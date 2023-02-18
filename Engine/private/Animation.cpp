@@ -1,0 +1,264 @@
+#include "stdafx.h"
+#include "Animation.h"
+#include "Channel.h"
+#include "GameUtils.h"
+#include "Model.h"
+#include "JsonStorage.h"
+
+namespace nlohmann
+{
+	template <>
+	struct adl_serializer<ANIM_EVENT>
+	{
+		static void to_json(json& j, const ANIM_EVENT& value)
+		{
+			j["EventTime"] = value.EventTime;
+			j["EventName"] = value.strEventName;
+		}
+
+		static void from_json(const json& j, ANIM_EVENT& value)
+		{
+			j["EventTime"].get_to(value.EventTime);
+			j["EventName"].get_to(value.strEventName);
+		}
+	};
+}
+
+CAnimation CAnimation::s_NullAnimation;
+const string CAnimation::s_ModifyFilePath = "../Bin/Resources/Meshes/Valorant/AnimationModifier.json";
+
+CAnimation::CAnimation()
+	: m_bFinished(true)
+	, m_bLooping(true)
+{
+}
+
+CAnimation::CAnimation(const CAnimation& rhs)
+	: m_strName(rhs.m_strName)
+	, m_Duration(rhs.m_Duration)
+	, m_TickPerSecond(rhs.m_TickPerSecond)
+	, m_bFinished(rhs.m_bFinished)
+	, m_bLooping(rhs.m_bLooping)
+{
+	m_Channels.reserve(rhs.m_Channels.size());
+	for (auto& channel : rhs.m_Channels)
+	{
+		m_Channels.push_back(channel->Clone());
+	}
+}
+
+HRESULT CAnimation::Initialize(const char* pAnimFilePath)
+{
+	_tchar szFilePath[MAX_PATH];
+	CGameUtils::c2wc(pAnimFilePath, szFilePath);
+	HANDLE hFile = CreateFile(szFilePath, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+	{
+		IM_ERROR("fail to open file %s", pAnimFilePath);
+		return E_FAIL;
+	}
+
+	DWORD dwByte = 0;
+	m_strName = CGameUtils::ReadStrFile(hFile); /* Read */
+	ReadFile(hFile, &m_Duration, sizeof(_double), &dwByte, nullptr); /* Read */
+	ReadFile(hFile, &m_TickPerSecond, sizeof(_double), &dwByte, nullptr); /* Read */
+
+	_uint iNumChannels = 0;
+	ReadFile(hFile, &iNumChannels, sizeof(_uint), &dwByte, nullptr); /* Read */
+
+	m_Channels.reserve(iNumChannels);
+	for (_uint i = 0; i < iNumChannels; ++i)
+	{
+		CChannel* pChannel = CChannel::Create(hFile);
+		Assert(pChannel != nullptr);
+		m_Channels.push_back(pChannel);
+	}
+
+	CloseHandle(hFile);
+	return S_OK;
+}
+
+void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float fRatio)
+{
+	if (m_bFinished && !m_bLooping)
+	{
+		return;
+	}
+
+	m_bFinished = false;
+	const _double PrePlayTime = m_PlayTime;
+	m_PlayTime += m_TickPerSecond * TimeDelta;
+
+	switch (eType)
+	{
+	case EAnimUpdateType::NORMAL:
+		for (const auto pChannel : m_Channels)
+		{
+			pChannel->Update_TransformMatrix(m_PlayTime);
+		}
+		break;
+	case EAnimUpdateType::BLEND:
+		for (const auto pChannel : m_Channels)
+		{
+			pChannel->Blend_TransformMatrix(m_PlayTime, fRatio);
+		}
+		break;
+	case EAnimUpdateType::ADDITIVE:
+		for (const auto pChannel : m_Channels)
+		{
+			pChannel->Blend_Additive(m_PlayTime, fRatio);
+		}
+		break;
+	case EAnimUpdateType::TYPE_END:
+		FALLTHROUGH
+	default: ;
+		NODEFAULT
+	}
+
+	if (m_PlayTime >= m_Duration)
+	{
+		if (m_bStay)
+		{
+			m_PlayTime = m_Duration;
+		}
+		else
+		{
+			m_PlayTime = 0.0;
+			m_bFinished = true;
+		}
+	}
+}
+
+void CAnimation::Update_BonesAtTime(_double PlayTime, EAnimUpdateType eType, _float fRatio)
+{
+	switch (eType)
+	{
+	case EAnimUpdateType::NORMAL:
+		for (const auto pChannel : m_Channels)
+		{
+			pChannel->Update_TransformMatrix(PlayTime);
+		}
+		break;
+	case EAnimUpdateType::BLEND:
+		for (const auto pChannel : m_Channels)
+		{
+			pChannel->Blend_TransformMatrix(PlayTime, fRatio);
+		}
+		break;
+	case EAnimUpdateType::ADDITIVE:
+		for (const auto pChannel : m_Channels)
+		{
+			pChannel->Blend_Additive(PlayTime, fRatio);
+		}
+		break;
+	case EAnimUpdateType::TYPE_END:
+		FALLTHROUGH
+	default: ;
+		NODEFAULT
+	}
+}
+
+void CAnimation::Link_Model(CModel* pModel)
+{
+	Assert(m_pModel == nullptr); // 중복 링크 방지
+	m_pModel = pModel;
+	for (auto channel : m_Channels)
+	{
+		channel->Link_Model(pModel);
+	}
+
+	const Json& jsonAnimModifier = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Meshes/Valorant/AnimationModifier.json");
+	if (jsonAnimModifier.contains(m_strName))
+	{
+		Json ModifyData = jsonAnimModifier[m_strName];
+		m_Duration = ModifyData["Duration"];
+		m_TickPerSecond = ModifyData["TickPerSecond"];
+		m_bLooping = ModifyData["bLooping"];
+	}
+}
+
+void CAnimation::Reset()
+{
+	m_PlayTime = 0.0;
+	m_bFinished = false;
+}
+
+void CAnimation::SaveModifiedData(Json& json)
+{
+	json["Duration"] = m_Duration;
+	json["TickPerSecond"] = m_TickPerSecond;
+	json["bLooping"] = m_bLooping;
+}
+
+void CAnimation::Imgui_RenderProperty()
+{
+	_float fPlayTime = static_cast<_float>(m_PlayTime);
+	_float fDuration = static_cast<_float>(m_Duration);
+	_float fTickPerSecond = static_cast<_float>(m_TickPerSecond);
+
+	ImGui::Separator();
+	ImGui::Text("%s", m_strName.c_str());
+	ImGui::Text("RealDuration : %.4f", fDuration / fTickPerSecond);
+	ImGui::InputFloat("TickPerSecond", &fTickPerSecond);
+	ImGui::InputFloat("Duration", &fDuration);
+
+	ImGui::SliderFloat("Cur PlayTime", &fPlayTime, 0.f, fDuration);
+
+	ImGui::Separator();
+	ImGui::Checkbox("Looping", &m_bLooping);
+	if (ImGui::Button("Reset"))
+		Reset();
+
+	ImGui::Separator();
+	static char szEventName[MAX_PATH]{};
+	static _float fEventTime = 0.f;
+	ImGui::InputText("EventName", szEventName, MAX_PATH);
+	ImGui::InputFloat("Event PlayTime", &fEventTime);
+
+
+	if (ImGui::Button("Save AnimModify Data"))
+	{
+		Json AnimModifiers = CJsonStorage::GetInstance()->FindOrLoadJson(s_ModifyFilePath);
+
+		Json json;
+		SaveModifiedData(json);
+		AnimModifiers[m_strName] = json;
+
+		CJsonStorage::GetInstance()->UpdateJson(s_ModifyFilePath, AnimModifiers);
+		CJsonStorage::GetInstance()->SaveJson(s_ModifyFilePath);
+	}
+
+
+	m_PlayTime = static_cast<_double>(fPlayTime);
+	m_Duration = static_cast<_double>(fDuration);
+	m_TickPerSecond = static_cast<_double>(fTickPerSecond);
+}
+
+CAnimation * CAnimation::Create(const char* pAnimFilePath)
+{
+	CAnimation*		pInstance = new CAnimation();
+
+	if (FAILED(pInstance->Initialize(pAnimFilePath)))
+	{
+		MSG_BOX("Failed to Created : CAnimation");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CAnimation* CAnimation::Clone()
+{
+	CAnimation* clone = new CAnimation(*this);
+
+	return clone;
+}
+
+void CAnimation::Free()
+{
+	for (auto& pChannel : m_Channels)
+		Safe_Release(pChannel);
+
+	m_Channels.clear();
+}
+

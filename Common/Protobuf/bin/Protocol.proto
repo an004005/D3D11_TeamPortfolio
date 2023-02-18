@@ -1,0 +1,45 @@
+syntax = "proto3";
+package Protocol;
+
+import "Enum.proto";
+import "Struct.proto";
+
+message C_LOGIN
+{
+}
+
+// to client
+message S_LOGIN 
+{
+	uint32 playerID = 1; // id from server
+}
+
+// in game protocols
+message S_PLAYER_EXIT
+{
+	Player player = 1;
+}
+
+message C_PLAYER_ACTION_SYNC
+{
+	Player player = 1;
+	PlayerSyncData syncData = 2;
+}
+message S_PLAYER_ACTION_SYNC
+{
+	Player player = 1;
+	PlayerSyncData syncData = 2;
+}
+
+message C_PLAYER_ACTION_SYNC_MATRIX
+{
+	Player player = 1;
+	PlayerSyncData syncData = 2;
+	Matrix world = 3;
+}
+message S_PLAYER_ACTION_SYNC_MATRIX
+{
+	Player player = 1;
+	PlayerSyncData syncData = 2;
+	Matrix world = 3;
+}

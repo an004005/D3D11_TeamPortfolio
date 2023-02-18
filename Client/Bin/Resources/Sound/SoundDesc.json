@@ -1,0 +1,14 @@
+{
+    "SoundFilePath" : "../Bin/Resources/Sound/Sounds/",
+    "Sounds" :[
+        {
+            "Name" : "Jet_Ability_E",
+            "SoundFiles" : ["265902545.wav", "489694515.wav", "565631422.wav", "585563305.wav"],
+            "2DSound" : false,
+            "Volume" : 0.7,
+            "Loop" : false,
+            "MinDistance": 2.0,
+            "MaxDistance" : 30.0
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+#pragma once
+#include "Client_Defines.h"
+#include "Level.h"
+
+BEGIN(Engine)
+class CModel;
+END
+
+BEGIN(Client)
+
+class CLevel_Effect : public CLevel
+{
+private:
+	CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+
+public:
+	virtual HRESULT Initialize() override;
+	virtual void Tick(_double TimeDelta) override;
+	virtual void Late_Tick(_double TimeDelta) override;
+	virtual HRESULT Render() override;
+
+private:
+	HRESULT Ready_Lights();
+	HRESULT Ready_Prototypes();
+	HRESULT Ready_Layer(const _tchar* pLayerTag);
+
+public:
+	static CLevel_Effect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual void Free() override;
+};
+
+END
