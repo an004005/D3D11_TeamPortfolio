@@ -111,7 +111,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	RELEASE_INSTANCE(CGameInstance);
 
-	google::protobuf::ShutdownProtobufLibrary();
 	Safe_Release(pMainApp);
     return (int) msg.wParam;
 }

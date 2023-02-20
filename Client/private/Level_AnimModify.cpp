@@ -97,6 +97,8 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 
 	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
+
+
 	return S_OK;
 }
 

@@ -6,12 +6,10 @@
 #include "JsonLib.h"
 #include "Imgui_PropertyEditor.h"
 #include "JsonStorage.h"
-#include "Trail.h"
 #include "MaterialPreview.h"
 #include "GameUtils.h"
 #include "Material.h"
 #include "Imgui_PostProcess.h"
-#include "ParticleSystem.h"
 
 
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

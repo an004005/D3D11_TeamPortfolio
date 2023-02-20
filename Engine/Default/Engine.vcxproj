@@ -167,7 +167,6 @@ call Copy.bat</Command>
     <ClInclude Include="..\public\Bone.h" />
     <ClInclude Include="..\public\BoundingCapsule.h" />
     <ClInclude Include="..\public\Camera.h" />
-    <ClInclude Include="..\public\Canvas.h" />
     <ClInclude Include="..\public\Cell.h" />
     <ClInclude Include="..\public\Channel.h" />
     <ClInclude Include="..\public\Collider.h" />
@@ -219,7 +218,6 @@ call Copy.bat</Command>
     <ClInclude Include="..\public\Imgui_ModelConverter.h" />
     <ClInclude Include="..\public\Imgui_PostProcess.h" />
     <ClInclude Include="..\public\Imgui_PropertyEditor.h" />
-    <ClInclude Include="..\public\Imgui_SMDImporter.h" />
     <ClInclude Include="..\public\Input_Device.h" />
     <ClInclude Include="..\public\JsonLib.h" />
     <ClInclude Include="..\public\JsonStorage.h" />
@@ -245,14 +243,12 @@ call Copy.bat</Command>
     <ClInclude Include="..\public\Sound_Manager.h" />
     <ClInclude Include="..\public\stdafx.h" />
     <ClInclude Include="..\public\Target_Manager.h" />
-    <ClInclude Include="..\public\TextUI.h" />
     <ClInclude Include="..\public\Texture.h" />
     <ClInclude Include="..\public\Timeline.h" />
     <ClInclude Include="..\public\Timer.h" />
     <ClInclude Include="..\public\TimerHelper.h" />
     <ClInclude Include="..\public\Timer_Manager.h" />
     <ClInclude Include="..\public\Transform.h" />
-    <ClInclude Include="..\public\UI.h" />
     <ClInclude Include="..\public\Material.h" />
     <ClInclude Include="..\public\VIBuffer.h" />
     <ClInclude Include="..\public\VIBuffer_Cell.h" />
@@ -271,7 +267,6 @@ call Copy.bat</Command>
     <ClCompile Include="..\private\Bone.cpp" />
     <ClCompile Include="..\private\BoundingCapsule.cpp" />
     <ClCompile Include="..\private\Camera.cpp" />
-    <ClCompile Include="..\private\Canvas.cpp" />
     <ClCompile Include="..\private\Cell.cpp" />
     <ClCompile Include="..\private\Channel.cpp" />
     <ClCompile Include="..\private\Collider.cpp" />
@@ -300,7 +295,6 @@ call Copy.bat</Command>
     <ClCompile Include="..\private\Imgui_ModelConverter.cpp" />
     <ClCompile Include="..\private\Imgui_PostProcess.cpp" />
     <ClCompile Include="..\private\Imgui_PropertyEditor.cpp" />
-    <ClCompile Include="..\private\Imgui_SMDImporter.cpp" />
     <ClCompile Include="..\private\Input_Device.cpp" />
     <ClCompile Include="..\private\JsonLib.cpp" />
     <ClCompile Include="..\private\JsonStorage.cpp" />
@@ -325,14 +319,12 @@ call Copy.bat</Command>
     <ClCompile Include="..\private\SoundStore.cpp" />
     <ClCompile Include="..\private\Sound_Manager.cpp" />
     <ClCompile Include="..\private\Target_Manager.cpp" />
-    <ClCompile Include="..\private\TextUI.cpp" />
     <ClCompile Include="..\private\Texture.cpp" />
     <ClCompile Include="..\private\Timeline.cpp" />
     <ClCompile Include="..\private\Timer.cpp" />
     <ClCompile Include="..\private\TimerHelper.cpp" />
     <ClCompile Include="..\private\Timer_Manager.cpp" />
     <ClCompile Include="..\private\Transform.cpp" />
-    <ClCompile Include="..\private\UI.cpp" />
     <ClCompile Include="..\private\Material.cpp" />
     <ClCompile Include="..\private\VIBuffer.cpp" />
     <ClCompile Include="..\private\VIBuffer_Cell.cpp" />

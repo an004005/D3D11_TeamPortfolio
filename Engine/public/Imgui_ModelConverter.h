@@ -3,12 +3,6 @@
 #include "Bone.h"
 
 BEGIN(Engine)
-struct TmpChannel
-{
-	string boneName;
-	vector<KEYFRAME> frames;
-};
-
 class ENGINE_DLL CImgui_ModelConverter : public CImguiObject
 {
 private:

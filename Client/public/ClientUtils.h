@@ -1,6 +1,5 @@
 #pragma once
 #include "Client_Defines.h"
-#include "Struct.pb.h"
 
 BEGIN(Engine)
 class CTransform;
@@ -69,16 +68,6 @@ public:
 	static void CloneDebugRay(_float3 vOrigin, _float3 vDir, _float fLife = 1.f);
 	static void CloneDebugSphere(_float3 vOrigin, _float fRadius, _float fLife = 1.f);
 	static EBaseAxis GetDamageFromAxis(CTransform* pTransform, _fvector vFrom);
-
-	// 수학 패킷
-	static _float2 ToClientVector2(const Protocol::Vector2& vector2);
-	static void ToProtocolVector2(const _float2& vector2, Protocol::Vector2* out);
-	static _float4 ToClientVector4(const Protocol::Vector3& vector3);
-	static _float3 ToClientVector3(const Protocol::Vector3& vector3);
-	static void ToProtocolVector3(const _float4& vector4, Protocol::Vector3* out);
-	static void ToProtocolVector3(const _float3& vector3, Protocol::Vector3* out);
-	static _float4x4 ToClientMatrix(const Protocol::Matrix& matrix);
-	static void ToProtocolMatrix(const _float4x4& matrix, Protocol::Matrix* out);
 
 public:
 	static const _tchar* const s_DebugLayer;

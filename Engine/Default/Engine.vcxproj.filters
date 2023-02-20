@@ -109,9 +109,6 @@
     <Filter Include="01.Utility\03.Components\06.Model\Mesh">
       <UniqueIdentifier>{a02bb9e1-b002-4273-bac3-1e481c121098}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\02.GameObject\UI">
-      <UniqueIdentifier>{1bfd2e87-3a06-45c1-baa9-43facb15f5c9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03.Components\50.Material">
       <UniqueIdentifier>{791ad97a-dd73-4b73-8d7b-b73825f16b89}</UniqueIdentifier>
     </Filter>
@@ -327,12 +324,6 @@
     <ClInclude Include="..\public\Mesh.h">
       <Filter>01.Utility\03.Components\06.Model\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UI.h">
-      <Filter>01.Utility\02.GameObject\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Canvas.h">
-      <Filter>01.Utility\02.GameObject\UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\ImguiUtils.h">
       <Filter>80. Imgui</Filter>
     </ClInclude>
@@ -420,9 +411,6 @@
     <ClInclude Include="EngineThreadPool.h">
       <Filter>00.System\01.ThreadPool</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\TextUI.h">
-      <Filter>01.Utility\02.GameObject\UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\CurveFloatMapImpl.h">
       <Filter>81.Utils\Time</Filter>
     </ClInclude>
@@ -465,7 +453,6 @@
     <ClInclude Include="..\public\Sound_Manager.h">
       <Filter>01.Utility\10.Sound</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Imgui_SMDImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -609,12 +596,6 @@
     <ClCompile Include="..\private\Mesh.cpp">
       <Filter>01.Utility\03.Components\06.Model\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UI.cpp">
-      <Filter>01.Utility\02.GameObject\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas.cpp">
-      <Filter>01.Utility\02.GameObject\UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\ImguiUtils.cpp">
       <Filter>80. Imgui</Filter>
     </ClCompile>
@@ -705,9 +686,6 @@
     <ClCompile Include="EngineThreadPool.cpp">
       <Filter>00.System\01.ThreadPool</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\TextUI.cpp">
-      <Filter>01.Utility\02.GameObject\UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\CurveFloatMapImpl.cpp">
       <Filter>81.Utils\Time</Filter>
     </ClCompile>
@@ -744,6 +722,5 @@
     <ClCompile Include="..\private\Sound_Manager.cpp">
       <Filter>01.Utility\10.Sound</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Imgui_SMDImporter.cpp" />
   </ItemGroup>
 </Project>

@@ -72,7 +72,6 @@ using namespace std;
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
 #include "Engine_Struct.h"
-#include "RefGuard.h"
 #include "Imgui_AppLog.h"
 
 #ifdef _DEBUG

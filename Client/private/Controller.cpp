@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Controller.h"
 #include "GameInstance.h"
-#include "ClientServiceMgr.h"
 #include "GameUtils.h"
 
 CController::CController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -154,27 +153,6 @@ void CController::Tick(_double TimeDelta)
 			m_iInputMask |= MASK_MOUSERB;
 	}
 
-	if (g_bOnline)
-	{
-		m_WorldCoolTime.Tick(TimeDelta);
-
-		// const _bool bWorldSync = m_WorldCoolTime.Use() || KeyDown(MOUSE_LB) || KeyDown(Q) || KeyDown(E) || KeyDown(C) || KeyDown(X) || KeyUp(MOUSE_LB);
-		// if (bWorldSync)
-		// {
-		// 	GClientService->DoAsync(&CClientServiceMgr::LocalInputSyncMatrix,
-		// 		m_iInputMask,
-		// 		m_vMouseAxis,
-		// 		m_pOwner
-		// 		->GetComponentChecked<CTransform>(CGameObject::m_pTransformComTag)
-		// 		->Get_WorldMatrix_f4x4());
-		// }
-		// else if (m_iPreInputMask != m_iInputMask || m_vMouseAxis != _float2::Zero)
-		// {
-		// 	GClientService->DoAsync(&CClientServiceMgr::LocalInputSync,
-		// 		m_iInputMask,
-		// 		m_vMouseAxis);
-		// }
-	}
 }
 
 void CController::Invalidate()

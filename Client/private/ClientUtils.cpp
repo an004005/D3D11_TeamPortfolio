@@ -3,7 +3,6 @@
 #include "GameInstance.h"
 #include "JsonLib.h"
 #include "Transform.h"
-#include "Protocol.pb.h"
 
 const _tchar* const CClientUtils::s_DebugLayer = L"DebugLayer";
 const _tchar* const CClientUtils::s_DebugRayPrototype = L"Prototype_DebugRay";
@@ -117,79 +116,4 @@ EBaseAxis CClientUtils::GetDamageFromAxis(CTransform* pTransform, _fvector vFrom
 		eAxis = EBaseAxis::SOUTH;
 
 	return eAxis;
-}
-
-_float2 CClientUtils::ToClientVector2(const Protocol::Vector2& vector2)
-{
-	return _float2{vector2.x(), vector2.y()};
-}
-
-void CClientUtils::ToProtocolVector2(const _float2& vector2, Protocol::Vector2* out)
-{
-	out->set_x(vector2.x);
-	out->set_y(vector2.y);
-}
-
-void CClientUtils::ToProtocolVector3(const _float4& vector4, Protocol::Vector3* out)
-{
-	out->set_x(vector4.x);
-	out->set_y(vector4.y);
-	out->set_z(vector4.z);
-}
-
-void CClientUtils::ToProtocolVector3(const _float3& vector3, Protocol::Vector3* out)
-{
-	out->set_x(vector3.x);
-	out->set_y(vector3.y);
-	out->set_z(vector3.z);
-}
-
-void CClientUtils::ToProtocolMatrix(const _float4x4& matrix, Protocol::Matrix* out)
-{
-	out->mutable_vright()->set_x(matrix._11);
-	out->mutable_vright()->set_y(matrix._12);
-	out->mutable_vright()->set_z(matrix._13);
-
-	out->mutable_vup()->set_x(matrix._21);
-	out->mutable_vup()->set_y(matrix._22);
-	out->mutable_vup()->set_z(matrix._23);
-
-	out->mutable_vlook()->set_x(matrix._31);
-	out->mutable_vlook()->set_y(matrix._32);
-	out->mutable_vlook()->set_z(matrix._33);
-
-	out->mutable_vpos()->set_x(matrix._41);
-	out->mutable_vpos()->set_y(matrix._42);
-	out->mutable_vpos()->set_z(matrix._43);
-}
-
-_float4 CClientUtils::ToClientVector4(const Protocol::Vector3& vector3)
-{
-	return _float4{vector3.x(), vector3.y(), vector3.z(), 0.f};
-}
-
-_float3 CClientUtils::ToClientVector3(const Protocol::Vector3& vector3)
-{
-	return _float3{vector3.x(), vector3.y(), vector3.z()};
-}
-
-_float4x4 CClientUtils::ToClientMatrix(const Protocol::Matrix& matrix)
-{
-	_float4x4 out;
-	out._11 = matrix.vright().x();
-	out._12 = matrix.vright().y();
-	out._13 = matrix.vright().z();
-
-	out._21 = matrix.vup().x();
-	out._22 = matrix.vup().y();
-	out._23 = matrix.vup().z();
-
-	out._31 = matrix.vlook().x();
-	out._32 = matrix.vlook().y();
-	out._33 = matrix.vlook().z();
-
-	out._41 = matrix.vpos().x();
-	out._42 = matrix.vpos().y();
-	out._43 = matrix.vpos().z();
-	return out;
 }

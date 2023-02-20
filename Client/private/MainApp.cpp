@@ -9,7 +9,6 @@
 #include "DebugRay.h"
 #include "DebugSphere.h"
 #include "Collider.h"
-#include "ClientServiceMgr.h"
 #include "VIBuffer_Sphere.h"
 #include "VIBuffer_CircleRect.h"
 #include "VIBuffer_CircleRectLookOut.h"
@@ -276,7 +275,6 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
-	GClientService->ClearClientObjects();
 
 	m_pGameInstance->Clear_ImguiObjects();
 	m_pGameInstance->Clear();

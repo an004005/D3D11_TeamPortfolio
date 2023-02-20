@@ -46,9 +46,6 @@
     <Filter Include="02.GameObjects\Player">
       <UniqueIdentifier>{e087c335-2441-4c1d-a430-11f6b36cb587}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI">
-      <UniqueIdentifier>{8cc5add7-a22d-4954-b2a5-60295b5df002}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\12.ModelConverter">
       <UniqueIdentifier>{d4f8c3f8-ee01-487f-97ab-2e7eeca793f7}</UniqueIdentifier>
     </Filter>
@@ -70,9 +67,6 @@
     <Filter Include="01.Levels\13.AnimationModifier">
       <UniqueIdentifier>{e61324b3-b73d-4519-8aa0-641457bc1944}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NetWork">
-      <UniqueIdentifier>{3ed600e2-e3f3-487c-9bd1-d3c423f4dd2e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\03.MutliPlay">
       <UniqueIdentifier>{acaa07ef-f95d-413a-a9d1-868906b549f6}</UniqueIdentifier>
     </Filter>
@@ -87,12 +81,6 @@
     </Filter>
     <Filter Include="01.Levels\14.EffectTool">
       <UniqueIdentifier>{cb237c72-7e46-4d9a-980b-70bd8a509dc4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="VFX\Particle">
-      <UniqueIdentifier>{6472903a-98bb-4c1e-ab48-4d53d1c6d2f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="VFX\Trail">
-      <UniqueIdentifier>{ee4e60a9-21ce-4cdc-ab70-612c027d5052}</UniqueIdentifier>
     </Filter>
     <Filter Include="97.ShaderFiles\PostProcess">
       <UniqueIdentifier>{297a4e23-345b-4c8d-9cec-57b2d352b928}</UniqueIdentifier>
@@ -183,29 +171,11 @@
     <ClInclude Include="..\public\Level_AnimModify.h">
       <Filter>01.Levels\13.AnimationModifier</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\ServerPacketHandler.h">
-      <Filter>NetWork</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Protocol.pb.h">
-      <Filter>NetWork</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Struct.pb.h">
-      <Filter>NetWork</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Enum.pb.h">
-      <Filter>NetWork</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\ClientServiceMgr.h">
-      <Filter>NetWork</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Level_MultiPlay.h">
       <Filter>01.Levels\03.MutliPlay</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_Loading_MultiPlay.h">
       <Filter>01.Levels\09.Loading</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\RemoteController.h">
-      <Filter>50.Component\01.Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SkyBox.h">
       <Filter>02.GameObjects\Map</Filter>
@@ -219,15 +189,6 @@
     <ClInclude Include="..\public\Level_Effect.h">
       <Filter>01.Levels\14.EffectTool</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\ParticleSystem.h">
-      <Filter>VFX\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\VIBuffer_Instancing_Trail.h">
-      <Filter>VFX\Trail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Trail.h">
-      <Filter>VFX\Trail</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\PostVFX_WhiteOut.h">
       <Filter>VFX\PostProcess</Filter>
     </ClInclude>
@@ -236,12 +197,6 @@
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h">
       <Filter>VFX\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\UIEx.h">
-      <Filter>02.GameObjects\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\CanvasEX.h">
-      <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -302,44 +257,17 @@
     <ClCompile Include="..\private\Level_AnimModify.cpp">
       <Filter>01.Levels\13.AnimationModifier</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Protocol.pb.cc">
-      <Filter>NetWork</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Struct.pb.cc">
-      <Filter>NetWork</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Enum.pb.cc">
-      <Filter>NetWork</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\ServerPacketHandler.cpp">
-      <Filter>NetWork</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\ClientServiceMgr.cpp">
-      <Filter>NetWork</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Level_MultiPlay.cpp">
       <Filter>01.Levels\03.MutliPlay</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Loading_MultiPlay.cpp">
       <Filter>01.Levels\09.Loading</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\RemoteController.cpp">
-      <Filter>50.Component\01.Controller</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\SkyBox.cpp">
       <Filter>02.GameObjects\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Effect.cpp">
       <Filter>01.Levels\14.EffectTool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\ParticleSystem.cpp">
-      <Filter>VFX\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\VIBuffer_Instancing_Trail.cpp">
-      <Filter>VFX\Trail</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Trail.cpp">
-      <Filter>VFX\Trail</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp">
       <Filter>VFX\PostProcess</Filter>
@@ -349,12 +277,6 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp">
       <Filter>VFX\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\UIEx.cpp">
-      <Filter>02.GameObjects\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\CanvasEX.cpp">
-      <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

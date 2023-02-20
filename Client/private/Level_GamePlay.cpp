@@ -9,15 +9,11 @@
 #include "JsonStorage.h"
 #include "GameUtils.h"
 #include "Material.h"
-#include "Trail.h"
 #include "Imgui_PropertyEditor.h"
 #include "Imgui_PostProcess.h"
 #include "PostVFX_WhiteOut.h"
 #include "Camera.h"
-#include "ParticleSystem.h"
 #include "Sound.h"
-#include "UIEx.h"
-#include "CanvasEX.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -149,24 +145,11 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 			CNavigation::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
-		/*for ProtoVFX_Trail */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoVFX_Trail"),
-			CTrail::Create(m_pDevice, m_pContext))))
-				return E_FAIL;
-
 		/*for ProtoPostVFX_WhiteOut */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_WhiteOut"),
 			CPostVFX_WhiteOut::Create(m_pDevice, m_pContext))))
 				return E_FAIL;
 
-		/*for ProtoUI_UIEX*/
-		if (FAILED(pGameInstance->Add_Prototype(L"ProtoUI_UIEX",
-			CUIEx::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
-		/*for ProtoUI_CanvasEX*/
-		if (FAILED(pGameInstance->Add_Prototype(L"ProtoUI_CanvasEX",
-			CCanvasEX::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
 	}
 
 	return S_OK;

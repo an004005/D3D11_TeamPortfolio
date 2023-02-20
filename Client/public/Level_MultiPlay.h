@@ -2,7 +2,6 @@
 
 #include "Client_Defines.h"
 #include "Level.h"
-#include "CorePch.h"
 
 BEGIN(Client)
 
