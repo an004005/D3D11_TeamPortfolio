@@ -6,7 +6,6 @@
 #include "Level_GamePlay.h"
 #include "Imgui_LevelSwitcher.h"
 #include "JsonStorage.h"
-#include "Loading.h"
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
