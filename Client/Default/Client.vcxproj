@@ -196,6 +196,9 @@
     <ClInclude Include="..\public\Level_Maptool.h" />
     <ClInclude Include="..\public\Level_MultiPlay.h" />
     <ClInclude Include="..\public\MainApp.h" />
+    <ClInclude Include="..\Public\Player.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Terrain.h" />
@@ -226,6 +229,9 @@
     <ClCompile Include="..\private\Level_Maptool.cpp" />
     <ClCompile Include="..\private\Level_MultiPlay.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
+    <ClCompile Include="..\Private\Player.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
