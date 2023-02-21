@@ -27,10 +27,14 @@ HRESULT CComponent::Initialize_Prototype()
 
 HRESULT CComponent::Initialize(void * pArg)
 {
+	if (pArg)
+	{
+		Json& json = *static_cast<Json*>(pArg);
+		LoadFromJson(json);
+	}
+
 	return S_OK;
 }
-
-
 
 void CComponent::Free()
 {

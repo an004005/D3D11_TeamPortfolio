@@ -2,6 +2,7 @@
 #include "..\public\GameObject.h"
 #include "GameInstance.h"
 #include "GameUtils.h"
+#include "ImguiUtils.h"
 #include "JsonLib.h"
 
 const _tchar* CGameObject::m_pTransformComTag = TEXT("Com_Transform");
@@ -36,11 +37,7 @@ HRESULT CGameObject::Initialize(void * pArg)
 	if (pArg)
 	{
 		Json& json = *static_cast<Json*>(pArg);
-
-		if (json.contains("ObjectTag"))
-		{
-			m_strObjectTag = json["ObjectTag"];
-		}
+		LoadFromJson(json);
 	}
 
 	if (FAILED(Add_Component(LEVEL_STATIC, CGameInstance::m_pPrototypeTransformTag, m_pTransformComTag, (CComponent**)&m_pTransformCom, pArg)))
@@ -73,7 +70,7 @@ void CGameObject::SaveToJson(Json& json)
 
 void CGameObject::LoadFromJson(const Json& json)
 {
-
+	m_strObjectTag = json["ObjectTag"];
 }
 
 void CGameObject::Imgui_RenderComponentProperties()
@@ -98,6 +95,15 @@ void CGameObject::Imgui_RenderProperty()
 
 	if (ImGui::Button("Visibie"))
 		m_bVisible = !m_bVisible;
+
+	CImguiUtils::FileDialog_FileSelector("Save Object to", ".json", "../Bin/Resources/Objects/",
+	[this](const string& filePath)
+	{
+		Json json;
+		SaveToJson(json);
+		std::ofstream file(filePath);
+		file << json;
+	});
 }
 
 void CGameObject::Compute_CamDistance()

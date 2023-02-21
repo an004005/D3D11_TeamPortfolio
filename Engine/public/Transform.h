@@ -33,12 +33,6 @@ public:
 	_float4x4 Get_WorldMatrix_f4x4();
 	void Set_WorldMatrix(const _float4x4& WorldMatrix) { m_WorldMatrix = WorldMatrix; };
 	void Set_WorldMatrix(_fmatrix WorldMatrix) { XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix); }
-	void Set_ParentTransform(CTransform* pParent)
-	{
-		Safe_Release(m_pParent);
-		m_pParent = pParent;
-		Safe_AddRef(m_pParent);
-	}
 	_vector Get_State(STATE eState) const {
 		return XMLoadFloat4x4(&m_WorldMatrix).r[eState];
 	}
@@ -73,6 +67,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Imgui_RenderProperty() override;
 	virtual void SaveToJson(OUT Json& json) override;
+	virtual void LoadFromJson(const Json& json) override;
 
 	void Go_Straight(_double TimeDelta);
 	void Go_Backward(_double TimeDelta);
@@ -112,8 +107,6 @@ private:
 
 	_bool m_bPitchLock = false;
 	_float m_fMaxPitchRad = 0.f;
-
-	CTransform* m_pParent = nullptr;
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
