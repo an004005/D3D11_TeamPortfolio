@@ -26,17 +26,7 @@ HRESULT CCamera::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (pArg)
-	{
-		Json& json = *static_cast<Json*>(pArg);
-		m_fFOV = json["FOV"];
-		m_fWidth = json["Width"];
-		m_fHeight = json["Height"];
-		m_fNear = json["Near"];
-		m_fFar = json["Far"];
-		m_bUseViewPortSize = json["UseViewportSize"];
-	}
-	else
+	if (pArg == nullptr)
 	{
 		m_CameraDesc.vEye = _float4(0.f, 10.f, -10.f, 1.f);
 		m_CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
@@ -93,6 +83,17 @@ void CCamera::SaveToJson(Json& json)
 	json["Near"] = m_fNear;
 	json["Far"] = m_fFar;
 	json["UseViewportSize"] = m_bUseViewPortSize;
+}
+
+void CCamera::LoadFromJson(const Json& json)
+{
+	CGameObject::LoadFromJson(json);
+	m_fFOV = json["FOV"];
+	m_fWidth = json["Width"];
+	m_fHeight = json["Height"];
+	m_fNear = json["Near"];
+	m_fFar = json["Far"];
+	m_bUseViewPortSize = json["UseViewportSize"];
 }
 
 _float4x4 CCamera::GetProjMatrix() const
