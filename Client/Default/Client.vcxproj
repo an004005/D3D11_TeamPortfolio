@@ -197,6 +197,7 @@
     <ClInclude Include="..\public\Level_MultiPlay.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
+    <ClInclude Include="..\public\ScarletMap.h" />
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="..\private\Level_MultiPlay.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
+    <ClCompile Include="..\private\ScarletMap.cpp" />
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />

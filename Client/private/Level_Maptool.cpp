@@ -3,10 +3,8 @@
 #include "GameInstance.h"
 #include "Imgui_MapEditor.h"
 #include "Imgui_LevelSwitcher.h"
-#include "Floors.h"
-#include "Navigation.h"
-#include "Indicator.h"
 #include "JsonLib.h"
+#include "Texture.h"
 
 CLevel_Maptool::CLevel_Maptool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -34,10 +32,6 @@ HRESULT CLevel_Maptool::Initialize()
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
-		return E_FAIL;
-
 
 	return S_OK;
 }
@@ -84,36 +78,15 @@ HRESULT CLevel_Maptool::Ready_Lights()
 HRESULT CLevel_Maptool::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
-	// CGameUtils::ListFilesRecursive("../Bin/Resources/Meshes/Valorant/Materials/", [this](const string& fileName)
-	// {
-	// 	char szFileName[MAX_PATH]{};
-	// 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-	// 	CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
-	// });
-
-
-	/* For.Prototype_GameObject_Floors */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Floors"),
-		CFloors::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-	/* For.Prototype_GameObject_Navigation */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Navigation"),
-		CNavigation::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	/* For.Prototype_GameObject_Indicator */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Indicator"),
-		CIndicator::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-
+	
 	return S_OK;
 }
 
 HRESULT CLevel_Maptool::Ready_Layer_Terrain(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Terrain")));
 
 	return S_OK;
 }
@@ -122,18 +95,11 @@ HRESULT CLevel_Maptool::Ready_Layer_Camera(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
-		return E_FAIL;
-
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
+	
 	return S_OK;
 }
 
-HRESULT CLevel_Maptool::Ready_Layer_Player(const _tchar* pLayerTag)
-{
-
-
-	return S_OK;
-}
 
 CLevel_Maptool* CLevel_Maptool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
