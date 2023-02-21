@@ -199,6 +199,7 @@
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Terrain.h" />
+    <ClInclude Include="..\public\TestMonster.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
     <ClInclude Include="Client.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
+    <ClCompile Include="..\private\TestMonster.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
     <ClCompile Include="Client.cpp" />
