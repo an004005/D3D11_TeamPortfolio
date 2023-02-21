@@ -18,6 +18,7 @@ private:
 	HRESULT Ready_Layer_Terrain(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_AnimModel(const _tchar* pLayerTag);
 
 public:
 	static CLevel_AnimModify* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -198,6 +198,9 @@
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h">
       <Filter>VFX\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -277,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp">
       <Filter>VFX\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

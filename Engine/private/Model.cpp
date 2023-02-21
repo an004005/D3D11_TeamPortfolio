@@ -292,6 +292,22 @@ void CModel::Imgui_RenderProperty()
 			}
 		}
 	}
+
+	if (m_eType == TYPE_ANIM)
+	{
+		if (ImGui::CollapsingHeader("Event Viewer"))
+		{
+			if (ImGui::BeginListBox("Event View"))
+			{
+				for (auto& iter : m_EventFunc)
+				{
+					if (ImGui::Selectable(iter.first.c_str()))
+						iter.second();
+				}
+				ImGui::EndListBox();
+			}
+		}
+	}
 }
 
 void CModel::SetPlayAnimation(const string& strAnimName)
@@ -322,6 +338,17 @@ void CModel::Play_Animation(_double TimeDelta)
 	if (auto pAnim = Find_Animation(m_CurAnimName))
 	{
 		pAnim->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+
+		KEYFRAME tempKeyFrame = *pAnim->GetCurKeyFrame();
+		if (tempKeyFrame.Time != m_CurKeyFrame.Time)
+		{
+			m_BefKeyFrame = m_CurKeyFrame;
+			m_CurKeyFrame = tempKeyFrame;
+			//m_EventMap = m_mapAnimation[m_CurAnimName]->GetEventMap();
+		}
+
+		// 이벤트 실행
+		//EventCaller();
 	}
 
 	Compute_CombindTransformationMatrix();
@@ -402,9 +429,9 @@ HRESULT CModel::Render(const _float4x4& WorldMatrix)
 
 		if (m_eType == TYPE_ANIM)
 		{
-			_float4x4 BoneMatrices[128];
+			_float4x4 BoneMatrices[512];
 			mesh->SetUp_BoneMatrices(BoneMatrices, XMLoadFloat4x4(&m_PivotMatrix));
-			m_Materials[iMtrlIdx]->GetShader()->Set_MatrixArray("g_BoneMatrices", BoneMatrices, 128);
+			m_Materials[iMtrlIdx]->GetShader()->Set_MatrixArray("g_BoneMatrices", BoneMatrices, 512);
 		}
 
 		m_Materials[iMtrlIdx]->BindMatrices(WorldMatrix);
@@ -423,9 +450,9 @@ HRESULT CModel::RenderMesh(CTransform* pTransform, _uint iMeshIdx)
 
 	if (m_eType == TYPE_ANIM)
 	{
-		_float4x4 BoneMatrices[128];
+		_float4x4 BoneMatrices[512];
 		m_Meshes[iMeshIdx]->SetUp_BoneMatrices(BoneMatrices, XMLoadFloat4x4(&m_PivotMatrix));
-		m_Materials[iMtrlIdx]->GetShader()->Set_MatrixArray("g_BoneMatrices", BoneMatrices, 128);
+		m_Materials[iMtrlIdx]->GetShader()->Set_MatrixArray("g_BoneMatrices", BoneMatrices, 512);
 	}
 
 	m_Materials[iMtrlIdx]->BindMatrices(pTransform);
@@ -448,9 +475,9 @@ HRESULT CModel::Render_ShadowDepth(CTransform* pTransform)
 
 		if (m_eType == TYPE_ANIM)
 		{
-			_float4x4 BoneMatrices[128];
+			_float4x4 BoneMatrices[512];
 			m_Meshes[i]->SetUp_BoneMatrices(BoneMatrices, XMLoadFloat4x4(&m_PivotMatrix));
-			m_pShadowShader->Set_MatrixArray("g_BoneMatrices", BoneMatrices, 128);
+			m_pShadowShader->Set_MatrixArray("g_BoneMatrices", BoneMatrices, 512);
 		}
 		
 		FAILED_CHECK(pTransform->Bind_ShaderResource(m_pShadowShader, "g_WorldMatrix"));
@@ -646,6 +673,19 @@ HRESULT CModel::Ready_Materials(HANDLE hFile)
 	}
 
 	return S_OK;
+}
+
+void CModel::EventCaller(const string& EventName)
+{
+	for (auto& iter : m_EventFunc)
+	{
+		if (EventName == iter.first) iter.second();
+	}
+}
+
+void CModel::Add_EventCaller(const string & EventName, std::function<void(void)> Func)
+{
+	m_EventFunc.emplace(EventName, Func);
 }
 
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const char * pModelFilePath, _float4x4 PivotMatrix)
