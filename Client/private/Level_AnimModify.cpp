@@ -40,6 +40,8 @@ HRESULT CLevel_AnimModify::Initialize()
 	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_AnimModel(L"Layer_AnimModel")))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -87,17 +89,36 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& filePath)
-	{
-		string fileName = CGameUtils::GetFileName(filePath);
-		CGameInstance::GetInstance()->Add_Prototype(
-			s2ws(fileName).c_str(),
-			CMaterial::Create(m_pDevice, m_pContext, filePath.c_str()));
-	});
+	 CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& filePath)
+	 {
+	 	string fileName = CGameUtils::GetFileName(filePath);
+	 	CGameInstance::GetInstance()->Add_Prototype(
+	 		s2ws(fileName).c_str(),
+	 		CMaterial::Create(m_pDevice, m_pContext, filePath.c_str()));
+	 });
 
 	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
+	pGameInstance->Add_Prototype(L"GoatPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
-	pGameInstance->Add_Prototype(L"Model_Build", CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/StaticModel/BigBuilding/big_building.static_model"));
+	// 모델 추가하는 방법
+	auto pModel_TestPlayer = CModel::Create(m_pDevice, m_pContext,
+		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/TestPlayer/Test.anim_model",
+		_float4x4::CreateScale({ 0.01f, 0.01f, 0.01f }) * _float4x4::CreateRotationY(XMConvertToRadians(-90.f)));
+
+	// 모델에 애니메이션 추가하는 방법
+	pModel_TestPlayer->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/TestPlayer/Animation/");
+
+	// 프로토타입 추가 방법
+	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_TestPlayer", pModel_TestPlayer));
+
+	// Goat
+	auto pModel_Goat = CModel::Create(m_pDevice, m_pContext,
+		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Goat/Goat.anim_model",
+		_float4x4::CreateScale({ 0.01f, 0.01f, 0.01f }) * _float4x4::CreateRotationY(XMConvertToRadians(-90.f)));
+
+	pModel_Goat->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Goat/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Goat", pModel_Goat));
 
 	return S_OK;
 }
@@ -105,7 +126,6 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 HRESULT CLevel_AnimModify::Ready_Layer_Terrain(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
 	
 	return S_OK;
 }
@@ -125,9 +145,23 @@ HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	Json PreviewData;
-	PreviewData["Model"] = "Model_Build";
+	PreviewData["Model"] = "Model_TestPlayer";
 
-	pGameInstance->Clone_GameObject(pLayerTag, L"ModelPreview", &PreviewData);
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_AnimModify::Ready_Layer_AnimModel(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json PreviewData;
+	PreviewData["Model"] = "Model_Goat";
+
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("GoatPreview"), &PreviewData)))
+		return E_FAIL;
 
 	return S_OK;
 }

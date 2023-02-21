@@ -80,6 +80,7 @@ void CChannel::Update_TransformMatrix(_double PlayTime)
 		{
 			++iFrameIdx;
 		}
+		m_iCurFrameIdx = iFrameIdx;
 
 		_float			fRatio = (_float)(PlayTime - m_KeyFrames[iFrameIdx].Time) / 
 			(m_KeyFrames[iFrameIdx + 1].Time - m_KeyFrames[iFrameIdx].Time);

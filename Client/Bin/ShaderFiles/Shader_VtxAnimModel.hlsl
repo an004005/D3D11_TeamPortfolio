@@ -2,7 +2,7 @@
 #include "Shader_Defines.h"
 #include "Shader_Params.h"
 
-matrix			g_BoneMatrices[128];
+matrix			g_BoneMatrices[512];
 
 struct VS_IN
 {

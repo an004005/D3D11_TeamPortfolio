@@ -61,6 +61,9 @@ private:
 
 
 	CModelPreviwer* m_pPreview = nullptr;
+
+private:
+
 };
 
 END
