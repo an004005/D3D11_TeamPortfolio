@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Level.h"
+
 class CLevel_AnimModify : public CLevel
 {
 private:

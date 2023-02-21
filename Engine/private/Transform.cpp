@@ -19,20 +19,17 @@ CTransform::CTransform(const CTransform & rhs)
 
 _matrix CTransform::Get_WorldMatrix_Inverse()
 {
-	return XMMatrixInverse(nullptr, Get_WorldMatrix());
+	return XMMatrixInverse(nullptr, m_WorldMatrix);
 }
 
 _matrix CTransform::Get_WorldMatrix()
 {
-	if (m_pParent)
-		return XMLoadFloat4x4(&m_WorldMatrix) * m_pParent->Get_WorldMatrix();
-	else
-		return XMLoadFloat4x4(&m_WorldMatrix); 
+	return XMLoadFloat4x4(&m_WorldMatrix); 
 }
 
 _float4x4 CTransform::Get_WorldMatrix_f4x4()
 {
-	return Get_WorldMatrix();
+	return m_WorldMatrix;
 }
 
 _float CTransform::GetYaw_Radian()
@@ -88,16 +85,7 @@ HRESULT CTransform::Initialize_Prototype()
 
 HRESULT CTransform::Initialize(void * pArg)
 {
-	if (pArg)
-	{
-		Json& json = *static_cast<Json*>(pArg);
-		if (json.contains("Transform"))
-		{
-			json["Transform"]["WorldMatrix"].get_to(m_WorldMatrix);
-		}
-	}
-
-	return S_OK;
+	return __super::Initialize(pArg);
 }
 
 void CTransform::Imgui_RenderProperty()
@@ -109,6 +97,11 @@ void CTransform::Imgui_RenderProperty()
 void CTransform::SaveToJson(Json& json)
 {
 	json["Transform"]["WorldMatrix"] = m_WorldMatrix;
+}
+
+void CTransform::LoadFromJson(const Json& json)
+{
+	m_WorldMatrix = json["Transform"]["WorldMatrix"];
 }
 
 void CTransform::Go_Straight(_double TimeDelta)
@@ -499,6 +492,5 @@ CComponent * CTransform::Clone(void * pArg)
 void CTransform::Free()
 {
 	__super::Free();
-	Safe_Release(m_pParent);
 
 }
