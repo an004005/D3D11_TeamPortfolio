@@ -24,6 +24,7 @@ public:
 	virtual void Tick(_double TimeDelta);
 	virtual void Imgui_RenderProperty() override;
 	virtual void SaveToJson(Json& json) override;
+	virtual void LoadFromJson(const Json& json) override;
 
 	void SetMainCamera() { s_pMainCamera = this; }
 	static void SetMainCamera(CCamera* pCamera) { s_pMainCamera = pCamera; }

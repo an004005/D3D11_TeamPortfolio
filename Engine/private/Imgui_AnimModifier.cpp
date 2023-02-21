@@ -187,7 +187,7 @@ void CImgui_AnimModifier::Imgui_RenderTab()
 		}
 	}
 
-	static Json AnimModifiers = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Meshes/Valorant/AnimationModifier.json");
+	static Json AnimModifiers = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Meshes/Scarlet_Nexus/AnimationModifier.json");
 
 	if (m_pPreview && m_pPreview->GetPlayAnimation())
 	{
@@ -199,8 +199,8 @@ void CImgui_AnimModifier::Imgui_RenderTab()
 			string animName = m_pPreview->GetPlayAnimation()->GetName();
 	
 			AnimModifiers[animName] = json;
-			CJsonStorage::GetInstance()->UpdateJson("../Bin/Resources/Meshes/Valorant/AnimationModifier.json", AnimModifiers);
-			CJsonStorage::GetInstance()->SaveJson("../Bin/Resources/Meshes/Valorant/AnimationModifier.json");
+			CJsonStorage::GetInstance()->UpdateJson("../Bin/Resources/Meshes/Scarlet_Nexus/AnimationModifier.json", AnimModifiers);
+			CJsonStorage::GetInstance()->SaveJson("../Bin/Resources/Meshes/Scarlet_Nexus/AnimationModifier.json");
 		}
 	}
 }

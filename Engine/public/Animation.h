@@ -49,6 +49,10 @@ public:
 	void SaveModifiedData(Json& json);
 	void Imgui_RenderProperty();
 
+public:
+	KEYFRAME*						GetCurKeyFrame();
+	_double							GetCurDuration() const { return m_Duration; }
+	unordered_map<double, string>	GetEventMap() const { return m_EventMap; }
 
 public:
 	static CAnimation s_NullAnimation;
@@ -72,6 +76,9 @@ private:
 
 	/* 이 애니메이션을 재생하기위해 갱신해야하는 뼈들. */
 	vector<class CChannel*>				m_Channels;
+	/* 이벤트 맵 */
+	unordered_map<double, string>		m_EventMap;
+	vector<ANIM_EVENT>					m_vecEvent;
 
 	// 상호참조로 레퍼런스 카운트 증가하지 않는다.
 	class CModel*						m_pModel = nullptr;
