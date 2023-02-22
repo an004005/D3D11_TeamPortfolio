@@ -1,0 +1,39 @@
+{
+    "ObjectTag": "",
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Prototype_GameObject": "UI_Default\u0000",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": [
+            "..\\Bin\\Resources\\Player_Info_BackGround.png\u0000"
+        ]
+    },
+    "SizeX": 410.0,
+    "SizeY": 80.0,
+    "Transform": {
+        "WorldMatrix": [
+            410.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            80.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}
