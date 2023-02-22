@@ -77,6 +77,7 @@ public:
 	void MoveVelocity(_double TimeDelta, _float3 vVelocity);
 	_vector MoveVelocity_Get(_double TimeDelta, _float3 vVelocity);
 	void MoveVelocity_Navi(_double TimeDelta, _float3 vVelocity, class CNavigation* pNavi, _int& iCellIdx);
+	void LocalMove(_float3 vDir, _float fRange = 1.f);
 
 	// Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 	void Turn(_fvector vAxis, _double TimeDelta); /* Dynamic */

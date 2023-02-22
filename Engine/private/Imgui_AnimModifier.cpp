@@ -37,6 +37,7 @@ HRESULT CModelPreviwer::Initialize(void* pArg)
 	/* For.Com_Renderer */
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
+	m_pTransformCom->SetSpeed(1.f);
 
 	if (pArg)
 	{
@@ -50,7 +51,6 @@ HRESULT CModelPreviwer::Initialize(void* pArg)
 		}
 	}
 
-
 	return S_OK;
 }
 
@@ -60,6 +60,7 @@ void CModelPreviwer::Late_Tick(_double TimeDelta)
 	{
 		m_pModel->Play_Animation(TimeDelta);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		m_pTransformCom->LocalMove(m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix()));
 	}
 }
 
@@ -210,6 +211,7 @@ CImgui_AnimModifier* CImgui_AnimModifier::Create(ID3D11Device* pDevice, ID3D11De
 	auto inst = new CImgui_AnimModifier(pDevice, pContext);
 	if (FAILED(inst->Initialize(pArg)))
 	{
+		Safe_Release(inst);
 		return nullptr;
 	}
 

@@ -53,6 +53,7 @@ public:
 	KEYFRAME*						GetCurKeyFrame();
 	_double							GetCurDuration() const { return m_Duration; }
 	unordered_map<double, string>	GetEventMap() const { return m_EventMap; }
+	_vector&						GetLocalMove() { return m_vLocalMove; }
 
 public:
 	static CAnimation s_NullAnimation;
@@ -73,6 +74,9 @@ private:
 	_bool								m_bLooping = false;
 	// 애니메이션 끝나면 마지작 프레임 유지
 	_bool								m_bStay = false;
+
+	// 로컬 좌표 이동
+	_vector								m_vLocalMove;
 
 	/* 이 애니메이션을 재생하기위해 갱신해야하는 뼈들. */
 	vector<class CChannel*>				m_Channels;
