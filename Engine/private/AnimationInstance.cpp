@@ -30,83 +30,6 @@ HRESULT CAnimationStateMachine::Initialize(CASMBuilder * pBuilder)
 
 void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 {
-//	Assert(m_pCurState != nullptr);
-//
-//	_bool bFirstChange = true;
-//	_int iLoopBreaker = 100;
-//	while(--iLoopBreaker)
-//	{
-//		_bool bChange = false;
-//
-//		for (const auto pTransition : m_pCurState->m_Transitions)
-//		{
-//			bChange = pTransition->m_Predicator();
-//
-//			if (bChange)	// 애니메이션이 바로 변경되는 시점
-//			{
-//				if (bFirstChange) // 최조 state전환시 이전 상태 저장후 blend에 사용
-//				{
-//					m_pPreState = m_pCurState;
-//					bFirstChange = false;
-//					m_fBlend = 0.f;
-//#ifdef _DEBUG
-//					if (m_bStoreHistory)
-//					{
-//						m_strFromState = m_pPreState->m_strName;
-//						m_strTransition = "";
-//					}
-//#endif
-//				}
-//#ifdef _DEBUG
-//				if (m_bStoreHistory)
-//				{
-//					m_strTransition += pTransition->m_strName;
-//					m_strTransition += " -> \n";
-//				}
-//#endif
-//
-//				m_pCurState = m_mapStates.find(pTransition->m_strNextStateName)->second;
-//				m_fTransitionDuration = pTransition->m_fTransitionDuration;
-//				m_fCurTransitionTime = 0.f;
-//
-//				break;
-//			}
-//			else if (m_fBlend < 1.f)		// 애니메이션 사이 보간
-//			{
-//				m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fBlend);
-//				m_fBlend += m_fTransitionDuration;
-//				break;
-//			}
-//			else		// 그냥 애니메이션 실행
-//			{
-//				m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
-//				break;
-//			}
-//		}
-//
-//		// state 변경이 없으면 종료
-//		if (bChange == false)
-//		{
-//#ifdef _DEBUG
-//			if (!bFirstChange && m_bStoreHistory)
-//			{
-//				m_strToState = m_pCurState->m_strName;
-//				m_DebugQue.push_front("from " + m_strFromState + " | by " + m_strTransition + " | to " + m_strToState);
-//
-//				if (m_DebugQue.size() > m_iDebugQueSize)
-//					m_DebugQue.pop_back();
-//				m_bStoreHistory = false;
-//			}
-//#endif
-//			break;
-//		}
-//	}
-//	Assert(iLoopBreaker > 0); // 무한루프 방치
-//
-//	if (m_fCurTransitionTime < m_fTransitionDuration)
-//	{
-//		m_fCurTransitionTime += (_float)TimeDelta;
-//	}
 	Assert(m_pCurState != nullptr);
 
 	_bool bFirstChange = true;
@@ -179,7 +102,7 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 
 	if (m_fCurTransitionTime < m_fTransitionDuration)
 	{
-		m_pPreState->m_Animation->Update_BonesAtTime(m_fPreStatePlayAt, EAnimUpdateType::NORMAL, bUpdateBone);
+		m_pPreState->m_Animation->Update_BonesAtTime(m_fPreStatePlayAt, EAnimUpdateType::NORMAL);
 
 		m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fCurTransitionTime / m_fTransitionDuration);
 
@@ -187,7 +110,7 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 	}
 	else
 	{
-		m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL, bUpdateBone);
+		m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
 	}
 }
 
@@ -222,7 +145,6 @@ CAnimationStateMachine * CAnimationStateMachine::Create(CASMBuilder * pBuilder)
 {
 	CAnimationStateMachine* pASM = new CAnimationStateMachine;
 	FAILED_CHECK(pASM->Initialize(pBuilder));
-	//Safe_Delete(pBuilder);
 	return pASM;
 }
 
@@ -242,45 +164,50 @@ void CAnimationInstance::PlayAnimationSocket(const string& strSocName, CAnimatio
 	const auto& SocketPair = m_mapAnimSocket.find(strSocName);
 	Assert(SocketPair != m_mapAnimSocket.end());
 
-	if (SocketPair->second)
+	if (SocketPair->second.front())
 	{
-		SocketPair->second->SetFinish();
+		SocketPair->second.front()->SetFinish();
 	}
 
-	SocketPair->second = pAnimation;
-	SocketPair->second->Reset();
-	SocketPair->second->SetPlayTime((_double)fPlayAt);
+	SocketPair->second.front() = pAnimation;
+	SocketPair->second.front()->Reset();
+	SocketPair->second.front()->SetPlayTime((_double)fPlayAt);
 }
 
 void CAnimationInstance::StopAnimationSocket(const string& strSocName)
 {
 	const auto& SocketPair = m_mapAnimSocket.find(strSocName);
 	Assert(SocketPair != m_mapAnimSocket.end());
-	if (SocketPair->second)
+	if (SocketPair->second.front())
 	{
-		SocketPair->second->SetPlayTime(0.0);
-		SocketPair->second->SetFinish();
+		SocketPair->second.front()->SetPlayTime(0.0);
+		SocketPair->second.front()->SetFinish();
 	}
-	SocketPair->second = nullptr;
+	SocketPair->second.front() = nullptr;
 }
 
 CAnimation* CAnimationInstance::GetSocketAnimation(const string& strSocName)
 {
-	return m_mapAnimSocket.find(strSocName)->second;
+	return m_mapAnimSocket.find(strSocName)->second.front();
 }
 
-void CAnimationInstance::CheckFinishedAnimSocket()
+_bool CAnimationInstance::CheckFinishedAnimSocket()
 {
 	for (auto& PairSoc : m_mapAnimSocket)
 	{
-		if (auto pAnim = PairSoc.second)
+		if (PairSoc.second.empty())
+			return false;
+
+		if (auto pAnim = PairSoc.second.front())
 		{
 			if (!pAnim->IsLooping() && pAnim->IsFinished())
 			{
-				PairSoc.second = nullptr;
+				PairSoc.second.pop_front();
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 void CAnimationInstance::Free()

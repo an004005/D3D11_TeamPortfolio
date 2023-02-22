@@ -51,7 +51,8 @@ protected:
 public:
 	virtual HRESULT	Initialize(class CASMBuilder* pBuilder);
 	void Tick(_double TimeDelta, _bool bUpdateBone = true);													// 스테이트머신 업데이트
-	void SetCurState(CAnimState* pCurState) { m_pCurState = pCurState; }									// 현재 상태 설정
+	void SetCurState(CAnimState* pCurState) { m_pCurState = pCurState; }			// 현재 상태 설정
+	void SetCurState(const string& stateName) { m_pCurState = m_mapStates[stateName]; }
 	CAnimState* GetState(const string& stateName);															// 특정 상태 가져오기
 	void Imgui_RenderState();
 
@@ -113,13 +114,13 @@ public:
 	CAnimation* GetSocketAnimation(const string& strSocName);
 
 protected:
-	void CheckFinishedAnimSocket();
+	_bool CheckFinishedAnimSocket();
 
 protected:
 	CModel* m_pModel = nullptr;
 	CGameObject* m_pTargetObject = nullptr;
 
-	unordered_map<string, CAnimation*> m_mapAnimSocket;
+	unordered_map<string, list<CAnimation*>> m_mapAnimSocket;
 
 
 public:

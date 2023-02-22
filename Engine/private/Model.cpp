@@ -118,7 +118,7 @@ _vector & CModel::GetLocalMove(_fmatrix WorldMatrix)
 			m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
-		if (1.f <= m_mapAnimation[m_CurAnimName]->GetPlayRatio())
+		if (m_mapAnimation[m_CurAnimName]->IsFinished())
 		{
 			m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);

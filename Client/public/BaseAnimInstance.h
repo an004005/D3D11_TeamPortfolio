@@ -14,6 +14,9 @@ public:
 
 	virtual void Imgui_RenderState() override;
 
+public:
+	void	InputAnimSocket(const string& strSocName, list<CAnimation*> AnimList);
+
 protected:	// 대상의 상태
 	_bool	m_bAir = false;
 	_bool	m_bPreAir = false;
@@ -22,6 +25,10 @@ protected:	// 대상의 상태
 	_bool	m_bWalk = false;
 
 	CAnimationStateMachine* m_pASM_Base = nullptr;
+
+protected:
+	_float	m_fLerpTime = 0.f;
+	_float	m_fLerpDuration = 0.2f;
 
 public:
 	static CBaseAnimInstance* Create(CModel* pModel, CGameObject* pGameObject);
