@@ -22,8 +22,6 @@ enum class EBoneMask
 	BONE_MASK_END
 };
 
-
-
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
@@ -42,6 +40,7 @@ public:
 	_float4x4 GetPivotMatrix() const { return m_PivotMatrix; }
 	CAnimation* Find_Animation(const string& strAnimaName);
 	void SetPivot(_float4x4 Pivot) { m_PivotMatrix = Pivot; }
+	_vector& GetLocalMove(_fmatrix WorldMatrix);
 
 public:
 	virtual HRESULT Initialize_Prototype(const char* pModelFilePath);
@@ -51,6 +50,7 @@ public:
 public:
 	void SetPlayAnimation(const string& strAnimName);
 	CAnimation* GetPlayAnimation();
+	void SetCurAnimName(const string& strAnimName);
 
 	void Play_Animation(_double TimeDelta);
 	void Play_Animation_Test(_double TimeDelta);
@@ -105,6 +105,9 @@ private:
 
 	KEYFRAME							m_CurKeyFrame;
 	KEYFRAME							m_BefKeyFrame;
+
+	_vector								m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	_vector								m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 
 	class CShader* m_pShadowShader = nullptr;
 

@@ -97,6 +97,12 @@
     <Filter Include="97.ShaderFiles\Shadow">
       <UniqueIdentifier>{de99238f-264e-4f79-877c-728ea5e89b86}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Player\AnimInstance">
+      <UniqueIdentifier>{f7c4a316-58ff-44eb-bc6b-94195c17f0cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\20.PlayerTester">
+      <UniqueIdentifier>{c5cff968-b07f-4b9d-86c2-f5fbff38b7af}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Monster">
       <UniqueIdentifier>{2dcdfb98-a83e-4081-837c-3a6545dabb97}</UniqueIdentifier>
     </Filter>
@@ -213,6 +219,12 @@
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BaseAnimInstance.h">
+      <Filter>02.GameObjects\Player\AnimInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_PlayerTest.h">
+      <Filter>01.Levels\20.PlayerTester</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\TestMonster.h">
       <Filter>02.GameObjects\Monster\TestMonster%28Goat%29</Filter>
     </ClInclude>
@@ -304,6 +316,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BaseAnimInstance.cpp">
+      <Filter>02.GameObjects\Player\AnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_PlayerTest.cpp">
+      <Filter>01.Levels\20.PlayerTester</Filter>
     </ClCompile>
     <ClCompile Include="..\private\TestMonster.cpp">
       <Filter>02.GameObjects\Monster\TestMonster%28Goat%29</Filter>

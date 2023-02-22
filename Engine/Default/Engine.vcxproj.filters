@@ -453,6 +453,9 @@
     <ClInclude Include="..\public\Sound_Manager.h">
       <Filter>01.Utility\10.Sound</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\AnimationInstance.h">
+      <Filter>01.Utility\03.Components\06.Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -721,6 +724,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Sound_Manager.cpp">
       <Filter>01.Utility\10.Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AnimationInstance.cpp">
+      <Filter>01.Utility\03.Components\06.Model</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

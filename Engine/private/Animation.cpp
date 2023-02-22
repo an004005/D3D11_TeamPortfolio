@@ -96,6 +96,12 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 		for (const auto pChannel : m_Channels)
 		{
 			pChannel->Update_TransformMatrix(m_PlayTime);
+
+			// 로컬 이동 채널로부터	받아옴
+			if ("Reference" == pChannel->GetChannelName())
+			{
+				m_vLocalMove = pChannel->GetLocalMove();
+			}
 		}
 		// 이벤트 실행
 		for (auto& iter : m_vecEvent)
@@ -110,6 +116,12 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 		for (const auto pChannel : m_Channels)
 		{
 			pChannel->Blend_TransformMatrix(m_PlayTime, fRatio);
+
+			if ("Reference" == pChannel->GetChannelName())
+			{
+				m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+				//m_vLocalMove = pChannel->GetLocalMove();
+			}
 		}
 		break;
 	case EAnimUpdateType::ADDITIVE:
