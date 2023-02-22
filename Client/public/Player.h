@@ -41,6 +41,10 @@ protected:
 	CModel*				m_pModel = nullptr;
 
 protected:
+	HRESULT				Setup_AnimSocket();
+	list<CAnimation*>	m_TestAnimSocket;
+
+protected:
 	_bool			m_bAir = false;
 	_bool			m_PreAir = false;
 	_bool			m_bMove = false;
