@@ -36,6 +36,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
+	if (FAILED(Setup_AnimSocket()))
+		return E_FAIL;
+
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(90.f) });
 
 	return S_OK;
@@ -54,6 +57,11 @@ void CPlayer::Tick(_double TimeDelta)
 	else
 	{
 		m_bWalk = false;
+	}
+
+	if (pGameInstance->KeyDown(DIK_SPACE))
+	{
+		m_pASM->InputAnimSocket("AnimSocket_Test", m_TestAnimSocket);
 	}
 
 	m_pASM->Tick(TimeDelta);
@@ -97,6 +105,21 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	m_pASM = CBaseAnimInstance::Create(m_pModel, this);
 	if (nullptr == m_pASM)
 		MSG_BOX("FAIL");
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Setup_AnimSocket()
+{
+	CAnimation*	pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_011_AL_walk_start_F"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_016_AL_walk"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_018_AL_walk_end"));
+
+	m_TestAnimSocket.push_back(pAnimation = m_pModel->Find_Animation("AS_ch0100_011_AL_walk_start_F"));
+	m_TestAnimSocket.push_back(pAnimation = m_pModel->Find_Animation("AS_ch0100_016_AL_walk"));
+	m_TestAnimSocket.push_back(pAnimation = m_pModel->Find_Animation("AS_ch0100_018_AL_walk_end"));
 
 	return S_OK;
 }

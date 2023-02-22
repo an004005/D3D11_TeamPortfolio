@@ -33,6 +33,8 @@ HRESULT CChannel::Initialize(HANDLE hFile)
 		m_KeyFrames.push_back(buffer);
 	}
 
+	m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+
 	return S_OK;
 }
 

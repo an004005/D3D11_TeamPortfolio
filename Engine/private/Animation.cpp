@@ -28,8 +28,8 @@ CAnimation CAnimation::s_NullAnimation;
 const string CAnimation::s_ModifyFilePath = "../Bin/Resources/Meshes/Scarlet_Nexus/AnimationModifier.json";
 
 CAnimation::CAnimation()
-	: m_bFinished(true)
-	, m_bLooping(true)
+	: m_bFinished(false)
+	, m_bLooping(false)
 {
 }
 
@@ -39,6 +39,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_TickPerSecond(rhs.m_TickPerSecond)
 	, m_bFinished(rhs.m_bFinished)
 	, m_bLooping(rhs.m_bLooping)
+	, m_vLocalMove(rhs.m_vLocalMove)
 {
 	m_Channels.reserve(rhs.m_Channels.size());
 	for (auto& channel : rhs.m_Channels)
@@ -76,6 +77,9 @@ HRESULT CAnimation::Initialize(const char* pAnimFilePath)
 	}
 
 	CloseHandle(hFile);
+
+	m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+
 	return S_OK;
 }
 
@@ -120,7 +124,7 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 			if ("Reference" == pChannel->GetChannelName())
 			{
 				m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-				//m_vLocalMove = pChannel->GetLocalMove();
+				m_vLocalMove = pChannel->GetLocalMove();
 			}
 		}
 		break;
