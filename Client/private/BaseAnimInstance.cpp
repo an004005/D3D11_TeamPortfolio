@@ -18,14 +18,23 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 		.AddState("WALK")
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_051_AL_dodge_F_start"))
+
 		.AddTransition("WALK to IDLE", "IDLE")
 		.Priority(0)
 		.Predicator([&]()->_bool { return !m_bWalk; })
 		.Duration(0.2f)
+
+		/*.AddTransition("WALK END", "IDLE")
+		.Priority(1)
+		.Predicator([&]()->_bool { return m_pASM_Base->GetCurState()->m_Animation->GetPlayRatio() >= 1.f ? true : false; })
+		.Duration(0.2f)*/
+
 		.Build();
 
+	m_pASM_Base->SetCurState("IDLE");
 
-	m_mapAnimSocket.emplace("AnimSocket_KnuckBack", nullptr);
+	list<CAnimation*> SocketList;
+	m_mapAnimSocket.emplace("AnimSocket_Test", SocketList);
 
 	return S_OK;
 }
@@ -34,12 +43,50 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 {
 	UpdateTargetState(TimeDelta);
 
-	m_pASM_Base->Tick(TimeDelta);
-	m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+	_bool bChange = CheckFinishedAnimSocket();
+	_bool bLocalMove = true;
+
+	if (!m_mapAnimSocket.find("AnimSocket_Test")->second.empty())
+	{
+		auto Socket = m_mapAnimSocket.find("AnimSocket_Test")->second.front();
+		if (bChange)
+		{
+			Socket = m_mapAnimSocket.find("AnimSocket_Test")->second.front();
+			m_pModel->SetPlayAnimation(Socket->GetName());
+			m_pModel->SetCurAnimName(Socket->GetName());
+			m_fLerpTime = 0.f;
+		}
+
+		if (1.f > m_fLerpTime / m_fLerpDuration)
+		{
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+			m_fLerpTime += TimeDelta;
+		}
+		else
+		{
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+		}
+	}
+	else if (bChange)
+	{
+		bLocalMove = false;
+		m_pASM_Base->SetCurState("IDLE");
+		m_pASM_Base->GetCurState()->m_Animation->Reset();
+		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+	}
+	else
+	{
+		m_pASM_Base->Tick(TimeDelta);
+		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+	}
+
 	m_pModel->Compute_CombindTransformationMatrix();
 
-	_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
-	m_pTargetObject->GetTransform()->LocalMove(m_pModel->GetLocalMove(WorldMatrix));
+	if (bLocalMove)
+	{
+		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+		m_pTargetObject->GetTransform()->LocalMove(m_pModel->GetLocalMove(WorldMatrix));
+	}
 }
 
 void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
@@ -57,6 +104,11 @@ void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
 
 void CBaseAnimInstance::Imgui_RenderState()
 {
+}
+
+void CBaseAnimInstance::InputAnimSocket(const string& strSocName, list<CAnimation*> AnimList)
+{
+	m_mapAnimSocket[strSocName] = (AnimList);
 }
 
 CBaseAnimInstance * CBaseAnimInstance::Create(CModel * pModel, CGameObject * pGameObject)
