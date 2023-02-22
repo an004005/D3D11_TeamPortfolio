@@ -182,6 +182,7 @@
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
     <ClInclude Include="..\public\Floors.h" />
+    <ClInclude Include="..\public\FlowerLeg.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
     <ClInclude Include="..\public\Imgui_LevelSwitcher.h" />
     <ClInclude Include="..\public\Imgui_MapEditor.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="..\public\Level_AnimModify.h" />
     <ClInclude Include="..\public\Level_Converter.h" />
     <ClInclude Include="..\public\Level_Effect.h" />
+    <ClInclude Include="..\public\Level_EnemiesTest.h" />
     <ClInclude Include="..\public\Level_GamePlay.h" />
     <ClInclude Include="..\public\Level_Loading_MultiPlay.h" />
     <ClInclude Include="..\public\Level_Loading_Simple.h" />
@@ -216,6 +218,7 @@
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\Floors.cpp" />
+    <ClCompile Include="..\private\FlowerLeg.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
     <ClCompile Include="..\private\Imgui_LevelSwitcher.cpp" />
     <ClCompile Include="..\private\Imgui_MapEditor.cpp" />
@@ -223,6 +226,7 @@
     <ClCompile Include="..\private\Level_AnimModify.cpp" />
     <ClCompile Include="..\private\Level_Converter.cpp" />
     <ClCompile Include="..\private\Level_Effect.cpp" />
+    <ClCompile Include="..\private\Level_EnemiesTest.cpp" />
     <ClCompile Include="..\private\Level_GamePlay.cpp" />
     <ClCompile Include="..\private\Level_Loading_MultiPlay.cpp" />
     <ClCompile Include="..\private\Level_Loading_Simple.cpp" />

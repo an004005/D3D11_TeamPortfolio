@@ -157,27 +157,27 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	}
 
-	// 23.02.20 PJW Work
+	//// 23.02.20 PJW Work
 
-	{														// Bin\Resources\Model\AnimModel\Monster\Goat
-		auto pGoat = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/AnimModel/Monster/Goat/Goat.anim_model",
-			_float4x4::CreateScale({ 0.1f, 0.1f, 0.1f }));
-		pGoat->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/Goat/Anim/"); // Bin\Resources\Model\AnimModel\Monster\Goat\Anim
-		pGameInstance->Add_Prototype(TEXT("TestMonsterGoat"), pGoat);
-	}
+	//{														// Bin\Resources\Model\AnimModel\Monster\Goat
+	//	auto pGoat = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/AnimModel/Monster/Goat/Goat.anim_model",
+	//		_float4x4::CreateScale({ 0.1f, 0.1f, 0.1f }));
+	//	pGoat->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/Goat/Anim/"); // Bin\Resources\Model\AnimModel\Monster\Goat\Anim
+	//	pGameInstance->Add_Prototype(TEXT("TestMonsterGoat"), pGoat);
+	//}
 
-	{														// \Bin\Resources\Model\AnimModel\Monster\FlowerLeg
-		auto pFlowerLeg = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/FlowerLeg.anim_model",
-			_float4x4::CreateScale({ 0.1f, 0.1f, 0.1f }));
-		pFlowerLeg->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Anim/"); // \Bin\Resources\Model\AnimModel\Monster\FlowerLeg\Anim
-		pGameInstance->Add_Prototype(TEXT("MonsterFlowerLeg"), pFlowerLeg);
-	}
+	//{														// \Bin\Resources\Model\AnimModel\Monster\FlowerLeg
+	//	auto pFlowerLeg = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/FlowerLeg.anim_model",
+	//		_float4x4::CreateScale({ 0.1f, 0.1f, 0.1f }));
+	//	pFlowerLeg->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Anim/"); // \Bin\Resources\Model\AnimModel\Monster\FlowerLeg\Anim
+	//	pGameInstance->Add_Prototype(TEXT("MonsterFlowerLeg"), pFlowerLeg);
+	//}
 
-	pGameInstance->Add_Prototype(TEXT("TestMonster"), CTestMonster::Create(m_pDevice, m_pContext));
+	//pGameInstance->Add_Prototype(TEXT("TestMonster"), CTestMonster::Create(m_pDevice, m_pContext));
 
-	// Model Component Origin Create
+	//// Model Component Origin Create
 
-	// ~23.02.20 PJW Work
+	//// ~23.02.20 PJW Work
 
 	return S_OK;
 }
@@ -216,13 +216,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	/*Json PreviewData;
-	PreviewData["Object"] = "TestMonster";
+	PreviewData["Model"] = "Monster";
 	pGameInstance->Clone_GameObject(pLayerTag, L"TestMonster", &PreviewData);*/
 
-	if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
+	/*if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
 		return E_FAIL;
 
-	RELEASE_INSTANCE(CGameInstance);
+	RELEASE_INSTANCE(CGameInstance);*/
 
 	return S_OK;
 }

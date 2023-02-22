@@ -100,7 +100,13 @@
     <Filter Include="02.GameObjects\Monster">
       <UniqueIdentifier>{2dcdfb98-a83e-4081-837c-3a6545dabb97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster\TestMonster">
+    <Filter Include="01.Levels\50.MonsterTest">
+      <UniqueIdentifier>{56794968-d655-499b-a8e5-20af1ee1495e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg">
+      <UniqueIdentifier>{3386faa1-76ca-4e3d-88fc-b10d3335d21c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\TestMonster%28Goat%29">
       <UniqueIdentifier>{745e34b2-083b-4b07-a6e4-087ec47d99ea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -208,7 +214,13 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\TestMonster.h">
-      <Filter>02.GameObjects\Monster\TestMonster</Filter>
+      <Filter>02.GameObjects\Monster\TestMonster%28Goat%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_EnemiesTest.h">
+      <Filter>01.Levels\50.MonsterTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FlowerLeg.h">
+      <Filter>02.GameObjects\Monster\FlowerLeg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -294,7 +306,13 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\TestMonster.cpp">
-      <Filter>02.GameObjects\Monster\TestMonster</Filter>
+      <Filter>02.GameObjects\Monster\TestMonster%28Goat%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_EnemiesTest.cpp">
+      <Filter>01.Levels\50.MonsterTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FlowerLeg.cpp">
+      <Filter>02.GameObjects\Monster\FlowerLeg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
