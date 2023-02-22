@@ -101,7 +101,8 @@ void CTransform::SaveToJson(Json& json)
 
 void CTransform::LoadFromJson(const Json& json)
 {
-	m_WorldMatrix = json["Transform"]["WorldMatrix"];
+	if (json.contains("Transform"))
+		m_WorldMatrix = json["Transform"]["WorldMatrix"];
 }
 
 void CTransform::Go_Straight(_double TimeDelta)

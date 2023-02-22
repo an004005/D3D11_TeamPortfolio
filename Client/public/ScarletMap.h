@@ -2,7 +2,8 @@
 #include "GameObject.h"
 #include "Client_Defines.h"
 
-//맵 저장, 불러오기 담당
+//맵 저장, 불러오기, 오브젝트 생성
+//Map Editor 역할(그럴거면 맵 에디터를 만들지..)
 
 enum COMPONENTS {
 	PSYCOKINESIS,
@@ -23,7 +24,9 @@ public:
 	void Late_Tick(_double TimeDelta) override;
 	HRESULT Render() override;
 	void Imgui_RenderProperty() override;
-	
+	virtual void LoadFromJson(const Json& json) override;
+
+
 public:
 	void	LoadMap(const _tchar* pMapPath, LEVEL eLevel);
 	void	SaveMap(const _tchar* pMapPath);
@@ -31,14 +34,13 @@ public:
 
 private:
 	HRESULT SetUp_Components();
-	void	Create_MapNonAnim_Object();
 
 private:
-	map<const _tchar*, CGameObject*>	m_pMapProtos;
+	map<const _tchar*, CGameObject*>	m_pModelProtos;
 	array<_bool, COMPONENTS_END>		m_eComponents;
 
-	const _tchar*						m_pMapProtoTag = nullptr;
-
+	const _tchar*						m_pModelProtoTag = nullptr;
+	CGameObject* 						m_pGameObject = nullptr;
 public:
 	static CScarletMap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr) override;

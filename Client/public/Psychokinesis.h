@@ -1,5 +1,8 @@
 #pragma once
 #include "Component.h"
+#include "Client_Defines.h"
+
+BEGIN(Client)
 class CPsychokinesis : public CComponent
 {
 private:
@@ -19,3 +22,5 @@ public:
 
 };
 
+
+END

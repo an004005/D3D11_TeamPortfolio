@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\public\MapObject.h"
 #include "GameInstance.h"
+#include "Psychokinesis.h"
+#include "JsonLib.h"
 
 CMapObject::CMapObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
@@ -43,7 +45,6 @@ void CMapObject::Late_Tick(_double TimeDelta)
 
 	if (m_pRendererCom != nullptr)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
 }
 
 HRESULT CMapObject::Render()
@@ -55,6 +56,12 @@ HRESULT CMapObject::Render()
 	return S_OK;
 }
 
+void CMapObject::LoadFromJson(const Json & json)
+{
+	__super::LoadFromJson(json);
+	m_strModelTag = s2ws(json["ModelTag"]);
+}
+
 HRESULT CMapObject::SetUp_Components()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -64,12 +71,8 @@ HRESULT CMapObject::SetUp_Components()
 		(CComponent**)&m_pRendererCom));
 
 	/* For. Com_Model*/
-	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, /*m_pModelTag*/TEXT("big_building"), TEXT("Com_Model"),
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_strModelTag.c_str(), TEXT("Com_Model"),
 		(CComponent**)&m_pModelCom));
-
-	/* For. Com_Shader*/
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel") , TEXT("Com_Shader"),
-		(CComponent**)&m_pShaderCom));
 
 	/* For. Com_Psycokinesis*/
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Psycokinesis"), TEXT("Com_Psycokinesis"),
@@ -81,4 +84,8 @@ HRESULT CMapObject::SetUp_Components()
 void CMapObject::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pModelCom);
+	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pPsycokinesisCom);
 }
