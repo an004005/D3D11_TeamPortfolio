@@ -109,6 +109,15 @@
     <Filter Include="VFX\Effect\Parent">
       <UniqueIdentifier>{ebd31f6e-1e78-408a-9670-616c928bb21b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Map\MapObject">
+      <UniqueIdentifier>{4f82786f-f101-4eee-ad17-ae1f4daa78d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map\MapObject\MapNonAnimObject">
+      <UniqueIdentifier>{f0a8da97-16ac-4cd9-b740-36ca82718601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.Component\02. Psychokinesis">
+      <UniqueIdentifier>{746a1bc6-0b47-4e7e-8cf3-715a03cb1af0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -221,6 +230,21 @@
     </ClInclude>
     <ClInclude Include="..\public\Effect.h">
       <Filter>VFX\Effect\Parent</Filter>
+	</ClInclude>
+    <ClInclude Include="..\public\ScarletMap.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h">
+      <Filter>02.GameObjects\Map\MapObject\MapNonAnimObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Psychokinesis.h">
+      <Filter>50.Component\02. Psychokinesis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EffectSystem.h" />
   </ItemGroup>
@@ -314,6 +338,21 @@
     </ClCompile>
     <ClCompile Include="..\private\Effect.cpp">
       <Filter>VFX\Effect\Parent</Filter>
+	</ClCompile>
+    <ClCompile Include="..\private\ScarletMap.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
+      <Filter>02.GameObjects\Map\MapObject\MapNonAnimObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Psychokinesis.cpp">
+      <Filter>50.Component\02. Psychokinesis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EffectSystem.cpp" />
   </ItemGroup>

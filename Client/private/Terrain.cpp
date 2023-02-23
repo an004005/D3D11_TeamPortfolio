@@ -221,12 +221,11 @@ HRESULT CTerrain::SetUp_Components()
 		(CComponent**)&m_pRendererCom))
 
 	/* For.Com_Shader */
-	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_Shader_VtxNorTex"), TEXT("Com_Shader"),
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"), TEXT("Com_Shader"),
 		(CComponent**)&m_pShaderCom))
 
-
 	/* For.Com_VIBuffer */
-	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer"),
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer"),
 		(CComponent**)&m_pVIBufferCom))
 
 	/* For.Com_Texture */
@@ -243,9 +242,6 @@ HRESULT CTerrain::SetUp_Components()
 
 	// m_pTextureCom[TYPE_FILTER] = CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Terrain/Filter.bmp");
 
-
-
-	
 
 	return S_OK;
 }
@@ -282,7 +278,7 @@ HRESULT CTerrain::SetUp_ShaderResources()
 	FAILED_CHECK(m_pTextureCom[TYPE_DIFFUSE]->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTexture"))
 	FAILED_CHECK(m_pTextureCom[TYPE_BRUSH]->Bind_ShaderResource(m_pShaderCom, "g_BrushTexture", 0))
 	// FAILED_CHECK(m_pTextureCom[TYPE_FILTER]->Bind_ShaderResource(m_pShaderCom, "g_FilterTexture", 0))
-	FAILED_CHECK(m_pShaderCom->Set_ShaderResourceView("g_FilterTexture", m_pFilterSRV)) 
+	//FAILED_CHECK(m_pShaderCom->Set_ShaderResourceView("g_FilterTexture", m_pFilterSRV)) 
 
 	FAILED_CHECK(m_pShaderCom->Set_RawValue("g_bEditMode", &m_bEditMode, sizeof(_uint)))
 	FAILED_CHECK(m_pShaderCom->Set_RawValue("g_fBrushRange", &m_fBrushRange, sizeof(_float)))
