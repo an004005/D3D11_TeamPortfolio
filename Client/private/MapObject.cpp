@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "Psychokinesis.h"
 #include "JsonLib.h"
-
+#include "Material.h"
 CMapObject::CMapObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
 {
@@ -54,6 +54,22 @@ HRESULT CMapObject::Render()
 	m_pModelCom->Render(m_pTransformCom);
 
 	return S_OK;
+}
+
+void CMapObject::Imgui_RenderProperty()
+{
+	__super::Imgui_RenderProperty();
+
+	if (ImGui::Button("WireFrame"))
+	{
+		auto Materials = m_pModelCom->GetMaterials();
+
+		for (auto material : Materials)
+		{
+			material->GetParam().iPass = 3;
+		}
+
+	}
 }
 
 void CMapObject::LoadFromJson(const Json & json)

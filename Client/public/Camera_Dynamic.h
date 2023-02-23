@@ -26,6 +26,11 @@ public:
 
 private:
 	HRESULT SetUp_Components();
+	
+private:
+	_float		m_fMouseSpeed = 0.03f;
+	_float		m_fSpeedPerSec = 10.f;
+
 public:
 	static CCamera_Dynamic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

@@ -102,6 +102,9 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	/* For. MID_buildbase_M_01 */
 	FAILED_CHECK(Create_Model(TEXT("MID_buildbase_M_01"), "../Bin/Resources/Model/StaticModel/Buildings/MID_buildbase_M_01.static_model"));
 
+	/* For. LC01_Area02_Minimap */
+	FAILED_CHECK(Create_Model(TEXT("LC01_Area02_Minimap"), "../Bin/Resources/Model/StaticModel/Minimaps/LC01_Area02_Minimap.static_model"));
+
 	return S_OK;
 }
 

@@ -29,7 +29,7 @@ HRESULT CCamera_Dynamic::Initialize(void * pArg)
 		return E_FAIL;
 
 	CTransform::TRANSFORMDESC desc;
-	desc.fSpeedPerSec = 6.f;
+	desc.fSpeedPerSec = m_fSpeedPerSec;
 	desc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	m_pTransformCom->SetTransformDesc(desc);
@@ -78,15 +78,17 @@ void CCamera_Dynamic::Tick(_double TimeDelta)
 		{
 			if (MouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMS_X))
 			{
-				m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta * MouseMove * 0.1f);
+				m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta * MouseMove * m_fMouseSpeed);
 			}
 
 			if (MouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMS_Y))
 			{
-				m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), TimeDelta * MouseMove * 0.1f);
+				m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), TimeDelta * MouseMove * m_fMouseSpeed);
 			}
 		}
 	}
+
+	m_pTransformCom->SetSpeed(m_fSpeedPerSec);
 }
 
 void CCamera_Dynamic::Late_Tick(_double TimeDelta)
@@ -105,6 +107,9 @@ HRESULT CCamera_Dynamic::Render()
 void CCamera_Dynamic::Imgui_RenderProperty()
 {
 	CCamera::Imgui_RenderProperty();
+
+	ImGui::SliderFloat("MouseSpeed", &m_fMouseSpeed, 0.01f, 0.1f);
+	ImGui::SliderFloat("KeyBoardSpeed", &m_fSpeedPerSec, 5.f, 20.f);
 }
 
 HRESULT CCamera_Dynamic::SetUp_Components()
