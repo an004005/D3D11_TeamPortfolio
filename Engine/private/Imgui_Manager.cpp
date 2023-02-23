@@ -139,7 +139,7 @@ void CImgui_Manager::Tick_Imgui()
 	ImGui::NewFrame();
 	ImGuizmo::BeginFrame();
 
-	ImGui::ShowStyleEditor();
+	//ImGui::ShowStyleEditor();
 }
 
 void CImgui_Manager::Render_Imgui()

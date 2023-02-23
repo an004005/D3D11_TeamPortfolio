@@ -74,7 +74,7 @@ void CCanvas::Imgui_RenderProperty()
 	static char szChildName[MAX_PATH]{};
 	ImGui::InputText("ChildName", szChildName, MAX_PATH);
 
-	if (ImGui::Button("Add Empty UI"))
+	if (ImGui::Button("Add Empty UI"))	// 캔버스 안 에서 유아이를 생성한다.
 	{
 		wstring childTag = s2ws(szChildName);
 		wstring childPrototypeTag = s2ws(szChildProtoName);
@@ -83,7 +83,7 @@ void CCanvas::Imgui_RenderProperty()
 			Add_ChildUI(LEVEL_NOW, childPrototypeTag.c_str(), childTag.c_str());
 	}
 
-	if (ImGui::BeginListBox("UI List"))
+	if (ImGui::BeginListBox("UI List"))	// 캔버스 안 에서 생성한 유아이를 확인한다.
 	{
 	
 		for (auto& UI : m_mapChildUIs)
@@ -105,7 +105,7 @@ void CCanvas::Imgui_RenderProperty()
 		ImGui::EndListBox();
 	}
 
-	ImGui::BeginChild("ChildUIProperty", { 500.f, 500.f }, true);
+	ImGui::BeginChild("ChildUIProperty", { 500.f, 500.f }, true);	// 유아이의 정보를 확인 및 수정 가능하다.
 	if (m_pUI)
 	{
 		ImGui::Separator();

@@ -50,21 +50,18 @@ HRESULT CDefaultUI::Render()
 void CDefaultUI::Imgui_RenderProperty()
 {
 	CUI::Imgui_RenderProperty();
-	CShader::Imgui_RenderShaderParams(m_tParams);
 
 }
 
 void CDefaultUI::SaveToJson(Json & json)
 {
-	__super::SaveToJson(json);
-	CShader::SaveShaderParam(m_tParams, json);
+	CUI::SaveToJson(json);
 
 }
 
 void CDefaultUI::LoadFromJson(const Json & json)
 {
-	__super::LoadFromJson(json);
-	CShader::LoadShaderParam(m_tParams, json);
+	CUI::LoadFromJson(json);
 
 }
 

@@ -27,6 +27,8 @@ HRESULT CCanvas_PlayerInfo::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	m_ePivot = UI_PIVOT::BOT;
+
 	return S_OK;
 }
 

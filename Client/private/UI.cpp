@@ -50,20 +50,15 @@ HRESULT CUI::Initialize(void * pArg)
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;	
-	
-	m_fX = 0.5f;
-	m_fY = 0.5f;
-	m_fSizeX = 100.0f;
-	m_fSizeY = 100.0f;
-
-	m_ImguiInfo.fPosition.x = (_float)g_iWinSizeX * m_fX;
-	m_ImguiInfo.fPosition.y = (_float)g_iWinSizeY * m_fY;
 
 	m_pTransformCom->Set_Scaled(_float3(m_fSizeX, m_fSizeY, 1.f));
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet((_float)g_iWinSizeX * m_fX, (_float)g_iWinSizeY * m_fY, 0.f, 1.f));
 
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
+
+	//m_ePivot = UI_PIVOT::CENTER;
+	m_CanvasSize = CanvasRect{ 0.f, 0.f, (_float)g_iWinSizeX * 0.5f, (_float)g_iWinSizeY * 0.5f };
 
 	return S_OK;
 }
@@ -72,8 +67,13 @@ void CUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	m_pTransformCom->Set_Scaled(_float3(m_fSizeX, m_fSizeY, 1.f));
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet((_float)g_iWinSizeX * m_fX, (_float)g_iWinSizeY * m_fY, 0.f, 1.f));
+	const _float2 PivotPair = GetPivotXY(m_ePivot);
+
+	if (0.1f > m_vScale.x || 0.1f > m_vScale.y)	
+		return; // 텍스처의 스케일을 조정할 때 0.0f 보다 작아지면 그 다음부터 0 * m_vScale.y 이 되기 때문에 0.1f 보다 작은 경우에는 return 시킨다.
+
+	m_pTransformCom->Set_Scaled(_float3(m_fSizeX * m_vScale.x, m_fSizeY * m_vScale.y, 1.f));
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fX + PivotPair.x, m_fY + PivotPair.y, 0.f, 1.f));
 }
 
 void CUI::Late_Tick(_double TimeDelta)
@@ -101,7 +101,41 @@ HRESULT CUI::Render()
 void CUI::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
-	CUI::Imgui_UIInfo();
+	CShader::Imgui_RenderShaderParams(m_tParams);
+
+	ImGui::Separator();
+	static array<const char*, UI_PIVOT_CNT> arrPivotName {
+		"CENTER", "LEFT TOP", "TOP", "RIGHT_TOP", "RIGHT", "RIGHT BOT", "BOT", "LEFT BOT", "LEFT"
+	};
+
+	ImGui::Checkbox("Visible", &m_bVisible);
+	_int iPriority = m_iPriority;
+	ImGui::InputInt("Priority", &iPriority);
+	m_iPriority = iPriority;
+
+	if (ImGui::BeginCombo("Pivot", arrPivotName[static_cast<_uint>(m_ePivot)]))
+	{
+		for (int i = 0; i < UI_PIVOT_CNT; ++i)
+		{
+			const bool bSelected = false;
+			if (ImGui::Selectable(arrPivotName[i], bSelected))
+				m_ePivot = static_cast<UI_PIVOT>(i);
+		}
+
+		ImGui::EndCombo();
+	}
+
+	ImGui::Separator();
+	ImGui::DragFloat("pos X", &m_fX);
+	ImGui::DragFloat("pos Y", &m_fY);
+	ImGui::DragFloat("Size X", &m_fSizeX);
+	ImGui::DragFloat("Size Y", &m_fSizeY);
+
+	ImGui::Separator();
+	ImGui::DragFloat("Scale X", &m_vScale.x, 0.01f, 0.1f, 1.0f);
+	ImGui::DragFloat("Scale Y", &m_vScale.y, 0.01f, 0.1f, 1.0f);
+
+	ImGui::Separator();
 }
 
 void CUI::SaveToJson(Json & json)
@@ -113,6 +147,10 @@ void CUI::SaveToJson(Json & json)
 	json["PositionY"] = m_fY;
 	json["SizeX"] = m_fSizeX;
 	json["SizeY"] = m_fSizeY;
+	json["ScaleX"] = m_vScale.x;
+	json["ScaleY"] = m_vScale.y;
+	json["Priority"] = m_iPriority;
+	json["Pivot"] = static_cast<_uint>(m_ePivot);
 }
 
 void CUI::LoadFromJson(const Json & json)
@@ -124,6 +162,10 @@ void CUI::LoadFromJson(const Json & json)
 	m_fY = json["PositionY"];
 	m_fSizeX = json["SizeX"];
 	m_fSizeY = json["SizeY"];
+	m_vScale.x = json["ScaleX"];
+	m_vScale.y = json["ScaleY"];
+	m_iPriority = json["Priority"];
+	m_ePivot = static_cast<UI_PIVOT>(json["Pivot"]);
 }
 
 HRESULT CUI::SetUp_Components()
@@ -161,40 +203,56 @@ HRESULT CUI::SetUp_ShaderResources()
 	return S_OK;
 }
 
-void CUI::Imgui_UIInfo()
+_float2 CUI::GetPivotXY(UI_PIVOT ePivot) const
 {
-	if (m_ImguiInfo.bModify)
+	_float2 vPivotXY{ 0.f, 0.f };
+
+	switch (ePivot)
 	{
-		m_fX = m_ImguiInfo.fPosition.x;
-		m_fY = m_ImguiInfo.fPosition.y;
-		m_fSizeX = m_ImguiInfo.fSize.x;
-		m_fSizeY = m_ImguiInfo.fSize.y;
+	case UI_PIVOT::CENTER:
+		vPivotXY.x = m_CanvasSize.fCenterX;
+		vPivotXY.y = m_CanvasSize.fCenterY;
+		break;
+	case UI_PIVOT::LEFT_TOP:
+		vPivotXY.x = m_CanvasSize.fCenterX - m_CanvasSize.fHalfWidth;
+		vPivotXY.y = m_CanvasSize.fCenterY + m_CanvasSize.fHalfHeight;
+		break;
+	case UI_PIVOT::TOP:
+		vPivotXY.x = m_CanvasSize.fCenterX;
+		vPivotXY.y = m_CanvasSize.fCenterY + m_CanvasSize.fHalfHeight;
+		break;
+	case UI_PIVOT::RIGHT_TOP:
+		vPivotXY.x = m_CanvasSize.fCenterX + m_CanvasSize.fHalfWidth;
+		vPivotXY.y = m_CanvasSize.fCenterY + m_CanvasSize.fHalfHeight;
+		break;
+	case UI_PIVOT::RIGHT:
+		vPivotXY.x = m_CanvasSize.fCenterX + m_CanvasSize.fHalfWidth;
+		vPivotXY.y = m_CanvasSize.fCenterY;
+		break;
+	case UI_PIVOT::RIGHT_BOT:
+		vPivotXY.x = m_CanvasSize.fCenterX + m_CanvasSize.fHalfWidth;
+		vPivotXY.y = m_CanvasSize.fCenterY - m_CanvasSize.fHalfHeight;
+		break;
+	case UI_PIVOT::BOT:
+		vPivotXY.x = m_CanvasSize.fCenterX;
+		vPivotXY.y = m_CanvasSize.fCenterY - m_CanvasSize.fHalfHeight;
+		break;
+	case UI_PIVOT::LEFT_BOT:
+		vPivotXY.x = m_CanvasSize.fCenterX - m_CanvasSize.fHalfWidth;
+		vPivotXY.y = m_CanvasSize.fCenterY - m_CanvasSize.fHalfHeight;
+		break;
+	case UI_PIVOT::LEFT:
+		vPivotXY.x = m_CanvasSize.fCenterX - m_CanvasSize.fHalfWidth;
+		vPivotXY.y = m_CanvasSize.fCenterY;
+		break;
+	case UI_PIVOT::PIVOT_END:
+		FALLTHROUGH
+	default:
+		NODEFAULT
+			break;
 	}
 
-	ImGui::DragFloat("Position X", &m_fX);
-	ImGui::DragFloat("Position Y", &m_fY);
-	ImGui::DragFloat("SizeX", &m_fSizeX);
-	ImGui::DragFloat("SizeY", &m_fSizeY);
-
-	ImGui::Separator();
-	ImGui::Checkbox("UI Move", &m_ImguiInfo.bModify);
-	ImGui::SameLine();
-	if (ImGui::Button("Reset Position"))
-	{
-		m_fX = m_ImguiInfo.fPosition.x;
-		m_fY = m_ImguiInfo.fPosition.y;
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Set Size"))
-	{
-		m_fSizeX *= m_ImguiInfo.fSize.x;
-		m_fSizeY *= m_ImguiInfo.fSize.y;
-	}
-
-	ImGui::DragFloat("Reposition X", &m_ImguiInfo.fPosition.x);
-	ImGui::DragFloat("Reposition Y", &m_ImguiInfo.fPosition.y);
-	ImGui::DragFloat("ReSize X", &m_ImguiInfo.fSize.x);
-	ImGui::DragFloat("ReSize Y", &m_ImguiInfo.fSize.y);
+	return vPivotXY;
 }
 
 void CUI::Free()
