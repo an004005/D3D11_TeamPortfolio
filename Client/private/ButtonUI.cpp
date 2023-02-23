@@ -35,7 +35,7 @@ void CButtonUI::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-	if (true == IsCursorOn(CGameUtils::GetClientCursor()) && pGameInstance->Get_DIMouseState(CInput_Device::DIM_LB))
+	if (true == IsCursorOn(CGameUtils::GetClientCursor()) && pGameInstance->KeyDown(CInput_Device::DIM_LB))
 	{
 		IM_LOG("gg");
 	}
@@ -52,7 +52,7 @@ HRESULT CButtonUI::Render()
 void CButtonUI::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
-
+	CShader::Imgui_RenderShaderParams(m_tParams);
 }
 
 CButtonUI * CButtonUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

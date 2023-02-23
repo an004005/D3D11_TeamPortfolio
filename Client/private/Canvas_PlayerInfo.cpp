@@ -43,7 +43,12 @@ void CCanvas_PlayerInfo::Imgui_RenderProperty()
 
 void CCanvas_PlayerInfo::SaveToJson(Json& json)
 {
+	CCanvas::SaveToJson(json);
+}
 
+void CCanvas_PlayerInfo::LoadFromJson(const Json & json)
+{
+	CCanvas::LoadFromJson(json);
 }
 
 CCanvas_PlayerInfo * CCanvas_PlayerInfo::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

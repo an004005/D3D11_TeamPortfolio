@@ -17,21 +17,13 @@ enum class UI_PIVOT
 	CENTER, LEFT_TOP, TOP, RIGHT_TOP, RIGHT, RIGHT_BOT, BOT, LEFT_BOT, LEFT, PIVOT_END
 };
 
-// 이 UI가 포함되어 있는 캔버스(또는 뷰포트)의 스크린 스페이스의 RECT사이즈
-struct CanvasRect
-{
-	_float fCenterX = 0.f;
-	_float fCenterY = 0.f;
-	_float fHalfWidth = 0.f;
-	_float fHalfHeight = 0.f;
+typedef struct tagImGuiUIInfo {
 
-	CanvasRect() = default;
-	CanvasRect(_float fCenterX, _float fCenterY, _float fHalfWidth, _float fHalfHeight)
-		: fCenterX(fCenterX),
-		fCenterY(fCenterY),
-		fHalfWidth(fHalfWidth),
-		fHalfHeight(fHalfHeight) {}
-};
+	_bool				bModify		= { false };
+	_float2				fPosition = { 1.0f, 1.0f };
+	_float2				fSize		= { 1.0f, 1.0f };
+
+}IMGUIUIINFO;
 
 class CUI abstract : public CGameObject
 {
@@ -61,9 +53,6 @@ public:
 		m_fSizeX = vScale.x; m_fSizeY = vScale.y;
 	}
 
-	void			Set_CanvasSize(CanvasRect CanvasSize) { m_CanvasSize = CanvasSize; }
-	_float2			Get_PivotXY(UI_PIVOT ePivot) const;
-
 	_bool			IsCursorOn(POINT ptClient);
 
 public:
@@ -81,6 +70,8 @@ protected:
 	HRESULT			SetUp_Components();
 	HRESULT			SetUp_ShaderResources();
 
+	void			Imgui_UIInfo();
+
 protected:
 	CShader*			m_pShaderCom = nullptr;
 	CRenderer*			m_pRendererCom = nullptr;
@@ -91,17 +82,15 @@ protected:
 	_float4x4			m_ViewMatrix;
 	_float4x4			m_ProjMatrix;
 
-	CanvasRect			m_CanvasSize;
-
-	_float				m_fX = 0.0f;
-	_float				m_fY = 0.0f;
-	_float				m_fSizeX = 0.0f;
-	_float				m_fSizeY = 0.0f;
+	_float				m_fX = 0.5f;
+	_float				m_fY = 0.5f;
+	_float				m_fSizeX = 100.0f;
+	_float				m_fSizeY = 100.0f;
 
 	_uint				m_iPriority = 0;
 
-	_float2				m_vScale = _float2::One;
-	UI_PIVOT			m_ePivot = UI_PIVOT::CENTER;
+	IMGUIUIINFO			m_ImguiInfo = {};
+
 
 public:
 	virtual CGameObject* Clone(void* pArg = nullptr) override = 0;

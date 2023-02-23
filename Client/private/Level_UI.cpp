@@ -9,7 +9,6 @@
 #include "GameUtils.h"
 
 #include "Camera.h"
-#include "UI_Manager.h"
 
 #include "DefaultUI.h"
 #include "ButtonUI.h"
@@ -118,9 +117,10 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas"));
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/UI/ButtonTest.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_PlayerInfo", &json));
 
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/UI/UI_Dafault.json");
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/UI/def.json");
  //   FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Button_UI", (void*)&json));
 
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)

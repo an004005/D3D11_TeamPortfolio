@@ -49,7 +49,7 @@ HRESULT CDefaultUI::Render()
 
 void CDefaultUI::Imgui_RenderProperty()
 {
-	__super::Imgui_RenderProperty();
+	CUI::Imgui_RenderProperty();
 	CShader::Imgui_RenderShaderParams(m_tParams);
 
 }

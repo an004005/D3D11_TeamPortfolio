@@ -4,8 +4,6 @@
 #include "JsonLib.h"
 #include "JsonStorage.h"
 
-#include "DefaultUI.h"
-
 CCanvas::CCanvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
@@ -28,6 +26,11 @@ HRESULT CCanvas::Initialize(void * pArg)
 {
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
+
+	m_fSizeX = _float(g_iWinSizeX);
+	m_fSizeY = _float(g_iWinSizeY);
+
+	m_bVisible = false;
 
 	return S_OK;
 }
@@ -63,11 +66,13 @@ void CCanvas::Late_Tick(_double TimeDelta)
 
 void CCanvas::Imgui_RenderProperty()
 {
-	static char szChildProtoName[MAX_PATH]{};/* = "Default_UI"*/
+	__super::Imgui_RenderProperty();
+
+	ImGui::Separator();
+	static char szChildProtoName[MAX_PATH]{};
 	ImGui::InputText("ChildProtoTag", szChildProtoName, MAX_PATH);
 	static char szChildName[MAX_PATH]{};
 	ImGui::InputText("ChildName", szChildName, MAX_PATH);
-	ImGui::SameLine();
 
 	if (ImGui::Button("Add Empty UI"))
 	{
@@ -78,17 +83,36 @@ void CCanvas::Imgui_RenderProperty()
 			Add_ChildUI(LEVEL_NOW, childPrototypeTag.c_str(), childTag.c_str());
 	}
 
-	for (const auto& Pair : m_mapChildUIs)
-		Pair.second->Imgui_RenderProperty();
+	if (ImGui::BeginListBox("UI List"))
+	{
+	
+		for (auto& UI : m_mapChildUIs)
+		{
+			const bool bSelected = (UI.second == m_pUI);
 
-	/*
-	1. 이 캔버스에 넣고 싶은 UI(캔버스 포함)의 프로트타입 태크를 입력받는다.
-	2. 입력받은 이름을 클론하고 바로 리스트에 넣는다.
-	3. 끝
-	*/
+			if (bSelected)
+				ImGui::SetItemDefaultFocus();
 
+			char pStr[64];
+			wc2c(UI.first.c_str(), pStr);
 
-	//CGameObject::SetDelete();
+			if (ImGui::Selectable(pStr, bSelected))
+			{
+				m_pUI = UI.second;
+			}
+		}
+
+		ImGui::EndListBox();
+	}
+
+	ImGui::BeginChild("ChildUIProperty", { 500.f, 500.f }, true);
+	if (m_pUI)
+	{
+		ImGui::Separator();
+		ImGui::Text("%s", typeid(*m_pUI).name());
+		m_pUI->Imgui_RenderProperty();
+	}
+	ImGui::EndChild();
 }
 
 void CCanvas::SaveToJson(Json & json)
@@ -109,6 +133,13 @@ void CCanvas::LoadFromJson(const Json & json)
 {
 	__super::LoadFromJson(json);
 
+	for (auto& childJson : json["ChildrenUI"])
+	{
+		string protoTag = childJson["Prototype_GameObject"];
+		string childTag = childJson["ChildTag"];
+		auto pUI = Add_ChildUI(LEVEL_NOW, s2ws(protoTag).c_str(),s2ws(childTag).c_str(), (void*)&childJson);
+		Assert(pUI != nullptr);
+	}
 }
 
 CUI * CCanvas::Find_ChildUI(const _tchar * pChildTag)
@@ -128,8 +159,7 @@ CUI * CCanvas::Add_ChildUI(_uint iLevelIndex, const _tchar * pPrototypeTag, cons
 		return nullptr;
 	}
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/UI/UI_Dafault.json");
-	CUI* pChildUI = dynamic_cast<CUI*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(iLevelIndex, pPrototypeTag, (void*)&json));
+	CUI* pChildUI = dynamic_cast<CUI*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(iLevelIndex, pPrototypeTag, pArg));
 	Assert(pChildUI != nullptr);
 
 	m_mapChildUIs.emplace(pChildTag, pChildUI);

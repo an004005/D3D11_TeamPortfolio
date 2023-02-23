@@ -27,13 +27,15 @@ public:
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
 
-public:
+protected:
 	CUI* Find_ChildUI(const _tchar* pChildTag);
 	CUI* Add_ChildUI(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pChildTag, void* pArg = nullptr);
 
 
 protected:
 	map<wstring, CUI*> m_mapChildUIs;
+	
+	CUI*	m_pUI = { nullptr };
 
 public:
 	static CCanvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
