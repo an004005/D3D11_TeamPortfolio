@@ -23,11 +23,7 @@ HRESULT CScarletMap::Initialize_Prototype()
 
 HRESULT CScarletMap::Initialize(void* pArg)
 {
-	FAILED_CHECK(__super::Initialize(nullptr));
-
-	m_eComponents.fill(false);
-
-	m_pModelProtos = *static_cast<map<const _tchar*, CGameObject*>*>(pArg);
+	FAILED_CHECK(__super::Initialize(pArg));
 	
 	FAILED_CHECK(SetUp_Components());
 
@@ -57,10 +53,11 @@ HRESULT CScarletMap::Render()
 
 void CScarletMap::Imgui_RenderProperty()
 {
+	__super::Imgui_RenderProperty();
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	ImGui::Text("Select Components");
-	ImGui::NewLine();
+	ImGui::Separator();
 
 	static char szSearchProto[MAX_PATH] = "";
 	ImGui::InputText("ProtoType Search", szSearchProto, MAX_PATH);
@@ -74,37 +71,34 @@ void CScarletMap::Imgui_RenderProperty()
 		{
 			if (bSearch)
 			{
-				wstring szProtoTag = proto.first;
-				if (szProtoTag.find(strSearch) == wstring::npos)
+				if (proto.find(strSearch) == wstring::npos)
 					continue;
 			}
-			const bool bSelected = (0 == lstrcmp(proto.first, m_pModelProtoTag));
+
+			const bool bSelected = (proto == m_pModelProtoTag);
 
 			if (bSelected)
 				ImGui::SetItemDefaultFocus();
 
-			//wchar -> char
+			
 			char pStr[64];
-			wc2c(proto.first, pStr);
+			wc2c(proto.c_str(), pStr);
 
 			if (ImGui::Selectable(pStr, bSelected))
 			{
-				m_pModelProtoTag = proto.first;
+				m_pModelProtoTag = proto;
 			}
 		}
 
 		ImGui::EndListBox();
 	}
 
-	ImGui::Checkbox("Psycokinesis", &m_eComponents[PSYCOKINESIS]);
-
-	ImGui::NewLine();
+	ImGui::Separator();
 
 	if (ImGui::Button("Create_MapNonAnim_Object"))
 	{	
 		Json json;
 		json["ModelTag"] = ws2s(m_pModelProtoTag);
-
 		FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MapNonAnimObject"), TEXT("Prototype_GameObject_MapNonAnim_Object"), &json));
 	}
 
@@ -118,7 +112,7 @@ void CScarletMap::Imgui_RenderProperty()
 	}
 
 	ImGui::NewLine();
-	ImGui::NewLine();
+	ImGui::Separator();
 
 	CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_MapNonAnimObject"));
 	
@@ -138,7 +132,6 @@ void CScarletMap::Imgui_RenderProperty()
 
 			for (auto& obj : pGameObjects)
 			{
-
 				if (bSearch)
 				{
 					wstring szProtoTag = dynamic_cast<CMapObject*>(obj)->Get_ModelTag();
@@ -151,16 +144,15 @@ void CScarletMap::Imgui_RenderProperty()
 				if (bSelected)
 					ImGui::SetItemDefaultFocus();
 
-				//wchar -> char
-				char pStr[64];
-				wc2c(dynamic_cast<CMapObject*>(obj)->Get_ModelTag(), pStr);
+				string str = ws2s(dynamic_cast<CMapObject*>(obj)->Get_ModelTag());
 		
 				_uint iCount = count_if(pGameObjects.begin(), iter, [&](CGameObject* pGameObject) {
 					return dynamic_cast<CMapObject*>(pGameObject)->Get_ModelTag() == dynamic_cast<CMapObject*>(obj)->Get_ModelTag();
 				});
 
-				sprintf_s(pStr, sizeof(pStr), "%s %d", pStr, iCount);
-	
+				char pStr[MAX_PATH]{};
+				sprintf_s(pStr, sizeof(pStr), "%s %d", str.c_str(), iCount);
+				
 				if (ImGui::Selectable(pStr, bSelected))
 				{
 					m_pGameObject = obj;
@@ -168,11 +160,9 @@ void CScarletMap::Imgui_RenderProperty()
 
 				++iter;
 			}
-
 			ImGui::EndListBox();
 		}
 	}
-
 
 	if (m_pGameObject)
 	{
@@ -181,32 +171,47 @@ void CScarletMap::Imgui_RenderProperty()
 		m_pGameObject->Imgui_RenderProperty();
 		m_pGameObject->Imgui_RenderComponentProperties();
 	}
-	
+}
+
+void CScarletMap::SaveToJson(OUT Json & json)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_MapNonAnimObject"));
+
+	if (pLayer == nullptr) return;
+
+	__super::SaveToJson(json);
+
+	auto pGameObjects = pLayer->GetGameObjects();
+
+	for (auto& obj : pGameObjects)
+	{
+		json["ModelTags"].push_back(ws2s(dynamic_cast<CMapObject*>(obj)->Get_ModelTag()));
+	}
 }
 
 void CScarletMap::LoadFromJson(const Json & json)
 {
-}
+	__super::LoadFromJson(json);
 
-void CScarletMap::LoadMap(const _tchar * pMapPath, LEVEL eLevel)
-{
-	//각 레벨에 필요한 오브젝트들의 프로토타입 생성
-	SetUp_Prototypes_MapObject(eLevel);
-}
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-void CScarletMap::SaveMap(const _tchar * pMapPath)
-{
-}
-
-void CScarletMap::SetUp_Prototypes_MapObject(LEVEL eLevel)
-{
-	if (eLevel == LEVEL_MAPTOOL) return;
-
-	if (eLevel == LEVEL_GAMEPLAY)
+	for (auto prototag : json["ProtoTags"])
 	{
-
+		wstring tag = s2ws(prototag);
+		m_pModelProtos.emplace_back(tag);
 	}
 
+	if (json.contains("ModelTags"))
+	{
+		for (auto Modeltag : json["ModelTags"])
+		{
+			Json json;
+			json["ModelTag"] = Modeltag;
+			FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MapNonAnimObject"), TEXT("Prototype_GameObject_MapNonAnim_Object"), &json));
+		}
+	}
+	
 }
 
 HRESULT CScarletMap::SetUp_Components()

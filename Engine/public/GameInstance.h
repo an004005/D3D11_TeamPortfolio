@@ -101,6 +101,7 @@ public: /* For.Object_Manager */
 	list<CGameObject*> Find_AllObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred);
 	template<typename T>
 	T* Find_OneObjectByType(_uint iLevelIndex, const _tchar* pLayerTag);
+	class CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 
 	void Imgui_ProtoViewer(const _tchar*& szSelectedProto);
 	void Imgui_ObjectViewer(_uint iLevel, CGameObject*& pSelectedObject);
@@ -112,6 +113,7 @@ public: /* For.Component_Manager */
 	class CComponent* Clone_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg = nullptr);
 	class CComponent* Clone_Component(const _tchar* pPrototypeTag, void* pArg = nullptr);
 	wcmap<class CComponent*>* GetProtoTypes(_uint iLevelIndex);
+	class CComponent* Find_Prototype_Component(_uint iLevelIndex, const _tchar* pPrototypeTag);
 
 public: /* For.PipeLine */
 	_matrix Get_TransformMatrix(CPipeLine::TRANSFORMSTATE eState) ;

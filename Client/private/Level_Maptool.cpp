@@ -105,26 +105,33 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	return S_OK;
 }
 
-HRESULT CLevel_Maptool::Ready_Layer_Camera(const _tchar* pLayerTag)
+HRESULT CLevel_Maptool::Ready_Layer_Camera(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag.c_str(), TEXT("Prototype_GameObject_Camera_Dynamic")));
 
 	return S_OK;
 }
 
-HRESULT CLevel_Maptool::Ready_Layer_Map(const _tchar * pLayerTag)
+HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &m_pMapProtos));
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
 
+	//TODO: 프로토 테그만 저장하고 로드할때 find로 찾아야함
+	for (auto& Proto : m_pProtosTags)
+	{	
+		json["ProtoTags"].push_back(ws2s(Proto));
+	}
+	
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag.c_str(), TEXT("Prototype_GameObject_ScarletMap"), &json));
 	return S_OK;
 }
 
 
-HRESULT CLevel_Maptool::Create_Model(const _tchar * pProtoTag, const char* pModelPath)
+HRESULT CLevel_Maptool::Create_Model(const wstring& pProtoTag, const char* pModelPath)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
@@ -134,10 +141,10 @@ HRESULT CLevel_Maptool::Create_Model(const _tchar * pProtoTag, const char* pMode
 	assert(pComponent != nullptr);
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(
-		pProtoTag,
+		pProtoTag.c_str(),
 		pComponent));
 
-	m_pMapProtos.emplace(pProtoTag, pComponent);
+	m_pProtosTags.emplace_back(pProtoTag);
 
 	return S_OK;
 }

@@ -56,7 +56,7 @@ typedef struct tagDamageParam
 enum
 {
 	MOVE_AXIS_CNT = static_cast<_uint>(EMoveAxis::AXIS_END),
-	BASE_AXIS_CNT = static_cast<_uint>(EBaseAxis::AXIS_END)
+	BASE_AXIS_CNT = static_cast<_uint>(EBaseAxis::AXIS_END),
 };
 
 class CClientUtils

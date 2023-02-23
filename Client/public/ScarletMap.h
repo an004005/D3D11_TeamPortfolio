@@ -5,10 +5,6 @@
 //맵 저장, 불러오기, 오브젝트 생성
 //Map Editor 역할(그럴거면 맵 에디터를 만들지..)
 
-enum COMPONENTS {
-	PSYCOKINESIS,
-	COMPONENTS_END
-};
 class CScarletMap : public CGameObject
 {
 private:
@@ -24,22 +20,17 @@ public:
 	void Late_Tick(_double TimeDelta) override;
 	HRESULT Render() override;
 	void Imgui_RenderProperty() override;
+	virtual void SaveToJson(OUT Json& json) override;
 	virtual void LoadFromJson(const Json& json) override;
 
-
-public:
-	void	LoadMap(const _tchar* pMapPath, LEVEL eLevel);
-	void	SaveMap(const _tchar* pMapPath);
-	void	SetUp_Prototypes_MapObject(LEVEL eLevel);
 
 private:
 	HRESULT SetUp_Components();
 
 private:
-	map<const _tchar*, CGameObject*>	m_pModelProtos;
-	array<_bool, COMPONENTS_END>		m_eComponents;
+	vector<wstring>	m_pModelProtos;
 
-	const _tchar*						m_pModelProtoTag = nullptr;
+	wstring								m_pModelProtoTag;
 	CGameObject* 						m_pGameObject = nullptr;
 public:
 	static CScarletMap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -74,10 +74,6 @@ HRESULT CMapObject::SetUp_Components()
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_strModelTag.c_str(), TEXT("Com_Model"),
 		(CComponent**)&m_pModelCom));
 
-	/* For. Com_Psycokinesis*/
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Psycokinesis"), TEXT("Com_Psycokinesis"),
-		(CComponent**)&m_pPsycokinesisCom));
-
 	return S_OK;
 }
 
@@ -87,5 +83,4 @@ void CMapObject::Free()
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pPsycokinesisCom);
 }

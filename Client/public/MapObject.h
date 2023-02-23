@@ -10,8 +10,6 @@ END
 
 BEGIN(Client)
 
-enum class MAPOBJ_TYPE{ TYPE_END};
-
 class CMapObject abstract : public CGameObject
 {
 protected:
@@ -29,21 +27,17 @@ public:
 	virtual void LoadFromJson(const Json& json) override;
 
 public:
-	const _tchar*		Get_ModelTag() { return m_strModelTag.c_str(); }
-
+	const wstring&	Get_ModelTag() { return m_strModelTag; }
+	
 private:
 	HRESULT	SetUp_Components();
 
 protected:
 	CModel*					m_pModelCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
-	class CPsychokinesis*	m_pPsycokinesisCom = nullptr;
 
 protected:
-	MAPOBJ_TYPE				m_eType = MAPOBJ_TYPE::TYPE_END;
 	wstring					m_strModelTag;
-	_bool					m_OnStep = false;
-
 	
 public:
 	CGameObject* Clone(void* pArg = nullptr) override { return nullptr; }
