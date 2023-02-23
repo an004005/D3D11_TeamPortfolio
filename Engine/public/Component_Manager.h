@@ -26,6 +26,7 @@ public:
 	class CComponent* Clone_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg = nullptr);
 
 	wcmap<class CComponent*>* GetProtoTypes(_uint iLevelIndex);
+	CComponent* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 
 private:
 	_uint											m_iNumLevels = 0;
@@ -35,7 +36,6 @@ private:
 	vector<PROTOTYPES> m_pPrototypes;
 
 private:
-	CComponent* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 	CComponent* Handle_FindPrototypeFailed(_uint iLevelIndex, const _tchar* pPrototypeTag);
 
 public:

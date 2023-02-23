@@ -214,8 +214,12 @@
     <ClInclude Include="..\Public\Player.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h" />
+    <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
+    <ClInclude Include="..\public\ScarletMap.h" />
     <ClInclude Include="..\public\SkyBox.h" />
+    <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\UI.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
@@ -263,8 +267,12 @@
     <ClCompile Include="..\Private\Player.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
+    <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
+    <ClCompile Include="..\private\ScarletMap.cpp" />
     <ClCompile Include="..\private\SkyBox.cpp" />
+    <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\UI.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
