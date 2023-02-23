@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Canvas_PlayerInfo.h"
-#include <ImguiUtils.h>
 #include "GameInstance.h"
-#include "JsonLib.h"
 
 CCanvas_PlayerInfo::CCanvas_PlayerInfo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -26,8 +24,6 @@ HRESULT CCanvas_PlayerInfo::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
-
-	m_ePivot = UI_PIVOT::BOT;
 
 	return S_OK;
 }

@@ -115,6 +115,9 @@
     <Filter Include="01.Levels\15. UITool">
       <UniqueIdentifier>{5357e7ff-329d-4daf-8dae-a5f0aa71bc95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI">
+      <UniqueIdentifier>{dbe3d603-c8a0-4590-96fa-f2a387abb7b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -241,11 +244,14 @@
     <ClInclude Include="..\public\DefaultUI.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_PlayerInfo.h">
-      <Filter>02.GameObjects\UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\ButtonUI.h">
       <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PlayerInfo.h">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SAS.h">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -352,11 +358,14 @@
     <ClCompile Include="..\private\DefaultUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_PlayerInfo.cpp">
-      <Filter>02.GameObjects\UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\ButtonUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PlayerInfo.cpp">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SAS.cpp">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
