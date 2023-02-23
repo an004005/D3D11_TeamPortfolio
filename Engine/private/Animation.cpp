@@ -25,11 +25,11 @@ namespace nlohmann
 }
 
 CAnimation CAnimation::s_NullAnimation;
-const string CAnimation::s_ModifyFilePath = "../Bin/Resources/Meshes/Valorant/AnimationModifier.json";
+const string CAnimation::s_ModifyFilePath = "../Bin/Resources/Meshes/Scarlet_Nexus/AnimationModifier.json";
 
 CAnimation::CAnimation()
-	: m_bFinished(true)
-	, m_bLooping(true)
+	: m_bFinished(false)
+	, m_bLooping(false)
 {
 }
 
@@ -39,6 +39,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_TickPerSecond(rhs.m_TickPerSecond)
 	, m_bFinished(rhs.m_bFinished)
 	, m_bLooping(rhs.m_bLooping)
+	, m_vLocalMove(rhs.m_vLocalMove)
 {
 	m_Channels.reserve(rhs.m_Channels.size());
 	for (auto& channel : rhs.m_Channels)
@@ -76,6 +77,9 @@ HRESULT CAnimation::Initialize(const char* pAnimFilePath)
 	}
 
 	CloseHandle(hFile);
+
+	m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+
 	return S_OK;
 }
 
@@ -96,12 +100,32 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 		for (const auto pChannel : m_Channels)
 		{
 			pChannel->Update_TransformMatrix(m_PlayTime);
+
+			// 로컬 이동 채널로부터	받아옴
+			if ("Reference" == pChannel->GetChannelName())
+			{
+				m_vLocalMove = pChannel->GetLocalMove();
+			}
+		}
+		// 이벤트 실행
+		for (auto& iter : m_vecEvent)
+		{
+			if (iter.EventTime >= PrePlayTime && iter.EventTime < m_PlayTime)
+			{
+				m_pModel->EventCaller(iter.strEventName);
+			}
 		}
 		break;
 	case EAnimUpdateType::BLEND:
 		for (const auto pChannel : m_Channels)
 		{
 			pChannel->Blend_TransformMatrix(m_PlayTime, fRatio);
+
+			if ("Reference" == pChannel->GetChannelName())
+			{
+				m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+				m_vLocalMove = pChannel->GetLocalMove();
+			}
 		}
 		break;
 	case EAnimUpdateType::ADDITIVE:
@@ -168,13 +192,14 @@ void CAnimation::Link_Model(CModel* pModel)
 		channel->Link_Model(pModel);
 	}
 
-	const Json& jsonAnimModifier = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Meshes/Valorant/AnimationModifier.json");
+	const Json& jsonAnimModifier = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Meshes/Scarlet_Nexus/AnimationModifier.json");
 	if (jsonAnimModifier.contains(m_strName))
 	{
 		Json ModifyData = jsonAnimModifier[m_strName];
 		m_Duration = ModifyData["Duration"];
 		m_TickPerSecond = ModifyData["TickPerSecond"];
 		m_bLooping = ModifyData["bLooping"];
+		m_vecEvent = ModifyData["vecEvent"];
 	}
 }
 
@@ -189,6 +214,7 @@ void CAnimation::SaveModifiedData(Json& json)
 	json["Duration"] = m_Duration;
 	json["TickPerSecond"] = m_TickPerSecond;
 	json["bLooping"] = m_bLooping;
+	json["vecEvent"] = m_vecEvent;
 }
 
 void CAnimation::Imgui_RenderProperty()
@@ -213,9 +239,65 @@ void CAnimation::Imgui_RenderProperty()
 	ImGui::Separator();
 	static char szEventName[MAX_PATH]{};
 	static _float fEventTime = 0.f;
+	static string szItem = "";
 	ImGui::InputText("EventName", szEventName, MAX_PATH);
 	ImGui::InputFloat("Event PlayTime", &fEventTime);
 
+	static char szSelectedEventName[MAX_PATH]{};
+	static _float fSelectedEventTime = 0.f;
+	static string szSelectedItem = "";
+
+	// 선택된 이벤트 이름
+	ImGui::Text(szSelectedItem.c_str());
+
+	// 이벤트 뷰어
+	if (ImGui::BeginListBox("Event Frame"))
+	{
+		for (auto& Pair : m_vecEvent)
+		{
+			szItem = to_string(Pair.EventTime) + " / " + Pair.strEventName;
+
+			const bool bSelected = szItem == szSelectedItem;
+
+			if (bSelected)
+				ImGui::SetItemDefaultFocus();
+
+			if (ImGui::Selectable(szItem.c_str()))
+			{
+				strcpy_s(szSelectedEventName, Pair.strEventName.c_str());
+				fSelectedEventTime = Pair.EventTime;
+				szSelectedItem = szItem;
+			}
+
+		}
+		ImGui::EndListBox();
+	}
+
+	// 이벤트 추가
+	if (ImGui::Button("Add Event"))
+	{
+		ANIM_EVENT AddEvent;
+		ZeroMemory(&AddEvent, sizeof(ANIM_EVENT));
+		AddEvent.EventTime = fEventTime;
+		AddEvent.strEventName = szEventName;
+		m_vecEvent.push_back(AddEvent);
+	}
+
+	// 이벤트 삭제
+	if (ImGui::Button("Delete Event"))
+	{
+		for (auto iter = m_vecEvent.begin(); iter != m_vecEvent.end();)
+		{
+			if ((iter->EventTime == fSelectedEventTime) && (iter->strEventName == szSelectedEventName))
+			{
+				iter = m_vecEvent.erase(iter);
+				szSelectedItem = "";
+				break;
+			}
+			else
+				++iter;
+		}
+	}
 
 	if (ImGui::Button("Save AnimModify Data"))
 	{
@@ -229,10 +311,14 @@ void CAnimation::Imgui_RenderProperty()
 		CJsonStorage::GetInstance()->SaveJson(s_ModifyFilePath);
 	}
 
-
 	m_PlayTime = static_cast<_double>(fPlayTime);
 	m_Duration = static_cast<_double>(fDuration);
 	m_TickPerSecond = static_cast<_double>(fTickPerSecond);
+}
+
+KEYFRAME * CAnimation::GetCurKeyFrame()
+{
+	return m_Channels.front()->GetCurKeyFrame();
 }
 
 CAnimation * CAnimation::Create(const char* pAnimFilePath)

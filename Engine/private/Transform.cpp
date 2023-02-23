@@ -101,7 +101,10 @@ void CTransform::SaveToJson(Json& json)
 
 void CTransform::LoadFromJson(const Json& json)
 {
-	m_WorldMatrix = json["Transform"]["WorldMatrix"];
+	if (json.contains("Transform"))
+	{
+		m_WorldMatrix = json["Transform"]["WorldMatrix"];
+	}
 }
 
 void CTransform::Go_Straight(_double TimeDelta)
@@ -190,6 +193,13 @@ void CTransform::MoveVelocity_Navi(_double TimeDelta, _float3 vVelocity, CNaviga
 	}
 	
 	Set_State(CTransform::STATE_TRANSLATION, vNewPosition);
+}
+
+void CTransform::LocalMove(_float3 vDir, _float fRange)
+{
+	_vector	vPosition = Get_State(CTransform::STATE_TRANSLATION);
+	vPosition += vDir * fRange;
+	Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
 void CTransform::Turn(_fvector vAxis, _double TimeDelta)

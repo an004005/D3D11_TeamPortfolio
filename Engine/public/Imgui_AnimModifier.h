@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CBaseAnimInstance;
+
 /************************
  * CModelPreviwer
  ************************/
@@ -25,7 +27,6 @@ public:
 	class CAnimation* GetPlayAnimation();
 	class CModel* GetModel() { return m_pModel; }
 	void Reset();
-
 
 private:
 	class CRenderer*				m_pRendererCom = nullptr;
@@ -61,6 +62,9 @@ private:
 
 
 	CModelPreviwer* m_pPreview = nullptr;
+
+private:
+
 };
 
 END

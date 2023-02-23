@@ -18,6 +18,8 @@ public:
 	void Render_Imgui();
 	void Render_Update_ImGui();
 
+	void ImGui_DockSpace();
+
 	// imgui object를 새로운 window로 추가한다.
 	void Add_ImguiObject(CImguiObject* pImguiObject);
 
