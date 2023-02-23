@@ -27,6 +27,16 @@ HRESULT CMapObject::Initialize(void* pArg)
 
 	FAILED_CHECK(SetUp_Components());
 
+	if (pArg)
+	{
+		Json& json = *static_cast<Json*>(pArg);
+		if (json.contains("InitPos"))
+		{
+			_float4 InitPos = json["InitPos"];
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&InitPos));
+		}
+	}
+
 	return S_OK;
 }
 
@@ -76,6 +86,12 @@ void CMapObject::LoadFromJson(const Json & json)
 {
 	__super::LoadFromJson(json);
 	m_strModelTag = s2ws(json["ModelTag"]);
+}
+
+void CMapObject::SaveToJson(Json & json)
+{
+	__super::SaveToJson(json);
+	json["ModelTag"] = ws2s(m_strModelTag);
 }
 
 HRESULT CMapObject::SetUp_Components()

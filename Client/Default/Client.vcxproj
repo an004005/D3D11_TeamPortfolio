@@ -201,6 +201,7 @@
     <ClInclude Include="..\public\Level_Maptool.h" />
     <ClInclude Include="..\public\Level_MultiPlay.h" />
     <ClInclude Include="..\public\Level_PlayerTest.h" />
+    <ClInclude Include="..\public\Level_Tutorial.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\Player.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -244,6 +245,7 @@
     <ClCompile Include="..\private\Level_Maptool.cpp" />
     <ClCompile Include="..\private\Level_MultiPlay.cpp" />
     <ClCompile Include="..\private\Level_PlayerTest.cpp" />
+    <ClCompile Include="..\private\Level_Tutorial.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\Private\Player.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

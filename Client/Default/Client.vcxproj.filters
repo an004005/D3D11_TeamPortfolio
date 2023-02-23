@@ -118,6 +118,9 @@
     <Filter Include="50.Component\02. Psychokinesis">
       <UniqueIdentifier>{746a1bc6-0b47-4e7e-8cf3-715a03cb1af0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.GamePlay\01.Tutorial">
+      <UniqueIdentifier>{0ce87f0a-cfa9-4fa6-8ec1-62c4bf61ba72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -230,7 +233,7 @@
     </ClInclude>
     <ClInclude Include="..\public\Effect.h">
       <Filter>VFX\Effect\Parent</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\public\ScarletMap.h">
       <Filter>02.GameObjects\Map</Filter>
     </ClInclude>
@@ -247,6 +250,9 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EffectSystem.h" />
+    <ClInclude Include="..\public\Level_Tutorial.h">
+      <Filter>01.Levels\02.GamePlay\01.Tutorial</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -338,7 +344,7 @@
     </ClCompile>
     <ClCompile Include="..\private\Effect.cpp">
       <Filter>VFX\Effect\Parent</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\ScarletMap.cpp">
       <Filter>02.GameObjects\Map</Filter>
     </ClCompile>
@@ -355,6 +361,9 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EffectSystem.cpp" />
+    <ClCompile Include="..\private\Level_Tutorial.cpp">
+      <Filter>01.Levels\02.GamePlay\01.Tutorial</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
