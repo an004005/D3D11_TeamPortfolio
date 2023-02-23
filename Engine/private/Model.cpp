@@ -12,7 +12,7 @@
 #include "ImguiUtils.h"
 #include "Light_Manager.h"
 
-const _float4x4 CModel::s_DefaultPivot = _float4x4::CreateScale({ 0.01f, 0.01f, 0.01f });
+const _float4x4 CModel::s_DefaultPivot = _float4x4::CreateScale({ 0.01f, 0.01f, 0.01f }) *_float4x4::CreateRotationY(XMConvertToRadians(-180.f));
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -100,6 +100,58 @@ CAnimation* CModel::Find_Animation(const string& strAnimaName)
 		return itr->second;
 
 	return nullptr;
+}
+
+_vector & CModel::GetLocalMove(_fmatrix WorldMatrix)
+{
+	_vector vMovePos;
+	ZeroMemory(&vMovePos, sizeof(_vector));
+
+	m_vBefLocalMove = m_vLocalMove;
+	m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	if (m_CurAnimName != "")
+	{
+		m_vLocalMove = m_mapAnimation[m_CurAnimName]->GetLocalMove();
+		if (XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
+		{
+			m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+		if (m_mapAnimation[m_CurAnimName]->IsFinished())
+		{
+			m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+	}
+
+	_vector vScale, vRotation, vTrans;
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
+
+	vMovePos = m_vLocalMove - m_vBefLocalMove;
+	XMVectorSetW(vMovePos, 0.f);
+	_float	fLength = XMVectorGetX(XMVector3Length(vMovePos));
+
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_PivotMatrix);
+	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
+	vMovePos = XMVector3TransformNormal(vMovePos, PivotRotation);
+
+	// Pivot을 적용시켜도 Y축과 Z축 이동이 뒤틀리는 현상으로 인해
+	// 현재 X축에 대해 회전을 해둔 상태, 원인 파악 시 다시 원상복구 할 것
+	/*********************************************************************/
+	_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
+	vMovePos = XMVector3TransformNormal(vMovePos, ModifyRotation);
+	/*********************************************************************/
+
+	vMovePos = XMVector3TransformNormal(vMovePos, WorldRotation);
+
+	XMVectorSetW(vMovePos, 0.f);
+
+	//vMovePos *= fLength;
+
+	return vMovePos;
 }
 
 HRESULT CModel::Initialize_Prototype(const char * pModelFilePath)
@@ -328,6 +380,11 @@ CAnimation* CModel::GetPlayAnimation()
 	return nullptr;
 }
 
+void CModel::SetCurAnimName(const string & strAnimName)
+{
+	m_CurAnimName = strAnimName;
+}
+
 void CModel::Play_Animation(_double TimeDelta)
 {
 	if (m_eType == TYPE_NONANIM)
@@ -344,11 +401,7 @@ void CModel::Play_Animation(_double TimeDelta)
 		{
 			m_BefKeyFrame = m_CurKeyFrame;
 			m_CurKeyFrame = tempKeyFrame;
-			//m_EventMap = m_mapAnimation[m_CurAnimName]->GetEventMap();
 		}
-
-		// 이벤트 실행
-		//EventCaller();
 	}
 
 	Compute_CombindTransformationMatrix();
@@ -501,6 +554,8 @@ void CModel::LoadAnimations(const char* pAnimDir)
 		auto pAnim = CAnimation::Create(pAnimPath.c_str());
 		m_mapAnimation.emplace(pAnim->GetName(), pAnim);
 	});
+
+	int iA = 0;
 }
 
 void CModel::AddBoneRotation(const string& strBoneName, Quaternion qQuat)

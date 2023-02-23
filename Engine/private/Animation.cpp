@@ -28,8 +28,8 @@ CAnimation CAnimation::s_NullAnimation;
 const string CAnimation::s_ModifyFilePath = "../Bin/Resources/Meshes/Scarlet_Nexus/AnimationModifier.json";
 
 CAnimation::CAnimation()
-	: m_bFinished(true)
-	, m_bLooping(true)
+	: m_bFinished(false)
+	, m_bLooping(false)
 {
 }
 
@@ -39,6 +39,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_TickPerSecond(rhs.m_TickPerSecond)
 	, m_bFinished(rhs.m_bFinished)
 	, m_bLooping(rhs.m_bLooping)
+	, m_vLocalMove(rhs.m_vLocalMove)
 {
 	m_Channels.reserve(rhs.m_Channels.size());
 	for (auto& channel : rhs.m_Channels)
@@ -76,6 +77,9 @@ HRESULT CAnimation::Initialize(const char* pAnimFilePath)
 	}
 
 	CloseHandle(hFile);
+
+	m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+
 	return S_OK;
 }
 
@@ -96,6 +100,12 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 		for (const auto pChannel : m_Channels)
 		{
 			pChannel->Update_TransformMatrix(m_PlayTime);
+
+			// 로컬 이동 채널로부터	받아옴
+			if ("Reference" == pChannel->GetChannelName())
+			{
+				m_vLocalMove = pChannel->GetLocalMove();
+			}
 		}
 		// 이벤트 실행
 		for (auto& iter : m_vecEvent)
@@ -110,6 +120,12 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 		for (const auto pChannel : m_Channels)
 		{
 			pChannel->Blend_TransformMatrix(m_PlayTime, fRatio);
+
+			if ("Reference" == pChannel->GetChannelName())
+			{
+				m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+				m_vLocalMove = pChannel->GetLocalMove();
+			}
 		}
 		break;
 	case EAnimUpdateType::ADDITIVE:
