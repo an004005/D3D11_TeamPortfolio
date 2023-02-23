@@ -26,6 +26,7 @@ public:
 	class CLayer* GetLayer(_uint iLevelIndex, const _tchar* pLayerTag);
 	CGameObject* Find_ObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred);
 	list<CGameObject*> Find_AllObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred);
+	class CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 
 	void Tick(_double TimeDelta);
 	void Late_Tick(_double TimeDelta);
@@ -60,7 +61,6 @@ private: /* 사본객체들을 보관하기위한 컨테이너. */
 	vector<list<CGameObject*>> m_vecBeginTicks;
 
 private:
-	class CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 	class CLayer* Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
 
 public:

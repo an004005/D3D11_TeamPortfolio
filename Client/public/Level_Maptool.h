@@ -1,6 +1,11 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Level.h"
+
+BEGIN(Engine)
+class CComponent;
+END;
+
 class CLevel_Maptool : public CLevel
 {
 private:
@@ -15,9 +20,14 @@ public:
 private:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Prototypes();
-	HRESULT Ready_Layer_Terrain(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Camera(const wstring& pLayerTag);
+	HRESULT Ready_Layer_Map(const wstring& pLayerTag);
+
+private:
+	HRESULT Create_Model(const wstring& pProtoTag, const char* pModelPath);
+
+private:
+	vector<wstring> m_pProtosTags;
 
 public:
 	static CLevel_Maptool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
