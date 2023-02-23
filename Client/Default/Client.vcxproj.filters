@@ -250,7 +250,16 @@
     <ClInclude Include="..\public\Canvas_PlayerInfo.h">
       <Filter>02.GameObjects\UI\Front_UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_SAS.h">
+    <ClInclude Include="..\public\Canvas_SASSkill.h">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SASInfo.h">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Drive.h">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Item.h">
       <Filter>02.GameObjects\UI\Front_UI</Filter>
     </ClInclude>
   </ItemGroup>
@@ -364,7 +373,16 @@
     <ClCompile Include="..\private\Canvas_PlayerInfo.cpp">
       <Filter>02.GameObjects\UI\Front_UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_SAS.cpp">
+    <ClCompile Include="..\private\Canvas_SASSkill.cpp">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SASInfo.cpp">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Drive.cpp">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Item.cpp">
       <Filter>02.GameObjects\UI\Front_UI</Filter>
     </ClCompile>
   </ItemGroup>

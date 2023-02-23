@@ -14,7 +14,11 @@
 #include "ButtonUI.h"
 
 #include "Canvas.h"
+#include "Canvas_Item.h"
+#include "Canvas_SASInfo.h"
 #include "Canvas_PlayerInfo.h"
+#include "Canvas_Drive.h"
+#include "Canvas_SASSkill.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -77,9 +81,30 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CCanvas::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
+		// Canvas_Frount_UI
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Item"),
+			CCanvas_Item::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASInfo"),
+			CCanvas_SASInfo::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_PlayerInfo"),
 			CCanvas_PlayerInfo::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Drive"),
+			CCanvas_Drive::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASSkill"),
+			CCanvas_SASSkill::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 		// UI
@@ -117,8 +142,24 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/PlayerInfo.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Item.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Item", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/SASInfo_Left.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfo", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/PlayerInfo.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_PlayerInfo", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Drive.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Drive", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/SASInfo_Right.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfo", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/SASSkill.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkill", &json));
+	
 
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/UI/def.json");
  //   FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Button_UI", (void*)&json));

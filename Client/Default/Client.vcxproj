@@ -183,8 +183,11 @@
     <ClInclude Include="..\public\ButtonUI.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
     <ClInclude Include="..\public\Canvas.h" />
+    <ClInclude Include="..\public\Canvas_Drive.h" />
+    <ClInclude Include="..\public\Canvas_Item.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
-    <ClInclude Include="..\public\Canvas_SAS.h" />
+    <ClInclude Include="..\public\Canvas_SASInfo.h" />
+    <ClInclude Include="..\public\Canvas_SASSkill.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
@@ -230,8 +233,11 @@
     <ClCompile Include="..\private\ButtonUI.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\private\Canvas.cpp" />
+    <ClCompile Include="..\private\Canvas_Drive.cpp" />
+    <ClCompile Include="..\private\Canvas_Item.cpp" />
     <ClCompile Include="..\private\Canvas_PlayerInfo.cpp" />
-    <ClCompile Include="..\private\Canvas_SAS.cpp" />
+    <ClCompile Include="..\private\Canvas_SASInfo.cpp" />
+    <ClCompile Include="..\private\Canvas_SASSkill.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
