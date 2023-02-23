@@ -94,22 +94,6 @@ HRESULT CUI::Render()
 	return S_OK;
 }
 
-void CUI::Imgui_RenderComponentProperties()
-{
-	for (const auto& com : m_Components)
-	{
-		// UI의 Transform을 기즈모로 조종할 수 없기 때문에 Imgui로도 출력하지 않는다.
-		if (dynamic_cast<CTransform*>(com.second))
-			continue;
-
-		char szName[MAX_PATH];
-		wc2c(com.first.c_str(), szName);
-
-		if (ImGui::CollapsingHeader(szName, ImGuiTreeNodeFlags_DefaultOpen))
-			com.second->Imgui_RenderProperty();
-	}
-}
-
 void CUI::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();

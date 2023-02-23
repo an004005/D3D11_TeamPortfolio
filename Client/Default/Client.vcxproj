@@ -205,7 +205,6 @@
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\UI.h" />
-    <ClInclude Include="..\public\UI_Manager.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
     <ClInclude Include="Client.h" />
@@ -242,7 +241,6 @@
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\UI.cpp" />
-    <ClCompile Include="..\private\UI_Manager.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
     <ClCompile Include="Client.cpp" />

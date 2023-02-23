@@ -219,9 +219,6 @@
     <ClInclude Include="..\public\Canvas_PlayerInfo.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UI_Manager.h">
-      <Filter>02.GameObjects\UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\ButtonUI.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
@@ -318,9 +315,6 @@
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_PlayerInfo.cpp">
-      <Filter>02.GameObjects\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\UI_Manager.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ButtonUI.cpp">

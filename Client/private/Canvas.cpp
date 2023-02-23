@@ -63,8 +63,6 @@ void CCanvas::Late_Tick(_double TimeDelta)
 
 void CCanvas::Imgui_RenderProperty()
 {
-	__super::Imgui_RenderProperty();
-
 	static char szChildProtoName[MAX_PATH]{};/* = "Default_UI"*/
 	ImGui::InputText("ChildProtoTag", szChildProtoName, MAX_PATH);
 	static char szChildName[MAX_PATH]{};
@@ -80,6 +78,9 @@ void CCanvas::Imgui_RenderProperty()
 			Add_ChildUI(LEVEL_NOW, childPrototypeTag.c_str(), childTag.c_str());
 	}
 
+	for (const auto& Pair : m_mapChildUIs)
+		Pair.second->Imgui_RenderProperty();
+
 	/*
 	1. 이 캔버스에 넣고 싶은 UI(캔버스 포함)의 프로트타입 태크를 입력받는다.
 	2. 입력받은 이름을 클론하고 바로 리스트에 넣는다.
@@ -93,7 +94,7 @@ void CCanvas::Imgui_RenderProperty()
 void CCanvas::SaveToJson(Json & json)
 {
 	__super::SaveToJson(json);
-	//CShader::SaveShaderParam(m_tParams, json);
+	json["ChildrenUI"] = Json::array();
 
 	for (auto pChild : m_mapChildUIs)
 	{
@@ -107,7 +108,6 @@ void CCanvas::SaveToJson(Json & json)
 void CCanvas::LoadFromJson(const Json & json)
 {
 	__super::LoadFromJson(json);
-	//CShader::LoadShaderParam(m_tParams, json);
 
 }
 
@@ -128,7 +128,8 @@ CUI * CCanvas::Add_ChildUI(_uint iLevelIndex, const _tchar * pPrototypeTag, cons
 		return nullptr;
 	}
 
-	CUI* pChildUI = dynamic_cast<CUI*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(iLevelIndex, pPrototypeTag, pArg));
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/UI/UI_Dafault.json");
+	CUI* pChildUI = dynamic_cast<CUI*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(iLevelIndex, pPrototypeTag, (void*)&json));
 	Assert(pChildUI != nullptr);
 
 	m_mapChildUIs.emplace(pChildTag, pChildUI);

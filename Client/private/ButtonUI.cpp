@@ -37,7 +37,7 @@ void CButtonUI::Tick(_double TimeDelta)
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 	if (true == IsCursorOn(CGameUtils::GetClientCursor()) && pGameInstance->Get_DIMouseState(CInput_Device::DIM_LB))
 	{
-		IM_LOG("log");
+		IM_LOG("gg");
 	}
 }
 
