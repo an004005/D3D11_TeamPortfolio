@@ -1,11 +1,14 @@
 #include "stdafx.h"
-#include "..\public\FlowerLeg.h"
+#include "FlowerLeg.h"
 #include "GameInstance.h"
 #include "MathUtils.h"
 #include "GameUtils.h"
 #include "FSMComponent.h"
+#include "AnimationInstance.h"
 #include"Animation.h"
 #include"Model.h"
+
+#include "FL_AnimInstance.h"
 
 CFlowerLeg::CFlowerLeg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -32,9 +35,9 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->SetSpeed(1.f);	
-
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 0.f)));
+
+	m_pTransformCom->SetSpeed(1.f);	
 
 	m_strObjectTag = "Flower_Leg";
 
@@ -42,56 +45,56 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		m_pFSM = CFSMComponentBuilder()
 			.InitState("Idle")
 			.AddState("Idle")
-			.OnStart([this]
-			{
-				m_pModelCom->SetPlayAnimation("AS_em0200_102_AL_wait02");
-			})
-			.AddTransition("Idle to Walk", "Walk")
-				.Predicator([this]
+				/*.OnStart([this]
 				{
-					return m_eDikKey == KEY_W || m_eDikKey == KEY_S || m_eDikKey == KEY_A 
-						|| m_eDikKey == KEY_D && m_eDikKey != KEY_END;
-				})
-			
-			.AddTransition("Idle to Attack", "Attack")
+					m_pModelCom->SetPlayAnimation("AS_em0200_102_AL_wait02");
+				})*/
+				.AddTransition("Idle to Walk", "Walk")
 					.Predicator([this]
-				{
-					return m_eDimMouse == MS_LB || m_eDimMouse == MS_RB 
-						&& m_eDimMouse != MS_END;
-				})
+					{
+						return m_eDikKey == KEY_W || m_eDikKey == KEY_S || m_eDikKey == KEY_A 
+							|| m_eDikKey == KEY_D && m_eDikKey != KEY_END;
+					})
+			
+				.AddTransition("Idle to Attack", "Attack")
+					.Predicator([this]
+					{
+						return m_eDimMouse == MS_LB || m_eDimMouse == MS_RB 
+							&& m_eDimMouse != MS_END;
+					})
 
 			.AddState("Walk")
-			.OnStart([this]
-			{
-				m_pModelCom->SetPlayAnimation("AS_em0200_106_AL_walk02");
-			})
-			.AddTransition("Walk to Idle", "Idle")
-				.Predicator([this]
+				.OnStart([this]
 				{
-					return m_eDikKey == KEY_END;
+					m_pModelCom->SetPlayAnimation("AS_em0200_106_AL_walk02");
 				})
+				.AddTransition("Walk to Idle", "Idle")
+					.Predicator([this]
+					{
+						return m_eDikKey == KEY_END;
+					})
 
 			.AddState("Attack")
-			.OnStart([this]
-			{
-				if(m_eDimMouse == MS_LB)
-					m_pModelCom->SetPlayAnimation("AS_em0200_202_AL_atk_a2");
-
-				if (m_eDimMouse == MS_RB)
-					m_pModelCom->SetPlayAnimation("AS_em0200_203_AL_atk_a3");
-			})
-			.Tick([this](_double TimeDelta)
-			{
-				auto pAnim = m_pModelCom->GetPlayAnimation();
-
-				if(pAnim->GetPlayRatio() >= 0.95)
-					m_eDimMouse = MS_END;
-			})
-			.AddTransition("Attack to Idle", "Idle")
-				.Predicator([this]
+				.OnStart([this]
 				{
-					return m_eDimMouse == MS_END;
+					if(m_eDimMouse == MS_LB)
+						m_pModelCom->SetPlayAnimation("AS_em0200_202_AL_atk_a2");
+
+					if (m_eDimMouse == MS_RB)
+						m_pModelCom->SetPlayAnimation("AS_em0200_203_AL_atk_a3");
 				})
+				.Tick([this](_double TimeDelta)
+				{
+					auto pAnim = m_pModelCom->GetPlayAnimation();
+
+					if(pAnim->GetPlayRatio() >= 0.95)
+						m_eDimMouse = MS_END;
+				})
+				.AddTransition("Attack to Idle", "Idle")
+					.Predicator([this]
+					{
+						return m_eDimMouse == MS_END;
+					})
 
 			.Build();
 	}
@@ -108,10 +111,10 @@ void CFlowerLeg::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 			
-	Key_Input(TimeDelta);
+//	Key_Input(TimeDelta);
 
 	m_pFSM->Tick(TimeDelta);
-	m_pModelCom->Play_Animation(TimeDelta);
+	m_pASM->Tick(TimeDelta);
 }
 
 void CFlowerLeg::Late_Tick(_double TimeDelta)
@@ -127,9 +130,6 @@ HRESULT CFlowerLeg::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	if (FAILED(SetUp_ShaderResources()))
-		return E_FAIL;
-
 	m_pModelCom->Render(m_pTransformCom);
 
 	return S_OK;
@@ -138,6 +138,23 @@ HRESULT CFlowerLeg::Render()
 void CFlowerLeg::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+	
+	if (ImGui::CollapsingHeader("MonsterAnimStateTest", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		
+		if(ImGui::Button("Damaged"))
+		{
+			if (m_iTestHp <= 0)
+				m_iTestHp = 0;
+
+			else
+				m_iTestHp -= 50;			
+		}
+
+		ImGui::Text("%d", m_iTestHp);
+	}
+
+	m_pModelCom->Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
 }
 
@@ -217,6 +234,11 @@ void CFlowerLeg::JumpToGround(_double TimeDelta)
 	}
 }
 
+HRESULT CFlowerLeg::Setup_AnimSocket()
+{	
+	return S_OK;
+}
+
 HRESULT CFlowerLeg::SetUp_Components()
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
@@ -231,11 +253,13 @@ HRESULT CFlowerLeg::SetUp_Components()
 		(CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
-	return S_OK;
-}
+	m_pASM = CFL_AnimInstance::Create(m_pModelCom, this);
+	if (nullptr == m_pASM)
+	{
+		MSG_BOX("FlowerLeg's ASM Failed");
+		return E_FAIL;
+	}
 
-HRESULT CFlowerLeg::SetUp_ShaderResources()
-{
 	return S_OK;
 }
 
@@ -272,4 +296,5 @@ void CFlowerLeg::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
+	Safe_Release(m_pASM);
 }

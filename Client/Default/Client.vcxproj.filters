@@ -115,6 +115,15 @@
     <Filter Include="02.GameObjects\Monster\TestMonster%28Goat%29">
       <UniqueIdentifier>{745e34b2-083b-4b07-a6e4-087ec47d99ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\BuddyLumi">
+      <UniqueIdentifier>{e601f17e-3211-4b5c-9124-ad399b6dceac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BuddyLumi\BdLm_AnimInstance">
+      <UniqueIdentifier>{d8041f1a-6290-470e-af61-3a587d8fc4c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_AnimInstance">
+      <UniqueIdentifier>{af66fe60-49a3-4fbb-ad06-68cc0dec429b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -234,6 +243,15 @@
     <ClInclude Include="..\public\FlowerLeg.h">
       <Filter>02.GameObjects\Monster\FlowerLeg</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BuddyLumi.h">
+      <Filter>02.GameObjects\Monster\BuddyLumi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BdLm_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_AnimInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FL_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_AnimInstance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -331,6 +349,15 @@
     </ClCompile>
     <ClCompile Include="..\private\FlowerLeg.cpp">
       <Filter>02.GameObjects\Monster\FlowerLeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BuddyLumi.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BdLm_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_AnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FL_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_AnimInstance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,7 @@ class CFSMComponent;
 END
 
 BEGIN(Client)
+class CFL_AnimInstance;
 
 class CFlowerLeg : public CGameObject
 {
@@ -41,6 +42,11 @@ private:
 	CModel*					m_pModelCom = nullptr;
 	CFSMComponent*			m_pFSM = nullptr;
 
+	CFL_AnimInstance*		m_pASM = nullptr;
+
+private:
+	HRESULT				Setup_AnimSocket();
+
 private:
 	_vector			m_vCurrentLook = { 0.f, 0.f, 0.f, 0.f };
 	// Jump
@@ -57,6 +63,9 @@ private:
 	_bool m_bAttack = false;	
 	_bool m_bAir = false;
 
+	// imgui Test
+	_uint m_iTestHp = 1000;
+
 public:
 	KEYSTATE	const	Get_eDikKey() { return m_eDikKey; }
 	MOUSESTATE  const	Get_eDimMouse() { return m_eDimMouse; }
@@ -66,8 +75,10 @@ private:
 	MOUSESTATE		m_eDimMouse = MS_END;
 
 private:
+	wstring					m_ModelName;
+
+private:
 	HRESULT SetUp_Components();
-	HRESULT SetUp_ShaderResources();
 
 public:
 	static CFlowerLeg* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

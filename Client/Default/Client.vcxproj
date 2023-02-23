@@ -180,12 +180,15 @@
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\BdLm_AnimInstance.h" />
+    <ClInclude Include="..\public\BuddyLumi.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
     <ClInclude Include="..\public\Floors.h" />
     <ClInclude Include="..\public\FlowerLeg.h" />
+    <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
     <ClInclude Include="..\public\Imgui_LevelSwitcher.h" />
     <ClInclude Include="..\public\Imgui_MapEditor.h" />
@@ -221,11 +224,14 @@
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\BdLm_AnimInstance.cpp" />
+    <ClCompile Include="..\private\BuddyLumi.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\Floors.cpp" />
     <ClCompile Include="..\private\FlowerLeg.cpp" />
+    <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
     <ClCompile Include="..\private\Imgui_LevelSwitcher.cpp" />
     <ClCompile Include="..\private\Imgui_MapEditor.cpp" />

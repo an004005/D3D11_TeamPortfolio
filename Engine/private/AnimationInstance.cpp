@@ -196,7 +196,7 @@ _bool CAnimationInstance::CheckFinishedAnimSocket()
 	for (auto& PairSoc : m_mapAnimSocket)
 	{
 		if (PairSoc.second.empty())
-			return false;
+			continue;
 
 		if (auto pAnim = PairSoc.second.front())
 		{

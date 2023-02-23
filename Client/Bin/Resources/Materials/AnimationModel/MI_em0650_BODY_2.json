@@ -8,8 +8,9 @@
         "Float4x4s" : [],
         "Textures" : [         
             "../Bin/Resources/Model/AnimModel/Monster/SkummyPool/Texture/T_em0650_body_ALB.png",
-            "../Bin/Resources/Model/AnimModel/Monster/SkummyPool/Texture/T_em0650_body_NML.png"
-
+            "../Bin/Resources/Model/AnimModel/Monster/SkummyPool/Texture/T_em0650_body_NML.png",
+            "../Bin/Resources/Model/AnimModel/Monster/SkummyPool/Texture/dds/T_em0650_body_ALB.dds",
+            "../Bin/Resources/Model/AnimModel/Monster/SkummyPool/Texture/dds/T_em0650_body_NML.dds"
         ],
         "Pass" : 0
     }
