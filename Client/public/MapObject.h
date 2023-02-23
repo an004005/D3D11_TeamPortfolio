@@ -24,6 +24,7 @@ public:
 	void Tick(_double TimeDelta) override;
 	void Late_Tick(_double TimeDelta) override;
 	HRESULT Render() override;
+	virtual void Imgui_RenderProperty() override;
 	virtual void LoadFromJson(const Json& json) override;
 
 public:

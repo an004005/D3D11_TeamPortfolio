@@ -19,6 +19,10 @@ public:
 		return m_iMaterialIndex;
 	}
 
+	void	Set_MaterialIndex(_uint iIndex) {
+		m_iMaterialIndex = iIndex;
+	}
+
 public:
 	virtual HRESULT Initialize_Prototype(CModel::TYPE eType, HANDLE hFile, class CModel* pModel);
 
