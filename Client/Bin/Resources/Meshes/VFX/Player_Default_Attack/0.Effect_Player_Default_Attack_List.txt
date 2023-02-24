@@ -1,3 +1,7 @@
+../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/Air_Attack_1.json
+
+
+
 Prototype_Component_Shader_VtxModel_VFX
 
 Air_Attack_1

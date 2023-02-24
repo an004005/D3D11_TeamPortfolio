@@ -24,6 +24,7 @@ private:
 	HRESULT Ready_Prototypes();
 	HRESULT Ready_Layer(const _tchar* pLayerTag);
 
+
 public:
 	static CLevel_Effect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

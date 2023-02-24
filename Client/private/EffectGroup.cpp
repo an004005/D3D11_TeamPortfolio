@@ -26,18 +26,10 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom));
 
-	if(pArg)
-	{
-		Json& json = *static_cast<Json*>(pArg);
-		for(auto curveJson : json["Curves"])
-		{
-			auto pCurve = CCurveFloatImpl::Create(&curveJson);
-			m_Curves.emplace(pCurve->GetName(), pCurve);
-		}
-	}
 
-	m_Timeline.SetTimelineLength(3.0);
-	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+	// m_Timeline.SetTimelineLength(3.0);
+	// m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+
 
 	if (m_Curves.empty())
 	{
@@ -58,10 +50,6 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 		// AddEmptyCurve("Rotation"); // 회전값 변경, 축 어떻게 전달할지 결정하기
 	}
 
-	// void Tick_Scale(_float fValue);
-	// void Tick_Floats_Value(_uint iParamIndex, _float fValue);
-	// void Tick_Float4s_Value(_uint iParamIndex, _float4 fValue);
-
 	// m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_Curves.find("Scale")->second);
 	// Safe_AddRef(m_Curves.find("Scale")->second);
 	//
@@ -71,15 +59,7 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 	// m_Timeline.SetCurve(this, &CEffectGroup::Tick_Floats_Value, m_Curves.find("OutroTime")->second);
 	// Safe_AddRef(m_Curves.find("OutroTime")->second);
 
-	m_Timeline.PlayFromStart();
-
-	// CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
-	// {
-	// 	char szFileName[MAX_PATH]{};
-	// 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-	// 	CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
-	// });
-
+	// m_Timeline.PlayFromStart();
 
 	return S_OK;
 }
@@ -94,11 +74,40 @@ void CEffectGroup::Imgui_RenderProperty()
 {
 	CGameObject::Imgui_RenderProperty();
 
-	LoadEffectData();
+	Load_EffectSystem();
 
 	ImGui::Separator();
 
+	ImGui::BulletText("Timeline_Options");
+	ImGui::SliderFloat("Set_EndTime", &m_fEndTime, 0.f, 30.f);
+
+	ImGui::Combo("Finish_Function", &m_iSelectFinishFunc, m_szFuncName, FUNC_END);
+	ImGui::SameLine();
+	if(ImGui::Button("Set_Fin-Function"))
+	{
+		if(m_iSelectFinishFunc == 0)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+		}
+		else if (m_iSelectFinishFunc == 1)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+		}
+		else if (m_iSelectFinishFunc == 2)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+		}
+		// 삭제 또는 비활성화 만들기
+	}
+
+
+	// if(ImGui::Button("PlayFromStart"))
+	// {
+	// 	m_Timeline.PlayFromStart();
+	// }
+
 	m_Timeline.Imgui_RenderEditor();
+
 	ImGui::Separator();
 
 	static const char* pCurName = "";
@@ -112,7 +121,6 @@ void CEffectGroup::Imgui_RenderProperty()
 			if (ImGui::Selectable(pCurve.first, bSelected))
 				pCurName = pCurve.first;
 		}
-
 		ImGui::EndListBox();
 	}
 
@@ -130,7 +138,7 @@ void CEffectGroup::Imgui_RenderProperty()
 		SaveToJson(json);
 		std::ofstream file(filePath);
 		file << json;
-	});
+	});	
 
 	Imgui_RenderEffectSource();
 }
@@ -138,6 +146,41 @@ void CEffectGroup::Imgui_RenderProperty()
 void CEffectGroup::SaveToJson(Json& json)
 {
 	CGameObject::SaveToJson(json);
+
+	if(m_pFirst_EffectSystem != nullptr)
+		json["First_Directory"] = m_First_EffectDirectory;
+	else
+		json["First_Directory"] = "";
+
+	if(m_pSecond_EffectSystem != nullptr)
+		json["Second_Directory"] = m_Second_EffectDirectory;
+	else
+		json["Second_Directory"] = "";
+
+	if (m_pThird_EffectSystem != nullptr)
+		json["Third_Directory"] = m_Third_EffectDirectory;
+	else
+		json["Third_Directory"] = "";
+
+	if(m_pFourth_EffectSystem!=nullptr)
+		json["Fourth_Directory"] = m_Fourth_EffectDirectory;
+	else
+		json["Fourth_Directory"] = "";
+
+	if(m_pFifth_EffectSystem != nullptr)
+		json["Fifth_Directory"] = m_Fifth_EffectDirectory;
+	else
+		json["Fifth_Directory"] = "";
+
+	if(m_iSelectFinishFunc >= FUNC_PLAYFROMSTART && m_iSelectFinishFunc < FUNC_END )
+		json["Finish_Function"] = m_iSelectFinishFunc;
+	else
+		json["Finish_Function"] = FUNC_RESET;
+
+	if (m_fEndTime >= 0.f && 30.f <= m_fEndTime)
+		json["End_Time"] = m_fEndTime;
+	else
+		json["End_Time"] = 3.f;
 
 	json["Curves"] = Json::array();
 	for (auto pCurve : m_Curves)
@@ -149,20 +192,70 @@ void CEffectGroup::SaveToJson(Json& json)
 	// json["TimelineLength"] = 
 }
 
-void CEffectGroup::LoadEffectData()
+void CEffectGroup::LoadFromJson(const Json& json)
+{
+	CGameObject::LoadFromJson(json);
+
+	for (auto curveJson : json["Curves"])
+	{
+		auto pCurve = CCurveFloatImpl::Create(&curveJson);
+		m_Curves.emplace(pCurve->GetName(), pCurve);
+	}
+
+	// json["First_Directory"].get_to<string>(m_First_EffectDirectory);
+	// json["First_Directory"].get_to<string>(m_First_EffectDirectory);
+	// json["First_Directory"].get_to<string>(m_First_EffectDirectory);
+	// json["First_Directory"].get_to<string>(m_First_EffectDirectory);
+
+	if (json.contains("First_Directory"))
+		m_First_EffectDirectory = json["First_Directory"];
+
+	if (json.contains("Second_Directory"))
+		m_Second_EffectDirectory = json["Second_Directory"];
+
+	if (json.contains("Third_Directory"))
+		m_Third_EffectDirectory = json["Third_Directory"];
+
+	if (json.contains("Fourth_Directory"))
+		m_Fourth_EffectDirectory = json["Fourth_Directory"];
+
+	if (json.contains("Fifth_Directory"))
+		m_Fifth_EffectDirectory = json["Fifth_Directory"];
+
+	json["End_Time"].get_to<_float>(m_fEndTime);
+	json["Finish_Function"].get_to<_int>(m_iSelectFinishFunc);
+
+	m_Timeline.SetTimelineLength((_double)m_fEndTime);
+
+	if (m_iSelectFinishFunc == 0)
+	{
+		m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+	}
+	else if (m_iSelectFinishFunc == 1)
+	{
+		m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+	}
+	else if (m_iSelectFinishFunc == 2)
+	{
+		m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+	}
+
+}
+
+void CEffectGroup::Load_EffectSystem()
 {
 	{
 		char EffectProtoTag[MAX_PATH];
-		strcpy(EffectProtoTag, m_First_EffectProtoTag.c_str());
+		strcpy(EffectProtoTag, m_First_EffectDirectory.c_str());
 		ImGui::InputText("1_EffectDir", EffectProtoTag, MAX_PATH);
-		m_First_EffectProtoTag = EffectProtoTag;
+		m_First_EffectDirectory = EffectProtoTag;
 		ImGui::SameLine();
 		if (ImGui::Button("Load First"))
 		{
 			if (m_pFirst_EffectSystem != nullptr)
 				Safe_Release(m_pFirst_EffectSystem);
 
-			if (m_First_EffectProtoTag == "")
+			if (m_First_EffectDirectory == "")
 			{
 				MSG_BOX("PLEASE WRITE THE DIRECTORY");
 				return;
@@ -174,16 +267,16 @@ void CEffectGroup::LoadEffectData()
 	}
 	{
 		char EffectProtoTag[MAX_PATH];
-		strcpy(EffectProtoTag, m_Second_EffectProtoTag.c_str());
+		strcpy(EffectProtoTag, m_Second_EffectDirectory.c_str());
 		ImGui::InputText("2_EffectDir", EffectProtoTag, MAX_PATH);
-		m_Second_EffectProtoTag = EffectProtoTag;
+		m_Second_EffectDirectory = EffectProtoTag;
 		ImGui::SameLine();
 		if (ImGui::Button("Load Second"))
 		{
 			if (m_pSecond_EffectSystem != nullptr)
 				Safe_Release(m_pSecond_EffectSystem);
 
-			if (m_Second_EffectProtoTag == "")
+			if (m_Second_EffectDirectory == "")
 			{
 				MSG_BOX("PLEASE WRITE THE DIRECTORY");
 				return;
@@ -195,16 +288,16 @@ void CEffectGroup::LoadEffectData()
 	}
 	{
 		char EffectProtoTag[MAX_PATH];
-		strcpy(EffectProtoTag, m_Third_EffectProtoTag.c_str());
+		strcpy(EffectProtoTag, m_Third_EffectDirectory.c_str());
 		ImGui::InputText("3_EffectDir", EffectProtoTag, MAX_PATH);
-		m_Third_EffectProtoTag = EffectProtoTag;
+		m_Third_EffectDirectory = EffectProtoTag;
 		ImGui::SameLine();
 		if (ImGui::Button("Load Third"))
 		{
 			if (m_pThird_EffectSystem != nullptr)
 				Safe_Release(m_pThird_EffectSystem);
 
-			if (m_Third_EffectProtoTag == "")
+			if (m_Third_EffectDirectory == "")
 			{
 				MSG_BOX("PLEASE WRITE THE DIRECTORY");
 				return;
@@ -216,16 +309,16 @@ void CEffectGroup::LoadEffectData()
 	}
 	{
 		char EffectProtoTag[MAX_PATH];
-		strcpy(EffectProtoTag, m_Fourth_EffectProtoTag.c_str());
+		strcpy(EffectProtoTag, m_Fourth_EffectDirectory.c_str());
 		ImGui::InputText("4_EffectDir", EffectProtoTag, MAX_PATH);
-		m_Fourth_EffectProtoTag = EffectProtoTag;
+		m_Fourth_EffectDirectory = EffectProtoTag;
 		ImGui::SameLine();
 		if (ImGui::Button("Load Fourth"))
 		{
 			if (m_pFourth_EffectSystem != nullptr)
 				Safe_Release(m_pFourth_EffectSystem);
 
-			if (m_Fourth_EffectProtoTag == "")
+			if (m_Fourth_EffectDirectory == "")
 			{
 				MSG_BOX("PLEASE WRITE THE DIRECTORY");
 				return;
@@ -237,16 +330,16 @@ void CEffectGroup::LoadEffectData()
 	}
 	{
 		char EffectProtoTag[MAX_PATH];
-		strcpy(EffectProtoTag, m_Fifth_EffectProtoTag.c_str());
+		strcpy(EffectProtoTag, m_Fifth_EffectDirectory.c_str());
 		ImGui::InputText("5_EffectDir", EffectProtoTag, MAX_PATH);
-		m_Fifth_EffectProtoTag = EffectProtoTag;
+		m_Fifth_EffectDirectory = EffectProtoTag;
 		ImGui::SameLine();
 		if (ImGui::Button("Load Fifth"))
 		{
 			if (m_pFifth_EffectSystem != nullptr)
 				Safe_Release(m_pFifth_EffectSystem);
 
-			if (m_Fourth_EffectProtoTag == "")
+			if (m_Fourth_EffectDirectory == "")
 			{
 				MSG_BOX("PLEASE WRITE THE DIRECTORY");
 				return;
@@ -313,16 +406,34 @@ void CEffectGroup::Tick_Scale(_uint iParamIndex, _float fValue)
 	m_pTransformCom->Set_Scaled(_float3(fValue, fValue, fValue));
 }
 
-void CEffectGroup::Tick_Floats_Value(_uint iParamIndex, _float fValue)
+void CEffectGroup::Tick_IntroDissolve(_float fValue)
 {
-	
-
-	m_pCurSelect_Effect->GetParams().Floats[iParamIndex] = fValue;
+	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
 }
 
-void CEffectGroup::Tick_Float4s_Value(_uint iParamIndex, _float4 fValue)
+void CEffectGroup::Tick_OutroDissolve(_float fValue)
 {
-	m_pCurSelect_Effect->GetParams().Float4s[iParamIndex] = fValue;
+	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
+}
+
+void CEffectGroup::Tick_EmissiveChange(_float fValue)
+{
+	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
+}
+
+void CEffectGroup::Tick_IntroTime(_float fValue)
+{
+	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
+}
+
+void CEffectGroup::Tick_OutroTime(_float fValue)
+{
+	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
+}
+
+void CEffectGroup::Tick_ColorChange(_float fValue)
+{
+	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
 }
 
 CEffectGroup* CEffectGroup::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

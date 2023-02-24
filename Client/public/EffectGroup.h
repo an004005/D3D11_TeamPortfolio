@@ -11,8 +11,8 @@ END
 BEGIN(Client)
 class CEffectGroup :	public CGameObject
 {
-protected:
-	
+public:
+	enum FINISHFUNC { FUNC_PLAYFROMSTART, FUNC_RESET, FUNC_STOP, FUNC_END};
 
 protected:
 	CEffectGroup(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -25,15 +25,22 @@ public:
 
 	virtual void Imgui_RenderProperty() override;
 	virtual void SaveToJson(Json& json) override;
+	virtual void LoadFromJson(const Json& json) override;
 
-	void		LoadEffectData();
+	void		Load_EffectSystem();
 	void		Imgui_RenderEffectSource();
+
 public:
+	// For Graph
 	void Tick_Scale(_uint iParamIndex, _float fValue);
-	// void Tick_Ints_Value(_uint iParamIndex, _int iValue);
-	void Tick_Floats_Value(_uint iParamIndex, _float fValue);
-	// void Tick_Float2s_Value(_uint iParamIndex, _float2 fValue);
-	void Tick_Float4s_Value(_uint iParamIndex, _float4 fValue);
+	void Tick_IntroDissolve(_float fValue);
+	void Tick_OutroDissolve(_float fValue);
+	void Tick_ColorChange(_float fValue);
+	void Tick_EmissiveChange(_float fValue);
+	void Tick_IntroTime(_float fValue);
+	void Tick_OutroTime(_float fValue);
+
+
 	// void Tick_Float4x4s_Value(_uint iParamIndex, _float4x4 fValue);
 
 protected:
@@ -47,11 +54,11 @@ protected:
 	cmap<CCurveFloatImpl*> m_Curves;
 
 private:
-	string		m_First_EffectProtoTag = "";
-	string		m_Second_EffectProtoTag = "";
-	string		m_Third_EffectProtoTag = "";
-	string		m_Fourth_EffectProtoTag = "";
-	string		m_Fifth_EffectProtoTag = "";
+	string		m_First_EffectDirectory = "";
+	string		m_Second_EffectDirectory = "";
+	string		m_Third_EffectDirectory = "";
+	string		m_Fourth_EffectDirectory = "";
+	string		m_Fifth_EffectDirectory = "";
 
 	class CEffectSystem* m_pCurSelect_Effect = nullptr;
 
@@ -60,6 +67,11 @@ private:
 	class CEffectSystem* m_pThird_EffectSystem = nullptr;
 	class CEffectSystem* m_pFourth_EffectSystem = nullptr;
 	class CEffectSystem* m_pFifth_EffectSystem = nullptr;
+
+private:
+	_float	m_fEndTime = 0.f;
+	_int	m_iSelectFinishFunc = 0;
+	char*	m_szFuncName[FUNC_END] = { "PlayFromStart",  "Reset", "Stop" };
 
 public:
 	static CEffectGroup*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

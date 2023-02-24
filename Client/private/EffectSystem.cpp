@@ -212,7 +212,7 @@ HRESULT CEffectSystem::Begin()
 	else
 		m_tParam.iPass = 0;
 	
-
+	
 	return m_pShaderCom->Begin(m_tParam.iPass);
 }
 
@@ -336,8 +336,6 @@ void CEffectSystem::Imgui_RenderProperty()
 		file << json;
 	});
 }
-
-
 
 
 
