@@ -111,6 +111,22 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 	// 프로토타입 추가 방법
 	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_TestPlayer", pModel_TestPlayer));
 
+	// 23.02.23 PJW Monster Model Anim Control Purpose
+	{
+		auto pBuddyLumi = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/BuddyLumi.anim_model");
+		pBuddyLumi->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBuddyLumi"), pBuddyLumi));
+	}
+
+	{
+		auto pFlowerLeg = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/FlowerLeg.anim_model");
+		pFlowerLeg->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterFlowerLeg"), pFlowerLeg));
+	}
+	// ~23.02.23 PJW Monster Model Anim Control Purpose
+
 	//// Goat
 	//auto pModel_Goat = CModel::Create(m_pDevice, m_pContext,
 	//	"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Goat/Goat.anim_model",
@@ -144,7 +160,7 @@ HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json PreviewData;
+	Json PreviewData; // MonsterBuddyLumi	Model_TestPlayer	MonsterFlowerLeg
 	PreviewData["Model"] = "Model_TestPlayer";
 
 	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))

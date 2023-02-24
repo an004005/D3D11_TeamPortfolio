@@ -16,6 +16,7 @@ namespace Client
 		LEVEL_PLAYERTEST,
 		LEVEL_EFFECT,
 		LEVEL_UI,
+		LEVEL_ENEMIESTEST,
 		LEVEL_END };
 }
 
