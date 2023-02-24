@@ -70,9 +70,6 @@
     <Filter Include="80. Imgui\00.Manager">
       <UniqueIdentifier>{ee4a256e-5aeb-4b07-b9f8-20aa00574dd1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="80. Imgui\01.ImguiObject">
-      <UniqueIdentifier>{3706bd1c-e703-4ba3-8a1d-d4b0abc64a21}</UniqueIdentifier>
-    </Filter>
     <Filter Include="81.Utils">
       <UniqueIdentifier>{7b1c93b6-4d3a-4080-bc8e-5bb52208ef18}</UniqueIdentifier>
     </Filter>
@@ -168,6 +165,12 @@
     </Filter>
     <Filter Include="01.Utility\03.Components\02.VIBuffer\Instance\Mesh">
       <UniqueIdentifier>{4d52fb9f-e800-4a90-9589-1d2f38262b5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\02.VIBuffer\Instance\Trail">
+      <UniqueIdentifier>{4ca0fff1-598c-45f9-9a06-e03b3917b793}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80. Imgui\01.ImguiObject">
+      <UniqueIdentifier>{3706bd1c-e703-4ba3-8a1d-d4b0abc64a21}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

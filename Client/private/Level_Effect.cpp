@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "..\public\Level_Effect.h"
+
+#include "EffectGroup.h"
+#include "EffectSystem.h"
 #include "GameInstance.h"
 #include "Imgui_MapEditor.h"
 #include "Imgui_LevelSwitcher.h"
@@ -10,6 +13,8 @@
 #include "GameUtils.h"
 #include "Material.h"
 #include "Imgui_PostProcess.h"
+#include "ParticleSystem.h"
+#include "TrailSystem.h"
 
 
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -52,11 +57,8 @@ void CLevel_Effect::Late_Tick(_double TimeDelta)
 
 HRESULT CLevel_Effect::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
-
+	FAILED_CHECK(__super::Render());
 	SetWindowText(g_hWnd, TEXT("Level : Effecttool"));
-
 
 	return S_OK;
 }
@@ -84,13 +86,44 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 {
 	auto pGameInstance = CGameInstance::GetInstance();
 
-	//CGameUtils::ListFilesRecursive("../Bin/Resources/Meshes/Valorant/Materials/", [this](const string& filePath)
-	//{
-	//	string fileName = CGameUtils::GetFileName(filePath);
-	//	CGameInstance::GetInstance()->Add_Prototype(
-	//		s2ws(fileName).c_str(),
-	//		CMaterial::Create(m_pDevice, m_pContext, filePath.c_str()));
-	//});
+	// CGameUtils::ListFiles("../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/", [this](const string& filePath)
+	// {
+	// 	string fileName = CGameUtils::GetFileName(filePath);
+	// 	CGameInstance::GetInstance()->Add_Prototype(
+	// 		s2ws(fileName).c_str(),
+	// 		CModel::Create(m_pDevice, m_pContext, filePath.c_str()));
+	// });
+
+
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
+	{
+		char szFileName[MAX_PATH]{};
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
+		CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
+	});
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
+
+	// 모델 추가하는 방법
+	// auto pModel_VFX = CModel::Create(m_pDevice, m_pContext,
+	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/Default_Attack_1.static_model");
+	// // 프로토타입 추가 방법
+	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_01", pModel_VFX));
+	//
+	// pModel_VFX = CModel::Create(m_pDevice, m_pContext,
+	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/Default_Attack_2.static_model");
+	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_02", pModel_VFX));
+	//
+	// pModel_VFX = CModel::Create(m_pDevice, m_pContext,
+	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/Default_Attack_3.static_model");
+	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_03", pModel_VFX));
+	//
+	// pModel_VFX = CModel::Create(m_pDevice, m_pContext,
+	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/Default_Attack_4.static_model");
+	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_04", pModel_VFX));
 
 	return S_OK;
 }
@@ -98,9 +131,19 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectSystem")));
+
+	// Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/Air_Attack_1.json");
+	// pGameInstance->Clone_GameObject(L"Layer_EffectSys", L"ProtoVFX_EffectSystem", &AttackMesh);
 
 
-	pGameInstance->Clone_GameObject(L"Preview", L"MaterialPreview");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup")));
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_TrailSystem")));
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_ParticleSystem")));
+
+
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Preview", L"MaterialPreview"));
 
 	return S_OK;
 }

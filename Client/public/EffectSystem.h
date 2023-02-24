@@ -52,6 +52,11 @@ public:
 
 	void SetShadowPass(_uint iPass) { m_iShadowPass = iPass; }
 
+	//For_Curve
+public:
+
+
+
 private:
 	CShader*					m_pShaderCom = nullptr;
 	CRenderer*					m_pRendererCom = nullptr;
@@ -74,6 +79,9 @@ private:
 
 	_uint m_iShadowPass = 0;
 
+	_float m_fCurModelChangeTime = 0.f;
+	_float m_fModelChangeTime = 2.f;
+	_bool	m_bModelChange = false;
 public:
 	static CEffectSystem*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void*);

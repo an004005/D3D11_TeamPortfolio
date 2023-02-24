@@ -141,7 +141,7 @@ HRESULT CRenderer::Initialize_Prototype()
 	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
 
 	/* ·»ÅÍÅ¸°ÙµéÀ» »ý¼ºÇÏ³®. */
-
+	
 	/* For.Target_Diffuse */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Diffuse"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.0f, 0.0f, 0.f))))
 		return E_FAIL;
