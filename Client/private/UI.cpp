@@ -139,6 +139,8 @@ void CUI::SaveToJson(Json & json)
 	__super::SaveToJson(json);
 	CShader::SaveShaderParam(m_tParams, json);
 
+	json["sdf"];
+
 	json["PositionX"] = m_fX;
 	json["PositionY"] = m_fY;
 	json["SizeX"] = m_fSizeX;

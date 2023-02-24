@@ -22,7 +22,7 @@ HRESULT CCanvas_SASSkill::Initialize_Prototype()
 
 HRESULT CCanvas_SASSkill::Initialize(void* pArg)
 {
-	if (FAILED(CCanvas::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	return S_OK;
@@ -30,23 +30,23 @@ HRESULT CCanvas_SASSkill::Initialize(void* pArg)
 
 void CCanvas_SASSkill::Tick(_double TimeDelta)
 {
-	CCanvas::Tick(TimeDelta);
+	__super::Tick(TimeDelta);
 
 }
 
 void CCanvas_SASSkill::Imgui_RenderProperty()
 {
-	CCanvas::Imgui_RenderProperty();
+	__super::Imgui_RenderProperty();
 }
 
 void CCanvas_SASSkill::SaveToJson(Json& json)
 {
-	CCanvas::SaveToJson(json);
+	__super::SaveToJson(json);
 }
 
 void CCanvas_SASSkill::LoadFromJson(const Json & json)
 {
-	CCanvas::LoadFromJson(json);
+	__super::LoadFromJson(json);
 }
 
 CCanvas_SASSkill * CCanvas_SASSkill::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -75,5 +75,5 @@ CCanvas * CCanvas_SASSkill::Clone(void * pArg)
 
 void CCanvas_SASSkill::Free()
 {
-	CCanvas::Free();
+	__super::Free();
 }

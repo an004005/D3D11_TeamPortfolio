@@ -10,15 +10,16 @@
 
 #include "Camera.h"
 
-#include "DefaultUI.h"
-#include "ButtonUI.h"
-
 #include "Canvas.h"
 #include "Canvas_Item.h"
 #include "Canvas_SASInfo.h"
 #include "Canvas_PlayerInfo.h"
 #include "Canvas_Drive.h"
 #include "Canvas_SASSkill.h"
+
+#include "DefaultUI.h"
+#include "ButtonUI.h"
+#include "SASSkillIconUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -73,7 +74,6 @@ HRESULT CLevel_UI::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	// 게임오브젝트 로딩
 	{
 		// Canvas
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
@@ -106,7 +106,9 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASSkill"),
 			CCanvas_SASSkill::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+	}
 
+	{
 		// UI
 		/* For.Prototype_GameObject_Default_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Default_UI"),
@@ -117,6 +119,12 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Button_UI"),
 			CButtonUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+
+		// Frount_UI
+		/* For.Prototype_GameObject_Button_UI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillIcon_UI"),
+			CSASSkillIconUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 	}
 
 	return S_OK;
@@ -124,7 +132,7 @@ HRESULT CLevel_UI::Ready_Prototypes()
 
 HRESULT CLevel_UI::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
-	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
 		return E_FAIL;
@@ -133,8 +141,6 @@ HRESULT CLevel_UI::Ready_Layer_Camera(const _tchar * pLayerTag)
 	auto pCam = pGameInstance->Clone_GameObject_Get(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), (void*)&json);
 	pGameInstance->SetShadowCam(dynamic_cast<CCamera*>(pCam));
 
-	RELEASE_INSTANCE(CGameInstance);
-
 	return S_OK;
 }
 
@@ -142,6 +148,7 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
+	// Frount_UI
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Item.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Item", &json));
 
@@ -160,10 +167,6 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/SASSkill.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkill", &json));
 	
-
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/UI/def.json");
- //   FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Button_UI", (void*)&json));
-
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
 	//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);

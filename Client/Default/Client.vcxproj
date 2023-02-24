@@ -217,6 +217,7 @@
     <ClInclude Include="..\public\MapNonAnim_Object.h" />
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
+    <ClInclude Include="..\public\SASSkillIconUI.h" />
     <ClInclude Include="..\public\ScarletMap.h" />
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
@@ -270,6 +271,7 @@
     <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
+    <ClCompile Include="..\private\SASSkillIconUI.cpp" />
     <ClCompile Include="..\private\ScarletMap.cpp" />
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
