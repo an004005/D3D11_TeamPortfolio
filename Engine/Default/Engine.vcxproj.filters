@@ -157,6 +157,18 @@
     <Filter Include="81.Utils\Action">
       <UniqueIdentifier>{d9ae48cd-67ca-42dd-bc7b-3ef92a5c33a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\02.VIBuffer\Instance">
+      <UniqueIdentifier>{4ff26052-9178-49b8-b909-cab16e6e4387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\02.VIBuffer\Instance\Point">
+      <UniqueIdentifier>{e8975b59-8058-40c0-9777-8728b4c5d6c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\02.VIBuffer\Instance\Rect">
+      <UniqueIdentifier>{a83caeca-f628-4fe2-a6fb-f28ac7ead586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\02.VIBuffer\Instance\Mesh">
+      <UniqueIdentifier>{4d52fb9f-e800-4a90-9589-1d2f38262b5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\GameInstance.h">
@@ -405,17 +417,11 @@
     <ClInclude Include="..\public\Frustum.h">
       <Filter>01.Utility\08.Frustum</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\VIBuffer_Point_Instancing.h">
-      <Filter>01.Utility\03.Components\02.VIBuffer\Point</Filter>
-    </ClInclude>
     <ClInclude Include="EngineThreadPool.h">
       <Filter>00.System\01.ThreadPool</Filter>
     </ClInclude>
     <ClInclude Include="..\public\CurveFloatMapImpl.h">
       <Filter>81.Utils\Time</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\VIBuffer_Instancing.h">
-      <Filter>01.Utility\03.Components\02.VIBuffer\Point</Filter>
     </ClInclude>
     <ClInclude Include="..\public\RenderTarget.h">
       <Filter>01.Utility\09.RenderTarget</Filter>
@@ -455,6 +461,12 @@
     </ClInclude>
     <ClInclude Include="..\public\AnimationInstance.h">
       <Filter>01.Utility\03.Components\06.Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Instancing.h">
+      <Filter>01.Utility\03.Components\02.VIBuffer\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Point_Instancing.h">
+      <Filter>01.Utility\03.Components\02.VIBuffer\Instance\Point</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -677,12 +689,6 @@
     <ClCompile Include="..\private\Frustum.cpp">
       <Filter>01.Utility\08.Frustum</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\VIBuffer_Point_Instancing.cpp">
-      <Filter>01.Utility\03.Components\02.VIBuffer\Point</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\VIBuffer_Instancing.cpp">
-      <Filter>01.Utility\03.Components\02.VIBuffer\Point</Filter>
-    </ClCompile>
     <ClCompile Include="EngineThreadPool.cpp">
       <Filter>00.System\01.ThreadPool</Filter>
     </ClCompile>
@@ -724,6 +730,12 @@
     </ClCompile>
     <ClCompile Include="..\private\AnimationInstance.cpp">
       <Filter>01.Utility\03.Components\06.Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Instancing.cpp">
+      <Filter>01.Utility\03.Components\02.VIBuffer\Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Point_Instancing.cpp">
+      <Filter>01.Utility\03.Components\02.VIBuffer\Instance\Point</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GameObject.cpp">
       <Filter>01.Utility\02.GameObject</Filter>

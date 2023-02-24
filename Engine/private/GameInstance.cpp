@@ -472,6 +472,11 @@ list<CGameObject*> CGameInstance::Find_AllObjectByPredicator(_uint iLevelIndex, 
 	return m_pObject_Manager->Find_AllObjectByPredicator(iLevelIndex, Pred);
 }
 
+CGameObject * CGameInstance::Find_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag)
+{
+	return m_pObject_Manager->Find_Prototype(iLevelIndex, pPrototypeTag);
+}
+
 void CGameInstance::Imgui_ProtoViewer(const _tchar*& szSelectedProto)
 {
 	m_pObject_Manager->Imgui_ProtoViewer(szSelectedProto);
@@ -519,6 +524,11 @@ CComponent* CGameInstance::Clone_Component(const _tchar* pPrototypeTag, void* pA
 wcmap<CComponent*>* CGameInstance::GetProtoTypes(_uint iLevelIndex)
 {
 	return m_pComponent_Manager->GetProtoTypes(iLevelIndex);
+}
+
+CComponent * CGameInstance::Find_Prototype_Component(_uint iLevelIndex, const _tchar * pPrototypeTag)
+{
+	return m_pComponent_Manager->Find_Prototype(iLevelIndex, pPrototypeTag);
 }
 
 /*************************
