@@ -10,7 +10,7 @@ struct ENGINE_DLL CAnimTransition : public CBase		// 트랜지션(변경)
 {
 	string m_strName;									// 트랜지션 이름
 	string m_strNextStateName;							// 넘어갈 State 이름
-	_float m_fTransitionDuration = 0.f;					// 변경이 진행될 시점의 Duration -> 따로 조건이 없이 애니메이션이 일정 진행되면 변경되도록 하는 것 인둣?
+	_float m_fTransitionDuration = 0.f;					// 보간 속도
 	std::function<_bool()> m_Predicator = nullptr;		// Predicator가 True를 반환하면 변경됨
 	_uint m_iPriority = 0;								// 우선순위
 
@@ -30,6 +30,8 @@ struct ENGINE_DLL CAnimState : public CBase
 	string m_strName;									// 스테이트 이름
 	vector<CAnimTransition*> m_Transitions;				// 현재 스테이트가 가지는 트랜지션의 벡터
 	CAnimation* m_Animation = nullptr;
+	std::function<void(void)> m_StartEvent = nullptr;	// 애니메이션이 시작될 때 발생하는 이벤트, 있으면 실행시키게 하자
+	std::function<void(void)> m_FinishEvent = nullptr;	// 애니메이션이 종료될 때 발생하는 이벤트, 있으면 실행시키게 하자
 
 public:
 	CAnimState(const string& szStateName) :m_strName(szStateName) {};
@@ -51,7 +53,7 @@ protected:
 public:
 	virtual HRESULT	Initialize(class CASMBuilder* pBuilder);
 	void Tick(_double TimeDelta, _bool bUpdateBone = true);													// 스테이트머신 업데이트
-	void SetCurState(CAnimState* pCurState) { m_pCurState = pCurState; }			// 현재 상태 설정
+	void SetCurState(CAnimState* pCurState) { m_pCurState = pCurState; }									// 현재 상태 설정
 	void SetCurState(const string& stateName) { m_pCurState = m_mapStates[stateName]; }
 	CAnimState* GetState(const string& stateName);															// 특정 상태 가져오기
 	void Imgui_RenderState();
@@ -60,6 +62,7 @@ public:
 	CAnimState* GetPreState() { return m_pPreState; }					// 직전 상태 가져오기
 	_float GetTransitionDuration() { return m_fTransitionDuration; }	// 트랜지션의 Duration 가져오기 (총 재생시간)
 	_float GetCurTransitionTime() { return m_fCurTransitionTime; }		// 트랜지션의 Time 가져오기 (진행시간)
+	_bool  isLerping() { return (1.f > (m_fCurTransitionTime / m_fTransitionDuration)) ? true : false ; }
 
 private:
 	string m_szCurStateName = "";
@@ -73,6 +76,7 @@ private:
 	_float m_fTransitionDuration = 0.f;			// 트랜지션의 Duration
 	_float m_fCurTransitionTime = 0.f;			// 현재 실행중인 애니메이션의 진행시간
 	_float m_fBlend = 0.f;
+	_bool  m_bLerp = false;
 
 	unordered_map<string, CAnimState*> m_mapStates;
 
@@ -173,6 +177,22 @@ public:
 		Assert(m_pBuildAnimTransition != nullptr);
 		Assert(m_pBuildAnimTransition->m_Predicator == nullptr);
 		m_pBuildAnimTransition->m_Predicator = Predicator;
+		return *this;
+	}
+
+	CASMBuilder& StartEvent(std::function<void(void)> StartEvent)
+	{
+		Assert(m_pBuildAnimState != nullptr);
+		Assert(m_pBuildAnimState->m_StartEvent == nullptr);
+		m_pBuildAnimState->m_StartEvent = StartEvent;
+		return *this;
+	}
+
+	CASMBuilder& FinishEvent(std::function<void(void)> FinishEvent)
+	{
+		Assert(m_pBuildAnimState != nullptr);
+		Assert(m_pBuildAnimState->m_FinishEvent == nullptr);
+		m_pBuildAnimState->m_FinishEvent = FinishEvent;
 		return *this;
 	}
 

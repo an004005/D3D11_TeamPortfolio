@@ -41,6 +41,8 @@ public:
 	CAnimation* Find_Animation(const string& strAnimaName);
 	void SetPivot(_float4x4 Pivot) { m_PivotMatrix = Pivot; }
 	_vector& GetLocalMove(_fmatrix WorldMatrix);
+	_bool	isLocalMove() { return !XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)); }
+	_float	GetLastLocalMoveSpeed() const { return m_fLastLocalMoveSpeed; }
 
 public:
 	virtual HRESULT Initialize_Prototype(const char* pModelFilePath);
@@ -108,6 +110,7 @@ private:
 
 	_vector								m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_vector								m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	_float								m_fLastLocalMoveSpeed = 0.f;
 
 	class CShader* m_pShadowShader = nullptr;
 

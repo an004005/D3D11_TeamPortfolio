@@ -121,6 +121,7 @@ public: /* For.PipeLine */
 	_matrix Get_TransformMatrix_Inverse(CPipeLine::TRANSFORMSTATE eState) ;
 	void Set_Transform(CPipeLine::TRANSFORMSTATE eState, _fmatrix TransformMatrix);
 	_float4 Get_CamPosition();
+	_float4 Get_CamLook();	// Cam Look 가져오는거
 
 public: /* For.Timer_Manager */ 
 	_double		Get_TimeDelta(const _tchar* pTimerTag);
