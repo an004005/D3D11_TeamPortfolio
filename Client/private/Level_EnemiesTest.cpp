@@ -6,9 +6,13 @@
 #include "Imgui_PropertyEditor.h"
 #include "Imgui_PostProcess.h"
 #include "Imgui_LevelSwitcher.h"
+#include "Imgui_MapEditor.h"
 #include "Model.h"
 #include "JsonLib.h"
 #include "AnimationInstance.h"
+#include "Texture.h"
+#include "MapNonAnim_Object.h"
+#include "JsonStorage.h"
 
 // AJH's Initial Setting
 //#include "Controller.h"
@@ -49,6 +53,9 @@ HRESULT CLevel_EnemiesTest::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Monster(L"Layer_Monster")))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -131,7 +138,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("FlowerLeg"), CFlowerLeg::Create(m_pDevice, m_pContext)));
 		
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BuddyLumi"), CBuddyLumi::Create(m_pDevice, m_pContext)));
-
+	
 	return S_OK;
 }
 
@@ -162,6 +169,16 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"), &BuddyLumiModel)))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+	
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 	return S_OK;
 }
 

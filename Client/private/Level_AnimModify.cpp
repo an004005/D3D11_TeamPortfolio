@@ -161,7 +161,7 @@ HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	Json PreviewData; // MonsterBuddyLumi	Model_TestPlayer	MonsterFlowerLeg
-	PreviewData["Model"] = "Model_TestPlayer";
+	PreviewData["Model"] = "MonsterFlowerLeg";
 
 	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
 		return E_FAIL;

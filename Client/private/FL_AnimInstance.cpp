@@ -15,10 +15,32 @@ HRESULT CFL_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject)
 				.SetAnimation(*m_pModel->Find_Animation("AS_em0200_102_AL_wait02"))
 
 				.AddTransition("Idle to Walk", "Walk")
-					.Predicator([&]()->_bool {return m_bWalk; })
+					.Predicator([&]()->_bool {return !m_bIdle && m_bWalk; })
 					.Duration(0.2f)
 
+				.AddTransition("Idle to JumpStart", "JumpStart")
+					.Predicator([&]()->_bool {return !m_bIdle && m_bAir; })
+					.Duration(0.2f)
 
+			.AddState("Walk")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0200_106_AL_walk02"))
+				
+				.AddTransition("Walk to Idle", "Idle")
+					.Predicator([&]()->_bool {return !m_bWalk && m_bIdle; })
+					.Duration(0.2f)
+
+				.AddTransition("Walk to JumpStart", "JumpStart")
+					.Predicator([&]()->_bool {return !m_bWalk && m_bAir; })
+					.Duration(0.2f)
+
+			.AddState("JumpStart")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0200_135_AL_dodge_B_start"))
+				
+				.AddTransition("JumpStart to JumpEnd", "JumpEnd")
+					.Predicator([&]()->_bool {return m_bAir; })	// End를 위한 값 받기
+					.Duration(0.2f)
+
+			.AddState("JumpEnd")
 
 			.Build();
 	}
