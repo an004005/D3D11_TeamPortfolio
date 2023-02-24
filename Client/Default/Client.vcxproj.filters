@@ -127,6 +127,9 @@
     <Filter Include="02.GameObjects\UI\Front_UI">
       <UniqueIdentifier>{dbe3d603-c8a0-4590-96fa-f2a387abb7b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Camera\CamSpot">
+      <UniqueIdentifier>{b280be19-5c98-4da2-b901-ddc4e17635f3}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01.Levels\02.GamePlay\01.Tutorial">
       <UniqueIdentifier>{0ce87f0a-cfa9-4fa6-8ec1-62c4bf61ba72}</UniqueIdentifier>
     </Filter>
@@ -289,6 +292,12 @@
     <ClInclude Include="..\public\Canvas_Item.h">
       <Filter>02.GameObjects\UI\Front_UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Camera_Player.h">
+      <Filter>02.GameObjects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CamSpot.h">
+      <Filter>02.GameObjects\Camera\CamSpot</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Level_Tutorial.h">
       <Filter>01.Levels\02.GamePlay\01.Tutorial</Filter>
     </ClInclude>
@@ -429,6 +438,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Canvas_Item.cpp">
       <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera_Player.cpp">
+      <Filter>02.GameObjects\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CamSpot.cpp">
+      <Filter>02.GameObjects\Camera\CamSpot</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Tutorial.cpp">
       <Filter>01.Levels\02.GamePlay\01.Tutorial</Filter>

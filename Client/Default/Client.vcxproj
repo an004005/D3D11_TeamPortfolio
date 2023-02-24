@@ -182,6 +182,8 @@
     </ClInclude>
     <ClInclude Include="..\public\ButtonUI.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
+    <ClInclude Include="..\public\Camera_Player.h" />
+    <ClInclude Include="..\public\CamSpot.h" />
     <ClInclude Include="..\public\Canvas.h" />
     <ClInclude Include="..\public\Canvas_Drive.h" />
     <ClInclude Include="..\public\Canvas_Item.h" />
@@ -243,6 +245,8 @@
     <ClCompile Include="..\private\Canvas_PlayerInfo.cpp" />
     <ClCompile Include="..\private\Canvas_SASInfo.cpp" />
     <ClCompile Include="..\private\Canvas_SASSkill.cpp" />
+    <ClCompile Include="..\private\Camera_Player.cpp" />
+    <ClCompile Include="..\private\CamSpot.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />

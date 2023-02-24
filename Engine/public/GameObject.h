@@ -77,7 +77,7 @@ protected:
 
 protected:
 	/* 객체들이 사용해야 할 컴포넌트들을 보관한다. */
-	map<wstring, class CComponent*>			m_Components;
+	map<wstring, class CComponent*>					m_Components;
 	class CTransform*								m_pTransformCom = nullptr;
 	_bool											m_bCloned = false;
 	_bool											m_bDelete = false;

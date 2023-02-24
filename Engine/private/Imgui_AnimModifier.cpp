@@ -51,6 +51,8 @@ HRESULT CModelPreviwer::Initialize(void* pArg)
 		}
 	}
 
+	m_pModel->Add_EventCaller("Test", []() {IM_LOG("Hello World!")});
+
 	return S_OK;
 }
 
@@ -60,7 +62,14 @@ void CModelPreviwer::Late_Tick(_double TimeDelta)
 	{
 		m_pModel->Play_Animation(TimeDelta);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		m_pTransformCom->LocalMove(m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix()));
+
+		if (m_bLocalMoveAccess) 
+		{
+			_vector vTest = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix());
+			//IM_LOG(to_string(XMVectorGetX(vTest)).c_str());
+			//IM_LOG(to_string(XMVectorGetZ(vTest)).c_str());
+			m_pTransformCom->LocalMove(vTest);
+		}
 	}
 }
 
@@ -79,6 +88,11 @@ void CModelPreviwer::SetAttachTo(string BoneName, CModelPreviwer* pAttachPreview
 {
 	m_AttachBoneName = BoneName;
 	m_pAttachPreview = pAttachPreview;
+}
+
+void CModelPreviwer::Imgui_RenderProperty()
+{
+	ImGui::Checkbox("TestModelLocalMove", &m_bLocalMoveAccess);
 }
 
 CAnimation* CModelPreviwer::GetPlayAnimation()

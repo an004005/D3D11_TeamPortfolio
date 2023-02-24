@@ -574,6 +574,14 @@ _float4 CGameInstance::Get_CamPosition()
 	return m_pPipeLine->Get_CamPosition();	
 }
 
+_float4 CGameInstance::Get_CamLook()
+{
+	if (nullptr == m_pPipeLine)
+		return _float4(0.0f, 0.f, 0.f, 0.f);
+
+	return m_pPipeLine->Get_CamLook();
+}
+
 /*************************
  *	Timer_Manager
  *************************/

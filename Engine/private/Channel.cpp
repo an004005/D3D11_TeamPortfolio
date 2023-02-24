@@ -125,6 +125,8 @@ void CChannel::Blend_TransformMatrix(_double PlayTime, _float fBlendRatio)
 	_vector			vRotation;
 	_vector			vPosition;
 
+	_vector			vBefRotation;
+
 	_matrix			TransformMatrix;
 
 	/* 현재 재생된 시간이 마지막 키프레임시간보다 커지며.ㄴ */
@@ -134,6 +136,8 @@ void CChannel::Blend_TransformMatrix(_double PlayTime, _float fBlendRatio)
 		vRotation = XMLoadFloat4(&m_KeyFrames.back().vRotation);
 		vPosition = XMLoadFloat3(&m_KeyFrames.back().vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
+
+		vBefRotation = vRotation;
 	}
 	else if (PlayTime <= m_KeyFrames.front().Time)
 	{
@@ -141,6 +145,8 @@ void CChannel::Blend_TransformMatrix(_double PlayTime, _float fBlendRatio)
 		vRotation = XMLoadFloat4(&m_KeyFrames.front().vRotation);
 		vPosition = XMLoadFloat3(&m_KeyFrames.front().vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
+
+		vBefRotation = vRotation;
 	}
 	else
 	{
@@ -157,17 +163,20 @@ void CChannel::Blend_TransformMatrix(_double PlayTime, _float fBlendRatio)
 		vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[iFrameIdx].vRotation), XMLoadFloat4(&m_KeyFrames[iFrameIdx + 1].vRotation), fRatio);
 		vPosition = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[iFrameIdx].vPosition), XMLoadFloat3(&m_KeyFrames[iFrameIdx + 1].vPosition), fRatio);
 		vPosition = XMVectorSetW(vPosition, 1.f);
+
+		vBefRotation = vRotation;
 	}
 
 	// blend
 	vScale = XMVectorLerp(vBaseScale, vScale, fBlendRatio);
-	vRotation = XMQuaternionSlerp(vBaseQut, vRotation, fBlendRatio);
+	vRotation = XMQuaternionSlerp(vBaseQut, vRotation, fBlendRatio);	// Blend애니메이션은 보간 안함
 	vPosition = XMVectorLerp(vBasePosition, vPosition, fBlendRatio);
 	vPosition = XMVectorSetW(vPosition, 1.f);
 
 	if ("Reference" == m_strName)
 	{
 		m_vLocalMove = vPosition;
+		vRotation = vBefRotation;
 		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
 	}
 

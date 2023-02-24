@@ -120,11 +120,13 @@ _vector & CModel::GetLocalMove(_fmatrix WorldMatrix)
 		}
 		if (m_mapAnimation[m_CurAnimName]->IsFinished())
 		{
+			m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
 			m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 	}
+	m_fLastLocalMoveSpeed = 0.f;
 
 	_vector vScale, vRotation, vTrans;
 	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
