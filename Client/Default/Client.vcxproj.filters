@@ -151,6 +151,9 @@
     <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_AnimInstance">
       <UniqueIdentifier>{af66fe60-49a3-4fbb-ad06-68cc0dec429b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.GamePlay\01.Tutorial">
+      <UniqueIdentifier>{0ce87f0a-cfa9-4fa6-8ec1-62c4bf61ba72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -263,7 +266,7 @@
     </ClInclude>
     <ClInclude Include="..\public\Effect.h">
       <Filter>VFX\Effect\Parent</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\public\ScarletMap.h">
       <Filter>02.GameObjects\Map</Filter>
     </ClInclude>
@@ -333,6 +336,9 @@
     </ClInclude>
     <ClInclude Include="..\public\FL_AnimInstance.h">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_AnimInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Tutorial.h">
+      <Filter>01.Levels\02.GamePlay\01.Tutorial</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -425,7 +431,7 @@
     </ClCompile>
     <ClCompile Include="..\private\Effect.cpp">
       <Filter>VFX\Effect\Parent</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\ScarletMap.cpp">
       <Filter>02.GameObjects\Map</Filter>
     </ClCompile>
@@ -495,6 +501,9 @@
     </ClCompile>
     <ClCompile Include="..\private\FL_AnimInstance.cpp">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_AnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Tutorial.cpp">
+      <Filter>01.Levels\02.GamePlay\01.Tutorial</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -16,6 +16,7 @@
 #include "VIBuffer_Terrain.h"
 #include "ScarletMap.h"
 #include "Psychokinesis.h"
+#include "MapNonAnim_Object.h"
 #include "Camera_Player.h"
 
 CMainApp::CMainApp()
@@ -286,6 +287,11 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	/* For.Prototype_GameObject_Camera_Player */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_Camera_Player"),
 		CCamera_Player::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For. MapNonAnimObject */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_MapNonAnim_Object"),
+		CMapNonAnim_Object::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;
