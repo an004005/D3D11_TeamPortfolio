@@ -32,6 +32,8 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 {
 	Assert(m_pCurState != nullptr);
 
+	//IM_LOG(to_string(m_fCurTransitionTime / m_fTransitionDuration).c_str());
+
 	_bool bFirstChange = true;
 	_int iLoopBreaker = 100;
 	while (--iLoopBreaker)
@@ -53,6 +55,10 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 					m_pPreState = m_pCurState;
 					m_fPreStatePlayAt = m_pCurState->m_Animation->GetPlayTime();
 					bFirstChange = false;
+					
+					// 종료 이벤트가 있으면 실행
+					if (nullptr != m_pCurState->m_FinishEvent)
+						m_pCurState->m_FinishEvent();
 #ifdef _DEBUG
 					if (m_bStoreHistory)
 					{
@@ -72,9 +78,21 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 				m_pCurState = m_mapStates.find(pTransition->m_strNextStateName)->second;
 				m_fTransitionDuration = pTransition->m_fTransitionDuration;
 				m_fCurTransitionTime = 0.f;
+				IM_LOG(m_pCurState->m_strName.c_str());
+				if (m_pCurState->m_strName == "ATK_A2")
+					int iA = 0;
+				//m_pCurState->m_Animation->Reset();
+
+				// 시작 이벤트가 있으면 실행
+				if (nullptr != m_pCurState->m_StartEvent)
+					m_pCurState->m_StartEvent();
+
+				if (nullptr == m_pCurState->m_Animation)
+					return;
 
 				if (m_pCurState->m_Animation != &CAnimation::s_NullAnimation)
 					m_pCurState->m_Animation->Reset();
+
 				break;
 			}
 		}
@@ -107,10 +125,17 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 		m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fCurTransitionTime / m_fTransitionDuration);
 
 		m_fCurTransitionTime += (_float)TimeDelta;
+
+		m_bLerp = true;
 	}
 	else
 	{
+		if (m_pCurState->m_Animation->IsFinished())
+			m_pCurState->m_Animation->Reset();
+
 		m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+
+		m_bLerp = false;
 	}
 }
 

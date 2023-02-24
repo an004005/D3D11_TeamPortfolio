@@ -2,6 +2,7 @@
 #include "..\public\FSMComponent.h"
 #include "GameUtils.h"
 #include <sstream>
+#include "GameInstance.h"
 
 /*-------------------
  *    CFSMComponent
@@ -12,6 +13,8 @@ CFSMComponent::CFSMComponent()
 
 void CFSMComponent::Tick(_double TimeDelta)
 {
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
 	int iLoopBreaker = 100;
 	// 다른 state로 전이가 불가해질 때 가지 반복하여 전이
 	while (--iLoopBreaker)
