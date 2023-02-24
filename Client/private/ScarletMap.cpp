@@ -169,6 +169,8 @@ void CScarletMap::Imgui_RenderProperty()
 		}
 	}
 
+	ImGui::BeginChild("Selected Object", { 500.f, 200.f });
+
 	if (m_pGameObject)
 	{
 		ImGui::Separator();
@@ -176,6 +178,8 @@ void CScarletMap::Imgui_RenderProperty()
 		m_pGameObject->Imgui_RenderProperty();
 		m_pGameObject->Imgui_RenderComponentProperties();
 	}
+
+	ImGui::EndChild();
 }
 
 void CScarletMap::SaveToJson(OUT Json & json)

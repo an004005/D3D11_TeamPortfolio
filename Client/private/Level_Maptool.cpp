@@ -90,7 +90,6 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 		CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
 	});
 
-
 	/* For. big_building */
 	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Buildings/big_building.static_model"), "../Bin/Resources/Model/StaticModel/Buildings/big_building.static_model"));
 
@@ -99,6 +98,12 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 
 	/* For. LC01_Area02_Minimap */
 	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Minimaps/LC01_Area02_Minimap.static_model"), "../Bin/Resources/Model/StaticModel/Minimaps/LC01_Area02_Minimap.static_model"));
+
+	/* For. HWBase_B02 */
+	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Roads/HWBase_B02.static_model"), "../Bin/Resources/Model/StaticModel/Roads/HWBase_B02.static_model"));
+
+	/* For. HWEndZ_tes02 */
+	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Roads/HWEndZ_tes02.static_model"), "../Bin/Resources/Model/StaticModel/Roads/HWEndZ_tes02.static_model"));
 
 	return S_OK;
 }
