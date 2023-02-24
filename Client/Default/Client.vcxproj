@@ -180,12 +180,20 @@
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\ButtonUI.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
+    <ClInclude Include="..\public\Canvas.h" />
+    <ClInclude Include="..\public\Canvas_Drive.h" />
+    <ClInclude Include="..\public\Canvas_Item.h" />
+    <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
+    <ClInclude Include="..\public\Canvas_SASInfo.h" />
+    <ClInclude Include="..\public\Canvas_SASSkill.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
     <ClInclude Include="..\public\Effect.h" />
     <ClInclude Include="..\public\EffectSystem.h" />
+    <ClInclude Include="..\public\DefaultUI.h" />
     <ClInclude Include="..\public\Floors.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
     <ClInclude Include="..\public\Imgui_LevelSwitcher.h" />
@@ -202,6 +210,7 @@
     <ClInclude Include="..\public\Level_MultiPlay.h" />
     <ClInclude Include="..\public\Level_PlayerTest.h" />
     <ClInclude Include="..\public\Level_Tutorial.h" />
+    <ClInclude Include="..\public\Level_UI.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\Player.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -213,6 +222,7 @@
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\Terrain.h" />
+    <ClInclude Include="..\public\UI.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
     <ClInclude Include="Client.h" />
@@ -225,11 +235,19 @@
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\ButtonUI.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
+    <ClCompile Include="..\private\Canvas.cpp" />
+    <ClCompile Include="..\private\Canvas_Drive.cpp" />
+    <ClCompile Include="..\private\Canvas_Item.cpp" />
+    <ClCompile Include="..\private\Canvas_PlayerInfo.cpp" />
+    <ClCompile Include="..\private\Canvas_SASInfo.cpp" />
+    <ClCompile Include="..\private\Canvas_SASSkill.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp" />
+    <ClCompile Include="..\private\DefaultUI.cpp" />
     <ClCompile Include="..\private\Floors.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
     <ClCompile Include="..\private\Imgui_LevelSwitcher.cpp" />
@@ -246,6 +264,7 @@
     <ClCompile Include="..\private\Level_MultiPlay.cpp" />
     <ClCompile Include="..\private\Level_PlayerTest.cpp" />
     <ClCompile Include="..\private\Level_Tutorial.cpp" />
+    <ClCompile Include="..\private\Level_UI.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\Private\Player.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -257,6 +276,7 @@
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
+    <ClCompile Include="..\private\UI.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
     <ClCompile Include="Client.cpp" />
