@@ -1,6 +1,0 @@
-diffuse
-normal
-rma
-moss diffuse
-moss normal
-moss rma
