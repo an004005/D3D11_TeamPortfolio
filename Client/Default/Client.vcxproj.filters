@@ -118,6 +118,15 @@
     <Filter Include="50.Component\02. Psychokinesis">
       <UniqueIdentifier>{746a1bc6-0b47-4e7e-8cf3-715a03cb1af0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI">
+      <UniqueIdentifier>{cd40877e-1d57-40a8-aa94-2c831bd55b5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\15. UITool">
+      <UniqueIdentifier>{5357e7ff-329d-4daf-8dae-a5f0aa71bc95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI">
+      <UniqueIdentifier>{dbe3d603-c8a0-4590-96fa-f2a387abb7b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -247,6 +256,36 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EffectSystem.h" />
+    <ClInclude Include="..\public\Canvas.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_UI.h">
+      <Filter>01.Levels\15. UITool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\DefaultUI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ButtonUI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PlayerInfo.h">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SASSkill.h">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SASInfo.h">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Drive.h">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Item.h">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -355,6 +394,36 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EffectSystem.cpp" />
+    <ClCompile Include="..\private\Canvas.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_UI.cpp">
+      <Filter>01.Levels\15. UITool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\DefaultUI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ButtonUI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PlayerInfo.cpp">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SASSkill.cpp">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SASInfo.cpp">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Drive.cpp">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Item.cpp">
+      <Filter>02.GameObjects\UI\Front_UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
