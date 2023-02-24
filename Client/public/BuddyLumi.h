@@ -60,6 +60,9 @@ public:
 	_bool IsDamage() const { return m_bDamage; }
 	_bool IsDead() const { return m_bDead; }
 
+// ASM 통제용
+	_bool IsStatic() const { return m_bStatic; }
+
 private:
 	_bool			m_bIdle = false;
 	_bool			m_bAir = false;
@@ -80,6 +83,7 @@ private:
 
 private:	//FSM
 	_bool			m_bInitialize = false;
+	_bool			m_bStatic = false;
 
 private:
 	wstring			m_ModelName;
@@ -87,11 +91,9 @@ private:
 	_float			m_fTimeAcc = 0.f;
 	_float3			m_fMyPos = { 0.f, 0.f, 0.f };
 
+	_uint			m_iAfterRunPt = 0;
 	_uint			m_iAfterAtkPt = 0;
-
-private:
-	_bool			m_bRtoA = false; // Run이 끝나고 Attack로 가기 위한 bool 변수
-
+	_uint			m_iWalkPosition = 0;
 
 public:
 	static CBuddyLumi* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

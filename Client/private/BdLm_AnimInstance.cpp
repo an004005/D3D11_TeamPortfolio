@@ -108,6 +108,10 @@ HRESULT CBdLm_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 					.Predicator([&]()->_bool {return !m_bDodgeB && m_bIdle && m_pModel->Find_Animation("AS_em0400_135_AL_dodge_B")->IsFinished(); })
 					.Duration(0.2f)
 
+				.AddTransition("DodgeB to Walk", "Walk")
+					.Predicator([&]()->_bool {return !m_bDodgeB && m_bWalk && m_pModel->Find_Animation("AS_em0400_135_AL_dodge_B")->IsFinished(); })
+					.Duration(0.2f)
+
 				.AddTransition("DodgeB to Run", "Run")
 					.Predicator([&]()->_bool {return !m_bDodgeB && m_bRun && m_pModel->Find_Animation("AS_em0400_135_AL_dodge_B")->IsFinished(); })
 					.Duration(0.2f)
@@ -121,6 +125,10 @@ HRESULT CBdLm_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 			
 				.AddTransition("DodgeL to Idle", "Idle")
 					.Predicator([&]()->_bool {return !m_bDodgeL && m_bIdle && m_pModel->Find_Animation("AS_em0400_140_AL_dodge_L")->IsFinished(); })
+					.Duration(0.2f)
+
+				.AddTransition("DodgeL to Walk", "Walk")
+					.Predicator([&]()->_bool {return !m_bDodgeL && m_bWalk && m_pModel->Find_Animation("AS_em0400_140_AL_dodge_L")->IsFinished(); })
 					.Duration(0.2f)
 
 				.AddTransition("DodgeL to Run", "Run")
@@ -138,6 +146,10 @@ HRESULT CBdLm_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 					.Predicator([&]()->_bool {return !m_bDodgeR && m_bIdle && m_pModel->Find_Animation("AS_em0400_145_AL_dodge_R")->IsFinished(); })
 					.Duration(0.2f)
 
+				.AddTransition("DodgeR to Walk", "Walk")
+					.Predicator([&]()->_bool {return !m_bDodgeR && m_bWalk && m_pModel->Find_Animation("AS_em0400_145_AL_dodge_R")->IsFinished(); })
+					.Duration(0.2f)
+
 				.AddTransition("DodgeR to Run", "Run")
 					.Predicator([&]()->_bool {return !m_bDodgeR && m_bRun && m_pModel->Find_Animation("AS_em0400_145_AL_dodge_R")->IsFinished(); })
 					.Duration(0.2f)
@@ -151,6 +163,10 @@ HRESULT CBdLm_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 			
 				.AddTransition("Threat to Run", "Run")
 					.Predicator([&]()->_bool {return !m_bThreat && m_bRun && m_pModel->Find_Animation("AS_em0400_160_AL_threat")->IsFinished(); })
+					.Duration(0.2f)
+
+				.AddTransition("Threat to Walk", "Walk")
+					.Predicator([&]()->_bool {return !m_bThreat && m_bWalk && m_pModel->Find_Animation("AS_em0400_160_AL_threat")->IsFinished(); })
 					.Duration(0.2f)
 
 			.Build();
@@ -170,95 +186,100 @@ void CBdLm_AnimInstance::Tick(_double TimeDelta)
 {
 	UpdateTargetState(TimeDelta);
 
-	_bool bChange = CheckFinishedAnimSocket();
-	_bool bLocalMove = true;
-
-	if (!m_mapAnimSocket.find("BuddyLumi_GroundDmgAnim")->second.empty())
+	if (!m_bStatic)
 	{
-		auto Socket = m_mapAnimSocket.find("BuddyLumi_GroundDmgAnim")->second.front();
-		if (bChange)
+		_bool bChange = CheckFinishedAnimSocket();
+		_bool bLocalMove = true;
+			
+		if (!m_mapAnimSocket.find("BuddyLumi_GroundDmgAnim")->second.empty())
 		{
-			Socket = m_mapAnimSocket.find("BuddyLumi_GroundDmgAnim")->second.front();
-			m_pModel->SetPlayAnimation(Socket->GetName());
-			m_pModel->SetCurAnimName(Socket->GetName());
-			m_fLerpTime = 0.f;
+			auto Socket = m_mapAnimSocket.find("BuddyLumi_GroundDmgAnim")->second.front();
+			if (bChange)
+			{
+				Socket = m_mapAnimSocket.find("BuddyLumi_GroundDmgAnim")->second.front();
+				m_pModel->SetPlayAnimation(Socket->GetName());
+				m_pModel->SetCurAnimName(Socket->GetName());
+				m_fLerpTime = 0.f;
+			}
+
+			if (1.f > m_fLerpTime / m_fLerpDuration)
+			{
+				Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+				m_fLerpTime += TimeDelta;
+			}
+			else
+			{
+				Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+			}
 		}
 
-		if (1.f > m_fLerpTime / m_fLerpDuration)
+		else if (!m_mapAnimSocket.find("BuddyLumi_AirDmgAnim")->second.empty())
 		{
-			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
-			m_fLerpTime += TimeDelta;
+			auto Socket = m_mapAnimSocket.find("BuddyLumi_AirDmgAnim")->second.front();
+			if (bChange)
+			{
+				Socket = m_mapAnimSocket.find("BuddyLumi_AirDmgAnim")->second.front();
+				m_pModel->SetPlayAnimation(Socket->GetName());
+				m_pModel->SetCurAnimName(Socket->GetName());
+				m_fLerpTime = 0.f;
+			}
+
+			if (1.f > m_fLerpTime / m_fLerpDuration)
+			{
+				Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+				m_fLerpTime += TimeDelta;
+			}
+			else
+			{
+				Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+			}
+		}
+
+		else if (!m_mapAnimSocket.find("BuddyLumi_DeadAnim")->second.empty())
+		{
+			auto Socket = m_mapAnimSocket.find("BuddyLumi_DeadAnim")->second.front();
+			if (bChange)
+			{
+				Socket = m_mapAnimSocket.find("BuddyLumi_DeadAnim")->second.front();
+				m_pModel->SetPlayAnimation(Socket->GetName());
+				m_pModel->SetCurAnimName(Socket->GetName());
+				m_fLerpTime = 0.f;
+			}
+
+			if (1.f > m_fLerpTime / m_fLerpDuration)
+			{
+				Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+				m_fLerpTime += TimeDelta;
+			}
+			else
+			{
+				Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+			}
+		}
+		else if (bChange)
+		{
+			if (!m_bStatic)
+			{
+				bLocalMove = false;
+				m_pASM_Base->SetCurState("Idle");
+				m_pASM_Base->GetCurState()->m_Animation->Reset();
+				m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+			}			
 		}
 		else
 		{
-			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+			m_pASM_Base->Tick(TimeDelta);
+			m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+		}
+
+		m_pModel->Compute_CombindTransformationMatrix();
+
+		if (bLocalMove)
+		{
+			_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+			m_pTargetObject->GetTransform()->LocalMove(m_pModel->GetLocalMove(WorldMatrix));
 		}
 	}	
-
-	else if (!m_mapAnimSocket.find("BuddyLumi_AirDmgAnim")->second.empty())
-	{
-		auto Socket = m_mapAnimSocket.find("BuddyLumi_AirDmgAnim")->second.front();
-		if (bChange)
-		{
-			Socket = m_mapAnimSocket.find("BuddyLumi_AirDmgAnim")->second.front();
-			m_pModel->SetPlayAnimation(Socket->GetName());
-			m_pModel->SetCurAnimName(Socket->GetName());
-			m_fLerpTime = 0.f;
-		}
-
-		if (1.f > m_fLerpTime / m_fLerpDuration)
-		{
-			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
-			m_fLerpTime += TimeDelta;
-		}
-		else
-		{
-			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
-		}
-	}	
-
-	else if (!m_mapAnimSocket.find("BuddyLumi_DeadAnim")->second.empty())
-	{
-		auto Socket = m_mapAnimSocket.find("BuddyLumi_DeadAnim")->second.front();
-		if (bChange)
-		{
-			Socket = m_mapAnimSocket.find("BuddyLumi_DeadAnim")->second.front();
-			m_pModel->SetPlayAnimation(Socket->GetName());
-			m_pModel->SetCurAnimName(Socket->GetName());
-			m_fLerpTime = 0.f;
-		}
-
-		if (1.f > m_fLerpTime / m_fLerpDuration)
-		{
-			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
-			m_fLerpTime += TimeDelta;
-		}
-		else
-		{
-			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
-		}
-	}
-
-	else if (bChange)
-	{
-		bLocalMove = false;
-		m_pASM_Base->SetCurState("Idle");
-		m_pASM_Base->GetCurState()->m_Animation->Reset();
-		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
-	}
-	else
-	{
-		m_pASM_Base->Tick(TimeDelta);
-		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
-	}
-
-	m_pModel->Compute_CombindTransformationMatrix();
-
-	if (bLocalMove)
-	{
-		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
-		m_pTargetObject->GetTransform()->LocalMove(m_pModel->GetLocalMove(WorldMatrix));
-	}
 }
 
 void CBdLm_AnimInstance::UpdateTargetState(_double TimeDelta)
@@ -283,6 +304,10 @@ void CBdLm_AnimInstance::UpdateTargetState(_double TimeDelta)
 	m_bDodgeB = pBuddyLumi->IsDodgeB();
 	m_bDodgeL = pBuddyLumi->IsDodgeL();
 	m_bDodgeR = pBuddyLumi->IsDodgeR();
+
+	// ASM Control
+	m_bStatic = pBuddyLumi->IsStatic();
+
 }
 
 

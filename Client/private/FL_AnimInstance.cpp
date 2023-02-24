@@ -12,7 +12,13 @@ HRESULT CFL_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject)
 		m_pASM_Base = CASMBuilder()
 			.InitState("Idle")
 			.AddState("Idle")
-			.SetAnimation(*m_pModel->Find_Animation("AS_em0200_102_AL_wait02"))
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0200_102_AL_wait02"))
+
+				.AddTransition("Idle to Walk", "Walk")
+					.Predicator([&]()->_bool {return m_bWalk; })
+					.Duration(0.2f)
+
+
 
 			.Build();
 	}

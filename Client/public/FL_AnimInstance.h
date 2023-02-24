@@ -17,6 +17,24 @@ public:
 public:
 	void	InputAnimSocket(const string& strSocName, list<CAnimation*> AnimList);
 
+protected:	// 대상의 상태
+	_bool			m_bIdle = false;
+	_bool			m_bAir = false;
+	_bool			m_bPreAir = false;
+	_bool			m_bWalk = false;
+	_bool			m_bRun = false;
+	_bool			m_bAttack = false;
+	_bool			m_bThreat = false;
+
+	// Socket
+	_bool			m_bDamage = false;
+	_bool			m_bDead = false;
+
+	// Dodge 3-Direct
+	_bool			m_bDodgeB = false;
+	_bool			m_bDodgeL = false;
+	_bool			m_bDodgeR = false;
+
 protected:
 	CAnimationStateMachine* m_pASM_Base = nullptr;
 

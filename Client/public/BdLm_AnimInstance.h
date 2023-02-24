@@ -35,6 +35,10 @@ protected:	// 대상의 상태
 	_bool			m_bDodgeL = false;
 	_bool			m_bDodgeR = false;
 
+
+	// ASM Control
+	_bool			m_bStatic = false;
+
 protected:
 	CAnimationStateMachine* m_pASM_Base = nullptr;
 
