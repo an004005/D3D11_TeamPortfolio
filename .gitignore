@@ -7,8 +7,7 @@
 *.userosscache
 *.sln.docstates
 
-# Environment Files
-Environments/
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -263,3 +262,6 @@ ModelManifest.xml
 
 /Client/Default/imgui.ini
 /GameServer/Bin/*
+
+# Environment Files
+Environments/
