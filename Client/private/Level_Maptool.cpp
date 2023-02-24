@@ -5,7 +5,6 @@
 #include "Imgui_LevelSwitcher.h"
 #include "JsonLib.h"
 #include "Texture.h"
-#include "MapNonAnim_Object.h"
 #include "Imgui_PropertyEditor.h"
 #include "JsonStorage.h"
 #include "GameUtils.h"
@@ -91,19 +90,20 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 		CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
 	});
 
-	/* For. MapNonAnimObject */
-	FAILED_CHECK(pGameInstance->Add_Prototype(
-		TEXT("Prototype_GameObject_MapNonAnim_Object"),
-		CMapNonAnim_Object::Create(m_pDevice, m_pContext)));
-
 	/* For. big_building */
-	FAILED_CHECK(Create_Model(TEXT("big_building"), "../Bin/Resources/Model/StaticModel/Buildings/big_building.static_model"));
+	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Buildings/big_building.static_model"), "../Bin/Resources/Model/StaticModel/Buildings/big_building.static_model"));
 
 	/* For. MID_buildbase_M_01 */
-	FAILED_CHECK(Create_Model(TEXT("MID_buildbase_M_01"), "../Bin/Resources/Model/StaticModel/Buildings/MID_buildbase_M_01.static_model"));
+	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Buildings/MID_buildbase_M_01.static_model"), "../Bin/Resources/Model/StaticModel/Buildings/MID_buildbase_M_01.static_model"));
 
 	/* For. LC01_Area02_Minimap */
-	FAILED_CHECK(Create_Model(TEXT("LC01_Area02_Minimap"), "../Bin/Resources/Model/StaticModel/Minimaps/LC01_Area02_Minimap.static_model"));
+	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Minimaps/LC01_Area02_Minimap.static_model"), "../Bin/Resources/Model/StaticModel/Minimaps/LC01_Area02_Minimap.static_model"));
+
+	/* For. HWBase_B02 */
+	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Roads/HWBase_B02.static_model"), "../Bin/Resources/Model/StaticModel/Roads/HWBase_B02.static_model"));
+
+	/* For. HWEndZ_tes02 */
+	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Roads/HWEndZ_tes02.static_model"), "../Bin/Resources/Model/StaticModel/Roads/HWEndZ_tes02.static_model"));
 
 	return S_OK;
 }

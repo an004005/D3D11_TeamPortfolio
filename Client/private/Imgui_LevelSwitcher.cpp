@@ -9,6 +9,7 @@
 #include "Level_Effect.h"
 #include "Level_UI.h"
 #include "Level_PlayerTest.h"
+#include "Level_Tutorial.h"
 #include "Level_EnemiesTest.h"
 
 CImgui_LevelSwitcher::CImgui_LevelSwitcher(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -30,6 +31,12 @@ void CImgui_LevelSwitcher::Imgui_RenderMenu()
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_GAMEPLAY, 
 				CLevel_Loading_Simple::Create<CLevel_GamePlay>(m_pDevice, m_pContext));
+		}
+		if (ImGui::MenuItem("Level_Tutorial"))
+		{
+			CGameInstance::GetInstance()->Open_Loading(
+				LEVEL_TUTORIAL,
+				CLevel_Loading_Simple::Create<CLevel_Tutorial>(m_pDevice, m_pContext));
 		}
 		if (ImGui::MenuItem("Level_MapTool"))
 		{

@@ -1,0 +1,11 @@
+diffuse
+normal
+rma
+
+//////////
+
+기본
+detail
+moss
+dust
+damage

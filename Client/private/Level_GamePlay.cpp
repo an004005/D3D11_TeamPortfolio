@@ -182,8 +182,6 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
-
 	return S_OK;
 }
 
