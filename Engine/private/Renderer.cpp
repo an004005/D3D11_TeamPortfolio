@@ -96,19 +96,19 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (FAILED(Render_UI()))
 		return E_FAIL;
 
-//#ifdef _DEBUG
-//
-//	if (FAILED(Render_DebugObject()))
-//		return E_FAIL;
-//
-//	if (nullptr != m_pTarget_Manager && m_bVisibleTargets)
-//	{
-//		m_pTarget_Manager->Render_Debug(TEXT("MRT_Deferred"));
-//		m_pTarget_Manager->Render_Debug(TEXT("MRT_LightAcc"));
-//		m_pTarget_Manager->Render_Debug(TEXT("MRT_LightDepth"));
-//
-//	}
-//#endif
+#ifdef _DEBUG
+
+	if (FAILED(Render_DebugObject()))
+		return E_FAIL;
+
+	if (nullptr != m_pTarget_Manager && m_bVisibleTargets)
+	{
+		m_pTarget_Manager->Render_Debug(TEXT("MRT_Deferred"));
+		m_pTarget_Manager->Render_Debug(TEXT("MRT_LightAcc"));
+		m_pTarget_Manager->Render_Debug(TEXT("MRT_LightDepth"));
+
+	}
+#endif
 
 	return S_OK;
 }

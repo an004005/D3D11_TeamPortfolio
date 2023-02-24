@@ -103,6 +103,9 @@
     <Filter Include="01.Levels\20.PlayerTester">
       <UniqueIdentifier>{c5cff968-b07f-4b9d-86c2-f5fbff38b7af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Camera\CamSpot">
+      <UniqueIdentifier>{b280be19-5c98-4da2-b901-ddc4e17635f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -213,6 +216,12 @@
     <ClInclude Include="..\public\Level_PlayerTest.h">
       <Filter>01.Levels\20.PlayerTester</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Camera_Player.h">
+      <Filter>02.GameObjects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CamSpot.h">
+      <Filter>02.GameObjects\Camera\CamSpot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -301,6 +310,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Level_PlayerTest.cpp">
       <Filter>01.Levels\20.PlayerTester</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera_Player.cpp">
+      <Filter>02.GameObjects\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CamSpot.cpp">
+      <Filter>02.GameObjects\Camera\CamSpot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

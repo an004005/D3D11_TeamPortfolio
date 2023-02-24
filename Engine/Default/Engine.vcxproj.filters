@@ -476,9 +476,6 @@
     <ClCompile Include="..\private\Level_Manager.cpp">
       <Filter>01.Utility\01.Level\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\GameObject.cpp">
-      <Filter>01.Utility\02.GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Object_Manager.cpp">
       <Filter>01.Utility\02.GameObject\Manager</Filter>
     </ClCompile>
@@ -727,6 +724,9 @@
     </ClCompile>
     <ClCompile Include="..\private\AnimationInstance.cpp">
       <Filter>01.Utility\03.Components\06.Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameObject.cpp">
+      <Filter>01.Utility\02.GameObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -11,6 +11,8 @@
 #include "GameUtils.h"
 #include "AnimationInstance.h"
 #include "Player.h"
+#include "Controller.h"
+#include "CamSpot.h"
 
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -36,10 +38,10 @@ HRESULT CLevel_PlayerTest::Initialize()
 	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
 
@@ -98,12 +100,17 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	});
 
 	pGameInstance->Add_Prototype(L"TestPlayer", CPlayer::Create(m_pDevice, m_pContext));
+	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
 
 	auto pModel_TestPlayer = CModel::Create(m_pDevice, m_pContext,
 		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/TestPlayer/Test.anim_model");
 
 	pModel_TestPlayer->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/TestPlayer/Animation/");
 	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_TestPlayer", pModel_TestPlayer));
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
+		CController::Create())))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -122,6 +129,9 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Camera(const _tchar* pLayerTag)
 	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Player"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -132,8 +142,10 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Player(const _tchar* pLayerTag)
 	Json PreviewData;
 	PreviewData["Model"] = "Model_TestPlayer";
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("TestPlayer"), &PreviewData)))
-		return E_FAIL;
+	CGameObject* pPlayer = nullptr;
+	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("TestPlayer"), &PreviewData));
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
 
 	return S_OK;
 }

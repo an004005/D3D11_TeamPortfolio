@@ -4,6 +4,8 @@
 #include "GameUtils.h"
 #include "Model.h"
 #include "JsonStorage.h"
+#include "GameInstance.h"
+#include "Level.h"
 
 namespace nlohmann
 {
@@ -148,7 +150,10 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 		}
 		else
 		{
-			m_PlayTime = 0.0;
+			CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+			if (3 == pGameInstance->GetCurLevelIdx())
+				m_PlayTime = 0.0;
+
 			m_bFinished = true;
 		}
 	}
@@ -226,6 +231,7 @@ void CAnimation::Imgui_RenderProperty()
 	ImGui::Separator();
 	ImGui::Text("%s", m_strName.c_str());
 	ImGui::Text("RealDuration : %.4f", fDuration / fTickPerSecond);
+	ImGui::Text("PlayRatio : %.4f", static_cast<_float>(m_PlayTime / m_Duration));
 	ImGui::InputFloat("TickPerSecond", &fTickPerSecond);
 	ImGui::InputFloat("Duration", &fDuration);
 

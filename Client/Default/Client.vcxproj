@@ -181,6 +181,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\public\Camera_Dynamic.h" />
+    <ClInclude Include="..\public\Camera_Player.h" />
+    <ClInclude Include="..\public\CamSpot.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
@@ -219,6 +221,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
+    <ClCompile Include="..\private\Camera_Player.cpp" />
+    <ClCompile Include="..\private\CamSpot.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\Floors.cpp" />

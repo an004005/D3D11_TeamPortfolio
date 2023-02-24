@@ -13,6 +13,7 @@
 #include "VIBuffer_CircleRect.h"
 #include "VIBuffer_CircleRectLookOut.h"
 #include "VIBuffer_Cube.h"
+#include "Camera_Player.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -256,6 +257,11 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	/* For.Prototype_GameObject_Camera_Dynamic */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_Camera_Dynamic"),
 		CCamera_Dynamic::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Camera_Player */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_Camera_Player"),
+		CCamera_Player::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;
