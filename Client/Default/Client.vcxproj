@@ -238,14 +238,14 @@
     </ClCompile>
     <ClCompile Include="..\private\ButtonUI.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
-    <ClCompile Include="..\private\Camera_Player.cpp" />
-    <ClCompile Include="..\private\CamSpot.cpp" />
     <ClCompile Include="..\private\Canvas.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
     <ClCompile Include="..\private\Canvas_Item.cpp" />
     <ClCompile Include="..\private\Canvas_PlayerInfo.cpp" />
     <ClCompile Include="..\private\Canvas_SASInfo.cpp" />
     <ClCompile Include="..\private\Canvas_SASSkill.cpp" />
+    <ClCompile Include="..\private\Camera_Player.cpp" />
+    <ClCompile Include="..\private\CamSpot.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
