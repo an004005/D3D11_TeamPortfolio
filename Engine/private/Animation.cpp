@@ -151,7 +151,7 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 		else
 		{
 			CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-			if (3 == pGameInstance->GetCurLevelIdx())
+			if (4 == pGameInstance->GetCurLevelIdx())
 				m_PlayTime = 0.0;
 
 			m_bFinished = true;

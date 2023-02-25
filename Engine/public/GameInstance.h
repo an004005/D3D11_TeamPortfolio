@@ -168,6 +168,12 @@ public: // for CImgui_Manager
 	void Clear_ImguiObjects();
 	void Imgui_OnOff(_bool bOn);
 
+public: // for RootAnimation
+	_vector&	GetPeekingPos();
+	void		SetPeekingPos(_fvector vPeekingPos);
+private: // for RootAnimation
+	_vector		m_vecPeekingPos;
+
 private:
 	static _uint					m_iStaticLevelIndex;
 	static _uint					m_iLoadingLevelIndex;

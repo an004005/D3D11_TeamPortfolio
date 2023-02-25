@@ -35,6 +35,8 @@ public:
 	virtual void Late_Tick(_double TimeDelta);
 	virtual HRESULT Render();
 
+	virtual void Imgui_RenderProperty() override;
+
 protected:
 	HRESULT SetUp_Components(void* pArg);
 
@@ -66,6 +68,8 @@ protected:
 
 	_float	m_fPlayRatio = 0.f;
 
+	_float	m_fTurnSpeed = 0.f;
+
 	EMoveDir	m_eMoveDir = DIR_END;
 
 protected:
@@ -74,11 +78,15 @@ protected:
 
 public:
 	EMoveDir	GetMoveDir() const { return m_eMoveDir; }
-	void		LookAtDir();
+	void		LookAtDir(Vector3 Vector);
+	Matrix		GetMatCamRot() const { return m_vMatCamRot; }
+	void		Turn(_fvector vAxis, _float fRange) { m_pTransformCom->Turn(vAxis, fRange); }
 
 protected:
 	Vector3		m_vMoveDir = Vector3();
-	Vector3		m_vLastDir = Vector3();
+	Vector4		m_vLastDir = Vector4();
+	Vector4		m_vBefPos = Vector4();
+	Matrix		m_vMatCamRot = Matrix();
 
 protected:
 	wstring			m_ModelName;
