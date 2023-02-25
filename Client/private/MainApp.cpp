@@ -6,9 +6,6 @@
 #include "Level_Loading_Simple.h"
 #include "Level_Logo.h"
 #include "VIBuffer_PosRect.h"
-#include "DebugRay.h"
-#include "DebugSphere.h"
-#include "Collider.h"
 #include "VIBuffer_Sphere.h"
 #include "VIBuffer_CircleRect.h"
 #include "VIBuffer_CircleRectLookOut.h"
@@ -150,22 +147,6 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	/* For.Prototype_Component_Shader_VtxAnimModel*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimModel"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimModel.hlsl"), VTXANIMMODEL_DECLARATION::Elements, VTXANIMMODEL_DECLARATION::iNumElements))))
-		return E_FAIL;
-
-
-	/* For.Prototype_Component_Collider*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"),
-		CCollider::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-
-	/*For.Prototype_DebugRay*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, CClientUtils::s_DebugRayPrototype,
-		CDebugRay::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-	/*For.Prototype_DebugSphere*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, CClientUtils::s_DebugSpherePrototype,
-		CDebugSphere::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

@@ -5,8 +5,6 @@
 #include "Transform.h"
 
 const _tchar* const CClientUtils::s_DebugLayer = L"DebugLayer";
-const _tchar* const CClientUtils::s_DebugRayPrototype = L"Prototype_DebugRay";
-const _tchar* const CClientUtils::s_DebugSpherePrototype = L"Prototype_DebugSphere";
 
 
 EMoveAxis CClientUtils::MoveAxisToEnum(_float3 vMoveAxis)
@@ -67,26 +65,6 @@ const string& CClientUtils::AxisEnumToStr(EMoveAxis eAxis)
 	"CENTER",
 	};
 	return strs[static_cast<_uint>(eAxis)];
-}
-
-void CClientUtils::CloneDebugRay(_float3 vOrigin, _float3 vDir, _float fLife)
-{
-	Json json = Json::object();
-	json["Origin"] = vOrigin;
-	json["Dir"] = vDir;
-	json["Life"] = fLife;
-
-	CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, s_DebugLayer, s_DebugRayPrototype, &json);
-}
-
-void CClientUtils::CloneDebugSphere(_float3 vOrigin, _float fRadius, _float fLife)
-{
-	Json json = Json::object();
-	json["Origin"] = vOrigin;
-	json["Radius"] = fRadius;
-	json["Life"] = fLife;
-
-	CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, s_DebugLayer, s_DebugSpherePrototype, &json);
 }
 
 EBaseAxis CClientUtils::GetDamageFromAxis(CTransform* pTransform, _fvector vFrom)
