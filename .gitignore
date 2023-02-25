@@ -265,3 +265,5 @@ ModelManifest.xml
 
 # Environment Files
 Environments/
+
+!/Engine/ThirdPartyLib/physx/*
