@@ -64,7 +64,7 @@ public:
 	_uint Get_Priority() const {
 		return m_iPriority;
 	}
-	void SetPriority(_uint iPriority) { 
+	void Set_Priority(_uint iPriority) { 
 		m_iPriority = iPriority;
 	}
 

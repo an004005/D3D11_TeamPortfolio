@@ -21,6 +21,7 @@
 #include "ButtonUI.h"
 #include "SASSkillIconUI.h"
 #include "SASSkillGaugeUI.h"
+#include "SASSkillLightUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -130,6 +131,11 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_SASSkillGauge_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillGauge_UI"),
 			CSASSkillGaugeUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_SASSkillLight_UI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillLight_UI"),
+			CSASSkillLightUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 	}

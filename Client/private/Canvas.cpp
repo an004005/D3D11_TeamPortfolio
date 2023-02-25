@@ -60,8 +60,19 @@ void CCanvas::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
+	vector<CUI*> tmpUI;
+	tmpUI.reserve(m_mapChildUIs.size());
+
 	for (const auto& Pair : m_mapChildUIs)
-		Pair.second->Late_Tick(TimeDelta);
+		tmpUI.push_back(Pair.second);
+
+	std::sort(tmpUI.begin(), tmpUI.end(), [](const CUI* left, const CUI* right)
+	{
+		return left->Get_Priority() < right->Get_Priority();
+	});
+
+	for (auto pUI : tmpUI)
+		pUI->Late_Tick(TimeDelta);
 }
 
 void CCanvas::Imgui_RenderProperty()

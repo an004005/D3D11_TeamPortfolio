@@ -65,19 +65,10 @@ void CSASSkillGaugeUI::Tick(_double TimeDelta)
 		{
 			if(1.0f > m_tParams.Floats[0])
 				m_tParams.Floats[0] += _float(TimeDelta) /** m_fGaugeSpeed*/;
-
 		}
 
-		static _uint iCount = 5;
-		if (pGameInstance->KeyDown(DIK_1))
-		{
-			++iCount;
-		}
-		if (pGameInstance->KeyDown(DIK_2))
-		{
-			--iCount;
-		}
-		m_pCanvas->Set_SuperPowers(CCanvas_SASSkill::SUPERPOWERS(iCount));
+		
+		m_pCanvas->Set_SuperPowers(CCanvas_SASSkill::SUPERPOWERS(1));
 	}
 }
 
@@ -147,71 +138,71 @@ void CSASSkillGaugeUI::ChangeSkill()
 {
 	switch (m_pCanvas->Get_SuperPowers())
 	{
-	case CCanvas_SASSkill::PSYCHOKINESIS0:
+	case CCanvas_SASSkill::PSYCHOKINESIS0:	// 0
 	{
 		m_tParams.Float4s[0] = { 0.886f, 0.620f, 1.0f, 1.0f };
 		m_fMinMaxGauge = { 0.0f, 1.0f };
 		m_fGaugeSpeed = { 0.5f };
 	}
 		break;
-	case CCanvas_SASSkill::PSYCHOKINESIS1:
+	case CCanvas_SASSkill::PSYCHOKINESIS1:	// 1
 	{
 		m_tParams.Float4s[0] = { 0.886f, 0.620f, 1.0f, 1.0f };
 		m_fMinMaxGauge = { 0.0f, 1.0f };
 		m_fGaugeSpeed = { 0.5f };
 	}
 		break;
-	case CCanvas_SASSkill::IGNITION:
+	case CCanvas_SASSkill::IGNITION:	// 2
 	{
 		m_tParams.Float4s[0] = { 1.0f, 0.549f, 0.635f, 1.0f };
 		m_fMinMaxGauge = { 0.0f, 1.0f };
 		m_fGaugeSpeed = { 0.2f };
 	}
 		break;
-	case CCanvas_SASSkill::RESHUFFLE:
+	case CCanvas_SASSkill::RESHUFFLE:	// 3
 	{
 		m_tParams.Float4s[0] = { 1.0f, 0.824f, 0.427f, 1.0f };
 		m_fMinMaxGauge = { 0.0f, 1.0f };
 		m_fGaugeSpeed = { 0.8f };
 	}
 		break;
-	case CCanvas_SASSkill::CLAIRVOYANCE:
+	case CCanvas_SASSkill::CLAIRVOYANCE:	// 4
 	{
 		m_tParams.Float4s[0] = { 0.388f, 0.992f, 0.455f, 1.0f };
 
 	}
 		break;
-	case CCanvas_SASSkill::TELEPORTATION:
+	case CCanvas_SASSkill::TELEPORTATION:	// 5
 	{
 		m_tParams.Float4s[0] = { 0.584f, 0.918f, 1.0f, 1.0f };
 
 	}
 		break;
-	case CCanvas_SASSkill::TRANSPARENCY:
+	case CCanvas_SASSkill::TRANSPARENCY:	// 6
 	{
 		m_tParams.Float4s[0] = { 0.714f, 1.0f, 0.957f, 1.0f };
 
 	}
 		break;
-	case CCanvas_SASSkill::DISCHARGE:
+	case CCanvas_SASSkill::DISCHARGE:	// 7
 	{
 		m_tParams.Float4s[0] = { 1.0f, 0.937f, 0.580f, 1.0f };
 
 	}
 		break;
-	case CCanvas_SASSkill::COPY:
+	case CCanvas_SASSkill::COPY:	// 8
 	{
 		m_tParams.Float4s[0] = { 0.694f, 0.804f, 1.0f, 1.0f };
 
 	}
 		break;
-	case CCanvas_SASSkill::HIGHSPEED:
+	case CCanvas_SASSkill::HIGHSPEED:	// 9
 	{
 		m_tParams.Float4s[0] = { 1.0f, 0.553f, 0.878f, 1.0f };
 
 	}
 		break;
-	case CCanvas_SASSkill::NOT:
+	case CCanvas_SASSkill::NOT:	// 10
 	{
 		m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
