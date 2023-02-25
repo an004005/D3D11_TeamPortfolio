@@ -26,6 +26,7 @@ public:
 	class CLayer* GetLayer(_uint iLevelIndex, const _tchar* pLayerTag);
 	CGameObject* Find_ObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred);
 	list<CGameObject*> Find_AllObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred);
+	class CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 
 	void Tick(_double TimeDelta);
 	void Late_Tick(_double TimeDelta);
@@ -69,7 +70,6 @@ private:
 	static unordered_set<CGameObject*> s_AliveObjects;
 
 private:
-	class CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 	class CLayer* Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
 
 public:

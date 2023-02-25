@@ -15,6 +15,8 @@
 #include "Camera.h"
 #include "Sound.h"
 
+#include "TestMonster.h"
+
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -31,7 +33,6 @@ HRESULT CLevel_GamePlay::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 
-
 	if (FAILED(Ready_Prototypes()))
 		return E_FAIL;
 
@@ -45,6 +46,9 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Monster(L"Layer_Monster")))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_UI(L"Layer_UI")))
@@ -116,14 +120,12 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	// CGameUtils::ListFilesRecursive("../Bin/Resources/Meshes/Valorant/Materials/", [this](const string& fileName)
-	// {
-	// 	char szFileName[MAX_PATH]{};
-	// 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-	// 	CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
-	// });
-
-	
+	 CGameUtils::ListFilesRecursive("../Bin/Resources/Meshes/Valorant/Materials/", [this](const string& fileName)
+	 {
+	 	char szFileName[MAX_PATH]{};
+	 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
+	 	CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
+	 });
 
 	/* Controller */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
@@ -152,14 +154,34 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	}
 
+	//// 23.02.20 PJW Work
+
+	//{														// Bin\Resources\Model\AnimModel\Monster\Goat
+	//	auto pGoat = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/AnimModel/Monster/Goat/Goat.anim_model",
+	//		_float4x4::CreateScale({ 0.1f, 0.1f, 0.1f }));
+	//	pGoat->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/Goat/Anim/"); // Bin\Resources\Model\AnimModel\Monster\Goat\Anim
+	//	pGameInstance->Add_Prototype(TEXT("TestMonsterGoat"), pGoat);
+	//}
+
+	//{														// \Bin\Resources\Model\AnimModel\Monster\FlowerLeg
+	//	auto pFlowerLeg = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/FlowerLeg.anim_model",
+	//		_float4x4::CreateScale({ 0.1f, 0.1f, 0.1f }));
+	//	pFlowerLeg->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Anim/"); // \Bin\Resources\Model\AnimModel\Monster\FlowerLeg\Anim
+	//	pGameInstance->Add_Prototype(TEXT("MonsterFlowerLeg"), pFlowerLeg);
+	//}
+
+	//pGameInstance->Add_Prototype(TEXT("TestMonster"), CTestMonster::Create(m_pDevice, m_pContext));
+
+	//// Model Component Origin Create
+
+	//// ~23.02.20 PJW Work
+
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
-
 	return S_OK;
 }
 
@@ -184,9 +206,26 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar* pLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	/*Json PreviewData;
+	PreviewData["Model"] = "Monster";
+	pGameInstance->Clone_GameObject(pLayerTag, L"TestMonster", &PreviewData);*/
+
+	/*if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CGameInstance);*/
+
+	return S_OK;
+}
+
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
 	return S_OK;
 }
 
@@ -212,4 +251,3 @@ void CLevel_GamePlay::Free()
 {
 	__super::Free();
 }
-

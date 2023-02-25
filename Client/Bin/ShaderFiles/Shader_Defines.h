@@ -39,7 +39,7 @@ RasterizerState RS_NonCulling
 RasterizerState RS_Wireframe
 {
 	FillMode = wireframe;
-	CullMode = back;
+	CullMode = none;
 	FrontCounterClockwise = false;
 };
 

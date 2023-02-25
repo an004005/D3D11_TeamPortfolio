@@ -22,12 +22,19 @@ enum class EBoneMask
 	BONE_MASK_END
 };
 
-
+typedef struct tagOptionalRootMotion
+{
+	string szAnimName;
+	_float fStartTime;
+	_float fEndTime;
+	_float4 vOptionalRootVector;
+}OPTIONAL_ROOTMOTION;
 
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
 	enum TYPE { TYPE_NONANIM, TYPE_ANIM, TYPE_END };
+
 private:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CModel(const CModel& rhs);
@@ -41,6 +48,9 @@ public:
 	_float4x4 GetPivotMatrix() const { return m_PivotMatrix; }
 	CAnimation* Find_Animation(const string& strAnimaName);
 	void SetPivot(_float4x4 Pivot) { m_PivotMatrix = Pivot; }
+	_vector& GetLocalMove(_fmatrix WorldMatrix);
+	_bool	isLocalMove() { return !XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)); }
+	_float	GetLastLocalMoveSpeed() const { return m_fLastLocalMoveSpeed; }
 
 public:
 	virtual HRESULT Initialize_Prototype(const char* pModelFilePath);
@@ -50,6 +60,7 @@ public:
 public:
 	void SetPlayAnimation(const string& strAnimName);
 	CAnimation* GetPlayAnimation();
+	void SetCurAnimName(const string& strAnimName);
 
 	void Play_Animation(_double TimeDelta);
 	void Play_Animation_Test(_double TimeDelta);
@@ -71,12 +82,27 @@ public:
 	class CMaterial* FindMaterial(const _tchar* pMtrlProtoTag);
 
 private:
+	void SaveModifiedData(Json& json);
+
+private:
 	void Ready_Bones(const Json& jBone, class CBone* pParent);
 	void SetBoneChildren(const Json& jBone);
 	HRESULT Ready_Materials(HANDLE hFile);
 
+public:		// 이벤트 실행
+	void EventCaller(const string& EventName);
+	void Add_EventCaller(const string& EventName, std::function<void(void)> Func);
+	_vector& GetOptionalMoveVector(_fmatrix WorldMatrix);
+	void Add_OptionalRootMotion(OPTIONAL_ROOTMOTION RootMotion);
+	void Delete_OptionalRootMotion();
+
+private:	// 이벤트
+	unordered_map<string, std::function<void(void)>>	m_EventFunc;
+	unordered_map<string, OPTIONAL_ROOTMOTION>			m_mapOptionalRootMotion;
+
 private:
 	static const _float4x4 s_DefaultPivot;
+	static const string s_ModifyFilePath;
 
 private:
 	string								m_strName;
@@ -85,15 +111,24 @@ private:
 
 	/* 하나의 모델은 교체가 가능한 여러개의 메시로 구성되어있다. */
 	vector<class CMesh*>				m_Meshes;
-	vector<class CMaterial*>	m_Materials;
+	vector<class CMaterial*>			m_Materials;
 
 	// Json jBoneOrigin;
-	string								m_BoneObjectDump;
+	string								 m_BoneObjectDump;
 	class CBone*						 m_pRootBone = nullptr;
 	unordered_map<string, class CBone*>	 m_mapBones;
 
 	string								m_CurAnimName;
 	unordered_map<string, CAnimation*>  m_mapAnimation;
+
+	KEYFRAME							m_CurKeyFrame;
+	KEYFRAME							m_BefKeyFrame;
+
+	_vector								m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	_vector								m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	_float								m_fLastLocalMoveSpeed = 0.f;
+
+	_vector								m_vInitTrans = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 
 	class CShader* m_pShadowShader = nullptr;
 

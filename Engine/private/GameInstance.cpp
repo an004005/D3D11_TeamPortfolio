@@ -477,6 +477,11 @@ list<CGameObject*> CGameInstance::Find_AllObjectByPredicator(_uint iLevelIndex, 
 	return m_pObject_Manager->Find_AllObjectByPredicator(iLevelIndex, Pred);
 }
 
+CGameObject * CGameInstance::Find_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag)
+{
+	return m_pObject_Manager->Find_Prototype(iLevelIndex, pPrototypeTag);
+}
+
 void CGameInstance::Imgui_ProtoViewer(const _tchar*& szSelectedProto)
 {
 	m_pObject_Manager->Imgui_ProtoViewer(szSelectedProto);
@@ -526,6 +531,11 @@ wcmap<CComponent*>* CGameInstance::GetProtoTypes(_uint iLevelIndex)
 	return m_pComponent_Manager->GetProtoTypes(iLevelIndex);
 }
 
+CComponent * CGameInstance::Find_Prototype_Component(_uint iLevelIndex, const _tchar * pPrototypeTag)
+{
+	return m_pComponent_Manager->Find_Prototype(iLevelIndex, pPrototypeTag);
+}
+
 /*************************
  *	PipeLine
  *************************/
@@ -567,6 +577,14 @@ _float4 CGameInstance::Get_CamPosition()
 		return _float4(0.0f, 0.f, 0.f, 1.f);
 
 	return m_pPipeLine->Get_CamPosition();	
+}
+
+_float4 CGameInstance::Get_CamLook()
+{
+	if (nullptr == m_pPipeLine)
+		return _float4(0.0f, 0.f, 0.f, 0.f);
+
+	return m_pPipeLine->Get_CamLook();
 }
 
 /*************************
@@ -730,6 +748,16 @@ void CGameInstance::Clear_ImguiObjects()
 void CGameInstance::Imgui_OnOff(_bool bOn)
 {
 	m_pImgui_Manager->ImguiOnOff(bOn);
+}
+
+_vector & CGameInstance::GetPeekingPos()
+{
+	return m_vecPeekingPos;
+}
+
+void CGameInstance::SetPeekingPos(_fvector vPeekingPos)
+{
+	m_vecPeekingPos = vPeekingPos;
 }
 
 void CGameInstance::Release_Engine()

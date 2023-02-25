@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CBaseAnimInstance;
+
 /************************
  * CModelPreviwer
  ************************/
@@ -21,11 +23,12 @@ public:
 	virtual HRESULT Render() override;
 	void SetAttachTo(string BoneName, CModelPreviwer* pAttachPreview);
 
+	virtual void Imgui_RenderProperty();
+
 public:
 	class CAnimation* GetPlayAnimation();
 	class CModel* GetModel() { return m_pModel; }
 	void Reset();
-
 
 private:
 	class CRenderer*				m_pRendererCom = nullptr;
@@ -34,6 +37,11 @@ private:
 
 	string m_AttachBoneName;
 	CModelPreviwer* m_pAttachPreview = nullptr;
+
+	_bool	m_bLocalMoveAccess = false;
+
+	Vector3	m_vOptionalVector = { 0.f, 0.f, 0.f };
+
 public:
 	static CModelPreviwer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
@@ -56,11 +64,17 @@ public:
 	virtual void Free() override;
 
 private:
+	void RootMotionMaker(); // 루트모션메이커
+
+private:
 	class CGameObject* m_pSelectedObject = nullptr;
 	class CGameInstance* m_pGameInstance = nullptr;
 
 
 	CModelPreviwer* m_pPreview = nullptr;
+
+private:
+
 };
 
 END

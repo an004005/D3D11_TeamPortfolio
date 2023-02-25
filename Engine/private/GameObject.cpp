@@ -78,7 +78,8 @@ void CGameObject::SaveToJson(Json& json)
 
 void CGameObject::LoadFromJson(const Json& json)
 {
-	m_strObjectTag = json["ObjectTag"];
+	if (json.contains("ObjectTag"))
+		m_strObjectTag = json["ObjectTag"];
 }
 
 void CGameObject::Imgui_RenderComponentProperties()

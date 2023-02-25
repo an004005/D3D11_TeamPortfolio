@@ -166,6 +166,7 @@ call Copy.bat $(Configuration)</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Animation.h" />
+    <ClInclude Include="..\public\AnimationInstance.h" />
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\public\Bone.h" />
     <ClInclude Include="..\public\Camera.h" />
@@ -270,6 +271,7 @@ call Copy.bat $(Configuration)</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Animation.cpp" />
+    <ClCompile Include="..\private\AnimationInstance.cpp" />
     <ClCompile Include="..\private\Base.cpp" />
     <ClCompile Include="..\private\Bone.cpp" />
     <ClCompile Include="..\private\Camera.cpp" />
