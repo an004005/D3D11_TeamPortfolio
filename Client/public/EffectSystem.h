@@ -61,7 +61,7 @@ private:
 	CRenderer*					m_pRendererCom = nullptr;
 	CVIBuffer*					m_pBuffer = nullptr;
 	CModel*						m_pModel = nullptr;
-
+	
 	string m_BufferProtoTag = "Prototype_Component_VIBuffer_Rect";
 	string m_ShaderProtoTag = "Prototype_Component_Shader_VtxTex_VFX";
 	string m_ModelProtoTag;
@@ -81,6 +81,8 @@ private:
 	_float m_fCurModelChangeTime = 0.f;
 	_float m_fModelChangeTime = 2.f;
 	_bool	m_bModelChange = false;
+
+	
 public:
 	static CEffectSystem*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void*);

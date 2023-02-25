@@ -1,0 +1,4 @@
+Effect Todolist
+
+1. 타임라인 길이랑 플레이타임 설정하는 버튼 만들기 
+PlayFromStart, Stop, Reset

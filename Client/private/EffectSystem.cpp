@@ -75,6 +75,9 @@ void CEffectSystem::Tick(_double TimeDelta)
 	// 	m_fCurModelChangeTime = 0.f;
 	// 	m_bModelChange = true;
 	// }
+
+	// if(m_pBuffer->Check_IsInstance() == true)
+	// 	dynamic_cast<CVIBuffer_Mesh_Instancing*>(m_pBuffer)->Tick(TimeDelta);
 }
 
 void CEffectSystem::Late_Tick(_double TimeDelta)
@@ -279,6 +282,19 @@ void CEffectSystem::Imgui_RenderProperty()
 			FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_BufferProtoTag).c_str(), TEXT("Buffer"), (CComponent**)&m_pBuffer));
 		}
 	}
+	// {
+	// 	char BufferProtoTag[MAX_PATH];
+	// 	strcpy(BufferProtoTag, m_BufferProtoTag.c_str());
+	// 	ImGui::InputText("InstanceBuffer ProtoTag", BufferProtoTag, MAX_PATH);
+	// 	m_BufferProtoTag = BufferProtoTag;
+	// 	ImGui::SameLine();
+	// 	if (ImGui::Button("ReCreate Buffer"))
+	// 	{
+	// 		Safe_Release(m_pBuffer);
+	// 		Delete_Component(TEXT("Instance_Buffer"));
+	// 		FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_BufferProtoTag).c_str(), TEXT("Buffer"), (CComponent**)&m_pBuffer));
+	// 	}
+	// }
 	{
 		char ShaderProtoTag[MAX_PATH];
 		strcpy(ShaderProtoTag, m_ShaderProtoTag.c_str());
@@ -305,7 +321,9 @@ void CEffectSystem::Imgui_RenderProperty()
 			FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), 	(CComponent**)&m_pModel));
 		}
 	}
+
 	
+
 	// if (auto pBillBoard = dynamic_cast<CBillBoardTest*>(m_pBuffer))
 	// {
 	// 	ImGui::InputFloat("BillBoardLife", &pBillBoard->m_fLife);

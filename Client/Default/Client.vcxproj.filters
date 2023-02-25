@@ -240,9 +240,6 @@
     <ClInclude Include="..\public\ParticleSystem.h">
       <Filter>VFX\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="TrailSystem.h">
-      <Filter>VFX\Trail</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h">
       <Filter>VFX\Effect\Buffer</Filter>
     </ClInclude>
@@ -251,6 +248,9 @@
     </ClInclude>
     <ClInclude Include="..\public\TestEffectGroup.h">
       <Filter>VFX\Effect\EffectGroup\TestEffectGroup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TrailSystem.h">
+      <Filter>VFX\Trail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -350,9 +350,6 @@
     <ClCompile Include="..\private\ParticleSystem.cpp">
       <Filter>VFX\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="TrailSystem.cpp">
-      <Filter>VFX\Trail</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp">
       <Filter>VFX\Effect\Buffer</Filter>
     </ClCompile>
@@ -361,6 +358,9 @@
     </ClCompile>
     <ClCompile Include="..\private\TestEffectGroup.cpp">
       <Filter>VFX\Effect\EffectGroup\TestEffectGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TrailSystem.cpp">
+      <Filter>VFX\Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -445,6 +445,9 @@
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstance_ParticleSystem.hlsl">
       <Filter>97.ShaderFiles\VFX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_MeshInstance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
