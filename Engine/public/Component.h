@@ -29,6 +29,9 @@ public:
 	virtual void SaveToJson(OUT Json& json){}
 	virtual void LoadFromJson(const Json& json) {}
 
+	// 보통 GameObject에서 clone할 때 지정해준다.
+	void SetOwner(class CGameObject* pOwner) { m_pOwner = pOwner; }
+	class CGameObject* TryGetOwner();
 	_bool IsCloned() const { return m_isCloned; }
 
 public: /* imgui */
@@ -45,6 +48,9 @@ protected:
 	_bool						m_isCloned = false;
 	const _tchar* m_pPrototypeTag = nullptr;
 
+private:
+	// 순환참조문제로 reference count는 올리지 않는다. 주의
+	class CGameObject* m_pOwner = nullptr;
 };
 
 END

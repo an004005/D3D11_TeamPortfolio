@@ -5,9 +5,10 @@
 #include "BoundingCapsule.h"
 #include "JsonLib.h"
 #include "ImguiUtils.h"
+#include "PhysX_Manager.h"
 
 const array<const string, CCollider::TYPE_END> CCollider::s_EnumNames{
-	"AABB", "OBB", "SPHERE", "CAPSULE"
+	"OBB", "SPHERE", "CAPSULE"
 };
 
 CCollider::CCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -55,13 +56,8 @@ HRESULT CCollider::Initialize_Prototype()
 
 HRESULT CCollider::Initialize(void * pArg)
 {
-	if (pArg)
-	{
-		Json& json = *static_cast<Json*>(pArg);
-		m_eType = static_cast<CCollider::TYPE>(json["Collider"]["Type"]);
-		m_OriginTransformMatrix = json["Collider"]["OriginTransform"];
-	}
-	else
+	__super::Initialize(pArg);
+	if (!pArg)
 	{
 		m_eType = CCollider::TYPE_SPHERE;
 		m_OriginTransformMatrix = _float4x4::Identity;
@@ -75,6 +71,13 @@ void CCollider::SaveToJson(Json& json)
 {
 	json["Collider"]["Type"] = static_cast<_uint>(m_eType);
 	json["Collider"]["OriginTransform"] = m_OriginTransformMatrix;
+}
+
+void CCollider::LoadFromJson(const Json& json)
+{
+	CComponent::LoadFromJson(json);
+	m_eType = static_cast<CCollider::TYPE>(json["Collider"]["Type"]);
+	m_OriginTransformMatrix = json["Collider"]["OriginTransform"];
 }
 
 void CCollider::Imgui_RenderProperty()
@@ -97,10 +100,26 @@ void CCollider::Imgui_RenderProperty()
 
 void CCollider::ChangeType(CCollider::TYPE eType)
 {
+	if (m_pActor)
+	{
+		if (m_pShape)
+		{
+			m_pActor->detachShape(*m_pShape);
+			m_pShape->release();
+			m_pShape = nullptr;
+		}
+
+		if (m_pActor->getScene())
+		{
+			auto pScene = CPhysX_Manager::GetInstance()->GetScene();
+			pScene->removeActor(*m_pActor);
+		}
+		m_pActor->release();
+		m_pActor = nullptr;
+	}
+
 	m_eType = eType;
 
-	Safe_Delete(m_pAABB_Original);
-	Safe_Delete(m_pAABB);
 	Safe_Delete(m_pOBB_Original);
 	Safe_Delete(m_pOBB);
 	Safe_Delete(m_pSphere_Original);
@@ -108,36 +127,63 @@ void CCollider::ChangeType(CCollider::TYPE eType)
 	Safe_Delete(m_pCapsule_Origin);
 	Safe_Delete(m_pCapsule);
 
+
+	auto pPhysics = CPhysX_Manager::GetInstance()->GetPhysics();
+	auto pMtrl = CPhysX_Manager::GetInstance()->FindMaterial("Default");
+
+	auto pxMat = CPhysXUtils::ToFloat4x4(m_OriginTransformMatrix);
+	m_pActor = pPhysics->createRigidDynamic(physx::PxTransform{pxMat});
+
 	switch (m_eType)
 	{
-	case CCollider::TYPE_AABB:
-		m_pAABB_Original = new BoundingBox(_float3(0.f, 0.f, 0.f), _float3(0.5f, 0.5f, 0.5f));
-		Update_Origin(m_OriginTransformMatrix);
-		m_pAABB = new BoundingBox(*m_pAABB_Original);
-		break;
-
 	case CCollider::TYPE_OBB:
 		m_pOBB_Original = new BoundingOrientedBox();
 		Update_Origin(m_OriginTransformMatrix);
 		m_pOBB = new BoundingOrientedBox(*m_pOBB_Original);
+
+		{
+			const _float3 vExtents = m_pOBB->Extents;
+			m_pShape = pPhysics->createShape(physx::PxBoxGeometry(vExtents.x, vExtents.y, vExtents.z), *pMtrl);
+		}
 		break;
 
 	case CCollider::TYPE_SPHERE:
 		m_pSphere_Original = new BoundingSphere(_float3(0.f, 0.f, 0.f), 0.5f);
 		Update_Origin(m_OriginTransformMatrix);
 		m_pSphere = new BoundingSphere(*m_pSphere_Original);
+
+		m_pShape = pPhysics->createShape(physx::PxSphereGeometry(m_pSphere->Radius), *pMtrl);
+
 		break;
 
 	case CCollider::TYPE_CAPSULE:
-		m_pCapsule_Origin = new CBoundingCapsule(_float3(0.f, 0.5f, 0.f), _float3(0.f, -0.5f, 0.f), 0.5f);
+		m_pCapsule_Origin = new CBoundingCapsule(_float3(1.f, 0.f, 0.f), _float3(-1.f, 0.f, 0.f), 0.5f);
 		Update_Origin(m_OriginTransformMatrix);
 		m_pCapsule = new CBoundingCapsule(*m_pCapsule_Origin);
+
+		// m_pShape = pPhysics->createShape(physx::PxCapsuleGeometry(m_pCapsule->m_fRadius, m_pCapsule->GetHalfHeight()), *pMtrl);
+
+		{
+			m_pShape = pPhysics->createShape(physx::PxCapsuleGeometry(m_pCapsule->m_fRadius, m_pCapsule_Origin->GetHalfHeight()), *pMtrl);
+			physx::PxTransform relativePose(physx::PxQuat(physx::PxHalfPi, physx::PxVec3(0,0,1)));
+			m_pShape->setLocalPose(relativePose);
+			// physx::PxRigidBodyExt::updateMassAndInertia(*m_pActor, capsuleDensity);
+		}
+
 		break;
+
 	case TYPE_END:
 		FALLTHROUGH
-	default: 
+	default:
 		NODEFAULT
 	}
+
+
+
+	m_pActor->attachShape(*m_pShape);
+	physx::PxRigidBodyExt::updateMassAndInertia(*m_pActor, 100.0f);
+	CPhysX_Manager::GetInstance()->GetScene()->addActor(*m_pActor);
+	
 }
 
 void CCollider::Update_Origin(_fmatrix TransformMatrix)
@@ -146,13 +192,6 @@ void CCollider::Update_Origin(_fmatrix TransformMatrix)
 
 	switch (m_eType)
 	{
-	case CCollider::TYPE_AABB:
-		Assert(m_pAABB_Original != nullptr);
-		m_pAABB_Original->Center = _float3(0.f, 0.f, 0.f);
-		m_pAABB_Original->Extents = _float3(0.5f, 0.5f, 0.5f);
-		m_pAABB_Original->Transform(*m_pAABB_Original, Remove_Rotation(TransformMatrix));		
-		break;
-
 	case CCollider::TYPE_OBB:
 		{
 			Assert(m_pOBB_Original != nullptr);
@@ -176,13 +215,15 @@ void CCollider::Update_Origin(_fmatrix TransformMatrix)
 		m_pSphere_Original->Radius = 0.5f;
 		m_pSphere_Original->Transform(*m_pSphere_Original, TransformMatrix);
 		break;
+
 	case CCollider::TYPE_CAPSULE:
 		Assert(m_pCapsule_Origin != nullptr);
-		m_pCapsule_Origin->m_vTip = _float3(0.f, 0.5f, 0.f);
-		m_pCapsule_Origin->m_vBase = _float3(0.f, -0.5f, 0.f);
+		m_pCapsule_Origin->m_vTip = _float3(1.f, 0.f, 0.f);
+		m_pCapsule_Origin->m_vBase = _float3(-1.f, 0.f, 0.f);
 		m_pCapsule_Origin->m_fRadius = 0.5f;
 		m_pCapsule_Origin->Transform(*m_pCapsule_Origin, TransformMatrix);
 		break;
+
 	case TYPE_END:
 		FALLTHROUGH
 	default: 
@@ -192,22 +233,28 @@ void CCollider::Update_Origin(_fmatrix TransformMatrix)
 
 void CCollider::Update(_fmatrix TransformMatrix)
 {
+	const physx::PxMat44 shapePose(physx::PxShapeExt::getGlobalPose(*m_pShape, *m_pActor));
+
+	// _float4x4 mw;
+	// mw(0,0) = shapePose(0,0); mw(0,1) = shapePose(0,1); mw(0,2) = shapePose(0,2); mw(0,3) = shapePose(0,3);
+	// mw(1,0) = shapePose(1,0); mw(1,1) = shapePose(1,1); mw(1,2) = shapePose(1,2); mw(1,3) = shapePose(1,3);
+	// mw(2,0) = shapePose(2,0); mw(2,1) = shapePose(2,1); mw(2,2) = shapePose(2,2); mw(2,3) = shapePose(2,3);
+	// mw(3,0) = shapePose(3,0); mw(3,1) = shapePose(3,1); mw(3,2) = shapePose(3,2); mw(3,3) = shapePose(3,3);
+
+	XMMATRIX mWorld = CPhysXUtils::ToFloat4x4(shapePose);
+
 	switch (m_eType)
 	{
-	case CCollider::TYPE_AABB:
-		m_pAABB_Original->Transform(*m_pAABB, Remove_Rotation(TransformMatrix));
-		break;
-
 	case CCollider::TYPE_OBB:
-		m_pOBB_Original->Transform(*m_pOBB, TransformMatrix);
+		m_pOBB_Original->Transform(*m_pOBB, mWorld);
 		break;
 
 	case CCollider::TYPE_SPHERE:
-		m_pSphere_Original->Transform(*m_pSphere, TransformMatrix);
+		m_pSphere_Original->Transform(*m_pSphere, mWorld);
 		break;
 
 	case CCollider::TYPE_CAPSULE:
-		m_pCapsule_Origin->Transform(*m_pCapsule, TransformMatrix);
+		m_pCapsule_Origin->Transform(*m_pCapsule, mWorld);
 		break;
 
 	case TYPE_END:
@@ -215,131 +262,9 @@ void CCollider::Update(_fmatrix TransformMatrix)
 	default: 
 		NODEFAULT
 	}
-}
-
-void CCollider::Get2D_AABB_YPlane(_float2& vLeftTop, _float2& vRightBot)
-{
-	switch (m_eType)
-	{
-	case CCollider::TYPE_AABB:
-		vLeftTop.x = m_pAABB->Center.x - m_pAABB->Extents.x;
-		vRightBot.x = m_pAABB->Center.x + m_pAABB->Extents.x;
-		vLeftTop.y = m_pAABB->Center.z + m_pAABB->Extents.z;
-		vRightBot.y = m_pAABB->Center.z - m_pAABB->Extents.z;
-		break;
-
-	case CCollider::TYPE_OBB:
-		{
-		_float fDiangLength = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_pOBB->Extents)));
-		vLeftTop.x = m_pOBB->Center.x - fDiangLength;
-		vRightBot.x = m_pOBB->Center.x + fDiangLength;
-		vLeftTop.y = m_pOBB->Center.z + fDiangLength;
-		vRightBot.y = m_pOBB->Center.z - fDiangLength;
-		}
-		break;
-
-	case CCollider::TYPE_SPHERE:
-		vLeftTop.x = m_pSphere->Center.x - m_pSphere->Radius;
-		vRightBot.x = m_pSphere->Center.x + m_pSphere->Radius;
-		vLeftTop.y = m_pSphere->Center.z + m_pSphere->Radius;
-		vRightBot.y = m_pSphere->Center.z - m_pSphere->Radius;
-		break;
-
-		// 서있는 캡슐은 항상 서있다고 생각하고 구현(어렵다...)
-	case CCollider::TYPE_CAPSULE:
-		vLeftTop.x = m_pCapsule->m_vBase.x - m_pCapsule->m_fRadius;
-		vRightBot.x = m_pCapsule->m_vBase.x + m_pCapsule->m_fRadius;
-		vLeftTop.y = m_pCapsule->m_vBase.z + m_pCapsule->m_fRadius;
-		vRightBot.y = m_pCapsule->m_vBase.z - m_pCapsule->m_fRadius;
-		break;
-
-	case TYPE_END:
-		FALLTHROUGH
-	default: 
-		NODEFAULT
-	}
-}
-
-_bool CCollider::Collision(CCollider * pTargetCollider) 
-{
-	m_bColl = false;
-
-	switch (m_eType)
-	{
-	case CCollider::TYPE_AABB:
-		if (TYPE_AABB == pTargetCollider->m_eType)
-			m_bColl = m_pAABB->Intersects(*pTargetCollider->m_pAABB);
-		else if (TYPE_OBB == pTargetCollider->m_eType)
-			m_bColl = m_pAABB->Intersects(*pTargetCollider->m_pOBB);
-		else if (TYPE_SPHERE == pTargetCollider->m_eType)
-			m_bColl = m_pAABB->Intersects(*pTargetCollider->m_pSphere);
-		break;
-	case CCollider::TYPE_OBB:
-		if (TYPE_AABB == pTargetCollider->m_eType)
-			m_bColl = m_pOBB->Intersects(*pTargetCollider->m_pAABB);
-		else if (TYPE_OBB == pTargetCollider->m_eType)
-			m_bColl = m_pOBB->Intersects(*pTargetCollider->m_pOBB);
-		else if (TYPE_SPHERE == pTargetCollider->m_eType)
-			m_bColl = m_pOBB->Intersects(*pTargetCollider->m_pSphere);
-		break;
-	case CCollider::TYPE_SPHERE:
-		if (TYPE_AABB == pTargetCollider->m_eType)
-			m_bColl = m_pSphere->Intersects(*pTargetCollider->m_pAABB);
-		else if (TYPE_OBB == pTargetCollider->m_eType)
-			m_bColl = m_pSphere->Intersects(*pTargetCollider->m_pOBB);
-		else if (TYPE_SPHERE == pTargetCollider->m_eType)
-			m_bColl = m_pSphere->Intersects(*pTargetCollider->m_pSphere);
-		break;
-	case CCollider::TYPE_CAPSULE:
-		if (pTargetCollider->m_eType == TYPE_CAPSULE)
-			m_bColl = m_pCapsule->Intersects(*pTargetCollider->m_pCapsule);
-		if (pTargetCollider->m_eType == TYPE_SPHERE)
-			m_bColl = m_pCapsule->Intersects(*pTargetCollider->m_pSphere);
-		else
-		{
-			IM_WARN("Capsule can collider only capsule now");
-			m_bColl = false;
-		}
-		break;
-	case TYPE_END:
-		FALLTHROUGH
-	default: 
-		NODEFAULT
-	}
-
-	return m_bColl;
-}
-
-_bool CCollider::Collision(_fvector vOrigin, _fvector vDir, _float& fDistance)
-{
-	m_bColl = false;
-
-	switch (m_eType)
-	{
-	case TYPE_AABB:
-		m_bColl = m_pAABB->Intersects(vOrigin, vDir, fDistance);
-		break;
-	case TYPE_OBB:
-		m_bColl = m_pOBB->Intersects(vOrigin, vDir, fDistance);
-		break;
-	case TYPE_SPHERE:
-		m_bColl = m_pSphere->Intersects(vOrigin, vDir, fDistance);
-		break;
-	case TYPE_CAPSULE:
-		m_bColl = m_pCapsule->Intersects(vOrigin, vDir, fDistance);
-		break;
-	case TYPE_END:
-		FALLTHROUGH
-	default:
-		NODEFAULT
-	}
-
-
-	return m_bColl;
 }
 
 #ifdef _DEBUG
-
 HRESULT CCollider::Render()
 {
 	m_vColor = m_bColl == true ? _float4(1.f, 0.f, 0.f, 1.f) : _float4(0.f, 1.f, 0.f, 1.f);
@@ -361,9 +286,6 @@ HRESULT CCollider::Render()
 
 	switch (m_eType)
 	{
-	case CCollider::TYPE_AABB:
-		DX::Draw(m_pBatch, *m_pAABB, XMLoadFloat4(&m_vColor));
-		break;
 	case CCollider::TYPE_OBB:
 		DX::Draw(m_pBatch, *m_pOBB, XMLoadFloat4(&m_vColor));
 		break;
@@ -384,17 +306,6 @@ HRESULT CCollider::Render()
 	return S_OK;
 }
 #endif // _DEBUG
-
-_matrix CCollider::Remove_Rotation(_fmatrix TransformMatrix)
-{
-	_matrix			ResultMatrix = TransformMatrix;
-
-	ResultMatrix.r[0] = XMVectorSet(1.f, 0.f, 0.f, 0.f) * XMVectorGetX(XMVector3Length(TransformMatrix.r[0]));
-	ResultMatrix.r[1] = XMVectorSet(0.f, 1.f, 0.f, 0.f) * XMVectorGetX(XMVector3Length(TransformMatrix.r[1]));
-	ResultMatrix.r[2] = XMVectorSet(0.f, 0.f, 1.f, 0.f) * XMVectorGetX(XMVector3Length(TransformMatrix.r[2]));
-
-	return ResultMatrix;
-}
 
 CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
@@ -424,8 +335,6 @@ void CCollider::Free()
 {
 	__super::Free();
 
-	Safe_Delete(m_pAABB_Original);
-	Safe_Delete(m_pAABB);
 	Safe_Delete(m_pOBB_Original);
 	Safe_Delete(m_pOBB);
 	Safe_Delete(m_pSphere_Original);
@@ -443,5 +352,21 @@ void CCollider::Free()
 		Safe_Delete(m_pEffect);
 	}
 #endif // _DEBUG
+
+	if (m_pActor)
+	{
+		if (m_pShape)
+		{
+			m_pActor->detachShape(*m_pShape);
+			m_pShape->release();
+		}
+
+		if (m_pActor->getScene())
+		{
+			auto pScene = CPhysX_Manager::GetInstance()->GetScene();
+			pScene->removeActor(*m_pActor);
+		}
+		m_pActor->release();
+	}
 
 }

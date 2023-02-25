@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Component.h"
+#include "Object_Manager.h"
 
 CComponent::CComponent(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -34,6 +35,14 @@ HRESULT CComponent::Initialize(void * pArg)
 	}
 
 	return S_OK;
+}
+
+CGameObject* CComponent::TryGetOwner()
+{
+	if (CObject_Manager::Check_ObjectAlive(m_pOwner))
+		return m_pOwner;
+
+	return nullptr;
 }
 
 void CComponent::Free()

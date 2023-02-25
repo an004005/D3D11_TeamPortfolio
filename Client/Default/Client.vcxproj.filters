@@ -97,6 +97,9 @@
     <Filter Include="97.ShaderFiles\Shadow">
       <UniqueIdentifier>{de99238f-264e-4f79-877c-728ea5e89b86}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96.Test">
+      <UniqueIdentifier>{057aa277-d73a-4379-bf1d-ed33bde7fe89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -198,6 +201,9 @@
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h">
       <Filter>VFX\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\TestObject.h">
+      <Filter>96.Test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -277,6 +283,9 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp">
       <Filter>VFX\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TestObject.cpp">
+      <Filter>96.Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -3,7 +3,7 @@
 #include "Renderer.h"
 #include "GameInstance.h"
 #include "JsonLib.h"
-#include "Collider.h"
+#include "RigidBody.h"
 
 CIndicator::CIndicator(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -31,33 +31,20 @@ HRESULT CIndicator::Initialize(void* pArg)
 		(CComponent**)&m_pRendererCom));
 
 	
-	Json collJson = Json::object();
-	collJson["Collider"]["Type"] = static_cast<_uint>(CCollider::TYPE_SPHERE);
-	collJson["Collider"]["OriginTransform"] = _float4x4::Identity;
-
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"),
-		(CComponent**)&m_pCollider, &collJson));
-	
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_RigidBody"), TEXT("Com_Collider"),
+		(CComponent**)&m_pCollider));
 
 	return S_OK;
 }
 
 void CIndicator::Late_Tick(_double TimeDelta)
 {
-	if (m_bVisible)
-	{
-		m_pCollider->Update(m_pTransformCom->Get_WorldMatrix());
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	}
+	m_pCollider->Update_Tick(m_pTransformCom);
 }
 
-HRESULT CIndicator::Render()
+void CIndicator::AfterPhysX()
 {
-#ifdef _DEBUG
-	m_pCollider->Render();
-#endif
-
-	return S_OK;
+	m_pCollider->Update_AfterPhysX(m_pTransformCom);
 }
 
 void CIndicator::SetPosition(_float3 vPos)
