@@ -42,11 +42,13 @@ void CCanvas_SASSkill::Imgui_RenderProperty()
 void CCanvas_SASSkill::SaveToJson(Json& json)
 {
 	__super::SaveToJson(json);
+
 }
 
 void CCanvas_SASSkill::LoadFromJson(const Json & json)
 {
 	__super::LoadFromJson(json);
+
 }
 
 CCanvas_SASSkill * CCanvas_SASSkill::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

@@ -2,9 +2,7 @@
 
 #include "Client_Defines.h"
 #include "UI.h"
-
-enum SASSKILL { ONE, TWO, THREE, FOUR, SASSKILL_END };
-enum SUPERPOWERS { PSYCHOKINESIS0, PSYCHOKINESIS1, IGNITION, RESHUFFLE, CLAIRVOYANCE, TELEPORTATION, TRANSPARENCY, DISCHARGE, COPY, HIGHSPEED, SUPERPOWERS_END };
+#include "Canvas_SASSkill.h"
 
 BEGIN(Client)
 
@@ -17,6 +15,7 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void	BeginTick() override;
 	virtual void	Tick(_double TimeDelta) override;
 	virtual void	Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
@@ -26,13 +25,12 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 private:
-	void			Key_Input();
 	void			SASSkillIcon_Tick();
+	void			ChangeSkill_Shader();
 
 private:
-	SASSKILL		m_eSASSkill = SASSKILL_END;
-	SASSKILL		m_ePreSASSkill = SASSKILL_END;
-	SUPERPOWERS		m_eSuperPowers = SUPERPOWERS_END;
+	CCanvas_SASSkill::OBJECTCOUNT	m_eObjectCount = CCanvas_SASSkill::ONE;
+	CCanvas_SASSkill*			m_pCanvas = { nullptr };
 
 public:
 	static CSASSkillIconUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

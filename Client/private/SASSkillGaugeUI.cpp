@@ -2,6 +2,9 @@
 #include "..\public\SASSkillGaugeUI.h"
 #include "GameInstance.h"
 
+//m_tParams.Floats[0] = _float(TimeDelta) * m_fGaugeSpeed;	// 게이지 조정
+//m_tParams.Float4s[0] = { 226.0f, 158.0f, 1.0f, 1.0f };	// 색상 조정
+
 CSASSkillGaugeUI::CSASSkillGaugeUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
@@ -25,18 +28,57 @@ HRESULT CSASSkillGaugeUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	///* For.Com_VIBuffer */
-	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_CircleRect"), TEXT("Com_VIBuffer_CRect"),
-	//	(CComponent**)&m_pVIBufferCom)))
-	//	return E_FAIL;
+	SkilInfo_Initialize();
 
 	return S_OK;
+}
+
+void CSASSkillGaugeUI::BeginTick()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	m_pCanvas = dynamic_cast<CCanvas_SASSkill*>(pGameInstance->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkill")));
 }
 
 void CSASSkillGaugeUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	//  TODO : 키 입력 삭제해야 한다. 플레이어 에서 Set 해야한다.
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	if (CCanvas_SASSkill::ONE == m_eObjectCount)
+	{
+		static _bool bOnSkil;
+		if (pGameInstance->KeyDown(DIK_0))
+		{
+			bOnSkil = !bOnSkil;
+		}
+
+		m_pCanvas->Set_InputSkill(CCanvas_SASSkill::ONE0, bOnSkil);
+
+		if (m_pCanvas->Get_InputSkill(CCanvas_SASSkill::ONE0))
+		{
+			if (0.0f < m_tParams.Floats[0])
+				m_tParams.Floats[0] -= _float(TimeDelta) /** m_fGaugeSpeed*/;
+		}
+		else
+		{
+			if(1.0f > m_tParams.Floats[0])
+				m_tParams.Floats[0] += _float(TimeDelta) /** m_fGaugeSpeed*/;
+
+		}
+
+		static _uint iCount = 5;
+		if (pGameInstance->KeyDown(DIK_1))
+		{
+			++iCount;
+		}
+		if (pGameInstance->KeyDown(DIK_2))
+		{
+			--iCount;
+		}
+		m_pCanvas->Set_SuperPowers(CCanvas_SASSkill::SUPERPOWERS(iCount));
+	}
 }
 
 void CSASSkillGaugeUI::Late_Tick(_double TimeDelta)
@@ -68,6 +110,163 @@ void CSASSkillGaugeUI::LoadFromJson(const Json & json)
 {
 	CUI::LoadFromJson(json);
 
+}
+
+void CSASSkillGaugeUI::SkilInfo_Initialize()
+{
+	static _uint eObjectCount;
+	m_eObjectCount = CCanvas_SASSkill::OBJECTCOUNT(eObjectCount);
+	++eObjectCount;
+
+	switch (m_eObjectCount)
+	{
+	case Client::CCanvas_SASSkill::ONE:
+	{
+
+	}
+		break;
+	case Client::CCanvas_SASSkill::TWO:
+	{
+
+	}
+		break;
+	case Client::CCanvas_SASSkill::THREE:
+	{
+
+	}
+		break;
+	case Client::CCanvas_SASSkill::FOUR:
+	{
+
+	}
+		break;
+	}
+}
+
+void CSASSkillGaugeUI::ChangeSkill()
+{
+	switch (m_pCanvas->Get_SuperPowers())
+	{
+	case CCanvas_SASSkill::PSYCHOKINESIS0:
+	{
+		m_tParams.Float4s[0] = { 0.886f, 0.620f, 1.0f, 1.0f };
+		m_fMinMaxGauge = { 0.0f, 1.0f };
+		m_fGaugeSpeed = { 0.5f };
+	}
+		break;
+	case CCanvas_SASSkill::PSYCHOKINESIS1:
+	{
+		m_tParams.Float4s[0] = { 0.886f, 0.620f, 1.0f, 1.0f };
+		m_fMinMaxGauge = { 0.0f, 1.0f };
+		m_fGaugeSpeed = { 0.5f };
+	}
+		break;
+	case CCanvas_SASSkill::IGNITION:
+	{
+		m_tParams.Float4s[0] = { 1.0f, 0.549f, 0.635f, 1.0f };
+		m_fMinMaxGauge = { 0.0f, 1.0f };
+		m_fGaugeSpeed = { 0.2f };
+	}
+		break;
+	case CCanvas_SASSkill::RESHUFFLE:
+	{
+		m_tParams.Float4s[0] = { 1.0f, 0.824f, 0.427f, 1.0f };
+		m_fMinMaxGauge = { 0.0f, 1.0f };
+		m_fGaugeSpeed = { 0.8f };
+	}
+		break;
+	case CCanvas_SASSkill::CLAIRVOYANCE:
+	{
+		m_tParams.Float4s[0] = { 0.388f, 0.992f, 0.455f, 1.0f };
+
+	}
+		break;
+	case CCanvas_SASSkill::TELEPORTATION:
+	{
+		m_tParams.Float4s[0] = { 0.584f, 0.918f, 1.0f, 1.0f };
+
+	}
+		break;
+	case CCanvas_SASSkill::TRANSPARENCY:
+	{
+		m_tParams.Float4s[0] = { 0.714f, 1.0f, 0.957f, 1.0f };
+
+	}
+		break;
+	case CCanvas_SASSkill::DISCHARGE:
+	{
+		m_tParams.Float4s[0] = { 1.0f, 0.937f, 0.580f, 1.0f };
+
+	}
+		break;
+	case CCanvas_SASSkill::COPY:
+	{
+		m_tParams.Float4s[0] = { 0.694f, 0.804f, 1.0f, 1.0f };
+
+	}
+		break;
+	case CCanvas_SASSkill::HIGHSPEED:
+	{
+		m_tParams.Float4s[0] = { 1.0f, 0.553f, 0.878f, 1.0f };
+
+	}
+		break;
+	case CCanvas_SASSkill::NOT:
+	{
+		m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+	}
+		break;
+	}
+}
+
+void CSASSkillGaugeUI::ChangeSkill_TickShader(const _float & fTimeDelta)
+{
+	m_fSkill_TimeAcc += fTimeDelta;
+
+	if (m_pCanvas->Get_SASSkill() != m_pCanvas->Get_PreSASSkill())
+	{
+		ChangeSkill(); // 스킬이 바뀌면 쉐이더 값도 변경해준다.
+
+		if (true == m_pCanvas->Get_ChangeX())
+		{
+			switch (m_pCanvas->Get_SASSkill())
+			{
+			case CCanvas_SASSkill::ONE0:
+				m_tParams.Floats[0] = m_fSkill_TimeAcc;
+				break;
+			case CCanvas_SASSkill::TWO0:
+				m_tParams.Floats[0] = m_fSkill_TimeAcc;
+				break;
+			case CCanvas_SASSkill::THREE0:
+				m_tParams.Floats[0] = m_fSkill_TimeAcc;
+				break;
+			case CCanvas_SASSkill::FOUR0:
+				m_tParams.Floats[0] = m_fSkill_TimeAcc;
+				break;
+			}
+		}
+		else
+		{
+			switch (m_pCanvas->Get_SASSkill())
+			{
+			case CCanvas_SASSkill::ONE1:
+				m_tParams.Floats[0] = m_fSkill_TimeAcc;
+				break;
+			case CCanvas_SASSkill::TWO1:
+				m_tParams.Floats[0] = m_fSkill_TimeAcc;
+				break;
+			case CCanvas_SASSkill::THREE1:
+				m_tParams.Floats[0] = m_fSkill_TimeAcc;
+				break;
+			case CCanvas_SASSkill::FOUR1:
+				m_tParams.Floats[0] = m_fSkill_TimeAcc;
+				break;
+			}
+		}
+
+		m_pCanvas->Set_PreSASSkill(m_pCanvas->Get_SASSkill());
+	}
 }
 
 CSASSkillGaugeUI * CSASSkillGaugeUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

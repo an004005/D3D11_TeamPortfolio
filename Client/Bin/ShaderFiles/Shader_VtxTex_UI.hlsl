@@ -353,6 +353,9 @@ PS_OUT PS_Alpha_Color(PS_IN In)	// → 13
 /*******************
 * UVCut → 15 : 회전하면서 UV 를 조정한다.
 /********************/
+// g_tex_0 : 텍스처
+// g_float_0 : 게이지 정도
+// g_vec4_0 : 색상 조절
 PS_OUT PS_RotationGauge(PS_IN In) // → 15
 {
 	PS_OUT         Out = (PS_OUT)0;

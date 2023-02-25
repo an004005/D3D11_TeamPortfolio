@@ -2,7 +2,7 @@
 
 #include "Client_Defines.h"
 #include "UI.h"
-#include "VIBuffer_CircleRect.h"
+#include "Canvas_SASSkill.h"
 
 BEGIN(Client)
 
@@ -15,6 +15,7 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void	BeginTick() override;
 	virtual void	Tick(_double TimeDelta) override;
 	virtual void	Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
@@ -24,7 +25,19 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 private:
-	CVIBuffer_CircleRect*	m_pVIBufferCom = { nullptr };
+	void			SkilInfo_Initialize();
+
+	void			ChangeSkill();
+	void			ChangeSkill_TickShader(const _float & fTimeDelta);
+
+private:
+	CCanvas_SASSkill::OBJECTCOUNT	m_eObjectCount = CCanvas_SASSkill::ONE;
+	CCanvas_SASSkill*				m_pCanvas = { nullptr };
+
+	_float2		m_fMinMaxGauge = { 0.0f, 1.0f };	// 최소 게이지와 최대 게이지
+	_float		m_fGaugeSpeed = { 0.0f };			// 게이지가 사용되는 속도
+	
+	_float		m_fSkill_TimeAcc = { 0.0f };
 
 public:
 	static CSASSkillGaugeUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
