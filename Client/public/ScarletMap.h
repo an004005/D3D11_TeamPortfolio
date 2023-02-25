@@ -23,9 +23,11 @@ public:
 	virtual void SaveToJson(OUT Json& json) override;
 	virtual void LoadFromJson(const Json& json) override;
 
+	
 private:
-	HRESULT SetUp_Components();
+	HRESULT SetUp_Components();   
 	_float4	SetUp_InitPosition();
+	void	ClearMap();
 
 private:
 	vector<wstring>	m_pModelProtos;

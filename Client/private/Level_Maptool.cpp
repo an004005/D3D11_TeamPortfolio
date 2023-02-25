@@ -105,6 +105,32 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	/* For. HWEndZ_tes02 */
 	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Roads/HWEndZ_tes02.static_model"), "../Bin/Resources/Model/StaticModel/Roads/HWEndZ_tes02.static_model"));
 
+	/* For. Town_Road */
+	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Roads/Town_Road.static_model"), "../Bin/Resources/Model/StaticModel/Roads/Town_Road.static_model"));
+
+	// Pedestrian
+	{
+		/* For. Town_Road */
+		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a.static_model"));
+		/* For. Town_Road */
+		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a_re.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a_re.static_model"));
+		/* For. Town_Road */
+		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01b.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01b.static_model"));
+		/* For. Town_Road */
+		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01b_re.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01b_re.static_model"));
+		/* For. Town_Road */
+		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/PedestrianBridge01c_re.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01c_re.static_model"));
+	}
+	
+	wstring wstrModelPath = L"";
+	/* For. SM_pr_S_TownRoad_a1 */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/Roads/SM_pr_S_TownRoad_a1.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_S_TownRoad_a4 */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/Roads/SM_pr_S_TownRoad_a4.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
 	return S_OK;
 }
 
@@ -121,7 +147,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
 
 	//TODO: 프로토 테그만 저장하고 로드할때 find로 찾아야함
 	for (auto& Proto : m_pProtosTags)

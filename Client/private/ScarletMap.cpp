@@ -169,6 +169,9 @@ void CScarletMap::Imgui_RenderProperty()
 		}
 	}
 
+	if(ImGui::Button("Clear Map"))
+		ClearMap();
+
 	ImGui::BeginChild("Selected Object", { 500.f, 200.f });
 
 	if (m_pGameObject)
@@ -245,6 +248,17 @@ _float4 CScarletMap::SetUp_InitPosition()
 	XMStoreFloat4(&vInitPos, XMVectorSetW(vCamPos + XMVector3Normalize(vCamLook) * 20.f, 1.f));
 
 	return vInitPos;
+}
+
+void CScarletMap::ClearMap()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	auto pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_MapNonAnimObject"));
+
+	auto& MapObjects = pLayer->GetGameObjects();
+
+	for (auto& obj : MapObjects)
+		obj->SetDelete();
 }
 
 
