@@ -4,6 +4,7 @@
 #include "GameUtils.h"
 #include "ImguiUtils.h"
 #include "JsonLib.h"
+#include "Object_Manager.h"
 
 const _tchar* CGameObject::m_pTransformComTag = TEXT("Com_Transform");
 
@@ -14,6 +15,7 @@ CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
+	CObject_Manager::Add_Object(this);
 }
 
 CGameObject::CGameObject(const CGameObject & rhs) 
@@ -25,6 +27,12 @@ CGameObject::CGameObject(const CGameObject & rhs)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
+	CObject_Manager::Add_Object(this);
+}
+
+CGameObject::~CGameObject()
+{
+	CObject_Manager::Delete_Object(this);
 }
 
 HRESULT CGameObject::Initialize_Prototype()
@@ -129,6 +137,8 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar * pPrototypeT
 	m_Components.emplace(pComponentTag, pComponent);
 
 	Safe_AddRef(pComponent);
+
+	pComponent->SetOwner(this);
 
 	*ppOut = pComponent;
 

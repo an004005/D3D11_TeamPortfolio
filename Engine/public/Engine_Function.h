@@ -72,6 +72,8 @@ namespace Engine
 		return dwRefCnt;
 	}
 
+
+
 	inline void wc2c(const wchar_t* szWchar, char* szChar)
 	{
 		_int len;
@@ -109,4 +111,113 @@ namespace Engine
 		::WideCharToMultiByte(CP_ACP, 0, s.c_str(), slength, &r[0], len, 0, 0);
 		return r;
 	}
+
+	enum class ECOLLISION_TYPE
+	{
+		COLL_BLOCK,
+		COLL_IGNORE,
+		COLL_END
+	};
+
+	enum ECOLLIDER_TYPE
+	{
+		CT_PLAYER,
+		CT_MONSTER,
+		CT_PLAYER_ATTACK,
+		CT_MONSTER_ATTACK,
+		CT_PSYCHICK_OBJ,
+		CT_TRIGGER_FOR_PLAYER,
+		CT_TRIGGER_FOR_MONSTER,
+		CT_STATIC,
+		CT_END
+	};
+
+	enum ECOLLIDER_TYPE_BIT
+	{
+		CTB_PLAYER = 1 << CT_PLAYER,
+		CTB_MONSTER = 1 << CT_MONSTER,
+		CTB_PLAYER_ATTACK = 1 << CT_PLAYER_ATTACK,
+		CTB_MONSTER_ATTACK = 1 << CT_MONSTER_ATTACK,
+		CTB_PSYCHICK_OBJ = 1 << CT_PSYCHICK_OBJ,
+		CTB_TRIGGER_FOR_PLAYER = 1 << CT_TRIGGER_FOR_PLAYER,
+		CTB_TRIGGER_FOR_MONSTER = 1 << CT_TRIGGER_FOR_MONSTER,
+		CTB_STATIC = 1 << CT_STATIC,
+	};
+
+	inline ECOLLIDER_TYPE_BIT GetCollTypeBit(ECOLLIDER_TYPE eType)
+	{
+		static array<ECOLLIDER_TYPE_BIT, CT_END> collTypeBits
+		{
+			CTB_PLAYER, CTB_MONSTER, CTB_PLAYER_ATTACK, CTB_MONSTER_ATTACK, CTB_PSYCHICK_OBJ,
+			CTB_TRIGGER_FOR_PLAYER, CTB_TRIGGER_FOR_MONSTER, CTB_STATIC
+		};
+
+		return collTypeBits[eType];
+	}
+
+	enum ESIMULATION_PRESET
+	{
+		SI_CONTROLLER = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC
+	};
+
+
+	struct RayCastParams
+	{
+		OUT physx::PxRaycastBuffer* rayOut;
+		_float4 vOrigin;
+		_float4 vDir;
+		_float fDistance;
+		_uint iTargetType;
+		_bool bSingle = true;
+		_float fVisibleTime = 1.f;
+		physx::PxQueryFlags queryFlags = physx::PxQueryFlag::eDYNAMIC | physx::PxQueryFlag::eSTATIC;
+	};
+
+	struct SphereOverlapParams
+	{
+		OUT physx::PxOverlapBuffer* overlapOut;
+		_float fRadius;
+		_float4 vPos;
+		_uint iTargetType;
+		_float fVisibleTime = 1.f;
+		physx::PxQueryFlags queryFlags = physx::PxQueryFlag::eDYNAMIC | physx::PxQueryFlag::eSTATIC;
+	};
+
+	struct CapsuleOverlapParams
+	{
+		OUT physx::PxOverlapBuffer* overlapOut;
+		_float fRadius;
+		_float fHalfHeight;
+		_float3 vLook;
+		_float4 vPos;
+		_uint iTargetType;
+		_float fVisibleTime = 1.f;
+		physx::PxQueryFlags queryFlags = physx::PxQueryFlag::eDYNAMIC | physx::PxQueryFlag::eSTATIC;
+	};
+
+	struct SphereSweepParams
+	{
+		OUT physx::PxSweepBuffer* sweepOut;
+		_float fRadius;
+		_float4 vPos;
+		_float3 vUnitDir;
+		_float fDistance;
+		_uint iTargetType;
+		_float fVisibleTime = 1.f;
+		physx::PxQueryFlags queryFlags = physx::PxQueryFlag::eDYNAMIC | physx::PxQueryFlag::eSTATIC;
+	};
+
+	struct CapsuleSweepParams
+	{
+		OUT physx::PxSweepBuffer* sweepOut;
+		_float fRadius;
+		_float fHalfHeight;
+		_float3 vLook;
+		_float4 vPos;
+		_float3 vUnitDir;
+		_float fDistance;
+		_uint iTargetType;
+		_float fVisibleTime = 1.f;
+		physx::PxQueryFlags queryFlags = physx::PxQueryFlag::eDYNAMIC | physx::PxQueryFlag::eSTATIC;
+	};
 }

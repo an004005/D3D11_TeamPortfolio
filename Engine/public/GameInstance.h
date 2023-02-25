@@ -134,17 +134,6 @@ public: /* For.Light_Manager */
 	void ClearLight();
 	void SetShadowCam(class CCamera* pShadowCam);
 
-public: /* For.Collision_Manager */ 
-	void AddStaticCollider(class CCollider* pStaticColl);
-	void AddDynamicCollider(class CCollider* pDynamicColl);
-	_bool CheckOnCollider(_float4 vPos, _float& fHeight, CGameObject* pOwner, _bool bOnlyStatic = false);
-	_bool CheckCollided(class CCollider* pCollider, _bool bOnlyStatic = false);
-	_bool SphereTest(const BoundingSphere& Sphere, _float3& v, CGameObject* pOwner, _bool bOnlyStatic = false);
-
-	void GetRayIntersects_UntilStatic(_float3 vOrigin, _float3 vDir, CGameObject* pSelf, OUT vector<RAY_INTERSECT_OUT>& Outs);
-	void GetSphereIntersects(const BoundingSphere& Sphere, CGameObject* pSelf, OUT list<CGameObject*>& IntersectedObjects);
-	_bool GetRayIntersectSingle(_float3 vOrigin, _float3 vDir, CGameObject* pSelf, OUT RAY_INTERSECT_OUT& Out);
-
 public: /* For.Font_Manager */
 	HRESULT Add_Font(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pFontTag, const _tchar* pFontFilePath);
 	HRESULT Render_Font(const _tchar* pFontTag, const _tchar* pText, const _float2& vPos, _float fRadian, _float2 vScale, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f));
@@ -160,6 +149,14 @@ public: /* for sound manager*/
 
 public: /* for targetManager*/
 	ID3D11ShaderResourceView* Get_SRV(const _tchar* pTargetTag);
+
+public:
+	// 주의사항 CPhysX_Manager 에서 읽고 사용하기, 예제도 있음
+	_bool RayCast(const RayCastParams& params);
+	_bool OverlapSphere(const SphereOverlapParams& params);
+	_bool OverlapCapsule(const CapsuleOverlapParams& params);
+	_bool SweepSphere(const SphereSweepParams& params);
+	_bool SweepCapsule(const CapsuleSweepParams& params);
 
 public: // for CImgui_Manager
 	void Render_ImGui();
@@ -187,12 +184,12 @@ private:
 	class CPipeLine*				m_pPipeLine = nullptr;
 	class CTimer_Manager*			m_pTimer_Manager = nullptr;
 	class CLight_Manager*			m_pLight_Manager = nullptr;
-	class CCollision_Manger*		m_pCollision_Manager = nullptr;
 	class CFont_Manager*			m_pFont_Manager = nullptr;
 	class CFrustum*					m_pFrustum = nullptr;
 	class CTarget_Manager*			m_pTarget_Manager = nullptr;
 	class CHDR*						m_pHDR = nullptr;
 	class CSound_Manager*			m_pSound_Manager = nullptr;
+	class CPhysX_Manager*			m_pPhysX_Manager = nullptr;
 
 	class CImgui_Manager*			m_pImgui_Manager = nullptr;
 
