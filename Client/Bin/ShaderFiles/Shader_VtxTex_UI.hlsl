@@ -350,6 +350,41 @@ PS_OUT PS_Alpha_Color(PS_IN In)	// → 13
 	return Out;
 }
 
+/*******************
+* UVCut → 15 : 회전하면서 UV 를 조정한다.
+/********************/
+PS_OUT PS_RotationGauge(PS_IN In) // → 15
+{
+	PS_OUT         Out = (PS_OUT)0;
+
+	float4 fillColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	float3 center = float3(0.5f, 0.5f, 0.0f);
+	float3 top = float3(0.5f, 1.0f, 0.0f);
+	float3 curUV = float3(In.vTexUV.xy, 0.0f);
+	float angle = 0;
+
+	float3 centerToTop = top - center;
+	float3 centerToCurUV = curUV - center;
+
+	centerToTop = normalize(centerToTop);
+	centerToCurUV = normalize(centerToCurUV);
+
+	angle = acos(dot(centerToTop, centerToCurUV));
+	angle = angle * (180.0f / 3.141592654f); // radian to degree
+
+	angle = (centerToTop.x * centerToCurUV.x - centerToTop.y * centerToCurUV.x > 0.0f) ? angle : (-angle) + 360.0f;
+
+	float condition = 360 * g_float_0;
+
+	if (angle >= condition)
+		discard;
+
+	Out.vColor = fillColor * g_vec4_0;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0 : 알파 블랜딩으로 그리기
@@ -543,10 +578,39 @@ technique11 DefaultTechnique
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
-		VertexShader = compile vs_5_0 VS_UVCut();			// 텍스처의 원하는 부분만 출력
+		VertexShader = compile vs_5_0 VS_UVCut();		// 텍스처의 원하는 부분만 출력
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_Alpha_Color();	// 색상 조정
 	}
+
+	//14
+	pass ColorChange
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();		// 아무것도 안 한다.
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_Alpha_Color();	// 색상 조정
+	}
+
+	//15: 스킬 게이지, 아이템 게이지
+	pass RotationGauge
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_RotationGauge();	// 색상 조정 하면서 시계방향 으로 uv가 줄어들고 늘어난다.
+	}
+
 }

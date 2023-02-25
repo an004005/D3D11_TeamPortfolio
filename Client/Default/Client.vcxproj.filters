@@ -284,6 +284,9 @@
     <ClInclude Include="..\public\SASSkillIconUI.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\SASSkillGaugeUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -412,6 +415,9 @@
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillIconUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SASSkillGaugeUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
   </ItemGroup>

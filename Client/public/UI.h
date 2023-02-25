@@ -106,6 +106,8 @@ protected:
 	HRESULT			SetUp_Components();
 	HRESULT			SetUp_ShaderResources();
 
+	void SetUseRotation(_bool bUseRot);
+
 protected:
 	_float2			GetPivotXY(UI_PIVOT ePivot) const;
 
@@ -119,13 +121,20 @@ protected:
 	_float4x4			m_ViewMatrix;
 	_float4x4			m_ProjMatrix;
 
+	_uint				m_iPriority = 0;			// 낮을 수록 뒤에 그려진다.
+
 	_float				m_fX = 0.0f;
 	_float				m_fY = 0.0f;
 	_float				m_fSizeX = 100.0f;
 	_float				m_fSizeY = 100.0f;
 	_float2				m_vScale = { 1.0f, 1.0f };	// 추가적으로 수정할 스케일
 
-	_uint				m_iPriority = 0;			// 낮을 수록 뒤에 그려진다.
+	_bool m_bUseRot = false;
+	// pivot중심의 공전 각도
+	_float m_fRadianRevolve = 0.f;
+	// 현재 위치 기준 자전 각도
+	_float m_fRadianRotation = 0.f;
+
 
 	CanvasRect			m_CanvasSize;
 	UI_PIVOT			m_ePivot = UI_PIVOT::CENTER;

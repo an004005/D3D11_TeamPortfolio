@@ -132,14 +132,27 @@ void CUI::Imgui_RenderProperty()
 	ImGui::DragFloat("Scale Y", &m_vScale.y, 0.01f, 0.1f, 1.0f);
 
 	ImGui::Separator();
+
+	if (ImGui::Button("UseRot"))
+	{
+		m_bUseRot = !m_bUseRot;
+		SetUseRotation(m_bUseRot);
+	}
+
+	if (m_bUseRot)
+	{
+		//_float fDegreeRotation = XMConvertToDegrees(m_fRadianRotation);
+		ImGui::DragFloat("Rotation(degree)", &m_fRadianRotation);
+		//m_fRadianRotation = XMConvertToRadians(fDegreeRotation);
+		m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, m_fRadianRotation);
+	}
+	ImGui::Separator();
 }
 
 void CUI::SaveToJson(Json & json)
 {
 	__super::SaveToJson(json);
 	CShader::SaveShaderParam(m_tParams, json);
-
-	json["sdf"];
 
 	json["PositionX"] = m_fX;
 	json["PositionY"] = m_fY;
@@ -199,6 +212,11 @@ HRESULT CUI::SetUp_ShaderResources()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CUI::SetUseRotation(_bool bUseRot)
+{
+	m_bUseRot = bUseRot;
 }
 
 _float2 CUI::GetPivotXY(UI_PIVOT ePivot) const

@@ -66,39 +66,7 @@ void CCanvas::Late_Tick(_double TimeDelta)
 
 void CCanvas::Imgui_RenderProperty()
 {
-	//__super::Imgui_RenderProperty();
-
-	ImGui::Separator();
-	static array<const char*, UI_PIVOT_CNT> arrPivotName{
-		"CENTER", "LEFT TOP", "TOP", "RIGHT_TOP", "RIGHT", "RIGHT BOT", "BOT", "LEFT BOT", "LEFT"
-	};
-
-	ImGui::Checkbox("Visible", &m_bVisible);
-	_int iPriority = m_iPriority;
-	ImGui::InputInt("Priority", &iPriority);
-	m_iPriority = iPriority;
-
-	if (ImGui::BeginCombo("Pivot", arrPivotName[static_cast<_uint>(m_ePivot)]))
-	{
-		for (int i = 0; i < UI_PIVOT_CNT; ++i)
-		{
-			const bool bSelected = false;
-			if (ImGui::Selectable(arrPivotName[i], bSelected))
-				m_ePivot = static_cast<UI_PIVOT>(i);
-		}
-
-		ImGui::EndCombo();
-	}
-
-	ImGui::Separator();
-	ImGui::DragFloat("pos X", &m_fX);
-	ImGui::DragFloat("pos Y", &m_fY);
-	ImGui::DragFloat("Size X", &m_fSizeX);
-	ImGui::DragFloat("Size Y", &m_fSizeY);
-
-	ImGui::Separator();
-	ImGui::DragFloat("Scale X", &m_vScale.x, 0.01f, 0.1f, 1.0f);
-	ImGui::DragFloat("Scale Y", &m_vScale.y, 0.01f, 0.1f, 1.0f);
+	__super::Imgui_RenderProperty();
 
 	ImGui::Separator();
 	static char szChildProtoName[MAX_PATH]{};
