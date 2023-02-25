@@ -102,6 +102,8 @@ HRESULT CLevel_Tutorial::Ready_Lights()
 
 	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
 		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CLevel_Tutorial::Ready_Layer_BackGround(const _tchar * pLayerTag)

@@ -10,6 +10,8 @@
 #include "Imgui_AnimModifier.h"
 #include "GameUtils.h"
 #include "AnimationInstance.h"
+#include "Terrain.h"
+#include "JsonStorage.h"
 
 CLevel_AnimModify::CLevel_AnimModify(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -44,12 +46,17 @@ HRESULT CLevel_AnimModify::Initialize()
 	if (FAILED(Ready_Layer_AnimModel(L"Layer_AnimModel")))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Map(L"Layer_Map")))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CLevel_AnimModify::Tick(_double TimeDelta)
 {
 	CLevel::Tick(TimeDelta);
+
+	//PeekPosSetting();
 }
 
 void CLevel_AnimModify::Late_Tick(_double TimeDelta)
@@ -136,12 +143,17 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 
 	//FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Goat", pModel_Goat));
 
+	// Terrain
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"), CTerrain::Create(m_pDevice, m_pContext)));
+
 	return S_OK;
 }
 
 HRESULT CLevel_AnimModify::Ready_Layer_Terrain(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Terrain")));
 	
 	return S_OK;
 }
@@ -150,8 +162,11 @@ HRESULT CLevel_AnimModify::Ready_Layer_Camera(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
-		return E_FAIL;
+	CGameObject* pGameObject = nullptr;
+	pGameObject = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
+	pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(65.f, 5.f, 60.f, 1.f));
+	pGameObject->GetTransform()->LookAt(XMVectorSet(65.f, 0.f, 65.f, 1.f));
+	NULL_CHECK(pGameObject);
 
 	return S_OK;
 }
@@ -163,8 +178,12 @@ HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 	Json PreviewData; // MonsterBuddyLumi	Model_TestPlayer	MonsterFlowerLeg
 	PreviewData["Model"] = "Model_TestPlayer";
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
+		return E_FAIL;*/
+
+	CGameObject* pGameObject = nullptr;
+	pGameObject = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
+	pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(65.f, 0.f, 65.f, 1.f));
 
 	return S_OK;
 }
@@ -180,6 +199,30 @@ HRESULT CLevel_AnimModify::Ready_Layer_AnimModel(const _tchar * pLayerTag)
 	//	return E_FAIL;
 
 	return S_OK;
+}
+
+HRESULT CLevel_AnimModify::Ready_Layer_Map(const _tchar* pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+
+	CGameObject* pGameObject = nullptr;
+	pGameObject = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+	pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(65.f, 0.f, 65.f, 1.f));
+
+	return S_OK;
+}
+
+void CLevel_AnimModify::PeekPosSetting(void)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	CGameObject* pTerrain = nullptr;
+	_float4		 vPeekingPos = { 0.f, 0.f, 0.f, 0.f };
+	NULL_CHECK(pTerrain = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Terrain"))->GetGameObjects().front());
+	static_cast<CTerrain*>(pTerrain)->PickTerrain(vPeekingPos);
+	pGameInstance->SetPeekingPos(XMLoadFloat4(&vPeekingPos));
 }
 
 CLevel_AnimModify* CLevel_AnimModify::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

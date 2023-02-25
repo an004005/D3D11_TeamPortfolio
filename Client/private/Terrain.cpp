@@ -51,6 +51,14 @@ void CTerrain::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
+	{	// 터레인 피킹 세팅
+		CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+		_float4 vPeekingPos;
+		PickTerrain(vPeekingPos);
+		pGameInstance->SetPeekingPos(XMLoadFloat4(&vPeekingPos));
+	}
+
 	if(nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_PRIORITY, this);
 }

@@ -2,10 +2,13 @@
 #include "../public/BaseAnimInstance.h"
 #include "Player.h"
 #include "Model.h"
+#include "GameInstance.h"
 
 HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject)
 {
 	FAILED_CHECK(__super::Initialize(pModel, pGameObject));
+
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	m_pASM_Base = CASMBuilder()
 		.InitState("IDLE")
@@ -101,7 +104,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 			.AddState("WALK_LOOP")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_026_AL_run"))
-				.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(); })
+				.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); })
 				.AddTransition("WALK_LOOP to IDLE", "IDLE")
 				.Predicator([&]()->_bool { return !m_bWalk; })
 				.Duration(0.2f).Priority(0)
@@ -219,7 +222,11 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 	if (bLocalMove)
 	{
 		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
-		m_pTargetObject->GetTransform()->LocalMove(m_pModel->GetLocalMove(WorldMatrix));
+		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix);
+		m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
+
+		if (0.f != XMVectorGetX(XMVector3Length(vLocalMove)))
+			m_vLocalMove = vLocalMove;
 	}
 }
 

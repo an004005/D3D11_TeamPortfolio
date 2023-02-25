@@ -765,6 +765,16 @@ void CGameInstance::Imgui_OnOff(_bool bOn)
 	m_pImgui_Manager->ImguiOnOff(bOn);
 }
 
+_vector & CGameInstance::GetPeekingPos()
+{
+	return m_vecPeekingPos;
+}
+
+void CGameInstance::SetPeekingPos(_fvector vPeekingPos)
+{
+	m_vecPeekingPos = vPeekingPos;
+}
+
 void CGameInstance::Release_Engine()
 {
 	_uint ref = CGameInstance::GetInstance()->DestroyInstance();
