@@ -18,6 +18,8 @@
 #include "Psychokinesis.h"
 #include "MapNonAnim_Object.h"
 #include "Camera_Player.h"
+#include "ControlledRigidBody.h"
+#include "RigidBody.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -254,6 +256,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CPsychokinesis::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_ControlledRigidBody"), CControlledRigidBody::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_RigidBody"), CRigidBody::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Regular32"), TEXT("../Bin/Resources/Fonts/kim_regular32.spritefont"))))
 		return E_FAIL;

@@ -34,6 +34,9 @@ protected:	// 대상의 상태
 
 	string	m_szCurAnimName = "";
 
+	Vector3	m_vLocalMove;
+	Matrix	m_matCamRot;
+
 	_uint	m_eMoveDir;
 
 	CAnimationStateMachine* m_pASM_Base = nullptr;

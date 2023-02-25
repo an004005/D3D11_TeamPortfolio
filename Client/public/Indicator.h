@@ -5,6 +5,8 @@
 BEGIN(Engine)
 class CRenderer;
 class CCollider;
+class CRigidBody;
+class CPhysXStaticModel;
 END
 
 BEGIN(Client)
@@ -16,10 +18,11 @@ private:
 	CIndicator(const CIndicator& rhs);
 	virtual ~CIndicator() = default;
 
+public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Late_Tick(_double TimeDelta) override;
-	virtual HRESULT Render() override;
+	virtual void AfterPhysX() override;
 
 public:
 	void SetPosition(_float3 vPos);
@@ -27,8 +30,7 @@ public:
 
 private:
 	CRenderer*				m_pRendererCom = nullptr;
-	CCollider*				m_pCollider = nullptr;
-
+	CRigidBody*				m_pCollider = nullptr;
 	
 
 public:

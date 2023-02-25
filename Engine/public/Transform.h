@@ -87,6 +87,7 @@ public:
 	/* 쳐다본다. */
 	/*void LookAt(const CTransform* pTarget);*/
 	void LookAt(_fvector vTargetPos);
+	void LookAt_Smooth(_fvector vTargetPos, _double TimeDelta);
 
 	/* 추적한다 .*/
 	void Chase(_fvector vTargetPos, _double TimeDelta, _float fLimit = 0.1f);

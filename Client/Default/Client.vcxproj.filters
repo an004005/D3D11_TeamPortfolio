@@ -154,6 +154,9 @@
     <Filter Include="01.Levels\02.GamePlay\01.Tutorial">
       <UniqueIdentifier>{0ce87f0a-cfa9-4fa6-8ec1-62c4bf61ba72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96.Test">
+      <UniqueIdentifier>{057aa277-d73a-4379-bf1d-ed33bde7fe89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -340,6 +343,9 @@
     <ClInclude Include="..\public\Level_Tutorial.h">
       <Filter>01.Levels\02.GamePlay\01.Tutorial</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\TestObject.h">
+      <Filter>96.Test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -504,6 +510,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Level_Tutorial.cpp">
       <Filter>01.Levels\02.GamePlay\01.Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TestObject.cpp">
+      <Filter>96.Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

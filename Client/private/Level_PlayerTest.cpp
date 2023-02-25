@@ -13,6 +13,7 @@
 #include "Player.h"
 #include "Controller.h"
 #include "CamSpot.h"
+#include "JsonStorage.h"
 
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -42,6 +43,9 @@ HRESULT CLevel_PlayerTest::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
 
 
@@ -147,6 +151,16 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Player(const _tchar* pLayerTag)
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
 
+	return S_OK;
+}
+
+HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 	return S_OK;
 }
 

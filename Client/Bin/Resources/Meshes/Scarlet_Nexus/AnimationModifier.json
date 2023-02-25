@@ -161,5 +161,31 @@
         "TickPerSecond": 100.0,
         "bLooping": false,
         "vecEvent": []
+    },
+    "ch0100": {
+        "mapRootMotion": {
+            "AS_ch0100_002_AL_wait02": {
+                "AnimName": "AS_ch0100_002_AL_wait02",
+                "EndTime": 400.0,
+                "RootVector": [
+                    1.8860931396484375,
+                    0.0,
+                    3.1727294921875,
+                    0.0
+                ],
+                "StartTime": 300.0
+            },
+            "AS_ch0100_201_AL_atk_a1": {
+                "AnimName": "AS_ch0100_201_AL_atk_a1",
+                "EndTime": 10.0,
+                "RootVector": [
+                    0.0,
+                    0.0,
+                    3.0,
+                    0.0
+                ],
+                "StartTime": 0.0
+            }
+        }
     }
 }
