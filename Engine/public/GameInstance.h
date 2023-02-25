@@ -8,7 +8,6 @@
 #include "Component_Manager.h"
 #include "PipeLine.h"
 #include "Graphic_Device.h"
-#include "Collider.h"
 #include "Layer.h"
 #include "Sound.h"
 

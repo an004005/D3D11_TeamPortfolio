@@ -8,7 +8,6 @@
 //-------------------------------------------------------------------------------------
 
 #pragma once
-#include "BoundingCapsule.h"
 
 namespace DX
 {
@@ -45,7 +44,7 @@ namespace DX
         DirectX::FXMVECTOR pointA, DirectX::FXMVECTOR pointB, DirectX::FXMVECTOR pointC,
         DirectX::GXMVECTOR color = DirectX::Colors::White);
 
-    void XM_CALLCONV Draw(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-        const CBoundingCapsule& capsule,
-        DirectX::FXMVECTOR color = DirectX::Colors::White);
+    // void XM_CALLCONV Draw(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
+    //     const CBoundingCapsule& capsule,
+    //     DirectX::FXMVECTOR color = DirectX::Colors::White);
 }

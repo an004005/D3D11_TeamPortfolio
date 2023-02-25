@@ -100,9 +100,6 @@
     <Filter Include="81.Utils\Time">
       <UniqueIdentifier>{365ecf67-c722-49c2-8694-6eb7b57fc26d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\03.Components\07.Collider">
-      <UniqueIdentifier>{7e2fe4fb-845d-4289-af19-45d064c9f6c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03.Components\08.Nevigation">
       <UniqueIdentifier>{c4e76e14-dc84-40dd-9df2-d5da0862b247}</UniqueIdentifier>
     </Filter>
@@ -384,9 +381,6 @@
     <ClInclude Include="..\public\DebugDraw.h">
       <Filter>81.Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Collider.h">
-      <Filter>01.Utility\03.Components\07.Collider</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Navigation.h">
       <Filter>01.Utility\03.Components\08.Nevigation</Filter>
     </ClInclude>
@@ -474,10 +468,6 @@
     <ClInclude Include="..\public\PhysX_Manager.h">
       <Filter>01.Utility\11.PhysX</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="..\public\Imgui_PhysX.h">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\RigidBody.h">
       <Filter>01.Utility\11.PhysX\Collider</Filter>
     </ClInclude>
@@ -486,6 +476,12 @@
     </ClInclude>
     <ClInclude Include="..\public\PhysXStaticModel.h">
       <Filter>01.Utility\11.PhysX\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_PhysX.h">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>99.Defines</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -666,9 +662,6 @@
     <ClCompile Include="..\private\DebugDraw.cpp">
       <Filter>81.Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Collider.cpp">
-      <Filter>01.Utility\03.Components\07.Collider</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Navigation.cpp">
       <Filter>01.Utility\03.Components\08.Nevigation</Filter>
     </ClCompile>
@@ -741,7 +734,7 @@
     <ClCompile Include="..\private\Sound_Manager.cpp">
       <Filter>01.Utility\10.Sound</Filter>
     </ClCompile>
-	<ClCompile Include="..\private\AnimationInstance.cpp">
+    <ClCompile Include="..\private\AnimationInstance.cpp">
       <Filter>01.Utility\03.Components\06.Model</Filter>
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Instancing.cpp">
@@ -756,9 +749,6 @@
     <ClCompile Include="..\private\PhysX_Manager.cpp">
       <Filter>01.Utility\11.PhysX</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Imgui_PhysX.cpp">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\RigidBody.cpp">
       <Filter>01.Utility\11.PhysX\Collider</Filter>
     </ClCompile>
@@ -768,8 +758,13 @@
     <ClCompile Include="..\private\PhysXStaticModel.cpp">
       <Filter>01.Utility\11.PhysX\Collider</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Imgui_PhysX.cpp">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Engine.rc" />
+    <ResourceCompile Include="Engine.rc">
+      <Filter>99.Defines</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
