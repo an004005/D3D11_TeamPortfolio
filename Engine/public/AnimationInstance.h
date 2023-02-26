@@ -117,6 +117,7 @@ public:
 	void PlayAnimationSocket(const string& strSocName, CAnimation* pAnimation, _float fPlayAt = 0.f);
 	void StopAnimationSocket(const string& strSocName);
 	CAnimation* GetSocketAnimation(const string& strSocName);
+	
 
 protected:
 	_bool CheckFinishedAnimSocket();
