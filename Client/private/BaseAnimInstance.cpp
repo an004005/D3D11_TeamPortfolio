@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Model.h"
 #include "GameInstance.h"
+#include "HelperClasses.h"
 
 HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject)
 {
@@ -12,23 +13,24 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 	m_pASM_Base = CASMBuilder()
 		.InitState("IDLE")
-			.AddState("IDLE")
-			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_002_AL_wait02"))
-			.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanTurn(false).SetCanMove(false); })
+			
 		
 #pragma region IDLE
+		.AddState("IDLE")
+		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_002_AL_wait02"))
+		.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanTurn(false).SetCanMove(false); })
 
-				.AddTransition("IDLE to WALK", "WALK")
-				.Predicator([&]()->_bool { return m_bWalk; })
-				.Duration(0.1f).Priority(0)
+			.AddTransition("IDLE to WALK", "WALK")
+			.Predicator([&]()->_bool { return m_bWalk; })
+			.Duration(0.1f).Priority(0)
 				
-				.AddTransition("IDLE to ATK_A1", "ATK_A1")
-				.Predicator([&]()->_bool {return m_bLeftClick; })
-				.Duration(0.1f).Priority(1)
+			.AddTransition("IDLE to ATK_A1", "ATK_A1")
+			.Predicator([&]()->_bool {return m_bLeftClick; })
+			.Duration(0.1f).Priority(1)
 
-				.AddTransition("IDLE to DASH_START_FRONT", "DASH_START_FRONT")
-				.Predicator([&]()->_bool {return m_bShiftClick; })
-				.Duration(0.1f).Priority(1)
+			.AddTransition("IDLE to DASH", "DASH")
+			.Predicator([&]()->_bool {return m_bDash; })
+			.Duration(0.1f).Priority(1)
 
 #pragma endregion IDLE
 
@@ -73,6 +75,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Predicator([&]()->_bool {return m_bLeftClick; })
 				.Duration(0.1f).Priority(1)
 
+				.AddTransition("WALK_START_FRONT to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash; })
+				.Duration(0.1f).Priority(1)
+
 				.AddTransition("WALK_START_FRONT to WALK_LOOP", "WALK_LOOP")
 					.Priority(0)
 					.Duration(0.05f)
@@ -86,10 +92,13 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_022_AL_run_start_L"))
 				.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanTurn(false).SetCanMove(false); })
 				.FinishEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); })
-				//.OptionalEvent([&]() { if (0.4255f <= m_fPlayRatio) { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); } })
 
 				.AddTransition("WALK to ATK_A1", "ATK_A1")
 				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_LEFT to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash && (0.4255f <= m_fPlayRatio); })
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_START_LEFT to WALK_LOOP", "WALK_LOOP")
@@ -104,10 +113,13 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_023_AL_run_start_R"))
 				.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanTurn(false).SetCanMove(false); })
 				.FinishEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); })
-				//.OptionalEvent([&]() { if (0.4255f <= m_fPlayRatio) { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); } })
 
 				.AddTransition("WALK to ATK_A1", "ATK_A1")
 				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_RIGHT to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash && (0.4255f <= m_fPlayRatio); })
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_START_RIGHT to WALK_LOOP", "WALK_LOOP")
@@ -127,6 +139,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Predicator([&]()->_bool {return m_bLeftClick; })
 				.Duration(0.1f).Priority(1)
 
+				.AddTransition("WALK_START_BACK_LEFT to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash && (0.4255f <= m_fPlayRatio); })
+				.Duration(0.1f).Priority(1)
+
 				.AddTransition("WALK_START_BACK_LEFT to WALK_LOOP", "WALK_LOOP")
 				.Duration(0.05f).Priority(0)
 
@@ -144,6 +160,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Predicator([&]()->_bool {return m_bLeftClick; })
 				.Duration(0.1f).Priority(1)
 
+				.AddTransition("WALK_START_BACK_RIGHT to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash && (0.4255f <= m_fPlayRatio); })
+				.Duration(0.1f).Priority(1)
+
 				.AddTransition("WALK_START_BACK_RIGHT to WALK_LOOP", "WALK_LOOP")
 				.Duration(0.05f).Priority(0)
 
@@ -159,6 +179,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Predicator([&]()->_bool {return m_bLeftClick; })
 				.Duration(0.1f).Priority(1)
 
+				.AddTransition("WALK_LOOP to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash; })
+				.Duration(0.1f).Priority(1)
+
 				.AddTransition("WALK_LOOP to WALK_END", "WALK_END")
 				.Predicator([&]()->_bool { return !m_bWalk; })
 				.Duration(0.1f).Priority(0)
@@ -169,6 +193,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 				.AddTransition("WALK to ATK_A1", "ATK_A1")
 				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_END to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash; })
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_END to IDLE", "IDLE")
@@ -191,6 +219,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.Duration(0.1f)
 			.Priority(100)
 
+			.AddTransition("ATK_A1 to DASH", "DASH")
+			.Predicator([&]()->_bool {return m_bDash && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")); })
+			.Duration(0.1f).Priority(0)
+
 			.AddTransition("ATK_A1 to WALK", "WALK")
 			.Predicator([&]()->_bool {return m_bWalk && (0.3f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && (!m_bLerp); })
 			.Duration(0.1f)
@@ -207,6 +239,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.Predicator([&]()->_bool {return m_bLeftClick && (0.15f <= m_fPlayRatio) && (0.5f > m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")) && (!m_bLerp); })
 			.Duration(0.1f)
 			.Priority(100)
+
+			.AddTransition("ATK_A2 to DASH", "DASH")
+			.Predicator([&]()->_bool {return m_bDash && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")); })
+			.Duration(0.1f).Priority(0)
 
 			.AddTransition("ATK_A2 to WALK", "WALK")
 			.Predicator([&]()->_bool {return m_bWalk && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")) && (!m_bLerp); })
@@ -225,6 +261,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.Duration(0.1f)
 			.Priority(100)
 
+			.AddTransition("ATK_A3 to DASH", "DASH")
+			.Predicator([&]()->_bool {return m_bDash && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")); })
+			.Duration(0.1f).Priority(0)
+
 			.AddTransition("ATK_A3 to WALK", "WALK")
 			.Predicator([&]()->_bool {return m_bWalk && (0.65f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")) && (!m_bLerp); })
 			.Duration(0.1f)
@@ -241,6 +281,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.Predicator([&]()->_bool {return m_bLeftClick && (0.25f <= m_fPlayRatio) && (0.6f > m_fPlayRatio) && (CheckAnim("AS_ch0100_204_AL_atk_a4")) && (!m_bLerp); })
 			.Duration(0.1f)
 			.Priority(100)
+
+			.AddTransition("ATK_A4 to DASH", "DASH")
+			.Predicator([&]()->_bool {return m_bDash && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_204_AL_atk_a4")); })
+			.Duration(0.1f).Priority(0)
 
 			.AddTransition("ATK_A4 to WALK", "WALK")
 			.Predicator([&]()->_bool {return m_bWalk && (0.6f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_204_AL_atk_a4")) && (!m_bLerp); })
@@ -260,6 +304,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.Duration(0.1f)
 			.Priority(100)
 
+			.AddTransition("ATK_A5 to DASH", "DASH")
+			.Predicator([&]()->_bool {return m_bDash && (0.4f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_205_AL_atk_a5")); })
+			.Duration(0.1f).Priority(0)
+
 			.AddTransition("ATK_A5 to WALK", "WALK")
 			.Predicator([&]()->_bool {return m_bWalk && (0.4f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_205_AL_atk_a5")) && (!m_bLerp); })
 			.Duration(0.1f)
@@ -272,12 +320,45 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 #pragma endregion Attack_A
 
 #pragma region Dash And Run
+			// 대시 스타트 모션
+			.AddState("DASH")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_051_AL_dodge_F_start"))
+			.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanMove(false).SetCanTurn(false); })
+
+			.AddTransition("DASH to ATTACK_DASH_START", "ATTACK_DASH_START")
+			.Predicator([&]()->_bool {return m_bLeftClick; })
+			.Duration(0.1f).Priority(0)
+
+			.AddTransition("DASH to DASH_START_FRONT", "DASH_START_FRONT")
+			.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_F; })
+			.Duration(0.05f).Priority(0)
+
+			.AddTransition("DASH to DASH_START_LEFT", "DASH_START_LEFT")
+			.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_L; })
+			.Duration(0.05f).Priority(0)
+
+			.AddTransition("DASH to DASH_START_RIGHT", "DASH_START_RIGHT")
+			.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_R; })
+			.Duration(0.05f).Priority(0)
+
+			.AddTransition("DASH to DASH_START_BACK", "DASH_START_BACK")
+			.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_B; })
+			.Duration(0.05f).Priority(0)
+
+			.AddTransition("DASH to DASH_END_FRONT", "DASH_END_FRONT")
+			.Duration(0.05f).Priority(0)
+			
+			// 앞쪽 대시 관련
 			.AddState("DASH_START_FRONT")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_051_AL_dodge_F_start"))
 			.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanMove(false).SetCanTurn(false); })
 
+			.AddTransition("DASH_START_FRONT to ATTACK_DASH_START", "ATTACK_DASH_START")
+			.Predicator([&]()->_bool {return m_bLeftClick; })
+			.Duration(0.1f).Priority(0)
+
 			.AddTransition("DASH_START_FRONT to RUN_FRONT", "RUN_FRONT")
-			.Predicator([&]()->_bool {return m_bShiftPress && (0.6f <= m_fPlayRatio); })
+			.Predicator([&]()->_bool {return m_bWalk && (0.8f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_051_AL_dodge_F_start")); })
 			.Duration(0.05f)
 			.Priority(100)
 
@@ -292,21 +373,132 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.Duration(0.1f)
 			.Priority(100)
 
+			// 좌측 대시 관련
+			.AddState("DASH_START_LEFT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_057_AL_dodge_L_start"))
+			.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanMove(false).SetCanTurn(false); })
+
+			.AddTransition("DASH_START_LEFT to RUN_FRONT", "RUN_FRONT")
+			.Predicator([&]()->_bool {return m_bWalk && (0.8f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_057_AL_dodge_L_start")); })
+			.Duration(0.05f)
+			.Priority(100)
+
+			.AddTransition("DASH_START_LEFT to DASH_END_LEFT", "DASH_END_LEFT")
+			.Duration(0.1f)
+			.Priority(100)
+
+			.AddState("DASH_END_LEFT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_057_AL_dodge_L_stop"))
+			.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanMove(false).SetCanTurn(false); })
+			.AddTransition("DASH_END_LEFT to IDLE", "IDLE")
+			.Duration(0.1f)
+			.Priority(100)
+
+			// 우측 대시 관련
+			.AddState("DASH_START_RIGHT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_053_AL_dodge_R_start"))
+			.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanMove(false).SetCanTurn(false); })
+
+			.AddTransition("DASH_START_RIGHT to RUN_FRONT", "RUN_FRONT")
+			.Predicator([&]()->_bool {return m_bWalk && (0.8f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_053_AL_dodge_R_start")); })
+			.Duration(0.05f)
+			.Priority(100)
+
+			.AddTransition("DASH_START_RIGHT to DASH_END_RIGHT", "DASH_END_RIGHT")
+			.Duration(0.1f)
+			.Priority(100)
+
+			.AddState("DASH_END_RIGHT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_053_AL_dodge_R_stop"))
+			.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanMove(false).SetCanTurn(false); })
+			.AddTransition("DASH_END_RIGHT to IDLE", "IDLE")
+			.Duration(0.1f)
+			.Priority(100)
+
+			// 후방 대시 관련
+			.AddState("DASH_START_BACK")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_055_AL_dodge_B_start"))
+			.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanMove(false).SetCanTurn(false); })
+
+			.AddTransition("DASH_START_BACK to DASH_END_BACK", "DASH_END_BACK")
+			.Duration(0.1f)
+			.Priority(100)
+
+			.AddState("DASH_END_BACK")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_055_AL_dodge_B_stop"))
+			.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanMove(false).SetCanTurn(false); })
+
+			.AddTransition("DASH_END_BACK to RUN_FRONT", "RUN_FRONT")
+			.Predicator([&]()->_bool {return m_bWalk && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_055_AL_dodge_B_stop")); })
+			.Duration(0.05f)
+			.Priority(100)
+
+			.AddTransition("DASH_END_BACK to IDLE", "IDLE")
+			.Duration(0.1f)
+			.Priority(100)
+
+			// 달리기
 			.AddState("RUN_FRONT")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_036_AL_dash"))
-			.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanMove(true).SetCanTurn(true); })
+			.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanMove(true).SetCanTurn(true).SetCanRun(true); })
+			.FinishEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanMove(false).SetCanTurn(false).SetCanRun(false); })
+			
+			.AddTransition("RUN_FRONT to ATTACK_DASH_START", "ATTACK_DASH_START")
+			.Predicator([&]()->_bool {return m_bLeftClick; })
+			.Duration(0.1f).Priority(0)
+
+			.AddTransition("RUN_FRONT to DASH", "DASH")
+			.Predicator([&]()->_bool {return m_bDash; })
+			.Duration(0.1f).Priority(0)
+				
 			.AddTransition("RUN_FRONT to RUN_END", "RUN_END")
 			.Predicator([&]()->_bool {return !m_bWalk; })
 			.Duration(0.1f)
 			.Priority(100)
 
+			// 달리기 종료
 			.AddState("RUN_END")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_038_AL_dash_stop"))
-			.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanMove(false).SetCanTurn(false); })
 			.AddTransition("RUN_END to IDLE", "IDLE")
 			.Duration(0.1f)
 			.Priority(100)
 #pragma endregion Dash And Run
+
+#pragma region DashAttack
+
+				.AddState("ATTACK_DASH_START")
+				.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_214_AL_atk_dash_start"))
+				.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanTurn(false).SetCanMove(false); })
+				.AddTransition("ATTACK_DASH_START to ATTACK_DASH_END", "ATTACK_DASH_END")
+				.Duration(0.1f).Priority(1)
+
+				.AddState("ATTACK_DASH_END")
+				.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_214_AL_atk_dash_end"))
+				.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanTurn(false).SetCanMove(false); })
+
+				.AddTransition("ATTACK_DASH_END to ATK_A3", "ATK_A3")
+				.Predicator([&]()->_bool {return m_bLeftClick && (0.07f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_214_AL_atk_dash_end")); })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("ATTACK_DASH_END to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash && (0.07f <= m_fPlayRatio); })
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("ATTACK_DASH_END to IDLE", "IDLE")
+				.Duration(0.1f).Priority(1)
+
+#pragma endregion DashAttack
+
+#pragma region ChargeAttack
+
+				/*.AddState("ATTACK_NONCHARGE")
+				.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_215_AL_atk_dash_hold"))
+				.StartEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->SetCanTurn(false).SetCanMove(false); })
+				.AddTransition("ATTACK_DASH_START to ATTACK_DASH_END", "ATTACK_DASH_END")
+				.Duration(0.1f).Priority(1)*/
+
+
+#pragma endregion ChargeAttack
 
 		.Build();
 
@@ -388,8 +580,7 @@ void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
 	m_bWalk = pPlayer->isWalk();
 
 	m_bLeftClick = pPlayer->isLeftClick();
-	m_bShiftClick = pPlayer->isShiftClick();
-	m_bShiftPress = pPlayer->isShiftPress();
+	m_bDash = pPlayer->isDash();
 	
 	m_fPlayRatio = 0.f;
 	m_fPlayRatio = pPlayer->GetPlayRatio();

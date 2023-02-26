@@ -118,8 +118,8 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 	}
 	Assert(iLoopBreaker > 0); // 무한루프 방치
 
-	if (nullptr != m_pCurState->m_OptionalEvent)
-		m_pCurState->m_OptionalEvent();
+	if (nullptr != m_pCurState->m_OptionalEvent && (m_pCurState->m_bOptionalEvent))
+		m_pCurState->m_bOptionalEvent = m_pCurState->m_OptionalEvent();
 
 	if (m_fCurTransitionTime < m_fTransitionDuration)
 	{

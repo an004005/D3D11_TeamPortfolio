@@ -56,8 +56,7 @@ public:
 	_bool	isMove() { return m_bMove; }
 	_bool	isWalk() { return m_bWalk; }
 	_bool	isLeftClick() { return m_bLeftClick; }
-	_bool	isShiftClick() { return m_bShiftClick; }
-	_bool	isShiftPress() { return m_bShiftPress; }
+	_bool	isDash() { return m_bDash; }
 
 	_float	GetPlayRatio() { return m_fPlayRatio; }
 
@@ -67,8 +66,7 @@ protected:
 	_bool	m_bMove = false;
 	_bool	m_bWalk = false;
 	_bool	m_bLeftClick = false;
-	_bool	m_bShiftClick = false;
-	_bool	m_bShiftPress = false;
+	_bool	m_bDash = false;
 
 	_float	m_fPlayRatio = 0.f;
 
@@ -79,10 +77,12 @@ protected:
 public:
 	CPlayer&	SetCanTurn(_bool is) { m_bCanTurn = is; return *this; }
 	CPlayer&	SetCanMove(_bool is) { m_bCanMove = is; return *this; }
+	CPlayer&	SetCanRun (_bool is) { m_bCanRun = is; return *this; }
 
 protected:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
 	_bool	m_bCanTurn = false;
 	_bool	m_bCanMove = false;
+	_bool	m_bCanRun = false;
 
 protected:
 	void	BehaviorCheck(_double TimeDelta);

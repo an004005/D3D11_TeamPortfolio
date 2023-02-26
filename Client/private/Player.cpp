@@ -64,8 +64,10 @@ void CPlayer::Tick(_double TimeDelta)
 
 	if (m_bCanMove)
 	{
-		m_pTransformCom->Move(m_pModel->GetLastLocalMoveSpeed(), m_vMoveDir);
-		//IM_LOG(to_string(m_pModel->GetLastLocalMoveSpeed()).c_str());
+		if (m_bCanRun)
+			m_pTransformCom->Move(0.2f, m_vMoveDir);
+		else if (m_bWalk)
+			m_pTransformCom->Move(0.1f, m_vMoveDir);
 	}
 }
 
@@ -147,8 +149,7 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 	if (nullptr != m_pModel->GetPlayAnimation())
 		m_fPlayRatio = m_pModel->GetPlayAnimation()->GetPlayRatio();
 	m_bLeftClick = m_pController->KeyDown(CController::MOUSE_LB);
-	m_bShiftClick = m_pController->KeyDown(CController::SHIFT);
-	m_bShiftPress = m_pController->KeyPress(CController::SHIFT);
+	m_bDash = m_pController->KeyDown(CController::SHIFT);
 }
 
 void CPlayer::MoveStateCheck(_double TimeDelta)

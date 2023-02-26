@@ -30,8 +30,7 @@ protected:	// 대상의 상태
 	_bool	m_bWalk = false;
 
 	_bool	m_bLeftClick = false;
-	_bool	m_bShiftClick = false;
-	_bool	m_bShiftPress = false;
+	_bool	m_bDash = false;
 
 	_float	m_fPlayRatio = 0.f;
 

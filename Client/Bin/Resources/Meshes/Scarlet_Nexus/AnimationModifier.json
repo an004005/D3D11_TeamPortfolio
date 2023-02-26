@@ -137,6 +137,36 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_210_AL_atk_charge": {
+        "Duration": 45.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_210_AL_atk_charge_cancel": {
+        "Duration": 73.0,
+        "TickPerSecond": 60.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_210_AL_atk_charge_loop": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_211_AL_atk_charge01": {
+        "Duration": 151.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_212_AL_atk_charge02": {
+        "Duration": 166.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_214_AL_atk_dash_end": {
         "Duration": 141.0,
         "TickPerSecond": 60.0,
@@ -145,6 +175,12 @@
     },
     "AS_ch0100_214_AL_atk_dash_start": {
         "Duration": 11.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_215_AL_atk_dash_hold": {
+        "Duration": 195.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
@@ -467,6 +503,19 @@
                         0.0
                     ],
                     "StartTime": 60.0
+                }
+            ],
+            "AS_ch0100_214_AL_atk_dash_start": [
+                {
+                    "AnimName": "AS_ch0100_214_AL_atk_dash_start",
+                    "EndTime": 11.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        3.0,
+                        0.0
+                    ],
+                    "StartTime": 0.0010000000474974513
                 }
             ]
         }
