@@ -40,8 +40,13 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(Setup_AnimSocket()))
 		return E_FAIL;
 
-	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(90.f) });
+	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
 	//m_pModel->Add_EventCaller("Test", []() {IM_LOG("Test")});
+
+	//m_pModel->Add_EventCaller("LookAt_Permission", [&]() {this->SetCanTurn(true); });
+	//m_pModel->Add_EventCaller("Move_Permission", [&]() {this->SetCanMove(true); });
+	//m_pModel->Add_EventCaller("LookAt_Denied", [&]() {this->SetCanTurn(false); });
+	//m_pModel->Add_EventCaller("Move_Denied", [&]() {this->SetCanMove(false); });
 
 	return S_OK;
 }
@@ -57,8 +62,11 @@ void CPlayer::Tick(_double TimeDelta)
 
 	m_pASM->Tick(TimeDelta);
 
-	if (false == m_pModel->isLocalMove())
+	if (m_bCanMove)
+	{
 		m_pTransformCom->Move(m_pModel->GetLastLocalMoveSpeed(), m_vMoveDir);
+		//IM_LOG(to_string(m_pModel->GetLastLocalMoveSpeed()).c_str());
+	}
 }
 
 void CPlayer::Late_Tick(_double TimeDelta)
@@ -77,6 +85,15 @@ HRESULT CPlayer::Render()
 	m_pModel->Render(m_pTransformCom);
 
 	return S_OK;
+}
+
+void CPlayer::Imgui_RenderProperty()
+{
+	ImGui::SliderFloat("PlayerTurnSpeed", &m_fTurnSpeed, 0.f, 1000.f);
+	if (ImGui::Button("TurnAccess"))
+	{
+		m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(m_fTurnSpeed) });
+	}
 }
 
 HRESULT CPlayer::SetUp_Components(void * pArg)
@@ -130,6 +147,8 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 	if (nullptr != m_pModel->GetPlayAnimation())
 		m_fPlayRatio = m_pModel->GetPlayAnimation()->GetPlayRatio();
 	m_bLeftClick = m_pController->KeyDown(CController::MOUSE_LB);
+	m_bShiftClick = m_pController->KeyDown(CController::SHIFT);
+	m_bShiftPress = m_pController->KeyPress(CController::SHIFT);
 }
 
 void CPlayer::MoveStateCheck(_double TimeDelta)
@@ -140,6 +159,13 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 	m_eMoveDir = DIR_END;
 
 	m_vMoveDir = m_pController->GetMoveAxis();
+
+	Vector4 vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	vPlayerPos.w = 1.f;
+
+	m_vLastDir = vPlayerPos - m_vBefPos;
+	m_vLastDir.w = 0.f;
+	m_vBefPos = vPlayerPos;
 
 	if (0.f != XMVectorGetX(XMVector3Length(m_vMoveDir)))
 	{
@@ -153,9 +179,6 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 		vPlayerRight.y = 0.f;
 		vPlayerRight.Normalize();
 
-		Vector4 vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		vPlayerPos.w = 1.f;
-
 		Matrix matCam = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW);
 		_vector vScale, vRotate, vTrans;
 		XMMatrixDecompose(&vScale, &vRotate, &vTrans, matCam);
@@ -163,11 +186,6 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 		m_vMoveDir = XMVector3TransformNormal(m_vMoveDir, matCamRot);
 		m_vMoveDir.y = 0.f;
 		m_vMoveDir.Normalize();
-
-		/*
-		Look기준 +앞 -뒤
-		Right기준 +우 -좌
-		*/
 
 		_float fAxis_Look = vPlayerLook.Dot(m_vMoveDir);
 		_float fAxis_Right = vPlayerRight.Dot(m_vMoveDir);
@@ -183,20 +201,14 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 			else { m_eMoveDir = DIR_L; }
 		}
 
-		if ("AS_ch0100_026_AL_run" == m_pASM->GetCurAnimName())
-			m_pTransformCom->LookAt(vPlayerPos + m_vMoveDir);
-
-//		if(false == m_pModel->isLocalMove())
-//			m_pTransformCom->LookAt(vPlayerPos + m_vMoveDir);
-
-		m_vLastDir = m_vMoveDir;
+		if (m_bCanTurn)
+			m_pTransformCom->LookAt_Smooth(vPlayerPos + m_vMoveDir, TimeDelta);
 	}
 }
 
-void CPlayer::LookAtDir()
+void CPlayer::LookAtDir(Vector3 Vector)
 {
-	if (0.f != m_vLastDir.Length())
-		m_pTransformCom->LookAt(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(m_vLastDir.x, 0.f, m_vLastDir.z, 0.f));
+	m_pTransformCom->LookAt(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(Vector.x, 0.f, Vector.z, 0.f));
 }
 
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

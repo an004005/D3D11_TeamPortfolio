@@ -22,6 +22,14 @@ enum class EBoneMask
 	BONE_MASK_END
 };
 
+typedef struct tagOptionalRootMotion
+{
+	string szAnimName;
+	_float fStartTime;
+	_float fEndTime;
+	_float4 vOptionalRootVector;
+}OPTIONAL_ROOTMOTION;
+
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
@@ -40,7 +48,7 @@ public:
 	_float4x4 GetPivotMatrix() const { return m_PivotMatrix; }
 	CAnimation* Find_Animation(const string& strAnimaName);
 	void SetPivot(_float4x4 Pivot) { m_PivotMatrix = Pivot; }
-	_vector& GetLocalMove(_fmatrix WorldMatrix);
+	_vector GetLocalMove(_fmatrix WorldMatrix);
 	_bool	isLocalMove() { return !XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)); }
 	_float	GetLastLocalMoveSpeed() const { return m_fLastLocalMoveSpeed; }
 
@@ -74,6 +82,9 @@ public:
 	class CMaterial* FindMaterial(const _tchar* pMtrlProtoTag);
 
 private:
+	void SaveModifiedData(Json& json);
+
+private:
 	void Ready_Bones(const Json& jBone, class CBone* pParent);
 	void SetBoneChildren(const Json& jBone);
 	HRESULT Ready_Materials(HANDLE hFile);
@@ -81,12 +92,17 @@ private:
 public:		// 이벤트 실행
 	void EventCaller(const string& EventName);
 	void Add_EventCaller(const string& EventName, std::function<void(void)> Func);
+	_vector GetOptionalMoveVector(_fmatrix WorldMatrix);
+	void Add_OptionalRootMotion(OPTIONAL_ROOTMOTION RootMotion);
+	void Delete_OptionalRootMotion();
 
 private:	// 이벤트
 	unordered_map<string, std::function<void(void)>>	m_EventFunc;
+	unordered_map<string, vector<OPTIONAL_ROOTMOTION>>	m_mapOptionalRootMotion;
 
 private:
 	static const _float4x4 s_DefaultPivot;
+	static const string s_ModifyFilePath;
 
 private:
 	string								m_strName;

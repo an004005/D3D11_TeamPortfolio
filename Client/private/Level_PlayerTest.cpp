@@ -13,6 +13,7 @@
 #include "Player.h"
 #include "Controller.h"
 #include "CamSpot.h"
+#include "JsonStorage.h"
 
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -42,6 +43,9 @@ HRESULT CLevel_PlayerTest::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
 
 
@@ -99,14 +103,14 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 			CMaterial::Create(m_pDevice, m_pContext, filePath.c_str()));
 	});
 
-	pGameInstance->Add_Prototype(L"TestPlayer", CPlayer::Create(m_pDevice, m_pContext));
+	pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
 	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
 
-	auto pModel_TestPlayer = CModel::Create(m_pDevice, m_pContext,
-		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/TestPlayer/Test.anim_model");
+	auto pModel_Player = CModel::Create(m_pDevice, m_pContext,
+		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
 
-	pModel_TestPlayer->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/TestPlayer/Animation/");
-	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_TestPlayer", pModel_TestPlayer));
+	pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
+	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
 		CController::Create())))
@@ -140,13 +144,23 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Player(const _tchar* pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	Json PreviewData;
-	PreviewData["Model"] = "Model_TestPlayer";
+	PreviewData["Model"] = "Model_Player";
 
 	CGameObject* pPlayer = nullptr;
-	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("TestPlayer"), &PreviewData));
+	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Player"), &PreviewData));
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
 
+	return S_OK;
+}
+
+HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 	return S_OK;
 }
 

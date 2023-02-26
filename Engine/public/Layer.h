@@ -15,6 +15,7 @@ public:
 	HRESULT Initialize();
 	void Tick(_double TimeDelta);
 	void Late_Tick(_double TimeDelta);
+	void AfterPhysX();
 	
 	list<class CGameObject*>& GetGameObjects() { return m_GameObjects; }
 

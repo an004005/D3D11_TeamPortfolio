@@ -36,6 +36,12 @@ void CLayer::Late_Tick(_double TimeDelta)
 		pGameObject->Late_Tick(TimeDelta);
 }
 
+void CLayer::AfterPhysX()
+{
+	for (const auto pGameObject : m_GameObjects)
+		pGameObject->AfterPhysX();
+}
+
 HRESULT CLayer::Add_GameObject(CGameObject * pGameObject)
 {
 	if (nullptr == pGameObject)

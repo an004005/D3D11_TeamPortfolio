@@ -66,9 +66,12 @@ void CModelPreviwer::Late_Tick(_double TimeDelta)
 		if (m_bLocalMoveAccess) 
 		{
 			_vector vTest = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix());
-			//IM_LOG(to_string(XMVectorGetX(vTest)).c_str());
-			//IM_LOG(to_string(XMVectorGetZ(vTest)).c_str());
 			m_pTransformCom->LocalMove(vTest);
+		}
+
+		{
+			_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTransformCom->Get_WorldMatrix());
+			m_pTransformCom->LocalMove(vOpTest);
 		}
 	}
 }
@@ -202,6 +205,8 @@ void CImgui_AnimModifier::Imgui_RenderTab()
 		}
 	}
 
+	RootMotionMaker();
+
 	static Json AnimModifiers = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Meshes/Scarlet_Nexus/AnimationModifier.json");
 
 	if (m_pPreview && m_pPreview->GetPlayAnimation())
@@ -230,6 +235,53 @@ CImgui_AnimModifier* CImgui_AnimModifier::Create(ID3D11Device* pDevice, ID3D11De
 	}
 
 	return inst;
+}
+
+void CImgui_AnimModifier::RootMotionMaker()
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	if (ImGui::CollapsingHeader("RootMotionMaker"))
+	{
+		static _float4 vPeekingPos;
+		static _float4 vModelPos;
+		static _float2 fMoveTime;
+		static _bool   bPeekMode;
+
+		ImGui::Checkbox("PeekMode", &bPeekMode);
+		
+		vPeekingPos = pGameInstance->GetPeekingPos();
+		if(nullptr != m_pPreview)
+			vModelPos = m_pPreview->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		ImGui::InputFloat4("PeekingPos", &vPeekingPos.x);
+		ImGui::InputFloat4("ModelPos", &vModelPos.x);
+		ImGui::InputFloat2("MoveTime", &fMoveTime.x);
+
+		static _float4 vOptionalRootVector;
+
+		if (pGameInstance->KeyDown(CInput_Device::DIM_LB) && bPeekMode)
+		{
+			vOptionalRootVector = vPeekingPos - vModelPos;
+			bPeekMode = false;
+		}
+
+		ImGui::InputFloat4("RootVector", &vOptionalRootVector.x);
+
+		if (ImGui::Button("Add RootMotion"))
+		{
+			OPTIONAL_ROOTMOTION Root;
+			ZeroMemory(&Root, sizeof(OPTIONAL_ROOTMOTION));
+			Root.fStartTime = fMoveTime.x;
+			Root.fEndTime = fMoveTime.y;
+			XMStoreFloat4(&Root.vOptionalRootVector, vOptionalRootVector);
+
+			m_pPreview->GetModel()->Add_OptionalRootMotion(Root);
+		}
+		if (ImGui::Button("Delete RootMotion"))
+		{
+			m_pPreview->GetModel()->Delete_OptionalRootMotion();
+		}
+	}
 }
 
 void CImgui_AnimModifier::Free()

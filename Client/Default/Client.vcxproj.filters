@@ -154,6 +154,9 @@
     <Filter Include="01.Levels\02.GamePlay\01.Tutorial">
       <UniqueIdentifier>{0ce87f0a-cfa9-4fa6-8ec1-62c4bf61ba72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96.Test">
+      <UniqueIdentifier>{057aa277-d73a-4379-bf1d-ed33bde7fe89}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Monster\SkummyPool">
       <UniqueIdentifier>{773075e2-bc28-4393-8e82-36474691f893}</UniqueIdentifier>
     </Filter>
@@ -346,6 +349,9 @@
     <ClInclude Include="..\public\Level_Tutorial.h">
       <Filter>01.Levels\02.GamePlay\01.Tutorial</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\TestObject.h">
+      <Filter>96.Test</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\SkummyPool.h">
       <Filter>02.GameObjects\Monster\SkummyPool</Filter>
     </ClInclude>
@@ -516,6 +522,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Level_Tutorial.cpp">
       <Filter>01.Levels\02.GamePlay\01.Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TestObject.cpp">
+      <Filter>96.Test</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SkummyPool.cpp">
       <Filter>02.GameObjects\Monster\SkummyPool</Filter>

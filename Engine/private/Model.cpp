@@ -11,8 +11,33 @@
 #include "Material.h"
 #include "ImguiUtils.h"
 #include "Light_Manager.h"
+#include "JsonStorage.h"
+
+namespace nlohmann
+{
+	template <>
+	struct adl_serializer<OPTIONAL_ROOTMOTION>
+	{
+		static void to_json(json& j, const OPTIONAL_ROOTMOTION& value)
+		{
+			j["AnimName"] = value.szAnimName;
+			j["RootVector"] = value.vOptionalRootVector;
+			j["StartTime"] = value.fStartTime;
+			j["EndTime"] = value.fEndTime;
+		}
+
+		static void from_json(const json& j, OPTIONAL_ROOTMOTION& value)
+		{
+			j["AnimName"].get_to(value.szAnimName);
+			j["RootVector"].get_to(value.vOptionalRootVector);
+			j["StartTime"].get_to(value.fStartTime);
+			j["EndTime"].get_to(value.fEndTime);
+		}
+	};
+}
 
 const _float4x4 CModel::s_DefaultPivot = _float4x4::CreateScale({ 0.01f, 0.01f, 0.01f }) *_float4x4::CreateRotationY(XMConvertToRadians(-180.f));
+const string CModel::s_ModifyFilePath = "../Bin/Resources/Meshes/Scarlet_Nexus/AnimationModifier.json";
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -25,6 +50,7 @@ CModel::CModel(const CModel & rhs)
 	, m_eType(rhs.m_eType)
 	, m_PivotMatrix(rhs.m_PivotMatrix)
 	, m_pShadowShader(rhs.m_pShadowShader)
+	, m_mapOptionalRootMotion(rhs.m_mapOptionalRootMotion)
 {
 	if (m_eType == TYPE_ANIM)
 	{
@@ -102,7 +128,7 @@ CAnimation* CModel::Find_Animation(const string& strAnimaName)
 	return nullptr;
 }
 
-_vector & CModel::GetLocalMove(_fmatrix WorldMatrix)
+_vector CModel::GetLocalMove(_fmatrix WorldMatrix)
 {
 	_vector vMovePos;
 	ZeroMemory(&vMovePos, sizeof(_vector));
@@ -120,13 +146,14 @@ _vector & CModel::GetLocalMove(_fmatrix WorldMatrix)
 		}
 		if (m_mapAnimation[m_CurAnimName]->IsFinished())
 		{
-			m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
+			//m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
 			m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 	}
-	m_fLastLocalMoveSpeed = 0.f;
+	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
+	//m_fLastLocalMoveSpeed = 0.f;
 
 	_vector vScale, vRotation, vTrans;
 	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
@@ -199,7 +226,6 @@ HRESULT CModel::Initialize_Prototype(const char * pModelFilePath)
 	}
 
 	Ready_Materials(hFile);
-
 	
 	if (m_eType == TYPE_ANIM)
 	{
@@ -215,6 +241,16 @@ HRESULT CModel::Initialize_Prototype(const char * pModelFilePath)
 	{
 		m_pShadowShader = dynamic_cast<CShader*>(CGameInstance::GetInstance()
 			->Clone_Component(LEVEL_STATIC, L"Prototype_Component_Shader_VtxModel_Shadow"));
+	}
+
+	if (m_eType == TYPE_ANIM)
+	{
+		const Json& jsonAnimModifier = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Meshes/Scarlet_Nexus/AnimationModifier.json");
+		if (jsonAnimModifier.contains(m_strName))
+		{
+			Json ModifyData = jsonAnimModifier[m_strName];
+			m_mapOptionalRootMotion = ModifyData["mapRootMotion"];
+		}
 	}
 
 	CloseHandle(hFile);
@@ -360,6 +396,62 @@ void CModel::Imgui_RenderProperty()
 				}
 				ImGui::EndListBox();
 			}
+		}
+
+		static string szSelectedEvent;
+
+		if (ImGui::CollapsingHeader("OptionalVector Viewer"))
+		{
+			if (ImGui::BeginListBox("Optional Anim View"))
+			{
+				for (auto& iter : m_mapOptionalRootMotion)
+				{
+					if (iter.first == szSelectedEvent)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+
+					if (ImGui::Selectable(iter.first.c_str()))
+					{
+						szSelectedEvent = iter.first;
+					}
+				}
+				ImGui::EndListBox();
+			}
+
+			if (ImGui::BeginListBox("OptionalVector View"))
+			{
+				for (auto& iter : m_mapOptionalRootMotion)
+				{
+					if (iter.first == szSelectedEvent)
+					{
+						for (auto Vector = iter.second.begin(); Vector != iter.second.end();)
+						{
+							if (ImGui::Selectable(to_string(Vector->fStartTime).c_str()))
+							{
+								Vector = iter.second.erase(Vector);
+								break;
+							}
+							else
+								++Vector;
+						}
+					}
+				}
+				ImGui::EndListBox();
+			}
+
+			if (ImGui::Button("Save OptionalVector"))
+			{
+				Json AnimModifiers = CJsonStorage::GetInstance()->FindOrLoadJson(s_ModifyFilePath);
+
+				Json json;
+				SaveModifiedData(json);
+				AnimModifiers[m_strName] = json;
+
+				CJsonStorage::GetInstance()->UpdateJson(s_ModifyFilePath, AnimModifiers);
+				CJsonStorage::GetInstance()->SaveJson(s_ModifyFilePath);
+			}
+
 		}
 	}
 }
@@ -654,6 +746,11 @@ CMaterial* CModel::FindMaterial(const _tchar* pMtrlProtoTag)
 	return nullptr;
 }
 
+void CModel::SaveModifiedData(Json & json)
+{
+	json["mapRootMotion"] = m_mapOptionalRootMotion;
+}
+
 void CModel::Ready_Bones(const Json& jBone, CBone* pParent)
 {
 	CBone*		pBone = CBone::Create(jBone, pParent);
@@ -743,6 +840,102 @@ void CModel::EventCaller(const string& EventName)
 void CModel::Add_EventCaller(const string & EventName, std::function<void(void)> Func)
 {
 	m_EventFunc.emplace(EventName, Func);
+}
+
+_vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix)
+{
+	static _vector vInitTrans;
+	static _float fStartTime;
+	static string szCurAnimName;
+
+	if (szCurAnimName != m_CurAnimName)
+	{
+		szCurAnimName = m_CurAnimName;
+		vInitTrans = XMVectorSet(0.f, 0.f, 0.f, -1.f);
+	}
+
+	for (auto& iter : m_mapOptionalRootMotion)
+	{
+		if (m_CurAnimName == iter.first)	// ÀÌº¥Æ® ÄÝ·¯¿Í °°Àº °³³ä
+		{
+			_float fPlayTime = static_cast<_float>(m_mapAnimation[m_CurAnimName]->GetPlayTime());
+
+			for (auto& Optional : iter.second)
+			{
+				_float fRatio = (fPlayTime - Optional.fStartTime) / (Optional.fEndTime - Optional.fStartTime);
+
+				if (0.f <= fRatio && 1.f >= fRatio)
+				{
+					_vector vScale, vRotation, vTrans;
+					XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+					_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
+
+					if (-1.f == XMVectorGetW(vInitTrans))
+					{
+						vInitTrans = vTrans;
+					}
+
+					if (fStartTime != Optional.fStartTime)
+					{
+						fStartTime = Optional.fStartTime;
+						vInitTrans = vTrans;
+					}
+
+					/*if (szCurAnimName != m_CurAnimName)
+					{
+						szCurAnimName = m_CurAnimName;
+						vInitTrans = vTrans;
+					}*/
+
+					_vector vMovePos = Optional.vOptionalRootVector;
+					vMovePos = XMVectorSetW(vMovePos, 0.f);
+
+					vMovePos = XMVector3TransformNormal(vMovePos, WorldRotation);
+
+					_vector vDestPos = vInitTrans + vMovePos;
+
+					vDestPos = XMVectorLerp(vInitTrans, vDestPos, fRatio);
+
+					_vector vResultDir = vDestPos - vTrans;
+					vResultDir = XMVectorSetW(vResultDir, 0.f);
+
+					if (0.f > XMVectorGetX(XMVector3Dot(vResultDir, vMovePos)))
+					{
+						// È¤½Ã ¹æÇâº¤ÅÍ Æ¢¸é ¾ê·Î Àâ¾ÆÁÜ
+						vInitTrans = vTrans;
+						GetOptionalMoveVector(WorldMatrix);
+					}
+
+					return vResultDir;
+				}
+			}
+		}
+	}
+
+	vInitTrans = XMVectorSet(0.f, 0.f, 0.f, -1.f);
+	return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+}
+
+void CModel::Add_OptionalRootMotion(OPTIONAL_ROOTMOTION RootMotion)
+{
+	RootMotion.szAnimName = m_CurAnimName;
+
+	const auto iter = m_mapOptionalRootMotion.find(m_CurAnimName);
+	if (iter == m_mapOptionalRootMotion.end())
+	{
+		vector<OPTIONAL_ROOTMOTION> vecRoot;
+		m_mapOptionalRootMotion.emplace(m_CurAnimName, vecRoot);
+		m_mapOptionalRootMotion[m_CurAnimName].push_back(RootMotion);
+	}
+	else
+	{
+		iter->second.push_back(RootMotion);
+	}
+}
+
+void CModel::Delete_OptionalRootMotion()
+{
+	m_mapOptionalRootMotion.erase(m_CurAnimName);
 }
 
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const char * pModelFilePath, _float4x4 PivotMatrix)

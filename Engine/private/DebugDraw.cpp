@@ -277,57 +277,57 @@ void XM_CALLCONV DX::DrawTriangle(PrimitiveBatch<VertexPositionColor>* batch,
     batch->Draw(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP, verts, 4);
 }
 
-void __vectorcall DX::Draw(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-	const CBoundingCapsule& capsule, DirectX::FXMVECTOR color)
-{
-
-	const _vector Tip = XMLoadFloat3(&capsule.m_vTip);
-	const _vector Base = XMLoadFloat3(&capsule.m_vBase);
-
-	_vector CapsuleNormal = XMVector3Normalize(Tip - Base);
-	_vector LineEndOffset = CapsuleNormal * capsule.m_fRadius;
-	_vector A = Base + LineEndOffset;
-	_vector B = Tip - LineEndOffset;
-
-	    
-    const float radius = capsule.m_fRadius;
-    
-    XMVECTOR xaxis = g_XMIdentityR0 * radius;
-    XMVECTOR yaxis = g_XMIdentityR1 * radius;
-    XMVECTOR zaxis = g_XMIdentityR2 * radius;
-
-	// draw A, B
-	{
-	    DrawRing(batch, A, xaxis, zaxis, color);
-	    DrawRing(batch, A, xaxis, yaxis, color);
-	    DrawRing(batch, A, yaxis, zaxis, color);	
-	}
-	{
-	    DrawRing(batch, B, xaxis, zaxis, color);
-	    DrawRing(batch, B, xaxis, yaxis, color);
-	    DrawRing(batch, B, yaxis, zaxis, color);	
-	}
-
-	_uint iRingCnt = static_cast<_uint>(XMVectorGetX(XMVector3Length(A - B)));
-
-	const _vector vUnitY = _float3::UnitY;
-	_vector vVertical1 = XMVector3Normalize(XMVector3Cross(vUnitY, CapsuleNormal)) * radius;
-	_vector vVertical2 = XMVector3Normalize(XMVector3Cross(vVertical1, CapsuleNormal)) * radius;
-
-	if (fabs(XMVectorGetX(XMVector3Length(vVertical1)) - 0.f) < FLT_EPSILON || fabs(XMVectorGetX(XMVector3Length(vVertical2)) - 0.f) < FLT_EPSILON)
-	{
-		vVertical1 = xaxis;
-		vVertical2 = zaxis;
-	}
-
-	_vector vStride = CapsuleNormal / 4.f;
-
-
-	for (_uint i = 0; i < iRingCnt * 4; ++i)
-	{
-		_vector origin = A + vStride * static_cast<_float>(i);
-		DrawRing(batch, origin, vVertical1, vVertical2, color);
-	}
-}
-
+// void __vectorcall DX::Draw(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
+// 	const CBoundingCapsule& capsule, DirectX::FXMVECTOR color)
+// {
+//
+// 	const _vector Tip = XMLoadFloat3(&capsule.m_vTip);
+// 	const _vector Base = XMLoadFloat3(&capsule.m_vBase);
+//
+// 	_vector CapsuleNormal = XMVector3Normalize(Tip - Base);
+// 	_vector LineEndOffset = CapsuleNormal * capsule.m_fRadius;
+// 	_vector A = Base + LineEndOffset;
+// 	_vector B = Tip - LineEndOffset;
+//
+// 	    
+//     const float radius = capsule.m_fRadius;
+//     
+//     XMVECTOR xaxis = g_XMIdentityR0 * radius;
+//     XMVECTOR yaxis = g_XMIdentityR1 * radius;
+//     XMVECTOR zaxis = g_XMIdentityR2 * radius;
+//
+// 	// draw A, B
+// 	{
+// 	    DrawRing(batch, A, xaxis, zaxis, color);
+// 	    DrawRing(batch, A, xaxis, yaxis, color);
+// 	    DrawRing(batch, A, yaxis, zaxis, color);	
+// 	}
+// 	{
+// 	    DrawRing(batch, B, xaxis, zaxis, color);
+// 	    DrawRing(batch, B, xaxis, yaxis, color);
+// 	    DrawRing(batch, B, yaxis, zaxis, color);	
+// 	}
+//
+// 	_uint iRingCnt = static_cast<_uint>(XMVectorGetX(XMVector3Length(A - B)));
+//
+// 	const _vector vUnitY = _float3::UnitY;
+// 	_vector vVertical1 = XMVector3Normalize(XMVector3Cross(vUnitY, CapsuleNormal)) * radius;
+// 	_vector vVertical2 = XMVector3Normalize(XMVector3Cross(vVertical1, CapsuleNormal)) * radius;
+//
+// 	if (fabs(XMVectorGetX(XMVector3Length(vVertical1)) - 0.f) < FLT_EPSILON || fabs(XMVectorGetX(XMVector3Length(vVertical2)) - 0.f) < FLT_EPSILON)
+// 	{
+// 		vVertical1 = xaxis;
+// 		vVertical2 = zaxis;
+// 	}
+//
+// 	_vector vStride = CapsuleNormal / 4.f;
+//
+//
+// 	for (_uint i = 0; i < iRingCnt * 4; ++i)
+// 	{
+// 		_vector origin = A + vStride * static_cast<_float>(i);
+// 		DrawRing(batch, origin, vVertical1, vVertical2, color);
+// 	}
+// }
+//
 

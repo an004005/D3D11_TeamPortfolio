@@ -17,6 +17,7 @@ public:
 public:
 	void			InputAnimSocket(const string& strSocName, list<CAnimation*> AnimList);
 	const string&	GetCurAnimName() { return m_pASM_Base->GetCurState()->m_Animation->GetName(); } // 현재 재생중인 애니메이션 이름은 모델에서 가져올 것 -> State Machine은 Transition이 겹치면 통과함
+	_bool			isLerping() { return m_pASM_Base->isLerping(); }
 
 protected:
 	_bool	CheckAnim(const string& szAnimName);
@@ -29,10 +30,15 @@ protected:	// 대상의 상태
 	_bool	m_bWalk = false;
 
 	_bool	m_bLeftClick = false;
+	_bool	m_bShiftClick = false;
+	_bool	m_bShiftPress = false;
 
 	_float	m_fPlayRatio = 0.f;
 
 	string	m_szCurAnimName = "";
+
+	Vector3	m_vLocalMove;
+	Matrix	m_matCamRot;
 
 	_uint	m_eMoveDir;
 
