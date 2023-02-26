@@ -57,12 +57,12 @@ void CSASSkillLightUI::Tick(_double TimeDelta)
 
 		if (m_pCanvas->Get_InputSkill(CCanvas_SASSkill::ONE0))
 		{
-			m_fLight_TimeAcc += TimeDelta;
+			m_dLight_TimeAcc += TimeDelta;
 
-			if (0.2 < m_fLight_TimeAcc)
+			if (0.2 < m_dLight_TimeAcc)
 			{
 				m_tParams.Float4s[0].w = { 0.0f };
-				m_fLight_TimeAcc = 0.0;
+				m_dLight_TimeAcc = 0.0;
 			}
 			else
 			{
@@ -72,7 +72,7 @@ void CSASSkillLightUI::Tick(_double TimeDelta)
 		}
 		else
 		{
-			m_fLight_TimeAcc = 0.0;
+			m_dLight_TimeAcc = 0.0;
 			m_tParams.Float4s[0].w = { 0.0f };
 		}
 	}

@@ -6,11 +6,11 @@
 
 BEGIN(Client)
 
-class CSASSkillLightUI final : public CUI
+class CSASSkillCtrlUI final : public CUI
 {
 private:
-	CSASSkillLightUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSASSkillLightUI(const CSASSkillLightUI& rhs);
+	CSASSkillCtrlUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSASSkillCtrlUI(const CSASSkillCtrlUI& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -25,19 +25,10 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 private:
-	void			SkilInfo_Initialize();
-	
-	void			ChangeSkill();
-	void			ChangeSkill_TickShader(const _float & fTimeDelta);
-
-private:
-	CCanvas_SASSkill*				m_pCanvas = { nullptr };
-	CCanvas_SASSkill::OBJECTCOUNT	m_eObjectCount = CCanvas_SASSkill::ONE;
-	
-	_double		m_dLight_TimeAcc = { 0.0f };
+	CCanvas_SASSkill* m_pCanvas = { nullptr };
 
 public:
-	static CSASSkillLightUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSASSkillCtrlUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

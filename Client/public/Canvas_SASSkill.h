@@ -67,13 +67,22 @@ public:
 	}
 
 private:
+	void	Info_Tick(const _bool bPush); // Ctrl, Alt 를 눌렀을 때에 대한 처리를 하기 위해 (스킬 아이콘이 보이지 않으면서 정보가 뜬다.)
+	void	InputCtrl_Tick();
+	void	InputAlt_Tick();
+	void	InputX_Tick(const _double & dTimeDelta);
+
+private:
 	SKILLINDEX		m_eSASSkill = SKILLINDEX_END;		// UI 들이 같은 객체를 사용하기 때문에 구별하기 위해서
-	SKILLINDEX		m_ePreSASSkill = SKILLINDEX_END;
+	SKILLINDEX		m_ePreSASSkill = SKILLINDEX_END;	// 이전에 사용한 스킬
 	SUPERPOWERS		m_eSuperPowers = SUPERPOWERS_END;	// 초능력 종류
 
 	_bool			m_bInputSkill[SKILLINDEX_END] = {};	// 플레이어에서 키를 눌렀을 때
-	_bool			m_bChangeX = { false };				// 8개의 스킬 중 4개씩 바꿔서 확인할 수 있다.
+	_bool			m_bChangeX = { false };				// 8개의 스킬 중 4개씩 바꿔서 확인할 수 있다. flase->Left, true->Right
 	_bool			m_bOnSkill = { false };				// 1: 초능력 사용 가능, 0: 초능력 사용 불 가능
+
+	_bool			m_bChangeXButton = { false };		// 타이머 사용하기 위해서
+	_double			m_dChangeX_TimcAcc = { 0.0 };		// X로 변경하면서, 잠깐 X 키에 불이 들어오는 용도
 
 public:
 	static CCanvas_SASSkill* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

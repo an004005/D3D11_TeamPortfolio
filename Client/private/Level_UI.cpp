@@ -22,6 +22,8 @@
 #include "SASSkillIconUI.h"
 #include "SASSkillGaugeUI.h"
 #include "SASSkillLightUI.h"
+#include "SASSkillCtrlUI.h"
+#include "SASSkillFullCircleUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -122,7 +124,7 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CButtonUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
-		// Frount_UI
+		// Frount_UI -> SAS Skill
 		/* For.Prototype_GameObject_SASSkillIcon_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillIcon_UI"),
 			CSASSkillIconUI::Create(m_pDevice, m_pContext))))
@@ -137,6 +139,19 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillLight_UI"),
 			CSASSkillLightUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+
+		/* For.Prototype_GameObject_SASSkillCtrl_UI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillCtrl_UI"),
+			CSASSkillCtrlUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_SASSkillFullCircle_UI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillFullCircle_UI"),
+			CSASSkillFullCircleUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+
+
 
 	}
 

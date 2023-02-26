@@ -6,11 +6,11 @@
 
 BEGIN(Client)
 
-class CSASSkillLightUI final : public CUI
+class CSASSkillFullCircleUI final : public CUI
 {
 private:
-	CSASSkillLightUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSASSkillLightUI(const CSASSkillLightUI& rhs);
+	CSASSkillFullCircleUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSASSkillFullCircleUI(const CSASSkillFullCircleUI& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -25,19 +25,15 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 private:
-	void			SkilInfo_Initialize();
-	
-	void			ChangeSkill();
-	void			ChangeSkill_TickShader(const _float & fTimeDelta);
+	CCanvas_SASSkill* m_pCanvas = { nullptr };
 
-private:
-	CCanvas_SASSkill*				m_pCanvas = { nullptr };
-	CCanvas_SASSkill::OBJECTCOUNT	m_eObjectCount = CCanvas_SASSkill::ONE;
-	
-	_double		m_dLight_TimeAcc = { 0.0f };
+	_bool m_bGrow = { false };
+	_float m_fSpeed = { 0.0f };
+	_float2 m_vFirstSize = { 0.0f, 0.0f };
+	_float2 m_vCurrentSize = { 0.0f, 0.0f };
 
 public:
-	static CSASSkillLightUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSASSkillFullCircleUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

@@ -2,6 +2,13 @@
 #include "..\public\SASSkillIconUI.h"
 #include "GameInstance.h"
 
+// [0] 초능력 사용 가능(이미지) / [1] 초능력 사용 불 가능(검정색) -> 그냥 Float4s[0] 로 변경해도 되는데 이게 직관적인 것 같아서요
+//m_tParams.Ints[0] = { 1 };
+
+// x: [0] 염력 [1] 염력 [2] 발화 [3] 경질 [4] 투시 [5] 순간이동 [6] 투명 [7] 방전 [8] 복제 [9] 초고속 [10] 사용 불가
+// y: [0] 초능력 사용 불 가능 (그냥) / [1] 초능력 사용 가능(불들어오는거)
+//m_tParams.Float2s[0] = _float2(1.0f, 0.0f);
+
 CSASSkillIconUI::CSASSkillIconUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
@@ -137,13 +144,6 @@ void CSASSkillIconUI::SASSkillIcon_Tick()
 
 void CSASSkillIconUI::ChangeSkill_Shader()
 {
-	// [0] 초능력 사용 가능(이미지) / [1] 초능력 사용 불 가능(검정색) -> 그냥 Float4s[0] 로 변경해도 되는데 이게 직관적인 것 같아서요
-	//m_tParams.Ints[0] = { 1 };
-
-	// x: [0] 염력 [1] 염력 [2] 발화 [3] 경질 [4] 투시 [5] 순간이동 [6] 투명 [7] 방전 [8] 복제 [9] 초고속 [10] 사용 불가
-	// y: [0] 초능력 사용 불 가능 (그냥) / [1] 초능력 사용 가능(불들어오는거)
-	//m_tParams.Float2s[0] = _float2(1.0f, 0.0f);
-
 	m_tParams.Ints[0] = { !m_pCanvas->Get_OnSkill() };
 	m_tParams.Float2s[0] = { _float(m_pCanvas->Get_SuperPowers()), _float(m_pCanvas->Get_OnSkill()) };
 }
