@@ -1,14 +1,12 @@
 #include "stdafx.h"
 #include "..\public\PhysXStaticModel.h"
-#include "ImguiUtils.h"
 #include "PhysX_Manager.h"
-#include "Transform.h"
 #include "JsonLib.h"
 #include "GameUtils.h"
 
 using namespace physx;
 
-_float4x4 CPhysXStaticModel::s_DefaultPivot = _float4x4::CreateScale({ 0.01f, 0.01f, 0.01f });
+_float4x4 CPhysXStaticModel::s_DefaultPivot = _float4x4::CreateScale({ 0.01f, 0.01f, 0.01f }) *_float4x4::CreateRotationY(XMConvertToRadians(-180.f));
 
 CPhysXStaticModel::CPhysXStaticModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -128,7 +126,7 @@ HRESULT CPhysXStaticModel::Initialize_Prototype(const char* pModelFilePath, _flo
 
 		pxMesh.pShape->setSimulationFilterData(physx::PxFilterData{ static_cast<physx::PxU32>(ECOLLIDER_TYPE::CT_STATIC), 0, 0, 0 });
 		pxMesh.pShape->setQueryFilterData(physx::PxFilterData{static_cast<physx::PxU32>(GetCollTypeBit(ECOLLIDER_TYPE::CT_STATIC)), 0, 0, 0});
-
+		
 		m_PxMeshes.push_back(pxMesh);
 	}
 
@@ -164,10 +162,7 @@ void CPhysXStaticModel::Imgui_RenderProperty()
 
 void CPhysXStaticModel::SetPxWorldMatrix(const _float4x4& WorldMatrix)
 {
-	// 디버그에서만 이동가능, 릴리즈에서는 이동못하게 막는다.
-#ifdef _DEBUG
 	m_pActor->setGlobalPose(physx::PxTransform{ CPhysXUtils::ToFloat4x4(WorldMatrix) });
-#endif
 }
 
 void CPhysXStaticModel::Free()

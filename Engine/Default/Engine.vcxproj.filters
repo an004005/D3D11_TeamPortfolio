@@ -483,6 +483,9 @@
     <ClInclude Include="resource.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PhysXDynamicModel.h">
+      <Filter>01.Utility\11.PhysX\Collider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -760,6 +763,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Imgui_PhysX.cpp">
       <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PhysXDynamicModel.cpp">
+      <Filter>01.Utility\11.PhysX\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

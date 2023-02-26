@@ -58,7 +58,7 @@ private:
 	_float4x4							m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 
 	ID3D11DepthStencilView* m_pShadowDepthStencilView = nullptr;
-	_bool m_bVisibleTargets = true;
+	_bool m_bVisibleTargets = false;
 
 private:
 	HRESULT Render_Priority();
