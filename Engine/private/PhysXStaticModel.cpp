@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\public\PhysXStaticModel.h"
 #include "PhysX_Manager.h"
-#include "Transform.h"
 #include "JsonLib.h"
 #include "GameUtils.h"
 
@@ -164,13 +163,6 @@ void CPhysXStaticModel::Imgui_RenderProperty()
 void CPhysXStaticModel::SetPxWorldMatrix(const _float4x4& WorldMatrix)
 {
 	m_pActor->setGlobalPose(physx::PxTransform{ CPhysXUtils::ToFloat4x4(WorldMatrix) });
-}
-
-void CPhysXStaticModel::Update_AfterPhysX(CTransform* pTransform)
-{
-	if (m_pActor->getScene() == nullptr)
-		return;
-	pTransform->Set_WorldMatrix(CPhysXUtils::ToFloat4x4(m_pActor->getGlobalPose()));
 }
 
 void CPhysXStaticModel::Free()

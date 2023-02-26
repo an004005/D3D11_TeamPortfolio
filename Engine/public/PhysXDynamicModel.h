@@ -17,6 +17,7 @@ public:
 
 	// 최초 한번만 위치 셋팅하는 용도로 사용할것 그 뒤는 physx에 몸을 맡긴다.
 	void SetPxWorldMatrix(const _float4x4& WorldMatrix);
+	void Update_AfterPhysX(class CTransform* pTransform);
 
 private:
 	static _float4x4 s_DefaultPivot;

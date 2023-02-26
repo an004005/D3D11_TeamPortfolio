@@ -101,7 +101,7 @@ void CPhysX_Manager::Initialize()
 
 	physx::PxSceneDesc sceneDesc(m_Physics->getTolerancesScale());
 	sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
-	m_Dispatcher = physx::PxDefaultCpuDispatcherCreate(2);
+	m_Dispatcher = physx::PxDefaultCpuDispatcherCreate(3);
 	sceneDesc.cpuDispatcher	= m_Dispatcher;
 	sceneDesc.filterShader	= PxEngineSimulationFilterShader;
 	sceneDesc.broadPhaseType = physx::PxBroadPhaseType::eABP;
