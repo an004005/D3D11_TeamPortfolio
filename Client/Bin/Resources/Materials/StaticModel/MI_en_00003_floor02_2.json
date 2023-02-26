@@ -9,7 +9,7 @@
         "Textures" : [
             "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_StreetFloor/T_lc001_floor02_ALB_2.dds",
             "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_StreetFloor/T_lc001_floor02_NML.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_StreetFloor/T_lc001_floor02_RMA.dss"
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_StreetFloor/T_lc001_floor02_RMA.dds"
         ],
         "Pass" : 1
     }

@@ -110,15 +110,11 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 
 	// Pedestrian
 	{
-		/* For. Town_Road */
-		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a.static_model"));
-		/* For. Town_Road */
+		
+		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a.static_model"));		
 		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a_re.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a_re.static_model"));
-		/* For. Town_Road */
 		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01b.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01b.static_model"));
-		/* For. Town_Road */
 		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01b_re.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01b_re.static_model"));
-		/* For. Town_Road */
 		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/PedestrianBridge01c_re.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01c_re.static_model"));
 	}
 	
@@ -129,6 +125,62 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 
 	/* For. SM_pr_S_TownRoad_a4 */
 	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/Roads/SM_pr_S_TownRoad_a4.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_SG_Ground */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/Grounds/SM_pr_SG_Ground.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_Dodai_A1 */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Dodai_A1.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_Dodai_B1 */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Dodai_B1.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_Dodai_C1 */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Dodai_C1.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_S_F_light_a1 */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_S_F_light_a1.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_S_Town_CP1_1 */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_S_Town_CP1_1.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_Keijiban_B */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Keijiban_B.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_Omikuji_A1 */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Omikuji_A1.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_Omikuji_A1_Effect01 */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Omikuji_A1_Effect01.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_Omikuji_B1 */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Omikuji_B1.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_Syamusyo_A1 */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Syamusyo_A1.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_Sumeragi_Tourou_B */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Sumeragi_Tourou_B.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_Sumeragi_Kaidan_B */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Sumeragi_Kaidan_B.static_model");
+	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+
+	/* For. SM_pr_Sumeragi_Kaidan_A */
+	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Sumeragi_Kaidan_A.static_model");
 	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
 
 	return S_OK;

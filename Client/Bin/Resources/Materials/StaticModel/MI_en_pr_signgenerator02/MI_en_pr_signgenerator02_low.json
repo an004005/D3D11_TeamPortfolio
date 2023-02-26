@@ -9,7 +9,7 @@
         "Textures" : [
             "../Bin/Resources/Environments/Prop/10_Props/Electronics/pr_RedEquipment/T_pr0003_signgenerator02_ALB.dds",
             "../Bin/Resources/Environments/Prop/10_Props/Electronics/pr_RedEquipment/T_pr0003_signgenerator02_NML.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Electronics/pr_RedEquipment/T_pr0003_signgenerator02_RMA.dss",
+            "../Bin/Resources/Environments/Prop/10_Props/Electronics/pr_RedEquipment/T_pr0003_signgenerator02_RMA.dds",
             "../Bin/Resources/Environments/Prop/10_Props/Electronics/pr_RedEquipment/T_pr0003_signgenerator02_EMI.dds" 
         ],
         "Pass" : 1
