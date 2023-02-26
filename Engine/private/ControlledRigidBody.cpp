@@ -5,15 +5,6 @@
 
 using namespace physx;
 
-class CEngineControllerHitReport : public physx::PxUserControllerHitReport
-{
-public:
-	virtual ~CEngineControllerHitReport() = default;
-	virtual void onShapeHit(const physx::PxControllerShapeHit& hit) override;
-	virtual void onControllerHit(const physx::PxControllersHit& hit) override{}
-	virtual void onObstacleHit(const physx::PxControllerObstacleHit& hit) override{}
-} g_EngineControllerHitReport;
-
 CControlledRigidBody::CControlledRigidBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 {
@@ -28,7 +19,7 @@ CControlledRigidBody::CControlledRigidBody(const CControlledRigidBody& rhs)
 HRESULT CControlledRigidBody::Initialize(void* pArg)
 {
 	FAILED_CHECK(CComponent::Initialize(pArg));
-	m_tDesc.reportCallback = &g_EngineControllerHitReport;
+	m_tDesc.reportCallback = &m_HitReport;
 	m_tDesc.material = CPhysX_Manager::GetInstance()->FindMaterial("Default");
 	m_tDesc.upDirection = { 0.f, 1.f, 0.f };
 
@@ -60,6 +51,19 @@ void CControlledRigidBody::Imgui_RenderProperty()
 		ImGui::EndCombo();
 	}
 
+	ImGui::InputFloat("Radius", &m_tDesc.radius);
+	ImGui::InputFloat("height", &m_tDesc.height);
+	ImGui::InputFloat("contactOffset", &m_tDesc.contactOffset);
+	ImGui::InputFloat("density", &m_tDesc.density);
+	ImGui::InputFloat("slopeLimit", &m_fSlopeLimitDegree);
+	m_tDesc.slopeLimit = cosf(XMConvertToRadians(m_fSlopeLimitDegree));
+	ImGui::InputFloat("stepOffset", &m_tDesc.stepOffset);
+	ImGui::InputFloat("maxJumpHeight", &m_tDesc.maxJumpHeight);
+
+	_float fPushPower = m_HitReport.GetPushPower();
+	ImGui::InputFloat("pushPower", &fPushPower);
+	m_HitReport.SetPushPower(fPushPower);
+
 	if (ImGui::Button("Update Changes"))
 	{
 		CreateController();
@@ -74,10 +78,10 @@ void CControlledRigidBody::SaveToJson(Json& json)
 	json["ControlledRigidBody"]["height"] = m_tDesc.height;
 	json["ControlledRigidBody"]["contactOffset"] = m_tDesc.contactOffset;
 	json["ControlledRigidBody"]["density"] = m_tDesc.density;
-	json["ControlledRigidBody"]["slopeLimit"] = m_tDesc.slopeLimit;
+	json["ControlledRigidBody"]["slopeLimitDegree"] = m_fSlopeLimitDegree;
 	json["ControlledRigidBody"]["stepOffset"] = m_tDesc.stepOffset;
 	json["ControlledRigidBody"]["maxJumpHeight"] = m_tDesc.maxJumpHeight;
-
+	json["ControlledRigidBody"]["pushPower"] = m_HitReport.GetPushPower();
 }
 
 void CControlledRigidBody::LoadFromJson(const Json& json)
@@ -90,9 +94,11 @@ void CControlledRigidBody::LoadFromJson(const Json& json)
 		m_tDesc.height = 1.f;
 		m_tDesc.contactOffset = 0.1f;
 		m_tDesc.density = 10.f;
-		m_tDesc.slopeLimit = cosf(XMConvertToRadians(45.f));
+		m_fSlopeLimitDegree = 45.f;
+		m_tDesc.slopeLimit = cosf(XMConvertToRadians(m_fSlopeLimitDegree));
 		m_tDesc.stepOffset = 0.1f;
 		m_tDesc.maxJumpHeight = 3.f;
+		m_HitReport.SetPushPower(100.f);
 	}
 	else
 	{
@@ -101,9 +107,11 @@ void CControlledRigidBody::LoadFromJson(const Json& json)
 		m_tDesc.height = json["ControlledRigidBody"]["height"];
 		m_tDesc.contactOffset = json["ControlledRigidBody"]["contactOffset"];
 		m_tDesc.density = json["ControlledRigidBody"]["density"];
-		m_tDesc.slopeLimit = json["ControlledRigidBody"]["slopeLimit"];
+		m_fSlopeLimitDegree = json["ControlledRigidBody"]["slopeLimitDegree"];
+		m_tDesc.slopeLimit = cosf(XMConvertToRadians(m_fSlopeLimitDegree));
 		m_tDesc.stepOffset = json["ControlledRigidBody"]["stepOffset"];
 		m_tDesc.maxJumpHeight = json["ControlledRigidBody"]["maxJumpHeight"];
+		m_HitReport.SetPushPower(json["ControlledRigidBody"]["pushPower"]);
 	}
 }
 
@@ -210,7 +218,7 @@ void CEngineControllerHitReport::onShapeHit(const physx::PxControllerShapeHit& h
 		{
 			const PxTransform globalPose = actor->getGlobalPose();
 			const PxVec3 localPos = globalPose.transformInv(toVec3(hit.worldPos));
-			CPhysXUtils::AddForceAtLocalPos(*actor, hit.dir*hit.length*200.0f, localPos, PxForceMode::eACCELERATION);
+			CPhysXUtils::AddForceAtLocalPos(*actor, hit.dir*hit.length*m_fPushPower, localPos, PxForceMode::eACCELERATION);
 		}
 	}
 }

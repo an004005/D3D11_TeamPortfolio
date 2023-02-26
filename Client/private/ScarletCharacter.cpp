@@ -22,11 +22,13 @@ HRESULT CScarletCharacter::Initialize(void* pArg)
 	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_ControlledRigidBody", 
 		L"Collider", (CComponent**)&m_pCollider, pArg));
 
+	m_bActiveGravity = true;
 	return S_OK;
 }
 
 void CScarletCharacter::Late_Tick(_double TimeDelta)
 {
+	// 점프하고 싶을 때는 m_fYSpeed에 + 값을 넣어준다.
 	// if (m_pGameInstance->KeyDown(DIK_SPACE))
 	// {
 	// 	m_fYSpeed = 10.f;
@@ -36,12 +38,13 @@ void CScarletCharacter::Late_Tick(_double TimeDelta)
 	const _vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	const _vector vPrePos = m_vPrePos;
 	const _vector vMoveDelta = vPos - vPrePos;
-	physx::PxControllerCollisionFlags flags = m_pCollider->MoveDisp(vMoveDelta, (_float)TimeDelta);
 
+	// transform 변동사항 적용
+	physx::PxControllerCollisionFlags flags = m_pCollider->MoveDisp(vMoveDelta, (_float)TimeDelta);
 	m_bOnSide = flags & physx::PxControllerCollisionFlag::eCOLLISION_SIDES;
 
+	// 중력 이동
 	flags = m_pCollider->Move(_float4{0.f, m_fYSpeed, 0.f, 0.f}, (_float)TimeDelta);
-
 	m_bOnFloor = flags & physx::PxControllerCollisionFlag::eCOLLISION_UP;
 	if (m_bOnFloor || !m_bActiveGravity)
 	{

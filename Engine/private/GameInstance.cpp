@@ -178,9 +178,6 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 	m_pLevel_Manager->Late_Tick(TimeDelta);
 
 	m_pPhysX_Manager->Simulate(TimeDelta);
-	m_pPhysX_Manager->WaitSimulate();
-
-	m_pObject_Manager->AfterPhysX();
 
 	if (CCamera::GetMainCamera())
 	{
@@ -191,6 +188,9 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 	{
 		m_pSound_Manager->Tick((_float)TimeDelta);
 	}
+
+	m_pPhysX_Manager->WaitSimulate();
+	m_pObject_Manager->AfterPhysX();
 }
 
 void CGameInstance::Clear()

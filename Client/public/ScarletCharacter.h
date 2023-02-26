@@ -35,7 +35,7 @@ protected:
 	_bool m_bOnFloor = false;
 	_bool m_bOnSide = false;
 
-	_bool m_bActiveGravity = false;
+	_bool m_bActiveGravity = true;
 	_float m_fYSpeed = 0.f;
 	_float m_fGravity = 20.f;
 

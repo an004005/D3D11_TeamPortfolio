@@ -6,6 +6,7 @@
 #include "ImguiUtils.h"
 #include "JsonStorage.h"
 #include "GameInstance.h"
+#include "GameObject.h"
 #include "GameUtils.h"
 #include "RigidBody.h"
 
@@ -188,7 +189,8 @@ _bool CPhysX_Manager::RayCast(const RayCastParams& params)
 	vNormalDir.Normalize();
 
 #ifdef _DEBUG
-	m_DebugLines.push_back(DebugLine{params.fVisibleTime, params.vOrigin, vNormalDir * params.fDistance + params.vOrigin});
+	if (params.fVisibleTime > 0.f)
+		m_DebugLines.push_back(DebugLine{params.fVisibleTime, params.vOrigin, vNormalDir * params.fDistance + params.vOrigin});
 #endif
 
 	PxFilterData filterData;
@@ -216,6 +218,7 @@ _bool CPhysX_Manager::OverlapSphere(const SphereOverlapParams& params)
 	const PxTransform transform(PxVec3{ params.vPos.x, params.vPos.y, params.vPos.z });
 
 #ifdef _DEBUG
+	if (params.fVisibleTime > 0.f)
 	{
 		PxShape* pShape = m_Physics->createShape(sphere, *FindMaterial("Default"));
 		AddDebugShape(pShape, transform, params.fVisibleTime);
@@ -248,6 +251,7 @@ _bool CPhysX_Manager::OverlapCapsule(const CapsuleOverlapParams& params)
 	const PxTransform transform(PxVec3{ params.vPos.x, params.vPos.y, params.vPos.z }, PxQuat{Quat.x, Quat.y, Quat.z, Quat.w});
 
 #ifdef _DEBUG
+	if (params.fVisibleTime > 0.f)
 	{
 		PxShape* pShape = m_Physics->createShape(capsule, *FindMaterial("Default"));
 		AddDebugShape(pShape, transform, params.fVisibleTime);
@@ -271,6 +275,7 @@ _bool CPhysX_Manager::SweepSphere(const SphereSweepParams& params)
 	vNormalDir.Normalize();
 
 #ifdef _DEBUG
+	if (params.fVisibleTime > 0.f)
 	{
 		_float fSegment = 0.5f;
 		if (params.fDistance <= 1.f)
@@ -327,6 +332,7 @@ _bool CPhysX_Manager::SweepCapsule(const CapsuleSweepParams& params)
 	vNormalDir.Normalize();
 
 #ifdef _DEBUG
+	if (params.fVisibleTime > 0.f)
 	{
 		_float fSegment = 0.5f;
 		if (params.fDistance <= 1.f)
@@ -424,6 +430,10 @@ void CPhysX_Manager::Imgui_RenderProperty()
 		file << json;
 	}
 
+	static _uint iRayTarget = CTB_STATIC;
+	static _uint iOverlapTarget = CTB_PLAYER;
+	static _uint iSweepTarget = CTB_STATIC | CTB_PLAYER;
+
 	if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
 		_float4 vOrigin;
@@ -434,17 +444,17 @@ void CPhysX_Manager::Imgui_RenderProperty()
 		PxRaycastHit hitBuffer[bufferSize];
 		PxRaycastBuffer t(hitBuffer, bufferSize);
 
-
 		RayCastParams params;
 		params.rayOut = &t;
 		params.vOrigin = vOrigin;
 		params.vDir = vDir;
 		params.fDistance = 1000.f;
-		params.iTargetType = CTB_PLAYER | CTB_STATIC;
+		params.iTargetType = iRayTarget;
 		params.bSingle = false;
 
 		if (RayCast(params))
 		{
+			IM_LOG("Hit Ray");
 			for (int i = 0; i < t.getNbAnyHits(); ++i)
 			{
 				auto p = t.getAnyHit(i);
@@ -461,7 +471,7 @@ void CPhysX_Manager::Imgui_RenderProperty()
 				params2.vPos = vPos;
 				params2.vUnitDir = _float3{ 1.f, 0.f, 0.f };
 				params2.fDistance = 3.f;
-				params2.iTargetType = CTB_PLAYER;
+				params2.iTargetType = iSweepTarget;
 
 				if (SweepCapsule(params2))
 				{
@@ -469,6 +479,7 @@ void CPhysX_Manager::Imgui_RenderProperty()
 					{
 						if (overlapOut.getAnyHit(i).actor)
 							IM_LOG("Sweeped");
+						CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor);
 					}
 				}
 			}
@@ -487,10 +498,11 @@ void CPhysX_Manager::Imgui_RenderProperty()
 		params.vOrigin = vOrigin;
 		params.vDir = vDir;
 		params.fDistance = 1000.f;
-		params.iTargetType = SI_CONTROLLER;
+		params.iTargetType = iRayTarget;
 
 		if (RayCast(params))
 		{
+			IM_LOG("Hit Ray");
 			for (int i = 0; i < out.getNbAnyHits(); ++i)
 			{
 				auto p = out.getAnyHit(i);
@@ -502,7 +514,7 @@ void CPhysX_Manager::Imgui_RenderProperty()
 				params2.overlapOut = &overlapOut;
 				params2.fRadius = 1.f;
 				params2.vPos = vPos;
-				params2.iTargetType = SI_CONTROLLER;
+				params2.iTargetType = iOverlapTarget;
 
 				if (OverlapSphere(params2))
 				{
@@ -510,6 +522,7 @@ void CPhysX_Manager::Imgui_RenderProperty()
 					{
 						if (overlapOut.getAnyHit(i).actor)
 							IM_LOG("Overlap");
+						CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor);
 					}
 				}
 			}
@@ -674,7 +687,8 @@ void CPhysXUtils::AddForceAtLocalPos(physx::PxRigidBody& body, const physx::PxVe
 CGameObject* CPhysXUtils::GetOnwer(physx::PxActor* pActor)
 {
 	// userData에는 Physx를 사용하는 컴포넌트의 주소가 항상 들어간다.
-	Assert(pActor->userData != nullptr);
+	if (pActor->userData == nullptr)
+		return nullptr;
 	CComponent* pPxCom = static_cast<CComponent*>(pActor->userData);
 	return pPxCom->TryGetOwner();
 }

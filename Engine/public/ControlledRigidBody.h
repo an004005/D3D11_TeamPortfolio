@@ -3,6 +3,21 @@
 
 BEGIN(Engine)
 
+class CEngineControllerHitReport : public physx::PxUserControllerHitReport
+{
+public:
+	virtual ~CEngineControllerHitReport() = default;
+	virtual void onShapeHit(const physx::PxControllerShapeHit& hit) override;
+	virtual void onControllerHit(const physx::PxControllersHit& hit) override{}
+	virtual void onObstacleHit(const physx::PxControllerObstacleHit& hit) override{}
+
+	void SetPushPower(_float fPushPower) { m_fPushPower = fPushPower; }
+	_float GetPushPower() const { return m_fPushPower; }
+
+private:
+	_float m_fPushPower = 100.f;
+};
+
 class ENGINE_DLL CControlledRigidBody : public CComponent
 {
 protected:
@@ -31,12 +46,15 @@ protected:
 	void ReleaseController();
 
 protected:
+	CEngineControllerHitReport m_HitReport;
 	physx::PxController* m_pController = nullptr;
 	physx::PxCapsuleControllerDesc m_tDesc;
+	_float m_fSlopeLimitDegree = 45.f;
 	physx::PxControllerFilters m_Filters;
 
 	physx::PxFilterData m_MoveFilterData;
 	ECOLLIDER_TYPE m_eColliderType = CT_PLAYER;
+
 
 
 public:

@@ -1,27 +1,25 @@
 #include "stdafx.h"
-#include "..\public\PhysXStaticModel.h"
-#include "PhysX_Manager.h"
-#include "Transform.h"
-#include "JsonLib.h"
+#include "..\public\PhysXDynamicModel.h"
+
 #include "GameUtils.h"
+#include "PhysX_Manager.h"
 
 using namespace physx;
 
-_float4x4 CPhysXStaticModel::s_DefaultPivot = _float4x4::CreateScale({ 0.01f, 0.01f, 0.01f }) *_float4x4::CreateRotationY(XMConvertToRadians(-180.f));
+_float4x4 CPhysXDynamicModel::s_DefaultPivot = _float4x4::CreateScale({ 0.01f, 0.01f, 0.01f }) *_float4x4::CreateRotationY(XMConvertToRadians(-180.f));
 
-CPhysXStaticModel::CPhysXStaticModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPhysXDynamicModel::CPhysXDynamicModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 {
 }
 
-CPhysXStaticModel::CPhysXStaticModel(const CPhysXStaticModel& rhs)
+CPhysXDynamicModel::CPhysXDynamicModel(const CPhysXDynamicModel& rhs)
 	: CComponent(rhs)
 	, m_PxMeshes(rhs.m_PxMeshes)
 {
-	
 }
 
-HRESULT CPhysXStaticModel::Initialize_Prototype(const char* pModelFilePath, _float4x4 PivotMatrix)
+HRESULT CPhysXDynamicModel::Initialize_Prototype(const char* pModelFilePath, _float4x4 PivotMatrix)
 {
 	CComponent::Initialize_Prototype();
 	Assert(true == CGameUtils::CheckExt(pModelFilePath, { ".static_model" }));
@@ -125,9 +123,9 @@ HRESULT CPhysXStaticModel::Initialize_Prototype(const char* pModelFilePath, _flo
 		pxMesh.pShape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
 		pxMesh.pShape->setFlag(physx::PxShapeFlag::eVISUALIZATION, false);
 
-		pxMesh.pShape->setSimulationFilterData(physx::PxFilterData{ static_cast<physx::PxU32>(ECOLLIDER_TYPE::CT_STATIC), 0, 0, 0 });
-		pxMesh.pShape->setQueryFilterData(physx::PxFilterData{static_cast<physx::PxU32>(GetCollTypeBit(ECOLLIDER_TYPE::CT_STATIC)), 0, 0, 0});
-		
+		pxMesh.pShape->setSimulationFilterData(physx::PxFilterData{ static_cast<physx::PxU32>(ECOLLIDER_TYPE::CT_PSYCHICK_OBJ), 0, 0, 0 });
+		pxMesh.pShape->setQueryFilterData(physx::PxFilterData{static_cast<physx::PxU32>(GetCollTypeBit(ECOLLIDER_TYPE::CT_PSYCHICK_OBJ)), 0, 0, 0});
+
 		m_PxMeshes.push_back(pxMesh);
 	}
 
@@ -136,14 +134,14 @@ HRESULT CPhysXStaticModel::Initialize_Prototype(const char* pModelFilePath, _flo
 	return S_OK;
 }
 
-HRESULT CPhysXStaticModel::Initialize(void* pArg)
+HRESULT CPhysXDynamicModel::Initialize(void* pArg)
 {
 	FAILED_CHECK(CComponent::Initialize(pArg));
 
 	auto pPhysics = CPhysX_Manager::GetInstance()->GetPhysics();
 
 	auto pxMat = CPhysXUtils::ToFloat4x4(_float4x4::Identity);
-	m_pActor = pPhysics->createRigidStatic(physx::PxTransform{ pxMat });
+	m_pActor = pPhysics->createRigidDynamic(physx::PxTransform{ pxMat });
 	m_pActor->userData = this;
 
 	for (auto& pxMesh : m_PxMeshes)
@@ -156,24 +154,17 @@ HRESULT CPhysXStaticModel::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CPhysXStaticModel::Imgui_RenderProperty()
+void CPhysXDynamicModel::Imgui_RenderProperty()
 {
 	CComponent::Imgui_RenderProperty();
 }
 
-void CPhysXStaticModel::SetPxWorldMatrix(const _float4x4& WorldMatrix)
+void CPhysXDynamicModel::SetPxWorldMatrix(const _float4x4& WorldMatrix)
 {
 	m_pActor->setGlobalPose(physx::PxTransform{ CPhysXUtils::ToFloat4x4(WorldMatrix) });
 }
 
-void CPhysXStaticModel::Update_AfterPhysX(CTransform* pTransform)
-{
-	if (m_pActor->getScene() == nullptr)
-		return;
-	pTransform->Set_WorldMatrix(CPhysXUtils::ToFloat4x4(m_pActor->getGlobalPose()));
-}
-
-void CPhysXStaticModel::Free()
+void CPhysXDynamicModel::Free()
 {
 	CComponent::Free();
 
@@ -206,25 +197,26 @@ void CPhysXStaticModel::Free()
 	}
 }
 
-CPhysXStaticModel* CPhysXStaticModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const char* pModelFilePath, _float4x4 PivotMatrix)
+CPhysXDynamicModel* CPhysXDynamicModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
+	const char* pModelFilePath, _float4x4 PivotMatrix)
 {
-	CPhysXStaticModel*		pInstance = new CPhysXStaticModel(pDevice, pContext);
+	CPhysXDynamicModel*		pInstance = new CPhysXDynamicModel(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(pModelFilePath, PivotMatrix)))
 	{
-		MSG_BOX("Failed to Created : CPhysXStaticModel");
+		MSG_BOX("Failed to Created : CPhysXDynamicModel");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CComponent* CPhysXStaticModel::Clone(void* pArg)
+CComponent* CPhysXDynamicModel::Clone(void* pArg)
 {
-	CPhysXStaticModel*		pInstance = new CPhysXStaticModel(*this);
+	CPhysXDynamicModel*		pInstance = new CPhysXDynamicModel(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Created : CPhysXStaticModel");
+		MSG_BOX("Failed to Created : CPhysXDynamicModel");
 		Safe_Release(pInstance);
 	}
 	return pInstance;

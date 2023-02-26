@@ -31,7 +31,7 @@ public:
 
 	_bool IsKinematic() const { return m_bKinematic; }
 	_bool IsTrigger() const { return m_bTrigger; }
-
+	
 	void SetOriginTransform(const _float4x4& OriginMatrix);
 
 	// 콜라이더 타입 변경을 제외한 나머지 설정 변경 가능
