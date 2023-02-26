@@ -66,8 +66,6 @@ void CModelPreviwer::Late_Tick(_double TimeDelta)
 		if (m_bLocalMoveAccess) 
 		{
 			_vector vTest = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix());
-			//IM_LOG(to_string(XMVectorGetX(vTest)).c_str());
-			//IM_LOG(to_string(XMVectorGetZ(vTest)).c_str());
 			m_pTransformCom->LocalMove(vTest);
 		}
 
@@ -253,7 +251,8 @@ void CImgui_AnimModifier::RootMotionMaker()
 		ImGui::Checkbox("PeekMode", &bPeekMode);
 		
 		vPeekingPos = pGameInstance->GetPeekingPos();
-		vModelPos = m_pPreview->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		if(nullptr != m_pPreview)
+			vModelPos = m_pPreview->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 		ImGui::InputFloat4("PeekingPos", &vPeekingPos.x);
 		ImGui::InputFloat4("ModelPos", &vModelPos.x);
 		ImGui::InputFloat2("MoveTime", &fMoveTime.x);

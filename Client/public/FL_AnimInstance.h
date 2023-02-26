@@ -20,10 +20,14 @@ public:
 protected:	// 대상의 상태
 	_bool			m_bIdle = false;
 	_bool			m_bAir = false;
+	_bool			m_bLanding = false;
 	_bool			m_bPreAir = false;
 	_bool			m_bWalk = false;
 	_bool			m_bRun = false;
-	_bool			m_bAttack = false;
+
+	_bool			m_bAttackL = false;
+	_bool			m_bAttackR = false;
+
 	_bool			m_bThreat = false;
 
 	// Socket

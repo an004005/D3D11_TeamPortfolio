@@ -6,9 +6,13 @@
 #include "Imgui_PropertyEditor.h"
 #include "Imgui_PostProcess.h"
 #include "Imgui_LevelSwitcher.h"
+#include "Imgui_MapEditor.h"
 #include "Model.h"
 #include "JsonLib.h"
 #include "AnimationInstance.h"
+#include "Texture.h"
+#include "MapNonAnim_Object.h"
+#include "JsonStorage.h"
 
 // AJH's Initial Setting
 //#include "Controller.h"
@@ -22,6 +26,7 @@
 #include "TestMonster.h"
 #include "FlowerLeg.h"
 #include "BuddyLumi.h"
+#include "SkummyPool.h"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -48,7 +53,10 @@ HRESULT CLevel_EnemiesTest::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(L"Layer_Monster")))
+	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -125,6 +133,13 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 		pBuddyLumi->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBuddyLumi"), pBuddyLumi));
 	}
+
+	{
+		auto pSkummyPool = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/SkummyPool/SkummyPool.anim_model");
+		pSkummyPool->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/SkummyPool/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterSkummyPool"), pSkummyPool));
+	}
 	
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("TestMonster"), CTestMonster::Create(m_pDevice, m_pContext)));
 
@@ -132,6 +147,8 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 		
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BuddyLumi"), CBuddyLumi::Create(m_pDevice, m_pContext)));
 
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkummyPool"), CSkummyPool::Create(m_pDevice, m_pContext)));
+		
 	return S_OK;
 }
 
@@ -141,7 +158,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
 		return E_FAIL;
-	
+
 	return S_OK;
 }
 
@@ -151,17 +168,36 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	/*if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
 		return E_FAIL;*/
-	
-	// 23.02.23 PJW 
-	if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("FlowerLeg"))))
+
+	Json FlowerLegModel;
+	FlowerLegModel["Model"] = "MonsterFlowerLeg";
+		
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("FlowerLeg"), &FlowerLegModel)))
 		return E_FAIL;
 
 	Json BuddyLumiModel;
 	BuddyLumiModel["Model"] = "MonsterBuddyLumi";
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"), &BuddyLumiModel)))
+	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"), &BuddyLumiModel)))
+		return E_FAIL;*/
+
+	Json SkummyPoolModel;
+	SkummyPoolModel["Model"] = "MonsterSkummyPool";
+
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPool"), &SkummyPoolModel)))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+	
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+	
 	return S_OK;
 }
 

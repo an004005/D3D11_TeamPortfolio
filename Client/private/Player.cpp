@@ -12,12 +12,12 @@
 #include "Controller.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	:CGameObject(pDevice, pContext)
+	: CScarletCharacter(pDevice, pContext)
 {
 }
 
 CPlayer::CPlayer(const CPlayer & rhs)
-	:CGameObject(rhs)
+	: CScarletCharacter(rhs)
 {
 }
 
@@ -43,6 +43,11 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
 	//m_pModel->Add_EventCaller("Test", []() {IM_LOG("Test")});
 
+	//m_pModel->Add_EventCaller("LookAt_Permission", [&]() {this->SetCanTurn(true); });
+	//m_pModel->Add_EventCaller("Move_Permission", [&]() {this->SetCanMove(true); });
+	//m_pModel->Add_EventCaller("LookAt_Denied", [&]() {this->SetCanTurn(false); });
+	//m_pModel->Add_EventCaller("Move_Denied", [&]() {this->SetCanMove(false); });
+
 	return S_OK;
 }
 
@@ -57,8 +62,11 @@ void CPlayer::Tick(_double TimeDelta)
 
 	m_pASM->Tick(TimeDelta);
 
-	if (false == m_pModel->isLocalMove())
+	if (m_bCanMove)
+	{
 		m_pTransformCom->Move(m_pModel->GetLastLocalMoveSpeed(), m_vMoveDir);
+		//IM_LOG(to_string(m_pModel->GetLastLocalMoveSpeed()).c_str());
+	}
 }
 
 void CPlayer::Late_Tick(_double TimeDelta)
@@ -67,6 +75,11 @@ void CPlayer::Late_Tick(_double TimeDelta)
 
 	if (m_bVisible && (nullptr != m_pRenderer))
 		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+}
+
+void CPlayer::AfterPhysX()
+{
+	__super::AfterPhysX();
 }
 
 HRESULT CPlayer::Render()
@@ -139,6 +152,8 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 	if (nullptr != m_pModel->GetPlayAnimation())
 		m_fPlayRatio = m_pModel->GetPlayAnimation()->GetPlayRatio();
 	m_bLeftClick = m_pController->KeyDown(CController::MOUSE_LB);
+	m_bShiftClick = m_pController->KeyDown(CController::SHIFT);
+	m_bShiftPress = m_pController->KeyPress(CController::SHIFT);
 }
 
 void CPlayer::MoveStateCheck(_double TimeDelta)
@@ -191,7 +206,7 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 			else { m_eMoveDir = DIR_L; }
 		}
 
-		if ("AS_ch0100_026_AL_run" == m_pASM->GetCurAnimName())
+		if (m_bCanTurn)
 			m_pTransformCom->LookAt_Smooth(vPlayerPos + m_vMoveDir, TimeDelta);
 	}
 }

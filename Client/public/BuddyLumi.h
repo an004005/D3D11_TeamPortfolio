@@ -91,9 +91,14 @@ private:
 	_float			m_fTimeAcc = 0.f;
 	_float3			m_fMyPos = { 0.f, 0.f, 0.f };
 
+	_float3			m_fStorePos = { 0.f, 0.f, 0.f };
+
 	_uint			m_iAfterRunPt = 0;
 	_uint			m_iAfterAtkPt = 0;
 	_uint			m_iWalkPosition = 0;
+
+private:
+	CGameObject*	m_pFlowerLeg = nullptr;
 
 public:
 	static CBuddyLumi* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

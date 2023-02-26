@@ -5,8 +5,8 @@
 #include "GameUtils.h"
 #include "FSMComponent.h"
 #include "AnimationInstance.h"
-#include"Animation.h"
-#include"Model.h"
+#include "Animation.h"
+#include "Model.h"
 #include "JsonStorage.h"
 
 #include "BdLm_AnimInstance.h"
@@ -80,12 +80,19 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 				.Tick([this](_double TimeDelta)
 				{
 					m_fMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					
+					_vector vTargetPos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_float3 fTargetPos;
+					XMStoreFloat3(&fTargetPos, vTargetPos);
 
-					_vector vDest = { 0.f, 0.f, 0.f, 1.f };
+					m_pTransformCom->LookAt(vTargetPos);
+					m_pTransformCom->Chase(vTargetPos, 0.03f);
+
+					/*_vector vDest = { 0.f, 0.f, 0.f, 1.f };
 					
 					m_pTransformCom->LookAt(vDest);
-					m_pTransformCom->Chase(vDest, 0.03f);
-
+					m_pTransformCom->Chase(vDest, 0.03f);*/
+					
 					/*vector<_uint> vecRandomPattern;
 
 					_uint iAttack = 1;
@@ -102,43 +109,52 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 
 					random_shuffle(vecRandomPattern.begin(), vecRandomPattern.end());*/
 					// TODO : 4방면에 대응하는 조건 찾기
-
+						
+					//if (m_fMyPos.x <= 1.f && m_fMyPos.z <= 1.f)
 										
-						if (m_fMyPos.x <= 1.f && m_fMyPos.z <= 1.f)
-						{
-							m_bRun = false;		
+					if (m_fMyPos.x >= fTargetPos.x && m_fMyPos.z >= fTargetPos.z && m_fMyPos.x <= (fTargetPos.x + 0.7f) && m_fMyPos.z <= (fTargetPos.z + 0.7f) ||
+						m_fMyPos.x <= fTargetPos.x && m_fMyPos.z >= fTargetPos.z && m_fMyPos.x >= (fTargetPos.x - 0.7f) && m_fMyPos.z <= (fTargetPos.z + 0.7f) ||
+						m_fMyPos.x <= fTargetPos.x && m_fMyPos.z <= fTargetPos.z && m_fMyPos.x >= (fTargetPos.x - 0.7f) && m_fMyPos.z >= (fTargetPos.z - 0.7f) ||
+						m_fMyPos.x >= fTargetPos.x && m_fMyPos.z <= fTargetPos.z && m_fMyPos.x <= (fTargetPos.x + 0.7f) && m_fMyPos.z >= (fTargetPos.z - 0.7f))
+					{
+						m_bRun = false;		
+						
+						m_fStorePos = m_fMyPos;
 
-							if (m_iAfterRunPt == 0)
-								m_bAttack = true;
+						if (m_iAfterRunPt == 0) 
+							m_bAttack = true;
 
-							if (m_iAfterRunPt == 1)
-								m_bDodgeB = true;
+						if (m_iAfterRunPt == 1)
+							m_bDodgeB = true;
 
-							if (m_iAfterRunPt == 2)
-								m_bDodgeL = true;
+						if (m_iAfterRunPt == 2)
+							m_bDodgeL = true;
 
-							if (m_iAfterRunPt == 3)
-								m_bDodgeR = true;
+						if (m_iAfterRunPt == 3)
+							m_bAttack = true;
 
-							++m_iAfterRunPt;
+						if (m_iAfterRunPt == 4)
+							m_bDodgeR = true;
 
-							if (m_iAfterRunPt > 3)
-								m_iAfterRunPt = 0;
+						++m_iAfterRunPt;
 
-							/*_uint iShuffleResult = vecRandomPattern.front();
+						if (m_iAfterRunPt > 4)
+							m_iAfterRunPt = 0;
 
-							if (iShuffleResult == 1)
-								m_bAttack = true;
+						/*_uint iShuffleResult = vecRandomPattern.front();
 
-							if (iShuffleResult == 2)
-								m_bDodgeB = true;
+						if (iShuffleResult == 1)
+							m_bAttack = true;
 
-							if (iShuffleResult == 3)
-								m_bDodgeL = true;
+						if (iShuffleResult == 2)
+							m_bDodgeB = true;
 
-							if (iShuffleResult == 4)
-								m_bDodgeR = true;*/
-						}				
+						if (iShuffleResult == 3)
+							m_bDodgeL = true;
+
+						if (iShuffleResult == 4)
+							m_bDodgeR = true;*/
+					}				
 				})
 
 				.AddTransition("Run to Attack", "Attack")
@@ -206,6 +222,10 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("Threat")
 				.Tick([this](_double TimeDelta)
 				{
+					_vector vTargetPos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+
+					m_pTransformCom->LookAt(vTargetPos);
+
 					auto pAnim = m_pModelCom->GetPlayAnimation();
 
 					if (pAnim == m_pModelCom->Find_Animation("AS_em0400_160_AL_threat") && pAnim->IsFinished() == true)
@@ -225,36 +245,45 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("Walk")
 				.Tick([this](_double TimeDelta)
 				{
-					m_fMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					m_fTimeAcc += _float(TimeDelta * 1);
 
-					_vector vDest;
-					// 추후엔 플레이어가 회피해서 멀어진 경우 다시 그곳을 추적해서 Run하거나 걷는 식으로 바꿀 것.
-					if(m_iWalkPosition == 0)
-						vDest = { 6.f, 0.f, 6.f, 1.f };
+					//m_fMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
-					/*if (m_iWalkPosition == 1)
-						vDest = { -5.f, 0.f, 5.f, 1.f };
+					//_vector vDest;
+					//// 추후엔 플레이어가 회피해서 멀어진 경우 다시 그곳을 추적해서 Run하거나 걷는 식으로 바꿀 것.
+					//if(m_iWalkPosition == 0)
+					//	vDest = { (m_fStorePos.x + 3.f), 0.f, (m_fStorePos.z + 3.f), 1.f };
 
-					if (m_iWalkPosition == 2)
-						vDest = { 5.f, 0.f, -5.f, 1.f };
+					//if (m_iWalkPosition == 1)
+					//	vDest = { (m_fStorePos.x - 3.f), 0.f, (m_fStorePos.z + 3.f), 1.f };
 
-					if (m_iWalkPosition == 3)
-						vDest = { -5.f, 0.f, -5.f, 1.f };*/
+					//if (m_iWalkPosition == 2)
+					//	vDest = { (m_fStorePos.x + 3.f), 0.f, (m_fStorePos.z - 3.f), 1.f };
 
+					//if (m_iWalkPosition == 3)
+					//	vDest = { (m_fStorePos.x - 3.f), 0.f, (m_fStorePos.z - 3.f), 1.f };
 
-					m_pTransformCom->LookAt(vDest);
-					m_pTransformCom->Chase(vDest, 0.018f);
-					// TODO : 4방면에 대응하는 조건 찾기
-										
-					if (m_fMyPos.x >= 5.f && m_fMyPos.z >= 5.f)
+					//_float3 fDest;
+					//XMStoreFloat3(&fDest, vDest);
+
+					//m_pTransformCom->LookAt(vDest);
+					//m_pTransformCom->Chase(vDest, 0.018f);
+					//// TODO : 4방면에 대응하는 조건 찾기
+					//					
+					//if (m_iWalkPosition == 0 && m_fMyPos.x >= (fDest.x - 0.5f) && m_fMyPos.z >= (fDest.z - 0.5f) ||
+					//	m_iWalkPosition == 1 && m_fMyPos.x >= (fDest.x + 0.5f) && m_fMyPos.z <= (fDest.z - 0.5f) ||
+					//	m_iWalkPosition == 2 && m_fMyPos.x <= (fDest.x - 0.5f) && m_fMyPos.z >= (fDest.z + 0.5f) ||
+					//	m_iWalkPosition == 3 && m_fMyPos.x <= (fDest.x - 0.5f) && m_fMyPos.z <= (fDest.z - 0.5f))
+					if(m_fTimeAcc >= 1.5f)
 					{
 						m_bWalk = false;
 						
-						m_bRun = true;						
+						m_bRun = true;		
+						m_fTimeAcc = 0.f;
 //						++m_iWalkPosition;	// 4가 되면 아래 조건에 걸려서 초기화
 
-						if (m_iWalkPosition > 3)
-							m_iWalkPosition = 0;
+//						if (m_iWalkPosition > 3)
+//							m_iWalkPosition = 0;
 					}
 					
 				})
@@ -335,6 +364,18 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 void CBuddyLumi::BeginTick()
 {
 	__super::BeginTick();
+	
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
+	{
+		if (iter->GetPrototypeTag() == TEXT("FlowerLeg"))
+		{
+			int iA = 0;
+
+			m_pFlowerLeg = iter;			
+		}
+	}
 }
 
 void CBuddyLumi::Tick(_double TimeDelta)
@@ -342,26 +383,13 @@ void CBuddyLumi::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 
 	m_pFSM->Tick(TimeDelta);
-	m_pASM->Tick(TimeDelta);
-		
-
-	/*else
-	{
-		int iA = 0;
-		auto pAnim = m_pModelCom->GetPlayAnimation();
-
-		if (pAnim == m_pModelCom->Find_Animation("AS_em0400_101_AL_wait01"))
-		{
-			int iB = 0;
-		}
-	}*/
+	m_pASM->Tick(TimeDelta);	
 }
 
 void CBuddyLumi::Late_Tick(_double TimeDelta)
 {	
 	__super::Late_Tick(TimeDelta);
 		
-
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
@@ -422,7 +450,7 @@ HRESULT CBuddyLumi::Setup_AnimSocket()
 }
 
 HRESULT CBuddyLumi::SetUp_Components(void* pArg)
-{
+{	
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom)))
 		return E_FAIL;
@@ -476,7 +504,7 @@ CGameObject * CBuddyLumi::Clone(void * pArg)
 void CBuddyLumi::Free()
 {
 	__super::Free();
-
+	
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pModelCom);

@@ -157,6 +157,12 @@
     <Filter Include="96.Test">
       <UniqueIdentifier>{057aa277-d73a-4379-bf1d-ed33bde7fe89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPool">
+      <UniqueIdentifier>{773075e2-bc28-4393-8e82-36474691f893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance">
+      <UniqueIdentifier>{d05ad475-8f00-4e1d-a167-7bb09014504b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -346,6 +352,14 @@
     <ClInclude Include="..\public\TestObject.h">
       <Filter>96.Test</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\SkummyPool.h">
+      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkmP_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Monster.h" />
+    <ClInclude Include="..\public\ScarletCharacter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -514,6 +528,14 @@
     <ClCompile Include="..\private\TestObject.cpp">
       <Filter>96.Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\SkummyPool.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkmP_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Monster.cpp" />
+    <ClCompile Include="..\private\ScarletCharacter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
