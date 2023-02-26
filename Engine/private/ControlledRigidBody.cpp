@@ -93,6 +93,8 @@ void CControlledRigidBody::SaveToJson(Json& json)
 
 void CControlledRigidBody::LoadFromJson(const Json& json)
 {
+	if (json.contains("ControlledRigidBody") == false)
+		return;
 	CComponent::LoadFromJson(json);
 	m_eColliderType = json["ControlledRigidBody"]["ColliderType"];
 	m_tDesc.radius = json["ControlledRigidBody"]["radius"];
@@ -115,12 +117,24 @@ _float4 CControlledRigidBody::GetPosition()
 	return _float4{(_float)vPos.x, (_float)vPos.y, (_float)vPos.z, 1.f};
 }
 
+_float4 CControlledRigidBody::GetFootPosition()
+{
+	const auto vPos = m_pController->getFootPosition();
+	return _float4{(_float)vPos.x, (_float)vPos.y, (_float)vPos.z, 1.f};
+}
+
 void CControlledRigidBody::Move(_float4 vVelocity, _float fTimeDelta, _float minDist)
 {
-	// disp : direction * speed * delta
+	// disp : direction * speed * delta(delta 시간 동안의 이동량)
 	vVelocity *= fTimeDelta;
 
 	const physx::PxVec3 vDisp{vVelocity.x, vVelocity.y, vVelocity.z};
+	m_pController->move(vDisp, minDist, fTimeDelta, m_Filters);
+}
+
+void CControlledRigidBody::MoveDisp(_float4 vPosDelta, _float fTimeDelta, _float minDist)
+{
+	const physx::PxVec3 vDisp{vPosDelta.x, vPosDelta.y, vPosDelta.z};
 	m_pController->move(vDisp, minDist, fTimeDelta, m_Filters);
 }
 

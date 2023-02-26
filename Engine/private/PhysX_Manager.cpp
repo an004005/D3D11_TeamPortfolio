@@ -156,6 +156,7 @@ void CPhysX_Manager::Initialize()
 	groundPlane->getShapes(&shape, 1);
 	shape->setSimulationFilterData(PxFilterData{ static_cast<PxU32>(CT_STATIC), 0, 0, 0 });
 	shape->setQueryFilterData(PxFilterData{static_cast<PxU32>(GetCollTypeBit(CT_STATIC)), 0, 0, 0 });
+	shape->setFlag(PxShapeFlag::eVISUALIZATION, false);
 	m_Scene->addActor(*groundPlane);
 #endif
 

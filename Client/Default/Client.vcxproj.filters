@@ -346,6 +346,8 @@
     <ClInclude Include="..\public\TestObject.h">
       <Filter>96.Test</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Monster.h" />
+    <ClInclude Include="..\public\ScarletCharacter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -514,6 +516,8 @@
     <ClCompile Include="..\private\TestObject.cpp">
       <Filter>96.Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Monster.cpp" />
+    <ClCompile Include="..\private\ScarletCharacter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

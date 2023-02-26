@@ -100,6 +100,8 @@ void CRigidBody::SaveToJson(Json& json)
 
 void CRigidBody::LoadFromJson(const Json& json)
 {
+	if (json.contains("RigidBody") == false)
+		return;
 	CComponent::LoadFromJson(json);
 	m_bKinematic = json["RigidBody"]["bKinematic"];
 	m_bTrigger = json["RigidBody"]["bTrigger"];
