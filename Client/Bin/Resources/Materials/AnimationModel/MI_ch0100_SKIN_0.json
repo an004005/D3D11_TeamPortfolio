@@ -7,12 +7,12 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Skin_COL.dds",
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Skin_NML.png",
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Skin_CTL.dds",
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Skin_AMB.dds",
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Skin_DMG.png",
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_cm_Fil_White.png"
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Skin_COL.dds",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Skin_NML.png",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Skin_CTL.dds",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Skin_AMB.dds",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Skin_DMG.png",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_cm_Fil_White.png"
         ],
         "Pass" : 0
     }

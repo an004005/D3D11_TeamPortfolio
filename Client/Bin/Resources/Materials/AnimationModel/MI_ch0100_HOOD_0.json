@@ -7,11 +7,11 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Hood_COL.dds",
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Hood_NML.png",
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Hood_CTL.dds",
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_DefaultColorGrading.png",
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_cm_Fil_White.png"
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hood_COL.dds",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hood_NML.png",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hood_CTL.dds",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_DefaultColorGrading.png",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_cm_Fil_White.png"
         ],
         "Pass" : 0
     }

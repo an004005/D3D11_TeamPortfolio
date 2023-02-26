@@ -7,10 +7,10 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Eye_COL.dds",
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Eye_NML.png",
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Eye_CTL.dds",
-            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Eye_AMB.dds"
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Eye_COL.dds",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Eye_NML.png",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Eye_CTL.dds",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Eye_AMB.dds"
         ],
         "Pass" : 0
     }
