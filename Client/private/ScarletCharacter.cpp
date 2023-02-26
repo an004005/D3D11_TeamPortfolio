@@ -20,18 +20,37 @@ HRESULT CScarletCharacter::Initialize(void* pArg)
 	Safe_AddRef(m_pGameInstance);
 
 	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_ControlledRigidBody", 
-		L"Collider", (CComponent**)m_pCollider, pArg));
+		L"Collider", (CComponent**)&m_pCollider, pArg));
 
 	return S_OK;
 }
 
 void CScarletCharacter::Late_Tick(_double TimeDelta)
 {
+	// if (m_pGameInstance->KeyDown(DIK_SPACE))
+	// {
+	// 	m_fYSpeed = 10.f;
+	// }
+
 	CGameObject::Late_Tick(TimeDelta);
 	const _vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	const _vector vPrePos = m_vPrePos;
 	const _vector vMoveDelta = vPos - vPrePos;
-	m_pCollider->MoveDisp(vMoveDelta, (_float)TimeDelta);
+	physx::PxControllerCollisionFlags flags = m_pCollider->MoveDisp(vMoveDelta, (_float)TimeDelta);
+
+	m_bOnSide = flags & physx::PxControllerCollisionFlag::eCOLLISION_SIDES;
+
+	flags = m_pCollider->Move(_float4{0.f, m_fYSpeed, 0.f, 0.f}, (_float)TimeDelta);
+
+	m_bOnFloor = flags & physx::PxControllerCollisionFlag::eCOLLISION_UP;
+	if (m_bOnFloor || !m_bActiveGravity)
+	{
+		m_fYSpeed = 0.f;
+	}
+	else
+	{
+		m_fYSpeed -= m_fGravity * (_float)TimeDelta;
+	}
 }
 
 void CScarletCharacter::AfterPhysX()

@@ -32,17 +32,6 @@ HRESULT CControlledRigidBody::Initialize(void* pArg)
 	m_tDesc.material = CPhysX_Manager::GetInstance()->FindMaterial("Default");
 	m_tDesc.upDirection = { 0.f, 1.f, 0.f };
 
-	if (pArg == nullptr)
-	{
-		m_tDesc.radius = 0.5f;
-		m_tDesc.height = 1.f;
-		m_tDesc.contactOffset = 0.1f;
-		m_tDesc.density = 100.f;
-		m_tDesc.slopeLimit = cosf(XMConvertToRadians(45.f));
-		m_tDesc.stepOffset = 0.1f;
-		m_tDesc.maxJumpHeight = 3.f;
-	}
-
 	// 이 컨트롤러와 충돌하는 타입 선택(컨트롤러의 이동은 scene query기반)
 	m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC;
 	m_Filters.mFilterData = &m_MoveFilterData;
@@ -93,17 +82,29 @@ void CControlledRigidBody::SaveToJson(Json& json)
 
 void CControlledRigidBody::LoadFromJson(const Json& json)
 {
-	if (json.contains("ControlledRigidBody") == false)
-		return;
 	CComponent::LoadFromJson(json);
-	m_eColliderType = json["ControlledRigidBody"]["ColliderType"];
-	m_tDesc.radius = json["ControlledRigidBody"]["radius"];
-	m_tDesc.height = json["ControlledRigidBody"]["height"];
-	m_tDesc.contactOffset = json["ControlledRigidBody"]["contactOffset"];
-	m_tDesc.density = json["ControlledRigidBody"]["density"];
-	m_tDesc.slopeLimit = json["ControlledRigidBody"]["slopeLimit"];
-	m_tDesc.stepOffset = json["ControlledRigidBody"]["stepOffset"];
-	m_tDesc.maxJumpHeight = json["ControlledRigidBody"]["maxJumpHeight"];
+
+	if (json.contains("ControlledRigidBody") == false)
+	{
+		m_tDesc.radius = 0.5f;
+		m_tDesc.height = 1.f;
+		m_tDesc.contactOffset = 0.1f;
+		m_tDesc.density = 10.f;
+		m_tDesc.slopeLimit = cosf(XMConvertToRadians(45.f));
+		m_tDesc.stepOffset = 0.1f;
+		m_tDesc.maxJumpHeight = 3.f;
+	}
+	else
+	{
+		m_eColliderType = json["ControlledRigidBody"]["ColliderType"];
+		m_tDesc.radius = json["ControlledRigidBody"]["radius"];
+		m_tDesc.height = json["ControlledRigidBody"]["height"];
+		m_tDesc.contactOffset = json["ControlledRigidBody"]["contactOffset"];
+		m_tDesc.density = json["ControlledRigidBody"]["density"];
+		m_tDesc.slopeLimit = json["ControlledRigidBody"]["slopeLimit"];
+		m_tDesc.stepOffset = json["ControlledRigidBody"]["stepOffset"];
+		m_tDesc.maxJumpHeight = json["ControlledRigidBody"]["maxJumpHeight"];
+	}
 }
 
 void CControlledRigidBody::SetPosition(const _float4& vPos)
@@ -123,19 +124,19 @@ _float4 CControlledRigidBody::GetFootPosition()
 	return _float4{(_float)vPos.x, (_float)vPos.y, (_float)vPos.z, 1.f};
 }
 
-void CControlledRigidBody::Move(_float4 vVelocity, _float fTimeDelta, _float minDist)
+PxControllerCollisionFlags CControlledRigidBody::Move(_float4 vVelocity, _float fTimeDelta, _float minDist)
 {
 	// disp : direction * speed * delta(delta 시간 동안의 이동량)
 	vVelocity *= fTimeDelta;
 
 	const physx::PxVec3 vDisp{vVelocity.x, vVelocity.y, vVelocity.z};
-	m_pController->move(vDisp, minDist, fTimeDelta, m_Filters);
+	return m_pController->move(vDisp, minDist, fTimeDelta, m_Filters);
 }
 
-void CControlledRigidBody::MoveDisp(_float4 vPosDelta, _float fTimeDelta, _float minDist)
+PxControllerCollisionFlags CControlledRigidBody::MoveDisp(_float4 vPosDelta, _float fTimeDelta, _float minDist)
 {
 	const physx::PxVec3 vDisp{vPosDelta.x, vPosDelta.y, vPosDelta.z};
-	m_pController->move(vDisp, minDist, fTimeDelta, m_Filters);
+	return m_pController->move(vDisp, minDist, fTimeDelta, m_Filters);
 }
 
 void CControlledRigidBody::CreateController()

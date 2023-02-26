@@ -12,12 +12,12 @@
 #include "Controller.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	:CGameObject(pDevice, pContext)
+	: CScarletCharacter(pDevice, pContext)
 {
 }
 
 CPlayer::CPlayer(const CPlayer & rhs)
-	:CGameObject(rhs)
+	: CScarletCharacter(rhs)
 {
 }
 
@@ -75,6 +75,11 @@ void CPlayer::Late_Tick(_double TimeDelta)
 
 	if (m_bVisible && (nullptr != m_pRenderer))
 		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+}
+
+void CPlayer::AfterPhysX()
+{
+	__super::AfterPhysX();
 }
 
 HRESULT CPlayer::Render()
