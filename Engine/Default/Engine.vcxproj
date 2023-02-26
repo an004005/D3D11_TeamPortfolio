@@ -76,6 +76,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\Bin\</OutDir>
     <IntDir>..\Bin\</IntDir>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -106,17 +108,18 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../public/;../public/Imgui;../default;../public/fmod</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11d.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11d.lib;DirectXTKd.lib;PhysX_64d.lib;PhysXCommon_64d.lib;PhysXCooking_64d.lib;PhysXFoundation_64d.lib;SceneQuery_static_64d.lib;PhysXCharacterKinematic_static_64d.lib;PhysXExtensions_static_64d.lib;PhysXPvdSDK_static_64d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdPartyLib/</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>cd /d $(SolutionDir)
-call Copy.bat</Command>
+call Copy.bat $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -145,7 +148,7 @@ call Copy.bat</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../public/;../public/Imgui;../default;../public/fmod</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../public/;../public/Imgui;../default;../public/fmod;../public/PhysX</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -153,12 +156,12 @@ call Copy.bat</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11.lib;DirectXTK.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXFoundation_64.lib;SceneQuery_static_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXExtensions_static_64.lib;PhysXPvdSDK_static_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdPartyLib/</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>cd /d $(SolutionDir)
-call Copy.bat</Command>
+call Copy.bat $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -166,14 +169,12 @@ call Copy.bat</Command>
     <ClInclude Include="..\public\AnimationInstance.h" />
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\public\Bone.h" />
-    <ClInclude Include="..\public\BoundingCapsule.h" />
     <ClInclude Include="..\public\Camera.h" />
     <ClInclude Include="..\public\Cell.h" />
     <ClInclude Include="..\public\Channel.h" />
-    <ClInclude Include="..\public\Collider.h" />
-    <ClInclude Include="..\public\Collision_Manger.h" />
     <ClInclude Include="..\public\Component.h" />
     <ClInclude Include="..\public\Component_Manager.h" />
+    <ClInclude Include="..\public\ControlledRigidBody.h" />
     <ClInclude Include="..\public\CurveFloatMapImpl.h" />
     <ClInclude Include="..\public\CustomFont.h" />
     <ClInclude Include="..\public\DebugDraw.h" />
@@ -217,6 +218,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\public\Imgui_AppLog.h" />
     <ClInclude Include="..\public\Imgui_Manager.h" />
     <ClInclude Include="..\public\Imgui_ModelConverter.h" />
+    <ClInclude Include="..\public\Imgui_PhysX.h" />
     <ClInclude Include="..\public\Imgui_PostProcess.h" />
     <ClInclude Include="..\public\Imgui_PropertyEditor.h" />
     <ClInclude Include="..\public\Input_Device.h" />
@@ -234,10 +236,14 @@ call Copy.bat</Command>
     <ClInclude Include="..\public\Model.h" />
     <ClInclude Include="..\public\Navigation.h" />
     <ClInclude Include="..\public\Object_Manager.h" />
+    <ClInclude Include="..\public\PhysXDynamicModel.h" />
+    <ClInclude Include="..\public\PhysXStaticModel.h" />
+    <ClInclude Include="..\public\PhysX_Manager.h" />
     <ClInclude Include="..\public\PipeLine.h" />
     <ClInclude Include="..\public\PostProcess.h" />
     <ClInclude Include="..\public\Renderer.h" />
     <ClInclude Include="..\public\RenderTarget.h" />
+    <ClInclude Include="..\public\RigidBody.h" />
     <ClInclude Include="..\public\Shader.h" />
     <ClInclude Include="..\public\Sound.h" />
     <ClInclude Include="..\public\SoundStore.h" />
@@ -261,20 +267,19 @@ call Copy.bat</Command>
     <ClInclude Include="..\public\VIBuffer_Sphere.h" />
     <ClInclude Include="..\public\VIBuffer_Terrain.h" />
     <ClInclude Include="EngineThreadPool.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Animation.cpp" />
     <ClCompile Include="..\private\AnimationInstance.cpp" />
     <ClCompile Include="..\private\Base.cpp" />
     <ClCompile Include="..\private\Bone.cpp" />
-    <ClCompile Include="..\private\BoundingCapsule.cpp" />
     <ClCompile Include="..\private\Camera.cpp" />
     <ClCompile Include="..\private\Cell.cpp" />
     <ClCompile Include="..\private\Channel.cpp" />
-    <ClCompile Include="..\private\Collider.cpp" />
-    <ClCompile Include="..\private\Collision_Manger.cpp" />
     <ClCompile Include="..\private\Component.cpp" />
     <ClCompile Include="..\private\Component_Manager.cpp" />
+    <ClCompile Include="..\private\ControlledRigidBody.cpp" />
     <ClCompile Include="..\private\CurveFloatMapImpl.cpp" />
     <ClCompile Include="..\private\CustomFont.cpp" />
     <ClCompile Include="..\private\DebugDraw.cpp" />
@@ -295,6 +300,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\private\Imgui_AppLog.cpp" />
     <ClCompile Include="..\private\Imgui_Manager.cpp" />
     <ClCompile Include="..\private\Imgui_ModelConverter.cpp" />
+    <ClCompile Include="..\private\Imgui_PhysX.cpp" />
     <ClCompile Include="..\private\Imgui_PostProcess.cpp" />
     <ClCompile Include="..\private\Imgui_PropertyEditor.cpp" />
     <ClCompile Include="..\private\Input_Device.cpp" />
@@ -312,10 +318,14 @@ call Copy.bat</Command>
     <ClCompile Include="..\private\Model.cpp" />
     <ClCompile Include="..\private\Navigation.cpp" />
     <ClCompile Include="..\private\Object_Manager.cpp" />
+    <ClCompile Include="..\private\PhysXDynamicModel.cpp" />
+    <ClCompile Include="..\private\PhysXStaticModel.cpp" />
+    <ClCompile Include="..\private\PhysX_Manager.cpp" />
     <ClCompile Include="..\private\PipeLine.cpp" />
     <ClCompile Include="..\private\PostProcess.cpp" />
     <ClCompile Include="..\private\Renderer.cpp" />
     <ClCompile Include="..\private\RenderTarget.cpp" />
+    <ClCompile Include="..\private\RigidBody.cpp" />
     <ClCompile Include="..\private\Shader.cpp" />
     <ClCompile Include="..\private\Sound.cpp" />
     <ClCompile Include="..\private\SoundStore.cpp" />
@@ -421,6 +431,9 @@ call Copy.bat</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="EngineThreadPool.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

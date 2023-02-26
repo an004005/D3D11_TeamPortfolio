@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "JsonStorage.h"
 #include "MapObject.h"
+#include "GameUtils.h"
 
 CScarletMap::CScarletMap(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
@@ -53,6 +54,8 @@ HRESULT CScarletMap::Render()
 
 void CScarletMap::Imgui_RenderProperty()
 {
+	if (LEVEL_NOW != LEVEL_MAPTOOL) return;
+
 	__super::Imgui_RenderProperty();
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
@@ -80,9 +83,8 @@ void CScarletMap::Imgui_RenderProperty()
 			if (bSelected)
 				ImGui::SetItemDefaultFocus();
 
-			
-			char pStr[64];
-			wc2c(proto.c_str(), pStr);
+			char pStr[MAX_PATH];
+			strcpy(pStr, CGameUtils::GetFileName(ws2s(proto)).c_str());
 
 			if (ImGui::Selectable(pStr, bSelected))
 			{
@@ -99,6 +101,9 @@ void CScarletMap::Imgui_RenderProperty()
 	{	
 		Json json;
 		json["ModelTag"] = ws2s(m_pModelProtoTag);
+
+		_float4 InitPos = SetUp_InitPosition();
+		json["InitPos"] = InitPos;
 		FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MapNonAnimObject"), TEXT("Prototype_GameObject_MapNonAnim_Object"), &json));
 	}
 
@@ -145,24 +150,26 @@ void CScarletMap::Imgui_RenderProperty()
 					ImGui::SetItemDefaultFocus();
 
 				string str = ws2s(dynamic_cast<CMapObject*>(obj)->Get_ModelTag());
-		
+
 				_uint iCount = count_if(pGameObjects.begin(), iter, [&](CGameObject* pGameObject) {
 					return dynamic_cast<CMapObject*>(pGameObject)->Get_ModelTag() == dynamic_cast<CMapObject*>(obj)->Get_ModelTag();
 				});
 
 				char pStr[MAX_PATH]{};
-				sprintf_s(pStr, sizeof(pStr), "%s %d", str.c_str(), iCount);
+				strcpy(pStr, CGameUtils::GetFileName(str).c_str());
+				sprintf_s(pStr, sizeof(pStr), "%s %d", pStr, iCount);
 				
 				if (ImGui::Selectable(pStr, bSelected))
 				{
 					m_pGameObject = obj;
 				}
-
 				++iter;
 			}
 			ImGui::EndListBox();
 		}
 	}
+
+	ImGui::BeginChild("Selected Object", { 500.f, 200.f });
 
 	if (m_pGameObject)
 	{
@@ -171,6 +178,8 @@ void CScarletMap::Imgui_RenderProperty()
 		m_pGameObject->Imgui_RenderProperty();
 		m_pGameObject->Imgui_RenderComponentProperties();
 	}
+
+	ImGui::EndChild();
 }
 
 void CScarletMap::SaveToJson(OUT Json & json)
@@ -184,9 +193,13 @@ void CScarletMap::SaveToJson(OUT Json & json)
 
 	auto pGameObjects = pLayer->GetGameObjects();
 
+	json["MapObjects"] = Json::array();
+
 	for (auto& obj : pGameObjects)
 	{
-		json["ModelTags"].push_back(ws2s(dynamic_cast<CMapObject*>(obj)->Get_ModelTag()));
+		Json jsonMapObject;
+		obj->SaveToJson(jsonMapObject);
+		json["MapObjects"].push_back(jsonMapObject);
 	}
 }
 
@@ -196,19 +209,20 @@ void CScarletMap::LoadFromJson(const Json & json)
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	for (auto prototag : json["ProtoTags"])
+	if (json.contains("ProtoTags"))
 	{
-		wstring tag = s2ws(prototag);
-		m_pModelProtos.emplace_back(tag);
+		for (auto prototag : json["ProtoTags"])
+		{
+			wstring tag = s2ws(prototag);
+			m_pModelProtos.emplace_back(tag);
+		}
 	}
 
-	if (json.contains("ModelTags"))
+	if (json.contains("MapObjects"))
 	{
-		for (auto Modeltag : json["ModelTags"])
+		for (auto mapObj : json["MapObjects"])
 		{
-			Json json;
-			json["ModelTag"] = Modeltag;
-			FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MapNonAnimObject"), TEXT("Prototype_GameObject_MapNonAnim_Object"), &json));
+			FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MapNonAnimObject"), TEXT("Prototype_GameObject_MapNonAnim_Object"), &mapObj));
 		}
 	}
 	
@@ -217,6 +231,20 @@ void CScarletMap::LoadFromJson(const Json & json)
 HRESULT CScarletMap::SetUp_Components()
 {
 	return S_OK;
+}
+
+_float4 CScarletMap::SetUp_InitPosition()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	_matrix CamWorldMatrix = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW);
+
+	_vector vCamLook = CamWorldMatrix.r[2];
+	_vector vCamPos = CamWorldMatrix.r[3];
+
+	_float4 vInitPos;
+	XMStoreFloat4(&vInitPos, XMVectorSetW(vCamPos + XMVector3Normalize(vCamLook) * 20.f, 1.f));
+
+	return vInitPos;
 }
 
 

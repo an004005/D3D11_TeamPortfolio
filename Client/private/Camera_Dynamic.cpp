@@ -114,7 +114,6 @@ void CCamera_Dynamic::Imgui_RenderProperty()
 
 HRESULT CCamera_Dynamic::SetUp_Components()
 {
-	
 	return S_OK;
 }
 
@@ -146,6 +145,4 @@ CGameObject * CCamera_Dynamic::Clone(void * pArg)
 void CCamera_Dynamic::Free()
 {
 	__super::Free();
-
-
 }

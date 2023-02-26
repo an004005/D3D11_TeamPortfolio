@@ -14,7 +14,7 @@ class ENGINE_DLL CGameObject abstract : public CBase
 protected:
 	CGameObject(ID3D11Device*	pDevice, ID3D11DeviceContext* pContext);
 	CGameObject(const CGameObject& rhs);
-	virtual ~CGameObject() = default;
+	virtual ~CGameObject() override;
 
 public:
 	static const _tchar*			m_pTransformComTag;
@@ -31,6 +31,7 @@ public:
 	virtual void BeginTick(){}
 	virtual void Tick(_double TimeDelta);
 	virtual void Late_Tick(_double TimeDelta);
+	virtual void AfterPhysX(){}
 	virtual HRESULT Render();
 	virtual HRESULT Render_ShadowDepth() { return S_OK; }
 
@@ -77,7 +78,7 @@ protected:
 
 protected:
 	/* 객체들이 사용해야 할 컴포넌트들을 보관한다. */
-	map<wstring, class CComponent*>			m_Components;
+	map<wstring, class CComponent*>					m_Components;
 	class CTransform*								m_pTransformCom = nullptr;
 	_bool											m_bCloned = false;
 	_bool											m_bDelete = false;

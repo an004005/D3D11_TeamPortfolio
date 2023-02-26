@@ -26,6 +26,7 @@ public:
 	HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 	virtual void LoadFromJson(const Json& json) override;
+	virtual void SaveToJson(Json& json) override;
 
 public:
 	const wstring&	Get_ModelTag() { return m_strModelTag; }

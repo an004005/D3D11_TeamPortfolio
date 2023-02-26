@@ -201,4 +201,10 @@ namespace Engine
 	}VTXCUBETEX_DECLARATION;
 
 
+	struct PxMesh
+	{
+		physx::PxTriangleMesh* pPxMesh = nullptr;
+		physx::PxTriangleMeshGeometry tMeshGeom;
+		physx::PxShape* pShape = nullptr;
+	};
 }

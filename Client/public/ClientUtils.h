@@ -5,17 +5,17 @@ BEGIN(Engine)
 class CTransform;
 END
 
-#ifdef _DEBUG
-#define DEBUG_RAY(vOrigin, vDir, fLife) CClientUtils::CloneDebugRay(vOrigin, vDir, fLife);
-#define DEBUG_RAY(vOrigin, vDir) CClientUtils::CloneDebugRay(vOrigin, vDir, 1.f);
-#define DEBUG_SPHERE(vOrigin, fRadius, fLife) CClientUtils::CloneDebugSphere(vOrigin, fRadius, fLife);
-#define DEBUG_SPHERE(vOrigin, fRadius) CClientUtils::CloneDebugSphere(vOrigin, fRadius, 1.f);
-#else
-#define DEBUG_RAY(vOrigin, vDir, fLife) 
-#define DEBUG_RAY(vOrigin, vDir) 
-#define DEBUG_SPHERE(vOrigin, fRadius, fLife) 
-#define DEBUG_SPHERE(vOrigin, fRadius) 
-#endif
+// #ifdef _DEBUG
+// #define DEBUG_RAY(vOrigin, vDir, fLife) CClientUtils::CloneDebugRay(vOrigin, vDir, fLife);
+// #define DEBUG_RAY(vOrigin, vDir) CClientUtils::CloneDebugRay(vOrigin, vDir, 1.f);
+// #define DEBUG_SPHERE(vOrigin, fRadius, fLife) CClientUtils::CloneDebugSphere(vOrigin, fRadius, fLife);
+// #define DEBUG_SPHERE(vOrigin, fRadius) CClientUtils::CloneDebugSphere(vOrigin, fRadius, 1.f);
+// #else
+// #define DEBUG_RAY(vOrigin, vDir, fLife) 
+// #define DEBUG_RAY(vOrigin, vDir) 
+// #define DEBUG_SPHERE(vOrigin, fRadius, fLife) 
+// #define DEBUG_SPHERE(vOrigin, fRadius) 
+// #endif
 
 BEGIN(Client)
 
@@ -42,21 +42,58 @@ enum class EBaseAxis
 	AXIS_END
 };
 
+enum class ESASType
+{
+	SAS_FIRE, // 불
+	SAS_PENETRATE, // 투시
+	SAS_HARDBODY, // 경질화
+	SAS_TELEPORT, // 텔레포트
+	SAS_ELETRIC, // 전기
+	SAS_SUPERSPEED, // 초고속
+	SAS_COPY, // 복제
+	SAS_INVISIBLE, // 투명화
+	SAS_GRAVIKENISIS, // 염력
+	SAS_END
+};
+
+enum class EDeBuffType
+{
+	DEBUFF_FIRE, // 화상
+	DEBUFF_OIL, // 기름
+	DEBUFF_THUNDER, // 감전
+	DEBUFF_WATER, // 물
+	DEBUFF_END
+};
+
+enum class EAttackType
+{
+	ATK_LIGHT,
+	ATK_MIDDLE,
+	ATK_HEAVY,
+	ATK_TO_AIR,
+	ATK_END
+};
+
 typedef struct tagDamageParam
 {
 	_int iDamage;
-	_float3 vFrom;
-	_bool bHead = false;
-	_bool bFullBlinded = false;
-	class CPlayer* pCauser = nullptr;
-	_float3 vHitPosition;
+	_float3 vHitFrom; // 공격자의 위치
+	_float3 vHitPosition; // 공격 히트 위치
+	_float3 vHitNormal; // 공격 히트 위치의 노멀
+	_float3 vSlashVector; // 검 공격의 베는 방향(vHitPosition 기준)
+	ESASType eAttackSAS = ESASType::SAS_END; // 공격 타입(몬스터는 SAS_END 고정)
+	EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END; // 공격에 디버프 포함 여부
+	EAttackType eAttackType = EAttackType::ATK_LIGHT;
+	class CPlayer* pCauser = nullptr; // 공격자 포인터
 } DAMAGE_PARAM;
-
 
 enum
 {
 	MOVE_AXIS_CNT = static_cast<_uint>(EMoveAxis::AXIS_END),
 	BASE_AXIS_CNT = static_cast<_uint>(EBaseAxis::AXIS_END),
+	SAS_CNT = static_cast<_uint>(ESASType::SAS_END),
+	DEBUFF_CNT = static_cast<_uint>(EDeBuffType::DEBUFF_END),
+	ATK_TYPE_CNT = static_cast<_uint>(EAttackType::ATK_END),
 };
 
 class CClientUtils
@@ -65,15 +102,10 @@ public:
 	static EMoveAxis MoveAxisToEnum(_float3 vMoveAxis);
 	static EBaseAxis MoveAxisToBaseEnum(_float3 vMoveAxis);
 	static const string& AxisEnumToStr(EMoveAxis eAxis);
-	static void CloneDebugRay(_float3 vOrigin, _float3 vDir, _float fLife = 1.f);
-	static void CloneDebugSphere(_float3 vOrigin, _float fRadius, _float fLife = 1.f);
 	static EBaseAxis GetDamageFromAxis(CTransform* pTransform, _fvector vFrom);
 
 public:
 	static const _tchar* const s_DebugLayer;
-	static const _tchar* const s_DebugSpherePrototype;
-	static const _tchar* const s_DebugRayPrototype;
-
 };
 
 END

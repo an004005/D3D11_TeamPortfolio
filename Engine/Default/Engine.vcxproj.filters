@@ -61,18 +61,6 @@
     <Filter Include="01.Utility\03.Components\04.Transform">
       <UniqueIdentifier>{4fb7e495-bad9-43ad-91ea-a194005e192c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="80. Imgui">
-      <UniqueIdentifier>{4ad4dc50-2340-42bd-9fe6-df270a09a717}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80. Imgui\libs">
-      <UniqueIdentifier>{61b164dc-d44e-4244-8def-d4f81b70bbea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80. Imgui\00.Manager">
-      <UniqueIdentifier>{ee4a256e-5aeb-4b07-b9f8-20aa00574dd1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80. Imgui\01.ImguiObject">
-      <UniqueIdentifier>{3706bd1c-e703-4ba3-8a1d-d4b0abc64a21}</UniqueIdentifier>
-    </Filter>
     <Filter Include="81.Utils">
       <UniqueIdentifier>{7b1c93b6-4d3a-4080-bc8e-5bb52208ef18}</UniqueIdentifier>
     </Filter>
@@ -81,9 +69,6 @@
     </Filter>
     <Filter Include="01.Utility\03.Components\02.VIBuffer\Terrain">
       <UniqueIdentifier>{1f24f09e-cfc6-404a-aa57-9b00377e2cdb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\04.PipeLine">
-      <UniqueIdentifier>{5dc2e456-ed2f-47e4-b538-4cefc44b2a5a}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\05.Timers">
       <UniqueIdentifier>{a2a1a6e9-0337-49c6-ba64-0260e27f70af}</UniqueIdentifier>
@@ -115,9 +100,6 @@
     <Filter Include="81.Utils\Time">
       <UniqueIdentifier>{365ecf67-c722-49c2-8694-6eb7b57fc26d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\03.Components\07.Collider">
-      <UniqueIdentifier>{7e2fe4fb-845d-4289-af19-45d064c9f6c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03.Components\08.Nevigation">
       <UniqueIdentifier>{c4e76e14-dc84-40dd-9df2-d5da0862b247}</UniqueIdentifier>
     </Filter>
@@ -129,9 +111,6 @@
     </Filter>
     <Filter Include="01.Utility\07.Font">
       <UniqueIdentifier>{de646c00-b3e0-4e44-aec2-6396112e3488}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\08.Frustum">
-      <UniqueIdentifier>{0e353350-317e-47df-bc13-72304cf87dbe}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\03.Components\02.VIBuffer\Point">
       <UniqueIdentifier>{bd1d798b-6bfe-46b1-8817-8dc27cada7fb}</UniqueIdentifier>
@@ -168,6 +147,33 @@
     </Filter>
     <Filter Include="01.Utility\03.Components\02.VIBuffer\Instance\Mesh">
       <UniqueIdentifier>{4d52fb9f-e800-4a90-9589-1d2f38262b5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="81.Utils\80. Imgui">
+      <UniqueIdentifier>{4ad4dc50-2340-42bd-9fe6-df270a09a717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="81.Utils\80. Imgui\libs">
+      <UniqueIdentifier>{61b164dc-d44e-4244-8def-d4f81b70bbea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="81.Utils\80. Imgui\00.Manager">
+      <UniqueIdentifier>{ee4a256e-5aeb-4b07-b9f8-20aa00574dd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="81.Utils\80. Imgui\01.ImguiObject">
+      <UniqueIdentifier>{3706bd1c-e703-4ba3-8a1d-d4b0abc64a21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.PipeLine">
+      <UniqueIdentifier>{5dc2e456-ed2f-47e4-b538-4cefc44b2a5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\09.RenderTarget\08.Frustum">
+      <UniqueIdentifier>{0e353350-317e-47df-bc13-72304cf87dbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\11.PhysX">
+      <UniqueIdentifier>{2609d896-2f53-407d-a381-741ef8df533f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\11.PhysX\Collider">
+      <UniqueIdentifier>{bea53394-8e79-4760-8c97-f022ca55d745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\11.PhysX\Controller">
+      <UniqueIdentifier>{dd2650c4-4920-44b4-a0f9-6c96c160edc2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -235,64 +241,64 @@
       <Filter>01.Utility\03.Components\04.Transform</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\ImCurveEdit.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\ImGradient.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\imgui.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\imgui_impl_dx11.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\imgui_impl_win32.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\imgui_internal.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\ImGuiFileDialog.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\ImGuiFileDialogConfig.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\ImGuizmo.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\ImSequencer.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\imstb_rectpack.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\imstb_textedit.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\imstb_truetype.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\ImZoomSlider.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\dirent.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\GraphEditor.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\imconfig.h">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui_Manager.h">
-      <Filter>80. Imgui\00.Manager</Filter>
+      <Filter>81.Utils\80. Imgui\00.Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui_PropertyEditor.h">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ImguiObject.h">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GameUtils.h">
       <Filter>81.Utils</Filter>
@@ -337,7 +343,7 @@
       <Filter>01.Utility\03.Components\06.Model\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ImguiUtils.h">
-      <Filter>80. Imgui</Filter>
+      <Filter>81.Utils\80. Imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\public\JsonLib.h">
       <Filter>81.Utils</Filter>
@@ -346,7 +352,7 @@
       <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui_AppLog.h">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Animation.h">
       <Filter>01.Utility\03.Components\06.Model</Filter>
@@ -361,7 +367,7 @@
       <Filter>01.Utility\03.Components\50.Material</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui_ModelConverter.h">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_PosRect.h">
       <Filter>01.Utility\03.Components\02.VIBuffer</Filter>
@@ -375,9 +381,6 @@
     <ClInclude Include="..\public\DebugDraw.h">
       <Filter>81.Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Collider.h">
-      <Filter>01.Utility\03.Components\07.Collider</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Navigation.h">
       <Filter>01.Utility\03.Components\08.Nevigation</Filter>
     </ClInclude>
@@ -387,17 +390,11 @@
     <ClInclude Include="..\public\Cell.h">
       <Filter>01.Utility\03.Components\08.Nevigation</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\BoundingCapsule.h">
-      <Filter>01.Utility\03.Components\07.Collider</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\JsonStorage.h">
       <Filter>81.Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Collision_Manger.h">
-      <Filter>01.Utility\02.GameObject\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Imgui_AnimModifier.h">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Sphere.h">
       <Filter>01.Utility\03.Components\02.VIBuffer\Sphere</Filter>
@@ -415,7 +412,7 @@
       <Filter>01.Utility\07.Font</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Frustum.h">
-      <Filter>01.Utility\08.Frustum</Filter>
+      <Filter>01.Utility\09.RenderTarget\08.Frustum</Filter>
     </ClInclude>
     <ClInclude Include="EngineThreadPool.h">
       <Filter>00.System\01.ThreadPool</Filter>
@@ -436,13 +433,13 @@
       <Filter>01.Utility\09.RenderTarget</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui_PostProcess.h">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PostProcess.h">
       <Filter>01.Utility\02.GameObject\PostProcessVFX</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui\imgui_curve.hpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Cube.h">
       <Filter>01.Utility\03.Components\02.VIBuffer</Filter>
@@ -468,6 +465,27 @@
     <ClInclude Include="..\public\VIBuffer_Point_Instancing.h">
       <Filter>01.Utility\03.Components\02.VIBuffer\Instance\Point</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PhysX_Manager.h">
+      <Filter>01.Utility\11.PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\RigidBody.h">
+      <Filter>01.Utility\11.PhysX\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ControlledRigidBody.h">
+      <Filter>01.Utility\11.PhysX\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PhysXStaticModel.h">
+      <Filter>01.Utility\11.PhysX\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_PhysX.h">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PhysXDynamicModel.h">
+      <Filter>01.Utility\11.PhysX\Collider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -487,9 +505,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Level_Manager.cpp">
       <Filter>01.Utility\01.Level\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\GameObject.cpp">
-      <Filter>01.Utility\02.GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Object_Manager.cpp">
       <Filter>01.Utility\02.GameObject\Manager</Filter>
@@ -522,52 +537,52 @@
       <Filter>01.Utility\03.Components\04.Transform</Filter>
     </ClCompile>
     <ClCompile Include="..\public\Imgui\ImGradient.cpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClCompile>
     <ClCompile Include="..\public\Imgui\imgui.cpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClCompile>
     <ClCompile Include="..\public\Imgui\imgui_demo.cpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClCompile>
     <ClCompile Include="..\public\Imgui\imgui_draw.cpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClCompile>
     <ClCompile Include="..\public\Imgui\imgui_impl_dx11.cpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClCompile>
     <ClCompile Include="..\public\Imgui\imgui_impl_win32.cpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClCompile>
     <ClCompile Include="..\public\Imgui\imgui_tables.cpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClCompile>
     <ClCompile Include="..\public\Imgui\imgui_widgets.cpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClCompile>
     <ClCompile Include="..\public\Imgui\ImGuiFileDialog.cpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClCompile>
     <ClCompile Include="..\public\Imgui\ImGuizmo.cpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClCompile>
     <ClCompile Include="..\public\Imgui\ImSequencer.cpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClCompile>
     <ClCompile Include="..\public\Imgui\GraphEditor.cpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClCompile>
     <ClCompile Include="..\public\Imgui\ImCurveEdit.cpp">
-      <Filter>80. Imgui\libs</Filter>
+      <Filter>81.Utils\80. Imgui\libs</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Imgui_Manager.cpp">
-      <Filter>80. Imgui\00.Manager</Filter>
+      <Filter>81.Utils\80. Imgui\00.Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Imgui_PropertyEditor.cpp">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ImguiObject.cpp">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GameUtils.cpp">
       <Filter>81.Utils</Filter>
@@ -612,7 +627,7 @@
       <Filter>01.Utility\03.Components\06.Model\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ImguiUtils.cpp">
-      <Filter>80. Imgui</Filter>
+      <Filter>81.Utils\80. Imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\public\stdafx.cpp">
       <Filter>99.Defines</Filter>
@@ -621,7 +636,7 @@
       <Filter>81.Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Imgui_AppLog.cpp">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Animation.cpp">
       <Filter>01.Utility\03.Components\06.Model</Filter>
@@ -636,7 +651,7 @@
       <Filter>01.Utility\03.Components\50.Material</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Imgui_ModelConverter.cpp">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_PosRect.cpp">
       <Filter>01.Utility\03.Components\02.VIBuffer</Filter>
@@ -650,9 +665,6 @@
     <ClCompile Include="..\private\DebugDraw.cpp">
       <Filter>81.Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Collider.cpp">
-      <Filter>01.Utility\03.Components\07.Collider</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Navigation.cpp">
       <Filter>01.Utility\03.Components\08.Nevigation</Filter>
     </ClCompile>
@@ -662,17 +674,11 @@
     <ClCompile Include="..\private\Cell.cpp">
       <Filter>01.Utility\03.Components\08.Nevigation</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BoundingCapsule.cpp">
-      <Filter>01.Utility\03.Components\07.Collider</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\JsonStorage.cpp">
       <Filter>81.Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Collision_Manger.cpp">
-      <Filter>01.Utility\02.GameObject\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Imgui_AnimModifier.cpp">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Sphere.cpp">
       <Filter>01.Utility\03.Components\02.VIBuffer\Sphere</Filter>
@@ -690,7 +696,7 @@
       <Filter>01.Utility\07.Font</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Frustum.cpp">
-      <Filter>01.Utility\08.Frustum</Filter>
+      <Filter>01.Utility\09.RenderTarget\08.Frustum</Filter>
     </ClCompile>
     <ClCompile Include="EngineThreadPool.cpp">
       <Filter>00.System\01.ThreadPool</Filter>
@@ -711,7 +717,7 @@
       <Filter>01.Utility\09.RenderTarget</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Imgui_PostProcess.cpp">
-      <Filter>80. Imgui\01.ImguiObject</Filter>
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PostProcess.cpp">
       <Filter>01.Utility\02.GameObject\PostProcessVFX</Filter>
@@ -740,5 +746,31 @@
     <ClCompile Include="..\private\VIBuffer_Point_Instancing.cpp">
       <Filter>01.Utility\03.Components\02.VIBuffer\Instance\Point</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\GameObject.cpp">
+      <Filter>01.Utility\02.GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PhysX_Manager.cpp">
+      <Filter>01.Utility\11.PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\RigidBody.cpp">
+      <Filter>01.Utility\11.PhysX\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ControlledRigidBody.cpp">
+      <Filter>01.Utility\11.PhysX\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PhysXStaticModel.cpp">
+      <Filter>01.Utility\11.PhysX\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_PhysX.cpp">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PhysXDynamicModel.cpp">
+      <Filter>01.Utility\11.PhysX\Collider</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc">
+      <Filter>99.Defines</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

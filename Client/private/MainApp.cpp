@@ -6,9 +6,6 @@
 #include "Level_Loading_Simple.h"
 #include "Level_Logo.h"
 #include "VIBuffer_PosRect.h"
-#include "DebugRay.h"
-#include "DebugSphere.h"
-#include "Collider.h"
 #include "VIBuffer_Sphere.h"
 #include "VIBuffer_CircleRect.h"
 #include "VIBuffer_CircleRectLookOut.h"
@@ -16,6 +13,10 @@
 #include "VIBuffer_Terrain.h"
 #include "ScarletMap.h"
 #include "Psychokinesis.h"
+#include "MapNonAnim_Object.h"
+#include "Camera_Player.h"
+#include "ControlledRigidBody.h"
+#include "RigidBody.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -149,22 +150,6 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 
 
-	/* For.Prototype_Component_Collider*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"),
-		CCollider::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-
-	/*For.Prototype_DebugRay*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, CClientUtils::s_DebugRayPrototype,
-		CDebugRay::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-	/*For.Prototype_DebugSphere*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, CClientUtils::s_DebugSpherePrototype,
-		CDebugSphere::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-
 	/*For.Prototype_VIBuffer_Sphere*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_VIBuffer_Sphere",
 		CVIBuffer_Sphere::Create(m_pDevice, m_pContext, 0.5f))))
@@ -253,6 +238,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 
 
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_ControlledRigidBody"), CControlledRigidBody::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_RigidBody"), CRigidBody::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Regular32"), TEXT("../Bin/Resources/Fonts/kim_regular32.spritefont"))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Bold32"), TEXT("../Bin/Resources/Fonts/kim_bold32.spritefont"))))
@@ -280,6 +270,16 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	/* For.Prototype_GameObject_ScarletMap */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_ScarletMap"),
 		CScarletMap::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Camera_Player */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_Camera_Player"),
+		CCamera_Player::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For. MapNonAnimObject */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_MapNonAnim_Object"),
+		CMapNonAnim_Object::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;

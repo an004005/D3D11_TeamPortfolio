@@ -21,6 +21,9 @@ public:
 	_float4 Get_CamPosition() const {
 		return m_vCamPosition;
 	}
+	_float4 Get_CamLook() const {
+		return m_vCamLook;
+	}
 
 public:
 	void Set_Transform(TRANSFORMSTATE eState, _fmatrix TransformMatrix);	
@@ -32,6 +35,7 @@ private:
 	_float4x4			m_TransformMatrices[D3DTS_END];
 	_float4x4			m_TransformMatrices_Inverse[D3DTS_END];
 	_float4				m_vCamPosition;
+	_float4				m_vCamLook;
 
 public:
 	virtual void Free() override;

@@ -7,6 +7,9 @@
 
 IMPLEMENT_SINGLETON(CObject_Manager)
 
+unordered_set<CGameObject*> CObject_Manager::s_AliveObjects{};
+
+
 CObject_Manager::CObject_Manager()
 {
 }
@@ -234,6 +237,15 @@ void CObject_Manager::Late_Tick(_double TimeDelta)
 	}
 }
 
+void CObject_Manager::AfterPhysX()
+{
+	for (auto& Pair : m_vecLayers[m_iUpdatedLevel])
+	{
+		if (nullptr != Pair.second)
+			Pair.second->AfterPhysX();
+	}
+}
+
 void CObject_Manager::Imgui_ProtoViewer(const _tchar*& szSelectedProto)
 {
 	if (ImGui::TreeNode("ProtoViewer"))
@@ -343,6 +355,23 @@ void CObject_Manager::Imgui_LayerCombo(_uint iLevel, const _tchar*& pLayerName)
 
 		ImGui::EndCombo();
 	}
+}
+
+void CObject_Manager::Add_Object(CGameObject* pObject)
+{
+	Assert(pObject != nullptr);
+	s_AliveObjects.insert(pObject);
+}
+
+void CObject_Manager::Delete_Object(CGameObject* pObject)
+{
+	Assert(pObject != nullptr);
+	s_AliveObjects.erase(pObject);
+}
+
+_bool CObject_Manager::Check_ObjectAlive(CGameObject* pObject)
+{
+	return pObject != nullptr && s_AliveObjects.find(pObject) != s_AliveObjects.end();
 }
 
 CGameObject * CObject_Manager::Find_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag)
