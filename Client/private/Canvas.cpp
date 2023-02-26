@@ -24,7 +24,7 @@ HRESULT CCanvas::Initialize_Prototype()
 
 HRESULT CCanvas::Initialize(void * pArg)
 {
-	if (FAILED(CUI::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	m_fSizeX = _float(g_iWinSizeX);
@@ -60,8 +60,19 @@ void CCanvas::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
+	vector<CUI*> tmpUI;
+	tmpUI.reserve(m_mapChildUIs.size());
+
 	for (const auto& Pair : m_mapChildUIs)
-		Pair.second->Late_Tick(TimeDelta);
+		tmpUI.push_back(Pair.second);
+
+	std::sort(tmpUI.begin(), tmpUI.end(), [](const CUI* left, const CUI* right)
+	{
+		return left->Get_Priority() < right->Get_Priority();
+	});
+
+	for (auto pUI : tmpUI)
+		pUI->Late_Tick(TimeDelta);
 }
 
 void CCanvas::Imgui_RenderProperty()
@@ -153,6 +164,15 @@ CUI * CCanvas::Find_ChildUI(const _tchar * pChildTag)
 
 CUI * CCanvas::Add_ChildUI(_uint iLevelIndex, const _tchar * pPrototypeTag, const _tchar * pChildTag, void * pArg)
 {
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	CGameObject * pGameObject = pGameInstance->Find_Prototype(LEVEL_NOW, pPrototypeTag);
+	if (nullptr == pGameObject)
+	{
+		MSG_BOX("Not Found");
+		return nullptr;
+	}
+
 	if (Find_ChildUI(pChildTag))
 	{
 		IM_WARN("Child Tag is Duplicated");
