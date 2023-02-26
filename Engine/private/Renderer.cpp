@@ -12,6 +12,7 @@
 #include "Graphic_Device.h"
 #include "RenderTarget.h"
 #include "Light_Manager.h"
+#include "PhysX_Manager.h"
 
 
 CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -674,6 +675,9 @@ HRESULT CRenderer::Render_DebugObject()
 
 		Safe_Release(pComponent);
 	}
+#ifdef _DEBUG
+	CPhysX_Manager::GetInstance()->DebugRender(m_pDevice, m_pContext);
+#endif
 
 	m_DebugObject.clear();
 

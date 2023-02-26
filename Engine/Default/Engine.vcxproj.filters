@@ -100,9 +100,6 @@
     <Filter Include="81.Utils\Time">
       <UniqueIdentifier>{365ecf67-c722-49c2-8694-6eb7b57fc26d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\03.Components\07.Collider">
-      <UniqueIdentifier>{7e2fe4fb-845d-4289-af19-45d064c9f6c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03.Components\08.Nevigation">
       <UniqueIdentifier>{c4e76e14-dc84-40dd-9df2-d5da0862b247}</UniqueIdentifier>
     </Filter>
@@ -168,6 +165,15 @@
     </Filter>
     <Filter Include="01.Utility\09.RenderTarget\08.Frustum">
       <UniqueIdentifier>{0e353350-317e-47df-bc13-72304cf87dbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\11.PhysX">
+      <UniqueIdentifier>{2609d896-2f53-407d-a381-741ef8df533f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\11.PhysX\Collider">
+      <UniqueIdentifier>{bea53394-8e79-4760-8c97-f022ca55d745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\11.PhysX\Controller">
+      <UniqueIdentifier>{dd2650c4-4920-44b4-a0f9-6c96c160edc2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -375,9 +381,6 @@
     <ClInclude Include="..\public\DebugDraw.h">
       <Filter>81.Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Collider.h">
-      <Filter>01.Utility\03.Components\07.Collider</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Navigation.h">
       <Filter>01.Utility\03.Components\08.Nevigation</Filter>
     </ClInclude>
@@ -387,14 +390,8 @@
     <ClInclude Include="..\public\Cell.h">
       <Filter>01.Utility\03.Components\08.Nevigation</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\BoundingCapsule.h">
-      <Filter>01.Utility\03.Components\07.Collider</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\JsonStorage.h">
       <Filter>81.Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Collision_Manger.h">
-      <Filter>01.Utility\02.GameObject\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui_AnimModifier.h">
       <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
@@ -467,6 +464,24 @@
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Point_Instancing.h">
       <Filter>01.Utility\03.Components\02.VIBuffer\Instance\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PhysX_Manager.h">
+      <Filter>01.Utility\11.PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\RigidBody.h">
+      <Filter>01.Utility\11.PhysX\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ControlledRigidBody.h">
+      <Filter>01.Utility\11.PhysX\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PhysXStaticModel.h">
+      <Filter>01.Utility\11.PhysX\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_PhysX.h">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>99.Defines</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -647,9 +662,6 @@
     <ClCompile Include="..\private\DebugDraw.cpp">
       <Filter>81.Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Collider.cpp">
-      <Filter>01.Utility\03.Components\07.Collider</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Navigation.cpp">
       <Filter>01.Utility\03.Components\08.Nevigation</Filter>
     </ClCompile>
@@ -659,14 +671,8 @@
     <ClCompile Include="..\private\Cell.cpp">
       <Filter>01.Utility\03.Components\08.Nevigation</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BoundingCapsule.cpp">
-      <Filter>01.Utility\03.Components\07.Collider</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\JsonStorage.cpp">
       <Filter>81.Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Collision_Manger.cpp">
-      <Filter>01.Utility\02.GameObject\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Imgui_AnimModifier.cpp">
       <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
@@ -740,5 +746,25 @@
     <ClCompile Include="..\private\GameObject.cpp">
       <Filter>01.Utility\02.GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\PhysX_Manager.cpp">
+      <Filter>01.Utility\11.PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\RigidBody.cpp">
+      <Filter>01.Utility\11.PhysX\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ControlledRigidBody.cpp">
+      <Filter>01.Utility\11.PhysX\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PhysXStaticModel.cpp">
+      <Filter>01.Utility\11.PhysX\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_PhysX.cpp">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc">
+      <Filter>99.Defines</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

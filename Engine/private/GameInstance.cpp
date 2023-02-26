@@ -7,7 +7,6 @@
 #include "Timer_Manager.h"
 #include "Light_Manager.h"
 #include "JsonStorage.h"
-#include "Collision_Manger.h"
 #include "Font_Manager.h"
 #include "Frustum.h"
 #include "Animation.h"
@@ -16,6 +15,7 @@
 #include "HDR.h"
 #include "Material.h"
 #include "Sound_Manager.h"
+#include "PhysX_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -33,13 +33,13 @@ CGameInstance::CGameInstance()
 	, m_pPipeLine(CPipeLine::GetInstance())
 	, m_pTimer_Manager(CTimer_Manager::GetInstance())
 	, m_pLight_Manager(CLight_Manager::GetInstance())
-	, m_pCollision_Manager(CCollision_Manger::GetInstance())
 	, m_pFont_Manager(CFont_Manager::GetInstance())
 	, m_pFrustum(CFrustum::GetInstance())
 	, m_pTarget_Manager(CTarget_Manager::GetInstance())
 	, m_pImgui_Manager(CImgui_Manager::GetInstance())
 	, m_pHDR(CHDR::GetInstance())
 	, m_pSound_Manager(CSound_Manager::GetInstance())
+	, m_pPhysX_Manager(CPhysX_Manager::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -49,13 +49,13 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pTimer_Manager);
 	Safe_AddRef(m_pLight_Manager);
-	Safe_AddRef(m_pCollision_Manager);
 	Safe_AddRef(m_pFrustum);
 	Safe_AddRef(m_pFont_Manager);
 	Safe_AddRef(m_pTarget_Manager);
 	Safe_AddRef(m_pImgui_Manager);
 	Safe_AddRef(m_pHDR);
 	Safe_AddRef(m_pSound_Manager);
+	Safe_AddRef(m_pPhysX_Manager);
 }
 
 /*************************
@@ -147,6 +147,8 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 	if (FAILED(m_pFrustum->Initialize()))
 		return E_FAIL;
 
+	m_pPhysX_Manager->Initialize();
+
 	// FAILED_CHECK(m_pSound_Manager->Initialize("../Bin/Resources/Sound/SoundDesc.json"));
 
 	return S_OK;
@@ -175,6 +177,11 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 	m_pObject_Manager->Late_Tick(TimeDelta);
 	m_pLevel_Manager->Late_Tick(TimeDelta);
 
+	m_pPhysX_Manager->Simulate(TimeDelta);
+	m_pPhysX_Manager->WaitSimulate();
+
+	m_pObject_Manager->AfterPhysX();
+
 	if (CCamera::GetMainCamera())
 	{
 		const _float4x4 ListenerWorldMatrix = CCamera::GetMainCamera()->GetTransform()->Get_WorldMatrix_f4x4();
@@ -184,8 +191,6 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 	{
 		m_pSound_Manager->Tick((_float)TimeDelta);
 	}
-
-	m_pCollision_Manager->ResetDynamicCollider();
 }
 
 void CGameInstance::Clear()
@@ -639,51 +644,6 @@ void CGameInstance::SetShadowCam(CCamera* pShadowCam)
 }
 
 /*************************
- *	CCollision_Manger
- *************************/
-void CGameInstance::AddStaticCollider(CCollider* pStaticColl)
-{
-	m_pCollision_Manager->AddStaticCollider(pStaticColl);
-}
-
-void CGameInstance::AddDynamicCollider(CCollider* pDynamicColl)
-{
-	m_pCollision_Manager->AddDynamicCollider(pDynamicColl);
-}
-
-_bool CGameInstance::CheckOnCollider(_float4 vPos, _float& fHeight, CGameObject* pOwner, _bool bOnlyStatic)
-{
-	return m_pCollision_Manager->CheckOnCollider(vPos, fHeight, pOwner, bOnlyStatic);
-}
-
-_bool CGameInstance::CheckCollided(CCollider* pCollider, _bool bOnlyStatic)
-{
-	return m_pCollision_Manager->CheckCollided(pCollider, bOnlyStatic);
-}
-
-_bool CGameInstance::SphereTest(const BoundingSphere& Sphere, _float3& v, CGameObject* pOwner, _bool bOnlyStatic)
-{
-	return m_pCollision_Manager->SphereTest(Sphere, v, pOwner, bOnlyStatic);
-}
-
-void CGameInstance::GetRayIntersects_UntilStatic(_float3 vOrigin, _float3 vDir, CGameObject* pSelf,
-                                                 vector<RAY_INTERSECT_OUT>& Outs)
-{
-	m_pCollision_Manager->GetRayIntersects_UntilStatic(vOrigin, vDir, pSelf, Outs);
-}
-
-void CGameInstance::GetSphereIntersects(const BoundingSphere& Sphere, CGameObject* pSelf,
-	list<CGameObject*>& IntersectedObjects)
-{
-	m_pCollision_Manager->GetSphereIntersects(Sphere, pSelf, IntersectedObjects);
-}
-
-_bool CGameInstance::GetRayIntersectSingle(_float3 vOrigin, _float3 vDir, CGameObject* pSelf, RAY_INTERSECT_OUT& Out)
-{
-	return m_pCollision_Manager->GetRayIntersectSingle(vOrigin, vDir, pSelf, Out);
-}
-
-/*************************
  *	CFont_Manager
  *************************/
 HRESULT CGameInstance::Add_Font(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _tchar * pFontTag, const _tchar * pFontFilePath)
@@ -727,6 +687,31 @@ void CGameInstance::AddSoundQueue(const string& QName)
 ID3D11ShaderResourceView* CGameInstance::Get_SRV(const _tchar* pTargetTag)
 {
 	return m_pTarget_Manager->Get_SRV(pTargetTag);
+}
+
+_bool CGameInstance::RayCast(const RayCastParams& params)
+{
+	return m_pPhysX_Manager->RayCast(params);
+}
+
+_bool CGameInstance::OverlapSphere(const SphereOverlapParams& params)
+{
+	return m_pPhysX_Manager->OverlapSphere(params);
+}
+
+_bool CGameInstance::OverlapCapsule(const CapsuleOverlapParams& params)
+{
+	return m_pPhysX_Manager->OverlapCapsule(params);
+}
+
+_bool CGameInstance::SweepSphere(const SphereSweepParams& params)
+{
+	return m_pPhysX_Manager->SweepSphere(params);
+}
+
+_bool CGameInstance::SweepCapsule(const CapsuleSweepParams& params)
+{
+	return m_pPhysX_Manager->SweepCapsule(params);
 }
 
 /*************************
@@ -797,8 +782,6 @@ void CGameInstance::Release_Engine()
 
 	ref = CImgui_Manager::GetInstance()->DestroyInstance();
 
-	ref = CCollision_Manger::GetInstance()->DestroyInstance();
-
 	CTarget_Manager::GetInstance()->DestroyInstance();
 
 	CFont_Manager::GetInstance()->DestroyInstance();
@@ -811,6 +794,8 @@ void CGameInstance::Release_Engine()
 
 	// json은 동떨어진 기능이라서 gameinstace에서 포함하지 않고 파괴만 담당
 	ref = CJsonStorage::GetInstance()->DestroyInstance();
+
+	CPhysX_Manager::GetInstance()->DestroyInstance();
 }
 
 void CGameInstance::Free()
@@ -823,7 +808,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pHDR);
 	Safe_Release(m_pImgui_Manager);
-	Safe_Release(m_pCollision_Manager);
 
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pTimer_Manager);
@@ -833,5 +817,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pLevel_Manager);
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pGraphic_Device);
+	Safe_Release(m_pPhysX_Manager);
 }
 
