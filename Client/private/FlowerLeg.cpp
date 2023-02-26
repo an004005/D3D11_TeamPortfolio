@@ -7,6 +7,7 @@
 #include "AnimationInstance.h"
 #include"Animation.h"
 #include"Model.h"
+#include "JsonStorage.h"
 
 #include "FL_AnimInstance.h"
 
@@ -32,7 +33,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(SetUp_Components()))
+	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 0.f)));
@@ -45,56 +46,94 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		m_pFSM = CFSMComponentBuilder()
 			.InitState("Idle")
 			.AddState("Idle")
-				/*.OnStart([this]
+				.Tick([this](_double TimeDelta)
 				{
-					m_pModelCom->SetPlayAnimation("AS_em0200_102_AL_wait02");
-				})*/
+					m_bIdle = true;
+					m_bWalk = false;
+										
+				})
+
 				.AddTransition("Idle to Walk", "Walk")
 					.Predicator([this]
 					{
 						return m_eDikKey == KEY_W || m_eDikKey == KEY_S || m_eDikKey == KEY_A 
-							|| m_eDikKey == KEY_D && m_eDikKey != KEY_END;
+							|| m_eDikKey == KEY_D &&  m_eDikKey != KEY_END;
 					})
 			
-				.AddTransition("Idle to Attack", "Attack")
+				/*.AddTransition("Idle to Attack", "Attack")
 					.Predicator([this]
 					{
 						return m_eDimMouse == MS_LB || m_eDimMouse == MS_RB 
 							&& m_eDimMouse != MS_END;
-					})
+					})*/
+
+				/*.AddTransition("Idle to Jump", "Jump")
+					.Predicator([this] 
+					{
+						return m_bAir;
+					})*/
 
 			.AddState("Walk")
-				.OnStart([this]
+				.Tick([this](_double TimeDelta)
 				{
-					m_pModelCom->SetPlayAnimation("AS_em0200_106_AL_walk02");
+					m_bWalk = true;
+					m_bIdle = false;					 
 				})
+
 				.AddTransition("Walk to Idle", "Idle")
 					.Predicator([this]
 					{
 						return m_eDikKey == KEY_END;
 					})
 
-			.AddState("Attack")
+				/*.AddTransition("Walk to Jump", "Jump")
+					.Predicator([this]
+					{
+						return m_bAir;
+					})*/
+
+			/*.AddState("Jump")
+				.Tick([this](_double TimeDelta)
+					{
+						if (m_bLanding)
+						{
+							auto pAnim = m_pModelCom->GetPlayAnimation();
+
+							if (pAnim->GetPlayRatio() > 0.9)							
+								m_bLanding = false;					
+						}
+					})
+				.AddTransition("Jump to Idle", "Idle")
+					.Predicator([this] 
+					{	
+						return !m_bLanding;
+					})*/
+
+			/*.AddState("Attack")
 				.OnStart([this]
 				{
-					if(m_eDimMouse == MS_LB)
-						m_pModelCom->SetPlayAnimation("AS_em0200_202_AL_atk_a2");
+					if (m_eDimMouse == MS_LB)
+						m_bAttackL = true;
 
 					if (m_eDimMouse == MS_RB)
-						m_pModelCom->SetPlayAnimation("AS_em0200_203_AL_atk_a3");
+						m_bAttackR = true;
 				})
 				.Tick([this](_double TimeDelta)
 				{
 					auto pAnim = m_pModelCom->GetPlayAnimation();
 
-					if(pAnim->GetPlayRatio() >= 0.95)
+					if (pAnim->GetPlayRatio() >= 0.95)
+					{
+						m_bAttackL = false;
+						m_bAttackR = false;
 						m_eDimMouse = MS_END;
+					}
 				})
 				.AddTransition("Attack to Idle", "Idle")
 					.Predicator([this]
 					{
 						return m_eDimMouse == MS_END;
-					})
+					})*/
 
 			.Build();
 	}
@@ -111,7 +150,7 @@ void CFlowerLeg::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 			
-//	Key_Input(TimeDelta);
+	Key_Input(TimeDelta);
 
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
@@ -154,6 +193,19 @@ void CFlowerLeg::Imgui_RenderProperty()
 		ImGui::Text("%d", m_iTestHp);
 	}
 
+	if (ImGui::CollapsingHeader("JumpSpeed", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::Text("m_fJumpSpeed : PreValue = 13.3f");
+		ImGui::InputFloat("m_fJumpSpeed", &m_fJumpSpeed);
+		ImGui::Text("m_fJumpTime : %.4f", &m_fJumpTime);
+		ImGui::Text("m_fGravity : PreValue = 7.7f");
+		ImGui::InputFloat("m_fGravity", &m_fGravity);
+		ImGui::Text("m_fOverLap : PreValue = 0.28f");
+		ImGui::InputFloat("m_fOverLap", &m_fOverLap);
+		ImGui::Text("m_fWeight : PreValue = 0.24f");
+		ImGui::InputFloat("m_fWeight", &m_fWeight);
+	}
+
 	m_pModelCom->Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
 }
@@ -162,30 +214,32 @@ void CFlowerLeg::Key_Input(_double TimeDelta)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_UP) & 0x80)
 	{		
-		m_pTransformCom->Go_Straight(TimeDelta);
+		m_pTransformCom->Go_Straight(0.1f);
 		m_eDikKey = KEY_W;
 	}
-	else if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
+	else if (pGameInstance->Get_DIKeyState(DIK_DOWN) & 0x80)
 	{		
-		m_pTransformCom->Go_Backward(TimeDelta);
+		m_pTransformCom->Go_Backward(0.1f);
 		m_eDikKey = KEY_S;
 	}
-	else if (pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
+	else if (pGameInstance->Get_DIKeyState(DIK_LEFT) & 0x80)
 	{		
-		m_pTransformCom->Go_Left(TimeDelta);
+		m_pTransformCom->Go_Left(0.1f);
 		m_eDikKey = KEY_A;
 	}
-	else if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
+	else if (pGameInstance->Get_DIKeyState(DIK_RIGHT) & 0x80)
 	{	
-		m_pTransformCom->Go_Right(TimeDelta);
+		m_pTransformCom->Go_Right(0.1f);
 		m_eDikKey = KEY_D;
 	}
 	else
-		m_eDikKey = KEY_END;
-
-
+	{
+//		if(!m_bAir && !m_bLanding)
+			m_eDikKey = KEY_END;
+	}
+	
 	if (pGameInstance->KeyDown(CInput_Device::DIM_LB))
 	{		
 		m_eDimMouse = MS_LB;		
@@ -196,41 +250,36 @@ void CFlowerLeg::Key_Input(_double TimeDelta)
 		m_eDimMouse = MS_RB;
 	}
 
-	// Jump
 	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x80)
-	{
+	{		
 		m_bAir = true;
 	}
 
+	// Jump
 	if(m_bAir)
 		JumpToGround(TimeDelta);
 	// ~Jump
-
-//	RELEASE_INSTANCE(CGameInstance);   // ´©¼ö Test ¿ëµµ·Î Àá±ÅºÃÀ½. 
 }
 
 void CFlowerLeg::JumpToGround(_double TimeDelta)
 {
 	m_fMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
-	if (m_fMyPos.y >= 0.f)
-	{
-//		m_fGravity += (TimeDelta * 300);
-//		m_fJumpSpeed -= 3.f;
-//		m_fMyPos.y = m_fJumpSpeed * TimeDelta * TimeDelta * m_fGravity;
+     if (m_fMyPos.y >= 0.f)
+	{													
 		m_fMyPos.y = m_fJumpSpeed * m_fJumpTime - (7.7f * m_fJumpTime * m_fJumpTime) * 0.28f;
-		m_fJumpTime += 0.24f;
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&m_fMyPos));
+		m_fJumpTime += 0.24f; 
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&m_fMyPos));		
 	}
 	
-	if (m_fMyPos.y < 0.f)
+	if (m_fMyPos.y <= 0.f)
 	{
+		m_bLanding = true;
 		m_bAir = false;
 		m_fMyPos.y = 0.f;
-//		m_fGravity = 15.f;
-		m_fJumpSpeed = 13.3f;
 		m_fJumpTime = 0.f;
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&m_fMyPos));
+				
 	}
 }
 
@@ -239,20 +288,28 @@ HRESULT CFlowerLeg::Setup_AnimSocket()
 	return S_OK;
 }
 
-HRESULT CFlowerLeg::SetUp_Components()
+HRESULT CFlowerLeg::SetUp_Components(void* pArg)
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_NOW, TEXT("MonsterFlowerLeg"), TEXT("Com_ModelCom"),
+	/*if (FAILED(__super::Add_Component(LEVEL_NOW, TEXT("MonsterFlowerLeg"), TEXT("Com_ModelCom"),
 		(CComponent**)&m_pModelCom)))
-		return E_FAIL;
-	
-	if (FAILED(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_Shader_VtxAnimModel"), TEXT("Com_Shader"),
-		(CComponent**)&m_pShaderCom)))
-		return E_FAIL;
+		return E_FAIL;*/
 
+	if (pArg)
+	{
+		Json& json = *static_cast<Json*>(pArg);
+		if (json.contains("Model"))
+		{
+			string ProtoModel = json["Model"];
+			m_ModelName = CGameUtils::s2ws(ProtoModel);
+			FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_ModelName.c_str(), m_ModelName.c_str(),
+				(CComponent**)&m_pModelCom));
+		}
+	}	
+	
 	m_pASM = CFL_AnimInstance::Create(m_pModelCom, this);
 	if (nullptr == m_pASM)
 	{

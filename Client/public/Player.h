@@ -56,6 +56,8 @@ public:
 	_bool	isMove() { return m_bMove; }
 	_bool	isWalk() { return m_bWalk; }
 	_bool	isLeftClick() { return m_bLeftClick; }
+	_bool	isShiftClick() { return m_bShiftClick; }
+	_bool	isShiftPress() { return m_bShiftPress; }
 
 	_float	GetPlayRatio() { return m_fPlayRatio; }
 
@@ -65,6 +67,8 @@ protected:
 	_bool	m_bMove = false;
 	_bool	m_bWalk = false;
 	_bool	m_bLeftClick = false;
+	_bool	m_bShiftClick = false;
+	_bool	m_bShiftPress = false;
 
 	_float	m_fPlayRatio = 0.f;
 
@@ -72,12 +76,21 @@ protected:
 
 	EMoveDir	m_eMoveDir = DIR_END;
 
+public:
+	CPlayer&	SetCanTurn(_bool is) { m_bCanTurn = is; return *this; }
+	CPlayer&	SetCanMove(_bool is) { m_bCanMove = is; return *this; }
+
+protected:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
+	_bool	m_bCanTurn = false;
+	_bool	m_bCanMove = false;
+
 protected:
 	void	BehaviorCheck(_double TimeDelta);
 	void	MoveStateCheck(_double TimeDelta);
 
 public:
 	EMoveDir	GetMoveDir() const { return m_eMoveDir; }
+	Vector3		GetMoveVector() { return m_vMoveDir; }
 	void		LookAtDir(Vector3 Vector);
 	Matrix		GetMatCamRot() const { return m_vMatCamRot; }
 	void		Turn(_fvector vAxis, _float fRange) { m_pTransformCom->Turn(vAxis, fRange); }
@@ -89,7 +102,7 @@ protected:
 	Matrix		m_vMatCamRot = Matrix();
 
 protected:
-	wstring			m_ModelName;
+	wstring		m_ModelName;
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

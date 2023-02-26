@@ -21,6 +21,7 @@ private:
 	HRESULT Ready_Prototypes();
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Monster(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Map(const _tchar* pLayerTag);
 
 public:
 	static CLevel_EnemiesTest* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -48,7 +48,7 @@ public:
 	_float4x4 GetPivotMatrix() const { return m_PivotMatrix; }
 	CAnimation* Find_Animation(const string& strAnimaName);
 	void SetPivot(_float4x4 Pivot) { m_PivotMatrix = Pivot; }
-	_vector& GetLocalMove(_fmatrix WorldMatrix);
+	_vector GetLocalMove(_fmatrix WorldMatrix);
 	_bool	isLocalMove() { return !XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)); }
 	_float	GetLastLocalMoveSpeed() const { return m_fLastLocalMoveSpeed; }
 
@@ -92,13 +92,13 @@ private:
 public:		// 이벤트 실행
 	void EventCaller(const string& EventName);
 	void Add_EventCaller(const string& EventName, std::function<void(void)> Func);
-	_vector& GetOptionalMoveVector(_fmatrix WorldMatrix);
+	_vector GetOptionalMoveVector(_fmatrix WorldMatrix);
 	void Add_OptionalRootMotion(OPTIONAL_ROOTMOTION RootMotion);
 	void Delete_OptionalRootMotion();
 
 private:	// 이벤트
 	unordered_map<string, std::function<void(void)>>	m_EventFunc;
-	unordered_map<string, OPTIONAL_ROOTMOTION>			m_mapOptionalRootMotion;
+	unordered_map<string, vector<OPTIONAL_ROOTMOTION>>	m_mapOptionalRootMotion;
 
 private:
 	static const _float4x4 s_DefaultPivot;
@@ -127,8 +127,6 @@ private:
 	_vector								m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_vector								m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_float								m_fLastLocalMoveSpeed = 0.f;
-
-	_vector								m_vInitTrans = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 
 	class CShader* m_pShadowShader = nullptr;
 
