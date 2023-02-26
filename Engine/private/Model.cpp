@@ -128,7 +128,7 @@ CAnimation* CModel::Find_Animation(const string& strAnimaName)
 	return nullptr;
 }
 
-_vector & CModel::GetLocalMove(_fmatrix WorldMatrix)
+_vector CModel::GetLocalMove(_fmatrix WorldMatrix)
 {
 	_vector vMovePos;
 	ZeroMemory(&vMovePos, sizeof(_vector));
@@ -146,13 +146,14 @@ _vector & CModel::GetLocalMove(_fmatrix WorldMatrix)
 		}
 		if (m_mapAnimation[m_CurAnimName]->IsFinished())
 		{
-			m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
+			//m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
 			m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 	}
-	m_fLastLocalMoveSpeed = 0.f;
+	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
+	//m_fLastLocalMoveSpeed = 0.f;
 
 	_vector vScale, vRotation, vTrans;
 	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
@@ -225,7 +226,6 @@ HRESULT CModel::Initialize_Prototype(const char * pModelFilePath)
 	}
 
 	Ready_Materials(hFile);
-
 	
 	if (m_eType == TYPE_ANIM)
 	{
@@ -398,13 +398,44 @@ void CModel::Imgui_RenderProperty()
 			}
 		}
 
+		static string szSelectedEvent;
+
 		if (ImGui::CollapsingHeader("OptionalVector Viewer"))
 		{
+			if (ImGui::BeginListBox("Optional Anim View"))
+			{
+				for (auto& iter : m_mapOptionalRootMotion)
+				{
+					if (iter.first == szSelectedEvent)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+
+					if (ImGui::Selectable(iter.first.c_str()))
+					{
+						szSelectedEvent = iter.first;
+					}
+				}
+				ImGui::EndListBox();
+			}
+
 			if (ImGui::BeginListBox("OptionalVector View"))
 			{
 				for (auto& iter : m_mapOptionalRootMotion)
 				{
-					ImGui::Selectable(iter.first.c_str());
+					if (iter.first == szSelectedEvent)
+					{
+						for (auto Vector = iter.second.begin(); Vector != iter.second.end();)
+						{
+							if (ImGui::Selectable(to_string(Vector->fStartTime).c_str()))
+							{
+								Vector = iter.second.erase(Vector);
+								break;
+							}
+							else
+								++Vector;
+						}
+					}
 				}
 				ImGui::EndListBox();
 			}
@@ -811,51 +842,95 @@ void CModel::Add_EventCaller(const string & EventName, std::function<void(void)>
 	m_EventFunc.emplace(EventName, Func);
 }
 
-_vector & CModel::GetOptionalMoveVector(_fmatrix WorldMatrix)
+_vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix)
 {
+	static _vector vInitTrans;
+	static _float fStartTime;
+	static string szCurAnimName;
+
+	if (szCurAnimName != m_CurAnimName)
+	{
+		szCurAnimName = m_CurAnimName;
+		vInitTrans = XMVectorSet(0.f, 0.f, 0.f, -1.f);
+	}
+
 	for (auto& iter : m_mapOptionalRootMotion)
 	{
 		if (m_CurAnimName == iter.first)	// 이벤트 콜러와 같은 개념
 		{
 			_float fPlayTime = static_cast<_float>(m_mapAnimation[m_CurAnimName]->GetPlayTime());
 
-			if (iter.second.fStartTime <= fPlayTime && iter.second.fEndTime > fPlayTime)	// 보간하는 사이의 시간
+			for (auto& Optional : iter.second)
 			{
-				_vector vScale, vRotation, vTrans;
-				XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
-				_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
+				_float fRatio = (fPlayTime - Optional.fStartTime) / (Optional.fEndTime - Optional.fStartTime);
 
-				if (-1.f == XMVectorGetW(m_vInitTrans)) m_vInitTrans = vTrans;
+				if (0.f <= fRatio && 1.f >= fRatio)
+				{
+					_vector vScale, vRotation, vTrans;
+					XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+					_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
 
-				_vector vMovePos = iter.second.vOptionalRootVector;
-				XMVectorSetW(vMovePos, 0.f);
+					if (-1.f == XMVectorGetW(vInitTrans))
+					{
+						vInitTrans = vTrans;
+					}
 
-				vMovePos = XMVector3TransformNormal(vMovePos, WorldRotation);
+					if (fStartTime != Optional.fStartTime)
+					{
+						fStartTime = Optional.fStartTime;
+						vInitTrans = vTrans;
+					}
 
-				_vector vDestPos = m_vInitTrans + vMovePos;
+					/*if (szCurAnimName != m_CurAnimName)
+					{
+						szCurAnimName = m_CurAnimName;
+						vInitTrans = vTrans;
+					}*/
 
-				_float fRatio = (fPlayTime - iter.second.fStartTime) / (iter.second.fEndTime - iter.second.fStartTime);
+					_vector vMovePos = Optional.vOptionalRootVector;
+					vMovePos = XMVectorSetW(vMovePos, 0.f);
 
-				if (1.f <= fRatio) m_vInitTrans = XMVectorSet(0.f, 0.f, 0.f, -1.f);	// 보간값이 1보다 커지면 위치값 다시받음
+					vMovePos = XMVector3TransformNormal(vMovePos, WorldRotation);
 
-				vDestPos = XMVectorLerp(m_vInitTrans, vDestPos, fRatio);
+					_vector vDestPos = vInitTrans + vMovePos;
 
-				_vector vResultDir = vDestPos - vTrans;
-				XMVectorSetW(vResultDir, 0.f);
-				//vResultDir *= fLength;
+					vDestPos = XMVectorLerp(vInitTrans, vDestPos, fRatio);
 
-				return vResultDir;
+					_vector vResultDir = vDestPos - vTrans;
+					vResultDir = XMVectorSetW(vResultDir, 0.f);
+
+					if (0.f > XMVectorGetX(XMVector3Dot(vResultDir, vMovePos)))
+					{
+						// 혹시 방향벡터 튀면 얘로 잡아줌
+						vInitTrans = vTrans;
+						GetOptionalMoveVector(WorldMatrix);
+					}
+
+					return vResultDir;
+				}
 			}
 		}
 	}
-	
+
+	vInitTrans = XMVectorSet(0.f, 0.f, 0.f, -1.f);
 	return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 }
 
 void CModel::Add_OptionalRootMotion(OPTIONAL_ROOTMOTION RootMotion)
 {
 	RootMotion.szAnimName = m_CurAnimName;
-	m_mapOptionalRootMotion.emplace(m_CurAnimName, RootMotion);
+
+	const auto iter = m_mapOptionalRootMotion.find(m_CurAnimName);
+	if (iter == m_mapOptionalRootMotion.end())
+	{
+		vector<OPTIONAL_ROOTMOTION> vecRoot;
+		m_mapOptionalRootMotion.emplace(m_CurAnimName, vecRoot);
+		m_mapOptionalRootMotion[m_CurAnimName].push_back(RootMotion);
+	}
+	else
+	{
+		iter->second.push_back(RootMotion);
+	}
 }
 
 void CModel::Delete_OptionalRootMotion()

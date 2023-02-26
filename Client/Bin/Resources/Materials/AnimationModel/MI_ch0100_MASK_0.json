@@ -1,0 +1,19 @@
+    {
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxAnimModel",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Mask_AMB.dds",
+            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Mask_CTL.png",
+            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Mask_AMB.dds",
+            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ch0100_Mask_COL.dds",
+            "../Bin/Resources/Model/AnimModel/Player/Texture/T_ef_scl_noi_013.png.png",
+            "../Bin/Resources/Model/AnimModel/Player/Texture/T_cm_Fil_White.png"
+        ],
+        "Pass" : 0
+    }
+}
