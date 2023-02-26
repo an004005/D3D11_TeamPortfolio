@@ -30,8 +30,9 @@ struct ENGINE_DLL CAnimState : public CBase
 	string m_strName;									// 스테이트 이름
 	vector<CAnimTransition*> m_Transitions;				// 현재 스테이트가 가지는 트랜지션의 벡터
 	CAnimation* m_Animation = nullptr;
-	std::function<void(void)> m_StartEvent = nullptr;	// 애니메이션이 시작될 때 발생하는 이벤트, 있으면 실행시키게 하자
-	std::function<void(void)> m_FinishEvent = nullptr;	// 애니메이션이 종료될 때 발생하는 이벤트, 있으면 실행시키게 하자
+	std::function<void(void)> m_StartEvent = nullptr;		// 애니메이션이 시작될 때 발생하는 이벤트, 있으면 실행시키게 하자
+	std::function<void(void)> m_OptionalEvent = nullptr;	// 매개변수로 받은 프레임을 넘어갈 때 발생하는 이벤트, 있으면 실행시키게 하자
+	std::function<void(void)> m_FinishEvent = nullptr;		// 애니메이션이 종료될 때 발생하는 이벤트, 있으면 실행시키게 하자
 
 public:
 	CAnimState(const string& szStateName) :m_strName(szStateName) {};
@@ -193,6 +194,14 @@ public:
 		Assert(m_pBuildAnimState != nullptr);
 		Assert(m_pBuildAnimState->m_FinishEvent == nullptr);
 		m_pBuildAnimState->m_FinishEvent = FinishEvent;
+		return *this;
+	}
+
+	CASMBuilder& OptionalEvent(std::function<void(void)> OptionalEvent)
+	{
+		Assert(m_pBuildAnimState != nullptr);
+		Assert(m_pBuildAnimState->m_OptionalEvent == nullptr);
+		m_pBuildAnimState->m_OptionalEvent = OptionalEvent;
 		return *this;
 	}
 
