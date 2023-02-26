@@ -133,17 +133,21 @@ HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
 
-	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectSystem")));
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectSystem")));
 
 	// Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/Air_Attack_1.json");
 	// pGameInstance->Clone_GameObject(L"Layer_EffectSys", L"ProtoVFX_EffectSystem", &AttackMesh);
 
+
+
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup")));
 
-	// Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/SaveTest.json");
-	// pGameInstance->Clone_GameObject(L"Layer_EffectSys", L"ProtoVFX_EffectGroup", &AttackMesh);
 
-	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_TrailSystem")));
+	Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/SetCurve.json");
+	pGameInstance->Clone_GameObject(L"Layer_EffectSys", L"ProtoVFX_EffectGroup", &AttackMesh);
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_TrailSystem")));
+
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_ParticleSystem")));
 
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Preview", L"MaterialPreview"));

@@ -26,32 +26,78 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom));
 
-
-	// m_Timeline.SetTimelineLength(3.0);
-	// m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
-
-
-	if (m_Curves.empty())
+	if(pArg != nullptr)
 	{
-		_int i = 0;
-		AddEmptyCurve("Scale"); // 스케일 변경
-		
-		AddEmptyCurve("IntroDissolve"); // 나타날 때
-		AddEmptyCurve("OutroDissolve"); // 죽을 때
+		if(m_First_EffectDirectory != "")
+		{
+			Json First_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_First_EffectDirectory);
+			m_pFirst_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &First_Effect));
 
-		AddEmptyCurve("ColorChange"); // 색상 그대로 받기 (_float4)
-
-		AddEmptyCurve("EmissiveChange"); // HDR 강도 변경할 때
-
-		AddEmptyCurve("IntroTime"); // 디졸브 안 쓸 때
-		AddEmptyCurve("OutroTime");
-
-		//Todo:: 회전축 어떻게 잡을지 고민
-		// AddEmptyCurve("Rotation"); // 회전값 변경, 축 어떻게 전달할지 결정하기
+			const string& strFileName =  CGameUtils::GetFileName(m_First_EffectDirectory);
+			m_mapEffectSystemTag.emplace(strFileName, m_pFirst_EffectSystem);
+		}
+		if (m_Second_EffectDirectory != "")
+		{
+			Json Second_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_Second_EffectDirectory);
+			m_pSecond_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Second_Effect));
+			const string& strFileName = CGameUtils::GetFileName(m_Second_EffectDirectory);
+			m_mapEffectSystemTag.emplace(strFileName, m_pSecond_EffectSystem);
+		}
+		if (m_Third_EffectDirectory != "")
+		{
+			Json Third_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_Third_EffectDirectory);
+			m_pThird_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Third_Effect));
+			const string& strFileName = CGameUtils::GetFileName(m_Third_EffectDirectory);
+			m_mapEffectSystemTag.emplace(strFileName, m_pThird_EffectSystem);
+		}
+		if (m_Fourth_EffectDirectory != "")
+		{
+			Json Fourth_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_Fourth_EffectDirectory);
+			m_pFourth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fourth_Effect));
+			const string& strFileName = CGameUtils::GetFileName(m_Fourth_EffectDirectory);
+			m_mapEffectSystemTag.emplace(strFileName,m_pFourth_EffectSystem);
+		}
+		if (m_Fifth_EffectDirectory != "")
+		{
+			Json Fifth_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_Fifth_EffectDirectory);
+			m_pFifth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fifth_Effect));
+			const string& strFileName = CGameUtils::GetFileName(m_Fifth_EffectDirectory);
+			m_mapEffectSystemTag.emplace(strFileName, m_pFifth_EffectSystem);
+		}
+	}
+	else
+	{
+		m_Timeline.SetTimelineLength(3.0);
+		m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
 	}
 
-	// m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_Curves.find("Scale")->second);
-	// Safe_AddRef(m_Curves.find("Scale")->second);
+
+	m_Timeline.SetTimelineLength(0.70);
+	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+
+	m_Timeline.PlayFromStart();
+
+	// if (m_FirstEffect_Curves.empty())
+	// {
+	// 	_int i = 0;
+	// 	AddEmptyCurve_ForFirst("ObjectScale"); // 스케일 변경
+	// 	
+	// 	AddEmptyCurve_ForFirst("IntroDissolve"); // 나타날 때 디졸브사용
+	// 	AddEmptyCurve_ForFirst("OutroDissolve"); // 죽을 때 디졸브사용
+	//
+	// 	AddEmptyCurve_ForFirst("ColorChange"); // 색상 그대로 받기 (_float4)
+	//
+	// 	AddEmptyCurve_ForFirst("EmissiveChange"); // HDR 강도 변경할 때
+	//
+	// 	AddEmptyCurve_ForFirst("IntroTime"); // 알파로 나타나기
+	// 	AddEmptyCurve_ForFirst("OutroTime"); // 알파로 사라지기
+	//
+	// 	//Todo:: 회전축 어떻게 잡을지 고민
+	// 	// AddEmptyCurve("Rotation"); // 회전값 변경, 축 어떻게 전달할지 결정하기
+	// }
+
+	// m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_Curves.find("ObjectScale")->second);
+	// Safe_AddRef(m_Curves.find("ObjectScale")->second);
 	//
 	// m_Timeline.SetCurve(this, &CEffectGroup::Tick_Floats_Value, m_Curves.find("IntroDissolve")->second);
 	// Safe_AddRef(m_Curves.find("IntroDissolve")->second);
@@ -59,7 +105,6 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 	// m_Timeline.SetCurve(this, &CEffectGroup::Tick_Floats_Value, m_Curves.find("OutroTime")->second);
 	// Safe_AddRef(m_Curves.find("OutroTime")->second);
 
-	// m_Timeline.PlayFromStart();
 
 	return S_OK;
 }
@@ -80,6 +125,8 @@ void CEffectGroup::Imgui_RenderProperty()
 
 	ImGui::BulletText("Timeline_Options");
 	ImGui::SliderFloat("Set_EndTime", &m_fEndTime, 0.f, 30.f);
+
+	// m_Timeline.SetTimelineLength(3.0);
 
 	ImGui::Combo("Finish_Function", &m_iSelectFinishFunc, m_szFuncName, FUNC_END);
 	ImGui::SameLine();
@@ -109,27 +156,275 @@ void CEffectGroup::Imgui_RenderProperty()
 	m_Timeline.Imgui_RenderEditor();
 
 	ImGui::Separator();
+	ImGui::Separator();
 
-	static const char* pCurName = "";
-	if (ImGui::BeginListBox("Curves"))
+	static _int item_current_idx = -1;
+
+	ImGui::BulletText("EffectGroup List");
+
+	char** ppEffectGroupTag = new char*[m_mapEffectSystemTag.size()];
+
+	_uint i = 0;
+	
+	for(auto iter : m_mapEffectSystemTag)
 	{
-		for (auto pCurve : m_Curves)
+		ppEffectGroupTag[i] = new char[MAX_PATH];
+		ppEffectTag.push_back(ppEffectGroupTag[i]);
+
+		sprintf_s(ppEffectGroupTag[i], sizeof(char)*MAX_PATH, iter.first.c_str());
+		i++;
+	}
+
+	if (m_mapEffectSystemTag.size() > 0)
+		ImGui::ListBox("##EffectGroup ListBox", &item_current_idx, ppEffectGroupTag, (_int)m_mapEffectSystemTag.size());
+	else
+		ImGui::Text("    [ There is no EffectGroup Elements ]");
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
+	{
+		item_current_idx = -1;
+	}
+
+	// if(ImGui::BeginListBox("##EffectGroup Box", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	// {
+	// 	for(_int n= 0; n<m_mapEffectSystemTag.size(); n++)
+	// 	{
+	// 		const _bool is_selected = (item_current_idx == n);
+	//
+	// 		if (ImGui::Selectable(m_mapEffectSystemTag[n].first.c_str(), is_selected))
+	// 		{
+	// 			item_current_idx = n;
+	// 		}
+	//
+	// 		if (is_selected)
+	// 			ImGui::SetItemDefaultFocus();
+	//
+	// 		if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
+	// 		{
+	// 			item_current_idx = -1;
+	// 		}
+	// 			
+	// 	}
+	// 	ImGui::EndListBox();
+	// }
+
+	if (item_current_idx != -1)
+	{
+		if (item_current_idx == 0)
 		{
-			const bool bSelected = strcmp(pCurve.first, pCurName) == 0;
-			if (bSelected)
-				ImGui::SetItemDefaultFocus();
-			if (ImGui::Selectable(pCurve.first, bSelected))
-				pCurName = pCurve.first;
+			string CurveOwnerName = ppEffectGroupTag[0];
+			// CurveOwnerName = ;
+
+			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
+			static const char* pCurName = "";
+			if (ImGui::BeginListBox("##FirstEffect Curve List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+				for (auto pCurve : m_FirstEffect_Curves)
+				{
+					const bool bSelected = strcmp(pCurve.first, pCurName) == 0;
+					if (bSelected)
+						ImGui::SetItemDefaultFocus();
+					if (ImGui::Selectable(pCurve.first, bSelected))
+						pCurName = pCurve.first;
+				}
+				ImGui::EndListBox();
+			}
+
+			auto itr = m_FirstEffect_Curves.find(pCurName);
+
+			if (itr != m_FirstEffect_Curves.end())
+			{
+				itr->second->Imgui_RenderEditor();
+			}
+
+			static char szCurveTag[MAX_PATH] = "";
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FirstEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
+			{
+				AddEmptyCurve_ForFirst(szCurveTag);
+				ZeroMemory(szCurveTag, MAX_PATH);
+			}
 		}
-		ImGui::EndListBox();
-	}
+		else if (item_current_idx == 1)
+		{
+			string CurveOwnerName = ppEffectGroupTag[1];
+			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
+			static const char* pCurName = "";
+			if (ImGui::BeginListBox("##SecondEffect Curve List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+				for (auto pCurve : m_SecondEffect_Curves)
+				{
+					const bool bSelected = strcmp(pCurve.first, pCurName) == 0;
+					if (bSelected)
+						ImGui::SetItemDefaultFocus();
+					if (ImGui::Selectable(pCurve.first, bSelected))
+						pCurName = pCurve.first;
+				}
+				ImGui::EndListBox();
+			}
 
-	auto itr = m_Curves.find(pCurName);
+			auto itr = m_SecondEffect_Curves.find(pCurName);
 
-	if (itr != m_Curves.end())
-	{
-		itr->second->Imgui_RenderEditor();
+			if (itr != m_SecondEffect_Curves.end())
+			{
+				itr->second->Imgui_RenderEditor();
+			}
+
+			static char szCurveTag[MAX_PATH] = "";
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add SecondEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
+			{
+				AddEmptyCurve_ForSecond(szCurveTag);
+				ZeroMemory(szCurveTag, MAX_PATH);
+			}
+		}
+		else if (item_current_idx == 2)
+		{
+			string CurveOwnerName = ppEffectGroupTag[2];
+			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
+			static const char* pCurName = "";
+			if (ImGui::BeginListBox("##ThirdEffect Curve List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+				for (auto pCurve : m_ThirdEffect_Curves)
+				{
+					const bool bSelected = strcmp(pCurve.first, pCurName) == 0;
+					if (bSelected)
+						ImGui::SetItemDefaultFocus();
+					if (ImGui::Selectable(pCurve.first, bSelected))
+						pCurName = pCurve.first;
+				}
+				ImGui::EndListBox();
+			}
+
+			auto itr = m_ThirdEffect_Curves.find(pCurName);
+
+			if (itr != m_ThirdEffect_Curves.end())
+			{
+				itr->second->Imgui_RenderEditor();
+			}
+
+			static char szCurveTag[MAX_PATH] = "";
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add ThirdEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
+			{
+				AddEmptyCurve_ForThird(szCurveTag);
+				ZeroMemory(szCurveTag, MAX_PATH);
+			}
+		}
+		else if (item_current_idx == 3)
+		{
+			string CurveOwnerName = ppEffectGroupTag[3];
+			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
+			static const char* pCurName = "";
+			if (ImGui::BeginListBox("##FourthEffect Curve List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+				for (auto pCurve : m_FourthEffect_Curves)
+				{
+					const bool bSelected = strcmp(pCurve.first, pCurName) == 0;
+					if (bSelected)
+						ImGui::SetItemDefaultFocus();
+					if (ImGui::Selectable(pCurve.first, bSelected))
+						pCurName = pCurve.first;
+				}
+				ImGui::EndListBox();
+			}
+
+			auto itr = m_FourthEffect_Curves.find(pCurName);
+
+			if (itr != m_FourthEffect_Curves.end())
+			{
+				itr->second->Imgui_RenderEditor();
+			}
+			static char szCurveTag[MAX_PATH] = "";
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FourthEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
+			{
+				AddEmptyCurve_ForFourth(szCurveTag);
+				ZeroMemory(szCurveTag, MAX_PATH);
+			}
+		}
+		else if (item_current_idx == 4)
+		{
+			string CurveOwnerName = ppEffectGroupTag[4];
+			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
+			static const char* pCurName = "";
+			if (ImGui::BeginListBox("##FifthEffect Curve List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+				for (auto pCurve : m_FifthEffect_Curves)
+				{
+					const bool bSelected = strcmp(pCurve.first, pCurName) == 0;
+					if (bSelected)
+						ImGui::SetItemDefaultFocus();
+					if (ImGui::Selectable(pCurve.first, bSelected))
+						pCurName = pCurve.first;
+				}
+				ImGui::EndListBox();
+			}
+
+			auto itr = m_FifthEffect_Curves.find(pCurName);
+
+			if (itr != m_FifthEffect_Curves.end())
+			{
+				itr->second->Imgui_RenderEditor();
+			}
+			static char szCurveTag[MAX_PATH] = "";
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FifthEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
+			{
+				AddEmptyCurve_ForFifth(szCurveTag);
+				ZeroMemory(szCurveTag, MAX_PATH);
+			}
+		}
+		else
+		{
+			ImGui::Separator();
+			ImGui::Separator();
+
+			ImGui::Text("    [ Please Select EffectGroup Element ] ");
+		}
+
+		static _int	iSelectCurve = -1;
+
+		IMGUI_LEFT_LABEL(ImGui::Combo, "Target Curve", &iSelectCurve, m_szCurveTag, CURVE_END);
+		ImGui::SameLine();
+
+		if(ImGui::Button("Add Target Curve"))
+		{
+			if (iSelectCurve == -1 || iSelectCurve > CURVE_END)
+			{
+				MSG_BOX("Wrong Curve Number");
+				return;
+			}
+
+			if(item_current_idx == -1 || item_current_idx > (_int)m_mapEffectSystemTag.size())
+			{
+				MSG_BOX("Wrong EffectTag");
+				return;
+			}
+
+			Add_TargetCurve(item_current_idx, m_szCurveTag[iSelectCurve]);
+
+			iSelectCurve = -1;
+		}
+
+
+
 	}
+	// 커브 추가하는 곳
+
+	ImGui::Separator();
+	ImGui::Separator();
+
 
 	CImguiUtils::FileDialog_FileSelector("Save Curves And Group", ".json", "../Bin/Resources/Curve/",
 		[this](const string& filePath)
@@ -141,34 +436,90 @@ void CEffectGroup::Imgui_RenderProperty()
 	});	
 
 	Imgui_RenderEffectSource();
+
+	for (auto iter : ppEffectTag)
+	{
+		Safe_Delete_Array(iter);
+	}
+	ppEffectTag.clear();
+
+	Safe_Delete_Array(ppEffectGroupTag);
+		
 }
 
 void CEffectGroup::SaveToJson(Json& json)
 {
 	CGameObject::SaveToJson(json);
 
+	json["Curves"] = Json::array();
+
 	if(m_pFirst_EffectSystem != nullptr)
+	{
 		json["First_Directory"] = m_First_EffectDirectory;
+
+		for (auto pCurve : m_FirstEffect_Curves)
+		{
+			Json curveJson;
+			pCurve.second->SaveToJson(curveJson);
+			json["FirstEffect_Curves"].push_back(curveJson);
+		}
+	}
 	else
 		json["First_Directory"] = "";
 
 	if(m_pSecond_EffectSystem != nullptr)
+	{
 		json["Second_Directory"] = m_Second_EffectDirectory;
+
+		for (auto pCurve : m_SecondEffect_Curves)
+		{
+			Json curveJson;
+			pCurve.second->SaveToJson(curveJson);
+			json["SecondEffect_Curves"].push_back(curveJson);
+		}
+	}
 	else
 		json["Second_Directory"] = "";
 
 	if (m_pThird_EffectSystem != nullptr)
+	{
 		json["Third_Directory"] = m_Third_EffectDirectory;
+
+		for (auto pCurve : m_ThirdEffect_Curves)
+		{
+			Json curveJson;
+			pCurve.second->SaveToJson(curveJson);
+			json["ThirdEffect_Curves"].push_back(curveJson);
+		}
+	}
 	else
 		json["Third_Directory"] = "";
 
 	if(m_pFourth_EffectSystem!=nullptr)
+	{
 		json["Fourth_Directory"] = m_Fourth_EffectDirectory;
+
+		for (auto pCurve : m_FourthEffect_Curves)
+		{
+			Json curveJson;
+			pCurve.second->SaveToJson(curveJson);
+			json["FourthEffect_Curves"].push_back(curveJson);
+		}
+	}
 	else
 		json["Fourth_Directory"] = "";
 
 	if(m_pFifth_EffectSystem != nullptr)
+	{
 		json["Fifth_Directory"] = m_Fifth_EffectDirectory;
+
+		for (auto pCurve : m_FifthEffect_Curves)
+		{
+			Json curveJson;
+			pCurve.second->SaveToJson(curveJson);
+			json["FifthEffect_Curves"].push_back(curveJson);
+		}
+	}
 	else
 		json["Fifth_Directory"] = "";
 
@@ -182,45 +533,108 @@ void CEffectGroup::SaveToJson(Json& json)
 	else
 		json["End_Time"] = 3.f;
 
-	json["Curves"] = Json::array();
-	for (auto pCurve : m_Curves)
-	{
-		Json curveJson;
-		pCurve.second->SaveToJson(curveJson);
-		json["Curves"].push_back(curveJson);
-	}
-	// json["TimelineLength"] = 
+
+	// for (auto pCurve : m_Curves)
+	// {
+	// 	Json curveJson;
+	// 	pCurve.second->SaveToJson(curveJson);
+	// 	json["Curves"].push_back(curveJson);
+	// }
+	
 }
 
 void CEffectGroup::LoadFromJson(const Json& json)
 {
 	CGameObject::LoadFromJson(json);
 
-	for (auto curveJson : json["Curves"])
-	{
-		auto pCurve = CCurveFloatImpl::Create(&curveJson);
-		m_Curves.emplace(pCurve->GetName(), pCurve);
-	}
-
-	// json["First_Directory"].get_to<string>(m_First_EffectDirectory);
-	// json["First_Directory"].get_to<string>(m_First_EffectDirectory);
-	// json["First_Directory"].get_to<string>(m_First_EffectDirectory);
-	// json["First_Directory"].get_to<string>(m_First_EffectDirectory);
+	// for (auto curveJson : json["Curves"])
+	// {
+		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
+		// m_Curves.emplace(pCurve->GetName(), pCurve);
+	// }
 
 	if (json.contains("First_Directory"))
+	{
 		m_First_EffectDirectory = json["First_Directory"];
 
+		if (json.contains("FirstEffect_Curves"))
+		{
+			for (auto curveJson : json["FirstEffect_Curves"])
+			{
+				LoadAndSetCurve_First(&curveJson);
+			}
+		}
+	}
+
 	if (json.contains("Second_Directory"))
+	{
 		m_Second_EffectDirectory = json["Second_Directory"];
 
+		if (json.contains("SecondEffect_Curves"))
+		{
+			for (auto curveJson : json["SecondEffect_Curves"])
+			{
+				// auto pCurve = CCurveFloatImpl::Create(&curveJson);
+				// m_SecondEffect_Curves.emplace(pCurve->GetName(), pCurve);
+				// AddEmptyCurve_ForSecond(pCurve->GetName());
+
+				LoadAndSetCurve_Second(&curveJson);
+
+			}
+		}
+	}
+
 	if (json.contains("Third_Directory"))
+	{
 		m_Third_EffectDirectory = json["Third_Directory"];
 
+		if (json.contains("ThirdEffect_Curves"))
+		{
+			for (auto curveJson : json["ThirdEffect_Curves"])
+			{
+				// auto pCurve = CCurveFloatImpl::Create(&curveJson);
+				// m_ThirdEffect_Curves.emplace(pCurve->GetName(), pCurve);
+				// AddEmptyCurve_ForThird(pCurve->GetName());
+
+				LoadAndSetCurve_Third(&curveJson);
+
+			}
+		}
+	}
+
 	if (json.contains("Fourth_Directory"))
+	{
 		m_Fourth_EffectDirectory = json["Fourth_Directory"];
 
+		if (json.contains("FourthEffect_Curves"))
+		{
+			for (auto curveJson : json["FourthEffect_Curves"])
+			{
+				// auto pCurve = CCurveFloatImpl::Create(&curveJson);
+				// m_FourthEffect_Curves.emplace(pCurve->GetName(), pCurve);
+				// AddEmptyCurve_ForFourth(pCurve->GetName());
+
+				LoadAndSetCurve_Fourth(&curveJson);
+			}
+		}
+	}
+
 	if (json.contains("Fifth_Directory"))
+	{
 		m_Fifth_EffectDirectory = json["Fifth_Directory"];
+
+		if (json.contains("FifthEffect_Curves"))
+		{
+			for (auto curveJson : json["FifthEffect_Curves"])
+			{
+				// auto pCurve = CCurveFloatImpl::Create(&curveJson);
+				// m_FifthEffect_Curves.emplace(pCurve->GetName(), pCurve);
+				// AddEmptyCurve_ForFifth(pCurve->GetName());
+
+				LoadAndSetCurve_Fifth(&curveJson);
+			}
+		}
+	}
 
 	json["End_Time"].get_to<_float>(m_fEndTime);
 	json["Finish_Function"].get_to<_int>(m_iSelectFinishFunc);
@@ -240,6 +654,237 @@ void CEffectGroup::LoadFromJson(const Json& json)
 		m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
 	}
 
+}
+
+inline void CEffectGroup::LoadAndSetCurve_First(Json* json)
+{
+	auto pCurve = CCurveFloatImpl::Create(json);
+	m_FirstEffect_Curves.emplace(pCurve->GetName(), pCurve);
+
+	if (!strcmp(pCurve->GetName(), "ObjectScale"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_FirstEffect_Curves.find("ObjectScale")->second);
+		Safe_AddRef(m_FirstEffect_Curves.find("ObjectScale")->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Intro_Dissolve"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_FirstEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Outro_Dissolve"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_FirstEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Color_Change"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_FirstEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Emissive_Change"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_FirstEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Intro_Time"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_FirstEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Outro_Time"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_FirstEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else
+	{
+		MSG_BOX("Failed to FirstEffect SetCurve [ %s ]", strCurveName.c_str());
+	}
+
+}
+
+void CEffectGroup::LoadAndSetCurve_Second(Json* json)
+{
+	auto pCurve = CCurveFloatImpl::Create(json);
+	m_SecondEffect_Curves.emplace(pCurve->GetName(), pCurve);
+
+	if (!strcmp(pCurve->GetName(), "ObjectScale"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Intro_Dissolve"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Outro_Dissolve"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Color_Change"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Emissive_Change"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Intro_Time"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Outro_Time"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else
+	{
+		MSG_BOX("Failed to SecondEffect SetCurve [ %s ]", strCurveName.c_str());
+	}
+}
+
+void CEffectGroup::LoadAndSetCurve_Third(Json* json)
+{
+	auto pCurve = CCurveFloatImpl::Create(json);
+	m_ThirdEffect_Curves.emplace(pCurve->GetName(), pCurve);
+
+	if (!strcmp(pCurve->GetName(), "ObjectScale"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Intro_Dissolve"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Outro_Dissolve"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Color_Change"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Emissive_Change"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Intro_Time"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Outro_Time"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else
+	{
+		MSG_BOX("Failed to ThirdEffect SetCurve [ %s ]", strCurveName.c_str());
+	}
+}
+
+void CEffectGroup::LoadAndSetCurve_Fourth(Json* json)
+{
+	auto pCurve = CCurveFloatImpl::Create(json);
+	m_FourthEffect_Curves.emplace(pCurve->GetName(), pCurve);
+
+	if (!strcmp(pCurve->GetName(), "ObjectScale"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Intro_Dissolve"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Outro_Dissolve"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Color_Change"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Emissive_Change"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Intro_Time"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Outro_Time"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else
+	{
+		MSG_BOX("Failed to FourthEffect SetCurve [ %s ]", strCurveName.c_str());
+	}
+}
+
+void CEffectGroup::LoadAndSetCurve_Fifth(Json* json)
+{
+	auto pCurve = CCurveFloatImpl::Create(json);
+	m_FifthEffect_Curves.emplace(pCurve->GetName(), pCurve);
+
+	if (!strcmp(pCurve->GetName(), "ObjectScale"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Intro_Dissolve"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Outro_Dissolve"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Color_Change"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Emissive_Change"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Intro_Time"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "Outro_Time"))
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
+	}
+	else
+	{
+		MSG_BOX("Failed to FifthEffect SetCurve [ %s ]", strCurveName.c_str());
+	}
 }
 
 void CEffectGroup::Load_EffectSystem()
@@ -263,6 +908,9 @@ void CEffectGroup::Load_EffectSystem()
 
 			Json First_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
 			m_pFirst_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &First_Effect));
+
+			const string& strFileName = CGameUtils::GetFileName(m_First_EffectDirectory);
+			m_mapEffectSystemTag.emplace(strFileName, m_pFirst_EffectSystem);
 		}
 	}
 	{
@@ -284,6 +932,9 @@ void CEffectGroup::Load_EffectSystem()
 
 			Json Secon_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
 			m_pSecond_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Secon_Effect));
+
+			const string& strFileName = CGameUtils::GetFileName(m_Second_EffectDirectory);
+			m_mapEffectSystemTag.emplace(strFileName, m_pSecond_EffectSystem);
 		}
 	}
 	{
@@ -305,6 +956,9 @@ void CEffectGroup::Load_EffectSystem()
 
 			Json Third_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
 			m_pThird_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Third_Effect));
+
+			const string& strFileName = CGameUtils::GetFileName(m_Third_EffectDirectory);
+			m_mapEffectSystemTag.emplace(strFileName, m_pThird_EffectSystem);
 		}
 	}
 	{
@@ -326,6 +980,9 @@ void CEffectGroup::Load_EffectSystem()
 
 			Json Fourth_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
 			m_pFourth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fourth_Effect));
+
+			const string& strFileName = CGameUtils::GetFileName(m_Fourth_EffectDirectory);
+			m_mapEffectSystemTag.emplace(strFileName, m_pFourth_EffectSystem);
 		}
 	}
 	{
@@ -347,13 +1004,45 @@ void CEffectGroup::Load_EffectSystem()
 
 			Json Fifth_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
 			m_pFifth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fifth_Effect));
+			const string& strFileName = CGameUtils::GetFileName(m_Fifth_EffectDirectory);
+			m_mapEffectSystemTag.emplace(strFileName, m_pFifth_EffectSystem);
 		}
+	}
+}
+
+void CEffectGroup::Add_TargetCurve(_uint iSelectEffect, string strCurveName)
+{
+	if (iSelectEffect == 0)
+	{
+		AddEmptyCurve_ForFirst(strCurveName);
+	}
+	else if (iSelectEffect == 1)
+	{
+		AddEmptyCurve_ForSecond(strCurveName);
+	}
+	else if (iSelectEffect == 2)
+	{
+		AddEmptyCurve_ForThird(strCurveName);
+	}
+	else if (iSelectEffect == 3)
+	{
+		AddEmptyCurve_ForFourth(strCurveName);
+	}
+	else if (iSelectEffect == 4)
+	{
+		AddEmptyCurve_ForFifth(strCurveName);
+	}
+	else
+	{
+		MSG_BOX("Failed to Add Empty Curve");
+		return;
 	}
 }
 
 void CEffectGroup::Imgui_RenderEffectSource()
 {
 	ImGui::BeginTabBar("EffectGroup_Sources");
+
 	if(m_pFirst_EffectSystem != nullptr)
 	{
 		ImGui::Begin("First_Effect");
@@ -389,7 +1078,6 @@ void CEffectGroup::Imgui_RenderEffectSource()
 
 }
 
-
 void CEffectGroup::AddEmptyCurve(string strCurveName)
 {
 	auto itr = m_Curves.find(strCurveName.c_str());
@@ -400,14 +1088,271 @@ void CEffectGroup::AddEmptyCurve(string strCurveName)
 	m_Curves.emplace(pCurve->GetName(), pCurve);
 }
 
-void CEffectGroup::Tick_Scale(_uint iParamIndex, _float fValue)
+void CEffectGroup::AddEmptyCurve_ForFirst(string strCurveName)
+{
+	// auto itr = m_FirstEffect_Curves.find(strCurveName.c_str());
+	// if (itr != m_FirstEffect_Curves.end())
+	// 	return;
+
+	auto pCurve = CCurveFloatImpl::Create(strCurveName);
+	m_FirstEffect_Curves.emplace(pCurve->GetName(), pCurve);
+
+	// "ObjectScale", "Intro_Dissolve", "Outro_Dissolve", "Color_Change", "Emissive_Change", "Intro_Time", "Outtro_Time"
+
+	if (strCurveName == "ObjectScale")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Intro_Dissolve")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Outro_Dissolve")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Color_Change")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Emissive_Change")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Intro_Time")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Outro_Time")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else
+	{
+		MSG_BOX("Failed to FirstEffect SetCurve [ %s ]", strCurveName.c_str());
+	}
+}
+
+void CEffectGroup::AddEmptyCurve_ForSecond(string strCurveName)
+{
+	auto itr = m_SecondEffect_Curves.find(strCurveName.c_str());
+	if (itr != m_SecondEffect_Curves.end())
+		return;
+
+	auto pCurve = CCurveFloatImpl::Create(strCurveName);
+	m_SecondEffect_Curves.emplace(pCurve->GetName(), pCurve);
+
+	if (strCurveName == "ObjectScale")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Intro_Dissolve")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Outro_Dissolve")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Color_Change")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Emissive_Change")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Intro_Time")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Outro_Time")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else
+	{
+		MSG_BOX("Failed to SecondEffect SetCurve [ %s ]", strCurveName.c_str());
+	}
+}
+
+void CEffectGroup::AddEmptyCurve_ForThird(string strCurveName)
+{
+	auto itr = m_ThirdEffect_Curves.find(strCurveName.c_str());
+	if (itr != m_ThirdEffect_Curves.end())
+		return;
+
+	auto pCurve = CCurveFloatImpl::Create(strCurveName);
+	m_ThirdEffect_Curves.emplace(pCurve->GetName(), pCurve);
+
+	if (strCurveName == "ObjectScale")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Intro_Dissolve")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Outro_Dissolve")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Color_Change")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Emissive_Change")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Intro_Time")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Outro_Time")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else
+	{
+		MSG_BOX("Failed to ThirdEffect SetCurve [ %s ]", strCurveName.c_str());
+	}
+}
+
+void CEffectGroup::AddEmptyCurve_ForFourth(string strCurveName)
+{
+	auto itr = m_FourthEffect_Curves.find(strCurveName.c_str());
+	if (itr != m_FourthEffect_Curves.end())
+		return;
+
+	auto pCurve = CCurveFloatImpl::Create(strCurveName);
+	m_FourthEffect_Curves.emplace(pCurve->GetName(), pCurve);
+
+	if (strCurveName == "ObjectScale")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Intro_Dissolve")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Outro_Dissolve")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Color_Change")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Emissive_Change")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Intro_Time")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Outro_Time")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else
+	{
+		MSG_BOX("Failed to FourthEffect SetCurve [ %s ]", strCurveName.c_str());
+	}
+}
+
+void CEffectGroup::AddEmptyCurve_ForFifth(string strCurveName)
+{
+	auto itr = m_FifthEffect_Curves.find(strCurveName.c_str());
+	if (itr != m_FifthEffect_Curves.end())
+		return;
+
+	auto pCurve = CCurveFloatImpl::Create(strCurveName);
+	m_FifthEffect_Curves.emplace(pCurve->GetName(), pCurve);
+
+	if (strCurveName == "ObjectScale")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Intro_Dissolve")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Outro_Dissolve")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Color_Change")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Emissive_Change")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Intro_Time")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Outro_Time")
+	{
+		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else
+	{
+		MSG_BOX("Failed to FifthEffect SetCurve [ %s ]", strCurveName.c_str());
+	}
+}
+
+void CEffectGroup::Tick_Scale( _float fValue)
 {
 	fValue *= 2.f;
-	m_pTransformCom->Set_Scaled(_float3(fValue, fValue, fValue));
+
+	m_pFirst_EffectSystem->GetTransform()->Set_Scaled(_float3(fValue, fValue, fValue));
 }
+
+// 인자 뭐에 던질지 고민해봐야함
 
 void CEffectGroup::Tick_IntroDissolve(_float fValue)
 {
+	// 이펙트 내에서 어떤 효과에 어떤 인자를 쓸건지 저장하는건 어떤지 
+
 	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
 }
 
@@ -468,6 +1413,46 @@ void CEffectGroup::Free()
 	for (auto pCurve : m_Curves)
 		Safe_Release(pCurve.second);
 	m_Curves.clear();
+
+
+
+	if (!m_FirstEffect_Curves.empty())
+	{
+		for (auto pCurve : m_FirstEffect_Curves)
+			Safe_Release(pCurve.second);
+		m_FirstEffect_Curves.clear();
+	}
+
+	if (!m_SecondEffect_Curves.empty())
+	{
+		for (auto pCurve : m_SecondEffect_Curves)
+			Safe_Release(pCurve.second);
+		m_SecondEffect_Curves.clear();
+	}
+
+	if (!m_ThirdEffect_Curves.empty())
+	{
+		for (auto pCurve : m_ThirdEffect_Curves)
+			Safe_Release(pCurve.second);
+		m_ThirdEffect_Curves.clear();
+	}
+
+	if (!m_FourthEffect_Curves.empty())
+	{
+		for (auto pCurve : m_FourthEffect_Curves)
+			Safe_Release(pCurve.second);
+		m_FourthEffect_Curves.clear();
+	}
+
+	if (!m_FifthEffect_Curves.empty())
+	{
+		for (auto pCurve : m_FifthEffect_Curves)
+			Safe_Release(pCurve.second);
+		m_FifthEffect_Curves.clear();
+	}
+
+
+	m_mapEffectSystemTag.clear();
 
 	if(m_pFirst_EffectSystem != nullptr)
 		Safe_Release(m_pFirst_EffectSystem);

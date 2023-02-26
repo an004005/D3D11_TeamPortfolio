@@ -58,6 +58,9 @@ using namespace SimpleMath;
 #include <mutex>
 using namespace std;
 
+#define IMGUI_LEFT_LABEL(func, label, ...) (ImGui::TextUnformatted(label), ImGui::SameLine(), func("##" label, __VA_ARGS__))
+
+
 #include "fmod.h"
 #include "fmod.hpp"
 #pragma comment(lib, "fmod_vc.lib")

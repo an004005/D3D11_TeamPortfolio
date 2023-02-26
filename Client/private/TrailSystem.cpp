@@ -42,8 +42,10 @@ HRESULT CTrailSystem::Initialize(void* pArg)
 	}
 	else
 	{
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("../Bin/Resources/Texture/VFX/AlphaGradient/ring_glow.dds"), TEXT("Texture"),(CComponent**)&m_pTex));
+		// FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("../Bin/Resources/Texture/VFX/AlphaGradient/ring_glow.dds"), TEXT("Texture"),(CComponent**)&m_pTex));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("../Bin/Resources/Texture/VFX/T_ef_one_lin_015.png"), TEXT("Texture"), (CComponent**)&m_pTex));
 
+		
 		m_fLife = 0.5f;
 		m_fWidth = 1.2f;
 		m_fSegmentSize = 0.1f;
