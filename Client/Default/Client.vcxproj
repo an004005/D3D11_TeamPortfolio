@@ -219,12 +219,14 @@
     <ClInclude Include="..\public\Level_Tutorial.h" />
     <ClInclude Include="..\public\Level_UI.h" />
     <ClInclude Include="..\public\MainApp.h" />
+    <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\Public\Player.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\public\MapNonAnim_Object.h" />
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
+    <ClInclude Include="..\public\ScarletCharacter.h" />
     <ClInclude Include="..\public\ScarletMap.h" />
     <ClInclude Include="..\public\SkmP_AnimInstance.h" />
     <ClInclude Include="..\public\SkummyPool.h" />
@@ -284,12 +286,14 @@
     <ClCompile Include="..\private\Level_Tutorial.cpp" />
     <ClCompile Include="..\private\Level_UI.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
+    <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\Private\Player.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
+    <ClCompile Include="..\private\ScarletCharacter.cpp" />
     <ClCompile Include="..\private\ScarletMap.cpp" />
     <ClCompile Include="..\private\SkmP_AnimInstance.cpp" />
     <ClCompile Include="..\private\SkummyPool.cpp" />

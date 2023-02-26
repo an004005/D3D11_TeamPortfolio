@@ -1,7 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "ImguiObject.h"
-#include "GameObject.h"
+#include "ScarletCharacter.h"
 
 BEGIN(Engine)
 class CGameInstance;
@@ -17,7 +17,7 @@ BEGIN(Client);
 class CBaseAnimInstance;
 class CController;
 
-class CPlayer : public CGameObject
+class CPlayer : public CScarletCharacter
 {
 public:
 	enum EMoveDir { DIR_F, DIR_B, DIR_L, DIR_R, DIR_FL, DIR_FR, DIR_BL, DIR_BR, DIR_END, };
@@ -33,6 +33,7 @@ public:
 	virtual void BeginTick() {}
 	virtual void Tick(_double TimeDelta);
 	virtual void Late_Tick(_double TimeDelta);
+	virtual void AfterPhysX() override;
 	virtual HRESULT Render();
 
 	virtual void Imgui_RenderProperty() override;

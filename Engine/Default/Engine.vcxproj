@@ -236,6 +236,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\Model.h" />
     <ClInclude Include="..\public\Navigation.h" />
     <ClInclude Include="..\public\Object_Manager.h" />
+    <ClInclude Include="..\public\PhysXDynamicModel.h" />
     <ClInclude Include="..\public\PhysXStaticModel.h" />
     <ClInclude Include="..\public\PhysX_Manager.h" />
     <ClInclude Include="..\public\PipeLine.h" />
@@ -317,6 +318,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\Model.cpp" />
     <ClCompile Include="..\private\Navigation.cpp" />
     <ClCompile Include="..\private\Object_Manager.cpp" />
+    <ClCompile Include="..\private\PhysXDynamicModel.cpp" />
     <ClCompile Include="..\private\PhysXStaticModel.cpp" />
     <ClCompile Include="..\private\PhysX_Manager.cpp" />
     <ClCompile Include="..\private\PipeLine.cpp" />

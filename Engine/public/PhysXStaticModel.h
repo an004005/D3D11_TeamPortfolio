@@ -3,13 +3,6 @@
 
 BEGIN(Engine)
 
-struct PxMesh
-{
-	physx::PxTriangleMesh* pPxMesh = nullptr;
-	physx::PxTriangleMeshGeometry tMeshGeom;
-	physx::PxShape* pShape = nullptr;
-};
-
 class ENGINE_DLL CPhysXStaticModel : public CComponent
 {
 protected:
@@ -22,6 +15,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Imgui_RenderProperty() override;
 
+	// 최초 한번만 위치 셋팅하는 용도로 사용할것
 	void SetPxWorldMatrix(const _float4x4& WorldMatrix);
 
 private:

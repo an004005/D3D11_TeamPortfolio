@@ -3,6 +3,21 @@
 
 BEGIN(Engine)
 
+class CEngineControllerHitReport : public physx::PxUserControllerHitReport
+{
+public:
+	virtual ~CEngineControllerHitReport() = default;
+	virtual void onShapeHit(const physx::PxControllerShapeHit& hit) override;
+	virtual void onControllerHit(const physx::PxControllersHit& hit) override{}
+	virtual void onObstacleHit(const physx::PxControllerObstacleHit& hit) override{}
+
+	void SetPushPower(_float fPushPower) { m_fPushPower = fPushPower; }
+	_float GetPushPower() const { return m_fPushPower; }
+
+private:
+	_float m_fPushPower = 100.f;
+};
+
 class ENGINE_DLL CControlledRigidBody : public CComponent
 {
 protected:
@@ -18,22 +33,28 @@ public:
 
 	// 텔레포트용
 	void SetPosition(const _float4& vPos);
+
 	_float4 GetPosition();
+	_float4 GetFootPosition();
 
 	// 이동용, 기본 중력없기 때문에 이 함수로 중력 만들어 줘야합니다.
-	void Move(_float4 vVelocity, _float fTimeDelta, _float minDist = 0.001f);
+	physx::PxControllerCollisionFlags Move(_float4 vVelocity, _float fTimeDelta, _float minDist = 0.001f);
+	physx::PxControllerCollisionFlags MoveDisp(_float4 vPosDelta, _float fTimeDelta, _float minDist = 0.001f);
 
 protected:
 	void CreateController();
 	void ReleaseController();
 
 protected:
+	CEngineControllerHitReport m_HitReport;
 	physx::PxController* m_pController = nullptr;
 	physx::PxCapsuleControllerDesc m_tDesc;
+	_float m_fSlopeLimitDegree = 45.f;
 	physx::PxControllerFilters m_Filters;
 
 	physx::PxFilterData m_MoveFilterData;
 	ECOLLIDER_TYPE m_eColliderType = CT_PLAYER;
+
 
 
 public:
