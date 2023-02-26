@@ -40,19 +40,19 @@ HRESULT CBdLm_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 			
 			// ~Idle
 
-			.AddState("Walk")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0400_106_AL_walk02"))
+			.AddState("Walk")		// AS_em0400_414_AL_damage_m_R	AS_em0400_106_AL_walk02
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0400_414_AL_damage_m_R"))
 				
 				.AddTransition("Walk to Idle", "Idle")
-					.Predicator([&]()->_bool {return !m_bWalk && m_bIdle && m_pModel->Find_Animation("AS_em0400_106_AL_walk02")->IsFinished(); })
+					.Predicator([&]()->_bool {return !m_bWalk && m_bIdle && m_pModel->Find_Animation("AS_em0400_414_AL_damage_m_R")->IsFinished(); })
 					.Duration(0.2f)
 
 				.AddTransition("Walk to Run", "Run")
-					.Predicator([&]()->_bool {return !m_bWalk && m_bRun && m_pModel->Find_Animation("AS_em0400_106_AL_walk02")->IsFinished(); })
+					.Predicator([&]()->_bool {return !m_bWalk && m_bRun && m_pModel->Find_Animation("AS_em0400_414_AL_damage_m_R")->IsFinished(); })
 					.Duration(0.2f)
 
 				.AddTransition("Walk to Attack", "Attack")
-					.Predicator([&]()->_bool {return !m_bWalk && m_bAttack && m_pModel->Find_Animation("AS_em0400_106_AL_walk02")->IsFinished(); })
+					.Predicator([&]()->_bool {return !m_bWalk && m_bAttack && m_pModel->Find_Animation("AS_em0400_414_AL_damage_m_R")->IsFinished(); })
 					.Duration(0.2f)
 
 			.AddState("Run")
@@ -257,14 +257,12 @@ void CBdLm_AnimInstance::Tick(_double TimeDelta)
 			}
 		}
 		else if (bChange)
-		{
-			if (!m_bStatic)
-			{
-				bLocalMove = false;
-				m_pASM_Base->SetCurState("Idle");
-				m_pASM_Base->GetCurState()->m_Animation->Reset();
-				m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
-			}			
+		{			
+			bLocalMove = false;
+			m_pASM_Base->SetCurState("Idle");
+			m_pASM_Base->GetCurState()->m_Animation->Reset();
+			m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+						
 		}
 		else
 		{
@@ -307,9 +305,7 @@ void CBdLm_AnimInstance::UpdateTargetState(_double TimeDelta)
 
 	// ASM Control
 	m_bStatic = pBuddyLumi->IsStatic();
-
 }
-
 
 void CBdLm_AnimInstance::Imgui_RenderState()
 {

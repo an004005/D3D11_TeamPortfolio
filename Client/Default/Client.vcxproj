@@ -226,6 +226,8 @@
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
     <ClInclude Include="..\public\ScarletMap.h" />
+    <ClInclude Include="..\public\SkmP_AnimInstance.h" />
+    <ClInclude Include="..\public\SkummyPool.h" />
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\Terrain.h" />
@@ -288,6 +290,8 @@
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
     <ClCompile Include="..\private\ScarletMap.cpp" />
+    <ClCompile Include="..\private\SkmP_AnimInstance.cpp" />
+    <ClCompile Include="..\private\SkummyPool.cpp" />
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />

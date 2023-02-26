@@ -54,17 +54,37 @@ private:
 	
 	_float			m_fJumpSpeed = 13.3f;
 	_float			m_fJumpTime = 0.f;
-	_float			m_fGravity = 15.f;
+	_float			m_fGravity = 7.7f;
 	// ~Jump
+
+	// Jump Speed Tool
+	_float		m_fWeight = 0.24f;
+	_float		m_fOverLap = 0.28f;
+
 
 	// 스테이트 상태
 	_bool m_bIdle = false;
 	_bool m_bWalk = false;
-	_bool m_bAttack = false;	
 	_bool m_bAir = false;
+	_bool m_bLanding = false;
+	
+	// Attack L + R
+	_bool m_bAttackL = false;	
+	_bool m_bAttackR = false;
+
+	// ~Attack L + R
 
 	// imgui Test
 	_uint m_iTestHp = 1000;
+
+public:
+	_bool IsIdle() const { return m_bIdle; }
+	_bool IsWalk() const { return m_bWalk; }
+	_bool IsAir() const { return m_bAir; }
+	_bool IsLanding() const { return m_bLanding; }
+	
+	_bool IsAttackL() const { return m_bAttackL; }
+	_bool IsAttackR() const { return m_bAttackR; }
 
 public:
 	KEYSTATE	const	Get_eDikKey() { return m_eDikKey; }
@@ -78,7 +98,7 @@ private:
 	wstring					m_ModelName;
 
 private:
-	HRESULT SetUp_Components();
+	HRESULT SetUp_Components(void* pArg);
 
 public:
 	static CFlowerLeg* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
