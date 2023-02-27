@@ -1,12 +1,11 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "UI.h"
 #include "Canvas_SASSkill.h"
 
 BEGIN(Client)
 
-class CSASSkillGaugeUI final : public CUI
+class CSASSkillGaugeUI final : public CCanvas_SASSkill
 {
 private:
 	CSASSkillGaugeUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -15,7 +14,6 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void	BeginTick() override;
 	virtual void	Tick(_double TimeDelta) override;
 	virtual void	Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
@@ -31,7 +29,6 @@ private:
 	void			ChangeSkill_TickShader(const _float & fTimeDelta);
 
 private:
-	CCanvas_SASSkill*				m_pCanvas = { nullptr };
 	CCanvas_SASSkill::OBJECTCOUNT	m_eObjectCount = CCanvas_SASSkill::ONE;
 
 	_float2		m_fMinMaxGauge = { 0.0f, 1.0f };	// 최소 게이지와 최대 게이지
@@ -41,7 +38,7 @@ private:
 
 public:
 	static CSASSkillGaugeUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CUI* Clone(void* pArg = nullptr) override;
+	virtual CCanvas_SASSkill* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 

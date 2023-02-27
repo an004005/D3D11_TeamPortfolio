@@ -1,17 +1,16 @@
 #include "stdafx.h"
 #include "..\public\SASSkillFullCircleUI.h"
 #include "GameInstance.h"
-#include "JsonLib.h"
 
 // 알파값이 줄어들면서, 원이 커진다.
 
 CSASSkillFullCircleUI::CSASSkillFullCircleUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CUI(pDevice, pContext)
+	: CCanvas_SASSkill(pDevice, pContext)
 {
 }
 
 CSASSkillFullCircleUI::CSASSkillFullCircleUI(const CSASSkillFullCircleUI& rhs)
-	: CUI(rhs)
+	: CCanvas_SASSkill(rhs)
 {
 }
 
@@ -28,6 +27,8 @@ HRESULT CSASSkillFullCircleUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	CCanvas_SASSkill::UIMove_Initialize();
+	
 	m_vOriginSize = { m_fSizeX * m_vScale.x, m_fSizeY * m_vScale.y };
 	m_vCurrentSize = { 140.0f, 140.0f };	// 최대 크기를 이야기 한다.
 	m_fSpeed = 50.0f; 
@@ -35,14 +36,9 @@ HRESULT CSASSkillFullCircleUI::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CSASSkillFullCircleUI::BeginTick()
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	m_pCanvas = dynamic_cast<CCanvas_SASSkill*>(pGameInstance->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkill")));
-}
-
 void CSASSkillFullCircleUI::Tick(_double TimeDelta)
 {
+	
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 	{
 		m_bGrow = !m_bGrow;
@@ -64,18 +60,18 @@ void CSASSkillFullCircleUI::Tick(_double TimeDelta)
 	}
 	else
 	{
-		__super::Tick(TimeDelta);
+		CUI::Tick(TimeDelta);
 	}
 }
 
 void CSASSkillFullCircleUI::Late_Tick(_double TimeDelta)
 {
-	__super::Late_Tick(TimeDelta);
+	CUI::Late_Tick(TimeDelta);
 }
 
 HRESULT CSASSkillFullCircleUI::Render()
 {
-	if (FAILED(__super::Render()))
+	if (FAILED(CUI::Render()))
 		return E_FAIL;
 
 	return S_OK;
@@ -111,7 +107,7 @@ CSASSkillFullCircleUI * CSASSkillFullCircleUI::Create(ID3D11Device * pDevice, ID
 	return pInstance;
 }
 
-CUI * CSASSkillFullCircleUI::Clone(void * pArg)
+CCanvas_SASSkill * CSASSkillFullCircleUI::Clone(void * pArg)
 {
 	CSASSkillFullCircleUI*		pInstance = new CSASSkillFullCircleUI(*this);
 
@@ -125,6 +121,6 @@ CUI * CSASSkillFullCircleUI::Clone(void * pArg)
 
 void CSASSkillFullCircleUI::Free()
 {
-	__super::Free();
+	CUI::Free();
 
 }

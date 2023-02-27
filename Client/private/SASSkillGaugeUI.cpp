@@ -6,12 +6,12 @@
 //m_tParams.Float4s[0] = { 226.0f, 158.0f, 1.0f, 1.0f };	// 색상 조정
 
 CSASSkillGaugeUI::CSASSkillGaugeUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CUI(pDevice, pContext)
+	: CCanvas_SASSkill(pDevice, pContext)
 {
 }
 
 CSASSkillGaugeUI::CSASSkillGaugeUI(const CSASSkillGaugeUI& rhs)
-	: CUI(rhs)
+	: CCanvas_SASSkill(rhs)
 {
 }
 
@@ -28,20 +28,25 @@ HRESULT CSASSkillGaugeUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	CCanvas_SASSkill::UIMove_Initialize();
+	
 	SkilInfo_Initialize();
 
 	return S_OK;
 }
 
-void CSASSkillGaugeUI::BeginTick()
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	m_pCanvas = dynamic_cast<CCanvas_SASSkill*>(pGameInstance->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkill")));
-}
+//void CSASSkillGaugeUI::BeginTick()
+//{
+//	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+//	m_pCanvas = dynamic_cast<CCanvas_SASSkill*>(pGameInstance->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkill")));
+//}
 
 void CSASSkillGaugeUI::Tick(_double TimeDelta)
 {
-	__super::Tick(TimeDelta);
+	CUI::Tick(TimeDelta);
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
+		Set_UIMove();
 
 	//  TODO : 키 입력 삭제해야 한다. 플레이어 에서 Set 해야한다.
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
@@ -54,9 +59,9 @@ void CSASSkillGaugeUI::Tick(_double TimeDelta)
 			bOnSkil = !bOnSkil;
 		}
 
-		m_pCanvas->Set_InputSkill(CCanvas_SASSkill::ONE0, bOnSkil);
+		CCanvas_SASSkill::Set_InputSkill(CCanvas_SASSkill::ONE0, bOnSkil);
 
-		if (m_pCanvas->Get_InputSkill(CCanvas_SASSkill::ONE0))
+		if (CCanvas_SASSkill::Get_InputSkill(CCanvas_SASSkill::ONE0))
 		{
 			if (0.0f < m_tParams.Floats[0])
 				m_tParams.Floats[0] -= _float(TimeDelta) /** m_fGaugeSpeed*/;
@@ -68,18 +73,18 @@ void CSASSkillGaugeUI::Tick(_double TimeDelta)
 		}
 
 		
-		m_pCanvas->Set_SuperPowers(CCanvas_SASSkill::SUPERPOWERS(1));
+		CCanvas_SASSkill::Set_SuperPowers(CCanvas_SASSkill::SUPERPOWERS(1));
 	}
 }
 
 void CSASSkillGaugeUI::Late_Tick(_double TimeDelta)
 {
-	__super::Late_Tick(TimeDelta);
+	CUI::Late_Tick(TimeDelta);
 }
 
 HRESULT CSASSkillGaugeUI::Render()
 {
-	if (FAILED(__super::Render()))
+	if (FAILED(CUI::Render()))
 		return E_FAIL;
 
 	return S_OK;
@@ -139,7 +144,7 @@ void CSASSkillGaugeUI::SkilInfo_Initialize()
 
 void CSASSkillGaugeUI::ChangeSkill()
 {
-	switch (m_pCanvas->Get_SuperPowers())
+	switch (CCanvas_SASSkill::Get_SuperPowers())
 	{
 	case CCanvas_SASSkill::PSYCHOKINESIS0:	// 0
 	{
@@ -221,13 +226,13 @@ void CSASSkillGaugeUI::ChangeSkill_TickShader(const _float & fTimeDelta)
 {
 	m_fSkill_TimeAcc += fTimeDelta;
 
-	if (m_pCanvas->Get_SASSkill() != m_pCanvas->Get_PreSASSkill())
+	if (CCanvas_SASSkill::Get_SASSkill() != CCanvas_SASSkill::Get_PreSASSkill())
 	{
 		ChangeSkill(); // 스킬이 바뀌면 쉐이더 값도 변경해준다.
 
-		if (true == m_pCanvas->Get_ChangeX())
+		if (true == CCanvas_SASSkill::Get_ChangeX())
 		{
-			switch (m_pCanvas->Get_SASSkill())
+			switch (CCanvas_SASSkill::Get_SASSkill())
 			{
 			case CCanvas_SASSkill::ONE0:
 				m_tParams.Floats[0] = m_fSkill_TimeAcc;
@@ -248,7 +253,7 @@ void CSASSkillGaugeUI::ChangeSkill_TickShader(const _float & fTimeDelta)
 		}
 		else
 		{
-			switch (m_pCanvas->Get_SASSkill())
+			switch (CCanvas_SASSkill::Get_SASSkill())
 			{
 			case CCanvas_SASSkill::ONE1:
 				m_tParams.Floats[0] = m_fSkill_TimeAcc;
@@ -268,7 +273,7 @@ void CSASSkillGaugeUI::ChangeSkill_TickShader(const _float & fTimeDelta)
 			}
 		}
 
-		m_pCanvas->Set_PreSASSkill(m_pCanvas->Get_SASSkill());
+		CCanvas_SASSkill::Set_PreSASSkill(CCanvas_SASSkill::Get_SASSkill());
 	}
 }
 
@@ -284,7 +289,7 @@ CSASSkillGaugeUI * CSASSkillGaugeUI::Create(ID3D11Device * pDevice, ID3D11Device
 	return pInstance;
 }
 
-CUI * CSASSkillGaugeUI::Clone(void * pArg)
+CCanvas_SASSkill * CSASSkillGaugeUI::Clone(void * pArg)
 {
 	CSASSkillGaugeUI*		pInstance = new CSASSkillGaugeUI(*this);
 
@@ -298,6 +303,6 @@ CUI * CSASSkillGaugeUI::Clone(void * pArg)
 
 void CSASSkillGaugeUI::Free()
 {
-	__super::Free();
+	CUI::Free();
 
 }

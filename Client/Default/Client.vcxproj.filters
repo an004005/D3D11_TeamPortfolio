@@ -285,19 +285,9 @@
     <ClInclude Include="..\public\ScarletMap.h">
       <Filter>02.GameObjects\Map</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapObject.h">
-      <Filter>02.GameObjects\Map\MapObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MapNonAnim_Object.h">
-      <Filter>02.GameObjects\Map\MapObject\MapNonAnimObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Psychokinesis.h">
-      <Filter>50.Component\02. Psychokinesis</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
-
     <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\Canvas.h">
       <Filter>02.GameObjects\UI</Filter>
@@ -342,9 +332,6 @@
     <ClInclude Include="..\public\SASSkillLightUI.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\SASSkillCtrlUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\SASSkillFullCircleUI.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
@@ -386,6 +373,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
+    <ClInclude Include="..\public\MapNonAnim_Object.h" />
+    <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\Psychokinesis.h" />
+    <ClInclude Include="..\public\SASSkillDefaultUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -481,15 +474,6 @@
     <ClCompile Include="..\private\ScarletMap.cpp">
       <Filter>02.GameObjects\Map</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapObject.cpp">
-      <Filter>02.GameObjects\Map\MapObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
-      <Filter>02.GameObjects\Map\MapObject\MapNonAnimObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Psychokinesis.cpp">
-      <Filter>50.Component\02. Psychokinesis</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
@@ -537,9 +521,6 @@
     <ClCompile Include="..\private\SASSkillLightUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\SASSkillCtrlUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\SASSkillFullCircleUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
@@ -581,6 +562,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\private\ScarletCharacter.cpp" />
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
+    <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\Psychokinesis.cpp" />
+    <ClCompile Include="..\private\SASSkillDefaultUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

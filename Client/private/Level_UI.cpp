@@ -22,7 +22,7 @@
 #include "SASSkillIconUI.h"
 #include "SASSkillGaugeUI.h"
 #include "SASSkillLightUI.h"
-#include "SASSkillCtrlUI.h"
+#include "SASSkillDefaultUI.h"
 #include "SASSkillFullCircleUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -141,8 +141,8 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_SASSkillCtrl_UI */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillCtrl_UI"),
-			CSASSkillCtrlUI::Create(m_pDevice, m_pContext))))
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillDefault_UI"),
+			CSASSkillDefaultUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_SASSkillFullCircle_UI */
