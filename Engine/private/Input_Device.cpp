@@ -35,7 +35,7 @@ HRESULT CInput_Device::Ready_Input_Device(HINSTANCE hInst, HWND hWnd)
 	// 장치에 대한 access 버전을 받아오는 함수
 	m_pKeyBoard->Acquire();
 
-
+	
 	// 마우스 객체 생성
 	if (FAILED(m_pInputSDK->CreateDevice(GUID_SysMouse, &m_pMouse, nullptr)))
 		return E_FAIL;		

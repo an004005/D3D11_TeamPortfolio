@@ -196,6 +196,7 @@
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
     <ClInclude Include="..\public\Effect.h" />
+    <ClInclude Include="..\public\EffectGroup.h" />
     <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\DefaultUI.h" />
     <ClInclude Include="..\public\Floors.h" />
@@ -219,6 +220,7 @@
     <ClInclude Include="..\public\Level_Tutorial.h" />
     <ClInclude Include="..\public\Level_UI.h" />
     <ClInclude Include="..\public\MainApp.h" />
+    <ClInclude Include="..\public\ParticleSystem.h" />
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\Public\Player.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -244,8 +246,11 @@
     <ClInclude Include="..\public\UI.h" />
     <ClInclude Include="..\public\TestMonster.h" />
     <ClInclude Include="..\public\TestObject.h" />
+    <ClInclude Include="..\public\TestEffectGroup.h" />
+    <ClInclude Include="..\public\TrailSystem.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
+    <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -271,6 +276,7 @@
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
+    <ClCompile Include="..\private\EffectGroup.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp" />
     <ClCompile Include="..\private\DefaultUI.cpp" />
     <ClCompile Include="..\private\Floors.cpp" />
@@ -295,6 +301,7 @@
     <ClCompile Include="..\private\Level_UI.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\Monster.cpp" />
+    <ClCompile Include="..\private\ParticleSystem.cpp" />
     <ClCompile Include="..\Private\Player.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -319,8 +326,11 @@
     <ClCompile Include="..\private\UI.cpp" />
     <ClCompile Include="..\private\TestMonster.cpp" />
     <ClCompile Include="..\private\TestObject.cpp" />
+    <ClCompile Include="..\private\TestEffectGroup.cpp" />
+    <ClCompile Include="..\private\TrailSystem.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -341,6 +351,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\PostDownScaleFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\PostFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_MeshInstance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Navigation.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcessVFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />

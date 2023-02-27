@@ -19,6 +19,7 @@ public:
 		RENDER_ALPHABLEND,
 		RENDER_DECAL,
 		RENDER_DEBUG,
+		RENDER_OUTLINE,
 		POSTPROCESS_VFX,
 		RENDER_UI,
 		RENDER_END
@@ -71,6 +72,9 @@ private:
 	HRESULT Render_HDR();
 	HRESULT Render_PostProcess();
 	HRESULT Render_UI();
+
+	HRESULT Render_Outline();
+
 
 private:
 	HRESULT Render_DebugObject();

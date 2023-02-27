@@ -178,6 +178,18 @@
     <Filter Include="02.GameObjects\Monster\TestMonster%28Fix%29">
       <UniqueIdentifier>{745e34b2-083b-4b07-a6e4-087ec47d99ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="VFX\Particle">
+      <UniqueIdentifier>{a079757b-66b7-47bb-8ebb-83898358c7aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\Trail">
+      <UniqueIdentifier>{7541f2ee-9728-4466-8de6-3d3d0ac1aa50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\Effect\EffectGroup">
+      <UniqueIdentifier>{dc4d2c5a-8ae6-46a5-b3ca-5f35f27c8b5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\Effect\EffectGroup\TestEffectGroup">
+      <UniqueIdentifier>{c04eb42d-7b50-4114-8751-7fab3bf8a885}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -297,7 +309,24 @@
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\EffectSystem.h" />
+    <ClInclude Include="..\public\EffectSystem.h">
+      <Filter>VFX\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ParticleSystem.h">
+      <Filter>VFX\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h">
+      <Filter>VFX\Effect\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EffectGroup.h">
+      <Filter>VFX\Effect\EffectGroup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TestEffectGroup.h">
+      <Filter>VFX\Effect\EffectGroup\TestEffectGroup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TrailSystem.h">
+      <Filter>VFX\Trail</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Canvas.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
@@ -397,6 +426,9 @@
     <ClInclude Include="..\public\MapNonAnim_Object.h" />
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
+    <ClInclude Include="..\public\EffectSystem.h">
+      <Filter>VFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -495,7 +527,24 @@
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\EffectSystem.cpp" />
+    <ClCompile Include="..\private\EffectSystem.cpp">
+      <Filter>VFX\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ParticleSystem.cpp">
+      <Filter>VFX\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp">
+      <Filter>VFX\Effect\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EffectGroup.cpp">
+      <Filter>VFX\Effect\EffectGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TestEffectGroup.cpp">
+      <Filter>VFX\Effect\EffectGroup\TestEffectGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TrailSystem.cpp">
+      <Filter>VFX\Trail</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Canvas.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
@@ -595,6 +644,9 @@
     <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
+    <ClCompile Include="..\private\EffectSystem.cpp">
+      <Filter>VFX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -678,6 +730,9 @@
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstance_ParticleSystem.hlsl">
       <Filter>97.ShaderFiles\VFX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_MeshInstance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
