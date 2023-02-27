@@ -80,15 +80,16 @@ wstring CMapNonAnim_Object::MakePxModelProtoTag()
 HRESULT CMapNonAnim_Object::SetUp_Components()
 {
 	const wstring PxModelTag = MakePxModelProtoTag();
-	if (nullptr == CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, PxModelTag.c_str()))
+	if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_NOW, PxModelTag.c_str()))
 	{
-		CGameInstance::GetInstance()->Add_Prototype(LEVEL_NOW, 
-			PxModelTag.c_str(), CPhysXStaticModel::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str()));
+		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_NOW, 
+			PxModelTag.c_str(), CPhysXStaticModel::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str())));
 	}
 
 	// todo : 임시로 모든 CMapNonAnim_Object 에 PxModel을 가지도록 설정 추후 수정 바람
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, PxModelTag.c_str(), TEXT("Com_PxModel"),
 		(CComponent**)&m_pPxModel));
+
 	return S_OK;
 }
 

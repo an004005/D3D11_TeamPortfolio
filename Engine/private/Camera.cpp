@@ -35,6 +35,7 @@ HRESULT CCamera::Initialize(void * pArg)
 		m_pTransformCom->LookAt(XMLoadFloat4(&m_CameraDesc.vAt));
 	}
 
+	m_fNear = 0.1f;
 	return S_OK;
 }
 

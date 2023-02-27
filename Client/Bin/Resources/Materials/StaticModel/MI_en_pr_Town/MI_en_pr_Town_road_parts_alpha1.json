@@ -1,0 +1,16 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+             "../Bin/Resources/Environments/Prop/10_Props/Exterior/Basement/pr_BasementTown/T_pr_Town_road_parts_alpha1_ALB.dds",
+             "../Bin/Resources/Environments/Prop/10_Props/Exterior/Basement/pr_BasementTown/T_pr_Town_road_parts_alpha1_NML.png"
+        ],
+        
+        "Pass" : 1
+    }
+}

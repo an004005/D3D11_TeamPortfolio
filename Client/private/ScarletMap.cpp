@@ -97,26 +97,31 @@ void CScarletMap::Imgui_RenderProperty()
 
 	ImGui::Separator();
 
+	static _bool DoInput = false;
+	static _float4 InitPosition = { 0.f, 0.f, 0.f, 1.f };
+	static _float3 Interval = { 0.f, 0.f, 0.f };
+	ImGui::Checkbox("InputPosition", &DoInput);
+
+	if (DoInput)
+	{
+		ImGui::InputFloat3("SetInitPosition", (float*)&InitPosition);
+		ImGui::InputFloat3("SetIntermal", (float*)&Interval);
+	}
+	
 	if (ImGui::Button("Create_MapNonAnim_Object"))
 	{	
 		Json json;
 		json["ModelTag"] = ws2s(m_pModelProtoTag);
+	
+		InitPosition.x += Interval.x;
+		InitPosition.y += Interval.y;
+		InitPosition.z += Interval.z;
 
-		_float4 InitPos = SetUp_InitPosition();
+		_float4 InitPos = DoInput == false ? SetUp_InitPosition() : InitPosition;
 		json["InitPos"] = InitPos;
 		FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MapNonAnimObject"), TEXT("Prototype_GameObject_MapNonAnim_Object"), &json));
 	}
 
-	if (ImGui::Button("Delete_MapNonAnim_Object"))
-	{
-		if (m_pGameObject)
-		{
-			m_pGameObject->SetDelete();
-			m_pGameObject = nullptr;
-		}
-	}
-
-	ImGui::NewLine();
 	ImGui::Separator();
 
 	CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_MapNonAnimObject"));
@@ -168,6 +173,20 @@ void CScarletMap::Imgui_RenderProperty()
 			ImGui::EndListBox();
 		}
 	}
+
+	ImGui::Separator();
+
+
+	if (ImGui::Button("Delete_MapNonAnim_Object"))
+	{
+		if (m_pGameObject)
+		{
+			m_pGameObject->SetDelete();
+			m_pGameObject = nullptr;
+		}
+	}
+
+	ImGui::Separator();
 
 	if(ImGui::Button("Clear Map"))
 		ClearMap();

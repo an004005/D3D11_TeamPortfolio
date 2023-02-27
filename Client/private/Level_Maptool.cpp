@@ -87,102 +87,20 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	{
 		char szFileName[MAX_PATH]{};
 		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-		CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
+		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
 	});
 
-	/* For. big_building */
-	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Buildings/big_building.static_model"), "../Bin/Resources/Model/StaticModel/Buildings/big_building.static_model"));
-
-	/* For. MID_buildbase_M_01 */
-	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Buildings/MID_buildbase_M_01.static_model"), "../Bin/Resources/Model/StaticModel/Buildings/MID_buildbase_M_01.static_model"));
-
-	/* For. LC01_Area02_Minimap */
-	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Minimaps/LC01_Area02_Minimap.static_model"), "../Bin/Resources/Model/StaticModel/Minimaps/LC01_Area02_Minimap.static_model"));
-
-	/* For. HWBase_B02 */
-	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Roads/HWBase_B02.static_model"), "../Bin/Resources/Model/StaticModel/Roads/HWBase_B02.static_model"));
-
-	/* For. HWEndZ_tes02 */
-	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Roads/HWEndZ_tes02.static_model"), "../Bin/Resources/Model/StaticModel/Roads/HWEndZ_tes02.static_model"));
-
-	/* For. Town_Road */
-	FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Roads/Town_Road.static_model"), "../Bin/Resources/Model/StaticModel/Roads/Town_Road.static_model"));
-
-	// Pedestrian
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/", 
+		[this](const string& fileName)
 	{
-		
-		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a.static_model"));		
-		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a_re.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01a_re.static_model"));
-		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01b.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01b.static_model"));
-		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01b_re.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01b_re.static_model"));
-		FAILED_CHECK(Create_Model(TEXT("../Bin/Resources/Model/StaticModel/Structure/PedestrianBridge01c_re.static_model"), "../Bin/Resources/Model/StaticModel/Structure/Pedestrian/PedestrianBridge01c_re.static_model"));
-	}
-	
-	wstring wstrModelPath = L"";
-	/* For. SM_pr_S_TownRoad_a1 */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/Roads/SM_pr_S_TownRoad_a1.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
+		char szFileExt[MAX_PATH]{};
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0 , szFileExt, MAX_PATH);
 
-	/* For. SM_pr_S_TownRoad_a4 */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/Roads/SM_pr_S_TownRoad_a4.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_SG_Ground */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/Grounds/SM_pr_SG_Ground.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_Dodai_A1 */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Dodai_A1.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_Dodai_B1 */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Dodai_B1.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_Dodai_C1 */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Dodai_C1.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_S_F_light_a1 */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_S_F_light_a1.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_S_Town_CP1_1 */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_S_Town_CP1_1.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_Keijiban_B */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Keijiban_B.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_Omikuji_A1 */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Omikuji_A1.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_Omikuji_A1_Effect01 */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Omikuji_A1_Effect01.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_Omikuji_B1 */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Omikuji_B1.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_Syamusyo_A1 */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Syamusyo_A1.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_Sumeragi_Tourou_B */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Sumeragi_Tourou_B.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_Sumeragi_Kaidan_B */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Sumeragi_Kaidan_B.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
-	/* For. SM_pr_Sumeragi_Kaidan_A */
-	wstrModelPath = TEXT("../Bin/Resources/Model/StaticModel/DownTown/SM_pr_Sumeragi_Kaidan_A.static_model");
-	FAILED_CHECK(Create_Model(wstrModelPath, ws2s(wstrModelPath).c_str()));
-
+		if (0 == strcmp(szFileExt, ".static_model"))
+		{
+			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str()));
+		}
+	});
 	return S_OK;
 }
 
@@ -191,7 +109,6 @@ HRESULT CLevel_Maptool::Ready_Layer_Camera(const wstring& pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag.c_str(), TEXT("Prototype_GameObject_Camera_Dynamic")));
-
 	return S_OK;
 }
 
