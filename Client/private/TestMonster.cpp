@@ -8,12 +8,12 @@
 #include"Model.h"
 
 CTestMonster::CTestMonster(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+	: CMonster(pDevice, pContext)
 {
 }
 
 CTestMonster::CTestMonster(const CTestMonster & rhs)
-	: CGameObject(rhs)
+	: CMonster(rhs)
 {
 }
 

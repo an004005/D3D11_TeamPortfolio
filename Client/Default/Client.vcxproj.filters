@@ -130,9 +130,6 @@
     <Filter Include="02.GameObjects\Monster\FlowerLeg">
       <UniqueIdentifier>{3386faa1-76ca-4e3d-88fc-b10d3335d21c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster\TestMonster%28Goat%29">
-      <UniqueIdentifier>{745e34b2-083b-4b07-a6e4-087ec47d99ea}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Monster\BuddyLumi">
       <UniqueIdentifier>{e601f17e-3211-4b5c-9124-ad399b6dceac}</UniqueIdentifier>
     </Filter>
@@ -168,6 +165,18 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
       <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPool\SkMpBullet">
+      <UniqueIdentifier>{81b8a892-455d-4368-8398-fd91cc4bf17e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPandou">
+      <UniqueIdentifier>{77a8119b-8713-49c4-b0ae-773fc0c8cd4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance">
+      <UniqueIdentifier>{8ab2e832-9040-4d96-a44d-460f9f302254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\TestMonster%28Fix%29">
+      <UniqueIdentifier>{745e34b2-083b-4b07-a6e4-087ec47d99ea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -285,19 +294,9 @@
     <ClInclude Include="..\public\ScarletMap.h">
       <Filter>02.GameObjects\Map</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapObject.h">
-      <Filter>02.GameObjects\Map\MapObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MapNonAnim_Object.h">
-      <Filter>02.GameObjects\Map\MapObject\MapNonAnimObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Psychokinesis.h">
-      <Filter>50.Component\02. Psychokinesis</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
-
     <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\Canvas.h">
       <Filter>02.GameObjects\UI</Filter>
@@ -355,7 +354,7 @@
       <Filter>02.GameObjects\Camera\CamSpot</Filter>
     </ClInclude>
     <ClInclude Include="..\public\TestMonster.h">
-      <Filter>02.GameObjects\Monster\TestMonster%28Goat%29</Filter>
+      <Filter>02.GameObjects\Monster\TestMonster%28Fix%29</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_EnemiesTest.h">
       <Filter>01.Levels\50.MonsterTest</Filter>
@@ -386,6 +385,18 @@
     </ClInclude>
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
+    <ClInclude Include="..\public\SkMpBullet.h">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkMpBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkummyPandou.h">
+      <Filter>02.GameObjects\Monster\SkummyPandou</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkPd_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h" />
+    <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\Psychokinesis.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -481,15 +492,6 @@
     <ClCompile Include="..\private\ScarletMap.cpp">
       <Filter>02.GameObjects\Map</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapObject.cpp">
-      <Filter>02.GameObjects\Map\MapObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
-      <Filter>02.GameObjects\Map\MapObject\MapNonAnimObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Psychokinesis.cpp">
-      <Filter>50.Component\02. Psychokinesis</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
@@ -550,7 +552,7 @@
       <Filter>02.GameObjects\Camera\CamSpot</Filter>
     </ClCompile>
     <ClCompile Include="..\private\TestMonster.cpp">
-      <Filter>02.GameObjects\Monster\TestMonster%28Goat%29</Filter>
+      <Filter>02.GameObjects\Monster\TestMonster%28Fix%29</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_EnemiesTest.cpp">
       <Filter>01.Levels\50.MonsterTest</Filter>
@@ -581,6 +583,18 @@
     </ClCompile>
     <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\private\ScarletCharacter.cpp" />
+    <ClCompile Include="..\private\SkMpBullet.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkMpBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkummyPandou.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPandou</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkPd_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
+    <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\Psychokinesis.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
