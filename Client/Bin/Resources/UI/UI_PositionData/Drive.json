@@ -1,10 +1,10 @@
 {
     "ChildrenUI": [
         {
-            "ChildTag": "PlayerInfo_BackGround\u0000",
+            "ChildTag": "Drive_BackGround\u0000",
             "ObjectTag": "Drive_BackGround",
             "Pivot": 6,
-            "PositionX": 180.0,
+            "PositionX": 182.0,
             "PositionY": 75.0,
             "Priority": 0,
             "Prototype_GameObject": "Default_UI\u0000",
@@ -37,7 +37,7 @@
                     0.0,
                     1.0,
                     0.0,
-                    180.0,
+                    182.0,
                     -285.0,
                     0.0,
                     1.0

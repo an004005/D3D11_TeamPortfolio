@@ -34,6 +34,7 @@ public:
 	virtual void AfterPhysX(){}
 	virtual HRESULT Render();
 	virtual HRESULT Render_ShadowDepth() { return S_OK; }
+	virtual HRESULT Render_OutlineFlag() { return S_OK; }
 
 	virtual void SaveToJson(OUT Json& json);
 	virtual void LoadFromJson(const Json& json);
@@ -68,6 +69,7 @@ public:
 
 	const string& GetObjectTag() const { return m_strObjectTag; }
 
+	void Set_Owner(CGameObject* pOwner) { m_pOwner = pOwner; }
 
 	void SetVisible(_bool bVisible) { m_bVisible = bVisible; }
 	virtual void SetDelete() { m_bDelete = true; }
@@ -89,6 +91,9 @@ protected:
 	// prototype으로 추가될 때 지정해준다.
 	wstring											m_strPrototypeTag;
 	string											m_strObjectTag;
+
+protected:
+	CGameObject*									m_pOwner = nullptr;
 
 protected:
 	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, class CComponent** ppOut, void* pArg = nullptr);

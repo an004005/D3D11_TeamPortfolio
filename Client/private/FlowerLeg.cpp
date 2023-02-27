@@ -12,12 +12,12 @@
 #include "FL_AnimInstance.h"
 
 CFlowerLeg::CFlowerLeg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+	: CMonster(pDevice, pContext)
 {
 }
 
 CFlowerLeg::CFlowerLeg(const CFlowerLeg & rhs)
-	: CGameObject(rhs)
+	: CMonster(rhs)
 {
 }
 

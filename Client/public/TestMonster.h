@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "Monster.h"
 
 BEGIN(Engine)
 class CShader;
@@ -11,7 +12,7 @@ END
 
 BEGIN(Client)
 
-class CTestMonster : public CGameObject
+class CTestMonster : public CMonster
 {
 private:
 	CTestMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

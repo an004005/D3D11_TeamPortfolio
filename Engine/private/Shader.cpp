@@ -442,7 +442,7 @@ void CShader::Imgui_RenderShaderParams(ShaderParams& tParams)
 		string name = to_string(i) + "Float4";
 		ImGui::InputFloat4(name.c_str(), (_float*)&tParams.Float4s[i]);
 		name += " Color";
-		ImGui::ColorEdit4(name.c_str(), (_float*)&tParams.Float4s[i]);
+		ImGui::ColorEdit4(name.c_str(), (_float*)&tParams.Float4s[i], ImGuiColorEditFlags_PickerHueWheel);
 	}
 	if (ImGui::Button("Add Float4") && tParams.Float4s.size() < PARAM_FLOAT4_CNT)
 	{
