@@ -14,6 +14,7 @@
 #include "Material.h"
 #include "Imgui_PostProcess.h"
 #include "ParticleSystem.h"
+#include "SkyBox.h"
 #include "TrailSystem.h"
 
 
@@ -99,13 +100,26 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	{
 		char szFileName[MAX_PATH]{};
 		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-		CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
+		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
 	});
+
+	// ForSky
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_Component_Model_SkySphere"),
+		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/StaticModel/Sky/SkySphere.static_model"))))
+		return E_FAIL;
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
+
+	// ~ForSky
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
+
+
+
 
 	// 모델 추가하는 방법
 	// auto pModel_VFX = CModel::Create(m_pDevice, m_pContext,
@@ -131,6 +145,10 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	// For_SkySphere
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Env", TEXT("Prototype_GameObject_SkyBox")));
+
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectSystem")));

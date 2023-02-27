@@ -9,6 +9,6 @@
         "Textures" : [
             "../Bin/Resources/99.DefaultSky/T_Sky_01_A.png"
         ],
-        "Pass" : 1
+        "Pass" : 2
     }
 }
