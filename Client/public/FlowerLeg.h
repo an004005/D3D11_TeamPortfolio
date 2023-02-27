@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "Monster.h"
 
 BEGIN(Engine)
 class CShader;
@@ -12,7 +13,7 @@ END
 BEGIN(Client)
 class CFL_AnimInstance;
 
-class CFlowerLeg : public CGameObject
+class CFlowerLeg : public CMonster
 {
 public:
 	enum KEYSTATE { KEY_W, KEY_S, KEY_A, KEY_D, KEY_END };
