@@ -78,11 +78,6 @@ void CRigidBody::Imgui_RenderProperty()
 	{
 		static GUIZMO_INFO tInfo;
 		CImguiUtils::Render_Guizmo(&m_OriginTransformMatrix, tInfo, true, true);
-		if (m_pShape)
-		{
-			physx::PxTransform relativePose(CPhysXUtils::ToFloat4x4(m_OriginTransformMatrix));
-			m_pShape->setLocalPose(relativePose);
-		}
 	}
 	ImGui::Unindent( 20.f );
 }
@@ -100,6 +95,8 @@ void CRigidBody::SaveToJson(Json& json)
 
 void CRigidBody::LoadFromJson(const Json& json)
 {
+	if (json.contains("RigidBody") == false)
+		return;
 	CComponent::LoadFromJson(json);
 	m_bKinematic = json["RigidBody"]["bKinematic"];
 	m_bTrigger = json["RigidBody"]["bTrigger"];

@@ -22,31 +22,206 @@ HRESULT CCanvas_SASSkill::Initialize_Prototype()
 
 HRESULT CCanvas_SASSkill::Initialize(void* pArg)
 {
-	if (FAILED(CCanvas::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
+
+	// 처음에 보이지 않을 UI 들
+	Find_ChildUI(L"SASSkill_CtrlText1")->SetVisible(false);
+	Find_ChildUI(L"SASSkill_CtrlTexture1")->SetVisible(false);
+
+	Find_ChildUI(L"SASSkill_IconNumber1")->SetVisible(false);
+	Find_ChildUI(L"SASSkill_IconNumber2")->SetVisible(false);
+	Find_ChildUI(L"SASSkill_IconNumber3")->SetVisible(false);
+	Find_ChildUI(L"SASSkill_IconNumber4")->SetVisible(false);
+
+	Find_ChildUI(L"SASSkill_AltText1")->SetVisible(false);
+	Find_ChildUI(L"SASSkill_AltTexture1")->SetVisible(false);
+
+	Find_ChildUI(L"SASSKill_ColleagueName1")->SetVisible(false);
+	Find_ChildUI(L"SASSKill_ColleagueName2")->SetVisible(false);
+	Find_ChildUI(L"SASSKill_ColleagueName3")->SetVisible(false);
+	Find_ChildUI(L"SASSKill_ColleagueName4")->SetVisible(false);
+
+	Find_ChildUI(L"SASSKill_SuperPower1")->SetVisible(false);
+	Find_ChildUI(L"SASSKill_SuperPower2")->SetVisible(false);
+	Find_ChildUI(L"SASSKill_SuperPower3")->SetVisible(false);
+	Find_ChildUI(L"SASSKill_SuperPower4")->SetVisible(false);
+
+	Find_ChildUI(L"SASSkill_XRight")->SetVisible(false);
+	Find_ChildUI(L"SASSkill_XInput")->SetVisible(false);
+
 
 	return S_OK;
 }
 
 void CCanvas_SASSkill::Tick(_double TimeDelta)
 {
-	CCanvas::Tick(TimeDelta);
+	__super::Tick(TimeDelta);
 
+	InputCtrl_Tick();
+	InputAlt_Tick();
+	InputX_Tick(TimeDelta);
 }
 
 void CCanvas_SASSkill::Imgui_RenderProperty()
 {
-	CCanvas::Imgui_RenderProperty();
+	__super::Imgui_RenderProperty();
 }
 
 void CCanvas_SASSkill::SaveToJson(Json& json)
 {
-	CCanvas::SaveToJson(json);
+	__super::SaveToJson(json);
+
 }
 
 void CCanvas_SASSkill::LoadFromJson(const Json & json)
 {
-	CCanvas::LoadFromJson(json);
+	__super::LoadFromJson(json);
+
+}
+
+void CCanvas_SASSkill::Info_Tick(const _bool bPush)
+{
+	if (true == bPush)
+	{
+		Find_ChildUI(L"SASSkill_Icon1")->SetVisible(false);
+		Find_ChildUI(L"SASSkill_Icon2")->SetVisible(false);
+		Find_ChildUI(L"SASSkill_Icon3")->SetVisible(false);
+		Find_ChildUI(L"SASSkill_Icon4")->SetVisible(false);
+
+		Find_ChildUI(L"SASSkill_IconNumber1")->SetVisible(true);
+		Find_ChildUI(L"SASSkill_IconNumber2")->SetVisible(true);
+		Find_ChildUI(L"SASSkill_IconNumber3")->SetVisible(true);
+		Find_ChildUI(L"SASSkill_IconNumber4")->SetVisible(true);
+
+
+	}
+	else
+	{
+		Find_ChildUI(L"SASSkill_Icon1")->SetVisible(true);
+		Find_ChildUI(L"SASSkill_Icon2")->SetVisible(true);
+		Find_ChildUI(L"SASSkill_Icon3")->SetVisible(true);
+		Find_ChildUI(L"SASSkill_Icon4")->SetVisible(true);
+
+		Find_ChildUI(L"SASSkill_IconNumber1")->SetVisible(false);
+		Find_ChildUI(L"SASSkill_IconNumber2")->SetVisible(false);
+		Find_ChildUI(L"SASSkill_IconNumber3")->SetVisible(false);
+		Find_ChildUI(L"SASSkill_IconNumber4")->SetVisible(false);
+
+
+	}
+}
+
+void CCanvas_SASSkill::InputCtrl_Tick()
+{
+	// Ctrel 눌렀을 때 보여야 하는 UI
+	if (CGameInstance::GetInstance()->KeyDown(DIK_LCONTROL))	
+	{
+		Info_Tick(true);
+
+		Find_ChildUI(L"SASSkill_CtrlText0")->SetVisible(false);
+		Find_ChildUI(L"SASSkill_CtrlTexture0")->SetVisible(false);
+
+		Find_ChildUI(L"SASSkill_CtrlText1")->SetVisible(true);
+		Find_ChildUI(L"SASSkill_CtrlTexture1")->SetVisible(true);
+
+		Find_ChildUI(L"SASSKill_ColleagueName1")->SetVisible(true);
+		Find_ChildUI(L"SASSKill_ColleagueName2")->SetVisible(true);
+		Find_ChildUI(L"SASSKill_ColleagueName3")->SetVisible(true);
+		Find_ChildUI(L"SASSKill_ColleagueName4")->SetVisible(true);
+	}
+	// Ctrel 누르지 않을 때 보여야 하는 UI
+	if (CGameInstance::GetInstance()->KeyUp(DIK_LCONTROL))
+	{
+		Info_Tick(false);
+		
+		Find_ChildUI(L"SASSkill_CtrlText0")->SetVisible(true);
+		Find_ChildUI(L"SASSkill_CtrlTexture0")->SetVisible(true);
+
+		Find_ChildUI(L"SASSkill_CtrlText1")->SetVisible(false);
+		Find_ChildUI(L"SASSkill_CtrlTexture1")->SetVisible(false);
+
+		Find_ChildUI(L"SASSKill_ColleagueName1")->SetVisible(false);
+		Find_ChildUI(L"SASSKill_ColleagueName2")->SetVisible(false);
+		Find_ChildUI(L"SASSKill_ColleagueName3")->SetVisible(false);
+		Find_ChildUI(L"SASSKill_ColleagueName4")->SetVisible(false);
+	}
+}
+
+void CCanvas_SASSkill::InputAlt_Tick()
+{
+	// Alt 눌렀을 때 보여야 하는 UI
+	if (CGameInstance::GetInstance()->KeyDown(DIK_LALT))
+	{
+		Info_Tick(true);
+
+		Find_ChildUI(L"SASSkill_AltText0")->SetVisible(false);
+		Find_ChildUI(L"SASSkill_AltTexture0")->SetVisible(false);
+
+		Find_ChildUI(L"SASSkill_AltText1")->SetVisible(true);
+		Find_ChildUI(L"SASSkill_AltTexture1")->SetVisible(true);
+
+		Find_ChildUI(L"SASSKill_SuperPower1")->SetVisible(true);
+		Find_ChildUI(L"SASSKill_SuperPower2")->SetVisible(true);
+		Find_ChildUI(L"SASSKill_SuperPower3")->SetVisible(true);
+		Find_ChildUI(L"SASSKill_SuperPower4")->SetVisible(true);
+	}
+	// Alt 누르지 않을 때 보여야 하는 UI
+	if (CGameInstance::GetInstance()->KeyUp(DIK_LALT))
+	{
+		Info_Tick(false);
+
+		Find_ChildUI(L"SASSkill_AltText0")->SetVisible(true);
+		Find_ChildUI(L"SASSkill_AltTexture0")->SetVisible(true);
+
+		Find_ChildUI(L"SASSkill_AltText1")->SetVisible(false);
+		Find_ChildUI(L"SASSkill_AltTexture1")->SetVisible(false);
+
+		Find_ChildUI(L"SASSKill_SuperPower1")->SetVisible(false);
+		Find_ChildUI(L"SASSKill_SuperPower2")->SetVisible(false);
+		Find_ChildUI(L"SASSKill_SuperPower3")->SetVisible(false);
+		Find_ChildUI(L"SASSKill_SuperPower4")->SetVisible(false);
+	}
+}
+
+void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
+{
+	// TODO : Text 용 삭제해야 합니당.
+	// 만약에 UI 에서 하는 것 이라면 매개변수로 _bool 받아와서 할 것! -> 계속 Tick() 을 돌고 있음 생각하기
+	if (CGameInstance::GetInstance()->KeyDown(DIK_X))
+	{
+		m_bChangeX = !m_bChangeX;
+		m_bChangeXButton = true;
+	}
+	// 요기까지
+
+	if (true == m_bChangeX)	// 오른쪽
+	{
+		Find_ChildUI(L"SASSkill_XLeft")->SetVisible(false);
+		Find_ChildUI(L"SASSkill_XRight")->SetVisible(true);
+	}
+	else					// 왼쪽
+	{
+		Find_ChildUI(L"SASSkill_XLeft")->SetVisible(true);
+		Find_ChildUI(L"SASSkill_XRight")->SetVisible(false);
+	}
+
+	if (true == m_bChangeXButton)
+	{
+		if (0.0 < m_dChangeX_TimcAcc)
+		{
+			Find_ChildUI(L"SASSkill_XInput")->SetVisible(true);
+		}
+
+		m_dChangeX_TimcAcc += dTimeDelta;
+
+		if (0.2 < m_dChangeX_TimcAcc)
+		{
+			m_bChangeXButton = false;
+			m_dChangeX_TimcAcc = 0.0;
+			Find_ChildUI(L"SASSkill_XInput")->SetVisible(false);
+		}
+	}
 }
 
 CCanvas_SASSkill * CCanvas_SASSkill::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -75,5 +250,5 @@ CCanvas * CCanvas_SASSkill::Clone(void * pArg)
 
 void CCanvas_SASSkill::Free()
 {
-	CCanvas::Free();
+	__super::Free();
 }

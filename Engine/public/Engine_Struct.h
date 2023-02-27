@@ -199,4 +199,12 @@ namespace Engine
 		static const unsigned int			iNumElements = 2;
 		static D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTXCUBETEX_DECLARATION;
+
+
+	struct PxMesh
+	{
+		physx::PxTriangleMesh* pPxMesh = nullptr;
+		physx::PxTriangleMeshGeometry tMeshGeom;
+		physx::PxShape* pShape = nullptr;
+	};
 }
