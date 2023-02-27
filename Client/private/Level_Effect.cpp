@@ -16,6 +16,12 @@
 #include "ParticleSystem.h"
 #include "SkyBox.h"
 #include "TrailSystem.h"
+#include "CamSpot.h"
+#include "Weapon_wp0190.h"
+#include "Model.h"
+#include "AnimationInstance.h"
+#include "Player.h"
+#include "Controller.h"
 
 
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -41,6 +47,15 @@ HRESULT CLevel_Effect::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer(TEXT("Layer"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -119,7 +134,26 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
 
 
+	// ±è±â¹üÀÇ ÈçÀû
+	pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
+	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
 
+	auto pModel_Player = CModel::Create(m_pDevice, m_pContext,
+		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
+
+	pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
+	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
+		CController::Create())))
+		return E_FAIL;
+
+	_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
+	pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
+	auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
+		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
+	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
+	////////////////
 
 	// ¸ðµ¨ Ãß°¡ÇÏ´Â ¹æ¹ý
 	// auto pModel_VFX = CModel::Create(m_pDevice, m_pContext,
@@ -170,6 +204,44 @@ HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Preview", L"MaterialPreview"));
 
+	return S_OK;
+}
+
+HRESULT CLevel_Effect::Ready_Layer_Camera(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Player"))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_Effect::Ready_Layer_Player(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json PreviewData;
+	PreviewData["Model"] = "Model_Player";
+
+	CGameObject* pPlayer = nullptr;
+	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Player"), &PreviewData));
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Effect::Ready_Layer_Map(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 	return S_OK;
 }
 
