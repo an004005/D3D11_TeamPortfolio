@@ -25,6 +25,20 @@ struct PS_OUT
 	float4		vColor : SV_TARGET0;
 };
 
+struct VS_OUT1
+{
+	float4		vPosition : SV_POSITION;
+	float2		vTexUV : TEXCOORD0;
+	float2		vTexUV1 : TEXCOORD1;
+};
+
+struct PS_IN1
+{
+	float4		vPosition : SV_POSITION;
+	float2		vTexUV : TEXCOORD0;
+	float2		vTexUV1 : TEXCOORD1;
+};
+
 /*******************
  * UI_Tex_Alpha 
  /********************/
@@ -388,6 +402,60 @@ PS_OUT PS_RotationGauge(PS_IN In) // → 15
 	return Out;
 }
 
+/*******************
+* UVCut → 16 : 2장의 텍스처를 원하는 크기로 잘라서 쓰고, 섞는다.
+/********************/
+// g_vec2_0 : 첫번 째 출력할 인덱스
+// g_vec2_1 : [x] 가로로 자를 개수, [y] 세로로 자를 개수
+// g_vec2_2 : 두번 째 출력할 인덱스
+// g_vec2_3 : [x] 가로로 자를 개수, [y] 세로로 자를 개수
+VS_OUT1 VS_UVCut2(VS_IN In)
+{
+	VS_OUT1		Out = (VS_OUT1)0;
+	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
+
+	Out.vPosition = mul(float4(In.vPosition, 1.f), matWP);
+
+	//Out.vTexUV1 = In.vTexUV;
+
+	//In.vTexUV.x = In.vTexUV.x + g_vec2_0.x;
+	//In.vTexUV.y = In.vTexUV.y + g_vec2_0.y;
+
+	//In.vTexUV.x = In.vTexUV.x / g_vec2_1.x;
+	//In.vTexUV.y = In.vTexUV.y / g_vec2_1.y;
+
+	//Out.vTexUV = In.vTexUV;
+
+	Out.vTexUV1 = In.vTexUV;
+
+	In.vTexUV.x = In.vTexUV.x + g_vec2_0.x;
+	In.vTexUV.y = In.vTexUV.y + g_vec2_0.y;
+
+	In.vTexUV.x = In.vTexUV.x / g_vec2_1.x;
+	In.vTexUV.y = In.vTexUV.y / g_vec2_1.y;
+
+	Out.vTexUV = In.vTexUV;
+
+	return Out;
+}
+// g_int_0 : [0] 이미지 색상 사용, [1] 내가 지정한 색상 사용
+// g_vec4_0 : 변경할 색상과 알파값
+// g_tex_1 : g_tex_0 과 섞을 텍스처
+// g_float_0 : Glow 의 정도
+PS_OUT PS_Glow(PS_IN1 In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4  vTextureColor;
+	float4  vGlowColor;
+
+	vTextureColor = g_tex_1.Sample(LinearSampler, In.vTexUV1) * g_vec4_0;
+	vGlowColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor = saturate(vTextureColor + (vGlowColor * g_float_0));
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0 : 알파 블랜딩으로 그리기
@@ -614,6 +682,20 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_RotationGauge();	// 색상 조정 하면서 시계방향 으로 uv가 줄어들고 늘어난다.
+	}
+
+	//16: 텍스처에 글로우 효과 주기
+	pass Rsdfasdfdasdfsd
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_UVCut2();	// 2개의 텍스처를 섞는다.
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_Glow();	// 0번째 텍스처에 1번째 텍스처를 섞는다.
 	}
 
 }

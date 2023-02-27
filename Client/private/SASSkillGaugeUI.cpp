@@ -131,6 +131,9 @@ void CSASSkillGaugeUI::SkilInfo_Initialize()
 
 	}
 		break;
+	default:
+		assert(!"Wrong Skillgauge Number");
+		break;
 	}
 }
 
@@ -208,6 +211,9 @@ void CSASSkillGaugeUI::ChangeSkill()
 
 	}
 		break;
+	default:
+		assert(!"Wrong Skillgauge Number");
+		break;
 	}
 }
 
@@ -235,6 +241,9 @@ void CSASSkillGaugeUI::ChangeSkill_TickShader(const _float & fTimeDelta)
 			case CCanvas_SASSkill::FOUR0:
 				m_tParams.Floats[0] = m_fSkill_TimeAcc;
 				break;
+			default:
+				assert(!"Wrong Skillgauge Number");
+				break;
 			}
 		}
 		else
@@ -252,6 +261,9 @@ void CSASSkillGaugeUI::ChangeSkill_TickShader(const _float & fTimeDelta)
 				break;
 			case CCanvas_SASSkill::FOUR1:
 				m_tParams.Floats[0] = m_fSkill_TimeAcc;
+				break;
+			default:
+				assert(!"Wrong Skillgauge Number");
 				break;
 			}
 		}

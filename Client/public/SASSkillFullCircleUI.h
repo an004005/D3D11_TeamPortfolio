@@ -29,7 +29,7 @@ private:
 
 	_bool m_bGrow = { false };
 	_float m_fSpeed = { 0.0f };
-	_float2 m_vFirstSize = { 0.0f, 0.0f };
+	_float2 m_vOriginSize = { 0.0f, 0.0f };
 	_float2 m_vCurrentSize = { 0.0f, 0.0f };
 
 public:

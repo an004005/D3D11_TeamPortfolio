@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Canvas_SASSkill.h"
 #include "GameInstance.h"
+#include "GameUtils.h"
 
 CCanvas_SASSkill::CCanvas_SASSkill(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -61,6 +62,7 @@ void CCanvas_SASSkill::Tick(_double TimeDelta)
 	InputCtrl_Tick();
 	InputAlt_Tick();
 	InputX_Tick(TimeDelta);
+
 }
 
 void CCanvas_SASSkill::Imgui_RenderProperty()
@@ -220,6 +222,67 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 			m_bChangeXButton = false;
 			m_dChangeX_TimcAcc = 0.0;
 			Find_ChildUI(L"SASSkill_XInput")->SetVisible(false);
+		}
+	}
+}
+
+void CCanvas_SASSkill::SASSkill_UIMove(CTransform * pTransform, const _float2 & vOrigin, const _double & dTimeDelta)
+{
+	//CGameUtils::GetRandFloat(90.0f, 180.0f);
+
+	//if (false == m_bUIMove)
+	//	return;
+
+	if (false == m_bOneCheck)
+	{
+		m_bOneCheck = true;
+		m_bIsDestination = true;
+		m_fOriginPosition = { vOrigin.x, vOrigin.y };
+		m_fDestination = { vOrigin.x + 3.0f, vOrigin.y - 3.0f };
+	}
+
+	static _float fSpeed = 5.0f;
+
+	if (true == m_bIsDestination)
+	{
+		_vector vPosition = pTransform->Get_State(CTransform::STATE_TRANSLATION);
+		
+		vPosition += XMVector2Normalize(XMLoadFloat2(&m_fDestination) - vPosition) * _float(dTimeDelta) * fSpeed;
+
+		pTransform->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.0f));
+
+		// 목표 지점과 현재 지점을 비교한다.
+		_vector vDestination = { m_fDestination.x, m_fDestination.y, 0.0f, 1.0f };
+		_float fDistance = XMVectorGetX(XMVector3Length(vDestination - vPosition));
+		
+		if (0.1f > fDistance)
+		{
+			m_bIsDestination = false;
+			m_bIsOriginGoal = true;
+		}
+	}
+
+	if (true == m_bIsOriginGoal)
+	{
+		_vector vPosition = pTransform->Get_State(CTransform::STATE_TRANSLATION);
+
+		vPosition += XMVector2Normalize(XMLoadFloat2(&m_fOriginPosition) - vPosition) * _float(dTimeDelta) * fSpeed;
+		pTransform->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.0f));
+
+		// 원래 지점과 현재 지점을 비교한다.
+		_vector vDestination = { m_fOriginPosition.x, m_fOriginPosition.y, 0.0f, 1.0f };
+		_float fDistance = XMVectorGetX(XMVector3Length(vDestination - vPosition));
+
+		if (0.0f > fDistance)
+		{
+			m_bIsOriginGoal = false;
+
+			// 모든 값을 초기화 한다.
+			m_bUIMove = false;
+			m_bOneCheck = false;
+			m_bIsDestination = false;
+			m_fOriginPosition = { 0.0f, 0.0f };
+			m_fDestination = { 0.0f, 0.0f };
 		}
 	}
 }

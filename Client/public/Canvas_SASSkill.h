@@ -66,12 +66,15 @@ public:
 		m_bOnSkill = bOn;
 	}
 
+public:
+	void	SASSkill_UIMove(CTransform * pTransform, const _float2 & vOrigin, const _double & dTimeDelta);
+
 private:
 	void	Info_Tick(const _bool bPush); // Ctrl, Alt 를 눌렀을 때에 대한 처리를 하기 위해 (스킬 아이콘이 보이지 않으면서 정보가 뜬다.)
 	void	InputCtrl_Tick();
 	void	InputAlt_Tick();
 	void	InputX_Tick(const _double & dTimeDelta);
-
+	
 private:
 	SKILLINDEX		m_eSASSkill = SKILLINDEX_END;		// UI 들이 같은 객체를 사용하기 때문에 구별하기 위해서
 	SKILLINDEX		m_ePreSASSkill = SKILLINDEX_END;	// 이전에 사용한 스킬
@@ -83,6 +86,14 @@ private:
 
 	_bool			m_bChangeXButton = { false };		// 타이머 사용하기 위해서
 	_double			m_dChangeX_TimcAcc = { 0.0 };		// X로 변경하면서, 잠깐 X 키에 불이 들어오는 용도
+	
+	// SASSkill_UIMove() -> 도착지점에 도달했다가 원래 지점으로 돌아가기 위해 함수
+	_bool			m_bUIMove = { false };	// UI를 이동시키고자 할 때 외부에서 Set 을 한다.
+	_bool			m_bOneCheck = { false }; // 원래 지점과 목표지점의 좌표를 받는다.
+	_bool			m_bIsDestination = { false };
+	_bool			m_bIsOriginGoal = { false };
+	_float2			m_fOriginPosition = { 0.0f, 0.0f }; // 도착지점까지 도달했다가 다시 돌아오고 나서 정확하게 원래 자리로 돌아가기 위해서
+	_float2			m_fDestination = { 0.0f, 0.0f };	// 도착지점
 
 public:
 	static CCanvas_SASSkill* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

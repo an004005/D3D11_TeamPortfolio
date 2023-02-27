@@ -28,7 +28,7 @@ HRESULT CSASSkillFullCircleUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	m_vFirstSize = { m_fSizeX * m_vScale.x, m_fSizeY * m_vScale.y };
+	m_vOriginSize = { m_fSizeX * m_vScale.x, m_fSizeY * m_vScale.y };
 	m_vCurrentSize = { 140.0f, 140.0f };	// 최대 크기를 이야기 한다.
 	m_fSpeed = 50.0f; 
 
@@ -43,9 +43,6 @@ void CSASSkillFullCircleUI::BeginTick()
 
 void CSASSkillFullCircleUI::Tick(_double TimeDelta)
 {
-	IM_LOG("X %f", m_vCurrentSize.x);
-	IM_LOG("Y %f", m_vCurrentSize.y);
-
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 	{
 		m_bGrow = !m_bGrow;
@@ -53,7 +50,7 @@ void CSASSkillFullCircleUI::Tick(_double TimeDelta)
 
 	if (true == m_bGrow)
 	{
-		if (m_vFirstSize.x < m_vCurrentSize.x)
+		if (m_vOriginSize.x < m_vCurrentSize.x)
 		{
 			m_vCurrentSize -= {_float(TimeDelta) * m_fSpeed, _float(TimeDelta) * m_fSpeed};
 			m_pTransformCom->Set_Scaled(_float3(m_vCurrentSize.x, m_vCurrentSize.y, 1.f));
@@ -62,7 +59,7 @@ void CSASSkillFullCircleUI::Tick(_double TimeDelta)
 		{
 			m_bGrow = false;
 			m_vCurrentSize = { 140.0f, 140.0f };
-			m_pTransformCom->Set_Scaled(_float3(m_vFirstSize.x, m_vFirstSize.y, 1.f));
+			m_pTransformCom->Set_Scaled(_float3(m_vOriginSize.x, m_vOriginSize.y, 1.f));
 		}
 	}
 	else

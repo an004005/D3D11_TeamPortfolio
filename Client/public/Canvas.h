@@ -34,7 +34,7 @@ protected:
 
 protected:
 	map<wstring, CUI*> m_mapChildUIs;
-	
+
 	CUI*	m_pUI = { nullptr };
 
 public:
