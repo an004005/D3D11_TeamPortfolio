@@ -10,6 +10,7 @@
 #include "JsonStorage.h"
 #include "GameUtils.h"
 #include "Controller.h"
+#include "ScarletWeapon.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -40,13 +41,10 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(Setup_AnimSocket()))
 		return E_FAIL;
 
-	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
-	//m_pModel->Add_EventCaller("Test", []() {IM_LOG("Test")});
+	if (FAILED(Setup_Parts()))
+		return E_FAIL;
 
-	//m_pModel->Add_EventCaller("LookAt_Permission", [&]() {this->SetCanTurn(true); });
-	//m_pModel->Add_EventCaller("Move_Permission", [&]() {this->SetCanMove(true); });
-	//m_pModel->Add_EventCaller("LookAt_Denied", [&]() {this->SetCanTurn(false); });
-	//m_pModel->Add_EventCaller("Move_Denied", [&]() {this->SetCanMove(false); });
+	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
 
 	return S_OK;
 }
@@ -64,14 +62,27 @@ void CPlayer::Tick(_double TimeDelta)
 
 	if (m_bCanMove)
 	{
-		m_pTransformCom->Move(m_pModel->GetLastLocalMoveSpeed(), m_vMoveDir);
-		//IM_LOG(to_string(m_pModel->GetLastLocalMoveSpeed()).c_str());
+		_float fSpeedControl = 0.f;
+
+		if (m_bWalk)				fSpeedControl = 0.1f;
+
+		if (m_bCanRun)				fSpeedControl *= 2.f;
+
+//		if (!m_bCanRun && m_bAir)	fSpeedControl *= 0.5f;
+
+		m_pTransformCom->Move(fSpeedControl, m_vMoveDir);
 	}
+
+	for (auto& iter : m_vecWeapon)
+		iter->Tick(TimeDelta);
 }
 
 void CPlayer::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
+
+	for (auto& iter : m_vecWeapon)
+		iter->Late_Tick(TimeDelta);
 
 	if (m_bVisible && (nullptr != m_pRenderer))
 		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -80,6 +91,11 @@ void CPlayer::Late_Tick(_double TimeDelta)
 void CPlayer::AfterPhysX()
 {
 	__super::AfterPhysX();
+
+	for (auto& iter : m_vecWeapon)
+	{
+		static_cast<CScarletWeapon*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
+	}
 }
 
 HRESULT CPlayer::Render()
@@ -94,11 +110,14 @@ HRESULT CPlayer::Render()
 
 void CPlayer::Imgui_RenderProperty()
 {
+	__super::Imgui_RenderProperty();
 	ImGui::SliderFloat("PlayerTurnSpeed", &m_fTurnSpeed, 0.f, 1000.f);
 	if (ImGui::Button("TurnAccess"))
 	{
 		m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(m_fTurnSpeed) });
 	}
+
+	ImGui::SliderFloat("JumpPower", &m_fJumpPower, 0.f, 100.f);
 }
 
 HRESULT CPlayer::SetUp_Components(void * pArg)
@@ -127,6 +146,11 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_AttackFSM()
+{
+	return S_OK;
+}
+
 HRESULT CPlayer::Setup_AnimSocket()
 {
 	CAnimation*	pAnimation = nullptr;
@@ -142,6 +166,113 @@ HRESULT CPlayer::Setup_AnimSocket()
 	return S_OK;
 }
 
+_bool CPlayer::BeforeCharge(_float fBeforeCharge)
+{
+	if (fBeforeCharge > m_fBefCharge)
+	{
+		m_fBefCharge += g_fTimeDelta;
+		return false;
+	}
+	else
+	{
+		m_fBefCharge = 0.f;
+		return true;
+	}
+}
+
+_bool CPlayer::Charge(_uint iNum, _float fCharge)
+{
+	if (fCharge > m_fCharge[iNum])
+	{
+		m_fCharge[iNum] += g_fTimeDelta;
+		return false;
+	}
+	else
+	{
+		IM_LOG(to_string(m_fCharge[iNum]).c_str());
+		return true;
+	}
+}
+
+CPlayer& CPlayer::Reset_Charge()
+{
+	m_fBefCharge = 0.f;
+	for (auto& iter : m_fCharge)
+		iter = 0.f;
+
+	return *this;
+}
+
+_bool CPlayer::UseSkillCnt(_uint iLimitType)
+{
+	switch (iLimitType)
+	{
+	case STACK_NONCHARGE_FLOOR:
+		if (0 < m_UseLimit.m_iNonChargeAttack_Floor) { m_UseLimit.m_iNonChargeAttack_Floor -= 1; return true; }
+		break;
+	case STACK_NONCHARGE_AIR:
+		if (0 < m_UseLimit.m_iNonChargeAttack_Air) { m_UseLimit.m_iNonChargeAttack_Air -= 1; return true; }
+		break;
+	case STACK_ATTACK_AIR01:
+		if (0 < m_UseLimit.m_iAttack_Air01) { m_UseLimit.m_iAttack_Air01 -= 1; return true; }
+		break;
+	case STACK_ATTACK_AIR02:
+		if (0 < m_UseLimit.m_iAttack_Air02) { m_UseLimit.m_iAttack_Air02 -= 1; return true; }
+		break;
+	case STACK_DOUBLEJUMP:
+		if (0 < m_UseLimit.m_iDoubleJump) { m_UseLimit.m_iDoubleJump -= 1; return true; }
+		break;
+	default:
+		break;
+	}
+	return false;
+}
+
+CPlayer& CPlayer::UseLimitReset(void)
+{
+	m_UseLimit.m_iAttack_Air01 = m_UseLimit.MAX_iAttack_Air01;
+	m_UseLimit.m_iAttack_Air02 = m_UseLimit.MAX_iAttack_Air02;
+	m_UseLimit.m_iDoubleJump = m_UseLimit.MAX_iDoubleJump;
+	m_UseLimit.m_iNonChargeAttack_Air = m_UseLimit.MAX_iNonChargeAttack_Air;
+	m_UseLimit.m_iNonChargeAttack_Floor = m_UseLimit.MAX_iNonChargeAttack_Floor;
+
+	return *this;
+}
+
+void CPlayer::Jump()
+{
+	m_fYSpeed = m_fJumpPower;
+}
+
+void CPlayer::SmoothTurn_Attack(_double TimeDelta)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Vector4 vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	vPlayerPos.w = 1.f;
+
+	Vector4 vCamLook = pGameInstance->Get_CamLook();
+	vCamLook.y = 0.f;
+	vCamLook.w = 0.f;
+	vCamLook.Normalize();
+
+	Vector4 vTarget = vPlayerPos + vCamLook;
+
+	m_pTransformCom->LookAt_Smooth(vTarget, TimeDelta * 0.5f);
+}
+
+CPlayer& CPlayer::Reset_SkillCnt()
+{
+	m_iSkillUsableCnt = 2;
+	return *this;
+}
+
+CPlayer & CPlayer::Reset_Gravity()
+{
+	m_fGravity = 0.f;
+	return *this;
+}
+
 void CPlayer::BehaviorCheck(_double TimeDelta)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
@@ -152,8 +283,17 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 	if (nullptr != m_pModel->GetPlayAnimation())
 		m_fPlayRatio = m_pModel->GetPlayAnimation()->GetPlayRatio();
 	m_bLeftClick = m_pController->KeyDown(CController::MOUSE_LB);
-	m_bShiftClick = m_pController->KeyDown(CController::SHIFT);
-	m_bShiftPress = m_pController->KeyPress(CController::SHIFT);
+	m_bDash = m_pController->KeyDown(CController::SHIFT);
+
+	m_bNonCharge = m_pController->KeyUp(CController::C);
+	m_bCharge = m_pController->KeyPress(CController::C);
+
+	m_bJump = m_pController->KeyDown(CController::SPACE);
+
+	if (m_bCanTurn_Attack)
+	{
+		SmoothTurn_Attack(TimeDelta);
+	}
 }
 
 void CPlayer::MoveStateCheck(_double TimeDelta)
@@ -208,12 +348,37 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 
 		if (m_bCanTurn)
 			m_pTransformCom->LookAt_Smooth(vPlayerPos + m_vMoveDir, TimeDelta);
+
+		if (m_bAir)	// 공중 상태에선 회전이 먹지 않음
+			m_vMoveDir = vPlayerLook;
 	}
 }
 
 void CPlayer::LookAtDir(Vector3 Vector)
 {
 	m_pTransformCom->LookAt(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(Vector.x, 0.f, Vector.z, 0.f));
+}
+
+HRESULT CPlayer::Setup_Parts()
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json Weapon;
+	Weapon["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
+
+	CGameObject*	pGameObject = nullptr;
+
+	WEAPON_DESC		Desc;
+	ZeroMemory(&Desc, sizeof(WEAPON_DESC));
+	Desc.m_PivotMatrix = m_pModel->GetPivotMatrix();
+	Desc.m_pSocket = m_pModel->Get_BonePtr("RightWeapon");
+	Desc.m_pTransform = m_pTransformCom;
+	Desc.m_pJson = &Weapon;
+
+	pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
+	m_vecWeapon.push_back(pGameObject);
+
+	return S_OK;
 }
 
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -247,6 +412,10 @@ CGameObject * CPlayer::Clone(void * pArg)
 void CPlayer::Free()
 {
 	__super::Free();
+
+	for (auto& iter : m_vecWeapon)
+		Safe_Release(iter);
+	m_vecWeapon.clear();
 
 	Safe_Release(m_pFSM);
 	Safe_Release(m_pASM);
