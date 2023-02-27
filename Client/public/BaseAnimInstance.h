@@ -32,11 +32,22 @@ protected:	// 대상의 상태
 	_bool	m_bLeftClick = false;
 	_bool	m_bDash = false;
 
+	_bool	m_bJump = false;
+
+	_bool	m_bNonCharge = false;
+	_bool	m_bCharge = false;
+
+	_bool	m_bOnFloor = false;
+
 	_float	m_fPlayRatio = 0.f;
 
 	string	m_szCurAnimName = "";
 
-	Vector3	m_vLocalMove;
+	_vector m_vLookPoint;
+
+	Vector3	m_vMoveDir;		// 실제 이동하려 하는 방향
+
+	Vector3	m_vLocalMove;	// 로컬 축으로 이동하고 있는 방향
 	Matrix	m_matCamRot;
 
 	_uint	m_eMoveDir;

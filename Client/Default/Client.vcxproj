@@ -228,6 +228,7 @@
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
     <ClInclude Include="..\public\ScarletMap.h" />
+    <ClInclude Include="..\public\ScarletWeapon.h" />
     <ClInclude Include="..\public\SkmP_AnimInstance.h" />
     <ClInclude Include="..\public\SkummyPool.h" />
     <ClInclude Include="..\public\SkyBox.h" />
@@ -242,6 +243,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Weapon_wp0190.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\BackGround.cpp" />
@@ -295,6 +297,7 @@
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
     <ClCompile Include="..\private\ScarletCharacter.cpp" />
     <ClCompile Include="..\private\ScarletMap.cpp" />
+    <ClCompile Include="..\private\ScarletWeapon.cpp" />
     <ClCompile Include="..\private\SkmP_AnimInstance.cpp" />
     <ClCompile Include="..\private\SkummyPool.cpp" />
     <ClCompile Include="..\private\SkyBox.cpp" />
@@ -312,6 +315,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Weapon_wp0190.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />

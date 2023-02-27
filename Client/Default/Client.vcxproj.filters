@@ -163,6 +163,12 @@
     <Filter Include="02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance">
       <UniqueIdentifier>{d05ad475-8f00-4e1d-a167-7bb09014504b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Weapon">
+      <UniqueIdentifier>{5c27df65-18ab-49b1-bd63-62f0d992e42f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Weapon\wp0190">
+      <UniqueIdentifier>{556fd684-ed88-4908-bb68-cfefb092763f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -360,6 +366,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
+    <ClInclude Include="..\public\ScarletWeapon.h">
+      <Filter>02.GameObjects\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon_wp0190.h">
+      <Filter>02.GameObjects\Weapon\wp0190</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -536,6 +548,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\private\ScarletCharacter.cpp" />
+    <ClCompile Include="..\private\ScarletWeapon.cpp">
+      <Filter>02.GameObjects\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon_wp0190.cpp">
+      <Filter>02.GameObjects\Weapon\wp0190</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

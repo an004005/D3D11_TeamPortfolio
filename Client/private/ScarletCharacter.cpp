@@ -45,7 +45,7 @@ void CScarletCharacter::Late_Tick(_double TimeDelta)
 
 	// 중력 이동
 	flags = m_pCollider->Move(_float4{0.f, m_fYSpeed, 0.f, 0.f}, (_float)TimeDelta);
-	m_bOnFloor = flags & physx::PxControllerCollisionFlag::eCOLLISION_UP;
+	m_bOnFloor = flags & physx::PxControllerCollisionFlag::eCOLLISION_DOWN;
 	if (m_bOnFloor || !m_bActiveGravity)
 	{
 		m_fYSpeed = 0.f;
