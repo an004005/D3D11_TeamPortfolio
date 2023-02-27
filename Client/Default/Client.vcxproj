@@ -226,7 +226,10 @@
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
     <ClInclude Include="..\public\ScarletMap.h" />
+    <ClInclude Include="..\public\SkMpBullet.h" />
     <ClInclude Include="..\public\SkmP_AnimInstance.h" />
+    <ClInclude Include="..\public\SkPd_AnimInstance.h" />
+    <ClInclude Include="..\public\SkummyPandou.h" />
     <ClInclude Include="..\public\SkummyPool.h" />
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
@@ -291,7 +294,10 @@
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
     <ClCompile Include="..\private\ScarletMap.cpp" />
+    <ClCompile Include="..\private\SkMpBullet.cpp" />
     <ClCompile Include="..\private\SkmP_AnimInstance.cpp" />
+    <ClCompile Include="..\private\SkPd_AnimInstance.cpp" />
+    <ClCompile Include="..\private\SkummyPandou.cpp" />
     <ClCompile Include="..\private\SkummyPool.cpp" />
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />

@@ -11,6 +11,7 @@
 
 #include "SkmP_AnimInstance.h"
 #include "FlowerLeg.h"
+#include "SkMpBullet.h"
 
 
 CSkummyPool::CSkummyPool(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -115,6 +116,15 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 							_uint iThreat = 5;
 							vecRandomPattern.push_back(iThreat);
 
+							_uint iMoveB2 = 6;
+							vecRandomPattern.push_back(iMoveB2);
+
+							_uint iMoveL2 = 7;
+							vecRandomPattern.push_back(iMoveL2);
+
+							_uint iMoveR2 = 8;
+							vecRandomPattern.push_back(iMoveR2);
+							
 							random_shuffle(vecRandomPattern.begin(), vecRandomPattern.end());
 
 							_uint iShuffleResult = vecRandomPattern.front();
@@ -133,6 +143,15 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 							if (iShuffleResult == 5)
 								m_bThreat = true;
+
+							if(iShuffleResult == 6)
+								m_bMoveB = true;
+							
+							if(iShuffleResult == 7)
+								m_bMoveL = true;
+
+							if(iShuffleResult == 8)
+								m_bMoveR = true;
 						}
 					}
 				})
@@ -168,6 +187,10 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 					})
 
 			.AddState("Attack")
+				.OnStart([this]
+				{
+					m_bCreateBullet = false;
+				})
 				.Tick([this](_double TimeDelta)
 				{
 					_vector vTargetPos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
@@ -177,8 +200,26 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 					if (pAnim->GetPlayRatio() > 0.66 && !m_bCreateBullet)
 					{
-						// 투사체 생성
-						//MSG_BOX("Bullet Fire!!!");
+						CGameInstance* pGameInstance = CGameInstance::GetInstance();
+						// 투사체 생성						
+						auto pObj = pGameInstance->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("SkMpBullet"));
+						if (CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(pObj))
+						{
+							pBullet->Set_Owner(this);
+
+							_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
+							_float4x4 fBoneMtx;
+							XMStoreFloat4x4(&fBoneMtx, BoneMtx);
+
+							_vector vPrePos = { fBoneMtx.m[3][0], fBoneMtx.m[3][1], fBoneMtx.m[3][2], fBoneMtx.m[3][3] };
+							
+							_vector vDest = vTargetPos - vPrePos;
+
+							pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
+							pBullet->GetTransform()->LookAt(m_pTransformCom->Get_State(CTransform::STATE_LOOK));	
+							pBullet->Set_ShootDir(vDest);
+						}
+
 						m_bCreateBullet = true;
 					}
 
@@ -343,9 +384,7 @@ void CSkummyPool::BeginTick()
 	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
 	{
 		if (iter->GetPrototypeTag() == TEXT("FlowerLeg"))
-		{
-			int iA = 0;
-
+		{			
 			m_pFlowerLeg = iter;
 		}
 	}

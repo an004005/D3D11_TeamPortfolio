@@ -163,6 +163,15 @@
     <Filter Include="02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance">
       <UniqueIdentifier>{d05ad475-8f00-4e1d-a167-7bb09014504b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPool\SkMpBullet">
+      <UniqueIdentifier>{81b8a892-455d-4368-8398-fd91cc4bf17e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPandou">
+      <UniqueIdentifier>{77a8119b-8713-49c4-b0ae-773fc0c8cd4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance">
+      <UniqueIdentifier>{8ab2e832-9040-4d96-a44d-460f9f302254}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -358,6 +367,15 @@
     <ClInclude Include="..\public\SkmP_AnimInstance.h">
       <Filter>02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\SkMpBullet.h">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkMpBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkummyPandou.h">
+      <Filter>02.GameObjects\Monster\SkummyPandou</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkPd_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -531,6 +549,15 @@
     </ClCompile>
     <ClCompile Include="..\private\SkmP_AnimInstance.cpp">
       <Filter>02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkMpBullet.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkMpBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkummyPandou.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPandou</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkPd_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
