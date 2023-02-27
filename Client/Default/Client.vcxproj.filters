@@ -309,7 +309,6 @@
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\EffectSystem.h">
       <Filter>VFX\Effect</Filter>
     </ClInclude>
@@ -427,6 +426,9 @@
     <ClInclude Include="..\public\MapNonAnim_Object.h" />
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
+    <ClInclude Include="..\public\EffectSystem.h">
+      <Filter>VFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -525,7 +527,6 @@
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\EffectSystem.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp">
       <Filter>VFX\Effect</Filter>
     </ClCompile>
@@ -643,6 +644,9 @@
     <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
+    <ClCompile Include="..\private\EffectSystem.cpp">
+      <Filter>VFX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
