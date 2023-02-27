@@ -1,0 +1,125 @@
+#include "stdafx.h"
+#include "..\public\MapNonAnim_Object.h"
+#include "GameInstance.h"
+#include "PhysXStaticModel.h"
+
+CMapNonAnim_Object::CMapNonAnim_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+	: CMapObject(pDevice, pContext)
+{
+}
+
+CMapNonAnim_Object::CMapNonAnim_Object(const CMapNonAnim_Object & rhs)
+	: CMapObject(rhs)
+{
+}
+
+HRESULT CMapNonAnim_Object::Initialize_Prototype()
+{
+	FAILED_CHECK(__super::Initialize_Prototype());
+
+	return S_OK;
+}
+
+HRESULT CMapNonAnim_Object::Initialize(void * pArg)
+{
+	FAILED_CHECK(__super::Initialize(pArg));
+
+	FAILED_CHECK(SetUp_Components());
+
+	m_pPxModel->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
+
+	return S_OK;
+}
+
+void CMapNonAnim_Object::BeginTick()
+{
+}
+
+void CMapNonAnim_Object::Tick(_double TimeDelta)
+{
+	__super::Tick(TimeDelta);
+}
+
+void CMapNonAnim_Object::Late_Tick(_double TimeDelta)
+{
+	__super::Late_Tick(TimeDelta);
+}
+
+HRESULT CMapNonAnim_Object::Render()
+{
+	FAILED_CHECK(__super::Render());
+	return S_OK;
+}
+
+void CMapNonAnim_Object::Imgui_RenderProperty()
+{
+	CMapObject::Imgui_RenderProperty();
+
+	// imgui를 켰을 때만 위치 수정가능
+	m_pPxModel->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
+}
+
+wstring CMapNonAnim_Object::MakePxModelProtoTag()
+{
+	_tchar szDriveName[MAX_PATH]{};
+	_tchar szDirName[MAX_PATH]{};
+	_tchar szFileName[MAX_PATH]{};
+	_tchar szExtName[MAX_PATH]{};
+	_wsplitpath_s(m_strModelTag.c_str(), szDriveName, MAX_PATH, szDirName, MAX_PATH, szFileName, MAX_PATH, szExtName, MAX_PATH);
+
+	wstring PxModelTag = szDriveName;
+	PxModelTag += szDirName;
+
+	const wstring strFileName = wstring(L"PhysX_") + szFileName;
+	PxModelTag += strFileName;
+	PxModelTag += szExtName;
+
+	return PxModelTag;
+}
+
+HRESULT CMapNonAnim_Object::SetUp_Components()
+{
+	const wstring PxModelTag = MakePxModelProtoTag();
+	if (nullptr == CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, PxModelTag.c_str()))
+	{
+		CGameInstance::GetInstance()->Add_Prototype(LEVEL_NOW, 
+			PxModelTag.c_str(), CPhysXStaticModel::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str()));
+	}
+
+	// todo : 임시로 모든 CMapNonAnim_Object 에 PxModel을 가지도록 설정 추후 수정 바람
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, PxModelTag.c_str(), TEXT("Com_PxModel"),
+		(CComponent**)&m_pPxModel));
+	return S_OK;
+}
+
+CMapNonAnim_Object * CMapNonAnim_Object::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+{
+	CMapNonAnim_Object*		pInstance = new CMapNonAnim_Object(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CMapNonAnim_Object");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CGameObject * CMapNonAnim_Object::Clone(void * pArg)
+{
+	CMapNonAnim_Object*		pInstance = new CMapNonAnim_Object(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CMapNonAnim_Object");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CMapNonAnim_Object::Free()
+{
+	__super::Free();
+	Safe_Release(m_pPxModel);
+}

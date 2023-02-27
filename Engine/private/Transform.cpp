@@ -102,9 +102,7 @@ void CTransform::SaveToJson(Json& json)
 void CTransform::LoadFromJson(const Json& json)
 {
 	if (json.contains("Transform"))
-	{
 		m_WorldMatrix = json["Transform"]["WorldMatrix"];
-	}
 }
 
 void CTransform::Go_Straight(_double TimeDelta)
@@ -288,6 +286,28 @@ void CTransform::LookAt(_fvector vTargetPos)
 	Set_State(CTransform::STATE_RIGHT, vRight);
 	Set_State(CTransform::STATE_UP, vUp);
 	Set_State(CTransform::STATE_LOOK, vLook);
+}
+
+void CTransform::LookAt_Smooth(_fvector vTargetPos, _double TimeDelta)
+{
+	_vector vLook = XMVector3Normalize(Get_State(CTransform::STATE_LOOK));
+	_vector vRight = XMVector3Normalize(Get_State(CTransform::STATE_RIGHT));
+	_vector vDir = XMVector3Normalize(vTargetPos - Get_State(CTransform::STATE_TRANSLATION));
+
+	_float fDotRight = XMVectorGetX(XMVector3Dot(vRight, vDir));	// 왼쪽? 오른쪽?
+	_float fDotLook = XMVectorGetX(XMVector3Dot(vLook, vDir));		// 앞? 뒤?
+
+	if (0.2 > fDotRight && -0.2 < fDotRight)
+	{
+		if (0 > fDotLook)
+			Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta);
+		else
+			LookAt(vTargetPos);
+	}
+	else if (0.2 <= XMVectorGetX(XMVector3Dot(vRight, vDir)))
+		Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta);
+	else if (-0.2 >= XMVectorGetX(XMVector3Dot(vRight, vDir)))
+		Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -TimeDelta);
 }
 
 void CTransform::Chase(_fvector vTargetPos, _double TimeDelta, _float fLimit)

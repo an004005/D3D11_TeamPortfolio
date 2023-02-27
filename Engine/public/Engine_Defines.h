@@ -4,6 +4,8 @@
 #pragma warning (disable : 4251)
 #pragma warning (disable : 4503) // json warn
 
+
+
 #include <d3d11.h>
 #include <Effects11/d3dx11effect.h>
 #include <DirectXTK/DDSTextureLoader.h>
@@ -19,6 +21,10 @@
 #include <d3dcompiler.h>
 #include <TypeInfo.h>
 #include <DirectXCollision.h>
+
+#define PX_PHYSX_CHARACTER_STATIC_LIB
+#include <PhysX/PxPhysics.h>
+#include <PhysX/PxPhysicsAPI.h>
 
 // #define USE_ASSIMPT_CONVERTER
 

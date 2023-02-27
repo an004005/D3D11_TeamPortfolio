@@ -130,6 +130,15 @@ PS_OUT PS_DEFAULT_ROUGHNESS(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_WIRE_FRAME(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	Out.vDiffuse = vector(1.f, 0.f, 1.f, 1.f);
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	// 0
@@ -173,4 +182,20 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_DEFAULT_ROUGHNESS();
 	}
+
+	// 3
+	pass WireFrameModel
+	{
+		SetRasterizerState(RS_Wireframe);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_WIRE_FRAME();
+	}
+
+
 }

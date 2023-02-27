@@ -7,9 +7,9 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Environment/Location/lc001/03_Texture/T_lo055_en001_wall.png",
-            "../Bin/Resources/Environment/Location/lc001/03_Texture/T_lo055_en001_wall_NML.png",
-            "../Bin/Resources/Environment/Location/lc001/03_Texture/T_lo055_en001_wall_roughness.png"
+            "../Bin/Resources/Environments/Location/lc001/03_Texture/T_lo055_en001_wall.dds",
+            "../Bin/Resources/Environments/Location/lc001/03_Texture/T_lo055_en001_wall_NML.png",
+            "../Bin/Resources/Environments/Location/lc001/03_Texture/T_lo055_en001_wall_roughness.dds"
         ],
         "Pass" : 2
     }

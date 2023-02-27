@@ -109,6 +109,75 @@
     <Filter Include="VFX\Effect\Parent">
       <UniqueIdentifier>{ebd31f6e-1e78-408a-9670-616c928bb21b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI">
+      <UniqueIdentifier>{cd40877e-1d57-40a8-aa94-2c831bd55b5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\15. UITool">
+      <UniqueIdentifier>{5357e7ff-329d-4daf-8dae-a5f0aa71bc95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI">
+      <UniqueIdentifier>{dbe3d603-c8a0-4590-96fa-f2a387abb7b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\CamSpot">
+      <UniqueIdentifier>{b280be19-5c98-4da2-b901-ddc4e17635f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster">
+      <UniqueIdentifier>{2dcdfb98-a83e-4081-837c-3a6545dabb97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\50.MonsterTest">
+      <UniqueIdentifier>{56794968-d655-499b-a8e5-20af1ee1495e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg">
+      <UniqueIdentifier>{3386faa1-76ca-4e3d-88fc-b10d3335d21c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BuddyLumi">
+      <UniqueIdentifier>{e601f17e-3211-4b5c-9124-ad399b6dceac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BuddyLumi\BdLm_AnimInstance">
+      <UniqueIdentifier>{d8041f1a-6290-470e-af61-3a587d8fc4c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_AnimInstance">
+      <UniqueIdentifier>{af66fe60-49a3-4fbb-ad06-68cc0dec429b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\01.Tutorial">
+      <UniqueIdentifier>{0ce87f0a-cfa9-4fa6-8ec1-62c4bf61ba72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Test">
+      <UniqueIdentifier>{057aa277-d73a-4379-bf1d-ed33bde7fe89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPool">
+      <UniqueIdentifier>{773075e2-bc28-4393-8e82-36474691f893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance">
+      <UniqueIdentifier>{d05ad475-8f00-4e1d-a167-7bb09014504b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\Drive">
+      <UniqueIdentifier>{2a9015c3-ac89-4688-ba20-5af55c1b4601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\Item">
+      <UniqueIdentifier>{46619585-dc48-4000-9f31-5617ce206aab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\PlayerInfo">
+      <UniqueIdentifier>{1288607c-59a4-4427-b040-1ed8b21a4858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\SASInfo">
+      <UniqueIdentifier>{ea0a820a-4dc8-4972-9330-a21a848385ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
+      <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPool\SkMpBullet">
+      <UniqueIdentifier>{81b8a892-455d-4368-8398-fd91cc4bf17e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPandou">
+      <UniqueIdentifier>{77a8119b-8713-49c4-b0ae-773fc0c8cd4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance">
+      <UniqueIdentifier>{8ab2e832-9040-4d96-a44d-460f9f302254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\TestMonster%28Fix%29">
+      <UniqueIdentifier>{745e34b2-083b-4b07-a6e4-087ec47d99ea}</UniqueIdentifier>
+    </Filter>
     <Filter Include="VFX\Particle">
       <UniqueIdentifier>{a079757b-66b7-47bb-8ebb-83898358c7aa}</UniqueIdentifier>
     </Filter>
@@ -234,6 +303,13 @@
     <ClInclude Include="..\public\Effect.h">
       <Filter>VFX\Effect\Parent</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ScarletMap.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\EffectSystem.h">
       <Filter>VFX\Effect</Filter>
     </ClInclude>
@@ -252,6 +328,105 @@
     <ClInclude Include="..\public\TrailSystem.h">
       <Filter>VFX\Trail</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_UI.h">
+      <Filter>01.Levels\15. UITool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\DefaultUI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ButtonUI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h" />
+    <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\ScarletMap.h" />
+    <ClInclude Include="..\public\Psychokinesis.h" />
+    <ClInclude Include="..\public\Canvas_Drive.h">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Item.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PlayerInfo.h">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SASInfo.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SASSkill.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SASSkillIconUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SASSkillGaugeUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SASSkillLightUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SASSkillCtrlUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SASSkillFullCircleUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Camera_Player.h">
+      <Filter>02.GameObjects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CamSpot.h">
+      <Filter>02.GameObjects\Camera\CamSpot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TestMonster.h">
+      <Filter>02.GameObjects\Monster\TestMonster%28Fix%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_EnemiesTest.h">
+      <Filter>01.Levels\50.MonsterTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FlowerLeg.h">
+      <Filter>02.GameObjects\Monster\FlowerLeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BuddyLumi.h">
+      <Filter>02.GameObjects\Monster\BuddyLumi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BdLm_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_AnimInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FL_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_AnimInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Tutorial.h">
+      <Filter>01.Levels\02.GamePlay\01.Tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TestObject.h">
+      <Filter>96.Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkummyPool.h">
+      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkmP_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Monster.h" />
+    <ClInclude Include="..\public\ScarletCharacter.h" />
+    <ClInclude Include="..\public\SkMpBullet.h">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkMpBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkummyPandou.h">
+      <Filter>02.GameObjects\Monster\SkummyPandou</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkPd_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h" />
+    <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\Psychokinesis.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -344,6 +519,13 @@
     <ClCompile Include="..\private\Effect.cpp">
       <Filter>VFX\Effect\Parent</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\ScarletMap.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EffectSystem.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp">
       <Filter>VFX\Effect</Filter>
     </ClCompile>
@@ -362,6 +544,105 @@
     <ClCompile Include="..\private\TrailSystem.cpp">
       <Filter>VFX\Trail</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Canvas.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_UI.cpp">
+      <Filter>01.Levels\15. UITool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\DefaultUI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ButtonUI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
+    <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\ScarletMap.cpp" />
+    <ClCompile Include="..\private\Psychokinesis.cpp" />
+    <ClCompile Include="..\private\Canvas_Drive.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Item.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PlayerInfo.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SASInfo.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SASSkill.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SASSkillIconUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SASSkillGaugeUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SASSkillLightUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SASSkillCtrlUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SASSkillFullCircleUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera_Player.cpp">
+      <Filter>02.GameObjects\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CamSpot.cpp">
+      <Filter>02.GameObjects\Camera\CamSpot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TestMonster.cpp">
+      <Filter>02.GameObjects\Monster\TestMonster%28Fix%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_EnemiesTest.cpp">
+      <Filter>01.Levels\50.MonsterTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FlowerLeg.cpp">
+      <Filter>02.GameObjects\Monster\FlowerLeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BuddyLumi.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BdLm_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_AnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FL_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_AnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Tutorial.cpp">
+      <Filter>01.Levels\02.GamePlay\01.Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TestObject.cpp">
+      <Filter>96.Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkummyPool.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkmP_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Monster.cpp" />
+    <ClCompile Include="..\private\ScarletCharacter.cpp" />
+    <ClCompile Include="..\private\SkMpBullet.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkMpBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkummyPandou.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPandou</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkPd_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
+    <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\Psychokinesis.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

@@ -253,4 +253,11 @@ namespace Engine
 		_float fAge; //현재 파티클 생존시간
 		_uint iNum; //인스탄스 번호
 	}PARTICLE;
+
+	struct PxMesh
+	{
+		physx::PxTriangleMesh* pPxMesh = nullptr;
+		physx::PxTriangleMeshGeometry tMeshGeom;
+		physx::PxShape* pShape = nullptr;
+	};
 }

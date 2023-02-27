@@ -26,11 +26,11 @@ struct PS_OUT
 };
 
 /*******************
- * UI_Tex_Alpha
+ * UI_Tex_Alpha 
  /********************/
 // 단순 알파블렌드 텍스쳐
 // g_tex_0 : UI 텍스쳐
-VS_OUT VS_UI_Tex_Alpha(VS_IN In)
+VS_OUT VS_UI_Tex_Alpha(VS_IN In)	// → 0
 {
 	VS_OUT		Out = (VS_OUT)0;
 	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
@@ -40,14 +40,14 @@ VS_OUT VS_UI_Tex_Alpha(VS_IN In)
 	return Out;
 }
 
-PS_OUT PS_UI_Tex_Alpha(PS_IN In)
+PS_OUT PS_UI_Tex_Alpha(PS_IN In)	// → 0	알파 블랜딩으로 그리기
 {
 	PS_OUT			Out = (PS_OUT)0;
 	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	return Out;
 }
 
-VS_OUT VS_UI_Tex_Alpha_Flip(VS_IN In)
+VS_OUT VS_UI_Tex_Alpha_Flip(VS_IN In)	// → 1 반전
 {
 	VS_OUT		Out = (VS_OUT)0;
 	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
@@ -64,7 +64,7 @@ VS_OUT VS_UI_Tex_Alpha_Flip(VS_IN In)
 // HPUI전용 패스
 // g_tex_0 : UI 텍스쳐
 // g_float_0 : 알파 비율
-VS_OUT VS_UI_LowStateBg(VS_IN In)
+VS_OUT VS_UI_LowStateBg(VS_IN In)	// → 2
 {
 	VS_OUT		Out = (VS_OUT)0;
 	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
@@ -74,7 +74,7 @@ VS_OUT VS_UI_LowStateBg(VS_IN In)
 	return Out;
 }
 
-PS_OUT PS_UI_LowStateBg(PS_IN In)
+PS_OUT PS_UI_LowStateBg(PS_IN In)	// → 2 빨간색으로 알파값 조절
 {
 	PS_OUT			Out = (PS_OUT)0;
 	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV) * float4(1.f, 0.f, 0.f, g_float_0);
@@ -86,7 +86,7 @@ PS_OUT PS_UI_LowStateBg(PS_IN In)
  /********************/
 // g_tex_0 : UI 텍스쳐
 // g_float_0 : 알파 비율
-VS_OUT VS_UI_SkillIcon(VS_IN In)
+VS_OUT VS_UI_SkillIcon(VS_IN In)	// → 3
 {
 	VS_OUT		Out = (VS_OUT)0;
 	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
@@ -96,7 +96,7 @@ VS_OUT VS_UI_SkillIcon(VS_IN In)
 	return Out;
 }
 
-PS_OUT PS_UI_SkillIcon(PS_IN In)
+PS_OUT PS_UI_SkillIcon(PS_IN In)	// → 3 본연의 색상으로 알파값 조절
 {
 	PS_OUT			Out = (PS_OUT)0;
 	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
@@ -111,7 +111,7 @@ PS_OUT PS_UI_SkillIcon(PS_IN In)
 // g_float_1 : frame time
 // g_tex_0 : 플립북 텍스쳐
 // g_tex_1 : 컬러 그레디언트 텍스쳐
-VS_OUT VS_CSkill_UseAnim(VS_IN In)
+VS_OUT VS_CSkill_UseAnim(VS_IN In)	// → 4
 {
 	VS_OUT		Out = (VS_OUT)0;
 
@@ -123,7 +123,7 @@ VS_OUT VS_CSkill_UseAnim(VS_IN In)
 	return Out;
 }
 
-PS_OUT PS_CSkill_UseAnim(PS_IN In)
+PS_OUT PS_CSkill_UseAnim(PS_IN In)	// → 4
 {
 	PS_OUT			Out = (PS_OUT)0;
 
@@ -144,7 +144,7 @@ PS_OUT PS_CSkill_UseAnim(PS_IN In)
 // g_vec4_0 : Color
 // g_tex_0 : ui texture
 // g_int_0 : bFlip Y Axis
-VS_OUT VS_UI_Alpha_Color(VS_IN In)
+VS_OUT VS_UI_Alpha_Color(VS_IN In)	// → 5
 {
 	VS_OUT		Out = (VS_OUT)0;
 	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
@@ -156,8 +156,7 @@ VS_OUT VS_UI_Alpha_Color(VS_IN In)
 	return Out;
 }
 
-
-PS_OUT PS_UI_Alpha_Color(PS_IN In)
+PS_OUT PS_UI_Alpha_Color(PS_IN In)	// → 5
 {
 	PS_OUT			Out = (PS_OUT)0;
 	if (g_tex_on_0)
@@ -172,7 +171,7 @@ PS_OUT PS_UI_Alpha_Color(PS_IN In)
  /********************/
 // g_vec4_0 : Color
 // g_tex_0 : Mask UI texture
-PS_OUT PS_UI_Alpha_Mask_Color(PS_IN In)
+PS_OUT PS_UI_Alpha_Mask_Color(PS_IN In)	// → 6
 {
 	PS_OUT			Out = (PS_OUT)0;
 
@@ -187,7 +186,7 @@ PS_OUT PS_UI_Alpha_Mask_Color(PS_IN In)
 // g_float_0 : progress ratio
 // g_vec4_0 : Color
 // 오른쪽에서 왼쪽으로 줄어드는 프로그레스 바 쉐이더
-VS_OUT VS_UI_ProgressBar(VS_IN In)
+VS_OUT VS_UI_ProgressBar(VS_IN In)	// → 7
 {
 	VS_OUT		Out = (VS_OUT)0;
 	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
@@ -206,7 +205,7 @@ VS_OUT VS_UI_ProgressBar(VS_IN In)
 }
 
 
-PS_OUT PS_UI_ProgressBar(PS_IN In)
+PS_OUT PS_UI_ProgressBar(PS_IN In)	// → 7 (알파값 처음에 0 이니 조정해 주어야 한다)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
@@ -316,9 +315,82 @@ PS_OUT PS_EOG_LOGO(PS_IN In)
 	return Out;
 }
 
+/*******************
+* UVCut → 13 : UV 좌표를 잘라서 원하는 부분만 출력해 주는 함수
+/********************/
+// g_vec2_0 : 출력할 인덱스
+// g_vec2_1 : [x] 가로로 자를 개수, [y] 세로로 자를 개수
+VS_OUT VS_UVCut(VS_IN In)	// → 13
+{
+	VS_OUT		Out = (VS_OUT)0;
+	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
+
+	Out.vPosition = mul(float4(In.vPosition, 1.f), matWP);
+
+	In.vTexUV.x = In.vTexUV.x + g_vec2_0.x;
+	In.vTexUV.y = In.vTexUV.y + g_vec2_0.y;
+
+	In.vTexUV.x = In.vTexUV.x / g_vec2_1.x;
+	In.vTexUV.y = In.vTexUV.y / g_vec2_1.y;
+
+	Out.vTexUV = In.vTexUV;
+	return Out;
+}
+// g_int_0 : [0] 이미지 색상 사용, [1] 내가 지정한 색상 사용
+// g_vec4_0 : 변경할 색상과 알파값
+PS_OUT PS_Alpha_Color(PS_IN In)	// → 13
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	if (g_int_0)
+		Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV) * g_vec4_0;
+	else
+		Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	return Out;
+}
+
+/*******************
+* UVCut → 15 : 회전하면서 UV 를 조정한다.
+/********************/
+// g_tex_0 : 텍스처
+// g_float_0 : 게이지 정도
+// g_vec4_0 : 색상 조절
+PS_OUT PS_RotationGauge(PS_IN In) // → 15
+{
+	PS_OUT         Out = (PS_OUT)0;
+
+	float4 fillColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	float3 center = float3(0.5f, 0.5f, 0.0f);
+	float3 top = float3(0.5f, 1.0f, 0.0f);
+	float3 curUV = float3(In.vTexUV.xy, 0.0f);
+	float angle = 0;
+
+	float3 centerToTop = top - center;
+	float3 centerToCurUV = curUV - center;
+
+	centerToTop = normalize(centerToTop);
+	centerToCurUV = normalize(centerToCurUV);
+
+	angle = acos(dot(centerToTop, centerToCurUV));
+	angle = angle * (180.0f / 3.141592654f); // radian to degree
+
+	angle = (centerToTop.x * centerToCurUV.x - centerToTop.y * centerToCurUV.x > 0.0f) ? angle : (-angle) + 360.0f;
+
+	float condition = 360 * g_float_0;
+
+	if (angle >= condition)
+		discard;
+
+	Out.vColor = fillColor * g_vec4_0;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
-	//0
+	//0 : 알파 블랜딩으로 그리기
 	pass UI_Tex_Alpha
 	{
 		SetRasterizerState(RS_Default);
@@ -331,6 +403,7 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_UI_Tex_Alpha();
 	}
+
 	//1
 	pass UI_Tex_Alpha_Flip
 	{
@@ -344,6 +417,7 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_UI_Tex_Alpha();
 	}
+
 	// HPUI
 	//2
 	pass UI_LowStateBg
@@ -358,7 +432,6 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_UI_LowStateBg();
 	}
-	// HPUI
 
 	//3
 	pass UI_SkillIcon
@@ -499,4 +572,48 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EOG_LOGO();
 	}
+
+	// sh
+	//13
+	pass UVCut
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_UVCut();		// 텍스처의 원하는 부분만 출력
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_Alpha_Color();	// 색상 조정
+	}
+
+	//14
+	pass ColorChange
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();		// 아무것도 안 한다.
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_Alpha_Color();	// 색상 조정
+	}
+
+	//15: 스킬 게이지, 아이템 게이지
+	pass RotationGauge
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_RotationGauge();	// 색상 조정 하면서 시계방향 으로 uv가 줄어들고 늘어난다.
+	}
+
 }

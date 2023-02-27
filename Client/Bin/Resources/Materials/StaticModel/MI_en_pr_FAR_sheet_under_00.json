@@ -7,9 +7,9 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Environment/Location/LC07/Common/BNS_TST/RD_T_BG_TST_T02_FAR_sheet_under_00_D.png",
-            "../Bin/Resources/Environment/Location/LC07/Common/BNS_TST/RD_T_BG_TST_T02_FAR_sheet_under_00_N.png",
-            "../Bin/Resources/Environment/Location/LC07/Common/BNS_TST/T_T02_FAR_sheet_under_00_M_RMA.png"
+            "../Bin/Resources/Environments/Location/LC07/Common/BNS_TST/RD_T_BG_TST_T02_FAR_sheet_under_00_D.png",
+            "../Bin/Resources/Environments/Location/LC07/Common/BNS_TST/RD_T_BG_TST_T02_FAR_sheet_under_00_N.png",
+            "../Bin/Resources/Environments/Location/LC07/Common/BNS_TST/T_T02_FAR_sheet_under_00_M_RMA.png"
         ],
         "Pass" : 1
     }

@@ -262,3 +262,8 @@ ModelManifest.xml
 
 /Client/Default/imgui.ini
 /GameServer/Bin/*
+
+# Environment Files
+Environments/
+
+!/Engine/ThirdPartyLib/physx/*

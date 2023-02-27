@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Base.h"
-
+#include "unordered_set"
 /* 게임내에 필요한 객체들을 내 기준(CLayer)에 따라 나누어 보관한다. */
 /* 객체들을 나누어 저장하고 있는 CLayer들을 보관하는 클래스이다. */
 /* 모든 객체들의 갱신(Tick, Late_Tick)을 담당한다. */
@@ -26,9 +26,11 @@ public:
 	class CLayer* GetLayer(_uint iLevelIndex, const _tchar* pLayerTag);
 	CGameObject* Find_ObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred);
 	list<CGameObject*> Find_AllObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred);
+	class CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 
 	void Tick(_double TimeDelta);
 	void Late_Tick(_double TimeDelta);
+	void AfterPhysX();
 
 	void SetUpdatedLevel(_uint iLevel) { m_iUpdatedLevel = iLevel; }
 
@@ -59,8 +61,15 @@ private: /* 사본객체들을 보관하기위한 컨테이너. */
 
 	vector<list<CGameObject*>> m_vecBeginTicks;
 
+public:
+	static void Add_Object(CGameObject* pObject);
+	static void Delete_Object(CGameObject* pObject);
+	static _bool Check_ObjectAlive(CGameObject* pObject);
+
 private:
-	class CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
+	static unordered_set<CGameObject*> s_AliveObjects;
+
+private:
 	class CLayer* Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
 
 public:

@@ -77,10 +77,10 @@ void CImgui_Manager::Ready_Imgui(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceC
 
 	pstyle->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
 	pstyle->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-	pstyle->Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+	pstyle->Colors[ImGuiCol_WindowBg] = ImVec4(0.24f, 0.24f, 0.24f, 1.00f);
 	pstyle->Colors[ImGuiCol_ChildBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
 	pstyle->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-	pstyle->Colors[ImGuiCol_Border] = ImVec4(0.37f, 0.28f, 0.20f, 0.88f);
+	pstyle->Colors[ImGuiCol_Border] = ImVec4(0.41f, 0.41f, 0.41f, 0.88f);
 	pstyle->Colors[ImGuiCol_Tab] = ImVec4(0.30f, 0.30f, 0.33f, 1.f);
 	pstyle->Colors[ImGuiCol_TabHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
 	pstyle->Colors[ImGuiCol_TabActive] = ImVec4(0.36f, 0.36f, 0.38f, 1.00f);
@@ -139,7 +139,7 @@ void CImgui_Manager::Tick_Imgui()
 	ImGui::NewFrame();
 	ImGuizmo::BeginFrame();
 
-
+	//ImGui::ShowStyleEditor();
 }
 
 void CImgui_Manager::Render_Imgui()

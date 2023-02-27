@@ -51,6 +51,8 @@ HRESULT CModelPreviwer::Initialize(void* pArg)
 		}
 	}
 
+	m_pModel->Add_EventCaller("Test", []() {IM_LOG("Hello World!")});
+
 	return S_OK;
 }
 
@@ -60,7 +62,17 @@ void CModelPreviwer::Late_Tick(_double TimeDelta)
 	{
 		m_pModel->Play_Animation(TimeDelta);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		m_pTransformCom->LocalMove(m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix()));
+
+		if (m_bLocalMoveAccess) 
+		{
+			_vector vTest = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix());
+			m_pTransformCom->LocalMove(vTest);
+		}
+
+		{
+			_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTransformCom->Get_WorldMatrix());
+			m_pTransformCom->LocalMove(vOpTest);
+		}
 	}
 }
 
@@ -79,6 +91,11 @@ void CModelPreviwer::SetAttachTo(string BoneName, CModelPreviwer* pAttachPreview
 {
 	m_AttachBoneName = BoneName;
 	m_pAttachPreview = pAttachPreview;
+}
+
+void CModelPreviwer::Imgui_RenderProperty()
+{
+	ImGui::Checkbox("TestModelLocalMove", &m_bLocalMoveAccess);
 }
 
 CAnimation* CModelPreviwer::GetPlayAnimation()
@@ -188,6 +205,8 @@ void CImgui_AnimModifier::Imgui_RenderTab()
 		}
 	}
 
+	RootMotionMaker();
+
 	static Json AnimModifiers = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Meshes/Scarlet_Nexus/AnimationModifier.json");
 
 	if (m_pPreview && m_pPreview->GetPlayAnimation())
@@ -216,6 +235,53 @@ CImgui_AnimModifier* CImgui_AnimModifier::Create(ID3D11Device* pDevice, ID3D11De
 	}
 
 	return inst;
+}
+
+void CImgui_AnimModifier::RootMotionMaker()
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	if (ImGui::CollapsingHeader("RootMotionMaker"))
+	{
+		static _float4 vPeekingPos;
+		static _float4 vModelPos;
+		static _float2 fMoveTime;
+		static _bool   bPeekMode;
+
+		ImGui::Checkbox("PeekMode", &bPeekMode);
+		
+		vPeekingPos = pGameInstance->GetPeekingPos();
+		if(nullptr != m_pPreview)
+			vModelPos = m_pPreview->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		ImGui::InputFloat4("PeekingPos", &vPeekingPos.x);
+		ImGui::InputFloat4("ModelPos", &vModelPos.x);
+		ImGui::InputFloat2("MoveTime", &fMoveTime.x);
+
+		static _float4 vOptionalRootVector;
+
+		if (pGameInstance->KeyDown(CInput_Device::DIM_LB) && bPeekMode)
+		{
+			vOptionalRootVector = vPeekingPos - vModelPos;
+			bPeekMode = false;
+		}
+
+		ImGui::InputFloat4("RootVector", &vOptionalRootVector.x);
+
+		if (ImGui::Button("Add RootMotion"))
+		{
+			OPTIONAL_ROOTMOTION Root;
+			ZeroMemory(&Root, sizeof(OPTIONAL_ROOTMOTION));
+			Root.fStartTime = fMoveTime.x;
+			Root.fEndTime = fMoveTime.y;
+			XMStoreFloat4(&Root.vOptionalRootVector, vOptionalRootVector);
+
+			m_pPreview->GetModel()->Add_OptionalRootMotion(Root);
+		}
+		if (ImGui::Button("Delete RootMotion"))
+		{
+			m_pPreview->GetModel()->Delete_OptionalRootMotion();
+		}
+	}
 }
 
 void CImgui_AnimModifier::Free()

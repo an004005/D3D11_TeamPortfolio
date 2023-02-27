@@ -8,7 +8,6 @@
 #include "Component_Manager.h"
 #include "PipeLine.h"
 #include "Graphic_Device.h"
-#include "Collider.h"
 #include "Layer.h"
 #include "Sound.h"
 
@@ -101,6 +100,7 @@ public: /* For.Object_Manager */
 	list<CGameObject*> Find_AllObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred);
 	template<typename T>
 	T* Find_OneObjectByType(_uint iLevelIndex, const _tchar* pLayerTag);
+	class CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 
 	void Imgui_ProtoViewer(const _tchar*& szSelectedProto);
 	void Imgui_ObjectViewer(_uint iLevel, CGameObject*& pSelectedObject);
@@ -112,6 +112,7 @@ public: /* For.Component_Manager */
 	class CComponent* Clone_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg = nullptr);
 	class CComponent* Clone_Component(const _tchar* pPrototypeTag, void* pArg = nullptr);
 	wcmap<class CComponent*>* GetProtoTypes(_uint iLevelIndex);
+	class CComponent* Find_Prototype_Component(_uint iLevelIndex, const _tchar* pPrototypeTag);
 
 public: /* For.PipeLine */
 	_matrix Get_TransformMatrix(CPipeLine::TRANSFORMSTATE eState) ;
@@ -119,6 +120,7 @@ public: /* For.PipeLine */
 	_matrix Get_TransformMatrix_Inverse(CPipeLine::TRANSFORMSTATE eState) ;
 	void Set_Transform(CPipeLine::TRANSFORMSTATE eState, _fmatrix TransformMatrix);
 	_float4 Get_CamPosition();
+	_float4 Get_CamLook();	// Cam Look 가져오는거
 
 public: /* For.Timer_Manager */ 
 	_double		Get_TimeDelta(const _tchar* pTimerTag);
@@ -130,17 +132,6 @@ public: /* For.Light_Manager */
 	HRESULT Add_Light(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc);
 	void ClearLight();
 	void SetShadowCam(class CCamera* pShadowCam);
-
-public: /* For.Collision_Manager */ 
-	void AddStaticCollider(class CCollider* pStaticColl);
-	void AddDynamicCollider(class CCollider* pDynamicColl);
-	_bool CheckOnCollider(_float4 vPos, _float& fHeight, CGameObject* pOwner, _bool bOnlyStatic = false);
-	_bool CheckCollided(class CCollider* pCollider, _bool bOnlyStatic = false);
-	_bool SphereTest(const BoundingSphere& Sphere, _float3& v, CGameObject* pOwner, _bool bOnlyStatic = false);
-
-	void GetRayIntersects_UntilStatic(_float3 vOrigin, _float3 vDir, CGameObject* pSelf, OUT vector<RAY_INTERSECT_OUT>& Outs);
-	void GetSphereIntersects(const BoundingSphere& Sphere, CGameObject* pSelf, OUT list<CGameObject*>& IntersectedObjects);
-	_bool GetRayIntersectSingle(_float3 vOrigin, _float3 vDir, CGameObject* pSelf, OUT RAY_INTERSECT_OUT& Out);
 
 public: /* For.Font_Manager */
 	HRESULT Add_Font(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pFontTag, const _tchar* pFontFilePath);
@@ -158,12 +149,26 @@ public: /* for sound manager*/
 public: /* for targetManager*/
 	ID3D11ShaderResourceView* Get_SRV(const _tchar* pTargetTag);
 
+public:
+	// 주의사항 CPhysX_Manager 에서 읽고 사용하기, 예제도 있음
+	_bool RayCast(const RayCastParams& params);
+	_bool OverlapSphere(const SphereOverlapParams& params);
+	_bool OverlapCapsule(const CapsuleOverlapParams& params);
+	_bool SweepSphere(const SphereSweepParams& params);
+	_bool SweepCapsule(const CapsuleSweepParams& params);
+
 public: // for CImgui_Manager
 	void Render_ImGui();
 	void Render_Update_ImGui();
 	void Add_ImguiObject(class CImguiObject* pImguiObject);
 	void Clear_ImguiObjects();
 	void Imgui_OnOff(_bool bOn);
+
+public: // for RootAnimation
+	_vector&	GetPeekingPos();
+	void		SetPeekingPos(_fvector vPeekingPos);
+private: // for RootAnimation
+	_vector		m_vecPeekingPos;
 
 private:
 	static _uint					m_iStaticLevelIndex;
@@ -178,12 +183,12 @@ private:
 	class CPipeLine*				m_pPipeLine = nullptr;
 	class CTimer_Manager*			m_pTimer_Manager = nullptr;
 	class CLight_Manager*			m_pLight_Manager = nullptr;
-	class CCollision_Manger*		m_pCollision_Manager = nullptr;
 	class CFont_Manager*			m_pFont_Manager = nullptr;
 	class CFrustum*					m_pFrustum = nullptr;
 	class CTarget_Manager*			m_pTarget_Manager = nullptr;
 	class CHDR*						m_pHDR = nullptr;
 	class CSound_Manager*			m_pSound_Manager = nullptr;
+	class CPhysX_Manager*			m_pPhysX_Manager = nullptr;
 
 	class CImgui_Manager*			m_pImgui_Manager = nullptr;
 

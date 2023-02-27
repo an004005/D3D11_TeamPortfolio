@@ -12,6 +12,7 @@
 #include "Graphic_Device.h"
 #include "RenderTarget.h"
 #include "Light_Manager.h"
+#include "PhysX_Manager.h"
 
 
 CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -96,19 +97,19 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (FAILED(Render_UI()))
 		return E_FAIL;
 
-//#ifdef _DEBUG
-//
-//	if (FAILED(Render_DebugObject()))
-//		return E_FAIL;
-//
-//	if (nullptr != m_pTarget_Manager && m_bVisibleTargets)
-//	{
-//		m_pTarget_Manager->Render_Debug(TEXT("MRT_Deferred"));
-//		m_pTarget_Manager->Render_Debug(TEXT("MRT_LightAcc"));
-//		m_pTarget_Manager->Render_Debug(TEXT("MRT_LightDepth"));
-//
-//	}
-//#endif
+#ifdef _DEBUG
+
+	if (FAILED(Render_DebugObject()))
+		return E_FAIL;
+
+	if (nullptr != m_pTarget_Manager && m_bVisibleTargets)
+	{
+		m_pTarget_Manager->Render_Debug(TEXT("MRT_Deferred"));
+		m_pTarget_Manager->Render_Debug(TEXT("MRT_LightAcc"));
+		m_pTarget_Manager->Render_Debug(TEXT("MRT_LightDepth"));
+
+	}
+#endif
 
 	return S_OK;
 }
@@ -725,6 +726,9 @@ HRESULT CRenderer::Render_DebugObject()
 
 		Safe_Release(pComponent);
 	}
+#ifdef _DEBUG
+	CPhysX_Manager::GetInstance()->DebugRender(m_pDevice, m_pContext);
+#endif
 
 	m_DebugObject.clear();
 

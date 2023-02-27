@@ -6,6 +6,7 @@
 #include "Level_GamePlay.h"
 #include "Imgui_LevelSwitcher.h"
 #include "JsonStorage.h"
+#include "Level_Maptool.h"
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -41,7 +42,7 @@ void CLevel_Logo::Late_Tick(_double TimeDelta)
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 	{
 		CGameInstance::GetInstance()->Open_Loading(
-			LEVEL_GAMEPLAY, 
+			LEVEL_GAMEPLAY,
 			CLevel_Loading_Simple::Create<CLevel_GamePlay>(m_pDevice, m_pContext));
 		return;
 	}
