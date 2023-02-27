@@ -23,6 +23,10 @@ private:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Prototypes();
 	HRESULT Ready_Layer(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Map(const _tchar* pLayerTag);
+
 
 public:
 	static CLevel_Effect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

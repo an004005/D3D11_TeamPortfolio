@@ -1,0 +1,13 @@
+Prototype_Component_Shader_VtxModel_VFX
+
+VFX_Mesh_Slash_0
+../Bin/Resources/Meshes/VFX/Effect_Slash/VFX_Mesh_Slash_0.static_model
+VFX_Mesh_Slash_1
+../Bin/Resources/Meshes/VFX/Effect_Slash/VFX_Mesh_Slash_1.static_model
+
+
+
+
+
+
+

@@ -22,7 +22,7 @@ public:
 
 private:
 	void	MouseMove(_double TimeDelta);
-	_float	m_fSensitivity = 0.2f;
+	_float	m_fSensitivity = 0.1f;
 	_float	m_fCamHeight = 0.f;
 
 public:

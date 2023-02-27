@@ -12,6 +12,9 @@ protected:
 	virtual ~CVIBuffer() = default;
 
 public:
+	_bool			Check_IsInstance() { return m_bIsInstance; }
+
+public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual HRESULT Render();
@@ -33,6 +36,8 @@ protected:
 	DXGI_FORMAT					m_eIndexFormat;
 	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;
 
+	_float3*					m_pVerticesPos = nullptr;
+	void*						m_pIndices = nullptr;
 
 protected: /* 버텍스 버퍼 */
 	ID3D11Buffer*				m_pVB = nullptr;
@@ -47,7 +52,8 @@ protected:
 	HRESULT	Create_VertexBuffer();
 	HRESULT	Create_IndexBuffer();
 
-
+protected:
+	_bool	m_bIsInstance = false;
 
 public:
 	virtual CComponent* Clone(void* pArg = nullptr) = 0;

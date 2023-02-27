@@ -34,6 +34,7 @@ public:
 	virtual void AfterPhysX(){}
 	virtual HRESULT Render();
 	virtual HRESULT Render_ShadowDepth() { return S_OK; }
+	virtual HRESULT Render_OutlineFlag() { return S_OK; }
 
 	virtual void SaveToJson(OUT Json& json);
 	virtual void LoadFromJson(const Json& json);

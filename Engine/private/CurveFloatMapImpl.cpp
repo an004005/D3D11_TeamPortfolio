@@ -170,7 +170,7 @@ void CCurveFloatImpl::LoadFromJson(const Json& json)
 
 _float CCurveFloatImpl::GetValue(_double Frame)
 {
-	return ImGui::CurveValue((_float)Frame, m_iMaxPoint, m_KeyFrames); 
+	return ImGui::CurveValueSmooth((_float)Frame, m_iMaxPoint, m_KeyFrames);
 }
 
 void CCurveFloatImpl::Imgui_RenderEditor()

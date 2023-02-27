@@ -7,12 +7,7 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Model/StaticModel/Monster/SkPmBullet/Texture/T_co0600_Body_ALB.png",
-            "../Bin/Resources/Model/StaticModel/Monster/SkPmBullet/Texture/T_co0600_Body_NML.png",
-            "../Bin/Resources/Model/StaticModel/Monster/SkPmBullet/Texture/T_co0600_Body_RMA.png",
-            "../Bin/Resources/Model/StaticModel/Monster/SkPmBullet/Texture/dds/T_co0600_Body_ALB.dds",
-            "../Bin/Resources/Model/StaticModel/Monster/SkPmBullet/Texture/dds/T_co0600_Body_NML.dds",
-            "../Bin/Resources/Model/StaticModel/Monster/SkPmBullet/Texture/dds/T_co0600_Body_RMA.dds"
+            "../Bin/Resources/99.DefaultSky/T_Sky_01_A.png"
         ],
         "Pass" : 1
     }
