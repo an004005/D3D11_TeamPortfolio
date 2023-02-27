@@ -1,5 +1,8 @@
 Effect Todolist
 
+https://mentum.tistory.com/676 // 이펙트 공부
+
+
 1. 타임라인 길이랑 플레이타임 설정하는 버튼 만들기 
 PlayFromStart, Stop, Reset
 // 완료 
@@ -29,8 +32,16 @@ PlayFromStart, Stop, Reset
 해당 이펙트랑 커브 함수랑 이어주는 툴 생성하기 
 // 완료 
 
+
+
+
 커브랑 이어진 함수가 어떤 포인터의 함수를 돌릴건지 
-27일 작업하기
+//완료
+
+그래프 초기화하는 버튼 만들기 
+마지막 키프레임 삭제하는 버튼 만들기
+
+
 
 
 

@@ -4,9 +4,8 @@
 #include "ImguiUtils.h"
 #include "GameUtils.h"
 #include "JsonLib.h"
-// #include "BillBoard.h"
 #include "MathUtils.h"
-// #include "../../Engine/public/Sound_Manager.h"
+
 
 
 CEffectSystem::CEffectSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -176,6 +175,7 @@ HRESULT CEffectSystem::SetParams()
 	
 	FAILED_CHECK(m_pShaderCom->Set_Params(m_tParam));
 	
+
 	if (m_bDecal)
 	{
 		const _float4x4 ProjInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_PROJ);
@@ -239,9 +239,15 @@ void CEffectSystem::Imgui_RenderProperty()
 	CGameObject::Imgui_RenderProperty();
 	
 	ImGui::Separator();
+
 	
 	CShader::Imgui_RenderShaderParams(m_tParam);
-	
+
+	if(ImGui::Button("Set_OriginColor"))
+	{
+		m_vOriginColor = m_tParam.Float4s[0];
+	}
+
 	ImGui::Separator();
 
 	if (ImGui::Button("Add Child Buffer"))
@@ -355,6 +361,53 @@ void CEffectSystem::Imgui_RenderProperty()
 	});
 }
 
+void CEffectSystem::Tick_Scale(_float fValue)
+{
+	fValue *= 2.f;
+
+	m_pTransformCom->Set_Scaled(_float3(fValue, fValue, fValue));
+}
+
+void CEffectSystem::Tick_IntroDissolve(_float fValue)
+{
+	m_tParam.Floats[0] = fValue;
+}
+
+void CEffectSystem::Tick_OutroDissolve(_float fValue)
+{
+	m_tParam.Floats[0] = fValue;
+}
+
+void CEffectSystem::Tick_ColorChange(_float fValue)
+{
+	if (m_tParam.Float4s.size() < 2)
+		return;
+
+	_float4 vOriginColor = m_vOriginColor;
+	_float4 vChangeColor = m_tParam.Float4s[1];
+
+	_float4 vOutColor = vOriginColor * (1.f - fValue);
+	_float4 vInColor = vChangeColor * (fValue);
+
+	// _float4 vResultColor = CMathUtils::Clamp(vOutColor + vInColor, _float4::Zero, _float4::One) ;
+	
+	m_tParam.Float4s[0] = vOutColor  + vInColor;
+}
+
+void CEffectSystem::Tick_EmissiveChange(_float fValue)
+{
+	m_tParam.Floats[0] = fValue;
+}
+
+void CEffectSystem::Tick_IntroTime(_float fValue)
+{
+	m_tParam.Floats[0] = fValue;
+}
+
+void CEffectSystem::Tick_OutroTime(_float fValue)
+{
+	m_tParam.Floats[0] = fValue;
+}
 
 
 CEffectSystem* CEffectSystem::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -25,6 +25,11 @@ public:
 
 	void SetResizable(_bool bResizable) { m_bResizable = bResizable; }
 
+	D3D11_VIEWPORT				GetViewPortDesc() { return m_ViewPort; }
+	ID3D11DepthStencilView*		GetDepthStencilView() { return m_pDepthStencilView; }
+	HRESULT						Ready_DepthStencilRenderTargetView(_uint iWidth, _uint iHeight, DXGI_FORMAT eFormat);
+
+
 public:
 	HRESULT Initialize(_uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4* pClearColor);
 	HRESULT Resize(_uint iWidth, _uint iHeight);
@@ -48,10 +53,12 @@ private:
 	ID3D11Texture2D*					m_pTexture2D = nullptr;
 	ID3D11RenderTargetView*				m_pRTV = nullptr;
 	ID3D11ShaderResourceView*			m_pSRV = nullptr;
-
+	ID3D11DepthStencilView*				m_pDepthStencilView = nullptr;
+		
 private:
 	_float4								m_vClearColor;
 	DXGI_FORMAT							m_ePixelFormat;
+	D3D11_VIEWPORT						m_ViewPort;
 
 #ifdef _DEBUG
 private:

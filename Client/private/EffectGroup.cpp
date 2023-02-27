@@ -28,6 +28,8 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 	if(pArg != nullptr)
 	{
+		Json& json = *static_cast<Json*>(pArg);
+
 		if(m_First_EffectDirectory != "")
 		{
 			Json First_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_First_EffectDirectory);
@@ -35,6 +37,16 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 			const string& strFileName =  CGameUtils::GetFileName(m_First_EffectDirectory);
 			m_mapEffectSystemTag.emplace(strFileName, m_pFirst_EffectSystem);
+
+
+			if (json.contains("FirstEffect_Curves"))
+			{
+				for (auto curveJson : json["FirstEffect_Curves"])
+				{
+					LoadAndSetCurve_First(&curveJson);
+				}
+			}
+
 		}
 		if (m_Second_EffectDirectory != "")
 		{
@@ -42,6 +54,14 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			m_pSecond_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Second_Effect));
 			const string& strFileName = CGameUtils::GetFileName(m_Second_EffectDirectory);
 			m_mapEffectSystemTag.emplace(strFileName, m_pSecond_EffectSystem);
+
+			if (json.contains("SecondEffect_Curves"))
+			{
+				for (auto curveJson : json["SecondEffect_Curves"])
+				{
+					LoadAndSetCurve_Second(&curveJson);
+				}
+			}
 		}
 		if (m_Third_EffectDirectory != "")
 		{
@@ -49,6 +69,14 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			m_pThird_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Third_Effect));
 			const string& strFileName = CGameUtils::GetFileName(m_Third_EffectDirectory);
 			m_mapEffectSystemTag.emplace(strFileName, m_pThird_EffectSystem);
+
+			if (json.contains("ThirdEffect_Curves"))
+			{
+				for (auto curveJson : json["ThirdEffect_Curves"])
+				{
+					LoadAndSetCurve_Third(&curveJson);
+				}
+			}
 		}
 		if (m_Fourth_EffectDirectory != "")
 		{
@@ -56,6 +84,14 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			m_pFourth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fourth_Effect));
 			const string& strFileName = CGameUtils::GetFileName(m_Fourth_EffectDirectory);
 			m_mapEffectSystemTag.emplace(strFileName,m_pFourth_EffectSystem);
+
+			if (json.contains("FourthEffect_Curves"))
+			{
+				for (auto curveJson : json["FourthEffect_Curves"])
+				{
+					LoadAndSetCurve_Fourth(&curveJson);
+				}
+			}
 		}
 		if (m_Fifth_EffectDirectory != "")
 		{
@@ -63,7 +99,31 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			m_pFifth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fifth_Effect));
 			const string& strFileName = CGameUtils::GetFileName(m_Fifth_EffectDirectory);
 			m_mapEffectSystemTag.emplace(strFileName, m_pFifth_EffectSystem);
+
+			if (json.contains("FifthEffect_Curves"))
+			{
+				for (auto curveJson : json["FifthEffect_Curves"])
+				{
+					LoadAndSetCurve_Fifth(&curveJson);
+				}
+			}
 		}
+
+		m_Timeline.SetTimelineLength((_double)m_fEndTime);
+
+		if (m_iSelectFinishFunc == 0)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+		}
+		else if (m_iSelectFinishFunc == 1)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+		}
+		else if (m_iSelectFinishFunc == 2)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+		}
+
 	}
 	else
 	{
@@ -72,8 +132,7 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 	}
 
 
-	m_Timeline.SetTimelineLength(0.70);
-	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+	
 
 	m_Timeline.PlayFromStart();
 
@@ -125,6 +184,12 @@ void CEffectGroup::Imgui_RenderProperty()
 
 	ImGui::BulletText("Timeline_Options");
 	ImGui::SliderFloat("Set_EndTime", &m_fEndTime, 0.f, 30.f);
+	ImGui::SameLine();
+	if(ImGui::Button("Set_End"))
+	{
+		m_Timeline.SetTimelineLength(m_fEndTime);
+	}
+
 
 	// m_Timeline.SetTimelineLength(3.0);
 
@@ -246,6 +311,9 @@ void CEffectGroup::Imgui_RenderProperty()
 				AddEmptyCurve_ForFirst(szCurveTag);
 				ZeroMemory(szCurveTag, MAX_PATH);
 			}
+
+			Imgui_RenderEffectSource(item_current_idx);
+
 		}
 		else if (item_current_idx == 1)
 		{
@@ -281,6 +349,8 @@ void CEffectGroup::Imgui_RenderProperty()
 				AddEmptyCurve_ForSecond(szCurveTag);
 				ZeroMemory(szCurveTag, MAX_PATH);
 			}
+
+			Imgui_RenderEffectSource(item_current_idx);
 		}
 		else if (item_current_idx == 2)
 		{
@@ -316,6 +386,9 @@ void CEffectGroup::Imgui_RenderProperty()
 				AddEmptyCurve_ForThird(szCurveTag);
 				ZeroMemory(szCurveTag, MAX_PATH);
 			}
+
+			Imgui_RenderEffectSource(item_current_idx);
+
 		}
 		else if (item_current_idx == 3)
 		{
@@ -350,6 +423,9 @@ void CEffectGroup::Imgui_RenderProperty()
 				AddEmptyCurve_ForFourth(szCurveTag);
 				ZeroMemory(szCurveTag, MAX_PATH);
 			}
+
+			Imgui_RenderEffectSource(item_current_idx);
+
 		}
 		else if (item_current_idx == 4)
 		{
@@ -384,6 +460,9 @@ void CEffectGroup::Imgui_RenderProperty()
 				AddEmptyCurve_ForFifth(szCurveTag);
 				ZeroMemory(szCurveTag, MAX_PATH);
 			}
+
+			Imgui_RenderEffectSource(item_current_idx);
+
 		}
 		else
 		{
@@ -416,9 +495,6 @@ void CEffectGroup::Imgui_RenderProperty()
 
 			iSelectCurve = -1;
 		}
-
-
-
 	}
 	// 커브 추가하는 곳
 
@@ -435,7 +511,7 @@ void CEffectGroup::Imgui_RenderProperty()
 		file << json;
 	});	
 
-	Imgui_RenderEffectSource();
+	// Imgui_RenderEffectSource();
 
 	for (auto iter : ppEffectTag)
 	{
@@ -532,14 +608,6 @@ void CEffectGroup::SaveToJson(Json& json)
 		json["End_Time"] = m_fEndTime;
 	else
 		json["End_Time"] = 3.f;
-
-
-	// for (auto pCurve : m_Curves)
-	// {
-	// 	Json curveJson;
-	// 	pCurve.second->SaveToJson(curveJson);
-	// 	json["Curves"].push_back(curveJson);
-	// }
 	
 }
 
@@ -557,83 +625,77 @@ void CEffectGroup::LoadFromJson(const Json& json)
 	{
 		m_First_EffectDirectory = json["First_Directory"];
 
-		if (json.contains("FirstEffect_Curves"))
-		{
-			for (auto curveJson : json["FirstEffect_Curves"])
-			{
-				LoadAndSetCurve_First(&curveJson);
-			}
-		}
+		
 	}
 
 	if (json.contains("Second_Directory"))
 	{
 		m_Second_EffectDirectory = json["Second_Directory"];
 
-		if (json.contains("SecondEffect_Curves"))
-		{
-			for (auto curveJson : json["SecondEffect_Curves"])
-			{
-				// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-				// m_SecondEffect_Curves.emplace(pCurve->GetName(), pCurve);
-				// AddEmptyCurve_ForSecond(pCurve->GetName());
-
-				LoadAndSetCurve_Second(&curveJson);
-
-			}
-		}
+		// if (json.contains("SecondEffect_Curves"))
+		// {
+		// 	for (auto curveJson : json["SecondEffect_Curves"])
+		// 	{
+		// 		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
+		// 		// m_SecondEffect_Curves.emplace(pCurve->GetName(), pCurve);
+		// 		// AddEmptyCurve_ForSecond(pCurve->GetName());
+		//
+		// 		LoadAndSetCurve_Second(&curveJson);
+		//
+		// 	}
+		// }
 	}
 
 	if (json.contains("Third_Directory"))
 	{
 		m_Third_EffectDirectory = json["Third_Directory"];
 
-		if (json.contains("ThirdEffect_Curves"))
-		{
-			for (auto curveJson : json["ThirdEffect_Curves"])
-			{
-				// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-				// m_ThirdEffect_Curves.emplace(pCurve->GetName(), pCurve);
-				// AddEmptyCurve_ForThird(pCurve->GetName());
-
-				LoadAndSetCurve_Third(&curveJson);
-
-			}
-		}
+		// if (json.contains("ThirdEffect_Curves"))
+		// {
+		// 	for (auto curveJson : json["ThirdEffect_Curves"])
+		// 	{
+		// 		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
+		// 		// m_ThirdEffect_Curves.emplace(pCurve->GetName(), pCurve);
+		// 		// AddEmptyCurve_ForThird(pCurve->GetName());
+		//
+		// 		LoadAndSetCurve_Third(&curveJson);
+		//
+		// 	}
+		// }
 	}
 
 	if (json.contains("Fourth_Directory"))
 	{
 		m_Fourth_EffectDirectory = json["Fourth_Directory"];
 
-		if (json.contains("FourthEffect_Curves"))
-		{
-			for (auto curveJson : json["FourthEffect_Curves"])
-			{
-				// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-				// m_FourthEffect_Curves.emplace(pCurve->GetName(), pCurve);
-				// AddEmptyCurve_ForFourth(pCurve->GetName());
-
-				LoadAndSetCurve_Fourth(&curveJson);
-			}
-		}
+		// if (json.contains("FourthEffect_Curves"))
+		// {
+		// 	for (auto curveJson : json["FourthEffect_Curves"])
+		// 	{
+		// 		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
+		// 		// m_FourthEffect_Curves.emplace(pCurve->GetName(), pCurve);
+		// 		// AddEmptyCurve_ForFourth(pCurve->GetName());
+		//
+		// 		LoadAndSetCurve_Fourth(&curveJson);
+		// 	}
+		// }
 	}
 
 	if (json.contains("Fifth_Directory"))
 	{
 		m_Fifth_EffectDirectory = json["Fifth_Directory"];
 
-		if (json.contains("FifthEffect_Curves"))
-		{
-			for (auto curveJson : json["FifthEffect_Curves"])
-			{
-				// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-				// m_FifthEffect_Curves.emplace(pCurve->GetName(), pCurve);
-				// AddEmptyCurve_ForFifth(pCurve->GetName());
-
-				LoadAndSetCurve_Fifth(&curveJson);
-			}
-		}
+		// if (json.contains("FifthEffect_Curves"))
+		// {
+		// 	for (auto curveJson : json["FifthEffect_Curves"])
+		// 	{
+		// 		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
+		// 		// m_FifthEffect_Curves.emplace(pCurve->GetName(), pCurve);
+		// 		// AddEmptyCurve_ForFifth(pCurve->GetName());
+		//
+		// 		LoadAndSetCurve_Fifth(&curveJson);
+		// 	}
+		// }
 	}
 
 	json["End_Time"].get_to<_float>(m_fEndTime);
@@ -663,37 +725,37 @@ inline void CEffectGroup::LoadAndSetCurve_First(Json* json)
 
 	if (!strcmp(pCurve->GetName(), "ObjectScale"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_FirstEffect_Curves.find("ObjectScale")->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_Scale, m_FirstEffect_Curves.find("ObjectScale")->second);
 		Safe_AddRef(m_FirstEffect_Curves.find("ObjectScale")->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Intro_Dissolve"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_FirstEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_IntroDissolve, m_FirstEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Outro_Dissolve"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_FirstEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_OutroDissolve, m_FirstEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Color_Change"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_FirstEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_ColorChange, m_FirstEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Emissive_Change"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_FirstEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_EmissiveChange, m_FirstEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Intro_Time"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_FirstEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_IntroTime, m_FirstEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Outro_Time"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_FirstEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_OutroTime, m_FirstEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else
@@ -710,37 +772,37 @@ void CEffectGroup::LoadAndSetCurve_Second(Json* json)
 
 	if (!strcmp(pCurve->GetName(), "ObjectScale"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_Scale, m_SecondEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Intro_Dissolve"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_IntroDissolve, m_SecondEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Outro_Dissolve"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_OutroDissolve, m_SecondEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Color_Change"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_ColorChange, m_SecondEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Emissive_Change"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_EmissiveChange, m_SecondEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Intro_Time"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_IntroTime, m_SecondEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Outro_Time"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_OutroTime, m_SecondEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else
@@ -756,37 +818,37 @@ void CEffectGroup::LoadAndSetCurve_Third(Json* json)
 
 	if (!strcmp(pCurve->GetName(), "ObjectScale"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_Scale, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Intro_Dissolve"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_IntroDissolve, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Outro_Dissolve"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_OutroDissolve, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Color_Change"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_ColorChange, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Emissive_Change"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_EmissiveChange, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Intro_Time"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_IntroTime, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Outro_Time"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_OutroTime, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else
@@ -802,37 +864,37 @@ void CEffectGroup::LoadAndSetCurve_Fourth(Json* json)
 
 	if (!strcmp(pCurve->GetName(), "ObjectScale"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_Scale, m_FourthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Intro_Dissolve"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_IntroDissolve, m_FourthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Outro_Dissolve"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_OutroDissolve, m_FourthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Color_Change"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_ColorChange, m_FourthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Emissive_Change"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_EmissiveChange, m_FourthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Intro_Time"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_IntroTime, m_FourthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Outro_Time"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_OutroTime, m_FourthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else
@@ -848,37 +910,37 @@ void CEffectGroup::LoadAndSetCurve_Fifth(Json* json)
 
 	if (!strcmp(pCurve->GetName(), "ObjectScale"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_Scale, m_FifthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Intro_Dissolve"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_IntroDissolve, m_FifthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Outro_Dissolve"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_OutroDissolve, m_FifthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Color_Change"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_ColorChange, m_FifthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Emissive_Change"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_EmissiveChange, m_FifthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Intro_Time"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_IntroTime, m_FifthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Outro_Time"))
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_OutroTime, m_FifthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
 	}
 	else
@@ -1039,38 +1101,47 @@ void CEffectGroup::Add_TargetCurve(_uint iSelectEffect, string strCurveName)
 	}
 }
 
-void CEffectGroup::Imgui_RenderEffectSource()
+void CEffectGroup::Imgui_RenderEffectSource(_int iSelectEffect)
 {
 	ImGui::BeginTabBar("EffectGroup_Sources");
 
-	if(m_pFirst_EffectSystem != nullptr)
+	if(m_pFirst_EffectSystem != nullptr && iSelectEffect ==0)
 	{
 		ImGui::Begin("First_Effect");
 		m_pFirst_EffectSystem->Imgui_RenderProperty();
+		m_pFirst_EffectSystem->GetShader()->Imgui_RenderProperty();
 		ImGui::End();
 	}
-	if (m_pSecond_EffectSystem != nullptr)
+	else if (m_pSecond_EffectSystem != nullptr && iSelectEffect ==1)
 	{
 		ImGui::Begin("Second_Effect");
 		m_pSecond_EffectSystem->Imgui_RenderProperty();
+		m_pSecond_EffectSystem->GetShader()->Imgui_RenderProperty();
+
 		ImGui::End();
 	}
-	if (m_pThird_EffectSystem != nullptr)
+	else if (m_pThird_EffectSystem != nullptr&& iSelectEffect == 2)
 	{
 		ImGui::Begin("Third_Effect");
 		m_pThird_EffectSystem->Imgui_RenderProperty();
+		m_pThird_EffectSystem->GetShader()->Imgui_RenderProperty();
+
 		ImGui::End();
 	}
-	if (m_pFourth_EffectSystem != nullptr)
+	else if (m_pFourth_EffectSystem != nullptr && iSelectEffect == 3)
 	{
 		ImGui::Begin("Fourth_Effect");
 		m_pFourth_EffectSystem->Imgui_RenderProperty();
+		m_pFourth_EffectSystem->GetShader()->Imgui_RenderProperty();
+
 		ImGui::End();
 	}
-	if (m_pFifth_EffectSystem != nullptr)
+	else if (m_pFifth_EffectSystem != nullptr && iSelectEffect == 4)
 	{
 		ImGui::Begin("Fifth_Effect");
 		m_pFifth_EffectSystem->Imgui_RenderProperty();
+		m_pFifth_EffectSystem->GetShader()->Imgui_RenderProperty();
+
 		ImGui::End();
 	}
 
@@ -1090,9 +1161,9 @@ void CEffectGroup::AddEmptyCurve(string strCurveName)
 
 void CEffectGroup::AddEmptyCurve_ForFirst(string strCurveName)
 {
-	// auto itr = m_FirstEffect_Curves.find(strCurveName.c_str());
-	// if (itr != m_FirstEffect_Curves.end())
-	// 	return;
+	auto itr = m_FirstEffect_Curves.find(strCurveName.c_str());
+	if (itr != m_FirstEffect_Curves.end())
+		return;
 
 	auto pCurve = CCurveFloatImpl::Create(strCurveName);
 	m_FirstEffect_Curves.emplace(pCurve->GetName(), pCurve);
@@ -1101,37 +1172,37 @@ void CEffectGroup::AddEmptyCurve_ForFirst(string strCurveName)
 
 	if (strCurveName == "ObjectScale")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_Scale, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Intro_Dissolve")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_IntroDissolve, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Outro_Dissolve")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_OutroDissolve, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Color_Change")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_ColorChange, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Emissive_Change")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_EmissiveChange, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Intro_Time")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_IntroTime, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Outro_Time")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_OutroTime, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else
@@ -1151,37 +1222,37 @@ void CEffectGroup::AddEmptyCurve_ForSecond(string strCurveName)
 
 	if (strCurveName == "ObjectScale")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_Scale, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Intro_Dissolve")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_IntroDissolve, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Outro_Dissolve")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_OutroDissolve, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Color_Change")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_ColorChange, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Emissive_Change")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_EmissiveChange, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Intro_Time")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_IntroTime, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Outro_Time")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_OutroTime, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else
@@ -1201,37 +1272,37 @@ void CEffectGroup::AddEmptyCurve_ForThird(string strCurveName)
 
 	if (strCurveName == "ObjectScale")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_Scale, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Intro_Dissolve")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_IntroDissolve, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Outro_Dissolve")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_OutroDissolve, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Color_Change")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_ColorChange, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Emissive_Change")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_EmissiveChange, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Intro_Time")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_IntroTime, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Outro_Time")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_OutroTime, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else
@@ -1251,37 +1322,37 @@ void CEffectGroup::AddEmptyCurve_ForFourth(string strCurveName)
 
 	if (strCurveName == "ObjectScale")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_Scale, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Intro_Dissolve")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_IntroDissolve, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Outro_Dissolve")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_OutroDissolve, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Color_Change")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_ColorChange, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Emissive_Change")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_EmissiveChange, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Intro_Time")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_IntroTime, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Outro_Time")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_OutroTime, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else
@@ -1301,37 +1372,37 @@ void CEffectGroup::AddEmptyCurve_ForFifth(string strCurveName)
 
 	if (strCurveName == "ObjectScale")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_Scale, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Intro_Dissolve")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroDissolve, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_IntroDissolve, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Outro_Dissolve")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroDissolve, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_OutroDissolve, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Color_Change")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_ColorChange, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_ColorChange, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Emissive_Change")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_EmissiveChange, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_EmissiveChange, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Intro_Time")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_IntroTime, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_IntroTime, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else if (strCurveName == "Outro_Time")
 	{
-		m_Timeline.SetCurve(this, &CEffectGroup::Tick_OutroTime, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_OutroTime, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 	}
 	else
@@ -1340,46 +1411,46 @@ void CEffectGroup::AddEmptyCurve_ForFifth(string strCurveName)
 	}
 }
 
-void CEffectGroup::Tick_Scale( _float fValue)
-{
-	fValue *= 2.f;
-
-	m_pFirst_EffectSystem->GetTransform()->Set_Scaled(_float3(fValue, fValue, fValue));
-}
-
-// 인자 뭐에 던질지 고민해봐야함
-
-void CEffectGroup::Tick_IntroDissolve(_float fValue)
-{
-	// 이펙트 내에서 어떤 효과에 어떤 인자를 쓸건지 저장하는건 어떤지 
-
-	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
-}
-
-void CEffectGroup::Tick_OutroDissolve(_float fValue)
-{
-	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
-}
-
-void CEffectGroup::Tick_EmissiveChange(_float fValue)
-{
-	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
-}
-
-void CEffectGroup::Tick_IntroTime(_float fValue)
-{
-	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
-}
-
-void CEffectGroup::Tick_OutroTime(_float fValue)
-{
-	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
-}
-
-void CEffectGroup::Tick_ColorChange(_float fValue)
-{
-	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
-}
+// void CEffectGroup::Tick_Scale( _float fValue)
+// {
+// 	fValue *= 2.f;
+//
+// 	m_pFirst_EffectSystem->GetTransform()->Set_Scaled(_float3(fValue, fValue, fValue));
+// }
+//
+// // 인자 뭐에 던질지 고민해봐야함
+//
+// void CEffectGroup::Tick_IntroDissolve(_float fValue)
+// {
+// 	// 이펙트 내에서 어떤 효과에 어떤 인자를 쓸건지 저장하는건 어떤지 
+//
+// 	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
+// }
+//
+// void CEffectGroup::Tick_OutroDissolve(_float fValue)
+// {
+// 	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
+// }
+//
+// void CEffectGroup::Tick_EmissiveChange(_float fValue)
+// {
+// 	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
+// }
+//
+// void CEffectGroup::Tick_IntroTime(_float fValue)
+// {
+// 	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
+// }
+//
+// void CEffectGroup::Tick_OutroTime(_float fValue)
+// {
+// 	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
+// }
+//
+// void CEffectGroup::Tick_ColorChange(_float fValue)
+// {
+// 	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
+// }
 
 CEffectGroup* CEffectGroup::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

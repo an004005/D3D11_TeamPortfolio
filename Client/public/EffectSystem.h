@@ -38,6 +38,7 @@ public:
 	HRESULT SetParams();
 	HRESULT Begin();
 	ShaderParams& GetParams() { return m_tParam; }
+	CShader* GetShader() { return m_pShaderCom; }
 
 	virtual void SaveToJson(Json& json) override;
 	virtual void Imgui_RenderProperty() override;
@@ -54,7 +55,13 @@ public:
 
 	//For_Curve
 public:
-
+	void Tick_Scale(_float fValue);
+	void Tick_IntroDissolve(_float fValue);
+	void Tick_OutroDissolve(_float fValue);
+	void Tick_ColorChange(_float fValue);
+	void Tick_EmissiveChange(_float fValue);
+	void Tick_IntroTime(_float fValue);
+	void Tick_OutroTime(_float fValue);
 
 private:
 	CShader*					m_pShaderCom = nullptr;
@@ -82,6 +89,9 @@ private:
 	_float m_fModelChangeTime = 2.f;
 	_bool	m_bModelChange = false;
 
+
+private:
+	_float4			m_vOriginColor = _float4::Zero;
 	
 public:
 	static CEffectSystem*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

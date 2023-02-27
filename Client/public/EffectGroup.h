@@ -29,17 +29,17 @@ public:
 	virtual void LoadFromJson(const Json& json) override;
 
 	void		Load_EffectSystem();
-	void		Imgui_RenderEffectSource();
+	void		Imgui_RenderEffectSource(_int iSelectEffect);
 
 public:
 	// For Graph
-	void Tick_Scale( _float fValue);
-	void Tick_IntroDissolve(_float fValue);
-	void Tick_OutroDissolve(_float fValue);
-	void Tick_ColorChange(_float fValue);
-	void Tick_EmissiveChange(_float fValue);
-	void Tick_IntroTime(_float fValue);
-	void Tick_OutroTime(_float fValue);
+	// void Tick_Scale( _float fValue);
+	// void Tick_IntroDissolve(_float fValue);
+	// void Tick_OutroDissolve(_float fValue);
+	// void Tick_ColorChange(_float fValue);
+	// void Tick_EmissiveChange(_float fValue);
+	// void Tick_IntroTime(_float fValue);
+	// void Tick_OutroTime(_float fValue);
 
 	void LoadAndSetCurve_First(Json* json);
 	void LoadAndSetCurve_Second(Json* json);

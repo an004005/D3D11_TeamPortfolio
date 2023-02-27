@@ -115,6 +115,8 @@ void CTimeline::Imgui_RenderEditor()
 	_float _fEnd = m_EndTime;
 	ImGui::InputFloat("EndTime", &_fEnd);
 	m_EndTime = (_double)_fEnd;
+
+	
 }
 
 void CTimeline::Free()

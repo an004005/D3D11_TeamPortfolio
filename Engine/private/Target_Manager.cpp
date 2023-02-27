@@ -127,6 +127,9 @@ HRESULT CTarget_Manager::Begin_MRT(ID3D11DeviceContext * pContext, const _tchar 
 		pRTVs[iNumViews++] = pRTV->Get_RTV();	
 	}
 
+	_uint iNumViewports = 1;
+	pContext->RSGetViewports(&iNumViewports, &m_OriginViewPort);
+
 	pContext->OMSetRenderTargets(iNumViews, pRTVs, m_pDepthStencilView);
 
 	return S_OK;
@@ -165,6 +168,60 @@ HRESULT CTarget_Manager::End_MRT(ID3D11DeviceContext * pContext, const _tchar * 
 
 	Safe_Release(m_pBackBufferView);
 	Safe_Release(m_pDepthStencilView);
+
+	pContext->RSSetViewports(1, &m_OriginViewPort);
+
+	return S_OK;
+}
+
+HRESULT CTarget_Manager::Begin_RenderTarget(ID3D11DeviceContext* pContext, const _tchar* pTargetTag)
+{
+	CRenderTarget*		pRenderTarget = Find_RenderTarget(pTargetTag);
+
+	ID3D11ShaderResourceView*		pSRVs[128] = { nullptr };
+
+	pContext->PSSetShaderResources(0, 128, pSRVs);
+
+	ID3D11RenderTargetView*			pRTV;
+
+	pRenderTarget->Clear();
+	pRTV = pRenderTarget->Get_RTV();
+
+	// 기존에 바인딩되어있던 (백버퍼 + 깊이스텐실버퍼)를 얻어옴
+	pContext->OMGetRenderTargets(1, &m_pBackBufferView, &m_pDepthStencilView);
+
+	_uint iNumViewports = 1;
+	pContext->RSGetViewports(&iNumViewports, &m_OriginViewPort);
+
+	pContext->OMSetRenderTargets(1, &pRTV, m_pDepthStencilView);
+
+	return S_OK;
+}
+
+HRESULT CTarget_Manager::Begin_ShadowDepthRenderTarget(ID3D11DeviceContext* pContext, const _tchar* pTargetTag)
+{
+	CRenderTarget*		pRenderTarget = Find_RenderTarget(pTargetTag);
+
+	ID3D11ShaderResourceView*		pSRVs[128] = { nullptr };
+
+	pContext->PSSetShaderResources(0, 128, pSRVs);
+
+	ID3D11RenderTargetView*		pRTV;
+
+	pRenderTarget->Clear();
+	pRTV = pRenderTarget->Get_RTV();
+
+	/* 기존에 바인딩되어있던(백버퍼 + 깊이스텐실버퍼)를 얻어온다. */
+	pContext->OMGetRenderTargets(1, &m_pBackBufferView, &m_pDepthStencilView);
+
+	_uint iNumViewports = 1;
+	pContext->RSGetViewports(&iNumViewports, &m_OriginViewPort);
+
+	pContext->OMSetRenderTargets(1, &pRTV, pRenderTarget->GetDepthStencilView());
+
+	pContext->ClearDepthStencilView(pRenderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+
+	pContext->RSSetViewports(1, &pRenderTarget->GetViewPortDesc());
 
 	return S_OK;
 }
