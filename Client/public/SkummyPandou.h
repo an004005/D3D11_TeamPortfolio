@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "Monster.h"
 
 BEGIN(Engine)
 class CGameInstance;
@@ -15,7 +16,7 @@ END
 BEGIN(Client)
 class CSkPd_AnimInstance;
 
-class CSkummyPandou : public CGameObject
+class CSkummyPandou : public CMonster
 {
 private:
 	CSkummyPandou(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -15,12 +15,12 @@
 
 
 CSkummyPool::CSkummyPool(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+	: CMonster(pDevice, pContext)
 {
 }
 
 CSkummyPool::CSkummyPool(const CSkummyPool & rhs)
-	: CGameObject(rhs)
+	: CMonster(rhs)
 {
 }
 
@@ -43,7 +43,7 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 	if (FAILED(Setup_AnimSocket()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(7.f, 0.f, 7.f)));
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 3.f)));
 
 	m_pTransformCom->SetSpeed(1.f);
 

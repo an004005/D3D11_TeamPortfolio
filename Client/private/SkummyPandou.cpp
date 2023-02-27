@@ -13,12 +13,12 @@
 #include "FlowerLeg.h"
 
 CSkummyPandou::CSkummyPandou(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+	: CMonster(pDevice, pContext)
 {
 }
 
 CSkummyPandou::CSkummyPandou(const CSkummyPandou & rhs)
-	: CGameObject(rhs)
+	: CMonster(rhs)
 {
 }
 
@@ -60,9 +60,6 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 				{
 									
 				})
-
-
-
 
 			.Build();
 	}

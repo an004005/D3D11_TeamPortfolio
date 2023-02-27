@@ -195,8 +195,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Json BuddyLumiModel;
 	BuddyLumiModel["Model"] = "MonsterBuddyLumi";
 
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"), &BuddyLumiModel)))
-		return E_FAIL;*/
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"), &BuddyLumiModel)))
+		return E_FAIL;
 
 	Json SkummyPoolModel;
 	SkummyPoolModel["Model"] = "MonsterSkummyPool";
