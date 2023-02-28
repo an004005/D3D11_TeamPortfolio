@@ -44,6 +44,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(Setup_Parts()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_Event()))
+		return E_FAIL;
+
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
 
 	return S_OK;
@@ -153,6 +156,48 @@ HRESULT CPlayer::SetUp_AttackFSM()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_Event()
+{
+	m_pModel->Add_EventCaller("Turn_Enable", [&]() {Event_SetCanTurn(true); });
+	m_pModel->Add_EventCaller("Turn_Disable", [&]() {Event_SetCanTurn(false); });
+
+	m_pModel->Add_EventCaller("Move_Enable", [&]() {Event_SetCanMove(true); });
+	m_pModel->Add_EventCaller("Move_Disable", [&]() {Event_SetCanMove(false); });
+
+	m_pModel->Add_EventCaller("Run_Enable", [&]() {Event_SetCanRun(true); });
+	m_pModel->Add_EventCaller("Run_Disable", [&]() {Event_SetCanRun(false); });
+
+	m_pModel->Add_EventCaller("AtkTurn_Enable", [&]() {Event_SetCanTurn_Attack(true); });
+	m_pModel->Add_EventCaller("AtkTurn_Disable", [&]() {Event_SetCanTurn_Attack(false); });
+
+	m_pModel->Add_EventCaller("FrontAxis_Sync_Enable", [&]() {Event_SetSyncAxis(CPlayer::DIR_F, true); });
+	m_pModel->Add_EventCaller("FrontAxis_Sync_Disable", [&]() {Event_SetSyncAxis(CPlayer::DIR_F, false); });
+
+	m_pModel->Add_EventCaller("LeftAxis_Sync_Enable", [&]() {Event_SetSyncAxis(CPlayer::DIR_L, true); });
+	m_pModel->Add_EventCaller("LeftAxis_Sync_Disable", [&]() {Event_SetSyncAxis(CPlayer::DIR_L, false); });
+
+	m_pModel->Add_EventCaller("RightAxis_Sync_Enable", [&]() {Event_SetSyncAxis(CPlayer::DIR_R, true); });
+	m_pModel->Add_EventCaller("RightAxis_Sync_Disable", [&]() {Event_SetSyncAxis(CPlayer::DIR_R, false); });
+
+	m_pModel->Add_EventCaller("BackAxis_Sync_Enable", [&]() {Event_SetSyncAxis(CPlayer::DIR_B, true); });
+	m_pModel->Add_EventCaller("BackAxis_Sync_Disable", [&]() {Event_SetSyncAxis(CPlayer::DIR_B, false); });
+
+	m_pModel->Add_EventCaller("OnAir_Enable", [&]() {Event_SetOnAir(true); });
+	m_pModel->Add_EventCaller("OnAir_Disable", [&]() {Event_SetOnAir(false); });
+
+	m_pModel->Add_EventCaller("OnAir_Enable", [&]() {Event_SetOnAir(true); });
+	m_pModel->Add_EventCaller("OnAir_Disable", [&]() {Event_SetOnAir(false); });
+
+	m_pModel->Add_EventCaller("Gravity_Enable", [&]() {Event_SetGravity(true); });
+	m_pModel->Add_EventCaller("Gravity_Disable", [&]() {Event_SetGravity(false); });
+
+	m_pModel->Add_EventCaller("MoveLimitReset", [&]() {Event_MoveLimitReset(); });
+	m_pModel->Add_EventCaller("Event_AttackLimitReset", [&]() {Event_AttackLimitReset(); });
+	m_pModel->Add_EventCaller("Event_ChargeReset", [&]() {Event_ChargeReset(); });
+	
+	return S_OK;
+}
+
 HRESULT CPlayer::Setup_AnimSocket()
 {
 	CAnimation*	pAnimation = nullptr;
@@ -254,6 +299,9 @@ _bool CPlayer::UseAttackCnt(_uint eType)
 	case LIMIT_AIRATK02:
 		if (0 < m_AttackLimit.m_iAttack_Air02) { m_AttackLimit.m_iAttack_Air02 -= 1; return true; }
 		break;
+	case LIMIT_AIRDODGEATK:
+		if (0 < m_AttackLimit.m_iAttack_AirDodge) { m_AttackLimit.m_iAttack_AirDodge -= 1; return true; }
+		break;
 	default:
 		break;
 	}
@@ -267,6 +315,9 @@ _bool CPlayer::UseMoveCnt(_uint eType)
 	case LIMIT_DOUBLEJUMP:
 		if (0 < m_MoveLimit.m_iDoubleJump) { m_MoveLimit.m_iDoubleJump -= 1; return true; }
 		break;
+	case LIMIT_AIRDODGE:
+		if (0 < m_MoveLimit.m_iAirDodge) { m_MoveLimit.m_iAirDodge -= 1; return true; }
+		break;
 	default:
 		break;
 	}
@@ -279,11 +330,13 @@ void CPlayer::AttackLimitReset(void)
 	m_AttackLimit.m_iNonChargeAttack_Air = m_AttackLimit.MAX_iNonChargeAttack_Air;
 	m_AttackLimit.m_iAttack_Air01 = m_AttackLimit.MAX_iAttack_Air01;
 	m_AttackLimit.m_iAttack_Air02 = m_AttackLimit.MAX_iAttack_Air02;
+	m_AttackLimit.m_iAttack_AirDodge = m_AttackLimit.MAX_iAttack_AirDodge;
 }
 
 void CPlayer::MoveLimitReset(void)
 {
 	m_MoveLimit.m_iDoubleJump = m_MoveLimit.MAX_iDoubleJump;
+	m_MoveLimit.m_iAirDodge = m_MoveLimit.MAX_iAirDodge;
 }
 
 void CPlayer::Jump()
@@ -322,6 +375,8 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 
 	m_bNonCharge = m_pController->KeyUp(CController::C);
 	m_bCharge = m_pController->KeyPress(CController::C);
+
+	if (!m_bCharge) m_fBefCharge = 0.f;
 
 	m_bJump = m_pController->KeyDown(CController::SPACE);
 
@@ -386,6 +441,31 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 
 		if (m_bAir)	// 공중 상태에선 회전이 먹지 않음
 			m_vMoveDir = vPlayerLook;
+
+		if (m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_022_AL_run_start_L")
+		{
+			Vector4 vCamLook = pGameInstance->Get_CamLook();
+			vCamLook = Vector4(vCamLook.x, 0.f, vCamLook.z, 0.f);
+			vCamLook = XMVector3Normalize(vCamLook);
+
+			if (m_pModel->GetPlayAnimation()->GetPlayRatio() >= 0.4255f)
+			{
+				m_pTransformCom->SetAxis(CTransform::STATE_LOOK, vCamLook);
+			}
+		}
+
+		if (m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_022_AL_run_start_L")
+		{
+			Vector4 vCamLook = pGameInstance->Get_CamLook();
+			vCamLook = Vector4(vCamLook.x, 0.f, vCamLook.z, 0.f);
+			vCamLook = XMVector3Normalize(vCamLook);
+
+			if (m_pModel->GetPlayAnimation()->GetPlayRatio() >= 0.4255f)
+			{
+				m_pTransformCom->SetAxis(CTransform::STATE_LOOK, vCamLook);
+			}
+		}
+
 	}
 }
 

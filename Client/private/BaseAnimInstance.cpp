@@ -11,14 +11,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	// ??
-	/*m_pModel->Add_EventCaller("Gravity_Enable", [&]() {Player->SetWeightless(true); });
-	m_pModel->Add_EventCaller("Gravity_Enable", [&]() {Player->SetWeightless(false); });*/
-
-
 	m_pASM_Base = CASMBuilder()
 		.InitState("IDLE")
-
 
 #pragma region IDLE
 		.AddState("IDLE")
@@ -107,6 +101,14 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Predicator([&]()->_bool {return m_bJump; })
 		.Duration(0.1f).Priority(1)
 
+		.AddTransition("WALK_START_FRONT to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("WALK_START_FRONT to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(1)
+
 		.AddTransition("WALK_START_FRONT to WALK_LOOP", "WALK_LOOP")
 		.Priority(0)
 		.Duration(0.05f)
@@ -133,6 +135,14 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 		.AddTransition("WALK_START_LEFT to RUNJUMP_START", "RUNJUMP_START")
 		.Predicator([&]()->_bool {return m_bJump; })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("WALK_START_LEFT to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("WALK_START_LEFT to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
 		.Duration(0.1f).Priority(1)
 
 		.AddTransition("WALK_START_LEFT to WALK_LOOP", "WALK_LOOP")
@@ -162,6 +172,14 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Predicator([&]()->_bool {return m_bJump; })
 		.Duration(0.1f).Priority(1)
 
+		.AddTransition("WALK_START_RIGHT to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("WALK_START_RIGHT to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(1)
+
 		.AddTransition("WALK_START_RIGHT to WALK_LOOP", "WALK_LOOP")
 		.Duration(0.05f).Priority(0)
 
@@ -187,6 +205,14 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 		.AddTransition("WALK_START_BACK_LEFT to RUNJUMP_START", "RUNJUMP_START")
 		.Predicator([&]()->_bool {return m_bJump; })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("WALK_START_BACK_LEFT to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("WALK_START_BACK_LEFT to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
 		.Duration(0.1f).Priority(1)
 
 		.AddTransition("WALK_START_BACK_LEFT to WALK_LOOP", "WALK_LOOP")
@@ -216,6 +242,14 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Predicator([&]()->_bool {return m_bJump; })
 		.Duration(0.1f).Priority(1)
 
+		.AddTransition("WALK_START_BACK_RIGHT to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("WALK_START_BACK_RIGHT to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(1)
+			
 		.AddTransition("WALK_START_BACK_RIGHT to WALK_LOOP", "WALK_LOOP")
 		.Duration(0.05f).Priority(0)
 
@@ -241,6 +275,14 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Predicator([&]()->_bool {return m_bJump; })
 		.Duration(0.1f).Priority(1)
 
+		.AddTransition("WALK_LOOP to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("WALK_LOOP to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(1)
+
 		.AddTransition("WALK_LOOP to WALK_END", "WALK_END")
 		.Predicator([&]()->_bool { return !m_bWalk; })
 		.Duration(0.1f).Priority(0)
@@ -251,7 +293,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		static_cast<CPlayer*>(m_pTargetObject)
 		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
 
-		.AddTransition("WALK to ATK_A1", "ATK_A1")
+		.AddTransition("WALK_END to ATK_A1", "ATK_A1")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
 		.Duration(0.1f).Priority(1)
 
@@ -260,7 +302,15 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Duration(0.1f).Priority(1)
 
 		.AddTransition("WALK_END to JUMP_START", "JUMP_START")
-		.Predicator([&]()->_bool {return m_bDash; })
+		.Predicator([&]()->_bool {return m_bJump; })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("WALK_END to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("WALK_END to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
 		.Duration(0.1f).Priority(1)
 
 		.AddTransition("WALK_END to IDLE", "IDLE")
@@ -288,6 +338,15 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.AddTransition("ATK_A1 to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
 		.Predicator([&]()->_bool {return m_bNonCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
 		.Duration(0.1f).Priority(1)
+
+		.AddTransition("ATK_A1 to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(2)
+
+		.AddTransition("ATK_A1 to JUMP_START", "JUMP_START")
+		.Predicator([&]()->_bool {return m_bJump && (0.3f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && (!m_bLerp); })
+		.Duration(0.1f)
+		.Priority(100)
 
 		.AddTransition("ATK_A1 to DASH", "DASH")
 		.Predicator([&]()->_bool {return m_bDash && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")); })
@@ -317,6 +376,15 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Predicator([&]()->_bool {return m_bNonCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
 		.Duration(0.1f).Priority(1)
 
+		.AddTransition("ATK_A2 to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(2)
+
+		.AddTransition("ATK_A2 to JUMP_START", "JUMP_START")
+		.Predicator([&]()->_bool {return m_bJump && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")) && (!m_bLerp); })
+		.Duration(0.1f)
+		.Priority(100)
+
 		.AddTransition("ATK_A2 to DASH", "DASH")
 		.Predicator([&]()->_bool {return m_bDash && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")); })
 		.Duration(0.1f).Priority(0)
@@ -344,6 +412,15 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.AddTransition("ATK_A3 to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
 		.Predicator([&]()->_bool {return m_bNonCharge && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
 		.Duration(0.1f).Priority(1)
+
+		.AddTransition("ATK_A3 to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(2)
+
+		.AddTransition("ATK_A3 to JUMP_START", "JUMP_START")
+		.Predicator([&]()->_bool {return m_bJump && (0.65f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")) && (!m_bLerp); })
+		.Duration(0.1f)
+		.Priority(100)
 
 		.AddTransition("ATK_A3 to DASH", "DASH")
 		.Predicator([&]()->_bool {return m_bDash && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")); })
@@ -373,6 +450,15 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Predicator([&]()->_bool {return m_bNonCharge && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_204_AL_atk_a4")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
 		.Duration(0.1f).Priority(1)
 
+		.AddTransition("ATK_A4 to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_204_AL_atk_a4")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(2)
+
+		.AddTransition("ATK_A4 to JUMP_START", "JUMP_START")
+		.Predicator([&]()->_bool {return m_bJump && (0.6f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_204_AL_atk_a4")) && (!m_bLerp); })
+		.Duration(0.1f)
+		.Priority(100)
+
 		.AddTransition("ATK_A4 to DASH", "DASH")
 		.Predicator([&]()->_bool {return m_bDash && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_204_AL_atk_a4")); })
 		.Duration(0.1f).Priority(0)
@@ -400,6 +486,15 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.AddTransition("ATK_A5 to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
 		.Predicator([&]()->_bool {return m_bNonCharge && (0.4f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_205_AL_atk_a5")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
 		.Duration(0.1f).Priority(1)
+
+		.AddTransition("ATK_A5 to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && (0.4f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_205_AL_atk_a5")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(2)
+
+		.AddTransition("ATK_A5 to JUMP_START", "JUMP_START")
+		.Predicator([&]()->_bool {return m_bJump && (0.4f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_205_AL_atk_a5")) && (!m_bLerp); })
+		.Duration(0.1f)
+		.Priority(100)
 
 		.AddTransition("ATK_A5 to DASH", "DASH")
 		.Predicator([&]()->_bool {return m_bDash && (0.4f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_205_AL_atk_a5")); })
@@ -591,6 +686,14 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Predicator([&]()->_bool {return m_bJump; })
 		.Duration(0.1f).Priority(1)
 
+		.AddTransition("RUN_FRONT to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("RUN_FRONT to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(1)
+
 		.AddTransition("RUN_FRONT to RUN_END", "RUN_END")
 		.Predicator([&]()->_bool {return !m_bWalk; })
 		.Duration(0.1f)
@@ -617,6 +720,14 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 		.AddTransition("RUN_END to JUMP_START", "JUMP_START")
 		.Predicator([&]()->_bool {return m_bJump; })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("RUN_END to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("RUN_END to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
 		.Duration(0.1f).Priority(1)
 
 		.AddTransition("RUN_END to IDLE", "IDLE")
@@ -681,6 +792,15 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Predicator([&]()->_bool {return m_bLeftClick && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_215_AL_atk_dash_hold")); })
 		.Duration(0.1f).Priority(1)
 
+		.AddTransition("ATTACK_NONCHARGE to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_215_AL_atk_dash_hold")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(2)
+
+		.AddTransition("ATTACK_NONCHARGE to JUMP_START", "JUMP_START")
+		.Predicator([&]()->_bool {return m_bJump && (0.3f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_215_AL_atk_dash_hold")) && (!m_bLerp); })
+		.Duration(0.1f)
+		.Priority(100)
+
 		.AddTransition("ATTACK_NONCHARGE to IDLE", "IDLE")
 		.Duration(0.1f).Priority(1)
 
@@ -724,6 +844,32 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
 		->SetAbleState({ false, false, false, false, false, true, true, false, true });})
+
+		.AddTransition("CHARGE_CANCEL to WALK", "WALK")
+		.Predicator([&]()->_bool {return m_bWalk && (0.6f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_210_AL_atk_charge_cancel")); })
+		.Duration(0.1f).Priority(100)
+
+		.AddTransition("CHARGE_CANCEL to DASH", "DASH")
+		.Predicator([&]()->_bool {return m_bDash && (0.2f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_210_AL_atk_charge_cancel")); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("CHARGE_CANCEL to ATK_A1", "ATK_A1")
+		.Predicator([&]()->_bool {return m_bLeftClick && (0.2f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_210_AL_atk_charge_cancel")); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("CHARGE_CANCEL to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && (0.2f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_210_AL_atk_charge_cancel")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("CHARGE_CANCEL to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && (0.2f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_210_AL_atk_charge_cancel")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(2)
+
+		.AddTransition("CHARGE_CANCEL to JUMP_START", "JUMP_START")
+		.Predicator([&]()->_bool {return m_bJump && (0.4f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_210_AL_atk_charge_cancel")) && (!m_bLerp); })
+		.Duration(0.1f)
+		.Priority(100)
+			
 		.AddTransition("CHARGE_CANCEL to IDLE", "IDLE")
 		.Duration(0.1f).Priority(1)
 
@@ -732,6 +878,32 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
 		->SetAbleState({ false, false, false, false, false, true, true, false, true });})
+
+		.AddTransition("CHARGE_ATTACK_01 to WALK", "WALK")
+		.Predicator([&]()->_bool {return m_bWalk && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_211_AL_atk_charge01")); })
+		.Duration(0.1f).Priority(100)
+
+		.AddTransition("CHARGE_ATTACK_01 to DASH", "DASH")
+		.Predicator([&]()->_bool {return m_bDash && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_211_AL_atk_charge01")); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("CHARGE_ATTACK_01 to ATK_A1", "ATK_A1")
+		.Predicator([&]()->_bool {return m_bLeftClick && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_211_AL_atk_charge01")); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("CHARGE_ATTACK_01 to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_211_AL_atk_charge01")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("CHARGE_ATTACK_01 to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_211_AL_atk_charge01")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(2)
+
+		.AddTransition("CHARGE_ATTACK_01 to JUMP_START", "JUMP_START")
+		.Predicator([&]()->_bool {return m_bJump && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_211_AL_atk_charge01")) && (!m_bLerp); })
+		.Duration(0.1f)
+		.Priority(100)
+
 		.AddTransition("CHARGE_ATTACK_01 to IDLE", "IDLE")
 		.Duration(0.1f).Priority(1)
 
@@ -740,6 +912,32 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
 		->SetAbleState({ false, false, false, false, false, true, true, false, true });})
+
+		.AddTransition("CHARGE_ATTACK_02 to WALK", "WALK")
+		.Predicator([&]()->_bool {return m_bWalk && (0.55f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_212_AL_atk_charge02")); })
+		.Duration(0.1f).Priority(100)
+
+		.AddTransition("CHARGE_ATTACK_02 to DASH", "DASH")
+		.Predicator([&]()->_bool {return m_bDash && (0.55f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_212_AL_atk_charge02")); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("CHARGE_ATTACK_02 to ATK_A1", "ATK_A1")
+		.Predicator([&]()->_bool {return m_bLeftClick && (0.55f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_212_AL_atk_charge02")); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("CHARGE_ATTACK_02 to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && (0.55f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_212_AL_atk_charge02")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("CHARGE_ATTACK_02 to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && (0.55f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_212_AL_atk_charge02")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(2)
+
+		.AddTransition("CHARGE_ATTACK_02 to JUMP_START", "JUMP_START")
+		.Predicator([&]()->_bool {return m_bJump && (0.55f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_212_AL_atk_charge02")) && (!m_bLerp); })
+		.Duration(0.1f)
+		.Priority(100)
+
 		.AddTransition("CHARGE_ATTACK_02 to IDLE", "IDLE")
 		.Duration(0.1f).Priority(1)
 
@@ -748,6 +946,32 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
 		->SetAbleState({ false, false, false, false, false, true, true, false, true });})
+
+		.AddTransition("CHARGE_ATTACK_03 to WALK", "WALK")
+		.Predicator([&]()->_bool {return m_bWalk && (0.6f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_213_AL_atk_charge03")); })
+		.Duration(0.1f).Priority(100)
+
+		.AddTransition("CHARGE_ATTACK_03 to DASH", "DASH")
+		.Predicator([&]()->_bool {return m_bDash && (0.6f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_213_AL_atk_charge03")); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("CHARGE_ATTACK_03 to ATK_A1", "ATK_A1")
+		.Predicator([&]()->_bool {return m_bLeftClick && (0.6f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_213_AL_atk_charge03")); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("CHARGE_ATTACK_03 to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && (0.6f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_213_AL_atk_charge03")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("CHARGE_ATTACK_03 to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && (0.6f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_213_AL_atk_charge03")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(2)
+
+		.AddTransition("CHARGE_ATTACK_03 to JUMP_START", "JUMP_START")
+		.Predicator([&]()->_bool {return m_bJump && (0.6f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_213_AL_atk_charge03")) && (!m_bLerp); })
+		.Duration(0.1f)
+		.Priority(100)
+
 		.AddTransition("CHARGE_ATTACK_03 to IDLE", "IDLE")
 		.Duration(0.1f).Priority(1)
 
@@ -778,6 +1002,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Duration(0.f)
 		.Priority(100)
 
+		.AddTransition("JUMP_RISE to AIR_DODGE", "AIR_DODGE")
+		.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+		.Duration(0.05f)
+		.Priority(100)
+
 		.AddTransition("JUMP_RISE to ATK_AIR1", "ATK_AIR1")
 		.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRATK01); })
 		.Duration(0.05f)
@@ -805,6 +1034,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 		.AddTransition("JUMP_FALL to DOUBLE_JUMP_RISE", "DOUBLE_JUMP_RISE")
 		.Predicator([&]()->_bool {return m_bJump && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_DOUBLEJUMP); })
+		.Duration(0.05f)
+		.Priority(100)
+
+		.AddTransition("JUMP_FALL to AIR_DODGE", "AIR_DODGE")
+		.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
 		.Duration(0.05f)
 		.Priority(100)
 
@@ -839,6 +1073,23 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Duration(0.1f)
 		.Priority(100)
 
+		.AddTransition("JUMP_LANDING to JUMP_START", "JUMP_START")
+		.Predicator([&]()->_bool {return m_bJump && (CheckAnim("AS_ch0100_041_AL_jump_landing")) && (0.1f <= m_fPlayRatio); })
+		.Duration(0.1f)
+		.Priority(100)
+
+		.AddTransition("JUMP_LANDING to ATK_A1", "ATK_A1")
+		.Predicator([&]()->_bool {return m_bLeftClick && (CheckAnim("AS_ch0100_041_AL_jump_landing")) && (0.1f <= m_fPlayRatio); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("JUMP_LANDING to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && (CheckAnim("AS_ch0100_041_AL_jump_landing")) && (0.1f <= m_fPlayRatio) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("JUMP_LANDING to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && (CheckAnim("AS_ch0100_041_AL_jump_landing")) && (0.1f <= m_fPlayRatio) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(1)
+
 		.AddTransition("JUMP_LANDING to IDLE", "IDLE")
 		.Duration(0.1f)
 		.Priority(100)
@@ -852,6 +1103,26 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_043_AL_doublejump_rise")); })
 		.Duration(0.f)
 		.Priority(100)
+
+		.AddTransition("DOUBLE_JUMP_RISE to AIR_DODGE", "AIR_DODGE")
+		.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+		.Duration(0.05f)
+		.Priority(100)
+
+		.AddTransition("DOUBLE_JUMP_RISE to ATK_AIR1", "ATK_AIR1")
+		.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRATK01); })
+		.Duration(0.05f)
+		.Priority(100)
+
+		.AddTransition("DOUBLE_JUMP_RISE to ATK_AIR_NONCHARGE", "ATK_AIR_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_AIR); })
+		.Duration(0.05f)
+		.Priority(100)
+
+		.AddTransition("DOUBLE_JUMP_RISE to ATK_AIR_CHARGE_START", "ATK_AIR_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f)
+		.Priority(1)
 
 		.AddTransition("DOUBLE_JUMP_RISE to JUMP_FALL", "JUMP_FALL")
 		.Duration(0.1f)
@@ -881,6 +1152,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Duration(0.f)
 		.Priority(100)
 
+		.AddTransition("RUNJUMP_RISE to AIR_DODGE", "AIR_DODGE")
+		.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+		.Duration(0.05f)
+		.Priority(100)
+
 		.AddTransition("RUNJUMP_RISE to ATK_AIR1", "ATK_AIR1")
 		.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRATK01); })
 		.Duration(0.05f)
@@ -890,6 +1166,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_AIR); })
 		.Duration(0.05f)
 		.Priority(100)
+
+		.AddTransition("RUNJUMP_RISE to ATK_AIR_CHARGE_START", "ATK_AIR_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f)
+		.Priority(1)
 
 		.AddTransition("RUNJUMP_RISE to RUNJUMP_FALL", "RUNJUMP_FALL")
 		.Duration(0.1f)
@@ -906,6 +1187,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Duration(0.05f)
 		.Priority(100)
 
+		.AddTransition("RUNJUMP_FALL to AIR_DODGE", "AIR_DODGE")
+		.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+		.Duration(0.05f)
+		.Priority(100)
+
 		.AddTransition("RUNJUMP_FALL to ATK_AIR1", "ATK_AIR1")
 		.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRATK01); })
 		.Duration(0.05f)
@@ -915,6 +1201,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_AIR); })
 		.Duration(0.05f)
 		.Priority(100)
+
+		.AddTransition("RUNJUMP_FALL to ATK_AIR_CHARGE_START", "ATK_AIR_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f)
+		.Priority(1)
 
 		.AddTransition("RUNJUMP_FALL to RUNJUMP_LANDING", "RUNJUMP_LANDING")
 		.Predicator([&]()->_bool {return m_bOnFloor; })
@@ -932,6 +1223,23 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Duration(0.1f)
 		.Priority(100)
 
+		.AddTransition("RUNJUMP_LANDING to JUMP_START", "JUMP_START")
+		.Predicator([&]()->_bool {return m_bJump && (CheckAnim("AS_ch0100_044_AL_runjump_landing")) && (0.1f <= m_fPlayRatio); })
+		.Duration(0.1f)
+		.Priority(100)
+
+		.AddTransition("RUNJUMP_LANDING to ATK_A1", "ATK_A1")
+		.Predicator([&]()->_bool {return m_bLeftClick && (CheckAnim("AS_ch0100_044_AL_runjump_landing")) && (0.1f <= m_fPlayRatio); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("RUNJUMP_LANDING to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && (CheckAnim("AS_ch0100_044_AL_runjump_landing")) && (0.1f <= m_fPlayRatio) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("RUNJUMP_LANDING to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && (CheckAnim("AS_ch0100_044_AL_runjump_landing")) && (0.1f <= m_fPlayRatio) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(1)
+
 		.AddTransition("RUNJUMP_LANDING to IDLE", "IDLE")
 		.Duration(0.1f)
 		.Priority(100)
@@ -940,12 +1248,32 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_043_AL_doublejump_rise"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, true, false, false, true, true, true, true, true }).Jump();})
+		->SetAbleState({ false, true, false, false, true, true, false, true, true }).Jump();})
 
 		.AddTransition("DOUBLE_RUNJUMP_RISE to RUNJUMP_LANDING", "RUNJUMP_LANDING")
 		.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_043_AL_doublejump_rise")); })
 		.Duration(0.f)
 		.Priority(100)
+
+		.AddTransition("DOUBLE_RUNJUMP_RISE to AIR_DODGE", "AIR_DODGE")
+		.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+		.Duration(0.05f)
+		.Priority(100)
+
+		.AddTransition("DOUBLE_RUNJUMP_RISE to ATK_AIR1", "ATK_AIR1")
+		.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRATK01); })
+		.Duration(0.05f)
+		.Priority(100)
+
+		.AddTransition("DOUBLE_RUNJUMP_RISE to ATK_AIR_NONCHARGE", "ATK_AIR_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_AIR); })
+		.Duration(0.05f)
+		.Priority(100)
+
+		.AddTransition("DOUBLE_RUNJUMP_RISE to ATK_AIR_CHARGE_START", "ATK_AIR_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f)
+		.Priority(1)
 
 		.AddTransition("DOUBLE_RUNJUMP_RISE to RUNJUMP_FALL", "RUNJUMP_FALL")
 		.Duration(0.1f)
@@ -975,6 +1303,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Duration(0.f)
 		.Priority(100)
 
+		.AddTransition("DASHJUMP_RISE to AIR_DODGE", "AIR_DODGE")
+		.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+		.Duration(0.05f)
+		.Priority(100)
+
 		.AddTransition("DASHJUMP_RISE to ATK_AIR1", "ATK_AIR1")
 		.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRATK01); })
 		.Duration(0.05f)
@@ -984,6 +1317,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_AIR); })
 		.Duration(0.05f)
 		.Priority(100)
+
+		.AddTransition("DASHJUMP_RISE to ATK_AIR_CHARGE_START", "ATK_AIR_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f)
+		.Priority(1)
 
 		.AddTransition("DASHJUMP_RISE to DASHJUMP_FALL", "DASHJUMP_FALL")
 		.Duration(0.1f)
@@ -999,6 +1337,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Duration(0.05f)
 		.Priority(100)
 
+		.AddTransition("DASHJUMP_FALL to AIR_DODGE", "AIR_DODGE")
+		.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+		.Duration(0.05f)
+		.Priority(100)
+
 		.AddTransition("DASHJUMP_FALL to ATK_AIR1", "ATK_AIR1")
 		.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRATK01); })
 		.Duration(0.05f)
@@ -1008,6 +1351,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_AIR); })
 		.Duration(0.05f)
 		.Priority(100)
+
+		.AddTransition("DASHJUMP_FALL to ATK_AIR_CHARGE_START", "ATK_AIR_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f)
+		.Priority(1)
 
 		.AddTransition("DASHJUMP_FALL to DASHJUMP_LANDING", "DASHJUMP_LANDING")
 		.Predicator([&]()->_bool {return m_bOnFloor; })
@@ -1025,6 +1373,23 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Duration(0.1f)
 		.Priority(100)
 
+		.AddTransition("DASHJUMP_LANDING to JUMP_START", "JUMP_START")
+		.Predicator([&]()->_bool {return m_bJump && (CheckAnim("AS_ch0100_042_AL_dashjump_landing")) && (0.1f <= m_fPlayRatio); })
+		.Duration(0.1f)
+		.Priority(100)
+
+		.AddTransition("DASHJUMP_LANDING to ATK_A1", "ATK_A1")
+		.Predicator([&]()->_bool {return m_bLeftClick && (CheckAnim("AS_ch0100_042_AL_dashjump_landing")) && (0.1f <= m_fPlayRatio); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("DASHJUMP_LANDING to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && (CheckAnim("AS_ch0100_042_AL_dashjump_landing")) && (0.1f <= m_fPlayRatio) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+		.Duration(0.1f).Priority(1)
+
+		.AddTransition("DASHJUMP_LANDING to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && (CheckAnim("AS_ch0100_042_AL_dashjump_landing")) && (0.1f <= m_fPlayRatio) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f).Priority(1)
+
 		.AddTransition("DASHJUMP_LANDING to IDLE", "IDLE")
 		.Duration(0.1f)
 		.Priority(100)
@@ -1033,11 +1398,31 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_043_AL_doublejump_rise"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, true, true, false, true, true, true, true, true }).Jump();})
+		->SetAbleState({ false, true, true, false, true, true, false, true, true }).Jump();})
 		.AddTransition("DOUBLE_DASHJUMP_RISE to DASHJUMP_LANDING", "DASHJUMP_LANDING")
 		.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_043_AL_doublejump_rise")); })
 		.Duration(0.f)
 		.Priority(100)
+
+		.AddTransition("DOUBLE_DASHJUMP_RISE to AIR_DODGE", "AIR_DODGE")
+		.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+		.Duration(0.05f)
+		.Priority(100)
+
+		.AddTransition("DOUBLE_DASHJUMP_RISE to ATK_AIR1", "ATK_AIR1")
+		.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRATK01); })
+		.Duration(0.05f)
+		.Priority(100)
+
+		.AddTransition("DOUBLE_DASHJUMP_RISE to ATK_AIR_NONCHARGE", "ATK_AIR_NONCHARGE")
+		.Predicator([&]()->_bool {return m_bNonCharge && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_AIR); })
+		.Duration(0.05f)
+		.Priority(100)
+
+		.AddTransition("DOUBLE_DASHJUMP_RISE to ATK_AIR_CHARGE_START", "ATK_AIR_CHARGE_START")
+		.Predicator([&]()->_bool {return m_bCharge && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+		.Duration(0.1f)
+		.Priority(1)
 
 		.AddTransition("DOUBLE_DASHJUMP_RISE to DASHJUMP_FALL", "DASHJUMP_FALL")
 		.Duration(0.1f)
@@ -1056,6 +1441,16 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.AddTransition("ATK_AIR1 to ATK_AIR2", "ATK_AIR2")
 			.Predicator([&]()->_bool {return m_bLeftClick && (0.3f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_221_AL_atk_air1")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRATK02); })
 			.Duration(0.1f)
+			.Priority(100)
+
+			.AddTransition("ATK_AIR1 to DOUBLE_JUMP_RISE", "DOUBLE_JUMP_RISE")
+			.Predicator([&]()->_bool {return m_bJump && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_DOUBLEJUMP); })
+			.Duration(0.05f)
+			.Priority(100)
+
+			.AddTransition("ATK_AIR1 to AIR_DODGE", "AIR_DODGE")
+			.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+			.Duration(0.05f)
 			.Priority(100)
 
 			.AddTransition("ATK_AIR1 to JUMP_LANDING", "JUMP_LANDING")
@@ -1083,8 +1478,6 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.Predicator([&]()->_bool {return (0.7f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_222_AL_atk_air2")); })
 			.Duration(0.1f)
 			.Priority(100)
-
-		.AddState("ATK_AIR_DODGE")
 
 		.AddState("ATK_AIR_NONCHARGE")
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_229_AL_atk_air_dash_hold"))
@@ -1121,7 +1514,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_227_AL_atk_air_hold_fall"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, true, true, true, true, true });})
+		->SetAbleState({ false, false, false, false, true, true, true, true, true }).SetGravity_Optional(-20.f);})
 
 			.AddTransition("ATK_AIR_CHARGE_FALL to ATK_AIR_CHARGE_LANDING", "ATK_AIR_CHARGE_LANDING")
 			.Predicator([&]()->_bool {return m_bOnFloor; })
@@ -1134,13 +1527,146 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		static_cast<CPlayer*>(m_pTargetObject)
 		->SetAbleState({ false, false, false, false, false, true, true, true, true });})
 
+			.AddTransition("ATK_AIR_CHARGE_LANDING to ATK_A1", "ATK_A1")
+			.Predicator([&]()->_bool {return m_bLeftClick && (CheckAnim("AS_ch0100_227_AL_atk_air_hold_landing")) && (0.5f <= m_fPlayRatio); })
+			.Duration(0.1f)
+			.Priority(100)
+
+			.AddTransition("ATK_AIR_CHARGE_LANDING to DASH", "DASH")
+			.Predicator([&]()->_bool {return m_bDash && (CheckAnim("AS_ch0100_227_AL_atk_air_hold_landing")) && (0.5f <= m_fPlayRatio); })
+			.Duration(0.1f)
+			.Priority(100)
+
+			.AddTransition("ATK_AIR_CHARGE_LANDING to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
+			.Predicator([&]()->_bool {return m_bNonCharge && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_227_AL_atk_air_hold_landing")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+			.Duration(0.1f).Priority(1)
+
 			.AddTransition("ATK_AIR_CHARGE_LANDING to IDLE", "IDLE")
 			.Duration(0.1f)
 			.Priority(0)
 
-		.AddState("AIR_DODGE") // UseLimitReset()
+		.AddState("ATK_AIR_DODGE_START")
+		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_230_AL_atk_air_dash_start"))
+		.StartEvent([&]() { 
+		static_cast<CPlayer*>(m_pTargetObject)
+		->SetAbleState({ false, false, false, false, true, false, false, false, true });})
+
+			.AddTransition("ATK_AIR_DODGE_START to ATK_AIR_DODGE_END", "ATK_AIR_DODGE_END")
+			.Duration(0.1f)
+			.Priority(100)
+
+		.AddState("ATK_AIR_DODGE_END")
+		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_230_AL_atk_air_dash_end"))
+		.StartEvent([&]() { 
+		static_cast<CPlayer*>(m_pTargetObject)
+		->SetAbleState({ false, false, false, false, true, false, false, false, true });})
+
+			.AddTransition("ATK_AIR_DODGE_END to JUMP_LANDING", "JUMP_LANDING")
+			.Predicator([&]()->_bool {return m_bOnFloor; })
+			.Duration(0.f)
+			.Priority(100)
+
+			.AddTransition("ATK_AIR_DODGE_END to ATK_AIR1", "ATK_AIR1")
+			.Predicator([&]()->_bool {return (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_230_AL_atk_air_dash_end")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRATK01); })
+			.Duration(0.1f)
+			.Priority(100)
+
+			.AddTransition("ATK_AIR_DODGE_END to JUMP_FALL", "JUMP_FALL")
+			.Predicator([&]()->_bool {return (0.7f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_230_AL_atk_air_dash_end")); })
+			.Duration(0.1f)
+			.Priority(100)
 
 #pragma endregion JumpAction
+
+#pragma region AirDodge
+
+			.AddState("AIR_DODGE")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_061_AL_air_dodge_F"))
+			.StartEvent([&]() {
+			static_cast<CPlayer*>(m_pTargetObject)
+				->SetAbleState({ false, false, false, false, true, false, false, true, true }); })
+
+			.AddTransition("AIR_DODGE to AIR_DODGE_FRONT", "AIR_DODGE_FRONT")
+				.Predicator([&]()->_bool {return m_eMoveDir == CPlayer::DIR_F || true; })
+				.Duration(0.1f)
+				.Priority(100)
+				
+			.AddTransition("AIR_DODGE to AIR_DODGE_BACK", "AIR_DODGE_BACK")
+				.Predicator([&]()->_bool {return m_eMoveDir == CPlayer::DIR_B; })
+				.Duration(0.1f)
+				.Priority(0)
+
+			.AddTransition("AIR_DODGE to AIR_DODGE_LEFT", "AIR_DODGE_LEFT")
+				.Predicator([&]()->_bool {return m_eMoveDir == CPlayer::DIR_L; })
+				.Duration(0.1f)
+				.Priority(1)
+
+			.AddTransition("AIR_DODGE to AIR_DODGE_RIGHT", "AIR_DODGE_RIGHT")
+				.Predicator([&]()->_bool {return m_eMoveDir == CPlayer::DIR_R; })
+				.Duration(0.1f)
+				.Priority(2)
+
+			.AddState("AIR_DODGE_FRONT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_061_AL_air_dodge_F"))
+			.StartEvent([&]() {
+			static_cast<CPlayer*>(m_pTargetObject)
+				->SetAbleState({ false, false, false, false, true, false, false, true, true }); })
+			
+			.AddTransition("AIR_DODGE_FRONT to ATK_AIR_DODGE_START", "ATK_AIR_DODGE_START")
+				.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRDODGEATK); })
+				.Duration(0.1f)
+				.Priority(100)
+
+			.AddTransition("AIR_DODGE_FRONT to JUMP_FALL", "JUMP_FALL")
+				.Duration(0.1f)
+				.Priority(100)
+
+			.AddState("AIR_DODGE_BACK")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_065_AL_air_dodge_B"))
+			.StartEvent([&]() {
+			static_cast<CPlayer*>(m_pTargetObject)
+				->SetAbleState({ false, false, false, false, true, false, false, true, true }); })
+
+			.AddTransition("AIR_DODGE_BACK to ATK_AIR_DODGE_START", "ATK_AIR_DODGE_START")
+				.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRDODGEATK); })
+				.Duration(0.1f)
+				.Priority(100)
+
+			.AddTransition("AIR_DODGE_BACK to JUMP_FALL", "JUMP_FALL")
+				.Duration(0.1f)
+				.Priority(100)
+
+			.AddState("AIR_DODGE_LEFT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_067_AL_air_dodge_L"))
+			.StartEvent([&]() {
+			static_cast<CPlayer*>(m_pTargetObject)
+				->SetAbleState({ false, false, false, false, true, false, false, true, true }); })
+
+			.AddTransition("AIR_DODGE_LEFT to ATK_AIR_DODGE_START", "ATK_AIR_DODGE_START")
+				.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRDODGEATK); })
+				.Duration(0.1f)
+				.Priority(100)
+
+			.AddTransition("AIR_DODGE_LEFT to JUMP_FALL", "JUMP_FALL")
+				.Duration(0.1f)
+				.Priority(100)
+
+			.AddState("AIR_DODGE_RIGHT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_063_AL_air_dodge_R"))
+			.StartEvent([&]() {
+			static_cast<CPlayer*>(m_pTargetObject)
+				->SetAbleState({ false, false, false, false, true, false, false, true, true }); })
+
+			.AddTransition("AIR_DODGE_RIGHT to ATK_AIR_DODGE_START", "ATK_AIR_DODGE_START")
+				.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRDODGEATK); })
+				.Duration(0.1f)
+				.Priority(100)
+
+			.AddTransition("AIR_DODGE_RIGHT to JUMP_FALL", "JUMP_FALL")
+				.Duration(0.1f)
+				.Priority(100)
+
+#pragma endregion AirDodge
 
 		.Build();
 

@@ -185,6 +185,30 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_061_AL_air_dodge_F": {
+        "Duration": 25.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_063_AL_air_dodge_R": {
+        "Duration": 25.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_065_AL_air_dodge_B": {
+        "Duration": 25.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_067_AL_air_dodge_L": {
+        "Duration": 25.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_141_AL_jump_fall": {
         "Duration": 25.0,
         "TickPerSecond": 60.0,
@@ -299,6 +323,12 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_227_AL_atk_air_hold_landing": {
+        "Duration": 66.0,
+        "TickPerSecond": 66.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_227_AL_atk_air_hold_start": {
         "Duration": 55.0,
         "TickPerSecond": 60.0,
@@ -308,6 +338,18 @@
     "AS_ch0100_229_AL_atk_air_dash_hold": {
         "Duration": 75.0,
         "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_230_AL_atk_air_dash_end": {
+        "Duration": 49.0,
+        "TickPerSecond": 98.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_230_AL_atk_air_dash_start": {
+        "Duration": 12.0,
+        "TickPerSecond": 36.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -479,25 +521,104 @@
         "TickPerSecond": 45.0,
         "bLooping": false,
         "vecEvent": []
-    },
-    "AS_em0700_107_AL_fly_wait": {
+    },   
+   "AS_em0700_107_AL_fly_wait": {
         "Duration": 576.0,
-        "TickPerSecond": 40.0,
+        "TickPerSecond": 45.0,
         "bLooping": true,
         "vecEvent": []
     },
     "AS_em0700_110_AL_walk_F": {
         "Duration": 144.0,
-        "TickPerSecond": 42.0,
+        "TickPerSecond": 49.0,
         "bLooping": true,
         "vecEvent": []
     },
     "AS_em0700_111_AL_walk_B": {
         "Duration": 144.0,
-        "TickPerSecond": 42.0,
+        "TickPerSecond": 49.0,
         "bLooping": true,
         "vecEvent": []
     },
+    "AS_em0700_112_AL_walk_L": {
+        "Duration": 144.0,
+        "TickPerSecond": 47.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0700_113_AL_walk_R": {
+        "Duration": 144.0,
+        "TickPerSecond": 47.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0700_121_AL_randommove_L": {
+        "Duration": 120.0,
+        "TickPerSecond": 14.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0700_122_AL_randommove_R": {
+        "Duration": 120.0,
+        "TickPerSecond": 14.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0700_160_AL_threat": {
+        "Duration": 364.0,
+        "TickPerSecond": 54.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_201_AL_atk_a1_start": {
+        "Duration": 90.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_202_AL_atk_a1_loop": {
+        "Duration": 20.0,
+        "TickPerSecond": 34.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0700_203_AL_atk_a1_end": {
+        "Duration": 40.0,
+        "TickPerSecond": 33.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_411_AL_damage_m_F": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_412_AL_damage_m_B": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_413_AL_damage_m_L": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_414_AL_damage_m_R": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_424_AL_dead_down01": {
+        "Duration": 160.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+
     "ch0100": {
         "mapRootMotion": {
             "AS_ch0100_201_AL_atk_a1": [
