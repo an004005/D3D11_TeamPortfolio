@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Level_AnimModify.h"
 
+#include <Imgui_PostProcess.h>
 #include <Material.h>
 #include "GameInstance.h"
 #include "Imgui_MapEditor.h"
@@ -27,6 +28,7 @@ HRESULT CLevel_AnimModify::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LevelSwitcher::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AnimModifier::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -88,7 +90,7 @@ HRESULT CLevel_AnimModify::Ready_Lights()
 	LightDesc.isEnable = true;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.0f, 0.f);
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(0.5f, 0.5f, 0.5f, 0.5f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
 	FAILED_CHECK(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc));
