@@ -87,6 +87,10 @@ public:
 
 	_float	GetPlayRatio() { return m_fPlayRatio; }
 
+public: // For VFX
+	void	Trail_Render(_bool trueisrender) { m_bTrailRender = trueisrender; }
+
+
 protected:
 	_bool	m_bAir = false;
 	_bool	m_PreAir = false;
@@ -124,6 +128,11 @@ public:
 	CPlayer&	Reset_Charge();
 	CPlayer&	Reset_SkillCnt();
 	CPlayer&	Reset_Gravity();
+
+private:
+	// For TrailSystem
+	class CTrailSystem* m_pTrail = nullptr;
+	_bool		m_bTrailRender = false;
 
 protected:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
 	_bool		m_bCanTurn = false;

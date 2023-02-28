@@ -2,6 +2,11 @@
 #include "Shader_Defines.h"
 #include "Shader_Params.h"
 
+//For Effect
+texture2D		g_FlagTexture;
+
+// ~For Effect
+
 texture2D		g_LDRTexture;
 texture2D		g_NormalTexture; 
 texture2D		g_DepthTexture;
@@ -47,14 +52,48 @@ struct PS_IN
 struct PS_OUT
 {
 	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
-	
+	float4 vFlags = g_FlagTexture.Sample(PointSampler, In.vTexUV);
+	// float4 vOrigin = g_DiffuseTexture
+
+	if(vFlags.x == SHADER_DISTORTION)
+	{
+		float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
+		float2 distortionUV = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time));
+		// float4 noise = g_tex_4.Sample(LinearSampler, distortionUV);
+
+		float4 DistortionTex = g_tex_0.Sample(LinearSampler, distortionUV);
+		
+		float fWeight = DistortionTex.r * g_float_1;
+
+		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, (In.vTexUV + fWeight));
+
+
+
+
+
+
+
+
+		Out.vColor = OriginColor;
+		Out.vColor.a = DistortionTex.r;
+		// Out.vColor = float4(0.f, 1.f, 1.f, 1.f);
+
+		return Out;
+	}
+	else
+		Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+
+
+
+
+
 	return Out;
 }
 

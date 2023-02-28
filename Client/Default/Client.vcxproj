@@ -227,6 +227,7 @@
     </ClInclude>
     <ClInclude Include="..\public\MapNonAnim_Object.h" />
     <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\PostVFX_Distortion.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
     <ClInclude Include="..\public\SASSkillCtrlUI.h" />
@@ -309,6 +310,7 @@
     </ClCompile>
     <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\PostVFX_Distortion.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
     <ClCompile Include="..\private\ScarletCharacter.cpp" />
     <ClCompile Include="..\private\SASSkillCtrlUI.cpp" />

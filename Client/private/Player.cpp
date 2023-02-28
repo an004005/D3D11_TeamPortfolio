@@ -11,6 +11,7 @@
 #include "GameUtils.h"
 #include "Controller.h"
 #include "ScarletWeapon.h"
+#include "TrailSystem.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -46,6 +47,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
 
+	// FAILED_CHECK(m_pTrail = CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_TrailSystem")));
+
+
 	return S_OK;
 }
 
@@ -75,6 +79,9 @@ void CPlayer::Tick(_double TimeDelta)
 
 	for (auto& iter : m_vecWeapon)
 		iter->Tick(TimeDelta);
+
+	// m_pTrail->GetTransform()->Set_State();
+	// m_pTrail->Tick();
 }
 
 void CPlayer::Late_Tick(_double TimeDelta)
@@ -417,6 +424,7 @@ void CPlayer::Free()
 		Safe_Release(iter);
 	m_vecWeapon.clear();
 
+	Safe_Release(m_pTrail);
 	Safe_Release(m_pFSM);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pRenderer);

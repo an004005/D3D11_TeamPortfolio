@@ -2,7 +2,12 @@
 #define __SHADER_UTILS_HLSL__
 
 #define IDENTITY_MATRIX float4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+
+#define SHADER_DISTORTION 2.0f
+
 static const float PI = 3.14159265f;
+
+
 
 float2 Get_FlipBookUV(float2 vRectUV, float fCurTime, float fFrameTime, int iRowCnt, int iColCnt)
 {

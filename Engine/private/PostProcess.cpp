@@ -9,7 +9,6 @@ CPostProcess::CPostProcess(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CPostProcess::CPostProcess(const CPostProcess& rhs)
 	: CGameObject(rhs)
-	, m_iPass(rhs.m_iPass)
 	, m_iPriority(rhs.m_iPriority)
 {
 }
@@ -37,11 +36,6 @@ void CPostProcess::Imgui_RenderProperty()
 {
 	CGameObject::Imgui_RenderProperty();
 	CShader::Imgui_RenderShaderParams(m_tParam);
-
-	ImGui::Separator();
-	_int iPass = (_int)m_iPass;
-	ImGui::InputInt("Pass", &iPass);
-	m_iPass = iPass;
 }
 
 void CPostProcess::Free()

@@ -196,6 +196,15 @@
     <Filter Include="VFX\Effect\EffectGroup\TestEffectGroup">
       <UniqueIdentifier>{c04eb42d-7b50-4114-8751-7fab3bf8a885}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.ShaderFiles\PostProcess\Distortion">
+      <UniqueIdentifier>{a2654f95-9aaa-4a83-a0f1-4cf87b41901b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\PostProcess\WhiteOut">
+      <UniqueIdentifier>{f56bb59f-7c4c-4baa-8c70-2b9087add5d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\PostProcess\Distortion">
+      <UniqueIdentifier>{22ba49aa-e9f1-4a6a-b530-12599d744dcd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -287,9 +296,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Level_Effect.h">
       <Filter>01.Levels\14.EffectTool</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\PostVFX_WhiteOut.h">
-      <Filter>VFX\PostProcess</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
@@ -441,6 +447,12 @@
     <ClInclude Include="Weapon_wp0190.h">
       <Filter>02.GameObjects\Weapon\wp0190</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PostVFX_WhiteOut.h">
+      <Filter>VFX\PostProcess\WhiteOut</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Distortion.h">
+      <Filter>VFX\PostProcess\Distortion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -511,9 +523,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Level_Effect.cpp">
       <Filter>01.Levels\14.EffectTool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\PostVFX_WhiteOut.cpp">
-      <Filter>VFX\PostProcess</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
@@ -664,6 +673,12 @@
     </ClCompile>
     <ClCompile Include="Weapon_wp0190.cpp">
       <Filter>02.GameObjects\Weapon\wp0190</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_WhiteOut.cpp">
+      <Filter>VFX\PostProcess\WhiteOut</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Distortion.cpp">
+      <Filter>VFX\PostProcess\Distortion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -73,6 +73,7 @@ private:
 	HRESULT Render_PostProcess();
 	HRESULT Render_UI();
 
+	HRESULT	Render_Distortion(const _tchar* pTargetTag);
 	HRESULT Render_Outline();
 
 
