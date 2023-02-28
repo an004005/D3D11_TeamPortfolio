@@ -303,6 +303,43 @@ void CModel::Imgui_RenderProperty()
 		}
 	}
 
+	if (m_eType == TYPE_NONANIM)
+	{
+		ImGui::Text("Pivot");
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&m_PivotMatrix, tInfo, true, true);
+
+		ImGui::Separator();
+		if (ImGui::CollapsingHeader("Anim Viewer"))
+		{
+			static char szSeachAnim[MAX_PATH] = "";
+			ImGui::InputText("Anim Search", szSeachAnim, MAX_PATH);
+
+			const string strSearch = szSeachAnim;
+			const _bool bSearch = strSearch.empty() == false;
+
+			if (ImGui::BeginListBox("Anim list"))
+			{
+				for (auto& Pair : m_mapAnimation)
+				{
+					if (bSearch)
+					{
+						if (Pair.first.find(strSearch) == string::npos)
+							continue;
+					}
+
+					const bool bSelected = m_CurAnimName == Pair.first;
+					if (bSelected)
+						ImGui::SetItemDefaultFocus();
+
+					if (ImGui::Selectable(Pair.first.c_str(), bSelected))
+						m_CurAnimName = Pair.first;
+				}
+				ImGui::EndListBox();
+			}
+		}
+	}
+
 
 
 	// if (ImGui::BeginListBox("Animations Additive"))

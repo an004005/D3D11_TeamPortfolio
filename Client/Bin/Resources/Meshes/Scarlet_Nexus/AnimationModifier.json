@@ -59,6 +59,84 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_041_AL_jump_fall": {
+        "Duration": 25.0,
+        "TickPerSecond": 60.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_041_AL_jump_landing": {
+        "Duration": 56.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_041_AL_jump_rise": {
+        "Duration": 36.0,
+        "TickPerSecond": 100.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_041_AL_jump_start": {
+        "Duration": 8.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_042_AL_dashjump_fall": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_042_AL_dashjump_landing": {
+        "Duration": 51.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_042_AL_dashjump_rise": {
+        "Duration": 60.0,
+        "TickPerSecond": 180.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_042_AL_dashjump_start": {
+        "Duration": 8.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_043_AL_doublejump_rise": {
+        "Duration": 45.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_044_AL_runjump_fall": {
+        "Duration": 25.0,
+        "TickPerSecond": 60.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_044_AL_runjump_landing": {
+        "Duration": 44.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_044_AL_runjump_rise": {
+        "Duration": 39.0,
+        "TickPerSecond": 120.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_044_AL_runjump_start": {
+        "Duration": 8.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_051_AL_dodge_F_start": {
         "Duration": 22.0,
         "TickPerSecond": 60.0,
@@ -107,6 +185,24 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_141_AL_jump_fall": {
+        "Duration": 25.0,
+        "TickPerSecond": 60.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_141_AL_jump_landing": {
+        "Duration": 56.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_141_AL_jump_rise": {
+        "Duration": 36.0,
+        "TickPerSecond": 100.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_201_AL_atk_a1": {
         "Duration": 140.0,
         "TickPerSecond": 60.0,
@@ -137,6 +233,42 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_210_AL_atk_charge": {
+        "Duration": 45.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_210_AL_atk_charge_cancel": {
+        "Duration": 73.0,
+        "TickPerSecond": 60.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_210_AL_atk_charge_loop": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_211_AL_atk_charge01": {
+        "Duration": 151.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_212_AL_atk_charge02": {
+        "Duration": 166.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_213_AL_atk_charge03": {
+        "Duration": 186.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_214_AL_atk_dash_end": {
         "Duration": 141.0,
         "TickPerSecond": 60.0,
@@ -145,6 +277,36 @@
     },
     "AS_ch0100_214_AL_atk_dash_start": {
         "Duration": 11.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_215_AL_atk_dash_hold": {
+        "Duration": 195.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_221_AL_atk_air1": {
+        "Duration": 47.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_222_AL_atk_air2": {
+        "Duration": 48.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_227_AL_atk_air_hold_start": {
+        "Duration": 55.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_229_AL_atk_air_dash_hold": {
+        "Duration": 75.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
@@ -230,7 +392,7 @@
     },
     "AS_em0400_160_AL_threat": {
         "Duration": 200.0,
-        "TickPerSecond": 70.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -317,8 +479,8 @@
         "TickPerSecond": 45.0,
         "bLooping": false,
         "vecEvent": []
-    },
-    "AS_em0700_107_AL_fly_wait": {
+    },   
+   "AS_em0700_107_AL_fly_wait": {
         "Duration": 576.0,
         "TickPerSecond": 45.0,
         "bLooping": true,
@@ -414,6 +576,7 @@
         "bLooping": false,
         "vecEvent": []
     },
+
     "ch0100": {
         "mapRootMotion": {
             "AS_ch0100_201_AL_atk_a1": [
@@ -591,6 +754,214 @@
                     "StartTime": 193.0
                 }
             ],
+            "AS_ch0100_210_AL_atk_charge": [
+                {
+                    "AnimName": "AS_ch0100_210_AL_atk_charge",
+                    "EndTime": 10.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "StartTime": 0.0
+                }
+            ],
+            "AS_ch0100_210_AL_atk_charge_cancel": [
+                {
+                    "AnimName": "AS_ch0100_210_AL_atk_charge_cancel",
+                    "EndTime": 10.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.5,
+                        0.0
+                    ],
+                    "StartTime": 0.0010000000474974513
+                },
+                {
+                    "AnimName": "AS_ch0100_210_AL_atk_charge_cancel",
+                    "EndTime": 17.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.009999999776482582,
+                        0.0
+                    ],
+                    "StartTime": 10.0
+                },
+                {
+                    "AnimName": "AS_ch0100_210_AL_atk_charge_cancel",
+                    "EndTime": 45.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612,
+                        0.0
+                    ],
+                    "StartTime": 33.0
+                },
+                {
+                    "AnimName": "AS_ch0100_210_AL_atk_charge_cancel",
+                    "EndTime": 27.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.30000001192092896,
+                        0.0
+                    ],
+                    "StartTime": 18.0
+                }
+            ],
+            "AS_ch0100_211_AL_atk_charge01": [
+                {
+                    "AnimName": "AS_ch0100_211_AL_atk_charge01",
+                    "EndTime": 20.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "StartTime": 6.0
+                },
+                {
+                    "AnimName": "AS_ch0100_211_AL_atk_charge01",
+                    "EndTime": 50.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        -0.05000000074505806,
+                        0.0
+                    ],
+                    "StartTime": 30.0
+                },
+                {
+                    "AnimName": "AS_ch0100_211_AL_atk_charge01",
+                    "EndTime": 65.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612,
+                        0.0
+                    ],
+                    "StartTime": 50.0
+                }
+            ],
+            "AS_ch0100_212_AL_atk_charge02": [
+                {
+                    "AnimName": "AS_ch0100_212_AL_atk_charge02",
+                    "EndTime": 20.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "StartTime": 6.0
+                },
+                {
+                    "AnimName": "AS_ch0100_212_AL_atk_charge02",
+                    "EndTime": 75.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        -0.10000000149011612,
+                        0.0
+                    ],
+                    "StartTime": 70.0
+                },
+                {
+                    "AnimName": "AS_ch0100_212_AL_atk_charge02",
+                    "EndTime": 90.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.5,
+                        0.0
+                    ],
+                    "StartTime": 75.0
+                },
+                {
+                    "AnimName": "AS_ch0100_212_AL_atk_charge02",
+                    "EndTime": 120.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.009999999776482582,
+                        0.0
+                    ],
+                    "StartTime": 110.0
+                },
+                {
+                    "AnimName": "AS_ch0100_212_AL_atk_charge02",
+                    "EndTime": 145.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612,
+                        0.0
+                    ],
+                    "StartTime": 130.0
+                }
+            ],
+            "AS_ch0100_213_AL_atk_charge03": [
+                {
+                    "AnimName": "AS_ch0100_213_AL_atk_charge03",
+                    "EndTime": 22.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "StartTime": 6.0
+                },
+                {
+                    "AnimName": "AS_ch0100_213_AL_atk_charge03",
+                    "EndTime": 30.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.009999999776482582,
+                        0.0
+                    ],
+                    "StartTime": 22.0
+                },
+                {
+                    "AnimName": "AS_ch0100_213_AL_atk_charge03",
+                    "EndTime": 90.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        -0.009999999776482582,
+                        0.0
+                    ],
+                    "StartTime": 75.0
+                },
+                {
+                    "AnimName": "AS_ch0100_213_AL_atk_charge03",
+                    "EndTime": 100.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612,
+                        0.0
+                    ],
+                    "StartTime": 90.0
+                },
+                {
+                    "AnimName": "AS_ch0100_213_AL_atk_charge03",
+                    "EndTime": 155.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612,
+                        0.0
+                    ],
+                    "StartTime": 140.0
+                }
+            ],
             "AS_ch0100_214_AL_atk_dash_end": [
                 {
                     "AnimName": "AS_ch0100_214_AL_atk_dash_end",
@@ -635,6 +1006,65 @@
                         0.0
                     ],
                     "StartTime": 60.0
+                }
+            ],
+            "AS_ch0100_214_AL_atk_dash_start": [
+                {
+                    "AnimName": "AS_ch0100_214_AL_atk_dash_start",
+                    "EndTime": 11.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        3.0,
+                        0.0
+                    ],
+                    "StartTime": 0.0010000000474974513
+                }
+            ],
+            "AS_ch0100_215_AL_atk_dash_hold": [
+                {
+                    "AnimName": "AS_ch0100_215_AL_atk_dash_hold",
+                    "EndTime": 24.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        3.0,
+                        0.0
+                    ],
+                    "StartTime": 0.0010000000474974513
+                },
+                {
+                    "AnimName": "AS_ch0100_215_AL_atk_dash_hold",
+                    "EndTime": 90.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.5,
+                        0.0
+                    ],
+                    "StartTime": 70.0
+                },
+                {
+                    "AnimName": "AS_ch0100_215_AL_atk_dash_hold",
+                    "EndTime": 125.0,
+                    "RootVector": [
+                        0.10000000149011612,
+                        0.0,
+                        -0.10000000149011612,
+                        0.0
+                    ],
+                    "StartTime": 105.0
+                },
+                {
+                    "AnimName": "AS_ch0100_215_AL_atk_dash_hold",
+                    "EndTime": 150.0,
+                    "RootVector": [
+                        -0.05000000074505806,
+                        0.0,
+                        0.05000000074505806,
+                        0.0
+                    ],
+                    "StartTime": 135.0
                 }
             ]
         }

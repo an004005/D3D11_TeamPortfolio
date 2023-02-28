@@ -44,6 +44,7 @@ public:
 	void SetPlayTime(_double PlayTime) { m_PlayTime = PlayTime; }
 	void SetTickPerSec(_double TickPerSec) { m_TickPerSecond = TickPerSec; }
 	void SetStay(_bool bStay) { m_bStay = bStay; }
+	void SetPlayRatio(_double PlayRatio) { m_PlayTime = m_Duration * PlayRatio; }
 	void Reset();
 
 	void SaveModifiedData(Json& json);

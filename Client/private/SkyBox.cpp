@@ -29,13 +29,9 @@ HRESULT CSkyBox::Initialize(void* pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_VIBuffer_Sphere"), TEXT("Com_Sphere"),
-		(CComponent**)&m_pBuffer));
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_Model_SkySphere"), TEXT("Com_Model"), (CComponent**)&m_pModelCom));
 
-	// FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("../Bin/Resources/Meshes/Valorant/Texture/Skybox_M0_VeniceSky_DF.dds"), TEXT("SkyTexture"),
-		// (CComponent**)&m_pTexture));
-
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorSkyBox"), TEXT("SkyBox_Shader"),
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"), TEXT("SkyBox_Shader"),
 		(CComponent**)&m_pShader));
 
 
@@ -49,13 +45,15 @@ void CSkyBox::Late_Tick(_double TimeDelta)
 
 HRESULT CSkyBox::Render()
 {
-	// FAILED_CHECK(m_pShader->Set_Matrix("g_WorldMatrix", &_float4x4::Identity));
+
+	FAILED_CHECK(m_pShader->Set_Matrix("g_WorldMatrix", &_float4x4::Identity));
 	FAILED_CHECK(m_pShader->Set_Matrix("g_ViewMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
 	FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
-	FAILED_CHECK(m_pTexture->Bind_ShaderResource(m_pShader, "g_Diffuse"));
+	// FAILED_CHECK(m_pTexture->Bind_ShaderResource(m_pShader, "g_SkyTex"));
 
-	FAILED_CHECK(m_pShader->Begin(0));
-	FAILED_CHECK(m_pBuffer->Render());
+	// FAILED_CHECK(m_pShader->Begin(2));
+	m_pModelCom->Render(m_pTransformCom);
+
 
 	return S_OK;
 }
@@ -88,7 +86,6 @@ void CSkyBox::Free()
 {
 	__super::Free();
 	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pBuffer);
+	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShader);
-	Safe_Release(m_pTexture);
 }
