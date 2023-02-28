@@ -14,12 +14,12 @@
 #include "FlowerLeg.h"
 
 CBuddyLumi::CBuddyLumi(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+	: CMonster(pDevice, pContext)
 {
 }
 
 CBuddyLumi::CBuddyLumi(const CBuddyLumi & rhs)
-	: CGameObject(rhs)
+	: CMonster(rhs)
 {
 }
 
@@ -112,10 +112,10 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 						
 					//if (m_fMyPos.x <= 1.f && m_fMyPos.z <= 1.f)
 										
-					if (m_fMyPos.x >= fTargetPos.x && m_fMyPos.z >= fTargetPos.z && m_fMyPos.x <= (fTargetPos.x + 0.7f) && m_fMyPos.z <= (fTargetPos.z + 0.7f) ||
-						m_fMyPos.x <= fTargetPos.x && m_fMyPos.z >= fTargetPos.z && m_fMyPos.x >= (fTargetPos.x - 0.7f) && m_fMyPos.z <= (fTargetPos.z + 0.7f) ||
-						m_fMyPos.x <= fTargetPos.x && m_fMyPos.z <= fTargetPos.z && m_fMyPos.x >= (fTargetPos.x - 0.7f) && m_fMyPos.z >= (fTargetPos.z - 0.7f) ||
-						m_fMyPos.x >= fTargetPos.x && m_fMyPos.z <= fTargetPos.z && m_fMyPos.x <= (fTargetPos.x + 0.7f) && m_fMyPos.z >= (fTargetPos.z - 0.7f))
+					if (m_fMyPos.x >= fTargetPos.x && m_fMyPos.z >= fTargetPos.z && m_fMyPos.x <= (fTargetPos.x + 1.3f) && m_fMyPos.z <= (fTargetPos.z + 1.3f) ||
+						m_fMyPos.x <= fTargetPos.x && m_fMyPos.z >= fTargetPos.z && m_fMyPos.x >= (fTargetPos.x - 1.3f) && m_fMyPos.z <= (fTargetPos.z + 1.3f) ||
+						m_fMyPos.x <= fTargetPos.x && m_fMyPos.z <= fTargetPos.z && m_fMyPos.x >= (fTargetPos.x - 1.3f) && m_fMyPos.z >= (fTargetPos.z - 1.3f) ||
+						m_fMyPos.x >= fTargetPos.x && m_fMyPos.z <= fTargetPos.z && m_fMyPos.x <= (fTargetPos.x + 1.3f) && m_fMyPos.z >= (fTargetPos.z - 1.3f))
 					{
 						m_bRun = false;		
 						
@@ -295,9 +295,16 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					.Predicator([this]()->_bool {return m_bDead; })
 
 			.AddState("DodgeB")
+					.OnStart([this] 
+					{
+						//m_vStorePos =
+					})
 				.Tick([this](_double TimeDelta) 
 				{
 					auto pAnim = m_pModelCom->GetPlayAnimation();
+
+					// 뒤로 이동 
+					
 
 					if (pAnim == m_pModelCom->Find_Animation("AS_em0400_135_AL_dodge_B") && pAnim->IsFinished() == true)
 					{
@@ -316,6 +323,8 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 				{
 					auto pAnim = m_pModelCom->GetPlayAnimation();
 
+					// 중점 Axis 기준 왼쪽으로 Turn
+
 					if (pAnim == m_pModelCom->Find_Animation("AS_em0400_140_AL_dodge_L") && pAnim->IsFinished() == true)
 					{
 						m_bDodgeL = false;
@@ -332,6 +341,8 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 				.Tick([this](_double TimeDelta)
 				{
 					auto pAnim = m_pModelCom->GetPlayAnimation();
+
+					// 중점 Axis 기준 오른쪽으로 Turn
 
 					if (pAnim == m_pModelCom->Find_Animation("AS_em0400_145_AL_dodge_R") && pAnim->IsFinished() == true)
 					{

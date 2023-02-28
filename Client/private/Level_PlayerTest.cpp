@@ -14,6 +14,8 @@
 #include "Controller.h"
 #include "CamSpot.h"
 #include "JsonStorage.h"
+#include "Weapon_wp0190.h"
+#include "Imgui_PhysX.h"
 #include "Imgui_PostProcess.h"
 
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -28,6 +30,7 @@ HRESULT CLevel_PlayerTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AnimModifier::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -49,7 +52,6 @@ HRESULT CLevel_PlayerTest::Initialize()
 
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
-
 
 	return S_OK;
 }
@@ -117,6 +119,12 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
 		CController::Create())))
 		return E_FAIL;
+
+	_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
+	pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
+	auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
+		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
+	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
 
 	return S_OK;
 }

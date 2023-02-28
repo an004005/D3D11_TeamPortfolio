@@ -153,7 +153,7 @@ HRESULT CRenderer::Initialize_Prototype()
 	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
 
 	/* ·»ÅÍÅ¸°ÙµéÀ» »ý¼ºÇÏ³®. */
-
+	
 	/* For.Target_Diffuse */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Diffuse"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.3f, 0.3f, 0.3f, 0.f))))
 		return E_FAIL;
@@ -173,6 +173,10 @@ HRESULT CRenderer::Initialize_Prototype()
 	/* For.Target_CTL */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_CTL"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
+
+	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Outline"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.f, 0.f, 0.f, 0.f)), E_FAIL);
+	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_OutlineFlag"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.f, 0.f, 0.f, 0.f)), E_FAIL);
+
 
 	/* For.Target_Diffuse_Copy */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Diffuse_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.0f, 0.0f, 0.f))))
@@ -224,6 +228,9 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_ToonDeferred"), TEXT("Target_CTL"))))
 		return E_FAIL;
 
+	FAILED_CHECK(m_pTarget_Manager->Add_MRT(TEXT("MRT_Outline"), TEXT("Target_Outline")), E_FAIL);
+
+
 	/* For.MRT_LightAcc */ /* ºû ¿¬»êÀÇ °á°ú¸¦ ÀúÀåÇÒ ·»´õÅ¸°Ùµé.  */
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade"))))
 		return E_FAIL;
@@ -274,6 +281,8 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_CTL"), 300.0f, 700.f, 200.f, 200.f)))
 		return E_FAIL;
+
+	// FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Outline"), 250.0f, 150.f, 100.f, 100.f), E_FAIL);
 
 #endif
 
@@ -727,6 +736,48 @@ HRESULT CRenderer::Render_UI()
 	}
 
 	m_RenderObjects[RENDER_UI].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Outline()
+{
+	// FAILED_CHECK(m_pTarget_Manager->Begin_RenderTarget(m_pContext, TEXT("Target_OutlineFlag")), E_FAIL);
+	//
+	// for (auto& pGameObject : m_RenderObjects[RENDER_OUTLINE])
+	// {
+	// 	if (nullptr != pGameObject)
+	// 		pGameObject->Render_OutlineFlag();
+	//
+	// 	Safe_Release(pGameObject);
+	// }
+	//
+	// m_RenderObjects[RENDER_OUTLINE].clear();
+	//
+	// FAILED_CHECK(m_pTarget_Manager->End_MRT(m_pContext, L"Target_OutlineFlag"), E_FAIL);
+	//
+	// FAILED_CHECK(m_pTarget_Manager->Begin_RenderTarget(m_pContext, TEXT("Target_Outline")), E_FAIL);
+	//
+	// D3D11_VIEWPORT			ViewPortDesc;
+	// ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
+	//
+	// _uint		iNumViewports = 1;
+	//
+	// m_pContext->RSGetViewports(&iNumViewports, &ViewPortDesc);
+	//
+	// m_pShader->Set_RawValue("g_iWinCX", &ViewPortDesc.Width, sizeof(_float));
+	// m_pShader->Set_RawValue("g_iWinCY", &ViewPortDesc.Height, sizeof(_float));
+	//
+	// FAILED_CHECK(m_pShader->Set_ShaderResourceView("g_OutlineFlagTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_OutlineFlag"))), E_FAIL);
+	//
+	// m_pShader->Set_Matrix("g_WorldMatrix", &m_WorldMatrix);
+	// m_pShader->Set_Matrix("g_ViewMatrix", &m_ViewMatrix);
+	// m_pShader->Set_Matrix("g_ProjMatrix", &m_ProjMatrix);
+	//
+	// m_pShader->Begin(4);
+	//
+	// m_pVIBuffer->Render();
+	// FAILED_CHECK(m_pTarget_Manager->End_MRT(m_pContext, L""), E_FAIL);
 
 	return S_OK;
 }

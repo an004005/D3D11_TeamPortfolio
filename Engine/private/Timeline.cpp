@@ -103,7 +103,9 @@ void CTimeline::Imgui_RenderEditor()
 {
 	ImGui::Text("TimeLine");
 	ImGui::Checkbox("Loop", &m_bLoop);
+	ImGui::SameLine();
 	ImGui::Checkbox("Play", &m_bPlay);
+	ImGui::SameLine();
 	ImGui::Checkbox("Forward", &m_bForward);
 
 	_float _fFrame = m_CurFrame;
@@ -113,6 +115,8 @@ void CTimeline::Imgui_RenderEditor()
 	_float _fEnd = m_EndTime;
 	ImGui::InputFloat("EndTime", &_fEnd);
 	m_EndTime = (_double)_fEnd;
+
+	
 }
 
 void CTimeline::Free()

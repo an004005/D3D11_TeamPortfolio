@@ -304,6 +304,44 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 }
 
 
+float coord[3] = { -1.5f, 0.f, 1.5f };
+
+PS_OUT PS_OUTLINE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	// vector vFlag = g_OutlineFlagTexture.Sample(LinearSampler, In.vTexUV);
+	// float fFlag;
+	//
+	// for (int i = 0; i < 3; i++)
+	// {
+	// 	for (int j = 0; j < 3; j++)
+	// 	{
+	// 		fFlag += g_OutlineFlagTexture.Sample(LinearSampler, In.vTexUV + float2(coord[j] / g_iWinCX, coord[i] / g_iWinCY)).r;
+	// 	}
+	// }
+	// fFlag /= 9.f;
+	//
+	// if (vFlag.r > 0.f && vFlag.r != fFlag)
+	// {
+	// 	if (vFlag.r == 1.f)
+	// 	{
+	// 		Out.vColor = vector(0.f, 0.f, 0.f, 1.f);
+	// 	}
+	// 	else
+	// 		Out.vColor = vector(vFlag.rgb, 1.f);
+	// }
+	// else
+	// {
+	// 	Out.vColor.a = 0.f;
+	// 	discard;
+	// }
+
+	return Out;
+}
+
+
+
 RasterizerState RS_Default
 {
 	FillMode = Solid;
@@ -415,4 +453,14 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_BLEND();
 	}
 
+	pass Outline
+	{
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(DS_Default, 0);
+		SetRasterizerState(RS_Default);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_OUTLINE();
+	}
 }

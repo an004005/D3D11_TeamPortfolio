@@ -69,10 +69,10 @@ void CModelPreviwer::Late_Tick(_double TimeDelta)
 			m_pTransformCom->LocalMove(vTest);
 		}
 
-		{
+		/*{
 			_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTransformCom->Get_WorldMatrix());
 			m_pTransformCom->LocalMove(vOpTest);
-		}
+		}*/
 	}
 }
 

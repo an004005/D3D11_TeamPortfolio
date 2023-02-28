@@ -149,6 +149,13 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterSkummyPandou"), pSkummyPandou));
 	}
 
+	{
+		_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
+		auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
+	}
+
 	// PJW Monster Model Anim Control Purpose
 
 	//// Goat
@@ -191,16 +198,20 @@ HRESULT CLevel_AnimModify::Ready_Layer_Camera(const _tchar* pLayerTag)
 HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
-	Json PreviewData; // MonsterBuddyLumi	Model_TestPlayer	MonsterFlowerLeg
+						// Model_Player
+	Json PreviewData; //	MonsterBuddyLumi	MonsterSkummyPool	MonsterFlowerLeg	MonsterSkummyPandou
 	PreviewData["Model"] = "Model_Player";
 
 	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
 		return E_FAIL;*/
 
-	CGameObject* pGameObject = nullptr;
-	pGameObject = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
+	auto pPlayer = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
 	//pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(65.f, 0.f, 65.f, 1.f));
+
+	PreviewData["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
+	auto pwp = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
+	
+	static_cast<CModelPreviwer*>(pwp)->SetAttachTo("RightWeapon", static_cast<CModelPreviwer*>(pPlayer));
 
 	return S_OK;
 }
