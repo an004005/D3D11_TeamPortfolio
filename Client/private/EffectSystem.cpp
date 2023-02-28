@@ -24,32 +24,7 @@ HRESULT CEffectSystem::Initialize(void* pArg)
 	/* For.Com_Renderer */
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)); 
 	
-	if (pArg)
-	{
-		Json& json = *static_cast<Json*>(pArg);
-		CShader::LoadShaderParam(m_tParam, json);
-	
-		m_ChildBuffers = json["Children"];
-		m_BufferProtoTag = json["BufferProtoTag"];
-		m_ShaderProtoTag = json["ShaderProtoTag"];
-
-		if (json.contains("ModelProtoTag"))
-			m_ModelProtoTag = json["ModelProtoTag"];
-	
-		if (json.contains("bDecal"))
-			m_bDecal = json["bDecal"];
-		if (json.contains("bUseDepth"))
-			m_bUseDepth = json["bUseDepth"];
-	
-		FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_BufferProtoTag).c_str(), TEXT("Buffer"),(CComponent**)&m_pBuffer));
-		FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ShaderProtoTag).c_str(), TEXT("Shader"), (CComponent**)&m_pShaderCom));
-	
-			if (m_ModelProtoTag.empty() == false)
-			{
-				FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"),	(CComponent**)&m_pModel));
-			}
-	}
-	else
+	if (pArg == nullptr)
 	{
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxTex_VFX"), TEXT("Shader"),(CComponent**)&m_pShaderCom));
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Buffer"),(CComponent**)&m_pBuffer));
@@ -232,6 +207,36 @@ void CEffectSystem::SaveToJson(Json& json)
 	json["BufferProtoTag"] = m_BufferProtoTag;
 	json["ShaderProtoTag"] = m_ShaderProtoTag;
 	json["ModelProtoTag"] = m_ModelProtoTag;
+	
+}
+
+void CEffectSystem::LoadFromJson(const Json& json)
+{
+	CGameObject::LoadFromJson(json);
+
+	CShader::LoadShaderParam(m_tParam, json);
+
+	m_bBillBoard = json["bBillBoard"];
+	m_eBillBoardType = json["BillBoardType"];
+	m_ChildBuffers = json["Children"];
+	m_BufferProtoTag = json["BufferProtoTag"];
+	m_ShaderProtoTag = json["ShaderProtoTag"];
+
+	if (json.contains("ModelProtoTag"))
+		m_ModelProtoTag = json["ModelProtoTag"];
+
+	if (json.contains("bDecal"))
+		m_bDecal = json["bDecal"];
+	if (json.contains("bUseDepth"))
+		m_bUseDepth = json["bUseDepth"];
+
+	FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_BufferProtoTag).c_str(), TEXT("Buffer"), (CComponent**)&m_pBuffer));
+	FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ShaderProtoTag).c_str(), TEXT("Shader"), (CComponent**)&m_pShaderCom));
+
+	if (m_ModelProtoTag.empty() == false)
+	{
+		FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), (CComponent**)&m_pModel));
+	}
 }
 
 void CEffectSystem::Imgui_RenderProperty()

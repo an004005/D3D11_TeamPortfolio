@@ -49,6 +49,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
 	// Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
 
 	return Out;
@@ -71,41 +72,18 @@ PS_OUT_Flag PS_MAIN_Flag(PS_IN In)
 	return Out;
 }
 
+
 PS_OUT_Flag PS_MAIN_TEST(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
 
-	// float2 vTileOffsetUV = TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(g_Time * g_float_0, g_Time* g_float_0));
-	//
-	// float4 TexColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	// Out.vColor = TexColor;
-	// Out.vColor.a = TexColor.r;
+
 	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
-
-	// float4 distortionParams = g_float_3; // x: distortion strength, y: frequency, z: speed, w: time
-	// distortionParams.w = g_Time;
-	//
-	// float4 distortionSample = g_tex_0.Sample(LinearSampler, vTileOffsetUV);
-	//
-	// float frequency = distortionParams.y;
-	// float distortion = distortionParams.x * sin(2 * 3.14159 * frequency * distortionParams.w + vTileOffsetUV.x * 100);
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.r);
+	Out.vColor = 0.f;
+	// Out.vColor.a = 1 - Out.vColor.r;
 	
-	// Offset texture coordinates by distortion and speed
-	// float2 texCoord = vTileOffsetUV;
-	// texCoord.x += distortion * distortionParams.z;
-	//
-	// // Sample source texture at distorted texture coordinates
-	// Out.vColor = g_tex_0.Sample(LinearSampler, texCoord);
-	// Out.vColor.a = distortionSample.r;
-	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, 0.f);
 
-
-	// float4 color = sourceTexture.Sample(samLinear, texCoord);
-
-
-	// Out.vColor = GrapTexture.Sample(LinearSampler, TexColor.x);
-
-	// Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
 	
 	return Out;
 }

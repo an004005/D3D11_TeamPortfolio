@@ -24,6 +24,7 @@ struct PS_IN
 struct PS_OUT
 {
 	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -47,7 +48,20 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	// Out.vColor = g_Texture.Sample(LinearSampler, In.vTexUV * 2.f);
 	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
-	
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	return Out;
+}
+
+PS_OUT PS_DEFAULT_DISTORTION(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	// Out.vColor = g_Texture.Sample(LinearSampler, In.vTexUV * 2.f);
+	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, 0.f);
+
 	return Out;
 }
 

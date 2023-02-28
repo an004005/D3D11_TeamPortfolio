@@ -19,13 +19,10 @@ void CVIBuffer_Trail_Instancing::Tick(_double TimeDelta)
 		for (auto& data : m_PointData)
 		{
 			data.vPosition.w -= (_float)TimeDelta;
-			// data.vUp.w -= (_float)TimeDelta;
-			// m_fLifeTime -= (_float)TimeDelta;
 		}
 
 		m_PointData.erase(remove_if(m_PointData.begin(), m_PointData.end(), [](const VTXMATRIX& Matrix)
 		{
-			// return Matrix.vUp.w <= 0.f;
 			return Matrix.vPosition.w <= 0.f;
 		}), m_PointData.end());
 

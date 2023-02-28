@@ -55,44 +55,32 @@ struct PS_OUT
 	float4		vFlag : SV_TARGET1;
 };
 
+// g_tex_1 = noise
+// g_tex_0 = distortiontex
+
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
 	float4 vFlags = g_FlagTexture.Sample(PointSampler, In.vTexUV);
-	// float4 vOrigin = g_DiffuseTexture
+	float4 LDR = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
 
 	if(vFlags.x == SHADER_DISTORTION)
 	{
 		float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
 		float2 distortionUV = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time));
-		// float4 noise = g_tex_4.Sample(LinearSampler, distortionUV);
-
 		float4 DistortionTex = g_tex_0.Sample(LinearSampler, distortionUV);
-		
 		float fWeight = DistortionTex.r * g_float_1;
-
 		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, (In.vTexUV + fWeight));
 
+		Out.vColor = LDR * (1.f - vFlags.a) + OriginColor * vFlags.a;
 
-
-
-
-
-
-
-		Out.vColor = OriginColor;
-		Out.vColor.a = DistortionTex.r;
-		// Out.vColor = float4(0.f, 1.f, 1.f, 1.f);
+		Out.vColor.a = 1.f;
 
 		return Out;
 	}
 	else
-		Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
-
-
-
-
+		Out.vColor = LDR;
 
 	return Out;
 }
@@ -201,11 +189,11 @@ PS_OUT PS_MAIN_RADIAL_MASK(PS_IN In)
 
 technique11 DefaultTechnique
 {
-	pass Default
+	pass Default_Test
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
-		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
@@ -268,5 +256,17 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_RADIAL_MASK();
 	}
+	//5
+	pass Default_Real
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN();
+	}
 }

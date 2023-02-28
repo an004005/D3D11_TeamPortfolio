@@ -32,9 +32,6 @@ PlayFromStart, Stop, Reset
 해당 이펙트랑 커브 함수랑 이어주는 툴 생성하기 
 // 완료 
 
-
-
-
 커브랑 이어진 함수가 어떤 포인터의 함수를 돌릴건지 
 //완료
 
@@ -45,16 +42,8 @@ PlayFromStart, Stop, Reset
 플레이어의 무기뼈에 트레일 세팅 
 
 트레일이 얇아지는게 아니라 뒤에서 짧아지는걸로 구현해야함 ( 수명시간을 줄이면될거같음 )
+// 완료 
 
-
-
-
-
-
-
-
-
- 
- 
-Prototype_Component_VIBuffer_Mesh_Instance
-Prototype_Component_Shader_VtxMesh_Instance
+디스토션할 때 필요한건 소스(버퍼에 그려지는 배경)과 섞고자하는 디스토션 텍스쳐임
+디스토션 텍스쳐는 내가 넣어줄 수 있음. 
+// 완료

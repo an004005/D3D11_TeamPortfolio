@@ -41,6 +41,7 @@ public:
 	CShader* GetShader() { return m_pShaderCom; }
 
 	virtual void SaveToJson(Json& json) override;
+	virtual void LoadFromJson(const Json& json) override;
 	virtual void Imgui_RenderProperty() override;
 
 	_uint GetChildNums() const { return static_cast<_uint>(m_ChildBuffers.size()); }
