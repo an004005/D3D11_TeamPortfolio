@@ -5,12 +5,12 @@
 // 알파값이 줄어들면서, 원이 커진다.
 
 CSASSkillFullCircleUI::CSASSkillFullCircleUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CCanvas_SASSkill(pDevice, pContext)
+	: CUI(pDevice, pContext)
 {
 }
 
 CSASSkillFullCircleUI::CSASSkillFullCircleUI(const CSASSkillFullCircleUI& rhs)
-	: CCanvas_SASSkill(rhs)
+	: CUI(rhs)
 {
 }
 
@@ -27,8 +27,6 @@ HRESULT CSASSkillFullCircleUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	CCanvas_SASSkill::UIMove_Initialize();
-	
 	m_vOriginSize = { m_fSizeX * m_vScale.x, m_fSizeY * m_vScale.y };
 	m_vCurrentSize = { 140.0f, 140.0f };	// 최대 크기를 이야기 한다.
 	m_fSpeed = 50.0f; 
@@ -107,7 +105,7 @@ CSASSkillFullCircleUI * CSASSkillFullCircleUI::Create(ID3D11Device * pDevice, ID
 	return pInstance;
 }
 
-CCanvas_SASSkill * CSASSkillFullCircleUI::Clone(void * pArg)
+CUI * CSASSkillFullCircleUI::Clone(void * pArg)
 {
 	CSASSkillFullCircleUI*		pInstance = new CSASSkillFullCircleUI(*this);
 

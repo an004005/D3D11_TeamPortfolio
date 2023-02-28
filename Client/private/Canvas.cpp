@@ -39,6 +39,20 @@ void CCanvas::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	const _float2 PivotPair = GetPivotXY(m_ePivot);
+
+	// 자식들의 캔버스 최신화
+	const CanvasRect ThisCanvasSize{
+		m_fX + PivotPair.x,
+		m_fY + PivotPair.y,
+		m_fSizeX * 0.5f,
+		m_fSizeY * 0.5f
+	};
+
+	for (auto& Pair : m_mapChildUIs)
+		Pair.second->SetCanvasSize(ThisCanvasSize);
+
+	// map 으로 보관하고 있는 캔버스의 Tick() 을 돌린다.
 	for (auto iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end();)
 	{
 		const auto ChildPair = *iter;

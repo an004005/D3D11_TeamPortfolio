@@ -5,12 +5,12 @@
 //m_tParams.Float4s[0] = { 226.0f, 158.0f, 1.0f, 0.7f };	// 색상 조정 a: 0.0f 미사용 0.7f 사용
 
 CSASSkillLightUI::CSASSkillLightUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CCanvas_SASSkill(pDevice, pContext)
+	: CUI(pDevice, pContext)
 {
 }
 
 CSASSkillLightUI::CSASSkillLightUI(const CSASSkillLightUI& rhs)
-	: CCanvas_SASSkill(rhs)
+	: CUI(rhs)
 {
 }
 
@@ -27,11 +27,15 @@ HRESULT CSASSkillLightUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	CCanvas_SASSkill::UIMove_Initialize();
-	
 	SkilInfo_Initialize();
 
 	return S_OK;
+}
+
+void CSASSkillLightUI::BeginTick()
+{
+	m_pCanvas = dynamic_cast<CCanvas_SASSkill*>(CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkill")));
+
 }
 
 void CSASSkillLightUI::Tick(_double TimeDelta)
@@ -49,9 +53,9 @@ void CSASSkillLightUI::Tick(_double TimeDelta)
 			bOnSkil = !bOnSkil;
 		}
 
-		CCanvas_SASSkill::Set_InputSkill(CCanvas_SASSkill::ONE0, bOnSkil);
+		m_pCanvas->Set_InputSkill(CCanvas_SASSkill::ONE0, bOnSkil);
 
-		if (CCanvas_SASSkill::Get_InputSkill(CCanvas_SASSkill::ONE0))
+		if (m_pCanvas->Get_InputSkill(CCanvas_SASSkill::ONE0))
 		{
 			m_dLight_TimeAcc += TimeDelta;
 
@@ -138,7 +142,7 @@ void CSASSkillLightUI::SkilInfo_Initialize()
 
 void CSASSkillLightUI::ChangeSkill()
 {
-	switch (CCanvas_SASSkill::Get_SuperPowers())
+	switch (m_pCanvas->Get_SuperPowers())
 	{
 	case CCanvas_SASSkill::PSYCHOKINESIS0:	//0
 	{
@@ -264,7 +268,7 @@ CSASSkillLightUI * CSASSkillLightUI::Create(ID3D11Device * pDevice, ID3D11Device
 	return pInstance;
 }
 
-CCanvas_SASSkill * CSASSkillLightUI::Clone(void * pArg)
+CUI * CSASSkillLightUI::Clone(void * pArg)
 {
 	CSASSkillLightUI*		pInstance = new CSASSkillLightUI(*this);
 

@@ -24,6 +24,8 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	Tick(_double TimeDelta) override;
+	virtual void	Late_Tick(_double TimeDelta) override;
+	virtual HRESULT Render() override;
 
 	virtual void	Imgui_RenderProperty() override;
 	virtual void	SaveToJson(Json& json) override;
@@ -74,9 +76,8 @@ public:
 		m_bOnSkill = bOn;
 	}
 
-protected:
-	void	UIMove_Initialize();
-	void	SASSkill_UIMove(const _double & dTimeDelta);
+public:
+	//void	SASSkill_UIMove(CTransform * pTransformCom, const _float2 & vStartingPoint, const _double & dTimeDelta);
 
 private:
 	void	Info_Tick(const _bool bPush); // Ctrl, Alt 를 눌렀을 때에 대한 처리를 하기 위해 (스킬 아이콘이 보이지 않으면서 정보가 뜬다.)
@@ -84,8 +85,7 @@ private:
 	void	InputAlt_Tick();
 	void	InputX_Tick(const _double & dTimeDelta);
 	
-protected:
-	_float2			m_vStartingPoint = { 0.0f, 0.0f }; // 도착지점까지 도달했다가 다시 돌아오고 나서 정확하게 원래 자리로 돌아가기 위해서
+	void	UIMove_FSM();
 
 private:
 	SKILLINDEX		m_eSASSkill = SKILLINDEX_END;		// UI 들이 같은 객체를 사용하기 때문에 구별하기 위해서
@@ -100,10 +100,11 @@ private:
 	_double			m_dChangeX_TimcAcc = { 0.0 };		// X로 변경하면서, 잠깐 X 키에 불이 들어오는 용도
 	
 	// SASSkill_UIMove() -> 도착지점에 도달했다가 원래 지점으로 돌아가기 위해 함수
-	static _bool	m_bUIMove;	// SASSkill_UIMove() -> UI를 이동시키고자 할 때 외부에서 Set 을 한다.
+	_bool			m_bUIMove = { false };	// SASSkill_UIMove() -> UI를 이동시키고자 할 때 외부에서 Set 을 한다.
 	_bool			m_bOneCheck = { false }; // 원래 지점과 목표지점의 좌표를 받는다.
 	_bool			m_bIsDestination = { false };
 	_bool			m_bIsOriginGoal = { false };
+	_float2			m_vStartingPoint = { 0.0f, 0.0f }; // 도착지점까지 도달했다가 다시 돌아오고 나서 정확하게 원래 자리로 돌아가기 위해서
 	_float2			m_vDestination = { 0.0f, 0.0f };	// 도착지점
 
 	CFSMComponent* m_pFSM = nullptr;

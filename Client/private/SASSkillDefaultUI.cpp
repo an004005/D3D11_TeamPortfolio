@@ -6,12 +6,12 @@
 // 
 
 CSASSkillDefaultUI::CSASSkillDefaultUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CCanvas_SASSkill(pDevice, pContext)
+	: CUI(pDevice, pContext)
 {
 }
 
 CSASSkillDefaultUI::CSASSkillDefaultUI(const CSASSkillDefaultUI& rhs)
-	: CCanvas_SASSkill(rhs)
+	: CUI(rhs)
 {
 }
 
@@ -28,15 +28,32 @@ HRESULT CSASSkillDefaultUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	const _float2 PivotPair = GetPivotXY(m_ePivot);
+	m_vStartingPoint = { m_fX + PivotPair.x, m_fY + PivotPair.y };
 
 	return S_OK;
+}
+
+void CSASSkillDefaultUI::BeginTick()
+{
+	m_pCanvas = dynamic_cast<CCanvas_SASSkill*>(CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkill")));
+
+
 }
 
 void CSASSkillDefaultUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	CCanvas_SASSkill::SASSkill_UIMove(TimeDelta);
+	//const _float2 canvaspos = m_pCanvas->Get_Position();
+
+	//_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+	//vPosition += XMLoadFloat2(&canvaspos);
+	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.f));
+
+
+	
 }
 
 void CSASSkillDefaultUI::Late_Tick(_double TimeDelta)
@@ -82,7 +99,7 @@ CSASSkillDefaultUI * CSASSkillDefaultUI::Create(ID3D11Device * pDevice, ID3D11De
 	return pInstance;
 }
 
-CCanvas_SASSkill * CSASSkillDefaultUI::Clone(void * pArg)
+CUI * CSASSkillDefaultUI::Clone(void * pArg)
 {
 	CSASSkillDefaultUI*		pInstance = new CSASSkillDefaultUI(*this);
 

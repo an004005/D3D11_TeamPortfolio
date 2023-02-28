@@ -4,7 +4,7 @@
 #include "GameUtils.h"
 #include "FSMComponent.h"
 
-_bool CCanvas_SASSkill::m_bUIMove = false;
+//_bool CCanvas_SASSkill::m_bUIMove = false;
 
 CCanvas_SASSkill::CCanvas_SASSkill(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -54,72 +54,10 @@ HRESULT CCanvas_SASSkill::Initialize(void* pArg)
 	Find_ChildUI(L"SASSkill_XRight")->SetVisible(false);
 	Find_ChildUI(L"SASSkill_XInput")->SetVisible(false);
 
-	m_pFSM = CFSMComponentBuilder()
-		.InitState("Idle")
-		.AddState("Idle")
-			.AddTransition("Idle to Move", "Move")
-			.Predicator([this] {
-				return m_bUIMove;
-			})
+	m_vStartingPoint = { m_fX, m_fY };
+	UIMove_FSM();
 
-		.AddState("Move")
-			.OnStart([this]
-			{
-				static _float2 vRandomPosition = { /*CGameUtils::GetRandFloat(3.0f, 10.0f), CGameUtils::GetRandFloat(0.0f, 10.0f)*/5.0f, 5.0f };
-				m_vDestination = { m_vStartingPoint.x + vRandomPosition.x, m_vStartingPoint.y - vRandomPosition.y };
-			})
-			.Tick([this](_double TimeDelta) {
-				_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-				vPosition += XMVector2Normalize(XMLoadFloat2(&m_vDestination) - vPosition) * _float(TimeDelta) * 12.f;
-
-				m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.0f));
-
-				// 목표 지점과 현재 지점을 비교한다.
-				_vector vDestination = { m_vDestination.x, m_vDestination.y, 0.0f, 1.0f };
-				_float fDistance = XMVectorGetX(XMVector3Length(vDestination - vPosition));
-
-				if (0.1f > fDistance)
-				{
-					//m_bIsDestination = false;
-					m_bIsOriginGoal = true;
-				}
-			})
-			.AddTransition("Move to Return", "Return")
-			.Predicator([this] {
-				return m_bIsOriginGoal;
-			})
-		.AddState("Return")
-			.Tick([this](_double TimeDelta) {
-				_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-				vPosition += XMVector2Normalize(XMLoadFloat2(&m_vStartingPoint) - vPosition) * _float(TimeDelta) * 12.f;
-				m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.0f));
-
-				// 원래 지점과 현재 지점을 비교한다.
-				_vector vDestination = { m_vStartingPoint.x, m_vStartingPoint.y, 0.0f, 1.0f };
-				_float fDistance = XMVectorGetX(XMVector3Length(vDestination - vPosition));
-
-				if (0.1f > fDistance)
-				{
-					m_bIsOriginGoal = false;
-					m_bUIMove = false;
-
-					// 모든 값을 초기화 한다.
-					//m_bOneCheck = false;
-					//m_bIsDestination = false;
-					m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_vStartingPoint.x, m_vStartingPoint.y, 0.0f, 1.0f));
-				}
-			})
 	
-			.AddTransition("Return to Idle", "Idle")
-				.Predicator([this] {
-					return m_bUIMove == false;
-				})
-
-		.Build();
-		
-
 
 	return S_OK;
 }
@@ -127,9 +65,10 @@ HRESULT CCanvas_SASSkill::Initialize(void* pArg)
 void CCanvas_SASSkill::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
 	if (CGameInstance::GetInstance()->KeyDown(DIK_7))
 	{
-		m_bUIMove = true;
+		m_bUIMove = !m_bUIMove;
 	}
 
 	m_pFSM->Tick(TimeDelta);
@@ -137,7 +76,25 @@ void CCanvas_SASSkill::Tick(_double TimeDelta)
 	InputCtrl_Tick();
 	InputAlt_Tick();
 	InputX_Tick(TimeDelta);
+}
 
+void CCanvas_SASSkill::Late_Tick(_double TimeDelta)
+{
+	__super::Late_Tick(TimeDelta);
+
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	if (true == IsCursorOn(CGameUtils::GetClientCursor()) && pGameInstance->KeyDown(CInput_Device::DIM_LB))
+	{
+		IM_LOG("onn");
+	}
+}
+
+HRESULT CCanvas_SASSkill::Render()
+{
+	if (FAILED(__super::Render()))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 void CCanvas_SASSkill::Imgui_RenderProperty()
@@ -171,7 +128,6 @@ void CCanvas_SASSkill::Info_Tick(const _bool bPush)
 		Find_ChildUI(L"SASSkill_IconNumber3")->SetVisible(true);
 		Find_ChildUI(L"SASSkill_IconNumber4")->SetVisible(true);
 
-
 	}
 	else
 	{
@@ -184,7 +140,6 @@ void CCanvas_SASSkill::Info_Tick(const _bool bPush)
 		Find_ChildUI(L"SASSkill_IconNumber2")->SetVisible(false);
 		Find_ChildUI(L"SASSkill_IconNumber3")->SetVisible(false);
 		Find_ChildUI(L"SASSkill_IconNumber4")->SetVisible(false);
-
 
 	}
 }
@@ -301,53 +256,113 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 	}
 }
 
-void CCanvas_SASSkill::UIMove_Initialize()
+void CCanvas_SASSkill::UIMove_FSM()
 {
+	m_pFSM = CFSMComponentBuilder()
+		.InitState("Idle")
+		.AddState("Idle")
+		.AddTransition("Idle to Move", "Move")
+		.Predicator([this] {
+		return m_bUIMove;
+	})
+		.AddState("Move")
+		.OnStart([this]
+	{
+		_float2 vRandomPosition = { CGameUtils::GetRandFloat(3.0f, 10.0f), CGameUtils::GetRandFloat(0.0f, 10.0f) };
+		m_vDestination = { m_vStartingPoint.x + vRandomPosition.x, m_vStartingPoint.y - vRandomPosition.y };
+	})
+		.Tick([this](_double TimeDelta) {
 
-	const _float2 PivotPair = GetPivotXY(m_ePivot);
-	m_vStartingPoint = { m_fX + PivotPair.x, m_fY + PivotPair.y};
-}
+		_vector vPosition = XMVectorSet(m_fX, m_fY, 0.0f, 1.0f);
+		_vector vDestination = { m_vDestination.x, m_vDestination.y, 0.0f, 1.0f };
+		_vector vDistance = vDestination - vPosition;
+			
+		vPosition += XMVector2Normalize(vDistance) * _float(TimeDelta) * 15.0f;
+		m_fX = XMVectorGetX(vPosition);
+		m_fY = XMVectorGetY(vPosition);
 
-void CCanvas_SASSkill::SASSkill_UIMove(const _double & dTimeDelta)
-{
-	/*if (false == m_bUIMove)
-		return;*/
+		// 목표 지점과 현재 지점을 비교한다.
+		_float fDistance = XMVectorGetX(XMVector4Length(vDestination - vPosition));
 
-	//if (false == m_bOneCheck)
+		IM_LOG("X %f", fDistance);
+		if (0.1f > fDistance)
+		{
+			IM_LOG("X ---------------------");
+			m_bIsOriginGoal = true;
+		}
+	})
+		.AddTransition("Move to Return", "Return")
+		.Predicator([this] {
+		return m_bIsOriginGoal;
+	})
+		.AddState("Return")
+		.Tick([this](_double TimeDelta) {
+
+		_vector vPosition = XMVectorSet(m_fX, m_fY, 0.0f, 1.0f);
+		_vector vDestination = { m_vStartingPoint.x, m_vStartingPoint.y, 0.0f, 1.0f };
+		_vector vDistance = vDestination - vPosition;
+
+		vPosition += XMVector2Normalize(vDistance) * _float(TimeDelta) * 15.0f;
+		m_fX = XMVectorGetX(vPosition);
+		m_fY = XMVectorGetY(vPosition);
+
+		// 원래 지점과 현재 지점을 비교한다.
+		_float fDistance = XMVectorGetX(XMVector2Length(vDestination - vPosition));
+
+		IM_LOG("Y %f", fDistance);
+		if (0.1f > fDistance)
+		{
+			IM_LOG("Y --------------------");
+			m_bIsOriginGoal = false;
+			m_bUIMove = false;
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_vStartingPoint.x, m_vStartingPoint.y, 0.0f, 1.0f));
+		}
+	})
+		.AddTransition("Return to Idle", "Idle")
+		.Predicator([this] {
+		return m_bUIMove == false;
+	})
+		.Build();
+
+	//m_pFSM = CFSMComponentBuilder()
+	//	.InitState("Idle")
+	//	.AddState("Idle")
+	//	.AddTransition("Idle to Move", "Move")
+	//	.Predicator([this] {
+	//	return m_bUIMove;
+	//})
+
+	//	.AddState("Move")
+	//	.OnStart([this]
 	//{
-	//	m_bOneCheck = true;
-	//	m_bIsDestination = true;
-
-	//	static _float2 vRandomPosition = { /*CGameUtils::GetRandFloat(3.0f, 10.0f), CGameUtils::GetRandFloat(0.0f, 10.0f)*/5.0f, 5.0f };
+	//	static _float2 vRandomPosition = { CGameUtils::GetRandFloat(3.0f, 10.0f), CGameUtils::GetRandFloat(0.0f, 10.0f) };
 	//	m_vDestination = { m_vStartingPoint.x + vRandomPosition.x, m_vStartingPoint.y - vRandomPosition.y };
-	//}
-
-	//_float fSpeed = 12.0f;v
-
-	//if (true == m_bIsDestination)
-	//{
+	//})
+	//	.Tick([this](_double TimeDelta) {
 	//	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	//	
-	//	vPosition += XMVector2Normalize(XMLoadFloat2(&m_vDestination) - vPosition) * _float(dTimeDelta) * fSpeed;
+
+	//	vPosition += XMVector2Normalize(XMLoadFloat2(&m_vDestination) - vPosition) * _float(TimeDelta) * 12.f;
 
 	//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.0f));
 
 	//	// 목표 지점과 현재 지점을 비교한다.
 	//	_vector vDestination = { m_vDestination.x, m_vDestination.y, 0.0f, 1.0f };
 	//	_float fDistance = XMVectorGetX(XMVector3Length(vDestination - vPosition));
-	//	
+
 	//	if (0.1f > fDistance)
 	//	{
-	//		m_bIsDestination = false;
 	//		m_bIsOriginGoal = true;
 	//	}
-	//}
-
-	//if (true == m_bIsOriginGoal)
-	//{
+	//})
+	//	.AddTransition("Move to Return", "Return")
+	//	.Predicator([this] {
+	//	return m_bIsOriginGoal;
+	//})
+	//	.AddState("Return")
+	//	.Tick([this](_double TimeDelta) {
 	//	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
-	//	vPosition += XMVector2Normalize(XMLoadFloat2(&m_vStartingPoint) - vPosition) * _float(dTimeDelta) * fSpeed;
+	//	vPosition += XMVector2Normalize(XMLoadFloat2(&m_vStartingPoint) - vPosition) * _float(TimeDelta) * 12.f;
 	//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.0f));
 
 	//	// 원래 지점과 현재 지점을 비교한다.
@@ -357,15 +372,82 @@ void CCanvas_SASSkill::SASSkill_UIMove(const _double & dTimeDelta)
 	//	if (0.1f > fDistance)
 	//	{
 	//		m_bIsOriginGoal = false;
-
-	//		// 모든 값을 초기화 한다.
 	//		m_bUIMove = false;
-	//		//m_bOneCheck = false;
-	//		m_bIsDestination = false;
 	//		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_vStartingPoint.x, m_vStartingPoint.y, 0.0f, 1.0f));
 	//	}
-	//}
+	//})
+	//	.AddTransition("Return to Idle", "Idle")
+	//	.Predicator([this] {
+	//	return m_bUIMove == false;
+	//})
+	//	.Build();
 }
+
+//void CCanvas_SASSkill::UIMove_Initialize()
+//{
+//
+//	const _float2 PivotPair = GetPivotXY(m_ePivot);
+//	m_vStartingPoint = { m_fX + PivotPair.x, m_fY + PivotPair.y};
+//}
+//
+//void CCanvas_SASSkill::SASSkill_UIMove(const _double & dTimeDelta)
+//{
+//	/*if (false == m_bUIMove)
+//		return;*/
+//
+//	//if (false == m_bOneCheck)
+//	//{
+//	//	m_bOneCheck = true;
+//	//	m_bIsDestination = true;
+//
+//	//	static _float2 vRandomPosition = { /*CGameUtils::GetRandFloat(3.0f, 10.0f), CGameUtils::GetRandFloat(0.0f, 10.0f)*/5.0f, 5.0f };
+//	//	m_vDestination = { m_vStartingPoint.x + vRandomPosition.x, m_vStartingPoint.y - vRandomPosition.y };
+//	//}
+//
+//	//_float fSpeed = 12.0f;v
+//
+//	//if (true == m_bIsDestination)
+//	//{
+//	//	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+//	//	
+//	//	vPosition += XMVector2Normalize(XMLoadFloat2(&m_vDestination) - vPosition) * _float(dTimeDelta) * fSpeed;
+//
+//	//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.0f));
+//
+//	//	// 목표 지점과 현재 지점을 비교한다.
+//	//	_vector vDestination = { m_vDestination.x, m_vDestination.y, 0.0f, 1.0f };
+//	//	_float fDistance = XMVectorGetX(XMVector3Length(vDestination - vPosition));
+//	//	
+//	//	if (0.1f > fDistance)
+//	//	{
+//	//		m_bIsDestination = false;
+//	//		m_bIsOriginGoal = true;
+//	//	}
+//	//}
+//
+//	//if (true == m_bIsOriginGoal)
+//	//{
+//	//	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+//
+//	//	vPosition += XMVector2Normalize(XMLoadFloat2(&m_vStartingPoint) - vPosition) * _float(dTimeDelta) * fSpeed;
+//	//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.0f));
+//
+//	//	// 원래 지점과 현재 지점을 비교한다.
+//	//	_vector vDestination = { m_vStartingPoint.x, m_vStartingPoint.y, 0.0f, 1.0f };
+//	//	_float fDistance = XMVectorGetX(XMVector3Length(vDestination - vPosition));
+//
+//	//	if (0.1f > fDistance)
+//	//	{
+//	//		m_bIsOriginGoal = false;
+//
+//	//		// 모든 값을 초기화 한다.
+//	//		m_bUIMove = false;
+//	//		//m_bOneCheck = false;
+//	//		m_bIsDestination = false;
+//	//		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_vStartingPoint.x, m_vStartingPoint.y, 0.0f, 1.0f));
+//	//	}
+//	//}
+//}
 
 CCanvas_SASSkill * CCanvas_SASSkill::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {

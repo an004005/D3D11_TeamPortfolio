@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Client_Defines.h"
+#include "UI.h"
 #include "Canvas_SASSkill.h"
 
 BEGIN(Client)
 
-class CSASSkillDefaultUI final : public CCanvas_SASSkill
+class CSASSkillDefaultUI final : public CUI
 {
 private:
 	CSASSkillDefaultUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -14,6 +15,7 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void	BeginTick() override;
 	virtual void	Tick(_double TimeDelta) override;
 	virtual void	Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
@@ -21,10 +23,16 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
+	CCanvas*		Get_Canvas() { return m_pCanvas; }
+
+private:
+	CCanvas_SASSkill * m_pCanvas = { nullptr };
+
+	_float2	m_vStartingPoint = { 0.0f, 0.0f };
 
 public:
 	static CSASSkillDefaultUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CCanvas_SASSkill* Clone(void* pArg = nullptr) override;
+	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 

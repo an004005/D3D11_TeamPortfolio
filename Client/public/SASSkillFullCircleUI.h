@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "Canvas_SASSkill.h"
+#include "UI.h"
 
 BEGIN(Client)
 
-class CSASSkillFullCircleUI final : public CCanvas_SASSkill
+class CSASSkillFullCircleUI final : public CUI
 {
 private:
 	CSASSkillFullCircleUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -30,7 +30,7 @@ private:
 
 public:
 	static CSASSkillFullCircleUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CCanvas_SASSkill* Clone(void* pArg = nullptr) override;
+	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 
