@@ -409,7 +409,7 @@ PS_OUT PS_RotationGauge(PS_IN In) // → 15
 // g_vec2_1 : [x] 가로로 자를 개수, [y] 세로로 자를 개수
 // g_vec2_2 : 두번 째 출력할 인덱스
 // g_vec2_3 : [x] 가로로 자를 개수, [y] 세로로 자를 개수
-VS_OUT1 VS_UVCut2(VS_IN In)
+VS_OUT1 VS_UVCut1(VS_IN In)
 {
 	VS_OUT1		Out = (VS_OUT1)0;
 	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
@@ -452,6 +452,35 @@ PS_OUT PS_Glow(PS_IN1 In)
 	vTextureColor = g_tex_1.Sample(LinearSampler, In.vTexUV1) * g_vec4_0;
 	vGlowColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	Out.vColor = saturate(vTextureColor + (vGlowColor * g_float_0));
+
+	return Out;
+}
+
+/*******************
+* UVCut → 17 : 2장의 텍스처를 가져와서 섞는다.
+/********************/
+VS_OUT1 VS_MAIN1(VS_IN In)
+{
+	VS_OUT1		Out = (VS_OUT1)0;
+
+	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
+	Out.vTexUV1 = In.vTexUV;
+
+	Out.vPosition = mul(float4(In.vPosition, 1.f), matWP);
+	Out.vTexUV = In.vTexUV;
+
+	return Out;
+}
+PS_OUT PS_Emissive(PS_IN1 In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4  vTextureColor;
+	float4  vEmissiveColor;
+
+	vTextureColor = g_tex_1.Sample(LinearSampler, In.vTexUV1);
+	vEmissiveColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor = saturate(vTextureColor + vEmissiveColor);
 
 	return Out;
 }
@@ -685,17 +714,30 @@ technique11 DefaultTechnique
 	}
 
 	//16: 텍스처에 글로우 효과 주기
-	pass Rsdfasdfdasdfsd
+	pass Glow
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
-		VertexShader = compile vs_5_0 VS_UVCut2();	// 2개의 텍스처를 섞는다.
+		VertexShader = compile vs_5_0 VS_UVCut1();
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_Glow();	// 0번째 텍스처에 1번째 텍스처를 섞는다.
 	}
 
+	//16: 이미시브 (검정색 이미지와 원본 이미지 섞기
+	pass Emissive
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN1();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_Emissive();
+	}
 }

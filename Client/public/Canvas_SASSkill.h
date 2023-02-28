@@ -16,8 +16,6 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	BeginTick() override;
 	virtual void	Tick(_double TimeDelta) override;
-	virtual void	Late_Tick(_double TimeDelta) override;
-	virtual HRESULT Render() override;
 
 	virtual void	Imgui_RenderProperty() override;
 	virtual void	SaveToJson(Json& json) override;

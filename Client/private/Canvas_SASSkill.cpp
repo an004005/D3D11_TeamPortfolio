@@ -77,20 +77,6 @@ void CCanvas_SASSkill::Tick(_double TimeDelta)
 	InputX_Tick(TimeDelta);
 }
 
-void CCanvas_SASSkill::Late_Tick(_double TimeDelta)
-{
-	__super::Late_Tick(TimeDelta);
-
-}
-
-HRESULT CCanvas_SASSkill::Render()
-{
-	if (FAILED(__super::Render()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
 void CCanvas_SASSkill::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
