@@ -163,6 +163,9 @@
     <Filter Include="02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance">
       <UniqueIdentifier>{d05ad475-8f00-4e1d-a167-7bb09014504b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.ShaderFiles\PBR">
+      <UniqueIdentifier>{0c8fe263-8aae-429a-84d4-56b5c393fd83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -360,6 +363,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h">
+      <Filter>97.ShaderFiles\PBR</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -619,6 +625,9 @@
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstance_ParticleSystem.hlsl">
       <Filter>97.ShaderFiles\VFX</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl">
+      <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

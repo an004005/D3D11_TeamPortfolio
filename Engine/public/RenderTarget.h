@@ -29,6 +29,7 @@ public:
 	HRESULT Initialize(_uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4* pClearColor);
 	HRESULT Resize(_uint iWidth, _uint iHeight);
 	HRESULT Clear();
+	void SetIgnoreClearOnce() { m_bIgnoreClearOnce = true; }
 
 
 #ifdef _DEBUG
@@ -52,6 +53,7 @@ private:
 private:
 	_float4								m_vClearColor;
 	DXGI_FORMAT							m_ePixelFormat;
+	_bool								m_bIgnoreClearOnce = false;
 
 #ifdef _DEBUG
 private:

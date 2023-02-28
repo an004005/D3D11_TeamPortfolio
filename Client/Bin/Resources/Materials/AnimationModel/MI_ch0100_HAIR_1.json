@@ -1,5 +1,5 @@
     {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxAnimModel",
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxToonAnimModel",
     "ShaderParams" : {
         "Ints" : [],
         "Floats" : [],
@@ -7,8 +7,11 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hair_COL.dds",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hair_NML.png",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hair_AMB.dds",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hair_CTL.dds"
         ],
-        "Pass" : 0
+        "Pass" : 1
     }
 }
