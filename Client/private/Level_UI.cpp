@@ -16,6 +16,7 @@
 #include "Canvas_PlayerInfo.h"
 #include "Canvas_Drive.h"
 #include "Canvas_SASSkill.h"
+#include "Canvas_SASSkillInside.h"
 
 #include "DefaultUI.h"
 #include "ButtonUI.h"
@@ -110,6 +111,11 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASSkill"),
 			CCanvas_SASSkill::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_SASSkillInside */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASSkillInside"),
+			CCanvas_SASSkillInside::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 	}
 
 	{
@@ -193,7 +199,10 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfo", &json));
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/SASSkill.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkill", &json));
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkill", &json));	// 움직이지 않은 UI
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/SASSkillInside.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkillInside", &json));	// 움직이는 UI
 	
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{

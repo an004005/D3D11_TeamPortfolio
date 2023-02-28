@@ -31,6 +31,10 @@ protected:
 	CUI* Find_ChildUI(const _tchar* pChildTag);
 	CUI* Add_ChildUI(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pChildTag, void* pArg = nullptr);
 
+public:
+	map<wstring, CUI*> Get_Map() {
+		return m_mapChildUIs;
+	}
 
 protected:
 	map<wstring, CUI*> m_mapChildUIs;

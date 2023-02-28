@@ -379,6 +379,9 @@
     <ClInclude Include="..\public\SASSkillDefaultUI.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_SASSkillInside.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -566,6 +569,9 @@
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\SASSkillDefaultUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SASSkillInside.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
   </ItemGroup>

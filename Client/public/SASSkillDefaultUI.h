@@ -2,7 +2,6 @@
 
 #include "Client_Defines.h"
 #include "UI.h"
-#include "Canvas_SASSkill.h"
 
 BEGIN(Client)
 
@@ -23,12 +22,6 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
-	CCanvas*		Get_Canvas() { return m_pCanvas; }
-
-private:
-	CCanvas_SASSkill * m_pCanvas = { nullptr };
-
-	_float2	m_vStartingPoint = { 0.0f, 0.0f };
 
 public:
 	static CSASSkillDefaultUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

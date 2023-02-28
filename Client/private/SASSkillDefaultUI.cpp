@@ -28,15 +28,11 @@ HRESULT CSASSkillDefaultUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	const _float2 PivotPair = GetPivotXY(m_ePivot);
-	m_vStartingPoint = { m_fX + PivotPair.x, m_fY + PivotPair.y };
-
 	return S_OK;
 }
 
 void CSASSkillDefaultUI::BeginTick()
 {
-	m_pCanvas = dynamic_cast<CCanvas_SASSkill*>(CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkill")));
 
 
 }

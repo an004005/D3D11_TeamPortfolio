@@ -2,7 +2,6 @@
 
 #include "Client_Defines.h"
 #include "UI.h"
-#include "Canvas_SASSkill.h"
 
 BEGIN(Engine)
 class CFSMComponent;
@@ -33,8 +32,8 @@ private:
 	void			ChangeSkill_Shader();
 
 private:
-	CCanvas_SASSkill* m_pCanvas = { nullptr };
-	CCanvas_SASSkill::OBJECTCOUNT	m_eObjectCount = CCanvas_SASSkill::ONE;
+	//CCanvas_SASSkill* m_pCanvas = { nullptr };
+	//CCanvas_SASSkill::OBJECTCOUNT	m_eObjectCount = CCanvas_SASSkill::ONE;
 
 	_bool	asdfasdfasdfasdf;	// SASSkill_UIMove() -> UI를 이동시키고자 할 때 외부에서 Set 을 한다.
 	_bool			m_bOneCheck = { false }; // 원래 지점과 목표지점의 좌표를 받는다.

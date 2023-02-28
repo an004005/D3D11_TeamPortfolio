@@ -40,77 +40,12 @@ HRESULT CSASSkillIconUI::Initialize(void * pArg)
 	//if (3 == eObjectCount)
 	//	eObjectCount = 0;
 
-	//m_pFSM = CFSMComponentBuilder()
-	//	.InitState("Idle")
-	//	.AddState("Idle")
-	//	.AddTransition("Idle to Move", "Move")
-	//	.Predicator([this] {
-	//	return asdfasdfasdfasdf;
-	//})
-
-	//	.AddState("Move")
-	//	.OnStart([this]
-	//{
-	//	static _float2 vRandomPosition = { /*CGameUtils::GetRandFloat(3.0f, 10.0f), CGameUtils::GetRandFloat(0.0f, 10.0f)*/5.0f, 5.0f };
-	//	m_vDestination = { m_vStartingPoint.x + vRandomPosition.x, m_vStartingPoint.y - vRandomPosition.y };
-	//})
-	//	.Tick([this](_double TimeDelta) {
-	//	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-	//	vPosition += XMVector2Normalize(XMLoadFloat2(&m_vDestination) - vPosition) * _float(TimeDelta) * 12.f;
-
-	//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.0f));
-
-	//	// 목표 지점과 현재 지점을 비교한다.
-	//	_vector vDestination = { m_vDestination.x, m_vDestination.y, 0.0f, 1.0f };
-	//	_float fDistance = XMVectorGetX(XMVector3Length(vDestination - vPosition));
-
-	//	if (0.1f > fDistance)
-	//	{
-	//		//m_bIsDestination = false;
-	//		m_bIsOriginGoal = true;
-	//	}
-	//})
-	//	.AddTransition("Move to Return", "Return")
-	//	.Predicator([this] {
-	//	return m_bIsOriginGoal;
-	//})
-	//	.AddState("Return")
-	//	.Tick([this](_double TimeDelta) {
-	//	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-	//	vPosition += XMVector2Normalize(XMLoadFloat2(&m_vStartingPoint) - vPosition) * _float(TimeDelta) * 12.f;
-	//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.0f));
-
-	//	// 원래 지점과 현재 지점을 비교한다.
-	//	_vector vDestination = { m_vStartingPoint.x, m_vStartingPoint.y, 0.0f, 1.0f };
-	//	_float fDistance = XMVectorGetX(XMVector3Length(vDestination - vPosition));
-
-	//	if (0.1f > fDistance)
-	//	{
-	//		m_bIsOriginGoal = false;
-	//		asdfasdfasdfasdf = false;
-
-	//		// 모든 값을 초기화 한다.
-	//		//m_bOneCheck = false;
-	//		//m_bIsDestination = false;
-	//		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_vStartingPoint.x, m_vStartingPoint.y, 0.0f, 1.0f));
-	//	}
-	//})
-
-	//	.AddTransition("Return to Idle", "Idle")
-	//	.Predicator([this] {
-	//	return asdfasdfasdfasdf == false;
-	//})
-
-	//	.Build();
-
 	return S_OK;
 }
 
 void CSASSkillIconUI::BeginTick()
 {
-	m_pCanvas = dynamic_cast<CCanvas_SASSkill*>(CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkill")));
+	//m_pCanvas = dynamic_cast<CCanvas_SASSkill*>(CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkill")));
 
 }
 
@@ -177,108 +112,54 @@ void CSASSkillIconUI::LoadFromJson(const Json & json)
 
 void CSASSkillIconUI::SASSkillIcon_Tick()
 {
-	if (m_pCanvas->Get_SASSkill() != m_pCanvas->Get_PreSASSkill())
-	{
-		ChangeSkill_Shader(); // 스킬이 바뀌면 쉐이더 값도 변경해준다.
+	//if (m_pCanvas->Get_SASSkill() != m_pCanvas->Get_PreSASSkill())
+	//{
+	//	ChangeSkill_Shader(); // 스킬이 바뀌면 쉐이더 값도 변경해준다.
 
-		if (true == m_pCanvas->Get_ChangeX())
-		{
-			switch (m_pCanvas->Get_SASSkill())
-			{
-			case CCanvas_SASSkill::ONE0:
-				break;
-			case CCanvas_SASSkill::TWO0:
-				break;
-			case CCanvas_SASSkill::THREE0:
-				break;
-			case CCanvas_SASSkill::FOUR0:
-				break;
-			default:
-				assert(!"Wrong Skill Icon Number");
-				break;
-			}
-		}
-		else
-		{
-			switch (m_pCanvas->Get_SASSkill())
-			{
-			case CCanvas_SASSkill::ONE1:
-				break;
-			case CCanvas_SASSkill::TWO1:
-				break;
-			case CCanvas_SASSkill::THREE1:
-				break;
-			case CCanvas_SASSkill::FOUR1:
-				break;
-			default:
-				assert(!"Wrong Skill Icon Number");
-				break;
-			}
-		}
+	//	if (true == m_pCanvas->Get_ChangeX())
+	//	{
+	//		switch (m_pCanvas->Get_SASSkill())
+	//		{
+	//		case CCanvas_SASSkill::ONE0:
+	//			break;
+	//		case CCanvas_SASSkill::TWO0:
+	//			break;
+	//		case CCanvas_SASSkill::THREE0:
+	//			break;
+	//		case CCanvas_SASSkill::FOUR0:
+	//			break;
+	//		default:
+	//			assert(!"Wrong Skill Icon Number");
+	//			break;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		switch (m_pCanvas->Get_SASSkill())
+	//		{
+	//		case CCanvas_SASSkill::ONE1:
+	//			break;
+	//		case CCanvas_SASSkill::TWO1:
+	//			break;
+	//		case CCanvas_SASSkill::THREE1:
+	//			break;
+	//		case CCanvas_SASSkill::FOUR1:
+	//			break;
+	//		default:
+	//			assert(!"Wrong Skill Icon Number");
+	//			break;
+	//		}
+	//	}
 
-		m_pCanvas->Set_PreSASSkill(m_pCanvas->Get_SASSkill());
-	}
+	//	m_pCanvas->Set_PreSASSkill(m_pCanvas->Get_SASSkill());
+	//}
 }
 
 void CSASSkillIconUI::ChangeSkill_Shader()
 {
-	m_tParams.Ints[0] = { !m_pCanvas->Get_OnSkill() };
-	m_tParams.Float2s[0] = { _float(m_pCanvas->Get_SuperPowers()), _float(m_pCanvas->Get_OnSkill()) };
+	//m_tParams.Ints[0] = { !m_pCanvas->Get_OnSkill() };
+	//m_tParams.Float2s[0] = { _float(m_pCanvas->Get_SuperPowers()), _float(m_pCanvas->Get_OnSkill()) };
 }
-//
-//void CSASSkillIconUI::SASSkill_UIMove(const _double & dTimeDelta)
-//{
-//	if (false == m_bOneCheck)
-//	{
-//		m_bOneCheck = true;
-//		m_bIsDestination = true;
-//		m_vDestination = { m_vOriginPosition.x + 3.0f, m_vOriginPosition.y - 3.0f };
-//	}
-//
-//	static _float fSpeed = 3.0f;
-//
-//	if (true == m_bIsDestination)
-//	{
-//		_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-//
-//		vPosition += XMVector2Normalize(XMLoadFloat2(&m_vDestination) - vPosition) * _float(dTimeDelta) * fSpeed;
-//
-//		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.0f));
-//
-//		// 목표 지점과 현재 지점을 비교한다.
-//		_vector vDestination = { m_vDestination.x, m_vDestination.y, 0.0f, 1.0f };
-//		_float fDistance = XMVectorGetX(XMVector3Length(vDestination - vPosition));
-//
-//		if (0.1f > fDistance)
-//		{
-//			m_bIsDestination = false;
-//			m_bIsOriginGoal = true;
-//		}
-//	}
-//
-//	if (true == m_bIsOriginGoal)
-//	{
-//		_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-//
-//		vPosition += XMVector2Normalize(XMLoadFloat2(&m_vOriginPosition) - vPosition) * _float(dTimeDelta) * fSpeed;
-//		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.0f));
-//
-//		// 원래 지점과 현재 지점을 비교한다.
-//		_vector vDestination = { m_vOriginPosition.x, m_vOriginPosition.y, 0.0f, 1.0f };
-//		_float fDistance = XMVectorGetX(XMVector3Length(vDestination - vPosition));
-//
-//		if (0.0f > fDistance)
-//		{
-//			m_bIsOriginGoal = false;
-//
-//			// 모든 값을 초기화 한다.
-//			m_bOneCheck = false;
-//			m_bIsDestination = false;
-//			m_vOriginPosition = { 0.0f, 0.0f };
-//			m_vDestination = { 0.0f, 0.0f };
-//		}
-//	}
-//}
 
 CSASSkillIconUI * CSASSkillIconUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {

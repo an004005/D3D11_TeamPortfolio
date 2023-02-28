@@ -192,6 +192,7 @@
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
     <ClInclude Include="..\public\Canvas_SASInfo.h" />
     <ClInclude Include="..\public\Canvas_SASSkill.h" />
+    <ClInclude Include="..\public\Canvas_SASSkillInside.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
@@ -265,6 +266,7 @@
     <ClCompile Include="..\private\Canvas_SASSkill.cpp" />
     <ClCompile Include="..\private\Camera_Player.cpp" />
     <ClCompile Include="..\private\CamSpot.cpp" />
+    <ClCompile Include="..\private\Canvas_SASSkillInside.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
