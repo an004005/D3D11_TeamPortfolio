@@ -379,8 +379,11 @@
     <ClInclude Include="..\public\SASSkillDefaultUI.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_SASSkillInside.h">
+    <ClInclude Include="..\public\Canvas_SASSkillMove.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PlayerInfoMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -571,8 +574,11 @@
     <ClCompile Include="..\private\SASSkillDefaultUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_SASSkillInside.cpp">
+    <ClCompile Include="..\private\Canvas_SASSkillMove.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PlayerInfoMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

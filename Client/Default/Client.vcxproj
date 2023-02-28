@@ -190,9 +190,10 @@
     <ClInclude Include="..\public\Canvas_Drive.h" />
     <ClInclude Include="..\public\Canvas_Item.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
+    <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
     <ClInclude Include="..\public\Canvas_SASInfo.h" />
     <ClInclude Include="..\public\Canvas_SASSkill.h" />
-    <ClInclude Include="..\public\Canvas_SASSkillInside.h" />
+    <ClInclude Include="..\public\Canvas_SASSkillMove.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
@@ -262,11 +263,12 @@
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
     <ClCompile Include="..\private\Canvas_Item.cpp" />
     <ClCompile Include="..\private\Canvas_PlayerInfo.cpp" />
+    <ClCompile Include="..\private\Canvas_PlayerInfoMove.cpp" />
     <ClCompile Include="..\private\Canvas_SASInfo.cpp" />
     <ClCompile Include="..\private\Canvas_SASSkill.cpp" />
     <ClCompile Include="..\private\Camera_Player.cpp" />
     <ClCompile Include="..\private\CamSpot.cpp" />
-    <ClCompile Include="..\private\Canvas_SASSkillInside.cpp" />
+    <ClCompile Include="..\private\Canvas_SASSkillMove.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />

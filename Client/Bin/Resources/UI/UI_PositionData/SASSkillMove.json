@@ -1306,7 +1306,7 @@
     "PositionX": 0.0,
     "PositionY": 0.0,
     "Priority": 0,
-    "Prototype_GameObject": "Canvas_SASSkillInside\u0000",
+    "Prototype_GameObject": "Canvas_SASSkillMove\u0000",
     "ScaleX": 0.0,
     "ScaleY": 0.0,
     "ShaderParams": {

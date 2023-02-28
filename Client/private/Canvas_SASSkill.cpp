@@ -2,7 +2,7 @@
 #include "..\public\Canvas_SASSkill.h"
 #include "GameInstance.h"
 #include "GameUtils.h"
-#include "Canvas_SASSkillInside.h"
+#include "Canvas_SASSkillMove.h"
 
 CCanvas_SASSkill::CCanvas_SASSkill(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -66,7 +66,7 @@ HRESULT CCanvas_SASSkill::Initialize(void* pArg)
 
 void CCanvas_SASSkill::BeginTick()
 {
-	m_pCanvas = dynamic_cast<CCanvas_SASSkillInside*>(CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkillInside")));
+	m_pCanvas = dynamic_cast<CCanvas_SASSkillMove*>(CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkillInside")));
 
 }
 
