@@ -7,13 +7,10 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [         
-            "../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/Texture/T_em0400_body_ALB.png",
-            "../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/Texture/T_em0400_body_NML.png",
-            "../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/Texture/T_em0400_body_RMA.png",
             "../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/Texture/dds/T_em0400_body_ALB.dds",
-            "../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/Texture/dds/T_em0400_body_NML.dds",
+            "../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/Texture/T_em0400_body_NML.png",
             "../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/Texture/dds/T_em0400_body_RMA.dds"
         ],
-        "Pass" : 0
+        "Pass" : 1
     }
 }

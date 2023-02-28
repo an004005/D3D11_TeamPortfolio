@@ -11,6 +11,7 @@
 #include "GameUtils.h"
 #include "Controller.h"
 #include "ScarletWeapon.h"
+#include "Camera.h"
 #include "TrailSystem.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -47,6 +48,11 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
 
+	
+	m_pPlayerCam = dynamic_cast<CCamera*>(m_pGameInstance->Clone_GameObject_Get(L"Layer_Camera", TEXT("Prototype_GameObject_Camera_Player")));
+	Assert(m_pPlayerCam != nullptr);
+	Safe_AddRef(m_pPlayerCam);
+
 	// FAILED_CHECK(m_pTrail = CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_TrailSystem")));
 
 
@@ -57,7 +63,10 @@ void CPlayer::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	m_pController->Tick(TimeDelta);
+	if (m_pPlayerCam->IsMainCamera())
+		m_pController->Tick(TimeDelta);
+	else
+		m_pController->Invalidate();
 
 	MoveStateCheck(TimeDelta);
 	BehaviorCheck(TimeDelta);
@@ -80,8 +89,7 @@ void CPlayer::Tick(_double TimeDelta)
 	for (auto& iter : m_vecWeapon)
 		iter->Tick(TimeDelta);
 
-	// m_pTrail->GetTransform()->Set_State();
-	// m_pTrail->Tick();
+	isPlayerAttack();
 }
 
 void CPlayer::Late_Tick(_double TimeDelta)
@@ -92,7 +100,7 @@ void CPlayer::Late_Tick(_double TimeDelta)
 		iter->Late_Tick(TimeDelta);
 
 	if (m_bVisible && (nullptr != m_pRenderer))
-		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
 }
 
 void CPlayer::AfterPhysX()
@@ -125,6 +133,17 @@ void CPlayer::Imgui_RenderProperty()
 	}
 
 	ImGui::SliderFloat("JumpPower", &m_fJumpPower, 0.f, 100.f);
+
+	if (ImGui::CollapsingHeader("Weapons"))
+	{
+		ImGui::Indent(20.f);
+		if (m_vecWeapon.empty() == false)
+		{
+			m_vecWeapon.front()->Imgui_RenderProperty();
+			m_vecWeapon.front()->Imgui_RenderComponentProperties();
+		}
+		ImGui::Unindent(20.f);
+	}
 }
 
 HRESULT CPlayer::SetUp_Components(void * pArg)
@@ -173,6 +192,24 @@ HRESULT CPlayer::Setup_AnimSocket()
 	return S_OK;
 }
 
+_bool CPlayer::isPlayerAttack(void)
+{
+	string szCurAnim = "";
+
+	if (nullptr != m_pModel->GetPlayAnimation())
+		szCurAnim = m_pModel->GetPlayAnimation()->GetName();
+
+	string szKeyString = "atk";
+
+	if (szCurAnim.find(szKeyString) != string::npos)
+	{
+		IM_LOG(szCurAnim.c_str());
+		return true;
+	}
+
+	return false;
+}
+
 _bool CPlayer::BeforeCharge(_float fBeforeCharge)
 {
 	if (fBeforeCharge > m_fBefCharge)
@@ -201,33 +238,45 @@ _bool CPlayer::Charge(_uint iNum, _float fCharge)
 	}
 }
 
-CPlayer& CPlayer::Reset_Charge()
+CPlayer & CPlayer::SetAbleState(REMOTE tagRemote)
 {
-	m_fBefCharge = 0.f;
-	for (auto& iter : m_fCharge)
-		iter = 0.f;
+	m_bCanTurn = tagRemote.CanTurn;
+	m_bCanMove = tagRemote.CanMove;
+	m_bCanRun = tagRemote.CanRun;
+	m_bCanTurn_Attack = tagRemote.AttackTurn;
+
+	m_bAir = tagRemote.OnAir;
+	m_bActiveGravity = tagRemote.Gravity;
+
+	if (tagRemote.MoveLimitReset) { MoveLimitReset(); }
+	if (tagRemote.AttackLimitReset) { AttackLimitReset(); }
+	if (tagRemote.ChargeReset) { Reset_Charge(); }
 
 	return *this;
 }
 
-_bool CPlayer::UseSkillCnt(_uint iLimitType)
+void CPlayer::Reset_Charge()
 {
-	switch (iLimitType)
+	m_fBefCharge = 0.f;
+	for (auto& iter : m_fCharge)
+		iter = 0.f;
+}
+
+_bool CPlayer::UseAttackCnt(_uint eType)
+{
+	switch (eType)
 	{
-	case STACK_NONCHARGE_FLOOR:
-		if (0 < m_UseLimit.m_iNonChargeAttack_Floor) { m_UseLimit.m_iNonChargeAttack_Floor -= 1; return true; }
+	case LIMIT_NONCHARGE_FLOOR:
+		if (0 < m_AttackLimit.m_iNonChargeAttack_Floor) { m_AttackLimit.m_iNonChargeAttack_Floor -= 1; return true; }
 		break;
-	case STACK_NONCHARGE_AIR:
-		if (0 < m_UseLimit.m_iNonChargeAttack_Air) { m_UseLimit.m_iNonChargeAttack_Air -= 1; return true; }
+	case LIMIT_NONCHARGE_AIR:
+		if (0 < m_AttackLimit.m_iNonChargeAttack_Air) { m_AttackLimit.m_iNonChargeAttack_Air -= 1; return true; }
 		break;
-	case STACK_ATTACK_AIR01:
-		if (0 < m_UseLimit.m_iAttack_Air01) { m_UseLimit.m_iAttack_Air01 -= 1; return true; }
+	case LIMIT_AIRATK01:
+		if (0 < m_AttackLimit.m_iAttack_Air01) { m_AttackLimit.m_iAttack_Air01 -= 1; return true; }
 		break;
-	case STACK_ATTACK_AIR02:
-		if (0 < m_UseLimit.m_iAttack_Air02) { m_UseLimit.m_iAttack_Air02 -= 1; return true; }
-		break;
-	case STACK_DOUBLEJUMP:
-		if (0 < m_UseLimit.m_iDoubleJump) { m_UseLimit.m_iDoubleJump -= 1; return true; }
+	case LIMIT_AIRATK02:
+		if (0 < m_AttackLimit.m_iAttack_Air02) { m_AttackLimit.m_iAttack_Air02 -= 1; return true; }
 		break;
 	default:
 		break;
@@ -235,15 +284,30 @@ _bool CPlayer::UseSkillCnt(_uint iLimitType)
 	return false;
 }
 
-CPlayer& CPlayer::UseLimitReset(void)
+_bool CPlayer::UseMoveCnt(_uint eType)
 {
-	m_UseLimit.m_iAttack_Air01 = m_UseLimit.MAX_iAttack_Air01;
-	m_UseLimit.m_iAttack_Air02 = m_UseLimit.MAX_iAttack_Air02;
-	m_UseLimit.m_iDoubleJump = m_UseLimit.MAX_iDoubleJump;
-	m_UseLimit.m_iNonChargeAttack_Air = m_UseLimit.MAX_iNonChargeAttack_Air;
-	m_UseLimit.m_iNonChargeAttack_Floor = m_UseLimit.MAX_iNonChargeAttack_Floor;
+	switch (eType)
+	{
+	case LIMIT_DOUBLEJUMP:
+		if (0 < m_MoveLimit.m_iDoubleJump) { m_MoveLimit.m_iDoubleJump -= 1; return true; }
+		break;
+	default:
+		break;
+	}
+	return false;
+}
 
-	return *this;
+void CPlayer::AttackLimitReset(void)
+{
+	m_AttackLimit.m_iNonChargeAttack_Floor = m_AttackLimit.MAX_iNonChargeAttack_Floor;
+	m_AttackLimit.m_iNonChargeAttack_Air = m_AttackLimit.MAX_iNonChargeAttack_Air;
+	m_AttackLimit.m_iAttack_Air01 = m_AttackLimit.MAX_iAttack_Air01;
+	m_AttackLimit.m_iAttack_Air02 = m_AttackLimit.MAX_iAttack_Air02;
+}
+
+void CPlayer::MoveLimitReset(void)
+{
+	m_MoveLimit.m_iDoubleJump = m_MoveLimit.MAX_iDoubleJump;
 }
 
 void CPlayer::Jump()
@@ -266,18 +330,6 @@ void CPlayer::SmoothTurn_Attack(_double TimeDelta)
 	Vector4 vTarget = vPlayerPos + vCamLook;
 
 	m_pTransformCom->LookAt_Smooth(vTarget, TimeDelta * 0.5f);
-}
-
-CPlayer& CPlayer::Reset_SkillCnt()
-{
-	m_iSkillUsableCnt = 2;
-	return *this;
-}
-
-CPlayer & CPlayer::Reset_Gravity()
-{
-	m_fGravity = 0.f;
-	return *this;
 }
 
 void CPlayer::BehaviorCheck(_double TimeDelta)
@@ -382,7 +434,10 @@ HRESULT CPlayer::Setup_Parts()
 	Desc.m_pTransform = m_pTransformCom;
 	Desc.m_pJson = &Weapon;
 
-	pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
+//	/*pGameObject = */pGameInstance->Clone_GameObject/*_Get*/(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
+////	m_vecWeapon.push_back(pGameObject);
+
+	pGameObject = pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("PlayerWeapon"), &Desc);
 	m_vecWeapon.push_back(pGameObject);
 
 	return S_OK;
@@ -430,4 +485,5 @@ void CPlayer::Free()
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pModel);
 	Safe_Release(m_pController);
+	Safe_Release(m_pPlayerCam);
 }

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\PostProcess.h"
 #include "GameInstance.h"
+#include "JsonLib.h"
 
 CPostProcess::CPostProcess(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -30,6 +31,20 @@ void CPostProcess::Late_Tick(_double TimeDelta)
 {
 	if (m_bVisible)
 		m_pRenderer->Add_RenderGroup(CRenderer::POSTPROCESS_VFX, this);
+}
+
+void CPostProcess::LoadFromJson(const Json& json)
+{
+	CGameObject::LoadFromJson(json);
+	CShader::LoadShaderParam(m_tParam, json);
+	m_iPriority = json["Priority"];
+}
+
+void CPostProcess::SaveToJson(Json& json)
+{
+	CGameObject::SaveToJson(json);
+	CShader::SaveShaderParam(m_tParam, json);
+	json["Priority"] = m_iPriority;
 }
 
 void CPostProcess::Imgui_RenderProperty()

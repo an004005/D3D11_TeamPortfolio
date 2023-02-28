@@ -79,9 +79,6 @@
     <Filter Include="97.ShaderFiles\VFX">
       <UniqueIdentifier>{c17249d2-0829-4a8d-8fa2-6268013e3cc0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\14.EffectTool">
-      <UniqueIdentifier>{cb237c72-7e46-4d9a-980b-70bd8a509dc4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.ShaderFiles\PostProcess">
       <UniqueIdentifier>{297a4e23-345b-4c8d-9cec-57b2d352b928}</UniqueIdentifier>
     </Filter>
@@ -195,6 +192,12 @@
     </Filter>
     <Filter Include="VFX\Effect\EffectGroup\TestEffectGroup">
       <UniqueIdentifier>{c04eb42d-7b50-4114-8751-7fab3bf8a885}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\14.EffectTool">
+      <UniqueIdentifier>{cb237c72-7e46-4d9a-980b-70bd8a509dc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.ShaderFiles\PBR">
+      <UniqueIdentifier>{0c8fe263-8aae-429a-84d4-56b5c393fd83}</UniqueIdentifier>
     </Filter>
     <Filter Include="97.ShaderFiles\PostProcess\Distortion">
       <UniqueIdentifier>{a2654f95-9aaa-4a83-a0f1-4cf87b41901b}</UniqueIdentifier>
@@ -446,6 +449,9 @@
     </ClInclude>
     <ClInclude Include="Weapon_wp0190.h">
       <Filter>02.GameObjects\Weapon\wp0190</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h">
+      <Filter>97.ShaderFiles\PBR</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PostVFX_WhiteOut.h">
       <Filter>VFX\PostProcess\WhiteOut</Filter>
@@ -765,6 +771,9 @@
       <Filter>97.ShaderFiles\VFX</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_MeshInstance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

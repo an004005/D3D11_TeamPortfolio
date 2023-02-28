@@ -60,7 +60,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	if (vDepthDesc.w != 4.f) // map object가 아니면 decal적용 하지 않는다.
 		discard;
 
-	float fViewZ = vDepthDesc.y * 300.f;
+	float fViewZ = vDepthDesc.y * g_Far;
 	vector vProjPos = (vector)0.f;
 
     // 투영행렬을 만드는 과정.
@@ -102,7 +102,7 @@ PS_OUT PS_SPIKE_CRACK(PS_IN In)
 	if (vDepthDesc.w != 4.f) // map object가 아니면 decal적용 하지 않는다.
 		discard;
 
-	float fViewZ = vDepthDesc.y * 300.f;
+	float fViewZ = vDepthDesc.y * g_Far;
 	vector vProjPos = (vector)0.f;
 
     // 투영행렬을 만드는 과정.
@@ -160,7 +160,7 @@ PS_OUT PS_FIREWALL_BOT(PS_IN In)
 	if (vDepthDesc.w != 4.f) // map object가 아니면 decal적용 하지 않는다.
 		discard;
 
-	float fViewZ = vDepthDesc.y * 300.f;
+	float fViewZ = vDepthDesc.y * g_Far;
 	vector vProjPos = (vector)0.f;
 
     // 투영행렬을 만드는 과정.

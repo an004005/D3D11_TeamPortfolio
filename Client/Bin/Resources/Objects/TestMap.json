@@ -1,1 +1,101 @@
-{"MapObjects":[{"ModelTag":"../Bin/Resources/Model/StaticModel/Minimaps/LC01_Area02_Minimap.static_model\u0000","ObjectTag":"","Prototype_GameObject":"Prototype_GameObject_MapNonAnim_Object\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,-0.15936732292175293,0.0,1.0]}},{"ModelTag":"../Bin/Resources/Model/StaticModel/Roads/HWBase_B02.static_model\u0000","ObjectTag":"","Prototype_GameObject":"Prototype_GameObject_MapNonAnim_Object\u0000","Transform":{"WorldMatrix":[0.037156444042921066,-0.0044965678825974464,-0.9992567896842957,0.0,5.840208359586541e-06,0.9998106360435486,-0.004498842637985945,0.0,0.9991975426673889,0.00016133916506078094,0.03715351223945618,0.0,0.16074657440185547,0.03023076057434082,-3.939537286758423,1.0]}},{"ModelTag":"../Bin/Resources/Model/StaticModel/Roads/HWEndZ_tes02.static_model\u0000","ObjectTag":"","Prototype_GameObject":"Prototype_GameObject_MapNonAnim_Object\u0000","Transform":{"WorldMatrix":[0.5990121960639954,0.0,-0.8007370829582214,0.0,0.0,0.999998152256012,0.0,0.0,0.8007373213768005,0.0,0.5990123748779297,0.0,160.64271545410156,27.39530372619629,144.4750518798828,1.0]}}],"ObjectTag":"","Prototype_GameObject":"Prototype_GameObject_ScarletMap\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "MapObjects": [
+        {
+            "ModelTag": "../Bin/Resources/Model/StaticModel/Minimaps/LC01_Area02_Minimap.static_model\u0000",
+            "ObjectTag": "",
+            "Prototype_GameObject": "Prototype_GameObject_MapNonAnim_Object\u0000",
+            "Transform": {
+                "WorldMatrix": [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    -0.15936732292175293,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ModelTag": "../Bin/Resources/Model/StaticModel/Roads/HWBase_B02.static_model\u0000",
+            "ObjectTag": "",
+            "Prototype_GameObject": "Prototype_GameObject_MapNonAnim_Object\u0000",
+            "Transform": {
+                "WorldMatrix": [
+                    0.037156444042921066,
+                    -0.0044965678825974464,
+                    -0.9992567896842957,
+                    0.0,
+                    5.840208359586541e-06,
+                    0.9998106360435486,
+                    -0.004498842637985945,
+                    0.0,
+                    0.9991975426673889,
+                    0.00016133916506078094,
+                    0.03715351223945618,
+                    0.0,
+                    0.16074657440185547,
+                    0.03023076057434082,
+                    -3.939537286758423,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ModelTag": "../Bin/Resources/Model/StaticModel/Roads/HWEndZ_tes02.static_model\u0000",
+            "ObjectTag": "",
+            "Prototype_GameObject": "Prototype_GameObject_MapNonAnim_Object\u0000",
+            "Transform": {
+                "WorldMatrix": [
+                    0.5990121960639954,
+                    0.0,
+                    -0.8007370829582214,
+                    0.0,
+                    0.0,
+                    0.999998152256012,
+                    0.0,
+                    0.0,
+                    0.8007373213768005,
+                    0.0,
+                    0.5990123748779297,
+                    0.0,
+                    160.64271545410156,
+                    27.39530372619629,
+                    144.4750518798828,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "Prototype_GameObject_ScarletMap\u0000",
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}
