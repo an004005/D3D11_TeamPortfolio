@@ -11,6 +11,7 @@ class CAnimation;
 class CFSMComponent;
 class CModel;
 class CRenderer;
+class CCamera;
 END
 
 BEGIN(Client);
@@ -202,6 +203,8 @@ protected:
 
 protected:
 	wstring		m_ModelName;
+
+	CCamera*	m_pPlayerCam = nullptr;
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

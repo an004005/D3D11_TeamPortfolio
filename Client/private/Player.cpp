@@ -11,6 +11,7 @@
 #include "GameUtils.h"
 #include "Controller.h"
 #include "ScarletWeapon.h"
+#include "Camera.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -46,6 +47,11 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
 
+	
+	m_pPlayerCam = dynamic_cast<CCamera*>(m_pGameInstance->Clone_GameObject_Get(L"Layer_Camera", TEXT("Prototype_GameObject_Camera_Player")));
+	Assert(m_pPlayerCam != nullptr);
+	Safe_AddRef(m_pPlayerCam);
+
 	return S_OK;
 }
 
@@ -53,7 +59,10 @@ void CPlayer::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	m_pController->Tick(TimeDelta);
+	if (m_pPlayerCam->IsMainCamera())
+		m_pController->Tick(TimeDelta);
+	else
+		m_pController->Invalidate();
 
 	MoveStateCheck(TimeDelta);
 	BehaviorCheck(TimeDelta);
@@ -87,7 +96,7 @@ void CPlayer::Late_Tick(_double TimeDelta)
 		iter->Late_Tick(TimeDelta);
 
 	if (m_bVisible && (nullptr != m_pRenderer))
-		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
 }
 
 void CPlayer::AfterPhysX()
@@ -120,6 +129,17 @@ void CPlayer::Imgui_RenderProperty()
 	}
 
 	ImGui::SliderFloat("JumpPower", &m_fJumpPower, 0.f, 100.f);
+
+	if (ImGui::CollapsingHeader("Weapons"))
+	{
+		ImGui::Indent(20.f);
+		if (m_vecWeapon.empty() == false)
+		{
+			m_vecWeapon.front()->Imgui_RenderProperty();
+			m_vecWeapon.front()->Imgui_RenderComponentProperties();
+		}
+		ImGui::Unindent(20.f);
+	}
 }
 
 HRESULT CPlayer::SetUp_Components(void * pArg)
@@ -460,4 +480,5 @@ void CPlayer::Free()
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pModel);
 	Safe_Release(m_pController);
+	Safe_Release(m_pPlayerCam);
 }

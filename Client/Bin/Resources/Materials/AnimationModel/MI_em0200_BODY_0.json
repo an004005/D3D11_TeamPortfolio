@@ -7,13 +7,10 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [           
-            "../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Texture/T_em0200_Body_ALB.png",
-            "../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Texture/T_em0200_Body_NML.png",
-            "../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Texture/T_em0200_Body_RMA.png",
             "../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Texture/dds/T_em0200_Body_ALB.dds",
-            "../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Texture/dds/T_em0200_Body_NML.dds",
+            "../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Texture/T_em0200_Body_NML.png",
             "../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Texture/dds/T_em0200_Body_RMA.dds"
         ],
-        "Pass" : 0
+        "Pass" : 1
     }
 }

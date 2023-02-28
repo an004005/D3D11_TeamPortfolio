@@ -175,6 +175,7 @@
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Defines.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Params.h" />
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Utils.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\BaseAnimInstance.h">
@@ -375,6 +376,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_VFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_UI.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

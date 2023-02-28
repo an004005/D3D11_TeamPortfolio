@@ -215,6 +215,7 @@ void CFlowerLeg::Imgui_RenderProperty()
 		ImGui::InputFloat("m_fWeight", &m_fWeight);
 	}
 
+	// m_pModelCom->Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
 }
 

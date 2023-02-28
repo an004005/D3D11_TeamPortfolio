@@ -39,6 +39,7 @@ public:
 
 	HWND GetHWND() { return m_hWnd; }
 	_double GetTimeDelta() const { return m_TimeDelta; }
+	CRenderer* GetRenderer() { return m_pRenderer; }
 
 public: /* For.GameInstance */	
 	static const _tchar*			m_pPrototypeTransformTag;
