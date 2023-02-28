@@ -10,14 +10,9 @@
            "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/T_em0800_body_ALB.png",
            "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/T_em0800_body_NML.png",
            "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/T_em0800_body_RMA.png",
-           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/T_em0800_weak_MTC.png",
-           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/dds/T_em0800_body_ALB.dds",
-           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/dds/T_em0800_body_NML.dds",
-           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/dds/T_em0800_body_RMA.dds",
-           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/dds/T_em0800_weak_MTC.dds"
-        
+           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/T_em0800_weak_MTC.png"        
 
         ],
-        "Pass" : 0
+        "Pass" : 1
     }
 }

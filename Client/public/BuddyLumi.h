@@ -11,6 +11,7 @@ class CAnimation;
 class CFSMComponent;
 class CModel;
 class CRenderer;
+class CRigidBody;
 END
 
 BEGIN(Client)
@@ -32,6 +33,8 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
+	virtual void AfterPhysX();
+
 private:
 	CShader*				m_pShaderCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
@@ -39,6 +42,7 @@ private:
 	CFSMComponent*			m_pFSM = nullptr;
 
 	CBdLm_AnimInstance*		m_pASM = nullptr;
+	CRigidBody*				m_pTrigger = nullptr;
 
 private:
 	HRESULT				Setup_AnimSocket();

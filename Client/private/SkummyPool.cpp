@@ -35,6 +35,9 @@ HRESULT CSkummyPool::Initialize_Prototype()
 
 HRESULT CSkummyPool::Initialize(void * pArg)
 {
+	Json SkummyPoolTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Test.json");
+	pArg = &SkummyPoolTrigger;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -43,8 +46,6 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 	if (FAILED(Setup_AnimSocket()))
 		return E_FAIL;
-
-	Json SkummyPoolTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPoolTrigger.json");
 
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"), 
 		(CComponent**)&m_pTrigger, &SkummyPoolTrigger)))
@@ -389,11 +390,11 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 		CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
 
-		if (pFlower == nullptr)
+		/*if (pFlower == nullptr)
 			MSG_BOX("null");
 
 		else
-			MSG_BOX("!null");
+			MSG_BOX("!null");*/
 	});
 
 	return S_OK;
@@ -473,7 +474,11 @@ HRESULT CSkummyPool::SetUp_Components(void * pArg)
 		(CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	if (pArg)
+	if (FAILED(__super::Add_Component(LEVEL_NOW, TEXT("MonsterSkummyPool"), TEXT("Com_Model"), 
+		(CComponent**)&m_pModelCom)))
+		return E_FAIL;
+
+	/*if (pArg)
 	{
 		Json& json = *static_cast<Json*>(pArg);
 		if (json.contains("Model"))
@@ -483,7 +488,7 @@ HRESULT CSkummyPool::SetUp_Components(void * pArg)
 			FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_ModelName.c_str(), m_ModelName.c_str(),
 				(CComponent**)&m_pModelCom));
 		}
-	}	
+	}*/	
 
 	m_pASM = CSkmP_AnimInstance::Create(m_pModelCom, this);
 	if (nullptr == m_pASM)

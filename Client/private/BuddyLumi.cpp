@@ -13,6 +13,8 @@
 #include "TimerHelper.h"
 #include "FlowerLeg.h"
 
+#include "RigidBody.h"
+
 CBuddyLumi::CBuddyLumi(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -33,6 +35,8 @@ HRESULT CBuddyLumi::Initialize_Prototype()
 
 HRESULT CBuddyLumi::Initialize(void * pArg)
 {
+	Json BuddyLumiTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumiTrigger.json");
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -40,6 +44,10 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 		return E_FAIL;
 
 	if (FAILED(Setup_AnimSocket()))
+		return E_FAIL;
+
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
+		(CComponent**)&m_pTrigger, &BuddyLumiTrigger)))
 		return E_FAIL;
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(15.f, 0.f, 15.f)));
@@ -409,7 +417,9 @@ void CBuddyLumi::BeginTick()
 
 void CBuddyLumi::Tick(_double TimeDelta)
 {	
-	__super::Tick(TimeDelta);
+	CMonster::Tick(TimeDelta);
+
+	m_pTrigger->Update_Tick(m_pTransformCom);
 
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);	
@@ -417,7 +427,7 @@ void CBuddyLumi::Tick(_double TimeDelta)
 
 void CBuddyLumi::Late_Tick(_double TimeDelta)
 {	
-	__super::Late_Tick(TimeDelta);
+	CMonster::Late_Tick(TimeDelta);
 		
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -425,7 +435,7 @@ void CBuddyLumi::Late_Tick(_double TimeDelta)
 
 HRESULT CBuddyLumi::Render()
 {
-	if (FAILED(__super::Render()))
+	if (FAILED(CMonster::Render()))
 		return E_FAIL;
 
 	m_pModelCom->Render(m_pTransformCom);
@@ -458,8 +468,13 @@ void CBuddyLumi::Imgui_RenderProperty()
 		}
 	}
 
-	m_pModelCom->Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
+}
+
+void CBuddyLumi::AfterPhysX()
+{
+	__super::AfterPhysX();
+	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 }
 
 HRESULT CBuddyLumi::Setup_AnimSocket()
@@ -484,6 +499,10 @@ HRESULT CBuddyLumi::SetUp_Components(void* pArg)
 		(CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
+	/*if (FAILED(__super::Add_Component(LEVEL_NOW, TEXT("MonsterBuddyLumi"), TEXT("Com_Model"),
+		(CComponent**)&m_pModelCom)))
+		return E_FAIL;*/
+
 	if (pArg)
 	{
 		Json& json = *static_cast<Json*>(pArg);
@@ -495,7 +514,7 @@ HRESULT CBuddyLumi::SetUp_Components(void* pArg)
 				(CComponent**)&m_pModelCom));
 		}
 	}
-
+	
 	m_pASM = CBdLm_AnimInstance::Create(m_pModelCom, this);
 	if (nullptr == m_pASM)
 	{
@@ -539,4 +558,5 @@ void CBuddyLumi::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
 	Safe_Release(m_pASM);
+	Safe_Release(m_pTrigger);
 }

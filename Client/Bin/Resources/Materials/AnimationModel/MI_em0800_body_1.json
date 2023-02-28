@@ -9,13 +9,9 @@
         "Textures" : [     
            "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/T_em0800_body_ALB.png",
            "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/T_em0800_body_NML.png",
-           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/T_em0800_body_RMA.png",
-           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/dds/T_em0800_body_ALB.dds",
-           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/dds/T_em0800_body_NML.dds",
-           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/dds/T_em0800_body_RMA.dds"
-        
+           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/T_em0800_body_RMA.png"          
 
         ],
-        "Pass" : 0
+        "Pass" : 1
     }
 }

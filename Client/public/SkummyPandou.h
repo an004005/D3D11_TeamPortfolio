@@ -92,7 +92,7 @@ private:
 	_bool			m_bMoveR = false;
 
 	_bool			m_bRandomMove = false;
-	_bool			m_bCurrentRatioSave = false;
+	_bool			m_bCurrentRatioSave = false;	// RandomMove를 끊어주기 위한 _bool
 
 	_bool			m_bAttackStart = false;
 	_bool			m_bAttacking = false;
@@ -124,7 +124,8 @@ private:
 
 	_vector			m_vMyPos;
 	_vector			m_vStorePos;
-	_bool			m_bTargetCheck = false;
+	_vector			m_vDest;
+	_bool			m_bDirCheck = false;
 	// ~위치 저장용
 	// 현재 플레이중인 Animation의 Ratio를 AnimState에 넘겨주기 위한 용도
 	_float	m_fPlayRatio = 0.f;
@@ -135,6 +136,7 @@ private:
 
 private:
 	CGameObject*	m_pFlowerLeg = nullptr;
+	CGameObject*	m_pStorePt = nullptr;
 
 public:
 	static CSkummyPandou* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

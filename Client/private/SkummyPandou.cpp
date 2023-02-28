@@ -32,7 +32,7 @@ HRESULT CSkummyPandou::Initialize_Prototype()
 }
 
 HRESULT CSkummyPandou::Initialize(void * pArg)
-{
+{	
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -43,21 +43,20 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 		return E_FAIL;
 
 	Json SkummyPandouTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouTrigger.json");
+	Json SkummyPandouSearch = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouSearch.json");
 
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
 		(CComponent**)&m_pTrigger, &SkummyPandouTrigger)))
 		return E_FAIL;
 
-	Json SkummyPandouSearch = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouSearch.json");
 
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Search"),
 		(CComponent**)&m_pSearch, &SkummyPandouSearch)))
 		return E_FAIL;
 	
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(4.f, 0.5f, 10.f)));
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(5.f, 0.5f, 7.f)));
-
-	m_pTransformCom->SetSpeed(1.f);
+	m_pTransformCom->SetSpeed(0.4f);
 
 	m_strObjectTag = "Skummy_Pandou";
 
@@ -73,59 +72,67 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 				})
 				.Tick([this](_double TimeDelta)
 				{
-					//if(시야 범위 Trigger에 걸리면)
-					if(m_bSearchEye)
+					CGameInstance* pGameInstance = CGameInstance::GetInstance();
+					
+					// 시야 범위 Trigger에 걸리기 전까진
+					if(!m_bSearchEye)
+					{		
+						m_bIdle = false;
+						//m_bRandomMove = true;
+					}
+
+					else // 시야 범위 Trigger에 걸린
 					{
+						m_bRandomMove = false;
 						m_bInitialize = true;
 					}
-
-					else // 시야 범위 Trigger에 걸리기 전까진
+					if (m_bInitialize) // 한 번 Player를 발견하면 여기로만 조건이 들어온다.
 					{
-						m_bIdle = false;
-						m_bRandomMove = true;
-					}
-
-					if (m_bArea)
-					{
-						if (m_bInitialize) // 한 번 Player를 발견하면 여기로만 조건이 들어온다.
+						if (m_bArea)
 						{
-							m_bIdle = false;
-
 							m_fTimeAcc += _float(TimeDelta * 1);
 
 							if (m_fTimeAcc >= 5.f)
 							{
+								m_bIdle = false;
+
 								if (m_iAfterIdlePt == 0)
-									m_bAttackStart = true;
+									m_bMoveR = true;
 
 								if (m_iAfterIdlePt == 1)
-									m_bMoveR = true;
+									m_bAttackStart = true;
 
 								if (m_iAfterIdlePt == 2)
 									m_bThreat = true;
 
 								if (m_iAfterIdlePt == 3)
-									m_bMoveL = true;
+									m_bAttackStart = true;
 
 								if (m_iAfterIdlePt == 4)
+									m_bMoveL = true;
+
+								if (m_iAfterIdlePt == 5)
 									m_bMoveB = true;
+
+								if (m_iAfterIdlePt == 6)
+									m_bAttackStart = true;
 
 								++m_iAfterIdlePt;
 
-								if (m_iAfterIdlePt > 4)
+								if (m_iAfterIdlePt > 6)
 									m_iAfterIdlePt = 0;
 							}
 						}
-					}
-					
-					else
-					{
-						m_fTimeAcc += _float(TimeDelta * 1);
-						if (m_fTimeAcc >= 5.f)
+
+						else
 						{
-							m_bIdle = false;
-							m_bMoveF = true;
-						}						
+							m_fTimeAcc += _float(TimeDelta * 1);
+							if (m_fTimeAcc >= 5.f)
+							{
+								m_bIdle = false;
+								m_bMoveF = true;
+							}
+						}
 					}
 				})
 
@@ -173,15 +180,21 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 
 			.AddState("RandomMove")
 				.OnStart([this]				
-					{ m_fTimeAcc = 0.f; })
+				{ 
+					m_fTimeAcc = 0.f; 
+					m_bCurrentRatioSave = false;
+				})
 				.Tick([this](_double TimeDelta)
 				{				
 					m_fTimeAcc += _float(TimeDelta * 1);
 
-					if (m_fTimeAcc > 2.f)
+					m_pTransformCom->LocalMove(m_pModelCom->GetLocalMove(m_pTransformCom->Get_WorldMatrix()), 0.4f);
+
+					if (m_fTimeAcc > 4.f)
 					{
 						m_bIdle = true;
 						m_bRandomMove = false;
+						m_bCurrentRatioSave = true;
 					}
 				})
 				.AddTransition("RandomMove to Idle", "Idle")
@@ -195,10 +208,254 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 				{
 					auto pAnim = m_pModelCom->GetPlayAnimation();
 
-
+					if (pAnim->GetPlayRatio() > 0.95)
+					{
+						m_bThreat = false;
+						m_bIdle = true;
+					}
 				})
+				.AddTransition("Threat to Idle", "Idle")
+					.Predicator([this]
+					{
+						return !m_bThreat && m_bIdle;
+					})
 					
+			.AddState("Attack_Start")
+				.OnStart([this] 
+				{
+					_vector vAtkLook = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					/*_float3 fAtkLook;
+					XMStoreFloat3(&fAtkLook, vAtkLook);
+					fAtkLook.y += 0.5f;*/
+
+					m_pTransformCom->LookAt(vAtkLook);
+				})
+				.Tick([this](_double TimeDelta)
+				{
+					auto pAnim = m_pModelCom->GetPlayAnimation();
+
+					if (pAnim->GetPlayRatio() > 0.97)
+					{
+						m_bAttackStart = false;
+						m_bAttacking = true;
+					}
+				})
+				.AddTransition("Attack_Start to Attack_Ing", "Attack_Ing")
+					.Predicator([this] 
+					{
+						return !m_bAttackStart && m_bAttacking;
+					})
+
+			.AddState("Attack_Ing")
+				.OnStart([this]
+				{
+					m_fTimeAcc = 0.f;
+				})
+				.Tick([this](_double TimeDelta)
+				{
+					m_fTimeAcc += _float(TimeDelta * 1);
+
+					m_pTransformCom->Go_Straight(0.2);
+
+					if (m_fTimeAcc >= 4.f)
+					{
+						m_bAttacking = false;
+						m_bAttackEnd = true;
+					}
+				})
+
+				.AddTransition("Attack_Ing to Attack_End", "Attack_End")
+					.Predicator([this]
+					{
+						return !m_bAttacking && m_bAttackEnd;
+					})
+
+			.AddState("Attack_End")
+				.Tick([this](_double TimeDelta)
+				{
+					auto pAnim = m_pModelCom->GetPlayAnimation();
+
+					if (pAnim->GetPlayRatio() > 0.97)
+					{
+						m_bAttackEnd = false;
+						m_bIdle = true;
+					}
+				})
+				.AddTransition("Attack_End to Idle", "Idle")
+					.Predicator([this]
+					{
+						return !m_bAttackEnd && m_bIdle;
+					})
+
+			.AddState("MoveF")
+				.Tick([this](_double TimeDelta)
+				{
+					_vector vTargetPos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					m_pTransformCom->Move(0.1, vTargetPos);
+
+					if (m_bArea)
+					{
+						m_bMoveF = false;
+						m_bAttackStart = true;
+					}
+				})
+				.AddTransition("MoveF to Attack_Start", "Attack_Start")
+					.Predicator([this]
+					{
+						return !m_bMoveF && m_bAttackStart;
+					})
+
+			.AddState("MoveB")
+				.OnStart([this]
+				{
+					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					m_vDest = m_vMyPos - m_vStorePos;
+				
+					m_fTimeAcc = 0.f;
+				})
+				.Tick([this](_double TimeDelta)
+				{
+					m_pTransformCom->Move(0.08, m_vDest);
 					
+					m_fTimeAcc += _float(TimeDelta * 1);
+
+					if (m_fTimeAcc >= 3.f)
+					{
+						m_bMoveB = false;
+
+						vector<_uint> vecRandomPattern;
+
+						_uint iAttack = 1;
+						vecRandomPattern.push_back(iAttack);
+
+						_uint iThreat = 2;
+						vecRandomPattern.push_back(iThreat);
+
+						random_shuffle(vecRandomPattern.begin(), vecRandomPattern.end());
+
+						_uint iShuffleResult = vecRandomPattern.front();
+
+						if (iShuffleResult == 1)
+							m_bThreat = true;
+
+						if (iShuffleResult == 2)
+							m_bAttackStart = true;
+
+					}
+				})
+				.AddTransition("MoveB to Attack_Start", "Attack_Start")
+					.Predicator([this]
+					{
+						return !m_bMoveB && m_bAttackStart;
+					})
+
+				.AddTransition("MoveB to Threat", "Threat")
+					.Predicator([this]
+					{
+						return !m_bMoveB && m_bThreat;
+					})
+			
+			.AddState("MoveL")
+				.OnStart([this]
+				{
+					m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				})
+				.Tick([this](_double TimeDelta)
+				{
+					auto pAnim = m_pModelCom->GetPlayAnimation();
+
+					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+					// 중점 Axis 기준 왼쪽으로 Turn
+					m_pTransformCom->LookAt(m_vStorePos);
+					m_pTransformCom->Move(0.008f, -vMyRight);
+
+					if (pAnim->IsFinished() == true)
+					{
+						m_bMoveL = false;
+						
+						vector<_uint> vecRandomPattern;
+
+						_uint iAttack = 1;
+						vecRandomPattern.push_back(iAttack);
+
+						_uint iThreat = 2;
+						vecRandomPattern.push_back(iThreat);
+
+						random_shuffle(vecRandomPattern.begin(), vecRandomPattern.end());
+
+						_uint iShuffleResult = vecRandomPattern.front();
+
+						if (iShuffleResult == 1)
+							m_bThreat = true;
+
+						if (iShuffleResult == 2)
+							m_bAttackStart = true;
+					}
+				})
+				.AddTransition("MoveL to Attack_Start", "Attack_Start")
+					.Predicator([this]
+				{
+					return !m_bMoveL && m_bAttackStart;
+				})
+
+				.AddTransition("MoveL to Threat", "Threat")
+					.Predicator([this]
+				{
+					return !m_bMoveL && m_bThreat;
+				})
+
+
+			.AddState("MoveR")
+					.OnStart([this]
+				{
+					m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				})
+					.Tick([this](_double TimeDelta)
+				{
+					auto pAnim = m_pModelCom->GetPlayAnimation();
+
+					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+					// 중점 Axis 기준 왼쪽으로 Turn
+					m_pTransformCom->LookAt(m_vStorePos);
+					m_pTransformCom->Move(0.008f, vMyRight);
+
+					if (pAnim->IsFinished() == true)
+					{
+						m_bMoveR = false;
+
+						vector<_uint> vecRandomPattern;
+
+						_uint iAttack = 1;
+						vecRandomPattern.push_back(iAttack);
+
+						_uint iThreat = 2;
+						vecRandomPattern.push_back(iThreat);
+
+						random_shuffle(vecRandomPattern.begin(), vecRandomPattern.end());
+
+						_uint iShuffleResult = vecRandomPattern.front();
+
+						if (iShuffleResult == 1)
+							m_bThreat = true;
+
+						if (iShuffleResult == 2)
+							m_bAttackStart = true;
+					}
+				})
+					.AddTransition("MoveR to Attack_Start", "Attack_Start")
+					.Predicator([this]
+				{
+					return !m_bMoveR && m_bAttackStart;
+				})
+
+					.AddTransition("MoveR to Threat", "Threat")
+					.Predicator([this]
+				{
+					return !m_bMoveR && m_bThreat;
+				})
+
+						
 			.Build();
 	}
 
@@ -209,20 +466,30 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 		CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
+		if (pFlower != nullptr && pFlower->GetObjectTag() == "Flower_Leg")
+		{
+			m_pStorePt = dynamic_cast<CGameObject*>(pFlower);
+		}
 
-		if (pFlower != nullptr)
+		if (m_pStorePt != nullptr)
 			m_bSearchEye = true;
 	});
 
 	m_pSearch->SetOnTriggerIn([this](CGameObject* pObj)
 	{
-		CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-		if (pFlower != nullptr)
+		CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
+		if (pFlower != nullptr && pFlower->GetObjectTag() == "Flower_Leg")
+		{
+			m_pStorePt = dynamic_cast<CGameObject*>(pFlower);
+		}
+
+		/*if (pFlower != nullptr)
 			m_bArea = true;
 
 		if (pFlower == nullptr)
-			m_bArea = false;
+			m_bArea = false;*/
 	});
 
 	return S_OK;
@@ -259,7 +526,7 @@ void CSkummyPandou::Tick(_double TimeDelta)
 
 void CSkummyPandou::Late_Tick(_double TimeDelta)
 {
-	__super::Late_Tick(TimeDelta);
+	CMonster::Late_Tick(TimeDelta);
 
 	if(nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -267,7 +534,7 @@ void CSkummyPandou::Late_Tick(_double TimeDelta)
 
 HRESULT CSkummyPandou::Render()
 {
-	if (FAILED(__super::Render()))
+	if (FAILED(CMonster::Render()))
 		return E_FAIL;
 
 	m_pModelCom->Render(m_pTransformCom);
@@ -277,7 +544,13 @@ HRESULT CSkummyPandou::Render()
 
 void CSkummyPandou::Imgui_RenderProperty()
 {
-	__super::Imgui_RenderProperty();
+	CMonster::Imgui_RenderProperty();
+	
+	/*_bool bSearchEye = m_bSearchEye;
+	_bool bArea = m_bArea;
+
+	ImGui::Text("");*/
+
 	m_pFSM->Imgui_RenderProperty();
 }
 
@@ -316,6 +589,10 @@ HRESULT CSkummyPandou::SetUp_Components(void * pArg)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom)))
 		return E_FAIL;
+
+	/*if (FAILED(__super::Add_Component(LEVEL_NOW, TEXT("MonsterSkummyPandou"), TEXT("Com_Model"),
+		(CComponent**)&m_pModelCom)))
+		return E_FAIL;*/
 
 	if (pArg)
 	{
