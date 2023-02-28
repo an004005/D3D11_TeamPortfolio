@@ -297,16 +297,19 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("DodgeB")
 					.OnStart([this] 
 					{
-						//m_vStorePos =
+						m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+						m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					})
 				.Tick([this](_double TimeDelta) 
 				{
 					auto pAnim = m_pModelCom->GetPlayAnimation();
 
 					// 뒤로 이동 
+					_vector vDest = m_vMyPos - m_vStorePos;
 					
+					m_pTransformCom->Move(0.008f, vDest);
 
-					if (pAnim == m_pModelCom->Find_Animation("AS_em0400_135_AL_dodge_B") && pAnim->IsFinished() == true)
+					if (pAnim->IsFinished() == true)
 					{
 						m_bDodgeB = false;
 						m_bWalk = true;
@@ -319,13 +322,21 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					.Predicator([this]()->_bool {return m_bDead; })
 
 			.AddState("DodgeL")
+				.OnStart([this] 
+				{
+					m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);				
+				})
+
 				.Tick([this](_double TimeDelta)
 				{
 					auto pAnim = m_pModelCom->GetPlayAnimation();
-
+					
+					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 					// 중점 Axis 기준 왼쪽으로 Turn
+					m_pTransformCom->LookAt_Smooth(m_vStorePos, 0.008f);
+					m_pTransformCom->Move(0.008f, -vMyRight);
 
-					if (pAnim == m_pModelCom->Find_Animation("AS_em0400_140_AL_dodge_L") && pAnim->IsFinished() == true)
+					if (pAnim->IsFinished() == true)
 					{
 						m_bDodgeL = false;
 						m_bWalk = true;
@@ -338,13 +349,20 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					.Predicator([this]()->_bool {return m_bDead; })
 
 			.AddState("DodgeR")
+				.OnStart([this]
+				{
+					m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				})
 				.Tick([this](_double TimeDelta)
 				{
 					auto pAnim = m_pModelCom->GetPlayAnimation();
+					
+					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+					// 중점 Axis 기준 오른으로 Turn
+					m_pTransformCom->LookAt_Smooth(m_vStorePos, 0.008f);
+					m_pTransformCom->Move(0.008f, vMyRight);
 
-					// 중점 Axis 기준 오른쪽으로 Turn
-
-					if (pAnim == m_pModelCom->Find_Animation("AS_em0400_145_AL_dodge_R") && pAnim->IsFinished() == true)
+					if (pAnim->IsFinished() == true)
 					{
 						m_bDodgeR = false;
 						m_bWalk = true;

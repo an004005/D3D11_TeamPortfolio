@@ -1,0 +1,60 @@
+{
+    "ControlledRigidBody": {
+        "ColliderType": 0,
+        "contactOffset": 0.10000000149011612,
+        "density": 10.0,
+        "height": 1.0,
+        "maxJumpHeight": 3.0,
+        "pushPower": 100.0,
+        "radius": 0.5,
+        "slopeLimitDegree": 45.0,
+        "stepOffset": 0.10000000149011612
+    },
+    "ObjectTag": "Skummy_Pandou",
+    "Prototype_GameObject": "SkummyPandou\u0000",
+    "RigidBody": {
+        "ColliderType": 5,
+        "Density": 10.0,
+        "OriginTransform": [
+            20.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            20.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            20.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 1,
+        "bKinematic": false,
+        "bTrigger": true
+    },
+    "Transform": {
+        "WorldMatrix": [
+            1.537799835205078e-05,
+            -0.9999898672103882,
+            0.00453755259513855,
+            0.0,
+            -0.3943263590335846,
+            -0.004176139831542969,
+            -0.9189611673355103,
+            0.0,
+            0.9189705848693848,
+            -0.0017749965190887451,
+            -0.3943225145339966,
+            0.0,
+            -4.664568901062012,
+            0.0562567338347435,
+            -2.8413052558898926,
+            1.0
+        ]
+    }
+}

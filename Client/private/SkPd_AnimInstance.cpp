@@ -233,6 +233,14 @@ void CSkPd_AnimInstance::UpdateTargetState(_double TimeDelta)
 
 	m_fPlayRatio = 0.f;
 	m_fPlayRatio = pSkummyPandou->GetPlayRatio();
+
+	m_bCurrentRatioSave = pSkummyPandou->CheckCurrentRatio();
+
+	if (m_bCurrentRatioSave)
+	{
+		m_fSaveRatio = m_fPlayRatio;
+		m_bCurrentRatioSave = false;
+	}
 }
 
 void CSkPd_AnimInstance::Imgui_RenderState()
@@ -242,6 +250,11 @@ void CSkPd_AnimInstance::Imgui_RenderState()
 void CSkPd_AnimInstance::InputAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
 {
 	m_mapAnimSocket[strSocName] = (AnimList);
+}
+
+_bool CSkPd_AnimInstance::CheckAnim(const string & szAnimName)
+{
+	return  (szAnimName == m_pModel->GetPlayAnimation()->GetName()) ? true : false;
 }
 
 CSkPd_AnimInstance * CSkPd_AnimInstance::Create(CModel * pModel, CGameObject * pGameObject)

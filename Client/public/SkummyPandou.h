@@ -11,6 +11,7 @@ class CAnimation;
 class CFSMComponent;
 class CModel;
 class CRenderer;
+class CRigidBody;
 END
 
 BEGIN(Client)
@@ -32,6 +33,8 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
+	virtual void AfterPhysX();
+
 	void StateCheck(_double TimeDelta);
 
 private:
@@ -41,6 +44,8 @@ private:
 	CFSMComponent*			m_pFSM = nullptr;
 
 	CSkPd_AnimInstance*		m_pASM = nullptr;
+	CRigidBody*				m_pTrigger = nullptr;	
+	CRigidBody*				m_pSearch = nullptr;
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -58,7 +63,9 @@ public:
 	_bool IsMoveB() const { return m_bMoveB; }
 	_bool IsMoveL() const { return m_bMoveL; }
 	_bool IsMoveR() const { return m_bMoveR; }
+
 	_bool IsRandomMove() const { return m_bRandomMove; }
+	_bool CheckCurrentRatio() const { return m_bCurrentRatioSave; }
 
 	_bool IsAttackStart() const { return m_bAttackStart; }
 	_bool IsAttacking() const { return m_bAttacking; }
@@ -83,7 +90,9 @@ private:
 	_bool			m_bMoveB = false;
 	_bool			m_bMoveL = false;
 	_bool			m_bMoveR = false;
+
 	_bool			m_bRandomMove = false;
+	_bool			m_bCurrentRatioSave = false;
 
 	_bool			m_bAttackStart = false;
 	_bool			m_bAttacking = false;
@@ -101,6 +110,8 @@ private:
 
 	// Out of Sight Check
 	_bool			m_bArea = false;
+	// Search Range
+	_bool			m_bSearchEye = false;
 
 private:
 	wstring			m_ModelName;
@@ -113,10 +124,14 @@ private:
 
 	_vector			m_vMyPos;
 	_vector			m_vStorePos;
+	_bool			m_bTargetCheck = false;
 	// ~위치 저장용
-
 	// 현재 플레이중인 Animation의 Ratio를 AnimState에 넘겨주기 위한 용도
 	_float	m_fPlayRatio = 0.f;
+
+	_uint	m_iAfterIdlePt = 0;
+
+	DAMAGE_PARAM	m_StrDamage;
 
 private:
 	CGameObject*	m_pFlowerLeg = nullptr;

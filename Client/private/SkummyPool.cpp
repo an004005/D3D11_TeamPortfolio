@@ -12,6 +12,7 @@
 #include "SkmP_AnimInstance.h"
 #include "FlowerLeg.h"
 #include "SkMpBullet.h"
+#include "RigidBody.h"
 
 
 CSkummyPool::CSkummyPool(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -43,11 +44,19 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 	if (FAILED(Setup_AnimSocket()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 3.f)));
+	Json SkummyPoolTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPoolTrigger.json");
+
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"), 
+		(CComponent**)&m_pTrigger, &SkummyPoolTrigger)))
+		return E_FAIL;
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(5.f, 0.f, 5.f)));
 
 	m_pTransformCom->SetSpeed(1.f);
 
 	m_strObjectTag = "Skummy_Pool";
+
+	//m_StrDamage.
 
 	{
 		m_pFSM = CFSMComponentBuilder()
@@ -193,6 +202,9 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 				})
 				.Tick([this](_double TimeDelta)
 				{
+
+
+					///////////////
 					_vector vTargetPos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					m_pTransformCom->LookAt(vTargetPos);
 
@@ -359,9 +371,8 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 						// 움직임 통제
 						m_bMoveR = false;
 						m_bAttack = true;
-					}
+					}				
 				})
-
 					.AddTransition("MoveR to Attack", "Attack")
 					.Predicator([this]
 				{
@@ -370,7 +381,20 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 
 			.Build();
-	}
+	}	
+	// Tick에서 도는게 아닌
+	m_pTrigger->SetOnTriggerIn([this](CGameObject* pObj)
+	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+		CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
+
+		if (pFlower == nullptr)
+			MSG_BOX("null");
+
+		else
+			MSG_BOX("!null");
+	});
 
 	return S_OK;
 }
@@ -392,7 +416,9 @@ void CSkummyPool::BeginTick()
 
 void CSkummyPool::Tick(_double TimeDelta)
 {
-	__super::Tick(TimeDelta);
+	CMonster::Tick(TimeDelta);
+
+	m_pTrigger->Update_Tick(m_pTransformCom);
 
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
@@ -419,11 +445,13 @@ HRESULT CSkummyPool::Render()
 void CSkummyPool::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
-
-	// Attack(Shoot) Animation -> 
-
-	m_pModelCom->Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
+}
+
+void CSkummyPool::AfterPhysX()
+{
+	__super::AfterPhysX();
+	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 }
 
 HRESULT CSkummyPool::Setup_AnimSocket()
@@ -455,7 +483,7 @@ HRESULT CSkummyPool::SetUp_Components(void * pArg)
 			FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_ModelName.c_str(), m_ModelName.c_str(),
 				(CComponent**)&m_pModelCom));
 		}
-	}
+	}	
 
 	m_pASM = CSkmP_AnimInstance::Create(m_pModelCom, this);
 	if (nullptr == m_pASM)
@@ -500,4 +528,5 @@ void CSkummyPool::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
 	Safe_Release(m_pASM);
+	Safe_Release(m_pTrigger);
 }

@@ -1,0 +1,21 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxAnimModel",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [     
+           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/T_em0800_body_ALB.png",
+           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/T_em0800_body_NML.png",
+           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/T_em0800_body_RMA.png",
+           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/dds/T_em0800_body_ALB.dds",
+           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/dds/T_em0800_body_NML.dds",
+           "../Bin/Resources/Model/AnimModel/Monster/BronJon/Texture/dds/T_em0800_body_RMA.dds"
+        
+
+        ],
+        "Pass" : 0
+    }
+}

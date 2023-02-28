@@ -11,6 +11,7 @@
 
 #include "SkPd_AnimInstance.h"
 #include "FlowerLeg.h"
+#include "RigidBody.h"
 
 CSkummyPandou::CSkummyPandou(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -41,28 +42,188 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 	if (FAILED(Setup_AnimSocket()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-7.f, 0.5f, 7.f)));
+	Json SkummyPandouTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouTrigger.json");
+
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
+		(CComponent**)&m_pTrigger, &SkummyPandouTrigger)))
+		return E_FAIL;
+
+	Json SkummyPandouSearch = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouSearch.json");
+
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Search"),
+		(CComponent**)&m_pSearch, &SkummyPandouSearch)))
+		return E_FAIL;
+	
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(5.f, 0.5f, 7.f)));
 
 	m_pTransformCom->SetSpeed(1.f);
 
 	m_strObjectTag = "Skummy_Pandou";
+
+	//m_StrDamage.
 
 	{
 		m_pFSM = CFSMComponentBuilder()
 			.InitState("Idle")
 			.AddState("Idle")
 				.OnStart([this] 
-				{
-					m_bInitialize = false;
-					m_fTimeAcc = 0.f;
+				{						
+					m_fTimeAcc = 0.f;								
 				})
 				.Tick([this](_double TimeDelta)
 				{
-									
+					//if(시야 범위 Trigger에 걸리면)
+					if(m_bSearchEye)
+					{
+						m_bInitialize = true;
+					}
+
+					else // 시야 범위 Trigger에 걸리기 전까진
+					{
+						m_bIdle = false;
+						m_bRandomMove = true;
+					}
+
+					if (m_bArea)
+					{
+						if (m_bInitialize) // 한 번 Player를 발견하면 여기로만 조건이 들어온다.
+						{
+							m_bIdle = false;
+
+							m_fTimeAcc += _float(TimeDelta * 1);
+
+							if (m_fTimeAcc >= 5.f)
+							{
+								if (m_iAfterIdlePt == 0)
+									m_bAttackStart = true;
+
+								if (m_iAfterIdlePt == 1)
+									m_bMoveR = true;
+
+								if (m_iAfterIdlePt == 2)
+									m_bThreat = true;
+
+								if (m_iAfterIdlePt == 3)
+									m_bMoveL = true;
+
+								if (m_iAfterIdlePt == 4)
+									m_bMoveB = true;
+
+								++m_iAfterIdlePt;
+
+								if (m_iAfterIdlePt > 4)
+									m_iAfterIdlePt = 0;
+							}
+						}
+					}
+					
+					else
+					{
+						m_fTimeAcc += _float(TimeDelta * 1);
+						if (m_fTimeAcc >= 5.f)
+						{
+							m_bIdle = false;
+							m_bMoveF = true;
+						}						
+					}
 				})
 
+				.AddTransition("Idle to RandomMove", "RandomMove")
+					.Predicator([this]
+					{
+						return !m_bIdle && m_bRandomMove;
+					})
+
+				.AddTransition("Idle to MoveF", "MoveF")
+					.Predicator([this]
+					{
+						return !m_bIdle && m_bMoveF;
+					})
+
+				.AddTransition("Idle to MoveB", "MoveB")
+					.Predicator([this]
+					{
+						return !m_bIdle && m_bMoveB;
+					})
+
+				.AddTransition("Idle to MoveL", "MoveL")
+					.Predicator([this]
+					{
+						return !m_bIdle && m_bMoveL;
+					})
+
+				.AddTransition("Idle to MoveR", "MoveR")
+					.Predicator([this]
+					{
+						return !m_bIdle && m_bMoveR;
+					})
+
+				.AddTransition("Idle to AttackStart", "AttackStart")
+					.Predicator([this] 
+					{
+						return !m_bIdle && m_bAttackStart; 
+					})
+
+				.AddTransition("Idle to Threat", "Threat")
+					.Predicator([this]
+					{
+						return !m_bIdle && m_bThreat;
+					})
+
+			.AddState("RandomMove")
+				.OnStart([this]				
+					{ m_fTimeAcc = 0.f; })
+				.Tick([this](_double TimeDelta)
+				{				
+					m_fTimeAcc += _float(TimeDelta * 1);
+
+					if (m_fTimeAcc > 2.f)
+					{
+						m_bIdle = true;
+						m_bRandomMove = false;
+					}
+				})
+				.AddTransition("RandomMove to Idle", "Idle")
+					.Predicator([this]
+					{
+						return !m_bRandomMove && m_bIdle;
+					})
+					
+			.AddState("Threat")				
+				.Tick([this](_double TimeDelta)
+				{
+					auto pAnim = m_pModelCom->GetPlayAnimation();
+
+
+				})
+					
+					
 			.Build();
 	}
+
+	// Tick에서 도는게 아닌
+	// Player가 최초에 시야에 들어오는지를 체크하는 Trigger. 들어오면 : Player를 발견했다는 UI가 출력되며 이후 패턴들 실행.  들어오지 않았다면 : RandomMove
+	m_pTrigger->SetOnTriggerIn([this](CGameObject* pObj)
+	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+		CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
+
+		if (pFlower != nullptr)
+			m_bSearchEye = true;
+	});
+
+	m_pSearch->SetOnTriggerIn([this](CGameObject* pObj)
+	{
+		CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
+
+		if (pFlower != nullptr)
+			m_bArea = true;
+
+		if (pFlower == nullptr)
+			m_bArea = false;
+	});
 
 	return S_OK;
 }
@@ -85,7 +246,10 @@ void CSkummyPandou::BeginTick()
 
 void CSkummyPandou::Tick(_double TimeDelta)
 {
-	__super::Tick(TimeDelta);
+	CMonster::Tick(TimeDelta);
+
+	m_pTrigger->Update_Tick(m_pTransformCom);
+	m_pSearch->Update_Tick(m_pTransformCom);
 
 	StateCheck(TimeDelta);
 
@@ -97,7 +261,7 @@ void CSkummyPandou::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
-	if (nullptr != m_pRendererCom)
+	if(nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
@@ -114,9 +278,14 @@ HRESULT CSkummyPandou::Render()
 void CSkummyPandou::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
-	
-	m_pModelCom->Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
+}
+
+void CSkummyPandou::AfterPhysX()
+{
+	__super::AfterPhysX();
+	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
+	m_pSearch->Update_AfterPhysX(m_pTransformCom);
 }
 
 void CSkummyPandou::StateCheck(_double TimeDelta)
@@ -125,8 +294,7 @@ void CSkummyPandou::StateCheck(_double TimeDelta)
 
 	if (nullptr != m_pModelCom->GetPlayAnimation())
 		m_fPlayRatio = m_pModelCom->GetPlayAnimation()->GetPlayRatio();
-
-	
+		
 	// m_pFlowerLeg
 }
 
@@ -204,4 +372,6 @@ void CSkummyPandou::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
 	Safe_Release(m_pASM);
+	Safe_Release(m_pTrigger);
+	Safe_Release(m_pSearch);
 }
