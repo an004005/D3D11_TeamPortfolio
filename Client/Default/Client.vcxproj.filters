@@ -196,6 +196,9 @@
     <Filter Include="01.Levels\14.EffectTool">
       <UniqueIdentifier>{cb237c72-7e46-4d9a-980b-70bd8a509dc4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.ShaderFiles\PBR">
+      <UniqueIdentifier>{0c8fe263-8aae-429a-84d4-56b5c393fd83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -440,6 +443,9 @@
     </ClInclude>
     <ClInclude Include="Weapon_wp0190.h">
       <Filter>02.GameObjects\Weapon\wp0190</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h">
+      <Filter>97.ShaderFiles\PBR</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -750,6 +756,9 @@
       <Filter>97.ShaderFiles\VFX</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_MeshInstance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
