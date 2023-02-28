@@ -75,6 +75,8 @@ void CPlayer::Tick(_double TimeDelta)
 
 	for (auto& iter : m_vecWeapon)
 		iter->Tick(TimeDelta);
+
+	isPlayerAttack();
 }
 
 void CPlayer::Late_Tick(_double TimeDelta)
@@ -166,6 +168,24 @@ HRESULT CPlayer::Setup_AnimSocket()
 	return S_OK;
 }
 
+_bool CPlayer::isPlayerAttack(void)
+{
+	string szCurAnim = "";
+
+	if (nullptr != m_pModel->GetPlayAnimation())
+		szCurAnim = m_pModel->GetPlayAnimation()->GetName();
+
+	string szKeyString = "atk";
+
+	if (szCurAnim.find(szKeyString) != string::npos)
+	{
+		IM_LOG(szCurAnim.c_str());
+		return true;
+	}
+
+	return false;
+}
+
 _bool CPlayer::BeforeCharge(_float fBeforeCharge)
 {
 	if (fBeforeCharge > m_fBefCharge)
@@ -194,33 +214,45 @@ _bool CPlayer::Charge(_uint iNum, _float fCharge)
 	}
 }
 
-CPlayer& CPlayer::Reset_Charge()
+CPlayer & CPlayer::SetAbleState(REMOTE tagRemote)
 {
-	m_fBefCharge = 0.f;
-	for (auto& iter : m_fCharge)
-		iter = 0.f;
+	m_bCanTurn = tagRemote.CanTurn;
+	m_bCanMove = tagRemote.CanMove;
+	m_bCanRun = tagRemote.CanRun;
+	m_bCanTurn_Attack = tagRemote.AttackTurn;
+
+	m_bAir = tagRemote.OnAir;
+	m_bActiveGravity = tagRemote.Gravity;
+
+	if (tagRemote.MoveLimitReset) { MoveLimitReset(); }
+	if (tagRemote.AttackLimitReset) { AttackLimitReset(); }
+	if (tagRemote.ChargeReset) { Reset_Charge(); }
 
 	return *this;
 }
 
-_bool CPlayer::UseSkillCnt(_uint iLimitType)
+void CPlayer::Reset_Charge()
 {
-	switch (iLimitType)
+	m_fBefCharge = 0.f;
+	for (auto& iter : m_fCharge)
+		iter = 0.f;
+}
+
+_bool CPlayer::UseAttackCnt(_uint eType)
+{
+	switch (eType)
 	{
-	case STACK_NONCHARGE_FLOOR:
-		if (0 < m_UseLimit.m_iNonChargeAttack_Floor) { m_UseLimit.m_iNonChargeAttack_Floor -= 1; return true; }
+	case LIMIT_NONCHARGE_FLOOR:
+		if (0 < m_AttackLimit.m_iNonChargeAttack_Floor) { m_AttackLimit.m_iNonChargeAttack_Floor -= 1; return true; }
 		break;
-	case STACK_NONCHARGE_AIR:
-		if (0 < m_UseLimit.m_iNonChargeAttack_Air) { m_UseLimit.m_iNonChargeAttack_Air -= 1; return true; }
+	case LIMIT_NONCHARGE_AIR:
+		if (0 < m_AttackLimit.m_iNonChargeAttack_Air) { m_AttackLimit.m_iNonChargeAttack_Air -= 1; return true; }
 		break;
-	case STACK_ATTACK_AIR01:
-		if (0 < m_UseLimit.m_iAttack_Air01) { m_UseLimit.m_iAttack_Air01 -= 1; return true; }
+	case LIMIT_AIRATK01:
+		if (0 < m_AttackLimit.m_iAttack_Air01) { m_AttackLimit.m_iAttack_Air01 -= 1; return true; }
 		break;
-	case STACK_ATTACK_AIR02:
-		if (0 < m_UseLimit.m_iAttack_Air02) { m_UseLimit.m_iAttack_Air02 -= 1; return true; }
-		break;
-	case STACK_DOUBLEJUMP:
-		if (0 < m_UseLimit.m_iDoubleJump) { m_UseLimit.m_iDoubleJump -= 1; return true; }
+	case LIMIT_AIRATK02:
+		if (0 < m_AttackLimit.m_iAttack_Air02) { m_AttackLimit.m_iAttack_Air02 -= 1; return true; }
 		break;
 	default:
 		break;
@@ -228,15 +260,30 @@ _bool CPlayer::UseSkillCnt(_uint iLimitType)
 	return false;
 }
 
-CPlayer& CPlayer::UseLimitReset(void)
+_bool CPlayer::UseMoveCnt(_uint eType)
 {
-	m_UseLimit.m_iAttack_Air01 = m_UseLimit.MAX_iAttack_Air01;
-	m_UseLimit.m_iAttack_Air02 = m_UseLimit.MAX_iAttack_Air02;
-	m_UseLimit.m_iDoubleJump = m_UseLimit.MAX_iDoubleJump;
-	m_UseLimit.m_iNonChargeAttack_Air = m_UseLimit.MAX_iNonChargeAttack_Air;
-	m_UseLimit.m_iNonChargeAttack_Floor = m_UseLimit.MAX_iNonChargeAttack_Floor;
+	switch (eType)
+	{
+	case LIMIT_DOUBLEJUMP:
+		if (0 < m_MoveLimit.m_iDoubleJump) { m_MoveLimit.m_iDoubleJump -= 1; return true; }
+		break;
+	default:
+		break;
+	}
+	return false;
+}
 
-	return *this;
+void CPlayer::AttackLimitReset(void)
+{
+	m_AttackLimit.m_iNonChargeAttack_Floor = m_AttackLimit.MAX_iNonChargeAttack_Floor;
+	m_AttackLimit.m_iNonChargeAttack_Air = m_AttackLimit.MAX_iNonChargeAttack_Air;
+	m_AttackLimit.m_iAttack_Air01 = m_AttackLimit.MAX_iAttack_Air01;
+	m_AttackLimit.m_iAttack_Air02 = m_AttackLimit.MAX_iAttack_Air02;
+}
+
+void CPlayer::MoveLimitReset(void)
+{
+	m_MoveLimit.m_iDoubleJump = m_MoveLimit.MAX_iDoubleJump;
 }
 
 void CPlayer::Jump()
@@ -259,18 +306,6 @@ void CPlayer::SmoothTurn_Attack(_double TimeDelta)
 	Vector4 vTarget = vPlayerPos + vCamLook;
 
 	m_pTransformCom->LookAt_Smooth(vTarget, TimeDelta * 0.5f);
-}
-
-CPlayer& CPlayer::Reset_SkillCnt()
-{
-	m_iSkillUsableCnt = 2;
-	return *this;
-}
-
-CPlayer & CPlayer::Reset_Gravity()
-{
-	m_fGravity = 0.f;
-	return *this;
 }
 
 void CPlayer::BehaviorCheck(_double TimeDelta)
@@ -375,7 +410,10 @@ HRESULT CPlayer::Setup_Parts()
 	Desc.m_pTransform = m_pTransformCom;
 	Desc.m_pJson = &Weapon;
 
-	pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
+//	/*pGameObject = */pGameInstance->Clone_GameObject/*_Get*/(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
+////	m_vecWeapon.push_back(pGameObject);
+
+	pGameObject = pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("PlayerWeapon"), &Desc);
 	m_vecWeapon.push_back(pGameObject);
 
 	return S_OK;
