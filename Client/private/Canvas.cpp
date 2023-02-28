@@ -3,6 +3,9 @@
 #include "GameInstance.h"
 #include "JsonLib.h"
 #include "JsonStorage.h"
+#include "FSMComponent.h"
+
+_bool CCanvas::m_bUIMove = false;
 
 CCanvas::CCanvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -201,6 +204,75 @@ CUI * CCanvas::Add_ChildUI(_uint iLevelIndex, const _tchar * pPrototypeTag, cons
 	return pChildUI;
 }
 
+void CCanvas::UIMove_FSM()
+{
+	m_pUIMoveFSM = CFSMComponentBuilder()
+		.InitState("Idle")
+		.AddState("Idle")
+		.AddTransition("Idle to Move", "Move")
+		.Predicator([this] {
+		return m_bUIMove;
+	})
+		.AddState("Move")
+		.OnStart([this]
+	{
+		_float2 vRandomPosition = { 5.0f, 5.0f };
+		m_vDestination = { vRandomPosition.x, -vRandomPosition.y };
+	})
+		.Tick([this](_double TimeDelta) {
+
+		_vector vPosition = XMVectorSet(m_fX, m_fY, 0.0f, 1.0f);
+		_vector vDestination = { m_vDestination.x, m_vDestination.y, 0.0f, 1.0f };
+		_vector vDistance = vDestination - vPosition;
+
+		vPosition += XMVector2Normalize(vDistance) * _float(TimeDelta) * 15.0f;
+		m_fX = XMVectorGetX(vPosition);
+		m_fY = XMVectorGetY(vPosition);
+
+		// 목표 지점과 현재 지점을 비교한다.
+		_float fDistance = XMVectorGetX(XMVector4Length(vDestination - vPosition));
+
+		IM_LOG("X %f", fDistance);
+		if (0.2f > fDistance)
+		{
+			IM_LOG("X ---------------------");
+			m_bIsDestination = true;
+		}
+	})
+		.AddTransition("Move to Return", "Return")
+		.Predicator([this] {
+		return m_bIsDestination;
+	})
+		.AddState("Return")
+		.Tick([this](_double TimeDelta) {
+
+		_vector vPosition = XMVectorSet(m_fX, m_fY, 0.0f, 1.0f);
+		_vector vDestination = { 0.0f, 0.0f, 0.0f, 1.0f };
+		_vector vDistance = vDestination - vPosition;
+
+		vPosition += XMVector2Normalize(vDistance) * _float(TimeDelta) * 15.0f;
+		m_fX = XMVectorGetX(vPosition);
+		m_fY = XMVectorGetY(vPosition);
+
+		// 원래 지점과 현재 지점을 비교한다.
+		_float fDistance = XMVectorGetX(XMVector2Length(vDestination - vPosition));
+
+		IM_LOG("Y %f", fDistance);
+		if (0.2f > fDistance)
+		{
+			IM_LOG("Y --------------------");
+			m_bIsDestination = false;
+			m_bUIMove = false;
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
+		}
+	})
+		.AddTransition("Return to Idle", "Idle")
+		.Predicator([this] {
+		return m_bUIMove == false;
+	})
+		.Build();
+}
+
 CCanvas * CCanvas::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CCanvas*		pInstance = new CCanvas(pDevice, pContext);
@@ -228,6 +300,8 @@ CUI * CCanvas::Clone(void * pArg)
 void CCanvas::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pUIMoveFSM);
 
 	for (auto& Pair : m_mapChildUIs)
 		Safe_Release(Pair.second);

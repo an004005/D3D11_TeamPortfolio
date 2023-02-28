@@ -188,6 +188,7 @@
     <ClInclude Include="..\public\CamSpot.h" />
     <ClInclude Include="..\public\Canvas.h" />
     <ClInclude Include="..\public\Canvas_Drive.h" />
+    <ClInclude Include="..\public\Canvas_DriveMove.h" />
     <ClInclude Include="..\public\Canvas_Item.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
@@ -261,6 +262,7 @@
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\private\Canvas.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
+    <ClCompile Include="..\private\Canvas_DriveMove.cpp" />
     <ClCompile Include="..\private\Canvas_Item.cpp" />
     <ClCompile Include="..\private\Canvas_PlayerInfo.cpp" />
     <ClCompile Include="..\private\Canvas_PlayerInfoMove.cpp" />

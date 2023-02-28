@@ -14,7 +14,9 @@
 #include "Canvas_Item.h"
 #include "Canvas_SASInfo.h"
 #include "Canvas_PlayerInfo.h"
+#include "Canvas_PlayerInfoMove.h"
 #include "Canvas_Drive.h"
+#include "Canvas_DriveMove.h"
 #include "Canvas_SASSkill.h"
 #include "Canvas_SASSkillMove.h"
 
@@ -103,8 +105,18 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_PlayerInfoMove"),
+			CCanvas_PlayerInfoMove::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Drive"),
 			CCanvas_Drive::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_DriveMove"),
+			CCanvas_DriveMove::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
@@ -183,25 +195,31 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	// Frount_UI Canvas_FrontUI
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Item.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Item.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Item", &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/SASInfo_Left.json");
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfo_Left.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfo", &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/PlayerInfo.json");
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_PlayerInfo.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_PlayerInfo", &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Drive.json");
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_PlayerInfoMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_PlayerInfoMove", &json));
+	
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Drive.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Drive", &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/SASInfo_Right.json");
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_DriveMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_DriveMove", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfo_Right.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfo", &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/SASSkill.json");
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASSkill.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkill", &json));		// 움직이지 않은 UI
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/SASSkillMove.json");
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASSkillMove.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkillMove", &json));	// 움직이는 UI
 	
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)

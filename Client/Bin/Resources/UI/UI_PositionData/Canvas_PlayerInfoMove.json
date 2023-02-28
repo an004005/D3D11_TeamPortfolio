@@ -1,15 +1,15 @@
 {
     "ChildrenUI": [
         {
-            "ChildTag": "Drive_BackGround\u0000",
-            "ObjectTag": "Drive_BackGround",
+            "ChildTag": "PlayerInfo_PlayerInfo_TelekinesisGauge0\u0000",
+            "ObjectTag": "PlayerInfo_TelekinesisGauge0",
             "Pivot": 6,
-            "PositionX": 182.0,
-            "PositionY": 75.0,
-            "Priority": 0,
+            "PositionX": 0.0,
+            "PositionY": 91.0,
+            "Priority": 1,
             "Prototype_GameObject": "Default_UI\u0000",
-            "ScaleX": 0.699999988079071,
-            "ScaleY": 0.699999988079071,
+            "ScaleX": 0.6700000166893005,
+            "ScaleY": 0.6499999761581421,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [],
@@ -18,27 +18,27 @@
                 "Ints": [],
                 "Pass": 0,
                 "Textures": [
-                    "..\\Bin\\Resources\\UI\\Front_UI\\Drive_BackGround.dds\u0000"
+                    "..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_TelekinesisGauge0.dds\u0000"
                 ]
             },
-            "SizeX": 128.0,
+            "SizeX": 512.0,
             "SizeY": 128.0,
             "Transform": {
                 "WorldMatrix": [
-                    89.5999984741211,
+                    343.0400085449219,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    89.5999984741211,
+                    83.19999694824219,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    182.0,
-                    -285.0,
+                    0.0,
+                    -269.0,
                     0.0,
                     1.0
                 ]
@@ -50,7 +50,7 @@
     "PositionX": 0.0,
     "PositionY": 0.0,
     "Priority": 0,
-    "Prototype_GameObject": "Canvas_Drive\u0000",
+    "Prototype_GameObject": "Canvas_PlayerInfo\u0000",
     "ScaleX": 0.0,
     "ScaleY": 0.0,
     "ShaderParams": {
