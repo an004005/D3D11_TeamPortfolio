@@ -30,12 +30,7 @@ HRESULT CRigidBody::Initialize(void* pArg)
 void CRigidBody::Imgui_RenderProperty()
 {
 	CComponent::Imgui_RenderProperty();
-	if (ImGui::Button("UpdateChange"))
-	{
-		UpdateChange();
-	}
-	ImGui::Text("(for change shape type)");
-	if (ImGui::Button("ReCreateActor"))
+	if (ImGui::Button("ReCreateActor(for change shape or scale)"))
 	{
 		CreateActor();
 	}
@@ -80,6 +75,8 @@ void CRigidBody::Imgui_RenderProperty()
 		CImguiUtils::Render_Guizmo(&m_OriginTransformMatrix, tInfo, true, true);
 	}
 	ImGui::Unindent( 20.f );
+
+	UpdateChange();
 }
 
 void CRigidBody::SaveToJson(Json& json)
@@ -223,7 +220,7 @@ void CRigidBody::CreateActor()
 			break;
 		case TYPE_END:
 			FALLTHROUGH;
-		default: 
+		default:
 			NODEFAULT;
 	}
 
@@ -262,7 +259,12 @@ void CRigidBody::SetUpActor()
 	m_pShape->setSimulationFilterData(physx::PxFilterData{ static_cast<physx::PxU32>(m_eColliderType), 0, 0, 0 });
 	m_pShape->setQueryFilterData(physx::PxFilterData{static_cast<physx::PxU32>(GetCollTypeBit(m_eColliderType)), 0, 0, 0});
 
-	physx::PxTransform relativePose(CPhysXUtils::ToFloat4x4(m_OriginTransformMatrix));
+	_matrix RemoveScaleOriginMatrix = m_OriginTransformMatrix;
+	RemoveScaleOriginMatrix.r[0] = XMVector3Normalize(RemoveScaleOriginMatrix.r[0]);
+	RemoveScaleOriginMatrix.r[1] = XMVector3Normalize(RemoveScaleOriginMatrix.r[1]);
+	RemoveScaleOriginMatrix.r[2] = XMVector3Normalize(RemoveScaleOriginMatrix.r[2]);
+
+	physx::PxTransform relativePose(CPhysXUtils::ToFloat4x4(RemoveScaleOriginMatrix));
 	m_pShape->setLocalPose(relativePose);
 }
 

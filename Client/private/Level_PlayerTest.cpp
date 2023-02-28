@@ -143,8 +143,7 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Camera(const _tchar* pLayerTag)
 	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Player"))))
-		return E_FAIL;
+
 
 	return S_OK;
 }
