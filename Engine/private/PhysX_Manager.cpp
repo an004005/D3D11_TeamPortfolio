@@ -702,7 +702,6 @@ void CEngineSimulationEventCallback::onContact(const physx::PxContactPairHeader&
 	
 	{
 		CComponent* pPxCom = static_cast<CComponent*>(pairHeader.actors[0]->userData);
-		Assert(pPxCom != nullptr);
 		if (CRigidBody* pRigid = dynamic_cast<CRigidBody*>(pPxCom))
 		{
 			pRigid->CallOnTriggerIn(CPhysXUtils::GetOnwer(pairHeader.actors[1]));
@@ -711,7 +710,6 @@ void CEngineSimulationEventCallback::onContact(const physx::PxContactPairHeader&
 
 	{
 		CComponent* pPxCom = static_cast<CComponent*>(pairHeader.actors[1]->userData);
-		Assert(pPxCom != nullptr);
 		if (CRigidBody* pRigid = dynamic_cast<CRigidBody*>(pPxCom))
 		{
 			pRigid->CallOnTriggerIn(CPhysXUtils::GetOnwer(pairHeader.actors[0]));

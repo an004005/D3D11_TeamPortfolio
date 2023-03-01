@@ -181,7 +181,8 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 	m_pObject_Manager->Late_Tick(TimeDelta);
 	m_pLevel_Manager->Late_Tick(TimeDelta);
 
-	m_pPhysX_Manager->Simulate(TimeDelta);
+	if (m_pLevel_Manager->GetUpdatedLevel() != LEVEL_LOADING)
+		m_pPhysX_Manager->Simulate(TimeDelta);
 
 	if (m_pCamera_Manager->GetMainCam())
 	{
@@ -193,7 +194,8 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 		m_pSound_Manager->Tick((_float)TimeDelta);
 	}
 
-	m_pPhysX_Manager->WaitSimulate();
+	if (m_pLevel_Manager->GetUpdatedLevel() != LEVEL_LOADING)
+		m_pPhysX_Manager->WaitSimulate();
 	m_pObject_Manager->AfterPhysX();
 }
 
@@ -205,6 +207,9 @@ void CGameInstance::Clear()
 		m_pComponent_Manager->Clear(i);
 	}
 	m_pRenderer->Clear();
+	m_pLight_Manager->Clear();
+	m_pCamera_Manager->Clear();
+	m_pSound_Manager->Stop_All();
 }
 
 void CGameInstance::Clear_Level(_uint iLevelIndex)
@@ -380,8 +385,9 @@ HRESULT CGameInstance::Open_Loading(_uint iNewLevelIdx, CLoadingLevel* pLoadingL
 	if (nullptr == m_pLevel_Manager)
 		return E_FAIL;
 
+	m_pLight_Manager->Clear();
 	m_pCamera_Manager->Clear();
-	m_pSound_Manager->Stop_All();
+
 	return m_pLevel_Manager->Open_Loading(iNewLevelIdx, pLoadingLevel);
 }
 
@@ -819,6 +825,7 @@ void CGameInstance::SetPeekingPos(_fvector vPeekingPos)
 
 void CGameInstance::Release_Engine()
 {
+	CGameInstance::GetInstance()->Clear();
 	_uint ref = CGameInstance::GetInstance()->DestroyInstance();
 
 	CCamera_Manager::GetInstance()->DestroyInstance();

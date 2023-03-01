@@ -4,6 +4,7 @@
 #include <sstream>
 #include <dirent.h>
 #include "Shlwapi.h"
+#include <random>
 
 void CGameUtils::wc2c(const wchar_t* szWchar, char* szChar)
 {
@@ -266,9 +267,9 @@ _float CGameUtils::GetRandFloat(_float fMin, _float fMax)
 {
 	if (fMin >= fMax) 
 		return fMin;
-
+	
 	float f = (rand() % 10000) * 0.0001f;
-
+	
 	return (f * (fMax - fMin)) + fMin;
 }
 
@@ -284,6 +285,23 @@ _float3 CGameUtils::GetRandVector3Sphere(_float3 vOrigin, _float fRadius)
 	XMStoreFloat3(&vRt, vRand);
 	vRt += vOrigin;
 	return vRt;
+}
+
+string CGameUtils::GetRandomString(_uint iLen)
+{
+    std::string str(iLen, 0);
+    static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_int_distribution<> dis(0, sizeof(alphanum) - 2);
+    for (int i = 0; i < iLen; ++i) 
+	{
+        str[i] = alphanum[dis(gen)];
+    }
+    return str;
 }
 
 void CGameUtils::HideCursor()
