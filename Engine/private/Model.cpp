@@ -668,8 +668,8 @@ HRESULT CModel::Render_ShadowDepth(CTransform* pTransform)
 		
 		FAILED_CHECK(pTransform->Bind_ShaderResource(m_pShadowShader, "g_WorldMatrix"));
 
-		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ViewMatrix", CLight_Manager::GetInstance()->GetDirectionalLightView()));
-		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ProjMatrix", CLight_Manager::GetInstance()->GetDirectionalLightProj()));
+		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ViewMatrix", CLight_Manager::GetInstance()->GetShadowLightView()));
+		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ProjMatrix", CLight_Manager::GetInstance()->GetShadowLightProj()));
 
 		m_pShadowShader->Begin(0);
 		m_Meshes[i]->Render();

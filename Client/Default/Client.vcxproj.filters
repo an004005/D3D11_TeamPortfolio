@@ -79,9 +79,6 @@
     <Filter Include="97.ShaderFiles\VFX">
       <UniqueIdentifier>{c17249d2-0829-4a8d-8fa2-6268013e3cc0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\14.EffectTool">
-      <UniqueIdentifier>{cb237c72-7e46-4d9a-980b-70bd8a509dc4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.ShaderFiles\PostProcess">
       <UniqueIdentifier>{297a4e23-345b-4c8d-9cec-57b2d352b928}</UniqueIdentifier>
     </Filter>
@@ -195,6 +192,18 @@
     </Filter>
     <Filter Include="VFX\Effect\EffectGroup\TestEffectGroup">
       <UniqueIdentifier>{c04eb42d-7b50-4114-8751-7fab3bf8a885}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\14.EffectTool">
+      <UniqueIdentifier>{cb237c72-7e46-4d9a-980b-70bd8a509dc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.ShaderFiles\PBR">
+      <UniqueIdentifier>{0c8fe263-8aae-429a-84d4-56b5c393fd83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29">
+      <UniqueIdentifier>{f32c4093-e8d8-4c15-b7d1-2e0c14e0a683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance">
+      <UniqueIdentifier>{640f0a16-08b5-491a-9462-b102e9dcaac2}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Map\MapObject">
       <UniqueIdentifier>{13c3e0df-d901-4b13-a7e5-d6ac024d79f5}</UniqueIdentifier>
@@ -455,6 +464,15 @@
     <ClInclude Include="..\public\MapInstance_Object.h">
       <Filter>02.GameObjects\Map\MapObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h">
+      <Filter>97.ShaderFiles\PBR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BronJon.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrJ_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -690,6 +708,12 @@
     <ClCompile Include="..\private\MapInstance_Object.cpp">
       <Filter>02.GameObjects\Map\MapObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\BronJon.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrJ_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -778,6 +802,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

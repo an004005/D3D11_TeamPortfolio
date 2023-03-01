@@ -14,6 +14,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Late_Tick(_double TimeDelta) override;
 
+	virtual void LoadFromJson(const Json& json) override;
+	virtual void SaveToJson(Json& json) override;
+
 	ShaderParams& GetParam() { return m_tParam; }
 	_uint GetPass() const { return m_iPass; }
 	_uint GetPriority() const { return m_iPriority; }

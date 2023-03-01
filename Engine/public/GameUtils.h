@@ -32,9 +32,11 @@ public:
 	static void GetPickingRay(OUT _float4& vRayOrigin, OUT _float4& vRayDir);
 	static POINT GetClientCursor();
 
-	static _float GetRandFloat(_float fMin, _float fMax);
+	static _float GetRandFloat(_float fMin = 0.f, _float fMax = 1.f);
 	static _float3 GetRandVector3(_float3 vMin, _float3 vMax);
 	static _float3 GetRandVector3Sphere(_float3 vOrigin, _float fRadius);
+
+	static string GetRandomString(_uint iLen = 15);
 
 	static void HideCursor();
 	static void ShowCursor();

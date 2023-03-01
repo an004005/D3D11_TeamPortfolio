@@ -136,6 +136,11 @@ HRESULT CRenderTarget::Resize(_uint iWidth, _uint iHeight)
 
 HRESULT CRenderTarget::Clear()
 {
+	if (m_bIgnoreClearOnce)
+	{
+		m_bIgnoreClearOnce = false;
+		return S_OK;
+	}
 	m_pContext->ClearRenderTargetView(m_pRTV, (_float*)&m_vClearColor);
 
 	return S_OK;

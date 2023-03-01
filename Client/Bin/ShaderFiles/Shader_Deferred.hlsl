@@ -1,4 +1,7 @@
 #include "Shader_Utils.h"
+#include "Shader_PBRCommon.h"
+
+float   g_Far = 300.f;
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix			g_ProjMatrixInv, g_ViewMatrixInv;
@@ -17,7 +20,7 @@ vector			g_vLightSpecular;
 vector			g_vCamPosition;
 
 vector			g_vMtrlAmbient = (vector)1.f;
-vector			g_vMtrlSpecular = (vector)0.f;
+vector			g_vMtrlSpecular = (vector)0.5f;
 
 texture2D		g_Texture; /* 디버그용텍스쳐*/
 texture2D		g_NormalTexture; 
@@ -27,6 +30,9 @@ texture2D		g_ShadowDepthTexture;
 texture2D		g_DiffuseTexture;
 texture2D		g_ShadeTexture;
 texture2D		g_SpecularTexture;
+texture2D		g_RMATexture;
+texture2D		g_AMBTexture;
+texture2D		g_CTLTexture;
 
 sampler LinearSampler = sampler_state
 {
@@ -97,47 +103,72 @@ struct PS_OUT_LIGHT
 	float4		vSpecular : SV_TARGET1;
 };
 
+float GetSpecular(float3 normal, float3 eyeVec, float3 lightDir, float specularPower)
+{
+    float3 halfVec = normalize(normalize(eyeVec) + lightDir);
+    return pow(max(dot(normal, halfVec), 0.0), specularPower);
+}
 
 PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
 	PS_OUT_LIGHT			Out = (PS_OUT_LIGHT)0;
 
+	vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	vector		vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	vector		vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
 
-	float		fViewZ = vDepthDesc.y * 300.f;
+	float fShaderIdx = vDepthDesc.a;
+	float		fViewZ = vDepthDesc.y * g_Far;
 
 	/* 0 ~ 1 => -1 ~ 1 */
 	vector		vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
-	// Out.vShade = g_vLightDiffuse * saturate(saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient * g_vMtrlAmbient));
-	Out.vShade = g_vLightDiffuse * saturate(saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vNormal))));
-	Out.vShade = Out.vShade * 0.5f + 0.5f;
-	Out.vShade.a = 1.f;
+	vector		vWorldPos;
+	vWorldPos.x = In.vTexUV.x * 2.f - 1.f;
+	vWorldPos.y = In.vTexUV.y * -2.f + 1.f;
+	vWorldPos.z = vDepthDesc.x; /* 0 ~ 1 */
+	vWorldPos.w = 1.0f;
+ 
+	vWorldPos *= fViewZ;
+	vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+	vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
 
-	/* 화면에 그려지고 있는 픽셀들의 투영스페이스 상의 위치. */
-	/* 로컬위치 * 월드행렬 * 뷰행렬 * 투영행렬 / z */
-	// vector		vWorldPos;
-	// vWorldPos.x = In.vTexUV.x * 2.f - 1.f;
-	// vWorldPos.y = In.vTexUV.y * -2.f + 1.f;
-	// vWorldPos.z = vDepthDesc.x; /* 0 ~ 1 */
-	// vWorldPos.w = 1.0f;
-	//
-	// /* 로컬위치 * 월드행렬 * 뷰행렬 * 투영행렬 */
-	// vWorldPos *= fViewZ;
-	//
-	// /* 로컬위치 * 월드행렬 * 뷰행렬 */
-	// vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-	//
-	// /* 로컬위치 * 월드행렬  */
-	// vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
-	//
-	// vector		vReflect = reflect(normalize(g_vLightDir), normalize(vNormal));
-	// vector		vLook = vWorldPos - g_vCamPosition;
-	//
-	// Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(saturate(dot(normalize(vLook) * -1.f, normalize(vReflect))), 30.f);
-	Out.vSpecular.a = 0.f;
-	// specular 안씀
+	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).a;
+
+	if (CheckPostProcessFlag(fShaderFlag, SHADER_DEFAULT))
+	{
+		vector		vRMA = g_RMATexture.Sample(LinearSampler, In.vTexUV);
+
+		float3 albedo = vDiffuse.rgb;
+		float metalness = vRMA.g;
+		float roughness = vRMA.r;
+		float AO = vRMA.b;
+
+	    const float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz); // view vector
+
+		Out.vShade.rgb = LightSurface(V, vNormal.xyz, g_vLightDiffuse.xyz, g_vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
+		Out.vShade.a = vDiffuse.a;
+
+		return Out;
+
+	}
+	else if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
+	{
+		float4 vCTL = g_CTLTexture.Sample(LinearSampler, In.vTexUV);
+		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
+
+		float fDiff = saturate(max(dot(normalize(vNormal.xyz), normalize(g_vLightDir.xyz)), 0.0));
+		fDiff = max(vCTL.r * 2.f, min(vCTL.g, fDiff));
+		// fDiff = ceil(fDiff * 2.f) * 0.5f;
+
+		Out.vShade = g_vLightDiffuse * saturate(fDiff + vAMB);
+		Out.vShade.a = 1.f;
+		
+		vector		vLook = vWorldPos - g_vCamPosition;
+		float spec = GetSpecular(vNormal.xyz, vLook.xyz, g_vLightDir.xyz, 30.f);
+		Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec;
+	}
+
 	return Out;
 }
 
@@ -145,49 +176,64 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
 	PS_OUT_LIGHT			Out = (PS_OUT_LIGHT)0;
 
+	vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	vector		vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	vector		vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
 
-	float		fViewZ = vDepthDesc.y * 300.f;
+	float		fViewZ = vDepthDesc.y * g_Far;
 
 	/* 0 ~ 1 => -1 ~ 1 */
 	vector		vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
-	/* 화면에 그려지고 있는 픽셀들의 투영스페이스 상의 위치. */
-	/* 로컬위치 * 월드행렬 * 뷰행렬 * 투영행렬 / z */
 	vector		vWorldPos;
 	vWorldPos.x = In.vTexUV.x * 2.f - 1.f;
 	vWorldPos.y = In.vTexUV.y * -2.f + 1.f;
 	vWorldPos.z = vDepthDesc.x; /* 0 ~ 1 */
 	vWorldPos.w = 1.0f;
-
-	/* 로컬위치 * 월드행렬 * 뷰행렬 * 투영행렬 */
+ 
 	vWorldPos *= fViewZ;
-
-	/* 로컬위치 * 월드행렬 * 뷰행렬 */
 	vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-
-	/* 로컬위치 * 월드행렬  */
 	vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
 
 	vector		vLightDir = vWorldPos - g_vLightPos;
-
 	float		fDistance = length(vLightDir);
-
 	float		fAtt = max((g_fLightRange - fDistance), 0.f) / g_fLightRange;
 
-	// Out.vShade = g_vLightDiffuse * saturate(saturate(dot(normalize(vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient * g_vMtrlAmbient)) * fAtt;
-	Out.vShade = g_vLightDiffuse * saturate(saturate(dot(normalize(vLightDir) * -1.f, normalize(vNormal)))) * fAtt;
-	Out.vShade = Out.vShade * 0.5f + 0.5f;
-	Out.vShade.a = 1.f;	
+	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).a;
 
-	vector		vReflect = reflect(normalize(vLightDir), normalize(vNormal));
-	vector		vLook = vWorldPos - g_vCamPosition;
+	if (CheckPostProcessFlag(fShaderFlag, SHADER_DEFAULT))
+	{
+		vector		vRMA = g_RMATexture.Sample(LinearSampler, In.vTexUV);
 
-	Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(saturate(dot(normalize(vLook) * -1.f, normalize(vReflect))), 30.f) * fAtt;
+		float3 albedo = vDiffuse.rgb;
+		float metalness = vRMA.g;
+		float roughness = vRMA.r;
+		float AO = vRMA.b;
 
-	Out.vSpecular.a = 0.f;
+	    const float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz); // view vector
 
+		float3 vLightColorIntencity = g_vLightDiffuse.xyz * fAtt;
+		Out.vShade.rgb = LightSurface(V, vNormal.xyz, vLightColorIntencity, vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
+		Out.vShade.a = vDiffuse.a;
+	}
+	else if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
+	{
+		
+		float4 vCTL = g_CTLTexture.Sample(LinearSampler, In.vTexUV);
+		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
+
+		float fDiff = saturate(max(dot(normalize(vNormal.xyz), normalize(vLightDir.xyz)), 0.0)) * fAtt;
+		fDiff = max(vCTL.r * 2.f, min(vCTL.g, fDiff));
+		// fDiff = ceil(fDiff * 2.f) * 0.5f;
+
+		Out.vShade = g_vLightDiffuse * saturate(fDiff + (vAMB));
+		Out.vShade.a = 1.f;
+		
+		vector		vLook = vWorldPos - g_vCamPosition;
+		float spec = GetSpecular(vNormal.xyz, vLook.xyz, vLightDir.xyz, 30.f);
+		Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec * fAtt;
+	}
+	
 	return Out;
 }
 
@@ -195,55 +241,70 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
-	// vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
 	vector		vDepth = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
-	vector		vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
-	vector		vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
+	// vector		vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
+	// vector		vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
-	Out.vColor = CalcHDRColor(vDiffuse, vDepth.b) * vShade /*+ vSpecular*/;
-	if (0.0f == Out.vColor.a)
-		discard;
+	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).a;
 
-	// 그림자 연산
-	float fViewZ = vDepth.y * 300.f;
-
-	vector vPixelWorld;
-	vPixelWorld.x = In.vTexUV.x * 2.f - 1.f;
-	vPixelWorld.y = In.vTexUV.y * -2.f + 1.f;
-	vPixelWorld.z = vDepth.x; /* 0 ~ 1 */
-	vPixelWorld.w = 1.0f;
-	vPixelWorld *= fViewZ; // pixcel clip space
-
-	vPixelWorld = mul(vPixelWorld, g_ProjMatrixInv); // pixel view space
-	vPixelWorld = mul(vPixelWorld, g_ViewMatrixInv); // pixel world space
-
-	vector		vLightViewSpace = mul(vPixelWorld, g_LightViewMatrix);;
-	vector		vLightClipSpace = mul(vLightViewSpace, g_LightProjMatrix);
-	float2		vNewUV;
-	vNewUV.x = (vLightClipSpace.x / vLightClipSpace.w) * 0.5f + 0.5f;
-	vNewUV.y = (vLightClipSpace.y / vLightClipSpace.w) * -0.5f + 0.5f;
-
-	// float fBias = 0.1f;
-	float2 TexcelSize = float2( 1.0 / 8192.0,  1.0 / 8192.0);
-	float fShadowRate = 0.f;
-
-	for (int y = -1; y <= 1; ++y)
+	if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
-		for (int x = -1; x <= 1; ++x)
-		{
-			float2 offset = float2(x, y) * TexcelSize;
-			vector		vShadowDepthInfo = g_ShadowDepthTexture.Sample(LinearSampler, vNewUV + offset);
-			if (vLightViewSpace.z - 0.1f > vShadowDepthInfo.x * 300.0f)
-				fShadowRate += 1.f;
-		}
+		vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
+		vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
+
+		Out.vColor = CalcHDRColor(vDiffuse, vDepth.b) * vShade + vSpecular;
+		if (0.0f == Out.vColor.a)
+			discard;
+	}
+	else if (CheckPostProcessFlag(fShaderFlag, SHADER_DEFAULT))
+	{
+		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
+		Out.vColor = vShade * pow(2.f, vDepth.b);
+		Out.vColor.a = vShade.a;
+		if (0.0f == Out.vColor.a)
+			discard;
 	}
 
-	fShadowRate /= 9.f;
-	fShadowRate *= 0.3f;
 
-	Out.vColor *= (1.f - fShadowRate);
+	// 그림자 연산
+	// float fViewZ = vDepth.y * g_Far;
+	//
+	// vector vPixelWorld;
+	// vPixelWorld.x = In.vTexUV.x * 2.f - 1.f;
+	// vPixelWorld.y = In.vTexUV.y * -2.f + 1.f;
+	// vPixelWorld.z = vDepth.x; /* 0 ~ 1 */
+	// vPixelWorld.w = 1.0f;
+	// vPixelWorld *= fViewZ; // pixcel clip space
+	//
+	// vPixelWorld = mul(vPixelWorld, g_ProjMatrixInv); // pixel view space
+	// vPixelWorld = mul(vPixelWorld, g_ViewMatrixInv); // pixel world space
+	//
+	// vector		vLightViewSpace = mul(vPixelWorld, g_LightViewMatrix);;
+	// vector		vLightClipSpace = mul(vLightViewSpace, g_LightProjMatrix);
+	// float2		vNewUV;
+	// vNewUV.x = (vLightClipSpace.x / vLightClipSpace.w) * 0.5f + 0.5f;
+	// vNewUV.y = (vLightClipSpace.y / vLightClipSpace.w) * -0.5f + 0.5f;
+	//
+	// // float fBias = 0.1f;
+	// float2 TexcelSize = float2( 1.0 / 8192.0,  1.0 / 8192.0);
+	// float fShadowRate = 0.f;
+	//
+	// for (int y = -1; y <= 1; ++y)
+	// {
+	// 	for (int x = -1; x <= 1; ++x)
+	// 	{
+	// 		float2 offset = float2(x, y) * TexcelSize;
+	// 		vector		vShadowDepthInfo = g_ShadowDepthTexture.Sample(LinearSampler, vNewUV + offset);
+	// 		if (vLightViewSpace.z - 0.1f > vShadowDepthInfo.x * g_Far)
+	// 			fShadowRate += 1.f;
+	// 	}
+	// }
+	//
+	// fShadowRate /= 9.f;
+	// fShadowRate *= 0.3f;
+	//
+	// Out.vColor *= (1.f - fShadowRate);
 
 	return Out;
 }

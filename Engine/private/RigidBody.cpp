@@ -20,8 +20,6 @@ HRESULT CRigidBody::Initialize(void* pArg)
 {
 	FAILED_CHECK(CComponent::Initialize(pArg));
 
-	m_bKinematic = false;
-	m_fDensity = 10.f;
 	CreateActor();
 
 	return S_OK;
@@ -30,12 +28,7 @@ HRESULT CRigidBody::Initialize(void* pArg)
 void CRigidBody::Imgui_RenderProperty()
 {
 	CComponent::Imgui_RenderProperty();
-	if (ImGui::Button("UpdateChange"))
-	{
-		UpdateChange();
-	}
-	ImGui::Text("(for change shape type)");
-	if (ImGui::Button("ReCreateActor"))
+	if (ImGui::Button("ReCreateActor(for change shape or scale)"))
 	{
 		CreateActor();
 	}
@@ -80,11 +73,23 @@ void CRigidBody::Imgui_RenderProperty()
 		CImguiUtils::Render_Guizmo(&m_OriginTransformMatrix, tInfo, true, true);
 	}
 	ImGui::Unindent( 20.f );
+
+	CImguiUtils::FileDialog_FileSelector("Save RigidBody to", ".json", "../Bin/Resources/Objects/",
+	[this](const string& filePath)
+	{
+		Json json;
+		SaveToJson(json);
+		std::ofstream file(filePath);
+		file << json;
+	});
+
+	UpdateChange();
 }
 
 void CRigidBody::SaveToJson(Json& json)
 {
 	CComponent::SaveToJson(json);
+
 	json["RigidBody"]["bKinematic"] = m_bKinematic;
 	json["RigidBody"]["bTrigger"] = m_bTrigger;
 	json["RigidBody"]["Density"] = m_fDensity;
@@ -140,6 +145,18 @@ void CRigidBody::Update_Tick(CTransform* pTransform)
 	else if (m_bKinematic)
 	{
 		m_pActor->setKinematicTarget(physx::PxTransform{ CPhysXUtils::ToFloat4x4(pTransform->Get_WorldMatrix_f4x4()) });
+	}
+}
+
+void CRigidBody::Update_Tick(_fmatrix matrix)
+{
+	if (m_bTrigger)
+	{
+		SetPxWorldMatrix(matrix);
+	}
+	else if (m_bKinematic)
+	{
+		m_pActor->setKinematicTarget(physx::PxTransform{ CPhysXUtils::ToFloat4x4(matrix) });
 	}
 }
 
@@ -223,7 +240,7 @@ void CRigidBody::CreateActor()
 			break;
 		case TYPE_END:
 			FALLTHROUGH;
-		default: 
+		default:
 			NODEFAULT;
 	}
 
@@ -262,7 +279,12 @@ void CRigidBody::SetUpActor()
 	m_pShape->setSimulationFilterData(physx::PxFilterData{ static_cast<physx::PxU32>(m_eColliderType), 0, 0, 0 });
 	m_pShape->setQueryFilterData(physx::PxFilterData{static_cast<physx::PxU32>(GetCollTypeBit(m_eColliderType)), 0, 0, 0});
 
-	physx::PxTransform relativePose(CPhysXUtils::ToFloat4x4(m_OriginTransformMatrix));
+	_matrix RemoveScaleOriginMatrix = m_OriginTransformMatrix;
+	RemoveScaleOriginMatrix.r[0] = XMVector3Normalize(RemoveScaleOriginMatrix.r[0]);
+	RemoveScaleOriginMatrix.r[1] = XMVector3Normalize(RemoveScaleOriginMatrix.r[1]);
+	RemoveScaleOriginMatrix.r[2] = XMVector3Normalize(RemoveScaleOriginMatrix.r[2]);
+
+	physx::PxTransform relativePose(CPhysXUtils::ToFloat4x4(RemoveScaleOriginMatrix));
 	m_pShape->setLocalPose(relativePose);
 }
 

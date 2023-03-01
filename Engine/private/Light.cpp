@@ -54,6 +54,31 @@ HRESULT CLight::Render(CVIBuffer_Rect * pVIBuffer, CShader * pShader)
 	return S_OK;
 }
 
+void CLight::Imgui_Render()
+{
+	if (m_LightDesc.eType == LIGHTDESC::TYPE_DIRECTIONAL)
+	{
+		ImGui::Text("Directional Light");
+		ImGui::Checkbox("Enable", &m_LightDesc.isEnable);
+		ImGui::InputFloat4("Direction", (float*)&m_LightDesc.vDirection);
+
+		ImGui::ColorEdit4("Diffuse", (float*)&m_LightDesc.vDiffuse, ImGuiColorEditFlags_PickerHueWheel);
+		ImGui::ColorEdit4("Ambient", (float*)&m_LightDesc.vAmbient, ImGuiColorEditFlags_PickerHueWheel);
+		ImGui::ColorEdit4("Speclar", (float*)&m_LightDesc.vSpecular, ImGuiColorEditFlags_PickerHueWheel);
+	}
+	else if (m_LightDesc.eType == LIGHTDESC::TYPE_POINT)
+	{
+		ImGui::Text("Point Light");
+		ImGui::Checkbox("Enable", &m_LightDesc.isEnable);
+		ImGui::InputFloat3("Pos", (float*)&m_LightDesc.vPosition);
+		ImGui::InputFloat("Range", &m_LightDesc.fRange);
+
+		ImGui::ColorEdit4("Diffuse", (float*)&m_LightDesc.vDiffuse, ImGuiColorEditFlags_PickerHueWheel);
+		ImGui::ColorEdit4("Ambient", (float*)&m_LightDesc.vAmbient, ImGuiColorEditFlags_PickerHueWheel);
+		ImGui::ColorEdit4("Speclar", (float*)&m_LightDesc.vSpecular, ImGuiColorEditFlags_PickerHueWheel);
+	}
+}
+
 CLight * CLight::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const LIGHTDESC & LightDesc)
 {
 	CLight*		pInstance = new CLight(pDevice, pContext);

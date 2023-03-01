@@ -10,6 +10,7 @@
 #include "JsonStorage.h"
 
 #include "FL_AnimInstance.h"
+#include "RigidBody.h"
 
 CFlowerLeg::CFlowerLeg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -34,6 +35,12 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		return E_FAIL;
 
 	if (FAILED(SetUp_Components(pArg)))
+		return E_FAIL;
+
+	Json FlowerLegTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLegTrigger.json");
+
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
+		(CComponent**)&m_pTrigger, &FlowerLegTrigger)))
 		return E_FAIL;
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 0.f)));
@@ -148,7 +155,9 @@ void CFlowerLeg::BeginTick()
 
 void CFlowerLeg::Tick(_double TimeDelta)
 {
-	__super::Tick(TimeDelta);
+	CMonster::Tick(TimeDelta);
+
+	m_pTrigger->Update_Tick(m_pTransformCom);
 			
 	Key_Input(TimeDelta);
 
@@ -158,7 +167,7 @@ void CFlowerLeg::Tick(_double TimeDelta)
 
 void CFlowerLeg::Late_Tick(_double TimeDelta)
 {
-	__super::Late_Tick(TimeDelta);
+	CMonster::Late_Tick(TimeDelta);
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -166,7 +175,7 @@ void CFlowerLeg::Late_Tick(_double TimeDelta)
 
 HRESULT CFlowerLeg::Render()
 {
-	if (FAILED(__super::Render()))
+	if (FAILED(CMonster::Render()))
 		return E_FAIL;
 
 	m_pModelCom->Render(m_pTransformCom);
@@ -206,8 +215,14 @@ void CFlowerLeg::Imgui_RenderProperty()
 		ImGui::InputFloat("m_fWeight", &m_fWeight);
 	}
 
-	m_pModelCom->Imgui_RenderProperty();
+	// m_pModelCom->Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
+}
+
+void CFlowerLeg::AfterPhysX()
+{
+	__super::AfterPhysX();
+	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 }
 
 void CFlowerLeg::Key_Input(_double TimeDelta)
@@ -294,11 +309,11 @@ HRESULT CFlowerLeg::SetUp_Components(void* pArg)
 		(CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	/*if (FAILED(__super::Add_Component(LEVEL_NOW, TEXT("MonsterFlowerLeg"), TEXT("Com_ModelCom"),
+	if (FAILED(__super::Add_Component(LEVEL_NOW, TEXT("MonsterFlowerLeg"), TEXT("Com_ModelCom"),
 		(CComponent**)&m_pModelCom)))
-		return E_FAIL;*/
+		return E_FAIL;
 
-	if (pArg)
+	/*if (pArg)
 	{
 		Json& json = *static_cast<Json*>(pArg);
 		if (json.contains("Model"))
@@ -308,7 +323,7 @@ HRESULT CFlowerLeg::SetUp_Components(void* pArg)
 			FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_ModelName.c_str(), m_ModelName.c_str(),
 				(CComponent**)&m_pModelCom));
 		}
-	}	
+	}*/	
 	
 	m_pASM = CFL_AnimInstance::Create(m_pModelCom, this);
 	if (nullptr == m_pASM)
@@ -354,4 +369,5 @@ void CFlowerLeg::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
 	Safe_Release(m_pASM);
+	Safe_Release(m_pTrigger);
 }

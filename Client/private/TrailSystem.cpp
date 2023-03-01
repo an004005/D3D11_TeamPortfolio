@@ -75,13 +75,13 @@ void CTrailSystem::Tick(_double TimeDelta)
 			m_vPrePoses.erase(m_vPrePoses.begin());
 
 		_vector vCamPos = CGameInstance::GetInstance()->Get_CamPosition();
-		_float fSplineLen = XMVectorGetX(XMVector3LengthEst(m_vPrePoses[1] - m_vPrePoses[2]));
+		_float fSplineLen = XMVectorGetX(XMVector3LengthEst(m_vPrePoses[m_vPrePoses.size() - 2] - m_vPrePoses[m_vPrePoses.size() - 1]));
 		_uint iSegmentCnt = static_cast<_uint>((fSplineLen / m_fSegmentSize));
 
-		_vector p0 = m_vPrePoses[0];
-		_vector p1 = m_vPrePoses[1];
-		_vector p2 = m_vPrePoses[2];
-		_vector p3 = m_vPrePoses[2];
+		_vector p0 = m_vPrePoses[m_vPrePoses.size() - 3];
+		_vector p1 = m_vPrePoses[m_vPrePoses.size() - 2];
+		_vector p2 = m_vPrePoses[m_vPrePoses.size() - 1];
+		_vector p3 = m_vPrePoses[m_vPrePoses.size() - 1];
 		_float fPreLife = 0.f;
 		if (m_pBuffer->GetDatas()->empty() == false)
 			fPreLife = m_pBuffer->GetDatas()->back().vPosition.w;
@@ -93,15 +93,9 @@ void CTrailSystem::Tick(_double TimeDelta)
 			_float fWeight = (_float)(i + 1) / (_float)iSegmentCnt;
 			_vector vSplinePos = XMVectorCatmullRom(p0, p1, p2, p3, fWeight);
 
-			_vector vRight = XMVector3Normalize(vSplinePos - vPrePos);
-			_vector vLookAtCam = XMVector3Normalize(vCamPos - vSplinePos);
-
-			float fRadian = XMConvertToDegrees(fabs(acosf(XMVectorGetX(XMVector3Dot(vLookAtCam, vRight)))));
-			if (fRadian < 5.f)
-				continue;
-
-			_vector vUp = XMVector3Cross(vRight, vLookAtCam);
-			_vector vLook = XMVector3Cross(vRight, vUp);
+			_vector vRight = XMVectorLerp(m_vPreRight, m_pTransformCom->Get_State(CTransform::STATE_RIGHT), fWeight);
+			_vector vLook = XMVector3Cross(vRight, XMVectorSet(0.f, 1.f, 0.f, 0.f));
+			_vector vUp = XMVector3Cross(vLook, vRight);
 			vSplinePos = XMVectorSetW(vSplinePos, CMathUtils::Lerp(fPreLife, m_fLife, fWeight));//life
 
 			_matrix TrailMatrix(vRight, vUp, vLook, vSplinePos);
@@ -110,7 +104,66 @@ void CTrailSystem::Tick(_double TimeDelta)
 			vPrePos = vSplinePos;
 		}
 	}
+
+	m_vPreRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 }
+
+// 소드트레일 적용 전 Tick
+//void CTrailSystem::Tick(_double TimeDelta)
+//{
+//	CGameObject::Tick(TimeDelta);
+//	m_pBuffer->Tick(TimeDelta);
+//
+//	if (m_bActive == false)
+//		return;
+//
+//	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+//	if (m_vPrePoses.empty() || m_vPrePoses.back() != vPos)
+//		m_vPrePoses.push_back(vPos);
+//
+//	if (m_vPrePoses.size() >= 3)
+//	{
+//		while (m_vPrePoses.size() > 3)
+//			m_vPrePoses.erase(m_vPrePoses.begin());
+//
+//		_vector vCamPos = CGameInstance::GetInstance()->Get_CamPosition();
+//		_float fSplineLen = XMVectorGetX(XMVector3LengthEst(m_vPrePoses[1] - m_vPrePoses[2]));
+//		_uint iSegmentCnt = static_cast<_uint>((fSplineLen / m_fSegmentSize));
+//
+//		_vector p0 = m_vPrePoses[0];
+//		_vector p1 = m_vPrePoses[1];
+//		_vector p2 = m_vPrePoses[2];
+//		_vector p3 = m_vPrePoses[2];
+//		_float fPreLife = 0.f;
+//		if (m_pBuffer->GetDatas()->empty() == false)
+//			fPreLife = m_pBuffer->GetDatas()->back().vPosition.w;
+//
+//		_vector vPrePos = p1;
+//
+//		for (_uint i = 0; i < iSegmentCnt; ++i)
+//		{
+//			_float fWeight = (_float)(i + 1) / (_float)iSegmentCnt;
+//			_vector vSplinePos = XMVectorCatmullRom(p0, p1, p2, p3, fWeight);
+//
+//			_vector vRight = XMVector3Normalize(vSplinePos - vPrePos);
+//			_vector vLookAtCam = XMVector3Normalize(vCamPos - vSplinePos);
+//
+//			float fRadian = XMConvertToDegrees(fabs(acosf(XMVectorGetX(XMVector3Dot(vLookAtCam, vRight)))));
+//			if (fRadian < 5.f)
+//				continue;
+//
+//			_vector vUp = XMVector3Cross(vRight, vLookAtCam);
+//			_vector vLook = XMVector3Cross(vRight, vUp);
+//			vSplinePos = XMVectorSetW(vSplinePos, CMathUtils::Lerp(fPreLife, m_fLife, fWeight));//life
+//
+//			_matrix TrailMatrix(vRight, vUp, vLook, vSplinePos);
+//			m_pBuffer->AddData(TrailMatrix);
+//
+//			vPrePos = vSplinePos;
+//		}
+//	}
+//}
+
 
 void CTrailSystem::Late_Tick(_double TimeDelta)
 {

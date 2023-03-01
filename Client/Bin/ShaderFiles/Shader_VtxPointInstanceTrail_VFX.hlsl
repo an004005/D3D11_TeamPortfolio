@@ -12,20 +12,20 @@ struct VS_IN
 {
 	float3		vPosition : POSITION;
 	float2		vPSize : PSIZE;
-	row_major float4x4	Matrix : WORLD;	
+	row_major float4x4	Matrix : WORLD;
 	uint		instanceID : SV_InstanceID;
 };
 
 struct VS_OUT
 {
-	row_major float4x4	Matrix : WORLD;	
+	row_major float4x4	Matrix : WORLD;
 	float		life : TEXCOORD0;
 	uint		instanceID : SV_InstanceID;
 };
 
 struct GS_IN
 {
-	row_major float4x4	Matrix : WORLD;	
+	row_major float4x4	Matrix : WORLD;
 	float		life : TEXCOORD0;
 	uint		instanceID : SV_InstanceID;
 };
@@ -58,7 +58,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	World[0][3] = 0.f;
 	World[1][3] = 0.f;
-	World[2][3] = 0.f;
+	World[2][3] = 1.f;
 	World[3][3] = 1.f;
 
 	Out.Matrix = World;
@@ -72,7 +72,7 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
 {
 	GS_OUT		Out[4];
 
-	float CurWidth = g_fWidth * In[0].life / g_fLife * 0.5f;
+	float CurWidth = g_fWidth *In[0].life / g_fLife * 0.5f;
 	float4x4 WorldMatrix = In[0].Matrix;
 
 	if (In[0].instanceID == 0)
@@ -85,17 +85,17 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
 		Out[0].vPosition = vector(vPosition, 1.f);
 		Out[0].life = In[0].life;
 		Out[0].vTexUV = float2(0.f, 0.f);
-		
+
 		vPosition = vCenter + vUp;
 		Out[1].vPosition = vector(vPosition, 1.f);
 		Out[1].life = In[0].life;
 		Out[1].vTexUV = float2(1.f, 0.f);
-		
+
 		vPosition = vCenter - vUp;
 		Out[2].vPosition = vector(vPosition, 1.f);
 		Out[2].life = In[0].life;
 		Out[2].vTexUV = float2(1.f, 1.f);
-		
+
 		vPosition = vCenter - vUp;
 		Out[3].vPosition = vector(vPosition, 1.f);
 		Out[3].life = In[0].life;
@@ -118,19 +118,19 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
 
 		float3 vCenter = matrix_postion(WorldMatrix);
 		float3 vUp = matrix_up(WorldMatrix) * CurWidth;
-		
+
 		float3		vPosition;
-		
+
 		vPosition = vPreCenter + vPreUp;
 		Out[0].vPosition = vector(vPosition, 1.f);
 		Out[0].life = In[0].life;
 		Out[0].vTexUV = float2(0.f, 0.f);
-		
+
 		vPosition = vCenter + vUp;
 		Out[1].vPosition = vector(vPosition, 1.f);
 		Out[1].life = In[0].life;
 		Out[1].vTexUV = float2(1.f, 0.f);
-		
+
 		vPosition = vCenter - vUp;
 		Out[2].vPosition = vector(vPosition, 1.f);
 		Out[2].life = In[0].life;
@@ -154,7 +154,201 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
 	Vertices.Append(Out[1]);
 	Vertices.Append(Out[2]);
 	Vertices.RestartStrip();
-	
+
+	Vertices.Append(Out[0]);
+	Vertices.Append(Out[2]);
+	Vertices.Append(Out[3]);
+	Vertices.RestartStrip();
+}
+
+[maxvertexcount(6)]
+void GS_MAIN_SWORD(point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
+{
+	GS_OUT		Out[4];
+
+	float CurWidth = g_fWidth;// *In[0].life; // g_fLife * 0.5f;
+	float4x4 WorldMatrix = In[0].Matrix;
+
+	if (In[0].instanceID == 0)
+	{
+		float3		vPosition;
+		float3 vCenter = matrix_postion(WorldMatrix);
+		float3 vRight = matrix_right(WorldMatrix) * CurWidth;
+		//float3 vUp = matrix_up(WorldMatrix) * CurWidth;
+		//float3 vLook = matrix_look(WorldMatrix) * CurWidth;
+
+		vPosition = vCenter + vRight;
+		Out[0].vPosition = vector(vPosition, 1.f);
+		Out[0].life = In[0].life;
+		Out[0].vTexUV = float2(0.f, 0.f);
+
+		vPosition = vCenter + vRight;
+		Out[1].vPosition = vector(vPosition, 1.f);
+		Out[1].life = In[0].life;
+		Out[1].vTexUV = float2(1.f, 0.f);
+
+		vPosition = vCenter - vRight;
+		Out[2].vPosition = vector(vPosition, 1.f);
+		Out[2].life = In[0].life;
+		Out[2].vTexUV = float2(1.f, 1.f);
+
+		vPosition = vCenter - vRight;
+		Out[3].vPosition = vector(vPosition, 1.f);
+		Out[3].life = In[0].life;
+		Out[3].vTexUV = float2(0.f, 1.f);
+
+		matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
+
+		Out[0].vPosition = mul(Out[0].vPosition, matVP);
+		Out[1].vPosition = mul(Out[1].vPosition, matVP);
+		Out[2].vPosition = mul(Out[2].vPosition, matVP);
+		Out[3].vPosition = mul(Out[3].vPosition, matVP);
+	}
+	else
+	{
+		matrix PreWorldMatrix = g_TrailData[In[0].instanceID - 1];
+		float PreWidth = g_fWidth;// * PreWorldMatrix[3][3];// / g_fLife * 0.5f;
+
+		float3 vPreCenter = matrix_postion(PreWorldMatrix);
+		float3 vPreRight = matrix_right(PreWorldMatrix) * PreWidth;
+		//float3 vPreUp = matrix_up(PreWorldMatrix) * PreWidth;
+		//float3 vPreLook = matrix_look(PreWorldMatrix) * CurWidth;
+
+		float3 vCenter = matrix_postion(WorldMatrix);
+		float3 vRight = matrix_right(WorldMatrix) * CurWidth;
+		//float3 vUp = matrix_up(WorldMatrix) * CurWidth;
+		//float3 vLook = matrix_look(WorldMatrix) * CurWidth;
+
+		float3		vPosition;
+
+		vPosition = vPreCenter + vPreRight;
+		Out[0].vPosition = vector(vPosition, 1.f);
+		Out[0].life = In[0].life;
+		Out[0].vTexUV = float2(0.f, 0.f);
+
+		vPosition = vCenter + vRight;
+		Out[1].vPosition = vector(vPosition, 1.f);
+		Out[1].life = In[0].life;
+		Out[1].vTexUV = float2(1.f, 0.f);
+
+		vPosition = vCenter - vRight;
+		Out[2].vPosition = vector(vPosition, 1.f);
+		Out[2].life = In[0].life;
+		Out[2].vTexUV = float2(1.f, 1.f);
+
+		vPosition = vPreCenter - vPreRight;
+		Out[3].vPosition = vector(vPosition, 1.f);
+		Out[3].life = In[0].life;
+		Out[3].vTexUV = float2(0.f, 1.f);
+
+		matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
+
+		Out[0].vPosition = mul(Out[0].vPosition, matVP);
+		Out[1].vPosition = mul(Out[1].vPosition, matVP);
+		Out[2].vPosition = mul(Out[2].vPosition, matVP);
+		Out[3].vPosition = mul(Out[3].vPosition, matVP);
+	}
+
+
+	Vertices.Append(Out[0]);
+	Vertices.Append(Out[1]);
+	Vertices.Append(Out[2]);
+	Vertices.RestartStrip();
+
+	Vertices.Append(Out[0]);
+	Vertices.Append(Out[2]);
+	Vertices.Append(Out[3]);
+	Vertices.RestartStrip();
+}
+
+[maxvertexcount(6)]
+void GS_MAIN_TRAIL(point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
+{
+	GS_OUT		Out[4];
+
+	float CurWidth = g_fWidth;// *In[0].life; // g_fLife * 0.5f;
+	float4x4 WorldMatrix = In[0].Matrix;
+
+	if (In[0].instanceID == 0)
+	{
+		float3		vPosition;
+		float3 vCenter = matrix_postion(WorldMatrix);
+		float3 vUp = matrix_up(WorldMatrix) * CurWidth;
+
+		vPosition = vCenter + vUp;
+		Out[0].vPosition = vector(vPosition, 1.f);
+		Out[0].life = In[0].life;
+		Out[0].vTexUV = float2(0.f, 0.f);
+
+		vPosition = vCenter + vUp;
+		Out[1].vPosition = vector(vPosition, 1.f);
+		Out[1].life = In[0].life;
+		Out[1].vTexUV = float2(1.f, 0.f);
+
+		vPosition = vCenter - vUp;
+		Out[2].vPosition = vector(vPosition, 1.f);
+		Out[2].life = In[0].life;
+		Out[2].vTexUV = float2(1.f, 1.f);
+
+		vPosition = vCenter - vUp;
+		Out[3].vPosition = vector(vPosition, 1.f);
+		Out[3].life = In[0].life;
+		Out[3].vTexUV = float2(0.f, 1.f);
+
+		matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
+
+		Out[0].vPosition = mul(Out[0].vPosition, matVP);
+		Out[1].vPosition = mul(Out[1].vPosition, matVP);
+		Out[2].vPosition = mul(Out[2].vPosition, matVP);
+		Out[3].vPosition = mul(Out[3].vPosition, matVP);
+	}
+	else
+	{
+		matrix PreWorldMatrix = g_TrailData[In[0].instanceID - 1];
+		float PreWidth = g_fWidth;// * PreWorldMatrix[3][3];// / g_fLife * 0.5f;
+
+		float3 vPreCenter = matrix_postion(PreWorldMatrix);
+		float3 vPreUp = matrix_up(PreWorldMatrix) * PreWidth;
+
+		float3 vCenter = matrix_postion(WorldMatrix);
+		float3 vUp = matrix_up(WorldMatrix) * CurWidth;
+
+		float3		vPosition;
+
+		vPosition = vPreCenter + vPreUp;
+		Out[0].vPosition = vector(vPosition, 1.f);
+		Out[0].life = In[0].life;
+		Out[0].vTexUV = float2(0.f, 0.f);
+
+		vPosition = vCenter + vUp;
+		Out[1].vPosition = vector(vPosition, 1.f);
+		Out[1].life = In[0].life;
+		Out[1].vTexUV = float2(1.f, 0.f);
+
+		vPosition = vCenter - vUp;
+		Out[2].vPosition = vector(vPosition, 1.f);
+		Out[2].life = In[0].life;
+		Out[2].vTexUV = float2(1.f, 1.f);
+
+		vPosition = vPreCenter - vPreUp;
+		Out[3].vPosition = vector(vPosition, 1.f);
+		Out[3].life = In[0].life;
+		Out[3].vTexUV = float2(0.f, 1.f);
+
+		matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
+
+		Out[0].vPosition = mul(Out[0].vPosition, matVP);
+		Out[1].vPosition = mul(Out[1].vPosition, matVP);
+		Out[2].vPosition = mul(Out[2].vPosition, matVP);
+		Out[3].vPosition = mul(Out[3].vPosition, matVP);
+	}
+
+
+	Vertices.Append(Out[0]);
+	Vertices.Append(Out[1]);
+	Vertices.Append(Out[2]);
+	Vertices.RestartStrip();
+
 	Vertices.Append(Out[0]);
 	Vertices.Append(Out[2]);
 	Vertices.Append(Out[3]);
@@ -168,6 +362,18 @@ PS_OUT PS_MAIN(PS_IN In)
 	float4 alpha = g_AlphaTex.Sample(LinearSampler, In.vTexUV);
 
 	Out.vColor = CalcHDRColor((alpha.r + 1.f) * g_Color, 1.5f);
+	Out.vColor.a = alpha.r;
+
+	return Out;
+}
+
+PS_OUT PS_PLAYERSWORD(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 alpha = g_AlphaTex.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor = CalcHDRColor((alpha.r + 1.f) * g_Color, 3.f);
 	Out.vColor.a = alpha.r;
 
 	return Out;
@@ -205,17 +411,17 @@ void GS_FIREWALL(point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
 		Out[0].vPosition = vector(vPosition, 1.f);
 		Out[0].life = In[0].life;
 		Out[0].vTexUV = float2(0.f, 0.f);
-		
+
 		vPosition = vCenter + vUp;
 		Out[1].vPosition = vector(vPosition, 1.f);
 		Out[1].life = In[0].life;
 		Out[1].vTexUV = float2(1.f, 0.f);
-		
+
 		vPosition = vCenter;
 		Out[2].vPosition = vector(vPosition, 1.f);
 		Out[2].life = In[0].life;
 		Out[2].vTexUV = float2(1.f, 1.f);
-		
+
 		vPosition = vCenter;
 		Out[3].vPosition = vector(vPosition, 1.f);
 		Out[3].life = In[0].life;
@@ -239,19 +445,19 @@ void GS_FIREWALL(point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
 		float3 vCenter = matrix_postion(WorldMatrix);
 		float3 vUp = matrix_look(WorldMatrix) * CurWidth;
 		float3 vU = matrix_right(WorldMatrix);
-		
+
 		float3		vPosition;
-		
+
 		vPosition = vPreCenter + vPreUp;
 		Out[0].vPosition = vector(vPosition, 1.f);
 		Out[0].life = In[0].life;
 		Out[0].vTexUV = float2(vPreU.x, 0.f);
-		
+
 		vPosition = vCenter + vUp;
 		Out[1].vPosition = vector(vPosition, 1.f);
 		Out[1].life = In[0].life;
 		Out[1].vTexUV = float2(vU.x, 0.f);
-		
+
 		vPosition = vCenter;
 		Out[2].vPosition = vector(vPosition, 1.f);
 		Out[2].life = In[0].life;
@@ -274,7 +480,7 @@ void GS_FIREWALL(point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
 	Vertices.Append(Out[1]);
 	Vertices.Append(Out[2]);
 	Vertices.RestartStrip();
-	
+
 	Vertices.Append(Out[0]);
 	Vertices.Append(Out[2]);
 	Vertices.Append(Out[3]);
@@ -297,7 +503,7 @@ PS_OUT PS_FIREWALL(PS_IN In)
 	if (In.vTexUV.y * dissolve2.r <= 0.1f)
 		discard;
 
-	float4 orange = float4(1.f, 68.f / 255.f, 51.f/255.f, 1.f);// orange
+	float4 orange = float4(1.f, 68.f / 255.f, 51.f / 255.f, 1.f);// orange
 
 	float4 smokeMask = g_tex_2.Sample(LinearSampler, vTileOffsetUV);
 	float smokeLightMask = g_tex_4.Sample(LinearSampler, vTileOffsetUV).r;
@@ -306,7 +512,7 @@ PS_OUT PS_FIREWALL(PS_IN In)
 	if (In.vTexUV.y * dissolve.r <= 0.3f || dissolve.a <= 0.1f)
 		return Out;
 
-	float4 color =  float4(1.f, 197.f / 255.f, 129.f/255.f, 1.f); // Yellow
+	float4 color = float4(1.f, 197.f / 255.f, 129.f / 255.f, 1.f); // Yellow
 	float4 flameTearAway = g_tex_3.Sample(LinearSampler, vTileOffsetUV);
 
 	float4 bottomWallBright = g_tex_5.Sample(LinearSampler, In.vTexUV);
@@ -385,6 +591,18 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_FIREWALL_BOT();
 	}
 
-	
+	//4
+	pass PlayerSword
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN_SWORD();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_PLAYERSWORD();
+	}
 
 }

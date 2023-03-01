@@ -5,9 +5,11 @@
 
 BEGIN(Engine)
 class CBone;
+class CRigidBody;
 END
 
 BEGIN(Client)
+class CTrailSystem;
 
 typedef struct tagWeaponDesc
 {
@@ -36,8 +38,10 @@ protected:
 	Matrix		m_SocketMatrix;
 
 protected:
-	CRenderer*	m_pRenderer = nullptr;
-	CModel*		m_pModel = nullptr;
+	CRenderer*		m_pRenderer = nullptr;
+	CModel*			m_pModel = nullptr;
+	CRigidBody*		m_pCollider = nullptr;
+	CTrailSystem*	m_pTrail = nullptr;
 
 protected:
 	wstring		m_ModelName;

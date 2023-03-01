@@ -16,6 +16,7 @@
 #include "Material.h"
 #include "Sound_Manager.h"
 #include "PhysX_Manager.h"
+#include "Camera_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -40,6 +41,7 @@ CGameInstance::CGameInstance()
 	, m_pHDR(CHDR::GetInstance())
 	, m_pSound_Manager(CSound_Manager::GetInstance())
 	, m_pPhysX_Manager(CPhysX_Manager::GetInstance())
+	, m_pCamera_Manager(CCamera_Manager::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -56,6 +58,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pHDR);
 	Safe_AddRef(m_pSound_Manager);
 	Safe_AddRef(m_pPhysX_Manager);
+	Safe_AddRef(m_pCamera_Manager);
 }
 
 /*************************
@@ -172,16 +175,18 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 	m_pObject_Manager->Tick(TimeDelta);
 	m_pLevel_Manager->Tick(TimeDelta);
 
+	m_pCamera_Manager->Tick();
 	m_pPipeLine->Tick();
 
 	m_pObject_Manager->Late_Tick(TimeDelta);
 	m_pLevel_Manager->Late_Tick(TimeDelta);
 
-	m_pPhysX_Manager->Simulate(TimeDelta);
+	if (m_pLevel_Manager->GetUpdatedLevel() != LEVEL_LOADING)
+		m_pPhysX_Manager->Simulate(TimeDelta);
 
-	if (CCamera::GetMainCamera())
+	if (m_pCamera_Manager->GetMainCam())
 	{
-		const _float4x4 ListenerWorldMatrix = CCamera::GetMainCamera()->GetTransform()->Get_WorldMatrix_f4x4();
+		const _float4x4 ListenerWorldMatrix = m_pCamera_Manager->GetMainCam()->GetTransform()->Get_WorldMatrix_f4x4();
 		m_pSound_Manager->Tick((_float)TimeDelta, &ListenerWorldMatrix);
 	}
 	else
@@ -189,7 +194,8 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 		m_pSound_Manager->Tick((_float)TimeDelta);
 	}
 
-	m_pPhysX_Manager->WaitSimulate();
+	if (m_pLevel_Manager->GetUpdatedLevel() != LEVEL_LOADING)
+		m_pPhysX_Manager->WaitSimulate();
 	m_pObject_Manager->AfterPhysX();
 }
 
@@ -201,6 +207,9 @@ void CGameInstance::Clear()
 		m_pComponent_Manager->Clear(i);
 	}
 	m_pRenderer->Clear();
+	m_pLight_Manager->Clear();
+	m_pCamera_Manager->Clear();
+	m_pSound_Manager->Stop_All();
 }
 
 void CGameInstance::Clear_Level(_uint iLevelIndex)
@@ -376,7 +385,9 @@ HRESULT CGameInstance::Open_Loading(_uint iNewLevelIdx, CLoadingLevel* pLoadingL
 	if (nullptr == m_pLevel_Manager)
 		return E_FAIL;
 
-	m_pSound_Manager->Stop_All();
+	m_pLight_Manager->Clear();
+	m_pCamera_Manager->Clear();
+
 	return m_pLevel_Manager->Open_Loading(iNewLevelIdx, pLoadingLevel);
 }
 
@@ -617,20 +628,20 @@ void CGameInstance::Update_Timer(const _tchar * pTimerTag)
 /*************************
  *	Light_Manager
  *************************/
-const LIGHTDESC * CGameInstance::Get_LightDesc(_uint iIndex)
+CLight* CGameInstance::Find_Light(const string& strLightTag)
 {
-	if (nullptr == m_pLight_Manager)
-		return nullptr;
-
-	return m_pLight_Manager->Get_LightDesc(iIndex);	
+	return m_pLight_Manager->Find_Light(strLightTag);
 }
 
-HRESULT CGameInstance::Add_Light(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const LIGHTDESC & LightDesc)
+CLight* CGameInstance::Add_Light(const string& strLightTag, ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
+	const LIGHTDESC& LightDesc)
 {
-	if (nullptr == m_pLight_Manager)
-		return E_FAIL;
+	return m_pLight_Manager->Add_Light(strLightTag, pDevice, pContext, LightDesc);
+}
 
-	return m_pLight_Manager->Add_Light(pDevice, pContext, LightDesc);
+void CGameInstance::Delete_Light(const string& strLightTag)
+{
+	m_pLight_Manager->Delete_Light(strLightTag);
 }
 
 void CGameInstance::ClearLight()
@@ -669,6 +680,9 @@ _bool CGameInstance::isInFrustum_LocalSpace(_fvector vLocalPos, _float fRange)
 	return m_pFrustum->isInFrustum_LocalSpace(vLocalPos, fRange);
 }
 
+/*************************
+ *	CSound_Manager
+ *************************/
 CSound* CGameInstance::CloneSound(const string& soundName)
 {
 	return m_pSound_Manager->CloneSound(soundName);
@@ -684,11 +698,17 @@ void CGameInstance::AddSoundQueue(const string& QName)
 	m_pSound_Manager->AddSoundQ(QName);
 }
 
+/*************************
+ *	CTarget_Manager
+ *************************/
 ID3D11ShaderResourceView* CGameInstance::Get_SRV(const _tchar* pTargetTag)
 {
 	return m_pTarget_Manager->Get_SRV(pTargetTag);
 }
 
+/*************************
+ *	CPhysX_Manager
+ *************************/
 _bool CGameInstance::RayCast(const RayCastParams& params)
 {
 	return m_pPhysX_Manager->RayCast(params);
@@ -712,6 +732,49 @@ _bool CGameInstance::SweepSphere(const SphereSweepParams& params)
 _bool CGameInstance::SweepCapsule(const CapsuleSweepParams& params)
 {
 	return m_pPhysX_Manager->SweepCapsule(params);
+}
+
+/*************************
+ *	CCamera_Manager
+ *************************/
+CCamera* CGameInstance::Add_Camera(const string& strCamTag, _uint iLevelIdx, const wstring& pLayerTag, const wstring& pPrototypeTag, const Json* camJson)
+{
+	return m_pCamera_Manager->Add_Camera(strCamTag, iLevelIdx, pLayerTag, pPrototypeTag, camJson);
+}
+
+void CGameInstance::SetMainCamera(const string& strCamTag)
+{
+	m_pCamera_Manager->SetMainCamera(strCamTag);
+}
+
+void CGameInstance::SetMainCamera(CCamera* pCamera)
+{
+	m_pCamera_Manager->SetMainCamera(pCamera);
+}
+
+CCamera* CGameInstance::GetMainCam()
+{
+	return m_pCamera_Manager->GetMainCam();
+}
+
+_matrix CGameInstance::GetCamViewMatrix(const string& strCamTag)
+{
+	return m_pCamera_Manager->GetCamViewMatrix(strCamTag);
+}
+
+_matrix CGameInstance::GetCamProjMatrix(const string& strCamTag)
+{
+	return m_pCamera_Manager->GetCamProjMatrix(strCamTag);
+}
+
+_float4 CGameInstance::Get_CamPosition(const string& strCamTag)
+{
+	return m_pCamera_Manager->Get_CamPosition(strCamTag);
+}
+
+CCamera* CGameInstance::FindCamera(const string& strCamTag)
+{
+	return m_pCamera_Manager->FindCamera(strCamTag);
 }
 
 /*************************
@@ -762,7 +825,10 @@ void CGameInstance::SetPeekingPos(_fvector vPeekingPos)
 
 void CGameInstance::Release_Engine()
 {
+	CGameInstance::GetInstance()->Clear();
 	_uint ref = CGameInstance::GetInstance()->DestroyInstance();
+
+	CCamera_Manager::GetInstance()->DestroyInstance();
 
 	ref = CObject_Manager::GetInstance()->DestroyInstance();
 
@@ -800,6 +866,7 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {
+	Safe_Release(m_pCamera_Manager);
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pFrustum);
 	Safe_Release(m_pFont_Manager);

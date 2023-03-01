@@ -26,8 +26,10 @@ public:
 
 	// GameObject의 Tick에서 실행 필수
 	void Update_Tick(class CTransform* pTransform);
+	void Update_Tick(_fmatrix matrix);
 	// GameObject의 AfterPhysX에서 실행 필수
 	void Update_AfterPhysX(class CTransform* pTransform);
+
 
 	_bool IsKinematic() const { return m_bKinematic; }
 	_bool IsTrigger() const { return m_bTrigger; }
@@ -41,6 +43,8 @@ public:
 	void SetOnTriggerIn(std::function<void(class CGameObject*)> TriggerIn) { m_OnTriggerIn = TriggerIn; }
 	void CallOnTriggerOut(class CGameObject* TriggeredObj) { if (m_OnTriggerOut) m_OnTriggerOut(TriggeredObj); }
 	void SetOnTriggerOut(std::function<void(class CGameObject*)> TriggerOut) { m_OnTriggerOut = TriggerOut; }
+	void CallOnTriggerPersist(class CGameObject* TriggeredObj) { if (m_OnTriggerPersist) m_OnTriggerPersist(TriggeredObj); }
+	void SetOnTriggerPersist(std::function<void(class CGameObject*)> TriggerPersist) { m_OnTriggerPersist = TriggerPersist; }
 
 protected:
 	void ReleaseActor();
@@ -61,6 +65,7 @@ protected:
 
 	std::function<void(class CGameObject*)> m_OnTriggerIn = nullptr;
 	std::function<void(class CGameObject*)> m_OnTriggerOut = nullptr;
+	std::function<void(class CGameObject*)> m_OnTriggerPersist = nullptr;
 
 
 public:

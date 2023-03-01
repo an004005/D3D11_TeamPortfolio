@@ -120,7 +120,6 @@ public:
 	void StopAnimationSocket(const string& strSocName);
 	CAnimation* GetSocketAnimation(const string& strSocName);
 	
-
 protected:
 	_bool CheckFinishedAnimSocket();
 
@@ -129,7 +128,6 @@ protected:
 	CGameObject* m_pTargetObject = nullptr;
 
 	unordered_map<string, list<CAnimation*>> m_mapAnimSocket;
-
 
 public:
 	virtual void Free() override;
