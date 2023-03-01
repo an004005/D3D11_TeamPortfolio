@@ -8,6 +8,8 @@ class CShader;
 class CRenderer;
 class CModel;
 class CFSMComponent;
+class CRigidBody;
+class CGameInstance;
 END
 
 BEGIN(Client)
@@ -33,6 +35,8 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
+	virtual void AfterPhysX();
+
 private:
 	void Key_Input(_double TimeDelta);
 	void JumpToGround(_double TimeDelta);
@@ -44,6 +48,7 @@ private:
 	CFSMComponent*			m_pFSM = nullptr;
 
 	CFL_AnimInstance*		m_pASM = nullptr;
+	CRigidBody*				m_pTrigger = nullptr;
 
 private:
 	HRESULT				Setup_AnimSocket();

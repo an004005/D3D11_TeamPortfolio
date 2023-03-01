@@ -16,49 +16,49 @@ HRESULT CSkPd_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 				
 				.AddTransition("Idle to RandomMove", "RandomMove")
 					.Predicator([&]()->_bool {return !m_bIdle && m_bRandomMove; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 				.AddTransition("Idle to Attack_Start", "Attack_Start")
 					.Predicator([&]()->_bool {return !m_bIdle && m_bAttackStart; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 				.AddTransition("Idle to MoveF", "MoveF")
 					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveF; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 				.AddTransition("Idle to MoveB", "MoveB")
 					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveB; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 				.AddTransition("Idle to MoveL", "MoveL")
 					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveL; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 				.AddTransition("Idle to MoveR", "MoveR")
 					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveR; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 				.AddTransition("Idle to Threat", "Threat")
 					.Predicator([&]()->_bool {return !m_bIdle && m_bThreat; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 			.AddState("MoveF")
 				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_110_AL_walk_F"))
 				
 				.AddTransition("MoveF to Attack_Start", "Attack_Start")
 					.Predicator([&]()->_bool {return !m_bMoveF && m_bAttackStart; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 			.AddState("MoveB")
 				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_111_AL_walk_B"))
 
 				.AddTransition("MoveB to Attack_Start", "Attack_Start")
 					.Predicator([&]()->_bool {return !m_bMoveB && m_bAttackStart; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 				.AddTransition("MoveB to Threat", "Threat")
 					.Predicator([&]()->_bool {return !m_bMoveB && m_bThreat; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 			// 플레이어를 중심으로 Turn 해줄 것
 			.AddState("MoveL")
@@ -66,22 +66,22 @@ HRESULT CSkPd_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 
 				.AddTransition("MoveL to Attack_Start", "Attack_Start")
 					.Predicator([&]()->_bool {return !m_bMoveL && m_bAttackStart; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 				.AddTransition("MoveL to Threat", "Threat")
 					.Predicator([&]()->_bool {return !m_bMoveL && m_bThreat; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 			.AddState("MoveR")
-			.SetAnimation(*m_pModel->Find_Animation("AS_em0700_113_AL_walk_R"))
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_113_AL_walk_R"))
 
-			.AddTransition("MoveR to Attack_Start", "Attack_Start")
-			.Predicator([&]()->_bool {return !m_bMoveR && m_bAttackStart; })
-			.Duration(0.2f)
+				.AddTransition("MoveR to Attack_Start", "Attack_Start")
+					.Predicator([&]()->_bool {return !m_bMoveR && m_bAttackStart; })
+					.Duration(0.4f)
 
-			.AddTransition("MoveR to Threat", "Threat")
-			.Predicator([&]()->_bool {return !m_bMoveR && m_bThreat; })
-			.Duration(0.2f)
+				.AddTransition("MoveR to Threat", "Threat")
+					.Predicator([&]()->_bool {return !m_bMoveR && m_bThreat; })
+					.Duration(0.4f)
 			
 			// Attack
 			.AddState("Attack_Start")
@@ -89,36 +89,47 @@ HRESULT CSkPd_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 				
 				.AddTransition("Attack_Start to Attack_Ing", "Attack_Ing")
 					.Predicator([&]()->_bool {return !m_bAttackStart && m_bAttacking; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 			.AddState("Attack_Ing")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_202_AL_atk_a1_loop"))
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0710_205_AL_atk_a2_loop"))
 
 				.AddTransition("Attack_Ing to Attack_End", "Attack_End")
 					.Predicator([&]()->_bool {return !m_bAttacking && m_bAttackEnd; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 			
 			.AddState("Attack_End")
 				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_203_AL_atk_a1_end"))
 
 				.AddTransition("Attack_End to Idle", "Idle")
 					.Predicator([&]()->_bool {return !m_bAttackEnd && m_bIdle; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 			// ~Attack
 
 			.AddState("RandomMove")
 				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_121_AL_randommove_L"))
+			
+				/*.StartEvent([&] 
+				{
+					auto pAnim = m_pModel->GetPlayAnimation();
+
+					if (pAnim != nullptr)
+					{
+						m_pModel->GetPlayAnimation()->SetPlayRatio(m_fSaveRatio); 
+						
+					}
+				})	*/			
 
 				.AddTransition("RandomMove to Idle", "Idle")
 					.Predicator([&]()->_bool {return !m_bRandomMove && m_bIdle; })
-					.Duration(0.2f)
+					.Duration(0.4f)
 
 			.AddState("Threat")
 				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_160_AL_threat"))
 
 				.AddTransition("Threat to Idle", "Idle")
 					.Predicator([&]()->_bool { return !m_bThreat && m_bIdle; })
-					.Duration(0.2f)
+					.Duration(0.4f)				
 
 			.Build();
 	}
@@ -231,8 +242,16 @@ void CSkPd_AnimInstance::UpdateTargetState(_double TimeDelta)
 
 	m_bStatic = pSkummyPandou->IsStatic();
 
-	m_fPlayRatio = 0.f;
+	/*m_fPlayRatio = 0.f;
 	m_fPlayRatio = pSkummyPandou->GetPlayRatio();
+
+	m_bCurrentRatioSave = pSkummyPandou->CheckCurrentRatio();
+
+	if (m_bCurrentRatioSave)
+	{
+		m_fSaveRatio = m_fPlayRatio;
+		m_bCurrentRatioSave = false;
+	}*/
 }
 
 void CSkPd_AnimInstance::Imgui_RenderState()
@@ -242,6 +261,11 @@ void CSkPd_AnimInstance::Imgui_RenderState()
 void CSkPd_AnimInstance::InputAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
 {
 	m_mapAnimSocket[strSocName] = (AnimList);
+}
+
+_bool CSkPd_AnimInstance::CheckAnim(const string & szAnimName)
+{
+	return  (szAnimName == m_pModel->GetPlayAnimation()->GetName()) ? true : false;
 }
 
 CSkPd_AnimInstance * CSkPd_AnimInstance::Create(CModel * pModel, CGameObject * pGameObject)

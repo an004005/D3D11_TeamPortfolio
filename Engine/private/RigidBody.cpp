@@ -20,8 +20,6 @@ HRESULT CRigidBody::Initialize(void* pArg)
 {
 	FAILED_CHECK(CComponent::Initialize(pArg));
 
-	m_bKinematic = false;
-	m_fDensity = 10.f;
 	CreateActor();
 
 	return S_OK;
@@ -147,6 +145,18 @@ void CRigidBody::Update_Tick(CTransform* pTransform)
 	else if (m_bKinematic)
 	{
 		m_pActor->setKinematicTarget(physx::PxTransform{ CPhysXUtils::ToFloat4x4(pTransform->Get_WorldMatrix_f4x4()) });
+	}
+}
+
+void CRigidBody::Update_Tick(_fmatrix matrix)
+{
+	if (m_bTrigger)
+	{
+		SetPxWorldMatrix(matrix);
+	}
+	else if (m_bKinematic)
+	{
+		m_pActor->setKinematicTarget(physx::PxTransform{ CPhysXUtils::ToFloat4x4(matrix) });
 	}
 }
 
