@@ -1,1 +1,60 @@
-{"ControlledRigidBody":{"ColliderType":1,"contactOffset":0.10000000149011612,"density":10.0,"height":1.0,"maxJumpHeight":3.0,"pushPower":100.0,"radius":0.6000000238418579,"slopeLimitDegree":45.0,"stepOffset":0.10000000149011612},"ObjectTag":"Buddy_Lumi","Prototype_GameObject":"BuddyLumi\u0000","RigidBody":{"ColliderType":5,"Density":10.0,"OriginTransform":[4.0,0.0,0.0,0.0,0.0,4.0,0.0,0.0,0.0,0.0,4.0,0.0,0.0,0.0,0.0,1.0],"ShapeType":1,"bKinematic":false,"bTrigger":true},"Transform":{"WorldMatrix":[0.13163089752197266,-0.0,0.991295337677002,0.0,0.0006064719636924565,0.9999860525131226,-8.05314484750852e-05,0.0,-0.9912471175193787,0.0006117720040492713,0.1316245049238205,0.0,1.1641000509262085,0.10091382265090942,7.090743064880371,1.0]}}
+{
+    "ControlledRigidBody": {
+        "ColliderType": 1,
+        "contactOffset": 0.10000000149011612,
+        "density": 10.0,
+        "height": 1.0,
+        "maxJumpHeight": 3.0,
+        "pushPower": 100.0,
+        "radius": 0.6000000238418579,
+        "slopeLimitDegree": 45.0,
+        "stepOffset": 0.10000000149011612
+    },
+    "ObjectTag": "Buddy_Lumi",
+    "Prototype_GameObject": "BuddyLumi\u0000",
+    "RigidBody": {
+        "ColliderType": 5,
+        "Density": 10.0,
+        "OriginTransform": [
+            4.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            4.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            4.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 1,
+        "bKinematic": false,
+        "bTrigger": true
+    },
+    "Transform": {
+        "WorldMatrix": [
+            0.13163089752197266,
+            -0.0,
+            0.991295337677002,
+            0.0,
+            0.0006064719636924565,
+            0.9999860525131226,
+            -8.05314484750852e-05,
+            0.0,
+            -0.9912471175193787,
+            0.0006117720040492713,
+            0.1316245049238205,
+            0.0,
+            1.1641000509262085,
+            0.10091382265090942,
+            7.090743064880371,
+            1.0
+        ]
+    }
+}

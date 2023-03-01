@@ -140,6 +140,18 @@ void CRigidBody::Update_Tick(CTransform* pTransform)
 	}
 }
 
+void CRigidBody::Update_Tick(_fmatrix matrix)
+{
+	if (m_bTrigger)
+	{
+		SetPxWorldMatrix(matrix);
+	}
+	else if (m_bKinematic)
+	{
+		m_pActor->setKinematicTarget(physx::PxTransform{ CPhysXUtils::ToFloat4x4(matrix) });
+	}
+}
+
 void CRigidBody::Update_AfterPhysX(CTransform* pTransform)
 {
 	if (m_pActor->getScene() == nullptr)

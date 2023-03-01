@@ -14,6 +14,7 @@
 #include "FlowerLeg.h"
 
 #include "RigidBody.h"
+#include "ScarletWeapon.h"
 
 CBuddyLumi::CBuddyLumi(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -36,6 +37,7 @@ HRESULT CBuddyLumi::Initialize_Prototype()
 HRESULT CBuddyLumi::Initialize(void * pArg)
 {
 	Json BuddyLumiTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumiTrigger.json");
+	Json BuddyLumiWeapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumiWeapon.json");
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -45,6 +47,10 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 
 	if (FAILED(Setup_AnimSocket()))
 		return E_FAIL;
+
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Weapon"),
+		(CComponent**)&m_pWeaponCollider, &BuddyLumiWeapon)))
+		return E_FAIL;	
 
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
 		(CComponent**)&m_pTrigger, &BuddyLumiTrigger)))
@@ -315,7 +321,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					// 뒤로 이동 
 					_vector vDest = m_vMyPos - m_vStorePos;
 					
-					m_pTransformCom->Move(0.008f, vDest);
+					m_pTransformCom->Move(0.018f, vDest);
 
 					if (pAnim->IsFinished() == true)
 					{
@@ -341,8 +347,8 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					
 					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 					// 중점 Axis 기준 왼쪽으로 Turn
-					m_pTransformCom->LookAt_Smooth(m_vStorePos, 0.008f);
-					m_pTransformCom->Move(0.008f, -vMyRight);
+					m_pTransformCom->LookAt_Smooth(m_vStorePos, 0.03f);
+					m_pTransformCom->Move(0.03f, -vMyRight);
 
 					if (pAnim->IsFinished() == true)
 					{
@@ -367,8 +373,8 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					
 					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 					// 중점 Axis 기준 오른으로 Turn
-					m_pTransformCom->LookAt_Smooth(m_vStorePos, 0.008f);
-					m_pTransformCom->Move(0.008f, vMyRight);
+					m_pTransformCom->LookAt_Smooth(m_vStorePos, 0.03f);
+					m_pTransformCom->Move(0.03f, vMyRight);
 
 					if (pAnim->IsFinished() == true)
 					{
@@ -474,7 +480,23 @@ void CBuddyLumi::Imgui_RenderProperty()
 void CBuddyLumi::AfterPhysX()
 {
 	__super::AfterPhysX();
+	// 무기 콜라이더의 Update_Tick(매트릭스) 
+	m_pWeaponCollider->Update_Tick(AttachCollider());
+
+	m_pWeaponCollider->Update_AfterPhysX(m_pTransformCom);
+
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
+}
+
+_matrix CBuddyLumi::AttachCollider()
+{
+	_matrix	SocketMatrix = m_pModelCom->GetBoneMatrix("RightWeapon") * m_pTransformCom->Get_WorldMatrix();
+
+	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+	
+	return SocketMatrix;
 }
 
 HRESULT CBuddyLumi::Setup_AnimSocket()
@@ -559,4 +581,5 @@ void CBuddyLumi::Free()
 	Safe_Release(m_pFSM);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pTrigger);
+	Safe_Release(m_pWeaponCollider);
 }

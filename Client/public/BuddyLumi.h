@@ -35,6 +35,8 @@ public:
 
 	virtual void AfterPhysX();
 
+	_matrix AttachCollider();
+
 private:
 	CShader*				m_pShaderCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
@@ -43,6 +45,8 @@ private:
 
 	CBdLm_AnimInstance*		m_pASM = nullptr;
 	CRigidBody*				m_pTrigger = nullptr;
+
+	CRigidBody*				m_pWeaponCollider = nullptr;
 
 private:
 	HRESULT				Setup_AnimSocket();

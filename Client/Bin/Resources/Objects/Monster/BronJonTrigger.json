@@ -1,0 +1,60 @@
+{
+    "ControlledRigidBody": {
+        "ColliderType": 1,
+        "contactOffset": 0.10000000149011612,
+        "density": 10.0,
+        "height": 1.0,
+        "maxJumpHeight": 3.0,
+        "pushPower": 100.0,
+        "radius": 1.0,
+        "slopeLimitDegree": 45.0,
+        "stepOffset": 0.10000000149011612
+    },
+    "ObjectTag": "Bron_Jon",
+    "Prototype_GameObject": "BronJon\u0000",
+    "RigidBody": {
+        "ColliderType": 5,
+        "Density": 10.0,
+        "OriginTransform": [
+            20.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            20.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            20.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 1,
+        "bKinematic": false,
+        "bTrigger": true
+    },
+    "Transform": {
+        "WorldMatrix": [
+            0.9998168349266052,
+            -4.308855932322331e-05,
+            0.019138578325510025,
+            0.0,
+            0.019138192757964134,
+            -0.004476685542613268,
+            -0.999806821346283,
+            0.0,
+            0.000128757645143196,
+            0.9999899864196777,
+            -0.004475040826946497,
+            0.0,
+            4.101373672485352,
+            -30.0,
+            21.298480987548828,
+            1.0
+        ]
+    }
+}

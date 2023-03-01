@@ -1,1 +1,60 @@
-{"ControlledRigidBody":{"ColliderType":1,"contactOffset":0.10000000149011612,"density":10.0,"height":1.0,"maxJumpHeight":3.0,"pushPower":100.0,"radius":0.800000011920929,"slopeLimitDegree":45.0,"stepOffset":0.10000000149011612},"ObjectTag":"Flower_Leg","Prototype_GameObject":"FlowerLeg\u0000","RigidBody":{"ColliderType":5,"Density":10.0,"OriginTransform":[15.0,0.0,0.0,0.0,0.0,15.0,0.0,0.0,0.0,0.0,15.0,0.0,0.0,0.0,0.0,1.0],"ShapeType":1,"bKinematic":false,"bTrigger":true},"Transform":{"WorldMatrix":[1.0,2.2814572730567306e-05,0.0001875879825092852,0.0,-2.196610876126215e-05,0.9999897480010986,-0.004521775059401989,0.0,-0.0001876892347354442,0.004521770402789116,0.9999897480010986,0.0,0.04305620864033699,0.0644209235906601,-1.0214850902557373,1.0]}}
+{
+    "ControlledRigidBody": {
+        "ColliderType": 1,
+        "contactOffset": 0.10000000149011612,
+        "density": 10.0,
+        "height": 1.0,
+        "maxJumpHeight": 3.0,
+        "pushPower": 100.0,
+        "radius": 0.800000011920929,
+        "slopeLimitDegree": 45.0,
+        "stepOffset": 0.10000000149011612
+    },
+    "ObjectTag": "Flower_Leg",
+    "Prototype_GameObject": "FlowerLeg\u0000",
+    "RigidBody": {
+        "ColliderType": 5,
+        "Density": 10.0,
+        "OriginTransform": [
+            15.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            15.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            15.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 1,
+        "bKinematic": false,
+        "bTrigger": true
+    },
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            2.2814572730567306e-05,
+            0.0001875879825092852,
+            0.0,
+            -2.196610876126215e-05,
+            0.9999897480010986,
+            -0.004521775059401989,
+            0.0,
+            -0.0001876892347354442,
+            0.004521770402789116,
+            0.9999897480010986,
+            0.0,
+            0.04305620864033699,
+            0.0644209235906601,
+            -1.0214850902557373,
+            1.0
+        ]
+    }
+}
