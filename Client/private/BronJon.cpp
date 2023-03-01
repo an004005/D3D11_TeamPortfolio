@@ -14,6 +14,7 @@
 #include "FlowerLeg.h"
 #include "Player.h"
 #include "RigidBody.h"
+#include "PhysX_Manager.h"
 
 CBronJon::CBronJon(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -90,6 +91,32 @@ HRESULT CBronJon::Initialize(void * pArg)
 			.AddState("BiteAtk")
 				.Tick([this](_double TimeDelta)
 				{
+					CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+					_matrix matJaw = AttachCollider();					
+					_vector vJawPos = matJaw.r[3];
+
+					physx::PxSweepHit hitBuff[5];
+					physx::PxSweepBuffer overlapOut(hitBuff, 5);
+					
+					SphereSweepParams params;
+					params.fDistance = 3.f;
+					params.fRadius = 1.5f;
+					params.iTargetType = CTB_PLAYER;
+					params.sweepOut = &overlapOut;
+					params.vPos = vJawPos;
+					params.vUnitDir = _float3{ 0.f, 0.f, 1.f };
+
+					if (pGameInstance->SweepSphere(params))	// 조건
+					{
+						for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+						{
+							if (overlapOut.getAnyHit(i).actor)
+								MSG_BOX("Touch");
+							CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor);
+						}
+					}
+				
 					auto pAnim = m_pModelCom->GetPlayAnimation();
 
 					if (pAnim->GetPlayRatio() > 0.98)
@@ -129,7 +156,7 @@ void CBronJon::BeginTick()
 void CBronJon::Tick(_double TimeDelta)
 {
 	CMonster::Tick(TimeDelta);
-	// Bite 사거리
+	
 	m_pTrigger->Update_Tick(m_pTransformCom);
 	
 	m_pFSM->Tick(TimeDelta);

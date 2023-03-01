@@ -53,7 +53,6 @@ private:
 	list<CAnimation*>	m_GroundDmgSocket;
 	list<CAnimation*>	m_DeadAnimSocket;
 
-	CapsuleSweepParams	m_CapsuleParams;
 private:
 	HRESULT SetUp_Components(void* pArg);
 
