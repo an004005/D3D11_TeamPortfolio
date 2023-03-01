@@ -35,12 +35,16 @@ typedef struct tagRemote
 	_bool AttackLimitReset = false;	// 횟수 제한 공격 초기화
 	_bool ChargeReset = false;	// 차지 상태 초기화
 
+	_bool LocalRevise = false;
+
 	tagRemote(	_bool CanTurn, _bool CanMove, _bool CanRun, _bool AttackTurn,
 				_bool OnAir, _bool Gravity, 
-				_bool MoveLimitReset, _bool AttackLimitReset, _bool ChargeReset)
+				_bool MoveLimitReset, _bool AttackLimitReset, _bool ChargeReset,
+				_bool LocalRevise)
 	:CanTurn(CanTurn), CanMove(CanMove), CanRun(CanRun), AttackTurn(AttackTurn), 
 		OnAir(OnAir), Gravity(Gravity), 
-		MoveLimitReset(MoveLimitReset), AttackLimitReset(AttackLimitReset), ChargeReset(ChargeReset){}
+		MoveLimitReset(MoveLimitReset), AttackLimitReset(AttackLimitReset), ChargeReset(ChargeReset),
+		LocalRevise(LocalRevise){}
 
 }REMOTE;
 
@@ -55,12 +59,14 @@ private:
 		_uint m_iNonChargeAttack_Air = 2;
 		_uint m_iAttack_Air01 = 1;
 		_uint m_iAttack_Air02 = 1;
+		_uint m_iAttack_AirDodge = 1;
 
 		// 상한치
 		_uint MAX_iNonChargeAttack_Floor = 2;
 		_uint MAX_iNonChargeAttack_Air = 2;
 		_uint MAX_iAttack_Air01 = 1;
 		_uint MAX_iAttack_Air02 = 1;
+		_uint MAX_iAttack_AirDodge = 1;
 
 	}ATTACKLIMIT;
 
@@ -68,14 +74,16 @@ private:
 	{	
 		// 현재 값
 		_uint m_iDoubleJump = 1;
+		_uint m_iAirDodge = 1;
 
 		// 상한치
 		_uint MAX_iDoubleJump = 1;
+		_uint MAX_iAirDodge = 1;
 
 	}MOVELIMIT;
 
 public:
-	enum EATTACK_LIMIT { LIMIT_NONCHARGE_FLOOR, LIMIT_NONCHARGE_AIR, LIMIT_AIRATK01, LIMIT_AIRATK02, };
+	enum EATTACK_LIMIT { LIMIT_NONCHARGE_FLOOR, LIMIT_NONCHARGE_AIR, LIMIT_AIRATK01, LIMIT_AIRATK02, LIMIT_AIRDODGEATK, };
 	enum EMOVE_LIMIT { LIMIT_DOUBLEJUMP, LIMIT_AIRDODGE, };
 	enum EMoveDir { DIR_F, DIR_B, DIR_L, DIR_R, DIR_FL, DIR_FR, DIR_BL, DIR_BR, DIR_END, };
 
@@ -98,6 +106,7 @@ public:
 protected:
 	HRESULT SetUp_Components(void* pArg);
 	HRESULT	SetUp_AttackFSM();
+	HRESULT SetUp_Event();
 
 	CFSMComponent*		m_pFSM = nullptr;
 	CBaseAnimInstance*	m_pASM = nullptr;
@@ -109,6 +118,7 @@ protected:
 protected:
 	HRESULT				Setup_AnimSocket();
 	list<CAnimation*>	m_TestAnimSocket;
+	list<CAnimation*>	m_TransNeutralSocket;
 
 public:
 	_bool	isAir() { return m_bAir; }
@@ -147,8 +157,20 @@ protected:
 
 	EMoveDir	m_eMoveDir = DIR_END;
 
-public:
-	CPlayer&	SetAbleState(REMOTE	tagRemote);	
+public:	// ASM용, 상태마다 리모컨 값을 싹 다 지정하지 않으면 점프했는데 공중부양하고 그럼
+	CPlayer&	SetAbleState(REMOTE	tagRemote);
+
+public:	//EventCaller용
+	void		Event_SetCanTurn(_bool is) { m_bCanTurn = is; }
+	void		Event_SetCanMove(_bool is) { m_bCanMove = is; }
+	void		Event_SetCanRun(_bool is) { m_bCanRun = is; }
+	void		Event_SetCanTurn_Attack(_bool is) { m_bCanTurn_Attack = is; }
+	void		Event_SetOnAir(_bool is) { m_bAir = is; }
+	void		Event_SetGravity(_bool is) { m_bActiveGravity = is; }
+	void		Event_SetLocalRevise(_bool is) { m_bLocalRevise = is; }
+	void		Event_MoveLimitReset() { MoveLimitReset(); }
+	void		Event_AttackLimitReset() { AttackLimitReset(); }
+	void		Event_ChargeReset() { Reset_Charge(); }
 
 protected:
 	void		Reset_Charge();
@@ -158,6 +180,7 @@ protected:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
 	_bool		m_bCanMove = false;
 	_bool		m_bCanRun = false;
 	_bool		m_bCanTurn_Attack = false;
+	_bool		m_bLocalRevise = false;		//	좌우 한 걸음 고정
 
 public:
 	_bool		isPlayerAttack(void);	// 공격 중인 애니메이션일 때 true 반환
