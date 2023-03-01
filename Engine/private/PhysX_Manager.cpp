@@ -3,7 +3,6 @@
 #include "DebugDraw.h"
 #include "Graphic_Device.h"
 #include "PipeLine.h"
-#include "ImguiUtils.h"
 #include "JsonStorage.h"
 #include "GameInstance.h"
 #include "GameObject.h"
@@ -735,10 +734,7 @@ void CEngineSimulationEventCallback::onTrigger(physx::PxTriggerPair* pairs, phys
 		IM_LOG("Trigger Out!");
 		pRigid->CallOnTriggerOut(CPhysXUtils::GetOnwer(pairs->otherActor));
 		break;
-	// case PxPairFlag::eNOTIFY_TOUCH_PERSISTS:
-		// IM_LOG("Trigger persist!");
-		// pRigid->CallOnTriggerPersist(CPhysXUtils::GetOnwer(pairs->otherActor));
-		// break;
+
 	default: ;
 		IM_LOG("Non Handled Trigger %d", (_int)pairs->status);
 	}

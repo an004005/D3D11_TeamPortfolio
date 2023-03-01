@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "MathUtils.h"
 #include "GameUtils.h"
+#include "Light.h"
 
 CTerrain::CTerrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -261,12 +262,14 @@ HRESULT CTerrain::SetUp_ShaderResources()
 
 	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))
 
-	FAILED_CHECK(m_pShaderCom->Set_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)))
-	FAILED_CHECK(m_pShaderCom->Set_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)))
+		FAILED_CHECK(m_pShaderCom->Set_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)))
+		FAILED_CHECK(m_pShaderCom->Set_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)))
 
 
-	/* For.Lights */
-	const LIGHTDESC* pLightDesc = m_pGameInstance->Get_LightDesc(0);
+		/* For.Lights */
+
+
+	const LIGHTDESC* pLightDesc = m_pGameInstance->Find_Light("DirectionalLight")->Get_LightDesc();
 	if (nullptr == pLightDesc)
 		return E_FAIL;
 	

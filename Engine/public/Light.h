@@ -4,14 +4,14 @@
 
 BEGIN(Engine)
 
-class CLight final : public CBase
+class ENGINE_DLL CLight final : public CBase
 {
 public:
 	CLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CLight() = default;
 
 public:
-	const LIGHTDESC* Get_LightDesc() const {
+	LIGHTDESC* Get_LightDesc() {
 		return &m_LightDesc;
 	}
 
@@ -20,6 +20,8 @@ public:
 	HRESULT Render(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader);
 	LIGHTDESC::TYPE GetType() const { return m_LightDesc.eType; }
 	void SetDirection(_float4 vDirection) { m_LightDesc.vDirection = vDirection; }
+
+	void Imgui_Render();
 
 private:
 	ID3D11Device*			m_pDevice = nullptr;

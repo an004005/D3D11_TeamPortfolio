@@ -18,6 +18,7 @@
 #include "Imgui_PhysX.h"
 #include "Imgui_PostProcess.h"
 #include "Imgui_CameraManager.h"
+#include "Indicator.h"
 
 #include "TrailSystem.h"
 
@@ -70,7 +71,7 @@ void CLevel_PlayerTest::Late_Tick(_double TimeDelta)
 	CLevel::Late_Tick(TimeDelta);
 	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
 	{
-		CGameInstance::GetInstance()->Clone_GameObject(L"test", L"indicator");
+		CGameInstance::GetInstance()->Clone_GameObject(L"test", L"Indicator");
 	}
 }
 
@@ -91,14 +92,16 @@ HRESULT CLevel_PlayerTest::Ready_Lights()
 	LIGHTDESC			LightDesc;
 	ZeroMemory(&LightDesc, sizeof LightDesc);
 
+
 	LightDesc.eType = LIGHTDESC::TYPE_DIRECTIONAL;
 	LightDesc.isEnable = true;
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.0f, 0.f);
+	// LightDesc.vDirection = _float4(1.f, -1.f, 1.0f, 0.f);
+	LightDesc.vDirection = _float4(-cosf(XMConvertToRadians(60.f)), -sinf(XMConvertToRadians(60.f)), 0.0f, 0.f);
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
-	FAILED_CHECK(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc));
+	NULL_CHECK(pGameInstance->Add_Light("DirectionalLight", m_pDevice, m_pContext, LightDesc));
 
 	return S_OK;
 }
@@ -135,6 +138,8 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+
+	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
