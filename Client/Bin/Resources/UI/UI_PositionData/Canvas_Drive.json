@@ -4,7 +4,7 @@
             "ChildTag": "Drive_B\u0000",
             "ObjectTag": "Drive_B",
             "Pivot": 6,
-            "PositionX": 188.0,
+            "PositionX": 183.0,
             "PositionY": 110.0,
             "Priority": 0,
             "Prototype_GameObject": "Default_UI\u0000",
@@ -21,11 +21,11 @@
                     "..\\Bin\\Resources\\UI\\Front_UI\\Drive_B.dds\u0000"
                 ]
             },
-            "SizeX": 128.0,
+            "SizeX": 64.0,
             "SizeY": 32.0,
             "Transform": {
                 "WorldMatrix": [
-                    102.4000015258789,
+                    51.20000076293945,
                     0.0,
                     0.0,
                     0.0,
@@ -37,7 +37,7 @@
                     0.0,
                     1.0,
                     0.0,
-                    188.0,
+                    183.0,
                     -250.0,
                     0.0,
                     1.0
@@ -92,8 +92,8 @@
             "ChildTag": "Drive_Circle0\u0000",
             "ObjectTag": "Drive_Circle0",
             "Pivot": 6,
-            "PositionX": 213.0,
-            "PositionY": 107.0,
+            "PositionX": 212.0,
+            "PositionY": 106.0,
             "Priority": 0,
             "Prototype_GameObject": "Default_UI\u0000",
             "ScaleX": 0.699999988079071,
@@ -125,8 +125,8 @@
                     0.0,
                     1.0,
                     0.0,
-                    213.0,
-                    -253.0,
+                    212.0,
+                    -254.0,
                     0.0,
                     1.0
                 ]
@@ -134,14 +134,14 @@
         },
         {
             "ChildTag": "Drive_Circle1\u0000",
-            "ObjectTag": "",
+            "ObjectTag": "Drive_Circle1",
             "Pivot": 6,
-            "PositionX": 218.0,
-            "PositionY": 111.0,
+            "PositionX": 216.0,
+            "PositionY": 109.0,
             "Priority": 0,
             "Prototype_GameObject": "Default_UI\u0000",
-            "ScaleX": 0.8999999761581421,
-            "ScaleY": 0.8999999761581421,
+            "ScaleX": 0.800000011920929,
+            "ScaleY": 0.800000011920929,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [],
@@ -157,27 +157,27 @@
             "SizeY": 64.0,
             "Transform": {
                 "WorldMatrix": [
-                    57.599998474121094,
+                    51.20000076293945,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    57.599998474121094,
+                    51.20000076293945,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    218.0,
-                    -249.0,
+                    216.0,
+                    -251.0,
                     0.0,
                     1.0
                 ]
             }
         }
     ],
-    "ObjectTag": "PlayerInfo",
+    "ObjectTag": "Canvas_Drive",
     "Pivot": 0,
     "PositionX": 0.0,
     "PositionY": 0.0,

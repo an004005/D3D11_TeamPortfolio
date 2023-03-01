@@ -107,7 +107,7 @@ void CUI::Imgui_RenderProperty()
 	ImGui::Checkbox("Visible", &m_bVisible);
 	_int iPriority = m_iPriority;
 	ImGui::InputInt("Priority", &iPriority);
-	m_iPriority = iPriority;
+	m_iPriority = _uint(iPriority);
 
 	if (ImGui::BeginCombo("Pivot", arrPivotName[static_cast<_uint>(m_ePivot)]))
 	{

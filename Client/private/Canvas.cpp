@@ -114,7 +114,6 @@ void CCanvas::Imgui_RenderProperty()
 
 	if (ImGui::BeginListBox("UI List"))	// 캔버스 안 에서 생성한 유아이를 확인한다.
 	{
-	
 		for (auto& UI : m_mapChildUIs)
 		{
 			const bool bSelected = (UI.second == m_pUI);
@@ -142,6 +141,8 @@ void CCanvas::Imgui_RenderProperty()
 		m_pUI->Imgui_RenderProperty();
 	}
 	ImGui::EndChild();
+
+	ImGui::Separator();
 }
 
 void CCanvas::SaveToJson(Json & json)
