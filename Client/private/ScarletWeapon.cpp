@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\public\ScarletWeapon.h"
 #include "Bone.h"
+#include "RigidBody.h"
+#include "TrailSystem.h"
 
 CScarletWeapon::CScarletWeapon(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
@@ -44,6 +46,8 @@ void CScarletWeapon::Setup_BoneMatrix(CModel* pModel, _fmatrix Transform)
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
+	//m_pTransformCom->Set_WorldMatrix(m_SocketMatrix);
+
 	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
 }
 
@@ -58,4 +62,6 @@ void CScarletWeapon::Free()
 	}
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pModel);
+	Safe_Release(m_pCollider);
+	Safe_Release(m_pTrail);
 }

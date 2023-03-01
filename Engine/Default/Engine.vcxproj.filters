@@ -507,6 +507,12 @@
     <ClInclude Include="..\public\VIBuffer_Mesh_Instance.h">
       <Filter>01.Utility\03.Components\02.VIBuffer\Instance\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Camera_Manager.h">
+      <Filter>01.Utility\02.GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_CameraManager.h">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -790,6 +796,12 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Mesh_Instance.cpp">
       <Filter>01.Utility\03.Components\02.VIBuffer\Instance\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera_Manager.cpp">
+      <Filter>01.Utility\02.GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_CameraManager.cpp">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

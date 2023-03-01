@@ -245,6 +245,18 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_104_Lo_trans_neutral": {
+        "Duration": 206.0,
+        "TickPerSecond": 80.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_104_Up_trans_neutral": {
+        "Duration": 206.0,
+        "TickPerSecond": 80.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_141_AL_jump_fall": {
         "Duration": 25.0,
         "TickPerSecond": 60.0,
@@ -747,6 +759,42 @@
     "AS_em0810_201_AL_atk_a1_bite": {
         "Duration": 130.0,
         "TickPerSecond": 70.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_203_AL_atk_a1_end": {
+        "Duration": 40.0,
+        "TickPerSecond": 33.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_411_AL_damage_m_F": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_412_AL_damage_m_B": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_413_AL_damage_m_L": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_414_AL_damage_m_R": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_424_AL_dead_down01": {
+        "Duration": 160.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },

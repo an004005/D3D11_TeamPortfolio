@@ -76,12 +76,22 @@ void CRigidBody::Imgui_RenderProperty()
 	}
 	ImGui::Unindent( 20.f );
 
+	CImguiUtils::FileDialog_FileSelector("Save RigidBody to", ".json", "../Bin/Resources/Objects/",
+	[this](const string& filePath)
+	{
+		Json json;
+		SaveToJson(json);
+		std::ofstream file(filePath);
+		file << json;
+	});
+
 	UpdateChange();
 }
 
 void CRigidBody::SaveToJson(Json& json)
 {
 	CComponent::SaveToJson(json);
+
 	json["RigidBody"]["bKinematic"] = m_bKinematic;
 	json["RigidBody"]["bTrigger"] = m_bTrigger;
 	json["RigidBody"]["Density"] = m_fDensity;

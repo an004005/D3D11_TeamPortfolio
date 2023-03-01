@@ -46,6 +46,7 @@ private:
 	_float								m_fSegmentSize;
 	_float4								m_vColor;
 	vector<_float4>						m_vPrePoses;
+	_float4								m_vPreRight;
 	_uint								m_iPass = 0;
 
 public:

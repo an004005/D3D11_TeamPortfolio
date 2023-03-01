@@ -13,6 +13,9 @@
 #include "AnimationInstance.h"
 #include "Terrain.h"
 #include "JsonStorage.h"
+#include "Controller.h"
+
+#include "Player.h"
 
 CLevel_AnimModify::CLevel_AnimModify(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -157,6 +160,14 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 	}
 
 	{
+		// 플레이어 이벤트 콜러 지정용
+		pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
+			CController::Create())))
+			return E_FAIL;
+	}
+
+	{
 		auto pBronJon = CModel::Create(m_pDevice, m_pContext,
 			"../Bin/Resources/Model/AnimModel/Monster/BronJon/BronJon.anim_model");
 		pBronJon->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BronJon/Anim/");
@@ -213,7 +224,6 @@ HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	auto pPlayer = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
-	//pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(65.f, 0.f, 65.f, 1.f));
 
 	PreviewData["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
 	auto pwp = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));

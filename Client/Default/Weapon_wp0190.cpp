@@ -3,6 +3,7 @@
 #include "JsonStorage.h"
 #include "GameUtils.h"
 #include "RigidBody.h"
+#include "TrailSystem.h"
 
 CWeapon_wp0190::CWeapon_wp0190(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CScarletWeapon(pDevice, pContext)
@@ -23,11 +24,14 @@ HRESULT CWeapon_wp0190::Initialize_Prototype()
 
 HRESULT CWeapon_wp0190::Initialize(void * pArg)
 {
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
 	FAILED_CHECK(__super::Initialize(pArg));
 
 	FAILED_CHECK(SetUp_Components());
-	
-	Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"Trigger", (CComponent**)&m_pCollider, pArg);
+
+	Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Trail/PlayerSwordTrail.json");
+	m_pTrail = static_cast<CTrailSystem*>(pGameInstance->Clone_GameObject_Get(L"Layer_Player", TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
 
 	return S_OK;
 }
@@ -36,6 +40,11 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 	m_pCollider->Update_Tick(m_pTransformCom);
+
+	m_pTrail->GetTransform()
+		->Set_WorldMatrix(m_pCollider->GetPxWorldMatrix());
+	
+	m_pTrail->Tick(TimeDelta);
 }
 
 void CWeapon_wp0190::Late_Tick(_double TimeDelta)
@@ -55,6 +64,8 @@ HRESULT CWeapon_wp0190::Render()
 
 	m_pModel->Render(m_pTransformCom);
 
+//	m_pTrail->Render();
+
 	return S_OK;
 }
 
@@ -72,7 +83,10 @@ HRESULT CWeapon_wp0190::SetUp_Components()
 			m_ModelName = CGameUtils::s2ws(ProtoModel);
 			FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_ModelName.c_str(), m_ModelName.c_str(),
 				(CComponent**)&m_pModel));
+
 		}
+
+		Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"Trigger", (CComponent**)&m_pCollider, (void*)m_Desc.m_pJson);
 	}
 
 	return S_OK;
@@ -109,5 +123,4 @@ CGameObject * CWeapon_wp0190::Clone(void * pArg)
 void CWeapon_wp0190::Free()
 {
 	__super::Free();
-	Safe_Release(m_pCollider);
 }
