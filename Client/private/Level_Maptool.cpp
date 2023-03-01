@@ -9,6 +9,7 @@
 #include "JsonStorage.h"
 #include "GameUtils.h"
 #include "Material.h"
+#include "Model_Instancing.h"
 
 CLevel_Maptool::CLevel_Maptool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -90,7 +91,8 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
 	});
 
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/", 
+	//일반 모델들의 프로토타입 생성
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/", 
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
@@ -98,9 +100,25 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 
 		if (0 == strcmp(szFileExt, ".static_model"))
 		{
-			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str()));
+				FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str()));
 		}
 	});
+
+
+	//인스턴싱 모델들의 프로토타입 생성
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/",
+		[this](const string& fileName)
+	{
+		char szFileExt[MAX_PATH]{};
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+
+		if (0 == strcmp(szFileExt, ".static_model"))
+		{
+			FAILED_CHECK(Create_Model_Instance(s2ws(fileName), fileName.c_str()));
+		}
+	});
+
+
 	return S_OK;
 }
 
@@ -118,10 +136,11 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
 
-	//TODO: 프로토 테그만 저장하고 로드할때 find로 찾아야함
+	json["Model_ProtoTypes"] = Json::array();
+
 	for (auto& Proto : m_pProtosTags)
 	{	
-		json["ProtoTags"].push_back(ws2s(Proto));
+		json["Model_ProtoTypes"].push_back({ ws2s(Proto.first), Proto.second });
 	}
 	
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag.c_str(), TEXT("Prototype_GameObject_ScarletMap"), &json));
@@ -142,7 +161,26 @@ HRESULT CLevel_Maptool::Create_Model(const wstring& pProtoTag, const char* pMode
 		pProtoTag.c_str(),
 		pComponent));
 
-	m_pProtosTags.emplace_back(pProtoTag);
+	m_pProtosTags.emplace_back(pProtoTag, NON_INSTANCE);
+
+	return S_OK;
+}
+
+HRESULT CLevel_Maptool::Create_Model_Instance(const wstring & pProtoTag, const char * pModelPath)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	CComponent* pComponent = nullptr;
+	
+	_uint iNumInstance = 300;
+	pComponent = CModel_Instancing::Create(m_pDevice, m_pContext, pModelPath, iNumInstance);
+	assert(pComponent != nullptr);
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(
+		pProtoTag.c_str(),
+		pComponent));
+
+	m_pProtosTags.emplace_back(pProtoTag, INSTANCE);
 
 	return S_OK;
 }

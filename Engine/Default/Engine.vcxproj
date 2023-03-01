@@ -234,6 +234,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\MathUtils.h" />
     <ClInclude Include="..\public\Mesh.h" />
     <ClInclude Include="..\public\Model.h" />
+    <ClInclude Include="..\public\Model_Instancing.h" />
     <ClInclude Include="..\public\Navigation.h" />
     <ClInclude Include="..\public\Object_Manager.h" />
     <ClInclude Include="..\public\PhysXDynamicModel.h" />
@@ -262,6 +263,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\VIBuffer_Cube.h" />
     <ClInclude Include="..\public\VIBuffer_Instancing.h" />
     <ClInclude Include="..\public\VIBuffer_Mesh_Instance.h" />
+    <ClInclude Include="..\public\VIBuffer_ModelInstancing.h" />
     <ClInclude Include="..\public\VIBuffer_Point_Instancing.h" />
     <ClInclude Include="..\public\VIBuffer_PosRect.h" />
     <ClInclude Include="..\public\VIBuffer_Rect.h" />
@@ -317,6 +319,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\MathUtils.cpp" />
     <ClCompile Include="..\private\Mesh.cpp" />
     <ClCompile Include="..\private\Model.cpp" />
+    <ClCompile Include="..\private\Model_Instancing.cpp" />
     <ClCompile Include="..\private\Navigation.cpp" />
     <ClCompile Include="..\private\Object_Manager.cpp" />
     <ClCompile Include="..\private\PhysXDynamicModel.cpp" />
@@ -344,6 +347,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\private\VIBuffer_Instancing.cpp" />
     <ClCompile Include="..\private\VIBuffer_Mesh_Instance.cpp" />
+    <ClCompile Include="..\private\VIBuffer_ModelInstancing.cpp" />
     <ClCompile Include="..\private\VIBuffer_Point_Instancing.cpp" />
     <ClCompile Include="..\private\VIBuffer_PosRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect.cpp" />

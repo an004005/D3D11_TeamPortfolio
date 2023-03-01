@@ -2,6 +2,7 @@
 #include "..\public\MapNonAnim_Object.h"
 #include "GameInstance.h"
 #include "PhysXStaticModel.h"
+#include "JsonStorage.h"
 
 CMapNonAnim_Object::CMapNonAnim_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
@@ -28,6 +29,16 @@ HRESULT CMapNonAnim_Object::Initialize(void * pArg)
 
 	m_pPxModel->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
 
+	if (pArg)
+	{
+		Json& json = *static_cast<Json*>(pArg);
+		if (json.contains("InitPos"))
+		{
+			_float4 InitPos = json["InitPos"];
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&InitPos));
+		}
+	}
+
 	return S_OK;
 }
 
@@ -47,13 +58,30 @@ void CMapNonAnim_Object::Late_Tick(_double TimeDelta)
 
 HRESULT CMapNonAnim_Object::Render()
 {
+	if (m_bVisible == false) return S_OK;
+
 	FAILED_CHECK(__super::Render());
+
+	FAILED_CHECK(m_pModelCom->Render(m_pTransformCom));
+
 	return S_OK;
 }
 
+void CMapNonAnim_Object::LoadFromJson(const Json & json)
+{
+	__super::LoadFromJson(json);
+	m_strModelTag = s2ws(json["ModelTag"]);
+}
+
+void CMapNonAnim_Object::SaveToJson(Json & json)
+{
+	__super::SaveToJson(json);
+	json["ModelTag"] = ws2s(m_strModelTag);
+}
+
+
 void CMapNonAnim_Object::Imgui_RenderProperty()
 {
-	CMapObject::Imgui_RenderProperty();
 
 	// imgui를 켰을 때만 위치 수정가능
 	m_pPxModel->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
@@ -79,10 +107,14 @@ wstring CMapNonAnim_Object::MakePxModelProtoTag()
 
 HRESULT CMapNonAnim_Object::SetUp_Components()
 {
+	/* For.Com_Model */
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_strModelTag.c_str(), TEXT("Com_Model"),
+		(CComponent**)&m_pModelCom));
+
 	const wstring PxModelTag = MakePxModelProtoTag();
 	if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_NOW, PxModelTag.c_str()))
 	{
-		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_NOW, 
+		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_NOW,
 			PxModelTag.c_str(), CPhysXStaticModel::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str())));
 	}
 
@@ -123,4 +155,5 @@ void CMapNonAnim_Object::Free()
 {
 	__super::Free();
 	Safe_Release(m_pPxModel);
+	Safe_Release(m_pModelCom);
 }

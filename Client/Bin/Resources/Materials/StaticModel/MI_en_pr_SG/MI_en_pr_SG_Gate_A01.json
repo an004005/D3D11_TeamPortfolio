@@ -1,5 +1,5 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
     "ShaderParams" : {
         "Ints" : [],
         "Floats" : [],

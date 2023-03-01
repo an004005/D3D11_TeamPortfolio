@@ -7,12 +7,12 @@ END
 
 BEGIN(Client)
 
-class CMapNonAnim_Object : public CMapObject
+class CMapInstance_Object : public CMapObject
 {
 private:
-	CMapNonAnim_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMapNonAnim_Object(const CMapNonAnim_Object& rhs);
-	virtual ~CMapNonAnim_Object() = default;
+	CMapInstance_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMapInstance_Object(const CMapInstance_Object& rhs);
+	virtual ~CMapInstance_Object() = default;
 
 public:
 	HRESULT Initialize_Prototype() override;
@@ -25,17 +25,24 @@ public:
 	virtual void SaveToJson(Json& json) override;
 	virtual void Imgui_RenderProperty() override;
 
+public:
+	CModel_Instancing* Get_Model_Instancing() { return m_pModel_InstancingCom; }
+
+public:
+	void		Set_Focus();
 private:
 	wstring MakePxModelProtoTag();
 
 private:
 	HRESULT	SetUp_Components();
 
-	CPhysXStaticModel* m_pPxModel = nullptr;
-	CModel*					m_pModelCom = nullptr;
+	CPhysXStaticModel*		m_pPxModel = nullptr;
+	CModel_Instancing*		m_pModel_InstancingCom = nullptr;
 
+	_int					m_iIndex = -1;
+	_float4x4				m_WorldMatrix;
 public:
-	static CMapNonAnim_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMapInstance_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr) override;
 	void Free() override;
 };

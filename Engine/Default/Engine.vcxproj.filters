@@ -193,11 +193,11 @@
     <Filter Include="80. Imgui\01.ImguiObject">
       <UniqueIdentifier>{3706bd1c-e703-4ba3-8a1d-d4b0abc64a21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\06.Model\Instancing">
+      <UniqueIdentifier>{38dc0079-48ff-40b9-a5e2-f65a35d0c524}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\public\GameInstance.h">
-      <Filter>01.Utility\00.GameInstace</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Engine_Defines.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
@@ -507,6 +507,15 @@
     <ClInclude Include="..\public\VIBuffer_Mesh_Instance.h">
       <Filter>01.Utility\03.Components\02.VIBuffer\Instance\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_ModelInstancing.h">
+      <Filter>01.Utility\03.Components\06.Model\Instancing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Model_Instancing.h">
+      <Filter>01.Utility\03.Components\06.Model\Instancing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GameInstance.h">
+      <Filter>01.Utility\00.GameInstace</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -790,6 +799,12 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Mesh_Instance.cpp">
       <Filter>01.Utility\03.Components\02.VIBuffer\Instance\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Model_Instancing.cpp">
+      <Filter>01.Utility\03.Components\06.Model\Instancing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_ModelInstancing.cpp">
+      <Filter>01.Utility\03.Components\06.Model\Instancing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
