@@ -55,9 +55,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pPlayerCam = m_pGameInstance->Add_Camera("PlayerCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Player");
 	
-	m_pPlayerCam = dynamic_cast<CCamera*>(m_pGameInstance->Clone_GameObject_Get(L"Layer_Camera", TEXT("Prototype_GameObject_Camera_Player")));
-	Assert(m_pPlayerCam != nullptr);
-	Safe_AddRef(m_pPlayerCam);
+	//m_pPlayerCam = dynamic_cast<CCamera*>(m_pGameInstance->Clone_GameObject_Get(L"Layer_Camera", TEXT("Prototype_GameObject_Camera_Player")));
+	//Assert(m_pPlayerCam != nullptr);
+	//Safe_AddRef(m_pPlayerCam);
 
 	return S_OK;
 }
