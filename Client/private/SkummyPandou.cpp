@@ -11,6 +11,7 @@
 
 #include "SkPd_AnimInstance.h"
 #include "FlowerLeg.h"
+#include "Player.h"
 #include "RigidBody.h"
 
 CSkummyPandou::CSkummyPandou(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -41,6 +42,8 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 
 	if (FAILED(Setup_AnimSocket()))
 		return E_FAIL;
+	
+	//	m_fGravity = 평소엔 0으로 잡아주고, 피격시 중력값을 올려서 떨어트려준다.
 
 	Json SkummyPandouTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouTrigger.json");
 	Json SkummyPandouSearch = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouSearch.json");
@@ -53,7 +56,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Search"),
 		(CComponent**)&m_pSearch, &SkummyPandouSearch)))
 		return E_FAIL;
-	
+
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(4.f, 0.5f, 10.f)));
 
 	m_pTransformCom->SetSpeed(0.4f);
@@ -67,28 +70,59 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 			.InitState("Idle")
 			.AddState("Idle")
 				.OnStart([this] 
-				{						
+				{			
+					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					XMStoreFloat3(&m_fMyPos, m_vMyPos);
 					m_fTimeAcc = 0.f;								
 				})
 				.Tick([this](_double TimeDelta)
 				{
 					CGameInstance* pGameInstance = CGameInstance::GetInstance();
-					
-					// 시야 범위 Trigger에 걸리기 전까진
-					if(!m_bSearchEye)
-					{		
-						m_bIdle = false;
-						//m_bRandomMove = true;
+								
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					XMStoreFloat3(&m_fStorePos, m_vStorePos);
+
+					if (!m_bInitialize)
+					{
+						if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 2.3f) && m_fMyPos.z <= (m_fStorePos.z + 2.3f) ||
+							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 2.3f) && m_fMyPos.z <= (m_fStorePos.z + 2.3f) ||
+							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 2.3f) && m_fMyPos.z >= (m_fStorePos.z - 2.3f) ||
+							m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 2.3f) && m_fMyPos.z >= (m_fStorePos.z - 2.3f))
+						{
+							m_bRandomMove = false;
+							m_bInitialize = true;
+						}
+						else
+						{
+							m_bIdle = false;
+							m_bRandomMove = true;
+						}									
 					}
 
-					else // 시야 범위 Trigger에 걸린
+					// Trigger Tick으로 대체
+					// 시야 범위 Trigger에 걸리기 전까진
+					//if(!m_bSearchEye)
+					//{		
+					//	//m_bIdle = false;
+					//	//m_bRandomMove = true;
+					//}
+
+					//else // 시야 범위 Trigger에 걸린
+					//{
+					//	m_bRandomMove = false;
+					//	m_bInitialize = true;
+					//}
+					// ~Trigger Tick으로 대체
+
+					else // 한 번 Player를 발견하면 여기로만 조건이 들어온다.
 					{
-						m_bRandomMove = false;
-						m_bInitialize = true;
-					}
-					if (m_bInitialize) // 한 번 Player를 발견하면 여기로만 조건이 들어온다.
-					{
-						if (m_bArea)
+						m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+						XMStoreFloat3(&m_fMyPos, m_vMyPos);
+
+						if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 3.3f) && m_fMyPos.z <= (m_fStorePos.z + 3.3f) ||
+							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 3.3f) && m_fMyPos.z <= (m_fStorePos.z + 3.3f) ||
+							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 3.3f) && m_fMyPos.z >= (m_fStorePos.z - 3.3f) ||
+							m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 3.3f) && m_fMyPos.z >= (m_fStorePos.z - 3.3f))
 						{
 							m_fTimeAcc += _float(TimeDelta * 1);
 
@@ -123,7 +157,6 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 									m_iAfterIdlePt = 0;
 							}
 						}
-
 						else
 						{
 							m_fTimeAcc += _float(TimeDelta * 1);
@@ -132,7 +165,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 								m_bIdle = false;
 								m_bMoveF = true;
 							}
-						}
+						}						
 					}
 				})
 
@@ -166,7 +199,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 						return !m_bIdle && m_bMoveR;
 					})
 
-				.AddTransition("Idle to AttackStart", "AttackStart")
+				.AddTransition("Idle to Attack_Start", "Attack_Start")
 					.Predicator([this] 
 					{
 						return !m_bIdle && m_bAttackStart; 
@@ -190,7 +223,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 
 					m_pTransformCom->LocalMove(m_pModelCom->GetLocalMove(m_pTransformCom->Get_WorldMatrix()), 0.4f);
 
-					if (m_fTimeAcc > 4.f)
+					if (m_fTimeAcc > 3.f)
 					{
 						m_bIdle = true;
 						m_bRandomMove = false;
@@ -206,6 +239,9 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 			.AddState("Threat")				
 				.Tick([this](_double TimeDelta)
 				{
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					m_pTransformCom->LookAt(m_vStorePos);
+
 					auto pAnim = m_pModelCom->GetPlayAnimation();
 
 					if (pAnim->GetPlayRatio() > 0.95)
@@ -223,7 +259,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 			.AddState("Attack_Start")
 				.OnStart([this] 
 				{
-					_vector vAtkLook = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_vector vAtkLook = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					/*_float3 fAtkLook;
 					XMStoreFloat3(&fAtkLook, vAtkLook);
 					fAtkLook.y += 0.5f;*/
@@ -255,13 +291,13 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 				{
 					m_fTimeAcc += _float(TimeDelta * 1);
 
-					m_pTransformCom->Go_Straight(0.2);
+					m_pTransformCom->Go_Straight(0.3);
 
-					if (m_fTimeAcc >= 4.f)
+					if (m_fTimeAcc >= 2.f)
 					{
 						m_bAttacking = false;
 						m_bAttackEnd = true;
-					}
+					}					
 				})
 
 				.AddTransition("Attack_Ing to Attack_End", "Attack_End")
@@ -287,13 +323,22 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 						return !m_bAttackEnd && m_bIdle;
 					})
 
-			.AddState("MoveF")
+			.AddState("MoveF")				
 				.Tick([this](_double TimeDelta)
 				{
-					_vector vTargetPos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					m_pTransformCom->Move(0.1, vTargetPos);
+					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					XMStoreFloat3(&m_fMyPos, m_vMyPos);
 
-					if (m_bArea)
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					XMStoreFloat3(&m_fStorePos, m_vStorePos);
+
+					m_pTransformCom->LookAt(m_vStorePos);
+					m_pTransformCom->Chase(m_vStorePos, 0.13);
+
+					if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 5.f) && m_fMyPos.z <= (m_fStorePos.z + 5.f) ||
+						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 5.f) && m_fMyPos.z <= (m_fStorePos.z + 5.f) ||
+						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 5.f) && m_fMyPos.z >= (m_fStorePos.z - 5.f) ||
+						m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 5.f) && m_fMyPos.z >= (m_fStorePos.z - 5.f))
 					{
 						m_bMoveF = false;
 						m_bAttackStart = true;
@@ -309,7 +354,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 				.OnStart([this]
 				{
 					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					m_vDest = m_vMyPos - m_vStorePos;
 				
 					m_fTimeAcc = 0.f;
@@ -359,7 +404,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 			.AddState("MoveL")
 				.OnStart([this]
 				{
-					m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 				})
 				.Tick([this](_double TimeDelta)
 				{
@@ -409,7 +454,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 			.AddState("MoveR")
 					.OnStart([this]
 				{
-					m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 				})
 					.Tick([this](_double TimeDelta)
 				{
@@ -461,36 +506,36 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 
 	// Tick에서 도는게 아닌
 	// Player가 최초에 시야에 들어오는지를 체크하는 Trigger. 들어오면 : Player를 발견했다는 UI가 출력되며 이후 패턴들 실행.  들어오지 않았다면 : RandomMove
-	m_pTrigger->SetOnTriggerIn([this](CGameObject* pObj)
-	{
-		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	//m_pTrigger->SetOnTriggerIn([this](CGameObject* pObj)
+	//{
+	//	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-		CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
-		if (pFlower != nullptr && pFlower->GetObjectTag() == "Flower_Leg")
-		{
-			m_pStorePt = dynamic_cast<CGameObject*>(pFlower);
-		}
+	//	CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
+	//	if (pFlower != nullptr && pFlower->GetObjectTag() == "Flower_Leg")
+	//	{
+	//		m_pStorePt = dynamic_cast<CGameObject*>(pFlower);
+	//	}
 
-		if (m_pStorePt != nullptr)
-			m_bSearchEye = true;
-	});
+	//	if (m_pStorePt != nullptr)
+	//		m_bSearchEye = true;
+	//});
 
-	m_pSearch->SetOnTriggerIn([this](CGameObject* pObj)
-	{
-		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	//m_pSearch->SetOnTriggerIn([this](CGameObject* pObj)
+	//{
+	//	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-		CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
-		if (pFlower != nullptr && pFlower->GetObjectTag() == "Flower_Leg")
-		{
-			m_pStorePt = dynamic_cast<CGameObject*>(pFlower);
-		}
+	//	CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
+	//	if (pFlower != nullptr && pFlower->GetObjectTag() == "Flower_Leg")
+	//	{
+	//		m_pStorePt = dynamic_cast<CGameObject*>(pFlower);
+	//	}
 
-		/*if (pFlower != nullptr)
-			m_bArea = true;
+	//	/*if (pFlower != nullptr)
+	//		m_bArea = true;
 
-		if (pFlower == nullptr)
-			m_bArea = false;*/
-	});
+	//	if (pFlower == nullptr)
+	//		m_bArea = false;*/
+	//});
 
 	return S_OK;
 }
@@ -502,11 +547,11 @@ void CSkummyPandou::BeginTick()
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
+	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
 	{
-		if (iter->GetPrototypeTag() == TEXT("FlowerLeg"))
+		if (iter->GetPrototypeTag() == TEXT("Player"))
 		{
-			m_pFlowerLeg = iter;
+			m_pPlayer = iter;
 		}
 	}
 }
@@ -515,8 +560,8 @@ void CSkummyPandou::Tick(_double TimeDelta)
 {
 	CMonster::Tick(TimeDelta);
 
-	m_pTrigger->Update_Tick(m_pTransformCom);
 	m_pSearch->Update_Tick(m_pTransformCom);
+	m_pTrigger->Update_Tick(m_pTransformCom);
 
 	StateCheck(TimeDelta);
 
@@ -557,6 +602,7 @@ void CSkummyPandou::Imgui_RenderProperty()
 void CSkummyPandou::AfterPhysX()
 {
 	__super::AfterPhysX();
+
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 	m_pSearch->Update_AfterPhysX(m_pTransformCom);
 }
@@ -569,6 +615,17 @@ void CSkummyPandou::StateCheck(_double TimeDelta)
 		m_fPlayRatio = m_pModelCom->GetPlayAnimation()->GetPlayRatio();
 		
 	// m_pFlowerLeg
+}
+
+_matrix CSkummyPandou::AttachCollider()
+{
+	_matrix SocketMatrix = m_pModelCom->GetBoneMatrix("Spine1") * m_pTransformCom->Get_WorldMatrix();
+
+	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+
+	return SocketMatrix;
 }
 
 HRESULT CSkummyPandou::Setup_AnimSocket()

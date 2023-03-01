@@ -204,11 +204,12 @@ HRESULT CLevel_AnimModify::Ready_Layer_Camera(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	CGameObject* pGameObject = nullptr;
-	pGameObject = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
-	//pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(65.f, 5.f, 60.f, 1.f));
-	//pGameObject->GetTransform()->LookAt(XMVectorSet(65.f, 0.f, 65.f, 1.f));
-	NULL_CHECK(pGameObject);
+	//CGameObject* pGameObject = nullptr;
+	//pGameObject = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
+	////pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(65.f, 5.f, 60.f, 1.f));
+	////pGameObject->GetTransform()->LookAt(XMVectorSet(65.f, 0.f, 65.f, 1.f));
+	//NULL_CHECK(pGameObject);
+	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
 	return S_OK;
 }
@@ -222,7 +223,7 @@ HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 
 	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
 		return E_FAIL;
-
+	
 	auto pPlayer = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
 
 	PreviewData["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
@@ -261,13 +262,13 @@ HRESULT CLevel_AnimModify::Ready_Layer_Map(const _tchar* pLayerTag)
 
 void CLevel_AnimModify::PeekPosSetting(void)
 {
-	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	/*CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	CGameObject* pTerrain = nullptr;
 	_float4		 vPeekingPos = { 0.f, 0.f, 0.f, 0.f };
 	NULL_CHECK(pTerrain = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Terrain"))->GetGameObjects().front());
 	static_cast<CTerrain*>(pTerrain)->PickTerrain(vPeekingPos);
-	pGameInstance->SetPeekingPos(XMLoadFloat4(&vPeekingPos));
+	pGameInstance->SetPeekingPos(XMLoadFloat4(&vPeekingPos));*/
 }
 
 CLevel_AnimModify* CLevel_AnimModify::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

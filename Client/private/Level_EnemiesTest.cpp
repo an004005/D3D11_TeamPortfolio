@@ -9,6 +9,7 @@
 #include "Imgui_AnimModifier.h"
 #include "Imgui_MapEditor.h"
 #include "Imgui_PhysX.h"
+#include "Imgui_CameraManager.h"
 #include "Model.h"
 #include "JsonLib.h"
 #include "AnimationInstance.h"
@@ -22,6 +23,8 @@
 #include "Controller.h"
 #include "CamSpot.h"
 #include "Weapon_wp0190.h"
+#include "Indicator.h"
+#include "TrailSystem.h"
 
 // Monster
 #include "TestMonster.h"
@@ -77,12 +80,16 @@ HRESULT CLevel_EnemiesTest::Initialize()
 
 void CLevel_EnemiesTest::Tick(_double TimeDelta)
 {
-	__super::Tick(TimeDelta);
+	CLevel::Tick(TimeDelta);
 }
 
 void CLevel_EnemiesTest::Late_Tick(_double TimeDelta)
 {
-	__super::Late_Tick(TimeDelta);
+	CLevel::Late_Tick(TimeDelta);
+	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	{
+		CGameInstance::GetInstance()->Clone_GameObject(L"test", L"Indicator");
+	}
 }
 
 HRESULT CLevel_EnemiesTest::Render()
@@ -147,6 +154,9 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
 	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
 
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+
+	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
 
 	// ~02.28 KKB Player
 	
@@ -230,8 +240,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Json FlowerLegModel;
 	FlowerLegModel["Model"] = "MonsterFlowerLeg";
 		
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("FlowerLeg"), &FlowerLegModel)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("FlowerLeg"), &FlowerLegModel)))
+		return E_FAIL;*/
 	
 	Json BuddyLumiModel;
 	BuddyLumiModel["Model"] = "MonsterBuddyLumi";
@@ -272,14 +282,14 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Player(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	/*Json PreviewData;
+	Json PreviewData;
 	PreviewData["Model"] = "Model_Player";
 
 	CGameObject* pPlayer = nullptr;
 	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Player"), &PreviewData));
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
-*/
+
 	return S_OK;
 }
 

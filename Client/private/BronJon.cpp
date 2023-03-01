@@ -89,35 +89,47 @@ HRESULT CBronJon::Initialize(void * pArg)
 					})
 
 			.AddState("BiteAtk")
+				.OnStart([this]
+				{
+					m_bCreateBite = false;
+				})
 				.Tick([this](_double TimeDelta)
 				{
 					CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
-					_matrix matJaw = AttachCollider();					
-					_vector vJawPos = matJaw.r[3];
-
-					physx::PxSweepHit hitBuff[5];
-					physx::PxSweepBuffer overlapOut(hitBuff, 5);
-					
-					SphereSweepParams params;
-					params.fDistance = 3.f;
-					params.fRadius = 1.5f;
-					params.iTargetType = CTB_PLAYER;
-					params.sweepOut = &overlapOut;
-					params.vPos = vJawPos;
-					params.vUnitDir = _float3{ 0.f, 0.f, 1.f };
-
-					if (pGameInstance->SweepSphere(params))	// 조건
-					{
-						for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
-						{
-							if (overlapOut.getAnyHit(i).actor)
-								MSG_BOX("Touch");
-							CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor);
-						}
-					}
-				
+							
 					auto pAnim = m_pModelCom->GetPlayAnimation();
+
+					if (pAnim->GetPlayRatio() > 0.3 && !m_bCreateBite)
+					{
+						_matrix matJaw = AttachCollider();
+						_vector vJawPos = matJaw.r[3];
+						_float4 fJawPos;
+						XMStoreFloat4(&fJawPos, vJawPos);
+
+						fJawPos.z += 2.f;
+
+						physx::PxSweepHit hitBuff[5];
+						physx::PxSweepBuffer overlapOut(hitBuff, 5);
+
+						SphereSweepParams params;
+						params.fDistance = 1.f;
+						params.fRadius = 1.5f;
+						params.iTargetType = CTB_PLAYER;
+						params.sweepOut = &overlapOut;
+						params.vPos = fJawPos;//vJawPos;
+						params.vUnitDir = _float3{ 0.f, 0.f, 1.f };
+
+						if (pGameInstance->SweepSphere(params))	// 조건
+						{
+							for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+							{
+								if (overlapOut.getAnyHit(i).actor)
+									int iA = 0;//MSG_BOX("Touch");
+								CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor);
+							}
+						}
+						m_bCreateBite = true;
+					}				
 
 					if (pAnim->GetPlayRatio() > 0.98)
 					{
@@ -143,14 +155,14 @@ void CBronJon::BeginTick()
 	__super::BeginTick();
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	/*
+	
 	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
 	{
 		if (iter->GetPrototypeTag() == TEXT("Player"))
 		{
 			m_pPlayer = iter;
 		}
-	}*/
+	}
 }
 
 void CBronJon::Tick(_double TimeDelta)

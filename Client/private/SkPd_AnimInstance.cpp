@@ -92,7 +92,7 @@ HRESULT CSkPd_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 					.Duration(0.4f)
 
 			.AddState("Attack_Ing")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_202_AL_atk_a1_loop"))
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0710_205_AL_atk_a2_loop"))
 
 				.AddTransition("Attack_Ing to Attack_End", "Attack_End")
 					.Predicator([&]()->_bool {return !m_bAttacking && m_bAttackEnd; })

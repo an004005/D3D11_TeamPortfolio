@@ -6,7 +6,7 @@
         "height": 1.0,
         "maxJumpHeight": 3.0,
         "pushPower": 100.0,
-        "radius": 0.800000011920929,
+        "radius": 0.7,
         "slopeLimitDegree": 45.0,
         "stepOffset": 0.10000000149011612
     },

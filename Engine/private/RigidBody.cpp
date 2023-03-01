@@ -20,8 +20,6 @@ HRESULT CRigidBody::Initialize(void* pArg)
 {
 	FAILED_CHECK(CComponent::Initialize(pArg));
 
-	m_bKinematic = false;
-	m_fDensity = 10.f;
 	CreateActor();
 
 	return S_OK;

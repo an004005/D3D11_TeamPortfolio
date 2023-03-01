@@ -37,6 +37,8 @@ public:
 
 	void StateCheck(_double TimeDelta);
 
+	_matrix AttachCollider();
+
 private:
 	CShader*				m_pShaderCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
@@ -85,7 +87,6 @@ private:
 	_bool			m_bIdle = false;
 
 	// Move
-	// Move
 	_bool			m_bMoveF = false;
 	_bool			m_bMoveB = false;
 	_bool			m_bMoveL = false;
@@ -132,10 +133,8 @@ private:
 
 	_uint	m_iAfterIdlePt = 0;
 
-	DAMAGE_PARAM	m_StrDamage;
-
 private:
-	CGameObject*	m_pFlowerLeg = nullptr;
+	CGameObject*	m_pPlayer = nullptr;
 	CGameObject*	m_pStorePt = nullptr;
 
 public:

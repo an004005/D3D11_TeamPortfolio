@@ -106,6 +106,7 @@ private:	//FSM
 	_bool			m_bStatic = false;
 
 	_bool			m_bCreateLaser = false;
+	_bool			m_bCreateBite = false;
 
 private:
 	wstring			m_ModelName;
@@ -121,7 +122,7 @@ private:
 	DAMAGE_PARAM	m_StrDamage;
 
 private:
-	CGameObject*	m_pFlowerLeg = nullptr;
+	
 	CGameObject*	m_pPlayer = nullptr;
 
 	public:

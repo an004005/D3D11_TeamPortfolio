@@ -666,6 +666,12 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_em0710_205_AL_atk_a2_loop": {
+        "Duration": 20.0,
+        "TickPerSecond": 28.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
     "AS_em0800_101_AL_wait01": {
         "Duration": 300.0,
         "TickPerSecond": 62.0,
@@ -759,42 +765,6 @@
     "AS_em0810_201_AL_atk_a1_bite": {
         "Duration": 130.0,
         "TickPerSecond": 70.0,
-        "bLooping": false,
-        "vecEvent": []
-    },
-    "AS_em0700_203_AL_atk_a1_end": {
-        "Duration": 40.0,
-        "TickPerSecond": 33.0,
-        "bLooping": false,
-        "vecEvent": []
-    },
-    "AS_em0700_411_AL_damage_m_F": {
-        "Duration": 240.0,
-        "TickPerSecond": 60.0,
-        "bLooping": false,
-        "vecEvent": []
-    },
-    "AS_em0700_412_AL_damage_m_B": {
-        "Duration": 240.0,
-        "TickPerSecond": 60.0,
-        "bLooping": false,
-        "vecEvent": []
-    },
-    "AS_em0700_413_AL_damage_m_L": {
-        "Duration": 240.0,
-        "TickPerSecond": 60.0,
-        "bLooping": false,
-        "vecEvent": []
-    },
-    "AS_em0700_414_AL_damage_m_R": {
-        "Duration": 240.0,
-        "TickPerSecond": 60.0,
-        "bLooping": false,
-        "vecEvent": []
-    },
-    "AS_em0700_424_AL_dead_down01": {
-        "Duration": 160.0,
-        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
