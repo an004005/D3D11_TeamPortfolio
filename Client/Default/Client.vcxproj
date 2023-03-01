@@ -182,6 +182,8 @@
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\BrJ_AnimInstance.h" />
+    <ClInclude Include="..\public\BronJon.h" />
     <ClInclude Include="..\public\ButtonUI.h" />
     <ClInclude Include="..\public\BdLm_AnimInstance.h" />
     <ClInclude Include="..\public\BuddyLumi.h" />
@@ -265,6 +267,8 @@
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
+    <ClCompile Include="..\private\BronJon.cpp" />
     <ClCompile Include="..\private\ButtonUI.cpp" />
     <ClCompile Include="..\private\BdLm_AnimInstance.cpp" />
     <ClCompile Include="..\private\BuddyLumi.cpp" />

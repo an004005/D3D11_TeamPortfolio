@@ -26,8 +26,10 @@ public:
 
 	// GameObject의 Tick에서 실행 필수
 	void Update_Tick(class CTransform* pTransform);
+	void Update_Tick(_fmatrix matrix);
 	// GameObject의 AfterPhysX에서 실행 필수
 	void Update_AfterPhysX(class CTransform* pTransform);
+
 
 	_bool IsKinematic() const { return m_bKinematic; }
 	_bool IsTrigger() const { return m_bTrigger; }

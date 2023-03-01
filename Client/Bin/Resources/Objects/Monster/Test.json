@@ -1,0 +1,60 @@
+{
+    "ControlledRigidBody": {
+        "ColliderType": 1,
+        "contactOffset": 0.10000000149011612,
+        "density": 10.0,
+        "height": 1.0,
+        "maxJumpHeight": 3.0,
+        "pushPower": 100.0,
+        "radius": 1.0,
+        "slopeLimitDegree": 45.0,
+        "stepOffset": 0.10000000149011612
+    },
+    "ObjectTag": "Skummy_Pool",
+    "Prototype_GameObject": "SkummyPool\u0000",
+    "RigidBody": {
+        "ColliderType": 5,
+        "Density": 10.0,
+        "OriginTransform": [
+            20.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            20.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            20.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 1,
+        "bKinematic": false,
+        "bTrigger": true
+    },
+    "Transform": {
+        "WorldMatrix": [
+            0.9832156300544739,
+            0.0,
+            -0.18244804441928864,
+            0.0,
+            -0.0008273310377262533,
+            0.9999897480010986,
+            -0.004458500538021326,
+            0.0,
+            0.1824432611465454,
+            0.004534539766609669,
+            0.9831897616386414,
+            0.0,
+            -0.150178924202919,
+            0.06872235238552094,
+            0.35160699486732483,
+            1.0
+        ]
+    }
+}

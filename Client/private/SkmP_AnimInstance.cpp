@@ -178,8 +178,7 @@ void CSkmP_AnimInstance::UpdateTargetState(_double TimeDelta)
 
 	m_bPreAir = m_bAir;
 
-	m_bIdle = pSkummyPool->IsIdle();
-	
+	m_bIdle = pSkummyPool->IsIdle();	
 	// Move
 	m_bMoveF = pSkummyPool->IsMoveF();
 	m_bMoveB = pSkummyPool->IsMoveB();

@@ -539,10 +539,10 @@ HRESULT CRenderer::Render_Blend()
 	if (FAILED(m_pShader->Set_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pShader->Set_Matrix("g_LightViewMatrix", CLight_Manager::GetInstance()->GetDirectionalLightView())))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_Matrix("g_LightProjMatrix", CLight_Manager::GetInstance()->GetDirectionalLightProj())))
-		return E_FAIL;
+	// if (FAILED(m_pShader->Set_Matrix("g_LightViewMatrix", CLight_Manager::GetInstance()->GetDirectionalLightView())))
+	// 	return E_FAIL;
+	// if (FAILED(m_pShader->Set_Matrix("g_LightProjMatrix", CLight_Manager::GetInstance()->GetDirectionalLightProj())))
+	// 	return E_FAIL;
 
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
 	if (FAILED(m_pShader->Set_Matrix("g_ViewMatrixInv", &pPipeLine->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW))))
@@ -556,8 +556,8 @@ HRESULT CRenderer::Render_Blend()
 		return E_FAIL;
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_DepthTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Depth")))))
 		return E_FAIL;
-	if (FAILED(m_pShader->Set_ShaderResourceView("g_ShadowDepthTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_ShadowDepth")))))
-		return E_FAIL;
+	// if (FAILED(m_pShader->Set_ShaderResourceView("g_ShadowDepthTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_ShadowDepth")))))
+	// 	return E_FAIL;
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_NormalTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Normal")))))
 		return E_FAIL;
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_RMATexture", m_pTarget_Manager->Get_SRV(TEXT("Target_RMA")))))

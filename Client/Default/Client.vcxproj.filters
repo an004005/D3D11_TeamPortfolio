@@ -199,6 +199,12 @@
     <Filter Include="97.ShaderFiles\PBR">
       <UniqueIdentifier>{0c8fe263-8aae-429a-84d4-56b5c393fd83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29">
+      <UniqueIdentifier>{f32c4093-e8d8-4c15-b7d1-2e0c14e0a683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance">
+      <UniqueIdentifier>{640f0a16-08b5-491a-9462-b102e9dcaac2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -447,6 +453,12 @@
     <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h">
       <Filter>97.ShaderFiles\PBR</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BronJon.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrJ_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -670,6 +682,12 @@
     </ClCompile>
     <ClCompile Include="Weapon_wp0190.cpp">
       <Filter>02.GameObjects\Weapon\wp0190</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BronJon.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrJ_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -628,20 +628,20 @@ void CGameInstance::Update_Timer(const _tchar * pTimerTag)
 /*************************
  *	Light_Manager
  *************************/
-const LIGHTDESC * CGameInstance::Get_LightDesc(_uint iIndex)
+CLight* CGameInstance::Find_Light(const string& strLightTag)
 {
-	if (nullptr == m_pLight_Manager)
-		return nullptr;
-
-	return m_pLight_Manager->Get_LightDesc(iIndex);	
+	return m_pLight_Manager->Find_Light(strLightTag);
 }
 
-HRESULT CGameInstance::Add_Light(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const LIGHTDESC & LightDesc)
+CLight* CGameInstance::Add_Light(const string& strLightTag, ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
+	const LIGHTDESC& LightDesc)
 {
-	if (nullptr == m_pLight_Manager)
-		return E_FAIL;
+	return m_pLight_Manager->Add_Light(strLightTag, pDevice, pContext, LightDesc);
+}
 
-	return m_pLight_Manager->Add_Light(pDevice, pContext, LightDesc);
+void CGameInstance::Delete_Light(const string& strLightTag)
+{
+	m_pLight_Manager->Delete_Light(strLightTag);
 }
 
 void CGameInstance::ClearLight()
