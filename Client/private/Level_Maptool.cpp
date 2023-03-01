@@ -136,7 +136,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
 
 	json["Model_ProtoTypes"] = Json::array();
 
