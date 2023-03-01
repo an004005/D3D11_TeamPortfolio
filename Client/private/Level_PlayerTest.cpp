@@ -17,6 +17,7 @@
 #include "Weapon_wp0190.h"
 #include "Imgui_PhysX.h"
 #include "Imgui_PostProcess.h"
+#include "Imgui_CameraManager.h"
 
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -31,6 +32,7 @@ HRESULT CLevel_PlayerTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AnimModifier::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -64,6 +66,10 @@ void CLevel_PlayerTest::Tick(_double TimeDelta)
 void CLevel_PlayerTest::Late_Tick(_double TimeDelta)
 {
 	CLevel::Late_Tick(TimeDelta);
+	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	{
+		CGameInstance::GetInstance()->Clone_GameObject(L"test", L"indicator");
+	}
 }
 
 HRESULT CLevel_PlayerTest::Render()
@@ -140,9 +146,10 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Camera(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
-		return E_FAIL;
-
+	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
+	//
+	// if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
+	// 	return E_FAIL;
 
 
 	return S_OK;
