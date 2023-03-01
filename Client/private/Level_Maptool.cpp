@@ -74,7 +74,7 @@ HRESULT CLevel_Maptool::Ready_Lights()
 	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
-	FAILED_CHECK(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc));
+	NULL_CHECK(pGameInstance->Add_Light("DirectionalLight", m_pDevice, m_pContext, LightDesc));
 
 	return S_OK;
 }

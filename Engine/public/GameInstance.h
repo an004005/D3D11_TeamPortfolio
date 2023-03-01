@@ -129,8 +129,9 @@ public: /* For.Timer_Manager */
 	void		Update_Timer(const _tchar* pTimerTag);
 
 public: /* For.Light_Manager */ 
-	const LIGHTDESC* Get_LightDesc(_uint iIndex);
-	HRESULT Add_Light(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc);
+	class CLight* Find_Light(const string& strLightTag);
+	class CLight* Add_Light(const string& strLightTag, ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc);
+	void Delete_Light(const string& strLightTag);
 	void ClearLight();
 	void SetShadowCam(class CCamera* pShadowCam);
 
