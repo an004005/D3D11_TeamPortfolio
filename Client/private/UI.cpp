@@ -147,6 +147,13 @@ void CUI::Imgui_RenderProperty()
 		m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, m_fRadianRotation);
 	}
 	ImGui::Separator();
+
+#ifdef _DEBUG
+	if (ImGui::Button("Recompile"))
+	{
+		m_pShaderCom->ReCompileShader();
+	}
+#endif
 }
 
 void CUI::SaveToJson(Json & json)

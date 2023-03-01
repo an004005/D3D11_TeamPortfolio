@@ -4,8 +4,9 @@
 #include "JsonLib.h"
 #include "JsonStorage.h"
 #include "FSMComponent.h"
+#include "UI_Manager.h"
 
-_bool CCanvas::m_bUIMove = false;
+//_bool CCanvas::m_bUIMove = false;
 
 CCanvas::CCanvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -168,6 +169,7 @@ void CCanvas::LoadFromJson(const Json & json)
 		auto pUI = Add_ChildUI(LEVEL_NOW, s2ws(protoTag).c_str(),s2ws(childTag).c_str(), (void*)&childJson);
 		Assert(pUI != nullptr);
 	}
+
 }
 
 CUI * CCanvas::Find_ChildUI(const _tchar * pChildTag)
@@ -216,6 +218,12 @@ void CCanvas::UIMove_FSM()
 		.AddState("Move")
 		.OnStart([this]
 	{
+		map<wstring, CCanvas*>& canvases = CUI_Manager::GetInstance()->Get_Canvas();
+
+		for_each(canvases.begin(), canvases.end(), [&](pair<wstring, CCanvas*> pCanvas) {
+			pCanvas.second->Set_UIMove();
+		});
+
 		_float2 vRandomPosition = { 5.0f, 5.0f };
 		m_vDestination = { vRandomPosition.x, -vRandomPosition.y };
 	})

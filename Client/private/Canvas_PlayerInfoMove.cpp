@@ -2,6 +2,7 @@
 #include "..\public\Canvas_PlayerInfoMove.h"
 #include "GameInstance.h"
 #include "FSMComponent.h"
+#include "UI_Manager.h"
 
 CCanvas_PlayerInfoMove::CCanvas_PlayerInfoMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -26,6 +27,7 @@ HRESULT CCanvas_PlayerInfoMove::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	CUI_Manager::GetInstance()->Add_CCanvas(L"Canvas_PlayerInfoMove", this);
 	CCanvas::UIMove_FSM();
 
 	return S_OK;
@@ -42,6 +44,8 @@ void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
 
 	m_pUIMoveFSM->Tick(TimeDelta);
 
+	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
+		Set_UIMove();
 }
 
 void CCanvas_PlayerInfoMove::Late_Tick(_double TimeDelta)

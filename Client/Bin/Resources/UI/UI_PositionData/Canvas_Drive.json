@@ -1,1 +1,219 @@
-{"ChildrenUI":[{"ChildTag":"Drive_B\u0000","ObjectTag":"Drive_B","Pivot":6,"PositionX":188.0,"PositionY":110.0,"Priority":0,"Prototype_GameObject":"Default_UI\u0000","ScaleX":0.800000011920929,"ScaleY":0.800000011920929,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Drive_B.dds\u0000"]},"SizeX":128.0,"SizeY":32.0,"Transform":{"WorldMatrix":[102.4000015258789,0.0,0.0,0.0,0.0,25.600000381469727,0.0,0.0,0.0,0.0,1.0,0.0,188.0,-250.0,0.0,1.0]}},{"ChildTag":"Drive_BackGround\u0000","ObjectTag":"Drive_BackGround","Pivot":6,"PositionX":182.0,"PositionY":75.0,"Priority":0,"Prototype_GameObject":"Default_UI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Drive_BackGround.dds\u0000"]},"SizeX":128.0,"SizeY":128.0,"Transform":{"WorldMatrix":[89.5999984741211,0.0,0.0,0.0,0.0,89.5999984741211,0.0,0.0,0.0,0.0,1.0,0.0,182.0,-285.0,0.0,1.0]}},{"ChildTag":"Drive_Circle0\u0000","ObjectTag":"Drive_Circle0","Pivot":6,"PositionX":213.0,"PositionY":107.0,"Priority":0,"Prototype_GameObject":"Default_UI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Drive_Circle0.dds\u0000"]},"SizeX":64.0,"SizeY":64.0,"Transform":{"WorldMatrix":[44.79999923706055,0.0,0.0,0.0,0.0,44.79999923706055,0.0,0.0,0.0,0.0,1.0,0.0,213.0,-253.0,0.0,1.0]}},{"ChildTag":"Drive_Circle1\u0000","ObjectTag":"","Pivot":6,"PositionX":218.0,"PositionY":111.0,"Priority":0,"Prototype_GameObject":"Default_UI\u0000","ScaleX":0.8999999761581421,"ScaleY":0.8999999761581421,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Drive_Circle1.dds\u0000"]},"SizeX":64.0,"SizeY":64.0,"Transform":{"WorldMatrix":[57.599998474121094,0.0,0.0,0.0,0.0,57.599998474121094,0.0,0.0,0.0,0.0,1.0,0.0,218.0,-249.0,0.0,1.0]}},{"ChildTag":"Drive_Circle2\u0000","ObjectTag":"Drive_Circle2","Pivot":6,"PositionX":218.0,"PositionY":111.0,"Priority":0,"Prototype_GameObject":"Default_UI\u0000","ScaleX":0.8999999761581421,"ScaleY":0.8999999761581421,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Drive_Circle2.dds\u0000"]},"SizeX":64.0,"SizeY":64.0,"Transform":{"WorldMatrix":[57.599998474121094,0.0,0.0,0.0,0.0,57.599998474121094,0.0,0.0,0.0,0.0,1.0,0.0,218.0,-249.0,0.0,1.0]}}],"ObjectTag":"PlayerInfo","Pivot":0,"PositionX":0.0,"PositionY":0.0,"Priority":0,"Prototype_GameObject":"Canvas_Drive\u0000","ScaleX":0.0,"ScaleY":0.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":[]},"SizeX":1280.0,"SizeY":720.0,"Transform":{"WorldMatrix":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "Drive_B\u0000",
+            "ObjectTag": "Drive_B",
+            "Pivot": 6,
+            "PositionX": 188.0,
+            "PositionY": 110.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.800000011920929,
+            "ScaleY": 0.800000011920929,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Drive_B.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    102.4000015258789,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    25.600000381469727,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    188.0,
+                    -250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Drive_BackGround\u0000",
+            "ObjectTag": "Drive_BackGround",
+            "Pivot": 6,
+            "PositionX": 182.0,
+            "PositionY": 75.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Drive_BackGround.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 128.0,
+            "Transform": {
+                "WorldMatrix": [
+                    89.5999984741211,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    89.5999984741211,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    182.0,
+                    -285.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Drive_Circle0\u0000",
+            "ObjectTag": "Drive_Circle0",
+            "Pivot": 6,
+            "PositionX": 213.0,
+            "PositionY": 107.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Drive_Circle0.dds\u0000"
+                ]
+            },
+            "SizeX": 64.0,
+            "SizeY": 64.0,
+            "Transform": {
+                "WorldMatrix": [
+                    44.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    44.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    213.0,
+                    -253.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Drive_Circle1\u0000",
+            "ObjectTag": "",
+            "Pivot": 6,
+            "PositionX": 218.0,
+            "PositionY": 111.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8999999761581421,
+            "ScaleY": 0.8999999761581421,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Drive_Circle1.dds\u0000"
+                ]
+            },
+            "SizeX": 64.0,
+            "SizeY": 64.0,
+            "Transform": {
+                "WorldMatrix": [
+                    57.599998474121094,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    57.599998474121094,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    218.0,
+                    -249.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "PlayerInfo",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 0,
+    "Prototype_GameObject": "Canvas_Drive\u0000",
+    "ScaleX": 0.0,
+    "ScaleY": 0.0,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1280.0,
+    "SizeY": 720.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

@@ -17,6 +17,7 @@
 #include "Camera_Player.h"
 #include "ControlledRigidBody.h"
 #include "RigidBody.h"
+#include "UI_Manager.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -299,6 +300,7 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
+	CUI_Manager::GetInstance()->DestroyInstance();
 
 	m_pGameInstance->Clear_ImguiObjects();
 	m_pGameInstance->Clear();

@@ -2,6 +2,7 @@
 #include "..\public\Canvas_DriveMove.h"
 #include "GameInstance.h"
 #include "FSMComponent.h"
+#include "UI_Manager.h"
 
 CCanvas_DriveMove::CCanvas_DriveMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -26,6 +27,7 @@ HRESULT CCanvas_DriveMove::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	CUI_Manager::GetInstance()->Add_CCanvas(L"Canvas_DriveMove", this);
 	CCanvas::UIMove_FSM();
 
 	return S_OK;

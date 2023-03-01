@@ -9,7 +9,7 @@
 
 	BEGIN(Client)
 
-class CCanvas_SASSkillMove : public CCanvas
+class CCanvas_SASSkillMove final : public CCanvas
 {
 public:
 	enum OBJECTCOUNT { ONE, TWO, THREE, FOUR };
@@ -77,7 +77,7 @@ public:
 
 private:
 	//CFSMComponent*	m_pFSM = { nullptr };
-	class CCanvas_SASSkill* m_pCanvas = { nullptr };
+	class CCanvas* m_pCanvas = { nullptr };
 
 	SKILLINDEX		m_eSASSkill = SKILLINDEX_END;		// UI 들이 같은 객체를 사용하기 때문에 구별하기 위해서
 	SKILLINDEX		m_ePreSASSkill = SKILLINDEX_END;	// 이전에 사용한 스킬

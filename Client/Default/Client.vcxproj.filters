@@ -388,6 +388,9 @@
     <ClInclude Include="..\public\Canvas_DriveMove.h">
       <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UI_Manager.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -585,6 +588,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Canvas_DriveMove.cpp">
       <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_Manager.cpp">
+      <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

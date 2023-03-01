@@ -37,7 +37,6 @@ private:
 	void	InputX_Tick(const _double & dTimeDelta);
 	
 private:
-	class CCanvas_SASSkillMove * m_pCanvas = { nullptr };
 	_bool			m_bChangeX = { false };				// 8개의 스킬 중 4개씩 바꿔서 확인할 수 있다. flase->Left, true->Right
 
 	_bool			m_bChangeXButton = { false };		// 타이머 사용하기 위해서

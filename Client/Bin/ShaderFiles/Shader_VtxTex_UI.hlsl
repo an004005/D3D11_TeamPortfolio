@@ -248,28 +248,28 @@ PS_OUT PS_UI_Alpha_Mask_Color_AlphaGradient(PS_IN In)
 /*******************
  * FlipBook
  /********************/
-// g_float_0 : cur time
-// g_float_1 : frame time
+// g_float_0 : frame time
 // g_tex_0 : 플립북 텍스쳐
 // g_int_0 : 플릭북 가로 개수
 // g_int_1 : 플립북 세로 개수
 
-VS_OUT VS_FlipBook(VS_IN In)
+VS_OUT VS_FlipBook(VS_IN In)	// ->9
 {
 	VS_OUT		Out = (VS_OUT)0;
 
 	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWP);
-	Out.vTexUV = Get_FlipBookUV(In.vTexUV, g_float_0, g_float_1, g_int_0, g_int_1);
+	Out.vTexUV = In.vTexUV;
 
 	return Out;
 }
 
-PS_OUT PS_FlipBook(PS_IN In)
+PS_OUT PS_FlipBook(PS_IN In)	// ->9
 {
 	PS_OUT			Out = (PS_OUT)0;
-	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_0, g_int_0, g_int_1));
 	return Out;
 }
 
@@ -475,13 +475,46 @@ PS_OUT PS_Emissive(PS_IN1 In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4  vTextureColor;
-	float4  vEmissiveColor;
+	float4 vTexture0 = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 vTexture1 = g_tex_1.Sample(LinearSampler, In.vTexUV1);
 
-	vTextureColor = g_tex_1.Sample(LinearSampler, In.vTexUV1);
-	vEmissiveColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	Out.vColor = saturate(vTextureColor + vEmissiveColor);
+	vTexture1.a = 0.0f;
 
+	Out.vColor = saturate(vTexture0 + vTexture1) * g_vec4_0;
+
+	return Out;
+}
+
+/*******************
+* 18 : 가로는 텍스처가 계속 이동하고, 세로로는 지정한 만큼 보여진다.
+/********************/
+// g_float_0 : frame time
+// g_float_1 : 세로에 더해줄 텍스쳐 높이
+// g_tex_0 : 플립북 텍스쳐
+// g_int_0 : 플릭북 가로 개수
+// g_int_1 : 플립북 세로 개수
+// g_vec2_0 : 세로에 더해줄 UV, 세로에 나눠줄 값
+
+VS_OUT VS_FlipBookCut(VS_IN In)	// ->18
+{
+	VS_OUT		Out = (VS_OUT)0;
+
+	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
+
+	Out.vPosition = mul(float4(In.vPosition, 1.f), matWP);
+
+	In.vTexUV.y = In.vTexUV.y / g_vec2_0.x + g_vec2_0.y;
+
+	Out.vTexUV = In.vTexUV;
+
+	return Out;
+}
+
+PS_OUT PS_FlipBookCut(PS_IN In)	// ->18
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	Out.vColor = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_0, g_int_0, g_int_1));
 	return Out;
 }
 
@@ -619,7 +652,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
-		SetBlendState(BS_One, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_FlipBook();
 		GeometryShader = NULL;
@@ -727,7 +760,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_Glow();	// 0번째 텍스처에 1번째 텍스처를 섞는다.
 	}
 
-	//16: 이미시브 (검정색 이미지와 원본 이미지 섞기
+	//17: 이미시브 (검정색 이미지와 원본 이미지 섞기
 	pass Emissive
 	{
 		SetRasterizerState(RS_Default);
@@ -739,5 +772,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_Emissive();
+	}
+
+	//18: 가로로는 Time 을 받아서 텍스처가 이동하고, 세로는 입력받는 int 에 따라가 보여지는 값이 늘어나야 한다.
+	pass FlipBookCut
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_FlipBookCut();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_FlipBookCut();
 	}
 }

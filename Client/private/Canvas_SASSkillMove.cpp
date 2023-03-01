@@ -4,6 +4,7 @@
 #include "GameUtils.h"
 #include "FSMComponent.h"
 #include "Canvas_SASSkill.h"
+#include "UI_Manager.h"
 
 CCanvas_SASSkillMove::CCanvas_SASSkillMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -28,24 +29,25 @@ HRESULT CCanvas_SASSkillMove::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	CUI_Manager::GetInstance()->Add_CCanvas(L"Canvas_SASSkillMove", this);
 	CCanvas::UIMove_FSM();
 	
 	// 처음에 보이지 않을 UI 들
 
-	Find_ChildUI(L"SASSkill_IconNumber1")->SetVisible(false);
-	Find_ChildUI(L"SASSkill_IconNumber2")->SetVisible(false);
-	Find_ChildUI(L"SASSkill_IconNumber3")->SetVisible(false);
-	Find_ChildUI(L"SASSkill_IconNumber4")->SetVisible(false);
+	//Find_ChildUI(L"SASSkill_IconNumber1")->SetVisible(false);
+	//Find_ChildUI(L"SASSkill_IconNumber2")->SetVisible(false);
+	//Find_ChildUI(L"SASSkill_IconNumber3")->SetVisible(false);
+	//Find_ChildUI(L"SASSkill_IconNumber4")->SetVisible(false);
 
-	Find_ChildUI(L"SASSKill_ColleagueName1")->SetVisible(false);
-	Find_ChildUI(L"SASSKill_ColleagueName2")->SetVisible(false);
-	Find_ChildUI(L"SASSKill_ColleagueName3")->SetVisible(false);
-	Find_ChildUI(L"SASSKill_ColleagueName4")->SetVisible(false);
+	//Find_ChildUI(L"SASSKill_ColleagueName1")->SetVisible(false);
+	//Find_ChildUI(L"SASSKill_ColleagueName2")->SetVisible(false);
+	//Find_ChildUI(L"SASSKill_ColleagueName3")->SetVisible(false);
+	//Find_ChildUI(L"SASSKill_ColleagueName4")->SetVisible(false);
 
-	Find_ChildUI(L"SASSKill_SuperPower1")->SetVisible(false);
-	Find_ChildUI(L"SASSKill_SuperPower2")->SetVisible(false);
-	Find_ChildUI(L"SASSKill_SuperPower3")->SetVisible(false);
-	Find_ChildUI(L"SASSKill_SuperPower4")->SetVisible(false);
+	//Find_ChildUI(L"SASSKill_SuperPower1")->SetVisible(false);
+	//Find_ChildUI(L"SASSKill_SuperPower2")->SetVisible(false);
+	//Find_ChildUI(L"SASSKill_SuperPower3")->SetVisible(false);
+	//Find_ChildUI(L"SASSKill_SuperPower4")->SetVisible(false);
 
 
 	return S_OK;
@@ -53,17 +55,17 @@ HRESULT CCanvas_SASSkillMove::Initialize(void* pArg)
 
 void CCanvas_SASSkillMove::BeginTick()
 {
-	m_pCanvas = dynamic_cast<CCanvas_SASSkill*>(CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkill")));
+	//m_pCanvas = dynamic_cast<CCanvas*>(CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, TEXT("Canvas_SASSkill")));
 
-	Temp = m_pCanvas->Get_Map();
-
-	if (m_pCanvas == nullptr)
-		assert(!"Canvas not be found.");
+	//if (m_pCanvas == nullptr)
+	//	assert(!"Canvas not be found.");
 }
 
 void CCanvas_SASSkillMove::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
+	
+
 
 	m_pUIMoveFSM->Tick(TimeDelta);
 
@@ -139,8 +141,6 @@ void CCanvas_SASSkillMove::InputCtrl_Tick()
 	{
 		Info_Tick(true);
 
-		//m_pCanvas->InputCtrl(true);
-
 		Find_ChildUI(L"SASSKill_ColleagueName1")->SetVisible(true);
 		Find_ChildUI(L"SASSKill_ColleagueName2")->SetVisible(true);
 		Find_ChildUI(L"SASSKill_ColleagueName3")->SetVisible(true);
@@ -151,7 +151,7 @@ void CCanvas_SASSkillMove::InputCtrl_Tick()
 	{
 		Info_Tick(false);
 		
-		//m_pCanvas->InputCtrl(false);
+		//dynamic_cast<CCanvas_SASSkill*>(CUI_Manager::GetInstance()->Find_CCanvas(L"Canvas_SASSkill"))->InputCtrl(false);
 
 		Find_ChildUI(L"SASSKill_ColleagueName1")->SetVisible(false);
 		Find_ChildUI(L"SASSKill_ColleagueName2")->SetVisible(false);
