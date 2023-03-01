@@ -12,26 +12,25 @@ private:
 	virtual ~CLight_Manager() = default;
 
 public:
-	const LIGHTDESC* Get_LightDesc(_uint iIndex);
-
-public:
-	HRESULT Add_Light(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc);
+	class CLight* Find_Light(const string& strLightTag);
+	class CLight* Add_Light(const string& strLightTag, ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc);
+	void Delete_Light(const string& strLightTag);
 	void Render_Light(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader);
 	void Clear();
 
-	const _float4x4* GetDirectionalLightView() const { return &m_DirectionalLightView; }
-	const _float4x4* GetDirectionalLightProj() const { return &m_DirectionalLightProj; }
+	const _float4x4* GetShadowLightView() const { return &m_ShadowLightView; }
+	const _float4x4* GetShadowLightProj() const { return &m_ShadowLightProj; }
 	void SetShadowCam(class CCamera* pShadowCam);
 	_float4 GetShadowCamLook();
 
-private:
+	void Imgui_Render();
 
-	vector<class CLight*>					m_Lights;
-	typedef vector<class CLight*>			LIGHTS;
+private:
+	unordered_map<string, class CLight*> m_Lights;
 
 	CCamera* m_pShadowCam = nullptr;
-	_float4x4 m_DirectionalLightView;
-	_float4x4 m_DirectionalLightProj;
+	_float4x4 m_ShadowLightView;
+	_float4x4 m_ShadowLightProj;
 
 public:
 	virtual void Free() override;

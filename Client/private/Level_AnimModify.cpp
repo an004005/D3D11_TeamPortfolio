@@ -93,7 +93,7 @@ HRESULT CLevel_AnimModify::Ready_Lights()
 	LightDesc.vAmbient = _float4(0.5f, 0.5f, 0.5f, 0.5f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
-	FAILED_CHECK(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc));
+	NULL_CHECK(pGameInstance->Add_Light("DirectionalLight", m_pDevice, m_pContext, LightDesc));
 
 	return S_OK;
 }
