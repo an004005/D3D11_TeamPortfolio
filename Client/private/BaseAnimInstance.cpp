@@ -1676,6 +1676,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 	m_mapAnimSocket.emplace("AnimSocket_Test", SocketList);
 	m_mapAnimSocket.emplace("Upper_Saperate_Animation", SocketList);
 	m_mapAnimSocket.emplace("Under_Saperate_Animation", SocketList);
+	m_mapAnimSocket.emplace("Kinetic_AnimSocket", SocketList);
 
 	return S_OK;
 }
@@ -1687,12 +1688,29 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 	_bool bChange = CheckFinishedAnimSocket();
 	_bool bLocalMove = true;
 
-	if (!m_mapAnimSocket.find("AnimSocket_Test")->second.empty())
+	string szCurAnimName = "";
+
+	// 소켓이 비어있는지 탐색
+	list<CAnimation*> CurSocket;
+
+	for (auto& iter : m_mapAnimSocket)
 	{
-		auto Socket = m_mapAnimSocket.find("AnimSocket_Test")->second.front();
+		if (iter.second.empty())
+			continue;
+		else
+		{
+			CurSocket = iter.second;
+			break;
+		}
+	}
+
+	// 발견한 소켓이 있으면 해당 소켓을 실행
+	if (!CurSocket.empty())
+	{
+		auto Socket = CurSocket.front();
 		if (bChange)
 		{
-			Socket = m_mapAnimSocket.find("AnimSocket_Test")->second.front();
+			Socket = CurSocket.front();
 			m_pModel->SetPlayAnimation(Socket->GetName());
 			m_pModel->SetCurAnimName(Socket->GetName());
 			m_fLerpTime = 0.f;
@@ -1703,17 +1721,39 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
 			m_fLerpTime += (_float)TimeDelta;
 		}
+		else if (m_bAttach)
+		{
+			m_fLerpTime = 0.f;	// 어태치면 바로 보간
+			m_bAttach = false;
+		}
 		else
 		{
+			szCurAnimName = Socket->GetName();
 			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+		}
+
+		if (m_bSeperateAnim)	// 분리 애니메이션이 돌아가면 하체는 업데이트하자
+		{
+			m_pModel->SetBoneMask(EBoneMask::OFF_CHILD_EQ, "Spine1");
+
+			m_pASM_Base->Tick(TimeDelta);
+			m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+
+			m_pModel->SetBoneMask(EBoneMask::ON_ALL);
 		}
 	}
 	else if (bChange)
 	{
 		bLocalMove = false;
 		m_pASM_Base->SetCurState("IDLE");
-		m_pASM_Base->GetCurState()->m_Animation->Reset();
+		//m_pASM_Base->GetCurState()->m_Animation->Reset();
 		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+		m_fLerpTime = 0.f;
+	}
+	else if (m_fLerpTime < m_fLerpDuration)
+	{
+		m_pASM_Base->GetCurState()->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+		m_fLerpTime += (_float)TimeDelta;
 	}
 	else
 	{
@@ -1721,38 +1761,8 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
 	}
 
-	// 무기 넣기
-	if (!m_mapAnimSocket.find("Upper_Saperate_Animation")->second.empty())
-	{
-		m_pModel->SetBoneMask(EBoneMask::OFF_ALL);
-		m_pModel->SetBoneMask(EBoneMask::ON_CHILD_EQ, "Spine1");
+	// 전체 본 마스킹을 할지, 상체에 대해서만 본 마스킹을 할지는 플레이어에서 던져주는 값에 따라 정해지도록 한다.
 
-		auto Socket = m_mapAnimSocket.find("Upper_Saperate_Animation")->second.front();
-		if (bChange)
-		{
-			Socket = m_mapAnimSocket.find("Upper_Saperate_Animation")->second.front();
-			m_pModel->SetPlayAnimation(Socket->GetName());
-			m_pModel->SetCurAnimName(Socket->GetName());
-			m_fLerpTime = 0.f;
-		}
-
-		if (1.f > m_fLerpTime / m_fLerpDuration)
-		{
-			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
-			m_fLerpTime += (_float)TimeDelta;
-		}
-		else
-		{
-			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
-		}
-
-		m_pModel->SetBoneMask(EBoneMask::ON_ALL);
-	}
-	else
-	{
-		m_pModel->SetBoneMask(EBoneMask::ON_ALL);
-	}
-	
 	m_pModel->Compute_CombindTransformationMatrix();
 
 	if (bLocalMove)
@@ -1763,6 +1773,15 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 
 		if (0.f != XMVectorGetX(XMVector3Length(vLocalMove)))
 			m_vLocalMove = vLocalMove;
+	}
+	
+	if ("" != szCurAnimName)
+	{
+		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix, szCurAnimName);
+
+		if (!m_bSeperateAnim)
+			m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
 	}
 
 	_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTargetObject->GetTransform()->Get_WorldMatrix());
@@ -1793,6 +1812,8 @@ void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
 
 	m_bOnFloor = pPlayer->isOnFloor();
 
+	m_bSeperateAnim = pPlayer->isSeperateAnim();
+
 	m_fPlayRatio = 0.f;
 	m_fPlayRatio = pPlayer->GetPlayRatio();
 
@@ -1811,13 +1832,40 @@ void CBaseAnimInstance::Imgui_RenderState()
 
 void CBaseAnimInstance::InputAnimSocket(const string& strSocName, list<CAnimation*> AnimList)
 {
+	// 기존 소켓을 싹 지우고 이걸로 덮어버림
+
 	for (auto& iter : m_mapAnimSocket)
 	{
+		if (!iter.second.empty())
+			iter.second.front()->Reset();
+	
 		list<CAnimation*> SocketList;
 		iter.second = SocketList;
 	}
 
 	m_mapAnimSocket[strSocName] = (AnimList);
+}
+
+void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
+{
+	// 소켓의 애니메이션을 교환하고 보간함, 아닐 경우 그냥 덮어버림
+
+	const auto List = m_mapAnimSocket.find(strSocName);
+
+	if (List != m_mapAnimSocket.end())
+	{
+		if (!List->second.empty())
+		{
+			m_bAttach = true;
+			List->second.front()->Reset();;
+		}
+		m_mapAnimSocket[strSocName] = (AnimList);
+	}
+}
+
+_bool CBaseAnimInstance::isSocketAlmostFinish(const string & strSocName)
+{
+	return (m_mapAnimSocket[strSocName].size() == 1) && (m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= 0.95);
 }
 
 _bool CBaseAnimInstance::CheckAnim(const string & szAnimName)

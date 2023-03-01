@@ -74,6 +74,10 @@ void CPlayer::Tick(_double TimeDelta)
 	MoveStateCheck(TimeDelta);
 	BehaviorCheck(TimeDelta);
 
+	m_pKineticStataMachine->Tick(TimeDelta);
+
+	SeperateCheck();
+
 	m_pASM->Tick(TimeDelta);
 
 	if (m_bCanMove)
@@ -177,13 +181,9 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 		(CComponent**)&m_pController));
 	
 	NULL_CHECK(m_pASM = CBaseAnimInstance::Create(m_pModel, this));
+	FAILED_CHECK(Setup_KineticStateMachine());
 	//NULL_CHECK(m_pState = CFSM_Player::Create(this));
 
-	return S_OK;
-}
-
-HRESULT CPlayer::SetUp_AttackFSM()
-{
 	return S_OK;
 }
 
@@ -220,6 +220,152 @@ HRESULT CPlayer::SetUp_Event()
 	return S_OK;
 }
 
+HRESULT CPlayer::Setup_KineticStateMachine()
+{
+	CAnimation*	pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_301_AL_capture_wait_start"));
+	m_Kinetic_RB_Start.push_back(m_pModel->Find_Animation("AS_ch0100_301_AL_capture_wait_start"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_301_AL_capture_wait_loop"));
+	m_Kinetic_RB_Loop.push_back(m_pModel->Find_Animation("AS_ch0100_301_AL_capture_wait_loop"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_301_AL_capture_wait_cancel"));
+	m_Kinetic_RB_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_301_AL_capture_wait_cancel"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_303_AL_throw2_wait_start"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_303_AL_throw2_wait_loop"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_303_AL_throw2_wait_cancel"));
+	m_Kinetic_RB_Throw01_Start.push_back(m_pModel->Find_Animation("AS_ch0100_303_AL_throw2_wait_start"));
+	m_Kinetic_RB_Throw01_Loop.push_back(m_pModel->Find_Animation("AS_ch0100_303_AL_throw2_wait_loop"));
+	m_Kinetic_RB_Throw01_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_303_AL_throw2_wait_cancel"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_302_AL_throw1_wait_start"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_302_AL_throw1_wait_loop"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_302_AL_throw1_wait_cancel"));
+	m_Kinetic_RB_Throw02_Start.push_back(m_pModel->Find_Animation("AS_ch0100_302_AL_throw1_wait_start"));
+	m_Kinetic_RB_Throw02_Loop.push_back(m_pModel->Find_Animation("AS_ch0100_302_AL_throw1_wait_loop"));
+	m_Kinetic_RB_Throw02_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_302_AL_throw1_wait_cancel"));
+
+	m_pKineticStataMachine = CFSMComponentBuilder().InitState("NO_USE_KINETIC")
+
+		.AddState("NO_USE_KINETIC")
+		.Tick([&](double g_fTimeDelta) { m_bKineticMove = false; })
+			.AddTransition("NO_USE_KINETIC to KINETIC_RB_START", "KINETIC_RB_START")
+			.Predicator([&]()->_bool{return m_bKineticRB;})
+			.Priority(0)
+
+#pragma region KineticRB
+
+		.AddState("KINETIC_RB_START")
+			.OnStart([&]() { m_pASM->InputAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Start); })
+		.Tick([&](double g_fTimeDelta) { m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_START to KINETIC_RB_LOOP", "KINETIC_RB_LOOP")
+			.Predicator([&]()->_bool{return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket");})
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_START to KINETIC_RB_CANCEL", "KINETIC_RB_CANCEL")
+			.Predicator([&]()->_bool{return !m_bKineticRB;})
+			.Priority(0)
+
+		.AddState("KINETIC_RB_LOOP")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Loop); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_START to KINETIC_RB_THROW_01_START", "KINETIC_RB_THROW_01_START")
+			.Predicator([&]()->_bool{return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket");})
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_START to KINETIC_RB_CANCEL", "KINETIC_RB_CANCEL")
+			.Predicator([&]()->_bool{return !m_bKineticRB;})
+			.Priority(0)
+
+		.AddState("KINETIC_RB_CANCEL")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Cancel); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_CANCEL to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool{return !m_bKineticRB && m_pASM->isSocketEmpty("Kinetic_AnimSocket");})
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_CANCEL to KINETIC_RB_START", "KINETIC_RB_START")
+			.Predicator([&]()->_bool{return m_bKineticRB && (m_pASM->GetSocketAnimation("Kinetic_AnimSocket")->GetPlayRatio() >= 0.2f);})
+			.Priority(0)
+			
+#pragma endregion KineticRB
+
+#pragma region KineticRB_Throw
+
+		// 일반 던지기
+		.AddState("KINETIC_RB_THROW_01_START")	// 루프 / 앤드
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw01_Start); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_THROW_01_START to KINETIC_RB_THROW_01_END", "KINETIC_RB_THROW_01_END")
+			.Predicator([&]()->_bool {return !m_bKineticRB; })
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_THROW_01_START to KINETIC_RB_THROW_01_LOOP", "KINETIC_RB_THROW_01_LOOP")
+			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket") && m_pASM->CheckSocketAnim("Kinetic_AnimSocket", "AS_ch0100_303_AL_throw2_wait_start"); })
+			.Priority(0)
+
+		.AddState("KINETIC_RB_THROW_01_LOOP")	// 앤드 / 스타트2
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw01_Loop); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_THROW_01_LOOP to KINETIC_RB_THROW_01_END", "KINETIC_RB_THROW_01_END")
+			.Predicator([&]()->_bool {return !m_bKineticRB && (m_pASM->GetSocketAnimation("Kinetic_AnimSocket")->GetPlayRatio() >= 0.5f); })
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_THROW_01_LOOP to KINETIC_RB_THROW_02_START", "KINETIC_RB_THROW_02_START")
+			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket") && m_pASM->CheckSocketAnim("Kinetic_AnimSocket", "AS_ch0100_303_AL_throw2_wait_loop"); })
+			.Priority(0)
+
+		.AddState("KINETIC_RB_THROW_01_END")	// 종료 / 처음시작
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw01_Cancel); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_THROW_01_END to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool {return !m_bKineticRB && m_pASM->isSocketEmpty("Kinetic_AnimSocket"); })
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_THROW_01_END to KINETIC_RB_START", "KINETIC_RB_START")
+			.Predicator([&]()->_bool {return m_bKineticRB && (m_pASM->GetSocketAnimation("Kinetic_AnimSocket")->GetPlayRatio() >= 0.2f); })
+			.Priority(0)
+
+		// 일반 던지기 연속
+		.AddState("KINETIC_RB_THROW_02_START")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw02_Start); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_THROW to KINETIC_RB_THROW_02_LOOP", "KINETIC_RB_THROW_02_LOOP")
+			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket"); })
+			.Priority(0)
+
+		.AddState("KINETIC_RB_THROW_02_LOOP")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw02_Loop); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_THROW to KINETIC_RB_THROW_02_END", "KINETIC_RB_THROW_02_END")
+			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket"); })
+			.Priority(0)
+
+		.AddState("KINETIC_RB_THROW_02_END")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw02_Cancel); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_THROW to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool {return m_pASM->isSocketEmpty("Kinetic_AnimSocket"); })
+			.Priority(0)
+
+#pragma endregion KineticRB_Throw
+
+		.Build();
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Setup_AnimSocket()
 {
 	CAnimation*	pAnimation = nullptr;
@@ -249,7 +395,7 @@ _bool CPlayer::isPlayerAttack(void)
 
 	if (szCurAnim.find(szKeyString) != string::npos)
 	{
-		IM_LOG(szCurAnim.c_str());
+		//IM_LOG(szCurAnim.c_str());
 		return true;
 	}
 
@@ -279,7 +425,7 @@ _bool CPlayer::Charge(_uint iNum, _float fCharge)
 	}
 	else
 	{
-		IM_LOG(to_string(m_fCharge[iNum]).c_str());
+		//IM_LOG(to_string(m_fCharge[iNum]).c_str());
 		return true;
 	}
 }
@@ -411,6 +557,13 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 	{
 		SmoothTurn_Attack(TimeDelta);
 	}
+
+	m_bKineticRB = m_pController->KeyPress(CController::MOUSE_RB);
+	m_bKineticG = m_pController->KeyPress(CController::G);
+
+	//_bool bCurIdle = false;
+	//if(m_pModel->GetPlayAnimation() != nullptr)
+	//	bCurIdle = m_pModel->GetPlayAnimation()->GetName() != "AS_ch0100_002_AL_wait02";
 }
 
 void CPlayer::MoveStateCheck(_double TimeDelta)
@@ -475,6 +628,17 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 			m_pTransformCom->SetAxis(CTransform::STATE_LOOK, vCamLook);
 		}
 
+	}
+}
+
+void CPlayer::SeperateCheck()
+{
+	m_bSeperateAnim = true;
+
+	if (m_pModel->GetPlayAnimation() != nullptr)
+	{
+		m_bSeperateAnim = (m_pModel->GetPlayAnimation()->GetName() != "AS_ch0100_002_AL_wait02") &&
+			(m_bKineticMove || (!m_pASM->isSocketEmpty("Upper_Saperate_Animation")));
 	}
 }
 
@@ -543,7 +707,7 @@ void CPlayer::Free()
 		Safe_Release(iter);
 	m_vecWeapon.clear();
 
-	Safe_Release(m_pFSM);
+	Safe_Release(m_pKineticStataMachine);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pModel);

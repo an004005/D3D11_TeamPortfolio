@@ -242,6 +242,10 @@ _bool CAnimationInstance::CheckFinishedAnimSocket()
 				if (PairSoc.second.empty() && PairSoc.first.find("Saperate") != (string::npos))
 					return false;
 
+				// 소켓 이름에 Kinetic이 들어갈 경우 전부 비게 되면 false를 반환하여 기존 상태를 유지하도록 한다.
+				if (PairSoc.second.empty() && PairSoc.first.find("Kinetic") != (string::npos))
+					return false;
+
 				return true;
 			}
 		}

@@ -161,10 +161,10 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 
 	{
 		// 플레이어 이벤트 콜러 지정용
-		pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
-			CController::Create())))
-			return E_FAIL;
+		//pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
+		//if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
+		//	CController::Create())))
+		//	return E_FAIL;
 	}
 
 	// PJW Monster Model Anim Control Purpose
@@ -197,11 +197,12 @@ HRESULT CLevel_AnimModify::Ready_Layer_Camera(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	CGameObject* pGameObject = nullptr;
-	pGameObject = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
-	//pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(65.f, 5.f, 60.f, 1.f));
-	//pGameObject->GetTransform()->LookAt(XMVectorSet(65.f, 0.f, 65.f, 1.f));
-	NULL_CHECK(pGameObject);
+	//CGameObject* pGameObject = nullptr;
+	//pGameObject = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
+	////pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(65.f, 5.f, 60.f, 1.f));
+	////pGameObject->GetTransform()->LookAt(XMVectorSet(65.f, 0.f, 65.f, 1.f));
+	//NULL_CHECK(pGameObject);
+	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
 	return S_OK;
 }
