@@ -174,8 +174,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_CTL"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
-	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Outline"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.f, 0.f, 0.f, 0.f)), E_FAIL);
-	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_OutlineFlag"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.f, 0.f, 0.f, 0.f)), E_FAIL);
+	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Outline"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_OutlineFlag"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.f, 0.f, 0.f, 0.f)));
 
 
 	/* For.Target_Diffuse_Copy */
@@ -228,7 +228,7 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_ToonDeferred"), TEXT("Target_CTL"))))
 		return E_FAIL;
 
-	FAILED_CHECK(m_pTarget_Manager->Add_MRT(TEXT("MRT_Outline"), TEXT("Target_Outline")), E_FAIL);
+	FAILED_CHECK(m_pTarget_Manager->Add_MRT(TEXT("MRT_Outline"), TEXT("Target_Outline")));
 
 
 	/* For.MRT_LightAcc */ /* 빛 연산의 결과를 저장할 렌더타겟들.  */

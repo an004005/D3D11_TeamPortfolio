@@ -52,6 +52,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 //		return E_FAIL;
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
+
+	m_pPlayerCam = m_pGameInstance->Add_Camera("PlayerCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Player");
 	
 	m_pPlayerCam = dynamic_cast<CCamera*>(m_pGameInstance->Clone_GameObject_Get(L"Layer_Camera", TEXT("Prototype_GameObject_Camera_Player")));
 	Assert(m_pPlayerCam != nullptr);

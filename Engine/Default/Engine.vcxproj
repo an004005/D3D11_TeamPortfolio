@@ -170,6 +170,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\public\Bone.h" />
     <ClInclude Include="..\public\Camera.h" />
+    <ClInclude Include="..\public\Camera_Manager.h" />
     <ClInclude Include="..\public\Cell.h" />
     <ClInclude Include="..\public\Channel.h" />
     <ClInclude Include="..\public\Component.h" />
@@ -216,6 +217,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\Imgui\ImZoomSlider.h" />
     <ClInclude Include="..\public\Imgui_AnimModifier.h" />
     <ClInclude Include="..\public\Imgui_AppLog.h" />
+    <ClInclude Include="..\public\Imgui_CameraManager.h" />
     <ClInclude Include="..\public\Imgui_Manager.h" />
     <ClInclude Include="..\public\Imgui_ModelConverter.h" />
     <ClInclude Include="..\public\Imgui_PhysX.h" />
@@ -276,6 +278,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\Base.cpp" />
     <ClCompile Include="..\private\Bone.cpp" />
     <ClCompile Include="..\private\Camera.cpp" />
+    <ClCompile Include="..\private\Camera_Manager.cpp" />
     <ClCompile Include="..\private\Cell.cpp" />
     <ClCompile Include="..\private\Channel.cpp" />
     <ClCompile Include="..\private\Component.cpp" />
@@ -299,6 +302,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\ImguiUtils.cpp" />
     <ClCompile Include="..\private\Imgui_AnimModifier.cpp" />
     <ClCompile Include="..\private\Imgui_AppLog.cpp" />
+    <ClCompile Include="..\private\Imgui_CameraManager.cpp" />
     <ClCompile Include="..\private\Imgui_Manager.cpp" />
     <ClCompile Include="..\private\Imgui_ModelConverter.cpp" />
     <ClCompile Include="..\private\Imgui_PhysX.cpp" />
