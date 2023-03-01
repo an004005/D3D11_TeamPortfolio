@@ -110,6 +110,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_SCL_SECURE_NO_WARNINGS;USE_BOOKMARK;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../public/;../../Reference/Headers/;../Default/;../../Reference/Headers/Imgui;../../Reference/Headers/fmod</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

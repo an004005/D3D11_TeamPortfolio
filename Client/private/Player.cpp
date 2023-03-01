@@ -12,6 +12,9 @@
 #include "Controller.h"
 #include "ScarletWeapon.h"
 #include "Camera.h"
+#include "TrailSystem.h"
+#include "Weapon_wp0190.h"
+#include "RigidBody.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -45,11 +48,16 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(Setup_Parts()))
 		return E_FAIL;
 
+//	if (FAILED(SetUp_Event()))	-> 이건 진짜 천천히 보자...
+//		return E_FAIL;
+
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
 
 	m_pPlayerCam = m_pGameInstance->Add_Camera("PlayerCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Player");
-	Assert(m_pPlayerCam != nullptr);
-	Safe_AddRef(m_pPlayerCam);
+	
+	//m_pPlayerCam = dynamic_cast<CCamera*>(m_pGameInstance->Clone_GameObject_Get(L"Layer_Camera", TEXT("Prototype_GameObject_Camera_Player")));
+	//Assert(m_pPlayerCam != nullptr);
+	//Safe_AddRef(m_pPlayerCam);
 
 	return S_OK;
 }
@@ -76,13 +84,20 @@ void CPlayer::Tick(_double TimeDelta)
 
 		if (m_bCanRun)				fSpeedControl *= 2.f;
 
-//		if (!m_bCanRun && m_bAir)	fSpeedControl *= 0.5f;
-
 		m_pTransformCom->Move(fSpeedControl, m_vMoveDir);
 	}
 
 	for (auto& iter : m_vecWeapon)
+	{
 		iter->Tick(TimeDelta);
+	}
+
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	if (pGameInstance->KeyDown(DIK_L))
+	{
+		m_pASM->InputAnimSocket("Upper_Saperate_Animation", m_TransNeutralSocket);
+	}
 
 	isPlayerAttack();
 }
@@ -172,6 +187,39 @@ HRESULT CPlayer::SetUp_AttackFSM()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_Event()
+{
+	m_pModel->Add_EventCaller("Turn_Enable", [&]() {Event_SetCanTurn(true); });
+	m_pModel->Add_EventCaller("Turn_Disable", [&]() {Event_SetCanTurn(false); });
+
+	m_pModel->Add_EventCaller("Move_Enable", [&]() {Event_SetCanMove(true); });
+	m_pModel->Add_EventCaller("Move_Disable", [&]() {Event_SetCanMove(false); });
+
+	m_pModel->Add_EventCaller("Run_Enable", [&]() {Event_SetCanRun(true); });
+	m_pModel->Add_EventCaller("Run_Disable", [&]() {Event_SetCanRun(false); });
+
+	m_pModel->Add_EventCaller("AtkTurn_Enable", [&]() {Event_SetCanTurn_Attack(true); });
+	m_pModel->Add_EventCaller("AtkTurn_Disable", [&]() {Event_SetCanTurn_Attack(false); });
+
+	m_pModel->Add_EventCaller("LocalRevise_Enable", [&]() {Event_SetLocalRevise(true); });
+	m_pModel->Add_EventCaller("LocalRevise_Disable", [&]() {Event_SetLocalRevise(false); });
+
+	m_pModel->Add_EventCaller("OnAir_Enable", [&]() {Event_SetOnAir(true); });
+	m_pModel->Add_EventCaller("OnAir_Disable", [&]() {Event_SetOnAir(false); });
+
+	m_pModel->Add_EventCaller("OnAir_Enable", [&]() {Event_SetOnAir(true); });
+	m_pModel->Add_EventCaller("OnAir_Disable", [&]() {Event_SetOnAir(false); });
+
+	m_pModel->Add_EventCaller("Gravity_Enable", [&]() {Event_SetGravity(true); });
+	m_pModel->Add_EventCaller("Gravity_Disable", [&]() {Event_SetGravity(false); });
+
+	m_pModel->Add_EventCaller("MoveLimitReset", [&]() {Event_MoveLimitReset(); });
+	m_pModel->Add_EventCaller("Event_AttackLimitReset", [&]() {Event_AttackLimitReset(); });
+	m_pModel->Add_EventCaller("Event_ChargeReset", [&]() {Event_ChargeReset(); });
+	
+	return S_OK;
+}
+
 HRESULT CPlayer::Setup_AnimSocket()
 {
 	CAnimation*	pAnimation = nullptr;
@@ -183,6 +231,9 @@ HRESULT CPlayer::Setup_AnimSocket()
 	m_TestAnimSocket.push_back(pAnimation = m_pModel->Find_Animation("AS_ch0100_011_AL_walk_start_F"));
 	m_TestAnimSocket.push_back(pAnimation = m_pModel->Find_Animation("AS_ch0100_016_AL_walk"));
 	m_TestAnimSocket.push_back(pAnimation = m_pModel->Find_Animation("AS_ch0100_018_AL_walk_end"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_104_Up_trans_neutral"));
+	m_TransNeutralSocket.push_back(m_pModel->Find_Animation("AS_ch0100_104_Up_trans_neutral"));
 
 	return S_OK;
 }
@@ -247,6 +298,8 @@ CPlayer & CPlayer::SetAbleState(REMOTE tagRemote)
 	if (tagRemote.AttackLimitReset) { AttackLimitReset(); }
 	if (tagRemote.ChargeReset) { Reset_Charge(); }
 
+	m_bLocalRevise = tagRemote.LocalRevise;
+
 	return *this;
 }
 
@@ -273,6 +326,9 @@ _bool CPlayer::UseAttackCnt(_uint eType)
 	case LIMIT_AIRATK02:
 		if (0 < m_AttackLimit.m_iAttack_Air02) { m_AttackLimit.m_iAttack_Air02 -= 1; return true; }
 		break;
+	case LIMIT_AIRDODGEATK:
+		if (0 < m_AttackLimit.m_iAttack_AirDodge) { m_AttackLimit.m_iAttack_AirDodge -= 1; return true; }
+		break;
 	default:
 		break;
 	}
@@ -286,6 +342,9 @@ _bool CPlayer::UseMoveCnt(_uint eType)
 	case LIMIT_DOUBLEJUMP:
 		if (0 < m_MoveLimit.m_iDoubleJump) { m_MoveLimit.m_iDoubleJump -= 1; return true; }
 		break;
+	case LIMIT_AIRDODGE:
+		if (0 < m_MoveLimit.m_iAirDodge) { m_MoveLimit.m_iAirDodge -= 1; return true; }
+		break;
 	default:
 		break;
 	}
@@ -298,11 +357,13 @@ void CPlayer::AttackLimitReset(void)
 	m_AttackLimit.m_iNonChargeAttack_Air = m_AttackLimit.MAX_iNonChargeAttack_Air;
 	m_AttackLimit.m_iAttack_Air01 = m_AttackLimit.MAX_iAttack_Air01;
 	m_AttackLimit.m_iAttack_Air02 = m_AttackLimit.MAX_iAttack_Air02;
+	m_AttackLimit.m_iAttack_AirDodge = m_AttackLimit.MAX_iAttack_AirDodge;
 }
 
 void CPlayer::MoveLimitReset(void)
 {
 	m_MoveLimit.m_iDoubleJump = m_MoveLimit.MAX_iDoubleJump;
+	m_MoveLimit.m_iAirDodge = m_MoveLimit.MAX_iAirDodge;
 }
 
 void CPlayer::Jump()
@@ -341,6 +402,8 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 
 	m_bNonCharge = m_pController->KeyUp(CController::C);
 	m_bCharge = m_pController->KeyPress(CController::C);
+
+	if (!m_bCharge) m_fBefCharge = 0.f;
 
 	m_bJump = m_pController->KeyDown(CController::SPACE);
 
@@ -405,6 +468,13 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 
 		if (m_bAir)	// 공중 상태에선 회전이 먹지 않음
 			m_vMoveDir = vPlayerLook;
+
+		if (m_bLocalRevise)
+		{
+			Vector4 vCamLook = pGameInstance->Get_CamLook();
+			m_pTransformCom->SetAxis(CTransform::STATE_LOOK, vCamLook);
+		}
+
 	}
 }
 
@@ -417,7 +487,7 @@ HRESULT CPlayer::Setup_Parts()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json Weapon;
+	Json Weapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/wp0190.json");
 	Weapon["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
 
 	CGameObject*	pGameObject = nullptr;
@@ -429,8 +499,7 @@ HRESULT CPlayer::Setup_Parts()
 	Desc.m_pTransform = m_pTransformCom;
 	Desc.m_pJson = &Weapon;
 
-//	/*pGameObject = */pGameInstance->Clone_GameObject/*_Get*/(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
-////	m_vecWeapon.push_back(pGameObject);
+	//pGameInstance->Clone_GameObject(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
 
 	pGameObject = pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("PlayerWeapon"), &Desc);
 	m_vecWeapon.push_back(pGameObject);
