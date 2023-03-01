@@ -133,7 +133,9 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
 	vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
 
-	if (fShaderIdx == SHADER_DEFAULT)
+	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).a;
+
+	if (CheckPostProcessFlag(fShaderFlag, SHADER_DEFAULT))
 	{
 		vector		vRMA = g_RMATexture.Sample(LinearSampler, In.vTexUV);
 
@@ -150,7 +152,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 		return Out;
 
 	}
-	else if (fShaderIdx == SHADER_TOON)
+	else if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
 		float4 vCTL = g_CTLTexture.Sample(LinearSampler, In.vTexUV);
 		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
@@ -179,7 +181,6 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	vector		vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
 
 	float		fViewZ = vDepthDesc.y * g_Far;
-	float fShaderIdx = vDepthDesc.a;
 
 	/* 0 ~ 1 => -1 ~ 1 */
 	vector		vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
@@ -198,7 +199,9 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	float		fDistance = length(vLightDir);
 	float		fAtt = max((g_fLightRange - fDistance), 0.f) / g_fLightRange;
 
-	if (fShaderIdx == SHADER_DEFAULT)
+	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).a;
+
+	if (CheckPostProcessFlag(fShaderFlag, SHADER_DEFAULT))
 	{
 		vector		vRMA = g_RMATexture.Sample(LinearSampler, In.vTexUV);
 
@@ -213,8 +216,9 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 		Out.vShade.rgb = LightSurface(V, vNormal.xyz, vLightColorIntencity, vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
 		Out.vShade.a = vDiffuse.a;
 	}
-	else if (fShaderIdx == SHADER_TOON)
+	else if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
+		
 		float4 vCTL = g_CTLTexture.Sample(LinearSampler, In.vTexUV);
 		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
 
@@ -229,7 +233,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 		float spec = GetSpecular(vNormal.xyz, vLook.xyz, vLightDir.xyz, 30.f);
 		Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec * fAtt;
 	}
-
+	
 	return Out;
 }
 
@@ -241,7 +245,9 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	// vector		vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	// vector		vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
-	if (vDepth.a == SHADER_TOON)
+	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).a;
+
+	if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
 		vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
@@ -251,7 +257,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 		if (0.0f == Out.vColor.a)
 			discard;
 	}
-	else if (vDepth.a == SHADER_DEFAULT)
+	else if (CheckPostProcessFlag(fShaderFlag, SHADER_DEFAULT))
 	{
 		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
 		Out.vColor = vShade * pow(2.f, vDepth.b);
