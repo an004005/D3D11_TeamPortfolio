@@ -72,15 +72,19 @@ PS_OUT_Flag PS_MAIN_Flag(PS_IN In)
 	return Out;
 }
 
-
-PS_OUT_Flag PS_MAIN_TEST(PS_IN In)
+// g_tex_0 : 원 마스크 텍스쳐
+// g_vec4_0 : 테스트용 컬러
+PS_OUT_Flag PS_DISTORTION(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
 
 
 	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
 	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.r);
-	Out.vColor = 0.f;
+
+
+	Out.vColor = 0;
 	// Out.vColor.a = 1 - Out.vColor.r;
 	
 
@@ -88,6 +92,26 @@ PS_OUT_Flag PS_MAIN_TEST(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_SCIFI(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	// float4 defaultColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	// Out.vColor = defaultColor * g_vec4_0;
+	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
+	// Out.vColor = g_vec4_0;
+	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.r);
+	
+	Out.vFlag = float4(0.f, SHADER_SCIFI, 0.f, Out.vColor.r);
+
+
+	// Out.vColor = 0;
+	// Out.vColor.a = 1 - Out.vColor.r;
+	
+
+	
+	return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -106,7 +130,7 @@ technique11 DefaultTechnique
 	}
 
 	//1
-	pass Test
+	pass Distortion
 	{
 		SetRasterizerState(RS_NonCulling);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
@@ -116,6 +140,19 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_TEST();
+		PixelShader = compile ps_5_0 PS_DISTORTION();
+	}
+	//2
+	pass Scifi
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SCIFI();
 	}
 }

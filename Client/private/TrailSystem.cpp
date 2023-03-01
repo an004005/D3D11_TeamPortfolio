@@ -96,9 +96,9 @@ void CTrailSystem::Tick(_double TimeDelta)
 			_vector vRight = XMVector3Normalize(vSplinePos - vPrePos);
 			_vector vLookAtCam = XMVector3Normalize(vCamPos - vSplinePos);
 
-			float fRadian = XMConvertToDegrees(fabs(acosf(XMVectorGetX(XMVector3Dot(vLookAtCam, vRight)))));
-			if (fRadian < 5.f)
-				continue;
+				float fRadian = XMConvertToDegrees(fabs(acosf(XMVectorGetX(XMVector3Dot(vLookAtCam, vRight)))));
+				if (fRadian < 5.f)
+					continue;
 
 			_vector vUp = XMVector3Cross(vRight, vLookAtCam);
 			_vector vLook = XMVector3Cross(vRight, vUp);

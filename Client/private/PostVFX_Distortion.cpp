@@ -33,10 +33,10 @@ void CPostVFX_Distortion::Tick(_double TimeDelta)
 		m_bVisible = true;
 }
 
-void CPostVFX_Distortion::SetWhiteOutTime(_float fWhiteOutTime)
-{
-	m_tParam.Floats[0] = fWhiteOutTime;
-}
+// void CPostVFX_Distortion::SetWhiteOutTime(_float fWhiteOutTime)
+// {
+// 	m_tParam.Floats[0] = fWhiteOutTime;
+// }
 
 CPostVFX_Distortion* CPostVFX_Distortion::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

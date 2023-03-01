@@ -57,4 +57,7 @@ void CPostProcess::Free()
 {
 	CGameObject::Free();
 	Safe_Release(m_pRenderer);
+
+	for (auto e : m_tParam.Textures)
+		Safe_Release(e.first);
 }

@@ -33,41 +33,6 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 
 	m_pBuffer = CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, m_iInstanceNum);
 
-
-	if (pArg)
-	{
-		Json& json = *static_cast<Json*>(pArg);
-		CShader::LoadShaderParam(m_tParam, json["ShaderParams"]);
-
-		m_iPassIdx = json["Pass"];
-		m_fDuration = json["Duration"];
-		m_bLoop = json["Loop"];
-		m_fSpawnTickTime = json["SpawnTickTime"];
-		m_iBurstCnt = json["BurstCnt"];
-		m_bLifeRand = json["LifeRand"];
-		m_fLifeMinMax = json["LifeMinMax"];
-		m_fLife = json["Life"];
-		m_bSpeedRand = json["SpeedRand"];
-		m_fSpeedMinMax = json["SpeedMinMax"];
-		m_fSpeed = json["Speed"];
-		m_fSize = json["pSize"];
-		m_fSphereRadius = json["SphereRadius"];
-		m_bFromOrigin = json["FromOrigin"];
-		m_bLocal = json["bLocal"];
-		m_bSizeDecreaseByLife = json["bSizeDecreaseByLife"];
-		if (json.contains("bSizeIncreaseByLife"))
-			m_bSizeIncreaseByLife = json["bSizeIncreaseByLife"];
-		if (json.contains("Shape"))
-			m_eShape = json["Shape"];
-		if (json.contains("ConeDirDegree"))
-			m_fConeAngleDeg = json["ConeDirDegree"];
-		if (json.contains("ConeOriginRadius"))
-			m_fConeOriginRadius = json["ConeOriginRadius"];
-		if (json.contains("IncreaseMaxSize"))
-			m_fIncreaseMaxSize = json["IncreaseMaxSize"];
-	}
-
-
 	return S_OK;
 }
 
@@ -156,6 +121,42 @@ void CParticleSystem::SaveToJson(Json& json)
 	json["ConeDirDegree"] = m_fConeAngleDeg;
 	json["ConeOriginRadius"] = m_fConeOriginRadius;
 	json["IncreaseMaxSize"] = m_fIncreaseMaxSize;
+}
+
+void CParticleSystem::LoadFromJson(const Json& json)
+{
+	CGameObject::LoadFromJson(json);
+
+	// Json& json = *static_cast<Json*>(json);
+	CShader::LoadShaderParam(m_tParam, json["ShaderParams"]);
+
+	m_iPassIdx = json["Pass"];
+	m_fDuration = json["Duration"];
+	m_bLoop = json["Loop"];
+	m_fSpawnTickTime = json["SpawnTickTime"];
+	m_iBurstCnt = json["BurstCnt"];
+	m_bLifeRand = json["LifeRand"];
+	m_fLifeMinMax = json["LifeMinMax"];
+	m_fLife = json["Life"];
+	m_bSpeedRand = json["SpeedRand"];
+	m_fSpeedMinMax = json["SpeedMinMax"];
+	m_fSpeed = json["Speed"];
+	m_fSize = json["pSize"];
+	m_fSphereRadius = json["SphereRadius"];
+	m_bFromOrigin = json["FromOrigin"];
+	m_bLocal = json["bLocal"];
+	m_bSizeDecreaseByLife = json["bSizeDecreaseByLife"];
+	if (json.contains("bSizeIncreaseByLife"))
+		m_bSizeIncreaseByLife = json["bSizeIncreaseByLife"];
+	if (json.contains("Shape"))
+		m_eShape = json["Shape"];
+	if (json.contains("ConeDirDegree"))
+		m_fConeAngleDeg = json["ConeDirDegree"];
+	if (json.contains("ConeOriginRadius"))
+		m_fConeOriginRadius = json["ConeOriginRadius"];
+	if (json.contains("IncreaseMaxSize"))
+		m_fIncreaseMaxSize = json["IncreaseMaxSize"];
+
 }
 
 void CParticleSystem::Imgui_RenderProperty()

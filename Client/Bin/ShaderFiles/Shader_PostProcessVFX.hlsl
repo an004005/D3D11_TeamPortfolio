@@ -71,13 +71,38 @@ PS_OUT PS_MAIN(PS_IN In)
 		float2 distortionUV = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time));
 		float4 DistortionTex = g_tex_0.Sample(LinearSampler, distortionUV);
 		float fWeight = DistortionTex.r * g_float_1;
+
 		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, (In.vTexUV + fWeight));
 
 		Out.vColor = LDR * (1.f - vFlags.a) + OriginColor * vFlags.a;
 
 		Out.vColor.a = 1.f;
 
-		return Out;
+		// return Out;
+	}
+	else if(vFlags.y == SHADER_SCIFI)
+	{
+		// float2 randomNormal = g_tex_0.Sample(LinearSampler, In.vTexUV).xy;
+
+		float4 ScifiTex = g_tex_0.Sample(LinearSampler, In.vTexUV * 20.f);
+		float4 TestTex = g_LDRTexture.Sample(LinearSampler, (In.vTexUV));
+		float4 BlendTex = ScifiTex * TestTex * 2.0;
+
+		float4 ScifiNoiseTex = g_tex_1.Sample(LinearSampler, In.vTexUV* 20.f);
+
+		float4 FinalColor = BlendTex * ScifiNoiseTex * 2.0;
+
+		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, (In.vTexUV));
+
+		Out.vColor = saturate(FinalColor);
+
+
+		Out.vColor.a = 1.f;
+
+		
+		// Out.vColor.a = 1.f;
+
+		// return Out;
 	}
 	else
 		Out.vColor = LDR;

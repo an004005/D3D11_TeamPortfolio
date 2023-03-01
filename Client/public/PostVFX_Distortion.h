@@ -13,7 +13,7 @@ public:
 public:
 	virtual HRESULT					Initialize(void* pArg) override;
 	virtual void					Tick(_double TimeDelta) override;
-	void							SetWhiteOutTime(_float fWhiteOutTime);
+	// void							SetWhiteOutTime(_float fWhiteOutTime);
 
 public:
 	static CPostVFX_Distortion*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

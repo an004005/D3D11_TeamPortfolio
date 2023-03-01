@@ -23,6 +23,7 @@
 #include "Player.h"
 #include "Controller.h"
 #include "PostVFX_Distortion.h"
+#include "PostVFX_Scifi.h"
 #include "PostVFX_WhiteOut.h"
 
 
@@ -67,8 +68,9 @@ void CLevel_Effect::Tick(_double TimeDelta)
 {
 	CLevel::Tick(TimeDelta);
 
-	if(CGameInstance::GetInstance()->KeyDown(DIK_SPACE))
+	if(ImGui::Button("Add Sample EffectSystem"))
 	{
+		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectSystem")));
 	}
 }
 
@@ -163,11 +165,17 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 
 
 
-	// For PostVFX Test
+	// For PostVFX Distortion
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
 		CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	// 
 
+	// For PostVFX Scifi
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
+		CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	// 
 
 	// 모델 추가하는 방법
 	// auto pModel_VFX = CModel::Create(m_pDevice, m_pContext,
@@ -202,15 +210,19 @@ HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectSystem")));
 
 	//For PostVFX
-
-	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_PostVFX", TEXT("ProtoPostVFX_Distortion")));
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectSystem")));
+	Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_Effect.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
+	FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_PostVFX", TEXT("ProtoPostVFX_Scifi")));
 	//~For PostVFX
 
-	Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Distortion/Distortion_Effect.json");
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &AttackMesh);
-
-	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Distortion/Distortion_PostVFX.json");
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Test);
+	// For Distortion
+	// Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_Effect.json");
+	// pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &AttackMesh);
+	//
+	// Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
+	// pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Test);
+	//~ For Distortion
 
 	
 
@@ -224,8 +236,10 @@ HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 
 	// Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Trail/PlayerSwordTrail.json");
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
-
-	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_ParticleSystem")));
+	//
+	//
+	// Json Particle = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/ParticleSystem/Default_Particle.json");
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_ParticleSystem"), &Particle));
 
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Preview", L"MaterialPreview"));
 
