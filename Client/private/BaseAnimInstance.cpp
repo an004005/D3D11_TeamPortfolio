@@ -19,7 +19,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_002_AL_wait02"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({false, false, false, false, false, true, true, true, true, false});})
 
 		.AddTransition("IDLE to WALK", "WALK")
 		.Predicator([&]()->_bool { return m_bWalk; })
@@ -53,7 +53,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_021_AL_run_start_F"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({false, false, false, false, false, true, true, true, true, false });})
 		.AddTransition("WALK to WALK_START_FRONT", "WALK_START_FRONT")
 		.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_F; })
 		.Duration(0.1f).Priority(0)
@@ -86,7 +86,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_021_AL_run_start_F"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ true, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ true, false, false, false, false, true, true, true, true, false });})
 		.FinishEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); })
 
 		.AddTransition("WALK to ATK_A1", "ATK_A1")
@@ -122,7 +122,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_022_AL_run_start_L"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 		.FinishEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); })
 
 		.AddTransition("WALK to ATK_A1", "ATK_A1")
@@ -157,7 +157,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_023_AL_run_start_R"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 		.FinishEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); })
 
 		.AddTransition("WALK to ATK_A1", "ATK_A1")
@@ -192,7 +192,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_024_AL_run_start_BL"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 		.FinishEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); })
 
 		.AddTransition("WALK to ATK_A1", "ATK_A1")
@@ -227,7 +227,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_025_AL_run_start_BR"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 		.FinishEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); })
 
 		.AddTransition("WALK to ATK_A1", "ATK_A1")
@@ -262,7 +262,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_026_AL_run"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ true, true, false, false, false, true, true, true, true});})
+		->SetAbleState({ true, true, false, false, false, true, true, true, true, false });})
 		.AddTransition("WALK to ATK_A1", "ATK_A1")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
 		.Duration(0.1f).Priority(1)
@@ -291,7 +291,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_028_AL_run_end"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 
 		.AddTransition("WALK_END to ATK_A1", "ATK_A1")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
@@ -328,7 +328,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_201_AL_atk_a1"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, true, false, true, true, false, true});})
+		->SetAbleState({ false, false, false, true, false, true, true, false, true, false });})
 
 		.AddTransition("ATK_A1 to ATK_A2", "ATK_A2")
 		.Predicator([&]()->_bool {return m_bLeftClick && (0.15f <= m_fPlayRatio) && (0.3f > m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && (!m_bLerp); })
@@ -365,7 +365,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_202_AL_atk_a2"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, true, false, true, true, false, true});})
+		->SetAbleState({ false, false, false, true, false, true, true, false, true, false });})
 
 		.AddTransition("ATK_A2 to ATK_A3", "ATK_A3")
 		.Predicator([&]()->_bool {return m_bLeftClick && (0.15f <= m_fPlayRatio) && (0.5f > m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")) && (!m_bLerp); })
@@ -402,7 +402,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_203_AL_atk_a3"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, true, false, true, true, false, true});})
+		->SetAbleState({ false, false, false, true, false, true, true, false, true, false });})
 
 		.AddTransition("ATK_A3 to ATK_A4", "ATK_A4")
 		.Predicator([&]()->_bool {return m_bLeftClick && (0.25f <= m_fPlayRatio) && (0.65f > m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")) && (!m_bLerp); })
@@ -439,7 +439,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_204_AL_atk_a4"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, true, false, true, true, false, true});})
+		->SetAbleState({ false, false, false, true, false, true, true, false, true, false });})
 
 		.AddTransition("ATK_A4 to ATK_A5", "ATK_A5")
 		.Predicator([&]()->_bool {return m_bLeftClick && (0.25f <= m_fPlayRatio) && (0.6f > m_fPlayRatio) && (CheckAnim("AS_ch0100_204_AL_atk_a4")) && (!m_bLerp); })
@@ -476,7 +476,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_205_AL_atk_a5"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, true, false, true, true, false, true});})
+		->SetAbleState({ false, false, false, true, false, true, true, false, true, false });})
 
 		.AddTransition("ATK_A5 to ATK_A1", "ATK_A1")
 		.Predicator([&]()->_bool {return m_bLeftClick && (0.4f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_205_AL_atk_a5")) && (!m_bLerp); })
@@ -517,7 +517,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_051_AL_dodge_F_start"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 
 		.AddTransition("DASH to ATTACK_DASH_START", "ATTACK_DASH_START")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
@@ -547,7 +547,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_051_AL_dodge_F_start"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 
 		.AddTransition("DASH_START_FRONT to ATTACK_DASH_START", "ATTACK_DASH_START")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
@@ -570,7 +570,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_051_AL_dodge_F_stop"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 		.AddTransition("DASH_END_FRONT to IDLE", "IDLE")
 		.Duration(0.1f)
 		.Priority(100)
@@ -580,7 +580,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_057_AL_dodge_L_start"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 
 		.AddTransition("DASH_START_LEFT to RUN_FRONT", "RUN_FRONT")
 		.Predicator([&]()->_bool {return m_bWalk && (0.8f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_057_AL_dodge_L_start")); })
@@ -599,7 +599,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_057_AL_dodge_L_stop"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 		.AddTransition("DASH_END_LEFT to IDLE", "IDLE")
 		.Duration(0.1f)
 		.Priority(100)
@@ -609,7 +609,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_053_AL_dodge_R_start"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 
 		.AddTransition("DASH_START_RIGHT to RUN_FRONT", "RUN_FRONT")
 		.Predicator([&]()->_bool {return m_bWalk && (0.8f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_053_AL_dodge_R_start")); })
@@ -628,7 +628,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_053_AL_dodge_R_stop"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 		.AddTransition("DASH_END_RIGHT to IDLE", "IDLE")
 		.Duration(0.1f)
 		.Priority(100)
@@ -638,7 +638,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_055_AL_dodge_B_start"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 
 		.AddTransition("DASH_START_BACK to DASH_END_BACK", "DASH_END_BACK")
 		.Duration(0.1f)
@@ -652,7 +652,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_055_AL_dodge_B_stop"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 
 		.AddTransition("DASH_END_BACK to RUN_FRONT", "RUN_FRONT")
 		.Predicator([&]()->_bool {return m_bWalk && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_055_AL_dodge_B_stop")); })
@@ -672,7 +672,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_036_AL_dash"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ true, true, true, false, false, true, true, true, true});})
+		->SetAbleState({ true, true, true, false, false, true, true, true, true, false });})
 
 		.AddTransition("RUN_FRONT to ATTACK_DASH_START", "ATTACK_DASH_START")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
@@ -704,7 +704,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_038_AL_dash_stop"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 
 		.AddTransition("RUN_END to ATTACK_DASH_START", "ATTACK_DASH_START")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
@@ -741,7 +741,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_214_AL_atk_dash_start"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, true, false, true, true, false, true});})
+		->SetAbleState({ false, false, false, true, false, true, true, false, true, false });})
 		.AddTransition("ATTACK_DASH_START to ATTACK_DASH_END", "ATTACK_DASH_END")
 		.Duration(0.1f).Priority(1)
 
@@ -749,7 +749,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_214_AL_atk_dash_end"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, false, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, false, true, false });})
 
 		.AddTransition("ATTACK_DASH_END to ATK_A3", "ATK_A3")
 		.Predicator([&]()->_bool {return m_bLeftClick && (0.07f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_214_AL_atk_dash_end")); })
@@ -774,7 +774,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_215_AL_atk_dash_hold"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, false, true});})
+		->SetAbleState({ false, false, false, false, false, true, true, false, true, false });})
 
 		.AddTransition("REPEAT", "ATTACK_NONCHARGE")
 		.Predicator([&]()->_bool {return m_bNonCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_215_AL_atk_dash_hold")) && (static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR)); })
@@ -808,7 +808,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_210_AL_atk_charge"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, false, false });})
+		->SetAbleState({ false, false, false, false, false, true, true, false, false, false });})
 		.AddTransition("ATTACK_CHARGE_START to ATTACK_CHARGE_LOOP", "ATTACK_CHARGE_LOOP")
 		.Duration(0.1f).Priority(1)
 
@@ -821,7 +821,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_210_AL_atk_charge_loop"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, false, false });})
+		->SetAbleState({ false, false, false, false, false, true, true, false, false, false });})
 
 		.AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_01", "CHARGE_ATTACK_01")
 		.Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(0, 0.5f)) && (!m_bCharge); })
@@ -843,7 +843,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_210_AL_atk_charge_cancel"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, false, true });})
+		->SetAbleState({ false, false, false, false, false, true, true, false, true, false });})
 
 		.AddTransition("CHARGE_CANCEL to WALK", "WALK")
 		.Predicator([&]()->_bool {return m_bWalk && (0.6f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_210_AL_atk_charge_cancel")); })
@@ -877,7 +877,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_211_AL_atk_charge01"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, false, true });})
+		->SetAbleState({ false, false, false, false, false, true, true, false, true, false });})
 
 		.AddTransition("CHARGE_ATTACK_01 to WALK", "WALK")
 		.Predicator([&]()->_bool {return m_bWalk && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_211_AL_atk_charge01")); })
@@ -911,7 +911,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_212_AL_atk_charge02"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, false, true });})
+		->SetAbleState({ false, false, false, false, false, true, true, false, true, false });})
 
 		.AddTransition("CHARGE_ATTACK_02 to WALK", "WALK")
 		.Predicator([&]()->_bool {return m_bWalk && (0.55f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_212_AL_atk_charge02")); })
@@ -945,7 +945,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_213_AL_atk_charge03"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, false, true });})
+		->SetAbleState({ false, false, false, false, false, true, true, false, true, false });})
 
 		.AddTransition("CHARGE_ATTACK_03 to WALK", "WALK")
 		.Predicator([&]()->_bool {return m_bWalk && (0.6f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_213_AL_atk_charge03")); })
@@ -986,7 +986,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_041_AL_jump_start"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true });})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 		.FinishEvent([&]() {static_cast<CPlayer*>(m_pTargetObject)->Jump(); })
 		.AddTransition("JUMP_START to JUMP_RISE", "JUMP_RISE")
 		.Duration(0.1f)
@@ -996,7 +996,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_041_AL_jump_rise"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, true, false, false, true, true, false, false, false });})
+		->SetAbleState({ false, true, false, false, true, true, false, false, false, false });})
 		.AddTransition("JUMP_RISE to JUMP_LANDING", "JUMP_LANDING")
 		.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_041_AL_jump_rise")); })
 		.Duration(0.f)
@@ -1030,7 +1030,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_041_AL_jump_fall"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, true, false, false, true, true, false, false, false });})
+		->SetAbleState({ false, true, false, false, true, true, false, false, false, false });})
 
 		.AddTransition("JUMP_FALL to DOUBLE_JUMP_RISE", "DOUBLE_JUMP_RISE")
 		.Predicator([&]()->_bool {return m_bJump && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_DOUBLEJUMP); })
@@ -1066,7 +1066,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_041_AL_jump_landing"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true });})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 
 		.AddTransition("JUMP_LANDING to WALK_LOOP", "WALK_LOOP")
 		.Predicator([&]()->_bool {return m_bWalk && (CheckAnim("AS_ch0100_041_AL_jump_landing")) && (0.1f <= m_fPlayRatio); })
@@ -1098,7 +1098,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_043_AL_doublejump_rise"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, true, false, false, true, true, false, true, true }).Jump();})
+		->SetAbleState({ false, true, false, false, true, true, false, true, true, false }).Jump();})
 		.AddTransition("DOUBLE_JUMP_RISE to JUMP_LANDING", "JUMP_LANDING")
 		.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_043_AL_doublejump_rise")); })
 		.Duration(0.f)
@@ -1136,7 +1136,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_044_AL_runjump_start"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true }).LookAtDir(m_vMoveDir);})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false }).LookAtDir(m_vMoveDir);})
 		.FinishEvent([&]() {static_cast<CPlayer*>(m_pTargetObject)->Jump(); })
 		.AddTransition("RUNJUMP_START to RUNJUMP_RISE", "RUNJUMP_RISE")
 		.Duration(0.1f)
@@ -1146,7 +1146,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_044_AL_runjump_rise"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, true, false, false, true, true, false, false, false });})
+		->SetAbleState({ false, true, false, false, true, true, false, false, false, false });})
 		.AddTransition("RUNJUMP_RISE to RUNJUMP_LANDING", "RUNJUMP_LANDING")
 		.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_044_AL_runjump_rise")); })
 		.Duration(0.f)
@@ -1180,7 +1180,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_044_AL_runjump_fall"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, true, false, false, true, true, false, false, false });})
+		->SetAbleState({ false, true, false, false, true, true, false, false, false, false });})
 
 		.AddTransition("RUNJUMP_FALL to DOUBLE_RUNJUMP_RISE", "DOUBLE_RUNJUMP_RISE")
 		.Predicator([&]()->_bool {return m_bJump && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_DOUBLEJUMP); })
@@ -1216,7 +1216,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_044_AL_runjump_landing"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true });})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 
 		.AddTransition("RUNJUMP_LANDING to WALK_LOOP", "WALK_LOOP")
 		.Predicator([&]()->_bool {return m_bWalk && (CheckAnim("AS_ch0100_044_AL_runjump_landing")) && (0.1f <= m_fPlayRatio); })
@@ -1248,7 +1248,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_043_AL_doublejump_rise"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, true, false, false, true, true, false, true, true }).Jump();})
+		->SetAbleState({ false, true, false, false, true, true, false, true, true, false }).Jump();})
 
 		.AddTransition("DOUBLE_RUNJUMP_RISE to RUNJUMP_LANDING", "RUNJUMP_LANDING")
 		.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_043_AL_doublejump_rise")); })
@@ -1287,7 +1287,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_042_AL_dashjump_start"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true }).LookAtDir(m_vMoveDir);})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false }).LookAtDir(m_vMoveDir);})
 		.FinishEvent([&]() {static_cast<CPlayer*>(m_pTargetObject)->Jump(); })
 		.AddTransition("DASHJUMP_START to DASHJUMP_RISE", "DASHJUMP_RISE")
 		.Duration(0.1f)
@@ -1297,7 +1297,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_042_AL_dashjump_rise"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, true, true, false, true, true, false, false, false });})
+		->SetAbleState({ false, true, true, false, true, true, false, false, false, false });})
 		.AddTransition("DASHJUMP_RISE to DASHJUMP_LANDING", "DASHJUMP_LANDING")
 		.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_042_AL_dashjump_rise")); })
 		.Duration(0.f)
@@ -1331,7 +1331,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_042_AL_dashjump_fall"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, true, true, false, true, true, false, false, false });})
+		->SetAbleState({ false, true, true, false, true, true, false, false, false, false });})
 		.AddTransition("DASHJUMP_FALL to DOUBLE_DASHJUMP_RISE", "DOUBLE_DASHJUMP_RISE")
 		.Predicator([&]()->_bool {return m_bJump && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_DOUBLEJUMP); })
 		.Duration(0.05f)
@@ -1366,7 +1366,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_042_AL_dashjump_landing"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true });})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 
 		.AddTransition("DASHJUMP_LANDING to RUN_FRONT", "RUN_FRONT")
 		.Predicator([&]()->_bool {return m_bWalk && (CheckAnim("AS_ch0100_042_AL_dashjump_landing")) && (0.1f <= m_fPlayRatio); })
@@ -1398,7 +1398,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_043_AL_doublejump_rise"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, true, true, false, true, true, false, true, true }).Jump();})
+		->SetAbleState({ false, true, true, false, true, true, false, true, true, false }).Jump();})
 		.AddTransition("DOUBLE_DASHJUMP_RISE to DASHJUMP_LANDING", "DASHJUMP_LANDING")
 		.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_043_AL_doublejump_rise")); })
 		.Duration(0.f)
@@ -1436,7 +1436,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_221_AL_atk_air1"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, true, false, false, false, true });})
+		->SetAbleState({ false, false, false, false, true, false, false, false, true, false });})
 
 			.AddTransition("ATK_AIR1 to ATK_AIR2", "ATK_AIR2")
 			.Predicator([&]()->_bool {return m_bLeftClick && (0.3f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_221_AL_atk_air1")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRATK02); })
@@ -1467,7 +1467,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_222_AL_atk_air2"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, true, false, false, false, true });})
+		->SetAbleState({ false, false, false, false, true, false, false, false, true, false });})
 
 			.AddTransition("ATK_AIR2 to JUMP_LANDING", "JUMP_LANDING")
 			.Predicator([&]()->_bool {return m_bOnFloor; })
@@ -1483,7 +1483,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_229_AL_atk_air_dash_hold"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, true, false, false, false, true });})
+		->SetAbleState({ false, false, false, false, true, false, false, false, true, false });})
 
 			.AddTransition("REPEAT", "ATK_AIR_NONCHARGE")
 			.Predicator([&]()->_bool {return m_bNonCharge && (0.2f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_229_AL_atk_air_dash_hold")) && (static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_AIR)); })
@@ -1504,7 +1504,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_227_AL_atk_air_hold_start"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, true, false, true, true, true });})
+		->SetAbleState({ false, false, false, false, true, false, true, true, true, false });})
 
 			.AddTransition("ATK_AIR_CHARGE_START to ATK_AIR_CHARGE_FALL", "ATK_AIR_CHARGE_FALL")
 			.Duration(0.1f)
@@ -1514,7 +1514,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_227_AL_atk_air_hold_fall"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, true, true, true, true, true }).SetGravity_Optional(-20.f);})
+		->SetAbleState({ false, false, false, false, true, true, true, true, true, false }).SetGravity_Optional(-20.f);})
 
 			.AddTransition("ATK_AIR_CHARGE_FALL to ATK_AIR_CHARGE_LANDING", "ATK_AIR_CHARGE_LANDING")
 			.Predicator([&]()->_bool {return m_bOnFloor; })
@@ -1525,7 +1525,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_227_AL_atk_air_hold_landing"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, false, true, true, true, true });})
+		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 
 			.AddTransition("ATK_AIR_CHARGE_LANDING to ATK_A1", "ATK_A1")
 			.Predicator([&]()->_bool {return m_bLeftClick && (CheckAnim("AS_ch0100_227_AL_atk_air_hold_landing")) && (0.5f <= m_fPlayRatio); })
@@ -1549,7 +1549,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_230_AL_atk_air_dash_start"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, true, false, false, false, true });})
+		->SetAbleState({ false, false, false, false, true, false, false, false, true, false });})
 
 			.AddTransition("ATK_AIR_DODGE_START to ATK_AIR_DODGE_END", "ATK_AIR_DODGE_END")
 			.Duration(0.1f)
@@ -1559,7 +1559,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_230_AL_atk_air_dash_end"))
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
-		->SetAbleState({ false, false, false, false, true, false, false, false, true });})
+		->SetAbleState({ false, false, false, false, true, false, false, false, true, false });})
 
 			.AddTransition("ATK_AIR_DODGE_END to JUMP_LANDING", "JUMP_LANDING")
 			.Predicator([&]()->_bool {return m_bOnFloor; })
@@ -1584,7 +1584,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_061_AL_air_dodge_F"))
 			.StartEvent([&]() {
 			static_cast<CPlayer*>(m_pTargetObject)
-				->SetAbleState({ false, false, false, false, true, false, false, true, true }); })
+				->SetAbleState({ false, false, false, false, true, false, false, true, true, false }); })
 
 			.AddTransition("AIR_DODGE to AIR_DODGE_FRONT", "AIR_DODGE_FRONT")
 				.Predicator([&]()->_bool {return m_eMoveDir == CPlayer::DIR_F || true; })
@@ -1610,7 +1610,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_061_AL_air_dodge_F"))
 			.StartEvent([&]() {
 			static_cast<CPlayer*>(m_pTargetObject)
-				->SetAbleState({ false, false, false, false, true, false, false, true, true }); })
+				->SetAbleState({ false, false, false, false, true, false, false, true, true, false }); })
 			
 			.AddTransition("AIR_DODGE_FRONT to ATK_AIR_DODGE_START", "ATK_AIR_DODGE_START")
 				.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRDODGEATK); })
@@ -1625,7 +1625,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_065_AL_air_dodge_B"))
 			.StartEvent([&]() {
 			static_cast<CPlayer*>(m_pTargetObject)
-				->SetAbleState({ false, false, false, false, true, false, false, true, true }); })
+				->SetAbleState({ false, false, false, false, true, false, false, true, true, false }); })
 
 			.AddTransition("AIR_DODGE_BACK to ATK_AIR_DODGE_START", "ATK_AIR_DODGE_START")
 				.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRDODGEATK); })
@@ -1640,7 +1640,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_067_AL_air_dodge_L"))
 			.StartEvent([&]() {
 			static_cast<CPlayer*>(m_pTargetObject)
-				->SetAbleState({ false, false, false, false, true, false, false, true, true }); })
+				->SetAbleState({ false, false, false, false, true, false, false, true, true, false }); })
 
 			.AddTransition("AIR_DODGE_LEFT to ATK_AIR_DODGE_START", "ATK_AIR_DODGE_START")
 				.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRDODGEATK); })
@@ -1655,7 +1655,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_063_AL_air_dodge_R"))
 			.StartEvent([&]() {
 			static_cast<CPlayer*>(m_pTargetObject)
-				->SetAbleState({ false, false, false, false, true, false, false, true, true }); })
+				->SetAbleState({ false, false, false, false, true, false, false, true, true, false }); })
 
 			.AddTransition("AIR_DODGE_RIGHT to ATK_AIR_DODGE_START", "ATK_AIR_DODGE_START")
 				.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRDODGEATK); })
@@ -1674,6 +1674,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 	list<CAnimation*> SocketList;
 	m_mapAnimSocket.emplace("AnimSocket_Test", SocketList);
+	m_mapAnimSocket.emplace("Upper_Saperate_Animation", SocketList);
+	m_mapAnimSocket.emplace("Under_Saperate_Animation", SocketList);
 
 	return S_OK;
 }
@@ -1719,6 +1721,38 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
 	}
 
+	// 무기 넣기
+	if (!m_mapAnimSocket.find("Upper_Saperate_Animation")->second.empty())
+	{
+		m_pModel->SetBoneMask(EBoneMask::OFF_ALL);
+		m_pModel->SetBoneMask(EBoneMask::ON_CHILD_EQ, "Spine1");
+
+		auto Socket = m_mapAnimSocket.find("Upper_Saperate_Animation")->second.front();
+		if (bChange)
+		{
+			Socket = m_mapAnimSocket.find("Upper_Saperate_Animation")->second.front();
+			m_pModel->SetPlayAnimation(Socket->GetName());
+			m_pModel->SetCurAnimName(Socket->GetName());
+			m_fLerpTime = 0.f;
+		}
+
+		if (1.f > m_fLerpTime / m_fLerpDuration)
+		{
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+			m_fLerpTime += (_float)TimeDelta;
+		}
+		else
+		{
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+		}
+
+		m_pModel->SetBoneMask(EBoneMask::ON_ALL);
+	}
+	else
+	{
+		m_pModel->SetBoneMask(EBoneMask::ON_ALL);
+	}
+	
 	m_pModel->Compute_CombindTransformationMatrix();
 
 	if (bLocalMove)

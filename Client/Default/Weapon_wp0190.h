@@ -5,6 +5,8 @@ BEGIN(Engine)
 class CRigidBody;
 END
 
+BEGIN(Client)
+
 class CWeapon_wp0190 : public CScarletWeapon
 {
 private:
@@ -23,9 +25,6 @@ public:
 
 private:
 	HRESULT		SetUp_Components();
-	
-	CRigidBody* m_pCollider = nullptr;
-
 
 public:
 	static CWeapon_wp0190*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -33,3 +32,4 @@ public:
 	virtual void Free() override;
 };
 
+END

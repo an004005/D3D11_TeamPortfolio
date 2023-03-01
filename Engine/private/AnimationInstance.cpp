@@ -141,9 +141,9 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 		if (m_pCurState->m_Animation->IsFinished())
 			m_pCurState->m_Animation->Reset();
 
-		m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
 
-		m_bLerp = false;
+m_bLerp = false;
 	}
 }
 
@@ -235,7 +235,13 @@ _bool CAnimationInstance::CheckFinishedAnimSocket()
 		{
 			if (!pAnim->IsLooping() && pAnim->IsFinished())
 			{
+				pAnim->Reset();
 				PairSoc.second.pop_front();
+				
+				// 소켓 이름에 Saperate가 들어갈 경우 전부 비게 되면 false를 반환하여 IDLE상태로 가는 것을 막는다.
+				if (PairSoc.second.empty() && PairSoc.first.find("Saperate") != (string::npos))
+					return false;
+
 				return true;
 			}
 		}

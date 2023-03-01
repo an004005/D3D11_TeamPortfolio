@@ -9,25 +9,61 @@
         "Duration": 47.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "LocalRevise_Enable",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "LocalRevise_Disable",
+                "EventTime": 46.0
+            }
+        ]
     },
     "AS_ch0100_023_AL_run_start_R": {
         "Duration": 30.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "LocalRevise_Enable",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "LocalRevise_Disable",
+                "EventTime": 29.0
+            }
+        ]
     },
     "AS_ch0100_024_AL_run_start_BL": {
         "Duration": 49.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "LocalRevise_Disable",
+                "EventTime": 48.0
+            },
+            {
+                "EventName": "LocalRevise_Enable",
+                "EventTime": 20.0
+            }
+        ]
     },
     "AS_ch0100_025_AL_run_start_BR": {
         "Duration": 25.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "LocalRevise_Enable",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "LocalRevise_Disable",
+                "EventTime": 24.0
+            }
+        ]
     },
     "AS_ch0100_026_AL_run": {
         "Duration": 32.0,
@@ -206,6 +242,18 @@
     "AS_ch0100_067_AL_air_dodge_L": {
         "Duration": 25.0,
         "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_104_Lo_trans_neutral": {
+        "Duration": 206.0,
+        "TickPerSecond": 80.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_104_Up_trans_neutral": {
+        "Duration": 206.0,
+        "TickPerSecond": 80.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -521,8 +569,8 @@
         "TickPerSecond": 45.0,
         "bLooping": false,
         "vecEvent": []
-    },   
-   "AS_em0700_107_AL_fly_wait": {
+    },
+    "AS_em0700_107_AL_fly_wait": {
         "Duration": 576.0,
         "TickPerSecond": 45.0,
         "bLooping": true,
@@ -618,7 +666,6 @@
         "bLooping": false,
         "vecEvent": []
     },
-
     "ch0100": {
         "mapRootMotion": {
             "AS_ch0100_201_AL_atk_a1": [

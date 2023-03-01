@@ -12,6 +12,9 @@
 #include "Controller.h"
 #include "ScarletWeapon.h"
 #include "Camera.h"
+#include "TrailSystem.h"
+#include "Weapon_wp0190.h"
+#include "RigidBody.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -45,11 +48,10 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(Setup_Parts()))
 		return E_FAIL;
 
-	if (FAILED(SetUp_Event()))
-		return E_FAIL;
+//	if (FAILED(SetUp_Event()))	-> 이건 진짜 천천히 보자...
+//		return E_FAIL;
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
-
 	
 	m_pPlayerCam = dynamic_cast<CCamera*>(m_pGameInstance->Clone_GameObject_Get(L"Layer_Camera", TEXT("Prototype_GameObject_Camera_Player")));
 	Assert(m_pPlayerCam != nullptr);
@@ -80,13 +82,20 @@ void CPlayer::Tick(_double TimeDelta)
 
 		if (m_bCanRun)				fSpeedControl *= 2.f;
 
-//		if (!m_bCanRun && m_bAir)	fSpeedControl *= 0.5f;
-
 		m_pTransformCom->Move(fSpeedControl, m_vMoveDir);
 	}
 
 	for (auto& iter : m_vecWeapon)
+	{
 		iter->Tick(TimeDelta);
+	}
+
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	if (pGameInstance->KeyDown(DIK_L))
+	{
+		m_pASM->InputAnimSocket("Upper_Saperate_Animation", m_TransNeutralSocket);
+	}
 
 	isPlayerAttack();
 }
@@ -190,17 +199,8 @@ HRESULT CPlayer::SetUp_Event()
 	m_pModel->Add_EventCaller("AtkTurn_Enable", [&]() {Event_SetCanTurn_Attack(true); });
 	m_pModel->Add_EventCaller("AtkTurn_Disable", [&]() {Event_SetCanTurn_Attack(false); });
 
-	m_pModel->Add_EventCaller("FrontAxis_Sync_Enable", [&]() {Event_SetSyncAxis(CPlayer::DIR_F, true); });
-	m_pModel->Add_EventCaller("FrontAxis_Sync_Disable", [&]() {Event_SetSyncAxis(CPlayer::DIR_F, false); });
-
-	m_pModel->Add_EventCaller("LeftAxis_Sync_Enable", [&]() {Event_SetSyncAxis(CPlayer::DIR_L, true); });
-	m_pModel->Add_EventCaller("LeftAxis_Sync_Disable", [&]() {Event_SetSyncAxis(CPlayer::DIR_L, false); });
-
-	m_pModel->Add_EventCaller("RightAxis_Sync_Enable", [&]() {Event_SetSyncAxis(CPlayer::DIR_R, true); });
-	m_pModel->Add_EventCaller("RightAxis_Sync_Disable", [&]() {Event_SetSyncAxis(CPlayer::DIR_R, false); });
-
-	m_pModel->Add_EventCaller("BackAxis_Sync_Enable", [&]() {Event_SetSyncAxis(CPlayer::DIR_B, true); });
-	m_pModel->Add_EventCaller("BackAxis_Sync_Disable", [&]() {Event_SetSyncAxis(CPlayer::DIR_B, false); });
+	m_pModel->Add_EventCaller("LocalRevise_Enable", [&]() {Event_SetLocalRevise(true); });
+	m_pModel->Add_EventCaller("LocalRevise_Disable", [&]() {Event_SetLocalRevise(false); });
 
 	m_pModel->Add_EventCaller("OnAir_Enable", [&]() {Event_SetOnAir(true); });
 	m_pModel->Add_EventCaller("OnAir_Disable", [&]() {Event_SetOnAir(false); });
@@ -229,6 +229,9 @@ HRESULT CPlayer::Setup_AnimSocket()
 	m_TestAnimSocket.push_back(pAnimation = m_pModel->Find_Animation("AS_ch0100_011_AL_walk_start_F"));
 	m_TestAnimSocket.push_back(pAnimation = m_pModel->Find_Animation("AS_ch0100_016_AL_walk"));
 	m_TestAnimSocket.push_back(pAnimation = m_pModel->Find_Animation("AS_ch0100_018_AL_walk_end"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_104_Up_trans_neutral"));
+	m_TransNeutralSocket.push_back(m_pModel->Find_Animation("AS_ch0100_104_Up_trans_neutral"));
 
 	return S_OK;
 }
@@ -292,6 +295,8 @@ CPlayer & CPlayer::SetAbleState(REMOTE tagRemote)
 	if (tagRemote.MoveLimitReset) { MoveLimitReset(); }
 	if (tagRemote.AttackLimitReset) { AttackLimitReset(); }
 	if (tagRemote.ChargeReset) { Reset_Charge(); }
+
+	m_bLocalRevise = tagRemote.LocalRevise;
 
 	return *this;
 }
@@ -462,28 +467,10 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 		if (m_bAir)	// 공중 상태에선 회전이 먹지 않음
 			m_vMoveDir = vPlayerLook;
 
-		if (m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_022_AL_run_start_L")
+		if (m_bLocalRevise)
 		{
 			Vector4 vCamLook = pGameInstance->Get_CamLook();
-			vCamLook = Vector4(vCamLook.x, 0.f, vCamLook.z, 0.f);
-			vCamLook = XMVector3Normalize(vCamLook);
-
-			if (m_pModel->GetPlayAnimation()->GetPlayRatio() >= 0.4255f)
-			{
-				m_pTransformCom->SetAxis(CTransform::STATE_LOOK, vCamLook);
-			}
-		}
-
-		if (m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_022_AL_run_start_L")
-		{
-			Vector4 vCamLook = pGameInstance->Get_CamLook();
-			vCamLook = Vector4(vCamLook.x, 0.f, vCamLook.z, 0.f);
-			vCamLook = XMVector3Normalize(vCamLook);
-
-			if (m_pModel->GetPlayAnimation()->GetPlayRatio() >= 0.4255f)
-			{
-				m_pTransformCom->SetAxis(CTransform::STATE_LOOK, vCamLook);
-			}
+			m_pTransformCom->SetAxis(CTransform::STATE_LOOK, vCamLook);
 		}
 
 	}
@@ -498,7 +485,7 @@ HRESULT CPlayer::Setup_Parts()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json Weapon;
+	Json Weapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/wp0190.json");
 	Weapon["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
 
 	CGameObject*	pGameObject = nullptr;
@@ -510,8 +497,7 @@ HRESULT CPlayer::Setup_Parts()
 	Desc.m_pTransform = m_pTransformCom;
 	Desc.m_pJson = &Weapon;
 
-//	/*pGameObject = */pGameInstance->Clone_GameObject/*_Get*/(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
-////	m_vecWeapon.push_back(pGameObject);
+	//pGameInstance->Clone_GameObject(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
 
 	pGameObject = pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("PlayerWeapon"), &Desc);
 	m_vecWeapon.push_back(pGameObject);

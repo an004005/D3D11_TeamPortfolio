@@ -35,12 +35,16 @@ typedef struct tagRemote
 	_bool AttackLimitReset = false;	// 횟수 제한 공격 초기화
 	_bool ChargeReset = false;	// 차지 상태 초기화
 
+	_bool LocalRevise = false;
+
 	tagRemote(	_bool CanTurn, _bool CanMove, _bool CanRun, _bool AttackTurn,
 				_bool OnAir, _bool Gravity, 
-				_bool MoveLimitReset, _bool AttackLimitReset, _bool ChargeReset)
+				_bool MoveLimitReset, _bool AttackLimitReset, _bool ChargeReset,
+				_bool LocalRevise)
 	:CanTurn(CanTurn), CanMove(CanMove), CanRun(CanRun), AttackTurn(AttackTurn), 
 		OnAir(OnAir), Gravity(Gravity), 
-		MoveLimitReset(MoveLimitReset), AttackLimitReset(AttackLimitReset), ChargeReset(ChargeReset){}
+		MoveLimitReset(MoveLimitReset), AttackLimitReset(AttackLimitReset), ChargeReset(ChargeReset),
+		LocalRevise(LocalRevise){}
 
 }REMOTE;
 
@@ -114,6 +118,7 @@ protected:
 protected:
 	HRESULT				Setup_AnimSocket();
 	list<CAnimation*>	m_TestAnimSocket;
+	list<CAnimation*>	m_TransNeutralSocket;
 
 public:
 	_bool	isAir() { return m_bAir; }
@@ -162,26 +167,10 @@ public:	//EventCaller용
 	void		Event_SetCanTurn_Attack(_bool is) { m_bCanTurn_Attack = is; }
 	void		Event_SetOnAir(_bool is) { m_bAir = is; }
 	void		Event_SetGravity(_bool is) { m_bActiveGravity = is; }
-	void		Event_SetSyncAxis(_uint eType, _bool is) { m_bCanSync_Axis[eType] = is; }
+	void		Event_SetLocalRevise(_bool is) { m_bLocalRevise = is; }
 	void		Event_MoveLimitReset() { MoveLimitReset(); }
 	void		Event_AttackLimitReset() { AttackLimitReset(); }
 	void		Event_ChargeReset() { Reset_Charge(); }
-	/*
-	_bool CanTurn = false;	// 카메라 보는 방향으로 회전
-	_bool CanMove = false;	// 월드 무브 가능 여부
-	_bool CanRun = false;	// 달리기 여부
-	_bool AttackTurn = false;	// 공격 중 회전(카메라 방향) 여부
-
-	// 상태 관련
-	_bool OnAir = false;	// 공중 상태 여부
-	_bool Gravity = false;	// 중력 적용 여부
-
-	// 제한 관련
-	_bool MoveLimitReset = false;	// 횟수 제한 이동 초기화
-	_bool AttackLimitReset = false;	// 횟수 제한 공격 초기화
-	_bool ChargeReset = false;	// 차지 상태 초기화
-	*/
-
 
 protected:
 	void		Reset_Charge();
@@ -191,7 +180,7 @@ protected:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
 	_bool		m_bCanMove = false;
 	_bool		m_bCanRun = false;
 	_bool		m_bCanTurn_Attack = false;
-	_bool		m_bCanSync_Axis[4] = { false, false, false, false };	// eMoveDir 사용하기
+	_bool		m_bLocalRevise = false;		//	좌우 한 걸음 고정
 
 public:
 	_bool		isPlayerAttack(void);	// 공격 중인 애니메이션일 때 true 반환
