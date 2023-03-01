@@ -150,13 +150,23 @@ public: /* for sound manager*/
 public: /* for targetManager*/
 	ID3D11ShaderResourceView* Get_SRV(const _tchar* pTargetTag);
 
-public:
+public:/* for PhysX Manager*/
 	// 주의사항 CPhysX_Manager 에서 읽고 사용하기, 예제도 있음
 	_bool RayCast(const RayCastParams& params);
 	_bool OverlapSphere(const SphereOverlapParams& params);
 	_bool OverlapCapsule(const CapsuleOverlapParams& params);
 	_bool SweepSphere(const SphereSweepParams& params);
 	_bool SweepCapsule(const CapsuleSweepParams& params);
+
+public: /* for CameraManager*/
+	CCamera* Add_Camera(const string& strCamTag, _uint iLevelIdx, const wstring& pLayerTag, const wstring& pPrototypeTag, const Json* camJson = nullptr);
+	void SetMainCamera(const string& strCamTag);
+	void SetMainCamera(CCamera* pCamera);
+	CCamera* GetMainCam();
+	_matrix GetCamViewMatrix(const string& strCamTag);
+	_matrix GetCamProjMatrix(const string& strCamTag);
+	_float4 Get_CamPosition(const string& strCamTag);
+	CCamera* FindCamera(const string& strCamTag);
 
 public: // for CImgui_Manager
 	void Render_ImGui();
@@ -190,6 +200,7 @@ private:
 	class CHDR*						m_pHDR = nullptr;
 	class CSound_Manager*			m_pSound_Manager = nullptr;
 	class CPhysX_Manager*			m_pPhysX_Manager = nullptr;
+	class CCamera_Manager*			m_pCamera_Manager = nullptr;
 
 	class CImgui_Manager*			m_pImgui_Manager = nullptr;
 

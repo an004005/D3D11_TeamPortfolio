@@ -156,7 +156,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
 
 		float fDiff = saturate(max(dot(normalize(vNormal.xyz), normalize(g_vLightDir.xyz)), 0.0));
-		fDiff = max(vCTL.r, min(vCTL.g, fDiff));
+		fDiff = max(vCTL.r * 2.f, min(vCTL.g, fDiff));
 		// fDiff = ceil(fDiff * 2.f) * 0.5f;
 
 		Out.vShade = g_vLightDiffuse * saturate(fDiff + vAMB);
@@ -209,7 +209,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 
 	    const float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz); // view vector
 
-		float3 vLightColorIntencity = g_vLightDiffuse * fAtt;
+		float3 vLightColorIntencity = g_vLightDiffuse.xyz * fAtt;
 		Out.vShade.rgb = LightSurface(V, vNormal.xyz, vLightColorIntencity, vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
 		Out.vShade.a = vDiffuse.a;
 	}
@@ -219,7 +219,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
 
 		float fDiff = saturate(max(dot(normalize(vNormal.xyz), normalize(vLightDir.xyz)), 0.0)) * fAtt;
-		fDiff = max(vCTL.r, min(vCTL.g, fDiff));
+		fDiff = max(vCTL.r * 2.f, min(vCTL.g, fDiff));
 		// fDiff = ceil(fDiff * 2.f) * 0.5f;
 
 		Out.vShade = g_vLightDiffuse * saturate(fDiff + (vAMB));
