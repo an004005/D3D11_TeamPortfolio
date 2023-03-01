@@ -69,14 +69,11 @@ public:
 	}
 
 public:
-	//void	UIMove_FSM();
-
-	void	Info_Tick(const _bool bPush); // Ctrl, Alt 를 눌렀을 때에 대한 처리를 하기 위해 (스킬 아이콘이 보이지 않으면서 정보가 뜬다.)
+	void	Info_Tick(); 
 	void	InputCtrl_Tick();
 	void	InputAlt_Tick();
 
 private:
-	//CFSMComponent*	m_pFSM = { nullptr };
 	class CCanvas* m_pCanvas = { nullptr };
 
 	SKILLINDEX		m_eSASSkill = SKILLINDEX_END;		// UI 들이 같은 객체를 사용하기 때문에 구별하기 위해서
@@ -86,12 +83,7 @@ private:
 	_bool			m_bInputSkill[SKILLINDEX_END] = {};	// 플레이어에서 키를 눌렀을 때
 	_bool			m_bOnSkill = { false };				// 1: 초능력 사용 가능, 0: 초능력 사용 불 가
 
-	//// UIMove_FSM() -> 도착지점에 도달했다가 원래 지점으로 돌아가기 위해 함수
-	//_bool			m_bUIMove = { false };				// SASSkill_UIMove() -> UI를 이동시키고자 할 때 외부에서 Set 을 한다.
-	//_bool			m_bIsDestination = { false };		// 목표지점에 도달! 원점으로 이제 돌아가라
-	//_float2			m_vDestination = { 0.0f, 0.0f };	// 도착지점
-
-	map<wstring, CUI*> Temp;
+	_bool			m_bKeyInput[2] = { false };			// [0]Ctrl, [1]Alt 이 동시에 눌리지 않도록 하기 위해서
 
 public:
 	static CCanvas_SASSkillMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -49,6 +49,8 @@ void CCanvas_SASSkill::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	InputAlt();
+	InputCtrl();
 	InputX_Tick(TimeDelta);
 }
 
@@ -110,44 +112,42 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 	}
 }
 
-void CCanvas_SASSkill::InputAlt(const _bool & bInput)
+void CCanvas_SASSkill::InputAlt()
 {
-	if (true == bInput)
+	if (CGameInstance::GetInstance()->KeyDown(DIK_LALT))
 	{
-		Find_ChildUI(L"SASSkill_AltText0")->SetVisible(false);
-		Find_ChildUI(L"SASSkill_AltTexture0")->SetVisible(false);
-
-		Find_ChildUI(L"SASSkill_AltText1")->SetVisible(true);
-		Find_ChildUI(L"SASSkill_AltTexture1")->SetVisible(true);
+		m_bKeyInput[0] = true;
+		m_bKeyInput[1] = false;
 	}
-	else
+	if (CGameInstance::GetInstance()->KeyUp(DIK_LALT))
 	{
-		Find_ChildUI(L"SASSkill_AltText0")->SetVisible(true);
-		Find_ChildUI(L"SASSkill_AltTexture0")->SetVisible(true);
-
-		Find_ChildUI(L"SASSkill_AltText1")->SetVisible(false);
-		Find_ChildUI(L"SASSkill_AltTexture1")->SetVisible(false);
+		m_bKeyInput[0] = false;
 	}
+
+	Find_ChildUI(L"SASSkill_AltText0")->SetVisible(!m_bKeyInput[0]);
+	Find_ChildUI(L"SASSkill_AltTexture0")->SetVisible(!m_bKeyInput[0]);
+
+	Find_ChildUI(L"SASSkill_AltText1")->SetVisible(m_bKeyInput[0]);
+	Find_ChildUI(L"SASSkill_AltTexture1")->SetVisible(m_bKeyInput[0]);
 }
 
-void CCanvas_SASSkill::InputCtrl(const _bool & bInput)
+void CCanvas_SASSkill::InputCtrl()
 {
-	if (true == bInput)
+	if (CGameInstance::GetInstance()->KeyDown(DIK_LCONTROL))
 	{
-		Find_ChildUI(L"SASSkill_CtrlText0")->SetVisible(false);
-		Find_ChildUI(L"SASSkill_CtrlTexture0")->SetVisible(false);
-
-		Find_ChildUI(L"SASSkill_CtrlText1")->SetVisible(true);
-		Find_ChildUI(L"SASSkill_CtrlTexture1")->SetVisible(true);
+		m_bKeyInput[0] = false;
+		m_bKeyInput[1] = true;
 	}
-	else
+	if (CGameInstance::GetInstance()->KeyUp(DIK_LCONTROL))
 	{
-		Find_ChildUI(L"SASSkill_CtrlText0")->SetVisible(true);
-		Find_ChildUI(L"SASSkill_CtrlTexture0")->SetVisible(true);
-
-		Find_ChildUI(L"SASSkill_CtrlText1")->SetVisible(false);
-		Find_ChildUI(L"SASSkill_CtrlTexture1")->SetVisible(false);
+		m_bKeyInput[1] = false;
 	}
+
+	Find_ChildUI(L"SASSkill_CtrlText0")->SetVisible(!m_bKeyInput[1]);
+	Find_ChildUI(L"SASSkill_CtrlTexture0")->SetVisible(!m_bKeyInput[1]);
+
+	Find_ChildUI(L"SASSkill_CtrlText1")->SetVisible(m_bKeyInput[1]);
+	Find_ChildUI(L"SASSkill_CtrlTexture1")->SetVisible(m_bKeyInput[1]);
 }
 
 CCanvas_SASSkill * CCanvas_SASSkill::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

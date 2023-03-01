@@ -30,8 +30,8 @@ public:
 	}
 
 public:
-	void	InputAlt(const _bool & bInput);
-	void	InputCtrl(const _bool & bInput);
+	void	InputAlt();
+	void	InputCtrl();
 
 private:
 	void	InputX_Tick(const _double & dTimeDelta);
@@ -41,6 +41,8 @@ private:
 
 	_bool			m_bChangeXButton = { false };		// 타이머 사용하기 위해서
 	_double			m_dChangeX_TimcAcc = { 0.0 };		// X로 변경하면서, 잠깐 X 키에 불이 들어오는 용도
+
+	_bool			m_bKeyInput[2] = { false };			// [0]Ctrl, [1]Alt 이 동시에 눌리지 않도록 하기 위해서
 
 public:
 	static CCanvas_SASSkill* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
