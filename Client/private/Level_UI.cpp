@@ -27,6 +27,8 @@
 #include "SASSkillLightUI.h"
 #include "SASSkillDefaultUI.h"
 #include "SASSkillFullCircleUI.h"
+//
+#include "Drive_RightDotUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -168,7 +170,11 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CSASSkillFullCircleUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
-
+		// Frount_UI -> Drive
+		/* For.Prototype_GameObject_Drive_RightDotUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Drive_RightDotUI"),
+			CDrive_RightDotUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 
 
 	}

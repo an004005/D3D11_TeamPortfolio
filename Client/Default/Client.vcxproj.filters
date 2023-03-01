@@ -391,6 +391,9 @@
     <ClInclude Include="..\public\UI_Manager.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Drive_RightDotUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -591,6 +594,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UI_Manager.cpp">
       <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Drive_RightDotUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

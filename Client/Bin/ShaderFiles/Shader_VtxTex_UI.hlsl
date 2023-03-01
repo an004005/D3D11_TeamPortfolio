@@ -403,7 +403,7 @@ PS_OUT PS_RotationGauge(PS_IN In) // → 15
 }
 
 /*******************
-* UVCut → 16 : 2장의 텍스처를 원하는 크기로 잘라서 쓰고, 섞는다.
+* 16 : 한 장의 텍스처를 자르고, 두 장으 텍스처를 이용해 글로우를 준다.
 /********************/
 // g_vec2_0 : 첫번 째 출력할 인덱스
 // g_vec2_1 : [x] 가로로 자를 개수, [y] 세로로 자를 개수
@@ -489,24 +489,23 @@ PS_OUT PS_Emissive(PS_IN1 In)
 * 18 : 가로는 텍스처가 계속 이동하고, 세로로는 지정한 만큼 보여진다.
 /********************/
 // g_float_0 : frame time
-// g_float_1 : 세로에 더해줄 텍스쳐 높이
 // g_tex_0 : 플립북 텍스쳐
 // g_int_0 : 플릭북 가로 개수
 // g_int_1 : 플립북 세로 개수
-// g_vec2_0 : 세로에 더해줄 UV, 세로에 나눠줄 값
+// g_vec2_0 : [x] UV.y 에 더할 값 / [y] 텍스쳐 나눌 값
 
 VS_OUT VS_FlipBookCut(VS_IN In)	// ->18
 {
 	VS_OUT		Out = (VS_OUT)0;
-
 	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWP);
 
-	In.vTexUV.y = In.vTexUV.y / g_vec2_0.x + g_vec2_0.y;
+	In.vTexUV.y = In.vTexUV.y + g_vec2_0.x;
+
+	In.vTexUV.y = In.vTexUV.y / g_vec2_0.y;
 
 	Out.vTexUV = In.vTexUV;
-
 	return Out;
 }
 

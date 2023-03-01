@@ -3,8 +3,6 @@
 #include "GameInstance.h"
 #include "JsonLib.h"
 
-// 
-
 CSASSkillDefaultUI::CSASSkillDefaultUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {

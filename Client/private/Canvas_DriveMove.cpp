@@ -30,6 +30,12 @@ HRESULT CCanvas_DriveMove::Initialize(void* pArg)
 	CUI_Manager::GetInstance()->Add_CCanvas(L"Canvas_DriveMove", this);
 	CCanvas::UIMove_FSM();
 
+	// 처음에 보이지 않을 UI 들
+	Find_ChildUI(L"Drive_OnCircle")->SetVisible(false);
+	Find_ChildUI(L"Drive_LeftDot")->SetVisible(false);
+	Find_ChildUI(L"Dirve_RightDot")->SetVisible(false);
+	Find_ChildUI(L"Dirve_RightDotFull")->SetVisible(false);
+
 	return S_OK;
 }
 
@@ -44,6 +50,10 @@ void CCanvas_DriveMove::Tick(_double TimeDelta)
 
 	m_pUIMoveFSM->Tick(TimeDelta);
 
+	Find_ChildUI(L"Drive_OnCircle")->SetVisible(m_bOnDrive);
+	Find_ChildUI(L"Drive_LeftDot")->SetVisible(m_bLeftDot);
+	Find_ChildUI(L"Dirve_RightDot")->SetVisible(m_bRightDot);
+	Find_ChildUI(L"Dirve_RightDotFull")->SetVisible(m_bRightDotFull);
 }
 
 void CCanvas_DriveMove::Late_Tick(_double TimeDelta)
@@ -63,6 +73,14 @@ HRESULT CCanvas_DriveMove::Render()
 void CCanvas_DriveMove::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
+
+	ImGui::Checkbox("OnDrive", &m_bOnDrive);
+	ImGui::SameLine();
+	ImGui::Checkbox("LeftDot", &m_bLeftDot);
+	ImGui::SameLine();
+	ImGui::Checkbox("RightDot", &m_bRightDot);
+	ImGui::SameLine();
+	ImGui::Checkbox("RightDotFull", &m_bRightDotFull);
 }
 
 void CCanvas_DriveMove::SaveToJson(Json& json)
