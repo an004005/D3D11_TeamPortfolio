@@ -2,6 +2,7 @@
 #include "..\public\Drive_RightDotUI.h"
 #include "GameInstance.h"
 #include "JsonLib.h"
+#include "UI_Manager.h"
 
 //m_tParams.Float2s[0] = [x] UV.y 에 더할 값 / [y] 텍스쳐 나눌 값
 
