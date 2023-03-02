@@ -23,6 +23,12 @@ private:
 
 	HRESULT Ready_Effect(const _tchar* pLayerTag);
 
+private:
+	HRESULT Create_Model(const wstring& pProtoTag, const char* pModelPath);
+
+private:
+	//vector<pair<wstring, PROTOINFO>> m_pProtosTags;
+
 public:
 	static CLevel_PlayerTest* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

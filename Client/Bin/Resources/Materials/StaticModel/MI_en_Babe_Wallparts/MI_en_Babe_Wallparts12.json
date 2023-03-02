@@ -1,0 +1,17 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/LC21/Prop/pr_Babe_Wall/T_pr_Babe_Wallparts012_ALB.dds",
+            "../Bin/Resources/Environments/Location/LC21/Prop/pr_Babe_Wall/T_pr_Babe_Wallparts012_NML.png",
+            "../Bin/Resources/Environments/Location/LC21/Prop/pr_Babe_Wall/T_pr_Babe_Wallparts012_RMA.dds",
+            "../Bin/Resources/Environments/Location/LC21/Prop/pr_Babe_Etc/T_pr_Babe_Pendulum01_EMI.dds"
+        ],
+        "Pass" : 1
+    }
+}

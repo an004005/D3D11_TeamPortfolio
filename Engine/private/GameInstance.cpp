@@ -479,9 +479,9 @@ CLayer* CGameInstance::GetLayer(_uint iLevelIndex, const _tchar* pLayerTag)
 	return m_pObject_Manager->GetLayer(iLevelIndex, pLayerTag);
 }
 
-CGameObject* CGameInstance::Find_ObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred)
+CGameObject* CGameInstance::Find_ObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred, const _tchar* pLayerTag)
 {
-	return m_pObject_Manager->Find_ObjectByPredicator(iLevelIndex, Pred);
+	return m_pObject_Manager->Find_ObjectByPredicator(iLevelIndex, Pred, pLayerTag);
 }
 
 list<CGameObject*> CGameInstance::Find_AllObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred)

@@ -16,27 +16,27 @@ HRESULT CBdLm_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 			
 				.AddTransition("Idle to Walk", "Walk")
 					.Predicator([&]()->_bool {return m_bWalk; })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Idle to Run", "Run")
 					.Predicator([&]()->_bool {return m_bRun; })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Idle to Attack", "Attack")
 					.Predicator([&]()->_bool {return m_bAttack; })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Idle to DodgeB", "DodgeB")
 					.Predicator([&]()->_bool {return m_bDodgeB; })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Idle to DodgeL", "DodgeL")
 					.Predicator([&]()->_bool {return m_bDodgeL; })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Idle to DodgeR", "DodgeR")
 					.Predicator([&]()->_bool {return m_bDodgeR; })
-					.Duration(0.2f)
+					.Duration(0.5f)
 			
 			// ~Idle
 
@@ -45,129 +45,129 @@ HRESULT CBdLm_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 				
 				.AddTransition("Walk to Idle", "Idle")
 					.Predicator([&]()->_bool {return !m_bWalk && m_bIdle && m_pModel->Find_Animation("AS_em0400_414_AL_damage_m_R")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Walk to Run", "Run")
 					.Predicator([&]()->_bool {return !m_bWalk && m_bRun && m_pModel->Find_Animation("AS_em0400_414_AL_damage_m_R")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Walk to Attack", "Attack")
 					.Predicator([&]()->_bool {return !m_bWalk && m_bAttack && m_pModel->Find_Animation("AS_em0400_414_AL_damage_m_R")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 			.AddState("Run")
 				.SetAnimation(*m_pModel->Find_Animation("AS_em0400_107_AL_run01"))
 
 				.AddTransition("Run to Idle", "Idle")
 					.Predicator([&]()->_bool {return !m_bRun && m_bIdle; }) //&& m_pModel->Find_Animation("AS_em0400_107_AL_run01")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Run to Walk", "Walk")
 					.Predicator([&]()->_bool {return !m_bRun && m_bWalk; }) //&& m_pModel->Find_Animation("AS_em0400_107_AL_run01")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Run to Attack", "Attack")
 					.Predicator([&]()->_bool { return !m_bRun && m_bAttack; }) //&& m_pModel->Find_Animation("AS_em0400_107_AL_run01")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Run to DodgeB", "DodgeB")
 					.Predicator([&]()->_bool { return !m_bRun && m_bDodgeB; }) //&& m_pModel->Find_Animation("AS_em0400_107_AL_run01")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Run to DodgeL", "DodgeL")
 					.Predicator([&]()->_bool { return !m_bRun && m_bDodgeL; }) //&& m_pModel->Find_Animation("AS_em0400_107_AL_run01")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Run to DodgeR", "DodgeR")
 					.Predicator([&]()->_bool { return !m_bRun && m_bDodgeR; }) //&& m_pModel->Find_Animation("AS_em0400_107_AL_run01")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 			.AddState("Attack")
 				.SetAnimation(*m_pModel->Find_Animation("AS_em0400_200_AL_atk_a1"))
-				
+							
 				.AddTransition("Attack to Idle", "Idle")
 					.Predicator([&]()->_bool {return !m_bAttack && m_bIdle && m_pModel->Find_Animation("AS_em0400_200_AL_atk_a1")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Attack to Walk", "Walk")
 					.Predicator([&]()->_bool {return !m_bAttack && m_bWalk && m_pModel->Find_Animation("AS_em0400_200_AL_atk_a1")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Attack to Run", "Run")
 					.Predicator([&]()->_bool {return !m_bAttack && m_bRun && m_pModel->Find_Animation("AS_em0400_200_AL_atk_a1")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Attack to Threat", "Threat")
 					.Predicator([&]()->_bool {return !m_bAttack && m_bThreat && m_pModel->Find_Animation("AS_em0400_200_AL_atk_a1")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 			
 			.AddState("DodgeB")
 				.SetAnimation(*m_pModel->Find_Animation("AS_em0400_135_AL_dodge_B"))
 			
 				.AddTransition("DodgeB to Idle", "Idle")
 					.Predicator([&]()->_bool {return !m_bDodgeB && m_bIdle && m_pModel->Find_Animation("AS_em0400_135_AL_dodge_B")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("DodgeB to Walk", "Walk")
 					.Predicator([&]()->_bool {return !m_bDodgeB && m_bWalk && m_pModel->Find_Animation("AS_em0400_135_AL_dodge_B")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("DodgeB to Run", "Run")
 					.Predicator([&]()->_bool {return !m_bDodgeB && m_bRun && m_pModel->Find_Animation("AS_em0400_135_AL_dodge_B")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("DodgeB to Attack", "Attack")
 					.Predicator([&]()->_bool {return !m_bDodgeB && m_bAttack && m_pModel->Find_Animation("AS_em0400_135_AL_dodge_B")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 			.AddState("DodgeL")
 				.SetAnimation(*m_pModel->Find_Animation("AS_em0400_140_AL_dodge_L"))
 			
 				.AddTransition("DodgeL to Idle", "Idle")
 					.Predicator([&]()->_bool {return !m_bDodgeL && m_bIdle && m_pModel->Find_Animation("AS_em0400_140_AL_dodge_L")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("DodgeL to Walk", "Walk")
 					.Predicator([&]()->_bool {return !m_bDodgeL && m_bWalk && m_pModel->Find_Animation("AS_em0400_140_AL_dodge_L")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("DodgeL to Run", "Run")
 					.Predicator([&]()->_bool {return !m_bDodgeL && m_bRun && m_pModel->Find_Animation("AS_em0400_140_AL_dodge_L")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("DodgeL to Attack", "Attack")
 					.Predicator([&]()->_bool {return !m_bDodgeL && m_bAttack && m_pModel->Find_Animation("AS_em0400_140_AL_dodge_L")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 			.AddState("DodgeR")
 				.SetAnimation(*m_pModel->Find_Animation("AS_em0400_145_AL_dodge_R"))
 			
 				.AddTransition("DodgeR to Idle", "Idle")
 					.Predicator([&]()->_bool {return !m_bDodgeR && m_bIdle && m_pModel->Find_Animation("AS_em0400_145_AL_dodge_R")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("DodgeR to Walk", "Walk")
 					.Predicator([&]()->_bool {return !m_bDodgeR && m_bWalk && m_pModel->Find_Animation("AS_em0400_145_AL_dodge_R")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("DodgeR to Run", "Run")
 					.Predicator([&]()->_bool {return !m_bDodgeR && m_bRun && m_pModel->Find_Animation("AS_em0400_145_AL_dodge_R")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("DodgeR to Attack", "Attack")
 					.Predicator([&]()->_bool {return !m_bDodgeR && m_bAttack && m_pModel->Find_Animation("AS_em0400_145_AL_dodge_R")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 			.AddState("Threat")
 				.SetAnimation(*m_pModel->Find_Animation("AS_em0400_160_AL_threat"))
 			
 				.AddTransition("Threat to Run", "Run")
 					.Predicator([&]()->_bool {return !m_bThreat && m_bRun && m_pModel->Find_Animation("AS_em0400_160_AL_threat")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 				.AddTransition("Threat to Walk", "Walk")
 					.Predicator([&]()->_bool {return !m_bThreat && m_bWalk && m_pModel->Find_Animation("AS_em0400_160_AL_threat")->IsFinished(); })
-					.Duration(0.2f)
+					.Duration(0.5f)
 
 			.Build();
 	}

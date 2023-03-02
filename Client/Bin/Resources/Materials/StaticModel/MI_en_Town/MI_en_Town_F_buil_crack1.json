@@ -1,0 +1,16 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Basement/pr_BasementTown/pr_S_town_future/F_building/T_pr_Town_crack_tile_1ALB.dds",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Basement/pr_BasementTown/pr_S_town_future/F_building/T_pr_Town_crack_tile_1NML.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Basement/pr_BasementTown/pr_S_town_future/F_building/T_pr_Town_crack_tile_1RMA.dds"
+        ],
+        "Pass" : 1
+    }
+}

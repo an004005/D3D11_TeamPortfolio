@@ -182,6 +182,8 @@
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\BrJ_AnimInstance.h" />
+    <ClInclude Include="..\public\BronJon.h" />
     <ClInclude Include="..\public\Boss1.h" />
     <ClInclude Include="..\public\Boss1_AnimationInstance.h" />
     <ClInclude Include="..\public\ButtonUI.h" />
@@ -224,6 +226,8 @@
     <ClInclude Include="..\public\Level_Tutorial.h" />
     <ClInclude Include="..\public\Level_UI.h" />
     <ClInclude Include="..\public\MainApp.h" />
+    <ClInclude Include="..\public\MapInstance_Object.h" />
+    <ClInclude Include="..\public\MapKinetic_Object.h" />
     <ClInclude Include="..\public\ParticleSystem.h" />
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\Public\Player.h">
@@ -268,6 +272,8 @@
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
+    <ClCompile Include="..\private\BronJon.cpp" />
     <ClCompile Include="..\private\Boss1.cpp" />
     <ClCompile Include="..\private\Boss1_AnimationInstance.cpp" />
     <ClCompile Include="..\private\ButtonUI.cpp" />
@@ -309,6 +315,8 @@
     <ClCompile Include="..\private\Level_Tutorial.cpp" />
     <ClCompile Include="..\private\Level_UI.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
+    <ClCompile Include="..\private\MapInstance_Object.cpp" />
+    <ClCompile Include="..\private\MapKinetic_Object.cpp" />
     <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\private\ParticleSystem.cpp" />
     <ClCompile Include="..\Private\Player.cpp">
@@ -369,6 +377,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel_Shadow.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCube_SSDecal.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Shadow.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_VFX.hlsl" />

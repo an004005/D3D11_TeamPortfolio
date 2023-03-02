@@ -199,6 +199,15 @@
     <Filter Include="97.ShaderFiles\PBR">
       <UniqueIdentifier>{0c8fe263-8aae-429a-84d4-56b5c393fd83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29">
+      <UniqueIdentifier>{f32c4093-e8d8-4c15-b7d1-2e0c14e0a683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance">
+      <UniqueIdentifier>{640f0a16-08b5-491a-9462-b102e9dcaac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map\MapObject">
+      <UniqueIdentifier>{13c3e0df-d901-4b13-a7e5-d6ac024d79f5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Monster\boss1">
       <UniqueIdentifier>{44a3e289-3391-45e6-b735-a5ae92424cd7}</UniqueIdentifier>
     </Filter>
@@ -357,8 +366,6 @@
     <ClInclude Include="..\public\ButtonUI.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapNonAnim_Object.h" />
-    <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\ScarletMap.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\Canvas_Drive.h">
@@ -438,8 +445,6 @@
     <ClInclude Include="..\public\SkPd_AnimInstance.h">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapNonAnim_Object.h" />
-    <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\EffectSystem.h">
       <Filter>VFX</Filter>
@@ -450,8 +455,38 @@
     <ClInclude Include="Weapon_wp0190.h">
       <Filter>02.GameObjects\Weapon\wp0190</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapInstance_Object.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h">
       <Filter>97.ShaderFiles\PBR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BronJon.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrJ_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapKinetic_Object.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Boss1.h">
       <Filter>02.GameObjects\Monster\boss1</Filter>
@@ -593,8 +628,6 @@
     <ClCompile Include="..\private\ButtonUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
-    <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\ScarletMap.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp">
@@ -674,8 +707,6 @@
     <ClCompile Include="..\private\SkPd_AnimInstance.cpp">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
-    <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp">
       <Filter>VFX</Filter>
@@ -685,6 +716,36 @@
     </ClCompile>
     <ClCompile Include="Weapon_wp0190.cpp">
       <Filter>02.GameObjects\Weapon\wp0190</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapInstance_Object.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BronJon.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrJ_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapKinetic_Object.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Boss1.cpp">
       <Filter>02.GameObjects\Monster\boss1</Filter>
@@ -780,6 +841,9 @@
       <Filter>97.ShaderFiles\VFX</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_MeshInstance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl">

@@ -49,6 +49,7 @@ public:
 	CAnimation* Find_Animation(const string& strAnimaName);
 	void SetPivot(_float4x4 Pivot) { m_PivotMatrix = Pivot; }
 	_vector GetLocalMove(_fmatrix WorldMatrix);
+	_vector GetLocalMove(_fmatrix WorldMatrix, const string& srtAnimName);
 	_bool	isLocalMove() { return !XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)); }
 	_float	GetLastLocalMoveSpeed() const { return m_fLastLocalMoveSpeed; }
 

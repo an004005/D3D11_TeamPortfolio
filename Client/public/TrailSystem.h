@@ -48,6 +48,7 @@ private:
 	vector<_float4>						m_vPrePoses;
 	_float4								m_vPreRight;
 	_uint								m_iPass = 0;
+	_uint								m_iSegmentCnt = 0;
 
 public:
 	static CTrailSystem*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

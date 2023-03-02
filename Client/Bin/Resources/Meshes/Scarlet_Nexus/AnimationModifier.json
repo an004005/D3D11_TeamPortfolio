@@ -401,6 +401,102 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_301_AL_capture_wait_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_302_AL_throw1_wait_cancel": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_302_AL_throw1_wait_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_302_AL_throw1_wait_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_303_AL_throw2_wait_cancel": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_303_AL_throw2_wait_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_303_AL_throw2_wait_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_311_AL_AirCap_cancel": {
+        "Duration": 25.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_311_AL_AirCap_loop": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_311_AL_AirCap_start": {
+        "Duration": 25.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_312_AL_AirCap_throw1_cancel": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_312_AL_AirCap_throw1_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_312_AL_AirCap_throw1_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_313_AL_AirCap_throw2_cancel": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_313_AL_AirCap_throw2_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_313_AL_AirCap_throw2_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0200_002_AL_wait02": {
         "Duration": 2256.0,
         "TickPerSecond": 24.0,
@@ -687,6 +783,108 @@
     "AS_em0700_424_AL_dead_down01": {
         "Duration": 160.0,
         "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0710_205_AL_atk_a2_loop": {
+        "Duration": 20.0,
+        "TickPerSecond": 28.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0800_101_AL_wait01": {
+        "Duration": 300.0,
+        "TickPerSecond": 62.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0800_106_AL_walk01_loop": {
+        "Duration": 719.0,
+        "TickPerSecond": 100.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0800_110_AL_walk_B_loop": {
+        "Duration": 359.0,
+        "TickPerSecond": 80.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0800_112_AL_walk_L_start": {
+        "Duration": 31.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_113_AL_walk_L_loop": {
+        "Duration": 61.0,
+        "TickPerSecond": 61.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0800_115_AL_walk_R_start": {
+        "Duration": 31.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_116_AL_walk_R_loop": {
+        "Duration": 61.0,
+        "TickPerSecond": 61.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0800_160_AL_threat": {
+        "Duration": 240.0,
+        "TickPerSecond": 55.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_214_AL_atk_a7_laser2_start": {
+        "Duration": 155.0,
+        "TickPerSecond": 52.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_215_AL_atk_a7_laser2_loop": {
+        "Duration": 45.0,
+        "TickPerSecond": 40.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0800_216_AL_atk_a7_laser2_end": {
+        "Duration": 60.0,
+        "TickPerSecond": 55.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_411_AL_damage_m_F": {
+        "Duration": 240.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_424_AL_dead_down": {
+        "Duration": 130.0,
+        "TickPerSecond": 52.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_480_AL_down_shock": {
+        "Duration": 70.0,
+        "TickPerSecond": 28.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0800_495_AL_press_down_start": {
+        "Duration": 76.0,
+        "TickPerSecond": 42.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0810_201_AL_atk_a1_bite": {
+        "Duration": 130.0,
+        "TickPerSecond": 70.0,
         "bLooping": false,
         "vecEvent": []
     },

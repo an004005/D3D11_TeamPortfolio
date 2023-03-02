@@ -24,7 +24,7 @@ public:
 	CGameObject* Clone_GameObject_NoLayer(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg = nullptr);
 	wcmap<class CLayer*>& GetLayers(_uint iLevelIndex);
 	class CLayer* GetLayer(_uint iLevelIndex, const _tchar* pLayerTag);
-	CGameObject* Find_ObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred);
+	CGameObject* Find_ObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred, const _tchar* pLayerTag);
 	list<CGameObject*> Find_AllObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred);
 	class CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 
