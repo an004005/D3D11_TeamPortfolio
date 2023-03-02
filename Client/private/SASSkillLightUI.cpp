@@ -44,29 +44,28 @@ void CSASSkillLightUI::Tick(_double TimeDelta)
 	//  TODO : 키 입력 삭제해야 한다. 플레이어 에서 Set 해야한다.
 
 	static _bool bOnSkil;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
 	{
 		bOnSkil = !bOnSkil;
 	}
 
-	if (bOnSkil)
+	if (bOnSkil = true)
 	{
-		m_dLight_TimeAcc += TimeDelta;
+		if (false == m_bBrightness && 0.3f >= m_fStrength)
+			m_bBrightness = true;
+		if (true == m_bBrightness && 0.7f <= m_fStrength)
+			m_bBrightness = false;
 
-		if (0.2 < m_dLight_TimeAcc)
-		{
-			m_tParams.Float4s[0].w = { 0.0f };
-			m_dLight_TimeAcc = 0.0;
-		}
+		if (true == m_bBrightness)
+			m_fStrength += _float(TimeDelta) * 5.0f;
 		else
-		{
-			m_tParams.Float4s[0].w = { 0.7f };
-		}
+			m_fStrength -= _float(TimeDelta) * 5.0f;
 
+		m_tParams.Float4s[0].w = { m_fStrength };
 	}
 	else
 	{
-		m_dLight_TimeAcc = 0.0;
+		m_fStrength = 0.5f;
 		m_tParams.Float4s[0].w = { 0.0f };
 	}
 }
@@ -80,6 +79,10 @@ HRESULT CSASSkillLightUI::Render()
 {
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
+
+	//_float4 m_vEmissiveColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_vEmissiveColor", &m_vEmissiveColor, sizeof _float4)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -171,7 +174,7 @@ void CSASSkillLightUI::ChangeSkill()
 	//	break;
 	//case CCanvas_SASSkill::TRANSPARENCY:	//6
 	//{
-	//	m_tParams.Float4s[0] = { 0.071f, 0.604f, 0.635f, 0.7f };
+	//	m_tParams.Float4s[0] = { 0.428f, 0.969f, 1.0f, 0.7f };
 
 	//}
 	//	break;
@@ -183,13 +186,13 @@ void CSASSkillLightUI::ChangeSkill()
 	//	break;
 	//case CCanvas_SASSkill::COPY:	//8
 	//{
-	//	m_tParams.Float4s[0] = { 0.235f, 0.345f, 0.894f, 0.7f };
-
+	//	m_tParams.Float4s[0] = { 0.572f, 0.650f, 1.0f, 0.7f };
+	
 	//}
 	//	break;
 	//case CCanvas_SASSkill::HIGHSPEED:	//9
 	//{
-	//	m_tParams.Float4s[0] = { 0.910f, 0.231f, 0.659f, 1.0f };
+	//	m_tParams.Float4s[0] = { 1.0f, 0.515f, 0.821f, 1.0f };
 
 	//}
 	//	break;

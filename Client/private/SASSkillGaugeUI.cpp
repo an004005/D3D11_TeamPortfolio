@@ -143,59 +143,99 @@ void CSASSkillGaugeUI::ChangeSkill()
 	//{
 	//case CCanvas_SASSkill::PSYCHOKINESIS0:	// 0
 	//{
-	//	m_tParams.Float4s[0] = { 0.886f, 0.620f, 1.0f, 1.0f };
+	//	m_tParams.Floats[0] = 1.0f;
+	//	m_tParams.Floats[1] = 1.0f;
+	//	m_tParams.Float4s[0] = { 0.928f, 0.803f, 0.981f, 1.0f };
 	//	m_fMinMaxGauge = { 0.0f, 1.0f };
 	//	m_fGaugeSpeed = { 0.5f };
+
+	//	m_tParams.Float4s[0] = { 0.826f, 0.420f, 1.0f, 1.0f };
 	//}
 	//	break;
 	//case CCanvas_SASSkill::PSYCHOKINESIS1:	// 1
 	//{
-	//	m_tParams.Float4s[0] = { 0.886f, 0.620f, 1.0f, 1.0f };
+	//	m_tParams.Floats[0] = 1.0f;
+	//	m_tParams.Floats[1] = 1.0f;
+	//	m_tParams.Float4s[0] = { 0.928f, 0.803f, 0.981f, 1.0f };
 	//	m_fMinMaxGauge = { 0.0f, 1.0f };
 	//	m_fGaugeSpeed = { 0.5f };
+
+	//	m_tParams.Float4s[0] = { 0.826f, 0.420f, 1.0f, 1.0f };
 	//}
 	//	break;
 	//case CCanvas_SASSkill::IGNITION:	// 2
 	//{
-	//	m_tParams.Float4s[0] = { 1.0f, 0.549f, 0.635f, 1.0f };
+	//	m_tParams.Floats[0] = 1.0f;
+	//	m_tParams.Floats[1] = 7.0f; 삭제예정
+	//	m_tParams.Float4s[0] = { 1.0f, 0.857f, 0.841f, 1.0f };
 	//	m_fMinMaxGauge = { 0.0f, 1.0f };
 	//	m_fGaugeSpeed = { 0.2f };
+
+	//	m_tParams.Float4s[0] = { 0.992f, 0.449f, 0.387f, 1.0f };
 	//}
 	//	break;
 	//case CCanvas_SASSkill::RESHUFFLE:	// 3
 	//{
-	//	m_tParams.Float4s[0] = { 1.0f, 0.824f, 0.427f, 1.0f };
+	//	m_tParams.Floats[0] = 1.0f;
+	//	m_tParams.Float4s[0] = { 1.0f, 0.968f, 0.871f, 1.0f };
 	//	m_fMinMaxGauge = { 0.0f, 1.0f };
 	//	m_fGaugeSpeed = { 0.8f };
+	
+	//	m_tParams.Float4s[0] = { 0.989f, 0.761f, 0.401f, 1.0f };
 	//}
 	//	break;
 	//case CCanvas_SASSkill::CLAIRVOYANCE:	// 4
 	//{
-	//	m_tParams.Float4s[0] = { 0.388f, 0.992f, 0.455f, 1.0f };
+	//	m_tParams.Floats[0] = 1.0f;
+	//	m_tParams.Float4s[0] = { 0.814f, 1.0f, 0.886f, 1.0f };
+	//	m_fMinMaxGauge = { 0.0f, 1.0f };
+	//	m_fGaugeSpeed = { 0.8f };
+
+	//	m_tParams.Float4s[0] = { 0.378f, 0.754f, 0.217f, 1.0f };
 
 	//}
 	//	break;
 	//case CCanvas_SASSkill::TELEPORTATION:	// 5
 	//{
-	//	m_tParams.Float4s[0] = { 0.584f, 0.918f, 1.0f, 1.0f };
+	//	m_tParams.Floats[0] = 1.0f;
+	//	m_tParams.Float4s[0] = { 0.803f, 0.977f, 0.981f, 1.0f };
+	//	m_fMinMaxGauge = { 0.0f, 1.0f };
+	//	m_fGaugeSpeed = { 0.8f };
+
+	//	m_tParams.Float4s[0] = { 0.420f, 0.605f, 1.0f, 1.0f };
 
 	//}
 	//	break;
 	//case CCanvas_SASSkill::TRANSPARENCY:	// 6
 	//{
-	//	m_tParams.Float4s[0] = { 0.714f, 1.0f, 0.957f, 1.0f };
+	//	m_tParams.Floats[0] = 1.0f;
+	//	m_tParams.Float4s[0] = { 0.280f, 0.754f, 0.657f, 1.0f };
+	//	m_fMinMaxGauge = { 0.0f, 1.0f };
+	//	m_fGaugeSpeed = { 0.8f };
+
+	//	m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	//}
 	//	break;
 	//case CCanvas_SASSkill::DISCHARGE:	// 7
 	//{
-	//	m_tParams.Float4s[0] = { 1.0f, 0.937f, 0.580f, 1.0f };
+	//	m_tParams.Floats[0] = 1.0f;
+	//	m_tParams.Float4s[0] = { 0.833f, 0.798f, 0.319f, 1.0f };
+	//	m_fMinMaxGauge = { 0.0f, 1.0f };
+	//	m_fGaugeSpeed = { 0.8f };
+
+	//	m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	//}
 	//	break;
 	//case CCanvas_SASSkill::COPY:	// 8
 	//{
-	//	m_tParams.Float4s[0] = { 0.694f, 0.804f, 1.0f, 1.0f };
+	//	m_tParams.Floats[0] = 1.0f;
+	//	m_tParams.Float4s[0] = { 0.598f, 0.781f, 0.981f, 1.0f };
+	//	m_fMinMaxGauge = { 0.0f, 1.0f };
+	//	m_fGaugeSpeed = { 0.8f };
+
+	//	m_tParams.Float4s[0] = { 0.379f, 0.392f, 0.943f, 1.0f };
 
 	//}
 	//	break;

@@ -36,6 +36,9 @@ HRESULT CCanvas_SASSkill::Initialize(void* pArg)
 	Find_ChildUI(L"SASSkill_XRight")->SetVisible(false);
 	Find_ChildUI(L"SASSkill_XInput")->SetVisible(false);
 
+	Find_ChildUI(L"SASSkill_FullCircle1")->SetVisible(false);
+	Find_ChildUI(L"SASSkill_FullCircle2")->SetVisible(false);
+
 	return S_OK;
 }
 

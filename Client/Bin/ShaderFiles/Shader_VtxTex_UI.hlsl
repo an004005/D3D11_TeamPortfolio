@@ -370,14 +370,27 @@ PS_OUT PS_Alpha_Color(PS_IN In)	// → 13
 // g_tex_0 : 텍스처
 // g_float_0 : 게이지 정도
 // g_vec4_0 : 색상 조절
-PS_OUT PS_RotationGauge(PS_IN In) // → 15
+PS_OUT PS_SASSkillGauge1(PS_IN In) // → 15
 {
 	PS_OUT         Out = (PS_OUT)0;
 
-	float4 fillColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 DefaultTexAnother = DefaultTex;
+	
+	float4 GlowBase = DefaultTex * g_vec4_0;
 
+	float4 glow = g_tex_1.Sample(LinearSampler, In.vTexUV);
+
+	GlowBase.a = glow.a;
+	float4 LineTex = DefaultTexAnother * g_vec4_1;
+
+	float4 PointTex = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	
+	LineTex.a = PointTex.r;
+
+	// BOT 에서 RIGHTBOT 순서로 사라진다.
 	float3 center = float3(0.5f, 0.5f, 0.0f);
-	float3 top = float3(0.5f, 1.0f, 0.0f);
+	float3 top = float3(0.5f, 0.0f, 0.0f);
 	float3 curUV = float3(In.vTexUV.xy, 0.0f);
 	float angle = 0;
 
@@ -397,8 +410,8 @@ PS_OUT PS_RotationGauge(PS_IN In) // → 15
 	if (angle >= condition)
 		discard;
 
-	Out.vColor = fillColor * g_vec4_0;
-
+	Out.vColor = saturate(GlowBase + LineTex * g_float_1);
+	Out.vColor.a = PointTex.r;
 	return Out;
 }
 
@@ -442,6 +455,7 @@ VS_OUT1 VS_UVCut1(VS_IN In)
 // g_vec4_0 : 변경할 색상과 알파값
 // g_tex_1 : g_tex_0 과 섞을 텍스처
 // g_float_0 : Glow 의 정도
+
 PS_OUT PS_Glow(PS_IN1 In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -457,8 +471,14 @@ PS_OUT PS_Glow(PS_IN1 In)
 }
 
 /*******************
-* UVCut → 17 : 2장의 텍스처를 가져와서 섞는다.
+* UVCut → 17 : 2장의 텍스쳐를 가져와서 섞는다.
+
+g_tex_0 : 섞을 색상의 텍스쳐
+g_tex_1 : 이미시브 텍스쳐
+g_vec4_0 : 섞을 색상
 /********************/
+float4 g_vEmissiveColor : EMISSIVE;
+
 VS_OUT1 VS_MAIN1(VS_IN In)
 {
 	VS_OUT1		Out = (VS_OUT1)0;
@@ -475,24 +495,35 @@ PS_OUT PS_Emissive(PS_IN1 In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4 vTexture0 = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	float4 vTexture1 = g_tex_1.Sample(LinearSampler, In.vTexUV1);
+	float4 vEdiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 vEmissive = g_tex_1.Sample(LinearSampler, In.vTexUV1);
+	vEmissive = lerp(vEmissive, g_vec4_0, 0.85f);
 
-	vTexture1.a = 0.0f;
-
-	Out.vColor = saturate(vTexture0 + vTexture1) * g_vec4_0;
+	Out.vColor = vEdiffuse * vEmissive;
 
 	return Out;
+
+	//PS_OUT			Out = (PS_OUT)0;
+
+	//float4 vTexture0 = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	//float4 vTexture1 = g_tex_1.Sample(LinearSampler, In.vTexUV1);
+
+	//vTexture1.a = 0.0f;
+
+	//Out.vColor = saturate(vTexture0 + vTexture1) * g_vec4_0;
+
+	//return Out;
 }
 
 /*******************
 * 18 : 가로는 텍스처가 계속 이동하고, 세로로는 지정한 만큼 보여진다.
-/********************/
+
 // g_float_0 : frame time
 // g_tex_0 : 플립북 텍스쳐
 // g_int_0 : 플릭북 가로 개수
 // g_int_1 : 플립북 세로 개수
 // g_vec2_0 : [x] UV.y 에 더할 값 / [y] 텍스쳐 나눌 값
+/********************/
 
 VS_OUT VS_FlipBookCut(VS_IN In)	// ->18
 {
@@ -514,6 +545,53 @@ PS_OUT PS_FlipBookCut(PS_IN In)	// ->18
 	PS_OUT			Out = (PS_OUT)0;
 
 	Out.vColor = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_0, g_int_0, g_int_1));
+	return Out;
+}
+
+/*******************
+* UVCut → 19 : 텍스쳐 2장을 섞고, UV 를 조정한다. 
+
+g_tex_0 : 흰색 텍스쳐
+g_tex_1 : 출력할 텍스쳐
+g_float_0 : 게이지 정도
+g_vec4_0 : 색상 조절
+/********************/
+PS_OUT PS_SASSkillGauge0(PS_IN In)	// → 19
+{
+	PS_OUT         Out = (PS_OUT)0;
+
+	float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 DefaultTexAnother = DefaultTex;
+
+	float4 GlowBase = DefaultTex * g_vec4_0;
+
+	float4 PointTex = g_tex_1.Sample(LinearSampler, In.vTexUV);
+
+	// BOT 에서 RIGHTBOT 순서로 사라진다.=======
+	float3 center = float3(0.5f, 0.5f, 0.0f);
+	float3 top = float3(0.5f, 0.0f, 0.0f);
+	float3 curUV = float3(In.vTexUV.xy, 0.0f);
+	float angle = 0;
+
+	float3 centerToTop = top - center;
+	float3 centerToCurUV = curUV - center;
+
+	centerToTop = normalize(centerToTop);
+	centerToCurUV = normalize(centerToCurUV);
+
+	angle = acos(dot(centerToTop, centerToCurUV));
+	angle = angle * (180.0f / 3.141592654f); // radian to degree
+
+	angle = (centerToTop.x * centerToCurUV.x - centerToTop.y * centerToCurUV.x > 0.0f) ? angle : (-angle) + 360.0f;
+
+	float condition = 360 * g_float_0;
+
+	if (angle >= condition)
+		discard;
+	// ==============================
+
+	Out.vColor = saturate(GlowBase);
+	Out.vColor.a = PointTex.r;
 	return Out;
 }
 
@@ -731,8 +809,8 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_Alpha_Color();	// 색상 조정
 	}
 
-	//15: 스킬 게이지, 아이템 게이지
-	pass RotationGauge
+	//15: Texture 3장을 섞고, 외곽선을 뚜렸하게하고, UV 를 시계방향으로 조절 가능하다.
+	pass SASSkillGauge1
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
@@ -742,7 +820,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_RotationGauge();	// 색상 조정 하면서 시계방향 으로 uv가 줄어들고 늘어난다.
+		PixelShader = compile ps_5_0 PS_SASSkillGauge1();	// 색상 조정 하면서 시계방향 으로 uv가 줄어들고 늘어난다.
 	}
 
 	//16: 텍스처에 글로우 효과 주기
@@ -785,5 +863,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_FlipBookCut();
+	}
+
+	//19: Texture 을 2장 섞고, 시계방향으로 UV를 조절한다.
+	pass SASSkillGauge0
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SASSkillGauge0();
 	}
 }
