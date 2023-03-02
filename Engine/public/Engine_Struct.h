@@ -185,6 +185,16 @@ namespace Engine
 		_float4			vColor;
 	}VTXINSTANCE;
 
+	/*******************
+	VTXMODEL INSTANCING
+	********************/
+	typedef struct ENGINE_DLL tagVertexInstance_Declaration
+	{
+		static const unsigned int		iNumElements = 8;
+		static D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXMODEL_INSTANCE_DECLARATION;
+
+
 	typedef struct tagVertexPoint
 	{
 		XMFLOAT3		vPosition;
