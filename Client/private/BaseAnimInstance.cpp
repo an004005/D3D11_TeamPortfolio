@@ -1677,6 +1677,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 	m_mapAnimSocket.emplace("Upper_Saperate_Animation", SocketList);
 	m_mapAnimSocket.emplace("Under_Saperate_Animation", SocketList);
 	m_mapAnimSocket.emplace("Kinetic_AnimSocket", SocketList);
+	m_mapAnimSocket.emplace("Kinetic_Air_AnimSocket", SocketList);
 
 	return S_OK;
 }
@@ -1685,8 +1686,10 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 {
 	UpdateTargetState(TimeDelta);
 
-	_bool bChange = CheckFinishedAnimSocket();
+	// bool 말고 int 반환해서 어떤 소켓이 끝난건지 받는게 더 좋을듯? 내일해라
+	_bool bChange = CheckFinishedAnimSocket();	
 	_bool bLocalMove = true;
+	_bool vAirEnd = bChange && m_bAir;
 
 	string szCurAnimName = "";
 
@@ -1724,6 +1727,7 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 		else if (m_bAttach)
 		{
 			m_fLerpTime = 0.f;	// 어태치면 바로 보간
+			m_bSeperateSwitch = false;
 			m_bAttach = false;
 		}
 		else
@@ -1734,18 +1738,30 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 
 		if (m_bSeperateAnim)	// 분리 애니메이션이 돌아가면 하체는 업데이트하자
 		{
+			m_bSeperateSwitch = true;
+		}
+
+		if (m_bSeperateSwitch)
+		{
 			m_pModel->SetBoneMask(EBoneMask::OFF_CHILD_EQ, "Spine1");
 
 			m_pASM_Base->Tick(TimeDelta);
 			m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
 
 			m_pModel->SetBoneMask(EBoneMask::ON_ALL);
+
+			m_fSeperateLerpTime = 0.f;
 		}
 	}
 	else if (bChange)
 	{
 		bLocalMove = false;
-		m_pASM_Base->SetCurState("IDLE");
+		
+		if(m_bAir)
+			m_pASM_Base->SetCurState("JUMP_FALL");
+		else
+			m_pASM_Base->SetCurState("IDLE");
+
 		//m_pASM_Base->GetCurState()->m_Animation->Reset();
 		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
 		m_fLerpTime = 0.f;
@@ -1780,7 +1796,7 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
 		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix, szCurAnimName);
 
-		if (!m_bSeperateAnim)
+		if (!m_bSeperateAnim && !m_bSeperateSwitch)
 			m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
 	}
 
@@ -1865,7 +1881,12 @@ void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimat
 
 _bool CBaseAnimInstance::isSocketAlmostFinish(const string & strSocName)
 {
-	return (m_mapAnimSocket[strSocName].size() == 1) && (m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= 0.95);
+	return (m_mapAnimSocket[strSocName].size() == 1) && (m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= 0.95f);
+}
+
+_bool CBaseAnimInstance::isSocketPassby(const string & strSocName, _float fPlayRatio)
+{
+	return (m_mapAnimSocket[strSocName].size() == 1) && (m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= fPlayRatio);
 }
 
 _bool CBaseAnimInstance::CheckAnim(const string & szAnimName)

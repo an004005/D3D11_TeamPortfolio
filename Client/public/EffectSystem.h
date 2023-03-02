@@ -53,6 +53,12 @@ public:
 
 	void SetShadowPass(_uint iPass) { m_iShadowPass = iPass; }
 
+// ±è±â¹ü
+public:
+	void Set_BoneMatrix(CModel* pModel, _fmatrix Transform);
+private:
+	string m_szBoneName = "RightWeapon";
+
 	//For_Curve
 public:
 	void Tick_Scale(_float fValue);

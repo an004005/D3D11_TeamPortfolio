@@ -21,6 +21,7 @@
 #include "Indicator.h"
 
 #include "TrailSystem.h"
+#include "EffectSystem.h"
 
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -56,6 +57,9 @@ HRESULT CLevel_PlayerTest::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -141,6 +145,8 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 
 	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
 
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
+
 	return S_OK;
 }
 
@@ -191,6 +197,11 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 
 HRESULT CLevel_PlayerTest::Ready_Effect(const _tchar * pLayerTag)
 {
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
+	
 	return S_OK;
 }
 

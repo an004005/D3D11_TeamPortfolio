@@ -124,12 +124,27 @@ protected:	// 염력 소켓 애니메이션
 	list<CAnimation*>	m_Kinetic_RB_Start;
 	list<CAnimation*>	m_Kinetic_RB_Loop;
 	list<CAnimation*>	m_Kinetic_RB_Cancel;
+
 	list<CAnimation*>	m_Kinetic_RB_Throw01_Start;
 	list<CAnimation*>	m_Kinetic_RB_Throw01_Loop;
 	list<CAnimation*>	m_Kinetic_RB_Throw01_Cancel;
+
 	list<CAnimation*>	m_Kinetic_RB_Throw02_Start;
 	list<CAnimation*>	m_Kinetic_RB_Throw02_Loop;
 	list<CAnimation*>	m_Kinetic_RB_Throw02_Cancel;
+
+	list<CAnimation*>	m_Kinetic_RB_Air_Start;
+	list<CAnimation*>	m_Kinetic_RB_Air_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Air_Cancel;
+
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw01_Start;
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw01_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw01_Cancel;
+
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Start;
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Cancel;
+
 
 public:
 	_bool	isAir() { return m_bAir; }
@@ -246,6 +261,9 @@ protected:
 	wstring		m_ModelName;
 
 	CCamera*	m_pPlayerCam = nullptr;
+
+protected:
+	CGameObject*	m_pEffect = nullptr;
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

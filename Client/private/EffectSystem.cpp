@@ -359,6 +359,26 @@ void CEffectSystem::Imgui_RenderProperty()
 		std::ofstream file(filePath);
 		file << json;
 	});
+
+	// ±è±â¹ü
+	static char szName[MAX_PATH]{};
+	ImGui::InputText("BoneName", szName, MAX_PATH);
+	if (ImGui::Button("BoneChange"))
+	{
+		m_szBoneName = szName;
+	}
+}
+
+void CEffectSystem::Set_BoneMatrix(CModel * pModel, _fmatrix Transform)
+{
+	// ±è±â¹ü
+	_matrix	SocketMatrix = pModel->GetPivotMatrix() * pModel->GetBoneMatrix(m_szBoneName) * Transform;
+
+	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]) * 0.2f;
+	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]) * 0.2f;
+	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]) * 0.2f;
+
+	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
 }
 
 void CEffectSystem::Tick_Scale(_float fValue)

@@ -221,8 +221,8 @@ HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 	Json PreviewData; //	MonsterBuddyLumi	MonsterSkummyPool	MonsterFlowerLeg	MonsterSkummyPandou		MonsterBronJon
 	PreviewData["Model"] = "Model_Player";
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
+	//	return E_FAIL;
 	
 	auto pPlayer = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
 
