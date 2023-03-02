@@ -1,6 +1,7 @@
 diffuse
 normal
 rma
+emissive
 
 //////////
 

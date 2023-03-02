@@ -1,0 +1,16 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Prop/10_Props/Rubble/RubbleAndDebris/03_Texture/Props_Rebar_Color_Texture.dds",
+            "../Bin/Resources/Environments/Prop/10_Props/Rubble/RubbleAndDebris/03_Texture/Props_Rebar_NM_Texture.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Rubble/RubbleAndDebris/03_Texture/Props_Rebar_ORM_Texture_RMA.dds"
+        ],
+        "Pass" : 1
+    }
+}

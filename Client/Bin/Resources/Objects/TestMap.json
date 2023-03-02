@@ -1,32 +1,7 @@
 {
     "MapObjects": [
         {
-            "ModelTag": "../Bin/Resources/Model/StaticModel/Minimaps/LC01_Area02_Minimap.static_model\u0000",
-            "ObjectTag": "",
-            "Prototype_GameObject": "Prototype_GameObject_MapNonAnim_Object\u0000",
-            "Transform": {
-                "WorldMatrix": [
-                    1.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    0.0,
-                    0.0,
-                    -0.15936732292175293,
-                    0.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "ModelTag": "../Bin/Resources/Model/StaticModel/Roads/HWBase_B02.static_model\u0000",
+            "ModelTag": "../Bin/Resources/Model/StaticModel/MapStaicModels/Default/Roads/HWBase_B02.static_model\u0000",
             "ObjectTag": "",
             "Prototype_GameObject": "Prototype_GameObject_MapNonAnim_Object\u0000",
             "Transform": {
@@ -51,7 +26,7 @@
             }
         },
         {
-            "ModelTag": "../Bin/Resources/Model/StaticModel/Roads/HWEndZ_tes02.static_model\u0000",
+            "ModelTag": "../Bin/Resources/Model/StaticModel/MapStaicModels/Default/Roads/HWEndZ_tes02.static_model\u0000",
             "ObjectTag": "",
             "Prototype_GameObject": "Prototype_GameObject_MapNonAnim_Object\u0000",
             "Transform": {

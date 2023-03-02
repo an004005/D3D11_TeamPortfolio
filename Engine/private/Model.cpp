@@ -283,9 +283,11 @@ HRESULT CModel::Initialize_Prototype(const char * pModelFilePath)
 
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
+		
 		CMesh*		pMesh = CMesh::Create(m_pDevice, m_pContext, m_eType, hFile, this);
 		Assert(pMesh != nullptr);
 		m_Meshes.push_back(pMesh);
+
 	}
 
 	Ready_Materials(hFile);

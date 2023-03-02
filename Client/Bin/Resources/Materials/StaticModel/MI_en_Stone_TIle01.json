@@ -1,0 +1,16 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/CommonLC/LC06_LC56/T_Tamajari01_ALB.dds",
+            "../Bin/Resources/Environments/Location/CommonLC/LC06_LC56/T_Tamajari01_NML.png",
+            "../Bin/Resources/Environments/Location/CommonLC/LC06_LC56/T_Tamajari01_RMAH.dds"
+        ],
+        "Pass" : 1
+    }
+}

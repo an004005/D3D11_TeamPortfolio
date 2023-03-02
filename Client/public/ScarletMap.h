@@ -1,10 +1,11 @@
 #pragma once
 #include "GameObject.h"
 #include "Client_Defines.h"
+#include "Level_Maptool.h"
 
 //맵 저장, 불러오기, 오브젝트 생성
 //Map Editor 역할(그럴거면 맵 에디터를 만들지..)
-
+BEGIN(Client)
 class CScarletMap : public CGameObject
 {
 private:
@@ -23,18 +24,24 @@ public:
 	virtual void SaveToJson(OUT Json& json) override;
 	virtual void LoadFromJson(const Json& json) override;
 
+	
 private:
-	HRESULT SetUp_Components();
+	HRESULT SetUp_Components();   
 	_float4	SetUp_InitPosition();
-
+	void	ClearMap();
+	void	CreateMapObjectFromLoad(Json& json);
+	 
 private:
-	vector<wstring>	m_pModelProtos;
+	vector<pair<wstring, PROTOINFO>>	m_pModelProtos;
+	vector<class CMapObject*>			m_pMapObjects;
 
-	wstring								m_pModelProtoTag;
+	pair<wstring, PROTOINFO>			m_pModelProtoInfo;
 	CGameObject* 						m_pGameObject = nullptr;
 public:
 	static CScarletMap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr) override;
 	void Free() override;
 };
+
+END
 
