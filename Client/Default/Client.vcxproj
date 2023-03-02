@@ -225,6 +225,7 @@
     <ClInclude Include="..\public\Level_UI.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\public\MapInstance_Object.h" />
+    <ClInclude Include="..\public\MapKinetic_Object.h" />
     <ClInclude Include="..\public\ParticleSystem.h" />
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\Public\Player.h">
@@ -310,6 +311,7 @@
     <ClCompile Include="..\private\Level_UI.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\MapInstance_Object.cpp" />
+    <ClCompile Include="..\private\MapKinetic_Object.cpp" />
     <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\private\ParticleSystem.cpp" />
     <ClCompile Include="..\Private\Player.cpp">

@@ -30,6 +30,9 @@ public:
 	// GameObject의 AfterPhysX에서 실행 필수
 	void Update_AfterPhysX(class CTransform* pTransform);
 
+	// 날리기 & 돌리기
+	void AddForce(_float3 vForce);
+	void AddTorque(_float3 vTorque);
 
 	_bool IsKinematic() const { return m_bKinematic; }
 	_bool IsTrigger() const { return m_bTrigger; }

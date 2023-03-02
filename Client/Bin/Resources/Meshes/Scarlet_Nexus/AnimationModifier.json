@@ -401,6 +401,102 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_301_AL_capture_wait_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_302_AL_throw1_wait_cancel": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_302_AL_throw1_wait_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_302_AL_throw1_wait_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_303_AL_throw2_wait_cancel": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_303_AL_throw2_wait_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_303_AL_throw2_wait_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_311_AL_AirCap_cancel": {
+        "Duration": 25.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_311_AL_AirCap_loop": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_311_AL_AirCap_start": {
+        "Duration": 25.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_312_AL_AirCap_throw1_cancel": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_312_AL_AirCap_throw1_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_312_AL_AirCap_throw1_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_313_AL_AirCap_throw2_cancel": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_313_AL_AirCap_throw2_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_313_AL_AirCap_throw2_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0200_002_AL_wait02": {
         "Duration": 2256.0,
         "TickPerSecond": 24.0,

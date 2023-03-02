@@ -473,6 +473,15 @@
     <ClInclude Include="..\public\BrJ_AnimInstance.h">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapKinetic_Object.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -713,6 +722,15 @@
     </ClCompile>
     <ClCompile Include="..\private\BrJ_AnimInstance.cpp">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapKinetic_Object.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

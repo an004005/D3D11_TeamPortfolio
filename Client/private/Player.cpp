@@ -15,6 +15,8 @@
 #include "TrailSystem.h"
 #include "Weapon_wp0190.h"
 #include "RigidBody.h"
+#include "EffectSystem.h"
+#include "ControlledRigidBody.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -51,10 +53,23 @@ HRESULT CPlayer::Initialize(void * pArg)
 //	if (FAILED(SetUp_Event()))	-> 이건 진짜 천천히 보자...
 //		return E_FAIL;
 
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
+
+	m_pCollider->SetPosition(XMVectorSet(0.f, 1.f, 0.f, 0.f));//SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
+
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
 
 	m_pPlayerCam = m_pGameInstance->Add_Camera("PlayerCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Player");
 	
+
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
+	m_pEffect = pGameInstance->Clone_GameObject_Get(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
+	/*
+		Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
+	*/
+
 	//m_pPlayerCam = dynamic_cast<CCamera*>(m_pGameInstance->Clone_GameObject_Get(L"Layer_Camera", TEXT("Prototype_GameObject_Camera_Player")));
 	//Assert(m_pPlayerCam != nullptr);
 	//Safe_AddRef(m_pPlayerCam);
@@ -73,6 +88,10 @@ void CPlayer::Tick(_double TimeDelta)
 
 	MoveStateCheck(TimeDelta);
 	BehaviorCheck(TimeDelta);
+
+	m_pKineticStataMachine->Tick(TimeDelta);
+
+	SeperateCheck();
 
 	m_pASM->Tick(TimeDelta);
 
@@ -121,6 +140,8 @@ void CPlayer::AfterPhysX()
 	{
 		static_cast<CScarletWeapon*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
 	}
+
+	Attack_Effect("Eff01", 0.2f);
 }
 
 HRESULT CPlayer::Render()
@@ -154,6 +175,8 @@ void CPlayer::Imgui_RenderProperty()
 		}
 		ImGui::Unindent(20.f);
 	}
+
+	m_pKineticStataMachine->Imgui_RenderProperty();
 }
 
 HRESULT CPlayer::SetUp_Components(void * pArg)
@@ -177,13 +200,9 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 		(CComponent**)&m_pController));
 	
 	NULL_CHECK(m_pASM = CBaseAnimInstance::Create(m_pModel, this));
+	FAILED_CHECK(Setup_KineticStateMachine());
 	//NULL_CHECK(m_pState = CFSM_Player::Create(this));
 
-	return S_OK;
-}
-
-HRESULT CPlayer::SetUp_AttackFSM()
-{
 	return S_OK;
 }
 
@@ -220,6 +239,286 @@ HRESULT CPlayer::SetUp_Event()
 	return S_OK;
 }
 
+HRESULT CPlayer::Setup_KineticStateMachine()
+{
+	// 염력에 사용할 애니메이션 추가
+
+	CAnimation*	pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_301_AL_capture_wait_start"));
+	m_Kinetic_RB_Start.push_back(m_pModel->Find_Animation("AS_ch0100_301_AL_capture_wait_start"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_301_AL_capture_wait_loop"));
+	m_Kinetic_RB_Loop.push_back(m_pModel->Find_Animation("AS_ch0100_301_AL_capture_wait_loop"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_301_AL_capture_wait_cancel"));
+	m_Kinetic_RB_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_301_AL_capture_wait_cancel"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_303_AL_throw2_wait_start"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_303_AL_throw2_wait_loop"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_303_AL_throw2_wait_cancel"));
+	m_Kinetic_RB_Throw01_Start.push_back(m_pModel->Find_Animation("AS_ch0100_303_AL_throw2_wait_start"));
+	m_Kinetic_RB_Throw01_Loop.push_back(m_pModel->Find_Animation("AS_ch0100_303_AL_throw2_wait_loop"));
+	m_Kinetic_RB_Throw01_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_303_AL_throw2_wait_cancel"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_302_AL_throw1_wait_start"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_302_AL_throw1_wait_loop"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_302_AL_throw1_wait_cancel"));
+	m_Kinetic_RB_Throw02_Start.push_back(m_pModel->Find_Animation("AS_ch0100_302_AL_throw1_wait_start"));
+	m_Kinetic_RB_Throw02_Loop.push_back(m_pModel->Find_Animation("AS_ch0100_302_AL_throw1_wait_loop"));
+	m_Kinetic_RB_Throw02_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_302_AL_throw1_wait_cancel"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_311_AL_AirCap_start"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_311_AL_AirCap_loop"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_311_AL_AirCap_cancel"));
+	m_Kinetic_RB_Air_Start.push_back(m_pModel->Find_Animation("AS_ch0100_311_AL_AirCap_start"));
+	m_Kinetic_RB_Air_Loop.push_back(m_pModel->Find_Animation("AS_ch0100_311_AL_AirCap_loop"));
+	m_Kinetic_RB_Air_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_311_AL_AirCap_cancel"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_312_AL_AirCap_throw1_start"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_312_AL_AirCap_throw1_loop"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_312_AL_AirCap_throw1_cancel"));
+	m_Kinetic_RB_Air_Throw01_Start.push_back(m_pModel->Find_Animation("AS_ch0100_312_AL_AirCap_throw1_start"));
+	m_Kinetic_RB_Air_Throw01_Loop.push_back(m_pModel->Find_Animation("AS_ch0100_312_AL_AirCap_throw1_loop"));
+	m_Kinetic_RB_Air_Throw01_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_312_AL_AirCap_throw1_cancel"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_313_AL_AirCap_throw2_start"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_313_AL_AirCap_throw2_loop"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_313_AL_AirCap_throw2_cancel"));
+	m_Kinetic_RB_Air_Throw02_Start.push_back(m_pModel->Find_Animation("AS_ch0100_313_AL_AirCap_throw2_start"));
+	m_Kinetic_RB_Air_Throw02_Loop.push_back(m_pModel->Find_Animation("AS_ch0100_313_AL_AirCap_throw2_loop"));
+	m_Kinetic_RB_Air_Throw02_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_313_AL_AirCap_throw2_cancel"));
+
+	// ~염력에 사용할 애니메이션 추가
+
+	m_pKineticStataMachine = CFSMComponentBuilder().InitState("NO_USE_KINETIC")
+
+		.AddState("NO_USE_KINETIC")
+		.Tick([&](double g_fTimeDelta) { m_bKineticMove = false; })
+			.AddTransition("NO_USE_KINETIC to KINETIC_RB_START", "KINETIC_RB_START")
+			.Predicator([&]()->_bool{return m_bKineticRB && !m_bAir;})
+			.Priority(0)
+
+			.AddTransition("NO_USE_KINETIC to KINETIC_RB_AIR_START", "KINETIC_RB_AIR_START")
+			.Predicator([&]()->_bool {return m_bKineticRB && m_bAir; })
+			.Priority(0)
+
+#pragma region KineticRB
+
+		.AddState("KINETIC_RB_START")
+			.OnStart([&]() { m_pASM->InputAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Start); })
+		.Tick([&](double g_fTimeDelta) { m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_START to KINETIC_RB_LOOP", "KINETIC_RB_LOOP")
+			.Predicator([&]()->_bool{return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket");})
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_START to KINETIC_RB_CANCEL", "KINETIC_RB_CANCEL")
+			.Predicator([&]()->_bool{return !m_bKineticRB;})
+			.Priority(0)
+
+		.AddState("KINETIC_RB_LOOP")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Loop); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_START to KINETIC_RB_THROW_01_START", "KINETIC_RB_THROW_01_START")
+			.Predicator([&]()->_bool{return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket");})
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_START to KINETIC_RB_CANCEL", "KINETIC_RB_CANCEL")
+			.Predicator([&]()->_bool{return !m_bKineticRB;})
+			.Priority(0)
+
+		.AddState("KINETIC_RB_CANCEL")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Cancel); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_CANCEL to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool{return !m_bKineticRB && m_pASM->isSocketEmpty("Kinetic_AnimSocket");})
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_CANCEL to KINETIC_RB_START", "KINETIC_RB_START")
+			.Predicator([&]()->_bool{return m_bKineticRB && (m_pASM->GetSocketAnimation("Kinetic_AnimSocket")->GetPlayRatio() >= 0.2f);})
+			.Priority(0)
+			
+#pragma endregion KineticRB
+
+#pragma region KineticRB_Throw
+
+		// 일반 던지기
+		.AddState("KINETIC_RB_THROW_01_START")	// 루프 / 앤드
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw01_Start); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_THROW_01_START to KINETIC_RB_THROW_01_END", "KINETIC_RB_THROW_01_END")
+			.Predicator([&]()->_bool {return !m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket"); })
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_THROW_01_START to KINETIC_RB_THROW_01_LOOP", "KINETIC_RB_THROW_01_LOOP")
+			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket") && m_pASM->CheckSocketAnim("Kinetic_AnimSocket", "AS_ch0100_303_AL_throw2_wait_start"); })
+			.Priority(0)
+
+		.AddState("KINETIC_RB_THROW_01_LOOP")	// 앤드 / 스타트2
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw01_Loop); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; }) // 루프 반복되도록 끝나가면 더 넣어주기
+
+			.AddTransition("KINETIC_RB_THROW_01_LOOP to KINETIC_RB_THROW_01_END", "KINETIC_RB_THROW_01_END")
+			.Predicator([&]()->_bool {return !m_bKineticRB; })
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_THROW_01_LOOP to KINETIC_RB_THROW_02_START", "KINETIC_RB_THROW_02_START")
+			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket") && m_pASM->CheckSocketAnim("Kinetic_AnimSocket", "AS_ch0100_303_AL_throw2_wait_loop"); })
+			.Priority(0)
+
+		.AddState("KINETIC_RB_THROW_01_END")	// 종료 / 처음시작
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw01_Cancel); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_THROW_01_END to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool {return !m_bKineticRB && m_pASM->isSocketEmpty("Kinetic_AnimSocket"); })
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_THROW_01_END to KINETIC_RB_START", "KINETIC_RB_START")
+			.Predicator([&]()->_bool {return m_bKineticRB && (m_pASM->GetSocketAnimation("Kinetic_AnimSocket")->GetPlayRatio() >= 0.2f); })
+			.Priority(0)
+
+		// 일반 던지기 연속
+		.AddState("KINETIC_RB_THROW_02_START")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw02_Start); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_THROW to KINETIC_RB_THROW_02_END", "KINETIC_RB_THROW_02_END")
+			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket"); })
+			.Priority(0)
+
+		.AddState("KINETIC_RB_THROW_02_LOOP")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw02_Loop); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_THROW to KINETIC_RB_THROW_02_END", "KINETIC_RB_THROW_02_END")
+			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket"); })
+			.Priority(0)
+
+		.AddState("KINETIC_RB_THROW_02_END")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw02_Cancel); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = true; })
+
+			.AddTransition("KINETIC_RB_THROW to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool {return m_pASM->isSocketEmpty("Kinetic_AnimSocket"); })
+			.Priority(0)
+
+#pragma endregion KineticRB_Throw
+
+#pragma region KineticRB_Air
+
+		.AddState("KINETIC_RB_AIR_START")
+		.OnStart([&]() { m_pASM->InputAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Start); })
+		.Tick([&](double g_fTimeDelta) { m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false; })
+
+			.AddTransition("KINETIC_RB_AIR_START to KINETIC_RB_AIR_LOOP", "KINETIC_RB_AIR_LOOP")
+			.Predicator([&]()->_bool{return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket");})
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_AIR_START to KINETIC_RB_AIR_CANCEL", "KINETIC_RB_AIR_CANCEL")
+			.Predicator([&]()->_bool{return !m_bKineticRB;})
+			.Priority(0)
+
+		.AddState("KINETIC_RB_AIR_LOOP")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Loop); })
+			.Tick([&](double g_fTimeDelta) { m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false; })
+
+			.AddTransition("KINETIC_RB_AIR_LOOP to KINETIC_RB_AIR_THROW_01_START", "KINETIC_RB_AIR_THROW_01_START")
+			.Predicator([&]()->_bool{return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket");})
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_AIR_LOOP to KINETIC_RB_AIR_CANCEL", "KINETIC_RB_AIR_CANCEL")
+			.Predicator([&]()->_bool{return !m_bKineticRB;})
+			.Priority(0)
+
+		.AddState("KINETIC_RB_AIR_CANCEL")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Cancel); })
+			.Tick([&](double g_fTimeDelta) { m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false; })
+			.OnExit([&]() {m_bCanMove = true; m_bActiveGravity = true; })
+
+			.AddTransition("KINETIC_RB_AIR_CANCEL to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool{return !m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket");})	// 취소시간만 조절해주면 될듯
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_AIR_CANCEL to KINETIC_RB_AIR_START", "KINETIC_RB_AIR_START")
+			.Predicator([&]()->_bool{return m_bKineticRB && (m_pASM->GetSocketAnimation("Kinetic_Air_AnimSocket")->GetPlayRatio() >= 0.2f);})
+			.Priority(0)
+
+#pragma endregion KineticRB_Air
+
+#pragma region KineticRB_Air_Throw
+
+		.AddState("KINETIC_RB_AIR_THROW_01_START")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw01_Start); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false; })
+
+			.AddTransition("KINETIC_RB_AIR_THROW_01_START to KINETIC_RB_AIR_THROW_01_END", "KINETIC_RB_AIR_THROW_01_END")
+			.Predicator([&]()->_bool {return !m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket"); })
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_AIR_THROW_01_START to KINETIC_RB_AIR_THROW_01_LOOP", "KINETIC_RB_AIR_THROW_01_LOOP")
+			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket") && m_pASM->CheckSocketAnim("Kinetic_Air_AnimSocket", "AS_ch0100_312_AL_AirCap_throw1_start"); })
+			.Priority(0)
+
+		.AddState("KINETIC_RB_AIR_THROW_01_LOOP")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw01_Loop); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false; }) // 루프 반복되도록 끝나가면 더 넣어주기
+
+			.AddTransition("KINETIC_RB_AIR_THROW_01_LOOP to KINETIC_RB_AIR_THROW_01_END", "KINETIC_RB_AIR_THROW_01_END")
+			.Predicator([&]()->_bool {return !m_bKineticRB; })
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_AIR_THROW_01_LOOP to KINETIC_RB_AIR_THROW_02_START", "KINETIC_RB_AIR_THROW_02_START")
+			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket") && m_pASM->CheckSocketAnim("Kinetic_Air_AnimSocket", "AS_ch0100_312_AL_AirCap_throw1_loop"); })
+			.Priority(0)
+
+		.AddState("KINETIC_RB_AIR_THROW_01_END")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw01_Cancel); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = false; m_bCanMove = true; m_bActiveGravity = true; })
+
+			.AddTransition("KINETIC_RB_AIR_THROW_01_END to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool {return !m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Air_AnimSocket", 0.7f); })
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_AIR_THROW_01_END to KINETIC_RB_AIR_START", "KINETIC_RB_AIR_START")
+			.Predicator([&]()->_bool {return m_bKineticRB && (m_pASM->GetSocketAnimation("Kinetic_Air_AnimSocket")->GetPlayRatio() >= 0.2f); })
+			.Priority(0)
+
+		.AddState("KINETIC_RB_AIR_THROW_02_START")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw02_Start); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false; })
+
+			.AddTransition("KINETIC_RB_AIR_THROW_02_START to KINETIC_RB_AIR_THROW_02_END", "KINETIC_RB_AIR_THROW_02_END")
+			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket"); })
+			.Priority(0)
+
+		.AddState("KINETIC_RB_AIR_THROW_02_LOOP")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw02_Loop); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false; })
+
+			.AddTransition("KINETIC_RB_AIR_THROW_02_LOOP to KINETIC_RB_AIR_THROW_02_END", "KINETIC_RB_AIR_THROW_02_END")
+			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket"); })
+			.Priority(0)
+
+		.AddState("KINETIC_RB_AIR_THROW_02_END")
+			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw02_Cancel); })
+			.Tick([&](double g_fTimeDelta) {m_bKineticMove = false; m_bCanMove = true; m_bActiveGravity = true; })
+
+			.AddTransition("KINETIC_RB_AIR_THROW_02_END to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool {return m_pASM->isSocketPassby("Kinetic_Air_AnimSocket", 0.7f) || (!m_bAir); })
+			.Priority(0)
+
+#pragma endregion KineticRB_Air_Throw
+
+		.Build();
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Setup_AnimSocket()
 {
 	CAnimation*	pAnimation = nullptr;
@@ -249,7 +548,7 @@ _bool CPlayer::isPlayerAttack(void)
 
 	if (szCurAnim.find(szKeyString) != string::npos)
 	{
-		IM_LOG(szCurAnim.c_str());
+		//IM_LOG(szCurAnim.c_str());
 		return true;
 	}
 
@@ -279,7 +578,7 @@ _bool CPlayer::Charge(_uint iNum, _float fCharge)
 	}
 	else
 	{
-		IM_LOG(to_string(m_fCharge[iNum]).c_str());
+		//IM_LOG(to_string(m_fCharge[iNum]).c_str());
 		return true;
 	}
 }
@@ -411,6 +710,13 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 	{
 		SmoothTurn_Attack(TimeDelta);
 	}
+
+	m_bKineticRB = m_pController->KeyPress(CController::MOUSE_RB);
+	m_bKineticG = m_pController->KeyPress(CController::G);
+
+	//_bool bCurIdle = false;
+	//if(m_pModel->GetPlayAnimation() != nullptr)
+	//	bCurIdle = m_pModel->GetPlayAnimation()->GetName() != "AS_ch0100_002_AL_wait02";
 }
 
 void CPlayer::MoveStateCheck(_double TimeDelta)
@@ -478,6 +784,17 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 	}
 }
 
+void CPlayer::SeperateCheck()
+{
+	m_bSeperateAnim = true;
+
+	if (m_pModel->GetPlayAnimation() != nullptr)
+	{
+		m_bSeperateAnim = (m_pModel->GetPlayAnimation()->GetName() != "AS_ch0100_002_AL_wait02") &&
+			(m_bKineticMove || (!m_pASM->isSocketEmpty("Upper_Saperate_Animation")));
+	}
+}
+
 void CPlayer::LookAtDir(Vector3 Vector)
 {
 	m_pTransformCom->LookAt(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(Vector.x, 0.f, Vector.z, 0.f));
@@ -505,6 +822,17 @@ HRESULT CPlayer::Setup_Parts()
 	m_vecWeapon.push_back(pGameObject);
 
 	return S_OK;
+}
+
+void CPlayer::Attack_Effect(const string& szBoneName, _float fSize)
+{
+	_matrix	SocketMatrix = m_pModel->GetPivotMatrix() * m_pModel->GetBoneMatrix(szBoneName) * m_pTransformCom->Get_WorldMatrix();
+
+	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]) *	fSize;
+	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]) * fSize;
+	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]) * fSize;
+
+	static_cast<CEffectSystem*>(m_pEffect)->Set_BoneMatrix(SocketMatrix);
 }
 
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -543,7 +871,7 @@ void CPlayer::Free()
 		Safe_Release(iter);
 	m_vecWeapon.clear();
 
-	Safe_Release(m_pFSM);
+	Safe_Release(m_pKineticStataMachine);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pModel);
