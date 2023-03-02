@@ -51,6 +51,9 @@ public:
 
 	void MakeDFSTravelVector(OUT vector<CBone*>& vectorOut);
 
+	void SetLocalRotation(_bool bLocalRotation) { m_bLocalRotation = bLocalRotation; }
+	_bool IsLocalRotation() const { return m_bLocalRotation; }
+
 private:
 
 
@@ -64,6 +67,7 @@ private:
 	vector<string>		m_ChildrenName;
 
 	bool				m_bDisableAnim = false;
+	_bool				m_bLocalRotation = false;
 
 public:
 	static CBone* Create(const Json& jBone, CBone* pParent);

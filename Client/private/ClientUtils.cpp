@@ -95,3 +95,13 @@ EBaseAxis CClientUtils::GetDamageFromAxis(CTransform* pTransform, _fvector vFrom
 
 	return eAxis;
 }
+
+EBaseTurn CClientUtils::TurnDeltaToEnum(_float fTurnDelta)
+{
+	if (abs(fTurnDelta - 0.00001f) < 0.01f)
+		return EBaseTurn::TURN_END;
+	else if (fTurnDelta > 0.f)
+		return EBaseTurn::TURN_LEFT;
+	else
+		return EBaseTurn::TURN_RIGHT;
+}

@@ -44,6 +44,7 @@ public:
 protected:
 	void CreateController();
 	void ReleaseController();
+	void SetDefaultValue();
 
 protected:
 	CEngineControllerHitReport m_HitReport;

@@ -99,6 +99,7 @@ public:
 	void SetOwner(class CPlayer* pOwner) { m_pOwner = pOwner; }
 	void Invalidate();
 	void SetInputLock(_bool bLock) { m_bInputLock = bLock; }
+	_bool IsCursorLock() const { return m_bCursorLock; }
 
 protected:
 	void UpdateInputState(_ubyte iDIK, EHandleInput eInput);

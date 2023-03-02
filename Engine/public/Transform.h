@@ -78,12 +78,14 @@ public:
 	_vector MoveVelocity_Get(_double TimeDelta, _float3 vVelocity);
 	void MoveVelocity_Navi(_double TimeDelta, _float3 vVelocity, class CNavigation* pNavi, _int& iCellIdx);
 	void LocalMove(_float3 vDir, _float fRange = 1.f);
+	void AddQuaternion(_vector Quaternion);
 
 	/* 객체의 특정 축을 입력받은 축으로 변환하고 외적하여 값 전환 */
 	void SetAxis(STATE eState, _fvector vAxis);
 
 	// Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 	void Turn(_fvector vAxis, _double TimeDelta); /* Dynamic */
+	void Turn_Fixed(_fvector vAxis, _float fRadian); /* Dynamic */
 	void TurnPitch(_double TimeDelta);
 	void Rotation(_fvector vAxis, _float fRadian); /* Static */
 	void RemoveRotation();
@@ -91,6 +93,8 @@ public:
 	/*void LookAt(const CTransform* pTarget);*/
 	void LookAt(_fvector vTargetPos);
 	void LookAt_Smooth(_fvector vTargetPos, _double TimeDelta);
+	_float LookAt_SmoothYaw(_fvector vTargetPos, _double TimeDelta);
+	_float Get_RemainYawToLookAt(_fvector vTargetPos);
 
 	/* 추적한다 .*/
 	void Chase(_fvector vTargetPos, _double TimeDelta, _float fLimit = 0.1f);

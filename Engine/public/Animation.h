@@ -55,6 +55,7 @@ public:
 	_double							GetCurDuration() const { return m_Duration; }
 	unordered_map<double, string>	GetEventMap() const { return m_EventMap; }
 	_vector&						GetLocalMove() { return m_vLocalMove; }
+	_vector&						GetLocalRotation() { return m_vLocalRotation; }
 
 public:
 	static CAnimation s_NullAnimation;
@@ -78,6 +79,7 @@ private:
 
 	// 로컬 좌표 이동
 	_vector								m_vLocalMove;
+	_vector								m_vLocalRotation;
 
 	/* 이 애니메이션을 재생하기위해 갱신해야하는 뼈들. */
 	vector<class CChannel*>				m_Channels;

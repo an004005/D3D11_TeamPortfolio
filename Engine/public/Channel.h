@@ -22,6 +22,7 @@ public:
 
 	KEYFRAME*		GetCurKeyFrame() { return &m_KeyFrames[m_iCurFrameIdx]; }
 	_vector&		GetLocalMove() { return m_vLocalMove; }
+	_vector&		GetLocalRotation() { return m_vLocalRotation; }
 	const string&	GetChannelName() { return m_strName; }
 
 private:
@@ -32,7 +33,7 @@ private:
 	class CBone*		m_pBone = nullptr;
 
 	_vector			m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-
+	_vector			m_vLocalRotation = XMQuaternionIdentity();
 private:
 	_uint			m_iCurFrameIdx = 0;
 

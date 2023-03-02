@@ -23,6 +23,7 @@ public:
 
 public:
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams){}
+	_bool IsOnFloor() const { return m_bOnFloor; }
 
 public:
 	EDeBuffType GetDeBuffType() const { return m_eDeBuff; }

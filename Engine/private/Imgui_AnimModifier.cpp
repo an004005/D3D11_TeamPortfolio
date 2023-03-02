@@ -61,7 +61,7 @@ void CModelPreviwer::Late_Tick(_double TimeDelta)
 	if (m_bVisible)
 	{
 		m_pModel->Play_Animation(TimeDelta);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
+		m_pRendererCom->Add_RenderGroup(m_eRenderGroup, this);
 
 		if (m_bLocalMoveAccess) 
 		{

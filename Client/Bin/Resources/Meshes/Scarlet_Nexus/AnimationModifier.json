@@ -444,6 +444,30 @@
         "bLooping": true,
         "vecEvent": []
     },
+    "AS_em0300_111_AL_walk_L_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 48.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0300_112_AL_walk_L_roop": {
+        "Duration": 88.0,
+        "TickPerSecond": 36.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0300_114_AL_walk_R_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 48.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0300_115_AL_walk_R_roop": {
+        "Duration": 88.0,
+        "TickPerSecond": 36.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0400_101_AL_wait01": {
         "Duration": 240.0,
         "TickPerSecond": 40.0,

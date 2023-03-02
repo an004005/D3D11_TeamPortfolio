@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "Level_GamePlay.h"
+
+#include <Imgui_AnimModifier.h>
+
 #include "GameInstance.h"
 #include "Material.h"
 #include "Controller.h"
@@ -16,6 +19,8 @@
 #include "Sound.h"
 
 #include "TestMonster.h"
+#include "TestCamera.h"
+#include "Boss1.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -32,6 +37,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PropertyEditor::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AnimModifier::Create(m_pDevice, m_pContext));
 
 	if (FAILED(Ready_Prototypes()))
 		return E_FAIL;
@@ -120,39 +126,32 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	 CGameUtils::ListFilesRecursive("../Bin/Resources/Meshes/Valorant/Materials/", [this](const string& fileName)
-	 {
-	 	char szFileName[MAX_PATH]{};
-	 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-	 	CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
-	 });
 
-	/* Controller */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
-		CController::Create())))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_DummyController"),
-		CDummyController::Create())))
-		return E_FAIL;
-
-	// 게임오브젝트 로딩
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
 	{
-		/* For.Prototype_GameObject_Floors */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Floors"),
-			CFloors::Create(m_pDevice, m_pContext))))
-				return E_FAIL;
+		char szFileName[MAX_PATH]{};
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
+		CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
+	});
 
-		/* For.Prototype_GameObject_Navigation */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Navigation"),
-			CNavigation::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
+	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
-		/*for ProtoPostVFX_WhiteOut */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_WhiteOut"),
-			CPostVFX_WhiteOut::Create(m_pDevice, m_pContext))))
-				return E_FAIL;
 
+	{
+		auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
+		pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
 	}
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"), CController::Create())))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_TestCamera"), CTestCamera::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	//// 23.02.20 PJW Work
 
@@ -182,6 +181,12 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+
 	return S_OK;
 }
 
@@ -211,14 +216,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	/*Json PreviewData;
-	PreviewData["Model"] = "Monster";
-	pGameInstance->Clone_GameObject(pLayerTag, L"TestMonster", &PreviewData);*/
-
-	/*if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
-		return E_FAIL;
-
-	RELEASE_INSTANCE(CGameInstance);*/
+	// Json PreviewData;
+	// PreviewData["Model"] = "MonsterBoss1";
+	// auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
+	pGameInstance->Clone_GameObject(pLayerTag, L"Prototype_MonsterBoss1");
 
 	return S_OK;
 }

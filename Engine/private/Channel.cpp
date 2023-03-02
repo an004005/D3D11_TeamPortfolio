@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "Bone.h"
 #include "GameUtils.h"
+#include "MathUtils.h"
 
 CChannel::CChannel()
 {
@@ -99,6 +100,15 @@ void CChannel::Update_TransformMatrix(_double PlayTime)
 	{
 		m_vLocalMove = vPosition;
 		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+		if (m_pBone->IsLocalRotation())
+		{
+			static Quaternion defaultQ = XMQuaternionRotationAxis(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(-90.f));
+			static Quaternion CondugatedDefaultQ = XMQuaternionConjugate(defaultQ);
+			m_vLocalRotation = XMQuaternionMultiply(vRotation, CondugatedDefaultQ);
+			vRotation = defaultQ;
+
+			_float4 tmp = CMathUtils::Quat2EulerDegree( m_vLocalRotation);
+		}
 	}
 
 	TransformMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);

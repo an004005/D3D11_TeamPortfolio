@@ -183,6 +183,39 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix)
 	return vMovePos;
 }
 
+_vector CModel::GetLocalRotationDelta()
+{
+	m_vBefLocalRotation = m_vLocalRotation;
+	m_vLocalRotation = XMQuaternionIdentity();
+
+	if (m_CurAnimName.empty() == false)
+	{
+		m_vLocalRotation = m_mapAnimation[m_CurAnimName]->GetLocalRotation();
+		if (XMVector3Equal(m_vLocalRotation, XMQuaternionIdentity()))
+		{
+			m_vLocalRotation = XMQuaternionIdentity();
+			m_vBefLocalRotation = XMQuaternionIdentity();
+			return XMQuaternionIdentity();
+		}
+		if (m_mapAnimation[m_CurAnimName]->IsFinished())
+		{
+			m_vLocalRotation = XMQuaternionIdentity();
+			m_vBefLocalRotation = XMQuaternionIdentity();
+			return XMQuaternionIdentity();
+		}
+	}
+
+	const _vector conjugateBeforeLocal = XMQuaternionConjugate(m_vBefLocalRotation);
+	const _vector vRotationDelta = XMQuaternionMultiply(m_vLocalRotation, conjugateBeforeLocal);
+
+	return vRotationDelta;
+}
+
+void CModel::ActivateLocalRotation(_bool bLocalRotation)
+{
+	Get_BonePtr("Reference")->SetLocalRotation(bLocalRotation);
+}
+
 HRESULT CModel::Initialize_Prototype(const char * pModelFilePath)
 {
 	char szExt[MAX_PATH];

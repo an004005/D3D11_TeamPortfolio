@@ -199,6 +199,12 @@
     <Filter Include="97.ShaderFiles\PBR">
       <UniqueIdentifier>{0c8fe263-8aae-429a-84d4-56b5c393fd83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\boss1">
+      <UniqueIdentifier>{44a3e289-3391-45e6-b735-a5ae92424cd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\boss1\Boss1_Animinstance">
+      <UniqueIdentifier>{107db123-e61b-466e-8716-8300f9f27d16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -447,6 +453,15 @@
     <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h">
       <Filter>97.ShaderFiles\PBR</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Boss1.h">
+      <Filter>02.GameObjects\Monster\boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss1_AnimationInstance.h">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_Animinstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TestCamera.h">
+      <Filter>02.GameObjects\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -670,6 +685,15 @@
     </ClCompile>
     <ClCompile Include="Weapon_wp0190.cpp">
       <Filter>02.GameObjects\Weapon\wp0190</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss1.cpp">
+      <Filter>02.GameObjects\Monster\boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss1_AnimationInstance.cpp">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_Animinstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TestCamera.cpp">
+      <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

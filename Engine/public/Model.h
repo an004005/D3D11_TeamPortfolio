@@ -52,6 +52,9 @@ public:
 	_bool	isLocalMove() { return !XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)); }
 	_float	GetLastLocalMoveSpeed() const { return m_fLastLocalMoveSpeed; }
 
+	_vector GetLocalRotationDelta();
+	void ActivateLocalRotation(_bool bLocalRotation);
+
 public:
 	virtual HRESULT Initialize_Prototype(const char* pModelFilePath);
 	virtual HRESULT Initialize(void* pArg) override;
@@ -127,6 +130,9 @@ private:
 	_vector								m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_vector								m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_float								m_fLastLocalMoveSpeed = 0.f;
+
+	_vector								m_vLocalRotation = XMQuaternionIdentity();
+	_vector								m_vBefLocalRotation = XMQuaternionIdentity();
 
 	class CShader* m_pShadowShader = nullptr;
 

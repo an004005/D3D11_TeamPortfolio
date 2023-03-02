@@ -1,6 +1,7 @@
 #pragma once
 #include "ImguiObject.h"
 #include "GameObject.h"
+#include "Renderer.h"
 
 BEGIN(Engine)
 
@@ -30,6 +31,8 @@ public:
 	class CModel* GetModel() { return m_pModel; }
 	void Reset();
 
+	void SetRenderGroup(CRenderer::RENDERGROUP eRenderGroup) { m_eRenderGroup = eRenderGroup; }
+
 private:
 	class CRenderer*				m_pRendererCom = nullptr;
 	class CModel*					m_pModel = nullptr;
@@ -41,6 +44,8 @@ private:
 	_bool	m_bLocalMoveAccess = false;
 
 	Vector3	m_vOptionalVector = { 0.f, 0.f, 0.f };
+
+	CRenderer::RENDERGROUP m_eRenderGroup = CRenderer::RENDER_NONALPHABLEND;
 
 public:
 	static CModelPreviwer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
