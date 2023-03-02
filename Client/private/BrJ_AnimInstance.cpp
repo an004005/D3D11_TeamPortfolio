@@ -18,17 +18,118 @@ HRESULT CBrJ_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 					.Predicator([&]()->_bool {return !m_bIdle && m_bBiteAtk; })
 					.Duration(0.4f)
 
+				.AddTransition("Idle to LaserAtkStart", "LaserAtkStart")
+					.Predicator([&]()->_bool {return !m_bIdle && m_bLaserAtkStart; })
+					.Duration(0.5f)
+
+				.AddTransition("Idle to Threat", "Threat")
+					.Predicator([&]()->_bool {return !m_bIdle && m_bThreat; })
+					.Duration(0.4f)
+
+				.AddTransition("Idle to MoveF", "MoveF")
+					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveF; })
+					.Duration(0.3f)
+
+				.AddTransition("Idle to MoveB", "MoveB")
+					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveB; })
+					.Duration(0.3f)
+
+				.AddTransition("Idle to MoveL_Start", "MoveL_Start")
+					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveL_Start; })
+					.Duration(0.3f)
+
+				.AddTransition("Idle to MoveR_Start", "MoveR_Start")
+					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveR_Start; })
+					.Duration(0.3f)
+			
 			.AddState("BiteAtk")
 				.SetAnimation(*m_pModel->Find_Animation("AS_em0810_201_AL_atk_a1_bite"))
-				
+
 				.AddTransition("BiteAtk to Idle", "Idle")
 					.Predicator([&]()->_bool {return !m_bBiteAtk && m_bIdle; })
 					.Duration(0.4f)
 
-			.Build();
+			.AddState("MoveF")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_106_AL_walk01_loop"))
+
+				.AddTransition("MoveF to Idle", "Idle")
+					.Predicator([&]()->_bool {return !m_bMoveF && m_bIdle; })
+					.Duration(0.4f)
+
+				.AddTransition("MoveF to LaserAtkStart", "LaserAtkStart")
+					.Predicator([&]()->_bool {return !m_bMoveF && m_bLaserAtkStart; })
+					.Duration(0.7f)
+
+			.AddState("LaserAtkStart")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_214_AL_atk_a7_laser2_start"))
+
+				.AddTransition("LaserAtkStart to LaserAtkIng", "LaserAtkIng")
+					.Predicator([&]()->_bool {return !m_bLaserAtkStart && m_bLaserAtkIng; })
+					.Duration(0.2f)
+
+			.AddState("LaserAtkIng")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_215_AL_atk_a7_laser2_loop"))
+
+				.AddTransition("LaserAtkIng to LaserAtkEnd", "LaserAtkEnd")
+					.Predicator([&]()->_bool {return !m_bLaserAtkIng && m_bLaserAtkEnd; })
+					.Duration(0.2f)
+
+			.AddState("LaserAtkEnd")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_216_AL_atk_a7_laser2_end"))
+
+				.AddTransition("LaserAtkEnd to Idle", "Idle")
+					.Predicator([&]()->_bool {return !m_bLaserAtkEnd && m_bIdle; })
+					.Duration(0.7f)
+
+			.AddState("Threat")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_160_AL_threat"))
+
+				.AddTransition("Threat to Idle", "Idle")
+					.Predicator([&]()->_bool {return !m_bThreat && m_bIdle; })
+					.Duration(0.4f)
+
+			.AddState("MoveB")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_110_AL_walk_B_loop"))
+
+				.AddTransition("MoveB to Idle", "Idle")
+					.Predicator([&]()->_bool {return !m_bMoveB && m_bIdle; })
+					.Duration(0.4f)
+
+				.AddTransition("MoveB to LaserAtkStart", "LaserAtkStart")
+					.Predicator([&]()->_bool {return !m_bMoveB && m_bLaserAtkStart;})
+					.Duration(0.4f)
+
+			.AddState("MoveL_Start")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_112_AL_walk_L_start"))
+				
+				.AddTransition("MoveL_Start to MoveL_End", "MoveL_End")
+					.Predicator([&]()->_bool {return !m_bMoveL_Start && m_bMoveL_End; })
+					.Duration(0.4f)
+
+			.AddState("MoveL_End")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_113_AL_walk_L_loop"))
+			
+				.AddTransition("MoveL_End to Idle", "Idle")
+					.Predicator([&]()->_bool {return !m_bMoveL_End && m_bIdle; })
+					.Duration(0.5f)
+
+			.AddState("MoveR_Start")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_115_AL_walk_R_start"))
+
+				.AddTransition("MoveR_Start to MoveR_End", "MoveR_End")
+					.Predicator([&]()->_bool {return !m_bMoveR_Start && m_bMoveR_End; })
+					.Duration(0.4f)
+
+			.AddState("MoveR_End")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_116_AL_walk_R_loop"))
+
+				.AddTransition("MoveR_End to Idle", "Idle")
+					.Predicator([&]()->_bool {return !m_bMoveR_End && m_bIdle; })
+					.Duration(0.5f)
+
+		.Build();
 		
-		// Atk Start : AS_em0800_214_AL_atk_a7_laser2_start
-		// Atk Loop : 
+		
 	}
 
 	m_pASM_Base->SetCurState("Idle");
@@ -124,10 +225,16 @@ void CBrJ_AnimInstance::UpdateTargetState(_double TimeDelta)
 
 	m_bMoveF = pBronJon->IsMoveF();
 	m_bMoveB = pBronJon->IsMoveB();
-	m_bMoveL = pBronJon->IsMoveL();
-	m_bMoveR = pBronJon->IsMoveR();
+	m_bMoveL_Start = pBronJon->IsMoveL_Start();
+	m_bMoveL_End = pBronJon->IsMoveL_End();
 
-	m_bLaserAtk = pBronJon->IsLaserAtk();
+	m_bMoveR_Start = pBronJon->IsMoveR_Start();
+	m_bMoveR_End = pBronJon->IsMoveR_End();
+
+	m_bLaserAtkStart = pBronJon->IsLaserAtkStart();
+	m_bLaserAtkIng = pBronJon->IsLaserAtkIng();
+	m_bLaserAtkEnd = pBronJon->IsLaserAtkEnd();
+
 	m_bBiteAtk = pBronJon->IsBiteAtk();
 	m_bThreat = pBronJon->IsThreat();
 

@@ -112,7 +112,7 @@ private:
 	_uint			m_iWalkPosition = 0;
 
 private:
-	CGameObject*	m_pFlowerLeg = nullptr;
+	CGameObject*	m_pPlayer = nullptr;
 
 public:
 	static CBuddyLumi* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

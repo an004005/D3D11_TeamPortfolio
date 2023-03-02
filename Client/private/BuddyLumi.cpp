@@ -12,6 +12,7 @@
 #include "BdLm_AnimInstance.h"
 #include "TimerHelper.h"
 #include "FlowerLeg.h"
+#include "Player.h"
 
 #include "RigidBody.h"
 #include "ScarletWeapon.h"
@@ -58,30 +59,46 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(15.f, 0.f, 15.f)));
 	
-	m_pTransformCom->SetSpeed(1.f);
+	m_pTransformCom->SetSpeed(1.1f);
 	
 	m_strObjectTag = "Buddy_Lumi";
 
 	{
 		m_pFSM = CFSMComponentBuilder()
-			.InitState("Idle")
+			.InitState("Idle")			
 			.AddState("Idle")		
+				.OnStart([this]
+				{
+					m_bInitialize = false;
+				})
 				.Tick([this](_double TimeDelta)
 				{
 					m_fTimeAcc += _float(TimeDelta * 1);
-					
-					if (m_fTimeAcc >= 7.4f && !m_bInitialize)	// 처음 생성되고 1회
+
+					if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 15.f) && m_fMyPos.z <= (m_fStorePos.z + 15.f) ||
+						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 15.f) && m_fMyPos.z <= (m_fStorePos.z + 15.f) ||
+						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 15.f) && m_fMyPos.z >= (m_fStorePos.z - 15.f) ||
+						m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 15.f) && m_fMyPos.z >= (m_fStorePos.z - 15.f))
 					{
-						m_bRun = true;
-						m_fTimeAcc = 0.f;
-						m_bInitialize = true;
+						if (m_fTimeAcc >= 30.f && !m_bInitialize)	// 처음 생성되고 1회
+						{
+							m_bIdle = false;
+							m_bRun = true;
+							m_fTimeAcc = 0.f;
+							m_bInitialize = true;
+						}
 					}
+					else
+					{
+						m_bIdle = true;
+						m_bRun = false;
+					}					
 				})
 
 				.AddTransition("Idle to Run", "Run")
 					.Predicator([this]
 					{
-						return m_bRun;
+						return !m_bIdle && m_bRun;
 					})
 
 				/*.AddTransition("Idle to Attack", "Attack")
@@ -94,24 +111,24 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 				.Tick([this](_double TimeDelta)
 				{
 					m_fMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					
-					_vector vTargetPos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					m_fStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_vector vTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					_float3 fTargetPos;
 					XMStoreFloat3(&fTargetPos, vTargetPos);
-
+										
 					m_pTransformCom->LookAt(vTargetPos);
-					m_pTransformCom->Chase(vTargetPos, 0.03f);
+					m_pTransformCom->Chase(vTargetPos, 0.06f);
 
 					/*_vector vDest = { 0.f, 0.f, 0.f, 1.f };
-					
+
 					m_pTransformCom->LookAt(vDest);
 					m_pTransformCom->Chase(vDest, 0.03f);*/
-					
+
 					/*vector<_uint> vecRandomPattern;
 
 					_uint iAttack = 1;
 					vecRandomPattern.push_back(iAttack);
-					
+
 					_uint iDodgeB = 2;
 					vecRandomPattern.push_back(iDodgeB);
 
@@ -123,19 +140,19 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 
 					random_shuffle(vecRandomPattern.begin(), vecRandomPattern.end());*/
 					// TODO : 4방면에 대응하는 조건 찾기
-						
+
 					//if (m_fMyPos.x <= 1.f && m_fMyPos.z <= 1.f)
-										
-					if (m_fMyPos.x >= fTargetPos.x && m_fMyPos.z >= fTargetPos.z && m_fMyPos.x <= (fTargetPos.x + 1.3f) && m_fMyPos.z <= (fTargetPos.z + 1.3f) ||
-						m_fMyPos.x <= fTargetPos.x && m_fMyPos.z >= fTargetPos.z && m_fMyPos.x >= (fTargetPos.x - 1.3f) && m_fMyPos.z <= (fTargetPos.z + 1.3f) ||
-						m_fMyPos.x <= fTargetPos.x && m_fMyPos.z <= fTargetPos.z && m_fMyPos.x >= (fTargetPos.x - 1.3f) && m_fMyPos.z >= (fTargetPos.z - 1.3f) ||
-						m_fMyPos.x >= fTargetPos.x && m_fMyPos.z <= fTargetPos.z && m_fMyPos.x <= (fTargetPos.x + 1.3f) && m_fMyPos.z >= (fTargetPos.z - 1.3f))
+
+					if (m_fMyPos.x >= fTargetPos.x && m_fMyPos.z >= fTargetPos.z && m_fMyPos.x <= (fTargetPos.x + 2.f) && m_fMyPos.z <= (fTargetPos.z + 2.f) ||
+						m_fMyPos.x <= fTargetPos.x && m_fMyPos.z >= fTargetPos.z && m_fMyPos.x >= (fTargetPos.x - 2.f) && m_fMyPos.z <= (fTargetPos.z + 2.f) ||
+						m_fMyPos.x <= fTargetPos.x && m_fMyPos.z <= fTargetPos.z && m_fMyPos.x >= (fTargetPos.x - 2.f) && m_fMyPos.z >= (fTargetPos.z - 2.f) ||
+						m_fMyPos.x >= fTargetPos.x && m_fMyPos.z <= fTargetPos.z && m_fMyPos.x <= (fTargetPos.x + 2.f) && m_fMyPos.z >= (fTargetPos.z - 2.f))
 					{
-						m_bRun = false;		
-						
+						m_bRun = false;
+
 						m_fStorePos = m_fMyPos;
 
-						if (m_iAfterRunPt == 0) 
+						if (m_iAfterRunPt == 0)
 							m_bAttack = true;
 
 						if (m_iAfterRunPt == 1)
@@ -158,17 +175,17 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 						/*_uint iShuffleResult = vecRandomPattern.front();
 
 						if (iShuffleResult == 1)
-							m_bAttack = true;
+						m_bAttack = true;
 
 						if (iShuffleResult == 2)
-							m_bDodgeB = true;
+						m_bDodgeB = true;
 
 						if (iShuffleResult == 3)
-							m_bDodgeL = true;
+						m_bDodgeL = true;
 
 						if (iShuffleResult == 4)
-							m_bDodgeR = true;*/
-					}				
+						m_bDodgeR = true;*/
+					}										
 				})
 
 				.AddTransition("Run to Attack", "Attack")
@@ -236,7 +253,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("Threat")
 				.Tick([this](_double TimeDelta)
 				{
-					_vector vTargetPos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_vector vTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 
 					m_pTransformCom->LookAt(vTargetPos);
 
@@ -311,7 +328,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("DodgeB")
 					.OnStart([this] 
 					{
-						m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+						m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 						m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					})
 				.Tick([this](_double TimeDelta) 
@@ -319,9 +336,10 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					auto pAnim = m_pModelCom->GetPlayAnimation();
 
 					// 뒤로 이동 
-					_vector vDest = m_vMyPos - m_vStorePos;
+					_vector vDest = XMVectorSetW(m_vMyPos - m_vStorePos, 0.f);
+					vDest = XMVector3Normalize(XMVectorSetY(vDest, 0.f));
 					
-					m_pTransformCom->Move(0.018f, vDest);
+					m_pTransformCom->Move(0.02, vDest);
 
 					if (pAnim->IsFinished() == true)
 					{
@@ -338,7 +356,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("DodgeL")
 				.OnStart([this] 
 				{
-					m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);				
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 				})
 
 				.Tick([this](_double TimeDelta)
@@ -347,8 +365,8 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					
 					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 					// 중점 Axis 기준 왼쪽으로 Turn
-					m_pTransformCom->LookAt_Smooth(m_vStorePos, 0.03f);
-					m_pTransformCom->Move(0.03f, -vMyRight);
+					m_pTransformCom->LookAt(m_vStorePos);
+					m_pTransformCom->Move(0.05, -vMyRight);
 
 					if (pAnim->IsFinished() == true)
 					{
@@ -365,7 +383,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("DodgeR")
 				.OnStart([this]
 				{
-					m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 				})
 				.Tick([this](_double TimeDelta)
 				{
@@ -373,8 +391,8 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					
 					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 					// 중점 Axis 기준 오른으로 Turn
-					m_pTransformCom->LookAt_Smooth(m_vStorePos, 0.03f);
-					m_pTransformCom->Move(0.03f, vMyRight);
+					m_pTransformCom->LookAt(m_vStorePos);
+					m_pTransformCom->Move(0.05, vMyRight);
 
 					if (pAnim->IsFinished() == true)
 					{
@@ -410,13 +428,13 @@ void CBuddyLumi::BeginTick()
 	
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
+	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
 	{
-		if (iter->GetPrototypeTag() == TEXT("FlowerLeg"))
+		if (iter->GetPrototypeTag() == TEXT("Player"))
 		{
 			int iA = 0;
 
-			m_pFlowerLeg = iter;			
+			m_pPlayer = iter;
 		}
 	}
 }

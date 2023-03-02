@@ -23,10 +23,15 @@ protected:	// 대상의 상태
 	// Move (4-Direct)
 	_bool			m_bMoveF = false;
 	_bool			m_bMoveB = false;
-	_bool			m_bMoveL = false;
-	_bool			m_bMoveR = false;
+	_bool			m_bMoveL_Start = false;
+	_bool			m_bMoveL_End = false;
+	_bool			m_bMoveR_Start = false;
+	_bool			m_bMoveR_End = false;
 
-	_bool			m_bLaserAtk = false;
+	_bool			m_bLaserAtkStart = false;
+	_bool			m_bLaserAtkIng = false;
+	_bool			m_bLaserAtkEnd = false;
+
 	_bool			m_bBiteAtk = false;
 	_bool			m_bThreat = false;
 

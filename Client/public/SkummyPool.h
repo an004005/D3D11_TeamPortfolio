@@ -115,14 +115,8 @@ private:
 	_vector			m_vMyPos;
 	_vector			m_vStorePos;
 
-	_uint			m_iMovAnimCnt = 0;
-
-	DAMAGE_PARAM	m_StrDamage;
-
-	_uint			m_iTest = 0;
-
 private:
-	CGameObject*	m_pFlowerLeg = nullptr;
+	CGameObject*	m_pPlayer = nullptr;
 
 public:
 	static CSkummyPool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

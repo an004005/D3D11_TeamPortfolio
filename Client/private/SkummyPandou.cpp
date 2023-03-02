@@ -13,6 +13,7 @@
 #include "FlowerLeg.h"
 #include "Player.h"
 #include "RigidBody.h"
+#include "PhysX_Manager.h"
 
 CSkummyPandou::CSkummyPandou(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -33,7 +34,10 @@ HRESULT CSkummyPandou::Initialize_Prototype()
 }
 
 HRESULT CSkummyPandou::Initialize(void * pArg)
-{	
+{
+	Json SkummyPandouTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouTrigger.json");
+	Json SkummyPandouSearch = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouSearch.json");
+	
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -45,19 +49,15 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 	
 	//	m_fGravity = 평소엔 0으로 잡아주고, 피격시 중력값을 올려서 떨어트려준다.
 
-	Json SkummyPandouTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouTrigger.json");
-	Json SkummyPandouSearch = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouSearch.json");
-
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
 		(CComponent**)&m_pTrigger, &SkummyPandouTrigger)))
 		return E_FAIL;
-
 
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Search"),
 		(CComponent**)&m_pSearch, &SkummyPandouSearch)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(4.f, 0.5f, 10.f)));
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 20.f)));
 
 	m_pTransformCom->SetSpeed(0.4f);
 
@@ -81,13 +81,14 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 								
 					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					XMStoreFloat3(&m_fStorePos, m_vStorePos);
+									
 
 					if (!m_bInitialize)
 					{
-						if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 2.3f) && m_fMyPos.z <= (m_fStorePos.z + 2.3f) ||
-							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 2.3f) && m_fMyPos.z <= (m_fStorePos.z + 2.3f) ||
-							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 2.3f) && m_fMyPos.z >= (m_fStorePos.z - 2.3f) ||
-							m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 2.3f) && m_fMyPos.z >= (m_fStorePos.z - 2.3f))
+						if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 2.5f) && m_fMyPos.z <= (m_fStorePos.z + 2.5f) ||
+							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 2.5f) && m_fMyPos.z <= (m_fStorePos.z + 2.5f) ||
+							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 2.5f) && m_fMyPos.z >= (m_fStorePos.z - 2.5f) ||
+							m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 2.5f) && m_fMyPos.z >= (m_fStorePos.z - 2.5f))
 						{
 							m_bRandomMove = false;
 							m_bInitialize = true;
@@ -119,14 +120,14 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 						m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 						XMStoreFloat3(&m_fMyPos, m_vMyPos);
 
-						if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 3.3f) && m_fMyPos.z <= (m_fStorePos.z + 3.3f) ||
-							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 3.3f) && m_fMyPos.z <= (m_fStorePos.z + 3.3f) ||
-							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 3.3f) && m_fMyPos.z >= (m_fStorePos.z - 3.3f) ||
-							m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 3.3f) && m_fMyPos.z >= (m_fStorePos.z - 3.3f))
+						if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 6.3f) && m_fMyPos.z <= (m_fStorePos.z + 6.3f) ||
+							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 6.3f) && m_fMyPos.z <= (m_fStorePos.z + 6.3f) ||
+							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 6.3f) && m_fMyPos.z >= (m_fStorePos.z - 6.3f) ||
+							m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 6.3f) && m_fMyPos.z >= (m_fStorePos.z - 6.3f))
 						{
 							m_fTimeAcc += _float(TimeDelta * 1);
 
-							if (m_fTimeAcc >= 5.f)
+							if (m_fTimeAcc >= 3.f)
 							{
 								m_bIdle = false;
 
@@ -291,9 +292,9 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 				{
 					m_fTimeAcc += _float(TimeDelta * 1);
 
-					m_pTransformCom->Go_Straight(0.3);
+					m_pTransformCom->Go_Straight(1);
 
-					if (m_fTimeAcc >= 2.f)
+					if (m_fTimeAcc >= 0.8f)
 					{
 						m_bAttacking = false;
 						m_bAttackEnd = true;
@@ -355,13 +356,14 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 				{
 					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					m_vDest = m_vMyPos - m_vStorePos;
-				
+					m_vDest = XMVectorSetW(m_vMyPos - m_vStorePos, 0.f);
+					m_vDest = XMVector3Normalize(XMVectorSetY(m_vDest, 0.f));
+
 					m_fTimeAcc = 0.f;
 				})
 				.Tick([this](_double TimeDelta)
 				{
-					m_pTransformCom->Move(0.08, m_vDest);
+					m_pTransformCom->Move(0.13, m_vDest);
 					
 					m_fTimeAcc += _float(TimeDelta * 1);
 
@@ -413,7 +415,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 					// 중점 Axis 기준 왼쪽으로 Turn
 					m_pTransformCom->LookAt(m_vStorePos);
-					m_pTransformCom->Move(0.008f, -vMyRight);
+					m_pTransformCom->Move(0.1f, -vMyRight);
 
 					if (pAnim->IsFinished() == true)
 					{
@@ -463,7 +465,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 					// 중점 Axis 기준 왼쪽으로 Turn
 					m_pTransformCom->LookAt(m_vStorePos);
-					m_pTransformCom->Move(0.008f, vMyRight);
+					m_pTransformCom->Move(0.1f, vMyRight);
 
 					if (pAnim->IsFinished() == true)
 					{
@@ -560,7 +562,7 @@ void CSkummyPandou::Tick(_double TimeDelta)
 {
 	CMonster::Tick(TimeDelta);
 
-	m_pSearch->Update_Tick(m_pTransformCom);
+//	m_pSearch->Update_Tick(m_pTransformCom);
 	m_pTrigger->Update_Tick(m_pTransformCom);
 
 	StateCheck(TimeDelta);
@@ -589,13 +591,7 @@ HRESULT CSkummyPandou::Render()
 
 void CSkummyPandou::Imgui_RenderProperty()
 {
-	CMonster::Imgui_RenderProperty();
-	
-	/*_bool bSearchEye = m_bSearchEye;
-	_bool bArea = m_bArea;
-
-	ImGui::Text("");*/
-
+	__super::Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
 }
 
@@ -603,8 +599,10 @@ void CSkummyPandou::AfterPhysX()
 {
 	__super::AfterPhysX();
 
-	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
+	m_pSearch->Update_Tick(AttachCollider());
+
 	m_pSearch->Update_AfterPhysX(m_pTransformCom);
+	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 }
 
 void CSkummyPandou::StateCheck(_double TimeDelta)

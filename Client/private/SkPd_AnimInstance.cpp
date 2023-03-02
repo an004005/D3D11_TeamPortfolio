@@ -216,6 +216,9 @@ void CSkPd_AnimInstance::Tick(_double TimeDelta)
 			_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
 			m_pTargetObject->GetTransform()->LocalMove(m_pModel->GetLocalMove(WorldMatrix));
 		}
+
+		/*_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTargetObject->GetTransform()->Get_WorldMatrix());
+		m_pTargetObject->GetTransform()->LocalMove(vOpTest);*/
 	}
 }
 

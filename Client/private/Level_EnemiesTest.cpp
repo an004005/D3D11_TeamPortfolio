@@ -189,8 +189,9 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	}
 
 	{
+		_float4x4	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(270.f));
 		auto pSkMpBullet = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Model/StaticModel/Monster/SkPmBullet/SkMp_Bullet.static_model");
+			"../Bin/Resources/Model/StaticModel/Monster/SkPmBullet/SkMp_Bullet.static_model", PivotMatrix);
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BulletSkummyPool"), pSkMpBullet));
 	}
 
@@ -248,8 +249,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	/*Json BuddyLumiTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumiTrigger.json");*/
 
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"),& BuddyLumiModel)))
-		return E_FAIL;*/
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"),& BuddyLumiModel)))
+		return E_FAIL;
 
 	Json SkummyPoolModel;
 	SkummyPoolModel["Model"] = "MonsterSkummyPool";
@@ -266,8 +267,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Json BronJonModel;
 	BronJonModel["Model"] = "MonsterBronJon";
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
+		return E_FAIL;*/
 
 	return S_OK;
 }

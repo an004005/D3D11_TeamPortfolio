@@ -9,6 +9,7 @@
 #include "SkummyPool.h"
 #include "Model.h"
 #include "Bone.h"
+#include "RigidBody.h"
 
 CSkMpBullet::CSkMpBullet(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -30,13 +31,19 @@ HRESULT CSkMpBullet::Initialize_Prototype()
 
 HRESULT CSkMpBullet::Initialize(void * pArg)
 {
+	Json SkMpBullet = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPoolBullet.json");
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->SetSpeed(1.f);
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Bullet"),
+		(CComponent**)&m_pCollider, &SkMpBullet)))
+		return E_FAIL;
+
+	m_pTransformCom->SetSpeed(13.f);
 
 	m_strObjectTag = "SkMp_Bullet";
 
@@ -55,13 +62,13 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 			.AddState("Shoot")
 				.OnStart([this]
 				{
-			
+	//				m_pTransformCom->LookAt(m_vDir);					
 				})
 				.Tick([this](_double TimeDelta) 
 				{
-					m_pTransformCom->Move(0.3f, m_vDir);
+					m_pTransformCom->Move(TimeDelta, m_vDir);
 
-					m_fTimeAcc += _float(TimeDelta * 1);
+					m_fTimeAcc += _float(TimeDelta);
 
 					if (m_fTimeAcc >= 5.f)
 					{
@@ -105,6 +112,8 @@ void CSkMpBullet::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	m_pCollider->Update_Tick(m_pTransformCom);
+
 	m_pFSM->Tick(TimeDelta);
 }
 
@@ -132,6 +141,12 @@ void CSkMpBullet::Imgui_RenderProperty()
 		
 	m_pModelCom->Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
+}
+
+void CSkMpBullet::AfterPhysX()
+{
+	__super::AfterPhysX();
+	m_pCollider->Update_AfterPhysX(m_pTransformCom);
 }
 
 HRESULT CSkMpBullet::SetUp_Components(void * pArg)
@@ -179,4 +194,5 @@ void CSkMpBullet::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
+	Safe_Release(m_pCollider);
 }

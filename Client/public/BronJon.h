@@ -37,6 +37,8 @@ public:
 
 	_matrix AttachCollider();
 
+	_matrix WeaponRigidBodyMatrix();
+
 private:
 	CShader*				m_pShaderCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
@@ -62,14 +64,20 @@ public:
 	// Move(4-Direct)
 	_bool IsMoveF() const { return m_bMoveF; }
 	_bool IsMoveB() const { return m_bMoveB; }
-	_bool IsMoveL() const { return m_bMoveL; }
-	_bool IsMoveR() const { return m_bMoveR; }
+	_bool IsMoveL_Start() const { return m_bMoveL_Start; }
+	_bool IsMoveL_End() const { return m_bMoveL_End; }
+
+	_bool IsMoveR_Start() const { return m_bMoveR_Start; }
+	_bool IsMoveR_End() const { return m_bMoveR_End; }
 
 	_bool IsDodgeB() const { return m_bDodgeB; }
 	_bool IsDodgeL() const { return m_bDodgeL; }
 	_bool IsDodgeR() const { return m_bDodgeR; }
 
-	_bool IsLaserAtk() const { return m_bLaserAtk; }
+	_bool IsLaserAtkStart() const { return m_bLaserAtkStart; }
+	_bool IsLaserAtkIng() const { return m_bLaserAtkIng; }
+	_bool IsLaserAtkEnd() const { return m_bLaserAtkEnd; }
+
 	_bool IsBiteAtk() const { return m_bBiteAtk; }
 	_bool IsThreat() const { return m_bThreat; }
 
@@ -85,10 +93,18 @@ private:
 	// Move (4-Direct)
 	_bool			m_bMoveF = false;
 	_bool			m_bMoveB = false;
-	_bool			m_bMoveL = false;
-	_bool			m_bMoveR = false;
 
-	_bool			m_bLaserAtk = false;
+	_bool			m_bMoveL_Start = false;
+	_bool			m_bMoveL_End = false;
+	
+	_bool			m_bMoveR_Start = false;
+	_bool			m_bMoveR_End = false;
+
+//	_bool			m_bTargetCheck = false;
+	_bool			m_bLaserAtkStart = false;
+	_bool			m_bLaserAtkIng = false;
+	_bool			m_bLaserAtkEnd = false;
+
 	_bool			m_bBiteAtk = false;
 	_bool			m_bThreat = false;
 
@@ -118,8 +134,13 @@ private:
 
 	_vector			m_vMyPos;
 	_vector			m_vStorePos;
+	_vector			m_vDest;
 
-	DAMAGE_PARAM	m_StrDamage;
+	_uint			m_iNearPattern = 0;
+	_uint			m_iFarPattern = 0;
+
+	_bool			m_bNear = false;
+	_bool			m_bFar = false;
 
 private:
 	
