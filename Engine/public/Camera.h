@@ -46,7 +46,7 @@ private:
 	_float m_fFOV = 75.f;
 	_float m_fWidth = 1280.f;
 	_float m_fHeight = 720.f;
-	_float m_fNear = 0.01f;
+	_float m_fNear = 0.1f;
 	_float m_fFar = 300.f;
 
 public:		

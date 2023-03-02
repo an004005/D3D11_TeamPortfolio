@@ -176,6 +176,7 @@ void CChannel::Blend_TransformMatrix(_double PlayTime, _float fBlendRatio)
 	if ("Reference" == m_strName)
 	{
 		m_vLocalMove = vPosition;
+		//m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 1.f);
 		vRotation = vBefRotation;
 		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
 	}

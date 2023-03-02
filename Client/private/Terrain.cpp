@@ -56,8 +56,8 @@ void CTerrain::Late_Tick(_double TimeDelta)
 		CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 		_float4 vPeekingPos;
-		PickTerrain(vPeekingPos);
-		pGameInstance->SetPeekingPos(XMLoadFloat4(&vPeekingPos));
+		//PickTerrain(vPeekingPos);
+		//pGameInstance->SetPeekingPos(XMLoadFloat4(&vPeekingPos));
 	}
 
 	if(nullptr != m_pRendererCom)

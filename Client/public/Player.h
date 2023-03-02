@@ -105,10 +105,10 @@ public:
 
 protected:
 	HRESULT SetUp_Components(void* pArg);
-	HRESULT	SetUp_AttackFSM();
 	HRESULT SetUp_Event();
+	HRESULT Setup_KineticStateMachine();
 
-	CFSMComponent*		m_pFSM = nullptr;
+	CFSMComponent*		m_pKineticStataMachine = nullptr;
 	CBaseAnimInstance*	m_pASM = nullptr;
 
 	CRenderer*			m_pRenderer = nullptr;
@@ -120,6 +120,32 @@ protected:
 	list<CAnimation*>	m_TestAnimSocket;
 	list<CAnimation*>	m_TransNeutralSocket;
 
+protected:	// 염력 소켓 애니메이션
+	list<CAnimation*>	m_Kinetic_RB_Start;
+	list<CAnimation*>	m_Kinetic_RB_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Cancel;
+
+	list<CAnimation*>	m_Kinetic_RB_Throw01_Start;
+	list<CAnimation*>	m_Kinetic_RB_Throw01_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Throw01_Cancel;
+
+	list<CAnimation*>	m_Kinetic_RB_Throw02_Start;
+	list<CAnimation*>	m_Kinetic_RB_Throw02_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Throw02_Cancel;
+
+	list<CAnimation*>	m_Kinetic_RB_Air_Start;
+	list<CAnimation*>	m_Kinetic_RB_Air_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Air_Cancel;
+
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw01_Start;
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw01_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw01_Cancel;
+
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Start;
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Cancel;
+
+
 public:
 	_bool	isAir() { return m_bAir; }
 	_bool	isMove() { return m_bMove; }
@@ -130,6 +156,7 @@ public:
 	_bool	isCharge() { return m_bCharge; }
 	_bool	isJump() { return m_bJump; }
 	_bool	isOnFloor() { return m_bOnFloor; }
+	_bool	isSeperateAnim() { return m_bSeperateAnim; }
 
 	_float	GetPlayRatio() { return m_fPlayRatio; }
 
@@ -141,6 +168,11 @@ protected:
 	_bool	m_bLeftClick = false;
 	_bool	m_bDash = false;
 	_bool	m_bJump = false;
+	_bool	m_bSeperateAnim = false;
+
+	_bool	m_bKineticRB = false;
+	_bool	m_bKineticG = false;
+	_bool	m_bKineticMove = false;
 
 	_bool	m_bNonCharge = false;
 	_bool	m_bCharge = false;
@@ -197,6 +229,7 @@ public:
 protected:
 	void		BehaviorCheck(_double TimeDelta);
 	void		MoveStateCheck(_double TimeDelta);
+	void		SeperateCheck();
 
 public:
 	EMoveDir	GetMoveDir() const { return m_eMoveDir; }
@@ -228,6 +261,10 @@ protected:
 	wstring		m_ModelName;
 
 	CCamera*	m_pPlayerCam = nullptr;
+
+protected:
+	void			Attack_Effect(const string& szBoneName, _float fSize);
+	CGameObject*	m_pEffect = nullptr;
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

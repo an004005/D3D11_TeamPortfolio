@@ -171,6 +171,24 @@ void CRigidBody::Update_AfterPhysX(CTransform* pTransform)
 	}
 }
 
+void CRigidBody::AddForce(_float3 vForce)
+{
+	if (false == (m_bTrigger && m_bKinematic))
+	{
+		physx::PxVec3 PxForce = physx::PxVec3(vForce.x, vForce.y, vForce.z);
+		m_pActor->addForce(PxForce, physx::PxForceMode::eFORCE);
+	}
+}
+
+void CRigidBody::AddTorque(_float3 vTorque)
+{
+	if (false == (m_bTrigger && m_bKinematic))
+	{
+		physx::PxVec3 PxToque = physx::PxVec3(vTorque.x, vTorque.y, vTorque.z);
+		m_pActor->addTorque(PxToque, physx::PxForceMode::eFORCE);
+	}
+}
+
 void CRigidBody::SetOriginTransform(const _float4x4& OriginMatrix)
 {
 	m_OriginTransformMatrix = OriginMatrix;
