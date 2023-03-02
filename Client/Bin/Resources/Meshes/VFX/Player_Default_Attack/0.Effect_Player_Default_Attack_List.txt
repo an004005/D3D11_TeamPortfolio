@@ -4,7 +4,6 @@
 
 Prototype_Component_Shader_VtxModel_VFX
 
-
 Default_Attack_1
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Default_Attack_1.static_model
 Default_Attack_2
@@ -21,13 +20,16 @@ Default_Attack_4_03_03
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Default_Attack_4_03_03.static_model
 Default_Attack_5_002
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Default_Attack_5_002.static_model
-
 Default_Attack_B4
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Default_Attack_B4.static_model
 Default_Attack_Charging(C)
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Default_Attack_Charging(C).static_model
 Default_Attack_Upper
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Default_Attack_Upper.static_model
+
+
+
+
 
 
 Air_Attack_1

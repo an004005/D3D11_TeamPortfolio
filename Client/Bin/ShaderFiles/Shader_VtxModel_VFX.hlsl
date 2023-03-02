@@ -83,7 +83,7 @@ PS_OUT PS_MAIN_DEFAULT_ATTACK(PS_IN In)
 	float4 BasicColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x * g_float_0, In.vTexUV.y));
 	float4 OriginColor = g_vec4_0;
 	float4 BlendColor = BasicColor * OriginColor * 2.0f;
-	// *g_float_1
+	
 
 	float4 AllTex = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
 	float4 BlendColor2 = AllTex * OriginColor * 2.0f;
@@ -94,8 +94,6 @@ PS_OUT PS_MAIN_DEFAULT_ATTACK(PS_IN In)
 		Out.vColor = CalcHDRColor(BlendColor2, g_float_2);
 		Out.vColor.a = 1.f;
 
-
-		
 		Out.vFlag = float4(0.f, SHADER_SCIFI_PLAYER_ATTACK, 0.f, Out.vColor.a);
 
 	}

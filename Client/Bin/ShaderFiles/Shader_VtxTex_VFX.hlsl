@@ -80,9 +80,7 @@ PS_OUT_Flag PS_DISTORTION(PS_IN In)
 
 
 	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
-
 	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.r);
-
 
 	Out.vColor = 0;
 	// Out.vColor.a = 1 - Out.vColor.r;
@@ -92,27 +90,70 @@ PS_OUT_Flag PS_DISTORTION(PS_IN In)
 	return Out;
 }
 
+// g_tex_0 : Default White
+// g_vec4_0 : Origin Color
+
+PS_OUT_Flag PS_DISTORTION_FLIPBOOK(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+
+	float4 Default_White = g_tex_0.Sample(LinearSampler, In.vTexUV); // Not Use Plz Fix
+	//////
+	float2 TexUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.1, 4, 4);
+	float  Mask = g_tex_1.Sample(LinearSampler, TexUV).r;
+	/////
+	// float4 OriginColor = g_vec4_0;
+	// float4 BlendColor = Default_White * OriginColor * 2.0f;
+	// float4 FinalColor = saturate(BlendColor);
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
+
+	Out.vColor = 0.f; 
+	// Out.vColor.a = 0.f;
+
+	// Out.vColor.a = 1 - Out.vColor.r;
+
+
+
+	return Out;
+}
+
+// g_tex_0 : Default White
+// g_vec4_0 : OriginColor
+// g_float_0 : Emissive
 PS_OUT_Flag PS_SCIFI(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
 
 	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y * 10.f));
-	// Out.vColor = defaultColor * g_vec4_0;
 	float4 OriginColor = g_vec4_0;
 	float4 BlendColor = defaultColor * OriginColor;
 	BlendColor.a = 1.f;
 	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
-	// Out.vColor = g_vec4_0;
-	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.r);
-	// Out.vColor.a = Out.vColor.r;
 	Out.vFlag = float4(0.f, SHADER_SCIFI, 0.f, Out.vColor.r);
-
-
-	// Out.vColor = 0;
-	// Out.vColor.a = 1 - Out.vColor.r;
 	
+	return Out;
+}
 
-	
+// g_tex_0 : Default White
+// g_vec4_0 : OriginColor
+// g_float_0 : Emissive
+
+PS_OUT_Flag PS_MASK_TEX(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float Mask = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y)).r;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	BlendColor.a = Mask * g_float_1;
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
 	return Out;
 }
 
@@ -157,5 +198,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SCIFI();
+	}
+
+	//3
+	pass MaskTex
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MASK_TEX();
+	}
+
+	//4
+	pass DistortionFlipBook
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DISTORTION_FLIPBOOK();
 	}
 }
