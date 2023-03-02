@@ -16,6 +16,7 @@
 #include "Weapon_wp0190.h"
 #include "RigidBody.h"
 #include "EffectSystem.h"
+#include "ControlledRigidBody.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -51,6 +52,10 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 //	if (FAILED(SetUp_Event()))	-> 이건 진짜 천천히 보자...
 //		return E_FAIL;
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
+
+	m_pCollider->SetPosition(XMVectorSet(0.f, 1.f, 0.f, 0.f));//SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
 
@@ -136,7 +141,7 @@ void CPlayer::AfterPhysX()
 		static_cast<CScarletWeapon*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
 	}
 
-	static_cast<CEffectSystem*>(m_pEffect)->Set_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
+	Attack_Effect("Eff01", 0.2f);
 }
 
 HRESULT CPlayer::Render()
@@ -817,6 +822,17 @@ HRESULT CPlayer::Setup_Parts()
 	m_vecWeapon.push_back(pGameObject);
 
 	return S_OK;
+}
+
+void CPlayer::Attack_Effect(const string& szBoneName, _float fSize)
+{
+	_matrix	SocketMatrix = m_pModel->GetPivotMatrix() * m_pModel->GetBoneMatrix(szBoneName) * m_pTransformCom->Get_WorldMatrix();
+
+	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]) *	fSize;
+	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]) * fSize;
+	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]) * fSize;
+
+	static_cast<CEffectSystem*>(m_pEffect)->Set_BoneMatrix(SocketMatrix);
 }
 
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

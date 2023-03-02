@@ -263,6 +263,7 @@ protected:
 	CCamera*	m_pPlayerCam = nullptr;
 
 protected:
+	void			Attack_Effect(const string& szBoneName, _float fSize);
 	CGameObject*	m_pEffect = nullptr;
 
 public:

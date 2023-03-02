@@ -406,26 +406,42 @@ void CModel::Imgui_RenderProperty()
 	}
 
 
-
+	//static _float fAdditiveRatio = 0.f;
+	//static string szAdditiveAnimName;
 	// if (ImGui::BeginListBox("Animations Additive"))
 	// {
-	// 	for (size_t i = 0; i < m_Animations.size(); ++i)
+	//	 for (auto& iter : m_mapAnimation)
+	//	 {
+	//		 const bool bSelected = szAdditiveAnimName == iter.first;
+	//		 if (bSelected)
+	//			 ImGui::SetItemDefaultFocus();
+
+	//		 if (ImGui::Selectable(iter.second->GetName().c_str(), bSelected))
+	//		 {
+	//			 //strcpy_s(animBuff, iter.second->GetName().c_str());
+	//			 szAdditiveAnimName = iter.first;
+	//		 }
+	//	 }
+
+	// 	/*for (size_t i = 0; i < m_mapAnimation.size(); ++i)
 	// 	{
+	//		static string szAdditiveAnimName;
 	// 		const bool bSelected = m_iAdditiveAnimIdx == (_uint)i;
 	// 		if (bSelected)
 	// 			ImGui::SetItemDefaultFocus();
 	//
-	// 		if (ImGui::Selectable(m_Animations[i]->GetName().c_str(), bSelected))
+	// 		if (ImGui::Selectable(m_mapAnimation[i]->GetName().c_str(), bSelected))
 	// 		{
-	// 			strcpy_s(animBuff, m_Animations[i]->GetName().c_str());
+	// 			strcpy_s(animBuff, m_mapAnimation[i]->GetName().c_str());
 	// 			m_iAdditiveAnimIdx = (_uint)i;
 	// 		}
-	// 	}
+	// 	}*/
 	//
 	// 	ImGui::EndListBox();
 	// }
-
-	// ImGui::SliderFloat("additiveRatio", &m_fAdditiveRatio, 0.f, 3.f);
+	// ImGui::SliderFloat("additiveRatio", &fAdditiveRatio, 0.f, 3.f);
+	// if (ImGui::Button("AdditiveAccess"))
+	//	m_mapAnimation[szAdditiveAnimName]->Update_Bones(0.f, EAnimUpdateType::ADDITIVE, fAdditiveRatio);
 
 
 	if (ImGui::CollapsingHeader("Material Viewer"))

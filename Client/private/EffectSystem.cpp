@@ -381,6 +381,11 @@ void CEffectSystem::Set_BoneMatrix(CModel * pModel, _fmatrix Transform)
 	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
 }
 
+void CEffectSystem::Set_BoneMatrix(_fmatrix SocketMatrix)
+{
+	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
+}
+
 void CEffectSystem::Tick_Scale(_float fValue)
 {
 	fValue *= 2.f;

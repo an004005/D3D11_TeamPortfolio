@@ -19,6 +19,7 @@
 #include "Imgui_PostProcess.h"
 #include "Imgui_CameraManager.h"
 #include "Indicator.h"
+#include "MapKinetic_Object.h"
 
 #include "TrailSystem.h"
 #include "EffectSystem.h"
@@ -147,6 +148,20 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
 
+	// Å°³×Æ½ ¿ÀºêÁ§Æ® ¸ðµ¨
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",
+		[this](const string& fileName)
+	{
+		char szFileExt[MAX_PATH]{};
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+
+		if (0 == strcmp(szFileExt, ".static_model"))
+		{
+			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str()));
+		}
+	});
+	FAILED_CHECK(pGameInstance->Add_Prototype(L"Proto_KineticObject_Table", CMapKinetic_Object::Create(m_pDevice, m_pContext)));
+
 	return S_OK;
 }
 
@@ -192,6 +207,12 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+
+
+	Json Test;
+	Test["ModelTag"] = "../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Table/Table.static_model";
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Proto_KineticObject_Table"), &Test));
+
 	return S_OK;
 }
 
@@ -202,6 +223,24 @@ HRESULT CLevel_PlayerTest::Ready_Effect(const _tchar * pLayerTag)
 	Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
 	
+	return S_OK;
+}
+
+HRESULT CLevel_PlayerTest::Create_Model(const wstring & pProtoTag, const char * pModelPath)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	CComponent* pComponent = nullptr;
+
+	pComponent = CModel::Create(m_pDevice, m_pContext, pModelPath);
+	assert(pComponent != nullptr);
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(
+		pProtoTag.c_str(),
+		pComponent));
+
+	//m_pProtosTags.emplace_back(pProtoTag,  NON_INSTANCE);
+
 	return S_OK;
 }
 
