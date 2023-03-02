@@ -12,7 +12,8 @@ static const float EPSILON = 1e-6f;
 #define SHADER_DEFAULT 0.f
 #define SHADER_TOON 1.f
 #define SHADER_DISTORTION 2.0f
-#define SHADER_SCIFI 2.0f
+#define SHADER_SCIFI 3.0f
+#define SHADER_SCIFI_PLAYER_ATTACK 4.0f
 
 float2 Get_FlipBookUV(float2 vRectUV, float fCurTime, float fFrameTime, int iRowCnt, int iColCnt)
 {
@@ -367,11 +368,16 @@ float3 fresnelSchlick(float3 F0, float cosTheta)
 
 
 
+float Rand(float2 co)
+{
+	return 0.5 + (frac(sin(dot(co.xy, float2(12.9898, 78.233))) * 43758.5453)) * 0.5;
+}
 
 
 
-
-
+// float r1 = Rand(float2(x, accTime));
+// float r2 = Rand(float2(x * accTime, accTime));
+// float r3 = Rand(float2(x * accTime * accTime, accTime * accTime));
 
 
 

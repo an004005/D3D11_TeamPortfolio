@@ -96,12 +96,15 @@ PS_OUT_Flag PS_SCIFI(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
 
-	// float4 defaultColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y * 10.f));
 	// Out.vColor = defaultColor * g_vec4_0;
+	float4 OriginColor = g_vec4_0;
+	float4 BlendColor = defaultColor * OriginColor;
+	BlendColor.a = 1.f;
 	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
 	// Out.vColor = g_vec4_0;
 	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.r);
-	
+	// Out.vColor.a = Out.vColor.r;
 	Out.vFlag = float4(0.f, SHADER_SCIFI, 0.f, Out.vColor.r);
 
 
