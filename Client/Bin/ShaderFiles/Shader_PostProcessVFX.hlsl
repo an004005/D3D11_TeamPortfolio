@@ -80,29 +80,32 @@ PS_OUT PS_MAIN(PS_IN In)
 
 		// return Out;
 	}
-	else if(vFlags.y == SHADER_SCIFI)
+	else if(vFlags.y == SHADER_SCIFI_PLAYER_ATTACK)
 	{
 		// float2 randomNormal = g_tex_0.Sample(LinearSampler, In.vTexUV).xy;
 
-		float4 ScifiTex = g_tex_0.Sample(LinearSampler, In.vTexUV * 20.f);
-		float4 TestTex = g_LDRTexture.Sample(LinearSampler, (In.vTexUV));
-		float4 BlendTex = ScifiTex * TestTex * 2.0;
+		// float2 TiltingUV = TilingAndOffset(In.vTexUV, float2(40.f, 40.f), float2( 0.f, 0.f));
 
-		float4 ScifiNoiseTex = g_tex_1.Sample(LinearSampler, In.vTexUV* 20.f);
 
-		float4 FinalColor = BlendTex * ScifiNoiseTex * 2.0;
+		float4 ScifiTex = g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, float2(30.f, 1.f), float2(g_Time * 0.1f, 0.f)) );
+		float fWeight = ScifiTex.r * g_float_0;
 
-		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, (In.vTexUV));
+		float4 ScifiNoiseTex = g_tex_1.Sample(LinearSampler, (In.vTexUV + fWeight));
 
-		Out.vColor = saturate(FinalColor);
+		float4 InputColor = g_vec4_0;
+		float4 Blend = (ScifiTex * ScifiNoiseTex + InputColor);
 
+		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+
+		Out.vColor = ((saturate(Blend * OriginColor * (1-vFlags.a) *2)) + LDR *  vFlags.a);
+
+		// if(vFlags.a <= 0.f)
+		// {
+		// 	Out.vColor = OriginColor;
+		// }
 
 		Out.vColor.a = 1.f;
 
-		
-		// Out.vColor.a = 1.f;
-
-		// return Out;
 	}
 	else
 		Out.vColor = LDR;
@@ -216,7 +219,7 @@ technique11 DefaultTechnique
 {
 	pass Default_Test
 	{
-		SetRasterizerState(RS_Default);
+		SetRasterizerState(RS_NonCulling);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 

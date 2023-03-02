@@ -57,10 +57,16 @@ public:
 	//For_Curve
 public:
 	void Tick_Scale(_float fValue);
-	void Tick_IntroDissolve(_float fValue);
-	void Tick_OutroDissolve(_float fValue);
+	void Tick_Floats_0(_float fValue);
+	void Tick_Floats_1(_float fValue);
+	void Tick_Floats_2(_float fValue);
+	void Tick_Floats_3(_float fValue);
+	void Tick_Floats_4(_float fValue);
+	void Tick_Floats_5(_float fValue);
+	void Tick_Floats_6(_float fValue);
+	void Tick_Floats_7(_float fValue);
 	void Tick_ColorChange(_float fValue);
-	void Tick_EmissiveChange(_float fValue);
+
 	void Tick_IntroTime(_float fValue);
 	void Tick_OutroTime(_float fValue);
 

@@ -373,14 +373,19 @@ void CEffectSystem::Tick_Scale(_float fValue)
 	m_pTransformCom->Set_Scaled(_float3(fValue, fValue, fValue));
 }
 
-void CEffectSystem::Tick_IntroDissolve(_float fValue)
+void CEffectSystem::Tick_Floats_0(_float fValue)
 {
 	m_tParam.Floats[0] = fValue;
 }
 
-void CEffectSystem::Tick_OutroDissolve(_float fValue)
+void CEffectSystem::Tick_Floats_1(_float fValue)
 {
-	m_tParam.Floats[0] = fValue;
+	m_tParam.Floats[1] = fValue;
+}
+
+void CEffectSystem::Tick_Floats_2(_float fValue)
+{
+	m_tParam.Floats[2] = fValue;
 }
 
 void CEffectSystem::Tick_ColorChange(_float fValue)
@@ -399,19 +404,39 @@ void CEffectSystem::Tick_ColorChange(_float fValue)
 	m_tParam.Float4s[0] = vOutColor  + vInColor;
 }
 
-void CEffectSystem::Tick_EmissiveChange(_float fValue)
+void CEffectSystem::Tick_Floats_3(_float fValue)
 {
-	m_tParam.Floats[0] = fValue;
+	m_tParam.Floats[3] = fValue;
+}
+
+void CEffectSystem::Tick_Floats_4(_float fValue)
+{
+	m_tParam.Floats[4] = fValue;
+}
+
+void CEffectSystem::Tick_Floats_5(_float fValue)
+{
+	m_tParam.Floats[5] = fValue;
+}
+
+void CEffectSystem::Tick_Floats_6(_float fValue)
+{
+	m_tParam.Floats[6] = fValue;
+}
+
+void CEffectSystem::Tick_Floats_7(_float fValue)
+{
+	m_tParam.Floats[7] = fValue;
 }
 
 void CEffectSystem::Tick_IntroTime(_float fValue)
 {
-	m_tParam.Floats[0] = fValue;
+	m_tParam.Floats[8] = fValue;
 }
 
 void CEffectSystem::Tick_OutroTime(_float fValue)
 {
-	m_tParam.Floats[0] = fValue;
+	m_tParam.Floats[9] = fValue;
 }
 
 

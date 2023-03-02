@@ -1,0 +1,1 @@
+../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json

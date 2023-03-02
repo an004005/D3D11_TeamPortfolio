@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Timeline.h"
+
+#include "GameInstance.h"
 #include "MathUtils.h"
 
 /******************
