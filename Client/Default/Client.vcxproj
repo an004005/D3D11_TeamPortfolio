@@ -198,6 +198,7 @@
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
+    <ClInclude Include="..\public\Drive_GaugeUI.h" />
     <ClInclude Include="..\public\Drive_RightDotUI.h" />
     <ClInclude Include="..\public\Effect.h" />
     <ClInclude Include="..\public\EffectSystem.h" />
@@ -275,6 +276,7 @@
     <ClCompile Include="..\private\Canvas_SASSkillMove.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
+    <ClCompile Include="..\private\Drive_GaugeUI.cpp" />
     <ClCompile Include="..\private\Drive_RightDotUI.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp" />

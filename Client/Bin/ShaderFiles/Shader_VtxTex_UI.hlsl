@@ -561,7 +561,6 @@ PS_OUT PS_SASSkillGauge0(PS_IN In)	// → 19
 	PS_OUT         Out = (PS_OUT)0;
 
 	float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	float4 DefaultTexAnother = DefaultTex;
 
 	float4 GlowBase = DefaultTex * g_vec4_0;
 
@@ -592,6 +591,33 @@ PS_OUT PS_SASSkillGauge0(PS_IN In)	// → 19
 
 	Out.vColor = saturate(GlowBase);
 	Out.vColor.a = PointTex.r;
+	return Out;
+}
+
+/*******************
+* UVCut → 20 : 텍스처에 따라서 게이지가 차고 줄어들고 한다.
+g_float_0(fProgress) : Gauge (최대 1 최소 0)
+/********************/
+PS_OUT PS_Flow(PS_IN In)	// → 20
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float fProgress = g_float_0;
+
+	float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float ProgressMask = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+
+	if (1.f - ProgressMask >= fProgress)
+		discard;
+
+	float4 GlowBase = DefaultTex * g_vec4_0;
+
+	float4 PointTex = g_tex_1.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor = saturate(GlowBase);
+
+	Out.vColor.a = PointTex.r;
+
 	return Out;
 }
 
@@ -877,5 +903,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SASSkillGauge0();
+	}
+
+	//20 : 빨간색 텍스처에 따라서 보이고 안 보이고
+	pass MaskedProgress
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_Flow();
 	}
 }
