@@ -52,14 +52,14 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer(TEXT("Layer"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
-		return E_FAIL;
+	// if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+	// 	return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
-		return E_FAIL;
+	// if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
+	// 	return E_FAIL;
 
 	return S_OK;
 }
@@ -143,24 +143,24 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 
 
 	// 辫扁裹狼 如利
-	pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
-	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
-
-	auto pModel_Player = CModel::Create(m_pDevice, m_pContext,
-		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
-
-	pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
-	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
-
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
-		CController::Create())))
-		return E_FAIL;
-
-	_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
-	pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
-	auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
-		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
-	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
+	// pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
+	// pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
+	//
+	// auto pModel_Player = CModel::Create(m_pDevice, m_pContext,
+	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
+	//
+	// pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
+	// FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
+	//
+	// if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
+	// 	CController::Create())))
+	// 	return E_FAIL;
+	//
+	// _matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
+	// pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
+	// auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
+	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
+	// FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
 	// ~ 辫扁裹狼 如利
 
 
