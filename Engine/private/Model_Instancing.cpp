@@ -236,7 +236,7 @@ HRESULT CModel_Instancing::Ready_Materials(HANDLE hFile)
 		if (pMtrl == nullptr)
 		{
 			
-			pMtrl = dynamic_cast<CMaterial*>(CGameInstance::GetInstance()->Clone_Component(L"Proto_Mtrl_Empty"));
+			pMtrl = dynamic_cast<CMaterial*>(CGameInstance::GetInstance()->Clone_Component(L"Proto_Mtrl_Empty_Instance"));
 			IM_WARN("Fail to Find Mtrl : %s", mtrlName.c_str());
 		}
 

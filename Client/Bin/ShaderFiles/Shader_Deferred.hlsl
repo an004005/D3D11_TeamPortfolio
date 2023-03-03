@@ -1,7 +1,7 @@
 #include "Shader_Utils.h"
 #include "Shader_PBRCommon.h"
 
-float   g_Far = 300.f;
+float   g_Far = 1000.f;
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix			g_ProjMatrixInv, g_ViewMatrixInv;

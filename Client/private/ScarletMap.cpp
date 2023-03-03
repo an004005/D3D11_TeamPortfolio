@@ -314,12 +314,7 @@ _float4 CScarletMap::SetUp_InitPosition()
 
 void CScarletMap::ClearMap()
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	auto pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_MapNonAnimObject"));
-
-	auto& MapObjects = pLayer->GetGameObjects();
-
-	for (auto& obj : MapObjects)
+	for (auto& obj : m_pMapObjects)
 		obj->SetDelete();
 }
 

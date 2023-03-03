@@ -150,12 +150,29 @@ PS_OUT PS_WIRE_FRAME(PS_IN In)
 	return Out;
 }
 
+VS_OUT VS_SKY(VS_IN In)
+{
+	VS_OUT		Out = (VS_OUT)0;
+
+	float4 viewPos = mul(float4(In.vPosition, 0), g_ViewMatrix);
+	float4 clipSpacePos = mul(viewPos, g_ProjMatrix);
+
+	Out.vPosition = clipSpacePos.xyww;
+	//Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), g_WorldMatrix));
+	Out.vTexUV = In.vTexUV;
+	Out.vProjPos = Out.vPosition;
+	//Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
+	//Out.vBinormal = normalize(cross(Out.vNormal.xyz, Out.vTangent.xyz));
+
+	return Out;
+}
 
 PS_OUT PS_SKY(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, 0.f);
 
 	return Out;
 }
@@ -225,7 +242,7 @@ technique11 DefaultTechnique
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
-		VertexShader = compile vs_5_0 VS_MAIN();
+		VertexShader = compile vs_5_0 VS_SKY();
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
