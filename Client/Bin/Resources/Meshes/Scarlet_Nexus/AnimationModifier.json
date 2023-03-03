@@ -812,7 +812,22 @@
     },
     "AS_em0400_200_AL_atk_a1": {
         "Duration": 420.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 0.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Swing_Start",
+                "EventTime": 149.0
+            },
+            {
+                "EventName": "Swing_End",
+                "EventTime": 184.0
+            }
+        ]
+    },
+    "AS_em0400_401_AL_damage_l_F": {
+        "Duration": 60.0,
+        "TickPerSecond": 32.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -1688,6 +1703,19 @@
                         0.0
                     ],
                     "StartTime": 120.0
+                }
+            ],
+            "AS_ch0100_457_AL_fall_start": [
+                {
+                    "AnimName": "AS_ch0100_457_AL_fall_start",
+                    "EndTime": 5.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        -0.5,
+                        0.0
+                    ],
+                    "StartTime": 0.0010000000474974513
                 }
             ]
         }

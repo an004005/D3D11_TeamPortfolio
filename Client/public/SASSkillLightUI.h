@@ -2,7 +2,6 @@
 
 #include "Client_Defines.h"
 #include "UI.h"
-#include "Canvas_SASSkill.h"
 
 BEGIN(Client)
 
@@ -31,9 +30,8 @@ private:
 	void			ChangeSkill_TickShader(const _float & fTimeDelta);
 
 private:
-	CCanvas_SASSkill*				m_pCanvas = { nullptr };
-	CCanvas_SASSkill::OBJECTCOUNT	m_eObjectCount = CCanvas_SASSkill::ONE;
-	
+	_bool	m_bBrightness = { false };
+	_float	m_fStrength = { 0.5f };
 	_double		m_dLight_TimeAcc = { 0.0f };
 
 public:

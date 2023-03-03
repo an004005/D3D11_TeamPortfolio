@@ -483,6 +483,9 @@ void CBuddyLumi::Tick(_double TimeDelta)
 	m_pFSM->Tick(TimeDelta);
 	m_pSocketFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);	
+
+	/*m_pTransformCom->MoveVelocity(1.f, m_tmp);
+	m_tmp = _float3::Zero;*/ // 예제 코드
 }
 
 void CBuddyLumi::Late_Tick(_double TimeDelta)
@@ -536,6 +539,16 @@ void CBuddyLumi::Imgui_RenderProperty()
 
 void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+	/*
+	// 예제 코드
+	_vector tmp = _float4{ tDamageParams.vHitFrom.x, tDamageParams.vHitFrom.y , tDamageParams.vHitFrom.z, 1.f };
+	_float4 vBackDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - tmp;
+	vBackDir.Normalize();
+
+	m_tmp = _float3{ vBackDir.x, vBackDir.y ,vBackDir.z } *2.f;
+
+	*/
+
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	// ↑ 공격이 들어올 방향 
 	m_eAtkType = tDamageParams.eAttackType;

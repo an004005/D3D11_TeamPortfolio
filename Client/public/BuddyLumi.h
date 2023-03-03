@@ -40,6 +40,8 @@ public:
 
 	_matrix AttachCollider();
 
+	_float3 m_tmp;
+
 private:
 	CShader*				m_pShaderCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;

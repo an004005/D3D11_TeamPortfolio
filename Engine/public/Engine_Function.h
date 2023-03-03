@@ -220,4 +220,16 @@ namespace Engine
 		_float fVisibleTime = 1.f;
 		physx::PxQueryFlags queryFlags = physx::PxQueryFlag::eDYNAMIC | physx::PxQueryFlag::eSTATIC;
 	};
+
+	struct PxCapsuleSweepParams
+	{
+		OUT physx::PxSweepBuffer* sweepOut;
+		physx::PxCapsuleGeometry CapsuleGeo;
+		physx::PxTransform pxTransform;
+		_float3 vUnitDir;
+		_float fDistance;
+		_uint iTargetType;
+		_float fVisibleTime = 1.f;
+		physx::PxQueryFlags queryFlags = physx::PxQueryFlag::eDYNAMIC | physx::PxQueryFlag::eSTATIC;
+	};
 }

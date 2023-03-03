@@ -107,7 +107,7 @@ void CUI::Imgui_RenderProperty()
 	ImGui::Checkbox("Visible", &m_bVisible);
 	_int iPriority = m_iPriority;
 	ImGui::InputInt("Priority", &iPriority);
-	m_iPriority = iPriority;
+	m_iPriority = _uint(iPriority);
 
 	if (ImGui::BeginCombo("Pivot", arrPivotName[static_cast<_uint>(m_ePivot)]))
 	{
@@ -147,6 +147,13 @@ void CUI::Imgui_RenderProperty()
 		m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, m_fRadianRotation);
 	}
 	ImGui::Separator();
+
+#ifdef _DEBUG
+	if (ImGui::Button("Recompile"))
+	{
+		m_pShaderCom->ReCompileShader();
+	}
+#endif
 }
 
 void CUI::SaveToJson(Json & json)
