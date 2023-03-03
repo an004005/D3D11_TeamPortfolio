@@ -1,1 +1,51 @@
-{"MapObjects":[{"ModelTag":"../Bin/Resources/Model/StaticModel/Minimaps/LC01_Area02_Minimap.static_model\u0000","ObjectTag":"","Prototype_GameObject":"Prototype_GameObject_MapNonAnim_Object\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.45562195777893066,-1.5480797290802002,0.0,1.0]}}],"ObjectTag":"","Prototype_GameObject":"Prototype_GameObject_ScarletMap\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "MapObjects": [
+        {
+            "ModelTag": "../Bin/Resources/Model/StaticModel/SM_ef_unq_noUQ_BreakFloor01.static_model\u0000",
+            "ObjectTag": "",
+            "Prototype_GameObject": "Prototype_GameObject_MapNonAnim_Object\u0000",
+            "Transform": {
+                "WorldMatrix": [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.45562195777893066,
+                    -1.5480797290802002,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "Prototype_GameObject_ScarletMap\u0000",
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}
