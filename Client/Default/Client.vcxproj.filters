@@ -304,8 +304,6 @@
     <ClInclude Include="..\public\ButtonUI.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapNonAnim_Object.h" />
-    <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\ScarletMap.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\Canvas_Drive.h">
@@ -421,6 +419,12 @@
     <ClInclude Include="..\public\PlayerInfo_HpUI.h">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -535,8 +539,6 @@
     <ClCompile Include="..\private\ButtonUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
-    <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\ScarletMap.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp">
@@ -651,6 +653,12 @@
     </ClCompile>
     <ClCompile Include="..\private\PlayerInfo_HpUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
+      <Filter>02.GameObjects\Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
