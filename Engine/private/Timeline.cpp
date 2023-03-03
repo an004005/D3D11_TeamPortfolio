@@ -19,7 +19,7 @@ void CTimeline::Tick(_double TimeDelta)
 {
 	if (m_bPlay == false)
 		return;
-
+	
 	if (m_bForward)
 		m_CurFrame += TimeDelta;
 	else

@@ -56,7 +56,10 @@ public:
 
 	//For_Curve
 public:
-	void Tick_Scale(_float fValue);
+	void Tick_Scale_All(_float fValue);
+	void Tick_Scale_Y(_float fValue);
+	void Tick_Scale_X(_float fValue);
+
 	void Tick_Floats_0(_float fValue);
 	void Tick_Floats_1(_float fValue);
 	void Tick_Floats_2(_float fValue);

@@ -364,13 +364,31 @@ void CEffectSystem::Imgui_RenderProperty()
 		std::ofstream file(filePath);
 		file << json;
 	});
+
+	
 }
 
-void CEffectSystem::Tick_Scale(_float fValue)
+void CEffectSystem::Tick_Scale_All(_float fValue)
 {
 	fValue *= 2.f;
 
 	m_pTransformCom->Set_Scaled(_float3(fValue, fValue, fValue));
+}
+
+void CEffectSystem::Tick_Scale_Y(_float fValue)
+{
+	fValue *= 2.f;
+	_float3 Scale = m_pTransformCom->Get_Scaled();
+
+	m_pTransformCom->Set_Scaled(_float3(Scale.x, fValue, Scale.x));
+}
+
+void CEffectSystem::Tick_Scale_X(_float fValue)
+{
+	fValue *= 2.f;
+	_float3 Scale = m_pTransformCom->Get_Scaled();
+
+	m_pTransformCom->Set_Scaled(_float3(fValue, Scale.y, Scale.z));
 }
 
 void CEffectSystem::Tick_Floats_0(_float fValue)

@@ -121,7 +121,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/HWBase.json");
 
 	//TODO: 프로토 테그만 저장하고 로드할때 find로 찾아야함
 	for (auto& Proto : m_pProtosTags)

@@ -111,6 +111,9 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 		m_Timeline.SetTimelineLength((_double)m_fEndTime);
 
+		// m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
+
+
 		if (m_iSelectFinishFunc == 0)
 		{
 			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
@@ -130,40 +133,8 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 		m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
 	}
 
-
-	
-
 	m_Timeline.PlayFromStart();
-
-	// if (m_FirstEffect_Curves.empty())
-	// {
-	// 	_int i = 0;
-	// 	AddEmptyCurve_ForFirst("ObjectScale"); // 스케일 변경
-	// 	
-	// 	AddEmptyCurve_ForFirst("IntroDissolve"); // 나타날 때 디졸브사용
-	// 	AddEmptyCurve_ForFirst("OutroDissolve"); // 죽을 때 디졸브사용
-	//
-	// 	AddEmptyCurve_ForFirst("ColorChange"); // 색상 그대로 받기 (_float4)
-	//
-	// 	AddEmptyCurve_ForFirst("EmissiveChange"); // HDR 강도 변경할 때
-	//
-	// 	AddEmptyCurve_ForFirst("IntroTime"); // 알파로 나타나기
-	// 	AddEmptyCurve_ForFirst("OutroTime"); // 알파로 사라지기
-	//
-	// 	//Todo:: 회전축 어떻게 잡을지 고민
-	// 	// AddEmptyCurve("Rotation"); // 회전값 변경, 축 어떻게 전달할지 결정하기
-	// }
-
-	// m_Timeline.SetCurve(this, &CEffectGroup::Tick_Scale, m_Curves.find("ObjectScale")->second);
-	// Safe_AddRef(m_Curves.find("ObjectScale")->second);
-	//
-	// m_Timeline.SetCurve(this, &CEffectGroup::Tick_Floats_Value, m_Curves.find("IntroDissolve")->second);
-	// Safe_AddRef(m_Curves.find("IntroDissolve")->second);
-	//
-	// m_Timeline.SetCurve(this, &CEffectGroup::Tick_Floats_Value, m_Curves.find("OutroTime")->second);
-	// Safe_AddRef(m_Curves.find("OutroTime")->second);
-
-
+	
 	return S_OK;
 }
 
@@ -725,10 +696,20 @@ inline void CEffectGroup::LoadAndSetCurve_First(Json* json)
 	auto pCurve = CCurveFloatImpl::Create(json);
 	m_FirstEffect_Curves.emplace(pCurve->GetName(), pCurve);
 
-	if (!strcmp(pCurve->GetName(), "ObjectScale"))
+	if (!strcmp(pCurve->GetName(), "ObjectScale_All"))
 	{
-		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_Scale, m_FirstEffect_Curves.find("ObjectScale")->second);
-		Safe_AddRef(m_FirstEffect_Curves.find("ObjectScale")->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_Scale_All, m_FirstEffect_Curves.find("ObjectScale_All")->second);
+		Safe_AddRef(m_FirstEffect_Curves.find("ObjectScale_All")->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_Y"))
+	{
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_Scale_Y, m_FirstEffect_Curves.find("ObjectScale_Y")->second);
+		Safe_AddRef(m_FirstEffect_Curves.find("ObjectScale_Y")->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_X"))
+	{
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_Scale_X, m_FirstEffect_Curves.find("ObjectScale_X")->second);
+		Safe_AddRef(m_FirstEffect_Curves.find("ObjectScale_X")->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Floats_0"))
 	{
@@ -787,7 +768,7 @@ inline void CEffectGroup::LoadAndSetCurve_First(Json* json)
 	}
 	else
 	{
-		MSG_BOX("Failed to FirstEffect SetCurve [ %s ]", strCurveName.c_str());
+		MSG_BOX("Failed to FirstEffect SetCurve", strCurveName.c_str());
 	}
 
 }
@@ -797,10 +778,20 @@ void CEffectGroup::LoadAndSetCurve_Second(Json* json)
 	auto pCurve = CCurveFloatImpl::Create(json);
 	m_SecondEffect_Curves.emplace(pCurve->GetName(), pCurve);
 
-	if (!strcmp(pCurve->GetName(), "ObjectScale"))
+	if (!strcmp(pCurve->GetName(), "ObjectScale_All"))
 	{
-		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_Scale, m_SecondEffect_Curves.find(pCurve->GetName())->second);
-		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_Scale_All, m_SecondEffect_Curves.find("ObjectScale_All")->second);
+		Safe_AddRef(m_SecondEffect_Curves.find("ObjectScale_All")->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_Y"))
+	{
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_Scale_Y, m_SecondEffect_Curves.find("ObjectScale_Y")->second);
+		Safe_AddRef(m_SecondEffect_Curves.find("ObjectScale_Y")->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_X"))
+	{
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_Scale_X, m_SecondEffect_Curves.find("ObjectScale_X")->second);
+		Safe_AddRef(m_SecondEffect_Curves.find("ObjectScale_X")->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Floats_0"))
 	{
@@ -859,7 +850,7 @@ void CEffectGroup::LoadAndSetCurve_Second(Json* json)
 	}
 	else
 	{
-		MSG_BOX("Failed to SecondEffect SetCurve [ %s ]", strCurveName.c_str());
+		MSG_BOX("Failed to SecondEffect SetCurve",strCurveName.c_str());
 	}
 }
 
@@ -868,10 +859,20 @@ void CEffectGroup::LoadAndSetCurve_Third(Json* json)
 	auto pCurve = CCurveFloatImpl::Create(json);
 	m_ThirdEffect_Curves.emplace(pCurve->GetName(), pCurve);
 
-	if (!strcmp(pCurve->GetName(), "ObjectScale"))
+	if (!strcmp(pCurve->GetName(), "ObjectScale_All"))
 	{
-		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_Scale, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
-		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_Scale_All, m_ThirdEffect_Curves.find("ObjectScale_All")->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find("ObjectScale_All")->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_Y"))
+	{
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_Scale_Y, m_ThirdEffect_Curves.find("ObjectScale_Y")->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find("ObjectScale_Y")->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_X"))
+	{
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_Scale_X, m_ThirdEffect_Curves.find("ObjectScale_X")->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find("ObjectScale_X")->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Floats_0"))
 	{
@@ -930,7 +931,7 @@ void CEffectGroup::LoadAndSetCurve_Third(Json* json)
 	}
 	else
 	{
-		MSG_BOX("Failed to ThirdEffect SetCurve [ %s ]", strCurveName.c_str());
+		MSG_BOX("Failed to ThirdEffect SetCurve", strCurveName.c_str());
 	}
 }
 
@@ -939,10 +940,20 @@ void CEffectGroup::LoadAndSetCurve_Fourth(Json* json)
 	auto pCurve = CCurveFloatImpl::Create(json);
 	m_FourthEffect_Curves.emplace(pCurve->GetName(), pCurve);
 
-	if (!strcmp(pCurve->GetName(), "ObjectScale"))
+	if (!strcmp(pCurve->GetName(), "ObjectScale_All"))
 	{
-		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_Scale, m_FourthEffect_Curves.find(pCurve->GetName())->second);
-		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_Scale_All, m_FourthEffect_Curves.find("ObjectScale_All")->second);
+		Safe_AddRef(m_FourthEffect_Curves.find("ObjectScale_All")->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_Y"))
+	{
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_Scale_Y, m_FourthEffect_Curves.find("ObjectScale_Y")->second);
+		Safe_AddRef(m_FourthEffect_Curves.find("ObjectScale_Y")->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_X"))
+	{
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_Scale_X, m_FourthEffect_Curves.find("ObjectScale_X")->second);
+		Safe_AddRef(m_FourthEffect_Curves.find("ObjectScale_X")->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Floats_0"))
 	{
@@ -1001,7 +1012,7 @@ void CEffectGroup::LoadAndSetCurve_Fourth(Json* json)
 	}
 	else
 	{
-		MSG_BOX("Failed to FourthEffect SetCurve [ %s ]", strCurveName.c_str());
+		MSG_BOX("Failed to FourthEffect SetCurve", strCurveName.c_str());
 	}
 }
 
@@ -1010,10 +1021,20 @@ void CEffectGroup::LoadAndSetCurve_Fifth(Json* json)
 	auto pCurve = CCurveFloatImpl::Create(json);
 	m_FifthEffect_Curves.emplace(pCurve->GetName(), pCurve);
 
-	if (!strcmp(pCurve->GetName(), "ObjectScale"))
+	if (!strcmp(pCurve->GetName(), "ObjectScale_All"))
 	{
-		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_Scale, m_FifthEffect_Curves.find(pCurve->GetName())->second);
-		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_Scale_All, m_FifthEffect_Curves.find("ObjectScale_All")->second);
+		Safe_AddRef(m_FifthEffect_Curves.find("ObjectScale_All")->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_Y"))
+	{
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_Scale_Y, m_FifthEffect_Curves.find("ObjectScale_Y")->second);
+		Safe_AddRef(m_FifthEffect_Curves.find("ObjectScale_Y")->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_X"))
+	{
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_Scale_X, m_FifthEffect_Curves.find("ObjectScale_X")->second);
+		Safe_AddRef(m_FifthEffect_Curves.find("ObjectScale_X")->second);
 	}
 	else if (!strcmp(pCurve->GetName(), "Floats_0"))
 	{
@@ -1072,7 +1093,7 @@ void CEffectGroup::LoadAndSetCurve_Fifth(Json* json)
 	}
 	else
 	{
-		MSG_BOX("Failed to FifthEffect SetCurve [ %s ]", strCurveName.c_str());
+		MSG_BOX("Failed to FifthEffect SetCurve", strCurveName.c_str());
 	}
 }
 
@@ -1236,7 +1257,7 @@ void CEffectGroup::Imgui_RenderEffectSource(_int iSelectEffect)
 	{
 		ImGui::Begin("First_Effect");
 		m_pFirst_EffectSystem->Imgui_RenderProperty();
-		m_pFirst_EffectSystem->GetShader()->Imgui_RenderProperty();
+		m_pFirst_EffectSystem->Imgui_RenderComponentProperties();
 		ImGui::End();
 	}
 	else if (m_pSecond_EffectSystem != nullptr && iSelectEffect ==1)
@@ -1276,6 +1297,21 @@ void CEffectGroup::Imgui_RenderEffectSource(_int iSelectEffect)
 
 }
 
+void CEffectGroup::SetStop()
+{
+	m_Timeline.PlayFromStart();
+}
+
+void CEffectGroup::SetPlay()
+{
+	m_Timeline.PlayFromStart();
+}
+
+_bool CEffectGroup::CheckPlay()
+{
+	return m_Timeline.IsPlay();
+}
+
 void CEffectGroup::AddEmptyCurve(string strCurveName)
 {
 	auto itr = m_Curves.find(strCurveName.c_str());
@@ -1295,12 +1331,22 @@ void CEffectGroup::AddEmptyCurve_ForFirst(string strCurveName)
 	auto pCurve = CCurveFloatImpl::Create(strCurveName);
 	m_FirstEffect_Curves.emplace(pCurve->GetName(), pCurve);
 
-	// "ObjectScale", "Floats_0", "Floats_1", "Color_Change", "Emissive_Change", "Intro_Time", "Outtro_Time"
+	// "ObjectScale_All", "Floats_0", "Floats_1", "Color_Change", "Emissive_Change", "Intro_Time", "Outtro_Time"
 
-	if (strCurveName == "ObjectScale")
+	if (strCurveName == "ObjectScale_All")
 	{
-		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_Scale, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_Scale_All, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "ObjectScale_Y")
+	{
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_Scale_Y, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_X"))
+	{
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_Scale_X, m_FirstEffect_Curves.find("ObjectScale_X")->second);
+		Safe_AddRef(m_FirstEffect_Curves.find("ObjectScale_X")->second);
 	}
 	else if (strCurveName == "Floats_0")
 	{
@@ -1359,7 +1405,7 @@ void CEffectGroup::AddEmptyCurve_ForFirst(string strCurveName)
 	}
 	else
 	{
-		MSG_BOX("Failed to FirstEffect SetCurve [ %s ]", strCurveName.c_str());
+		MSG_BOX("Failed to FirstEffect SetCurve", strCurveName.c_str());
 	}
 }
 
@@ -1372,10 +1418,20 @@ void CEffectGroup::AddEmptyCurve_ForSecond(string strCurveName)
 	auto pCurve = CCurveFloatImpl::Create(strCurveName);
 	m_SecondEffect_Curves.emplace(pCurve->GetName(), pCurve);
 
-	if (strCurveName == "ObjectScale")
+	if (strCurveName == "ObjectScale_All")
 	{
-		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_Scale, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_Scale_All, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "ObjectScale_Y")
+	{
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_Scale_Y, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_X"))
+	{
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_Scale_X, m_SecondEffect_Curves.find("ObjectScale_X")->second);
+		Safe_AddRef(m_SecondEffect_Curves.find("ObjectScale_X")->second);
 	}
 	else if (strCurveName == "Floats_0")
 	{
@@ -1434,7 +1490,7 @@ void CEffectGroup::AddEmptyCurve_ForSecond(string strCurveName)
 	}
 	else
 	{
-		MSG_BOX("Failed to SecondEffect SetCurve [ %s ]", strCurveName.c_str());
+		MSG_BOX("Failed to SecondEffect SetCurve", strCurveName.c_str());
 	}
 }
 
@@ -1447,10 +1503,20 @@ void CEffectGroup::AddEmptyCurve_ForThird(string strCurveName)
 	auto pCurve = CCurveFloatImpl::Create(strCurveName);
 	m_ThirdEffect_Curves.emplace(pCurve->GetName(), pCurve);
 
-	if (strCurveName == "ObjectScale")
+	if (strCurveName == "ObjectScale_All")
 	{
-		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_Scale, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_Scale_All, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "ObjectScale_Y")
+	{
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_Scale_Y, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_X"))
+	{
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_Scale_X, m_ThirdEffect_Curves.find("ObjectScale_X")->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find("ObjectScale_X")->second);
 	}
 	else if (strCurveName == "Floats_0")
 	{
@@ -1509,7 +1575,7 @@ void CEffectGroup::AddEmptyCurve_ForThird(string strCurveName)
 	}
 	else
 	{
-		MSG_BOX("Failed to ThirdEffect SetCurve [ %s ]", strCurveName.c_str());
+		MSG_BOX("Failed to ThirdEffect SetCurve", strCurveName.c_str());
 	}
 }
 
@@ -1522,10 +1588,20 @@ void CEffectGroup::AddEmptyCurve_ForFourth(string strCurveName)
 	auto pCurve = CCurveFloatImpl::Create(strCurveName);
 	m_FourthEffect_Curves.emplace(pCurve->GetName(), pCurve);
 
-	if (strCurveName == "ObjectScale")
+	if (strCurveName == "ObjectScale_All")
 	{
-		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_Scale, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_Scale_All, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "ObjectScale_Y")
+	{
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_Scale_Y, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_X"))
+	{
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_Scale_X, m_FourthEffect_Curves.find("ObjectScale_X")->second);
+		Safe_AddRef(m_FourthEffect_Curves.find("ObjectScale_X")->second);
 	}
 	else if (strCurveName == "Floats_0")
 	{
@@ -1584,7 +1660,7 @@ void CEffectGroup::AddEmptyCurve_ForFourth(string strCurveName)
 	}
 	else
 	{
-		MSG_BOX("Failed to FourthEffect SetCurve [ %s ]", strCurveName.c_str());
+		MSG_BOX("Failed to FourthEffect SetCurve", strCurveName.c_str());
 	}
 }
 
@@ -1597,10 +1673,20 @@ void CEffectGroup::AddEmptyCurve_ForFifth(string strCurveName)
 	auto pCurve = CCurveFloatImpl::Create(strCurveName);
 	m_FifthEffect_Curves.emplace(pCurve->GetName(), pCurve);
 
-	if (strCurveName == "ObjectScale")
+	if (strCurveName == "ObjectScale_All")
 	{
-		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_Scale, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_Scale_All, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "ObjectScale_Y")
+	{
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_Scale_Y, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_X"))
+	{
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_Scale_X, m_FifthEffect_Curves.find("ObjectScale_X")->second);
+		Safe_AddRef(m_FifthEffect_Curves.find("ObjectScale_X")->second);
 	}
 	else if (strCurveName == "Floats_0")
 	{
@@ -1659,50 +1745,9 @@ void CEffectGroup::AddEmptyCurve_ForFifth(string strCurveName)
 	}
 	else
 	{
-		MSG_BOX("Failed to FifthEffect SetCurve [ %s ]", strCurveName.c_str());
+		MSG_BOX("Failed to FifthEffect SetCurve", strCurveName.c_str());
 	}
 }
-
-// void CEffectGroup::Tick_Scale( _float fValue)
-// {
-// 	fValue *= 2.f;
-//
-// 	m_pFirst_EffectSystem->GetTransform()->Set_Scaled(_float3(fValue, fValue, fValue));
-// }
-//
-// // 인자 뭐에 던질지 고민해봐야함
-//
-// void CEffectGroup::Tick_Floats_0(_float fValue)
-// {
-// 	// 이펙트 내에서 어떤 효과에 어떤 인자를 쓸건지 저장하는건 어떤지 
-//
-// 	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
-// }
-//
-// void CEffectGroup::Tick_Floats_1(_float fValue)
-// {
-// 	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
-// }
-//
-// void CEffectGroup::Tick_Floats_3(_float fValue)
-// {
-// 	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
-// }
-//
-// void CEffectGroup::Tick_IntroTime(_float fValue)
-// {
-// 	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
-// }
-//
-// void CEffectGroup::Tick_OutroTime(_float fValue)
-// {
-// 	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
-// }
-//
-// void CEffectGroup::Tick_Floats_2(_float fValue)
-// {
-// 	m_pCurSelect_Effect->GetParams().Floats[0] = fValue;
-// }
 
 CEffectGroup* CEffectGroup::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -1777,18 +1822,9 @@ void CEffectGroup::Free()
 
 	m_mapEffectSystemTag.clear();
 
-	if(m_pFirst_EffectSystem != nullptr)
-		Safe_Release(m_pFirst_EffectSystem);
-
-	if (m_pSecond_EffectSystem != nullptr)
-		Safe_Release(m_pSecond_EffectSystem);
-
-	if (m_pThird_EffectSystem != nullptr)
-		Safe_Release(m_pThird_EffectSystem);
-
-	if (m_pFourth_EffectSystem != nullptr)
-		Safe_Release(m_pFourth_EffectSystem);
-
-	if (m_pFifth_EffectSystem != nullptr)
-		Safe_Release(m_pFifth_EffectSystem);
+	Safe_Release(m_pFirst_EffectSystem);
+	Safe_Release(m_pSecond_EffectSystem);
+	Safe_Release(m_pThird_EffectSystem);
+	Safe_Release(m_pFourth_EffectSystem);
+	Safe_Release(m_pFifth_EffectSystem);
 }

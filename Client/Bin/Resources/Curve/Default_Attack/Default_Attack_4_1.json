@@ -406,7 +406,7 @@
     ],
     "First_Directory": "../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_4_1.json",
     "Fourth_Directory": "",
-    "ObjectTag": "",
+    "ObjectTag": "Default_Attack_4_1",
     "Prototype_GameObject": "ProtoVFX_EffectGroup\u0000",
     "Second_Directory": "",
     "Third_Directory": "",
