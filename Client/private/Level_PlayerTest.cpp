@@ -21,6 +21,8 @@
 #include "Indicator.h"
 #include "MapKinetic_Object.h"
 
+#include "BuddyLumi.h"
+
 #include "TrailSystem.h"
 #include "EffectSystem.h"
 
@@ -58,6 +60,12 @@ HRESULT CLevel_PlayerTest::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Kinetic(TEXT("Layer_Kinetic"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
@@ -162,6 +170,14 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	});
 	FAILED_CHECK(pGameInstance->Add_Prototype(L"Proto_KineticObject_Table", CMapKinetic_Object::Create(m_pDevice, m_pContext)));
 
+	{
+		auto pBuddyLumi = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/BuddyLumi.anim_model");
+		pBuddyLumi->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBuddyLumi"), pBuddyLumi));
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BuddyLumi"), CBuddyLumi::Create(m_pDevice, m_pContext)));
+	}
+
 	return S_OK;
 }
 
@@ -208,10 +224,31 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
+	return S_OK;
+}
+
+HRESULT CLevel_PlayerTest::Ready_Layer_Kinetic(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	Json Test;
 	Test["ModelTag"] = "../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Table/Table.static_model";
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Proto_KineticObject_Table"), &Test));
+
+	return S_OK;
+}
+
+HRESULT CLevel_PlayerTest::Ready_Layer_Monster(const _tchar * pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	Json BuddyLumiModel;
+	BuddyLumiModel["Model"] = "MonsterBuddyLumi";
+
+	Json BuddyLumiTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumiTrigger.json");
+
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"),& BuddyLumiModel)))
+	return E_FAIL;
 
 	return S_OK;
 }

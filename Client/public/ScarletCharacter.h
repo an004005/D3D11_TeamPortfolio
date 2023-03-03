@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class CControlledRigidBody;
+class CRigidBody;
 END
 
 BEGIN(Client)
@@ -26,6 +27,9 @@ public:
 
 public:
 	EDeBuffType GetDeBuffType() const { return m_eDeBuff; }
+
+protected:
+	void		Collision_Check(CRigidBody*	AttackTrigger, DAMAGE_PARAM DamageParam);
 
 protected:
 	EDeBuffType m_eDeBuff = EDeBuffType::DEBUFF_END;
