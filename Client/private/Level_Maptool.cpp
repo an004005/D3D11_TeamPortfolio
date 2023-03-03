@@ -194,7 +194,7 @@ HRESULT CLevel_Maptool::Create_Model_Instance(const wstring & pProtoTag, const c
 
 	CComponent* pComponent = nullptr;
 	
-	_uint iNumInstance = 300;
+	_uint iNumInstance = 500;
 	pComponent = CModel_Instancing::Create(m_pDevice, m_pContext, pModelPath, iNumInstance);
 	assert(pComponent != nullptr);
 
