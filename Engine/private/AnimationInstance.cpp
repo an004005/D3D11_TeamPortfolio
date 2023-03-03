@@ -33,6 +33,7 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 	Assert(m_pCurState != nullptr);
 
 	//IM_LOG(to_string(m_fCurTransitionTime / m_fTransitionDuration).c_str());
+	string szTransitionName = "";
 
 	_bool bFirstChange = true;
 	_int iLoopBreaker = 100;
@@ -48,11 +49,14 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 			else
 				bChange = pTransition->m_Predicator();
 
+			szTransitionName = pTransition->m_strName;
+
 			if (bChange)
 			{
 				if (bFirstChange) // 최조 state전환시 이전 상태 저장후 blend에 사용
 				{
 					m_pPreState = m_pCurState;
+
 					m_fPreStatePlayAt = m_pCurState->m_Animation->GetPlayTime();
 					bFirstChange = false;
 					
@@ -78,10 +82,7 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 				m_pCurState = m_mapStates.find(pTransition->m_strNextStateName)->second;
 				m_fTransitionDuration = pTransition->m_fTransitionDuration;
 				m_fCurTransitionTime = 0.f;
-				IM_LOG(m_pCurState->m_strName.c_str());
-				if (m_pCurState->m_strName == "ATK_A2")
-					int iA = 0;
-				//m_pCurState->m_Animation->Reset();
+//				IM_LOG(m_pCurState->m_strName.c_str());
 
 				// 시작 이벤트가 있으면 실행
 				if (nullptr != m_pCurState->m_StartEvent)
@@ -115,11 +116,15 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 			Assert(bNullAnim == false); // null anim이면 항상 변경해야한다.
 			break;
 		}
+
+		// REPEAT라는 키를 가지는 애니메이션의 경우 그냥 탈출시킨다.
+		if ("REPEAT" == szTransitionName)
+			break;
 	}
 	Assert(iLoopBreaker > 0); // 무한루프 방치
 
-	if (nullptr != m_pCurState->m_OptionalEvent)
-		m_pCurState->m_OptionalEvent();
+	if (nullptr != m_pCurState->m_OptionalEvent/* && (m_pCurState->m_bOptionalEvent)*/)
+		m_pCurState->m_bOptionalEvent = m_pCurState->m_OptionalEvent();
 
 	if (m_fCurTransitionTime < m_fTransitionDuration)
 	{
@@ -136,9 +141,9 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 		if (m_pCurState->m_Animation->IsFinished())
 			m_pCurState->m_Animation->Reset();
 
-		m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
 
-		m_bLerp = false;
+m_bLerp = false;
 	}
 }
 
@@ -230,7 +235,20 @@ _bool CAnimationInstance::CheckFinishedAnimSocket()
 		{
 			if (!pAnim->IsLooping() && pAnim->IsFinished())
 			{
+				pAnim->Reset();
 				PairSoc.second.pop_front();
+				
+				// 소켓 이름에 Saperate가 들어갈 경우 전부 비게 되면 false를 반환하여 IDLE상태로 가는 것을 막는다.
+				if (PairSoc.second.empty() && PairSoc.first.find("Saperate") != (string::npos))
+					return false;
+
+				if (PairSoc.second.empty() && PairSoc.first.find("Kinetic_Air") != (string::npos))
+					return true;
+
+				// 소켓 이름에 Kinetic이 들어갈 경우 전부 비게 되면 false를 반환하여 기존 상태를 유지하도록 한다.
+				if (PairSoc.second.empty() && PairSoc.first.find("Kinetic") != (string::npos))
+					return false;
+
 				return true;
 			}
 		}

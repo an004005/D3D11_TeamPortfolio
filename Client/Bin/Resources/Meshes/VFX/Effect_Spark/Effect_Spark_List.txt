@@ -1,0 +1,6 @@
+Prototype_Component_Shader_VtxModel_VFX
+
+VFX_Mesh_Spark_0
+../Bin/Resources/Meshes/VFX/Effect_Spark/VFX_Mesh_Spark_0.static_model
+VFX_Mesh_Spark_1
+../Bin/Resources/Meshes/VFX/Effect_Spark/VFX_Mesh_Spark_0.static_model

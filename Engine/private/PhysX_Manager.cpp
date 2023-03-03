@@ -3,7 +3,6 @@
 #include "DebugDraw.h"
 #include "Graphic_Device.h"
 #include "PipeLine.h"
-#include "ImguiUtils.h"
 #include "JsonStorage.h"
 #include "GameInstance.h"
 #include "GameObject.h"
@@ -37,7 +36,7 @@ PxFilterFlags PxEngineSimulationFilterShader(
 	}
 
 	// PxPairFlag::eNOTIFY_TOUCH_FOUND 추가하면 OnContact 실행됨
-	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+	pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_TOUCH_FOUND;
 	return PxFilterFlags();
 }
 
@@ -699,7 +698,23 @@ CGameObject* CPhysXUtils::GetOnwer(physx::PxActor* pActor)
 void CEngineSimulationEventCallback::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs, physx::PxU32 nbPairs)
 {
 	IM_LOG("Contacted");
-    // Handle contact events
+	
+	{
+		CComponent* pPxCom = static_cast<CComponent*>(pairHeader.actors[0]->userData);
+		if (CRigidBody* pRigid = dynamic_cast<CRigidBody*>(pPxCom))
+		{
+			pRigid->CallOnTriggerIn(CPhysXUtils::GetOnwer(pairHeader.actors[1]));
+		}
+	}
+
+	{
+		CComponent* pPxCom = static_cast<CComponent*>(pairHeader.actors[1]->userData);
+		if (CRigidBody* pRigid = dynamic_cast<CRigidBody*>(pPxCom))
+		{
+			pRigid->CallOnTriggerIn(CPhysXUtils::GetOnwer(pairHeader.actors[0]));
+		}
+	}
+
 }
 
 void CEngineSimulationEventCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)
@@ -712,15 +727,16 @@ void CEngineSimulationEventCallback::onTrigger(physx::PxTriggerPair* pairs, phys
 	switch (pairs->status)
 	{
 	case PxPairFlag::eNOTIFY_TOUCH_FOUND:
-		IM_LOG("Trigger Start!");
+		IM_LOG("Trigger In!");
 		pRigid->CallOnTriggerIn(CPhysXUtils::GetOnwer(pairs->otherActor));
 		break;
 	case PxPairFlag::eNOTIFY_TOUCH_LOST:
 		IM_LOG("Trigger Out!");
 		pRigid->CallOnTriggerOut(CPhysXUtils::GetOnwer(pairs->otherActor));
 		break;
+
 	default: ;
-		IM_LOG("Non Handled Trigger %d", (_int)PxPairFlag::eNOTIFY_TOUCH_FOUND);
+		IM_LOG("Non Handled Trigger %d", (_int)pairs->status);
 	}
 }
 

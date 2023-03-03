@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Level_AnimModify.h"
 
+#include <Imgui_PostProcess.h>
 #include <Material.h>
 #include "GameInstance.h"
 #include "Imgui_MapEditor.h"
@@ -12,6 +13,9 @@
 #include "AnimationInstance.h"
 #include "Terrain.h"
 #include "JsonStorage.h"
+#include "Controller.h"
+
+#include "Player.h"
 
 CLevel_AnimModify::CLevel_AnimModify(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -24,6 +28,7 @@ HRESULT CLevel_AnimModify::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LevelSwitcher::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AnimModifier::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -85,10 +90,10 @@ HRESULT CLevel_AnimModify::Ready_Lights()
 	LightDesc.isEnable = true;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.0f, 0.f);
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(0.5f, 0.5f, 0.5f, 0.5f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
-	FAILED_CHECK(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc));
+	NULL_CHECK(pGameInstance->Add_Light("DirectionalLight", m_pDevice, m_pContext, LightDesc));
 
 	return S_OK;
 }
@@ -147,6 +152,28 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterSkummyPandou"), pSkummyPandou));
 	}
 
+	{
+		_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
+		auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
+	}
+
+	{
+		// 플레이어 이벤트 콜러 지정용
+		//pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
+		//if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
+		//	CController::Create())))
+		//	return E_FAIL;
+	}
+
+	{
+		auto pBronJon = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/BronJon/BronJon.anim_model");
+		pBronJon->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BronJon/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBronJon"), pBronJon));
+	}
+
 	// PJW Monster Model Anim Control Purpose
 
 	//// Goat
@@ -177,11 +204,12 @@ HRESULT CLevel_AnimModify::Ready_Layer_Camera(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	CGameObject* pGameObject = nullptr;
-	pGameObject = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
-	//pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(65.f, 5.f, 60.f, 1.f));
-	//pGameObject->GetTransform()->LookAt(XMVectorSet(65.f, 0.f, 65.f, 1.f));
-	NULL_CHECK(pGameObject);
+	//CGameObject* pGameObject = nullptr;
+	//pGameObject = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
+	////pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(65.f, 5.f, 60.f, 1.f));
+	////pGameObject->GetTransform()->LookAt(XMVectorSet(65.f, 0.f, 65.f, 1.f));
+	//NULL_CHECK(pGameObject);
+	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
 	return S_OK;
 }
@@ -189,16 +217,19 @@ HRESULT CLevel_AnimModify::Ready_Layer_Camera(const _tchar* pLayerTag)
 HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
-	Json PreviewData; // MonsterBuddyLumi	Model_TestPlayer	MonsterFlowerLeg
+						// Model_Player
+	Json PreviewData; //	MonsterBuddyLumi	MonsterSkummyPool	MonsterFlowerLeg	MonsterSkummyPandou		MonsterBronJon
 	PreviewData["Model"] = "Model_Player";
 
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
-		return E_FAIL;*/
+	//if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
+	//	return E_FAIL;
+	
+	auto pPlayer = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
 
-	CGameObject* pGameObject = nullptr;
-	pGameObject = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
-	//pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(65.f, 0.f, 65.f, 1.f));
+	PreviewData["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
+	auto pwp = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
+	
+	static_cast<CModelPreviwer*>(pwp)->SetAttachTo("RightWeapon", static_cast<CModelPreviwer*>(pPlayer));
 
 	return S_OK;
 }
@@ -231,13 +262,13 @@ HRESULT CLevel_AnimModify::Ready_Layer_Map(const _tchar* pLayerTag)
 
 void CLevel_AnimModify::PeekPosSetting(void)
 {
-	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	/*CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	CGameObject* pTerrain = nullptr;
 	_float4		 vPeekingPos = { 0.f, 0.f, 0.f, 0.f };
 	NULL_CHECK(pTerrain = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Terrain"))->GetGameObjects().front());
 	static_cast<CTerrain*>(pTerrain)->PickTerrain(vPeekingPos);
-	pGameInstance->SetPeekingPos(XMLoadFloat4(&vPeekingPos));
+	pGameInstance->SetPeekingPos(XMLoadFloat4(&vPeekingPos));*/
 }
 
 CLevel_AnimModify* CLevel_AnimModify::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

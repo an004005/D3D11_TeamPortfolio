@@ -183,6 +183,69 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix)
 	return vMovePos;
 }
 
+_vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
+{
+	_vector vMovePos;
+	ZeroMemory(&vMovePos, sizeof(_vector));
+
+	static _vector vBefLocalMove;
+	static _vector vLocalMove;
+	static string szBefAnimName;
+
+	vBefLocalMove = vLocalMove;
+	vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	if (srtAnimName != "")
+	{
+		vLocalMove = m_mapAnimation[srtAnimName]->GetLocalMove();
+		if (XMVector3Equal(vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
+		{
+			vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+		if (m_mapAnimation[srtAnimName]->IsFinished())
+		{
+			//m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
+			vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+		if (szBefAnimName != srtAnimName)
+		{
+			szBefAnimName = srtAnimName;
+			vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+	}
+	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(vLocalMove - vBefLocalMove));
+
+	_vector vScale, vRotation, vTrans;
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
+
+	vMovePos = vLocalMove - vBefLocalMove;
+	XMVectorSetW(vMovePos, 0.f);
+	_float	fLength = XMVectorGetX(XMVector3Length(vMovePos));
+
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_PivotMatrix);
+	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
+	vMovePos = XMVector3TransformNormal(vMovePos, PivotRotation);
+
+	// Pivot을 적용시켜도 Y축과 Z축 이동이 뒤틀리는 현상으로 인해
+	// 현재 X축에 대해 회전을 해둔 상태, 원인 파악 시 다시 원상복구 할 것
+	/*********************************************************************/
+	_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
+	vMovePos = XMVector3TransformNormal(vMovePos, ModifyRotation);
+	/*********************************************************************/
+
+	vMovePos = XMVector3TransformNormal(vMovePos, WorldRotation);
+
+	XMVectorSetW(vMovePos, 0.f);
+
+	return vMovePos;
+}
+
 HRESULT CModel::Initialize_Prototype(const char * pModelFilePath)
 {
 	char szExt[MAX_PATH];
@@ -220,9 +283,11 @@ HRESULT CModel::Initialize_Prototype(const char * pModelFilePath)
 
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
+		
 		CMesh*		pMesh = CMesh::Create(m_pDevice, m_pContext, m_eType, hFile, this);
 		Assert(pMesh != nullptr);
 		m_Meshes.push_back(pMesh);
+
 	}
 
 	Ready_Materials(hFile);
@@ -303,27 +368,80 @@ void CModel::Imgui_RenderProperty()
 		}
 	}
 
+	if (m_eType == TYPE_NONANIM)
+	{
+		ImGui::Text("Pivot");
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&m_PivotMatrix, tInfo, true, true);
+
+		ImGui::Separator();
+		if (ImGui::CollapsingHeader("Anim Viewer"))
+		{
+			static char szSeachAnim[MAX_PATH] = "";
+			ImGui::InputText("Anim Search", szSeachAnim, MAX_PATH);
+
+			const string strSearch = szSeachAnim;
+			const _bool bSearch = strSearch.empty() == false;
+
+			if (ImGui::BeginListBox("Anim list"))
+			{
+				for (auto& Pair : m_mapAnimation)
+				{
+					if (bSearch)
+					{
+						if (Pair.first.find(strSearch) == string::npos)
+							continue;
+					}
+
+					const bool bSelected = m_CurAnimName == Pair.first;
+					if (bSelected)
+						ImGui::SetItemDefaultFocus();
+
+					if (ImGui::Selectable(Pair.first.c_str(), bSelected))
+						m_CurAnimName = Pair.first;
+				}
+				ImGui::EndListBox();
+			}
+		}
+	}
 
 
+	//static _float fAdditiveRatio = 0.f;
+	//static string szAdditiveAnimName;
 	// if (ImGui::BeginListBox("Animations Additive"))
 	// {
-	// 	for (size_t i = 0; i < m_Animations.size(); ++i)
+	//	 for (auto& iter : m_mapAnimation)
+	//	 {
+	//		 const bool bSelected = szAdditiveAnimName == iter.first;
+	//		 if (bSelected)
+	//			 ImGui::SetItemDefaultFocus();
+
+	//		 if (ImGui::Selectable(iter.second->GetName().c_str(), bSelected))
+	//		 {
+	//			 //strcpy_s(animBuff, iter.second->GetName().c_str());
+	//			 szAdditiveAnimName = iter.first;
+	//		 }
+	//	 }
+
+	// 	/*for (size_t i = 0; i < m_mapAnimation.size(); ++i)
 	// 	{
+	//		static string szAdditiveAnimName;
 	// 		const bool bSelected = m_iAdditiveAnimIdx == (_uint)i;
 	// 		if (bSelected)
 	// 			ImGui::SetItemDefaultFocus();
 	//
-	// 		if (ImGui::Selectable(m_Animations[i]->GetName().c_str(), bSelected))
+	// 		if (ImGui::Selectable(m_mapAnimation[i]->GetName().c_str(), bSelected))
 	// 		{
-	// 			strcpy_s(animBuff, m_Animations[i]->GetName().c_str());
+	// 			strcpy_s(animBuff, m_mapAnimation[i]->GetName().c_str());
 	// 			m_iAdditiveAnimIdx = (_uint)i;
 	// 		}
-	// 	}
+	// 	}*/
 	//
 	// 	ImGui::EndListBox();
 	// }
-
-	// ImGui::SliderFloat("additiveRatio", &m_fAdditiveRatio, 0.f, 3.f);
+	// ImGui::SliderFloat("additiveRatio", &fAdditiveRatio, 0.f, 3.f);
+	// if (ImGui::Button("AdditiveAccess"))
+	//	m_mapAnimation[szAdditiveAnimName]->Update_Bones(0.f, EAnimUpdateType::ADDITIVE, fAdditiveRatio);
 
 
 	if (ImGui::CollapsingHeader("Material Viewer"))
@@ -629,8 +747,8 @@ HRESULT CModel::Render_ShadowDepth(CTransform* pTransform)
 		
 		FAILED_CHECK(pTransform->Bind_ShaderResource(m_pShadowShader, "g_WorldMatrix"));
 
-		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ViewMatrix", CLight_Manager::GetInstance()->GetDirectionalLightView()));
-		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ProjMatrix", CLight_Manager::GetInstance()->GetDirectionalLightProj()));
+		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ViewMatrix", CLight_Manager::GetInstance()->GetShadowLightView()));
+		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ProjMatrix", CLight_Manager::GetInstance()->GetShadowLightProj()));
 
 		m_pShadowShader->Begin(0);
 		m_Meshes[i]->Render();

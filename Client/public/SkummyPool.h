@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "Monster.h"
 
 BEGIN(Engine)
 class CGameInstance;
@@ -10,12 +11,13 @@ class CAnimation;
 class CFSMComponent;
 class CModel;
 class CRenderer;
+class CRigidBody;
 END
 
 BEGIN(Client)
 class CSkmP_AnimInstance;
 
-class CSkummyPool : public CGameObject
+class CSkummyPool : public CMonster
 {
 private:
 	CSkummyPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -31,6 +33,8 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
+	virtual void AfterPhysX();
+
 private:
 	CShader*				m_pShaderCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
@@ -38,6 +42,7 @@ private:
 	CFSMComponent*			m_pFSM = nullptr;
 
 	CSkmP_AnimInstance*		m_pASM = nullptr;
+	CRigidBody*				m_pTrigger = nullptr;
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -111,6 +116,10 @@ private:
 	_vector			m_vStorePos;
 
 	_uint			m_iMovAnimCnt = 0;
+
+	DAMAGE_PARAM	m_StrDamage;
+
+	_uint			m_iTest = 0;
 
 private:
 	CGameObject*	m_pFlowerLeg = nullptr;

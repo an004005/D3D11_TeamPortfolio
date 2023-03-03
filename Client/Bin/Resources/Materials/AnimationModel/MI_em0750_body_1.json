@@ -7,16 +7,12 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [     
-           "../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Texture/T_em0750_body_ALB.png",
-           "../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Texture/T_em0750_body_NML.png",
-           "../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Texture/T_em0750_body_RMA.png",
-           "../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Texture/T_em0700_wing_MTC.png",
            "../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Texture/dds/T_em0750_body_ALB.dds",
-           "../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Texture/dds/T_em0750_body_NML.dds",
+           "../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Texture/T_em0750_body_NML.png",
            "../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Texture/dds/T_em0750_body_RMA.dds",
            "../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Texture/dds/T_em0700_wing_MTC.dds"
 
         ],
-        "Pass" : 0
+        "Pass" : 1
     }
 }

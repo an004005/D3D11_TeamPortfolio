@@ -1,0 +1,14 @@
+Prototype_Component_Shader_VtxModel_VFX
+
+VFX_Mesh_Con_2.static_model
+../Bin/Resources/Meshes/VFX/Effect_Con/VFX_Mesh_Con_2.static_model
+VFX_Mesh_Con_3
+../Bin/Resources/Meshes/VFX/Effect_Con/VFX_Mesh_Con_3.static_model
+VFX_Mesh_Con_4
+../Bin/Resources/Meshes/VFX/Effect_Con/VFX_Mesh_Con_4.static_model
+VFX_Mesh_Con_5
+../Bin/Resources/Meshes/VFX/Effect_Con/VFX_Mesh_Con_5.static_model
+VFX_Mesh_Con_7
+../Bin/Resources/Meshes/VFX/Effect_Con/VFX_Mesh_Con_7.static_model
+VFX_Mesh_Con_8
+../Bin/Resources/Meshes/VFX/Effect_Con/VFX_Mesh_Con_8.static_model

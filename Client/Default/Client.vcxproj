@@ -110,6 +110,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_SCL_SECURE_NO_WARNINGS;USE_BOOKMARK;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../public/;../../Reference/Headers/;../Default/;../../Reference/Headers/Imgui;../../Reference/Headers/fmod</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -175,11 +176,14 @@
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Defines.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Params.h" />
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Utils.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\BrJ_AnimInstance.h" />
+    <ClInclude Include="..\public\BronJon.h" />
     <ClInclude Include="..\public\ButtonUI.h" />
     <ClInclude Include="..\public\BdLm_AnimInstance.h" />
     <ClInclude Include="..\public\BuddyLumi.h" />
@@ -202,6 +206,7 @@
     <ClInclude Include="..\public\Drive_GaugeUI.h" />
     <ClInclude Include="..\public\Drive_RightDotUI.h" />
     <ClInclude Include="..\public\Effect.h" />
+    <ClInclude Include="..\public\EffectGroup.h" />
     <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\DefaultUI.h" />
     <ClInclude Include="..\public\Floors.h" />
@@ -231,6 +236,9 @@
     <ClInclude Include="..\public\Level_Tutorial.h" />
     <ClInclude Include="..\public\Level_UI.h" />
     <ClInclude Include="..\public\MainApp.h" />
+    <ClInclude Include="..\public\MapInstance_Object.h" />
+    <ClInclude Include="..\public\MapKinetic_Object.h" />
+    <ClInclude Include="..\public\ParticleSystem.h" />
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\Public\Player.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -246,7 +254,11 @@
     <ClInclude Include="..\public\SASSkillIconUI.h" />
     <ClInclude Include="..\public\SASSkillLightUI.h" />
     <ClInclude Include="..\public\ScarletMap.h" />
+    <ClInclude Include="..\public\ScarletWeapon.h" />
+    <ClInclude Include="..\public\SkMpBullet.h" />
     <ClInclude Include="..\public\SkmP_AnimInstance.h" />
+    <ClInclude Include="..\public\SkPd_AnimInstance.h" />
+    <ClInclude Include="..\public\SkummyPandou.h" />
     <ClInclude Include="..\public\SkummyPool.h" />
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
@@ -254,19 +266,25 @@
     <ClInclude Include="..\public\UI.h" />
     <ClInclude Include="..\public\TestMonster.h" />
     <ClInclude Include="..\public\TestObject.h" />
+    <ClInclude Include="..\public\TestEffectGroup.h" />
+    <ClInclude Include="..\public\TrailSystem.h" />
     <ClInclude Include="..\public\UI_Manager.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
+    <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Weapon_wp0190.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
+    <ClCompile Include="..\private\BronJon.cpp" />
     <ClCompile Include="..\private\ButtonUI.cpp" />
     <ClCompile Include="..\private\BdLm_AnimInstance.cpp" />
     <ClCompile Include="..\private\BuddyLumi.cpp" />
@@ -288,6 +306,7 @@
     <ClCompile Include="..\private\Drive_GaugeUI.cpp" />
     <ClCompile Include="..\private\Drive_RightDotUI.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
+    <ClCompile Include="..\private\EffectGroup.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp" />
     <ClCompile Include="..\private\DefaultUI.cpp" />
     <ClCompile Include="..\private\Floors.cpp" />
@@ -317,7 +336,10 @@
     <ClCompile Include="..\private\Level_Tutorial.cpp" />
     <ClCompile Include="..\private\Level_UI.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
+    <ClCompile Include="..\private\MapInstance_Object.cpp" />
+    <ClCompile Include="..\private\MapKinetic_Object.cpp" />
     <ClCompile Include="..\private\Monster.cpp" />
+    <ClCompile Include="..\private\ParticleSystem.cpp" />
     <ClCompile Include="..\Private\Player.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -332,7 +354,11 @@
     <ClCompile Include="..\private\SASSkillIconUI.cpp" />
     <ClCompile Include="..\private\SASSkillLightUI.cpp" />
     <ClCompile Include="..\private\ScarletMap.cpp" />
+    <ClCompile Include="..\private\ScarletWeapon.cpp" />
+    <ClCompile Include="..\private\SkMpBullet.cpp" />
     <ClCompile Include="..\private\SkmP_AnimInstance.cpp" />
+    <ClCompile Include="..\private\SkPd_AnimInstance.cpp" />
+    <ClCompile Include="..\private\SkummyPandou.cpp" />
     <ClCompile Include="..\private\SkummyPool.cpp" />
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
@@ -340,9 +366,12 @@
     <ClCompile Include="..\private\UI.cpp" />
     <ClCompile Include="..\private\TestMonster.cpp" />
     <ClCompile Include="..\private\TestObject.cpp" />
+    <ClCompile Include="..\private\TestEffectGroup.cpp" />
+    <ClCompile Include="..\private\TrailSystem.cpp" />
     <ClCompile Include="..\private\UI_Manager.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -350,6 +379,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Weapon_wp0190.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />
@@ -363,11 +393,13 @@
     <FxCompile Include="..\Bin\ShaderFiles\PostDownScaleFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\PostFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_MeshInstance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Navigation.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcessVFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel_Shadow.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCube_SSDecal.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Shadow.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_VFX.hlsl" />
@@ -382,6 +414,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_VFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_UI.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

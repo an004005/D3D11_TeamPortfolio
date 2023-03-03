@@ -1,5 +1,5 @@
     {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxAnimModel",
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxToonAnimModel",
     "ShaderParams" : {
         "Ints" : [],
         "Floats" : [],
@@ -9,9 +9,9 @@
         "Textures" : [
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Eye_COL.dds",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Eye_NML.png",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Eye_CTL.dds",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Eye_AMB.dds"
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Eye_AMB.dds",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Eye_CTL.dds"
         ],
-        "Pass" : 0
+        "Pass" : 1
     }
 }

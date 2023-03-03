@@ -6,6 +6,9 @@ BEGIN(Engine)
 class CComponent;
 END;
 
+enum PROTOINFO{ NON_INSTANCE, INSTANCE };
+
+BEGIN(Client)
 class CLevel_Maptool : public CLevel
 {
 private:
@@ -25,12 +28,13 @@ private:
 
 private:
 	HRESULT Create_Model(const wstring& pProtoTag, const char* pModelPath);
-
+	HRESULT Create_Model_Instance(const wstring& pProtoTag, const char* pModelPath);
 private:
-	vector<wstring> m_pProtosTags;
+	vector<pair<wstring, PROTOINFO>> m_pProtosTags;
 
 public:
 	static CLevel_Maptool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 };
 
+END

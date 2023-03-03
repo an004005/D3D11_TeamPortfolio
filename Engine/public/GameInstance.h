@@ -39,6 +39,7 @@ public:
 
 	HWND GetHWND() { return m_hWnd; }
 	_double GetTimeDelta() const { return m_TimeDelta; }
+	CRenderer* GetRenderer() { return m_pRenderer; }
 
 public: /* For.GameInstance */	
 	static const _tchar*			m_pPrototypeTransformTag;
@@ -96,7 +97,7 @@ public: /* For.Object_Manager */
 	CGameObject* Clone_GameObject_NoLayer(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg = nullptr);
 	wcmap<class CLayer*>& GetLayers(_uint iLevelIndex);
 	CLayer* GetLayer(_uint iLevelIndex, const _tchar* pLayerTag);
-	CGameObject* Find_ObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred);
+	CGameObject* Find_ObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred, const _tchar* pLayerTag = nullptr);
 	list<CGameObject*> Find_AllObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred);
 	template<typename T>
 	T* Find_OneObjectByType(_uint iLevelIndex, const _tchar* pLayerTag);
@@ -128,8 +129,9 @@ public: /* For.Timer_Manager */
 	void		Update_Timer(const _tchar* pTimerTag);
 
 public: /* For.Light_Manager */ 
-	const LIGHTDESC* Get_LightDesc(_uint iIndex);
-	HRESULT Add_Light(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc);
+	class CLight* Find_Light(const string& strLightTag);
+	class CLight* Add_Light(const string& strLightTag, ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc);
+	void Delete_Light(const string& strLightTag);
 	void ClearLight();
 	void SetShadowCam(class CCamera* pShadowCam);
 
@@ -149,13 +151,23 @@ public: /* for sound manager*/
 public: /* for targetManager*/
 	ID3D11ShaderResourceView* Get_SRV(const _tchar* pTargetTag);
 
-public:
+public:/* for PhysX Manager*/
 	// 주의사항 CPhysX_Manager 에서 읽고 사용하기, 예제도 있음
 	_bool RayCast(const RayCastParams& params);
 	_bool OverlapSphere(const SphereOverlapParams& params);
 	_bool OverlapCapsule(const CapsuleOverlapParams& params);
 	_bool SweepSphere(const SphereSweepParams& params);
 	_bool SweepCapsule(const CapsuleSweepParams& params);
+
+public: /* for CameraManager*/
+	CCamera* Add_Camera(const string& strCamTag, _uint iLevelIdx, const wstring& pLayerTag, const wstring& pPrototypeTag, const Json* camJson = nullptr);
+	void SetMainCamera(const string& strCamTag);
+	void SetMainCamera(CCamera* pCamera);
+	CCamera* GetMainCam();
+	_matrix GetCamViewMatrix(const string& strCamTag);
+	_matrix GetCamProjMatrix(const string& strCamTag);
+	_float4 Get_CamPosition(const string& strCamTag);
+	CCamera* FindCamera(const string& strCamTag);
 
 public: // for CImgui_Manager
 	void Render_ImGui();
@@ -189,6 +201,7 @@ private:
 	class CHDR*						m_pHDR = nullptr;
 	class CSound_Manager*			m_pSound_Manager = nullptr;
 	class CPhysX_Manager*			m_pPhysX_Manager = nullptr;
+	class CCamera_Manager*			m_pCamera_Manager = nullptr;
 
 	class CImgui_Manager*			m_pImgui_Manager = nullptr;
 

@@ -1,18 +1,21 @@
 #pragma once
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "Monster.h"
 
 BEGIN(Engine)
 class CShader;
 class CRenderer;
 class CModel;
 class CFSMComponent;
+class CRigidBody;
+class CGameInstance;
 END
 
 BEGIN(Client)
 class CFL_AnimInstance;
 
-class CFlowerLeg : public CGameObject
+class CFlowerLeg : public CMonster
 {
 public:
 	enum KEYSTATE { KEY_W, KEY_S, KEY_A, KEY_D, KEY_END };
@@ -32,6 +35,8 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
+	virtual void AfterPhysX();
+
 private:
 	void Key_Input(_double TimeDelta);
 	void JumpToGround(_double TimeDelta);
@@ -43,6 +48,7 @@ private:
 	CFSMComponent*			m_pFSM = nullptr;
 
 	CFL_AnimInstance*		m_pASM = nullptr;
+	CRigidBody*				m_pTrigger = nullptr;
 
 private:
 	HRESULT				Setup_AnimSocket();

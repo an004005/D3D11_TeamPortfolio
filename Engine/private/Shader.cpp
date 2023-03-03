@@ -349,7 +349,10 @@ void CShader::SaveShaderParam(const ShaderParams& tParams, Json& json)
 	vector<string> TextureProtoTags;
 	for (auto& e : tParams.Textures)
 	{
-		TextureProtoTags.push_back(CGameUtils::ws2s(e.first->GetPrototypeTag()));
+		if (e.first == nullptr)
+			TextureProtoTags.push_back("");
+		else
+			TextureProtoTags.push_back(CGameUtils::ws2s(e.first->GetPrototypeTag()));
 	}
 		
 	jsonParams["Textures"] = TextureProtoTags;
@@ -369,7 +372,15 @@ void CShader::LoadShaderParam(ShaderParams& tParams, const Json& json)
 	vector<string> TextureProtoTags = jsonParams["Textures"];
 	for (auto e : TextureProtoTags)
 	{
-		tParams.Textures.push_back({dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(CGameUtils::s2ws(e).c_str())), 0});
+		if (e.empty())
+		{
+			tParams.Textures.push_back({ nullptr, 0 });
+		}
+		else
+		{
+			tParams.Textures.push_back({dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(CGameUtils::s2ws(e).c_str())), 0});
+		}
+
 	}
 
 	tParams.iPass = jsonParams["Pass"];
@@ -442,7 +453,7 @@ void CShader::Imgui_RenderShaderParams(ShaderParams& tParams)
 		string name = to_string(i) + "Float4";
 		ImGui::InputFloat4(name.c_str(), (_float*)&tParams.Float4s[i]);
 		name += " Color";
-		ImGui::ColorEdit4(name.c_str(), (_float*)&tParams.Float4s[i]);
+		ImGui::ColorEdit4(name.c_str(), (_float*)&tParams.Float4s[i], ImGuiColorEditFlags_PickerHueWheel);
 	}
 	if (ImGui::Button("Add Float4") && tParams.Float4s.size() < PARAM_FLOAT4_CNT)
 	{

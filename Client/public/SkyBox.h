@@ -6,6 +6,7 @@ BEGIN(Engine)
 class CRenderer;
 class CShader;
 class CTexture;
+class CModel;
 class CVIBuffer_Sphere;
 END
 
@@ -26,6 +27,7 @@ private:
 
 private:
 	CRenderer*				m_pRendererCom = nullptr;
+	CModel*					m_pModelCom = nullptr;
 	CVIBuffer_Sphere*		m_pBuffer = nullptr;
 	CShader*				m_pShader = nullptr;
 	CTexture*				m_pTexture = nullptr;

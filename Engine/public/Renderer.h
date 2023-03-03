@@ -15,10 +15,12 @@ public:
 		RENDER_PRIORITY,
 		RENDER_SHADOWDEPTH,
 		RENDER_NONALPHABLEND,
+		RENDER_NONALPHABLEND_TOON,
 		RENDER_NONLIGHT,
 		RENDER_ALPHABLEND,
 		RENDER_DECAL,
 		RENDER_DEBUG,
+		RENDER_OUTLINE,
 		POSTPROCESS_VFX,
 		RENDER_UI,
 		RENDER_END
@@ -31,7 +33,7 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_ShadowDepthResources(_uint iWidth, _uint iHeight);
-	virtual void Imgui_RenderProperty() override;
+	void Imgui_RenderOtherWindow();
 
 public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
@@ -71,6 +73,9 @@ private:
 	HRESULT Render_HDR();
 	HRESULT Render_PostProcess();
 	HRESULT Render_UI();
+
+	HRESULT Render_Outline();
+
 
 private:
 	HRESULT Render_DebugObject();

@@ -171,14 +171,33 @@ CLayer* CObject_Manager::GetLayer(_uint iLevelIndex, const _tchar* pLayerTag)
 	return Find_Layer(iLevelIndex, pLayerTag);
 }
 
-CGameObject* CObject_Manager::Find_ObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred)
+CGameObject* CObject_Manager::Find_ObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred, const _tchar* pLayerTag)
 {
 	if (iLevelIndex >= m_iNumLevels || Pred == nullptr)
 		return nullptr;
 
-	for (const auto& layerPair : m_vecLayers[iLevelIndex])
+	if (pLayerTag == nullptr)
 	{
-		for (const auto& obj : layerPair.second->GetGameObjects())
+		for (const auto& layerPair : m_vecLayers[iLevelIndex])
+		{
+			for (const auto& obj : layerPair.second->GetGameObjects())
+			{
+				if (Pred(obj))
+				{
+					return obj;
+				}
+			}
+		}
+	}
+
+	else
+	{
+		CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
+
+		if (pLayer == nullptr)
+			return nullptr;
+
+		for (const auto& obj : pLayer->GetGameObjects())
 		{
 			if (Pred(obj))
 			{

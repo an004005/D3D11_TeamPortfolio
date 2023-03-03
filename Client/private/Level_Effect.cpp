@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "..\public\Level_Effect.h"
+
+#include "EffectGroup.h"
+#include "EffectSystem.h"
 #include "GameInstance.h"
 #include "Imgui_MapEditor.h"
 #include "Imgui_LevelSwitcher.h"
@@ -10,6 +13,15 @@
 #include "GameUtils.h"
 #include "Material.h"
 #include "Imgui_PostProcess.h"
+#include "ParticleSystem.h"
+#include "SkyBox.h"
+#include "TrailSystem.h"
+#include "CamSpot.h"
+#include "Weapon_wp0190.h"
+#include "Model.h"
+#include "AnimationInstance.h"
+#include "Player.h"
+#include "Controller.h"
 
 
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -37,6 +49,15 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer(TEXT("Layer"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -52,11 +73,8 @@ void CLevel_Effect::Late_Tick(_double TimeDelta)
 
 HRESULT CLevel_Effect::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
-
+	FAILED_CHECK(__super::Render());
 	SetWindowText(g_hWnd, TEXT("Level : Effecttool"));
-
 
 	return S_OK;
 }
@@ -75,7 +93,7 @@ HRESULT CLevel_Effect::Ready_Lights()
 	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
-	FAILED_CHECK(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc));
+	NULL_CHECK(pGameInstance->Add_Light("DirectionalLight", m_pDevice, m_pContext, LightDesc));
 
 	return S_OK;
 }
@@ -84,13 +102,76 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 {
 	auto pGameInstance = CGameInstance::GetInstance();
 
-	//CGameUtils::ListFilesRecursive("../Bin/Resources/Meshes/Valorant/Materials/", [this](const string& filePath)
-	//{
-	//	string fileName = CGameUtils::GetFileName(filePath);
-	//	CGameInstance::GetInstance()->Add_Prototype(
-	//		s2ws(fileName).c_str(),
-	//		CMaterial::Create(m_pDevice, m_pContext, filePath.c_str()));
-	//});
+	// CGameUtils::ListFiles("../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/", [this](const string& filePath)
+	// {
+	// 	string fileName = CGameUtils::GetFileName(filePath);
+	// 	CGameInstance::GetInstance()->Add_Prototype(
+	// 		s2ws(fileName).c_str(),
+	// 		CModel::Create(m_pDevice, m_pContext, filePath.c_str()));
+	// });
+
+
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
+	{
+		char szFileName[MAX_PATH]{};
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
+		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
+	});
+
+	// ForSky
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_Component_Model_SkySphere"),
+		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/StaticModel/Sky/SkySphere.static_model"))))
+		return E_FAIL;
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
+
+	// ~ForSky
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
+
+
+	// 김기범의 흔적
+	pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
+	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
+
+	auto pModel_Player = CModel::Create(m_pDevice, m_pContext,
+		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
+
+	pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
+	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
+		CController::Create())))
+		return E_FAIL;
+
+	_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
+	pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
+	auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
+		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
+	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
+	////////////////
+
+	// 모델 추가하는 방법
+	// auto pModel_VFX = CModel::Create(m_pDevice, m_pContext,
+	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/Default_Attack_1.static_model");
+	// // 프로토타입 추가 방법
+	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_01", pModel_VFX));
+	//
+	// pModel_VFX = CModel::Create(m_pDevice, m_pContext,
+	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/Default_Attack_2.static_model");
+	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_02", pModel_VFX));
+	//
+	// pModel_VFX = CModel::Create(m_pDevice, m_pContext,
+	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/Default_Attack_3.static_model");
+	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_03", pModel_VFX));
+	//
+	// pModel_VFX = CModel::Create(m_pDevice, m_pContext,
+	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/Default_Attack_4.static_model");
+	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_04", pModel_VFX));
 
 	return S_OK;
 }
@@ -99,14 +180,74 @@ HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+	// For_SkySphere
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Env", TEXT("Prototype_GameObject_SkyBox")));
 
-	pGameInstance->Clone_GameObject(L"Preview", L"MaterialPreview");
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
+	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectSystem")));
+
+	// Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/Air_Attack_1.json");
+	// pGameInstance->Clone_GameObject(L"Layer_EffectSys", L"ProtoVFX_EffectSystem", &AttackMesh);
+
+
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup")));
+
+
+	Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Color_Scale_Test.json");
+	pGameInstance->Clone_GameObject(L"Layer_EffectSys", L"ProtoVFX_EffectGroup", &AttackMesh);
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_TrailSystem")));
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_ParticleSystem")));
+
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Preview", L"MaterialPreview"));
 
 	return S_OK;
 }
 
-CLevel_Effect* CLevel_Effect::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+HRESULT CLevel_Effect::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Player"))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_Effect::Ready_Layer_Player(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json PreviewData;
+	PreviewData["Model"] = "Model_Player";
+
+	CGameObject* pPlayer = nullptr;
+	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Player"), &PreviewData));
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Effect::Ready_Layer_Map(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+	return S_OK;
+}
+
+CLevel_Effect* CLevel_Effect::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{ 
 	CLevel_Effect*	pInstance = new CLevel_Effect(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize()))

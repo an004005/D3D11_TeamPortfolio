@@ -11,15 +11,17 @@
 
 #include "SkmP_AnimInstance.h"
 #include "FlowerLeg.h"
+#include "SkMpBullet.h"
+#include "RigidBody.h"
 
 
 CSkummyPool::CSkummyPool(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+	: CMonster(pDevice, pContext)
 {
 }
 
 CSkummyPool::CSkummyPool(const CSkummyPool & rhs)
-	: CGameObject(rhs)
+	: CMonster(rhs)
 {
 }
 
@@ -33,6 +35,9 @@ HRESULT CSkummyPool::Initialize_Prototype()
 
 HRESULT CSkummyPool::Initialize(void * pArg)
 {
+	Json SkummyPoolTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Test.json");
+	pArg = &SkummyPoolTrigger;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -42,11 +47,17 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 	if (FAILED(Setup_AnimSocket()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(7.f, 0.f, 7.f)));
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"), 
+		(CComponent**)&m_pTrigger, &SkummyPoolTrigger)))
+		return E_FAIL;
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(5.f, 0.f, 5.f)));
 
 	m_pTransformCom->SetSpeed(1.f);
 
 	m_strObjectTag = "Skummy_Pool";
+
+	//m_StrDamage.
 
 	{
 		m_pFSM = CFSMComponentBuilder()
@@ -115,6 +126,15 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 							_uint iThreat = 5;
 							vecRandomPattern.push_back(iThreat);
 
+							_uint iMoveB2 = 6;
+							vecRandomPattern.push_back(iMoveB2);
+
+							_uint iMoveL2 = 7;
+							vecRandomPattern.push_back(iMoveL2);
+
+							_uint iMoveR2 = 8;
+							vecRandomPattern.push_back(iMoveR2);
+							
 							random_shuffle(vecRandomPattern.begin(), vecRandomPattern.end());
 
 							_uint iShuffleResult = vecRandomPattern.front();
@@ -133,6 +153,15 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 							if (iShuffleResult == 5)
 								m_bThreat = true;
+
+							if(iShuffleResult == 6)
+								m_bMoveB = true;
+							
+							if(iShuffleResult == 7)
+								m_bMoveL = true;
+
+							if(iShuffleResult == 8)
+								m_bMoveR = true;
 						}
 					}
 				})
@@ -168,8 +197,15 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 					})
 
 			.AddState("Attack")
+				.OnStart([this]
+				{
+					m_bCreateBullet = false;
+				})
 				.Tick([this](_double TimeDelta)
 				{
+
+
+					///////////////
 					_vector vTargetPos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					m_pTransformCom->LookAt(vTargetPos);
 
@@ -177,8 +213,26 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 					if (pAnim->GetPlayRatio() > 0.66 && !m_bCreateBullet)
 					{
-						// 투사체 생성
-						//MSG_BOX("Bullet Fire!!!");
+						CGameInstance* pGameInstance = CGameInstance::GetInstance();
+						// 투사체 생성						
+						auto pObj = pGameInstance->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("SkMpBullet"));
+						if (CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(pObj))
+						{
+							pBullet->Set_Owner(this);
+
+							_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
+							_float4x4 fBoneMtx;
+							XMStoreFloat4x4(&fBoneMtx, BoneMtx);
+
+							_vector vPrePos = { fBoneMtx.m[3][0], fBoneMtx.m[3][1], fBoneMtx.m[3][2], fBoneMtx.m[3][3] };
+							
+							_vector vDest = vTargetPos - vPrePos;
+
+							pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
+							pBullet->GetTransform()->LookAt(m_pTransformCom->Get_State(CTransform::STATE_LOOK));	
+							pBullet->Set_ShootDir(vDest);
+						}
+
 						m_bCreateBullet = true;
 					}
 
@@ -318,9 +372,8 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 						// 움직임 통제
 						m_bMoveR = false;
 						m_bAttack = true;
-					}
+					}				
 				})
-
 					.AddTransition("MoveR to Attack", "Attack")
 					.Predicator([this]
 				{
@@ -329,7 +382,20 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 
 			.Build();
-	}
+	}	
+	// Tick에서 도는게 아닌
+	m_pTrigger->SetOnTriggerIn([this](CGameObject* pObj)
+	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+		CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
+
+		/*if (pFlower == nullptr)
+			MSG_BOX("null");
+
+		else
+			MSG_BOX("!null");*/
+	});
 
 	return S_OK;
 }
@@ -343,9 +409,7 @@ void CSkummyPool::BeginTick()
 	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
 	{
 		if (iter->GetPrototypeTag() == TEXT("FlowerLeg"))
-		{
-			int iA = 0;
-
+		{			
 			m_pFlowerLeg = iter;
 		}
 	}
@@ -353,7 +417,9 @@ void CSkummyPool::BeginTick()
 
 void CSkummyPool::Tick(_double TimeDelta)
 {
-	__super::Tick(TimeDelta);
+	CMonster::Tick(TimeDelta);
+
+	m_pTrigger->Update_Tick(m_pTransformCom);
 
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
@@ -380,11 +446,13 @@ HRESULT CSkummyPool::Render()
 void CSkummyPool::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
-
-	// Attack(Shoot) Animation -> 
-
-	m_pModelCom->Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
+}
+
+void CSkummyPool::AfterPhysX()
+{
+	__super::AfterPhysX();
+	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 }
 
 HRESULT CSkummyPool::Setup_AnimSocket()
@@ -406,7 +474,11 @@ HRESULT CSkummyPool::SetUp_Components(void * pArg)
 		(CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	if (pArg)
+	if (FAILED(__super::Add_Component(LEVEL_NOW, TEXT("MonsterSkummyPool"), TEXT("Com_Model"), 
+		(CComponent**)&m_pModelCom)))
+		return E_FAIL;
+
+	/*if (pArg)
 	{
 		Json& json = *static_cast<Json*>(pArg);
 		if (json.contains("Model"))
@@ -416,7 +488,7 @@ HRESULT CSkummyPool::SetUp_Components(void * pArg)
 			FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_ModelName.c_str(), m_ModelName.c_str(),
 				(CComponent**)&m_pModelCom));
 		}
-	}
+	}*/	
 
 	m_pASM = CSkmP_AnimInstance::Create(m_pModelCom, this);
 	if (nullptr == m_pASM)
@@ -461,4 +533,5 @@ void CSkummyPool::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
 	Safe_Release(m_pASM);
+	Safe_Release(m_pTrigger);
 }

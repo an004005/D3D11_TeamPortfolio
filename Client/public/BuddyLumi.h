@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "Monster.h"
 
 BEGIN(Engine)
 class CGameInstance;
@@ -10,12 +11,13 @@ class CAnimation;
 class CFSMComponent;
 class CModel;
 class CRenderer;
+class CRigidBody;
 END
 
 BEGIN(Client)
 class CBdLm_AnimInstance;
 
-class CBuddyLumi : public CGameObject
+class CBuddyLumi : public CMonster
 {
 private:
 	CBuddyLumi(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -31,6 +33,10 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
+	virtual void AfterPhysX();
+
+	_matrix AttachCollider();
+
 private:
 	CShader*				m_pShaderCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
@@ -38,6 +44,9 @@ private:
 	CFSMComponent*			m_pFSM = nullptr;
 
 	CBdLm_AnimInstance*		m_pASM = nullptr;
+	CRigidBody*				m_pTrigger = nullptr;
+
+	CRigidBody*				m_pWeaponCollider = nullptr;
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -89,9 +98,14 @@ private:
 	wstring			m_ModelName;
 
 	_float			m_fTimeAcc = 0.f;
-	_float3			m_fMyPos = { 0.f, 0.f, 0.f };
 
+	// 위치값 저장 및 실시간 갱신
+	_float3			m_fMyPos = { 0.f, 0.f, 0.f };
 	_float3			m_fStorePos = { 0.f, 0.f, 0.f };
+
+	_vector			m_vMyPos;
+	_vector			m_vStorePos;
+	// ~위치값 저장 및 실시간 갱신
 
 	_uint			m_iAfterRunPt = 0;
 	_uint			m_iAfterAtkPt = 0;

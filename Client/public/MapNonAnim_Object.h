@@ -21,7 +21,8 @@ public:
 	void Tick(_double TimeDelta) override;
 	void Late_Tick(_double TimeDelta) override;
 	HRESULT Render() override;
-
+	virtual void LoadFromJson(const Json& json) override;
+	virtual void SaveToJson(Json& json) override;
 	virtual void Imgui_RenderProperty() override;
 
 private:
@@ -31,6 +32,7 @@ private:
 	HRESULT	SetUp_Components();
 
 	CPhysXStaticModel* m_pPxModel = nullptr;
+	CModel*					m_pModelCom = nullptr;
 
 public:
 	static CMapNonAnim_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

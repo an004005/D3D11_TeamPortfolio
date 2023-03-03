@@ -200,6 +200,48 @@ void CTransform::LocalMove(_float3 vDir, _float fRange)
 	Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
+void CTransform::SetAxis(STATE eState, _fvector vAxis)
+{
+	_float3		vScale = Get_Scaled();
+
+	_vector		vRight = Get_State(CTransform::STATE_RIGHT);
+	_vector		vUp = Get_State(CTransform::STATE_UP);
+	_vector		vLook = Get_State(CTransform::STATE_LOOK);
+
+	_vector vRenewal_Right, vRenewal_Look, vRenewal_Up;
+
+	switch (eState)
+	{
+	case Engine::CTransform::STATE_RIGHT:
+
+		vRenewal_Right = XMVector3Normalize(vAxis) * vScale.x;
+		vRenewal_Look = XMVector3Normalize(XMVector3Cross(vRenewal_Right, XMVectorSet(0.f, 1.f, 0.f, 0.f))) * vScale.z;
+		vRenewal_Up = XMVector3Normalize(XMVector3Cross(vRenewal_Look, vRenewal_Right)) * vScale.y;
+
+		break;
+	case Engine::CTransform::STATE_UP:
+
+		vRenewal_Up = XMVector3Normalize(vAxis) * vScale.y;
+		vRenewal_Right = XMVector3Normalize(XMVector3Cross(vRenewal_Up, XMVectorSet(0.f, 0.f, 1.f, 0.f))) * vScale.x;
+		vRenewal_Look = XMVector3Normalize(XMVector3Cross(vRenewal_Right, vRenewal_Up)) * vScale.z;
+
+		break;
+	case Engine::CTransform::STATE_LOOK:
+
+		vRenewal_Look = XMVector3Normalize(vAxis) * vScale.z;
+		vRenewal_Right = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vRenewal_Look)) * vScale.x;
+		vRenewal_Up = XMVector3Normalize(XMVector3Cross(vRenewal_Look, vRenewal_Right)) * vScale.y;
+
+		break;
+	default:
+		break;
+	}
+
+	Set_State(CTransform::STATE_RIGHT, vRenewal_Right);
+	Set_State(CTransform::STATE_UP, vRenewal_Up);
+	Set_State(CTransform::STATE_LOOK, vRenewal_Look);
+}
+
 void CTransform::Turn(_fvector vAxis, _double TimeDelta)
 {
 	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, m_TransformDesc.fRotationPerSec * TimeDelta);
@@ -277,6 +319,9 @@ void CTransform::RemoveRotation()
 
 void CTransform::LookAt(_fvector vTargetPos)
 {
+	// 바라볼 지점이 나 자신이면 고장나더라... 바로 리턴
+	if (XMVector3Equal(vTargetPos, Get_State(CTransform::STATE_TRANSLATION)))	return;
+
 	_float3		vScale = Get_Scaled();
 
 	_vector		vLook = XMVector3Normalize(vTargetPos - Get_State(CTransform::STATE_TRANSLATION)) * vScale.z;
@@ -290,6 +335,9 @@ void CTransform::LookAt(_fvector vTargetPos)
 
 void CTransform::LookAt_Smooth(_fvector vTargetPos, _double TimeDelta)
 {
+	// 바라볼 지점이 나 자신이면 고장나더라... 바로 리턴
+	if (XMVector3Equal(vTargetPos, Get_State(CTransform::STATE_TRANSLATION)))	return;
+
 	_vector vLook = XMVector3Normalize(Get_State(CTransform::STATE_LOOK));
 	_vector vRight = XMVector3Normalize(Get_State(CTransform::STATE_RIGHT));
 	_vector vDir = XMVector3Normalize(vTargetPos - Get_State(CTransform::STATE_TRANSLATION));

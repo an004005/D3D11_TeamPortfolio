@@ -1,0 +1,16 @@
+../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/Default_Attack_3.json
+
+../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/Default_Attack_4.json
+
+../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/Default_Attack_4_03_01.json
+
+../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/Default_Attack_4_03_02.json
+
+
+
+../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/Default_Attack_4_03_03.json
+
+
+../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/ColorTest_0.json
+
+../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/ColorTest_1.json

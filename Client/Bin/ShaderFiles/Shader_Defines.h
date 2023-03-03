@@ -1,5 +1,6 @@
 #ifndef __SHADER_DEFINES_HLSL__
 #define __SHADER_DEFINES_HLSL__
+
 sampler LinearSampler = sampler_state
 {
 	filter = min_mag_mip_linear;
