@@ -54,13 +54,6 @@ public:
 
 	void SetShadowPass(_uint iPass) { m_iShadowPass = iPass; }
 
-// ±è±â¹ü
-public:
-	void Set_BoneMatrix(CModel* pModel, _fmatrix Transform);
-	void Set_BoneMatrix(_fmatrix SocketMatrix);
-private:
-	string m_szBoneName = "Eff01";
-
 	//For_Curve
 public:
 	void Tick_Scale_All(_float fValue);
