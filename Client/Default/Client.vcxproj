@@ -192,13 +192,19 @@
     <ClInclude Include="..\public\CamSpot.h" />
     <ClInclude Include="..\public\Canvas.h" />
     <ClInclude Include="..\public\Canvas_Drive.h" />
+    <ClInclude Include="..\public\Canvas_DriveMove.h" />
     <ClInclude Include="..\public\Canvas_Item.h" />
+    <ClInclude Include="..\public\Canvas_ItemMove.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
+    <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
     <ClInclude Include="..\public\Canvas_SASInfo.h" />
     <ClInclude Include="..\public\Canvas_SASSkill.h" />
+    <ClInclude Include="..\public\Canvas_SASSkillMove.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
+    <ClInclude Include="..\public\Drive_GaugeUI.h" />
+    <ClInclude Include="..\public\Drive_RightDotUI.h" />
     <ClInclude Include="..\public\Effect.h" />
     <ClInclude Include="..\public\EffectGroup.h" />
     <ClInclude Include="..\public\EffectSystem.h" />
@@ -210,6 +216,12 @@
     <ClInclude Include="..\public\Imgui_LevelSwitcher.h" />
     <ClInclude Include="..\public\Imgui_MapEditor.h" />
     <ClInclude Include="..\public\Indicator.h" />
+    <ClInclude Include="..\public\Item_GaugeUI.h" />
+    <ClInclude Include="..\public\Item_IconUI.h" />
+    <ClInclude Include="..\public\Item_LeftArrowUI.h" />
+    <ClInclude Include="..\public\Item_NameUI.h" />
+    <ClInclude Include="..\public\Item_PushArrowUI.h" />
+    <ClInclude Include="..\public\Item_RightArrowUI.h" />
     <ClInclude Include="..\public\Level_AnimModify.h" />
     <ClInclude Include="..\public\Level_Converter.h" />
     <ClInclude Include="..\public\Level_Effect.h" />
@@ -225,6 +237,7 @@
     <ClInclude Include="..\public\Level_UI.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\public\MapInstance_Object.h" />
+    <ClInclude Include="..\public\MapKinetic_Object.h" />
     <ClInclude Include="..\public\ParticleSystem.h" />
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\Public\Player.h">
@@ -232,9 +245,12 @@
     </ClInclude>
     <ClInclude Include="..\public\MapNonAnim_Object.h" />
     <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\PlayerInfo_HpUI.h" />
+    <ClInclude Include="..\public\PostVFX_Distortion.h" />
+    <ClInclude Include="..\public\PostVFX_Scifi.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
-    <ClInclude Include="..\public\SASSkillCtrlUI.h" />
+    <ClInclude Include="..\public\SASSkillDefaultUI.h" />
     <ClInclude Include="..\public\SASSkillFullCircleUI.h" />
     <ClInclude Include="..\public\SASSkillGaugeUI.h" />
     <ClInclude Include="..\public\SASSkillIconUI.h" />
@@ -254,6 +270,7 @@
     <ClInclude Include="..\public\TestObject.h" />
     <ClInclude Include="..\public\TestEffectGroup.h" />
     <ClInclude Include="..\public\TrailSystem.h" />
+    <ClInclude Include="..\public\UI_Manager.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
@@ -276,14 +293,20 @@
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\private\Canvas.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
+    <ClCompile Include="..\private\Canvas_DriveMove.cpp" />
     <ClCompile Include="..\private\Canvas_Item.cpp" />
+    <ClCompile Include="..\private\Canvas_ItemMove.cpp" />
     <ClCompile Include="..\private\Canvas_PlayerInfo.cpp" />
+    <ClCompile Include="..\private\Canvas_PlayerInfoMove.cpp" />
     <ClCompile Include="..\private\Canvas_SASInfo.cpp" />
     <ClCompile Include="..\private\Canvas_SASSkill.cpp" />
     <ClCompile Include="..\private\Camera_Player.cpp" />
     <ClCompile Include="..\private\CamSpot.cpp" />
+    <ClCompile Include="..\private\Canvas_SASSkillMove.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
+    <ClCompile Include="..\private\Drive_GaugeUI.cpp" />
+    <ClCompile Include="..\private\Drive_RightDotUI.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
     <ClCompile Include="..\private\EffectGroup.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp" />
@@ -295,6 +318,12 @@
     <ClCompile Include="..\private\Imgui_LevelSwitcher.cpp" />
     <ClCompile Include="..\private\Imgui_MapEditor.cpp" />
     <ClCompile Include="..\private\Indicator.cpp" />
+    <ClCompile Include="..\private\Item_GaugeUI.cpp" />
+    <ClCompile Include="..\private\Item_IconUI.cpp" />
+    <ClCompile Include="..\private\Item_LeftArrowUI.cpp" />
+    <ClCompile Include="..\private\Item_NameUI.cpp" />
+    <ClCompile Include="..\private\Item_PushArrowUI.cpp" />
+    <ClCompile Include="..\private\Item_RightArrowUI.cpp" />
     <ClCompile Include="..\private\Level_AnimModify.cpp" />
     <ClCompile Include="..\private\Level_Converter.cpp" />
     <ClCompile Include="..\private\Level_Effect.cpp" />
@@ -310,6 +339,7 @@
     <ClCompile Include="..\private\Level_UI.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\MapInstance_Object.cpp" />
+    <ClCompile Include="..\private\MapKinetic_Object.cpp" />
     <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\private\ParticleSystem.cpp" />
     <ClCompile Include="..\Private\Player.cpp">
@@ -317,9 +347,12 @@
     </ClCompile>
     <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\PlayerInfo_HpUI.cpp" />
+    <ClCompile Include="..\private\PostVFX_Distortion.cpp" />
+    <ClCompile Include="..\private\PostVFX_Scifi.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
     <ClCompile Include="..\private\ScarletCharacter.cpp" />
-    <ClCompile Include="..\private\SASSkillCtrlUI.cpp" />
+    <ClCompile Include="..\private\SASSkillDefaultUI.cpp" />
     <ClCompile Include="..\private\SASSkillFullCircleUI.cpp" />
     <ClCompile Include="..\private\SASSkillGaugeUI.cpp" />
     <ClCompile Include="..\private\SASSkillIconUI.cpp" />
@@ -339,6 +372,7 @@
     <ClCompile Include="..\private\TestObject.cpp" />
     <ClCompile Include="..\private\TestEffectGroup.cpp" />
     <ClCompile Include="..\private\TrailSystem.cpp" />
+    <ClCompile Include="..\private\UI_Manager.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />

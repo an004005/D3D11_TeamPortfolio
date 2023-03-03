@@ -482,12 +482,18 @@ void CShader::Imgui_RenderShaderParams(ShaderParams& tParams)
 		CImguiUtils::FileDialog_FileSelector(key.c_str(), ".png,.dds", "../Bin/Resources/", 
 			[&](const string& fileName)
 		{
+			if (false == CGameUtils::FileExist(s2ws(fileName).c_str()))
+			{
+				MSG_BOX("!!! There no File !!! ");
+				return;
+			}
+
 			Safe_Release(tParams.Textures[i].first);
 			size_t iPos = fileName.find("\\Bin\\Resources");
 			string relative = ".." + fileName.substr(iPos, fileName.size() - iPos);
 
 			tParams.Textures[i].first = dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(CGameUtils::s2ws(relative).c_str()));
-			Assert(tParams.Textures[i].first != nullptr);
+	
 		});
 	}
 	if (ImGui::Button("Add Texture") && tParams.Textures.size() < PARAM_TEXTURE_CNT)
@@ -510,6 +516,7 @@ void CShader::ReCompileShader()
 
 	if (FAILED(D3DX11CompileEffectFromFile(m_shaderFilePath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, iHlslFlag, 0, m_pDevice, &pEffect, nullptr)))
 	{
+		MSG_BOX("!!!!! Failed to ReCompileShader !!!!!");
 		Safe_Release(pEffect);
 		return;
 	}

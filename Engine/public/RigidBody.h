@@ -30,6 +30,9 @@ public:
 	// GameObject의 AfterPhysX에서 실행 필수
 	void Update_AfterPhysX(class CTransform* pTransform);
 
+	// 날리기 & 돌리기
+	void AddForce(_float3 vForce);
+	void AddTorque(_float3 vTorque);
 
 	_bool IsKinematic() const { return m_bKinematic; }
 	_bool IsTrigger() const { return m_bTrigger; }
@@ -45,6 +48,13 @@ public:
 	void SetOnTriggerOut(std::function<void(class CGameObject*)> TriggerOut) { m_OnTriggerOut = TriggerOut; }
 	void CallOnTriggerPersist(class CGameObject* TriggeredObj) { if (m_OnTriggerPersist) m_OnTriggerPersist(TriggeredObj); }
 	void SetOnTriggerPersist(std::function<void(class CGameObject*)> TriggerPersist) { m_OnTriggerPersist = TriggerPersist; }
+
+public:
+	_float4x4					Get_OriginMatrix();
+	physx::PxBoxGeometry		Get_BoxGeometry();
+	physx::PxSphereGeometry		Get_SphereGeometry();
+	physx::PxCapsuleGeometry	Get_CapsuleGeometry();
+	physx::PxTransform			Get_PxTransform();
 
 protected:
 	void ReleaseActor();

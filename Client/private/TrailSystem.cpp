@@ -104,7 +104,8 @@ void CTrailSystem::Tick(_double TimeDelta)
 			vPrePos = vSplinePos;
 		}
 	}
-
+	
+	m_iSegmentCnt = m_iSegmentCnt;
 	m_vPreRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 }
 

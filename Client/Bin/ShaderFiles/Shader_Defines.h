@@ -109,4 +109,12 @@ BlendState BS_AlphaOne
 	BlendOp[0] = Add;
 };
 
+BlendState BS_BlackCut
+{
+BlendEnable[0] = true;
+SrcBlend[0] = ONE;
+DestBlend[0] = SRC_ALPHA;
+BlendOp[0] = Add;
+};
+
 #endif // __DEPENDENCY_HLSL__

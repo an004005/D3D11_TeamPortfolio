@@ -2,6 +2,11 @@
 #include "Shader_Defines.h"
 #include "Shader_Params.h"
 
+//For Effect
+texture2D		g_FlagTexture;
+
+// ~For Effect
+
 texture2D		g_LDRTexture;
 texture2D		g_NormalTexture; 
 texture2D		g_DepthTexture;
@@ -47,14 +52,64 @@ struct PS_IN
 struct PS_OUT
 {
 	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1;
 };
+
+// g_tex_1 = noise
+// g_tex_0 = distortiontex
 
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
-	
+	float4 vFlags = g_FlagTexture.Sample(PointSampler, In.vTexUV);
+	float4 LDR = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+
+	if(vFlags.x == SHADER_DISTORTION)
+	{
+		float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
+		float2 distortionUV = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time));
+		float4 DistortionTex = g_tex_0.Sample(LinearSampler, distortionUV);
+		float fWeight = DistortionTex.r * g_float_1;
+
+		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, (In.vTexUV + fWeight));
+
+		Out.vColor = LDR * (1.f - vFlags.a) + OriginColor * vFlags.a;
+
+		Out.vColor.a = 1.f;
+
+		// return Out;
+	}
+	else if(vFlags.y == SHADER_SCIFI_PLAYER_ATTACK)
+	{
+		// float2 randomNormal = g_tex_0.Sample(LinearSampler, In.vTexUV).xy;
+
+		// float2 TiltingUV = TilingAndOffset(In.vTexUV, float2(40.f, 40.f), float2( 0.f, 0.f));
+
+
+		float4 ScifiTex = g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, float2(30.f, 1.f), float2(g_Time * 0.1f, g_Time)) );
+		float fWeight = ScifiTex.r * g_float_0;
+
+		float4 ScifiNoiseTex = g_tex_1.Sample(LinearSampler, (In.vTexUV + fWeight));
+
+		float4 InputColor = g_vec4_0;
+		float4 Blend = (ScifiTex * ScifiNoiseTex + InputColor);
+
+		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+
+		Out.vColor = ((saturate(Blend * OriginColor * (1-vFlags.a) *2)) + LDR *  vFlags.a);
+
+		// if(vFlags.a <= 0.f)
+		// {
+		// 	Out.vColor = OriginColor;
+		// }
+
+		Out.vColor.a = 1.f;
+
+	}
+	else
+		Out.vColor = LDR;
+
 	return Out;
 }
 
@@ -162,11 +217,11 @@ PS_OUT PS_MAIN_RADIAL_MASK(PS_IN In)
 
 technique11 DefaultTechnique
 {
-	pass Default
+	pass Default_Test
 	{
-		SetRasterizerState(RS_Default);
+		SetRasterizerState(RS_NonCulling);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
-		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
@@ -229,5 +284,17 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_RADIAL_MASK();
 	}
+	//5
+	pass Default_Real
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN();
+	}
 }

@@ -24,6 +24,7 @@ struct PS_IN
 struct PS_OUT
 {
 	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -47,7 +48,68 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	// Out.vColor = g_Texture.Sample(LinearSampler, In.vTexUV * 2.f);
 	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	return Out;
+}
+
+PS_OUT PS_DEFAULT_DISTORTION(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	// Out.vColor = g_Texture.Sample(LinearSampler, In.vTexUV * 2.f);
+	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+// g_float_0 : 모델 텍스쳐 UV.y 값
+// g_float_1 : UV.y 값 연동된
+// g_float_2 : Emissive
+// g_float_3 : Dissolve 커질수록 사라짐
+
+// g_vec4_0 : 섞는 색상
+
+// g_tex_0 : 반절만 나오는 텍스쳐
+// g_tex_1 : 흰색 꽉찬 텍스쳐
+// g_tex_2 : 디졸브 텍스쳐 
+
+PS_OUT PS_MAIN_DEFAULT_ATTACK(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 BasicColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x * g_float_0, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float4 BlendColor = BasicColor * OriginColor * 2.0f;
 	
+
+	float4 AllTex = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 BlendColor2 = AllTex * OriginColor * 2.0f;
+	float fDissolvePower = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+
+	if(g_float_1 <= 0.f)
+	{
+		Out.vColor = CalcHDRColor(BlendColor2, g_float_2);
+		Out.vColor.a = 1.f;
+
+		Out.vFlag = float4(0.f, SHADER_SCIFI_PLAYER_ATTACK, 0.f, Out.vColor.a);
+
+	}
+	else
+	{
+		Out.vColor = CalcHDRColor((BlendColor *g_float_1) + (BlendColor2 * (1-g_float_1)), g_float_2);
+		Out.vColor.a = (BasicColor.r * g_float_1) + (BlendColor2 * (1 - g_float_1));
+		Out.vFlag = float4(0.f, SHADER_SCIFI_PLAYER_ATTACK, 0.f, g_float_1);
+	}
+
+	if (g_float_3 >= fDissolvePower)
+	{
+		discard;
+	}
+
+	// Out.vColor.a = NoiseTex.a;
 	return Out;
 }
 
@@ -67,5 +129,18 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
+	//1
+	pass PlayerDefaultAttack
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_DEFAULT_ATTACK();
+	}
 
 }

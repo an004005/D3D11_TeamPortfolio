@@ -161,10 +161,10 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 
 	{
 		// 플레이어 이벤트 콜러 지정용
-		pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
-			CController::Create())))
-			return E_FAIL;
+		//pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
+		//if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
+		//	CController::Create())))
+		//	return E_FAIL;
 	}
 
 	{
@@ -221,8 +221,8 @@ HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 	Json PreviewData; //	MonsterBuddyLumi	MonsterSkummyPool	MonsterFlowerLeg	MonsterSkummyPandou		MonsterBronJon
 	PreviewData["Model"] = "Model_Player";
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
+	//	return E_FAIL;
 	
 	auto pPlayer = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
 

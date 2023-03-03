@@ -20,8 +20,16 @@ private:
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Map(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Kinetic(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Monster(const _tchar* pLayerTag);
 
 	HRESULT Ready_Effect(const _tchar* pLayerTag);
+
+private:
+	HRESULT Create_Model(const wstring& pProtoTag, const char* pModelPath);
+
+private:
+	//vector<pair<wstring, PROTOINFO>> m_pProtosTags;
 
 public:
 	static CLevel_PlayerTest* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

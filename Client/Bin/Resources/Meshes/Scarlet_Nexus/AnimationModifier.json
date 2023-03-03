@@ -401,6 +401,330 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_301_AL_capture_wait_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_302_AL_throw1_wait_cancel": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_302_AL_throw1_wait_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_302_AL_throw1_wait_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_303_AL_throw2_wait_cancel": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_303_AL_throw2_wait_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_303_AL_throw2_wait_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_311_AL_AirCap_cancel": {
+        "Duration": 25.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_311_AL_AirCap_loop": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_311_AL_AirCap_start": {
+        "Duration": 25.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_312_AL_AirCap_throw1_cancel": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_312_AL_AirCap_throw1_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_312_AL_AirCap_throw1_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_313_AL_AirCap_throw2_cancel": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_313_AL_AirCap_throw2_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 120.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_313_AL_AirCap_throw2_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_401_AL_damage_l_F": {
+        "Duration": 69.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_401_AL_damage_l_FL": {
+        "Duration": 70.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_401_AL_damage_l_FR": {
+        "Duration": 70.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_402_AL_damage_l_B": {
+        "Duration": 69.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_406_AL_damage_air": {
+        "Duration": 145.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_410_AL_damage_sas": {
+        "Duration": 69.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_410_UP_damage_sas": {
+        "Duration": 69.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_411_AL_damage_h_F": {
+        "Duration": 95.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_411_AL_damage_h_F_long": {
+        "Duration": 95.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_412_AL_damage_h_B": {
+        "Duration": 95.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_412_AL_damage_h_B_long": {
+        "Duration": 95.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_413_AL_damage_h_L": {
+        "Duration": 120.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_413_AL_damage_h_L_long": {
+        "Duration": 120.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_414_AL_damage_h_R": {
+        "Duration": 120.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_414_AL_damage_h_R_long": {
+        "Duration": 120.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_420_AL_down_start_short": {
+        "Duration": 113.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_421_AL_down_start": {
+        "Duration": 155.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_433_AL_blow_landing_F": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_434_AL_down_F": {
+        "Duration": 200.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_435_AL_wakeup_F": {
+        "Duration": 150.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_438_AL_breakfall_F": {
+        "Duration": 27.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_444_AL_down_B": {
+        "Duration": 180.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_445_AL_wakeup_B": {
+        "Duration": 160.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_448_AL_breakfall_B": {
+        "Duration": 52.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_451_AL_cure_end": {
+        "Duration": 80.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_451_AL_cure_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 60.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_451_AL_cure_start": {
+        "Duration": 50.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_455_AL_rise_start": {
+        "Duration": 150.0,
+        "TickPerSecond": 300.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_456_AL_guard": {
+        "Duration": 120.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_456_AL_guard_air": {
+        "Duration": 120.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_457_AL_fall_start": {
+        "Duration": 5.0,
+        "TickPerSecond": 24.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_466_AL_damage_BF_1": {
+        "Duration": 280.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_468_AL_damage_BF_3_down": {
+        "Duration": 77.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_468_AL_damage_BF_3_loop": {
+        "Duration": 59.0,
+        "TickPerSecond": 60.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_468_AL_damage_BF_3_start": {
+        "Duration": 137.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_468_AL_damage_BF_3_wakeup": {
+        "Duration": 138.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_480_AL_down_F_shock": {
+        "Duration": 200.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_481_AL_down_B_shock": {
+        "Duration": 180.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0200_002_AL_wait02": {
         "Duration": 2256.0,
         "TickPerSecond": 24.0,
@@ -488,19 +812,52 @@
     },
     "AS_em0400_200_AL_atk_a1": {
         "Duration": 420.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 0.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Swing_Start",
+                "EventTime": 149.0
+            },
+            {
+                "EventName": "Swing_End",
+                "EventTime": 184.0
+            }
+        ]
     },
     "AS_em0400_401_AL_damage_l_F": {
         "Duration": 60.0,
-        "TickPerSecond": 25.0,
+        "TickPerSecond": 32.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_402_AL_damage_l_B": {
+        "Duration": 60.0,
+        "TickPerSecond": 33.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0400_406_AL_damage_air2": {
         "Duration": 180.0,
         "TickPerSecond": 130.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_411_AL_damage_m_F": {
+        "Duration": 96.0,
+        "TickPerSecond": 54.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_412_AL_damage_m_B": {
+        "Duration": 114.0,
+        "TickPerSecond": 55.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_413_AL_damage_m_L": {
+        "Duration": 114.0,
+        "TickPerSecond": 61.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -513,6 +870,24 @@
     "AS_em0400_424_AL_dead_down": {
         "Duration": 203.0,
         "TickPerSecond": 100.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_427_AL_getup_01": {
+        "Duration": 110.0,
+        "TickPerSecond": 46.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_432_AL_blow_start_F": {
+        "Duration": 130.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_433_AL_blow_landing_F": {
+        "Duration": 60.0,
+        "TickPerSecond": 40.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -1256,6 +1631,76 @@
                         0.0
                     ],
                     "StartTime": 135.0
+                }
+            ],
+            "AS_ch0100_455_AL_rise_start": [
+                {
+                    "AnimName": "AS_ch0100_455_AL_rise_start",
+                    "EndTime": 30.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        -2.0,
+                        0.0
+                    ],
+                    "StartTime": 0.0010000000474974513
+                },
+                {
+                    "AnimName": "AS_ch0100_455_AL_rise_start",
+                    "EndTime": 60.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        -1.5,
+                        0.0
+                    ],
+                    "StartTime": 30.0
+                },
+                {
+                    "AnimName": "AS_ch0100_455_AL_rise_start",
+                    "EndTime": 90.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "StartTime": 60.0
+                },
+                {
+                    "AnimName": "AS_ch0100_455_AL_rise_start",
+                    "EndTime": 120.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        -0.5,
+                        0.0
+                    ],
+                    "StartTime": 90.0
+                },
+                {
+                    "AnimName": "AS_ch0100_455_AL_rise_start",
+                    "EndTime": 150.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        -0.10000000149011612,
+                        0.0
+                    ],
+                    "StartTime": 120.0
+                }
+            ],
+            "AS_ch0100_457_AL_fall_start": [
+                {
+                    "AnimName": "AS_ch0100_457_AL_fall_start",
+                    "EndTime": 5.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        -0.5,
+                        0.0
+                    ],
+                    "StartTime": 0.0010000000474974513
                 }
             ]
         }

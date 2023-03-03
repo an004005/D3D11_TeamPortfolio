@@ -19,8 +19,12 @@
 #include "Imgui_PostProcess.h"
 #include "Imgui_CameraManager.h"
 #include "Indicator.h"
+#include "MapKinetic_Object.h"
+
+#include "BuddyLumi.h"
 
 #include "TrailSystem.h"
+#include "EffectSystem.h"
 
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -56,6 +60,15 @@ HRESULT CLevel_PlayerTest::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Kinetic(TEXT("Layer_Kinetic"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -137,9 +150,33 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
 	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
 
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+	//FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
 
 	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
+
+	// Å°³×Æ½ ¿ÀºêÁ§Æ® ¸ðµ¨
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",
+		[this](const string& fileName)
+	{
+		char szFileExt[MAX_PATH]{};
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+
+		if (0 == strcmp(szFileExt, ".static_model"))
+		{
+			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str()));
+		}
+	});
+	FAILED_CHECK(pGameInstance->Add_Prototype(L"Proto_KineticObject_Table", CMapKinetic_Object::Create(m_pDevice, m_pContext)));
+
+	{
+		auto pBuddyLumi = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/BuddyLumi.anim_model");
+		pBuddyLumi->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBuddyLumi"), pBuddyLumi));
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BuddyLumi"), CBuddyLumi::Create(m_pDevice, m_pContext)));
+	}
 
 	return S_OK;
 }
@@ -186,11 +223,61 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+
+	return S_OK;
+}
+
+HRESULT CLevel_PlayerTest::Ready_Layer_Kinetic(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json Test;
+	Test["ModelTag"] = "../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Table/Table.static_model";
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Proto_KineticObject_Table"), &Test));
+
+	return S_OK;
+}
+
+HRESULT CLevel_PlayerTest::Ready_Layer_Monster(const _tchar * pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	Json BuddyLumiModel;
+	BuddyLumiModel["Model"] = "MonsterBuddyLumi";
+
+	Json BuddyLumiTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumiTrigger.json");
+
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"),& BuddyLumiModel)))
+	return E_FAIL;
+
 	return S_OK;
 }
 
 HRESULT CLevel_PlayerTest::Ready_Effect(const _tchar * pLayerTag)
 {
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
+	
+	return S_OK;
+}
+
+HRESULT CLevel_PlayerTest::Create_Model(const wstring & pProtoTag, const char * pModelPath)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	CComponent* pComponent = nullptr;
+
+	pComponent = CModel::Create(m_pDevice, m_pContext, pModelPath);
+	assert(pComponent != nullptr);
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(
+		pProtoTag.c_str(),
+		pComponent));
+
+	//m_pProtosTags.emplace_back(pProtoTag,  NON_INSTANCE);
+
 	return S_OK;
 }
 

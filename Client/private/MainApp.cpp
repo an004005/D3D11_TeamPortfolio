@@ -17,6 +17,7 @@
 #include "Camera_Player.h"
 #include "ControlledRigidBody.h"
 #include "RigidBody.h"
+#include "UI_Manager.h"
 #include "VIBuffer_Mesh_Instance.h"
 #include "MapInstance_Object.h"
 
@@ -331,6 +332,8 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
+	CUI_Manager::GetInstance()->DestroyInstance();
+
 	m_pGameInstance->Clear_ImguiObjects();
 	m_pGameInstance->Clear();
 
