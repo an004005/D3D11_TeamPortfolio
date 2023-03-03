@@ -25,6 +25,11 @@ HRESULT CCanvas_Drive::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	// 처음에 보이지 않을 UI 들
+	Find_ChildUI(L"Drive_B")->SetVisible(false);
+	Find_ChildUI(L"Drive_Circle0")->SetVisible(false);
+	Find_ChildUI(L"Drive_Circle1")->SetVisible(false);
+
 	return S_OK;
 }
 
@@ -32,11 +37,19 @@ void CCanvas_Drive::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
+	Find_ChildUI(L"Drive_Circle0")->SetVisible(m_bDriveB_OFF);
+
+	Find_ChildUI(L"Drive_B")->SetVisible(m_bDriveB_ON);
+	Find_ChildUI(L"Drive_Circle1")->SetVisible(m_bDriveB_ON);
 }
 
 void CCanvas_Drive::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
+
+	ImGui::Checkbox("DriveB_OFF", &m_bDriveB_OFF);
+	ImGui::SameLine();
+	ImGui::Checkbox("DriveB_ON", &m_bDriveB_ON);
 }
 
 void CCanvas_Drive::SaveToJson(Json& json)

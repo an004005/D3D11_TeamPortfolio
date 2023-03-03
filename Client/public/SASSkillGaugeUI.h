@@ -2,7 +2,6 @@
 
 #include "Client_Defines.h"
 #include "UI.h"
-#include "Canvas_SASSkill.h"
 
 BEGIN(Client)
 
@@ -31,9 +30,6 @@ private:
 	void			ChangeSkill_TickShader(const _float & fTimeDelta);
 
 private:
-	CCanvas_SASSkill*				m_pCanvas = { nullptr };
-	CCanvas_SASSkill::OBJECTCOUNT	m_eObjectCount = CCanvas_SASSkill::ONE;
-
 	_float2		m_fMinMaxGauge = { 0.0f, 1.0f };	// 최소 게이지와 최대 게이지
 	_float		m_fGaugeSpeed = { 0.0f };			// 게이지가 사용되는 속도
 	
