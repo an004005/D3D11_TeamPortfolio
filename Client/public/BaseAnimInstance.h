@@ -63,7 +63,7 @@ protected:	// 대상의 상태
 
 protected:
 	_float	m_fLerpTime = 0.f;
-	_float	m_fLerpDuration = 0.1f;
+	_float	m_fLerpDuration = 0.2f;
 	_float	m_fSeperateLerpTime = 0.f;
 	_bool	m_bLerp = false;
 	_bool	m_bAttach = false;

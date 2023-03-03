@@ -439,42 +439,29 @@ void CModel::Imgui_RenderProperty()
 	}
 
 
-	//static _float fAdditiveRatio = 0.f;
-	//static string szAdditiveAnimName;
-	// if (ImGui::BeginListBox("Animations Additive"))
-	// {
-	//	 for (auto& iter : m_mapAnimation)
-	//	 {
-	//		 const bool bSelected = szAdditiveAnimName == iter.first;
-	//		 if (bSelected)
-	//			 ImGui::SetItemDefaultFocus();
+	 if (ImGui::BeginListBox("Animations Additive"))
+	 {
+		 for (auto& iter : m_mapAnimation)
+		 {
+			 const bool bSelected = m_szAdditiveAnimName == iter.first;
+			 if (bSelected)
+				 ImGui::SetItemDefaultFocus();
 
-	//		 if (ImGui::Selectable(iter.second->GetName().c_str(), bSelected))
-	//		 {
-	//			 //strcpy_s(animBuff, iter.second->GetName().c_str());
-	//			 szAdditiveAnimName = iter.first;
-	//		 }
-	//	 }
+			 if (ImGui::Selectable(iter.second->GetName().c_str(), bSelected))
+			 {
+				 m_szAdditiveAnimName = iter.first;
+			 }
+		 }
+	
+	 	ImGui::EndListBox();
+	 }
+	 ImGui::SliderFloat("additiveRatio", &m_fAdditiveRatio, 0.f, 3.f);
 
-	// 	/*for (size_t i = 0; i < m_mapAnimation.size(); ++i)
-	// 	{
-	//		static string szAdditiveAnimName;
-	// 		const bool bSelected = m_iAdditiveAnimIdx == (_uint)i;
-	// 		if (bSelected)
-	// 			ImGui::SetItemDefaultFocus();
-	//
-	// 		if (ImGui::Selectable(m_mapAnimation[i]->GetName().c_str(), bSelected))
-	// 		{
-	// 			strcpy_s(animBuff, m_mapAnimation[i]->GetName().c_str());
-	// 			m_iAdditiveAnimIdx = (_uint)i;
-	// 		}
-	// 	}*/
-	//
-	// 	ImGui::EndListBox();
-	// }
-	// ImGui::SliderFloat("additiveRatio", &fAdditiveRatio, 0.f, 3.f);
-	// if (ImGui::Button("AdditiveAccess"))
-	//	m_mapAnimation[szAdditiveAnimName]->Update_Bones(0.f, EAnimUpdateType::ADDITIVE, fAdditiveRatio);
+	 if (ImGui::Button("Additive Delete"))
+	 {
+		 m_mapAnimation[m_szAdditiveAnimName]->Reset();
+		 m_szAdditiveAnimName = "";
+	 }
 
 
 	if (ImGui::CollapsingHeader("Material Viewer"))
@@ -685,6 +672,37 @@ void CModel::Play_Animation_Test(_double TimeDelta)
 	// m_Animations[m_iAdditiveAnimIdx]->Update_Bones(TimeDelta, EAnimUpdateType::ADDITIVE, m_fAdditiveRatio);
 	// SetBoneMask(EBoneMask::ON_ALL);
 
+
+	Compute_CombindTransformationMatrix();
+}
+
+void CModel::Play_Animation_Additive(_double TimeDelta)
+{
+	if (m_eType == TYPE_NONANIM)
+	{
+		// IM_WARN("STATIC Model Cannot player animation.");
+		return;
+	}
+
+	if (auto pAnim = Find_Animation(m_CurAnimName))
+	{
+		pAnim->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+
+		if ("" != m_szAdditiveAnimName)
+		{
+			if (auto pAnim = Find_Animation(m_szAdditiveAnimName))
+			{
+				pAnim->Update_Bones(TimeDelta, EAnimUpdateType::ADDITIVE, m_fAdditiveRatio);
+			}
+		}
+
+		KEYFRAME tempKeyFrame = *pAnim->GetCurKeyFrame();
+		if (tempKeyFrame.Time != m_CurKeyFrame.Time)
+		{
+			m_BefKeyFrame = m_CurKeyFrame;
+			m_CurKeyFrame = tempKeyFrame;
+		}
+	}
 
 	Compute_CombindTransformationMatrix();
 }
@@ -1037,6 +1055,74 @@ _vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix)
 						szCurAnimName = m_CurAnimName;
 						vInitTrans = vTrans;
 					}*/
+
+					_vector vMovePos = Optional.vOptionalRootVector;
+					vMovePos = XMVectorSetW(vMovePos, 0.f);
+
+					vMovePos = XMVector3TransformNormal(vMovePos, WorldRotation);
+
+					_vector vDestPos = vInitTrans + vMovePos;
+
+					vDestPos = XMVectorLerp(vInitTrans, vDestPos, fRatio);
+
+					_vector vResultDir = vDestPos - vTrans;
+					vResultDir = XMVectorSetW(vResultDir, 0.f);
+
+					if (0.f > XMVectorGetX(XMVector3Dot(vResultDir, vMovePos)))
+					{
+						// È¤½Ã ¹æÇâº¤ÅÍ Æ¢¸é ¾ê·Î Àâ¾ÆÁÜ
+						vInitTrans = vTrans;
+						GetOptionalMoveVector(WorldMatrix);
+					}
+
+					return vResultDir;
+				}
+			}
+		}
+	}
+
+	vInitTrans = XMVectorSet(0.f, 0.f, 0.f, -1.f);
+	return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+}
+
+_vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix, const string & srtAnimName)
+{
+	static _vector vInitTrans;
+	static _float fStartTime;
+	static string szCurAnimName;
+
+	if (szCurAnimName != srtAnimName)
+	{
+		szCurAnimName = srtAnimName;
+		vInitTrans = XMVectorSet(0.f, 0.f, 0.f, -1.f);
+	}
+
+	for (auto& iter : m_mapOptionalRootMotion)
+	{
+		if (srtAnimName == iter.first)	// ÀÌº¥Æ® ÄÝ·¯¿Í °°Àº °³³ä
+		{
+			_float fPlayTime = static_cast<_float>(m_mapAnimation[srtAnimName]->GetPlayTime());
+
+			for (auto& Optional : iter.second)
+			{
+				_float fRatio = (fPlayTime - Optional.fStartTime) / (Optional.fEndTime - Optional.fStartTime);
+
+				if (0.f <= fRatio && 1.f >= fRatio)
+				{
+					_vector vScale, vRotation, vTrans;
+					XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+					_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
+
+					if (-1.f == XMVectorGetW(vInitTrans))
+					{
+						vInitTrans = vTrans;
+					}
+
+					if (fStartTime != Optional.fStartTime)
+					{
+						fStartTime = Optional.fStartTime;
+						vInitTrans = vTrans;
+					}
 
 					_vector vMovePos = Optional.vOptionalRootVector;
 					vMovePos = XMVectorSetW(vMovePos, 0.f);

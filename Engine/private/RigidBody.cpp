@@ -206,6 +206,40 @@ void CRigidBody::UpdateChange()
 	Activate(true);
 }
 
+_float4x4 CRigidBody::Get_OriginMatrix()
+{
+	return m_OriginTransformMatrix;
+}
+
+physx::PxBoxGeometry CRigidBody::Get_BoxGeometry()
+{
+	if (m_eShapeType != TYPE_BOX)
+		return physx::PxBoxGeometry();
+
+	return m_pShape->getGeometry().box();
+}
+
+physx::PxSphereGeometry CRigidBody::Get_SphereGeometry()
+{
+	if (m_eShapeType != TYPE_SPHERE)
+		return physx::PxSphereGeometry();
+
+	return m_pShape->getGeometry().sphere();
+}
+
+physx::PxCapsuleGeometry CRigidBody::Get_CapsuleGeometry()
+{
+	if (m_eShapeType != TYPE_CAPSULE)
+		return physx::PxCapsuleGeometry();
+
+	return m_pShape->getGeometry().capsule();
+}
+
+physx::PxTransform CRigidBody::Get_PxTransform()
+{
+	return physx::PxShapeExt::getGlobalPose(*m_pShape, *m_pActor);
+}
+
 void CRigidBody::ReleaseActor()
 {
 	if (m_pActor)
@@ -244,7 +278,7 @@ void CRigidBody::CreateActor()
 	_float3 vScale =_float3(XMVectorGetX(XMVector3Length(OriginMatrix.r[0])), 
 			XMVectorGetX(XMVector3Length(OriginMatrix.r[1])), 
 			XMVectorGetX(XMVector3Length(OriginMatrix.r[2])));
-	
+
 	switch (m_eShapeType)
 	{
 		case TYPE_BOX:

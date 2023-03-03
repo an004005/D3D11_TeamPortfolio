@@ -3,6 +3,10 @@
 #include "GameInstance.h"
 #include "JsonLib.h"
 #include "JsonStorage.h"
+#include "FSMComponent.h"
+#include "UI_Manager.h"
+
+//_bool CCanvas::m_bUIMove = false;
 
 CCanvas::CCanvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -39,6 +43,20 @@ void CCanvas::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	const _float2 PivotPair = GetPivotXY(m_ePivot);
+
+	// 자식들의 캔버스 최신화
+	const CanvasRect ThisCanvasSize{
+		m_fX + PivotPair.x,
+		m_fY + PivotPair.y,
+		m_fSizeX * 0.5f,
+		m_fSizeY * 0.5f
+	};
+
+	for (auto& Pair : m_mapChildUIs)
+		Pair.second->SetCanvasSize(ThisCanvasSize);
+
+	// map 으로 보관하고 있는 캔버스의 Tick() 을 돌린다.
 	for (auto iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end();)
 	{
 		const auto ChildPair = *iter;
@@ -96,7 +114,6 @@ void CCanvas::Imgui_RenderProperty()
 
 	if (ImGui::BeginListBox("UI List"))	// 캔버스 안 에서 생성한 유아이를 확인한다.
 	{
-	
 		for (auto& UI : m_mapChildUIs)
 		{
 			const bool bSelected = (UI.second == m_pUI);
@@ -124,6 +141,8 @@ void CCanvas::Imgui_RenderProperty()
 		m_pUI->Imgui_RenderProperty();
 	}
 	ImGui::EndChild();
+
+	ImGui::Separator();
 }
 
 void CCanvas::SaveToJson(Json & json)
@@ -151,6 +170,7 @@ void CCanvas::LoadFromJson(const Json & json)
 		auto pUI = Add_ChildUI(LEVEL_NOW, s2ws(protoTag).c_str(),s2ws(childTag).c_str(), (void*)&childJson);
 		Assert(pUI != nullptr);
 	}
+
 }
 
 CUI * CCanvas::Find_ChildUI(const _tchar * pChildTag)
@@ -187,6 +207,81 @@ CUI * CCanvas::Add_ChildUI(_uint iLevelIndex, const _tchar * pPrototypeTag, cons
 	return pChildUI;
 }
 
+void CCanvas::UIMove_FSM()
+{
+	m_pUIMoveFSM = CFSMComponentBuilder()
+		.InitState("Idle")
+		.AddState("Idle")
+		.AddTransition("Idle to Move", "Move")
+		.Predicator([this] {
+		return m_bUIMove;
+	})
+		.AddState("Move")
+		.OnStart([this]
+	{
+		map<wstring, CCanvas*>& canvases = CUI_Manager::GetInstance()->Get_Canvas();
+
+		for_each(canvases.begin(), canvases.end(), [&](pair<wstring, CCanvas*> pCanvas) {
+			pCanvas.second->Set_UIMove();
+		});
+
+		_float2 vRandomPosition = { 5.0f, 5.0f };
+		m_vDestination = { vRandomPosition.x, -vRandomPosition.y };
+	})
+		.Tick([this](_double TimeDelta) {
+
+		_vector vPosition = XMVectorSet(m_fX, m_fY, 0.0f, 1.0f);
+		_vector vDestination = { m_vDestination.x, m_vDestination.y, 0.0f, 1.0f };
+		_vector vDistance = vDestination - vPosition;
+
+		vPosition += XMVector2Normalize(vDistance) * _float(TimeDelta) * 15.0f;
+		m_fX = XMVectorGetX(vPosition);
+		m_fY = XMVectorGetY(vPosition);
+
+		// 목표 지점과 현재 지점을 비교한다.
+		_float fDistance = XMVectorGetX(XMVector4Length(vDestination - vPosition));
+
+		IM_LOG("X %f", fDistance);
+		if (0.2f > fDistance)
+		{
+			IM_LOG("X ---------------------");
+			m_bIsDestination = true;
+		}
+	})
+		.AddTransition("Move to Return", "Return")
+		.Predicator([this] {
+		return m_bIsDestination;
+	})
+		.AddState("Return")
+		.Tick([this](_double TimeDelta) {
+
+		_vector vPosition = XMVectorSet(m_fX, m_fY, 0.0f, 1.0f);
+		_vector vDestination = { 0.0f, 0.0f, 0.0f, 1.0f };
+		_vector vDistance = vDestination - vPosition;
+
+		vPosition += XMVector2Normalize(vDistance) * _float(TimeDelta) * 15.0f;
+		m_fX = XMVectorGetX(vPosition);
+		m_fY = XMVectorGetY(vPosition);
+
+		// 원래 지점과 현재 지점을 비교한다.
+		_float fDistance = XMVectorGetX(XMVector2Length(vDestination - vPosition));
+
+		IM_LOG("Y %f", fDistance);
+		if (0.2f > fDistance)
+		{
+			IM_LOG("Y --------------------");
+			m_bIsDestination = false;
+			m_bUIMove = false;
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
+		}
+	})
+		.AddTransition("Return to Idle", "Idle")
+		.Predicator([this] {
+		return m_bUIMove == false;
+	})
+		.Build();
+}
+
 CCanvas * CCanvas::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CCanvas*		pInstance = new CCanvas(pDevice, pContext);
@@ -214,6 +309,8 @@ CUI * CCanvas::Clone(void * pArg)
 void CCanvas::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pUIMoveFSM);
 
 	for (auto& Pair : m_mapChildUIs)
 		Safe_Release(Pair.second);

@@ -1,14 +1,14 @@
 {
     "ChildrenUI": [
         {
-            "ChildTag": "Drive_BackGround\u0000",
-            "ObjectTag": "Drive_BackGround",
+            "ChildTag": "PlayerInfo_BackGround\u0000",
+            "ObjectTag": "PlayerInfo_BackGround",
             "Pivot": 6,
-            "PositionX": 182.0,
-            "PositionY": 75.0,
+            "PositionX": 0.0,
+            "PositionY": 80.0,
             "Priority": 0,
             "Prototype_GameObject": "Default_UI\u0000",
-            "ScaleX": 0.699999988079071,
+            "ScaleX": 0.6700000166893005,
             "ScaleY": 0.699999988079071,
             "ShaderParams": {
                 "Float2s": [],
@@ -18,14 +18,14 @@
                 "Ints": [],
                 "Pass": 0,
                 "Textures": [
-                    "..\\Bin\\Resources\\UI\\Front_UI\\Drive_BackGround.dds\u0000"
+                    "..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_BackGround.dds\u0000"
                 ]
             },
-            "SizeX": 128.0,
+            "SizeX": 512.0,
             "SizeY": 128.0,
             "Transform": {
                 "WorldMatrix": [
-                    89.5999984741211,
+                    343.0400085449219,
                     0.0,
                     0.0,
                     0.0,
@@ -37,8 +37,8 @@
                     0.0,
                     1.0,
                     0.0,
-                    182.0,
-                    -285.0,
+                    0.0,
+                    -280.0,
                     0.0,
                     1.0
                 ]
@@ -50,7 +50,7 @@
     "PositionX": 0.0,
     "PositionY": 0.0,
     "Priority": 0,
-    "Prototype_GameObject": "Canvas_Drive\u0000",
+    "Prototype_GameObject": "Canvas_PlayerInfo\u0000",
     "ScaleX": 0.0,
     "ScaleY": 0.0,
     "ShaderParams": {

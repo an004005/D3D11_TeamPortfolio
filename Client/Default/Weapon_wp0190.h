@@ -17,11 +17,17 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
-	virtual void BeginTick() {}
+	virtual void BeginTick();
 	virtual void Tick(_double TimeDelta);
 	virtual void Late_Tick(_double TimeDelta);
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render();
+
+public:
+	void		Collision_Check();
+
+private:
+	_vector		m_vBeforePos;
 
 private:
 	HRESULT		SetUp_Components();

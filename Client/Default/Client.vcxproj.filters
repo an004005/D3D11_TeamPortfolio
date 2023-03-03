@@ -341,6 +341,9 @@
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h">
       <Filter>VFX\Effect\Buffer</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EffectGroup.h">
       <Filter>VFX\Effect\EffectGroup</Filter>
@@ -351,6 +354,7 @@
     <ClInclude Include="..\public\TrailSystem.h">
       <Filter>VFX\Trail</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\Canvas.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
@@ -390,9 +394,6 @@
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillLightUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\SASSkillCtrlUI.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillFullCircleUI.h">
@@ -487,6 +488,60 @@
     </ClInclude>
     <ClInclude Include="..\public\MapKinetic_Object.h">
       <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h" />
+    <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\Psychokinesis.h" />
+    <ClInclude Include="..\public\SASSkillDefaultUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SASSkillMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PlayerInfoMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_DriveMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UI_Manager.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Drive_RightDotUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Drive_GaugeUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_NameUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_IconUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_GaugeUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_ItemMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_LeftArrowUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_PushArrowUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_RightArrowUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerInfo_HpUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h">
+      <Filter>02.GameObjects\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Boss1.h">
       <Filter>02.GameObjects\Monster\boss1</Filter>
@@ -614,6 +669,9 @@
     </ClCompile>
     <ClCompile Include="..\private\TrailSystem.cpp">
       <Filter>VFX\Trail</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas.cpp">
       <Filter>02.GameObjects\UI</Filter>
@@ -654,9 +712,6 @@
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillLightUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\SASSkillCtrlUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillFullCircleUI.cpp">
@@ -748,6 +803,60 @@
     </ClCompile>
     <ClCompile Include="..\private\MapKinetic_Object.cpp">
       <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
+    <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\Psychokinesis.cpp" />
+    <ClCompile Include="..\private\SASSkillDefaultUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SASSkillMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PlayerInfoMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_DriveMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_Manager.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Drive_RightDotUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Drive_GaugeUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_NameUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_IconUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_GaugeUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_ItemMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_LeftArrowUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_PushArrowUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_RightArrowUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerInfo_HpUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
+      <Filter>02.GameObjects\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Boss1.cpp">
       <Filter>02.GameObjects\Monster\boss1</Filter>

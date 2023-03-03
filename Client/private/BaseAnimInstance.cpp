@@ -1678,6 +1678,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 	m_mapAnimSocket.emplace("Under_Saperate_Animation", SocketList);
 	m_mapAnimSocket.emplace("Kinetic_AnimSocket", SocketList);
 	m_mapAnimSocket.emplace("Kinetic_Air_AnimSocket", SocketList);
+	m_mapAnimSocket.emplace("Hit_AnimSocket", SocketList);
 
 	return S_OK;
 }
@@ -1873,7 +1874,7 @@ void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimat
 		if (!List->second.empty())
 		{
 			m_bAttach = true;
-			List->second.front()->Reset();;
+			List->second.front()->Reset();
 		}
 		m_mapAnimSocket[strSocName] = (AnimList);
 	}

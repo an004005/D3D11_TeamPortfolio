@@ -32,16 +32,26 @@ public:
 
 public:
 	void	Setup_BoneMatrix(CModel* pModel, _fmatrix Transform);
+
+public:
+	CRigidBody*	Get_Trigger() { return m_pCollider; }
+
+protected:
+	void	Collision_Check();
 	
 protected:
 	WEAPON_DESC	m_Desc;
-	Matrix		m_SocketMatrix;
+	Vector4		m_BeforePos;
+	Matrix		m_BeforeMatrix;
 
 protected:
 	CRenderer*		m_pRenderer = nullptr;
 	CModel*			m_pModel = nullptr;
 	CRigidBody*		m_pCollider = nullptr;
 	CTrailSystem*	m_pTrail = nullptr;
+
+protected:
+	CGameObject*	m_pCamSpot = nullptr;
 
 protected:
 	wstring		m_ModelName;

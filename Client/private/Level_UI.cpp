@@ -14,16 +14,33 @@
 #include "Canvas_Item.h"
 #include "Canvas_SASInfo.h"
 #include "Canvas_PlayerInfo.h"
+#include "Canvas_PlayerInfoMove.h"
 #include "Canvas_Drive.h"
+#include "Canvas_DriveMove.h"
 #include "Canvas_SASSkill.h"
+#include "Canvas_SASSkillMove.h"
+#include "Canvas_ItemMove.h"
 
 #include "DefaultUI.h"
 #include "ButtonUI.h"
+// SAS SKill
 #include "SASSkillIconUI.h"
 #include "SASSkillGaugeUI.h"
 #include "SASSkillLightUI.h"
-#include "SASSkillCtrlUI.h"
+#include "SASSkillDefaultUI.h"
 #include "SASSkillFullCircleUI.h"
+// Direve
+#include "Drive_RightDotUI.h"
+#include "Drive_GaugeUI.h"
+// Item
+#include "Item_NameUI.h"
+#include "Item_IconUI.h"
+#include "Item_GaugeUI.h"
+#include "Item_PushArrowUI.h"
+#include "Item_LeftArrowUI.h"
+#include "Item_RightArrowUI.h"
+// PlayerInfo
+#include "PlayerInfo_HpUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -90,6 +107,10 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Item"),
 			CCanvas_Item::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_ItemMove */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_ItemMove"),
+			CCanvas_ItemMove::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASInfo"),
@@ -100,15 +121,27 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_PlayerInfo"),
 			CCanvas_PlayerInfo::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_PlayerInfoMove"),
+			CCanvas_PlayerInfoMove::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Drive"),
 			CCanvas_Drive::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_DriveMove"),
+			CCanvas_DriveMove::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASSkill"),
 			CCanvas_SASSkill::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_SASSkillMove */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASSkillMove"),
+			CCanvas_SASSkillMove::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 	}
 
@@ -141,8 +174,8 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_SASSkillCtrl_UI */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillCtrl_UI"),
-			CSASSkillCtrlUI::Create(m_pDevice, m_pContext))))
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillDefault_UI"),
+			CSASSkillDefaultUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_SASSkillFullCircle_UI */
@@ -150,9 +183,47 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CSASSkillFullCircleUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
+		// Frount_UI -> Drive
+		/* For.Prototype_GameObject_Drive_RightDotUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Drive_RightDotUI"),
+			CDrive_RightDotUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Drive_RightDotUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Drive_GaugeUI"),
+			CDrive_GaugeUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 
+		// Frount_UI -> Item
+		/* For.Prototype_GameObject_Item_GaugeUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_GaugeUI"),
+			CItem_GaugeUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_IconUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_IconUI"),
+			CItem_IconUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_NameUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_NameUI"),
+			CItem_NameUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_PushArrowUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_PushArrowUI"),
+			CItem_PushArrowUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_LeftArrowUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_LeftArrowUI"),
+			CItem_LeftArrowUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_RightArrowUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_RightArrowUI"),
+			CItem_RightArrowUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 
-
+		// Frount_UI -> PlayerInfo
+		/* For.Prototype_GameObject_PlayerInfo_HpUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_HpUI"),
+			CPlayerInfo_HpUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 	}
 
 	return S_OK;
@@ -177,24 +248,36 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	// Frount_UI
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Item.json");
+	// Frount_UI Canvas_FrontUI 
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Item.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Item", &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/SASInfo_Left.json");
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_ItemMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_ItemMove", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfo_Left.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfo", &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/PlayerInfo.json");
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_PlayerInfo.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_PlayerInfo", &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Drive.json");
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_PlayerInfoMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_PlayerInfoMove", &json));
+	
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Drive.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Drive", &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/SASInfo_Right.json");
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_DriveMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_DriveMove", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfo_Right.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfo", &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/SASSkill.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkill", &json));
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASSkill.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(L"Canvas_SASSkill", L"Canvas_SASSkill", &json));		// 움직이지 않은 UI
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASSkillMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkillMove", &json));	// 움직이는 UI
 	
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
