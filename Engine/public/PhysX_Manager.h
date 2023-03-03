@@ -41,6 +41,7 @@ public:
 	// sweep 도 overlap과 마찬가지
 	_bool SweepSphere(const SphereSweepParams& params);
 	_bool SweepCapsule(const CapsuleSweepParams& params);
+	_bool PxSweepCapsule(const PxCapsuleSweepParams& params);
 
 	void AddActor(physx::PxActor& pActor);
 	void RemoveActor(physx::PxActor& pActor);

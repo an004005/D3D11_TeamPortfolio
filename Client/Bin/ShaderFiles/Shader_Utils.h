@@ -9,11 +9,12 @@ static const float PI = 3.14159265f;
 static const float EPSILON = 1e-6f;
 
 // using in blend or light acc to separate shader step
-#define SHADER_DEFAULT 0.f
-#define SHADER_TOON 1.f
-#define SHADER_DISTORTION 2.0f
-#define SHADER_SCIFI 3.0f
-#define SHADER_SCIFI_PLAYER_ATTACK 4.0f
+#define SHADER_DEFAULT 1 << 0
+#define SHADER_TOON 1 << 1
+
+#define SHADER_DISTORTION 1 << 2
+#define SHADER_SCIFI 1 << 3
+#define SHADER_SCIFI_PLAYER_ATTACK 1 << 4
 
 float2 Get_FlipBookUV(float2 vRectUV, float fCurTime, float fFrameTime, int iRowCnt, int iColCnt)
 {
@@ -117,6 +118,17 @@ float3 matrix_postion(float4x4 m)
 {
 	return float3(m[3][0], m[3][1], m[3][2]);
 }
+
+float PackPostProcessFlag(float Flags, int PostProcessFlag)
+{
+	return asfloat(asint(Flags) | PostProcessFlag);
+}
+
+bool CheckPostProcessFlag(float Flags, int PostProcessFlag)
+{
+	return asint(Flags) & PostProcessFlag;
+}
+
 
 float4x4 inverse(float4x4 m) {
     float n11 = m[0][0], n12 = m[1][0], n13 = m[2][0], n14 = m[3][0];

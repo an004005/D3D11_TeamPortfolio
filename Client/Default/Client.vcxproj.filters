@@ -199,6 +199,15 @@
     <Filter Include="97.ShaderFiles\PBR">
       <UniqueIdentifier>{0c8fe263-8aae-429a-84d4-56b5c393fd83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29">
+      <UniqueIdentifier>{f32c4093-e8d8-4c15-b7d1-2e0c14e0a683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance">
+      <UniqueIdentifier>{640f0a16-08b5-491a-9462-b102e9dcaac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map\MapObject">
+      <UniqueIdentifier>{13c3e0df-d901-4b13-a7e5-d6ac024d79f5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="97.ShaderFiles\PostProcess\Distortion">
       <UniqueIdentifier>{a2654f95-9aaa-4a83-a0f1-4cf87b41901b}</UniqueIdentifier>
     </Filter>
@@ -335,6 +344,9 @@
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h">
       <Filter>VFX\Effect\Buffer</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EffectGroup.h">
       <Filter>VFX\Effect\EffectGroup</Filter>
@@ -345,6 +357,7 @@
     <ClInclude Include="..\public\TrailSystem.h">
       <Filter>VFX\Trail</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\Canvas.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
@@ -360,8 +373,6 @@
     <ClInclude Include="..\public\ButtonUI.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapNonAnim_Object.h" />
-    <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\ScarletMap.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\Canvas_Drive.h">
@@ -386,9 +397,6 @@
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillLightUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\SASSkillCtrlUI.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillFullCircleUI.h">
@@ -441,8 +449,6 @@
     <ClInclude Include="..\public\SkPd_AnimInstance.h">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapNonAnim_Object.h" />
-    <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\EffectSystem.h">
       <Filter>VFX</Filter>
@@ -453,8 +459,92 @@
     <ClInclude Include="Weapon_wp0190.h">
       <Filter>02.GameObjects\Weapon\wp0190</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapInstance_Object.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h">
       <Filter>97.ShaderFiles\PBR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BronJon.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrJ_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapKinetic_Object.h">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h" />
+    <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\Psychokinesis.h" />
+    <ClInclude Include="..\public\SASSkillDefaultUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SASSkillMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PlayerInfoMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_DriveMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UI_Manager.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Drive_RightDotUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Drive_GaugeUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_NameUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_IconUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_GaugeUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_ItemMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_LeftArrowUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_PushArrowUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_RightArrowUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerInfo_HpUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h">
+      <Filter>02.GameObjects\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PostVFX_WhiteOut.h">
       <Filter>VFX\PostProcess\WhiteOut</Filter>
@@ -577,6 +667,9 @@
     </ClCompile>
     <ClCompile Include="..\private\TrailSystem.cpp">
       <Filter>VFX\Trail</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas.cpp">
       <Filter>02.GameObjects\UI</Filter>
@@ -593,8 +686,6 @@
     <ClCompile Include="..\private\ButtonUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
-    <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\ScarletMap.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp">
@@ -619,9 +710,6 @@
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillLightUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\SASSkillCtrlUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillFullCircleUI.cpp">
@@ -674,8 +762,6 @@
     <ClCompile Include="..\private\SkPd_AnimInstance.cpp">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
-    <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp">
       <Filter>VFX</Filter>
@@ -685,6 +771,90 @@
     </ClCompile>
     <ClCompile Include="Weapon_wp0190.cpp">
       <Filter>02.GameObjects\Weapon\wp0190</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapInstance_Object.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BronJon.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrJ_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapKinetic_Object.cpp">
+      <Filter>02.GameObjects\Map\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
+    <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\Psychokinesis.cpp" />
+    <ClCompile Include="..\private\SASSkillDefaultUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SASSkillMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PlayerInfoMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_DriveMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_Manager.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Drive_RightDotUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Drive_GaugeUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_NameUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_IconUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_GaugeUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_ItemMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_LeftArrowUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_PushArrowUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_RightArrowUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerInfo_HpUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
+      <Filter>02.GameObjects\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp">
       <Filter>VFX\PostProcess\WhiteOut</Filter>
@@ -780,6 +950,9 @@
       <Filter>97.ShaderFiles\VFX</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_MeshInstance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl">

@@ -2,7 +2,6 @@
 #include "..\public\Light_Manager.h"
 #include "Light.h"
 #include "GameInstance.h"
-#include "Imgui/ImGuizmo.h"
 #include "Camera.h"
 
 IMPLEMENT_SINGLETON(CLight_Manager)
@@ -11,47 +10,57 @@ CLight_Manager::CLight_Manager()
 {
 }
 
-const LIGHTDESC * CLight_Manager::Get_LightDesc(_uint iIndex)
+CLight* CLight_Manager::Find_Light(const string& strLightTag)
 {
-	if (iIndex >= m_Lights.size())
+	auto itr = m_Lights.find(strLightTag);
+	if (itr == m_Lights.end())
 		return nullptr;
-
-	return m_Lights[iIndex]->Get_LightDesc();	
+	return itr->second;
 }
 
-HRESULT CLight_Manager::Add_Light(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const LIGHTDESC & LightDesc)
+CLight* CLight_Manager::Add_Light(const string& strLightTag, ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const LIGHTDESC & LightDesc)
 {
 	CLight*			pLight = CLight::Create(pDevice, pContext, LightDesc);
 
 	if (nullptr == pLight)
-		return E_FAIL;
+		return nullptr;
 
-	m_Lights.push_back(pLight);
+	m_Lights.emplace(strLightTag, pLight);
 
-	return S_OK;
+	return pLight;
+}
+
+void CLight_Manager::Delete_Light(const string& strLightTag)
+{
+	auto pLight = Find_Light(strLightTag);
+	if (pLight)
+	{
+		m_Lights.erase(strLightTag);
+		Safe_Release(pLight);
+	}
 }
 
 void CLight_Manager::Render_Light(CVIBuffer_Rect * pVIBuffer, CShader * pShader)
 {
 	if (m_pShadowCam)
 	{
-		m_DirectionalLightView = m_pShadowCam->GetViewMatrix();
-		m_DirectionalLightProj = m_pShadowCam->GetProjMatrix();
+		m_ShadowLightView = m_pShadowCam->GetViewMatrix();
+		m_ShadowLightProj = m_pShadowCam->GetProjMatrix();
 	}
 
-	for (auto& pLight : m_Lights)
+	for (auto& Light : m_Lights)
 	{
-		if (pLight->GetType() == LIGHTDESC::TYPE_DIRECTIONAL && m_pShadowCam)
-			pLight->SetDirection(m_pShadowCam->GetTransform()->Get_State(CTransform::STATE_LOOK));
+		if (Light.second->GetType() == LIGHTDESC::TYPE_DIRECTIONAL && m_pShadowCam)
+			Light.second->SetDirection(m_pShadowCam->GetTransform()->Get_State(CTransform::STATE_LOOK));
 
-		pLight->Render(pVIBuffer, pShader);
+		Light.second->Render(pVIBuffer, pShader);
 	}
 }
 
 void CLight_Manager::Clear()
 {
-	for (auto& pLight : m_Lights)
-		Safe_Release(pLight);
+	for (auto pLight : m_Lights)
+		Safe_Release(pLight.second);
 
 	m_Lights.clear();
 
@@ -71,7 +80,48 @@ _float4 CLight_Manager::GetShadowCamLook()
 {
 	if (m_pShadowCam)
 		return m_pShadowCam->GetTransform()->Get_State(CTransform::STATE_LOOK);
-	return _float4();
+	return _float4(0.f, -1.f, 0.f, 0.f);
+}
+
+void CLight_Manager::Imgui_Render()
+{
+	if (m_pShadowCam)
+	{
+		if (ImGui::CollapsingHeader("Shadow Cam"))
+		{
+			m_pShadowCam->Imgui_RenderProperty();
+			m_pShadowCam->Imgui_RenderComponentProperties();
+		}
+	}
+	else
+	{
+		ImGui::Text("Shadow Cam not Set");
+	}
+
+	static string strSelectedLightTag;
+	if (ImGui::BeginListBox("Lights"))
+	{
+		for (auto& Light : m_Lights)
+		{
+			const bool bSelected = strSelectedLightTag == Light.first;
+			if (bSelected)
+				ImGui::SetItemDefaultFocus();
+			if (ImGui::Selectable(Light.first.c_str(), bSelected))
+				strSelectedLightTag = Light.first;
+		}
+
+		ImGui::EndListBox();
+	}
+
+
+	if (ImGui::CollapsingHeader("Show Selected Light Properties"))
+	{
+		if (auto pLight = Find_Light(strSelectedLightTag))
+		{
+			pLight->Imgui_Render();
+		}
+	}
+
 }
 
 void CLight_Manager::Free()

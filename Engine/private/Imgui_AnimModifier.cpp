@@ -60,13 +60,17 @@ void CModelPreviwer::Late_Tick(_double TimeDelta)
 {
 	if (m_bVisible)
 	{
-		m_pModel->Play_Animation(TimeDelta);
+		//m_pModel->Play_Animation(TimeDelta);
+		m_pModel->Play_Animation_Additive(TimeDelta);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
 
 		if (m_bLocalMoveAccess) 
 		{
 			_vector vTest = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix());
 			m_pTransformCom->LocalMove(vTest);
+
+			_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTransformCom->Get_WorldMatrix());
+			m_pTransformCom->LocalMove(vOpTest);
 		}
 
 		/*{

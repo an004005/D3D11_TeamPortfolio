@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/LC06/props/T_pr_Omikuji_A1_ALB.dds",
+            "../Bin/Resources/Environments/Location/LC06/props/T_pr_Omikuji_A1_NML.png",
+            "../Bin/Resources/Environments/00_Common/03_Texture/T_Detail_N.png",
+            "../Bin/Resources/Environments/Location/LC06/props/T_pr_Omikuji_A1_RMA.dds",
+            "../Bin/Resources/Environments/Location/LC06/props/T_pr_Omikuji_A1_EMI.dds"
+        ],
+        "Pass" : 1
+    }
+}

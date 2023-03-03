@@ -183,6 +183,69 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix)
 	return vMovePos;
 }
 
+_vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
+{
+	_vector vMovePos;
+	ZeroMemory(&vMovePos, sizeof(_vector));
+
+	static _vector vBefLocalMove;
+	static _vector vLocalMove;
+	static string szBefAnimName;
+
+	vBefLocalMove = vLocalMove;
+	vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	if (srtAnimName != "")
+	{
+		vLocalMove = m_mapAnimation[srtAnimName]->GetLocalMove();
+		if (XMVector3Equal(vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
+		{
+			vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+		if (m_mapAnimation[srtAnimName]->IsFinished())
+		{
+			//m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
+			vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+		if (szBefAnimName != srtAnimName)
+		{
+			szBefAnimName = srtAnimName;
+			vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+	}
+	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(vLocalMove - vBefLocalMove));
+
+	_vector vScale, vRotation, vTrans;
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
+
+	vMovePos = vLocalMove - vBefLocalMove;
+	XMVectorSetW(vMovePos, 0.f);
+	_float	fLength = XMVectorGetX(XMVector3Length(vMovePos));
+
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_PivotMatrix);
+	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
+	vMovePos = XMVector3TransformNormal(vMovePos, PivotRotation);
+
+	// Pivot을 적용시켜도 Y축과 Z축 이동이 뒤틀리는 현상으로 인해
+	// 현재 X축에 대해 회전을 해둔 상태, 원인 파악 시 다시 원상복구 할 것
+	/*********************************************************************/
+	_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
+	vMovePos = XMVector3TransformNormal(vMovePos, ModifyRotation);
+	/*********************************************************************/
+
+	vMovePos = XMVector3TransformNormal(vMovePos, WorldRotation);
+
+	XMVectorSetW(vMovePos, 0.f);
+
+	return vMovePos;
+}
+
 HRESULT CModel::Initialize_Prototype(const char * pModelFilePath)
 {
 	char szExt[MAX_PATH];
@@ -220,9 +283,11 @@ HRESULT CModel::Initialize_Prototype(const char * pModelFilePath)
 
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
+		
 		CMesh*		pMesh = CMesh::Create(m_pDevice, m_pContext, m_eType, hFile, this);
 		Assert(pMesh != nullptr);
 		m_Meshes.push_back(pMesh);
+
 	}
 
 	Ready_Materials(hFile);
@@ -341,26 +406,29 @@ void CModel::Imgui_RenderProperty()
 	}
 
 
+	 if (ImGui::BeginListBox("Animations Additive"))
+	 {
+		 for (auto& iter : m_mapAnimation)
+		 {
+			 const bool bSelected = m_szAdditiveAnimName == iter.first;
+			 if (bSelected)
+				 ImGui::SetItemDefaultFocus();
 
-	// if (ImGui::BeginListBox("Animations Additive"))
-	// {
-	// 	for (size_t i = 0; i < m_Animations.size(); ++i)
-	// 	{
-	// 		const bool bSelected = m_iAdditiveAnimIdx == (_uint)i;
-	// 		if (bSelected)
-	// 			ImGui::SetItemDefaultFocus();
-	//
-	// 		if (ImGui::Selectable(m_Animations[i]->GetName().c_str(), bSelected))
-	// 		{
-	// 			strcpy_s(animBuff, m_Animations[i]->GetName().c_str());
-	// 			m_iAdditiveAnimIdx = (_uint)i;
-	// 		}
-	// 	}
-	//
-	// 	ImGui::EndListBox();
-	// }
+			 if (ImGui::Selectable(iter.second->GetName().c_str(), bSelected))
+			 {
+				 m_szAdditiveAnimName = iter.first;
+			 }
+		 }
+	
+	 	ImGui::EndListBox();
+	 }
+	 ImGui::SliderFloat("additiveRatio", &m_fAdditiveRatio, 0.f, 3.f);
 
-	// ImGui::SliderFloat("additiveRatio", &m_fAdditiveRatio, 0.f, 3.f);
+	 if (ImGui::Button("Additive Delete"))
+	 {
+		 m_mapAnimation[m_szAdditiveAnimName]->Reset();
+		 m_szAdditiveAnimName = "";
+	 }
 
 
 	if (ImGui::CollapsingHeader("Material Viewer"))
@@ -575,6 +643,37 @@ void CModel::Play_Animation_Test(_double TimeDelta)
 	Compute_CombindTransformationMatrix();
 }
 
+void CModel::Play_Animation_Additive(_double TimeDelta)
+{
+	if (m_eType == TYPE_NONANIM)
+	{
+		// IM_WARN("STATIC Model Cannot player animation.");
+		return;
+	}
+
+	if (auto pAnim = Find_Animation(m_CurAnimName))
+	{
+		pAnim->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+
+		if ("" != m_szAdditiveAnimName)
+		{
+			if (auto pAnim = Find_Animation(m_szAdditiveAnimName))
+			{
+				pAnim->Update_Bones(TimeDelta, EAnimUpdateType::ADDITIVE, m_fAdditiveRatio);
+			}
+		}
+
+		KEYFRAME tempKeyFrame = *pAnim->GetCurKeyFrame();
+		if (tempKeyFrame.Time != m_CurKeyFrame.Time)
+		{
+			m_BefKeyFrame = m_CurKeyFrame;
+			m_CurKeyFrame = tempKeyFrame;
+		}
+	}
+
+	Compute_CombindTransformationMatrix();
+}
+
 // HRESULT CModel::RenderCustomShader(_uint iPass, CShader* pShader)
 // {
 // 	for (const auto& mesh : m_Meshes)
@@ -666,8 +765,8 @@ HRESULT CModel::Render_ShadowDepth(CTransform* pTransform)
 		
 		FAILED_CHECK(pTransform->Bind_ShaderResource(m_pShadowShader, "g_WorldMatrix"));
 
-		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ViewMatrix", CLight_Manager::GetInstance()->GetDirectionalLightView()));
-		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ProjMatrix", CLight_Manager::GetInstance()->GetDirectionalLightProj()));
+		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ViewMatrix", CLight_Manager::GetInstance()->GetShadowLightView()));
+		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ProjMatrix", CLight_Manager::GetInstance()->GetShadowLightProj()));
 
 		m_pShadowShader->Begin(0);
 		m_Meshes[i]->Render();
@@ -923,6 +1022,74 @@ _vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix)
 						szCurAnimName = m_CurAnimName;
 						vInitTrans = vTrans;
 					}*/
+
+					_vector vMovePos = Optional.vOptionalRootVector;
+					vMovePos = XMVectorSetW(vMovePos, 0.f);
+
+					vMovePos = XMVector3TransformNormal(vMovePos, WorldRotation);
+
+					_vector vDestPos = vInitTrans + vMovePos;
+
+					vDestPos = XMVectorLerp(vInitTrans, vDestPos, fRatio);
+
+					_vector vResultDir = vDestPos - vTrans;
+					vResultDir = XMVectorSetW(vResultDir, 0.f);
+
+					if (0.f > XMVectorGetX(XMVector3Dot(vResultDir, vMovePos)))
+					{
+						// 혹시 방향벡터 튀면 얘로 잡아줌
+						vInitTrans = vTrans;
+						GetOptionalMoveVector(WorldMatrix);
+					}
+
+					return vResultDir;
+				}
+			}
+		}
+	}
+
+	vInitTrans = XMVectorSet(0.f, 0.f, 0.f, -1.f);
+	return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+}
+
+_vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix, const string & srtAnimName)
+{
+	static _vector vInitTrans;
+	static _float fStartTime;
+	static string szCurAnimName;
+
+	if (szCurAnimName != srtAnimName)
+	{
+		szCurAnimName = srtAnimName;
+		vInitTrans = XMVectorSet(0.f, 0.f, 0.f, -1.f);
+	}
+
+	for (auto& iter : m_mapOptionalRootMotion)
+	{
+		if (srtAnimName == iter.first)	// 이벤트 콜러와 같은 개념
+		{
+			_float fPlayTime = static_cast<_float>(m_mapAnimation[srtAnimName]->GetPlayTime());
+
+			for (auto& Optional : iter.second)
+			{
+				_float fRatio = (fPlayTime - Optional.fStartTime) / (Optional.fEndTime - Optional.fStartTime);
+
+				if (0.f <= fRatio && 1.f >= fRatio)
+				{
+					_vector vScale, vRotation, vTrans;
+					XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+					_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
+
+					if (-1.f == XMVectorGetW(vInitTrans))
+					{
+						vInitTrans = vTrans;
+					}
+
+					if (fStartTime != Optional.fStartTime)
+					{
+						fStartTime = Optional.fStartTime;
+						vInitTrans = vTrans;
+					}
 
 					_vector vMovePos = Optional.vOptionalRootVector;
 					vMovePos = XMVectorSetW(vMovePos, 0.f);

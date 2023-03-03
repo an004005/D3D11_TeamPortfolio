@@ -13,6 +13,9 @@
 #include "TimerHelper.h"
 #include "FlowerLeg.h"
 
+#include "RigidBody.h"
+#include "ScarletWeapon.h"
+
 CBuddyLumi::CBuddyLumi(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -33,6 +36,9 @@ HRESULT CBuddyLumi::Initialize_Prototype()
 
 HRESULT CBuddyLumi::Initialize(void * pArg)
 {
+	Json BuddyLumiTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumiTrigger.json");
+	Json BuddyLumiWeapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumiWeapon.json");
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -40,6 +46,14 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 		return E_FAIL;
 
 	if (FAILED(Setup_AnimSocket()))
+		return E_FAIL;
+
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Weapon"),
+		(CComponent**)&m_pWeaponCollider, &BuddyLumiWeapon)))
+		return E_FAIL;	
+
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
+		(CComponent**)&m_pTrigger, &BuddyLumiTrigger)))
 		return E_FAIL;
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(15.f, 0.f, 15.f)));
@@ -81,7 +95,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 				{
 					m_fMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					
-					_vector vTargetPos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_vector vTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					_float3 fTargetPos;
 					XMStoreFloat3(&fTargetPos, vTargetPos);
 
@@ -222,7 +236,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("Threat")
 				.Tick([this](_double TimeDelta)
 				{
-					_vector vTargetPos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_vector vTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 
 					m_pTransformCom->LookAt(vTargetPos);
 
@@ -297,16 +311,19 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("DodgeB")
 					.OnStart([this] 
 					{
-						//m_vStorePos =
+						m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+						m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					})
 				.Tick([this](_double TimeDelta) 
 				{
 					auto pAnim = m_pModelCom->GetPlayAnimation();
 
 					// 뒤로 이동 
+					_vector vDest = m_vMyPos - m_vStorePos;
 					
+					m_pTransformCom->Move(0.018f, vDest);
 
-					if (pAnim == m_pModelCom->Find_Animation("AS_em0400_135_AL_dodge_B") && pAnim->IsFinished() == true)
+					if (pAnim->IsFinished() == true)
 					{
 						m_bDodgeB = false;
 						m_bWalk = true;
@@ -319,13 +336,21 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					.Predicator([this]()->_bool {return m_bDead; })
 
 			.AddState("DodgeL")
+				.OnStart([this] 
+				{
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				})
+
 				.Tick([this](_double TimeDelta)
 				{
 					auto pAnim = m_pModelCom->GetPlayAnimation();
-
+					
+					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 					// 중점 Axis 기준 왼쪽으로 Turn
+					m_pTransformCom->LookAt_Smooth(m_vStorePos, 0.03f);
+					m_pTransformCom->Move(0.03f, -vMyRight);
 
-					if (pAnim == m_pModelCom->Find_Animation("AS_em0400_140_AL_dodge_L") && pAnim->IsFinished() == true)
+					if (pAnim->IsFinished() == true)
 					{
 						m_bDodgeL = false;
 						m_bWalk = true;
@@ -338,13 +363,20 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					.Predicator([this]()->_bool {return m_bDead; })
 
 			.AddState("DodgeR")
+				.OnStart([this]
+				{
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				})
 				.Tick([this](_double TimeDelta)
 				{
 					auto pAnim = m_pModelCom->GetPlayAnimation();
+					
+					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+					// 중점 Axis 기준 오른으로 Turn
+					m_pTransformCom->LookAt_Smooth(m_vStorePos, 0.03f);
+					m_pTransformCom->Move(0.03f, vMyRight);
 
-					// 중점 Axis 기준 오른쪽으로 Turn
-
-					if (pAnim == m_pModelCom->Find_Animation("AS_em0400_145_AL_dodge_R") && pAnim->IsFinished() == true)
+					if (pAnim->IsFinished() == true)
 					{
 						m_bDodgeR = false;
 						m_bWalk = true;
@@ -378,28 +410,33 @@ void CBuddyLumi::BeginTick()
 	
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
+	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
 	{
-		if (iter->GetPrototypeTag() == TEXT("FlowerLeg"))
+		if (iter->GetPrototypeTag() == TEXT("Player"))
 		{
 			int iA = 0;
 
-			m_pFlowerLeg = iter;			
+			m_pPlayer = iter;
 		}
 	}
 }
 
 void CBuddyLumi::Tick(_double TimeDelta)
 {	
-	__super::Tick(TimeDelta);
+	CMonster::Tick(TimeDelta);
+
+	m_pTrigger->Update_Tick(m_pTransformCom);
 
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);	
+
+	m_pTransformCom->MoveVelocity(1.f, m_tmp);
+	m_tmp = _float3::Zero;
 }
 
 void CBuddyLumi::Late_Tick(_double TimeDelta)
 {	
-	__super::Late_Tick(TimeDelta);
+	CMonster::Late_Tick(TimeDelta);
 		
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -407,7 +444,7 @@ void CBuddyLumi::Late_Tick(_double TimeDelta)
 
 HRESULT CBuddyLumi::Render()
 {
-	if (FAILED(__super::Render()))
+	if (FAILED(CMonster::Render()))
 		return E_FAIL;
 
 	m_pModelCom->Render(m_pTransformCom);
@@ -440,8 +477,38 @@ void CBuddyLumi::Imgui_RenderProperty()
 		}
 	}
 
-	m_pModelCom->Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
+}
+
+void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
+{
+	_vector tmp = _float4{ tDamageParams.vHitFrom.x, tDamageParams.vHitFrom.y , tDamageParams.vHitFrom.z, 1.f };
+	_float4 vBackDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - tmp;
+	vBackDir.Normalize();
+
+	m_tmp = _float3{ vBackDir.x, vBackDir.y ,vBackDir.z } *2.f;
+}
+
+void CBuddyLumi::AfterPhysX()
+{
+	__super::AfterPhysX();
+	// 무기 콜라이더의 Update_Tick(매트릭스) 
+	m_pWeaponCollider->Update_Tick(AttachCollider());
+
+	m_pWeaponCollider->Update_AfterPhysX(m_pTransformCom);
+
+	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
+}
+
+_matrix CBuddyLumi::AttachCollider()
+{
+	_matrix	SocketMatrix = m_pModelCom->GetBoneMatrix("RightWeapon") * m_pTransformCom->Get_WorldMatrix();
+
+	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+	
+	return SocketMatrix;
 }
 
 HRESULT CBuddyLumi::Setup_AnimSocket()
@@ -466,6 +533,10 @@ HRESULT CBuddyLumi::SetUp_Components(void* pArg)
 		(CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
+	/*if (FAILED(__super::Add_Component(LEVEL_NOW, TEXT("MonsterBuddyLumi"), TEXT("Com_Model"),
+		(CComponent**)&m_pModelCom)))
+		return E_FAIL;*/
+
 	if (pArg)
 	{
 		Json& json = *static_cast<Json*>(pArg);
@@ -477,7 +548,7 @@ HRESULT CBuddyLumi::SetUp_Components(void* pArg)
 				(CComponent**)&m_pModelCom));
 		}
 	}
-
+	
 	m_pASM = CBdLm_AnimInstance::Create(m_pModelCom, this);
 	if (nullptr == m_pASM)
 	{
@@ -521,4 +592,6 @@ void CBuddyLumi::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
 	Safe_Release(m_pASM);
+	Safe_Release(m_pTrigger);
+	Safe_Release(m_pWeaponCollider);
 }

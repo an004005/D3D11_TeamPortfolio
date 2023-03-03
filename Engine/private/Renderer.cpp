@@ -178,8 +178,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_CTL"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
-	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Outline"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.f, 0.f, 0.f, 0.f)), E_FAIL);
-	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_OutlineFlag"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.f, 0.f, 0.f, 0.f)), E_FAIL);
+	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Outline"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_OutlineFlag"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.f, 0.f, 0.f, 0.f)));
 
 
 	/* For.Target_Diffuse_Copy */
@@ -232,12 +232,7 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_ToonDeferred"), TEXT("Target_CTL"))))
 		return E_FAIL;
 
-	// For Effect
-	// if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Deferred"), TEXT("Target_Flag"))))
-	// 	return E_FAIL;
-	// ~For Effect
-
-	FAILED_CHECK(m_pTarget_Manager->Add_MRT(TEXT("MRT_Outline"), TEXT("Target_Outline")), E_FAIL);
+	FAILED_CHECK(m_pTarget_Manager->Add_MRT(TEXT("MRT_Outline"), TEXT("Target_Outline")));
 
 
 	/* For.MRT_LightAcc */ /* ºû ¿¬»êÀÇ °á°ú¸¦ ÀúÀåÇÒ ·»´õÅ¸°Ùµé.  */
@@ -557,10 +552,10 @@ HRESULT CRenderer::Render_Blend()
 	if (FAILED(m_pShader->Set_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pShader->Set_Matrix("g_LightViewMatrix", CLight_Manager::GetInstance()->GetDirectionalLightView())))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_Matrix("g_LightProjMatrix", CLight_Manager::GetInstance()->GetDirectionalLightProj())))
-		return E_FAIL;
+	// if (FAILED(m_pShader->Set_Matrix("g_LightViewMatrix", CLight_Manager::GetInstance()->GetDirectionalLightView())))
+	// 	return E_FAIL;
+	// if (FAILED(m_pShader->Set_Matrix("g_LightProjMatrix", CLight_Manager::GetInstance()->GetDirectionalLightProj())))
+	// 	return E_FAIL;
 
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
 	if (FAILED(m_pShader->Set_Matrix("g_ViewMatrixInv", &pPipeLine->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW))))
@@ -574,8 +569,8 @@ HRESULT CRenderer::Render_Blend()
 		return E_FAIL;
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_DepthTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Depth")))))
 		return E_FAIL;
-	if (FAILED(m_pShader->Set_ShaderResourceView("g_ShadowDepthTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_ShadowDepth")))))
-		return E_FAIL;
+	// if (FAILED(m_pShader->Set_ShaderResourceView("g_ShadowDepthTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_ShadowDepth")))))
+	// 	return E_FAIL;
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_NormalTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Normal")))))
 		return E_FAIL;
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_RMATexture", m_pTarget_Manager->Get_SRV(TEXT("Target_RMA")))))

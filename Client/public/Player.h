@@ -35,12 +35,16 @@ typedef struct tagRemote
 	_bool AttackLimitReset = false;	// 횟수 제한 공격 초기화
 	_bool ChargeReset = false;	// 차지 상태 초기화
 
+	_bool LocalRevise = false;
+
 	tagRemote(	_bool CanTurn, _bool CanMove, _bool CanRun, _bool AttackTurn,
 				_bool OnAir, _bool Gravity, 
-				_bool MoveLimitReset, _bool AttackLimitReset, _bool ChargeReset)
+				_bool MoveLimitReset, _bool AttackLimitReset, _bool ChargeReset,
+				_bool LocalRevise)
 	:CanTurn(CanTurn), CanMove(CanMove), CanRun(CanRun), AttackTurn(AttackTurn), 
 		OnAir(OnAir), Gravity(Gravity), 
-		MoveLimitReset(MoveLimitReset), AttackLimitReset(AttackLimitReset), ChargeReset(ChargeReset){}
+		MoveLimitReset(MoveLimitReset), AttackLimitReset(AttackLimitReset), ChargeReset(ChargeReset),
+		LocalRevise(LocalRevise){}
 
 }REMOTE;
 
@@ -55,12 +59,14 @@ private:
 		_uint m_iNonChargeAttack_Air = 2;
 		_uint m_iAttack_Air01 = 1;
 		_uint m_iAttack_Air02 = 1;
+		_uint m_iAttack_AirDodge = 1;
 
 		// 상한치
 		_uint MAX_iNonChargeAttack_Floor = 2;
 		_uint MAX_iNonChargeAttack_Air = 2;
 		_uint MAX_iAttack_Air01 = 1;
 		_uint MAX_iAttack_Air02 = 1;
+		_uint MAX_iAttack_AirDodge = 1;
 
 	}ATTACKLIMIT;
 
@@ -68,14 +74,16 @@ private:
 	{	
 		// 현재 값
 		_uint m_iDoubleJump = 1;
+		_uint m_iAirDodge = 1;
 
 		// 상한치
 		_uint MAX_iDoubleJump = 1;
+		_uint MAX_iAirDodge = 1;
 
 	}MOVELIMIT;
 
 public:
-	enum EATTACK_LIMIT { LIMIT_NONCHARGE_FLOOR, LIMIT_NONCHARGE_AIR, LIMIT_AIRATK01, LIMIT_AIRATK02, };
+	enum EATTACK_LIMIT { LIMIT_NONCHARGE_FLOOR, LIMIT_NONCHARGE_AIR, LIMIT_AIRATK01, LIMIT_AIRATK02, LIMIT_AIRDODGEATK, };
 	enum EMOVE_LIMIT { LIMIT_DOUBLEJUMP, LIMIT_AIRDODGE, };
 	enum EMoveDir { DIR_F, DIR_B, DIR_L, DIR_R, DIR_FL, DIR_FR, DIR_BL, DIR_BR, DIR_END, };
 
@@ -97,9 +105,12 @@ public:
 
 protected:
 	HRESULT SetUp_Components(void* pArg);
-	HRESULT	SetUp_AttackFSM();
+	HRESULT SetUp_Event();
+	HRESULT Setup_KineticStateMachine();
+	HRESULT	SetUp_HitStateMachine();
 
-	CFSMComponent*		m_pFSM = nullptr;
+	CFSMComponent*		m_pKineticStataMachine = nullptr;
+	CFSMComponent*		m_pHitStateMachine = nullptr;
 	CBaseAnimInstance*	m_pASM = nullptr;
 
 	CRenderer*			m_pRenderer = nullptr;
@@ -109,6 +120,53 @@ protected:
 protected:
 	HRESULT				Setup_AnimSocket();
 	list<CAnimation*>	m_TestAnimSocket;
+	list<CAnimation*>	m_TransNeutralSocket;
+
+protected:	// 염력 소켓 애니메이션
+	list<CAnimation*>	m_Kinetic_RB_Start;
+	list<CAnimation*>	m_Kinetic_RB_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Cancel;
+
+	list<CAnimation*>	m_Kinetic_RB_Throw01_Start;
+	list<CAnimation*>	m_Kinetic_RB_Throw01_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Throw01_Cancel;
+
+	list<CAnimation*>	m_Kinetic_RB_Throw02_Start;
+	list<CAnimation*>	m_Kinetic_RB_Throw02_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Throw02_Cancel;
+
+	list<CAnimation*>	m_Kinetic_RB_Air_Start;
+	list<CAnimation*>	m_Kinetic_RB_Air_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Air_Cancel;
+
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw01_Start;
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw01_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw01_Cancel;
+
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Start;
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Cancel;
+
+protected:	// 피격 소켓 애니메이션
+	list<CAnimation*>	m_Hit_FL_Level01;
+	list<CAnimation*>	m_Hit_F_Level01;
+	list<CAnimation*>	m_Hit_FR_Level01;
+	list<CAnimation*>	m_Hit_B_Level01;
+
+	list<CAnimation*>	m_Hit_F_Level02;
+	list<CAnimation*>	m_Hit_B_Level02;
+	list<CAnimation*>	m_Hit_L_Level02;
+	list<CAnimation*>	m_Hit_R_Level02;
+
+	list<CAnimation*>	m_Knuckback;
+
+	list<CAnimation*>	m_Fall;
+	list<CAnimation*>	m_FallDown_Back;
+
+	list<CAnimation*>	m_BreakFall_Front;
+	list<CAnimation*>	m_BreakFall_Back;
+
+protected:	// 피격 관련 변수
 
 public:
 	_bool	isAir() { return m_bAir; }
@@ -120,6 +178,7 @@ public:
 	_bool	isCharge() { return m_bCharge; }
 	_bool	isJump() { return m_bJump; }
 	_bool	isOnFloor() { return m_bOnFloor; }
+	_bool	isSeperateAnim() { return m_bSeperateAnim; }
 
 	_float	GetPlayRatio() { return m_fPlayRatio; }
 
@@ -128,6 +187,8 @@ public: // For VFX
 
 
 protected:
+	_bool	m_bHit = false;
+
 	_bool	m_bAir = false;
 	_bool	m_PreAir = false;
 	_bool	m_bMove = false;
@@ -135,13 +196,18 @@ protected:
 	_bool	m_bLeftClick = false;
 	_bool	m_bDash = false;
 	_bool	m_bJump = false;
+	_bool	m_bSeperateAnim = false;
+
+	_bool	m_bKineticRB = false;
+	_bool	m_bKineticG = false;
+	_bool	m_bKineticMove = false;
 
 	_bool	m_bNonCharge = false;
 	_bool	m_bCharge = false;
 	_float  m_fBefCharge = 0.f;			// 실제 차지 전
 	_float	m_fCharge[3] = { 0.f, };	// 실제 차지
 
-	_float	m_fJumpPower = 8.f;
+	_float	m_fJumpPower = 10.f;
 
 	_uint	m_iSkillUsableCnt = 2;
 
@@ -151,8 +217,20 @@ protected:
 
 	EMoveDir	m_eMoveDir = DIR_END;
 
-public:
-	CPlayer&	SetAbleState(REMOTE	tagRemote);	
+public:	// ASM용, 상태마다 리모컨 값을 싹 다 지정하지 않으면 점프했는데 공중부양하고 그럼
+	CPlayer&	SetAbleState(REMOTE	tagRemote);
+
+public:	//EventCaller용
+	void		Event_SetCanTurn(_bool is) { m_bCanTurn = is; }
+	void		Event_SetCanMove(_bool is) { m_bCanMove = is; }
+	void		Event_SetCanRun(_bool is) { m_bCanRun = is; }
+	void		Event_SetCanTurn_Attack(_bool is) { m_bCanTurn_Attack = is; }
+	void		Event_SetOnAir(_bool is) { m_bAir = is; }
+	void		Event_SetGravity(_bool is) { m_bActiveGravity = is; }
+	void		Event_SetLocalRevise(_bool is) { m_bLocalRevise = is; }
+	void		Event_MoveLimitReset() { MoveLimitReset(); }
+	void		Event_AttackLimitReset() { AttackLimitReset(); }
+	void		Event_ChargeReset() { Reset_Charge(); }
 
 protected:
 	void		Reset_Charge();
@@ -167,6 +245,7 @@ protected:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
 	_bool		m_bCanMove = false;
 	_bool		m_bCanRun = false;
 	_bool		m_bCanTurn_Attack = false;
+	_bool		m_bLocalRevise = false;		//	좌우 한 걸음 고정
 
 public:
 	_bool		isPlayerAttack(void);	// 공격 중인 애니메이션일 때 true 반환
@@ -177,12 +256,14 @@ public:
 
 public:
 	void		Jump();
+	void		AirBorne() { m_fYSpeed = 10.f; }
 	void		SetGravity_Optional(_float fGravity) { m_fYSpeed = fGravity; }
 	void		SmoothTurn_Attack(_double TimeDelta);
 
 protected:
 	void		BehaviorCheck(_double TimeDelta);
 	void		MoveStateCheck(_double TimeDelta);
+	void		SeperateCheck();
 
 public:
 	EMoveDir	GetMoveDir() const { return m_eMoveDir; }
@@ -211,9 +292,21 @@ protected:
 	Matrix		m_vMatCamRot	= Matrix();
 
 protected:
+	_bool		m_bTestKey = false;
+
+protected:
 	wstring		m_ModelName;
 
 	CCamera*	m_pPlayerCam = nullptr;
+
+protected:
+	void			Attack_Effect(const string& szBoneName, _float fSize);
+	CGameObject*	m_pEffect = nullptr;
+
+protected:
+	void			Search_Usable_KineticObject();
+	CGameObject*	m_pKineticObject = nullptr;
+	_vector			m_vCamLook;
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

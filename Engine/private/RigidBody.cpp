@@ -20,8 +20,6 @@ HRESULT CRigidBody::Initialize(void* pArg)
 {
 	FAILED_CHECK(CComponent::Initialize(pArg));
 
-	m_bKinematic = false;
-	m_fDensity = 10.f;
 	CreateActor();
 
 	return S_OK;
@@ -76,12 +74,22 @@ void CRigidBody::Imgui_RenderProperty()
 	}
 	ImGui::Unindent( 20.f );
 
+	CImguiUtils::FileDialog_FileSelector("Save RigidBody to", ".json", "../Bin/Resources/Objects/",
+	[this](const string& filePath)
+	{
+		Json json;
+		SaveToJson(json);
+		std::ofstream file(filePath);
+		file << json;
+	});
+
 	UpdateChange();
 }
 
 void CRigidBody::SaveToJson(Json& json)
 {
 	CComponent::SaveToJson(json);
+
 	json["RigidBody"]["bKinematic"] = m_bKinematic;
 	json["RigidBody"]["bTrigger"] = m_bTrigger;
 	json["RigidBody"]["Density"] = m_fDensity;
@@ -140,6 +148,18 @@ void CRigidBody::Update_Tick(CTransform* pTransform)
 	}
 }
 
+void CRigidBody::Update_Tick(_fmatrix matrix)
+{
+	if (m_bTrigger)
+	{
+		SetPxWorldMatrix(matrix);
+	}
+	else if (m_bKinematic)
+	{
+		m_pActor->setKinematicTarget(physx::PxTransform{ CPhysXUtils::ToFloat4x4(matrix) });
+	}
+}
+
 void CRigidBody::Update_AfterPhysX(CTransform* pTransform)
 {
 	if (m_pActor->getScene() == nullptr)
@@ -148,6 +168,24 @@ void CRigidBody::Update_AfterPhysX(CTransform* pTransform)
 	if (!m_bKinematic && !m_bTrigger)
 	{
 		pTransform->Set_WorldMatrix(GetPxWorldMatrix());
+	}
+}
+
+void CRigidBody::AddForce(_float3 vForce)
+{
+	if (false == (m_bTrigger && m_bKinematic))
+	{
+		physx::PxVec3 PxForce = physx::PxVec3(vForce.x, vForce.y, vForce.z);
+		m_pActor->addForce(PxForce, physx::PxForceMode::eFORCE);
+	}
+}
+
+void CRigidBody::AddTorque(_float3 vTorque)
+{
+	if (false == (m_bTrigger && m_bKinematic))
+	{
+		physx::PxVec3 PxToque = physx::PxVec3(vTorque.x, vTorque.y, vTorque.z);
+		m_pActor->addTorque(PxToque, physx::PxForceMode::eFORCE);
 	}
 }
 
@@ -166,6 +204,40 @@ void CRigidBody::UpdateChange()
 	SetUpActor();
 	m_pActor->attachShape(*m_pShape);
 	Activate(true);
+}
+
+_float4x4 CRigidBody::Get_OriginMatrix()
+{
+	return m_OriginTransformMatrix;
+}
+
+physx::PxBoxGeometry CRigidBody::Get_BoxGeometry()
+{
+	if (m_eShapeType != TYPE_BOX)
+		return physx::PxBoxGeometry();
+
+	return m_pShape->getGeometry().box();
+}
+
+physx::PxSphereGeometry CRigidBody::Get_SphereGeometry()
+{
+	if (m_eShapeType != TYPE_SPHERE)
+		return physx::PxSphereGeometry();
+
+	return m_pShape->getGeometry().sphere();
+}
+
+physx::PxCapsuleGeometry CRigidBody::Get_CapsuleGeometry()
+{
+	if (m_eShapeType != TYPE_CAPSULE)
+		return physx::PxCapsuleGeometry();
+
+	return m_pShape->getGeometry().capsule();
+}
+
+physx::PxTransform CRigidBody::Get_PxTransform()
+{
+	return physx::PxShapeExt::getGlobalPose(*m_pShape, *m_pActor);
 }
 
 void CRigidBody::ReleaseActor()
@@ -206,7 +278,7 @@ void CRigidBody::CreateActor()
 	_float3 vScale =_float3(XMVectorGetX(XMVector3Length(OriginMatrix.r[0])), 
 			XMVectorGetX(XMVector3Length(OriginMatrix.r[1])), 
 			XMVectorGetX(XMVector3Length(OriginMatrix.r[2])));
-	
+
 	switch (m_eShapeType)
 	{
 		case TYPE_BOX:

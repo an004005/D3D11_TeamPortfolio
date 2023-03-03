@@ -11,6 +11,7 @@ class CAnimation;
 class CFSMComponent;
 class CModel;
 class CRenderer;
+class CRigidBody;
 END
 
 BEGIN(Client)
@@ -31,6 +32,13 @@ public:
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
+	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
+
+	virtual void AfterPhysX();
+
+	_matrix AttachCollider();
+
+	_float3 m_tmp;
 
 private:
 	CShader*				m_pShaderCom = nullptr;
@@ -39,6 +47,9 @@ private:
 	CFSMComponent*			m_pFSM = nullptr;
 
 	CBdLm_AnimInstance*		m_pASM = nullptr;
+	CRigidBody*				m_pTrigger = nullptr;
+
+	CRigidBody*				m_pWeaponCollider = nullptr;
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -104,7 +115,7 @@ private:
 	_uint			m_iWalkPosition = 0;
 
 private:
-	CGameObject*	m_pFlowerLeg = nullptr;
+	CGameObject*	m_pPlayer = nullptr;
 
 public:
 	static CBuddyLumi* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

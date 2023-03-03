@@ -17,7 +17,9 @@
 #include "Camera_Player.h"
 #include "ControlledRigidBody.h"
 #include "RigidBody.h"
+#include "UI_Manager.h"
 #include "VIBuffer_Mesh_Instance.h"
+#include "MapInstance_Object.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -155,6 +157,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	/* For.Prototype_Component_Shader_VtxModel*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Shader_VtxModel_Instancing*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel_Instancing"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel_Instancing.hlsl"), VTXMODEL_INSTANCE_DECLARATION::Elements, VTXMODEL_INSTANCE_DECLARATION::iNumElements))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_VtxAnimModel*/
@@ -301,6 +308,11 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 		CMapNonAnim_Object::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For. MapInstanceObject */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_MapInstance_Object"),
+		CMapInstance_Object::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -318,6 +330,8 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
+	CUI_Manager::GetInstance()->DestroyInstance();
+
 	m_pGameInstance->Clear_ImguiObjects();
 	m_pGameInstance->Clear();
 

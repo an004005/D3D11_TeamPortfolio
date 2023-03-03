@@ -37,9 +37,15 @@ void CController::Tick(_double TimeDelta)
 	{
 		m_bCursorLock = !m_bCursorLock;
 		if (m_bCursorLock)
+		{
 			CGameUtils::ShowCursor();
+			m_bInputLock = true;
+		}
 		else
+		{
 			CGameUtils::HideCursor();
+			m_bInputLock = false;
+		}
 	}
 
 	if (m_bInputLock)

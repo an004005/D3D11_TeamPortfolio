@@ -79,6 +79,9 @@ public:
 	void MoveVelocity_Navi(_double TimeDelta, _float3 vVelocity, class CNavigation* pNavi, _int& iCellIdx);
 	void LocalMove(_float3 vDir, _float fRange = 1.f);
 
+	/* 객체의 특정 축을 입력받은 축으로 변환하고 외적하여 값 전환 */
+	void SetAxis(STATE eState, _fvector vAxis);
+
 	// Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 	void Turn(_fvector vAxis, _double TimeDelta); /* Dynamic */
 	void TurnPitch(_double TimeDelta);

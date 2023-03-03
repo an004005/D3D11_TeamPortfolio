@@ -3,7 +3,6 @@
 #include "DebugDraw.h"
 #include "Graphic_Device.h"
 #include "PipeLine.h"
-#include "ImguiUtils.h"
 #include "JsonStorage.h"
 #include "GameInstance.h"
 #include "GameObject.h"
@@ -37,7 +36,7 @@ PxFilterFlags PxEngineSimulationFilterShader(
 	}
 
 	// PxPairFlag::eNOTIFY_TOUCH_FOUND 추가하면 OnContact 실행됨
-	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+	pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_TOUCH_FOUND;
 	return PxFilterFlags();
 }
 
@@ -275,15 +274,16 @@ _bool CPhysX_Manager::SweepSphere(const SphereSweepParams& params)
 	vNormalDir.Normalize();
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f)
+	if (params.fVisibleTime > 0.f || params.fDistance > 0.f)
 	{
 		_float fSegment = 0.5f;
 		if (params.fDistance <= 1.f)
 			fSegment = 0.1f;
 
+		_uint iCnt = 100;
 		_float fMoveDistance = 0.f;
 		PxTransform sweepTransform(transform);
-		while (fMoveDistance <= params.fDistance)
+		while (iCnt > 0 && fMoveDistance <= params.fDistance)
 		{
 			PxShape* pShape = m_Physics->createShape(sphere, *FindMaterial("Default"));
 			AddDebugShape(pShape, sweepTransform, params.fVisibleTime);
@@ -292,6 +292,7 @@ _bool CPhysX_Manager::SweepSphere(const SphereSweepParams& params)
 			sweepTransform.p.y += vNormalDir.y * fSegment;
 			sweepTransform.p.z += vNormalDir.z * fSegment;
 			fMoveDistance += fSegment;
+			--iCnt;
 		}
 	}
 #endif
@@ -332,15 +333,18 @@ _bool CPhysX_Manager::SweepCapsule(const CapsuleSweepParams& params)
 	vNormalDir.Normalize();
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f)
+	if (params.fVisibleTime > 0.f || params.fDistance > 0.f)
 	{
 		_float fSegment = 0.5f;
 		if (params.fDistance <= 1.f)
 			fSegment = 0.1f;
 
+		fSegment = params.fDistance;
+
+		_uint iCnt = 100;
 		_float fMoveDistance = 0.f;
 		PxTransform sweepTransform(transform);
-		while (fMoveDistance <= params.fDistance)
+		while (iCnt > 0 && fMoveDistance <= params.fDistance)
 		{
 			PxShape* pShape = m_Physics->createShape(capsule, *FindMaterial("Default"));
 			AddDebugShape(pShape, sweepTransform, params.fVisibleTime);
@@ -349,6 +353,7 @@ _bool CPhysX_Manager::SweepCapsule(const CapsuleSweepParams& params)
 			sweepTransform.p.y += vNormalDir.y * fSegment;
 			sweepTransform.p.z += vNormalDir.z * fSegment;
 			fMoveDistance += fSegment;
+			iCnt--;
 		}
 	}
 #endif
@@ -366,6 +371,54 @@ _bool CPhysX_Manager::SweepCapsule(const CapsuleSweepParams& params)
 		PxVec3{ vNormalDir.x, vNormalDir.y, vNormalDir.z },
 		params.fDistance,
 		*params.sweepOut, 
+		hitFlags,
+		queryFilterData);
+}
+
+_bool CPhysX_Manager::PxSweepCapsule(const PxCapsuleSweepParams& params)
+{
+	_float3 vNormalDir{ params.vUnitDir.x, params.vUnitDir.y, params.vUnitDir.z };
+	vNormalDir.Normalize();
+
+#ifdef _DEBUG
+	if (params.fVisibleTime > 0.f || params.fDistance > 0.f)
+	{
+		_float fSegment = 0.5f;
+		if (params.fDistance <= 1.f)
+			fSegment = 0.1f;
+
+		fSegment = params.fDistance;
+
+		_uint iCnt = 100;
+		_float fMoveDistance = 0.f;
+		PxTransform sweepTransform(params.pxTransform);
+		while (iCnt > 0 && fMoveDistance <= params.fDistance)
+		{
+			PxShape* pShape = m_Physics->createShape(params.CapsuleGeo, *FindMaterial("Default"));
+			AddDebugShape(pShape, sweepTransform, params.fVisibleTime);
+
+			sweepTransform.p.x += vNormalDir.x * fSegment;
+			sweepTransform.p.y += vNormalDir.y * fSegment;
+			sweepTransform.p.z += vNormalDir.z * fSegment;
+			fMoveDistance += fSegment;
+			iCnt--;
+		}
+	}
+#endif
+
+	PxFilterData filterData;
+	filterData.word0 = params.iTargetType;
+	PxQueryFilterData queryFilterData;
+	queryFilterData.data = filterData;
+	queryFilterData.flags = params.queryFlags;
+	static const PxHitFlags hitFlags = PxHitFlag::eNORMAL | PxHitFlag::ePOSITION;
+
+	return m_Scene->sweep(
+		params.CapsuleGeo,
+		params.pxTransform,
+		PxVec3{ vNormalDir.x, vNormalDir.y, vNormalDir.z },
+		params.fDistance,
+		*params.sweepOut,
 		hitFlags,
 		queryFilterData);
 }
@@ -699,7 +752,23 @@ CGameObject* CPhysXUtils::GetOnwer(physx::PxActor* pActor)
 void CEngineSimulationEventCallback::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs, physx::PxU32 nbPairs)
 {
 	IM_LOG("Contacted");
-    // Handle contact events
+	
+	{
+		CComponent* pPxCom = static_cast<CComponent*>(pairHeader.actors[0]->userData);
+		if (CRigidBody* pRigid = dynamic_cast<CRigidBody*>(pPxCom))
+		{
+			pRigid->CallOnTriggerIn(CPhysXUtils::GetOnwer(pairHeader.actors[1]));
+		}
+	}
+
+	{
+		CComponent* pPxCom = static_cast<CComponent*>(pairHeader.actors[1]->userData);
+		if (CRigidBody* pRigid = dynamic_cast<CRigidBody*>(pPxCom))
+		{
+			pRigid->CallOnTriggerIn(CPhysXUtils::GetOnwer(pairHeader.actors[0]));
+		}
+	}
+
 }
 
 void CEngineSimulationEventCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)
@@ -712,15 +781,16 @@ void CEngineSimulationEventCallback::onTrigger(physx::PxTriggerPair* pairs, phys
 	switch (pairs->status)
 	{
 	case PxPairFlag::eNOTIFY_TOUCH_FOUND:
-		IM_LOG("Trigger Start!");
+		IM_LOG("Trigger In!");
 		pRigid->CallOnTriggerIn(CPhysXUtils::GetOnwer(pairs->otherActor));
 		break;
 	case PxPairFlag::eNOTIFY_TOUCH_LOST:
 		IM_LOG("Trigger Out!");
 		pRigid->CallOnTriggerOut(CPhysXUtils::GetOnwer(pairs->otherActor));
 		break;
+
 	default: ;
-		IM_LOG("Non Handled Trigger %d", (_int)PxPairFlag::eNOTIFY_TOUCH_FOUND);
+		IM_LOG("Non Handled Trigger %d", (_int)pairs->status);
 	}
 }
 

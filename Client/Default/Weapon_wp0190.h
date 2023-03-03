@@ -5,6 +5,8 @@ BEGIN(Engine)
 class CRigidBody;
 END
 
+BEGIN(Client)
+
 class CWeapon_wp0190 : public CScarletWeapon
 {
 private:
@@ -15,17 +17,20 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
-	virtual void BeginTick() {}
+	virtual void BeginTick();
 	virtual void Tick(_double TimeDelta);
 	virtual void Late_Tick(_double TimeDelta);
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render();
 
+public:
+	void		Collision_Check();
+
+private:
+	_vector		m_vBeforePos;
+
 private:
 	HRESULT		SetUp_Components();
-	
-	CRigidBody* m_pCollider = nullptr;
-
 
 public:
 	static CWeapon_wp0190*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -33,3 +38,4 @@ public:
 	virtual void Free() override;
 };
 
+END
