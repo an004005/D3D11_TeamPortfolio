@@ -55,7 +55,10 @@ HRESULT CScarletMap::Render()
 
 void CScarletMap::Imgui_RenderProperty()
 {
+	static _bool	bImPlay = false;
+	ImGui::Checkbox("Open MapTool", &bImPlay);
 
+	if (bImPlay == false) return;
 
 	__super::Imgui_RenderProperty();
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
