@@ -19,6 +19,9 @@ class CBdLm_AnimInstance;
 
 class CBuddyLumi : public CMonster
 {
+public:
+	enum HITAXISTYPE {HAS_FL, HAS_BL, HAS_LL, HAS_RL, HAS_FM, HAS_BM, HAS_LM, HAS_RM, HAS_END };
+
 private:
 	CBuddyLumi(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBuddyLumi(const CBuddyLumi& rhs);
@@ -32,8 +35,8 @@ public:
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
-
-	virtual void AfterPhysX();
+	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
+	virtual void AfterPhysX() override;
 
 	_matrix AttachCollider();
 
@@ -42,19 +45,51 @@ private:
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;
 	CFSMComponent*			m_pFSM = nullptr;
+	CFSMComponent*			m_pSocketFSM = nullptr;
 
 	CBdLm_AnimInstance*		m_pASM = nullptr;
 	CRigidBody*				m_pTrigger = nullptr;
 
 	CRigidBody*				m_pWeaponCollider = nullptr;
 
-private:
+private:	// 기존 버전 (Test)
 	HRESULT				Setup_AnimSocket();
 	list<CAnimation*>	m_GroundDmgSocket;
 	list<CAnimation*>	m_AirDmgSocket;
 	list<CAnimation*>	m_DeadAnimSocket;
+
+	HRESULT				Setup_WeakAnimState();
+
+	// Socket Animation 관리용
+private:	// 피격을 좀 더 쪼갤 것 (list<CAnimation*> 멤버 변수로 자세히 상황을 쪼개서 쓰자.
+	list<CAnimation*>	m_HitLightFoward;
+	list<CAnimation*>	m_HitLightBack;
+
+	list<CAnimation*>	m_HitMiddleFoward;
+	list<CAnimation*>	m_HitMiddleBack;
+
+	list<CAnimation*>	m_HitMiddleLeft;
+	list<CAnimation*>	m_HitMiddleRight;
+
+	_bool		m_bStruck = false;
+
+	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
+	EAttackType	m_eAtkType = EAttackType::ATK_END;
+
+	HITAXISTYPE	m_Haxistype = HAS_END;
+	// EventCaller 관리용
+public:
+	void		Event_AtkCall(_bool bSwitch) { m_bAtkCall = bSwitch; }
+
+	void		Set_Struck(_bool bStruck) { m_bStruck = bStruck; }
+	void		Set_Air(_bool bAir) { m_bAir = bAir; }
+
+private:	// EventCaller
+	_bool		m_bAtkCall = false;
+
 private:
-	HRESULT SetUp_Components(void* pArg);
+	HRESULT		SetUp_Components(void* pArg);
+	HRESULT		SetUp_Event();
 
 public:
 	_bool IsIdle() const { return m_bIdle; }

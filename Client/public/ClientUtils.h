@@ -84,7 +84,7 @@ typedef struct tagDamageParam
 	ESASType eAttackSAS = ESASType::SAS_END; // 공격 타입(몬스터는 SAS_END 고정)
 	EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END; // 공격에 디버프 포함 여부
 	EAttackType eAttackType = EAttackType::ATK_LIGHT;
-	class CPlayer* pCauser = nullptr; // 공격자 포인터
+	class CScarletCharacter* pCauser = nullptr; // 공격자 포인터
 } DAMAGE_PARAM;
 
 enum

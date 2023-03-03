@@ -49,6 +49,9 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 	if (FAILED(Setup_AnimSocket()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_Event()))
+		return E_FAIL;
+
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Weapon"),
 		(CComponent**)&m_pWeaponCollider, &BuddyLumiWeapon)))
 		return E_FAIL;	
@@ -80,7 +83,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 15.f) && m_fMyPos.z >= (m_fStorePos.z - 15.f) ||
 						m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 15.f) && m_fMyPos.z >= (m_fStorePos.z - 15.f))
 					{
-						if (m_fTimeAcc >= 30.f && !m_bInitialize)	// 처음 생성되고 1회
+						if (m_fTimeAcc >= 5.f && !m_bInitialize)	// 처음 생성되고 1회
 						{
 							m_bIdle = false;
 							m_bRun = true;
@@ -366,7 +369,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 					// 중점 Axis 기준 왼쪽으로 Turn
 					m_pTransformCom->LookAt(m_vStorePos);
-					m_pTransformCom->Move(0.05, -vMyRight);
+					m_pTransformCom->Move(0.02, -vMyRight);
 
 					if (pAnim->IsFinished() == true)
 					{
@@ -392,7 +395,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 					// 중점 Axis 기준 오른으로 Turn
 					m_pTransformCom->LookAt(m_vStorePos);
-					m_pTransformCom->Move(0.05, vMyRight);
+					m_pTransformCom->Move(0.02, vMyRight);
 
 					if (pAnim->IsFinished() == true)
 					{
@@ -419,6 +422,36 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.Build();
 	}
 
+	//m_pWeaponCollider->SetOnTriggerIn([this](CGameObject* pObj)
+	//{
+	//	// 이벤트 콜러를 이용해서 공격 모션일때만 조건 들어오게 하기 
+	//	if (m_bAtkCall)
+	//	{
+	//		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	//		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pObj);
+
+	//		DAMAGE_PARAM damageParam;
+
+	//		_float3 fWeaponHitPosition = { m_pWeaponCollider->GetPxWorldMatrix().m[3][0], m_pWeaponCollider->GetPxWorldMatrix().m[3][1], m_pWeaponCollider->GetPxWorldMatrix().m[3][2] };
+
+	//		damageParam.eAttackSAS = ESASType::SAS_END;
+	//		damageParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	//		damageParam.vHitPosition = fWeaponHitPosition;
+	//		damageParam.pCauser = this;
+	//		damageParam.iDamage = 1;
+
+	//		pPlayer->TakeDamage(damageParam);
+	//	}
+	//});
+
+	//m_pWeaponCollider->SetOnTriggerOut([this](CGameObject* pObj)
+	//{
+
+
+	//});
+
+
 	return S_OK;
 }
 
@@ -443,9 +476,12 @@ void CBuddyLumi::Tick(_double TimeDelta)
 {	
 	CMonster::Tick(TimeDelta);
 
+	
+
 	m_pTrigger->Update_Tick(m_pTransformCom);
 
 	m_pFSM->Tick(TimeDelta);
+	m_pSocketFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);	
 }
 
@@ -471,6 +507,7 @@ void CBuddyLumi::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
+	/*
 	if (ImGui::CollapsingHeader("BuddyLumiAnimSocket", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (ImGui::Button("GroundDmg"))
@@ -491,8 +528,21 @@ void CBuddyLumi::Imgui_RenderProperty()
 			m_pASM->InputAnimSocket("BuddyLumi_DeadAnim", m_DeadAnimSocket);
 		}
 	}
+	*/
 
 	m_pFSM->Imgui_RenderProperty();
+	m_pSocketFSM->Imgui_RenderProperty();
+}
+
+void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
+{
+	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
+	// ↑ 공격이 들어올 방향 
+	m_eAtkType = tDamageParams.eAttackType;
+
+	m_eHitDir = eHitFrom;
+
+	m_bStruck = true;
 }
 
 void CBuddyLumi::AfterPhysX()
@@ -533,6 +583,126 @@ HRESULT CBuddyLumi::Setup_AnimSocket()
 	return S_OK;
 }
 
+HRESULT CBuddyLumi::Setup_WeakAnimState()
+{	
+	CAnimation*	pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0400_401_AL_damage_l_F"));
+	m_HitLightFoward.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0400_402_AL_damage_l_B"));
+	m_HitLightBack.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0400_411_AL_damage_m_F"));
+	m_HitMiddleFoward.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0400_412_AL_damage_m_B"));
+	m_HitMiddleBack.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0400_413_AL_damage_m_L"));
+	m_HitMiddleLeft.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0400_414_AL_damage_m_R"));
+	m_HitMiddleRight.push_back(pAnimation);
+
+	// m_bDamage : 피격 소켓이 돌기 위한 조건으로, 기본적으로 m_pFSM(소켓 아님)
+	// 이 돌때는 항시 false를 던져주다가 m_bStruck이 true일 때 조건에 따라 
+	// 지상 피격(m_bAir가 false), 공중 피격(m_bAir가 true)에 따라 어떤 소켓일지가
+	// 갈리게 된다.
+	{
+		m_pSocketFSM = CFSMComponentBuilder()
+			.InitState("No_Hit")
+			.AddState("No_Hit")
+			.Tick([this](_double TimeDelta) { m_bDamage = false; })
+				.AddTransition("No_Hit to Ground_Hit", "Ground_Hit")
+					.Predicator([this] {return m_bStruck && !m_bAir; })
+					.Priority(0)
+
+				.AddTransition("No_Hit to Air_Hit", "Air_Hit")
+					.Predicator([this] {return m_bStruck && m_bAir; })
+					.Priority(0)
+
+#pragma region Ground_Hit
+
+			.AddState("Ground_Hit")
+			.OnStart([this]
+			{				
+				if (m_eAtkType == EAttackType::ATK_LIGHT)	// 기본 공격(평타)
+				{
+					if (m_eHitDir == EBaseAxis::NORTH)	// NORTH : 전방
+					{
+						m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitLightFoward);
+						m_Haxistype = HAS_FL;
+					}
+					else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
+					{
+						m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitLightBack);
+						m_Haxistype = HAS_BL;
+					}
+				}
+
+				else if (m_eAtkType == EAttackType::ATK_MIDDLE)
+				{
+					if (m_eHitDir == EBaseAxis::NORTH) // NORTH : 전방
+					{
+						m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitMiddleFoward);
+						m_Haxistype = HAS_FM;
+					}
+					else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
+					{
+						m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitMiddleBack);
+						m_Haxistype = HAS_BM;
+					}
+					else if (m_eHitDir == EBaseAxis::WEST)	// WEST : 좌측
+					{
+						m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitMiddleLeft);
+						m_Haxistype = HAS_LM;
+					}
+					else if (m_eHitDir == EBaseAxis::EAST)	// EAST : 우측
+					{
+						m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitMiddleRight);
+						m_Haxistype = HAS_RM;
+					}
+				}
+			})
+
+			.Tick([this](_double TimeDelta)
+			{
+				m_bDamage = true;
+
+				if (m_pASM->isSocketPassby("BuddyLumi_GroundDmgAnim") > 0.98)
+				{
+					m_bStruck = false;
+				}
+			})
+
+			.AddTransition("Ground_Hit to Ground_Hit", "Ground_Hit")
+				.Predicator([this] {return m_bStruck && !m_bAir && m_pASM->isSocketPassby("BuddyLumi_GroundDmgAnim") <= 0.98; })
+				.Priority(0)
+
+			.AddTransition("Ground_Hit to No_Hit", "No_Hit")
+				.Predicator([this] {return !m_bStruck && !m_bAir && m_pASM->isSocketAlmostFinish("BuddyLumi_GroundDmgAnim"); })
+				.Priority(0)
+
+			.AddTransition("Ground_Hit to Air_Hit", "Air_Hit")
+				.Predicator([this] {return m_bStruck && m_bAir; })
+				.Priority(0)
+
+#pragma endregion Ground_Hit
+			
+#pragma region Air_Hit
+
+#pragma endregion Air_Hit
+
+
+			.Build();
+	}
+
+
+
+	return S_OK;
+}
+
 HRESULT CBuddyLumi::SetUp_Components(void* pArg)
 {	
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
@@ -561,6 +731,16 @@ HRESULT CBuddyLumi::SetUp_Components(void* pArg)
 		MSG_BOX("BuddyLumi's ASM Failed");
 		return E_FAIL;
 	}
+
+	FAILED_CHECK(Setup_WeakAnimState());
+
+	return S_OK;
+}
+
+HRESULT CBuddyLumi::SetUp_Event()
+{
+	m_pModelCom->Add_EventCaller("Swing_Start", [&] {Event_AtkCall(true); });
+	m_pModelCom->Add_EventCaller("Swing_End", [&] {Event_AtkCall(false); });
 
 	return S_OK;
 }
@@ -597,6 +777,7 @@ void CBuddyLumi::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
+	Safe_Release(m_pSocketFSM);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pTrigger);
 	Safe_Release(m_pWeaponCollider);

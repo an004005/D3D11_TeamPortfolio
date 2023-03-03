@@ -814,17 +814,50 @@
         "Duration": 420.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Swing_Start",
+                "EventTime": 149.0
+            },
+            {
+                "EventName": "Swing_End",
+                "EventTime": 184.0
+            }
+        ]
     },
     "AS_em0400_401_AL_damage_l_F": {
         "Duration": 60.0,
-        "TickPerSecond": 25.0,
+        "TickPerSecond": 32.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_402_AL_damage_l_B": {
+        "Duration": 60.0,
+        "TickPerSecond": 33.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0400_406_AL_damage_air2": {
         "Duration": 180.0,
         "TickPerSecond": 130.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_411_AL_damage_m_F": {
+        "Duration": 96.0,
+        "TickPerSecond": 54.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_412_AL_damage_m_B": {
+        "Duration": 114.0,
+        "TickPerSecond": 55.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_413_AL_damage_m_L": {
+        "Duration": 114.0,
+        "TickPerSecond": 61.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -837,6 +870,24 @@
     "AS_em0400_424_AL_dead_down": {
         "Duration": 203.0,
         "TickPerSecond": 100.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_427_AL_getup_01": {
+        "Duration": 110.0,
+        "TickPerSecond": 46.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_432_AL_blow_start_F": {
+        "Duration": 130.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0400_433_AL_blow_landing_F": {
+        "Duration": 60.0,
+        "TickPerSecond": 40.0,
         "bLooping": false,
         "vecEvent": []
     },

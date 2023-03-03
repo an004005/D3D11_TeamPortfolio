@@ -33,7 +33,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
-	virtual void AfterPhysX();
+	virtual void AfterPhysX() override;
 
 	_matrix AttachCollider();
 

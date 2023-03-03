@@ -389,7 +389,7 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 	{
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-		CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
+	//	CFlowerLeg* pFlower = dynamic_cast<CFlowerLeg*>(pObj);
 
 		/*if (pFlower == nullptr)
 			MSG_BOX("null");
