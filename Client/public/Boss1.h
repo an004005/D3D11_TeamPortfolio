@@ -7,6 +7,7 @@ class CShader;
 class CRenderer;
 class CModel;
 class CFSMComponent;
+class CAnimation;
 END
 
 BEGIN(Client)
@@ -29,21 +30,47 @@ public:
 
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
-	_float GetTurnRemain() const { return m_fTurnRamain; }
+	_float GetTurnRemain() const { return m_fTurnRemain; }
+	_bool IsAttack() const { return m_bAttack; }
+
 
 private:
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;
 	CFSMComponent*			m_pFSM = nullptr;
-	class CBoss1_AnimationInstance*		m_pASM = nullptr;
+	class CBoss1_AnimationInstance* m_pASM = nullptr;
+	class CBoss1_AIController*		m_pController = nullptr;
 
 	_float3 m_vMoveAxis;
-	_float m_fTurnRamain = 0.f;
+	_float m_fTurnRemain = 0.f;
 
+
+	_bool m_bAttack = false;
+	_bool m_bRange = false;
+	_bool m_bJump = false;
+	_bool m_bDown = false;
+	_bool m_bMiddleDown = false;
+
+
+	CAnimation* m_pAtk_R = nullptr;
+	CAnimation* m_pAtk_L = nullptr;
+	CAnimation* m_pAtk_Spin = nullptr;
+	CAnimation* m_pAtk_WaterBall = nullptr;
+	CAnimation* m_pThreat = nullptr;
+	CAnimation* m_pMiddleDown = nullptr;
+	CAnimation* m_pDownStart = nullptr;
+	CAnimation* m_pDown = nullptr;
+
+	CAnimation* m_pJumpStart = nullptr;
+	CAnimation* m_pJumpEnd = nullptr;
+	CAnimation* m_pJumpLand = nullptr;
+	CAnimation* m_pJumpJitabata = nullptr;
+
+
+	CAnimation* m_pCurSocAnim = nullptr;
+	
 
 	// for test
-	class CController*		m_pController = nullptr;
-	class CTestCamera*		m_pCam = nullptr;
 
 public:
 	static CBoss1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

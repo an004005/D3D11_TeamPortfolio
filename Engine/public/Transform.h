@@ -93,7 +93,7 @@ public:
 	/*void LookAt(const CTransform* pTarget);*/
 	void LookAt(_fvector vTargetPos);
 	void LookAt_Smooth(_fvector vTargetPos, _double TimeDelta);
-	_float LookAt_SmoothYaw(_fvector vTargetPos, _double TimeDelta);
+	// _float LookAt_SmoothYaw(_fvector vTargetPos, _double TimeDelta);
 	_float Get_RemainYawToLookAt(_fvector vTargetPos);
 
 	/* 추적한다 .*/

@@ -14,6 +14,13 @@ public:
 
 	virtual void Imgui_RenderState() override;
 
+	const string& GetCurStateName() { return m_pASM->GetCurState()->m_strName; }
+
+public:
+	_bool isSocketEmpty(const string& strSocName) { return m_mapAnimSocket[strSocName].empty(); }
+	_bool isSocketPassby(const string& strSocName, _float fPlayRatio = 1.f);
+	void AttachAnimSocket(const string& strSocName, const list<CAnimation*>& AnimList);
+
 private:
 	CAnimationStateMachine* m_pASM = nullptr;
 
@@ -27,6 +34,12 @@ private:
 	EBaseTurn m_eTurn = EBaseTurn::TURN_END;
 	_float m_fTurnRemain = 0.f;
 
+
+private:
+	_float	m_fLerpTime = 0.f;
+	_float	m_fLerpDuration = 0.1f;
+	_bool	m_bLerp = false;
+	_bool m_bAttach = false;
 
 
 public:

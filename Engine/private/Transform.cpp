@@ -384,36 +384,36 @@ void CTransform::LookAt_Smooth(_fvector vTargetPos, _double TimeDelta)
 		Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -TimeDelta);
 }
 
-_float CTransform::LookAt_SmoothYaw(_fvector vTargetPos, _double TimeDelta)
-{
-	const _float fMyYaw = GetYaw_Radian();
-
-	const _vector vToTargetDir = XMVector3Normalize(XMVectorSetY(vTargetPos - Get_State(STATE_TRANSLATION), 0.f));
-
-	_float fToTargetYaw;
-	if (XMVectorGetX(vToTargetDir) < 0.f)
-		fToTargetYaw = -acosf(XMVectorGetX(XMVector3Dot(vToTargetDir, _float3::UnitZ)));
-	else
-		fToTargetYaw = acosf(XMVectorGetX(XMVector3Dot(vToTargetDir, _float3::UnitZ)));
-
-	// yaw 차이
-	const _float fYawDelta = fMyYaw - fToTargetYaw;
-
-	const _float fTickTurn = m_TransformDesc.fRotationPerSec * TimeDelta;
-
-	if (abs(fYawDelta) > 0.001f)
-	{
-		if (abs(fYawDelta) <= abs(fTickTurn))
-			Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), fToTargetYaw);
-		else if (fYawDelta < 0.f)
-			Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta);
-		else
-			Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -TimeDelta);
-		return fYawDelta;
-	}
-
-	return 0.f;
-}
+// _float CTransform::LookAt_SmoothYaw(_fvector vTargetPos, _double TimeDelta)
+// {
+// 	const _float fMyYaw = GetYaw_Radian();
+//
+// 	const _vector vToTargetDir = XMVector3Normalize(XMVectorSetY(vTargetPos - Get_State(STATE_TRANSLATION), 0.f));
+//
+// 	_float fToTargetYaw;
+// 	if (XMVectorGetX(vToTargetDir) < 0.f)
+// 		fToTargetYaw = -acosf(XMVectorGetX(XMVector3Dot(vToTargetDir, _float3::UnitZ)));
+// 	else
+// 		fToTargetYaw = acosf(XMVectorGetX(XMVector3Dot(vToTargetDir, _float3::UnitZ)));
+//
+// 	// yaw 차이
+// 	const _float fYawDelta = fMyYaw - fToTargetYaw;
+//
+// 	const _float fTickTurn = m_TransformDesc.fRotationPerSec * TimeDelta;
+//
+// 	if (abs(fYawDelta) > 0.001f)
+// 	{
+// 		if (abs(fYawDelta) <= abs(fTickTurn))
+// 			Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), fToTargetYaw);
+// 		else if (fYawDelta < 0.f)
+// 			Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta);
+// 		else
+// 			Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -TimeDelta);
+// 		return fYawDelta;
+// 	}
+//
+// 	return 0.f;
+// }
 
 _float CTransform::Get_RemainYawToLookAt(_fvector vTargetPos)
 {

@@ -497,6 +497,8 @@
     <ClInclude Include="..\public\TestCamera.h">
       <Filter>02.GameObjects\Monster</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\AIController.h" />
+    <ClInclude Include="..\public\Boss1_AIController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -756,6 +758,8 @@
     <ClCompile Include="..\private\TestCamera.cpp">
       <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\AIController.cpp" />
+    <ClCompile Include="..\private\Boss1_AIController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

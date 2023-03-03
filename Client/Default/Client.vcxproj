@@ -178,10 +178,12 @@
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Params.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Utils.h" />
+    <ClInclude Include="..\public\AIController.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\Boss1_AIController.h" />
     <ClInclude Include="..\public\BrJ_AnimInstance.h" />
     <ClInclude Include="..\public\BronJon.h" />
     <ClInclude Include="..\public\Boss1.h" />
@@ -268,10 +270,12 @@
     <ClInclude Include="Weapon_wp0190.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\AIController.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\Boss1_AIController.cpp" />
     <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
     <ClCompile Include="..\private\BronJon.cpp" />
     <ClCompile Include="..\private\Boss1.cpp" />

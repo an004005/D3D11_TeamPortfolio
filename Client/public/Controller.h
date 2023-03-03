@@ -94,9 +94,8 @@ public:
 
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_float2 GetMouseAxis() const { return m_vMouseAxis; }
-	_uint GetInputMask() const { return m_iInputMask; }
+	// _uint GetInputMask() const { return m_iInputMask; }
 
-	void SetOwner(class CPlayer* pOwner) { m_pOwner = pOwner; }
 	void Invalidate();
 	void SetInputLock(_bool bLock) { m_bInputLock = bLock; }
 	_bool IsCursorLock() const { return m_bCursorLock; }
@@ -107,16 +106,15 @@ protected:
 
 protected:
 	EControllerType m_eType = EControllerType::CONTROLLER_END;
-	class CPlayer* m_pOwner = nullptr;
 
 	array<KEY_STATE, HANDLE_END> m_InputState{};
 	_float3 m_vMoveAxis;
 	_float2 m_vMouseAxis;
 
-	_uint m_iPreInputMask = 0;
-	_uint m_iInputMask = 0;
+	// _uint m_iPreInputMask = 0;
+	// _uint m_iInputMask = 0;
 
-	CCoolTimeHelper m_WorldCoolTime;
+	// CCoolTimeHelper m_WorldCoolTime;
 
 	_bool m_bCursorLock = false;
 	_bool m_bInputLock = false;

@@ -24,6 +24,7 @@ HRESULT CBoss1_AnimationInstance::Initialize(CModel* pModel, CGameObject* pGameO
 					return m_eTurn != EBaseTurn::TURN_END;
 				})
 				.Duration(0.1f)
+		
 
 		.AddState("MoveStart")
 			.SetAnimation(*m_pModel->Find_Animation("AS_em0300_105_AL_walk_F_start"))
@@ -38,28 +39,32 @@ HRESULT CBoss1_AnimationInstance::Initialize(CModel* pModel, CGameObject* pGameO
 				{
 					return m_eMoveAxis == EBaseAxis::NORTH;
 				})
+				.Duration(0.2f)
 			.AddTransition("MoveStart to Back_MoveStart", "Back_MoveStart")
 				.Predicator([this]
 				{
 					return m_eMoveAxis == EBaseAxis::SOUTH;
 				})
+				.Duration(0.2f)
 			.AddTransition("MoveStart to Left_MoveStart", "Left_MoveStart")
 				.Predicator([this]
 				{
 					return m_eMoveAxis == EBaseAxis::WEST;
 				})
+				.Duration(0.2f)
 			.AddTransition("MoveStart to Right_MoveStart", "Right_MoveStart")
 				.Predicator([this]
 				{
 					return m_eMoveAxis == EBaseAxis::EAST;
 				})
+				.Duration(0.2f)
 
 		.AddState("TurnStart")
 			.SetAnimation(*m_pModel->Find_Animation("AS_em0300_150_AL_turn_L_start"))
 			.AddTransition("TurnStart to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_eTurn == EBaseTurn::TURN_END;
+					return m_eTurn == EBaseTurn::TURN_END || m_bMove;
 				})
 				.Duration(0.2f)
 			.AddTransition("TurnStart to TurnRightStart", "TurnRightStart")
@@ -72,7 +77,7 @@ HRESULT CBoss1_AnimationInstance::Initialize(CModel* pModel, CGameObject* pGameO
 				{
 					return m_eTurn == EBaseTurn::TURN_LEFT;
 				})
-				
+
 
 		.AddState("Forward_MoveStart")
 			.SetAnimation(*m_pModel->Find_Animation("AS_em0300_105_AL_walk_F_start"))
@@ -194,35 +199,90 @@ HRESULT CBoss1_AnimationInstance::Initialize(CModel* pModel, CGameObject* pGameO
 			
 		.Build();
 
+
+	m_mapAnimSocket.insert({ "FullBody", {} });
 	return S_OK;
 }
 
 void CBoss1_AnimationInstance::Tick(_double TimeDelta)
 {
 	UpdateTargetState(TimeDelta);
-	m_pASM->Tick(TimeDelta);
-	m_pModel->SetCurAnimName(m_pASM->GetCurState()->m_Animation->GetName());
+
+	_bool bChange = CheckFinishedAnimSocket();	
+	_bool bLocalMove = true;
+
+	string szCurAnimName = "";
+
+	// 소켓이 비어있는지 탐색
+	list<CAnimation*> CurSocket;
+
+	for (auto& iter : m_mapAnimSocket)
+	{
+		if (iter.second.empty() == false)
+		{
+			CurSocket = iter.second;
+			break;
+		}
+	}
+
+	// 발견한 소켓이 있으면 해당 소켓을 실행
+	if (!CurSocket.empty())
+	{
+		auto Socket = CurSocket.front();
+		if (bChange)
+		{
+			Socket = CurSocket.front();
+			m_pModel->SetPlayAnimation(Socket->GetName());
+			m_pModel->SetCurAnimName(Socket->GetName());
+			m_fLerpTime = 0.f;
+		}
+
+		if (1.f > m_fLerpTime / m_fLerpDuration)
+		{
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+			m_fLerpTime += (_float)TimeDelta;
+		}
+		else if (m_bAttach)
+		{
+			m_fLerpTime = 0.f;	// 어태치면 바로 보간
+			m_bAttach = false;
+		}
+		else
+		{
+			szCurAnimName = Socket->GetName();
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+		}
+	
+	}
+	else if (bChange)
+	{
+		bLocalMove = false;
+
+		m_pASM->SetCurState("Idle");
+
+		//m_pASM_Base->GetCurState()->m_Animation->Reset();
+		m_pModel->SetCurAnimName(m_pASM->GetCurState()->m_Animation->GetName());
+		m_fLerpTime = 0.f;
+	}
+	else if (m_fLerpTime < m_fLerpDuration)
+	{
+		m_pASM->GetCurState()->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+		m_fLerpTime += (_float)TimeDelta;
+	}
+	else
+	{
+		m_pASM->Tick(TimeDelta);
+		m_pModel->SetCurAnimName(m_pASM->GetCurState()->m_Animation->GetName());
+	}
+
 	m_pModel->Compute_CombindTransformationMatrix();
 
-
-
-	// _vector RotationDelta = m_pModel->GetLocalRotationDelta();
-	// _float fYaw = 0.f;
-	// XMQuaternionToAxisAngle(&XMVectorSet(0.f, 1.f, 0.f, 0.f), &fYaw, RotationDelta);
-	//
-	//
-	// _float4 tmp = CMathUtils::Quat2Euler( RotationDelta);
-	// fYaw = tmp.y;
-	//
-	// if (m_eTurn != EBaseTurn::TURN_END)
-	// {
-	// 	if (abs(fYaw) >= abs(m_fTurnRemain))
-	// 	{
-	// 		RotationDelta = XMQuaternionRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), XMConvertToRadians(m_fTurnRemain));
-	// 	}
-	//
-	// 	m_pTargetObject->GetTransform()->Turn_Fixed(XMVectorSet(0.f, 1.f, 0.f, 0.f), fYaw);
-	// }
+	if (bLocalMove)
+	{
+		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix);
+		m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
+	}
 }
 
 void CBoss1_AnimationInstance::UpdateTargetState(_double TimeDelta)
@@ -245,6 +305,27 @@ void CBoss1_AnimationInstance::UpdateTargetState(_double TimeDelta)
 void CBoss1_AnimationInstance::Imgui_RenderState()
 {
 	m_pASM->Imgui_RenderState();
+}
+
+_bool CBoss1_AnimationInstance::isSocketPassby(const string& strSocName, _float fPlayRatio)
+{
+	Assert(m_mapAnimSocket.find(strSocName) != m_mapAnimSocket.end());
+
+	return m_mapAnimSocket[strSocName].empty() == false
+		&& m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= fPlayRatio;
+}
+
+void CBoss1_AnimationInstance::AttachAnimSocket(const string& strSocName, const list<CAnimation*>& AnimList)
+{
+	const auto itr = m_mapAnimSocket.find(strSocName);
+	Assert(itr != m_mapAnimSocket.end());
+
+	if (!itr->second.empty())
+	{
+		m_bAttach = true;
+		itr->second.front()->Reset();;
+	}
+	m_mapAnimSocket[strSocName] = (AnimList);
 }
 
 CBoss1_AnimationInstance* CBoss1_AnimationInstance::Create(CModel* pModel, CGameObject* pGameObject)
