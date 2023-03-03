@@ -65,6 +65,10 @@ PostVFX_Scifi 에 있음
 
 이펙트 커브 스케일 X, Y 추가 완료
 위 그래프 연동하기 !!!!!
+
+Default_Attack/Default_Attack_5_Test1.json
+
+후보 T_ef_one_lin_036
 //////////////////////////////////////
 
 3. 검광 끝나기직전에 공격 메시 생성 
