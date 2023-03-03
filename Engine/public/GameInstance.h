@@ -158,6 +158,7 @@ public:/* for PhysX Manager*/
 	_bool OverlapCapsule(const CapsuleOverlapParams& params);
 	_bool SweepSphere(const SphereSweepParams& params);
 	_bool SweepCapsule(const CapsuleSweepParams& params);
+	_bool PxSweepCapsule(const PxCapsuleSweepParams& params);
 
 public: /* for CameraManager*/
 	CCamera* Add_Camera(const string& strCamTag, _uint iLevelIdx, const wstring& pLayerTag, const wstring& pPrototypeTag, const Json* camJson = nullptr);

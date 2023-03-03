@@ -95,7 +95,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 				{
 					m_fMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					
-					_vector vTargetPos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_vector vTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					_float3 fTargetPos;
 					XMStoreFloat3(&fTargetPos, vTargetPos);
 
@@ -236,7 +236,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("Threat")
 				.Tick([this](_double TimeDelta)
 				{
-					_vector vTargetPos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_vector vTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 
 					m_pTransformCom->LookAt(vTargetPos);
 
@@ -311,7 +311,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("DodgeB")
 					.OnStart([this] 
 					{
-						m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+						m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 						m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					})
 				.Tick([this](_double TimeDelta) 
@@ -338,7 +338,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("DodgeL")
 				.OnStart([this] 
 				{
-					m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);				
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 				})
 
 				.Tick([this](_double TimeDelta)
@@ -365,7 +365,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("DodgeR")
 				.OnStart([this]
 				{
-					m_vStorePos = m_pFlowerLeg->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 				})
 				.Tick([this](_double TimeDelta)
 				{
@@ -410,13 +410,13 @@ void CBuddyLumi::BeginTick()
 	
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
+	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
 	{
-		if (iter->GetPrototypeTag() == TEXT("FlowerLeg"))
+		if (iter->GetPrototypeTag() == TEXT("Player"))
 		{
 			int iA = 0;
 
-			m_pFlowerLeg = iter;			
+			m_pPlayer = iter;
 		}
 	}
 }
@@ -429,6 +429,9 @@ void CBuddyLumi::Tick(_double TimeDelta)
 
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);	
+
+	m_pTransformCom->MoveVelocity(1.f, m_tmp);
+	m_tmp = _float3::Zero;
 }
 
 void CBuddyLumi::Late_Tick(_double TimeDelta)
@@ -475,6 +478,15 @@ void CBuddyLumi::Imgui_RenderProperty()
 	}
 
 	m_pFSM->Imgui_RenderProperty();
+}
+
+void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
+{
+	_vector tmp = _float4{ tDamageParams.vHitFrom.x, tDamageParams.vHitFrom.y , tDamageParams.vHitFrom.z, 1.f };
+	_float4 vBackDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - tmp;
+	vBackDir.Normalize();
+
+	m_tmp = _float3{ vBackDir.x, vBackDir.y ,vBackDir.z } *2.f;
 }
 
 void CBuddyLumi::AfterPhysX()

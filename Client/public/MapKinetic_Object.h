@@ -28,6 +28,9 @@ public:
 	virtual void SaveToJson(Json& json) override;
 	virtual void Imgui_RenderProperty() override;
 
+public:
+	void	Add_Physical(_float3 vForce = { 0.f, 0.f, 0.f }, _float3 vTorque = {0.f, 0.f, 0.f});
+
 private:
 	wstring MakePxModelProtoTag();
 

@@ -104,6 +104,12 @@ void CMapKinetic_Object::Imgui_RenderProperty()
 	//m_pPxModel->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
 }
 
+void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
+{
+	m_pRigidBody->AddForce(vForce);
+	m_pRigidBody->AddTorque(vTorque);
+}
+
 wstring CMapKinetic_Object::MakePxModelProtoTag()
 {
 	_tchar szDriveName[MAX_PATH]{};

@@ -49,6 +49,13 @@ public:
 	void CallOnTriggerPersist(class CGameObject* TriggeredObj) { if (m_OnTriggerPersist) m_OnTriggerPersist(TriggeredObj); }
 	void SetOnTriggerPersist(std::function<void(class CGameObject*)> TriggerPersist) { m_OnTriggerPersist = TriggerPersist; }
 
+public:
+	_float4x4					Get_OriginMatrix();
+	physx::PxBoxGeometry		Get_BoxGeometry();
+	physx::PxSphereGeometry		Get_SphereGeometry();
+	physx::PxCapsuleGeometry	Get_CapsuleGeometry();
+	physx::PxTransform			Get_PxTransform();
+
 protected:
 	void ReleaseActor();
 	void CreateActor();
