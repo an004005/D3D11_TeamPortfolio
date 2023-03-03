@@ -120,12 +120,15 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	 CGameUtils::ListFilesRecursive("../Bin/Resources/Meshes/Valorant/Materials/", [this](const string& fileName)
-	 {
-	 	char szFileName[MAX_PATH]{};
-	 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-	 	CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
-	 });
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& filePath)
+	{
+		string fileName = CGameUtils::GetFileName(filePath);
+		CGameInstance::GetInstance()->Add_Prototype(
+			s2ws(fileName).c_str(),
+			CMaterial::Create(m_pDevice, m_pContext, filePath.c_str()));
+	});
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
 	/* Controller */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
@@ -182,6 +185,7 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
 	return S_OK;
 }
 

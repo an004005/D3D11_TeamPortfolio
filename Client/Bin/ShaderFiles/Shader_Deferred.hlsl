@@ -246,6 +246,8 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	// vector		vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
 	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).a;
+	if (fShaderFlag == 0.f)
+		discard;
 
 	if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
