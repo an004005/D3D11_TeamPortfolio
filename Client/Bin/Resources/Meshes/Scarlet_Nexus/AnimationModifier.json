@@ -794,15 +794,26 @@
     },
     "AS_em0300_201_AL_atk_a1_L": {
         "Duration": 161.0,
-        "TickPerSecond": 100.0,
+        "TickPerSecond": 80.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0300_202_AL_atk_a2_R": {
         "Duration": 161.0,
-        "TickPerSecond": 100.0,
+        "TickPerSecond": 80.0,
         "bLooping": false,
         "vecEvent": []
+    },
+    "AS_em0300_204_AL_atk_a3_start": {
+        "Duration": 80.0,
+        "TickPerSecond": 48.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "JumpAttackStart",
+                "EventTime": 20.0
+            }
+        ]
     },
     "AS_em0300_205_AL_atk_a3_landing": {
         "Duration": 45.0,
@@ -814,7 +825,12 @@
         "Duration": 32.0,
         "TickPerSecond": 40.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Jitabata",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em0300_415_AL_damage_m_F": {
         "Duration": 240.0,

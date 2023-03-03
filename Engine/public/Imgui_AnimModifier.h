@@ -45,7 +45,7 @@ private:
 
 	Vector3	m_vOptionalVector = { 0.f, 0.f, 0.f };
 
-	CRenderer::RENDERGROUP m_eRenderGroup = CRenderer::RENDER_NONALPHABLEND;
+	CRenderer::RENDERGROUP m_eRenderGroup = CRenderer::RENDER_NONALPHABLEND_TOON;
 
 public:
 	static CModelPreviwer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

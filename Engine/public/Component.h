@@ -18,6 +18,7 @@ public:
 	virtual HRESULT Initialize_Prototype();
 	// pArg는 항상 Json* 이다. 변경하기 어렵고, 기존 수업과의 통일을 위해서 유지한다. 추후 수정요함
 	virtual HRESULT Initialize(void* pArg);
+	virtual void BeginTick(){}
 
 #ifdef _DEBUG
 public:
@@ -31,6 +32,7 @@ public:
 
 	// 보통 GameObject에서 clone할 때 지정해준다.
 	void SetOwner(class CGameObject* pOwner) { m_pOwner = pOwner; }
+	// TryGetOwner는 Initialize 이후부터 사용 가능
 	class CGameObject* TryGetOwner();
 	_bool IsCloned() const { return m_isCloned; }
 

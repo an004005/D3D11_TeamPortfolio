@@ -21,6 +21,8 @@
 #include "Player.h"
 #include "Weapon_wp0190.h"
 
+#define ADD_PLAYER
+
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -123,6 +125,7 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
+#ifdef ADD_PLAYER
 	// player
 	{
 		pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
@@ -145,7 +148,7 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
 
 	}
-
+#endif
 
 	{
 		auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
@@ -224,6 +227,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+#ifdef ADD_PLAYER
+
 	Json PreviewData;
 	PreviewData["Model"] = "Model_Player";
 
@@ -231,6 +236,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar* pLayerTag)
 	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Player"), &PreviewData));
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
+#endif
 
 	return S_OK;
 }
@@ -241,6 +247,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	// Json PreviewData;
 	// PreviewData["Model"] = "MonsterBoss1";
+	// PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
 	// auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 
 	auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");

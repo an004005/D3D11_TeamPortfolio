@@ -1,6 +1,10 @@
 #pragma once
 #include "AIController.h"
 
+BEGIN(Engine)
+class CFSMComponent;
+END
+
 BEGIN(Client)
 
 class CBoss1_AIController : public CAIController
@@ -11,10 +15,26 @@ protected:
 	virtual ~CBoss1_AIController() override = default;
 
 public:
+	virtual HRESULT Initialize(void* pArg) override;
+	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
 
+	void Tick_Near(_double TimeDelta);
+	void Tick_Mid(_double TimeDelta);
+	void Tick_Far(_double TimeDelta);
+
+
+private:
+	CFSMComponent* m_pFSM = nullptr;
+	_float m_fToTargetDistance;
+	class CBoss1* m_pCastedOwner = nullptr;
+
+	_uint m_iNearOrder = 0;
+	_uint m_iMidOrder = 0;
+	_uint m_iFarOrder = 0;
 
 public:
+	virtual void Free() override;
 	virtual CComponent* Clone(void* pArg) override;
 	static CBoss1_AIController* Create();
 };

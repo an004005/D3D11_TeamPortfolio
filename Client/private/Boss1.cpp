@@ -33,7 +33,22 @@ HRESULT CBoss1::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_MonsterBoss1_Controller"), TEXT("Com_Controller"), (CComponent**)&m_pController));
 	// FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_TestCamera"), TEXT("Com_Controller"), (CComponent**)&m_pController));
+	m_fGravity = 25.f;
 
+	m_pModelCom->Add_EventCaller("JumpAttackStart", [this]
+	{
+		m_fYSpeed = 20.f;
+		//start damage
+	});
+	m_pModelCom->Add_EventCaller("Jitabata", [this]
+	{
+		++m_iJitabaCnt;
+		if (m_iJitabaCnt == 5)
+		{
+			m_iJitabaCnt = 0;
+			// end damage
+		}
+	});
 
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(100.f));
 
@@ -71,9 +86,17 @@ HRESULT CBoss1::Initialize(void* pArg)
 		.AddState("MeleeAttack")
 			.OnStart([this]
 			{
-				// todo 플레이어 위치에 따라 공격 정하기
+				if (m_bSpinAttack)
+				{
+					m_pASM->AttachAnimSocket("FullBody", { m_pAtk_Spin });
+				}
+				else
+				{
+					// todo 플레이어 위치에 따라 공격 정하기
+					m_pASM->AttachAnimSocket("FullBody", { m_pAtk_R });
+				}
+				m_bSpinAttack = false;
 				m_bAttack = false;
-				m_pASM->AttachAnimSocket("FullBody", { m_pAtk_R });
 			})
 			.AddTransition("MeleeAttack to Idle", "Idle")
 				.Predicator([this]
@@ -172,17 +195,23 @@ void CBoss1::Tick(_double TimeDelta)
 	{
 		m_bAttack = true;
 	}
+	if (m_pController->KeyDown(CController::G))
+	{
+		m_bAttack = true;
+		m_bSpinAttack = true;
+	}
 	if (m_pController->KeyDown(CController::MOUSE_RB))
 	{
 		m_bRange = true;
 	}
+	if (m_pController->KeyDown(CController::E))
+	{
+		m_bJump = true;
+	}
+
 	if (m_pController->KeyDown(CController::C))
 	{
 		m_bDown = true;
-	}
-	if (m_pController->KeyDown(CController::G))
-	{
-		m_bRange = true;
 	}
 	if (m_pController->KeyDown(CController::Q))
 	{
@@ -194,21 +223,6 @@ void CBoss1::Tick(_double TimeDelta)
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
 
-
-
-	// _vector vCamLook = XMVectorSetY(m_pCam->GetTransform()->Get_State(CTransform::STATE_LOOK), 0.f) ;
-	//
-	// const char* pStateName = m_pFSM->GetCurStateName();
-	// if (0 == strcmp(pStateName, "Move") || 0 == strcmp(pStateName, "Idle"))
-	// {
-	// 	_vector vLookAt = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVector3Normalize(vCamLook) * 5.f;
-	// 	m_fTurnRemain = m_pTransformCom->LookAt_SmoothYaw(vLookAt, TimeDelta);
-	// }
-	// else if (0 == strcmp(pStateName, "RangeAttack"))
-	// {
-	// 	_vector vLookAt = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVector3Normalize(vCamLook) * 5.f;
-	// 	m_fTurnRemain = m_pTransformCom->LookAt_SmoothYaw(vLookAt, TimeDelta * 0.2f);
-	// }
 }
 
 void CBoss1::Late_Tick(_double TimeDelta)
@@ -231,6 +245,11 @@ void CBoss1::Imgui_RenderProperty()
 	CMonster::Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
 	m_pASM->Imgui_RenderState();
+}
+
+_bool CBoss1::IsPlayingSocket() const
+{
+	return m_pASM->isSocketEmpty("FullBody") == false;
 }
 
 CBoss1* CBoss1::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

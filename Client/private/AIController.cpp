@@ -19,24 +19,35 @@ void CAIController::Tick(_double TimeDelta)
 
 	if (m_pTarget == nullptr)
 	{
-		ClearCommands();
+		ClearAllCommands();
 		return;
 	}
 	if (m_pTarget->IsDeleted())
 	{
-		ClearCommands();
+		ClearAllCommands();
 		SetTarget(nullptr);
 		return;
 	}
 
 	m_fTimeDelta = (_float)TimeDelta;
 
+
+
 	for (auto itr = m_Commands.begin(); itr != m_Commands.end();)
 	{
-		if (itr->second.Execute(TimeDelta))
+		if (itr->second.IsDeleted())
+		{
 			itr = m_Commands.erase(itr);
+		}
+		else if (itr->second.Execute(TimeDelta))
+		{
+			itr = m_Commands.erase(itr);
+			ExecuteExitCommand(itr->first);
+		}
 		else
+		{
 			++itr;
+		}
 	}
 }
 
@@ -64,6 +75,24 @@ void CAIController::Imgui_RenderProperty()
 		{
 			m_Commands.erase(strSelected);
 			strSelected.clear();
+		}
+	}
+
+	if (ImGui::CollapsingHeader("ExitCommands"))
+	{
+		static string strSelectedExit;
+		if (ImGui::BeginListBox("Current ExitCommands"))
+		{
+			for (auto& command : m_ExitCommands)
+			{
+				const bool bSelected = command.first == strSelectedExit;
+				if (bSelected)
+					ImGui::SetItemDefaultFocus();
+
+				if (ImGui::Selectable(command.first.c_str(), bSelected))
+					strSelectedExit = command.first;
+			}
+			ImGui::EndListBox();
 		}
 	}
 
@@ -131,10 +160,12 @@ void CAIController::SetTarget(CScarletCharacter* pTarget)
 	Safe_AddRef(m_pTarget);
 }
 
-void CAIController::PopCommand(const string& strName)
+void CAIController::DeleteCommand(const string& strName)
 {
 	if (ExistCommand(strName))
-		m_Commands.erase(strName);
+	{
+		m_Commands.find(strName)->second.SetDelete();
+	}
 }
 
 _bool CAIController::ExistCommand(const string& strName)
@@ -145,6 +176,28 @@ _bool CAIController::ExistCommand(const string& strName)
 void CAIController::ClearCommands()
 {
 	m_Commands.clear();
+}
+
+_bool CAIController::ExistExitCommand(const string& strName)
+{
+	return m_ExitCommands.find(strName) != m_ExitCommands.end();
+}
+
+void CAIController::DeleteExitCommand(const string& strName)
+{
+	if (ExistExitCommand(strName))
+		m_ExitCommands.erase(strName);
+}
+
+void CAIController::ClearExitCommands()
+{
+	m_ExitCommands.clear();
+}
+
+void CAIController::ClearAllCommands()
+{
+	ClearExitCommands();
+	ClearCommands();
 }
 
 void CAIController::Move(EMoveAxis eAxis)
@@ -204,9 +257,19 @@ void CAIController::Input(EHandleInput eInput)
 	m_InputState[eInput] = KEY_STATE::DOWN;
 }
 
+void CAIController::ExecuteExitCommand(const string& strName)
+{
+	auto itr = m_ExitCommands.find(strName);
+	if (itr != m_ExitCommands.end())
+	{
+		itr->second.Execute();
+		m_ExitCommands.erase(strName);
+	}
+}
+
 void CAIController::Free()
 {
 	CController::Free();
-	ClearCommands();
+	ClearAllCommands();
 	Safe_Release(m_pTarget);
 }

@@ -67,7 +67,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
 
 	m_pPlayerCam = m_pGameInstance->Add_Camera("PlayerCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Player");
-	
+	Safe_AddRef(m_pPlayerCam);
 
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 	Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
@@ -1082,7 +1082,8 @@ void CPlayer::Search_Usable_KineticObject()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	if (pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic")->GetGameObjects().empty())
+	if (pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic") == nullptr
+		|| pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic")->GetGameObjects().empty())
 	{
 		m_pKineticObject = nullptr;
 	}

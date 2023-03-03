@@ -32,7 +32,7 @@ public:
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_float GetTurnRemain() const { return m_fTurnRemain; }
 	_bool IsAttack() const { return m_bAttack; }
-
+	_bool IsPlayingSocket() const;
 
 private:
 	CRenderer*				m_pRendererCom = nullptr;
@@ -46,11 +46,13 @@ private:
 
 
 	_bool m_bAttack = false;
+	_bool m_bSpinAttack = false;
 	_bool m_bRange = false;
 	_bool m_bJump = false;
 	_bool m_bDown = false;
 	_bool m_bMiddleDown = false;
 
+	_int m_iJitabaCnt = 0;
 
 	CAnimation* m_pAtk_R = nullptr;
 	CAnimation* m_pAtk_L = nullptr;

@@ -30,10 +30,37 @@ public:
 		return m_fDuration <= 0.f;
 	}
 	_float GetDuration() const { return m_fDuration; }
+	void SetDelete() { m_bDelete = true; }
+	_bool IsDeleted() { return m_bDelete; }
 
 private:
 	CallbackType m_Callback;
-	_float m_fDuration;
+	_float m_fDuration = 0.f;
+	_bool m_bDelete = false;
+};
+
+class AIExitCommand
+{
+using CallbackType = std::function<void()>;
+public:
+	AIExitCommand(CallbackType&& callback)
+		: m_Callback(std::move(callback))
+	{
+	}
+	template<typename T, typename Ret, typename... Args>
+	AIExitCommand(T* owner, Ret(T::* memFunc)(Args...), Args&&... args)
+	{
+		m_Callback = [owner, memFunc, args...]()
+		{
+			(owner->*memFunc)(args...);
+		};
+	}
+	void Execute() const
+	{
+		m_Callback();
+	}
+private:
+	CallbackType m_Callback;
 };
 
 class CAIController abstract : public CController
@@ -60,8 +87,21 @@ public:
 	}
 
 	_bool ExistCommand(const string& strName);
-	void PopCommand(const string& strName);
+	void DeleteCommand(const string& strName);
 	void ClearCommands();
+
+	template<typename T, typename Ret, typename... Args>
+	void AddExitCommand(const string& strName, Ret(T::*memFunc)(Args...), Args... args)
+	{
+		if (ExistExitCommand(strName))
+			return;
+		m_ExitCommands.emplace(strName, AIExitCommand(this, memFunc, std::forward<Args>(args)...));
+	}
+
+	_bool ExistExitCommand(const string& strName);
+	void DeleteExitCommand(const string& strName);
+	void ClearExitCommands();
+	void ClearAllCommands();
 
 
 	// 기본 command 함수, 커맨드 함수의 인자는 레퍼런스 사용 금지!
@@ -69,10 +109,14 @@ public:
 	void TurnToTarget(_float fSpeedRatio = 1.f);
 	void Input(EHandleInput eInput);
 
+private:
+	void ExecuteExitCommand(const string& strName);
+
+
 protected:
 	class CScarletCharacter* m_pTarget = nullptr;
-	_float4 m_vLookPos;
-	map<string, AICommand> m_Commands;
+	unordered_map<string, AICommand> m_Commands;
+	unordered_map<string, AIExitCommand> m_ExitCommands;
 	_float m_fTurnRemain = 0.f;
 
 	// command 내에서 사용할 TimeDelta
