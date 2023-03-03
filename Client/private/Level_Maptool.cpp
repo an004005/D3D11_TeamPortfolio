@@ -96,7 +96,7 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	});
 
 	//일반 모델들의 프로토타입 생성
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/", 
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/Effect/", 
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
@@ -156,7 +156,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
+	Json json;// = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
 
 	json["Model_ProtoTypes"] = Json::array();
 
