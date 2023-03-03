@@ -19,7 +19,7 @@ vector			g_vCamPosition;
 vector			g_vMtrlAmbient = (vector)1.f;
 vector			g_vMtrlSpecular = (vector)0.f;
 
-texture2D		g_Texture; /* 디버그용텍스쳐*/
+texture2D		g_Texture; /* 디버그용텍스처*/
 texture2D		g_NormalTexture; 
 texture2D		g_DepthTexture;
 texture2D		g_ShadowDepthTexture;

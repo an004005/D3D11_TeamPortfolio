@@ -14,7 +14,6 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void	BeginTick() override;
 	virtual void	Tick(_double TimeDelta) override;
 
 	virtual void	Imgui_RenderProperty() override;

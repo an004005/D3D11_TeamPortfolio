@@ -42,8 +42,8 @@ struct PS_IN1
 /*******************
  * UI_Tex_Alpha 
  /********************/
-// 단순 알파블렌드 텍스쳐
-// g_tex_0 : UI 텍스쳐
+// 단순 알파블렌드 텍스처
+// g_tex_0 : UI 텍스처
 VS_OUT VS_UI_Tex_Alpha(VS_IN In)	// → 0
 {
 	VS_OUT		Out = (VS_OUT)0;
@@ -76,7 +76,7 @@ VS_OUT VS_UI_Tex_Alpha_Flip(VS_IN In)	// → 1 반전
  * UI_LowStateBg
  /********************/
 // HPUI전용 패스
-// g_tex_0 : UI 텍스쳐
+// g_tex_0 : UI 텍스처
 // g_float_0 : 알파 비율
 VS_OUT VS_UI_LowStateBg(VS_IN In)	// → 2
 {
@@ -98,7 +98,7 @@ PS_OUT PS_UI_LowStateBg(PS_IN In)	// → 2 빨간색으로 알파값 조절
 /*******************
  * UI_SkillIcon
  /********************/
-// g_tex_0 : UI 텍스쳐
+// g_tex_0 : UI 텍스처
 // g_float_0 : 알파 비율
 VS_OUT VS_UI_SkillIcon(VS_IN In)	// → 3
 {
@@ -123,8 +123,8 @@ PS_OUT PS_UI_SkillIcon(PS_IN In)	// → 3 본연의 색상으로 알파값 조절
  /********************/
 // g_float_0 : cur time
 // g_float_1 : frame time
-// g_tex_0 : 플립북 텍스쳐
-// g_tex_1 : 컬러 그레디언트 텍스쳐
+// g_tex_0 : 플립북 텍스처
+// g_tex_1 : 컬러 그레디언트 텍스처
 VS_OUT VS_CSkill_UseAnim(VS_IN In)	// → 4
 {
 	VS_OUT		Out = (VS_OUT)0;
@@ -249,7 +249,7 @@ PS_OUT PS_UI_Alpha_Mask_Color_AlphaGradient(PS_IN In)
  * FlipBook
  /********************/
 // g_float_0 : frame time
-// g_tex_0 : 플립북 텍스쳐
+// g_tex_0 : 플립북 텍스처
 // g_int_0 : 플릭북 가로 개수
 // g_int_1 : 플립북 세로 개수
 
@@ -471,10 +471,10 @@ PS_OUT PS_Glow(PS_IN1 In)
 }
 
 /*******************
-* UVCut → 17 : 2장의 텍스쳐를 가져와서 섞는다.
+* UVCut → 17 : 2장의 텍스처를 가져와서 섞는다.
 
-g_tex_0 : 섞을 색상의 텍스쳐
-g_tex_1 : 이미시브 텍스쳐
+g_tex_0 : 섞을 색상의 텍스처
+g_tex_1 : 이미시브 텍스처
 g_vec4_0 : 섞을 색상
 /********************/
 float4 g_vEmissiveColor : EMISSIVE;
@@ -519,10 +519,10 @@ PS_OUT PS_Emissive(PS_IN1 In)
 * 18 : 가로는 텍스처가 계속 이동하고, 세로로는 지정한 만큼 보여진다.
 
 // g_float_0 : frame time
-// g_tex_0 : 플립북 텍스쳐
+// g_tex_0 : 플립북 텍스처
 // g_int_0 : 플릭북 가로 개수
 // g_int_1 : 플립북 세로 개수
-// g_vec2_0 : [x] UV.y 에 더할 값 / [y] 텍스쳐 나눌 값
+// g_vec2_0 : [x] UV.y 에 더할 값 / [y] 텍스처 나눌 값
 /********************/
 
 VS_OUT VS_FlipBookCut(VS_IN In)	// ->18
@@ -549,10 +549,10 @@ PS_OUT PS_FlipBookCut(PS_IN In)	// ->18
 }
 
 /*******************
-* UVCut → 19 : 텍스쳐 2장을 섞고, UV 를 조정한다. 
+* UVCut → 19 : 텍스처 2장을 섞고, UV 를 조정한다. 
 
-g_tex_0 : 흰색 텍스쳐
-g_tex_1 : 출력할 텍스쳐
+g_tex_0 : 흰색 텍스처
+g_tex_1 : 출력할 텍스처
 g_float_0 : 게이지 정도
 g_vec4_0 : 색상 조절
 /********************/
@@ -618,6 +618,25 @@ PS_OUT PS_Flow(PS_IN In)	// → 20
 
 	Out.vColor.a = PointTex.r;
 
+	return Out;
+}
+
+/*******************
+* UVCut → 21 : 배경이 검정색인 텍스처를 검정색을 없애고 색상을 변경할 수 있습니다.
+g_float_0 : 색상 변경 (초록색)
+/********************/
+PS_OUT PS_MaskTexture(PS_IN In)	// → 21
+{
+	PS_OUT         Out = (PS_OUT)0;
+
+	float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	float4 GlowBase = DefaultTex * g_vec4_0;
+
+	float4 PointTex = g_tex_1.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor = saturate(GlowBase);
+	Out.vColor.a = PointTex.g;
 	return Out;
 }
 
@@ -917,5 +936,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_Flow();
+	}
+
+	//21 : 배경이 검정색인 텍스처를 사용할 때
+	pass MaskTexture
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MaskTexture();
 	}
 }

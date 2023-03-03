@@ -190,6 +190,7 @@
     <ClInclude Include="..\public\Canvas_Drive.h" />
     <ClInclude Include="..\public\Canvas_DriveMove.h" />
     <ClInclude Include="..\public\Canvas_Item.h" />
+    <ClInclude Include="..\public\Canvas_ItemMove.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
     <ClInclude Include="..\public\Canvas_SASInfo.h" />
@@ -210,6 +211,12 @@
     <ClInclude Include="..\public\Imgui_LevelSwitcher.h" />
     <ClInclude Include="..\public\Imgui_MapEditor.h" />
     <ClInclude Include="..\public\Indicator.h" />
+    <ClInclude Include="..\public\Item_GaugeUI.h" />
+    <ClInclude Include="..\public\Item_IconUI.h" />
+    <ClInclude Include="..\public\Item_LeftArrowUI.h" />
+    <ClInclude Include="..\public\Item_NameUI.h" />
+    <ClInclude Include="..\public\Item_PushArrowUI.h" />
+    <ClInclude Include="..\public\Item_RightArrowUI.h" />
     <ClInclude Include="..\public\Level_AnimModify.h" />
     <ClInclude Include="..\public\Level_Converter.h" />
     <ClInclude Include="..\public\Level_Effect.h" />
@@ -230,6 +237,7 @@
     </ClInclude>
     <ClInclude Include="..\public\MapNonAnim_Object.h" />
     <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\PlayerInfo_HpUI.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
     <ClInclude Include="..\public\SASSkillDefaultUI.h" />
@@ -267,6 +275,7 @@
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
     <ClCompile Include="..\private\Canvas_DriveMove.cpp" />
     <ClCompile Include="..\private\Canvas_Item.cpp" />
+    <ClCompile Include="..\private\Canvas_ItemMove.cpp" />
     <ClCompile Include="..\private\Canvas_PlayerInfo.cpp" />
     <ClCompile Include="..\private\Canvas_PlayerInfoMove.cpp" />
     <ClCompile Include="..\private\Canvas_SASInfo.cpp" />
@@ -288,6 +297,12 @@
     <ClCompile Include="..\private\Imgui_LevelSwitcher.cpp" />
     <ClCompile Include="..\private\Imgui_MapEditor.cpp" />
     <ClCompile Include="..\private\Indicator.cpp" />
+    <ClCompile Include="..\private\Item_GaugeUI.cpp" />
+    <ClCompile Include="..\private\Item_IconUI.cpp" />
+    <ClCompile Include="..\private\Item_LeftArrowUI.cpp" />
+    <ClCompile Include="..\private\Item_NameUI.cpp" />
+    <ClCompile Include="..\private\Item_PushArrowUI.cpp" />
+    <ClCompile Include="..\private\Item_RightArrowUI.cpp" />
     <ClCompile Include="..\private\Level_AnimModify.cpp" />
     <ClCompile Include="..\private\Level_Converter.cpp" />
     <ClCompile Include="..\private\Level_Effect.cpp" />
@@ -308,6 +323,7 @@
     </ClCompile>
     <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\PlayerInfo_HpUI.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
     <ClCompile Include="..\private\ScarletCharacter.cpp" />
     <ClCompile Include="..\private\SASSkillDefaultUI.cpp" />

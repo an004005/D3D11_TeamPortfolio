@@ -19,17 +19,28 @@
 #include "Canvas_DriveMove.h"
 #include "Canvas_SASSkill.h"
 #include "Canvas_SASSkillMove.h"
+#include "Canvas_ItemMove.h"
 
 #include "DefaultUI.h"
 #include "ButtonUI.h"
+// SAS SKill
 #include "SASSkillIconUI.h"
 #include "SASSkillGaugeUI.h"
 #include "SASSkillLightUI.h"
 #include "SASSkillDefaultUI.h"
 #include "SASSkillFullCircleUI.h"
-//
+// Direve
 #include "Drive_RightDotUI.h"
 #include "Drive_GaugeUI.h"
+// Item
+#include "Item_NameUI.h"
+#include "Item_IconUI.h"
+#include "Item_GaugeUI.h"
+#include "Item_PushArrowUI.h"
+#include "Item_LeftArrowUI.h"
+#include "Item_RightArrowUI.h"
+// PlayerInfo
+#include "PlayerInfo_HpUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -96,6 +107,10 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Item"),
 			CCanvas_Item::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_ItemMove */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_ItemMove"),
+			CCanvas_ItemMove::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASInfo"),
@@ -106,7 +121,6 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_PlayerInfo"),
 			CCanvas_PlayerInfo::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_PlayerInfoMove"),
 			CCanvas_PlayerInfoMove::Create(m_pDevice, m_pContext))))
@@ -116,7 +130,6 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Drive"),
 			CCanvas_Drive::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_DriveMove"),
 			CCanvas_DriveMove::Create(m_pDevice, m_pContext))))
@@ -126,7 +139,6 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASSkill"),
 			CCanvas_SASSkill::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
 		/* For.Prototype_GameObject_Canvas_SASSkillMove */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASSkillMove"),
 			CCanvas_SASSkillMove::Create(m_pDevice, m_pContext))))
@@ -180,6 +192,38 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Drive_GaugeUI"),
 			CDrive_GaugeUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+
+		// Frount_UI -> Item
+		/* For.Prototype_GameObject_Item_GaugeUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_GaugeUI"),
+			CItem_GaugeUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_IconUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_IconUI"),
+			CItem_IconUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_NameUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_NameUI"),
+			CItem_NameUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_PushArrowUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_PushArrowUI"),
+			CItem_PushArrowUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_LeftArrowUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_LeftArrowUI"),
+			CItem_LeftArrowUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_RightArrowUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_RightArrowUI"),
+			CItem_RightArrowUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		// Frount_UI -> PlayerInfo
+		/* For.Prototype_GameObject_PlayerInfo_HpUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_HpUI"),
+			CPlayerInfo_HpUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 	}
 
 	return S_OK;
@@ -203,9 +247,12 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	// Frount_UI Canvas_FrontUI
+	// Frount_UI Canvas_FrontUI 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Item.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Item", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_ItemMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_ItemMove", &json));
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfo_Left.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfo", &json));

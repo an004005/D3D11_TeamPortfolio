@@ -42,12 +42,6 @@ HRESULT CCanvas_SASSkill::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CCanvas_SASSkill::BeginTick()
-{
-
-
-}
-
 void CCanvas_SASSkill::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);

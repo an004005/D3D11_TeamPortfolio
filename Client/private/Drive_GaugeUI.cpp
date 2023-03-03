@@ -121,7 +121,7 @@ void CDrive_GaugeUI::DrivaGaugeMinus_Tick(const _double & dTimeDelta)
 	static _double m_dMinus_TimeAcc;
 	m_dMinus_TimeAcc += dTimeDelta;
 	_float fDriveFullTime = CUI_Manager::GetInstance()->Get_DriveFullTime();
-	m_tParams.Floats[0] = 1 - (_float(m_dMinus_TimeAcc) / fDriveFullTime);
+	m_tParams.Floats[0] = 1.0f - (_float(m_dMinus_TimeAcc) / fDriveFullTime);
 
 	if (0.0f > m_tParams.Floats[0])
 	{
