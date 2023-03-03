@@ -196,6 +196,45 @@ PS_OUT PS_PHOENIX_FIREBALL(PS_IN In)
 	return Out;
 }
 
+// g_tex_0 : 그라디언트와 동시에 디퓨즈
+// g_tex_1 : 문자형상을 가진 텍스쳐
+// g_float_0 : Emissive
+// g_float_1 : Alpha
+
+PS_OUT PS_MAIN_PLAYER_TEXT_PARTICLE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+
+
+	float2 vTileOffsetUV = TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0, g_Time));
+
+	float2 MixUV = Get_FlipBookUV(vTileOffsetUV, g_Time + In.CurLife, 3.0, 4, 4);
+	float2 TexUV =  Get_FlipBookUV(In.vTexUV, g_Time + In.CurLife, 2.0, 4, 4);
+
+	float4 MixColor = g_tex_0.Sample(LinearSampler, MixUV);
+
+	float4 TexColor = g_tex_1.Sample(LinearSampler, TexUV);
+
+	// if(TexColor.a < 0.0001f)
+	// 	discard;
+
+	float gradient = g_float_1;
+
+	float4 CalcColor = float4(saturate(MixColor.rgb * TexColor.rgb), gradient);
+
+	Out.vColor = CalcHDRColor(CalcColor, g_float_0);
+
+	Out.vColor.a = TexColor.a * gradient;
+
+
+
+	// if (Out.vColor.a < 0.01f)
+	// 	discard;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0
@@ -226,7 +265,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_SPIKE_CHARGE();
 	}
 
-	//1
+	//2
 	pass PhoenixUltReturn
 	{
 		SetRasterizerState(RS_Default);
@@ -240,7 +279,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_PHOENIX_ULT_RETURN();
 	}
 
-	//2
+	//3
 	pass PhoenixFireBall
 	{
 		SetRasterizerState(RS_Default);
@@ -252,5 +291,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_PHOENIX_FIREBALL();
+	}
+
+	//4
+	pass Player_Text_Particle
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_PLAYER_TEXT_PARTICLE();
 	}
 }

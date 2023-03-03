@@ -88,6 +88,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext, TEXT("MRT_HDR"))))
 			return E_FAIL;
+
 		Render_HDR();
 	}
 	else
@@ -118,6 +119,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 		m_pTarget_Manager->Render_Debug(TEXT("MRT_LightAcc"));
 		m_pTarget_Manager->Render_Debug(TEXT("MRT_LightDepth"));
 		m_pTarget_Manager->Render_Debug(TEXT("MRT_ToonDeferred"));
+		m_pTarget_Manager->Render_Debug(TEXT("MRT_HDR"));
 
 	}
 #endif
@@ -156,6 +158,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	
 	/* For.Target_Diffuse */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Diffuse"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.3f, 0.3f, 0.3f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Flag"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(0.f, 0.0f, 0.0f, 0.f))))
 		return E_FAIL;
 	/* For.Target_Normal */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Normal"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(1.f, 1.f, 1.f, 1.f))))
@@ -244,8 +248,14 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_HDR"), TEXT("Target_HDR"))))
 		return E_FAIL;
 
+	// For Effect
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_HDR"), TEXT("Target_Flag"))))
+		return E_FAIL;
+	// ~For Effect
+
+	Ready_ShadowDepthResources(8192, 8192);
 	// Ready_ShadowDepthResources(8192, 8192);
-	Ready_ShadowDepthResources(128, 128);
+	// Ready_ShadowDepthResources(128, 128);
 
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer)
@@ -281,6 +291,9 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_CTL"), 300.0f, 700.f, 200.f, 200.f)))
 		return E_FAIL;
+
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Flag"), 100.0f, 900.f, 200.f, 200.f), E_FAIL);
+
 
 	// FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Outline"), 250.0f, 150.f, 100.f, 100.f), E_FAIL);
 
@@ -674,6 +687,11 @@ HRESULT CRenderer::Render_PostProcess()
 		if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_DepthMaintainTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Depth_Maintain")))))
 			return E_FAIL;
 
+		// For Effect
+		if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_FlagTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Flag")))))
+			return E_FAIL;
+		// ~For Effect
+
 		m_RenderObjects[POSTPROCESS_VFX].sort([](CGameObject* pLeft, CGameObject* pRight)
 		{
 			const auto pLeftPostFX = dynamic_cast<CPostProcess*>(pLeft);
@@ -699,8 +717,7 @@ HRESULT CRenderer::Render_PostProcess()
 				pLDRSour = pLDRDest;
 				pLDRDest = pLDRTmp;
 
-				m_pShader_PostProcess->Set_Params(pPostFX->GetParam());
-				m_pShader_PostProcess->Begin(pPostFX->GetPass());
+				m_pShader_PostProcess->Begin_Params(pPostFX->GetParam());
 				m_pVIBuffer->Render();
 			}
 
@@ -737,6 +754,11 @@ HRESULT CRenderer::Render_UI()
 
 	m_RenderObjects[RENDER_UI].clear();
 
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Distortion(const _tchar* pTargetTag)
+{
 	return S_OK;
 }
 

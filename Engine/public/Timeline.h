@@ -116,6 +116,8 @@ public:
 
 	void Imgui_RenderEditor();
 
+	_bool IsPlay() { return m_bPlay; }
+
 	template<typename T>
 	void SetFinishFunction(T* obj, void (T::*memFunc)())
 	{

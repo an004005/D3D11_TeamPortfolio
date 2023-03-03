@@ -21,6 +21,7 @@
 #include "PhysX_Manager.h"
 #include "Monster.h"
 #include <random>
+#include "TrailSystem.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -1143,6 +1144,8 @@ void CPlayer::Free()
 
 	Safe_Release(m_pKineticStataMachine);
 	Safe_Release(m_pHitStateMachine);
+	Safe_Release(m_pTrail);
+	Safe_Release(m_pFSM);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pModel);

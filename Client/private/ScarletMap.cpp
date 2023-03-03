@@ -55,7 +55,7 @@ HRESULT CScarletMap::Render()
 
 void CScarletMap::Imgui_RenderProperty()
 {
-	if (LEVEL_NOW != LEVEL_MAPTOOL) return;
+
 
 	__super::Imgui_RenderProperty();
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
