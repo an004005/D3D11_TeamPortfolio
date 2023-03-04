@@ -18,7 +18,7 @@ public:
 	virtual void SaveToJson(Json& json) override;
 
 	ShaderParams& GetParam() { return m_tParam; }
-	_uint GetPass() const { return m_iPass; }
+	_uint GetPass() const { return m_tParam.iPass; }
 	_uint GetPriority() const { return m_iPriority; }
 
 	virtual void Imgui_RenderProperty() override;
@@ -28,7 +28,6 @@ private:
 
 protected:
 	ShaderParams m_tParam;
-	_uint m_iPass = 0;
 	// priority가 작은거부터 먼저 실행한다.
 	_uint m_iPriority = 0;
 

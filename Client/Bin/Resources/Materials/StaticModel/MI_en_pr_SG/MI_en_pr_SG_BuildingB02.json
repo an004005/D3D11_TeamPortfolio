@@ -1,0 +1,16 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Building/pr_SGHeadquarters/T_pr_SG_BuildingB_ALB_0.dds",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Building/pr_SGHeadquarters/T_pr_SG_BuildingB_NML_0.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Building/pr_SGHeadquarters/T_pr_SG_BuildingB_RMA_0.dds"
+        ],
+        "Pass" : 1
+    }
+}

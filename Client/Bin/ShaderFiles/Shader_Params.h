@@ -15,7 +15,7 @@ vector g_vCamPosition;
 // matrix g_matViewInv;
 
 float   g_Time;
-float   g_Far = 300.f;
+float   g_Far = 1000.f;
 
 int     g_int_0;
 int     g_int_1;

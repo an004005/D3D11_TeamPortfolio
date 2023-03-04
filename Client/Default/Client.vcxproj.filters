@@ -208,6 +208,18 @@
     <Filter Include="02.GameObjects\Map\MapObject">
       <UniqueIdentifier>{13c3e0df-d901-4b13-a7e5-d6ac024d79f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.ShaderFiles\PostProcess\Distortion">
+      <UniqueIdentifier>{a2654f95-9aaa-4a83-a0f1-4cf87b41901b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\PostProcess\WhiteOut">
+      <UniqueIdentifier>{f56bb59f-7c4c-4baa-8c70-2b9087add5d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\PostProcess\Distortion">
+      <UniqueIdentifier>{22ba49aa-e9f1-4a6a-b530-12599d744dcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\PostProcess\Scifi">
+      <UniqueIdentifier>{c05fd436-44e5-4ea4-b432-630fe9acddd2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Monster\boss1">
       <UniqueIdentifier>{44a3e289-3391-45e6-b735-a5ae92424cd7}</UniqueIdentifier>
     </Filter>
@@ -305,9 +317,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Level_Effect.h">
       <Filter>01.Levels\14.EffectTool</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\PostVFX_WhiteOut.h">
-      <Filter>VFX\PostProcess</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
@@ -543,6 +552,15 @@
     <ClInclude Include="..\public\MapNonAnim_Object.h">
       <Filter>02.GameObjects\Map</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PostVFX_WhiteOut.h">
+      <Filter>VFX\PostProcess\WhiteOut</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Distortion.h">
+      <Filter>VFX\PostProcess\Distortion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Scifi.h">
+      <Filter>VFX\PostProcess\Scifi</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Boss1.h">
       <Filter>02.GameObjects\Monster\boss1</Filter>
     </ClInclude>
@@ -624,9 +642,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Level_Effect.cpp">
       <Filter>01.Levels\14.EffectTool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\PostVFX_WhiteOut.cpp">
-      <Filter>VFX\PostProcess</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
@@ -857,6 +872,15 @@
     </ClCompile>
     <ClCompile Include="..\private\MapNonAnim_Object.cpp">
       <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_WhiteOut.cpp">
+      <Filter>VFX\PostProcess\WhiteOut</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Distortion.cpp">
+      <Filter>VFX\PostProcess\Distortion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Scifi.cpp">
+      <Filter>VFX\PostProcess\Scifi</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Boss1.cpp">
       <Filter>02.GameObjects\Monster\boss1</Filter>

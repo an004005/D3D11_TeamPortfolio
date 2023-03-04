@@ -1,0 +1,16 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/LC22/Area01_02/Plants/T_Bark_ALB.dds",
+            "../Bin/Resources/Environments/00_Common/03_Texture/T_Detail_N.png",
+            "../Bin/Resources/Environments/Location/LC22/Area01_02/T_SumeragiTile_A_RMA.dds"
+        ],
+        "Pass" : 1
+    }
+}

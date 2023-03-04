@@ -22,6 +22,9 @@ private:
 	vector<VTXMATRIX> m_PointData;
 	_bool m_bLife = true;
 
+	_float m_fLifeTime = 0.2f;
+
+
 public:
 	static CVIBuffer_Trail_Instancing* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumInstance = 1);
 	virtual CComponent* Clone(void* pArg = nullptr) override;
