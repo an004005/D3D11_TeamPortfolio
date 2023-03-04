@@ -293,14 +293,14 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Json SkummyPandouModel;
 	SkummyPandouModel["Model"] = "MonsterSkummyPandou";
 	
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPandou"), &SkummyPandouModel)))
-	return E_FAIL;*/
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPandou"), &SkummyPandouModel)))
+	return E_FAIL;
 
 	Json BronJonModel;
 	BronJonModel["Model"] = "MonsterBronJon";
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
+		return E_FAIL;*/
 
 	return S_OK;
 }
