@@ -107,6 +107,7 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 			if ("Reference" == pChannel->GetChannelName())
 			{
 				m_vLocalMove = pChannel->GetLocalMove();
+				m_vLocalRotation = pChannel->GetLocalRotation();
 			}
 		}
 		// 이벤트 실행
@@ -127,6 +128,7 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 			{
 				m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 				m_vLocalMove = pChannel->GetLocalMove();
+				m_vLocalRotation = pChannel->GetLocalRotation();
 			}
 		}
 		break;
@@ -212,6 +214,18 @@ void CAnimation::Reset()
 {
 	m_PlayTime = 0.0;
 	m_bFinished = false;
+}
+
+void CAnimation::SetLocalRotation(_bool bLocalRotation)
+{
+	for (auto pChannel : m_Channels)
+	{
+		if ("Reference" == pChannel->GetChannelName())
+		{
+			pChannel->SetLocalRotation(bLocalRotation);
+			break;
+		}
+	}
 }
 
 void CAnimation::SaveModifiedData(Json& json)

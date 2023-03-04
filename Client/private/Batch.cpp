@@ -1,0 +1,229 @@
+#include "stdafx.h"
+#include "..\public\ScarletMap.h"
+#include "GameInstance.h"
+#include "JsonStorage.h"
+#include "GameUtils.h"
+#include "Batch.h"
+
+CBatch::CBatch(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+	:CGameObject(pDevice, pContext)
+{
+}
+
+CBatch::CBatch(const CBatch & rhs)
+	: CGameObject(rhs)
+{
+}
+
+HRESULT CBatch::Initialize_Prototype()
+{
+	FAILED_CHECK(__super::Initialize_Prototype());
+
+	return S_OK;
+}
+
+HRESULT CBatch::Initialize(void* pArg)
+{
+	FAILED_CHECK(__super::Initialize(pArg));
+
+	FAILED_CHECK(SetUp_Components());
+
+	return S_OK;
+}
+
+void CBatch::BeginTick()
+{
+}
+
+void CBatch::Tick(_double TimeDelta)
+{
+	__super::Tick(TimeDelta);
+}
+
+void CBatch::Late_Tick(_double TimeDelta)
+{
+	__super::Late_Tick(TimeDelta);
+}
+
+HRESULT CBatch::Render()
+{
+	FAILED_CHECK(__super::Render());
+
+	return S_OK;
+}
+
+void CBatch::Imgui_RenderProperty()
+{
+	__super::Imgui_RenderProperty();
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	const char*	BatchTypes[BATCHTYPE::TYPE_END] = { "MONSTER", "OTEHR" };
+	ImGui::Combo("ProtoFilter", &m_Filter, BatchTypes, IM_ARRAYSIZE(BatchTypes));
+
+	ImGui::Separator();
+
+	if (ImGui::BeginListBox("GameObjectProto List"))
+	{
+		for (auto& info : m_ProtosInfo)
+		{
+			//필터 적용
+			if (m_Filter != info.second) continue;
+
+			const bool bSelected = (info.first == m_pProtoTag);
+
+			if (bSelected)
+				ImGui::SetItemDefaultFocus();
+
+			char pStr[MAX_PATH];
+			strcpy(pStr, CGameUtils::GetFileName(ws2s(info.first)).c_str());
+
+			if (ImGui::Selectable(pStr, bSelected))
+			{
+				m_pProtoTag = info.first;
+			}
+		}
+
+		ImGui::EndListBox();
+	}
+
+	ImGui::Separator();
+
+	if (ImGui::Button("Create_GameObject"))
+	{		
+
+	}
+
+	ImGui::Separator();
+
+	static char szSearchObject[MAX_PATH] = "";
+	ImGui::InputText("GameObject Search", szSearchObject, MAX_PATH);
+
+	const wstring strObjSearch = s2ws(szSearchObject);
+	const _bool bObjSearch = strObjSearch.empty() == false;
+
+	if (ImGui::BeginListBox("GameObject List"))
+	{
+		for (size_t i = 0; i < m_pGameObjects.size(); ++i)
+		{
+			if (bObjSearch)
+			{
+				wstring szProtoTag = m_pGameObjects[i]->GetPrototypeTag();
+				if (szProtoTag.find(strObjSearch) == wstring::npos)
+					continue;
+			}
+
+			const bool bSelected = (m_pGameObjects[i]->GetPrototypeTag() == m_pProtoTag);
+
+			if (bSelected)
+				ImGui::SetItemDefaultFocus();
+
+			char pStr[MAX_PATH]{};
+			strcpy(pStr, CGameUtils::GetFileName(ws2s(m_ProtosInfo[i].first)).c_str());
+			sprintf_s(pStr, sizeof(pStr), "%s %zd", pStr, i);
+
+			if (ImGui::Selectable(pStr, bSelected))
+			{
+				m_pGameObject = m_pGameObjects[i];
+			}
+
+		}
+
+		ImGui::EndListBox();
+	}
+
+	ImGui::Separator();
+
+
+	if (ImGui::Button("Delete_GameObject"))
+	{
+		
+	}
+
+	ImGui::Separator();
+
+	ImGui::BeginChild("Selected Object", { 500.f, 200.f });
+
+	if (m_pGameObject)
+	{
+		ImGui::Separator();
+		ImGui::Text("%s", typeid(*m_pGameObject).name());
+		m_pGameObject->Imgui_RenderProperty();
+		m_pGameObject->Imgui_RenderComponentProperties();
+	}
+
+	ImGui::EndChild();
+}
+
+void CBatch::SaveToJson(OUT Json & json)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	__super::SaveToJson(json);
+}
+
+void CBatch::LoadFromJson(const Json & json)
+{
+	__super::LoadFromJson(json);
+
+	if (json.contains("ProtosInfo"))
+	{
+		for (auto pGameObj : json["ProtosInfo"])
+		{
+			pair<wstring, BATCHTYPE> objdesc = pGameObj;
+			m_ProtosInfo.emplace_back(objdesc);
+		}
+	}
+}
+
+HRESULT CBatch::SetUp_Components()
+{
+	return S_OK;
+}
+
+_float4 CBatch::SetUp_InitPosition()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	_matrix CamWorldMatrix = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW);
+
+	_vector vCamLook = CamWorldMatrix.r[2];
+	_vector vCamPos = CamWorldMatrix.r[3];
+
+	_float4 vInitPos;
+	XMStoreFloat4(&vInitPos, XMVectorSetW(vCamPos + XMVector3Normalize(vCamLook) * 20.f, 1.f));
+
+	return vInitPos;
+}
+
+
+
+
+
+CBatch * CBatch::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+{
+	CBatch*		pInstance = new CBatch(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CBatch");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CGameObject* CBatch::Clone(void* pArg)
+{
+	CBatch*		pInstance = new CBatch(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CBatch");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void CBatch::Free()
+{
+	__super::Free();
+}

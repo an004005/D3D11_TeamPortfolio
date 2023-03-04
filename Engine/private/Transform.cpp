@@ -200,6 +200,19 @@ void CTransform::LocalMove(_float3 vDir, _float fRange)
 	Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
+void CTransform::AddQuaternion(_vector Quaternion)
+{
+	_matrix		RotationMatrix = XMMatrixRotationQuaternion(Quaternion);
+
+	_vector		vRight = Get_State(CTransform::STATE_RIGHT);
+	_vector		vUp = Get_State(CTransform::STATE_UP);
+	_vector		vLook = Get_State(CTransform::STATE_LOOK);	
+
+	Set_State(CTransform::STATE_RIGHT, XMVector4Transform(vRight, RotationMatrix));
+	Set_State(CTransform::STATE_UP, XMVector4Transform(vUp, RotationMatrix));
+	Set_State(CTransform::STATE_LOOK , XMVector4Transform(vLook, RotationMatrix));
+}
+
 void CTransform::SetAxis(STATE eState, _fvector vAxis)
 {
 	_float3		vScale = Get_Scaled();
@@ -245,6 +258,19 @@ void CTransform::SetAxis(STATE eState, _fvector vAxis)
 void CTransform::Turn(_fvector vAxis, _double TimeDelta)
 {
 	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, m_TransformDesc.fRotationPerSec * TimeDelta);
+
+	_vector		vRight = Get_State(CTransform::STATE_RIGHT);
+	_vector		vUp = Get_State(CTransform::STATE_UP);
+	_vector		vLook = Get_State(CTransform::STATE_LOOK);	
+
+	Set_State(CTransform::STATE_RIGHT, XMVector4Transform(vRight, RotationMatrix));
+	Set_State(CTransform::STATE_UP, XMVector4Transform(vUp, RotationMatrix));
+	Set_State(CTransform::STATE_LOOK , XMVector4Transform(vLook, RotationMatrix));
+}
+
+void CTransform::Turn_Fixed(_fvector vAxis, _float fRadian)
+{
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, fRadian);
 
 	_vector		vRight = Get_State(CTransform::STATE_RIGHT);
 	_vector		vUp = Get_State(CTransform::STATE_UP);
@@ -356,6 +382,53 @@ void CTransform::LookAt_Smooth(_fvector vTargetPos, _double TimeDelta)
 		Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta);
 	else if (-0.2 >= XMVectorGetX(XMVector3Dot(vRight, vDir)))
 		Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -TimeDelta);
+}
+
+// _float CTransform::LookAt_SmoothYaw(_fvector vTargetPos, _double TimeDelta)
+// {
+// 	const _float fMyYaw = GetYaw_Radian();
+//
+// 	const _vector vToTargetDir = XMVector3Normalize(XMVectorSetY(vTargetPos - Get_State(STATE_TRANSLATION), 0.f));
+//
+// 	_float fToTargetYaw;
+// 	if (XMVectorGetX(vToTargetDir) < 0.f)
+// 		fToTargetYaw = -acosf(XMVectorGetX(XMVector3Dot(vToTargetDir, _float3::UnitZ)));
+// 	else
+// 		fToTargetYaw = acosf(XMVectorGetX(XMVector3Dot(vToTargetDir, _float3::UnitZ)));
+//
+// 	// yaw 차이
+// 	const _float fYawDelta = fMyYaw - fToTargetYaw;
+//
+// 	const _float fTickTurn = m_TransformDesc.fRotationPerSec * TimeDelta;
+//
+// 	if (abs(fYawDelta) > 0.001f)
+// 	{
+// 		if (abs(fYawDelta) <= abs(fTickTurn))
+// 			Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), fToTargetYaw);
+// 		else if (fYawDelta < 0.f)
+// 			Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta);
+// 		else
+// 			Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -TimeDelta);
+// 		return fYawDelta;
+// 	}
+//
+// 	return 0.f;
+// }
+
+_float CTransform::Get_RemainYawToLookAt(_fvector vTargetPos)
+{
+	const _float fMyYaw = GetYaw_Radian();
+
+	const _vector vToTargetDir = XMVector3Normalize(XMVectorSetY(vTargetPos - Get_State(STATE_TRANSLATION), 0.f));
+
+	_float fToTargetYaw;
+	if (XMVectorGetX(vToTargetDir) < 0.f)
+		fToTargetYaw = -acosf(XMVectorGetX(XMVector3Dot(vToTargetDir, _float3::UnitZ)));
+	else
+		fToTargetYaw = acosf(XMVectorGetX(XMVector3Dot(vToTargetDir, _float3::UnitZ)));
+
+	// yaw 차이
+	return fMyYaw - fToTargetYaw;
 }
 
 void CTransform::Chase(_fvector vTargetPos, _double TimeDelta, _float fLimit)

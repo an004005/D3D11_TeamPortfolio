@@ -49,6 +49,10 @@ HRESULT CModelPreviwer::Initialize(void* pArg)
 			FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_ModelName.c_str(), m_ModelName.c_str(),
 				(CComponent**)&m_pModel));
 		}
+		if (json.contains("RenderGroup"))
+		{
+			m_eRenderGroup = json["RenderGroup"];
+		}
 	}
 
 	m_pModel->Add_EventCaller("Test", []() {IM_LOG("Hello World!")});
@@ -62,7 +66,7 @@ void CModelPreviwer::Late_Tick(_double TimeDelta)
 	{
 		//m_pModel->Play_Animation(TimeDelta);
 		m_pModel->Play_Animation_Additive(TimeDelta);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
+		m_pRendererCom->Add_RenderGroup(m_eRenderGroup, this);
 
 		if (m_bLocalMoveAccess) 
 		{

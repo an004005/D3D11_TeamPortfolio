@@ -9,7 +9,7 @@ _bool CMathUtils::FloatCmp(_float f1, _float f2, _float fEpsilon)
 	return fabs(f1 - f2) <= fEpsilon;
 }
 
-_float4 CMathUtils::Quat2EulerDegree(XMFLOAT4 q)
+_float4 CMathUtils::Quat2EulerDegree(Quaternion q)
 {
 	_float4 vEuler;
 	_float sqw = q.w * q.w;
@@ -24,7 +24,7 @@ _float4 CMathUtils::Quat2EulerDegree(XMFLOAT4 q)
 	return vEuler;
 }
 
-_float4 CMathUtils::Quat2Euler(XMFLOAT4 q)
+_float4 CMathUtils::Quat2Euler(Quaternion q)
 {
 	_float4 vEuler;
 	_float sqw = q.w * q.w;
