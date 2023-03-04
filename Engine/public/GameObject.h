@@ -28,7 +28,7 @@ public:
 	 * Initialize는 상호작용을 하는 객체가 아직 없을 수 있다.
 	 * 따라서 모든 객체가 생성이 완료되고나서 같은 레벨에 있는 다른 오브젝트들과의 상호작용이 필요할 때 사용
 	 */
-	virtual void BeginTick(){}
+	virtual void BeginTick();
 	virtual void Tick(_double TimeDelta);
 	virtual void Late_Tick(_double TimeDelta);
 	virtual void AfterPhysX(){}

@@ -37,7 +37,7 @@ HRESULT CLevel_Manager::Finish_Loading(class CLevel* pNewLevel)
 	m_bLoading = false;
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	pGameInstance->Stop_All_Sound();
+	// pGameInstance->Stop_All_Sound();
 
 	if(nullptr != m_pCurrentLevel)
 		pGameInstance->Clear_Level(LEVEL_LOADING);

@@ -13,7 +13,7 @@ CController::CController(const CController& rhs)
 {
 	m_eType = EControllerType::LOCAL;
 	m_InputState.fill(KEY_STATE::NONE);
-	m_WorldCoolTime = { 0.2, false };
+	// m_WorldCoolTime = { 0.2, false };
 
 #ifdef _DEBUG
 	m_bCursorLock = true;
@@ -113,51 +113,51 @@ void CController::Tick(_double TimeDelta)
 	UpdateInputState(CInput_Device::DIM_LB, MOUSE_LB);
 	UpdateInputState(CInput_Device::DIM_RB, MOUSE_RB);
 
-
-	{
-		m_iPreInputMask = m_iInputMask;
-		m_iInputMask = 0;
-
-		if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
-			m_iInputMask |= MASK_W;
-		if (pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
-			m_iInputMask |= MASK_A;
-		if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
-			m_iInputMask |= MASK_S;
-		if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
-			m_iInputMask |= MASK_D;
-
-		if (pGameInstance->Get_DIKeyState(DIK_LSHIFT) & 0x80)
-			m_iInputMask |= MASK_LSHIFT;
-		if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x80)
-			m_iInputMask |= MASK_SPACE;
-		if (pGameInstance->Get_DIKeyState(DIK_LCONTROL) & 0x80)
-			m_iInputMask |= MASK_LCTRL;
-		if (pGameInstance->Get_DIKeyState(DIK_1) & 0x80)
-			m_iInputMask |= MASK_NUM_1;
-		if (pGameInstance->Get_DIKeyState(DIK_2) & 0x80)
-			m_iInputMask |= MASK_NUM_2;
-		if (pGameInstance->Get_DIKeyState(DIK_3) & 0x80)
-			m_iInputMask |= MASK_NUM_3;
-		if (pGameInstance->Get_DIKeyState(DIK_4) & 0x80)
-			m_iInputMask |= MASK_NUM_4;
-		if (pGameInstance->Get_DIKeyState(DIK_R) & 0x80)
-			m_iInputMask |= MASK_R;
-
-		if (pGameInstance->Get_DIKeyState(DIK_Q) & 0x80)
-			m_iInputMask |= MASK_Q;
-		if (pGameInstance->Get_DIKeyState(DIK_E) & 0x80)
-			m_iInputMask |= MASK_E;
-		if (pGameInstance->Get_DIKeyState(DIK_C) & 0x80)
-			m_iInputMask |= MASK_C;
-		if (pGameInstance->Get_DIKeyState(DIK_X) & 0x80)
-			m_iInputMask |= MASK_X;
-
-		if (pGameInstance->Get_DIMouseState(CInput_Device::DIM_LB) & 0x8000)
-			m_iInputMask |= MASK_MOUSELB;
-		if (pGameInstance->Get_DIMouseState(CInput_Device::DIM_RB) & 0x8000)
-			m_iInputMask |= MASK_MOUSERB;
-	}
+	//
+	// {
+	// 	m_iPreInputMask = m_iInputMask;
+	// 	m_iInputMask = 0;
+	//
+	// 	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
+	// 		m_iInputMask |= MASK_W;
+	// 	if (pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
+	// 		m_iInputMask |= MASK_A;
+	// 	if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
+	// 		m_iInputMask |= MASK_S;
+	// 	if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
+	// 		m_iInputMask |= MASK_D;
+	//
+	// 	if (pGameInstance->Get_DIKeyState(DIK_LSHIFT) & 0x80)
+	// 		m_iInputMask |= MASK_LSHIFT;
+	// 	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x80)
+	// 		m_iInputMask |= MASK_SPACE;
+	// 	if (pGameInstance->Get_DIKeyState(DIK_LCONTROL) & 0x80)
+	// 		m_iInputMask |= MASK_LCTRL;
+	// 	if (pGameInstance->Get_DIKeyState(DIK_1) & 0x80)
+	// 		m_iInputMask |= MASK_NUM_1;
+	// 	if (pGameInstance->Get_DIKeyState(DIK_2) & 0x80)
+	// 		m_iInputMask |= MASK_NUM_2;
+	// 	if (pGameInstance->Get_DIKeyState(DIK_3) & 0x80)
+	// 		m_iInputMask |= MASK_NUM_3;
+	// 	if (pGameInstance->Get_DIKeyState(DIK_4) & 0x80)
+	// 		m_iInputMask |= MASK_NUM_4;
+	// 	if (pGameInstance->Get_DIKeyState(DIK_R) & 0x80)
+	// 		m_iInputMask |= MASK_R;
+	//
+	// 	if (pGameInstance->Get_DIKeyState(DIK_Q) & 0x80)
+	// 		m_iInputMask |= MASK_Q;
+	// 	if (pGameInstance->Get_DIKeyState(DIK_E) & 0x80)
+	// 		m_iInputMask |= MASK_E;
+	// 	if (pGameInstance->Get_DIKeyState(DIK_C) & 0x80)
+	// 		m_iInputMask |= MASK_C;
+	// 	if (pGameInstance->Get_DIKeyState(DIK_X) & 0x80)
+	// 		m_iInputMask |= MASK_X;
+	//
+	// 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIM_LB) & 0x8000)
+	// 		m_iInputMask |= MASK_MOUSELB;
+	// 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIM_RB) & 0x8000)
+	// 		m_iInputMask |= MASK_MOUSERB;
+	// }
 
 }
 
@@ -167,8 +167,8 @@ void CController::Invalidate()
 	m_vMoveAxis = _float3::Zero;
 	for (auto& state : m_InputState)
 		state = KEY_STATE::NONE;
-	m_iInputMask = 0;
-	m_iPreInputMask = 0;
+	// m_iInputMask = 0;
+	// m_iPreInputMask = 0;
 }
 
 void CController::UpdateInputState(_ubyte iDIK, EHandleInput eInput)

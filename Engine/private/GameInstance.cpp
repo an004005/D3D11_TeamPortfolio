@@ -152,7 +152,7 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 
 	m_pPhysX_Manager->Initialize();
 
-	// FAILED_CHECK(m_pSound_Manager->Initialize("../Bin/Resources/Sound/SoundDesc.json"));
+	FAILED_CHECK(m_pSound_Manager->Initialize("../Bin/Resources/Sound/SoundDesc.json"));
 
 	return S_OK;
 }
@@ -175,14 +175,19 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 	m_pObject_Manager->Tick(TimeDelta);
 	m_pLevel_Manager->Tick(TimeDelta);
 
-	m_pCamera_Manager->Tick();
-	m_pPipeLine->Tick();
-
 	m_pObject_Manager->Late_Tick(TimeDelta);
 	m_pLevel_Manager->Late_Tick(TimeDelta);
 
 	if (m_pLevel_Manager->GetUpdatedLevel() != LEVEL_LOADING)
+	{
 		m_pPhysX_Manager->Simulate(TimeDelta);
+		m_pPhysX_Manager->WaitSimulate();
+	}
+
+	m_pObject_Manager->AfterPhysX();
+
+	m_pCamera_Manager->Tick();
+	m_pPipeLine->Tick();
 
 	if (m_pCamera_Manager->GetMainCam())
 	{
@@ -193,10 +198,6 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 	{
 		m_pSound_Manager->Tick((_float)TimeDelta);
 	}
-
-	if (m_pLevel_Manager->GetUpdatedLevel() != LEVEL_LOADING)
-		m_pPhysX_Manager->WaitSimulate();
-	m_pObject_Manager->AfterPhysX();
 }
 
 void CGameInstance::Clear()
