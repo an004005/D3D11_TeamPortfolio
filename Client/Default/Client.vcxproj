@@ -245,6 +245,7 @@
     </ClInclude>
     <ClInclude Include="..\public\MapNonAnim_Object.h" />
     <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\PlayerInfo_HpBackUI.h" />
     <ClInclude Include="..\public\PlayerInfo_HpUI.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
@@ -345,6 +346,7 @@
     </ClCompile>
     <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\PlayerInfo_HpBackUI.cpp" />
     <ClCompile Include="..\private\PlayerInfo_HpUI.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
     <ClCompile Include="..\private\ScarletCharacter.cpp" />

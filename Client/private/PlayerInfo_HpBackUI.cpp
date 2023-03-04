@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\public\PlayerInfo_HpUI.h"
+#include "..\public\PlayerInfo_HpBackUI.h"
 #include "GameInstance.h"
 #include "JsonLib.h"
 #include "MathUtils.h"
@@ -8,17 +8,17 @@
 // m_tParams.Ints[0] : g_int_2가 0일 때 5 / g_int_2가 1일 때 10 / g_int_2가 2일 때 노상관
 // m_tParams.Floats[0] : 게이지
 
-CPlayerInfo_HpUI::CPlayerInfo_HpUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPlayerInfo_HpBackUI::CPlayerInfo_HpBackUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
 }
 
-CPlayerInfo_HpUI::CPlayerInfo_HpUI(const CPlayerInfo_HpUI& rhs)
+CPlayerInfo_HpBackUI::CPlayerInfo_HpBackUI(const CPlayerInfo_HpBackUI& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CPlayerInfo_HpUI::Initialize_Prototype()
+HRESULT CPlayerInfo_HpBackUI::Initialize_Prototype()
 {
 	if (FAILED(CUI::Initialize_Prototype()))
 		return E_FAIL;
@@ -26,7 +26,7 @@ HRESULT CPlayerInfo_HpUI::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CPlayerInfo_HpUI::Initialize(void * pArg)
+HRESULT CPlayerInfo_HpBackUI::Initialize(void * pArg)
 {
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
@@ -35,30 +35,37 @@ HRESULT CPlayerInfo_HpUI::Initialize(void * pArg)
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
 
+	m_fCurrentHp = 1.0f;
+
 	return S_OK;
 }
 
-void CPlayerInfo_HpUI::BeginTick()
+void CPlayerInfo_HpBackUI::BeginTick()
 {
-
+	m_fCurrentHp = 1.0f;
 
 }
 
-void CPlayerInfo_HpUI::Tick(_double TimeDelta)
+void CPlayerInfo_HpBackUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	m_fCurrentHp = m_fHp / m_fMaxHp;
+	_float fReault = m_fHp / m_fMaxHp;
+	
+	if (m_fCurrentHp > fReault)
+		m_fCurrentHp -= _float(TimeDelta) * 0.1f;
+	else
+		m_fCurrentHp = fReault;
 
 	Object_Tick(TimeDelta);
 }
 
-void CPlayerInfo_HpUI::Late_Tick(_double TimeDelta)
+void CPlayerInfo_HpBackUI::Late_Tick(_double TimeDelta)
 {
 	CUI::Late_Tick(TimeDelta);
 }
 
-HRESULT CPlayerInfo_HpUI::Render()
+HRESULT CPlayerInfo_HpBackUI::Render()
 {
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
@@ -66,25 +73,25 @@ HRESULT CPlayerInfo_HpUI::Render()
 	return S_OK;
 }
 
-void CPlayerInfo_HpUI::Imgui_RenderProperty()
+void CPlayerInfo_HpBackUI::Imgui_RenderProperty()
 {
 	CUI::Imgui_RenderProperty();
 
 }
 
-void CPlayerInfo_HpUI::SaveToJson(Json & json)
+void CPlayerInfo_HpBackUI::SaveToJson(Json & json)
 {
 	CUI::SaveToJson(json);
 
 }
 
-void CPlayerInfo_HpUI::LoadFromJson(const Json & json)
+void CPlayerInfo_HpBackUI::LoadFromJson(const Json & json)
 {
 	CUI::LoadFromJson(json);
 
 }
 
-void CPlayerInfo_HpUI::Object_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpBackUI::Object_Tick(const _double & dTimeDetla)
 {
 	switch (m_iObjectNumber)
 	{
@@ -112,7 +119,7 @@ void CPlayerInfo_HpUI::Object_Tick(const _double & dTimeDetla)
 	}
 }
 
-void CPlayerInfo_HpUI::Zero_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpBackUI::Zero_Tick(const _double & dTimeDetla)
 {
 	if (0.2f < m_fCurrentHp)
 	{
@@ -124,7 +131,7 @@ void CPlayerInfo_HpUI::Zero_Tick(const _double & dTimeDetla)
 	NotDraw(0.05f);
 }
 
-void CPlayerInfo_HpUI::One_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpBackUI::One_Tick(const _double & dTimeDetla)
 {
 	if (0.35f < m_fCurrentHp)
 	{
@@ -136,7 +143,7 @@ void CPlayerInfo_HpUI::One_Tick(const _double & dTimeDetla)
 	NotDraw(0.2f);
 }
 
-void CPlayerInfo_HpUI::Two_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpBackUI::Two_Tick(const _double & dTimeDetla)
 {
 	if (0.5f <= m_fCurrentHp)
 	{
@@ -148,7 +155,7 @@ void CPlayerInfo_HpUI::Two_Tick(const _double & dTimeDetla)
 	NotDraw(0.35f);
 }
 
-void CPlayerInfo_HpUI::Three_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpBackUI::Three_Tick(const _double & dTimeDetla)
 {
 	if (0.65f < m_fCurrentHp)
 	{
@@ -160,7 +167,7 @@ void CPlayerInfo_HpUI::Three_Tick(const _double & dTimeDetla)
 	NotDraw(0.5f);
 }
 
-void CPlayerInfo_HpUI::Four_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpBackUI::Four_Tick(const _double & dTimeDetla)
 {
 	if (0.8f < m_fCurrentHp)
 	{
@@ -172,7 +179,7 @@ void CPlayerInfo_HpUI::Four_Tick(const _double & dTimeDetla)
 	NotDraw(0.65f);
 }
 
-void CPlayerInfo_HpUI::Five_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpBackUI::Five_Tick(const _double & dTimeDetla)
 {
 	if (0.95f < m_fCurrentHp)
 	{
@@ -184,7 +191,7 @@ void CPlayerInfo_HpUI::Five_Tick(const _double & dTimeDetla)
 	NotDraw(0.8f);
 }
 
-void CPlayerInfo_HpUI::RendomHpImage(const _double & dTimeDetla)
+void CPlayerInfo_HpBackUI::RendomHpImage(const _double & dTimeDetla)
 {
 	m_tParams.Floats[0] = 1.0f; 
 	
@@ -218,12 +225,12 @@ void CPlayerInfo_HpUI::RendomHpImage(const _double & dTimeDetla)
 				if (0 == iRandomNumber)
 				{
 					m_tParams.Ints[2] = iRandomNumber;
-					m_tParams.Ints[0] = 5;// _int(CMathUtils::RandomFloat(0.0f, 6.0f));
+					m_tParams.Ints[0] = _int(CMathUtils::RandomFloat(0.0f, 6.0f));
 				}
 				else
 				{
 					m_tParams.Ints[2] = iRandomNumber;
-					m_tParams.Ints[0] = 10;// _int(CMathUtils::RandomFloat(0.0f, 11.0f));
+					m_tParams.Ints[0] = _int(CMathUtils::RandomFloat(0.0f, 11.0f));
 				}
 
 			}
@@ -233,7 +240,7 @@ void CPlayerInfo_HpUI::RendomHpImage(const _double & dTimeDetla)
 	}
 }
 
-void CPlayerInfo_HpUI::NotDraw(const _float & fMinHp)
+void CPlayerInfo_HpBackUI::NotDraw(const _float & fMinHp)
 {
 	if (0.0f > m_tParams.Ints[2])
 	{
@@ -246,31 +253,31 @@ void CPlayerInfo_HpUI::NotDraw(const _float & fMinHp)
 	m_tParams.Ints[2] = 2;
 }
 
-CPlayerInfo_HpUI * CPlayerInfo_HpUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CPlayerInfo_HpBackUI * CPlayerInfo_HpBackUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
- 	CPlayerInfo_HpUI*		pInstance = new CPlayerInfo_HpUI(pDevice, pContext);
+ 	CPlayerInfo_HpBackUI*		pInstance = new CPlayerInfo_HpBackUI(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CPlayerInfo_HpUI");
+		MSG_BOX("Failed to Created : CPlayerInfo_HpBackUI");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CUI * CPlayerInfo_HpUI::Clone(void * pArg)
+CUI * CPlayerInfo_HpBackUI::Clone(void * pArg)
 {
-	CPlayerInfo_HpUI*		pInstance = new CPlayerInfo_HpUI(*this);
+	CPlayerInfo_HpBackUI*		pInstance = new CPlayerInfo_HpBackUI(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CPlayerInfo_HpUI");
+		MSG_BOX("Failed to Cloned : CPlayerInfo_HpBackUI");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CPlayerInfo_HpUI::Free()
+void CPlayerInfo_HpBackUI::Free()
 {
 	CUI::Free();
 

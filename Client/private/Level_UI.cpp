@@ -41,6 +41,7 @@
 #include "Item_RightArrowUI.h"
 // PlayerInfo
 #include "PlayerInfo_HpUI.h"
+#include "PlayerInfo_HpBackUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -223,6 +224,10 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_PlayerInfo_HpUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_HpUI"),
 			CPlayerInfo_HpUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_HpBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_HpBackUI"),
+			CPlayerInfo_HpBackUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 	}
 

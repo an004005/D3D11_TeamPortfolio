@@ -653,8 +653,8 @@ g_tex_0 : g_int_2 -> 0	Hp
 g_tex_3 : g_int_2 -> 0	Hp 배경
 g_tex_2 : g_int_2 -> 1
 g_tex_4 : g_int_2 -> 1
-g_tex_2 : g_int_2 -> 2
-g_tex_5 : g_int_2 -> 2
+g_tex_2 : g_int_2 -> 2	텍스처 넘김 X
+g_tex_5 : g_int_2 -> 2	텍스처 넘김 X
 g_tex_6 : g_int_2 -> 2	흰색 배경
 /********************/
 PS_OUT PS_ChoiceTextureReverseFlipBook(PS_IN In)	// ->22
@@ -689,6 +689,39 @@ PS_OUT PS_ChoiceTextureReverseFlipBook(PS_IN In)	// ->22
 	float4 BlendColor = DefaultWhite * OriginColor;
 	Out.vColor = saturate(BlendColor + Texture * g_float_2);
 	Out.vColor.a = Mask * 1.0f;
+
+	return Out;
+}
+
+/*******************
+* UVCut → 23 : 나눈 텍스처의 끝까지 도달했다가 다시 처음으로 돌아가는 코드 입니다. -> <- (텍스처 넘김, UV 조절)
+g_Time : 현재 시간.
+g_float_0 : Gauge	-> 클라이언트에서 입력 받아야 한다.
+g_float_1 : FrameTime
+g_int_0 : 가로로 자를 개수	-> 클라이언트에서 입력 받아야 한다.
+g_int_1 : 세로로 자를 개수
+g_int_2 : 사용할 텍스처	-> 클라이언트에서 입력 받아야 한다.
+g_vec4_0 : 색상 변경
+g_tex_0 : g_int_2 -> 0	Hp
+g_tex_1 : g_int_2 -> 1
+g_tex_2 : g_int_2 -> 0	Hp 배경
+/********************/
+PS_OUT PS_ReverseFlipBook(PS_IN In)	// ->23
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	if (0 == g_int_2)
+	{
+		Out.vColor = g_tex_0.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_1, g_int_0, g_int_1)) * g_vec4_0;
+	}
+	else if (1 == g_int_2)
+	{
+		Out.vColor = g_tex_1.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_1, g_int_0, g_int_1)) * g_vec4_0;
+	}
+	else if (2 == g_int_2)
+	{
+		Out.vColor = g_tex_2.Sample(LinearSampler, In.vTexUV)  * g_vec4_0;
+	}
 
 	return Out;
 
@@ -1012,7 +1045,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MaskTexture();
 	}
 
-	//22 : 2개의 텍스처를 선택해서 처음부터 끝에서 다시 처음으로를 반복한다. 색 선택 가능
+	//22 : 2개의 텍스처를 선택해서 처음부터 끝에서 다시 처음으로를 반복한다. 색 선택 가능 (Hp)
 	pass ChoiceTextureReverseFlipBook
 	{
 		SetRasterizerState(RS_Default);
@@ -1026,4 +1059,17 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_ChoiceTextureReverseFlipBook();
 	}
 
+	//23 : 2개의 텍스처를 선택해서 처음부터 끝에서 다시 처음으로를 반복한다. 색 선택 가능 (HpBack)
+	pass ReverseFlipBook
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaOne, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_UI_ProgressBar();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ReverseFlipBook();
+	}
 }

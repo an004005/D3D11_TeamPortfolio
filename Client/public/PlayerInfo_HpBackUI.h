@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CPlayerInfo_HpUI final : public CUI
+class CPlayerInfo_HpBackUI final : public CUI
 {
 private:
-	CPlayerInfo_HpUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CPlayerInfo_HpUI(const CPlayerInfo_HpUI& rhs);
+	CPlayerInfo_HpBackUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CPlayerInfo_HpBackUI(const CPlayerInfo_HpBackUI& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -50,13 +50,13 @@ private:
 	
 	_float	m_fHp = { 0.0f };
 	_float	m_fMaxHp = { 1.0f };
-	_float	m_fCurrentHp = { 0.0f };
+	_float	m_fCurrentHp = { 1.0f };
 
 private:
 	_double	m_dImageChange_TimeAcc = { 0.0 };
 
 public:
-	static CPlayerInfo_HpUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CPlayerInfo_HpBackUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
