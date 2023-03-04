@@ -114,7 +114,6 @@ void CPhysX_Manager::Initialize()
 	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eWELD_VERTICES;
 	m_pCooking->setParams(params);
 
-
 #ifdef _DEBUG
 	physx::PxPvdSceneClient* pvdClient = m_Scene->getScenePvdClient();
 	if (pvdClient)

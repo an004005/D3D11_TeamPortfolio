@@ -54,6 +54,12 @@ HRESULT CGameObject::Initialize(void * pArg)
 	return S_OK;
 }
 
+void CGameObject::BeginTick()
+{
+	for (const auto& Com : m_Components)
+		Com.second->BeginTick();
+}
+
 void CGameObject::Tick(_double TimeDelta)
 {
 }
