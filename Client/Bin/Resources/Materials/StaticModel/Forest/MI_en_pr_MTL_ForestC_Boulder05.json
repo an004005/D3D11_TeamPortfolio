@@ -1,0 +1,16 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/LC09/props/Nature/TEX_ForestC_Boulder05_col.dds",
+            "../Bin/Resources/Environments/Location/LC09/props/Nature/TEX_ForestC_Boulder05_nrm.png",
+            "../Bin/Resources/Environments/Location/LC09/props/Nature/TEX_ForestC_Boulder05_msk.png"
+        ],
+        "Pass" : 1
+    }
+}

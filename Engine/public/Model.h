@@ -53,6 +53,8 @@ public:
 	_bool	isLocalMove() { return !XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)); }
 	_float	GetLastLocalMoveSpeed() const { return m_fLastLocalMoveSpeed; }
 
+	_vector GetLocalRotationDelta();
+
 public:
 	virtual HRESULT Initialize_Prototype(const char* pModelFilePath);
 	virtual HRESULT Initialize(void* pArg) override;
@@ -65,6 +67,7 @@ public:
 
 	void Play_Animation(_double TimeDelta);
 	void Play_Animation_Test(_double TimeDelta);
+	void Play_Animation_Additive(_double TimeDelta);
 	// HRESULT RenderCustomShader(_uint iPass, class CShader* pShader);
 	HRESULT Render(class CTransform* pTransform);
 	HRESULT Render(const _float4x4& WorldMatrix);
@@ -94,6 +97,7 @@ public:		// 이벤트 실행
 	void EventCaller(const string& EventName);
 	void Add_EventCaller(const string& EventName, std::function<void(void)> Func);
 	_vector GetOptionalMoveVector(_fmatrix WorldMatrix);
+	_vector GetOptionalMoveVector(_fmatrix WorldMatrix, const string& srtAnimName);
 	void Add_OptionalRootMotion(OPTIONAL_ROOTMOTION RootMotion);
 	void Delete_OptionalRootMotion();
 
@@ -128,6 +132,12 @@ private:
 	_vector								m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_vector								m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_float								m_fLastLocalMoveSpeed = 0.f;
+
+	string								m_szAdditiveAnimName = "";
+	_float								m_fAdditiveRatio = 0.f;
+
+	_vector								m_vLocalRotation = XMQuaternionIdentity();
+	_vector								m_vBefLocalRotation = XMQuaternionIdentity();
 
 	class CShader* m_pShadowShader = nullptr;
 

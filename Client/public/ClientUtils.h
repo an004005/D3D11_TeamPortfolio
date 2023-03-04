@@ -42,6 +42,13 @@ enum class EBaseAxis
 	AXIS_END
 };
 
+enum class EBaseTurn
+{
+	TURN_LEFT,
+	TURN_RIGHT,
+	TURN_END
+};
+
 enum class ESASType
 {
 	SAS_FIRE, // 불
@@ -84,13 +91,14 @@ typedef struct tagDamageParam
 	ESASType eAttackSAS = ESASType::SAS_END; // 공격 타입(몬스터는 SAS_END 고정)
 	EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END; // 공격에 디버프 포함 여부
 	EAttackType eAttackType = EAttackType::ATK_LIGHT;
-	class CPlayer* pCauser = nullptr; // 공격자 포인터
+	class CScarletCharacter* pCauser = nullptr; // 공격자 포인터
 } DAMAGE_PARAM;
 
 enum
 {
 	MOVE_AXIS_CNT = static_cast<_uint>(EMoveAxis::AXIS_END),
 	BASE_AXIS_CNT = static_cast<_uint>(EBaseAxis::AXIS_END),
+	TURN_CNT = static_cast<_uint>(EBaseTurn::TURN_END),
 	SAS_CNT = static_cast<_uint>(ESASType::SAS_END),
 	DEBUFF_CNT = static_cast<_uint>(EDeBuffType::DEBUFF_END),
 	ATK_TYPE_CNT = static_cast<_uint>(EAttackType::ATK_END),
@@ -103,6 +111,7 @@ public:
 	static EBaseAxis MoveAxisToBaseEnum(_float3 vMoveAxis);
 	static const string& AxisEnumToStr(EMoveAxis eAxis);
 	static EBaseAxis GetDamageFromAxis(CTransform* pTransform, _fvector vFrom);
+	static EBaseTurn TurnDeltaToEnum(_float fTurnDelta);
 
 public:
 	static const _tchar* const s_DebugLayer;

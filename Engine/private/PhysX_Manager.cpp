@@ -114,7 +114,6 @@ void CPhysX_Manager::Initialize()
 	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eWELD_VERTICES;
 	m_pCooking->setParams(params);
 
-
 #ifdef _DEBUG
 	physx::PxPvdSceneClient* pvdClient = m_Scene->getScenePvdClient();
 	if (pvdClient)
@@ -274,15 +273,16 @@ _bool CPhysX_Manager::SweepSphere(const SphereSweepParams& params)
 	vNormalDir.Normalize();
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f)
+	if (params.fVisibleTime > 0.f || params.fDistance > 0.f)
 	{
 		_float fSegment = 0.5f;
 		if (params.fDistance <= 1.f)
 			fSegment = 0.1f;
 
+		_uint iCnt = 100;
 		_float fMoveDistance = 0.f;
 		PxTransform sweepTransform(transform);
-		while (fMoveDistance <= params.fDistance)
+		while (iCnt > 0 && fMoveDistance <= params.fDistance)
 		{
 			PxShape* pShape = m_Physics->createShape(sphere, *FindMaterial("Default"));
 			AddDebugShape(pShape, sweepTransform, params.fVisibleTime);
@@ -291,6 +291,7 @@ _bool CPhysX_Manager::SweepSphere(const SphereSweepParams& params)
 			sweepTransform.p.y += vNormalDir.y * fSegment;
 			sweepTransform.p.z += vNormalDir.z * fSegment;
 			fMoveDistance += fSegment;
+			--iCnt;
 		}
 	}
 #endif
@@ -331,15 +332,18 @@ _bool CPhysX_Manager::SweepCapsule(const CapsuleSweepParams& params)
 	vNormalDir.Normalize();
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f)
+	if (params.fVisibleTime > 0.f || params.fDistance > 0.f)
 	{
 		_float fSegment = 0.5f;
 		if (params.fDistance <= 1.f)
 			fSegment = 0.1f;
 
+		fSegment = params.fDistance;
+
+		_uint iCnt = 100;
 		_float fMoveDistance = 0.f;
 		PxTransform sweepTransform(transform);
-		while (fMoveDistance <= params.fDistance)
+		while (iCnt > 0 && fMoveDistance <= params.fDistance)
 		{
 			PxShape* pShape = m_Physics->createShape(capsule, *FindMaterial("Default"));
 			AddDebugShape(pShape, sweepTransform, params.fVisibleTime);
@@ -348,6 +352,7 @@ _bool CPhysX_Manager::SweepCapsule(const CapsuleSweepParams& params)
 			sweepTransform.p.y += vNormalDir.y * fSegment;
 			sweepTransform.p.z += vNormalDir.z * fSegment;
 			fMoveDistance += fSegment;
+			iCnt--;
 		}
 	}
 #endif
@@ -365,6 +370,54 @@ _bool CPhysX_Manager::SweepCapsule(const CapsuleSweepParams& params)
 		PxVec3{ vNormalDir.x, vNormalDir.y, vNormalDir.z },
 		params.fDistance,
 		*params.sweepOut, 
+		hitFlags,
+		queryFilterData);
+}
+
+_bool CPhysX_Manager::PxSweepCapsule(const PxCapsuleSweepParams& params)
+{
+	_float3 vNormalDir{ params.vUnitDir.x, params.vUnitDir.y, params.vUnitDir.z };
+	vNormalDir.Normalize();
+
+#ifdef _DEBUG
+	if (params.fVisibleTime > 0.f || params.fDistance > 0.f)
+	{
+		_float fSegment = 0.5f;
+		if (params.fDistance <= 1.f)
+			fSegment = 0.1f;
+
+		fSegment = params.fDistance;
+
+		_uint iCnt = 100;
+		_float fMoveDistance = 0.f;
+		PxTransform sweepTransform(params.pxTransform);
+		while (iCnt > 0 && fMoveDistance <= params.fDistance)
+		{
+			PxShape* pShape = m_Physics->createShape(params.CapsuleGeo, *FindMaterial("Default"));
+			AddDebugShape(pShape, sweepTransform, params.fVisibleTime);
+
+			sweepTransform.p.x += vNormalDir.x * fSegment;
+			sweepTransform.p.y += vNormalDir.y * fSegment;
+			sweepTransform.p.z += vNormalDir.z * fSegment;
+			fMoveDistance += fSegment;
+			iCnt--;
+		}
+	}
+#endif
+
+	PxFilterData filterData;
+	filterData.word0 = params.iTargetType;
+	PxQueryFilterData queryFilterData;
+	queryFilterData.data = filterData;
+	queryFilterData.flags = params.queryFlags;
+	static const PxHitFlags hitFlags = PxHitFlag::eNORMAL | PxHitFlag::ePOSITION;
+
+	return m_Scene->sweep(
+		params.CapsuleGeo,
+		params.pxTransform,
+		PxVec3{ vNormalDir.x, vNormalDir.y, vNormalDir.z },
+		params.fDistance,
+		*params.sweepOut,
 		hitFlags,
 		queryFilterData);
 }
@@ -720,9 +773,12 @@ void CEngineSimulationEventCallback::onContact(const physx::PxContactPairHeader&
 void CEngineSimulationEventCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)
 {
 	CComponent* pPxCom = static_cast<CComponent*>(pairs->triggerActor->userData);
-	Assert(pPxCom != nullptr);
+	if (pPxCom == nullptr)
+		return;
+
 	CRigidBody* pRigid = dynamic_cast<CRigidBody*>(pPxCom);
-	Assert(pRigid != nullptr);
+	if (pRigid == nullptr)
+		return;
 
 	switch (pairs->status)
 	{

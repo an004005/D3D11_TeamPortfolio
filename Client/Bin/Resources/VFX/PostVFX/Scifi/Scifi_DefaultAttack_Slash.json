@@ -1,0 +1,54 @@
+{
+    "BillBoardType": 0,
+    "BufferProtoTag": "Prototype_Component_VIBuffer_Rect",
+    "Children": [
+        [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    ],
+    "ModelProtoTag": "../Bin/Resources/Meshes/VFX/Player_Default_Attack/Slash_0.static_model",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.4431372582912445,
+                0.13333334028720856,
+                0.9803921580314636,
+                1.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [
+            0.2784550189971924,
+            1.0,
+            2.180000066757202,
+            0.0
+        ],
+        "Ints": [],
+        "Pass": 1,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_White_01.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_White_01.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_White_01.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxModel_VFX",
+    "bBillBoard": false,
+    "bDecal": false,
+    "bUseDepth": false
+}

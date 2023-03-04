@@ -24,32 +24,7 @@ HRESULT CEffectSystem::Initialize(void* pArg)
 	/* For.Com_Renderer */
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)); 
 	
-	if (pArg)
-	{
-		Json& json = *static_cast<Json*>(pArg);
-		CShader::LoadShaderParam(m_tParam, json);
-	
-		m_ChildBuffers = json["Children"];
-		m_BufferProtoTag = json["BufferProtoTag"];
-		m_ShaderProtoTag = json["ShaderProtoTag"];
-
-		if (json.contains("ModelProtoTag"))
-			m_ModelProtoTag = json["ModelProtoTag"];
-	
-		if (json.contains("bDecal"))
-			m_bDecal = json["bDecal"];
-		if (json.contains("bUseDepth"))
-			m_bUseDepth = json["bUseDepth"];
-	
-		FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_BufferProtoTag).c_str(), TEXT("Buffer"),(CComponent**)&m_pBuffer));
-		FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ShaderProtoTag).c_str(), TEXT("Shader"), (CComponent**)&m_pShaderCom));
-	
-			if (m_ModelProtoTag.empty() == false)
-			{
-				FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"),	(CComponent**)&m_pModel));
-			}
-	}
-	else
+	if (pArg == nullptr)
 	{
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxTex_VFX"), TEXT("Shader"),(CComponent**)&m_pShaderCom));
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Buffer"),(CComponent**)&m_pBuffer));
@@ -222,6 +197,7 @@ HRESULT CEffectSystem::Begin()
 void CEffectSystem::SaveToJson(Json& json)
 {
 	CShader::SaveShaderParam(m_tParam, json);
+
 	
 	json["bBillBoard"] = m_bBillBoard;
 	json["BillBoardType"] = static_cast<_uint>(m_eBillBoardType);
@@ -232,6 +208,36 @@ void CEffectSystem::SaveToJson(Json& json)
 	json["BufferProtoTag"] = m_BufferProtoTag;
 	json["ShaderProtoTag"] = m_ShaderProtoTag;
 	json["ModelProtoTag"] = m_ModelProtoTag;
+	
+}
+
+void CEffectSystem::LoadFromJson(const Json& json)
+{
+	CGameObject::LoadFromJson(json);
+
+	CShader::LoadShaderParam(m_tParam, json);
+
+	m_bBillBoard = json["bBillBoard"];
+	m_eBillBoardType = json["BillBoardType"];
+	m_ChildBuffers = json["Children"];
+	m_BufferProtoTag = json["BufferProtoTag"];
+	m_ShaderProtoTag = json["ShaderProtoTag"];
+
+	if (json.contains("ModelProtoTag"))
+		m_ModelProtoTag = json["ModelProtoTag"];
+
+	if (json.contains("bDecal"))
+		m_bDecal = json["bDecal"];
+	if (json.contains("bUseDepth"))
+		m_bUseDepth = json["bUseDepth"];
+
+	FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_BufferProtoTag).c_str(), TEXT("Buffer"), (CComponent**)&m_pBuffer));
+	FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ShaderProtoTag).c_str(), TEXT("Shader"), (CComponent**)&m_pShaderCom));
+
+	if (m_ModelProtoTag.empty() == false)
+	{
+		FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), (CComponent**)&m_pModel));
+	}
 }
 
 void CEffectSystem::Imgui_RenderProperty()
@@ -324,7 +330,7 @@ void CEffectSystem::Imgui_RenderProperty()
 		{
 			Safe_Release(m_pModel);
 			Delete_Component(TEXT("Model"));
-			FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), 	(CComponent**)&m_pModel));
+			Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), 	(CComponent**)&m_pModel);
 		}
 	}
 
@@ -360,47 +366,45 @@ void CEffectSystem::Imgui_RenderProperty()
 		file << json;
 	});
 
-	// ±è±â¹ü
-	static char szName[MAX_PATH]{};
-	ImGui::InputText("BoneName", szName, MAX_PATH);
-	if (ImGui::Button("BoneChange"))
-	{
-		m_szBoneName = szName;
-	}
+	
 }
 
-void CEffectSystem::Set_BoneMatrix(CModel * pModel, _fmatrix Transform)
-{
-	// ±è±â¹ü
-	_matrix	SocketMatrix = pModel->GetPivotMatrix() * pModel->GetBoneMatrix(m_szBoneName) * Transform;
-
-	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]) * 0.2f;
-	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]) * 0.2f;
-	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]) * 0.2f;
-
-	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
-}
-
-void CEffectSystem::Set_BoneMatrix(_fmatrix SocketMatrix)
-{
-	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
-}
-
-void CEffectSystem::Tick_Scale(_float fValue)
+void CEffectSystem::Tick_Scale_All(_float fValue)
 {
 	fValue *= 2.f;
 
 	m_pTransformCom->Set_Scaled(_float3(fValue, fValue, fValue));
 }
 
-void CEffectSystem::Tick_IntroDissolve(_float fValue)
+void CEffectSystem::Tick_Scale_Y(_float fValue)
+{
+	fValue *= 2.f;
+	_float3 Scale = m_pTransformCom->Get_Scaled();
+
+	m_pTransformCom->Set_Scaled(_float3(Scale.x, fValue, Scale.x));
+}
+
+void CEffectSystem::Tick_Scale_X(_float fValue)
+{
+	fValue *= 2.f;
+	_float3 Scale = m_pTransformCom->Get_Scaled();
+
+	m_pTransformCom->Set_Scaled(_float3(fValue, Scale.y, Scale.z));
+}
+
+void CEffectSystem::Tick_Floats_0(_float fValue)
 {
 	m_tParam.Floats[0] = fValue;
 }
 
-void CEffectSystem::Tick_OutroDissolve(_float fValue)
+void CEffectSystem::Tick_Floats_1(_float fValue)
 {
-	m_tParam.Floats[0] = fValue;
+	m_tParam.Floats[1] = fValue;
+}
+
+void CEffectSystem::Tick_Floats_2(_float fValue)
+{
+	m_tParam.Floats[2] = fValue;
 }
 
 void CEffectSystem::Tick_ColorChange(_float fValue)
@@ -419,19 +423,39 @@ void CEffectSystem::Tick_ColorChange(_float fValue)
 	m_tParam.Float4s[0] = vOutColor  + vInColor;
 }
 
-void CEffectSystem::Tick_EmissiveChange(_float fValue)
+void CEffectSystem::Tick_Floats_3(_float fValue)
 {
-	m_tParam.Floats[0] = fValue;
+	m_tParam.Floats[3] = fValue;
+}
+
+void CEffectSystem::Tick_Floats_4(_float fValue)
+{
+	m_tParam.Floats[4] = fValue;
+}
+
+void CEffectSystem::Tick_Floats_5(_float fValue)
+{
+	m_tParam.Floats[5] = fValue;
+}
+
+void CEffectSystem::Tick_Floats_6(_float fValue)
+{
+	m_tParam.Floats[6] = fValue;
+}
+
+void CEffectSystem::Tick_Floats_7(_float fValue)
+{
+	m_tParam.Floats[7] = fValue;
 }
 
 void CEffectSystem::Tick_IntroTime(_float fValue)
 {
-	m_tParam.Floats[0] = fValue;
+	m_tParam.Floats[8] = fValue;
 }
 
 void CEffectSystem::Tick_OutroTime(_float fValue)
 {
-	m_tParam.Floats[0] = fValue;
+	m_tParam.Floats[9] = fValue;
 }
 
 

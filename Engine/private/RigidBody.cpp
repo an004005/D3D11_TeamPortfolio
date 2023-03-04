@@ -21,8 +21,16 @@ HRESULT CRigidBody::Initialize(void* pArg)
 	FAILED_CHECK(CComponent::Initialize(pArg));
 
 	CreateActor();
-
 	return S_OK;
+}
+
+void CRigidBody::BeginTick()
+{
+	CComponent::BeginTick();
+	if (auto pOwner = TryGetOwner())
+	{
+		m_pActor->setGlobalPose(physx::PxTransform{ CPhysXUtils::ToFloat4x4(pOwner->GetTransform()->Get_WorldMatrix()) });
+	}
 }
 
 void CRigidBody::Imgui_RenderProperty()
@@ -206,10 +214,51 @@ void CRigidBody::UpdateChange()
 	Activate(true);
 }
 
+_float4x4 CRigidBody::Get_OriginMatrix()
+{
+	return m_OriginTransformMatrix;
+}
+
+physx::PxBoxGeometry CRigidBody::Get_BoxGeometry()
+{
+	if (m_eShapeType != TYPE_BOX)
+		return physx::PxBoxGeometry();
+
+	return m_pShape->getGeometry().box();
+}
+
+physx::PxSphereGeometry CRigidBody::Get_SphereGeometry()
+{
+	if (m_eShapeType != TYPE_SPHERE)
+		return physx::PxSphereGeometry();
+
+	return m_pShape->getGeometry().sphere();
+}
+
+physx::PxCapsuleGeometry CRigidBody::Get_CapsuleGeometry()
+{
+	if (m_eShapeType != TYPE_CAPSULE)
+		return physx::PxCapsuleGeometry();
+
+	return m_pShape->getGeometry().capsule();
+}
+
+physx::PxTransform CRigidBody::Get_PxTransform()
+{
+	return physx::PxShapeExt::getGlobalPose(*m_pShape, *m_pActor);
+}
+
 void CRigidBody::ReleaseActor()
 {
 	if (m_pActor)
 	{
+		m_pActor->userData = nullptr;
+		if (m_pActor->getScene())
+		{
+			auto pScene = CPhysX_Manager::GetInstance()->GetScene();
+			pScene->removeActor(*m_pActor);
+		}
+
 		if (m_pShape)
 		{
 			m_pActor->detachShape(*m_pShape);
@@ -217,11 +266,6 @@ void CRigidBody::ReleaseActor()
 			m_pShape = nullptr;
 		}
 
-		if (m_pActor->getScene())
-		{
-			auto pScene = CPhysX_Manager::GetInstance()->GetScene();
-			pScene->removeActor(*m_pActor);
-		}
 		m_pActor->release();
 		m_pActor = nullptr;
 	}
@@ -244,7 +288,7 @@ void CRigidBody::CreateActor()
 	_float3 vScale =_float3(XMVectorGetX(XMVector3Length(OriginMatrix.r[0])), 
 			XMVectorGetX(XMVector3Length(OriginMatrix.r[1])), 
 			XMVectorGetX(XMVector3Length(OriginMatrix.r[2])));
-	
+
 	switch (m_eShapeType)
 	{
 		case TYPE_BOX:

@@ -1,7 +1,7 @@
 #include "Shader_Utils.h"
 #include "Shader_PBRCommon.h"
 
-float   g_Far = 300.f;
+float   g_Far = 1000.f;
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix			g_ProjMatrixInv, g_ViewMatrixInv;
@@ -247,6 +247,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 
 	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).a;
 
+
 	if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
 		vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
@@ -264,6 +265,10 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 		Out.vColor.a = vShade.a;
 		if (0.0f == Out.vColor.a)
 			discard;
+	}
+	else
+	{
+		discard;
 	}
 
 

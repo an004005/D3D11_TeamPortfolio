@@ -1,0 +1,16 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Building/pr_CityBuilding/T_pr_CityBuilding_partsI_ALB.dds",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Building/pr_CityBuilding/T_pr_CityBuilding_partsI_NML.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Building/pr_CityBuilding/T_pr_CityBuilding_partsI_RMA.dds"
+        ],
+        "Pass" : 1
+    }
+}

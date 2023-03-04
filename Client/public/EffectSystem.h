@@ -41,6 +41,7 @@ public:
 	CShader* GetShader() { return m_pShaderCom; }
 
 	virtual void SaveToJson(Json& json) override;
+	virtual void LoadFromJson(const Json& json) override;
 	virtual void Imgui_RenderProperty() override;
 
 	_uint GetChildNums() const { return static_cast<_uint>(m_ChildBuffers.size()); }
@@ -53,20 +54,22 @@ public:
 
 	void SetShadowPass(_uint iPass) { m_iShadowPass = iPass; }
 
-// ±è±â¹ü
-public:
-	void Set_BoneMatrix(CModel* pModel, _fmatrix Transform);
-	void Set_BoneMatrix(_fmatrix SocketMatrix);
-private:
-	string m_szBoneName = "Eff01";
-
 	//For_Curve
 public:
-	void Tick_Scale(_float fValue);
-	void Tick_IntroDissolve(_float fValue);
-	void Tick_OutroDissolve(_float fValue);
+	void Tick_Scale_All(_float fValue);
+	void Tick_Scale_Y(_float fValue);
+	void Tick_Scale_X(_float fValue);
+
+	void Tick_Floats_0(_float fValue);
+	void Tick_Floats_1(_float fValue);
+	void Tick_Floats_2(_float fValue);
+	void Tick_Floats_3(_float fValue);
+	void Tick_Floats_4(_float fValue);
+	void Tick_Floats_5(_float fValue);
+	void Tick_Floats_6(_float fValue);
+	void Tick_Floats_7(_float fValue);
 	void Tick_ColorChange(_float fValue);
-	void Tick_EmissiveChange(_float fValue);
+
 	void Tick_IntroTime(_float fValue);
 	void Tick_OutroTime(_float fValue);
 

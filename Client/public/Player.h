@@ -107,8 +107,10 @@ protected:
 	HRESULT SetUp_Components(void* pArg);
 	HRESULT SetUp_Event();
 	HRESULT Setup_KineticStateMachine();
+	HRESULT	SetUp_HitStateMachine();
 
 	CFSMComponent*		m_pKineticStataMachine = nullptr;
+	CFSMComponent*		m_pHitStateMachine = nullptr;
 	CBaseAnimInstance*	m_pASM = nullptr;
 
 	CRenderer*			m_pRenderer = nullptr;
@@ -145,6 +147,26 @@ protected:	// 염력 소켓 애니메이션
 	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Loop;
 	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Cancel;
 
+protected:	// 피격 소켓 애니메이션
+	list<CAnimation*>	m_Hit_FL_Level01;
+	list<CAnimation*>	m_Hit_F_Level01;
+	list<CAnimation*>	m_Hit_FR_Level01;
+	list<CAnimation*>	m_Hit_B_Level01;
+
+	list<CAnimation*>	m_Hit_F_Level02;
+	list<CAnimation*>	m_Hit_B_Level02;
+	list<CAnimation*>	m_Hit_L_Level02;
+	list<CAnimation*>	m_Hit_R_Level02;
+
+	list<CAnimation*>	m_Knuckback;
+
+	list<CAnimation*>	m_Fall;
+	list<CAnimation*>	m_FallDown_Back;
+
+	list<CAnimation*>	m_BreakFall_Front;
+	list<CAnimation*>	m_BreakFall_Back;
+
+protected:	// 피격 관련 변수
 
 public:
 	_bool	isAir() { return m_bAir; }
@@ -160,7 +182,13 @@ public:
 
 	_float	GetPlayRatio() { return m_fPlayRatio; }
 
+public: // For VFX
+	void	Trail_Render(_bool trueisrender) { m_bTrailRender = trueisrender; }
+
+
 protected:
+	_bool	m_bHit = false;
+
 	_bool	m_bAir = false;
 	_bool	m_PreAir = false;
 	_bool	m_bMove = false;
@@ -179,7 +207,7 @@ protected:
 	_float  m_fBefCharge = 0.f;			// 실제 차지 전
 	_float	m_fCharge[3] = { 0.f, };	// 실제 차지
 
-	_float	m_fJumpPower = 8.f;
+	_float	m_fJumpPower = 10.f;
 
 	_uint	m_iSkillUsableCnt = 2;
 
@@ -207,6 +235,11 @@ public:	//EventCaller용
 protected:
 	void		Reset_Charge();
 
+private:
+	// For TrailSystem
+	class CTrailSystem* m_pTrail = nullptr;
+	_bool		m_bTrailRender = false;
+
 protected:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
 	_bool		m_bCanTurn = false;
 	_bool		m_bCanMove = false;
@@ -223,6 +256,7 @@ public:
 
 public:
 	void		Jump();
+	void		AirBorne() { m_fYSpeed = 10.f; }
 	void		SetGravity_Optional(_float fGravity) { m_fYSpeed = fGravity; }
 	void		SmoothTurn_Attack(_double TimeDelta);
 
@@ -258,6 +292,9 @@ protected:
 	Matrix		m_vMatCamRot	= Matrix();
 
 protected:
+	_bool		m_bTestKey = false;
+
+protected:
 	wstring		m_ModelName;
 
 	CCamera*	m_pPlayerCam = nullptr;
@@ -265,6 +302,11 @@ protected:
 protected:
 	void			Attack_Effect(const string& szBoneName, _float fSize);
 	CGameObject*	m_pEffect = nullptr;
+
+protected:
+	void			Search_Usable_KineticObject();
+	CGameObject*	m_pKineticObject = nullptr;
+	_vector			m_vCamLook;
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

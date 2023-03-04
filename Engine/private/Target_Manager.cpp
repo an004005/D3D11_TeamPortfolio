@@ -169,7 +169,7 @@ HRESULT CTarget_Manager::End_MRT(ID3D11DeviceContext * pContext, const _tchar * 
 	Safe_Release(m_pBackBufferView);
 	Safe_Release(m_pDepthStencilView);
 
-	pContext->RSSetViewports(1, &m_OriginViewPort);
+	// pContext->RSSetViewports(1, &m_OriginViewPort);
 
 	return S_OK;
 }

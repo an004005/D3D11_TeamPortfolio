@@ -1,0 +1,41 @@
+{
+    "BillBoardType": 0,
+    "BufferProtoTag": "Prototype_Component_VIBuffer_Rect",
+    "Children": [
+        [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.005642354488372803,
+            0.0,
+            1.0
+        ]
+    ],
+    "ModelProtoTag": "",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 4,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_White_01.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_aur_004.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxTex_VFX",
+    "bBillBoard": true,
+    "bDecal": false,
+    "bUseDepth": false
+}

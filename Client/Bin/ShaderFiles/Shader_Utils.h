@@ -2,12 +2,19 @@
 #define __SHADER_UTILS_HLSL__
 
 #define IDENTITY_MATRIX float4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+
+
+
 static const float PI = 3.14159265f;
 static const float EPSILON = 1e-6f;
 
 // using in blend or light acc to separate shader step
 #define SHADER_DEFAULT 1 << 0
 #define SHADER_TOON 1 << 1
+
+#define SHADER_DISTORTION 1 << 2
+#define SHADER_SCIFI 1 << 3
+#define SHADER_SCIFI_PLAYER_ATTACK 1 << 4
 
 float2 Get_FlipBookUV(float2 vRectUV, float fCurTime, float fFrameTime, int iRowCnt, int iColCnt)
 {
@@ -401,11 +408,16 @@ float3 fresnelSchlick(float3 F0, float cosTheta)
 
 
 
+float Rand(float2 co)
+{
+	return 0.5 + (frac(sin(dot(co.xy, float2(12.9898, 78.233))) * 43758.5453)) * 0.5;
+}
 
 
 
-
-
+// float r1 = Rand(float2(x, accTime));
+// float r2 = Rand(float2(x * accTime, accTime));
+// float r3 = Rand(float2(x * accTime * accTime, accTime * accTime));
 
 
 

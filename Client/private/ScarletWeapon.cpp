@@ -46,9 +46,12 @@ void CScarletWeapon::Setup_BoneMatrix(CModel* pModel, _fmatrix Transform)
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
-	//m_pTransformCom->Set_WorldMatrix(m_SocketMatrix);
-
 	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
+}
+
+void CScarletWeapon::Collision_Check()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 }
 
 void CScarletWeapon::Free()
