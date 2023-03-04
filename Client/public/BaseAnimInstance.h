@@ -59,7 +59,13 @@ protected:	// 대상의 상태
 
 	_uint	m_eMoveDir;
 
+	_float	m_fYSpeed = 0.f;
+
 	CAnimationStateMachine* m_pASM_Base = nullptr;
+
+protected:
+	_bool	FloorCheck();
+	_float	m_fFloorCheck = 0.f;
 
 protected:
 	_float	m_fLerpTime = 0.f;

@@ -395,7 +395,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 				})
 				.Tick([this](_double TimeDelta) 
 				{
-								
+
 				})
 
 			.Build();

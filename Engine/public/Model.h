@@ -134,6 +134,10 @@ private:
 	string								m_szAdditiveAnimName = "";
 	_float								m_fAdditiveRatio = 0.f;
 
+	_vector								m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	_vector								m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	string								m_szSocketBefAnimName = "";
+
 	class CShader* m_pShadowShader = nullptr;
 
 public:

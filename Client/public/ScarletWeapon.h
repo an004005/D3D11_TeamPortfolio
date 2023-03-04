@@ -35,9 +35,6 @@ public:
 
 public:
 	CRigidBody*	Get_Trigger() { return m_pCollider; }
-
-protected:
-	void	Collision_Check();
 	
 protected:
 	WEAPON_DESC	m_Desc;

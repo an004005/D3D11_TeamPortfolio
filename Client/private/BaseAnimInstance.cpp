@@ -21,6 +21,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		static_cast<CPlayer*>(m_pTargetObject)
 		->SetAbleState({false, false, false, false, false, true, true, true, true, false});})
 
+		.AddTransition("IDLE to JUMP_FALL", "JUMP_FALL")
+		.Predicator([&]()->_bool{return FloorCheck();})
+		.Duration(0.1f).Priority(0)
+
 		.AddTransition("IDLE to WALK", "WALK")
 		.Predicator([&]()->_bool { return m_bWalk; })
 		.Duration(0.1f).Priority(0)
@@ -54,6 +58,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
 		->SetAbleState({false, false, false, false, false, true, true, true, true, false });})
+
+		.AddTransition("WALK to RUNJUMP_FALL", "RUNJUMP_FALL")
+		.Predicator([&]()->_bool{return FloorCheck();})
+		.Duration(0.1f).Priority(0)
+
 		.AddTransition("WALK to WALK_START_FRONT", "WALK_START_FRONT")
 		.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_F; })
 		.Duration(0.1f).Priority(0)
@@ -88,6 +97,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		static_cast<CPlayer*>(m_pTargetObject)
 		->SetAbleState({ true, false, false, false, false, true, true, true, true, false });})
 		.FinishEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); })
+
+		.AddTransition("WALK_START_FRONT to RUNJUMP_FALL", "RUNJUMP_FALL")
+		.Predicator([&]()->_bool{return FloorCheck();})
+		.Duration(0.1f).Priority(0)
 
 		.AddTransition("WALK to ATK_A1", "ATK_A1")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
@@ -125,6 +138,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 		.FinishEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); })
 
+		.AddTransition("WALK_START_LEFT to RUNJUMP_FALL", "RUNJUMP_FALL")
+		.Predicator([&]()->_bool{return FloorCheck();})
+		.Duration(0.1f).Priority(0)
+
 		.AddTransition("WALK to ATK_A1", "ATK_A1")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
 		.Duration(0.1f).Priority(1)
@@ -159,6 +176,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		static_cast<CPlayer*>(m_pTargetObject)
 		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 		.FinishEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); })
+
+		.AddTransition("WALK_START_RIGHT to RUNJUMP_FALL", "RUNJUMP_FALL")
+		.Predicator([&]()->_bool{return FloorCheck();})
+		.Duration(0.1f).Priority(0)
 
 		.AddTransition("WALK to ATK_A1", "ATK_A1")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
@@ -195,6 +216,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 		.FinishEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); })
 
+		.AddTransition("WALK_START_BACK_LEFT to RUNJUMP_FALL", "RUNJUMP_FALL")
+		.Predicator([&]()->_bool{return FloorCheck();})
+		.Duration(0.1f).Priority(0)
+
 		.AddTransition("WALK to ATK_A1", "ATK_A1")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
 		.Duration(0.1f).Priority(1)
@@ -230,6 +255,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
 		.FinishEvent([&]() { static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); })
 
+		.AddTransition("WALK_START_BACK_RIGHT to RUNJUMP_FALL", "RUNJUMP_FALL")
+		.Predicator([&]()->_bool{return FloorCheck();})
+		.Duration(0.1f).Priority(0)
+
 		.AddTransition("WALK to ATK_A1", "ATK_A1")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
 		.Duration(0.1f).Priority(1)
@@ -263,6 +292,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
 		->SetAbleState({ true, true, false, false, false, true, true, true, true, false });})
+		
+		.AddTransition("WALK_LOOP to RUNJUMP_FALL", "RUNJUMP_FALL")
+		.Predicator([&]()->_bool{return FloorCheck();})
+		.Duration(0.1f).Priority(0)
+
 		.AddTransition("WALK to ATK_A1", "ATK_A1")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
 		.Duration(0.1f).Priority(1)
@@ -292,6 +326,10 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.StartEvent([&]() { 
 		static_cast<CPlayer*>(m_pTargetObject)
 		->SetAbleState({ false, false, false, false, false, true, true, true, true, false });})
+
+		.AddTransition("WALK_END to RUNJUMP_FALL", "RUNJUMP_FALL")
+		.Predicator([&]()->_bool{return FloorCheck();})
+		.Duration(0.1f).Priority(0)
 
 		.AddTransition("WALK_END to ATK_A1", "ATK_A1")
 		.Predicator([&]()->_bool {return m_bLeftClick; })
@@ -1758,7 +1796,7 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 	{
 		bLocalMove = false;
 		
-		if(m_bAir)
+		if(!m_bOnFloor)
 			m_pASM_Base->SetCurState("JUMP_FALL");
 		else
 			m_pASM_Base->SetCurState("IDLE");
@@ -1834,6 +1872,8 @@ void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
 	m_fPlayRatio = 0.f;
 	m_fPlayRatio = pPlayer->GetPlayRatio();
 
+	m_fYSpeed = pPlayer->GetfYSpeed();
+
 	Vector4 vCamLook = pGameInstance->Get_CamLook();
 	m_vLookPoint = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(vCamLook.x, 0.f, vCamLook.z, 0.f);
 
@@ -1860,12 +1900,23 @@ void CBaseAnimInstance::InputAnimSocket(const string& strSocName, list<CAnimatio
 		iter.second = SocketList;
 	}
 
+
+	m_bSeperateSwitch = false;
 	m_mapAnimSocket[strSocName] = (AnimList);
 }
 
 void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
 {
 	// 소켓의 애니메이션을 교환하고 보간함, 아닐 경우 그냥 덮어버림
+
+	for (auto& iter : m_mapAnimSocket)
+	{
+		if (!iter.second.empty())
+			iter.second.front()->Reset();
+
+		list<CAnimation*> SocketList;
+		iter.second = SocketList;
+	}
 
 	const auto List = m_mapAnimSocket.find(strSocName);
 
@@ -1878,6 +1929,7 @@ void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimat
 		}
 		m_mapAnimSocket[strSocName] = (AnimList);
 	}
+	m_bSeperateSwitch = false;
 }
 
 _bool CBaseAnimInstance::isSocketAlmostFinish(const string & strSocName)
@@ -1893,6 +1945,20 @@ _bool CBaseAnimInstance::isSocketPassby(const string & strSocName, _float fPlayR
 _bool CBaseAnimInstance::CheckAnim(const string & szAnimName)
 {
 	return  (szAnimName == m_pModel->GetPlayAnimation()->GetName()) ? true : false;
+}
+
+_bool CBaseAnimInstance::FloorCheck()
+{
+	if (!m_bAir && !m_bOnFloor)
+	{
+		IM_LOG("%f", m_fYSpeed);
+		if (-7.f >= m_fYSpeed)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 CBaseAnimInstance * CBaseAnimInstance::Create(CModel * pModel, CGameObject * pGameObject)

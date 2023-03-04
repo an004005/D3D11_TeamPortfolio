@@ -82,6 +82,20 @@ private:
 
 	}MOVELIMIT;
 
+	typedef struct tagPlayerStatus
+	{
+		_uint m_iHP = 100;
+		_uint m_iKineticEnergy = 100;
+	}PLAYER_STAT;
+
+	typedef struct tagDamageDesc
+	{
+		_int		m_iDamage;
+		_vector		m_vHitDir;
+		EAttackType	m_iDamageType;
+		EBaseAxis	m_eHitDir;
+	}DAMAGE_DESC;
+
 public:
 	enum EATTACK_LIMIT { LIMIT_NONCHARGE_FLOOR, LIMIT_NONCHARGE_AIR, LIMIT_AIRATK01, LIMIT_AIRATK02, LIMIT_AIRDODGEATK, };
 	enum EMOVE_LIMIT { LIMIT_DOUBLEJUMP, LIMIT_AIRDODGE, };
@@ -95,13 +109,19 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
-	virtual void BeginTick() {}
+	virtual void BeginTick();
 	virtual void Tick(_double TimeDelta);
 	virtual void Late_Tick(_double TimeDelta);
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render();
 
+	virtual void TakeDamage(DAMAGE_PARAM tDamageParams);
+
 	virtual void Imgui_RenderProperty() override;
+
+protected:
+	PLAYER_STAT m_PlayerStat;
+	DAMAGE_DESC m_DamageDesc;
 
 protected:
 	HRESULT SetUp_Components(void* pArg);
@@ -167,6 +187,7 @@ protected:	// 피격 소켓 애니메이션
 	list<CAnimation*>	m_BreakFall_Back;
 
 protected:	// 피격 관련 변수
+	_vector	m_vHitDir;
 
 public:
 	_bool	isAir() { return m_bAir; }
@@ -181,11 +202,13 @@ public:
 	_bool	isSeperateAnim() { return m_bSeperateAnim; }
 
 	_float	GetPlayRatio() { return m_fPlayRatio; }
+	_float	GetfYSpeed() { return m_fYSpeed; }
 
 protected:
 	_bool	m_bHit = false;
+	_bool	m_bBreakFall = false;
 
-	_bool	m_bAir = false;
+	_bool	m_bAir = false;		// 의도한 공중 상태인지 파악을 위함
 	_bool	m_PreAir = false;
 	_bool	m_bMove = false;
 	_bool	m_bWalk = false;
@@ -255,6 +278,7 @@ protected:
 	void		BehaviorCheck(_double TimeDelta);
 	void		MoveStateCheck(_double TimeDelta);
 	void		SeperateCheck();
+	void		HitCheck();
 
 public:
 	EMoveDir	GetMoveDir() const { return m_eMoveDir; }
@@ -296,8 +320,28 @@ protected:
 
 protected:
 	void			Search_Usable_KineticObject();
+	void			Spline_Kinetic(_double TimeDelta);
+	void			Kinetic_Test(_float fRatio);
+	void			Kinetic_ByTurn();
 	CGameObject*	m_pKineticObject = nullptr;
+	CGameObject*	m_pTargetedEnemy = nullptr;
 	_vector			m_vCamLook;
+
+protected:
+	_float4 m_vSplinePoint_01;
+	_float4 m_vSplinePoint_02;
+	_float4 m_vSplinePoint_03;
+	_float4 m_vSplinePoint_04;
+
+protected:
+	_vector	m_vToKineticObj;	// 뒤로 붕 돌릴 때의 보간 시작 지점
+	_vector m_vKineticPoint;	// 뒤로 붕 돌릴 때의 보간 완료 지점
+	_vector m_vKineticOrbit;
+	_bool	m_bSwingKineticThrow = false;
+	_vector m_vThrow;
+	_float	m_fSwingLerpTimer = 0.f;
+	_bool	m_bRight = false;
+	_vector m_vKineticInitLook;
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

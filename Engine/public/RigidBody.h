@@ -34,6 +34,8 @@ public:
 	void AddForce(_float3 vForce);
 	void AddTorque(_float3 vTorque);
 
+	void Set_Kinetic(_bool bKinematic);
+
 	_bool IsKinematic() const { return m_bKinematic; }
 	_bool IsTrigger() const { return m_bTrigger; }
 	

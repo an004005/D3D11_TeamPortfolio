@@ -619,7 +619,7 @@
     },
     "AS_ch0100_438_AL_breakfall_F": {
         "Duration": 27.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 27.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -812,7 +812,7 @@
     },
     "AS_em0400_200_AL_atk_a1": {
         "Duration": 420.0,
-        "TickPerSecond": 0.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": [
             {
