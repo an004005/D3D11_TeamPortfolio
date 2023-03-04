@@ -167,15 +167,13 @@ void CPlayerInfo_HpBackUI::Five_Tick(const _double & dTimeDelta)
 
 void CPlayerInfo_HpBackUI::RendomHpImage(const _int & iImageNumber)
 {
-	// 캔버스에서 호출하는 함수로, Hp를 그리며, 이미지를 정하고 일부객체를 그린다.
-	m_bVisible = true;
+	// 캔버스에서 호출하는 함수로, 이미지를 정하고 일부객체를 그린다.
 
 	if (0 == iImageNumber)
 		m_tParams.Ints[0] = 5;
 	else
 		m_tParams.Ints[0] = 10;
 
-	m_tParams.Floats[0] = 1.0f;
 	m_tParams.Ints[2] = iImageNumber;
 }
 
