@@ -249,8 +249,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	/*Json BuddyLumiTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumiTrigger.json");*/
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"),& BuddyLumiModel)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"),& BuddyLumiModel)))
+		return E_FAIL;*/
 
 	Json SkummyPoolModel;
 	SkummyPoolModel["Model"] = "MonsterSkummyPool";
@@ -267,8 +267,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Json BronJonModel;
 	BronJonModel["Model"] = "MonsterBronJon";
 
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
-		return E_FAIL;*/
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
+		return E_FAIL;
 
 	return S_OK;
 }

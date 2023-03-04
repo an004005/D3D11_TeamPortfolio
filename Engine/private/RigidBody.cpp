@@ -244,6 +244,13 @@ void CRigidBody::ReleaseActor()
 {
 	if (m_pActor)
 	{
+		m_pActor->userData = nullptr;
+		if (m_pActor->getScene())
+		{
+			auto pScene = CPhysX_Manager::GetInstance()->GetScene();
+			pScene->removeActor(*m_pActor);
+		}
+
 		if (m_pShape)
 		{
 			m_pActor->detachShape(*m_pShape);
@@ -251,11 +258,6 @@ void CRigidBody::ReleaseActor()
 			m_pShape = nullptr;
 		}
 
-		if (m_pActor->getScene())
-		{
-			auto pScene = CPhysX_Manager::GetInstance()->GetScene();
-			pScene->removeActor(*m_pActor);
-		}
 		m_pActor->release();
 		m_pActor = nullptr;
 	}

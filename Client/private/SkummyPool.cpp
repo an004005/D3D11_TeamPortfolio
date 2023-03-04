@@ -15,6 +15,7 @@
 #include "SkMpBullet.h"
 #include "RigidBody.h"
 
+// TODO : 소켓 작업, Turn
 
 CSkummyPool::CSkummyPool(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -72,9 +73,13 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 				.Tick([this](_double TimeDelta)
 				{
 					// Player의 Position 계속 받아옴
-					_float3 fTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+//					_float3 fTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					// 내 Position 갱신
-					m_fMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+//					m_fMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_vector vDir = m_vStorePos - m_vMyPos;
 
 					m_fTimeAcc += _float(TimeDelta);
 
@@ -86,8 +91,9 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 					if (m_bInitialize)
 					{		// 기준점 밖일 때
-						if (m_fMyPos.x >= (fTargetPos.x + 5.f) || m_fMyPos.z >= (fTargetPos.z + 5.f) ||
-							m_fMyPos.x <= (fTargetPos.x - 5.f) || m_fMyPos.z <= (fTargetPos.z - 5.f))
+						/*if (m_fMyPos.x >= (fTargetPos.x + 5.f) || m_fMyPos.z >= (fTargetPos.z + 5.f) ||
+							m_fMyPos.x <= (fTargetPos.x - 5.f) || m_fMyPos.z <= (fTargetPos.z - 5.f))*/
+						if(XMVectorGetX(XMVector3Length(vDir)) > 7.f)
 						{
 							vector<_uint> vecRandomPattern;
 
@@ -231,7 +237,6 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 							pBullet->Set_ShootDir(vDest);
 							
 							pBullet->GetTransform()->LookAt(vTargetPos);
-							
 						}
 
 						m_bCreateBullet = true;
@@ -380,7 +385,7 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 				{
 					return !m_bMoveR && m_bAttack;
 				})
-
+					
 
 			.Build();
 	}	
@@ -420,15 +425,18 @@ void CSkummyPool::Tick(_double TimeDelta)
 {
 	CMonster::Tick(TimeDelta);
 
+	Collision();
+
 	m_pTrigger->Update_Tick(m_pTransformCom);
 
+	m_pSocketFSM->Tick(TimeDelta);
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
 }
 
 void CSkummyPool::Late_Tick(_double TimeDelta)
 {
-	__super::Late_Tick(TimeDelta);
+	CMonster::Late_Tick(TimeDelta);
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -436,7 +444,7 @@ void CSkummyPool::Late_Tick(_double TimeDelta)
 
 HRESULT CSkummyPool::Render()
 {
-	if (FAILED(__super::Render()))
+	if (FAILED(CMonster::Render()))
 		return E_FAIL;
 
 	m_pModelCom->Render(m_pTransformCom);
@@ -448,12 +456,28 @@ void CSkummyPool::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
+	m_pSocketFSM->Imgui_RenderProperty();
+}
+
+void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
+{
+	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
+	// ↑ 공격이 들어올 방향 
+	m_eAtkType = tDamageParams.eAttackType;
+
+	m_eHitDir = eHitFrom;
+
+	m_bStruck = true;
 }
 
 void CSkummyPool::AfterPhysX()
 {
 	__super::AfterPhysX();
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
+}
+
+void CSkummyPool::Collision()
+{
 }
 
 HRESULT CSkummyPool::Setup_AnimSocket()
@@ -465,6 +489,119 @@ HRESULT CSkummyPool::Setup_AnimSocket()
 
 	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0600_424_AL_dead_down"));
 	m_DeadAnimSocket.push_back(pAnimation = m_pModelCom->Find_Animation("AS_em0600_424_AL_dead_down"));
+
+	return S_OK;
+}
+
+HRESULT CSkummyPool::Setup_WeakAnimState()
+{
+	CAnimation* pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0600_401_AL_damage_l_F"));
+	m_HitLightFoward.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0600_402_AL_damage_l_B"));
+	m_HitLightBack.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0600_411_AL_damage_m_F"));
+	m_HitMiddleFoward.push_back(pAnimation);				   
+															   
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0600_412_AL_damage_m_B"));
+	m_HitMiddleBack.push_back(pAnimation);					   
+															   
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0600_413_AL_damage_m_L"));
+	m_HitMiddleLeft.push_back(pAnimation);					  
+															  
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0600_414_AL_damage_m_R"));
+	m_HitMiddleRight.push_back(pAnimation);
+
+	{
+		m_pSocketFSM = CFSMComponentBuilder()
+			.InitState("No_Hit")
+			.AddState("No_Hit")
+				.Tick([this](_double TimeDelta) { m_bDamage = false; })
+					.AddTransition("No_Hit to Ground_Hit", "Ground_Hit")
+						.Predicator([this] {return m_bStruck && !m_bAir; })
+						.Priority(0)
+
+					.AddTransition("No_Hit to Air_Hit", "Air_Hit")
+						.Predicator([this] {return m_bStruck && m_bAir; })
+						.Priority(0)
+
+#pragma region Ground_Hit
+
+			.AddState("Ground_Hit")
+				.OnStart([this]
+				{
+					if (m_eAtkType == EAttackType::ATK_LIGHT)	// 기본 공격(평타)
+					{
+						if (m_eHitDir == EBaseAxis::NORTH)	// NORTH : 전방
+						{
+							m_pASM->InputAnimSocket("SkummyPool_GroundDmgAnim", m_HitLightFoward);
+							m_Haxistype = HAS_FL;
+						}
+						else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
+						{
+							m_pASM->InputAnimSocket("SkummyPool_GroundDmgAnim", m_HitLightBack);
+							m_Haxistype = HAS_BL;
+						}
+					}
+
+					else if (m_eAtkType == EAttackType::ATK_MIDDLE)
+					{
+						if (m_eHitDir == EBaseAxis::NORTH) // NORTH : 전방
+						{
+							m_pASM->InputAnimSocket("SkummyPool_GroundDmgAnim", m_HitMiddleFoward);
+							m_Haxistype = HAS_FM;
+						}
+						else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
+						{
+							m_pASM->InputAnimSocket("SkummyPool_GroundDmgAnim", m_HitMiddleBack);
+							m_Haxistype = HAS_BM;
+						}
+						else if (m_eHitDir == EBaseAxis::WEST)	// WEST : 좌측
+						{
+							m_pASM->InputAnimSocket("SkummyPool_GroundDmgAnim", m_HitMiddleLeft);
+							m_Haxistype = HAS_LM;
+						}
+						else if (m_eHitDir == EBaseAxis::EAST)	// EAST : 우측
+						{
+							m_pASM->InputAnimSocket("SkummyPool_GroundDmgAnim", m_HitMiddleRight);
+							m_Haxistype = HAS_RM;
+						}
+					}
+				})
+
+				.Tick([this](_double TimeDelta)
+				{
+					m_bDamage = true;
+
+					if (m_pASM->isSocketPassby("SkummyPool_GroundDmgAnim") > 0.92)
+					{
+						m_bStruck = false;
+					}
+				})
+
+				.AddTransition("Ground_Hit to Ground_Hit", "Ground_Hit")
+					.Predicator([this] {return m_bStruck && !m_bAir && m_pASM->isSocketPassby("SkummyPool_GroundDmgAnim") <= 0.92; })
+					.Priority(0)
+
+				.AddTransition("Ground_Hit to No_Hit", "No_Hit")
+					.Predicator([this] {return !m_bStruck && !m_bAir && m_pASM->isSocketAlmostFinish("SkummyPool_GroundDmgAnim"); })
+					.Priority(0)
+
+				.AddTransition("Ground_Hit to Air_Hit", "Air_Hit")
+					.Predicator([this] {return m_bStruck && m_bAir; })
+					.Priority(0)
+
+#pragma endregion Ground_Hit
+
+#pragma region Air_Hit
+
+#pragma endregion Air_Hit
+
+			.Build();
+	}
 
 	return S_OK;
 }
@@ -497,6 +634,8 @@ HRESULT CSkummyPool::SetUp_Components(void * pArg)
 		MSG_BOX("SkummyPool's ASM Failed");
 		return E_FAIL;
 	}
+
+	FAILED_CHECK(Setup_WeakAnimState());
 
 	return S_OK;
 }
@@ -533,6 +672,7 @@ void CSkummyPool::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
+	Safe_Release(m_pSocketFSM);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pTrigger);
 }

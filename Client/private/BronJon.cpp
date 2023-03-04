@@ -16,6 +16,8 @@
 #include "RigidBody.h"
 #include "PhysX_Manager.h"
 
+// TODO : Turn 애님 제어 및 State 추가, 소켓 작업, 충돌
+
 CBronJon::CBronJon(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -75,24 +77,30 @@ HRESULT CBronJon::Initialize(void * pArg)
 				})
 				.Tick([this](_double TimeDelta)
 				{
+					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
 					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					XMStoreFloat3(&m_fStorePos, m_vStorePos);
 
+					_vector vDir = m_vStorePos - m_vMyPos;
+
 					m_fTimeAcc += _float(TimeDelta * 1);
 
-					if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 20.f) && m_fMyPos.z <= (m_fStorePos.z + 20.f) ||
-						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 20.f) && m_fMyPos.z <= (m_fStorePos.z + 20.f) ||
-						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 20.f) && m_fMyPos.z >= (m_fStorePos.z - 20.f) ||
-						m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 20.f) && m_fMyPos.z >= (m_fStorePos.z - 20.f))
+					/*if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 15.f) && m_fMyPos.z <= (m_fStorePos.z + 15.f) ||
+						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 15.f) && m_fMyPos.z <= (m_fStorePos.z + 15.f) ||
+						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 15.f) && m_fMyPos.z >= (m_fStorePos.z - 15.f) ||
+						m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 15.f) && m_fMyPos.z >= (m_fStorePos.z - 15.f))*/
+					if (XMVectorGetX(XMVector3Length(vDir)) < 28.f)
 					{
 						if (m_fTimeAcc >= 3.f)
 						{
 							m_bIdle = false;
 
-							if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 6.f) && m_fMyPos.z <= (m_fStorePos.z + 6.f) ||
-								m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 6.f) && m_fMyPos.z <= (m_fStorePos.z + 6.f) ||
-								m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 6.f) && m_fMyPos.z >= (m_fStorePos.z - 6.f) ||
-								m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 6.f) && m_fMyPos.z >= (m_fStorePos.z - 6.f))
+							/*if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 8.f) && m_fMyPos.z <= (m_fStorePos.z + 8.f) ||
+								m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 8.f) && m_fMyPos.z <= (m_fStorePos.z + 8.f) ||
+								m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 8.f) && m_fMyPos.z >= (m_fStorePos.z - 8.f) ||
+								m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 8.f) && m_fMyPos.z >= (m_fStorePos.z - 8.f))*/
+							if (XMVectorGetX(XMVector3Length(vDir)) < 10.f)
 							{
 								m_bNear = true;
 								m_bFar = false;
@@ -143,7 +151,10 @@ HRESULT CBronJon::Initialize(void * pArg)
 						}
 					}
 					else
+					{
+						m_fTimeAcc = 0.f;
 						m_bIdle = true;
+					}
 				})
 
 				.AddTransition("Idle to BiteAtk", "BiteAtk")
@@ -222,16 +233,32 @@ HRESULT CBronJon::Initialize(void * pArg)
 						params.vPos = fJawPos;//vJawPos;
 						params.vUnitDir = _float3{ 0.f, 0.f, 1.f };
 						params.fVisibleTime = 0.1f; // 보여지는 시간
-
 						if (pGameInstance->SweepSphere(params))	// 조건
 						{
 							for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
 							{
-								if (overlapOut.getAnyHit(i).actor)
-									int iA = 0;//MSG_BOX("Touch");
-								CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor);
+								auto pHit = overlapOut.getAnyHit(i);
+								CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+
+								if (auto pTargetCol = dynamic_cast<CPlayer*>(pCollidedObject))
+								{									
+									DAMAGE_PARAM tParam;
+									tParam.iDamage = 1;
+									tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+									tParam.pCauser = this;
+									pTargetCol->TakeDamage(tParam);
+								}
 							}
 						}
+						//if (pGameInstance->SweepSphere(params))	// 조건
+						//{
+						//	for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+						//	{
+						//		if (overlapOut.getAnyHit(i).actor)
+						//			int iA = 0;//MSG_BOX("Touch");
+						//		CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor);
+						//	}
+						//}
 						m_bCreateBite = true;
 					}				
 
@@ -280,6 +307,7 @@ HRESULT CBronJon::Initialize(void * pArg)
 
 					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					XMStoreFloat3(&m_fStorePos, m_vStorePos);
+					_vector vDir = m_vStorePos - m_vMyPos;
 
 					m_pTransformCom->LookAt(m_vStorePos);
 					m_pTransformCom->Chase(m_vStorePos, 0.05);
@@ -290,10 +318,12 @@ HRESULT CBronJon::Initialize(void * pArg)
 					{
 						m_bMoveF = false;
 
-						if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 6.f) && m_fMyPos.z <= (m_fStorePos.z + 6.f) ||
+//						if (XMVectorGetX(XMVector3Length(vDir)) < 10.f)
+						/*if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 6.f) && m_fMyPos.z <= (m_fStorePos.z + 6.f) ||
 							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 6.f) && m_fMyPos.z <= (m_fStorePos.z + 6.f) ||
 							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 6.f) && m_fMyPos.z >= (m_fStorePos.z - 6.f) ||
-							m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 6.f) && m_fMyPos.z >= (m_fStorePos.z - 6.f))
+							m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 6.f) && m_fMyPos.z >= (m_fStorePos.z - 6.f))*/
+						if (XMVectorGetX(XMVector3Length(vDir)) < 10.f)
 						{							
 							m_bIdle = true;
 						}
@@ -514,9 +544,11 @@ HRESULT CBronJon::Initialize(void * pArg)
 					if (pAnim->GetPlayRatio() <= 0.35)
 					{
 						m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					}
+						m_fCorrect = m_vStorePos;
+					}					
+						m_fCorrect.y = 0.f;
 
-					m_pTransformCom->LookAt(m_vStorePos);
+					m_pTransformCom->LookAt(m_fCorrect);
 
 					if (pAnim->GetPlayRatio() > 0.97)
 					{
@@ -564,10 +596,18 @@ HRESULT CBronJon::Initialize(void * pArg)
 						if (pGameInstance->SweepSphere(params))	// 조건
 						{
 							for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
-							{								
-								if (overlapOut.getAnyHit(i).actor)
-									int iA = 0;//MSG_BOX("Touch");
-								CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor);
+							{				
+								auto pHit = overlapOut.getAnyHit(i);
+								CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+								
+								if (auto pTargetCol = dynamic_cast<CPlayer*>(pCollidedObject))
+								{								
+									DAMAGE_PARAM tParam;
+									tParam.iDamage = 1;
+									tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+									tParam.pCauser = this;									
+									pTargetCol->TakeDamage(tParam);
+								}
 							}
 						}					
 					}					
@@ -638,10 +678,11 @@ void CBronJon::Tick(_double TimeDelta)
 {
 	CMonster::Tick(TimeDelta);
 	
-	m_pTrigger->Update_Tick(m_pTransformCom);
 	
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
+	
+	m_pTrigger->Update_Tick(m_pTransformCom);
 }
 
 void CBronJon::Late_Tick(_double TimeDelta)
@@ -666,6 +707,18 @@ void CBronJon::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 	m_pFSM->Imgui_RenderProperty();
+
+}
+
+void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
+{
+	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
+
+	m_eAtkType = tDamageParams.eAttackType;
+
+	m_eHitDir = eHitFrom;
+
+	m_bStruck = true;
 }
 
 void CBronJon::AfterPhysX()
@@ -677,6 +730,10 @@ void CBronJon::AfterPhysX()
 	m_pJawRBody->Update_AfterPhysX(m_pTransformCom);
 
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
+}
+
+void CBronJon::Collision()
+{
 }
 
 _matrix CBronJon::AttachCollider()
@@ -714,6 +771,108 @@ HRESULT CBronJon::Setup_AnimSocket()
 	return S_OK;
 }
 
+HRESULT CBronJon::Setup_WeakAnimState()
+{
+	CAnimation* pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_401_AL_damage_l_F"));
+	m_HitLightFoward.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_402_AL_damage_l_B"));
+	m_HitLightBack.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_411_AL_damage_m_F"));
+	m_HitMiddleFoward.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_412_AL_damage_m_B"));
+	m_HitMiddleBack.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_413_AL_damage_m_L"));
+	m_HitMiddleLeft.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_414_AL_damage_m_R"));
+	m_HitMiddleRight.push_back(pAnimation);
+
+	{
+		m_pSocketFSM = CFSMComponentBuilder()
+			.InitState("No_Hit")
+			.AddState("No_Hit")
+				.Tick([this](_double TimeDelta) { m_bDamage = false; })
+
+				.AddTransition("No_Hit to Ground_Hit", "Ground_Hit")
+					.Predicator([this] {return m_bStruck; })
+					.Priority(0)
+
+#pragma region Ground_Hit
+
+			.AddState("Ground_Hit")
+				.OnStart([this] 
+				{
+					if (m_eAtkType == EAttackType::ATK_LIGHT)	// 기본 공격(평타)
+					{
+						if (m_eHitDir == EBaseAxis::NORTH)	// NORTH : 전방
+						{
+							m_pASM->InputAnimSocket("BronJon_GroundDmgAnim", m_HitLightFoward);
+							m_Haxistype = HAS_FL;
+						}
+						else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
+						{
+							m_pASM->InputAnimSocket("BronJon_GroundDmgAnim", m_HitLightBack);
+							m_Haxistype = HAS_BL;
+						}
+					}
+
+					else if (m_eAtkType == EAttackType::ATK_MIDDLE)
+					{
+						if (m_eHitDir == EBaseAxis::NORTH) // NORTH : 전방
+						{
+							m_pASM->InputAnimSocket("BronJon_GroundDmgAnim", m_HitMiddleFoward);
+							m_Haxistype = HAS_FM;
+						}
+						else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
+						{
+							m_pASM->InputAnimSocket("BronJon_GroundDmgAnim", m_HitMiddleBack);
+							m_Haxistype = HAS_BM;
+						}
+						else if (m_eHitDir == EBaseAxis::WEST)	// WEST : 좌측
+						{
+							m_pASM->InputAnimSocket("BronJon_GroundDmgAnim", m_HitMiddleLeft);
+							m_Haxistype = HAS_LM;
+						}
+						else if (m_eHitDir == EBaseAxis::EAST)	// EAST : 우측
+						{
+							m_pASM->InputAnimSocket("BronJon_GroundDmgAnim", m_HitMiddleRight);
+							m_Haxistype = HAS_RM;
+						}
+					}
+				})
+
+				.Tick([this](_double TimeDelta)
+					{
+						m_bDamage = true;
+
+						if (m_pASM->isSocketPassby("BronJon_GroundDmgAnim") > 0.92)
+						{
+							m_bStruck = false;
+						}
+					})
+
+						.AddTransition("Ground_Hit to Ground_Hit", "Ground_Hit")
+							.Predicator([this] {return m_bStruck && m_pASM->isSocketPassby("BronJon_GroundDmgAnim") <= 0.92; })
+							.Priority(0)
+
+						.AddTransition("Ground_Hit to No_Hit", "No_Hit")
+							.Predicator([this] {return !m_bStruck && m_pASM->isSocketAlmostFinish("BronJon_GroundDmgAnim"); })
+							.Priority(0)						
+
+#pragma endregion Ground_Hit
+
+			.Build();
+	}
+
+	return S_OK;
+}
+
 HRESULT CBronJon::SetUp_Components(void * pArg)
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
@@ -738,6 +897,8 @@ HRESULT CBronJon::SetUp_Components(void * pArg)
 		MSG_BOX("BronJon's ASM Failed");
 		return E_FAIL;
 	}
+
+	FAILED_CHECK(Setup_WeakAnimState());
 
 	return S_OK;
 }
@@ -774,6 +935,7 @@ void CBronJon::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
+	Safe_Release(m_pSocketFSM);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pTrigger);
 	Safe_Release(m_pJawRBody);

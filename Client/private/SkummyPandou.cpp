@@ -36,7 +36,7 @@ HRESULT CSkummyPandou::Initialize_Prototype()
 HRESULT CSkummyPandou::Initialize(void * pArg)
 {
 	Json SkummyPandouTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouTrigger.json");
-	Json SkummyPandouSearch = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouSearch.json");
+//	Json SkummyPandouSearch = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouSearch.json");
 	
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -53,13 +53,14 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 		(CComponent**)&m_pTrigger, &SkummyPandouTrigger)))
 		return E_FAIL;
 
-	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Search"),
+	/*if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Search"),
 		(CComponent**)&m_pSearch, &SkummyPandouSearch)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 20.f)));
 
-	m_pTransformCom->SetSpeed(0.4f);
+//	m_pTransformCom->SetSpeed(0.4f);
+	m_pTransformCom->SetTransformDesc({ 0.45f,  XMConvertToRadians(50.f) });
 
 	m_strObjectTag = "Skummy_Pandou";
 
@@ -78,17 +79,15 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 				.Tick([this](_double TimeDelta)
 				{
 					CGameInstance* pGameInstance = CGameInstance::GetInstance();
-								
+						
 					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					XMStoreFloat3(&m_fStorePos, m_vStorePos);
-									
+					
+//					XMStoreFloat3(&m_fStorePos, m_vStorePos);
+					_vector vDir = m_vStorePos - m_vMyPos;
 
 					if (!m_bInitialize)
 					{
-						if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 2.5f) && m_fMyPos.z <= (m_fStorePos.z + 2.5f) ||
-							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 2.5f) && m_fMyPos.z <= (m_fStorePos.z + 2.5f) ||
-							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 2.5f) && m_fMyPos.z >= (m_fStorePos.z - 2.5f) ||
-							m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 2.5f) && m_fMyPos.z >= (m_fStorePos.z - 2.5f))
+						if (XMVectorGetX(XMVector3Length(vDir)) > 2.5f)
 						{
 							m_bRandomMove = false;
 							m_bInitialize = true;
@@ -117,13 +116,12 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 
 					else // 한 번 Player를 발견하면 여기로만 조건이 들어온다.
 					{
+						m_pTransformCom->LookAt_Smooth(m_vStorePos, TimeDelta);
+						//m_pTransformCom->LookAt(m_vStorePos);
 						m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-						XMStoreFloat3(&m_fMyPos, m_vMyPos);
+//						XMStoreFloat3(&m_fMyPos, m_vMyPos);
 
-						if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 6.3f) && m_fMyPos.z <= (m_fStorePos.z + 6.3f) ||
-							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 6.3f) && m_fMyPos.z <= (m_fStorePos.z + 6.3f) ||
-							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 6.3f) && m_fMyPos.z >= (m_fStorePos.z - 6.3f) ||
-							m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 6.3f) && m_fMyPos.z >= (m_fStorePos.z - 6.3f))
+						if (XMVectorGetX(XMVector3Length(vDir)) < 10.f)
 						{
 							m_fTimeAcc += _float(TimeDelta * 1);
 
@@ -260,6 +258,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 			.AddState("Attack_Start")
 				.OnStart([this] 
 				{
+					m_bCollision = false;
 					_vector vAtkLook = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					/*_float3 fAtkLook;
 					XMStoreFloat3(&fAtkLook, vAtkLook);
@@ -292,7 +291,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 				{
 					m_fTimeAcc += _float(TimeDelta * 1);
 
-					m_pTransformCom->Go_Straight(1);
+					m_pTransformCom->Go_Straight(0.9);
 
 					if (m_fTimeAcc >= 0.8f)
 					{
@@ -307,39 +306,59 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 						return !m_bAttacking && m_bAttackEnd;
 					})
 
-			.AddState("Attack_End")
+			.AddState("Attack_End")	
+						.OnStart([this]
+					{
+			//			m_bLerpTurn = false;
+					})
 				.Tick([this](_double TimeDelta)
-				{
+				{					
 					auto pAnim = m_pModelCom->GetPlayAnimation();
 
-					if (pAnim->GetPlayRatio() > 0.97)
+					if (pAnim->GetPlayRatio() > 0.3)
 					{
+						/*if (!m_bLerpTurn)
+						{
+							m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+							m_bLerpTurn = true;
+						}*/
+
 						m_bAttackEnd = false;
-						m_bIdle = true;
-					}
+						//m_bIdle = true;
+						m_bLerpTurn = true;
+					}	
+				})
+				.OnExit([this]
+				{
+	//				m_pTransformCom->LookAt(m_vStorePos);
 				})
 				.AddTransition("Attack_End to Idle", "Idle")
 					.Predicator([this]
 					{
 						return !m_bAttackEnd && m_bIdle;
 					})
+				.AddTransition("Attack_End to Turn", "Turn")
+					.Predicator([this]
+					{
+						return !m_bAttackEnd && m_bLerpTurn;
+					})
+
 
 			.AddState("MoveF")				
 				.Tick([this](_double TimeDelta)
 				{
 					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					XMStoreFloat3(&m_fMyPos, m_vMyPos);
+//					XMStoreFloat3(&m_fMyPos, m_vMyPos);
 
 					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					XMStoreFloat3(&m_fStorePos, m_vStorePos);
+//					XMStoreFloat3(&m_fStorePos, m_vStorePos);
 
+					_vector vDir = m_vStorePos - m_vMyPos;
+					
 					m_pTransformCom->LookAt(m_vStorePos);
 					m_pTransformCom->Chase(m_vStorePos, 0.13);
 
-					if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 5.f) && m_fMyPos.z <= (m_fStorePos.z + 5.f) ||
-						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 5.f) && m_fMyPos.z <= (m_fStorePos.z + 5.f) ||
-						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 5.f) && m_fMyPos.z >= (m_fStorePos.z - 5.f) ||
-						m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 5.f) && m_fMyPos.z >= (m_fStorePos.z - 5.f))
+					if (XMVectorGetX(XMVector3Length(vDir)) < 10.f)
 					{
 						m_bMoveF = false;
 						m_bAttackStart = true;
@@ -431,13 +450,13 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 
 						random_shuffle(vecRandomPattern.begin(), vecRandomPattern.end());
 
-						_uint iShuffleResult = vecRandomPattern.front();
+_uint iShuffleResult = vecRandomPattern.front();
 
-						if (iShuffleResult == 1)
-							m_bThreat = true;
+if (iShuffleResult == 1)
+m_bThreat = true;
 
-						if (iShuffleResult == 2)
-							m_bAttackStart = true;
+if (iShuffleResult == 2)
+m_bAttackStart = true;
 					}
 				})
 				.AddTransition("MoveL to Attack_Start", "Attack_Start")
@@ -446,14 +465,14 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 					return !m_bMoveL && m_bAttackStart;
 				})
 
-				.AddTransition("MoveL to Threat", "Threat")
+					.AddTransition("MoveL to Threat", "Threat")
 					.Predicator([this]
 				{
 					return !m_bMoveL && m_bThreat;
 				})
 
 
-			.AddState("MoveR")
+					.AddState("MoveR")
 					.OnStart([this]
 				{
 					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
@@ -502,8 +521,78 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 					return !m_bMoveR && m_bThreat;
 				})
 
-						
-			.Build();
+					.AddState("Turn")
+					.OnStart([this]
+				{
+					m_fMovingTime = 0.f;
+				})
+					.Tick([this](_double TimeDelta)
+				{
+					m_fMovingTime += _float(TimeDelta);
+
+					_vector vTarget = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					m_pTransformCom->Go_Straight(TimeDelta * 1.2);
+					m_pTransformCom->LookAt_Smooth(vTarget, TimeDelta * 1.6);
+
+					if (m_fMovingTime >= 2.6f)
+					{
+						m_bLerpTurn = false;
+						m_bIdle = true;
+					}
+				})
+					.AddTransition("Turn to Idle", "Idle")
+					.Predicator([this]
+				{
+					return !m_bLerpTurn && m_bIdle;
+				})
+
+
+					.Build();
+	}
+
+	{
+		m_pTrigger->SetOnTriggerIn([this](CGameObject* pObj)
+		{
+			if (auto pPlayer = dynamic_cast<CPlayer*>(pObj))
+			{
+				if (!m_bCollision)
+				{
+					physx::PxRaycastHit hitBuffer[1];
+					physx::PxRaycastBuffer rayOut(hitBuffer, 1);
+
+					RayCastParams param;
+					param.rayOut = &rayOut;
+					param.vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					param.vDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+					param.fDistance = 5.f;
+					param.iTargetType = CTB_MONSTER_ATTACK;
+					param.bSingle = true;
+					param.fVisibleTime = 0.3f;
+					if (CGameInstance::GetInstance()->RayCast(param))
+					{
+						for (int i = 0; i < rayOut.getNbAnyHits(); ++i)
+						{
+							auto pHit = rayOut.getAnyHit(i);
+							CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+							if (auto pPlayerCol = dynamic_cast<CPlayer*>(pCollidedObject))
+							{
+								DAMAGE_PARAM tParam;
+								tParam.iDamage = 1;
+								tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+								_float3 fParamOrigin = { param.vOrigin.x, param.vOrigin.y, param.vOrigin.z };
+								tParam.vHitPosition = fParamOrigin;
+								tParam.pCauser = this;
+								
+								pPlayerCol->TakeDamage(tParam);
+							}
+						}
+					}
+
+					m_bCollision = true;
+				}
+			}
+
+		});
 	}
 
 	// Tick에서 도는게 아닌
@@ -562,9 +651,6 @@ void CSkummyPandou::Tick(_double TimeDelta)
 {
 	CMonster::Tick(TimeDelta);
 
-//	m_pSearch->Update_Tick(m_pTransformCom);
-	m_pTrigger->Update_Tick(m_pTransformCom);
-
 	StateCheck(TimeDelta);
 
 	m_pFSM->Tick(TimeDelta);
@@ -595,13 +681,23 @@ void CSkummyPandou::Imgui_RenderProperty()
 	m_pFSM->Imgui_RenderProperty();
 }
 
+void CSkummyPandou::TakeDamage(DAMAGE_PARAM tDamageParams)
+{
+	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
+	
+	m_eAtkType = tDamageParams.eAttackType;
+	
+	m_eHitDir = eHitFrom;
+	
+	m_bStruck = true;
+}
+
 void CSkummyPandou::AfterPhysX()
 {
 	__super::AfterPhysX();
 
-	m_pSearch->Update_Tick(AttachCollider());
+	m_pTrigger->Update_Tick(AttachCollider());
 
-	m_pSearch->Update_AfterPhysX(m_pTransformCom);
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 }
 
@@ -611,8 +707,6 @@ void CSkummyPandou::StateCheck(_double TimeDelta)
 
 	if (nullptr != m_pModelCom->GetPlayAnimation())
 		m_fPlayRatio = m_pModelCom->GetPlayAnimation()->GetPlayRatio();
-		
-	// m_pFlowerLeg
 }
 
 _matrix CSkummyPandou::AttachCollider()
@@ -628,6 +722,7 @@ _matrix CSkummyPandou::AttachCollider()
 
 HRESULT CSkummyPandou::Setup_AnimSocket()
 {
+	// 수정 필요
 	CAnimation*	pAnimation = nullptr;
 	// 맞는 방향에 따른 애니메이션 소켓화시켜줘야 함
 	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0700_411_AL_damage_m_F"));
@@ -636,6 +731,118 @@ HRESULT CSkummyPandou::Setup_AnimSocket()
 	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0700_424_AL_dead_down01"));
 	m_DeadAnimSocket.push_back(pAnimation = m_pModelCom->Find_Animation("AS_em0700_424_AL_dead_down01"));
 
+	return S_OK;
+}
+
+HRESULT CSkummyPandou::Setup_WeakAnimState()
+{
+	CAnimation* pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0700_401_AL_damage_l_F"));
+	m_HitLightFoward.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0700_402_AL_damage_l_B"));
+	m_HitLightBack.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0700_411_AL_damage_m_F"));
+	m_HitMiddleFoward.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0700_412_AL_damage_m_B"));
+	m_HitMiddleBack.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0700_413_AL_damage_m_L"));
+	m_HitMiddleLeft.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0700_414_AL_damage_m_R"));
+	m_HitMiddleRight.push_back(pAnimation);
+
+	{
+		m_pSocketFSM = CFSMComponentBuilder()
+			.InitState("No_Hit")
+			.AddState("No_Hit")
+				.Tick([this](_double TimeDelta) { m_bDamage = false; })
+
+				.AddTransition("No_Hit to Air_Hit", "Air_Hit")
+					.Predicator([this] {return m_bStruck && !m_bGround; })
+					.Priority(0)
+
+				.AddTransition("No_Hit to Ground_Hit", "Ground_Hit")
+					.Predicator([this] {return m_bStruck && m_bGround; })
+					.Priority(0)
+
+#pragma region Ground_Hit
+
+			.AddState("Air_Hit")
+				.OnStart([this]
+				{
+					if (m_eAtkType == EAttackType::ATK_LIGHT) // 평타
+					{
+						if (m_eHitDir == EBaseAxis::NORTH)	// NORTH : 전방
+						{
+							m_pASM->InputAnimSocket("SkummyPandou_AirDmgAnim", m_HitLightFoward);
+							m_Haxistype = HAS_FL;
+						}
+						else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
+						{
+							m_pASM->InputAnimSocket("SkummyPandou_AirDmgAnim", m_HitLightBack);
+							m_Haxistype = HAS_BL;
+						}
+					}
+					else if (m_eAtkType == EAttackType::ATK_MIDDLE)
+					{
+						if (m_eHitDir == EBaseAxis::NORTH) // NORTH : 전방
+						{
+							m_pASM->InputAnimSocket("SkummyPandou_AirDmgAnim", m_HitMiddleFoward);
+							m_Haxistype = HAS_FM;
+						}
+						else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
+						{
+							m_pASM->InputAnimSocket("SkummyPandou_AirDmgAnim", m_HitMiddleBack);
+							m_Haxistype = HAS_BM;
+						}
+						else if (m_eHitDir == EBaseAxis::WEST)	// WEST : 좌측
+						{
+							m_pASM->InputAnimSocket("SkummyPandou_AirDmgAnim", m_HitMiddleLeft);
+							m_Haxistype = HAS_LM;
+						}
+						else if (m_eHitDir == EBaseAxis::EAST)	// EAST : 우측
+						{
+							m_pASM->InputAnimSocket("SkummyPandou_AirDmgAnim", m_HitMiddleRight);
+							m_Haxistype = HAS_RM;
+						}
+					}
+
+				})
+				.Tick([this](_double TimeDelta)
+				{
+					m_bDamage = true;
+
+					if (m_pASM->isSocketPassby("SkummyPandou_AirDmgAnim") > 0.92)
+					{
+						m_bStruck = false;
+					}
+				})
+
+				.AddTransition("Air_Hit to Air_Hit", "Air_Hit")
+					.Predicator([this] {return m_bStruck && !m_bGround && m_pASM->isSocketPassby("SkummyPandou_AirDmgAnim") <= 0.92; })
+					.Priority(0)
+
+				.AddTransition("Air_Hit to No_Hit", "No_Hit")
+					.Predicator([this] {return !m_bStruck && !m_bGround && m_pASM->isSocketAlmostFinish("SkummyPandou_AirDmgAnim"); })
+					.Priority(0)
+
+				.AddTransition("Air_Hit to Ground_Hit", "Ground_Hit")
+					.Predicator([this] {return m_bStruck && m_bGround; })
+					.Priority(0)
+
+
+#pragma endregion Ground_Hit
+
+
+
+			.Build();
+	}
+		
 	return S_OK;
 }
 
@@ -667,6 +874,8 @@ HRESULT CSkummyPandou::SetUp_Components(void * pArg)
 		MSG_BOX("SkummyPandou's ASM Failed");
 		return E_FAIL;
 	}
+	 
+	FAILED_CHECK(Setup_WeakAnimState());
 
 	return S_OK;
 }
@@ -703,7 +912,7 @@ void CSkummyPandou::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
+	Safe_Release(m_pSocketFSM);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pTrigger);
-	Safe_Release(m_pSearch);
 }

@@ -38,6 +38,8 @@ public:
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 	virtual void AfterPhysX() override;
 
+	void		 Collision();
+
 	_matrix AttachCollider();
 
 	_float3 m_tmp;

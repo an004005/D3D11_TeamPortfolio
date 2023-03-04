@@ -87,7 +87,7 @@ void CScarletCharacter::Collision_Check(CRigidBody * AttackTrigger, DAMAGE_PARAM
 	param.vUnitDir = _float3(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z);
 	param.fDistance = param.vUnitDir.Length();
 	param.iTargetType = CTB_MONSTER;
-	param.fVisibleTime = 0.1f;
+	param.fVisibleTime = 0.f;
 
 	if (CGameInstance::GetInstance()->PxSweepCapsule(param))
 	{

@@ -16,6 +16,9 @@
 
 #include "RigidBody.h"
 #include "ScarletWeapon.h"
+#include "PhysX_Manager.h"
+
+// TODO : Turn, 작업해둔 소켓 Test (Player와의 피`타격)
 
 CBuddyLumi::CBuddyLumi(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -78,10 +81,15 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 				{
 					m_fTimeAcc += _float(TimeDelta * 1);
 
-					if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 15.f) && m_fMyPos.z <= (m_fStorePos.z + 15.f) ||
+					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_vector vDir = m_vStorePos - m_vMyPos;
+
+					/*if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 15.f) && m_fMyPos.z <= (m_fStorePos.z + 15.f) ||
 						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 15.f) && m_fMyPos.z <= (m_fStorePos.z + 15.f) ||
 						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 15.f) && m_fMyPos.z >= (m_fStorePos.z - 15.f) ||
-						m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 15.f) && m_fMyPos.z >= (m_fStorePos.z - 15.f))
+						m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 15.f) && m_fMyPos.z >= (m_fStorePos.z - 15.f))*/
+					if(XMVectorGetX(XMVector3Length(vDir)) > 15.f)
 					{
 						if (m_fTimeAcc >= 5.f && !m_bInitialize)	// 처음 생성되고 1회
 						{
@@ -118,7 +126,8 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					_vector vTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					_float3 fTargetPos;
 					XMStoreFloat3(&fTargetPos, vTargetPos);
-										
+					_vector vDir = m_vStorePos - m_vMyPos;
+
 					m_pTransformCom->LookAt(vTargetPos);
 					m_pTransformCom->Chase(vTargetPos, 0.06f);
 
@@ -146,10 +155,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 
 					//if (m_fMyPos.x <= 1.f && m_fMyPos.z <= 1.f)
 
-					if (m_fMyPos.x >= fTargetPos.x && m_fMyPos.z >= fTargetPos.z && m_fMyPos.x <= (fTargetPos.x + 2.f) && m_fMyPos.z <= (fTargetPos.z + 2.f) ||
-						m_fMyPos.x <= fTargetPos.x && m_fMyPos.z >= fTargetPos.z && m_fMyPos.x >= (fTargetPos.x - 2.f) && m_fMyPos.z <= (fTargetPos.z + 2.f) ||
-						m_fMyPos.x <= fTargetPos.x && m_fMyPos.z <= fTargetPos.z && m_fMyPos.x >= (fTargetPos.x - 2.f) && m_fMyPos.z >= (fTargetPos.z - 2.f) ||
-						m_fMyPos.x >= fTargetPos.x && m_fMyPos.z <= fTargetPos.z && m_fMyPos.x <= (fTargetPos.x + 2.f) && m_fMyPos.z >= (fTargetPos.z - 2.f))
+					if (XMVectorGetX(XMVector3Length(vDir)) < 2.f)
 					{
 						m_bRun = false;
 
@@ -465,8 +471,6 @@ void CBuddyLumi::BeginTick()
 	{
 		if (iter->GetPrototypeTag() == TEXT("Player"))
 		{
-			int iA = 0;
-
 			m_pPlayer = iter;
 		}
 	}
@@ -476,7 +480,7 @@ void CBuddyLumi::Tick(_double TimeDelta)
 {	
 	CMonster::Tick(TimeDelta);
 
-	
+	Collision();
 
 	m_pTrigger->Update_Tick(m_pTransformCom);
 
@@ -569,6 +573,21 @@ void CBuddyLumi::AfterPhysX()
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 }
 
+void CBuddyLumi::Collision()
+{
+	DAMAGE_PARAM damageParam;
+
+	_float3 fWeaponHitPosition = { m_pWeaponCollider->GetPxWorldMatrix().m[3][0], m_pWeaponCollider->GetPxWorldMatrix().m[3][1], m_pWeaponCollider->GetPxWorldMatrix().m[3][2] };
+
+	damageParam.eAttackSAS = ESASType::SAS_END;
+	damageParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	damageParam.vHitPosition = fWeaponHitPosition;
+	damageParam.pCauser = this;
+	damageParam.iDamage = 1;
+
+	Collision_Check(m_pWeaponCollider, damageParam);
+}
+
 _matrix CBuddyLumi::AttachCollider()
 {
 	_matrix	SocketMatrix = m_pModelCom->GetBoneMatrix("RightWeapon") * m_pTransformCom->Get_WorldMatrix();
@@ -626,7 +645,8 @@ HRESULT CBuddyLumi::Setup_WeakAnimState()
 		m_pSocketFSM = CFSMComponentBuilder()
 			.InitState("No_Hit")
 			.AddState("No_Hit")
-			.Tick([this](_double TimeDelta) { m_bDamage = false; })
+				.Tick([this](_double TimeDelta) { m_bDamage = false; })
+
 				.AddTransition("No_Hit to Ground_Hit", "Ground_Hit")
 					.Predicator([this] {return m_bStruck && !m_bAir; })
 					.Priority(0)
@@ -638,68 +658,68 @@ HRESULT CBuddyLumi::Setup_WeakAnimState()
 #pragma region Ground_Hit
 
 			.AddState("Ground_Hit")
-			.OnStart([this]
-			{				
-				if (m_eAtkType == EAttackType::ATK_LIGHT)	// 기본 공격(평타)
+				.OnStart([this]
+				{				
+					if (m_eAtkType == EAttackType::ATK_LIGHT)	// 기본 공격(평타)
+					{
+						if (m_eHitDir == EBaseAxis::NORTH)	// NORTH : 전방
+						{
+							m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitLightFoward);
+							m_Haxistype = HAS_FL;
+						}
+						else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
+						{
+							m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitLightBack);
+							m_Haxistype = HAS_BL;
+						}
+					}
+
+					else if (m_eAtkType == EAttackType::ATK_MIDDLE)
+					{
+						if (m_eHitDir == EBaseAxis::NORTH) // NORTH : 전방
+						{
+							m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitMiddleFoward);
+							m_Haxistype = HAS_FM;
+						}
+						else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
+						{
+							m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitMiddleBack);
+							m_Haxistype = HAS_BM;
+						}
+						else if (m_eHitDir == EBaseAxis::WEST)	// WEST : 좌측
+						{
+							m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitMiddleLeft);
+							m_Haxistype = HAS_LM;
+						}
+						else if (m_eHitDir == EBaseAxis::EAST)	// EAST : 우측
+						{
+							m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitMiddleRight);
+							m_Haxistype = HAS_RM;
+						}
+					}
+				})
+
+				.Tick([this](_double TimeDelta)
 				{
-					if (m_eHitDir == EBaseAxis::NORTH)	// NORTH : 전방
-					{
-						m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitLightFoward);
-						m_Haxistype = HAS_FL;
-					}
-					else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
-					{
-						m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitLightBack);
-						m_Haxistype = HAS_BL;
-					}
-				}
+					m_bDamage = true;
 
-				else if (m_eAtkType == EAttackType::ATK_MIDDLE)
-				{
-					if (m_eHitDir == EBaseAxis::NORTH) // NORTH : 전방
+					if (m_pASM->isSocketPassby("BuddyLumi_GroundDmgAnim") > 0.92)
 					{
-						m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitMiddleFoward);
-						m_Haxistype = HAS_FM;
+						m_bStruck = false;
 					}
-					else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
-					{
-						m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitMiddleBack);
-						m_Haxistype = HAS_BM;
-					}
-					else if (m_eHitDir == EBaseAxis::WEST)	// WEST : 좌측
-					{
-						m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitMiddleLeft);
-						m_Haxistype = HAS_LM;
-					}
-					else if (m_eHitDir == EBaseAxis::EAST)	// EAST : 우측
-					{
-						m_pASM->InputAnimSocket("BuddyLumi_GroundDmgAnim", m_HitMiddleRight);
-						m_Haxistype = HAS_RM;
-					}
-				}
-			})
+				})
 
-			.Tick([this](_double TimeDelta)
-			{
-				m_bDamage = true;
+				.AddTransition("Ground_Hit to Ground_Hit", "Ground_Hit")
+					.Predicator([this] {return m_bStruck && !m_bAir && m_pASM->isSocketPassby("BuddyLumi_GroundDmgAnim") <= 0.92; })
+					.Priority(0)
 
-				if (m_pASM->isSocketPassby("BuddyLumi_GroundDmgAnim") > 0.98)
-				{
-					m_bStruck = false;
-				}
-			})
+				.AddTransition("Ground_Hit to No_Hit", "No_Hit")
+					.Predicator([this] {return !m_bStruck && !m_bAir && m_pASM->isSocketAlmostFinish("BuddyLumi_GroundDmgAnim"); })
+					.Priority(0)
 
-			.AddTransition("Ground_Hit to Ground_Hit", "Ground_Hit")
-				.Predicator([this] {return m_bStruck && !m_bAir && m_pASM->isSocketPassby("BuddyLumi_GroundDmgAnim") <= 0.98; })
-				.Priority(0)
-
-			.AddTransition("Ground_Hit to No_Hit", "No_Hit")
-				.Predicator([this] {return !m_bStruck && !m_bAir && m_pASM->isSocketAlmostFinish("BuddyLumi_GroundDmgAnim"); })
-				.Priority(0)
-
-			.AddTransition("Ground_Hit to Air_Hit", "Air_Hit")
-				.Predicator([this] {return m_bStruck && m_bAir; })
-				.Priority(0)
+				.AddTransition("Ground_Hit to Air_Hit", "Air_Hit")
+					.Predicator([this] {return m_bStruck && m_bAir; })
+					.Priority(0)
 
 #pragma endregion Ground_Hit
 			

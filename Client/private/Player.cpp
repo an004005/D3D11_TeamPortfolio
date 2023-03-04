@@ -72,9 +72,10 @@ HRESULT CPlayer::Initialize(void * pArg)
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 	Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
 	m_pEffect = pGameInstance->Clone_GameObject_Get(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
+
 	
-		Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
+		/*Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);*/
 	
 
 	//m_pPlayerCam = dynamic_cast<CCamera*>(m_pGameInstance->Clone_GameObject_Get(L"Layer_Camera", TEXT("Prototype_GameObject_Camera_Player")));
@@ -1082,7 +1083,8 @@ void CPlayer::Search_Usable_KineticObject()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	if (pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic")->GetGameObjects().empty())
+	if (pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic") == nullptr
+		|| pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic")->GetGameObjects().empty())
 	{
 		m_pKineticObject = nullptr;
 	}
