@@ -29,9 +29,6 @@ public:
 	void	Set_PlayerHp(const _float & fHp) {
 		m_fHp = fHp;
 	}
-	void	Set_PlayerMaxHp(const _float & fMaxHp) {
-		m_fMaxHp = fMaxHp;
-	}
 
 private:
 	void	Object_Tick(const _double & dTimeDelta);
@@ -49,8 +46,7 @@ private:
 private:
 	_int	m_iObjectNumber = { 0 };		// 6개 객체를 구별하기 위한 변수
 	
-	_float	m_fHp = { 0.0f };
-	_float	m_fMaxHp = { 1.0f };
+	_float	m_fHp = { 0.0f };	// Canvas 에서 0~1 로 계산된 HP
 	_float	m_fCurrentHp = { 0.0f };
 
 public:

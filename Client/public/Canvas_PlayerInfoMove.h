@@ -24,26 +24,18 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_PlayerHp(const _float & fHp) {
-		ChildHp(fHp);
-		m_fHp = fHp;
-	}
-	void	Set_PlayerMaxHp(const _float & fMaxHp) {
-		ChildMaxHp(fMaxHp);
-		m_fMaxHp = fMaxHp;
+	void	Set_PlayerHp(const _float & fCurrentHp, const _float & fMaxHp) {
+		m_fHp = fCurrentHp / fMaxHp;
 	}
 
 private:
 	void	StartAndEndHp();
-	void	ChildHp(const _float & fHp);
-	void	ChildMaxHp(const _float & fMaxHp);
+	void	ChildHp_Tick();
 
 	void	RendomTexture(const _double & dTimeDelta);
 
 private:
 	_float	m_fHp = { 0.0f };
-	_float	m_fMaxHp = { 1.0f };
-	_float	m_fCurrentHp = { 0.0f };
 	
 	_double	m_dRendomTexture_TimeAcc = { 0.0 };
 

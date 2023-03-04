@@ -36,7 +36,8 @@ HRESULT CPlayerInfo_HpBackUI::Initialize(void * pArg)
 	++iObjectCount;
 
 	m_fCurrentHp = 1.0f;
-
+	m_tParams.Floats[0] = 0.0f;
+	
 	return S_OK;
 }
 
@@ -49,12 +50,10 @@ void CPlayerInfo_HpBackUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	_float fReault = m_fHp / m_fMaxHp;
-	
-	if (m_fCurrentHp > fReault)
-		m_fCurrentHp -= _float(TimeDelta) * 0.1f;
+	if (m_fCurrentHp < m_fHp)
+		m_fCurrentHp += _float(TimeDelta) * 0.1f;
 	else
-		m_fCurrentHp = fReault;
+		m_fCurrentHp -= _float(TimeDelta) * 0.1f;
 
 	Object_Tick(TimeDelta);
 }
@@ -136,7 +135,7 @@ void CPlayerInfo_HpBackUI::One_Tick(const _double & dTimeDelta)
 
 void CPlayerInfo_HpBackUI::Two_Tick(const _double & dTimeDelta)
 {
-	if (0.5f <= m_fCurrentHp)
+	if (0.5f < m_fCurrentHp)
 		return;
 
 	NotDraw(0.35f);
@@ -182,12 +181,6 @@ void CPlayerInfo_HpBackUI::RendomHpImage(const _int & iImageNumber)
 
 void CPlayerInfo_HpBackUI::NotDraw(const _float & fMinHp)
 {
-	if (0.0f > m_tParams.Ints[2])
-	{
-		m_bVisible = false;
-		return;
-	}
-
 	_float fCurrentHp = m_fCurrentHp - fMinHp;
 	m_tParams.Floats[0] = _float(fCurrentHp / 0.15f);
 	m_tParams.Ints[2] = 2;

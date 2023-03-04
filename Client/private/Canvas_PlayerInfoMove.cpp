@@ -7,6 +7,7 @@
 
 #include "PlayerInfo_HpUI.h"
 #include "PlayerInfo_HpBackUI.h"
+#include "PlayerInfo_HpBothEndsUI.h"
 
 CCanvas_PlayerInfoMove::CCanvas_PlayerInfoMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -51,7 +52,7 @@ void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 		Set_UIMove();
 
-
+	ChildHp_Tick();
 	RendomTexture(TimeDelta);	// 계속 Hp 가 출력할 전체 개수, 이미지를 계산한다.
 }
 
@@ -74,13 +75,14 @@ void CCanvas_PlayerInfoMove::Imgui_RenderProperty()
 	CCanvas::Imgui_RenderProperty();
 
 	// UITEST
-	ImGui::InputFloat("Hp", &m_fHp);
-	ImGui::InputFloat("MaxHp", &m_fMaxHp);
+	static _float fHp;
+	ImGui::InputFloat("Hp", &fHp);
+	static _float fMaxHp;
+	ImGui::InputFloat("MaxHp", &fMaxHp);
 
-	if (ImGui::Button("Set"))
+	if (ImGui::Button("Save Hp"))
 	{
-		ChildHp(m_fHp);
-		ChildMaxHp(m_fMaxHp);
+		m_fHp = fHp / fMaxHp;
 	}
 }
 
@@ -101,44 +103,30 @@ void CCanvas_PlayerInfoMove::StartAndEndHp()
 {
 }
 
-void CCanvas_PlayerInfoMove::ChildHp(const _float & fHp)
+void CCanvas_PlayerInfoMove::ChildHp_Tick()
 {
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp0"))->Set_PlayerHp(fHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp1"))->Set_PlayerHp(fHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp2"))->Set_PlayerHp(fHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp3"))->Set_PlayerHp(fHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp4"))->Set_PlayerHp(fHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp5"))->Set_PlayerHp(fHp);
+	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp0"))->Set_PlayerHp(m_fHp);
+	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp1"))->Set_PlayerHp(m_fHp);
+	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp2"))->Set_PlayerHp(m_fHp);
+	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp3"))->Set_PlayerHp(m_fHp);
+	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp4"))->Set_PlayerHp(m_fHp);
+	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp5"))->Set_PlayerHp(m_fHp);
 
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack0"))->Set_PlayerHp(fHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack1"))->Set_PlayerHp(fHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack2"))->Set_PlayerHp(fHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack3"))->Set_PlayerHp(fHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack4"))->Set_PlayerHp(fHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack5"))->Set_PlayerHp(fHp);
-}
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack0"))->Set_PlayerHp(m_fHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack1"))->Set_PlayerHp(m_fHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack2"))->Set_PlayerHp(m_fHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack3"))->Set_PlayerHp(m_fHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack4"))->Set_PlayerHp(m_fHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack5"))->Set_PlayerHp(m_fHp);
 
-void CCanvas_PlayerInfoMove::ChildMaxHp(const _float & fMaxHp)
-{
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp0"))->Set_PlayerMaxHp(fMaxHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp1"))->Set_PlayerMaxHp(fMaxHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp2"))->Set_PlayerMaxHp(fMaxHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp3"))->Set_PlayerMaxHp(fMaxHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp4"))->Set_PlayerMaxHp(fMaxHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp5"))->Set_PlayerMaxHp(fMaxHp);
-
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack0"))->Set_PlayerMaxHp(fMaxHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack1"))->Set_PlayerMaxHp(fMaxHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack2"))->Set_PlayerMaxHp(fMaxHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack3"))->Set_PlayerMaxHp(fMaxHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack4"))->Set_PlayerMaxHp(fMaxHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack5"))->Set_PlayerMaxHp(fMaxHp);
+	dynamic_cast<CPlayerInfo_HpBothEndsUI*>(Find_ChildUI(L"PlayerInfo_EndHp"))->Set_PlayerHp(m_fHp);
+	dynamic_cast<CPlayerInfo_HpBothEndsUI*>(Find_ChildUI(L"PlayerInfo_EndHpBack"))->Set_PlayerHp(m_fHp);
+	dynamic_cast<CPlayerInfo_HpBothEndsUI*>(Find_ChildUI(L"PlayerInfo_StartHp"))->Set_PlayerHp(m_fHp);
+	dynamic_cast<CPlayerInfo_HpBothEndsUI*>(Find_ChildUI(L"PlayerInfo_StartHpBack"))->Set_PlayerHp(m_fHp);
 }
 
 void CCanvas_PlayerInfoMove::RendomTexture(const _double & dTimeDelta)
 {
-	m_fCurrentHp = m_fHp / m_fMaxHp;
-
 	m_dRendomTexture_TimeAcc += dTimeDelta;
 	if (3.0 < m_dRendomTexture_TimeAcc)
 		m_dRendomTexture_TimeAcc = 0.0;
@@ -146,28 +134,28 @@ void CCanvas_PlayerInfoMove::RendomTexture(const _double & dTimeDelta)
 	if (0.0 != m_dRendomTexture_TimeAcc)
 		return;
 
-	// 체력에 따라서 랜덤으로 이미지를 출력하는 개수가 달라진다. (m_fCurrentHp 기준)
+	// 체력에 따라서 랜덤으로 이미지를 출력하는 개수가 달라진다. (m_fHp 기준)
 	// 0.05~0.95 : 3 / 0.05~0.65 : 2 / 0.05~0.35 : 1
 
 	_int iCount;
-	_int iRendomCount;			// 움직이는 Hp 를 그릴 개수
-	_float fObjectMaxNumber;	// 6개중 움직이는 Hp를 그릴 객체
-	if (0.95f < m_fCurrentHp)
+	_int iRendomCount;			// 움직이는 Hp 를 그리는 개수 
+	_float fObjectMaxNumber;	// 6개중 움직이는 Hp를 그리는 객체
+	if (0.95f < m_fHp)
 	{
 		iCount = 3;
-		fObjectMaxNumber = 6.0f;
+		fObjectMaxNumber = 5.0f;
 		iRendomCount = _int(CMathUtils::RandomFloat(0.0f, 4.0f));
 	}
-	else if (0.65f < m_fCurrentHp)
+	else if (0.65f < m_fHp)
 	{
 		iCount = 2;
-		fObjectMaxNumber = 4.0f;
+		fObjectMaxNumber = 3.0f;
 		iRendomCount = _int(CMathUtils::RandomFloat(0.0f, 3.0f));
 	}
-	else if (0.35f < m_fCurrentHp)
+	else if (0.35f < m_fHp)
 	{
 		iCount = 1;
-		fObjectMaxNumber = 3.0f;
+		fObjectMaxNumber = 2.0f;
 		iRendomCount = _int(CMathUtils::RandomFloat(0.0f, 2.0f));
 	}
 	else
@@ -189,7 +177,7 @@ void CCanvas_PlayerInfoMove::RendomTexture(const _double & dTimeDelta)
 		arrObjectNumber[iRandimArrayNumber] = iRandomObjectNumber;
 	}
 
-	for (_int i = 0; i < _int(fObjectMaxNumber); i++)
+	for (_int i = 0; i < _int(fObjectMaxNumber + 1); i++)
 	{
 		_tchar szChildTag[MAX_PATH] = TEXT("");
 		if (-1 == arrObjectNumber[i])

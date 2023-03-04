@@ -540,6 +540,9 @@
     <ClInclude Include="..\public\PlayerInfo_HpBackUI.h">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PlayerInfo_HpBothEndsUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -845,6 +848,9 @@
       <Filter>02.GameObjects\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerInfo_HpBackUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerInfo_HpBothEndsUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClCompile>
   </ItemGroup>
