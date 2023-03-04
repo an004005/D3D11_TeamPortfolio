@@ -22,7 +22,10 @@
 #include "AnimationInstance.h"
 #include "Player.h"
 #include "Controller.h"
-
+#include "PostVFX_Distortion.h"
+#include "PostVFX_Scifi.h"
+#include "PostVFX_WhiteOut.h"
+#include "Imgui_EffectBrowser.h"
 
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -32,6 +35,8 @@ CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 HRESULT CLevel_Effect::Initialize()
 {
 	CGameInstance::GetInstance()->Clear_ImguiObjects();
+
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_EffectBrowser::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PropertyEditor::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LevelSwitcher::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
@@ -49,11 +54,11 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer(TEXT("Layer"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
-		return E_FAIL;
+	// if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+	// 	return E_FAIL;
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
-		return E_FAIL;
+	// if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	// 	return E_FAIL;
 
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
@@ -64,6 +69,125 @@ HRESULT CLevel_Effect::Initialize()
 void CLevel_Effect::Tick(_double TimeDelta)
 {
 	CLevel::Tick(TimeDelta);
+
+	// if (ImGui::Button("Add Sample EffectSystem"))
+	// {
+	// 	FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_EffectSys", TEXT("ProtoVFX_EffectSystem")));
+	// }
+	// else if (ImGui::Button("Add Sample EffectGroup"))
+	// {
+	// 	FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup")));
+	//
+	// 	// Json Attack = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_1.json");
+	// 	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack));
+	// 	//
+	// 	// Json Attack1 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_2.json");
+	// 	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack1));
+	// 	//
+	// 	// Json Attack2 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_3.json");
+	// 	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack2));
+	// 	//
+	// 	// Json Attack3 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_4_1.json");
+	// 	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack3));
+	// 	//
+	// 	// Json Attack4 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_4_2.json");
+	// 	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack4));
+	// 	//
+	// 	// Json Attack5 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_4_3.json");
+	// 	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack5));
+	// }
+	//
+	// ImGui::Separator();
+	// ImGui::Separator();
+	// ImGui::Separator();
+	// ImGui::Separator();
+	// ImGui::Separator();
+	//
+	//
+	// {
+	// 	char EffectGroupTag[MAX_PATH];
+	// 	strcpy(EffectGroupTag, m_EffectGroupTag.c_str());
+	// 	ImGui::InputText("EffectGroup Tag", EffectGroupTag, MAX_PATH);
+	// 	m_EffectGroupTag = EffectGroupTag;
+	// 	if (ImGui::Button("Add New EffectGroup"))
+	// 	{
+	// 		Json Attack5 = CJsonStorage::GetInstance()->FindOrLoadJson(m_EffectGroupTag);
+	// 		if(Attack5.empty())
+	// 			MSG_BOX("Failed to Add New EffectGroup");
+	// 		else
+	// 		{
+	// 			HRESULT hr = (CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup"), &Attack5));
+	// 		}
+	// 	}
+	// }
+	//
+	// ImGui::Separator();
+	// ImGui::Separator();
+	// {
+	// 	char EffectSystemTag[MAX_PATH];
+	// 	strcpy(EffectSystemTag, m_EffectSystemTag.c_str());
+	// 	ImGui::InputText("EffectSystem Tag", EffectSystemTag, MAX_PATH);
+	// 	m_EffectSystemTag = EffectSystemTag;
+	//
+	// 	if (ImGui::Button("Add New EffectSystem"))
+	// 	{
+	// 		Json Attack5 = CJsonStorage::GetInstance()->FindOrLoadJson(m_EffectSystemTag);
+	// 		HRESULT hr = (CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_EffectSystem", TEXT("ProtoVFX_EffectSystem"), &Attack5));
+	// 		if (hr == E_FAIL)
+	// 			MSG_BOX("Failed to Add New EffectSystem");
+	// 	}
+	// }
+	//
+	// ImGui::Separator();
+	// ImGui::Separator();
+	//
+	// if(ImGui::Button("Refresh_Effect Folder"))
+	// {
+	// 	// LoadEffects("../Bin/Resources/Curve/Default_Attack/");
+	// 	LoadEffects("../Bin/Resources/Curve/NeedToWork/");
+	// }
+	//
+	// if(ImGui::CollapsingHeader("Effect Viewer"))
+	// {
+	// 	static char szSearchEffect[MAX_PATH] = "";
+	// 	ImGui::InputText("Effect Search", szSearchEffect, MAX_PATH);
+	//
+	// 	const string strSearch = szSearchEffect;
+	// 	const _bool bSearch = strSearch.empty() == false;
+	//
+	// 	if(ImGui::BeginListBox("Effects List"))
+	// 	{
+	// 		for(auto& Pair : m_mapEffectGroup)
+	// 		{
+	// 			// if(Pair.second->CheckPlay() == false)
+	// 			// {
+	// 			// 	Pair.second->SetVisible(false);
+	// 			// }
+	//
+	// 			if(bSearch)
+	// 			{
+	// 				if (Pair.first.find(strSearch) == string::npos)
+	// 					continue;
+	// 			}
+	//
+	// 			const bool bSelected = m_CurEffectName == Pair.first;
+	// 			if (bSelected)
+	// 			{
+	// 				ImGui::SetItemDefaultFocus();
+	// 				Json jsonEffect = CJsonStorage::GetInstance()->FindOrLoadJson(Pair.second);
+	// 				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect);
+	//
+	// 				// Pair.second->SetPlay();
+	// 				m_CurEffectName = "";
+	// 			}
+	//
+	// 			if (ImGui::Selectable(Pair.first.c_str(), bSelected))
+	// 				m_CurEffectName = Pair.first;
+	// 		}
+	// 		ImGui::EndListBox();
+	// 	}
+	// }
+
 }
 
 void CLevel_Effect::Late_Tick(_double TimeDelta)
@@ -77,6 +201,24 @@ HRESULT CLevel_Effect::Render()
 	SetWindowText(g_hWnd, TEXT("Level : Effecttool"));
 
 	return S_OK;
+}
+
+void CLevel_Effect::LoadEffects(const char* pEffectDir)
+{
+	// for(auto Pair : m_mapEffectGroup)
+	// {
+	// 	Pair.second->SetDelete();
+	// }
+
+	m_mapEffectGroup.clear();
+
+	CGameUtils::ListFiles(pEffectDir, [this](const string& pEffectPath)
+	{
+		Json jsonEffect = CJsonStorage::GetInstance()->FindOrLoadJson(pEffectPath);
+		auto pEffectGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect));
+		m_mapEffectGroup.emplace(pEffectGroup->GetObjectTag(), pEffectPath);
+		pEffectGroup->SetDelete();
+	});
 }
 
 HRESULT CLevel_Effect::Ready_Lights()
@@ -153,7 +295,21 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
 		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
 	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
-	////////////////
+	// ~ ±è±â¹üÀÇ ÈçÀû
+
+
+
+	// For PostVFX Distortion
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
+		CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	// 
+
+	// For PostVFX Scifi
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
+		CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	// 
 
 	// ¸ðµ¨ Ãß°¡ÇÏ´Â ¹æ¹ý
 	// auto pModel_VFX = CModel::Create(m_pDevice, m_pContext,
@@ -186,22 +342,49 @@ HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
-	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectSystem")));
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectSystem")));
 
-	// Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/Air_Attack_1.json");
-	// pGameInstance->Clone_GameObject(L"Layer_EffectSys", L"ProtoVFX_EffectSystem", &AttackMesh);
-
-
-
-	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup")));
+	//For PostVFX
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectSystem")));
+	// Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
+	// pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
 
 
-	Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Color_Scale_Test.json");
-	pGameInstance->Clone_GameObject(L"Layer_EffectSys", L"ProtoVFX_EffectGroup", &AttackMesh);
+	// Json Attack = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_1.json");
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack));
 
-	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_TrailSystem")));
 
-	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_ParticleSystem")));
+	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Scifi", &Test);
+
+	//~For PostVFX
+
+	// For Distortion
+	// Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_Effect.json");
+	// pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &AttackMesh);
+	//
+	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
+	//~ For Distortion
+
+
+	// Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_4_3.json");
+	// pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
+
+
+
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup")));
+
+
+	// Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Color_Scale_Test.json");
+	// pGameInstance->Clone_GameObject(L"Layer_EffectSys", L"ProtoVFX_EffectGroup", &AttackMesh);
+
+	// Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Trail/PlayerSwordTrail.json");
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
+	//
+	//
+	// Json Particle = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/ParticleSystem/Default_Particle.json");
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_ParticleSystem"), &Particle));
 
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Preview", L"MaterialPreview"));
 
@@ -247,7 +430,7 @@ HRESULT CLevel_Effect::Ready_Layer_Map(const _tchar * pLayerTag)
 }
 
 CLevel_Effect* CLevel_Effect::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-{ 
+{
 	CLevel_Effect*	pInstance = new CLevel_Effect(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize()))

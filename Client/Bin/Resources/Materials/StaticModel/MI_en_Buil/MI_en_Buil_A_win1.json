@@ -1,0 +1,16 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/CommonLC/LC06_LC15/T_pr_Town_A_buil_win_ALB.dds",
+            "",
+            "../Bin/Resources/Environments/Location/CommonLC/LC06_LC15/T_pr_Town_A_buil_win_RMA.dds"
+        ],
+        "Pass" : 1
+    }
+}

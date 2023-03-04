@@ -20,7 +20,7 @@
 #include "UI_Manager.h"
 #include "VIBuffer_Mesh_Instance.h"
 #include "MapInstance_Object.h"
-
+#include "MapKinetic_Object.h"
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
@@ -73,6 +73,8 @@ HRESULT CMainApp::Render()
 {
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
+
+	CONTEXT_LOCK
 
 	m_pGameInstance->Render_ImGui();
 
@@ -184,7 +186,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 
 	/* For.Prototype_Component_Shader_VtxNorSkyBox*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorSkyBox"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorSkyBox.hlsl"), VTXNORTEX_DECLARATION::Elements, VTXNORTEX_DECLARATION::iNumElements))))
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorSkyBox.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_VtxNor*/
@@ -311,6 +313,11 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	/* For. MapInstanceObject */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_MapInstance_Object"),
 		CMapInstance_Object::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For. MapKineticObject */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_MapKinetic_Object"),
+		CMapKinetic_Object::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;

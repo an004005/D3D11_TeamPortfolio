@@ -208,6 +208,24 @@
     <Filter Include="02.GameObjects\Map\MapObject">
       <UniqueIdentifier>{13c3e0df-d901-4b13-a7e5-d6ac024d79f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.ShaderFiles\PostProcess\Distortion">
+      <UniqueIdentifier>{a2654f95-9aaa-4a83-a0f1-4cf87b41901b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\PostProcess\WhiteOut">
+      <UniqueIdentifier>{f56bb59f-7c4c-4baa-8c70-2b9087add5d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\PostProcess\Distortion">
+      <UniqueIdentifier>{22ba49aa-e9f1-4a6a-b530-12599d744dcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\PostProcess\Scifi">
+      <UniqueIdentifier>{c05fd436-44e5-4ea4-b432-630fe9acddd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\16.BatchTool">
+      <UniqueIdentifier>{ead14635-4788-4854-851a-2a087c3173ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Batch">
+      <UniqueIdentifier>{ed211422-fc89-49fa-908b-ea3041994ccf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -300,9 +318,6 @@
     <ClInclude Include="..\public\Level_Effect.h">
       <Filter>01.Levels\14.EffectTool</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PostVFX_WhiteOut.h">
-      <Filter>VFX\PostProcess</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
@@ -335,7 +350,7 @@
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h">
       <Filter>VFX\Effect\Buffer</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
@@ -537,6 +552,24 @@
     <ClInclude Include="..\public\MapNonAnim_Object.h">
       <Filter>02.GameObjects\Map</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PostVFX_WhiteOut.h">
+      <Filter>VFX\PostProcess\WhiteOut</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Distortion.h">
+      <Filter>VFX\PostProcess\Distortion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Scifi.h">
+      <Filter>VFX\PostProcess\Scifi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Batch.h">
+      <Filter>01.Levels\16.BatchTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Batch.h">
+      <Filter>02.GameObjects\Batch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_EffectBrowser.h">
+      <Filter>60.Imgui_Tool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -608,9 +641,6 @@
     <ClCompile Include="..\private\Level_Effect.cpp">
       <Filter>01.Levels\14.EffectTool</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PostVFX_WhiteOut.cpp">
-      <Filter>VFX\PostProcess</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
@@ -652,7 +682,7 @@
     </ClCompile>
     <ClCompile Include="..\private\TrailSystem.cpp">
       <Filter>VFX\Trail</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
@@ -840,6 +870,24 @@
     </ClCompile>
     <ClCompile Include="..\private\MapNonAnim_Object.cpp">
       <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_WhiteOut.cpp">
+      <Filter>VFX\PostProcess\WhiteOut</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Distortion.cpp">
+      <Filter>VFX\PostProcess\Distortion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Scifi.cpp">
+      <Filter>VFX\PostProcess\Scifi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Batch.cpp">
+      <Filter>01.Levels\16.BatchTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Batch.cpp">
+      <Filter>02.GameObjects\Batch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_EffectBrowser.cpp">
+      <Filter>60.Imgui_Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

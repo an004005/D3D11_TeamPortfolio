@@ -10,6 +10,7 @@
 #include "GameUtils.h"
 #include "Material.h"
 #include "Model_Instancing.h"
+#include "SkyBox.h"
 
 CLevel_Maptool::CLevel_Maptool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -30,6 +31,9 @@ HRESULT CLevel_Maptool::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Lights()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
@@ -91,16 +95,22 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
 	});
 
+	/* 
+	모델 프로토 타입은 굳이 생성 안해도 자동으로 됨.
+	리스트박스에 넣으려고 툴에서만 생성해줌.
+	그래서 다른 레벨에서는 아래 모델 프로토 타입 생성을 넘겨도 괜찮음.
+	*/
+	
 	//일반 모델들의 프로토타입 생성
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/", 
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/",
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
-		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0 , szFileExt, MAX_PATH);
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
 
 		if (0 == strcmp(szFileExt, ".static_model"))
 		{
-				FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str()));
+			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), NON_INSTANCE));
 		}
 	});
 
@@ -118,6 +128,38 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 		}
 	});
 
+	//키네틱 모델들의 프로토타입 생성
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",
+		[this](const string& fileName)
+	{
+		char szFileExt[MAX_PATH]{};
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+
+		if (0 == strcmp(szFileExt, ".static_model"))
+		{
+			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), KINETIC));
+		}
+	});
+
+
+
+
+	//SkyBox
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_Component_Model_SkySphere"),
+		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/StaticModel/Sky/SkySphere.static_model"))))
+		return E_FAIL;
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Maptool::Ready_Layer_BackGround(const wstring & pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	// For_SkySphere
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Env", TEXT("Prototype_GameObject_SkyBox")));
 
 	return S_OK;
 }
@@ -136,7 +178,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
 
 	json["Model_ProtoTypes"] = Json::array();
 
@@ -150,7 +192,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 }
 
 
-HRESULT CLevel_Maptool::Create_Model(const wstring& pProtoTag, const char* pModelPath)
+HRESULT CLevel_Maptool::Create_Model(const wstring& pProtoTag, const char* pModelPath, PROTOINFO eProtoInfo)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
@@ -163,7 +205,7 @@ HRESULT CLevel_Maptool::Create_Model(const wstring& pProtoTag, const char* pMode
 		pProtoTag.c_str(),
 		pComponent));
 
-	m_pProtosTags.emplace_back(pProtoTag, NON_INSTANCE);
+	m_pProtosTags.emplace_back(pProtoTag, eProtoInfo);
 
 	return S_OK;
 }
@@ -174,7 +216,7 @@ HRESULT CLevel_Maptool::Create_Model_Instance(const wstring & pProtoTag, const c
 
 	CComponent* pComponent = nullptr;
 	
-	_uint iNumInstance = 300;
+	_uint iNumInstance = 500;
 	pComponent = CModel_Instancing::Create(m_pDevice, m_pContext, pModelPath, iNumInstance);
 	assert(pComponent != nullptr);
 

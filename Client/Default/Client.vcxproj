@@ -182,6 +182,7 @@
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\Batch.h" />
     <ClInclude Include="..\public\BrJ_AnimInstance.h" />
     <ClInclude Include="..\public\BronJon.h" />
     <ClInclude Include="..\public\ButtonUI.h" />
@@ -213,6 +214,7 @@
     <ClInclude Include="..\public\FlowerLeg.h" />
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\Imgui_EffectBrowser.h" />
     <ClInclude Include="..\public\Imgui_LevelSwitcher.h" />
     <ClInclude Include="..\public\Imgui_MapEditor.h" />
     <ClInclude Include="..\public\Indicator.h" />
@@ -223,6 +225,7 @@
     <ClInclude Include="..\public\Item_PushArrowUI.h" />
     <ClInclude Include="..\public\Item_RightArrowUI.h" />
     <ClInclude Include="..\public\Level_AnimModify.h" />
+    <ClInclude Include="..\public\Level_Batch.h" />
     <ClInclude Include="..\public\Level_Converter.h" />
     <ClInclude Include="..\public\Level_Effect.h" />
     <ClInclude Include="..\public\Level_EnemiesTest.h" />
@@ -246,6 +249,8 @@
     <ClInclude Include="..\public\MapNonAnim_Object.h" />
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\PlayerInfo_HpUI.h" />
+    <ClInclude Include="..\public\PostVFX_Distortion.h" />
+    <ClInclude Include="..\public\PostVFX_Scifi.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
     <ClInclude Include="..\public\SASSkillDefaultUI.h" />
@@ -283,6 +288,7 @@
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\Batch.cpp" />
     <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
     <ClCompile Include="..\private\BronJon.cpp" />
     <ClCompile Include="..\private\ButtonUI.cpp" />
@@ -313,6 +319,7 @@
     <ClCompile Include="..\private\FlowerLeg.cpp" />
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\Imgui_EffectBrowser.cpp" />
     <ClCompile Include="..\private\Imgui_LevelSwitcher.cpp" />
     <ClCompile Include="..\private\Imgui_MapEditor.cpp" />
     <ClCompile Include="..\private\Indicator.cpp" />
@@ -323,6 +330,7 @@
     <ClCompile Include="..\private\Item_PushArrowUI.cpp" />
     <ClCompile Include="..\private\Item_RightArrowUI.cpp" />
     <ClCompile Include="..\private\Level_AnimModify.cpp" />
+    <ClCompile Include="..\private\Level_Batch.cpp" />
     <ClCompile Include="..\private\Level_Converter.cpp" />
     <ClCompile Include="..\private\Level_Effect.cpp" />
     <ClCompile Include="..\private\Level_EnemiesTest.cpp" />
@@ -346,6 +354,8 @@
     <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\PlayerInfo_HpUI.cpp" />
+    <ClCompile Include="..\private\PostVFX_Distortion.cpp" />
+    <ClCompile Include="..\private\PostVFX_Scifi.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
     <ClCompile Include="..\private\ScarletCharacter.cpp" />
     <ClCompile Include="..\private\SASSkillDefaultUI.cpp" />

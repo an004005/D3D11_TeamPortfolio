@@ -36,6 +36,7 @@ public:
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual void SaveToJson(Json& json) override;
+	virtual void LoadFromJson(const Json& json) override;
 	virtual void Imgui_RenderProperty() override;
 	void SetLoop(_bool bLoop) { m_bLoop = bLoop; }
 

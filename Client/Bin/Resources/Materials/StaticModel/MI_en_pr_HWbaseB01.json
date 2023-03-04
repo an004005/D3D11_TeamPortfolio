@@ -8,7 +8,7 @@
         "Float4x4s" : [],
         "Textures" : [
 
-            "../Bin/Resources/Environments/Location/LC10/props/Base/T_base_B01_ALB.dds",
+            "../Bin/Resources/Texture/VFX/DefaultDiffuse.png",
             "../Bin/Resources/Environments/Location/LC10/props/Base/T_base_B01_NML.png",
             "../Bin/Resources/Environments/Location/LC10/props/Base/T_base_B01_RMA.dds"
         ],
