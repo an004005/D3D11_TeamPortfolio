@@ -555,7 +555,9 @@
     <ClInclude Include="..\public\PostVFX_Scifi.h">
       <Filter>VFX\PostProcess\Scifi</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Imgui_EffectBrowser.h" />
+    <ClInclude Include="..\public\Imgui_EffectBrowser.h">
+      <Filter>60.Imgui_Tool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -866,7 +868,9 @@
     <ClCompile Include="..\private\PostVFX_Scifi.cpp">
       <Filter>VFX\PostProcess\Scifi</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Imgui_EffectBrowser.cpp" />
+    <ClCompile Include="..\private\Imgui_EffectBrowser.cpp">
+      <Filter>60.Imgui_Tool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
