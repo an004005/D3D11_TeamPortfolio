@@ -58,7 +58,7 @@ private:
 	class CShader* m_pShadowShader = nullptr;
 
 public:
-	static CModel_Instancing* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const char* pModelFilePath, _uint iNumInstance, _float4x4 PivotMatrix = s_DefaultPivot);
+	static CModel_Instancing* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const char* pModelFilePath, _uint iNumInstance = 300, _float4x4 PivotMatrix = s_DefaultPivot);
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };

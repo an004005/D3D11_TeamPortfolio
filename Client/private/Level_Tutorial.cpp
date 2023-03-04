@@ -83,6 +83,19 @@ HRESULT CLevel_Tutorial::Ready_Prototypes()
 		CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
 	});
 
+	////인스턴싱 모델들의 프로토타입 생성
+	//CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/",
+	//	[this](const string& fileName)
+	//{
+	//	char szFileExt[MAX_PATH]{};
+	//	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+
+	//	if (0 == strcmp(szFileExt, ".static_model"))
+	//	{
+	//		FAILED_CHECK(Create_Model_Instance(s2ws(fileName), fileName.c_str()));
+	//	}
+	//});
+
 	return S_OK;
 }
 
@@ -138,7 +151,7 @@ HRESULT CLevel_Tutorial::Ready_Layer_Map(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 	return S_OK;
@@ -159,6 +172,23 @@ CLevel_Tutorial * CLevel_Tutorial::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+HRESULT CLevel_Tutorial::Create_Model_Instance(const wstring & pProtoTag, const char * pModelPath)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	CComponent* pComponent = nullptr;
+
+	_uint iNumInstance = 300;
+	pComponent = CModel_Instancing::Create(m_pDevice, m_pContext, pModelPath, iNumInstance);
+	assert(pComponent != nullptr);
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(
+		pProtoTag.c_str(),
+		pComponent));
+
+	return S_OK;
 }
 
 void CLevel_Tutorial::Free()

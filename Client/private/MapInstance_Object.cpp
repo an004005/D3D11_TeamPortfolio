@@ -67,6 +67,7 @@ HRESULT CMapInstance_Object::Render()
 	FAILED_CHECK(__super::Render());
 
 	FAILED_CHECK(m_pModel_InstancingCom->Render(m_pTransformCom));
+
 	return S_OK;
 }
 
@@ -178,6 +179,16 @@ wstring CMapInstance_Object::MakePxModelProtoTag()
 HRESULT CMapInstance_Object::SetUp_Components()
 {
 	/* For.Com_Model */
+
+	//여기서 원본이 없으면 생성
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	if (nullptr == pGameInstance->Find_Prototype_Component(LEVEL_NOW, m_strModelTag.c_str()))
+	{
+		_uint iNumInstance = 500;
+		FAILED_CHECK(pGameInstance->Add_Prototype(m_strModelTag.c_str(), CModel_Instancing::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str(), iNumInstance)));
+	}
+
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_strModelTag.c_str(), TEXT("Com_Model"),
 		(CComponent**)&m_pModel_InstancingCom));
 

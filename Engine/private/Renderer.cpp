@@ -62,8 +62,6 @@ HRESULT CRenderer::Add_DebugRenderGroup(CComponent * pComponent)
 
 HRESULT CRenderer::Draw_RenderGroup()
 {
-	CONTEXT_LOCK
-
 	if (FAILED(Render_ShadowDepth()))
 		return E_FAIL;
 	if (FAILED(Render_NonAlphaBlend()))

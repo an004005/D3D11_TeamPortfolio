@@ -58,8 +58,6 @@ void CMapNonAnim_Object::Late_Tick(_double TimeDelta)
 
 HRESULT CMapNonAnim_Object::Render()
 {
-	if (m_bVisible == false) return S_OK;
-
 	FAILED_CHECK(__super::Render());
 
 	FAILED_CHECK(m_pModelCom->Render(m_pTransformCom));

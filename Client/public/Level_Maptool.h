@@ -23,6 +23,7 @@ public:
 private:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Prototypes();
+	HRESULT Ready_Layer_BackGround(const wstring& pLayerTag);
 	HRESULT Ready_Layer_Camera(const wstring& pLayerTag);
 	HRESULT Ready_Layer_Map(const wstring& pLayerTag);
 

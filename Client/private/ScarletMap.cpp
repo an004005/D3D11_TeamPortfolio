@@ -55,7 +55,10 @@ HRESULT CScarletMap::Render()
 
 void CScarletMap::Imgui_RenderProperty()
 {
+	static _bool	bImPlay = false;
+	ImGui::Checkbox("Open MapTool", &bImPlay);
 
+	if (bImPlay == false) return;
 
 	__super::Imgui_RenderProperty();
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -314,12 +317,7 @@ _float4 CScarletMap::SetUp_InitPosition()
 
 void CScarletMap::ClearMap()
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	auto pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_MapNonAnimObject"));
-
-	auto& MapObjects = pLayer->GetGameObjects();
-
-	for (auto& obj : MapObjects)
+	for (auto& obj : m_pMapObjects)
 		obj->SetDelete();
 }
 
