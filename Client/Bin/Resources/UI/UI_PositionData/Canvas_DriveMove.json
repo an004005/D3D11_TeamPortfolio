@@ -181,7 +181,7 @@
                 "Pass": 20,
                 "Textures": [
                     "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
-                    "..\\Bin\\Resources\\UI\\Front_UI\\Drive_GaugeBack0.dds\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Drive_GaugeBack.dds\u0000",
                     "..\\Bin\\Resources\\UI\\Front_UI\\Drive_GaugeBackGround.dds\u0000"
                 ]
             },
