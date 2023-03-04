@@ -26,15 +26,26 @@ public:
 public:
 	void	Set_PlayerHp(const _float & fHp) {
 		ChildHp(fHp);
+		m_fHp = fHp;
 	}
 	void	Set_PlayerMaxHp(const _float & fMaxHp) {
 		ChildMaxHp(fMaxHp);
+		m_fMaxHp = fMaxHp;
 	}
 
 private:
 	void	StartAndEndHp();
 	void	ChildHp(const _float & fHp);
 	void	ChildMaxHp(const _float & fMaxHp);
+
+	void	RendomTexture(const _double & dTimeDelta);
+
+private:
+	_float	m_fHp = { 0.0f };
+	_float	m_fMaxHp = { 1.0f };
+	_float	m_fCurrentHp = { 0.0f };
+	
+	_double	m_dRendomTexture_TimeAcc = { 0.0 };
 
 public:
 	static CCanvas_PlayerInfoMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

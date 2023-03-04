@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "FSMComponent.h"
 #include "UI_Manager.h"
+#include "MathUtils.h"
 
 #include "PlayerInfo_HpUI.h"
 #include "PlayerInfo_HpBackUI.h"
@@ -51,6 +52,7 @@ void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
 		Set_UIMove();
 
 
+	RendomTexture(TimeDelta);	// 계속 Hp 가 출력할 전체 개수, 이미지를 계산한다.
 }
 
 void CCanvas_PlayerInfoMove::Late_Tick(_double TimeDelta)
@@ -72,16 +74,13 @@ void CCanvas_PlayerInfoMove::Imgui_RenderProperty()
 	CCanvas::Imgui_RenderProperty();
 
 	// UITEST
-	static _float fHp;
-	ImGui::InputFloat("Hp", &fHp);
-
-	static _float fMaxHp;
-	ImGui::InputFloat("MaxHp", &fMaxHp);
+	ImGui::InputFloat("Hp", &m_fHp);
+	ImGui::InputFloat("MaxHp", &m_fMaxHp);
 
 	if (ImGui::Button("Set"))
 	{
-		ChildHp(fHp);
-		ChildMaxHp(fMaxHp);
+		ChildHp(m_fHp);
+		ChildMaxHp(m_fMaxHp);
 	}
 }
 
@@ -134,6 +133,84 @@ void CCanvas_PlayerInfoMove::ChildMaxHp(const _float & fMaxHp)
 	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack3"))->Set_PlayerMaxHp(fMaxHp);
 	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack4"))->Set_PlayerMaxHp(fMaxHp);
 	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack5"))->Set_PlayerMaxHp(fMaxHp);
+}
+
+void CCanvas_PlayerInfoMove::RendomTexture(const _double & dTimeDelta)
+{
+	m_fCurrentHp = m_fHp / m_fMaxHp;
+
+	m_dRendomTexture_TimeAcc += dTimeDelta;
+	if (3.0 < m_dRendomTexture_TimeAcc)
+		m_dRendomTexture_TimeAcc = 0.0;
+
+	if (0.0 != m_dRendomTexture_TimeAcc)
+		return;
+
+	// 체력에 따라서 랜덤으로 이미지를 출력하는 개수가 달라진다. (m_fCurrentHp 기준)
+	// 0.05~0.95 : 3 / 0.05~0.65 : 2 / 0.05~0.35 : 1
+
+	_int iCount;
+	_int iRendomCount;			// 움직이는 Hp 를 그릴 개수
+	_float fObjectMaxNumber;	// 6개중 움직이는 Hp를 그릴 객체
+	if (0.95f < m_fCurrentHp)
+	{
+		iCount = 3;
+		fObjectMaxNumber = 6.0f;
+		iRendomCount = _int(CMathUtils::RandomFloat(0.0f, 4.0f));
+	}
+	else if (0.65f < m_fCurrentHp)
+	{
+		iCount = 2;
+		fObjectMaxNumber = 4.0f;
+		iRendomCount = _int(CMathUtils::RandomFloat(0.0f, 3.0f));
+	}
+	else if (0.35f < m_fCurrentHp)
+	{
+		iCount = 1;
+		fObjectMaxNumber = 3.0f;
+		iRendomCount = _int(CMathUtils::RandomFloat(0.0f, 2.0f));
+	}
+	else
+	{
+		iCount = 0;
+		fObjectMaxNumber = 0.0f;
+		iRendomCount = 0;
+	}
+
+	if (0 == iCount)
+		return;
+
+	_int arrObjectNumber[6] = { -1, -1, -1, -1, -1, -1 };
+
+	for (_int i = 0; i < iCount; i++) // 체력에 따라 다른 Count 를 받아온다.
+	{
+		_int iRandimArrayNumber = _int(CMathUtils::RandomFloat(0.0f, _float(iCount + iCount)));	// 랜덤 으로 배열에 담기 위해서
+		_int iRandomObjectNumber = _int(CMathUtils::RandomFloat(0.0f, fObjectMaxNumber));	// 랜덤 객체 번호로 넘기기 위해서
+		arrObjectNumber[iRandimArrayNumber] = iRandomObjectNumber;
+	}
+
+	for (_int i = 0; i < _int(fObjectMaxNumber); i++)
+	{
+		_tchar szChildTag[MAX_PATH] = TEXT("");
+		if (-1 == arrObjectNumber[i])
+		{
+			wsprintf(szChildTag, TEXT("PlayerInfo_Hp%d"), i);
+			dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(szChildTag))->RendomHpImage(2);
+
+			wsprintf(szChildTag, TEXT("PlayerInfo_HpBack%d"), i);
+			dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(szChildTag))->RendomHpImage(2);
+		}
+		else
+		{
+			_int iRandomTexture = _int(CMathUtils::RandomFloat(0.0f, 2.0f)); // 0 or 1
+
+			wsprintf(szChildTag, TEXT("PlayerInfo_Hp%d"), i);
+			dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(szChildTag))->RendomHpImage(iRandomTexture);
+
+			wsprintf(szChildTag, TEXT("PlayerInfo_HpBack%d"), i);
+			dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(szChildTag))->RendomHpImage(iRandomTexture);
+		}
+	}
 }
 
 CCanvas_PlayerInfoMove * CCanvas_PlayerInfoMove::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

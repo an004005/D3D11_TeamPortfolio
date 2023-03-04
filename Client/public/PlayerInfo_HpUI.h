@@ -24,6 +24,8 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
+	void	RendomHpImage(const _int & iImageNumber);
+
 	void	Set_PlayerHp(const _float & fHp) {
 		m_fHp = fHp;
 	}
@@ -42,7 +44,6 @@ private:
 	void	Five_Tick(const _double & dTimeDetla);
 
 private:
-	void	RendomHpImage(const _double & dTimeDetla);
 	void	NotDraw(const _float & _fMinHp);
 
 private:
@@ -51,9 +52,6 @@ private:
 	_float	m_fHp = { 0.0f };
 	_float	m_fMaxHp = { 1.0f };
 	_float	m_fCurrentHp = { 0.0f };
-
-private:
-	_double	m_dImageChange_TimeAcc = { 0.0 };
 
 public:
 	static CPlayerInfo_HpUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

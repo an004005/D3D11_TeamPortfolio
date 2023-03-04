@@ -84,27 +84,27 @@ void CPlayerInfo_HpUI::LoadFromJson(const Json & json)
 
 }
 
-void CPlayerInfo_HpUI::Object_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpUI::Object_Tick(const _double & dTimeDelta)
 {
 	switch (m_iObjectNumber)
 	{
 	case 0:
-		Zero_Tick(dTimeDetla);
+		Zero_Tick(dTimeDelta);
 		break;
 	case 1:
-		One_Tick(dTimeDetla);
+		One_Tick(dTimeDelta);
 		break;
 	case 2:
-		Two_Tick(dTimeDetla);
+		Two_Tick(dTimeDelta);
 		break;
 	case 3:
-		Three_Tick(dTimeDetla);
+		Three_Tick(dTimeDelta);
 		break;
 	case 4:
-		Four_Tick(dTimeDetla);
+		Four_Tick(dTimeDelta);
 		break;
 	case 5:
-		Five_Tick(dTimeDetla);
+		Five_Tick(dTimeDelta);
 		break;
 	default:
 		// Pass
@@ -112,125 +112,66 @@ void CPlayerInfo_HpUI::Object_Tick(const _double & dTimeDetla)
 	}
 }
 
-void CPlayerInfo_HpUI::Zero_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpUI::Zero_Tick(const _double & dTimeDelta)
 {
 	if (0.2f < m_fCurrentHp)
-	{
-		RendomHpImage(dTimeDetla);
-		m_bVisible = true;
 		return;
-	}
 
 	NotDraw(0.05f);
 }
 
-void CPlayerInfo_HpUI::One_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpUI::One_Tick(const _double & dTimeDelta)
 {
 	if (0.35f < m_fCurrentHp)
-	{
-		RendomHpImage(dTimeDetla);
-		m_bVisible = true;
 		return;
-	}
 
 	NotDraw(0.2f);
 }
 
-void CPlayerInfo_HpUI::Two_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpUI::Two_Tick(const _double & dTimeDelta)
 {
 	if (0.5f <= m_fCurrentHp)
-	{
-		RendomHpImage(dTimeDetla);
-		m_bVisible = true;
 		return;
-	}
 
 	NotDraw(0.35f);
 }
 
-void CPlayerInfo_HpUI::Three_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpUI::Three_Tick(const _double & dTimeDelta)
 {
 	if (0.65f < m_fCurrentHp)
-	{
-		RendomHpImage(dTimeDetla);
-		m_bVisible = true;
 		return;
-	}
 	
 	NotDraw(0.5f);
 }
 
-void CPlayerInfo_HpUI::Four_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpUI::Four_Tick(const _double & dTimeDelta)
 {
 	if (0.8f < m_fCurrentHp)
-	{
-		RendomHpImage(dTimeDetla);
-		m_bVisible = true;
 		return;
-	}
 
 	NotDraw(0.65f);
 }
 
-void CPlayerInfo_HpUI::Five_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpUI::Five_Tick(const _double & dTimeDelta)
 {
 	if (0.95f < m_fCurrentHp)
-	{
-		RendomHpImage(dTimeDetla);
-		m_bVisible = true;
 		return;
-	}
 
 	NotDraw(0.8f);
 }
 
-void CPlayerInfo_HpUI::RendomHpImage(const _double & dTimeDetla)
+void CPlayerInfo_HpUI::RendomHpImage(const _int & iImageNumber)
 {
-	m_tParams.Floats[0] = 1.0f; 
-	
-	m_dImageChange_TimeAcc += dTimeDetla;
-	if (1.0 < m_dImageChange_TimeAcc)
-	{
-		m_dImageChange_TimeAcc = 0.0;
+	// 캔버스에서 호출하는 함수로, Hp를 그리며, 이미지를 정하고 일부객체를 그린다.
+	m_bVisible = true;
 
-		// 체력에 따라서 랜덤으로 이미지를 출력하는 개수가 달라진다. (m_fCurrentHp 기준)
-		// 0.05~0.95 : 3 / 0.05~0.65 : 2 / 0.05~0.35 : 1
+	if (0 == iImageNumber)
+		m_tParams.Ints[0] = 5;
+	else
+		m_tParams.Ints[0] = 10;
 
-		static _int iRendomCount;
-		if (0.65f < m_fCurrentHp)
-			iRendomCount = 3;
-		else if(0.35f < m_fCurrentHp)
-			iRendomCount = 2;
-		else if (0.05f < m_fCurrentHp)
-			iRendomCount = 1;
-		else
-			iRendomCount = 0;
-
-		for (_int i = 0; i < iRendomCount; i++)
-		{
-			_int fRandomObjectNumber = _int(CMathUtils::RandomFloat(0.0f, 6.0f));	// 랜덤 객체 고르기
-
-			if (m_iObjectNumber == fRandomObjectNumber)
-			{
-				_int iRandomNumber = _int(CMathUtils::RandomFloat(0.0f, 2.0f)); // 0 or 1 이미지 고르기
-
-				// 가로로 자를 숫자
-				if (0 == iRandomNumber)
-				{
-					m_tParams.Ints[2] = iRandomNumber;
-					m_tParams.Ints[0] = 5;// _int(CMathUtils::RandomFloat(0.0f, 6.0f));
-				}
-				else
-				{
-					m_tParams.Ints[2] = iRandomNumber;
-					m_tParams.Ints[0] = 10;// _int(CMathUtils::RandomFloat(0.0f, 11.0f));
-				}
-
-			}
-			else
-				m_tParams.Ints[2] = 2;	// 그 외는 기본
-		}
-	}
+	m_tParams.Floats[0] = 1.0f;
+	m_tParams.Ints[2] = iImageNumber;
 }
 
 void CPlayerInfo_HpUI::NotDraw(const _float & fMinHp)

@@ -24,6 +24,8 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
+	void	RendomHpImage(const _int & iImageNumber);
+
 	void	Set_PlayerHp(const _float & fHp) {
 		m_fHp = fHp;
 	}
@@ -34,26 +36,22 @@ public:
 private:
 	void	Object_Tick(const _double & dTimeDelta);
 
-	void	Zero_Tick(const _double & dTimeDetla);
-	void	One_Tick(const _double & dTimeDetla);
-	void	Two_Tick(const _double & dTimeDetla);
-	void	Three_Tick(const _double & dTimeDetla);
-	void	Four_Tick(const _double & dTimeDetla);
-	void	Five_Tick(const _double & dTimeDetla);
+	void	Zero_Tick(const _double & dTimeDelta);
+	void	One_Tick(const _double & dTimeDelta);
+	void	Two_Tick(const _double & dTimeDelta);
+	void	Three_Tick(const _double & dTimeDelta);
+	void	Four_Tick(const _double & dTimeDelta);
+	void	Five_Tick(const _double & dTimeDelta);
 
 private:
-	void	RendomHpImage(const _double & dTimeDetla);
 	void	NotDraw(const _float & _fMinHp);
 
 private:
 	_int	m_iObjectNumber = { 0 };		// 6개 객체를 구별하기 위한 변수
-	
+
 	_float	m_fHp = { 0.0f };
 	_float	m_fMaxHp = { 1.0f };
-	_float	m_fCurrentHp = { 1.0f };
-
-private:
-	_double	m_dImageChange_TimeAcc = { 0.0 };
+	_float	m_fCurrentHp = { 0.0f };
 
 public:
 	static CPlayerInfo_HpBackUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
