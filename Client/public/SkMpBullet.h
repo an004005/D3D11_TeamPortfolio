@@ -8,6 +8,7 @@ class CShader;
 class CModel;
 class CRenderer;
 class CFSMComponent;
+class CRigidBody;
 END
 
 BEGIN(Client)
@@ -28,14 +29,18 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
+	virtual void AfterPhysX();
+
 public:
-	void					Set_ShootDir(_vector vDest) { m_vDir = vDest; }
+	void					Set_ShootDir(_vector vDest) { m_vDir = XMVector3Normalize(vDest); }
 
 private:
 	CShader*				m_pShaderCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;
 	CFSMComponent*			m_pFSM = nullptr;
+
+	CRigidBody*				m_pCollider = nullptr;
 
 private:
 	HRESULT SetUp_Components(void* pArg);

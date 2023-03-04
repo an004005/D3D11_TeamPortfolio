@@ -894,7 +894,7 @@
     },
     "AS_em0400_200_AL_atk_a1": {
         "Duration": 420.0,
-        "TickPerSecond": 0.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -1015,15 +1015,45 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_em0600_401_AL_damage_l_F": {
+        "Duration": 66.0,
+        "TickPerSecond": 48.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0600_402_AL_damage_l_B": {
+        "Duration": 66.0,
+        "TickPerSecond": 48.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0600_411_AL_damage_m_F": {
         "Duration": 95.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 62.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0600_412_AL_damage_m_B": {
+        "Duration": 96.0,
+        "TickPerSecond": 58.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0600_413_AL_damage_m_L": {
+        "Duration": 96.0,
+        "TickPerSecond": 62.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0600_414_AL_damage_m_R": {
+        "Duration": 95.0,
+        "TickPerSecond": 62.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0600_424_AL_dead_down": {
         "Duration": 90.0,
-        "TickPerSecond": 45.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -1093,33 +1123,51 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_em0700_401_AL_damage_l_F": {
+        "Duration": 68.0,
+        "TickPerSecond": 48.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_402_AL_damage_l_B": {
+        "Duration": 68.0,
+        "TickPerSecond": 48.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0700_411_AL_damage_m_F": {
         "Duration": 240.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 83.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_412_AL_damage_m_B": {
         "Duration": 240.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 83.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_413_AL_damage_m_L": {
         "Duration": 240.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 83.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_414_AL_damage_m_R": {
         "Duration": 240.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 83.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_424_AL_dead_down01": {
         "Duration": 160.0,
         "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_425_AL_down_start": {
+        "Duration": 125.0,
+        "TickPerSecond": 48.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -1171,6 +1219,18 @@
         "bLooping": true,
         "vecEvent": []
     },
+    "AS_em0800_150_AL_turn_R": {
+        "Duration": 46.0,
+        "TickPerSecond": 38.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0800_152_AL_turn_L": {
+        "Duration": 46.0,
+        "TickPerSecond": 38.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
     "AS_em0800_160_AL_threat": {
         "Duration": 240.0,
         "TickPerSecond": 55.0,
@@ -1195,9 +1255,39 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_em0800_401_AL_damage_l_F": {
+        "Duration": 75.0,
+        "TickPerSecond": 57.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_402_AL_damage_l_B": {
+        "Duration": 75.0,
+        "TickPerSecond": 57.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0800_411_AL_damage_m_F": {
         "Duration": 240.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 64.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_412_AL_damage_m_B": {
+        "Duration": 240.0,
+        "TickPerSecond": 81.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_413_AL_damage_m_L": {
+        "Duration": 240.0,
+        "TickPerSecond": 83.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_414_AL_damage_m_R": {
+        "Duration": 240.0,
+        "TickPerSecond": 93.0,
         "bLooping": false,
         "vecEvent": []
     },

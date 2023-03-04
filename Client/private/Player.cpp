@@ -73,10 +73,11 @@ HRESULT CPlayer::Initialize(void * pArg)
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 	Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
 	m_pEffect = pGameInstance->Clone_GameObject_Get(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
-	/*
-		Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
-	*/
+
+	
+		/*Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);*/
+	
 
 	//m_pPlayerCam = dynamic_cast<CCamera*>(m_pGameInstance->Clone_GameObject_Get(L"Layer_Camera", TEXT("Prototype_GameObject_Camera_Player")));
 	//Assert(m_pPlayerCam != nullptr);
@@ -223,7 +224,7 @@ void CPlayer::AfterPhysX()
 
 	}
 
-	Attack_Effect("Eff01", 0.2f);
+	Attack_Effect("Eff01", 1.f);
 }
 
 HRESULT CPlayer::Render()

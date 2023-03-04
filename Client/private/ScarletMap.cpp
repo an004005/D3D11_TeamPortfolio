@@ -5,7 +5,7 @@
 #include "MapObject.h"
 #include "GameUtils.h"
 #include "MapInstance_Object.h"
-
+#include "MapKinetic_Object.h"
 CScarletMap::CScarletMap(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
 {
@@ -63,7 +63,11 @@ void CScarletMap::Imgui_RenderProperty()
 	__super::Imgui_RenderProperty();
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	ImGui::Text("Select Components");
+	ImGui::Separator();
+
+	const char* ProtoInfos[] = { "NON_INSTANCE", "INSTANCE", "KINETIC" };
+	ImGui::Combo("ProtoFilter", &m_iProtoInfo, ProtoInfos, IM_ARRAYSIZE(ProtoInfos));
+
 	ImGui::Separator();
 
 	static char szSearchProto[MAX_PATH] = "";
@@ -76,6 +80,9 @@ void CScarletMap::Imgui_RenderProperty()
 	{
 		for (auto& proto : m_pModelProtos)
 		{
+			//필터 적용
+			if (m_iProtoInfo != proto.second) continue;
+
 			if (bSearch)
 			{
 				if (proto.first.find(strSearch) == wstring::npos)
@@ -87,13 +94,14 @@ void CScarletMap::Imgui_RenderProperty()
 			if (bSelected)
 				ImGui::SetItemDefaultFocus();
 
+			
+
 			char pStr[MAX_PATH];
 			strcpy(pStr, CGameUtils::GetFileName(ws2s(proto.first)).c_str());
 
 			if (ImGui::Selectable(pStr, bSelected))
 			{
 				m_pModelProtoInfo = proto;
-
 			}
 		}
 
@@ -113,7 +121,7 @@ void CScarletMap::Imgui_RenderProperty()
 		ImGui::InputFloat3("SetIntermal", (float*)&Interval);
 	}
 
-	if (ImGui::Button("Create_MapNonAnim_Object"))
+	if (ImGui::Button("Create_MapObject"))
 	{
 		if (m_pModelProtoInfo.second == PROTOINFO::NON_INSTANCE)
 		{
@@ -134,16 +142,8 @@ void CScarletMap::Imgui_RenderProperty()
 			m_pMapObjects.emplace_back(pMapObject);
 			m_pGameObject = pMapObject;
 		}
-		else
-		{
-			MSG_BOX("Wrong ModelMatch");
-		}
-	}
 
-	//같은 모델이 있는지 확인 후, 있으면 추가, 없으면 생성 후 추가
-	if (ImGui::Button("Create_MapInstance_Object"))
-	{
-		if (m_pModelProtoInfo.second == PROTOINFO::INSTANCE)
+		else if (m_pModelProtoInfo.second == PROTOINFO::INSTANCE)
 		{
 			CGameObject* pGameObject = pGameInstance->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pGameObject) {
 				return dynamic_cast<CMapInstance_Object*>(pGameObject)->Get_ModelTag() == m_pModelProtoInfo.first;
@@ -171,10 +171,27 @@ void CScarletMap::Imgui_RenderProperty()
 			pModel->Map_Meshs();
 			dynamic_cast<CMapInstance_Object*>(pGameObject)->Set_Focus();
 		}
-		else
+
+		else if (m_pModelProtoInfo.second == PROTOINFO::KINETIC)
 		{
-			MSG_BOX("Wrong ModelMatch");
+			Json json;
+			json["ModelTag"] = ws2s(m_pModelProtoInfo.first);
+
+			InitPosition.x += Interval.x;
+			InitPosition.y += Interval.y;
+			InitPosition.z += Interval.z;
+
+			_float4 InitPos = DoInput == false ? SetUp_InitPosition() : InitPosition;
+			json["InitPos"] = InitPos;
+
+			CMapObject* pMapObject = nullptr;
+			pMapObject = dynamic_cast<CMapObject*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &json));
+			assert(pMapObject != nullptr);
+
+			m_pMapObjects.emplace_back(pMapObject);
+			m_pGameObject = pMapObject;
 		}
+		
 	}
 
 	ImGui::Separator();
@@ -220,9 +237,10 @@ void CScarletMap::Imgui_RenderProperty()
 	ImGui::Separator();
 
 
-	if (ImGui::Button("Delete_MapNonAnim_Object"))
+	if (ImGui::Button("Delete_Map_Object"))
 	{
-		if (m_pModelProtoInfo.second == PROTOINFO::NON_INSTANCE)
+		if (m_pModelProtoInfo.second == PROTOINFO::NON_INSTANCE ||
+			m_pModelProtoInfo.second == PROTOINFO::KINETIC)
 		{
 			if (m_pGameObject)
 			{
@@ -231,7 +249,8 @@ void CScarletMap::Imgui_RenderProperty()
 				m_pGameObject = nullptr;
 			}
 		}
-		else
+	
+		else 
 		{
 			MSG_BOX("Wrong ModelMatch");
 		}
@@ -239,8 +258,8 @@ void CScarletMap::Imgui_RenderProperty()
 
 	ImGui::Separator();
 
-	if (ImGui::Button("Clear Map"))
-		ClearMap();
+	//if (ImGui::Button("Clear Map"))
+	//	ClearMap();
 
 	ImGui::BeginChild("Selected Object", { 500.f, 200.f });
 
@@ -336,6 +355,11 @@ void CScarletMap::CreateMapObjectFromLoad(Json & json)
 	else if (0 == strcmp(Prototag.c_str(), "Prototype_GameObject_MapInstance_Object"))
 	{	
 		pMapObject = dynamic_cast<CMapObject*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapInstanceObject"), TEXT("Prototype_GameObject_MapInstance_Object"), &json));
+	}
+
+	else if (0 == strcmp(Prototag.c_str(), "Prototype_GameObject_MapKinetic_Object"))
+	{
+		pMapObject = dynamic_cast<CMapObject*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &json));
 	}
 
 	assert(pMapObject != nullptr);

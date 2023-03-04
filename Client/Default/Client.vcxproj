@@ -183,6 +183,7 @@
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\Batch.h" />
     <ClInclude Include="..\public\Boss1_AIController.h" />
     <ClInclude Include="..\public\BrJ_AnimInstance.h" />
     <ClInclude Include="..\public\BronJon.h" />
@@ -217,6 +218,7 @@
     <ClInclude Include="..\public\FlowerLeg.h" />
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\Imgui_EffectBrowser.h" />
     <ClInclude Include="..\public\Imgui_LevelSwitcher.h" />
     <ClInclude Include="..\public\Imgui_MapEditor.h" />
     <ClInclude Include="..\public\Indicator.h" />
@@ -227,6 +229,7 @@
     <ClInclude Include="..\public\Item_PushArrowUI.h" />
     <ClInclude Include="..\public\Item_RightArrowUI.h" />
     <ClInclude Include="..\public\Level_AnimModify.h" />
+    <ClInclude Include="..\public\Level_Batch.h" />
     <ClInclude Include="..\public\Level_Converter.h" />
     <ClInclude Include="..\public\Level_Effect.h" />
     <ClInclude Include="..\public\Level_EnemiesTest.h" />
@@ -291,6 +294,7 @@
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\Batch.cpp" />
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
     <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
     <ClCompile Include="..\private\BronJon.cpp" />
@@ -324,6 +328,7 @@
     <ClCompile Include="..\private\FlowerLeg.cpp" />
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\Imgui_EffectBrowser.cpp" />
     <ClCompile Include="..\private\Imgui_LevelSwitcher.cpp" />
     <ClCompile Include="..\private\Imgui_MapEditor.cpp" />
     <ClCompile Include="..\private\Indicator.cpp" />
@@ -334,6 +339,7 @@
     <ClCompile Include="..\private\Item_PushArrowUI.cpp" />
     <ClCompile Include="..\private\Item_RightArrowUI.cpp" />
     <ClCompile Include="..\private\Level_AnimModify.cpp" />
+    <ClCompile Include="..\private\Level_Batch.cpp" />
     <ClCompile Include="..\private\Level_Converter.cpp" />
     <ClCompile Include="..\private\Level_Effect.cpp" />
     <ClCompile Include="..\private\Level_EnemiesTest.cpp" />

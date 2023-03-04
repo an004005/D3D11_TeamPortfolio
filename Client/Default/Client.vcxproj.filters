@@ -220,6 +220,12 @@
     <Filter Include="VFX\PostProcess\Scifi">
       <UniqueIdentifier>{c05fd436-44e5-4ea4-b432-630fe9acddd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\16.BatchTool">
+      <UniqueIdentifier>{ead14635-4788-4854-851a-2a087c3173ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Batch">
+      <UniqueIdentifier>{ed211422-fc89-49fa-908b-ea3041994ccf}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Monster\boss1">
       <UniqueIdentifier>{44a3e289-3391-45e6-b735-a5ae92424cd7}</UniqueIdentifier>
     </Filter>
@@ -350,7 +356,7 @@
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h">
       <Filter>VFX\Effect\Buffer</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
@@ -561,6 +567,15 @@
     <ClInclude Include="..\public\PostVFX_Scifi.h">
       <Filter>VFX\PostProcess\Scifi</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_Batch.h">
+      <Filter>01.Levels\16.BatchTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Batch.h">
+      <Filter>02.GameObjects\Batch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_EffectBrowser.h">
+      <Filter>60.Imgui_Tool</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Boss1.h">
       <Filter>02.GameObjects\Monster\boss1</Filter>
     </ClInclude>
@@ -684,7 +699,7 @@
     </ClCompile>
     <ClCompile Include="..\private\TrailSystem.cpp">
       <Filter>VFX\Trail</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
@@ -881,6 +896,15 @@
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_Scifi.cpp">
       <Filter>VFX\PostProcess\Scifi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Batch.cpp">
+      <Filter>01.Levels\16.BatchTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Batch.cpp">
+      <Filter>02.GameObjects\Batch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_EffectBrowser.cpp">
+      <Filter>60.Imgui_Tool</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Boss1.cpp">
       <Filter>02.GameObjects\Monster\boss1</Filter>
