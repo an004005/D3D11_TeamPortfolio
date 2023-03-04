@@ -20,7 +20,7 @@
 #include "UI_Manager.h"
 #include "VIBuffer_Mesh_Instance.h"
 #include "MapInstance_Object.h"
-
+#include "MapKinetic_Object.h"
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
@@ -313,6 +313,11 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	/* For. MapInstanceObject */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_MapInstance_Object"),
 		CMapInstance_Object::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For. MapKineticObject */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_MapKinetic_Object"),
+		CMapKinetic_Object::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;
