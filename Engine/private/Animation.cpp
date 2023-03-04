@@ -216,6 +216,18 @@ void CAnimation::Reset()
 	m_bFinished = false;
 }
 
+void CAnimation::SetLocalRotation(_bool bLocalRotation)
+{
+	for (auto pChannel : m_Channels)
+	{
+		if ("Reference" == pChannel->GetChannelName())
+		{
+			pChannel->SetLocalRotation(bLocalRotation);
+			break;
+		}
+	}
+}
+
 void CAnimation::SaveModifiedData(Json& json)
 {
 	json["Duration"] = m_Duration;

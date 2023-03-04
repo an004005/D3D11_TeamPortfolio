@@ -7,21 +7,27 @@ class AICommand
 {
 using CallbackType = std::function<void()>;
 public:
-	AICommand(CallbackType&& callback, _float fDuration)
-		: m_Callback(std::move(callback))
-		, m_fDuration(fDuration)
-	{
-	}
+	// AICommand(CallbackType&& callback, _float fDuration)
+	// 	: m_Callback(std::move(callback))
+	// 	, m_fDuration(fDuration)
+	// {
+	// }
 
 	template<typename T, typename Ret, typename... Args>
-	AICommand(_float fDuration, T* owner, Ret(T::* memFunc)(Args...), Args&&... args)
+	AICommand(const string& strName, _float fDuration, T* owner, Ret(T::* memFunc)(Args...), Args&&... args)
 	{
 		m_Callback = [owner, memFunc, args...]()
 		{
 			(owner->*memFunc)(args...);
 		};
 		m_fDuration = fDuration;
+		m_strName = strName;
 	}
+
+	AICommand(const AICommand& other);
+	AICommand(AICommand&& other) noexcept;
+	AICommand& operator=(const AICommand& other);
+	AICommand& operator=(AICommand&& other) noexcept;
 
 	_bool Execute(_double TimeDelta)
 	{
@@ -30,37 +36,13 @@ public:
 		return m_fDuration <= 0.f;
 	}
 	_float GetDuration() const { return m_fDuration; }
-	void SetDelete() { m_bDelete = true; }
-	_bool IsDeleted() { return m_bDelete; }
+	const string& GetName() const { return m_strName; }
+	void SetFinish() { m_fDuration = 0.f; }
 
 private:
 	CallbackType m_Callback;
 	_float m_fDuration = 0.f;
-	_bool m_bDelete = false;
-};
-
-class AIExitCommand
-{
-using CallbackType = std::function<void()>;
-public:
-	AIExitCommand(CallbackType&& callback)
-		: m_Callback(std::move(callback))
-	{
-	}
-	template<typename T, typename Ret, typename... Args>
-	AIExitCommand(T* owner, Ret(T::* memFunc)(Args...), Args&&... args)
-	{
-		m_Callback = [owner, memFunc, args...]()
-		{
-			(owner->*memFunc)(args...);
-		};
-	}
-	void Execute() const
-	{
-		m_Callback();
-	}
-private:
-	CallbackType m_Callback;
+	string m_strName;
 };
 
 class CAIController abstract : public CController
@@ -72,6 +54,7 @@ protected:
 
 public:
 	virtual void Tick(_double TimeDelta) override;
+	virtual void AI_Tick(_double TimeDelta) = 0;
 	virtual void Imgui_RenderProperty() override;
 	void SetTarget(class CScarletCharacter* pTarget);
 	_float GetTurnRemain() const { return m_fTurnRemain; }
@@ -81,42 +64,23 @@ public:
 	template<typename T, typename Ret, typename... Args>
 	void AddCommand(const string& strName, _float fDuration, Ret(T::*memFunc)(Args...), Args... args)
 	{
-		if (ExistCommand(strName))
-			return;
-		m_Commands.emplace(strName, AICommand(fDuration, this, memFunc, std::forward<Args>(args)...));
+		T* pController = dynamic_cast<T*>(this);
+		m_Commands.push_back(AICommand(strName, fDuration, pController, memFunc, std::forward<Args>(args)...));
 	}
 
-	_bool ExistCommand(const string& strName);
-	void DeleteCommand(const string& strName);
+	_bool IsCommandRunning();
 	void ClearCommands();
-
-	template<typename T, typename Ret, typename... Args>
-	void AddExitCommand(const string& strName, Ret(T::*memFunc)(Args...), Args... args)
-	{
-		if (ExistExitCommand(strName))
-			return;
-		m_ExitCommands.emplace(strName, AIExitCommand(this, memFunc, std::forward<Args>(args)...));
-	}
-
-	_bool ExistExitCommand(const string& strName);
-	void DeleteExitCommand(const string& strName);
-	void ClearExitCommands();
-	void ClearAllCommands();
 
 
 	// 기본 command 함수, 커맨드 함수의 인자는 레퍼런스 사용 금지!
 	void Move(EMoveAxis eAxis);
 	void TurnToTarget(_float fSpeedRatio = 1.f);
 	void Input(EHandleInput eInput);
-
-private:
-	void ExecuteExitCommand(const string& strName);
-
+	void Move_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio = 1.f);
 
 protected:
 	class CScarletCharacter* m_pTarget = nullptr;
-	unordered_map<string, AICommand> m_Commands;
-	unordered_map<string, AIExitCommand> m_ExitCommands;
+	list<AICommand> m_Commands;
 	_float m_fTurnRemain = 0.f;
 
 	// command 내에서 사용할 TimeDelta

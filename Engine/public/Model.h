@@ -54,7 +54,6 @@ public:
 	_float	GetLastLocalMoveSpeed() const { return m_fLastLocalMoveSpeed; }
 
 	_vector GetLocalRotationDelta();
-	void ActivateLocalRotation(_bool bLocalRotation);
 
 public:
 	virtual HRESULT Initialize_Prototype(const char* pModelFilePath);

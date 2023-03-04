@@ -27,12 +27,14 @@ protected:
 
 public:
 	virtual HRESULT Initialize(void* pArg);
+	virtual void BeginTick() override;
 	virtual void Imgui_RenderProperty();
 	virtual void SaveToJson(Json& json) override;
 	virtual void LoadFromJson(const Json& json) override;
 
 	// 텔레포트용
 	void SetPosition(const _float4& vPos);
+	void SetFootPosition(const _float4& vPos);
 
 	_float4 GetPosition();
 	_float4 GetFootPosition();

@@ -7,6 +7,10 @@ HRESULT CBoss1_AnimationInstance::Initialize(CModel* pModel, CGameObject* pGameO
 {
 	FAILED_CHECK(CAnimationInstance::Initialize(pModel, pGameObject));
 
+	m_pModel->Find_Animation("AS_em0300_153_AL_turn_R_roop")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_em0300_152_AL_turn_R_start")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_em0300_151_AL_turn_L_roop")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_em0300_150_AL_turn_L_start")->SetLocalRotation(true);
 
 	m_pASM = CASMBuilder()
 		.InitState("Idle")

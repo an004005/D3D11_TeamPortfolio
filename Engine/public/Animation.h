@@ -47,6 +47,8 @@ public:
 	void SetPlayRatio(_double PlayRatio) { m_PlayTime = m_Duration * PlayRatio; }
 	void Reset();
 
+	void SetLocalRotation(_bool bLocalRotation);
+
 	void SaveModifiedData(Json& json);
 	void Imgui_RenderProperty();
 

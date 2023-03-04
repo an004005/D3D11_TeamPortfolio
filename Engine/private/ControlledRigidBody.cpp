@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "..\public\ControlledRigidBody.h"
+
+#include "GameObject.h"
 #include "PhysX_Manager.h"
 #include "JsonLib.h"
 
@@ -36,6 +38,14 @@ HRESULT CControlledRigidBody::Initialize(void* pArg)
 	CreateController();
 
 	return S_OK;
+}
+
+void CControlledRigidBody::BeginTick()
+{
+	if (auto pOwner = TryGetOwner())
+	{
+		SetFootPosition(pOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+	}
 }
 
 void CControlledRigidBody::Imgui_RenderProperty()
@@ -118,6 +128,11 @@ void CControlledRigidBody::SetPosition(const _float4& vPos)
 	m_pController->setPosition({(_double)vPos.x, (_double)vPos.y, (_double)vPos.z});
 }
 
+void CControlledRigidBody::SetFootPosition(const _float4& vPos)
+{
+	m_pController->setFootPosition({(_double)vPos.x, (_double)vPos.y, (_double)vPos.z});
+}
+
 _float4 CControlledRigidBody::GetPosition()
 {
 	const auto vPos = m_pController->getPosition();
@@ -158,6 +173,11 @@ void CControlledRigidBody::CreateController()
 	m_pController->getActor()->userData = this;
 
 	CPhysX_Manager::GetInstance()->AddActor(*m_pController->getActor());
+
+	if (auto pOwner = TryGetOwner())
+	{
+		SetFootPosition(pOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+	}
 }
 
 void CControlledRigidBody::ReleaseController()

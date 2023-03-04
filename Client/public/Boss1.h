@@ -31,34 +31,33 @@ public:
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_float GetTurnRemain() const { return m_fTurnRemain; }
-	_bool IsAttack() const { return m_bAttack; }
 	_bool IsPlayingSocket() const;
 
 private:
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;
-	CFSMComponent*			m_pFSM = nullptr;
 	class CBoss1_AnimationInstance* m_pASM = nullptr;
 	class CBoss1_AIController*		m_pController = nullptr;
+
+	CScarletCharacter* m_pTarget = nullptr;
 
 	_float3 m_vMoveAxis;
 	_float m_fTurnRemain = 0.f;
 
-
-	_bool m_bAttack = false;
-	_bool m_bSpinAttack = false;
-	_bool m_bRange = false;
-	_bool m_bJump = false;
 	_bool m_bDown = false;
 	_bool m_bMiddleDown = false;
 
+
+	_bool m_bJumpAttack = false;
+	_float3 m_vOnJumpMoveVelocity;
+	_float m_fJumpMoveTime = 0.f;
 	_int m_iJitabaCnt = 0;
+
 
 	CAnimation* m_pAtk_R = nullptr;
 	CAnimation* m_pAtk_L = nullptr;
 	CAnimation* m_pAtk_Spin = nullptr;
 	CAnimation* m_pAtk_WaterBall = nullptr;
-	CAnimation* m_pThreat = nullptr;
 	CAnimation* m_pMiddleDown = nullptr;
 	CAnimation* m_pDownStart = nullptr;
 	CAnimation* m_pDown = nullptr;
@@ -68,8 +67,6 @@ private:
 	CAnimation* m_pJumpLand = nullptr;
 	CAnimation* m_pJumpJitabata = nullptr;
 
-
-	CAnimation* m_pCurSocAnim = nullptr;
 	
 
 	// for test

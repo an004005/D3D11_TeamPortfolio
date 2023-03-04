@@ -18,6 +18,7 @@
 #include "Boss1_AIController.h"
 #include "CamSpot.h"
 #include "EffectSystem.h"
+#include "Indicator.h"
 #include "Player.h"
 #include "Weapon_wp0190.h"
 
@@ -73,6 +74,10 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
+	{
+		CGameInstance::GetInstance()->Clone_GameObject(L"LayerTest", L"Indicator");
+	}
 }
 
 void CLevel_GamePlay::Late_Tick(_double TimeDelta)
@@ -168,6 +173,8 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create())))
 		return E_FAIL;
+
+	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
 
 	//// 23.02.20 PJW Work
 

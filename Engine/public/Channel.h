@@ -25,6 +25,8 @@ public:
 	_vector&		GetLocalRotation() { return m_vLocalRotation; }
 	const string&	GetChannelName() { return m_strName; }
 
+	void SetLocalRotation(_bool bLocalRotation) { m_bLocalRotation = bLocalRotation; }
+
 private:
 	string			m_strName;
 
@@ -36,6 +38,7 @@ private:
 	_vector			m_vLocalRotation = XMQuaternionIdentity();
 private:
 	_uint			m_iCurFrameIdx = 0;
+	_bool			m_bLocalRotation = false;
 
 public:
 	static CChannel* Create(HANDLE hFile);

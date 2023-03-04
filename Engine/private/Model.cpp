@@ -274,11 +274,6 @@ _vector CModel::GetLocalRotationDelta()
 	return vRotationDelta;
 }
 
-void CModel::ActivateLocalRotation(_bool bLocalRotation)
-{
-	Get_BonePtr("Reference")->SetLocalRotation(bLocalRotation);
-}
-
 HRESULT CModel::Initialize_Prototype(const char * pModelFilePath)
 {
 	char szExt[MAX_PATH];
