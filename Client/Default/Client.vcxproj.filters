@@ -344,7 +344,7 @@
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h">
       <Filter>VFX\Effect\Buffer</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
@@ -555,6 +555,7 @@
     <ClInclude Include="..\public\PostVFX_Scifi.h">
       <Filter>VFX\PostProcess\Scifi</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Imgui_EffectBrowser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -667,7 +668,7 @@
     </ClCompile>
     <ClCompile Include="..\private\TrailSystem.cpp">
       <Filter>VFX\Trail</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
@@ -865,6 +866,7 @@
     <ClCompile Include="..\private\PostVFX_Scifi.cpp">
       <Filter>VFX\PostProcess\Scifi</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Imgui_EffectBrowser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
