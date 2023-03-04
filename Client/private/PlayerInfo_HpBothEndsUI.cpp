@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "..\public\PlayerInfo_HpBothEndsUI.h"
 #include "GameInstance.h"
-#include "JsonLib.h"
-#include "MathUtils.h"
 
 // m_tParams.Floats[0] : ∞‘¿Ã¡ˆ
 

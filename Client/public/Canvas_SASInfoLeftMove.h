@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CCanvas_SASInfo : public CCanvas
+class CCanvas_SASInfoLeftMove : public CCanvas
 {
 protected:
-	CCanvas_SASInfo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CCanvas_SASInfo(const CCanvas_SASInfo& rhs);
+	CCanvas_SASInfoLeftMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCanvas_SASInfoLeftMove(const CCanvas_SASInfoLeftMove& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -21,7 +21,7 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	static CCanvas_SASInfo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CCanvas_SASInfoLeftMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

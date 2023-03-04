@@ -12,7 +12,10 @@
 
 #include "Canvas.h"
 #include "Canvas_Item.h"
-#include "Canvas_SASInfo.h"
+#include "Canvas_SASInfoLeft.h"
+#include "Canvas_SASInfoLeftMove.h"
+#include "Canvas_SASInfoRight.h"
+#include "Canvas_SASInfoRightMove.h"
 #include "Canvas_PlayerInfo.h"
 #include "Canvas_PlayerInfoMove.h"
 #include "Canvas_Drive.h"
@@ -43,6 +46,13 @@
 #include "PlayerInfo_HpUI.h"
 #include "PlayerInfo_HpBackUI.h"
 #include "PlayerInfo_HpBothEndsUI.h"
+// SASInfo Left
+#include "SASInfoLeftHpUI.h"
+#include "SASInfoLeftHpBackUI.h"
+#include "SASInfoLeftHpBothEndsUI.h"
+#include "SASInfoRightHpUI.h"
+#include "SASInfoRightHpBackUI.h"
+#include "SASInfoRightHpBothEndsUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -115,8 +125,12 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASInfo"),
-			CCanvas_SASInfo::Create(m_pDevice, m_pContext))))
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASInfoLeft"),
+			CCanvas_SASInfoLeft::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASInfoLeftMove"),
+			CCanvas_SASInfoLeftMove::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
@@ -135,6 +149,15 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_DriveMove"),
 			CCanvas_DriveMove::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASInfoRight"),
+			CCanvas_SASInfoRight::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASInfoRightMove"),
+			CCanvas_SASInfoRightMove::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
@@ -158,28 +181,24 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Button_UI"),
 			CButtonUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
+		
 		// Frount_UI -> SAS Skill
 		/* For.Prototype_GameObject_SASSkillIcon_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillIcon_UI"),
 			CSASSkillIconUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
 		/* For.Prototype_GameObject_SASSkillGauge_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillGauge_UI"),
 			CSASSkillGaugeUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
 		/* For.Prototype_GameObject_SASSkillLight_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillLight_UI"),
 			CSASSkillLightUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
 		/* For.Prototype_GameObject_SASSkillCtrl_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillDefault_UI"),
 			CSASSkillDefaultUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
 		/* For.Prototype_GameObject_SASSkillFullCircle_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillFullCircle_UI"),
 			CSASSkillFullCircleUI::Create(m_pDevice, m_pContext))))
@@ -234,7 +253,36 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_HpBothEndsUI"),
 			CPlayerInfo_HpBothEndsUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-	}
+
+		// Frount_UI -> SASInfoLeft
+		/* For.Prototype_GameObject_PlayerInfo_HpUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASInfoLeft_HpUI"),
+			CSASInfoLeftHpUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_HpBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASInfoLeft_HpBackUI"),
+			CSASInfoLeftHpBackUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_HpBothEndsUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASInfoLeft_HpBothEndsUI"),
+			CSASInfoLeftHpBothEndsUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		// Frount_UI -> SASInfoRight
+		/* For.Prototype_GameObject_PlayerInfo_HpUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASInfoRight_HpUI"),
+			CSASInfoRightHpUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_HpBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASInfoRight_HpBackUI"),
+			CSASInfoRightHpBackUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_HpBothEndsUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASInfoRight_HpBothEndsUI"),
+			CSASInfoRightHpBothEndsUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+	}	
 
 	return S_OK;
 }
@@ -265,8 +313,11 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_ItemMove.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_ItemMove", &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfo_Left.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfo", &json));
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfoLeft.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfoLeft", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfoLeftMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfoLeftMove", &json));
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_PlayerInfo.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_PlayerInfo", &json));
@@ -280,11 +331,14 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_DriveMove.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_DriveMove", &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfo_Right.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfo", &json));
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfoRight.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfoRight", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfoRightMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfoRightMove", &json));
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASSkill.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(L"Canvas_SASSkill", L"Canvas_SASSkill", &json));		// 움직이지 않은 UI
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkill", &json));		// 움직이지 않은 UI
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASSkillMove.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkillMove", &json));	// 움직이는 UI

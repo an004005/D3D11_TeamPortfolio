@@ -163,9 +163,6 @@
     <Filter Include="02.GameObjects\UI\Front_UI\PlayerInfo">
       <UniqueIdentifier>{1288607c-59a4-4427-b040-1ed8b21a4858}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\SASInfo">
-      <UniqueIdentifier>{ea0a820a-4dc8-4972-9330-a21a848385ce}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
       <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
     </Filter>
@@ -231,6 +228,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Monster\boss1\Boss1_Animinstance">
       <UniqueIdentifier>{107db123-e61b-466e-8716-8300f9f27d16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\SASInfoLeft">
+      <UniqueIdentifier>{ea0a820a-4dc8-4972-9330-a21a848385ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\SASSkillRight">
+      <UniqueIdentifier>{ef81e424-8ab1-4dfd-ae18-2316c41c86a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -395,9 +398,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Canvas_PlayerInfo.h">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Canvas_SASInfo.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_SASSkill.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
@@ -593,6 +593,36 @@
     <ClInclude Include="..\public\PlayerInfo_HpBothEndsUI.h">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_SASInfoRight.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SASInfoRightMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SASInfoLeft.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SASInfoLeftMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SASInfoRightHpUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SASInfoLeftHpUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SASInfoRightHpBackUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SASInfoLeftHpBothEndsUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SASInfoRightHpBothEndsUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SASInfoLeftHpBackUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -734,9 +764,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Canvas_PlayerInfo.cpp">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_SASInfo.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_SASSkill.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
@@ -928,6 +955,36 @@
     </ClCompile>
     <ClCompile Include="..\private\PlayerInfo_HpBothEndsUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SASInfoLeft.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SASInfoRight.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SASInfoRightMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SASInfoLeftMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SASInfoRightHpUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SASInfoLeftHpUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SASInfoLeftHpBackUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SASInfoRightHpBackUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SASInfoRightHpBothEndsUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SASInfoLeftHpBothEndsUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

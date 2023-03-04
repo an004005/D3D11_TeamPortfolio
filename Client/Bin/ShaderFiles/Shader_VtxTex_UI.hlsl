@@ -1064,7 +1064,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
-		SetBlendState(BS_AlphaOne, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_UI_ProgressBar();
 		GeometryShader = NULL;

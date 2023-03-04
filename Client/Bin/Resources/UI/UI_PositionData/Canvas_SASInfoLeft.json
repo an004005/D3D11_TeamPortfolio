@@ -1,10 +1,10 @@
 {
     "ChildrenUI": [
         {
-            "ChildTag": "SASInfo_Right_BackGround\u0000",
-            "ObjectTag": "SASInfo_Right_BackGround",
+            "ChildTag": "SASInfo_Left_BackGround\u0000",
+            "ObjectTag": "SASInfo_Left_BackGround",
             "Pivot": 6,
-            "PositionX": 290.0,
+            "PositionX": -260.0,
             "PositionY": 76.0,
             "Priority": 0,
             "Prototype_GameObject": "Default_UI\u0000",
@@ -18,7 +18,7 @@
                 "Ints": [],
                 "Pass": 0,
                 "Textures": [
-                    "..\\Bin\\Resources\\UI\\Front_UI\\SASInfo_Right_BackGround.dds\u0000"
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASInfo_Left_BackGround.dds\u0000"
                 ]
             },
             "SizeX": 512.0,
@@ -37,7 +37,7 @@
                     0.0,
                     1.0,
                     0.0,
-                    290.0,
+                    -260.0,
                     -284.0,
                     0.0,
                     1.0
@@ -50,7 +50,7 @@
     "PositionX": 0.0,
     "PositionY": 0.0,
     "Priority": 0,
-    "Prototype_GameObject": "Canvas_SASInfo\u0000",
+    "Prototype_GameObject": "Canvas_SASInfoLeft\u0000",
     "ScaleX": 0.0,
     "ScaleY": 0.0,
     "ShaderParams": {

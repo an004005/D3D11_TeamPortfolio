@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "..\public\PlayerInfo_HpBackUI.h"
 #include "GameInstance.h"
-#include "JsonLib.h"
-#include "MathUtils.h"
 
 // m_tParams.Ints[2] : 0번은 5번째 까지 / 1번은 10번째 까지 / 2번은 기본
 // m_tParams.Ints[0] : g_int_2가 0일 때 5 / g_int_2가 1일 때 10 / g_int_2가 2일 때 노상관
