@@ -107,12 +107,11 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 					LoadAndSetCurve_Fifth(&curveJson);
 				}
 			}
-		}
+		} 
 
 		m_Timeline.SetTimelineLength((_double)m_fEndTime);
 
 		// m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
-
 
 		if (m_iSelectFinishFunc == 0)
 		{

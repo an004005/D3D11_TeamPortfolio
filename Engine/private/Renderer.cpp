@@ -290,7 +290,7 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_CTL"), 300.0f, 700.f, 200.f, 200.f)))
 		return E_FAIL;
 
-	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Flag"), 100.0f, 900.f, 200.f, 200.f), E_FAIL);
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Flag"), 500.0f, 100.f, 200.f, 200.f), E_FAIL);
 
 
 	// FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Outline"), 250.0f, 150.f, 100.f, 100.f), E_FAIL);

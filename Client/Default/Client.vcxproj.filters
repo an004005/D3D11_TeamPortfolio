@@ -567,6 +567,9 @@
     <ClInclude Include="..\public\Batch.h">
       <Filter>02.GameObjects\Batch</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Imgui_EffectBrowser.h">
+      <Filter>60.Imgui_Tool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -882,6 +885,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Batch.cpp">
       <Filter>02.GameObjects\Batch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_EffectBrowser.cpp">
+      <Filter>60.Imgui_Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

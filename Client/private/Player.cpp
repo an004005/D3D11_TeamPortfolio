@@ -223,7 +223,7 @@ void CPlayer::AfterPhysX()
 
 	}
 
-	Attack_Effect("Eff01", 0.2f);
+	Attack_Effect("Eff01", 1.f);
 }
 
 HRESULT CPlayer::Render()

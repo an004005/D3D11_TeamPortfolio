@@ -197,6 +197,7 @@ HRESULT CEffectSystem::Begin()
 void CEffectSystem::SaveToJson(Json& json)
 {
 	CShader::SaveShaderParam(m_tParam, json);
+
 	
 	json["bBillBoard"] = m_bBillBoard;
 	json["BillBoardType"] = static_cast<_uint>(m_eBillBoardType);
@@ -329,7 +330,7 @@ void CEffectSystem::Imgui_RenderProperty()
 		{
 			Safe_Release(m_pModel);
 			Delete_Component(TEXT("Model"));
-			FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), 	(CComponent**)&m_pModel));
+			Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), 	(CComponent**)&m_pModel);
 		}
 	}
 
