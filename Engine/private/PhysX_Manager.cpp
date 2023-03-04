@@ -114,7 +114,6 @@ void CPhysX_Manager::Initialize()
 	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eWELD_VERTICES;
 	m_pCooking->setParams(params);
 
-
 #ifdef _DEBUG
 	physx::PxPvdSceneClient* pvdClient = m_Scene->getScenePvdClient();
 	if (pvdClient)
@@ -774,9 +773,12 @@ void CEngineSimulationEventCallback::onContact(const physx::PxContactPairHeader&
 void CEngineSimulationEventCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)
 {
 	CComponent* pPxCom = static_cast<CComponent*>(pairs->triggerActor->userData);
-	Assert(pPxCom != nullptr);
+	if (pPxCom == nullptr)
+		return;
+
 	CRigidBody* pRigid = dynamic_cast<CRigidBody*>(pPxCom);
-	Assert(pRigid != nullptr);
+	if (pRigid == nullptr)
+		return;
 
 	switch (pairs->status)
 	{

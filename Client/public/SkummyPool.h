@@ -19,6 +19,9 @@ class CSkmP_AnimInstance;
 
 class CSkummyPool : public CMonster
 {
+public:
+	enum HITAXISTYPE { HAS_FL, HAS_BL, HAS_LL, HAS_RL, HAS_FM, HAS_BM, HAS_LM, HAS_RM, HAS_END };
+
 private:
 	CSkummyPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CSkummyPool(const CSkummyPool& rhs);
@@ -32,14 +35,18 @@ public:
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
-
-	virtual void AfterPhysX();
+	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
+	virtual void AfterPhysX() override;
+	
+	void		 Collision();
 
 private:
 	CShader*				m_pShaderCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;
 	CFSMComponent*			m_pFSM = nullptr;
+
+	CFSMComponent*			m_pSocketFSM = nullptr;
 
 	CSkmP_AnimInstance*		m_pASM = nullptr;
 	CRigidBody*				m_pTrigger = nullptr;
@@ -48,6 +55,25 @@ private:
 	HRESULT				Setup_AnimSocket();
 	list<CAnimation*>	m_GroundDmgSocket;	
 	list<CAnimation*>	m_DeadAnimSocket;
+
+private:
+	HRESULT				Setup_WeakAnimState();
+
+	list<CAnimation*>	m_HitLightFoward;
+	list<CAnimation*>	m_HitLightBack;
+
+	list<CAnimation*>	m_HitMiddleFoward;
+	list<CAnimation*>	m_HitMiddleBack;
+
+	list<CAnimation*>	m_HitMiddleLeft;
+	list<CAnimation*>	m_HitMiddleRight;
+
+	_bool		m_bStruck = false;
+
+	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
+	EAttackType	m_eAtkType = EAttackType::ATK_END;
+	
+	HITAXISTYPE	m_Haxistype = HAS_END;
 
 private:
 	HRESULT SetUp_Components(void* pArg);
@@ -115,20 +141,13 @@ private:
 	_vector			m_vMyPos;
 	_vector			m_vStorePos;
 
-	_uint			m_iMovAnimCnt = 0;
-
-	DAMAGE_PARAM	m_StrDamage;
-
-	_uint			m_iTest = 0;
-
 private:
-	CGameObject*	m_pFlowerLeg = nullptr;
+	CGameObject*	m_pPlayer = nullptr;
 
 public:
 	static CSkummyPool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
-
 };
 
 END

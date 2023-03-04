@@ -21,8 +21,16 @@ HRESULT CRigidBody::Initialize(void* pArg)
 	FAILED_CHECK(CComponent::Initialize(pArg));
 
 	CreateActor();
-
 	return S_OK;
+}
+
+void CRigidBody::BeginTick()
+{
+	CComponent::BeginTick();
+	if (auto pOwner = TryGetOwner())
+	{
+		m_pActor->setGlobalPose(physx::PxTransform{ CPhysXUtils::ToFloat4x4(pOwner->GetTransform()->Get_WorldMatrix()) });
+	}
 }
 
 void CRigidBody::Imgui_RenderProperty()
@@ -250,6 +258,7 @@ void CRigidBody::ReleaseActor()
 {
 	if (m_pActor)
 	{
+		m_pActor->userData = nullptr;
 		if (m_pActor->getScene())
 		{
 			auto pScene = CPhysX_Manager::GetInstance()->GetScene();

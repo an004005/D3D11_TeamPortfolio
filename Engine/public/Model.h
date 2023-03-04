@@ -53,6 +53,8 @@ public:
 	_bool	isLocalMove() { return !XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)); }
 	_float	GetLastLocalMoveSpeed() const { return m_fLastLocalMoveSpeed; }
 
+	_vector GetLocalRotationDelta();
+
 public:
 	virtual HRESULT Initialize_Prototype(const char* pModelFilePath);
 	virtual HRESULT Initialize(void* pArg) override;
@@ -133,6 +135,9 @@ private:
 
 	string								m_szAdditiveAnimName = "";
 	_float								m_fAdditiveRatio = 0.f;
+
+	_vector								m_vLocalRotation = XMQuaternionIdentity();
+	_vector								m_vBefLocalRotation = XMQuaternionIdentity();
 
 	_vector								m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_vector								m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);

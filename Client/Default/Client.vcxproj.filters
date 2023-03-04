@@ -208,6 +208,30 @@
     <Filter Include="02.GameObjects\Map\MapObject">
       <UniqueIdentifier>{13c3e0df-d901-4b13-a7e5-d6ac024d79f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.ShaderFiles\PostProcess\Distortion">
+      <UniqueIdentifier>{a2654f95-9aaa-4a83-a0f1-4cf87b41901b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\PostProcess\WhiteOut">
+      <UniqueIdentifier>{f56bb59f-7c4c-4baa-8c70-2b9087add5d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\PostProcess\Distortion">
+      <UniqueIdentifier>{22ba49aa-e9f1-4a6a-b530-12599d744dcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\PostProcess\Scifi">
+      <UniqueIdentifier>{c05fd436-44e5-4ea4-b432-630fe9acddd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\16.BatchTool">
+      <UniqueIdentifier>{ead14635-4788-4854-851a-2a087c3173ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Batch">
+      <UniqueIdentifier>{ed211422-fc89-49fa-908b-ea3041994ccf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\boss1">
+      <UniqueIdentifier>{44a3e289-3391-45e6-b735-a5ae92424cd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\boss1\Boss1_Animinstance">
+      <UniqueIdentifier>{107db123-e61b-466e-8716-8300f9f27d16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -300,9 +324,6 @@
     <ClInclude Include="..\public\Level_Effect.h">
       <Filter>01.Levels\14.EffectTool</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PostVFX_WhiteOut.h">
-      <Filter>VFX\PostProcess</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
@@ -336,6 +357,9 @@
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h">
       <Filter>VFX\Effect\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\EffectGroup.h">
       <Filter>VFX\Effect\EffectGroup</Filter>
     </ClInclude>
@@ -345,6 +369,7 @@
     <ClInclude Include="..\public\TrailSystem.h">
       <Filter>VFX\Trail</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\Canvas.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
@@ -384,9 +409,6 @@
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillLightUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\SASSkillCtrlUI.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillFullCircleUI.h">
@@ -482,6 +504,89 @@
     <ClInclude Include="..\public\MapKinetic_Object.h">
       <Filter>02.GameObjects\Map\MapObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h" />
+    <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\Psychokinesis.h" />
+    <ClInclude Include="..\public\SASSkillDefaultUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SASSkillMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PlayerInfoMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_DriveMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UI_Manager.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Drive_RightDotUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Drive_GaugeUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_NameUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_IconUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_GaugeUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_ItemMove.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_LeftArrowUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_PushArrowUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_RightArrowUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerInfo_HpUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNonAnim_Object.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_WhiteOut.h">
+      <Filter>VFX\PostProcess\WhiteOut</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Distortion.h">
+      <Filter>VFX\PostProcess\Distortion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Scifi.h">
+      <Filter>VFX\PostProcess\Scifi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Batch.h">
+      <Filter>01.Levels\16.BatchTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Batch.h">
+      <Filter>02.GameObjects\Batch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_EffectBrowser.h">
+      <Filter>60.Imgui_Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss1.h">
+      <Filter>02.GameObjects\Monster\boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss1_AnimationInstance.h">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_Animinstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TestCamera.h">
+      <Filter>02.GameObjects\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AIController.h" />
+    <ClInclude Include="..\public\Boss1_AIController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -553,9 +658,6 @@
     <ClCompile Include="..\private\Level_Effect.cpp">
       <Filter>01.Levels\14.EffectTool</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PostVFX_WhiteOut.cpp">
-      <Filter>VFX\PostProcess</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
@@ -598,6 +700,9 @@
     <ClCompile Include="..\private\TrailSystem.cpp">
       <Filter>VFX\Trail</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Canvas.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
@@ -637,9 +742,6 @@
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillLightUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\SASSkillCtrlUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillFullCircleUI.cpp">
@@ -732,6 +834,89 @@
     <ClCompile Include="..\private\MapKinetic_Object.cpp">
       <Filter>02.GameObjects\Map\MapObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
+    <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\Psychokinesis.cpp" />
+    <ClCompile Include="..\private\SASSkillDefaultUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SASSkillMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PlayerInfoMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_DriveMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_Manager.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Drive_RightDotUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Drive_GaugeUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_NameUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_IconUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_GaugeUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_ItemMove.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_LeftArrowUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_PushArrowUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_RightArrowUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerInfo_HpUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNonAnim_Object.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_WhiteOut.cpp">
+      <Filter>VFX\PostProcess\WhiteOut</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Distortion.cpp">
+      <Filter>VFX\PostProcess\Distortion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Scifi.cpp">
+      <Filter>VFX\PostProcess\Scifi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Batch.cpp">
+      <Filter>01.Levels\16.BatchTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Batch.cpp">
+      <Filter>02.GameObjects\Batch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_EffectBrowser.cpp">
+      <Filter>60.Imgui_Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss1.cpp">
+      <Filter>02.GameObjects\Monster\boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss1_AnimationInstance.cpp">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_Animinstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TestCamera.cpp">
+      <Filter>02.GameObjects\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AIController.cpp" />
+    <ClCompile Include="..\private\Boss1_AIController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

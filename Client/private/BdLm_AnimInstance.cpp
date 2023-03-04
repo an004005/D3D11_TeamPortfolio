@@ -186,98 +186,184 @@ void CBdLm_AnimInstance::Tick(_double TimeDelta)
 {
 	UpdateTargetState(TimeDelta);
 
-	if (!m_bStatic)
+	
+	_bool bChange = CheckFinishedAnimSocket();
+	_bool bLocalMove = true;
+	_bool vAirEnd = bChange && m_bAir;	// 소켓이 비었고 공중 상태인지 확인 
+
+	string szCurAnimName = "";
+
+	// 소켓이 비어있는지 탐색
+	list<CAnimation*> CurSocket;
+
+	for (auto& iter : m_mapAnimSocket)
 	{
-		_bool bChange = CheckFinishedAnimSocket();
-		_bool bLocalMove = true;
-			
-		if (!m_mapAnimSocket.find("BuddyLumi_GroundDmgAnim")->second.empty())
+		if (iter.second.empty())
+			continue;
+		else
 		{
-			auto Socket = m_mapAnimSocket.find("BuddyLumi_GroundDmgAnim")->second.front();
-			if (bChange)
-			{
-				Socket = m_mapAnimSocket.find("BuddyLumi_GroundDmgAnim")->second.front();
-				m_pModel->SetPlayAnimation(Socket->GetName());
-				m_pModel->SetCurAnimName(Socket->GetName());
-				m_fLerpTime = 0.f;
-			}
+			CurSocket = iter.second;
+			break;
+		}
+	}
 
-			if (1.f > m_fLerpTime / m_fLerpDuration)
-			{
-				Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
-				m_fLerpTime += TimeDelta;
-			}
-			else
-			{
-				Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
-			}
+	// 발견한 소켓이 있으면 해당 소켓을 실행
+	if (!CurSocket.empty())
+	{
+		auto Socket = CurSocket.front();
+		if (bChange)
+		{
+			Socket = CurSocket.front();
+			m_pModel->SetPlayAnimation(Socket->GetName());
+			m_pModel->SetCurAnimName(Socket->GetName());
+			m_fLerpTime = 0.f;
 		}
 
-		else if (!m_mapAnimSocket.find("BuddyLumi_AirDmgAnim")->second.empty())
+		if (1.f > m_fLerpTime / m_fLerpDuration)
 		{
-			auto Socket = m_mapAnimSocket.find("BuddyLumi_AirDmgAnim")->second.front();
-			if (bChange)
-			{
-				Socket = m_mapAnimSocket.find("BuddyLumi_AirDmgAnim")->second.front();
-				m_pModel->SetPlayAnimation(Socket->GetName());
-				m_pModel->SetCurAnimName(Socket->GetName());
-				m_fLerpTime = 0.f;
-			}
-
-			if (1.f > m_fLerpTime / m_fLerpDuration)
-			{
-				Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
-				m_fLerpTime += TimeDelta;
-			}
-			else
-			{
-				Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
-			}
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+			m_fLerpTime += (_float)TimeDelta;
 		}
-
-		else if (!m_mapAnimSocket.find("BuddyLumi_DeadAnim")->second.empty())
+		else if (m_bAttach)
 		{
-			auto Socket = m_mapAnimSocket.find("BuddyLumi_DeadAnim")->second.front();
-			if (bChange)
-			{
-				Socket = m_mapAnimSocket.find("BuddyLumi_DeadAnim")->second.front();
-				m_pModel->SetPlayAnimation(Socket->GetName());
-				m_pModel->SetCurAnimName(Socket->GetName());
-				m_fLerpTime = 0.f;
-			}
-
-			if (1.f > m_fLerpTime / m_fLerpDuration)
-			{
-				Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
-				m_fLerpTime += TimeDelta;
-			}
-			else
-			{
-				Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
-			}
-		}
-		else if (bChange)
-		{			
-			bLocalMove = false;
-			m_pASM_Base->SetCurState("Idle");
-			m_pASM_Base->GetCurState()->m_Animation->Reset();
-			m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
-						
+			m_fLerpTime = 0.f;	// 어태치면 바로 보간			
+			m_bAttach = false;
 		}
 		else
 		{
-			m_pASM_Base->Tick(TimeDelta);
-			m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
-		}
+			szCurAnimName = Socket->GetName();
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+		}		
+	}
+	else if (bChange)
+	{
+		bLocalMove = false;
+			
+		m_pASM_Base->SetCurState("Idle");
 
-		m_pModel->Compute_CombindTransformationMatrix();
+		//m_pASM_Base->GetCurState()->m_Animation->Reset();
+		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+		m_fLerpTime = 0.f;
+	}
+	else if (m_fLerpTime < m_fLerpDuration)
+	{
+		m_pASM_Base->GetCurState()->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+		m_fLerpTime += (_float)TimeDelta;
+	}
+	else
+	{
+		m_pASM_Base->Tick(TimeDelta);
+		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+	}
 
-		if (bLocalMove)
+	// 전체 본 마스킹을 할지, 상체에 대해서만 본 마스킹을 할지는 플레이어에서 던져주는 값에 따라 정해지도록 한다.
+
+	m_pModel->Compute_CombindTransformationMatrix();
+
+	if (bLocalMove)
+	{
+		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix);
+		m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
+
+		if (0.f != XMVectorGetX(XMVector3Length(vLocalMove)))
+			m_vLocalMove = vLocalMove;
+	}
+
+	if ("" != szCurAnimName)
+	{
+		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix, szCurAnimName);	
+	}
+		
+	// 기존
+	/*if (!m_mapAnimSocket.find("BuddyLumi_GroundDmgAnim")->second.empty())
+	{
+		auto Socket = m_mapAnimSocket.find("BuddyLumi_GroundDmgAnim")->second.front();
+		if (bChange)
 		{
-			_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
-			m_pTargetObject->GetTransform()->LocalMove(m_pModel->GetLocalMove(WorldMatrix));
+			Socket = m_mapAnimSocket.find("BuddyLumi_GroundDmgAnim")->second.front();
+			m_pModel->SetPlayAnimation(Socket->GetName());
+			m_pModel->SetCurAnimName(Socket->GetName());
+			m_fLerpTime = 0.f;
 		}
-	}	
+
+		if (1.f > m_fLerpTime / m_fLerpDuration)
+		{
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+			m_fLerpTime += TimeDelta;
+		}
+		else
+		{
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+		}
+	}
+
+	else if (!m_mapAnimSocket.find("BuddyLumi_AirDmgAnim")->second.empty())
+	{
+		auto Socket = m_mapAnimSocket.find("BuddyLumi_AirDmgAnim")->second.front();
+		if (bChange)
+		{
+			Socket = m_mapAnimSocket.find("BuddyLumi_AirDmgAnim")->second.front();
+			m_pModel->SetPlayAnimation(Socket->GetName());
+			m_pModel->SetCurAnimName(Socket->GetName());
+			m_fLerpTime = 0.f;
+		}
+
+		if (1.f > m_fLerpTime / m_fLerpDuration)
+		{
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+			m_fLerpTime += TimeDelta;
+		}
+		else
+		{
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+		}
+	}
+
+	else if (!m_mapAnimSocket.find("BuddyLumi_DeadAnim")->second.empty())
+	{
+		auto Socket = m_mapAnimSocket.find("BuddyLumi_DeadAnim")->second.front();
+		if (bChange)
+		{
+			Socket = m_mapAnimSocket.find("BuddyLumi_DeadAnim")->second.front();
+			m_pModel->SetPlayAnimation(Socket->GetName());
+			m_pModel->SetCurAnimName(Socket->GetName());
+			m_fLerpTime = 0.f;
+		}
+
+		if (1.f > m_fLerpTime / m_fLerpDuration)
+		{
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+			m_fLerpTime += TimeDelta;
+		}
+		else
+		{
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+		}
+	}
+	else if (bChange)
+	{			
+		bLocalMove = false;
+		m_pASM_Base->SetCurState("Idle");
+		m_pASM_Base->GetCurState()->m_Animation->Reset();
+		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+					
+	}
+	else
+	{
+		m_pASM_Base->Tick(TimeDelta);
+		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+	}
+
+	m_pModel->Compute_CombindTransformationMatrix();
+
+	if (bLocalMove)
+	{
+		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+		m_pTargetObject->GetTransform()->LocalMove(m_pModel->GetLocalMove(WorldMatrix));
+	}*/
+
 }
 
 void CBdLm_AnimInstance::UpdateTargetState(_double TimeDelta)
@@ -305,6 +391,8 @@ void CBdLm_AnimInstance::UpdateTargetState(_double TimeDelta)
 
 	// ASM Control
 	m_bStatic = pBuddyLumi->IsStatic();
+
+	m_bLerp = m_pASM_Base->isLerping();
 }
 
 void CBdLm_AnimInstance::Imgui_RenderState()
@@ -313,7 +401,49 @@ void CBdLm_AnimInstance::Imgui_RenderState()
 
 void CBdLm_AnimInstance::InputAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
 {
+	//m_mapAnimSocket[strSocName] = (AnimList);
+
+	for (auto& iter : m_mapAnimSocket)
+	{
+		if (!iter.second.empty())
+			iter.second.front()->Reset();
+
+		list<CAnimation*> SocketList;
+		iter.second = SocketList;
+	}
+
 	m_mapAnimSocket[strSocName] = (AnimList);
+}
+
+void CBdLm_AnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
+{
+	// 소켓의 애니메이션을 교환하고 보간함, 아닐 경우 그냥 덮어버림
+	const auto List = m_mapAnimSocket.find(strSocName);
+
+	if (List != m_mapAnimSocket.end())
+	{
+		if (!List->second.empty())
+		{
+			m_bAttach = true;
+			List->second.front()->Reset();;
+		}
+		m_mapAnimSocket[strSocName] = (AnimList);
+	}
+}
+
+_bool CBdLm_AnimInstance::isSocketAlmostFinish(const string & strSocName)
+{
+	return (m_mapAnimSocket[strSocName].size() == 1) && (m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= 0.95f);
+}
+
+_bool CBdLm_AnimInstance::isSocketPassby(const string & strSocName, _float fPlayRatio)
+{
+	return (m_mapAnimSocket[strSocName].size() == 1) && (m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= fPlayRatio);
+}
+
+_bool CBdLm_AnimInstance::CheckAnim(const string & szAnimName)
+{
+	return  (szAnimName == m_pModel->GetPlayAnimation()->GetName()) ? true : false;
 }
 
 CBdLm_AnimInstance * CBdLm_AnimInstance::Create(CModel * pModel, CGameObject * pGameObject)

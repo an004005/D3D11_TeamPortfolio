@@ -6,7 +6,7 @@ BEGIN(Engine)
 class CComponent;
 END;
 
-enum PROTOINFO{ NON_INSTANCE, INSTANCE };
+enum PROTOINFO { NON_INSTANCE, INSTANCE, KINETIC};
 
 BEGIN(Client)
 class CLevel_Maptool : public CLevel
@@ -23,11 +23,12 @@ public:
 private:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Prototypes();
+	HRESULT Ready_Layer_BackGround(const wstring& pLayerTag);
 	HRESULT Ready_Layer_Camera(const wstring& pLayerTag);
 	HRESULT Ready_Layer_Map(const wstring& pLayerTag);
 
 private:
-	HRESULT Create_Model(const wstring& pProtoTag, const char* pModelPath);
+	HRESULT Create_Model(const wstring& pProtoTag, const char* pModelPath, PROTOINFO eProtoInfo);
 	HRESULT Create_Model_Instance(const wstring& pProtoTag, const char* pModelPath);
 private:
 	vector<pair<wstring, PROTOINFO>> m_pProtosTags;

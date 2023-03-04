@@ -13,6 +13,7 @@ struct VS_IN
 	float3		vPosition : POSITION;
 	float3		vNormal : NORMAL;
 	float2		vTexUV : TEXCOORD0;
+	float3		vTangent : TANGENT;
 };
 
 struct VS_OUT

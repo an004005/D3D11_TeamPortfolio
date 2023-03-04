@@ -16,6 +16,7 @@ protected:
 
 public:
 	virtual HRESULT Initialize(void* pArg);
+	virtual void BeginTick() override;
 	virtual void Imgui_RenderProperty();
 	virtual void SaveToJson(Json& json) override;
 	virtual void LoadFromJson(const Json& json) override;

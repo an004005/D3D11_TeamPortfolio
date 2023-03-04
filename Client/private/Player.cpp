@@ -22,6 +22,7 @@
 #include "Monster.h"
 #include <random>
 #include "RigidBody.h"
+#include "TrailSystem.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -73,14 +74,16 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_pTransformCom->SetTransformDesc({ 10.f, XMConvertToRadians(720.f) });
 
 	m_pPlayerCam = m_pGameInstance->Add_Camera("PlayerCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Player");
+	Safe_AddRef(m_pPlayerCam);
 
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 	Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
 	m_pEffect = pGameInstance->Clone_GameObject_Get(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
-	/*
-		Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
-	*/
+
+	
+		/*Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);*/
+	
 
 	//m_pPlayerCam = dynamic_cast<CCamera*>(m_pGameInstance->Clone_GameObject_Get(L"Layer_Camera", TEXT("Prototype_GameObject_Camera_Player")));
 	//Assert(m_pPlayerCam != nullptr);
@@ -240,7 +243,7 @@ void CPlayer::AfterPhysX()
 		static_cast<CScarletWeapon*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
 	}
 
-	Attack_Effect("Eff01", 0.2f);
+	Attack_Effect("Eff01", 1.f);
 }
 
 HRESULT CPlayer::Render()
@@ -1193,14 +1196,17 @@ void CPlayer::Attack_Effect(const string& szBoneName, _float fSize)
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]) * fSize;
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]) * fSize;
 
-	static_cast<CEffectSystem*>(m_pEffect)->Set_BoneMatrix(SocketMatrix);
+	static_cast<CEffectSystem*>(m_pEffect)->GetTransform()->Set_WorldMatrix(SocketMatrix);
 }
 
 void CPlayer::Search_Usable_KineticObject()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	if (pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic")->GetGameObjects().empty())
+
+
+	if (pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic") == nullptr
+		|| pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic")->GetGameObjects().empty())
 	{
 		m_pKineticObject = nullptr;
 	}
@@ -1509,6 +1515,7 @@ void CPlayer::Free()
 
 	Safe_Release(m_pKineticStataMachine);
 	Safe_Release(m_pHitStateMachine);
+	Safe_Release(m_pTrail);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pModel);

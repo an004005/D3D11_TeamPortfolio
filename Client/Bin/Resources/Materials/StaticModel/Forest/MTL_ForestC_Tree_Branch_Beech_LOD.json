@@ -1,0 +1,16 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/LC17/porps/TEX_ForestC_Branch_Beech_col.dds",
+            "../Bin/Resources/Environments/Location/LC17/porps/TEX_ForestC_Branch_Beech_nrm.png",
+            ""
+        ],
+        "Pass" : 1
+    }
+}

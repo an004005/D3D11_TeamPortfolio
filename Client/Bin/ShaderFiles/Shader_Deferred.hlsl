@@ -1,7 +1,7 @@
 #include "Shader_Utils.h"
 #include "Shader_PBRCommon.h"
 
-float   g_Far = 300.f;
+float   g_Far = 1000.f;
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix			g_ProjMatrixInv, g_ViewMatrixInv;
@@ -22,7 +22,7 @@ vector			g_vCamPosition;
 vector			g_vMtrlAmbient = (vector)1.f;
 vector			g_vMtrlSpecular = (vector)0.5f;
 
-texture2D		g_Texture; /* 디버그용텍스쳐*/
+texture2D		g_Texture; /* 디버그용텍스처*/
 texture2D		g_NormalTexture; 
 texture2D		g_DepthTexture;
 texture2D		g_ShadowDepthTexture;
@@ -247,6 +247,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 
 	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).a;
 
+
 	if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
 		vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
@@ -264,6 +265,10 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 		Out.vColor.a = vShade.a;
 		if (0.0f == Out.vColor.a)
 			discard;
+	}
+	else
+	{
+		discard;
 	}
 
 

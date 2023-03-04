@@ -104,6 +104,10 @@ HRESULT CSkPd_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 				.AddTransition("Attack_End to Idle", "Idle")
 					.Predicator([&]()->_bool {return !m_bAttackEnd && m_bIdle; })
 					.Duration(0.4f)
+
+				.AddTransition("Attack_End to Turn", "Turn")
+					.Predicator([&]()->_bool {return !m_bAttackEnd && m_bLerpTurn; })
+					.Duration(0.2f)
 			// ~Attack
 
 			.AddState("RandomMove")
@@ -129,7 +133,15 @@ HRESULT CSkPd_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 
 				.AddTransition("Threat to Idle", "Idle")
 					.Predicator([&]()->_bool { return !m_bThreat && m_bIdle; })
-					.Duration(0.4f)				
+					.Duration(0.4f)		
+
+			.AddState("Turn")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_107_AL_fly_wait"))
+
+				.AddTransition("Turn to Idle", "Idle")
+						.Predicator([&]()->_bool {return !m_bLerpTurn && m_bIdle; })
+						.Duration(0.2f)
+
 
 			.Build();
 	}
@@ -138,6 +150,7 @@ HRESULT CSkPd_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 
 	list<CAnimation*> AddAnimSocket;
 	m_mapAnimSocket.emplace("SkummyPandou_AirDmgAnim", AddAnimSocket);
+	m_mapAnimSocket.emplace("SkummyPandou_GroundDmgAnim", AddAnimSocket);
 	m_mapAnimSocket.emplace("SkummyPandou_DeadAnim", AddAnimSocket);
 
 	return S_OK;
@@ -147,75 +160,92 @@ void CSkPd_AnimInstance::Tick(_double TimeDelta)
 {
 	UpdateTargetState(TimeDelta);
 
-	if (!m_bStatic)
+	_bool bChange = CheckFinishedAnimSocket();
+	_bool bLocalMove = true;
+	
+	string szCurAnimName = "";
+
+	// 소켓이 비어있는지 탐색
+	list<CAnimation*> CurSocket;
+
+	for (auto& iter : m_mapAnimSocket)
 	{
-		_bool bChange = CheckFinishedAnimSocket();
-		_bool bLocalMove = true;
-
-		if (!m_mapAnimSocket.find("SkummyPandou_AirDmgAnim")->second.empty())
+		if (iter.second.empty())
+			continue;
+		else
 		{
-			auto Socket = m_mapAnimSocket.find("SkummyPandou_AirDmgAnim")->second.front();
-			if (bChange)
-			{
-				Socket = m_mapAnimSocket.find("SkummyPandou_AirDmgAnim")->second.front();
-				m_pModel->SetPlayAnimation(Socket->GetName());
-				m_pModel->SetCurAnimName(Socket->GetName());
-				m_fLerpTime = 0.f;
-			}
+			CurSocket = iter.second;
+			break;
+		}
+	}
 
-			if (1.f > m_fLerpTime / m_fLerpDuration)
-			{
-				Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
-				m_fLerpTime += TimeDelta;
-			}
-			else
-			{
-				Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
-			}
+	// 발견한 소켓이 있으면 해당 소켓을 실행
+	if (!CurSocket.empty())
+	{
+		auto Socket = CurSocket.front();
+		if (bChange)
+		{
+			Socket = CurSocket.front();
+			m_pModel->SetPlayAnimation(Socket->GetName());
+			m_pModel->SetCurAnimName(Socket->GetName());
+			m_fLerpTime = 0.f;
 		}
 
-		else if (!m_mapAnimSocket.find("SkummyPandou_DeadAnim")->second.empty())
+		if (1.f > m_fLerpTime / m_fLerpDuration)
 		{
-			auto Socket = m_mapAnimSocket.find("SkummyPandou_DeadAnim")->second.front();
-			if (bChange)
-			{
-				Socket = m_mapAnimSocket.find("SkummyPandou_DeadAnim")->second.front();
-				m_pModel->SetPlayAnimation(Socket->GetName());
-				m_pModel->SetCurAnimName(Socket->GetName());
-				m_fLerpTime = 0.f;
-			}
-
-			if (1.f > m_fLerpTime / m_fLerpDuration)
-			{
-				Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
-				m_fLerpTime += TimeDelta;
-			}
-			else
-			{
-				Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
-			}
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+			m_fLerpTime += (_float)TimeDelta;
 		}
-		else if (bChange)
+		else if (m_bAttach)
 		{
-			bLocalMove = false;
-			m_pASM_Base->SetCurState("Idle");
-			m_pASM_Base->GetCurState()->m_Animation->Reset();
-			m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
-
+			m_fLerpTime = 0.f;	// 어태치면 바로 보간			
+			m_bAttach = false;
 		}
 		else
 		{
-			m_pASM_Base->Tick(TimeDelta);
-			m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+			szCurAnimName = Socket->GetName();
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
 		}
+	}
+	else if (bChange)
+	{
+		bLocalMove = false;
 
-		m_pModel->Compute_CombindTransformationMatrix();
+		m_pASM_Base->SetCurState("Idle");
 
-		if (bLocalMove)
-		{
-			_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
-			m_pTargetObject->GetTransform()->LocalMove(m_pModel->GetLocalMove(WorldMatrix));
-		}
+		//m_pASM_Base->GetCurState()->m_Animation->Reset();
+		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+		m_fLerpTime = 0.f;
+	}
+	else if (m_fLerpTime < m_fLerpDuration)
+	{
+		m_pASM_Base->GetCurState()->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+		m_fLerpTime += (_float)TimeDelta;
+	}
+	else
+	{
+		m_pASM_Base->Tick(TimeDelta);
+		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+	}
+
+	// 전체 본 마스킹을 할지, 상체에 대해서만 본 마스킹을 할지는 플레이어에서 던져주는 값에 따라 정해지도록 한다.
+
+	m_pModel->Compute_CombindTransformationMatrix();
+
+	if (bLocalMove)
+	{
+		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix);
+		m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
+
+		if (0.f != XMVectorGetX(XMVector3Length(vLocalMove)))
+			m_vLocalMove = vLocalMove;
+	}
+
+	if ("" != szCurAnimName)
+	{
+		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix, szCurAnimName);
 	}
 }
 
@@ -242,6 +272,8 @@ void CSkPd_AnimInstance::UpdateTargetState(_double TimeDelta)
 
 	m_bStatic = pSkummyPandou->IsStatic();
 
+	m_bLerpTurn = pSkummyPandou->IsLerpTurn();
+
 	/*m_fPlayRatio = 0.f;
 	m_fPlayRatio = pSkummyPandou->GetPlayRatio();
 
@@ -260,7 +292,41 @@ void CSkPd_AnimInstance::Imgui_RenderState()
 
 void CSkPd_AnimInstance::InputAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
 {
+	for (auto& iter : m_mapAnimSocket)
+	{
+		if (!iter.second.empty())
+			iter.second.front()->Reset();
+
+		list<CAnimation*> SocketList;
+		iter.second = SocketList;
+	}
+
 	m_mapAnimSocket[strSocName] = (AnimList);
+}
+
+void CSkPd_AnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
+{
+	const auto List = m_mapAnimSocket.find(strSocName);
+
+	if (List != m_mapAnimSocket.end())
+	{
+		if (!List->second.empty())
+		{
+			m_bAttach = true;
+			List->second.front()->Reset();;
+		}
+		m_mapAnimSocket[strSocName] = (AnimList);
+	}
+}
+
+_bool CSkPd_AnimInstance::isSocketAlmostFinish(const string & strSocName)
+{
+	return (m_mapAnimSocket[strSocName].size() == 1) && (m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= 0.95f);
+}
+
+_bool CSkPd_AnimInstance::isSocketPassby(const string & strSocName, _float fPlayRatio)
+{
+	return (m_mapAnimSocket[strSocName].size() == 1) && (m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= fPlayRatio);
 }
 
 _bool CSkPd_AnimInstance::CheckAnim(const string & szAnimName)
