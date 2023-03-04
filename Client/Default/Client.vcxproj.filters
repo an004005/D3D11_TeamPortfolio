@@ -220,6 +220,12 @@
     <Filter Include="VFX\PostProcess\Scifi">
       <UniqueIdentifier>{c05fd436-44e5-4ea4-b432-630fe9acddd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\16.BatchTool">
+      <UniqueIdentifier>{ead14635-4788-4854-851a-2a087c3173ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Batch">
+      <UniqueIdentifier>{ed211422-fc89-49fa-908b-ea3041994ccf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -555,6 +561,12 @@
     <ClInclude Include="..\public\PostVFX_Scifi.h">
       <Filter>VFX\PostProcess\Scifi</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_Batch.h">
+      <Filter>01.Levels\16.BatchTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Batch.h">
+      <Filter>02.GameObjects\Batch</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Imgui_EffectBrowser.h">
       <Filter>60.Imgui_Tool</Filter>
     </ClInclude>
@@ -867,6 +879,12 @@
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_Scifi.cpp">
       <Filter>VFX\PostProcess\Scifi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Batch.cpp">
+      <Filter>01.Levels\16.BatchTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Batch.cpp">
+      <Filter>02.GameObjects\Batch</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Imgui_EffectBrowser.cpp">
       <Filter>60.Imgui_Tool</Filter>

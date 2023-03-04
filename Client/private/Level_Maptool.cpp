@@ -95,16 +95,22 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
 	});
 
+	/* 
+	모델 프로토 타입은 굳이 생성 안해도 자동으로 됨.
+	리스트박스에 넣으려고 툴에서만 생성해줌.
+	그래서 다른 레벨에서는 아래 모델 프로토 타입 생성을 넘겨도 괜찮음.
+	*/
+	
 	//일반 모델들의 프로토타입 생성
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/", 
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/",
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
-		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0 , szFileExt, MAX_PATH);
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
 
 		if (0 == strcmp(szFileExt, ".static_model"))
 		{
-				FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str()));
+			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), NON_INSTANCE));
 		}
 	});
 
@@ -121,6 +127,22 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 			FAILED_CHECK(Create_Model_Instance(s2ws(fileName), fileName.c_str()));
 		}
 	});
+
+	//키네틱 모델들의 프로토타입 생성
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",
+		[this](const string& fileName)
+	{
+		char szFileExt[MAX_PATH]{};
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+
+		if (0 == strcmp(szFileExt, ".static_model"))
+		{
+			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), KINETIC));
+		}
+	});
+
+
+
 
 	//SkyBox
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_Component_Model_SkySphere"),
@@ -170,7 +192,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 }
 
 
-HRESULT CLevel_Maptool::Create_Model(const wstring& pProtoTag, const char* pModelPath)
+HRESULT CLevel_Maptool::Create_Model(const wstring& pProtoTag, const char* pModelPath, PROTOINFO eProtoInfo)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
@@ -183,7 +205,7 @@ HRESULT CLevel_Maptool::Create_Model(const wstring& pProtoTag, const char* pMode
 		pProtoTag.c_str(),
 		pComponent));
 
-	m_pProtosTags.emplace_back(pProtoTag, NON_INSTANCE);
+	m_pProtosTags.emplace_back(pProtoTag, eProtoInfo);
 
 	return S_OK;
 }
