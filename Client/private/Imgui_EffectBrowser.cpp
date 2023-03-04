@@ -81,8 +81,8 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 	{
 		if (ImGui::Button("Refresh_Effect Folder"))
 		{
-			// LoadEffects("../Bin/Resources/Curve/Default_Attack/");
-			LoadEffects("../Bin/Resources/Curve/NeedToWork/");
+			LoadEffects("../Bin/Resources/Curve/Default_Attack/");
+			// LoadEffects("../Bin/Resources/Curve/NeedToWork/");
 		}
 
 		static char szSearchEffect[MAX_PATH] = "";

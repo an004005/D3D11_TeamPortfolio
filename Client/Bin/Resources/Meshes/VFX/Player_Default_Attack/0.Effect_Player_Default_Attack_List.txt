@@ -38,6 +38,8 @@ Air_Attack_1
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Air_Attack_1.static_model
 Air_Attack_2
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Air_Attack_2.static_model
+
+//
 Air_Attack_Chase
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Air_Attack_Chase.static_model
 Air_Dash_0
@@ -52,6 +54,7 @@ Air_Hold_2
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Air_Hold_2.static_model
 Air_Hold_3_Landing
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Air_Hold_3_Landing.static_model
+
 Dash_0
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Dash_0.static_model
 Dash_1_01
@@ -78,6 +81,7 @@ Sas_Attack_0
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Sas_Attack_0.static_model
 Sas_Attack_1
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Sas_Attack_1.static_model
+// 
 Sas_Attack_2
 ../Bin/Resources/Meshes/VFX/Player_Default_Attack/Sas_Attack_2.static_model
 Slash_0
