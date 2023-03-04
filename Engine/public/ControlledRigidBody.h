@@ -2,20 +2,21 @@
 #include "Component.h"
 
 BEGIN(Engine)
-
-class CEngineControllerHitReport : public physx::PxUserControllerHitReport
+	class CEngineControllerHitReport : public physx::PxUserControllerHitReport
 {
 public:
 	virtual ~CEngineControllerHitReport() = default;
 	virtual void onShapeHit(const physx::PxControllerShapeHit& hit) override;
-	virtual void onControllerHit(const physx::PxControllersHit& hit) override{}
+	virtual void onControllerHit(const physx::PxControllersHit& hit) override;
 	virtual void onObstacleHit(const physx::PxControllerObstacleHit& hit) override{}
 
 	void SetPushPower(_float fPushPower) { m_fPushPower = fPushPower; }
 	_float GetPushPower() const { return m_fPushPower; }
+	void SetHitCallback(const std::function<void(class CGameObject*, ECOLLIDER_TYPE)>& HitCallback) { m_HitCallback = HitCallback; }
 
 private:
 	_float m_fPushPower = 100.f;
+	std::function<void(class CGameObject*, ECOLLIDER_TYPE)> m_HitCallback = nullptr;
 };
 
 class ENGINE_DLL CControlledRigidBody : public CComponent
@@ -43,6 +44,9 @@ public:
 	physx::PxControllerCollisionFlags Move(_float4 vVelocity, _float fTimeDelta, _float minDist = 0.001f);
 	physx::PxControllerCollisionFlags MoveDisp(_float4 vPosDelta, _float fTimeDelta, _float minDist = 0.001f);
 
+	// ÀÌ Ä¸½¶°ú ¾î¶² ¾×ÅÍ°¡ ´ê¾ÆÀÖÀ¸¸é Æ½¸¶´Ù ½ÇÇàµÊ(lateÆ½°ú after physx »çÀÌ¿¡¼­)
+	void SetContactCallback(const std::function<void(class CGameObject*, ECOLLIDER_TYPE)>& HitCallback) { m_HitReport.SetHitCallback(HitCallback); }
+
 protected:
 	void CreateController();
 	void ReleaseController();
@@ -59,13 +63,10 @@ protected:
 	ECOLLIDER_TYPE m_eColliderType = CT_PLAYER;
 
 
-
 public:
 	virtual void Free() override;
 	static CControlledRigidBody* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(void* pArg = nullptr) override;
 };
-
-
 
 END
