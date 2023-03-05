@@ -271,11 +271,12 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_RigidBody"), CRigidBody::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Regular32"), TEXT("../Bin/Resources/Fonts/kim_regular32.spritefont"))))
+	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Regular32"), TEXT("../Bin/Resources/Fonts/kim_regular32.spritefont"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Bold32"), TEXT("../Bin/Resources/Fonts/kim_bold32.spritefont"))))
+	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Pretendard32"), TEXT("../Bin/Resources/Fonts/Pretendard.spritefont"))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Bold32"), TEXT("../Bin/Resources/Fonts/kim_bold32.spritefont"))))
-		return E_FAIL;
-
 	
 	m_pGameInstance->AddSoundQueue("AnnouncerVO");
 	m_pGameInstance->AddSoundQueue("CharacterVO");

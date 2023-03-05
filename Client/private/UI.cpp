@@ -13,6 +13,18 @@ CUI::CUI(const CUI & rhs)
 {
 }
 
+_float2 CUI::GetScreenSpaceLeftTop()
+{
+	const _float fWindowHalfWidth = static_cast<_float>(WINCX) * 0.5f;
+	const _float fWindowHalfHeight = static_cast<_float>(WINCY) * 0.5f;
+
+	const _float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	const _float fScreenCenterX = vPos.x + fWindowHalfWidth;
+	const _float fScreenCenterY = -vPos.y + fWindowHalfHeight;
+
+	return _float2{ fScreenCenterX - m_fSizeX * 0.5f, fScreenCenterY - m_fSizeY * 0.5f };
+}
+
 _bool CUI::IsCursorOn(POINT ptClient)
 {
 	// PtInRect()

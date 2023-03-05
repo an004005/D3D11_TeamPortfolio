@@ -54,6 +54,7 @@ protected:
 	CUI(const CUI& rhs);
 
 public:
+	_float2	GetScreenSpaceLeftTop();
 	void SetCanvasSize(CanvasRect CanvasSize) { m_CanvasSize = CanvasSize; }
 	
 	//UI_PIVOT GetPivot() const { 

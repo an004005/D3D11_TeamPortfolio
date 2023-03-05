@@ -34,8 +34,12 @@ private:
 
 private:
 	_float	m_fHp = { 0.0f };
-	
 	_double	m_dRendomTexture_TimeAcc = { 0.0 };
+
+private:
+	_float2 m_vFontPos = { 0.0f, 0.0f };
+	_float2 m_vFontScale = { 0.0f, 0.0f };
+
 
 public:
 	static CCanvas_PlayerInfoMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

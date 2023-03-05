@@ -35,6 +35,7 @@ HRESULT CCanvas::Initialize(void * pArg)
 	m_fSizeY = _float(g_iWinSizeY);
 
 	m_bVisible = false;
+	m_bFullSize = true;
 
 	return S_OK;
 }
@@ -42,6 +43,12 @@ HRESULT CCanvas::Initialize(void * pArg)
 void CCanvas::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+	if (m_bFullSize)
+	{
+		m_fSizeX = (_float)g_iWinSizeX;
+		m_fSizeY = (_float)g_iWinSizeY;
+	}
 
 	const _float2 PivotPair = GetPivotXY(m_ePivot);
 
