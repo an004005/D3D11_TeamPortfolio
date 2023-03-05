@@ -8,9 +8,9 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Environments/Location/LC07/Common/pr_Buildings/T_pr_BNbuilding01_ALB.png",
-            "../Bin/Resources/Environments/Location/LC07/Common/pr_Buildings/T_pr_BNbuilding01_NML.png",
-            "../Bin/Resources/Environments/Location/LC07/Common/pr_Buildings/T_pr_BNbuilding01_RMA.png"
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_Plaza/T_pr_PlazaWall_A_ALB.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_Plaza/T_pr_PlazaWall_A_NML.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_Plaza/T_pr_PlazaWall_A_RMA.png"
         ],
         "Pass" : 1
     },

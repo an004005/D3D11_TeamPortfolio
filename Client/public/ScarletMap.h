@@ -38,7 +38,7 @@ private:
 	pair<wstring, PROTOINFO>			m_pModelProtoInfo;
 	CGameObject* 						m_pGameObject = nullptr;
 
-	_int								m_iProtoInfo = NON_INSTANCE;
+	_int								m_iProtoInfo = INSTANCE;
 public:
 	static CScarletMap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr) override;

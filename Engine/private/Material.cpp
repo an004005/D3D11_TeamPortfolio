@@ -15,9 +15,12 @@ CMaterial::CMaterial(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CMaterial::CMaterial(const CMaterial& rhs)
 	: CComponent(rhs)
 	, m_pShader(rhs.m_pShader)
+	, m_pShaderInstancing(rhs.m_pShaderInstancing)
 	, m_tParams(rhs.m_tParams)
+	, m_iInstancingPass(rhs.m_iInstancingPass)
 {
 	Safe_AddRef(m_pShader);
+	Safe_AddRef(m_pShaderInstancing);
 	for (auto e : m_tParams.Textures)
 		Safe_AddRef(e.first);
 }
@@ -32,6 +35,15 @@ HRESULT CMaterial::Initialize_Prototype(const char* pMtrlFilePath)
 	string shaderProtoTag = json["ShaderProtoTag"];
 	m_pShader = dynamic_cast<CShader*>(CGameInstance::GetInstance()->Clone_Component(CGameUtils::s2ws(shaderProtoTag).c_str()));
 
+	if (json.contains("InstancingPass"))
+	{
+		m_iInstancingPass = json["InstancingPass"];
+	}
+	if (json.contains("ShaderInstancingProtoTag"))
+	{
+		string shaderInstancingProtoTag = json["ShaderInstancingProtoTag"];
+		m_pShaderInstancing = dynamic_cast<CShader*>(CGameInstance::GetInstance()->Clone_Component(s2ws(shaderInstancingProtoTag).c_str()));
+	}
 	return S_OK;
 }
 
@@ -42,6 +54,10 @@ void CMaterial::SaveToJson(Json& json)
 	char szProtoTag[MAX_PATH];
 	CGameUtils::wc2c(m_pShader->GetPrototypeTag(), szProtoTag);
 	json["ShaderProtoTag"] = szProtoTag;
+
+	CGameUtils::wc2c(m_pShaderInstancing->GetPrototypeTag(), szProtoTag);
+	json["ShaderInstancingProtoTag"] = szProtoTag;
+	json["InstancingPass"] = m_iInstancingPass;
 }
 
 void CMaterial::Imgui_RenderProperty()
@@ -54,6 +70,8 @@ void CMaterial::Imgui_RenderProperty()
 	ImGui::Separator();
 
 	m_pShader->Imgui_RenderProperty();
+	ImGui::Separator();
+	m_pShaderInstancing->Imgui_RenderProperty();
 	ImGui::Separator();
 
 	CShader::Imgui_RenderShaderParams(m_tParams);
@@ -120,6 +138,22 @@ void CMaterial::BindMatrices(const _float4x4& WorldMatrix)
 	// FAILED_CHECK(m_pShader->Set_Matrix("g_ViewMatrixInv", &ViewInv));
 }
 
+void CMaterial::BindMatrices_Instancing(CTransform * pTransform)
+{
+	FAILED_CHECK(pTransform->Bind_ShaderResource(m_pShaderInstancing, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderInstancing->Set_Matrix("g_ViewMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderInstancing->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+	FAILED_CHECK(m_pShaderInstancing->Set_RawValue("g_vCamPosition", &CGameInstance::GetInstance()->Get_CamPosition(), sizeof(_float4)));
+}
+
+void CMaterial::BindMatrices_Instancing(const _float4x4 & WorldMatrix)
+{
+	FAILED_CHECK(m_pShaderInstancing->Set_Matrix("g_WorldMatrix", &WorldMatrix));
+	FAILED_CHECK(m_pShaderInstancing->Set_Matrix("g_ViewMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderInstancing->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+	FAILED_CHECK(m_pShaderInstancing->Set_RawValue("g_vCamPosition", &CGameInstance::GetInstance()->Get_CamPosition(), sizeof(_float4)));
+}
+
 void CMaterial::Begin()
 {
 	m_pShader->Begin_Params(m_tParams);
@@ -131,10 +165,17 @@ void CMaterial::Begin(_uint iPass)
 	m_pShader->Begin(iPass);
 }
 
+void CMaterial::Begin_Instancing()
+{
+	m_pShaderInstancing->Set_Params(m_tParams);
+	m_pShaderInstancing->Begin(m_iInstancingPass);
+}
+
 void CMaterial::Free()
 {
 	CComponent::Free();
 	Safe_Release(m_pShader);
+	Safe_Release(m_pShaderInstancing);
 	for (auto e : m_tParams.Textures)
 		Safe_Release(e.first);
 }

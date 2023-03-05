@@ -252,7 +252,16 @@ void CScarletMap::Imgui_RenderProperty()
 	
 		else 
 		{
-			MSG_BOX("Wrong ModelMatch");
+			if (MSG_BOX_CHECK("Delete Instancing Object?") == IDYES)
+			{
+				if (m_pGameObject)
+				{
+					m_pGameObject->SetDelete();
+					m_pMapObjects.erase(remove(m_pMapObjects.begin(), m_pMapObjects.end(), m_pGameObject), m_pMapObjects.end());
+					m_pGameObject = nullptr;
+				}
+			}
+
 		}
 	}
 
