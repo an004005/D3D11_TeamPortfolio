@@ -24,14 +24,12 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_PlayerHp(const _float & fCurrentHp, const _float & fMaxHp) {
+	void	Set_PlayerHp(const _float & fCurrentHp, const _float & fMaxHp) {	// UITODO : BeginTick() 에서 호출
 		m_fHp = fCurrentHp / fMaxHp;
 	}
 
 private:
-	void	StartAndEndHp();
 	void	ChildHp_Tick();
-
 	void	RendomTexture(const _double & dTimeDelta);
 
 private:

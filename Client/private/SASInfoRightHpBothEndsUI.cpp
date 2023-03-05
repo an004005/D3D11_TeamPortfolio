@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "..\public\SASInfoRightHpBothEndsUI.h"
 #include "GameInstance.h"
-#include "JsonLib.h"
+
+// m_tParams.Floats[0] : °ÔÀÌÁö
 
 CSASInfoRightHpBothEndsUI::CSASInfoRightHpBothEndsUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -26,28 +27,40 @@ HRESULT CSASInfoRightHpBothEndsUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	// 0: EndHP, 1:  EndHpBack, 2: StartHp, 3: StartHpBack
+	static _int iObjectCount;
+	m_iObjectNumber = iObjectCount;
+	++iObjectCount;
+
+	m_tParams.Floats[0] = 0.0f;
+
 	return S_OK;
-}
-
-void CSASInfoRightHpBothEndsUI::BeginTick()
-{
-
-
 }
 
 void CSASInfoRightHpBothEndsUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	//const _float2 canvaspos = m_pCanvas->Get_Position();
+	if (0 == m_iObjectNumber || 2 == m_iObjectNumber)
+	{
+		if (m_fCurrentHp < m_fHp)
+			m_fCurrentHp += _float(TimeDelta) * 0.1f;
+		else
+			m_fCurrentHp = m_fHp;
+	}
+	else
+	{
+		if (m_fCurrentHp < m_fHp)
+			m_fCurrentHp += _float(TimeDelta) * 0.1f;
+		else
+			m_fCurrentHp -= _float(TimeDelta) * 0.1f;
+	}
 
-	//_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
-	//vPosition += XMLoadFloat2(&canvaspos);
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.f));
-
-
-	
+	if (2 == m_iObjectNumber || 3 == m_iObjectNumber)
+		Start_Tick(TimeDelta);
+	else
+		End_Tick(TimeDelta);
 }
 
 void CSASInfoRightHpBothEndsUI::Late_Tick(_double TimeDelta)
@@ -79,6 +92,24 @@ void CSASInfoRightHpBothEndsUI::LoadFromJson(const Json & json)
 {
 	CUI::LoadFromJson(json);
 
+}
+
+void CSASInfoRightHpBothEndsUI::RendomHpImage(const _int & iImageNumber)
+{
+	m_bVisible = true;
+	m_tParams.Floats[0] = 1.0f;
+}
+
+void CSASInfoRightHpBothEndsUI::Start_Tick(const _double & dTimeDetla)
+{
+	_float fCurHp = Clamp<_float>(m_fCurrentHp, 0.0f, 0.05f);
+	m_tParams.Floats[0] = Remap<float>(fCurHp, 0.0f, 0.05f, 0.0f, 1.0f);
+}
+
+void CSASInfoRightHpBothEndsUI::End_Tick(const _double & dTimeDetla)
+{
+	_float fCurrentHp = m_fCurrentHp - 0.95f;
+	m_tParams.Floats[0] = _float(fCurrentHp / 0.05f);
 }
 
 CSASInfoRightHpBothEndsUI * CSASInfoRightHpBothEndsUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

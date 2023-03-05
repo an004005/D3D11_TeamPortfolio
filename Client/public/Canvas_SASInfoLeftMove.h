@@ -21,6 +21,19 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
+	void	Set_SASRightHp(const _float & fCurrentHp, const _float & fMaxHp) {	// UITODO : BeginTick() 에서 호출
+		m_fHp = fCurrentHp / fMaxHp;
+	}
+
+private:
+	void	ChildHp_Tick();
+	void	RendomTexture(const _double & dTimeDelta);
+
+private:
+	_float	m_fHp = { 0.0f };
+	_double	m_dRendomTexture_TimeAcc = { 0.0 };
+
+public:
 	static CCanvas_SASInfoLeftMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;

@@ -37,12 +37,6 @@ HRESULT CPlayerInfo_HpBothEndsUI::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CPlayerInfo_HpBothEndsUI::BeginTick()
-{
-
-
-}
-
 void CPlayerInfo_HpBothEndsUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);

@@ -33,7 +33,6 @@ HRESULT CPlayerInfo_HpBackUI::Initialize(void * pArg)
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
 
-	m_fCurrentHp = 1.0f;
 	m_tParams.Floats[0] = 0.0f;
 	
 	return S_OK;

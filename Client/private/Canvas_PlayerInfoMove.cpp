@@ -99,10 +99,6 @@ void CCanvas_PlayerInfoMove::LoadFromJson(const Json & json)
 	
 }
 
-void CCanvas_PlayerInfoMove::StartAndEndHp()
-{
-}
-
 void CCanvas_PlayerInfoMove::ChildHp_Tick()
 {
 	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp0"))->Set_PlayerHp(m_fHp);
@@ -143,19 +139,19 @@ void CCanvas_PlayerInfoMove::RendomTexture(const _double & dTimeDelta)
 	if (0.95f < m_fHp)
 	{
 		iCount = 3;
-		fObjectMaxNumber = 5.0f;
+		fObjectMaxNumber = 6.0f;
 		iRendomCount = _int(CMathUtils::RandomFloat(0.0f, 4.0f));
 	}
 	else if (0.65f < m_fHp)
 	{
 		iCount = 2;
-		fObjectMaxNumber = 3.0f;
+		fObjectMaxNumber = 5.0f;
 		iRendomCount = _int(CMathUtils::RandomFloat(0.0f, 3.0f));
 	}
 	else if (0.35f < m_fHp)
 	{
 		iCount = 1;
-		fObjectMaxNumber = 2.0f;
+		fObjectMaxNumber = 3.0f;
 		iRendomCount = _int(CMathUtils::RandomFloat(0.0f, 2.0f));
 	}
 	else
@@ -177,7 +173,7 @@ void CCanvas_PlayerInfoMove::RendomTexture(const _double & dTimeDelta)
 		arrObjectNumber[iRandimArrayNumber] = iRandomObjectNumber;
 	}
 
-	for (_int i = 0; i < _int(fObjectMaxNumber + 1); i++)
+	for (_int i = 0; i < _int(fObjectMaxNumber); i++)
 	{
 		_tchar szChildTag[MAX_PATH] = TEXT("");
 		if (-1 == arrObjectNumber[i])
