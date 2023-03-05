@@ -338,8 +338,6 @@ float4x4 look_at_matrix(float3 at, float3 eye, float3 up)
     return axis_matrix(xaxis, yaxis, zaxis);
 }
 
-
-
 float Rand(float2 co)
 {
 	return 0.5 + (frac(sin(dot(co.xy, float2(12.9898, 78.233))) * 43758.5453)) * 0.5;

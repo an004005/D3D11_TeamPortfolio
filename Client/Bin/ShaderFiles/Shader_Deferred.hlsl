@@ -36,6 +36,8 @@ texture2D		g_CTLTexture;
 TextureCube     g_IrradianceTexture;
 TextureCube     g_RadianceTexture;
 
+float g_Gamma = 2.2f;
+
 sampler LinearSampler = sampler_state
 {
 	filter = min_mag_mip_linear;
@@ -130,7 +132,6 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	vector		vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	vector		vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
 
-	float fShaderIdx = vDepthDesc.a;
 	float		fViewZ = vDepthDesc.y * g_Far;
 
 	/* 0 ~ 1 => -1 ~ 1 */
@@ -152,8 +153,8 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	{
 		vector		vRMA = g_RMATexture.Sample(LinearSampler, In.vTexUV);
 
-		// float3 albedo = pow(vDiffuse.rgb, 2.2f);
-		float3 albedo = vDiffuse.rgb;
+		float3 albedo = pow(vDiffuse.rgb, g_Gamma);
+		// float3 albedo = vDiffuse.rgb;
 		float metalness = vRMA.g;
 		float roughness = vRMA.r;
 		float AO = vRMA.b;
@@ -171,16 +172,18 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 		float4 vCTL = g_CTLTexture.Sample(LinearSampler, In.vTexUV);
 		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
 
-		float fDiff = saturate(max(dot(normalize(vNormal.xyz), normalize(g_vLightDir.xyz)), 0.0));
-		fDiff = max(vCTL.r * 2.f, min(vCTL.g, fDiff));
-		// fDiff = ceil(fDiff * 2.f) * 0.5f;
+		float fNdotL = dot(normalize(vNormal.xyz), normalize(g_vLightDir.xyz));
+		float fDiff = saturate(max(fNdotL, 0.0));
+
+		fDiff = max(vCTL.r , min(vCTL.g, fDiff));
+		fDiff = fDiff * 0.5f + 0.5f;
 
 		Out.vShade = g_vLightDiffuse * saturate(fDiff + vAMB);
 		Out.vShade.a = 1.f;
 		
-		vector		vLook = vWorldPos - g_vCamPosition;
-		float spec = GetSpecular(vNormal.xyz, vLook.xyz, g_vLightDir.xyz, 30.f);
-		Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec;
+		// vector		vLook = vWorldPos - g_vCamPosition;
+		// float spec = GetSpecular(vNormal.xyz, vLook.xyz, g_vLightDir.xyz, 256.f);
+		// Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec;
 	}
 
 	return Out;
@@ -265,10 +268,11 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
 		vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+		vDiffuse.rgb = pow(vDiffuse.rgb, g_Gamma);
 		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
-		vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
+		// vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
 
-		Out.vColor = CalcHDRColor(vDiffuse, vDepth.b) * vShade + vSpecular;
+		Out.vColor = CalcHDRColor(vDiffuse, vDepth.b) * vShade;
 		if (0.0f == Out.vColor.a)
 			discard;
 	}

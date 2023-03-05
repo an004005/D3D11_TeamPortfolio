@@ -93,7 +93,11 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	Out.vDiffuse.a = 1.f;
+	if (Out.vDiffuse.a < 0.001f)
+	{
+		Out.vDiffuse.a = 1.f;
+	}
+	// Out.vDiffuse.a = 1.f;
 	// if (Out.vDiffuse.a < 0.01f)
 		// discard;
 

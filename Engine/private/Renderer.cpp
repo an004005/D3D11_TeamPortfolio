@@ -62,6 +62,9 @@ HRESULT CRenderer::Add_DebugRenderGroup(CComponent * pComponent)
 
 HRESULT CRenderer::Draw_RenderGroup()
 {
+	_float fGamma = CHDR::GetInstance()->GetGamma();
+	m_pShader->Set_RawValue("g_Gamma", &fGamma, sizeof(_float));
+
 	if (FAILED(Render_ShadowDepth()))
 		return E_FAIL;
 	if (FAILED(Render_NonAlphaBlend()))
@@ -177,7 +180,7 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;	
 
 	/* For.Target_Shade */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Shade"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.0f, 0.0f, 0.0f, 1.f))))
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Shade"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, &_float4(0.0f, 0.0f, 0.0f, 1.f))))
 		return E_FAIL;
 
 	/* For.Target_Specular */
