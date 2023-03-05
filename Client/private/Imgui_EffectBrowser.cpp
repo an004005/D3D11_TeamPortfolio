@@ -84,7 +84,7 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 	{
 		if (ImGui::Button("Refresh_Effect Folder"))
 		{
-			LoadEffects("../Bin/Resources/Curve/Default_Attack/");
+			LoadEffects("../Bin/Resources/Curve/Fire_Attack/");
 			// LoadEffects("../Bin/Resources/Curve/NeedToWork/");
 		}
 
@@ -98,11 +98,6 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 		{
 			for (auto& Pair : m_mapEffectGroup)
 			{
-				// if(Pair.second->CheckPlay() == false)
-				// {
-				// 	Pair.second->SetVisible(false);
-				// }
-
 				if (bSearch)
 				{
 					if (Pair.first.find(strSearch) == string::npos)
