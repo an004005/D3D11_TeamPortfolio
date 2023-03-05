@@ -69,37 +69,23 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (FAILED(Render_LightAcc()))
 		return E_FAIL;
 
-	/* 디퓨즈타겟(색상) * 셰이드타겟(명암)을 곱하여 최종적으로 백버퍼에 그려내는 작업을 수행한다. */
-	if (CHDR::GetInstance()->IsOn())
-	{
-		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_HDR"))))
-			return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_HDR"))))
+		return E_FAIL;
 
-		if (FAILED(Render_Priority()))
-			return E_FAIL;
-		if (FAILED(Render_Blend()))
-			return E_FAIL;
-		if (FAILED(Render_NonLight()))
-			return E_FAIL;
-		if (FAILED(Render_AlphaBlend()))
-			return E_FAIL;
+	if (FAILED(Render_Priority()))
+		return E_FAIL;
+	if (FAILED(Render_Blend()))
+		return E_FAIL;
+	if (FAILED(Render_NonLight()))
+		return E_FAIL;
+	if (FAILED(Render_AlphaBlend()))
+		return E_FAIL;
 
-		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext, TEXT("MRT_HDR"))))
-			return E_FAIL;
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext, TEXT("MRT_HDR"))))
+		return E_FAIL;
 
-		Render_HDR();
-	}
-	else
-	{
-		if (FAILED(Render_Priority()))
-			return E_FAIL;
-		if (FAILED(Render_Blend()))
-			return E_FAIL;
-		if (FAILED(Render_NonLight()))
-			return E_FAIL;
-		if (FAILED(Render_AlphaBlend()))
-			return E_FAIL;
-	}
+	Render_HDR();
+
 	if (FAILED(Render_PostProcess()))
 		return E_FAIL;
 
@@ -166,7 +152,7 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Depth"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(0.f, 1.f, 0.f, 0.f))))
 		return E_FAIL;
 	/* For.Target_RMA */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_RMA"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.f, 1.f, 0.f))))
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_RMA"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(1.f, 0.f, 1.f, 0.f))))
 		return E_FAIL;
 
 	/* For.Target_AMB */
@@ -239,7 +225,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular"))))
 		return E_FAIL;
 
-
+	m_pEnv = dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(L"../Bin/Resources/Textures/DiffuseEnv.dds"));
+	m_pEnv2 = dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(L"../Bin/Resources/Textures/BlueSkyIradiance.dds"));
 
 
 	// HDR 텍스쳐 렌더링용
@@ -251,9 +238,8 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	// ~For Effect
 
-	Ready_ShadowDepthResources(8192, 8192);
 	// Ready_ShadowDepthResources(8192, 8192);
-	// Ready_ShadowDepthResources(128, 128);
+	Ready_ShadowDepthResources(128, 128);
 
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer)
@@ -578,6 +564,10 @@ HRESULT CRenderer::Render_Blend()
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_CTLTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_CTL")))))
 		return E_FAIL;
 
+	m_pEnv->Bind_ShaderResource(m_pShader, "g_IrradianceTexture");
+	m_pEnv2->Bind_ShaderResource(m_pShader, "g_RadianceTexture");
+
+
 	m_pShader->Begin(3);
 	m_pVIBuffer->Render();
 
@@ -878,4 +868,6 @@ void CRenderer::Free()
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pShadowDepthStencilView);
+	Safe_Release(m_pEnv);
+	Safe_Release(m_pEnv2);
 }

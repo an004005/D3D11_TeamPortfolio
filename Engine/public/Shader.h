@@ -18,7 +18,7 @@ enum class EShaderParamType
 enum
 {
 	PARAM_INT_CNT = 4,
-	PARAM_FLOAT_CNT = 4,
+	PARAM_FLOAT_CNT = 10,
 	PARAM_FLOAT2_CNT = 4,
 	PARAM_FLOAT4_CNT = 4,
 	PARAM_FLOAT4X4_CNT = 2,

@@ -4,6 +4,7 @@
 #include "GameUtils.h"
 #include "Shader.h"
 #include "GameUtils.h"
+#include "GameInstance.h"
 
 CTexture::CTexture(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -57,7 +58,7 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 
 		if (wstrExt == L".tga")
 			return E_FAIL;	
-		else if(wstrExt == L".dds")		
+		else if(wstrExt == L".dds")
 			hr = DirectX::CreateDDSTextureFromFile(m_pDevice, szTexturePath, nullptr, &m_Textures[i]);
 		else		
 			hr = DirectX::CreateWICTextureFromFile(m_pDevice, szTexturePath, nullptr, &m_Textures[i]);
@@ -109,7 +110,7 @@ HRESULT CTexture::Initialize_Prototype(const char* pTextureDirectoryPath)
 
 		if (wstrExt == L".tga")
 			return E_FAIL;	
-		else if(wstrExt == L".dds")		
+		else if(wstrExt == L".dds")
 			hr = DirectX::CreateDDSTextureFromFile(m_pDevice, wstrFilePath.c_str(), nullptr, &m_Textures[iIdx]);
 		else		
 			hr = DirectX::CreateWICTextureFromFile(m_pDevice, wstrFilePath.c_str(), nullptr, &m_Textures[iIdx]);

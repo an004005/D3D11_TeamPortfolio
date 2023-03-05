@@ -72,6 +72,9 @@ float4 FinalPassPS( VS_OUTPUT In ) : SV_TARGET
 	// Tone mapping
 	color = ToneMapping(color);
 
+	// 감마코렉션?
+	// color = pow(color, 1.f / 2.2f);
+
 	// Output the LDR value
 	return float4(color, 1.0);
 }

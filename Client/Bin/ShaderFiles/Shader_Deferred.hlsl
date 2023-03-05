@@ -1,5 +1,4 @@
 #include "Shader_Utils.h"
-#include "Shader_PBRCommon.h"
 
 float   g_Far = 1000.f;
 
@@ -34,6 +33,9 @@ texture2D		g_RMATexture;
 texture2D		g_AMBTexture;
 texture2D		g_CTLTexture;
 
+TextureCube     g_IrradianceTexture;
+TextureCube     g_RadianceTexture;
+
 sampler LinearSampler = sampler_state
 {
 	filter = min_mag_mip_linear;
@@ -47,6 +49,17 @@ sampler PointSampler = sampler_state
 	AddressU = wrap;
 	AddressV = wrap;
 };
+
+sampler CubeSampler = sampler_state
+{
+	filter = min_mag_mip_linear;
+	AddressU = CLAMP;
+	AddressV = CLAMP;
+	AddressW = CLAMP;
+	ComparisonFunc = NEVER;
+};
+
+#include "Shader_PBRCommon.h"
 
 struct VS_IN
 {
@@ -139,6 +152,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	{
 		vector		vRMA = g_RMATexture.Sample(LinearSampler, In.vTexUV);
 
+		// float3 albedo = pow(vDiffuse.rgb, 2.2f);
 		float3 albedo = vDiffuse.rgb;
 		float metalness = vRMA.g;
 		float roughness = vRMA.r;

@@ -21,6 +21,7 @@
 #include "Indicator.h"
 #include "Player.h"
 #include "Weapon_wp0190.h"
+#include "SkyBox.h"
 
 #define ADD_PLAYER
 
@@ -176,27 +177,7 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
 
-	//// 23.02.20 PJW Work
-
-	//{														// Bin\Resources\Model\AnimModel\Monster\Goat
-	//	auto pGoat = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/AnimModel/Monster/Goat/Goat.anim_model",
-	//		_float4x4::CreateScale({ 0.1f, 0.1f, 0.1f }));
-	//	pGoat->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/Goat/Anim/"); // Bin\Resources\Model\AnimModel\Monster\Goat\Anim
-	//	pGameInstance->Add_Prototype(TEXT("TestMonsterGoat"), pGoat);
-	//}
-
-	//{														// \Bin\Resources\Model\AnimModel\Monster\FlowerLeg
-	//	auto pFlowerLeg = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/FlowerLeg.anim_model",
-	//		_float4x4::CreateScale({ 0.1f, 0.1f, 0.1f }));
-	//	pFlowerLeg->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Anim/"); // \Bin\Resources\Model\AnimModel\Monster\FlowerLeg\Anim
-	//	pGameInstance->Add_Prototype(TEXT("MonsterFlowerLeg"), pFlowerLeg);
-	//}
-
-	//pGameInstance->Add_Prototype(TEXT("TestMonster"), CTestMonster::Create(m_pDevice, m_pContext));
-
-	//// Model Component Origin Create
-
-	//// ~23.02.20 PJW Work
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
 	return S_OK;
 }
@@ -205,9 +186,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
 
-
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
 	return S_OK;
@@ -257,10 +238,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	// PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
 	// auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 
-	auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
-	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	pos.y += 1.f;
-	pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+	// auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
+	// _float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	// pos.y += 1.f;
+	// pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
 
 	return S_OK;
 }

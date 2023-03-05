@@ -22,7 +22,6 @@ sampler LinearSampler_Clamp = sampler_state
 	AddressV = CLAMP;
 };
 
-
 RasterizerState RS_Default
 {
 	FillMode = Solid;
