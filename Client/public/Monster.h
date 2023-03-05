@@ -11,6 +11,15 @@ protected:
 	CMonster(const CScarletCharacter& rhs);
 	virtual ~CMonster() = default;
 
+protected:
+	_uint m_iHP = 100;
+	_uint m_iMaxHP = 100;
+
+	_uint m_iStamina = 100;
+	_uint m_iMaxStamina = 100;
+
+	_bool m_bDead = false;
+
 };
 
 END

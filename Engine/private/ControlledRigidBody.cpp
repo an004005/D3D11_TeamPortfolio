@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "..\public\ControlledRigidBody.h"
+
+#include "GameObject.h"
 #include "PhysX_Manager.h"
 #include "JsonLib.h"
 
@@ -27,9 +29,23 @@ HRESULT CControlledRigidBody::Initialize(void* pArg)
 	m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC;
 	m_Filters.mFilterData = &m_MoveFilterData;
 
+	if (pArg == nullptr)
+	{
+		SetDefaultValue();
+	}
+
+
 	CreateController();
 
 	return S_OK;
+}
+
+void CControlledRigidBody::BeginTick()
+{
+	if (auto pOwner = TryGetOwner())
+	{
+		SetFootPosition(pOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+	}
 }
 
 void CControlledRigidBody::Imgui_RenderProperty()
@@ -90,15 +106,7 @@ void CControlledRigidBody::LoadFromJson(const Json& json)
 
 	if (json.contains("ControlledRigidBody") == false)
 	{
-		m_tDesc.radius = 0.5f;
-		m_tDesc.height = 1.f;
-		m_tDesc.contactOffset = 0.1f;
-		m_tDesc.density = 10.f;
-		m_fSlopeLimitDegree = 45.f;
-		m_tDesc.slopeLimit = cosf(XMConvertToRadians(m_fSlopeLimitDegree));
-		m_tDesc.stepOffset = 0.1f;
-		m_tDesc.maxJumpHeight = 3.f;
-		m_HitReport.SetPushPower(100.f);
+		SetDefaultValue();
 	}
 	else
 	{
@@ -118,6 +126,11 @@ void CControlledRigidBody::LoadFromJson(const Json& json)
 void CControlledRigidBody::SetPosition(const _float4& vPos)
 {
 	m_pController->setPosition({(_double)vPos.x, (_double)vPos.y, (_double)vPos.z});
+}
+
+void CControlledRigidBody::SetFootPosition(const _float4& vPos)
+{
+	m_pController->setFootPosition({(_double)vPos.x, (_double)vPos.y, (_double)vPos.z});
 }
 
 _float4 CControlledRigidBody::GetPosition()
@@ -160,6 +173,11 @@ void CControlledRigidBody::CreateController()
 	m_pController->getActor()->userData = this;
 
 	CPhysX_Manager::GetInstance()->AddActor(*m_pController->getActor());
+
+	if (auto pOwner = TryGetOwner())
+	{
+		SetFootPosition(pOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+	}
 }
 
 void CControlledRigidBody::ReleaseController()
@@ -169,6 +187,19 @@ void CControlledRigidBody::ReleaseController()
 		CPhysX_Manager::GetInstance()->RemoveActor(*m_pController->getActor());
 		m_pController->release();
 	}
+}
+
+void CControlledRigidBody::SetDefaultValue()
+{
+	m_tDesc.radius = 0.5f;
+	m_tDesc.height = 1.f;
+	m_tDesc.contactOffset = 0.1f;
+	m_tDesc.density = 10.f;
+	m_fSlopeLimitDegree = 45.f;
+	m_tDesc.slopeLimit = cosf(XMConvertToRadians(m_fSlopeLimitDegree));
+	m_tDesc.stepOffset = 0.1f;
+	m_tDesc.maxJumpHeight = 3.f;
+	m_HitReport.SetPushPower(100.f);
 }
 
 void CControlledRigidBody::Free()
@@ -220,5 +251,24 @@ void CEngineControllerHitReport::onShapeHit(const physx::PxControllerShapeHit& h
 			const PxVec3 localPos = globalPose.transformInv(toVec3(hit.worldPos));
 			CPhysXUtils::AddForceAtLocalPos(*actor, hit.dir*hit.length*m_fPushPower, localPos, PxForceMode::eACCELERATION);
 		}
+	}
+
+	if (m_HitCallback)
+	{
+		PxShape* shape;
+		hit.actor->getShapes(&shape, 1);
+		ECOLLIDER_TYPE eHitColliderType = static_cast<ECOLLIDER_TYPE>(shape->getSimulationFilterData().word0);
+		m_HitCallback(CPhysXUtils::GetOnwer(hit.actor), eHitColliderType);
+	}
+}
+
+void CEngineControllerHitReport::onControllerHit(const physx::PxControllersHit& hit)
+{
+	if (m_HitCallback)
+	{
+		PxShape* shape;
+		hit.other->getActor()->getShapes(&shape, 1);
+		ECOLLIDER_TYPE eHitColliderType = static_cast<ECOLLIDER_TYPE>(shape->getSimulationFilterData().word0);
+		m_HitCallback(CPhysXUtils::GetOnwer(hit.other->getActor()), eHitColliderType);
 	}
 }

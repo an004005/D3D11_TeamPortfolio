@@ -226,6 +226,12 @@
     <Filter Include="02.GameObjects\Batch">
       <UniqueIdentifier>{ed211422-fc89-49fa-908b-ea3041994ccf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\boss1">
+      <UniqueIdentifier>{44a3e289-3391-45e6-b735-a5ae92424cd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\boss1\Boss1_Animinstance">
+      <UniqueIdentifier>{107db123-e61b-466e-8716-8300f9f27d16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -570,6 +576,17 @@
     <ClInclude Include="..\public\Imgui_EffectBrowser.h">
       <Filter>60.Imgui_Tool</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Boss1.h">
+      <Filter>02.GameObjects\Monster\boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss1_AnimationInstance.h">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_Animinstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TestCamera.h">
+      <Filter>02.GameObjects\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AIController.h" />
+    <ClInclude Include="..\public\Boss1_AIController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -889,6 +906,17 @@
     <ClCompile Include="..\private\Imgui_EffectBrowser.cpp">
       <Filter>60.Imgui_Tool</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Boss1.cpp">
+      <Filter>02.GameObjects\Monster\boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss1_AnimationInstance.cpp">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_Animinstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TestCamera.cpp">
+      <Filter>02.GameObjects\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AIController.cpp" />
+    <ClCompile Include="..\private\Boss1_AIController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

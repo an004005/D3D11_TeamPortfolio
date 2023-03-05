@@ -14,8 +14,8 @@ public:
 	static T Clamp(T Value, T Min, T Max);
 
 	static _bool FloatCmp(_float f1, _float f2, _float fEpsilon = 0.000001f);
-	static _float4 Quat2EulerDegree(XMFLOAT4 q);
-	static _float4 Quat2Euler(XMFLOAT4 q);
+	static _float4 Quat2EulerDegree(Quaternion q);
+	static _float4 Quat2Euler(Quaternion q);
 
 	static _float Lerp(_float f1, _float f2, _float fS);
 
