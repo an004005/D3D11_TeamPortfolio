@@ -109,7 +109,54 @@ PS_OUT PS_MAIN_DEFAULT_ATTACK(PS_IN In)
 		discard;
 	}
 
-	// Out.vColor.a = NoiseTex.a;
+	return Out;
+}
+
+// g_float_0 : 모델 텍스쳐 UV.y 값
+// g_float_1 : UV.y 값 연동된
+// g_float_2 : Emissive
+// g_float_3 : Dissolve 커질수록 사라짐
+
+// g_vec4_0 : 섞는 색상
+
+// g_tex_0 : 반절만 나오는 텍스쳐
+// g_tex_1 : 흰색 꽉찬 텍스쳐
+// g_tex_2 : 디졸브 텍스쳐
+
+PS_OUT PS_MAIN_FIRE_ATTACK(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 BasicColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x * g_float_0, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float4 BlendColor = BasicColor * OriginColor * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+	// FinalColor.a = BasicColor.r;
+
+	float4 AllTex = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x * (1-g_float_1 ), In.vTexUV.y));
+	float4 BlendColor2 = AllTex * OriginColor * 2.0f;
+	float fDissolvePower = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+	float fDissolveNoise = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+	float ND = fDissolvePower * fDissolveNoise;
+	if (g_float_1 <= 0.f)
+	{
+		Out.vColor = CalcHDRColor(BlendColor2, g_float_2);
+		Out.vColor.a = AllTex.r;
+		
+		Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	}
+	else
+	{
+		Out.vColor = CalcHDRColor((FinalColor *g_float_1) + (BlendColor2 * (1 - g_float_1)), g_float_2);
+		Out.vColor.a = (BasicColor.r * g_float_1) +(AllTex * (1 - g_float_1));
+		Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	}
+
+	if (g_float_3 >= ND)
+	{
+		discard;
+	}
+
 	return Out;
 }
 
@@ -143,4 +190,17 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_DEFAULT_ATTACK();
 	}
 
+	//2
+	pass PlayerFireAttack
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_FIRE_ATTACK();
+	}
 }
