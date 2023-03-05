@@ -85,6 +85,7 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 		if (ImGui::Button("Refresh_Effect Folder"))
 		{
 			LoadEffects("../Bin/Resources/Curve/Fire_Attack/");
+			// LoadEffects("../Bin/Resources/Curve/Default_Attack/");
 			// LoadEffects("../Bin/Resources/Curve/NeedToWork/");
 		}
 
@@ -147,7 +148,7 @@ void CImgui_EffectBrowser::LoadEffects(const char* pEffectDir)
 		Json jsonEffect = CJsonStorage::GetInstance()->FindOrLoadJson(pEffectPath);
 		auto pEffectGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect));
 		m_mapEffectGroup.emplace(pEffectGroup->GetObjectTag(), pEffectPath);
-		pEffectGroup->SetDelete();
+		// pEffectGroup->SetDelete();
 	});
 }
 

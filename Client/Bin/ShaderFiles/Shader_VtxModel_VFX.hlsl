@@ -100,7 +100,7 @@ PS_OUT PS_MAIN_DEFAULT_ATTACK(PS_IN In)
 	else
 	{
 		Out.vColor = CalcHDRColor((BlendColor *g_float_1) + (BlendColor2 * (1-g_float_1)), g_float_2);
-		Out.vColor.a = (BasicColor.r * g_float_1) + (BlendColor2 * (1 - g_float_1));
+		Out.vColor.a = (BasicColor.r * g_float_1) + (BlendColor2.r * (1 - g_float_1));
 		Out.vFlag = float4(0.f, SHADER_SCIFI_PLAYER_ATTACK, 0.f, g_float_1);
 	}
 
@@ -135,27 +135,61 @@ PS_OUT PS_MAIN_FIRE_ATTACK(PS_IN In)
 
 	float4 AllTex = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x * (1-g_float_1 ), In.vTexUV.y));
 	float4 BlendColor2 = AllTex * OriginColor * 2.0f;
-	float fDissolvePower = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
-	float fDissolveNoise = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
-	float ND = fDissolvePower * fDissolveNoise;
-	if (g_float_1 <= 0.f)
+
+	if(g_tex_on_4)
 	{
-		Out.vColor = CalcHDRColor(BlendColor2, g_float_2);
-		Out.vColor.a = AllTex.r;
-		
-		Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+		float2 randomNormal = g_tex_4.Sample(LinearSampler, In.vTexUV).xy;
+		float2 distortionUV = randomNormal * g_float_4 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(g_Time, 0.f));
+
+		float fDissolvePower = g_tex_2.Sample(LinearSampler, distortionUV).r;
+		float fDissolveNoise = g_tex_3.Sample(LinearSampler, distortionUV).r;
+		float ND = fDissolvePower * fDissolveNoise;
+
+		if (g_float_1 <= 0.f)
+		{
+			Out.vColor = CalcHDRColor(BlendColor2, g_float_2);
+			Out.vColor.a = AllTex.r;
+
+			Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+		}
+		else
+		{
+			Out.vColor = CalcHDRColor((FinalColor *g_float_1) + (BlendColor2 * (1 - g_float_1)), g_float_2);
+			Out.vColor.a = g_float_5;
+			Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+		}
+
+		if (g_float_3 >= ND)
+		{
+			discard;
+		}
 	}
 	else
 	{
-		Out.vColor = CalcHDRColor((FinalColor *g_float_1) + (BlendColor2 * (1 - g_float_1)), g_float_2);
-		Out.vColor.a = (BasicColor.r * g_float_1) +(AllTex * (1 - g_float_1));
-		Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+		float fDissolvePower = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+		float fDissolveNoise = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+		float ND = fDissolvePower * fDissolveNoise;
+		if (g_float_1 <= 0.f)
+		{
+			Out.vColor = CalcHDRColor(BlendColor2, g_float_2);
+			Out.vColor.a = AllTex.r;
+
+			Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+		}
+		else
+		{
+			Out.vColor = CalcHDRColor((FinalColor *g_float_1) + (BlendColor2 * (1 - g_float_1)), g_float_2);
+			Out.vColor.a = (BasicColor.r * g_float_1) + (AllTex * (1 - g_float_1));
+			Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+		}
+
+		if (g_float_3 >= ND)
+		{
+			discard;
+		}
 	}
 
-	if (g_float_3 >= ND)
-	{
-		discard;
-	}
+	
 
 	return Out;
 }
