@@ -26,11 +26,19 @@ public:
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
 
+public:
+	void	Set_DriveCount();
+	void	Reset_DriveRightDot() {
+		m_iDriveCount = 0;
+		m_eDriveCount = ONE;
+	}
+
 private:
 	void	DriveCount_Tick();
 
 private:
 	DRIVECOUNT	m_eDriveCount = ONE;
+	_uint		m_iDriveCount = { 0 };
 
 public:
 	static CDrive_RightDotUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

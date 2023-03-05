@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Canvas_Drive.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
 
 CCanvas_Drive::CCanvas_Drive(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -17,6 +18,7 @@ HRESULT CCanvas_Drive::Initialize_Prototype()
 	if (FAILED(CCanvas::Initialize_Prototype()))
 		return E_FAIL;
 
+	
 	return S_OK;
 }
 
@@ -24,6 +26,8 @@ HRESULT CCanvas_Drive::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
+
+	CUI_Manager::GetInstance()->Add_Canvas(L"Canvas_Drive", this);
 
 	// 처음에 보이지 않을 UI 들
 	Find_ChildUI(L"Drive_B")->SetVisible(false);
@@ -37,19 +41,12 @@ void CCanvas_Drive::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
-	Find_ChildUI(L"Drive_Circle0")->SetVisible(m_bDriveB_OFF);
-
-	Find_ChildUI(L"Drive_B")->SetVisible(m_bDriveB_ON);
-	Find_ChildUI(L"Drive_Circle1")->SetVisible(m_bDriveB_ON);
 }
 
 void CCanvas_Drive::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	ImGui::Checkbox("DriveB_OFF", &m_bDriveB_OFF);
-	ImGui::SameLine();
-	ImGui::Checkbox("DriveB_ON", &m_bDriveB_ON);
 }
 
 void CCanvas_Drive::SaveToJson(Json& json)
@@ -60,6 +57,17 @@ void CCanvas_Drive::SaveToJson(Json& json)
 void CCanvas_Drive::LoadFromJson(const Json & json)
 {
 	CCanvas::LoadFromJson(json);
+}
+
+void CCanvas_Drive::Set_Drive(const _bool Drive)
+{
+	Find_ChildUI(L"Drive_Circle0")->SetVisible(Drive);	// 드라이브 계산을 시작하면!
+}
+
+void CCanvas_Drive::Set_DriveB(const _bool DriveB)
+{
+	Find_ChildUI(L"Drive_B")->SetVisible(DriveB);			// 드라이게이지를 사용하고 반 이하로 남았을 때
+	Find_ChildUI(L"Drive_Circle1")->SetVisible(DriveB);
 }
 
 CCanvas_Drive * CCanvas_Drive::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

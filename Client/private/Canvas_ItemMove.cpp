@@ -27,7 +27,7 @@ HRESULT CCanvas_ItemMove::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	CUI_Manager::GetInstance()->Add_CCanvas(L"Canvas_PlayerInfoMove", this);
+	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_PlayerInfoMove", this);
 	CCanvas::UIMove_FSM();
 
 	return S_OK;

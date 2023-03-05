@@ -226,7 +226,7 @@ void CCanvas::UIMove_FSM()
 		.AddState("Move")
 		.OnStart([this]
 	{
-		map<wstring, CCanvas*>& canvases = CUI_Manager::GetInstance()->Get_Canvas();
+		map<wstring, CCanvas*>& canvases = CUI_Manager::GetInstance()->Get_MoveCanvas();
 
 		for_each(canvases.begin(), canvases.end(), [&](pair<wstring, CCanvas*> pCanvas) {
 			pCanvas.second->Set_UIMove();

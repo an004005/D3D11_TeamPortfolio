@@ -21,16 +21,8 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_Drive(_bool	Drive) {
-		m_bDriveB_OFF = Drive;
-	}
-	void	Set_DriveB(_bool DriveB) {
-		m_bDriveB_ON = DriveB;
-	}
-
-private:
-	_bool	m_bDriveB_OFF = { false };
-	_bool	m_bDriveB_ON = { false };
+	void	Set_Drive(const _bool	Drive);
+	void	Set_DriveB(const _bool DriveB);
 
 public:
 	static CCanvas_Drive* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

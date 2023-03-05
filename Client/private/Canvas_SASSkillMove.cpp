@@ -29,7 +29,7 @@ HRESULT CCanvas_SASSkillMove::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	CUI_Manager::GetInstance()->Add_CCanvas(L"Canvas_SASSkillMove", this);
+	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_SASSkillMove", this);
 	CCanvas::UIMove_FSM();
 	
 	// 처음에 보이지 않을 UI 들

@@ -32,7 +32,7 @@ HRESULT CCanvas_SASInfoLeftMove::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	CUI_Manager::GetInstance()->Add_CCanvas(L"Canvas_SASInfoLeftMove", this);
+	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_SASInfoLeftMove", this);
 	CCanvas::UIMove_FSM();
 
 	return S_OK;
