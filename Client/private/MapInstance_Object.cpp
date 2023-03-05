@@ -86,16 +86,14 @@ void CMapInstance_Object::SaveToJson(Json & json)
 
 	json["InstanceInfo"]["WorldMatrix"] = Json::array();
 
-	for (auto mesh : Meshes)
+
+	vector<_float4x4> WorldMatrixs = Meshes.front()->GetWorldMatirxs();
+
+	for (auto WorldMatrix : WorldMatrixs)
 	{
-		vector<_float4x4> WorldMatrixs = mesh->GetWorldMatirxs();
-
-		for (auto WorldMatrix : WorldMatrixs)
-		{
-			json["InstanceInfo"]["WorldMatrix"].push_back(WorldMatrix);
-		}
-
+		json["InstanceInfo"]["WorldMatrix"].push_back(WorldMatrix);
 	}
+
 }
 
 void CMapInstance_Object::Imgui_RenderProperty()

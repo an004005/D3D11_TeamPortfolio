@@ -8,9 +8,9 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Environments/Location/CommonLC/LC06_LC15/T_pr_Town_buil_D1_ALB.dds",
-            "../Bin/Resources/Environments/Location/CommonLC/LC06_LC15/T_pr_Town_buil_D1_NML.png",
-            "../Bin/Resources/Environments/Location/CommonLC/LC06_LC15/T_pr_Town_buil_D1_RMA.dds"
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_Plaza/T_pr_PlazaFunsui_A01_ALB.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_Plaza/T_pr_PlazaFunsui_A01_NML.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_Plaza/T_pr_PlazaFunsui_A01_RMA.png"
         ],
         "Pass" : 1
     },

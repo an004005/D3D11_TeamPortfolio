@@ -170,6 +170,8 @@ void CScarletMap::Imgui_RenderProperty()
 			pModel->Add_Instance(WorldMatrix);
 			pModel->Map_Meshs();
 			dynamic_cast<CMapInstance_Object*>(pGameObject)->Set_Focus();
+
+			m_pGameObject = pGameObject;
 		}
 
 		else if (m_pModelProtoInfo.second == PROTOINFO::KINETIC)
@@ -192,6 +194,7 @@ void CScarletMap::Imgui_RenderProperty()
 			m_pGameObject = pMapObject;
 		}
 		
+		sort(m_pMapObjects.begin(), m_pMapObjects.end());
 	}
 
 	ImGui::Separator();
@@ -237,7 +240,7 @@ void CScarletMap::Imgui_RenderProperty()
 	ImGui::Separator();
 
 
-	if (ImGui::Button("Delete_Map_Object"))
+	if (ImGui::Button("Delete_MapObject"))
 	{
 		if (m_pModelProtoInfo.second == PROTOINFO::NON_INSTANCE ||
 			m_pModelProtoInfo.second == PROTOINFO::KINETIC)
@@ -263,6 +266,8 @@ void CScarletMap::Imgui_RenderProperty()
 			}
 
 		}
+
+		sort(m_pMapObjects.begin(), m_pMapObjects.end());
 	}
 
 	ImGui::Separator();
