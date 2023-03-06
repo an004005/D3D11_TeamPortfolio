@@ -10,7 +10,9 @@ const array<const char*, PARAM_INT_CNT> CShader::s_ParamIntName {
 	"g_int_0","g_int_1","g_int_2","g_int_3"
 };
 const array<const char*, PARAM_FLOAT_CNT> CShader::s_ParamFloatName {
-	"g_float_0","g_float_1","g_float_2","g_float_3"
+	"g_float_0","g_float_1","g_float_2","g_float_3",
+	"g_float_4","g_float_5","g_float_6","g_float_7",
+	"g_float_8","g_float_9"
 };
 const array<const char*, PARAM_FLOAT2_CNT> CShader::s_ParamFloat2Name {
 	"g_vec2_0","g_vec2_1","g_vec2_2","g_vec2_3"
@@ -22,10 +24,10 @@ const array<const char*, PARAM_FLOAT4X4_CNT> CShader::s_ParamFloat4x4Name {
 	"g_mat_0","g_mat_1"
 };
 const array<const char*, PARAM_TEXTURE_CNT> CShader::s_ParamTextureName {
-	"g_tex_0","g_tex_1","g_tex_2","g_tex_3","g_tex_4","g_tex_5", "g_tex_6", "g_tex_7"
+	"g_tex_0","g_tex_1","g_tex_2","g_tex_3","g_tex_4","g_tex_5", "g_tex_6", "g_tex_7", "g_tex_8", "g_tex_9"
 };
 const array<const char*, PARAM_TEXTURE_ON_CNT> CShader::s_ParamTextureOnName {
-	"g_tex_on_0","g_tex_on_1","g_tex_on_2","g_tex_on_3","g_tex_on_4","g_tex_on_5", "g_tex_on_6", "g_tex_on_7"
+	"g_tex_on_0","g_tex_on_1","g_tex_on_2","g_tex_on_3","g_tex_on_4","g_tex_on_5", "g_tex_on_6", "g_tex_on_7", "g_tex_on_8", "g_tex_on_9"
 };
 
 CShader::CShader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

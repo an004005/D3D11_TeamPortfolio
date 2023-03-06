@@ -252,4 +252,23 @@ void CEngineControllerHitReport::onShapeHit(const physx::PxControllerShapeHit& h
 			CPhysXUtils::AddForceAtLocalPos(*actor, hit.dir*hit.length*m_fPushPower, localPos, PxForceMode::eACCELERATION);
 		}
 	}
+
+	if (m_HitCallback)
+	{
+		PxShape* shape;
+		hit.actor->getShapes(&shape, 1);
+		ECOLLIDER_TYPE eHitColliderType = static_cast<ECOLLIDER_TYPE>(shape->getSimulationFilterData().word0);
+		m_HitCallback(CPhysXUtils::GetOnwer(hit.actor), eHitColliderType);
+	}
+}
+
+void CEngineControllerHitReport::onControllerHit(const physx::PxControllersHit& hit)
+{
+	if (m_HitCallback)
+	{
+		PxShape* shape;
+		hit.other->getActor()->getShapes(&shape, 1);
+		ECOLLIDER_TYPE eHitColliderType = static_cast<ECOLLIDER_TYPE>(shape->getSimulationFilterData().word0);
+		m_HitCallback(CPhysXUtils::GetOnwer(hit.other->getActor()), eHitColliderType);
+	}
 }

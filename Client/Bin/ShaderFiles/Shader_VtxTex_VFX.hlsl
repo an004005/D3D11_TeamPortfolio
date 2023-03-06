@@ -161,6 +161,7 @@ PS_OUT_Flag PS_MASK_TEX_DISTORTION(PS_IN In)
 }
 
 // g_tex_0 : Default White
+// g_tex_1 : Mask Texture
 // g_vec4_0 : OriginColor
 // g_float_0 : Emissive
 // g_float_1 : Mul Alpha
@@ -182,6 +183,49 @@ PS_OUT_Flag PS_MASK_TEX(PS_IN In)
 
 	if (Mask < 0.f)
 		discard;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+// g_tex_0 : Default White
+// g_tex_1 : Mask
+// g_tex_2 : Distortion Texture;
+
+// g_vec4_0 : OriginColor
+
+// g_float_0 : Emissive
+// g_float_1 : Mul Alpha
+// 
+PS_OUT_Flag PS_SEMI_DISTORTION_FOR_SAS(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 DistortionTex = g_float_0 * g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0, g_Time)));
+	float fWeight = DistortionTex.r * g_float_1;
+
+	float4 defaultColor = g_tex_1.Sample(LinearSampler, In.vTexUV + fWeight);
+	float4 OriginColor = g_vec4_0;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+
+	float4 FinalColor = saturate(BlendColor);
+
+	float fDissolvePower = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+
+	
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_2);
+
+	// if (FinalColor.r <= 0.5f)
+	// 	Out.vColor = FinalColor;
+
+	Out.vColor.a = defaultColor.a * g_float_3;
+
+	// if (g_float_3 >= fDissolvePower)
+	// {
+	// 	discard;
+	// }
 
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 
@@ -271,5 +315,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MASK_TEX();
+	}
+
+	//6
+	pass Mask_Semi_Distortion
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SEMI_DISTORTION_FOR_SAS();
 	}
 }
