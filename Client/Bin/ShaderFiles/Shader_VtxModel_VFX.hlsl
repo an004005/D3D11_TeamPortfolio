@@ -150,7 +150,7 @@ PS_OUT PS_MAIN_FIRE_ATTACK(PS_IN In)
 			Out.vColor = CalcHDRColor(BlendColor2, g_float_2);
 			Out.vColor.a = AllTex.r;
 
-			Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+			Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, 0.f);
 		}
 		else
 		{
