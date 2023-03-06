@@ -43,11 +43,6 @@ HRESULT CCanvas_DriveMove::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CCanvas_DriveMove::BeginTick()
-{
-
-}
-
 void CCanvas_DriveMove::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);

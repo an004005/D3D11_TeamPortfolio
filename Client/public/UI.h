@@ -121,8 +121,6 @@ protected:
 	ShaderParams		m_tParams;
 
 protected:
-	_float4x4			m_ViewMatrix;
-	_float4x4			m_ProjMatrix;
 
 	_uint				m_iPriority = 0;			// 낮을 수록 뒤에 그려진다.
 

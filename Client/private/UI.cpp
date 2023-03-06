@@ -63,9 +63,6 @@ HRESULT CUI::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;	
 
-	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
-
 	m_CanvasSize = CanvasRect{ 0.f, 0.f, (_float)g_iWinSizeX * 0.5f, (_float)g_iWinSizeY * 0.5f };
 
 	return S_OK;
@@ -153,9 +150,7 @@ void CUI::Imgui_RenderProperty()
 
 	if (m_bUseRot)
 	{
-		//_float fDegreeRotation = XMConvertToDegrees(m_fRadianRotation);
 		ImGui::DragFloat("Rotation(degree)", &m_fRadianRotation);
-		//m_fRadianRotation = XMConvertToRadians(fDegreeRotation);
 		m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, m_fRadianRotation);
 	}
 	ImGui::Separator();
@@ -225,9 +220,7 @@ HRESULT CUI::SetUp_ShaderResources()
 
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+	if (FAILED(m_pShaderCom->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_ORTHO))))
 		return E_FAIL;
 
 	return S_OK;

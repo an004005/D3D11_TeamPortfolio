@@ -43,11 +43,8 @@ void CCanvas::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	//if (true == m_bIsFont)
-	//{
-	//	m_fSizeX = (_float)g_iWinSizeX;
-	//	m_fSizeY = (_float)g_iWinSizeY;
-	//}
+	m_fSizeX = (_float)g_iWinSizeX;
+	m_fSizeY = (_float)g_iWinSizeY;
 
 	const _float2 PivotPair = GetPivotXY(m_ePivot);
 
@@ -176,7 +173,6 @@ void CCanvas::LoadFromJson(const Json & json)
 		auto pUI = Add_ChildUI(LEVEL_NOW, s2ws(protoTag).c_str(),s2ws(childTag).c_str(), (void*)&childJson);
 		Assert(pUI != nullptr);
 	}
-
 }
 
 CUI * CCanvas::Find_ChildUI(const _tchar * pChildTag)

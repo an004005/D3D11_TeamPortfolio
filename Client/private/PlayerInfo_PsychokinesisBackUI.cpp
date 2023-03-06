@@ -38,25 +38,16 @@ void CPlayerInfo_PsychokinesisBackUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	if (m_fCurrentPsychokinesisGauge < m_fPsychokinesisGauge)
+	if (m_fCurrentPsychokinesisGauge > m_fPsychokinesisGauge)
 	{
-		m_bMinus = false;
-		m_fCurrentPsychokinesisGauge = m_fPsychokinesisGauge;
-	}
-	else
-	{
-		m_bMinus = true;
+		m_bVisible = true;
 		m_fCurrentPsychokinesisGauge -= _float(TimeDelta) * 0.3f;
+		m_tParams.Floats[0] = m_fCurrentPsychokinesisGauge;
 	}
-
-	m_tParams.Floats[0] = m_fCurrentPsychokinesisGauge;
-
-	if (true == m_bMinus)
-		m_bVisible = true;
 	else
 	{
-		m_bVisible = true;
-		return;
+		m_bVisible = false;
+		m_tParams.Floats[0] = m_fPsychokinesisGauge;
 	}
 }
 

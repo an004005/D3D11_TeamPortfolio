@@ -36,7 +36,7 @@ HRESULT CCanvas_PlayerInfoMove::Initialize(void* pArg)
 
 	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_PlayerInfoMove", this);
 	CCanvas::UIMove_FSM();
-//	m_bIsFont = true;
+
 	return S_OK;
 }
 
@@ -60,7 +60,6 @@ void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
 void CCanvas_PlayerInfoMove::Late_Tick(_double TimeDelta)
 {
 	CCanvas::Late_Tick(TimeDelta);
-	//m_bVisible = true;
 
 }
 
@@ -69,9 +68,6 @@ HRESULT CCanvas_PlayerInfoMove::Render()
 	if (FAILED(CCanvas::Render()))
 		return E_FAIL;
 
-	/*_float2 fTemp = dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp0"))->GetScreenSpaceLeftTop();
-	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"유이토 스메라기", fTemp + m_vFontPos, 0.f, m_vFontScale, { 1.0f, 0.99f, 0.87f, 1.0f });
-*/
 	return S_OK;
 }
 
@@ -97,16 +93,8 @@ void CCanvas_PlayerInfoMove::Imgui_RenderProperty()
 
 	if (ImGui::Button("Set Gauge"))
 	{
-		Set_PsychokinesisGauge(fGauge, fMaxGauge);
+		Set_PsychokinesisGauge(LEVEL_ONE, fGauge, fMaxGauge);
 	}
-
-	//static _float fPosition[2];
-	//ImGui::DragFloat2("Font Position", fPosition);
-	//m_vFontPos = { fPosition[0], fPosition[1] };
-
-	//static _float fScele[2];
-	//ImGui::DragFloat2("Font fScele", fScele);
-	//m_vFontScale = { fScele[0], fScele[1] };
 }
 
 void CCanvas_PlayerInfoMove::SaveToJson(Json& json)
@@ -121,15 +109,21 @@ void CCanvas_PlayerInfoMove::LoadFromJson(const Json & json)
 
 }
 
-void CCanvas_PlayerInfoMove::Set_PsychokinesisGauge(const _float & fGauge, const _float & fMaxGauge)
+void CCanvas_PlayerInfoMove::Set_PsychokinesisGauge(PSYCHOKINESISLEVEL Level, const _float & fGauge, const _float & fMaxGauge)
 {
-	m_fPsychokinesisGauge = (1.0f < fGauge / fMaxGauge) ? 1.0f : (fGauge / fMaxGauge);
-	ChildPsychokinesis();
+	_float fValue = fGauge / fMaxGauge;
+	m_fPsychokinesisGauge = (1.0f < fValue) ? 1.0f : fValue;
+	ChildPsychokinesis(Level);
 }
 
 void CCanvas_PlayerInfoMove::Set_PlayerHp(const _float & fHp, const _float & fMaxHp)
 {
-	m_fPercentageHp = (1.0f < fHp / fMaxHp) ? 1.0f : (fHp / fMaxHp);
+	// 예외처리 다 해서 넘겨주시는 거겠지?
+	m_vPlayerHp.x = fHp;
+	m_vPlayerHp.y = fMaxHp;
+
+	_float fValue = fHp / fMaxHp;
+	m_fPercentageHp = (1.0f < fValue) ? 1.0f : fValue;
 	ChildHp();
 }
 
@@ -231,10 +225,10 @@ void CCanvas_PlayerInfoMove::RendomTexture_Tick(const _double & dTimeDelta)
 	}
 }
 
-void CCanvas_PlayerInfoMove::ChildPsychokinesis()
+void CCanvas_PlayerInfoMove::ChildPsychokinesis(PSYCHOKINESISLEVEL Level)
 {
-	dynamic_cast<CPlayerInfo_PsychokinesisUI*>(Find_ChildUI(L"PlayerInfo_Psychokinesis"))->Set_PsychokinesisGauge(0, m_fPsychokinesisGauge);
-	dynamic_cast<CPlayerInfo_PsychokinesisBackUI*>(Find_ChildUI(L"PlayerInfo_PsychokinesisBack"))->Set_PsychokinesisGauge(0, m_fPsychokinesisGauge);
+	dynamic_cast<CPlayerInfo_PsychokinesisUI*>(Find_ChildUI(L"PlayerInfo_Psychokinesis"))->Set_PsychokinesisGauge(_uint(Level), m_fPsychokinesisGauge);
+	dynamic_cast<CPlayerInfo_PsychokinesisBackUI*>(Find_ChildUI(L"PlayerInfo_PsychokinesisBack"))->Set_PsychokinesisGauge(_uint(Level), m_fPsychokinesisGauge);
 }
 
 CCanvas_PlayerInfoMove * CCanvas_PlayerInfoMove::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

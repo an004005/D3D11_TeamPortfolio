@@ -755,6 +755,10 @@ PS_OUT PS_PsychokinesisFlipBook(PS_IN In)	// ->24
 	{
 		OriginalTexture = g_tex_2.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_1, 10, 1));
 	}
+	else if (2 == g_int_0)
+	{
+		OriginalTexture = g_tex_3.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_1, 8, 1));
+	}
 
 	float4 TopColor = g_vec4_0;
 	float4 MixTexture = saturate(TopColor * OriginalTexture * 2.0f);

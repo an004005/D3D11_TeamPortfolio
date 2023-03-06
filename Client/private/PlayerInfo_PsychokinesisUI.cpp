@@ -77,7 +77,7 @@ void CPlayerInfo_PsychokinesisUI::LoadFromJson(const Json & json)
 
 }
 
-void CPlayerInfo_PsychokinesisUI::Set_PsychokinesisGauge(const _int iType, const _float & fGauge)
+void CPlayerInfo_PsychokinesisUI::Set_PsychokinesisGauge(const _uint & iType, const _float & fGauge)
 {
 	// iType : (0)일반0  (2)일반1  (3)  (4)공격 (5)드라이브
 	m_fPsychokinesisGauge = fGauge;
@@ -87,10 +87,10 @@ void CPlayerInfo_PsychokinesisUI::Set_PsychokinesisGauge(const _int iType, const
 	// 텍스처 프레임
 	switch (iType)
 	{
-	case 1:
+	case 0:
 		m_tParams.Floats[1] = 0.08f;
 		break;
-	case 2:
+	case 1:
 		m_tParams.Floats[1] = 0.03f;
 		break;
 	default:
