@@ -45,12 +45,12 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 		m_EffectGroupTag = EffectGroupTag;
 		if (ImGui::Button("Add New EffectGroup"))
 		{
-			Json Attack5 = CJsonStorage::GetInstance()->FindOrLoadJson(m_EffectGroupTag);
-			if (Attack5.empty())
+			Json EffectJson = CJsonStorage::GetInstance()->FindOrLoadJson(m_EffectGroupTag);
+			if (EffectJson.empty())
 				MSG_BOX("Failed to Add New EffectGroup");
 			else
 			{
-				HRESULT hr = (CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup"), &Attack5));
+				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup"), &EffectJson);
 			}
 		}
 	}
@@ -65,10 +65,13 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 
 		if (ImGui::Button("Add New EffectSystem"))
 		{
-			Json Attack5 = CJsonStorage::GetInstance()->FindOrLoadJson(m_EffectSystemTag);
-			HRESULT hr = (CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_EffectSystem", TEXT("ProtoVFX_EffectSystem"), &Attack5));
-			if (hr == E_FAIL)
+			Json EffectJson = CJsonStorage::GetInstance()->FindOrLoadJson(m_EffectSystemTag);
+			if (EffectJson.empty())
 				MSG_BOX("Failed to Add New EffectSystem");
+			else
+			{
+				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_EffectSystem", TEXT("ProtoVFX_EffectSystem"), &EffectJson);
+			}
 		}
 	}
 
@@ -81,8 +84,9 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 	{
 		if (ImGui::Button("Refresh_Effect Folder"))
 		{
+			LoadEffects("../Bin/Resources/Curve/Fire_Attack/");
 			// LoadEffects("../Bin/Resources/Curve/Default_Attack/");
-			LoadEffects("../Bin/Resources/Curve/NeedToWork/");
+			// LoadEffects("../Bin/Resources/Curve/NeedToWork/");
 		}
 
 		static char szSearchEffect[MAX_PATH] = "";
@@ -95,11 +99,6 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 		{
 			for (auto& Pair : m_mapEffectGroup)
 			{
-				// if(Pair.second->CheckPlay() == false)
-				// {
-				// 	Pair.second->SetVisible(false);
-				// }
-
 				if (bSearch)
 				{
 					if (Pair.first.find(strSearch) == string::npos)
