@@ -174,19 +174,28 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	else if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
 		float4 vCTL = g_CTLTexture.Sample(LinearSampler, In.vTexUV);
-		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
 
 		float fNdotL = dot(normalize(vNormal.xyz), normalize(g_vLightDir.xyz));
 		float fDiff = saturate(max(fNdotL, 0.0));
+		// fDiff = ceil(fDiff * 2.f) * 0.5f;
 
-		fDiff = max(vCTL.r , min(vCTL.g, fDiff));
-		fDiff = fDiff * 0.5f + 0.5f;
+		if (fDiff > 0.5f)
+			fDiff = vCTL.g;
+		else
+			fDiff = vCTL.r;
 
-		Out.vShade = g_vLightDiffuse * saturate(fDiff + vAMB);
+		// fDiff = max(vCTL.r , min(vCTL.g, fNdotL));
+		// fDiff = ceil(fDiff * 2.f) * 0.5f;
+		fDiff *= vCTL.b;
+
+		// fDiff = saturate((fDiff * 0.5f + 0.5f) * vCTL.b);
+
+		Out.vShade = g_vLightDiffuse * saturate(fDiff);
 		Out.vShade.a = 1.f;
 		
 		// vector		vLook = vWorldPos - g_vCamPosition;
 		// float spec = GetSpecular(vNormal.xyz, vLook.xyz, g_vLightDir.xyz, 256.f);
+		// spec = smoothstep(0.005f, 0.01f, spec);
 		// Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec;
 	}
 
@@ -271,12 +280,13 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 
 	if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
+		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
 		vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 		vDiffuse.rgb = pow(vDiffuse.rgb, g_Gamma);
 		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
-		// vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
+		vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
 
-		Out.vColor = CalcHDRColor(vDiffuse, vDepth.b) * vShade;
+		Out.vColor = CalcHDRColor(vDiffuse, vDepth.b) * vShade + vAMB * 0.2f;
 		if (0.0f == Out.vColor.a)
 			discard;
 	}
@@ -285,6 +295,13 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
 		Out.vColor = vShade * pow(2.f, vDepth.b);
 		Out.vColor.a = vShade.a;
+		if (0.0f == Out.vColor.a)
+			discard;
+	}
+	else if (CheckPostProcessFlag(fShaderFlag, SHADER_NONE_SHADE))
+	{
+		vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+		Out.vColor = CalcHDRColor(vDiffuse, vDepth.b);
 		if (0.0f == Out.vColor.a)
 			discard;
 	}

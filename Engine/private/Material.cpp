@@ -130,10 +130,10 @@ void CMaterial::BindMatrices(CTransform* pTransform)
 	FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 	FAILED_CHECK(m_pShader->Set_RawValue("g_vCamPosition", &CGameInstance::GetInstance()->Get_CamPosition(), sizeof(_float4)));
 
-	// const _float4x4 ProjInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_PROJ);
 	// const _float4x4 ViewInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW);
-	// FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrixInv", &ProjInv));
 	// FAILED_CHECK(m_pShader->Set_Matrix("g_ViewMatrixInv", &ViewInv));
+	// const _float4x4 ProjInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_PROJ);
+	// FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrixInv", &ProjInv));
 }
 
 void CMaterial::BindMatrices(const _float4x4& WorldMatrix)
@@ -142,11 +142,12 @@ void CMaterial::BindMatrices(const _float4x4& WorldMatrix)
 	FAILED_CHECK(m_pShader->Set_Matrix("g_ViewMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
 	FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 	FAILED_CHECK(m_pShader->Set_RawValue("g_vCamPosition", &CGameInstance::GetInstance()->Get_CamPosition(), sizeof(_float4)));
+	//
+	// const _float4x4 ViewInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW);
+	// FAILED_CHECK(m_pShader->Set_Matrix("g_ViewMatrixInv", &ViewInv));
 
 	// const _float4x4 ProjInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_PROJ);
-	// const _float4x4 ViewInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW);
 	// FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrixInv", &ProjInv));
-	// FAILED_CHECK(m_pShader->Set_Matrix("g_ViewMatrixInv", &ViewInv));
 }
 
 void CMaterial::Begin()
