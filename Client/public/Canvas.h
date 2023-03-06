@@ -48,15 +48,14 @@ protected:
 	map<wstring, CUI*> m_mapChildUIs;
 
 	CUI*	m_pUI = { nullptr };
-	
 	CFSMComponent*	m_pUIMoveFSM = { nullptr };				// UIMove_FSM() -> 도착지점에 도달했다가 원래 지점으로 돌아가기 위해 함수
+	
+	_bool			m_bIsFont = { false };
 
 private:
 	_bool			m_bUIMove = { false };				// SASSkill_UIMove() -> UI를 이동시키고자 할 때 외부에서 Set 을 한다.
 	_bool			m_bIsDestination = { false };		// 목표지점에 도달! 원점으로 이제 돌아가라
 	_float2			m_vDestination = { 0.0f, 0.0f };	// 도착지점
-
-	_bool			m_bFullSize = { false };
 
 public:
 	static CCanvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

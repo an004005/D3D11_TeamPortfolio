@@ -623,6 +623,12 @@
     <ClInclude Include="..\public\SASInfoLeftHpBackUI.h">
       <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PlayerInfo_PsychokinesisBackUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerInfo_PsychokinesisUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -985,6 +991,12 @@
     </ClCompile>
     <ClCompile Include="..\private\SASInfoLeftHpBothEndsUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerInfo_PsychokinesisBackUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerInfo_PsychokinesisUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

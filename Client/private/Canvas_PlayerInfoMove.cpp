@@ -8,6 +8,8 @@
 #include "PlayerInfo_HpUI.h"
 #include "PlayerInfo_HpBackUI.h"
 #include "PlayerInfo_HpBothEndsUI.h"
+#include "PlayerInfo_PsychokinesisUI.h"
+#include "PlayerInfo_PsychokinesisBackUI.h"
 
 CCanvas_PlayerInfoMove::CCanvas_PlayerInfoMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -34,7 +36,7 @@ HRESULT CCanvas_PlayerInfoMove::Initialize(void* pArg)
 
 	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_PlayerInfoMove", this);
 	CCanvas::UIMove_FSM();
-
+//	m_bIsFont = true;
 	return S_OK;
 }
 
@@ -52,14 +54,13 @@ void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 		Set_UIMove();
 
-	ChildHp_Tick();
-	RendomTexture(TimeDelta);	// 계속 Hp 가 출력할 전체 개수, 이미지를 계산한다.
+	RendomTexture_Tick(TimeDelta);	// 계속 Hp 가 출력할 전체 개수, 이미지를 계산한다.
 }
 
 void CCanvas_PlayerInfoMove::Late_Tick(_double TimeDelta)
 {
 	CCanvas::Late_Tick(TimeDelta);
-	m_bVisible = true;
+	//m_bVisible = true;
 
 }
 
@@ -68,9 +69,9 @@ HRESULT CCanvas_PlayerInfoMove::Render()
 	if (FAILED(CCanvas::Render()))
 		return E_FAIL;
 
-	_float2 fTemp = dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp0"))->GetScreenSpaceLeftTop();
+	/*_float2 fTemp = dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp0"))->GetScreenSpaceLeftTop();
 	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"유이토 스메라기", fTemp + m_vFontPos, 0.f, m_vFontScale, { 1.0f, 0.99f, 0.87f, 1.0f });
-
+*/
 	return S_OK;
 }
 
@@ -86,16 +87,28 @@ void CCanvas_PlayerInfoMove::Imgui_RenderProperty()
 
 	if (ImGui::Button("Save Hp"))
 	{
-		m_fHp = fHp / fMaxHp;
+		m_fPercentageHp = fHp / fMaxHp;
+		ChildHp();
 	}
 
-	static _float fPosition[2];
-	ImGui::DragFloat2("Font Position", fPosition);
-	m_vFontPos = { fPosition[0], fPosition[1] };
+	static _float fGauge;
+	ImGui::InputFloat("Gauge", &fGauge);
+	static _float fMaxGauge;
+	ImGui::InputFloat("MaxGauge", &fMaxGauge);
 
-	static _float fScele[2];
-	ImGui::DragFloat2("Font fScele", fScele);
-	m_vFontScale = { fScele[0], fScele[1] };
+	if (ImGui::Button("Set Gauge"))
+	{
+		m_fPsychokinesisGauge = fGauge / fMaxGauge;
+		ChildPsychokinesis();
+	}
+
+	//static _float fPosition[2];
+	//ImGui::DragFloat2("Font Position", fPosition);
+	//m_vFontPos = { fPosition[0], fPosition[1] };
+
+	//static _float fScele[2];
+	//ImGui::DragFloat2("Font fScele", fScele);
+	//m_vFontScale = { fScele[0], fScele[1] };
 }
 
 void CCanvas_PlayerInfoMove::SaveToJson(Json& json)
@@ -108,32 +121,43 @@ void CCanvas_PlayerInfoMove::LoadFromJson(const Json & json)
 {
 	CCanvas::LoadFromJson(json);
 
-	m_vFontPos = { 0.35f, 0.35f };
 }
 
-void CCanvas_PlayerInfoMove::ChildHp_Tick()
+void CCanvas_PlayerInfoMove::Set_PsychokinesisGauge(const _float & fGauge, const _float & fMaxGauge)
 {
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp0"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp1"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp2"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp3"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp4"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp5"))->Set_PlayerHp(m_fHp);
-
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack0"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack1"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack2"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack3"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack4"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack5"))->Set_PlayerHp(m_fHp);
-
-	dynamic_cast<CPlayerInfo_HpBothEndsUI*>(Find_ChildUI(L"PlayerInfo_EndHp"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CPlayerInfo_HpBothEndsUI*>(Find_ChildUI(L"PlayerInfo_EndHpBack"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CPlayerInfo_HpBothEndsUI*>(Find_ChildUI(L"PlayerInfo_StartHp"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CPlayerInfo_HpBothEndsUI*>(Find_ChildUI(L"PlayerInfo_StartHpBack"))->Set_PlayerHp(m_fHp);
+	m_fPsychokinesisGauge = (1.0f < fGauge / fMaxGauge) ? 1.0f : (fGauge / fMaxGauge);
+	ChildPsychokinesis();
 }
 
-void CCanvas_PlayerInfoMove::RendomTexture(const _double & dTimeDelta)
+void CCanvas_PlayerInfoMove::Set_PlayerHp(const _float & fHp, const _float & fMaxHp)
+{
+	m_fPercentageHp = (1.0f < fHp / fMaxHp) ? 1.0f : (fHp / fMaxHp);
+	ChildHp();
+}
+
+void CCanvas_PlayerInfoMove::ChildHp()
+{
+	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp0"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp1"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp2"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp3"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp4"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpUI*>(Find_ChildUI(L"PlayerInfo_Hp5"))->Set_PlayerHp(m_fPercentageHp);
+
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack0"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack1"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack2"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack3"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack4"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack5"))->Set_PlayerHp(m_fPercentageHp);
+
+	dynamic_cast<CPlayerInfo_HpBothEndsUI*>(Find_ChildUI(L"PlayerInfo_EndHp"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpBothEndsUI*>(Find_ChildUI(L"PlayerInfo_EndHpBack"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpBothEndsUI*>(Find_ChildUI(L"PlayerInfo_StartHp"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpBothEndsUI*>(Find_ChildUI(L"PlayerInfo_StartHpBack"))->Set_PlayerHp(m_fPercentageHp);
+}
+
+void CCanvas_PlayerInfoMove::RendomTexture_Tick(const _double & dTimeDelta)
 {
 	m_dRendomTexture_TimeAcc += dTimeDelta;
 	if (3.0 < m_dRendomTexture_TimeAcc)
@@ -142,25 +166,25 @@ void CCanvas_PlayerInfoMove::RendomTexture(const _double & dTimeDelta)
 	if (0.0 != m_dRendomTexture_TimeAcc)
 		return;
 
-	// 체력에 따라서 랜덤으로 이미지를 출력하는 개수가 달라진다. (m_fHp 기준)
+	// 체력에 따라서 랜덤으로 이미지를 출력하는 개수가 달라진다. (m_fPercentageHp 기준)
 	// 0.05~0.95 : 3 / 0.05~0.65 : 2 / 0.05~0.35 : 1
 
 	_int iCount;
 	_int iRendomCount;			// 움직이는 Hp 를 그리는 개수 
 	_float fObjectMaxNumber;	// 6개중 움직이는 Hp를 그리는 객체
-	if (0.95f < m_fHp)
+	if (0.95f < m_fPercentageHp)
 	{
 		iCount = 3;
 		fObjectMaxNumber = 6.0f;
 		iRendomCount = _int(CMathUtils::RandomFloat(0.0f, 4.0f));
 	}
-	else if (0.65f < m_fHp)
+	else if (0.65f < m_fPercentageHp)
 	{
 		iCount = 2;
 		fObjectMaxNumber = 5.0f;
 		iRendomCount = _int(CMathUtils::RandomFloat(0.0f, 3.0f));
 	}
-	else if (0.35f < m_fHp)
+	else if (0.35f < m_fPercentageHp)
 	{
 		iCount = 1;
 		fObjectMaxNumber = 3.0f;
@@ -207,6 +231,13 @@ void CCanvas_PlayerInfoMove::RendomTexture(const _double & dTimeDelta)
 			dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(szChildTag))->RendomHpImage(iRandomTexture);
 		}
 	}
+}
+
+void CCanvas_PlayerInfoMove::ChildPsychokinesis()
+{
+	//dynamic_cast<CPlayerInfo_PsychokinesisUI*>(Find_ChildUI(L"PlayerInfo_PsychokinesisBack"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_PsychokinesisBackUI*>(Find_ChildUI(L"PlayerInfo_PsychokinesisBack"))->Set_PsychokinesisGauge(0, m_fPsychokinesisGauge);
+
 }
 
 CCanvas_PlayerInfoMove * CCanvas_PlayerInfoMove::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

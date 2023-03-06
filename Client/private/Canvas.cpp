@@ -35,7 +35,6 @@ HRESULT CCanvas::Initialize(void * pArg)
 	m_fSizeY = _float(g_iWinSizeY);
 
 	m_bVisible = false;
-	m_bFullSize = true;
 
 	return S_OK;
 }
@@ -44,11 +43,11 @@ void CCanvas::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	if (m_bFullSize)
-	{
-		m_fSizeX = (_float)g_iWinSizeX;
-		m_fSizeY = (_float)g_iWinSizeY;
-	}
+	//if (true == m_bIsFont)
+	//{
+	//	m_fSizeX = (_float)g_iWinSizeX;
+	//	m_fSizeY = (_float)g_iWinSizeY;
+	//}
 
 	const _float2 PivotPair = GetPivotXY(m_ePivot);
 
@@ -59,10 +58,10 @@ void CCanvas::Tick(_double TimeDelta)
 		m_fSizeX * 0.5f,
 		m_fSizeY * 0.5f
 	};
-
+	
 	for (auto& Pair : m_mapChildUIs)
 		Pair.second->SetCanvasSize(ThisCanvasSize);
-
+	
 	// map 으로 보관하고 있는 캔버스의 Tick() 을 돌린다.
 	for (auto iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end();)
 	{

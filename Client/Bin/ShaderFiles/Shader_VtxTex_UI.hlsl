@@ -733,6 +733,29 @@ PS_OUT PS_ReverseFlipBook(PS_IN In)	// ->23
 	//return Out;
 }
 
+/*******************
+* UVCut → 24 : 염력 게이지 int값에 따라서 변한다.
+g_vec4_0 : 색상 변경 (초록색 배경)
+g_float_0 : VS 에서 Gauge 정도로 사용
+g_float_2 : 텍스처 넘기는 값 (프레임)
+g_int_0 : 텍스처 선택
+/********************/
+PS_OUT PS_PsychokinesisFlipBook(PS_IN In)	// ->24
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	if (0 == g_int_0)
+	{
+		Out.vColor = g_tex_0.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_1, 10, 1)) * g_vec4_0;
+	}
+	else if (1 == g_int_0)
+	{
+		Out.vColor = g_tex_1.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_1, 10, 1)) * g_vec4_0;
+	}
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0 : 알파 블랜딩으로 그리기
@@ -1071,5 +1094,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_ReverseFlipBook();
+	}
+
+	//24 : 염력 게이지만을 위한 패스..
+	pass TelekinesisGauge
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_UI_ProgressBar();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_PsychokinesisFlipBook();
 	}
 }

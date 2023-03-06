@@ -66,10 +66,6 @@ HRESULT CPlayerInfo_HpUI::Render()
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
 
-	const _float2 PivotPair = GetPivotXY(m_ePivot);
-	_float2 fTemp = _float2(m_fX + m_vFontPos.x, m_fY + m_vFontPos.y);
-	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"유이토 스메라기", fTemp, 0.f, m_vFontScale, { 1.0f, 0.99f, 0.87f, 1.0f });
-	
 	return S_OK;
 }
 
@@ -77,13 +73,6 @@ void CPlayerInfo_HpUI::Imgui_RenderProperty()
 {
 	CUI::Imgui_RenderProperty();
 
-	static _float fPosition[2];
-	ImGui::DragFloat2("Font Position", fPosition);
-	m_vFontPos = { fPosition[0], fPosition[1] };
-
-	static _float fScele[2];
-	ImGui::DragFloat2("Font fScele", fScele);
-	m_vFontScale = { fScele[0], fScele[1] };
 }
 
 void CPlayerInfo_HpUI::SaveToJson(Json & json)

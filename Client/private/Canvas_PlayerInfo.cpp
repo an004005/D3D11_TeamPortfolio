@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Canvas_PlayerInfo.h"
 #include "GameInstance.h"
-#include "JsonLib.h"
 
 CCanvas_PlayerInfo::CCanvas_PlayerInfo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -32,7 +31,6 @@ HRESULT CCanvas_PlayerInfo::Initialize(void* pArg)
 void CCanvas_PlayerInfo::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
-
 }
 
 void CCanvas_PlayerInfo::Late_Tick(_double TimeDelta)
@@ -54,24 +52,18 @@ void CCanvas_PlayerInfo::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-
-
 }
 
 void CCanvas_PlayerInfo::SaveToJson(Json& json)
 {
 	CCanvas::SaveToJson(json);
 
-	//json["FontPosition"] = m_vFontPos;
-	//json["FontScele"] = m_vFontScale;
 }
 
 void CCanvas_PlayerInfo::LoadFromJson(const Json & json)
 {
 	CCanvas::LoadFromJson(json);
 
-	//m_vFontPos = json["FontPosition"];
-	//m_vFontScale = json["FontScele"];
 }
 
 CCanvas_PlayerInfo * CCanvas_PlayerInfo::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

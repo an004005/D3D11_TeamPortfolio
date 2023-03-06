@@ -46,7 +46,7 @@ private:
 private:
 	_float	m_fDriveGauge = { 0.0f };			// Canvas 에서 0~1 로 넘겨준다.
 	_float	m_fCurrentDriveGauge = { 0.0f };	// 이 클래스 안 에서 계산하는 용도
-	_float	m_fDriveFullTime = { 0.0f };			// Drive 를 사용할 하는 전체시간
+	_float	m_fDriveFullTime = { 0.0f };		// Drive 를 사용할 하는 전체시간
 	_double m_dCurrentDriveTime = { 0.0 };
 
 	_bool	m_bDriveGauge_Use = { false };

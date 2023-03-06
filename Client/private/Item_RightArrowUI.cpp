@@ -26,6 +26,8 @@ HRESULT CItem_RightArrowUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	m_fStartX = m_fX;
+
 	return S_OK;
 }
 
@@ -42,9 +44,9 @@ void CItem_RightArrowUI::Tick(_double TimeDelta)
 	m_fMoveTimeAcc += TimeDelta;
 	if (0.15 < m_fMoveTimeAcc)
 	{
-		m_fX += _float(TimeDelta) * 100.0f;
+		m_fX -= _float(TimeDelta) * 100.0f;
 
-		if (m_fX > m_fStartX)
+		if (m_fX < m_fStartX)
 		{
 			m_fX = m_fStartX;
 			m_fMoveTimeAcc = 0.0;
@@ -53,7 +55,7 @@ void CItem_RightArrowUI::Tick(_double TimeDelta)
 	}
 	else
 	{
-		m_fX -= _float(TimeDelta) * 100.0f;
+		m_fX += _float(TimeDelta) * 100.0f;
 	}
 }
 

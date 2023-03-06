@@ -46,6 +46,8 @@
 #include "PlayerInfo_HpUI.h"
 #include "PlayerInfo_HpBackUI.h"
 #include "PlayerInfo_HpBothEndsUI.h"
+#include "PlayerInfo_PsychokinesisUI.h"
+#include "PlayerInfo_PsychokinesisBackUI.h"
 // SASInfo Left
 #include "SASInfoLeftHpUI.h"
 #include "SASInfoLeftHpBackUI.h"
@@ -252,6 +254,14 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_PlayerInfo_HpBothEndsUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_HpBothEndsUI"),
 			CPlayerInfo_HpBothEndsUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_PsychokinesisUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_PsychokinesisUI"),
+			CPlayerInfo_PsychokinesisUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_PsychokinesisBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_PsychokinesisBackUI"),
+			CPlayerInfo_PsychokinesisBackUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 		// Frount_UI -> SASInfoLeft

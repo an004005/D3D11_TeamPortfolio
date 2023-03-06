@@ -258,6 +258,8 @@
     <ClInclude Include="..\public\PlayerInfo_HpBackUI.h" />
     <ClInclude Include="..\public\PlayerInfo_HpBothEndsUI.h" />
     <ClInclude Include="..\public\PlayerInfo_HpUI.h" />
+    <ClInclude Include="..\public\PlayerInfo_PsychokinesisBackUI.h" />
+    <ClInclude Include="..\public\PlayerInfo_PsychokinesisUI.h" />
     <ClInclude Include="..\public\PostVFX_Distortion.h" />
     <ClInclude Include="..\public\PostVFX_Scifi.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
@@ -379,6 +381,8 @@
     <ClCompile Include="..\private\PlayerInfo_HpBackUI.cpp" />
     <ClCompile Include="..\private\PlayerInfo_HpBothEndsUI.cpp" />
     <ClCompile Include="..\private\PlayerInfo_HpUI.cpp" />
+    <ClCompile Include="..\private\PlayerInfo_PsychokinesisBackUI.cpp" />
+    <ClCompile Include="..\private\PlayerInfo_PsychokinesisUI.cpp" />
     <ClCompile Include="..\private\PostVFX_Distortion.cpp" />
     <ClCompile Include="..\private\PostVFX_Scifi.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />

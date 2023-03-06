@@ -53,9 +53,6 @@ private:
 	_float	m_fHp = { 0.0f };	// Canvas 에서 0~1 로 계산된 HP
 	_float	m_fCurrentHp = { 0.0f };
 
-private:
-	_float2 m_vFontPos = { 0.0f, 0.0f };
-	_float2 m_vFontScale = { 0.0f, 0.0f };
 public:
 	static CPlayerInfo_HpUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
