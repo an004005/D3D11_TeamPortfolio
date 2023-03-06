@@ -77,6 +77,7 @@ private:
 	float m_fBloomThreshold;
 	float m_fBloomScale;
 	float m_fGamma;
+	float m_fFlimSlope;
 
 	typedef struct
 	{
@@ -96,7 +97,7 @@ private:
 		float fLumWhiteSqr;
 		float fBloomScale;
 		float  fGamma;
-		float  fWhite;
+		float  fFlimSlope;
 		UINT pad[3];
 	} TFinalPassCB;
 	ID3D11Buffer* m_pFinalPassCB = nullptr;

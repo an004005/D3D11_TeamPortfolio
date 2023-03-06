@@ -16,6 +16,9 @@ CMaterial::CMaterial(const CMaterial& rhs)
 	: CComponent(rhs)
 	, m_pShader(rhs.m_pShader)
 	, m_tParams(rhs.m_tParams)
+#ifdef _DEBUG
+	, m_strFilePath(rhs.m_strFilePath)
+#endif
 {
 	Safe_AddRef(m_pShader);
 	for (auto e : m_tParams.Textures)
@@ -31,6 +34,10 @@ HRESULT CMaterial::Initialize_Prototype(const char* pMtrlFilePath)
 	CShader::LoadShaderParam(m_tParams, json);
 	string shaderProtoTag = json["ShaderProtoTag"];
 	m_pShader = dynamic_cast<CShader*>(CGameInstance::GetInstance()->Clone_Component(CGameUtils::s2ws(shaderProtoTag).c_str()));
+
+#ifdef _DEBUG
+	m_strFilePath = pMtrlFilePath;
+#endif
 
 	return S_OK;
 }
@@ -91,7 +98,25 @@ void CMaterial::Imgui_RenderProperty()
 		SaveToJson(json);
 		std::ofstream file(filePath);
 		file << json;
+#ifdef _DEBUG
+		m_strFilePath = filePath;
+#endif
 	});
+
+#ifdef _DEBUG
+	if (ImGui::Button("QuickSave") && m_strFilePath.empty() == false)
+	{
+		wstring msg = L"Save to " + s2ws(m_strFilePath);
+		if (MessageBox(NULL, msg.c_str(), L"System Message", MB_YESNO) == IDYES)
+		{
+			Json json;
+			SaveToJson(json);
+			std::ofstream file(m_strFilePath);
+			file << json;
+		}
+	}
+#endif
+
 }
 
 void CMaterial::BindMatrices(CTransform* pTransform)

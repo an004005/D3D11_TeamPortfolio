@@ -49,18 +49,18 @@ cbuffer FinalPassConstants : register( b0 )
 	float LumWhiteSqr : packoffset( c0.y );
 	float BloomScale  : packoffset( c0.z );
 	float Gamma  : packoffset( c0.w );
-	float White  : packoffset( c1 );
+	float FlimSlope  : packoffset( c1 );
 }
 
 static const float3 LUM_FACTOR = float3(0.299, 0.587, 0.114);
 
 // Reinhard Tonemapper
-float4 tonemap_reinhard(float3 color)
+float3 tonemap_reinhard(float3 color)
 {
    color *= 16;
    color = color/(1+color);
-   float3 ret = pow(color, Gamma); // gamma
-   return float4(ret,1);
+   float3 ret = pow(color, 1.f); // gamma
+   return ret;
 }
 
 // Uncharted 2 Tonemapper
@@ -89,7 +89,7 @@ float3 tonemap_uc2(float3 color)
     float3 white_scale = 1.0f/tonemap_uncharted2(W);
     float3 ccolor = curr*white_scale;
 
-    float3 ret = pow(abs(ccolor), Gamma); // gamma
+    float3 ret = pow(abs(ccolor), 1.f); 
 
     return ret;
 }
@@ -101,7 +101,12 @@ float3 tonemap_filmic(float3 color)
     color = (color * (6.2f * color + 0.5f)) / (color * (6.2f * color + 1.7f)+ 0.06f);
 
     // result has 1/2.2 baked in
-    return pow(color, Gamma);
+    return pow(color, 1.f);
+}
+
+float3 GammaCorrection(float3 color)
+{
+	return pow(color, 1.f / Gamma);
 }
 
 float3 ToneMapping(float3 HDRColor)
@@ -110,8 +115,7 @@ float3 ToneMapping(float3 HDRColor)
 	float LScale = dot(HDRColor, LUM_FACTOR);
 	LScale *= MiddleGrey / AvgLum[0];
 	LScale = (LScale + LScale * LScale / LumWhiteSqr) / (1.0 + LScale);
-	float3 LDRColor = HDRColor * LScale; // Apply the luminance scale to the pixels color
-	return pow(LDRColor, 1.f / Gamma); // gamma correction
+	return HDRColor * LScale; // Apply the luminance scale to the pixels color
 }
 
 float4 FinalPassPS( VS_OUTPUT In ) : SV_TARGET
@@ -124,6 +128,7 @@ float4 FinalPassPS( VS_OUTPUT In ) : SV_TARGET
 
 	// Tone mapping
 	color = ToneMapping(color);
+	color = GammaCorrection(color);
 	// color = tonemap_reinhard(color);
 	// color = tonemap_filmic(color);
 	// color = tonemap_uc2(color);

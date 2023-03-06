@@ -15,6 +15,7 @@ CHDR::CHDR()
 	m_fBloomThreshold = 1.1f;
 	m_fBloomScale = 0.74f;
 	m_fGamma = 2.2f;
+	m_fFlimSlope = 0.5f;
 }
 
 HRESULT CHDR::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -377,6 +378,8 @@ void CHDR::Imgui_Render()
 	ImGui::InputFloat2("GammaMinMax", (float*)&GammMinMax);
 	ImGui::SliderFloat("Gamma", &m_fGamma, GammMinMax.x, GammMinMax.y);
 
+	ImGui::SliderFloat("FlimSlop", &m_fFlimSlope, 0.f, 1.f);
+
 	if (ImGui::Button("Re Compile"))
 	{
 		Initialize(m_pDevice, m_pContext);
@@ -522,7 +525,7 @@ void CHDR::FinalPass(ID3D11ShaderResourceView* pHDRSRV)
 	pFinalPass->fLumWhiteSqr *= pFinalPass->fLumWhiteSqr; // Square
 	pFinalPass->fBloomScale = m_fBloomScale;
 	pFinalPass->fGamma = m_fGamma;
-	pFinalPass->fWhite = m_fWhite;
+	pFinalPass->fFlimSlope = m_fFlimSlope;
 	m_pContext->Unmap(m_pFinalPassCB, 0);
 	ID3D11Buffer* arrConstBuffers[1] = { m_pFinalPassCB };
 	m_pContext->PSSetConstantBuffers(0, 1, arrConstBuffers);

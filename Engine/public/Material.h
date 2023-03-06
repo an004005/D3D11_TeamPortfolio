@@ -35,6 +35,10 @@ protected:
 	// 임시로 이 머터리얼을 사용하는 메쉬를 렌더하거나 렌더하지 않는데 사용
 	_bool m_bActive = true;
 
+#ifdef _DEBUG
+	string m_strFilePath;
+#endif
+
 public:
 	virtual void Free() override;
 	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const char* pMtrlFilePath);

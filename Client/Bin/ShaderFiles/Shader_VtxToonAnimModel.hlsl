@@ -73,6 +73,7 @@ struct PS_OUT
 	float4		vDepth : SV_TARGET2;
 	float4		vAMB : SV_TARGET3;
 	float4		vCTL : SV_TARGET4;
+	float4		vOutline : SV_TARGET5;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -121,6 +122,7 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
 	Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
 	Out.vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
+	Out.vOutline = float4(1.f, 1.f, 1.f, 1.f);
 
 	return Out;
 
@@ -155,4 +157,5 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_TOON_DEFAULT();
 	}
+
 }
