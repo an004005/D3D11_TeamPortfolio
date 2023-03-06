@@ -744,14 +744,25 @@ PS_OUT PS_PsychokinesisFlipBook(PS_IN In)	// ->24
 {
 	PS_OUT			Out = (PS_OUT)0;
 
+	float4 OriginalTexture;
+	float4  vGlowColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
 	if (0 == g_int_0)
 	{
-		Out.vColor = g_tex_0.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_1, 10, 1)) * g_vec4_0;
+		OriginalTexture = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_1, 10, 1));
 	}
 	else if (1 == g_int_0)
 	{
-		Out.vColor = g_tex_1.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_1, 10, 1)) * g_vec4_0;
+		OriginalTexture = g_tex_2.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_1, 10, 1));
 	}
+
+	float4 TopColor = g_vec4_0;
+	float4 MixTexture = saturate(TopColor * OriginalTexture * 2.0f);
+	float4 BottomColor = g_vec4_1 * (1.0f - In.vTexUV.y);
+	float3 FinalTexture = MixTexture.rgb * In.vTexUV.y;
+
+	Out.vColor.rgb = saturate((FinalTexture + BottomColor.rgb) + vGlowColor * g_float_2);
+	Out.vColor.a = OriginalTexture.a;
 
 	return Out;
 }

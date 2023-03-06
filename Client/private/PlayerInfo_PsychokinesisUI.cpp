@@ -3,6 +3,10 @@
 #include "GameInstance.h"
 #include "JsonLib.h"
 
+// m_tParams.Ints[0] : 텍스처 선택
+// m_tParams.Floats[0] : 게이지 정도
+// m_tParams.Floats[1] : 프레임 Ints 에 따라 달라진다. (0 : 0.08, 1 : 0.03)
+
 CPlayerInfo_PsychokinesisUI::CPlayerInfo_PsychokinesisUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
@@ -39,15 +43,7 @@ void CPlayerInfo_PsychokinesisUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	//const _float2 canvaspos = m_pCanvas->Get_Position();
-
-	//_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-	//vPosition += XMLoadFloat2(&canvaspos);
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.f));
-
-
-	
+	m_tParams.Floats[0] = m_fPsychokinesisGauge;
 }
 
 void CPlayerInfo_PsychokinesisUI::Late_Tick(_double TimeDelta)
@@ -79,6 +75,28 @@ void CPlayerInfo_PsychokinesisUI::LoadFromJson(const Json & json)
 {
 	CUI::LoadFromJson(json);
 
+}
+
+void CPlayerInfo_PsychokinesisUI::Set_PsychokinesisGauge(const _int iType, const _float & fGauge)
+{
+	// iType : (0)일반0  (2)일반1  (3)  (4)공격 (5)드라이브
+	m_fPsychokinesisGauge = fGauge;
+
+	// 게이지 텍스처 선택
+	m_tParams.Ints[0] = iType;
+	// 텍스처 프레임
+	switch (iType)
+	{
+	case 1:
+		m_tParams.Floats[1] = 0.08f;
+		break;
+	case 2:
+		m_tParams.Floats[1] = 0.03f;
+		break;
+	default:
+		m_tParams.Floats[1] = 0.08f;
+		break;
+	}
 }
 
 CPlayerInfo_PsychokinesisUI * CPlayerInfo_PsychokinesisUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

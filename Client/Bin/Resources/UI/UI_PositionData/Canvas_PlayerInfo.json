@@ -43,6 +43,50 @@
                     1.0
                 ]
             }
+        },
+        {
+            "ChildTag": "PlayerInfo_GaugeBack\u0000",
+            "ObjectTag": "PlayerInfo_GaugeBack",
+            "Pivot": 6,
+            "PositionX": 0.0,
+            "PositionY": 93.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.6800000071525574,
+            "ScaleY": 0.75,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGauge0.png\u0000"
+                ]
+            },
+            "SizeX": 421.0,
+            "SizeY": 29.0,
+            "Transform": {
+                "WorldMatrix": [
+                    286.2799987792969,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    21.75,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.011817827820777893,
+                    -266.9881896972656,
+                    0.0,
+                    1.0
+                ]
+            }
         }
     ],
     "ObjectTag": "PlayerInfo",

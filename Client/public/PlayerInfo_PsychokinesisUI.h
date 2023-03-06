@@ -24,6 +24,12 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
+	void	Set_PsychokinesisGauge(const _int iType, const _float & fGauge);
+
+private:
+	_float m_fPsychokinesisGauge = { 0.0f };	// 0~1
+
+public:
 	static CPlayerInfo_PsychokinesisUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;

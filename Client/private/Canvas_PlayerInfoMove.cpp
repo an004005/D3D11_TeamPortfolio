@@ -87,8 +87,7 @@ void CCanvas_PlayerInfoMove::Imgui_RenderProperty()
 
 	if (ImGui::Button("Save Hp"))
 	{
-		m_fPercentageHp = fHp / fMaxHp;
-		ChildHp();
+		Set_PlayerHp(fHp, fMaxHp);
 	}
 
 	static _float fGauge;
@@ -98,8 +97,7 @@ void CCanvas_PlayerInfoMove::Imgui_RenderProperty()
 
 	if (ImGui::Button("Set Gauge"))
 	{
-		m_fPsychokinesisGauge = fGauge / fMaxGauge;
-		ChildPsychokinesis();
+		Set_PsychokinesisGauge(fGauge, fMaxGauge);
 	}
 
 	//static _float fPosition[2];
@@ -235,9 +233,8 @@ void CCanvas_PlayerInfoMove::RendomTexture_Tick(const _double & dTimeDelta)
 
 void CCanvas_PlayerInfoMove::ChildPsychokinesis()
 {
-	//dynamic_cast<CPlayerInfo_PsychokinesisUI*>(Find_ChildUI(L"PlayerInfo_PsychokinesisBack"))->Set_PlayerHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_PsychokinesisUI*>(Find_ChildUI(L"PlayerInfo_Psychokinesis"))->Set_PsychokinesisGauge(0, m_fPsychokinesisGauge);
 	dynamic_cast<CPlayerInfo_PsychokinesisBackUI*>(Find_ChildUI(L"PlayerInfo_PsychokinesisBack"))->Set_PsychokinesisGauge(0, m_fPsychokinesisGauge);
-
 }
 
 CCanvas_PlayerInfoMove * CCanvas_PlayerInfoMove::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

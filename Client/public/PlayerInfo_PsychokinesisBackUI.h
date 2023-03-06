@@ -29,6 +29,8 @@ private:
 	_float m_fPsychokinesisGauge = { 0.0f };	// 0~1
 	_float m_fCurrentPsychokinesisGauge = { 0.0f };
 
+	_bool	m_bMinus = { false };
+
 public:
 	static CPlayerInfo_PsychokinesisBackUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
