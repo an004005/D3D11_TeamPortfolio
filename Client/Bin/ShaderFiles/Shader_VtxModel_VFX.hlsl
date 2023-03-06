@@ -27,6 +27,32 @@ struct PS_OUT
 	float4		vFlag : SV_TARGET1;
 };
 
+struct VS_OUT_NORM
+{
+	float4		vPosition : SV_POSITION;
+	float2		vTexUV : TEXCOORD0;
+	float4		vNormal : NORMAL;
+	float4		vTangent : TANGENT;
+
+};
+
+struct PS_IN_NORM
+{
+	float4		vPosition : SV_POSITION;
+	float2		vTexUV : TEXCOORD0;
+	float4		vNormal : NORMAL;
+	float4		vTangent : TANGENT;
+
+
+};
+struct PS_OUT_NORM
+{
+	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1;
+	float4		vNormal : SV_TARGET2;
+};
+
+
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
@@ -37,8 +63,43 @@ VS_OUT VS_MAIN(VS_IN In)
 	matWVP = mul(matWV, g_ProjMatrix);
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+
 	Out.vTexUV = In.vTexUV;
 
+	return Out;
+}
+
+VS_OUT_NORM VS_MAIN_NORM(VS_IN In)
+{
+	VS_OUT_NORM		Out = (VS_OUT_NORM)0;
+
+	matrix		matWV, matWVP;
+
+	matWV = mul(g_WorldMatrix, g_ViewMatrix);
+	matWVP = mul(matWV, g_ProjMatrix);
+
+	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vTexUV = In.vTexUV;
+	Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
+
+	
+
+	return Out;
+}
+
+PS_OUT_NORM PS_MAIN_NORM (PS_IN_NORM In)
+{
+	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
+
+
+	float3 vNormal = In.vNormal.xyz;
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vColor = (vector)1.f;
+	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 	return Out;
 }
 
@@ -309,5 +370,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_ELEC_ATTACK();
+	}
+
+	//4
+	pass Normal
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_NORM();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_NORM();
 	}
 }
