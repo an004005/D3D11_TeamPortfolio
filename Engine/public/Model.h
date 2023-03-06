@@ -52,6 +52,7 @@ public:
 	_vector GetLocalMove(_fmatrix WorldMatrix, const string& srtAnimName);
 	_bool	isLocalMove() { return !XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)); }
 	_float	GetLastLocalMoveSpeed() const { return m_fLastLocalMoveSpeed; }
+	void	Reset_LocalMove(_bool isSocket = false);
 
 	_vector GetLocalRotationDelta();
 

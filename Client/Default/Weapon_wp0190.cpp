@@ -32,8 +32,8 @@ HRESULT CWeapon_wp0190::Initialize(void * pArg)
 
 	FAILED_CHECK(SetUp_Components());
 
-//	Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Trail/PlayerSwordTrail.json");
-//	m_pTrail = static_cast<CTrailSystem*>(pGameInstance->Clone_GameObject_Get(L"Layer_Player", TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
+	Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Trail/PlayerSwordTrail.json");
+	m_pTrail = static_cast<CTrailSystem*>(pGameInstance->Clone_GameObject_Get(L"Layer_Player", TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
 
 	return S_OK;
 }
@@ -56,8 +56,10 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 	m_pCollider->Update_Tick(m_pTransformCom);
 
-	//m_pTrail->GetTransform()
-	//	->Set_WorldMatrix(m_pCollider->GetPxWorldMatrix());
+	m_pTrail->GetTransform()
+		->Set_WorldMatrix(m_pCollider->GetPxWorldMatrix());
+
+	m_pTrail->SetActive(m_bTrailOn);
 	
 	//m_pTrail->Tick(TimeDelta);
 
@@ -68,6 +70,8 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 void CWeapon_wp0190::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
+
+	m_pTrail->Late_Tick(TimeDelta);
 }
 
 void CWeapon_wp0190::AfterPhysX()

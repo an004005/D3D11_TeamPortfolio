@@ -45,6 +45,8 @@ public:
 	void SetStop();
 	void SetPlay();
 	_bool CheckPlay();
+
+	void		Set_Transform(_fmatrix matSocket);
 public:
 	// For Graph
 	// void Tick_Scale_All( _float fValue);

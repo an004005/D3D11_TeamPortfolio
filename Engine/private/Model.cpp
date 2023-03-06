@@ -246,6 +246,20 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
 	return vMovePos;
 }
 
+void CModel::Reset_LocalMove(_bool isSocket)
+{
+	if (isSocket)
+	{
+		m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	}
+	else
+	{
+		m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	}
+}
+
 _vector CModel::GetLocalRotationDelta()
 {
 	m_vBefLocalRotation = m_vLocalRotation;

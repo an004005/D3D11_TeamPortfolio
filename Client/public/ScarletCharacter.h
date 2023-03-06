@@ -44,6 +44,12 @@ protected:
 	_float m_fYSpeed = 0.f;
 	_float m_fGravity = 20.f;
 
+public:
+	_bool isCollision() { return m_iHitTargetCount > 0 ? true : false; }
+
+protected:
+	_uint m_iHitTargetCount = 0;
+
 
 public:
 	virtual void Free() override;

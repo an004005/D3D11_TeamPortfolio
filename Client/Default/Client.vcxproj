@@ -431,6 +431,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosRect.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxSwordTrail_VFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_VFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_UI.hlsl" />

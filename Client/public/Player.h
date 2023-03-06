@@ -17,6 +17,7 @@ END
 BEGIN(Client);
 class CBaseAnimInstance;
 class CController;
+class CEffectGroup;
 
 typedef struct tagRemote
 {
@@ -128,9 +129,11 @@ protected:
 	HRESULT SetUp_Event();
 	HRESULT Setup_KineticStateMachine();
 	HRESULT	SetUp_HitStateMachine();
+	HRESULT SetUp_KineticComboStateMachine();
 
 	CFSMComponent*		m_pKineticStataMachine = nullptr;
 	CFSMComponent*		m_pHitStateMachine = nullptr;
+	CFSMComponent*		m_pKineticComboStateMachine = nullptr;
 	CBaseAnimInstance*	m_pASM = nullptr;
 
 	CRenderer*			m_pRenderer = nullptr;
@@ -166,6 +169,29 @@ protected:	// 염력 소켓 애니메이션
 	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Start;
 	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Loop;
 	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Cancel;
+
+protected:	// 키네틱 연계기 소켓 애니메이션
+	list<CAnimation*>	m_KineticCombo_Slash01;	// 키네틱 돌진베기
+	list<CAnimation*>	m_KineticCombo_Slash02;	// 키네틱 X자 베기
+	list<CAnimation*>	m_KineticCombo_Slash03;	// 키네틱 돌려베기(3단)
+	list<CAnimation*>	m_KineticCombo_Slash04;	// 키네틱 돌려베기(4단)
+	
+	list<CAnimation*>	m_KineticCombo_Kinetic01_Start;		// 연계 키네틱 차지
+	list<CAnimation*>	m_KineticCombo_Kinetic01_Throw;		// 연계 키네틱 던지기
+	list<CAnimation*>	m_KineticCombo_Kinetic01_Cancel;	// 연계 키네틱 취소, 일반 상태로 돌아감
+	list<CAnimation*>	m_KineticCombo_Kinetic01_ThrowEnd;	// 이하 동일
+										
+	list<CAnimation*>	m_KineticCombo_Kinetic02_Start;
+	list<CAnimation*>	m_KineticCombo_Kinetic02_Throw;
+	list<CAnimation*>	m_KineticCombo_Kinetic02_Cancel;
+
+	list<CAnimation*>	m_KineticCombo_Kinetic03_Start;
+	list<CAnimation*>	m_KineticCombo_Kinetic03_Throw;
+	list<CAnimation*>	m_KineticCombo_Kinetic03_Cancel;
+
+	list<CAnimation*>	m_KineticCombo_KineticFinish_Start;
+	list<CAnimation*>	m_KineticCombo_KineticFinish_Throw;
+	list<CAnimation*>	m_KineticCombo_KineticFinish_Cancel;
 
 protected:	// 피격 소켓 애니메이션
 	list<CAnimation*>	m_Hit_FL_Level01;
@@ -204,10 +230,6 @@ public:
 	_float	GetPlayRatio() { return m_fPlayRatio; }
 	_float	GetfYSpeed() { return m_fYSpeed; }
 
-public: // For VFX
-	void	Trail_Render(_bool trueisrender) { m_bTrailRender = trueisrender; }
-
-
 protected:
 	_bool	m_bHit = false;
 	_bool	m_bBreakFall = false;
@@ -229,6 +251,12 @@ protected:
 	_bool	m_bCharge = false;
 	_float  m_fBefCharge = 0.f;			// 실제 차지 전
 	_float	m_fCharge[3] = { 0.f, };	// 실제 차지
+
+	_float	m_fKineticCombo_Slash = 0.f;	// 평타 타격 시 갱신
+	_float	m_fKineticCombo_Kinetic = 0.f;	// 키네틱 타격 시 갱신
+	_float	m_fKineticCharge = 0.f;			// 염력 차지 시간, 기본적으로 1초
+
+	_bool	m_bKineticCombo = false;	// 현재 공격 진행중인지?
 
 	_float	m_fJumpPower = 10.f;
 
@@ -255,13 +283,19 @@ public:	//EventCaller용
 	void		Event_AttackLimitReset() { AttackLimitReset(); }
 	void		Event_ChargeReset() { Reset_Charge(); }
 
+	void		Event_Effect(string szEffectName);
+
+public:
+	void		Set_KineticCombo_Kinetic() { m_fKineticCombo_Kinetic = 1.f; }	// 키네틱 오브젝트에서 지정, 충돌 발생시 콤보 가능하도록 해준다.
+
 protected:
 	void		Reset_Charge();
 
-private:
-	// For TrailSystem
-	class CTrailSystem* m_pTrail = nullptr;
-	_bool		m_bTrailRender = false;
+protected:
+	unordered_map<string, string>	m_mapEffectGroup;
+	void		Load_DefaultEffects(const char* pEffectDir);
+	void		EffectMaker();
+	unordered_map<string, CGameObject*>	m_mapPlayerEffect;
 
 protected:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
 	_bool		m_bCanTurn = false;
@@ -325,7 +359,7 @@ protected:
 
 protected:
 	void			Attack_Effect(const string& szBoneName, _float fSize);
-	CGameObject*	m_pEffect = nullptr;
+	CEffectGroup*	m_pEffect = nullptr;
 
 protected:
 	void			Search_Usable_KineticObject();

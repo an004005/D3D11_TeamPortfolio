@@ -5,6 +5,9 @@
 #include "JsonStorage.h"
 #include "RigidBody.h"
 
+#include "Monster.h"
+#include "Player.h"
+
 CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
 {
@@ -38,6 +41,52 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 	m_pKinetic_RigidBody->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
 	m_pKinetic_RigidBody->Set_Kinetic(true);
 
+	// 다이나믹 리지드 바디가 몬스터와 충돌했는지?
+	m_pDynamic_RigidBody->SetOnTriggerIn([this](CGameObject* pGameObject)
+	{
+		if (!m_bThrow)
+			return;
+
+		if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
+		{
+			DAMAGE_PARAM tParam;
+			tParam.iDamage = 1;
+			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+			pMonster->TakeDamage(tParam);
+
+			// 충돌이 발생하면 플레이어의 키네틱 콤보 상태를 1로 올려준다.
+			if (CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player") != nullptr)
+			{
+				for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
+				{
+					if (L"Player" == iter->GetPrototypeTag())
+					{
+						static_cast<CPlayer*>(iter)->Set_KineticCombo_Kinetic();
+						break;
+					}
+				}
+			}
+
+		}
+	});
+
+	// 키네틱 리지드 바디가 몬스터와 충돌했는지?
+	m_pKinetic_RigidBody->SetOnTriggerIn([this](CGameObject* pGameObject)
+	{
+		if (!m_bThrow)
+			return;
+
+		if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
+		{
+			DAMAGE_PARAM tParam;
+			tParam.iDamage = 1;
+			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+			pMonster->TakeDamage(tParam);
+		}
+	});
+
 	if (pArg)
 	{
 		Json& json = *static_cast<Json*>(pArg);
@@ -53,6 +102,10 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 void CMapKinetic_Object::BeginTick()
 {
+	m_pKinetic_RigidBody->Update_Tick(m_pTransformCom);
+	m_pDynamic_RigidBody->Update_Tick(m_pTransformCom);
+	m_pKinetic_RigidBody->Update_AfterPhysX(m_pTransformCom);
+	m_pDynamic_RigidBody->Update_AfterPhysX(m_pTransformCom);
 }
 
 void CMapKinetic_Object::Tick(_double TimeDelta)
@@ -108,6 +161,19 @@ void CMapKinetic_Object::SaveToJson(Json & json)
 void CMapKinetic_Object::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	if (ImGui::Button("Kinetic Object Reset"))
+	{
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 10.f, 0.f));
+		m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(180.f) });
+
+		m_pDynamic_RigidBody->Activate(true);
+		m_pDynamic_RigidBody->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
+
+		m_pKinetic_RigidBody->Activate(false);
+		m_pKinetic_RigidBody->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
+		m_pKinetic_RigidBody->Set_Kinetic(true);
+	}
 	//m_pPxModel->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
 }
 

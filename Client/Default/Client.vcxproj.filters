@@ -1010,5 +1010,8 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxSwordTrail_VFX.hlsl">
+      <Filter>97.ShaderFiles\VFX</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

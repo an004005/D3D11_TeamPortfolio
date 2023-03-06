@@ -89,6 +89,8 @@ void CScarletCharacter::Collision_Check(CRigidBody * AttackTrigger, DAMAGE_PARAM
 	param.iTargetType = CTB_MONSTER;
 	param.fVisibleTime = 0.f;
 
+	m_iHitTargetCount = 0.;
+
 	if (CGameInstance::GetInstance()->PxSweepCapsule(param))
 	{
 		for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
@@ -101,6 +103,7 @@ void CScarletCharacter::Collision_Check(CRigidBody * AttackTrigger, DAMAGE_PARAM
 				tParam.iDamage = DamageParam.iDamage;
 				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				pTarget->TakeDamage(DamageParam);
+				++m_iHitTargetCount;
 			}
 		}
 	}
