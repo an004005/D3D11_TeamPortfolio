@@ -587,7 +587,6 @@
     </ClInclude>
     <ClInclude Include="..\public\AIController.h" />
     <ClInclude Include="..\public\Boss1_AIController.h" />
-    <ClInclude Include="..\public\PostVFX_ColorLUT.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -918,7 +917,6 @@
     </ClCompile>
     <ClCompile Include="..\private\AIController.cpp" />
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
-    <ClCompile Include="..\private\PostVFX_ColorLUT.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

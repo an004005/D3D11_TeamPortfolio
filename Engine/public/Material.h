@@ -28,6 +28,12 @@ public:
 	void SetActive(_bool bActive) { m_bActive = bActive; }
 	_bool IsActive() const { return m_bActive; }
 
+public:
+	static void LoadMaterialFilePathes(const string& MaterialJsonDir);
+	static const string* FindMaterialFilePath(const string& MaterialName);
+private:
+	static unordered_map<string, string> s_MtrlPathes;
+
 protected:
 	class CShader* m_pShader = nullptr;
 	 ShaderParams m_tParams;

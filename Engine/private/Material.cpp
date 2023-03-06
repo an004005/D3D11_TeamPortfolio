@@ -6,6 +6,10 @@
 #include "GameUtils.h"
 #include "JsonStorage.h"
 #include "ImguiUtils.h"
+#include "Graphic_Device.h"
+
+unordered_map<string, string> CMaterial::s_MtrlPathes{};
+
 
 CMaterial::CMaterial(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CComponent(pDevice, pContext)
@@ -92,7 +96,7 @@ void CMaterial::Imgui_RenderProperty()
 
 	ImGui::Separator();
 
-	CImguiUtils::FileDialog_FileSelector("Save Material to", ".json", "../Bin/Resources/Meshes/Valorant/Materials/", [this](const string& filePath)
+	CImguiUtils::FileDialog_FileSelector("Save Material to", ".json", "../Bin/Resources/Materials/", [this](const string& filePath)
 	{
 		Json json;
 		SaveToJson(json);
@@ -154,6 +158,36 @@ void CMaterial::Begin(_uint iPass)
 {
 	m_pShader->Set_Params(m_tParams);
 	m_pShader->Begin(iPass);
+}
+
+void CMaterial::LoadMaterialFilePathes(const string& MaterialJsonDir)
+{
+	s_MtrlPathes.clear();
+	CGameUtils::ListFilesRecursive(MaterialJsonDir, [](const string& filePath)
+	{
+		char szFileName[MAX_PATH]{};
+		_splitpath_s(filePath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
+
+		if (0 == strcmp("Proto_Mtrl_Empty", szFileName)
+			|| 0 == strcmp("Proto_MtrlAnim_Empty", szFileName)
+			|| 0 == strcmp("Proto_Mtrl_Empty_Instance", szFileName))
+		{
+			CGameInstance::GetInstance()->Add_Prototype(LEVEL_STATIC, s2ws(szFileName).c_str(),
+				CMaterial::Create(CGraphic_Device::GetInstance()->GetDevice(), CGraphic_Device::GetInstance()->GetContext(), filePath.c_str()));
+		}
+		else
+		{
+			s_MtrlPathes.emplace(szFileName, filePath);
+		}
+	});
+}
+
+const string* CMaterial::FindMaterialFilePath(const string& MaterialName)
+{
+	auto itr = s_MtrlPathes.find(MaterialName);
+	if (itr != s_MtrlPathes.end())
+		return &itr->second;
+	return nullptr;
 }
 
 void CMaterial::Free()

@@ -253,7 +253,6 @@
     <ClInclude Include="..\public\MapNonAnim_Object.h" />
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\PlayerInfo_HpUI.h" />
-    <ClInclude Include="..\public\PostVFX_ColorLUT.h" />
     <ClInclude Include="..\public\PostVFX_Distortion.h" />
     <ClInclude Include="..\public\PostVFX_Scifi.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
@@ -364,7 +363,6 @@
     <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\PlayerInfo_HpUI.cpp" />
-    <ClCompile Include="..\private\PostVFX_ColorLUT.cpp" />
     <ClCompile Include="..\private\PostVFX_Distortion.cpp" />
     <ClCompile Include="..\private\PostVFX_Scifi.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
