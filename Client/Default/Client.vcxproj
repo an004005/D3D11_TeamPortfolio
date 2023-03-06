@@ -217,6 +217,7 @@
     <ClInclude Include="..\public\Floors.h" />
     <ClInclude Include="..\public\FlowerLeg.h" />
     <ClInclude Include="..\public\FL_AnimInstance.h" />
+    <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
     <ClInclude Include="..\public\Imgui_EffectBrowser.h" />
     <ClInclude Include="..\public\Imgui_LevelSwitcher.h" />
@@ -327,6 +328,7 @@
     <ClCompile Include="..\private\Floors.cpp" />
     <ClCompile Include="..\private\FlowerLeg.cpp" />
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
+    <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
     <ClCompile Include="..\private\Imgui_EffectBrowser.cpp" />
     <ClCompile Include="..\private\Imgui_LevelSwitcher.cpp" />

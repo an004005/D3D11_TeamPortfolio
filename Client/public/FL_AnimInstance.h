@@ -14,37 +14,35 @@ public:
 
 	virtual void Imgui_RenderState() override;
 
+	const string& GetCurStateName() { return m_pASM_Base->GetCurState()->m_strName; }
+
 public:
-	void	InputAnimSocket(const string& strSocName, list<CAnimation*> AnimList);
+	_bool isSocketEmpty(const string& strSocName) { return m_mapAnimSocket[strSocName].empty(); }
+	_bool isSocketPassby(const string& strSocName, _float fPlayRatio = 1.f);
+	void AttachAnimSocket(const string& strSocName, const list<CAnimation*>& AnimList);
 
-protected:	// 대상의 상태
-	_bool			m_bIdle = false;
-	_bool			m_bAir = false;
-	_bool			m_bLanding = false;
-	_bool			m_bPreAir = false;
-	_bool			m_bWalk = false;
-	_bool			m_bRun = false;
-
-	_bool			m_bAttackL = false;
-	_bool			m_bAttackR = false;
-
-	_bool			m_bThreat = false;
-
-	// Socket
-	_bool			m_bDamage = false;
-	_bool			m_bDead = false;
-
-	// Dodge 3-Direct
-	_bool			m_bDodgeB = false;
-	_bool			m_bDodgeL = false;
-	_bool			m_bDodgeR = false;
-
-protected:
+private:
 	CAnimationStateMachine* m_pASM_Base = nullptr;
 
-protected:
+
+	_bool			m_bAir = false;
+	_bool			m_bPreAir = false;
+	_bool			m_bMove = false;
+	_bool			m_bRun = false;
+
+
+	_float3 m_vMoveAxis;
+	EBaseAxis m_eMoveAxis = EBaseAxis::AXIS_END;
+	EBaseAxis m_ePreMoveAxis = EBaseAxis::AXIS_END;
+	EBaseTurn m_eTurn = EBaseTurn::TURN_END;
+	_float m_fTurnRemain = 0.f;
+
+
+private:
 	_float	m_fLerpTime = 0.f;
-	_float	m_fLerpDuration = 0.2f;
+	_float	m_fLerpDuration = 0.1f;
+	_bool	m_bLerp = false;
+	_bool m_bAttach = false;
 
 public:
 	static CFL_AnimInstance* Create(CModel* pModel, CGameObject* pGameObject);

@@ -66,7 +66,7 @@ void CScarletCharacter::AfterPhysX()
 	m_vPrePos = vColliderFootPos;
 }
 
-void CScarletCharacter::Collision_Check(CRigidBody * AttackTrigger, DAMAGE_PARAM DamageParam)
+void CScarletCharacter::Collision_Check(CRigidBody * AttackTrigger, DAMAGE_PARAM DamageParam, ECOLLIDER_TYPE_BIT eColType)
 {
 	// 공격자의 트리거와 공격 파라미터를 전달받아서 진행
 	static Vector4 BeforePos;
@@ -86,7 +86,7 @@ void CScarletCharacter::Collision_Check(CRigidBody * AttackTrigger, DAMAGE_PARAM
 
 	param.vUnitDir = _float3(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z);
 	param.fDistance = param.vUnitDir.Length();
-	param.iTargetType = CTB_MONSTER;
+	param.iTargetType = eColType;
 	param.fVisibleTime = 0.f;
 
 	if (CGameInstance::GetInstance()->PxSweepCapsule(param))

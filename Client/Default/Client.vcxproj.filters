@@ -232,6 +232,9 @@
     <Filter Include="02.GameObjects\Monster\boss1\Boss1_Animinstance">
       <UniqueIdentifier>{107db123-e61b-466e-8716-8300f9f27d16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Controller">
+      <UniqueIdentifier>{4bc20954-31cf-4cfc-b16b-78107c6eb677}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -587,6 +590,9 @@
     </ClInclude>
     <ClInclude Include="..\public\AIController.h" />
     <ClInclude Include="..\public\Boss1_AIController.h" />
+    <ClInclude Include="..\public\FL_Controller.h">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_Controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -917,6 +923,9 @@
     </ClCompile>
     <ClCompile Include="..\private\AIController.cpp" />
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
+    <ClCompile Include="..\private\FL_Controller.cpp">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

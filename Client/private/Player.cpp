@@ -126,7 +126,7 @@ void CPlayer::Tick(_double TimeDelta)
 		{	// 충돌 판정
 			DAMAGE_PARAM tParam;
 			ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
-			tParam.iDamage = 1;
+			tParam.iDamage = 1;															
 			Collision_Check(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), tParam);
 		}
 	}

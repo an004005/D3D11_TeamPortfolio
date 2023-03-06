@@ -228,7 +228,7 @@ HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 
 	PreviewData["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
 	auto pwp = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
-	
+
 	static_cast<CModelPreviwer*>(pwp)->SetAttachTo("RightWeapon", static_cast<CModelPreviwer*>(pPlayer));
 
 	return S_OK;

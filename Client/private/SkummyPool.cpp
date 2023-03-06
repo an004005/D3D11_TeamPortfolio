@@ -53,7 +53,7 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 		(CComponent**)&m_pTrigger, &SkummyPoolTrigger)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 13.f)));
+//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 13.f)));
 
 	m_pTransformCom->SetSpeed(1.f);
 
@@ -409,6 +409,8 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 void CSkummyPool::BeginTick()
 {
 	__super::BeginTick();
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 36.f)));
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 

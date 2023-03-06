@@ -7,29 +7,32 @@ END
 
 BEGIN(Client)
 
-class CBoss1_AIController : public CAIController
+class CFL_Controller : public CAIController
 {
-protected:
-	CBoss1_AIController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	explicit CBoss1_AIController(const CBoss1_AIController& rhs);
-	virtual ~CBoss1_AIController() override = default;
+public:
+	CFL_Controller(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	explicit CFL_Controller(const CFL_Controller& rhs);
+	virtual ~CFL_Controller() = default;
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void BeginTick() override;
 	virtual void AI_Tick(_double TimeDelta) override;
 
+	_bool IsRun() const { return m_bRun; }
+
 	void Tick_Near(_double TimeDelta);
 	void Tick_Mid(_double TimeDelta);
 	void Tick_Far(_double TimeDelta);
+	
 
-//	void TurnToTargetStop(_float fSpeedRatio = 1.f);
-
+	void Run(EMoveAxis eAxis);
+	void Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio = 1.f);
 
 private:
 	CFSMComponent* m_pFSM = nullptr;
 	_float m_fToTargetDistance;
-	class CBoss1* m_pCastedOwner = nullptr;
+	class CFlowerLeg* m_pCastedOwner = nullptr;
 
 
 	_uint m_iNearOrder = 0;
@@ -39,11 +42,12 @@ private:
 	_float m_fTurnSlowTime;
 	_float m_fTurnSlowRatio;
 
+	_bool m_bRun = false;
 
 public:
 	virtual void Free() override;
 	virtual CComponent* Clone(void* pArg) override;
-	static CBoss1_AIController* Create();
+	static CFL_Controller* Create();
 };
 
 END

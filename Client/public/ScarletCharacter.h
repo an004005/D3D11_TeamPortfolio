@@ -30,7 +30,7 @@ public:
 	EDeBuffType GetDeBuffType() const { return m_eDeBuff; }
 
 protected:
-	void		Collision_Check(CRigidBody*	AttackTrigger, DAMAGE_PARAM DamageParam);
+	void		Collision_Check(CRigidBody*	AttackTrigger, DAMAGE_PARAM DamageParam, ECOLLIDER_TYPE_BIT eColType = CTB_PLAYER);
 
 protected:
 	EDeBuffType m_eDeBuff = EDeBuffType::DEBUFF_END;
