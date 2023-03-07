@@ -669,6 +669,12 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_207_AL_atk_justdodge": {
+        "Duration": 179.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_210_AL_atk_charge": {
         "Duration": 45.0,
         "TickPerSecond": 50.0,
@@ -917,6 +923,24 @@
                 "EventTime": 13.0
             }
         ]
+    },
+    "AS_ch0100_224_AL_atk_air_justdodge": {
+        "Duration": 111.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_224_AL_atk_air_justdodge_fall": {
+        "Duration": 25.0,
+        "TickPerSecond": 24.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_224_AL_atk_air_justdodge_landing": {
+        "Duration": 100.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_ch0100_227_AL_atk_air_hold_landing": {
         "Duration": 66.0,
@@ -1550,13 +1574,31 @@
         "Duration": 161.0,
         "TickPerSecond": 80.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "AttackEnd",
+                "EventTime": 80.0
+            },
+            {
+                "EventName": "Start_SweepLeft",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em0300_202_AL_atk_a2_R": {
         "Duration": 161.0,
         "TickPerSecond": 80.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Start_SweepRight",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "AttackEnd",
+                "EventTime": 80.0
+            }
+        ]
     },
     "AS_em0300_204_AL_atk_a3_start": {
         "Duration": 80.0,
@@ -1596,7 +1638,16 @@
         "Duration": 200.0,
         "TickPerSecond": 48.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Start_Spin",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "AttackEnd",
+                "EventTime": 150.0
+            }
+        ]
     },
     "AS_em0320_228_AL_atk8_waterball_F": {
         "Duration": 120.0,

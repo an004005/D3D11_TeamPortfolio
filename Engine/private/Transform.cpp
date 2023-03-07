@@ -359,6 +359,24 @@ void CTransform::LookAt(_fvector vTargetPos)
 	Set_State(CTransform::STATE_LOOK, vLook);
 }
 
+void CTransform::LookAt_NonY(_fvector vTargetPos)
+{
+	if (XMVector3Equal(vTargetPos, Get_State(CTransform::STATE_TRANSLATION)))	return;
+
+	_float3		vScale = Get_Scaled();
+
+	_float4		vLook_NonY = vTargetPos - Get_State(CTransform::STATE_TRANSLATION);
+				vLook_NonY.y = 0.f;
+
+	_vector		vLook = XMVector3Normalize(vLook_NonY) * vScale.z;
+	_vector		vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook)) * vScale.x;
+	_vector		vUp = XMVector3Normalize(XMVector3Cross(vLook, vRight)) * vScale.y;
+
+	Set_State(CTransform::STATE_RIGHT, vRight);
+	Set_State(CTransform::STATE_UP, vUp);
+	Set_State(CTransform::STATE_LOOK, vLook);
+}
+
 void CTransform::LookAt_Smooth(_fvector vTargetPos, _double TimeDelta)
 {
 	// 바라볼 지점이 나 자신이면 고장나더라... 바로 리턴
@@ -376,7 +394,7 @@ void CTransform::LookAt_Smooth(_fvector vTargetPos, _double TimeDelta)
 		if (0 > fDotLook)
 			Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta);
 		else
-			LookAt(vTargetPos);
+			LookAt_NonY(vTargetPos);
 	}
 	else if (0.2 <= XMVectorGetX(XMVector3Dot(vRight, vDir)))
 		Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta);

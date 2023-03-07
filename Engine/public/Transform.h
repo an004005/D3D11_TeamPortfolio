@@ -92,6 +92,7 @@ public:
 	/* 쳐다본다. */
 	/*void LookAt(const CTransform* pTarget);*/
 	void LookAt(_fvector vTargetPos);
+	void LookAt_NonY(_fvector vTargetPos);
 	void LookAt_Smooth(_fvector vTargetPos, _double TimeDelta);
 	_float Get_RemainYawToLookAt(_fvector vTargetPos);
 	_bool LookAt_Lerp(_fvector vSourLook, _fvector vTargetPos, _float fLerp);

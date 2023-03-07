@@ -2224,6 +2224,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 	m_mapAnimSocket.emplace("Kinetic_Air_AnimSocket", SocketList);
 	m_mapAnimSocket.emplace("Hit_AnimSocket", SocketList);
 	m_mapAnimSocket.emplace("Kinetic_Combo_AnimSocket", SocketList);
+	m_mapAnimSocket.emplace("JustDodge_AnimSocket", SocketList);
 
 	return S_OK;
 }
@@ -2468,6 +2469,19 @@ _bool CBaseAnimInstance::isSocketAlmostFinish(const string & strSocName)
 _bool CBaseAnimInstance::isSocketPassby(const string & strSocName, _float fPlayRatio)
 {
 	return (m_mapAnimSocket[strSocName].size() == 1) && (m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= fPlayRatio);
+}
+
+_bool CBaseAnimInstance::isSocketExactlyEmpty()
+{
+	for (auto& iter : m_mapAnimSocket)
+	{
+		if (iter.second.empty())
+			continue;
+		else
+			return false;
+	}
+
+	return true;
 }
 
 void CBaseAnimInstance::SpairAnimationChecker()
