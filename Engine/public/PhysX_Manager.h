@@ -112,6 +112,7 @@ public:
 	static void AddForceAtLocalPos(physx::PxRigidBody& body, const physx::PxVec3& force,
 		const physx::PxVec3& pos, physx::PxForceMode::Enum mode, bool wakeup = true);
 	static class CGameObject* GetOnwer(physx::PxActor* pActor);
+	static class CComponent* GetComponent(physx::PxActor* pActor);
 };
 
 END

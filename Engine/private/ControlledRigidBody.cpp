@@ -251,6 +251,7 @@ void CEngineControllerHitReport::onShapeHit(const physx::PxControllerShapeHit& h
 			const PxVec3 localPos = globalPose.transformInv(toVec3(hit.worldPos));
 			CPhysXUtils::AddForceAtLocalPos(*actor, hit.dir*hit.length*m_fPushPower, localPos, PxForceMode::eACCELERATION);
 		}
+		
 	}
 
 	if (m_HitCallback)

@@ -12,6 +12,12 @@ protected:
 	virtual ~CMonster() = default;
 
 protected:
+	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
+	void ClearDamagedTarget();
+	void HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
+	void HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
+
+protected:
 	_uint m_iHP = 100;
 	_uint m_iMaxHP = 100;
 
@@ -19,6 +25,8 @@ protected:
 	_uint m_iMaxStamina = 100;
 
 	_bool m_bDead = false;
+
+	set<CScarletCharacter*> m_DamagedTargetList;
 
 };
 
