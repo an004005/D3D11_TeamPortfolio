@@ -23,9 +23,6 @@ public:
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render();
 
-public:
-	void		Collision_Check();
-
 private:
 	_vector		m_vBeforePos;
 

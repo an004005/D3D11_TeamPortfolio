@@ -31,10 +31,14 @@ struct ENGINE_DLL CAnimState : public CBase
 	string m_strName;									// 스테이트 이름
 	vector<CAnimTransition*> m_Transitions;				// 현재 스테이트가 가지는 트랜지션의 벡터
 	CAnimation* m_Animation = nullptr;
+	CAnimation*	m_SpairAnimation = nullptr;					// 스테이트는 유지하되 애니메이션만 변경
 	std::function<void(void)> m_StartEvent = nullptr;		// 애니메이션이 시작될 때 발생하는 이벤트, 있으면 실행시키게 하자
 	std::function<_bool(void)> m_OptionalEvent = nullptr;	// 매개변수로 받은 프레임을 넘어갈 때 발생하는 이벤트, 있으면 실행시키게 하자
 	std::function<void(void)> m_FinishEvent = nullptr;		// 애니메이션이 종료될 때 발생하는 이벤트, 있으면 실행시키게 하자
+
 	_bool m_bOptionalEvent = true;
+	_bool m_bSpairClearFlag = false;						// 스페어 애니메이션 클리어 플래그
+	//이게 true이면 스페어 애니메이션이 끝날 경우 제거하고 기존 애니메이션으로 변경한 후 스페어를 제거한다.
 
 public:
 	CAnimState(const string& szStateName) :m_strName(szStateName) {};
@@ -65,7 +69,13 @@ public:
 	CAnimState* GetPreState() { return m_pPreState; }					// 직전 상태 가져오기
 	_float GetTransitionDuration() { return m_fTransitionDuration; }	// 트랜지션의 Duration 가져오기 (총 재생시간)
 	_float GetCurTransitionTime() { return m_fCurTransitionTime; }		// 트랜지션의 Time 가져오기 (진행시간)
-	_bool  isLerping() { return (1.f > (m_fCurTransitionTime / m_fTransitionDuration)) ? true : false ; }
+	_bool  isLerping();
+
+	void	SetSpairAnim(const string& stateName, CAnimation* pSpairAnim);
+	void	ResetSpairAnim();
+
+public:
+	unordered_map<string, CAnimState*>&	Get_MapStates() { return m_mapStates; }
 
 private:
 	string m_szCurStateName = "";
@@ -77,9 +87,11 @@ private:
 	_float m_fPreStatePlayAt = 0.f;
 
 	_float m_fTransitionDuration = 0.f;			// 트랜지션의 Duration
-	_float m_fCurTransitionTime = 0.f;			// 현재 실행중인 애니메이션의 진행시간
+	_float m_fCurTransitionTime = 0.f;			// 보간 진행도
 	_float m_fBlend = 0.f;
 	_bool  m_bLerp = false;
+
+	_float m_fSpairTransitionTime = 0.f;
 
 	unordered_map<string, CAnimState*> m_mapStates;
 

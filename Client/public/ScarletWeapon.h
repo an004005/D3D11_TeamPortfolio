@@ -34,10 +34,13 @@ public:
 	void	Setup_BoneMatrix(CModel* pModel, _fmatrix Transform);
 
 public:
-	CRigidBody*	Get_Trigger() { return m_pCollider; }
+	void	Trail_Setting(_bool TrailOn) { m_bTrailOn = TrailOn; }
 
 protected:
-	void	Collision_Check();
+	_bool	m_bTrailOn = false;
+
+public:
+	CRigidBody*	Get_Trigger() { return m_pCollider; }
 	
 protected:
 	WEAPON_DESC	m_Desc;

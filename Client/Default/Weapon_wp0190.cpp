@@ -32,8 +32,8 @@ HRESULT CWeapon_wp0190::Initialize(void * pArg)
 
 	FAILED_CHECK(SetUp_Components());
 
-//	Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Trail/PlayerSwordTrail.json");
-//	m_pTrail = static_cast<CTrailSystem*>(pGameInstance->Clone_GameObject_Get(L"Layer_Player", TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
+	Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Trail/PlayerSwordTrail.json");
+	m_pTrail = static_cast<CTrailSystem*>(pGameInstance->Clone_GameObject_Get(L"Layer_Player", TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
 
 	return S_OK;
 }
@@ -56,8 +56,10 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 	m_pCollider->Update_Tick(m_pTransformCom);
 
-	//m_pTrail->GetTransform()
-	//	->Set_WorldMatrix(m_pCollider->GetPxWorldMatrix());
+	m_pTrail->GetTransform()
+		->Set_WorldMatrix(m_pCollider->GetPxWorldMatrix());
+
+	m_pTrail->SetActive(m_bTrailOn);
 	
 	//m_pTrail->Tick(TimeDelta);
 
@@ -68,6 +70,8 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 void CWeapon_wp0190::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
+
+	m_pTrail->Late_Tick(TimeDelta);
 }
 
 void CWeapon_wp0190::AfterPhysX()
@@ -85,47 +89,6 @@ HRESULT CWeapon_wp0190::Render()
 //	m_pTrail->Render();
 
 	return S_OK;
-}
-
-void CWeapon_wp0190::Collision_Check()
-{
-	Matrix ColliderWorld = m_pCollider->GetPxWorldMatrix();
-	_float4 vPos = _float4(ColliderWorld.Translation().x, ColliderWorld.Translation().y, ColliderWorld.Translation().z, 1.f);
-	_float3 vLook = _float3(ColliderWorld.Right().x, ColliderWorld.Right().y, ColliderWorld.Right().z);
-
-	physx::PxSweepHit hitBuffer[4];
-	physx::PxSweepBuffer overlapOut(hitBuffer, 4);
-	CapsuleSweepParams param;
-	param.sweepOut = &overlapOut;
-	param.fRadius = 0.2f;
-	param.fHalfHeight = 0.3f;
-	param.vLook = vLook;
-	param.vPos = vPos;
-	
-	_float4	vWeaponDir = param.vPos - m_BeforePos;
-	
-	param.vUnitDir = _float3(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z);
-	param.fDistance = param.vUnitDir.Length();
-	param.iTargetType = CTB_MONSTER;
-	param.fVisibleTime = 0.1f;
-
-	if (CGameInstance::GetInstance()->SweepCapsule(param))
-	{
-		for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
-		{
-			auto pHit = overlapOut.getAnyHit(i);
-			CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
-			if (auto pMonster = dynamic_cast<CMonster*>(pCollidedObject))
-			{
-				DAMAGE_PARAM tParam;
-				tParam.iDamage = 1;
-				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-				pMonster->TakeDamage(tParam);
-			}
-		}
-	}
-	
-	m_BeforePos = param.vPos;
 }
 
 HRESULT CWeapon_wp0190::SetUp_Components()

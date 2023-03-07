@@ -197,6 +197,12 @@ void CRigidBody::AddTorque(_float3 vTorque)
 	}
 }
 
+void CRigidBody::Set_Kinetic(_bool bKinematic)
+{
+	m_bKinematic = bKinematic;
+	CreateActor();
+}
+
 void CRigidBody::SetOriginTransform(const _float4x4& OriginMatrix)
 {
 	m_OriginTransformMatrix = OriginMatrix;
