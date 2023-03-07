@@ -20,8 +20,13 @@
 #include "Imgui_CameraManager.h"
 #include "Indicator.h"
 #include "MapKinetic_Object.h"
+#include "PostVFX_Scifi.h"
+#include "EffectGroup.h"
+#include "ParticleSystem.h"
+#include "PostVFX_Distortion.h"
 
 #include "BuddyLumi.h"
+#include "BronJon.h"
 
 #include "TrailSystem.h"
 #include "EffectSystem.h"
@@ -123,13 +128,13 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& filePath)
-	{
-		string fileName = CGameUtils::GetFileName(filePath);
-		CGameInstance::GetInstance()->Add_Prototype(
-			s2ws(fileName).c_str(),
-			CMaterial::Create(m_pDevice, m_pContext, filePath.c_str()));
-	});
+	// CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& filePath)
+	// {
+	// 	string fileName = CGameUtils::GetFileName(filePath);
+	// 	CGameInstance::GetInstance()->Add_Prototype(
+	// 		s2ws(fileName).c_str(),
+	// 		CMaterial::Create(m_pDevice, m_pContext, filePath.c_str()));
+	// });
 
 	pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
 	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
@@ -150,12 +155,8 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
 	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
 
-	//FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
-
 	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
-
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
-
+	
 	// 키네틱 오브젝트 모델
 	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",
 		[this](const string& fileName)
@@ -176,6 +177,29 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 		pBuddyLumi->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBuddyLumi"), pBuddyLumi));
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BuddyLumi"), CBuddyLumi::Create(m_pDevice, m_pContext)));
+	}
+
+	{
+		auto pBronJon = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/BronJon/BronJon.anim_model");
+		pBronJon->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BronJon/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBronJon"), pBronJon));
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BronJon"), CBronJon::Create(m_pDevice, m_pContext)));
+	}
+
+	{	// 이펙트 프로토타입
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
+			CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
+			CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
 	}
 
 	return S_OK;
@@ -242,13 +266,19 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	Json BuddyLumiModel;
-	BuddyLumiModel["Model"] = "MonsterBuddyLumi";
+	//Json BuddyLumiModel;
+	//BuddyLumiModel["Model"] = "MonsterBuddyLumi";
 
-	Json BuddyLumiTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumiTrigger.json");
+	//Json BuddyLumiTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumiTrigger.json");
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"),& BuddyLumiModel)))
-	return E_FAIL;
+	//if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"),& BuddyLumiModel)))
+	//return E_FAIL;
+
+	Json BronJonModel;
+	BronJonModel["Model"] = "MonsterBronJon";
+
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -257,9 +287,15 @@ HRESULT CLevel_PlayerTest::Ready_Effect(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
+	//Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
+	//pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
 	
+	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Scifi", &Test);
+
+	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
+
 	return S_OK;
 }
 

@@ -46,7 +46,9 @@ private:
 	_float								m_fSegmentSize;
 	_float4								m_vColor;
 	vector<_float4>						m_vPrePoses;
-	_float4								m_vPreRight;
+	vector<_float4>						m_vPreRight;
+	list<_vector>						m_TrailPointList;
+//	_vector m_vPreRight;
 	_uint								m_iPass = 0;
 	_uint								m_iSegmentCnt = 0;
 

@@ -18,6 +18,8 @@ static const float EPSILON = 1e-6f;
 #define SHADER_HIT_DECAL 1 << 5
 
 
+#define SHADER_NONE_SHADE 1 << 5
+
 float2 Get_FlipBookUV(float2 vRectUV, float fCurTime, float fFrameTime, int iRowCnt, int iColCnt)
 {
 	float fTotalTime = fFrameTime * iRowCnt * iColCnt;
@@ -339,48 +341,6 @@ float4x4 look_at_matrix(float3 at, float3 eye, float3 up)
     float3 yaxis = cross(zaxis, xaxis);
     return axis_matrix(xaxis, yaxis, zaxis);
 }
-
-
-// GGX/Towbridge-Reitz normal distribution function.
-// Uses Disney's reparametrization of alpha = roughness^2.
-float ndfGGX(float cosLh, float roughness)
-{
-	float alpha   = roughness * roughness;
-	float alphaSq = alpha * alpha;
-
-	float denom = (cosLh * cosLh) * (alphaSq - 1.0) + 1.0;
-	return alphaSq / (PI * denom * denom);
-}
-
-// Single term for separable Schlick-GGX below.
-float gaSchlickG1(float cosTheta, float k)
-{
-	return cosTheta / (cosTheta * (1.0 - k) + k);
-}
-
-// Schlick-GGX approximation of geometric attenuation function using Smith's method.
-float gaSchlickGGX(float cosLi, float cosLo, float roughness)
-{
-	float r = roughness + 1.0;
-	float k = (r * r) / 8.0; // Epic suggests using this roughness remapping for analytic lights.
-	return gaSchlickG1(cosLi, k) * gaSchlickG1(cosLo, k);
-}
-
-// Shlick's approximation of the Fresnel factor.
-float3 fresnelSchlick(float3 F0, float cosTheta)
-{
-	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
-}
-
-// Returns number of mipmap levels for specular IBL environment map.
-// uint querySpecularTextureLevels()
-// {
-// 	uint width, height, levels;
-// 	specularTexture.GetDimensions(0, width, height, levels);
-// 	return levels;
-// }
-
-
 
 float Rand(float2 co)
 {

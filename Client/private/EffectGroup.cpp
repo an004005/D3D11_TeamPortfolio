@@ -111,7 +111,7 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 		m_Timeline.SetTimelineLength((_double)m_fEndTime);
 
-		// m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
+		//m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
 
 		if (m_iSelectFinishFunc == 0)
 		{
@@ -1334,6 +1334,24 @@ void CEffectGroup::SetPlay()
 _bool CEffectGroup::CheckPlay()
 {
 	return m_Timeline.IsPlay();
+}
+
+void CEffectGroup::Set_Transform(_fmatrix matSocket)
+{
+	//_matrix matSocket = XMMatrixIdentity();
+
+	//if()
+
+	if (nullptr != m_pFirst_EffectSystem)
+		m_pFirst_EffectSystem->GetTransform()->Set_WorldMatrix(matSocket);
+	if (nullptr != m_pSecond_EffectSystem)
+		m_pSecond_EffectSystem->GetTransform()->Set_WorldMatrix(matSocket);
+	if (nullptr != m_pThird_EffectSystem)
+		m_pThird_EffectSystem->GetTransform()->Set_WorldMatrix(matSocket);
+	if (nullptr != m_pFourth_EffectSystem)
+		m_pFourth_EffectSystem->GetTransform()->Set_WorldMatrix(matSocket);
+	if (nullptr != m_pFifth_EffectSystem)
+		m_pFifth_EffectSystem->GetTransform()->Set_WorldMatrix(matSocket);
 }
 
 void CEffectGroup::AddEmptyCurve(string strCurveName)

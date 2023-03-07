@@ -30,6 +30,7 @@ public:
 
 public:
 	void	Add_Physical(_float3 vForce = { 0.f, 0.f, 0.f }, _float3 vTorque = {0.f, 0.f, 0.f});
+	void	Set_Kinetic(_bool bKinetic);
 
 private:
 	wstring MakePxModelProtoTag();
@@ -38,9 +39,19 @@ private:
 	HRESULT	SetUp_Components(void* pArg);
 
 	CPhysXDynamicModel*	m_pPxModel = nullptr;
-	CRigidBody*			m_pRigidBody = nullptr;
+	CRigidBody*			m_pKinetic_RigidBody = nullptr;
+	CRigidBody*			m_pDynamic_RigidBody = nullptr;
+
+	_bool				m_bKinetic = false;
 	
 	CModel*				m_pModelCom = nullptr;
+
+public:
+	void				SetThrow(_bool bThrow) { m_bThrow = bThrow; }
+	_bool				Usable() { return (m_bThrow == false); }
+
+private:
+	_bool				m_bThrow = false;		//	데미지를 줄 수 있는 상태인가?
 
 public:
 	static CMapKinetic_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

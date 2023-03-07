@@ -4,7 +4,12 @@
         "Ints" : [],
         "Floats" : [],
         "Float2s" : [],
-        "Float4s" : [],
+        "Float4s" : [[
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ]],
         "Float4x4s" : [],
         "Textures" : [
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hood_COL.dds",

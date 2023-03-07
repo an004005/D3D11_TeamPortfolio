@@ -11,6 +11,6 @@
             "../Bin/Resources/Environments/00_Common/01_Material/SBS/Ground/dirt_pebbles_stylized/T_SBSM_Dirt_Pebbles_Stylized_01_NML.png",
             "../Bin/Resources/Environments/00_Common/01_Material/SBS/Ground/dirt_pebbles_stylized/T_SBSM_Dirt_Pebbles_Stylized_01_RMA.dds"
         ],
-        "Pass" : 2
+        "Pass" : 1
     }
 }

@@ -226,6 +226,31 @@ PS_OUT PS_MAIN_RADIAL_MASK(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_COLOR_GRADING_LUT_6(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+	
+	float2 vLUT_UV;
+	
+	float fSelction = 1.f / 16.f;
+	
+	
+	vLUT_UV.x = vColor.b / 16.f + ceil(vColor.r * 16.f) / 16.f;
+	vLUT_UV.y = vColor.g;
+	//
+	// vLUT_UV.x = vColor.g / 16.f + ceil(vColor.r * 16.f) / 16.f;
+	// vLUT_UV.y = vColor.b;
+	
+	Out.vColor.rgb = g_tex_0.Sample(LinearSampler, vLUT_UV).rgb;
+	Out.vColor.a = 1.f;
+	
+	Out.vColor = pow(Out.vColor, 1.f / 2.2f);
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default_Test
@@ -307,5 +332,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	//6
+	pass ColorGradingLUT
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_COLOR_GRADING_LUT_6();
 	}
 }
