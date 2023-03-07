@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "..\public\EffectSystem.h"
+
+#include <JsonStorage.h>
+
 #include "GameInstance.h"
 #include "ImguiUtils.h"
 #include "GameUtils.h"
@@ -42,16 +45,7 @@ void CEffectSystem::BeginTick()
 
 void CEffectSystem::Tick(_double TimeDelta)
 {
-	// m_fCurModelChangeTime += (_float)TimeDelta;
-
-	// if (m_fCurModelChangeTime >= m_fModelChangeTime &&m_bModelChange == false)
-	// {
-	// 	m_fCurModelChangeTime = 0.f;
-	// 	m_bModelChange = true;
-	// }
-
-	// if(m_pBuffer->Check_IsInstance() == true)
-	// 	dynamic_cast<CVIBuffer_Mesh_Instancing*>(m_pBuffer)->Tick(TimeDelta);
+	
 }
 
 void CEffectSystem::Late_Tick(_double TimeDelta)
@@ -61,6 +55,10 @@ void CEffectSystem::Late_Tick(_double TimeDelta)
 		if (m_bDecal)
 		{
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_DECAL, this);
+		}
+		else if(m_bNormal)
+		{
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		}
 		else
 		{
@@ -75,50 +73,95 @@ HRESULT CEffectSystem::Render()
 		return S_OK;
 
 	FAILED_CHECK(SetParams());
-	
-	if (m_pModel)
+
+	if(m_bModelSprite == true && m_vecModelCom.empty() == false)
 	{
-		for (auto& childMatrix : m_ChildBuffers)
+		Check_ModelSprite();
+
+		if (m_pModel)
 		{
-			const _float4x4 WorldMatrix = childMatrix * m_pTransformCom->Get_WorldMatrix_f4x4();
-
-			FAILED_CHECK(m_pShaderCom->Set_Matrix("g_WorldMatrix", &WorldMatrix));
-			FAILED_CHECK(Begin());
-
-			for (_uint i = 0; i < m_pModel->Get_NumMeshes(); ++i)
+			for (auto& childMatrix : m_ChildBuffers)
 			{
-				m_pModel->RenderMeshOnly(i);
+				const _float4x4 WorldMatrix = childMatrix * m_pTransformCom->Get_WorldMatrix_f4x4();
 
-				// if(m_fCurModelChangeTime >= m_fModelChangeTime)
-				// {
-				// 	m_fCurModelChangeTime = 0.f;
-				// 	++i;
-				// }
+				FAILED_CHECK(m_pShaderCom->Set_Matrix("g_WorldMatrix", &WorldMatrix));
+				FAILED_CHECK(Begin());
+
+				for (_uint i = 0; i < m_pModel->Get_NumMeshes(); ++i)
+				{
+					m_pModel->RenderMeshOnly(i);
+				}
 			}
 		}
+		else
+		{
+			for (auto& childMatrix : m_ChildBuffers)
+			{
+				const _float4x4 WorldMatrix = childMatrix * m_pTransformCom->Get_WorldMatrix_f4x4();
+
+				FAILED_CHECK(m_pShaderCom->Set_Matrix("g_WorldMatrix", &WorldMatrix));
+				FAILED_CHECK(Begin());
+
+				m_pBuffer->Render();
+			}
+		}
+
 	}
 	else
 	{
-		for (auto& childMatrix : m_ChildBuffers)
+		if (m_pModel)
 		{
-			const _float4x4 WorldMatrix = childMatrix * m_pTransformCom->Get_WorldMatrix_f4x4();
+			for (auto& childMatrix : m_ChildBuffers)
+			{
+				const _float4x4 WorldMatrix = childMatrix * m_pTransformCom->Get_WorldMatrix_f4x4();
 
-			FAILED_CHECK(m_pShaderCom->Set_Matrix("g_WorldMatrix", &WorldMatrix));
-			FAILED_CHECK(Begin());
+				FAILED_CHECK(m_pShaderCom->Set_Matrix("g_WorldMatrix", &WorldMatrix));
+				FAILED_CHECK(Begin());
 
-			m_pBuffer->Render();
+				for (_uint i = 0; i < m_pModel->Get_NumMeshes(); ++i)
+				{
+					m_pModel->RenderMeshOnly(i);
+
+				}
+			}
+		}
+		else
+		{
+			for (auto& childMatrix : m_ChildBuffers)
+			{
+				const _float4x4 WorldMatrix = childMatrix * m_pTransformCom->Get_WorldMatrix_f4x4();
+
+				FAILED_CHECK(m_pShaderCom->Set_Matrix("g_WorldMatrix", &WorldMatrix));
+				FAILED_CHECK(Begin());
+
+				m_pBuffer->Render();
+			}
 		}
 	}
 
 	return S_OK;
 }
 
+void CEffectSystem::Check_ModelSprite()
+{
+	if (m_vecModelDir.empty() == false && m_vecModelCom.empty() == false)
+	{
+		_uint ModelSize = (_uint)m_vecModelCom.size();
+
+		if (ModelSize > m_tParam.Ints[0])
+		{
+			m_pModel = m_vecModelCom[m_tParam.Ints[0]];
+		}
+		else
+		{
+			m_pModel = m_vecModelCom[ModelSize-1];
+		}
+	}
+}
+
 HRESULT CEffectSystem::SetParams()
 {
-	// if (auto pBillborad = dynamic_cast<CBillBoardTest*>(m_pBuffer))
-	// {
-	// 	pBillborad->Tick(g_fTimeDelta);
-	// }
+
 	if (m_bBillBoard)
 	{
 		switch (m_eBillBoardType)
@@ -176,13 +219,6 @@ HRESULT CEffectSystem::SetParams()
 
 HRESULT CEffectSystem::Begin()
 {
-	// if(m_tParam.iPass > m_pShaderCom->GetNumPasses())
-	// {
-	// 	m_tParam.iPass = 0;
-	// }
-	// if (nullptr == m_pContext ||
-	// 	m_tParam.iPass >= m_pShaderCom->GetNumPasses())
-	// 	return E_FAIL;
 	_uint iPassIndex = m_tParam.iPass;
 
 	if (0 <= iPassIndex && iPassIndex < m_pShaderCom->GetNumPasses())
@@ -198,17 +234,23 @@ void CEffectSystem::SaveToJson(Json& json)
 {
 	CShader::SaveShaderParam(m_tParam, json);
 
-	
+	json["bModelSprite"] = m_bModelSprite;
 	json["bBillBoard"] = m_bBillBoard;
 	json["BillBoardType"] = static_cast<_uint>(m_eBillBoardType);
 	json["Children"] = m_ChildBuffers;
 	json["bDecal"] = m_bDecal;
 	json["bUseDepth"] = m_bUseDepth;
-	
+	json["bNormal"] = m_bNormal;
 	json["BufferProtoTag"] = m_BufferProtoTag;
 	json["ShaderProtoTag"] = m_ShaderProtoTag;
 	json["ModelProtoTag"] = m_ModelProtoTag;
-	
+	json["ModelFolderDir"] = m_ModelFolderDir;
+
+	vector<string> ModelProtoTag;
+	if(m_bModelSprite == true)
+	{
+		json["ModelDirs"] = m_vecModelDir;
+	}
 }
 
 void CEffectSystem::LoadFromJson(const Json& json)
@@ -217,12 +259,50 @@ void CEffectSystem::LoadFromJson(const Json& json)
 
 	CShader::LoadShaderParam(m_tParam, json);
 
+	if(json.contains("bNormal"))
+	{
+		m_bNormal = json["bNormal"];
+	}
+	else
+	{
+		m_bNormal = false;
+	}
+	if(json.contains("bModelSprite"))
+	{
+		m_bModelSprite = json["bModelSprite"];
+
+		if (m_bModelSprite == true)
+		{
+			m_ModelFolderDir = json["ModelFolderDir"];
+			m_vecModelDir = json["ModelDirs"].get<vector<string>>();
+
+			vector<string> ModelProtoTags = json["ModelDirs"];
+			for(auto iter :ModelProtoTags)
+			{
+				if(iter.empty())
+				{
+					m_vecModelCom.push_back({nullptr});
+				}
+				else
+				{
+					m_vecModelCom.push_back({dynamic_cast<CModel*>(CGameInstance::GetInstance()->Clone_Component(CGameUtils::s2ws(iter).c_str()))});
+				}
+			}
+			m_pModel = m_vecModelCom[0];
+
+		}
+	}
+	else
+	{
+		m_bModelSprite = false;
+	}
+
 	m_bBillBoard = json["bBillBoard"];
 	m_eBillBoardType = json["BillBoardType"];
 	m_ChildBuffers = json["Children"];
 	m_BufferProtoTag = json["BufferProtoTag"];
 	m_ShaderProtoTag = json["ShaderProtoTag"];
-
+	
 	if (json.contains("ModelProtoTag"))
 		m_ModelProtoTag = json["ModelProtoTag"];
 
@@ -334,12 +414,56 @@ void CEffectSystem::Imgui_RenderProperty()
 		}
 	}
 
+	ImGui::Checkbox("Model Sprite", &m_bModelSprite);
+
+	if(m_bModelSprite == true)
+	{
+		char ModelFolderDir[MAX_PATH];
+		strcpy(ModelFolderDir, m_ModelFolderDir.c_str());
+		ImGui::InputText("Model Folder Directory", ModelFolderDir, MAX_PATH);
+		m_ModelFolderDir = ModelFolderDir;
+		ImGui::SameLine();
+		if (ImGui::Button("Load Models"))
+		{
+			Safe_Release(m_pModel);
+			Delete_Component(TEXT("Model"));
+
+			CGameUtils::ListFiles(m_ModelFolderDir, [this](const string& pEffectPath)
+			{
+				m_vecModelDir.push_back(pEffectPath);
+			});
+
+			if(m_vecModelDir.empty())
+			{
+				MSG_BOX("Empty Folder");
+				return;
+			}
+			else
+			{
+				_uint ModelDirSize = (_uint)m_vecModelDir.size();
+
+				for(_uint i =0; i < ModelDirSize; ++i)
+				{
+					// CModel* pModelCom = nullptr;
+					m_vecModelCom.push_back({ dynamic_cast<CModel*>(CGameInstance::GetInstance()->Clone_Component(CGameUtils::s2ws(m_vecModelDir[i]).c_str())) });
+
+					// Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_vecModelDir[i]).c_str(), TEXT("Model"), (CComponent**)&pModelCom);
+					// m_vecModelCom.push_back(pModelCom);
+				}
+				m_pModel = m_vecModelCom[0];
+			}
+			
+			// Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), (CComponent**)&m_pModel);
+		}
+	}
 	
 
 	// if (auto pBillBoard = dynamic_cast<CBillBoardTest*>(m_pBuffer))
 	// {
 	// 	ImGui::InputFloat("BillBoardLife", &pBillBoard->m_fLife);
 	// }
+	ImGui::Checkbox("NormalTex", &m_bNormal);
+
 	ImGui::Checkbox("BillBoard", &m_bBillBoard);
 	if (m_bBillBoard)
 	{
@@ -372,6 +496,7 @@ void CEffectSystem::Imgui_RenderProperty()
 void CEffectSystem::Tick_Scale_All(_float fValue)
 {
 	fValue *= 2.f;
+	_float3 Scale = m_pTransformCom->Get_Scaled();
 
 	m_pTransformCom->Set_Scaled(_float3(fValue, fValue, fValue));
 }
@@ -458,6 +583,11 @@ void CEffectSystem::Tick_OutroTime(_float fValue)
 	m_tParam.Floats[9] = fValue;
 }
 
+void CEffectSystem::Tick_Ints_0(_float fValue)
+{
+	m_tParam.Ints[0] = fValue;
+}
+
 
 CEffectSystem* CEffectSystem::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -490,6 +620,14 @@ void CEffectSystem::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pBuffer);
 	Safe_Release(m_pModel);
+
+	_uint ModelSize = (_uint)m_vecModelCom.size();
+
+	for(_uint i =0;i<ModelSize; ++i)
+	{
+		Safe_Release(m_vecModelCom[i]);
+	}
+	m_vecModelCom.clear();
 
 	for (auto e : m_tParam.Textures)
 		Safe_Release(e.first);

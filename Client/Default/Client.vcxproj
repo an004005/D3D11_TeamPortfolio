@@ -219,6 +219,7 @@
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\PostVFX_HitDecal.h" />
     <ClInclude Include="..\public\Imgui_EffectBrowser.h" />
     <ClInclude Include="..\public\Imgui_LevelSwitcher.h" />
     <ClInclude Include="..\public\Imgui_MapEditor.h" />
@@ -333,6 +334,7 @@
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\PostVFX_HitDecal.cpp" />
     <ClCompile Include="..\private\Imgui_EffectBrowser.cpp" />
     <ClCompile Include="..\private\Imgui_LevelSwitcher.cpp" />
     <ClCompile Include="..\private\Imgui_MapEditor.cpp" />
@@ -443,6 +445,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_UI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonModel.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

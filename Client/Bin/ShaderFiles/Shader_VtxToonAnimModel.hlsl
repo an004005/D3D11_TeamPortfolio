@@ -24,6 +24,7 @@ struct VS_OUT
 	float4		vProjPos : TEXCOORD1;
 	float4		vTangent : TANGENT;
 	float3		vBinormal : BINORMAL;
+	float4		vWorldPos : TEXCOORD2;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -52,6 +53,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
 	Out.vBinormal = normalize(cross(Out.vNormal.xyz, Out.vTangent.xyz));
 	Out.vProjPos = Out.vPosition;
+	Out.vWorldPos = mul(vPosition, g_WorldMatrix);
 
 	return Out;
 }
@@ -64,6 +66,7 @@ struct PS_IN
 	float4		vProjPos : TEXCOORD1;
 	float4		vTangent : TANGENT;
 	float3		vBinormal : BINORMAL;
+	float4		vWorldPos : TEXCOORD2;
 };
 
 struct PS_OUT
@@ -73,7 +76,11 @@ struct PS_OUT
 	float4		vDepth : SV_TARGET2;
 	float4		vAMB : SV_TARGET3;
 	float4		vCTL : SV_TARGET4;
+	float4		vOutline : SV_TARGET5;
 };
+
+// g_vec4_0 : 아웃라인 rgb : 컬러, a : 두께
+// g_int_0 : drive 모드(body 후드 마스크)
 
 PS_OUT PS_MAIN(PS_IN In)
 {
@@ -88,15 +95,8 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_TOON_DEFAULT(PS_IN In)
+float4 NormalPacking(PS_IN In)
 {
-	PS_OUT			Out = (PS_OUT)0;
-
-	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	Out.vDiffuse.a = 1.f;
-	// if (Out.vDiffuse.a < 0.01f)
-		// discard;
-
 	float3 vNormal;
 	if (g_tex_on_1)
 	{
@@ -106,20 +106,141 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 		vNormal = normalize(mul(vNormal, WorldMatrix));
 	}
 	else
-	{
 		vNormal = In.vNormal.xyz;
-	}
 
-	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	return vector(vNormal * 0.5f + 0.5f, 0.f);
+}
+
+PS_OUT PS_TOON_DEFAULT(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	if (Out.vDiffuse.a < 0.001f)
+		Out.vDiffuse.a = 1.f;
+
+	Out.vNormal = NormalPacking(In);
 
 	float flags = PackPostProcessFlag(0.f, SHADER_TOON);
 
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
 	Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
 	Out.vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
+	Out.vOutline = g_vec4_0;
 
 	return Out;
+}
 
+PS_OUT PS_WIRE_2(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	if (Out.vDiffuse.a < 0.001f)
+		discard;
+
+	Out.vNormal = NormalPacking(In);
+	float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
+
+	float flags = PackPostProcessFlag(0.f, SHADER_NONE_SHADE);
+
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 7.f, flags);
+	// Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	// Out.vCTL = float4(0.5f, 0.8f, 1.f, 0.f);
+
+	float4 vColor = float4(1.f, 30.f/ 255.f, 0.f, 1.f);
+	Out.vDiffuse *= vColor;
+	Out.vOutline = g_vec4_0;
+
+	float4 vViewDir = g_vCamPosition - In.vWorldPos;
+	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir), 0.1f);
+	float4 vWhite = float4(1.f, 1.f, 1.f, 1.f);
+	Out.vDiffuse = lerp(vWhite, Out.vDiffuse, fFresnel);
+
+	return Out;
+}
+
+PS_OUT PS_CH100_HAIR_1_3(PS_IN In)
+{
+	PS_OUT			Out = PS_TOON_DEFAULT(In);
+
+	float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
+	float4 vViewDir = g_vCamPosition - In.vWorldPos;
+	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir), 1.5f);
+	float4 vColor = float4(1.f, 26.f/255.f, 0.f, 1.f);
+	Out.vDiffuse = lerp(Out.vDiffuse, vColor, fFresnel);
+
+	return Out;
+}
+
+PS_OUT PS_ch0100_body_0_4(PS_IN In)
+{
+	int bDriveMode = g_int_0;
+	if (bDriveMode)
+	{
+		float4 vMask = g_tex_4.Sample(LinearSampler, In.vTexUV);
+		if (vMask.r == 0.f && vMask.g == 0.f && vMask.b == 0.f)
+			discard;
+	}
+
+	PS_OUT Out = PS_TOON_DEFAULT(In);
+
+	return Out;
+}
+
+PS_OUT PS_ch0100_mask_0_5(PS_IN In)
+{
+	float fDissolve = g_float_0; // 0 : mask off/ 1 : mask on
+	float4 vColor = (float4)0.f;
+	float fEmissive = 2.f;
+
+	if (fDissolve > 0.f && fDissolve < 1.f)
+	{
+		float fInvDissolve = 1.f - fDissolve;
+
+		float4 vSclNoi = g_tex_4.Sample(LinearSampler, In.vTexUV);
+		float fShape = vSclNoi.r;
+
+		if (fInvDissolve < fShape)
+		{
+			vColor = float4(0.f, 0.f, 0.f, 1.f);
+			fEmissive = 0.0f;
+		}
+		else
+		{
+			if (abs(fInvDissolve - fShape) < 0.2)
+			{
+				float vPattenMap_noise = g_tex_5.Sample(LinearSampler, In.vTexUV).g;
+				float2 distortionUV = vPattenMap_noise * 0.3f + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time));
+				float fNoise = g_tex_4.Sample(LinearSampler, distortionUV).g;
+
+				vColor = float4(73.f/ 255.f, 183.f/255.f, 173.f/255.f, 1.f) * fNoise;
+				fEmissive = fNoise * 2.f;
+			}
+			else
+				discard;
+		}
+	}
+	else if (fDissolve >= 1.f)
+	{
+		vColor = float4(1.f, 20.f/ 255.f, 0.f, 1.f);
+	}
+	else
+	{
+		discard;
+	}
+
+
+	PS_OUT Out = PS_TOON_DEFAULT(In);
+
+	Out.vDepth.z = fEmissive;
+	Out.vDepth.w = PackPostProcessFlag(0.f, SHADER_NONE_SHADE);
+
+	if (fDissolve >= 1.f)
+		Out.vDiffuse *= vColor;
+	else
+		Out.vDiffuse = vColor;
+	return Out;
 }
 
 technique11 DefaultTechnique
@@ -151,4 +272,63 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_TOON_DEFAULT();
 	}
+
+	//2
+	pass Wire_2
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_WIRE_2();
+	}
+
+	//3
+	pass ch100HairBridge
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_CH100_HAIR_1_3();
+	}
+
+	// 4 
+	pass ch100Body
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ch0100_body_0_4();
+	}
+
+	// 5
+	pass PS_ch0100_mask_0_5
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ch0100_mask_0_5();
+	}
+	
 }
+
+

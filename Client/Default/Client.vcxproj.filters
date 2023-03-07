@@ -94,9 +94,6 @@
     <Filter Include="97.ShaderFiles\Shadow">
       <UniqueIdentifier>{de99238f-264e-4f79-877c-728ea5e89b86}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Player\AnimInstance">
-      <UniqueIdentifier>{f7c4a316-58ff-44eb-bc6b-94195c17f0cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\20.PlayerTester">
       <UniqueIdentifier>{c5cff968-b07f-4b9d-86c2-f5fbff38b7af}</UniqueIdentifier>
     </Filter>
@@ -232,6 +229,15 @@
     <Filter Include="02.GameObjects\Monster\boss1\Boss1_Animinstance">
       <UniqueIdentifier>{107db123-e61b-466e-8716-8300f9f27d16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Player\BaseAnimInstance">
+      <UniqueIdentifier>{f7c4a316-58ff-44eb-bc6b-94195c17f0cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Player\BattleAninInstance">
+      <UniqueIdentifier>{bee24b6b-6010-44c3-9973-3fa91aa309aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.ShaderFiles\PostProcess\HitDecal">
+      <UniqueIdentifier>{eb2d8b39-fe98-4867-923b-0ed4f62afc11}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Controller">
       <UniqueIdentifier>{4bc20954-31cf-4cfc-b16b-78107c6eb677}</UniqueIdentifier>
     </Filter>
@@ -334,7 +340,7 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BaseAnimInstance.h">
-      <Filter>02.GameObjects\Player\AnimInstance</Filter>
+      <Filter>02.GameObjects\Player\BaseAnimInstance</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_PlayerTest.h">
       <Filter>01.Levels\20.PlayerTester</Filter>
@@ -593,6 +599,9 @@
     </ClInclude>
     <ClInclude Include="..\public\AIController.h" />
     <ClInclude Include="..\public\Boss1_AIController.h" />
+    <ClInclude Include="..\public\PostVFX_HitDecal.h">
+      <Filter>97.ShaderFiles\PostProcess\HitDecal</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\FL_Controller.h">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_Controller</Filter>
     </ClInclude>
@@ -674,7 +683,7 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
-      <Filter>02.GameObjects\Player\AnimInstance</Filter>
+      <Filter>02.GameObjects\Player\BaseAnimInstance</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_PlayerTest.cpp">
       <Filter>01.Levels\20.PlayerTester</Filter>
@@ -929,6 +938,9 @@
     </ClCompile>
     <ClCompile Include="..\private\AIController.cpp" />
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
+    <ClCompile Include="..\private\PostVFX_HitDecal.cpp">
+      <Filter>97.ShaderFiles\PostProcess\HitDecal</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\FL_Controller.cpp">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_Controller</Filter>
     </ClCompile>
@@ -1026,6 +1038,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonModel.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

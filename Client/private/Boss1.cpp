@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "..\public\Boss1.h"
+
+#include <PhysX_Manager.h>
+
 #include "Model.h"
 #include "JsonStorage.h"
 #include "Boss1_AnimationInstance.h"
@@ -7,6 +10,7 @@
 #include "Boss1_AIController.h"
 #include "Player.h"
 #include "JsonStorage.h"
+#include "RigidBody.h"
 
 CBoss1::CBoss1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
@@ -34,7 +38,10 @@ HRESULT CBoss1::Initialize(void* pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"MonsterBoss1", L"Model", (CComponent**)&m_pModelCom));
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_MonsterBoss1_Controller"), TEXT("Com_Controller"), (CComponent**)&m_pController));
-	// FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_TestCamera"), TEXT("Com_Controller"), (CComponent**)&m_pController));
+
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Com_Weak"), (CComponent**)&m_pWeak, pArg));
+
+
 	m_fGravity = 25.f;
 
 	m_pModelCom->Add_EventCaller("JumpAttackStart", [this]
@@ -66,12 +73,31 @@ HRESULT CBoss1::Initialize(void* pArg)
 	m_pModelCom->Add_EventCaller("Jitabata", [this]
 	{
 		++m_iJitabaCnt;
+		ClearDamagedTarget(); // 매 jitabata마다 초기화해서 다시 공격 가능
 		if (m_iJitabaCnt == 5)
 		{
-			m_iJitabaCnt = 0;
 			m_bJumpAttack = false;
+			End_AttackState();
 		}
 	});
+
+	m_pModelCom->Add_EventCaller("Start_SweepRight", [this]
+	{
+		Start_AttackState(RIGHT_SWEEP);
+	});
+	m_pModelCom->Add_EventCaller("Start_SweepLeft", [this]
+	{
+		Start_AttackState(LEFT_SWEEP);
+	});
+	m_pModelCom->Add_EventCaller("Start_Spin", [this]
+	{
+		Start_AttackState(SPIN);
+	});
+	m_pModelCom->Add_EventCaller("AttackEnd", [this]
+	{
+		End_AttackState();
+	});
+
 
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(100.f));
 
@@ -141,27 +167,33 @@ void CBoss1::Tick(_double TimeDelta)
 	}
 	if (m_pController->KeyDown(CController::E))
 	{
+		Start_AttackState(JUMP);
 		m_pASM->AttachAnimSocket("FullBody", { m_pJumpStart, m_pJumpLand, m_pJumpJitabata, m_pJumpJitabata, m_pJumpJitabata, m_pJumpJitabata, m_pJumpJitabata, m_pJumpEnd });
 	}
 
 	if (m_bDown || m_pController->KeyDown(CController::C))
 	{
-		m_iJitabaCnt = 0;
+		Reset();
 		m_bDown = false;
-		m_pController->ClearCommands();
 		m_pASM->AttachAnimSocket("FullBody", { m_pDownStart, m_pDown, m_pJumpEnd  });
 	}
 	if (m_bMiddleDown || m_pController->KeyDown(CController::Q))
 	{
-		m_iJitabaCnt = 0;
-		m_bMiddleDown = false;
-		m_pController->ClearCommands();
-		m_pASM->AttachAnimSocket("FullBody", { m_pMiddleDown });
+		if (m_bJumpAttack == false) // jump 어택중에는 경직 무시
+		{
+			Reset();
+			m_bMiddleDown = false;
+			m_pASM->AttachAnimSocket("FullBody", { m_pMiddleDown });
+		}
 	}
 
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
 	m_pASM->Tick(TimeDelta);
+
+	const _matrix WeakBoneMatrix = m_pModelCom->GetBoneMatrix("Water") * m_pTransformCom->Get_WorldMatrix();
+	m_pWeak->Update_Tick(WeakBoneMatrix);
+	Tick_AttackState();
 }
 
 void CBoss1::Late_Tick(_double TimeDelta)
@@ -169,6 +201,11 @@ void CBoss1::Late_Tick(_double TimeDelta)
 	CMonster::Late_Tick(TimeDelta);
 	if (m_bVisible)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+}
+
+void CBoss1::AfterPhysX()
+{
+	CMonster::AfterPhysX();
 }
 
 HRESULT CBoss1::Render()
@@ -186,6 +223,128 @@ void CBoss1::Imgui_RenderProperty()
 _bool CBoss1::IsPlayingSocket() const
 {
 	return m_pASM->isSocketEmpty("FullBody") == false;
+}
+
+void CBoss1::Start_AttackState(CBoss1_AttackStateType eState)
+{
+	m_eAttackType = eState;
+	switch (m_eAttackType)
+	{
+	case LEFT_SWEEP:
+		{
+			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("LeftHandHelp") * m_pTransformCom->Get_WorldMatrix();
+			m_vSweepPrePos = BoneMatrix.r[3];
+		}
+		break;
+	case RIGHT_SWEEP:
+		{
+			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("RightHandHelp") * m_pTransformCom->Get_WorldMatrix();
+			m_vSweepPrePos = BoneMatrix.r[3];
+		}
+		break;
+	case SPIN:
+		break;
+	case JUMP: 
+		break;
+	case STATE_END: 
+		break;
+	default: 
+		NODEFAULT;
+	}
+}
+
+void CBoss1::Tick_AttackState()
+{
+	_float4 vAttackPos;
+	switch (m_eAttackType)
+	{
+	case LEFT_SWEEP:
+		{
+			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("LeftHandHelp") * m_pTransformCom->Get_WorldMatrix();
+			vAttackPos = BoneMatrix.r[3];
+		}
+		break;
+	case RIGHT_SWEEP:
+		{
+			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("RightHandHelp") * m_pTransformCom->Get_WorldMatrix();
+			vAttackPos = BoneMatrix.r[3];
+		}
+		break;
+	case SPIN:
+		{
+			SphereOverlapParams tParams;
+			physx::PxOverlapHit hitBuffer[3];
+			physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
+			tParams.fRadius = 6.5f;
+			tParams.fVisibleTime = 0.1f;
+			tParams.iTargetType = CTB_PLAYER;
+			tParams.overlapOut = &overlapOut;
+			tParams.vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+			if (CGameInstance::GetInstance()->OverlapSphere(tParams))
+			{
+				HitTargets(overlapOut, 1, EAttackType::ATK_HEAVY);
+			}
+		}
+		break;
+	case JUMP:
+		{
+			SphereOverlapParams tParams;
+			physx::PxOverlapHit hitBuffer[3];
+			physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
+			tParams.fRadius = 6.f;
+			tParams.fVisibleTime = 0.1f;
+			tParams.iTargetType = CTB_PLAYER;
+			tParams.overlapOut = &overlapOut;
+			tParams.vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+			//tParams.vPos.y += 2.f;
+			if (CGameInstance::GetInstance()->OverlapSphere(tParams))
+			{
+				HitTargets(overlapOut, 1, EAttackType::ATK_HEAVY);
+			}
+		}
+		break;
+	case STATE_END: 
+		break;
+	default: 
+		NODEFAULT;
+	}
+
+	if (m_eAttackType == LEFT_SWEEP || m_eAttackType == RIGHT_SWEEP)
+	{
+		SphereSweepParams tParams;
+
+		physx::PxSweepHit hitBuffer[3];
+		physx::PxSweepBuffer sweepOut(hitBuffer, 3);
+		tParams.sweepOut = &sweepOut;
+		tParams.fRadius = 2.5f;
+		tParams.fVisibleTime = .1f;
+		tParams.iTargetType = CTB_PLAYER;
+		tParams.vPos = m_vSweepPrePos;
+		const _vector vDiff = vAttackPos - m_vSweepPrePos;
+		tParams.vUnitDir = XMVector3NormalizeEst(vDiff);
+		tParams.fDistance = XMVectorGetX(XMVector3LengthEst(vDiff));
+
+		if (CGameInstance::GetInstance()->SweepSphere(tParams))
+		{
+			HitTargets(sweepOut, 1, EAttackType::ATK_HEAVY);
+		}
+
+		m_vSweepPrePos = vAttackPos;
+	}
+}
+
+void CBoss1::End_AttackState()
+{
+	m_iJitabaCnt = 0;
+	ClearDamagedTarget();
+	m_eAttackType = STATE_END;
+}
+
+void CBoss1::Reset()
+{
+	CMonster::Reset();
+	End_AttackState();
+	m_pController->ClearCommands();
 }
 
 CBoss1* CBoss1::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -219,4 +378,5 @@ void CBoss1::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
+	Safe_Release(m_pWeak);
 }

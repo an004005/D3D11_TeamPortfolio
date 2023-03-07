@@ -14,6 +14,8 @@ CHDR::CHDR()
 	m_fAdaptation = 1.f;
 	m_fBloomThreshold = 1.1f;
 	m_fBloomScale = 0.74f;
+	m_fGamma = 2.2f;
+	m_fFlimSlope = 0.5f;
 }
 
 HRESULT CHDR::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -26,6 +28,10 @@ HRESULT CHDR::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		m_fAdaptation = json["Adaptation"];
 		m_fBloomThreshold = json["BloomThreshold"];
 		m_fBloomScale = json["BloomScale"];
+		if (json.contains("Gamma"))
+		{
+			m_fGamma = json["Gamma"];
+		}
 	}
 
 
@@ -368,6 +374,17 @@ void CHDR::Imgui_Render()
 	ImGui::InputFloat2("BloomScaleMinMax", (float*)&BloomScaleMinMax);
 	ImGui::SliderFloat("BloomScale", &m_fBloomScale, BloomScaleMinMax.x, BloomScaleMinMax.y);
 
+	static _float2 GammMinMax{0.f, 5.f};
+	ImGui::InputFloat2("GammaMinMax", (float*)&GammMinMax);
+	ImGui::SliderFloat("Gamma", &m_fGamma, GammMinMax.x, GammMinMax.y);
+
+	ImGui::SliderFloat("FlimSlop", &m_fFlimSlope, 0.f, 1.f);
+
+	if (ImGui::Button("Re Compile"))
+	{
+		Initialize(m_pDevice, m_pContext);
+	}
+
 	if (ImGui::Button("Save"))
 	{
 		Json json;
@@ -376,6 +393,7 @@ void CHDR::Imgui_Render()
 		json["Adaptation"] = m_fAdaptation;
 		json["BloomThreshold"] = m_fBloomThreshold;
 		json["BloomScale"] = m_fBloomScale;
+		json["Gamma"] = m_fGamma;
 		std:ofstream file("../Bin/Resources/Settings/HDR.json");
 		file << json;
 	}
@@ -506,6 +524,8 @@ void CHDR::FinalPass(ID3D11ShaderResourceView* pHDRSRV)
 	pFinalPass->fLumWhiteSqr *= pFinalPass->fMiddleGrey; // Scale by the middle grey value
 	pFinalPass->fLumWhiteSqr *= pFinalPass->fLumWhiteSqr; // Square
 	pFinalPass->fBloomScale = m_fBloomScale;
+	pFinalPass->fGamma = m_fGamma;
+	pFinalPass->fFlimSlope = m_fFlimSlope;
 	m_pContext->Unmap(m_pFinalPassCB, 0);
 	ID3D11Buffer* arrConstBuffers[1] = { m_pFinalPassCB };
 	m_pContext->PSSetConstantBuffers(0, 1, arrConstBuffers);

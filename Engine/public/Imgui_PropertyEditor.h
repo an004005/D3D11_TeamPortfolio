@@ -20,7 +20,6 @@ public:
 private:
 	class CGameObject* m_pSelectedObject = nullptr;
 	class CGameInstance* m_pGameInstance = nullptr;
-	
 };
 
 END

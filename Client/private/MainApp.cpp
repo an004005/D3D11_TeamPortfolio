@@ -21,6 +21,8 @@
 #include "VIBuffer_Mesh_Instance.h"
 #include "MapInstance_Object.h"
 #include "MapKinetic_Object.h"
+#include "Material.h"
+
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
@@ -130,6 +132,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
+
 	/* For.Prototype_Component_Shader_VtxPosRect */	
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPosRect"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosRect.hlsl"), VTXPOS_DECLARATION::Elements, VTXPOS_DECLARATION::iNumElements))))
@@ -176,6 +179,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxToonAnimModel.hlsl"), VTXANIMMODEL_DECLARATION::Elements, VTXANIMMODEL_DECLARATION::iNumElements))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Shader_VtxToonModel*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxToonModel"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxToonModel.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements))))
+		return E_FAIL;
+
 
 	/*For.Prototype_VIBuffer_Sphere*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_VIBuffer_Sphere",
@@ -208,11 +216,6 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	/* For.Prototype_Component_Shader_VtxTex_UI */	
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxTexUI"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxTex_UI.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_TextureColorGradients */	
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_TextureColorGradients"),
-		CTexture::Create(m_pDevice, m_pContext, "../Bin/Resources/Textures/VFX/ColorGradient/"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_VtxTex_VFX */	
@@ -259,12 +262,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPointInstance_ParticleSystem.hlsl"), VTXPOINT_DECLARATION::Elements, VTXPOINT_DECLARATION::iNumElements))))
 		return E_FAIL;
 
-
 	/* For. Prototype_Component_Psycokinesis */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Psycokinesis"),
 		CPsychokinesis::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_ControlledRigidBody"), CControlledRigidBody::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -276,11 +277,8 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Bold32"), TEXT("../Bin/Resources/Fonts/kim_bold32.spritefont"))))
 		return E_FAIL;
 
+	CMaterial::LoadMaterialFilePathes("../Bin/Resources/Materials/");
 	
-	m_pGameInstance->AddSoundQueue("AnnouncerVO");
-	m_pGameInstance->AddSoundQueue("CharacterVO");
-
-	// Engine::LoadEmptyMaterials();
 
 	return S_OK;
 }

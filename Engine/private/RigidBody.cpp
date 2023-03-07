@@ -45,7 +45,7 @@ void CRigidBody::Imgui_RenderProperty()
 	ImGui::Checkbox("bKinematic", &m_bKinematic);
 
 	static array<const char*, CT_END> CollTypeNames {
-		"Player", "Monster", "PlayerAtk", "MonsterAtk", "PsychickObj", "Trigger4Player", "Trigger4Monster", "Static"
+		"Player", "Monster", "PlayerAtk", "MonsterAtk", "PsychickObj", "Trigger4Player", "Trigger4Monster", "Static", "MonsterPart"
 	};
 	if (ImGui::BeginCombo("CollType", CollTypeNames[m_eColliderType]))
 	{
@@ -195,6 +195,12 @@ void CRigidBody::AddTorque(_float3 vTorque)
 		physx::PxVec3 PxToque = physx::PxVec3(vTorque.x, vTorque.y, vTorque.z);
 		m_pActor->addTorque(PxToque, physx::PxForceMode::eFORCE);
 	}
+}
+
+void CRigidBody::Set_Kinetic(_bool bKinematic)
+{
+	m_bKinematic = bKinematic;
+	CreateActor();
 }
 
 void CRigidBody::SetOriginTransform(const _float4x4& OriginMatrix)

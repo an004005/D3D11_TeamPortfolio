@@ -1,5 +1,4 @@
 #include "Shader_Utils.h"
-#include "Shader_PBRCommon.h"
 
 float   g_Far = 1000.f;
 
@@ -33,6 +32,15 @@ texture2D		g_SpecularTexture;
 texture2D		g_RMATexture;
 texture2D		g_AMBTexture;
 texture2D		g_CTLTexture;
+texture2D		g_OutlineFlagTexture;
+
+TextureCube     g_IrradianceTexture;
+TextureCube     g_RadianceTexture;
+
+float g_Gamma = 2.2f;
+
+float g_iWinCX;
+float g_iWinCY;
 
 sampler LinearSampler = sampler_state
 {
@@ -47,6 +55,17 @@ sampler PointSampler = sampler_state
 	AddressU = wrap;
 	AddressV = wrap;
 };
+
+sampler CubeSampler = sampler_state
+{
+	filter = min_mag_mip_linear;
+	AddressU = CLAMP;
+	AddressV = CLAMP;
+	AddressW = CLAMP;
+	ComparisonFunc = NEVER;
+};
+
+#include "Shader_PBRCommon.h"
 
 struct VS_IN
 {
@@ -117,7 +136,6 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	vector		vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	vector		vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
 
-	float fShaderIdx = vDepthDesc.a;
 	float		fViewZ = vDepthDesc.y * g_Far;
 
 	/* 0 ~ 1 => -1 ~ 1 */
@@ -139,7 +157,8 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	{
 		vector		vRMA = g_RMATexture.Sample(LinearSampler, In.vTexUV);
 
-		float3 albedo = vDiffuse.rgb;
+		float3 albedo = pow(vDiffuse.rgb, g_Gamma);
+		// float3 albedo = vDiffuse.rgb;
 		float metalness = vRMA.g;
 		float roughness = vRMA.r;
 		float AO = vRMA.b;
@@ -155,18 +174,20 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	else if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
 		float4 vCTL = g_CTLTexture.Sample(LinearSampler, In.vTexUV);
-		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
 
-		float fDiff = saturate(max(dot(normalize(vNormal.xyz), normalize(g_vLightDir.xyz)), 0.0));
-		fDiff = max(vCTL.r * 2.f, min(vCTL.g, fDiff));
-		// fDiff = ceil(fDiff * 2.f) * 0.5f;
+		float fNdotL = dot(normalize(vNormal.xyz), normalize(g_vLightDir.xyz));
+		float fDiff = saturate(max(fNdotL, 0.0));
+	
+		fDiff = max(vCTL.r * 1.5f , min(vCTL.g, fDiff));
+		fDiff *= vCTL.b;
 
-		Out.vShade = g_vLightDiffuse * saturate(fDiff + vAMB);
+		Out.vShade = g_vLightDiffuse * saturate(fDiff);
 		Out.vShade.a = 1.f;
 		
-		vector		vLook = vWorldPos - g_vCamPosition;
-		float spec = GetSpecular(vNormal.xyz, vLook.xyz, g_vLightDir.xyz, 30.f);
-		Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec;
+		// vector		vLook = vWorldPos - g_vCamPosition;
+		// float spec = GetSpecular(vNormal.xyz, vLook.xyz, g_vLightDir.xyz, 256.f);
+		// spec = smoothstep(0.005f, 0.01f, spec);
+		// Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec;
 	}
 
 	return Out;
@@ -218,20 +239,20 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	}
 	else if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
-		
 		float4 vCTL = g_CTLTexture.Sample(LinearSampler, In.vTexUV);
-		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
 
-		float fDiff = saturate(max(dot(normalize(vNormal.xyz), normalize(vLightDir.xyz)), 0.0)) * fAtt;
-		fDiff = max(vCTL.r * 2.f, min(vCTL.g, fDiff));
-		// fDiff = ceil(fDiff * 2.f) * 0.5f;
+		float fNdotL = dot(normalize(vNormal.xyz), normalize(g_vLightDir.xyz));
+		float fDiff = saturate(max(fNdotL, 0.0));
+	
+		fDiff = max(vCTL.r , min(vCTL.g, fDiff));
+		fDiff *= vCTL.b * fAtt;
 
-		Out.vShade = g_vLightDiffuse * saturate(fDiff + (vAMB));
+		Out.vShade = g_vLightDiffuse * saturate(fDiff);
 		Out.vShade.a = 1.f;
 		
-		vector		vLook = vWorldPos - g_vCamPosition;
-		float spec = GetSpecular(vNormal.xyz, vLook.xyz, vLightDir.xyz, 30.f);
-		Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec * fAtt;
+		// vector		vLook = vWorldPos - g_vCamPosition;
+		// float spec = GetSpecular(vNormal.xyz, vLook.xyz, vLightDir.xyz, 30.f);
+		// Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec * fAtt;
 	}
 	
 	return Out;
@@ -250,11 +271,13 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 
 	if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
+		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
 		vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+		vDiffuse.rgb = pow(vDiffuse.rgb, g_Gamma);
 		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
 		vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
 
-		Out.vColor = CalcHDRColor(vDiffuse, vDepth.b) * vShade + vSpecular;
+		Out.vColor = CalcHDRColor(vDiffuse, vDepth.b) * vShade + vAMB * 0.2f;
 		if (0.0f == Out.vColor.a)
 			discard;
 	}
@@ -263,6 +286,13 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
 		Out.vColor = vShade * pow(2.f, vDepth.b);
 		Out.vColor.a = vShade.a;
+		if (0.0f == Out.vColor.a)
+			discard;
+	}
+	else if (CheckPostProcessFlag(fShaderFlag, SHADER_NONE_SHADE))
+	{
+		vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+		Out.vColor = CalcHDRColor(vDiffuse, vDepth.b);
 		if (0.0f == Out.vColor.a)
 			discard;
 	}
@@ -315,38 +345,38 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 }
 
 
-float coord[3] = { -1.5f, 0.f, 1.5f };
 
 PS_OUT PS_OUTLINE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	// vector vFlag = g_OutlineFlagTexture.Sample(LinearSampler, In.vTexUV);
-	// float fFlag;
-	//
-	// for (int i = 0; i < 3; i++)
-	// {
-	// 	for (int j = 0; j < 3; j++)
-	// 	{
-	// 		fFlag += g_OutlineFlagTexture.Sample(LinearSampler, In.vTexUV + float2(coord[j] / g_iWinCX, coord[i] / g_iWinCY)).r;
-	// 	}
-	// }
-	// fFlag /= 9.f;
-	//
-	// if (vFlag.r > 0.f && vFlag.r != fFlag)
-	// {
-	// 	if (vFlag.r == 1.f)
-	// 	{
-	// 		Out.vColor = vector(0.f, 0.f, 0.f, 1.f);
-	// 	}
-	// 	else
-	// 		Out.vColor = vector(vFlag.rgb, 1.f);
-	// }
-	// else
-	// {
-	// 	Out.vColor.a = 0.f;
-	// 	discard;
-	// }
+	vector vFlag = g_OutlineFlagTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (vFlag.a < 0.01f)
+		discard;
+
+	float coord[3] = { -vFlag.a, 0.f, vFlag.a };
+
+	float3 vColor = (float3)0.f;
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			vColor += g_OutlineFlagTexture.Sample(LinearSampler, In.vTexUV + float2(coord[j] / g_iWinCX, coord[i] / g_iWinCY)).rgb;
+		}
+	}
+	vColor /= 9.f;
+	
+	if (vColor.r != vFlag.r && vColor.g != vFlag.g && vColor.b != vFlag.b)
+	{
+		Out.vColor = vector(vFlag.rgb, 1.f);
+	}
+	else
+	{
+		discard;
+	}
+
 
 	return Out;
 }
@@ -464,11 +494,12 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_BLEND();
 	}
 
+	// 4
 	pass Outline
 	{
-		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-		SetDepthStencilState(DS_Default, 0);
 		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;

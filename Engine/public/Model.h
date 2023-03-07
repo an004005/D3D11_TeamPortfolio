@@ -52,6 +52,7 @@ public:
 	_vector GetLocalMove(_fmatrix WorldMatrix, const string& srtAnimName);
 	_bool	isLocalMove() { return !XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)); }
 	_float	GetLastLocalMoveSpeed() const { return m_fLastLocalMoveSpeed; }
+	void	Reset_LocalMove(_bool isSocket = false);
 
 	_vector GetLocalRotationDelta();
 
@@ -109,6 +110,10 @@ private:
 	static const _float4x4 s_DefaultPivot;
 	static const string s_ModifyFilePath;
 
+// 플레이어 이펙트 부착 툴을 위한 임시 함수
+public:
+	unordered_map<string, CAnimation*>	Get_AnimList() const { return m_mapAnimation; }
+
 private:
 	string								m_strName;
 	TYPE								m_eType = TYPE_END;
@@ -138,6 +143,10 @@ private:
 
 	_vector								m_vLocalRotation = XMQuaternionIdentity();
 	_vector								m_vBefLocalRotation = XMQuaternionIdentity();
+
+	_vector								m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	_vector								m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	string								m_szSocketBefAnimName = "";
 
 	class CShader* m_pShadowShader = nullptr;
 

@@ -8,6 +8,8 @@ float g_fWidth;
 Texture2D g_AlphaTex;
 float4 g_Color;
 
+vector g_TrailPoint[4];
+
 struct VS_IN
 {
 	float3		vPosition : POSITION;
@@ -533,6 +535,101 @@ PS_OUT PS_FIREWALL_BOT(PS_IN In)
 	return Out;
 }
 
+
+// 소드트레일
+
+struct VS_IN_TRAIL
+{
+	float3		vPosition		: POSITION;
+	float2		vPSize			: PSIZE;
+	row_major float4x4	Matrix	: WORLD;
+	uint		instanceID		: SV_InstanceID;
+};
+struct VS_OUT_TRAIL
+{
+	float3		vPosition	: POSITION;
+	float2		vSize		: PSIZE;
+};
+struct GS_IN_TRAIL
+{
+	float3		vPosition	: POSITION;
+	float2		vSize		: PSIZE;
+};
+
+struct GS_OUT_TRAIL
+{
+	float4		vPosition	: SV_POSITION;
+	float2		vTexUV		: TEXCOORD0;
+};
+
+struct PS_IN_TRAIL
+{
+	float4		vPosition	: SV_POSITION;
+	float2		vTexUV		: TEXCOORD0;
+};
+
+struct PS_OUT_TRAIL
+{
+	float4		vColor : SV_TARGET0;
+};
+
+VS_OUT_TRAIL VS_MAIN_SWORDTRAIL(VS_IN_TRAIL In)
+{
+	VS_OUT_TRAIL	Out = (VS_OUT_TRAIL)0;
+
+	matrix World = In.Matrix;
+
+	vector vPosition = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+
+	Out.vPosition = vPosition.xyz;
+
+	return Out;
+}
+
+[maxvertexcount(6)]
+void GS_MAIN_SWORDTRAIL(point GS_IN_TRAIL In[1], inout TriangleStream<GS_OUT_TRAIL> Vertices)
+{
+	GS_OUT_TRAIL Out[4];
+
+	matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
+
+	Out[0].vPosition = mul(g_TrailPoint[0], matVP);
+	Out[0].vTexUV = float2(0.f, 0.f);
+
+	Out[1].vPosition = mul(g_TrailPoint[1], matVP);
+	Out[1].vTexUV = float2(1.f, 0.f);
+
+	Out[2].vPosition = mul(g_TrailPoint[2], matVP);
+	Out[2].vTexUV = float2(1.f, 1.f);
+
+	Out[3].vPosition = mul(g_TrailPoint[3], matVP);
+	Out[3].vTexUV = float2(0.f, 1.f);
+
+	Vertices.Append(Out[0]);
+	Vertices.Append(Out[1]);
+	Vertices.Append(Out[2]);
+	Vertices.RestartStrip();
+
+	Vertices.Append(Out[0]);
+	Vertices.Append(Out[2]);
+	Vertices.Append(Out[3]);
+	Vertices.RestartStrip();
+}
+
+PS_OUT_TRAIL PS_MAIN_SWORDTRAIL(PS_IN_TRAIL In)
+{
+	PS_OUT_TRAIL	Out = (PS_OUT_TRAIL)0;
+
+	float4 alpha = g_AlphaTex.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor = CalcHDRColor((alpha.r + 1.f) * g_Color, 3.f);
+	Out.vColor.a = alpha.r;
+
+	return Out;
+}
+
+// ~소드트레일
+
 technique11 DefaultTechnique
 {
 	//0
@@ -603,6 +700,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_PLAYERSWORD();
+	}
+
+	pass MySword
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_SWORDTRAIL();
+		GeometryShader = compile gs_5_0 GS_MAIN_SWORDTRAIL();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_SWORDTRAIL();
 	}
 
 }

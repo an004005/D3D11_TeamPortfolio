@@ -139,6 +139,13 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 				}
 			}
 		}
+		for (auto& iter : m_vecEvent)
+		{
+			if (iter.EventTime >= PrePlayTime && iter.EventTime < m_PlayTime)
+			{
+				m_pModel->EventCaller(iter.strEventName);
+			}
+		}
 		break;
 	case EAnimUpdateType::ADDITIVE:
 		for (const auto pChannel : m_Channels)
@@ -160,8 +167,8 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 		}
 		else
 		{
-			CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-			if (4 == pGameInstance->GetCurLevelIdx())
+			//CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+			if (4 == CGameInstance::GetInstance()->GetCurLevelIdx())
 				m_PlayTime = 0.0;
 
 			m_bFinished = true;

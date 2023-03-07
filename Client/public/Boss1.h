@@ -8,12 +8,22 @@ class CRenderer;
 class CModel;
 class CFSMComponent;
 class CAnimation;
+class CRigidBody;
 END
 
 BEGIN(Client)
 
 class CBoss1 : public CMonster
 {
+	enum CBoss1_AttackStateType
+	{
+		LEFT_SWEEP,
+		RIGHT_SWEEP,
+		SPIN,
+		JUMP,
+		STATE_END
+	};
+
 private:
 	CBoss1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBoss1(const CBoss1& rhs);
@@ -25,6 +35,7 @@ public:
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
+	virtual void AfterPhysX() override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
@@ -33,11 +44,18 @@ public:
 	_float GetTurnRemain() const { return m_fTurnRemain; }
 	_bool IsPlayingSocket() const;
 
+	void Start_AttackState(CBoss1_AttackStateType eState);
+	void Tick_AttackState();
+	void End_AttackState();
+	virtual void Reset() override;
+
 private:
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;
 	class CBoss1_AnimationInstance* m_pASM = nullptr;
 	class CBoss1_AIController*		m_pController = nullptr;
+
+	class CRigidBody* m_pWeak = nullptr;
 
 	CScarletCharacter* m_pTarget = nullptr;
 
@@ -53,6 +71,8 @@ private:
 	_float m_fJumpMoveTime = 0.f;
 	_int m_iJitabaCnt = 0;
 
+	CBoss1_AttackStateType m_eAttackType = STATE_END;
+	_float4 m_vSweepPrePos;
 
 	CAnimation* m_pAtk_R = nullptr;
 	CAnimation* m_pAtk_L = nullptr;
@@ -66,10 +86,7 @@ private:
 	CAnimation* m_pJumpEnd = nullptr;
 	CAnimation* m_pJumpLand = nullptr;
 	CAnimation* m_pJumpJitabata = nullptr;
-
 	
-
-	// for test
 
 public:
 	static CBoss1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

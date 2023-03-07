@@ -25,6 +25,7 @@
 #include "PostVFX_Scifi.h"
 #include "PostVFX_WhiteOut.h"
 #include "Imgui_EffectBrowser.h"
+#include "PostVFX_HitDecal.h"
 
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -53,8 +54,8 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer(TEXT("Layer"))))
 		return E_FAIL;
 
-	// if (FAILED(Ready_Layer_Player(L"Layer_Player")))
-	// 	return E_FAIL;
+	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+		return E_FAIL;
 
 	// if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 	// 	return E_FAIL;
@@ -133,13 +134,13 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	// 		CModel::Create(m_pDevice, m_pContext, filePath.c_str()));
 	// });
 
-
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
-	{
-		char szFileName[MAX_PATH]{};
-		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
-	});
+	//
+	// CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
+	// {
+	// 	char szFileName[MAX_PATH]{};
+	// 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
+	// 	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
+	// });
 
 	// ForSky
 
@@ -181,16 +182,19 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 
 
 	// For PostVFX Distortion
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
-		CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	// if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
+	// 	CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+	// 	return E_FAIL;
 	// 
 
 	// For PostVFX Scifi
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
 		CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-	// 
+	//
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Hit_Decal"),
+		CPostVFX_HitDecal::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	// 모델 추가하는 방법
 	// auto pModel_VFX = CModel::Create(m_pDevice, m_pContext,
