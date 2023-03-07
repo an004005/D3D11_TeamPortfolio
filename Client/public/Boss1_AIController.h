@@ -23,7 +23,7 @@ public:
 	void Tick_Mid(_double TimeDelta);
 	void Tick_Far(_double TimeDelta);
 
-	void TurnToTargetStop(_float fSpeedRatio = 1.f);
+//	void TurnToTargetStop(_float fSpeedRatio = 1.f);
 
 
 private:

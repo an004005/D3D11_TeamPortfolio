@@ -6,7 +6,7 @@
 HRESULT CBoss1_AnimationInstance::Initialize(CModel* pModel, CGameObject* pGameObject)
 {
 	FAILED_CHECK(CAnimationInstance::Initialize(pModel, pGameObject));
-
+															// 로컬 잠금
 	m_pModel->Find_Animation("AS_em0300_153_AL_turn_R_roop")->SetLocalRotation(true);
 	m_pModel->Find_Animation("AS_em0300_152_AL_turn_R_start")->SetLocalRotation(true);
 	m_pModel->Find_Animation("AS_em0300_151_AL_turn_L_roop")->SetLocalRotation(true);

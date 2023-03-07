@@ -1144,25 +1144,25 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 					->SetAbleState({ false, false, false, false, false, true, true, false, false, false });
 			})
 
-				// .AddTransition("ATTACK_CHARGE_LOOP to JUMP_FALL", "JUMP_FALL")
-				// .Predicator([&]()->_bool{return FloorCheck();})
-				// .Duration(0.1f).Priority(0)
-				//
-				// .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_01", "CHARGE_ATTACK_01")
-				// .Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(0, 0.5f)) && (!m_bCharge); })
-				// .Duration(0.1f).Priority(2)
-				//
-				// .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_02", "CHARGE_ATTACK_02")
-				// .Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(1, 1.f)) && (!m_bCharge); })
-				// .Duration(0.1f).Priority(1)
-				//
-				// .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_03", "CHARGE_ATTACK_03")
-				// .Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(2, 1.5f)) && (!m_bCharge); })
-				// .Duration(0.1f).Priority(0)
-				//
-				// .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_CANCEL", "CHARGE_CANCEL")
-				// .Predicator([&]() { return !m_bCharge; })
-				// .Duration(0.1f).Priority(100)
+				.AddTransition("ATTACK_CHARGE_LOOP to JUMP_FALL", "JUMP_FALL")
+				.Predicator([&]()->_bool {return FloorCheck(); })
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_01", "CHARGE_ATTACK_01")
+				.Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(0, 0.5f)) && (!m_bCharge); })
+				.Duration(0.1f).Priority(2)
+
+				.AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_02", "CHARGE_ATTACK_02")
+				.Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(1, 1.f)) && (!m_bCharge); })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_03", "CHARGE_ATTACK_03")
+				.Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(2, 1.5f)) && (!m_bCharge); })
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("ATTACK_CHARGE_LOOP to CHARGE_CANCEL", "CHARGE_CANCEL")
+				.Predicator([&]() { return !m_bCharge; })
+				.Duration(0.1f).Priority(100)
 
 		.AddState("CHARGE_CANCEL")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_210_AL_atk_charge_cancel"))
