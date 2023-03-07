@@ -238,6 +238,12 @@
     <Filter Include="97.ShaderFiles\PostProcess\HitDecal">
       <UniqueIdentifier>{eb2d8b39-fe98-4867-923b-0ed4f62afc11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Controller">
+      <UniqueIdentifier>{4bc20954-31cf-4cfc-b16b-78107c6eb677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPool\SkmP_Controller">
+      <UniqueIdentifier>{e5c3d8c2-d736-4e9d-a9c2-b6b7648712eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -596,6 +602,12 @@
     <ClInclude Include="..\public\PostVFX_HitDecal.h">
       <Filter>97.ShaderFiles\PostProcess\HitDecal</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\FL_Controller.h">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkmP_Controller.h">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\PostVFX_ColorGrading.h" />
   </ItemGroup>
   <ItemGroup>
@@ -929,6 +941,12 @@
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
     <ClCompile Include="..\private\PostVFX_HitDecal.cpp">
       <Filter>97.ShaderFiles\PostProcess\HitDecal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FL_Controller.cpp">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkmP_Controller.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_ColorGrading.cpp" />
   </ItemGroup>
