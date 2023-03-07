@@ -23,6 +23,14 @@
 #include "Weapon_wp0190.h"
 #include "SkyBox.h"
 
+#include "MapKinetic_Object.h"
+#include "PostVFX_Scifi.h"
+#include "EffectGroup.h"
+#include "ParticleSystem.h"
+#include "PostVFX_Distortion.h"
+#include "TrailSystem.h"
+#include "EffectSystem.h"
+
 #define ADD_PLAYER
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -152,7 +160,22 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
 		FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
 
+
+
+	{	// 이펙트 프로토타입
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
+			CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
+			CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
+	}
 
 	}
 #endif
@@ -190,8 +213,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
-	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
+	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
 
@@ -242,10 +265,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	// PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
 	// auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 
-	// auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
-	// _float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	// pos.y += 1.f;
-	// pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+	auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
+	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	pos.y += 1.f;
+	pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
 
 	return S_OK;
 }
@@ -260,6 +283,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar* pLayerTag)
 HRESULT CLevel_GamePlay::Ready_Layer_Effect()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Scifi", &Test);
+
+	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
 	return S_OK;
 }
 
