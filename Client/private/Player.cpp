@@ -71,6 +71,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_KineticComboStateMachine()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_JustDodgeStateMachine()))
+		return E_FAIL;
+
 	Load_DefaultEffects("../Bin/Resources/Curve/Default_Attack/");
 	Load_DefaultEffects("../Bin/Resources/Curve/Fire_Attack/");
 
@@ -118,6 +121,7 @@ void CPlayer::Tick(_double TimeDelta)
 	// 콤보 연계 시간
 	m_fKineticCombo_Slash -= TimeDelta;
 	m_fKineticCombo_Kinetic -= TimeDelta;
+	m_fJustDodgeAble -= TimeDelta;
 
 	NetualChecker(TimeDelta);	// 전투상태 아닐 때 체크
 
@@ -135,6 +139,9 @@ void CPlayer::Tick(_double TimeDelta)
 
 	HitCheck();
 
+	if(!m_bHit)
+		m_pJustDodgeStateMachine->Tick(TimeDelta);
+
 	if (!m_bHit && (0.f > m_fKineticCombo_Slash) && (0.f > m_fKineticCombo_Kinetic) 
 		&& (false == m_bKineticCombo)) // 콤보 타이밍이 아닐 때에는 일반 염력
 	{
@@ -148,9 +155,10 @@ void CPlayer::Tick(_double TimeDelta)
 	{
 		m_pKineticComboStateMachine->SetState("KINETIC_COMBO_NOUSE");
 		m_pKineticStataMachine->SetState("NO_USE_KINETIC");
+		m_pJustDodgeStateMachine->SetState("JUSTDODGE_NONUSE");
 	}
 
-	IM_LOG(m_pKineticComboStateMachine->GetCurStateName());
+	//IM_LOG(m_pKineticComboStateMachine->GetCurStateName());
 
 	SeperateCheck();
 
@@ -290,17 +298,26 @@ HRESULT CPlayer::Render()
 
 void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
-	m_bHit = true;
-
-	m_DamageDesc.m_iDamage = tDamageParams.iDamage;
-	m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
-	m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat3(&tDamageParams.vHitFrom);
-	m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, XMLoadFloat3(&tDamageParams.vHitFrom));
-
-	if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
+	// 현재 애니메이션 상태에 따라 저스트닷지 여부 판단
+	if (m_pModel->GetPlayAnimation()->GetName().find("dodge") != string::npos &&
+		m_pASM->isSocketExactlyEmpty())
 	{
-		// LookAt하면 아래쪽을 바라볼 수도 있음, 주의
-		m_pTransformCom->LookAt(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+		m_fJustDodgeAble = 1.f;
+	}
+	else
+	{
+		m_bHit = true;
+
+		m_DamageDesc.m_iDamage = tDamageParams.iDamage;
+		m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
+		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat3(&tDamageParams.vHitFrom);
+		m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, XMLoadFloat3(&tDamageParams.vHitFrom));
+
+		if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
+		{
+			// LookAt하면 아래쪽을 바라볼 수도 있음, 주의
+			m_pTransformCom->LookAt(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+		}
 	}
 }
 
@@ -454,33 +471,33 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 
 HRESULT CPlayer::SetUp_Event()
 {
-	//m_pModel->Add_EventCaller("Turn_Enable", [&]() {Event_SetCanTurn(true); });
-	//m_pModel->Add_EventCaller("Turn_Disable", [&]() {Event_SetCanTurn(false); });
+	m_pModel->Add_EventCaller("Turn_Enable", [&]() {Event_SetCanTurn(true); });
+	m_pModel->Add_EventCaller("Turn_Disable", [&]() {Event_SetCanTurn(false); });
 
-	//m_pModel->Add_EventCaller("Move_Enable", [&]() {Event_SetCanMove(true); });
-	//m_pModel->Add_EventCaller("Move_Disable", [&]() {Event_SetCanMove(false); });
+	m_pModel->Add_EventCaller("Move_Enable", [&]() {Event_SetCanMove(true); });
+	m_pModel->Add_EventCaller("Move_Disable", [&]() {Event_SetCanMove(false); });
 
-	//m_pModel->Add_EventCaller("Run_Enable", [&]() {Event_SetCanRun(true); });
-	//m_pModel->Add_EventCaller("Run_Disable", [&]() {Event_SetCanRun(false); });
+	m_pModel->Add_EventCaller("Run_Enable", [&]() {Event_SetCanRun(true); });
+	m_pModel->Add_EventCaller("Run_Disable", [&]() {Event_SetCanRun(false); });
 
-	//m_pModel->Add_EventCaller("AtkTurn_Enable", [&]() {Event_SetCanTurn_Attack(true); });
-	//m_pModel->Add_EventCaller("AtkTurn_Disable", [&]() {Event_SetCanTurn_Attack(false); });
+	m_pModel->Add_EventCaller("AtkTurn_Enable", [&]() {Event_SetCanTurn_Attack(true); });
+	m_pModel->Add_EventCaller("AtkTurn_Disable", [&]() {Event_SetCanTurn_Attack(false); });
 
-	//m_pModel->Add_EventCaller("LocalRevise_Enable", [&]() {Event_SetLocalRevise(true); });
-	//m_pModel->Add_EventCaller("LocalRevise_Disable", [&]() {Event_SetLocalRevise(false); });
+	m_pModel->Add_EventCaller("LocalRevise_Enable", [&]() {Event_SetLocalRevise(true); });
+	m_pModel->Add_EventCaller("LocalRevise_Disable", [&]() {Event_SetLocalRevise(false); });
 
-	//m_pModel->Add_EventCaller("OnAir_Enable", [&]() {Event_SetOnAir(true); });
-	//m_pModel->Add_EventCaller("OnAir_Disable", [&]() {Event_SetOnAir(false); });
+	m_pModel->Add_EventCaller("OnAir_Enable", [&]() {Event_SetOnAir(true); });
+	m_pModel->Add_EventCaller("OnAir_Disable", [&]() {Event_SetOnAir(false); });
 
-	//m_pModel->Add_EventCaller("OnAir_Enable", [&]() {Event_SetOnAir(true); });
-	//m_pModel->Add_EventCaller("OnAir_Disable", [&]() {Event_SetOnAir(false); });
+	m_pModel->Add_EventCaller("OnAir_Enable", [&]() {Event_SetOnAir(true); });
+	m_pModel->Add_EventCaller("OnAir_Disable", [&]() {Event_SetOnAir(false); });
 
-	//m_pModel->Add_EventCaller("Gravity_Enable", [&]() {Event_SetGravity(true); });
-	//m_pModel->Add_EventCaller("Gravity_Disable", [&]() {Event_SetGravity(false); });
+	m_pModel->Add_EventCaller("Gravity_Enable", [&]() {Event_SetGravity(true); });
+	m_pModel->Add_EventCaller("Gravity_Disable", [&]() {Event_SetGravity(false); });
 
-	//m_pModel->Add_EventCaller("MoveLimitReset", [&]() {Event_MoveLimitReset(); });
-	//m_pModel->Add_EventCaller("Event_AttackLimitReset", [&]() {Event_AttackLimitReset(); });
-	//m_pModel->Add_EventCaller("Event_ChargeReset", [&]() {Event_ChargeReset(); });
+	m_pModel->Add_EventCaller("MoveLimitReset", [&]() {Event_MoveLimitReset(); });
+	m_pModel->Add_EventCaller("Event_AttackLimitReset", [&]() {Event_AttackLimitReset(); });
+	m_pModel->Add_EventCaller("Event_ChargeReset", [&]() {Event_ChargeReset(); });
 
 	m_pModel->Add_EventCaller("Jump", [&]() {Jump(); });
 	
@@ -1032,7 +1049,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			.Tick([&](double fTimeDelta) {m_bHit = false; })
 			.OnExit([&]() { m_bSeperateAnim = false; m_bActiveGravity = true; m_bHit = true; })
 				.AddTransition("NON_HIT to AIRBORNE", "AIRBORNE")
-				.Predicator([&]()->_bool {return m_bHit && m_bAir;/*(m_DamageDesc.m_iDamageType == EAttackType::ATK_TO_AIR);*/ })
+				.Predicator([&]()->_bool {return m_bHit && (m_DamageDesc.m_iDamageType == EAttackType::ATK_TO_AIR); })
 				.Priority(0)
 
 				.AddTransition("NON_HIT to KNUCKBACK", "KNUCKBACK")
@@ -1522,6 +1539,56 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_JustDodgeStateMachine()
+{
+	CAnimation*	pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_207_AL_atk_justdodge"));
+	m_JustDodgeSlash.push_back(m_pModel->Find_Animation("AS_ch0100_207_AL_atk_justdodge"));
+
+	m_pJustDodgeStateMachine = CFSMComponentBuilder()
+		.InitState("JUSTDODGE_NONUSE")
+
+		.AddState("JUSTDODGE_NONUSE")
+			.AddTransition("JUSTDODGE_NONUSE to JUSTDODGE_USABLE", "JUSTDODGE_USABLE")
+			.Predicator([&]()->_bool { return m_fJustDodgeAble > 0.f; })
+			.Priority(0)
+
+		.AddState("JUSTDODGE_USABLE")
+			.OnStart([&](){})
+			.Tick([&](double fTimeDelta)
+			{
+				IM_LOG("%f", m_fJustDodgeAble);
+				IM_LOG("JUSTDODGE!!");
+				// 저스트닷지 조건 발생 시 돌릴 Tick함수
+			})
+			.OnExit([&](){})
+			
+				.AddTransition("JUSTDODGE_USABLE to JUSEDODGE_NONUSE", "JUSTDODGE_NONUSE")
+				.Predicator([&]()->_bool{ return m_fJustDodgeAble <= 0.f; })
+				.Priority(0)
+
+				.AddTransition("JUSTDODGE_USABLE to JUSTDODGE_SLASH", "JUSTDODGE_SLASH")
+				.Predicator([&]()->_bool { return m_bLeftClick; })
+				.Priority(0)
+
+		.AddState("JUSTDODGE_SLASH")
+			.OnStart([&](){ m_pASM->AttachAnimSocket("JustDodge_AnimSocket", m_JustDodgeSlash); })
+			.Tick([&](double fTimeDelta)
+			{
+				// 저스트닷지 피니시 발생 시 돌릴 Tick함수
+			})
+			.OnExit([&](){})
+
+				.AddTransition("JUSTDODGE_SLASH to JUSTDODGE_NONUSE", "JUSTDODGE_NONUSE")
+				.Predicator([&]()->_bool { return m_pASM->isSocketAlmostFinish("JustDodge_AnimSocket"); })
+				.Priority(0)
+
+		.Build();
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Setup_AnimSocket()
 {
 	CAnimation*	pAnimation = nullptr;
@@ -1765,28 +1832,44 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 	
 	if (nullptr != m_pModel->GetPlayAnimation())
 		m_fPlayRatio = m_pModel->GetPlayAnimation()->GetPlayRatio();
-	m_bLeftClick = m_pController->KeyDown(CController::MOUSE_LB);
-	m_bDash = m_pController->KeyDown(CController::SHIFT);
-
-	m_bNonCharge = m_pController->KeyUp(CController::C);
-	m_bCharge = m_pController->KeyPress(CController::C);
-
-	if (!m_bCharge) m_fBefCharge = 0.f;
-
-	m_bJump = m_pController->KeyDown(CController::SPACE);
-	m_bUpper = m_pController->KeyPress(CController::SPACE);
-
-	//if (m_bCanTurn_Attack)
-	//{
-	//	SmoothTurn_Attack(TimeDelta);
-	//}
-
-	m_bKineticRB = m_pController->KeyPress(CController::MOUSE_RB);
-	m_bKineticG = m_pController->KeyPress(CController::G);
-
-	m_bTestKey = m_pController->KeyDown(CController::E);
 
 	m_bBreakFall = m_pController->KeyDown(CController::SPACE);
+
+	if (m_bHit)
+	{
+		m_bLeftClick = false;
+		m_bDash = false;
+
+		m_bNonCharge = false;
+		m_bCharge = false;
+
+		m_fBefCharge = 0.f;
+
+		m_bJump = false;
+
+		m_bKineticRB = false;
+		m_bKineticG = false;
+	}
+	else
+	{
+		m_bLeftClick = m_pController->KeyDown(CController::MOUSE_LB);
+		m_bDash = m_pController->KeyDown(CController::SHIFT);
+
+		m_bNonCharge = m_pController->KeyUp(CController::C);
+		m_bCharge = m_pController->KeyPress(CController::C);
+
+		if (!m_bCharge) m_fBefCharge = 0.f;
+
+		m_bJump = m_pController->KeyDown(CController::SPACE);
+
+		//if (m_bCanTurn_Attack)
+		//{
+		//	SmoothTurn_Attack(TimeDelta);
+		//}
+
+		m_bKineticRB = m_pController->KeyPress(CController::MOUSE_RB);
+		m_bKineticG = m_pController->KeyPress(CController::G);
+	}
 
 	m_vCamLook = pGameInstance->Get_CamLook();
 }
@@ -1798,59 +1881,69 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 	m_bWalk = false;
 	m_eMoveDir = DIR_END;
 
-	m_vMoveDir = m_pController->GetMoveAxis();
-
-	Vector4 vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	vPlayerPos.w = 1.f;
-
-	m_vLastDir = vPlayerPos - m_vBefPos;
-	m_vLastDir.w = 0.f;
-	m_vBefPos = vPlayerPos;
-
-	if (0.f != XMVectorGetX(XMVector3Length(m_vMoveDir)))
+	if (m_bHit)
 	{
-		m_bWalk = true;
+		m_vMoveDir = Vector3::Zero;
+		m_bCanTurn = false;
+		m_bAir = false;
+		m_bLocalRevise = false;
+	}
+	else
+	{
+		m_vMoveDir = m_pController->GetMoveAxis();
 
-		Vector3 vPlayerLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-		vPlayerLook.y = 0.f;
-		vPlayerLook.Normalize();
+		Vector4 vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		vPlayerPos.w = 1.f;
 
-		Vector3 vPlayerRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
-		vPlayerRight.y = 0.f;
-		vPlayerRight.Normalize();
+		m_vLastDir = vPlayerPos - m_vBefPos;
+		m_vLastDir.w = 0.f;
+		m_vBefPos = vPlayerPos;
 
-		Matrix matCam = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW);
-		_vector vScale, vRotate, vTrans;
-		XMMatrixDecompose(&vScale, &vRotate, &vTrans, matCam);
-		Matrix matCamRot = XMMatrixRotationQuaternion(vRotate);
-		m_vMoveDir = XMVector3TransformNormal(m_vMoveDir, matCamRot);
-		m_vMoveDir.y = 0.f;
-		m_vMoveDir.Normalize();
-
-		_float fAxis_Look = vPlayerLook.Dot(m_vMoveDir);
-		_float fAxis_Right = vPlayerRight.Dot(m_vMoveDir);
-
-		if (fabs(fAxis_Look) > fabs(fAxis_Right))
+		if (0.f != XMVectorGetX(XMVector3Length(m_vMoveDir)))
 		{
-			if (0.f < fAxis_Look) { m_eMoveDir = DIR_F; }
-			else { m_eMoveDir = DIR_B; }
-		}
-		else
-		{
-			if (0.f < fAxis_Right) { m_eMoveDir = DIR_R; }
-			else { m_eMoveDir = DIR_L; }
-		}
+			m_bWalk = true;
 
-		if (m_bCanTurn)
-			m_pTransformCom->LookAt_Smooth(vPlayerPos + m_vMoveDir, TimeDelta);
+			Vector3 vPlayerLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+			vPlayerLook.y = 0.f;
+			vPlayerLook.Normalize();
 
-		if (m_bAir || m_bHit)	// 공중 상태에선 회전이 먹지 않음
-			m_vMoveDir = vPlayerLook;
+			Vector3 vPlayerRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+			vPlayerRight.y = 0.f;
+			vPlayerRight.Normalize();
 
-		if (m_bLocalRevise)
-		{
-			Vector4 vCamLook = pGameInstance->Get_CamLook();
-			m_pTransformCom->SetAxis(CTransform::STATE_LOOK, vCamLook);
+			Matrix matCam = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW);
+			_vector vScale, vRotate, vTrans;
+			XMMatrixDecompose(&vScale, &vRotate, &vTrans, matCam);
+			Matrix matCamRot = XMMatrixRotationQuaternion(vRotate);
+			m_vMoveDir = XMVector3TransformNormal(m_vMoveDir, matCamRot);
+			m_vMoveDir.y = 0.f;
+			m_vMoveDir.Normalize();
+
+			_float fAxis_Look = vPlayerLook.Dot(m_vMoveDir);
+			_float fAxis_Right = vPlayerRight.Dot(m_vMoveDir);
+
+			if (fabs(fAxis_Look) > fabs(fAxis_Right))
+			{
+				if (0.f < fAxis_Look) { m_eMoveDir = DIR_F; }
+				else { m_eMoveDir = DIR_B; }
+			}
+			else
+			{
+				if (0.f < fAxis_Right) { m_eMoveDir = DIR_R; }
+				else { m_eMoveDir = DIR_L; }
+			}
+
+			if (m_bCanTurn)
+				m_pTransformCom->LookAt_Smooth(vPlayerPos + m_vMoveDir, TimeDelta);
+
+			if (m_bAir || m_bHit)	// 공중 상태에선 회전이 먹지 않음
+				m_vMoveDir = vPlayerLook;
+
+			if (m_bLocalRevise)
+			{
+				Vector4 vCamLook = pGameInstance->Get_CamLook();
+				m_pTransformCom->SetAxis(CTransform::STATE_LOOK, vCamLook);
+			}
 		}
 	}
 }
@@ -1906,7 +1999,7 @@ void CPlayer::NetualChecker(_double TimeDelta)
 		m_fNetualTimer = 0.f;
 	}
 
-	IM_LOG("%f", m_fNetualTimer);
+	//IM_LOG("%f", m_fNetualTimer);
 
 	if (m_bOnBattle && (m_fNetualTimer >= 10.f))
 	{
@@ -2287,6 +2380,7 @@ void CPlayer::Free()
 	Safe_Release(m_pKineticComboStateMachine);
 	Safe_Release(m_pKineticStataMachine);
 	Safe_Release(m_pHitStateMachine);
+	Safe_Release(m_pJustDodgeStateMachine);
 
 	Safe_Release(m_pASM);
 	Safe_Release(m_pRenderer);
