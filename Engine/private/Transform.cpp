@@ -366,9 +366,9 @@ void CTransform::LookAt_NonY(_fvector vTargetPos)
 	_float3		vScale = Get_Scaled();
 
 	_float4		vLook_NonY = vTargetPos - Get_State(CTransform::STATE_TRANSLATION);
-				vLook_NonY.y = XMVectorGetY(Get_State(CTransform::STATE_TRANSLATION));
+				vLook_NonY.y = 0.f;
 
-	_vector		vLook = XMVector3Normalize(vLook_NonY) *vScale.z;
+	_vector		vLook = XMVector3Normalize(vLook_NonY) * vScale.z;
 	_vector		vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook)) * vScale.x;
 	_vector		vUp = XMVector3Normalize(XMVector3Cross(vLook, vRight)) * vScale.y;
 

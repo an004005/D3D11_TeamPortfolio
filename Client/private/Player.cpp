@@ -471,7 +471,7 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 
 HRESULT CPlayer::SetUp_Event()
 {
-	m_pModel->Add_EventCaller("Turn_Enable", [&]() {Event_SetCanTurn(true); });
+	/*m_pModel->Add_EventCaller("Turn_Enable", [&]() {Event_SetCanTurn(true); });
 	m_pModel->Add_EventCaller("Turn_Disable", [&]() {Event_SetCanTurn(false); });
 
 	m_pModel->Add_EventCaller("Move_Enable", [&]() {Event_SetCanMove(true); });
@@ -497,7 +497,7 @@ HRESULT CPlayer::SetUp_Event()
 
 	m_pModel->Add_EventCaller("MoveLimitReset", [&]() {Event_MoveLimitReset(); });
 	m_pModel->Add_EventCaller("Event_AttackLimitReset", [&]() {Event_AttackLimitReset(); });
-	m_pModel->Add_EventCaller("Event_ChargeReset", [&]() {Event_ChargeReset(); });
+	m_pModel->Add_EventCaller("Event_ChargeReset", [&]() {Event_ChargeReset(); });*/
 
 	m_pModel->Add_EventCaller("Jump", [&]() {Jump(); });
 	
