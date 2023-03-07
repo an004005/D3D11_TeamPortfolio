@@ -43,7 +43,7 @@ public:
 private:
 	_float4x4					m_ProjMatrix;
 
-	_float m_fFOV = 75.f;
+	_float m_fFOV = 60.f;
 	_float m_fWidth = 1280.f;
 	_float m_fHeight = 720.f;
 	_float m_fNear = 0.1f;

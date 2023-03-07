@@ -125,6 +125,7 @@ void CImgui_Manager::Ready_Imgui(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceC
 	pstyle->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
 	pstyle->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
 	pstyle->Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
+	m_pAlpha = &ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w;
 
 }
 
@@ -172,7 +173,11 @@ void CImgui_Manager::Render_Imgui()
 
 			ImGui::EndMenuBar();
 		}
-
+		////Alpha 
+		ImGui::Separator();
+		ImGui::SliderFloat("Alpha Slider", m_pAlpha, 0.f, 1.f);
+		ImGui::Separator();
+		////
 		// ÅÇ ·»´õ
 		if (ImGui::BeginTabBar("Manager_Tab", m_iTabBarFlags))
 		{

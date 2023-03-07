@@ -99,14 +99,25 @@ PS_OUT PS_MAIN(PS_IN In)
 
 		Out.vColor = ((saturate(Blend * OriginColor * (1-vFlags.a) *2)) + LDR *  vFlags.a);
 
-		// if(vFlags.a <= 0.f)
-		// {
-		// 	Out.vColor = OriginColor;
-		// }
+		Out.vColor.a = 1.f;
+	}
+	else if(vFlags.y == SHADER_HIT_DECAL)
+	{
+		float4 ScifiTex = g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(g_Time * 0.1f, g_Time)));
+		float fWeight = ScifiTex.r * g_float_0;
+
+		float4 ScifiNoiseTex = g_tex_1.Sample(LinearSampler, (In.vTexUV + fWeight));
+
+		float4 InputColor = g_vec4_0;
+		float4 Blend = (ScifiTex * ScifiNoiseTex + InputColor);
+
+		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+
+		Out.vColor = ((saturate(Blend * OriginColor * (1 - vFlags.a) * 2)) + LDR *  vFlags.a);
 
 		Out.vColor.a = 1.f;
-
 	}
+
 	else
 		Out.vColor = LDR;
 

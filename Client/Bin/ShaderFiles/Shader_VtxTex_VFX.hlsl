@@ -72,6 +72,27 @@ PS_OUT_Flag PS_MAIN_Flag(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_MASK_HIT(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 DefaultColor =g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	float4 OriginColor = g_vec4_0;
+	// float4 BlendColor = DefaultColor * OriginColor * 2.0f;
+	// float4 FinalColor = saturate(BlendColor);
+	// float  Mask = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	// Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+	// Out.vColor.a = Mask;
+	Out.vColor = DefaultColor;
+	// Out.vColor.a = DefaultColor.a;
+	Out.vFlag = float4(0.f, SHADER_HIT_DECAL, 0.f, 0.f);
+	// if (Out.vColor.a == 0.f)
+	// 	discard;
+
+	return Out;
+}
+
 // g_tex_0 : 원 마스크 텍스쳐
 // g_vec4_0 : 테스트용 컬러
 PS_OUT_Flag PS_DISTORTION(PS_IN In)
@@ -329,5 +350,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SEMI_DISTORTION_FOR_SAS();
+	}
+
+	//7
+	pass Mask_Hit_Decal
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MASK_HIT();
 	}
 }
