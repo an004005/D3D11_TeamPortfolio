@@ -62,6 +62,9 @@ HRESULT CRenderer::Add_DebugRenderGroup(CComponent * pComponent)
 
 HRESULT CRenderer::Draw_RenderGroup()
 {
+	_float fGamma = CHDR::GetInstance()->GetGamma();
+	m_pShader->Set_RawValue("g_Gamma", &fGamma, sizeof(_float));
+
 	if (FAILED(Render_ShadowDepth()))
 		return E_FAIL;
 	if (FAILED(Render_NonAlphaBlend()))
@@ -69,37 +72,25 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (FAILED(Render_LightAcc()))
 		return E_FAIL;
 
-	/* 디퓨즈타겟(색상) * 셰이드타겟(명암)을 곱하여 최종적으로 백버퍼에 그려내는 작업을 수행한다. */
-	if (CHDR::GetInstance()->IsOn())
-	{
-		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_HDR"))))
-			return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_HDR"))))
+		return E_FAIL;
 
-		if (FAILED(Render_Priority()))
-			return E_FAIL;
-		if (FAILED(Render_Blend()))
-			return E_FAIL;
-		if (FAILED(Render_NonLight()))
-			return E_FAIL;
-		if (FAILED(Render_AlphaBlend()))
-			return E_FAIL;
+	if (FAILED(Render_Priority()))
+		return E_FAIL;
+	if (FAILED(Render_Blend()))
+		return E_FAIL;
+	if (FAILED(Render_NonLight()))
+		return E_FAIL;
+	if (FAILED(Render_AlphaBlend()))
+		return E_FAIL;
+	if (FAILED(Render_Outline()))
+		return E_FAIL;
 
-		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext, TEXT("MRT_HDR"))))
-			return E_FAIL;
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext, TEXT("MRT_HDR"))))
+		return E_FAIL;
 
-		Render_HDR();
-	}
-	else
-	{
-		if (FAILED(Render_Priority()))
-			return E_FAIL;
-		if (FAILED(Render_Blend()))
-			return E_FAIL;
-		if (FAILED(Render_NonLight()))
-			return E_FAIL;
-		if (FAILED(Render_AlphaBlend()))
-			return E_FAIL;
-	}
+	Render_HDR();
+
 	if (FAILED(Render_PostProcess()))
 		return E_FAIL;
 
@@ -166,7 +157,7 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Depth"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(0.f, 1.f, 0.f, 0.f))))
 		return E_FAIL;
 	/* For.Target_RMA */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_RMA"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.f, 1.f, 0.f))))
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_RMA"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(1.f, 0.f, 1.f, 0.f))))
 		return E_FAIL;
 
 	/* For.Target_AMB */
@@ -176,8 +167,7 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_CTL"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
-	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Outline"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.f, 0.f, 0.f, 0.f)));
-	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_OutlineFlag"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_OutlineFlag"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, &_float4(0.f, 0.f, 0.f, 0.f)));
 
 
 	/* For.Target_Diffuse_Copy */
@@ -191,7 +181,7 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;	
 
 	/* For.Target_Shade */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Shade"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.0f, 0.0f, 0.0f, 1.f))))
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Shade"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, &_float4(0.0f, 0.0f, 0.0f, 1.f))))
 		return E_FAIL;
 
 	/* For.Target_Specular */
@@ -217,6 +207,8 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Deferred"), TEXT("Target_RMA"))))
 		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Deferred"), TEXT("Target_OutlineFlag"))))
+		return E_FAIL;
 
 	/* for.MRT_ToonDeferred*/
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_ToonDeferred"), TEXT("Target_Diffuse"))))
@@ -229,8 +221,8 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_ToonDeferred"), TEXT("Target_CTL"))))
 		return E_FAIL;
-
-	FAILED_CHECK(m_pTarget_Manager->Add_MRT(TEXT("MRT_Outline"), TEXT("Target_Outline")));
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_ToonDeferred"), TEXT("Target_OutlineFlag"))))
+		return E_FAIL;
 
 
 	/* For.MRT_LightAcc */ /* 빛 연산의 결과를 저장할 렌더타겟들.  */
@@ -239,7 +231,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular"))))
 		return E_FAIL;
 
-
+	m_pEnv = dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(L"../Bin/Resources/Textures/DiffuseEnv.dds"));
+	m_pEnv2 = dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(L"../Bin/Resources/Textures/BlueSkyIradiance.dds"));
 
 
 	// HDR 텍스쳐 렌더링용
@@ -251,9 +244,9 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	// ~For Effect
 
-	Ready_ShadowDepthResources(8192, 8192);
+
 	// Ready_ShadowDepthResources(8192, 8192);
-	// Ready_ShadowDepthResources(128, 128);
+	Ready_ShadowDepthResources(128, 128);
 
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer)
@@ -290,10 +283,11 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_CTL"), 300.0f, 700.f, 200.f, 200.f)))
 		return E_FAIL;
 
-	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Flag"), 500.0f, 100.f, 200.f, 200.f), E_FAIL);
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Flag"), 500.0f, 100.f, 200.f, 200.f));
 
 
-	// FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Outline"), 250.0f, 150.f, 100.f, 100.f), E_FAIL);
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_OutlineFlag"), 500.0f, 300.f, 200.f, 200.f));
+
 
 #endif
 
@@ -463,6 +457,7 @@ HRESULT CRenderer::Render_NonAlphaBlend()
 	m_pTarget_Manager->GetTarget(TEXT("Target_Diffuse"))->SetIgnoreClearOnce();
 	m_pTarget_Manager->GetTarget(TEXT("Target_Normal"))->SetIgnoreClearOnce();
 	m_pTarget_Manager->GetTarget(TEXT("Target_Depth"))->SetIgnoreClearOnce();
+	m_pTarget_Manager->GetTarget(TEXT("Target_OutlineFlag"))->SetIgnoreClearOnce();
 
 	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_ToonDeferred"))))
 		return E_FAIL;
@@ -479,6 +474,7 @@ HRESULT CRenderer::Render_NonAlphaBlend()
 
 	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext, TEXT("MRT_ToonDeferred"))))
 		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -577,6 +573,10 @@ HRESULT CRenderer::Render_Blend()
 		return E_FAIL;
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_CTLTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_CTL")))))
 		return E_FAIL;
+
+	m_pEnv->Bind_ShaderResource(m_pShader, "g_IrradianceTexture");
+	m_pEnv2->Bind_ShaderResource(m_pShader, "g_RadianceTexture");
+
 
 	m_pShader->Begin(3);
 	m_pVIBuffer->Render();
@@ -762,42 +762,24 @@ HRESULT CRenderer::Render_Distortion(const _tchar* pTargetTag)
 
 HRESULT CRenderer::Render_Outline()
 {
-	// FAILED_CHECK(m_pTarget_Manager->Begin_RenderTarget(m_pContext, TEXT("Target_OutlineFlag")), E_FAIL);
-	//
-	// for (auto& pGameObject : m_RenderObjects[RENDER_OUTLINE])
-	// {
-	// 	if (nullptr != pGameObject)
-	// 		pGameObject->Render_OutlineFlag();
-	//
-	// 	Safe_Release(pGameObject);
-	// }
-	//
-	// m_RenderObjects[RENDER_OUTLINE].clear();
-	//
-	// FAILED_CHECK(m_pTarget_Manager->End_MRT(m_pContext, L"Target_OutlineFlag"), E_FAIL);
-	//
-	// FAILED_CHECK(m_pTarget_Manager->Begin_RenderTarget(m_pContext, TEXT("Target_Outline")), E_FAIL);
-	//
-	// D3D11_VIEWPORT			ViewPortDesc;
-	// ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
-	//
-	// _uint		iNumViewports = 1;
-	//
-	// m_pContext->RSGetViewports(&iNumViewports, &ViewPortDesc);
-	//
-	// m_pShader->Set_RawValue("g_iWinCX", &ViewPortDesc.Width, sizeof(_float));
-	// m_pShader->Set_RawValue("g_iWinCY", &ViewPortDesc.Height, sizeof(_float));
-	//
-	// FAILED_CHECK(m_pShader->Set_ShaderResourceView("g_OutlineFlagTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_OutlineFlag"))), E_FAIL);
-	//
-	// m_pShader->Set_Matrix("g_WorldMatrix", &m_WorldMatrix);
-	// m_pShader->Set_Matrix("g_ViewMatrix", &m_ViewMatrix);
-	// m_pShader->Set_Matrix("g_ProjMatrix", &m_ProjMatrix);
-	//
-	// m_pShader->Begin(4);
-	//
-	// m_pVIBuffer->Render();
-	// FAILED_CHECK(m_pTarget_Manager->End_MRT(m_pContext, L""), E_FAIL);
+	D3D11_VIEWPORT			ViewPortDesc;
+	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
+	
+	_uint		iNumViewports = 1;
+	
+	m_pContext->RSGetViewports(&iNumViewports, &ViewPortDesc);
+	
+	m_pShader->Set_RawValue("g_iWinCX", &ViewPortDesc.Width, sizeof(_float));
+	m_pShader->Set_RawValue("g_iWinCY", &ViewPortDesc.Height, sizeof(_float));
+	
+	FAILED_CHECK(m_pShader->Set_ShaderResourceView("g_OutlineFlagTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_OutlineFlag"))));
+	
+	m_pShader->Set_Matrix("g_WorldMatrix", &m_WorldMatrix);
+	m_pShader->Set_Matrix("g_ViewMatrix", &m_ViewMatrix);
+	m_pShader->Set_Matrix("g_ProjMatrix", &m_ProjMatrix);
+	
+	m_pShader->Begin(4);
+	m_pVIBuffer->Render();
 
 	return S_OK;
 }
@@ -878,4 +860,6 @@ void CRenderer::Free()
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pShadowDepthStencilView);
+	Safe_Release(m_pEnv);
+	Safe_Release(m_pEnv2);
 }

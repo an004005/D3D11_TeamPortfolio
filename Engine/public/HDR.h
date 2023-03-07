@@ -16,6 +16,8 @@ public:
 	_bool IsOn() const { return m_bOn; }
 	void Imgui_Render();
 
+	_float GetGamma() const { return m_fGamma; }
+
 private:
 	void DownScale(ID3D11ShaderResourceView* pHDRSRV);
 	void Bloom();
@@ -28,6 +30,7 @@ private:
 	HRESULT CompileShader(PWCHAR strPath, D3D10_SHADER_MACRO* pMacros, char* strEntryPoint, char* strProfile, DWORD dwShaderFlags, ID3DBlob** ppVertexShaderBuffer);
 	// Down scale the full size HDR image
 	void Clear();
+
 
 private:
 	ID3D11Device* m_pDevice = nullptr;
@@ -73,6 +76,8 @@ private:
 	float m_fAdaptation;
 	float m_fBloomThreshold;
 	float m_fBloomScale;
+	float m_fGamma;
+	float m_fFlimSlope;
 
 	typedef struct
 	{
@@ -91,7 +96,9 @@ private:
 		float fMiddleGrey;
 		float fLumWhiteSqr;
 		float fBloomScale;
-		UINT pad;
+		float  fGamma;
+		float  fFlimSlope;
+		UINT pad[3];
 	} TFinalPassCB;
 	ID3D11Buffer* m_pFinalPassCB = nullptr;
 

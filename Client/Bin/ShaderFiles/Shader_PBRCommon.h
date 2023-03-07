@@ -62,19 +62,24 @@ float3 Specular_BRDF(float alpha, float3 specularColor, float NdotV, float NdotL
 }
 
 // Diffuse irradiance
-// float3 Diffuse_IBL(in float3 N)
-// {
-//     return IrradianceTexture.Sample(IBLSampler, N);
-// }
+float3 Diffuse_IBL(float3 N)
+{
+    return g_IrradianceTexture.Sample(CubeSampler, N);
+}
 //
 // // Approximate specular image based lighting by sampling radiance map at lower mips 
 // // according to roughness, then modulating by Fresnel term. 
-// float3 Specular_IBL(in float3 N, in float3 V, in float lodBias)
-// {
-//     float mip = lodBias * NumRadianceMipLevels;
-//     float3 dir = reflect(-V, N);
-//     return RadianceTexture.SampleLevel(IBLSampler, dir, mip);
-// }
+float3 Specular_IBL(float3 N, float3 V, float lodBias)
+{
+    // float mip = lodBias * NumRadianceMipLevels;
+    // float3 dir = reflect(-V, N);
+    // return g_RadianceTexture.SampleLevel(CubeSampler, dir, mip);
+
+    float mip = lodBias * 5;
+    float3 dir = reflect(-V, N);
+    return g_RadianceTexture.SampleLevel(CubeSampler, dir, mip) * 0.3f;
+}
+
 
 // Apply Disney-style physically based rendering to a surface with:
 //
@@ -86,7 +91,7 @@ float3 Specular_BRDF(float alpha, float3 specularColor, float NdotV, float NdotL
 //
 // lightDirection[]: Light direction.
 float3 LightSurface(
-    float3 V, float3 N, float lightColor, float3 lightDirection,
+    float3 V, float3 N, float3 lightColor, float3 lightDirection,
     float3 albedo, float roughness, float metallic, float ambientOcclusion)
 {
     // Specular coefficiant - fixed reflectance value for non-metals
@@ -124,13 +129,15 @@ float3 LightSurface(
     acc_color += NdotL * lightColor * (((c_diff * diffuse_factor) + specular));
 
     // // Add diffuse irradiance
-    // float3 diffuse_env = Diffuse_IBL(N);
-    // acc_color += c_diff * diffuse_env;
-    acc_color += c_diff * 0.4f;
-    //
+    float3 diffuse_env = Diffuse_IBL(N);
+    acc_color += c_diff * diffuse_env;
+
+    // acc_color += c_diff * 0.4f;
+
+
     // // Add specular radiance 
-    // float3 specular_env = Specular_IBL(N, V, roughness);
-    // acc_color += c_spec * specular_env;
+    float3 specular_env = Specular_IBL(N, V, roughness);
+    acc_color += c_spec * specular_env;
 
     return acc_color;
 }

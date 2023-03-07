@@ -56,7 +56,7 @@ struct PS_OUT
 	float4		vDiffuse : SV_TARGET0;
 	float4		vNormal : SV_TARGET1;
 	float4		vDepth : SV_TARGET2;
-	float4		vRMA : SV_TARGET4;
+	float4		vRMA : SV_TARGET3;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -101,7 +101,8 @@ PS_OUT PS_DEFAULT(PS_IN In)
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
 	if (g_tex_on_2)
 		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
-
+	else
+		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
 
 	return Out;
 }
