@@ -1,17 +1,1 @@
-    {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxToonAnimModel",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hair_COL.dds",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hair_NML.png",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hair_AMB.dds",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hair_CTL.dds"
-        ],
-        "Pass" : 1
-    }
-}
+{"ShaderParams":{"Float2s":[],"Float4s":[[9.999999747378752e-05,9.998999303206801e-05,9.998999303206801e-05,0.0]],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":3,"Textures":["../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hair_COL.dds\u0000","../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hair_NML.png\u0000","../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hair_AMB.dds\u0000","../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hair_CTL.dds\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxToonAnimModel"}

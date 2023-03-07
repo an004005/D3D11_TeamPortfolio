@@ -128,13 +128,13 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& filePath)
-	{
-		string fileName = CGameUtils::GetFileName(filePath);
-		CGameInstance::GetInstance()->Add_Prototype(
-			s2ws(fileName).c_str(),
-			CMaterial::Create(m_pDevice, m_pContext, filePath.c_str()));
-	});
+	// CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& filePath)
+	// {
+	// 	string fileName = CGameUtils::GetFileName(filePath);
+	// 	CGameInstance::GetInstance()->Add_Prototype(
+	// 		s2ws(fileName).c_str(),
+	// 		CMaterial::Create(m_pDevice, m_pContext, filePath.c_str()));
+	// });
 
 	pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
 	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));

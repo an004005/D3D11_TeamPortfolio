@@ -983,8 +983,16 @@ HRESULT CModel::Ready_Materials(HANDLE hFile)
 	for (_uint i = 0; i < iNumMaterials; ++i)
 	{
 		const string mtrlName = CGameUtils::ReadStrFile(hFile); /* Read */
-	
 		wstring wMtrlName = CGameUtils::s2ws(mtrlName);
+
+		if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_NOW, wMtrlName.c_str()))
+		{
+			const string* pMtrlPath = CMaterial::FindMaterialFilePath(mtrlName);
+
+			if (pMtrlPath)
+				CGameInstance::GetInstance()->Add_Prototype(wMtrlName.c_str(), CMaterial::Create(m_pDevice, m_pContext, pMtrlPath->c_str()));
+		}
+
 		CMaterial* pMtrl = dynamic_cast<CMaterial*>(CGameInstance::GetInstance()->Clone_Component(wMtrlName.c_str()));
 	
 		if (pMtrl == nullptr)

@@ -42,6 +42,7 @@
 #endif
 
 #define			MSG_BOX(_message)			MessageBox(NULL, TEXT(_message), L"System Message", MB_OK)
+#define         MSG_BOX_CHECK(_message)      MessageBox(NULL, TEXT(_message), L"System Message", MB_YESNO)
 
 #define NO_COPY(CLASSNAME)										\
 		private:												\

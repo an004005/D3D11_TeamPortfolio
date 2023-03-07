@@ -62,6 +62,9 @@ private:
 	ID3D11DepthStencilView* m_pShadowDepthStencilView = nullptr;
 	_bool m_bVisibleTargets = false;
 
+	class CTexture* m_pEnv = nullptr;
+	class CTexture* m_pEnv2 = nullptr;
+
 private:
 	HRESULT Render_Priority();
 	HRESULT Render_ShadowDepth();
