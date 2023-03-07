@@ -353,7 +353,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 		.Duration(0.1f).Priority(0)
 
 		.AddTransition("ATK_A1 to WALK", "WALK")
-		.Predicator([&]()->_bool {return m_bWalk && (0.3f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && (!m_bLerp); })
+		.Predicator([&]()->_bool {return m_bWalk && !m_bLeftClick && (0.3f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && (!m_bLerp); })
 		.Duration(0.1f)
 		.Priority(100)
 

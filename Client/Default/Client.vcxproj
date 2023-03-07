@@ -267,9 +267,12 @@
     <ClInclude Include="..\public\ScarletWeapon.h" />
     <ClInclude Include="..\public\SkMpBullet.h" />
     <ClInclude Include="..\public\SkmP_AnimInstance.h" />
+    <ClInclude Include="..\public\SkmP_Controller.h" />
     <ClInclude Include="..\public\SkPd_AnimInstance.h" />
     <ClInclude Include="..\public\SkummyPandou.h" />
-    <ClInclude Include="..\public\SkummyPool.h" />
+    <ClInclude Include="..\public\SkummyPool.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\Terrain.h" />
@@ -378,9 +381,12 @@
     <ClCompile Include="..\private\ScarletWeapon.cpp" />
     <ClCompile Include="..\private\SkMpBullet.cpp" />
     <ClCompile Include="..\private\SkmP_AnimInstance.cpp" />
+    <ClCompile Include="..\private\SkmP_Controller.cpp" />
     <ClCompile Include="..\private\SkPd_AnimInstance.cpp" />
     <ClCompile Include="..\private\SkummyPandou.cpp" />
-    <ClCompile Include="..\private\SkummyPool.cpp" />
+    <ClCompile Include="..\private\SkummyPool.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />

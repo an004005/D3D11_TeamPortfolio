@@ -23,9 +23,9 @@ HRESULT CFL_Controller::Initialize(void * pArg)
 			.AddState("Operate")
 				.AddTransition("Operate to Near", "Near")
 					.Predicator([this]
-				{
-					return m_pCastedOwner->IsPlayingSocket() == false;
-				})
+					{
+						return m_pCastedOwner->IsPlayingSocket() == false;
+					})
 
 			.AddState("Near")
 				.Tick(this, &CFL_Controller::Tick_Near)
@@ -113,7 +113,7 @@ void CFL_Controller::Tick_Near(_double TimeDelta)
 		AddCommand("Attack_Spin", 0.f, &CAIController::Input, R);
 		break;	
 	case 1:
-		AddCommand("WalkTurn", 1.2f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 0.9f);
+		AddCommand("WalkTurn", 1.2f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	case 2:
 		AddCommand("Dodge_L", 0.f, &CAIController::Input, NUM_1);
@@ -125,7 +125,7 @@ void CFL_Controller::Tick_Near(_double TimeDelta)
 		AddCommand("Dodge_B", 0.f, &CAIController::Input, NUM_2);
 		break;
 	case 5:
-		AddCommand("WalkTurn", 1.2f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 0.9f);
+		AddCommand("WalkTurn", 1.2f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	case 6:
 		AddCommand("Dodge_R", 0.f, &CAIController::Input, NUM_3);
@@ -143,10 +143,10 @@ void CFL_Controller::Tick_Mid(_double TimeDelta)
 	switch (m_iMidOrder)
 	{
 	case 0:
-		AddCommand("WalkTurn", 1.3f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 0.5f);
+		AddCommand("WalkTurn", 1.3f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	case 1:
-		AddCommand("Run", 3.f, &CFL_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 0.8f);
+		AddCommand("Run", 2.f, &CFL_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	}
 	m_iMidOrder = (m_iMidOrder + 1) % 2;

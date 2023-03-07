@@ -35,6 +35,7 @@
 #include "BuddyLumi.h"
 #include "SkummyPool.h"
 #include "SkMpBullet.h" // SkummPool's Bullet
+#include "SkmP_Controller.h"
 #include "SkummyPandou.h"
 #include "BronJon.h"
 
@@ -251,7 +252,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BronJon"), CBronJon::Create(m_pDevice, m_pContext)));
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FL_Controller"), CFL_Controller::Create()));
-
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
 
 	return S_OK;
 }

@@ -130,6 +130,14 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 				m_vLocalMove = pChannel->GetLocalMove();
 				m_vLocalRotation = pChannel->GetLocalRotation();
 			}
+			// 이벤트 실행
+			for (auto& iter : m_vecEvent)
+			{
+				if (iter.EventTime >= PrePlayTime && iter.EventTime < m_PlayTime)
+				{
+					m_pModel->EventCaller(iter.strEventName);
+				}
+			}
 		}
 		break;
 	case EAnimUpdateType::ADDITIVE:

@@ -100,6 +100,7 @@ void CScarletCharacter::Collision_Check(CRigidBody * AttackTrigger, DAMAGE_PARAM
 				DAMAGE_PARAM tParam;
 				tParam.iDamage = DamageParam.iDamage;
 				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				tParam.eAttackType = DamageParam.eAttackType;
 				pTarget->TakeDamage(DamageParam);
 			}
 		}

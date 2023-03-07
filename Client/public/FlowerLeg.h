@@ -107,15 +107,29 @@ private:
 	CAnimation* m_pDamage_M_L = nullptr;
 	CAnimation* m_pDamage_M_R = nullptr;
 
+	CAnimation* m_pBlowStart = nullptr; 
+	CAnimation* m_pBlowLand = nullptr;
+	CAnimation* m_pGetUp = nullptr;
+	CAnimation* m_pRiseStart = nullptr;
+
+
 	CAnimation* m_pDeadAnim = nullptr;
 
 	// Run 상태를 위한 _bool
 	_bool m_bRun = false;
 
-	// Damage
+	// Attack
 	_bool m_bAtkSwitch = false;
 
+	// Damage
 	_bool		m_bStruck = false;
+	_bool		m_bAirStruck = false;
+
+	_bool		m_bMaintain = false;
+
+	_uint		m_iAirDamage = 0;
+	_uint		m_iPreAirDamageCnt = 0;
+
 
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
@@ -128,6 +142,8 @@ public:
 	_float GetTurnRemain() const { return m_fTurnRemain; }
 	_bool IsPlayingSocket() const;		
 	_bool IsRun() const { return m_bRun; }
+
+	void NotAirStruck(_bool bState) {  m_bAirStruck = bState; }
 									
 	// ~Refine
 

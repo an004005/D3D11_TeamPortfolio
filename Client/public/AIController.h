@@ -81,6 +81,7 @@ public:
 	void Input(EHandleInput eInput);
 	void Move_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio = 1.f);
 	void TurnToTargetStop(_float fSpeedRatio = 1.f);
+	void Wait();
 
 	DISTANCE CurrentDistance() const { return m_eDistance; }
 

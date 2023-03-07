@@ -121,6 +121,7 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 		if ("REPEAT" == szTransitionName)
 			break;
 	}
+
 	Assert(iLoopBreaker > 0); // 무한루프 방치
 
 	if (nullptr != m_pCurState->m_OptionalEvent/* && (m_pCurState->m_bOptionalEvent)*/)

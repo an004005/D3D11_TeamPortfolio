@@ -257,6 +257,11 @@ void CAIController::TurnToTargetStop(_float fSpeedRatio)
 	}
 }
 
+void CAIController::Wait()
+{
+	// AddCommand 시간동안 쉰다.
+}
+
 void CAIController::Free()
 {
 	CController::Free();

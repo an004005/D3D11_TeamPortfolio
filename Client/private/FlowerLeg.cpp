@@ -57,10 +57,9 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Proto_FL_Controller"), TEXT("Com_Controller"), (CComponent**)&m_pController));
 
-	m_fGravity = 10.f;
-
-	m_pModelCom->Add_EventCaller("JumpAttackStart", [this] 
-	{
+	m_pModelCom->Add_EventCaller("JumpAttackStart", [this]
+	{	
+		m_fGravity = 10.f;
 		m_fYSpeed = 8.f;
 		m_bJumpAttack = true;
 
@@ -93,7 +92,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		m_fGravity = 27.f;
 		m_fYSpeed = 8.f;
 
-		_float fLength = 2.f; // 회피 이동하고자 하는 고정 거리
+		_float fLength = 2.8f; // 회피 이동하고자 하는 고정 거리
 		
 		if (m_pTarget)
 		{
@@ -125,9 +124,9 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("DodgeR_Start", [this]
 	{
 		m_fGravity = 27.f;
-		m_fYSpeed = 8.f;
+		m_fYSpeed = 6.f;
 
-		_float fLength = 2.f; // 회피 이동하고자 하는 고정 거리
+		_float fLength = 2.8f; // 회피 이동하고자 하는 고정 거리
 
 		if (m_pTarget)
 		{
@@ -162,7 +161,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		m_fGravity = 27.f;
 		m_fYSpeed = 6.f;
 
-		_float fLength = 2.f; // 회피 이동하고자 하는 고정 거리
+		_float fLength = 2.8f; // 회피 이동하고자 하는 고정 거리
 
 		if (m_pTarget)
 		{
@@ -209,6 +208,12 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 
 	m_pModelCom->Add_EventCaller("OverLap", [this] { Strew_Overlap(); });
 	m_pModelCom->Add_EventCaller("Kick_Event", [this] { Kick_SweepSphere(); });
+	m_pModelCom->Add_EventCaller("Upper", [this] 
+	{
+		m_fGravity = 22.f;
+		m_fYSpeed = 11.f; 
+	});
+
 
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 
@@ -240,6 +245,12 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	m_pDamage_M_L = m_pModelCom->Find_Animation("AS_em0200_413_AL_damage_m_L");
 	m_pDamage_M_R = m_pModelCom->Find_Animation("AS_em0200_414_AL_damage_m_R");
 
+	// Air Damage
+	m_pBlowStart = m_pModelCom->Find_Animation("AS_em0200_432_AL_blow_start_F");
+	m_pBlowLand = m_pModelCom->Find_Animation("AS_em0200_433_AL_blow_landing_F");
+	m_pGetUp = m_pModelCom->Find_Animation("AS_em0200_427_AL_getup");
+	m_pRiseStart = m_pModelCom->Find_Animation("AS_em0200_455_AL_rise_start");
+
 	// Dead
 	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0200_424_AL_dead_down");
 
@@ -248,7 +259,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 
 void CFlowerLeg::BeginTick()
 {
-	CMonster::BeginTick();
+	__super::BeginTick();
 	m_pASM->AttachAnimSocket(("UsingControl"), {m_pModelCom->Find_Animation("AS_em0200_160_AL_threat")});
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 10.f)));
@@ -257,6 +268,7 @@ void CFlowerLeg::BeginTick()
 void CFlowerLeg::Tick(_double TimeDelta)
 {
 	CMonster::Tick(TimeDelta);
+	IM_LOG("%f", m_fYSpeed);
 
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
 	{
@@ -268,7 +280,8 @@ void CFlowerLeg::Tick(_double TimeDelta)
 	m_pController->SetTarget(m_pTarget);
 
 	m_pController->Tick(TimeDelta);
-	m_bRun = m_pController->IsRun();
+	m_bRun = m_pController->IsRun();	
+	_bool bOnfloor = IsOnFloor();
 	
 	if (m_fJumpMoveTime > 0.f)
 	{
@@ -341,25 +354,61 @@ void CFlowerLeg::Tick(_double TimeDelta)
 		if (m_eAtkType == EAttackType::ATK_LIGHT)
 		{
 			if(m_eHitDir == EBaseAxis::NORTH)
-				m_pASM->AttachAnimSocket("UsingControl", { m_pDamage_L_F });
+				m_pASM->InputAnimSocket("UsingControl", { m_pDamage_L_F });
 
 			else
-				m_pASM->AttachAnimSocket("UsingControl", { m_pDamage_L_B });
+				m_pASM->InputAnimSocket("UsingControl", { m_pDamage_L_B });
 		}
 
 		if (m_eAtkType == EAttackType::ATK_MIDDLE)
 		{
 			if(m_eHitDir == EBaseAxis::NORTH)
-				m_pASM->AttachAnimSocket("UsingControl", { m_pDamage_M_F });
+				m_pASM->InputAnimSocket("UsingControl", { m_pDamage_M_F });
 
 			else if(m_eHitDir == EBaseAxis::SOUTH)
-				m_pASM->AttachAnimSocket("UsingControl", { m_pDamage_M_B });
+				m_pASM->InputAnimSocket("UsingControl", { m_pDamage_M_B });
 
 			else if(m_eHitDir == EBaseAxis::WEST)
-				m_pASM->AttachAnimSocket("UsingControl", { m_pDamage_M_L });
+				m_pASM->InputAnimSocket("UsingControl", { m_pDamage_M_L });
 
 			else if(m_eHitDir == EBaseAxis::EAST)
-				m_pASM->AttachAnimSocket("UsingControl", { m_pDamage_M_R });
+				m_pASM->InputAnimSocket("UsingControl", { m_pDamage_M_R });
+		}
+	}
+
+	if (m_bAirStruck || m_pController->KeyDown(CController::X))
+	{
+		m_bAirStruck = false;
+		m_pController->ClearCommands();
+		// 추가타 X
+		if (m_iAirDamage < 2)
+		{
+			if (!m_bMaintain)
+			{
+				m_pASM->AttachAnimSocket("UsingControl", { m_pBlowStart });
+				m_bMaintain = true;
+			}
+		}
+						
+		else if (m_iAirDamage >= 2)
+		{			
+			if(m_iAirDamage > m_iPreAirDamageCnt)
+				m_pASM->AttachAnimSocket("UsingControl", { m_pRiseStart });
+
+			m_iPreAirDamageCnt = m_iAirDamage;			
+		}
+	}
+
+	if (m_bMaintain)
+	{
+		if (m_pASM->isSocketPassby("UsingControl", 0.5f))
+		{
+			if (bOnfloor)
+			{				
+				m_pASM->InputAnimSocket("UsingControl", { m_pBlowLand, m_pGetUp });
+				m_iAirDamage = 0;
+				m_bMaintain = false;
+			}
 		}
 	}
 
@@ -388,7 +437,7 @@ void CFlowerLeg::Tick(_double TimeDelta)
 
 void CFlowerLeg::Late_Tick(_double TimeDelta)
 {
-	CMonster::Late_Tick(TimeDelta);
+	__super::Late_Tick(TimeDelta);
 
 	if (m_bAtkSwitch)
 	{
@@ -420,7 +469,7 @@ HRESULT CFlowerLeg::Render()
 
 void CFlowerLeg::Imgui_RenderProperty()
 {
-	CMonster::Imgui_RenderProperty();	
+	__super::Imgui_RenderProperty();
 	m_pASM->Imgui_RenderState();
 }
 
@@ -440,7 +489,15 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eHitDir = eHitFrom;
 	
 	m_eAtkType = tDamageParams.eAttackType;
-	m_bStruck = true;
+	
+	if (m_eAtkType == EAttackType::ATK_TO_AIR)
+	{
+		m_bAirStruck = true;
+		++m_iAirDamage;
+	}
+
+	else
+		m_bStruck = true;
 }
 
 void CFlowerLeg::Strew_Overlap()

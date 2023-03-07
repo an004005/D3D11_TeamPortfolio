@@ -63,7 +63,7 @@ void CFL_AnimInstance::Tick(_double TimeDelta)
 		{
 			CurSocket = iter.second;
 			break;
-		}
+		}	
 	}
 
 	// 발견한 소켓이 있으면 해당 소켓을 실행
@@ -100,7 +100,6 @@ void CFL_AnimInstance::Tick(_double TimeDelta)
 		bLocalMove = false;
 
 		m_pASM_Base->SetCurState("Idle");
-
 		//m_pASM_Base->GetCurState()->m_Animation->Reset();
 		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
 		m_fLerpTime = 0.f;
@@ -158,6 +157,20 @@ _bool CFL_AnimInstance::isSocketPassby(const string & strSocName, _float fPlayRa
 		&& m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= fPlayRatio;
 }
 
+void CFL_AnimInstance::InputAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
+{
+	for (auto& iter : m_mapAnimSocket)
+	{
+		if (!iter.second.empty())
+			iter.second.front()->Reset();
+
+		list<CAnimation*> SocketList;
+		iter.second = SocketList;
+	}
+
+	m_mapAnimSocket[strSocName] = (AnimList);
+}
+
 void CFL_AnimInstance::AttachAnimSocket(const string & strSocName, const list<CAnimation*>& AnimList)
 {
 	const auto itr = m_mapAnimSocket.find(strSocName);
@@ -166,7 +179,7 @@ void CFL_AnimInstance::AttachAnimSocket(const string & strSocName, const list<CA
 	if (!itr->second.empty())
 	{
 		m_bAttach = true;
-		itr->second.front()->Reset();;
+		itr->second.front()->Reset();
 	}
 	m_mapAnimSocket[strSocName] = (AnimList);
 }
