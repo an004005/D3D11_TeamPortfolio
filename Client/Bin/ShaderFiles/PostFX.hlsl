@@ -52,7 +52,45 @@ cbuffer FinalPassConstants : register( b0 )
 	float FlimSlope  : packoffset( c1 );
 }
 
-static const float3 LUM_FACTOR = float3(0.299, 0.587, 0.114);
+// static const float3 LUM_FACTOR = float3(0.299, 0.587, 0.114);
+static const float3 LUM_FACTOR = float3(0.2126, 0.7152, 0.0722);
+
+static const float3x3 ACESInputMat =
+{
+	{ 0.59719, 0.35458, 0.04823 },
+	{ 0.07600, 0.90834, 0.01566 },
+	{ 0.02840, 0.13383, 0.83777 }
+};
+
+// ODT_SAT => XYZ => D60_2_D65 => sRGB
+static const float3x3 ACESOutputMat =
+{
+	{ 1.60475, -0.53108, -0.07367 },
+	{ -0.10208,  1.10813, -0.00605 },
+	{ -0.00327, -0.07276,  1.07602 }
+};
+
+float3 RRTAndODTFit(float3 v)
+{
+	float3 a = v * (v + 0.0245786f) - 0.000090537f;
+	float3 b = v * (0.983729f * v + 0.4329510f) + 0.238081f;
+	return a / b;
+}
+
+float3 ACESFitted(float3 color)
+{
+	color = mul(ACESInputMat, color);
+
+	// Apply RRT and ODT
+	color = RRTAndODTFit(color);
+
+	color = mul(ACESOutputMat, color);
+
+	// Clamp to [0, 1]
+	color = saturate(color);
+
+	return color;
+}
 
 // Reinhard Tonemapper
 float3 tonemap_reinhard(float3 color)
@@ -121,17 +159,20 @@ float3 ToneMapping(float3 HDRColor)
 float4 FinalPassPS( VS_OUTPUT In ) : SV_TARGET
 {
 	// Get the color sample
-	float3 color = HDRTex.Sample( PointSampler, In.UV.xy ).xyz;
+	float3 color = HDRTex.Sample(LinearSampler, In.UV.xy ).xyz;
 	
 	// Add the bloom contribution
 	color += BloomScale * BloomTex.Sample( LinearSampler, In.UV.xy ).xyz;
 
 	// Tone mapping
+
 	color = ToneMapping(color);
-	color = GammaCorrection(color);
-	// color = tonemap_reinhard(color);
-	// color = tonemap_filmic(color);
+	 //color = tonemap_reinhard(color);
 	// color = tonemap_uc2(color);
+	// color = tonemap_filmic(color);
+	color = GammaCorrection(color);
+	color = ACESFitted(color);
+	// color = GammaCorrection(color);
 
 	// Output the LDR value
 	return float4(color, 1.0);

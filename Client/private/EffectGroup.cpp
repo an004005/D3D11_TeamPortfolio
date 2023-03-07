@@ -116,20 +116,20 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 		m_Timeline.SetTimelineLength((_double)m_fEndTime);
 
-		m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
+		// m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
 
-		// if (m_iSelectFinishFunc == 0)
-		// {
-		// 	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
-		// }
-		// else if (m_iSelectFinishFunc == 1)
-		// {
-		// 	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
-		// }
-		// else if (m_iSelectFinishFunc == 2)
-		// {
-		// 	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
-		// }
+		if (m_iSelectFinishFunc == 0)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+		}
+		else if (m_iSelectFinishFunc == 1)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+		}
+		else if (m_iSelectFinishFunc == 2)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+		}
 	}
 	else
 	{
