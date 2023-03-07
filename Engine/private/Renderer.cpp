@@ -247,6 +247,9 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 
 	// For Effect
+	// if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Deferred"), TEXT("Target_Flag"))))
+	// 	return E_FAIL;
+
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_HDR"), TEXT("Target_Flag"))))
 		return E_FAIL;
 	// ~For Effect

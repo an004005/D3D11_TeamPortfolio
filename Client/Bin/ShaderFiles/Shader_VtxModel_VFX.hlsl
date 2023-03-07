@@ -25,31 +25,36 @@ struct PS_OUT
 {
 	float4		vColor : SV_TARGET0;
 	float4		vFlag : SV_TARGET1;
+	float4		vRMA : SV_TARGET3;
+
 };
 
 struct VS_OUT_NORM
 {
 	float4		vPosition : SV_POSITION;
-	float2		vTexUV : TEXCOORD0;
 	float4		vNormal : NORMAL;
+	float2		vTexUV : TEXCOORD0;
+	float4		vProjPos : TEXCOORD1;
 	float4		vTangent : TANGENT;
-
+	float3		vBinormal : BINORMAL;
 };
 
 struct PS_IN_NORM
 {
 	float4		vPosition : SV_POSITION;
-	float2		vTexUV : TEXCOORD0;
 	float4		vNormal : NORMAL;
+	float2		vTexUV : TEXCOORD0;
+	float4		vProjPos : TEXCOORD1;
 	float4		vTangent : TANGENT;
-
-
+	float3		vBinormal : BINORMAL;
 };
 struct PS_OUT_NORM
 {
 	float4		vColor : SV_TARGET0;
-	float4		vFlag : SV_TARGET1;
-	float4		vNormal : SV_TARGET2;
+	float4		vNormal : SV_TARGET1;
+	float4		vDepth : SV_TARGET2;
+	float4		vRMA : SV_TARGET3;
+	//float4		vFlag : SV_TARGET4;
 };
 
 
@@ -82,7 +87,7 @@ VS_OUT_NORM VS_MAIN_NORM(VS_IN In)
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vTexUV = In.vTexUV;
 	Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
-
+	Out.vBinormal = normalize(cross(Out.vNormal.xyz, Out.vTangent.xyz));
 	
 
 	return Out;
@@ -94,12 +99,39 @@ PS_OUT_NORM PS_MAIN_NORM (PS_IN_NORM In)
 
 
 	float3 vNormal = In.vNormal.xyz;
+	float2 FlipUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.f, 1, 1);
+	float2 FlipUV2 = Get_FlipBookUV(In.vTexUV, g_Time, 0.f, 4, 4);
 
+	float4 DefaultTex = g_tex_0.Sample(LinearSampler, FlipUV);
+	float4 OriginColor = g_vec4_0;
+
+	float4 BlendColor = DefaultTex * OriginColor * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+	float Mask = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
-	Out.vColor = (vector)1.f;
-	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
+	Out.vColor.a = Out.vColor.a;
 
-	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	if(Mask >= 0.f)
+	{
+		Out.vRMA = float4(g_float_1, g_float_2, g_float_3, 0.f);
+		float flags = PackPostProcessFlag(0.f, SHADER_DEFAULT);
+		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	}
+
+	if(g_float_4 <= 0.f)
+	{
+		discard;
+	}
+
+	//Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
 	return Out;
 }
 
@@ -219,6 +251,9 @@ PS_OUT PS_MAIN_ELEC_ATTACK(PS_IN In)
 		Out.vColor.a = (BasicColor.r * g_float_1) + (BlendColor2.r * (1 - g_float_1));
 		Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, BlendColor2.r * (1-g_float_4));
 	}
+
+	Out.vRMA = float4(1.0f, 0.f, 1.0f, 0.f);
+
 	if (g_float_3 >= ND)
 	{
 		discard;

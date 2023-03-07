@@ -760,6 +760,11 @@ inline void CEffectGroup::LoadAndSetCurve_First(Json* json)
 		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_OutroTime, m_FirstEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
 	}
+	else if (!strcmp(pCurve->GetName(), "Ints_0"))
+	{
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_Ints_0, m_FirstEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(pCurve->GetName())->second);
+	}
 	else if (!strcmp(pCurve->GetName(), "Color_Change"))
 	{
 		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_ColorChange, m_FirstEffect_Curves.find(pCurve->GetName())->second);
@@ -767,7 +772,7 @@ inline void CEffectGroup::LoadAndSetCurve_First(Json* json)
 	}
 	else
 	{
-		MSG_BOX("Failed to FirstEffect SetCurve", strCurveName.c_str());
+		MSG_BOX("Failed to FirstEffect SetCurve");
 	}
 
 }
@@ -847,9 +852,14 @@ void CEffectGroup::LoadAndSetCurve_Second(Json* json)
 		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_ColorChange, m_SecondEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
 	}
+	else if (!strcmp(pCurve->GetName(), "Ints_0"))
+	{
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_Ints_0, m_SecondEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(pCurve->GetName())->second);
+	}
 	else
 	{
-		MSG_BOX("Failed to SecondEffect SetCurve",strCurveName.c_str());
+		MSG_BOX("Failed to SecondEffect SetCurve");
 	}
 }
 
@@ -928,9 +938,14 @@ void CEffectGroup::LoadAndSetCurve_Third(Json* json)
 		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_ColorChange, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
 	}
+	else if (!strcmp(pCurve->GetName(), "Ints_0"))
+	{
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_Ints_0, m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(pCurve->GetName())->second);
+	}
 	else
 	{
-		MSG_BOX("Failed to ThirdEffect SetCurve", strCurveName.c_str());
+		MSG_BOX("Failed to ThirdEffect SetCurve");
 	}
 }
 
@@ -1009,9 +1024,14 @@ void CEffectGroup::LoadAndSetCurve_Fourth(Json* json)
 		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_ColorChange, m_FourthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
 	}
+	else if (!strcmp(pCurve->GetName(), "Ints_0"))
+	{
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_Ints_0, m_FourthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(pCurve->GetName())->second);
+	}
 	else
 	{
-		MSG_BOX("Failed to FourthEffect SetCurve", strCurveName.c_str());
+		MSG_BOX("Failed to FourthEffect SetCurve");
 	}
 }
 
@@ -1090,9 +1110,14 @@ void CEffectGroup::LoadAndSetCurve_Fifth(Json* json)
 		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_ColorChange, m_FifthEffect_Curves.find(pCurve->GetName())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
 	}
+	else if (!strcmp(pCurve->GetName(), "Ints_0"))
+	{
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_Ints_0, m_FifthEffect_Curves.find(pCurve->GetName())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(pCurve->GetName())->second);
+	}
 	else
 	{
-		MSG_BOX("Failed to FifthEffect SetCurve", strCurveName.c_str());
+		MSG_BOX("Failed to FifthEffect SetCurve");
 	}
 }
 
@@ -1402,9 +1427,14 @@ void CEffectGroup::AddEmptyCurve_ForFirst(string strCurveName)
 		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_ColorChange, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
 	}
+	else if (strCurveName == "Ints_0")
+	{
+		m_Timeline.SetCurve(m_pFirst_EffectSystem, &CEffectSystem::Tick_Ints_0, m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FirstEffect_Curves.find(strCurveName.c_str())->second);
+	}
 	else
 	{
-		MSG_BOX("Failed to FirstEffect SetCurve", strCurveName.c_str());
+		MSG_BOX("Failed to FirstEffect SetCurve");
 	}
 }
 
@@ -1487,9 +1517,14 @@ void CEffectGroup::AddEmptyCurve_ForSecond(string strCurveName)
 		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_ColorChange, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
 	}
+	else if (strCurveName == "Ints_0")
+	{
+		m_Timeline.SetCurve(m_pSecond_EffectSystem, &CEffectSystem::Tick_Ints_0, m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_SecondEffect_Curves.find(strCurveName.c_str())->second);
+	}
 	else
 	{
-		MSG_BOX("Failed to SecondEffect SetCurve", strCurveName.c_str());
+		MSG_BOX("Failed to SecondEffect SetCurve");
 	}
 }
 
@@ -1572,9 +1607,14 @@ void CEffectGroup::AddEmptyCurve_ForThird(string strCurveName)
 		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_ColorChange, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
 	}
+	else if (strCurveName == "Ints_0")
+	{
+		m_Timeline.SetCurve(m_pThird_EffectSystem, &CEffectSystem::Tick_Ints_0, m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_ThirdEffect_Curves.find(strCurveName.c_str())->second);
+	}
 	else
 	{
-		MSG_BOX("Failed to ThirdEffect SetCurve", strCurveName.c_str());
+		MSG_BOX("Failed to ThirdEffect SetCurve");
 	}
 }
 
@@ -1657,9 +1697,14 @@ void CEffectGroup::AddEmptyCurve_ForFourth(string strCurveName)
 		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_ColorChange, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
 	}
+	else if (strCurveName == "Ints_0")
+	{
+		m_Timeline.SetCurve(m_pFourth_EffectSystem, &CEffectSystem::Tick_Ints_0, m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FourthEffect_Curves.find(strCurveName.c_str())->second);
+	}
 	else
 	{
-		MSG_BOX("Failed to FourthEffect SetCurve", strCurveName.c_str());
+		MSG_BOX("Failed to FourthEffect SetCurve");
 	}
 }
 
@@ -1742,9 +1787,14 @@ void CEffectGroup::AddEmptyCurve_ForFifth(string strCurveName)
 		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_ColorChange, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
 	}
+	else if (strCurveName == "Ints_0")
+	{
+		m_Timeline.SetCurve(m_pFifth_EffectSystem, &CEffectSystem::Tick_Ints_0, m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_FifthEffect_Curves.find(strCurveName.c_str())->second);
+	}
 	else
 	{
-		MSG_BOX("Failed to FifthEffect SetCurve", strCurveName.c_str());
+		MSG_BOX("Failed to FifthEffect SetCurve");
 	}
 }
 

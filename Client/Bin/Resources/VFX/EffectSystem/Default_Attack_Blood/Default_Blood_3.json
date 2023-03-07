@@ -1,0 +1,55 @@
+{
+    "BillBoardType": 0,
+    "BufferProtoTag": "Prototype_Component_VIBuffer_Rect",
+    "Children": [
+        [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    ],
+    "ModelProtoTag": "../Bin/Resources/Meshes/VFX/Fluid/Blood_05.static_model",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.36881279945373535,
+                0.15761923789978027,
+                0.6359416246414185,
+                1.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [
+            1.0,
+            1.0,
+            0.0,
+            1.0
+        ],
+        "Ints": [1],
+        "Pass": 4,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\Decal\\T_Blood_Clip_A.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\water_n.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\Decal\\T_pr_HS_VC_blood01_msk.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxModel_VFX",
+    "bBillBoard": false,
+    "bDecal": false,
+    "bUseDepth": false,
+    "bNormal" : true
+}

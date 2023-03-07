@@ -232,6 +232,9 @@
     <Filter Include="02.GameObjects\Monster\boss1\Boss1_Animinstance">
       <UniqueIdentifier>{107db123-e61b-466e-8716-8300f9f27d16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.ShaderFiles\PostProcess\HitDecal">
+      <UniqueIdentifier>{eb2d8b39-fe98-4867-923b-0ed4f62afc11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -587,6 +590,9 @@
     </ClInclude>
     <ClInclude Include="..\public\AIController.h" />
     <ClInclude Include="..\public\Boss1_AIController.h" />
+    <ClInclude Include="..\public\PostVFX_HitDecal.h">
+      <Filter>97.ShaderFiles\PostProcess\HitDecal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -917,6 +923,9 @@
     </ClCompile>
     <ClCompile Include="..\private\AIController.cpp" />
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
+    <ClCompile Include="..\private\PostVFX_HitDecal.cpp">
+      <Filter>97.ShaderFiles\PostProcess\HitDecal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

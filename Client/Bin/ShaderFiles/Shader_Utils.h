@@ -15,6 +15,8 @@ static const float EPSILON = 1e-6f;
 #define SHADER_DISTORTION 1 << 2
 #define SHADER_SCIFI 1 << 3
 #define SHADER_SCIFI_PLAYER_ATTACK 1 << 4
+#define SHADER_HIT_DECAL 1 << 5
+
 
 float2 Get_FlipBookUV(float2 vRectUV, float fCurTime, float fFrameTime, int iRowCnt, int iColCnt)
 {
