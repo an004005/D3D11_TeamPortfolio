@@ -177,18 +177,9 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 
 		float fNdotL = dot(normalize(vNormal.xyz), normalize(g_vLightDir.xyz));
 		float fDiff = saturate(max(fNdotL, 0.0));
-		// fDiff = ceil(fDiff * 2.f) * 0.5f;
-
-		if (fDiff > 0.5f)
-			fDiff = vCTL.g;
-		else
-			fDiff = vCTL.r;
-
-		// fDiff = max(vCTL.r , min(vCTL.g, fNdotL));
-		// fDiff = ceil(fDiff * 2.f) * 0.5f;
+	
+		fDiff = max(vCTL.r * 1.5f , min(vCTL.g, fDiff));
 		fDiff *= vCTL.b;
-
-		// fDiff = saturate((fDiff * 0.5f + 0.5f) * vCTL.b);
 
 		Out.vShade = g_vLightDiffuse * saturate(fDiff);
 		Out.vShade.a = 1.f;
@@ -248,20 +239,20 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	}
 	else if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
 	{
-		
 		float4 vCTL = g_CTLTexture.Sample(LinearSampler, In.vTexUV);
-		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
 
-		float fDiff = saturate(max(dot(normalize(vNormal.xyz), normalize(vLightDir.xyz)), 0.0)) * fAtt;
-		fDiff = max(vCTL.r * 2.f, min(vCTL.g, fDiff));
-		// fDiff = ceil(fDiff * 2.f) * 0.5f;
+		float fNdotL = dot(normalize(vNormal.xyz), normalize(g_vLightDir.xyz));
+		float fDiff = saturate(max(fNdotL, 0.0));
+	
+		fDiff = max(vCTL.r , min(vCTL.g, fDiff));
+		fDiff *= vCTL.b * fAtt;
 
-		Out.vShade = g_vLightDiffuse * saturate(fDiff + (vAMB));
+		Out.vShade = g_vLightDiffuse * saturate(fDiff);
 		Out.vShade.a = 1.f;
 		
-		vector		vLook = vWorldPos - g_vCamPosition;
-		float spec = GetSpecular(vNormal.xyz, vLook.xyz, vLightDir.xyz, 30.f);
-		Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec * fAtt;
+		// vector		vLook = vWorldPos - g_vCamPosition;
+		// float spec = GetSpecular(vNormal.xyz, vLook.xyz, vLightDir.xyz, 30.f);
+		// Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec * fAtt;
 	}
 	
 	return Out;
