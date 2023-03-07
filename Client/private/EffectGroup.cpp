@@ -18,6 +18,7 @@ CEffectGroup::CEffectGroup(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CEffectGroup::CEffectGroup(const CEffectGroup& rhs)
 	: CGameObject(rhs)
 {
+
 }
 
 HRESULT CEffectGroup::Initialize(void* pArg)
@@ -34,7 +35,8 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 		{
 			Json First_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_First_EffectDirectory);
 			m_pFirst_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &First_Effect));
-
+			Safe_AddRef(m_pFirst_EffectSystem);
+			
 			const string& strFileName =  CGameUtils::GetFileName(m_First_EffectDirectory);
 			m_mapEffectSystemTag.emplace(strFileName, m_pFirst_EffectSystem);
 
@@ -54,7 +56,8 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			m_pSecond_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Second_Effect));
 			const string& strFileName = CGameUtils::GetFileName(m_Second_EffectDirectory);
 			m_mapEffectSystemTag.emplace(strFileName, m_pSecond_EffectSystem);
-
+			Safe_AddRef(m_pSecond_EffectSystem);
+			
 			if (json.contains("SecondEffect_Curves"))
 			{
 				for (auto curveJson : json["SecondEffect_Curves"])
@@ -69,7 +72,8 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			m_pThird_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Third_Effect));
 			const string& strFileName = CGameUtils::GetFileName(m_Third_EffectDirectory);
 			m_mapEffectSystemTag.emplace(strFileName, m_pThird_EffectSystem);
-
+			Safe_AddRef(m_pThird_EffectSystem);
+			
 			if (json.contains("ThirdEffect_Curves"))
 			{
 				for (auto curveJson : json["ThirdEffect_Curves"])
@@ -84,7 +88,7 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			m_pFourth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fourth_Effect));
 			const string& strFileName = CGameUtils::GetFileName(m_Fourth_EffectDirectory);
 			m_mapEffectSystemTag.emplace(strFileName,m_pFourth_EffectSystem);
-
+			Safe_AddRef(m_pFourth_EffectSystem);
 			if (json.contains("FourthEffect_Curves"))
 			{
 				for (auto curveJson : json["FourthEffect_Curves"])
@@ -99,6 +103,7 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			m_pFifth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fifth_Effect));
 			const string& strFileName = CGameUtils::GetFileName(m_Fifth_EffectDirectory);
 			m_mapEffectSystemTag.emplace(strFileName, m_pFifth_EffectSystem);
+			Safe_AddRef(m_pFifth_EffectSystem);
 
 			if (json.contains("FifthEffect_Curves"))
 			{
@@ -111,20 +116,20 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 		m_Timeline.SetTimelineLength((_double)m_fEndTime);
 
-		//m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
+		m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
 
-		if (m_iSelectFinishFunc == 0)
-		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
-		}
-		else if (m_iSelectFinishFunc == 1)
-		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
-		}
-		else if (m_iSelectFinishFunc == 2)
-		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
-		}
+		// if (m_iSelectFinishFunc == 0)
+		// {
+		// 	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+		// }
+		// else if (m_iSelectFinishFunc == 1)
+		// {
+		// 	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+		// }
+		// else if (m_iSelectFinishFunc == 2)
+		// {
+		// 	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+		// }
 	}
 	else
 	{
@@ -1894,4 +1899,5 @@ void CEffectGroup::Free()
 	Safe_Release(m_pThird_EffectSystem);
 	Safe_Release(m_pFourth_EffectSystem);
 	Safe_Release(m_pFifth_EffectSystem);
+
 }

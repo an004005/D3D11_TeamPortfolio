@@ -144,7 +144,7 @@ PS_OUT PS_WIRE_2(PS_IN In)
 
 	float flags = PackPostProcessFlag(0.f, SHADER_NONE_SHADE);
 
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 7.f, flags);
 	// Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
 	// Out.vCTL = float4(0.5f, 0.8f, 1.f, 0.f);
 

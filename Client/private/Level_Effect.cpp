@@ -54,8 +54,8 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer(TEXT("Layer"))))
 		return E_FAIL;
 
-	// if (FAILED(Ready_Layer_Player(L"Layer_Player")))
-	// 	return E_FAIL;
+	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+		return E_FAIL;
 
 	// if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 	// 	return E_FAIL;
@@ -182,9 +182,9 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 
 
 	// For PostVFX Distortion
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
-		CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	// if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
+	// 	CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+	// 	return E_FAIL;
 	// 
 
 	// For PostVFX Scifi

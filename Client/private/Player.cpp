@@ -121,10 +121,10 @@ void CPlayer::Tick(_double TimeDelta)
 
 	NetualChecker(TimeDelta);	// 전투상태 아닐 때 체크
 
-	if (m_pPlayerCam->IsMainCamera())
+	// if (m_pPlayerCam->IsMainCamera())
 		m_pController->Tick(TimeDelta);
-	else
-		m_pController->Invalidate();
+	// else
+		// m_pController->Invalidate();
 
 	Search_Usable_KineticObject();
 
