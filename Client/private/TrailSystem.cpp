@@ -39,11 +39,12 @@ HRESULT CTrailSystem::Initialize(void* pArg)
 
 		wstring texProtoTag = CGameUtils::s2ws(json["Texture"]);
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, texProtoTag.c_str(), TEXT("Texture"),(CComponent**)&m_pTex));
+		//FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("../Bin/Resources/Texture/VFX/T_ef_one_lin_043.png"), TEXT("Texture"), (CComponent**)&m_pTex));
 	}
 	else
 	{
 		// FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("../Bin/Resources/Texture/VFX/AlphaGradient/ring_glow.dds"), TEXT("Texture"),(CComponent**)&m_pTex));
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("../Bin/Resources/Texture/VFX/T_ef_one_lin_015.png"), TEXT("Texture"), (CComponent**)&m_pTex));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("../Bin/Resources/Texture/VFX/T_ef_one_lin_043.png"), TEXT("Texture"), (CComponent**)&m_pTex));
 
 		
 		m_fLife = 0.5f;
@@ -52,7 +53,7 @@ HRESULT CTrailSystem::Initialize(void* pArg)
 		m_vColor = _float4(1.f, 68.f / 255.f, 51.f / 255.f, 1.f);
 	}
 
-	m_pTransformCom->SetTransformDesc(CTransform::TRANSFORMDESC{ XMConvertToRadians(180.f), 15.f });
+	m_pTransformCom->SetTransformDesc(CTransform::TRANSFORMDESC{ 15.f, XMConvertToRadians(180.f) });
 
 	return S_OK;
 }
@@ -62,52 +63,124 @@ void CTrailSystem::Tick(_double TimeDelta)
 	CGameObject::Tick(TimeDelta);
 	m_pBuffer->Tick(TimeDelta);
 
-	if (m_bActive == false)
-		return;
-
-	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	if (m_vPrePoses.empty() || m_vPrePoses.back() != vPos)
-		m_vPrePoses.push_back(vPos);
-
-	if (m_vPrePoses.size() >= 3)
+	if (m_vPrePoses.size() > 3)
 	{
-		while (m_vPrePoses.size() > 3)
-			m_vPrePoses.erase(m_vPrePoses.begin());
+		_vector vLerpPos = m_vPrePoses[m_vPrePoses.size() - 3];
+		_vector vSourPos = m_vPrePoses.back();
+		_vector vDestPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
-		_vector vCamPos = CGameInstance::GetInstance()->Get_CamPosition();
-		_float fSplineLen = XMVectorGetX(XMVector3LengthEst(m_vPrePoses[m_vPrePoses.size() - 2] - m_vPrePoses[m_vPrePoses.size() - 1]));
-		_uint iSegmentCnt = static_cast<_uint>((fSplineLen / m_fSegmentSize));
+		_vector vSourRight = m_vPreRight.back();
+		_vector vDestRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 
-		_vector p0 = m_vPrePoses[m_vPrePoses.size() - 3];
-		_vector p1 = m_vPrePoses[m_vPrePoses.size() - 2];
-		_vector p2 = m_vPrePoses[m_vPrePoses.size() - 1];
-		_vector p3 = m_vPrePoses[m_vPrePoses.size() - 1];
-		_float fPreLife = 0.f;
-		if (m_pBuffer->GetDatas()->empty() == false)
-			fPreLife = m_pBuffer->GetDatas()->back().vPosition.w;
-
-		_vector vPrePos = p1;
-
-		for (_uint i = 0; i < iSegmentCnt; ++i)
+		for (_uint i = 0; i < 5; i++)
 		{
-			_float fWeight = (_float)(i + 1) / (_float)iSegmentCnt;
-			_vector vSplinePos = XMVectorCatmullRom(p0, p1, p2, p3, fWeight);
+			_vector vBefPos = XMVectorCatmullRom(vLerpPos, vSourPos, vDestPos, vDestPos, _float(i * 0.2f));
+			_vector vAfterPos = XMVectorCatmullRom(vLerpPos, vSourPos, vDestPos, vDestPos, _float((i + 1) * 0.2f));
+			_vector vBefRight = XMVectorLerp(vSourRight, vDestRight, _float(i * 0.2f));
+			_vector vAfterRight = XMVectorLerp(vSourRight, vDestRight, _float((i + 1) * 0.2f));
 
-			_vector vRight = XMVectorLerp(m_vPreRight, m_pTransformCom->Get_State(CTransform::STATE_RIGHT), fWeight);
-			_vector vLook = XMVector3Cross(vRight, XMVectorSet(0.f, 1.f, 0.f, 0.f));
-			_vector vUp = XMVector3Cross(vLook, vRight);
-			vSplinePos = XMVectorSetW(vSplinePos, CMathUtils::Lerp(fPreLife, m_fLife, fWeight));//life
+			_vector v0 = vBefPos + (vBefRight * m_fWidth);
+			_vector v1 = vAfterPos + (vAfterRight * m_fWidth);
+			_vector v2 = vAfterPos - (vAfterRight * m_fWidth);
+			_vector v3 = vBefPos - (vBefRight * m_fWidth);
 
-			_matrix TrailMatrix(vRight, vUp, vLook, vSplinePos);
-			m_pBuffer->AddData(TrailMatrix);
+			m_TrailPointList.push_back(v0);
+			m_TrailPointList.push_back(v1);
+			m_TrailPointList.push_back(v2);
+			m_TrailPointList.push_back(v3);
 
-			vPrePos = vSplinePos;
+			m_pBuffer->AddData(m_pTransformCom->Get_WorldMatrix());
+		}
+
+		_vector v0 = vSourPos + (vSourRight * m_fWidth);
+		_vector v1 = vDestPos + (vDestRight * m_fWidth);
+		_vector v2 = vDestPos - (vDestRight * m_fWidth);
+		_vector v3 = vSourPos - (vSourRight * m_fWidth);
+
+		m_TrailPointList.push_back(v0);
+		m_TrailPointList.push_back(v1);
+		m_TrailPointList.push_back(v2);
+		m_TrailPointList.push_back(v3);
+
+		m_pBuffer->AddData(m_pTransformCom->Get_WorldMatrix());
+	}
+
+	// 이전 위치와 이전 Right 벡터를 저장해두어 CatMull-Rom 연산에 사용
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	m_vPrePoses.push_back(vPos);
+	
+	_vector vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+	m_vPreRight.push_back(vRight);
+
+	if (m_vPrePoses.size() >= 5)
+	{
+		while (m_vPrePoses.size() > 5)
+		{
+			m_vPrePoses.erase(m_vPrePoses.begin());
+			m_vPreRight.erase(m_vPreRight.begin());
 		}
 	}
-	
-	m_iSegmentCnt = m_iSegmentCnt;
-	m_vPreRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+
+	if (m_TrailPointList.size() > 40)
+	{
+		while (m_TrailPointList.size() > 40)
+		{
+			m_TrailPointList.pop_front();
+		}
+	}
 }
+
+//void CTrailSystem::Tick(_double TimeDelta)
+//{
+//	CGameObject::Tick(TimeDelta);
+//	m_pBuffer->Tick(TimeDelta);
+//
+//	if (m_bActive == false)
+//		return;
+//
+//	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+//	if (m_vPrePoses.empty() || m_vPrePoses.back() != vPos)
+//		m_vPrePoses.push_back(vPos);
+//
+//	if (m_vPrePoses.size() >= 3)
+//	{
+//		while (m_vPrePoses.size() > 3)
+//			m_vPrePoses.erase(m_vPrePoses.begin());
+//
+//		_vector vCamPos = CGameInstance::GetInstance()->Get_CamPosition();
+//		_float fSplineLen = XMVectorGetX(XMVector3LengthEst(m_vPrePoses[m_vPrePoses.size() - 2] - m_vPrePoses[m_vPrePoses.size() - 1]));
+//		_uint iSegmentCnt = static_cast<_uint>((fSplineLen / m_fSegmentSize));
+//
+//		_vector p0 = m_vPrePoses[m_vPrePoses.size() - 3];
+//		_vector p1 = m_vPrePoses[m_vPrePoses.size() - 2];
+//		_vector p2 = m_vPrePoses[m_vPrePoses.size() - 1];
+//		_vector p3 = m_vPrePoses[m_vPrePoses.size() - 1];
+//		_float fPreLife = 0.f;
+//		if (m_pBuffer->GetDatas()->empty() == false)
+//			fPreLife = m_pBuffer->GetDatas()->back().vPosition.w;
+//
+//		_vector vPrePos = p1;
+//
+//		for (_uint i = 0; i < iSegmentCnt; ++i)
+//		{
+//			_float fWeight = (_float)(i + 1) / (_float)iSegmentCnt;
+//			_vector vSplinePos = XMVectorCatmullRom(p0, p1, p2, p3, fWeight);
+//
+//			_vector vRight = XMVectorLerp(m_vPreRight, m_pTransformCom->Get_State(CTransform::STATE_RIGHT), fWeight);
+//			_vector vLook = XMVector3Cross(vRight, XMVectorSet(0.f, 1.f, 0.f, 0.f));
+//			_vector vUp = XMVector3Cross(vLook, vRight);
+//			vSplinePos = XMVectorSetW(vSplinePos, CMathUtils::Lerp(fPreLife, m_fLife, fWeight));//life
+//
+//			_matrix TrailMatrix(vRight, vUp, vLook, vSplinePos);
+//			m_pBuffer->AddData(TrailMatrix);
+//
+//			vPrePos = vSplinePos;
+//		}
+//	}
+//	
+//	m_iSegmentCnt = m_iSegmentCnt;
+//	m_vPreRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+//}
 
 // 소드트레일 적용 전 Tick
 //void CTrailSystem::Tick(_double TimeDelta)
@@ -168,7 +241,7 @@ void CTrailSystem::Tick(_double TimeDelta)
 
 void CTrailSystem::Late_Tick(_double TimeDelta)
 {
-	if (m_bVisible && m_pBuffer->IsEmpty() == false)
+	if (m_bVisible/* && m_pBuffer->IsEmpty() == false*/)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 }
 
@@ -176,8 +249,31 @@ HRESULT CTrailSystem::Render()
 {
 	FAILED_CHECK(SetUp_ShaderResources());
 
-	m_pShaderCom->Begin(m_iPass);
-	m_pBuffer->Render();
+	//m_pShaderCom->Begin(m_iPass);
+	//m_pBuffer->Render();
+
+	if (m_bActive == false)
+		return S_OK;
+
+	if (!m_TrailPointList.empty())
+	{
+		_vector vPoint[4];
+		_uint iCount = 0;
+		for (auto& iter : m_TrailPointList)
+		{
+			vPoint[iCount++] = iter;
+
+			if (iCount == 4)
+			{
+				FAILED_CHECK(m_pShaderCom->Set_RawValue("g_TrailPoint", &vPoint, sizeof(_vector) * 4));
+
+				m_pShaderCom->Begin(5);
+				m_pBuffer->Render();
+
+				iCount = 0;
+			}
+		}
+	}
 
 	return S_OK;
 }

@@ -45,7 +45,14 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 		for (const auto pTransition : m_pCurState->m_Transitions)
 		{
 			if (pTransition->m_Predicator == nullptr)
-				bChange = m_pCurState->m_Animation->IsFinished();
+			{
+				// 스페어 애니메이션
+				if (nullptr != m_pCurState->m_SpairAnimation)
+					bChange = m_pCurState->m_SpairAnimation->IsFinished();
+				else
+					bChange = m_pCurState->m_Animation->IsFinished();
+				// ~스페어 애니메이션
+			}
 			else
 				bChange = pTransition->m_Predicator();
 
@@ -57,7 +64,13 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 				{
 					m_pPreState = m_pCurState;
 
-					m_fPreStatePlayAt = m_pCurState->m_Animation->GetPlayTime();
+					// 스페어 애니메이션
+					if (nullptr != m_pCurState->m_SpairAnimation)
+						m_fPreStatePlayAt = m_pCurState->m_SpairAnimation->GetPlayTime();
+					else
+						m_fPreStatePlayAt = m_pCurState->m_Animation->GetPlayTime();
+					// ~스페어 애니메이션
+
 					bFirstChange = false;
 					
 					// 종료 이벤트가 있으면 실행
@@ -91,8 +104,13 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 				if (nullptr == m_pCurState->m_Animation)
 					return;
 
+				// 스페어 애니메이션
 				if (m_pCurState->m_Animation != &CAnimation::s_NullAnimation)
 					m_pCurState->m_Animation->Reset();
+
+				if (m_pCurState->m_SpairAnimation != nullptr)
+					m_pCurState->m_SpairAnimation->Reset();
+				// ~스페어 애니메이션
 
 				break;
 			}
@@ -120,7 +138,11 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 		// REPEAT라는 키를 가지는 애니메이션의 경우 그냥 탈출시킨다.
 		if ("REPEAT" == szTransitionName)
 			break;
+
+		if (iLoopBreaker < 10)
+			MSG_BOX("A");
 	}
+
 	Assert(iLoopBreaker > 0); // 무한루프 방치
 
 	if (nullptr != m_pCurState->m_OptionalEvent/* && (m_pCurState->m_bOptionalEvent)*/)
@@ -128,9 +150,18 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 
 	if (m_fCurTransitionTime < m_fTransitionDuration)
 	{
-		m_pPreState->m_Animation->Update_BonesAtTime(m_fPreStatePlayAt, EAnimUpdateType::NORMAL);
+		// 스페어 애니메이션
+		if (nullptr != m_pPreState->m_SpairAnimation)
+			m_pPreState->m_SpairAnimation->Update_BonesAtTime(m_fPreStatePlayAt, EAnimUpdateType::NORMAL);
+		else
+			m_pPreState->m_Animation->Update_BonesAtTime(m_fPreStatePlayAt, EAnimUpdateType::NORMAL);
 
-		m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fCurTransitionTime / m_fTransitionDuration);
+
+		if (nullptr != m_pCurState->m_SpairAnimation)
+			m_pCurState->m_SpairAnimation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fCurTransitionTime / m_fTransitionDuration);
+		else
+			m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fCurTransitionTime / m_fTransitionDuration);
+		// ~스페어 애니메이션
 
 		m_fCurTransitionTime += (_float)TimeDelta;
 
@@ -138,12 +169,39 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 	}
 	else
 	{
-		if (m_pCurState->m_Animation->IsFinished())
-			m_pCurState->m_Animation->Reset();
+		if (nullptr != m_pCurState->m_SpairAnimation)
+		{
+			if (m_pCurState->m_SpairAnimation->IsFinished())
+			{
+				m_pCurState->m_SpairAnimation->Reset();
+			}
 
-m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+			m_pCurState->m_SpairAnimation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
 
-m_bLerp = false;
+			if (m_pCurState->m_bSpairClearFlag)
+			{
+				m_pCurState->m_SpairAnimation = nullptr;
+				m_pCurState->m_bSpairClearFlag = false;
+				m_fSpairTransitionTime = 0.f;
+			}
+		}
+		// 스페어가 빌 때 보간을 하지 않아도 이상하지 않은가? 그러면 SpairFlag를 사용할 필요가 없어진다.
+		/*else if (m_fSpairTransitionTime < m_fTransitionDuration)
+		{
+			m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fSpairTransitionTime / m_fTransitionDuration);
+			m_fSpairTransitionTime += (_float)TimeDelta;
+
+			m_bLerp = true;
+		}*/
+		else
+		{
+			if (m_pCurState->m_Animation->IsFinished())
+				m_pCurState->m_Animation->Reset();
+
+			m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+		}
+
+		m_bLerp = false;
 	}
 }
 
@@ -172,6 +230,41 @@ void CAnimationStateMachine::Imgui_RenderState()
 	if (iInput >= 0) m_iDebugQueSize = iInput;
 	m_bStoreHistory = true;
 #endif
+}
+
+_bool CAnimationStateMachine::isLerping()
+{
+	return (1.f > (m_fCurTransitionTime / m_fTransitionDuration)) ? true : false;
+}
+
+void CAnimationStateMachine::SetSpairAnim(const string & stateName, CAnimation * pSpairAnim)
+{
+	const auto pState = m_mapStates.find(stateName);
+
+	if (pState == m_mapStates.end())
+		return;
+
+	if (nullptr == pSpairAnim)
+		return;
+
+	if (nullptr != pState->second->m_SpairAnimation)
+		return;
+
+	pState->second->m_SpairAnimation = pSpairAnim;
+}
+
+void CAnimationStateMachine::ResetSpairAnim()
+{
+	for (auto& iter : m_mapStates)
+	{
+		if (m_pCurState == iter.second)
+		{
+			m_pCurState->m_bSpairClearFlag = true;
+			continue;
+		}
+
+		iter.second->m_SpairAnimation = nullptr;
+	}
 }
 
 CAnimationStateMachine * CAnimationStateMachine::Create(CASMBuilder * pBuilder)

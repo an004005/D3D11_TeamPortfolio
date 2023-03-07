@@ -188,43 +188,43 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
 	_vector vMovePos;
 	ZeroMemory(&vMovePos, sizeof(_vector));
 
-	static _vector vBefLocalMove;
-	static _vector vLocalMove;
-	static string szBefAnimName;
+	//static _vector vBefLocalMove;
+	//static _vector vLocalMove;
+	//static string szBefAnimName;
 
-	vBefLocalMove = vLocalMove;
-	vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	m_vSocketBefLocalMove = m_vSocketLocalMove;
+	m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	if (srtAnimName != "")
 	{
-		vLocalMove = m_mapAnimation[srtAnimName]->GetLocalMove();
-		if (XMVector3Equal(vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
+		m_vSocketLocalMove = m_mapAnimation[srtAnimName]->GetLocalMove();
+		if (XMVector3Equal(m_vSocketLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
 		{
-			vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-			vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 		if (m_mapAnimation[srtAnimName]->IsFinished())
 		{
 			//m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
-			vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-			vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
-		if (szBefAnimName != srtAnimName)
+		if (m_szSocketBefAnimName != srtAnimName)
 		{
-			szBefAnimName = srtAnimName;
-			vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-			vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_szSocketBefAnimName = srtAnimName;
+			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 	}
-	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(vLocalMove - vBefLocalMove));
+	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vSocketLocalMove - m_vSocketBefLocalMove));
 
 	_vector vScale, vRotation, vTrans;
 	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
 	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
 
-	vMovePos = vLocalMove - vBefLocalMove;
+	vMovePos = m_vSocketLocalMove - m_vSocketBefLocalMove;
 	XMVectorSetW(vMovePos, 0.f);
 	_float	fLength = XMVectorGetX(XMVector3Length(vMovePos));
 
@@ -244,6 +244,20 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
 	XMVectorSetW(vMovePos, 0.f);
 
 	return vMovePos;
+}
+
+void CModel::Reset_LocalMove(_bool isSocket)
+{
+	if (isSocket)
+	{
+		m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	}
+	else
+	{
+		m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	}
 }
 
 _vector CModel::GetLocalRotationDelta()

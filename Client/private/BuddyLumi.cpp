@@ -422,7 +422,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 				})
 				.Tick([this](_double TimeDelta) 
 				{
-								
+
 				})
 
 			.Build();
@@ -585,7 +585,7 @@ void CBuddyLumi::Collision()
 	damageParam.pCauser = this;
 	damageParam.iDamage = 1;
 
-	Collision_Check(m_pWeaponCollider, damageParam);
+	Collision_Check_Capsule(m_pWeaponCollider, damageParam);
 }
 
 _matrix CBuddyLumi::AttachCollider()
