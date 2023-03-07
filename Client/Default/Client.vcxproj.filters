@@ -596,6 +596,7 @@
     <ClInclude Include="..\public\PostVFX_HitDecal.h">
       <Filter>97.ShaderFiles\PostProcess\HitDecal</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PostVFX_ColorGrading.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -929,6 +930,7 @@
     <ClCompile Include="..\private\PostVFX_HitDecal.cpp">
       <Filter>97.ShaderFiles\PostProcess\HitDecal</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\PostVFX_ColorGrading.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
