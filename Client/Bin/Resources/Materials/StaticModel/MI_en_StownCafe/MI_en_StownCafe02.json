@@ -10,8 +10,7 @@
         "Textures" : [
             "../Bin/Resources/Environments/Location/LC06/props/T_S_TownCafe_ALB.dds",
             "../Bin/Resources/Environments/Location/LC06/props/T_S_TownCafe_NML.png",
-            "../Bin/Resources/Environments/Location/LC06/props/T_S_TownCafe_RMA.dds",
-             "../Bin/Resources/Environments/00_Common/03_Texture/T_Dummy_RMA.png"
+            "../Bin/Resources/Environments/Location/LC06/props/T_S_TownCafe_RMA.dds"
         ],
         "Pass" : 1
     },

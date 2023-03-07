@@ -8,9 +8,9 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Environments/Location/LC06/props/T_S_TownCafe_ALB_1.dds",
-            "../Bin/Resources/Environments/Location/LC06/props/T_S_TownCafe_NML_1.png",
-            "../Bin/Resources/Environments/Location/LC06/props/T_S_TownCafe_RMA_1.dds"
+            "../Bin/Resources/Environments/Location/Common/Resources/RD_T_BG_TST_T02_NEAR_industrial_ashiba_00_D.dds",
+            "../Bin/Resources/Environments/Location/Common/Resources/RD_T_BG_TST_T02_NEAR_industrial_ashiba_00_N.png",
+            "../Bin/Resources/Environments/Location/Common/Resources/T_T02_NEAR_industrial_ashiba_00_M_RMA.dds"
         ],
         "Pass" : 1
     },

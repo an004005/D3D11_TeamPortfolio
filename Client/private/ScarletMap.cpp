@@ -242,18 +242,7 @@ void CScarletMap::Imgui_RenderProperty()
 
 	if (ImGui::Button("Delete_MapObject"))
 	{
-		if (m_pModelProtoInfo.second == PROTOINFO::NON_INSTANCE ||
-			m_pModelProtoInfo.second == PROTOINFO::KINETIC)
-		{
-			if (m_pGameObject)
-			{
-				m_pGameObject->SetDelete();	
-				m_pMapObjects.erase(remove(m_pMapObjects.begin(), m_pMapObjects.end(), m_pGameObject), m_pMapObjects.end());
-				m_pGameObject = nullptr;
-			}
-		}
-	
-		else 
+		if (dynamic_cast<CMapInstance_Object*>(m_pGameObject) != nullptr)
 		{
 			if (MSG_BOX_CHECK("Delete Instancing Object?") == IDYES)
 			{
@@ -264,7 +253,16 @@ void CScarletMap::Imgui_RenderProperty()
 					m_pGameObject = nullptr;
 				}
 			}
-
+		}
+	
+		else 
+		{
+			if (m_pGameObject)
+			{
+				m_pGameObject->SetDelete();
+				m_pMapObjects.erase(remove(m_pMapObjects.begin(), m_pMapObjects.end(), m_pGameObject), m_pMapObjects.end());
+				m_pGameObject = nullptr;
+			}
 		}
 
 		sort(m_pMapObjects.begin(), m_pMapObjects.end());

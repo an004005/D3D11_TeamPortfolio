@@ -61,9 +61,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_HitStateMachine()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 2.f, 0.f, 0.f));
 
-	m_pCollider->SetPosition(XMVectorSet(0.f, 1.f, 0.f, 0.f));//SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
+	m_pCollider->SetPosition(XMVectorSet(0.f, 2.f, 0.f, 0.f));//SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(720.f) });
 
