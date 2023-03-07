@@ -315,8 +315,7 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 		if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
 		{
-			// LookAt하면 아래쪽을 바라볼 수도 있음, 주의
-			m_pTransformCom->LookAt(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+			m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 		}
 	}
 }
@@ -1708,6 +1707,7 @@ void CPlayer::Load_DefaultEffects(const char * pEffectDir)
 	{
 		Json jsonEffect = CJsonStorage::GetInstance()->FindOrLoadJson(pEffectPath);
 		auto pEffectGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect));
+
 		m_mapEffectGroup.emplace(pEffectGroup->GetObjectTag(), pEffectPath);
 		pEffectGroup->SetDelete();
 	});

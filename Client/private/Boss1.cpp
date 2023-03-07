@@ -296,7 +296,7 @@ void CBoss1::Tick_AttackState()
 			tParams.iTargetType = CTB_PLAYER;
 			tParams.overlapOut = &overlapOut;
 			tParams.vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-			tParams.vPos.y += 2.f;
+			//tParams.vPos.y += 2.f;
 			if (CGameInstance::GetInstance()->OverlapSphere(tParams))
 			{
 				HitTargets(overlapOut, 1, EAttackType::ATK_HEAVY);
