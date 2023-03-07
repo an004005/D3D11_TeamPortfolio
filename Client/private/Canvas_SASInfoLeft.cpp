@@ -4,6 +4,7 @@
 
 #include "UI_Manager.h"
 #include "DefaultUI.h"
+#include "Canvas_SASInfoLeftMove.h"
 
 CCanvas_SASInfoLeft::CCanvas_SASInfoLeft(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -52,6 +53,24 @@ HRESULT CCanvas_SASInfoLeft::Render()
 
 	_float2 vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"SASInfo_Left_BackGround"))->GetScreenSpaceLeftTop();
 	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"츠구미 나자르", vPosition + _float2(190.0f, 85.0f), 0.f, { 0.3f, 0.3f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+
+	_float2 fPlayerHp = dynamic_cast<CCanvas_SASInfoLeftMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_SASInfoLeftMove"))->Get_SASLeftHp();
+	_tchar szChildTag[MAX_PATH] = TEXT("");
+
+	if (1000.0f < fPlayerHp.x)
+	{
+		wsprintf(szChildTag, TEXT("%d"), _int(fPlayerHp.x));
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(237.0f, 38.0f), 0.f, { 0.3f, 0.3f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		wsprintf(szChildTag, TEXT("/%d"), _int(fPlayerHp.y));
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(270.0f, 38.0f), 0.f, { 0.3f, 0.3f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	}
+	else
+	{
+		wsprintf(szChildTag, TEXT("%d"), _int(fPlayerHp.x));
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(260.0f, 38.0f), 0.f, { 0.3f, 0.3f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		wsprintf(szChildTag, TEXT("/%d"), _int(fPlayerHp.y));
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(284.0f, 38.0f), 0.f, { 0.3f, 0.3f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	}
 
 	return S_OK;
 }

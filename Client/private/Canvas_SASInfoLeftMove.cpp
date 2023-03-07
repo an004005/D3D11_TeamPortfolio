@@ -60,7 +60,7 @@ void CCanvas_SASInfoLeftMove::Imgui_RenderProperty()
 
 	if (ImGui::Button("Save Hp"))
 	{
-		m_fHp = fHp / fMaxHp;
+		Set_SASLeftHp(fHp, fMaxHp);
 	}
 }
 

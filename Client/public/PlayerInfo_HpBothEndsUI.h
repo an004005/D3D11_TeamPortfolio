@@ -30,8 +30,8 @@ public:
 	}
 
 private:
-	void	Start_Tick(const _double & dTimeDetla);
-	void	End_Tick(const _double & dTimeDetla);
+	void	Start_Tick();
+	void	End_Tick();
 
 private:
 	template <typename T>

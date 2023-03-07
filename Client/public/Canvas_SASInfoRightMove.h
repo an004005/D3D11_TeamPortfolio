@@ -21,8 +21,13 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_SASRightHp(const _float & fCurrentHp, const _float & fMaxHp) {	// UITODO : BeginTick() 에서 호출
-		m_fHp = fCurrentHp / fMaxHp;
+	_float2	Get_SASRihgtHp() {
+		return m_vSASRightHp;
+	}
+
+	void	Set_SASRightHp(const _float & fHp, const _float & fMaxHp) {	// UITODO : BeginTick() 에서 호출
+		m_fHp = fHp / fMaxHp;
+		m_vSASRightHp = { fHp, fMaxHp };
 	}
 
 private:
@@ -31,6 +36,7 @@ private:
 
 private:
 	_float	m_fHp = { 0.0f };
+	_float2 m_vSASRightHp = { 0.0f, 0.0f };
 	_double	m_dRendomTexture_TimeAcc = { 0.0 };
 
 public:

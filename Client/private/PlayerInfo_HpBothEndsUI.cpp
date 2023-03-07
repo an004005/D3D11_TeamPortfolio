@@ -58,9 +58,9 @@ void CPlayerInfo_HpBothEndsUI::Tick(_double TimeDelta)
 
 
 	if(2 == m_iObjectNumber || 3 == m_iObjectNumber)
-		Start_Tick(TimeDelta);
+		Start_Tick();
 	else
-		End_Tick(TimeDelta);
+		End_Tick();
 }
 
 void CPlayerInfo_HpBothEndsUI::Late_Tick(_double TimeDelta)
@@ -101,13 +101,13 @@ void CPlayerInfo_HpBothEndsUI::RendomHpImage(const _int & iImageNumber)
 	m_tParams.Floats[0] = 1.0f;
 }
 
-void CPlayerInfo_HpBothEndsUI::Start_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpBothEndsUI::Start_Tick()
 {
 	_float fCurHp = Clamp<_float>(m_fCurrentHp, 0.0f, 0.05f);
 	m_tParams.Floats[0] = Remap<float>(fCurHp, 0.0f, 0.05f, 0.0f, 1.0f);
 }
 
-void CPlayerInfo_HpBothEndsUI::End_Tick(const _double & dTimeDetla)
+void CPlayerInfo_HpBothEndsUI::End_Tick()
 {
 	_float fCurrentHp = m_fCurrentHp - 0.95f;
 	m_tParams.Floats[0] = _float(fCurrentHp / 0.05f);

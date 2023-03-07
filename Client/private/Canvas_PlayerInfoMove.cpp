@@ -10,6 +10,7 @@
 #include "PlayerInfo_HpBothEndsUI.h"
 #include "PlayerInfo_PsychokinesisUI.h"
 #include "PlayerInfo_PsychokinesisBackUI.h"
+#include "Canvas_PlayerInfo.h"
 
 CCanvas_PlayerInfoMove::CCanvas_PlayerInfoMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -55,6 +56,7 @@ void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
 		Set_UIMove();
 
 	RendomTexture_Tick(TimeDelta);	// 계속 Hp 가 출력할 전체 개수, 이미지를 계산한다.
+	Arrow_Move(); // 계속 화살표의 좌표를 변경한다.
 }
 
 void CCanvas_PlayerInfoMove::Late_Tick(_double TimeDelta)
@@ -93,8 +95,14 @@ void CCanvas_PlayerInfoMove::Imgui_RenderProperty()
 
 	if (ImGui::Button("Set Gauge"))
 	{
-		Set_PsychokinesisGauge(LEVEL_ONE, fGauge, fMaxGauge);
+		Set_PsychokinesisGauge(LEVEL_THREE, IDLE_TYPE, fGauge, fMaxGauge);
 	}
+
+	static _float ff;
+	ImGui::DragFloat("ff", &ff);
+	static _float gg;
+	ImGui::DragFloat("gg", &gg);
+	vTemp = { ff ,gg };
 }
 
 void CCanvas_PlayerInfoMove::SaveToJson(Json& json)
@@ -109,11 +117,11 @@ void CCanvas_PlayerInfoMove::LoadFromJson(const Json & json)
 
 }
 
-void CCanvas_PlayerInfoMove::Set_PsychokinesisGauge(PSYCHOKINESISLEVEL Level, const _float & fGauge, const _float & fMaxGauge)
+void CCanvas_PlayerInfoMove::Set_PsychokinesisGauge(const PSYCHOKINESISLEVEL Level, const PSYCHOKINESISTYPE iType, const _float & fGauge, const _float & fMaxGauge)
 {
 	_float fValue = fGauge / fMaxGauge;
 	m_fPsychokinesisGauge = (1.0f < fValue) ? 1.0f : fValue;
-	ChildPsychokinesis(Level);
+	ChildPsychokinesis(Level, iType);
 }
 
 void CCanvas_PlayerInfoMove::Set_PlayerHp(const _float & fHp, const _float & fMaxHp)
@@ -125,6 +133,25 @@ void CCanvas_PlayerInfoMove::Set_PlayerHp(const _float & fHp, const _float & fMa
 	_float fValue = fHp / fMaxHp;
 	m_fPercentageHp = (1.0f < fValue) ? 1.0f : fValue;
 	ChildHp();
+}
+
+void CCanvas_PlayerInfoMove::Arrow_Move()
+{
+	// 염력 게이지의 x 좌표 가져와서 화살표 에게 넘겨준다. 
+	//_float2 vGauge_Position = dynamic_cast<CPlayerInfo_PsychokinesisUI*>(Find_ChildUI(L"PlayerInfo_Psychokinesis"))->Gauge_Position();
+
+
+	//_float fCurHp = Clamp<_float>(m_fCurrentHp, 0.0f, 0.05f);
+	//m_tParams.Floats[0] = Remap<float>(fCurHp, 0.0f, 0.05f, 0.0f, 1.0f);
+
+	_float2 vGauge_Position = Find_ChildUI(L"PlauerInfo_GaugeArrow")->Get_Position();
+	_float fPosition = Clamp<_float>(vGauge_Position.x, -138.0f, 138.0f);
+	_float fResult = Remap<_float>(fPosition, -138.0f, 138.0f, 0.0f, 1.0f);
+
+	m_fPercentageHp;
+
+	_float2 vGauge_Position = Find_ChildUI(L"PlayerInfo_Psychokinesis")->Get_Position();
+	Find_ChildUI(L"PlauerInfo_GaugeArrow")->Set_Position(_float2(vTemp.x, vGauge_Position.y + 15.0f));
 }
 
 void CCanvas_PlayerInfoMove::ChildHp()
@@ -225,10 +252,12 @@ void CCanvas_PlayerInfoMove::RendomTexture_Tick(const _double & dTimeDelta)
 	}
 }
 
-void CCanvas_PlayerInfoMove::ChildPsychokinesis(PSYCHOKINESISLEVEL Level)
+void CCanvas_PlayerInfoMove::ChildPsychokinesis(const PSYCHOKINESISLEVEL eLevel, const PSYCHOKINESISTYPE eType)
 {
-	dynamic_cast<CPlayerInfo_PsychokinesisUI*>(Find_ChildUI(L"PlayerInfo_Psychokinesis"))->Set_PsychokinesisGauge(_uint(Level), m_fPsychokinesisGauge);
-	dynamic_cast<CPlayerInfo_PsychokinesisBackUI*>(Find_ChildUI(L"PlayerInfo_PsychokinesisBack"))->Set_PsychokinesisGauge(_uint(Level), m_fPsychokinesisGauge);
+	dynamic_cast<CPlayerInfo_PsychokinesisUI*>(Find_ChildUI(L"PlayerInfo_Psychokinesis"))->Set_PsychokinesisGauge(_uint(eLevel), _uint(eType), m_fPsychokinesisGauge);
+	dynamic_cast<CPlayerInfo_PsychokinesisBackUI*>(Find_ChildUI(L"PlayerInfo_PsychokinesisBack"))->Set_PsychokinesisGauge(_uint(eLevel), _uint(eType), m_fPsychokinesisGauge);
+
+	dynamic_cast<CCanvas_PlayerInfo*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_PlayerInfo"))->Set_GaugeBackGround(eLevel);
 }
 
 CCanvas_PlayerInfoMove * CCanvas_PlayerInfoMove::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

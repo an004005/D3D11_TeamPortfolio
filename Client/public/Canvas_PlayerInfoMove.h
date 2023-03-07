@@ -7,7 +7,8 @@ BEGIN(Client)
 
 class CCanvas_PlayerInfoMove : public CCanvas
 {
-	enum PSYCHOKINESISLEVEL { LEVEL_ONE, LEVEL_TWO, LEVELTHREE };
+	enum PSYCHOKINESISLEVEL { LEVEL_ONE, LEVEL_TWO, LEVEL_THREE };
+	enum PSYCHOKINESISTYPE { IDLE_TYPE, ATTACK_TYPE, DRIVE_TYPE };
 
 protected:
 	CCanvas_PlayerInfoMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -30,13 +31,22 @@ public:
 		return m_vPlayerHp;
 	}
 
-	void	Set_PsychokinesisGauge(const PSYCHOKINESISLEVEL Level, const _float & fGauge, const _float & fMaxGauge);
+	void	Set_PsychokinesisGauge(const PSYCHOKINESISLEVEL Level, const PSYCHOKINESISTYPE iType, const _float & fGauge, const _float & fMaxGauge);
 	void	Set_PlayerHp(const _float & fHp, const _float & fMaxHp); // UITODO : BeginTick() 에서 호출 
 
 private:
 	void	ChildHp();
 	void	RendomTexture_Tick(const _double & dTimeDelta);
-	void	ChildPsychokinesis(const PSYCHOKINESISLEVEL Level);
+	void	ChildPsychokinesis(const PSYCHOKINESISLEVEL eLevel, const PSYCHOKINESISTYPE eType);
+
+	void	Arrow_Move();
+
+private:
+	template <typename T>
+	T Remap(T In, T Inlow, T Inhigh, T Outlow, T Outhigh);
+
+	template <typename T>
+	T Clamp(T x, T low, T high);
 
 private:
 	_float	m_fPsychokinesisGauge = { 0.0f };
@@ -45,6 +55,8 @@ private:
 	_float2 m_vPlayerHp = { 0.0f, 0.0f };
 	_double	m_dRendomTexture_TimeAcc = { 0.0 };
 
+	_float2 vTemp = { 0.0f, 0.0f };
+
 public:
 	static CCanvas_PlayerInfoMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;
@@ -52,3 +64,16 @@ public:
 };
 
 END
+
+template<typename T>
+inline T CCanvas_PlayerInfoMove::Remap(T In, T Inlow, T Inhigh, T Outlow, T Outhigh)
+{
+	return Outlow + (In - Inlow) * (Outhigh - Outlow) / (Inhigh - Inlow);
+}
+
+template<typename T>
+inline T CCanvas_PlayerInfoMove::Clamp(T x, T low, T high)
+{
+	assert(low <= high);
+	return min(max(x, low), high);
+}

@@ -41,7 +41,7 @@ void CPlayerInfo_PsychokinesisBackUI::Tick(_double TimeDelta)
 	if (m_fCurrentPsychokinesisGauge > m_fPsychokinesisGauge)
 	{
 		m_bVisible = true;
-		m_fCurrentPsychokinesisGauge -= _float(TimeDelta) * 0.3f;
+		m_fCurrentPsychokinesisGauge -= _float(TimeDelta) * 0.25f;
 		m_tParams.Floats[0] = m_fCurrentPsychokinesisGauge;
 	}
 	else
@@ -82,31 +82,29 @@ void CPlayerInfo_PsychokinesisBackUI::LoadFromJson(const Json & json)
 
 }
 
-void CPlayerInfo_PsychokinesisBackUI::Set_PsychokinesisGauge(const _int iType, const _float & fGauge)
+void CPlayerInfo_PsychokinesisBackUI::Set_PsychokinesisGauge(const _uint iLevel, const _uint iType, const _float & fGauge)
 {
-	// iType : (0)일반0  (2)일반1  (3)  (4)공격 (5)드라이브
+	// iType : (0)일반(물결) (1)공격 (2) 드라이브
 	m_fPsychokinesisGauge = fGauge;
 
-	// 게이지 텍스처 선택
-	m_tParams.Ints[0] = iType;
-	// 텍스처 프레임
-	switch (iType)
-	{
-	case 1:
-		m_tParams.Floats[1] = 0.08f;
-		break;
-	case 2:
+	// 드라이브 레벨에서 텍스처 프레임이 달라진다.
+	if (2 == iType)
 		m_tParams.Floats[1] = 0.03f;
-		break;
-	default:
+	else
 		m_tParams.Floats[1] = 0.08f;
-		break;
-	}
+
+	// 레벨에 따른 게이지 바 길이가 달라진다.
+	if (0 == iLevel)
+		m_fMaxLevelGauge = 2.0f;
+	else if (1 == iLevel)
+		m_fMaxLevelGauge = 1.35f;
+	else
+		m_fMaxLevelGauge = 1.0f;
 }
 
 CPlayerInfo_PsychokinesisBackUI * CPlayerInfo_PsychokinesisBackUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
- 	CPlayerInfo_PsychokinesisBackUI*		pInstance = new CPlayerInfo_PsychokinesisBackUI(pDevice, pContext);
+	CPlayerInfo_PsychokinesisBackUI*		pInstance = new CPlayerInfo_PsychokinesisBackUI(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{

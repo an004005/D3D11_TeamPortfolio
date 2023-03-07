@@ -4,6 +4,7 @@
 #include "UI_Manager.h"
 
 #include "DefaultUI.h"
+#include "Canvas_PlayerInfoMove.h"
 
 CCanvas_Drive::CCanvas_Drive(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -59,6 +60,24 @@ HRESULT CCanvas_Drive::Render()
 
 	_float2 vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Drive_BackGround"))->GetScreenSpaceLeftTop();
 	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"DRIVE", vPosition + _float2(40.0f, 99.0f), 0.f, { 0.33f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+
+	_float2 fPlayerHp = dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Get_PlayerHp();
+	_tchar szChildTag[MAX_PATH] = TEXT("");
+
+	if (1000.0f < fPlayerHp.x)
+	{
+		wsprintf(szChildTag, TEXT("%d"), _int(fPlayerHp.x));
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-47.0f, 65.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		wsprintf(szChildTag, TEXT("/%d"), _int(fPlayerHp.y));
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-7.0f, 67.0f), 0.f, { 0.3f, 0.3f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	}
+	else
+	{
+		wsprintf(szChildTag, TEXT("%d"), _int(fPlayerHp.x));
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-31.0f, 65.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		wsprintf(szChildTag, TEXT("/%d"), _int(fPlayerHp.y));
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(0.0f, 67.0f), 0.f, { 0.3f, 0.3f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	}
 
 	return S_OK;
 }

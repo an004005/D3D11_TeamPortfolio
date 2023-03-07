@@ -629,6 +629,9 @@
     <ClInclude Include="..\public\PlayerInfo_PsychokinesisUI.h">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PlayerInfo_GaugeBackGround.h">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -992,10 +995,13 @@
     <ClCompile Include="..\private\SASInfoLeftHpBothEndsUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PlayerInfo_PsychokinesisBackUI.cpp">
+    <ClCompile Include="..\private\PlayerInfo_PsychokinesisUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PlayerInfo_PsychokinesisUI.cpp">
+    <ClCompile Include="..\private\PlayerInfo_GaugeBackGround.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerInfo_PsychokinesisBackUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClCompile>
   </ItemGroup>

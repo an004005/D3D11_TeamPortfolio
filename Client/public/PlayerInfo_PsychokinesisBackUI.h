@@ -23,11 +23,12 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_PsychokinesisGauge(const _int iType, const _float & fGauge);
+	void	Set_PsychokinesisGauge(const _uint iLevel, const _uint iType, const _float & fGauge);
 
 private:
 	_float m_fPsychokinesisGauge = { 0.0f };	// 0~1
 	_float m_fCurrentPsychokinesisGauge = { 1.0f };
+	_float m_fMaxLevelGauge = { 0.0f };
 
 	_bool	m_bMinus = { false };
 

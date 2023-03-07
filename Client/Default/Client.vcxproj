@@ -255,6 +255,7 @@
     </ClInclude>
     <ClInclude Include="..\public\MapNonAnim_Object.h" />
     <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\PlayerInfo_GaugeBackGround.h" />
     <ClInclude Include="..\public\PlayerInfo_HpBackUI.h" />
     <ClInclude Include="..\public\PlayerInfo_HpBothEndsUI.h" />
     <ClInclude Include="..\public\PlayerInfo_HpUI.h" />
@@ -378,6 +379,7 @@
     </ClCompile>
     <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\PlayerInfo_GaugeBackGround.cpp" />
     <ClCompile Include="..\private\PlayerInfo_HpBackUI.cpp" />
     <ClCompile Include="..\private\PlayerInfo_HpBothEndsUI.cpp" />
     <ClCompile Include="..\private\PlayerInfo_HpUI.cpp" />
