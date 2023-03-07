@@ -30,7 +30,8 @@ public:
 	EDeBuffType GetDeBuffType() const { return m_eDeBuff; }
 
 protected:
-	void		Collision_Check(CRigidBody*	AttackTrigger, DAMAGE_PARAM DamageParam);
+	void		Collision_Check_Capsule(CRigidBody*	AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollision = true, ECOLLIDER_TYPE_BIT ColType = CTB_MONSTER);
+	list<CScarletCharacter*>	m_DamagedObjectList;
 
 protected:
 	EDeBuffType m_eDeBuff = EDeBuffType::DEBUFF_END;
@@ -48,8 +49,8 @@ public:
 	_bool isCollision() { return m_iHitTargetCount > 0 ? true : false; }
 
 protected:
-	_uint m_iHitTargetCount = 0;
-
+	_uint	m_iHitTargetCount = 0;
+	Vector4 m_BeforePos;
 
 public:
 	virtual void Free() override;

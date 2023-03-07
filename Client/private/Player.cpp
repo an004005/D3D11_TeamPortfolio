@@ -174,7 +174,7 @@ void CPlayer::Tick(_double TimeDelta)
 			DAMAGE_PARAM tParam;
 			ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
 			tParam.iDamage = 1;
-			Collision_Check(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), tParam);
+			Collision_Check_Capsule(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), tParam);
 
 			if (isCollision())	// 무기로 충돌 발생하면 slash를 1로 올려줌
 				m_fKineticCombo_Slash = 1.f;
@@ -1897,9 +1897,7 @@ void CPlayer::HitCheck()
 
 void CPlayer::NetualChecker(_double TimeDelta)
 {
-	isPlayerAttack();
-
-	if (m_bOnBattle)
+	if ((false == isPlayerAttack()) && m_bOnBattle)
 	{
 		m_fNetualTimer += TimeDelta;
 	}

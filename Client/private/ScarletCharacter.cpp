@@ -66,10 +66,20 @@ void CScarletCharacter::AfterPhysX()
 	m_vPrePos = vColliderFootPos;
 }
 
-void CScarletCharacter::Collision_Check(CRigidBody * AttackTrigger, DAMAGE_PARAM DamageParam)
+void CScarletCharacter::Collision_Check_Capsule(CRigidBody * AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollision ,ECOLLIDER_TYPE_BIT ColType)
 {
+	// 1인자 : 리지드바디
+	// 2인자 : 데미지 정보
+	// 3인자 : 충돌 여부, 함수는 계속 돌리되 충돌판정하지 않을거면 false대입
+	// 4인자 : 타겟 타입
+
+	if (!bCollision)
+	{
+		m_DamagedObjectList.clear();
+		return;
+	}
+
 	// 공격자의 트리거와 공격 파라미터를 전달받아서 진행
-	static Vector4 BeforePos;
 
 	Matrix ColliderWorld = AttackTrigger->GetPxWorldMatrix();
 	_float4 vPos = _float4(ColliderWorld.Translation().x, ColliderWorld.Translation().y, ColliderWorld.Translation().z, 1.f);
@@ -82,11 +92,11 @@ void CScarletCharacter::Collision_Check(CRigidBody * AttackTrigger, DAMAGE_PARAM
 	param.CapsuleGeo = AttackTrigger->Get_CapsuleGeometry();
 	param.pxTransform = AttackTrigger->Get_PxTransform();
 
-	_float4	vWeaponDir = vPos - BeforePos;
+	_float4	vWeaponDir = vPos - m_BeforePos;
 
 	param.vUnitDir = _float3(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z);
 	param.fDistance = param.vUnitDir.Length();
-	param.iTargetType = CTB_MONSTER;
+	param.iTargetType = ColType;
 	param.fVisibleTime = 0.f;
 
 	m_iHitTargetCount = 0.;
@@ -99,16 +109,38 @@ void CScarletCharacter::Collision_Check(CRigidBody * AttackTrigger, DAMAGE_PARAM
 			CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
 			if (auto pTarget = dynamic_cast<CScarletCharacter*>(pCollidedObject))
 			{
-				DAMAGE_PARAM tParam;
-				tParam.iDamage = DamageParam.iDamage;
-				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-				pTarget->TakeDamage(DamageParam);
-				++m_iHitTargetCount;
+				_bool bDamagedTarget = true;
+				for (auto& iter : m_DamagedObjectList)
+				{
+					if (iter == pTarget)
+					{
+						bDamagedTarget = false;
+						break;
+					}
+				}
+
+				if (bDamagedTarget)
+				{
+					DAMAGE_PARAM tParam;
+					memcpy(&tParam, &DamageParam, sizeof(DAMAGE_PARAM));
+
+					// 내부에서 자체적으로 계산할 값
+					tParam.pCauser = this;
+					tParam.vHitNormal = _float3(pHit.normal.x, pHit.normal.y, pHit.normal.z);
+					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
+					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					
+					pTarget->TakeDamage(tParam);
+					++m_iHitTargetCount;
+
+					// 이미 충돌했던 대상을 리스트에 추가
+					m_DamagedObjectList.push_back(pTarget);
+				}
 			}
 		}
 	}
 
-	BeforePos = vPos;
+	m_BeforePos = vPos;
 }
 
 void CScarletCharacter::Free()

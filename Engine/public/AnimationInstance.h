@@ -69,7 +69,7 @@ public:
 	CAnimState* GetPreState() { return m_pPreState; }					// 직전 상태 가져오기
 	_float GetTransitionDuration() { return m_fTransitionDuration; }	// 트랜지션의 Duration 가져오기 (총 재생시간)
 	_float GetCurTransitionTime() { return m_fCurTransitionTime; }		// 트랜지션의 Time 가져오기 (진행시간)
-	_bool  isLerping() { return (1.f > (m_fCurTransitionTime / m_fTransitionDuration)) ? true : false ; }
+	_bool  isLerping();
 
 	void	SetSpairAnim(const string& stateName, CAnimation* pSpairAnim);
 	void	ResetSpairAnim();

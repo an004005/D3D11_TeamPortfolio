@@ -138,7 +138,11 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 		// REPEAT라는 키를 가지는 애니메이션의 경우 그냥 탈출시킨다.
 		if ("REPEAT" == szTransitionName)
 			break;
+
+		if (iLoopBreaker < 10)
+			MSG_BOX("A");
 	}
+
 	Assert(iLoopBreaker > 0); // 무한루프 방치
 
 	if (nullptr != m_pCurState->m_OptionalEvent/* && (m_pCurState->m_bOptionalEvent)*/)
@@ -226,6 +230,11 @@ void CAnimationStateMachine::Imgui_RenderState()
 	if (iInput >= 0) m_iDebugQueSize = iInput;
 	m_bStoreHistory = true;
 #endif
+}
+
+_bool CAnimationStateMachine::isLerping()
+{
+	return (1.f > (m_fCurTransitionTime / m_fTransitionDuration)) ? true : false;
 }
 
 void CAnimationStateMachine::SetSpairAnim(const string & stateName, CAnimation * pSpairAnim)

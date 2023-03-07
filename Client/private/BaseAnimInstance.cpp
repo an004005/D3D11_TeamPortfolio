@@ -801,6 +801,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Predicator([&]()->_bool{return FloorCheck();})
 				.Duration(0.1f).Priority(0)
 
+				.AddTransition("DASH_END_FRONT to RUN_FRONT", "RUN_FRONT")
+				.Predicator([&]()->_bool {return m_bWalk && (0.1f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_051_AL_dodge_F_stop") || CheckAnim("AS_ch0100_151_AL_dodge_F_stop")); })
+				.Duration(0.05f)
+				.Priority(100)
+
 				.AddTransition("DASH_END_FRONT to IDLE", "IDLE")
 				.Duration(0.1f)
 				.Priority(100)
@@ -2528,6 +2533,9 @@ void CBaseAnimInstance::SpairAnimationChecker()
 
 _bool CBaseAnimInstance::CheckAnim(const string & szAnimName)
 {
+	// 보간중에는 그냥 false 반환해서 보간중에 State가 변하는 참사를 막음
+	if (m_pASM_Base->isLerping()) return false;
+
 	return  (szAnimName == m_pModel->GetPlayAnimation()->GetName()) ? true : false;
 }
 
