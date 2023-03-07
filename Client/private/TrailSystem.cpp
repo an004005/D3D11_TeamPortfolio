@@ -63,9 +63,6 @@ void CTrailSystem::Tick(_double TimeDelta)
 	CGameObject::Tick(TimeDelta);
 	m_pBuffer->Tick(TimeDelta);
 
-	if (m_bActive == false)
-		return;
-
 	if (m_vPrePoses.size() > 3)
 	{
 		_vector vLerpPos = m_vPrePoses[m_vPrePoses.size() - 3];
@@ -88,23 +85,24 @@ void CTrailSystem::Tick(_double TimeDelta)
 			_vector v3 = vBefPos - (vBefRight * m_fWidth);
 
 			m_TrailPointList.push_back(v0);
-			if (m_TrailPointList.size() > 40)
-				m_TrailPointList.pop_front();
-
 			m_TrailPointList.push_back(v1);
-			if (m_TrailPointList.size() > 40)
-				m_TrailPointList.pop_front();
-
 			m_TrailPointList.push_back(v2);
-			if (m_TrailPointList.size() > 40)
-				m_TrailPointList.pop_front();
-
 			m_TrailPointList.push_back(v3);
-			if (m_TrailPointList.size() > 40)
-				m_TrailPointList.pop_front();
 
 			m_pBuffer->AddData(m_pTransformCom->Get_WorldMatrix());
 		}
+
+		_vector v0 = vSourPos + (vSourRight * m_fWidth);
+		_vector v1 = vDestPos + (vDestRight * m_fWidth);
+		_vector v2 = vDestPos - (vDestRight * m_fWidth);
+		_vector v3 = vSourPos - (vSourRight * m_fWidth);
+
+		m_TrailPointList.push_back(v0);
+		m_TrailPointList.push_back(v1);
+		m_TrailPointList.push_back(v2);
+		m_TrailPointList.push_back(v3);
+
+		m_pBuffer->AddData(m_pTransformCom->Get_WorldMatrix());
 	}
 
 	// 이전 위치와 이전 Right 벡터를 저장해두어 CatMull-Rom 연산에 사용
@@ -120,6 +118,14 @@ void CTrailSystem::Tick(_double TimeDelta)
 		{
 			m_vPrePoses.erase(m_vPrePoses.begin());
 			m_vPreRight.erase(m_vPreRight.begin());
+		}
+	}
+
+	if (m_TrailPointList.size() > 40)
+	{
+		while (m_TrailPointList.size() > 40)
+		{
+			m_TrailPointList.pop_front();
 		}
 	}
 }
@@ -245,6 +251,9 @@ HRESULT CTrailSystem::Render()
 
 	//m_pShaderCom->Begin(m_iPass);
 	//m_pBuffer->Render();
+
+	if (m_bActive == false)
+		return S_OK;
 
 	if (!m_TrailPointList.empty())
 	{

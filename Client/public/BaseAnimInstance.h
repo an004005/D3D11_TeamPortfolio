@@ -25,6 +25,9 @@ public:
 	_bool			CheckSocketAnim(const string& strSocName, const string& AnimName) { return (AnimName == m_mapAnimSocket[strSocName].front()->GetName()) ? true : false; }
 
 protected:
+	void			SpairAnimationChecker();
+
+protected:
 	_bool	CheckAnim(const string& szAnimName);
 
 protected:	// 대상의 상태
@@ -38,11 +41,13 @@ protected:	// 대상의 상태
 	_bool	m_bDash = false;
 
 	_bool	m_bJump = false;
+	_bool	m_bUpper = false;
 
 	_bool	m_bNonCharge = false;
 	_bool	m_bCharge = false;
 
 	_bool	m_bSeperateAnim = false;
+	_bool	m_bOnBattle = false;
 
 	_bool	m_bOnFloor = false;
 

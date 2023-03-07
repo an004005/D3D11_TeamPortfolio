@@ -23,12 +23,8 @@ public:
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render();
 
-public:
-	void	Trail_Setting(_bool TrailOn) { m_bTrailOn = TrailOn; }
-
 private:
 	_vector		m_vBeforePos;
-	_bool		m_bTrailOn = false;
 
 private:
 	HRESULT		SetUp_Components();

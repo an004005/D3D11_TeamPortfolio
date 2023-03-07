@@ -110,6 +110,10 @@ private:
 	static const _float4x4 s_DefaultPivot;
 	static const string s_ModifyFilePath;
 
+// 플레이어 이펙트 부착 툴을 위한 임시 함수
+public:
+	unordered_map<string, CAnimation*>	Get_AnimList() const { return m_mapAnimation; }
+
 private:
 	string								m_strName;
 	TYPE								m_eType = TYPE_END;

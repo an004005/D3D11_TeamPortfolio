@@ -22,30 +22,30 @@ class CEffectGroup;
 typedef struct tagRemote
 {
 	// 행동 관련
-	_bool CanTurn = false;	// 카메라 보는 방향으로 회전
-	_bool CanMove = false;	// 월드 무브 가능 여부
-	_bool CanRun = false;	// 달리기 여부
-	_bool AttackTurn = false;	// 공격 중 회전(카메라 방향) 여부
+	_bool bCanTurn = false;	// 카메라 보는 방향으로 회전
+	_bool bCanMove = false;	// 월드 무브 가능 여부
+	_bool bCanRun = false;	// 달리기 여부
+	_bool bAttackTurn = false;	// 공격 중 회전(카메라 방향) 여부
 
 								// 상태 관련
-	_bool OnAir = false;	// 공중 상태 여부
-	_bool Gravity = false;	// 중력 적용 여부
+	_bool bOnAir = false;	// 공중 상태 여부
+	_bool bGravity = false;	// 중력 적용 여부
 
 							// 제한 관련
-	_bool MoveLimitReset = false;	// 횟수 제한 이동 초기화
-	_bool AttackLimitReset = false;	// 횟수 제한 공격 초기화
-	_bool ChargeReset = false;	// 차지 상태 초기화
+	_bool bMoveLimitReset = false;	// 횟수 제한 이동 초기화
+	_bool bAttackLimitReset = false;	// 횟수 제한 공격 초기화
+	_bool bChargeReset = false;	// 차지 상태 초기화
 
-	_bool LocalRevise = false;
+	_bool bLocalRevise = false;
 
-	tagRemote(	_bool CanTurn, _bool CanMove, _bool CanRun, _bool AttackTurn,
-				_bool OnAir, _bool Gravity, 
-				_bool MoveLimitReset, _bool AttackLimitReset, _bool ChargeReset,
-				_bool LocalRevise)
-	:CanTurn(CanTurn), CanMove(CanMove), CanRun(CanRun), AttackTurn(AttackTurn), 
-		OnAir(OnAir), Gravity(Gravity), 
-		MoveLimitReset(MoveLimitReset), AttackLimitReset(AttackLimitReset), ChargeReset(ChargeReset),
-		LocalRevise(LocalRevise){}
+	tagRemote(	_bool bCanTurn, _bool bCanMove, _bool bCanRun, _bool bAttackTurn,
+				_bool bOnAir, _bool bGravity, 
+				_bool bMoveLimitReset, _bool bAttackLimitReset, _bool bChargeReset,
+				_bool bLocalRevise)
+	:bCanTurn(bCanTurn), bCanMove(bCanMove), bCanRun(bCanRun), bAttackTurn(bAttackTurn), 
+		bOnAir(bOnAir), bGravity(bGravity), 
+		bMoveLimitReset(bMoveLimitReset), bAttackLimitReset(bAttackLimitReset), bChargeReset(bChargeReset),
+		bLocalRevise(bLocalRevise){}
 
 }REMOTE;
 
@@ -123,10 +123,12 @@ public:
 protected:
 	PLAYER_STAT m_PlayerStat;
 	DAMAGE_DESC m_DamageDesc;
+	ESASType	m_PlayerSasType;
 
 protected:
 	HRESULT SetUp_Components(void* pArg);
 	HRESULT SetUp_Event();
+	HRESULT SetUp_EffectEvent();
 	HRESULT Setup_KineticStateMachine();
 	HRESULT	SetUp_HitStateMachine();
 	HRESULT SetUp_KineticComboStateMachine();
@@ -134,6 +136,7 @@ protected:
 	CFSMComponent*		m_pKineticStataMachine = nullptr;
 	CFSMComponent*		m_pHitStateMachine = nullptr;
 	CFSMComponent*		m_pKineticComboStateMachine = nullptr;
+
 	CBaseAnimInstance*	m_pASM = nullptr;
 
 	CRenderer*			m_pRenderer = nullptr;
@@ -226,6 +229,8 @@ public:
 	_bool	isJump() { return m_bJump; }
 	_bool	isOnFloor() { return m_bOnFloor; }
 	_bool	isSeperateAnim() { return m_bSeperateAnim; }
+	_bool	isUpper() { return m_bUpper; }
+	_bool	isBattle() { return m_bOnBattle; }
 
 	_float	GetPlayRatio() { return m_fPlayRatio; }
 	_float	GetfYSpeed() { return m_fYSpeed; }
@@ -242,6 +247,7 @@ protected:
 	_bool	m_bDash = false;
 	_bool	m_bJump = false;
 	_bool	m_bSeperateAnim = false;
+	_bool	m_bUpper = false;
 
 	_bool	m_bKineticRB = false;
 	_bool	m_bKineticG = false;
@@ -283,7 +289,7 @@ public:	//EventCaller용
 	void		Event_AttackLimitReset() { AttackLimitReset(); }
 	void		Event_ChargeReset() { Reset_Charge(); }
 
-	void		Event_Effect(string szEffectName);
+	void		Event_Effect(string szEffectName, _float fSize = 1.f, string szBoneName = "Eff01");
 
 public:
 	void		Set_KineticCombo_Kinetic() { m_fKineticCombo_Kinetic = 1.f; }	// 키네틱 오브젝트에서 지정, 충돌 발생시 콤보 가능하도록 해준다.
@@ -292,10 +298,12 @@ protected:
 	void		Reset_Charge();
 
 protected:
-	unordered_map<string, string>	m_mapEffectGroup;
 	void		Load_DefaultEffects(const char* pEffectDir);
-	void		EffectMaker();
+
+	unordered_map<string, string>	m_mapEffectGroup;
+
 	unordered_map<string, CGameObject*>	m_mapPlayerEffect;
+	unordered_map<string, CGameObject*>	m_mapFireEffect;	// 이펙트 전부 붙이고 나서 하기
 
 protected:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
 	_bool		m_bCanTurn = false;
@@ -303,6 +311,7 @@ protected:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
 	_bool		m_bCanRun = false;
 	_bool		m_bCanTurn_Attack = false;
 	_bool		m_bLocalRevise = false;		//	좌우 한 걸음 고정
+	_bool		m_bOnBattle = false;	// 전투상태인지?
 
 public:
 	_bool		isPlayerAttack(void);	// 공격 중인 애니메이션일 때 true 반환
@@ -322,6 +331,10 @@ protected:
 	void		MoveStateCheck(_double TimeDelta);
 	void		SeperateCheck();
 	void		HitCheck();
+
+protected:
+	_float		m_fNetualTimer = 0.f;
+	void		NetualChecker(_double TimeDelta);
 
 public:
 	EMoveDir	GetMoveDir() const { return m_eMoveDir; }

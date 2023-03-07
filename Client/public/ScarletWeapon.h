@@ -34,6 +34,12 @@ public:
 	void	Setup_BoneMatrix(CModel* pModel, _fmatrix Transform);
 
 public:
+	void	Trail_Setting(_bool TrailOn) { m_bTrailOn = TrailOn; }
+
+protected:
+	_bool	m_bTrailOn = false;
+
+public:
 	CRigidBody*	Get_Trigger() { return m_pCollider; }
 	
 protected:
