@@ -232,13 +232,13 @@ void CBoss1::Start_AttackState(CBoss1_AttackStateType eState)
 	{
 	case LEFT_SWEEP:
 		{
-			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("LeftHandMiddle1") * m_pTransformCom->Get_WorldMatrix();
+			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("LeftHandHelp") * m_pTransformCom->Get_WorldMatrix();
 			m_vSweepPrePos = BoneMatrix.r[3];
 		}
 		break;
 	case RIGHT_SWEEP:
 		{
-			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("RightHandMiddle1") * m_pTransformCom->Get_WorldMatrix();
+			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("RightHandHelp") * m_pTransformCom->Get_WorldMatrix();
 			m_vSweepPrePos = BoneMatrix.r[3];
 		}
 		break;
@@ -260,13 +260,13 @@ void CBoss1::Tick_AttackState()
 	{
 	case LEFT_SWEEP:
 		{
-			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("LeftHandMiddle1") * m_pTransformCom->Get_WorldMatrix();
+			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("LeftHandHelp") * m_pTransformCom->Get_WorldMatrix();
 			vAttackPos = BoneMatrix.r[3];
 		}
 		break;
 	case RIGHT_SWEEP:
 		{
-			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("RightHandMiddle1") * m_pTransformCom->Get_WorldMatrix();
+			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("RightHandHelp") * m_pTransformCom->Get_WorldMatrix();
 			vAttackPos = BoneMatrix.r[3];
 		}
 		break;
@@ -275,7 +275,7 @@ void CBoss1::Tick_AttackState()
 			SphereOverlapParams tParams;
 			physx::PxOverlapHit hitBuffer[3];
 			physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
-			tParams.fRadius = 3.f;
+			tParams.fRadius = 6.5f;
 			tParams.fVisibleTime = 0.1f;
 			tParams.iTargetType = CTB_PLAYER;
 			tParams.overlapOut = &overlapOut;
@@ -291,11 +291,12 @@ void CBoss1::Tick_AttackState()
 			SphereOverlapParams tParams;
 			physx::PxOverlapHit hitBuffer[3];
 			physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
-			tParams.fRadius = 3.f;
+			tParams.fRadius = 6.f;
 			tParams.fVisibleTime = 0.1f;
 			tParams.iTargetType = CTB_PLAYER;
 			tParams.overlapOut = &overlapOut;
 			tParams.vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+			tParams.vPos.y += 2.f;
 			if (CGameInstance::GetInstance()->OverlapSphere(tParams))
 			{
 				HitTargets(overlapOut, 1, EAttackType::ATK_HEAVY);
@@ -315,8 +316,8 @@ void CBoss1::Tick_AttackState()
 		physx::PxSweepHit hitBuffer[3];
 		physx::PxSweepBuffer sweepOut(hitBuffer, 3);
 		tParams.sweepOut = &sweepOut;
-		tParams.fRadius = 1.f;
-		tParams.fVisibleTime = .5f;
+		tParams.fRadius = 2.5f;
+		tParams.fVisibleTime = .1f;
 		tParams.iTargetType = CTB_PLAYER;
 		tParams.vPos = m_vSweepPrePos;
 		const _vector vDiff = vAttackPos - m_vSweepPrePos;

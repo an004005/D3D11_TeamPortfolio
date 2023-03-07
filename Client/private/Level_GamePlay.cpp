@@ -23,7 +23,15 @@
 #include "Weapon_wp0190.h"
 #include "SkyBox.h"
 
-// #define ADD_PLAYER
+#include "MapKinetic_Object.h"
+#include "PostVFX_Scifi.h"
+#include "EffectGroup.h"
+#include "ParticleSystem.h"
+#include "PostVFX_Distortion.h"
+#include "TrailSystem.h"
+#include "EffectSystem.h"
+
+#define ADD_PLAYER
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -152,7 +160,22 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
 		FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
 
+
+
+	{	// 이펙트 프로토타입
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
+			CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
+			CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
+	}
 
 	}
 #endif
@@ -260,6 +283,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar* pLayerTag)
 HRESULT CLevel_GamePlay::Ready_Layer_Effect()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Scifi", &Test);
+
+	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
 	return S_OK;
 }
 
