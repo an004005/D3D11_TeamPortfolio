@@ -102,7 +102,7 @@ public:
 	enum EMOVE_LIMIT { LIMIT_DOUBLEJUMP, LIMIT_AIRDODGE, };
 	enum EMoveDir { DIR_F, DIR_B, DIR_L, DIR_R, DIR_FL, DIR_FR, DIR_BL, DIR_BR, DIR_END, };
 
-protected:
+private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& rhs);
 	virtual ~CPlayer() = default;
@@ -120,22 +120,24 @@ public:
 
 	virtual void Imgui_RenderProperty() override;
 
-protected:
+private:
 	PLAYER_STAT m_PlayerStat;
 	DAMAGE_DESC m_DamageDesc;
 	ESASType	m_PlayerSasType;
 
-protected:
+private:
 	HRESULT SetUp_Components(void* pArg);
 	HRESULT SetUp_Event();
 	HRESULT SetUp_EffectEvent();
 	HRESULT Setup_KineticStateMachine();
 	HRESULT	SetUp_HitStateMachine();
 	HRESULT SetUp_KineticComboStateMachine();
+	HRESULT SetUp_JustDodgeStateMachine();
 
 	CFSMComponent*		m_pKineticStataMachine = nullptr;
 	CFSMComponent*		m_pHitStateMachine = nullptr;
 	CFSMComponent*		m_pKineticComboStateMachine = nullptr;
+	CFSMComponent*		m_pJustDodgeStateMachine = nullptr;
 
 	CBaseAnimInstance*	m_pASM = nullptr;
 
@@ -143,12 +145,12 @@ protected:
 	CModel*				m_pModel = nullptr;
 	CController*		m_pController = nullptr;
 
-protected:
+private:
 	HRESULT				Setup_AnimSocket();
 	list<CAnimation*>	m_TestAnimSocket;
 	list<CAnimation*>	m_TransNeutralSocket;
 
-protected:	// 염력 소켓 애니메이션
+private:	// 염력 소켓 애니메이션
 	list<CAnimation*>	m_Kinetic_RB_Start;
 	list<CAnimation*>	m_Kinetic_RB_Loop;
 	list<CAnimation*>	m_Kinetic_RB_Cancel;
@@ -173,7 +175,7 @@ protected:	// 염력 소켓 애니메이션
 	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Loop;
 	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Cancel;
 
-protected:	// 키네틱 연계기 소켓 애니메이션
+private:	// 키네틱 연계기 소켓 애니메이션
 	list<CAnimation*>	m_KineticCombo_Slash01;	// 키네틱 돌진베기
 	list<CAnimation*>	m_KineticCombo_Slash02;	// 키네틱 X자 베기
 	list<CAnimation*>	m_KineticCombo_Slash03;	// 키네틱 돌려베기(3단)
@@ -196,7 +198,7 @@ protected:	// 키네틱 연계기 소켓 애니메이션
 	list<CAnimation*>	m_KineticCombo_KineticFinish_Throw;
 	list<CAnimation*>	m_KineticCombo_KineticFinish_Cancel;
 
-protected:	// 피격 소켓 애니메이션
+private:	// 피격 소켓 애니메이션
 	list<CAnimation*>	m_Hit_FL_Level01;
 	list<CAnimation*>	m_Hit_F_Level01;
 	list<CAnimation*>	m_Hit_FR_Level01;
@@ -215,8 +217,11 @@ protected:	// 피격 소켓 애니메이션
 	list<CAnimation*>	m_BreakFall_Front;
 	list<CAnimation*>	m_BreakFall_Back;
 
-protected:	// 피격 관련 변수
+private:	// 피격 관련 변수
 	_vector	m_vHitDir;
+
+private:
+	list<CAnimation*>	m_JustDodgeSlash;
 
 public:
 	_bool	isAir() { return m_bAir; }
@@ -235,7 +240,7 @@ public:
 	_float	GetPlayRatio() { return m_fPlayRatio; }
 	_float	GetfYSpeed() { return m_fYSpeed; }
 
-protected:
+private:
 	_bool	m_bHit = false;
 	_bool	m_bBreakFall = false;
 
@@ -263,6 +268,8 @@ protected:
 	_float	m_fKineticCharge = 0.f;			// 염력 차지 시간, 기본적으로 1초
 
 	_bool	m_bKineticCombo = false;	// 현재 공격 진행중인지?
+	
+	_float	m_fJustDodgeAble = 0.f;
 
 	_float	m_fJumpPower = 10.f;
 
@@ -294,10 +301,10 @@ public:	//EventCaller용
 public:
 	void		Set_KineticCombo_Kinetic() { m_fKineticCombo_Kinetic = 1.f; }	// 키네틱 오브젝트에서 지정, 충돌 발생시 콤보 가능하도록 해준다.
 
-protected:
+private:
 	void		Reset_Charge();
 
-protected:
+private:
 	void		Load_DefaultEffects(const char* pEffectDir);
 
 	unordered_map<string, string>	m_mapEffectGroup;
@@ -305,7 +312,7 @@ protected:
 	unordered_map<string, CGameObject*>	m_mapPlayerEffect;
 	unordered_map<string, CGameObject*>	m_mapFireEffect;	// 이펙트 전부 붙이고 나서 하기
 
-protected:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
+private:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
 	_bool		m_bCanTurn = false;
 	_bool		m_bCanMove = false;
 	_bool		m_bCanRun = false;
@@ -326,13 +333,13 @@ public:
 	void		SetGravity_Optional(_float fGravity) { m_fYSpeed = fGravity; }
 	void		SmoothTurn_Attack(_double TimeDelta);
 
-protected:
+private:
 	void		BehaviorCheck(_double TimeDelta);
 	void		MoveStateCheck(_double TimeDelta);
 	void		SeperateCheck();
 	void		HitCheck();
 
-protected:
+private:
 	_float		m_fNetualTimer = 0.f;
 	void		NetualChecker(_double TimeDelta);
 
@@ -348,33 +355,33 @@ public:
 	void		AttackLimitReset(void);
 	void		MoveLimitReset(void);
 
-protected:		// 횟수 제한 및 특정 조건으로 스택 초기화 되는 것들의 스택 모임 구조체
+private:		// 횟수 제한 및 특정 조건으로 스택 초기화 되는 것들의 스택 모임 구조체
 	ATTACKLIMIT	m_AttackLimit;		// 공격 관련
 	MOVELIMIT	m_MoveLimit;		// 이동 관련
 
-protected:
+private:
 	HRESULT					Setup_Parts();
 	vector<CGameObject*>	m_vecWeapon;
 
-protected:
+private:
 	Vector3		m_vMoveDir		= Vector3();
 	Vector4		m_vLastDir		= Vector4();
 	Vector4		m_vBefPos		= Vector4();
 	Matrix		m_vMatCamRot	= Matrix();
 
-protected:
+private:
 	_bool		m_bTestKey = false;
 
-protected:
+private:
 	wstring		m_ModelName;
 
 	CCamera*	m_pPlayerCam = nullptr;
 
-protected:
+private:
 	void			Attack_Effect(const string& szBoneName, _float fSize);
 	CEffectGroup*	m_pEffect = nullptr;
 
-protected:
+private:
 	void			Search_Usable_KineticObject();
 	void			Spline_Kinetic(_double TimeDelta);
 	void			Kinetic_Test(_float fRatio);
@@ -383,13 +390,13 @@ protected:
 	CGameObject*	m_pTargetedEnemy = nullptr;
 	_vector			m_vCamLook;
 
-protected:
+private:
 	_float4 m_vSplinePoint_01;
 	_float4 m_vSplinePoint_02;
 	_float4 m_vSplinePoint_03;
 	_float4 m_vSplinePoint_04;
 
-protected:
+private:
 	_vector	m_vToKineticObj;	// 뒤로 붕 돌릴 때의 보간 시작 지점
 	_vector m_vKineticPoint;	// 뒤로 붕 돌릴 때의 보간 완료 지점
 	_vector m_vKineticOrbit;

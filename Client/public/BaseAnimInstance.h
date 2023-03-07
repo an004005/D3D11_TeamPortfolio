@@ -23,6 +23,7 @@ public:
 	_bool			isSocketAlmostFinish(const string& strSocName);
 	_bool			isSocketPassby(const string& strSocName, _float fPlayRatio = 1.f);
 	_bool			CheckSocketAnim(const string& strSocName, const string& AnimName) { return (AnimName == m_mapAnimSocket[strSocName].front()->GetName()) ? true : false; }
+	_bool			isSocketExactlyEmpty();	// 모든 소켓이 비어있는지?
 
 protected:
 	void			SpairAnimationChecker();
