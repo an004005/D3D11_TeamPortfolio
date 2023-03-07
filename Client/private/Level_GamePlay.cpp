@@ -23,7 +23,7 @@
 #include "Weapon_wp0190.h"
 #include "SkyBox.h"
 
-#define ADD_PLAYER
+// #define ADD_PLAYER
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -190,8 +190,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
-	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
+	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
 
@@ -242,10 +242,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	// PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
 	// auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 
-	// auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
-	// _float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	// pos.y += 1.f;
-	// pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+	auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
+	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	pos.y += 1.f;
+	pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
 
 	return S_OK;
 }

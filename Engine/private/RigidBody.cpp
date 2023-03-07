@@ -45,7 +45,7 @@ void CRigidBody::Imgui_RenderProperty()
 	ImGui::Checkbox("bKinematic", &m_bKinematic);
 
 	static array<const char*, CT_END> CollTypeNames {
-		"Player", "Monster", "PlayerAtk", "MonsterAtk", "PsychickObj", "Trigger4Player", "Trigger4Monster", "Static"
+		"Player", "Monster", "PlayerAtk", "MonsterAtk", "PsychickObj", "Trigger4Player", "Trigger4Monster", "Static", "MonsterPart"
 	};
 	if (ImGui::BeginCombo("CollType", CollTypeNames[m_eColliderType]))
 	{

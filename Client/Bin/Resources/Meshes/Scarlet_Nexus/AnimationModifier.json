@@ -796,13 +796,31 @@
         "Duration": 161.0,
         "TickPerSecond": 80.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "AttackEnd",
+                "EventTime": 80.0
+            },
+            {
+                "EventName": "Start_SweepLeft",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em0300_202_AL_atk_a2_R": {
         "Duration": 161.0,
         "TickPerSecond": 80.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Start_SweepRight",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "AttackEnd",
+                "EventTime": 80.0
+            }
+        ]
     },
     "AS_em0300_204_AL_atk_a3_start": {
         "Duration": 80.0,
@@ -842,7 +860,16 @@
         "Duration": 200.0,
         "TickPerSecond": 48.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Start_Spin",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "AttackEnd",
+                "EventTime": 150.0
+            }
+        ]
     },
     "AS_em0320_228_AL_atk8_waterball_F": {
         "Duration": 120.0,
