@@ -112,6 +112,8 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
 	if (g_tex_on_2)
 		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	else
+		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
 
 	return Out;
 

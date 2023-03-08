@@ -35,7 +35,7 @@ void CScarletWeapon::Late_Tick(_double TimeDelta)
 	__super::Late_Tick(TimeDelta);
 
 	if (nullptr != m_pRenderer)
-		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
 }
 
 void CScarletWeapon::Setup_BoneMatrix(CModel* pModel, _fmatrix Transform)
@@ -47,11 +47,6 @@ void CScarletWeapon::Setup_BoneMatrix(CModel* pModel, _fmatrix Transform)
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
 	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
-}
-
-void CScarletWeapon::Collision_Check()
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 }
 
 void CScarletWeapon::Free()

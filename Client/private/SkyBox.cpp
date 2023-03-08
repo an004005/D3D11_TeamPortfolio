@@ -54,8 +54,10 @@ HRESULT CSkyBox::Render()
 	FAILED_CHECK(m_pTexture->Bind_ShaderResource(m_pShader, "g_Diffuse"));
 
 	FAILED_CHECK(m_pShader->Begin(0));
-	m_pModelCom->Render(m_pTransformCom);
 
+	const _uint iMeshCnt = m_pModelCom->Get_NumMeshes();
+	for (_uint i = 0; i < iMeshCnt; ++i)
+		FAILED_CHECK(m_pModelCom->RenderMeshOnly(i));
 
 	return S_OK;
 }
