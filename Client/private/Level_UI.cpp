@@ -8,6 +8,7 @@
 #include "Imgui_PostProcess.h"
 #include "GameUtils.h"
 
+#include "Material.h"
 #include "Camera.h"
 
 #include "Canvas.h"
@@ -23,6 +24,7 @@
 #include "Canvas_SASSkill.h"
 #include "Canvas_SASSkillMove.h"
 #include "Canvas_ItemMove.h"
+#include "Canvas_Tutorial.h"
 
 #include "DefaultUI.h"
 #include "ButtonUI.h"
@@ -56,6 +58,10 @@
 #include "SASInfoRightHpUI.h"
 #include "SASInfoRightHpBackUI.h"
 #include "SASInfoRightHpBothEndsUI.h"
+// Tutorial
+#include "TutorialUI.h"
+#include "Tutorial_CheckUI.h"
+#include "Tutorial_YesNoUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -82,6 +88,9 @@ HRESULT CLevel_UI::Initialize()
 
 	if (FAILED(Ready_Layer_UI(L"Layer_UI")))
 		return E_FAIL;
+
+	//if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -110,13 +119,14 @@ HRESULT CLevel_UI::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
 	{
-		// Canvas
-		/* For.Prototype_GameObject_Canvas_PlayerInfo */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas"),
-			CCanvas::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
+		char szFileName[MAX_PATH]{};
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
+		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
+	});
 
+	{
 		// Canvas_Frount_UI
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Item"),
@@ -170,6 +180,11 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_Canvas_SASSkillMove */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASSkillMove"),
 			CCanvas_SASSkillMove::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+	
+		/* For.Prototype_GameObject_Canvas_Tutorial*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Tutorial"),
+			CCanvas_Tutorial::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 	}
 
@@ -297,6 +312,19 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CSASInfoRightHpBothEndsUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
+		// Tutorial
+		/* For.Prototype_GameObject_TutorialUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("TutorialUI"),
+			CTutorialUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Tutorial_CheckUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_CheckUI"),
+			CTutorial_CheckUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Tutorial_YesNoUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_YesNoUI"),
+			CTutorial_YesNoUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 	}	
 
 	return S_OK;
@@ -304,8 +332,6 @@ HRESULT CLevel_UI::Ready_Prototypes()
 
 HRESULT CLevel_UI::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
 	// if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
 	// 	return E_FAIL;
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
@@ -358,6 +384,9 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASSkillMove.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkillMove", &json));	// 움직이는 UI
 	
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Tutorial.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Tutorial", &json));
+
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
 	//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);
@@ -365,6 +394,16 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	//	pGameInstance->Clone_GameObject(pLayerTag, protoTag.c_str(), &json);
 	//});
 
+	return S_OK;
+}
+
+HRESULT CLevel_UI::Ready_Layer_Map(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 	return S_OK;
 }
 

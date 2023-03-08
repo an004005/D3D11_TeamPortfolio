@@ -211,6 +211,7 @@
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
+    <ClInclude Include="..\public\Canvas_Tutorial.h" />
     <ClInclude Include="..\public\Drive_GaugeUI.h" />
     <ClInclude Include="..\public\Drive_RightDotUI.h" />
     <ClInclude Include="..\public\Effect.h" />
@@ -287,6 +288,9 @@
     <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\TestCamera.h" />
+    <ClInclude Include="..\public\TutorialUI.h" />
+    <ClInclude Include="..\public\Tutorial_CheckUI.h" />
+    <ClInclude Include="..\public\Tutorial_YesNoUI.h" />
     <ClInclude Include="..\public\UI.h" />
     <ClInclude Include="..\public\TestMonster.h" />
     <ClInclude Include="..\public\TestObject.h" />
@@ -319,6 +323,7 @@
     <ClCompile Include="..\private\BuddyLumi.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\private\Canvas.cpp" />
+    <ClCompile Include="..\private\Canvas_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
     <ClCompile Include="..\private\Canvas_DriveMove.cpp" />
     <ClCompile Include="..\private\Canvas_Item.cpp" />
@@ -411,6 +416,9 @@
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\TestCamera.cpp" />
+    <ClCompile Include="..\private\TutorialUI.cpp" />
+    <ClCompile Include="..\private\Tutorial_CheckUI.cpp" />
+    <ClCompile Include="..\private\Tutorial_YesNoUI.cpp" />
     <ClCompile Include="..\private\UI.cpp" />
     <ClCompile Include="..\private\TestMonster.cpp" />
     <ClCompile Include="..\private\TestObject.cpp" />

@@ -235,6 +235,9 @@
     <Filter Include="02.GameObjects\UI\Front_UI\SASSkillRight">
       <UniqueIdentifier>{ef81e424-8ab1-4dfd-ae18-2316c41c86a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\DescriptionWindow">
+      <UniqueIdentifier>{abb2352e-02f6-4b3c-8379-d3a28a4803fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -632,6 +635,18 @@
     <ClInclude Include="..\public\PlayerInfo_GaugeBackGround.h">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_Tutorial.h">
+      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TutorialUI.h">
+      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Tutorial_CheckUI.h">
+      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Tutorial_YesNoUI.h">
+      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1003,6 +1018,18 @@
     </ClCompile>
     <ClCompile Include="..\private\PlayerInfo_PsychokinesisBackUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Tutorial.cpp">
+      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TutorialUI.cpp">
+      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Tutorial_CheckUI.cpp">
+      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Tutorial_YesNoUI.cpp">
+      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

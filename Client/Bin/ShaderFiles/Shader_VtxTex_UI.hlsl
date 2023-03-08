@@ -490,6 +490,7 @@ VS_OUT1 VS_MAIN1(VS_IN In)
 
 	return Out;
 }
+
 PS_OUT PS_Emissive(PS_IN1 In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -767,6 +768,36 @@ PS_OUT PS_PsychokinesisFlipBook(PS_IN In)	// ->24
 
 	Out.vColor.rgb = saturate((FinalTexture + BottomColor.rgb) + vGlowColor * g_float_2);
 	Out.vColor.a = OriginalTexture.a;
+
+	return Out;
+}
+
+/*******************
+* UVCut → 25 : 텍스처 이미지 그대로 사용하면서 알파값 만 조절
+g_float_0 : Alpha
+/********************/
+PS_OUT PS_UI_ChangeAlpha(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.a = Out.vColor.a - (1.f - g_float_0);
+	return Out;
+}
+
+/*******************
+* UVCut → 26 : 글로우
+g_float_0 : Alpha
+/********************/
+PS_OUT PS_GlowTexture(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4  vTextureColor;
+	float4  vGlowColor;
+
+	vTextureColor = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	vGlowColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor = saturate(vTextureColor + (vGlowColor * g_float_0))  * g_vec4_0;
 
 	return Out;
 }
@@ -1123,5 +1154,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_PsychokinesisFlipBook();
+	}
+
+	//25 : 알파값만 조절
+	pass ChangeAlpha
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_UI_ChangeAlpha();
+	}
+
+	//26 : 글로우 (위에 거랑 UV 다릅니다.)
+	pass GlowTexture
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_GlowTexture();	// 0번째 텍스처에 1번째 텍스처를 섞는다.
 	}
 }

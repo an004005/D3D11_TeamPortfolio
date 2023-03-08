@@ -144,14 +144,14 @@ void CCanvas_PlayerInfoMove::Arrow_Move()
 	//_float fCurHp = Clamp<_float>(m_fCurrentHp, 0.0f, 0.05f);
 	//m_tParams.Floats[0] = Remap<float>(fCurHp, 0.0f, 0.05f, 0.0f, 1.0f);
 
-	_float2 vGauge_Position = Find_ChildUI(L"PlauerInfo_GaugeArrow")->Get_Position();
-	_float fPosition = Clamp<_float>(vGauge_Position.x, -138.0f, 138.0f);
-	_float fResult = Remap<_float>(fPosition, -138.0f, 138.0f, 0.0f, 1.0f);
+	//_float2 vGauge_Position = Find_ChildUI(L"PlauerInfo_GaugeArrow")->Get_Position();
+	//_float fPosition = Clamp<_float>(vGauge_Position.x, -138.0f, 138.0f);
+	//_float fResult = Remap<_float>(fPosition, -138.0f, 138.0f, 0.0f, 1.0f);
 
-	m_fPercentageHp;
+	//m_fPercentageHp;
 
-	_float2 vGauge_Position = Find_ChildUI(L"PlayerInfo_Psychokinesis")->Get_Position();
-	Find_ChildUI(L"PlauerInfo_GaugeArrow")->Set_Position(_float2(vTemp.x, vGauge_Position.y + 15.0f));
+	//_float2 vGauge_Position = Find_ChildUI(L"PlayerInfo_Psychokinesis")->Get_Position();
+	//Find_ChildUI(L"PlauerInfo_GaugeArrow")->Set_Position(_float2(vTemp.x, vGauge_Position.y + 15.0f));
 }
 
 void CCanvas_PlayerInfoMove::ChildHp()
