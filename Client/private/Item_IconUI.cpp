@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Item_IconUI.h"
 #include "GameInstance.h"
-#include "JsonLib.h"
 
 CItem_IconUI::CItem_IconUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -39,15 +38,6 @@ void CItem_IconUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	//const _float2 canvaspos = m_pCanvas->Get_Position();
-
-	//_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-	//vPosition += XMLoadFloat2(&canvaspos);
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.f));
-
-
-	
 }
 
 void CItem_IconUI::Late_Tick(_double TimeDelta)

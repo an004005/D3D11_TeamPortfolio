@@ -27,7 +27,7 @@ HRESULT CTutorial_CheckUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	m_bVisible = false;
+	//m_bVisible = false;
 	m_fStartSizeX = m_fSizeX;
 
 	return S_OK;
@@ -43,7 +43,7 @@ void CTutorial_CheckUI::Tick(_double TimeDelta)
 	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
 		Set_OffTutorial();
 
-	//Input(TimeDelta);
+	Input(TimeDelta);
 	
 }
 

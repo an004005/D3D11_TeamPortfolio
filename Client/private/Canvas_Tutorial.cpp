@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 
 #include "TutorialUI.h"
+#include "Tutorial_CheckUI.h"
+#include "Tutorial_YesNoUI.h"
 
 CCanvas_Tutorial::CCanvas_Tutorial(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -35,6 +37,9 @@ void CCanvas_Tutorial::Tick(_double TimeDelta)
 	CCanvas::Tick(TimeDelta);
 
 	//Tutorial_Tick();
+	Check_Tick();
+	KeyInput_Yes();
+	KeyInput_No();
 }
 
 void CCanvas_Tutorial::Imgui_RenderProperty()
@@ -84,6 +89,49 @@ void CCanvas_Tutorial::Lockon()
 
 	dynamic_cast<CTutorialUI*>(Find_ChildUI(L"Tutorial0"))->Set_OnTutorial();
 	dynamic_cast<CTutorialUI*>(Find_ChildUI(L"Tutorial0"))->Set_OffTutorial();
+}
+
+void CCanvas_Tutorial::Check_Tick()
+{
+	// 깜박이 한 번 되고 나면
+	if (1 == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon1"))->Get_OneRenderCount())
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_TwoRneder();
+
+	if (true == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Get_TwoRnederEnd())
+	{
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon1"))->Set_OneTwoAlpha();
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_OneTwoAlpha();
+	}
+
+	if (true == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Get_AlphaEnd())
+	{
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon1"))->Set_OneReset();
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_TwoReset();
+	}
+}
+
+void CCanvas_Tutorial::KeyInput_Yes()
+{
+	if (true == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_YesBox"))->Get_InputYes())
+	{
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon0"))->Set_ZeroShader();
+
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon0"))->Set_Position(_float2(-50.0f, -19.0f));
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon1"))->Set_Position(_float2(-50.0f, -19.0f));
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_Position(_float2(-50.0f, -19.0f));
+	}
+}
+
+void CCanvas_Tutorial::KeyInput_No()
+{
+	if (true == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_NoBox"))->Get_InputNo())
+	{
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon0"))->Set_ZeroShader();
+
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon0"))->Set_Position(_float2(-50.0f, -52.0f));
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon1"))->Set_Position(_float2(-50.0f, -52.0f));
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_Position(_float2(-50.0f, -52.0f));
+	}
 }
 
 CCanvas_Tutorial * CCanvas_Tutorial::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

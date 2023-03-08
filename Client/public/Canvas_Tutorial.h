@@ -31,6 +31,11 @@ private:
 	void	Tutorial_Tick();
 	void	Lockon();
 
+	void	Check_Tick();
+
+	void	KeyInput_Yes();
+	void	KeyInput_No();
+
 private:
 	TUTORIAL	m_eTutorial = { TUTORIAL_END };
 	_bool		m_arrTutorial[TUTORIAL_END] = {};

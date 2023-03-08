@@ -349,6 +349,7 @@ VS_OUT VS_UVCut(VS_IN In)	// → 13
 	Out.vTexUV = In.vTexUV;
 	return Out;
 }
+
 // g_int_0 : [0] 이미지 색상 사용, [1] 내가 지정한 색상 사용
 // g_vec4_0 : 변경할 색상과 알파값
 PS_OUT PS_Alpha_Color(PS_IN In)	// → 13
@@ -792,11 +793,8 @@ PS_OUT PS_GlowTexture(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4  vTextureColor;
-	float4  vGlowColor;
-
-	vTextureColor = g_tex_1.Sample(LinearSampler, In.vTexUV);
-	vGlowColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4  vTextureColor = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4  vGlowColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	Out.vColor = saturate(vTextureColor + (vGlowColor * g_float_0))  * g_vec4_0;
 
 	return Out;
