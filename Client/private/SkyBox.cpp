@@ -42,7 +42,6 @@ HRESULT CSkyBox::Initialize(void* pArg)
 
 void CSkyBox::Late_Tick(_double TimeDelta)
 {
-	return;
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_PRIORITY, this);
 }
 

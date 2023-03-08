@@ -26,12 +26,14 @@ public:
 	virtual void SaveToJson(OUT Json& json) override;
 	virtual void LoadFromJson(const Json& json) override;
 
-
 private:
 	HRESULT SetUp_Components();
 	_float4	SetUp_InitPosition();
 
 
+private:
+	vector<class CTrigger*>				m_pTriggers;
+	CTrigger*							m_pTrigger = nullptr;
 private:
 	vector<pair<wstring, BATCHTYPE>>	m_ProtosInfo;
 	wstring 							m_pProtoTag = L"";

@@ -4,6 +4,7 @@
 #include "JsonStorage.h"
 #include "GameUtils.h"
 #include "Batch.h"
+#include "Trigger.h"
 
 CBatch::CBatch(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
@@ -86,57 +87,112 @@ void CBatch::Imgui_RenderProperty()
 		ImGui::EndListBox();
 	}
 
-	ImGui::Separator();
 
-	if (ImGui::Button("Create_GameObject"))
-	{		
 
-	}
 
 	ImGui::Separator();
 
-	static char szSearchObject[MAX_PATH] = "";
-	ImGui::InputText("GameObject Search", szSearchObject, MAX_PATH);
-
-	const wstring strObjSearch = s2ws(szSearchObject);
-	const _bool bObjSearch = strObjSearch.empty() == false;
-
-	if (ImGui::BeginListBox("GameObject List"))
+	if (ImGui::TreeNode("Trigger"))
 	{
-		for (size_t i = 0; i < m_pGameObjects.size(); ++i)
+		if (ImGui::Button("Create_Trigger"))
 		{
-			if (bObjSearch)
-			{
-				wstring szProtoTag = m_pGameObjects[i]->GetPrototypeTag();
-				if (szProtoTag.find(strObjSearch) == wstring::npos)
-					continue;
-			}
+			CTrigger* pTrigger = nullptr;
+			pTrigger = dynamic_cast<CTrigger*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_Trigger"), TEXT("Prototype_GameObject_Trigger")));
 
-			const bool bSelected = (m_pGameObjects[i]->GetPrototypeTag() == m_pProtoTag);
-
-			if (bSelected)
-				ImGui::SetItemDefaultFocus();
-
-			char pStr[MAX_PATH]{};
-			strcpy(pStr, CGameUtils::GetFileName(ws2s(m_ProtosInfo[i].first)).c_str());
-			sprintf_s(pStr, sizeof(pStr), "%s %zd", pStr, i);
-
-			if (ImGui::Selectable(pStr, bSelected))
-			{
-				m_pGameObject = m_pGameObjects[i];
-			}
-
+			assert(pTrigger != nullptr);
+			m_pTriggers.emplace_back(pTrigger);
 		}
 
-		ImGui::EndListBox();
+		ImGui::Separator();
+
+		if (ImGui::BeginListBox("Trigger List"))
+		{
+			for (size_t i = 0; i < m_pTriggers.size(); ++i)
+			{
+				const bool bSelected = (m_pTriggers[i] == m_pTrigger);
+
+				if (bSelected)
+					ImGui::SetItemDefaultFocus();
+
+				char pStr[MAX_PATH]{};
+				sprintf_s(pStr, sizeof(pStr), "Trigger %zd", i);
+
+				if (ImGui::Selectable(pStr, bSelected))
+				{
+					m_pTrigger = m_pTriggers[i];
+				}
+
+			}
+
+			ImGui::EndListBox();
+		}
+
+		if (ImGui::Button("Set_Monster"))
+		{
+			if (m_pTrigger != nullptr && m_pGameObject != nullptr)
+			{
+				m_pTrigger->SetMonster(m_pGameObject->GetPrototypeTag().c_str(), m_pGameObject->GetTransform()->Get_WorldMatrix());
+			}
+		}
+
+		ImGui::TreePop();
 	}
 
 	ImGui::Separator();
 
-
-	if (ImGui::Button("Delete_GameObject"))
+	if (ImGui::TreeNode("GameObject"))
 	{
-		
+		if (ImGui::Button("Create_Object"))
+		{
+			if (m_pProtoTag != L"")
+			{
+				CGameObject* pGameObject = nullptr;
+				pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), m_pProtoTag.c_str());
+
+				assert(pGameObject != nullptr);
+				m_pGameObjects.emplace_back(pGameObject);
+			}
+			
+		}
+
+		ImGui::Separator();
+
+		static char szSearchObject[MAX_PATH] = "";
+		ImGui::InputText("GameObject Search", szSearchObject, MAX_PATH);
+
+		const wstring strObjSearch = s2ws(szSearchObject);
+		const _bool bObjSearch = strObjSearch.empty() == false;
+
+		if (ImGui::BeginListBox("GameObject List"))
+		{
+			for (size_t i = 0; i < m_pGameObjects.size(); ++i)
+			{
+				if (bObjSearch)
+				{
+					wstring szProtoTag = m_pGameObjects[i]->GetPrototypeTag();
+					if (szProtoTag.find(strObjSearch) == wstring::npos)
+						continue;
+				}
+
+				const bool bSelected = (m_pGameObjects[i]->GetPrototypeTag() == m_pProtoTag);
+
+				if (bSelected)
+					ImGui::SetItemDefaultFocus();
+
+				char pStr[MAX_PATH]{};
+				strcpy(pStr, CGameUtils::GetFileName(ws2s(m_ProtosInfo[i].first)).c_str());
+				sprintf_s(pStr, sizeof(pStr), "%s %zd", pStr, i);
+
+				if (ImGui::Selectable(pStr, bSelected))
+				{
+					m_pGameObject = m_pGameObjects[i];
+				}
+
+			}
+
+			ImGui::EndListBox();
+		}
+		ImGui::TreePop();
 	}
 
 	ImGui::Separator();
@@ -149,6 +205,20 @@ void CBatch::Imgui_RenderProperty()
 		ImGui::Text("%s", typeid(*m_pGameObject).name());
 		m_pGameObject->Imgui_RenderProperty();
 		m_pGameObject->Imgui_RenderComponentProperties();
+	}
+
+	ImGui::EndChild();
+
+	ImGui::Separator();
+
+	ImGui::BeginChild("Selected Trigger", { 400.f, 250.f });
+
+	if (m_pTrigger)
+	{
+		ImGui::Separator();
+		ImGui::Text("%s", typeid(*m_pTrigger).name());
+		m_pTrigger->Imgui_RenderProperty();
+		m_pTrigger->Imgui_RenderComponentProperties();
 	}
 
 	ImGui::EndChild();

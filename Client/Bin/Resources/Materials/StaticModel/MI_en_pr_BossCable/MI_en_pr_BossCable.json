@@ -8,10 +8,12 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Environments/Prop/03_Texture/T_lo051_en001_projecbuil.png",
-            "../Bin/Resources/Environments/Prop/03_Texture/T_lo051_en001_projecbuil_NML.png"
+            "../Bin/Resources/Environments/Prop/10_Props/Electronics/Cable/pr_Cable01/T_pr_Cable01.dds",
+            "",
+            "",
+            "../Bin/Resources/Environments/Prop/10_Props/Electronics/Cable/pr_Cable01/T_pr_Cable01_EMI.dds"
         ],
         "Pass" : 1
     },
-    "InstancingPass" : 1
+    "InstancingPass" : 3
 }

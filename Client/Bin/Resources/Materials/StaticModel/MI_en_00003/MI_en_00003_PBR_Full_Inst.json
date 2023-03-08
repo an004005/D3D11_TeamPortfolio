@@ -8,10 +8,12 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Environments/Prop/03_Texture/T_lo051_en001_projecbuil.png",
-            "../Bin/Resources/Environments/Prop/03_Texture/T_lo051_en001_projecbuil_NML.png"
+            "../Bin/Resources/Environments/Prop/03_Texture/Telegraph_tower.dds",
+            "",
+            "",
+            "../Bin/Resources/Environments/00_Common/03_Texture/T_Dummy_Red.png"
         ],
         "Pass" : 1
     },
-    "InstancingPass" : 1
+    "InstancingPass" : 3
 }

@@ -8,8 +8,9 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Environments/Prop/03_Texture/T_lo051_en001_projecbuil.png",
-            "../Bin/Resources/Environments/Prop/03_Texture/T_lo051_en001_projecbuil_NML.png"
+            "../Bin/Resources/Environments/Location/LC07/Area03/T_pr_BuildingWall02_ALB.dds",
+            "../Bin/Resources/Environments/Location/LC07/Area03/T_pr_BuildingWall02_NML.png",
+            "../Bin/Resources/Environments/Location/LC07/Area03/T_pr_BuildingWall02_RMA.dds"
         ],
         "Pass" : 1
     },

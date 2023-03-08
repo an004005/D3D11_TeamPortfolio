@@ -235,6 +235,9 @@
     <Filter Include="02.GameObjects\Player\BattleAninInstance">
       <UniqueIdentifier>{bee24b6b-6010-44c3-9973-3fa91aa309aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Trigger">
+      <UniqueIdentifier>{55631933-d0bb-4c2f-a5de-c7e5655b9f86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -590,6 +593,9 @@
     </ClInclude>
     <ClInclude Include="..\public\AIController.h" />
     <ClInclude Include="..\public\Boss1_AIController.h" />
+    <ClInclude Include="..\public\Trigger.h">
+      <Filter>02.GameObjects\Trigger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -920,6 +926,9 @@
     </ClCompile>
     <ClCompile Include="..\private\AIController.cpp" />
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
+    <ClCompile Include="..\private\Trigger.cpp">
+      <Filter>02.GameObjects\Trigger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
