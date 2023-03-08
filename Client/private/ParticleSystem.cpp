@@ -33,6 +33,17 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 
 	m_pBuffer = CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, m_iInstanceNum);
 
+	if (m_bGravity == true)
+	{
+		m_fJumpPower = CGameUtils::GetRandFloat(0.f, 1.f);
+		m_fDownSpeed = CGameUtils::GetRandFloat(2.f, 5.f);
+	}
+	else
+	{
+		m_fJumpPower = 0.f;
+		m_fDownSpeed = 0.5f;
+	}
+
 	return S_OK;
 }
 
@@ -53,6 +64,8 @@ void CParticleSystem::Tick(_double TimeDelta)
 		m_fCurSpawnTick = m_fSpawnTickTime;
 		AddPoint();
 	}
+
+	
 }
 
 void CParticleSystem::Late_Tick(_double TimeDelta)
@@ -115,6 +128,7 @@ void CParticleSystem::SaveToJson(Json& json)
 	json["SphereRadius"] = m_fSphereRadius;
 	json["FromOrigin"] = m_bFromOrigin;
 	json["bLocal"] = m_bLocal;
+	json["bGravity"] = m_bGravity;
 	json["bSizeDecreaseByLife"] = m_bSizeDecreaseByLife;
 	json["bSizeIncreaseByLife"] = m_bSizeIncreaseByLife;
 	json["Shape"] = m_eShape;
@@ -145,6 +159,7 @@ void CParticleSystem::LoadFromJson(const Json& json)
 	m_fSphereRadius = json["SphereRadius"];
 	m_bFromOrigin = json["FromOrigin"];
 	m_bLocal = json["bLocal"];
+	m_bGravity = json["bGravity"];
 	m_bSizeDecreaseByLife = json["bSizeDecreaseByLife"];
 	if (json.contains("bSizeIncreaseByLife"))
 		m_bSizeIncreaseByLife = json["bSizeIncreaseByLife"];
@@ -189,6 +204,8 @@ void CParticleSystem::Imgui_RenderProperty()
 
 	ImGui::Checkbox("From Origin", &m_bFromOrigin);
 	ImGui::Checkbox("Is Local", &m_bLocal);
+	ImGui::Checkbox("Is Gravity", &m_bGravity);
+
 	ImGui::Checkbox("Size Decrease by life", &m_bSizeDecreaseByLife);
 	ImGui::Checkbox("Size Increase by life", &m_bSizeIncreaseByLife);
 	if (m_bSizeIncreaseByLife)
@@ -312,6 +329,8 @@ void CParticleSystem::AddPoint()
 			}
 		}
 
+		
+
 		pointData.vUp.w = fLife;
 		pointData.vLook = vDir;
 		pointData.vLook.w = fSpeed;
@@ -329,6 +348,13 @@ void CParticleSystem::UpdatePoints(_float fTimeDelta)
 
 		_float4 vNewPos = data.vPosition + data.vLook * data.vLook.w * fTimeDelta;
 		vNewPos.w = data.vPosition.w;
+
+		if(m_bGravity == true)
+		{
+			vNewPos.y -= (_float)fTimeDelta * 1.5f;
+			// m_fJumpPower -= 0.015f;
+		}
+
 		data.vPosition = vNewPos;
 	}
 
@@ -356,6 +382,8 @@ void CParticleSystem::UpdatePoints(_float fTimeDelta)
 			instanceData.vUp.z = XMVectorGetX(XMVector3Length(vCamPos - XMLoadFloat4(&instanceData.vPosition)));
 		}
 	}
+
+	
 
 	m_Points.sort([](const VTXMATRIX& left, const VTXMATRIX& right)->_bool
 	{

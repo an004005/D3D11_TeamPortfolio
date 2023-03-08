@@ -406,6 +406,8 @@ private:
 	_bool	m_bRight = false;
 	_vector m_vKineticInitLook;
 
+
+
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

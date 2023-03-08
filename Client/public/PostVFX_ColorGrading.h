@@ -14,9 +14,10 @@ public:
 	virtual void Tick(_double TimeDelta) override;
 
 
+
 public:
-	DECLARE_CREATE(CPostVFX_ColorGrading)
-	DECLARE_CLONE(CPostVFX_ColorGrading)
+	static CPostVFX_ColorGrading*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject*			Clone(void* pArg) override;
 };
 
 END

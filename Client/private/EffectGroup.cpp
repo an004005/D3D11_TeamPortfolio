@@ -116,7 +116,7 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 		m_Timeline.SetTimelineLength((_double)m_fEndTime);
 
-		// m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
+		m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
 
 		if (m_iSelectFinishFunc == 0)
 		{
@@ -129,6 +129,10 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 		else if (m_iSelectFinishFunc == 2)
 		{
 			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+		}
+		else if (m_iSelectFinishFunc == 3)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
 		}
 	}
 	else
@@ -149,6 +153,11 @@ void CEffectGroup::Tick(_double TimeDelta)
 
 	if (CGameInstance::GetInstance()->KeyPressing(DIK_LCONTROL) && CGameInstance::GetInstance()->KeyDown(DIK_SPACE))
 		m_Timeline.PlayFromStart();
+
+	// if(m_Timeline.Check_ReverseFin() == true)
+	// {
+	// 	SetDelete();
+	// }
 }
 
 void CEffectGroup::Imgui_RenderProperty()
@@ -185,6 +194,10 @@ void CEffectGroup::Imgui_RenderProperty()
 		else if (m_iSelectFinishFunc == 2)
 		{
 			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+		}
+		else if (m_iSelectFinishFunc == 3)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
 		}
 		// 삭제 또는 비활성화 만들기
 	}
@@ -692,7 +705,10 @@ void CEffectGroup::LoadFromJson(const Json& json)
 	{
 		m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
 	}
-
+	else if (m_iSelectFinishFunc == 3)
+	{
+		m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
+	}
 }
 
 inline void CEffectGroup::LoadAndSetCurve_First(Json* json)
@@ -1336,6 +1352,11 @@ void CEffectGroup::SetPlay()
 	m_Timeline.PlayFromStart();
 }
 
+void CEffectGroup::SetReverse()
+{
+	m_Timeline.Reverse();
+}
+
 _bool CEffectGroup::CheckPlay()
 {
 	return m_Timeline.IsPlay();
@@ -1854,8 +1875,6 @@ void CEffectGroup::Free()
 		Safe_Release(pCurve.second);
 	m_Curves.clear();
 
-
-
 	if (!m_FirstEffect_Curves.empty())
 	{
 		for (auto pCurve : m_FirstEffect_Curves)
@@ -1894,10 +1913,15 @@ void CEffectGroup::Free()
 
 	m_mapEffectSystemTag.clear();
 
-	Safe_Release(m_pFirst_EffectSystem);
-	Safe_Release(m_pSecond_EffectSystem);
-	Safe_Release(m_pThird_EffectSystem);
-	Safe_Release(m_pFourth_EffectSystem);
-	Safe_Release(m_pFifth_EffectSystem);
+	if(m_pFirst_EffectSystem != nullptr)
+		Safe_Release(m_pFirst_EffectSystem);
+	if (m_pSecond_EffectSystem != nullptr)
+		Safe_Release(m_pSecond_EffectSystem);
+	if (m_pThird_EffectSystem != nullptr)
+		Safe_Release(m_pThird_EffectSystem);
+	if (m_pFourth_EffectSystem != nullptr)
+		Safe_Release(m_pFourth_EffectSystem);
+	if (m_pFifth_EffectSystem != nullptr)
+		Safe_Release(m_pFifth_EffectSystem);
 
 }

@@ -85,6 +85,14 @@ private:
 
 	list<VTXMATRIX> m_Points;
 
+private:
+	// For Gravity
+
+	// _bool	m_bGravity;
+	_float	m_fJumpPower;
+	_float	m_fDownSpeed;
+
+
 
 public:
 	static CParticleSystem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

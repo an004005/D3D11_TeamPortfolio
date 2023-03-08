@@ -166,12 +166,13 @@ float4 FinalPassPS( VS_OUTPUT In ) : SV_TARGET
 
 	// Tone mapping
 
-	color = ToneMapping(color);
 	 //color = tonemap_reinhard(color);
 	// color = tonemap_uc2(color);
 	// color = tonemap_filmic(color);
+	//color = ACESFitted(color);
+	color = ToneMapping(color);
 	color = GammaCorrection(color);
-	color = ACESFitted(color);
+
 	// color = GammaCorrection(color);
 
 	// Output the LDR value

@@ -136,6 +136,10 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 	{
 		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup")));
 	}
+	else if(ImGui::Button("Add Sample ParticleSystem"))
+	{
+		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_ParticleSystem", TEXT("ProtoVFX_ParticleSystem")));
+	}
 
 
 }

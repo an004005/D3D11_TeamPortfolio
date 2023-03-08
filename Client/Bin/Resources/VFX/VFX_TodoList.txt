@@ -198,6 +198,10 @@ if(Event == "Air_Hold_2")
 
 
 
+../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/Default_Charging_Twist.json
+
+
+
 
 
 
