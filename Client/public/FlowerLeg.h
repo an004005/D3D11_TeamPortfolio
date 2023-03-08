@@ -1,6 +1,5 @@
 #pragma once
 #include "Client_Defines.h"
-#include "GameObject.h"
 #include "Monster.h"
 
 BEGIN(Engine)
@@ -8,19 +7,16 @@ class CShader;
 class CRenderer;
 class CModel;
 class CFSMComponent;
+class CAnimation;
 class CRigidBody;
 class CGameInstance;
 END
 
 BEGIN(Client)
-class CFL_AnimInstance;
+
 
 class CFlowerLeg : public CMonster
 {
-public:
-	enum KEYSTATE { KEY_W, KEY_S, KEY_A, KEY_D, KEY_END };
-	enum MOUSESTATE { MS_LB, MS_RB, MS_END };
-
 private:
 	CFlowerLeg(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CFlowerLeg(const CFlowerLeg& rhs);
@@ -37,74 +33,119 @@ public:
 
 	virtual void AfterPhysX();
 
-private:
-	void Key_Input(_double TimeDelta);
-	void JumpToGround(_double TimeDelta);
+	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
+
+	void	Strew_Overlap(); // Atk_Strew 충돌체
+
+	void	Kick_SweepSphere();
+
+	_matrix AttachCollider(CRigidBody* pRigidBody);
+
+	CRigidBody* Get_TailCol() { return m_pTailCol; }
 
 private:
 	CShader*				m_pShaderCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;
-	CFSMComponent*			m_pFSM = nullptr;
 
-	CFL_AnimInstance*		m_pASM = nullptr;
+	class CFL_Controller*	m_pController = nullptr;
+	class CFL_AnimInstance*		m_pASM = nullptr;
+	
 	CRigidBody*				m_pTrigger = nullptr;
+	CRigidBody*				m_pTailCol = nullptr;
 
+	CRigidBody*				m_pLeftLeg = nullptr;
+	CRigidBody*				m_pRightLeg = nullptr;
+	
+	// Refine
 private:
-	HRESULT				Setup_AnimSocket();
+	CScarletCharacter* m_pTarget = nullptr;
 
-private:
-	_vector			m_vCurrentLook = { 0.f, 0.f, 0.f, 0.f };
+	_float3 m_vMoveAxis;
+	_float m_fTurnRemain = 0.f;
+
+	_bool m_bDown = false; // 공중 피격 후 낙하하여 Down 된 상태. 보스와 달리 단순 Down 뿐
+	
 	// Jump
-	_float3			m_fMyPos = { 0.f, 0.f, 0.f };
+	_bool m_bJumpAttack = false;
+	_float3 m_vOnJumpMoveVelocity;	// 실시간 이동 좌표
+	_float m_fJumpMoveTime = 0.f;	// JumpStart동안 이동하는 시간
 	
-	_float			m_fJumpSpeed = 13.3f;
-	_float			m_fJumpTime = 0.f;
-	_float			m_fGravity = 7.7f;
-	// ~Jump
+	// Dodge
+	_float3 m_vOnDodgeMoveVelocity;
+	_float m_fDodgeMoveTime = 0.f;
 
-	// Jump Speed Tool
-	_float		m_fWeight = 0.24f;
-	_float		m_fOverLap = 0.28f;
+	_float3 m_vOnDodgeMoveVelocityRev;
+	_float m_fDodgeMoveTimeRev = 0.f;
+
+	_float3 m_vOnDodgeMoveVelocityBack;
+	_float m_fDodgeMoveTimeBack = 0.f;
+
+	// 소켓 애니메이션 보관
+	CAnimation* m_pAtk_Spin = nullptr;		// 회전 공격
+	CAnimation* m_pAtk_Strew = nullptr;		// 전방에 꽃 흩뿌리는 공격
+
+	CAnimation* m_pJumpStart = nullptr;
+	CAnimation* m_pJumpLanding = nullptr;
+
+	CAnimation* m_pDodgeL_Start = nullptr;
+	CAnimation* m_pDodgeL_Stop = nullptr;
+
+	CAnimation* m_pDodgeR_Start = nullptr;
+	CAnimation* m_pDodgeR_Stop = nullptr;
+
+	CAnimation* m_pDodgeB_Start = nullptr;
+	CAnimation* m_pDodgeB_Stop = nullptr;
+
+	CAnimation* m_pThreat = nullptr;
+
+	CAnimation* m_pDamage_L_F = nullptr;
+	CAnimation* m_pDamage_L_B = nullptr;
+
+	CAnimation* m_pDamage_M_F = nullptr;
+	CAnimation* m_pDamage_M_B = nullptr;
+	CAnimation* m_pDamage_M_L = nullptr;
+	CAnimation* m_pDamage_M_R = nullptr;
+
+	CAnimation* m_pBlowStart = nullptr; 
+	CAnimation* m_pBlowLand = nullptr;
+	CAnimation* m_pGetUp = nullptr;
+	CAnimation* m_pRiseStart = nullptr;
 
 
-	// 스테이트 상태
-	_bool m_bIdle = false;
-	_bool m_bWalk = false;
-	_bool m_bAir = false;
-	_bool m_bLanding = false;
-	
-	// Attack L + R
-	_bool m_bAttackL = false;	
-	_bool m_bAttackR = false;
+	CAnimation* m_pDeadAnim = nullptr;
 
-	// ~Attack L + R
+	// Run 상태를 위한 _bool
+	_bool m_bRun = false;
 
-	// imgui Test
-	_uint m_iTestHp = 1000;
+	// Attack
+	_bool m_bAtkSwitch = false;
+
+	// Damage
+	_bool		m_bStruck = false;
+	_bool		m_bAirStruck = false;
+
+	_bool		m_bMaintain = false;
+
+	_uint		m_iAirDamage = 0;
+	_uint		m_iPreAirDamageCnt = 0;
+
+
+	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
+	EAttackType	m_eAtkType = EAttackType::ATK_END;
+
+	vector<DAMAGE_PARAM> m_vecDamage;
 
 public:
-	_bool IsIdle() const { return m_bIdle; }
-	_bool IsWalk() const { return m_bWalk; }
-	_bool IsAir() const { return m_bAir; }
-	_bool IsLanding() const { return m_bLanding; }
-	
-	_bool IsAttackL() const { return m_bAttackL; }
-	_bool IsAttackR() const { return m_bAttackR; }
+	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
+	_float3 GetMoveAxis() const { return m_vMoveAxis; }
+	_float GetTurnRemain() const { return m_fTurnRemain; }
+	_bool IsPlayingSocket() const;		
+	_bool IsRun() const { return m_bRun; }
 
-public:
-	KEYSTATE	const	Get_eDikKey() { return m_eDikKey; }
-	MOUSESTATE  const	Get_eDimMouse() { return m_eDimMouse; }
-
-private:
-	KEYSTATE		m_eDikKey = KEY_END;
-	MOUSESTATE		m_eDimMouse = MS_END;
-
-private:
-	wstring					m_ModelName;
-
-private:
-	HRESULT SetUp_Components(void* pArg);
+	void NotAirStruck(_bool bState) {  m_bAirStruck = bState; }
+									
+	// ~Refine
 
 public:
 	static CFlowerLeg* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
