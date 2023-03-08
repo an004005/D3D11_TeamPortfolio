@@ -169,10 +169,15 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel_Instancing.hlsl"), VTXMODEL_INSTANCE_DECLARATION::Elements, VTXMODEL_INSTANCE_DECLARATION::iNumElements))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_Shader_VtxAnimModel*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimModel"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimModel.hlsl"), VTXANIMMODEL_DECLARATION::Elements, VTXANIMMODEL_DECLARATION::iNumElements))))
-		return E_FAIL;
+	{
+		/* For.Prototype_Component_Shader_VtxAnimModel*/
+		auto pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimModel.hlsl"), VTXANIMMODEL_DECLARATION::Elements, VTXANIMMODEL_DECLARATION::iNumElements);
+		pShader->SetCommonTexture("g_Weak01", "../Bin/Resources/Model/AnimModel/Monster/Common/Texture/T_em0000_weak01.png");
+		pShader->SetCommonTexture("g_Vanish_Noise", "../Bin/Resources/Model/AnimModel/Monster/Common/Texture/T_em0000_vanish_noise.png");
+		pShader->SetCommonTexture("g_Weak_Noise", "../Bin/Resources/Model/AnimModel/Monster/Common/Texture/T_em0000_weak_noise.png");
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimModel"), pShader)))
+			return E_FAIL;
+	}
 
 	/* For.Prototype_Component_Shader_VtxToonAnimModel*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxToonAnimModel"),

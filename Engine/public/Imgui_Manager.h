@@ -38,6 +38,7 @@ private:
 	ImGuiTabBarFlags m_iTabBarFlags = ImGuiTabBarFlags_None;
 
 	_bool m_bOn = true;
+	_float*		m_pAlpha = nullptr;
 
 public:
 	virtual void Free() override;

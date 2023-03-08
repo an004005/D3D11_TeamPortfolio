@@ -99,14 +99,25 @@ PS_OUT PS_MAIN(PS_IN In)
 
 		Out.vColor = ((saturate(Blend * OriginColor * (1-vFlags.a) *2)) + LDR *  vFlags.a);
 
-		// if(vFlags.a <= 0.f)
-		// {
-		// 	Out.vColor = OriginColor;
-		// }
+		Out.vColor.a = 1.f;
+	}
+	else if(vFlags.y == SHADER_HIT_DECAL)
+	{
+		float4 ScifiTex = g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(g_Time * 0.1f, g_Time)));
+		float fWeight = ScifiTex.r * g_float_0;
+
+		float4 ScifiNoiseTex = g_tex_1.Sample(LinearSampler, (In.vTexUV + fWeight));
+
+		float4 InputColor = g_vec4_0;
+		float4 Blend = (ScifiTex * ScifiNoiseTex + InputColor);
+
+		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+
+		Out.vColor = ((saturate(Blend * OriginColor * (1 - vFlags.a) * 2)) + LDR *  vFlags.a);
 
 		Out.vColor.a = 1.f;
-
 	}
+
 	else
 		Out.vColor = LDR;
 
@@ -215,30 +226,76 @@ PS_OUT PS_MAIN_RADIAL_MASK(PS_IN In)
 	return Out;
 }
 
+// https://halisavakis.com/my-take-on-shaders-color-grading-with-look-up-textures-lut/
 PS_OUT PS_MAIN_COLOR_GRADING_LUT_6(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4 vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
-	
-	float2 vLUT_UV;
-	
-	float fSelction = 1.f / 16.f;
-	
-	
-	vLUT_UV.x = vColor.b / 16.f + ceil(vColor.r * 16.f) / 16.f;
-	vLUT_UV.y = vColor.g;
-	//
-	// vLUT_UV.x = vColor.g / 16.f + ceil(vColor.r * 16.f) / 16.f;
-	// vLUT_UV.y = vColor.b;
-	
-	Out.vColor.rgb = g_tex_0.Sample(LinearSampler, vLUT_UV).rgb;
-	Out.vColor.a = 1.f;
-	
-	Out.vColor = pow(Out.vColor, 1.f / 2.2f);
+	float blend = g_float_0;
+
+	float COLORS = 16.f; // LUT 가로 개수?
+
+	float maxColor = COLORS - 1.0;
+	float4 col = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+	float halfColX = 0.5f / 256.f; // LUT텍스쳐 가로 픽셀 사이즈
+	float halfColY = 0.5f / 16.f; // LUT텍스쳐 세로 픽셀 사이즈
+	float threshold = maxColor / COLORS;
+
+	float xOffset = halfColX + col.r * threshold / COLORS;
+	float yOffset = halfColY + col.g * threshold;
+	float cell = floor(col.b * maxColor);
+
+	float2 lutPos = float2(cell / COLORS + xOffset, yOffset);
+	float4 gradedCol = g_tex_0.Sample(LinearSampler, lutPos);
+	 
+	Out.vColor = lerp(col, gradedCol, blend);
 
 	return Out;
 }
+
+static const float3x3 ACESInputMat =
+{
+    {0.59719, 0.35458, 0.04823},
+    {0.07600, 0.90834, 0.01566},
+    {0.02840, 0.13383, 0.83777}
+};
+
+// ODT_SAT => XYZ => D60_2_D65 => sRGB
+static const float3x3 ACESOutputMat =
+{
+    { 1.60475, -0.53108, -0.07367},
+    {-0.10208,  1.10813, -0.00605},
+    {-0.00327, -0.07276,  1.07602}
+};
+
+float3 RRTAndODTFit(float3 v)
+{
+    float3 a = v * (v + 0.0245786f) - 0.000090537f;
+    float3 b = v * (0.983729f * v + 0.4329510f) + 0.238081f;
+    return a / b;
+}
+
+PS_OUT PS_MAIN_ACESFitted_7(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+
+    float3 color = mul(ACESInputMat, vColor.rgb);
+
+    // Apply RRT and ODT
+    color = RRTAndODTFit(color);
+
+    color = mul(ACESOutputMat, color);
+
+    color = saturate(color);
+
+	Out.vColor.rgb = color;
+	Out.vColor.a = 1.f;
+
+	return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -335,5 +392,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_COLOR_GRADING_LUT_6();
+	}
+
+	//7
+	pass ACESFitted_7
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_ACESFitted_7();
 	}
 }

@@ -70,6 +70,8 @@ public:
 	HRESULT Set_Params(const ShaderParams& tParam);
 	HRESULT Begin_Params(const ShaderParams& tParam);
 
+	void SetCommonTexture(const char* pConstantName, const char* pTexFilePath);
+
 public:
 	static void SaveShaderParam(const ShaderParams& tParams, Json& json);
 	static void LoadShaderParam(ShaderParams& tParams, const Json& json);
@@ -94,6 +96,7 @@ public:
 private:
 	ID3DX11Effect*				m_pEffect = nullptr;
 	vector<ID3D11InputLayout*>	m_InputLayouts;
+	map<string, CTexture*>		m_CommonTextures;
 
 private:
 	_uint						m_iNumPasses = 0;

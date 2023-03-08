@@ -80,9 +80,9 @@ void CCamera_Player::Sync_Target(_fvector TargetPos, _fvector TargetLook, _float
 {
 	_vector vLook = TargetLook;
 
-	vLook = XMVector3Normalize(TargetLook) * -5.f;
+	vLook = XMVector3Normalize(TargetLook) * -1.f;
 
-	_vector vCamPos = TargetPos + (XMVector3Normalize(vLook + XMVectorSet(0.f, CamHeight, 0.f, 0.f)) * 5.f);
+	_vector vCamPos = TargetPos + (XMVector3Normalize(vLook + XMVectorSet(0.f, CamHeight + 1.f, 0.f, 0.f)) * 4.f);
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vCamPos);
 

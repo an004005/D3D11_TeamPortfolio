@@ -72,7 +72,11 @@ public:
 
 	void Tick_IntroTime(_float fValue);
 	void Tick_OutroTime(_float fValue);
+	// For Int 
+	void Tick_Ints_0(_float fValue);
 
+public:
+	void		Check_ModelSprite();
 private:
 	CShader*					m_pShaderCom = nullptr;
 	CRenderer*					m_pRendererCom = nullptr;
@@ -95,21 +99,26 @@ private:
 
 	_uint m_iShadowPass = 0;
 
-	_float m_fCurModelChangeTime = 0.f;
-	_float m_fModelChangeTime = 2.f;
-	_bool	m_bModelChange = false;
-
+private:
+	// For Mesh Sprite
+	vector<string> m_vecModelDir;
+	vector<CModel*> m_vecModelCom;
+	_bool			m_bModelSprite = false;
+	string			m_ModelFolderDir;// = "../Bin/Resources/Meshes/VFX/";
 
 private:
 	_float4			m_vOriginColor = _float4::Zero;
-	
+	_bool			m_bNormal = false;
 public:
 	static CEffectSystem*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void*);
 	virtual void				Free() override;
 };
 
+
+
 END
+
 //
 // // virtual HRESULT Render_ShadowDepth() override;
 // 	// virtual void LoadFromJson(const Json& json) override;

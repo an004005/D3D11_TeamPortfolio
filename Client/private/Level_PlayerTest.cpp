@@ -31,6 +31,9 @@
 #include "TrailSystem.h"
 #include "EffectSystem.h"
 
+#include "Boss1.h"
+#include "Boss1_AIController.h"
+
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -202,6 +205,23 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
 	}
 
+
+	// boss
+	{
+		auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
+		pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
+
+
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create())))
+			return E_FAIL;
+
+	}
+
 	return S_OK;
 }
 
@@ -274,11 +294,16 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	//if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"),& BuddyLumiModel)))
 	//return E_FAIL;
 
-	Json BronJonModel;
-	BronJonModel["Model"] = "MonsterBronJon";
+	//Json BronJonModel;
+	//BronJonModel["Model"] = "MonsterBronJon";
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
+	//	return E_FAIL;
+
+	auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
+	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	pos.y += 1.f;
+	pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
 
 	return S_OK;
 }
