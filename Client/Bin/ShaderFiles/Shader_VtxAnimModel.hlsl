@@ -4,6 +4,10 @@
 
 matrix			g_BoneMatrices[512];
 
+Texture2D g_Weak01;
+Texture2D g_Vanish_Noise;
+Texture2D g_Weak_Noise;
+
 struct VS_IN
 {
 	float3		vPosition : POSITION;

@@ -608,6 +608,7 @@
     <ClInclude Include="..\public\SkmP_Controller.h">
       <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PostVFX_ColorGrading.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -947,6 +948,7 @@
     <ClCompile Include="..\private\SkmP_Controller.cpp">
       <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\PostVFX_ColorGrading.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

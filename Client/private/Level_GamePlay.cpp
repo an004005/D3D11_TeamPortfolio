@@ -30,8 +30,8 @@
 #include "PostVFX_Distortion.h"
 #include "TrailSystem.h"
 #include "EffectSystem.h"
-
-#define ADD_PLAYER
+#include "PostVFX_ColorGrading.h"
+// #define ADD_PLAYER
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -203,6 +203,8 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_PostVFX_ColorGrading", CPostVFX_ColorGrading::Create(m_pDevice, m_pContext)));
+
 
 	return S_OK;
 }
@@ -289,6 +291,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect()
 
 	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
+
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"Prototype_PostVFX_ColorGrading");
+
 	return S_OK;
 }
 
