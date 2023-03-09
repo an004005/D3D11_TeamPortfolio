@@ -1,6 +1,7 @@
 #include "Shader_Utils.h"
 #include "Shader_Defines.h"
 #include "Shader_Params.h"
+#include "Shader_InGame.h"
 
 matrix			g_BoneMatrices[512];
 
@@ -79,18 +80,19 @@ struct PS_OUT
 	float4		vAMB : SV_TARGET3;
 	float4		vCTL : SV_TARGET4;
 	float4		vOutline : SV_TARGET5;
+	float4		vFlag : SV_TARGET6; // post process ÇÃ·¡±×
 };
 
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float flags = PackPostProcessFlag(0.f, SHADER_TOON);
+	float flags = SHADER_TOON;
 
 	Out.vDiffuse = (float4)1.f;
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-
+	// Out.vFlag = flags;
 	return Out;
 }
 
@@ -118,7 +120,7 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	float fEmissive = 0.f;
-	float flags = PackPostProcessFlag(0.f, SHADER_TOON);
+	float flags = SHADER_TOON;
 
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	if (Out.vDiffuse.a < 0.001f)
@@ -137,7 +139,7 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 		float3 vColor = (float3)1.f;
 		if (iDebuffState == 1)
 		{
-			vColor = float3(0.9f, 0.3f, 0.f);
+			vColor = COL_FIRE;
 			fEmissive = 2.f;
 		}
 		else
@@ -165,11 +167,12 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 		vWetNormal = lerp(vDefaultNormal, vWetNormal, vWaveTile.a);
 		Out.vNormal = vector(vWetNormal * 0.5f + 0.5f, 0.f);
 
-		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, float3(120.f / 255.f, 60.f/ 255.f, 0.f), vWaveTile.a);
+		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_OIL, vWaveTile.a);
 		fEmissive = (vWaveTile.a);
 	}
 
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
+	// Out.vFlag = flags;
 
 	return Out;
 }
@@ -186,7 +189,7 @@ PS_OUT PS_WIRE_2(PS_IN In)
 	Out.vNormal = NormalPacking(In);
 	float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
 
-	float flags = PackPostProcessFlag(0.f, SHADER_NONE_SHADE);
+	float flags = SHADER_NONE_SHADE;
 
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 7.f, flags);
 	// Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
@@ -200,6 +203,7 @@ PS_OUT PS_WIRE_2(PS_IN In)
 	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir), 0.1f);
 	float4 vWhite = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vDiffuse = lerp(vWhite, Out.vDiffuse, fFresnel);
+	// Out.vFlag = flags;
 
 	return Out;
 }
@@ -289,7 +293,8 @@ PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 	PS_OUT Out = PS_TOON_DEFAULT(In);
 
 	Out.vDepth.z = fEmissive;
-	Out.vDepth.w = PackPostProcessFlag(0.f, SHADER_NONE_SHADE);
+	Out.vDepth.w = SHADER_NONE_SHADE;
+	// Out.vFlag = SHADER_NONE_SHADE;
 
 	if (fDissolve >= 1.f)
 		Out.vDiffuse *= vColor;

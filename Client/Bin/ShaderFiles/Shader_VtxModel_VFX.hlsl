@@ -54,7 +54,8 @@ struct PS_OUT_NORM
 	float4		vNormal : SV_TARGET1;
 	float4		vDepth : SV_TARGET2;
 	float4		vRMA : SV_TARGET3;
-	//float4		vFlag : SV_TARGET4;
+	float4		vOutline : SV_TARGET4;
+	float4		vFlag : SV_TARGET5;
 };
 
 
@@ -121,8 +122,9 @@ PS_OUT_NORM PS_MAIN_NORM (PS_IN_NORM In)
 	if(Mask >= 0.f)
 	{
 		Out.vRMA = float4(g_float_1, g_float_2, g_float_3, 0.f);
-		float flags = PackPostProcessFlag(0.f, SHADER_DEFAULT);
-		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+		float flags = SHADER_DEFAULT;
+		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, SHADER_DEFAULT);
+		// Out.vFlag = flags;
 	}
 
 	if(g_float_4 <= 0.f)
