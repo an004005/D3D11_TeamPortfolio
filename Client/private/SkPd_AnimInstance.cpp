@@ -8,151 +8,155 @@ HRESULT CSkPd_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 {
 	FAILED_CHECK(__super::Initialize(pModel, pGameObject));
 
-	{
-		m_pASM_Base = CASMBuilder()
-			.InitState("Idle")
-			.AddState("Idle")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_107_AL_fly_wait"))
-				
-				.AddTransition("Idle to RandomMove", "RandomMove")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bRandomMove; })
-					.Duration(0.4f)
 
-				.AddTransition("Idle to Attack_Start", "Attack_Start")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bAttackStart; })
-					.Duration(0.4f)
+	m_pASM_Base = CASMBuilder()
+		.InitState("Idle")
+		.AddState("Idle")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0700_107_AL_fly_wait"))
 
-				.AddTransition("Idle to MoveF", "MoveF")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveF; })
-					.Duration(0.4f)
+			.AddTransition("Idle to LeftMove", "LeftMove")
+				.Predicator([this] { return m_bMove && m_eMoveAxis == EBaseAxis::WEST; })
+				.Duration(0.1f)
 
-				.AddTransition("Idle to MoveB", "MoveB")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveB; })
-					.Duration(0.4f)
+			.AddTransition("Idle to RightMove", "RightMove")
+				.Predicator([this] { return m_bMove && m_eMoveAxis == EBaseAxis::EAST; })
+				.Duration(0.1f)	
 
-				.AddTransition("Idle to MoveL", "MoveL")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveL; })
-					.Duration(0.4f)
+			.AddTransition("Idle to BackMove", "BackMove")
+				.Predicator([this] { return m_bMove && m_eMoveAxis == EBaseAxis::SOUTH; })
+				.Duration(0.1f)
 
-				.AddTransition("Idle to MoveR", "MoveR")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveR; })
-					.Duration(0.4f)
+			.AddTransition("Idle to ForwardMove", "ForwardMove")
+				.Predicator([this] { return m_bMove && m_eMoveAxis == EBaseAxis::NORTH; })
+				.Duration(0.1f)
 
-				.AddTransition("Idle to Threat", "Threat")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bThreat; })
-					.Duration(0.4f)
+		.AddState("LeftMove")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0700_112_AL_walk_L"))
 
-			.AddState("MoveF")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_110_AL_walk_F"))
-				
-				.AddTransition("MoveF to Attack_Start", "Attack_Start")
-					.Predicator([&]()->_bool {return !m_bMoveF && m_bAttackStart; })
-					.Duration(0.4f)
-
-			.AddState("MoveB")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_111_AL_walk_B"))
-
-				.AddTransition("MoveB to Attack_Start", "Attack_Start")
-					.Predicator([&]()->_bool {return !m_bMoveB && m_bAttackStart; })
-					.Duration(0.4f)
-
-				.AddTransition("MoveB to Threat", "Threat")
-					.Predicator([&]()->_bool {return !m_bMoveB && m_bThreat; })
-					.Duration(0.4f)
-
-			// 플레이어를 중심으로 Turn 해줄 것
-			.AddState("MoveL")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_112_AL_walk_L"))
-
-				.AddTransition("MoveL to Attack_Start", "Attack_Start")
-					.Predicator([&]()->_bool {return !m_bMoveL && m_bAttackStart; })
-					.Duration(0.4f)
-
-				.AddTransition("MoveL to Threat", "Threat")
-					.Predicator([&]()->_bool {return !m_bMoveL && m_bThreat; })
-					.Duration(0.4f)
-
-			.AddState("MoveR")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_113_AL_walk_R"))
-
-				.AddTransition("MoveR to Attack_Start", "Attack_Start")
-					.Predicator([&]()->_bool {return !m_bMoveR && m_bAttackStart; })
-					.Duration(0.4f)
-
-				.AddTransition("MoveR to Threat", "Threat")
-					.Predicator([&]()->_bool {return !m_bMoveR && m_bThreat; })
-					.Duration(0.4f)
-			
-			// Attack
-			.AddState("Attack_Start")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_201_AL_atk_a1_start"))
-				
-				.AddTransition("Attack_Start to Attack_Ing", "Attack_Ing")
-					.Predicator([&]()->_bool {return !m_bAttackStart && m_bAttacking; })
-					.Duration(0.4f)
-
-			.AddState("Attack_Ing")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0710_205_AL_atk_a2_loop"))
-
-				.AddTransition("Attack_Ing to Attack_End", "Attack_End")
-					.Predicator([&]()->_bool {return !m_bAttacking && m_bAttackEnd; })
-					.Duration(0.4f)
-			
-			.AddState("Attack_End")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_203_AL_atk_a1_end"))
-
-				.AddTransition("Attack_End to Idle", "Idle")
-					.Predicator([&]()->_bool {return !m_bAttackEnd && m_bIdle; })
-					.Duration(0.4f)
-
-				.AddTransition("Attack_End to Turn", "Turn")
-					.Predicator([&]()->_bool {return !m_bAttackEnd && m_bLerpTurn; })
-					.Duration(0.2f)
-			// ~Attack
-
-			.AddState("RandomMove")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_121_AL_randommove_L"))
-			
-				/*.StartEvent([&] 
+			.AddTransition("LeftMove to Idle", "Idle")
+				.Predicator([this]
 				{
-					auto pAnim = m_pModel->GetPlayAnimation();
+					return !m_bMove;
+				})
+				.Duration(0.2f)
 
-					if (pAnim != nullptr)
+			.AddTransition("LeftMove to BackMove", "BackMove")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::SOUTH;
+				})
+				.Duration(0.1f)
+
+			.AddTransition("LeftMove to ForwardMove", "ForwardMove")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::NORTH;
+				})
+				.Duration(0.1f)
+
+			.AddTransition("LeftMove to RightMove", "RightMove")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::EAST;
+				})
+				.Duration(0.1f)
+
+		.AddState("RightMove")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0700_113_AL_walk_R"))
+
+			.AddTransition("RightMove to Idle", "Idle")
+				.Predicator([this]
+				{
+					return !m_bMove;
+				})
+				.Duration(0.2f)
+
+			.AddTransition("RightMove to BackMove", "BackMove")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::SOUTH;
+				})
+				.Duration(0.1f)
+
+			.AddTransition("RightMove to ForwardMove", "ForwardMove")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::NORTH;
+				})
+				.Duration(0.1f)
+
+			.AddTransition("RightMove to LeftMove", "LeftMove")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::WEST;
+				})
+				.Duration(0.1f)
+
+		.AddState("ForwardMove")
+				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_110_AL_walk_F"))
+
+				.AddTransition("ForwardMove to Idle", "Idle")
+					.Predicator([this]
 					{
-						m_pModel->GetPlayAnimation()->SetPlayRatio(m_fSaveRatio); 
-						
-					}
-				})	*/			
+						return !m_bMove;
+					})
+					.Duration(0.2f)
 
-				.AddTransition("RandomMove to Idle", "Idle")
-					.Predicator([&]()->_bool {return !m_bRandomMove && m_bIdle; })
-					.Duration(0.4f)
+			.AddTransition("ForwardMove to BackMove", "BackMove")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::SOUTH;
+				})
+				.Duration(0.1f)
 
-			.AddState("Threat")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_160_AL_threat"))
+			.AddTransition("ForwardMove to RightMove", "RightMove")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::EAST;
+				})
+				.Duration(0.1f)
 
-				.AddTransition("Threat to Idle", "Idle")
-					.Predicator([&]()->_bool { return !m_bThreat && m_bIdle; })
-					.Duration(0.4f)		
+			.AddTransition("ForwardMove to LeftMove", "LeftMove")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::WEST;
+				})
+				.Duration(0.1f)
 
-			.AddState("Turn")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0700_107_AL_fly_wait"))
+		.AddState("BackMove")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0700_111_AL_walk_B"))
 
-				.AddTransition("Turn to Idle", "Idle")
-						.Predicator([&]()->_bool {return !m_bLerpTurn && m_bIdle; })
-						.Duration(0.2f)
+			.AddTransition("BackMove to Idle", "Idle")
+				.Predicator([this]
+				{
+					return !m_bMove;
+				})
+				.Duration(0.2f)
 
+			.AddTransition("BackMove to ForwardMove", "ForwardMove")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::NORTH;
+				})
+				.Duration(0.1f)
 
-			.Build();
-	}
+			.AddTransition("BackMove to RightMove", "RightMove")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::EAST;
+				})
+				.Duration(0.1f)
 
-	m_pASM_Base->SetCurState("Idle");
+			.AddTransition("BackMove to LeftMove", "LeftMove")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::WEST;
+				})
+				.Duration(0.1f)
 
-	list<CAnimation*> AddAnimSocket;
-	m_mapAnimSocket.emplace("SkummyPandou_AirDmgAnim", AddAnimSocket);
-	m_mapAnimSocket.emplace("SkummyPandou_GroundDmgAnim", AddAnimSocket);
-	m_mapAnimSocket.emplace("SkummyPandou_DeadAnim", AddAnimSocket);
+		.Build();
 
+	m_mapAnimSocket.insert({ "Bee", {} });
 	return S_OK;
 }
 
@@ -162,7 +166,7 @@ void CSkPd_AnimInstance::Tick(_double TimeDelta)
 
 	_bool bChange = CheckFinishedAnimSocket();
 	_bool bLocalMove = true;
-	
+
 	string szCurAnimName = "";
 
 	// 소켓이 비어있는지 탐색
@@ -170,9 +174,7 @@ void CSkPd_AnimInstance::Tick(_double TimeDelta)
 
 	for (auto& iter : m_mapAnimSocket)
 	{
-		if (iter.second.empty())
-			continue;
-		else
+		if (iter.second.empty() == false)
 		{
 			CurSocket = iter.second;
 			break;
@@ -198,7 +200,7 @@ void CSkPd_AnimInstance::Tick(_double TimeDelta)
 		}
 		else if (m_bAttach)
 		{
-			m_fLerpTime = 0.f;	// 어태치면 바로 보간			
+			m_fLerpTime = 0.f;	// 어태치면 바로 보간
 			m_bAttach = false;
 		}
 		else
@@ -206,6 +208,7 @@ void CSkPd_AnimInstance::Tick(_double TimeDelta)
 			szCurAnimName = Socket->GetName();
 			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
 		}
+
 	}
 	else if (bChange)
 	{
@@ -228,8 +231,6 @@ void CSkPd_AnimInstance::Tick(_double TimeDelta)
 		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
 	}
 
-	// 전체 본 마스킹을 할지, 상체에 대해서만 본 마스킹을 할지는 플레이어에서 던져주는 값에 따라 정해지도록 한다.
-
 	m_pModel->Compute_CombindTransformationMatrix();
 
 	if (bLocalMove)
@@ -237,57 +238,30 @@ void CSkPd_AnimInstance::Tick(_double TimeDelta)
 		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
 		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix);
 		m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
-
-		if (0.f != XMVectorGetX(XMVector3Length(vLocalMove)))
-			m_vLocalMove = vLocalMove;
-	}
-
-	if ("" != szCurAnimName)
-	{
-		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
-		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix, szCurAnimName);
 	}
 }
 
 void CSkPd_AnimInstance::UpdateTargetState(_double TimeDelta)
 {
 	CSkummyPandou* pSkummyPandou = static_cast<CSkummyPandou*>(m_pTargetObject);
-	
-	m_bIdle = pSkummyPandou->IsIdle();
 
-	m_bMoveF = pSkummyPandou->IsMoveF();
-	m_bMoveB = pSkummyPandou->IsMoveB();
-	m_bMoveL = pSkummyPandou->IsMoveL();
-	m_bMoveR = pSkummyPandou->IsMoveR();
-	m_bRandomMove = pSkummyPandou->IsRandomMove();
-	
-	m_bAttackStart = pSkummyPandou->IsAttackStart();
-	m_bAttacking = pSkummyPandou->IsAttacking();
-	m_bAttackEnd = pSkummyPandou->IsAttackEnd();
+	m_bPreAir = m_bAir;
+	m_ePreMoveAxis = m_eMoveAxis;
 
-	m_bThreat = pSkummyPandou->IsThreat();
-	
-	m_bDamage = pSkummyPandou->IsDamage();
-	m_bDead = pSkummyPandou->IsDead();
+	m_bAir = !pSkummyPandou->IsOnFloor();
+	m_bMove = pSkummyPandou->IsMove();
 
-	m_bStatic = pSkummyPandou->IsStatic();
+	m_vMoveAxis = pSkummyPandou->GetMoveAxis();
+	m_eMoveAxis = CClientUtils::MoveAxisToBaseEnum(m_vMoveAxis);
 
-	m_bLerpTurn = pSkummyPandou->IsLerpTurn();
+	m_fTurnRemain = pSkummyPandou->GetTurnRemain();
+	m_eTurn = CClientUtils::TurnDeltaToEnum(m_fTurnRemain);
 
-	/*m_fPlayRatio = 0.f;
-	m_fPlayRatio = pSkummyPandou->GetPlayRatio();
-
-	m_bCurrentRatioSave = pSkummyPandou->CheckCurrentRatio();
-
-	if (m_bCurrentRatioSave)
-	{
-		m_fSaveRatio = m_fPlayRatio;
-		m_bCurrentRatioSave = false;
-	}*/
 }
 
 void CSkPd_AnimInstance::Imgui_RenderState()
 {
+	m_pASM_Base->Imgui_RenderState();
 }
 
 void CSkPd_AnimInstance::InputAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
@@ -306,32 +280,23 @@ void CSkPd_AnimInstance::InputAnimSocket(const string & strSocName, list<CAnimat
 
 void CSkPd_AnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
 {
-	const auto List = m_mapAnimSocket.find(strSocName);
+	const auto itr = m_mapAnimSocket.find(strSocName);
+	Assert(itr != m_mapAnimSocket.end());
 
-	if (List != m_mapAnimSocket.end())
+	if (!itr->second.empty())
 	{
-		if (!List->second.empty())
-		{
-			m_bAttach = true;
-			List->second.front()->Reset();;
-		}
-		m_mapAnimSocket[strSocName] = (AnimList);
+		m_bAttach = true;
+		itr->second.front()->Reset();
 	}
-}
-
-_bool CSkPd_AnimInstance::isSocketAlmostFinish(const string & strSocName)
-{
-	return (m_mapAnimSocket[strSocName].size() == 1) && (m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= 0.95f);
+	m_mapAnimSocket[strSocName] = (AnimList);
 }
 
 _bool CSkPd_AnimInstance::isSocketPassby(const string & strSocName, _float fPlayRatio)
 {
-	return (m_mapAnimSocket[strSocName].size() == 1) && (m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= fPlayRatio);
-}
+	Assert(m_mapAnimSocket.find(strSocName) != m_mapAnimSocket.end());
 
-_bool CSkPd_AnimInstance::CheckAnim(const string & szAnimName)
-{
-	return  (szAnimName == m_pModel->GetPlayAnimation()->GetName()) ? true : false;
+	return m_mapAnimSocket[strSocName].empty() == false
+		&& m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= fPlayRatio;
 }
 
 CSkPd_AnimInstance * CSkPd_AnimInstance::Create(CModel * pModel, CGameObject * pGameObject)
@@ -348,6 +313,6 @@ CSkPd_AnimInstance * CSkPd_AnimInstance::Create(CModel * pModel, CGameObject * p
 
 void CSkPd_AnimInstance::Free()
 {
-	__super::Free();
+	CAnimationInstance::Free();
 	Safe_Release(m_pASM_Base);
 }

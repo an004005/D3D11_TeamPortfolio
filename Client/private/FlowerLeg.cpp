@@ -59,7 +59,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 
 	m_pModelCom->Add_EventCaller("JumpAttackStart", [this]
 	{	
-		m_fGravity = 10.f;
+		m_fGravity = 14.f;
 		m_fYSpeed = 8.f;
 		m_bJumpAttack = true;
 
@@ -72,7 +72,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 			// TargetPos
 			_vector vDest = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 			vDest = XMVectorSetY(vDest, 0.f); // ~TargetPos
-			m_fJumpMoveTime = (1.5 * m_fYSpeed) / m_fGravity; // 점프로 이동하는 시간
+			m_fJumpMoveTime = (1.4 * m_fYSpeed) / m_fGravity; // 점프로 이동하는 시간
 
 			const _vector vDiff = vDest - vOrigin; // 나 -> 대상까지의 방향
 			const _float fDistance = XMVectorGetX(XMVector3LengthEst(vDiff)); // 나 -> 대상까지의 거리
@@ -92,7 +92,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		m_fGravity = 27.f;
 		m_fYSpeed = 8.f;
 
-		_float fLength = 2.8f; // 회피 이동하고자 하는 고정 거리
+		_float fLength = 3.8f; // 회피 이동하고자 하는 고정 거리
 		
 		if (m_pTarget)
 		{
@@ -126,7 +126,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		m_fGravity = 27.f;
 		m_fYSpeed = 6.f;
 
-		_float fLength = 2.8f; // 회피 이동하고자 하는 고정 거리
+		_float fLength = 3.8f; // 회피 이동하고자 하는 고정 거리
 
 		if (m_pTarget)
 		{
@@ -190,21 +190,8 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 			m_vOnDodgeMoveVelocityBack = _float3::Zero;
 		}
 	});
-	// 꼬리 충돌시 Player 에게 넘겨줄 데미지 등의 정보
-	m_pModelCom->Add_EventCaller("Spin_Atk", [this]
-	{
-		DAMAGE_PARAM dParam;
-		ZeroMemory(&dParam, sizeof(DAMAGE_PARAM));
-		dParam.iDamage = 1;
 
-		if (m_vecDamage.empty())
-			m_vecDamage.push_back(dParam);			
-	});
-
-	/*m_pModelCom->Add_EventCaller("Damage_End", [this]
-	{
-		m_bStruck = false;
-	});*/
+	m_pModelCom->Add_EventCaller("Spin_Atk", [this] { m_bAtkSwitch = true; });
 
 	m_pModelCom->Add_EventCaller("OverLap", [this] { Strew_Overlap(); });
 	m_pModelCom->Add_EventCaller("Kick_Event", [this] { Kick_SweepSphere(); });
@@ -213,7 +200,13 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		m_fGravity = 22.f;
 		m_fYSpeed = 11.f; 
 	});
+	m_pModelCom->Add_EventCaller("Successive", [this] 
+	{ 
+		m_fGravity = 36.f;
+		m_fYSpeed = 11.f;
+	});
 
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-1.f, 0.f, 27.f)));
 
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 
@@ -262,7 +255,7 @@ void CFlowerLeg::BeginTick()
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket(("UsingControl"), {m_pModelCom->Find_Animation("AS_em0200_160_AL_threat")});
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 10.f)));
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-1.f, 0.f, 27.f)));
 }
 
 void CFlowerLeg::Tick(_double TimeDelta)
@@ -307,43 +300,48 @@ void CFlowerLeg::Tick(_double TimeDelta)
 	if (m_pController->KeyDown(CController::R))
 	{
 		m_pASM->AttachAnimSocket("UsingControl", { m_pAtk_Spin });
-		m_bAtkSwitch = true;
 	}
 
 	if (m_pController->KeyDown(CController::G))
 	{
 		m_pASM->AttachAnimSocket("UsingControl", { m_pAtk_Strew });
 		m_bAtkSwitch = false;
+		m_bOneHit = false;
 	}
 
 	if (m_pController->KeyDown(CController::NUM_1))
 	{
 		m_pASM->AttachAnimSocket("UsingControl", { m_pDodgeL_Start, m_pDodgeL_Stop });
 		m_bAtkSwitch = false;
+		m_bOneHit = false;
 	}
 
 	if (m_pController->KeyDown(CController::NUM_2))
 	{
 		m_pASM->AttachAnimSocket("UsingControl", { m_pDodgeR_Start, m_pDodgeR_Stop });
 		m_bAtkSwitch = false;
+		m_bOneHit = false;
 	}
 
 	if (m_pController->KeyDown(CController::NUM_3))
 	{
 		m_pASM->AttachAnimSocket("UsingControl", { m_pDodgeB_Start, m_pDodgeB_Stop });
 		m_bAtkSwitch = false;
+		m_bOneHit = false;
 	}
 
 	if (m_pController->KeyDown(CController::MOUSE_RB))
 	{
 		m_pASM->AttachAnimSocket("UsingControl", { m_pJumpStart, m_pJumpLanding });
 		m_bAtkSwitch = false;
+		m_bOneHit = false;
 	}
 
 	if (m_pController->KeyDown(CController::C))
 	{
 		m_pASM->AttachAnimSocket("UsingControl", { m_pThreat });
 		m_bAtkSwitch = false;
+		m_bOneHit = false;
 	}
 
 	if (m_bStruck || m_pController->KeyDown(CController::Q))
@@ -441,8 +439,7 @@ void CFlowerLeg::Late_Tick(_double TimeDelta)
 
 	if (m_bAtkSwitch)
 	{
-//		Collision_Check(m_pTailCol, m_vecDamage.front());
-		m_vecDamage.clear();
+		Spin_SweepCapsule(m_bOneHit);
 	}
 
 	if (m_iHP <= 0)
@@ -460,9 +457,6 @@ void CFlowerLeg::Late_Tick(_double TimeDelta)
 
 HRESULT CFlowerLeg::Render()
 {
-	/*if (FAILED(CMonster::Render()))
-		return E_FAIL;*/
-
 	m_pModelCom->Render(m_pTransformCom);
 	return S_OK;
 }
@@ -548,6 +542,72 @@ void CFlowerLeg::Strew_Overlap()
 
 		}
 	}
+}
+
+void CFlowerLeg::Spin_SweepCapsule(_bool bCol)
+{
+	if (bCol)
+	{
+		m_CollisionList.clear();
+		return;
+	}
+
+	Matrix mTailMatrix = m_pTailCol->GetPxWorldMatrix();
+	_float4 vTailPos = _float4(mTailMatrix.Translation().x, mTailMatrix.Translation().y, mTailMatrix.Translation().z, 1.f);
+	_float3 vLook = _float3(mTailMatrix.Up().x, mTailMatrix.Up().y, mTailMatrix.Up().z);
+
+	physx::PxSweepHit hitBuffer[5];
+	physx::PxSweepBuffer overlapOut(hitBuffer, 5);
+
+	PxCapsuleSweepParams param;
+	param.sweepOut = &overlapOut;
+	param.CapsuleGeo = m_pTailCol->Get_CapsuleGeometry();
+	param.pxTransform = m_pTailCol->Get_PxTransform();
+
+	_float4	vWeaponDir = vTailPos - m_BeforePos;
+
+	param.vUnitDir = _float3(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z);
+	param.fDistance = param.vUnitDir.Length();
+	param.iTargetType = CTB_PLAYER;
+	param.fVisibleTime = 0.f;
+
+	if (CGameInstance::GetInstance()->PxSweepCapsule(param))
+	{
+		for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+		{
+			auto pHit = overlapOut.getAnyHit(i);
+			CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+			if (auto pTarget = dynamic_cast<CScarletCharacter*>(pCollidedObject))
+			{
+				_bool bDamagedTarget = true;
+				for (auto& iter : m_CollisionList)
+				{
+					if (iter == pTarget)
+					{
+						bDamagedTarget = false;
+						break;
+					}
+				}
+				if (bDamagedTarget)
+				{
+					DAMAGE_PARAM tParam;
+
+					tParam.pCauser = this;
+					tParam.vHitNormal = _float3(pHit.normal.x, pHit.normal.y, pHit.normal.z);
+					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
+					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					tParam.iDamage = 1;
+
+					pTarget->TakeDamage(tParam);
+
+					m_CollisionList.push_back(pTarget);
+					m_bOneHit = true;
+				}
+			}
+		}
+	}
+
+	m_BeforePos = vTailPos;
 }
 
 void CFlowerLeg::Kick_SweepSphere()

@@ -48,7 +48,7 @@ private:
 class CAIController abstract : public CController
 {
 public:
-	enum DISTANCE { DIS_NEAR, DIS_MIDDLE, DIS_FAR, DIS_END };
+	enum DISTANCE { DIS_NEAR, DIS_MIDDLE, DIS_FAR, DIS_OUTSIDE, DIS_END };
 
 protected:
 	CAIController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
