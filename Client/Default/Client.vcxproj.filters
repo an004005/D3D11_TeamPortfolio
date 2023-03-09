@@ -244,6 +244,9 @@
     <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
       <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\BuddyLumi\BdLm_Controller">
+      <UniqueIdentifier>{7e82e54f-b5b7-4330-be57-352521a4f639}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -612,6 +615,7 @@
     <ClInclude Include="..\public\SkPd_Controller.h">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BdLm_Controller.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -955,6 +959,7 @@
     <ClCompile Include="..\private\SkPd_Controller.cpp">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\BdLm_Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
