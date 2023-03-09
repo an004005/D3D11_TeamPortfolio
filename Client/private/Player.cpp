@@ -2028,6 +2028,9 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 		}
 	}
 
+	if (m_bLeftClick)
+		m_fKineticCombo_Slash = 10.f;
+
 	m_vCamLook = pGameInstance->Get_CamLook();
 }
 
@@ -2463,6 +2466,7 @@ void CPlayer::Kinetic_ByTurn()
 				m_vThrow = vKineticToMonster;
 				m_bSwingKineticThrow = true;
 				m_fSwingLerpTimer = 0.f;
+				m_fKineticCombo_Slash = 10.f;
 			}
 			else
 			{
@@ -2483,6 +2487,7 @@ void CPlayer::Kinetic_ByTurn()
 				m_vThrow = vKineticToMonster;
 				m_bSwingKineticThrow = true;
 				m_fSwingLerpTimer = 0.f;
+				m_fKineticCombo_Slash = 10.f;
 			}
 			else
 			{
