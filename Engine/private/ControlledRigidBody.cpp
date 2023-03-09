@@ -259,7 +259,10 @@ void CEngineControllerHitReport::onShapeHit(const physx::PxControllerShapeHit& h
 		PxShape* shape;
 		hit.actor->getShapes(&shape, 1);
 		ECOLLIDER_TYPE eHitColliderType = static_cast<ECOLLIDER_TYPE>(shape->getSimulationFilterData().word0);
-		m_HitCallback(CPhysXUtils::GetOnwer(hit.actor), eHitColliderType);
+		if (GetCollTypeBit(eHitColliderType) & m_iTargetTypes)
+		{
+			m_HitCallback(CPhysXUtils::GetOnwer(hit.actor), eHitColliderType);
+		}
 	}
 }
 
@@ -270,6 +273,9 @@ void CEngineControllerHitReport::onControllerHit(const physx::PxControllersHit& 
 		PxShape* shape;
 		hit.other->getActor()->getShapes(&shape, 1);
 		ECOLLIDER_TYPE eHitColliderType = static_cast<ECOLLIDER_TYPE>(shape->getSimulationFilterData().word0);
-		m_HitCallback(CPhysXUtils::GetOnwer(hit.other->getActor()), eHitColliderType);
+		if (GetCollTypeBit(eHitColliderType) & m_iTargetTypes)
+		{
+			m_HitCallback(CPhysXUtils::GetOnwer(hit.other->getActor()), eHitColliderType);
+		}
 	}
 }
