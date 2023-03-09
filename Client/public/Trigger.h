@@ -7,8 +7,9 @@ BEGIN(Engine)
 class CRigidBody;
 END
 
-BEGIN(Client)
+enum USAGE { CREATE, USAGE_END};
 
+BEGIN(Client)
 class CTrigger final :  public CGameObject
 {
 private:
@@ -22,19 +23,31 @@ public:
 	void BeginTick() override;
 	void Tick(_double TimeDelta) override;
 	void Late_Tick(_double TimeDelta) override;
+
+	virtual void SaveToJson(OUT Json& json) override;
+	virtual void LoadFromJson(const Json& json) override;
+
 	void AfterPhysX() override;
 	HRESULT Render() override;
 	void Imgui_RenderProperty() override;
 
 public:
-	void	SetMonster(const _tchar* ProtoTag, _fmatrix WorldMatrix);
-
+	void	Set_ForCreate(const wstring& ProtoTag, const _float4x4 WorldMatrix);
+	
 private:
 	HRESULT SetUp_Components(void * pArg);
+	void	SetUp_InitInfo(const Json& json);
 
+	void	SetUp_Create(const Json& json);
 private:
-	CRigidBody*			m_pRigidBodyCom;
+	CRigidBody*			m_pRigidBodyCom = nullptr;
 
+	//로드때 RigidBoyd에 셋팅해줄 함수를 정하기 위해 셋팅해줌.
+	USAGE				m_eUsage = USAGE_END;
+
+	/*For Create*/
+	map<wstring, vector<_float4x4>>	m_ProtoWorldMatrixes;
+	wstring							m_PotoTag = L"";
 
 public:
 	static CTrigger* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

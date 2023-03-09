@@ -55,6 +55,8 @@ HRESULT CBatch::Render()
 
 void CBatch::Imgui_RenderProperty()
 {
+	if (LEVEL_NOW != LEVEL_BATCH) return;
+
 	__super::Imgui_RenderProperty();
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
@@ -86,8 +88,6 @@ void CBatch::Imgui_RenderProperty()
 
 		ImGui::EndListBox();
 	}
-
-
 
 
 	ImGui::Separator();
@@ -131,9 +131,24 @@ void CBatch::Imgui_RenderProperty()
 		{
 			if (m_pTrigger != nullptr && m_pGameObject != nullptr)
 			{
-				m_pTrigger->SetMonster(m_pGameObject->GetPrototypeTag().c_str(), m_pGameObject->GetTransform()->Get_WorldMatrix());
+				m_pTrigger->Set_ForCreate(m_pGameObject->GetPrototypeTag(), m_pGameObject->GetTransform()->Get_WorldMatrix());
 			}
 		}
+
+
+		ImGui::Separator();
+
+		ImGui::BeginChild("Selected Trigger", { 400.f, 250.f });
+
+		if (m_pTrigger)
+		{
+			ImGui::Separator();
+			ImGui::Text("%s", typeid(*m_pTrigger).name());
+			m_pTrigger->Imgui_RenderProperty();
+			m_pTrigger->Imgui_RenderComponentProperties();
+		}
+
+		ImGui::EndChild();
 
 		ImGui::TreePop();
 	}
@@ -192,47 +207,47 @@ void CBatch::Imgui_RenderProperty()
 
 			ImGui::EndListBox();
 		}
+
+		ImGui::Separator();
+
+		ImGui::BeginChild("Selected Object", { 400.f, 250.f });
+
+		if (m_pGameObject)
+		{
+			ImGui::Separator();
+			ImGui::Text("%s", typeid(*m_pGameObject).name());
+			m_pGameObject->Imgui_RenderProperty();
+			m_pGameObject->Imgui_RenderComponentProperties();
+		}
+
+		ImGui::EndChild();
+
 		ImGui::TreePop();
 	}
 
-	ImGui::Separator();
+	
 
-	ImGui::BeginChild("Selected Object", { 500.f, 200.f });
 
-	if (m_pGameObject)
-	{
-		ImGui::Separator();
-		ImGui::Text("%s", typeid(*m_pGameObject).name());
-		m_pGameObject->Imgui_RenderProperty();
-		m_pGameObject->Imgui_RenderComponentProperties();
-	}
-
-	ImGui::EndChild();
-
-	ImGui::Separator();
-
-	ImGui::BeginChild("Selected Trigger", { 400.f, 250.f });
-
-	if (m_pTrigger)
-	{
-		ImGui::Separator();
-		ImGui::Text("%s", typeid(*m_pTrigger).name());
-		m_pTrigger->Imgui_RenderProperty();
-		m_pTrigger->Imgui_RenderComponentProperties();
-	}
-
-	ImGui::EndChild();
 }
 
 void CBatch::SaveToJson(OUT Json & json)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
 	__super::SaveToJson(json);
+
+	json["Triggers"] = Json::array();
+
+	for (auto trigger : m_pTriggers)
+	{
+		Json jsonTrigger;
+		trigger->SaveToJson(jsonTrigger);
+		json["Triggers"].push_back(jsonTrigger);
+	}
 }
 
 void CBatch::LoadFromJson(const Json & json)
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
 	__super::LoadFromJson(json);
 
 	if (json.contains("ProtosInfo"))
@@ -243,6 +258,19 @@ void CBatch::LoadFromJson(const Json & json)
 			m_ProtosInfo.emplace_back(objdesc);
 		}
 	}
+
+	if (json.contains("Triggers"))
+	{
+		for (auto trigger : json["Triggers"])
+		{
+			CTrigger* pTrigger = nullptr;
+			pTrigger = dynamic_cast<CTrigger*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_Trigger"), TEXT("Prototype_GameObject_Trigger"), &trigger));
+
+			assert(pTrigger != nullptr);
+			m_pTriggers.emplace_back(pTrigger);
+		}
+	}
+	
 }
 
 HRESULT CBatch::SetUp_Components()

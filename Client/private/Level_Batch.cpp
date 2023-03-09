@@ -17,7 +17,8 @@
 #include "SkummyPandou.h"
 #include "SkummyPool.h"
 #include "Trigger.h"
-
+#include "FL_Controller.h"
+#include "SkmP_Controller.h"
 CLevel_Batch::CLevel_Batch(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -166,6 +167,11 @@ HRESULT CLevel_Batch::Ready_Prototypes()
 	FAILED_CHECK(Push_Back_Prototype(L"Prototype_GameObject_SkummyPandou", CSkummyPandou::Create(m_pDevice, m_pContext), MONSTER));
 	FAILED_CHECK(Push_Back_Prototype(L"Prototype_GameObject_SkummyPool", CSkummyPool::Create(m_pDevice, m_pContext), MONSTER));
 
+	//Controller
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FL_Controller"), CFL_Controller::Create()));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
+
+
 	//SkyBox
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_Component_Model_SkySphere"),
 		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/StaticModel/Sky/SkySphere.static_model"))))
@@ -205,7 +211,8 @@ HRESULT CLevel_Batch::Ready_Layer_Batch(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json;
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_Test.json");
+	
 	json["ProtosInfo"] = Json::array();
 
 	for (auto& info : m_ProtosInfo)
@@ -219,7 +226,7 @@ HRESULT CLevel_Batch::Ready_Layer_Map(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/ConstructionSite3F.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 	return S_OK;
