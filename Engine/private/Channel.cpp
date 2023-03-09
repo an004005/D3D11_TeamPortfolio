@@ -100,11 +100,14 @@ void CChannel::Update_TransformMatrix(_double PlayTime)
 	{
 		m_vLocalMove = vPosition;
 		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+
 		if (m_bLocalRotation)
 		{
-			static Quaternion defaultQ = XMQuaternionRotationAxis(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(-90.f));
-			static Quaternion CondugatedDefaultQ = XMQuaternionConjugate(defaultQ);
-			m_vLocalRotation = XMQuaternionMultiply(vRotation, CondugatedDefaultQ);
+			const static Quaternion defaultQ = XMQuaternionRotationAxis(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(-90.f));
+			const static Quaternion CondugatedDefaultQ = XMQuaternionConjugate(defaultQ);
+
+			m_vLocalRotation = XMQuaternionMultiply(CondugatedDefaultQ, vRotation);
+
 			vRotation = defaultQ;
 		}
 	}
@@ -133,6 +136,7 @@ void CChannel::Blend_TransformMatrix(_double PlayTime, _float fBlendRatio)
 	_vector			vRotation;
 	_vector			vPosition;
 
+	_vector			vBefPosition;
 	_vector			vBefRotation;
 
 	_matrix			TransformMatrix;
@@ -172,6 +176,7 @@ void CChannel::Blend_TransformMatrix(_double PlayTime, _float fBlendRatio)
 		vPosition = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[iFrameIdx].vPosition), XMLoadFloat3(&m_KeyFrames[iFrameIdx + 1].vPosition), fRatio);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 
+		vBefPosition = vPosition;
 		vBefRotation = vRotation;
 	}
 
@@ -183,8 +188,7 @@ void CChannel::Blend_TransformMatrix(_double PlayTime, _float fBlendRatio)
 
 	if ("Reference" == m_strName)
 	{
-		m_vLocalMove = vPosition;
-		//m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+		m_vLocalMove = vBefPosition;
 		vRotation = vBefRotation;
 		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
 	}

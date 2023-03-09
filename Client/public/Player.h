@@ -121,12 +121,17 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 private:
-	PLAYER_STAT m_PlayerStat;
-	DAMAGE_DESC m_DamageDesc;
-	ESASType	m_PlayerSasType;
+	PLAYER_STAT		m_PlayerStat;
+	DAMAGE_DESC		m_DamageDesc;
+	DAMAGE_PARAM	m_AttackDesc;
+	ESASType		m_PlayerSasType;
+	
+private:
+	_bool			m_bAttackEnable = false;
 
 private:
 	HRESULT SetUp_Components(void* pArg);
+	HRESULT SetUp_RigidBody();
 	HRESULT SetUp_Event();
 	HRESULT SetUp_EffectEvent();
 	HRESULT Setup_KineticStateMachine();
@@ -144,6 +149,7 @@ private:
 	CRenderer*			m_pRenderer = nullptr;
 	CModel*				m_pModel = nullptr;
 	CController*		m_pController = nullptr;
+//	CRigidBody*			m_pContectRigidBody = nullptr;
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -236,6 +242,7 @@ public:
 	_bool	isSeperateAnim() { return m_bSeperateAnim; }
 	_bool	isUpper() { return m_bUpper; }
 	_bool	isBattle() { return m_bOnBattle; }
+	_bool	isOptionalMove() { return m_bOptionalMove; }
 
 	_float	GetPlayRatio() { return m_fPlayRatio; }
 	_float	GetfYSpeed() { return m_fYSpeed; }
@@ -243,6 +250,8 @@ public:
 private:
 	_bool	m_bHit = false;
 	_bool	m_bBreakFall = false;
+
+	_bool	m_bOptionalMove = false;
 
 	_bool	m_bAir = false;		// 의도한 공중 상태인지 파악을 위함
 	_bool	m_PreAir = false;
@@ -291,13 +300,19 @@ public:	//EventCaller용
 	void		Event_SetCanTurn_Attack(_bool is) { m_bCanTurn_Attack = is; }
 	void		Event_SetOnAir(_bool is) { m_bAir = is; }
 	void		Event_SetGravity(_bool is) { m_bActiveGravity = is; }
-	void		Event_SetLocalRevise(_bool is) { m_bLocalRevise = is; }
 	void		Event_MoveLimitReset() { MoveLimitReset(); }
 	void		Event_AttackLimitReset() { AttackLimitReset(); }
 	void		Event_ChargeReset() { Reset_Charge(); }
+	void		Event_LookAtMove() { LookAtDir(m_vMoveDir); }
 
 	void		Event_Effect(string szEffectName, _float fSize = 1.f, string szBoneName = "Eff01");
 
+	void		Event_LightAttack_Start();
+	void		Event_MiddleAttack_Start();
+	void		Event_HeavyAttack_Start();
+	void		Event_AirAttack_Start();
+	void		Event_Attack_End();
+	
 public:
 	void		Set_KineticCombo_Kinetic() { m_fKineticCombo_Kinetic = 1.f; }	// 키네틱 오브젝트에서 지정, 충돌 발생시 콤보 가능하도록 해준다.
 
@@ -305,19 +320,16 @@ private:
 	void		Reset_Charge();
 
 private:
-	void		Load_DefaultEffects(const char* pEffectDir);
+	void		Load_Effect(const char* pEffectDir);
 
-	unordered_map<string, string>	m_mapEffectGroup;
-
-	unordered_map<string, CGameObject*>	m_mapPlayerEffect;
-	unordered_map<string, CGameObject*>	m_mapFireEffect;	// 이펙트 전부 붙이고 나서 하기
+	unordered_map<string, string>	m_mapDefaultEffect;
+	unordered_map<string, string>	m_mapFireEffect;
 
 private:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
 	_bool		m_bCanTurn = false;
 	_bool		m_bCanMove = false;
 	_bool		m_bCanRun = false;
 	_bool		m_bCanTurn_Attack = false;
-	_bool		m_bLocalRevise = false;		//	좌우 한 걸음 고정
 	_bool		m_bOnBattle = false;	// 전투상태인지?
 
 public:
@@ -377,9 +389,9 @@ private:
 
 	CCamera*	m_pPlayerCam = nullptr;
 
-private:
-	void			Attack_Effect(const string& szBoneName, _float fSize);
-	CEffectGroup*	m_pEffect = nullptr;
+//private:
+//	void			Attack_Effect(const string& szBoneName, _float fSize);
+//	CEffectGroup*	m_pEffect = nullptr;
 
 private:
 	void			Search_Usable_KineticObject();

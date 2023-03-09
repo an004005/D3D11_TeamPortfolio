@@ -23,6 +23,10 @@ public:
 	KEYFRAME*		GetCurKeyFrame() { return &m_KeyFrames[m_iCurFrameIdx]; }
 	_vector&		GetLocalMove() { return m_vLocalMove; }
 	_vector&		GetLocalRotation() { return m_vLocalRotation; }
+	Quaternion&		GetLocalQuaternion() { return m_vLocalQuaternion; }
+
+	pair<_vector, _float>& GetLocalEular() { return m_LocalEular; }
+
 	const string&	GetChannelName() { return m_strName; }
 
 	void SetLocalRotation(_bool bLocalRotation) { m_bLocalRotation = bLocalRotation; }
@@ -36,6 +40,10 @@ private:
 
 	_vector			m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_vector			m_vLocalRotation = XMQuaternionIdentity();
+	Quaternion		m_vLocalQuaternion = m_vLocalQuaternion.Identity;
+
+	pair<_vector, _float>	m_LocalEular;
+
 private:
 	_uint			m_iCurFrameIdx = 0;
 	_bool			m_bLocalRotation = false;
