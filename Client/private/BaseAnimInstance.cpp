@@ -2616,7 +2616,7 @@ _bool CBaseAnimInstance::FloorCheck()
 {
 	if (!m_bAir && !m_bOnFloor)
 	{
-		if (-7.f >= m_fYSpeed)
+		if (-15.f >= m_fYSpeed)
 		{
 			return true;
 		}
