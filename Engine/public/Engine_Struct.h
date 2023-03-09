@@ -167,14 +167,29 @@ namespace Engine
 		static D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VAL_BASE_VTXMODEL_DECLARATION;
 
-
+	// For Particle PointInstance 
 	typedef struct tagVertexMatrix
 	{
 		_float4			vRight;
 		_float4			vUp;
 		_float4			vLook;
 		_float4			vPosition;
+
+		_float4			vRotRight;
+		_float4			vRotUp;
+		_float4			vRotLook;
+		_float4			vRotPos;
+
+		_float			fGravityPower;
 	}VTXMATRIX;
+
+	typedef struct ENGINE_DLL tagVertexPoint_Instance_Particle_Declaration
+	{
+		static const unsigned int		iNumElements = 10;
+		static D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXPOINT_INSTANCE_PARTICLE_DECLARATION;
+
+	// ~ For Particle PointInstance 
 
 	typedef struct tagVertex_Instance
 	{
@@ -182,7 +197,16 @@ namespace Engine
 		_float4			vUp;
 		_float4			vLook;
 		_float4			vPosition;
+
 		_float4			vColor;
+
+		_float3			vEulerRad;
+		_float3			vRandDir;
+		_float3			vVelocity;
+		_float3			vSize;
+		_float			fGravityPower;
+		_float			fLifeTime;
+		_float			fCurLifeTime;
 	}VTXINSTANCE;
 
 	/*******************

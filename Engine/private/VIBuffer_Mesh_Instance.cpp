@@ -12,7 +12,7 @@ CVIBuffer_Mesh_Instancing::CVIBuffer_Mesh_Instancing(const CVIBuffer_Mesh_Instan
 	: CVIBuffer_Instancing(rhs)
 	, m_iInitNumInstance(rhs.m_iInitNumInstance)
 	, m_iMaterialIndex(rhs.m_iMaterialIndex)
-	, m_Particles(rhs.m_Particles)
+	// , m_Particles(rhs.m_Particles)
 	, m_strName(rhs.m_strName)
 {
 	m_bIsInstance = true;
@@ -114,15 +114,14 @@ HRESULT CVIBuffer_Mesh_Instancing::Initialize_Prototype(const char* pModelFilePa
 		pInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f);
 		pInstance[i].vUp = _float4(0.f, 1.f, 0.f, 0.f);
 		pInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
-		pInstance[i].vPosition = _float4((rand() % 5), (rand() % 5), (rand() % 5), 1.f);
+		pInstance[i].vPosition = _float4(0.f, 0.f, 0.f, 1.f);
+
 		pInstance[i].vColor = _float4(0.f, 0.f, 0.f, 1.f);
 
-		PARTICLE tParticle;
+		pInstance[i].vRandDir = _float3(0.f, 0.f, 0.f);
+		pInstance[i].fLifeTime = 0.f;
+		pInstance[i].fGravityPower = 0.f;
 
-		ZeroMemory(&tParticle, sizeof(PARTICLE));
-		tParticle.iNum = i;
-
-		m_Particles.push_back(tParticle);
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -206,16 +205,16 @@ HRESULT CVIBuffer_Mesh_Instancing::Initialize(void* pArg)
 
 void CVIBuffer_Mesh_Instancing::Tick(_double TimeDelta)
 {
-	if (nullptr == m_pContext ||
-		nullptr == m_pInstanceBuffer)
-		return;
+	// if (nullptr == m_pContext ||
+		// nullptr == m_pInstanceBuffer)
+		// return;
 
-	D3D11_MAPPED_SUBRESOURCE		SubResource;
+	// D3D11_MAPPED_SUBRESOURCE		SubResource;
 
 	/* D3D11_MAP_WRITE_NO_OVERWRITE : SubResource구조체가 받아온 pData에 유요한 값이 담겨잇는 형태로 얻어오낟. */
 	/* D3D11_MAP_WRITE_DISCARD : SubResource구조체가 받아온 pData에 값이 초기화된 형태로 얻어오낟. */
 
-	m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+	// m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 
 
 
@@ -265,27 +264,27 @@ void CVIBuffer_Mesh_Instancing::Tick(_double TimeDelta)
 	// 	XMStoreFloat3(&iter->vPos, XMLoadFloat3(&iter->vPos) + XMLoadFloat3(&iter->vVelocity) * TimeDelta); //위치
 	// 	XMStoreFloat3(&iter->vSize, XMLoadFloat3(&iter->vSize) + XMLoadFloat3(&m_ParticleDesc.vScaleVariation) * TimeDelta); //크기
 	//
-	for (auto& iter = m_Particles.begin(); iter != m_Particles.end();)
-		{
-	// 	pInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f);
-	// 	pInstance[i].vUp = _float4(0.f, 1.f, 0.f, 0.f);
-	// 	pInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
-	// 	pInstance[i].vPosition = _float4((rand() % 10), (rand() % 10), (rand() % 10), 1.f);
-	// 	pInstance[i].vColor = _float4(0.f, 0.f, 0.f, 1.f);
-	//
-	//
-		((VTXINSTANCE*)SubResource.pData)[iter->iNum].vPosition = _float4((rand() % 5), (rand() % 5), (rand() % 5), 1.f);
-		((VTXINSTANCE*)SubResource.pData)[iter->iNum].vRight = _float4(1.f, 0.f, 0.f, 0.f);
-		((VTXINSTANCE*)SubResource.pData)[iter->iNum].vUp = _float4(0.f, 1.f, 0.f, 0.f);
-		((VTXINSTANCE*)SubResource.pData)[iter->iNum].vLook = _float4(0.f, 0.f, 1.f, 0.f);
-		++iter;
-		}
+	// for (auto& iter = m_Particles.begin(); iter != m_Particles.end();)
+	// 	{
+	// // 	pInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f);
+	// // 	pInstance[i].vUp = _float4(0.f, 1.f, 0.f, 0.f);
+	// // 	pInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
+	// // 	pInstance[i].vPosition = _float4((rand() % 10), (rand() % 10), (rand() % 10), 1.f);
+	// // 	pInstance[i].vColor = _float4(0.f, 0.f, 0.f, 1.f);
+	// //
+	// //
+	// 	((VTXINSTANCE*)SubResource.pData)[iter->iNum].vPosition = _float4((rand() % 5), (rand() % 5), (rand() % 5), 1.f);
+	// 	((VTXINSTANCE*)SubResource.pData)[iter->iNum].vRight = _float4(1.f, 0.f, 0.f, 0.f);
+	// 	((VTXINSTANCE*)SubResource.pData)[iter->iNum].vUp = _float4(0.f, 1.f, 0.f, 0.f);
+	// 	((VTXINSTANCE*)SubResource.pData)[iter->iNum].vLook = _float4(0.f, 0.f, 1.f, 0.f);
+	// 	++iter;
+	// 	}
 	//
 		// ++iter;
 	// }
 
 
-	m_pContext->Unmap(m_pInstanceBuffer, 0);
+	// m_pContext->Unmap(m_pInstanceBuffer, 0);
 
 }
 

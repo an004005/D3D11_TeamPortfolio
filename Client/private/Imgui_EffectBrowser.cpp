@@ -78,7 +78,27 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 	ImGui::Separator();
 	ImGui::Separator();
 
-	
+	{
+		char ParticleTag[MAX_PATH];
+		strcpy(ParticleTag, m_ParticleSystemTag.c_str());
+		ImGui::InputText("ParticleSystem Tag", ParticleTag, MAX_PATH);
+		m_ParticleSystemTag = ParticleTag;
+
+		if (ImGui::Button("Add New ParticleSystem"))
+		{
+			Json EffectJson = CJsonStorage::GetInstance()->FindOrLoadJson(m_ParticleSystemTag);
+			if (EffectJson.empty())
+				MSG_BOX("Failed to Add New ParticleSystem");
+			else
+			{
+				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_ParticleSystem", TEXT("ProtoVFX_ParticleSystem"), &EffectJson);
+			}
+		}
+	}
+
+	ImGui::Separator();
+	ImGui::Separator();
+
 
 	if (ImGui::CollapsingHeader("Effect Viewer"))
 	{
