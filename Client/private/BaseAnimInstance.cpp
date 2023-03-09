@@ -11,6 +11,17 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+	m_pModel->Find_Animation("AS_ch0100_021_AL_run_start_F")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_ch0100_022_AL_run_start_L")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_ch0100_023_AL_run_start_R")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_ch0100_024_AL_run_start_BL")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_ch0100_025_AL_run_start_BR")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_ch0100_122_AL_run_start_L")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_ch0100_123_AL_run_start_R")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_ch0100_124_AL_run_start_BL")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_ch0100_125_AL_run_start_BR")->SetLocalRotation(true);
+
 	m_pASM_Base = CASMBuilder()
 		.InitState("IDLE")
 
@@ -71,8 +82,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_021_AL_run_start_F"))
 			.StartEvent([&]() 
 			{ 
-				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({false, false, false, false, false, true, true, true, true, false });
+				//static_cast<CPlayer*>(m_pTargetObject)
+				//	->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 			})
 
 				.AddTransition("WALK to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -98,12 +109,12 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.AddTransition("WALK to WALK_START_BACK_LEFT", "WALK_START_BACK_LEFT")
 				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_B; })
 				.Duration(0.1f)
-				.Priority(4)
+				.Priority(3)
 
 				.AddTransition("WALK to WALK_START_BACK_RIGHT", "WALK_START_BACK_RIGHT")
 				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_B; })
 				.Duration(0.1f)
-				.Priority(3)
+				.Priority(4)
 
 				.AddTransition("WALK to ATK_A1", "ATK_A1")
 				.Predicator([&]()->_bool {return m_bLeftClick; })
@@ -126,10 +137,6 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
 					->SetAbleState({ true, false, false, false, false, true, true, true, true, false });
-			})
-			.FinishEvent([&]() 
-			{ 
-				static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); 
 			})
 
 				.AddTransition("WALK_START_FRONT to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -162,8 +169,9 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Priority(1)
 
 				.AddTransition("WALK_START_FRONT to WALK_LOOP", "WALK_LOOP")
+//				.Predicator([&]()->_bool { return 0.95f <= m_fPlayRatio; })
 				.Priority(0)
-				.Duration(0.05f)
+				.Duration(0.1f)
 
 				.AddTransition("WALK_START_FRONT to WALK_END", "WALK_END")
 				.Predicator([&]()->_bool { return !m_bWalk && (m_eMoveDir != CPlayer::DIR_F); })
@@ -180,11 +188,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+					->SetAbleState({ true, false, false, false, false, true, true, true, true, false });
 			})
-			.FinishEvent([&]() 
-			{ 
-				static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); 
+			.FinishEvent([&]()
+			{
+				//static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove);
 			})
 
 				.AddTransition("WALK_START_LEFT to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -196,7 +204,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_START_LEFT to DASH", "DASH")
-				.Predicator([&]()->_bool {return m_bDash && (0.4255f <= m_fPlayRatio); })
+				.Predicator([&]()->_bool {return m_bDash; })
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_START_LEFT to RUNJUMP_START", "RUNJUMP_START")
@@ -212,10 +220,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_START_LEFT to WALK_LOOP", "WALK_LOOP")
-				.Priority(0).Duration(0.05f)
+//				.Predicator([&]()->_bool { return 0.95f <= m_fPlayRatio; })
+				.Priority(0).Duration(0.1f)
 
 				.AddTransition("WALK_START_LEFT to WALK_END", "WALK_END")
-				.Predicator([&]()->_bool { return !m_bWalk && (0.4255f <= m_fPlayRatio) && (m_eMoveDir != CPlayer::DIR_L); })
+				.Predicator([&]()->_bool { return !m_bWalk/* && (0.4255f <= m_fPlayRatio)*/ && (m_eMoveDir != CPlayer::DIR_L); })
 				.Priority(1)
 				.Duration(0.1f)
 
@@ -229,11 +238,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+					->SetAbleState({ true, false, false, false, false, true, true, true, true, false });
 			})
-			.FinishEvent([&]() 
-			{ 
-				static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); 
+			.FinishEvent([&]()
+			{
+				//static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove);
 			})
 
 				.AddTransition("WALK_START_RIGHT to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -245,7 +254,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_START_RIGHT to DASH", "DASH")
-				.Predicator([&]()->_bool {return m_bDash && (0.4255f <= m_fPlayRatio); })
+				.Predicator([&]()->_bool {return m_bDash; })
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_START_RIGHT to RUNJUMP_START", "RUNJUMP_START")
@@ -261,10 +270,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_START_RIGHT to WALK_LOOP", "WALK_LOOP")
-				.Duration(0.05f).Priority(0)
+//				.Predicator([&]()->_bool { return 0.95f <= m_fPlayRatio; })
+				.Duration(0.1f).Priority(0)
 
 				.AddTransition("WALK_START_RIGHT to WALK_END", "WALK_END")
-				.Predicator([&]()->_bool { return !m_bWalk && (0.4255f <= m_fPlayRatio) && (m_eMoveDir != CPlayer::DIR_R); })
+				.Predicator([&]()->_bool { return !m_bWalk/* && (0.4255f <= m_fPlayRatio)*/ && (m_eMoveDir != CPlayer::DIR_R); })
 				.Priority(1)
 				.Duration(0.1f)
 
@@ -278,11 +288,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+					->SetAbleState({ true, false, false, false, false, true, true, true, true, false });
 			})
-			.FinishEvent([&]() 
-			{ 
-				static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); 
+			.FinishEvent([&]()
+			{
+				//static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove);
 			})
 
 				.AddTransition("WALK_START_BACK_LEFT to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -294,7 +304,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_START_BACK_LEFT to DASH", "DASH")
-				.Predicator([&]()->_bool {return m_bDash && (0.4255f <= m_fPlayRatio); })
+				.Predicator([&]()->_bool {return m_bDash; })
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_START_BACK_LEFT to RUNJUMP_START", "RUNJUMP_START")
@@ -310,10 +320,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_START_BACK_LEFT to WALK_LOOP", "WALK_LOOP")
-				.Duration(0.05f).Priority(0)
+	//			.Predicator([&]()->_bool { return 0.95f <= m_fPlayRatio; })
+				.Duration(0.1f).Priority(0)
 
 				.AddTransition("WALK_START_BACK_LEFT to WALK_END", "WALK_END")
-				.Predicator([&]()->_bool { return !m_bWalk && (0.4255f <= m_fPlayRatio) && (m_eMoveDir != CPlayer::DIR_B); })
+				.Predicator([&]()->_bool { return !m_bWalk/* && (0.4255f <= m_fPlayRatio)*/ && (m_eMoveDir != CPlayer::DIR_B); })
 				.Priority(1)
 				.Duration(0.1f)
 
@@ -327,11 +338,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-				->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+				->SetAbleState({ true, false, false, false, false, true, true, true, true, false });
 			})
-			.FinishEvent([&]() 
-			{ 
-				static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove); 
+			.FinishEvent([&]()
+			{
+				//static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vLocalMove);
 			})
 
 				.AddTransition("WALK_START_BACK_RIGHT to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -343,7 +354,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_START_BACK_RIGHT to DASH", "DASH")
-				.Predicator([&]()->_bool {return m_bDash && (0.4255f <= m_fPlayRatio); })
+				.Predicator([&]()->_bool {return m_bDash; })
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("WALK_START_BACK_RIGHT to RUNJUMP_START", "RUNJUMP_START")
@@ -359,10 +370,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(1)
 			
 				.AddTransition("WALK_START_BACK_RIGHT to WALK_LOOP", "WALK_LOOP")
-				.Duration(0.05f).Priority(0)
+			//	.Predicator([&]()->_bool { return 0.95f <= m_fPlayRatio; })
+				.Duration(0.1f).Priority(0)
 
 				.AddTransition("WALK_START_BACK_RIGHT to WALK_END", "WALK_END")
-				.Predicator([&]()->_bool { return !m_bWalk && (0.4255f <= m_fPlayRatio) && (m_eMoveDir != CPlayer::DIR_B); })
+				.Predicator([&]()->_bool { return !m_bWalk/* && (0.4255f <= m_fPlayRatio)*/ && (m_eMoveDir != CPlayer::DIR_B); })
 				.Priority(1)
 				.Duration(0.1f)
 
@@ -375,6 +387,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_026_AL_run"))
 			.StartEvent([&]() 
 			{ 
+				static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vMoveDir);	// 이동하고 있는 방향을 봐야됨
 				static_cast<CPlayer*>(m_pTargetObject)
 					->SetAbleState({ true, true, false, false, false, true, true, true, true, false });
 			})
@@ -742,22 +755,22 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 				.AddTransition("DASH to DASH_START_FRONT", "DASH_START_FRONT")
 				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_F; })
-				.Duration(0.05f).Priority(0)
+				.Duration(0.f).Priority(0)
 
 				.AddTransition("DASH to DASH_START_LEFT", "DASH_START_LEFT")
 				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_L; })
-				.Duration(0.05f).Priority(0)
+				.Duration(0.f).Priority(0)
 
 				.AddTransition("DASH to DASH_START_RIGHT", "DASH_START_RIGHT")
 				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_R; })
-				.Duration(0.05f).Priority(0)
+				.Duration(0.f).Priority(0)
 
 				.AddTransition("DASH to DASH_START_BACK", "DASH_START_BACK")
 				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_B; })
-				.Duration(0.05f).Priority(0)
+				.Duration(0.f).Priority(0)
 
 				.AddTransition("DASH to DASH_END_FRONT", "DASH_END_FRONT")
-				.Duration(0.05f).Priority(0)
+				.Duration(0.f).Priority(0)
 
 		// 앞쪽 대시 관련
 		.AddState("DASH_START_FRONT")
@@ -786,7 +799,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Priority(100)
 
 				.AddTransition("DASH_START_FRONT to DASH_END_FRONT", "DASH_END_FRONT")
-				.Duration(0.1f)
+				.Duration(0.f)
 				.Priority(100)
 
 		.AddState("DASH_END_FRONT")
@@ -833,7 +846,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("DASH_START_LEFT to DASH_END_LEFT", "DASH_END_LEFT")
-				.Duration(0.1f)
+				.Duration(0.f)
 				.Priority(100)
 
 		.AddState("DASH_END_LEFT")
@@ -875,7 +888,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("DASH_START_RIGHT to DASH_END_RIGHT", "DASH_END_RIGHT")
-				.Duration(0.1f)
+				.Duration(0.f)
 				.Priority(100)
 
 		.AddState("DASH_END_RIGHT")
@@ -916,7 +929,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("DASH_START_BACK to DASH_END_BACK", "DASH_END_BACK")
-				.Duration(0.1f)
+				.Duration(0.f)
 				.Priority(100)
 
 				.AddTransition("DASH_START_BACK to DASHJUMP_START", "DASHJUMP_START")
@@ -1144,25 +1157,25 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 					->SetAbleState({ false, false, false, false, false, true, true, false, false, false });
 			})
 
-				.AddTransition("ATTACK_CHARGE_LOOP to JUMP_FALL", "JUMP_FALL")
-				.Predicator([&]()->_bool {return FloorCheck(); })
-				.Duration(0.1f).Priority(0)
-
-				.AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_01", "CHARGE_ATTACK_01")
-				.Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(0, 0.5f)) && (!m_bCharge); })
-				.Duration(0.1f).Priority(2)
-
-				.AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_02", "CHARGE_ATTACK_02")
-				.Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(1, 1.f)) && (!m_bCharge); })
-				.Duration(0.1f).Priority(1)
-
-				.AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_03", "CHARGE_ATTACK_03")
-				.Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(2, 1.5f)) && (!m_bCharge); })
-				.Duration(0.1f).Priority(0)
-
-				.AddTransition("ATTACK_CHARGE_LOOP to CHARGE_CANCEL", "CHARGE_CANCEL")
-				.Predicator([&]() { return !m_bCharge; })
-				.Duration(0.1f).Priority(100)
+				 .AddTransition("ATTACK_CHARGE_LOOP to JUMP_FALL", "JUMP_FALL")
+				 .Predicator([&]()->_bool{return FloorCheck();})
+				 .Duration(0.1f).Priority(0)
+				
+				 .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_01", "CHARGE_ATTACK_01")
+				 .Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(0, 0.5f)) && (!m_bCharge); })
+				 .Duration(0.1f).Priority(2)
+				
+				 .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_02", "CHARGE_ATTACK_02")
+				 .Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(1, 1.f)) && (!m_bCharge); })
+				 .Duration(0.1f).Priority(1)
+				
+				 .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_03", "CHARGE_ATTACK_03")
+				 .Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(2, 1.5f)) && (!m_bCharge); })
+				 .Duration(0.1f).Priority(0)
+				
+				 .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_CANCEL", "CHARGE_CANCEL")
+				 .Predicator([&]() { return !m_bCharge; })
+				 .Duration(0.1f).Priority(100)
 
 		.AddState("CHARGE_CANCEL")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_210_AL_atk_charge_cancel"))
@@ -1394,7 +1407,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 				.AddTransition("JUMP_FALL to DOUBLE_JUMP_RISE", "DOUBLE_JUMP_RISE")
 				.Predicator([&]()->_bool {return m_bJump && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_DOUBLEJUMP); })
-				.Duration(0.05f)
+				.Duration(0.0f)
 				.Priority(100)
 
 				.AddTransition("JUMP_FALL to AIR_DODGE", "AIR_DODGE")
@@ -2333,15 +2346,32 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 
 	m_pModel->Compute_CombindTransformationMatrix();
 
+	// 로컬무브 연산은 계속 해주되, 적용은 적용을 할 타이밍에만 사용
+	_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+	_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix);
+	if (0.f != XMVectorGetX(XMVector3Length(vLocalMove)))
+		m_vLocalMove = vLocalMove;
+
 	if (bLocalMove)
 	{
-		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
-		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix);
-		m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
+		if (m_pASM_Base->GetCurState()->m_strName.find("WALK_START") != string::npos)
+		{
+			_float fLength = XMVectorGetX(XMVector3Length(vLocalMove));
+			_vector vLook = XMVector3Normalize(m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_LOOK));
 
-		if (0.f != XMVectorGetX(XMVector3Length(vLocalMove)))
-			m_vLocalMove = vLocalMove;
+			m_pTargetObject->GetTransform()->LocalMove(vLook * fLength);
+		}
+		else
+		{
+			m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
+		}
 	}
+
+	//m_pTargetObject->GetTransform()->TurnByMatrix(m_pModel->GetLocalRotationMatrix(m_pTargetObject->GetTransform()->Get_WorldMatrix()));
+
+	//m_pTargetObject->GetTransform()->AddQuaternion(m_pModel->GetLocalRotationDelta());
+	
+	//m_pTargetObject->GetTransform()->TurnByMatrix(m_pModel->GetLocalEularMatrix(m_pTargetObject->GetTransform()->Get_WorldMatrix()));
 	
 	if ("" != szCurAnimName)
 	{
@@ -2352,9 +2382,12 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 			m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
 	}
 
-	// 툴 작업 시에는 이거 끄고 하기!! 옵셔널 무브
-	_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTargetObject->GetTransform()->Get_WorldMatrix());
-	m_pTargetObject->GetTransform()->LocalMove(vOpTest);
+	if (m_bOptionalMove)
+	{
+		// 툴 작업 시에는 이거 끄고 하기!! 옵셔널 무브
+		_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTargetObject->GetTransform()->Get_WorldMatrix());
+		m_pTargetObject->GetTransform()->LocalMove(vOpTest);
+	}
 }
 
 void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
@@ -2370,6 +2403,7 @@ void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
 	m_bAir = pPlayer->isAir();
 	m_bMove = pPlayer->isMove();
 	m_bWalk = pPlayer->isWalk();
+	m_bOptionalMove = pPlayer->isOptionalMove();
 
 	m_bLeftClick = pPlayer->isLeftClick();
 	m_bDash = pPlayer->isDash();
@@ -2484,6 +2518,31 @@ _bool CBaseAnimInstance::isSocketExactlyEmpty()
 	return true;
 }
 
+void CBaseAnimInstance::ClearAnimSocket(const string & strSocName)
+{
+	if ("" == strSocName)
+	{
+		for (auto& iter : m_mapAnimSocket)
+		{
+			if (!iter.second.empty())
+				iter.second.front()->Reset();
+
+			list<CAnimation*> SocketList;
+			iter.second = SocketList;
+		}
+	}
+	else
+	{
+		if (!m_mapAnimSocket[strSocName].empty())
+			m_mapAnimSocket[strSocName].front()->Reset();
+
+		list<CAnimation*> SocketList;
+		m_mapAnimSocket[strSocName] = SocketList;
+	}
+
+	m_bSeperateSwitch = false;
+}
+
 void CBaseAnimInstance::SpairAnimationChecker()
 {
 	// 전투 중 스페어 애니메이션 추가
@@ -2557,7 +2616,7 @@ _bool CBaseAnimInstance::FloorCheck()
 {
 	if (!m_bAir && !m_bOnFloor)
 	{
-		if (-7.f >= m_fYSpeed)
+		if (-15.f >= m_fYSpeed)
 		{
 			return true;
 		}
