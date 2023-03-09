@@ -50,9 +50,13 @@ public:
 	void SetPivot(_float4x4 Pivot) { m_PivotMatrix = Pivot; }
 	_vector GetLocalMove(_fmatrix WorldMatrix);
 	_vector GetLocalMove(_fmatrix WorldMatrix, const string& srtAnimName);
+	_float	GetLocalScalar(_fmatrix WorldMatrix);
 	_bool	isLocalMove() { return !XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)); }
 	_float	GetLastLocalMoveSpeed() const { return m_fLastLocalMoveSpeed; }
 	void	Reset_LocalMove(_bool isSocket = false);
+
+	_matrix GetLocalRotationMatrix(_fmatrix WorldMatrix);
+	_matrix GetLocalEularMatrix(_fmatrix WorldMatrix);
 
 	_vector GetLocalRotationDelta();
 
@@ -129,6 +133,7 @@ private:
 	unordered_map<string, class CBone*>	 m_mapBones;
 
 	string								m_CurAnimName;
+	string								m_LocalMoveAnimName;
 	unordered_map<string, CAnimation*>  m_mapAnimation;
 
 	KEYFRAME							m_CurKeyFrame;
@@ -143,6 +148,12 @@ private:
 
 	_vector								m_vLocalRotation = XMQuaternionIdentity();
 	_vector								m_vBefLocalRotation = XMQuaternionIdentity();
+
+	Quaternion							m_vLocalQuaternion = XMQuaternionIdentity();
+	Quaternion							m_vBefLocalQuaternion = XMQuaternionIdentity();
+
+	pair<_vector, _float>				m_LocalEular;
+	pair<_vector, _float>				m_BefLocalEular;
 
 	_vector								m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_vector								m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);

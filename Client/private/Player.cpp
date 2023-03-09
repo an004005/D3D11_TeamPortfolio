@@ -74,8 +74,14 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_JustDodgeStateMachine()))
 		return E_FAIL;
 
-//	Load_DefaultEffects("../Bin/Resources/Curve/Default_Attack/");
-//	Load_DefaultEffects("../Bin/Resources/Curve/Fire_Attack/");
+	if (FAILED(SetUp_RigidBody()))
+		return E_FAIL;
+
+	//Load_DefaultEffects("../Bin/Resources/Curve/Default_Attack/");
+	//Load_DefaultEffects("../Bin/Resources/Curve/Fire_Attack/");
+
+	Load_Effect("../Bin/Resources/Curve/Default_Attack/");
+	Load_Effect("../Bin/Resources/Curve/Fire_Attack/");
 
 	ZeroMemory(&m_PlayerStat, sizeof(PLAYER_STAT));
 	m_PlayerStat.m_iHP = 1000;
@@ -125,10 +131,10 @@ void CPlayer::Tick(_double TimeDelta)
 
 	NetualChecker(TimeDelta);	// 전투상태 아닐 때 체크
 
-	// if (m_pPlayerCam->IsMainCamera())
+	 if (m_pPlayerCam->IsMainCamera())
 		m_pController->Tick(TimeDelta);
-	// else
-		// m_pController->Invalidate();
+	 else
+		 m_pController->Invalidate();
 
 	Search_Usable_KineticObject();
 
@@ -179,11 +185,7 @@ void CPlayer::Tick(_double TimeDelta)
 	{
 		iter->Tick(TimeDelta);
 		{	// 충돌 판정
-			DAMAGE_PARAM tParam;
-			ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
-			tParam.iDamage = 1;
-			tParam.eAttackType = EAttackType::ATK_MIDDLE; // Test 용도 임시
-//			Collision_Check_Capsule(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), tParam);
+			Collision_Check_Capsule(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable);
 
 			if (isCollision())	// 무기로 충돌 발생하면 slash를 1로 올려줌
 				m_fKineticCombo_Slash = 1.f;
@@ -201,8 +203,34 @@ void CPlayer::Tick(_double TimeDelta)
 		m_PlayerSasType = ESASType::SAS_FIRE;
 	}
 
-	//EffectMaker();
-	//Attack_Effect("Eff01", 1.f);
+	if (pGameInstance->KeyDown(DIK_NUMPAD1))
+	{
+		m_bHit = true;
+		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
+		m_DamageDesc.m_iDamageType = EAttackType::ATK_LIGHT;
+	}
+	if (pGameInstance->KeyDown(DIK_NUMPAD2))
+	{
+		m_bHit = true;
+		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
+		m_DamageDesc.m_iDamageType = EAttackType::ATK_MIDDLE;
+	}
+	if (pGameInstance->KeyDown(DIK_NUMPAD3))
+	{
+		m_bHit = true;
+		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
+		m_DamageDesc.m_iDamageType = EAttackType::ATK_HEAVY;
+	}
+	if (pGameInstance->KeyDown(DIK_NUMPAD4))
+	{
+		m_bHit = true;
+		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
+		m_DamageDesc.m_iDamageType = EAttackType::ATK_TO_AIR;
+	}
 
 	/*if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
@@ -283,8 +311,6 @@ void CPlayer::AfterPhysX()
 	{
 		static_cast<CScarletWeapon*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
 	}
-
-	//Attack_Effect("Eff01", 1.f);
 }
 
 HRESULT CPlayer::Render()
@@ -324,6 +350,10 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 void CPlayer::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	//m_pContectRigidBody->Imgui_RenderProperty();
+	m_pASM->Imgui_RenderState();
+
 	ImGui::SliderFloat("PlayerTurnSpeed", &m_fTurnSpeed, 0.f, 1000.f);
 	if (ImGui::Button("TurnAccess"))
 	{
@@ -399,16 +429,42 @@ void CPlayer::Imgui_RenderProperty()
 			ImGui::EndListBox();
 		}
 
-		if (ImGui::BeginListBox("Effect List"))
+		if (ImGui::BeginListBox("Default Effect List"))
 		{
-			static char szSeachEffect[MAX_PATH] = "";
-			ImGui::InputText("Effect Search", szSeachEffect, MAX_PATH);
+			static char szSeachDefault[MAX_PATH] = "";
+			ImGui::InputText("Default Effect Search", szSeachDefault, MAX_PATH);
 
-			const string strSearch = szSeachEffect;
+			const string strSearch = szSeachDefault;
 			const _bool bSearch = strSearch.empty() == false;
 
 			
-			for (auto& Pair : m_mapPlayerEffect)
+			for (auto& Pair : m_mapDefaultEffect)
+			{
+				if (bSearch)
+				{
+					if (Pair.first.find(strSearch) == string::npos)
+						continue;
+				}
+
+				const bool bSelected = szEffectName == Pair.first;
+				if (bSelected)
+					ImGui::SetItemDefaultFocus();
+
+				if (ImGui::Selectable(Pair.first.c_str(), bSelected))
+					szEffectName = Pair.first;
+			}
+			ImGui::EndListBox();
+		}
+
+		if (ImGui::BeginListBox("Fire Effect List"))
+		{
+			static char szSeachFire[MAX_PATH] = "";
+			ImGui::InputText("Fire Effect Search", szSeachFire, MAX_PATH);
+
+			const string strSearch = szSeachFire;
+			const _bool bSearch = strSearch.empty() == false;
+
+			for (auto& Pair : m_mapFireEffect)
 			{
 				if (bSearch)
 				{
@@ -459,6 +515,9 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 			FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_ModelName.c_str(), m_ModelName.c_str(),
 				(CComponent**)&m_pModel));
 		}
+
+		//FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody",
+		//	L"ContectRigidBody", (CComponent**)&m_pContectRigidBody, pArg));
 	}
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_LocalController"), TEXT("Com_Controller"),
@@ -469,9 +528,26 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_RigidBody()
+{
+	m_pCollider->SetContactCallback([this](CGameObject* pGameObject, ECOLLIDER_TYPE eType)
+	{
+		if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
+		{
+			m_bOptionalMove = false;
+		}
+		else
+		{
+			m_bOptionalMove = true;
+		}
+	});
+
+	return S_OK;
+}
+
 HRESULT CPlayer::SetUp_Event()
 {
-	/*m_pModel->Add_EventCaller("Turn_Enable", [&]() {Event_SetCanTurn(true); });
+	m_pModel->Add_EventCaller("Turn_Enable", [&]() {Event_SetCanTurn(true); });
 	m_pModel->Add_EventCaller("Turn_Disable", [&]() {Event_SetCanTurn(false); });
 
 	m_pModel->Add_EventCaller("Move_Enable", [&]() {Event_SetCanMove(true); });
@@ -482,9 +558,6 @@ HRESULT CPlayer::SetUp_Event()
 
 	m_pModel->Add_EventCaller("AtkTurn_Enable", [&]() {Event_SetCanTurn_Attack(true); });
 	m_pModel->Add_EventCaller("AtkTurn_Disable", [&]() {Event_SetCanTurn_Attack(false); });
-
-	m_pModel->Add_EventCaller("LocalRevise_Enable", [&]() {Event_SetLocalRevise(true); });
-	m_pModel->Add_EventCaller("LocalRevise_Disable", [&]() {Event_SetLocalRevise(false); });
 
 	m_pModel->Add_EventCaller("OnAir_Enable", [&]() {Event_SetOnAir(true); });
 	m_pModel->Add_EventCaller("OnAir_Disable", [&]() {Event_SetOnAir(false); });
@@ -497,9 +570,18 @@ HRESULT CPlayer::SetUp_Event()
 
 	m_pModel->Add_EventCaller("MoveLimitReset", [&]() {Event_MoveLimitReset(); });
 	m_pModel->Add_EventCaller("Event_AttackLimitReset", [&]() {Event_AttackLimitReset(); });
-	m_pModel->Add_EventCaller("Event_ChargeReset", [&]() {Event_ChargeReset(); });*/
+	m_pModel->Add_EventCaller("Event_ChargeReset", [&]() {Event_ChargeReset(); });
+
+	m_pModel->Add_EventCaller("LookAtDir", [&]() {Event_LookAtMove(); });
 
 	m_pModel->Add_EventCaller("Jump", [&]() {Jump(); });
+
+	m_pModel->Add_EventCaller("Light_Attack_On", [&]() {Event_LightAttack_Start(); });
+	m_pModel->Add_EventCaller("Middle_Attack_On", [&]() {Event_MiddleAttack_Start(); });
+	m_pModel->Add_EventCaller("Heavy_Attack_On", [&]() {Event_HeavyAttack_Start(); });
+	m_pModel->Add_EventCaller("Air_Attack_On", [&]() {Event_AirAttack_Start(); });
+
+	m_pModel->Add_EventCaller("Attack_Off", [&]() {Event_Attack_End(); });
 	
 	return S_OK;
 }
@@ -507,81 +589,81 @@ HRESULT CPlayer::SetUp_Event()
 HRESULT CPlayer::SetUp_EffectEvent()
 {
 	// Default Effect
-	//m_pModel->Add_EventCaller("Default_Attack_1", [&]() {Event_Effect("Default_Attack_1"); });
-	//m_pModel->Add_EventCaller("Default_Attack_2", [&]() {Event_Effect("Default_Attack_2"); });
-	//m_pModel->Add_EventCaller("Default_Attack_3", [&]() {Event_Effect("Default_Attack_3"); });
-	//m_pModel->Add_EventCaller("Default_Attack_4_1", [&]() {Event_Effect("Default_Attack_4_1"); });
-	//m_pModel->Add_EventCaller("Default_Attack_4_2", [&]() {Event_Effect("Default_Attack_4_2"); });
-	//m_pModel->Add_EventCaller("Default_Attack_4_3", [&]() {Event_Effect("Default_Attack_4_3"); });
-	//m_pModel->Add_EventCaller("Default_Attack_5", [&]() {Event_Effect("Default_Attack_5"); });
-	//m_pModel->Add_EventCaller("Default_Attack_5_BackGround", [&]() {Event_Effect("Default_Attack_5_BackGround"); });
-	//m_pModel->Add_EventCaller("Default_Attack_5_Final", [&]() {Event_Effect("Default_Attack_5_Final"); });
-	//m_pModel->Add_EventCaller("Default_Attack_5_PreEffect", [&]() {Event_Effect("Default_Attack_5_PreEffect"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Air_Attack_1", [&]() {Event_Effect("Air_Attack_1"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Air_Attack_2", [&]() {Event_Effect("Air_Attack_2"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Air_Attack_Chase", [&]() {Event_Effect("Default_Attack_Air_Attack_Chase"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Air_Dash_0", [&]() {Event_Effect("Air_Dash_0"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Air_Dash_1", [&]() {Event_Effect("Default_Attack_Air_Dash_1"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Air_Hold_0", [&]() {Event_Effect("Air_Hold_0"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Air_Hold_1", [&]() {Event_Effect("Air_Hold_1"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Air_Hold_2", [&]() {Event_Effect("Air_Hold_2"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Air_Hold_3_Landing", [&]() {Event_Effect("Air_Hold_3_Landing"); });
-	//m_pModel->Add_EventCaller("Default_Attack_B4", [&]() {Event_Effect("Default_Attack_B4"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Charging_C4", [&]() {Event_Effect("Charging_C"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Dash_0", [&]() {Event_Effect("Dash_0"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Dash_1_01", [&]() {Event_Effect("Default_Attack_Dash_1_01"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Dash_1_02", [&]() {Event_Effect("Default_Attack_Dash_1_02"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Dash_2", [&]() {Event_Effect("Default_Attack_Dash_2"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Dash_3_End", [&]() {Event_Effect("Default_Attack_Dash_3_End"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Dash_Hold_0", [&]() {Event_Effect("Dash_Hold_0"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Dash_Hold_1", [&]() {Event_Effect("Dash_Hold_1"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Dash_Hold_2", [&]() {Event_Effect("Dash_Hold_2"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Justdodge_0", [&]() {Event_Effect("Default_Attack_Justdodge_0"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Justdodge_1", [&]() {Event_Effect("Default_Attack_Justdodge_1"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Justdodge_2", [&]() {Event_Effect("Default_Attack_Justdodge_2"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Sas_Attack_0", [&]() {Event_Effect("Default_Attack_Sas_Attack_0"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Sas_Attack_1", [&]() {Event_Effect("Default_Attack_Sas_Attack_1"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Sas_Attack_2", [&]() {Event_Effect("Default_Attack_Sas_Attack_2"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Slash", [&]() {Event_Effect("Default_Attack_Slash"); });
-	//m_pModel->Add_EventCaller("Default_Attack_Upper", [&]() {Event_Effect("Upper"); });
-	//
-	//// Fire Effect
-	//m_pModel->Add_EventCaller("Fire_Attack_1", [&]() {Event_Effect("Fire_Attack_1"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_1_001", [&]() {Event_Effect("Fire_Attack_1_001"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_2", [&]() {Event_Effect("Fire_Attack_2"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_3", [&]() {Event_Effect("Fire_Attack_3"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_3_Double_twist", [&]() {Event_Effect("Fire_Attack_3_Double_twist"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_3_twist", [&]() {Event_Effect("Fire_Attack_3_twist"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_4", [&]() {Event_Effect("Fire_Attack_4"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_4_001", [&]() {Event_Effect("Fire_Attack_4_001"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_5", [&]() {Event_Effect("Fire_Attack_5"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Air_1", [&]() {Event_Effect("Fire_Attack_Air_1"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Air_2", [&]() {Event_Effect("Fire_Attack_Air_2"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Air_Chase", [&]() {Event_Effect("Fire_Attack_Air_Chase"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Air_dash_0", [&]() {Event_Effect("Fire_Attack_Air_dash_0"); });
-	//m_pModel->Add_EventCaller("Fire_AttacK_Air_dash_0_001", [&]() {Event_Effect("Fire_AttacK_Air_dash_0_001"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1", [&]() {Event_Effect("Fire_Attack_Air_dash_1"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1_001", [&]() {Event_Effect("Fire_Attack_Air_dash_1_001"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1_002", [&]() {Event_Effect("Fire_Attack_Air_dash_1_002"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Air_Hold", [&]() {Event_Effect("Fire_Attack_Air_Hold"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_1", [&]() {Event_Effect("Fire_Attack_Air_Hold_1"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_2", [&]() {Event_Effect("Fire_Attack_Air_Hold_2"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_Landing", [&]() {Event_Effect("Fire_Attack_Air_Hold_Landing"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Charge03", [&]() {Event_Effect("Fire_Attack_Charge03"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Charge03_001", [&]() {Event_Effect("Fire_Attack_Charge03_001"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Charge03_002", [&]() {Event_Effect("Fire_Attack_Charge03_002"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Dash_00", [&]() {Event_Effect("Fire_Attack_Dash_00"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Dash_01", [&]() {Event_Effect("Fire_Attack_Dash_01"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Dash_02_001", [&]() {Event_Effect("Fire_Attack_Dash_02_001"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Dash_02_002", [&]() {Event_Effect("Fire_Attack_Dash_02_002"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Dash_03", [&]() {Event_Effect("Fire_Attack_Dash_03"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_001", [&]() {Event_Effect("Fire_Attack_Dash_Hold_001"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_002", [&]() {Event_Effect("Fire_Attack_Dash_Hold_002"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_003", [&]() {Event_Effect("Fire_Attack_Dash_Hold_003"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Justdodge_01", [&]() {Event_Effect("Fire_Attack_Justdodge_01"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Justdodge_02", [&]() {Event_Effect("Fire_Attack_Justdodge_02"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Justdodge_03", [&]() {Event_Effect("Fire_Attack_Justdodge_03"); });
-	//m_pModel->Add_EventCaller("Fire_Attack_Upper", [&]() {Event_Effect("Fire_Attack_Upper"); });
+	m_pModel->Add_EventCaller("Default_Attack_1", [&]() {Event_Effect("Default_Attack_1"); });
+	m_pModel->Add_EventCaller("Default_Attack_2", [&]() {Event_Effect("Default_Attack_2"); });
+	m_pModel->Add_EventCaller("Default_Attack_3", [&]() {Event_Effect("Default_Attack_3"); });
+	m_pModel->Add_EventCaller("Default_Attack_4_1", [&]() {Event_Effect("Default_Attack_4_1"); });
+	m_pModel->Add_EventCaller("Default_Attack_4_2", [&]() {Event_Effect("Default_Attack_4_2"); });
+	m_pModel->Add_EventCaller("Default_Attack_4_3", [&]() {Event_Effect("Default_Attack_4_3"); });
+	m_pModel->Add_EventCaller("Default_Attack_5", [&]() {Event_Effect("Default_Attack_5"); });
+	m_pModel->Add_EventCaller("Default_Attack_5_BackGround", [&]() {Event_Effect("Default_Attack_5_BackGround"); });
+	m_pModel->Add_EventCaller("Default_Attack_5_Final", [&]() {Event_Effect("Default_Attack_5_Final"); });
+	m_pModel->Add_EventCaller("Default_Attack_5_PreEffect", [&]() {Event_Effect("Default_Attack_5_PreEffect"); });
+	m_pModel->Add_EventCaller("Default_Attack_Air_Attack_1", [&]() {Event_Effect("Air_Attack_1"); });
+	m_pModel->Add_EventCaller("Default_Attack_Air_Attack_2", [&]() {Event_Effect("Air_Attack_2"); });
+	m_pModel->Add_EventCaller("Default_Attack_Air_Attack_Chase", [&]() {Event_Effect("Default_Attack_Air_Attack_Chase"); });
+	m_pModel->Add_EventCaller("Default_Attack_Air_Dash_0", [&]() {Event_Effect("Air_Dash_0"); });
+	m_pModel->Add_EventCaller("Default_Attack_Air_Dash_1", [&]() {Event_Effect("Default_Attack_Air_Dash_1"); });
+	m_pModel->Add_EventCaller("Default_Attack_Air_Hold_0", [&]() {Event_Effect("Air_Hold_0"); });
+	m_pModel->Add_EventCaller("Default_Attack_Air_Hold_1", [&]() {Event_Effect("Air_Hold_1"); });
+	m_pModel->Add_EventCaller("Default_Attack_Air_Hold_2", [&]() {Event_Effect("Air_Hold_2"); });
+	m_pModel->Add_EventCaller("Default_Attack_Air_Hold_3_Landing", [&]() {Event_Effect("Air_Hold_3_Landing"); });
+	m_pModel->Add_EventCaller("Default_Attack_B4", [&]() {Event_Effect("Default_Attack_B4"); });
+	m_pModel->Add_EventCaller("Default_Attack_Charging_C4", [&]() {Event_Effect("Charging_C"); });
+	m_pModel->Add_EventCaller("Default_Attack_Dash_0", [&]() {Event_Effect("Dash_0"); });
+	m_pModel->Add_EventCaller("Default_Attack_Dash_1_01", [&]() {Event_Effect("Default_Attack_Dash_1_01"); });
+	m_pModel->Add_EventCaller("Default_Attack_Dash_1_02", [&]() {Event_Effect("Default_Attack_Dash_1_02"); });
+	m_pModel->Add_EventCaller("Default_Attack_Dash_2", [&]() {Event_Effect("Default_Attack_Dash_2"); });
+	m_pModel->Add_EventCaller("Default_Attack_Dash_3_End", [&]() {Event_Effect("Default_Attack_Dash_3_End"); });
+	m_pModel->Add_EventCaller("Default_Attack_Dash_Hold_0", [&]() {Event_Effect("Dash_Hold_0"); });
+	m_pModel->Add_EventCaller("Default_Attack_Dash_Hold_1", [&]() {Event_Effect("Dash_Hold_1"); });
+	m_pModel->Add_EventCaller("Default_Attack_Dash_Hold_2", [&]() {Event_Effect("Dash_Hold_2"); });
+	m_pModel->Add_EventCaller("Default_Attack_Justdodge_0", [&]() {Event_Effect("Default_Attack_Justdodge_0"); });
+	m_pModel->Add_EventCaller("Default_Attack_Justdodge_1", [&]() {Event_Effect("Default_Attack_Justdodge_1"); });
+	m_pModel->Add_EventCaller("Default_Attack_Justdodge_2", [&]() {Event_Effect("Default_Attack_Justdodge_2"); });
+	m_pModel->Add_EventCaller("Default_Attack_Sas_Attack_0", [&]() {Event_Effect("Default_Attack_Sas_Attack_0"); });
+	m_pModel->Add_EventCaller("Default_Attack_Sas_Attack_1", [&]() {Event_Effect("Default_Attack_Sas_Attack_1"); });
+	m_pModel->Add_EventCaller("Default_Attack_Sas_Attack_2", [&]() {Event_Effect("Default_Attack_Sas_Attack_2"); });
+	m_pModel->Add_EventCaller("Default_Attack_Slash", [&]() {Event_Effect("Default_Attack_Slash"); });
+	m_pModel->Add_EventCaller("Default_Attack_Upper", [&]() {Event_Effect("Upper"); });
+	
+	// Fire Effect
+	m_pModel->Add_EventCaller("Fire_Attack_1", [&]() {Event_Effect("Fire_Attack_1"); });
+	m_pModel->Add_EventCaller("Fire_Attack_1_001", [&]() {Event_Effect("Fire_Attack_1_001"); });
+	m_pModel->Add_EventCaller("Fire_Attack_2", [&]() {Event_Effect("Fire_Attack_2"); });
+	m_pModel->Add_EventCaller("Fire_Attack_3", [&]() {Event_Effect("Fire_Attack_3"); });
+	m_pModel->Add_EventCaller("Fire_Attack_3_Double_twist", [&]() {Event_Effect("Fire_Attack_3_Double_twist"); });
+	m_pModel->Add_EventCaller("Fire_Attack_3_twist", [&]() {Event_Effect("Fire_Attack_3_twist"); });
+	m_pModel->Add_EventCaller("Fire_Attack_4", [&]() {Event_Effect("Fire_Attack_4"); });
+	m_pModel->Add_EventCaller("Fire_Attack_4_001", [&]() {Event_Effect("Fire_Attack_4_001"); });
+	m_pModel->Add_EventCaller("Fire_Attack_5", [&]() {Event_Effect("Fire_Attack_5"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_1", [&]() {Event_Effect("Fire_Attack_Air_1"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_2", [&]() {Event_Effect("Fire_Attack_Air_2"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Chase", [&]() {Event_Effect("Fire_Attack_Air_Chase"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_0", [&]() {Event_Effect("Fire_Attack_Air_dash_0"); });
+	m_pModel->Add_EventCaller("Fire_AttacK_Air_dash_0_001", [&]() {Event_Effect("Fire_AttacK_Air_dash_0_001"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1", [&]() {Event_Effect("Fire_Attack_Air_dash_1"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1_001", [&]() {Event_Effect("Fire_Attack_Air_dash_1_001"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1_002", [&]() {Event_Effect("Fire_Attack_Air_dash_1_002"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold", [&]() {Event_Effect("Fire_Attack_Air_Hold"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_1", [&]() {Event_Effect("Fire_Attack_Air_Hold_1"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_2", [&]() {Event_Effect("Fire_Attack_Air_Hold_2"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_Landing", [&]() {Event_Effect("Fire_Attack_Air_Hold_Landing"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Charge03", [&]() {Event_Effect("Fire_Attack_Charge03"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Charge03_001", [&]() {Event_Effect("Fire_Attack_Charge03_001"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Charge03_002", [&]() {Event_Effect("Fire_Attack_Charge03_002"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_00", [&]() {Event_Effect("Fire_Attack_Dash_00"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_01", [&]() {Event_Effect("Fire_Attack_Dash_01"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_001", [&]() {Event_Effect("Fire_Attack_Dash_02_001"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_002", [&]() {Event_Effect("Fire_Attack_Dash_02_002"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_03", [&]() {Event_Effect("Fire_Attack_Dash_03"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_001", [&]() {Event_Effect("Fire_Attack_Dash_Hold_001"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_002", [&]() {Event_Effect("Fire_Attack_Dash_Hold_002"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_003", [&]() {Event_Effect("Fire_Attack_Dash_Hold_003"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Justdodge_01", [&]() {Event_Effect("Fire_Attack_Justdodge_01"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Justdodge_02", [&]() {Event_Effect("Fire_Attack_Justdodge_02"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Justdodge_03", [&]() {Event_Effect("Fire_Attack_Justdodge_03"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Upper", [&]() {Event_Effect("Fire_Attack_Upper"); });
 
 	m_pModel->Add_EventCaller("Trail_On", [&]() { static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(true); });
 	m_pModel->Add_EventCaller("Trail_Off", [&]() { static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false); });
@@ -644,6 +726,11 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 	m_pKineticStataMachine = CFSMComponentBuilder().InitState("NO_USE_KINETIC")
 
 		.AddState("NO_USE_KINETIC")
+		.OnStart([&]() 
+		{
+			SetAbleState({ false, true, false ,false, true, true, false, false, true, false });
+			//m_pASM->ClearAnimSocket("Kinetic_AnimSocket");
+		})
 		.Tick([&](double TimeDelta) 
 		{ 
 			m_bKineticMove = false; 
@@ -935,64 +1022,74 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(m_vThrow);
 				static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetThrow(true);
 			})
-			.Tick([&](double TimeDelta) {
+			.Tick([&](double TimeDelta) 
+			{
+
+			})
+			.OnExit([&]()
+			{
+				SetAbleState({ false, true, false ,false, true, true, false, false, true, false });
 			})
 
-			.AddTransition("KINETIC_RB_AIR_THROW_01_START to KINETIC_RB_AIR_THROW_01_END", "KINETIC_RB_AIR_THROW_01_END")
-			.Predicator([&]()->_bool {return !m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket"); })
+			.AddTransition("KINETIC_RB_AIR_THROW_01_START to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket") || m_pASM->isSocketEmpty("Kinetic_Air_AnimSocket"); })
 			.Priority(0)
 
-			.AddTransition("KINETIC_RB_AIR_THROW_01_START to KINETIC_RB_AIR_THROW_01_LOOP", "KINETIC_RB_AIR_THROW_01_LOOP")
-			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket") && m_pASM->CheckSocketAnim("Kinetic_Air_AnimSocket", "AS_ch0100_312_AL_AirCap_throw1_start"); })
-			.Priority(0)
+		//	.AddTransition("KINETIC_RB_AIR_THROW_01_START to KINETIC_RB_AIR_THROW_01_LOOP", "KINETIC_RB_AIR_THROW_01_LOOP")
+		//	.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket") && m_pASM->CheckSocketAnim("Kinetic_Air_AnimSocket", "AS_ch0100_312_AL_AirCap_throw1_start"); })
+		//	.Priority(0)
 
-		.AddState("KINETIC_RB_AIR_THROW_01_LOOP")
-			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw01_Loop); })
-			.Tick([&](double TimeDelta) {m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false; }) // 루프 반복되도록 끝나가면 더 넣어주기
+		//.AddState("KINETIC_RB_AIR_THROW_01_LOOP")
+		//	.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw01_Loop); })
+		//	.Tick([&](double TimeDelta) {m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false; }) // 루프 반복되도록 끝나가면 더 넣어주기
 
-			.AddTransition("KINETIC_RB_AIR_THROW_01_LOOP to KINETIC_RB_AIR_THROW_01_END", "KINETIC_RB_AIR_THROW_01_END")
-			.Predicator([&]()->_bool {return !m_bKineticRB; })
-			.Priority(0)
+		//	.AddTransition("KINETIC_RB_AIR_THROW_01_LOOP to KINETIC_RB_AIR_THROW_01_END", "KINETIC_RB_AIR_THROW_01_END")
+		//	.Predicator([&]()->_bool {return !m_bKineticRB; })
+		//	.Priority(0)
 
-			.AddTransition("KINETIC_RB_AIR_THROW_01_LOOP to KINETIC_RB_AIR_THROW_02_START", "KINETIC_RB_AIR_THROW_02_START")
-			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket") && m_pASM->CheckSocketAnim("Kinetic_Air_AnimSocket", "AS_ch0100_312_AL_AirCap_throw1_loop"); })
-			.Priority(0)
+		//	.AddTransition("KINETIC_RB_AIR_THROW_01_LOOP to KINETIC_RB_AIR_THROW_02_START", "KINETIC_RB_AIR_THROW_02_START")
+		//	.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket") && m_pASM->CheckSocketAnim("Kinetic_Air_AnimSocket", "AS_ch0100_312_AL_AirCap_throw1_loop"); })
+		//	.Priority(0)
 
-		.AddState("KINETIC_RB_AIR_THROW_01_END")
-			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw01_Cancel); })
-			.Tick([&](double TimeDelta) {m_bKineticMove = false; m_bCanMove = true; m_bActiveGravity = true; })
+		//.AddState("KINETIC_RB_AIR_THROW_01_END")
+		//	.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw01_Cancel); })
+		//	.Tick([&](double TimeDelta) {m_bKineticMove = false; m_bCanMove = true; m_bActiveGravity = true; })
 
-			.AddTransition("KINETIC_RB_AIR_THROW_01_END to NO_USE_KINETIC", "NO_USE_KINETIC")
-			.Predicator([&]()->_bool {return !m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Air_AnimSocket", 0.7f); })
-			.Priority(0)
+		//	.AddTransition("KINETIC_RB_AIR_THROW_01_END to NO_USE_KINETIC", "NO_USE_KINETIC")
+		//	.Predicator([&]()->_bool {return !m_bKineticRB && m_bOnFloor; })
+		//	.Priority(0)
 
-			.AddTransition("KINETIC_RB_AIR_THROW_01_END to KINETIC_RB_AIR_START", "KINETIC_RB_AIR_START")
-			.Predicator([&]()->_bool {return m_bKineticRB && (m_pASM->GetSocketAnimation("Kinetic_Air_AnimSocket")->GetPlayRatio() >= 0.2f); })
-			.Priority(0)
+		//	.AddTransition("KINETIC_RB_AIR_THROW_01_END to NO_USE_KINETIC", "NO_USE_KINETIC")
+		//	.Predicator([&]()->_bool {return !m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Air_AnimSocket", 0.7f); })
+		//	.Priority(0)
 
-		.AddState("KINETIC_RB_AIR_THROW_02_START")
-			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw02_Start); })
-			.Tick([&](double TimeDelta) {m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false; })
+		//	.AddTransition("KINETIC_RB_AIR_THROW_01_END to KINETIC_RB_AIR_START", "KINETIC_RB_AIR_START")
+		//	.Predicator([&]()->_bool {return m_bKineticRB && (m_pASM->GetSocketAnimation("Kinetic_Air_AnimSocket")->GetPlayRatio() >= 0.2f); })
+		//	.Priority(0)
 
-			.AddTransition("KINETIC_RB_AIR_THROW_02_START to KINETIC_RB_AIR_THROW_02_END", "KINETIC_RB_AIR_THROW_02_END")
-			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket"); })
-			.Priority(0)
+		//.AddState("KINETIC_RB_AIR_THROW_02_START")
+		//	.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw02_Start); })
+		//	.Tick([&](double TimeDelta) {m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false; })
 
-		.AddState("KINETIC_RB_AIR_THROW_02_LOOP")
-			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw02_Loop); })
-			.Tick([&](double TimeDelta) {m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false; })
+		//	.AddTransition("KINETIC_RB_AIR_THROW_02_START to KINETIC_RB_AIR_THROW_02_END", "KINETIC_RB_AIR_THROW_02_END")
+		//	.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket"); })
+		//	.Priority(0)
 
-			.AddTransition("KINETIC_RB_AIR_THROW_02_LOOP to KINETIC_RB_AIR_THROW_02_END", "KINETIC_RB_AIR_THROW_02_END")
-			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket"); })
-			.Priority(0)
+		//.AddState("KINETIC_RB_AIR_THROW_02_LOOP")
+		//	.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw02_Loop); })
+		//	.Tick([&](double TimeDelta) {m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false; })
 
-		.AddState("KINETIC_RB_AIR_THROW_02_END")
-			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw02_Cancel); })
-			.Tick([&](double TimeDelta) {m_bKineticMove = false; m_bCanMove = true; m_bActiveGravity = true; })
+		//	.AddTransition("KINETIC_RB_AIR_THROW_02_LOOP to KINETIC_RB_AIR_THROW_02_END", "KINETIC_RB_AIR_THROW_02_END")
+		//	.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket"); })
+		//	.Priority(0)
 
-			.AddTransition("KINETIC_RB_AIR_THROW_02_END to NO_USE_KINETIC", "NO_USE_KINETIC")
-			.Predicator([&]()->_bool {return m_pASM->isSocketPassby("Kinetic_Air_AnimSocket", 0.7f) || (!m_bAir); })
-			.Priority(0)
+		//.AddState("KINETIC_RB_AIR_THROW_02_END")
+		//	.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Throw02_Cancel); })
+		//	.Tick([&](double TimeDelta) {m_bKineticMove = false; m_bCanMove = true; m_bActiveGravity = true; })
+
+		//	.AddTransition("KINETIC_RB_AIR_THROW_02_END to NO_USE_KINETIC", "NO_USE_KINETIC")
+		//	.Predicator([&]()->_bool {return m_pASM->isSocketPassby("Kinetic_Air_AnimSocket", 0.7f) || (!m_bAir); })
+		//	.Priority(0)
 
 #pragma endregion KineticRB_Air_Throw
 
@@ -1140,7 +1237,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			})
 			.OnExit([&]() {m_bActiveGravity = true; })
 				.AddTransition("BREAKFALL_FRONT to NON_HIT", "NON_HIT")
-				.Predicator([&]()->_bool {return m_pASM->isSocketPassby("Hit_AnimSocket", 0.5f); })
+				.Predicator([&]()->_bool {return m_pASM->isSocketPassby("Hit_AnimSocket", 0.5f) || m_bOnFloor; })
 				.Priority(0)
 
 		.AddState("HIT_LIGHT")
@@ -1558,8 +1655,8 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 			.OnStart([&](){})
 			.Tick([&](double fTimeDelta)
 			{
-				IM_LOG("%f", m_fJustDodgeAble);
-				IM_LOG("JUSTDODGE!!");
+				//IM_LOG("%f", m_fJustDodgeAble);
+				//IM_LOG("JUSTDODGE!!");
 				// 저스트닷지 조건 발생 시 돌릴 Tick함수
 			})
 			.OnExit([&](){})
@@ -1573,7 +1670,11 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 				.Priority(0)
 
 		.AddState("JUSTDODGE_SLASH")
-			.OnStart([&](){ m_pASM->AttachAnimSocket("JustDodge_AnimSocket", m_JustDodgeSlash); })
+			.OnStart([&]()
+			{
+				SetAbleState({ false, false, false ,false, true, true, true, true, true, false });
+				m_pASM->AttachAnimSocket("JustDodge_AnimSocket", m_JustDodgeSlash);
+			})
 			.Tick([&](double fTimeDelta)
 			{
 				// 저스트닷지 피니시 발생 시 돌릴 Tick함수
@@ -1606,9 +1707,13 @@ _bool CPlayer::isPlayerAttack(void)
 	if (nullptr != m_pModel->GetPlayAnimation())
 		szCurAnim = m_pModel->GetPlayAnimation()->GetName();
 
-	string szKeyString = "atk";
+	if (szCurAnim.find("AS_ch0100_2") != string::npos)
+	{
+		m_bOnBattle = true;
+		return true;
+	}
 
-	if (szCurAnim.find(szKeyString) != string::npos)
+	if (szCurAnim.find("AS_ch0100_3") != string::npos)
 	{
 		m_bOnBattle = true;
 		return true;
@@ -1659,29 +1764,34 @@ CPlayer & CPlayer::SetAbleState(REMOTE tagRemote)
 	if (tagRemote.bAttackLimitReset) { AttackLimitReset(); }
 	if (tagRemote.bChargeReset) { Reset_Charge(); }
 
-	m_bLocalRevise = tagRemote.bLocalRevise;
-
 	return *this;
 }
 
 void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 {
 	CEffectGroup* pEffect = nullptr;
+	Json Effect;
 
 	switch (m_PlayerSasType)
 	{
 	case ESASType::SAS_GRAVIKENISIS:
-		pEffect = static_cast<CEffectGroup*>(m_mapPlayerEffect[szEffectName]);
+		if (szEffectName.find("Fire") != string::npos)	// Fire키워드 들어간 이펙트는 거름
+			break;
+		Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_mapDefaultEffect[szEffectName]);
+		pEffect = static_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_PlayerEffect", L"ProtoVFX_EffectGroup", &Effect));
 		break;
 	case ESASType::SAS_FIRE:
-		pEffect = static_cast<CEffectGroup*>(m_mapFireEffect[szEffectName]);
+		if (szEffectName.find("Fire") == string::npos)	// Fire키워드 없으면 거름
+			break;
+		Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_mapFireEffect[szEffectName]);
+		pEffect = static_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_PlayerEffect", L"ProtoVFX_EffectGroup", &Effect));
 		break;
 	}
 
 	if (pEffect == nullptr)
 		return;
 
-	pEffect->SetPlay();
+	//pEffect->SetPlay();
 	
 	_matrix	SocketMatrix = m_pModel->GetPivotMatrix() * m_pModel->GetBoneMatrix(szBoneName) * m_pTransformCom->Get_WorldMatrix();
 
@@ -1693,6 +1803,59 @@ void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 		pEffect->Set_Transform(SocketMatrix);
 }
 
+void CPlayer::Event_LightAttack_Start()
+{
+	m_bAttackEnable = true;
+
+	ZeroMemory(&m_AttackDesc, sizeof(DAMAGE_PARAM));
+
+	m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+	m_AttackDesc.iDamage = 10;
+	m_AttackDesc.eAttackSAS = m_PlayerSasType;
+	m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+}
+
+void CPlayer::Event_MiddleAttack_Start()
+{
+	m_bAttackEnable = true;
+
+	ZeroMemory(&m_AttackDesc, sizeof(DAMAGE_PARAM));
+
+	m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
+	m_AttackDesc.iDamage = 50;
+	m_AttackDesc.eAttackSAS = m_PlayerSasType;
+	m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+}
+
+void CPlayer::Event_HeavyAttack_Start()
+{
+	m_bAttackEnable = true;
+
+	ZeroMemory(&m_AttackDesc, sizeof(DAMAGE_PARAM));
+
+	m_AttackDesc.eAttackType = EAttackType::ATK_HEAVY;
+	m_AttackDesc.iDamage = 100;
+	m_AttackDesc.eAttackSAS = m_PlayerSasType;
+	m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+}
+
+void CPlayer::Event_AirAttack_Start()
+{
+	m_bAttackEnable = true;
+
+	ZeroMemory(&m_AttackDesc, sizeof(DAMAGE_PARAM));
+
+	m_AttackDesc.eAttackType = EAttackType::ATK_TO_AIR;
+	m_AttackDesc.iDamage = 100;
+	m_AttackDesc.eAttackSAS = m_PlayerSasType;
+	m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+}
+
+void CPlayer::Event_Attack_End()
+{
+	m_bAttackEnable = false;
+}
+
 void CPlayer::Reset_Charge()
 {
 	m_fBefCharge = 0.f;
@@ -1700,50 +1863,35 @@ void CPlayer::Reset_Charge()
 		iter = 0.f;
 }
 
-void CPlayer::Load_DefaultEffects(const char * pEffectDir)
+void CPlayer::Load_Effect(const char * pEffectDir)
 {
-	m_mapEffectGroup.clear();
-
-	CGameUtils::ListFiles(pEffectDir, [this](const string& pEffectPath)
-	{
-		Json jsonEffect = CJsonStorage::GetInstance()->FindOrLoadJson(pEffectPath);
-		auto pEffectGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect));
-
-		m_mapEffectGroup.emplace(pEffectGroup->GetObjectTag(), pEffectPath);
-		pEffectGroup->SetDelete();
-	});
-
-	CGameObject* pEffect = nullptr;
-
-	/*for (auto& iter : m_mapEffectGroup)
-	{
-		Json Effect = CJsonStorage::GetInstance()->FindOrLoadJson(iter.second);
-		pEffect = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_PlayerEffect", L"ProtoVFX_EffectGroup", &Effect);
-
-		m_mapPlayerEffect.emplace(iter.first, pEffect);
-	}*/
-
 	if (strstr(pEffectDir, "Default_Attack") != nullptr)
 	{
-		for (auto& iter : m_mapEffectGroup)
-		{
-			Json Effect = CJsonStorage::GetInstance()->FindOrLoadJson(iter.second);
-			pEffect = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_PlayerEffect", L"ProtoVFX_EffectGroup", &Effect);
+		m_mapDefaultEffect.clear();
 
-			m_mapPlayerEffect.emplace(iter.first, pEffect);
-		}
+		CGameUtils::ListFiles(pEffectDir, [this](const string& pEffectPath)
+		{
+			Json jsonEffect = CJsonStorage::GetInstance()->FindOrLoadJson(pEffectPath);
+			auto pEffectGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect));
+
+			m_mapDefaultEffect.emplace(pEffectGroup->GetObjectTag(), pEffectPath);
+			pEffectGroup->SetDelete();
+		});
 	}
+
 	else if (strstr(pEffectDir, "Fire_Attack") != nullptr)
 	{
-		for (auto& iter : m_mapEffectGroup)
+		m_mapFireEffect.clear();
+
+		CGameUtils::ListFiles(pEffectDir, [this](const string& pEffectPath)
 		{
-			Json Effect = CJsonStorage::GetInstance()->FindOrLoadJson(iter.second);
-			pEffect = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_PlayerEffect", L"ProtoVFX_EffectGroup", &Effect);
+			Json jsonEffect = CJsonStorage::GetInstance()->FindOrLoadJson(pEffectPath);
+			auto pEffectGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect));
 
-			m_mapFireEffect.emplace(iter.first, pEffect);
-		}
+			m_mapFireEffect.emplace(pEffectGroup->GetObjectTag(), pEffectPath);
+			pEffectGroup->SetDelete();
+		});
 	}
-
 }
 
 _bool CPlayer::UseAttackCnt(_uint eType)
@@ -1821,7 +1969,7 @@ void CPlayer::SmoothTurn_Attack(_double TimeDelta)
 
 	Vector4 vTarget = vPlayerPos + vCamLook;
 
-	m_pTransformCom->LookAt_Smooth(vTarget, TimeDelta * 0.5f);
+	m_pTransformCom->LookAt_Smooth(vTarget, TimeDelta * 0.1f);
 }
 
 void CPlayer::BehaviorCheck(_double TimeDelta)
@@ -1850,6 +1998,7 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 
 		m_bKineticRB = false;
 		m_bKineticG = false;
+		m_bUpper = false;
 	}
 	else
 	{
@@ -1862,15 +2011,25 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 		if (!m_bCharge) m_fBefCharge = 0.f;
 
 		m_bJump = m_pController->KeyDown(CController::SPACE);
+		m_bUpper = m_pController->KeyPress(CController::SPACE);
 
-		//if (m_bCanTurn_Attack)
-		//{
-		//	SmoothTurn_Attack(TimeDelta);
-		//}
+		if (m_bCanTurn_Attack)
+		{
+			SmoothTurn_Attack(TimeDelta);
+		}
 
 		m_bKineticRB = m_pController->KeyPress(CController::MOUSE_RB);
 		m_bKineticG = m_pController->KeyPress(CController::G);
+
+		if ((false == m_pASM->isSocketEmpty("Netual_Saperate_Animation")) &&
+			(m_bDash || m_bJump || m_bLeftClick || m_bNonCharge || m_bCharge || m_bKineticRB))
+		{
+			m_pASM->ClearAnimSocket("Netual_Saperate_Animation");
+		}
 	}
+
+	if (m_bLeftClick)
+		m_fKineticCombo_Slash = 10.f;
 
 	m_vCamLook = pGameInstance->Get_CamLook();
 }
@@ -1887,7 +2046,6 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 		m_vMoveDir = Vector3::Zero;
 		m_bCanTurn = false;
 		m_bAir = false;
-		m_bLocalRevise = false;
 	}
 	else
 	{
@@ -1939,12 +2097,6 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 
 			if (m_bAir || m_bHit)	// 공중 상태에선 회전이 먹지 않음
 				m_vMoveDir = vPlayerLook;
-
-			if (m_bLocalRevise)
-			{
-				Vector4 vCamLook = pGameInstance->Get_CamLook();
-				m_pTransformCom->SetAxis(CTransform::STATE_LOOK, vCamLook);
-			}
 		}
 	}
 }
@@ -1981,7 +2133,6 @@ void CPlayer::HitCheck()
 		m_bCanMove = false;
 		m_bCanRun = false;
 		m_bCanTurn_Attack = false;
-		m_bLocalRevise = false;
 		m_bKineticCombo = false;
 
 		if (nullptr != m_pKineticObject)
@@ -2000,7 +2151,7 @@ void CPlayer::NetualChecker(_double TimeDelta)
 		m_fNetualTimer = 0.f;
 	}
 
-	//IM_LOG("%f", m_fNetualTimer);
+//	IM_LOG("%f", m_fNetualTimer);
 
 	if (m_bOnBattle && (m_fNetualTimer >= 10.f))
 	{
@@ -2038,21 +2189,24 @@ HRESULT CPlayer::Setup_Parts()
 	return S_OK;
 }
 
-void CPlayer::Attack_Effect(const string& szBoneName, _float fSize)
-{
-	_matrix	SocketMatrix = m_pModel->GetPivotMatrix() * m_pModel->GetBoneMatrix(szBoneName) * m_pTransformCom->Get_WorldMatrix();
-
-	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]) *	fSize;
-	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]) * fSize;
-	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]) * fSize;
-
-	if (nullptr != m_pEffect)
-		static_cast<CEffectGroup*>(m_pEffect)->Set_Transform(SocketMatrix);
-}
+//void CPlayer::Attack_Effect(const string& szBoneName, _float fSize)
+//{
+//	_matrix	SocketMatrix = m_pModel->GetPivotMatrix() * m_pModel->GetBoneMatrix(szBoneName) * m_pTransformCom->Get_WorldMatrix();
+//
+//	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]) *	fSize;
+//	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]) * fSize;
+//	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]) * fSize;
+//
+//	if (nullptr != m_pEffect)
+//		static_cast<CEffectGroup*>(m_pEffect)->Set_Transform(SocketMatrix);
+//}
 
 void CPlayer::Search_Usable_KineticObject()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+//	m_pKineticObject = nullptr;
+//	m_pTargetedEnemy = nullptr;
 
 	if (pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic") == nullptr
 		|| pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic")->GetGameObjects().empty())
@@ -2312,6 +2466,7 @@ void CPlayer::Kinetic_ByTurn()
 				m_vThrow = vKineticToMonster;
 				m_bSwingKineticThrow = true;
 				m_fSwingLerpTimer = 0.f;
+				m_fKineticCombo_Slash = 10.f;
 			}
 			else
 			{
@@ -2332,6 +2487,7 @@ void CPlayer::Kinetic_ByTurn()
 				m_vThrow = vKineticToMonster;
 				m_bSwingKineticThrow = true;
 				m_fSwingLerpTimer = 0.f;
+				m_fKineticCombo_Slash = 10.f;
 			}
 			else
 			{
@@ -2378,6 +2534,14 @@ void CPlayer::Free()
 		Safe_Release(iter);
 	m_vecWeapon.clear();
 
+	//for (auto& iter : m_mapPlayerEffect)
+	//	Safe_Release(iter);
+	//m_mapPlayerEffect.clear();
+
+	//for (auto& iter : m_mapFireEffect)
+	//	Safe_Release(iter);
+	//m_mapFireEffect.clear();
+
 	Safe_Release(m_pKineticComboStateMachine);
 	Safe_Release(m_pKineticStataMachine);
 	Safe_Release(m_pHitStateMachine);
@@ -2388,4 +2552,6 @@ void CPlayer::Free()
 	Safe_Release(m_pModel);
 	Safe_Release(m_pController);
 	Safe_Release(m_pPlayerCam);
+
+//	Safe_Release(m_pContectRigidBody);
 }

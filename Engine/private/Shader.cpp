@@ -42,6 +42,7 @@ CShader::CShader(const CShader & rhs)
 	, m_InputLayouts(rhs.m_InputLayouts)	
 	, m_iNumPasses(rhs.m_iNumPasses)
 #ifdef _DEBUG
+	, m_CommonTextures(rhs.m_CommonTextures)
 	, m_shaderFilePath(rhs.m_shaderFilePath)
 	, m_pElements(rhs.m_pElements)
 	, m_iNumElements(rhs.m_iNumElements)
@@ -338,6 +339,17 @@ HRESULT CShader::Begin_Params(const ShaderParams& tParam)
 	return S_OK;
 }
 
+void CShader::SetCommonTexture(const char* pConstantName, const char* pTexFilePath)
+{
+	if (m_isCloned == false)
+	{
+		auto pTex = dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(s2ws(pTexFilePath).c_str()));
+		Assert(pTex != nullptr);
+		m_CommonTextures.emplace(pConstantName, pTex);
+		pTex->Bind_ShaderResource(this, pConstantName);
+	}
+}
+
 void CShader::SaveShaderParam(const ShaderParams& tParams, Json& json)
 {
 	Json& jsonParams = json["ShaderParams"];
@@ -552,7 +564,13 @@ void CShader::ReCompileShader()
 			return;
 
 		m_InputLayouts.push_back(pInputLayout);
-	}	
+	}
+
+	for (auto& texture : m_CommonTextures)
+	{
+		texture.second->Bind_ShaderResource(this, texture.first.c_str());
+	}
+
 }
 #endif
 
@@ -590,4 +608,12 @@ void CShader::Free()
 	m_InputLayouts.clear();
 
 	Safe_Release(m_pEffect);
+
+	if (m_isCloned == false)
+	{
+		for (auto tex : m_CommonTextures)
+		{
+			Safe_Release(tex.second);
+		}
+	}
 }

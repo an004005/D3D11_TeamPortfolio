@@ -10,8 +10,10 @@
             ]
         ],
         "Float4x4s": [],
-        "Floats": [],
-        "Ints": [],
+        "Floats": [0.0],
+        "Ints": [
+            0
+        ],
         "Pass": 1,
         "Textures": [
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Eye_COL.dds\u0000",

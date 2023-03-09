@@ -20,6 +20,9 @@ static const float EPSILON = 1e-6f;
 
 #define SHADER_NONE_SHADE 1 << 5
 
+#define COL_WHITE float3(1.f, 1.f, 1.f)
+#define COL_PURPLE float3(0.545098f, 0.f, 1.f)
+
 float2 Get_FlipBookUV(float2 vRectUV, float fCurTime, float fFrameTime, int iRowCnt, int iColCnt)
 {
 	float fTotalTime = fFrameTime * iRowCnt * iColCnt;

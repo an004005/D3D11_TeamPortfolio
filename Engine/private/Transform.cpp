@@ -4,6 +4,7 @@
 #include "ImguiUtils.h"
 #include "JsonLib.h"
 #include "Navigation.h"
+#include "MathUtils.h"
 
 CTransform::CTransform(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -200,17 +201,26 @@ void CTransform::LocalMove(_float3 vDir, _float fRange)
 	Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
+
 void CTransform::AddQuaternion(_vector Quaternion)
 {
-	_matrix		RotationMatrix = XMMatrixRotationQuaternion(Quaternion);
+	_float4 vEuler = CMathUtils::Quat2Euler(Quaternion);// roll, pitch, yaw
 
-	_vector		vRight = Get_State(CTransform::STATE_RIGHT);
-	_vector		vUp = Get_State(CTransform::STATE_UP);
-	_vector		vLook = Get_State(CTransform::STATE_LOOK);	
+	_matrix RotationMatrix = XMMatrixRotationRollPitchYaw(vEuler.y, vEuler.z, vEuler.x);
+
+	// _matrix      RotationMatrix = XMMatrixRotationQuaternion(Quaternion);
+
+	_vector      vRight = Get_State(CTransform::STATE_RIGHT);
+	_vector      vUp = Get_State(CTransform::STATE_UP);
+	_vector      vLook = Get_State(CTransform::STATE_LOOK);
 
 	Set_State(CTransform::STATE_RIGHT, XMVector4Transform(vRight, RotationMatrix));
 	Set_State(CTransform::STATE_UP, XMVector4Transform(vUp, RotationMatrix));
-	Set_State(CTransform::STATE_LOOK , XMVector4Transform(vLook, RotationMatrix));
+	Set_State(CTransform::STATE_LOOK, XMVector4Transform(vLook, RotationMatrix));
+	// Set_State(CTransform::STATE_RIGHT, XMVector3Rotate(vRight, Quaternion));
+	// Set_State(CTransform::STATE_UP, XMVector3Rotate(vUp, Quaternion));
+	// Set_State(CTransform::STATE_LOOK , XMVector3Rotate(vLook, Quaternion));
+
 }
 
 void CTransform::SetAxis(STATE eState, _fvector vAxis)
@@ -253,6 +263,41 @@ void CTransform::SetAxis(STATE eState, _fvector vAxis)
 	Set_State(CTransform::STATE_RIGHT, vRenewal_Right);
 	Set_State(CTransform::STATE_UP, vRenewal_Up);
 	Set_State(CTransform::STATE_LOOK, vRenewal_Look);
+}
+
+void CTransform::RightAt(_fvector vAxis)
+{
+	_float4 Axis = vAxis;
+	Axis.y = 0.f;
+	Axis.w = 0.f;
+	SetAxis(CTransform::STATE_RIGHT, Axis);
+}
+
+void CTransform::RightAt_Smooth(_fvector vAxis, _double TimeDelta)
+{
+	_vector vRight = XMVector3Normalize(Get_State(CTransform::STATE_RIGHT));
+	_vector vLook_rev = XMVector3Normalize(Get_State(CTransform::STATE_LOOK) * -1.f);
+	_vector vDir = XMVector3Normalize(vAxis);
+
+	_float fRAL = XMVectorGetX(XMVector3Dot(vLook_rev, vDir));	// 왼쪽? 오른쪽?
+	_float fBAF = XMVectorGetX(XMVector3Dot(vRight, vDir));		// 앞? 뒤?
+
+	if (0.2f > fRAL && -0.2f < fRAL)
+	{
+		if (0.f > fBAF)
+		{
+			if (0.2f <= fRAL)
+				Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta);
+			else if (-0.2f >= fRAL)
+				Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -TimeDelta);
+		}
+		else
+			RightAt(vDir);
+	}
+	else if (0.2f <= fRAL)
+		Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta);
+	else if (-0.2f >= fRAL)
+		Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -TimeDelta);
 }
 
 void CTransform::Turn(_fvector vAxis, _double TimeDelta)
@@ -341,6 +386,17 @@ void CTransform::RemoveRotation()
 	WorldMatrix.r[1] = XMVectorSet(0.f, 1.f, 0.f, 0.f) * XMVectorGetX(XMVector3Length(WorldMatrix.r[1]));
 	WorldMatrix.r[2] = XMVectorSet(0.f, 0.f, 1.f, 0.f) * XMVectorGetX(XMVector3Length(WorldMatrix.r[2]));
 	m_WorldMatrix = WorldMatrix;
+}
+
+void CTransform::TurnByMatrix(_fmatrix turnMatrix)
+{
+	_vector		vRight = Get_State(CTransform::STATE_RIGHT);
+	_vector		vUp = Get_State(CTransform::STATE_UP);
+	_vector		vLook = Get_State(CTransform::STATE_LOOK);
+
+	Set_State(CTransform::STATE_RIGHT, XMVector4Transform(vRight, turnMatrix));
+	Set_State(CTransform::STATE_UP, XMVector4Transform(vUp, turnMatrix));
+	Set_State(CTransform::STATE_LOOK, XMVector4Transform(vLook, turnMatrix));
 }
 
 void CTransform::LookAt(_fvector vTargetPos)
