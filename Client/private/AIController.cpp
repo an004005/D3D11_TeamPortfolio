@@ -87,6 +87,9 @@ void CAIController::Imgui_RenderProperty()
 	else if (m_eDistance == DIS_FAR)
 		strDistance = "Far";
 
+	else if (m_eDistance == DIS_OUTSIDE)
+		strDistance = "Outside";
+
 	ImGui::Text("Distance : "); ImGui::SameLine(); ImGui::Text(strDistance.c_str());
 	static string strSelected;
 	if (ImGui::BeginListBox("Current Commands"))

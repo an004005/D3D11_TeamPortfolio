@@ -70,17 +70,31 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 			_vector vPrePos = { fBoneMtx.m[3][0], fBoneMtx.m[3][1], fBoneMtx.m[3][2], fBoneMtx.m[3][3] };
 
-			_vector vDest = XMVectorSetW(vTargetPos - vPrePos, 0.f);
+			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+			/*vLook = XMVector3Normalize(XMVectorSetY(vLook, 0.f));*/
+
+			_vector vDest = XMVectorSetW(vLook - vPrePos, 0.f);
 			vDest = XMVector3Normalize(XMVectorSetY(vDest, 0.f));
 
 			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
 			pBullet->Set_ShootDir(vDest);
 
-			pBullet->GetTransform()->LookAt(vTargetPos);
+			pBullet->GetTransform()->LookAt(vDest);
 		}
-
 	});
+	m_pModelCom->Add_EventCaller("Upper", [this]
+	{
+		m_fGravity = 22.f;
+		m_fYSpeed = 11.f;
+	});
+	m_pModelCom->Add_EventCaller("Successive", [this]
+	{
+		m_fGravity = 36.f;
+		m_fYSpeed = 11.f;
+	});
+
 	// ~Event Caller
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 25.f)));
 	
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 
@@ -98,6 +112,11 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 	m_pDamage_M_L = m_pModelCom->Find_Animation("AS_em0600_413_AL_damage_m_L");
 	m_pDamage_M_R = m_pModelCom->Find_Animation("AS_em0600_414_AL_damage_m_R");
 
+	m_pBlowStart = m_pModelCom->Find_Animation("AS_em0600_432_AL_blow_start_F");
+	m_pBlowLand = m_pModelCom->Find_Animation("AS_em0600_433_AL_blow_landing_F");
+	m_pGetUp = m_pModelCom->Find_Animation("AS_em0600_427_AL_getup");
+	m_pRiseStart = m_pModelCom->Find_Animation("AS_em0600_455_AL_rise_start");
+
 	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0600_424_AL_dead_down");
 
 	return S_OK;
@@ -108,7 +127,7 @@ void CSkummyPool::BeginTick()
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("Pool", { m_pModelCom->Find_Animation("AS_em0600_160_AL_threat") });
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 36.f)));
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 25.f)));
 }
 
 void CSkummyPool::Tick(_double TimeDelta)
@@ -170,6 +189,42 @@ void CSkummyPool::Tick(_double TimeDelta)
 		}
 	}
 
+	if (m_bAirStruck || m_pController->KeyDown(CController::X))
+	{
+		m_bAirStruck = false;
+		m_pController->ClearCommands();
+		// 추가타 X
+		if (m_iAirDamage < 2)
+		{
+			if (!m_bMaintain)
+			{
+				m_pASM->AttachAnimSocket("Pool", { m_pBlowStart });
+				m_bMaintain = true;
+			}
+		}
+
+		else if (m_iAirDamage >= 2)
+		{
+			if (m_iAirDamage > m_iPreAirDamageCnt)
+				m_pASM->AttachAnimSocket("Pool", { m_pRiseStart });
+
+			m_iPreAirDamageCnt = m_iAirDamage;
+		}
+	}
+
+	if (m_bMaintain)
+	{
+		if (m_pASM->isSocketPassby("Pool", 0.5f))
+		{
+			if (bOnfloor)
+			{
+				m_pASM->InputAnimSocket("Pool", { m_pBlowLand, m_pGetUp });
+				m_iAirDamage = 0;
+				m_bMaintain = false;
+			}
+		}
+	}
+
 	m_pTrigger->Update_Tick(m_pTransformCom);
 
 	m_fTurnRemain = m_pController->GetTurnRemain();
@@ -211,13 +266,15 @@ void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	// ↑ 공격이 들어올 방향 
-	m_eAtkType = tDamageParams.eAttackType;
-
 	m_eHitDir = eHitFrom;
-
+	
+	m_eAtkType = tDamageParams.eAttackType;
+	
 	if (m_eAtkType == EAttackType::ATK_TO_AIR)
 	{
 		// 공중 피격 정의 
+		m_bAirStruck = true;
+		++m_iAirDamage;
 	}
 
 	else
@@ -263,9 +320,6 @@ void CSkummyPool::Free()
 {
 	CMonster::Free();
 
-	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pModelCom);
-	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);

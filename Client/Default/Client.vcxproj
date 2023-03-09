@@ -175,6 +175,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Defines.h" />
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Params.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Utils.h" />
@@ -184,6 +185,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\public\Batch.h" />
+    <ClInclude Include="..\public\BdLm_Controller.h" />
     <ClInclude Include="..\public\Boss1_AIController.h" />
     <ClInclude Include="..\public\BrJ_AnimInstance.h" />
     <ClInclude Include="..\public\BronJon.h" />
@@ -271,6 +273,7 @@
     <ClInclude Include="..\public\SkmP_AnimInstance.h" />
     <ClInclude Include="..\public\SkmP_Controller.h" />
     <ClInclude Include="..\public\SkPd_AnimInstance.h" />
+    <ClInclude Include="..\public\SkPd_Controller.h" />
     <ClInclude Include="..\public\SkummyPandou.h" />
     <ClInclude Include="..\public\SkummyPool.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -301,6 +304,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\private\Batch.cpp" />
+    <ClCompile Include="..\private\BdLm_Controller.cpp" />
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
     <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
     <ClCompile Include="..\private\BronJon.cpp" />
@@ -387,6 +391,7 @@
     <ClCompile Include="..\private\SkmP_AnimInstance.cpp" />
     <ClCompile Include="..\private\SkmP_Controller.cpp" />
     <ClCompile Include="..\private\SkPd_AnimInstance.cpp" />
+    <ClCompile Include="..\private\SkPd_Controller.cpp" />
     <ClCompile Include="..\private\SkummyPandou.cpp" />
     <ClCompile Include="..\private\SkummyPool.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

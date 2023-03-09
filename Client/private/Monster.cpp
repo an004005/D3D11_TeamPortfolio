@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\public\Monster.h"
 #include "PhysX_Manager.h"
+#include "Material.h"
+#include "Shader.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -10,6 +12,12 @@ CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CMonster::CMonster(const CScarletCharacter& rhs)
 	: CScarletCharacter(rhs)
 {
+}
+
+void CMonster::Tick(_double TimeDelta)
+{
+	CScarletCharacter::Tick(TimeDelta);
+	Update_DeadDissolve(TimeDelta);
 }
 
 _bool CMonster::CheckDamagedTarget(CScarletCharacter* pTarget)
@@ -72,4 +80,54 @@ void CMonster::HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAtt
 			pTarget->TakeDamage(tDamageParams);
 		}
 	}
+}
+
+void CMonster::Update_DeadDissolve(_double TimeDelta)
+{
+	if (m_iHP <= 0)
+	{
+		m_bDead = true;
+		m_fDeadDissolve -= (_float)TimeDelta;
+
+		for (auto pMtrl : m_pModelCom->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[0] = 1.f - m_fDeadDissolve * 2.f;
+		}
+
+		if (m_fDeadDissolve <= 0.f)
+			m_bDelete = true;
+	}
+}
+
+void CMonster::DeBuff_End()
+{
+	for (auto pMtrl : m_pModelCom->GetMaterials())
+	{
+		pMtrl->GetParam().Ints[0] = 0;
+	}
+}
+
+void CMonster::DeBuff_Fire()
+{
+	m_fDeBuffTime = 8.f;
+	for (auto pMtrl : m_pModelCom->GetMaterials())
+	{
+		pMtrl->GetParam().Ints[0] = 1;
+	}
+}
+
+void CMonster::DeBuff_Oil()
+{
+	m_fDeBuffTime = 10.f;
+	for (auto pMtrl : m_pModelCom->GetMaterials())
+	{
+		pMtrl->GetParam().Ints[0] = 2;
+	}
+}
+
+void CMonster::Free()
+{
+	__super::Free();
+	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pModelCom);
 }

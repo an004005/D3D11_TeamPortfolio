@@ -111,6 +111,7 @@ void CPhysX_Manager::Initialize()
 	m_pCooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_Foundation, PxCookingParams(m_ToleranceScale));
 
 	PxCookingParams params(m_ToleranceScale);
+	params.meshWeldTolerance = 0.01f;
 	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eWELD_VERTICES;
 	m_pCooking->setParams(params);
 
@@ -593,7 +594,11 @@ ECOLLISION_TYPE CPhysX_Manager::CheckCollisionTable(ECOLLISION_TYPE e1, ECOLLISI
 void CPhysX_Manager::DebugRender(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	if (m_bRenderDebug == false)
+	{
+		m_DebugLines.clear();
+		m_DebugShapes.clear();
 		return;
+	}
 
 	m_pEffect->SetWorld(XMMatrixIdentity());
 

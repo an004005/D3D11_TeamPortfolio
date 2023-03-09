@@ -9,16 +9,22 @@ static const float PI = 3.14159265f;
 static const float EPSILON = 1e-6f;
 
 // using in blend or light acc to separate shader step
-#define SHADER_DEFAULT 1 << 0
-#define SHADER_TOON 1 << 1
+#define SHADER_DEFAULT 1.f
+#define SHADER_TOON 2.f
+#define SHADER_NONE_SHADE 3.f
 
-#define SHADER_DISTORTION 1 << 2
-#define SHADER_SCIFI 1 << 3
-#define SHADER_SCIFI_PLAYER_ATTACK 1 << 4
-#define SHADER_HIT_DECAL 1 << 5
+#define SHADER_DISTORTION 4.f
+#define SHADER_SCIFI 5.f
+#define SHADER_SCIFI_PLAYER_ATTACK 6.f
+#define SHADER_HIT_DECAL 7.f
 
 
-#define SHADER_NONE_SHADE 1 << 5
+#define COL_WHITE float3(1.f, 1.f, 1.f)
+#define COL_BLACK float3(0.f, 0.f, 0.f)
+#define COL_PURPLE float3(0.545098f, 0.f, 1.f)
+#define COL_OIL float3(0.470588f, 0.23529f, 0.f)
+#define COL_FIRE float3(0.9f, 0.3f, 0.f)
+#define COL_BURNOUT float3(1.f, 0.4f, 0.f) // ¸ó½ºÅÍ »ç¸Á µðÁ¹ºê »ö
 
 float2 Get_FlipBookUV(float2 vRectUV, float fCurTime, float fFrameTime, int iRowCnt, int iColCnt)
 {
@@ -122,17 +128,6 @@ float3 matrix_postion(float4x4 m)
 {
 	return float3(m[3][0], m[3][1], m[3][2]);
 }
-
-float PackPostProcessFlag(float Flags, int PostProcessFlag)
-{
-	return asfloat(asint(Flags) | PostProcessFlag);
-}
-
-bool CheckPostProcessFlag(float Flags, int PostProcessFlag)
-{
-	return asint(Flags) & PostProcessFlag;
-}
-
 
 float4x4 inverse(float4x4 m) {
     float n11 = m[0][0], n12 = m[1][0], n13 = m[2][0], n14 = m[3][0];

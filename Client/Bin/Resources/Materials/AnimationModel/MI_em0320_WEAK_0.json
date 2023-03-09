@@ -1,22 +1,21 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxAnimModel",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [     
-            "../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Texture/T_em0320_body_ALB.png",
-            "../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Texture/T_em0320_body_NML.png",
-            "../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Texture/T_em0320_body_RMA.png",
- 
-            "../Bin/Resources/Model/AnimModel/Monster/Common/Texture/T_em0000_vanish_noise.png",
-            
-            "../Bin/Resources/Model/AnimModel/Monster/Common/Texture/T_em0000_hatching.png",
-            "../Bin/Resources/Model/AnimModel/Monster/Common/Texture/T_em0000_weak01.png"
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
 
         ],
-        "Pass" : 1
-    }
+        "Float4x4s": [],
+        "Floats": [
+            0.0,
+            0.0
+        ],
+        "Ints": [0],
+        "Pass": 4,
+        "Textures": [
+            "../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Texture/T_em0320_body_ALB.png\u0000",
+            "../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Texture/T_em0320_body_NML.png\u0000",
+            "../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Texture/T_em0320_body_RMA.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxAnimModel"
 }

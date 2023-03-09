@@ -34,7 +34,7 @@ void CPostVFX_ColorGrading::Tick(_double TimeDelta)
 
 CPostVFX_ColorGrading* CPostVFX_ColorGrading::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CPostVFX_ColorGrading*		pInstance = new CPostVFX_ColorGrading(pDevice, pContext);
+	CPostVFX_ColorGrading* pInstance = new CPostVFX_ColorGrading(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{

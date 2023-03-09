@@ -72,6 +72,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (FAILED(Render_LightAcc()))
 		return E_FAIL;
 
+	m_pTarget_Manager->GetTarget(TEXT("Target_Flag"))->SetIgnoreClearOnce();
 	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_HDR"))))
 		return E_FAIL;
 
@@ -209,6 +210,8 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Deferred"), TEXT("Target_OutlineFlag"))))
 		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Deferred"), TEXT("Target_Flag"))))
+		return E_FAIL;
 
 	/* for.MRT_ToonDeferred*/
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_ToonDeferred"), TEXT("Target_Diffuse"))))
@@ -223,7 +226,8 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_ToonDeferred"), TEXT("Target_OutlineFlag"))))
 		return E_FAIL;
-
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_ToonDeferred"), TEXT("Target_Flag"))))
+		return E_FAIL;
 
 	/* For.MRT_LightAcc */ /* ºû ¿¬»êÀÇ °á°ú¸¦ ÀúÀåÇÒ ·»´õÅ¸°Ùµé.  */
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade"))))
@@ -461,7 +465,8 @@ HRESULT CRenderer::Render_NonAlphaBlend()
 	m_pTarget_Manager->GetTarget(TEXT("Target_Normal"))->SetIgnoreClearOnce();
 	m_pTarget_Manager->GetTarget(TEXT("Target_Depth"))->SetIgnoreClearOnce();
 	m_pTarget_Manager->GetTarget(TEXT("Target_OutlineFlag"))->SetIgnoreClearOnce();
-
+	m_pTarget_Manager->GetTarget(TEXT("Target_Flag"))->SetIgnoreClearOnce();
+	
 	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_ToonDeferred"))))
 		return E_FAIL;
 

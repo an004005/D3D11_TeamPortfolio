@@ -28,6 +28,12 @@ HRESULT CScarletCharacter::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CScarletCharacter::Tick(_double TimeDelta)
+{
+	__super::Tick(TimeDelta);
+	Update_DeBuff(TimeDelta);
+}
+
 void CScarletCharacter::Late_Tick(_double TimeDelta)
 {
 	// 점프하고 싶을 때는 m_fYSpeed에 + 값을 넣어준다.
@@ -64,6 +70,40 @@ void CScarletCharacter::AfterPhysX()
 	const _float4 vColliderFootPos = m_pCollider->GetFootPosition();
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vColliderFootPos);
 	m_vPrePos = vColliderFootPos;
+}
+
+void CScarletCharacter::Update_DeBuff(_double TimeDelta)
+{
+	if (m_fDeBuffTime > 0.f)
+	{
+		m_fDeBuffTime -= (_float)TimeDelta;
+		if (m_fDeBuffTime <= 0.f)
+			m_eDeBuff = EDeBuffType::DEBUFF_END;
+	}
+
+	if (m_ePreDeBuff != m_eDeBuff)
+	{
+		switch(m_eDeBuff)
+		{
+		case EDeBuffType::DEBUFF_FIRE:
+			DeBuff_Fire();
+			break;
+		case EDeBuffType::DEBUFF_OIL:
+			DeBuff_Oil();
+			break;
+		case EDeBuffType::DEBUFF_THUNDER: 
+			break;
+		case EDeBuffType::DEBUFF_WATER:
+			break;
+		case EDeBuffType::DEBUFF_END:
+			DeBuff_End();
+			break;
+		default:
+			NODEFAULT;
+		}
+	}
+
+	m_ePreDeBuff = m_eDeBuff;
 }
 
 void CScarletCharacter::Collision_Check_Capsule(CRigidBody * AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollision ,ECOLLIDER_TYPE_BIT ColType)
@@ -134,7 +174,7 @@ void CScarletCharacter::Collision_Check_Capsule(CRigidBody * AttackTrigger, DAMA
 					++m_iHitTargetCount;
 
 					// 이미 충돌했던 대상을 리스트에 추가
-					m_DamagedObjectList.push_back(pTarget);
+//					m_DamagedObjectList.push_back(pTarget);
 				}
 			}
 		}

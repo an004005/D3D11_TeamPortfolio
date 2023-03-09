@@ -5,12 +5,9 @@
 
 BEGIN(Engine)
 class CGameInstance;
-class CShader;
 class CAnimationInstance;
 class CAnimation;
 class CFSMComponent;
-class CModel;
-class CRenderer;
 class CRigidBody;
 END
 
@@ -46,9 +43,6 @@ public:
 	_matrix WeaponRigidBodyMatrix();
 
 private:
-	CShader*				m_pShaderCom = nullptr;
-	CRenderer*				m_pRendererCom = nullptr;
-	CModel*					m_pModelCom = nullptr;
 	CFSMComponent*			m_pFSM = nullptr;		
 	CFSMComponent*			m_pSocketFSM = nullptr;
 

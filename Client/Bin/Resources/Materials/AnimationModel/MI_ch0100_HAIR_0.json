@@ -1,15 +1,19 @@
 {
     "ShaderParams": {
         "Float2s": [],
-        "Float4s": [[
-            0.0,
-            0.0,
-            0.0,
-            0.0
-        ]],
+        "Float4s": [
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
         "Float4x4s": [],
-        "Floats": [],
-        "Ints": [],
+        "Floats": [0.0],
+        "Ints": [
+            0
+        ],
         "Pass": 1,
         "Textures": [
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hair_COL.dds\u0000",
