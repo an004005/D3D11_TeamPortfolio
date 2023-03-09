@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Level_EnemiesTest.h"
+
 #include "GameInstance.h"
 #include "Material.h" 
 #include "GameUtils.h"
@@ -38,11 +39,16 @@
 #include "TestMonster.h"
 #include "FlowerLeg.h"
 #include "FL_Controller.h"
+
 #include "BuddyLumi.h"
+
 #include "SkummyPool.h"
 #include "SkMpBullet.h" // SkummPool's Bullet
 #include "SkmP_Controller.h"
+
 #include "SkummyPandou.h"
+#include "SkPd_Controller.h"
+
 #include "BronJon.h"
 
 #include "Boss1.h"
@@ -273,6 +279,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FL_Controller"), CFL_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkPd_Controller"), CSkPd_Controller::Create()));
 
 	return S_OK;
 }
@@ -298,8 +305,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Json FlowerLegModel;
 	FlowerLegModel["Model"] = "MonsterFlowerLeg";
 		
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("FlowerLeg"), &FlowerLegModel)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("FlowerLeg"), &FlowerLegModel)))
+		return E_FAIL;*/
 	
 	Json BuddyLumiModel;
 	BuddyLumiModel["Model"] = "MonsterBuddyLumi";
@@ -316,8 +323,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Json SkummyPandouModel;
 	SkummyPandouModel["Model"] = "MonsterSkummyPandou";
 	
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPandou"), &SkummyPandouModel)))
-	return E_FAIL;*/
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPandou"), &SkummyPandouModel)))
+		return E_FAIL;
 
 	Json BronJonModel;
 	BronJonModel["Model"] = "MonsterBronJon";
@@ -374,6 +381,9 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
 HRESULT CLevel_EnemiesTest::Ready_Effect(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	//Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
+	//pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
 
 	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Scifi", &Test);
