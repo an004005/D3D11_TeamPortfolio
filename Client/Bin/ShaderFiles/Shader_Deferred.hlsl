@@ -151,9 +151,9 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
 	vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
 
-	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).a;
+	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).w;
 
-	if (CheckPostProcessFlag(fShaderFlag, SHADER_DEFAULT))
+	if (fShaderFlag == SHADER_DEFAULT)
 	{
 		vector		vRMA = g_RMATexture.Sample(LinearSampler, In.vTexUV);
 
@@ -171,7 +171,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 		return Out;
 
 	}
-	else if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
+	else if (fShaderFlag == SHADER_TOON)
 	{
 		float4 vCTL = g_CTLTexture.Sample(LinearSampler, In.vTexUV);
 
@@ -220,9 +220,9 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	float		fDistance = length(vLightDir);
 	float		fAtt = max((g_fLightRange - fDistance), 0.f) / g_fLightRange;
 
-	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).a;
+	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).w;
 
-	if (CheckPostProcessFlag(fShaderFlag, SHADER_DEFAULT))
+	if (fShaderFlag == SHADER_DEFAULT)
 	{
 		vector		vRMA = g_RMATexture.Sample(LinearSampler, In.vTexUV);
 
@@ -237,7 +237,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 		Out.vShade.rgb = LightSurface(V, vNormal.xyz, vLightColorIntencity, vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
 		Out.vShade.a = vDiffuse.a;
 	}
-	else if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
+	else if (fShaderFlag == SHADER_TOON)
 	{
 		float4 vCTL = g_CTLTexture.Sample(LinearSampler, In.vTexUV);
 
@@ -266,10 +266,9 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	// vector		vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	// vector		vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
-	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).a;
+	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).w;
 
-
-	if (CheckPostProcessFlag(fShaderFlag, SHADER_TOON))
+	if (fShaderFlag == SHADER_TOON)
 	{
 		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
 		vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
@@ -281,7 +280,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 		if (0.0f == Out.vColor.a)
 			discard;
 	}
-	else if (CheckPostProcessFlag(fShaderFlag, SHADER_DEFAULT))
+	else if (fShaderFlag == SHADER_DEFAULT)
 	{
 		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
 		Out.vColor = vShade * pow(2.f, vDepth.b);
@@ -289,7 +288,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 		if (0.0f == Out.vColor.a)
 			discard;
 	}
-	else if (CheckPostProcessFlag(fShaderFlag, SHADER_NONE_SHADE))
+	else if (fShaderFlag == SHADER_NONE_SHADE)
 	{
 		vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 		Out.vColor = CalcHDRColor(vDiffuse, vDepth.b);
