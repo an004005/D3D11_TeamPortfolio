@@ -262,12 +262,14 @@ void CBoss1::Tick_AttackState()
 		{
 			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("LeftHandHelp") * m_pTransformCom->Get_WorldMatrix();
 			vAttackPos = BoneMatrix.r[3];
+			vAttackPos.y -= 2.f;
 		}
 		break;
 	case RIGHT_SWEEP:
 		{
 			const _matrix BoneMatrix = m_pModelCom->GetBoneMatrix("RightHandHelp") * m_pTransformCom->Get_WorldMatrix();
 			vAttackPos = BoneMatrix.r[3];
+			vAttackPos.y -= 2.f;
 		}
 		break;
 	case SPIN:

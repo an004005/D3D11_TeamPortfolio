@@ -73,8 +73,8 @@ HRESULT CLevel_PlayerTest::Initialize()
 	if (FAILED(Ready_Layer_Kinetic(TEXT("Layer_Kinetic"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-		return E_FAIL;
+//	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+//		return E_FAIL;
 
 	if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
 		return E_FAIL;

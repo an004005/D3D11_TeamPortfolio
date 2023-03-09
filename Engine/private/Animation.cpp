@@ -108,6 +108,8 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 			{
 				m_vLocalMove = pChannel->GetLocalMove();
 				m_vLocalRotation = pChannel->GetLocalRotation();
+				//m_vLocalQuaternion = pChannel->GetLocalQuaternion();
+				//m_vLocalEular = pChannel->GetLocalEular();
 			}
 		}
 		// 이벤트 실행
@@ -126,9 +128,10 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 
 			if ("Reference" == pChannel->GetChannelName())
 			{
-				m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+				//m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 				m_vLocalMove = pChannel->GetLocalMove();
 				m_vLocalRotation = pChannel->GetLocalRotation();
+				//m_vLocalQuaternion = pChannel->GetLocalQuaternion();
 			}
 		}
 		for (auto& iter : m_vecEvent)

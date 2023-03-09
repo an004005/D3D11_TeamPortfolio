@@ -24,6 +24,7 @@ public:
 	_bool			isSocketPassby(const string& strSocName, _float fPlayRatio = 1.f);
 	_bool			CheckSocketAnim(const string& strSocName, const string& AnimName) { return (AnimName == m_mapAnimSocket[strSocName].front()->GetName()) ? true : false; }
 	_bool			isSocketExactlyEmpty();	// 모든 소켓이 비어있는지?
+	void			ClearAnimSocket(const string& strSocName = "");
 
 protected:
 	void			SpairAnimationChecker();
@@ -37,6 +38,7 @@ protected:	// 대상의 상태
 
 	_bool	m_bMove = false;
 	_bool	m_bWalk = false;
+	_bool	m_bOptionalMove = false;
 
 	_bool	m_bLeftClick = false;
 	_bool	m_bDash = false;

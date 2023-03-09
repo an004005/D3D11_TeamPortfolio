@@ -9,61 +9,25 @@
         "Duration": 47.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": [
-            {
-                "EventName": "LocalRevise_Enable",
-                "EventTime": 20.0
-            },
-            {
-                "EventName": "LocalRevise_Disable",
-                "EventTime": 46.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_ch0100_023_AL_run_start_R": {
         "Duration": 30.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": [
-            {
-                "EventName": "LocalRevise_Enable",
-                "EventTime": 15.0
-            },
-            {
-                "EventName": "LocalRevise_Disable",
-                "EventTime": 29.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_ch0100_024_AL_run_start_BL": {
         "Duration": 49.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": [
-            {
-                "EventName": "LocalRevise_Disable",
-                "EventTime": 48.0
-            },
-            {
-                "EventName": "LocalRevise_Enable",
-                "EventTime": 20.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_ch0100_025_AL_run_start_BR": {
         "Duration": 25.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": [
-            {
-                "EventName": "LocalRevise_Enable",
-                "EventTime": 15.0
-            },
-            {
-                "EventName": "LocalRevise_Disable",
-                "EventTime": 24.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_ch0100_026_AL_run": {
         "Duration": 32.0,
@@ -383,6 +347,12 @@
         "bLooping": true,
         "vecEvent": []
     },
+    "AS_ch0100_138_AL_dash_stop": {
+        "Duration": 61.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_141_AL_jump_fall": {
         "Duration": 25.0,
         "TickPerSecond": 50.0,
@@ -401,6 +371,18 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_141_AL_jump_start": {
+        "Duration": 8.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_142_AL_dashjump_landing": {
+        "Duration": 51.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_142_AL_dashjump_rise": {
         "Duration": 33.0,
         "TickPerSecond": 100.0,
@@ -409,7 +391,7 @@
     },
     "AS_ch0100_142_AL_dashjump_start": {
         "Duration": 8.0,
-        "TickPerSecond": 24.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -434,6 +416,12 @@
     "AS_ch0100_144_AL_runjump_rise": {
         "Duration": 39.0,
         "TickPerSecond": 100.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_144_AL_runjump_start": {
+        "Duration": 8.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -530,6 +518,14 @@
             },
             {
                 "EventName": "Trail_Off",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "Light_Attack_On",
+                "EventTime": 9.0
+            },
+            {
+                "EventName": "Attack_Off",
                 "EventTime": 15.0
             }
         ]
@@ -654,6 +650,22 @@
             {
                 "EventName": "Fire_Attack_Upper",
                 "EventTime": 18.0
+            },
+            {
+                "EventName": "Trail_On",
+                "EventTime": 13.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "Air_Attack_On",
+                "EventTime": 13.0
+            },
+            {
+                "EventName": "Attack_Off",
+                "EventTime": 30.0
             }
         ]
     },
@@ -671,9 +683,34 @@
     },
     "AS_ch0100_207_AL_atk_justdodge": {
         "Duration": 179.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 40.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Trail_On",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "Trail_On",
+                "EventTime": 27.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "Trail_On",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 57.0
+            }
+        ]
     },
     "AS_ch0100_210_AL_atk_charge": {
         "Duration": 45.0,
@@ -1314,13 +1351,13 @@
     },
     "AS_ch0100_434_AL_down_F": {
         "Duration": 200.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 200.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_ch0100_435_AL_wakeup_F": {
         "Duration": 150.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 75.0,
         "bLooping": false,
         "vecEvent": []
     },
