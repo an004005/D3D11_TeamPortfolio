@@ -933,9 +933,6 @@ void CBronJon::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
 	Safe_Release(m_pSocketFSM);
 	Safe_Release(m_pASM);

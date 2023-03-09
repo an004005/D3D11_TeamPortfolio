@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "JsonStorage.h"
 #include "RigidBody.h"
+#include "Material.h"
 
 CBoss1::CBoss1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
@@ -123,6 +124,17 @@ void CBoss1::BeginTick()
 {
 	CMonster::BeginTick();
 	m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
+
+	m_pModelCom->FindMaterial(L"MI_em0320_GLASS_0")->SetActive(false);
+	m_pGlassMtrl = m_pModelCom->FindMaterial(L"MI_em0320_GLASS_1");
+	m_pWeakMtrl = m_pModelCom->FindMaterial(L"MI_em0320_WEAK_0");
+	for (auto pMtrl : m_pModelCom->GetMaterials())
+	{
+		if (lstrcmp(pMtrl->GetPrototypeTag(), L"MI_em0320_GLASS_0") == 0 
+			|| lstrcmp(pMtrl->GetPrototypeTag(), L"MI_em0320_GLASS_1") == 0)
+			continue;
+		m_BodyMtrls.push_back(pMtrl);
+	}
 }
 
 void CBoss1::Tick(_double TimeDelta)
@@ -349,6 +361,32 @@ void CBoss1::Reset()
 	m_pController->ClearCommands();
 }
 
+void CBoss1::DeBuff_End()
+{
+	for (auto pMtrl : m_BodyMtrls)
+	{
+		pMtrl->GetParam().Ints[0] = 0;
+	}
+}
+
+void CBoss1::DeBuff_Fire()
+{
+	m_fDeBuffTime = 8.f;
+	for (auto pMtrl : m_BodyMtrls)
+	{
+		pMtrl->GetParam().Ints[0] = 1;
+	}
+}
+
+void CBoss1::DeBuff_Oil()
+{
+	m_fDeBuffTime = 10.f;
+	for (auto pMtrl : m_BodyMtrls)
+	{
+		pMtrl->GetParam().Ints[0] = 2;
+	}
+}
+
 CBoss1* CBoss1::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CBoss1* pInstance = new CBoss1(pDevice, pContext);
@@ -376,8 +414,6 @@ CGameObject* CBoss1::Clone(void* pArg)
 void CBoss1::Free()
 {
 	CMonster::Free();
-	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pModelCom);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pWeak);
