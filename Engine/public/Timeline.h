@@ -117,6 +117,10 @@ public:
 	void Imgui_RenderEditor();
 
 	_bool IsPlay() { return m_bPlay; }
+	_bool Check_ReverseFin() { return m_bReverseFinish; }
+
+
+
 
 	template<typename T>
 	void SetFinishFunction(T* obj, void (T::*memFunc)())
@@ -152,6 +156,7 @@ private:
 	_bool m_bPlay = false;
 	_bool m_bLoop = false;
 	_bool m_bFreed = false;
+	_bool m_bReverseFinish = false;
 
 	function<void()> m_FinFunction = nullptr;
 	vector<pair<function<void(_float)>, CCurveFloat*>> m_vecFloatCurve;

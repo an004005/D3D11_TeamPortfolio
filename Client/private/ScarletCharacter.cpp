@@ -183,6 +183,11 @@ void CScarletCharacter::Collision_Check_Capsule(CRigidBody * AttackTrigger, DAMA
 	m_BeforePos = vPos;
 }
 
+// HRESULT CScarletCharacter::Render_ShadowDepth()
+// {
+// 	return S_OK;
+// }
+
 void CScarletCharacter::Free()
 {
 	CGameObject::Free();

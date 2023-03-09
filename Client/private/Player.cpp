@@ -169,17 +169,17 @@ void CPlayer::Tick(_double TimeDelta)
 	SeperateCheck();
 
 	m_pASM->Tick(TimeDelta);
-
-	if (m_bCanMove)
-	{
-		_float fSpeedControl = 0.f;
-
-		if (m_bWalk)				fSpeedControl = g_fTimeDelta;
-
-		if (m_bCanRun)				fSpeedControl *= 2.f;
-
-		m_pTransformCom->Move(fSpeedControl, m_vMoveDir);
-	}
+	
+	// if (m_bCanMove)
+	// {
+	// 	_float fSpeedControl = 0.f;
+	//
+	// 	if (m_bWalk)				fSpeedControl = g_fTimeDelta;
+	//
+	// 	if (m_bCanRun)				fSpeedControl *= 2.f;
+	//
+	// 	m_pTransformCom->Move(fSpeedControl, m_vMoveDir);
+	// }
 
 	for (auto& iter : m_vecWeapon)
 	{
@@ -2497,6 +2497,7 @@ void CPlayer::Kinetic_ByTurn()
 		}
 	}
 }
+
 
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
