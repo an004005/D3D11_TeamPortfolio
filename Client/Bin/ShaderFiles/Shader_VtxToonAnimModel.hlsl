@@ -4,6 +4,8 @@
 
 matrix			g_BoneMatrices[512];
 
+Texture2D g_WaveTile;
+
 struct VS_IN
 {
 	float3		vPosition : POSITION;
@@ -79,9 +81,6 @@ struct PS_OUT
 	float4		vOutline : SV_TARGET5;
 };
 
-// g_vec4_0 : 아웃라인 rgb : 컬러, a : 두께
-// g_int_0 : drive 모드(body 후드 마스크)
-
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -111,26 +110,67 @@ float4 NormalPacking(PS_IN In)
 	return vector(vNormal * 0.5f + 0.5f, 0.f);
 }
 
+// g_float_0 : 염력 림라이트 밝기
+// g_int_0 : 상태이상 플래그
+// g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_TOON_DEFAULT(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
+
+	float fEmissive = 0.f;
+	float flags = PackPostProcessFlag(0.f, SHADER_TOON);
 
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	if (Out.vDiffuse.a < 0.001f)
 		Out.vDiffuse.a = 1.f;
 
 	Out.vNormal = NormalPacking(In);
-
-	float flags = PackPostProcessFlag(0.f, SHADER_TOON);
-
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
 	Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
 	Out.vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
 	Out.vOutline = g_vec4_0;
 
+	float fPhysicRimBright = g_float_0;
+	int iDebuffState = g_int_0;
+
+	if (iDebuffState == 1 || fPhysicRimBright > 0.f) // fire
+	{
+		float3 vColor = (float3)1.f;
+		if (iDebuffState == 1)
+			vColor = float3(0.9f, 0.3f, 0.f);
+		else
+			vColor = float3(139.f/ 255.f, 0.f, 1.f); // 보라
+
+		float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
+		float4 vViewDir = g_vCamPosition - In.vWorldPos;
+		float fFresnel = FresnelEffect(vNormal.xyz, vViewDir.xyz, 2.5f);
+		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, vColor , fFresnel);
+		if (fFresnel > 0.5f)
+			fEmissive = 2.f;
+		if (fPhysicRimBright > 0.f)
+			fEmissive = fPhysicRimBright;
+	}
+	else if (iDebuffState == 2) // oil
+	{
+		float3 vDefaultNormal = Out.vNormal.xyz * 2.f - 1.f;
+
+		float4 vWaveTile = g_WaveTile.Sample(LinearSampler, TilingAndOffset(In.vTexUV, (float2)2.f, float2(g_Time * 0.05f, 0.f)));
+		float3 vWetNormal = vWaveTile.xyz * 2.f - 1.f;
+		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+		vWetNormal = normalize(mul(vWetNormal, WorldMatrix));
+
+		vWetNormal = lerp(vDefaultNormal, vWetNormal, vWaveTile.a);
+		Out.vNormal = vector(vWetNormal * 0.5f + 0.5f, 0.f);
+
+		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, float3(120.f / 255.f, 60.f/ 255.f, 0.f), vWaveTile.a);
+		fEmissive *= (vWaveTile.a + 2.f);
+	}
+
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
+
 	return Out;
 }
 
+// g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_WIRE_2(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -160,6 +200,9 @@ PS_OUT PS_WIRE_2(PS_IN In)
 	return Out;
 }
 
+// g_float_0 : 염력 림라이트 밝기
+// g_int_0 : 상태이상 플래그
+// g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_CH100_HAIR_1_3(PS_IN In)
 {
 	PS_OUT			Out = PS_TOON_DEFAULT(In);
@@ -173,9 +216,13 @@ PS_OUT PS_CH100_HAIR_1_3(PS_IN In)
 	return Out;
 }
 
+// g_float_0 : 염력 림라이트 밝기
+// g_int_0 : 상태이상 플래그
+// g_int_1 : 드라이브 모드 플래그(후드 지우기)
+// g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_ch0100_body_0_4(PS_IN In)
 {
-	int bDriveMode = g_int_0;
+	int bDriveMode = g_int_1;
 	if (bDriveMode)
 	{
 		float4 vMask = g_tex_4.Sample(LinearSampler, In.vTexUV);
@@ -188,9 +235,13 @@ PS_OUT PS_ch0100_body_0_4(PS_IN In)
 	return Out;
 }
 
+// g_float_0 : 염력 림라이트 밝기
+// g_float_1 : 마스크 on, off
+// g_int_0 : 상태이상 플래그
+// g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 {
-	float fDissolve = g_float_0; // 0 : mask off/ 1 : mask on
+	float fDissolve = g_float_1; // 0 : mask off/ 1 : mask on
 	float4 vColor = (float4)0.f;
 	float fEmissive = 2.f;
 
