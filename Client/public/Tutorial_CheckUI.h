@@ -23,6 +23,13 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
+	_bool	Get_End() {
+		return m_bEnd;
+	}
+	void	Set_End() {
+		m_bEnd = false;
+	}
+
 	void	Set_OnTutorial() {
 		if (false == m_bOffTutorial)
 			m_bOnTutorial = true;
@@ -33,13 +40,15 @@ public:
 	}
 
 private:
-	void	Input(const _double & dTImeDelta);
+	void	Open(const _double & dTImeDelta);
+	void	Shut(const _double & dTImeDelta);
 	_bool	Change(const _double & dTImeDelta, const _bool & bTutorial);
 
 private:
 	_bool	m_bOnTutorial = { false };
 	_bool	m_bSizeGrowLess = { false };
 	_bool	m_bOffTutorial = { false };
+	_bool	m_bEnd = { false };
 
 	_float	m_fAlpha = { 0.0f };
 	_float	m_fStartSizeX = { 0.0f };

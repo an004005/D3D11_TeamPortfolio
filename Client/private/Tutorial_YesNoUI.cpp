@@ -26,7 +26,7 @@ HRESULT CTutorial_YesNoUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	// 0: 테두리 마름모 /1: 작은 마름로 /2: 화살표 /3: No (-52) /4:Yes (-19)
+	// 0: 테두리 마름모 /1: 작은 마름로 /2: 화살표 /3: 보이지 않는다./ 4: No (-52) /5:Yes (-19)/ 
 	static _int iObjectCount;
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
@@ -95,10 +95,14 @@ void CTutorial_YesNoUI::Object_Tick(const _double & TimeDelta)
 		break;
 
 	case 3:
-		ObjectNo_Tick();
+		InvisibleBox(); 
 		break;
 
 	case 4:
+		ObjectNo_Tick();
+		break;
+
+	case 5:
 		ObjectYes_Tick();
 		break;
 
@@ -117,6 +121,7 @@ void CTutorial_YesNoUI::ObjectZero_Tick(const _double & TimeDelta)
 	{
 		if (0.80f >= m_tParams.Floats[0])
 		{
+			m_tParams.Float4s[0] = { 1.0f, 0.594f, 0.469f, 1.0f };
 			m_tParams.Floats[0] += _float(TimeDelta);
 		}
 		else
@@ -134,6 +139,9 @@ void CTutorial_YesNoUI::ObjectZero_Tick(const _double & TimeDelta)
 		}
 		else
 		{
+			m_tParams.Floats[0] = 0.7f;
+			m_tParams.Float4s[0] = { 1.0f, 0.469f, 0.471f, 1.0f };
+
 			m_bGlowUp = false;
 			m_bGlowDown = false;
 			m_bZero_Shader = false;
@@ -201,7 +209,7 @@ void CTutorial_YesNoUI::ObjectYes_Tick()
 {
 	_bool	bCursor = CUI::IsCursorOn(CGameUtils::GetClientCursor());
 	_bool	bKeyDown = CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB);
-	_bool	bKeyUp =  CGameInstance::GetInstance()->KeyUp(CInput_Device::DIM_LB);
+	_bool	bKeyUp = CGameInstance::GetInstance()->KeyUp(CInput_Device::DIM_LB);
 	if (true == bCursor && true == bKeyDown)
 	{
 		m_bYes = true;
@@ -228,6 +236,17 @@ void CTutorial_YesNoUI::ObjectNo_Tick()
 		m_bNo = false;
 	}
 }
+
+void CTutorial_YesNoUI::InvisibleBox()
+{
+	_bool	bCursor = CUI::IsCursorOn(CGameUtils::GetClientCursor());
+	_bool	bKeyDown = CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB);
+	if (true == bCursor && true == bKeyDown)
+	{
+		m_bInvisible = true;
+	}
+}
+		
 
 CTutorial_YesNoUI * CTutorial_YesNoUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {

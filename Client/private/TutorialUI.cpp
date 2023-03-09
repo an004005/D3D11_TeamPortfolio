@@ -27,7 +27,6 @@ HRESULT CTutorialUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	m_bVisible = false;
 	m_fStartSizeX = m_fSizeX;
 
 	return S_OK;
@@ -37,13 +36,8 @@ void CTutorialUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
-		Set_OnTutorial();
-
-	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
-		Set_OffTutorial();
-
-	Input(TimeDelta);
+	Open(TimeDelta);
+	Shut(TimeDelta);
 }
 
 void CTutorialUI::Late_Tick(_double TimeDelta)
@@ -77,24 +71,28 @@ void CTutorialUI::LoadFromJson(const Json & json)
 
 }
 
-void CTutorialUI::Input(const _double & dTImeDelta)
+void CTutorialUI::Open(const _double & dTImeDelta)
 {
-	if (true == m_bOnTutorial)
+	if (false == m_bOnTutorial)
+		return;
+
+	m_bVisible = true;
+
+	if (true == Change(dTImeDelta, true))
 	{
-		m_bVisible = true;
-
-		if (true == Change(dTImeDelta, true))
-		{
-			m_bOnTutorial = false;
-		}
+		m_bOnTutorial = false;
 	}
+}
 
+void CTutorialUI::Shut(const _double & dTImeDelta)
+{
 	if (true == m_bOffTutorial)
 	{
 		if (true == Change(dTImeDelta, false))
 		{
 			m_bVisible = false;
 			m_bOffTutorial = false;
+			m_bEnd = true;
 		}
 	}
 }

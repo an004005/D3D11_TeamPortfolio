@@ -35,6 +35,13 @@ public:
 	_bool	Get_InputNo() {
 		return m_bNo;
 	}
+	_bool	Get_Invisible() {
+		return m_bInvisible;
+	}
+
+	void	Set_Invisible() {
+		m_bInvisible = false;
+	}
 
 	// 아이콘
 	_int	Get_OneRenderCount() {
@@ -84,12 +91,14 @@ private:
 
 	void	ObjectYes_Tick();
 	void	ObjectNo_Tick();
+	void	InvisibleBox();
 
 private:
 	_int	m_iObjectNumber = { 0 };
 
 	_bool	m_bYes = { false };
 	_bool	m_bNo = { false };
+	_bool	m_bInvisible = { false };
 
 	// 아이콘
 	// 0

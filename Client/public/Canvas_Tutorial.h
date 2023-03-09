@@ -24,6 +24,7 @@ public:
 
 public:
 	void	Set_Tutorial(const TUTORIAL & TUTORIAL) {
+		m_eTutorial = TUTORIAL;
 		m_arrTutorial[TUTORIAL] = true;
 	}
 
@@ -39,6 +40,16 @@ private:
 private:
 	TUTORIAL	m_eTutorial = { TUTORIAL_END };
 	_bool		m_arrTutorial[TUTORIAL_END] = {};
+
+	_int		m_iYesCount = { 0 };
+	_int		m_iNoCount = { 0 };
+	_bool		m_bYesPush = { false };
+	_bool		m_bNoPush = { false };
+
+	_bool		m_bTutorialOpen = { false };
+
+	_bool		m_bCheckOpen = { false };
+	_bool		m_bCheckClose = { false };
 
 public:
 	static CCanvas_Tutorial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
