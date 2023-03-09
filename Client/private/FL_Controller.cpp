@@ -16,8 +16,7 @@ CFL_Controller::CFL_Controller(const CFL_Controller & rhs)
 HRESULT CFL_Controller::Initialize(void * pArg)
 {
 	FAILED_CHECK(CAIController::Initialize(pArg));
-
-	
+		
 		m_pFSM = CFSMComponentBuilder()
 			.InitState("Operate")
 			.AddState("Operate")

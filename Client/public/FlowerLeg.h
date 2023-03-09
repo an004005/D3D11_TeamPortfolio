@@ -111,8 +111,7 @@ private:
 	CAnimation* m_pBlowLand = nullptr;
 	CAnimation* m_pGetUp = nullptr;
 	CAnimation* m_pRiseStart = nullptr;
-
-
+	
 	CAnimation* m_pDeadAnim = nullptr;
 
 	// Run 상태를 위한 _bool

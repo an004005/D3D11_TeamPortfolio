@@ -86,7 +86,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 			m_vOnJumpMoveVelocity = _float3::Zero;
 		}
 	});
-	// 이벤트 콜러 이슈
+
 	m_pModelCom->Add_EventCaller("DodgeL_Start", [this] 
 	{		
 		m_fGravity = 27.f;
@@ -212,6 +212,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 
 	m_pASM = CFL_AnimInstance::Create(m_pModelCom, this);
 
+	// 소켓 애니메이션 추가
 	m_pAtk_Spin = m_pModelCom->Find_Animation("AS_em0200_202_AL_atk_a2");
 	m_pAtk_Strew = m_pModelCom->Find_Animation("AS_em0200_203_AL_atk_a3");
 	m_pJumpStart = m_pModelCom->Find_Animation("AS_em0200_204_AL_atk_a4_start");
@@ -246,6 +247,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 
 	// Dead
 	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0200_424_AL_dead_down");
+	// ~소켓 애니메이션 추가
 
 	return S_OK;
 }
