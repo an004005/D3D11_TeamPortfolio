@@ -345,7 +345,7 @@ void CShader::SetCommonTexture(const char* pConstantName, const char* pTexFilePa
 	{
 		auto pTex = dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(s2ws(pTexFilePath).c_str()));
 		m_CommonTextures.emplace(pConstantName, pTex);
-		Safe_AddRef(pTex);
+		// Safe_AddRef(pTex);
 		pTex->Bind_ShaderResource(this, pConstantName);
 	}
 }
