@@ -31,7 +31,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 	FAILED_CHECK(SetUp_Components(pArg));
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 10.f, 0.f));
+	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 10.f, 0.f));
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(180.f) });
 
 	m_pDynamic_RigidBody->Activate(true);
@@ -52,6 +52,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 			DAMAGE_PARAM tParam;
 			tParam.iDamage = 1;
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+			tParam.eAttackType = EAttackType::ATK_HEAVY;
 
 			pMonster->TakeDamage(tParam);
 
@@ -81,6 +82,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 		{
 			DAMAGE_PARAM tParam;
 			tParam.iDamage = 1;
+			tParam.eAttackType = EAttackType::ATK_HEAVY;
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 			pMonster->TakeDamage(tParam);

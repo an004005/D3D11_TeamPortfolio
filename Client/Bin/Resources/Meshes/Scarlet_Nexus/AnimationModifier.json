@@ -819,10 +819,6 @@
             {
                 "EventName": "Trail_Off",
                 "EventTime": 15.0
-            },
-            {
-                "EventName": "Default_Attack_Dash_0",
-                "EventTime": 5.0
             }
         ]
     },
@@ -887,7 +883,7 @@
     },
     "AS_ch0100_217_AL_atk_dash2_start": {
         "Duration": 30.0,
-        "TickPerSecond": 30.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -1211,15 +1207,141 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_321_AL_cap_L_end180": {
+        "Duration": 130.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_321_AL_cap_L_end90": {
+        "Duration": 130.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_321_AL_cap_L_idle0": {
         "Duration": 300.0,
-        "TickPerSecond": 30.0,
+        "TickPerSecond": 50.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_321_AL_cap_L_idle180": {
+        "Duration": 300.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_321_AL_cap_L_idle90": {
+        "Duration": 300.0,
+        "TickPerSecond": 50.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_321_AL_cap_L_loop0": {
+        "Duration": 180.0,
+        "TickPerSecond": 50.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_321_AL_cap_L_loop180": {
+        "Duration": 180.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_321_AL_cap_L_loop90": {
+        "Duration": 180.0,
+        "TickPerSecond": 50.0,
         "bLooping": true,
         "vecEvent": []
     },
     "AS_ch0100_321_AL_cap_L_start0": {
         "Duration": 30.0,
-        "TickPerSecond": 30.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_321_AL_cap_L_start180": {
+        "Duration": 30.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_321_AL_cap_L_start90": {
+        "Duration": 30.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_322_AL_cap_R_end0": {
+        "Duration": 130.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_322_AL_cap_R_end180": {
+        "Duration": 130.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_322_AL_cap_R_end90": {
+        "Duration": 130.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_322_AL_cap_R_idle0": {
+        "Duration": 300.0,
+        "TickPerSecond": 50.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_322_AL_cap_R_idle180": {
+        "Duration": 300.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_322_AL_cap_R_idle90": {
+        "Duration": 300.0,
+        "TickPerSecond": 50.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_322_AL_cap_R_loop0": {
+        "Duration": 180.0,
+        "TickPerSecond": 50.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_322_AL_cap_R_loop180": {
+        "Duration": 180.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_322_AL_cap_R_loop90": {
+        "Duration": 180.0,
+        "TickPerSecond": 50.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_322_AL_cap_R_start0": {
+        "Duration": 30.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_322_AL_cap_R_start180": {
+        "Duration": 30.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_322_AL_cap_R_start90": {
+        "Duration": 30.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -1238,6 +1360,42 @@
     "AS_ch0100_325_AL_throw_LL_start": {
         "Duration": 40.0,
         "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_326_AL_throw_RL_end": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_326_AL_throw_RL_loop": {
+        "Duration": 180.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_326_AL_throw_RL_start": {
+        "Duration": 30.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_329_AL_throw_LR_end": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_329_AL_throw_LR_loop": {
+        "Duration": 160.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_329_AL_throw_LR_start": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -1488,7 +1646,7 @@
             }
         ]
     },
-     "AS_em0200_102_AL_wait02": {
+    "AS_em0200_102_AL_wait02": {
         "Duration": 240.0,
         "TickPerSecond": 28.0,
         "bLooping": true,
@@ -1844,7 +2002,7 @@
         "bLooping": false,
         "vecEvent": []
     },
-     "AS_em0400_101_AL_wait01": {
+    "AS_em0400_101_AL_wait01": {
         "Duration": 240.0,
         "TickPerSecond": 40.0,
         "bLooping": true,

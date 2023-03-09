@@ -42,7 +42,8 @@ void CCamera::Tick(_double TimeDelta)
 void CCamera::Imgui_RenderProperty()
 {
 	CGameObject::Imgui_RenderProperty();
-	ImGui::InputFloat("FOV", &m_fFOV);
+	//ImGui::InputFloat("FOV", &m_fFOV);
+	ImGui::SliderFloat("FOV", &m_fFOV, 0.f, 150.f, "%.1f");
 	ImGui::InputFloat("Width", &m_fWidth);
 	ImGui::InputFloat("Height", &m_fHeight);
 	ImGui::InputFloat("Near", &m_fNear);
