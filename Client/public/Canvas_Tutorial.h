@@ -36,6 +36,10 @@ public:
 		m_arrTips[eTIPS] = true;
 	}
 
+	void	Set_Success() {
+		m_bSuccess = true;
+	}
+
 private:
 	void	Tutorial_Tick();
 	void	Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChildTag);
@@ -50,6 +54,9 @@ private:
 	void	Tips(const TIPS & eTIPS, const _tchar * pChildTag);
 
 private:
+	void	Success_Tick();
+
+private:	// Tutorial
 	TUTORIAL	m_eTutorial = { TUTORIAL_END };
 	_bool		m_arrTutorial[TUTORIAL_END] = {};
 
@@ -63,11 +70,14 @@ private:
 	_bool		m_bCheckOpen = { false };
 	_bool		m_bCheckClose = { false };
 
-private:
+private:	// Tios
 	TIPS		m_eTips = { TIPS_END };
 	_bool		m_arrTips[TIPS_END] = {};
 
 	_bool		m_iTipsOpen = { false };
+
+private:	// Success
+	_bool		m_bSuccess = { false };
 
 public:
 	static CCanvas_Tutorial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

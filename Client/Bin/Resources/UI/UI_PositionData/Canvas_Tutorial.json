@@ -163,7 +163,7 @@
                         1.0,
                         0.4959107041358948,
                         0.36582326889038086,
-                        0.9666634202003479
+                        1.0
                     ]
                 ],
                 "Float4x4s": [],
@@ -216,7 +216,7 @@
                         1.0,
                         0.4941176474094391,
                         0.364705890417099,
-                        0.9833315014839172
+                        0.0
                     ]
                 ],
                 "Float4x4s": [],
@@ -344,6 +344,59 @@
                     0.0,
                     0.0,
                     -53.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Success\u0000",
+            "ObjectTag": "Tutorial_Success",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 179.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_SuccessUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        2.0,
+                        1.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\256,64_SUCCESS!.dds\u0000"
+                ]
+            },
+            "SizeX": 256.0,
+            "SizeY": 128.0,
+            "Transform": {
+                "WorldMatrix": [
+                    256.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    128.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    179.0,
                     0.0,
                     1.0
                 ]

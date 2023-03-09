@@ -6,6 +6,7 @@
 #include "Tutorial_CheckUI.h"
 #include "Tutorial_YesNoUI.h"
 #include "Tutorial_TipsUI.h"
+#include "Tutorial_SuccessUI.h"
 
 CCanvas_Tutorial::CCanvas_Tutorial(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -42,6 +43,7 @@ void CCanvas_Tutorial::Tick(_double TimeDelta)
 
 	Tutorial_Tick();
 	Tips_Tick();
+	Success_Tick();
 }
 
 void CCanvas_Tutorial::Imgui_RenderProperty()
@@ -61,6 +63,11 @@ void CCanvas_Tutorial::Imgui_RenderProperty()
 	if (ImGui::Button("Tips Shut"))
 	{
 		Set_TipsDelete(TIPS0);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Success"))
+	{
+		Set_Success();
 	}
 }
 
@@ -363,6 +370,19 @@ void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag)
 			m_iTipsOpen = false;
 			m_arrTips[eTIPS] = false;
 		}
+	}
+}
+
+void CCanvas_Tutorial::Success_Tick()
+{
+	if (false == m_bSuccess)
+		return;
+
+	Find_ChildUI(L"Tutorial_Success")->SetVisible(true);
+
+	if (true == dynamic_cast<CTutorial_SuccessUI*>(Find_ChildUI(L"Tutorial_Success"))->Get_SuccessEnd())
+	{
+		m_bSuccess = false;
 	}
 }
 

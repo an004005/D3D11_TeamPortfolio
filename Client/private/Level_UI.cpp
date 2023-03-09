@@ -63,6 +63,7 @@
 #include "Tutorial_CheckUI.h"
 #include "Tutorial_YesNoUI.h"
 #include "Tutorial_TipsUI.h"
+#include "Tutorial_SuccessUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -330,6 +331,10 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_TipsUI"),
 				CTutorial_TipsUI::Create(m_pDevice, m_pContext))))
 				return E_FAIL;
+		/* For.Prototype_GameObject_Tutorial_SuccessUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_SuccessUI"),
+			CTutorial_SuccessUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 	}	
 
 	return S_OK;
