@@ -59,7 +59,7 @@ HRESULT CBronJon::Initialize(void * pArg)
 		(CComponent**)&m_pTrigger, &BronJonTrigger)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 30.f)));
+//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 30.f)));
 
 	m_pTransformCom->SetSpeed(1.f);
 
@@ -662,6 +662,8 @@ HRESULT CBronJon::Initialize(void * pArg)
 void CBronJon::BeginTick()
 {
 	__super::BeginTick();
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 30.f)));
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	

@@ -74,7 +74,7 @@ void CBoss1_AIController::AI_Tick(_double TimeDelta)
 {
 	if (m_pTarget == nullptr)
 		return;
-
+	// 내가 타겟을 바라보는 방향으로의 거리 
 	m_fToTargetDistance = XMVectorGetX(XMVector3LengthEst(
 		m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)
 		- m_pCastedOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)));
@@ -87,6 +87,7 @@ void CBoss1_AIController::AI_Tick(_double TimeDelta)
 
 void CBoss1_AIController::Tick_Near(_double TimeDelta)
 {
+	m_eDistance = DIS_NEAR;
 	// 1. 스핀 공격, 플레이어 보고 때리기, 플레이어보고 뒤가기,
 	switch (m_iNearOrder)
 	{
@@ -118,6 +119,7 @@ void CBoss1_AIController::Tick_Near(_double TimeDelta)
 
 void CBoss1_AIController::Tick_Mid(_double TimeDelta)
 {
+	m_eDistance = DIS_MIDDLE;
 	// 2. 게걸음, 물폭탄
 	EMoveAxis eMove = rand() % 2 ? EMoveAxis::WEST : EMoveAxis::EAST;
 	switch (m_iMidOrder)
@@ -139,6 +141,7 @@ void CBoss1_AIController::Tick_Mid(_double TimeDelta)
 		AddCommand("TurnSlow", m_fTurnSlowTime, &CBoss1_AIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	case 4:
+		AddCommand("Turn", 3.f, &CBoss1_AIController::TurnToTargetStop, 1.f);
 		AddCommand("Attack_Water", 0.f, &CAIController::Input, MOUSE_RB); // Water attack
 		AddCommand("TurnSlow", m_fTurnSlowTime, &CBoss1_AIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
@@ -149,6 +152,7 @@ void CBoss1_AIController::Tick_Mid(_double TimeDelta)
 
 void CBoss1_AIController::Tick_Far(_double TimeDelta)
 {
+	m_eDistance = DIS_FAR;
 	// 3. 게걸음, 물폭탄, 점프
 	EMoveAxis eMove = rand() % 2 ? EMoveAxis::WEST : EMoveAxis::EAST;
 	switch (m_iFarOrder)
@@ -187,14 +191,14 @@ void CBoss1_AIController::Tick_Far(_double TimeDelta)
 	m_iFarOrder = (m_iFarOrder + 1) % 7;
 }
 
-void CBoss1_AIController::TurnToTargetStop(_float fSpeedRatio)
-{
-	TurnToTarget(fSpeedRatio);
-	if (abs(m_fTurnRemain) < 0.1f)
-	{
-		m_Commands.front().SetFinish();
-	}
-}
+//void CBoss1_AIController::TurnToTargetStop(_float fSpeedRatio)
+//{
+//	TurnToTarget(fSpeedRatio);
+//	if (abs(m_fTurnRemain) < 0.1f)
+//	{
+//		m_Commands.front().SetFinish();
+//	}
+//}
 
 void CBoss1_AIController::Free()
 {

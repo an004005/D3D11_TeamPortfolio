@@ -645,6 +645,8 @@ void CSkummyPandou::BeginTick()
 			m_pPlayer = iter;
 		}
 	}
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 23.f)));
 }
 
 void CSkummyPandou::Tick(_double TimeDelta)
