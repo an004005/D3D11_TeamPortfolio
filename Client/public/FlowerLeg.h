@@ -36,7 +36,7 @@ public:
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 
 	void	Strew_Overlap(); // Atk_Strew �浹ü
-
+	void	Spin_SweepCapsule(_bool bCol);
 	void	Kick_SweepSphere();
 
 	_matrix AttachCollider(CRigidBody* pRigidBody);
@@ -120,6 +120,7 @@ private:
 
 	// Attack
 	_bool m_bAtkSwitch = false;
+	_bool m_bOneHit = false;
 
 	// Damage
 	_bool		m_bStruck = false;
@@ -129,12 +130,11 @@ private:
 
 	_uint		m_iAirDamage = 0;
 	_uint		m_iPreAirDamageCnt = 0;
-
-
+	
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
 
-	vector<DAMAGE_PARAM> m_vecDamage;
+	list<CScarletCharacter*> m_CollisionList;
 
 public:
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
