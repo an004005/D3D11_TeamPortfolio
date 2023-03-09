@@ -5,6 +5,7 @@
 #include "TutorialUI.h"
 #include "Tutorial_CheckUI.h"
 #include "Tutorial_YesNoUI.h"
+#include "Tutorial_TipsUI.h"
 
 CCanvas_Tutorial::CCanvas_Tutorial(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -40,16 +41,27 @@ void CCanvas_Tutorial::Tick(_double TimeDelta)
 	CCanvas::Tick(TimeDelta);
 
 	Tutorial_Tick();
-	Check_Tick();
-
-	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
-		Set_Tutorial(LOCKON);
+	Tips_Tick();
 }
 
 void CCanvas_Tutorial::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
+	if (ImGui::Button("Totorial"))
+	{
+		Set_Tutorial(LOCKON);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Tips Open"))
+	{
+		Set_Tips(TIPS0);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Tips Shut"))
+	{
+		Set_TipsDelete(TIPS0);
+	}
 }
 
 void CCanvas_Tutorial::SaveToJson(Json& json)
@@ -64,33 +76,45 @@ void CCanvas_Tutorial::LoadFromJson(const Json & json)
 
 void CCanvas_Tutorial::Tutorial_Tick()
 {
+	if (m_eTutorial == TUTORIAL_END)
+		return;
+
+	_tchar szTag[MAX_PATH];
+
 	switch (m_eTutorial)
 	{
 	case Client::CCanvas_Tutorial::LOCKON:
-		Lockon();
+		wsprintf(szTag, TEXT("Tutorial0"));
 		break;
 	case Client::CCanvas_Tutorial::FIGHTINGSTYLE:
+		wsprintf(szTag, TEXT("Tutorial1"));
 		break;
 	case Client::CCanvas_Tutorial::SPECIALATTACK:
+		wsprintf(szTag, TEXT("Tutorial2"));
 		break;
 	case Client::CCanvas_Tutorial::ADDRUSHATTACK:
+		wsprintf(szTag, TEXT("Tutorial3"));
 		break;
 	case Client::CCanvas_Tutorial::ADDPSYCHOKINESISATTACK:
+		wsprintf(szTag, TEXT("Tutorial4"));
 		break;
 	case Client::CCanvas_Tutorial::STRENGTHENATTACK:
+		wsprintf(szTag, TEXT("Tutorial5"));
 		break;
 	default:
-		return; // No Tutorials
+		m_eTutorial = TUTORIAL_END;
 		break;
 	}
+
+	Tutorial(m_eTutorial, szTag);
 }
 
-void CCanvas_Tutorial::Lockon()
+void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChildTag)
 {
-	if (false == m_arrTutorial[LOCKON])
+	if (false == m_arrTutorial[eTUTORIAL])
 		return;
 
-	if (nullptr == Find_ChildUI(L"Tutorial0"))
+	if (nullptr == Find_ChildUI(pChildTag))
 	{
 		MSG_BOX("Objects Already Deleted");
 		return;
@@ -99,7 +123,7 @@ void CCanvas_Tutorial::Lockon()
 	if (false == m_bTutorialOpen)
 	{
 		m_bTutorialOpen = true;
-		dynamic_cast<CTutorialUI*>(Find_ChildUI(L"Tutorial0"))->Set_OnTutorial();
+		dynamic_cast<CTutorialUI*>(Find_ChildUI(pChildTag))->Set_OnTutorial();
 		return;
 	}
 
@@ -119,6 +143,7 @@ void CCanvas_Tutorial::Lockon()
 
 		KeyInput_Yes();
 		KeyInput_No();
+		Check_Tick();
 	}
 
 	// √ ±‚»≠
@@ -139,18 +164,18 @@ void CCanvas_Tutorial::Lockon()
 		if (true == dynamic_cast<CTutorial_CheckUI*>(Find_ChildUI(L"Tutorial_Check0"))->Get_End())
 		{
 			Find_ChildUI(L"Tutorial_Check0")->SetVisible(false);
-			dynamic_cast<CTutorialUI*>(Find_ChildUI(L"Tutorial0"))->Set_OffTutorial();
+			dynamic_cast<CTutorialUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
 		}
 
-		if (true == dynamic_cast<CTutorialUI*>(Find_ChildUI(L"Tutorial0"))->Get_End())
+		if (true == dynamic_cast<CTutorialUI*>(Find_ChildUI(pChildTag))->Get_End())
 		{
-			Find_ChildUI(L"Tutorial0")->SetDelete();
-			dynamic_cast<CTutorialUI*>(Find_ChildUI(L"Tutorial0"))->Set_End();
+			Find_ChildUI(pChildTag)->SetDelete();
+			dynamic_cast<CTutorialUI*>(Find_ChildUI(pChildTag))->Set_End();
 			dynamic_cast<CTutorial_CheckUI*>(Find_ChildUI(L"Tutorial_Check0"))->Set_End();
 			dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_InvisibleBox"))->Set_Invisible();
 
 			m_iYesCount = 0;
-			m_arrTutorial[LOCKON] = false;
+			m_arrTutorial[eTUTORIAL] = false;
 			m_bTutorialOpen = false;
 			m_bCheckOpen = false;
 			m_bCheckClose = false;
@@ -261,6 +286,83 @@ void CCanvas_Tutorial::KeyInput_No()
 		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon0"))->Set_Position(_float2(-50.0f, -52.0f));
 		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon1"))->Set_Position(_float2(-51.0f, -52.0f));
 		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_Position(_float2(-49.0f, -52.0f));
+	}
+}
+
+void CCanvas_Tutorial::Tips_Tick()
+{
+	if (TIPS_END == m_eTips)
+		return;
+
+	_tchar szTag[MAX_PATH];
+
+	switch (m_eTips)
+	{
+	case Client::CCanvas_Tutorial::TIPS0:
+		wsprintf(szTag, TEXT("Tutorial_Tips0"));
+		break;
+	case Client::CCanvas_Tutorial::TIPS1:
+		wsprintf(szTag, TEXT("Tutorial_Tips1"));
+		break;
+	case Client::CCanvas_Tutorial::TIPS2:
+		wsprintf(szTag, TEXT("Tutorial_Tips2"));
+		break;
+	case Client::CCanvas_Tutorial::TIPS3:
+		wsprintf(szTag, TEXT("Tutorial_Tips3"));
+		break;
+	case Client::CCanvas_Tutorial::TIPS4:
+		wsprintf(szTag, TEXT("Tutorial_Tips4"));
+		break;
+	case Client::CCanvas_Tutorial::TIPS5:
+		wsprintf(szTag, TEXT("Tutorial_Tips5"));
+		break;
+	case Client::CCanvas_Tutorial::TIPS6:
+		wsprintf(szTag, TEXT("Tutorial_Tips6"));
+		break;
+	case Client::CCanvas_Tutorial::TIPS7:
+		wsprintf(szTag, TEXT("Tutorial_Tips7"));
+		break;
+	case Client::CCanvas_Tutorial::TIPS8:
+		wsprintf(szTag, TEXT("Tutorial_Tips8"));
+		break;
+	case Client::CCanvas_Tutorial::TIPS9:
+		wsprintf(szTag, TEXT("Tutorial_Tips9"));
+		break;
+	case Client::CCanvas_Tutorial::TIPS10:
+		wsprintf(szTag, TEXT("Tutorial_Tips10"));
+		break;
+	default:
+		m_eTips = TIPS_END;
+		break;
+	}
+
+	Tips(m_eTips, szTag);
+}
+
+void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag)
+{
+	if (nullptr == Find_ChildUI(pChildTag))
+		return;
+
+	if (false == m_iTipsOpen)
+	{
+		m_iTipsOpen = true;
+		dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OnTutorial();
+	}
+
+	if (false == m_arrTips[eTIPS])
+		return;
+
+	if (true == m_arrTips[eTIPS])
+	{
+		dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
+
+		if (true == dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Get_End())
+		{
+			m_eTips = TIPS_END;
+			m_iTipsOpen = false;
+			m_arrTips[eTIPS] = false;
+		}
 	}
 }
 

@@ -290,6 +290,7 @@
     <ClInclude Include="..\public\TestCamera.h" />
     <ClInclude Include="..\public\TutorialUI.h" />
     <ClInclude Include="..\public\Tutorial_CheckUI.h" />
+    <ClInclude Include="..\public\Tutorial_TipsUI.h" />
     <ClInclude Include="..\public\Tutorial_YesNoUI.h" />
     <ClInclude Include="..\public\UI.h" />
     <ClInclude Include="..\public\TestMonster.h" />
@@ -418,6 +419,7 @@
     <ClCompile Include="..\private\TestCamera.cpp" />
     <ClCompile Include="..\private\TutorialUI.cpp" />
     <ClCompile Include="..\private\Tutorial_CheckUI.cpp" />
+    <ClCompile Include="..\private\Tutorial_TipsUI.cpp" />
     <ClCompile Include="..\private\Tutorial_YesNoUI.cpp" />
     <ClCompile Include="..\private\UI.cpp" />
     <ClCompile Include="..\private\TestMonster.cpp" />

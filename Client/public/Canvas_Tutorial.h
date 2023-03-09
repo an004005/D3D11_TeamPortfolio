@@ -8,6 +8,7 @@ BEGIN(Client)
 class CCanvas_Tutorial : public CCanvas
 {
 	enum TUTORIAL { LOCKON, FIGHTINGSTYLE, SPECIALATTACK, ADDRUSHATTACK, ADDPSYCHOKINESISATTACK, STRENGTHENATTACK, TUTORIAL_END };
+	enum TIPS { TIPS0, TIPS1, TIPS2, TIPS3, TIPS4, TIPS5, TIPS6, TIPS7, TIPS8, TIPS9, TIPS10, TIPS_END };
 
 protected:
 	CCanvas_Tutorial(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -23,19 +24,30 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_Tutorial(const TUTORIAL & TUTORIAL) {
-		m_eTutorial = TUTORIAL;
-		m_arrTutorial[TUTORIAL] = true;
+	void	Set_Tutorial(const TUTORIAL & eTUTORIAL) {
+		m_eTutorial = eTUTORIAL;
+		m_arrTutorial[eTUTORIAL] = true;
+	}
+	void	Set_Tips(const TIPS & eTIPS) {
+		m_eTips = eTIPS;
+	}
+	void	Set_TipsDelete(const TIPS & eTIPS) {
+		m_eTips = eTIPS;
+		m_arrTips[eTIPS] = true;
 	}
 
 private:
 	void	Tutorial_Tick();
-	void	Lockon();
+	void	Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChildTag);
 
 	void	Check_Tick();
 
 	void	KeyInput_Yes();
 	void	KeyInput_No();
+
+private:
+	void	Tips_Tick();
+	void	Tips(const TIPS & eTIPS, const _tchar * pChildTag);
 
 private:
 	TUTORIAL	m_eTutorial = { TUTORIAL_END };
@@ -50,6 +62,12 @@ private:
 
 	_bool		m_bCheckOpen = { false };
 	_bool		m_bCheckClose = { false };
+
+private:
+	TIPS		m_eTips = { TIPS_END };
+	_bool		m_arrTips[TIPS_END] = {};
+
+	_bool		m_iTipsOpen = { false };
 
 public:
 	static CCanvas_Tutorial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

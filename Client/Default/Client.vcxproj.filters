@@ -647,6 +647,9 @@
     <ClInclude Include="..\public\Tutorial_YesNoUI.h">
       <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Tutorial_TipsUI.h">
+      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1029,6 +1032,9 @@
       <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Tutorial_YesNoUI.cpp">
+      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Tutorial_TipsUI.cpp">
       <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
     </ClCompile>
   </ItemGroup>

@@ -64,7 +64,7 @@
                     1.0
                 ],
                 "Ints": [],
-                "Pass": 0,
+                "Pass": 25,
                 "Textures": [
                     "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check0.png\u0000"
                 ]
@@ -163,7 +163,7 @@
                         1.0,
                         0.4959107041358948,
                         0.36582326889038086,
-                        0.3492383360862732
+                        0.9666634202003479
                     ]
                 ],
                 "Float4x4s": [],
@@ -216,7 +216,7 @@
                         1.0,
                         0.4941176474094391,
                         0.364705890417099,
-                        0.3659084439277649
+                        0.9833315014839172
                     ]
                 ],
                 "Float4x4s": [],
@@ -344,6 +344,52 @@
                     0.0,
                     0.0,
                     -53.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Tips0\u0000",
+            "ObjectTag": "Tutorial_Tips0",
+            "Pivot": 1,
+            "PositionX": 200.0,
+            "PositionY": -200.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_TipsUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS0.png\u0000"
+                ]
+            },
+            "SizeX": 352.0,
+            "SizeY": 154.0,
+            "Transform": {
+                "WorldMatrix": [
+                    352.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    154.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -440.0,
+                    160.0,
                     0.0,
                     1.0
                 ]
