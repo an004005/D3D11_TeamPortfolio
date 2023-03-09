@@ -23,12 +23,14 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 	CGameObject::Initialize(pArg);
 
 	/* For.Com_Renderer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
-		(CComponent**)&m_pRendererCom)))
-		return E_FAIL;
+	
 
 	if (pArg == nullptr)
 	{
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
+			(CComponent**)&m_pRendererCom)))
+			return E_FAIL;
+
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPointInstance_Particle"), TEXT("Shader"),
 			(CComponent**)&m_pShader)))
 			return E_FAIL;
@@ -38,12 +40,18 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 	}
 	else
 	{
-		if (m_pMeshInstanceBuffer)
+		if (m_eBufferType == EBufferType::MESH)
 		{
-
+			if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
+				(CComponent**)&m_pRendererCom)))
+				return E_FAIL;
 		}
 		else
 		{
+			if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
+				(CComponent**)&m_pRendererCom)))
+				return E_FAIL;
+
 			if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPointInstance_Particle"), TEXT("Shader"),
 				(CComponent**)&m_pShader)))
 				return E_FAIL;
@@ -51,21 +59,6 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 			m_pPointInstanceBuffer = CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, m_iInstanceNum);
 		}
 	}
-
-
-		
-	// }
-
-	// if (m_bGravity == true)
-	// {
-	// 	m_fJumpPower = CGameUtils::GetRandFloat(0.f, 1.f);
-	// 	m_fDownSpeed = CGameUtils::GetRandFloat(2.f, 5.f);
-	// }
-	// else
-	// {
-	// 	m_fJumpPower = 0.f;
-	// 	m_fDownSpeed = 0.5f;
-	// }
 
 	return S_OK;
 }
@@ -772,10 +765,26 @@ CGameObject* CParticleSystem::Clone(void* pArg)
 void CParticleSystem::Free()
 {
 	CGameObject::Free();
-	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pPointInstanceBuffer);
-	Safe_Release(m_pMeshInstanceBuffer);
-	Safe_Release(m_pShader);
+
+	// for(auto& iter : m_PointList)
+	// {
+	// 	Safe_Release(iter);
+	// }
+	// m_PointList.clear();
+	//
+	// for (auto& iter : m_MeshList)
+	// {
+	// 	Safe_Release(iter);
+	// }
+	// m_MeshList.clear();
+
+	if (m_bCloned == true)
+	{
+		Safe_Release(m_pRendererCom);
+		Safe_Release(m_pPointInstanceBuffer);
+		Safe_Release(m_pMeshInstanceBuffer);
+		Safe_Release(m_pShader);
+	}
 
 	for (auto e : m_tParam.Textures)
 		Safe_Release(e.first);

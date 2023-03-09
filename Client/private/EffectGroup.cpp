@@ -1910,18 +1910,32 @@ void CEffectGroup::Free()
 		m_FifthEffect_Curves.clear();
 	}
 
-
 	m_mapEffectSystemTag.clear();
 
 	if(m_pFirst_EffectSystem != nullptr)
+	{
+		m_pFirst_EffectSystem->SetDelete();
 		Safe_Release(m_pFirst_EffectSystem);
+	}
 	if (m_pSecond_EffectSystem != nullptr)
+	{
+		m_pSecond_EffectSystem->SetDelete();
 		Safe_Release(m_pSecond_EffectSystem);
+	}
 	if (m_pThird_EffectSystem != nullptr)
+	{
+		m_pThird_EffectSystem->SetDelete();
 		Safe_Release(m_pThird_EffectSystem);
+	}
 	if (m_pFourth_EffectSystem != nullptr)
+	{
+		m_pFourth_EffectSystem->SetDelete();
 		Safe_Release(m_pFourth_EffectSystem);
+	}
 	if (m_pFifth_EffectSystem != nullptr)
+	{
+		m_pFifth_EffectSystem->SetDelete();
 		Safe_Release(m_pFifth_EffectSystem);
+	}
 
 }
