@@ -3,12 +3,10 @@
 #include "Client_Defines.h"
 
 BEGIN(Engine)
-class CShader;
-class CRenderer;
-class CModel;
 class CFSMComponent;
 class CAnimation;
 class CRigidBody;
+class CMaterial;
 END
 
 BEGIN(Client)
@@ -49,9 +47,11 @@ public:
 	void End_AttackState();
 	virtual void Reset() override;
 
+	virtual void DeBuff_End() override;
+	virtual void DeBuff_Fire() override;
+	virtual void DeBuff_Oil() override;
+
 private:
-	CRenderer*				m_pRendererCom = nullptr;
-	CModel*					m_pModelCom = nullptr;
 	class CBoss1_AnimationInstance* m_pASM = nullptr;
 	class CBoss1_AIController*		m_pController = nullptr;
 
@@ -86,6 +86,10 @@ private:
 	CAnimation* m_pJumpEnd = nullptr;
 	CAnimation* m_pJumpLand = nullptr;
 	CAnimation* m_pJumpJitabata = nullptr;
+
+	vector<CMaterial*> m_BodyMtrls;
+	CMaterial* m_pWeakMtrl = nullptr;
+	CMaterial* m_pGlassMtrl = nullptr;
 	
 
 public:

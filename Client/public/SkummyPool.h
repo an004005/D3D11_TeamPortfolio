@@ -4,11 +4,8 @@
 
 BEGIN(Engine)
 class CGameInstance;
-class CShader;
 class CAnimation;
 class CFSMComponent;
-class CModel;
-class CRenderer;
 class CRigidBody;
 END
 
@@ -36,10 +33,6 @@ public:
 	virtual void AfterPhysX();
 
 private:
-	CShader*					m_pShaderCom = nullptr;
-	CRenderer*					m_pRendererCom = nullptr;
-	CModel*						m_pModelCom = nullptr;
-
 	class CSkmP_Controller*		m_pController = nullptr;
 	class CSkmP_AnimInstance*	m_pASM = nullptr;
 	

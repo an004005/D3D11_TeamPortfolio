@@ -44,10 +44,6 @@ public:
 	CRigidBody* Get_TailCol() { return m_pTailCol; }
 
 private:
-	CShader*				m_pShaderCom = nullptr;
-	CRenderer*				m_pRendererCom = nullptr;
-	CModel*					m_pModelCom = nullptr;
-
 	class CFL_Controller*	m_pController = nullptr;
 	class CFL_AnimInstance*		m_pASM = nullptr;
 	

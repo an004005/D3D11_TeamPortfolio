@@ -296,10 +296,6 @@ HRESULT CTestMonster::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_NOW, TEXT("TestMonsterGoat"), TEXT("Com_ModelCom"),
 		(CComponent**)&m_pModelCom)))
 		return E_FAIL;
-	// Prototype_Component_Shader_VtxAnimModel
-	if (FAILED(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_Shader_VtxAnimModel"), TEXT("Com_Shader"),
-		(CComponent**)&m_pShaderCom)))
-		return E_FAIL;
 
 	return S_OK;
 }
@@ -337,9 +333,6 @@ void CTestMonster::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
 }
 
