@@ -82,6 +82,8 @@ public:
 
 	/* 객체의 특정 축을 입력받은 축으로 변환하고 외적하여 값 전환 */
 	void SetAxis(STATE eState, _fvector vAxis);
+	void RightAt(_fvector vAxis);
+	void RightAt_Smooth(_fvector vAxis, _double TimeDelta);
 
 	// Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 	void Turn(_fvector vAxis, _double TimeDelta); /* Dynamic */
@@ -89,6 +91,7 @@ public:
 	void TurnPitch(_double TimeDelta);
 	void Rotation(_fvector vAxis, _float fRadian); /* Static */
 	void RemoveRotation();
+	void TurnByMatrix(_fmatrix turnMatrix);
 	/* 쳐다본다. */
 	/*void LookAt(const CTransform* pTarget);*/
 	void LookAt(_fvector vTargetPos);

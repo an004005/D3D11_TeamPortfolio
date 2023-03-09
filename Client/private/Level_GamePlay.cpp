@@ -31,7 +31,9 @@
 #include "TrailSystem.h"
 #include "EffectSystem.h"
 #include "PostVFX_ColorGrading.h"
-// #define ADD_PLAYER
+
+
+#define ADD_PLAYER
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)

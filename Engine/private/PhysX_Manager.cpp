@@ -593,7 +593,11 @@ ECOLLISION_TYPE CPhysX_Manager::CheckCollisionTable(ECOLLISION_TYPE e1, ECOLLISI
 void CPhysX_Manager::DebugRender(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	if (m_bRenderDebug == false)
+	{
+		m_DebugLines.clear();
+		m_DebugShapes.clear();
 		return;
+	}
 
 	m_pEffect->SetWorld(XMMatrixIdentity());
 
