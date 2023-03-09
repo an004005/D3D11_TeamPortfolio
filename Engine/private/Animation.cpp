@@ -108,6 +108,8 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 			{
 				m_vLocalMove = pChannel->GetLocalMove();
 				m_vLocalRotation = pChannel->GetLocalRotation();
+				//m_vLocalQuaternion = pChannel->GetLocalQuaternion();
+				//m_vLocalEular = pChannel->GetLocalEular();
 			}
 		}
 		// 이벤트 실행
@@ -126,9 +128,25 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 
 			if ("Reference" == pChannel->GetChannelName())
 			{
-				m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+				//m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 				m_vLocalMove = pChannel->GetLocalMove();
 				m_vLocalRotation = pChannel->GetLocalRotation();
+				//m_vLocalQuaternion = pChannel->GetLocalQuaternion();
+			}
+			// 이벤트 실행
+			for (auto& iter : m_vecEvent)
+			{
+				if (iter.EventTime >= PrePlayTime && iter.EventTime < m_PlayTime)
+				{
+					m_pModel->EventCaller(iter.strEventName);
+				}
+			}
+		}
+		for (auto& iter : m_vecEvent)
+		{
+			if (iter.EventTime >= PrePlayTime && iter.EventTime < m_PlayTime)
+			{
+				m_pModel->EventCaller(iter.strEventName);
 			}
 		}
 		break;
@@ -152,8 +170,8 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 		}
 		else
 		{
-			CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-			if (4 == pGameInstance->GetCurLevelIdx())
+			//CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+			if (4 == CGameInstance::GetInstance()->GetCurLevelIdx())
 				m_PlayTime = 0.0;
 
 			m_bFinished = true;

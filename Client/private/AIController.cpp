@@ -77,6 +77,20 @@ void CAIController::Tick(_double TimeDelta)
 
 void CAIController::Imgui_RenderProperty()
 {
+	static string strDistance;
+	if (m_eDistance == DIS_NEAR)
+		strDistance = "Near";
+
+	else if (m_eDistance == DIS_MIDDLE)
+		strDistance = "Middle";
+
+	else if (m_eDistance == DIS_FAR)
+		strDistance = "Far";
+
+	else if (m_eDistance == DIS_OUTSIDE)
+		strDistance = "Outside";
+
+	ImGui::Text("Distance : "); ImGui::SameLine(); ImGui::Text(strDistance.c_str());
 	static string strSelected;
 	if (ImGui::BeginListBox("Current Commands"))
 	{
@@ -235,6 +249,20 @@ void CAIController::Move_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
 {
 	Move(eAxis);
 	TurnToTarget(fSpeedRatio);
+}
+
+void CAIController::TurnToTargetStop(_float fSpeedRatio)
+{
+	TurnToTarget(fSpeedRatio);
+	if (abs(m_fTurnRemain) < 0.1f)
+	{
+		m_Commands.front().SetFinish();
+	}
+}
+
+void CAIController::Wait()
+{
+	// AddCommand 시간동안 쉰다.
 }
 
 void CAIController::Free()

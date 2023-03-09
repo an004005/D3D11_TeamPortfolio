@@ -54,7 +54,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	// float2 flow = g_Flow.Sample(LinearSampler, In.vTexUV).xy;
     // flow = (flow - 0.5) * 2;
 
-	Out.vColor = g_Diffuse.Sample(LinearSampler, In.vTexUV) * 0.9f;
+	Out.vColor = g_Diffuse.Sample(LinearSampler, In.vTexUV);
 	return Out;
 }
 
@@ -62,7 +62,7 @@ technique11 DefaultTechnique
 {
 	pass Default
 	{
-		SetRasterizerState(RS_CW);
+		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);		
 		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);	
 

@@ -48,9 +48,66 @@ cbuffer FinalPassConstants : register( b0 )
 	float MiddleGrey  : packoffset( c0 );
 	float LumWhiteSqr : packoffset( c0.y );
 	float BloomScale  : packoffset( c0.z );
+	float Gamma  : packoffset( c0.w );
+	float FlimSlope  : packoffset( c1 );
 }
 
 static const float3 LUM_FACTOR = float3(0.299, 0.587, 0.114);
+
+// Reinhard Tonemapper
+float3 tonemap_reinhard(float3 color)
+{
+   color *= 16;
+   color = color/(1+color);
+   float3 ret = pow(color, 1.f); // gamma
+   return ret;
+}
+
+// Uncharted 2 Tonemapper
+float3 tonemap_uncharted2(float3 x)
+{
+    float A = 0.15;
+    float B = 0.50;
+    float C = 0.10;
+    float D = 0.20;
+    float E = 0.02;
+    float F = 0.30;
+
+    return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
+}
+
+float3 tonemap_uc2(float3 color)
+{
+	// default 11.2
+    float W = 11.2;
+
+    color *= 16;  // Hardcoded Exposure Adjustment
+
+    float exposure_bias = 2.0f;
+    float3 curr = tonemap_uncharted2(exposure_bias*color);
+
+    float3 white_scale = 1.0f/tonemap_uncharted2(W);
+    float3 ccolor = curr*white_scale;
+
+    float3 ret = pow(abs(ccolor), 1.f); 
+
+    return ret;
+}
+
+// Filmic tonemapper
+float3 tonemap_filmic(float3 color)
+{
+    color = max(0, color - 0.004f);
+    color = (color * (6.2f * color + 0.5f)) / (color * (6.2f * color + 1.7f)+ 0.06f);
+
+    // result has 1/2.2 baked in
+    return pow(color, 1.f);
+}
+
+float3 GammaCorrection(float3 color)
+{
+	return pow(color, 1.f / Gamma);
+}
 
 float3 ToneMapping(float3 HDRColor)
 {
@@ -71,6 +128,10 @@ float4 FinalPassPS( VS_OUTPUT In ) : SV_TARGET
 
 	// Tone mapping
 	color = ToneMapping(color);
+	color = GammaCorrection(color);
+	// color = tonemap_reinhard(color);
+	// color = tonemap_filmic(color);
+	// color = tonemap_uc2(color);
 
 	// Output the LDR value
 	return float4(color, 1.0);

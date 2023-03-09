@@ -18,12 +18,12 @@ enum class EShaderParamType
 enum
 {
 	PARAM_INT_CNT = 4,
-	PARAM_FLOAT_CNT = 4,
+	PARAM_FLOAT_CNT = 10,
 	PARAM_FLOAT2_CNT = 4,
 	PARAM_FLOAT4_CNT = 4,
 	PARAM_FLOAT4X4_CNT = 2,
-	PARAM_TEXTURE_CNT = 8,
-	PARAM_TEXTURE_ON_CNT = 8,
+	PARAM_TEXTURE_CNT = 10,
+	PARAM_TEXTURE_ON_CNT = 10,
 	PARAM_TYPE_CNT = static_cast<_uint>(EShaderParamType::PARAM_END)
 };
 
@@ -70,6 +70,8 @@ public:
 	HRESULT Set_Params(const ShaderParams& tParam);
 	HRESULT Begin_Params(const ShaderParams& tParam);
 
+	void SetCommonTexture(const char* pConstantName, const char* pTexFilePath);
+
 public:
 	static void SaveShaderParam(const ShaderParams& tParams, Json& json);
 	static void LoadShaderParam(ShaderParams& tParams, const Json& json);
@@ -94,6 +96,7 @@ public:
 private:
 	ID3DX11Effect*				m_pEffect = nullptr;
 	vector<ID3D11InputLayout*>	m_InputLayouts;
+	map<string, CTexture*>		m_CommonTextures;
 
 private:
 	_uint						m_iNumPasses = 0;

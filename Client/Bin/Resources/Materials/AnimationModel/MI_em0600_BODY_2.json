@@ -1,0 +1,16 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxAnimModel",
+    "ShaderParams" : {
+        "Ints" : [0],
+        "Floats" : [0.0],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [         
+            "../Bin/Resources/Model/AnimModel/Monster/PuelPool/Texture/dds/T_em0600_body_ALB.dds",
+            "../Bin/Resources/Model/AnimModel/Monster/PuelPool/Texture/T_em0600_body_NML.png"
+
+        ],
+        "Pass" : 1
+    }
+}

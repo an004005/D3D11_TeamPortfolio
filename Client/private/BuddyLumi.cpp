@@ -62,9 +62,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
 		(CComponent**)&m_pTrigger, &BuddyLumiTrigger)))
 		return E_FAIL;
-
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(15.f, 0.f, 15.f)));
-	
+		
 	m_pTransformCom->SetSpeed(1.1f);
 	
 	m_strObjectTag = "Buddy_Lumi";
@@ -89,7 +87,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 15.f) && m_fMyPos.z <= (m_fStorePos.z + 15.f) ||
 						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 15.f) && m_fMyPos.z >= (m_fStorePos.z - 15.f) ||
 						m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 15.f) && m_fMyPos.z >= (m_fStorePos.z - 15.f))*/
-					if(XMVectorGetX(XMVector3Length(vDir)) > 15.f)
+					if(XMVectorGetX(XMVector3Length(vDir)) < 15.f)
 					{
 						if (m_fTimeAcc >= 5.f && !m_bInitialize)	// 처음 생성되고 1회
 						{
@@ -121,15 +119,17 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 			.AddState("Run")
 				.Tick([this](_double TimeDelta)
 				{
-					m_fMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					m_fStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					_vector vTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					_float3 fTargetPos;
-					XMStoreFloat3(&fTargetPos, vTargetPos);
-					_vector vDir = m_vStorePos - m_vMyPos;
+					_vector vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					vOrigin = XMVectorSetY(vOrigin, 0.f);
+					_vector vDest = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					vDest = XMVectorSetY(vDest, 0.f);
+					const _vector vDiff = vDest - vOrigin;
+					const _float fDistance = XMVectorGetX(XMVector3LengthEst(vDiff));
+					const _vector vDirection = XMVector3NormalizeEst(vDiff);
 
-					m_pTransformCom->LookAt(vTargetPos);
-					m_pTransformCom->Chase(vTargetPos, 0.06f);
+
+					m_pTransformCom->LookAt(vDest);
+					m_pTransformCom->Chase(vDest, 0.06f);
 
 					/*_vector vDest = { 0.f, 0.f, 0.f, 1.f };
 
@@ -155,7 +155,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 
 					//if (m_fMyPos.x <= 1.f && m_fMyPos.z <= 1.f)
 
-					if (XMVectorGetX(XMVector3Length(vDir)) < 2.f)
+					if (XMVectorGetX(XMVector3Length(vDiff)) < 4.f)
 					{
 						m_bRun = false;
 
@@ -348,7 +348,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					_vector vDest = XMVectorSetW(m_vMyPos - m_vStorePos, 0.f);
 					vDest = XMVector3Normalize(XMVectorSetY(vDest, 0.f));
 					
-					m_pTransformCom->Move(0.02, vDest);
+					m_pTransformCom->Move(0.2, vDest);
 
 					if (pAnim->IsFinished() == true)
 					{
@@ -375,7 +375,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 					// 중점 Axis 기준 왼쪽으로 Turn
 					m_pTransformCom->LookAt(m_vStorePos);
-					m_pTransformCom->Move(0.02, -vMyRight);
+					m_pTransformCom->Move(0.2, -vMyRight);
 
 					if (pAnim->IsFinished() == true)
 					{
@@ -401,7 +401,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 					_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 					// 중점 Axis 기준 오른으로 Turn
 					m_pTransformCom->LookAt(m_vStorePos);
-					m_pTransformCom->Move(0.02, vMyRight);
+					m_pTransformCom->Move(0.2, vMyRight);
 
 					if (pAnim->IsFinished() == true)
 					{
@@ -422,7 +422,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 				})
 				.Tick([this](_double TimeDelta) 
 				{
-								
+
 				})
 
 			.Build();
@@ -464,6 +464,8 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 void CBuddyLumi::BeginTick()
 {
 	__super::BeginTick();
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 18.f)));
 	
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
@@ -585,7 +587,7 @@ void CBuddyLumi::Collision()
 	damageParam.pCauser = this;
 	damageParam.iDamage = 1;
 
-	Collision_Check(m_pWeaponCollider, damageParam);
+	Collision_Check_Capsule(m_pWeaponCollider, damageParam);
 }
 
 _matrix CBuddyLumi::AttachCollider()

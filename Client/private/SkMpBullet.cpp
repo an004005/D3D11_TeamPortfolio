@@ -46,7 +46,7 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 		(CComponent**)&m_pCollider, &SkMpBullet)))
 		return E_FAIL;
 
-	m_pTransformCom->SetSpeed(13.f);
+	m_pTransformCom->SetSpeed(22.f);
 
 	m_strObjectTag = "SkMp_Bullet";
 
@@ -85,7 +85,7 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 
 					else
 					{
-						if (m_fTimeAcc >= 5.f)
+						if (m_fTimeAcc >= 3.5f)
 						{
 							m_bShoot = false;
 							m_bDead = true;

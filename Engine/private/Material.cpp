@@ -6,6 +6,10 @@
 #include "GameUtils.h"
 #include "JsonStorage.h"
 #include "ImguiUtils.h"
+#include "Graphic_Device.h"
+
+unordered_map<string, string> CMaterial::s_MtrlPathes{};
+
 
 CMaterial::CMaterial(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CComponent(pDevice, pContext)
@@ -16,6 +20,9 @@ CMaterial::CMaterial(const CMaterial& rhs)
 	: CComponent(rhs)
 	, m_pShader(rhs.m_pShader)
 	, m_tParams(rhs.m_tParams)
+#ifdef _DEBUG
+	, m_strFilePath(rhs.m_strFilePath)
+#endif
 {
 	Safe_AddRef(m_pShader);
 	for (auto e : m_tParams.Textures)
@@ -31,6 +38,10 @@ HRESULT CMaterial::Initialize_Prototype(const char* pMtrlFilePath)
 	CShader::LoadShaderParam(m_tParams, json);
 	string shaderProtoTag = json["ShaderProtoTag"];
 	m_pShader = dynamic_cast<CShader*>(CGameInstance::GetInstance()->Clone_Component(CGameUtils::s2ws(shaderProtoTag).c_str()));
+
+#ifdef _DEBUG
+	m_strFilePath = pMtrlFilePath;
+#endif
 
 	return S_OK;
 }
@@ -85,13 +96,31 @@ void CMaterial::Imgui_RenderProperty()
 
 	ImGui::Separator();
 
-	CImguiUtils::FileDialog_FileSelector("Save Material to", ".json", "../Bin/Resources/Meshes/Valorant/Materials/", [this](const string& filePath)
+	CImguiUtils::FileDialog_FileSelector("Save Material to", ".json", "../Bin/Resources/Materials/", [this](const string& filePath)
 	{
 		Json json;
 		SaveToJson(json);
 		std::ofstream file(filePath);
 		file << json;
+#ifdef _DEBUG
+		m_strFilePath = filePath;
+#endif
 	});
+
+#ifdef _DEBUG
+	if (ImGui::Button("QuickSave") && m_strFilePath.empty() == false)
+	{
+		wstring msg = L"Save to " + s2ws(m_strFilePath);
+		if (MessageBox(NULL, msg.c_str(), L"System Message", MB_YESNO) == IDYES)
+		{
+			Json json;
+			SaveToJson(json);
+			std::ofstream file(m_strFilePath);
+			file << json;
+		}
+	}
+#endif
+
 }
 
 void CMaterial::BindMatrices(CTransform* pTransform)
@@ -101,10 +130,10 @@ void CMaterial::BindMatrices(CTransform* pTransform)
 	FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 	FAILED_CHECK(m_pShader->Set_RawValue("g_vCamPosition", &CGameInstance::GetInstance()->Get_CamPosition(), sizeof(_float4)));
 
-	// const _float4x4 ProjInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_PROJ);
 	// const _float4x4 ViewInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW);
-	// FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrixInv", &ProjInv));
 	// FAILED_CHECK(m_pShader->Set_Matrix("g_ViewMatrixInv", &ViewInv));
+	// const _float4x4 ProjInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_PROJ);
+	// FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrixInv", &ProjInv));
 }
 
 void CMaterial::BindMatrices(const _float4x4& WorldMatrix)
@@ -113,11 +142,12 @@ void CMaterial::BindMatrices(const _float4x4& WorldMatrix)
 	FAILED_CHECK(m_pShader->Set_Matrix("g_ViewMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
 	FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 	FAILED_CHECK(m_pShader->Set_RawValue("g_vCamPosition", &CGameInstance::GetInstance()->Get_CamPosition(), sizeof(_float4)));
+	//
+	// const _float4x4 ViewInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW);
+	// FAILED_CHECK(m_pShader->Set_Matrix("g_ViewMatrixInv", &ViewInv));
 
 	// const _float4x4 ProjInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_PROJ);
-	// const _float4x4 ViewInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW);
 	// FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrixInv", &ProjInv));
-	// FAILED_CHECK(m_pShader->Set_Matrix("g_ViewMatrixInv", &ViewInv));
 }
 
 void CMaterial::Begin()
@@ -129,6 +159,36 @@ void CMaterial::Begin(_uint iPass)
 {
 	m_pShader->Set_Params(m_tParams);
 	m_pShader->Begin(iPass);
+}
+
+void CMaterial::LoadMaterialFilePathes(const string& MaterialJsonDir)
+{
+	s_MtrlPathes.clear();
+	CGameUtils::ListFilesRecursive(MaterialJsonDir, [](const string& filePath)
+	{
+		char szFileName[MAX_PATH]{};
+		_splitpath_s(filePath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
+
+		if (0 == strcmp("Proto_Mtrl_Empty", szFileName)
+			|| 0 == strcmp("Proto_MtrlAnim_Empty", szFileName)
+			|| 0 == strcmp("Proto_Mtrl_Empty_Instance", szFileName))
+		{
+			CGameInstance::GetInstance()->Add_Prototype(LEVEL_STATIC, s2ws(szFileName).c_str(),
+				CMaterial::Create(CGraphic_Device::GetInstance()->GetDevice(), CGraphic_Device::GetInstance()->GetContext(), filePath.c_str()));
+		}
+		else
+		{
+			s_MtrlPathes.emplace(szFileName, filePath);
+		}
+	});
+}
+
+const string* CMaterial::FindMaterialFilePath(const string& MaterialName)
+{
+	auto itr = s_MtrlPathes.find(MaterialName);
+	if (itr != s_MtrlPathes.end())
+		return &itr->second;
+	return nullptr;
 }
 
 void CMaterial::Free()

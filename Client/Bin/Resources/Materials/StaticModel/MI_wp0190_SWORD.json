@@ -1,5 +1,5 @@
     {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxToonModel",
     "ShaderParams" : {
         "Ints" : [],
         "Floats" : [],
@@ -9,10 +9,9 @@
         "Textures" : [
             "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/Texture/T_wp0190_Sword_COL.dds",
             "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/Texture/T_wp0190_Sword_NML.png",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/Texture/T_wp0190_Sword_CTL.dds",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/Texture/T_cm_Fil_Glay.png",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/Texture/T_DefaultColorGrading.png"
+            "",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/Texture/T_wp0190_Sword_CTL.dds"
         ],
-        "Pass" : 0
+        "Pass" : 1
     }
 }

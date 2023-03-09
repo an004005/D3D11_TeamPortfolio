@@ -19,6 +19,8 @@ HRESULT CImgui_PropertyEditor::Initialize(void* pArg)
 
 void CImgui_PropertyEditor::Imgui_RenderTab()
 {
+
+
 	m_pGameInstance->Imgui_ObjectViewer(LEVEL_NOW,m_pSelectedObject);
 
 	// todo: 마우스 피킹으로 오브젝트 선택하는 기능 추가

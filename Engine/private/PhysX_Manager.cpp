@@ -148,6 +148,7 @@ void CPhysX_Manager::Initialize()
 	// create simulation
 	m_Materials.emplace("Default", m_Physics->createMaterial(0.5f, 0.5f, 0.6f));
 	m_Materials.emplace("SmallFriction", m_Physics->createMaterial(0.1f, 0.1f, 0.5f));
+	m_Materials.emplace("NoBounce", m_Physics->createMaterial(0.5f, 0.5f, 0.0f));
 
 #ifdef _DEBUG
 	groundPlane = PxCreatePlane(*m_Physics, physx::PxPlane(0,1,0,30), *FindMaterial("Default"));
@@ -437,7 +438,7 @@ void CPhysX_Manager::Imgui_RenderProperty()
 	ImGui::Checkbox("DebugDraw", &m_bRenderDebug);
 
 	static array<string, CT_END + 1> ColliderNames{
-		"E", "Player", "Monster", "PlayerAtk", "MonsterAtk", "PsychickObj", "Trigger4Player", "Trigger4Monster", "Static"
+		"E", "Player", "Monster", "PlayerAtk", "MonsterAtk", "PsychickObj", "Trigger4Player", "Trigger4Monster", "Static", "MonsterPart"
 	};
 
 	ImGui::Checkbox("ShowTable", &m_bShowTable);
@@ -592,7 +593,11 @@ ECOLLISION_TYPE CPhysX_Manager::CheckCollisionTable(ECOLLISION_TYPE e1, ECOLLISI
 void CPhysX_Manager::DebugRender(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	if (m_bRenderDebug == false)
+	{
+		m_DebugLines.clear();
+		m_DebugShapes.clear();
 		return;
+	}
 
 	m_pEffect->SetWorld(XMMatrixIdentity());
 
@@ -739,10 +744,17 @@ void CPhysXUtils::AddForceAtLocalPos(physx::PxRigidBody& body, const physx::PxVe
 CGameObject* CPhysXUtils::GetOnwer(physx::PxActor* pActor)
 {
 	// userData에는 Physx를 사용하는 컴포넌트의 주소가 항상 들어간다.
-	if (pActor->userData == nullptr)
+	if (pActor == nullptr || pActor->userData == nullptr)
 		return nullptr;
 	CComponent* pPxCom = static_cast<CComponent*>(pActor->userData);
 	return pPxCom->TryGetOwner();
+}
+
+CComponent* CPhysXUtils::GetComponent(physx::PxActor* pActor)
+{
+	if (pActor == nullptr || pActor->userData == nullptr)
+		return nullptr;
+	return static_cast<CComponent*>(pActor->userData);
 }
 
 /* **************************************

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "..\public\Level_Effect.h"
-
 #include "EffectGroup.h"
 #include "EffectSystem.h"
 #include "GameInstance.h"
@@ -26,6 +25,7 @@
 #include "PostVFX_Scifi.h"
 #include "PostVFX_WhiteOut.h"
 #include "Imgui_EffectBrowser.h"
+#include "PostVFX_HitDecal.h"
 
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -54,8 +54,8 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer(TEXT("Layer"))))
 		return E_FAIL;
 
-	// if (FAILED(Ready_Layer_Player(L"Layer_Player")))
-	// 	return E_FAIL;
+	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+		return E_FAIL;
 
 	// if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 	// 	return E_FAIL;
@@ -69,124 +69,6 @@ HRESULT CLevel_Effect::Initialize()
 void CLevel_Effect::Tick(_double TimeDelta)
 {
 	CLevel::Tick(TimeDelta);
-
-	// if (ImGui::Button("Add Sample EffectSystem"))
-	// {
-	// 	FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_EffectSys", TEXT("ProtoVFX_EffectSystem")));
-	// }
-	// else if (ImGui::Button("Add Sample EffectGroup"))
-	// {
-	// 	FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup")));
-	//
-	// 	// Json Attack = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_1.json");
-	// 	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack));
-	// 	//
-	// 	// Json Attack1 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_2.json");
-	// 	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack1));
-	// 	//
-	// 	// Json Attack2 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_3.json");
-	// 	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack2));
-	// 	//
-	// 	// Json Attack3 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_4_1.json");
-	// 	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack3));
-	// 	//
-	// 	// Json Attack4 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_4_2.json");
-	// 	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack4));
-	// 	//
-	// 	// Json Attack5 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_4_3.json");
-	// 	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack5));
-	// }
-	//
-	// ImGui::Separator();
-	// ImGui::Separator();
-	// ImGui::Separator();
-	// ImGui::Separator();
-	// ImGui::Separator();
-	//
-	//
-	// {
-	// 	char EffectGroupTag[MAX_PATH];
-	// 	strcpy(EffectGroupTag, m_EffectGroupTag.c_str());
-	// 	ImGui::InputText("EffectGroup Tag", EffectGroupTag, MAX_PATH);
-	// 	m_EffectGroupTag = EffectGroupTag;
-	// 	if (ImGui::Button("Add New EffectGroup"))
-	// 	{
-	// 		Json Attack5 = CJsonStorage::GetInstance()->FindOrLoadJson(m_EffectGroupTag);
-	// 		if(Attack5.empty())
-	// 			MSG_BOX("Failed to Add New EffectGroup");
-	// 		else
-	// 		{
-	// 			HRESULT hr = (CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup"), &Attack5));
-	// 		}
-	// 	}
-	// }
-	//
-	// ImGui::Separator();
-	// ImGui::Separator();
-	// {
-	// 	char EffectSystemTag[MAX_PATH];
-	// 	strcpy(EffectSystemTag, m_EffectSystemTag.c_str());
-	// 	ImGui::InputText("EffectSystem Tag", EffectSystemTag, MAX_PATH);
-	// 	m_EffectSystemTag = EffectSystemTag;
-	//
-	// 	if (ImGui::Button("Add New EffectSystem"))
-	// 	{
-	// 		Json Attack5 = CJsonStorage::GetInstance()->FindOrLoadJson(m_EffectSystemTag);
-	// 		HRESULT hr = (CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_EffectSystem", TEXT("ProtoVFX_EffectSystem"), &Attack5));
-	// 		if (hr == E_FAIL)
-	// 			MSG_BOX("Failed to Add New EffectSystem");
-	// 	}
-	// }
-	//
-	// ImGui::Separator();
-	// ImGui::Separator();
-	//
-	// if(ImGui::Button("Refresh_Effect Folder"))
-	// {
-	// 	// LoadEffects("../Bin/Resources/Curve/Default_Attack/");
-	// 	LoadEffects("../Bin/Resources/Curve/NeedToWork/");
-	// }
-	//
-	// if(ImGui::CollapsingHeader("Effect Viewer"))
-	// {
-	// 	static char szSearchEffect[MAX_PATH] = "";
-	// 	ImGui::InputText("Effect Search", szSearchEffect, MAX_PATH);
-	//
-	// 	const string strSearch = szSearchEffect;
-	// 	const _bool bSearch = strSearch.empty() == false;
-	//
-	// 	if(ImGui::BeginListBox("Effects List"))
-	// 	{
-	// 		for(auto& Pair : m_mapEffectGroup)
-	// 		{
-	// 			// if(Pair.second->CheckPlay() == false)
-	// 			// {
-	// 			// 	Pair.second->SetVisible(false);
-	// 			// }
-	//
-	// 			if(bSearch)
-	// 			{
-	// 				if (Pair.first.find(strSearch) == string::npos)
-	// 					continue;
-	// 			}
-	//
-	// 			const bool bSelected = m_CurEffectName == Pair.first;
-	// 			if (bSelected)
-	// 			{
-	// 				ImGui::SetItemDefaultFocus();
-	// 				Json jsonEffect = CJsonStorage::GetInstance()->FindOrLoadJson(Pair.second);
-	// 				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect);
-	//
-	// 				// Pair.second->SetPlay();
-	// 				m_CurEffectName = "";
-	// 			}
-	//
-	// 			if (ImGui::Selectable(Pair.first.c_str(), bSelected))
-	// 				m_CurEffectName = Pair.first;
-	// 		}
-	// 		ImGui::EndListBox();
-	// 	}
-	// }
 
 }
 
@@ -252,13 +134,13 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	// 		CModel::Create(m_pDevice, m_pContext, filePath.c_str()));
 	// });
 
-
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
-	{
-		char szFileName[MAX_PATH]{};
-		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
-	});
+	//
+	// CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
+	// {
+	// 	char szFileName[MAX_PATH]{};
+	// 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
+	// 	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
+	// });
 
 	// ForSky
 
@@ -300,16 +182,19 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 
 
 	// For PostVFX Distortion
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
-		CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	// if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
+	// 	CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+	// 	return E_FAIL;
 	// 
 
 	// For PostVFX Scifi
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
 		CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-	// 
+	//
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Hit_Decal"),
+		CPostVFX_HitDecal::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	// 모델 추가하는 방법
 	// auto pModel_VFX = CModel::Create(m_pDevice, m_pContext,

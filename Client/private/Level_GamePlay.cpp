@@ -21,6 +21,17 @@
 #include "Indicator.h"
 #include "Player.h"
 #include "Weapon_wp0190.h"
+#include "SkyBox.h"
+
+#include "MapKinetic_Object.h"
+#include "PostVFX_Scifi.h"
+#include "EffectGroup.h"
+#include "ParticleSystem.h"
+#include "PostVFX_Distortion.h"
+#include "TrailSystem.h"
+#include "EffectSystem.h"
+#include "PostVFX_ColorGrading.h"
+
 
 #define ADD_PLAYER
 
@@ -121,12 +132,13 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
-	{
-		char szFileName[MAX_PATH]{};
-		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-		CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
-	});
+	// CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
+	// {
+	// 	char szFileName[MAX_PATH]{};
+	// 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
+	// 	CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
+	// });
+
 
 	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
@@ -150,7 +162,22 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
 		FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
 
+
+
+	{	// 이펙트 프로토타입
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
+			CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
+			CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
+	}
 
 	}
 #endif
@@ -176,27 +203,10 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
 
-	//// 23.02.20 PJW Work
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
-	//{														// Bin\Resources\Model\AnimModel\Monster\Goat
-	//	auto pGoat = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/AnimModel/Monster/Goat/Goat.anim_model",
-	//		_float4x4::CreateScale({ 0.1f, 0.1f, 0.1f }));
-	//	pGoat->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/Goat/Anim/"); // Bin\Resources\Model\AnimModel\Monster\Goat\Anim
-	//	pGameInstance->Add_Prototype(TEXT("TestMonsterGoat"), pGoat);
-	//}
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_PostVFX_ColorGrading", CPostVFX_ColorGrading::Create(m_pDevice, m_pContext)));
 
-	//{														// \Bin\Resources\Model\AnimModel\Monster\FlowerLeg
-	//	auto pFlowerLeg = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/FlowerLeg.anim_model",
-	//		_float4x4::CreateScale({ 0.1f, 0.1f, 0.1f }));
-	//	pFlowerLeg->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Anim/"); // \Bin\Resources\Model\AnimModel\Monster\FlowerLeg\Anim
-	//	pGameInstance->Add_Prototype(TEXT("MonsterFlowerLeg"), pFlowerLeg);
-	//}
-
-	//pGameInstance->Add_Prototype(TEXT("TestMonster"), CTestMonster::Create(m_pDevice, m_pContext));
-
-	//// Model Component Origin Create
-
-	//// ~23.02.20 PJW Work
 
 	return S_OK;
 }
@@ -205,10 +215,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
 
-
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
+	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+
 
 	return S_OK;
 }
@@ -275,6 +287,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar* pLayerTag)
 HRESULT CLevel_GamePlay::Ready_Layer_Effect()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Scifi", &Test);
+
+	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
+
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"Prototype_PostVFX_ColorGrading");
+
 	return S_OK;
 }
 

@@ -10,7 +10,9 @@ const array<const char*, PARAM_INT_CNT> CShader::s_ParamIntName {
 	"g_int_0","g_int_1","g_int_2","g_int_3"
 };
 const array<const char*, PARAM_FLOAT_CNT> CShader::s_ParamFloatName {
-	"g_float_0","g_float_1","g_float_2","g_float_3"
+	"g_float_0","g_float_1","g_float_2","g_float_3",
+	"g_float_4","g_float_5","g_float_6","g_float_7",
+	"g_float_8","g_float_9"
 };
 const array<const char*, PARAM_FLOAT2_CNT> CShader::s_ParamFloat2Name {
 	"g_vec2_0","g_vec2_1","g_vec2_2","g_vec2_3"
@@ -22,10 +24,10 @@ const array<const char*, PARAM_FLOAT4X4_CNT> CShader::s_ParamFloat4x4Name {
 	"g_mat_0","g_mat_1"
 };
 const array<const char*, PARAM_TEXTURE_CNT> CShader::s_ParamTextureName {
-	"g_tex_0","g_tex_1","g_tex_2","g_tex_3","g_tex_4","g_tex_5", "g_tex_6", "g_tex_7"
+	"g_tex_0","g_tex_1","g_tex_2","g_tex_3","g_tex_4","g_tex_5", "g_tex_6", "g_tex_7", "g_tex_8", "g_tex_9"
 };
 const array<const char*, PARAM_TEXTURE_ON_CNT> CShader::s_ParamTextureOnName {
-	"g_tex_on_0","g_tex_on_1","g_tex_on_2","g_tex_on_3","g_tex_on_4","g_tex_on_5", "g_tex_on_6", "g_tex_on_7"
+	"g_tex_on_0","g_tex_on_1","g_tex_on_2","g_tex_on_3","g_tex_on_4","g_tex_on_5", "g_tex_on_6", "g_tex_on_7", "g_tex_on_8", "g_tex_on_9"
 };
 
 CShader::CShader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -40,6 +42,7 @@ CShader::CShader(const CShader & rhs)
 	, m_InputLayouts(rhs.m_InputLayouts)	
 	, m_iNumPasses(rhs.m_iNumPasses)
 #ifdef _DEBUG
+	, m_CommonTextures(rhs.m_CommonTextures)
 	, m_shaderFilePath(rhs.m_shaderFilePath)
 	, m_pElements(rhs.m_pElements)
 	, m_iNumElements(rhs.m_iNumElements)
@@ -336,6 +339,17 @@ HRESULT CShader::Begin_Params(const ShaderParams& tParam)
 	return S_OK;
 }
 
+void CShader::SetCommonTexture(const char* pConstantName, const char* pTexFilePath)
+{
+	if (m_isCloned == false)
+	{
+		auto pTex = dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(s2ws(pTexFilePath).c_str()));
+		Assert(pTex != nullptr);
+		m_CommonTextures.emplace(pConstantName, pTex);
+		pTex->Bind_ShaderResource(this, pConstantName);
+	}
+}
+
 void CShader::SaveShaderParam(const ShaderParams& tParams, Json& json)
 {
 	Json& jsonParams = json["ShaderParams"];
@@ -550,7 +564,13 @@ void CShader::ReCompileShader()
 			return;
 
 		m_InputLayouts.push_back(pInputLayout);
-	}	
+	}
+
+	for (auto& texture : m_CommonTextures)
+	{
+		texture.second->Bind_ShaderResource(this, texture.first.c_str());
+	}
+
 }
 #endif
 
@@ -588,4 +608,12 @@ void CShader::Free()
 	m_InputLayouts.clear();
 
 	Safe_Release(m_pEffect);
+
+	if (m_isCloned == false)
+	{
+		for (auto tex : m_CommonTextures)
+		{
+			Safe_Release(tex.second);
+		}
+	}
 }

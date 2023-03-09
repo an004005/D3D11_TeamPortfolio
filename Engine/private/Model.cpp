@@ -151,6 +151,13 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix)
 			m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
+		if (m_LocalMoveAnimName != m_CurAnimName)
+		{
+			m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_LocalMoveAnimName = m_CurAnimName;
+			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
 	}
 	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
 	//m_fLastLocalMoveSpeed = 0.f;
@@ -188,43 +195,39 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
 	_vector vMovePos;
 	ZeroMemory(&vMovePos, sizeof(_vector));
 
-	static _vector vBefLocalMove;
-	static _vector vLocalMove;
-	static string szBefAnimName;
-
-	vBefLocalMove = vLocalMove;
-	vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	m_vSocketBefLocalMove = m_vSocketLocalMove;
+	m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	if (srtAnimName != "")
 	{
-		vLocalMove = m_mapAnimation[srtAnimName]->GetLocalMove();
-		if (XMVector3Equal(vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
+		m_vSocketLocalMove = m_mapAnimation[srtAnimName]->GetLocalMove();
+		if (XMVector3Equal(m_vSocketLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
 		{
-			vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-			vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 		if (m_mapAnimation[srtAnimName]->IsFinished())
 		{
 			//m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
-			vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-			vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
-		if (szBefAnimName != srtAnimName)
+		if (m_szSocketBefAnimName != srtAnimName)
 		{
-			szBefAnimName = srtAnimName;
-			vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-			vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_szSocketBefAnimName = srtAnimName;
+			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 	}
-	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(vLocalMove - vBefLocalMove));
+	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vSocketLocalMove - m_vSocketBefLocalMove));
 
 	_vector vScale, vRotation, vTrans;
 	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
 	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
 
-	vMovePos = vLocalMove - vBefLocalMove;
+	vMovePos = m_vSocketLocalMove - m_vSocketBefLocalMove;
 	XMVectorSetW(vMovePos, 0.f);
 	_float	fLength = XMVectorGetX(XMVector3Length(vMovePos));
 
@@ -244,6 +247,159 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
 	XMVectorSetW(vMovePos, 0.f);
 
 	return vMovePos;
+}
+
+_float CModel::GetLocalScalar(_fmatrix WorldMatrix)
+{
+	_vector vMovePos;
+	ZeroMemory(&vMovePos, sizeof(_vector));
+
+	m_vBefLocalMove = m_vLocalMove;
+	m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	if (m_CurAnimName != "")
+	{
+		m_vLocalMove = m_mapAnimation[m_CurAnimName]->GetLocalMove();
+		if (XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
+		{
+			m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			return 0.f;
+		}
+		if (m_mapAnimation[m_CurAnimName]->IsFinished())
+		{
+			//m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
+			m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			return 0.f;
+		}
+	}
+	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
+	//m_fLastLocalMoveSpeed = 0.f;
+
+	_vector vScale, vRotation, vTrans;
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
+
+	vMovePos = m_vLocalMove - m_vBefLocalMove;
+	XMVectorSetW(vMovePos, 0.f);
+	_float	fLength = XMVectorGetX(XMVector3Length(vMovePos));
+
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_PivotMatrix);
+	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
+	vMovePos = XMVector3TransformNormal(vMovePos, PivotRotation);
+
+	// Pivot을 적용시켜도 Y축과 Z축 이동이 뒤틀리는 현상으로 인해
+	// 현재 X축에 대해 회전을 해둔 상태, 원인 파악 시 다시 원상복구 할 것
+	/*********************************************************************/
+	_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
+	vMovePos = XMVector3TransformNormal(vMovePos, ModifyRotation);
+	/*********************************************************************/
+
+	vMovePos = XMVector3TransformNormal(vMovePos, WorldRotation);
+
+	XMVectorSetW(vMovePos, 0.f);
+
+	//vMovePos *= fLength;
+
+	return XMVectorGetX(XMVector3Length(vMovePos));
+}
+
+void CModel::Reset_LocalMove(_bool isSocket)
+{
+	if (isSocket)
+	{
+		m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	}
+	else
+	{
+		m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	}
+}
+
+_matrix CModel::GetLocalRotationMatrix(_fmatrix WorldMatrix)
+{
+	Quaternion vDiffQuat = XMQuaternionIdentity();
+
+	m_vBefLocalQuaternion = m_vLocalQuaternion;
+	m_vLocalQuaternion = XMQuaternionIdentity();
+
+	if (m_CurAnimName != "")
+	{
+		m_vLocalQuaternion = m_mapAnimation[m_CurAnimName]->GetLocalQuaternion();
+		if (XMQuaternionEqual(m_vLocalQuaternion, XMQuaternionIdentity()))
+		{
+			m_vLocalQuaternion = XMQuaternionIdentity();
+			m_vBefLocalQuaternion = XMQuaternionIdentity();
+
+			return XMMatrixIdentity();
+		}
+
+		if (m_mapAnimation[m_CurAnimName]->IsFinished())
+		{
+			m_vLocalQuaternion = XMQuaternionIdentity();
+			m_vBefLocalQuaternion = XMQuaternionIdentity();
+
+			return XMMatrixIdentity();
+		}
+	}
+
+	//_vector vScale, vRotation, vTrans;
+	//XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+	//_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
+
+	vDiffQuat = XMQuaternionMultiply(m_vLocalQuaternion, XMQuaternionConjugate(m_vBefLocalQuaternion));
+
+	_vector vScale, vRotation, vTrans;
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_PivotMatrix);
+	vDiffQuat = XMQuaternionMultiply(vDiffQuat, vRotation);
+
+	static Quaternion defaultQ = XMQuaternionRotationAxis(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(-90.f));
+
+	//_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
+	vDiffQuat = XMQuaternionMultiply(vDiffQuat, defaultQ);
+
+	return XMMatrixRotationQuaternion(vDiffQuat);
+}
+
+_matrix CModel::GetLocalEularMatrix(_fmatrix WorldMatrix)
+{
+	m_BefLocalEular = m_LocalEular;
+	m_LocalEular = { XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.f };
+
+	if (m_CurAnimName != "")
+	{
+		m_LocalEular = m_mapAnimation[m_CurAnimName]->GetLocalEular();
+		if (m_LocalEular.second == 0.f)
+		{
+			m_LocalEular = { XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.f };
+			m_BefLocalEular = { XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.f };
+
+			return XMMatrixRotationAxis(m_LocalEular.first, m_LocalEular.second);
+		}
+
+		if (m_mapAnimation[m_CurAnimName]->IsFinished())
+		{
+			m_LocalEular = { XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.f };
+			m_BefLocalEular = { XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.f };
+
+			return XMMatrixRotationAxis(m_LocalEular.first, m_LocalEular.second);
+		}
+	}
+
+	_vector vAxis = m_LocalEular.first;
+	_float fDiffAngle = m_LocalEular.second - m_BefLocalEular.second;
+
+	_vector vScale, vRotation, vTrans;
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_PivotMatrix);
+	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
+	vAxis = XMVector3TransformNormal(vAxis, PivotRotation);
+
+	_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
+	vAxis = XMVector3TransformNormal(vAxis, ModifyRotation);
+
+	return XMMatrixRotationAxis(vAxis, fDiffAngle);
 }
 
 _vector CModel::GetLocalRotationDelta()
@@ -268,9 +424,7 @@ _vector CModel::GetLocalRotationDelta()
 		}
 	}
 
-	const _vector conjugateBeforeLocal = XMQuaternionConjugate(m_vBefLocalRotation);
-	const _vector vRotationDelta = XMQuaternionMultiply(m_vLocalRotation, conjugateBeforeLocal);
-
+	_vector vRotationDelta = XMQuaternionMultiply(XMQuaternionConjugate(m_vBefLocalRotation), m_vLocalRotation);
 	return vRotationDelta;
 }
 
@@ -969,8 +1123,16 @@ HRESULT CModel::Ready_Materials(HANDLE hFile)
 	for (_uint i = 0; i < iNumMaterials; ++i)
 	{
 		const string mtrlName = CGameUtils::ReadStrFile(hFile); /* Read */
-	
 		wstring wMtrlName = CGameUtils::s2ws(mtrlName);
+
+		if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_NOW, wMtrlName.c_str()))
+		{
+			const string* pMtrlPath = CMaterial::FindMaterialFilePath(mtrlName);
+
+			if (pMtrlPath)
+				CGameInstance::GetInstance()->Add_Prototype(wMtrlName.c_str(), CMaterial::Create(m_pDevice, m_pContext, pMtrlPath->c_str()));
+		}
+
 		CMaterial* pMtrl = dynamic_cast<CMaterial*>(CGameInstance::GetInstance()->Clone_Component(wMtrlName.c_str()));
 	
 		if (pMtrl == nullptr)

@@ -28,12 +28,22 @@ public:
 	void SetActive(_bool bActive) { m_bActive = bActive; }
 	_bool IsActive() const { return m_bActive; }
 
+public:
+	static void LoadMaterialFilePathes(const string& MaterialJsonDir);
+	static const string* FindMaterialFilePath(const string& MaterialName);
+private:
+	static unordered_map<string, string> s_MtrlPathes;
+
 protected:
 	class CShader* m_pShader = nullptr;
 	 ShaderParams m_tParams;
 
 	// 임시로 이 머터리얼을 사용하는 메쉬를 렌더하거나 렌더하지 않는데 사용
 	_bool m_bActive = true;
+
+#ifdef _DEBUG
+	string m_strFilePath;
+#endif
 
 public:
 	virtual void Free() override;

@@ -23,6 +23,11 @@ public:
 	_bool			isSocketAlmostFinish(const string& strSocName);
 	_bool			isSocketPassby(const string& strSocName, _float fPlayRatio = 1.f);
 	_bool			CheckSocketAnim(const string& strSocName, const string& AnimName) { return (AnimName == m_mapAnimSocket[strSocName].front()->GetName()) ? true : false; }
+	_bool			isSocketExactlyEmpty();	// 모든 소켓이 비어있는지?
+	void			ClearAnimSocket(const string& strSocName = "");
+
+protected:
+	void			SpairAnimationChecker();
 
 protected:
 	_bool	CheckAnim(const string& szAnimName);
@@ -33,16 +38,19 @@ protected:	// 대상의 상태
 
 	_bool	m_bMove = false;
 	_bool	m_bWalk = false;
+	_bool	m_bOptionalMove = false;
 
 	_bool	m_bLeftClick = false;
 	_bool	m_bDash = false;
 
 	_bool	m_bJump = false;
+	_bool	m_bUpper = false;
 
 	_bool	m_bNonCharge = false;
 	_bool	m_bCharge = false;
 
 	_bool	m_bSeperateAnim = false;
+	_bool	m_bOnBattle = false;
 
 	_bool	m_bOnFloor = false;
 
@@ -59,7 +67,13 @@ protected:	// 대상의 상태
 
 	_uint	m_eMoveDir;
 
+	_float	m_fYSpeed = 0.f;
+
 	CAnimationStateMachine* m_pASM_Base = nullptr;
+
+protected:
+	_bool	FloorCheck();
+	_float	m_fFloorCheck = 0.f;
 
 protected:
 	_float	m_fLerpTime = 0.f;
