@@ -136,24 +136,28 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 	{
 		float3 vColor = (float3)1.f;
 		if (iDebuffState == 1)
+		{
 			vColor = float3(0.9f, 0.3f, 0.f);
+			fEmissive = 2.f;
+		}
 		else
-			vColor = float3(139.f/ 255.f, 0.f, 1.f); // 보라
+		{
+			vColor = COL_PURPLE; // 보라
+			fEmissive = fPhysicRimBright;
+		}
 
 		float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
 		float4 vViewDir = g_vCamPosition - In.vWorldPos;
 		float fFresnel = FresnelEffect(vNormal.xyz, vViewDir.xyz, 2.5f);
 		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, vColor , fFresnel);
-		if (fFresnel > 0.5f)
-			fEmissive = 2.f;
-		if (fPhysicRimBright > 0.f)
-			fEmissive = fPhysicRimBright;
+
+		fEmissive *= fFresnel;
 	}
 	else if (iDebuffState == 2) // oil
 	{
 		float3 vDefaultNormal = Out.vNormal.xyz * 2.f - 1.f;
 
-		float4 vWaveTile = g_WaveTile.Sample(LinearSampler, TilingAndOffset(In.vTexUV, (float2)2.f, float2(g_Time * 0.05f, 0.f)));
+		float4 vWaveTile = g_WaveTile.Sample(LinearSampler, TilingAndOffset(In.vTexUV, (float2)2.f, float2(0.f, -g_Time * 0.3f)));
 		float3 vWetNormal = vWaveTile.xyz * 2.f - 1.f;
 		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
 		vWetNormal = normalize(mul(vWetNormal, WorldMatrix));
@@ -162,7 +166,7 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 		Out.vNormal = vector(vWetNormal * 0.5f + 0.5f, 0.f);
 
 		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, float3(120.f / 255.f, 60.f/ 255.f, 0.f), vWaveTile.a);
-		fEmissive *= (vWaveTile.a + 2.f);
+		fEmissive = (vWaveTile.a);
 	}
 
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
