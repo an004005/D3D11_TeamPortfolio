@@ -182,8 +182,8 @@ void CPlayer::Tick(_double TimeDelta)
 			DAMAGE_PARAM tParam;
 			ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
 			tParam.iDamage = 1;
-			tParam.eAttackType = EAttackType::ATK_LIGHT; // Test 용도 임시
-			Collision_Check_Capsule(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), tParam);
+			tParam.eAttackType = EAttackType::ATK_MIDDLE; // Test 용도 임시
+//			Collision_Check_Capsule(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), tParam);
 
 			if (isCollision())	// 무기로 충돌 발생하면 slash를 1로 올려줌
 				m_fKineticCombo_Slash = 1.f;

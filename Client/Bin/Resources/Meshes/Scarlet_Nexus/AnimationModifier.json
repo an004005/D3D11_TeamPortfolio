@@ -1451,7 +1451,7 @@
             }
         ]
     },
-     "AS_em0200_102_AL_wait02": {
+    "AS_em0200_102_AL_wait02": {
         "Duration": 240.0,
         "TickPerSecond": 28.0,
         "bLooping": true,
@@ -1694,9 +1694,14 @@
     },
     "AS_em0200_455_AL_rise_start": {
         "Duration": 110.0,
-        "TickPerSecond": 64.0,
+        "TickPerSecond": 70.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Successive",
+                "EventTime": 8.0
+            }
+        ]
     },
     "AS_em0300_111_AL_walk_L_start": {
         "Duration": 60.0,
@@ -1807,7 +1812,7 @@
         "bLooping": false,
         "vecEvent": []
     },
-     "AS_em0400_101_AL_wait01": {
+    "AS_em0400_101_AL_wait01": {
         "Duration": 240.0,
         "TickPerSecond": 40.0,
         "bLooping": true,
@@ -2019,6 +2024,40 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_em0600_427_AL_getup": {
+        "Duration": 60.0,
+        "TickPerSecond": 52.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0600_432_AL_blow_start_F": {
+        "Duration": 99.0,
+        "TickPerSecond": 62.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Upper",
+                "EventTime": 7.0
+            }
+        ]
+    },
+    "AS_em0600_433_AL_blow_landing_F": {
+        "Duration": 75.0,
+        "TickPerSecond": 51.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0600_455_AL_rise_start": {
+        "Duration": 80.0,
+        "TickPerSecond": 62.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Successive",
+                "EventTime": 9.0
+            }
+        ]
+    },
     "AS_em0700_107_AL_fly_wait": {
         "Duration": 576.0,
         "TickPerSecond": 45.0,
@@ -2071,7 +2110,12 @@
         "Duration": 90.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Rush_Start",
+                "EventTime": 85.0
+            }
+        ]
     },
     "AS_em0700_202_AL_atk_a1_loop": {
         "Duration": 20.0,
@@ -2083,7 +2127,12 @@
         "Duration": 40.0,
         "TickPerSecond": 33.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Rush_End",
+                "EventTime": 25.5
+            }
+        ]
     },
     "AS_em0700_401_AL_damage_l_F": {
         "Duration": 68.0,
@@ -2131,12 +2180,68 @@
         "Duration": 125.0,
         "TickPerSecond": 48.0,
         "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Upper",
+                "EventTime": 5.0
+            }
+        ]
+    },
+    "AS_em0700_427_AL_getup": {
+        "Duration": 80.0,
+        "TickPerSecond": 57.0,
+        "bLooping": false,
         "vecEvent": []
+    },
+    "AS_em0700_432_AL_blow_start_F": {
+        "Duration": 130.0,
+        "TickPerSecond": 48.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "UpperCut",
+                "EventTime": 5.0
+            }
+        ]
+    },
+    "AS_em0700_433_AL_blow_landing_F": {
+        "Duration": 60.0,
+        "TickPerSecond": 48.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0700_455_AL_rise_start": {
+        "Duration": 160.0,
+        "TickPerSecond": 110.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Successive",
+                "EventTime": 9.0
+            }
+        ]
     },
     "AS_em0710_205_AL_atk_a2_loop": {
         "Duration": 20.0,
         "TickPerSecond": 28.0,
-        "bLooping": true,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0710_207_AL_atk_a3": {
+        "Duration": 110.0,
+        "TickPerSecond": 55.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Rush_End",
+                "EventTime": 10.5
+            }
+        ]
+    },
+    "AS_em0720_108_AL_takeoff_start": {
+        "Duration": 47.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
         "vecEvent": []
     },
     "AS_em0800_101_AL_wait01": {

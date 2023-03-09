@@ -46,7 +46,7 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 		(CComponent**)&m_pCollider, &SkMpBullet)))
 		return E_FAIL;
 
-	m_pTransformCom->SetSpeed(16.f);
+	m_pTransformCom->SetSpeed(22.f);
 
 	m_strObjectTag = "SkMp_Bullet";
 

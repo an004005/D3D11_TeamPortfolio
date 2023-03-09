@@ -134,7 +134,7 @@ void CScarletCharacter::Collision_Check_Capsule(CRigidBody * AttackTrigger, DAMA
 					++m_iHitTargetCount;
 
 					// 이미 충돌했던 대상을 리스트에 추가
-					m_DamagedObjectList.push_back(pTarget);
+//					m_DamagedObjectList.push_back(pTarget);
 				}
 			}
 		}
