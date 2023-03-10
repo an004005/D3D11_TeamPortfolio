@@ -479,6 +479,7 @@ void CEffectSystem::Imgui_RenderProperty()
 	});
 
 	
+	
 }
 
 void CEffectSystem::Tick_Scale_All(_float fValue)

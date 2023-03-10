@@ -181,6 +181,9 @@ namespace Engine
 		_float4			vRotPos;
 
 		_float			fGravityPower;
+		_bool			bOnSurfase;
+
+		_uint		NearestIndex;
 	}VTXMATRIX;
 
 	typedef struct ENGINE_DLL tagVertexPoint_Instance_Particle_Declaration

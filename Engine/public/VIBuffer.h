@@ -12,6 +12,12 @@ protected:
 	virtual ~CVIBuffer() = default;
 
 public:
+	const _uint	   Get_NumVertices() { return m_iNumVertices; }
+	const _float3* Get_VerticesPos() const {
+		return m_pVerticesPos;
+	}
+	
+public:
 	_bool			Check_IsInstance() { return m_bIsInstance; }
 
 public:

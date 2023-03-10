@@ -7,6 +7,7 @@
 #include "GameInstance.h"
 #include "GameUtils.h"
 #include "JsonLib.h"
+#include "Model.h"
 
 CParticleSystem::CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -125,7 +126,7 @@ HRESULT CParticleSystem::Render()
 		m_pMeshInstanceBuffer->Render();
 	else
 		m_pPointInstanceBuffer->Render();
-
+	
 	return S_OK;
 }
 
@@ -261,6 +262,20 @@ void CParticleSystem::Imgui_RenderProperty()
 			FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ShaderProtoTag).c_str(), TEXT("Shader"), (CComponent**)&m_pShader));
 		}
 	}
+
+	{
+		char ModelProtoTag[MAX_PATH];
+		strcpy(ModelProtoTag, m_ModelProtoTag.c_str());
+		ImGui::InputText("MeshCurve ProtoTag", ModelProtoTag, MAX_PATH);
+		m_ModelProtoTag = ModelProtoTag;
+		ImGui::SameLine();
+		if (ImGui::Button("ReCreate MeshCurve"))
+		{
+			Safe_Release(m_pModel);
+			Delete_Component(TEXT("Model"));
+			FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), (CComponent**)&m_pModel));
+		}
+	}
 	ImGui::Separator();
 
 	if (ImGui::RadioButton("Point Instance", m_eBufferType == EBufferType::POINT))
@@ -383,13 +398,12 @@ HRESULT CParticleSystem::SetParams()
 	if (FAILED(m_pShader->Set_RawValue("g_bSizeDecreaseByLife", &bSizeDecreaseByLife, sizeof(_int))))
 		return E_FAIL;
 
+	const _int bRotate = m_bRotate ? 1 : 0;
+	if (FAILED(m_pShader->Set_RawValue("g_bRotate", &bRotate, sizeof(_int))))
+		return E_FAIL;
 
-	if (m_bPointInstance)
+	if (m_eBufferType == EBufferType::POINT)
 	{
-		const _int bRotate = m_bRotate ? 1 : 0;
-		if (FAILED(m_pShader->Set_RawValue("g_bRotate", &bRotate, sizeof(_int))))
-			return E_FAIL;
-
 		if (FAILED(m_pShader->Set_RawValue("g_vCamPosition", &CGameInstance::GetInstance()->Get_CamPosition(), sizeof(_float4))))
 			return E_FAIL;
 		const _int bSizeIncreaseByLife = m_bSizeIncreaseByLife ? 1 : 0;
@@ -498,7 +512,26 @@ void CParticleSystem::AddPoint()
 			}
 		}
 
-		
+		if (m_pModel != nullptr)
+		{
+			Create_MeshData(pointData);
+
+			_uint VBSize = m_pModel->Get_NumVertices();
+			VBSize /= 100;
+
+			_uint iRand = rand() % VBSize;
+
+			pointData.NearestIndex = iRand;
+			const VTXMODEL* pNonAnimBuffer = m_pModel->Get_NonAnimBuffer();
+
+			_float4 BufferPos = _float4(pNonAnimBuffer[pointData.NearestIndex].vPosition.x, pNonAnimBuffer[pointData.NearestIndex].vPosition.y, pNonAnimBuffer[pointData.NearestIndex].vPosition.z, 1.f);
+
+			vPos = BufferPos;
+		}
+		else
+		{
+			pointData.NearestIndex = 0;
+		}
 
 		pointData.vUp.w = fLife;
 		pointData.vLook = vDir * fSpeed;
@@ -514,13 +547,49 @@ void CParticleSystem::UpdatePoints(_float fTimeDelta)
 	for (auto& data : m_PointList)
 	{
 		data.vPosition.w += fTimeDelta;
+		_float4 vNewPos;
 
-		_float4 vNewPos = data.vPosition + data.vLook  * fTimeDelta;
-		vNewPos.w = data.vPosition.w;
+		if(m_pModel != nullptr)
+		{
+			// _float4 ParticlePos = _float4(data.vPosition.x, data.vPosition.y, data.vPosition.z, 1.f);
+			//
+			// // UINT nearestVertex = FineNearestIndex(ParticlePos);
+			const VTXMODEL* pNonAnimBuffer = m_pModel->Get_NonAnimBuffer();
+			//
+			// _uint VBSize = m_pModel->Get_NumVertices();
+			// // VBSize /= 100;
+			// //
+			// // _uint iRand = rand() % VBSize ;
+			//
+			// _float4 BufferPos = _float4(pNonAnimBuffer[data.NearestIndex].vPosition.x, pNonAnimBuffer[data.NearestIndex].vPosition.y, pNonAnimBuffer[data.NearestIndex].vPosition.z, 1.f);
+			//
+			// // 파티클이 이동한 방향
+			// _float4 dir = ParticlePos - BufferPos;
+			//
+			// // 메시의 표면 노말 벡터
+			_float4 normal = _float4(pNonAnimBuffer[data.NearestIndex].vNormal.x, pNonAnimBuffer[data.NearestIndex].vNormal.y, 
+				pNonAnimBuffer[data.NearestIndex].vNormal.z, 0.f);
+			//
+			// _float3 DotData = XMVector3Dot(dir, normal);
+			//
+			// _float3 CalcPos = (DotData * normal) ;
+			//
+			// _float4 FinalCalcPos = _float4(CalcPos.x, CalcPos.y, CalcPos.z, 0.f);
+			//
+			// // 파티클의 위치 보정
+			// _float4 correctedPos = ParticlePos - FinalCalcPos;
+
+			vNewPos = data.vPosition + data.vLook * fTimeDelta ;
+			vNewPos.w = data.vPosition.w;
+		}
+		else
+		{
+			vNewPos = data.vPosition + data.vLook  * fTimeDelta;
+			vNewPos.w = data.vPosition.w;
+		}
 
 		if (m_bGravity == true)
 		{
-
 			data.vLook.y -= data.fGravityPower * fTimeDelta;
 
 			if (data.vLook.y <= -20.f)
@@ -528,16 +597,13 @@ void CParticleSystem::UpdatePoints(_float fTimeDelta)
 				data.vLook.y = -20.f;
 			}
 		}
-		data.vPosition = vNewPos;
 
-		_matrix RotationMatrix = XMMatrixIdentity();
+		
+
+		data.vPosition = vNewPos;
 
 		if (m_bRotate == true)
 		{
-			// RotationMatrix = XMMatrixRotationX(XMConvertToRadians(data.vRotPos.x * fTimeDelta * 5.f))
-			// 	* XMMatrixRotationY(XMConvertToRadians(data.vRotPos.y * fTimeDelta * 5.f))
-			// 	* XMMatrixRotationZ(XMConvertToRadians(data.vRotPos.z * fTimeDelta * 5.f));
-
 			_float4 FRight = data.vRotPos * fTimeDelta;
 			_float4 FUp = data.vRotPos * fTimeDelta;
 			_float4 FLook = data.vRotPos * fTimeDelta;
@@ -581,6 +647,88 @@ void CParticleSystem::UpdatePoints(_float fTimeDelta)
 	});
 }
 
+void CParticleSystem::Create_MeshData(VTXMATRIX data)
+{
+	if (m_pModel == nullptr)
+		return;
+
+	m_vecVerticesDistance.clear();
+
+	if (m_pModel != nullptr)
+	{
+		// const _float3* pVerticesPos = m_pModel->Get_VerticesPos();
+		const VTXMODEL* pNonAnimBuffer = m_pModel->Get_NonAnimBuffer();
+
+		_uint VBSize = m_pModel->Get_NumVertices();
+		float minDistance = FLT_MAX;
+		VBSize /= 100;
+
+		for (_uint i = 0; i < VBSize; ++i)
+		{
+			_float4 VertexPos = _float4(pNonAnimBuffer[i].vPosition.x, pNonAnimBuffer[i].vPosition.y, pNonAnimBuffer[i].vPosition.z, 1.f);
+
+			_float4 ParticlePos = _float4(data.vPosition.x, data.vPosition.y, data.vPosition.z, 1.f);
+			float distance = XMVectorGetX(ParticlePos - VertexPos);
+
+			if (distance < minDistance)
+				minDistance = distance;
+
+			m_vecVerticesDistance.push_back({ minDistance, i });
+		}
+
+		// 각 정점의 인덱스를 최소 거리 순으로 정렬
+		sort(m_vecVerticesDistance.begin(), m_vecVerticesDistance.end());
+
+
+		// 파티클이 메시 위에 있는지 여부를 저장할 변수 초기화
+		// data.bOnSurface = false;
+
+		// 메시의 각 정점에 대해 파티클이 해당 정점 근처에 있는지 확인
+		// for (UINT i = 0; i < m_vecVerticesDistance.size(); ++i)
+		// {
+			// 최소 거리가 임계값 이하인 파티클이 존재할 경우 해당 파티클이 메시 위에 있음
+			// if (m_vecVerticesDistance[i].first < m_fsurfaceThreshold)
+				// data[m_vecVerticesDistance[i].second].isOnSurface = true;
+		// }
+
+	}
+}
+_uint CParticleSystem::FineNearestIndex(_float4 vPos)
+{
+	_uint VBSize = m_pModel->Get_NumVertices();
+	VBSize /= 100;
+
+	float minDistance = FLT_MAX;
+
+	m_vecVerticesDistance.clear();
+
+	for (_uint i = 0; i < VBSize; ++i)
+	{
+		// const _float3* pVerticesPos = m_pModel->Get_VerticesPos();
+		const VTXMODEL* pNonAnimBuffer = m_pModel->Get_NonAnimBuffer();
+
+		_float4 VertexPos = _float4(pNonAnimBuffer[i].vPosition.x, pNonAnimBuffer[i].vPosition.y, pNonAnimBuffer[i].vPosition.z, 1.f);
+
+		_float4 ParticlePos = _float4(vPos.x, vPos.y, vPos.z, 1.f);
+
+		float distance = XMVectorGetX(ParticlePos - VertexPos);
+
+		if (distance < minDistance)
+		{
+			minDistance = distance;
+		}
+
+		m_vecVerticesDistance.push_back({ minDistance, i });
+	}
+	// 각 정점의 인덱스를 최소 거리 순으로 정렬
+	sort(m_vecVerticesDistance.begin(), m_vecVerticesDistance.end());
+
+	_uint isize = (_uint)m_vecVerticesDistance.size();
+
+	_uint irand = rand() % isize;
+
+	return irand;
+}
 void CParticleSystem::AddMesh()
 {
 	/*
@@ -766,17 +914,8 @@ void CParticleSystem::Free()
 {
 	CGameObject::Free();
 
-	// for(auto& iter : m_PointList)
-	// {
-	// 	Safe_Release(iter);
-	// }
-	// m_PointList.clear();
-	//
-	// for (auto& iter : m_MeshList)
-	// {
-	// 	Safe_Release(iter);
-	// }
-	// m_MeshList.clear();
+	m_PointList.clear();
+	m_MeshList.clear();
 
 	if (m_bCloned == true)
 	{
@@ -784,6 +923,7 @@ void CParticleSystem::Free()
 		Safe_Release(m_pPointInstanceBuffer);
 		Safe_Release(m_pMeshInstanceBuffer);
 		Safe_Release(m_pShader);
+		Safe_Release(m_pModel);
 	}
 
 	for (auto e : m_tParam.Textures)

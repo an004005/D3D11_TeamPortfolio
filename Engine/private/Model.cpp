@@ -94,6 +94,24 @@ CModel::CModel(const CModel & rhs)
 	Safe_AddRef(m_pShadowShader);
 }
 
+const _float3* CModel::Get_VerticesPos()
+{
+	return m_Meshes.front()->Get_VerticesPos();
+}
+
+const _uint CModel::Get_NumVertices()
+{
+	return m_Meshes.front()->Get_NumVertices();
+}
+
+const VTXMODEL* CModel::Get_NonAnimBuffer()
+{
+	return m_Meshes.front()->Get_NonAnimBuffer();
+}
+
+
+
+
 CBone * CModel::Get_BonePtr(const char * pBoneName)
 {
 	const auto itr = m_mapBones.find(pBoneName);
