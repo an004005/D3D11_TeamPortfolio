@@ -166,6 +166,7 @@ void CScarletCharacter::Collision_Check_Capsule(CRigidBody * AttackTrigger, DAMA
 
 					// 내부에서 자체적으로 계산할 값
 					tParam.pCauser = this;
+					tParam.pContactComponent = CPhysXUtils::GetComponent(pHit.actor);
 					tParam.vHitNormal = _float3(pHit.normal.x, pHit.normal.y, pHit.normal.z);
 					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);

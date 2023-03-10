@@ -752,7 +752,12 @@
         "Duration": 240.0,
         "TickPerSecond": 50.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "WeaponBright_On",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_211_AL_atk_charge01": {
         "Duration": 151.0,

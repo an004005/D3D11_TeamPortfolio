@@ -709,8 +709,27 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Fire_Attack_Justdodge_03", [&]() {Event_Effect("Fire_Attack_Justdodge_03"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Upper", [&]() {Event_Effect("Fire_Attack_Upper"); });
 
-	m_pModel->Add_EventCaller("Trail_On", [&]() { static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(true); });
-	m_pModel->Add_EventCaller("Trail_Off", [&]() { static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false); });
+	m_pModel->Add_EventCaller("Trail_On", [&]() 
+	{ 
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(m_PlayerSasType, true);
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(true); 
+	});
+
+	m_pModel->Add_EventCaller("Trail_Off", [&]() 
+	{
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(m_PlayerSasType, false);
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false);
+	});
+
+	m_pModel->Add_EventCaller("WeaponBright_On", [&]()
+	{
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(m_PlayerSasType, true);
+	});
+
+	m_pModel->Add_EventCaller("WeaponBright_Off", [&]()
+	{
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(m_PlayerSasType, false);
+	});
 
 	return S_OK;
 }
@@ -772,7 +791,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 		.AddState("NO_USE_KINETIC")
 		.OnStart([&]() 
 		{
-			SetAbleState({ false, true, false ,false, true, true, false, false, true, false });
+			//SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 			//m_pASM->ClearAnimSocket("Kinetic_AnimSocket");
 		})
 		.Tick([&](double TimeDelta) 
@@ -990,20 +1009,6 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			.Tick([&](double TimeDelta) 
 			{
 				m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false;
-				m_vToKineticObj = m_pKineticObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-				m_vKineticPoint = XMVector3Normalize(m_vToKineticObj) * (-3.f);
-				
-				/*if (nullptr != m_pKineticObject)
-				{
-					random_device rng;
-					uniform_real_distribution<_double> dist0(-1.0, 1.0);
-					uniform_real_distribution<_double> dist1(-1.0, 1.0);
-					uniform_real_distribution<_double> dist2(-1.0, 1.0);
-
-					_float3 vForce = _float3(0.f, 120.f, 0.f);
-					_float3 vTorque = _float3(dist0(rng), dist1(rng), dist2(rng));
-					static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(vForce, vTorque);
-				}*/
 			})
 
 			.AddTransition("KINETIC_RB_AIR_START to KINETIC_RB_AIR_LOOP", "KINETIC_RB_AIR_LOOP")
@@ -1191,6 +1196,8 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 		.AddState("NON_HIT")
 			.OnStart([&]() 
 			{ 
+				SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
 				m_bHit = false;
 
 				m_pModel->Reset_LocalMove(true);
@@ -1590,6 +1597,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		.AddState("KINETIC_COMBO_NOUSE")
 		.OnStart([&]() 
 		{
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 			m_bKineticCombo = false;
 			m_pASM->ClearAnimSocket("Kinetic_Combo_AnimSocket");
 		})
@@ -1598,9 +1606,9 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			Search_Usable_KineticObject();
 		})
 
-			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_SLASH01", "KINETIC_COMBO_SLASH01")
-			.Predicator([&]()->_bool { return !m_bHit && m_bLeftClick && (m_fKineticCombo_Kinetic > 0.f) && !m_bAir && (nullptr != m_pKineticObject); })
-			.Priority(0)
+			//.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_SLASH01", "KINETIC_COMBO_SLASH01")
+			//.Predicator([&]()->_bool { return !m_bHit && m_bLeftClick && (m_fKineticCombo_Kinetic > 0.f) && !m_bAir && (nullptr != m_pKineticObject); })
+			//.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_KINETIC01_CHARGE", "KINETIC_COMBO_KINETIC01_CHARGE")
 			.Predicator([&]()->_bool { return !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && !m_bAir && (nullptr != m_pKineticObject); })
@@ -2658,6 +2666,13 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 		{
 			m_pASM->ClearAnimSocket("Netual_Saperate_Animation");
 		}
+
+		if (m_pASM->GetCurAnimName().find("run_start") != string::npos)
+		{
+			m_pASM->ClearAnimSocket("Netual_Saperate_Animation");
+		}
+
+		IM_LOG(m_pASM->GetCurAnimName().c_str());
 	}
 
 	if (m_bLeftClick)

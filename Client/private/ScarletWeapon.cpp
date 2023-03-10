@@ -49,6 +49,12 @@ void CScarletWeapon::Setup_BoneMatrix(CModel* pModel, _fmatrix Transform)
 	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
 }
 
+void CScarletWeapon::Set_Bright(ESASType eType, _bool bBright)
+{
+	m_eSasType = eType;
+	m_bBright = bBright;
+}
+
 void CScarletWeapon::Free()
 {
 	CGameObject::Free();

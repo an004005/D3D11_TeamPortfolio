@@ -6,6 +6,7 @@
 #include "TrailSystem.h"
 #include "Monster.h"
 #include "PhysX_Manager.h"
+#include "Material.h"
 
 CWeapon_wp0190::CWeapon_wp0190(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CScarletWeapon(pDevice, pContext)
@@ -63,6 +64,25 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 	
 	//m_pTrail->Tick(TimeDelta);
 
+	if (m_bBright)
+	{
+		switch (m_eSasType)
+		{
+		case ESASType::SAS_GRAVIKENISIS:
+			m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 1;
+			break;
+		case ESASType::SAS_FIRE:
+			m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 2;
+			break;
+		default:
+			m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 0;
+			break;
+		}
+	}
+	else
+	{
+		m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 0;
+	}
 	
 	//Collision_Check();
 }
