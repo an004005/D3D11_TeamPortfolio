@@ -250,6 +250,9 @@
     <Filter Include="02.GameObjects\Monster\BuddyLumi\BdLm_Controller">
       <UniqueIdentifier>{7e82e54f-b5b7-4330-be57-352521a4f639}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller">
+      <UniqueIdentifier>{8d065b3d-840e-4ba5-9be7-55d1de3f00f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -618,9 +621,14 @@
     <ClInclude Include="..\public\SkPd_Controller.h">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\BdLm_Controller.h" />
+    <ClInclude Include="..\public\BdLm_Controller.h">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h">
       <Filter>97.ShaderFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrJ_Controller.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -965,7 +973,12 @@
     <ClCompile Include="..\private\SkPd_Controller.cpp">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BdLm_Controller.cpp" />
+    <ClCompile Include="..\private\BdLm_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrJ_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

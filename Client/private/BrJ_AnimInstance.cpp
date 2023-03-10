@@ -8,134 +8,223 @@ HRESULT CBrJ_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 {
 	FAILED_CHECK(__super::Initialize(pModel, pGameObject));
 
-	{
-		m_pASM_Base = CASMBuilder()
-			.InitState("Idle")
-			.AddState("Idle")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_101_AL_wait01"))
+	/*m_pModel->Find_Animation("AS_em0800_115_AL_walk_R_start")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_em0800_116_AL_walk_R_loop")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_em0800_112_AL_walk_L_start")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_em0800_113_AL_walk_L_loop")->SetLocalRotation(true);*/
+	
+	m_pASM_Base = CASMBuilder()
+		.InitState("Idle")
+		.AddState("Idle")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_101_AL_wait01"))
+		
+			.AddTransition("Idle to MoveStart", "MoveStart")
+				.Predicator([this]
+				{
+					return m_bMove;
+				})
+				.Duration(0.1f)
 
-				.AddTransition("Idle to BiteAtk", "BiteAtk")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bBiteAtk; })
-					.Duration(0.4f)
+			.AddTransition("Idle to TurnStart", "TurnStart")
+				.Predicator([this]
+				{
+					return m_eTurn != EBaseTurn::TURN_END;
+				})
+				.Duration(0.1f)
+		// Move 분기점
+		.AddState("MoveStart")			
+			.AddTransition("MoveStart to Idle", "Idle")
+				.Predicator([this]
+				{
+					return !m_bMove;
+				})
+				.Duration(0.2f)
 
-				.AddTransition("Idle to LaserAtkStart", "LaserAtkStart")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bLaserAtkStart; })
-					.Duration(0.5f)
+			.AddTransition("MoveStart to Forward_MoveStart", "Forward_MoveStart")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::NORTH;
+				})
+				.Duration(0.2f)
 
-				.AddTransition("Idle to Threat", "Threat")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bThreat; })
-					.Duration(0.4f)
+			.AddTransition("MoveStart to Back_MoveStart", "Back_MoveStart")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::SOUTH;
+				})
+				.Duration(0.2f)
 
-				.AddTransition("Idle to MoveF", "MoveF")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveF; })
-					.Duration(0.3f)
+			.AddTransition("MoveStart to Left_MoveStart", "Left_MoveStart")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::WEST;
+				})
+				.Duration(0.2f)
+					
+			.AddTransition("MoveStart to Right_MoveStart", "Right_MoveStart")
+				.Predicator([this]
+				{
+					return m_eMoveAxis == EBaseAxis::EAST;
+				})
+				.Duration(0.2f)
+		// Turn 분기점
+		.AddState("TurnStart")	
+			.AddTransition("TurnStart to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_eTurn == EBaseTurn::TURN_END || m_bMove;
+				})
+				.Duration(0.2f)
 
-				.AddTransition("Idle to MoveB", "MoveB")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveB; })
-					.Duration(0.3f)
+			.AddTransition("TurnStart to TurnRightStart", "TurnRightStart")
+				.Predicator([this]
+				{
+					return m_eTurn == EBaseTurn::TURN_RIGHT;
+				})
+				.Duration(0.2f)
 
-				.AddTransition("Idle to MoveL_Start", "MoveL_Start")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveL_Start; })
-					.Duration(0.3f)
+			.AddTransition("TurnStart to TurnLeftStart", "TurnLeftStart")
+				.Predicator([this]
+				{
+					return m_eTurn == EBaseTurn::TURN_LEFT;
+				})
+				.Duration(0.2f)
+		// 앞 이동
+		.AddState("Forward_MoveStart")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_105_AL_walk01_start"))
 
-				.AddTransition("Idle to MoveR_Start", "MoveR_Start")
-					.Predicator([&]()->_bool {return !m_bIdle && m_bMoveR_Start; })
-					.Duration(0.3f)
+			.AddTransition("Forward_MoveStart to MoveStart", "MoveStart")
+				.Predicator([this]
+				{
+					return m_eMoveAxis != EBaseAxis::NORTH;
+				})
+				.Duration(0.2f)
+
+			.AddTransition("Forward_MoveStart to Forward_MoveLoop", "Forward_MoveLoop")
+
+		.AddState("Forward_MoveLoop")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_106_AL_walk01_loop"))
+		
+			.AddTransition("Forward_MoveLoop to MoveStart", "MoveStart")
+				.Predicator([this]
+				{
+					return m_eMoveAxis != EBaseAxis::NORTH;
+				})
+				.Duration(0.1f)
+		// 뒤 이동
+		.AddState("Back_MoveStart")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_109_AL_walk_B_start"))
 			
-			.AddState("BiteAtk")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0810_201_AL_atk_a1_bite"))
+			.AddTransition("Back_MoveStart to MoveStart", "MoveStart")
+				.Predicator([this]
+				{
+					return m_eMoveAxis != EBaseAxis::SOUTH;
+				})
+				.Duration(0.2f)
 
-				.AddTransition("BiteAtk to Idle", "Idle")
-					.Predicator([&]()->_bool {return !m_bBiteAtk && m_bIdle; })
-					.Duration(0.4f)
+			.AddTransition("Back_MoveStart to Back_MoveLoop", "Back_MoveLoop")
 
-			.AddState("MoveF")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_106_AL_walk01_loop"))
-
-				.AddTransition("MoveF to Idle", "Idle")
-					.Predicator([&]()->_bool {return !m_bMoveF && m_bIdle; })
-					.Duration(0.4f)
-
-				.AddTransition("MoveF to LaserAtkStart", "LaserAtkStart")
-					.Predicator([&]()->_bool {return !m_bMoveF && m_bLaserAtkStart; })
-					.Duration(0.7f)
-
-			.AddState("LaserAtkStart")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_214_AL_atk_a7_laser2_start"))
-
-				.AddTransition("LaserAtkStart to LaserAtkIng", "LaserAtkIng")
-					.Predicator([&]()->_bool {return !m_bLaserAtkStart && m_bLaserAtkIng; })
-					.Duration(0.2f)
-
-			.AddState("LaserAtkIng")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_215_AL_atk_a7_laser2_loop"))
-
-				.AddTransition("LaserAtkIng to LaserAtkEnd", "LaserAtkEnd")
-					.Predicator([&]()->_bool {return !m_bLaserAtkIng && m_bLaserAtkEnd; })
-					.Duration(0.2f)
-
-			.AddState("LaserAtkEnd")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_216_AL_atk_a7_laser2_end"))
-
-				.AddTransition("LaserAtkEnd to Idle", "Idle")
-					.Predicator([&]()->_bool {return !m_bLaserAtkEnd && m_bIdle; })
-					.Duration(0.7f)
-
-			.AddState("Threat")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_160_AL_threat"))
-
-				.AddTransition("Threat to Idle", "Idle")
-					.Predicator([&]()->_bool {return !m_bThreat && m_bIdle; })
-					.Duration(0.4f)
-
-			.AddState("MoveB")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_110_AL_walk_B_loop"))
-
-				.AddTransition("MoveB to Idle", "Idle")
-					.Predicator([&]()->_bool {return !m_bMoveB && m_bIdle; })
-					.Duration(0.4f)
-
-				.AddTransition("MoveB to LaserAtkStart", "LaserAtkStart")
-					.Predicator([&]()->_bool {return !m_bMoveB && m_bLaserAtkStart;})
-					.Duration(0.4f)
-
-			.AddState("MoveL_Start")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_112_AL_walk_L_start"))
-				
-				.AddTransition("MoveL_Start to MoveL_End", "MoveL_End")
-					.Predicator([&]()->_bool {return !m_bMoveL_Start && m_bMoveL_End; })
-					.Duration(0.4f)
-
-			.AddState("MoveL_End")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_113_AL_walk_L_loop"))
+		.AddState("Back_MoveLoop")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_110_AL_walk_B_loop"))
+		
+				.AddTransition("Back_MoveLoop to MoveStart", "MoveStart")
+					.Predicator([this]
+					{
+						return m_eMoveAxis != EBaseAxis::SOUTH;
+					})
+					.Duration(0.1f)
+		// 왼쪽 이동
+		.AddState("Left_MoveStart")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_112_AL_walk_L_start"))
 			
-				.AddTransition("MoveL_End to Idle", "Idle")
-					.Predicator([&]()->_bool {return !m_bMoveL_End && m_bIdle; })
-					.Duration(0.5f)
+			.AddTransition("Left_MoveStart to MoveStart", "MoveStart")
+				.Predicator([this]
+				{
+					return m_eMoveAxis != EBaseAxis::WEST;
+				})
+				.Duration(0.2f)
 
-			.AddState("MoveR_Start")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_115_AL_walk_R_start"))
+			.AddTransition("Left_MoveStart to Left_MoveLoop", "Left_MoveLoop")
 
-				.AddTransition("MoveR_Start to MoveR_End", "MoveR_End")
-					.Predicator([&]()->_bool {return !m_bMoveR_Start && m_bMoveR_End; })
-					.Duration(0.4f)
+		.AddState("Left_MoveLoop")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_113_AL_walk_L_loop"))
 
-			.AddState("MoveR_End")
-				.SetAnimation(*m_pModel->Find_Animation("AS_em0800_116_AL_walk_R_loop"))
-
-				.AddTransition("MoveR_End to Idle", "Idle")
-					.Predicator([&]()->_bool {return !m_bMoveR_End && m_bIdle; })
-					.Duration(0.5f)
-
-		.Build();				
-	}
-
-	m_pASM_Base->SetCurState("Idle");
-
-	list<CAnimation*> AddAnimSocket;
-	m_mapAnimSocket.emplace("BronJon_GroundDmgAnim", AddAnimSocket);
-	m_mapAnimSocket.emplace("BronJon_DeadAnim", AddAnimSocket);
+			.AddTransition("Left_MoveLoop to MoveStart", "MoveStart")
+				.Predicator([this]				{
+					return m_eMoveAxis != EBaseAxis::WEST;
+				})
+				.Duration(0.1f)
+		// 오른쪽 이동			
+		.AddState("Right_MoveStart")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_115_AL_walk_R_start"))
 			
+			.AddTransition("Right_MoveStart to MoveStart", "MoveStart")
+				.Predicator([this]
+				{
+					return m_eMoveAxis != EBaseAxis::EAST;
+				})
+				.Duration(0.2f)
+
+			.AddTransition("Right_MoveStart to Right_MoveLoop", "Right_MoveLoop")
+
+		.AddState("Right_MoveLoop")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_116_AL_walk_R_loop"))
+			
+			.AddTransition("Right_MoveLoop to MoveStart", "MoveStart")
+				.Predicator([this]
+				{
+					return m_eMoveAxis != EBaseAxis::EAST;
+				})
+				.Duration(0.1f)
+
+		// 오른쪽 회전
+		.AddState("TurnRightStart")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_150_AL_turn_R"))
+		
+			.AddTransition("TurnRightStart to TurnStart", "TurnStart")
+				.Predicator([this]
+				{
+					return m_eTurn != EBaseTurn::TURN_RIGHT;
+				})
+				.Duration(0.2f)
+
+			.AddTransition("TurnRightStart to TurnRightLoop", "TurnRightLoop")
+		
+		.AddState("TurnRightLoop")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_116_AL_walk_R_loop"))
+			
+			.AddTransition("TurnRightLoop to TurnStart", "TurnStart")
+				.Predicator([this]
+				{
+					return m_eTurn != EBaseTurn::TURN_RIGHT;
+				})
+				.Duration(0.1f)
+		// 왼쪽 회전
+		.AddState("TurnLeftStart")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_152_AL_turn_L"))
+		
+			.AddTransition("TurnLeftStart to TurnStart", "TurnStart")
+				.Predicator([this]
+				{
+					return m_eTurn != EBaseTurn::TURN_LEFT;
+				})
+				.Duration(0.2f)
+
+			.AddTransition("TurnLeftStart to TurnLeftLoop", "TurnLeftLoop")
+		
+		.AddState("TurnLeftLoop")		
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_113_AL_walk_L_loop"))
+		
+			.AddTransition("TurnLeftLoop to TurnStart", "TurnStart")
+				.Predicator([this]
+				{
+					return m_eTurn != EBaseTurn::TURN_LEFT;
+				})
+				.Duration(0.1f)
+
+	.Build();				
+	
+	m_mapAnimSocket.insert({ "BronJon",{} });
 	return S_OK;
 }
 
@@ -144,7 +233,7 @@ void CBrJ_AnimInstance::Tick(_double TimeDelta)
 	UpdateTargetState(TimeDelta);
 
 	_bool bChange = CheckFinishedAnimSocket();
-	_bool bLocalMove = true; 
+	_bool bLocalMove = true;
 
 	string szCurAnimName = "";
 
@@ -153,9 +242,7 @@ void CBrJ_AnimInstance::Tick(_double TimeDelta)
 
 	for (auto& iter : m_mapAnimSocket)
 	{
-		if (iter.second.empty())
-			continue;
-		else
+		if (iter.second.empty() == false)
 		{
 			CurSocket = iter.second;
 			break;
@@ -181,7 +268,7 @@ void CBrJ_AnimInstance::Tick(_double TimeDelta)
 		}
 		else if (m_bAttach)
 		{
-			m_fLerpTime = 0.f;	// 어태치면 바로 보간			
+			m_fLerpTime = 0.f;	// 어태치면 바로 보간
 			m_bAttach = false;
 		}
 		else
@@ -195,7 +282,6 @@ void CBrJ_AnimInstance::Tick(_double TimeDelta)
 		bLocalMove = false;
 
 		m_pASM_Base->SetCurState("Idle");
-
 		//m_pASM_Base->GetCurState()->m_Animation->Reset();
 		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
 		m_fLerpTime = 0.f;
@@ -211,8 +297,6 @@ void CBrJ_AnimInstance::Tick(_double TimeDelta)
 		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
 	}
 
-	// 전체 본 마스킹을 할지, 상체에 대해서만 본 마스킹을 할지는 플레이어에서 던져주는 값에 따라 정해지도록 한다.
-
 	m_pModel->Compute_CombindTransformationMatrix();
 
 	if (bLocalMove)
@@ -220,15 +304,6 @@ void CBrJ_AnimInstance::Tick(_double TimeDelta)
 		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
 		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix);
 		m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
-
-		if (0.f != XMVectorGetX(XMVector3Length(vLocalMove)))
-			m_vLocalMove = vLocalMove;
-	}
-
-	if ("" != szCurAnimName)
-	{
-		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
-		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix, szCurAnimName);
 	}
 }
 
@@ -236,33 +311,19 @@ void CBrJ_AnimInstance::UpdateTargetState(_double TimeDelta)
 {
 	CBronJon* pBronJon = static_cast<CBronJon*>(m_pTargetObject);
 
-	m_bIdle = pBronJon->IsIdle();
+	m_ePreMoveAxis = m_eMoveAxis;	
+	m_bMove = pBronJon->IsMove();
 
-	m_bMoveF = pBronJon->IsMoveF();
-	m_bMoveB = pBronJon->IsMoveB();
-	m_bMoveL_Start = pBronJon->IsMoveL_Start();
-	m_bMoveL_End = pBronJon->IsMoveL_End();
+	m_vMoveAxis = pBronJon->GetMoveAxis();
+	m_eMoveAxis = CClientUtils::MoveAxisToBaseEnum(m_vMoveAxis);
 
-	m_bMoveR_Start = pBronJon->IsMoveR_Start();
-	m_bMoveR_End = pBronJon->IsMoveR_End();
-
-	m_bLaserAtkStart = pBronJon->IsLaserAtkStart();
-	m_bLaserAtkIng = pBronJon->IsLaserAtkIng();
-	m_bLaserAtkEnd = pBronJon->IsLaserAtkEnd();
-
-	m_bBiteAtk = pBronJon->IsBiteAtk();
-	m_bThreat = pBronJon->IsThreat();
-
-	m_bDamage = pBronJon->IsDamage();
-	m_bDead = pBronJon->IsDead();
-
-	m_bDodgeB = pBronJon->IsDodgeB();
-	m_bDodgeL = pBronJon->IsDodgeL();
-	m_bDodgeR = pBronJon->IsDodgeR();
+	m_fTurnRemain = pBronJon->GetTurnRemain();
+	m_eTurn = CClientUtils::TurnDeltaToEnum(m_fTurnRemain);
 }
 
 void CBrJ_AnimInstance::Imgui_RenderState()
 {
+	m_pASM_Base->Imgui_RenderState();
 }
 
 void CBrJ_AnimInstance::InputAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
@@ -279,34 +340,25 @@ void CBrJ_AnimInstance::InputAnimSocket(const string & strSocName, list<CAnimati
 	m_mapAnimSocket[strSocName] = (AnimList);
 }
 
-void CBrJ_AnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
+void CBrJ_AnimInstance::AttachAnimSocket(const string & strSocName, const list<CAnimation*>& AnimList)
 {
-	const auto List = m_mapAnimSocket.find(strSocName);
+	const auto itr = m_mapAnimSocket.find(strSocName);
+	Assert(itr != m_mapAnimSocket.end());
 
-	if (List != m_mapAnimSocket.end())
+	if (!itr->second.empty())
 	{
-		if (!List->second.empty())
-		{
-			m_bAttach = true;
-			List->second.front()->Reset();;
-		}
-		m_mapAnimSocket[strSocName] = (AnimList);
+		m_bAttach = true;
+		itr->second.front()->Reset();
 	}
-}
-
-_bool CBrJ_AnimInstance::isSocketAlmostFinish(const string & strSocName)
-{
-	return (m_mapAnimSocket[strSocName].size() == 1) && (m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= 0.95f);
+	m_mapAnimSocket[strSocName] = (AnimList);
 }
 
 _bool CBrJ_AnimInstance::isSocketPassby(const string & strSocName, _float fPlayRatio)
 {
-	return (m_mapAnimSocket[strSocName].size() == 1) && (m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= fPlayRatio);
-}
+	Assert(m_mapAnimSocket.find(strSocName) != m_mapAnimSocket.end());
 
-_bool CBrJ_AnimInstance::CheckAnim(const string & szAnimName)
-{
-	return  (szAnimName == m_pModel->GetPlayAnimation()->GetName()) ? true : false;
+	return m_mapAnimSocket[strSocName].empty() == false
+		&& m_mapAnimSocket[strSocName].front()->GetPlayRatio() >= fPlayRatio;
 }
 
 CBrJ_AnimInstance * CBrJ_AnimInstance::Create(CModel * pModel, CGameObject * pGameObject)
@@ -323,6 +375,6 @@ CBrJ_AnimInstance * CBrJ_AnimInstance::Create(CModel * pModel, CGameObject * pGa
 
 void CBrJ_AnimInstance::Free()
 {
-	__super::Free();
+	CAnimationInstance::Free();
 	Safe_Release(m_pASM_Base);
 }

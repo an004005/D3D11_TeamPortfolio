@@ -32,18 +32,18 @@ HRESULT CFlowerLeg::Initialize_Prototype()
 
 HRESULT CFlowerLeg::Initialize(void * pArg)
 {
-	Json FlowerLegJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLegTrigger.json");
+	Json FlowerLegJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegTrigger.json");
 	pArg = &FlowerLegJson;
 
 	FAILED_CHECK(CMonster::Initialize(pArg));
 
-	Json FlowerLegTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLegTrigger.json");
+	Json FlowerLegTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegTrigger.json");
 
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
 		(CComponent**)&m_pTrigger, &FlowerLegTrigger)))
 		return E_FAIL;
 
-	Json FlowerLegTailCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLegTailCol.json");
+	Json FlowerLegTailCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegTailCol.json");
 
 	// 꼬리 충돌체
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("TailCol"),
@@ -86,7 +86,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 			m_vOnJumpMoveVelocity = _float3::Zero;
 		}
 	});
-	// 이벤트 콜러 이슈
+
 	m_pModelCom->Add_EventCaller("DodgeL_Start", [this] 
 	{		
 		m_fGravity = 27.f;
@@ -193,7 +193,10 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 
 	m_pModelCom->Add_EventCaller("Spin_Atk", [this] { m_bAtkSwitch = true; });
 
+	m_pModelCom->Add_EventCaller("Invincible_Start", [this] { m_bInvicible = true; });
 	m_pModelCom->Add_EventCaller("OverLap", [this] { Strew_Overlap(); });
+	m_pModelCom->Add_EventCaller("Invincible_End", [this] { m_bInvicible = false; });
+
 	m_pModelCom->Add_EventCaller("Kick_Event", [this] { Kick_SweepSphere(); });
 	m_pModelCom->Add_EventCaller("Upper", [this] 
 	{
@@ -207,11 +210,11 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	});
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-1.f, 0.f, 27.f)));
-
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 
 	m_pASM = CFL_AnimInstance::Create(m_pModelCom, this);
 
+	// 소켓 애니메이션 추가
 	m_pAtk_Spin = m_pModelCom->Find_Animation("AS_em0200_202_AL_atk_a2");
 	m_pAtk_Strew = m_pModelCom->Find_Animation("AS_em0200_203_AL_atk_a3");
 	m_pJumpStart = m_pModelCom->Find_Animation("AS_em0200_204_AL_atk_a4_start");
@@ -246,6 +249,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 
 	// Dead
 	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0200_424_AL_dead_down");
+	// ~소켓 애니메이션 추가
 
 	return S_OK;
 }
@@ -349,7 +353,7 @@ void CFlowerLeg::Tick(_double TimeDelta)
 		m_bStruck = false;
 		m_pController->ClearCommands();
 
-		if (m_eAtkType == EAttackType::ATK_LIGHT)
+		if (m_eAtkType == EAttackType::ATK_LIGHT || m_eAtkType == EAttackType::ATK_MIDDLE)
 		{
 			if(m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("UsingControl", { m_pDamage_L_F });
@@ -358,7 +362,7 @@ void CFlowerLeg::Tick(_double TimeDelta)
 				m_pASM->InputAnimSocket("UsingControl", { m_pDamage_L_B });
 		}
 
-		if (m_eAtkType == EAttackType::ATK_MIDDLE)
+		if (m_eAtkType == EAttackType::ATK_HEAVY)
 		{
 			if(m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("UsingControl", { m_pDamage_M_F });
@@ -437,10 +441,8 @@ void CFlowerLeg::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
-	if (m_bAtkSwitch)
-	{
-		Spin_SweepCapsule(m_bOneHit);
-	}
+	if (m_bAtkSwitch)	
+		Spin_SweepCapsule(m_bOneHit);	
 
 	if (m_iHP <= 0)
 		m_bDead = true;
@@ -490,7 +492,7 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 		++m_iAirDamage;
 	}
 
-	else
+	if(m_eAtkType != EAttackType::ATK_TO_AIR && m_eAtkType != EAttackType::ATK_END && !m_bAtkSwitch && !m_bInvicible)
 		m_bStruck = true;
 }
 
@@ -539,7 +541,6 @@ void CFlowerLeg::Strew_Overlap()
 				tParam.vHitPosition = paramPos;
 				pTarget->TakeDamage(tParam);
 			}
-
 		}
 	}
 }

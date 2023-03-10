@@ -51,6 +51,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 		{
 			DAMAGE_PARAM tParam;
 			tParam.iDamage = 1;
+			tParam.eAttackType = EAttackType::ATK_HEAVY;
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			tParam.eAttackType = EAttackType::ATK_HEAVY;
 

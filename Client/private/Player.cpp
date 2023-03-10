@@ -194,7 +194,7 @@ void CPlayer::Tick(_double TimeDelta)
 	{
 		iter->Tick(TimeDelta);
 		{	// 충돌 판정
-			Collision_Check_Capsule(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable);
+			Collision_Check_Capsule(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART));
 
 			if (isCollision())	// 무기로 충돌 발생하면 slash를 1로 올려줌
 				m_fKineticCombo_Slash = 1.f;
