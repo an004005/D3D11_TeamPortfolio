@@ -192,6 +192,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\FSMComponent.h" />
     <ClInclude Include="..\public\GameInstance.h" />
     <ClInclude Include="..\public\GameObject.h" />
+    <ClInclude Include="..\public\GameTime_Manager.h" />
     <ClInclude Include="..\public\GameUtils.h" />
     <ClInclude Include="..\public\Graphic_Device.h" />
     <ClInclude Include="..\public\HDR.h" />
@@ -300,6 +301,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\FSMComponent.cpp" />
     <ClCompile Include="..\private\GameInstance.cpp" />
     <ClCompile Include="..\private\GameObject.cpp" />
+    <ClCompile Include="..\private\GameTime_Manager.cpp" />
     <ClCompile Include="..\private\GameUtils.cpp" />
     <ClCompile Include="..\private\Graphic_Device.cpp" />
     <ClCompile Include="..\private\HDR.cpp" />

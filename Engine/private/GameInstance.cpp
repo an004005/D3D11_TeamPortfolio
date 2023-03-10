@@ -18,6 +18,7 @@
 #include "PhysX_Manager.h"
 #include "Camera_Manager.h"
 #include "CurveManager.h"
+#include "GameTime_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -44,6 +45,7 @@ CGameInstance::CGameInstance()
 	, m_pPhysX_Manager(CPhysX_Manager::GetInstance())
 	, m_pCamera_Manager(CCamera_Manager::GetInstance())
 	, m_pCurve_Manager(CCurveManager::GetInstance())
+	, m_pGameTime_Manager(CGameTime_Manager::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -62,6 +64,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pPhysX_Manager);
 	Safe_AddRef(m_pCamera_Manager);
 	Safe_AddRef(m_pCurve_Manager);
+	Safe_AddRef(m_pGameTime_Manager);
 }
 
 /*************************
@@ -169,7 +172,10 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 		nullptr == m_pObject_Manager)
 		return;
 
-	m_TimeDelta = TimeDelta;
+	m_pGameTime_Manager->Tick(TimeDelta);
+
+	const _double TimeDeltaModified = TimeDelta * m_pGameTime_Manager->GetTimeRatio();
+	m_TimeDelta = TimeDeltaModified;
 
 	/* 입력장치의 상태를 갱신받아온다. */
 	m_pInput_Device->Invalidate_Input_Device();
@@ -178,14 +184,14 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 	m_pImgui_Manager->Tick_Imgui();
 
 	m_pObject_Manager->Tick(TimeDelta);
-	m_pLevel_Manager->Tick(TimeDelta);
+	m_pLevel_Manager->Tick(TimeDeltaModified);
 
 	m_pObject_Manager->Late_Tick(TimeDelta);
-	m_pLevel_Manager->Late_Tick(TimeDelta);
+	m_pLevel_Manager->Late_Tick(TimeDeltaModified);
 
 	if (m_pLevel_Manager->GetUpdatedLevel() != LEVEL_LOADING)
 	{
-		m_pPhysX_Manager->Simulate(TimeDelta);
+		m_pPhysX_Manager->Simulate(TimeDeltaModified);
 		m_pPhysX_Manager->WaitSimulate();
 	}
 
@@ -786,6 +792,16 @@ CCamera* CGameInstance::FindCamera(const string& strCamTag)
 	return m_pCamera_Manager->FindCamera(strCamTag);
 }
 
+void CGameInstance::ResetTimeRatio()
+{
+	m_pGameTime_Manager->ResetTimeRatio();
+}
+
+void CGameInstance::SetTimeRatioCurve(const string& strCurveTag, _bool bStay, const vector<wstring>* ExceptLayers)
+{
+	m_pGameTime_Manager->SetTimeRatioCurve(strCurveTag, bStay, ExceptLayers);
+}
+
 /*************************
  *	CImgui_Manager
  *************************/
@@ -865,6 +881,8 @@ void CGameInstance::Release_Engine()
 
 	CHDR::GetInstance()->DestroyInstance();
 
+	CGameTime_Manager::GetInstance()->DestroyInstance();
+
 	CSound_Manager::GetInstance()->DestroyInstance();
 
 	// json은 동떨어진 기능이라서 gameinstace에서 포함하지 않고 파괴만 담당
@@ -886,6 +904,7 @@ void CGameInstance::Free()
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pHDR);
 	Safe_Release(m_pImgui_Manager);
+	Safe_Release(m_pGameTime_Manager);
 
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pTimer_Manager);

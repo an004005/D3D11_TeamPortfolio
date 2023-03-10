@@ -268,11 +268,11 @@ public:
 	_bool Tick(_double TimeDelta, OUT _float& fOut);
 	void PlayFromStart();
 	void Stop();
+	void SetStay(_bool bStay) { m_bStay = bStay; }
 
 	void Imgui_RenderEditor();
 
 	_bool IsPlay() { return m_bPlay; }
-	void SetAccel(_double Accel) { m_Accel = Accel; }
 
 	template<typename T>
 	void SetFinishFunction(T* obj, void (T::*memFunc)())
@@ -287,11 +287,12 @@ public:
 	}
 
 	void SetCurve(const string& strCurveTag);
+	void ReleaseCurve();
 
 private:
 	_double m_CurFrame = 0.0;
 	_bool m_bPlay = false;
-	_double m_Accel = 1.0;
+	_bool m_bStay = false;
 
 	function<void()> m_FinFunction = nullptr;
 	class CCurveFloatImpl* m_pCurve = nullptr;
