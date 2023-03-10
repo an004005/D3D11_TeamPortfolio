@@ -17,6 +17,7 @@
 #include "Sound_Manager.h"
 #include "PhysX_Manager.h"
 #include "Camera_Manager.h"
+#include "CurveManager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -42,6 +43,7 @@ CGameInstance::CGameInstance()
 	, m_pSound_Manager(CSound_Manager::GetInstance())
 	, m_pPhysX_Manager(CPhysX_Manager::GetInstance())
 	, m_pCamera_Manager(CCamera_Manager::GetInstance())
+	, m_pCurve_Manager(CCurveManager::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -59,6 +61,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pSound_Manager);
 	Safe_AddRef(m_pPhysX_Manager);
 	Safe_AddRef(m_pCamera_Manager);
+	Safe_AddRef(m_pCurve_Manager);
 }
 
 /*************************
@@ -153,6 +156,8 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 	m_pPhysX_Manager->Initialize();
 
 	FAILED_CHECK(m_pSound_Manager->Initialize("../Bin/Resources/Sound/SoundDesc.json"));
+
+	m_pCurve_Manager->LoadCurves("../Bin/Resources/Curve/CurveManagerData.json");
 
 	return S_OK;
 }
@@ -865,6 +870,8 @@ void CGameInstance::Release_Engine()
 	// json은 동떨어진 기능이라서 gameinstace에서 포함하지 않고 파괴만 담당
 	ref = CJsonStorage::GetInstance()->DestroyInstance();
 
+	CCurveManager::GetInstance()->DestroyInstance();
+
 	CPhysX_Manager::GetInstance()->DestroyInstance();
 }
 
@@ -888,6 +895,7 @@ void CGameInstance::Free()
 	Safe_Release(m_pLevel_Manager);
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pGraphic_Device);
+	Safe_Release(m_pCurve_Manager);
 	Safe_Release(m_pPhysX_Manager);
 }
 

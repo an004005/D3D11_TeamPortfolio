@@ -177,6 +177,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\Component_Manager.h" />
     <ClInclude Include="..\public\ControlledRigidBody.h" />
     <ClInclude Include="..\public\CurveFloatMapImpl.h" />
+    <ClInclude Include="..\public\CurveManager.h" />
     <ClInclude Include="..\public\CustomFont.h" />
     <ClInclude Include="..\public\DebugDraw.h" />
     <ClInclude Include="..\public\DebugRay.h" />
@@ -218,6 +219,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\Imgui_AnimModifier.h" />
     <ClInclude Include="..\public\Imgui_AppLog.h" />
     <ClInclude Include="..\public\Imgui_CameraManager.h" />
+    <ClInclude Include="..\public\Imgui_CurveManager.h" />
     <ClInclude Include="..\public\Imgui_LightManager.h" />
     <ClInclude Include="..\public\Imgui_Manager.h" />
     <ClInclude Include="..\public\Imgui_ModelConverter.h" />
@@ -288,6 +290,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\Component_Manager.cpp" />
     <ClCompile Include="..\private\ControlledRigidBody.cpp" />
     <ClCompile Include="..\private\CurveFloatMapImpl.cpp" />
+    <ClCompile Include="..\private\CurveManager.cpp" />
     <ClCompile Include="..\private\CustomFont.cpp" />
     <ClCompile Include="..\private\DebugDraw.cpp" />
     <ClCompile Include="..\private\DebugRay.cpp" />
@@ -306,6 +309,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\Imgui_AnimModifier.cpp" />
     <ClCompile Include="..\private\Imgui_AppLog.cpp" />
     <ClCompile Include="..\private\Imgui_CameraManager.cpp" />
+    <ClCompile Include="..\private\Imgui_CurveManager.cpp" />
     <ClCompile Include="..\private\Imgui_LightManager.cpp" />
     <ClCompile Include="..\private\Imgui_Manager.cpp" />
     <ClCompile Include="..\private\Imgui_ModelConverter.cpp" />

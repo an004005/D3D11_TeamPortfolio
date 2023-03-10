@@ -203,7 +203,7 @@ private:
 	class CSound_Manager*			m_pSound_Manager = nullptr;
 	class CPhysX_Manager*			m_pPhysX_Manager = nullptr;
 	class CCamera_Manager*			m_pCamera_Manager = nullptr;
-
+	class CCurveManager*			m_pCurve_Manager = nullptr;
 	class CImgui_Manager*			m_pImgui_Manager = nullptr;
 
 public:
