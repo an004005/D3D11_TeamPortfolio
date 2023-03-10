@@ -1,6 +1,7 @@
 #pragma once
 #include "Monster.h"
 #include "Client_Defines.h"
+#include "Timeline.h"
 
 BEGIN(Engine)
 class CFSMComponent;
@@ -90,7 +91,6 @@ private:
 	vector<CMaterial*> m_BodyMtrls;
 	CMaterial* m_pWeakMtrl = nullptr;
 	CMaterial* m_pGlassMtrl = nullptr;
-	
 
 public:
 	static CBoss1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

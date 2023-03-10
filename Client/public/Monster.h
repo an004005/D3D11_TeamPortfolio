@@ -1,4 +1,6 @@
 #pragma once
+#include <Timeline.h>
+
 #include "Client_Defines.h"
 #include "ScarletCharacter.h"
 
@@ -17,7 +19,10 @@ protected:
 	virtual ~CMonster() = default;
 
 public:
+	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
+	virtual void Imgui_RenderProperty() override;
+
 
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
@@ -44,6 +49,8 @@ protected:
 	_float m_fDeadDissolve = 0.5f;
 
 	set<CScarletCharacter*> m_DamagedTargetList;
+
+	CSimpleTimeline m_DeathTimeline;
 
 
 public:

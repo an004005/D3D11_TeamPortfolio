@@ -129,6 +129,11 @@ public:
 		m_FinFunction = [obj, memFunc]() { (obj->*memFunc)(); };
 	}
 
+	void SetFinishFunction(const function<void()>& FindFunction)
+	{
+		m_FinFunction = FindFunction;
+	}
+
 	template<typename T>
 	void SetCurve(T* obj, void (T::*memFunc)(_float), CCurveFloat* curve)
 	{
@@ -165,4 +170,134 @@ private:
 public:
 	virtual void Free() override;
 };
+
+/******************
+ * CTimelineEx
+ *****************/
+class ENGINE_DLL CTimelineEx final : public CBase
+{
+public:
+	~CTimelineEx()
+	{
+		Free();
+	}
+
+public:
+	void Tick(_double TimeDelta);
+
+	void Play();
+	void PlayFromStart();
+	void Stop();
+	void Reverse();
+	void ReverseFromEnd();
+	void SetNewFrame(_double NewFrame);
+	void Reset();
+
+	_bool IsForward() const { return m_bForward; }
+
+	void Imgui_RenderEditor();
+
+	_bool IsPlay() { return m_bPlay; }
+
+	template<typename T>
+	void SetFinishFunction(T* obj, void (T::*memFunc)())
+	{
+		Assert(obj != nullptr);
+		m_FinFunction = [obj, memFunc]() { (obj->*memFunc)(); };
+	}
+
+	void SetFinishFunction(const function<void()>& FindFunction)
+	{
+		m_FinFunction = FindFunction;
+	}
+
+	template<typename T>
+	void SetCurve(T* obj, void (T::*memFunc)(_float), CCurveFloat* curve)
+	{
+		Assert(curve != nullptr);
+		Assert(obj != nullptr);
+
+		Safe_Release(m_pCurve);
+		m_TickFunction = [obj, memFunc](_float f) { (obj->*memFunc)(f); };
+		m_pCurve = curve;
+	}
+
+	template<typename T>
+	void SetCurve(T* obj, void (T::*memFunc)(_float), const string& strCurveTag)
+	{
+		Safe_Release(m_pCurve);
+		Assert(obj != nullptr);
+
+		m_TickFunction = [obj, memFunc](_float f) { (obj->*memFunc)(f); };
+		auto pCurve = GetCurve(strCurveTag);
+		Assert(pCurve != nullptr);
+		Safe_AddRef(pCurve);
+		m_pCurve = pCurve;
+	}
+
+private:
+	class CCurveFloat* GetCurve(const string& strCurveTag);
+
+private:
+	_double m_CurFrame = 0.0;
+	_bool m_bForward = true;
+	_bool m_bPlay = false;
+	_bool m_bLoop = false;
+	_bool m_bSwing = false;
+
+	function<void()> m_FinFunction = nullptr;
+	function<void(_float)> m_TickFunction = nullptr;
+	class CCurveFloat* m_pCurve = nullptr;
+
+public:
+	virtual void Free() override;
+};
+
+/******************
+ * CSimpleTimeline
+ *****************/
+class ENGINE_DLL CSimpleTimeline final : public CBase
+{
+public:
+	~CSimpleTimeline()
+	{
+		Free();
+	}
+
+public:
+	_bool Tick(_double TimeDelta, OUT _float& fOut);
+	void PlayFromStart();
+	void Stop();
+
+	void Imgui_RenderEditor();
+
+	_bool IsPlay() { return m_bPlay; }
+	void SetAccel(_double Accel) { m_Accel = Accel; }
+
+	template<typename T>
+	void SetFinishFunction(T* obj, void (T::*memFunc)())
+	{
+		Assert(obj != nullptr);
+		m_FinFunction = [obj, memFunc]() { (obj->*memFunc)(); };
+	}
+
+	void SetFinishFunction(const function<void()>& FindFunction)
+	{
+		m_FinFunction = FindFunction;
+	}
+
+	void SetCurve(const string& strCurveTag);
+
+private:
+	_double m_CurFrame = 0.0;
+	_bool m_bPlay = false;
+	_double m_Accel = 1.0;
+
+	function<void()> m_FinFunction = nullptr;
+	class CCurveFloatImpl* m_pCurve = nullptr;
+
+public:
+	virtual void Free() override;
+};
+
 END

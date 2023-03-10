@@ -31,6 +31,7 @@
 #include "TrailSystem.h"
 #include "EffectSystem.h"
 #include "PostVFX_ColorGrading.h"
+#include "Imgui_CurveManager.h"
 
 
 #define ADD_PLAYER
@@ -52,6 +53,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AnimModifier::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 
 	if (FAILED(Ready_Prototypes()))
 		return E_FAIL;

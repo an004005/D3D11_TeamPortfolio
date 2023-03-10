@@ -176,12 +176,22 @@ _float CCurveFloatImpl::GetValue(_double Frame)
 void CCurveFloatImpl::Imgui_RenderEditor()
 {
 	ImGui::InputText("CurveName", m_szName, MAX_PATH);
-	ImGui::InputFloat2("Range Min", (float*)&m_RangeMin);
-	ImGui::InputFloat2("Range Max", (float*)&m_RangeMax);
+	ImGui::InputFloat2("Min x,y", (float*)&m_RangeMin);
+	ImGui::InputFloat2("Max x,y", (float*)&m_RangeMax);
 
 	if (ImGui::Curve(m_szName, ImVec2{400.f, 300.f}, 20, m_KeyFrames, &m_iSelection, m_RangeMin, m_RangeMax))
 	{// 그래프 변경시 true 반환됨
 	}
+}
+
+_float CCurveFloatImpl::GetMinX()
+{
+	return m_RangeMin.x;
+}
+
+_float CCurveFloatImpl::GetMaxX()
+{
+	return m_RangeMax.x;
 }
 
 void CCurveFloatImpl::Free()
