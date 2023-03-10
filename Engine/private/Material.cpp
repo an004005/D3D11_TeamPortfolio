@@ -81,9 +81,13 @@ void CMaterial::Imgui_RenderProperty()
 
 	ImGui::Separator();
 
-	m_pShader->Imgui_RenderProperty();
+	if (ImGui::CollapsingHeader("Shader"))
+	{
+		m_pShader->Imgui_RenderProperty();
+	}
 	ImGui::Separator();
-	m_pShaderInstancing->Imgui_RenderProperty();
+	if (ImGui::CollapsingHeader("Instancing Shader"))
+		m_pShaderInstancing->Imgui_RenderProperty();
 	ImGui::Separator();
 
 	CShader::Imgui_RenderShaderParams(m_tParams);

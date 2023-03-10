@@ -28,6 +28,7 @@ public:
 	// 경직 또는 죽을 때 실행하여 상태 초기화하는 함수
 	// ex) 공격 sweep 중단, 상태이상 제거 등등
 	virtual void Reset() {}
+	void SetPositionForce(_float4 vPos);
 
 public:
 	EDeBuffType GetDeBuffType() const { return m_eDeBuff; }

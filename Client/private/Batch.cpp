@@ -5,6 +5,8 @@
 #include "GameUtils.h"
 #include "Batch.h"
 #include "Trigger.h"
+#include "PhysX_Manager.h"
+#include "ScarletCharacter.h"
 
 CBatch::CBatch(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
@@ -39,6 +41,7 @@ void CBatch::BeginTick()
 void CBatch::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+	RayPicking();
 }
 
 void CBatch::Late_Tick(_double TimeDelta)
@@ -89,9 +92,12 @@ void CBatch::Imgui_RenderProperty()
 		ImGui::EndListBox();
 	}
 
-
+	
 	ImGui::Separator();
 
+	if (ImGui::Checkbox("Picking On", &m_bPick));
+	
+	ImGui::Separator();
 	if (ImGui::TreeNode("Trigger"))
 	{
 		if (ImGui::Button("Create_Trigger"))
@@ -102,6 +108,19 @@ void CBatch::Imgui_RenderProperty()
 			assert(pTrigger != nullptr);
 			m_pTriggers.emplace_back(pTrigger);
 		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Delete_Trigger"))
+		{
+			if (m_pTrigger != nullptr)
+			{
+				m_pTriggers.erase(remove(m_pTriggers.begin(), m_pTriggers.end(), m_pTrigger), m_pTriggers.end());
+				m_pTrigger->SetDelete();
+				m_pTrigger = nullptr;
+			}
+		}
+
 
 		ImGui::Separator();
 
@@ -157,52 +176,39 @@ void CBatch::Imgui_RenderProperty()
 
 	if (ImGui::TreeNode("GameObject"))
 	{
-		if (ImGui::Button("Create_Object"))
-		{
-			if (m_pProtoTag != L"")
+		/*	if (ImGui::Button("Create_Object"))
 			{
-				CGameObject* pGameObject = nullptr;
-				pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), m_pProtoTag.c_str());
+				if (m_pProtoTag != L"")
+				{
+					CGameObject* pGameObject = nullptr;
+					pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), m_pProtoTag.c_str());
 
-				assert(pGameObject != nullptr);
-				m_pGameObjects.emplace_back(pGameObject);
-			}
-			
-		}
+					assert(pGameObject != nullptr);
+					m_pGameObjects.emplace_back(pGameObject);
+				}
+
+			}*/
 
 		ImGui::Separator();
 
-		static char szSearchObject[MAX_PATH] = "";
-		ImGui::InputText("GameObject Search", szSearchObject, MAX_PATH);
-
-		const wstring strObjSearch = s2ws(szSearchObject);
-		const _bool bObjSearch = strObjSearch.empty() == false;
 
 		if (ImGui::BeginListBox("GameObject List"))
 		{
 			for (size_t i = 0; i < m_pGameObjects.size(); ++i)
 			{
-				if (bObjSearch)
-				{
-					wstring szProtoTag = m_pGameObjects[i]->GetPrototypeTag();
-					if (szProtoTag.find(strObjSearch) == wstring::npos)
-						continue;
-				}
-
-				const bool bSelected = (m_pGameObjects[i]->GetPrototypeTag() == m_pProtoTag);
+				const bool bSelected = (m_pGameObjects[i] == m_pGameObject);
 
 				if (bSelected)
 					ImGui::SetItemDefaultFocus();
 
 				char pStr[MAX_PATH]{};
-				strcpy(pStr, CGameUtils::GetFileName(ws2s(m_ProtosInfo[i].first)).c_str());
-				sprintf_s(pStr, sizeof(pStr), "%s %zd", pStr, i);
+				string str = ws2s(m_pGameObjects[i]->GetPrototypeTag());
+				sprintf_s(pStr, sizeof(pStr), "%s %zd", str.c_str(), i);
 
 				if (ImGui::Selectable(pStr, bSelected))
 				{
 					m_pGameObject = m_pGameObjects[i];
 				}
-
 			}
 
 			ImGui::EndListBox();
@@ -290,6 +296,62 @@ _float4 CBatch::SetUp_InitPosition()
 	XMStoreFloat4(&vInitPos, XMVectorSetW(vCamPos + XMVector3Normalize(vCamLook) * 20.f, 1.f));
 
 	return vInitPos;
+}
+
+void CBatch::RayPicking()
+{
+	if (m_bPick == false) return;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	if (pGameInstance->KeyDown(CInput_Device::DIM_LB))
+	{
+		_float4 vOrigin;
+		_float4 vDir;
+		CGameUtils::GetPickingRay(vOrigin, vDir);
+
+		physx::PxRaycastHit hitBuffer[1];
+		physx::PxRaycastBuffer t(hitBuffer, 1);
+
+		RayCastParams params;
+		params.rayOut = &t;
+		params.vOrigin = vOrigin;
+		params.vDir = vDir;
+		params.fDistance = 1000.f;
+		params.iTargetType = CTB_STATIC;
+		params.bSingle = true;
+
+		if (pGameInstance->RayCast(params))
+		{
+			IM_LOG("Hit Ray");
+			for (int i = 0; i < t.getNbAnyHits(); ++i)
+			{
+				auto p = t.getAnyHit(i);
+
+				_float4 vPos{ p.position.x, p.position.y + 10.f, p.position.z, 1.f };
+
+				if (m_pProtoTag != L"")
+				{
+					_float4x4 tmp = _float4x4::Identity;
+					tmp.m[3][0] = vPos.x;
+					tmp.m[3][1] = vPos.y;
+					tmp.m[3][2] = vPos.z;
+
+					Json tmp123;
+					tmp123["Transform"]["WorldMatrix"] = tmp;
+
+					CGameObject* pGameObject = nullptr;
+					pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), m_pProtoTag.c_str(), &tmp123);
+
+					//pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&vPos));
+					//assert(pGameObject != nullptr);
+					m_pGameObjects.emplace_back(pGameObject);
+
+					return;
+				}
+			}
+		}
+	}
 }
 
 

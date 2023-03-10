@@ -36,7 +36,7 @@ public:
 	
 private:
 	HRESULT SetUp_Components(void * pArg);
-	void	SetUp_InitInfo(const Json& json);
+	void	SetUp_InitInfo(const Json& json); //LoadFromJson에서 실행
 
 	void	SetUp_Create(const Json& json);
 private:

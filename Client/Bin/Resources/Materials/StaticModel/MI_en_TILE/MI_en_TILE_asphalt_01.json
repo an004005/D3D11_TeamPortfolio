@@ -1,8 +1,9 @@
 {
     "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderInstancingProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
     "ShaderParams" : {
         "Ints" : [],
-        "Floats" : [],
+        "Floats" : [0.7],
         "Float2s" : [],
         "Float4s" : [],
         "Float4x4s" : [],
@@ -13,5 +14,6 @@
             "../Bin/Resources/Environments/Location/LC10/props/Base/T_en_GrainMarkHW_NML.png" 
         ],
         "Pass" : 1
-    }
+    },
+    "InstancingPass" : 1
 }

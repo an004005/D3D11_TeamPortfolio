@@ -23,7 +23,6 @@ public:
 	void Imgui_RenderProperty() override;
 	virtual void SaveToJson(OUT Json& json) override;
 	virtual void LoadFromJson(const Json& json) override;
-
 	
 private:
 	HRESULT SetUp_Components();   

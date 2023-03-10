@@ -194,7 +194,9 @@ void CScarletMap::Imgui_RenderProperty()
 			m_pGameObject = pMapObject;
 		}
 		
-		sort(m_pMapObjects.begin(), m_pMapObjects.end());
+		sort(m_pMapObjects.begin(), m_pMapObjects.end(), [this](CMapObject* pSour, CMapObject* pDest) {
+			return pSour->Get_ModelTag() < pDest->Get_ModelTag();
+		});
 	}
 
 	ImGui::Separator();
@@ -265,7 +267,9 @@ void CScarletMap::Imgui_RenderProperty()
 			}
 		}
 
-		sort(m_pMapObjects.begin(), m_pMapObjects.end());
+		sort(m_pMapObjects.begin(), m_pMapObjects.end(), [this](CMapObject* pSour, CMapObject* pDest) {
+			return pSour->Get_ModelTag() < pDest->Get_ModelTag();
+		});
 	}
 
 	ImGui::Separator();

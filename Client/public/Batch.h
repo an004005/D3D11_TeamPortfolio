@@ -29,7 +29,7 @@ public:
 private:
 	HRESULT SetUp_Components();
 	_float4	SetUp_InitPosition();
-
+	void	RayPicking();
 
 private:
 	vector<class CTrigger*>				m_pTriggers;
@@ -41,6 +41,7 @@ private:
 	vector<CGameObject*>				m_pGameObjects;
 	CGameObject*						m_pGameObject = nullptr;
 	_int								m_Filter = BATCHTYPE::MONSTER;
+	_bool								m_bPick = false;
 public:
 	static CBatch* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr) override;

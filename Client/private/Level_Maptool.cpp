@@ -118,7 +118,7 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 
 
 	//인스턴싱 모델들의 프로토타입 생성
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/ConstructionSiteF3/",
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/",
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
@@ -129,33 +129,6 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 			FAILED_CHECK(Create_Model_Instance(s2ws(fileName), fileName.c_str()));
 		}
 	});
-
-	//인스턴싱 모델들의 프로토타입 생성
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/ConstructionSiteCommon/",
-		[this](const string& fileName)
-	{
-		char szFileExt[MAX_PATH]{};
-		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
-
-		if (0 == strcmp(szFileExt, ".static_model"))
-		{
-			FAILED_CHECK(Create_Model_Instance(s2ws(fileName), fileName.c_str()));
-		}
-	});
-
-	//키네틱 모델들의 프로토타입 생성
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",
-		[this](const string& fileName)
-	{
-		char szFileExt[MAX_PATH]{};
-		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
-
-		if (0 == strcmp(szFileExt, ".static_model"))
-		{
-			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), KINETIC));
-		}
-	});
-
 
 	//SkyBox
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_Component_Model_SkySphere"),
@@ -191,7 +164,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/ConstructionSite3F.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map_ConstructionSite2F.json");
 
 	json["Model_ProtoTypes"] = Json::array();
 
@@ -214,7 +187,7 @@ HRESULT CLevel_Maptool::Create_Model(const wstring& pProtoTag, const char* pMode
 	pComponent = CModel::Create(m_pDevice, m_pContext, pModelPath);
 	assert(pComponent != nullptr);
 
-	FAILED_CHECK(pGameInstance->Add_Prototype(
+	FAILED_CHECK(pGameInstance->Add_Prototype(	
 		pProtoTag.c_str(),
 		pComponent));
 
