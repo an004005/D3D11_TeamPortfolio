@@ -55,9 +55,6 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	if (Out.RamainLifeRatio >= 1.f)
 		Out.RamainLifeRatio = 1.f;
-	
-	if (g_bSizeDecreaseByLife)
-		Out.vPosition += float4(In.vNormal,0.f) * Out.RamainLifeRatio;
 
 	Out.vTexUV = In.vTexUV;
 

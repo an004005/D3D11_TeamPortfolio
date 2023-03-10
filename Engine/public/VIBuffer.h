@@ -16,7 +16,7 @@ public:
 	const _float3* Get_VerticesPos() const {
 		return m_pVerticesPos;
 	}
-	
+	static set<CVIBuffer*> tmp;
 public:
 	_bool			Check_IsInstance() { return m_bIsInstance; }
 

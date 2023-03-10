@@ -23,6 +23,7 @@
 #include "MapKinetic_Object.h"
 #include "Material.h"
 
+
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {

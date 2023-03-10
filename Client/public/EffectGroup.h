@@ -113,7 +113,7 @@ private:
 	char*	m_szFuncName[FUNC_END] = { "PlayFromStart",  "Reset", "Stop", "Reverse" };
 	char*	m_szCurveTag[CURVE_END] = { "ObjectScale_All", "ObjectScale_Y","ObjectScale_X", "Floats_0", "Floats_1", "Floats_2", "Floats_3","Floats_4","Floats_5","Floats_6", "Floats_7",  "Intro_Time", "Outro_Time", "Color_Change", "Ints_0" };
 
-	map<string, class CEffectSystem*> m_mapEffectSystemTag;
+	unordered_map<string, class CEffectSystem*> m_mapEffectSystemTag;
 
 	list<char*> ppEffectTag;
 public:

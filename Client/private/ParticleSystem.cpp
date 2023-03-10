@@ -9,14 +9,18 @@
 #include "JsonLib.h"
 #include "Model.h"
 
+set<CParticleSystem*> CParticleSystem::tmp{};
+
 CParticleSystem::CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
+	tmp.insert(this);
 }
 
 CParticleSystem::CParticleSystem(const CParticleSystem& rhs)
 	: CGameObject(rhs)
 {
+	tmp.insert(this);
 }
 
 HRESULT CParticleSystem::Initialize(void* pArg)
@@ -170,10 +174,8 @@ void CParticleSystem::LoadFromJson(const Json& json)
 {
 	CGameObject::LoadFromJson(json);
 
-	// Json& json = *static_cast<Json*>(json);
 	CShader::LoadShaderParam(m_tParam, json);
 
-	// m_iPassIdx = json["Pass"];
 	m_fDuration = json["Duration"];
 	m_bLoop = json["Loop"];
 	m_fSpawnTickTime = json["SpawnTickTime"];
@@ -307,7 +309,7 @@ void CParticleSystem::Imgui_RenderProperty()
 
 	if (m_eBufferType == EBufferType::MESH)
 	{
-		ImGui::InputFloat2("Mesh Size", (float*)&m_fSize);
+		ImGui::InputFloat3("Mesh Size", (float*)&m_vMeshSize);
 
 		CImguiUtils::InputFloat3(&m_vScaleVariation, "Mesh ScaleVariation");
 	}
@@ -390,21 +392,18 @@ HRESULT CParticleSystem::SetParams()
 	if (FAILED(m_pShader->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
-	const _int bLocal = m_bLocal ? 1 : 0;
-	if (FAILED(m_pShader->Set_RawValue("g_bLocal", &bLocal, sizeof(_int))))
-		return E_FAIL;
-
-	const _int bSizeDecreaseByLife = m_bSizeDecreaseByLife ? 1 : 0;
-	if (FAILED(m_pShader->Set_RawValue("g_bSizeDecreaseByLife", &bSizeDecreaseByLife, sizeof(_int))))
-		return E_FAIL;
-
-	const _int bRotate = m_bRotate ? 1 : 0;
-	if (FAILED(m_pShader->Set_RawValue("g_bRotate", &bRotate, sizeof(_int))))
-		return E_FAIL;
-
 	if (m_eBufferType == EBufferType::POINT)
 	{
+		const _int bLocal = m_bLocal ? 1 : 0;
+		if (FAILED(m_pShader->Set_RawValue("g_bLocal", &bLocal, sizeof(_int))))
+			return E_FAIL;
+		const _int bRotate = m_bRotate ? 1 : 0;
+		if (FAILED(m_pShader->Set_RawValue("g_bRotate", &bRotate, sizeof(_int))))
+			return E_FAIL;
 		if (FAILED(m_pShader->Set_RawValue("g_vCamPosition", &CGameInstance::GetInstance()->Get_CamPosition(), sizeof(_float4))))
+			return E_FAIL;
+		const _int bSizeDecreaseByLife = m_bSizeDecreaseByLife ? 1 : 0;
+		if (FAILED(m_pShader->Set_RawValue("g_bSizeDecreaseByLife", &bSizeDecreaseByLife, sizeof(_int))))
 			return E_FAIL;
 		const _int bSizeIncreaseByLife = m_bSizeIncreaseByLife ? 1 : 0;
 		if (FAILED(m_pShader->Set_RawValue("g_bSizeIncreaseByLife", &bSizeIncreaseByLife, sizeof(_int))))
@@ -811,11 +810,9 @@ void CParticleSystem::AddMesh()
 			}
 		}
 
-
-
 		MeshData.vPosition = vPos;
 		MeshData.vVelocity = vDir * fSpeed;
-		MeshData.vSize = _float3(m_fSize.x, m_fSize.x, m_fSize.x);
+		MeshData.vSize = _float3(m_vMeshSize.x, m_vMeshSize.y, m_vMeshSize.z);
 		MeshData.fLifeTime = fLife;
 		MeshData.fCurLifeTime = 0.f;
 
@@ -917,14 +914,11 @@ void CParticleSystem::Free()
 	m_PointList.clear();
 	m_MeshList.clear();
 
-	if (m_bCloned == true)
-	{
-		Safe_Release(m_pRendererCom);
-		Safe_Release(m_pPointInstanceBuffer);
-		Safe_Release(m_pMeshInstanceBuffer);
-		Safe_Release(m_pShader);
-		Safe_Release(m_pModel);
-	}
+	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pPointInstanceBuffer);
+	Safe_Release(m_pMeshInstanceBuffer);
+	Safe_Release(m_pShader);
+	Safe_Release(m_pModel);
 
 	for (auto e : m_tParam.Textures)
 		Safe_Release(e.first);

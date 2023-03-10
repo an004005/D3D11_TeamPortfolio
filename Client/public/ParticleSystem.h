@@ -13,6 +13,7 @@ END
 
 BEGIN(Client)
 
+
 enum class ESpawnShape
 {
 	SPHERE,
@@ -36,7 +37,11 @@ class CParticleSystem :	public CGameObject
 public:
 	CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CParticleSystem(const CParticleSystem& rhs);
-	virtual ~CParticleSystem() = default;
+	virtual ~CParticleSystem()
+	{
+		tmp.erase(this);
+	}
+	static set<CParticleSystem*> tmp;
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
@@ -134,11 +139,11 @@ private:
 	// For Rotation
 	_bool	  m_bRotate = false;
 	_float4x4 m_RotationMatrix = XMMatrixIdentity();
+	_float3	 m_vMeshSize{ 1.f,1.f,1.f };
 	// _float	  m_ArrayRoationToTime[3];
 	_float3	  m_fRotationToTime_Min = {0.f,0.f,0.f};
 	_float3	  m_fRotationToTime_Max = { 0.f,0.f,0.f };
 
-	
 
 public:
 	static CParticleSystem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

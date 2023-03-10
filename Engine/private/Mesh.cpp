@@ -15,8 +15,6 @@ CMesh::CMesh(const CMesh & rhs)
 	, m_strName(rhs.m_strName)
 	, m_iMaterialIndex(rhs.m_iMaterialIndex)
 	, m_BoneNames(rhs.m_BoneNames)
-	, m_pNonAnimModelBufferData(rhs.m_pNonAnimModelBufferData)
-	// , m_pAnimModelBufferData(rhs.m_pAnimModelBufferData)
 {
 }
 
@@ -145,9 +143,6 @@ HRESULT CMesh::Ready_VertexBuffer_NonAnimModel(HANDLE hFile, CModel* pModel)
 	VTXMODEL* pNonAnimVertices = new VTXMODEL[m_iNumVertices];
 	ZeroMemory(pNonAnimVertices, sizeof(VTXMODEL) * m_iNumVertices);
 
-	m_pNonAnimModelBufferData = new VTXMODEL[m_iNumVertices];
-	ZeroMemory(m_pNonAnimModelBufferData, sizeof(VTXMODEL) * m_iNumVertices);
-
 	const _matrix PivotMatrix = pModel->GetPivotMatrix();
 	DWORD dwByte;
 	for (_uint i = 0; i < m_iNumVertices; ++i)
@@ -157,7 +152,7 @@ HRESULT CMesh::Ready_VertexBuffer_NonAnimModel(HANDLE hFile, CModel* pModel)
 
 		XMStoreFloat3(&buffer.vPosition, XMVector3TransformCoord(XMLoadFloat3(&buffer.vPosition), PivotMatrix));
 		XMStoreFloat3(&buffer.vNormal, XMVector3TransformNormal(XMLoadFloat3(&buffer.vNormal), PivotMatrix));
-		pNonAnimVertices[i] = m_pNonAnimModelBufferData[i] = buffer;
+		pNonAnimVertices[i] = buffer;
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
@@ -198,14 +193,11 @@ HRESULT CMesh::Ready_VertexBuffer_AnimModel(HANDLE hFile, CModel* pModel)
 	VTXANIMMODEL* pAnimVertices = new VTXANIMMODEL[m_iNumVertices];
 	ZeroMemory(pAnimVertices, sizeof(VTXANIMMODEL) * m_iNumVertices);
 
-	m_pAnimModelBufferData = new VTXANIMMODEL[m_iNumVertices];
-	ZeroMemory(m_pAnimModelBufferData, sizeof(VTXANIMMODEL) * m_iNumVertices);
-
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
 		VTXANIMMODEL buffer;
 		ReadFile(hFile, &buffer, sizeof(VTXANIMMODEL), &dwByte, nullptr); /* Read */
-		pAnimVertices[i] = m_pAnimModelBufferData[i] = buffer;
+		pAnimVertices[i] = buffer;
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
@@ -248,9 +240,6 @@ CComponent * CMesh::Clone(void * pArg)
 void CMesh::Free()
 {
 	__super::Free();
-
-	Safe_Delete_Array(m_pNonAnimModelBufferData);
-	// Safe_Delete_Array(m_pAnimModelBufferData);
 
 	for (auto& pBone : m_Bones)
 		Safe_Release(pBone);

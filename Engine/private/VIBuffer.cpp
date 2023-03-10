@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include "..\public\VIBuffer.h"
 #include "GameInstance.h"
-
+set<CVIBuffer*> CVIBuffer::tmp{};
 CVIBuffer::CVIBuffer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
 {
-	
 }
 
 CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
@@ -21,7 +20,6 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 	, m_eIndexFormat(rhs.m_eIndexFormat)
 	, m_eTopology(rhs.m_eTopology)
 	, m_iNumIndices(rhs.m_iNumIndices)
-	, m_pVerticesPos(rhs.m_pVerticesPos)
 {
 	Safe_AddRef(m_pVB);
 	Safe_AddRef(m_pIB);
@@ -98,11 +96,6 @@ HRESULT CVIBuffer::Create_IndexBuffer()
 void CVIBuffer::Free()
 {
 	__super::Free();
-
-	if (false == m_isCloned)
-	{
-		Safe_Delete_Array(m_pVerticesPos);
-	}
 
 	Safe_Release(m_pVB);
 	Safe_Release(m_pIB);

@@ -268,7 +268,6 @@ void CEffectGroup::Imgui_RenderProperty()
 		if (item_current_idx == 0)
 		{
 			string CurveOwnerName = ppEffectGroupTag[0];
-			// CurveOwnerName = ;
 
 			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
 			static const char* pCurName = "";
@@ -415,7 +414,7 @@ void CEffectGroup::Imgui_RenderProperty()
 			}
 
 			Imgui_RenderEffectSource(item_current_idx);
-
+			
 		}
 		else if (item_current_idx == 4)
 		{

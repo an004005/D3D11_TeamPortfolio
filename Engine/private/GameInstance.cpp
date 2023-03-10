@@ -18,6 +18,7 @@
 #include "PhysX_Manager.h"
 #include "Camera_Manager.h"
 #include "CurveManager.h"
+#include "VIBuffer.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -837,7 +838,7 @@ void CGameInstance::Release_Engine()
 	CGameInstance::GetInstance()->Clear();
 	_uint ref = CGameInstance::GetInstance()->DestroyInstance();
 
-	CCamera_Manager::GetInstance()->DestroyInstance();
+	ref = CCamera_Manager::GetInstance()->DestroyInstance();
 
 	ref = CObject_Manager::GetInstance()->DestroyInstance();
 
@@ -857,15 +858,15 @@ void CGameInstance::Release_Engine()
 
 	ref = CImgui_Manager::GetInstance()->DestroyInstance();
 
-	CTarget_Manager::GetInstance()->DestroyInstance();
+	ref = CTarget_Manager::GetInstance()->DestroyInstance();
 
-	CFont_Manager::GetInstance()->DestroyInstance();
+	ref = CFont_Manager::GetInstance()->DestroyInstance();
 
-	CFrustum::GetInstance()->DestroyInstance();
+	ref = CFrustum::GetInstance()->DestroyInstance();
 
-	CHDR::GetInstance()->DestroyInstance();
+	ref = CHDR::GetInstance()->DestroyInstance();
 
-	CSound_Manager::GetInstance()->DestroyInstance();
+	ref = CSound_Manager::GetInstance()->DestroyInstance();
 
 	// json은 동떨어진 기능이라서 gameinstace에서 포함하지 않고 파괴만 담당
 	ref = CJsonStorage::GetInstance()->DestroyInstance();
@@ -897,5 +898,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pCurve_Manager);
 	Safe_Release(m_pPhysX_Manager);
+
 }
 
