@@ -305,7 +305,7 @@ _bool CSimpleTimeline::Tick(_double TimeDelta, _float& fOut)
 	if (m_bPlay == false)
 		return false;
 	
-	m_CurFrame += TimeDelta * m_Accel;
+	m_CurFrame += TimeDelta;
 
 	_bool bFin = false;
 	if (m_CurFrame <= (_double)m_pCurve->GetMinX())
@@ -322,7 +322,11 @@ _bool CSimpleTimeline::Tick(_double TimeDelta, _float& fOut)
 
 	fOut = m_pCurve->GetValue(m_CurFrame);
 
-	if (bFin && m_FinFunction)
+	if (m_bStay)
+	{
+		m_bPlay = true;
+	}
+	else if (bFin && m_FinFunction)
 	{
 		m_FinFunction();
 	}
@@ -357,9 +361,6 @@ void CSimpleTimeline::Imgui_RenderEditor()
 		ImGui::InputFloat("Current Frame", &_fFrame);
 		m_CurFrame = (_double)_fFrame;
 
-		_float fAccel = (_float)m_Accel;
-		ImGui::InputFloat("Current Accel", &fAccel);
-		m_Accel = (_double)fAccel;
 
 		static char szCurve[MAX_PATH]{};
 		ImGui::InputText("Switching Curve", szCurve, MAX_PATH);
@@ -386,8 +387,14 @@ void CSimpleTimeline::SetCurve(const string& strCurveTag)
 	Safe_AddRef(m_pCurve);
 }
 
-void CSimpleTimeline::Free()
+void CSimpleTimeline::ReleaseCurve()
 {
 	Safe_Release(m_pCurve);
+	m_pCurve = nullptr;
+}
+
+void CSimpleTimeline::Free()
+{
+	ReleaseCurve();
 }
 

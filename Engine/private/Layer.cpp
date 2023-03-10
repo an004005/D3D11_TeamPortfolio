@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Layer.h"
 #include "GameObject.h"
+#include "GameTime_Manager.h"
 
 CLayer::CLayer()
 {
@@ -13,6 +14,9 @@ HRESULT CLayer::Initialize()
 
 void CLayer::Tick(_double TimeDelta)
 {
+	if (m_bUseTimeRatio)
+		TimeDelta *= CGameTime_Manager::GetInstance()->GetTimeRatio();
+
 	for (auto itr = m_GameObjects.begin(); itr != m_GameObjects.end();)
 	{
 		const auto pGameObject = *itr;
@@ -32,6 +36,9 @@ void CLayer::Tick(_double TimeDelta)
 
 void CLayer::Late_Tick(_double TimeDelta)
 {
+	if (m_bUseTimeRatio)
+		TimeDelta *= CGameTime_Manager::GetInstance()->GetTimeRatio();
+
 	for (const auto pGameObject : m_GameObjects)
 		pGameObject->Late_Tick(TimeDelta);
 }

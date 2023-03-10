@@ -5,6 +5,7 @@
 #include "ImguiUtils.h"
 #include "imgui_curve.hpp"
 #include "MathUtils.h"
+#include "CurveManager.h"
 
 namespace nlohmann
 {
@@ -179,7 +180,9 @@ void CCurveFloatImpl::Imgui_RenderEditor()
 	ImGui::InputFloat2("Min x,y", (float*)&m_RangeMin);
 	ImGui::InputFloat2("Max x,y", (float*)&m_RangeMax);
 
-	if (ImGui::Curve(m_szName, ImVec2{400.f, 300.f}, 20, m_KeyFrames, &m_iSelection, m_RangeMin, m_RangeMax))
+	const _float2 vSize = CCurveManager::GetInstance()->GetCurveEditorSize();
+
+	if (ImGui::Curve(m_szName, ImVec2{vSize.x,  vSize.y}, 20, m_KeyFrames, &m_iSelection, m_RangeMin, m_RangeMax))
 	{// 그래프 변경시 true 반환됨
 	}
 }
