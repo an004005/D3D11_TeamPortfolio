@@ -23,6 +23,8 @@ public:
 	void SetShadowCam(class CCamera* pShadowCam);
 	_float4 GetShadowCamLook();
 
+	// void	CascadeUpdate(_float4x4 CamWorlMatrix, _float4* vFustumCorners);
+
 	void Imgui_Render();
 
 private:

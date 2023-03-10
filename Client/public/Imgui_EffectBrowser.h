@@ -23,6 +23,7 @@ public:
 private:
 	string m_EffectSystemTag = "../Bin/Resources/VFX/EffectSystem/";
 	string m_EffectGroupTag = "../Bin/Resources/Curve/";
+	string m_ParticleSystemTag = "../Bin/Resources/VFX/ParticleSystem/";
 
 	unordered_map<string, string>  m_mapEffectGroup;
 	string								m_CurEffectName;

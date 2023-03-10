@@ -32,6 +32,7 @@ void CTimeline::Tick(_double TimeDelta)
 		m_bPlay = false;
 		m_CurFrame = 0.0;
 		bFin = true;
+		m_bReverseFinish = true;
 	}
 	else if (m_CurFrame >= m_EndTime)
 	{

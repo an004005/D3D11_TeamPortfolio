@@ -126,7 +126,7 @@ void CImgui_Manager::Ready_Imgui(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceC
 	pstyle->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
 	pstyle->Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
 	m_pAlpha = &ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w;
-
+	*m_pAlpha = 0.5f;
 }
 
 
@@ -269,7 +269,6 @@ void CImgui_Manager::Clear_ImguiObjects()
 void CImgui_Manager::Free()
 {
 	Clear_ImguiObjects();
-
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pDeviceContext);
 	ImGui_ImplDX11_Shutdown();

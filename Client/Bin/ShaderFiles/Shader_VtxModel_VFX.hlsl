@@ -160,6 +160,19 @@ PS_OUT PS_DEFAULT_DISTORTION(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_DEFAULT_MODEL(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 OriginTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor = CalcHDRColor(OriginTex, g_float_0);
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	return Out;
+}
+
+
 // g_float_0 : 모델 텍스쳐 UV.y 값
 // g_float_1 : UV.y 값 연동된
 // g_float_2 : Emissive
@@ -200,6 +213,32 @@ PS_OUT PS_MAIN_DEFAULT_ATTACK(PS_IN In)
 	}
 
 	if (g_float_3 >= fDissolvePower)
+	{
+		discard;
+	}
+
+	return Out;
+}
+
+PS_OUT PS_MAIN_CHARGING_TWIST(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 BasicColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float4 BlendColor = BasicColor * OriginColor * 2.0f;
+
+
+	float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
+	float2 distortionUV = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time * 3.f));
+	float fDissolvePower = g_tex_2.Sample(LinearSampler, distortionUV).r;
+
+	Out.vColor = CalcHDRColor(BlendColor, g_float_1);
+	// Out.vColor.a = 1.f;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (g_float_2 >= fDissolvePower)
 	{
 		discard;
 	}
@@ -421,5 +460,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_NORM();
+	}
+
+	//5
+	pass ChargingTwist
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_CHARGING_TWIST();
+	}
+
+	//6
+	pass DefaultModel
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DEFAULT_MODEL();
 	}
 }

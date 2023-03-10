@@ -4,11 +4,11 @@
 matrix g_WorldMatrix;
 matrix g_ViewMatrix;
 matrix g_ProjMatrix;
+matrix g_RotationMatrix;
 
 matrix g_ProjMatrixInv;
 matrix g_ViewMatrixInv;
 matrix g_WorldMatrixInv;
-
 vector g_vCamPosition;
 // matrix g_matWV;
 // matrix g_matWVP;

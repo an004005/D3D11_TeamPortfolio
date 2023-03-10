@@ -67,6 +67,9 @@ protected:
 	Vector4 m_BeforePos;
 
 public:
+	// virtual HRESULT Render_ShadowDepth() override;
+
+public:
 	virtual void Free() override;
 };
 

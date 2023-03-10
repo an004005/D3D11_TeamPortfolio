@@ -11,15 +11,23 @@
  * look.xyz : 이동 방향
  * look.w : 이동 속력
  */
+int g_bRotate = 0;
 int g_bLocal = 0;
 int g_bSizeDecreaseByLife = 0;
 int g_bSizeIncreaseByLife = 0;
 float g_fIncreaseMaxSize = 1.f;
+
 struct VS_IN
 {
 	float3		vPosition : POSITION;
 	float2		vPSize : PSIZE;
-	row_major float4x4	Matrix : WORLD;	
+	row_major float4x4	Matrix : WORLD;
+
+	float4		vRotRight : TEXCOORD0;
+	float4		vRotUp : TEXCOORD1;
+	float4		vRotLook : TEXCOORD2;
+	float4		vControlData : TEXCOORD3;
+
 };
 
 struct VS_OUT
@@ -28,6 +36,8 @@ struct VS_OUT
 	float2		vSize : TEXCOORD0;
 	float		CurLife : TEXCOORD1;
 	float		RamainLifeRatio : TEXCOORD2;
+
+	float4x4    RotMatrix : TEXCOORD3;
 };
 
 struct GS_IN
@@ -36,6 +46,7 @@ struct GS_IN
 	float2		vSize : TEXCOORD0;
 	float		CurLife : TEXCOORD1;
 	float		RamainLifeRatio : TEXCOORD2;
+	float4x4    RotMatrix : TEXCOORD3;
 };
 
 struct GS_OUT
@@ -63,6 +74,9 @@ VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
 
+	float4x4 RotationMatrix = float4x4(In.vRotRight, In.vRotUp, In.vRotLook, vector(0.f,0.f,0.f,1.f));
+
+
 	matrix InstanceData = In.Matrix;
 	Out.CurLife = InstanceData[3][3];
 	Out.RamainLifeRatio = (1.f - InstanceData[3][3] / InstanceData[1][3]);
@@ -79,6 +93,8 @@ VS_OUT VS_MAIN(VS_IN In)
 		Out.vPosition = mul(float4(Out.vPosition, 1.f), g_WorldMatrix).xyz;
 	}
 
+	Out.RotMatrix = RotationMatrix;
+
 	return Out;
 }
 
@@ -88,10 +104,21 @@ void GS_MAIN( point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
 	GS_OUT		Out[4];
 
 	float2 PSize = In[0].vSize;
-
-	float3		vLook = g_vCamPosition.xyz - In[0].vPosition;
-	float3		vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook)) * PSize.x * 0.5f;
-	float3		vUp = normalize(cross(vLook, vRight)) * PSize.y * 0.5f;
+	float3		vLook;
+	float3		vRight;
+	float3		vUp;
+	if (g_bRotate == 1)
+	{
+		vLook = (In[0].RotMatrix[0].xyz - In[0].vPosition);
+		vRight = (normalize(cross(float3(0.f, 1.f, 0.f), vLook)) * PSize.x * 0.5f);
+		vUp = (normalize(cross(vLook, vRight)) * PSize.y * 0.5f);
+	}
+	else
+	{
+		vLook = (g_vCamPosition.xyz - In[0].vPosition);
+		vRight = (normalize(cross(float3(0.f, 1.f, 0.f), vLook)) * PSize.x * 0.5f);
+		vUp = (normalize(cross(vLook, vRight)) * PSize.y * 0.5f);
+	}
 
 	matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
@@ -121,6 +148,8 @@ void GS_MAIN( point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
 	Out[3].CurLife = In[0].CurLife;
 	Out[3].RamainLifeRatio = In[0].RamainLifeRatio;
 
+
+
 	Vertices.Append(Out[0]);
 	Vertices.Append(Out[1]);
 	Vertices.Append(Out[2]);
@@ -143,6 +172,33 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	if (Out.vColor.a < 0.01f)
 		discard;
+
+	return Out;
+}
+
+PS_OUT PS_PARTICLE_DEFAULT(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	// float GradientTex = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+
+	Out.vColor = DefaultTex * g_vec4_0 * g_float_0; // color * emissive
+
+	if(g_tex_on_1)
+	{
+		float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+		Out.vColor.a = Mask;
+	}
+	else
+	{
+		// Out.vColor.a = GradientTex;
+		Out.vColor = DefaultTex;
+
+		if (Out.vColor.a < 0.01f)
+			discard;
+	}
+
 
 	return Out;
 }
@@ -305,5 +361,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_PLAYER_TEXT_PARTICLE();
+	}
+
+	//5
+	pass Flow_Particle_Mask_Tex
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_PARTICLE_DEFAULT();
 	}
 }
