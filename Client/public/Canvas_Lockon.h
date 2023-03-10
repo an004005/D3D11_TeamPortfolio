@@ -1,30 +1,28 @@
 #pragma once
 
+#include "Canvas.h"
 #include "Client_Defines.h"
-#include "UI.h"
 
 BEGIN(Client)
 
-class CDefaultUI final : public CUI
+class CCanvas_Lockon : public CCanvas
 {
-private:
-	CDefaultUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CDefaultUI(const CDefaultUI& rhs);
+protected:
+	CCanvas_Lockon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCanvas_Lockon(const CCanvas_Lockon& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	Tick(_double TimeDelta) override;
-	virtual void	Late_Tick(_double TimeDelta) override;
-	virtual HRESULT Render() override;
 
 	virtual void	Imgui_RenderProperty() override;
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	static CDefaultUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CUI* Clone(void* pArg = nullptr) override;
+	static CCanvas_Lockon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CCanvas* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 

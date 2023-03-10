@@ -244,7 +244,6 @@ PS_OUT PS_UI_Alpha_Mask_Color_AlphaGradient(PS_IN In)
 	return Out;
 }
 
-
 /*******************
  * FlipBook
  /********************/
@@ -800,6 +799,35 @@ PS_OUT PS_GlowTexture(PS_IN In)
 	return Out;
 }
 
+/*******************
+* UVCut → 27 : 이미시브 (빨간색 초록색)
+g_float_0 : 섞는 정도
+g_vec4_0 : 색상 변경
+/********************/
+PS_OUT PS_RedEmissive(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Emissive = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	Emissive = lerp(Emissive, g_vec4_0, g_float_0);
+
+	Out.vColor = Texture * Emissive;
+
+	return Out;
+
+	//PS_OUT			Out = (PS_OUT)0;
+
+	//float4 vTexture0 = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	//float4 vTexture1 = g_tex_1.Sample(LinearSampler, In.vTexUV);
+
+	//vTexture1.a = 0.0f;
+
+	//Out.vColor = saturate(vTexture0 + vTexture1) * g_vec4_0;
+
+	//return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0 : 알파 블랜딩으로 그리기
@@ -1180,5 +1208,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_GlowTexture();	// 0번째 텍스처에 1번째 텍스처를 섞는다.
+	}
+
+	//27: 이미시브 (검정색과 빨간색으로 이루어진 텍스처)
+	pass RedEmissive
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_RedEmissive();
 	}
 }

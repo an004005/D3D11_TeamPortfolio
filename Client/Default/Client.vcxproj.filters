@@ -268,6 +268,12 @@
     <Filter Include="02.GameObjects\UI\DescriptionWindow">
       <UniqueIdentifier>{abb2352e-02f6-4b3c-8379-d3a28a4803fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\InGame">
+      <UniqueIdentifier>{a08702fe-11ca-4a47-9bc5-c932852b7d46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\InGame\Lockon">
+      <UniqueIdentifier>{e2183d4c-0bf6-4c3c-8fc8-504fa5bbdb70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -697,6 +703,15 @@
     <ClInclude Include="..\public\Tutorial_SuccessUI.h">
       <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_Lockon.h">
+      <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Lockon_FindUI.h">
+      <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Lockon_FindArrowUI.h">
+      <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1100,6 +1115,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Tutorial_SuccessUI.cpp">
       <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Lockon.cpp">
+      <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Lockon_FindUI.cpp">
+      <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Lockon_FindArrowUI.cpp">
+      <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

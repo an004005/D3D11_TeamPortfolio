@@ -11,6 +11,7 @@
 #include "Material.h"
 #include "Camera.h"
 
+// Canvas
 #include "Canvas.h"
 #include "Canvas_Item.h"
 #include "Canvas_SASInfoLeft.h"
@@ -26,6 +27,9 @@
 #include "Canvas_ItemMove.h"
 #include "Canvas_Tutorial.h"
 
+#include "Canvas_Lockon.h"
+
+// Default
 #include "DefaultUI.h"
 #include "ButtonUI.h"
 // SAS SKill
@@ -65,6 +69,10 @@
 #include "Tutorial_TipsUI.h"
 #include "Tutorial_SuccessUI.h"
 
+// InGmae
+#include "Lockon_FindUI.h"
+#include "Lockon_FindArrowUI.h"
+
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -91,8 +99,8 @@ HRESULT CLevel_UI::Initialize()
 	if (FAILED(Ready_Layer_UI(L"Layer_UI")))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -187,6 +195,13 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_Canvas_Tutorial*/
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Tutorial"),
 			CCanvas_Tutorial::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+
+		// ***************** InGame **********************
+		/* For.Prototype_GameObject_Canvas_Lockon*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Lockon"),
+			CCanvas_Lockon::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 	}
 
@@ -335,7 +350,19 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_SuccessUI"),
 			CTutorial_SuccessUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-	}	
+
+		// ***************** InGame **********************
+		/* For.Prototype_GameObject_Lockon_FindUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Lockon_FindUI"),
+			CLockon_FindUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Lockon_FindArrowUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Lockon_FindArrowUI"),
+			CLockon_FindArrowUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+
+}
 
 	return S_OK;
 }
@@ -397,6 +424,10 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Tutorial.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Tutorial", &json));
 
+	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Lockon.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Lockon", &json));
+
+	
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
 	//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);
