@@ -33,8 +33,7 @@ private:
 	CFSMComponent* m_pFSM = nullptr;
 	_float m_fToTargetDistance;
 	class CFlowerLeg* m_pCastedOwner = nullptr;
-
-
+	
 	_uint m_iNearOrder = 0;
 	_uint m_iMidOrder = 0;
 	_uint m_iFarOrder = 0;

@@ -107,8 +107,7 @@ private:
 	CAnimation* m_pBlowLand = nullptr;
 	CAnimation* m_pGetUp = nullptr;
 	CAnimation* m_pRiseStart = nullptr;
-
-
+	
 	CAnimation* m_pDeadAnim = nullptr;
 
 	// Run 상태를 위한 _bool
@@ -117,6 +116,7 @@ private:
 	// Attack
 	_bool m_bAtkSwitch = false;
 	_bool m_bOneHit = false;
+	list<CScarletCharacter*> m_CollisionList;
 
 	// Damage
 	_bool		m_bStruck = false;
@@ -124,13 +124,13 @@ private:
 
 	_bool		m_bMaintain = false;
 
+	_bool		m_bInvicible = false;
+
 	_uint		m_iAirDamage = 0;
 	_uint		m_iPreAirDamageCnt = 0;
 	
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
-
-	list<CScarletCharacter*> m_CollisionList;
 
 public:
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }

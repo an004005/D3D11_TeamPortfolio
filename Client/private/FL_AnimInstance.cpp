@@ -146,7 +146,6 @@ void CFL_AnimInstance::UpdateTargetState(_double TimeDelta)
 void CFL_AnimInstance::Imgui_RenderState()
 {
 	m_pASM_Base->Imgui_RenderState();
-
 }
 
 _bool CFL_AnimInstance::isSocketPassby(const string & strSocName, _float fPlayRatio)
