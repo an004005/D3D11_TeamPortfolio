@@ -14,10 +14,27 @@ CMonster::CMonster(const CScarletCharacter& rhs)
 {
 }
 
+HRESULT CMonster::Initialize(void* pArg)
+{
+	FAILED_CHECK(CScarletCharacter::Initialize(pArg));
+	m_DeathTimeline.SetFinishFunction([this]
+	{
+		m_bDelete = true;
+	});
+	m_DeathTimeline.SetCurve("Monster_DeathDissolve");
+	return S_OK;
+}
+
 void CMonster::Tick(_double TimeDelta)
 {
 	CScarletCharacter::Tick(TimeDelta);
 	Update_DeadDissolve(TimeDelta);
+}
+
+void CMonster::Imgui_RenderProperty()
+{
+	CScarletCharacter::Imgui_RenderProperty();
+	m_DeathTimeline.Imgui_RenderEditor();
 }
 
 _bool CMonster::CheckDamagedTarget(CScarletCharacter* pTarget)
@@ -84,18 +101,13 @@ void CMonster::HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAtt
 
 void CMonster::Update_DeadDissolve(_double TimeDelta)
 {
-	if (m_iHP <= 0)
+	_float fOut = 0.f;
+	if (m_DeathTimeline.Tick(TimeDelta, fOut))
 	{
-		m_bDead = true;
-		m_fDeadDissolve -= (_float)TimeDelta;
-
 		for (auto pMtrl : m_pModelCom->GetMaterials())
 		{
-			pMtrl->GetParam().Floats[0] = 1.f - m_fDeadDissolve * 2.f;
+			pMtrl->GetParam().Floats[0] = fOut;
 		}
-
-		if (m_fDeadDissolve <= 0.f)
-			m_bDelete = true;
 	}
 }
 

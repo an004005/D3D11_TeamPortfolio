@@ -135,6 +135,7 @@ void CBoss1::BeginTick()
 			continue;
 		m_BodyMtrls.push_back(pMtrl);
 	}
+
 }
 
 void CBoss1::Tick(_double TimeDelta)

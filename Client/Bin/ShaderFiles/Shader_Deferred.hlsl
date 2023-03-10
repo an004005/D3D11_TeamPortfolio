@@ -157,7 +157,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	{
 		vector		vRMA = g_RMATexture.Sample(LinearSampler, In.vTexUV);
 
-		float3 albedo = pow(vDiffuse.rgb, g_Gamma);
+		float3 albedo = pow(abs(vDiffuse.rgb), g_Gamma);
 		// float3 albedo = vDiffuse.rgb;
 		float metalness = vRMA.g;
 		float roughness = vRMA.r;
@@ -272,7 +272,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	{
 		float4 vAMB = g_AMBTexture.Sample(LinearSampler, In.vTexUV);
 		vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-		vDiffuse.rgb = pow(vDiffuse.rgb, g_Gamma);
+		vDiffuse.rgb = pow(abs(vDiffuse.rgb), g_Gamma);
 		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
 		vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
 
@@ -291,6 +291,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	else if (fShaderFlag == SHADER_NONE_SHADE)
 	{
 		vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+		vDiffuse.rgb = pow(abs(vDiffuse.rgb), g_Gamma);
 		Out.vColor = CalcHDRColor(vDiffuse, vDepth.b);
 		if (0.0f == Out.vColor.a)
 			discard;
