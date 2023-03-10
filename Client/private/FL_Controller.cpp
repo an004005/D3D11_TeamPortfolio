@@ -86,7 +86,6 @@ HRESULT CFL_Controller::Initialize(void * pArg)
 
 			.Build();
 	
-
 	m_fTurnSlowTime = 0.9f;
 	m_fTurnSlowRatio = 0.4f;
 
@@ -211,6 +210,10 @@ void CFL_Controller::Run(EMoveAxis eAxis)
 	{
 	case EMoveAxis::NORTH:
 		m_vMoveAxis.z += 1.f;
+		if (abs(m_fTtoM_Distance) < 1.3f)
+		{
+			m_Commands.front().SetFinish();
+		}
 		break;
 	case EMoveAxis::NORTH_EAST:
 		m_vMoveAxis.z += 1.f;

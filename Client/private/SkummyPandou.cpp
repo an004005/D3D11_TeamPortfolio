@@ -32,7 +32,7 @@ HRESULT CSkummyPandou::Initialize_Prototype()
 
 HRESULT CSkummyPandou::Initialize(void * pArg)
 {
-	Json SkummyPandouTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandouTrigger.json");
+	Json SkummyPandouTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandou/SkummyPandouTrigger.json");
 	pArg = &SkummyPandouTrigger;
 	
 	FAILED_CHECK(CMonster::Initialize(pArg));
@@ -132,6 +132,7 @@ void CSkummyPandou::Tick(_double TimeDelta)
 
 	// Controller
 	m_pController->SetTarget(m_pTarget);
+//	m_pController->SetUseObj(this);
 
 	m_pController->Tick(TimeDelta);
 	m_bRush = m_pController->IsRush();

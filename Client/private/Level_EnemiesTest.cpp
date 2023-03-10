@@ -51,6 +51,7 @@
 #include "SkPd_Controller.h"
 
 #include "BronJon.h"
+#include "BrJ_Controller.h"
 
 #include "Boss1.h"
 #include "Boss1_AIController.h"
@@ -249,6 +250,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	}
 
 	{
+//		_float4x4	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(90.f));
 		auto pBronJon = CModel::Create(m_pDevice, m_pContext,
 			"../Bin/Resources/Model/AnimModel/Monster/BronJon/BronJon.anim_model");
 		pBronJon->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BronJon/Anim/");
@@ -282,6 +284,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkPd_Controller"), CSkPd_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_BdLm_Controller"), CBdLm_Controller::Create()));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_BrJ_Controller"), CBrJ_Controller::Create()));
 
 	return S_OK;
 }
@@ -307,14 +310,14 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Json FlowerLegModel;
 	FlowerLegModel["Model"] = "MonsterFlowerLeg";
 		
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("FlowerLeg"), &FlowerLegModel)))
-		return E_FAIL;*/
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("FlowerLeg"), &FlowerLegModel)))
+		return E_FAIL;
 	
 	Json BuddyLumiModel;
 	BuddyLumiModel["Model"] = "MonsterBuddyLumi";
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"), &BuddyLumiModel)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"), &BuddyLumiModel)))
+		return E_FAIL;*/
 
 	Json SkummyPoolModel;
 	SkummyPoolModel["Model"] = "MonsterSkummyPool";

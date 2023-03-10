@@ -1586,6 +1586,10 @@
         "bLooping": false,
         "vecEvent": [
             {
+                "EventName": "Invincible_Start",
+                "EventTime": 85.0
+            },
+            {
                 "EventName": "OverLap",
                 "EventTime": 93.0
             },
@@ -1600,6 +1604,10 @@
             {
                 "EventName": "OverLap",
                 "EventTime": 143.0
+            },
+            {
+                "EventName": "Invincible_End",
+                "EventTime": 160.0
             }
         ]
     },
@@ -1961,10 +1969,15 @@
         "vecEvent": []
     },
     "AS_em0400_432_AL_blow_start_F": {
-        "Duration": 130.0,
+        "Duration": 90.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Upper",
+                "EventTime": 2.5
+            }
+        ]
     },
     "AS_em0400_433_AL_blow_landing_F": {
         "Duration": 60.0,
@@ -1973,10 +1986,15 @@
         "vecEvent": []
     },
     "AS_em0400_455_AL_rise_start": {
-        "Duration": 120.0,
-        "TickPerSecond": 90.0,
+        "Duration": 90.0,
+        "TickPerSecond": 120.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Successive",
+                "EventTime": 3.0
+            }
+        ]
     },
     "AS_em0600_101_AL_wait01": {
         "Duration": 200.0,
@@ -2293,10 +2311,22 @@
         "bLooping": true,
         "vecEvent": []
     },
+    "AS_em0800_105_AL_walk01_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 52.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0800_106_AL_walk01_loop": {
         "Duration": 719.0,
         "TickPerSecond": 100.0,
         "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0800_109_AL_walk_B_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 44.0,
+        "bLooping": false,
         "vecEvent": []
     },
     "AS_em0800_110_AL_walk_B_loop": {
@@ -2351,19 +2381,29 @@
         "Duration": 155.0,
         "TickPerSecond": 52.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Laser_Create",
+                "EventTime": 130.0
+            }
+        ]
     },
     "AS_em0800_215_AL_atk_a7_laser2_loop": {
         "Duration": 45.0,
         "TickPerSecond": 40.0,
-        "bLooping": true,
+        "bLooping": false,
         "vecEvent": []
     },
     "AS_em0800_216_AL_atk_a7_laser2_end": {
         "Duration": 60.0,
         "TickPerSecond": 55.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Laser_Finish",
+                "EventTime": 5.0
+            }
+        ]
     },
     "AS_em0800_401_AL_damage_l_F": {
         "Duration": 75.0,
@@ -2407,10 +2447,33 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_em0800_425_AL_down_start": {
+        "Duration": 97.0,
+        "TickPerSecond": 36.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_426_AL_down": {
+        "Duration": 150.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_427_AL_getup": {
+        "Duration": 190.0,
+        "TickPerSecond": 52.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Groggy_End",
+                "EventTime": 175.0
+            }
+        ]
+    },
     "AS_em0800_480_AL_down_shock": {
         "Duration": 70.0,
         "TickPerSecond": 28.0,
-        "bLooping": true,
+        "bLooping": false,
         "vecEvent": []
     },
     "AS_em0800_495_AL_press_down_start": {
@@ -2423,7 +2486,16 @@
         "Duration": 130.0,
         "TickPerSecond": 70.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Bite_Start",
+                "EventTime": 48.20000076293945
+            },
+            {
+                "EventName": "Bite_End",
+                "EventTime": 100.0
+            }
+        ]
     },
     "ch0100": {
         "mapRootMotion": {

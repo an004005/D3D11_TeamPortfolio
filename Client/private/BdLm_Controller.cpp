@@ -149,10 +149,10 @@ void CBdLm_Controller::Tick_Mid(_double TimeDelta)
 	switch (m_iMidOrder)
 	{
 	case 0:
-		AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		AddCommand("Walk", 1.5f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	case 1:
-		AddCommand("Run", 3.5f, &CBdLm_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		AddCommand("Run", 5.f, &CBdLm_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	}
 
@@ -199,6 +199,10 @@ void CBdLm_Controller::Run(EMoveAxis eAxis)
 	{
 	case EMoveAxis::NORTH:
 		m_vMoveAxis.z += 1.f;
+		if (abs(m_fTtoM_Distance) < 1.3f)
+		{
+			m_Commands.front().SetFinish();
+		}
 		break;
 	case EMoveAxis::NORTH_EAST:
 		m_vMoveAxis.z += 1.f;

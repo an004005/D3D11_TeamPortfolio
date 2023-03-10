@@ -34,7 +34,7 @@ HRESULT CBuddyLumi::Initialize_Prototype()
 
 HRESULT CBuddyLumi::Initialize(void * pArg)
 {
-	Json BuddyLumiTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumiTrigger.json");
+	Json BuddyLumiTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiTrigger.json");
 	pArg = &BuddyLumiTrigger;
 
 	FAILED_CHECK(CMonster::Initialize(pArg));
@@ -43,7 +43,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 		(CComponent**)&m_pTrigger, &BuddyLumiTrigger)))
 		return E_FAIL;
 	
-	Json BuddyLumiWeapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumiWeapon.json");
+	Json BuddyLumiWeapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiWeapon.json");
 
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Weapon"),
 		(CComponent**)&m_pWeaponCollider, &BuddyLumiWeapon)))
@@ -58,9 +58,19 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 
 	// Event Caller
 	
-	m_pModelCom->Add_EventCaller("Swing_Start", [this] {  });
-	m_pModelCom->Add_EventCaller("Swing_End", [this] {});
+	m_pModelCom->Add_EventCaller("Swing_Start", [this] { m_bAtkSwitch = true; });
+	m_pModelCom->Add_EventCaller("Swing_End", [this] { m_bAtkSwitch = false; });
 
+	m_pModelCom->Add_EventCaller("Upper", [this] 
+	{
+		m_fGravity = 22.f;
+		m_fYSpeed = 11.f;  
+	});
+	m_pModelCom->Add_EventCaller("Successive", [this] 
+	{ 
+		m_fGravity = 36.f;
+		m_fYSpeed = 11.f;
+	});
 	// ~Event Caller
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(1.f, 0.f, 29.f)));
@@ -127,16 +137,22 @@ void CBuddyLumi::Tick(_double TimeDelta)
 	if (m_pController->KeyDown(CController::NUM_1)) 
 	{
 		m_pASM->AttachAnimSocket("Buddy", { m_pDodgeL });
+		m_bAtkSwitch = false;
+		m_bOneHit = false;
 	}
 
 	if (m_pController->KeyDown(CController::NUM_2))
 	{
 		m_pASM->AttachAnimSocket("Buddy", { m_pDodgeR });
+		m_bAtkSwitch = false;
+		m_bOneHit = false;
 	}
 
 	if (m_pController->KeyDown(CController::NUM_3))
 	{
 		m_pASM->AttachAnimSocket("Buddy", { m_pDodgeB });
+		m_bAtkSwitch = false;
+		m_bOneHit = false;
 	}
 
 	if (m_pController->KeyDown(CController::MOUSE_LB))
@@ -147,6 +163,8 @@ void CBuddyLumi::Tick(_double TimeDelta)
 	if (m_pController->KeyDown(CController::MOUSE_RB))
 	{
 		m_pASM->AttachAnimSocket("Buddy", { m_pThreat });
+		m_bAtkSwitch = false;
+		m_bOneHit = false;
 	}
 
 	if (m_bStruck || m_pController->KeyDown(CController::Q))
@@ -236,12 +254,14 @@ void CBuddyLumi::Tick(_double TimeDelta)
 	_float3 vVelocity;
 	XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
 	m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
-
 }
 
 void CBuddyLumi::Late_Tick(_double TimeDelta)
 {	
 	__super::Late_Tick(TimeDelta);
+
+	if (m_bAtkSwitch)
+		Swing_SweepCapsule(m_bOneHit);
 
 	if (m_iHP <= 0)
 		m_bDead = true;
@@ -305,19 +325,71 @@ void CBuddyLumi::AfterPhysX()
 
 }
 
-void CBuddyLumi::Collision()
+void CBuddyLumi::Swing_SweepCapsule(_bool bCol)
 {
-	DAMAGE_PARAM damageParam;
+	if (bCol)
+	{
+		m_CollisionList.clear();
+		return;
+	}
 
-	_float3 fWeaponHitPosition = { m_pWeaponCollider->GetPxWorldMatrix().m[3][0], m_pWeaponCollider->GetPxWorldMatrix().m[3][1], m_pWeaponCollider->GetPxWorldMatrix().m[3][2] };
+	Matrix mWeaponMatrix = m_pWeaponCollider->GetPxWorldMatrix();
+	_float4 vTailPos = _float4(mWeaponMatrix.Translation().x, mWeaponMatrix.Translation().y, mWeaponMatrix.Translation().z, 1.f);
+	_float3 vLook = _float3(mWeaponMatrix.Up().x, mWeaponMatrix.Up().y, mWeaponMatrix.Up().z);
 
-	damageParam.eAttackSAS = ESASType::SAS_END;
-	damageParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	damageParam.vHitPosition = fWeaponHitPosition;
-	damageParam.pCauser = this;
-	damageParam.iDamage = 1;
+	physx::PxSweepHit hitBuffer[5];
+	physx::PxSweepBuffer overlapOut(hitBuffer, 5);
 
-	Collision_Check_Capsule(m_pWeaponCollider, damageParam);
+	PxCapsuleSweepParams param;
+	param.sweepOut = &overlapOut;
+	param.CapsuleGeo = m_pWeaponCollider->Get_CapsuleGeometry();
+	param.pxTransform = m_pWeaponCollider->Get_PxTransform();
+
+	_float4	vWeaponDir = vTailPos - m_BeforePos;
+
+	param.vUnitDir = _float3(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z);
+	param.fDistance = param.vUnitDir.Length();
+	param.iTargetType = CTB_PLAYER;
+	param.fVisibleTime = 0.f;
+
+	if (CGameInstance::GetInstance()->PxSweepCapsule(param))
+	{
+		for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+		{
+			auto pHit = overlapOut.getAnyHit(i);
+			CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+			if (auto pTarget = dynamic_cast<CScarletCharacter*>(pCollidedObject))
+			{
+				_bool bDamagedTarget = true;
+				for (auto& iter : m_CollisionList)
+				{
+					if (iter == pTarget)
+					{
+						bDamagedTarget = false;
+						break;
+					}
+				}
+				if (bDamagedTarget)
+				{
+					DAMAGE_PARAM tParam;
+
+					tParam.pCauser = this;
+					tParam.vHitNormal = _float3(pHit.normal.x, pHit.normal.y, pHit.normal.z);
+					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
+					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					tParam.iDamage = 1;
+
+					pTarget->TakeDamage(tParam);
+
+					m_CollisionList.push_back(pTarget);
+					m_bOneHit = true;
+				}
+			}
+		}
+	}
+
+	m_BeforePos = vTailPos;
+
 }
 
 _matrix CBuddyLumi::AttachCollider(CRigidBody* pRigidBody)

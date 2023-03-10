@@ -34,8 +34,8 @@ public:
 	virtual void AfterPhysX() override;
 	
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
-	// 내용물 빼고 삭제
-	void		 Collision();
+
+	void	Swing_SweepCapsule(_bool bCol);
 
 	_matrix AttachCollider(CRigidBody* pRigidBody);
 
@@ -95,6 +95,7 @@ private:
 	_bool m_bRun = false;
 
 	// Attack
+	_bool m_bAtkSwitch = false;
 	_bool m_bOneHit = false;
 
 	// Damaged
