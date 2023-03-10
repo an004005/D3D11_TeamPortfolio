@@ -123,6 +123,10 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 	float flags = SHADER_DEFAULT;
 
 
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	if (Out.vDiffuse.a < 0.01f)
+		discard;
+
 	if (fDissolve > 0.f)
 	{
 		fEmissive = 2.f;
@@ -140,17 +144,13 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 
 		if (chanB < fDissolve)
 		{
-			fEmissive = 10.f;
+			fEmissive = 8.f;
 		}
 
-		Out.vDiffuse *= float4(COL_BURNOUT, 1.f);
+		Out.vDiffuse.rgb *= COL_BURNOUT;
 	}
 	else
 	{
-		Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
-		if (Out.vDiffuse.a < 0.01f)
-			discard;
-
 		Out.vNormal = NormalPacking(In);
 		if (g_tex_on_2)
 			Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);

@@ -311,9 +311,6 @@ void CSkummyPool::Free()
 {
 	CMonster::Free();
 
-	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pModelCom);
-	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);

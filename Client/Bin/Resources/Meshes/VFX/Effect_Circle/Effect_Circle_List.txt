@@ -1,5 +1,7 @@
 Prototype_Component_Shader_VtxModel_VFX
 
+2, 3, 16, 20 깨진 원 메쉬
+
 VFX_Mesh_Circle_00
 ../Bin/Resources/Meshes/VFX/Effect_Cricle/VFX_Mesh_Circle_00.static_model
 VFX_Mesh_Circle_01

@@ -23,7 +23,7 @@ BEGIN(Client)
 class CEffectGroup :	public CGameObject
 {
 public:
-	enum FINISHFUNC { FUNC_PLAYFROMSTART, FUNC_RESET, FUNC_STOP, FUNC_END};
+	enum FINISHFUNC { FUNC_PLAYFROMSTART, FUNC_RESET, FUNC_STOP, FUNC_REVERSE, FUNC_END};
 	enum CURVETYPE { CURVE_SCALE_ALL, CURVE_SCALE_Y, CURVE_SCALE_X, CURVE_FLOATS_0, CURVE_FLOATS_1, CURVE_FLOATS_2, CURVE_FLOATS_3, CURVE_FLOATS_4, CURVE_FLOATS_5, CURVE_FLOATS_6, CURVE_FLOATS_7, CURVE_INTROTIME, CURVE_OUTROTIME, CURVE_COLORCHANGE,CURVE_INTS_0, CURVE_END };
 
 protected:
@@ -44,6 +44,7 @@ public:
 
 	void SetStop();
 	void SetPlay();
+	void SetReverse();
 	_bool CheckPlay();
 
 	void		Set_Transform(_fmatrix matSocket);
@@ -109,7 +110,7 @@ private:
 private:
 	_float	m_fEndTime = 0.f;
 	_int	m_iSelectFinishFunc = 0;
-	char*	m_szFuncName[FUNC_END] = { "PlayFromStart",  "Reset", "Stop" };
+	char*	m_szFuncName[FUNC_END] = { "PlayFromStart",  "Reset", "Stop", "Reverse" };
 	char*	m_szCurveTag[CURVE_END] = { "ObjectScale_All", "ObjectScale_Y","ObjectScale_X", "Floats_0", "Floats_1", "Floats_2", "Floats_3","Floats_4","Floats_5","Floats_6", "Floats_7",  "Intro_Time", "Outro_Time", "Color_Change", "Ints_0" };
 
 	map<string, class CEffectSystem*> m_mapEffectSystemTag;

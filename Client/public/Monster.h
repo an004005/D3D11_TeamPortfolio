@@ -1,8 +1,15 @@
 #pragma once
+#include <Timeline.h>
+
 #include "Client_Defines.h"
 #include "ScarletCharacter.h"
 
 BEGIN(Engine)
+class CRenderer;
+class CModel;
+END
+
+BEGIN(Client)
 
 class CMonster abstract : public CScarletCharacter
 {
@@ -11,23 +18,43 @@ protected:
 	CMonster(const CScarletCharacter& rhs);
 	virtual ~CMonster() = default;
 
+public:
+	virtual HRESULT Initialize(void* pArg) override;
+	virtual void Tick(_double TimeDelta) override;
+	virtual void Imgui_RenderProperty() override;
+
+
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
 	void ClearDamagedTarget();
 	void HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
 	void HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
 
-protected:
-	_uint m_iHP = 100;
-	_uint m_iMaxHP = 100;
+	virtual void Update_DeadDissolve(_double TimeDelta);
+	virtual void DeBuff_End() override;
+	virtual void DeBuff_Fire() override;
+	virtual void DeBuff_Oil() override;
 
-	_uint m_iStamina = 100;
-	_uint m_iMaxStamina = 100;
+protected:
+	CRenderer*				m_pRendererCom = nullptr;
+	CModel*					m_pModelCom = nullptr;
+
+	_int m_iHP = 100;
+	_int m_iMaxHP = 100;
+
+	_int m_iStamina = 100;
+	_int m_iMaxStamina = 100;
 
 	_bool m_bDead = false;
+	_float m_fDeadDissolve = 0.5f;
 
 	set<CScarletCharacter*> m_DamagedTargetList;
 
+	CSimpleTimeline m_DeathTimeline;
+
+
+public:
+	virtual void Free() override;
 };
 
 END

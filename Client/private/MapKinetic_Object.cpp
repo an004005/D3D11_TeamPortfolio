@@ -53,6 +53,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 			tParam.iDamage = 1;
 			tParam.eAttackType = EAttackType::ATK_HEAVY;
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+			tParam.eAttackType = EAttackType::ATK_HEAVY;
 
 			pMonster->TakeDamage(tParam);
 
@@ -68,7 +69,6 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 					}
 				}
 			}
-
 		}
 	});
 
@@ -176,7 +176,6 @@ void CMapKinetic_Object::Imgui_RenderProperty()
 		m_pKinetic_RigidBody->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
 		m_pKinetic_RigidBody->Set_Kinetic(true);
 	}
-	//m_pPxModel->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)

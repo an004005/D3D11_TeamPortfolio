@@ -1,0 +1,1 @@
+{"ObjectTag":"","Priority":0,"Prototype_GameObject":"Prototype_PostVFX_ColorGrading\u0000","ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[1.0],"Ints":[],"Pass":6,"Textures":["..\\Bin\\Resources\\Textures\\LUT\\LUT_01.png\u0000"]},"Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}

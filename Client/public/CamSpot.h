@@ -2,12 +2,19 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 
+BEGIN(Engine)
+class CModel;
+END
+
 BEGIN(Client)
 class CCamera_Player;
 class CController;
 
 class CCamSpot : public CGameObject
 {
+public:
+	enum ECamMod { MOD_SYNC, MOD_ATTACH, MOD_END };
+
 private:
 	CCamSpot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CCamSpot(const CCamSpot& rhs);
@@ -19,11 +26,21 @@ public:
 	virtual void BeginTick();
 	virtual void Tick(_double TimeDelta);
 	virtual void Late_Tick(_double TimeDelta);
+	virtual void Imgui_RenderProperty() override;
 
 private:
 	void	MouseMove(_double TimeDelta);
 	_float	m_fSensitivity = 0.1f;
 	_float	m_fCamHeight = 0.f;
+
+public:
+	void	Switch_CamMod();	// CameraPos¿¡ Ä· ºÙÀÌ±â
+	void	SetUp_BoneMatrix(CModel* pModel, _fmatrix Transform);
+
+private:
+	ECamMod	m_eCamMod = MOD_SYNC;
+	_matrix	m_AttachMatrix = XMMatrixIdentity();
+	_float	m_fLerpTime = 1.f;
 
 public:
 	CTransform*	GetTransform() { return this->m_pTransformCom; }

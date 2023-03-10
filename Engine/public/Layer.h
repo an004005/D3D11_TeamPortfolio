@@ -18,10 +18,12 @@ public:
 	void AfterPhysX();
 	
 	list<class CGameObject*>& GetGameObjects() { return m_GameObjects; }
+	void SetUseTimeRatio(_bool bUse) { m_bUseTimeRatio = bUse; }
 
 private:
 	list<class CGameObject*>			m_GameObjects;
 	typedef list<class CGameObject*>	GAMEOBJECTS;
+	_bool m_bUseTimeRatio = true;
 
 public:
 	static CLayer* Create();
