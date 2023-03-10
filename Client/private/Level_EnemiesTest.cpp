@@ -310,8 +310,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Json FlowerLegModel;
 	FlowerLegModel["Model"] = "MonsterFlowerLeg";
 		
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("FlowerLeg"), &FlowerLegModel)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("FlowerLeg"), &FlowerLegModel)))
+		return E_FAIL;*/
 	
 	Json BuddyLumiModel;
 	BuddyLumiModel["Model"] = "MonsterBuddyLumi";
@@ -334,8 +334,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Json BronJonModel;
 	BronJonModel["Model"] = "MonsterBronJon";
 
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
-		return E_FAIL;*/
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
+		return E_FAIL;
 
 	return S_OK;
 }

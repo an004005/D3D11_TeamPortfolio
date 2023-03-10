@@ -397,7 +397,7 @@ CGameObject * CBronJon::Clone(void * pArg)
 
 void CBronJon::Free()
 {
-	CMonster::Free();
+	__super::Free();
 	
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
