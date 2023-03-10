@@ -2387,12 +2387,12 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 	//		m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
 	//}
 
-	if (m_bOptionalMove)
-	{
+//	if (m_bOptionalMove)
+//	{
 		// 툴 작업 시에는 이거 끄고 하기!! 옵셔널 무브
 		_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTargetObject->GetTransform()->Get_WorldMatrix());
 		m_pTargetObject->GetTransform()->LocalMove(vOpTest);
-	}
+//	}
 }
 
 void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
