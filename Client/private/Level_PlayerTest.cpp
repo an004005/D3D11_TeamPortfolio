@@ -27,6 +27,9 @@
 
 #include "BuddyLumi.h"
 #include "BronJon.h"
+#include "SkummyPool.h"
+#include "SkMpBullet.h"
+#include "SkmP_Controller.h"
 
 #include "TrailSystem.h"
 #include "EffectSystem.h"
@@ -222,6 +225,25 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 
 	}
 
+	// 스커미풀
+	{
+		auto pSkummyPool = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/SkummyPool/SkummyPool.anim_model");
+		pSkummyPool->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/SkummyPool/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterSkummyPool"), pSkummyPool));
+	}
+	{
+		_float4x4	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(270.f));
+		auto pSkMpBullet = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/StaticModel/Monster/SkPmBullet/SkMp_Bullet.static_model", PivotMatrix);
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BulletSkummyPool"), pSkMpBullet));
+	}
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkummyPool"), CSkummyPool::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkMpBullet"), CSkMpBullet::Create(m_pDevice, m_pContext)));
+	// ~스커미풀
+
 	return S_OK;
 }
 
@@ -300,10 +322,16 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	//if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
 	//	return E_FAIL;
 
-	auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
-	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	pos.y += 1.f;
-	pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+	//auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
+	//_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	//pos.y += 1.f;
+	//pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+
+	Json SkummyPoolModel;
+	SkummyPoolModel["Model"] = "MonsterSkummyPool";
+
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPool"), &SkummyPoolModel)))
+		return E_FAIL;
 
 	return S_OK;
 }

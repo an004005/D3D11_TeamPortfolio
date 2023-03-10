@@ -40,15 +40,15 @@ HRESULT CWeapon_wp0190::Initialize(void * pArg)
 
 void CWeapon_wp0190::BeginTick()
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	//CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
-	{
-		if (iter->GetPrototypeTag() == TEXT("CamSpot"))
-		{
-			m_pCamSpot = iter;
-		}
-	}
+	//for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
+	//{
+	//	if (iter->GetPrototypeTag() == TEXT("CamSpot"))
+	//	{
+	//		m_pCamSpot = iter;
+	//	}
+	//}
 }
 
 void CWeapon_wp0190::Tick(_double TimeDelta)

@@ -31,7 +31,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 	FAILED_CHECK(SetUp_Components(pArg));
 
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 10.f, 0.f));
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 10.f, 0.f));
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(180.f) });
 
 	m_pDynamic_RigidBody->Activate(true);
@@ -68,7 +68,6 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 					}
 				}
 			}
-
 		}
 	});
 
@@ -176,7 +175,6 @@ void CMapKinetic_Object::Imgui_RenderProperty()
 		m_pKinetic_RigidBody->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
 		m_pKinetic_RigidBody->Set_Kinetic(true);
 	}
-	//m_pPxModel->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)

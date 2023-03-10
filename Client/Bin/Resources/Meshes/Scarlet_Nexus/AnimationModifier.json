@@ -683,7 +683,7 @@
     },
     "AS_ch0100_207_AL_atk_justdodge": {
         "Duration": 179.0,
-        "TickPerSecond": 40.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -709,6 +709,30 @@
             {
                 "EventName": "Trail_Off",
                 "EventTime": 57.0
+            },
+            {
+                "EventName": "Default_Attack_Justdodge_0",
+                "EventTime": 29.0
+            },
+            {
+                "EventName": "Default_Attack_Justdodge_1",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Default_Attack_Justdodge_2",
+                "EventTime": 45.0
+            },
+            {
+                "EventName": "Fire_Attack_Justdodge_01",
+                "EventTime": 29.0
+            },
+            {
+                "EventName": "Fire_Attack_Justdodge_02",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Fire_Attack_Justdodge_03",
+                "EventTime": 45.0
             }
         ]
     },
@@ -867,7 +891,24 @@
         "Duration": 177.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Trail_On",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "Default_Attack_Dash_0",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_01",
+                "EventTime": 14.0
+            }
+        ]
     },
     "AS_ch0100_216_AL_atk_dash1_start": {
         "Duration": 32.0,
@@ -879,7 +920,40 @@
         "Duration": 188.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Trail_On",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 12.0
+            },
+            {
+                "EventName": "Trail_On",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 25.0
+            },
+            {
+                "EventName": "Default_Attack_Dash_1_01",
+                "EventTime": 9.0
+            },
+            {
+                "EventName": "Default_Attack_Dash_1_02",
+                "EventTime": 19.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_02_001",
+                "EventTime": 3.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_02_002",
+                "EventTime": 16.0
+            }
+        ]
     },
     "AS_ch0100_217_AL_atk_dash2_start": {
         "Duration": 30.0,
@@ -891,7 +965,24 @@
         "Duration": 180.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Trail_On",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "Default_Attack_Dash_2",
+                "EventTime": 25.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_03",
+                "EventTime": 22.0
+            }
+        ]
     },
     "AS_ch0100_218_AL_atk_dash3_start": {
         "Duration": 13.0,
@@ -903,7 +994,24 @@
         "Duration": 203.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Trail_On",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "Default_Attack_Dash_2",
+                "EventTime": 55.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_03",
+                "EventTime": 50.0
+            }
+        ]
     },
     "AS_ch0100_219_AL_atk_dash4_start": {
         "Duration": 13.0,
@@ -1105,6 +1213,39 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_264_AL_Pcon_cReL_Lv3": {
+        "Duration": 123.0,
+        "TickPerSecond": 41.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_271_AL_Pcon_cReL_Lv4": {
+        "Duration": 312.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Jump",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "CamMod",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "CamMod",
+                "EventTime": 150.0
+            },
+            {
+                "EventName": "Gravity_Disable",
+                "EventTime": 90.0
+            },
+            {
+                "EventName": "Gravity_Enable",
+                "EventTime": 200.0
+            }
+        ]
+    },
     "AS_ch0100_301_AL_capture_wait_loop": {
         "Duration": 120.0,
         "TickPerSecond": 100.0,
@@ -1281,7 +1422,7 @@
     },
     "AS_ch0100_322_AL_cap_R_end180": {
         "Duration": 130.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 130.0,
         "bLooping": false,
         "vecEvent": []
     },
