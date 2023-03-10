@@ -18,6 +18,7 @@ BEGIN(Client);
 class CBaseAnimInstance;
 class CController;
 class CEffectGroup;
+class CCamSpot;
 
 typedef struct tagRemote
 {
@@ -121,6 +122,9 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 private:
+	void CamBoneTest();	// 액션캠 예시
+
+private:
 	PLAYER_STAT		m_PlayerStat;
 	DAMAGE_DESC		m_DamageDesc;
 	DAMAGE_PARAM	m_AttackDesc;
@@ -195,14 +199,13 @@ private:	// 키네틱 연계기 소켓 애니메이션
 	list<CAnimation*>	m_KineticCombo_Kinetic02_Start;
 	list<CAnimation*>	m_KineticCombo_Kinetic02_Throw;
 	list<CAnimation*>	m_KineticCombo_Kinetic02_Cancel;
+	list<CAnimation*>	m_KineticCombo_Kinetic02_ThrowEnd;
 
 	list<CAnimation*>	m_KineticCombo_Kinetic03_Start;
 	list<CAnimation*>	m_KineticCombo_Kinetic03_Throw;
 	list<CAnimation*>	m_KineticCombo_Kinetic03_Cancel;
 
-	list<CAnimation*>	m_KineticCombo_KineticFinish_Start;
-	list<CAnimation*>	m_KineticCombo_KineticFinish_Throw;
-	list<CAnimation*>	m_KineticCombo_KineticFinish_Cancel;
+	list<CAnimation*>	m_KineticCombo_KineticFinish;
 
 private:	// 피격 소켓 애니메이션
 	list<CAnimation*>	m_Hit_FL_Level01;
@@ -216,6 +219,8 @@ private:	// 피격 소켓 애니메이션
 	list<CAnimation*>	m_Hit_R_Level02;
 
 	list<CAnimation*>	m_Knuckback;
+
+	list<CAnimation*>	m_Airborne;
 
 	list<CAnimation*>	m_Fall;
 	list<CAnimation*>	m_FallDown_Back;
@@ -312,9 +317,10 @@ public:	//EventCaller용
 	void		Event_HeavyAttack_Start();
 	void		Event_AirAttack_Start();
 	void		Event_Attack_End();
+	void		Event_CamMod();
 	
 public:
-	void		Set_KineticCombo_Kinetic() { m_fKineticCombo_Kinetic = 1.f; }	// 키네틱 오브젝트에서 지정, 충돌 발생시 콤보 가능하도록 해준다.
+	void		Set_KineticCombo_Kinetic() { m_fKineticCombo_Kinetic = 10.f; }	// 키네틱 오브젝트에서 지정, 충돌 발생시 콤보 가능하도록 해준다.
 
 private:
 	void		Reset_Charge();
@@ -350,6 +356,7 @@ private:
 	void		MoveStateCheck(_double TimeDelta);
 	void		SeperateCheck();
 	void		HitCheck();
+	void		SocketLocalMoveCheck();
 
 private:
 	_float		m_fNetualTimer = 0.f;
@@ -388,6 +395,7 @@ private:
 	wstring		m_ModelName;
 
 	CCamera*	m_pPlayerCam = nullptr;
+	CCamSpot*	m_pCamSpot = nullptr;
 
 //private:
 //	void			Attack_Effect(const string& szBoneName, _float fSize);

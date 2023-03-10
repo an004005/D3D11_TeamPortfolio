@@ -142,6 +142,7 @@ private:
 	_vector								m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_vector								m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_float								m_fLastLocalMoveSpeed = 0.f;
+	_float								m_fBefRatio = 0.f;
 
 	string								m_szAdditiveAnimName = "";
 	_float								m_fAdditiveRatio = 0.f;
@@ -158,6 +159,7 @@ private:
 	_vector								m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_vector								m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	string								m_szSocketBefAnimName = "";
+	_float								m_fSocketBefRatio = 0.f;
 
 	class CShader* m_pShadowShader = nullptr;
 
