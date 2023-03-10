@@ -3,9 +3,6 @@
 #include "Monster.h"
 
 BEGIN(Engine)
-class CShader;
-class CRenderer;
-class CModel;
 class CFSMComponent;
 class CAnimation;
 class CRigidBody;
@@ -38,10 +35,6 @@ public:
 	void		 RushSweep(_bool bCol);
 
 private:
-	CShader*				m_pShaderCom = nullptr;
-	CRenderer*				m_pRendererCom = nullptr;
-	CModel*					m_pModelCom = nullptr;
-
 	class CSkPd_Controller*	m_pController = nullptr;
 	class CSkPd_AnimInstance* m_pASM = nullptr;
 

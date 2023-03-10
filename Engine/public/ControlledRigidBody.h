@@ -12,11 +12,16 @@ public:
 
 	void SetPushPower(_float fPushPower) { m_fPushPower = fPushPower; }
 	_float GetPushPower() const { return m_fPushPower; }
-	void SetHitCallback(const std::function<void(class CGameObject*, ECOLLIDER_TYPE)>& HitCallback) { m_HitCallback = HitCallback; }
+	void SetHitCallback(const std::function<void(class CGameObject*, ECOLLIDER_TYPE)>& HitCallback, _uint iTargetTypes)
+	{
+		m_HitCallback = HitCallback;
+		m_iTargetTypes = iTargetTypes;
+	}
 
 private:
 	_float m_fPushPower = 100.f;
 	std::function<void(class CGameObject*, ECOLLIDER_TYPE)> m_HitCallback = nullptr;
+	_uint m_iTargetTypes = 0;
 };
 
 class ENGINE_DLL CControlledRigidBody : public CComponent
@@ -45,7 +50,12 @@ public:
 	physx::PxControllerCollisionFlags MoveDisp(_float4 vPosDelta, _float fTimeDelta, _float minDist = 0.001f);
 
 	// ÀÌ Ä¸½¶°ú ¾î¶² ¾×ÅÍ°¡ ´ê¾ÆÀÖÀ¸¸é Æ½¸¶´Ù ½ÇÇàµÊ(lateÆ½°ú after physx »çÀÌ¿¡¼­)
-	void SetContactCallback(const std::function<void(class CGameObject*, ECOLLIDER_TYPE)>& HitCallback) { m_HitReport.SetHitCallback(HitCallback); }
+	void SetContactCallback(
+		const std::function<void(class CGameObject*, ECOLLIDER_TYPE)>& HitCallback, 
+		_uint iTargetTypes = CTB_MONSTER | CTB_MONSTER_PART)
+	{
+		m_HitReport.SetHitCallback(HitCallback, iTargetTypes);
+	}
 
 protected:
 	void CreateController();

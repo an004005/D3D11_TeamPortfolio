@@ -3124,6 +3124,7 @@ void CPlayer::Kinetic_ByTurn()
 	}
 }
 
+
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext);

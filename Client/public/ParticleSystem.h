@@ -7,6 +7,7 @@
 BEGIN(Engine)
 class CVIBuffer_Point_Instancing;
 class CRenderer;
+class CVIBuffer_Mesh_Instancing;
 END
 
 BEGIN(Client)
@@ -21,6 +22,12 @@ enum class EPointType
 {
 	TEXTURE,
 	FLIPBOOK
+};
+
+enum class EBufferType
+{
+	POINT,
+	MESH
 };
 
 class CParticleSystem :	public CGameObject
@@ -40,16 +47,24 @@ public:
 	virtual void Imgui_RenderProperty() override;
 	void SetLoop(_bool bLoop) { m_bLoop = bLoop; }
 
+
+	HRESULT SetParams();
+	HRESULT	Begin();
 private:
 	void AddPoint();
 	void UpdatePoints(_float fTimeDelta);
 
 private:
+	void AddMesh();
+	void UpdateMeshes(_float fTimeDelta);
+
+	
+private:
 	ShaderParams m_tParam;
 	CRenderer* m_pRendererCom = nullptr;
 	CShader* m_pShader = nullptr;
-	_uint m_iPassIdx = 0;
-	CVIBuffer_Point_Instancing* m_pBuffer = nullptr;
+	CVIBuffer_Point_Instancing* m_pPointInstanceBuffer = nullptr;
+	CVIBuffer_Mesh_Instancing*	m_pMeshInstanceBuffer = nullptr;
 
 	_bool m_bLocal = true;
 	_uint m_iInstanceNum = 50;
@@ -72,19 +87,46 @@ private:
 	_float2 m_fSize{ 0.1f, 0.1f };
 
 	ESpawnShape m_eShape = ESpawnShape::SPHERE;
+	EBufferType m_eBufferType = EBufferType::POINT;
+
+	_float2 m_fGravityPowerMinMax = { 0.f, 0.f };
+	_float m_fGravityPower = 0.f;
 	_float m_fConeAngleDeg = 30.f;
 	_float m_fConeOriginRadius = 1.f;
 	_float m_fSphereRadius = 4.f;
 
+	_float3 m_vScaleVariation = { 1.f ,1.f,1.f};
+
+	_bool m_bPointInstance = false;
+	_bool m_bMeshInstance = false;
 	_bool m_bFromOrigin = true; // false搁 官款爹 酒公单辑 积己
 	_bool m_bGravity = false;
 	_bool m_bSizeDecreaseByLife = false;
 	_bool m_bSizeIncreaseByLife = false;
 	_float m_fIncreaseMaxSize = 1.f;
 
+	string m_MeshBufferProtoTag;
 
-	list<VTXMATRIX> m_Points;
+	string m_PointBufferProtoTag = "Prototype_Component_PointInstance";
+	string m_ShaderProtoTag = "Prototype_Component_Shader_VtxPointInstance_Particle";
 
+	// string m_MeshBufferProtoTag;
+
+	list<VTXMATRIX> m_PointList;
+	list<VTXINSTANCE> m_MeshList;
+private:
+	// For Gravity
+
+	// _bool	m_bGravity;
+	_float	m_fJumpPower;
+	_float	m_fDownSpeed;
+
+	// For Rotation
+	_bool	  m_bRotate = false;
+	_float4x4 m_RotationMatrix = XMMatrixIdentity();
+	// _float	  m_ArrayRoationToTime[3];
+	_float3	  m_fRotationToTime_Min = {0.f,0.f,0.f};
+	_float3	  m_fRotationToTime_Max = { 0.f,0.f,0.f };
 
 public:
 	static CParticleSystem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -104,6 +104,14 @@ HRESULT CVIBuffer_Point_Instancing::Initialize_Prototype(_uint iNumInstance)
 		pInstanceVertices[i].vUp = _float4(0.0f, 1.f, 0.f, 0.f);
 		pInstanceVertices[i].vLook = _float4(0.0f, 0.f, 1.f, 0.f);
 		pInstanceVertices[i].vPosition = _float4(0.f, 0.f, 0.f, 1.f);
+
+		pInstanceVertices[i].vRotRight = _float4(1.0f, 0.f, 0.f, 0.f);
+		pInstanceVertices[i].vRotUp = _float4(0.0f, 1.f, 0.f, 0.f);
+		pInstanceVertices[i].vRotLook = _float4(0.0f, 0.f, 1.f, 0.f);
+		pInstanceVertices[i].vRotPos = _float4(0.f, 0.f, 0.f, 1.f);
+
+		pInstanceVertices[i].fGravityPower = 0.f;
+
 	}
 	
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);

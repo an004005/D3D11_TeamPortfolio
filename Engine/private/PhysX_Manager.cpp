@@ -111,6 +111,7 @@ void CPhysX_Manager::Initialize()
 	m_pCooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_Foundation, PxCookingParams(m_ToleranceScale));
 
 	PxCookingParams params(m_ToleranceScale);
+	params.meshWeldTolerance = 0.01f;
 	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eWELD_VERTICES;
 	m_pCooking->setParams(params);
 

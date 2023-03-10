@@ -62,16 +62,19 @@ struct PS_OUT
 	float4		vNormal : SV_TARGET1;
 	float4		vDepth : SV_TARGET2;
 	float4		vRMA : SV_TARGET3;
+	float4		vOutline : SV_TARGET4;
+	float4		vFlag : SV_TARGET5;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
-	float flags = PackPostProcessFlag(0.f, SHADER_DEFAULT);
+	float flags = SHADER_DEFAULT;
 
 	Out.vDiffuse = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	// Out.vFlag = flags;
 
 	return Out;
 }
@@ -100,7 +103,7 @@ PS_OUT PS_DEFAULT(PS_IN In)
 		vNormal = In.vNormal.xyz;
 	}
 
-	float flags = PackPostProcessFlag(0.f, SHADER_DEFAULT);
+	float flags = SHADER_DEFAULT;
 
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
@@ -108,6 +111,8 @@ PS_OUT PS_DEFAULT(PS_IN In)
 		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
 	else
 		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
+
+	// Out.vFlag = flags;
 
 	return Out;
 }
