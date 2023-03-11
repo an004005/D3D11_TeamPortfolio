@@ -17,6 +17,7 @@
 #include "EffectGroup.h"
 #include "TrailSystem.h"
 #include "ParticleSystem.h"
+#include "VFX_Manager.h"
 
 CImgui_EffectBrowser::CImgui_EffectBrowser(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImguiObject(pDevice, pContext)
@@ -124,14 +125,14 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 		if (ImGui::Button("Refresh_Effect Folder"))
 		{
 			// LoadEffects("../Bin/Resources/Curve/EffectGroup/Fire_Attack/");
-			LoadEffects("../Bin/Resources/Curve/EffectGroup/Elec_Attack/");
-			// LoadEffects("../Bin/Resources/Curve/EffectGroup/Default_Attack/");
+			// LoadEffects("../Bin/Resources/Curve/EffectGroup/Elec_Attack/");
+			LoadEffects("../Bin/Resources/Curve/EffectGroup/Default_Attack/");
 			// LoadEffects("../Bin/Resources/Curve/EffectGroup/NeedToWork/");
 		}
 
 		static char szSearchEffect[MAX_PATH] = "";
 		ImGui::InputText("Effect Search", szSearchEffect, MAX_PATH);
-
+		
 		const string strSearch = szSearchEffect;
 		const _bool bSearch = strSearch.empty() == false;
 
@@ -149,8 +150,11 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 				if (bSelected)
 				{
 					ImGui::SetItemDefaultFocus();
+
+					// CVFX_Manager::GetInstance()->GetEffect()
+
 					Json jsonEffect = CJsonStorage::GetInstance()->FindOrLoadJson(Pair.second);
-					CGameInstance::GetInstance()->Clone_GameObject(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect);
+					dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect))->Start_EffectWork();
 
 					// Pair.second->SetPlay();
 					m_CurEffectName = "";

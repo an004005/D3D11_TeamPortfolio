@@ -315,7 +315,9 @@ void CEffectSystem::LoadFromJson(const Json& json)
 
 	if (m_ModelProtoTag.empty() == false)
 	{
+		CModel::s_DefaultPivot = _float4x4::CreateScale({ 0.01f, 0.01f, 0.01f });
 		FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), (CComponent**)&m_pModel));
+		CModel::s_DefaultPivot = _float4x4::CreateScale({ 0.01f, 0.01f, 0.01f }) *_float4x4::CreateRotationY(XMConvertToRadians(-180.f));
 	}
 }
 

@@ -2422,20 +2422,18 @@ void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 	switch (m_PlayerSasType)
 	{
 	case ESASType::SAS_GRAVIKENISIS:
-		{
-
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, EffectName)->Start(this, "Eff01");
-		}
-		// if (szEffectName.find("Fire") != string::npos)	// Fire키워드 들어간 이펙트는 거름
-		// 	break;
+		if (szEffectName.find("Fire") != string::npos)	// Fire키워드 들어간 이펙트는 거름
+			break;
+		// CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, EffectName)->Start_Attach(this, "Eff01", true);
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"FlowerLeg_Fall_Rose")->Start_Attach(this, "Eff01",true);
 		// Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_mapDefaultEffect[szEffectName]);
 		// pEffect = static_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_PlayerEffect", L"ProtoVFX_EffectGroup", &Effect));
 		break;
 	case ESASType::SAS_FIRE:
 		if (szEffectName.find("Fire") == string::npos)	// Fire키워드 없으면 거름
 			break;
-		Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_mapFireEffect[szEffectName]);
-		pEffect = static_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_PlayerEffect", L"ProtoVFX_EffectGroup", &Effect));
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, EffectName)->Start_Attach(this, "Eff01");
+
 		break;
 	}
 

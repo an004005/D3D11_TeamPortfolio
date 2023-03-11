@@ -49,9 +49,11 @@ public:
 
 	void		Set_Transform(_fmatrix matSocket);
 public:
-	void		Start(CGameObject* pOwner, _bool trueisUpdate = false);
-	void		Start(CGameObject* pOwner, string BoneName, _bool trueisUpdate = false);
-	void		Start(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName,_bool usepivot = false, _bool trueisUpdate = false);
+	void		Start_EffectWork();
+
+	void		Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate = false);
+	void		Start_Attach(CGameObject* pOwner, string BoneName, _bool trueisUpdate = false);
+	void		Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName,_bool usepivot = false, _bool trueisUpdate = false);
 
 public:
 	// For Graph
