@@ -46,6 +46,7 @@ public: /* For.GameInstance */
 	static const _tchar*			m_pPrototypeVIRectTag;
 private:
 	_double m_TimeDelta = 0.0;
+	std::function<void()> m_LevelLoadingAsync = nullptr;
 
 public: /* For.GameInstance */
 	HRESULT Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppContextOut);

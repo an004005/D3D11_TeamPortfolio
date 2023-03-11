@@ -12,5 +12,6 @@
             "../Bin/Resources/Environments/Prop/10_Props/Electronics/pr_RedEquipment/T_lc001_pillarparts01_RMA.dds"
         ],
         "Pass" : 1
-    }
+    },
+    "InstancingPass" : 1
 }

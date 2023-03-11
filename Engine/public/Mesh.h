@@ -15,6 +15,20 @@ private:
 	virtual ~CMesh() = default;
 
 public:
+	// For ParticleSystem
+	VTXMODEL* Get_NonAnimBuffer()
+	{
+		return m_pNonAnimModelBufferData;
+	}
+
+	VTXANIMMODEL* Get_AnimBuffer()
+	{
+		return m_pAnimModelBufferData;
+	}
+	// ~For ParticleSystem
+
+
+
 	_uint Get_MaterialIndex() const {
 		return m_iMaterialIndex;
 	}
@@ -43,6 +57,11 @@ private:
 
 	// 얕은 복사 안함
 	vector<class CBone*>	m_Bones;
+
+
+private:
+	VTXMODEL* m_pNonAnimModelBufferData = nullptr;
+	VTXANIMMODEL* m_pAnimModelBufferData = nullptr;
 
 private:
 	HRESULT Ready_VertexBuffer_NonAnimModel(HANDLE hFile, class CModel* pModel);

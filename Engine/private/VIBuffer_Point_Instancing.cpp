@@ -111,6 +111,7 @@ HRESULT CVIBuffer_Point_Instancing::Initialize_Prototype(_uint iNumInstance)
 		pInstanceVertices[i].vRotPos = _float4(0.f, 0.f, 0.f, 1.f);
 
 		pInstanceVertices[i].fGravityPower = 0.f;
+		pInstanceVertices[i].NearestIndex = 0;
 
 	}
 	

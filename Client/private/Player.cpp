@@ -24,6 +24,7 @@
 #include "RigidBody.h"
 #include "EffectGroup.h"
 #include "CamSpot.h"
+#include "VFX_Manager.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -33,6 +34,22 @@ CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CPlayer::CPlayer(const CPlayer & rhs)
 	: CScarletCharacter(rhs)
 {
+}
+
+_float4x4 CPlayer::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
+{
+	if (m_pModel->Get_BonePtr(strBoneName) == nullptr)
+		return XMMatrixIdentity();
+	
+	return m_pModel->GetBoneMatrix(strBoneName, bPivotapply);
+}
+
+_float4x4 CPlayer::GetPivotMatrix()
+{
+	if (m_pModel == nullptr)
+		return XMMatrixIdentity();
+
+	return m_pModel->GetPivotMatrix();
 }
 
 HRESULT CPlayer::Initialize_Prototype()
@@ -91,7 +108,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
 
-	m_pCollider->SetPosition(XMVectorSet(0.f, 1.f, 0.f, 0.f));//SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
+	m_pCollider->SetPosition(XMVectorSet(0.f, 2.f, 0.f, 0.f));//SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
 
 	m_pTransformCom->SetTransformDesc({ 5.f, XMConvertToRadians(720.f) });
 
@@ -2400,33 +2417,39 @@ void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 	CEffectGroup* pEffect = nullptr;
 	Json Effect;
 
+	wstring EffectName = s2ws(szEffectName);
+
 	switch (m_PlayerSasType)
 	{
 	case ESASType::SAS_GRAVIKENISIS:
 		if (szEffectName.find("Fire") != string::npos)	// Fire키워드 들어간 이펙트는 거름
 			break;
-		Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_mapDefaultEffect[szEffectName]);
-		pEffect = static_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_PlayerEffect", L"ProtoVFX_EffectGroup", &Effect));
+		// CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, EffectName)->Start_Attach(this, "Eff01", true);
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"FlowerLeg_Fall_Rose")->Start_Attach(this, "Eff01",true);
+		// Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_mapDefaultEffect[szEffectName]);
+		// pEffect = static_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_PlayerEffect", L"ProtoVFX_EffectGroup", &Effect));
 		break;
 	case ESASType::SAS_FIRE:
 		if (szEffectName.find("Fire") == string::npos)	// Fire키워드 없으면 거름
 			break;
-		Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_mapFireEffect[szEffectName]);
-		pEffect = static_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_PlayerEffect", L"ProtoVFX_EffectGroup", &Effect));
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, EffectName)->Start_Attach(this, "Eff01");
+
 		break;
 	}
 
 	if (pEffect == nullptr)
 		return;
+
+	//pEffect->SetPlay();
 	
-	_matrix	SocketMatrix = m_pModel->GetPivotMatrix() * m_pModel->GetBoneMatrix(szBoneName) * m_pTransformCom->Get_WorldMatrix();
-
-	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]) * fSize;
-	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]) * fSize;
-	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]) * fSize;
-
-	if (nullptr != pEffect)
-		pEffect->Set_Transform(SocketMatrix);
+	// _matrix	SocketMatrix = m_pModel->GetPivotMatrix() * m_pModel->GetBoneMatrix(szBoneName) * m_pTransformCom->Get_WorldMatrix();
+	//
+	// SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]) * fSize;
+	// SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]) * fSize;
+	// SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]) * fSize;
+	//
+	// if (nullptr != pEffect)
+	// 	pEffect->Set_Transform(SocketMatrix);
 }
 
 void CPlayer::Event_LightAttack_Start()

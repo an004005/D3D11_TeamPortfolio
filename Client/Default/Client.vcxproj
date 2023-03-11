@@ -223,6 +223,8 @@
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\ParticleGroup.h" />
+    <ClInclude Include="..\public\Level_Stage1.h" />
     <ClInclude Include="..\public\PostVFX_ColorGrading.h" />
     <ClInclude Include="..\public\PostVFX_HitDecal.h" />
     <ClInclude Include="..\public\Imgui_EffectBrowser.h" />
@@ -284,12 +286,14 @@
     <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\TestCamera.h" />
+    <ClInclude Include="..\public\Trigger.h" />
     <ClInclude Include="..\public\UI.h" />
     <ClInclude Include="..\public\TestMonster.h" />
     <ClInclude Include="..\public\TestObject.h" />
     <ClInclude Include="..\public\TestEffectGroup.h" />
     <ClInclude Include="..\public\TrailSystem.h" />
     <ClInclude Include="..\public\UI_Manager.h" />
+    <ClInclude Include="..\public\VFX_Manager.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
@@ -344,6 +348,8 @@
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\ParticleGroup.cpp" />
+    <ClCompile Include="..\private\Level_Stage1.cpp" />
     <ClCompile Include="..\private\PostVFX_ColorGrading.cpp" />
     <ClCompile Include="..\private\PostVFX_HitDecal.cpp" />
     <ClCompile Include="..\private\Imgui_EffectBrowser.cpp" />
@@ -405,12 +411,14 @@
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\TestCamera.cpp" />
+    <ClCompile Include="..\private\Trigger.cpp" />
     <ClCompile Include="..\private\UI.cpp" />
     <ClCompile Include="..\private\TestMonster.cpp" />
     <ClCompile Include="..\private\TestObject.cpp" />
     <ClCompile Include="..\private\TestEffectGroup.cpp" />
     <ClCompile Include="..\private\TrailSystem.cpp" />
     <ClCompile Include="..\private\UI_Manager.cpp" />
+    <ClCompile Include="..\private\VFX_Manager.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />

@@ -22,6 +22,8 @@
 #include "MapInstance_Object.h"
 #include "MapKinetic_Object.h"
 #include "Material.h"
+#include "VFX_Manager.h"
+
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -360,6 +362,7 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
+	CVFX_Manager::GetInstance()->DestroyInstance();
 	CUI_Manager::GetInstance()->DestroyInstance();
 
 	m_pGameInstance->Clear_ImguiObjects();
