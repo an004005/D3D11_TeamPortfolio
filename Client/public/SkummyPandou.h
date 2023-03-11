@@ -4,9 +4,9 @@
 
 BEGIN(Engine)
 class CFSMComponent;
+class CGameInstance;
 class CAnimation;
 class CRigidBody;
-class CGameInstance;
 END
 
 BEGIN(Client)

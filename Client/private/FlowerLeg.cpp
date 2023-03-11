@@ -209,7 +209,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		m_fYSpeed = 11.f;
 	});
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-1.f, 0.f, 27.f)));
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-1.f, 0.f, 47.f)));
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 
 	m_pASM = CFL_AnimInstance::Create(m_pModelCom, this);
@@ -259,7 +259,7 @@ void CFlowerLeg::BeginTick()
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket(("UsingControl"), {m_pModelCom->Find_Animation("AS_em0200_160_AL_threat")});
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-1.f, 0.f, 27.f)));
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-1.f, 0.f, 47.f)));
 }
 
 void CFlowerLeg::Tick(_double TimeDelta)
@@ -492,7 +492,7 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 		++m_iAirDamage;
 	}
 
-	if(m_eAtkType != EAttackType::ATK_TO_AIR && m_eAtkType != EAttackType::ATK_END && !m_bAtkSwitch && !m_bInvicible)
+	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bInvicible)
 		m_bStruck = true;
 }
 

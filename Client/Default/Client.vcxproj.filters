@@ -253,6 +253,15 @@
     <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller">
       <UniqueIdentifier>{8d065b3d-840e-4ba5-9be7-55d1de3f00f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\boss1\Boss1_AIController">
+      <UniqueIdentifier>{4392880a-c8a6-4b0f-a1ca-2d118db75ace}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\boss1\Boss1_WaterBall">
+      <UniqueIdentifier>{0f87a90b-7254-4d30-91fd-9e68bde42065}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Bullet">
+      <UniqueIdentifier>{53a029da-cd62-4afd-8139-2be4c8759dc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -607,7 +616,6 @@
       <Filter>02.GameObjects\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\public\AIController.h" />
-    <ClInclude Include="..\public\Boss1_AIController.h" />
     <ClInclude Include="..\public\PostVFX_HitDecal.h">
       <Filter>97.ShaderFiles\PostProcess\HitDecal</Filter>
     </ClInclude>
@@ -629,6 +637,15 @@
     </ClInclude>
     <ClInclude Include="..\public\BrJ_Controller.h">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss1_AIController.h">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_AIController</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\WaterBall.h">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_WaterBall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bullet.h">
+      <Filter>02.GameObjects\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -959,7 +976,6 @@
       <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AIController.cpp" />
-    <ClCompile Include="..\private\Boss1_AIController.cpp" />
     <ClCompile Include="..\private\PostVFX_HitDecal.cpp">
       <Filter>97.ShaderFiles\PostProcess\HitDecal</Filter>
     </ClCompile>
@@ -978,6 +994,15 @@
     </ClCompile>
     <ClCompile Include="..\private\BrJ_Controller.cpp">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss1_AIController.cpp">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_AIController</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\WaterBall.cpp">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_WaterBall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bullet.cpp">
+      <Filter>02.GameObjects\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

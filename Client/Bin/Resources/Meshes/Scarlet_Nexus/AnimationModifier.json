@@ -2154,7 +2154,12 @@
         "Duration": 120.0,
         "TickPerSecond": 48.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "WaterBall",
+                "EventTime": 58.0
+            }
+        ]
     },
     "AS_em0400_101_AL_wait01": {
         "Duration": 240.0,
