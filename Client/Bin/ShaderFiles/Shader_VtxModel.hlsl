@@ -115,26 +115,26 @@ PS_OUT PS_DEFAULT(PS_IN In)
 	else
 		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
 
-	int iOutlineOn = g_int_0;
-	float fPsychic = g_float_0;
-	if (iOutlineOn)
-		Out.vOutline = (float4)1.f;
-	else
-		Out.vOutline = (float4)0.f;
-
-	if (fPsychic > 0.f)
-	{
-		if (fPsychic >= 1.f)
-		{
-			// todo: 웨이브로 추후 수정
-			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, 0.5f);
-		}
-		else
-		{
-			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, 0.5f);
-			Out.vDepth.z = 1.f - fPsychic;
-		}
-	}
+	// int iOutlineOn = g_int_0;
+	// float fPsychic = g_float_0;
+	// if (iOutlineOn)
+	// 	Out.vOutline = (float4)1.f;
+	// else
+	// 	Out.vOutline = (float4)0.f;
+	//
+	// if (fPsychic > 0.f)
+	// {
+	// 	if (fPsychic >= 1.f)
+	// 	{
+	// 		// todo: 웨이브로 추후 수정
+	// 		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, 0.5f);
+	// 	}
+	// 	else
+	// 	{
+	// 		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, 0.5f);
+	// 		Out.vDepth.z = 1.f - fPsychic;
+	// 	}
+	// }
 
 
 	return Out;

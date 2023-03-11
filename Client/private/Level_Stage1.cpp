@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\public\Level_Tutorial.h"
+#include "..\public\Level_Stage1.h"
 #include "GameInstance.h"
 #include "Material.h"
 #include "JsonStorage.h"
@@ -16,14 +16,13 @@
 #include "PostVFX_Distortion.h"
 #include "TrailSystem.h"
 
-CLevel_Tutorial::CLevel_Tutorial(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CLevel_Stage1::CLevel_Stage1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CLevel(pDevice, pContext)
 {
 }
 
-HRESULT CLevel_Tutorial::Initialize()
+HRESULT CLevel_Stage1::Initialize()
 {
-
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
@@ -59,30 +58,26 @@ HRESULT CLevel_Tutorial::Initialize()
 	return S_OK;
 }
 
-void CLevel_Tutorial::Tick(_double TimeDelta)
+void CLevel_Stage1::Tick(_double TimeDelta)
 {
-	__super::Tick(TimeDelta);
+	CLevel::Tick(TimeDelta);
 }
 
-void CLevel_Tutorial::Late_Tick(_double TimeDelta)
+void CLevel_Stage1::Late_Tick(_double TimeDelta)
 {
-	__super::Late_Tick(TimeDelta);
+	CLevel::Late_Tick(TimeDelta);
 }
 
-HRESULT CLevel_Tutorial::Render()
+HRESULT CLevel_Stage1::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	SetWindowText(g_hWnd, TEXT("Level : Stage1"));
 
-	SetWindowText(g_hWnd, TEXT("Level : TUTORIAL"));
-
-	return S_OK;
+	return CLevel::Render();
 }
 
-HRESULT CLevel_Tutorial::Ready_Prototypes()
+HRESULT CLevel_Stage1::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
 		// player
 	{
 		pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
@@ -127,7 +122,7 @@ HRESULT CLevel_Tutorial::Ready_Prototypes()
 	return S_OK;
 }
 
-HRESULT CLevel_Tutorial::Ready_Lights()
+HRESULT CLevel_Stage1::Ready_Lights()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
@@ -147,22 +142,21 @@ HRESULT CLevel_Tutorial::Ready_Lights()
 	return S_OK;
 }
 
-HRESULT CLevel_Tutorial::Ready_Layer_BackGround(const _tchar * pLayerTag)
+HRESULT CLevel_Stage1::Ready_Layer_BackGround(const _tchar* pLayerTag)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_Tutorial::Ready_Layer_Camera(const _tchar * pLayerTag)
+HRESULT CLevel_Stage1::Ready_Layer_Camera(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
-
 	return S_OK;
 }
 
-HRESULT CLevel_Tutorial::Ready_Layer_Player(const _tchar * pLayerTag)
+HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
@@ -177,40 +171,39 @@ HRESULT CLevel_Tutorial::Ready_Layer_Player(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_Tutorial::Ready_Layer_UI(const _tchar * pLayerTag)
+HRESULT CLevel_Stage1::Ready_Layer_UI(const _tchar* pLayerTag)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_Tutorial::Ready_Layer_Map(const _tchar * pLayerTag)
+HRESULT CLevel_Stage1::Ready_Layer_Map(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
-
 	return S_OK;
 }
 
-HRESULT CLevel_Tutorial::Ready_Layer_Effect(const _tchar * pLayerTag)
+HRESULT CLevel_Stage1::Ready_Layer_Effect(const _tchar* pLayerTag)
 {
 	return S_OK;
 }
 
-CLevel_Tutorial * CLevel_Tutorial::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CLevel_Stage1* CLevel_Stage1::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CLevel_Tutorial*		pInstance = new CLevel_Tutorial(pDevice, pContext);
+	CLevel_Stage1*		pInstance = new CLevel_Stage1(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize()))
 	{
-		MSG_BOX("Failed to Created : CLevel_Tutorial");
+		MSG_BOX("Failed to Created : CLevel_Stage1");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CLevel_Tutorial::Free()
+void CLevel_Stage1::Free()
 {
-	__super::Free();
+	CLevel::Free();
 }

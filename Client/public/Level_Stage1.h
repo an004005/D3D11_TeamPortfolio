@@ -1,14 +1,14 @@
 #pragma once
-#include "Level.h"
 #include "Client_Defines.h"
+#include "Level.h"
 
 BEGIN(Client)
 
-class CLevel_Tutorial : public CLevel
+class CLevel_Stage1 : public CLevel
 {
 private:
-	CLevel_Tutorial(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CLevel_Tutorial() = default;
+	CLevel_Stage1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CLevel_Stage1() = default;
 
 public:
 	HRESULT Initialize() override;
@@ -27,9 +27,8 @@ private:
 	HRESULT Ready_Layer_Effect(const _tchar* pLayerTag);
 
 public:
-	static CLevel_Tutorial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLevel_Stage1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	void Free() override;
-	
 };
 
 END
