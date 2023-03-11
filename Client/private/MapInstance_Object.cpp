@@ -33,11 +33,25 @@ HRESULT CMapInstance_Object::Initialize(void * pArg)
 	Json json = *reinterpret_cast<Json*>(pArg);
 	if (json.contains("InstanceInfo"))
 	{
-		
+		_uint iCount = 0;
+
 		for (auto WorldMatrix : json["InstanceInfo"]["WorldMatrix"])
 		{
 			_float4x4 WorldMat = WorldMatrix;
 			m_pModel_InstancingCom->Add_Instance(WorldMat);
+
+			CPhysXStaticModel* pPxModel = nullptr;
+
+			//todo: 임시로 모든 CMapNonAnim_Object 에 PxModel을 가지도록 설정 추후 수정 바람
+			
+			const wstring ComponentTag = L"Com_PxModel" + to_wstring(iCount++);
+
+			FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_PxModelTag.c_str(), ComponentTag.c_str(),
+				(CComponent**)&pPxModel));
+
+			m_pPxModels.emplace_back(pPxModel);
+			m_pPxModels.back()->SetPxWorldMatrix(WorldMatrix);
+
 		}
 		m_pModel_InstancingCom->Map_Meshs();
 	}
@@ -53,8 +67,6 @@ void CMapInstance_Object::BeginTick()
 void CMapInstance_Object::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-
-	_float4x4 mat = m_pTransformCom->Get_WorldMatrix_f4x4();
 }
 
 void CMapInstance_Object::Late_Tick(_double TimeDelta)
@@ -81,21 +93,18 @@ void CMapInstance_Object::SaveToJson(Json & json)
 {
 	__super::SaveToJson(json);
 	json["ModelTag"] = ws2s(m_strModelTag);
-
 	auto Meshes = m_pModel_InstancingCom->GetMeshes();
 
 	json["InstanceInfo"]["WorldMatrix"] = Json::array();
 
-	for (auto mesh : Meshes)
+
+	vector<_float4x4> WorldMatrixs = Meshes.front()->GetWorldMatirxs();
+
+	for (auto WorldMatrix : WorldMatrixs)
 	{
-		vector<_float4x4> WorldMatrixs = mesh->GetWorldMatirxs();
-
-		for (auto WorldMatrix : WorldMatrixs)
-		{
-			json["InstanceInfo"]["WorldMatrix"].push_back(WorldMatrix);
-		}
-
+		json["InstanceInfo"]["WorldMatrix"].push_back(WorldMatrix);
 	}
+
 }
 
 void CMapInstance_Object::Imgui_RenderProperty()
@@ -130,11 +139,12 @@ void CMapInstance_Object::Imgui_RenderProperty()
 
 	if (ImGui::Button("Delete_MapInstance_Object"))
 	{
-		if (m_iIndex != 0)
+		if (m_pModel_InstancingCom->GetMeshes().front()->GetWorldMatirxs().size() > 1)
 		{
 			m_pModel_InstancingCom->Delete_Instance(m_iIndex--);
-			m_WorldMatrix = WorldMatrixs[m_iIndex];
+			m_WorldMatrix = WorldMatrixs[max(0, m_iIndex)];
 		}
+			
 	}
 
 	ImGui::BeginChild("Instance Object", { 500.f, 200.f });
@@ -146,8 +156,6 @@ void CMapInstance_Object::Imgui_RenderProperty()
 
 	if(m_iIndex >= 0)
 		m_pModel_InstancingCom->Modify_Matrix(m_iIndex, m_WorldMatrix);
-	// imgui를 켰을 때만 위치 수정가능
-	//m_pPxModel->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CMapInstance_Object::Set_Focus()
@@ -193,17 +201,12 @@ HRESULT CMapInstance_Object::SetUp_Components()
 		(CComponent**)&m_pModel_InstancingCom));
 
 
-	//const wstring PxModelTag = MakePxModelProtoTag();
-	//if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_NOW, PxModelTag.c_str()))
-	//{
-	//	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_NOW,
-	//		PxModelTag.c_str(), CPhysXStaticModel::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str())));
-	//}
-
-	// todo : 임시로 모든 CMapNonAnim_Object 에 PxModel을 가지도록 설정 추후 수정 바람
-	//FAILED_CHECK(__super::Add_Component(LEVEL_NOW, PxModelTag.c_str(), TEXT("Com_PxModel"),
-	//	(CComponent**)&m_pPxModel));
-
+	m_PxModelTag = MakePxModelProtoTag();
+	if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_NOW, m_PxModelTag.c_str()))
+	{
+		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_NOW,
+			m_PxModelTag.c_str(), CPhysXStaticModel::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str())));
+	}
 	return S_OK;
 }
 
@@ -236,6 +239,9 @@ CGameObject * CMapInstance_Object::Clone(void * pArg)
 void CMapInstance_Object::Free()
 {
 	__super::Free();
-	Safe_Release(m_pPxModel);
+
+	for(auto pxModel : m_pPxModels)
+		Safe_Release(pxModel);
+
 	Safe_Release(m_pModel_InstancingCom);
 }

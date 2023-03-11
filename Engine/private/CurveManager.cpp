@@ -51,6 +51,8 @@ void CCurveManager::SaveCurves()
 
 void CCurveManager::Imgui_Render()
 {
+	ImGui::InputFloat2("Curve Editor Size", (float*)&m_CurveEditorSize);
+
 	static string strSelectCurve;
 	if (ImGui::BeginListBox("Curve list"))
 	{

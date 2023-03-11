@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Imgui_CurveManager.h"
 #include "CurveManager.h"
+#include "GameTime_Manager.h"
 
 CImgui_CurveManager::CImgui_CurveManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImguiObject(pDevice, pContext)
@@ -16,6 +17,9 @@ HRESULT CImgui_CurveManager::Initialize(void* pArg)
 void CImgui_CurveManager::Imgui_RenderWindow()
 {
 	CCurveManager::GetInstance()->Imgui_Render();
+	ImGui::Separator();
+
+	CGameTime_Manager::GetInstance()->Imgui_Render();
 }
 
 CImgui_CurveManager* CImgui_CurveManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

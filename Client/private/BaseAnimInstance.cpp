@@ -2238,6 +2238,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 	m_mapAnimSocket.emplace("Hit_AnimSocket", SocketList);
 	m_mapAnimSocket.emplace("Kinetic_Combo_AnimSocket", SocketList);
 	m_mapAnimSocket.emplace("JustDodge_AnimSocket", SocketList);
+	m_mapAnimSocket.emplace("Common_AnimSocket", SocketList);
 
 	return S_OK;
 }
@@ -2331,7 +2332,11 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 	}
 	else if (m_fLerpTime < m_fLerpDuration)
 	{
-		m_pASM_Base->GetCurState()->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+		if(m_pASM_Base->GetCurState()->m_SpairAnimation != nullptr)
+			m_pASM_Base->GetCurState()->m_SpairAnimation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+		else
+			m_pASM_Base->GetCurState()->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+		
 		m_fLerpTime += (_float)TimeDelta;
 	}
 	else
@@ -2352,8 +2357,8 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 	if (0.f != XMVectorGetX(XMVector3Length(vLocalMove)))
 		m_vLocalMove = vLocalMove;
 
-	if (bLocalMove)
-	{
+	if (bLocalMove && ("" == szCurAnimName))
+	{	
 		if (m_pASM_Base->GetCurState()->m_strName.find("WALK_START") != string::npos)
 		{
 			_float fLength = XMVectorGetX(XMVector3Length(vLocalMove));
@@ -2373,21 +2378,21 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 	
 	//m_pTargetObject->GetTransform()->TurnByMatrix(m_pModel->GetLocalEularMatrix(m_pTargetObject->GetTransform()->Get_WorldMatrix()));
 	
-	if ("" != szCurAnimName)
-	{
-		_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
-		_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix, szCurAnimName);
+	//else if ("" != szCurAnimName)
+	//{
+	//	_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+	//	_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix, szCurAnimName);
 
-		if (!m_bSeperateAnim && !m_bSeperateSwitch)
-			m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
-	}
+	//	if (!m_bSeperateAnim && !m_bSeperateSwitch)
+	//		m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
+	//}
 
-	if (m_bOptionalMove)
-	{
+//	if (m_bOptionalMove)
+//	{
 		// 툴 작업 시에는 이거 끄고 하기!! 옵셔널 무브
 		_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTargetObject->GetTransform()->Get_WorldMatrix());
 		m_pTargetObject->GetTransform()->LocalMove(vOpTest);
-	}
+//	}
 }
 
 void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
@@ -2450,6 +2455,10 @@ void CBaseAnimInstance::InputAnimSocket(const string& strSocName, list<CAnimatio
 {
 	// 기존 소켓을 싹 지우고 이걸로 덮어버림
 
+	m_pModel->Reset_LocalMove(true);
+
+//	m_pASM_Base->SetCurState("IDLE");
+
 	for (auto& iter : m_mapAnimSocket)
 	{
 		if (!iter.second.empty())
@@ -2459,8 +2468,6 @@ void CBaseAnimInstance::InputAnimSocket(const string& strSocName, list<CAnimatio
 		iter.second = SocketList;
 	}
 
-	m_pModel->Reset_LocalMove(true);
-
 	m_bSeperateSwitch = false;
 	m_mapAnimSocket[strSocName] = (AnimList);
 }
@@ -2468,6 +2475,10 @@ void CBaseAnimInstance::InputAnimSocket(const string& strSocName, list<CAnimatio
 void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
 {
 	// 소켓의 애니메이션을 교환하고 보간함, 아닐 경우 그냥 덮어버림
+
+	m_pModel->Reset_LocalMove(true);
+
+//	m_pASM_Base->SetCurState("IDLE");
 
 	for (auto& iter : m_mapAnimSocket)
 	{
@@ -2491,8 +2502,6 @@ void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimat
 	}
 
 	m_bSeperateSwitch = false;
-
-	m_pModel->Reset_LocalMove(true);
 }
 
 _bool CBaseAnimInstance::isSocketAlmostFinish(const string & strSocName)

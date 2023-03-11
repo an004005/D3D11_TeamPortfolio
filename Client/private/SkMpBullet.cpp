@@ -34,7 +34,7 @@ HRESULT CSkMpBullet::Initialize_Prototype()
 
 HRESULT CSkMpBullet::Initialize(void * pArg)
 {
-	Json SkMpBullet = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPoolBullet.json");
+	Json SkMpBullet = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPool/SkummyPoolBullet.json");
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;

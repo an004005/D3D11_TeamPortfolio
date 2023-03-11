@@ -182,17 +182,25 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix)
 			m_LocalMoveAnimName = m_CurAnimName;
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
+
+		if (m_mapAnimation[m_CurAnimName]->GetPlayRatio() < m_fBefRatio)
+		{
+			m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+
+		m_fBefRatio = m_mapAnimation[m_CurAnimName]->GetPlayRatio();
 	}
 	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
 	//m_fLastLocalMoveSpeed = 0.f;
 
-	_vector vScale, vRotation, vTrans;
-	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
-	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
-
 	vMovePos = m_vLocalMove - m_vBefLocalMove;
 	XMVectorSetW(vMovePos, 0.f);
 	_float	fLength = XMVectorGetX(XMVector3Length(vMovePos));
+
+	_vector vScale, vRotation, vTrans;
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
 
 	XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_PivotMatrix);
 	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
@@ -244,16 +252,24 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
 			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
+
+		if (m_mapAnimation[srtAnimName]->GetPlayRatio() < m_fSocketBefRatio)
+		{
+			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+
+		m_fSocketBefRatio = m_mapAnimation[srtAnimName]->GetPlayRatio();
 	}
 	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vSocketLocalMove - m_vSocketBefLocalMove));
-
-	_vector vScale, vRotation, vTrans;
-	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
-	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
 
 	vMovePos = m_vSocketLocalMove - m_vSocketBefLocalMove;
 	XMVectorSetW(vMovePos, 0.f);
 	_float	fLength = XMVectorGetX(XMVector3Length(vMovePos));
+
+	_vector vScale, vRotation, vTrans;
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
 
 	XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_PivotMatrix);
 	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);

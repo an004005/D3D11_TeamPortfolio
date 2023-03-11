@@ -531,6 +531,9 @@
     <ClInclude Include="..\public\Imgui_CurveManager.h">
       <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\GameTime_Manager.h">
+      <Filter>01.Utility\02.GameObject\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -835,6 +838,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Imgui_CurveManager.cpp">
       <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameTime_Manager.cpp">
+      <Filter>01.Utility\02.GameObject\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

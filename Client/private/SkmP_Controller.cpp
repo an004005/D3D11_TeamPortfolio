@@ -104,9 +104,9 @@ void CSkmP_Controller::Tick_Near(_double TimeDelta)
 		AddCommand("Threat", 0.f, &CAIController::Input, R);
 		break;
 	case 2:
-		AddCommand("Turn", 4.f, &CAIController::TurnToTarget, 1.f);
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
-
+		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	case 3:
 		AddCommand("LeftMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
@@ -121,8 +121,9 @@ void CSkmP_Controller::Tick_Near(_double TimeDelta)
 		AddCommand("BackMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
 		break;
 	case 7:
-		AddCommand("Turn", 4.f, &CAIController::TurnToTarget, 1.f);
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
+		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	case 8:
 		AddCommand("RightMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
@@ -147,8 +148,9 @@ void CSkmP_Controller::Tick_Far(_double TimeDelta)
 		AddCommand("Threat", 0.f, &CAIController::Input, R);
 		break;
 	case 2:
-		AddCommand("Turn", 4.f, &CAIController::TurnToTarget, 1.f);
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
+		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	case 3:
 		AddCommand("LeftMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
@@ -163,8 +165,9 @@ void CSkmP_Controller::Tick_Far(_double TimeDelta)
 		AddCommand("BackMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
 		break;
 	case 7:
-		AddCommand("Turn", 4.f, &CAIController::TurnToTarget, 1.f);
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
+		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	case 8:
 		AddCommand("RightMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);

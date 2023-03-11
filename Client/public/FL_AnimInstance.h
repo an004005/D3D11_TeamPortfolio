@@ -25,21 +25,18 @@ public:
 
 private:
 	CAnimationStateMachine* m_pASM_Base = nullptr;
-
-
+	
 	_bool			m_bAir = false;
 	_bool			m_bPreAir = false;
 	_bool			m_bMove = false;
 	_bool			m_bRun = false;
-
-
+	
 	_float3 m_vMoveAxis;
 	EBaseAxis m_eMoveAxis = EBaseAxis::AXIS_END;
 	EBaseAxis m_ePreMoveAxis = EBaseAxis::AXIS_END;
 	EBaseTurn m_eTurn = EBaseTurn::TURN_END;
 	_float m_fTurnRemain = 0.f;
-
-
+	
 private:
 	_float	m_fLerpTime = 0.f;
 	_float	m_fLerpDuration = 0.1f;

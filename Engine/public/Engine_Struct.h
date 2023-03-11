@@ -167,6 +167,16 @@ namespace Engine
 		static D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VAL_BASE_VTXMODEL_DECLARATION;
 
+
+	// For StaticModel Instancing
+	typedef struct tagVertexStaticModelMatrix
+	{
+		_float4			vRight;
+		_float4			vUp;
+		_float4			vLook;
+		_float4			vPosition;
+	}VTXMODELMATRIX;
+
 	// For Particle PointInstance 
 	typedef struct tagVertexMatrix
 	{

@@ -21,7 +21,7 @@ HRESULT CMonster::Initialize(void* pArg)
 	{
 		m_bDelete = true;
 	});
-	m_DeathTimeline.SetCurve("Monster_DeathDissolve");
+	m_DeathTimeline.SetCurve("Simple_Increase");
 	return S_OK;
 }
 

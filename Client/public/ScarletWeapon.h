@@ -53,8 +53,8 @@ protected:
 	CRigidBody*		m_pCollider = nullptr;
 	CTrailSystem*	m_pTrail = nullptr;
 
-protected:
-	CGameObject*	m_pCamSpot = nullptr;
+//protected:
+//	CGameObject*	m_pCamSpot = nullptr;
 
 protected:
 	wstring		m_ModelName;
