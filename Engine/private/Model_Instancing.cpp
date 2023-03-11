@@ -117,26 +117,41 @@ void CModel_Instancing::Imgui_RenderProperty()
 {
 	ImGui::Text("%s", m_strName.c_str());
 
-	// if (ImGui::BeginListBox("Animations Additive"))
-	// {
-	// 	for (size_t i = 0; i < m_Animations.size(); ++i)
-	// 	{
-	// 		const bool bSelected = m_iAdditiveAnimIdx == (_uint)i;
-	// 		if (bSelected)
-	// 			ImGui::SetItemDefaultFocus();
-	//
-	// 		if (ImGui::Selectable(m_Animations[i]->GetName().c_str(), bSelected))
-	// 		{
-	// 			strcpy_s(animBuff, m_Animations[i]->GetName().c_str());
-	// 			m_iAdditiveAnimIdx = (_uint)i;
-	// 		}
-	// 	}
-	//
-	// 	ImGui::EndListBox();
-	// }
+	if (ImGui::CollapsingHeader("Material Viewer"))
+	{
+		static char szSeachMtrl[MAX_PATH] = "";
+		ImGui::InputText("Mtrl Seach", szSeachMtrl, MAX_PATH);
 
-	// ImGui::SliderFloat("additiveRatio", &m_fAdditiveRatio, 0.f, 3.f);
+		const string strSearch = szSeachMtrl;
+		const _bool bSearch = strSearch.empty() == false;
 
+		static int iSelected = 0;
+
+		if (!m_Materials.empty() && ImGui::BeginListBox("Material List"))
+		{
+			for (int i = 0; i < int(m_Materials.size()); ++i)
+			{
+				char protoTag[MAX_PATH];
+				CGameUtils::wc2c(m_Materials[i]->GetPrototypeTag(), protoTag);
+				if (bSearch)
+				{
+					string strProtoTag = protoTag;
+					if (strProtoTag.find(strSearch) == string::npos)
+						continue;
+				}
+
+				const bool bSelected = iSelected == i;
+				if (bSelected)
+					ImGui::SetItemDefaultFocus();
+
+				if (ImGui::Selectable(protoTag, bSelected))
+					iSelected = i;
+			}
+			ImGui::EndListBox();
+
+			m_Materials[iSelected]->Imgui_RenderProperty();
+		}
+	}
 }
 
 
@@ -158,8 +173,8 @@ HRESULT CModel_Instancing::Render(const _float4x4& WorldMatrix)
 		if (m_Materials[iMtrlIdx]->IsActive() == false)
 			continue;
 
-		m_Materials[iMtrlIdx]->BindMatrices(WorldMatrix);
-		m_Materials[iMtrlIdx]->Begin();
+		m_Materials[iMtrlIdx]->BindMatrices_Instancing(WorldMatrix);
+		m_Materials[iMtrlIdx]->Begin_Instancing();
 		mesh->Render();
 	}
 
@@ -172,8 +187,8 @@ HRESULT CModel_Instancing::RenderMesh(CTransform* pTransform, _uint iMeshIdx)
 	if (m_Materials[iMtrlIdx]->IsActive() == false)
 		return S_OK;
 
-	m_Materials[iMtrlIdx]->BindMatrices(pTransform);
-	m_Materials[iMtrlIdx]->Begin();
+	m_Materials[iMtrlIdx]->BindMatrices_Instancing(pTransform);
+	m_Materials[iMtrlIdx]->Begin_Instancing();
 	return m_Meshes[iMeshIdx]->Render();
 }
 
@@ -243,9 +258,10 @@ HRESULT CModel_Instancing::Ready_Materials(HANDLE hFile)
 		if (pMtrl == nullptr)
 		{
 			
-			pMtrl = dynamic_cast<CMaterial*>(CGameInstance::GetInstance()->Clone_Component(L"Proto_Mtrl_Empty_Instance"));
+			pMtrl = dynamic_cast<CMaterial*>(CGameInstance::GetInstance()->Clone_Component(L"Proto_Mtrl_Empty_Instancing"));
 			IM_WARN("Fail to Find Mtrl : %s", mtrlName.c_str());
 		}
+
 
 		pMtrl->SetAnimType(CModel::TYPE_NONANIM);
 		m_Materials.push_back(pMtrl);

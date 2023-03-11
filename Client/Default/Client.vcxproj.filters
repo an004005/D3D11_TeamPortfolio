@@ -253,6 +253,9 @@
     <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller">
       <UniqueIdentifier>{8d065b3d-840e-4ba5-9be7-55d1de3f00f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Trigger">
+      <UniqueIdentifier>{55631933-d0bb-4c2f-a5de-c7e5655b9f86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -630,6 +633,9 @@
     <ClInclude Include="..\public\BrJ_Controller.h">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Trigger.h">
+      <Filter>02.GameObjects\Trigger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -978,6 +984,9 @@
     </ClCompile>
     <ClCompile Include="..\private\BrJ_Controller.cpp">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Trigger.cpp">
+      <Filter>02.GameObjects\Trigger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

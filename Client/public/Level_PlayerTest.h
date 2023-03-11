@@ -19,6 +19,7 @@ private:
 	HRESULT Ready_Layer_Terrain(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Batch(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Map(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Kinetic(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Monster(const _tchar* pLayerTag);
