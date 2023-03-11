@@ -108,6 +108,12 @@ private:
 	virtual ~CPlayer() = default;
 
 public:
+	//For Effect
+	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool vPivotapply = true) override;
+	virtual _float4x4 GetPivotMatrix() override;
+	//~For Effect
+
+
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void BeginTick();

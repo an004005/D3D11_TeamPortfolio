@@ -253,6 +253,9 @@
     <Filter Include="VFX\Particle\ParticleGroup">
       <UniqueIdentifier>{e8b9645e-c5ce-41d1-b77d-ed2a555a5e24}</UniqueIdentifier>
     </Filter>
+    <Filter Include="VFX\0. Manager">
+      <UniqueIdentifier>{bded6145-b30d-41c0-bef2-3ac921aa1015}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -628,6 +631,9 @@
     <ClInclude Include="..\public\ParticleGroup.h">
       <Filter>VFX\Particle\ParticleGroup</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VFX_Manager.h">
+      <Filter>VFX\0. Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -974,6 +980,9 @@
     <ClCompile Include="..\private\BdLm_Controller.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp">
       <Filter>VFX\Particle\ParticleGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VFX_Manager.cpp">
+      <Filter>VFX\0. Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

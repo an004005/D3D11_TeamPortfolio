@@ -130,11 +130,17 @@ CBone* CModel::Get_BonePtr(const string& strBoneName)
 	return itr->second;
 }
 
-_matrix CModel::GetBoneMatrix(const string& strBoneName)
+_matrix CModel::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
 {
 	CBone* pBone = Get_BonePtr(strBoneName);
 	Assert(pBone != nullptr);
-	return pBone->Get_CombindMatrix() * XMLoadFloat4x4(&m_PivotMatrix);
+
+	if(bPivotapply == true)
+	{
+		return pBone->Get_CombindMatrix() * XMLoadFloat4x4(&m_PivotMatrix);
+	}
+	
+	return pBone->Get_CombindMatrix();
 }
 
 CAnimation* CModel::Find_Animation(const string& strAnimaName)

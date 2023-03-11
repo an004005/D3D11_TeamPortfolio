@@ -148,7 +148,7 @@ void CChannel::Blend_TransformMatrix(_double PlayTime, _float fBlendRatio)
 		vRotation = XMLoadFloat4(&m_KeyFrames.back().vRotation);
 		vPosition = XMLoadFloat3(&m_KeyFrames.back().vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
-
+		vBefPosition = vPosition;
 		vBefRotation = vRotation;
 	}
 	else if (PlayTime <= m_KeyFrames.front().Time)
@@ -157,7 +157,7 @@ void CChannel::Blend_TransformMatrix(_double PlayTime, _float fBlendRatio)
 		vRotation = XMLoadFloat4(&m_KeyFrames.front().vRotation);
 		vPosition = XMLoadFloat3(&m_KeyFrames.front().vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
-
+		vBefPosition = vPosition;
 		vBefRotation = vRotation;
 	}
 	else

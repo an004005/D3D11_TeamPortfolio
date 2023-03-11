@@ -28,7 +28,7 @@
 #include "ParticleGroup.h"
 #include "PostVFX_ColorGrading.h"
 #include "PostVFX_HitDecal.h"
-
+#include "VFX_Manager.h"
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -43,6 +43,7 @@ HRESULT CLevel_Effect::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LevelSwitcher::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
+	CVFX_Manager::GetInstance()->Initialize(LEVEL_EFFECT);
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -56,8 +57,8 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer(TEXT("Layer"))))
 		return E_FAIL;
 
-	// if (FAILED(Ready_Layer_Player(L"Layer_Player")))
-	// 	return E_FAIL;
+	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -72,6 +73,10 @@ void CLevel_Effect::Tick(_double TimeDelta)
 {
 	CLevel::Tick(TimeDelta);
 
+	if(CGameInstance::GetInstance()->KeyDown(DIK_SPACE))
+	{
+		// CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_1")->Start();
+	}
 }
 
 void CLevel_Effect::Late_Tick(_double TimeDelta)

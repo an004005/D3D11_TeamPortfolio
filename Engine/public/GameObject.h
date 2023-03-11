@@ -35,9 +35,13 @@ public:
 	virtual HRESULT Render();
 	virtual HRESULT Render_ShadowDepth() { return S_OK; }
 	virtual HRESULT Render_OutlineFlag() { return S_OK; }
-
 	virtual void SaveToJson(OUT Json& json);
 	virtual void LoadFromJson(const Json& json);
+
+	//For Effect
+	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) { return XMMatrixIdentity(); }
+	virtual _float4x4 GetPivotMatrix() { return XMMatrixIdentity(); }
+	//~For Effect
 
 public: /* imgui */
 	// 이 오브젝트가 가지고 있는 component의 Imgui_RenderProtpery함수를 실행하는 함수.

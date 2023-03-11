@@ -49,6 +49,11 @@ public:
 
 	void		Set_Transform(_fmatrix matSocket);
 public:
+	void		Start(CGameObject* pOwner, _bool trueisUpdate = false);
+	void		Start(CGameObject* pOwner, string BoneName, _bool trueisUpdate = false);
+	void		Start(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName,_bool usepivot = false, _bool trueisUpdate = false);
+
+public:
 	// For Graph
 	// void Tick_Scale_All( _float fValue);
 	// void Tick_Floats_0(_float fValue);
@@ -106,6 +111,13 @@ private:
 	class CEffectSystem* m_pThird_EffectSystem = nullptr;
 	class CEffectSystem* m_pFourth_EffectSystem = nullptr;
 	class CEffectSystem* m_pFifth_EffectSystem = nullptr;
+
+private:
+	_bool	m_bUpdate = false;
+	_bool	m_bUsePivot = false;
+	string m_BoneName = "";
+	_float4x4 m_PivotMatrix = XMMatrixIdentity();
+
 
 private:
 	_float	m_fEndTime = 0.f;
