@@ -86,7 +86,7 @@ private:
 
 	typedef struct tagPlayerStatus
 	{
-		_uint m_iHP = 100;
+		_uint m_iHP = 1000;
 		_uint m_iKineticEnergy = 100;
 	}PLAYER_STAT;
 
@@ -153,6 +153,8 @@ private:
 	CRenderer*			m_pRenderer = nullptr;
 	CModel*				m_pModel = nullptr;
 	CController*		m_pController = nullptr;
+
+	CModel*				m_pKineticAnimModel = nullptr;
 //	CRigidBody*			m_pContectRigidBody = nullptr;
 
 private:
@@ -312,12 +314,14 @@ public:	//EventCaller용
 
 	void		Event_Effect(string szEffectName, _float fSize = 1.f, string szBoneName = "Eff01");
 
-	void		Event_LightAttack_Start();
-	void		Event_MiddleAttack_Start();
-	void		Event_HeavyAttack_Start();
-	void		Event_AirAttack_Start();
-	void		Event_Attack_End();
+	void		Event_CollisionStart();
+	void		Event_collisionEnd();
+
 	void		Event_CamMod();
+	void		Event_FinishFovActionCam();
+
+private:
+	_bool		m_bCollisionAble = false;
 	
 public:
 	void		Set_KineticCombo_Kinetic() { m_fKineticCombo_Kinetic = 10.f; }	// 키네틱 오브젝트에서 지정, 충돌 발생시 콤보 가능하도록 해준다.
@@ -366,6 +370,7 @@ public:
 	EMoveDir	GetMoveDir() const { return m_eMoveDir; }
 	Vector3		GetMoveVector() { return m_vMoveDir; }
 	void		LookAtDir(Vector3 Vector);
+	void		LookTarget();	// 락온
 
 public:
 	_bool		UseAttackCnt(_uint eType);
@@ -411,6 +416,13 @@ private:
 	_vector			m_vCamLook;
 
 private:
+	void			Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수
+	void			Kinetic_Combo_MoveToKineticPoint();	// 염력 물체 애니메이션을 돌리기 전에 애니메이션의 위치를 잡아주는 함수
+
+private:
+	_vector			m_vKineticComboRefPoint; // 키네틱 콤보를 할 때 이동해야 하는 포인트
+
+private:
 	_float4 m_vSplinePoint_01;
 	_float4 m_vSplinePoint_02;
 	_float4 m_vSplinePoint_03;
@@ -425,8 +437,6 @@ private:
 	_float	m_fSwingLerpTimer = 0.f;
 	_bool	m_bRight = false;
 	_vector m_vKineticInitLook;
-
-
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

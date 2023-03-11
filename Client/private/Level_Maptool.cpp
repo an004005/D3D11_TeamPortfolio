@@ -110,23 +110,23 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 
 		if (0 == strcmp(szFileExt, ".static_model"))
 		{
-			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), NON_INSTANCE));
+			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), KINETIC));
 		}
 	});
 
 
 	//인스턴싱 모델들의 프로토타입 생성
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/",
-		[this](const string& fileName)
-	{
-		char szFileExt[MAX_PATH]{};
-		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+	//CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/",
+	//	[this](const string& fileName)
+	//{
+	//	char szFileExt[MAX_PATH]{};
+	//	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
 
-		if (0 == strcmp(szFileExt, ".static_model"))
-		{
-			FAILED_CHECK(Create_Model_Instance(s2ws(fileName), fileName.c_str()));
-		}
-	});
+	//	if (0 == strcmp(szFileExt, ".static_model"))
+	//	{
+	//		FAILED_CHECK(Create_Model_Instance(s2ws(fileName), fileName.c_str()));
+	//	}
+	//});
 
 	//키네틱 모델들의 프로토타입 생성
 	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",

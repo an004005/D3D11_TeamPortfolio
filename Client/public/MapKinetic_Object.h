@@ -30,7 +30,7 @@ public:
 
 public:
 	void	Add_Physical(_float3 vForce = { 0.f, 0.f, 0.f }, _float3 vTorque = {0.f, 0.f, 0.f});
-	void	Set_Kinetic(_bool bKinetic);
+	void	Reset_Transform();
 
 private:
 	wstring MakePxModelProtoTag();
@@ -41,6 +41,8 @@ private:
 	CPhysXDynamicModel*	m_pPxModel = nullptr;
 	CRigidBody*			m_pKinetic_RigidBody = nullptr;
 	CRigidBody*			m_pDynamic_RigidBody = nullptr;
+
+	CRigidBody*			m_pCollider = nullptr;
 
 	_bool				m_bKinetic = false;
 	

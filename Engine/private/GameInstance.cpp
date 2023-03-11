@@ -792,6 +792,21 @@ CCamera* CGameInstance::FindCamera(const string& strCamTag)
 	return m_pCamera_Manager->FindCamera(strCamTag);
 }
 
+void CGameInstance::SetCameraFovCurve(const string & strCurveTag)
+{
+	return m_pCamera_Manager->SetCameraFovCurve(strCurveTag);
+}
+
+void CGameInstance::ActionCamTickByPlayTime(_float fRatio)
+{
+	return m_pCamera_Manager->ActionCamTickByPlayTime(fRatio);
+}
+
+void CGameInstance::ReleaseCameraFovCurve()
+{
+	return m_pCamera_Manager->ReleaseCameraFovCurve();
+}
+
 void CGameInstance::ResetTimeRatio()
 {
 	m_pGameTime_Manager->ResetTimeRatio();

@@ -4,6 +4,8 @@
 #include "Object_Manager.h"
 #include "PipeLine.h"
 #include "Light_Manager.h"
+#include "CurveManager.h"
+#include "CurveFloatMapImpl.h"
 #include "JsonLib.h"
 
 IMPLEMENT_SINGLETON(CCamera_Manager);
@@ -165,6 +167,44 @@ void CCamera_Manager::Imgui_Render()
 			pCam->Imgui_RenderComponentProperties();
 		}
 	}
+}
+
+void CCamera_Manager::SetCameraFovCurve(const string & strCurveTag)
+{
+	// CGameInstance::GetInstance()->SetCameraFovCurve("");
+	
+	Safe_Release(m_pFovCurve);
+
+	m_pFovCurve = CCurveManager::GetInstance()->GetCurve(strCurveTag);
+	if (m_pFovCurve == nullptr)
+		return;
+
+	Safe_AddRef(m_pFovCurve);
+}
+
+void CCamera_Manager::ActionCamTickByPlayTime(_float fRatio)
+{
+	if (nullptr != m_pFovCurve)
+	{
+		CCamera* pMainCam = GetMainCam();
+		Assert(pMainCam != nullptr);
+
+//		IM_LOG("%f", m_pFovCurve->GetValue(fRatio));
+
+		if (0.f == m_pFovCurve->GetValue(fRatio))
+			int iA = 0;
+
+		pMainCam->SetFOV(m_pFovCurve->GetValue(fRatio));
+	}
+}
+
+void CCamera_Manager::ReleaseCameraFovCurve()
+{
+	Safe_Release(m_pFovCurve);
+	m_pFovCurve = nullptr;
+	
+	CCamera* pMainCam = GetMainCam();
+	pMainCam->SetFOV(60.f);
 }
 
 CCamera* CCamera_Manager::FindCamera(const string& strCamTag)

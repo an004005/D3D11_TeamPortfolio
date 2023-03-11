@@ -3,6 +3,7 @@
 #include "Bone.h"
 #include "RigidBody.h"
 #include "TrailSystem.h"
+#include "Monster.h"
 
 CScarletWeapon::CScarletWeapon(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)

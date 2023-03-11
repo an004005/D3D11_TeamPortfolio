@@ -34,15 +34,13 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 10.f, 0.f));
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(180.f) });
 
-	m_pDynamic_RigidBody->Activate(true);
-	m_pDynamic_RigidBody->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
-
-	m_pKinetic_RigidBody->Activate(false);
-	m_pKinetic_RigidBody->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
-	m_pKinetic_RigidBody->Set_Kinetic(true);
+	m_pCollider->Activate(true);
+	m_pCollider->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
+	m_pCollider->Set_Kinetic(true);
+	m_pCollider->UpdateChange();
 
 	// 다이나믹 리지드 바디가 몬스터와 충돌했는지?
-	m_pDynamic_RigidBody->SetOnTriggerIn([this](CGameObject* pGameObject)
+	m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
 		if (!m_bThrow)
 			return;
@@ -72,23 +70,6 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 		}
 	});
 
-	// 키네틱 리지드 바디가 몬스터와 충돌했는지?
-	m_pKinetic_RigidBody->SetOnTriggerIn([this](CGameObject* pGameObject)
-	{
-		if (!m_bThrow)
-			return;
-
-		if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
-		{
-			DAMAGE_PARAM tParam;
-			tParam.iDamage = 1;
-			tParam.eAttackType = EAttackType::ATK_HEAVY;
-			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-			pMonster->TakeDamage(tParam);
-		}
-	});
-
 	if (pArg)
 	{
 		Json& json = *static_cast<Json*>(pArg);
@@ -104,10 +85,6 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 void CMapKinetic_Object::BeginTick()
 {
-	m_pKinetic_RigidBody->Update_Tick(m_pTransformCom);
-	m_pDynamic_RigidBody->Update_Tick(m_pTransformCom);
-	m_pKinetic_RigidBody->Update_AfterPhysX(m_pTransformCom);
-	m_pDynamic_RigidBody->Update_AfterPhysX(m_pTransformCom);
 }
 
 void CMapKinetic_Object::Tick(_double TimeDelta)
@@ -116,10 +93,7 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	if (m_bKinetic)
-		m_pKinetic_RigidBody->Update_Tick(m_pTransformCom);
-	else
-		m_pDynamic_RigidBody->Update_Tick(m_pTransformCom);
+	m_pCollider->Update_Tick(m_pTransformCom);
 }
 
 void CMapKinetic_Object::Late_Tick(_double TimeDelta)
@@ -129,12 +103,7 @@ void CMapKinetic_Object::Late_Tick(_double TimeDelta)
 
 void CMapKinetic_Object::AfterPhysX()
 {
-	//m_pRigidBody->Update_AfterPhysX(m_pTransformCom);
-
-	if (m_bKinetic)
-		m_pKinetic_RigidBody->Update_AfterPhysX(m_pTransformCom);
-	else
-		m_pDynamic_RigidBody->Update_AfterPhysX(m_pTransformCom);
+	m_pCollider->Update_AfterPhysX(m_pTransformCom);
 }
 
 HRESULT CMapKinetic_Object::Render()
@@ -169,45 +138,31 @@ void CMapKinetic_Object::Imgui_RenderProperty()
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 10.f, 0.f));
 		m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(180.f) });
 
-		m_pDynamic_RigidBody->Activate(true);
-		m_pDynamic_RigidBody->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
-
-		m_pKinetic_RigidBody->Activate(false);
-		m_pKinetic_RigidBody->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
-		m_pKinetic_RigidBody->Set_Kinetic(true);
+		m_pCollider->Activate(true);
+		m_pCollider->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
+		m_pCollider->Set_Kinetic(true);
+		m_pCollider->UpdateChange();
 	}
 }
 
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 {
-	//m_pRigidBody->AddForce(vForce);
-	//m_pRigidBody->AddTorque(vTorque);
+	m_pCollider->Set_Kinetic(false);
+	m_pCollider->UpdateChange();
 
-	m_pDynamic_RigidBody->AddForce(vForce);
-	m_pDynamic_RigidBody->AddTorque(vTorque);
+	m_pCollider->AddForce(vForce);
+	m_pCollider->AddTorque(vTorque);
 }
 
-void CMapKinetic_Object::Set_Kinetic(_bool bKinetic)
+void CMapKinetic_Object::Reset_Transform()
 {
-	//m_pRigidBody->Set_Kinetic(is);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 10.f, 0.f));
+	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(180.f) });
 
-	if (bKinetic == m_bKinetic)
-		return;
-
-	if (false == bKinetic)
-	{
-		m_pKinetic_RigidBody->Activate(false);
-		m_pDynamic_RigidBody->Activate(true);
-		m_pDynamic_RigidBody->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
-	}
-	else if (true == bKinetic)
-	{
-		m_pDynamic_RigidBody->Activate(false);
-		m_pKinetic_RigidBody->Activate(true);
-		m_pKinetic_RigidBody->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
-	}
-
-	m_bKinetic = bKinetic;
+	m_pCollider->Activate(true);
+	m_pCollider->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
+	m_pCollider->Set_Kinetic(true);
+	m_pCollider->UpdateChange();
 }
 
 wstring CMapKinetic_Object::MakePxModelProtoTag()
@@ -233,8 +188,7 @@ HRESULT CMapKinetic_Object::SetUp_Components(void* pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_strModelTag.c_str(), TEXT("Com_Model"),
 		(CComponent**)&m_pModelCom));
 
-	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"Kinetic", (CComponent**)&m_pKinetic_RigidBody, pArg));
-	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"Dynamic", (CComponent**)&m_pDynamic_RigidBody, pArg));
+	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"Collider", (CComponent**)&m_pCollider, pArg));
 
 	// todo : 임시로 모든 CMapNonAnim_Object 에 PxModel을 가지도록 설정 추후 수정 바람
 	//FAILED_CHECK(__super::Add_Component(LEVEL_NOW, PxModelTag.c_str(), TEXT("Com_PxModel"),
@@ -274,6 +228,5 @@ void CMapKinetic_Object::Free()
 	__super::Free();
 	Safe_Release(m_pPxModel);
 	Safe_Release(m_pModelCom);
-	Safe_Release(m_pDynamic_RigidBody);
-	Safe_Release(m_pKinetic_RigidBody);
+	Safe_Release(m_pCollider);
 }
