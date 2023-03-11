@@ -1,8 +1,9 @@
 {
     "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderInstancingProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
     "ShaderParams" : {
         "Ints" : [],
-        "Floats" : [],
+        "Floats" : [0.5],
         "Float2s" : [],
         "Float4s" : [],
         "Float4x4s" : [],
@@ -13,5 +14,6 @@
             "../Bin/Resources/Environments/00_Common/03_Texture/T_Detail_N.png"
         ],
         "Pass" : 1
-    }
+    },
+    "InstancingPass" : 2
 }

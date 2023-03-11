@@ -97,39 +97,39 @@ HRESULT CVIBuffer_Mesh_Instancing::Initialize_Prototype(const char* pModelFilePa
 	m_iInstanceStride = sizeof(VTXINSTANCE);
 	m_iNumInstance = iNumInstance;
 
-	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
-	m_BufferDesc.ByteWidth = m_iInstanceStride * m_iNumInstance;
-	m_BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	m_BufferDesc.StructureByteStride = m_iInstanceStride;
-	m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	m_BufferDesc.MiscFlags = 0;
+	//ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
+	//m_BufferDesc.ByteWidth = m_iInstanceStride * m_iNumInstance;
+	//m_BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	//m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	//m_BufferDesc.StructureByteStride = m_iInstanceStride;
+	//m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//m_BufferDesc.MiscFlags = 0;
 
-	VTXINSTANCE*		pInstance = new VTXINSTANCE[m_iNumInstance];
-	ZeroMemory(pInstance, sizeof(VTXINSTANCE));
+	//VTXINSTANCE*		pInstance = new VTXINSTANCE[m_iNumInstance];
+	//ZeroMemory(pInstance, sizeof(VTXINSTANCE));
 
-	for (_uint i = 0; i < m_iNumInstance; ++i)
-	{
-		pInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f);
-		pInstance[i].vUp = _float4(0.f, 1.f, 0.f, 0.f);
-		pInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
-		pInstance[i].vPosition = _float4(0.f, 0.f, 0.f, 1.f);
+	//for (_uint i = 0; i < m_iNumInstance; ++i)
+	//{
+	//	pInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f);
+	//	pInstance[i].vUp = _float4(0.f, 1.f, 0.f, 0.f);
+	//	pInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
+	//	pInstance[i].vPosition = _float4(0.f, 0.f, 0.f, 1.f);
 
-		pInstance[i].vColor = _float4(0.f, 0.f, 0.f, 1.f);
+	//	pInstance[i].vColor = _float4(0.f, 0.f, 0.f, 1.f);
 
-		pInstance[i].vRandDir = _float3(0.f, 0.f, 0.f);
-		pInstance[i].fLifeTime = 0.f;
-		pInstance[i].fGravityPower = 0.f;
+	//	pInstance[i].vRandDir = _float3(0.f, 0.f, 0.f);
+	//	pInstance[i].fLifeTime = 0.f;
+	//	pInstance[i].fGravityPower = 0.f;
 
-	}
+	//}
 
-	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-	m_SubResourceData.pSysMem = pInstance;
-	// m_SubResourceData.p
-	if (FAILED(m_pDevice->CreateBuffer(&m_BufferDesc, &m_SubResourceData, &m_pInstanceBuffer)))
-		return E_FAIL;
+	//ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+	//m_SubResourceData.pSysMem = pInstance;
+	//// m_SubResourceData.p
+	//if (FAILED(m_pDevice->CreateBuffer(&m_BufferDesc, &m_SubResourceData, &m_pInstanceBuffer)))
+	//	return E_FAIL;
 
-	Safe_Delete_Array(pInstance);
+	//Safe_Delete_Array(pInstance);
 
 
 #pragma endregion

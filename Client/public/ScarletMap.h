@@ -23,7 +23,6 @@ public:
 	void Imgui_RenderProperty() override;
 	virtual void SaveToJson(OUT Json& json) override;
 	virtual void LoadFromJson(const Json& json) override;
-
 	
 private:
 	HRESULT SetUp_Components();   
@@ -38,7 +37,7 @@ private:
 	pair<wstring, PROTOINFO>			m_pModelProtoInfo;
 	CGameObject* 						m_pGameObject = nullptr;
 
-	_int								m_iProtoInfo = NON_INSTANCE;
+	_int								m_iProtoInfo = INSTANCE;
 public:
 	static CScarletMap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr) override;

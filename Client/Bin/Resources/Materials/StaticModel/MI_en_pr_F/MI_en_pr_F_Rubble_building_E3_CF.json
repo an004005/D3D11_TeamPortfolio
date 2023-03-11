@@ -1,0 +1,19 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderInstancingProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [0.8],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Basement/pr_BasementTown/pr_S_town_future/Rubble/copy_Rubble_Small_Color_Texture_E.dds",
+            "../Bin/Resources/Environments/Prop/10_Props/Rubble/RubbleAndDebris/03_Texture/Rubble_Small_NM_Texture.png",
+            "",
+            "../Bin/Resources/Environments/00_Common/03_Texture/T_Detail_N.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass" : 2
+}

@@ -99,15 +99,34 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 	ImGui::Separator();
 	ImGui::Separator();
 
+	{
+		char ParticleGroupTag[MAX_PATH];
+		strcpy(ParticleGroupTag, m_ParticleGroupTag.c_str());
+		ImGui::InputText("ParticleGroup Tag", ParticleGroupTag, MAX_PATH);
+		m_ParticleGroupTag = ParticleGroupTag;
 
+		if (ImGui::Button("Add New ParticleGroup"))
+		{
+			Json EffectJson = CJsonStorage::GetInstance()->FindOrLoadJson(m_ParticleGroupTag);
+			if (EffectJson.empty())
+				MSG_BOX("Failed to Add New ParticleGroup");
+			else
+			{
+				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_ParticleGroup", TEXT("ProtoVFX_ParticleGroup"), &EffectJson);
+			}
+		}
+	}
+
+	ImGui::Separator();
+	ImGui::Separator();
 	if (ImGui::CollapsingHeader("Effect Viewer"))
 	{
 		if (ImGui::Button("Refresh_Effect Folder"))
 		{
-			// LoadEffects("../Bin/Resources/Curve/Fire_Attack/");
-			LoadEffects("../Bin/Resources/Curve/Elec_Attack/");
-			// LoadEffects("../Bin/Resources/Curve/Default_Attack/");
-			// LoadEffects("../Bin/Resources/Curve/NeedToWork/");
+			// LoadEffects("../Bin/Resources/Curve/EffectGroup/Fire_Attack/");
+			LoadEffects("../Bin/Resources/Curve/EffectGroup/Elec_Attack/");
+			// LoadEffects("../Bin/Resources/Curve/EffectGroup/Default_Attack/");
+			// LoadEffects("../Bin/Resources/Curve/EffectGroup/NeedToWork/");
 		}
 
 		static char szSearchEffect[MAX_PATH] = "";
@@ -151,6 +170,7 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 	if (ImGui::Button("Add Sample EffectSystem"))
 	{
 		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_EffectSys", TEXT("ProtoVFX_EffectSystem")));
+		ImGui::SameLine();
 	}
 	else if (ImGui::Button("Add Sample EffectGroup"))
 	{
@@ -159,8 +179,12 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 	else if(ImGui::Button("Add Sample ParticleSystem"))
 	{
 		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_ParticleSystem", TEXT("ProtoVFX_ParticleSystem")));
+		ImGui::SameLine();
 	}
-
+	else if (ImGui::Button("Add Sample ParticleGroup"))
+	{
+		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_ParticleGroup", TEXT("ProtoVFX_ParticleGroup")));
+	}
 
 }
 

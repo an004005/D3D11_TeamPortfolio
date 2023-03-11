@@ -22,8 +22,9 @@ public:
 	void LoadEffects(const char* pEffectDir);
 private:
 	string m_EffectSystemTag = "../Bin/Resources/VFX/EffectSystem/";
-	string m_EffectGroupTag = "../Bin/Resources/Curve/";
+	string m_EffectGroupTag = "../Bin/Resources/Curve/EffectGroup/";
 	string m_ParticleSystemTag = "../Bin/Resources/VFX/ParticleSystem/";
+	string m_ParticleGroupTag = "../Bin/Resources/Curve/ParticleGroup/";
 
 	unordered_map<string, string>  m_mapEffectGroup;
 	string								m_CurEffectName;
