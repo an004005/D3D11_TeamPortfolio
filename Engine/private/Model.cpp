@@ -94,6 +94,24 @@ CModel::CModel(const CModel & rhs)
 	Safe_AddRef(m_pShadowShader);
 }
 
+const _float3* CModel::Get_VerticesPos()
+{
+	return m_Meshes.front()->Get_VerticesPos();
+}
+
+const _uint CModel::Get_NumVertices()
+{
+	return m_Meshes.front()->Get_NumVertices();
+}
+
+const VTXMODEL* CModel::Get_NonAnimBuffer()
+{
+	return m_Meshes.front()->Get_NonAnimBuffer();
+}
+
+
+
+
 CBone * CModel::Get_BonePtr(const char * pBoneName)
 {
 	const auto itr = m_mapBones.find(pBoneName);
@@ -112,11 +130,17 @@ CBone* CModel::Get_BonePtr(const string& strBoneName)
 	return itr->second;
 }
 
-_matrix CModel::GetBoneMatrix(const string& strBoneName)
+_matrix CModel::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
 {
 	CBone* pBone = Get_BonePtr(strBoneName);
 	Assert(pBone != nullptr);
-	return pBone->Get_CombindMatrix() * XMLoadFloat4x4(&m_PivotMatrix);
+
+	if(bPivotapply == true)
+	{
+		return pBone->Get_CombindMatrix() * XMLoadFloat4x4(&m_PivotMatrix);
+	}
+	
+	return pBone->Get_CombindMatrix();
 }
 
 CAnimation* CModel::Find_Animation(const string& strAnimaName)

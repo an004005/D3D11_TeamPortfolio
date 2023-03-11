@@ -8,9 +8,11 @@ BEGIN(Engine)
 class CVIBuffer_Point_Instancing;
 class CRenderer;
 class CVIBuffer_Mesh_Instancing;
+class CModel;
 END
 
 BEGIN(Client)
+
 
 enum class ESpawnShape
 {
@@ -35,7 +37,11 @@ class CParticleSystem :	public CGameObject
 public:
 	CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CParticleSystem(const CParticleSystem& rhs);
-	virtual ~CParticleSystem() = default;
+	virtual ~CParticleSystem()
+	{
+		tmp.erase(this);
+	}
+	static set<CParticleSystem*> tmp;
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
@@ -58,13 +64,17 @@ private:
 	void AddMesh();
 	void UpdateMeshes(_float fTimeDelta);
 
-	
+private:
+	void Create_MeshData(VTXMATRIX data);
+	_uint FineNearestIndex(_float4 vPos);
 private:
 	ShaderParams m_tParam;
 	CRenderer* m_pRendererCom = nullptr;
 	CShader* m_pShader = nullptr;
 	CVIBuffer_Point_Instancing* m_pPointInstanceBuffer = nullptr;
 	CVIBuffer_Mesh_Instancing*	m_pMeshInstanceBuffer = nullptr;
+	CModel*						m_pModel = nullptr;
+
 
 	_bool m_bLocal = true;
 	_uint m_iInstanceNum = 50;
@@ -109,11 +119,16 @@ private:
 
 	string m_PointBufferProtoTag = "Prototype_Component_PointInstance";
 	string m_ShaderProtoTag = "Prototype_Component_Shader_VtxPointInstance_Particle";
-
+	string m_ModelProtoTag;
 	// string m_MeshBufferProtoTag;
 
 	list<VTXMATRIX> m_PointList;
 	list<VTXINSTANCE> m_MeshList;
+
+	vector<pair<float, _uint>> m_vecVerticesDistance;
+
+	_float m_fsurfaceThreshold = 0.1f;
+	const _float3* m_vVerticesPos = nullptr;
 private:
 	// For Gravity
 
@@ -124,14 +139,19 @@ private:
 	// For Rotation
 	_bool	  m_bRotate = false;
 	_float4x4 m_RotationMatrix = XMMatrixIdentity();
+	_float3	 m_vMeshSize{ 1.f,1.f,1.f };
 	// _float	  m_ArrayRoationToTime[3];
 	_float3	  m_fRotationToTime_Min = {0.f,0.f,0.f};
 	_float3	  m_fRotationToTime_Max = { 0.f,0.f,0.f };
+
 
 public:
 	static CParticleSystem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg) override;
 	virtual void			Free() override;
 };
+
+
+
 
 END

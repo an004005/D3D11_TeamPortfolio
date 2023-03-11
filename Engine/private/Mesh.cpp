@@ -142,7 +142,7 @@ HRESULT CMesh::Ready_VertexBuffer_NonAnimModel(HANDLE hFile, CModel* pModel)
 
 	VTXMODEL* pNonAnimVertices = new VTXMODEL[m_iNumVertices];
 	ZeroMemory(pNonAnimVertices, sizeof(VTXMODEL) * m_iNumVertices);
-	
+
 	const _matrix PivotMatrix = pModel->GetPivotMatrix();
 	DWORD dwByte;
 	for (_uint i = 0; i < m_iNumVertices; ++i)

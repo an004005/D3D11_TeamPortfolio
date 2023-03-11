@@ -853,7 +853,7 @@ void CGameInstance::Release_Engine()
 	CGameInstance::GetInstance()->Clear();
 	_uint ref = CGameInstance::GetInstance()->DestroyInstance();
 
-	CCamera_Manager::GetInstance()->DestroyInstance();
+	ref = CCamera_Manager::GetInstance()->DestroyInstance();
 
 	ref = CObject_Manager::GetInstance()->DestroyInstance();
 
@@ -873,13 +873,13 @@ void CGameInstance::Release_Engine()
 
 	ref = CImgui_Manager::GetInstance()->DestroyInstance();
 
-	CTarget_Manager::GetInstance()->DestroyInstance();
+	ref = CTarget_Manager::GetInstance()->DestroyInstance();
 
-	CFont_Manager::GetInstance()->DestroyInstance();
+	ref = CFont_Manager::GetInstance()->DestroyInstance();
 
-	CFrustum::GetInstance()->DestroyInstance();
+	ref = CFrustum::GetInstance()->DestroyInstance();
 
-	CHDR::GetInstance()->DestroyInstance();
+	ref = CHDR::GetInstance()->DestroyInstance();
 
 	CGameTime_Manager::GetInstance()->DestroyInstance();
 
@@ -916,5 +916,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pCurve_Manager);
 	Safe_Release(m_pPhysX_Manager);
+
 }
 

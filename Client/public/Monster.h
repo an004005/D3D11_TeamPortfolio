@@ -23,6 +23,11 @@ public:
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Imgui_RenderProperty() override;
 
+public:
+	//For Effect
+	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
+	virtual _float4x4 GetPivotMatrix() override;
+	//~For Effect
 
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);

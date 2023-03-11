@@ -107,6 +107,7 @@ void GS_MAIN( point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
 	float3		vLook;
 	float3		vRight;
 	float3		vUp;
+
 	if (g_bRotate == 1)
 	{
 		vLook = (In[0].RotMatrix[0].xyz - In[0].vPosition);
@@ -115,7 +116,7 @@ void GS_MAIN( point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
 	}
 	else
 	{
-		vLook = (g_vCamPosition.xyz - In[0].vPosition);
+		vLook = g_vCamPosition.xyz - In[0].vPosition;
 		vRight = (normalize(cross(float3(0.f, 1.f, 0.f), vLook)) * PSize.x * 0.5f);
 		vUp = (normalize(cross(vLook, vRight)) * PSize.y * 0.5f);
 	}

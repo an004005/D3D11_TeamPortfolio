@@ -25,9 +25,10 @@
 #include "PostVFX_Scifi.h"
 #include "PostVFX_WhiteOut.h"
 #include "Imgui_EffectBrowser.h"
+#include "ParticleGroup.h"
 #include "PostVFX_ColorGrading.h"
 #include "PostVFX_HitDecal.h"
-
+#include "VFX_Manager.h"
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -42,6 +43,7 @@ HRESULT CLevel_Effect::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LevelSwitcher::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
+	CVFX_Manager::GetInstance()->Initialize(LEVEL_EFFECT);
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -55,8 +57,8 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer(TEXT("Layer"))))
 		return E_FAIL;
 
-	// if (FAILED(Ready_Layer_Player(L"Layer_Player")))
-	// 	return E_FAIL;
+	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -71,6 +73,10 @@ void CLevel_Effect::Tick(_double TimeDelta)
 {
 	CLevel::Tick(TimeDelta);
 
+	if(CGameInstance::GetInstance()->KeyDown(DIK_SPACE))
+	{
+		// CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_1")->Start();
+	}
 }
 
 void CLevel_Effect::Late_Tick(_double TimeDelta)
@@ -136,6 +142,7 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleGroup", CParticleGroup::Create(m_pDevice, m_pContext)));
 
 
 	// ±è±â¹üÀÇ ÈçÀû
@@ -230,6 +237,7 @@ HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 	// Json Attack = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Default_Attack/Default_Attack_1.json");
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack));
 
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_ParticleWorks", TEXT("ProtoVFX_ParticleGroup")));
 
 	
 

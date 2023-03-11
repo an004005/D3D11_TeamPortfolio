@@ -37,6 +37,22 @@ void CMonster::Imgui_RenderProperty()
 	m_DeathTimeline.Imgui_RenderEditor();
 }
 
+_float4x4 CMonster::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
+{
+	if (m_pModelCom->Get_BonePtr(strBoneName) == nullptr)
+		return XMMatrixIdentity();
+
+	return m_pModelCom->GetBoneMatrix(strBoneName, bPivotapply);
+}
+
+_float4x4 CMonster::GetPivotMatrix()
+{
+	if (m_pModelCom == nullptr)
+		return XMMatrixIdentity();
+
+	return m_pModelCom->GetPivotMatrix();
+}
+
 _bool CMonster::CheckDamagedTarget(CScarletCharacter* pTarget)
 {
 	const auto itr = m_DamagedTargetList.find(pTarget);

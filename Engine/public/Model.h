@@ -3,7 +3,7 @@
 #include "Component.h"
 
 BEGIN(Engine)
-class CAnimation;
+	class CAnimation;
 
 enum class EBoneMask
 {
@@ -41,10 +41,19 @@ private:
 	virtual ~CModel() = default;
 
 public:
+	// For Particle
+	const _float3* Get_VerticesPos();
+	const _uint	   Get_NumVertices();
+
+	const VTXMODEL* Get_NonAnimBuffer();
+	// const VTXANIMMODEL* Get_AnimBuffer();
+
+	// ~For Particle
+
 	_uint Get_NumMeshes() const { return static_cast<_uint>(m_Meshes.size()); }
 	class CBone* Get_BonePtr(const char* pBoneName);
 	class CBone* Get_BonePtr(const string& strBoneName);
-	_matrix GetBoneMatrix(const string& strBoneName);
+	_matrix GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true);
 	_float4x4 GetPivotMatrix() const { return m_PivotMatrix; }
 	CAnimation* Find_Animation(const string& strAnimaName);
 	void SetPivot(_float4x4 Pivot) { m_PivotMatrix = Pivot; }
