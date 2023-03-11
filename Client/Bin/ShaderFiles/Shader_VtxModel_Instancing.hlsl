@@ -62,29 +62,27 @@ struct PS_OUT
 	float4		vNormal : SV_TARGET1;
 	float4		vDepth : SV_TARGET2;
 	float4		vRMA : SV_TARGET3;
+	float4		vOutline : SV_TARGET4;
+	float4		vFlag : SV_TARGET5;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
-	float flags = PackPostProcessFlag(0.f, SHADER_DEFAULT);
+	float flags = SHADER_DEFAULT;
 
 	Out.vDiffuse = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	// Out.vFlag = flags;
 
 	return Out;
 }
 
-// g_tex_0 : diffuse
-// g_tex_1 : normal
-// g_tex_2 : RMA
-PS_OUT PS_DEFAULT(PS_IN In)
+PS_OUT CommonProcess(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
-
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
-
 	if (Out.vDiffuse.a < 0.01f)
 		discard;
 
@@ -93,19 +91,27 @@ PS_OUT PS_DEFAULT(PS_IN In)
 	{
 		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
 		vNormal = vNormalDesc.xyz * 2.f - 1.f;
-
 		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
 		vNormal = normalize(mul(vNormal, WorldMatrix));
 	}
 	else
-	{
 		vNormal = In.vNormal.xyz;
-	}
 
-	float flags = PackPostProcessFlag(0.f, SHADER_DEFAULT);
+	float flags = SHADER_DEFAULT;
 
-	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 1.f);
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	// Out.vFlag = flags;
+	return Out;
+}
+
+// g_tex_0 : diffuse
+// g_tex_1 : normal
+// g_tex_2 : RMA
+PS_OUT PS_DEFAULT(PS_IN In)
+{
+	PS_OUT Out = CommonProcess(In);
+
 	if (g_tex_on_2)
 		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
 	else
@@ -122,18 +128,14 @@ PS_OUT PS_DEFAULT(PS_IN In)
 PS_OUT PS_DETAIL_N(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
-
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
-
-	
-	// FIXME : ALB에 알파값 없는 애들때문에 임시로 설정
 	if (Out.vDiffuse.a < 0.01f)
-		Out.vDiffuse.a = 1.f;
+		discard;
 
 	float3 vNormal;
 	float3 vDetialNormal;
 
-	if (g_tex_on_1)
+	if (g_tex_on_1 && g_tex_on_3)
 	{
 		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
 		vNormal = vNormalDesc.xyz * 2.f - 1.f;
@@ -144,25 +146,32 @@ PS_OUT PS_DETAIL_N(PS_IN In)
 		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
 		vNormal = normalize(mul(vNormal, WorldMatrix));
 		vDetialNormal = normalize(mul(vDetialNormal, WorldMatrix));
+	}
+	else if (g_tex_on_1)
+	{
+		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+		vNormal = vNormalDesc.xyz * 2.f - 1.f;
 
+		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+		vNormal = normalize(mul(vNormal, WorldMatrix));
+	}
+	else
+		vNormal = In.vNormal.xyz;
+
+
+	float flags = SHADER_DEFAULT;
+
+	if (g_tex_on_3)
+	{
+		vNormal += vDetialNormal * g_float_0;
 	}
 	else
 	{
-		vNormal = In.vNormal.xyz;
+		Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	}
-
-	float flags = PackPostProcessFlag(0.f, SHADER_DEFAULT);
-
-	vNormal += vDetialNormal * g_float_0;
-
-	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
-
+	
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	if (g_tex_on_2)
-		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
-	else
-		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
-
+	// Out.vFlag = flags;
 	return Out;
 }
 
@@ -186,9 +195,7 @@ PS_OUT PS_EMISSIVE(PS_IN In)
 PS_OUT PS__ALPHA(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
-
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
-
 	if (Out.vDiffuse.a < 0.01f)
 		Out.vDiffuse.a = 1.f;
 
@@ -197,24 +204,17 @@ PS_OUT PS__ALPHA(PS_IN In)
 	{
 		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
 		vNormal = vNormalDesc.xyz * 2.f - 1.f;
-
 		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
 		vNormal = normalize(mul(vNormal, WorldMatrix));
 	}
 	else
-	{
 		vNormal = In.vNormal.xyz;
-	}
 
-	float flags = PackPostProcessFlag(0.f, SHADER_DEFAULT);
+	float flags = SHADER_DEFAULT;
 
-	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 1.f);
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	if (g_tex_on_2)
-		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
-	else
-		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
-
+	// Out.vFlag = flags;
 	return Out;
 }
 

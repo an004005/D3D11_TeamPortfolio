@@ -81,17 +81,18 @@ struct PS_OUT
 	float4		vDepth : SV_TARGET2;
 	float4		vRMA : SV_TARGET3;
 	float4		vOutline : SV_TARGET4;
+	float4		vFlag : SV_TARGET5;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float flags = PackPostProcessFlag(0.f, SHADER_DEFAULT);
+	float flags = SHADER_DEFAULT;
 	Out.vDiffuse = (float4)1.f;
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-
+	// Out.vFlag = flags;
 	return Out;
 }
 
@@ -119,7 +120,8 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 
 	float fDissolve = g_float_0;
 	float fEmissive = 0.f;
-	float flags = PackPostProcessFlag(0.f, SHADER_DEFAULT);
+	float flags = SHADER_DEFAULT;
+
 
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	if (Out.vDiffuse.a < 0.01f)
@@ -129,7 +131,7 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 	{
 		fEmissive = 2.f;
 
-		flags = PackPostProcessFlag(0.f, SHADER_NONE_SHADE);
+		flags = SHADER_NONE_SHADE;
 		float4 VanishNoise = g_Vanish_Noise.Sample(LinearSampler, TilingAndOffset(In.vTexUV, float2(5.f, 5.f), float2(0.f, 0.f)));
 		float chanG = VanishNoise.g;
 		float chanB = VanishNoise.b;
@@ -142,10 +144,10 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 
 		if (chanB < fDissolve)
 		{
-			fEmissive = 10.f;
+			fEmissive = 8.f;
 		}
 
-		Out.vDiffuse *= float4(1.f, 0.4f, 0.f, 1.f);
+		Out.vDiffuse.rgb *= COL_BURNOUT;
 	}
 	else
 	{
@@ -161,7 +163,7 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 			float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
 			float4 vViewDir = g_vCamPosition - In.vWorldPos;
 			float fFresnel = FresnelEffect(vNormal.xyz, vViewDir.xyz, 2.5f);
-			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, float3(0.9f, 0.3f, 0.f) , fFresnel);
+			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_FIRE , fFresnel);
 			if (fFresnel > 0.5f)
 				fEmissive = 2.f;
 		}
@@ -177,7 +179,7 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 			vWetNormal = lerp(vDefaultNormal, vWetNormal, vWaveTile.a);
 			Out.vNormal = vector(vWetNormal * 0.5f + 0.5f, 0.f);
 
-			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, float3(120.f / 255.f, 60.f/ 255.f, 0.f), vWaveTile.a);
+			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_OIL, vWaveTile.a);
 			fEmissive = (vWaveTile.a * 0.5f);
 		}
 	}
@@ -185,6 +187,7 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 
 
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
+	// Out.vFlag = flags;
 
 	return Out;
 
@@ -211,7 +214,7 @@ PS_OUT PS_MAIN_EM320_Water_2(PS_IN In)
 	else
 	{
 		float fEmissive = 0.f;
-		float flags = PackPostProcessFlag(0.f, SHADER_DEFAULT);
+		float flags = SHADER_DEFAULT;
 		Out.vNormal = NormalPacking(In);
 
 		if (1.f - In.vTexUV.y >= fRegen)
@@ -274,6 +277,7 @@ PS_OUT PS_MAIN_EM320_Water_2(PS_IN In)
 		Out.vDiffuse.a = 1.f;
 
 		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
+		// Out.vFlag = flags;
 		Out.vRMA = float4(0.3f, 0.5f, 1.f, 0.f);
 	}
 

@@ -50,6 +50,9 @@ public:
 
 	const char* GetName() { return m_szName; }
 
+	_float GetMinX();
+	_float GetMaxX();
+
 private:
 	// ImVec2* m_pKeyFrames = nullptr;
 	ImVec2 m_KeyFrames[30];

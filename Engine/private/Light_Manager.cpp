@@ -83,6 +83,17 @@ _float4 CLight_Manager::GetShadowCamLook()
 	return _float4(0.f, -1.f, 0.f, 0.f);
 }
 
+// void CLight_Manager::CascadeUpdate(_float4x4 CamWorlMatrix, _float4* vFustumCorners)
+// {
+// 	for (auto& iter : m_Lights)
+// 	{
+// 		if (LIGHTDESC::TYPE_DIRECTIONAL == iter.second->Get_LightDesc()->eType)
+// 		{
+// 			iter.second->Update(CamWorlMatrix, vFustumCorners);
+// 		}
+// 	}
+// }
+
 void CLight_Manager::Imgui_Render()
 {
 	if (m_pShadowCam)

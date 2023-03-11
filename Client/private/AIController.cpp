@@ -59,10 +59,19 @@ void CAIController::Tick(_double TimeDelta)
 		ClearCommands();
 		SetTarget(nullptr);
 		return;
-	}
+	}	
 
 	m_fTimeDelta = (_float)TimeDelta;
 
+	auto pOwner = TryGetOwner();
+
+	if (pOwner == nullptr)
+		return;
+
+	m_fTtoM_Distance = XMVectorGetX(XMVector3LengthEst(
+		m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)
+		- pOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)));
+	
 	AI_Tick(TimeDelta);
 
 	while (m_Commands.empty() == false)
@@ -86,6 +95,9 @@ void CAIController::Imgui_RenderProperty()
 
 	else if (m_eDistance == DIS_FAR)
 		strDistance = "Far";
+
+	else if (m_eDistance == DIS_OUTSIDE)
+		strDistance = "Outside";
 
 	ImGui::Text("Distance : "); ImGui::SameLine(); ImGui::Text(strDistance.c_str());
 	static string strSelected;
@@ -144,7 +156,7 @@ void CAIController::Imgui_RenderProperty()
 	}
 
 	ImGui::Separator();
-
+	
 	static EHandleInput eInput = SPACE;
 	static array<const char*, HANDLE_END> arrInputName {
 		"SPACE", "CTRL", "SHIFT", "MOUSE_LB", "MOUSE_RB", "NUM_1", "NUM_2", "NUM_3", "NUM_4", "C", "Q", "E", "R", "X", "G"
@@ -174,7 +186,6 @@ void CAIController::SetTarget(CScarletCharacter* pTarget)
 	Safe_AddRef(m_pTarget);
 }
 
-
 _bool CAIController::IsCommandRunning()
 {
 	return m_Commands.empty() == false;
@@ -182,7 +193,7 @@ _bool CAIController::IsCommandRunning()
 
 void CAIController::ClearCommands()
 {
-	m_Commands.clear();
+	m_Commands.clear();	
 }
 
 void CAIController::Move(EMoveAxis eAxis)
@@ -191,6 +202,11 @@ void CAIController::Move(EMoveAxis eAxis)
 	{
 	case EMoveAxis::NORTH:
 		m_vMoveAxis.z += 1.f;
+		// 거리 비교해서 비교값 이하일때 멈추는 기능 추가하기 	
+		if (abs(m_fTtoM_Distance) < 1.3f)
+		{
+			m_Commands.front().SetFinish();
+		}
 		break;
 	case EMoveAxis::NORTH_EAST: 
 		m_vMoveAxis.z += 1.f;
@@ -234,7 +250,7 @@ void CAIController::TurnToTarget(_float fSpeedRatio)
 
 	const _vector vLookAt = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 	m_fTurnRemain = pOwner->GetTransform()->Get_RemainYawToLookAt(vLookAt);
-	pOwner->GetTransform()->LookAt_Smooth(vLookAt, _double(m_fTimeDelta * fSpeedRatio));
+	pOwner->GetTransform()->LookAt_Smooth(vLookAt, _double(m_fTimeDelta * fSpeedRatio));	
 }
 
 void CAIController::Input(EHandleInput eInput)

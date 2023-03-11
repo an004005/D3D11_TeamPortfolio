@@ -25,6 +25,7 @@
 #include "PostVFX_Scifi.h"
 #include "PostVFX_WhiteOut.h"
 #include "Imgui_EffectBrowser.h"
+#include "PostVFX_ColorGrading.h"
 #include "PostVFX_HitDecal.h"
 
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -54,11 +55,11 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer(TEXT("Layer"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
-		return E_FAIL;
-
-	// if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	// if (FAILED(Ready_Layer_Player(L"Layer_Player")))
 	// 	return E_FAIL;
+
+	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
@@ -87,11 +88,6 @@ HRESULT CLevel_Effect::Render()
 
 void CLevel_Effect::LoadEffects(const char* pEffectDir)
 {
-	// for(auto Pair : m_mapEffectGroup)
-	// {
-	// 	Pair.second->SetDelete();
-	// }
-
 	m_mapEffectGroup.clear();
 
 	CGameUtils::ListFiles(pEffectDir, [this](const string& pEffectPath)
@@ -112,7 +108,7 @@ HRESULT CLevel_Effect::Ready_Lights()
 
 	LightDesc.eType = LIGHTDESC::TYPE_DIRECTIONAL;
 	LightDesc.isEnable = true;
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.0f, 0.f);
+	LightDesc.vDirection = _float4(-cosf(XMConvertToRadians(60.f)), -sinf(XMConvertToRadians(60.f)), 0.0f, 0.f);
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
@@ -125,22 +121,6 @@ HRESULT CLevel_Effect::Ready_Lights()
 HRESULT CLevel_Effect::Ready_Prototypes()
 {
 	auto pGameInstance = CGameInstance::GetInstance();
-
-	// CGameUtils::ListFiles("../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/", [this](const string& filePath)
-	// {
-	// 	string fileName = CGameUtils::GetFileName(filePath);
-	// 	CGameInstance::GetInstance()->Add_Prototype(
-	// 		s2ws(fileName).c_str(),
-	// 		CModel::Create(m_pDevice, m_pContext, filePath.c_str()));
-	// });
-
-	//
-	// CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
-	// {
-	// 	char szFileName[MAX_PATH]{};
-	// 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-	// 	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
-	// });
 
 	// ForSky
 
@@ -182,10 +162,10 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 
 
 	// For PostVFX Distortion
-	// if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
-	// 	CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
-	// 	return E_FAIL;
-	// 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
+		CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
 
 	// For PostVFX Scifi
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
@@ -194,6 +174,10 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	//
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Hit_Decal"),
 		CPostVFX_HitDecal::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	//
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_PostVFX_ColorGrading"),
+		CPostVFX_ColorGrading::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	// 모델 추가하는 방법
@@ -223,6 +207,14 @@ HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 
 	// For_SkySphere
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Env", TEXT("Prototype_GameObject_SkyBox")));
+	Json ColorGrading = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/ColorGrading.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"Prototype_PostVFX_ColorGrading", &ColorGrading);
+	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Scifi", &Test);
+	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
+
+
 
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic")));
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
@@ -239,8 +231,7 @@ HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup"), &Attack));
 
 
-	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Scifi", &Test);
+	
 
 	//~For PostVFX
 
@@ -248,8 +239,7 @@ HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 	// Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_Effect.json");
 	// pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &AttackMesh);
 	//
-	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
+
 	//~ For Distortion
 
 
@@ -280,11 +270,11 @@ HRESULT CLevel_Effect::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
-		return E_FAIL;
+	// if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
+	// 	return E_FAIL;
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Player"))))
-		return E_FAIL;
+	// if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Player"))))
+		// return E_FAIL;
 
 	return S_OK;
 }

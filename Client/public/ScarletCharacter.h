@@ -19,6 +19,7 @@ protected:
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual void AfterPhysX() override;
 
@@ -27,18 +28,21 @@ public:
 	_bool IsOnFloor() const { return m_bOnFloor; }
 	// 경직 또는 죽을 때 실행하여 상태 초기화하는 함수
 	// ex) 공격 sweep 중단, 상태이상 제거 등등
-	virtual void Reset() {}
-	void SetPositionForce(_float4 vPos);
+	virtual void Reset() { }
 
 public:
 	EDeBuffType GetDeBuffType() const { return m_eDeBuff; }
+protected:
+	virtual void Update_DeBuff(_double TimeDelta);
+	virtual void DeBuff_End(){}
+	virtual void DeBuff_Fire(){}
+	virtual void DeBuff_Oil(){}
 
 protected:
 	void		Collision_Check_Capsule(CRigidBody*	AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollision = true, ECOLLIDER_TYPE_BIT ColType = CTB_MONSTER);
 	list<CScarletCharacter*>	m_DamagedObjectList;
 
 protected:
-	EDeBuffType m_eDeBuff = EDeBuffType::DEBUFF_END;
 	CControlledRigidBody* m_pCollider = nullptr;
 	CGameInstance* m_pGameInstance = nullptr;
 	_float4 m_vPrePos;
@@ -49,12 +53,21 @@ protected:
 	_float m_fYSpeed = 0.f;
 	_float m_fGravity = 20.f;
 
+	// Debuff
+	EDeBuffType m_ePreDeBuff = EDeBuffType::DEBUFF_END;
+	EDeBuffType m_eDeBuff = EDeBuffType::DEBUFF_END;
+	_float m_fDeBuffTime = 0.f;
+	// ~Debuff
+
 public:
 	_bool isCollision() { return m_iHitTargetCount > 0 ? true : false; }
 
 protected:
 	_uint	m_iHitTargetCount = 0;
 	Vector4 m_BeforePos;
+
+public:
+	// virtual HRESULT Render_ShadowDepth() override;
 
 public:
 	virtual void Free() override;

@@ -47,7 +47,7 @@ namespace Engine
 	/* 방향성광원, 점광원 : 방향벡터가 필요하다. */
 	typedef struct tagLightDesc
 	{
-		enum TYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_END };
+		enum TYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_FOV, TYPE_END };
 
 		TYPE				eType;
 
@@ -168,13 +168,38 @@ namespace Engine
 	}VAL_BASE_VTXMODEL_DECLARATION;
 
 
+	// For StaticModel Instancing
+	typedef struct tagVertexStaticModelMatrix
+	{
+		_float4			vRight;
+		_float4			vUp;
+		_float4			vLook;
+		_float4			vPosition;
+	}VTXMODELMATRIX;
+
+	// For Particle PointInstance 
 	typedef struct tagVertexMatrix
 	{
 		_float4			vRight;
 		_float4			vUp;
 		_float4			vLook;
 		_float4			vPosition;
+
+		_float4			vRotRight;
+		_float4			vRotUp;
+		_float4			vRotLook;
+		_float4			vRotPos;
+
+		_float			fGravityPower;
 	}VTXMATRIX;
+
+	typedef struct ENGINE_DLL tagVertexPoint_Instance_Particle_Declaration
+	{
+		static const unsigned int		iNumElements = 10;
+		static D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXPOINT_INSTANCE_PARTICLE_DECLARATION;
+
+	// ~ For Particle PointInstance 
 
 	typedef struct tagVertex_Instance
 	{
@@ -182,7 +207,16 @@ namespace Engine
 		_float4			vUp;
 		_float4			vLook;
 		_float4			vPosition;
+
 		_float4			vColor;
+
+		_float3			vEulerRad;
+		_float3			vRandDir;
+		_float3			vVelocity;
+		_float3			vSize;
+		_float			fGravityPower;
+		_float			fLifeTime;
+		_float			fCurLifeTime;
 	}VTXINSTANCE;
 
 	/*******************

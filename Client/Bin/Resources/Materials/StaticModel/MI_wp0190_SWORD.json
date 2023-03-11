@@ -1,10 +1,17 @@
     {
     "ShaderProtoTag" : "Prototype_Component_Shader_VtxToonModel",
     "ShaderParams" : {
-        "Ints" : [],
+        "Ints" : [0],
         "Floats" : [],
         "Float2s" : [],
-        "Float4s" : [],
+        "Float4s" : [
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
         "Float4x4s" : [],
         "Textures" : [
             "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/Texture/T_wp0190_Sword_COL.dds",

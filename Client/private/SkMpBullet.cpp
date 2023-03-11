@@ -34,7 +34,7 @@ HRESULT CSkMpBullet::Initialize_Prototype()
 
 HRESULT CSkMpBullet::Initialize(void * pArg)
 {
-	Json SkMpBullet = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPoolBullet.json");
+	Json SkMpBullet = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPool/SkummyPoolBullet.json");
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -46,7 +46,7 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 		(CComponent**)&m_pCollider, &SkMpBullet)))
 		return E_FAIL;
 
-	m_pTransformCom->SetSpeed(16.f);
+	m_pTransformCom->SetSpeed(22.f);
 
 	m_strObjectTag = "SkMp_Bullet";
 

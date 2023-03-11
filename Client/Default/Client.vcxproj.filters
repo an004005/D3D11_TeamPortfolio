@@ -103,14 +103,8 @@
     <Filter Include="VFX\Effect\Parent">
       <UniqueIdentifier>{ebd31f6e-1e78-408a-9670-616c928bb21b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI">
-      <UniqueIdentifier>{cd40877e-1d57-40a8-aa94-2c831bd55b5f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\15. UITool">
       <UniqueIdentifier>{5357e7ff-329d-4daf-8dae-a5f0aa71bc95}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI">
-      <UniqueIdentifier>{dbe3d603-c8a0-4590-96fa-f2a387abb7b8}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Camera\CamSpot">
       <UniqueIdentifier>{b280be19-5c98-4da2-b901-ddc4e17635f3}</UniqueIdentifier>
@@ -150,21 +144,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Weapon\wp0190">
       <UniqueIdentifier>{556fd684-ed88-4908-bb68-cfefb092763f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\Drive">
-      <UniqueIdentifier>{2a9015c3-ac89-4688-ba20-5af55c1b4601}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\Item">
-      <UniqueIdentifier>{46619585-dc48-4000-9f31-5617ce206aab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\PlayerInfo">
-      <UniqueIdentifier>{1288607c-59a4-4427-b040-1ed8b21a4858}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\SASInfo">
-      <UniqueIdentifier>{ea0a820a-4dc8-4972-9330-a21a848385ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
-      <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Monster\SkummyPool\SkMpBullet">
       <UniqueIdentifier>{81b8a892-455d-4368-8398-fd91cc4bf17e}</UniqueIdentifier>
@@ -232,6 +211,9 @@
     <Filter Include="02.GameObjects\Player\BaseAnimInstance">
       <UniqueIdentifier>{f7c4a316-58ff-44eb-bc6b-94195c17f0cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Player\BattleAninInstance">
+      <UniqueIdentifier>{bee24b6b-6010-44c3-9973-3fa91aa309aa}</UniqueIdentifier>
+    </Filter>
     <Filter Include="97.ShaderFiles\PostProcess\HitDecal">
       <UniqueIdentifier>{eb2d8b39-fe98-4867-923b-0ed4f62afc11}</UniqueIdentifier>
     </Filter>
@@ -240,6 +222,36 @@
     </Filter>
     <Filter Include="02.GameObjects\Monster\SkummyPool\SkmP_Controller">
       <UniqueIdentifier>{e5c3d8c2-d736-4e9d-a9c2-b6b7648712eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPandou\SkPd_Controller">
+      <UniqueIdentifier>{b3a20596-311c-4cc2-9a39-7c8e58f2e12f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI">
+      <UniqueIdentifier>{cd40877e-1d57-40a8-aa94-2c831bd55b5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI">
+      <UniqueIdentifier>{dbe3d603-c8a0-4590-96fa-f2a387abb7b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\Drive">
+      <UniqueIdentifier>{2a9015c3-ac89-4688-ba20-5af55c1b4601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\Item">
+      <UniqueIdentifier>{46619585-dc48-4000-9f31-5617ce206aab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\PlayerInfo">
+      <UniqueIdentifier>{1288607c-59a4-4427-b040-1ed8b21a4858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\SASInfo">
+      <UniqueIdentifier>{ea0a820a-4dc8-4972-9330-a21a848385ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
+      <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BuddyLumi\BdLm_Controller">
+      <UniqueIdentifier>{7e82e54f-b5b7-4330-be57-352521a4f639}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller">
+      <UniqueIdentifier>{8d065b3d-840e-4ba5-9be7-55d1de3f00f4}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Trigger">
       <UniqueIdentifier>{55631933-d0bb-4c2f-a5de-c7e5655b9f86}</UniqueIdentifier>
@@ -609,6 +621,18 @@
       <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PostVFX_ColorGrading.h" />
+    <ClInclude Include="..\public\SkPd_Controller.h">
+      <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BdLm_Controller.h">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h">
+      <Filter>97.ShaderFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrJ_Controller.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Trigger.h">
       <Filter>02.GameObjects\Trigger</Filter>
     </ClInclude>
@@ -952,6 +976,15 @@
       <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_ColorGrading.cpp" />
+    <ClCompile Include="..\private\SkPd_Controller.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BdLm_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrJ_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Trigger.cpp">
       <Filter>02.GameObjects\Trigger</Filter>
     </ClCompile>

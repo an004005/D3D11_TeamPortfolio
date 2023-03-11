@@ -16,15 +16,29 @@ CFL_Controller::CFL_Controller(const CFL_Controller & rhs)
 HRESULT CFL_Controller::Initialize(void * pArg)
 {
 	FAILED_CHECK(CAIController::Initialize(pArg));
-
-	
+		
 		m_pFSM = CFSMComponentBuilder()
 			.InitState("Operate")
 			.AddState("Operate")
-				.AddTransition("Operate to Near", "Near")
+				.AddTransition("Operate to Outside", "Outside")
 					.Predicator([this]
 					{
 						return m_pCastedOwner->IsPlayingSocket() == false;
+					})
+
+				/*.AddTransition("Operate to Near", "Near")
+					.Predicator([this]
+					{
+						return m_pCastedOwner->IsPlayingSocket() == false;
+					})*/
+
+			.AddState("Outside")
+				.Tick(this, &CFL_Controller::Tick_Outside)
+
+				.AddTransition("Outside to Far", "Far")
+					.Predicator([this] 
+					{
+						return m_fToTargetDistance <= 20.f;
 					})
 
 			.AddState("Near")
@@ -72,7 +86,6 @@ HRESULT CFL_Controller::Initialize(void * pArg)
 
 			.Build();
 	
-
 	m_fTurnSlowTime = 0.9f;
 	m_fTurnSlowRatio = 0.4f;
 
@@ -146,7 +159,7 @@ void CFL_Controller::Tick_Mid(_double TimeDelta)
 		AddCommand("WalkTurn", 1.3f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	case 1:
-		AddCommand("Run", 2.f, &CFL_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		AddCommand("Run", 2.8f, &CFL_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	}
 	m_iMidOrder = (m_iMidOrder + 1) % 2;
@@ -159,15 +172,33 @@ void CFL_Controller::Tick_Far(_double TimeDelta)
 	switch (m_iFarOrder)
 	{
 	case 0:
-//		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Turn", 3.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		AddCommand("Jump", 0.f, &CAIController::Input, MOUSE_RB);
 		break;
 	case 1:
 		AddCommand("Threat", 0.f, &CAIController::Input, C);
-
+		break;
 	}
 
 	m_iFarOrder = (m_iFarOrder + 1) % 2;
+}
+
+void CFL_Controller::Tick_Outside(_double TimeDelta)
+{
+	m_eDistance = DIS_OUTSIDE;
+
+	switch (m_iOutOrder)
+	{
+	case 0:
+		AddCommand("Wait", 2.f, &CAIController::Wait);
+		break;
+
+	case 1:
+		AddCommand("Wait", 2.f, &CAIController::Wait);
+		break;
+	}
+
+	m_iOutOrder = (m_iOutOrder + 1) % 2;
 }
 
 
@@ -179,6 +210,10 @@ void CFL_Controller::Run(EMoveAxis eAxis)
 	{
 	case EMoveAxis::NORTH:
 		m_vMoveAxis.z += 1.f;
+		if (abs(m_fTtoM_Distance) < 1.3f)
+		{
+			m_Commands.front().SetFinish();
+		}
 		break;
 	case EMoveAxis::NORTH_EAST:
 		m_vMoveAxis.z += 1.f;

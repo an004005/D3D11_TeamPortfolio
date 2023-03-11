@@ -4,11 +4,8 @@
 
 BEGIN(Engine)
 class CGameInstance;
-class CShader;
 class CAnimation;
 class CFSMComponent;
-class CModel;
-class CRenderer;
 class CRigidBody;
 END
 
@@ -36,10 +33,6 @@ public:
 	virtual void AfterPhysX();
 
 private:
-	CShader*					m_pShaderCom = nullptr;
-	CRenderer*					m_pRendererCom = nullptr;
-	CModel*						m_pModelCom = nullptr;
-
 	class CSkmP_Controller*		m_pController = nullptr;
 	class CSkmP_AnimInstance*	m_pASM = nullptr;
 	
@@ -49,6 +42,7 @@ private:
 	CAnimation*			m_pAtk_Shoot = nullptr; // 
 	CAnimation*			m_pThreat = nullptr; // µµ¹ß
 
+// Damage
 	CAnimation*			m_pDamage_L_F = nullptr;
 	CAnimation*			m_pDamage_L_B = nullptr;
 
@@ -57,10 +51,22 @@ private:
 	CAnimation*			m_pDamage_M_L = nullptr;
 	CAnimation*			m_pDamage_M_R = nullptr;
 
+// Air Damage
+	CAnimation*			m_pBlowStart = nullptr;
+	CAnimation*			m_pBlowLand = nullptr;
+	CAnimation*			m_pGetUp = nullptr;
+	CAnimation*			m_pRiseStart = nullptr;
+
 	CAnimation*			m_pDeadAnim = nullptr;
 
 	// Damage
 	_bool		m_bStruck = false;
+	_bool		m_bAirStruck = false;
+
+	_bool		m_bMaintain = false;
+
+	_uint		m_iAirDamage = 0;
+	_uint		m_iPreAirDamageCnt = 0;
 
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;

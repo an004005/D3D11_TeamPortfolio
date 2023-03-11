@@ -20,10 +20,25 @@ HRESULT CSkmP_Controller::Initialize(void * pArg)
 	m_pFSM = CFSMComponentBuilder()
 		.InitState("Operate")
 		.AddState("Operate")
-			.AddTransition("Operate to Near", "Near")
+			.AddTransition("Operate to Outside", "Outside")
+				.Predicator([this]
+				{
+					return m_pCastedOwner->IsPlayingSocket() == false;
+				})
+
+			/*.AddTransition("Operate to Near", "Near")
 				.Predicator([this] 
 				{
 					return m_pCastedOwner->IsPlayingSocket() == false;
+				})*/
+
+		.AddState("Outside")
+			.Tick(this, &CSkmP_Controller::Tick_Outside)
+
+			.AddTransition("Outside to Far", "Far")
+				.Predicator([this]
+				{
+					return m_fToTargetDistance <= 20.f;
 				})
 
 		.AddState("Near")
@@ -89,8 +104,9 @@ void CSkmP_Controller::Tick_Near(_double TimeDelta)
 		AddCommand("Threat", 0.f, &CAIController::Input, R);
 		break;
 	case 2:
-		AddCommand("Turn", 0.8f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
+		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	case 3:
 		AddCommand("LeftMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
@@ -105,8 +121,9 @@ void CSkmP_Controller::Tick_Near(_double TimeDelta)
 		AddCommand("BackMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
 		break;
 	case 7:
-		AddCommand("Turn", 0.8f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
+		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	case 8:
 		AddCommand("RightMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
@@ -131,8 +148,9 @@ void CSkmP_Controller::Tick_Far(_double TimeDelta)
 		AddCommand("Threat", 0.f, &CAIController::Input, R);
 		break;
 	case 2:
-		AddCommand("Turn", 0.6f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
+		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	case 3:
 		AddCommand("LeftMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
@@ -147,8 +165,9 @@ void CSkmP_Controller::Tick_Far(_double TimeDelta)
 		AddCommand("BackMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
 		break;
 	case 7:
-		AddCommand("Turn", 0.6f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
+		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	case 8:
 		AddCommand("RightMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
@@ -156,6 +175,24 @@ void CSkmP_Controller::Tick_Far(_double TimeDelta)
 	}
 
 	m_iFarOrder = (m_iFarOrder + 1) % 9;
+}
+
+void CSkmP_Controller::Tick_Outside(_double TimeDelta)
+{
+	m_eDistance = DIS_OUTSIDE;
+
+	switch (m_iOutOrder)
+	{
+	case 0:
+		AddCommand("Wait", 2.f, &CAIController::Wait);
+		break;
+
+	case 1:
+		AddCommand("Wait", 2.f, &CAIController::Wait);
+		break;
+	}
+
+	m_iOutOrder = (m_iOutOrder + 1) % 2;
 }
 
 void CSkmP_Controller::Free()

@@ -48,7 +48,7 @@ private:
 class CAIController abstract : public CController
 {
 public:
-	enum DISTANCE { DIS_NEAR, DIS_MIDDLE, DIS_FAR, DIS_END };
+	enum DISTANCE { DIS_NEAR, DIS_MIDDLE, DIS_FAR, DIS_OUTSIDE, DIS_END };
 
 protected:
 	CAIController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -60,6 +60,7 @@ public:
 	virtual void AI_Tick(_double TimeDelta) = 0;
 	virtual void Imgui_RenderProperty() override;
 	void SetTarget(class CScarletCharacter* pTarget);
+
 	_float GetTurnRemain() const { return m_fTurnRemain; }
 
 	// duration = 0 이면 한번만 실행함
@@ -87,6 +88,7 @@ public:
 
 protected:
 	class CScarletCharacter* m_pTarget = nullptr;
+//	class CScarletCharacter* m_pUseObj = nullptr;
 	list<AICommand> m_Commands;
 	_float m_fTurnRemain = 0.f;
 
@@ -95,6 +97,9 @@ protected:
 
 	// IMGUI 에서 현 거리 상태를 구하기 위한 enum
 	DISTANCE m_eDistance = DIS_END;
+
+	_float m_fTtoM_Distance = 0.f;
+	
 
 public:
 	virtual void Free() override;

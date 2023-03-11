@@ -24,7 +24,7 @@ public:
 	void Tick_Near(_double TimeDelta);
 	void Tick_Mid(_double TimeDelta);
 	void Tick_Far(_double TimeDelta);
-	
+	void Tick_Outside(_double TimeDelta);
 
 	void Run(EMoveAxis eAxis);
 	void Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio = 1.f);
@@ -33,11 +33,11 @@ private:
 	CFSMComponent* m_pFSM = nullptr;
 	_float m_fToTargetDistance;
 	class CFlowerLeg* m_pCastedOwner = nullptr;
-
-
+	
 	_uint m_iNearOrder = 0;
 	_uint m_iMidOrder = 0;
 	_uint m_iFarOrder = 0;
+	_uint m_iOutOrder = 0;
 
 	_float m_fTurnSlowTime;
 	_float m_fTurnSlowRatio;
