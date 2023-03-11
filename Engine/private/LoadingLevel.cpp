@@ -12,15 +12,18 @@ HRESULT CLoadingLevel::Initialize()
 	if (FAILED(CLevel::Initialize()))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+void CLoadingLevel::StartLoading()
+{
 	m_LoadingThread = std::thread([this]()
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(m_Delay));
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		m_pCreatedLevel = m_LevelCreator();
 		m_bFinished.store(true);
 	});
 	m_LoadingThread.detach();
-
-	return S_OK;
 }
 
 void CLoadingLevel::Free()

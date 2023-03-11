@@ -262,6 +262,9 @@
     <Filter Include="VFX\0. Manager">
       <UniqueIdentifier>{bded6145-b30d-41c0-bef2-3ac921aa1015}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.GamePlay\02. Stage1">
+      <UniqueIdentifier>{bb3692a0-b3da-4d2f-9b8f-6121fa8a6b2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -648,6 +651,9 @@
     <ClInclude Include="..\public\VFX_Manager.h">
       <Filter>VFX\0. Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_Stage1.h">
+      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1006,6 +1012,9 @@
     </ClCompile>
     <ClCompile Include="..\private\VFX_Manager.cpp">
       <Filter>VFX\0. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Stage1.cpp">
+      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

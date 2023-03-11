@@ -129,6 +129,7 @@ _float4 CCamera_Manager::Get_CamPosition(const string& strCamTag)
 
 void CCamera_Manager::Clear()
 {
+	m_strMainCamTag.clear();
 	for (auto cam : m_Cameras)
 		Safe_Release(cam.second);
 	m_Cameras.clear();

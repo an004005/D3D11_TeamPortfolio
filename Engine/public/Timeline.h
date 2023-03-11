@@ -89,6 +89,12 @@ public:
 	virtual void Free() override{}
 };
 
+typedef struct tagTimelineEvent
+{
+	_double EventTime;
+	string strEventName;
+}TIMELINE_EVENT;
+
 /******************
  * CTimeline
  *****************/
@@ -111,7 +117,7 @@ public:
 	void SetNewFrame(_double NewFrame);
 	void Reset();
 
-	void SetTimelineLength(_double TimeLength) { m_EndTime = TimeLength; }
+	void SetTimelineLength(_double TimeLength) {  }
 	_bool IsForward() const { return m_bForward; }
 
 	void Imgui_RenderEditor();
@@ -119,7 +125,8 @@ public:
 	_bool IsPlay() { return m_bPlay; }
 	_bool Check_ReverseFin() { return m_bReverseFinish; }
 
-
+	void SaveToJson(Json& json);
+	void LoadFromJson(const Json& json);
 
 
 	template<typename T>
@@ -145,6 +152,18 @@ public:
 	}
 
 	template<typename T>
+	void SetCurve(T* obj, void (T::*memFunc)(_float), const string& strCurveTag)
+	{
+		Assert(obj != nullptr);
+
+		auto callback = [obj, memFunc](_float f) { (obj->*memFunc)(f); };
+		auto pCurve = GetCurve(strCurveTag);
+		Assert(pCurve != nullptr);
+		Safe_AddRef(pCurve);
+		m_vecFloatCurve.push_back({ callback, pCurve });
+	}
+
+	template<typename T>
 	void SetCurve(T* obj, void (T::*memFunc)(_float3), CCurveVector3* curve)
 	{
 		Assert(curve != nullptr);
@@ -154,18 +173,32 @@ public:
 		m_vecVec3Curve.push_back({callback, curve});
 	}
 
+	void SetEventFunction(const function<void(const string&)>& EventFunction)
+	{
+		m_EventFunction = EventFunction;
+	}
+
 private:
-	_double m_EndTime = 0.0;
+	class CCurveFloat* GetCurve(const string& strCurveTag);
+
+private:
+	_double m_MinTime = 0.0;
+	_double m_MaxTime = 0.0;
 	_double m_CurFrame = 0.0;
 	_bool m_bForward = true;
 	_bool m_bPlay = false;
 	_bool m_bLoop = false;
 	_bool m_bFreed = false;
 	_bool m_bReverseFinish = false;
+	_bool m_bSwing = false;
 
 	function<void()> m_FinFunction = nullptr;
 	vector<pair<function<void(_float)>, CCurveFloat*>> m_vecFloatCurve;
 	vector<pair<function<void(_float3)>, CCurveVector3*>> m_vecVec3Curve;
+
+	vector<TIMELINE_EVENT>					m_vecEvent;
+	function<void(const string&)> m_EventFunction = nullptr;
+
 
 public:
 	virtual void Free() override;
@@ -198,6 +231,9 @@ public:
 	void Imgui_RenderEditor();
 
 	_bool IsPlay() { return m_bPlay; }
+
+	void SaveToJson(Json& json);
+	void LoadFromJson(const Json& json);
 
 	template<typename T>
 	void SetFinishFunction(T* obj, void (T::*memFunc)())
@@ -235,6 +271,11 @@ public:
 		m_pCurve = pCurve;
 	}
 
+	void SetEventFunction(const function<void(const string&)>& EventFunction)
+	{
+		m_EventFunction = EventFunction;
+	}
+
 private:
 	class CCurveFloat* GetCurve(const string& strCurveTag);
 
@@ -248,6 +289,9 @@ private:
 	function<void()> m_FinFunction = nullptr;
 	function<void(_float)> m_TickFunction = nullptr;
 	class CCurveFloat* m_pCurve = nullptr;
+
+	vector<TIMELINE_EVENT>					m_vecEvent;
+	function<void(const string&)> m_EventFunction = nullptr;
 
 public:
 	virtual void Free() override;
