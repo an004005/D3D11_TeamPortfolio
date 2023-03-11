@@ -209,6 +209,12 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 	{
 		m_pSound_Manager->Tick((_float)TimeDelta);
 	}
+
+	if (m_LevelLoadingAsync)
+	{
+		m_LevelLoadingAsync();
+		m_LevelLoadingAsync = nullptr;
+	}
 }
 
 void CGameInstance::Clear()
@@ -395,10 +401,14 @@ HRESULT CGameInstance::Open_Loading(_uint iNewLevelIdx, CLoadingLevel* pLoadingL
 	if (nullptr == m_pLevel_Manager)
 		return E_FAIL;
 
-	m_pLight_Manager->Clear();
-	m_pCamera_Manager->Clear();
+	m_LevelLoadingAsync = [this, iNewLevelIdx, pLoadingLevel]
+	{
+		m_pLight_Manager->Clear();
+		m_pCamera_Manager->Clear();
+		FAILED_CHECK(m_pLevel_Manager->Open_Loading(iNewLevelIdx, pLoadingLevel));
+	};
 
-	return m_pLevel_Manager->Open_Loading(iNewLevelIdx, pLoadingLevel);
+	return S_OK;
 }
 
 HRESULT CGameInstance::Open_Level(_uint iLevelIndex, CLevel * pNewLevel)
@@ -868,7 +878,7 @@ void CGameInstance::Release_Engine()
 	CGameInstance::GetInstance()->Clear();
 	_uint ref = CGameInstance::GetInstance()->DestroyInstance();
 
-	CCamera_Manager::GetInstance()->DestroyInstance();
+	ref = CCamera_Manager::GetInstance()->DestroyInstance();
 
 	ref = CObject_Manager::GetInstance()->DestroyInstance();
 
@@ -888,13 +898,13 @@ void CGameInstance::Release_Engine()
 
 	ref = CImgui_Manager::GetInstance()->DestroyInstance();
 
-	CTarget_Manager::GetInstance()->DestroyInstance();
+	ref = CTarget_Manager::GetInstance()->DestroyInstance();
 
-	CFont_Manager::GetInstance()->DestroyInstance();
+	ref = CFont_Manager::GetInstance()->DestroyInstance();
 
-	CFrustum::GetInstance()->DestroyInstance();
+	ref = CFrustum::GetInstance()->DestroyInstance();
 
-	CHDR::GetInstance()->DestroyInstance();
+	ref = CHDR::GetInstance()->DestroyInstance();
 
 	CGameTime_Manager::GetInstance()->DestroyInstance();
 
@@ -931,5 +941,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pCurve_Manager);
 	Safe_Release(m_pPhysX_Manager);
+
 }
 

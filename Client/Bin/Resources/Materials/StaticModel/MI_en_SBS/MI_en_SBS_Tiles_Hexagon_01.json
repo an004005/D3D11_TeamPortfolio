@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderInstancingProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Stone/tiles_hexagon/Hexagon_Tiles_INST_ALB.dds",
+            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Stone/tiles_hexagon/Hexagon_Tiles_INST_NML.png",
+            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Stone/tiles_hexagon/Hexagon_Tiles_INST_RMAH.dds"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass" : 1
+}

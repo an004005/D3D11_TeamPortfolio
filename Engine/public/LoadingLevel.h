@@ -11,7 +11,7 @@ protected:
 
 public:
 	virtual HRESULT Initialize() override;
-	
+	void StartLoading();
 
 protected:
 	void SetFinish();
@@ -19,9 +19,6 @@ protected:
 
 public:
 	virtual void Free() override;
-
-protected:
-	std::chrono::milliseconds m_Delay {500};
 
 private:
 	atomic<_bool> m_bFinished{false};

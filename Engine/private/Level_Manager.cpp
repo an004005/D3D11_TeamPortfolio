@@ -25,6 +25,7 @@ HRESULT CLevel_Manager::Open_Loading(_uint iNewLevelIdx, CLoadingLevel* pLoading
 
 	m_pCurrentLevel = pLoadingLevel;
 	m_iLevelIndex = iNewLevelIdx;
+	pLoadingLevel->StartLoading();
 
 	return S_OK;
 }
