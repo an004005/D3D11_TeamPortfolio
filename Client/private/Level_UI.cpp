@@ -26,6 +26,7 @@
 #include "Canvas_SASSkillMove.h"
 #include "Canvas_ItemMove.h"
 #include "Canvas_Tutorial.h"
+#include "Canvas_BossHp.h"
 
 // Default
 #include "DefaultUI.h"
@@ -67,7 +68,10 @@
 #include "Tutorial_TipsUI.h"
 #include "Tutorial_SuccessUI.h"
 
-// InGmae
+// Boss
+#include "Boss_HpUI.h"
+#include "Boss_HpBackUI.h"
+#include "Boss_ShildUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -160,7 +164,7 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_PlayerInfoMove"),
 			CCanvas_PlayerInfoMove::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-		
+
 		/* For.Prototype_GameObject_Canvas_PlayerInfo */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Drive"),
 			CCanvas_Drive::Create(m_pDevice, m_pContext))))
@@ -187,10 +191,15 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASSkillMove"),
 			CCanvas_SASSkillMove::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-	
+
 		/* For.Prototype_GameObject_Canvas_Tutorial*/
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Tutorial"),
 			CCanvas_Tutorial::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_BossHp*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_BossHp"),
+			CCanvas_BossHp::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 	}
@@ -206,7 +215,7 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Button_UI"),
 			CButtonUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-		
+
 		// Frount_UI -> SAS Skill
 		/* For.Prototype_GameObject_SASSkillIcon_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillIcon_UI"),
@@ -328,22 +337,33 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_CheckUI"),
 			CTutorial_CheckUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-		/* For.Prototype_GameObject_Tutorial_YesNoUI */ 
+		/* For.Prototype_GameObject_Tutorial_YesNoUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_YesNoUI"),
 			CTutorial_YesNoUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-		/* For.Prototype_GameObject_Tutorial_TipsUI */ 
-			if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_TipsUI"),
-				CTutorial_TipsUI::Create(m_pDevice, m_pContext))))
-				return E_FAIL;
+		/* For.Prototype_GameObject_Tutorial_TipsUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_TipsUI"),
+			CTutorial_TipsUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 		/* For.Prototype_GameObject_Tutorial_SuccessUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_SuccessUI"),
 			CTutorial_SuccessUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
-		// ***************** InGame **********************
-
-}
+		// Boss
+		/* For.Prototype_GameObject_Boss_HpUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_HpUI"),
+			CBoss_HpUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Boss_HpBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_HPBackUI"),
+			CBoss_HpBackUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Boss_ShildUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_ShildUI"),
+			CBoss_ShildUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -383,7 +403,7 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_PlayerInfoMove.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_PlayerInfoMove", &json));
-	
+
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Drive.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Drive", &json));
 
@@ -401,14 +421,14 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASSkillMove.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkillMove", &json));	// 움직이는 UI
-	
+
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Tutorial.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Tutorial", &json));
 
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Lockon.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Lockon", &json));
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_BossHp", &json));
 
-	
+
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
 	//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);

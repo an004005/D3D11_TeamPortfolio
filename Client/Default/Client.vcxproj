@@ -186,6 +186,8 @@
     <ClInclude Include="..\public\Batch.h" />
     <ClInclude Include="..\public\BdLm_Controller.h" />
     <ClInclude Include="..\public\Boss1_AIController.h" />
+    <ClInclude Include="..\public\Boss_HpBackUI.h" />
+    <ClInclude Include="..\public\Boss_ShildUI.h" />
     <ClInclude Include="..\public\BrJ_AnimInstance.h" />
     <ClInclude Include="..\public\BronJon.h" />
     <ClInclude Include="..\public\Boss1.h" />
@@ -197,11 +199,11 @@
     <ClInclude Include="..\public\Camera_Player.h" />
     <ClInclude Include="..\public\CamSpot.h" />
     <ClInclude Include="..\public\Canvas.h" />
+    <ClInclude Include="..\public\Canvas_BossHp.h" />
     <ClInclude Include="..\public\Canvas_Drive.h" />
     <ClInclude Include="..\public\Canvas_DriveMove.h" />
     <ClInclude Include="..\public\Canvas_Item.h" />
     <ClInclude Include="..\public\Canvas_ItemMove.h" />
-    <ClInclude Include="..\public\Canvas_Lockon.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
     <ClInclude Include="..\public\Canvas_SASInfoLeft.h" />
@@ -225,8 +227,7 @@
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
-    <ClInclude Include="..\public\Lockon_FindArrowUI.h" />
-    <ClInclude Include="..\public\Lockon_FindUI.h" />
+    <ClInclude Include="..\public\Boss_HpUI.h" />
     <ClInclude Include="..\public\MonsterHpUI.h" />
     <ClInclude Include="..\public\MonsterLockonUI.h" />
     <ClInclude Include="..\public\MonsterShildUI.h" />
@@ -331,6 +332,8 @@
     <ClCompile Include="..\private\Batch.cpp" />
     <ClCompile Include="..\private\BdLm_Controller.cpp" />
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
+    <ClCompile Include="..\private\Boss_HpBackUI.cpp" />
+    <ClCompile Include="..\private\Boss_ShildUI.cpp" />
     <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
     <ClCompile Include="..\private\BronJon.cpp" />
     <ClCompile Include="..\private\Boss1.cpp" />
@@ -340,7 +343,7 @@
     <ClCompile Include="..\private\BuddyLumi.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\private\Canvas.cpp" />
-    <ClCompile Include="..\private\Canvas_Lockon.cpp" />
+    <ClCompile Include="..\private\Canvas_BossHp.cpp" />
     <ClCompile Include="..\private\Canvas_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
     <ClCompile Include="..\private\Canvas_DriveMove.cpp" />
@@ -369,8 +372,7 @@
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
-    <ClCompile Include="..\private\Lockon_FindArrowUI.cpp" />
-    <ClCompile Include="..\private\Lockon_FindUI.cpp" />
+    <ClCompile Include="..\private\Boss_HpUI.cpp" />
     <ClCompile Include="..\private\MonsterHpUI.cpp" />
     <ClCompile Include="..\private\MonsterLockonUI.cpp" />
     <ClCompile Include="..\private\MonsterShildUI.cpp" />

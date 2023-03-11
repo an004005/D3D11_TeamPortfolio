@@ -265,14 +265,11 @@
     <Filter Include="02.GameObjects\UI\DescriptionWindow">
       <UniqueIdentifier>{abb2352e-02f6-4b3c-8379-d3a28a4803fd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\InGame">
-      <UniqueIdentifier>{a08702fe-11ca-4a47-9bc5-c932852b7d46}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\InGame\Lockon">
-      <UniqueIdentifier>{e2183d4c-0bf6-4c3c-8fc8-504fa5bbdb70}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Monster">
       <UniqueIdentifier>{1b202ea8-4c32-4399-b17b-b9c184a5027f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Boss">
+      <UniqueIdentifier>{dc1701f8-365a-4180-94c6-d3de20833679}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -703,15 +700,6 @@
     <ClInclude Include="..\public\Tutorial_SuccessUI.h">
       <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_Lockon.h">
-      <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Lockon_FindUI.h">
-      <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Lockon_FindArrowUI.h">
-      <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\MonsterHpUI.h">
       <Filter>02.GameObjects\UI\Monster</Filter>
     </ClInclude>
@@ -720,6 +708,18 @@
     </ClInclude>
     <ClInclude Include="..\public\MonsterShildUI.h">
       <Filter>02.GameObjects\UI\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_BossHp.h">
+      <Filter>02.GameObjects\UI\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_HpUI.h">
+      <Filter>02.GameObjects\UI\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_HpBackUI.h">
+      <Filter>02.GameObjects\UI\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_ShildUI.h">
+      <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1125,15 +1125,6 @@
     <ClCompile Include="..\private\Tutorial_SuccessUI.cpp">
       <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_Lockon.cpp">
-      <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Lockon_FindUI.cpp">
-      <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Lockon_FindArrowUI.cpp">
-      <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\MonsterHpUI.cpp">
       <Filter>02.GameObjects\UI\Monster</Filter>
     </ClCompile>
@@ -1142,6 +1133,18 @@
     </ClCompile>
     <ClCompile Include="..\private\MonsterShildUI.cpp">
       <Filter>02.GameObjects\UI\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_BossHp.cpp">
+      <Filter>02.GameObjects\UI\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_HpUI.cpp">
+      <Filter>02.GameObjects\UI\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_HpBackUI.cpp">
+      <Filter>02.GameObjects\UI\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_ShildUI.cpp">
+      <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
