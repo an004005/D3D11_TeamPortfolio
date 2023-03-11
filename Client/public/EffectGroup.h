@@ -65,6 +65,8 @@ public:
 
 	// void Tick_Float4x4s_Value(_uint iParamIndex, _float4x4 fValue);
 
+	class CEffectSystem* GetThirdEffect() { return m_pThird_EffectSystem; }
+
 protected:
 	void AddEmptyCurve(string strCurveName);
 

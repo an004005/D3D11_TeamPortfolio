@@ -73,6 +73,8 @@
 #include "Lockon_FindUI.h"
 #include "Lockon_FindArrowUI.h"
 
+#include "MonsterHpUI.h"
+
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -361,7 +363,10 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CLockon_FindArrowUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
-
+		/* For.Prototype_GameObject_MonsterHpUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterHpUI"),
+			CMonsterHpUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 }
 
 	return S_OK;
@@ -434,6 +439,9 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	//	wstring protoTag = s2ws(json["Prototype_GameObject"]);
 	//	pGameInstance->Clone_GameObject(pLayerTag, protoTag.c_str(), &json);
 	//});
+
+	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Tutorial.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"/*, &json*/));
 
 	return S_OK;
 }

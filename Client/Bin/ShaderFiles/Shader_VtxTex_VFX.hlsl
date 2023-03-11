@@ -60,14 +60,13 @@ PS_OUT PS_MAIN(PS_IN In)
 // g_tex_1 : Emissive Texture
 // g_vec4_0 : Color
 // g_float_0 : Century
+// g_float_1 : ratio
 PS_OUT PS_GreenEmissive(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
 	float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	float4 Emissive = g_tex_1.Sample(LinearSampler, In.vTexUV);
-	/*Emissive = lerp(Emissive, g_vec4_0, g_float_0);*/
-	//Emissive.a = 1.0f;
 
 	float Mask = Emissive.g;
 
@@ -96,6 +95,49 @@ PS_OUT PS_AlphaBlend(PS_IN In)
 
 	float4 MixTexture = saturate(g_vec4_0 * Texture * 2.0f);
 	Out.vColor = MixTexture;
+
+	return Out;
+}
+// g_tex_0 : ui texture
+// g_float_0 : progress ratio
+// g_float_1 : Century
+// g_vec4_0 : Color
+VS_OUT VS_ProgressBar(VS_IN In)	
+{
+	VS_OUT		Out = (VS_OUT)0;
+	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
+
+	float3 vPosition = In.vPosition;
+	Out.vTexUV = In.vTexUV;
+	if (vPosition.x > 0.f)
+	{
+		Out.vTexUV.x = g_float_0;
+		vPosition.x = -0.5f + g_float_0;
+	}
+
+	Out.vPosition = mul(float4(vPosition, 1.f), matWP);
+
+	return Out;
+}
+
+PS_OUT PS_MixTexture(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 DefaultWhite = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Texture = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float Mask = g_tex_2.Sample(LinearSampler, In.vTexUV).a;
+
+	float4 BlendColor = DefaultWhite * g_vec4_0;
+	Out.vColor = saturate(BlendColor + Texture * g_float_1) * g_vec4_0;
+	Out.vColor.a = Mask * 1.0f;
+
+	//float4  vTextureColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	//float4  vGlowColor = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	//Out.vColor = saturate(vTextureColor + (vGlowColor * g_float_1))  * g_vec4_0;
+
+	if (g_float_0 < In.vTexUV.x)
+		discard;
 
 	return Out;
 }
@@ -431,6 +473,7 @@ technique11 DefaultTechnique
 	pass AlphaBlend
 	{
 		SetRasterizerState(RS_Default);
+
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
@@ -439,6 +482,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_AlphaBlend();
+	}
+	//10
+	pass HpBar
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MixTexture();
 	}
 	// ok su hyeon
 	

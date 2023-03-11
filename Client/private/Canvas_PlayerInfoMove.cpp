@@ -97,12 +97,6 @@ void CCanvas_PlayerInfoMove::Imgui_RenderProperty()
 	{
 		Set_PsychokinesisGauge(LEVEL_THREE, IDLE_TYPE, fGauge, fMaxGauge);
 	}
-
-	static _float ff;
-	ImGui::DragFloat("ff", &ff);
-	static _float gg;
-	ImGui::DragFloat("gg", &gg);
-	vTemp = { ff ,gg };
 }
 
 void CCanvas_PlayerInfoMove::SaveToJson(Json& json)

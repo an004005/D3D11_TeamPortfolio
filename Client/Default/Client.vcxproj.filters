@@ -250,9 +250,6 @@
     <Filter Include="02.GameObjects\UI\Front_UI\PlayerInfo">
       <UniqueIdentifier>{1288607c-59a4-4427-b040-1ed8b21a4858}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\SASInfo">
-      <UniqueIdentifier>{ea0a820a-4dc8-4972-9330-a21a848385ce}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
       <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
     </Filter>
@@ -273,6 +270,9 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\InGame\Lockon">
       <UniqueIdentifier>{e2183d4c-0bf6-4c3c-8fc8-504fa5bbdb70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Monster">
+      <UniqueIdentifier>{1b202ea8-4c32-4399-b17b-b9c184a5027f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -712,6 +712,12 @@
     <ClInclude Include="..\public\Lockon_FindArrowUI.h">
       <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MonsterHpUI.h">
+      <Filter>02.GameObjects\UI\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MonsterLockonUI.h">
+      <Filter>02.GameObjects\UI\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1124,6 +1130,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Lockon_FindArrowUI.cpp">
       <Filter>02.GameObjects\UI\InGame\Lockon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MonsterHpUI.cpp">
+      <Filter>02.GameObjects\UI\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MonsterLockonUI.cpp">
+      <Filter>02.GameObjects\UI\Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

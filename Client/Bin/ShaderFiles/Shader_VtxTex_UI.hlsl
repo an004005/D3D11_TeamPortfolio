@@ -641,7 +641,7 @@ PS_OUT PS_MaskTexture(PS_IN In)	// → 21
 }
 
 /*******************
-* UVCut → 22 : 나눈 텍스처의 끝까지 도달했다가 다시 처음으로 돌아가는 코드 입니다. -> <- (텍스처 넘김, 글로우, UV 조절)
+* PS_ChoiceTextureReverseFlipBook → 22 : 나눈 텍스처의 끝까지 도달했다가 다시 처음으로 돌아가는 코드 입니다. -> <- (텍스처 넘김, 글로우, UV 조절)
 g_Time : 현재 시간.
 g_float_0 : Gauge	-> 클라이언트에서 입력 받아야 한다.
 g_float_1 : FrameTime
@@ -663,10 +663,10 @@ PS_OUT PS_ChoiceTextureReverseFlipBook(PS_IN In)	// ->22
 	PS_OUT			Out = (PS_OUT)0;
 
 	float4 Texture;
+	float Mask;
 
 	float4 DefaultWhite = g_tex_6.Sample(LinearSampler, In.vTexUV);
 	float4 OriginColor = g_vec4_0;
-	float Mask;
 
 	if (0 == g_int_2)
 	{
@@ -695,7 +695,7 @@ PS_OUT PS_ChoiceTextureReverseFlipBook(PS_IN In)	// ->22
 }
 
 /*******************
-* UVCut → 23 : 나눈 텍스처의 끝까지 도달했다가 다시 처음으로 돌아가는 코드 입니다. -> <- (텍스처 넘김, UV 조절)
+* PS_ReverseFlipBook → 23 : 나눈 텍스처의 끝까지 도달했다가 다시 처음으로 돌아가는 코드 입니다. -> <- (텍스처 넘김, UV 조절)
 g_Time : 현재 시간.
 g_float_0 : Gauge	-> 클라이언트에서 입력 받아야 한다.
 g_float_1 : FrameTime
