@@ -119,8 +119,9 @@ private:	// 이벤트
 	unordered_map<string, std::function<void(void)>>	m_EventFunc;
 	unordered_map<string, vector<OPTIONAL_ROOTMOTION>>	m_mapOptionalRootMotion;
 
+public:
+	static _float4x4 s_DefaultPivot;
 private:
-	static const _float4x4 s_DefaultPivot;
 	static const string s_ModifyFilePath;
 
 // 플레이어 이펙트 부착 툴을 위한 임시 함수

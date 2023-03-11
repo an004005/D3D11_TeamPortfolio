@@ -25,9 +25,23 @@ public:
 	void					Load_ParticleSystem();
 	void					ImGui_RenderParticleSystem(_int iSelectParticle);
 
+	void		Set_Transform(_matrix sokect);
+public:
+	void		Start_ParticleWork();
+
+	void		Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate = false);
+	void		Start_Attach(CGameObject* pOwner, string BoneName, _bool trueisUpdate = false);
+	void		Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _bool usepivot = false, _bool trueisUpdate = false);
+
 private:
 	// [ObjectTag : Key] [Value : <Directory, Ptr>]
 	unordered_map<string, pair<string, CParticleSystem*>> m_mapParticleSystem;
+	_bool	m_bGenerate = false;
+	_bool	m_bUpdate = false;
+	_bool	m_bUsePivot = false;
+	string m_BoneName = "";
+	_float4x4 m_PivotMatrix = XMMatrixIdentity();
+
 public:
 	virtual void Late_Tick(_double TimeDelta) override;
 private:
@@ -38,6 +52,7 @@ public:
 	virtual CGameObject*	Clone(void* pArg = nullptr) override;
 	virtual void			Free() override;
 };
+
 
 
 

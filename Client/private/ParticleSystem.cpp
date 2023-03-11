@@ -64,45 +64,45 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 			m_pPointInstanceBuffer = CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, m_iInstanceNum);
 		}
 	}
-
 	return S_OK;
 }
 
 void CParticleSystem::Tick(_double TimeDelta)
 {
-	const _float fTimeDelta = (_float)TimeDelta;
+		const _float fTimeDelta = (_float)TimeDelta;
 
-	if (m_bLoop == false)
-		m_fDuration -= fTimeDelta;
-	if (m_fDuration < 0.f)
-		m_bDelete = true;
-
-	if(m_eBufferType == EBufferType::MESH)
-	{
-		UpdateMeshes(fTimeDelta);
-	}
-	else
-		UpdatePoints(fTimeDelta);
-
-	m_fCurSpawnTick -= fTimeDelta;
-
-	if (m_fCurSpawnTick <= 0.f)
-	{
-		m_fCurSpawnTick = m_fSpawnTickTime;
+		if (m_bLoop == false)
+			m_fDuration -= fTimeDelta;
+		if (m_fDuration < 0.f)
+			m_bDelete = true;
 
 		if (m_eBufferType == EBufferType::MESH)
 		{
-			AddMesh();
+			UpdateMeshes(fTimeDelta);
 		}
 		else
+			UpdatePoints(fTimeDelta);
+
+		m_fCurSpawnTick -= fTimeDelta;
+
+		if (m_fCurSpawnTick <= 0.f)
 		{
-			AddPoint();
+			m_fCurSpawnTick = m_fSpawnTickTime;
+
+			if (m_eBufferType == EBufferType::MESH)
+			{
+				AddMesh();
+			}
+			else
+			{
+				AddPoint();
+			}
 		}
-	}	
 }
 
 void CParticleSystem::Late_Tick(_double TimeDelta)
 {
+	
 	if (m_bVisible)
 	{
 		if(m_eBufferType == EBufferType::MESH)
@@ -392,11 +392,13 @@ HRESULT CParticleSystem::SetParams()
 	if (FAILED(m_pShader->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
+	const _int bLocal = m_bLocal ? 1 : 0;
+	if (FAILED(m_pShader->Set_RawValue("g_bLocal", &bLocal, sizeof(_int))))
+		return E_FAIL;
+
 	if (m_eBufferType == EBufferType::POINT)
 	{
-		const _int bLocal = m_bLocal ? 1 : 0;
-		if (FAILED(m_pShader->Set_RawValue("g_bLocal", &bLocal, sizeof(_int))))
-			return E_FAIL;
+		
 		const _int bRotate = m_bRotate ? 1 : 0;
 		if (FAILED(m_pShader->Set_RawValue("g_bRotate", &bRotate, sizeof(_int))))
 			return E_FAIL;

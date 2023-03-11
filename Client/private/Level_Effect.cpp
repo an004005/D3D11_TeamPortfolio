@@ -56,7 +56,7 @@ HRESULT CLevel_Effect::Initialize()
 
 	if (FAILED(Ready_Layer(TEXT("Layer"))))
 		return E_FAIL;
-
+	
 	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
 		return E_FAIL;
 
@@ -75,7 +75,7 @@ void CLevel_Effect::Tick(_double TimeDelta)
 
 	if(CGameInstance::GetInstance()->KeyDown(DIK_SPACE))
 	{
-		// CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_1")->Start();
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_1")->Start_EffectWork();
 	}
 }
 

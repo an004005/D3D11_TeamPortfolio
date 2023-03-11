@@ -44,6 +44,9 @@ public:
 	static set<CParticleSystem*> tmp;
 
 public:
+	CShader* GetShader() { return m_pShader; }
+
+public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
@@ -143,6 +146,9 @@ private:
 	// _float	  m_ArrayRoationToTime[3];
 	_float3	  m_fRotationToTime_Min = {0.f,0.f,0.f};
 	_float3	  m_fRotationToTime_Max = { 0.f,0.f,0.f };
+
+private:
+	// For ParticleGroup
 
 
 public:
