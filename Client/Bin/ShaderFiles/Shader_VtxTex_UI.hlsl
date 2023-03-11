@@ -689,7 +689,7 @@ PS_OUT PS_ChoiceTextureReverseFlipBook(PS_IN In)	// ->22
 
 	float4 BlendColor = DefaultWhite * OriginColor;
 	Out.vColor = saturate(BlendColor + Texture * g_float_2);
-	Out.vColor.a = Mask * 1.0f;
+	//Out.vColor.a = Mask * 1.0f;
 
 	return Out;
 }

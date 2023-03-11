@@ -718,6 +718,9 @@
     <ClInclude Include="..\public\MonsterLockonUI.h">
       <Filter>02.GameObjects\UI\Monster</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MonsterShildUI.h">
+      <Filter>02.GameObjects\UI\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1135,6 +1138,9 @@
       <Filter>02.GameObjects\UI\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MonsterLockonUI.cpp">
+      <Filter>02.GameObjects\UI\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MonsterShildUI.cpp">
       <Filter>02.GameObjects\UI\Monster</Filter>
     </ClCompile>
   </ItemGroup>

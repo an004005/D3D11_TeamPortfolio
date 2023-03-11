@@ -229,6 +229,7 @@
     <ClInclude Include="..\public\Lockon_FindUI.h" />
     <ClInclude Include="..\public\MonsterHpUI.h" />
     <ClInclude Include="..\public\MonsterLockonUI.h" />
+    <ClInclude Include="..\public\MonsterShildUI.h" />
     <ClInclude Include="..\public\PostVFX_ColorGrading.h" />
     <ClInclude Include="..\public\PostVFX_HitDecal.h" />
     <ClInclude Include="..\public\Imgui_EffectBrowser.h" />
@@ -372,6 +373,7 @@
     <ClCompile Include="..\private\Lockon_FindUI.cpp" />
     <ClCompile Include="..\private\MonsterHpUI.cpp" />
     <ClCompile Include="..\private\MonsterLockonUI.cpp" />
+    <ClCompile Include="..\private\MonsterShildUI.cpp" />
     <ClCompile Include="..\private\PostVFX_ColorGrading.cpp" />
     <ClCompile Include="..\private\PostVFX_HitDecal.cpp" />
     <ClCompile Include="..\private\Imgui_EffectBrowser.cpp" />

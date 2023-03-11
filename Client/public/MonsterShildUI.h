@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CMonsterHpUI final : public CGameObject
+class CMonsterShildUI final : public CGameObject
 {
 protected:
-	CMonsterHpUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMonsterHpUI(const CMonsterHpUI& rhs);
+	CMonsterShildUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMonsterShildUI(const CMonsterShildUI& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -19,19 +19,19 @@ public:
 	virtual void   Imgui_RenderProperty() override;
 
 public:
-	void SetHP(_float fRatio);
+	void SetShild(const _float & fHP, const _float & fShild);
 
 private:
 	void HpBack_Tick(const _double & TimeDelta);
 
 private:
-	class CEffectGroup* m_pGroup = nullptr;
+	class CEffectGroup* m_pGroup = nullptr;;
 
 	_float m_fHpBack = { 1.0f };
 	_float m_fCurrentHpBack = { 1.0f };
 
 public:
-	static CMonsterHpUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMonsterShildUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 };

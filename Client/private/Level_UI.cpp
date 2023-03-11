@@ -68,9 +68,6 @@
 #include "Tutorial_SuccessUI.h"
 
 // InGmae
-#include "EffectGroup.h"
-#include "MonsterHpUI.h"
-#include "MonsterLockonUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -128,8 +125,6 @@ HRESULT CLevel_UI::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
-	
 	CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
 	{
 		char szFileName[MAX_PATH]{};
@@ -347,14 +342,7 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			return E_FAIL;
 
 		// ***************** InGame **********************
-		/* For.Prototype_GameObject_MonsterLockonUI */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),
-			CMonsterLockonUI::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
-		/* For.Prototype_GameObject_MonsterHpUI */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterHpUI"),
-			CMonsterHpUI::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
+
 }
 
 	return S_OK;
@@ -428,8 +416,7 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	//	pGameInstance->Clone_GameObject(pLayerTag, protoTag.c_str(), &json);
 	//});
 
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"));
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterLockonUI"));
+
 
 	return S_OK;
 }

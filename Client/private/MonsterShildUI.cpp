@@ -1,0 +1,115 @@
+#include "stdafx.h"
+#include "..\public\MonsterShildUI.h"
+#include "GameInstance.h"
+#include "JsonStorage.h"
+#include "EffectGroup.h"
+#include "EffectSystem.h"
+
+CMonsterShildUI::CMonsterShildUI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+	: CGameObject(pDevice, pContext)
+{
+}
+
+CMonsterShildUI::CMonsterShildUI(const CMonsterShildUI & rhs)
+	: CGameObject(rhs)
+{
+}
+
+HRESULT CMonsterShildUI::Initialize_Prototype()
+{
+	if (FAILED(__super::Initialize_Prototype()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMonsterShildUI::Initialize(void * pArg)
+{
+	if (FAILED(CGameObject::Initialize(pArg)))
+		return E_FAIL;
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterShild.json");
+	m_pGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_MonsterShild", L"ProtoVFX_EffectGroup", &json));
+
+	Safe_AddRef(m_pGroup);
+	Assert(m_pGroup != nullptr);
+
+	return S_OK;
+}
+
+void CMonsterShildUI::Tick(_double TimeDelta)
+{
+	__super::Tick(TimeDelta);
+	m_pGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
+
+	HpBack_Tick(TimeDelta);
+}
+
+void CMonsterShildUI::Imgui_RenderProperty()
+{
+	__super::Imgui_RenderProperty();
+
+	static _float fHp;
+	static _float fShild;
+	ImGui::DragFloat("Hp", &fHp);
+	ImGui::DragFloat("Shild", &fShild);
+
+	if (ImGui::Button("Set")) {
+		SetShild(fHp, fShild);
+	}
+}
+
+void CMonsterShildUI::SetShild(const _float & fHP, const _float & fShild)
+{
+	// 2: Hp, 3: HpBack, 4: Shild
+	//m_pGroup->GetSecondEffect()->GetParams().Floats[0] = fHP;
+	m_fHpBack = fHP;
+	m_pGroup->GetThirdEffect()->GetParams().Floats[0] = fHP;
+	m_pGroup->GetFourthEffect()->GetParams().Floats[0] = fShild;
+}
+
+void CMonsterShildUI::HpBack_Tick(const _double & TimeDelta)
+{
+	if (m_fCurrentHpBack > m_fHpBack)
+	{
+		m_fCurrentHpBack -= _float(TimeDelta) * 0.3f;
+	}
+	else
+	{
+		m_fCurrentHpBack = m_fHpBack;
+	}
+
+	m_pGroup->GetSecondEffect()->GetParams().Floats[0] = m_fCurrentHpBack;
+}
+
+CMonsterShildUI * CMonsterShildUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+{
+	CMonsterShildUI*      pInstance = new CMonsterShildUI(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CMonsterShildUI");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CGameObject * CMonsterShildUI::Clone(void * pArg)
+{
+	CMonsterShildUI*      pInstance = new CMonsterShildUI(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CMonsterShildUI");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void CMonsterShildUI::Free()
+{
+	__super::Free();
+
+	m_pGroup->SetDelete();
+	Safe_Release(m_pGroup);
+}

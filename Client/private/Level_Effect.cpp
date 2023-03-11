@@ -32,6 +32,8 @@
 #include "Boss1_AIController.h"
 
 #include "MonsterHpUI.h"
+#include "MonsterLockonUI.h"
+#include "MonsterShildUI.h"
 // ~ ¿Á¼öÇöÀÇ ÈçÀû
 
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -237,6 +239,19 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create())))
 			return E_FAIL;
 	}
+
+	/* For.Prototype_GameObject_MonsterLockonUI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),
+		CMonsterLockonUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_MonsterHpUI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterHpUI"),
+		CMonsterHpUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_MonsterShildUI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterShildUI"),
+		CMonsterShildUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 	// ~ ¿Á¼öÇöÀÇ ÈçÀû
 
 	return S_OK;
@@ -344,23 +359,33 @@ HRESULT CLevel_Effect::Ready_Layer_Map(const _tchar * pLayerTag)
 HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-	
+
+	// º¸½º
 	//auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
 	//_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 	//pos.y += 1.f;
 	//pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
 
+	// ´«
 	//Json Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_Find.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &Json));
 
+	// Lockon
 	//Json Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_Target.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &Json));
 
 	//Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_TargetRhombus.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &Json));
 
-	Json Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterHp.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MonsterHp"), TEXT("ProtoVFX_EffectGroup"), &Json));
+	// Monster hp
+	//Json Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterHp.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MonsterHp"), TEXT("ProtoVFX_EffectGroup"), &Json));
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterShild.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MonsterShild"), TEXT("ProtoVFX_EffectGroup"), &json));
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"));
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterLockonUI"));
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterShildUI"));
 
 	return S_OK;
 }
