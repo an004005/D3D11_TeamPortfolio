@@ -95,7 +95,7 @@ void CCanvas_PlayerInfoMove::Imgui_RenderProperty()
 
 	if (ImGui::Button("Set Gauge"))
 	{
-		Set_PsychokinesisGauge(LEVEL_THREE, IDLE_TYPE, fGauge, fMaxGauge);
+		Set_PsychokinesisGauge(LEVEL_ONE, DRIVE_TYPE, fGauge, fMaxGauge);
 	}
 }
 

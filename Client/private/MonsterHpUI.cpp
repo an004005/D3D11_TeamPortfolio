@@ -28,13 +28,11 @@ HRESULT CMonsterHpUI::Initialize(void * pArg)
 	if (FAILED(CGameObject::Initialize(pArg)))
 		return E_FAIL;
 
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/MonsterHp.json");
-	m_pGroup = dynamic_cast<CEffectGroup*>(pGameInstance->Clone_GameObject_Get(LEVEL_NOW, L"Layer_MonstserHpUI", L"ProtoVFX_EffectGroup", &json));
+	m_pGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_MonstserHpUI", L"ProtoVFX_EffectGroup", &json));
+
 	Safe_AddRef(m_pGroup);
 	Assert(m_pGroup != nullptr);
-
 
 	return S_OK;
 }

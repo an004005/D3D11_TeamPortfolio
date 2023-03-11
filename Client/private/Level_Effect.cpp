@@ -359,8 +359,8 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 	//Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_TargetRhombus.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &Json));
 
-	//Json Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterHp.json");
-	//FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(TEXT("Layer_MonsterHp"), TEXT("ProtoVFX_EffectGroup"), &Json));
+	Json Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterHp.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MonsterHp"), TEXT("ProtoVFX_EffectGroup"), &Json));
 
 	return S_OK;
 }

@@ -4,8 +4,8 @@
 #include "JsonLib.h"
 
 // m_tParams.Ints[0] : 텍스처 선택
-// m_tParams.Floats[0] : 게이지 정도
 // m_tParams.Floats[1] : 프레임 Ints 에 따라 달라진다. (0 : 0.08, 1 : 0.03)
+// m_tParams.Floats[0] : 게이지 정도
 
 CPlayerInfo_PsychokinesisUI::CPlayerInfo_PsychokinesisUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -43,7 +43,7 @@ void CPlayerInfo_PsychokinesisUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	m_tParams.Floats[0] = m_fPsychokinesisGauge / m_fMaxLevelGauge;
+	m_tParams.Floats[0] = m_fPsychokinesisGauge;
 }
 
 void CPlayerInfo_PsychokinesisUI::Late_Tick(_double TimeDelta)
@@ -80,13 +80,12 @@ void CPlayerInfo_PsychokinesisUI::LoadFromJson(const Json & json)
 void CPlayerInfo_PsychokinesisUI::Set_PsychokinesisGauge(const _uint iLevel, const _uint iType, const _float & fGauge)
 {
 	// iType : (0)일반(물결) (1)공격 (2) 드라이브
-	m_fPsychokinesisGauge = fGauge;
-
-	// 드라이브 레벨에서 텍스처 프레임이 달라진다.
-	if(2 == iType)
-		m_tParams.Floats[1] = 0.03f;
-	else
+	// 드라이브 타입에 따라 이미지와 속도가 달라진다.
+	m_tParams.Ints[0] = iType;
+	if (2 == iType)
 		m_tParams.Floats[1] = 0.08f;
+	else
+		m_tParams.Floats[1] = 0.05f;
 
 	// 레벨에 따른 게이지 바 길이가 달라진다.
 	if (0 == iLevel)
@@ -95,6 +94,8 @@ void CPlayerInfo_PsychokinesisUI::Set_PsychokinesisGauge(const _uint iLevel, con
 		m_fMaxLevelGauge = 1.35f;
 	else
 		m_fMaxLevelGauge = 1.0f;
+
+	m_fPsychokinesisGauge = fGauge / m_fMaxLevelGauge;
 }
 
 _float2 CPlayerInfo_PsychokinesisUI::Gauge_Position()

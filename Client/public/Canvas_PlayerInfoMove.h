@@ -8,7 +8,7 @@ BEGIN(Client)
 class CCanvas_PlayerInfoMove : public CCanvas
 {
 	enum PSYCHOKINESISLEVEL { LEVEL_ONE, LEVEL_TWO, LEVEL_THREE };
-	enum PSYCHOKINESISTYPE { IDLE_TYPE, ATTACK_TYPE, DRIVE_TYPE };
+	enum PSYCHOKINESISTYPE { ATTACK_TYPE, DRIVE_TYPE, IDLE_TYPE	};
 
 protected:
 	CCanvas_PlayerInfoMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

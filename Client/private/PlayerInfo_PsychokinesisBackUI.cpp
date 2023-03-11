@@ -47,6 +47,7 @@ void CPlayerInfo_PsychokinesisBackUI::Tick(_double TimeDelta)
 	else
 	{
 		m_bVisible = false;
+		m_fCurrentPsychokinesisGauge = m_fPsychokinesisGauge;
 		m_tParams.Floats[0] = m_fPsychokinesisGauge;
 	}
 }
@@ -85,13 +86,12 @@ void CPlayerInfo_PsychokinesisBackUI::LoadFromJson(const Json & json)
 void CPlayerInfo_PsychokinesisBackUI::Set_PsychokinesisGauge(const _uint iLevel, const _uint iType, const _float & fGauge)
 {
 	// iType : (0)일반(물결) (1)공격 (2) 드라이브
-	m_fPsychokinesisGauge = fGauge;
-
 	// 드라이브 레벨에서 텍스처 프레임이 달라진다.
+	m_tParams.Ints[0] = iType;
 	if (2 == iType)
-		m_tParams.Floats[1] = 0.03f;
-	else
 		m_tParams.Floats[1] = 0.08f;
+	else
+		m_tParams.Floats[1] = 0.05f;
 
 	// 레벨에 따른 게이지 바 길이가 달라진다.
 	if (0 == iLevel)
@@ -100,6 +100,8 @@ void CPlayerInfo_PsychokinesisBackUI::Set_PsychokinesisGauge(const _uint iLevel,
 		m_fMaxLevelGauge = 1.35f;
 	else
 		m_fMaxLevelGauge = 1.0f;
+
+	m_fPsychokinesisGauge = fGauge / m_fMaxLevelGauge;
 }
 
 CPlayerInfo_PsychokinesisBackUI * CPlayerInfo_PsychokinesisBackUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
