@@ -2388,15 +2388,6 @@ CPlayer & CPlayer::SetAbleState(REMOTE tagRemote)
 	return *this;
 }
 
-void CPlayer::LookTarget()
-{
-	if (nullptr != m_pTargetedEnemy)
-	{
-		_vector vTargetPos = m_pTargetedEnemy->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-		m_pTransformCom->LookAt_NonY(vTargetPos);
-	}
-}
-
 void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 {
 	CEffectGroup* pEffect = nullptr;
@@ -2573,6 +2564,11 @@ void CPlayer::Event_CollisionStart()
 			m_AttackDesc.iDamage = (rand() % 100) + 200;
 			m_AttackDesc.pCauser = this;
 			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		}
+		
+		else
+		{
+			int iA = 0;
 		}
 	}
 	else

@@ -391,7 +391,7 @@ void CFlowerLeg::Tick(_double TimeDelta)
 
 	if (!m_bStruck && m_bAirStruck || m_pController->KeyDown(CController::X))
 	{
-		m_bHitMove = false;
+  		m_bHitMove = false;
 		m_bAirStruck = false;
 		m_pController->ClearCommands();
 		// Ãß°¡Å¸ X
@@ -512,6 +512,8 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	{
 		m_bAirStruck = true;
 		++m_iAirDamage;
+
+		IM_LOG("Air");
 	}
 
 	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bInvicible)

@@ -331,42 +331,30 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	/*if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
 		return E_FAIL;*/
 
-	Json FlowerLegModel;
-	FlowerLegModel["Model"] = "MonsterFlowerLeg";
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("FlowerLeg"), &FlowerLegModel)))
-		return E_FAIL;
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLeg"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(20.f, 3.f, 6.f, 1.f));
 
-	Json BuddyLumiModel;
-	BuddyLumiModel["Model"] = "MonsterBuddyLumi";
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BuddyLumi"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(40.f, 3.f, 3.f, 1.f));
 
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"), &BuddyLumiModel)))
-		return E_FAIL;*/
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPool"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-20.f, 3.f, -3.f, 1.f));
+	
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPandou"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(100.f, 3.f, 10.f, 1.f));
 
-	Json SkummyPoolModel;
-	SkummyPoolModel["Model"] = "MonsterSkummyPool";
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(150.f, 3.f, 15.f, 1.f));
 
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPool"), &SkummyPoolModel)))
-		return E_FAIL;*/
+	/*pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_MonsterBoss1"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(200.f, 3.f, 10.f, 1.f));*/
 
-	Json SkummyPandouModel;
-	SkummyPandouModel["Model"] = "MonsterSkummyPandou";
-
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPandou"), &SkummyPandouModel)))
-		return E_FAIL;*/
-
-	Json BronJonModel;
-	BronJonModel["Model"] = "MonsterBronJon";
-
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
-		return E_FAIL;*/
-
-		/*auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
-		_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-		pos.y += 1.f;
-		pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);*/
-
-
+	/*auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
+	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	pos.y += 1.f;
+	pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);*/
+	
 	return S_OK;
 }
 
@@ -406,7 +394,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
 	
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 	
