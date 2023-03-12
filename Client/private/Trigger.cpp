@@ -10,6 +10,7 @@
 #include "ImGuizmo.h"
 #include "JsonLib.h"
 
+
 CTrigger::CTrigger(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -85,10 +86,13 @@ void CTrigger::LoadFromJson(const Json & json)
 
 	__super::LoadFromJson(json);
 
-	USAGE eUsage = json["Usage"];
-	m_eUsage = eUsage;
+	if (json.contains("Usage"))
+	{
+		USAGE eUsage = json["Usage"];
+		m_eUsage = eUsage;
 
-	SetUp_InitInfo(json);
+		SetUp_InitInfo(json);
+	}
 }
 
 void CTrigger::AfterPhysX()
@@ -173,8 +177,8 @@ HRESULT CTrigger::SetUp_Components(void * pArg)
 		(CComponent**)&m_pRigidBodyCom, pArg));
 
 	m_pRigidBodyCom->Set_Trigger();
+	m_pRigidBodyCom->Set_ColliderType(CT_TRIGGER_FOR_PLAYER);
 	m_pRigidBodyCom->UpdateChange();
-
 	return S_OK;
 }
 
@@ -211,11 +215,10 @@ void CTrigger::SetUp_Create(const Json & json)
 			for (auto matrix : proto.second)
 			{
 				CGameInstance* pGameInstance = CGameInstance::GetInstance();
-				CGameObject* pObject = nullptr;
-
+				
 				Json jsonWorldMatrix;
 				CTransform::ModifyTransformJson(jsonWorldMatrix, matrix);
-				pObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), proto.first.c_str(), &jsonWorldMatrix);
+				pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), proto.first.c_str(), &jsonWorldMatrix);
 			}
 		}
 

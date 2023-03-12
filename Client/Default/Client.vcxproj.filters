@@ -289,6 +289,9 @@
     <Filter Include="02.GameObjects\UI\Psychokinesis">
       <UniqueIdentifier>{05a34116-b873-484c-8da2-baafc69d27ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FactoryMethod">
+      <UniqueIdentifier>{c339909b-d428-41f4-9c52-dbbf78dbea31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -760,6 +763,9 @@
     <ClInclude Include="..\public\Boss_ShildUI.h">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\FactoryMethod.h">
+      <Filter>FactoryMethod</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1202,6 +1208,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Level_Stage1.cpp">
       <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FactoryMethod.cpp">
+      <Filter>FactoryMethod</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
