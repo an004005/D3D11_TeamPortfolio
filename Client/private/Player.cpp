@@ -385,26 +385,29 @@ HRESULT CPlayer::Render()
 
 void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
-	//// 현재 애니메이션 상태에 따라 저스트닷지 여부 판단
-	//if (m_pModel->GetPlayAnimation()->GetName().find("dodge") != string::npos &&
-	//	m_pASM->isSocketExactlyEmpty())
-	//{
-	//	m_fJustDodgeAble = 10.f;
-	//}
-	//else
-	//{
-	//	m_bHit = true;
+	// 현재 애니메이션 상태에 따라 저스트닷지 여부 판단
+	if (m_pModel->GetPlayAnimation()->GetName().find("dodge") != string::npos &&
+		m_pASM->isSocketExactlyEmpty())
+	{
+		m_fJustDodgeAble = 10.f;
+	}
+	else
+	{
+		m_bHit = true;
 
-	//	m_DamageDesc.m_iDamage = tDamageParams.iDamage;
-	//	m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
-	//	m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat3(&tDamageParams.vHitFrom);
-	//	m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, XMLoadFloat3(&tDamageParams.vHitFrom));
+		m_DamageDesc.m_iDamage = tDamageParams.iDamage;
+		m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
+		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat3(&tDamageParams.vHitFrom);
+		m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, XMLoadFloat3(&tDamageParams.vHitFrom));
 
-	//	if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
-	//	{
-	//		m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
-	//	}
-	//}
+		// 체력 깎이는 부분
+		m_PlayerStat.m_iHP -= tDamageParams.iDamage;
+
+		if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
+		{
+			m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+		}
+	}
 }
 
 void CPlayer::Imgui_RenderProperty()
