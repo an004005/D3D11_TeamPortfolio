@@ -23,6 +23,9 @@ void CCurveManager::LoadCurves(const char* pCurveJsonPath)
 	m_strCurveJsonPath = pCurveJsonPath;
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(pCurveJsonPath);
 
+	if(json.contains("CurveWindowSize"))
+		m_CurveEditorSize = json["CurveWindowSize"];
+
 	for (auto curve : json["Curves"])
 	{
 		auto pCurve = CCurveFloatImpl::Create(&curve);
@@ -34,6 +37,8 @@ void CCurveManager::SaveCurves()
 {
 	Json json;
 	json["Curves"] = Json::array();
+
+	json["CurveWindowSize"] = m_CurveEditorSize;
 
 	for (auto curve : m_Curves)
 	{

@@ -181,6 +181,8 @@ public:
 private:
 	class CCurveFloat* GetCurve(const string& strCurveTag);
 
+public:
+	void ImGui_RenderTimelineEvent();
 private:
 	_double m_EndTime = 0.0;
 	_double m_CurFrame = 0.0;
@@ -202,6 +204,8 @@ private:
 public:
 	virtual void Free() override;
 };
+
+
 
 /******************
  * CTimelineEx

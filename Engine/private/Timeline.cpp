@@ -168,19 +168,22 @@ void CTimeline::Imgui_RenderEditor()
 	ImGui::InputFloat("EndTime", &_fEndtime);
 	m_EndTime = (_double)_fEndtime;
 
-	if (ImGui::BeginListBox("Current Curves"))
-	{
-		for (auto& curve : m_vecFloatCurve)
-		{
-			auto pCurve = static_cast<CCurveFloatImpl*>(curve.second);
-			if (ImGui::Selectable(pCurve->GetName()))
-			{
-				
-			}
-		}
-		ImGui::EndListBox();
-	}
+	// if (ImGui::BeginListBox("Current Curves"))
+	// {
+	// 	for (auto& curve : m_vecFloatCurve)
+	// 	{
+	// 		auto pCurve = static_cast<CCurveFloatImpl*>(curve.second);
+	// 		if (ImGui::Selectable(pCurve->GetName()))
+	// 		{
+	// 			
+	// 		}
+	// 	}
+	// 	ImGui::EndListBox();
+	// }
+}
 
+void CTimeline::ImGui_RenderTimelineEvent()
+{
 	ImGui::Separator();
 	static char szEventName[MAX_PATH]{};
 	static _float fEventTime = 0.f;

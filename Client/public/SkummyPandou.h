@@ -34,6 +34,8 @@ public:
 
 	void		 RushSweep(_bool bCol);
 
+	void		HitDir(_double TimeDelta);
+
 private:
 	class CSkPd_Controller*	m_pController = nullptr;
 	class CSkPd_AnimInstance* m_pASM = nullptr;
@@ -64,6 +66,16 @@ private:
 	_uint		m_iAirDamage = 0;
 	_uint		m_iPreAirDamageCnt = 0;
 
+	// HitDir
+	_bool		m_bHitMove = false;
+
+	_vector		m_vPreDir;
+	_vector		m_vCurDir;
+	_vector		m_vFinDir;
+	_bool		m_bOneTick = false;
+	// ~HitDir
+
+	// TakeDamage
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
 
@@ -84,10 +96,10 @@ private:
 	CAnimation* m_pDamage_M_R = nullptr;
 
 	// Air Damage
-	CAnimation*			m_pBlowStart = nullptr;
-	CAnimation*			m_pBlowLand = nullptr;
-	CAnimation*			m_pGetUp = nullptr;
-	CAnimation*			m_pRiseStart = nullptr;
+	CAnimation*	m_pBlowStart = nullptr;
+	CAnimation*	m_pBlowLand = nullptr;
+	CAnimation*	m_pGetUp = nullptr;
+	CAnimation*	m_pRiseStart = nullptr;
 
 	CAnimation* m_pDeadAnim = nullptr;
 
