@@ -37,6 +37,7 @@ HRESULT CSkummyPool::Initialize_Prototype()
 HRESULT CSkummyPool::Initialize(void * pArg)
 {
 	Json SkummyPoolTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPool/Test.json");
+	MoveTransformJson(SkummyPoolTrigger, pArg);
 	pArg = &SkummyPoolTrigger;
 
 	FAILED_CHECK(CMonster::Initialize(pArg));
@@ -87,7 +88,7 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 	});
 
 	// ~Event Caller
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 25.f)));
+	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 25.f)));
 	
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 
@@ -120,7 +121,7 @@ void CSkummyPool::BeginTick()
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("Pool", { m_pModelCom->Find_Animation("AS_em0600_160_AL_threat") });
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 25.f)));
+	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 25.f)));
 }
 
 void CSkummyPool::Tick(_double TimeDelta)

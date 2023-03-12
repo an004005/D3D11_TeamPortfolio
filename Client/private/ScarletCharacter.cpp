@@ -28,6 +28,12 @@ HRESULT CScarletCharacter::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CScarletCharacter::BeginTick()
+{
+	CGameObject::BeginTick();
+	m_vPrePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+}
+
 void CScarletCharacter::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
@@ -67,9 +73,12 @@ void CScarletCharacter::Late_Tick(_double TimeDelta)
 void CScarletCharacter::AfterPhysX()
 {
 	CGameObject::AfterPhysX();
-	const _float4 vColliderFootPos = m_pCollider->GetFootPosition();
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vColliderFootPos);
-	m_vPrePos = vColliderFootPos;
+	if (m_pCollider->IsOnPhysX())
+	{
+		const _float4 vColliderFootPos = m_pCollider->GetFootPosition();
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vColliderFootPos);
+		m_vPrePos = vColliderFootPos;
+	}
 }
 
 void CScarletCharacter::Update_DeBuff(_double TimeDelta)

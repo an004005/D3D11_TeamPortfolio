@@ -46,6 +46,8 @@ void CControlledRigidBody::BeginTick()
 	{
 		SetFootPosition(pOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 	}
+
+	CPhysX_Manager::GetInstance()->AddActor(*m_pController->getActor());
 }
 
 void CControlledRigidBody::Imgui_RenderProperty()
@@ -83,6 +85,8 @@ void CControlledRigidBody::Imgui_RenderProperty()
 	if (ImGui::Button("Update Changes"))
 	{
 		CreateController();
+		if (!IsOnPhysX())
+			CPhysX_Manager::GetInstance()->AddActor(*m_pController->getActor());
 	}
 }
 
@@ -160,6 +164,11 @@ PxControllerCollisionFlags CControlledRigidBody::MoveDisp(_float4 vPosDelta, _fl
 	return m_pController->move(vDisp, minDist, fTimeDelta, m_Filters);
 }
 
+_bool CControlledRigidBody::IsOnPhysX()
+{
+	return m_pController != nullptr && m_pController->getActor()->getScene() != nullptr;
+}
+
 void CControlledRigidBody::CreateController()
 {
 	ReleaseController();
@@ -172,7 +181,7 @@ void CControlledRigidBody::CreateController()
 	shape->setQueryFilterData(physx::PxFilterData{static_cast<physx::PxU32>(GetCollTypeBit(m_eColliderType)), 0, 0, 0});
 	m_pController->getActor()->userData = this;
 
-	CPhysX_Manager::GetInstance()->AddActor(*m_pController->getActor());
+	CPhysX_Manager::GetInstance()->RemoveActor(*m_pController->getActor());
 
 	if (auto pOwner = TryGetOwner())
 	{
@@ -184,7 +193,8 @@ void CControlledRigidBody::ReleaseController()
 {
 	if (m_pController)
 	{
-		CPhysX_Manager::GetInstance()->RemoveActor(*m_pController->getActor());
+		if (m_pController->getActor()->getScene())
+			CPhysX_Manager::GetInstance()->RemoveActor(*m_pController->getActor());
 		m_pController->release();
 	}
 }
