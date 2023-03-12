@@ -258,6 +258,7 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkummyPool"), CSkummyPool::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkMpBullet"), CSkMpBullet::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
 	// ~스커미풀
 
 	//Model_flowerLeg
@@ -334,6 +335,7 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/KineticTestMap.json");
+//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
