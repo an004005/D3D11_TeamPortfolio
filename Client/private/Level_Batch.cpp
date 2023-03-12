@@ -21,9 +21,10 @@
 #include "SkmP_Controller.h"
 #include "Boss1.h"
 #include "Boss1_AIController.h"
-#include "SkPd_Controller.h"
 #include "BdLm_Controller.h"
+#include "SkPd_Controller.h"
 #include "BrJ_Controller.h"
+
 CLevel_Batch::CLevel_Batch(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
