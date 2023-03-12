@@ -168,7 +168,7 @@ PS_OUT PS_FLOWERLEG(PS_IN In)
 	// Out.vColor.a = Out.vColor.r;
 	// Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
 	Out.vColor.a *= g_float_1;
-	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.a);
+	Out.vFlag = float4(0.f, 0.f, 0.f, Out.vColor.a * 0.5f);
 
 	return Out;
 }
