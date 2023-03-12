@@ -14,6 +14,7 @@
 #include "FL_AnimInstance.h"
 #include "RigidBody.h"
 #include "Player.h"
+#include "ControlledRigidBody.h"
 
 CFlowerLeg::CFlowerLeg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -33,6 +34,7 @@ HRESULT CFlowerLeg::Initialize_Prototype()
 HRESULT CFlowerLeg::Initialize(void * pArg)
 {
 	Json FlowerLegJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegTrigger.json");
+	MoveTransformJson(FlowerLegJson, pArg);
 	pArg = &FlowerLegJson;
 
 	FAILED_CHECK(CMonster::Initialize(pArg));
@@ -262,8 +264,7 @@ void CFlowerLeg::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket(("UsingControl"), {m_pModelCom->Find_Animation("AS_em0200_160_AL_threat")});
-
-//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-1.f, 0.f, 47.f)));
+	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-1.f, 0.f, 27.f)));
 }
 
 void CFlowerLeg::Tick(_double TimeDelta)

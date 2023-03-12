@@ -43,6 +43,9 @@ void CCanvas::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	m_fSizeX = (_float)g_iWinSizeX;
+	m_fSizeY = (_float)g_iWinSizeY;
+
 	const _float2 PivotPair = GetPivotXY(m_ePivot);
 
 	// 자식들의 캔버스 최신화
@@ -52,10 +55,10 @@ void CCanvas::Tick(_double TimeDelta)
 		m_fSizeX * 0.5f,
 		m_fSizeY * 0.5f
 	};
-
+	
 	for (auto& Pair : m_mapChildUIs)
 		Pair.second->SetCanvasSize(ThisCanvasSize);
-
+	
 	// map 으로 보관하고 있는 캔버스의 Tick() 을 돌린다.
 	for (auto iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end();)
 	{
@@ -170,7 +173,6 @@ void CCanvas::LoadFromJson(const Json & json)
 		auto pUI = Add_ChildUI(LEVEL_NOW, s2ws(protoTag).c_str(),s2ws(childTag).c_str(), (void*)&childJson);
 		Assert(pUI != nullptr);
 	}
-
 }
 
 CUI * CCanvas::Find_ChildUI(const _tchar * pChildTag)
@@ -199,7 +201,7 @@ CUI * CCanvas::Add_ChildUI(_uint iLevelIndex, const _tchar * pPrototypeTag, cons
 		return nullptr;
 	}
 
-	CUI* pChildUI = dynamic_cast<CUI*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(iLevelIndex, pPrototypeTag, pArg));
+ 	CUI* pChildUI = dynamic_cast<CUI*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(iLevelIndex, pPrototypeTag, pArg));
 	Assert(pChildUI != nullptr);
 
 	m_mapChildUIs.emplace(pChildTag, pChildUI);
@@ -219,7 +221,7 @@ void CCanvas::UIMove_FSM()
 		.AddState("Move")
 		.OnStart([this]
 	{
-		map<wstring, CCanvas*>& canvases = CUI_Manager::GetInstance()->Get_Canvas();
+		map<wstring, CCanvas*>& canvases = CUI_Manager::GetInstance()->Get_MoveCanvas();
 
 		for_each(canvases.begin(), canvases.end(), [&](pair<wstring, CCanvas*> pCanvas) {
 			pCanvas.second->Set_UIMove();

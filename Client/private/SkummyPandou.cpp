@@ -33,6 +33,7 @@ HRESULT CSkummyPandou::Initialize_Prototype()
 HRESULT CSkummyPandou::Initialize(void * pArg)
 {
 	Json SkummyPandouTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandou/SkummyPandouTrigger.json");
+	MoveTransformJson(SkummyPandouTrigger, pArg);
 	pArg = &SkummyPandouTrigger;
 	
 	FAILED_CHECK(CMonster::Initialize(pArg));
@@ -77,7 +78,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 
 	// ~Event Caller
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-2.f, 0.f, 82.f)));
+	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(2.f, 0.f, 32.f)));
 
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 
@@ -117,7 +118,7 @@ void CSkummyPandou::BeginTick()
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("Bee", { m_pModelCom->Find_Animation("AS_em0700_160_AL_threat") });
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-2.f, 0.f, 82.f)));
+	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(2.f, 0.f, 32.f)));
 }
 
 void CSkummyPandou::Tick(_double TimeDelta)

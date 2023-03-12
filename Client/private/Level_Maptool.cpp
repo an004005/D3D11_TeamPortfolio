@@ -104,21 +104,33 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	*/
 	
 	//일반 모델들의 프로토타입 생성
-	//CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/",
-	//	[this](const string& fileName)
-	//{
-	//	char szFileExt[MAX_PATH]{};
-	//	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/",
+		[this](const string& fileName)
+	{
+		char szFileExt[MAX_PATH]{};
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
 
-	//	if (0 == strcmp(szFileExt, ".static_model"))
-	//	{
-	//		FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), NON_INSTANCE));
-	//	}
-	//});
+		if (0 == strcmp(szFileExt, ".static_model"))
+		{
+			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), KINETIC));
+		}
+	});
+
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",
+		[this](const string& fileName)
+	{
+		char szFileExt[MAX_PATH]{};
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+
+		if (0 == strcmp(szFileExt, ".static_model"))
+		{
+			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), KINETIC));
+		}
+	});
 
 
 	//인스턴싱 모델들의 프로토타입 생성
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/",
+	/*CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/",
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
@@ -128,7 +140,7 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 		{
 			FAILED_CHECK(Create_Model_Instance(s2ws(fileName), fileName.c_str()));
 		}
-	});
+	});*/
 
 	//SkyBox
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_Component_Model_SkySphere"),
@@ -164,7 +176,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map_ConstructionSite2F.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
 
 	json["Model_ProtoTypes"] = Json::array();
 

@@ -521,11 +521,11 @@
                 "EventTime": 15.0
             },
             {
-                "EventName": "Light_Attack_On",
+                "EventName": "Collision_Start",
                 "EventTime": 9.0
             },
             {
-                "EventName": "Attack_Off",
+                "EventName": "Collision_End",
                 "EventTime": 15.0
             }
         ]
@@ -545,6 +545,18 @@
             },
             {
                 "EventName": "Trail_Off",
+                "EventTime": 25.0
+            },
+            {
+                "EventName": "Light_Attack_On",
+                "EventTime": 17.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 17.0
+            },
+            {
+                "EventName": "Collision_End",
                 "EventTime": 25.0
             }
         ]
@@ -573,6 +585,14 @@
             {
                 "EventName": "Fire_Attack_3_twist",
                 "EventTime": 35.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 25.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 45.0
             }
         ]
     },
@@ -608,6 +628,14 @@
             {
                 "EventName": "Fire_Attack_4_001",
                 "EventTime": 38.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 25.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 40.0
             }
         ]
     },
@@ -631,6 +659,26 @@
             {
                 "EventName": "Fire_Attack_5",
                 "EventTime": 43.0
+            },
+            {
+                "EventName": "Light_Attack_On",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Attack_Off",
+                "EventTime": 45.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 45.0
+            },
+            {
+                "EventName": "ReleaseFovCurve",
+                "EventTime": 42.75
             }
         ]
     },
@@ -660,12 +708,12 @@
                 "EventTime": 30.0
             },
             {
-                "EventName": "Air_Attack_On",
-                "EventTime": 13.0
+                "EventName": "Event_CollisionStart",
+                "EventTime": 15.0
             },
             {
-                "EventName": "Attack_Off",
-                "EventTime": 30.0
+                "EventName": "Event_collisionEnd",
+                "EventTime": 25.0
             }
         ]
     },
@@ -733,6 +781,14 @@
             {
                 "EventName": "Fire_Attack_Justdodge_03",
                 "EventTime": 45.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 9.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 60.0
             }
         ]
     },
@@ -752,7 +808,12 @@
         "Duration": 240.0,
         "TickPerSecond": 50.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "WeaponBright_On",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_211_AL_atk_charge01": {
         "Duration": 151.0,
@@ -778,6 +839,18 @@
             {
                 "EventName": "Fire_Attack_Charge03_002",
                 "EventTime": 37.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "ReleaseFovCurve",
+                "EventTime": 70.0
             }
         ]
     },
@@ -805,6 +878,14 @@
             {
                 "EventName": "Fire_Attack_Charge03_002",
                 "EventTime": 54.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 60.0
             }
         ]
     },
@@ -828,6 +909,14 @@
             {
                 "EventName": "Fire_Attack_Charge03",
                 "EventTime": 65.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 70.0
             }
         ]
     },
@@ -884,6 +973,14 @@
             {
                 "EventName": "Fire_Attack_Dash_Hold_002",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 35.0
             }
         ]
     },
@@ -1039,6 +1136,14 @@
             {
                 "EventName": "Fire_Attack_Air_1",
                 "EventTime": 9.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 8.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 12.0
             }
         ]
     },
@@ -1062,6 +1167,14 @@
             {
                 "EventName": "Fire_Attack_Air_2",
                 "EventTime": 13.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 17.0
             }
         ]
     },
@@ -1083,6 +1196,17 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_227_AL_atk_air_hold_fall": {
+        "Duration": 5.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 0.0
+            }
+        ]
+    },
     "AS_ch0100_227_AL_atk_air_hold_landing": {
         "Duration": 66.0,
         "TickPerSecond": 66.0,
@@ -1102,6 +1226,14 @@
             },
             {
                 "EventName": "Fire_Attack_3_twist",
+                "EventTime": 5.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Collision_End",
                 "EventTime": 5.0
             }
         ]
@@ -1154,6 +1286,10 @@
             {
                 "EventName": "Fire_Attack_Air_Hold_2",
                 "EventTime": 26.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 5.0
             }
         ]
     },
@@ -1185,12 +1321,20 @@
             {
                 "EventName": "Fire_Attack_Dash_Hold_003",
                 "EventTime": 14.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 35.0
             }
         ]
     },
     "AS_ch0100_230_AL_atk_air_dash_end": {
         "Duration": 49.0,
-        "TickPerSecond": 98.0,
+        "TickPerSecond": 90.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -1204,6 +1348,14 @@
             {
                 "EventName": "Trail_Off",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 3.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 7.0
             }
         ]
     },
@@ -1213,9 +1365,21 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_245_AL_Pcon_cLeR_Lv1": {
+        "Duration": 131.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_252_AL_Pcon_cLeR_Lv2": {
+        "Duration": 157.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_264_AL_Pcon_cReL_Lv3": {
         "Duration": 123.0,
-        "TickPerSecond": 41.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },

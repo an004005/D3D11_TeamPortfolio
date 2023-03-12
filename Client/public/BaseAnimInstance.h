@@ -18,6 +18,8 @@ public:
 	void			InputAnimSocket(const string& strSocName, list<CAnimation*> AnimList);
 	void			AttachAnimSocket(const string& strSocName, list<CAnimation*> AnimList);
 	const string&	GetCurAnimName() { return m_pASM_Base->GetCurState()->m_Animation->GetName(); } // 현재 재생중인 애니메이션 이름은 모델에서 가져올 것 -> State Machine은 Transition이 겹치면 통과함
+	const string&	GetCurStateName() { return m_pASM_Base->GetCurState()->m_strName; } // 현재 상태 이름
+	const string&	GetCurSocketAnimName();
 	_bool			isLerping() { return m_pASM_Base->isLerping(); }
 	_bool			isSocketEmpty(const string& strSocName) { return m_mapAnimSocket[strSocName].empty(); }
 	_bool			isSocketAlmostFinish(const string& strSocName);
@@ -25,6 +27,7 @@ public:
 	_bool			CheckSocketAnim(const string& strSocName, const string& AnimName) { return (AnimName == m_mapAnimSocket[strSocName].front()->GetName()) ? true : false; }
 	_bool			isSocketExactlyEmpty();	// 모든 소켓이 비어있는지?
 	void			ClearAnimSocket(const string& strSocName = "");
+
 
 protected:
 	void			SpairAnimationChecker();
@@ -70,6 +73,9 @@ protected:	// 대상의 상태
 	_float	m_fYSpeed = 0.f;
 
 	CAnimationStateMachine* m_pASM_Base = nullptr;
+
+protected:
+	string	m_szNullString = "";
 
 protected:
 	_bool	FloorCheck();

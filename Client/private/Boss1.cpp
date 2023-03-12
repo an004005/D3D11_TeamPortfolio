@@ -33,6 +33,7 @@ HRESULT CBoss1::Initialize_Prototype()
 HRESULT CBoss1::Initialize(void* pArg)
 {
 	Json BossJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_en320.json");
+	MoveTransformJson(BossJson, pArg);
 	pArg = &BossJson;
 
 	FAILED_CHECK(CMonster::Initialize(pArg));

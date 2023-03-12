@@ -153,6 +153,15 @@ void CMonster::DeBuff_Oil()
 	}
 }
 
+void CMonster::MoveTransformJson(Json& jsonDest, void* pArg)
+{
+	if (pArg)
+	{
+		Json& json = *static_cast<Json*>(pArg);
+		CTransform::MoveTransformJson(jsonDest, json);
+	}
+}
+
 void CMonster::Free()
 {
 	__super::Free();

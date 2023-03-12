@@ -96,7 +96,12 @@ private:
 
 	PrimitiveBatch<VertexPositionColor>*				m_pBatch = nullptr;
 	BasicEffect*										m_pEffect = nullptr;
-	ID3D11InputLayout*									m_pInputLayout = nullptr;	
+	ID3D11InputLayout*									m_pInputLayout = nullptr;
+
+
+	class CShader*						m_pShader = nullptr;
+	class CVIBuffer_Line*				m_pVIBuffer = nullptr;
+
 #endif
 
 
