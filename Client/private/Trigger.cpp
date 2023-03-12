@@ -150,13 +150,7 @@ void Client::CTrigger::Imgui_RenderProperty()
 }
 
 void CTrigger::Set_ForCreate(const wstring& ProtoTag, const _float4x4 WorldMatrix)
-{
-	if (m_eUsage != USAGE_END || m_eUsage != CREATE)
-	{
-		MSG_BOX("Diffent Usage");
-		return;
-	}
-	
+{	
 	m_eUsage = CREATE;
 
 	auto& iter = m_ProtoWorldMatrixes.find(ProtoTag);

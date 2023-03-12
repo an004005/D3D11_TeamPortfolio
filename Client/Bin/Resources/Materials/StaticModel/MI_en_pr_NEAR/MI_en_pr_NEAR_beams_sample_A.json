@@ -8,9 +8,9 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Electronics/pr_RedEquipment/T_lc001_pillarparts01_ALB.dds",
-            "../Bin/Resources/Environments/Prop/10_Props/Electronics/pr_RedEquipment/T_lc001_pillarparts01_NML.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Electronics/pr_RedEquipment/T_lc001_pillarparts01_RMA.dds"
+            "../Bin/Resources/Environments/Location/LC07/Common/BNS_TST/RD_T_BG_TST_T02_NEAR_beams_00_D.dds",
+            "../Bin/Resources/Environments/Location/LC07/Common/BNS_TST/RD_T_BG_TST_T02_NEAR_beams_00_N.png",
+            "../Bin/Resources/Environments/Location/LC07/Common/BNS_TST/T_T02_NEAR_beams_00_M_RMA.dds"
         ],
         "Pass" : 1
     },
