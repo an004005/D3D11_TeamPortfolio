@@ -149,6 +149,7 @@ public:
 
 		auto callback = [obj, memFunc](_float f) { (obj->*memFunc)(f); };
 		m_vecFloatCurve.push_back({callback, curve});
+		CheckCurveTime(curve);
 	}
 
 	template<typename T>
@@ -180,6 +181,7 @@ public:
 
 private:
 	class CCurveFloat* GetCurve(const string& strCurveTag);
+	void CheckCurveTime(CCurveFloat* curve);
 
 private:
 	_double m_MinTime = 0.0;

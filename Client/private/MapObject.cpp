@@ -32,6 +32,7 @@ HRESULT CMapObject::Initialize(void* pArg)
 
 void CMapObject::BeginTick()
 {
+	__super::BeginTick();
 }
 
 void CMapObject::Tick(_double TimeDelta)

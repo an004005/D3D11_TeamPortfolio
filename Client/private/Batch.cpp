@@ -329,7 +329,7 @@ void CBatch::RayPicking()
 			{
 				auto p = t.getAnyHit(i);
 
-				_float4 vPos{ p.position.x, p.position.y + 10.f, p.position.z, 1.f };
+				_float4 vPos{ p.position.x, p.position.y + 1.f, p.position.z, 1.f };
 
 				if (m_pProtoTag != L"")
 				{

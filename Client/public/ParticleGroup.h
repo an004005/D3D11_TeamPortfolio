@@ -24,7 +24,7 @@ public:
 
 	void					Load_ParticleSystem();
 	void					ImGui_RenderParticleSystem(_int iSelectParticle);
-
+	void		VisibleUpdate();
 	void		Set_Transform(_matrix sokect);
 public:
 	void		Start_ParticleWork();
