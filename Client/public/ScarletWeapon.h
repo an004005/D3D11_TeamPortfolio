@@ -47,6 +47,13 @@ protected:
 	Vector4		m_BeforePos;
 	Matrix		m_BeforeMatrix;
 
+public:
+	void		Set_Bright(ESASType eType, _bool bBright);
+
+protected:
+	ESASType	m_eSasType = ESASType::SAS_GRAVIKENISIS;
+	_bool		m_bBright = false;
+
 protected:
 	CRenderer*		m_pRenderer = nullptr;
 	CModel*			m_pModel = nullptr;

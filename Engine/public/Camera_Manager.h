@@ -3,6 +3,8 @@
 #include "Camera.h"
 
 BEGIN(Engine)
+class	CCurveFloatImpl;
+
 
 class CCamera_Manager final : public CBase
 {
@@ -33,6 +35,15 @@ public:
 	void Clear();
 
 	void Imgui_Render();
+
+public:
+	void	SetCameraFovCurve(const string& strCurveTag);
+	void	ActionCamTickByPlayTime(_float fRatio);
+	void	ReleaseCameraFovCurve();
+
+private:
+	CCurveFloatImpl* m_pFovCurve = nullptr;
+	_float			m_fFovFrame = 0.f;
 
 private:
 	// void	Set_Cascade();

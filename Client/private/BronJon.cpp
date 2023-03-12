@@ -296,7 +296,10 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 	{			
 		++m_iGroggyCnt;
 		m_bStruck = true;	// 체력 다는 조건으로 주면 될듯?
-	}	
+	}
+//	CGameInstance::GetInstance()->SetTimeRatioCurve("Simple_Increase");
+
+	IM_LOG("yes");
 }
 
 _matrix CBronJon::AttachCollider(CRigidBody* pRigidBody)

@@ -3,6 +3,7 @@
 #include "Bone.h"
 #include "RigidBody.h"
 #include "TrailSystem.h"
+#include "Monster.h"
 
 CScarletWeapon::CScarletWeapon(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
@@ -47,6 +48,12 @@ void CScarletWeapon::Setup_BoneMatrix(CModel* pModel, _fmatrix Transform)
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
 	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
+}
+
+void CScarletWeapon::Set_Bright(ESASType eType, _bool bBright)
+{
+	m_eSasType = eType;
+	m_bBright = bBright;
 }
 
 void CScarletWeapon::Free()
