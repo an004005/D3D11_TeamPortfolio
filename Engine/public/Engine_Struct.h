@@ -83,6 +83,18 @@ namespace Engine
 		unsigned long			_0, _1, _2;
 	}FACEINDICES32;
 
+	typedef struct tagVertexLineColor
+	{
+		_float3		vPosition;
+		_float4		vColor;
+	}VTXLINE;
+
+	typedef struct ENGINE_DLL tagVertexLineColor_Declaration
+	{
+		static const unsigned int		iNumElements = 2;
+		static D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];			
+	}VTXLINE_DECLARATION;
+
 	typedef struct tagVertexPosition
 	{
 		XMFLOAT3		vPosition;

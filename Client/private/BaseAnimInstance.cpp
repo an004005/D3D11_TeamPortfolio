@@ -478,7 +478,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, true, false, true, true, false, true, false });
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false })
+					.LookTarget();
 			})
 
 				.AddTransition("ATK_A1 to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -531,7 +532,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, true, false, true, true, false, true, false });
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false })
+					.LookTarget();
 			})
 
 				.AddTransition("ATK_A2 to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -584,7 +586,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, true, false, true, true, false, true, false });
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false })
+					.LookTarget();
 			})
 
 				.AddTransition("ATK_A3 to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -637,7 +640,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, true, false, true, true, false, true, false });
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false })
+					.LookTarget();
 			})
 
 				.AddTransition("ATK_A4 to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -690,7 +694,14 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, true, false, true, true, false, true, false });
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false })
+					.LookTarget();
+
+				CGameInstance::GetInstance()->SetCameraFovCurve("Attack_A5_ActionCam");
+			})
+			.FinishEvent([&]()
+			{
+				CGameInstance::GetInstance()->ReleaseCameraFovCurve();
 			})
 
 				.AddTransition("ATK_A5 to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -1048,7 +1059,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, true, false, true, true, false, true, false });
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false })
+					.LookTarget();
 			})
 
 				.AddTransition("ATTACK_DASH_START to DASHJUMP_FALL", "DASHJUMP_FALL")
@@ -1096,6 +1108,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				static_cast<CPlayer*>(m_pTargetObject)
 					->SetAbleState({ false, false, false, false, false, true, true, false, true, false });
 			})
+
 
 				.AddTransition("ATTACK_NONCHARGE to RUNJUMP_FALL", "RUNJUMP_FALL")
 				.Predicator([&]()->_bool{return FloorCheck();})
@@ -1223,6 +1236,12 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
 					->SetAbleState({ false, false, false, false, false, true, true, false, true, false });
+
+				CGameInstance::GetInstance()->SetCameraFovCurve("Charge01_ActionCam");
+			})
+			.FinishEvent([&]()
+			{
+				CGameInstance::GetInstance()->ReleaseCameraFovCurve();
 			})
 
 				.AddTransition("CHARGE_ATTACK_01 to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -1852,7 +1871,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, false, true, false, false, false, true, false });
+					->SetAbleState({ false, false, false, false, true, false, false, false, true, false })
+					.LookTarget();
 			})
 
 				.AddTransition("ATK_AIR1 to ATK_AIR2", "ATK_AIR2")
@@ -1885,7 +1905,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, false, true, false, false, false, true, false });
+					->SetAbleState({ false, false, false, false, true, false, false, false, true, false })
+					.LookTarget();
 			})
 
 				.AddTransition("ATK_AIR2 to JUMP_LANDING", "JUMP_LANDING")
@@ -1978,7 +1999,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, false, true, false, false, false, true, false });
+					->SetAbleState({ false, false, false, false, true, false, false, false, true, false })
+					.LookTarget();
 			})
 
 				.AddTransition("ATK_AIR_DODGE_START to ATK_AIR_DODGE_END", "ATK_AIR_DODGE_END")
@@ -2117,7 +2139,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, false, true, true, true, true, true, false });
+					->SetAbleState({ false, false, false, false, true, true, true, true, true, false })
+					.LookTarget();
 			})
 
 				.AddTransition("ATTACK_UPPER_START to ATK_AIR1", "ATK_AIR1")
@@ -2393,6 +2416,9 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 		_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTargetObject->GetTransform()->Get_WorldMatrix());
 		m_pTargetObject->GetTransform()->LocalMove(vOpTest);
 //	}
+
+	// 카메라
+	CGameInstance::GetInstance()->ActionCamTickByPlayTime(m_pModel->GetPlayAnimation()->GetPlayRatio());
 }
 
 void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
@@ -2457,6 +2483,8 @@ void CBaseAnimInstance::InputAnimSocket(const string& strSocName, list<CAnimatio
 
 	m_pModel->Reset_LocalMove(true);
 
+//	static_cast<CPlayer*>(m_pTargetObject)->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
 //	m_pASM_Base->SetCurState("IDLE");
 
 	for (auto& iter : m_mapAnimSocket)
@@ -2477,6 +2505,8 @@ void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimat
 	// 소켓의 애니메이션을 교환하고 보간함, 아닐 경우 그냥 덮어버림
 
 	m_pModel->Reset_LocalMove(true);
+
+//	static_cast<CPlayer*>(m_pTargetObject)->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 
 //	m_pASM_Base->SetCurState("IDLE");
 
@@ -2502,6 +2532,19 @@ void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimat
 	}
 
 	m_bSeperateSwitch = false;
+}
+
+const string & CBaseAnimInstance::GetCurSocketAnimName()
+{
+	for (auto& iter : m_mapAnimSocket)
+	{
+		if (!iter.second.empty())
+		{
+			return iter.second.front()->GetName();
+		}
+	}
+
+	return m_szNullString;
 }
 
 _bool CBaseAnimInstance::isSocketAlmostFinish(const string & strSocName)

@@ -115,6 +115,10 @@ public:
 public:
 	HRESULT Bind_ShaderResource(class CShader* pShaderCom, const char* pConstantName);
 
+public:
+	static void ModifyTransformJson(Json& json, _float4x4 WorldMatrix);
+	static void MoveTransformJson(Json& jsonDest, const Json& jsonSour);
+
 private:	
 	_float4x4				m_WorldMatrix;
 	TRANSFORMDESC			m_TransformDesc;

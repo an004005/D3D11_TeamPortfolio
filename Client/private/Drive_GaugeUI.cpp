@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "..\public\Drive_GaugeUI.h"
 #include "GameInstance.h"
-#include "UI_Manager.h"
 
+// Drive 게이지와 Drive Back 가 동시에 계산되고 있습니다. (즉 이 클래스로 생성된 객체가 2개 입니다.)
 //m_tParams.Floats[0] = Gauge
 
 CDrive_GaugeUI::CDrive_GaugeUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -40,7 +40,7 @@ void CDrive_GaugeUI::Tick(_double TimeDelta)
 	// 드라이브를 사용하면 외부에서 받아온 전체 시간을 이용해서 게이지를 줄인다.
 
 	DrivaGaugePlus_Tick(TimeDelta);
-	DrivaGaugeMinus_Tick(TimeDelta);
+	DrivaGaugeUse_Tick(TimeDelta);
 	DirveRightDot_Tick(TimeDelta);
 }
 
@@ -72,26 +72,24 @@ void CDrive_GaugeUI::LoadFromJson(const Json & json)
 
 void CDrive_GaugeUI::DrivaGaugePlus_Tick(const _double & dTimeDelta)
 {
-	if (false == m_bDriveGauge_Plus)
+	if (0.0f == m_fDriveGauge)	// 외부에서 게이지가 증가하기 시작하면 아래서 계산을 시작한다.
 		return;
 
 	// 드라이브 게이지가 찬다. (0->1)
 
-	_float fDriveGauge = CUI_Manager::GetInstance()->Get_DriveGauge();
-	if (m_tParams.Floats[0] < fDriveGauge)
+	if (m_tParams.Floats[0] < m_fDriveGauge)
 	{
 		m_tParams.Floats[0] += _float(dTimeDelta) * 0.05f;
 	}
 	else	// UITODO : 테스트 용도 일 때만 else 을 추가한다.
 	{
-		m_tParams.Floats[0] = fDriveGauge;
+		m_tParams.Floats[0] = m_fDriveGauge;
 	}
 
 	if (1.0f < m_tParams.Floats[0])
 	{
 		m_tParams.Floats[0] = 1.0f;
 		m_bGaugeFull = true;
-		m_bDriveGauge_Plus = false;
 	}
 }
 
@@ -111,24 +109,23 @@ void CDrive_GaugeUI::DirveRightDot_Tick(const _double & dTimeDelta)
 	}
 }
 
-void CDrive_GaugeUI::DrivaGaugeMinus_Tick(const _double & dTimeDelta)
+void CDrive_GaugeUI::DrivaGaugeUse_Tick(const _double & dTimeDelta)
 {
-	if (false == m_bDriveGauge_Minus)
+	if (false == m_bDriveGauge_Use)		// 외부에서 드라이브를 사용하면 들어온다.
 		return;
 
 	// 드라이브 게이지가 줄어든다. (1->0)
 
-	static _double m_dMinus_TimeAcc;
-	m_dMinus_TimeAcc += dTimeDelta;
-	_float fDriveFullTime = CUI_Manager::GetInstance()->Get_DriveFullTime();
-	m_tParams.Floats[0] = 1.0f - (_float(m_dMinus_TimeAcc) / fDriveFullTime);
+	m_dCurrentDriveTime += dTimeDelta;
+	m_tParams.Floats[0] = m_fCurrentDriveGauge = 1.0f - (_float(m_dCurrentDriveTime) / m_fDriveFullTime);
 
-	if (0.0f > m_tParams.Floats[0])
+	if (0.0f > m_fCurrentDriveGauge)
 	{
 		m_tParams.Floats[0] = 0.0f;
-		m_bDriveGauge_Minus = false;
-
-		CUI_Manager::GetInstance()->Set_DriveGaugePlus(0.0f);
+		m_fDriveGauge = 0.0f;
+		m_fCurrentDriveGauge = 0.0f;
+		m_dCurrentDriveTime = 0.0;
+		m_bDriveGauge_Use = false;
 	}
 }
 

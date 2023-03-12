@@ -40,6 +40,8 @@ protected:
 	virtual void DeBuff_Fire() override;
 	virtual void DeBuff_Oil() override;
 
+	void MoveTransformJson(Json& jsonDest, void* pArg);
+
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;

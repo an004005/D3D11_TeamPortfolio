@@ -39,7 +39,6 @@ public:
 	_float4x4 GetProjMatrix() const;
 	_float4x4 GetViewMatrix() const { return m_pTransformCom->Get_WorldMatrix_Inverse(); }
 
-
 private:
 	_float4x4					m_ProjMatrix;
 

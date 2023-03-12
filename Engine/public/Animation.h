@@ -52,6 +52,11 @@ public:
 	void SaveModifiedData(Json& json);
 	void Imgui_RenderProperty();
 
+// 염력 물체 애니메이션 관련
+public:
+	void Update_Bones_SyncRatio(_double PlayTime);
+// ~염력 물체 애니메이션 관련
+
 public:
 	KEYFRAME*						GetCurKeyFrame();
 	_double							GetCurDuration() const { return m_Duration; }

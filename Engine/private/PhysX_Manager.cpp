@@ -8,6 +8,8 @@
 #include "GameObject.h"
 #include "GameUtils.h"
 #include "RigidBody.h"
+#include "Shader.h"
+#include "VIBuffer_Line.h"
 
 using namespace physx;
 
@@ -131,6 +133,8 @@ void CPhysX_Manager::Initialize()
 	m_Scene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_SHAPES, 1);
 	m_Scene->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_POINT, 2);
 	m_Scene->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_NORMAL, 2);
+	m_Scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 1.0f);
+	m_Scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 1.0f);
 
 	auto pContext = CGraphic_Device::GetInstance()->GetContext();
 	auto pDevice = CGraphic_Device::GetInstance()->GetDevice();
@@ -144,6 +148,10 @@ void CPhysX_Manager::Initialize()
 
 	m_pEffect->GetVertexShaderBytecode(&pShaderByteCode, &iShaderByteCodeSize);
 	FAILED_CHECK(pDevice->CreateInputLayout(VertexPositionColor::InputElements, VertexPositionColor::InputElementCount, pShaderByteCode, iShaderByteCodeSize, &m_pInputLayout));
+
+	m_pShader = CShader::Create(pDevice, pContext, L"../Bin/ShaderFiles/Shader_VtxLine.hlsl", VTXLINE_DECLARATION::Elements, VTXLINE_DECLARATION::iNumElements);
+	m_pVIBuffer = CVIBuffer_Line::Create(pDevice, pContext);
+
 #endif
 	
 	// create simulation
@@ -218,7 +226,7 @@ _bool CPhysX_Manager::OverlapSphere(const SphereOverlapParams& params)
 	const PxTransform transform(PxVec3{ params.vPos.x, params.vPos.y, params.vPos.z });
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f)
+	if (params.fVisibleTime > 0.f && m_bRenderDebug)
 	{
 		PxShape* pShape = m_Physics->createShape(sphere, *FindMaterial("Default"));
 		AddDebugShape(pShape, transform, params.fVisibleTime);
@@ -251,7 +259,7 @@ _bool CPhysX_Manager::OverlapCapsule(const CapsuleOverlapParams& params)
 	const PxTransform transform(PxVec3{ params.vPos.x, params.vPos.y, params.vPos.z }, PxQuat{Quat.x, Quat.y, Quat.z, Quat.w});
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f)
+	if (params.fVisibleTime > 0.f && m_bRenderDebug)
 	{
 		PxShape* pShape = m_Physics->createShape(capsule, *FindMaterial("Default"));
 		AddDebugShape(pShape, transform, params.fVisibleTime);
@@ -275,7 +283,7 @@ _bool CPhysX_Manager::SweepSphere(const SphereSweepParams& params)
 	vNormalDir.Normalize();
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f || params.fDistance > 0.f)
+	if ((params.fVisibleTime > 0.f || params.fDistance > 0.f) && m_bRenderDebug)
 	{
 		_float fSegment = 0.5f;
 		if (params.fDistance <= 1.f)
@@ -334,7 +342,7 @@ _bool CPhysX_Manager::SweepCapsule(const CapsuleSweepParams& params)
 	vNormalDir.Normalize();
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f || params.fDistance > 0.f)
+	if ((params.fVisibleTime > 0.f || params.fDistance > 0.f) && m_bRenderDebug)
 	{
 		_float fSegment = 0.5f;
 		if (params.fDistance <= 1.f)
@@ -382,7 +390,7 @@ _bool CPhysX_Manager::PxSweepCapsule(const PxCapsuleSweepParams& params)
 	vNormalDir.Normalize();
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f || params.fDistance > 0.f)
+	if ((params.fVisibleTime > 0.f || params.fDistance > 0.f) && m_bRenderDebug )
 	{
 		_float fSegment = 0.5f;
 		if (params.fDistance <= 1.f)
@@ -609,30 +617,47 @@ void CPhysX_Manager::DebugRender(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 	m_pEffect->Apply(pContext);
 	pContext->IASetInputLayout(m_pInputLayout);
 	m_pBatch->Begin();
-	
-	const physx::PxRenderBuffer& rb = m_Scene->getRenderBuffer();
-	for(physx::PxU32 i=0; i < rb.getNbLines(); i++)
-	{
-	    const physx::PxDebugLine& line = rb.getLines()[i];
-		const _vector vOrigin = XMVectorSet(line.pos0.x, line.pos0.y, line.pos0.z, 0.f);
-		const _vector vDest = XMVectorSet(line.pos1.x, line.pos1.y, line.pos1.z, 0.f);
-		const _vector vDirection = vDest - vOrigin;
-
-		_float4 vColor;
-		vColor.w = static_cast<_float>((line.color0 >> 24) & 255);
-		vColor.x = static_cast<_float>((line.color0 >> 16) & 255);
-		vColor.y = static_cast<_float>((line.color0 >> 8) & 255);
-		vColor.z = static_cast<_float>(line.color0 & 255);
-
-		DX::DrawRay(m_pBatch, vOrigin, vDirection, false, XMLoadFloat4(&vColor));
-	}
-
 	for (auto& line : m_DebugLines)
 	{
 		line.fLife -= TIME_DELTA;
 		DX::DrawRay(m_pBatch, line.vOrigin, line.vDirection, false, XMLoadFloat4(&_float4(1.f, 0.f, 0.f, 0.f)));
 	}
 	m_pBatch->End();
+
+	FAILED_CHECK(m_pShader->Set_Matrix("g_ViewMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+	const physx::PxRenderBuffer& rb = m_Scene->getRenderBuffer();
+	vector<VTXLINE> lines;
+	lines.reserve(2000);
+	for(physx::PxU32 i=0; i < rb.getNbLines(); i++)
+	{
+		VTXLINE vtxLine_0;
+		VTXLINE vtxLine_1;
+
+	    const physx::PxDebugLine& line = rb.getLines()[i];
+		// const _vector vOrigin = XMVectorSet(line.pos0.x, line.pos0.y, line.pos0.z, 0.f);
+		// const _vector vDest = XMVectorSet(line.pos1.x, line.pos1.y, line.pos1.z, 0.f);
+		// const _vector vDirection = vDest - vOrigin;
+
+		vtxLine_0.vPosition = _float3(line.pos0.x, line.pos0.y, line.pos0.z);
+		vtxLine_1.vPosition = _float3(line.pos1.x, line.pos1.y, line.pos1.z);
+		_float4 vColor;
+		vColor.w = static_cast<_float>((line.color0 >> 24) & 255);
+		vColor.x = static_cast<_float>((line.color0 >> 16) & 255);
+		vColor.y = static_cast<_float>((line.color0 >> 8) & 255);
+		vColor.z = static_cast<_float>(line.color0 & 255);
+		vtxLine_0.vColor = vColor;
+		vtxLine_1.vColor = vColor;
+		lines.push_back(vtxLine_0);
+		lines.push_back(vtxLine_1);
+		if (lines.size() >= 2000 || i == rb.getNbLines() - 1)
+		{
+			m_pVIBuffer->SetLines(lines);
+			m_pShader->Begin(0);
+			m_pVIBuffer->Render();
+			lines.clear();
+		}
+	}
 
 	m_DebugLines.remove_if([](const DebugLine& line)
 	{
@@ -703,6 +728,8 @@ void CPhysX_Manager::Free()
 	Safe_Release(m_pInputLayout);
 	Safe_Delete(m_pBatch);
 	Safe_Delete(m_pEffect);
+	Safe_Release(m_pShader);
+	Safe_Release(m_pVIBuffer);
 #endif
 
 	m_Foundation->release();

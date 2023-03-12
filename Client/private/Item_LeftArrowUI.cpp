@@ -26,28 +26,37 @@ HRESULT CItem_LeftArrowUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	m_fStartX = m_fX;
+
 	return S_OK;
-}
-
-void CItem_LeftArrowUI::BeginTick()
-{
-
-
 }
 
 void CItem_LeftArrowUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	//const _float2 canvaspos = m_pCanvas->Get_Position();
+	if (CGameInstance::GetInstance()->KeyDown(DIK_LEFT))
+		m_bInput = true;
 
-	//_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	if (false == m_bInput)
+		return;
 
-	//vPosition += XMLoadFloat2(&canvaspos);
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.f));
+	m_fMoveTimeAcc += TimeDelta;
+	if (0.15 < m_fMoveTimeAcc)
+	{
+		m_fX += _float(TimeDelta) * 100.0f;
 
-
-	
+		if (m_fX > m_fStartX)
+		{
+			m_fX = m_fStartX;
+			m_fMoveTimeAcc = 0.0;
+			m_bInput = false;
+		}
+	}
+	else
+	{
+		m_fX -= _float(TimeDelta) * 100.0f;
+	}
 }
 
 void CItem_LeftArrowUI::Late_Tick(_double TimeDelta)

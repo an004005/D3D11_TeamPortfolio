@@ -534,6 +534,7 @@
     <ClInclude Include="..\public\GameTime_Manager.h">
       <Filter>01.Utility\02.GameObject\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Line.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -842,6 +843,7 @@
     <ClCompile Include="..\private\GameTime_Manager.cpp">
       <Filter>01.Utility\02.GameObject\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Line.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">

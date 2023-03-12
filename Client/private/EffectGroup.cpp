@@ -134,6 +134,9 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 		// {
 		// 	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
 		// }
+		/*m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
+*/
+
 	}
 	else
 	{
