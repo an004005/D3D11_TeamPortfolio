@@ -240,18 +240,18 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 			return E_FAIL;
 	}
 
-	/* For.Prototype_GameObject_MonsterLockonUI */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),
-		CMonsterLockonUI::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-	/* For.Prototype_GameObject_MonsterHpUI */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterHpUI"),
-		CMonsterHpUI::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-	/* For.Prototype_GameObject_MonsterShildUI */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterShildUI"),
-		CMonsterShildUI::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	///* For.Prototype_GameObject_MonsterLockonUI */
+	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),
+	//	CMonsterLockonUI::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	///* For.Prototype_GameObject_MonsterHpUI */
+	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterHpUI"),
+	//	CMonsterHpUI::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	///* For.Prototype_GameObject_MonsterShildUI */
+	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterShildUI"),
+	//	CMonsterShildUI::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
 	// ~ ¿Á¼öÇöÀÇ ÈçÀû
 
 	return S_OK;
@@ -383,7 +383,13 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterShild.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MonsterShild"), TEXT("ProtoVFX_EffectGroup"), &json));
 
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"));
+	// Psychokinesis
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_G.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_PsychokinesisGauge_G"), TEXT("ProtoVFX_EffectGroup"), &json));
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_Mouse.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_PsychokinesisGauge_Mouse"), TEXT("ProtoVFX_EffectGroup"), &json));
+
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"));
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterLockonUI"));
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterShildUI"));
 

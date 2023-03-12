@@ -271,6 +271,9 @@
     <Filter Include="02.GameObjects\UI\Boss">
       <UniqueIdentifier>{dc1701f8-365a-4180-94c6-d3de20833679}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\Psychokinesis">
+      <UniqueIdentifier>{05a34116-b873-484c-8da2-baafc69d27ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

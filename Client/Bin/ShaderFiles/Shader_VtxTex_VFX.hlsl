@@ -56,6 +56,7 @@ PS_OUT PS_MAIN(PS_IN In)
 }
 
 // ***** ok su hyeon
+// [8] TargetaArrow
 // g_tex_0 : Original Texture
 // g_tex_1 : Emissive Texture
 // g_vec4_0 : Color
@@ -84,10 +85,10 @@ PS_OUT PS_GreenEmissive(PS_IN In)
 
 	return Out;
 }
-
+// [9] ColorChange
 // g_tex_0 : Original Texture
 // g_vec4_0 : Color
-PS_OUT PS_AlphaBlend(PS_IN In)
+PS_OUT PS_ColorChange(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
@@ -98,7 +99,9 @@ PS_OUT PS_AlphaBlend(PS_IN In)
 
 	return Out;
 }
-
+// [10] HpGauge (HP)
+// g_float_0 : Ratio
+// g_vec4_0 : Color
 PS_OUT PS_MixTexture(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -117,7 +120,9 @@ PS_OUT PS_MixTexture(PS_IN In)
 
 	return Out;
 }
-
+// [11] HpGauge (HPBack)
+// g_float_0 : Ratio
+// g_vec4_0 : Color
 PS_OUT PS_UVCut(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -132,7 +137,48 @@ PS_OUT PS_UVCut(PS_IN In)
 
 	return Out;
 }
+// [12] Psychokinesis Gauge
+// g_float_0 : Progress
+// g_vec4_0 : Color
+// g_tex_0 : White
+// g_tex_1 : Original Texture
+// g_tex_2 : Mask Texture
+PS_OUT PS_Flow(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
 
+	float fProgress = g_float_0;
+
+	float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float ProgressMask = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+
+	if (ProgressMask >= fProgress)
+		discard;
+
+	float4 GlowBase = DefaultTex * g_vec4_0;
+
+	float4 PointTex = g_tex_1.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor = saturate(GlowBase);
+
+	Out.vColor.a = PointTex.r;
+
+	return Out;
+}
+// [13] Alpha Control
+// g_float_0 : Alpha
+// g_vec4_0 : Color
+PS_OUT PS_Alpha_Color(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	float4 MixTexture = saturate(float4(g_vec4_0.rgb, g_float_0) * Texture);
+	Out.vColor = MixTexture;
+
+	return Out;
+}
 // ****** ok su hyeon
 
 struct PS_OUT_Flag
@@ -461,7 +507,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_GreenEmissive();
 	}
 	//9
-	pass AlphaBlend
+	pass ColorChange
 	{
 		SetRasterizerState(RS_Default);
 
@@ -472,7 +518,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_AlphaBlend();
+		PixelShader = compile ps_5_0 PS_ColorChange();
 	}
 	//10
 	pass HpBar
@@ -499,6 +545,32 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_UVCut();
+	}
+	// 12
+	pass Flow
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaOne, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_Flow();
+	}
+	// 13
+	pass Alpha_Color
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaOne, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_Alpha_Color();
 	}
 	// ok su hyeon
 	
