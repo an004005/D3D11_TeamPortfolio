@@ -22,6 +22,8 @@
 #include "EffectGroup.h"
 #include "TrailSystem.h"
 #include "ParticleSystem.h"
+#include "Imgui_CurveManager.h"
+#include "Imgui_PhysX.h"
 
 // Canvas
 #include "Canvas.h"
@@ -85,7 +87,8 @@
 #include "Boss_HpBackUI.h"
 #include "Boss_ShildUI.h"
 // Alarm
-#include "NextRoomNameUI.h"
+#include "NextMapNameUI.h"
+
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -102,6 +105,8 @@ HRESULT CLevel_UI::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PropertyEditor::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 
 
 	if (FAILED(Ready_Prototypes()))
@@ -430,8 +435,8 @@ HRESULT CLevel_UI::Ready_Prototypes()
 
 		// Alarm
 		/* For.Prototype_GameObject_NextRoomNameUI */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("NextRoomNameUI"),
-			CNextRoomNameUI::Create(m_pDevice, m_pContext))))
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("NextMapNameUI"),
+			CNextMapNameUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 	}
 

@@ -731,9 +731,6 @@
     <ClInclude Include="..\public\Level_Stage1.h" />
     <ClInclude Include="..\public\Trigger.h" />
     <ClInclude Include="..\public\VFX_Manager.h" />
-    <ClInclude Include="..\public\NextRoomNameUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Canvas_Alarm.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
@@ -742,6 +739,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Boss1_AIController.h">
       <Filter>02.GameObjects\Monster\boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\NextMapNameUI.h">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1171,9 +1171,6 @@
     <ClCompile Include="..\private\Level_Stage1.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
     <ClCompile Include="..\private\VFX_Manager.cpp" />
-    <ClCompile Include="..\private\NextRoomNameUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
@@ -1182,6 +1179,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Boss1_AIController.cpp">
       <Filter>02.GameObjects\Monster\boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NextMapNameUI.cpp">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

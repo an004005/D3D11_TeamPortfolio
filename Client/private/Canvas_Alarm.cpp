@@ -2,7 +2,7 @@
 #include "..\public\Canvas_Alarm.h"
 #include "GameInstance.h"
 
-#include "NextRoomNameUI.h"
+#include "NextMapNameUI.h"
 
 CCanvas_Alarm::CCanvas_Alarm(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -33,7 +33,7 @@ HRESULT CCanvas_Alarm::Initialize(void* pArg)
 void CCanvas_Alarm::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
-
+	m_bVisible = true;
 }
 
 void CCanvas_Alarm::Late_Tick(_double TimeDelta)
@@ -47,12 +47,23 @@ HRESULT CCanvas_Alarm::Render()
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
 
+
 	return S_OK;
 }
 
 void CCanvas_Alarm::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
+
+	if (ImGui::Button("Open Next Map Name UI"))
+	{
+		Set_OpenNextRoomName(L"전인복 메롱");
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Close Next Map Name UI"))
+	{
+		Set_CloseNextRoomName();
+	}
 }
 
 void CCanvas_Alarm::SaveToJson(Json& json)
@@ -67,13 +78,13 @@ void CCanvas_Alarm::LoadFromJson(const Json & json)
 
 void CCanvas_Alarm::Set_OpenNextRoomName(const _tchar * pNextRoomName)
 {
-	dynamic_cast<CNextRoomNameUI*>(Find_ChildUI(L"NextRoomName"))->Set_NextRoolName(L"천세의 방");
+	dynamic_cast<CNextMapNameUI*>(Find_ChildUI(L"NextMapName"))->Set_NextRoolName(pNextRoomName);
 
 }
 
 void CCanvas_Alarm::Set_CloseNextRoomName()
 {
-	Find_ChildUI(L"NextRoomName")->SetVisible(false);
+	Find_ChildUI(L"NextMapName")->SetVisible(false);
 }
 
 CCanvas_Alarm * CCanvas_Alarm::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
