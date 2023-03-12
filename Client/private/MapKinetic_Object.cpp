@@ -7,7 +7,7 @@
 #include "Player.h"
 #include "ScarletMap.h"
 #include "ImguiUtils.h"
-
+#include "GameUtils.h"
 CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
 {
@@ -124,7 +124,8 @@ HRESULT CMapKinetic_Object::Render()
 
 	const _matrix WorldMatrix = m_LocalMatrix * m_pTransformCom->Get_WorldMatrix();
 
-	FAILED_CHECK(m_pModelCom->Render(WorldMatrix));
+	if(m_eCurModelTag != Tag_End)
+		FAILED_CHECK(m_pModelComs[m_eCurModelTag]->Render(WorldMatrix));
 
 	return S_OK;
 }
@@ -132,7 +133,10 @@ HRESULT CMapKinetic_Object::Render()
 void CMapKinetic_Object::LoadFromJson(const Json & json)
 {
 	__super::LoadFromJson(json);
-	m_strModelTag = s2ws(json["ModelTag"]);
+
+	for (auto tag : json["ModelTags"])
+		m_pModelTags.push_back(s2ws(tag));
+	
 	if (json.contains("KineticType"))
 		m_eType = json["KineticType"];
 	if (json.contains("LocalMatrix"))
@@ -142,7 +146,10 @@ void CMapKinetic_Object::LoadFromJson(const Json & json)
 void CMapKinetic_Object::SaveToJson(Json & json)
 {
 	__super::SaveToJson(json);
-	json["ModelTag"] = ws2s(m_strModelTag);
+
+	for (auto tag : m_pModelTags)
+		json["ModelTags"].push_back(ws2s(tag));
+
 	json["KineticType"] = m_eType;
 	json["LocalMatrix"] = m_LocalMatrix;
 }
@@ -182,6 +189,30 @@ void CMapKinetic_Object::Imgui_RenderProperty()
 		m_pCollider->Set_Kinetic(true);
 		m_pCollider->UpdateChange();
 	}
+
+	if (ImGui::BeginListBox("ModelTagList"))
+	{
+		_uint i = 0;
+		for (auto tag : m_pModelTags)
+		{
+			const bool bSelected = (tag == m_strModelTag);
+
+			if (bSelected)
+				ImGui::SetItemDefaultFocus();
+
+			char pStr[MAX_PATH];
+			strcpy(pStr, CGameUtils::GetFileName(ws2s(tag)).c_str());
+
+			if (ImGui::Selectable(pStr, bSelected))
+			{
+				m_strModelTag = tag;
+				m_eCurModelTag = (KineticModeltag)i;
+			}
+
+			++i;
+		}
+		ImGui::EndListBox();
+	}
 }
 
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
@@ -207,10 +238,20 @@ void CMapKinetic_Object::Reset_Transform()
 	m_pCollider->UpdateChange();
 }
 
+
 HRESULT CMapKinetic_Object::SetUp_Components(void* pArg)
 {
-	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_strModelTag.c_str(), TEXT("Com_Model"),
-		(CComponent**)&m_pModelCom));
+	for (_int i = 0; i < m_pModelTags.size(); ++i)
+	{
+		CModel* pModel = nullptr;
+		const wstring comtag = L"Com_Model" + to_wstring(i);
+		FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_pModelTags[i].c_str(), comtag.c_str(),
+			(CComponent**)&pModel));
+
+		m_pModelComs.push_back(pModel);
+	}
+
+	m_eCurModelTag = Tag_default;
 
 	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"Collider", (CComponent**)&m_pCollider, pArg));
 	return S_OK;
@@ -245,6 +286,9 @@ CGameObject * CMapKinetic_Object::Clone(void * pArg)
 void CMapKinetic_Object::Free()
 {
 	__super::Free();
-	Safe_Release(m_pModelCom);
+
+	for(auto Model : m_pModelComs)
+		Safe_Release(Model);
+	
 	Safe_Release(m_pCollider);
 }

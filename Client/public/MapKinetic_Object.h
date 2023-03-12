@@ -3,6 +3,7 @@
 
 BEGIN(Engine)
 class CRigidBody;
+class CModel;
 END
 
 BEGIN(Client)
@@ -12,6 +13,14 @@ enum EKineticType
 	KT_NORMAL,
 	KT_END
 };
+
+enum KineticModeltag
+{
+	Tag_default,
+	Tag_broken,
+	Tag_End
+};
+
 
 class CMapKinetic_Object : public CMapObject
 {
@@ -40,11 +49,13 @@ public:
 private:
 	HRESULT	SetUp_Components(void* pArg);
 
-	CModel*				m_pModelCom = nullptr;
-	CRigidBody*			m_pCollider = nullptr;
-	EKineticType		m_eType = KT_NORMAL;
-	_float4x4			m_LocalMatrix;
+	vector<CModel*>			m_pModelComs;
+	vector<wstring>			m_pModelTags;
+	CRigidBody*				m_pCollider = nullptr;
+	EKineticType			m_eType = KT_NORMAL;
+	_float4x4				m_LocalMatrix;
 
+	KineticModeltag			m_eCurModelTag = Tag_End;
 public:
 	_bool				Usable() { return m_bUsable; }
 

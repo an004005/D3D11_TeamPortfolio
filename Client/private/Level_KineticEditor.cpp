@@ -8,7 +8,6 @@
 #include "Imgui_PropertyEditor.h"
 #include "Imgui_PostProcess.h"
 #include "Imgui_PhysX.h"
-#include "MapKinetic_Object.h"
 
 
 CLevel_KineticEditor::CLevel_KineticEditor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -73,8 +72,6 @@ HRESULT CLevel_KineticEditor::Ready_Lights()
 
 HRESULT CLevel_KineticEditor::Ready_Prototypes()
 {
-	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-	FAILED_CHECK(pGameInstance->Add_Prototype(L"Proto_KineticObject", CMapKinetic_Object::Create(m_pDevice, m_pContext)));
 	return S_OK;
 }
 
@@ -86,9 +83,14 @@ HRESULT CLevel_KineticEditor::Ready_Layer_BackGround(const _tchar* pLayerTag)
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
 	// 여기서 모델만 넣고 콜라이더 셋팅 후 json 저장, json을 맵툴에서 로드해서 사용
-	Json Test;
-	Test["ModelTag"] = "../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Table/Table.static_model";
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Proto_KineticObject"), &Test));
+	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Car1.json");
+	/*vector<string> modeltags;
+	modeltags.push_back("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Car/pr_Car01_B.static_model");
+	modeltags.push_back("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Car/SM_pr_Car01_BRK.static_model");
+
+	Test["ModelTags"] = modeltags;*/
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_MapKinetic_Object"), &Test));
 
 	return S_OK;
 }

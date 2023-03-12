@@ -8,9 +8,9 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "",
-            "",
-            ""
+            "../Bin/Resources/Environments/Prop/10_Props/Vehicles/pr_Car03/T_pr_Car03_ALB_1.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Vehicles/pr_Car03/T_pr_Car03_NML_1.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Vehicles/pr_Car03/T_pr_Car03_RMA_1.png"
         ],
         "Pass" : 1
     },

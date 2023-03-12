@@ -37,6 +37,18 @@ HRESULT CScarletMap::Initialize(void* pArg)
 
 	m_pModelProtoInfo.first = L"";
 	m_pModelProtoInfo.second = INSTANCE;
+
+
+	//
+	CGameInstance* pGameInstance = CGameInstance::GetInstance(); 
+
+	Json Car1 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Car1.json");
+	Car1["InitPos"] = _float4(5.f, 2.f, 5.f, 1.f);
+	pGameInstance->Clone_GameObject(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Car1);
+
+	Json Table = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Table.json");
+	Table["InitPos"] = _float4(-5.f, 2.f, -5.f, 1.f);
+	pGameInstance->Clone_GameObject(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Table);
 	return S_OK;
 }
 
@@ -202,22 +214,31 @@ void CScarletMap::Imgui_RenderProperty()
 
 			else if (m_pModelProtoInfo.second == PROTOINFO::KINETIC)
 			{
-				Json json;
-				json["ModelTag"] = ws2s(m_pModelProtoInfo.first);
+			//내일의 나 파이팅
+				/*	Json json;
+					CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/Map/KineticPreset/",
+						[this](const string& fileName)
+					{
+						if (m_pModelProtoInfo.first == s2ws(fileName))
+							json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Map_ConstructionSite2F.json");
+					});
 
-				InitPosition.x += Interval.x;
-				InitPosition.y += Interval.y;
-				InitPosition.z += Interval.z;
 
-				_float4 InitPos = DoInput == false ? SetUp_InitPosition() : InitPosition;
-				json["InitPos"] = InitPos;
+					json["ModelTag"] = ws2s(m_pModelProtoInfo.first);
 
-				CMapObject* pMapObject = nullptr;
-				pMapObject = dynamic_cast<CMapObject*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &json));
-				assert(pMapObject != nullptr);
+					InitPosition.x += Interval.x;
+					InitPosition.y += Interval.y;
+					InitPosition.z += Interval.z;
 
-				m_pMapObjects.emplace_back(pMapObject);
-				m_pGameObject = pMapObject;
+					_float4 InitPos = DoInput == false ? SetUp_InitPosition() : InitPosition;
+					json["InitPos"] = InitPos;
+
+					CMapObject* pMapObject = nullptr;
+					pMapObject = dynamic_cast<CMapObject*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &json));
+					assert(pMapObject != nullptr);
+
+					m_pMapObjects.emplace_back(pMapObject);
+					m_pGameObject = pMapObject;*/
 			}
 
 			sort(m_pMapObjects.begin(), m_pMapObjects.end(), [this](CMapObject* pSour, CMapObject* pDest) {

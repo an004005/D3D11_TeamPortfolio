@@ -8,9 +8,9 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Vehicles/pr_Car01/T_pr_Car_Interior_ALB.dds",
+            "../Bin/Resources/Environments/Prop/10_Props/Vehicles/pr_Car01/T_pr_Car_Interior_ALB.png",
             "../Bin/Resources/Environments/Prop/10_Props/Vehicles/pr_Car01/T_pr_Car_Interior_NML.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Vehicles/pr_Car01/T_pr_Car_Interior_RMA.dds"
+            "../Bin/Resources/Environments/Prop/10_Props/Vehicles/pr_Car01/T_pr_Car_Interior_RMA.png"
         ],
         "Pass" : 1
     },

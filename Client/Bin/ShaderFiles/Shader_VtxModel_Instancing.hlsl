@@ -236,7 +236,7 @@ PS_OUT PS_DISCARD(PS_IN In)
 
 	discard;
 
-	return;
+	return Out;
 }
 
 technique11 DefaultTechnique
@@ -308,7 +308,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS__ALPHA();
+		PixelShader = compile ps_5_0 PS_ALPHA();
 	}
 
 	// 5
