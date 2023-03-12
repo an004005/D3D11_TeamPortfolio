@@ -5,13 +5,13 @@
 #include "UI_Manager.h"
 #include "MathUtils.h"
 
+#include "Player.h"
 #include "PlayerInfo_HpUI.h"
 #include "PlayerInfo_HpBackUI.h"
 #include "PlayerInfo_HpBothEndsUI.h"
 #include "PlayerInfo_PsychokinesisUI.h"
 #include "PlayerInfo_PsychokinesisBackUI.h"
 #include "Canvas_PlayerInfo.h"
-#include "Player.h"
 
 CCanvas_PlayerInfoMove::CCanvas_PlayerInfoMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -54,7 +54,6 @@ void CCanvas_PlayerInfoMove::BeginTick()
 			break;
 		}
 	}
-	
 }
 
 void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)

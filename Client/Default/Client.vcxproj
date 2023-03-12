@@ -290,7 +290,7 @@
     <ClInclude Include="..\public\SASInfoRightHpBothEndsUI.h" />
     <ClInclude Include="..\public\SASInfoRightHpUI.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
-    <ClInclude Include="..\public\SASSkillDefaultUI.h" />
+    <ClInclude Include="..\public\SASSkillNameUI.h" />
     <ClInclude Include="..\public\SASSkillFullCircleUI.h" />
     <ClInclude Include="..\public\SASSkillGaugeUI.h" />
     <ClInclude Include="..\public\SASSkillIconUI.h" />
@@ -444,7 +444,7 @@
     <ClCompile Include="..\private\SASInfoRightHpBothEndsUI.cpp" />
     <ClCompile Include="..\private\SASInfoRightHpUI.cpp" />
     <ClCompile Include="..\private\ScarletCharacter.cpp" />
-    <ClCompile Include="..\private\SASSkillDefaultUI.cpp" />
+    <ClCompile Include="..\private\SASSkillNameUI.cpp" />
     <ClCompile Include="..\private\SASSkillFullCircleUI.cpp" />
     <ClCompile Include="..\private\SASSkillGaugeUI.cpp" />
     <ClCompile Include="..\private\SASSkillIconUI.cpp" />

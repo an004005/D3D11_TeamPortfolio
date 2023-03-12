@@ -21,7 +21,6 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void	BeginTick() override;
 	virtual void	Tick(_double TimeDelta) override;
 	virtual void	Late_Tick(_double TimeDelta) override;
 	
@@ -46,7 +45,6 @@ protected:
 	void	UIMove_FSM();
 
 protected:
-	class CPlayer* m_pPlyaer = { nullptr };
 	map<wstring, CUI*> m_mapChildUIs;
 
 	CUI*	m_pUI = { nullptr };

@@ -76,8 +76,8 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
 
-	// if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
-	// 	return E_FAIL;
+	 if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
+	 	return E_FAIL;
 
 	return S_OK;
 }
@@ -219,18 +219,18 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_04", pModel_VFX));
 
 	// ~ ¿Á¼öÇöÀÇ ÈçÀû
-	{
-		auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
-		pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
+	//{
+	//	auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
+	//		"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
+	//	pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
+	//	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
 
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
+	//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext))))
+	//		return E_FAIL;
 
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create())))
-			return E_FAIL;
-	}
+	//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create())))
+	//		return E_FAIL;
+	//}
 
 	/* For.Prototype_GameObject_MonsterLockonUI */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),

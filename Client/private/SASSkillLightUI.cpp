@@ -27,8 +27,6 @@ HRESULT CSASSkillLightUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	SkilInfo_Initialize();
-
 	return S_OK;
 }
 
@@ -39,35 +37,22 @@ void CSASSkillLightUI::BeginTick()
 
 void CSASSkillLightUI::Tick(_double TimeDelta)
 {
+	if (false == m_bOnSkil)
+		return; 
+	
 	CUI::Tick(TimeDelta);
 
-	//  TODO : 키 입력 삭제해야 한다. 플레이어 에서 Set 해야한다.
+	if (false == m_bBrightness && 0.3f >= m_fStrength)
+		m_bBrightness = true;
+	if (true == m_bBrightness && 0.7f <= m_fStrength)
+		m_bBrightness = false;
 
-	static _bool bOnSkil;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
-	{
-		bOnSkil = !bOnSkil;
-	}
-
-	if (bOnSkil = true)
-	{
-		if (false == m_bBrightness && 0.3f >= m_fStrength)
-			m_bBrightness = true;
-		if (true == m_bBrightness && 0.7f <= m_fStrength)
-			m_bBrightness = false;
-
-		if (true == m_bBrightness)
-			m_fStrength += _float(TimeDelta) * 5.0f;
-		else
-			m_fStrength -= _float(TimeDelta) * 5.0f;
-
-		m_tParams.Float4s[0].w = { m_fStrength };
-	}
+	if (true == m_bBrightness)
+		m_fStrength += _float(TimeDelta) * 5.0f;
 	else
-	{
-		m_fStrength = 0.5f;
-		m_tParams.Float4s[0].w = { 0.0f };
-	}
+		m_fStrength -= _float(TimeDelta) * 5.0f;
+
+	m_tParams.Float4s[0].w = { m_fStrength };
 }
 
 void CSASSkillLightUI::Late_Tick(_double TimeDelta)
@@ -79,10 +64,6 @@ HRESULT CSASSkillLightUI::Render()
 {
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
-
-	//_float4 m_vEmissiveColor = { 1.0f, 1.0f, 1.0f, 1.0f };
-	//if (FAILED(m_pShaderCom->Set_RawValue("g_vEmissiveColor", &m_vEmissiveColor, sizeof _float4)))
-	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -105,151 +86,53 @@ void CSASSkillLightUI::LoadFromJson(const Json & json)
 
 }
 
-void CSASSkillLightUI::SkilInfo_Initialize()
+void CSASSkillLightUI::Set_LightType(const ESASType & eESASType, const _bool bUsable)
 {
-	/*static _uint eObjectCount;
-	m_eObjectCount = CCanvas_SASSkill::OBJECTCOUNT(eObjectCount);
-	++eObjectCount;
+	m_bOnSkil = bUsable;
 
-	switch (m_eObjectCount)
+	if (false == bUsable)
 	{
-	case Client::CCanvas_SASSkill::ONE:
-	{
-
+		m_fStrength = 0.5f;
+		m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		return;
 	}
-	break;
-	case Client::CCanvas_SASSkill::TWO:
+
+	switch (eESASType)
 	{
-
+	case Client::ESASType::SAS_FIRE: // 발화
+		m_tParams.Float4s[0] = { 0.970f, 0.309f, 0.418f, m_fStrength };
+		break;
+	case Client::ESASType::SAS_PENETRATE:	// 투시
+		m_tParams.Float4s[0] = { 0.388f, 0.992f, 0.455f, m_fStrength };
+		break;
+	case Client::ESASType::SAS_HARDBODY:	// 경질화
+		m_tParams.Float4s[0] = { 1.0f, 0.824f, 0.427f, m_fStrength };
+		break;
+	case Client::ESASType::SAS_TELEPORT:	// 순간이동
+		m_tParams.Float4s[0] = { 0.071f, 0.439f, 0.753f, m_fStrength };
+		break;
+	case Client::ESASType::SAS_ELETRIC:		// 전기
+		m_tParams.Float4s[0] = { 1.0f, 0.713f, 0.212f, m_fStrength };
+		break;
+	case Client::ESASType::SAS_SUPERSPEED:	// 초고속
+		m_tParams.Float4s[0] = { 1.0f, 0.515f, 0.821f, m_fStrength };
+		break;
+	case Client::ESASType::SAS_COPY:		// 복제
+		m_tParams.Float4s[0] = { 0.572f, 0.650f, 1.0f, m_fStrength };
+		break;
+	case Client::ESASType::SAS_INVISIBLE:	// 투명
+		m_tParams.Float4s[0] = { 0.428f, 0.969f, 1.0f, m_fStrength };
+		break;
+	case Client::ESASType::SAS_GRAVIKENISIS:	// 염력
+		m_tParams.Float4s[0] = { 0.816f, 0.275f, 0.973f, m_fStrength };
+		break;
+	case Client::ESASType::SAS_NOT:	// 없어요
+		m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		break;
+	default:
+		Assert("Not Light Type : CSASSkillLightUI");
+		break;
 	}
-	break;
-	case Client::CCanvas_SASSkill::THREE:
-	{
-
-	}
-	break;
-	case Client::CCanvas_SASSkill::FOUR:
-	{
-
-	}
-	break;
-	}*/
-}
-
-void CSASSkillLightUI::ChangeSkill()
-{
-	//switch (m_pCanvas->Get_SuperPowers())
-	//{
-	//case CCanvas_SASSkill::PSYCHOKINESIS0:	//0
-	//{
-	//	m_tParams.Float4s[0] = { 0.816f, 0.275f, 0.973f, 0.7f };
-	//}
-	//	break;
-	//case CCanvas_SASSkill::PSYCHOKINESIS1:	//1
-	//{
-	//	m_tParams.Float4s[0] = { 0.816f, 0.275f, 0.973f, 0.7f };
-	//}
-	//	break;
-	//case CCanvas_SASSkill::IGNITION:	//2
-	//{
-	//	m_tParams.Float4s[0] = { 0.970f, 0.309f, 0.418f, 0.7f };
-	//}
-	//	break;
-	//case CCanvas_SASSkill::RESHUFFLE:	//3
-	//{
-	//	m_tParams.Float4s[0] = { 1.0f, 0.824f, 0.427f, 1.0f };
-	//}
-	//	break;
-	//case CCanvas_SASSkill::CLAIRVOYANCE:	//4
-	//{
-	//	m_tParams.Float4s[0] = { 0.388f, 0.992f, 0.455f, 1.0f };
-
-	//}
-	//	break;
-	//case CCanvas_SASSkill::TELEPORTATION:	//5
-	//{
-	//	m_tParams.Float4s[0] = { 0.071f, 0.439f, 0.753f, 0.7f };
-
-	//}
-	//	break;
-	//case CCanvas_SASSkill::TRANSPARENCY:	//6
-	//{
-	//	m_tParams.Float4s[0] = { 0.428f, 0.969f, 1.0f, 0.7f };
-
-	//}
-	//	break;
-	//case CCanvas_SASSkill::DISCHARGE:	//7
-	//{
-	//	m_tParams.Float4s[0] = { 1.0f, 0.713f, 0.212f, 0.7f };
-
-	//}
-	//	break;
-	//case CCanvas_SASSkill::COPY:	//8
-	//{
-	//	m_tParams.Float4s[0] = { 0.572f, 0.650f, 1.0f, 0.7f };
-	
-	//}
-	//	break;
-	//case CCanvas_SASSkill::HIGHSPEED:	//9
-	//{
-	//	m_tParams.Float4s[0] = { 1.0f, 0.515f, 0.821f, 1.0f };
-
-	//}
-	//	break;
-	//case CCanvas_SASSkill::NOT:	//10
-	//{
-	//	m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, 0.0f };
-
-	//}
-	//	break;
-	//}
-}
-
-void CSASSkillLightUI::ChangeSkill_TickShader(const _float & fTimeDelta)
-{
-	//if (CCanvas_SASSkill::Get_SASSkill() != CCanvas_SASSkill::Get_PreSASSkill())
-	//{
-	//	ChangeSkill(); // 스킬이 바뀌면 쉐이더 값도 변경해준다.
-
-	//	if (true == CCanvas_SASSkill::Get_ChangeX())
-	//	{
-	//		switch (CCanvas_SASSkill::Get_SASSkill())
-	//		{
-	//		case CCanvas_SASSkill::ONE0:
-	//			m_tParams.Floats[0] = m_fSkill_TimeAcc;
-	//			break;
-	//		case CCanvas_SASSkill::TWO0:
-	//			m_tParams.Floats[0] = m_fSkill_TimeAcc;
-	//			break;
-	//		case CCanvas_SASSkill::THREE0:
-	//			m_tParams.Floats[0] = m_fSkill_TimeAcc;
-	//			break;
-	//		case CCanvas_SASSkill::FOUR0:
-	//			m_tParams.Floats[0] = m_fSkill_TimeAcc;
-	//			break;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		switch (CCanvas_SASSkill::Get_SASSkill())
-	//		{
-	//		case CCanvas_SASSkill::ONE1:
-	//			m_tParams.Floats[0] = m_fSkill_TimeAcc;
-	//			break;
-	//		case CCanvas_SASSkill::TWO1:
-	//			m_tParams.Floats[0] = m_fSkill_TimeAcc;
-	//			break;
-	//		case CCanvas_SASSkill::THREE1:
-	//			m_tParams.Floats[0] = m_fSkill_TimeAcc;
-	//			break;
-	//		case CCanvas_SASSkill::FOUR1:
-	//			m_tParams.Floats[0] = m_fSkill_TimeAcc;
-	//			break;
-	//		}
-	//	}
-
-	//	CCanvas_SASSkill::Set_PreSASSkill(CCanvas_SASSkill::Get_SASSkill());
-	//}
 }
 
 CSASSkillLightUI * CSASSkillLightUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

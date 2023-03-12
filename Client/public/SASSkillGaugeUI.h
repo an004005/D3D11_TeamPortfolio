@@ -23,6 +23,10 @@ public:
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
 
+public:
+	void		Set_GaugeType(const ESASType & eESASType, const _float & fGauge);
+	void		Set_GaugeBackType(const ESASType & eESASType, const _float & fGauge);
+
 private:
 	void			SkilInfo_Initialize();
 

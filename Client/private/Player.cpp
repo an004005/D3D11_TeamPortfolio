@@ -575,16 +575,34 @@ void CPlayer::Initalize_Sas()
 {
 	m_PlayerSasType = ESASType::SAS_END;
 
+	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].Energy = 60.f;
 	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].MaxEnergy = 60.f;
 	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].MinEnergy = 20.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].bUsable = true;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].Energy = 60.f;
 	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].RecoveryRate = 1.f;
 	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].UseRate = 1.f;
+	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].bUsable = true;
 }
 
 void CPlayer::SasMgr()
 {
+	if (CGameInstance::GetInstance()->KeyDown(DIK_1))
+	{
+		m_bSASSkillInput[0] = !m_bSASSkillInput[0];
+
+	}
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_2))
+	{
+		m_bSASSkillInput[1] = !m_bSASSkillInput[1];
+		m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_INVISIBLE)].Energy = 1.0f;
+	}
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_3))
+	{
+		m_bSASSkillInput[2] = !m_bSASSkillInput[2];
+
+	}
+
 	if (CGameInstance::GetInstance()->KeyDown(DIK_4))
 	{
 		if (!m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].bUsable)
@@ -592,6 +610,8 @@ void CPlayer::SasMgr()
 			IM_LOG("Sas_Unusable");
 			return;
 		}
+
+		m_bSASSkillInput[3] = !m_bSASSkillInput[3];
 
 		if (m_PlayerSasType != ESASType::SAS_FIRE)
 		{

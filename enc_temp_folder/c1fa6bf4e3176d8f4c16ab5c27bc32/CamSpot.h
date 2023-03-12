@@ -34,8 +34,6 @@ private:
 	_float	m_fCamHeight = 0.f;
 
 public:
-	_float2	Get_MouseMovement() { return m_vMouseMovement; }
-	
 	void	Switch_CamMod();	// CameraPos에 캠 붙이기
 	void	SetUp_BoneMatrix(CModel* pModel, _fmatrix Transform);
 
@@ -54,8 +52,6 @@ private:
 private:
 	HRESULT	Setup_Components(void);
 	CController* m_pController = nullptr;
-
-	_float2 m_vMouseMovement;
 
 public:
 	static CCamSpot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

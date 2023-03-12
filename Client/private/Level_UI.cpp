@@ -50,7 +50,7 @@
 #include "SASSkillIconUI.h"
 #include "SASSkillGaugeUI.h"
 #include "SASSkillLightUI.h"
-#include "SASSkillDefaultUI.h"
+#include "SASSkillNameUI.h"
 #include "SASSkillFullCircleUI.h"
 // Direve
 #include "Drive_RightDotUI.h"
@@ -299,8 +299,8 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CSASSkillLightUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		/* For.Prototype_GameObject_SASSkillCtrl_UI */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillDefault_UI"),
-			CSASSkillDefaultUI::Create(m_pDevice, m_pContext))))
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillName_UI"),
+			CSASSkillNameUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		/* For.Prototype_GameObject_SASSkillFullCircle_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillFullCircle_UI"),

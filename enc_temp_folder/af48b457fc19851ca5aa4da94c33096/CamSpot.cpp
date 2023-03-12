@@ -129,19 +129,19 @@ void CCamSpot::MouseMove(_double TimeDelta)
 
 	m_pController->Tick(TimeDelta);
 
-	m_vMouseMovement = m_pController->GetMouseAxis();
+	_float2 vMouseMovement = m_pController->GetMouseAxis();
 	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
-	if (m_vMouseMovement.x)
+	if (vMouseMovement.x)
 	{
 		_matrix matRotation = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f),
-			XMConvertToRadians(90.f) * m_fSensitivity * (_float)TimeDelta * m_vMouseMovement.x);
+			XMConvertToRadians(90.f) * m_fSensitivity * (_float)TimeDelta * vMouseMovement.x);
 		vLook = XMVector3TransformNormal(vLook, matRotation);
 		m_pTransformCom->Set_State(CTransform::STATE_LOOK, vLook);
 	}
-	if (m_vMouseMovement.y)
+	if (vMouseMovement.y)
 	{
-		m_fCamHeight += static_cast<_float>(m_vMouseMovement.y) * m_fSensitivity * 0.1f;
+		m_fCamHeight += static_cast<_float>(vMouseMovement.y) * m_fSensitivity * 0.1f;
 
 		if (m_fCamHeight >= 3.f)
 			m_fCamHeight = 3.f;

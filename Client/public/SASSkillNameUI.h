@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CSASSkillDefaultUI final : public CUI
+class CSASSkillNameUI final : public CUI
 {
 private:
-	CSASSkillDefaultUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSASSkillDefaultUI(const CSASSkillDefaultUI& rhs);
+	CSASSkillNameUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSASSkillNameUI(const CSASSkillNameUI& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -24,7 +24,11 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	static CSASSkillDefaultUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	void	Set_ColleagueName(const ESASType & eESASType, const _bool bUsable);
+	void	Set_SuperPower(const ESASType & eESASType, const _bool bUsable);
+
+public:
+	static CSASSkillNameUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

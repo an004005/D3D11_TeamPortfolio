@@ -5,7 +5,6 @@
 #include "JsonStorage.h"
 #include "FSMComponent.h"
 #include "UI_Manager.h"
-#include "Player.h"
 
 //_bool CCanvas::m_bUIMove = false;
 
@@ -40,27 +39,12 @@ HRESULT CCanvas::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CCanvas::BeginTick()
-{
-	list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
-
-	for (auto iter : plsGameObject)
-	{
-		if (iter->GetPrototypeTag() == L"Player")
-		{
-			m_pPlyaer = dynamic_cast<CPlayer*>(iter);
-			break;
-		}
-	}
-}
-
 void CCanvas::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
 	m_fSizeX = (_float)g_iWinSizeX;
 	m_fSizeY = (_float)g_iWinSizeY;
-
 
 	const _float2 PivotPair = GetPivotXY(m_ePivot);
 
