@@ -2343,7 +2343,10 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 		if (m_bAir)
 			m_pASM_Base->SetCurState("JUMP_FALL");
 		else
+		{
 			m_pASM_Base->SetCurState("IDLE");
+			IM_LOG("Change State");
+		}
 
 		m_fLerpTime = 0.f;
 	}
