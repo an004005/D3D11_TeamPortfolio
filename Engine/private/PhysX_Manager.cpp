@@ -159,7 +159,6 @@ void CPhysX_Manager::Initialize()
 	m_Materials.emplace("SmallFriction", m_Physics->createMaterial(0.1f, 0.1f, 0.5f));
 	m_Materials.emplace("NoBounce", m_Physics->createMaterial(0.5f, 0.5f, 0.1f));
 
-#ifdef _DEBUG
 	groundPlane = PxCreatePlane(*m_Physics, physx::PxPlane(0,1,0,30), *FindMaterial("Default"));
 	PxShape* shape;
 	groundPlane->getShapes(&shape, 1);
@@ -167,7 +166,6 @@ void CPhysX_Manager::Initialize()
 	shape->setQueryFilterData(PxFilterData{static_cast<PxU32>(GetCollTypeBit(CT_STATIC)), 0, 0, 0 });
 	shape->setFlag(PxShapeFlag::eVISUALIZATION, false);
 	m_Scene->addActor(*groundPlane);
-#endif
 
 	m_pControllerManager = PxCreateControllerManager(*m_Scene);
 	m_pControllerManager->setOverlapRecoveryModule(true);

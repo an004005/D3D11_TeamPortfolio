@@ -26,13 +26,6 @@ HRESULT CPsychokinesis::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CPsychokinesis::Render()
-{
-	FAILED_CHECK(__super::Render());
-
-	return S_OK;
-}
-
 
 void CPsychokinesis::Imgui_RenderProperty()
 {
