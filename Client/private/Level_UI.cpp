@@ -23,7 +23,6 @@
 #include "TrailSystem.h"
 #include "ParticleSystem.h"
 
-
 // Canvas
 #include "Canvas.h"
 #include "Canvas_Item.h"
@@ -40,6 +39,7 @@
 #include "Canvas_ItemMove.h"
 #include "Canvas_Tutorial.h"
 #include "Canvas_BossHp.h"
+#include "Canvas_Alarm.h"
 
 // Default
 #include "DefaultUI.h"
@@ -80,11 +80,12 @@
 #include "Tutorial_YesNoUI.h"
 #include "Tutorial_TipsUI.h"
 #include "Tutorial_SuccessUI.h"
-
 // Boss
 #include "Boss_HpUI.h"
 #include "Boss_HpBackUI.h"
 #include "Boss_ShildUI.h"
+// Alarm
+#include "NextRoomNameUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -260,6 +261,11 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CCanvas_BossHp::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
+		/* For.Prototype_GameObject_Canvas_Alarm*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Alarm"),
+			CCanvas_Alarm::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
 	}
 
 	{
@@ -407,7 +413,7 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_SuccessUI"),
 			CTutorial_SuccessUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
+		
 		// Boss
 		/* For.Prototype_GameObject_Boss_HpUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_HpUI"),
@@ -420,6 +426,12 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_Boss_ShildUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_ShildUI"),
 			CBoss_ShildUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		// Alarm
+		/* For.Prototype_GameObject_NextRoomNameUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("NextRoomNameUI"),
+			CNextRoomNameUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 	}
 
@@ -501,7 +513,9 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_BossHp", &json));
 
-
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Alarm", &json));
+	
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
 	//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);

@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 
 //m_tParams.Float4s[0] = { 226.0f, 158.0f, 1.0f, 0.7f };	// 색상 조정 a: 0.0f 미사용 0.7f 사용
-
+                                                               
 CSASSkillLightUI::CSASSkillLightUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {

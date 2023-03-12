@@ -35,7 +35,6 @@ HRESULT CSASSkillGaugeUI::Initialize(void * pArg)
 
 void CSASSkillGaugeUI::BeginTick()
 {
-	//m_pCanvas = dynamic_cast<CCanvas_SASSkill*>(CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkill")));
 
 }
 
