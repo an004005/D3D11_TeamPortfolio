@@ -333,7 +333,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 
 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
-		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(150.f, 3.f, 15.f, 1.f));
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(120.f, 3.f, 15.f, 1.f));
 
 	// Test 하지 않는 중인 Monster 넣어두기
 	/*
