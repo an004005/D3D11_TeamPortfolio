@@ -46,7 +46,7 @@ public:
 	void SetPlay();
 	void SetReverse();
 	_bool CheckPlay();
-
+	void		VisibleUpdate();
 	void		Set_Transform(_fmatrix matSocket);
 public:
 	void		Start_EffectWork();
