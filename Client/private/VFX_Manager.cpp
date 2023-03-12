@@ -73,7 +73,13 @@ CParticleGroup* CVFX_Manager::Find_Particle(PARTICLE eType, wstring wstrParticle
 	if (iter == Particles[eType].end())
 		return nullptr;
 
-	string ParticleDir = CGameUtils::ws2s(wstrParticleTag);
+	string Dirpath = arrayParticleMatch[eType];
+
+	wstring Tmp = wstrParticleTag + L".json";
+
+	string ParticleName = ws2s(Tmp);
+
+	string ParticleDir = Dirpath + ParticleName;
 
 	return Add_Particle(ParticleDir, wszLayerTag);
 }

@@ -42,19 +42,30 @@ VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
 
-	matrix			matWV, matWVP;
+	matrix			matWV, matVP;
 	matrix			TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
 
-	matWV = mul(g_WorldMatrix, g_ViewMatrix);
-	matWVP = mul(matWV, g_ProjMatrix);
+	//matWV = mul(g_WorldMatrix, g_ViewMatrix);
+	matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-	vector vPosition = mul(vector(In.vPosition, 1.f), TransformMatrix);
 
-	Out.vPosition = mul(vPosition, matWVP);
 	Out.RamainLifeRatio = (1.f - In.vControlData.x / In.vControlData.y);
 
 	if (Out.RamainLifeRatio >= 1.f)
 		Out.RamainLifeRatio = 1.f;
+
+	if(g_bLocal == 1)
+	{
+		Out.vPosition = mul(mul(float4(In.vPosition,1.f), TransformMatrix), g_WorldMatrix);
+	}
+	else
+	{
+		Out.vPosition = mul(float4(In.vPosition, 1.f), TransformMatrix);
+	}
+
+	//vector vPosition = mul(vector(In.vPosition, 1.f), TransformMatrix);
+
+	Out.vPosition = mul(Out.vPosition, matVP);
 
 	Out.vTexUV = In.vTexUV;
 

@@ -144,7 +144,7 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CEffectGroup::Start(CGameObject* pOwner, _bool trueisUpdate)
+void CEffectGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate)
 {
 	if (pOwner == nullptr)
 	{
@@ -156,7 +156,7 @@ void CEffectGroup::Start(CGameObject* pOwner, _bool trueisUpdate)
 	m_Timeline.PlayFromStart();
 }
 
-void CEffectGroup::Start(CGameObject* pOwner, string BoneName, _bool trueisUpdate)
+void CEffectGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool trueisUpdate)
 {
 	if (pOwner == nullptr)
 	{
@@ -165,12 +165,21 @@ void CEffectGroup::Start(CGameObject* pOwner, string BoneName, _bool trueisUpdat
 	}
 
 	m_pOwner = pOwner;
+
+	if(trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, false) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		Set_Transform(SocketMatrix);
+	}
+
+
 	m_BoneName = BoneName;
 	m_bUpdate = trueisUpdate;
-	m_Timeline.PlayFromStart();
+	// m_Timeline.PlayFromStart();t
 }
 
-void CEffectGroup::Start(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _bool usepivot, _bool trueisUpdate)
+void CEffectGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _bool usepivot, _bool trueisUpdate)
 {
 	if (pOwner == nullptr)
 	{
@@ -198,14 +207,14 @@ void CEffectGroup::Tick(_double TimeDelta)
 			if(m_bUsePivot)
 			{
 				// 피봇행렬을 쓰는 경우
-				_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, false) * m_pOwner->GetTransform()->Get_WorldMatrix() ;
+				_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix() ;
 
 				Set_Transform(SocketMatrix);
 			}
 			else
 			{
 				// 피봇행렬을 안쓰는 경우
-				_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, false) * m_pOwner->GetTransform()->Get_WorldMatrix();
+				_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
 
 				Set_Transform(SocketMatrix);
 			}
@@ -213,9 +222,10 @@ void CEffectGroup::Tick(_double TimeDelta)
 		else
 		{
 			// 뼈에 안붙이는 경우
-			m_pTransformCom->Set_WorldMatrix(m_pOwner->GetTransform()->Get_WorldMatrix());
+			Set_Transform(m_pOwner->GetTransform()->Get_WorldMatrix());
 		}
 	}
+	
 }
 
 void CEffectGroup::Imgui_RenderProperty()
@@ -1431,6 +1441,11 @@ void CEffectGroup::Set_Transform(_fmatrix matSocket)
 		m_pFourth_EffectSystem->GetTransform()->Set_WorldMatrix(matSocket);
 	if (nullptr != m_pFifth_EffectSystem)
 		m_pFifth_EffectSystem->GetTransform()->Set_WorldMatrix(matSocket);
+}
+
+void CEffectGroup::Start_EffectWork()
+{
+	m_Timeline.PlayFromStart();
 }
 
 

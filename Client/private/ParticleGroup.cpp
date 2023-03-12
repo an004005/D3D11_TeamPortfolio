@@ -41,18 +41,112 @@ HRESULT CParticleGroup::Initialize(void* pArg)
 
 		m_mapParticleSystem.emplace(ObjectTag, pair<string, CParticleSystem*>(FilePath, nullptr));
 	}
+	m_bGenerate = true;
 
 	return S_OK;
+}
+
+void CParticleGroup::Start_ParticleWork()
+{
+	m_bGenerate = true;
+}
+
+void CParticleGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_bGenerate = true;
+}
+
+void CParticleGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, false) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		Set_Transform(SocketMatrix);
+	}
+
+	m_BoneName = BoneName;
+	m_bUpdate = trueisUpdate;
+	m_bGenerate = true;
+}
+
+void CParticleGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _bool usepivot,	_bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_BoneName = BoneName;
+	m_bUpdate = trueisUpdate;
+	m_bUsePivot = usepivot;
+	m_PivotMatrix = PivotMatrix;
+	m_bGenerate = true;
+}
+
+void CParticleGroup::Set_Transform(_matrix socket)
+{
+	for(auto iter : m_mapParticleSystem)
+	{
+		if (iter.second.second != nullptr)
+			iter.second.second->GetTransform()->Set_WorldMatrix(socket);
+	}
 }
 
 void CParticleGroup::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	for(auto iter : m_mapParticleSystem)
+	if(m_bUpdate == true && m_pOwner->IsDeleted() == false)
 	{
-		if(iter.second.second != nullptr)
-			iter.second.second->Tick(TimeDelta);
+		if (m_BoneName != "")
+		{
+			// 뼈에 붙이는 경우
+			if (m_bUsePivot)
+			{
+				// 피봇행렬을 쓰는 경우
+				_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+				Set_Transform(SocketMatrix);
+			}
+			else
+			{
+				// 피봇행렬을 안쓰는 경우
+				_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+				Set_Transform(SocketMatrix);
+			}
+		}
+		else
+		{
+			// 뼈에 안붙이는 경우
+			Set_Transform(m_pOwner->GetTransform()->Get_WorldMatrix());
+		}
+	}
+
+	if (m_bGenerate == true)
+	{
+		for (auto iter : m_mapParticleSystem)
+		{
+			if (iter.second.second != nullptr)
+				iter.second.second->Tick(TimeDelta);
+		}
 	}
 }
 
@@ -60,10 +154,13 @@ void CParticleGroup::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
-	for (auto iter : m_mapParticleSystem)
+	if (m_bGenerate == true)
 	{
-		if (iter.second.second != nullptr)
-			iter.second.second->Late_Tick(TimeDelta);
+		for (auto iter : m_mapParticleSystem)
+		{
+			if (iter.second.second != nullptr)
+				iter.second.second->Late_Tick(TimeDelta);
+		}
 	}
 }
 
@@ -148,7 +245,7 @@ void CParticleGroup::Imgui_RenderProperty()
 				ImGui::Begin(iter.first.c_str());
 
 				iter.second.second->Imgui_RenderProperty();
-
+				iter.second.second->GetShader()->Imgui_RenderProperty();
 				ImGui::End();
 				ImGui::EndTabBar();
 			}
@@ -417,6 +514,8 @@ void CParticleGroup::ImGui_RenderParticleSystem(_int iSelectParticle)
 
 	ImGui::EndTabBar();
 }
+
+
 
 CParticleGroup* CParticleGroup::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
