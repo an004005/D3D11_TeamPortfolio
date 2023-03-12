@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "FlowerLeg.h"
+#include <random>
+
 #include "GameInstance.h"
 #include "MathUtils.h"
 #include "GameUtils.h"
@@ -207,15 +209,13 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	});
 	m_pModelCom->Add_EventCaller("Successive", [this] 
 	{ 
-		m_fGravity = 36.f;
+		m_fGravity = 34.f;
 		m_fYSpeed = 13.f;
 	});
-
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 
-//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-1.f, 0.f, 47.f)));
+	m_iHP = 1200; // ¡Ú
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
-
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
 	m_pASM = CFL_AnimInstance::Create(m_pModelCom, this);
@@ -264,13 +264,11 @@ void CFlowerLeg::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket(("UsingControl"), {m_pModelCom->Find_Animation("AS_em0200_160_AL_threat")});
-	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(-1.f, 0.f, 27.f)));
 }
 
 void CFlowerLeg::Tick(_double TimeDelta)
 {
 	CMonster::Tick(TimeDelta);
-	IM_LOG("%f", m_fYSpeed);
 
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
 	{
@@ -281,7 +279,9 @@ void CFlowerLeg::Tick(_double TimeDelta)
 	// Controller
 	m_pController->SetTarget(m_pTarget);
 
-	m_pController->Tick(TimeDelta);
+	if (m_bDead == false)
+		m_pController->Tick(TimeDelta);
+	
 	m_bRun = m_pController->IsRun();	
 	_bool bOnfloor = IsOnFloor();
 	
@@ -365,7 +365,6 @@ void CFlowerLeg::Tick(_double TimeDelta)
 				m_pASM->InputAnimSocket("UsingControl", { m_pDamage_L_F });			
 				m_bHitMove = true;
 			}
-
 			else
 			{
 				m_pASM->InputAnimSocket("UsingControl", { m_pDamage_L_B });		
@@ -407,7 +406,7 @@ void CFlowerLeg::Tick(_double TimeDelta)
 		else if (m_iAirDamage >= 2)
 		{			
 			if(m_iAirDamage > m_iPreAirDamageCnt)
-				m_pASM->AttachAnimSocket("UsingControl", { m_pRiseStart });
+				m_pASM->InputAnimSocket("UsingControl", { m_pRiseStart });
 
 			m_iPreAirDamageCnt = m_iAirDamage;			
 		}
@@ -425,7 +424,6 @@ void CFlowerLeg::Tick(_double TimeDelta)
 			}
 		}
 	}
-
 	m_pTrigger->Update_Tick(m_pTransformCom);
 
 	m_fTurnRemain = m_pController->GetTurnRemain();
@@ -465,16 +463,7 @@ void CFlowerLeg::Late_Tick(_double TimeDelta)
 
 	if (m_bAtkSwitch)	
 		Spin_SweepCapsule(m_bOneHit);	
-
-	if (m_iHP <= 0)
-		m_bDead = true;
-
-	if (m_bDead && m_pController->KeyDown(CController::X))
-	{
-		m_pController->ClearCommands();
-		m_pASM->AttachAnimSocket("UsingControl", { m_pDeadAnim });
-	}
-
+	
 	if (nullptr != m_pRendererCom && m_bVisible)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
@@ -507,17 +496,24 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eHitDir = eHitFrom;
 	
 	m_eAtkType = tDamageParams.eAttackType;
+	m_iHP -= tDamageParams.iDamage;
 	
 	if (m_eAtkType == EAttackType::ATK_TO_AIR)
 	{
 		m_bAirStruck = true;
 		++m_iAirDamage;
-
-		IM_LOG("Air");
 	}
 
 	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bInvicible)
 		m_bStruck = true;
+
+	if (m_iHP <= 0)
+	{
+		m_pController->ClearCommands();
+		m_DeathTimeline.PlayFromStart();
+		m_pASM->InputAnimSocket("UsingControl", { m_pDeadAnim });
+		m_bDead = true;
+	}
 }
 
 
@@ -560,10 +556,11 @@ void CFlowerLeg::Strew_Overlap()
 			if (auto pTarget = dynamic_cast<CScarletCharacter*>(pCollidedObject))
 			{
 				DAMAGE_PARAM tParam;
-				tParam.iDamage = 10;
+				tParam.iDamage = (rand() % 30) + 20; 
 				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				tParam.pCauser = this;
 				tParam.vHitPosition = paramPos;
+				tParam.eAttackType = EAttackType::ATK_LIGHT;
 				pTarget->TakeDamage(tParam);
 			}
 		}
@@ -622,7 +619,8 @@ void CFlowerLeg::Spin_SweepCapsule(_bool bCol)
 					tParam.vHitNormal = _float3(pHit.normal.x, pHit.normal.y, pHit.normal.z);
 					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					tParam.iDamage = 30;
+					tParam.iDamage = (rand() % 80) + 40;
+					tParam.eAttackType = EAttackType::ATK_MIDDLE;
 
 					pTarget->TakeDamage(tParam);
 
@@ -661,7 +659,7 @@ void CFlowerLeg::Kick_SweepSphere()
 			if (auto pTarget = dynamic_cast<CScarletCharacter*>(pCollidedObject))
 			{
 				DAMAGE_PARAM param;
-				param.iDamage = 30;
+				param.iDamage = (rand() % 120) + 30;
 				param.eAttackType = EAttackType::ATK_HEAVY;
 				param.pCauser = this;
 				param.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);

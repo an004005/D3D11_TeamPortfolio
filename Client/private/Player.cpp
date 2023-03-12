@@ -402,6 +402,9 @@ void CPlayer::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
+	// HP Bar Check	
+	ImGui::Text("HP : %d", m_PlayerStat.m_iHP);
+
 	m_pKineticComboStateMachine->Imgui_RenderProperty();
 
 	ImGui::SliderFloat("PlayerTurnSpeed", &m_fTurnSpeed, 0.f, 1000.f);
