@@ -708,11 +708,11 @@
                 "EventTime": 30.0
             },
             {
-                "EventName": "Event_CollisionStart",
+                "EventName": "Collision_Start",
                 "EventTime": 15.0
             },
             {
-                "EventName": "Event_collisionEnd",
+                "EventName": "Collision_End",
                 "EventTime": 25.0
             }
         ]
