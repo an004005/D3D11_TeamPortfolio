@@ -65,17 +65,19 @@ void CCamSpot::Tick(_double TimeDelta)
 {
 	MouseMove(TimeDelta);
 
-	_vector vTargetPos = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 1.5f, 0.f, 0.f);
-	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
+	// CamSpot 이동 AfterPhsyX로 위치 이동
 
-	if (0.01f >= fDistance)
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vTargetPos);
-	else
-		m_pTransformCom->Chase(vTargetPos, fDistance * 0.1f, 0.f);
+	//_vector vTargetPos = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+	//_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	//_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	//_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
 
-	if (m_fLerpTime < 1.f)
+	//if (0.01f >= fDistance)
+	//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vTargetPos);
+	//else
+	//	m_pTransformCom->Chase(vTargetPos, fDistance * 0.1f, 0.f);
+
+	/*if (m_fLerpTime < 1.f)
 	{
 		m_fLerpTime += (_float)TimeDelta * 2.f;
 
@@ -110,12 +112,64 @@ void CCamSpot::Tick(_double TimeDelta)
 		{
 			static_cast<CCamera_Player*>(m_pPlayerCamera)->Attach_Target(m_AttachMatrix);
 		}
-	}
+	}*/
 }
 
 void CCamSpot::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
+}
+
+void CCamSpot::AfterPhysX()
+{
+	__super::AfterPhysX();
+
+	_vector vTargetPos = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
+
+	if (0.01f >= fDistance)
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vTargetPos);
+	else
+		m_pTransformCom->Chase(vTargetPos, fDistance * 0.1f, 0.f);
+
+	if (m_fLerpTime < 1.f)
+	{
+		m_fLerpTime += (_float)g_fTimeDelta * 2.f;
+
+		if (MOD_SYNC == m_eCamMod)
+		{
+			_vector vSyncPos = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncPos(vMyPos, vMyLook, m_fCamHeight, g_fTimeDelta);
+			_vector vLerpPos = XMVectorLerp(m_AttachMatrix.r[3], vSyncPos, m_fLerpTime);
+
+			_vector vSyncLook = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncLook(vMyPos, vMyLook, m_fCamHeight, g_fTimeDelta);
+			_vector vLerpLook = XMVectorLerp(m_AttachMatrix.r[2], vSyncLook, m_fLerpTime);
+
+			static_cast<CCamera_Player*>(m_pPlayerCamera)->Lerp_ActionPos(vLerpPos, vLerpLook);
+		}
+		else if (MOD_ATTACH == m_eCamMod)
+		{
+			_vector vSyncPos = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncPos(vMyPos, vMyLook, m_fCamHeight, g_fTimeDelta);
+			_vector vLerpPos = XMVectorLerp(vSyncPos, m_AttachMatrix.r[3], m_fLerpTime);
+
+			_vector vSyncLook = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncLook(vMyPos, vMyLook, m_fCamHeight, g_fTimeDelta);
+			_vector vLerpLook = XMVectorLerp(vSyncLook, m_AttachMatrix.r[2], m_fLerpTime);
+
+			static_cast<CCamera_Player*>(m_pPlayerCamera)->Lerp_ActionPos(vLerpPos, vLerpLook);
+		}
+	}
+	else
+	{
+		if (MOD_SYNC == m_eCamMod)
+		{
+			static_cast<CCamera_Player*>(m_pPlayerCamera)->Sync_Target(vMyPos, vMyLook, m_fCamHeight, g_fTimeDelta);
+		}
+		else if (MOD_ATTACH == m_eCamMod)
+		{
+			static_cast<CCamera_Player*>(m_pPlayerCamera)->Attach_Target(m_AttachMatrix);
+		}
+	}
 }
 
 void CCamSpot::Imgui_RenderProperty()

@@ -26,6 +26,7 @@ public:
 	virtual void BeginTick();
 	virtual void Tick(_double TimeDelta);
 	virtual void Late_Tick(_double TimeDelta);
+	virtual void AfterPhysX() override;
 	virtual void Imgui_RenderProperty() override;
 
 private:
