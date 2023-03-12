@@ -1,1 +1,93 @@
-{"BufferType":1,"BurstCnt":1,"ConeDirDegree":20.0,"ConeOriginRadius":0.30000001192092896,"Duration":5.0,"FromOrigin":true,"GravityPowerMinMax":[0.0,0.0],"IncreaseMaxSize":1.0,"Life":1.0,"LifeMinMax":[1.0,2.0],"LifeRand":false,"Loop":true,"MeshBufferProtoTag":"Prototype_Component_ShortLeaf_Mesh_Instance","MeshSize":[0.4000000059604645,0.4000000059604645,0.4000000059604645],"ObjectTag":"","Prototype_GameObject":"ProtoVFX_ParticleSystem\u0000","RotationToTimeMax":[0.0,0.0,0.0],"RotationToTimeMin":[0.0,0.0,0.0],"ScaleVariation":[1.0,1.0,1.0],"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":1,"Textures":["..\\Bin\\Resources\\Texture\\VFX\\TO14_T_FX_BTP_YRA_Bloody_Rose_Petal_01_C.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxMesh_Instance","Shape":1,"SpawnTickTime":0.20000000298023224,"Speed":2.0,"SpeedMinMax":[1.0,2.0],"SpeedRand":false,"SphereRadius":4.0,"Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]},"bGravity":false,"bLocal":true,"bRotate":true,"bSizeDecreaseByLife":false,"bSizeIncreaseByLife":false,"pSize":[0.10000000149011612,0.10000000149011612]}
+{
+    "BufferType": 1,
+    "BurstCnt": 1,
+    "ConeDirDegree": 20.0,
+    "ConeOriginRadius": 0.30000001192092896,
+    "Duration": 10.0,
+    "FromOrigin": true,
+    "GravityPowerMinMax": [
+        0.0,
+        0.0
+    ],
+    "IncreaseMaxSize": 1.0,
+    "Life": 1.0,
+    "LifeMinMax": [
+        1.0,
+        2.0
+    ],
+    "LifeRand": false,
+    "Loop": true,
+    "MeshBufferProtoTag": "Prototype_Component_ShortLeaf_Mesh_Instance",
+    "MeshSize": [
+        0.4000000059604645,
+        0.4000000059604645,
+        0.4000000059604645
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",
+    "RotationToTimeMax": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "ScaleVariation": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 1,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\TO14_T_FX_BTP_YRA_Bloody_Rose_Petal_01_C.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxMesh_Instance",
+    "Shape": 1,
+    "SpawnTickTime": 0.20000000298023224,
+    "Speed": 2.0,
+    "SpeedMinMax": [
+        1.0,
+        2.0
+    ],
+    "SpeedRand": false,
+    "SphereRadius": 4.0,
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    "bGravity": false,
+    "bLocal": true,
+    "bRotate": true,
+    "bSizeDecreaseByLife": false,
+    "bSizeIncreaseByLife": false,
+    "pSize": [
+        0.10000000149011612,
+        0.10000000149011612
+    ]
+}

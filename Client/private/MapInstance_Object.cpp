@@ -33,7 +33,7 @@ HRESULT CMapInstance_Object::Initialize(void * pArg)
 	Json json = *reinterpret_cast<Json*>(pArg);
 	if (json.contains("InstanceInfo"))
 	{
-		_uint iCount = 0;
+		m_iComNum = 0;
 
 		for (auto WorldMatrix : json["InstanceInfo"]["WorldMatrix"])
 		{
@@ -44,7 +44,7 @@ HRESULT CMapInstance_Object::Initialize(void * pArg)
 
 			//todo: 임시로 모든 CMapNonAnim_Object 에 PxModel을 가지도록 설정 추후 수정 바람
 			
-			const wstring ComponentTag = L"Com_PxModel" + to_wstring(iCount++);
+			const wstring ComponentTag = L"Com_PxModel" + to_wstring(m_iComNum++);
 
 			FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_PxModelTag.c_str(), ComponentTag.c_str(),
 				(CComponent**)&pPxModel));
@@ -67,6 +67,11 @@ void CMapInstance_Object::BeginTick()
 void CMapInstance_Object::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+#ifdef _DEBUG
+	if (m_iIndex > -1)
+		m_pPxModels[m_iIndex]->SetPxWorldMatrix(m_WorldMatrix);
+#endif
 }
 
 void CMapInstance_Object::Late_Tick(_double TimeDelta)
@@ -141,6 +146,7 @@ void CMapInstance_Object::Imgui_RenderProperty()
 	{
 		if (m_pModel_InstancingCom->GetMeshes().front()->GetWorldMatirxs().size() > 1)
 		{
+			m_pPxModels.erase(m_pPxModels.begin() + m_iIndex);
 			m_pModel_InstancingCom->Delete_Instance(m_iIndex--);
 			m_WorldMatrix = WorldMatrixs[max(0, m_iIndex)];
 		}
@@ -158,12 +164,54 @@ void CMapInstance_Object::Imgui_RenderProperty()
 		m_pModel_InstancingCom->Modify_Matrix(m_iIndex, m_WorldMatrix);
 }
 
+const CPhysXStaticModel * CMapInstance_Object::Find_PhysXStaticModel(CPhysXStaticModel * pPhsXSM)
+{
+	_uint iIndex = 0;
+
+	for (auto it : m_pPxModels)
+	{
+		if (it == pPhsXSM)
+		{
+			CVIBuffer_ModelInstancing* Mesh = m_pModel_InstancingCom->GetMeshes().front();
+			vector<_float4x4> WorldMatrixs = Mesh->GetWorldMatirxs();
+			m_iIndex = iIndex;
+			m_WorldMatrix = WorldMatrixs[m_iIndex];
+
+			return it;
+		}
+
+		iIndex++;
+	}
+
+	return nullptr;
+}
+
+_float4 CMapInstance_Object::Get_FocusPosition()
+{
+	return (_float4)m_WorldMatrix.m[3];
+}
+
+
+
 void CMapInstance_Object::Set_Focus()
 {
 	CVIBuffer_ModelInstancing* Mesh = m_pModel_InstancingCom->GetMeshes().front();
 	vector<_float4x4> WorldMatrixs = Mesh->GetWorldMatirxs();
 	m_iIndex = WorldMatrixs.size() - 1;
 	m_WorldMatrix = WorldMatrixs.back();
+}
+
+void CMapInstance_Object::Create_PhsyX(_fmatrix WorldMatrix)
+{
+	CPhysXStaticModel* pPxModel = nullptr;
+
+	const wstring ComponentTag = L"Com_PxModel" + to_wstring(m_iComNum++);
+
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_PxModelTag.c_str(), ComponentTag.c_str(),
+		(CComponent**)&pPxModel));
+
+	pPxModel->SetPxWorldMatrix(WorldMatrix);
+	m_pPxModels.emplace_back(pPxModel);
 }
 
 wstring CMapInstance_Object::MakePxModelProtoTag()

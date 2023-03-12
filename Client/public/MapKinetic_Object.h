@@ -2,14 +2,27 @@
 #include "MapObject.h"
 
 BEGIN(Engine)
-class CPhysXDynamicModel;
 class CRigidBody;
+class CModel;
 END
 
 BEGIN(Client)
 
-class CMapKinetic_Object :
-	public CMapObject
+enum EKineticType
+{
+	KT_NORMAL,
+	KT_END
+};
+
+enum KineticModeltag
+{
+	Tag_default,
+	Tag_broken,
+	Tag_End
+};
+
+
+class CMapKinetic_Object : public CMapObject
 {
 private:
 	CMapKinetic_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -31,16 +44,18 @@ public:
 public:
 	void	Add_Physical(_float3 vForce = { 0.f, 0.f, 0.f }, _float3 vTorque = {0.f, 0.f, 0.f});
 	void	Reset_Transform();
-
-private:
-	wstring MakePxModelProtoTag();
+	EKineticType GetType() const { return m_eType; }
 
 private:
 	HRESULT	SetUp_Components(void* pArg);
 
-	CModel*				m_pModelCom = nullptr;
-	CRigidBody*			m_pCollider = nullptr;
+	vector<CModel*>			m_pModelComs;
+	vector<wstring>			m_pModelTags;
+	CRigidBody*				m_pCollider = nullptr;
+	EKineticType			m_eType = KT_NORMAL;
+	_float4x4				m_LocalMatrix;
 
+	KineticModeltag			m_eCurModelTag = Tag_End;
 public:
 	_bool				Usable() { return m_bUsable; }
 

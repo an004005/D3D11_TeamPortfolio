@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "BronJon.h"
+#include <random>
+
 #include "GameInstance.h"
 #include "MathUtils.h"
 #include "GameUtils.h"
@@ -93,7 +95,7 @@ HRESULT CBronJon::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("Groggy_End", [this] { m_bDown = false; });
 
 	// ~Event Caller
-
+	m_iHP = 5000;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 	m_iGroggy_Able = 5;
 
@@ -284,14 +286,15 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eHitDir = eHitFrom;
 
 	m_eAtkType = tDamageParams.eAttackType;
+	m_iHP -= tDamageParams.iDamage;
 
 	if (m_eAtkType == EAttackType::ATK_HEAVY && !m_bAtkBite && !m_bAtkLaser && !m_bDown)
 	{			
-		++m_iGroggyCnt;
 		m_bStruck = true;	// 체력 다는 조건으로 주면 될듯?
+		++m_iGroggyCnt;
 	}
 
-	if (m_eAtkType == EAttackType::ATK_LIGHT)
+	if (m_eAtkType == EAttackType::ATK_LIGHT) // ATK_MIDDLE
 		m_bStruck = true;
 
 	if (m_iHP <= 0)
@@ -349,7 +352,7 @@ void CBronJon::Atk_BiteSweep()
 	Sparam.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	
 	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
-		HitTargets(sweepOut, 1, EAttackType::ATK_HEAVY);	
+		HitTargets(sweepOut, (rand() % 80) + 25, EAttackType::ATK_HEAVY);
 }
 
 void CBronJon::Atk_LaserSweep()
@@ -371,7 +374,7 @@ void CBronJon::Atk_LaserSweep()
 	Sparam.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
 	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
-		HitTargets(sweepOut, 1, EAttackType::ATK_HEAVY);
+		HitTargets(sweepOut, (rand() % 150) + 25, EAttackType::ATK_HEAVY);
 }
 
 _bool CBronJon::IsPlayingSocket() const

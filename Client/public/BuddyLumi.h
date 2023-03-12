@@ -36,11 +36,13 @@ public:
 
 	_matrix AttachCollider(CRigidBody* pRigidBody);
 
+	void HitDir(_double TimeDelta);
+
 private:		
 	class CBdLm_Controller*		m_pController = nullptr;
 	class CBdLm_AnimInstance*	m_pASM = nullptr;
 
-	CRigidBody*					m_pTrigger = nullptr;
+//	CRigidBody*					m_pTrigger = nullptr;
 	CRigidBody*					m_pWeaponCollider = nullptr;
 
 private:
@@ -100,9 +102,21 @@ private:
 	_uint		m_iAirDamage = 0;
 	_uint		m_iPreAirDamageCnt = 0;
 
+	// HitDir
+	_bool		m_bHitMove = false;
+
+	_vector		m_vPreDir;
+	_vector		m_vCurDir;
+	_vector		m_vFinDir;
+	_bool		m_bOneTick = false;
+	// ~HitDir
+
+	// TakeDamage 
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
+	// ~TakeDamage 
 
+	// Swing Attack
 	list<CScarletCharacter*> m_CollisionList;
 
 public:

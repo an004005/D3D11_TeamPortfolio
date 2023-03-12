@@ -42,12 +42,11 @@ HRESULT CControlledRigidBody::Initialize(void* pArg)
 
 void CControlledRigidBody::BeginTick()
 {
+	CPhysX_Manager::GetInstance()->AddActor(*m_pController->getActor());
 	if (auto pOwner = TryGetOwner())
 	{
 		SetFootPosition(pOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 	}
-
-	CPhysX_Manager::GetInstance()->AddActor(*m_pController->getActor());
 }
 
 void CControlledRigidBody::Imgui_RenderProperty()

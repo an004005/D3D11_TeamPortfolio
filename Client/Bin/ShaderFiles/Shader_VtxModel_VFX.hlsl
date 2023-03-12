@@ -85,11 +85,11 @@ VS_OUT_NORM VS_MAIN_NORM(VS_IN In)
 	matWVP = mul(matWV, g_ProjMatrix);
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), g_WorldMatrix));
 	Out.vTexUV = In.vTexUV;
+	Out.vProjPos = Out.vPosition;
 	Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
 	Out.vBinormal = normalize(cross(Out.vNormal.xyz, Out.vTangent.xyz));
-	
 
 	return Out;
 }
@@ -131,7 +131,6 @@ PS_OUT_NORM PS_MAIN_NORM (PS_IN_NORM In)
 	{
 		discard;
 	}
-
 	//Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 
 	return Out;
@@ -168,7 +167,7 @@ PS_OUT PS_FLOWERLEG(PS_IN In)
 	// Out.vColor.a = Out.vColor.r;
 	// Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
 	Out.vColor.a *= g_float_1;
-	Out.vFlag = float4(0.f, 0.f, 0.f, Out.vColor.a * 0.5f);
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.a);
 
 	return Out;
 }

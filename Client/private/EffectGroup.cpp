@@ -117,6 +117,10 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 		m_Timeline.SetTimelineLength((_double)m_fEndTime);
 
 		//m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
+		// m_Timeline.SetFinishFunction([this]
+		// {
+		// 	SetDelete();
+		// });
 
 		 if (m_iSelectFinishFunc == 0)
 		 {
@@ -154,6 +158,14 @@ void CEffectGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate)
 		SetDelete();
 		return;
 	}
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		Set_Transform(SocketMatrix);
+	}
+
 	m_pOwner = pOwner;
 	m_bUpdate = trueisUpdate;
 	m_Timeline.PlayFromStart();
@@ -171,9 +183,9 @@ void CEffectGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool true
 	m_BoneName = BoneName;
 	m_bUpdate = trueisUpdate;
 
-	if(trueisUpdate == false)
+	if(m_bUpdate == false)
 	{
-		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
 
 		Set_Transform(SocketMatrix);
 	}
@@ -190,8 +202,8 @@ void CEffectGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix,
 	}
 
 	m_pOwner = pOwner;
-	m_BoneName = BoneName;
 	m_bUpdate = trueisUpdate;
+	m_BoneName = BoneName;
 	m_bUsePivot = usepivot;
 	m_PivotMatrix = PivotMatrix;
 
@@ -238,6 +250,8 @@ void CEffectGroup::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
 	m_Timeline.Tick(TimeDelta);
+	VisibleUpdate();
+	
 
 	if(m_bUpdate == true && m_pOwner->IsDeleted() == false)
 	{
@@ -247,14 +261,14 @@ void CEffectGroup::Tick(_double TimeDelta)
 			if(m_bUsePivot)
 			{
 				// 피봇행렬을 쓰는 경우
-				_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix() ;
+				_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix() ;
 
 				Set_Transform(SocketMatrix);
 			}
 			else
 			{
 				// 피봇행렬을 안쓰는 경우
-				_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+				_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
 
 				Set_Transform(SocketMatrix);
 			}
@@ -1474,6 +1488,20 @@ void CEffectGroup::SetReverse()
 _bool CEffectGroup::CheckPlay()
 {
 	return m_Timeline.IsPlay();
+}
+
+void CEffectGroup::VisibleUpdate()
+{
+	if (nullptr != m_pFirst_EffectSystem)
+		m_pFirst_EffectSystem->SetVisible(m_bVisible);
+	if (nullptr != m_pSecond_EffectSystem)
+		m_pSecond_EffectSystem->SetVisible(m_bVisible);
+	if (nullptr != m_pThird_EffectSystem)
+		m_pThird_EffectSystem->SetVisible(m_bVisible);
+	if (nullptr != m_pFourth_EffectSystem)
+		m_pFourth_EffectSystem->SetVisible(m_bVisible);
+	if (nullptr != m_pFifth_EffectSystem)
+		m_pFifth_EffectSystem->SetVisible(m_bVisible);
 }
 
 void CEffectGroup::Set_Transform(_fmatrix matSocket)

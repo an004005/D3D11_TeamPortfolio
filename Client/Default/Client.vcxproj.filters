@@ -298,6 +298,9 @@
     <Filter Include="02.GameObjects\Bullet">
       <UniqueIdentifier>{53a029da-cd62-4afd-8139-2be4c8759dc7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FactoryMethod">
+      <UniqueIdentifier>{c339909b-d428-41f4-9c52-dbbf78dbea31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -777,6 +780,10 @@
     <ClInclude Include="..\public\Bullet.h">
       <Filter>02.GameObjects\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_KineticEditor.h" />
+    <ClInclude Include="..\public\FactoryMethod.h">
+      <Filter>FactoryMethod</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1227,6 +1234,10 @@
     </ClCompile>
     <ClCompile Include="..\private\Bullet.cpp">
       <Filter>02.GameObjects\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_KineticEditor.cpp" />
+    <ClCompile Include="..\private\FactoryMethod.cpp">
+      <Filter>FactoryMethod</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

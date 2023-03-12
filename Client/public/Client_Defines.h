@@ -18,6 +18,7 @@ namespace Client
 		LEVEL_UI,
 		LEVEL_ENEMIESTEST,
 		LEVEL_BATCH,
+		LEVEL_KINETIC_EDITOR,
 		LEVEL_END };
 }
 

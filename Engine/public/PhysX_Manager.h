@@ -74,6 +74,8 @@ private:
 	_bool m_bRenderDebug = true;
 	_bool m_bShowTable = false;
 
+	physx::PxRigidStatic* groundPlane;
+
 #ifdef _DEBUG
 	struct DebugLine
 	{
@@ -91,7 +93,6 @@ private:
 	list<DebugLine> m_DebugLines;
 	list<DebugShape> m_DebugShapes;
 
-	physx::PxRigidStatic* groundPlane;
 	physx::PxPvd* m_PVD = nullptr;
 
 	PrimitiveBatch<VertexPositionColor>*				m_pBatch = nullptr;
