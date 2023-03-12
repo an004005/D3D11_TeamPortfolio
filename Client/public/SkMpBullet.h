@@ -1,10 +1,9 @@
 #pragma once
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Bullet.h"
 
 BEGIN(Engine)
 class CGameInstance;
-class CShader;
 class CModel;
 class CRenderer;
 class CFSMComponent;
@@ -13,7 +12,7 @@ END
 
 BEGIN(Client)
 
-class CSkMpBullet : public CGameObject
+class CSkMpBullet : public CBullet
 {
 private:
 	CSkMpBullet(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -32,32 +31,13 @@ public:
 	virtual void AfterPhysX();
 
 public:
-	void					Set_ShootDir(_vector vDest) { m_vDir = XMVector3Normalize(vDest); }
+	void Set_ShootDir(_vector vDest) { m_vDir = XMVector3Normalize(vDest); }
 
 private:
-	CShader*				m_pShaderCom = nullptr;
-	CRenderer*				m_pRendererCom = nullptr;
-	CModel*					m_pModelCom = nullptr;
 	CFSMComponent*			m_pFSM = nullptr;
 
-	CRigidBody*				m_pCollider = nullptr;
-
 private:
-	HRESULT SetUp_Components(void* pArg);
-
-private:
-	wstring					m_ModelName;
-
-	_bool					m_bIdle = false;
-	_bool					m_bShoot = false;
-	_bool					m_bCollision = false;
-	_bool					m_bDead = false;
-
-	_float					m_fTimeAcc = 0.f;
 	_vector					m_vDir = { 0.f, 0.f, 0.f, 0.f };
-
-private:
-	CGameObject*			m_pSkummyPool = nullptr;
 
 public:
 	static CSkMpBullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

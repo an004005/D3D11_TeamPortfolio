@@ -160,6 +160,19 @@ PS_OUT PS_DEFAULT_DISTORTION(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_FLOWERLEG(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	Out.vColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x * g_float_0, In.vTexUV.y));
+	// Out.vColor.a = Out.vColor.r;
+	// Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
+	Out.vColor.a *= g_float_1;
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.a);
+
+	return Out;
+}
+
 PS_OUT PS_DEFAULT_MODEL(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -488,5 +501,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_DEFAULT_MODEL();
+	}
+
+	//6
+	pass DefaultDistortion
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_FLOWERLEG();
 	}
 }

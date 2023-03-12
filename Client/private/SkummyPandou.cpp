@@ -33,6 +33,7 @@ HRESULT CSkummyPandou::Initialize_Prototype()
 HRESULT CSkummyPandou::Initialize(void * pArg)
 {
 	Json SkummyPandouTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandou/SkummyPandouTrigger.json");
+	MoveTransformJson(SkummyPandouTrigger, pArg);
 	pArg = &SkummyPandouTrigger;
 	
 	FAILED_CHECK(CMonster::Initialize(pArg));
@@ -77,7 +78,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 
 	// ~Event Caller
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(2.f, 0.f, 32.f)));
+	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(2.f, 0.f, 32.f)));
 
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 
@@ -117,7 +118,7 @@ void CSkummyPandou::BeginTick()
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("Bee", { m_pModelCom->Find_Animation("AS_em0700_160_AL_threat") });
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(2.f, 0.f, 32.f)));
+	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(2.f, 0.f, 32.f)));
 }
 
 void CSkummyPandou::Tick(_double TimeDelta)
@@ -200,7 +201,7 @@ void CSkummyPandou::Tick(_double TimeDelta)
 				m_pASM->InputAnimSocket("Bee", { m_pDamage_L_B });
 		}
 
-		if (m_eAtkType == EAttackType::ATK_MIDDLE)
+		if (m_eAtkType == EAttackType::ATK_MIDDLE || m_eAtkType == EAttackType::ATK_HEAVY)
 		{
 			if (m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("Bee", { m_pDamage_M_F });
@@ -310,7 +311,7 @@ void CSkummyPandou::TakeDamage(DAMAGE_PARAM tDamageParams)
 		++m_iAirDamage;
 	}
 
-	else
+	if(m_eAtkType != EAttackType::ATK_TO_AIR || m_eAtkType != EAttackType::ATK_END)
 		m_bStruck = true;
 }
 
@@ -431,8 +432,7 @@ CGameObject * CSkummyPandou::Clone(void * pArg)
 
 void CSkummyPandou::Free()
 {
-	__super::Free();
-
+	CMonster::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);

@@ -3,12 +3,10 @@
 #include "Monster.h"
 
 BEGIN(Engine)
-class CGameInstance;
-class CAnimationInstance;
-class CAnimation;
 class CFSMComponent;
-class CRigidBody;
 class CGameInstance;
+class CAnimation;
+class CRigidBody;
 END
 
 BEGIN(Client)
@@ -38,9 +36,7 @@ public:
 
 	_matrix AttachCollider(CRigidBody* pRigidBody);
 
-private:
-
-		
+private:		
 	class CBdLm_Controller*		m_pController = nullptr;
 	class CBdLm_AnimInstance*	m_pASM = nullptr;
 

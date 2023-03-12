@@ -13,6 +13,8 @@
 #include "RigidBody.h"
 #include "Material.h"
 
+#include "WaterBall.h" // Oil_Bullet
+
 CBoss1::CBoss1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -31,6 +33,7 @@ HRESULT CBoss1::Initialize_Prototype()
 HRESULT CBoss1::Initialize(void* pArg)
 {
 	Json BossJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_en320.json");
+	MoveTransformJson(BossJson, pArg);
 	pArg = &BossJson;
 
 	FAILED_CHECK(CMonster::Initialize(pArg));
@@ -44,6 +47,8 @@ HRESULT CBoss1::Initialize(void* pArg)
 
 
 	m_fGravity = 25.f;
+	m_iHP = 3000;
+	m_iPreHP = m_iHP;
 
 	m_pModelCom->Add_EventCaller("JumpAttackStart", [this]
 	{
@@ -74,7 +79,7 @@ HRESULT CBoss1::Initialize(void* pArg)
 	m_pModelCom->Add_EventCaller("Jitabata", [this]
 	{
 		++m_iJitabaCnt;
-		ClearDamagedTarget(); // 매 jitabata마다 초기화해서 다시 공격 가능
+		ClearDamagedTarget(); // 매 jitabata 마다 초기화해서 다시 공격 가능
 		if (m_iJitabaCnt == 5)
 		{
 			m_bJumpAttack = false;
@@ -98,8 +103,56 @@ HRESULT CBoss1::Initialize(void* pArg)
 	{
 		End_AttackState();
 	});
+	// Water ball Create + De_buff : Oil
+	m_pModelCom->Add_EventCaller("WaterBall", [this] 
+	{ 
+		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		XMVectorSetY(vTargetPos, 0.f);
 
+		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_WaterBall"));		
+		if (CWaterBall* pBullet = dynamic_cast<CWaterBall*>(pObj))
+		{
+			pBullet->Set_Owner(this);
 
+			_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Water") * m_pTransformCom->Get_WorldMatrix();
+			_vector vPrePos = BoneMtx.r[3];
+
+			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
+			_vector vDest = XMVector3Normalize(vTargetPos - vPrePos);
+			
+			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
+			pBullet->Set_ShootDir(vDest);
+			
+			pBullet->GetTransform()->LookAt(vPrePos + vLook);
+
+			if (m_b2ndPhase)
+			{
+				auto pObj2 = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_WaterBall"));
+				auto pObj3 = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_WaterBall"));
+
+				CWaterBall* pBullet2 = dynamic_cast<CWaterBall*>(pObj2);
+				CWaterBall* pBullet3 = dynamic_cast<CWaterBall*>(pObj3);
+
+				// 2nd Bullet
+				_matrix		RotMatAxis = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(10.f));
+				_vector vRight = XMVector3TransformNormal(vDest, RotMatAxis);
+				pBullet2->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
+				pBullet2->Set_ShootDir(vRight);
+				pBullet2->GetTransform()->LookAt(vPrePos + vRight);
+
+				// 3rd Bullet
+				_matrix		RotMatAxisRev = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-10.f));
+				_vector vLeft = XMVector3TransformNormal(vDest, RotMatAxisRev);
+				pBullet3->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
+				pBullet3->Set_ShootDir(vLeft);
+				pBullet3->GetTransform()->LookAt(vPrePos + vLeft);
+			}			
+		}	
+	});
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 35.f)));
+	
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(100.f));
 
 	m_pASM = CBoss1_AnimationInstance::Create(m_pModelCom, this);
@@ -135,7 +188,7 @@ void CBoss1::BeginTick()
 			continue;
 		m_BodyMtrls.push_back(pMtrl);
 	}
-
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 35.f)));
 }
 
 void CBoss1::Tick(_double TimeDelta)
@@ -148,8 +201,7 @@ void CBoss1::Tick(_double TimeDelta)
 	   return dynamic_cast<CPlayer*>(pObj) != nullptr;
    });
 	m_pTarget = dynamic_cast<CScarletCharacter*>(pPlayer);
-
-
+	
 	m_pController->SetTarget(m_pTarget);
 
 	m_pController->Tick(TimeDelta);
@@ -212,6 +264,13 @@ void CBoss1::Tick(_double TimeDelta)
 void CBoss1::Late_Tick(_double TimeDelta)
 {
 	CMonster::Late_Tick(TimeDelta);
+
+	_int iCurrentHP = m_iPreHP - m_iHP;
+	if (iCurrentHP >= 2100)
+	{
+		m_b2ndPhase = true;
+	}
+
 	if (m_bVisible)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
@@ -219,6 +278,14 @@ void CBoss1::Late_Tick(_double TimeDelta)
 void CBoss1::AfterPhysX()
 {
 	CMonster::AfterPhysX();
+}
+
+void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
+{
+	if (m_bDead)
+		return;
+
+
 }
 
 HRESULT CBoss1::Render()
@@ -230,6 +297,14 @@ HRESULT CBoss1::Render()
 void CBoss1::Imgui_RenderProperty()
 {
 	CMonster::Imgui_RenderProperty();
+
+	ImGui::Text("HP : %d", m_iHP);
+	if (ImGui::Button("CurrentHP"))
+	{
+		m_iHP -= 50;
+	}
+	ImGui::Text("2ndPhase : %d", m_b2ndPhase);
+
 	m_pASM->Imgui_RenderState();
 }
 

@@ -33,6 +33,7 @@ HRESULT CBronJon::Initialize_Prototype()
 HRESULT CBronJon::Initialize(void * pArg)
 {
 	Json BronJonTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonTrigger.json");
+	MoveTransformJson(BronJonTrigger, pArg);
 	pArg = &BronJonTrigger;
 
 	FAILED_CHECK(CMonster::Initialize(pArg));
@@ -93,7 +94,6 @@ HRESULT CBronJon::Initialize(void * pArg)
 
 	// ~Event Caller
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 30.f)));
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 	m_iGroggy_Able = 5;
 
@@ -132,7 +132,6 @@ void CBronJon::BeginTick()
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("BronJon", { m_pModelCom->Find_Animation("AS_em0800_495_AL_press_down_start") });
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 30.f)));	
 }
 
 void CBronJon::Tick(_double TimeDelta)
@@ -148,7 +147,9 @@ void CBronJon::Tick(_double TimeDelta)
 	// Controller
 	m_pController->SetTarget(m_pTarget);
 
-	m_pController->Tick(TimeDelta);
+	if (m_bDead == false)
+		m_pController->Tick(TimeDelta);
+
 	_bool bOnfloor = IsOnFloor();
 						// m_iGroggy_Able = 5, 1회 그로기마다 +1씩 되어 갈수록 그로기가 어려워진다.
 	if (m_iGroggyCnt >= m_iGroggy_Able)
@@ -173,7 +174,16 @@ void CBronJon::Tick(_double TimeDelta)
 	{
 		m_bStruck = false;
 		m_pController->ClearCommands();
+		// Test
+		if (m_eAtkType == EAttackType::ATK_LIGHT)
+		{
+			if (m_eHitDir == EBaseAxis::NORTH)
+				m_pASM->InputAnimSocket("BronJon", { m_pDamage_L_F });
 
+			else if (m_eHitDir == EBaseAxis::SOUTH)
+				m_pASM->InputAnimSocket("BronJon", { m_pDamage_L_B });
+		}
+		// ~Test
 		if (m_eAtkType == EAttackType::ATK_HEAVY)
 		{
 			if (m_eHitDir == EBaseAxis::NORTH)
@@ -189,18 +199,7 @@ void CBronJon::Tick(_double TimeDelta)
 				m_pASM->InputAnimSocket("BronJon", { m_pDamage_M_R });
 		}
 	}
-	// Test
-	/*if (m_bGroggy || m_pController->KeyDown(CController::NUhttps://docs.google.com/spreadsheets/d/1JdqLLK8EKbACHrfHNorlPoRP6-GPo6nFquVOk6_Dp9o/edit#gid=324704638M_2))
-	{
-		m_bGroggy = false;
-		m_pController->ClearCommands();
-
-		if (m_eHitDir == EBaseAxis::NORTH)
-			m_pASM->InputAnimSocket("BronJon", { m_pDamage_L_F });
-
-		else if (m_eHitDir == EBaseAxis::SOUTH)
-			m_pASM->InputAnimSocket("BronJon", { m_pDamage_L_B });
-	}*/
+	
 	// m_bGroggy : 그로기 상태 및 Down 애니메이션이 돌기 위한 조건이므로 한번 돌고 바로 false 
 	if (m_bGroggy || m_pController->KeyDown(CController::NUM_4))
 	{		
@@ -240,16 +239,7 @@ void CBronJon::Late_Tick(_double TimeDelta)
 		Atk_BiteSweep();
 
 	if (m_bAtkLaser)
-		Atk_LaserSweep();
-
-	if (m_iHP <= 0)
-		m_bDead = true;
-
-	if (m_bDead && m_pController->KeyDown(CController::X))
-	{
-		m_pController->ClearCommands();
-		m_pASM->AttachAnimSocket("BronJon", { m_pDeadAnim });
-	}
+		Atk_LaserSweep();	
 
 	if (nullptr != m_pRendererCom && m_bVisible)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -287,6 +277,9 @@ void CBronJon::AfterPhysX()
 
 void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+	if (m_bDead)
+		return;
+
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	m_eHitDir = eHitFrom;
 
@@ -297,6 +290,18 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 		++m_iGroggyCnt;
 		m_bStruck = true;	// 체력 다는 조건으로 주면 될듯?
 	}
+
+	if (m_eAtkType == EAttackType::ATK_LIGHT)
+		m_bStruck = true;
+
+	if (m_iHP <= 0)
+	{
+		m_pController->ClearCommands();
+		m_DeathTimeline.PlayFromStart();
+		m_pASM->InputAnimSocket("BronJon", { m_pDeadAnim });
+		m_bDead = true;
+	}
+	
 //	CGameInstance::GetInstance()->SetTimeRatioCurve("Simple_Increase");
 
 	IM_LOG("yes");
@@ -400,8 +405,7 @@ CGameObject * CBronJon::Clone(void * pArg)
 
 void CBronJon::Free()
 {
-	__super::Free();
-	
+	CMonster::Free();	
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);

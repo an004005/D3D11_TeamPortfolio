@@ -7,6 +7,7 @@
 #include "Trigger.h"
 #include "PhysX_Manager.h"
 #include "ScarletCharacter.h"
+#include "MainApp.h"
 
 CBatch::CBatch(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
@@ -328,20 +329,20 @@ void CBatch::RayPicking()
 			{
 				auto p = t.getAnyHit(i);
 
-				_float4 vPos{ p.position.x, p.position.y + 10.f, p.position.z, 1.f };
+				_float4 vPos{ p.position.x, p.position.y + 1.f, p.position.z, 1.f };
 
 				if (m_pProtoTag != L"")
 				{
-					_float4x4 tmp = _float4x4::Identity;
-					tmp.m[3][0] = vPos.x;
-					tmp.m[3][1] = vPos.y;
-					tmp.m[3][2] = vPos.z;
+					_float4x4 WorldMatrix = _float4x4::Identity;
+					WorldMatrix.m[3][0] = vPos.x;
+					WorldMatrix.m[3][1] = vPos.y;
+					WorldMatrix.m[3][2] = vPos.z;
 
-					Json tmp123;
-					tmp123["Transform"]["WorldMatrix"] = tmp;
+					Json jsonTransform;
+					CTransform::ModifyTransformJson(jsonTransform, WorldMatrix);
 
 					CGameObject* pGameObject = nullptr;
-					pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), m_pProtoTag.c_str(), &tmp123);
+					pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), m_pProtoTag.c_str(), &jsonTransform);
 
 					//pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&vPos));
 					//assert(pGameObject != nullptr);
@@ -353,9 +354,6 @@ void CBatch::RayPicking()
 		}
 	}
 }
-
-
-
 
 
 CBatch * CBatch::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

@@ -34,9 +34,12 @@ public:
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
-	virtual void AfterPhysX() override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
+
+	virtual void AfterPhysX() override;
+	
+	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
@@ -91,6 +94,13 @@ private:
 	vector<CMaterial*> m_BodyMtrls;
 	CMaterial* m_pWeakMtrl = nullptr;
 	CMaterial* m_pGlassMtrl = nullptr;
+
+	// Add PJW
+	_bool	m_b2ndPhase = false;
+	_int	m_iPreHP;
+
+	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
+	EAttackType	m_eAtkType = EAttackType::ATK_END;
 
 public:
 	static CBoss1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
