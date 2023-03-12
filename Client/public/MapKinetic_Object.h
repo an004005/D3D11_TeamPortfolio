@@ -38,15 +38,8 @@ private:
 private:
 	HRESULT	SetUp_Components(void* pArg);
 
-	CPhysXDynamicModel*	m_pPxModel = nullptr;
-	CRigidBody*			m_pKinetic_RigidBody = nullptr;
-	CRigidBody*			m_pDynamic_RigidBody = nullptr;
-
-	CRigidBody*			m_pCollider = nullptr;
-
-	_bool				m_bKinetic = false;
-	
 	CModel*				m_pModelCom = nullptr;
+	CRigidBody*			m_pCollider = nullptr;
 
 public:
 	_bool				Usable() { return m_bUsable; }

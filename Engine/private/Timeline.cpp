@@ -49,36 +49,23 @@ void CTimeline::Tick(_double TimeDelta)
 		m_CurFrame -= TimeDelta;
 
 	_bool bFin = false;
-	if (m_CurFrame <= m_MinTime)
+	if (m_CurFrame <= 0.0)
 	{
 		m_bPlay = false;
-		m_CurFrame = m_MinTime;
+		m_CurFrame = 0.0;
 		bFin = true;
 		m_bReverseFinish = true;
 	}
-	else if (m_CurFrame >= m_MaxTime)
+	else if (m_CurFrame >= m_EndTime)
 	{
 		m_bPlay = false;
-		m_CurFrame = m_MaxTime;
+		m_CurFrame = m_EndTime;
 		bFin = true;
 	}
 
 	for (auto& e : m_vecFloatCurve)
 	{
 		auto pCurve = static_cast<CCurveFloatImpl*>(e.second);
-		if ((_double)pCurve->GetMinX() < m_MinTime)
-		{
-			m_MinTime = (_double)pCurve->GetMinX();
-			bFin = false;
-			m_bReverseFinish = false;
-		}
-		if ((_double)pCurve->GetMaxX() > m_MaxTime)
-		{
-			m_MaxTime = (_double)pCurve->GetMaxX();
-			bFin = false;
-			m_bReverseFinish = false;
-		}
-
 		_float fCurFrame = (_float)m_CurFrame;
 
 		if (fCurFrame < pCurve->GetMinX())
@@ -115,7 +102,7 @@ void CTimeline::Tick(_double TimeDelta)
 		{
 			if (m_bSwing)
 				m_bForward = !m_bForward;
-			m_CurFrame = m_bForward ? m_MinTime : m_MaxTime;
+			m_CurFrame = m_bForward ? 0.0 : m_EndTime;
 			m_bPlay = true;
 		}
 	}
@@ -146,7 +133,7 @@ void CTimeline::Reverse()
 
 void CTimeline::ReverseFromEnd()
 {
-	m_CurFrame = m_MaxTime;
+	m_CurFrame = m_EndTime;
 	Reverse();
 }
 
@@ -177,21 +164,26 @@ void CTimeline::Imgui_RenderEditor()
 	ImGui::InputFloat("Current Frame", &_fFrame);
 	m_CurFrame = (_double)_fFrame;
 
-	ImGui::Text("TimeRange : %f ~ %f", m_MinTime, m_MaxTime);
+	_float _fEndtime= (_float)m_EndTime;
+	ImGui::InputFloat("EndTime", &_fEndtime);
+	m_EndTime = (_double)_fEndtime;
 
-	if (ImGui::BeginListBox("Current Curves"))
-	{
-		for (auto& curve : m_vecFloatCurve)
-		{
-			auto pCurve = static_cast<CCurveFloatImpl*>(curve.second);
-			if (ImGui::Selectable(pCurve->GetName()))
-			{
-				
-			}
-		}
-		ImGui::EndListBox();
-	}
+	// if (ImGui::BeginListBox("Current Curves"))
+	// {
+	// 	for (auto& curve : m_vecFloatCurve)
+	// 	{
+	// 		auto pCurve = static_cast<CCurveFloatImpl*>(curve.second);
+	// 		if (ImGui::Selectable(pCurve->GetName()))
+	// 		{
+	// 			
+	// 		}
+	// 	}
+	// 	ImGui::EndListBox();
+	// }
+}
 
+void CTimeline::ImGui_RenderTimelineEvent()
+{
 	ImGui::Separator();
 	static char szEventName[MAX_PATH]{};
 	static _float fEventTime = 0.f;
@@ -268,20 +260,6 @@ CCurveFloat* CTimeline::GetCurve(const string& strCurveTag)
 {
 	return CCurveManager::GetInstance()->GetCurve(strCurveTag);
 }
-
-void CTimeline::CheckCurveTime(CCurveFloat* curve)
-{
-	auto pCurve = static_cast<class CCurveFloatImpl*>(curve);
-	if ((_double)pCurve->GetMinX() < m_MinTime)
-	{
-		m_MinTime = (_double)pCurve->GetMinX();
-	}
-	if ((_double)pCurve->GetMaxX() > m_MaxTime)
-	{
-		m_MaxTime = (_double)pCurve->GetMaxX();
-	}
-}
-
 
 void CTimeline::Free()
 {
