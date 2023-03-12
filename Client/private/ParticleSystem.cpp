@@ -105,11 +105,11 @@ void CParticleSystem::Late_Tick(_double TimeDelta)
 	
 	if (m_bVisible)
 	{
-		if(m_eBufferType == EBufferType::MESH)
+		if(m_eBufferType == EBufferType::MESH && m_pMeshInstanceBuffer != nullptr)
 		{
 			m_pMeshInstanceBuffer->SetInstanceBuffer(&m_MeshList);
 		}
-		else
+		else if (m_eBufferType == EBufferType::POINT && m_pPointInstanceBuffer != nullptr)
 		{
 			m_pPointInstanceBuffer->SetInstanceBuffer(&m_PointList);
 			// particle은 작기 때문에 먼저 해도 문제없을 듯
@@ -120,15 +120,15 @@ void CParticleSystem::Late_Tick(_double TimeDelta)
 
 HRESULT CParticleSystem::Render()
 {
-	if (m_pShader == nullptr || m_pPointInstanceBuffer == nullptr && m_pMeshInstanceBuffer == nullptr)
+	if (m_pShader == nullptr)
 		return S_OK;
 
 	FAILED_CHECK(SetParams());
 	FAILED_CHECK(Begin());
 
-	if (m_eBufferType == EBufferType::MESH)
+	if (m_eBufferType == EBufferType::MESH && m_pMeshInstanceBuffer != nullptr)
 		m_pMeshInstanceBuffer->Render();
-	else
+	else if (m_eBufferType == EBufferType::POINT && m_pPointInstanceBuffer != nullptr)
 		m_pPointInstanceBuffer->Render();
 	
 	return S_OK;
@@ -168,6 +168,7 @@ void CParticleSystem::SaveToJson(Json& json)
 	json["RotationToTimeMin"] = m_fRotationToTime_Min;
 	json["RotationToTimeMax"] = m_fRotationToTime_Max;
 	json["ScaleVariation"] = m_vScaleVariation;
+	json["MeshSize"] = m_vMeshSize;
 }
 
 void CParticleSystem::LoadFromJson(const Json& json)
@@ -198,6 +199,9 @@ void CParticleSystem::LoadFromJson(const Json& json)
 	m_fRotationToTime_Min = json["RotationToTimeMin"] ;
 	m_fRotationToTime_Max = json["RotationToTimeMax"] ;
 	m_vScaleVariation = json["ScaleVariation"];
+
+	if(json.contains("MeshSize"))
+		m_vMeshSize = json["MeshSize"];
 
 	if(m_eBufferType == EBufferType::MESH)
 	{
@@ -396,7 +400,7 @@ HRESULT CParticleSystem::SetParams()
 	if (FAILED(m_pShader->Set_RawValue("g_bLocal", &bLocal, sizeof(_int))))
 		return E_FAIL;
 
-	if (m_eBufferType == EBufferType::POINT)
+	if (m_pMeshInstanceBuffer == nullptr && m_eBufferType == EBufferType::POINT)
 	{
 		
 		const _int bRotate = m_bRotate ? 1 : 0;
