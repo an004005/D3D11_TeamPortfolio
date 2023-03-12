@@ -171,6 +171,10 @@ private:
 	HRESULT SetUp_KineticComboStateMachine();
 	HRESULT SetUp_JustDodgeStateMachine();
 
+	HRESULT SetUp_AttackDesc();
+
+	unordered_map<string, std::function<void()>>	m_mapCollisionEvent;
+
 	CFSMComponent*		m_pKineticStataMachine = nullptr;
 	CFSMComponent*		m_pHitStateMachine = nullptr;
 	CFSMComponent*		m_pKineticComboStateMachine = nullptr;
@@ -460,6 +464,10 @@ private:
 
 private:
 	void			Search_Usable_KineticObject();
+	void			Enemy_Targeting(_bool bNear);
+	void			KineticObject_Targeting();
+
+private:
 	void			Spline_Kinetic(_double TimeDelta);
 	void			Kinetic_Test(_float fRatio);
 	void			Kinetic_ByTurn();

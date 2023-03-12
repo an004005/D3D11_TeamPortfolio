@@ -367,11 +367,11 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	//if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"),& BuddyLumiModel)))
 	//return E_FAIL;
 
-	//Json BronJonModel;
-	//BronJonModel["Model"] = "MonsterBronJon";
+	Json BronJonModel;
+	BronJonModel["Model"] = "MonsterBronJon";
 
-	//if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
-	//	return E_FAIL;
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
+		return E_FAIL;
 
 	//auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
 	//_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);

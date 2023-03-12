@@ -22,6 +22,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Imgui_RenderProperty() override;
+	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 
 public:
 	//For Effect

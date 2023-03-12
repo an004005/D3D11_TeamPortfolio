@@ -17,6 +17,7 @@
 #include "SkMpBullet.h"
 
 #include "RigidBody.h"
+#include "VFX_Manager.h"
 
 // TODO : 소켓 작업, Turn
 
@@ -259,6 +260,8 @@ void CSkummyPool::Imgui_RenderProperty()
 
 void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+	IM_LOG("Coll");
+
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	// ↑ 공격이 들어올 방향 
 	m_eHitDir = eHitFrom;
@@ -275,6 +278,9 @@ void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 	{
 		m_bStruck = true;
 	}
+
+	// 타격 이펙트 잡아주는 부분, 몬스터 상위에서 동작
+	__super::TakeDamage(tDamageParams);
 }
 
 void CSkummyPool::AfterPhysX()

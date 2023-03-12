@@ -50,6 +50,15 @@ void CScarletWeapon::Setup_BoneMatrix(CModel* pModel, _fmatrix Transform)
 	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
 }
 
+_float4 CScarletWeapon::Get_Edge()
+{
+	_vector vWeaponCenter = m_pCollider->GetPxWorldMatrix().Translation();
+	vWeaponCenter = XMVectorSetW(vWeaponCenter, 1.f);
+	_vector vWeaponRight = m_pCollider->GetPxWorldMatrix().Right();
+
+	return vWeaponCenter;// +vWeaponRight;
+}
+
 void CScarletWeapon::Set_Bright(ESASType eType, _bool bBright)
 {
 	m_eSasType = eType;

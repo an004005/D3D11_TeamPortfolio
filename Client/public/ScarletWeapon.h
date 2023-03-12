@@ -41,6 +41,7 @@ protected:
 
 public:
 	CRigidBody*	Get_Trigger() { return m_pCollider; }
+	_float4		Get_Edge();
 	
 protected:
 	WEAPON_DESC	m_Desc;

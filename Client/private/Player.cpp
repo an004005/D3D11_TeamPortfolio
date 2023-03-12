@@ -95,6 +95,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_RigidBody()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_AttackDesc()))
+		return E_FAIL;
+
 	//Load_DefaultEffects("../Bin/Resources/Curve/Default_Attack/");
 	//Load_DefaultEffects("../Bin/Resources/Curve/Fire_Attack/");
 
@@ -162,6 +165,12 @@ void CPlayer::Tick(_double TimeDelta)
 
 	NetualChecker(TimeDelta);	// 전투상태 아닐 때 체크
 	SasMgr();
+
+	// 타게팅
+	if (CGameInstance::GetInstance()->KeyDown(DIK_Q))
+	{
+		Enemy_Targeting(false);
+	}
 
 	 if (m_pPlayerCam->IsMainCamera())
 		m_pController->Tick(TimeDelta);
@@ -983,32 +992,41 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 		.Tick([&](double TimeDelta) 
 		{ 
 			m_bKineticMove = false; 
-			Search_Usable_KineticObject();
+			//Search_Usable_KineticObject();
 		})
 			.AddTransition("NO_USE_KINETIC to KINETIC_RB_START", "KINETIC_RB_START")
 			.Predicator([&]()->_bool
 			{
-				return m_bKineticRB && !m_bAir && (nullptr != m_pKineticObject) && !m_bHit;
+				return m_bKineticRB && !m_bAir && !m_bHit;
 			})
 			.Priority(0)
 
 			.AddTransition("NO_USE_KINETIC to KINETIC_RB_AIR_START", "KINETIC_RB_AIR_START")
 			.Predicator([&]()->_bool 
 			{
-				return m_bKineticRB && m_bAir && (nullptr != m_pKineticObject) && !m_bHit; 
+				return m_bKineticRB && m_bAir && !m_bHit; 
 			})
 			.Priority(0)
 
 #pragma region KineticRB
 
 		.AddState("KINETIC_RB_START")
-			.OnStart([&]() { m_pASM->InputAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Start); })
+			.OnStart([&]() 
+			{ 
+				KineticObject_Targeting();
+				Enemy_Targeting(true);
+				m_pASM->InputAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Start);
+			})
 			.Tick([&](double fTimeDelta) 
 			{ 
 				m_bKineticMove = true;
 			})
 			.AddTransition("KINETIC_RB_START to KINETIC_RB_LOOP", "KINETIC_RB_LOOP")
 			.Predicator([&]()->_bool{return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket");})
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_START to KINETIC_RB_CANCEL", "KINETIC_RB_CANCEL")
+			.Predicator([&]()->_bool{return m_pKineticObject == nullptr;})
 			.Priority(0)
 
 			.AddTransition("KINETIC_RB_START to KINETIC_RB_CANCEL", "KINETIC_RB_CANCEL")
@@ -1035,11 +1053,11 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			})
 			.OnExit([&]() {m_fKineticCharge = 0.f; })
 
-			.AddTransition("KINETIC_RB_START to KINETIC_RB_THROW_01_START", "KINETIC_RB_THROW_01_START")
+			.AddTransition("KINETIC_RB_LOOP to KINETIC_RB_THROW_01_START", "KINETIC_RB_THROW_01_START")
 			.Predicator([&]()->_bool{return m_fKineticCharge >= 1.f;})
 			.Priority(0)
 
-			.AddTransition("KINETIC_RB_START to KINETIC_RB_CANCEL", "KINETIC_RB_CANCEL")
+			.AddTransition("KINETIC_RB_LOOP to KINETIC_RB_CANCEL", "KINETIC_RB_CANCEL")
 			.Predicator([&]()->_bool{return !m_bKineticRB;})
 			.Priority(0)
 
@@ -1188,7 +1206,10 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 #pragma region KineticRB_Air
 
 		.AddState("KINETIC_RB_AIR_START")
-			.OnStart([&]() { 
+			.OnStart([&]() 
+			{
+				KineticObject_Targeting();
+				Enemy_Targeting(true);
 				m_pASM->InputAnimSocket("Kinetic_Air_AnimSocket", m_Kinetic_RB_Air_Start);
 			})
 			.Tick([&](double TimeDelta) 
@@ -1198,6 +1219,10 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 
 			.AddTransition("KINETIC_RB_AIR_START to KINETIC_RB_AIR_LOOP", "KINETIC_RB_AIR_LOOP")
 			.Predicator([&]()->_bool{return m_bKineticRB && m_pASM->isSocketAlmostFinish("Kinetic_Air_AnimSocket");})
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_AIR_START to KINETIC_RB_AIR_CANCEL", "KINETIC_RB_AIR_CANCEL")
+			.Predicator([&]()->_bool{return m_pKineticObject == nullptr;})
 			.Priority(0)
 
 			.AddTransition("KINETIC_RB_AIR_START to KINETIC_RB_AIR_CANCEL", "KINETIC_RB_AIR_CANCEL")
@@ -1389,7 +1414,12 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				m_pASM->ClearAnimSocket("Hit_AnimSocket");
 			})
 			.Tick([&](double fTimeDelta) {m_bHit = false; })
-			.OnExit([&]() { m_bSeperateAnim = false; m_bActiveGravity = true; m_bHit = true; })
+			.OnExit([&]() 
+			{ 
+				m_pASM->SetCurState("IDLE");
+				m_bSeperateAnim = false; m_bHit = true;
+				SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
 				.AddTransition("NON_HIT to AIRBORNE", "AIRBORNE")
 				.Predicator([&]()->_bool {return m_bHit && (m_DamageDesc.m_iDamageType == EAttackType::ATK_TO_AIR); })
 				.Priority(0)
@@ -1834,7 +1864,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			Search_Usable_KineticObject();
+			//Search_Usable_KineticObject();
 		})
 		.OnExit([&]()
 		{
@@ -1846,7 +1876,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			//.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_KINETIC01_CHARGE", "KINETIC_COMBO_KINETIC01_CHARGE")
-			.Predicator([&]()->_bool { return !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && !m_bAir && (nullptr != m_pKineticObject); })
+			.Predicator([&]()->_bool { return !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && !m_bAir; })
 			.Priority(0)
 
 #pragma region 슬래시 콤보 1
@@ -1856,6 +1886,9 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		{
 			m_fKineticCombo_Kinetic = 0.f;
 			m_fKineticCombo_Slash = 10.f;
+
+			KineticObject_Targeting();
+			Enemy_Targeting(true);
 
 			if (m_pTargetedEnemy)
 				m_pTransformCom->LookAt_NonY(m_pTargetedEnemy->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
@@ -1898,6 +1931,9 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		.AddState("KINETIC_COMBO_KINETIC01_CHARGE")
 		.OnStart([&]() 
 		{
+			KineticObject_Targeting();
+			Enemy_Targeting(true);
+
 			m_bKineticCombo = true;
 			m_fKineticCombo_Slash = 0.f;
 			m_fKineticCharge = 0.f;
@@ -1906,7 +1942,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			m_pKineticAnimModel->SetPlayAnimation("AS_no0000_245_AL_Pcon_cLeR_Lv1");
 			//Kinetic_Combo_MoveToKineticPoint();
 
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
+//			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -1993,6 +2029,9 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		.AddState("KINETIC_COMBO_SLASH02")
 		.OnStart([&]() 
 		{
+			KineticObject_Targeting();
+			Enemy_Targeting(true);
+
 			m_fKineticCombo_Kinetic = 0.f;
 			m_fKineticCombo_Slash = 10.f;
 
@@ -2038,6 +2077,9 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		.AddState("KINETIC_COMBO_KINETIC02_CHARGE")
 		.OnStart([&]() 
 		{
+			KineticObject_Targeting();
+			Enemy_Targeting(true);
+
 			m_bKineticCombo = true;
 			m_fKineticCombo_Slash = 0.f;
 			m_fKineticCharge = 0.f;
@@ -2046,7 +2088,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			m_pKineticAnimModel->SetPlayAnimation("AS_no0000_252_AL_Pcon_cLeR_Lv2");
 			//Kinetic_Combo_MoveToKineticPoint();
 
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
+//			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -2136,6 +2178,9 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			m_fKineticCombo_Kinetic = 0.f;
 			m_fKineticCombo_Slash = 10.f;
 
+			KineticObject_Targeting();
+			Enemy_Targeting(true);
+
 			if (m_pTargetedEnemy)
 				m_pTransformCom->LookAt_NonY(m_pTargetedEnemy->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 
@@ -2177,6 +2222,9 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		.AddState("KINETIC_COMBO_KINETIC03_CHARGE")
 		.OnStart([&]() 
 		{
+			KineticObject_Targeting();
+			Enemy_Targeting(true);
+
 			m_bKineticCombo = true;
 			m_fKineticCombo_Slash = 0.f;
 			m_fKineticCharge = 0.f;
@@ -2185,7 +2233,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			m_pKineticAnimModel->SetPlayAnimation("AS_no0000_259_AL_Pcon_cLeR_Lv3");
 			//Kinetic_Combo_MoveToKineticPoint();
 
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
+//			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -2273,6 +2321,9 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		.AddState("KINETIC_COMBO_SLASH04")
 		.OnStart([&]() 
 		{
+			KineticObject_Targeting();
+			Enemy_Targeting(true);
+
 			m_fKineticCombo_Kinetic = 0.f;
 			m_fKineticCombo_Slash = 10.f;
 
@@ -2317,6 +2368,9 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		.AddState("KINETIC_COMBO_KINETIC04_CHARGE")
 		.OnStart([&]() 
 		{
+			KineticObject_Targeting();
+			Enemy_Targeting(true);
+
 			m_bKineticCombo = true;
 			m_fKineticCombo_Slash = 0.f;
 			m_fKineticCharge = 0.f;
@@ -2325,7 +2379,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			m_pKineticAnimModel->SetPlayAnimation("AS_no0000_266_AL_Pcon_cLeR_Lv4");
 			//Kinetic_Combo_MoveToKineticPoint();
 
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
+//			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -2467,6 +2521,172 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_AttackDesc()
+{
+	m_mapCollisionEvent.emplace("ATK_A1", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATK_A2", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 100) + 100;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATK_A3", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 100) + 200;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATK_A4", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATK_A5", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 200) + 300;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATTACK_DASH_START", [this]()
+	{
+		
+	});
+	m_mapCollisionEvent.emplace("ATTACK_DASH_END", [this]()
+	{
+		
+	});
+	m_mapCollisionEvent.emplace("ATTACK_NONCHARGE", [this]()
+	{
+		
+	});
+	m_mapCollisionEvent.emplace("CHARGE_ATTACK_01", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("CHARGE_ATTACK_02", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 100) + 100;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("CHARGE_ATTACK_03", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 100) + 200;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATK_AIR1", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATK_AIR2", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATK_AIR_NONCHARGE", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATK_AIR_CHARGE_START", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATK_AIR_CHARGE_FALL", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATTACK_UPPER_START", [this]()
+	{
+		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackType = EAttackType::ATK_TO_AIR;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = (rand() % 100) + 200;
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+
+
+	m_mapCollisionEvent.emplace("AS_ch0100_207_AL_atk_justdodge", [this]()
+	{
+
+	});
+	m_mapCollisionEvent.emplace("AS_ch0100_216_AL_atk_dash1_start", [this]()
+	{
+
+	});
+	m_mapCollisionEvent.emplace("AS_ch0100_217_AL_atk_dash2_end", [this]()
+	{
+
+	});
+	m_mapCollisionEvent.emplace("AS_ch0100_218_AL_atk_dash3_end", [this]()
+	{
+
+	});
+	m_mapCollisionEvent.emplace("AS_ch0100_219_AL_atk_dash4_end", [this]()
+	{
+
+	});
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Setup_AnimSocket()
 {
 	CAnimation*	pAnimation = nullptr;
@@ -2567,7 +2787,7 @@ void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 	case ESASType::SAS_END:
 		if (szEffectName.find("Fire") != string::npos)	// Fire키워드 들어간 이펙트는 거름
 			break;
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, EffectName)->Start_Attach(this, "Eff01", true);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, EffectName)->Start_Attach(this, szBoneName);
 //		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"FlowerLeg_Fall_Rose")->Start_Attach(this, "Eff01",true);
 		// Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_mapDefaultEffect[szEffectName]);
 		// pEffect = static_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_PlayerEffect", L"ProtoVFX_EffectGroup", &Effect));
@@ -2575,7 +2795,8 @@ void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 	case ESASType::SAS_FIRE:
 		if (szEffectName.find("Fire") == string::npos)	// Fire키워드 없으면 거름
 			break;
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, EffectName)->Start_Attach(this, "Eff01");
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, EffectName)->Start_Attach(this, szBoneName);
+//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, EffectName)->Start_AttachPivot(this, m_pModel->GetPivotMatrix(), szBoneName, true);
 
 		break;
 	}
@@ -2602,171 +2823,24 @@ void CPlayer::Event_CollisionStart()
 	if (m_pASM->isSocketExactlyEmpty())
 	{
 		string szCurAttackState = m_pASM->GetCurStateName();
-		//IM_LOG(szCurAttackState.c_str());
 
-		if ("ATK_A1" == szCurAttackState)
-		{
-			m_AttackDesc.eAttackSAS = m_PlayerSasType;
-			m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-			m_AttackDesc.iDamage = (rand() % 50) + 100;
-			m_AttackDesc.pCauser = this;
-			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		}
+		const auto iter = m_mapCollisionEvent.find(szCurAttackState);
 
-		else if ("ATK_A2" == szCurAttackState)
-		{
-			m_AttackDesc.eAttackSAS = m_PlayerSasType;
-			m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-			m_AttackDesc.iDamage = (rand() % 100) + 100;
-			m_AttackDesc.pCauser = this;
-			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		}
+		if (iter == m_mapCollisionEvent.end())
+			return;
 
-		else if ("ATK_A3" == szCurAttackState)
-		{
-			m_AttackDesc.eAttackSAS = m_PlayerSasType;
-			m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-			m_AttackDesc.iDamage = (rand() % 100) + 200;
-			m_AttackDesc.pCauser = this;
-			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		}
-
-		else if ("ATK_A4" == szCurAttackState)
-		{
-			m_AttackDesc.eAttackSAS = m_PlayerSasType;
-			m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-			m_AttackDesc.iDamage = (rand() % 50) + 100;
-			m_AttackDesc.pCauser = this;
-			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		}
-
-		else if ("ATK_A5" == szCurAttackState)
-		{
-			m_AttackDesc.eAttackSAS = m_PlayerSasType;
-			m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-			m_AttackDesc.iDamage = (rand() % 200) + 300;
-			m_AttackDesc.pCauser = this;
-			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		}
-
-		else if ("ATTACK_DASH_START" == szCurAttackState)
-		{
-
-		}
-
-		else if ("ATTACK_DASH_END" == szCurAttackState)
-		{
-
-		}
-
-		else if ("ATTACK_NONCHARGE" == szCurAttackState)
-		{
-
-		}
-
-		else if ("CHARGE_ATTACK_01" == szCurAttackState)
-		{
-			m_AttackDesc.eAttackSAS = m_PlayerSasType;
-			m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
-			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-			m_AttackDesc.iDamage = (rand() % 50) + 100;
-			m_AttackDesc.pCauser = this;
-			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		}
-
-		else if ("CHARGE_ATTACK_02" == szCurAttackState)
-		{
-			m_AttackDesc.eAttackSAS = m_PlayerSasType;
-			m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
-			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-			m_AttackDesc.iDamage = (rand() % 100) + 100;
-			m_AttackDesc.pCauser = this;
-			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		}
-
-		else if ("CHARGE_ATTACK_03" == szCurAttackState)
-		{
-			m_AttackDesc.eAttackSAS = m_PlayerSasType;
-			m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
-			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-			m_AttackDesc.iDamage = (rand() % 100) + 200;
-			m_AttackDesc.pCauser = this;
-			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		}
-
-		else if ("ATK_AIR1" == szCurAttackState)
-		{
-
-		}
-
-		else if ("ATK_AIR2" == szCurAttackState)
-		{
-
-		}
-
-		else if ("ATK_AIR_NONCHARGE" == szCurAttackState)
-		{
-
-		}
-
-		else if ("ATK_AIR_CHARGE_START" == szCurAttackState)
-		{
-
-		}
-
-		else if ("ATK_AIR_CHARGE_FALL" == szCurAttackState)
-		{
-
-		}
-
-		else if ("ATTACK_UPPER_START" == szCurAttackState)
-		{
-			m_AttackDesc.eAttackSAS = m_PlayerSasType;
-			m_AttackDesc.eAttackType = EAttackType::ATK_TO_AIR;
-			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-			m_AttackDesc.iDamage = (rand() % 100) + 200;
-			m_AttackDesc.pCauser = this;
-			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		}
-		
-		else
-		{
-			int iA = 0;
-		}
+		iter->second();
 	}
 	else
 	{
 		string szCurSocketAnim = m_pASM->GetCurSocketAnimName();
 
-		if ("AS_ch0100_207_AL_atk_justdodge" == szCurSocketAnim)
-		{
+		const auto iter = m_mapCollisionEvent.find(szCurSocketAnim);
 
-		}
+		if (iter == m_mapCollisionEvent.end())
+			return;
 
-		else if ("AS_ch0100_216_AL_atk_dash1_start" == szCurSocketAnim)
-		{
-
-		}
-
-		else if ("AS_ch0100_217_AL_atk_dash2_end" == szCurSocketAnim)
-		{
-
-		}
-
-		else if ("AS_ch0100_218_AL_atk_dash3_end" == szCurSocketAnim)
-		{
-
-		}
-
-		else if ("AS_ch0100_219_AL_atk_dash4_end" == szCurSocketAnim)
-		{
-
-		}
+		iter->second();
 	}
 }
 
@@ -3224,6 +3298,105 @@ void CPlayer::Search_Usable_KineticObject()
 			}
 		}
 	}
+}
+
+void CPlayer::Enemy_Targeting(_bool bNear)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	static _uint iTargetCount = 0;
+
+	m_pTargetedEnemy = nullptr;
+
+	if (pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster") == nullptr ||
+		pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects().empty())
+	{
+		m_pTargetedEnemy = nullptr;
+	}
+	else if (bNear)	// 무조건 가까운 대상 탐색
+	{
+		_uint iSearchCount = 0;
+		for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
+		{
+			_float fDistance = 1000.f;
+
+			_vector vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+			_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+			_float fCurDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
+
+			if (fDistance > fCurDistance)
+			{
+				m_pTargetedEnemy = iter;
+				iTargetCount = iSearchCount;	// 타겟카운트 갱신
+			}
+
+			iSearchCount++;
+		}
+	}
+	else if (!bNear)
+	{
+		iTargetCount++;
+
+		list<CGameObject*> MonsterList = pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects();
+
+		if (MonsterList.size() <= iTargetCount) { iTargetCount = 0; }
+
+		_uint iSearchCount = 0;
+		for (auto& iter : MonsterList)
+		{
+			if (iSearchCount == iTargetCount)
+			{
+				m_pTargetedEnemy = iter;
+				break;
+			}
+			else
+				iSearchCount++;
+		}
+	}
+}
+
+void CPlayer::KineticObject_Targeting()
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	m_pKineticObject = nullptr;
+
+	_uint iCount = 0;
+	_uint iTest = 0;
+
+	if (pGameInstance->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject") == nullptr
+		|| pGameInstance->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects().empty())
+	{
+		m_pKineticObject = nullptr;
+	}
+	else
+	{
+		_float fDistance = 100.f;
+
+		for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects())
+		{
+			//if (false == static_cast<CMapKinetic_Object*>(iter)->Usable())
+			//	continue;
+
+			_vector vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+			_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+			_float fCurDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
+
+			if (fDistance > fCurDistance)
+			{
+				fDistance = fCurDistance;
+				m_pKineticObject = iter;
+				iTest = iCount;
+			}
+			iCount++;
+
+			IM_LOG("%d", iCount);
+		}
+	}
+
+	IM_LOG("%d", iTest);
 }
 
 void CPlayer::Spline_Kinetic(_double TimeDelta)
