@@ -189,6 +189,7 @@ void CTimeline::Imgui_RenderEditor()
 				
 			}
 		}
+		ImGui::EndListBox();
 	}
 
 	ImGui::Separator();
@@ -267,6 +268,20 @@ CCurveFloat* CTimeline::GetCurve(const string& strCurveTag)
 {
 	return CCurveManager::GetInstance()->GetCurve(strCurveTag);
 }
+
+void CTimeline::CheckCurveTime(CCurveFloat* curve)
+{
+	auto pCurve = static_cast<class CCurveFloatImpl*>(curve);
+	if ((_double)pCurve->GetMinX() < m_MinTime)
+	{
+		m_MinTime = (_double)pCurve->GetMinX();
+	}
+	if ((_double)pCurve->GetMaxX() > m_MaxTime)
+	{
+		m_MaxTime = (_double)pCurve->GetMaxX();
+	}
+}
+
 
 void CTimeline::Free()
 {
