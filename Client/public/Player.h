@@ -84,10 +84,30 @@ private:
 
 	}MOVELIMIT;
 
+	typedef struct tagSasGage
+	{
+		_float Energy;
+		_float MaxEnergy;
+		_float MinEnergy;
+
+		_float RecoveryRate;
+		_float UseRate;
+
+		_bool bUsable = false;
+
+	} SAS_GAGE;
+
 	typedef struct tagPlayerStatus
 	{
-		_uint m_iHP = 1000;
+		_uint m_iHP = 100;
+		_uint m_iMaxHP = 100;
 		_uint m_iKineticEnergy = 100;
+		_uint m_iMaxKineticEnergy = 100;
+		_uint m_iKineticEnergyLevel = 0;   // 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
+		_uint m_iKineticEnergyType = 0;      // 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
+		
+		array<SAS_GAGE, SAS_CNT> Sasese{};
+
 	}PLAYER_STAT;
 
 	typedef struct tagDamageDesc
@@ -131,6 +151,8 @@ private:
 	void CamBoneTest();	// 액션캠 예시
 
 private:
+	void			Initalize_Sas();
+	void			SasMgr();
 	PLAYER_STAT		m_PlayerStat;
 	DAMAGE_DESC		m_DamageDesc;
 	DAMAGE_PARAM	m_AttackDesc;

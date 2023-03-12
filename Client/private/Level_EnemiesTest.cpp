@@ -18,6 +18,8 @@
 #include "MapNonAnim_Object.h"
 #include "JsonStorage.h"
 #include "RigidBody.h"
+#include "Model_Instancing.h"
+#include "SkyBox.h"
 
 // Effect Setting
 #include "PostVFX_Scifi.h"
@@ -55,6 +57,7 @@
 
 #include "Boss1.h"
 #include "Boss1_AIController.h"
+#include "WaterBall.h"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -206,6 +209,8 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(pGameInstance->Add_Prototype(L"Proto_KineticObject_Table", CMapKinetic_Object::Create(m_pDevice, m_pContext)));
 
 	// ~02.28 KKB Player
+
+	// Monster
 	
 	{														// Bin\Resources\Model\AnimModel\Monster\Goat
 		auto pGoat = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/AnimModel/Monster/Goat/Goat.anim_model",
@@ -250,12 +255,20 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	}
 
 	{
-//		_float4x4	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(90.f));
 		auto pBronJon = CModel::Create(m_pDevice, m_pContext,
 			"../Bin/Resources/Model/AnimModel/Monster/BronJon/BronJon.anim_model");
 		pBronJon->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BronJon/Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBronJon"), pBronJon));
 	}
+
+	{
+		auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
+		pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
+	}
+
+	// ~Monster
 
 	{	// 이펙트 프로토타입
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
@@ -271,7 +284,9 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
 	}
-		
+	
+	// Monster Prototype
+
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("TestMonster"), CTestMonster::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("FlowerLeg"), CFlowerLeg::Create(m_pDevice, m_pContext)));		
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BuddyLumi"), CBuddyLumi::Create(m_pDevice, m_pContext)));
@@ -279,12 +294,21 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkMpBullet"), CSkMpBullet::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkummyPandou"), CSkummyPandou::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BronJon"), CBronJon::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_WaterBall"), CWaterBall::Create(m_pDevice, m_pContext)));
 
+	// Monster Controller
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FL_Controller"), CFL_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkPd_Controller"), CSkPd_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_BdLm_Controller"), CBdLm_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_BrJ_Controller"), CBrJ_Controller::Create()));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create()));
+	// ~Monster Controller
+
+	// ~Monster Prototype
+
+//	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
 	return S_OK;
 }
@@ -307,36 +331,30 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	/*if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
 		return E_FAIL;*/
 
-	Json FlowerLegModel;
-	FlowerLegModel["Model"] = "MonsterFlowerLeg";
-		
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("FlowerLeg"), &FlowerLegModel)))
-		return E_FAIL;*/
+
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLeg"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(20.f, 3.f, 6.f, 1.f));
+
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BuddyLumi"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(40.f, 3.f, 3.f, 1.f));
+
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPool"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-20.f, 3.f, -3.f, 1.f));
 	
-	Json BuddyLumiModel;
-	BuddyLumiModel["Model"] = "MonsterBuddyLumi";
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPandou"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(100.f, 3.f, 10.f, 1.f));
 
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BuddyLumi"), &BuddyLumiModel)))
-		return E_FAIL;*/
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(150.f, 3.f, 15.f, 1.f));
 
-	Json SkummyPoolModel;
-	SkummyPoolModel["Model"] = "MonsterSkummyPool";
+	/*pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_MonsterBoss1"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(200.f, 3.f, 10.f, 1.f));*/
 
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPool"), &SkummyPoolModel)))
-		return E_FAIL;*/
-
-	Json SkummyPandouModel;
-	SkummyPandouModel["Model"] = "MonsterSkummyPandou";
+	/*auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
+	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	pos.y += 1.f;
+	pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);*/
 	
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPandou"), &SkummyPandouModel)))
-		return E_FAIL;*/
-
-	Json BronJonModel;
-	BronJonModel["Model"] = "MonsterBronJon";
-
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
-		return E_FAIL;
-
 	return S_OK;
 }
 
@@ -376,7 +394,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
 	
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 	
@@ -385,7 +403,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
 
 HRESULT CLevel_EnemiesTest::Ready_Effect(const _tchar * pLayerTag)
 {
-	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	 CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	//Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
 	//pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);

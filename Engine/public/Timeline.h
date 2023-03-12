@@ -117,7 +117,7 @@ public:
 	void SetNewFrame(_double NewFrame);
 	void Reset();
 
-	void SetTimelineLength(_double TimeLength) {  }
+	void SetTimelineLength(_double TimeLength) { m_EndTime = TimeLength; }
 	_bool IsForward() const { return m_bForward; }
 
 	void Imgui_RenderEditor();
@@ -149,7 +149,6 @@ public:
 
 		auto callback = [obj, memFunc](_float f) { (obj->*memFunc)(f); };
 		m_vecFloatCurve.push_back({callback, curve});
-		CheckCurveTime(curve);
 	}
 
 	template<typename T>
@@ -181,13 +180,11 @@ public:
 
 private:
 	class CCurveFloat* GetCurve(const string& strCurveTag);
-	void CheckCurveTime(CCurveFloat* curve);
 
 public:
 	void ImGui_RenderTimelineEvent();
 private:
-	_double m_MinTime = 0.0;
-	_double m_MaxTime = 0.0;
+	_double m_EndTime = 0.0;
 	_double m_CurFrame = 0.0;
 	_bool m_bForward = true;
 	_bool m_bPlay = false;

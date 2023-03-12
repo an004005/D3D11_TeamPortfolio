@@ -182,7 +182,7 @@ void CBuddyLumi::Tick(_double TimeDelta)
 				m_pASM->InputAnimSocket("Buddy", { m_pDamage_L_B });
 		}
 
-		if (m_eAtkType == EAttackType::ATK_MIDDLE)
+		if (m_eAtkType == EAttackType::ATK_MIDDLE || m_eAtkType == EAttackType::ATK_HEAVY)
 		{
 			if (m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("Buddy", { m_pDamage_M_F });
@@ -311,8 +311,10 @@ void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_bAirStruck = true;
 		++m_iAirDamage;
 	}
-	else
+	if (m_eAtkType != EAttackType::ATK_TO_AIR)
+	{
 		m_bStruck = true;
+	}
 }
 
 void CBuddyLumi::AfterPhysX()
@@ -438,8 +440,7 @@ CGameObject * CBuddyLumi::Clone(void * pArg)
 
 void CBuddyLumi::Free()
 {
-	__super::Free();
-
+	CMonster::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);

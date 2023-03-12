@@ -3,9 +3,9 @@
 #include "Monster.h"
 
 BEGIN(Engine)
+class CFSMComponent;
 class CGameInstance;
 class CAnimation;
-class CFSMComponent;
 class CRigidBody;
 END
 

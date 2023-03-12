@@ -1,12 +1,11 @@
 #include "stdafx.h"
 #include "..\public\MapKinetic_Object.h"
 #include "GameInstance.h"
-#include "PhysXDynamicModel.h"
 #include "JsonStorage.h"
 #include "RigidBody.h"
-
 #include "Monster.h"
 #include "Player.h"
+#include "ScarletMap.h"
 
 CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
@@ -31,13 +30,22 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 	FAILED_CHECK(SetUp_Components(pArg));
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, -30.f, 0.f, 1.f));
+	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, -30.f, 0.f, 1.f));
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(180.f) });
 
-	m_pCollider->Activate(true);
-	m_pCollider->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
-	m_pCollider->Set_Kinetic(true);
-	m_pCollider->UpdateChange();
+	if (CScarletMap::s_bMapEditor == true)
+	{
+		
+	}
+	else
+	{
+		
+	}
+
+	// m_pCollider->Activate(true);
+	// m_pCollider->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
+	// m_pCollider->Set_Kinetic(true);
+	// m_pCollider->UpdateChange();
 
 	m_bUsable = true;
 
@@ -232,7 +240,6 @@ CGameObject * CMapKinetic_Object::Clone(void * pArg)
 void CMapKinetic_Object::Free()
 {
 	__super::Free();
-	Safe_Release(m_pPxModel);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pCollider);
 }

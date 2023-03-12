@@ -23,6 +23,8 @@ public:
 	void Imgui_RenderProperty() override;
 	virtual void SaveToJson(OUT Json& json) override;
 	virtual void LoadFromJson(const Json& json) override;
+
+	static _bool s_bMapEditor;
 	
 private:
 	HRESULT SetUp_Components();   

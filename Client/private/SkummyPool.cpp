@@ -15,6 +15,7 @@
 #include "FlowerLeg.h"
 #include "Player.h"
 #include "SkMpBullet.h"
+
 #include "RigidBody.h"
 
 // TODO : 소켓 작업, Turn
@@ -61,7 +62,8 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 
 		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("SkMpBullet"));
-		if (CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(pObj))
+		//if (CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(pObj))
+		if(CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(pObj))
 		{
 			pBullet->Set_Owner(this);
 
@@ -166,7 +168,7 @@ void CSkummyPool::Tick(_double TimeDelta)
 				m_pASM->InputAnimSocket("Pool", { m_pDamage_L_B });
 		}
 
-		if (m_eAtkType == EAttackType::ATK_MIDDLE)
+		if (m_eAtkType == EAttackType::ATK_MIDDLE || m_eAtkType == EAttackType::ATK_HEAVY)
 		{
 			if (m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("Pool", { m_pDamage_M_F });
@@ -269,8 +271,10 @@ void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_bAirStruck = true;
 		++m_iAirDamage;
 	}
-	else
+	if (m_eAtkType != EAttackType::ATK_TO_AIR)
+	{
 		m_bStruck = true;
+	}
 }
 
 void CSkummyPool::AfterPhysX()
@@ -311,7 +315,6 @@ CGameObject * CSkummyPool::Clone(void * pArg)
 void CSkummyPool::Free()
 {
 	CMonster::Free();
-
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);

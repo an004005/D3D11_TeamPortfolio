@@ -174,6 +174,13 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBronJon"), pBronJon));
 	}
 
+	{
+		auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
+		pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
+	}
+
 	// PJW Monster Model Anim Control Purpose
 
 	//// Goat
@@ -217,8 +224,9 @@ HRESULT CLevel_AnimModify::Ready_Layer_Camera(const _tchar* pLayerTag)
 HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-						// Model_Player
-	Json PreviewData; //	MonsterBuddyLumi	MonsterSkummyPool	MonsterFlowerLeg	MonsterSkummyPandou		MonsterBronJon
+						// Model_Player	 
+// MonsterBuddyLumi	MonsterSkummyPool MonsterFlowerLeg MonsterSkummyPandou MonsterBronJon MonsterBoss1
+	Json PreviewData; 
 	PreviewData["Model"] = "Model_Player";
 
 	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
