@@ -11,6 +11,7 @@
 #include "PlayerInfo_PsychokinesisUI.h"
 #include "PlayerInfo_PsychokinesisBackUI.h"
 #include "Canvas_PlayerInfo.h"
+#include "Player.h"
 
 CCanvas_PlayerInfoMove::CCanvas_PlayerInfoMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -43,7 +44,17 @@ HRESULT CCanvas_PlayerInfoMove::Initialize(void* pArg)
 
 void CCanvas_PlayerInfoMove::BeginTick()
 {
-
+	list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
+	
+	for (auto iter : plsGameObject)
+	{
+		if (iter->GetPrototypeTag() == L"Player")
+		{
+			m_pPlyaer = dynamic_cast<CPlayer*>(iter);
+			break;
+		}
+	}
+	
 }
 
 void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
@@ -54,6 +65,13 @@ void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 		Set_UIMove();
+
+	Set_PlayerHp(_float(m_pPlyaer->Get_PlayerStat().m_iHP), _float(m_pPlyaer->Get_PlayerStat().m_iMaxHP));
+	Set_PsychokinesisGauge(
+		PSYCHOKINESISLEVEL(m_pPlyaer->Get_PlayerStat().m_iKineticEnergyLevel),
+		PSYCHOKINESISTYPE(m_pPlyaer->Get_PlayerStat().m_iKineticEnergyType), 
+		_float(m_pPlyaer->Get_PlayerStat().m_iKineticEnergy), 
+		_float(m_pPlyaer->Get_PlayerStat().m_iMaxKineticEnergy));
 
 	RendomTexture_Tick(TimeDelta);	// 계속 Hp 가 출력할 전체 개수, 이미지를 계산한다.
 	Arrow_Move(); // 계속 화살표의 좌표를 변경한다.
@@ -77,26 +95,26 @@ void CCanvas_PlayerInfoMove::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	// UITEST
-	static _float fHp;
-	ImGui::InputFloat("Hp", &fHp);
-	static _float fMaxHp;
-	ImGui::InputFloat("MaxHp", &fMaxHp);
+	//// UITEST
+	//static _float fHp;
+	//ImGui::InputFloat("Hp", &fHp);
+	//static _float fMaxHp;
+	//ImGui::InputFloat("MaxHp", &fMaxHp);
 
-	if (ImGui::Button("Save Hp"))
-	{
-		Set_PlayerHp(fHp, fMaxHp);
-	}
+	//if (ImGui::Button("Save Hp"))
+	//{
+	//	Set_PlayerHp(fHp, fMaxHp);
+	//}
 
-	static _float fGauge;
-	ImGui::InputFloat("Gauge", &fGauge);
-	static _float fMaxGauge;
-	ImGui::InputFloat("MaxGauge", &fMaxGauge);
+	//static _float fGauge;
+	//ImGui::InputFloat("Gauge", &fGauge);
+	//static _float fMaxGauge;
+	//ImGui::InputFloat("MaxGauge", &fMaxGauge);
 
-	if (ImGui::Button("Set Gauge"))
-	{
-		Set_PsychokinesisGauge(LEVEL_ONE, DRIVE_TYPE, fGauge, fMaxGauge);
-	}
+	//if (ImGui::Button("Set Gauge"))
+	//{
+	//	Set_PsychokinesisGauge(LEVEL_ONE, DRIVE_TYPE, fGauge, fMaxGauge);
+	//}
 }
 
 void CCanvas_PlayerInfoMove::SaveToJson(Json& json)

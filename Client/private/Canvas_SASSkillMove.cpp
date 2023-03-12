@@ -47,7 +47,6 @@ HRESULT CCanvas_SASSkillMove::Initialize(void* pArg)
 	Find_ChildUI(L"SASSKill_SuperPower3")->SetVisible(false);
 	Find_ChildUI(L"SASSKill_SuperPower4")->SetVisible(false);
 
-
 	return S_OK;
 }
 

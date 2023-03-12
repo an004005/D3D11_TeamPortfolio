@@ -232,18 +232,18 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 			return E_FAIL;
 	}
 
-	///* For.Prototype_GameObject_MonsterLockonUI */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),
-	//	CMonsterLockonUI::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	///* For.Prototype_GameObject_MonsterHpUI */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterHpUI"),
-	//	CMonsterHpUI::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	///* For.Prototype_GameObject_MonsterShildUI */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterShildUI"),
-	//	CMonsterShildUI::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	/* For.Prototype_GameObject_MonsterLockonUI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),
+		CMonsterLockonUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_MonsterHpUI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterHpUI"),
+		CMonsterHpUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_MonsterShildUI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterShildUI"),
+		CMonsterShildUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 	// ~ ¿Á¼öÇöÀÇ ÈçÀû
 
 	return S_OK;

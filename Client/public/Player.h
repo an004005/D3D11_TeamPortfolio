@@ -87,7 +87,11 @@ private:
 	typedef struct tagPlayerStatus
 	{
 		_uint m_iHP = 100;
+		_uint m_iMaxHP = 100;
 		_uint m_iKineticEnergy = 100;
+		_uint m_iMaxKineticEnergy = 100;
+		_uint m_iKineticEnergyLevel = 0;	// 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
+		_uint m_iKineticEnergyType = 0;		// 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
 	}PLAYER_STAT;
 
 	typedef struct tagDamageDesc
@@ -114,6 +118,10 @@ public:
 	virtual _float4x4 GetPivotMatrix() override;
 	//~For Effect
 
+	//~For UI
+	PLAYER_STAT	Get_PlayerStat() { return m_PlayerStat; }
+	ESASType	Get_PlayerSasType() { return m_PlayerSasType; }
+	//~For UI
 
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);

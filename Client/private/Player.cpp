@@ -103,7 +103,11 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	ZeroMemory(&m_PlayerStat, sizeof(PLAYER_STAT));
 	m_PlayerStat.m_iHP = 1000;
+	m_PlayerStat.m_iMaxHP = 1000;
 	m_PlayerStat.m_iKineticEnergy = 100;
+	m_PlayerStat.m_iMaxKineticEnergy = 100;
+	m_PlayerStat.m_iKineticEnergyLevel = 0;
+	m_PlayerStat.m_iKineticEnergyType = 2;
 	ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
@@ -233,6 +237,16 @@ void CPlayer::Tick(_double TimeDelta)
 		SasDamage.push_back(m_pModel->Find_Animation("AS_ch0100_410_AL_damage_sas"));
 		m_pASM->InputAnimSocket("Common_AnimSocket", SasDamage);
 		m_PlayerSasType = ESASType::SAS_FIRE;
+	}
+	if (pGameInstance->KeyDown(DIK_3))
+	{
+
+		m_PlayerSasType = ESASType::SAS_END;
+	}
+	if (pGameInstance->KeyDown(DIK_4))
+	{
+
+		m_PlayerSasType = ESASType::SAS_END;
 	}
 
 	if (pGameInstance->KeyDown(DIK_K))
