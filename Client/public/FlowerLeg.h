@@ -3,13 +3,10 @@
 #include "Monster.h"
 
 BEGIN(Engine)
-class CShader;
-class CRenderer;
-class CModel;
 class CFSMComponent;
+class CGameInstance;
 class CAnimation;
 class CRigidBody;
-class CGameInstance;
 END
 
 BEGIN(Client)
@@ -40,6 +37,8 @@ public:
 	void	Kick_SweepSphere();
 
 	_matrix AttachCollider(CRigidBody* pRigidBody);
+
+	void HitDir(_double TimeDelta);
 
 	CRigidBody* Get_TailCol() { return m_pTailCol; }
 
@@ -118,7 +117,7 @@ private:
 	_bool m_bOneHit = false;
 	list<CScarletCharacter*> m_CollisionList;
 
-	// Damage
+	// Damaged
 	_bool		m_bStruck = false;
 	_bool		m_bAirStruck = false;
 
@@ -129,9 +128,19 @@ private:
 	_uint		m_iAirDamage = 0;
 	_uint		m_iPreAirDamageCnt = 0;
 	
+	// HitDir
+	_bool		m_bHitMove = false;
+	
+	_vector		m_vPreDir;
+	_vector		m_vCurDir;
+	_vector		m_vFinDir;
+	_bool		m_bOneTick = false;
+	// ~HitDir
+
+	// TakeDamage 
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
-
+	// ~TakeDamage 
 public:
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }

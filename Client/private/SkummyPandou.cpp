@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "SkummyPandou.h"
+#include <random>
+
 #include "GameInstance.h"
 #include "MathUtils.h"
 #include "GameUtils.h"
@@ -51,7 +53,6 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Proto_SkPd_Controller"), TEXT("Com_Controller"), (CComponent**)&m_pController));
 
 	// Event Caller
-
 	m_pModelCom->Add_EventCaller("Rush_Start", [this]
 	{
 		// Effect 생성
@@ -72,17 +73,15 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 	});
 	m_pModelCom->Add_EventCaller("Successive", [this]
 	{
-		m_fGravity = 36.f;
-		m_fYSpeed = 11.f;
+		m_fGravity = 33.f;
+		m_fYSpeed = 13.f;
 	});
-
+	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 	// ~Event Caller
 
-	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(2.f, 0.f, 32.f)));
-
+	m_iHP = 2700; // ★
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
-
-	//	m_fGravity = 평소엔 0으로 잡아주고, 피격시 중력값을 올려서 떨어트려준다.
+	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 	m_bActiveGravity = false;
 
 	m_pASM = CSkPd_AnimInstance::Create(m_pModelCom, this);
@@ -117,8 +116,6 @@ void CSkummyPandou::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("Bee", { m_pModelCom->Find_Animation("AS_em0700_160_AL_threat") });
-
-	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(2.f, 0.f, 32.f)));
 }
 
 void CSkummyPandou::Tick(_double TimeDelta)
@@ -133,7 +130,6 @@ void CSkummyPandou::Tick(_double TimeDelta)
 
 	// Controller
 	m_pController->SetTarget(m_pTarget);
-//	m_pController->SetUseObj(this);
 
 	m_pController->Tick(TimeDelta);
 	m_bRush = m_pController->IsRush();
@@ -151,17 +147,12 @@ void CSkummyPandou::Tick(_double TimeDelta)
 	{
 		if (m_pASM->CheckSocketAnim("Bee", "AS_em0700_427_AL_getup"))
 		{
-			if (m_pASM->isSocketPassby("Bee", 0.85f))
+			if (m_pASM->isSocketPassby("Bee", 0.75f))
 				m_bActiveGravity = false;
-		}
-		else
-		{
-			_uint iA = 0;
-		}
+		}		
 	}
 
 	_bool bOnfloor = IsOnFloor();
-
 	// Socket
 
 	if (m_pController->KeyDown(CController::MOUSE_LB))
@@ -171,14 +162,14 @@ void CSkummyPandou::Tick(_double TimeDelta)
 
 	if (m_pController->KeyDown(CController::R))
 	{
-		m_pASM->AttachAnimSocket("Bee", { m_pAtk_RushLoop, m_pAtk_RushLoop, m_pAtk_RushLoop, m_pAtk_RushLoop });
+		m_pASM->AttachAnimSocket("Bee", { m_pAtk_RushLoop, m_pAtk_RushLoop, m_pAtk_RushLoop, m_pAtk_RushEnd });
 	}
 
-	if (m_pController->KeyDown(CController::C))
+	/*if (m_pController->KeyDown(CController::C))
 	{
 		m_pASM->AttachAnimSocket("Bee", { m_pAtk_RushEnd });
 		m_bOneHit = false;
-	}
+	}*/
 
 	if (m_pController->KeyDown(CController::G))
 	{
@@ -195,13 +186,19 @@ void CSkummyPandou::Tick(_double TimeDelta)
 		if (m_eAtkType == EAttackType::ATK_LIGHT)
 		{
 			if (m_eHitDir == EBaseAxis::NORTH)
+			{
 				m_pASM->InputAnimSocket("Bee", { m_pDamage_L_F });
+				m_bHitMove = true;
+			}
 
 			else
+			{
 				m_pASM->InputAnimSocket("Bee", { m_pDamage_L_B });
+				m_bHitMove = true;
+			}
 		}
 
-		if (m_eAtkType == EAttackType::ATK_MIDDLE)
+		if (m_eAtkType == EAttackType::ATK_MIDDLE || m_eAtkType == EAttackType::ATK_HEAVY)
 		{
 			if (m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("Bee", { m_pDamage_M_F });
@@ -219,6 +216,7 @@ void CSkummyPandou::Tick(_double TimeDelta)
 
 	if (m_bAirStruck || m_pController->KeyDown(CController::NUM_3))
 	{
+		m_bHitMove = false;
 		m_bOneHit = false;
 		m_bAirStruck = false;
 		m_pController->ClearCommands();
@@ -270,11 +268,21 @@ void CSkummyPandou::Tick(_double TimeDelta)
 		fMoveSpeed = 2.5f;
 
 	m_vMoveAxis.Normalize();
+	
+	if (!m_bHitMove)
+	{
+		const _float fYaw = m_pTransformCom->GetYaw_Radian();
+		_float3 vVelocity;
+		XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
+		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+		m_bOneTick = false;
 
-	const _float fYaw = m_pTransformCom->GetYaw_Radian();
-	_float3 vVelocity;
-	XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
-	m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+		m_vPreDir = { 0.f, 0.f, 0.f, 0.f };
+		m_vCurDir = { 0.f, 0.f, 0.f, 0.f };
+		m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
+	}
+	else
+		HitDir(TimeDelta);
 }
 
 void CSkummyPandou::Late_Tick(_double TimeDelta)
@@ -288,7 +296,6 @@ void CSkummyPandou::Late_Tick(_double TimeDelta)
 HRESULT CSkummyPandou::Render()
 {
 	m_pModelCom->Render(m_pTransformCom);
-
 	return S_OK;
 }
 
@@ -304,15 +311,24 @@ void CSkummyPandou::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eHitDir = eHitFrom;
 	
 	m_eAtkType = tDamageParams.eAttackType;
-		
+	m_iHP -= tDamageParams.iDamage;
+
 	if (m_eAtkType == EAttackType::ATK_TO_AIR)
 	{		
 		m_bAirStruck = true;
 		++m_iAirDamage;
 	}
 
-	else
+	if(m_eAtkType != EAttackType::ATK_TO_AIR || m_eAtkType != EAttackType::ATK_END)
 		m_bStruck = true;
+
+	if (m_iHP <= 0)
+	{
+		m_pController->ClearCommands();
+		m_DeathTimeline.PlayFromStart();
+		m_pASM->InputAnimSocket("Bee", { m_pDeadAnim });
+		m_bDead = true;
+	}
 }
 
 void CSkummyPandou::AfterPhysX()
@@ -387,7 +403,8 @@ void CSkummyPandou::RushSweep(_bool bCol)
 					tParam.vHitNormal = _float3(pHit.normal.x, pHit.normal.y, pHit.normal.z);
 					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					tParam.iDamage = 1;
+					tParam.iDamage = (rand() % 60) + 35;
+					tParam.eAttackType = EAttackType::ATK_HEAVY;
 
 					pTargetCol->TakeDamage(tParam);
 					// 러쉬 공격시에만 데미지 전달
@@ -399,6 +416,38 @@ void CSkummyPandou::RushSweep(_bool bCol)
 	}
 
 	m_BeforePos = vWeaponPos;
+}
+
+void CSkummyPandou::HitDir(_double TimeDelta)
+{
+	// 몸의 중점을 잡는 뼈
+	_matrix matRef = m_pModelCom->GetBoneMatrix("Reference") * m_pTransformCom->Get_WorldMatrix();
+	_vector vRef = matRef.r[3];
+
+	// 밀려나는 거리만큼의 뼈
+	_matrix matWeak = m_pModelCom->GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
+	_vector vWeak = matWeak.r[3];
+
+	// 현재 위치
+	_vector	vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	if (!m_bOneTick)
+		m_vPreDir = vPosition;
+
+	// 방향
+	_vector vDest = vRef - vWeak;
+
+	m_vCurDir = vDest;
+
+	if (m_bOneTick)
+		m_vFinDir = m_vCurDir - m_vPreDir;
+
+	_float fRange = XMVectorGetX(m_vFinDir);
+
+	m_pTransformCom->LocalMove(m_vFinDir);
+
+	m_vPreDir = m_vCurDir;
+
+	m_bOneTick = true;
 }
 
 _bool CSkummyPandou::IsPlayingSocket() const
@@ -432,8 +481,7 @@ CGameObject * CSkummyPandou::Clone(void * pArg)
 
 void CSkummyPandou::Free()
 {
-	__super::Free();
-
+	CMonster::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);

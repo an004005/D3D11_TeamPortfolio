@@ -36,28 +36,6 @@ HRESULT CImgui_EffectBrowser::Initialize(void* pArg)
 
 void CImgui_EffectBrowser::Imgui_RenderWindow()
 {
-	
-
-
-	{
-		char EffectGroupTag[MAX_PATH];
-		strcpy(EffectGroupTag, m_EffectGroupTag.c_str());
-		ImGui::InputText("EffectGroup Tag", EffectGroupTag, MAX_PATH);
-		m_EffectGroupTag = EffectGroupTag;
-		if (ImGui::Button("Add New EffectGroup"))
-		{
-			Json EffectJson = CJsonStorage::GetInstance()->FindOrLoadJson(m_EffectGroupTag);
-			if (EffectJson.empty())
-				MSG_BOX("Failed to Add New EffectGroup");
-			else
-			{
-				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup"), &EffectJson);
-			}
-		}
-	}
-
-	ImGui::Separator();
-	ImGui::Separator();
 	{
 		char EffectSystemTag[MAX_PATH];
 		strcpy(EffectSystemTag, m_EffectSystemTag.c_str());
@@ -72,6 +50,25 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 			else
 			{
 				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_EffectSystem", TEXT("ProtoVFX_EffectSystem"), &EffectJson);
+			}
+		}
+	}
+
+	ImGui::Separator();
+	ImGui::Separator();
+	{
+		char EffectGroupTag[MAX_PATH];
+		strcpy(EffectGroupTag, m_EffectGroupTag.c_str());
+		ImGui::InputText("EffectGroup Tag", EffectGroupTag, MAX_PATH);
+		m_EffectGroupTag = EffectGroupTag;
+		if (ImGui::Button("Add New EffectGroup"))
+		{
+			Json EffectJson = CJsonStorage::GetInstance()->FindOrLoadJson(m_EffectGroupTag);
+			if (EffectJson.empty())
+				MSG_BOX("Failed to Add New EffectGroup");
+			else
+			{
+				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup"), &EffectJson);
 			}
 		}
 	}
@@ -117,9 +114,11 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 			}
 		}
 	}
+	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::Separator();
+	ImGui::NewLine();
 
-	ImGui::Separator();
-	ImGui::Separator();
 	if (ImGui::CollapsingHeader("Effect Viewer"))
 	{
 		if (ImGui::Button("Refresh_Effect Folder"))
@@ -168,23 +167,30 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 		}
 	}
 
+	ImGui::NewLine();
 	ImGui::Separator();
 	ImGui::Separator();
-
+	ImGui::NewLine();
 
 	if (ImGui::Button("Add Sample EffectSystem"))
 	{
 		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_EffectSys", TEXT("ProtoVFX_EffectSystem")));
 	}
-	else if ( ImGui::Button("Add Sample EffectGroup"))
+	ImGui::SameLine();
+	if ( ImGui::Button("Add Sample EffectGroup"))
 	{
 		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup")));
 	}
-	else if( ImGui::Button("Add Sample ParticleSystem"))
+	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::Separator();
+	ImGui::NewLine();
+	if( ImGui::Button("Add Sample ParticleSystem"))
 	{
 		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_ParticleSystem", TEXT("ProtoVFX_ParticleSystem")));
 	}
-	else if (ImGui::Button("Add Sample ParticleGroup"))
+	ImGui::SameLine();
+	if (ImGui::Button("Add Sample ParticleGroup"))
 	{
 		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_ParticleGroup", TEXT("ProtoVFX_ParticleGroup")));
 	}
@@ -197,10 +203,9 @@ void CImgui_EffectBrowser::LoadEffects(const char* pEffectDir)
 
 	CGameUtils::ListFiles(pEffectDir, [this](const string& pEffectPath)
 	{
-		Json jsonEffect = CJsonStorage::GetInstance()->FindOrLoadJson(pEffectPath);
-		auto pEffectGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect));
-		m_mapEffectGroup.emplace(pEffectGroup->GetObjectTag(), pEffectPath);
-		pEffectGroup->SetDelete();
+		string FileName = CGameUtils::GetFileName(pEffectPath);
+
+		m_mapEffectGroup.emplace(FileName, pEffectPath);
 	});
 }
 

@@ -3,9 +3,9 @@
 #include "Monster.h"
 
 BEGIN(Engine)
+class CFSMComponent;
 class CGameInstance;
 class CAnimation;
-class CFSMComponent;
 class CRigidBody;
 END
 
@@ -13,9 +13,6 @@ BEGIN(Client)
 
 class CSkummyPool : public CMonster
 {
-//public:
-//	enum HITAXISTYPE { HAS_FL, HAS_BL, HAS_LL, HAS_RL, HAS_FM, HAS_BM, HAS_LM, HAS_RM, HAS_END };
-
 private:
 	CSkummyPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CSkummyPool(const CSkummyPool& rhs);
@@ -31,6 +28,8 @@ public:
 	virtual void Imgui_RenderProperty() override;
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 	virtual void AfterPhysX();
+
+	void HitDir(_double TimeDelta);
 
 private:
 	class CSkmP_Controller*		m_pController = nullptr;
@@ -68,10 +67,17 @@ private:
 	_uint		m_iAirDamage = 0;
 	_uint		m_iPreAirDamageCnt = 0;
 
+	// HitDir
+	_bool		m_bHitMove = false;
+
+	_vector		m_vPreDir;
+	_vector		m_vCurDir;
+	_vector		m_vFinDir;
+	_bool		m_bOneTick = false;
+
+	// TakeDamage
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
-	
-//	HITAXISTYPE	m_Haxistype = HAS_END;
 
 private:
 	_bool			m_bCreateBullet = false;

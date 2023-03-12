@@ -15,6 +15,7 @@
 #include "FlowerLeg.h"
 #include "Player.h"
 #include "SkMpBullet.h"
+
 #include "RigidBody.h"
 
 // TODO : 소켓 작업, Turn
@@ -61,7 +62,8 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 
 		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("SkMpBullet"));
-		if (CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(pObj))
+		//if (CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(pObj))
+		if(CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(pObj))
 		{
 			pBullet->Set_Owner(this);
 
@@ -83,14 +85,15 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 	});
 	m_pModelCom->Add_EventCaller("Successive", [this]
 	{
-		m_fGravity = 36.f;
-		m_fYSpeed = 11.f;
+		m_fGravity = 34.f;
+		m_fYSpeed = 13.f;
 	});
-
+	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 	// ~Event Caller
-	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 25.f)));
 	
+	m_iHP = 700; // ★
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
+	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
 	m_pASM = CSkmP_AnimInstance::Create(m_pModelCom, this);
 
@@ -120,8 +123,6 @@ void CSkummyPool::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("Pool", { m_pModelCom->Find_Animation("AS_em0600_160_AL_threat") });
-
-	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 25.f)));
 }
 
 void CSkummyPool::Tick(_double TimeDelta)
@@ -152,7 +153,7 @@ void CSkummyPool::Tick(_double TimeDelta)
 		m_pASM->AttachAnimSocket("Pool", { m_pThreat });
 	}
 
-	if (m_bStruck || m_pController->KeyDown(CController::Q))
+	if (!m_bAirStruck && m_bStruck || m_pController->KeyDown(CController::Q))
 	{
 		m_bStruck = false;
 		m_pController->ClearCommands();
@@ -160,13 +161,19 @@ void CSkummyPool::Tick(_double TimeDelta)
 		if (m_eAtkType == EAttackType::ATK_LIGHT)
 		{
 			if (m_eHitDir == EBaseAxis::NORTH)
+			{
 				m_pASM->InputAnimSocket("Pool", { m_pDamage_L_F });
+				m_bHitMove = true;
+			}
 
 			else
+			{
 				m_pASM->InputAnimSocket("Pool", { m_pDamage_L_B });
+				m_bHitMove = true;
+			}
 		}
 
-		if (m_eAtkType == EAttackType::ATK_MIDDLE)
+		if (m_eAtkType == EAttackType::ATK_MIDDLE || m_eAtkType == EAttackType::ATK_HEAVY)
 		{
 			if (m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("Pool", { m_pDamage_M_F });
@@ -182,8 +189,9 @@ void CSkummyPool::Tick(_double TimeDelta)
 		}
 	}
 
-	if (m_bAirStruck || m_pController->KeyDown(CController::X))
+	if (!m_bStruck && m_bAirStruck || m_pController->KeyDown(CController::X))
 	{
+		m_bHitMove = false;
 		m_bAirStruck = false;
 		m_pController->ClearCommands();
 		// 추가타 X
@@ -228,10 +236,20 @@ void CSkummyPool::Tick(_double TimeDelta)
 	_float fMoveSpeed = 1.f;
 	m_vMoveAxis.Normalize();
 
-	const _float fYaw = m_pTransformCom->GetYaw_Radian();
-	_float3 vVelocity;
-	XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
-	m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+	if (!m_bHitMove)
+	{
+		const _float fYaw = m_pTransformCom->GetYaw_Radian();
+		_float3 vVelocity;
+		XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
+		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+		m_bOneTick = false;
+
+		m_vPreDir = { 0.f, 0.f, 0.f, 0.f };
+		m_vCurDir = { 0.f, 0.f, 0.f, 0.f };
+		m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
+	}
+	else
+		HitDir(TimeDelta);
 }
 
 void CSkummyPool::Late_Tick(_double TimeDelta)
@@ -245,7 +263,6 @@ void CSkummyPool::Late_Tick(_double TimeDelta)
 HRESULT CSkummyPool::Render()
 {
 	m_pModelCom->Render(m_pTransformCom);
-
 	return S_OK;
 }
 
@@ -262,6 +279,7 @@ void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eHitDir = eHitFrom;
 	
 	m_eAtkType = tDamageParams.eAttackType;
+	m_iHP -= tDamageParams.iDamage;
 	
 	if (m_eAtkType == EAttackType::ATK_TO_AIR)
 	{
@@ -269,14 +287,54 @@ void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_bAirStruck = true;
 		++m_iAirDamage;
 	}
-	else
+	if (m_eAtkType != EAttackType::ATK_TO_AIR)	
 		m_bStruck = true;
+	
+	if (m_iHP <= 0)
+	{
+		m_pController->ClearCommands();
+		m_DeathTimeline.PlayFromStart();
+		m_pASM->InputAnimSocket("Pool", { m_pDeadAnim });
+		m_bDead = true;
+	}
 }
 
 void CSkummyPool::AfterPhysX()
 {
 	__super::AfterPhysX();
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
+}
+
+void CSkummyPool::HitDir(_double TimeDelta)
+{
+	// 몸의 중점을 잡는 뼈
+	_matrix matRef = m_pModelCom->GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
+	_vector vRef = matRef.r[3];
+
+	// 밀려나는 거리만큼의 뼈
+	_matrix matWeak = m_pModelCom->GetBoneMatrix("Tail_F") * m_pTransformCom->Get_WorldMatrix();
+	_vector vWeak = matWeak.r[3];
+
+	// 현재 위치
+	_vector	vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	if (!m_bOneTick)
+		m_vPreDir = vPosition;
+
+	// 방향
+	_vector vDest = vRef - vWeak;
+
+	m_vCurDir = vDest;
+
+	if (m_bOneTick)
+		m_vFinDir = m_vCurDir - m_vPreDir;
+
+	_float fRange = XMVectorGetX(m_vFinDir);
+
+	m_pTransformCom->LocalMove(m_vFinDir);
+
+	m_vPreDir = m_vCurDir;
+
+	m_bOneTick = true;
 }
 
 _bool CSkummyPool::IsPlayingSocket() const
@@ -311,7 +369,6 @@ CGameObject * CSkummyPool::Clone(void * pArg)
 void CSkummyPool::Free()
 {
 	CMonster::Free();
-
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);

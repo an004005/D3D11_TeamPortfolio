@@ -37,13 +37,13 @@ HRESULT CVIBuffer_Line::Initialize_Prototype()
 	m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	m_BufferDesc.MiscFlags = 0;
 
-	vector<VTXLINE> tmp;
-	tmp.resize(1000);
-	ZeroMemory(tmp.data(), sizeof(VTXLINE));
+	VTXLINE vtxLine;
+	ZeroMemory(&vtxLine, sizeof(VTXLINE));
+
+	vector<VTXLINE> tmp(1000, vtxLine);
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
 	m_SubResourceData.pSysMem = tmp.data();
-
 	if (FAILED(__super::Create_VertexBuffer()))
 		return E_FAIL;
 #pragma endregion

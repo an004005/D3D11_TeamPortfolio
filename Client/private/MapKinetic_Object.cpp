@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "..\public\MapKinetic_Object.h"
 #include "GameInstance.h"
-#include "PhysXDynamicModel.h"
 #include "JsonStorage.h"
 #include "RigidBody.h"
-
 #include "Monster.h"
 #include "Player.h"
+#include "ScarletMap.h"
+#include "ImguiUtils.h"
 
 CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
@@ -29,15 +29,33 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	if (pArg)
+	{
+		Json& json = *static_cast<Json*>(pArg);
+		if (json.contains("InitPos"))
+		{
+			_float4 InitPos = json["InitPos"];
+			_float4x4 WorldMatrix = XMMatrixTranslationFromVector(InitPos);
+			CTransform::ModifyTransformJson(json, WorldMatrix);
+			// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&InitPos));
+		}
+	}
+
 	FAILED_CHECK(SetUp_Components(pArg));
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, -30.f, 0.f, 1.f));
+	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, -30.f, 0.f, 1.f));
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(180.f) });
 
-	m_pCollider->Activate(true);
-	m_pCollider->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
-	m_pCollider->Set_Kinetic(true);
-	m_pCollider->UpdateChange();
+	if (CScarletMap::s_bMapEditor == true)
+	{
+		m_pCollider->Set_Kinetic(true);
+		m_pCollider->UpdateChange();
+	}
+
+	// m_pCollider->Activate(true);
+	// m_pCollider->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
+	// m_pCollider->Set_Kinetic(true);
+	// m_pCollider->UpdateChange();
 
 	m_bUsable = true;
 
@@ -72,15 +90,6 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 		}
 	});
 
-	if (pArg)
-	{
-		Json& json = *static_cast<Json*>(pArg);
-		if (json.contains("InitPos"))
-		{
-			_float4 InitPos = json["InitPos"];
-			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&InitPos));
-		}
-	}
 
 	return S_OK;
 }
@@ -93,8 +102,6 @@ void CMapKinetic_Object::BeginTick()
 void CMapKinetic_Object::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-
-	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	m_pCollider->Update_Tick(m_pTransformCom);
 }
@@ -115,7 +122,9 @@ HRESULT CMapKinetic_Object::Render()
 
 	FAILED_CHECK(__super::Render());
 
-	FAILED_CHECK(m_pModelCom->Render(m_pTransformCom));
+	const _matrix WorldMatrix = m_LocalMatrix * m_pTransformCom->Get_WorldMatrix();
+
+	FAILED_CHECK(m_pModelCom->Render(WorldMatrix));
 
 	return S_OK;
 }
@@ -124,17 +133,44 @@ void CMapKinetic_Object::LoadFromJson(const Json & json)
 {
 	__super::LoadFromJson(json);
 	m_strModelTag = s2ws(json["ModelTag"]);
+	if (json.contains("KineticType"))
+		m_eType = json["KineticType"];
+	if (json.contains("LocalMatrix"))
+		m_LocalMatrix = json["LocalMatrix"];
 }
 
 void CMapKinetic_Object::SaveToJson(Json & json)
 {
 	__super::SaveToJson(json);
 	json["ModelTag"] = ws2s(m_strModelTag);
+	json["KineticType"] = m_eType;
+	json["LocalMatrix"] = m_LocalMatrix;
 }
 
 void CMapKinetic_Object::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	static array<const char*, KT_END> arrTypeName {
+		"Normal"
+	};
+	if (ImGui::BeginCombo("KineticType", arrTypeName[m_eType]))
+	{
+		for (int i = 0; i < KT_END; ++i)
+		{
+			const bool bSelected = false;
+			if (ImGui::Selectable(arrTypeName[i], bSelected))
+				m_eType = static_cast<EKineticType>(i);
+		}
+		ImGui::EndCombo();
+	}
+
+	if (ImGui::CollapsingHeader("Local Matrix Edit"))
+	{
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&m_LocalMatrix, tInfo, true, true);
+	}
+
 
 	if (ImGui::Button("Kinetic Object Reset"))
 	{
@@ -171,35 +207,12 @@ void CMapKinetic_Object::Reset_Transform()
 	m_pCollider->UpdateChange();
 }
 
-wstring CMapKinetic_Object::MakePxModelProtoTag()
-{
-	_tchar szDriveName[MAX_PATH]{};
-	_tchar szDirName[MAX_PATH]{};
-	_tchar szFileName[MAX_PATH]{};
-	_tchar szExtName[MAX_PATH]{};
-	_wsplitpath_s(m_strModelTag.c_str(), szDriveName, MAX_PATH, szDirName, MAX_PATH, szFileName, MAX_PATH, szExtName, MAX_PATH);
-
-	wstring PxModelTag = szDriveName;
-	PxModelTag += szDirName;
-
-	const wstring strFileName = wstring(L"PhysX_") + szFileName;
-	PxModelTag += strFileName;
-	PxModelTag += szExtName;
-
-	return PxModelTag;
-}
-
 HRESULT CMapKinetic_Object::SetUp_Components(void* pArg)
 {
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_strModelTag.c_str(), TEXT("Com_Model"),
 		(CComponent**)&m_pModelCom));
 
 	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"Collider", (CComponent**)&m_pCollider, pArg));
-
-	// todo : 임시로 모든 CMapNonAnim_Object 에 PxModel을 가지도록 설정 추후 수정 바람
-	//FAILED_CHECK(__super::Add_Component(LEVEL_NOW, PxModelTag.c_str(), TEXT("Com_PxModel"),
-	//	(CComponent**)&m_pPxModel));
-
 	return S_OK;
 }
 
@@ -232,7 +245,6 @@ CGameObject * CMapKinetic_Object::Clone(void * pArg)
 void CMapKinetic_Object::Free()
 {
 	__super::Free();
-	Safe_Release(m_pPxModel);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pCollider);
 }

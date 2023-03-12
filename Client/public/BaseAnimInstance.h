@@ -28,6 +28,7 @@ public:
 	_bool			isSocketExactlyEmpty();	// 모든 소켓이 비어있는지?
 	void			ClearAnimSocket(const string& strSocName = "");
 
+	void			SetCurState(const string& szStateName) { m_pASM_Base->SetCurState(szStateName); }
 
 protected:
 	void			SpairAnimationChecker();

@@ -156,10 +156,10 @@ void CFL_Controller::Tick_Mid(_double TimeDelta)
 	switch (m_iMidOrder)
 	{
 	case 0:
-		AddCommand("WalkTurn", 1.3f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		AddCommand("WalkTurn", 1.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	case 1:
-		AddCommand("Run", 2.8f, &CFL_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		AddCommand("Run", 4.f, &CFL_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	}
 	m_iMidOrder = (m_iMidOrder + 1) % 2;
@@ -210,11 +210,10 @@ void CFL_Controller::Run(EMoveAxis eAxis)
 	{
 	case EMoveAxis::NORTH:
 		m_vMoveAxis.z += 1.f;
-		if (abs(m_fTtoM_Distance) < 1.3f)
+		if (abs(m_fTtoM_Distance) < 3.f)
 		{
 			m_Commands.front().SetFinish();
 		}
-		break;
 	case EMoveAxis::NORTH_EAST:
 		m_vMoveAxis.z += 1.f;
 		m_vMoveAxis.x += 1.f;

@@ -9,6 +9,9 @@
 #include "PhysX_Manager.h"
 #include "PhysXStaticModel.h"
 
+
+_bool CScarletMap::s_bMapEditor = false;
+
 CScarletMap::CScarletMap(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
 {
@@ -61,6 +64,7 @@ HRESULT CScarletMap::Render()
 
 void CScarletMap::Imgui_RenderProperty()
 {
+	s_bMapEditor = true;
 	static _bool	bImPlay = false;
 	ImGui::Checkbox("Open MapTool", &bImPlay);
 

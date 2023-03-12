@@ -194,6 +194,7 @@
     <ClInclude Include="..\public\BronJon.h" />
     <ClInclude Include="..\public\Boss1.h" />
     <ClInclude Include="..\public\Boss1_AnimationInstance.h" />
+    <ClInclude Include="..\public\Bullet.h" />
     <ClInclude Include="..\public\ButtonUI.h" />
     <ClInclude Include="..\public\BdLm_AnimInstance.h" />
     <ClInclude Include="..\public\BuddyLumi.h" />
@@ -230,6 +231,7 @@
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
     <ClInclude Include="..\public\Boss_HpUI.h" />
@@ -324,6 +326,7 @@
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
+    <ClInclude Include="..\public\WaterBall.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -346,6 +349,7 @@
     <ClCompile Include="..\private\BronJon.cpp" />
     <ClCompile Include="..\private\Boss1.cpp" />
     <ClCompile Include="..\private\Boss1_AnimationInstance.cpp" />
+    <ClCompile Include="..\private\Bullet.cpp" />
     <ClCompile Include="..\private\ButtonUI.cpp" />
     <ClCompile Include="..\private\BdLm_AnimInstance.cpp" />
     <ClCompile Include="..\private\BuddyLumi.cpp" />
@@ -381,6 +385,7 @@
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />
     <ClCompile Include="..\private\Boss_HpUI.cpp" />
@@ -475,6 +480,7 @@
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
+    <ClCompile Include="..\private\WaterBall.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

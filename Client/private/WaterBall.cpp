@@ -1,34 +1,33 @@
 #include "stdafx.h"
-#include "SkMpBullet.h"
-#include <random>
+#include "WaterBall.h"
 
 #include "GameInstance.h"
 #include "MathUtils.h"
 #include "GameUtils.h"
 #include "JsonStorage.h"
-#include "PhysX_Manager.h"
+#include <PhysX_Manager.h>
 
 #include "FSMComponent.h"
 
-#include "SkummyPool.h"
+#include "Boss1.h"
 #include "Player.h"
 
-CSkMpBullet::CSkMpBullet(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CWaterBall::CWaterBall(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBullet(pDevice, pContext)
 {
 }
 
-CSkMpBullet::CSkMpBullet(const CSkMpBullet & rhs)
+CWaterBall::CWaterBall(const CWaterBall & rhs)
 	: CBullet(rhs)
 {
 }
 
-HRESULT CSkMpBullet::Initialize_Prototype()
+HRESULT CWaterBall::Initialize_Prototype()
 {
 	return CBullet::Initialize_Prototype();
 }
 
-HRESULT CSkMpBullet::Initialize(void * pArg)
+HRESULT CWaterBall::Initialize(void * pArg)
 {
 	FAILED_CHECK(CBullet::Initialize(pArg));
 
@@ -37,31 +36,33 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"BulletSkummyPool", L"Model", (CComponent**)&m_pModelCom));
 	
-	m_fShootSpeed = 12.f;
+	m_fShootSpeed = 30.f;
 
 	m_pTransformCom->SetSpeed(m_fShootSpeed);
-
+	
+	// FSM 세팅
 	{
-		m_pFSM = CFSMComponentBuilder()
-			.InitState("Shoot")			
-			.AddState("Shoot")	
-				.OnStart([this]
-				{
+		m_pFSMCom = CFSMComponentBuilder()
+			.InitState("Shoot")
+			.AddState("Shoot")
+				.OnStart([this] 
+				{			
 					m_BeforePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					// Effect 생성
 				})
 				.Tick([this](_double TimeDelta) 
 				{
+					// 날아가면서 붙어있을 Effect 관리
 					m_pTransformCom->Move(TimeDelta, m_vDir);
 
 					DAMAGE_PARAM	dParams;
-					dParams.eAttackType = EAttackType::ATK_LIGHT;
-					dParams.eDeBuff = EDeBuffType::DEBUFF_END;
-					dParams.iDamage = (rand() % 50) + 25;
+					dParams.eAttackType = EAttackType::ATK_HEAVY;
+					dParams.eDeBuff = EDeBuffType::DEBUFF_OIL;
+					dParams.iDamage = 1;
 					dParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					dParams.pCauser = m_pCastOwner;
 
-					CollisionCheck_Bullet(m_pTransformCom, dParams, 0.3f, ECOLLIDER_TYPE_BIT::CTB_PLAYER);
-
+					CollisionCheck_Bullet(m_pTransformCom, dParams, 0.5f);//, ECOLLIDER_TYPE_BIT::CTB_PLAYER);
 					if (m_bHitCheck == true)
 					{
 						m_bDelete = true;
@@ -69,44 +70,46 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 					else
 					{
 						_vector vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+						_float4 fOrigin;
+						XMStoreFloat4(&fOrigin, vOrigin);
 						_vector vDest = m_pCastOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 
 						const _vector vDiff = vDest - vOrigin;
 						const _float fDistance = XMVectorGetX(XMVector3LengthEst(vDiff));
 
-						if (fDistance > 30.f)
-						{
+						if (abs(fDistance > 70.f))// || fOrigin.y <= 0.f)
+						{					
 							m_bDelete = true;
 						}
-					}
+					}				
 				})
-
+			
 			.Build();
 	}
 
 	return S_OK;
 }
 
-void CSkMpBullet::BeginTick()
-{	
+void CWaterBall::BeginTick()
+{
 	CBullet::BeginTick();
 
 	for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
 	{
-		if (iter->GetPrototypeTag() == TEXT("SkummyPool"))
+		if (iter->GetPrototypeTag() == TEXT("Prototype_MonsterBoss1"))
 		{
 			m_pCastOwner = dynamic_cast<CScarletCharacter*>(iter);
 		}
 	}
 }
 
-void CSkMpBullet::Tick(_double TimeDelta)
+void CWaterBall::Tick(_double TimeDelta)
 {
 	CBullet::Tick(TimeDelta);
-	m_pFSM->Tick(TimeDelta);
+	m_pFSMCom->Tick(TimeDelta);
 }
 
-void CSkMpBullet::Late_Tick(_double TimeDelta)
+void CWaterBall::Late_Tick(_double TimeDelta)
 {
 	CBullet::Late_Tick(TimeDelta);
 
@@ -114,48 +117,48 @@ void CSkMpBullet::Late_Tick(_double TimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
-HRESULT CSkMpBullet::Render()
+HRESULT CWaterBall::Render()
 {
 	m_pModelCom->Render(m_pTransformCom);
 	return S_OK;
 }
 
-void CSkMpBullet::Imgui_RenderProperty()
+void CWaterBall::Imgui_RenderProperty()
 {
 	CBullet::Imgui_RenderProperty();
 }
 
-void CSkMpBullet::AfterPhysX()
+void CWaterBall::AfterPhysX()
 {
-	__super::AfterPhysX();	
+	__super::AfterPhysX();
 }
 
-CSkMpBullet * CSkMpBullet::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CWaterBall * CWaterBall::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CSkMpBullet* pInstance = new CSkMpBullet(pDevice, pContext);
+	CWaterBall* pInstance = new CWaterBall(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CSkMpBullet");
+		MSG_BOX("Failed to Created : CWaterBall");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject * CSkMpBullet::Clone(void * pArg)
+CGameObject * CWaterBall::Clone(void * pArg)
 {
-	CSkMpBullet*		pInstance = new CSkMpBullet(*this);
+	CWaterBall*		pInstance = new CWaterBall(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CSkMpBullet");
+		MSG_BOX("Failed to Cloned : CWaterBall");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CSkMpBullet::Free()
+void CWaterBall::Free()
 {
 	__super::Free();
-	Safe_Release(m_pFSM);
+	Safe_Release(m_pFSMCom);
 }
