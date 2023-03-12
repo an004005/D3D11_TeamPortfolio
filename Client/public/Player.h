@@ -84,14 +84,30 @@ private:
 
 	}MOVELIMIT;
 
+	typedef struct tagSasGage
+	{
+		_float Energy;
+		_float MaxEnergy;
+		_float MinEnergy;
+
+		_float RecoveryRate;
+		_float UseRate;
+
+		_bool bUsable = false;
+
+	} SAS_GAGE;
+
 	typedef struct tagPlayerStatus
 	{
 		_uint m_iHP = 100;
 		_uint m_iMaxHP = 100;
 		_uint m_iKineticEnergy = 100;
 		_uint m_iMaxKineticEnergy = 100;
-		_uint m_iKineticEnergyLevel = 0;	// 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
-		_uint m_iKineticEnergyType = 0;		// 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
+		_uint m_iKineticEnergyLevel = 0;   // 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
+		_uint m_iKineticEnergyType = 0;      // 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
+		
+		array<SAS_GAGE, SAS_CNT> Sasese{};
+
 	}PLAYER_STAT;
 
 	typedef struct tagDamageDesc
@@ -139,6 +155,8 @@ private:
 	void CamBoneTest();	// 액션캠 예시
 
 private:
+	void			Initalize_Sas();
+	void			SasMgr();
 	PLAYER_STAT		m_PlayerStat;
 	DAMAGE_DESC		m_DamageDesc;
 	DAMAGE_PARAM	m_AttackDesc;
@@ -167,6 +185,8 @@ private:
 	CRenderer*			m_pRenderer = nullptr;
 	CModel*				m_pModel = nullptr;
 	CController*		m_pController = nullptr;
+
+	CModel*				m_pKineticAnimModel = nullptr;
 //	CRigidBody*			m_pContectRigidBody = nullptr;
 
 private:
@@ -205,21 +225,43 @@ private:	// 키네틱 연계기 소켓 애니메이션
 	list<CAnimation*>	m_KineticCombo_Slash03;	// 키네틱 돌려베기(3단)
 	list<CAnimation*>	m_KineticCombo_Slash04;	// 키네틱 돌려베기(4단)
 	
-	list<CAnimation*>	m_KineticCombo_Kinetic01_Start;		// 연계 키네틱 차지
-	list<CAnimation*>	m_KineticCombo_Kinetic01_Throw;		// 연계 키네틱 던지기
-	list<CAnimation*>	m_KineticCombo_Kinetic01_Cancel;	// 연계 키네틱 취소, 일반 상태로 돌아감
-	list<CAnimation*>	m_KineticCombo_Kinetic01_ThrowEnd;	// 이하 동일
+	list<CAnimation*>	m_KineticCombo_sLcLeR_Start;
+	list<CAnimation*>	m_KineticCombo_sLcLeR_End;
+	list<CAnimation*>	m_KineticCombo_sLcLeL_Start;
+	list<CAnimation*>	m_KineticCombo_sLcLeL_End;
+	list<CAnimation*>	m_KineticCombo_sLcReR_Start;
+	list<CAnimation*>	m_KineticCombo_sLcReR_End;
+	list<CAnimation*>	m_KineticCombo_sLcReL_Start;
+	list<CAnimation*>	m_KineticCombo_sLcReL_End;
+
+	list<CAnimation*>	m_KineticCombo_sRcLeL_Start;
+	list<CAnimation*>	m_KineticCombo_sRcLeL_End;
+	list<CAnimation*>	m_KineticCombo_sRcLeR_Start;
+	list<CAnimation*>	m_KineticCombo_sRcLeR_End;
+	list<CAnimation*>	m_KineticCombo_sRcReL_Start;
+	list<CAnimation*>	m_KineticCombo_sRcReL_End;
+	list<CAnimation*>	m_KineticCombo_sRcReR_Start;
+	list<CAnimation*>	m_KineticCombo_sRcReR_End;
+
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeR_Lv1;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeL_Lv1;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReR_Lv1;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReL_Lv1;
 										
-	list<CAnimation*>	m_KineticCombo_Kinetic02_Start;
-	list<CAnimation*>	m_KineticCombo_Kinetic02_Throw;
-	list<CAnimation*>	m_KineticCombo_Kinetic02_Cancel;
-	list<CAnimation*>	m_KineticCombo_Kinetic02_ThrowEnd;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeR_Lv2;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeL_Lv2;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReR_Lv2;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReL_Lv2;
 
-	list<CAnimation*>	m_KineticCombo_Kinetic03_Start;
-	list<CAnimation*>	m_KineticCombo_Kinetic03_Throw;
-	list<CAnimation*>	m_KineticCombo_Kinetic03_Cancel;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeR_Lv3;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeL_Lv3;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReR_Lv3;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReL_Lv3;
 
-	list<CAnimation*>	m_KineticCombo_KineticFinish;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeR_Lv4;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeL_Lv4;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReR_Lv4;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReL_Lv4;
 
 private:	// 피격 소켓 애니메이션
 	list<CAnimation*>	m_Hit_FL_Level01;
@@ -326,12 +368,16 @@ public:	//EventCaller용
 
 	void		Event_Effect(string szEffectName, _float fSize = 1.f, string szBoneName = "Eff01");
 
-	void		Event_LightAttack_Start();
-	void		Event_MiddleAttack_Start();
-	void		Event_HeavyAttack_Start();
-	void		Event_AirAttack_Start();
-	void		Event_Attack_End();
+	void		Event_CollisionStart();
+	void		Event_collisionEnd();
+
 	void		Event_CamMod();
+	void		Event_FinishFovActionCam();
+
+	void		Event_Kinetic_Throw();
+
+private:
+	_bool		m_bCollisionAble = false;
 	
 public:
 	void		Set_KineticCombo_Kinetic() { m_fKineticCombo_Kinetic = 10.f; }	// 키네틱 오브젝트에서 지정, 충돌 발생시 콤보 가능하도록 해준다.
@@ -380,6 +426,7 @@ public:
 	EMoveDir	GetMoveDir() const { return m_eMoveDir; }
 	Vector3		GetMoveVector() { return m_vMoveDir; }
 	void		LookAtDir(Vector3 Vector);
+	void		LookTarget();	// 락온
 
 public:
 	_bool		UseAttackCnt(_uint eType);
@@ -425,6 +472,13 @@ private:
 	_vector			m_vCamLook;
 
 private:
+	void			Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수
+	void			Kinetic_Combo_MoveToKineticPoint();	// 염력 물체 애니메이션을 돌리기 전에 애니메이션의 위치를 잡아주는 함수
+
+private:
+	_vector			m_vKineticComboRefPoint; // 키네틱 콤보를 할 때 이동해야 하는 포인트
+
+private:
 	_float4 m_vSplinePoint_01;
 	_float4 m_vSplinePoint_02;
 	_float4 m_vSplinePoint_03;
@@ -439,8 +493,6 @@ private:
 	_float	m_fSwingLerpTimer = 0.f;
 	_bool	m_bRight = false;
 	_vector m_vKineticInitLook;
-
-
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

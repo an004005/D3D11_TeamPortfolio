@@ -170,6 +170,9 @@ public: /* for CameraManager*/
 	_matrix GetCamProjMatrix(const string& strCamTag);
 	_float4 Get_CamPosition(const string& strCamTag);
 	CCamera* FindCamera(const string& strCamTag);
+	void SetCameraFovCurve(const string& strCurveTag);
+	void ActionCamTickByPlayTime(_float fRatio);
+	void ReleaseCameraFovCurve();
 
 public:/*for GameTimeManager */
 	void ResetTimeRatio();

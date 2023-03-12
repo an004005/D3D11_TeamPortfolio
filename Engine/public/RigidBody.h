@@ -59,6 +59,7 @@ public:
 	physx::PxSphereGeometry		Get_SphereGeometry();
 	physx::PxCapsuleGeometry	Get_CapsuleGeometry();
 	physx::PxTransform			Get_PxTransform();
+	_bool IsOnPhysX();
 
 protected:
 	void ReleaseActor();

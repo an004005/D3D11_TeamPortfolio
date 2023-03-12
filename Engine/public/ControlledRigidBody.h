@@ -57,6 +57,8 @@ public:
 		m_HitReport.SetHitCallback(HitCallback, iTargetTypes);
 	}
 
+	_bool IsOnPhysX();
+
 protected:
 	void CreateController();
 	void ReleaseController();

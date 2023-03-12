@@ -113,6 +113,8 @@ void CParticleGroup::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	VisibleUpdate();
+
 	if(m_bUpdate == true && m_pOwner->IsDeleted() == false)
 	{
 		if (m_BoneName != "")
@@ -515,6 +517,14 @@ void CParticleGroup::ImGui_RenderParticleSystem(_int iSelectParticle)
 	ImGui::EndTabBar();
 }
 
+void CParticleGroup::VisibleUpdate()
+{
+	for(auto iter : m_mapParticleSystem)
+	{
+		if (iter.second.second != nullptr)
+			iter.second.second->SetVisible(m_bVisible);
+	}
+}
 
 
 CParticleGroup* CParticleGroup::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

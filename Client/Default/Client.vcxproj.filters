@@ -271,6 +271,15 @@
     <Filter Include="02.GameObjects\UI\Psychokinesis">
       <UniqueIdentifier>{05a34116-b873-484c-8da2-baafc69d27ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\boss1\Boss1_AIController">
+      <UniqueIdentifier>{4392880a-c8a6-4b0f-a1ca-2d118db75ace}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\boss1\Boss1_WaterBall">
+      <UniqueIdentifier>{0f87a90b-7254-4d30-91fd-9e68bde42065}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Bullet">
+      <UniqueIdentifier>{53a029da-cd62-4afd-8139-2be4c8759dc7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\UI\Tutorial">
       <UniqueIdentifier>{abb2352e-02f6-4b3c-8379-d3a28a4803fd}</UniqueIdentifier>
     </Filter>
@@ -743,6 +752,15 @@
     <ClInclude Include="..\public\NextMapNameUI.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Boss1_AIController.h">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_AIController</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\WaterBall.h">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_WaterBall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bullet.h">
+      <Filter>02.GameObjects\Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1183,6 +1201,15 @@
     <ClCompile Include="..\private\NextMapNameUI.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Boss1_AIController.cpp">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_AIController</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\WaterBall.cpp">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_WaterBall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bullet.cpp">
+      <Filter>02.GameObjects\Bullet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1277,6 +1304,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonModel.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

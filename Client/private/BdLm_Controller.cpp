@@ -131,7 +131,7 @@ void CBdLm_Controller::Tick_Near(_double TimeDelta)
 		break;
 	case 3:
 		AddCommand("Dodge_B", 0.f, &CAIController::Input, NUM_3);
-		AddCommand("BackMove", 3.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
+		AddCommand("BackMove", 2.3f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
 		break;
 	case 4:
 		AddCommand("Threat", 0.f, &CAIController::Input, MOUSE_RB);
@@ -199,7 +199,7 @@ void CBdLm_Controller::Run(EMoveAxis eAxis)
 	{
 	case EMoveAxis::NORTH:
 		m_vMoveAxis.z += 1.f;
-		if (abs(m_fTtoM_Distance) < 1.3f)
+		if (abs(m_fTtoM_Distance) < 3.f)
 		{
 			m_Commands.front().SetFinish();
 		}

@@ -85,6 +85,15 @@ HRESULT CAnimation::Initialize(const char* pAnimFilePath)
 	return S_OK;
 }
 
+void CAnimation::Update_Bones_SyncRatio(_double PlayTime)
+{
+	// 다른 애니메이션의 플레이타임과 동기화하여 애니메이션을 받아오기 위함
+	for (const auto pChannel : m_Channels)
+	{
+		pChannel->Update_TransformMatrix(PlayTime);
+	}
+}
+
 void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float fRatio)
 {
 	if (m_bFinished && !m_bLooping)

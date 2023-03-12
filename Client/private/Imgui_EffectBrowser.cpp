@@ -154,6 +154,7 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 					// CVFX_Manager::GetInstance()->GetEffect()
 
 					Json jsonEffect = CJsonStorage::GetInstance()->FindOrLoadJson(Pair.second);
+					// CVFX_Manager::GetEffect()
 					dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect))->Start_EffectWork();
 
 					// Pair.second->SetPlay();
@@ -174,16 +175,14 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 	if (ImGui::Button("Add Sample EffectSystem"))
 	{
 		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_EffectSys", TEXT("ProtoVFX_EffectSystem")));
-		ImGui::SameLine();
 	}
-	else if (ImGui::Button("Add Sample EffectGroup"))
+	else if ( ImGui::Button("Add Sample EffectGroup"))
 	{
 		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup")));
 	}
-	else if(ImGui::Button("Add Sample ParticleSystem"))
+	else if( ImGui::Button("Add Sample ParticleSystem"))
 	{
 		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_ParticleSystem", TEXT("ProtoVFX_ParticleSystem")));
-		ImGui::SameLine();
 	}
 	else if (ImGui::Button("Add Sample ParticleGroup"))
 	{

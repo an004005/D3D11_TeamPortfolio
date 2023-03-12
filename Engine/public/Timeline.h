@@ -117,7 +117,7 @@ public:
 	void SetNewFrame(_double NewFrame);
 	void Reset();
 
-	void SetTimelineLength(_double TimeLength) {  }
+	void SetTimelineLength(_double TimeLength) { m_EndTime = TimeLength; }
 	_bool IsForward() const { return m_bForward; }
 
 	void Imgui_RenderEditor();
@@ -182,8 +182,7 @@ private:
 	class CCurveFloat* GetCurve(const string& strCurveTag);
 
 private:
-	_double m_MinTime = 0.0;
-	_double m_MaxTime = 0.0;
+	_double m_EndTime = 0.0;
 	_double m_CurFrame = 0.0;
 	_bool m_bForward = true;
 	_bool m_bPlay = false;
