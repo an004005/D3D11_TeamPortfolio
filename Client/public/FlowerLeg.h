@@ -38,6 +38,8 @@ public:
 
 	_matrix AttachCollider(CRigidBody* pRigidBody);
 
+	void HitDir(_double TimeDelta);
+
 	CRigidBody* Get_TailCol() { return m_pTailCol; }
 
 private:
@@ -126,6 +128,14 @@ private:
 	_uint		m_iAirDamage = 0;
 	_uint		m_iPreAirDamageCnt = 0;
 	
+	_bool		m_bHitMove = false;
+	
+	// HitDir
+	_vector		m_vPreDir;
+	_vector		m_vCurDir;
+	_vector		m_vFinDir;
+	_bool		m_bOneTick = false;
+
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
 

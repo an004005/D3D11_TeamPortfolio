@@ -478,7 +478,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, true, false, true, true, false, true, false });
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false }).LookTarget();
 			})
 
 				.AddTransition("ATK_A1 to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -531,7 +531,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, true, false, true, true, false, true, false });
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false }).LookTarget();
 			})
 
 				.AddTransition("ATK_A2 to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -584,7 +584,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, true, false, true, true, false, true, false });
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false }).LookTarget();
 			})
 
 				.AddTransition("ATK_A3 to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -637,7 +637,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, true, false, true, true, false, true, false });
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false }).LookTarget();
 			})
 
 				.AddTransition("ATK_A4 to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -690,7 +690,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, true, false, true, true, false, true, false });
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false }).LookTarget();
 			})
 
 				.AddTransition("ATK_A5 to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -2117,7 +2117,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, false, true, true, true, true, true, false });
+					->SetAbleState({ false, false, false, false, true, true, true, true, true, false }).LookTarget();
 			})
 
 				.AddTransition("ATTACK_UPPER_START to ATK_AIR1", "ATK_AIR1")

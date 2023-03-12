@@ -2412,6 +2412,15 @@ CPlayer & CPlayer::SetAbleState(REMOTE tagRemote)
 	return *this;
 }
 
+void CPlayer::LookTarget()
+{
+	if (nullptr != m_pTargetedEnemy)
+	{
+		_vector vTargetPos = m_pTargetedEnemy->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		m_pTransformCom->LookAt_NonY(vTargetPos);
+	}
+}
+
 void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 {
 	CEffectGroup* pEffect = nullptr;

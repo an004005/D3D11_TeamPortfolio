@@ -303,6 +303,7 @@ private:
 
 public:	// ASM용, 상태마다 리모컨 값을 싹 다 지정하지 않으면 점프했는데 공중부양하고 그럼
 	CPlayer&	SetAbleState(REMOTE	tagRemote);
+	void		LookTarget();
 
 public:	//EventCaller용
 	void		Event_SetCanTurn(_bool is) { m_bCanTurn = is; }
