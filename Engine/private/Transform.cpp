@@ -752,7 +752,8 @@ void CTransform::ModifyTransformJson(Json& json, _float4x4 WorldMatrix)
 
 void CTransform::MoveTransformJson(Json& jsonDest, const Json& jsonSour)
 {
-	jsonDest["Transform"]["WorldMatrix"] = jsonSour["Transform"]["WorldMatrix"];
+	if (jsonSour.contains("Transform"))
+		jsonDest["Transform"]["WorldMatrix"] = jsonSour["Transform"]["WorldMatrix"];
 }
 
 CTransform * CTransform::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

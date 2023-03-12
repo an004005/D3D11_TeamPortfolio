@@ -175,7 +175,7 @@ void CRigidBody::Update_Tick(_fmatrix matrix)
 
 void CRigidBody::Update_AfterPhysX(CTransform* pTransform)
 {
-	if (m_pActor->getScene() == nullptr)
+	if (IsOnPhysX() == false)
 		return;
 
 	if (!m_bKinematic && !m_bTrigger)

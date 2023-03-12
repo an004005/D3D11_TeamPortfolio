@@ -21,6 +21,10 @@
 #include "SkmP_Controller.h"
 #include "Boss1.h"
 #include "Boss1_AIController.h"
+#include "BdLm_Controller.h"
+#include "SkPd_Controller.h"
+#include "BrJ_Controller.h"
+
 CLevel_Batch::CLevel_Batch(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -184,7 +188,9 @@ HRESULT CLevel_Batch::Ready_Prototypes()
 	//Controller
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FL_Controller"), CFL_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
-
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkPd_Controller"), CSkPd_Controller::Create()));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_BdLm_Controller"), CBdLm_Controller::Create()));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_BrJ_Controller"), CBrJ_Controller::Create()));
 
 	//SkyBox
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_Component_Model_SkySphere"),
@@ -240,7 +246,7 @@ HRESULT CLevel_Batch::Ready_Layer_Map(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/ConstructionSite3F.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 	return S_OK;
