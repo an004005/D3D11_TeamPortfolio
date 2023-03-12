@@ -39,13 +39,6 @@ void CItem_NameUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	//const _float2 canvaspos = m_pCanvas->Get_Position();
-
-	//_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-	//vPosition += XMLoadFloat2(&canvaspos);
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.f));
-
 
 	
 }

@@ -26,22 +26,30 @@ public:
 		return m_bGaugeFull;
 	}
 
-	void	Set_DriveGauge_Plus() {	// 외부에서 드라이브 게이지를 증가 시킬 떄 호출한다.
-		m_bDriveGauge_Plus = true;
+	void	Set_DriveGauge_Use(const _float & fDriveFullTime) {
+		m_bDriveGauge_Use = true;
+		m_fDriveFullTime = fDriveFullTime;
 	}
-	void	Set_DriveGauge_Minus() {
-		m_bDriveGauge_Minus = true;
+
+	_float	Get_CurrentDriveGauge() {
+		return m_fCurrentDriveGauge;
+	}
+	void	Set_DriveGauge(const _float & fGauge) {
+		m_fDriveGauge = fGauge;
 	}
 
 private:
 	void	DrivaGaugePlus_Tick(const _double & dTimeDelta);
-	void	DrivaGaugeMinus_Tick(const _double & dTimeDelta);
-
 	void	DirveRightDot_Tick(const _double & dTimeDelta);
+	void	DrivaGaugeUse_Tick(const _double & dTimeDelta);
 
 private:
-	_bool	m_bDriveGauge_Plus = { false };	
-	_bool	m_bDriveGauge_Minus = { false };
+	_float	m_fDriveGauge = { 0.0f };			// Canvas 에서 0~1 로 넘겨준다.
+	_float	m_fCurrentDriveGauge = { 0.0f };	// 이 클래스 안 에서 계산하는 용도
+	_float	m_fDriveFullTime = { 0.0f };		// Drive 를 사용할 하는 전체시간
+	_double m_dCurrentDriveTime = { 0.0 };
+
+	_bool	m_bDriveGauge_Use = { false };
 
 	_bool	m_bGaugeFull = { false };
 	_double	m_dGaugeFull_TimeAcc = { 0.0 };

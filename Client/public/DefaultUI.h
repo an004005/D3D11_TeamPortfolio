@@ -3,12 +3,6 @@
 #include "Client_Defines.h"
 #include "UI.h"
 
-BEGIN(Engine)
-class CTexture;
-class CRenderer;
-class CVIBuffer_Rect;
-END
-
 BEGIN(Client)
 
 class CDefaultUI final : public CUI
