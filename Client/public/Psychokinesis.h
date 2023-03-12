@@ -12,7 +12,6 @@ private:
 
 	HRESULT Initialize_Prototype() override;
 	HRESULT Initialize(void* pArg) override;
-	HRESULT Render() override;
 	void Imgui_RenderProperty() override;
 
 public:

@@ -777,6 +777,7 @@
     <ClInclude Include="..\public\Bullet.h">
       <Filter>02.GameObjects\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_KineticEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1228,6 +1229,7 @@
     <ClCompile Include="..\private\Bullet.cpp">
       <Filter>02.GameObjects\Bullet</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Level_KineticEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

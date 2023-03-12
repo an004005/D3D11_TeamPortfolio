@@ -108,7 +108,6 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
 
-	m_pCollider->SetPosition(XMVectorSet(0.f, 2.f, 0.f, 0.f));//SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
 
 	m_pTransformCom->SetTransformDesc({ 5.f, XMConvertToRadians(720.f) });
 
@@ -134,7 +133,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 void CPlayer::BeginTick()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 2.f, 0.f, 1.f));
 	__super::BeginTick();
 
 	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
@@ -144,6 +143,7 @@ void CPlayer::BeginTick()
 			m_pCamSpot = static_cast<CCamSpot*>(iter);
 		}
 	}
+
 
 	// Å×½ºÆ®
 	//m_pKineticAnimModel->SetPlayAnimation("AS_no0000_271_AL_Pcon_cReL_Lv4");

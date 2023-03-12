@@ -155,7 +155,7 @@ void CRigidBody::Update_Tick(CTransform* pTransform)
 	{
 		SetPxWorldMatrix(pTransform->Get_WorldMatrix_f4x4());
 	}
-	else if (m_bKinematic)
+	else if (m_bKinematic && IsOnPhysX())
 	{
 		m_pActor->setKinematicTarget(physx::PxTransform{ CPhysXUtils::ToFloat4x4(pTransform->Get_WorldMatrix_f4x4()) });
 	}
@@ -167,7 +167,7 @@ void CRigidBody::Update_Tick(_fmatrix matrix)
 	{
 		SetPxWorldMatrix(matrix);
 	}
-	else if (m_bKinematic)
+	else if (m_bKinematic && IsOnPhysX())
 	{
 		m_pActor->setKinematicTarget(physx::PxTransform{ CPhysXUtils::ToFloat4x4(matrix) });
 	}
@@ -297,7 +297,7 @@ void CRigidBody::CreateActor()
 	if (auto pOwner = TryGetOwner())
 		pxMat = CPhysXUtils::ToFloat4x4(pOwner->GetTransform()->Get_WorldMatrix());
 
-	auto pMtrl = CPhysX_Manager::GetInstance()->FindMaterial("Default");
+	auto pMtrl = CPhysX_Manager::GetInstance()->FindMaterial("NoBounce");
 	m_pActor = pPhysics->createRigidDynamic(physx::PxTransform{pxMat});
 
 	_matrix OriginMatrix = m_OriginTransformMatrix;
