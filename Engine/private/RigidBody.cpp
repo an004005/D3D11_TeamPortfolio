@@ -31,6 +31,8 @@ void CRigidBody::BeginTick()
 	{
 		m_pActor->setGlobalPose(physx::PxTransform{ CPhysXUtils::ToFloat4x4(pOwner->GetTransform()->Get_WorldMatrix()) });
 	}
+
+	CPhysX_Manager::GetInstance()->GetScene()->addActor(*m_pActor);
 }
 
 void CRigidBody::Imgui_RenderProperty()
@@ -39,6 +41,8 @@ void CRigidBody::Imgui_RenderProperty()
 	if (ImGui::Button("ReCreateActor(for change shape or scale)"))
 	{
 		CreateActor();
+		if (!IsOnPhysX())
+			CPhysX_Manager::GetInstance()->GetScene()->addActor(*m_pActor);
 	}
 
 	ImGui::Checkbox("bTrigger", &m_bTrigger);
@@ -255,6 +259,11 @@ physx::PxTransform CRigidBody::Get_PxTransform()
 	return physx::PxShapeExt::getGlobalPose(*m_pShape, *m_pActor);
 }
 
+_bool CRigidBody::IsOnPhysX()
+{
+	return m_pActor != nullptr && m_pActor->getScene() != nullptr;
+}
+
 void CRigidBody::ReleaseActor()
 {
 	if (m_pActor)
@@ -317,7 +326,6 @@ void CRigidBody::CreateActor()
 
 	m_pActor->attachShape(*m_pShape);
 	physx::PxRigidBodyExt::updateMassAndInertia(*m_pActor, m_fDensity);
-	CPhysX_Manager::GetInstance()->GetScene()->addActor(*m_pActor);
 }
 
 void CRigidBody::SetUpActor()

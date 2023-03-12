@@ -35,6 +35,7 @@ HRESULT CBuddyLumi::Initialize_Prototype()
 HRESULT CBuddyLumi::Initialize(void * pArg)
 {
 	Json BuddyLumiTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiTrigger.json");
+	MoveTransformJson(BuddyLumiTrigger, pArg);
 	pArg = &BuddyLumiTrigger;
 
 	FAILED_CHECK(CMonster::Initialize(pArg));
@@ -73,7 +74,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 	});
 	// ~Event Caller
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(1.f, 0.f, 29.f)));
+	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(1.f, 0.f, 29.f)));
 
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 
@@ -114,7 +115,7 @@ void CBuddyLumi::BeginTick()
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("Buddy", { m_pModelCom->Find_Animation("AS_em0400_160_AL_threat") });
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(1.f, 0.f, 29.f)));	
+	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(1.f, 0.f, 29.f)));	
 }
 
 void CBuddyLumi::Tick(_double TimeDelta)

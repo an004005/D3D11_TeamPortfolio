@@ -33,6 +33,7 @@ HRESULT CBronJon::Initialize_Prototype()
 HRESULT CBronJon::Initialize(void * pArg)
 {
 	Json BronJonTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonTrigger.json");
+	MoveTransformJson(BronJonTrigger, pArg);
 	pArg = &BronJonTrigger;
 
 	FAILED_CHECK(CMonster::Initialize(pArg));
@@ -93,7 +94,6 @@ HRESULT CBronJon::Initialize(void * pArg)
 
 	// ~Event Caller
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 30.f)));
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 	m_iGroggy_Able = 5;
 
@@ -132,7 +132,6 @@ void CBronJon::BeginTick()
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("BronJon", { m_pModelCom->Find_Animation("AS_em0800_495_AL_press_down_start") });
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 30.f)));	
 }
 
 void CBronJon::Tick(_double TimeDelta)
