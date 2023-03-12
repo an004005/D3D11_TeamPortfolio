@@ -183,6 +183,8 @@ private:
 	class CCurveFloat* GetCurve(const string& strCurveTag);
 	void CheckCurveTime(CCurveFloat* curve);
 
+public:
+	void ImGui_RenderTimelineEvent();
 private:
 	_double m_MinTime = 0.0;
 	_double m_MaxTime = 0.0;
@@ -205,6 +207,8 @@ private:
 public:
 	virtual void Free() override;
 };
+
+
 
 /******************
  * CTimelineEx

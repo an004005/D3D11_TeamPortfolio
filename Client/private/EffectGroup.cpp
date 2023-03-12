@@ -336,8 +336,42 @@ void CEffectGroup::Imgui_RenderProperty()
 
 	if (item_current_idx != -1)
 	{
+		static _int	iSelectCurve = -1;
+
+		IMGUI_LEFT_LABEL(ImGui::Combo, "Target Curve", &iSelectCurve, m_szCurveTag, CURVE_END);
+		ImGui::SameLine();
+
+		if (ImGui::Button("Add Target Curve"))
+		{
+			if (iSelectCurve == -1 || iSelectCurve > CURVE_END)
+			{
+				MSG_BOX("Wrong Curve Number");
+				return;
+			}
+
+			if (item_current_idx == -1 || item_current_idx > (_int)m_mapEffectSystemTag.size())
+			{
+				MSG_BOX("Wrong EffectTag");
+				return;
+			}
+
+			Add_TargetCurve(item_current_idx, m_szCurveTag[iSelectCurve]);
+
+			iSelectCurve = -1;
+		}
+
 		if (item_current_idx == 0)
 		{
+			static char szCurveTag[MAX_PATH] = "";
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FirstEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
+			{
+				AddEmptyCurve_ForFirst(szCurveTag);
+				ZeroMemory(szCurveTag, MAX_PATH);
+			}
+
 			string CurveOwnerName = ppEffectGroupTag[0];
 
 			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
@@ -362,21 +396,23 @@ void CEffectGroup::Imgui_RenderProperty()
 				itr->second->Imgui_RenderEditor();
 			}
 
-			static char szCurveTag[MAX_PATH] = "";
-			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FirstEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
-			ImGui::SameLine();
-
-			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
-			{
-				AddEmptyCurve_ForFirst(szCurveTag);
-				ZeroMemory(szCurveTag, MAX_PATH);
-			}
+			
 
 			Imgui_RenderEffectSource(item_current_idx);
 
 		}
 		else if (item_current_idx == 1)
 		{
+			static char szCurveTag[MAX_PATH] = "";
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add SecondEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
+			{
+				AddEmptyCurve_ForSecond(szCurveTag);
+				ZeroMemory(szCurveTag, MAX_PATH);
+			}
+
 			string CurveOwnerName = ppEffectGroupTag[1];
 			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
 			static const char* pCurName = "";
@@ -400,20 +436,20 @@ void CEffectGroup::Imgui_RenderProperty()
 				itr->second->Imgui_RenderEditor();
 			}
 
-			static char szCurveTag[MAX_PATH] = "";
-			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add SecondEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
-			ImGui::SameLine();
-
-			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
-			{
-				AddEmptyCurve_ForSecond(szCurveTag);
-				ZeroMemory(szCurveTag, MAX_PATH);
-			}
-
 			Imgui_RenderEffectSource(item_current_idx);
 		}
 		else if (item_current_idx == 2)
 		{
+			static char szCurveTag[MAX_PATH] = "";
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add ThirdEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
+			{
+				AddEmptyCurve_ForThird(szCurveTag);
+				ZeroMemory(szCurveTag, MAX_PATH);
+			}
+
 			string CurveOwnerName = ppEffectGroupTag[2];
 			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
 			static const char* pCurName = "";
@@ -437,21 +473,21 @@ void CEffectGroup::Imgui_RenderProperty()
 				itr->second->Imgui_RenderEditor();
 			}
 
-			static char szCurveTag[MAX_PATH] = "";
-			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add ThirdEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
-			ImGui::SameLine();
-
-			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
-			{
-				AddEmptyCurve_ForThird(szCurveTag);
-				ZeroMemory(szCurveTag, MAX_PATH);
-			}
-
 			Imgui_RenderEffectSource(item_current_idx);
 
 		}
 		else if (item_current_idx == 3)
 		{
+			static char szCurveTag[MAX_PATH] = "";
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FourthEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
+			{
+				AddEmptyCurve_ForFourth(szCurveTag);
+				ZeroMemory(szCurveTag, MAX_PATH);
+			}
+
 			string CurveOwnerName = ppEffectGroupTag[3];
 			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
 			static const char* pCurName = "";
@@ -474,21 +510,21 @@ void CEffectGroup::Imgui_RenderProperty()
 			{
 				itr->second->Imgui_RenderEditor();
 			}
+
+			Imgui_RenderEffectSource(item_current_idx);
+		}
+		else if (item_current_idx == 4)
+		{
 			static char szCurveTag[MAX_PATH] = "";
-			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FourthEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FifthEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
 			ImGui::SameLine();
 
 			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
 			{
-				AddEmptyCurve_ForFourth(szCurveTag);
+				AddEmptyCurve_ForFifth(szCurveTag);
 				ZeroMemory(szCurveTag, MAX_PATH);
 			}
 
-			Imgui_RenderEffectSource(item_current_idx);
-			
-		}
-		else if (item_current_idx == 4)
-		{
 			string CurveOwnerName = ppEffectGroupTag[4];
 			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
 			static const char* pCurName = "";
@@ -511,15 +547,6 @@ void CEffectGroup::Imgui_RenderProperty()
 			{
 				itr->second->Imgui_RenderEditor();
 			}
-			static char szCurveTag[MAX_PATH] = "";
-			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FifthEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
-			ImGui::SameLine();
-
-			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
-			{
-				AddEmptyCurve_ForFifth(szCurveTag);
-				ZeroMemory(szCurveTag, MAX_PATH);
-			}
 
 			Imgui_RenderEffectSource(item_current_idx);
 
@@ -532,31 +559,11 @@ void CEffectGroup::Imgui_RenderProperty()
 			ImGui::Text("    [ Please Select EffectGroup Element ] ");
 		}
 
-		static _int	iSelectCurve = -1;
-
-		IMGUI_LEFT_LABEL(ImGui::Combo, "Target Curve", &iSelectCurve, m_szCurveTag, CURVE_END);
-		ImGui::SameLine();
-
-		if(ImGui::Button("Add Target Curve"))
-		{
-			if (iSelectCurve == -1 || iSelectCurve > CURVE_END)
-			{
-				MSG_BOX("Wrong Curve Number");
-				return;
-			}
-
-			if(item_current_idx == -1 || item_current_idx > (_int)m_mapEffectSystemTag.size())
-			{
-				MSG_BOX("Wrong EffectTag");
-				return;
-			}
-
-			Add_TargetCurve(item_current_idx, m_szCurveTag[iSelectCurve]);
-
-			iSelectCurve = -1;
-		}
+		
+		m_Timeline.ImGui_RenderTimelineEvent();
 	}
 	// 커브 추가하는 곳
+
 
 	ImGui::Separator();
 	ImGui::Separator();

@@ -179,19 +179,22 @@ void CTimeline::Imgui_RenderEditor()
 
 	ImGui::Text("TimeRange : %f ~ %f", m_MinTime, m_MaxTime);
 
-	if (ImGui::BeginListBox("Current Curves"))
-	{
-		for (auto& curve : m_vecFloatCurve)
-		{
-			auto pCurve = static_cast<CCurveFloatImpl*>(curve.second);
-			if (ImGui::Selectable(pCurve->GetName()))
-			{
-				
-			}
-		}
-		ImGui::EndListBox();
-	}
+	// if (ImGui::BeginListBox("Current Curves"))
+	// {
+	// 	for (auto& curve : m_vecFloatCurve)
+	// 	{
+	// 		auto pCurve = static_cast<CCurveFloatImpl*>(curve.second);
+	// 		if (ImGui::Selectable(pCurve->GetName()))
+	// 		{
+	// 			
+	// 		}
+	// 	}
+	// 	ImGui::EndListBox();
+	// }
+}
 
+void CTimeline::ImGui_RenderTimelineEvent()
+{
 	ImGui::Separator();
 	static char szEventName[MAX_PATH]{};
 	static _float fEventTime = 0.f;
