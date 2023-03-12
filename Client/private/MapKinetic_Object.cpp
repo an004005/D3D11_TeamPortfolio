@@ -31,7 +31,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 	FAILED_CHECK(SetUp_Components(pArg));
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 10.f, 0.f));
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, -30.f, 0.f, 1.f));
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(180.f) });
 
 	m_pCollider->Activate(true);
@@ -39,10 +39,12 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 	m_pCollider->Set_Kinetic(true);
 	m_pCollider->UpdateChange();
 
+	m_bUsable = true;
+
 	// 다이나믹 리지드 바디가 몬스터와 충돌했는지?
 	m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
-		if (!m_bThrow)
+		if (!m_bUsable)
 			return;
 
 		if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
@@ -135,7 +137,7 @@ void CMapKinetic_Object::Imgui_RenderProperty()
 
 	if (ImGui::Button("Kinetic Object Reset"))
 	{
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 10.f, 0.f));
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, -30.f, 0.f, 1.f));
 		m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(180.f) });
 
 		m_pCollider->Activate(true);
@@ -150,13 +152,16 @@ void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 	m_pCollider->Set_Kinetic(false);
 	m_pCollider->UpdateChange();
 
+	if(vForce.Length() > 900.f)
+		m_bUsable = false;
+
 	m_pCollider->AddForce(vForce);
 	m_pCollider->AddTorque(vTorque);
 }
 
 void CMapKinetic_Object::Reset_Transform()
 {
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 10.f, 0.f));
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, -30.f, 0.f, 1.f));
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(180.f) });
 
 	m_pCollider->Activate(true);

@@ -201,6 +201,8 @@ void CPlayer::Tick(_double TimeDelta)
 
 	if (m_bCanMove)
 	{
+		IM_LOG("Move");
+
 		_float fSpeedControl = 0.f;
 
 		if (m_bWalk)				fSpeedControl = g_fTimeDelta;
@@ -235,14 +237,14 @@ void CPlayer::Tick(_double TimeDelta)
 		//list<CAnimation*> SasDamage;
 		//SasDamage.push_back(m_pModel->Find_Animation("AS_ch0100_410_AL_damage_sas"));
 		//m_pASM->InputAnimSocket("Common_AnimSocket", SasDamage);
-		m_PlayerSasType = ESASType::SAS_GRAVIKENISIS;
+		//m_PlayerSasType = ESASType::SAS_GRAVIKENISIS;
 	}
 	if (pGameInstance->KeyDown(DIK_2))
 	{
 		//list<CAnimation*> SasDamage;
 		//SasDamage.push_back(m_pModel->Find_Animation("AS_ch0100_410_AL_damage_sas"));
 		//m_pASM->InputAnimSocket("Common_AnimSocket", SasDamage);
-		m_PlayerSasType = ESASType::SAS_FIRE;
+		//m_PlayerSasType = ESASType::SAS_FIRE;
 	}
 
 	if (pGameInstance->KeyDown(DIK_K))
@@ -259,34 +261,34 @@ void CPlayer::Tick(_double TimeDelta)
 
 	SocketLocalMoveCheck();
 
-	//if (pGameInstance->KeyDown(DIK_NUMPAD1))
-	//{
-	//	m_bHit = true;
-	//	m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	//	m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
-	//	m_DamageDesc.m_iDamageType = EAttackType::ATK_LIGHT;
-	//}
-	//if (pGameInstance->KeyDown(DIK_NUMPAD2))
-	//{
-	//	m_bHit = true;
-	//	m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	//	m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
-	//	m_DamageDesc.m_iDamageType = EAttackType::ATK_MIDDLE;
-	//}
-	//if (pGameInstance->KeyDown(DIK_NUMPAD3))
-	//{
-	//	m_bHit = true;
-	//	m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	//	m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
-	//	m_DamageDesc.m_iDamageType = EAttackType::ATK_HEAVY;
-	//}
-	//if (pGameInstance->KeyDown(DIK_NUMPAD4))
-	//{
-	//	m_bHit = true;
-	//	m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	//	m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
-	//	m_DamageDesc.m_iDamageType = EAttackType::ATK_TO_AIR;
-	//}
+	if (pGameInstance->KeyDown(DIK_NUMPAD1))
+	{
+		m_bHit = true;
+		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
+		m_DamageDesc.m_iDamageType = EAttackType::ATK_LIGHT;
+	}
+	if (pGameInstance->KeyDown(DIK_NUMPAD2))
+	{
+		m_bHit = true;
+		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
+		m_DamageDesc.m_iDamageType = EAttackType::ATK_MIDDLE;
+	}
+	if (pGameInstance->KeyDown(DIK_NUMPAD3))
+	{
+		m_bHit = true;
+		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
+		m_DamageDesc.m_iDamageType = EAttackType::ATK_HEAVY;
+	}
+	if (pGameInstance->KeyDown(DIK_NUMPAD4))
+	{
+		m_bHit = true;
+		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
+		m_DamageDesc.m_iDamageType = EAttackType::ATK_TO_AIR;
+	}
 
 	/*if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
@@ -383,33 +385,33 @@ HRESULT CPlayer::Render()
 
 void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
-	// 현재 애니메이션 상태에 따라 저스트닷지 여부 판단
-	if (m_pModel->GetPlayAnimation()->GetName().find("dodge") != string::npos &&
-		m_pASM->isSocketExactlyEmpty())
-	{
-		m_fJustDodgeAble = 10.f;
-	}
-	else
-	{
-		m_bHit = true;
+	//// 현재 애니메이션 상태에 따라 저스트닷지 여부 판단
+	//if (m_pModel->GetPlayAnimation()->GetName().find("dodge") != string::npos &&
+	//	m_pASM->isSocketExactlyEmpty())
+	//{
+	//	m_fJustDodgeAble = 10.f;
+	//}
+	//else
+	//{
+	//	m_bHit = true;
 
-		m_DamageDesc.m_iDamage = tDamageParams.iDamage;
-		m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
-		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat3(&tDamageParams.vHitFrom);
-		m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, XMLoadFloat3(&tDamageParams.vHitFrom));
+	//	m_DamageDesc.m_iDamage = tDamageParams.iDamage;
+	//	m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
+	//	m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat3(&tDamageParams.vHitFrom);
+	//	m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, XMLoadFloat3(&tDamageParams.vHitFrom));
 
-		if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
-		{
-			m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
-		}
-	}
+	//	if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
+	//	{
+	//		m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+	//	}
+	//}
 }
 
 void CPlayer::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
-	m_pHitStateMachine->Imgui_RenderProperty();
+	m_pKineticComboStateMachine->Imgui_RenderProperty();
 
 	ImGui::SliderFloat("PlayerTurnSpeed", &m_fTurnSpeed, 0.f, 1000.f);
 	if (ImGui::Button("TurnAccess"))
@@ -660,6 +662,8 @@ HRESULT CPlayer::SetUp_Event()
 	m_pModel->Add_EventCaller("Collision_End", [&]() {Event_collisionEnd(); });
 
 	m_pModel->Add_EventCaller("ReleaseFovCurve", [&]() {Event_FinishFovActionCam(); });
+
+	m_pModel->Add_EventCaller("Kinetic_Launch", [&]() {Event_Kinetic_Throw(); });
 	
 	return S_OK;
 }
@@ -825,7 +829,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 		.AddState("NO_USE_KINETIC")
 		.OnStart([&]() 
 		{
-			//SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			//SetAbleState({ true, false, false, false, false, true, true, true, true, false });
 			//m_pASM->ClearAnimSocket("Kinetic_AnimSocket");
 		})
 		.Tick([&](double TimeDelta) 
@@ -1100,7 +1104,6 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 				m_bKineticMove = false; m_bCanMove = false; m_bActiveGravity = false;
 				m_vThrow *= 1000.f;
 				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(m_vThrow);
-				static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetThrow(true);
 			})
 			.Tick([&](double TimeDelta) 
 			{
@@ -1108,7 +1111,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			})
 			.OnExit([&]()
 			{
-				SetAbleState({ false, true, false ,false, true, true, false, false, true, false });
+				//SetAbleState({ false, true, false ,false, true, true, false, false, true, false });
 			})
 
 			.AddTransition("KINETIC_RB_AIR_THROW_01_START to NO_USE_KINETIC", "NO_USE_KINETIC")
@@ -1226,7 +1229,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 		.AddState("NON_HIT")
 			.OnStart([&]() 
 			{ 
-				SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+				//SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 
 				m_bHit = false;
 
@@ -1564,57 +1567,105 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_219_AL_atk_dash4_end"));
 	m_KineticCombo_Slash04.push_back(pAnimation);
 
-	// 키네틱 연계기 1
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_start180"));
-	m_KineticCombo_Kinetic01_Start.push_back(pAnimation);
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_loop180"));
-	m_KineticCombo_Kinetic01_Start.push_back(pAnimation);
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_idle180"));
-	m_KineticCombo_Kinetic01_Start.push_back(pAnimation);
+	// sLcLeR
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_231_AL_Cap_sLcLeR_start"));
+	m_KineticCombo_sLcLeR_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_231_AL_Cap_sLcLeR_loop"));
+	m_KineticCombo_sLcLeR_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_231_AL_Cap_sLcLeR_end"));
+	m_KineticCombo_sLcLeR_End.push_back(pAnimation);
 
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_end180"));
-	m_KineticCombo_Kinetic01_Cancel.push_back(pAnimation);
+	// sLcLeL
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_232_AL_Cap_sLcLeL_start"));
+	m_KineticCombo_sLcLeL_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_232_AL_Cap_sLcLeL_loop"));
+	m_KineticCombo_sLcLeL_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_232_AL_Cap_sLcLeL_end"));
+	m_KineticCombo_sLcLeL_End.push_back(pAnimation);
+
+	// sLcReR
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_235_AL_Cap_sLcReR_start"));
+	m_KineticCombo_sLcReR_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_235_AL_Cap_sLcReR_loop"));
+	m_KineticCombo_sLcReR_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_235_AL_Cap_sLcReR_end"));
+	m_KineticCombo_sLcReR_End.push_back(pAnimation);
+
+	// sLcReL
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_236_AL_Cap_sLcReL_start"));
+	m_KineticCombo_sLcReL_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_236_AL_Cap_sLcReL_loop"));
+	m_KineticCombo_sLcReL_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_236_AL_Cap_sLcReL_end"));
+	m_KineticCombo_sLcReL_End.push_back(pAnimation);
+	
+	// sRcLeL
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_237_AL_Cap_sRcLeL_start"));
+	m_KineticCombo_sRcLeL_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_237_AL_Cap_sRcLeL_loop"));
+	m_KineticCombo_sRcLeL_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_237_AL_Cap_sRcLeL_end"));
+	m_KineticCombo_sRcLeL_End.push_back(pAnimation);
+
+	// sRcLeR
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_238_AL_Cap_sRcLeR_start"));
+	m_KineticCombo_sRcLeR_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_238_AL_Cap_sRcLeR_loop"));
+	m_KineticCombo_sRcLeR_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_238_AL_Cap_sRcLeR_end"));
+	m_KineticCombo_sRcLeR_End.push_back(pAnimation);
+
+	// sRcReL
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_241_AL_Cap_sRcReL_start"));
+	m_KineticCombo_sRcReL_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_241_AL_Cap_sRcReL_loop"));
+	m_KineticCombo_sRcReL_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_241_AL_Cap_sRcReL_end"));
+	m_KineticCombo_sRcReL_End.push_back(pAnimation);
+
+	// sRcReR
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_242_AL_Cap_sRcReR_start"));
+	m_KineticCombo_sRcReR_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_242_AL_Cap_sRcReR_loop"));
+	m_KineticCombo_sRcReR_Start.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_242_AL_Cap_sRcReR_end"));
+	m_KineticCombo_sRcReR_End.push_back(pAnimation);
 
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_245_AL_Pcon_cLeR_Lv1"));
-	m_KineticCombo_Kinetic01_Throw.push_back(pAnimation);
-
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_326_AL_throw_RL_end"));
-	m_KineticCombo_Kinetic01_ThrowEnd.push_back(pAnimation);
-
-	// 키네틱 연계기 2
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_start180"));
-	m_KineticCombo_Kinetic02_Start.push_back(pAnimation);
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_loop180"));
-	m_KineticCombo_Kinetic02_Start.push_back(pAnimation);
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_idle180"));
-	m_KineticCombo_Kinetic02_Start.push_back(pAnimation);
-
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_end180"));
-	m_KineticCombo_Kinetic02_Cancel.push_back(pAnimation);
+	m_KineticCombo_Pcon_cLeR_Lv1.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_246_AL_Pcon_cLeL_Lv1"));
+	m_KineticCombo_Pcon_cLeL_Lv1.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_249_AL_Pcon_cReR_Lv1"));
+	m_KineticCombo_Pcon_cReR_Lv1.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_250_AL_Pcon_cReL_Lv1"));
+	m_KineticCombo_Pcon_cReL_Lv1.push_back(pAnimation);
 
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_252_AL_Pcon_cLeR_Lv2"));
-	m_KineticCombo_Kinetic02_Throw.push_back(pAnimation);
+	m_KineticCombo_Pcon_cLeR_Lv2.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_253_AL_Pcon_cLeL_Lv2"));
+	m_KineticCombo_Pcon_cLeL_Lv2.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_256_AL_Pcon_cReR_Lv2"));
+	m_KineticCombo_Pcon_cReR_Lv2.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_257_AL_Pcon_cReL_Lv2"));
+	m_KineticCombo_Pcon_cReL_Lv2.push_back(pAnimation);
 
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_329_AL_throw_LR_end"));
-	m_KineticCombo_Kinetic02_ThrowEnd.push_back(pAnimation);
-
-	// 키네틱 연계기 3 -> 3부터는 즉발로 변경, 염력 좌우 이동이 아닌 위아래 이동으로 변경하기
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_start180"));
-	m_KineticCombo_Kinetic03_Start.push_back(pAnimation);
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_loop180"));
-	m_KineticCombo_Kinetic03_Start.push_back(pAnimation);
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_idle180"));
-	m_KineticCombo_Kinetic03_Start.push_back(pAnimation);
-
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_end180"));
-	m_KineticCombo_Kinetic03_Cancel.push_back(pAnimation);
-
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_259_AL_Pcon_cLeR_Lv3"));
+	m_KineticCombo_Pcon_cLeR_Lv3.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_260_AL_Pcon_cLeL_Lv3"));
+	m_KineticCombo_Pcon_cLeL_Lv3.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_263_AL_Pcon_cReR_Lv3"));
+	m_KineticCombo_Pcon_cReR_Lv3.push_back(pAnimation);
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_264_AL_Pcon_cReL_Lv3"));
-	m_KineticCombo_Kinetic03_Throw.push_back(pAnimation);
+	m_KineticCombo_Pcon_cReL_Lv3.push_back(pAnimation);
 
-	// 키네틱 연계 피니시
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_266_AL_Pcon_cLeR_Lv4"));
+	m_KineticCombo_Pcon_cLeR_Lv4.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_267_AL_Pcon_cLeL_Lv4"));
+	m_KineticCombo_Pcon_cLeL_Lv4.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_270_AL_Pcon_cReR_Lv4"));
+	m_KineticCombo_Pcon_cReR_Lv4.push_back(pAnimation);
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_271_AL_Pcon_cReL_Lv4"));
-	m_KineticCombo_KineticFinish.push_back(pAnimation);
+	m_KineticCombo_Pcon_cReL_Lv4.push_back(pAnimation);
 
 	m_pKineticComboStateMachine = CFSMComponentBuilder()
 
@@ -1623,7 +1674,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		.AddState("KINETIC_COMBO_NOUSE")
 		.OnStart([&]() 
 		{
-			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			//SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 			m_bKineticCombo = false;
 			m_pASM->ClearAnimSocket("Kinetic_Combo_AnimSocket");
 		})
@@ -1691,14 +1742,13 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		{
 			m_bKineticCombo = true;
 			m_fKineticCombo_Slash = 0.f;
-			m_fSwingLerpTimer = 0.f;
 			m_fKineticCharge = 0.f;
-			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Kinetic01_Start); 
-
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
+			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_sLcLeR_Start);
 
 			m_pKineticAnimModel->SetPlayAnimation("AS_no0000_245_AL_Pcon_cLeR_Lv1");
-			Kinetic_Combo_MoveToKineticPoint();
+			//Kinetic_Combo_MoveToKineticPoint();
+
+			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -1709,7 +1759,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 
 				_float fDistance = XMVectorGetX(XMVector3Length(vDirEnemy));
 
-				m_pTransformCom->Chase(m_vKineticComboRefPoint, fDistance * 0.01f, 3.f);
+				//m_pTransformCom->Chase(m_vKineticComboRefPoint, fDistance * 0.01f, 3.f);
 			}
 
 			m_fKineticCharge += (_float)fTimeDelta;
@@ -1727,14 +1777,11 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			.Predicator([&]()->_bool {return (m_fKineticCharge > 1.f); })
 			.Priority(1)
 
-
-
 		.AddState("KINETIC_COMBO_KINETIC01_CANCEL")
 		.OnStart([&]()
 		{
 			m_fKineticCharge = 0.f;
-			m_fSwingLerpTimer = 0.f;
-			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Kinetic01_Cancel);
+			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_sLcLeR_End);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -1747,27 +1794,15 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		})
 
 			.AddTransition("KINETIC_COMBO_KINETIC01_CANCEL to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
+			.Predicator([&]()->_bool { return m_bWalk || m_bDash || m_bLeftClick || m_bKineticRB || m_bJump; })
 			.Priority(0)
-
-			.AddTransition("KINETIC_COMBO_KINETIC01_CANCEL to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_Combo_AnimSocket"); })
-			.Priority(0)
-
-
 
 		.AddState("KINETIC_COMBO_KINETIC01_THROW")
 		.OnStart([&]()
 		{
 			m_fKineticCharge = 0.f;
-			m_fSwingLerpTimer = 0.f;
-			m_bSwingKineticThrow = false;
-			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Kinetic01_Throw);
-
-			/*m_vToKineticObj = m_pKineticObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-			m_vKineticPoint = XMVector3Normalize(m_vToKineticObj) * (-3.f);*/
-
-
+			m_fKineticCombo_Kinetic = 10.f;
+			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Pcon_cLeR_Lv1);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -1782,52 +1817,11 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		})
 
 			.AddTransition("KINETIC_COMBO_KINETIC01_THROW to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
-			.Priority(0)
-
-			.AddTransition("KINETIC_COMBO_KINETIC01_THROW to KINETIC_COMBO_KINETIC01_THROWEND", "KINETIC_COMBO_KINETIC01_THROWEND")
-			.Predicator([&]()->_bool {return m_bSwingKineticThrow; })
+			.Predicator([&]()->_bool { return m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.7f) && (m_bDash || m_bJump); })
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_KINETIC01_THROW to KINETIC_COMBO_SLASH02", "KINETIC_COMBO_SLASH02")
 			.Predicator([&]()->_bool {return m_bLeftClick; })
-			.Priority(0)
-
-
-
-		.AddState("KINETIC_COMBO_KINETIC01_THROWEND")
-		.OnStart([&]()
-		{
-			m_bSwingKineticThrow = false;
-			m_fSwingLerpTimer = 0.f;
-			m_vThrow *= 1000.f;
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(m_vThrow);
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetThrow(true);
-
-			m_fKineticCombo_Kinetic = 10.f;
-
-			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Kinetic01_ThrowEnd);
-		})
-			.Tick([&](double fTimeDelta)
-		{
-			if (!m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"))
-			{
-				string szCurAnimName = m_pASM->GetSocketAnimation("Kinetic_Combo_AnimSocket")->GetName();
-				_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
-				m_pTransformCom->LocalMove(vLocal);
-			}
-		})
-
-			.AddTransition("KINETIC_COMBO_KINETIC01_THROWEND to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
-			.Priority(0)
-
-			.AddTransition("KINETIC_COMBO_KINETIC01_THROWEND to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_Combo_AnimSocket"); })
-			.Priority(1)
-
-			.AddTransition("KINETIC_COMBO_KINETIC01_THROWEND to KINETIC_COMBO_SLASH02", "KINETIC_COMBO_SLASH02")
-			.Predicator([&]()->_bool {return m_bLeftClick && (0.f < m_fKineticCombo_Kinetic); })
 			.Priority(0)
 
 #pragma endregion 키네틱 콤보 1
@@ -1884,14 +1878,13 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		{
 			m_bKineticCombo = true;
 			m_fKineticCombo_Slash = 0.f;
-			m_fSwingLerpTimer = 0.f;
 			m_fKineticCharge = 0.f;
-			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Kinetic02_Start);
-
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
+			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_sLcLeR_Start);
 
 			m_pKineticAnimModel->SetPlayAnimation("AS_no0000_252_AL_Pcon_cLeR_Lv2");
-			Kinetic_Combo_MoveToKineticPoint();
+			//Kinetic_Combo_MoveToKineticPoint();
+
+			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -1902,7 +1895,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 
 				_float fDistance = XMVectorGetX(XMVector3Length(vDirEnemy));
 
-				m_pTransformCom->Chase(m_vKineticComboRefPoint, fDistance * 0.01f, 3.f);
+				//m_pTransformCom->Chase(m_vKineticComboRefPoint, fDistance * 0.02f, 3.f);
 			}
 
 			m_fKineticCharge += (_float)fTimeDelta;
@@ -1920,14 +1913,11 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			.Predicator([&]()->_bool {return (m_fKineticCharge > 1.f); })
 			.Priority(1)
 
-
-
 		.AddState("KINETIC_COMBO_KINETIC02_CANCEL")
 		.OnStart([&]()
 		{
 			m_fKineticCharge = 0.f;
-			m_fSwingLerpTimer = 0.f;
-			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Kinetic02_Cancel);
+			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_sLcLeR_End);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -1940,66 +1930,17 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		})
 
 			.AddTransition("KINETIC_COMBO_KINETIC02_CANCEL to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
+			.Predicator([&]()->_bool { return m_bWalk || m_bDash || m_bLeftClick || m_bKineticRB || m_bJump; })
 			.Priority(0)
-
-			.AddTransition("KINETIC_COMBO_KINETIC02_CANCEL to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_Combo_AnimSocket"); })
-			.Priority(0)
-
-
 
 		.AddState("KINETIC_COMBO_KINETIC02_THROW")
 		.OnStart([&]()
 		{
 			m_fKineticCharge = 0.f;
-			m_fSwingLerpTimer = 0.f;
-			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Kinetic02_Throw);
-
-			m_vToKineticObj = m_pKineticObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-			m_vKineticPoint = XMVector3Normalize(m_vToKineticObj) * (-3.f);
+			m_fKineticCombo_Kinetic = 10.f;
+			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Pcon_cLeR_Lv2);
 		})
 		.Tick([&](double fTimeDelta)
-		{
-			if (m_pTargetedEnemy)
-			{
-				_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-				_vector vDirEnemy = m_vKineticComboRefPoint - vMyPos;
-
-				_float fDistance = XMVectorGetX(XMVector3Length(vDirEnemy));
-
-				m_pTransformCom->Chase(m_vKineticComboRefPoint, fDistance * 0.01f, 3.f);
-			}
-		})
-
-			.AddTransition("KINETIC_COMBO_KINETIC02_THROW to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
-			.Priority(0)
-
-			.AddTransition("KINETIC_COMBO_KINETIC02_THROW to KINETIC_COMBO_KINETIC02_THROWEND", "KINETIC_COMBO_KINETIC02_THROWEND")
-			.Predicator([&]()->_bool {return m_bSwingKineticThrow; })
-			.Priority(0)
-
-			.AddTransition("KINETIC_COMBO_KINETIC02_THROW to KINETIC_COMBO_SLASH03", "KINETIC_COMBO_SLASH03")
-			.Predicator([&]()->_bool {return m_bLeftClick; })
-			.Priority(0)
-
-
-
-		.AddState("KINETIC_COMBO_KINETIC02_THROWEND")
-		.OnStart([&]()
-		{
-			m_bSwingKineticThrow = false;
-			m_fSwingLerpTimer = 0.f;
-			m_vThrow *= 1000.f;
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(m_vThrow);
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetThrow(true);
-
-			m_fKineticCombo_Kinetic = 10.f;
-
-			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Kinetic02_ThrowEnd);
-		})
-			.Tick([&](double fTimeDelta)
 		{
 			if (!m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"))
 			{
@@ -2007,18 +1948,16 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 				_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
 				m_pTransformCom->LocalMove(vLocal);
 			}
+
+			Kinetic_Combo_KineticAnimation();
 		})
 
-			.AddTransition("KINETIC_COMBO_KINETIC02_THROWEND to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
+			.AddTransition("KINETIC_COMBO_KINETIC02_THROW to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
+			.Predicator([&]()->_bool { return m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.7f) && (m_bDash || m_bJump); })
 			.Priority(0)
 
-			.AddTransition("KINETIC_COMBO_KINETIC02_THROWEND to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_Combo_AnimSocket"); })
-			.Priority(1)
-
-			.AddTransition("KINETIC_COMBO_KINETIC02_THROWEND to KINETIC_COMBO_SLASH03", "KINETIC_COMBO_SLASH03")
-			.Predicator([&]()->_bool {return m_bLeftClick && (0.f < m_fKineticCombo_Kinetic); })
+			.AddTransition("KINETIC_COMBO_KINETIC02_THROW to KINETIC_COMBO_SLASH03", "KINETIC_COMBO_SLASH03")
+			.Predicator([&]()->_bool {return m_bLeftClick; })
 			.Priority(0)
 
 #pragma endregion 키네틱 콤보 2
@@ -2074,14 +2013,13 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		{
 			m_bKineticCombo = true;
 			m_fKineticCombo_Slash = 0.f;
-			m_fSwingLerpTimer = 0.f;
 			m_fKineticCharge = 0.f;
-			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Kinetic03_Start); 
-
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
+			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_sLcLeR_Start);
 
 			m_pKineticAnimModel->SetPlayAnimation("AS_no0000_259_AL_Pcon_cLeR_Lv3");
-			Kinetic_Combo_MoveToKineticPoint();
+			//Kinetic_Combo_MoveToKineticPoint();
+
+			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -2092,8 +2030,9 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 
 				_float fDistance = XMVectorGetX(XMVector3Length(vDirEnemy));
 
-				m_pTransformCom->Chase(m_vKineticComboRefPoint, fDistance * 0.01f, 3.f);
+				//m_pTransformCom->Chase(m_vKineticComboRefPoint, fDistance * 0.03f, 3.f);
 			}
+
 			m_fKineticCharge += (_float)fTimeDelta;
 		})
 
@@ -2109,14 +2048,11 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			.Predicator([&]()->_bool {return (m_fKineticCharge > 1.f); })
 			.Priority(1)
 
-
-
 		.AddState("KINETIC_COMBO_KINETIC03_CANCEL")
 		.OnStart([&]()
 		{
 			m_fKineticCharge = 0.f;
-			m_fSwingLerpTimer = 0.f;
-			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Kinetic03_Cancel);
+			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_sLcLeR_End);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -2129,60 +2065,34 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 		})
 
 			.AddTransition("KINETIC_COMBO_KINETIC03_CANCEL to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
+			.Predicator([&]()->_bool { return m_bWalk || m_bDash || m_bLeftClick || m_bKineticRB || m_bJump; })
 			.Priority(0)
-
-			.AddTransition("KINETIC_COMBO_KINETIC03_CANCEL to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_Combo_AnimSocket"); })
-			.Priority(0)
-
-			
-
-
 
 		.AddState("KINETIC_COMBO_KINETIC03_THROW")
 		.OnStart([&]()
 		{
 			m_fKineticCharge = 0.f;
-			m_fSwingLerpTimer = 0.f;
-			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Kinetic03_Throw);
-
-			m_vToKineticObj = m_pKineticObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-			m_vKineticPoint = XMVector3Normalize(m_vToKineticObj) * (-3.f);
+			m_fKineticCombo_Kinetic = 10.f;
+			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Pcon_cLeR_Lv3);
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			if (m_pTargetedEnemy)
+			if (!m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"))
 			{
-				_vector EnemyPos = m_pTargetedEnemy->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-				_vector vDirEnemy = EnemyPos - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-				_float fDistance = XMVectorGetX(XMVector3Length(vDirEnemy));
-
-				m_pTransformCom->Chase(EnemyPos, fDistance * 0.01f, 3.f);
+				string szCurAnimName = m_pASM->GetSocketAnimation("Kinetic_Combo_AnimSocket")->GetName();
+				_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
+				m_pTransformCom->LocalMove(vLocal);
 			}
 
 			Kinetic_Combo_KineticAnimation();
 		})
-		.OnExit([&]()
-		{
-			m_bSwingKineticThrow = false;
-			m_fSwingLerpTimer = 0.f;
-			m_vThrow *= 1000.f;
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(m_vThrow);
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetThrow(true);
-		})
 
 			.AddTransition("KINETIC_COMBO_KINETIC03_THROW to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
+			.Predicator([&]()->_bool { return m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.7f) && (m_bDash || m_bJump); })
 			.Priority(0)
 
-			.AddTransition("KINETIC_COMBO_KINETIC03_THROW to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_Combo_AnimSocket"); })
-			.Priority(1)
-
 			.AddTransition("KINETIC_COMBO_KINETIC03_THROW to KINETIC_COMBO_SLASH04", "KINETIC_COMBO_SLASH04")
-			.Predicator([&]()->_bool {return m_bLeftClick/* && (0.f < m_fKineticCombo_Kinetic)*/; })
+			.Predicator([&]()->_bool {return m_bLeftClick; })
 			.Priority(0)
 
 
@@ -2226,28 +2136,80 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			.Predicator([&]()->_bool {return m_bLeftClick && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.5f); })
 			.Priority(0)
 
-			.AddTransition("KINETIC_COMBO_SLASH04 to KINETIC_COMBO_FINISH", "KINETIC_COMBO_FINISH")
+			.AddTransition("KINETIC_COMBO_SLASH04 to KINETIC_COMBO_KINETIC04_CHARGE", "KINETIC_COMBO_KINETIC04_CHARGE")
 			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.5f); })
 			.Priority(0)
 
 #pragma endregion 슬래시 콤보 4
 
-#pragma region 키네틱 피니시
+#pragma region 키네틱 콤보 4
 
-		.AddState("KINETIC_COMBO_FINISH")
+		.AddState("KINETIC_COMBO_KINETIC04_CHARGE")
+		.OnStart([&]() 
+		{
+			m_bKineticCombo = true;
+			m_fKineticCombo_Slash = 0.f;
+			m_fKineticCharge = 0.f;
+			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_sLcLeR_Start);
+
+			m_pKineticAnimModel->SetPlayAnimation("AS_no0000_266_AL_Pcon_cLeR_Lv4");
+			//Kinetic_Combo_MoveToKineticPoint();
+
+			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			if (m_pTargetedEnemy)
+			{
+				_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				_vector vDirEnemy = m_vKineticComboRefPoint - vMyPos;
+
+				_float fDistance = XMVectorGetX(XMVector3Length(vDirEnemy));
+
+				//m_pTransformCom->Chase(m_vKineticComboRefPoint, fDistance * 0.04f, 3.f);
+			}
+
+			m_fKineticCharge += (_float)fTimeDelta;
+		})
+
+			.AddTransition("KINETIC_COMBO_KINETIC04_CHARGE to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
+			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
+			.Priority(0)
+		
+			.AddTransition("KINETIC_COMBO_KINETIC04_CHARGE to KINETIC_COMBO_KINETIC04_CANCEL", "KINETIC_COMBO_KINETIC04_CANCEL")
+			.Predicator([&]()->_bool {return !m_bKineticRB; })
+			.Priority(0)
+
+			.AddTransition("KINETIC_COMBO_KINETIC04_CHARGE to KINETIC_COMBO_KINETIC04_THROW", "KINETIC_COMBO_KINETIC04_THROW")
+			.Predicator([&]()->_bool {return (m_fKineticCharge > 1.f); })
+			.Priority(1)
+
+		.AddState("KINETIC_COMBO_KINETIC04_CANCEL")
 		.OnStart([&]()
 		{
 			m_fKineticCharge = 0.f;
-			m_fSwingLerpTimer = 0.f;
-			m_fKineticCombo_Slash = 0.f;
-			m_fKineticCombo_Kinetic = 0.f;
+			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_sLcLeR_End);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			if (!m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"))
+			{
+				string szCurAnimName = m_pASM->GetSocketAnimation("Kinetic_Combo_AnimSocket")->GetName();
+				_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
+				m_pTransformCom->LocalMove(vLocal);
+			}
+		})
 
-			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_KineticFinish);
+			.AddTransition("KINETIC_COMBO_KINETIC04_CANCEL to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
+			.Predicator([&]()->_bool { return m_bWalk || m_bDash || m_bLeftClick || m_bKineticRB || m_bJump; })
+			.Priority(0)
 
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Reset_Transform();
-
-			m_pKineticAnimModel->SetPlayAnimation("AS_no0000_266_AL_Pcon_cLeR_Lv4");
-			Kinetic_Combo_MoveToKineticPoint();
+		.AddState("KINETIC_COMBO_KINETIC04_THROW")
+		.OnStart([&]()
+		{
+			m_fKineticCharge = 0.f;
+			//m_fKineticCombo_Kinetic = 10.f;
+			m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Pcon_cLeR_Lv4);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -2261,9 +2223,14 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			Kinetic_Combo_KineticAnimation();
 		})
 
-			.AddTransition("KINETIC_COMBO_KINETIC03_THROW to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool {return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
+			.AddTransition("KINETIC_COMBO_KINETIC04_THROW to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
+			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
 			.Priority(0)
+
+			.AddTransition("KINETIC_COMBO_KINETIC04_THROW to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
+			.Predicator([&]()->_bool { return m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.7f) && (m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB); })
+			.Priority(0)
+
 
 #pragma endregion 키네틱 피니시
 
@@ -2312,7 +2279,7 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 			.OnStart([&]()
 			{
 				m_fJustDodgeAble = 0.f;
-				SetAbleState({ false, false, false ,false, true, true, true, true, true, false });
+				//SetAbleState({ false, false, false ,false, true, true, true, true, true, false });
 				m_pASM->AttachAnimSocket("JustDodge_AnimSocket", m_JustDodgeSlash);
 			})
 			.Tick([&](double fTimeDelta)
@@ -2641,6 +2608,20 @@ void CPlayer::Event_CamMod()
 void CPlayer::Event_FinishFovActionCam()
 {
 	CGameInstance::GetInstance()->ReleaseCameraFovCurve();
+}
+
+void CPlayer::Event_Kinetic_Throw()
+{
+	if (nullptr != m_pKineticObject && nullptr != m_pTargetedEnemy)
+	{
+		Vector4 vTargetPos = m_pTargetedEnemy->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		Vector4 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		Vector4 vDir = vTargetPos - vMyPos;
+
+		_float3 vForce = { vDir.x, vDir.y, vDir.z };
+		vForce *= 1000.f;
+		static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(vForce);
+	}
 }
 
 void CPlayer::Reset_Charge()
@@ -3011,29 +2992,29 @@ void CPlayer::Search_Usable_KineticObject()
 	m_pKineticObject = nullptr;
 	m_pTargetedEnemy = nullptr;
 
-	if (pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic") == nullptr
-		|| pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic")->GetGameObjects().empty())
+	if (pGameInstance->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject") == nullptr
+		|| pGameInstance->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects().empty())
 	{
 		m_pKineticObject = nullptr;
 	}
 	else
 	{
-		for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Kinetic")->GetGameObjects())
+		for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects())
 		{
-//			if (false == static_cast<CMapKinetic_Object*>(iter)->Usable())
-//				continue;
+			if (false == static_cast<CMapKinetic_Object*>(iter)->Usable())
+				continue;
 
-			/*static _float fDistance = 10.f;
+			//static _float fDistance = 10.f;
 
-			_vector vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-			_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		//	_vector vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		//	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
-			_float fCurDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
+		//	_float fCurDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
 
-			if (fDistance > fCurDistance)
-			{*/
+		//	if (fDistance > fCurDistance)
+		//	{
 				m_pKineticObject = iter;
-			//}
+		//	}
 		}
 	}
 
@@ -3294,7 +3275,7 @@ void CPlayer::Kinetic_ByTurn()
 
 void CPlayer::Kinetic_Combo_KineticAnimation()
 {
-	if (nullptr != m_pTargetedEnemy || nullptr != m_pKineticObject)
+	if (nullptr != m_pTargetedEnemy && nullptr != m_pKineticObject && !m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"))
 	{
 		m_pKineticAnimModel->GetPlayAnimation()->Update_Bones_SyncRatio(m_pASM->GetSocketAnimation("Kinetic_Combo_AnimSocket")->GetPlayTime());
 		m_pKineticAnimModel->Compute_CombindTransformationMatrix();
@@ -3325,7 +3306,10 @@ void CPlayer::Kinetic_Combo_MoveToKineticPoint()
 		_vector vTmpLookAtMonster = m_pTargetedEnemy->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - vRePos; // 예비 이동 위치에서 몬스터를 바라본 방향벡터
 
 		_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		m_pTransformCom->LookAt_NonY(vMyPos + vTmpLookAtMonster);	// 예비 Look벡터로 바라보는 방향을 바꿈
+		_vector vLookPoint = vMyPos + vTmpLookAtMonster;
+		vLookPoint = XMVector3Normalize(vLookPoint);
+		vLookPoint = XMVectorSetW(vLookPoint, 1.f);
+		m_pTransformCom->LookAt_NonY(vLookPoint);	// 예비 Look벡터로 바라보는 방향을 바꿈
 
 		_matrix ModifiedMatrix = m_pKineticAnimModel->GetBoneMatrix("Waist") * m_pTransformCom->Get_WorldMatrix();
 		_vector vRenewalDiff = m_pKineticObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - ModifiedMatrix.r[3];

@@ -2413,8 +2413,8 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 //	if (m_bOptionalMove)
 //	{
 		// 툴 작업 시에는 이거 끄고 하기!! 옵셔널 무브
-		//_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTargetObject->GetTransform()->Get_WorldMatrix());
-		//m_pTargetObject->GetTransform()->LocalMove(vOpTest);
+		_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTargetObject->GetTransform()->Get_WorldMatrix());
+		m_pTargetObject->GetTransform()->LocalMove(vOpTest);
 //	}
 
 	// 카메라
@@ -2483,7 +2483,7 @@ void CBaseAnimInstance::InputAnimSocket(const string& strSocName, list<CAnimatio
 
 	m_pModel->Reset_LocalMove(true);
 
-	static_cast<CPlayer*>(m_pTargetObject)->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+//	static_cast<CPlayer*>(m_pTargetObject)->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 
 //	m_pASM_Base->SetCurState("IDLE");
 
@@ -2506,7 +2506,7 @@ void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimat
 
 	m_pModel->Reset_LocalMove(true);
 
-	static_cast<CPlayer*>(m_pTargetObject)->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+//	static_cast<CPlayer*>(m_pTargetObject)->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 
 //	m_pASM_Base->SetCurState("IDLE");
 

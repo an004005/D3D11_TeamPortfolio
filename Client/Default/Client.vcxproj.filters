@@ -211,9 +211,6 @@
     <Filter Include="02.GameObjects\Player\BaseAnimInstance">
       <UniqueIdentifier>{f7c4a316-58ff-44eb-bc6b-94195c17f0cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Player\BattleAninInstance">
-      <UniqueIdentifier>{bee24b6b-6010-44c3-9973-3fa91aa309aa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.ShaderFiles\PostProcess\HitDecal">
       <UniqueIdentifier>{eb2d8b39-fe98-4867-923b-0ed4f62afc11}</UniqueIdentifier>
     </Filter>

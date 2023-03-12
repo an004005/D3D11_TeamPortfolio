@@ -199,21 +199,43 @@ private:	// 키네틱 연계기 소켓 애니메이션
 	list<CAnimation*>	m_KineticCombo_Slash03;	// 키네틱 돌려베기(3단)
 	list<CAnimation*>	m_KineticCombo_Slash04;	// 키네틱 돌려베기(4단)
 	
-	list<CAnimation*>	m_KineticCombo_Kinetic01_Start;		// 연계 키네틱 차지
-	list<CAnimation*>	m_KineticCombo_Kinetic01_Throw;		// 연계 키네틱 던지기
-	list<CAnimation*>	m_KineticCombo_Kinetic01_Cancel;	// 연계 키네틱 취소, 일반 상태로 돌아감
-	list<CAnimation*>	m_KineticCombo_Kinetic01_ThrowEnd;	// 이하 동일
+	list<CAnimation*>	m_KineticCombo_sLcLeR_Start;
+	list<CAnimation*>	m_KineticCombo_sLcLeR_End;
+	list<CAnimation*>	m_KineticCombo_sLcLeL_Start;
+	list<CAnimation*>	m_KineticCombo_sLcLeL_End;
+	list<CAnimation*>	m_KineticCombo_sLcReR_Start;
+	list<CAnimation*>	m_KineticCombo_sLcReR_End;
+	list<CAnimation*>	m_KineticCombo_sLcReL_Start;
+	list<CAnimation*>	m_KineticCombo_sLcReL_End;
+
+	list<CAnimation*>	m_KineticCombo_sRcLeL_Start;
+	list<CAnimation*>	m_KineticCombo_sRcLeL_End;
+	list<CAnimation*>	m_KineticCombo_sRcLeR_Start;
+	list<CAnimation*>	m_KineticCombo_sRcLeR_End;
+	list<CAnimation*>	m_KineticCombo_sRcReL_Start;
+	list<CAnimation*>	m_KineticCombo_sRcReL_End;
+	list<CAnimation*>	m_KineticCombo_sRcReR_Start;
+	list<CAnimation*>	m_KineticCombo_sRcReR_End;
+
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeR_Lv1;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeL_Lv1;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReR_Lv1;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReL_Lv1;
 										
-	list<CAnimation*>	m_KineticCombo_Kinetic02_Start;
-	list<CAnimation*>	m_KineticCombo_Kinetic02_Throw;
-	list<CAnimation*>	m_KineticCombo_Kinetic02_Cancel;
-	list<CAnimation*>	m_KineticCombo_Kinetic02_ThrowEnd;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeR_Lv2;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeL_Lv2;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReR_Lv2;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReL_Lv2;
 
-	list<CAnimation*>	m_KineticCombo_Kinetic03_Start;
-	list<CAnimation*>	m_KineticCombo_Kinetic03_Throw;
-	list<CAnimation*>	m_KineticCombo_Kinetic03_Cancel;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeR_Lv3;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeL_Lv3;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReR_Lv3;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReL_Lv3;
 
-	list<CAnimation*>	m_KineticCombo_KineticFinish;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeR_Lv4;
+	list<CAnimation*>	m_KineticCombo_Pcon_cLeL_Lv4;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReR_Lv4;
+	list<CAnimation*>	m_KineticCombo_Pcon_cReL_Lv4;
 
 private:	// 피격 소켓 애니메이션
 	list<CAnimation*>	m_Hit_FL_Level01;
@@ -325,6 +347,8 @@ public:	//EventCaller용
 
 	void		Event_CamMod();
 	void		Event_FinishFovActionCam();
+
+	void		Event_Kinetic_Throw();
 
 private:
 	_bool		m_bCollisionAble = false;

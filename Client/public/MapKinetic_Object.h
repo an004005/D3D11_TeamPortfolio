@@ -49,11 +49,10 @@ private:
 	CModel*				m_pModelCom = nullptr;
 
 public:
-	void				SetThrow(_bool bThrow) { m_bThrow = bThrow; }
-	_bool				Usable() { return (m_bThrow == false); }
+	_bool				Usable() { return m_bUsable; }
 
 private:
-	_bool				m_bThrow = false;		//	데미지를 줄 수 있는 상태인가?
+	_bool				m_bUsable = true;
 
 public:
 	static CMapKinetic_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
