@@ -2,6 +2,10 @@
 #include "..\public\Canvas_PlayerInfo.h"
 #include "GameInstance.h"
 
+#include "UI_Manager.h"
+#include "DefaultUI.h"
+#include "PlayerInfo_GaugeBackGround.h"
+
 CCanvas_PlayerInfo::CCanvas_PlayerInfo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
@@ -25,6 +29,10 @@ HRESULT CCanvas_PlayerInfo::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	CUI_Manager::GetInstance()->Add_Canvas(L"Canvas_PlayerInfo", this);
+	
+	m_bVisible = true;
+
 	return S_OK;
 }
 
@@ -34,19 +42,65 @@ void CCanvas_PlayerInfo::Tick(_double TimeDelta)
 
 }
 
+void CCanvas_PlayerInfo::Late_Tick(_double TimeDelta)
+{
+	CCanvas::Late_Tick(TimeDelta);
+
+}
+
+HRESULT CCanvas_PlayerInfo::Render()
+{
+	if (FAILED(CUI::Render()))
+		return E_FAIL;
+
+	_float2 vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"PlayerInfo_BackGround"))->GetScreenSpaceLeftTop();
+	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"유이토 스메라기", vPosition + _float2(110.0f, 99.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+
+	//_float2 fPlayerHp = dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Get_PlayerHp();
+	//_tchar szChildTag[MAX_PATH] = TEXT("");
+
+	//if (1000.0f < fPlayerHp.x)
+	//{
+	//	wsprintf(szChildTag, TEXT("%d"), _int(fPlayerHp.x));
+	//	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(330.0f, 68.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	//	wsprintf(szChildTag, TEXT("/%d"), _int(fPlayerHp.y));
+	//	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(367.0f, 70.0f), 0.f, { 0.3f, 0.3f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	//}
+	//else
+	//{
+	//	wsprintf(szChildTag, TEXT("%d"), _int(fPlayerHp.x));
+	//	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(342.0f, 68.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	//	wsprintf(szChildTag, TEXT("/%d"), _int(fPlayerHp.y));
+	//	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(372.0f, 70.0f), 0.f, { 0.3f, 0.3f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	//}
+
+	return S_OK;
+}
+
 void CCanvas_PlayerInfo::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
+
+	static _float fPosition[2];
+	ImGui::DragFloat2("Font Position", fPosition);
+	m_vFontPos = { fPosition[0], fPosition[1] };
 }
 
 void CCanvas_PlayerInfo::SaveToJson(Json& json)
 {
 	CCanvas::SaveToJson(json);
+
 }
 
 void CCanvas_PlayerInfo::LoadFromJson(const Json & json)
 {
 	CCanvas::LoadFromJson(json);
+
+}
+
+void CCanvas_PlayerInfo::Set_GaugeBackGround(const _uint iLevel)
+{
+	dynamic_cast<CPlayerInfo_GaugeBackGround*>(Find_ChildUI(L"PlayerInfo_GaugeBack"))->Set_PsychokinesisGauge(iLevel);
 }
 
 CCanvas_PlayerInfo * CCanvas_PlayerInfo::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

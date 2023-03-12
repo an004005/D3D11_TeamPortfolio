@@ -23,6 +23,11 @@ public:
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Imgui_RenderProperty() override;
 
+public:
+	//For Effect
+	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
+	virtual _float4x4 GetPivotMatrix() override;
+	//~For Effect
 
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
@@ -34,6 +39,8 @@ protected:
 	virtual void DeBuff_End() override;
 	virtual void DeBuff_Fire() override;
 	virtual void DeBuff_Oil() override;
+
+	void MoveTransformJson(Json& jsonDest, void* pArg);
 
 protected:
 	CRenderer*				m_pRendererCom = nullptr;

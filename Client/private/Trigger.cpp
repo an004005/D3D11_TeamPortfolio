@@ -212,8 +212,10 @@ void CTrigger::SetUp_Create(const Json & json)
 			{
 				CGameInstance* pGameInstance = CGameInstance::GetInstance();
 				CGameObject* pObject = nullptr;
-				pObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), proto.first.c_str());
-				pObject->GetTransform()->Set_WorldMatrix(matrix);
+
+				Json jsonWorldMatrix;
+				CTransform::ModifyTransformJson(jsonWorldMatrix, matrix);
+				pObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), proto.first.c_str(), &jsonWorldMatrix);
 			}
 		}
 

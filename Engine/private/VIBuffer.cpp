@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include "..\public\VIBuffer.h"
 #include "GameInstance.h"
-
+set<CVIBuffer*> CVIBuffer::tmp{};
 CVIBuffer::CVIBuffer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
 {
-	
 }
 
 CVIBuffer::CVIBuffer(const CVIBuffer & rhs)

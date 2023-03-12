@@ -49,6 +49,13 @@ public:
 
 	void		Set_Transform(_fmatrix matSocket);
 public:
+	void		Start_EffectWork();
+
+	void		Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate = false);
+	void		Start_Attach(CGameObject* pOwner, string BoneName, _bool trueisUpdate = false);
+	void		Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName,_bool usepivot = false, _bool trueisUpdate = false);
+
+public:
 	// For Graph
 	// void Tick_Scale_All( _float fValue);
 	// void Tick_Floats_0(_float fValue);
@@ -65,6 +72,10 @@ public:
 	void LoadAndSetCurve_Fifth(Json* json);
 
 	// void Tick_Float4x4s_Value(_uint iParamIndex, _float4x4 fValue);
+
+	class CEffectSystem* GetSecondEffect() { return m_pSecond_EffectSystem; }
+	class CEffectSystem* GetThirdEffect() { return m_pThird_EffectSystem; }
+	class CEffectSystem* GetFourthEffect() { return m_pFourth_EffectSystem; }
 
 protected:
 	void AddEmptyCurve(string strCurveName);
@@ -108,12 +119,19 @@ private:
 	class CEffectSystem* m_pFifth_EffectSystem = nullptr;
 
 private:
+	_bool	m_bUpdate = false;
+	_bool	m_bUsePivot = false;
+	string m_BoneName = "";
+	_float4x4 m_PivotMatrix = XMMatrixIdentity();
+
+
+private:
 	_float	m_fEndTime = 0.f;
 	_int	m_iSelectFinishFunc = 0;
 	char*	m_szFuncName[FUNC_END] = { "PlayFromStart",  "Reset", "Stop", "Reverse" };
 	char*	m_szCurveTag[CURVE_END] = { "ObjectScale_All", "ObjectScale_Y","ObjectScale_X", "Floats_0", "Floats_1", "Floats_2", "Floats_3","Floats_4","Floats_5","Floats_6", "Floats_7",  "Intro_Time", "Outro_Time", "Color_Change", "Ints_0" };
 
-	map<string, class CEffectSystem*> m_mapEffectSystemTag;
+	unordered_map<string, class CEffectSystem*> m_mapEffectSystemTag;
 
 	list<char*> ppEffectTag;
 public:

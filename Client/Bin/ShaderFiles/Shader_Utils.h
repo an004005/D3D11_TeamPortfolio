@@ -42,6 +42,34 @@ float2 Get_FlipBookUV(float2 vRectUV, float fCurTime, float fFrameTime, int iRow
 	return vOutUV;
 }
 
+float2 Get_ReverseFlipBookUV(float2 vRectUV, float fCurTime, float fFrameTime, int iRowCnt, int iColCnt)
+{
+	float fTotalTime = fFrameTime * iRowCnt * iColCnt;
+	float fDoubleTotalTime = fTotalTime * 2.f;
+
+	float fTime = fmod(fCurTime, fTotalTime);
+	float fDoubleTime = fmod(fCurTime, fDoubleTotalTime);
+
+	float2 vOutUV;
+
+	// reverse
+	if (fTotalTime < fDoubleTime && fDoubleTime <= fDoubleTotalTime)
+	{
+		float fOverTime = fDoubleTime - fTotalTime;
+		fTime = fTotalTime - fOverTime;
+	}
+
+	uint iFrame = uint(fTime / fFrameTime); // idx = y * X + x;
+
+	float fRowSize = 1.f / iRowCnt;
+	float fColSize = 1.f / iColCnt;
+
+	vOutUV.x = vRectUV.x / iRowCnt + (iFrame % iRowCnt) * fRowSize;
+	vOutUV.y = vRectUV.y / iColCnt + (iFrame / iRowCnt) * fColSize;
+
+	return vOutUV;
+}
+
 float2 Get_ColorGradientUV(float fGrayColor)
 {
 	return float2(fGrayColor, fGrayColor);

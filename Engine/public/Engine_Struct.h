@@ -83,6 +83,18 @@ namespace Engine
 		unsigned long			_0, _1, _2;
 	}FACEINDICES32;
 
+	typedef struct tagVertexLineColor
+	{
+		_float3		vPosition;
+		_float4		vColor;
+	}VTXLINE;
+
+	typedef struct ENGINE_DLL tagVertexLineColor_Declaration
+	{
+		static const unsigned int		iNumElements = 2;
+		static D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];			
+	}VTXLINE_DECLARATION;
+
 	typedef struct tagVertexPosition
 	{
 		XMFLOAT3		vPosition;
@@ -191,6 +203,9 @@ namespace Engine
 		_float4			vRotPos;
 
 		_float			fGravityPower;
+		_bool			bOnSurfase;
+
+		_uint		NearestIndex;
 	}VTXMATRIX;
 
 	typedef struct ENGINE_DLL tagVertexPoint_Instance_Particle_Declaration
@@ -259,44 +274,44 @@ namespace Engine
 		static D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTXCUBETEX_DECLARATION;
 
-	typedef struct EffectParticleDesc
-	{
-		_float3 vMinPos; //최소 위치
-		_float3 vMaxPos; //최대 위치
+	// typedef struct EffectParticleDesc
+	// {
+	// 	_float3 vMinPos; //최소 위치
+	// 	_float3 vMaxPos; //최대 위치
+	//
+	// 	_float fMaxSpeed; //최대 속력
+	// 	_float fMinSpeed; //최소 속력
+	// 	_float3 vMaxDir; //방향(노말라이즈)
+	// 	_float3 vMinDir; //방향(노말라이즈)
+	// 	_float3 vAcceleration; //속도 변화량
+	//
+	// 	_float3 vMinScale; //최소 크기
+	// 	_float3 vMaxScale; //최대 크기
+	// 	_float3 vScaleVariation; //크기 변화량
+	//
+	// 	_float4 vMinColor; //최소 칼라
+	// 	_float4 vMaxColor; //최대 칼라
+	// 	_float4 vColorVariation; //색 변화량
+	//
+	// 	_float fMinLifeTime; //최소 생존시간
+	// 	_float fMaxLifeTime; //최대 생존시간
+	//
+	// 	_float fGenerateRate; //파티클 생성 비율(초당 파티클 수)
+	// 	_float fGenerationTime; //파티클 생성 시간(몇초까지 생성할 것인지)
+	// 	_uint  iTotalCnt;//전체 파티클 갯수
+	//
+	// }PARTICLEDESC;
 
-		_float fMaxSpeed; //최대 속력
-		_float fMinSpeed; //최소 속력
-		_float3 vMaxDir; //방향(노말라이즈)
-		_float3 vMinDir; //방향(노말라이즈)
-		_float3 vAcceleration; //속도 변화량
-
-		_float3 vMinScale; //최소 크기
-		_float3 vMaxScale; //최대 크기
-		_float3 vScaleVariation; //크기 변화량
-
-		_float4 vMinColor; //최소 칼라
-		_float4 vMaxColor; //최대 칼라
-		_float4 vColorVariation; //색 변화량
-
-		_float fMinLifeTime; //최소 생존시간
-		_float fMaxLifeTime; //최대 생존시간
-
-		_float fGenerateRate; //파티클 생성 비율(초당 파티클 수)
-		_float fGenerationTime; //파티클 생성 시간(몇초까지 생성할 것인지)
-		_uint  iTotalCnt;//전체 파티클 갯수
-
-	}PARTICLEDESC;
-
-	typedef struct Particle
-	{
-		_float3 vPos;
-		_float4	vColor;
-		_float3	vSize;
-		_float3 vVelocity;
-		_float fLifeTime;
-		_float fAge; //현재 파티클 생존시간
-		_uint iNum; //인스탄스 번호
-	}PARTICLE;
+	// typedef struct Particle
+	// {
+	// 	_float3 vPos;
+	// 	_float4	vColor;
+	// 	_float3	vSize;
+	// 	_float3 vVelocity;
+	// 	_float fLifeTime;
+	// 	_float fAge; //현재 파티클 생존시간
+	// 	_uint iNum; //인스탄스 번호
+	// }PARTICLE;
 
 	struct PxMesh
 	{

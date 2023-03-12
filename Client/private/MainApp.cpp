@@ -22,6 +22,8 @@
 #include "MapInstance_Object.h"
 #include "MapKinetic_Object.h"
 #include "Material.h"
+#include "VFX_Manager.h"
+
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -80,7 +82,7 @@ HRESULT CMainApp::Render()
 
 	m_pGameInstance->Render_ImGui();
 
-	m_pGameInstance->Clear_Graphic_Device(&_float4(0.25f, 0.25f, 0.25f, 1.f));	
+	m_pGameInstance->Clear_Graphic_Device(&_float4(0.5f, 0.25f, 0.25f, 1.f));	
 
 	m_pGameInstance->Draw_RenderGroup();
 
@@ -297,13 +299,20 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_RigidBody"), CRigidBody::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Regular32"), TEXT("../Bin/Resources/Fonts/kim_regular32.spritefont"))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Bold32"), TEXT("../Bin/Resources/Fonts/kim_bold32.spritefont"))))
+	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Regular32"), TEXT("../Bin/Resources/Fonts/kim_regular32.spritefont"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Bold32"), TEXT("../Bin/Resources/Fonts/kim_bold32.spritefont"))))
+	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Pretendard32"), TEXT("../Bin/Resources/Fonts/Pretendard.spritefont"))))
 		return E_FAIL;
 
 	CMaterial::LoadMaterialFilePathes("../Bin/Resources/Materials/");
 	
+	
+	m_pGameInstance->AddSoundQueue("AnnouncerVO");
+	m_pGameInstance->AddSoundQueue("CharacterVO");
+
+	// Engine::LoadEmptyMaterials();
 
 	return S_OK;
 }
@@ -360,6 +369,7 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
+	CVFX_Manager::GetInstance()->DestroyInstance();
 	CUI_Manager::GetInstance()->DestroyInstance();
 
 	m_pGameInstance->Clear_ImguiObjects();

@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "JsonLib.h"
 #include "Camera_Manager.h"
+#include "CurveManager.h"
 
 CCamera::CCamera(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)

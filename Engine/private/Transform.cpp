@@ -745,6 +745,16 @@ HRESULT CTransform::Bind_ShaderResource(CShader* pShaderCom, const char* pConsta
 	return pShaderCom->Set_Matrix(pConstantName, &Get_WorldMatrix_f4x4());	
 }
 
+void CTransform::ModifyTransformJson(Json& json, _float4x4 WorldMatrix)
+{
+	json["Transform"]["WorldMatrix"] = WorldMatrix;
+}
+
+void CTransform::MoveTransformJson(Json& jsonDest, const Json& jsonSour)
+{
+	jsonDest["Transform"]["WorldMatrix"] = jsonSour["Transform"]["WorldMatrix"];
+}
+
 CTransform * CTransform::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CTransform*		pInstance = new CTransform(pDevice, pContext);

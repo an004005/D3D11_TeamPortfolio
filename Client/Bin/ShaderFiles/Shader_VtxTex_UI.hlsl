@@ -244,7 +244,6 @@ PS_OUT PS_UI_Alpha_Mask_Color_AlphaGradient(PS_IN In)
 	return Out;
 }
 
-
 /*******************
  * FlipBook
  /********************/
@@ -272,7 +271,6 @@ PS_OUT PS_FlipBook(PS_IN In)	// ->9
 	Out.vColor = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_0, g_int_0, g_int_1));
 	return Out;
 }
-
 
 VS_OUT VS_MAIN(VS_IN In)
 {
@@ -350,6 +348,7 @@ VS_OUT VS_UVCut(VS_IN In)	// → 13
 	Out.vTexUV = In.vTexUV;
 	return Out;
 }
+
 // g_int_0 : [0] 이미지 색상 사용, [1] 내가 지정한 색상 사용
 // g_vec4_0 : 변경할 색상과 알파값
 PS_OUT PS_Alpha_Color(PS_IN In)	// → 13
@@ -491,6 +490,7 @@ VS_OUT1 VS_MAIN1(VS_IN In)
 
 	return Out;
 }
+
 PS_OUT PS_Emissive(PS_IN1 In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -623,7 +623,7 @@ PS_OUT PS_Flow(PS_IN In)	// → 20
 
 /*******************
 * UVCut → 21 : 배경이 검정색인 텍스처를 검정색을 없애고 색상을 변경할 수 있습니다.
-g_float_0 : 색상 변경 (초록색)
+g_vec4_0 : 색상 변경 (초록색 배경)
 /********************/
 PS_OUT PS_MaskTexture(PS_IN In)	// → 21
 {
@@ -638,6 +638,194 @@ PS_OUT PS_MaskTexture(PS_IN In)	// → 21
 	Out.vColor = saturate(GlowBase);
 	Out.vColor.a = PointTex.g;
 	return Out;
+}
+
+/*******************
+* PS_ChoiceTextureReverseFlipBook → 22 : 나눈 텍스처의 끝까지 도달했다가 다시 처음으로 돌아가는 코드 입니다. -> <- (텍스처 넘김, 글로우, UV 조절)
+g_Time : 현재 시간.
+g_float_0 : Gauge	-> 클라이언트에서 입력 받아야 한다.
+g_float_1 : FrameTime
+g_float_2 : Alpha
+g_int_0 : 가로로 자를 개수	-> 클라이언트에서 입력 받아야 한다.
+g_int_1 : 세로로 자를 개수
+g_int_2 : 사용할 텍스처	-> 클라이언트에서 입력 받아야 한다.
+g_vec4_0 : 색상 변경
+g_tex_0 : g_int_2 -> 0	Hp
+g_tex_3 : g_int_2 -> 0	Hp 배경
+g_tex_2 : g_int_2 -> 1
+g_tex_4 : g_int_2 -> 1
+g_tex_2 : g_int_2 -> 2	텍스처 넘김 X
+g_tex_5 : g_int_2 -> 2	텍스처 넘김 X
+g_tex_6 : g_int_2 -> 2	흰색 배경
+/********************/
+PS_OUT PS_ChoiceTextureReverseFlipBook(PS_IN In)	// ->22
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Texture;
+	float Mask;
+
+	float4 DefaultWhite = g_tex_6.Sample(LinearSampler, In.vTexUV);
+	float4 OriginColor = g_vec4_0;
+
+	if (0 == g_int_2)
+	{
+		Texture = g_tex_0.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_1, g_int_0, g_int_1));
+		Mask = g_tex_3.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_1, g_int_0, g_int_1)).a;
+
+	}
+	else if (1 == g_int_2)
+	{
+		Texture = g_tex_1.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_1, g_int_0, g_int_1));
+		Mask = g_tex_4.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_1, g_int_0, g_int_1)).a;
+
+	}
+	else if (2 == g_int_2)
+	{
+		Texture = g_tex_2.Sample(LinearSampler, In.vTexUV);
+		Mask = g_tex_5.Sample(LinearSampler, In.vTexUV).a;
+	
+	}
+
+	float4 BlendColor = DefaultWhite * OriginColor;
+	Out.vColor = saturate(BlendColor + Texture * g_float_2);
+	Out.vColor.a = Mask * 1.0f;
+
+	return Out;
+}
+
+/*******************
+* PS_ReverseFlipBook → 23 : 나눈 텍스처의 끝까지 도달했다가 다시 처음으로 돌아가는 코드 입니다. -> <- (텍스처 넘김, UV 조절)
+g_Time : 현재 시간.
+g_float_0 : Gauge	-> 클라이언트에서 입력 받아야 한다.
+g_float_1 : FrameTime
+g_int_0 : 가로로 자를 개수	-> 클라이언트에서 입력 받아야 한다.
+g_int_1 : 세로로 자를 개수
+g_int_2 : 사용할 텍스처	-> 클라이언트에서 입력 받아야 한다.
+g_vec4_0 : 색상 변경
+g_tex_0 : g_int_2 -> 0	Hp
+g_tex_1 : g_int_2 -> 1
+g_tex_2 : g_int_2 -> 0	Hp 배경
+/********************/
+PS_OUT PS_ReverseFlipBook(PS_IN In)	// ->23
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	if (0 == g_int_2)
+	{
+		Out.vColor = g_tex_0.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_1, g_int_0, g_int_1)) * g_vec4_0;
+	}
+	else if (1 == g_int_2)
+	{
+		Out.vColor = g_tex_1.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_1, g_int_0, g_int_1)) * g_vec4_0;
+	}
+	else if (2 == g_int_2)
+	{
+		Out.vColor = g_tex_2.Sample(LinearSampler, In.vTexUV)  * g_vec4_0;
+	}
+
+	return Out;
+
+
+	//PS_OUT			Out = (PS_OUT)0;
+	//
+	//Out.vColor = g_tex_0.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_0, g_int_0, g_int_1)) * g_vec4_0;
+
+	//return Out;
+}
+
+/*******************
+* UVCut → 24 : 염력 게이지 int값에 따라서 변한다.
+g_vec4_0 : 색상 변경 (초록색 배경)
+g_float_0 : VS 에서 Gauge 정도로 사용
+g_float_2 : 텍스처 넘기는 값 (프레임)
+g_int_0 : 텍스처 선택
+/********************/
+PS_OUT PS_PsychokinesisFlipBook(PS_IN In)	// ->24
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 OriginalTexture;
+	float4  vGlowColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	if (0 == g_int_0)
+	{
+		OriginalTexture = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_1, 10, 1));
+	}
+	else if (1 == g_int_0)
+	{
+		OriginalTexture = g_tex_2.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_1, 10, 1));
+	}
+	else if (2 == g_int_0)
+	{
+		OriginalTexture = g_tex_3.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_1, 8, 1));
+	}
+
+	float4 TopColor = g_vec4_0;
+	float4 MixTexture = saturate(TopColor * OriginalTexture * 2.0f);
+	float4 BottomColor = g_vec4_1 * (1.0f - In.vTexUV.y);
+	float3 FinalTexture = MixTexture.rgb * In.vTexUV.y;
+
+	Out.vColor.rgb = saturate((FinalTexture + BottomColor.rgb) + vGlowColor * g_float_2);
+	Out.vColor.a = OriginalTexture.a;
+
+	return Out;
+}
+
+/*******************
+* UVCut → 25 : 텍스처 이미지 그대로 사용하면서 알파값 만 조절
+g_float_0 : Alpha
+/********************/
+PS_OUT PS_UI_ChangeAlpha(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.a = Out.vColor.a - (1.f - g_float_0);
+	return Out;
+}
+
+/*******************
+* UVCut → 26 : 글로우
+g_float_0 : Alpha
+/********************/
+PS_OUT PS_GlowTexture(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4  vTextureColor = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4  vGlowColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor = saturate(vTextureColor + (vGlowColor * g_float_0))  * g_vec4_0;
+
+	return Out;
+}
+
+/*******************
+* UVCut → 27 : 이미시브 (빨간색 초록색)
+g_float_0 : 섞는 정도
+g_vec4_0 : 색상 변경
+/********************/
+PS_OUT PS_RedEmissive(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Emissive = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	Emissive = lerp(Emissive, g_vec4_0, g_float_0);
+
+	Out.vColor = Texture * Emissive;
+
+	return Out;
+
+	//PS_OUT			Out = (PS_OUT)0;
+
+	//float4 vTexture0 = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	//float4 vTexture1 = g_tex_1.Sample(LinearSampler, In.vTexUV);
+
+	//vTexture1.a = 0.0f;
+
+	//Out.vColor = saturate(vTexture0 + vTexture1) * g_vec4_0;
+
+	//return Out;
 }
 
 technique11 DefaultTechnique
@@ -950,5 +1138,89 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MaskTexture();
+	}
+
+	//22 : 2개의 텍스처를 선택해서 처음부터 끝에서 다시 처음으로를 반복한다. 색 선택 가능 (Hp)
+	pass ChoiceTextureReverseFlipBook
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaOne, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_UI_ProgressBar();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ChoiceTextureReverseFlipBook();
+	}
+
+	//23 : 2개의 텍스처를 선택해서 처음부터 끝에서 다시 처음으로를 반복한다. 색 선택 가능 (HpBack)
+	pass ReverseFlipBook
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_UI_ProgressBar();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ReverseFlipBook();
+	}
+
+	//24 : 염력 게이지만을 위한 패스..
+	pass TelekinesisGauge
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_UI_ProgressBar();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_PsychokinesisFlipBook();
+	}
+
+	//25 : 알파값만 조절
+	pass ChangeAlpha
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_UI_ChangeAlpha();
+	}
+
+	//26 : 글로우 (위에 거랑 UV 다릅니다.)
+	pass GlowTexture
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_GlowTexture();	// 0번째 텍스처에 1번째 텍스처를 섞는다.
+	}
+
+	//27: 이미시브 (검정색과 빨간색으로 이루어진 텍스처)
+	pass RedEmissive
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_RedEmissive();
 	}
 }
