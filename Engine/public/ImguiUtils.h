@@ -22,6 +22,10 @@ public:
 	static void Render_Guizmo_Translate(OUT _float3& pPosOut, GUIZMO_INFO& tInfo, _bool bMatrixEditor, _bool bManipulator);
 	// pBtnName을 파일다이얼로그의 키로 사용하므로 중복되면 안된다.
 	static void FileDialog_FileSelector(const char* pBtnName, const char* pFilter, const char* pFilePath, std::function<void(const string&)> FileCallback);
+
+	static void InputFloat2(_float2* pVector, const char* str);
+	static void InputFloat3(_float3* pVector, const char* str);
+	static void InputColor(_float4* pVector, const char* str);
 };
 
 END

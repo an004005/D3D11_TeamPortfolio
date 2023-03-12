@@ -32,6 +32,9 @@ void CCamera_Manager::Tick()
 	
 		const _matrix ProjMatrix = pMainCam->GetProjMatrix();
 		pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, ProjMatrix);
+
+		//_float4 vCamPos = pPipeLine->Get_CamPosition();
+		//IM_LOG("Result : %f %f %f", vCamPos.x, vCamPos.y, vCamPos.z);
 	}
 
 
@@ -126,6 +129,7 @@ _float4 CCamera_Manager::Get_CamPosition(const string& strCamTag)
 
 void CCamera_Manager::Clear()
 {
+	m_strMainCamTag.clear();
 	for (auto cam : m_Cameras)
 		Safe_Release(cam.second);
 	m_Cameras.clear();

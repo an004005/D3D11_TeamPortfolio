@@ -198,6 +198,25 @@ if(Event == "Air_Hold_2")
 
 
 
+../Bin/Resources/VFX/EffectSystem/Player_Default_Attack/Default_Charging_Twist.json
+
+
+꽃 떨어트리는 Duration 168
+
+꽃 발사하는 Duration 73
+
+
+
+
+트랜스폼 그룹들 관리하기
+
+
+사운드 매니저 참고 
+
+
+
+
+
 
 
 

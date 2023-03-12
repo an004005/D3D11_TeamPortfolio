@@ -26,8 +26,6 @@ private:
 	HRESULT Ready_Layer_Map(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Effect(const _tchar* pLayerTag);
 
-	HRESULT Create_Model_Instance(const wstring& pProtoTag, const char* pModelPath);
-
 public:
 	static CLevel_Tutorial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	void Free() override;

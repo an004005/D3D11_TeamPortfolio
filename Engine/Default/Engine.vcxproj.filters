@@ -522,7 +522,18 @@
     <ClInclude Include="..\public\Imgui_CameraManager.h">
       <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Imgui_LightManager.h" />
+    <ClInclude Include="..\public\CurveManager.h">
+      <Filter>01.Utility\02.GameObject\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_LightManager.h">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_CurveManager.h">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GameTime_Manager.h">
+      <Filter>01.Utility\02.GameObject\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -813,12 +824,23 @@
     <ClCompile Include="..\private\Imgui_CameraManager.cpp">
       <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Imgui_LightManager.cpp" />
     <ClCompile Include="..\private\Model_Instancing.cpp">
       <Filter>01.Utility\03.Components\06.Model\Instancing</Filter>
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_ModelInstancing.cpp">
       <Filter>01.Utility\03.Components\06.Model\Instancing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CurveManager.cpp">
+      <Filter>01.Utility\02.GameObject\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_LightManager.cpp">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_CurveManager.cpp">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameTime_Manager.cpp">
+      <Filter>01.Utility\02.GameObject\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

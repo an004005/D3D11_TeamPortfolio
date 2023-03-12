@@ -75,12 +75,52 @@ void CCamSpot::Tick(_double TimeDelta)
 	else
 		m_pTransformCom->Chase(vTargetPos, fDistance * 0.1f, 0.f);
 
-	static_cast<CCamera_Player*>(m_pPlayerCamera)->Sync_Target(vMyPos, vMyLook, m_fCamHeight,TimeDelta);
+	if (m_fLerpTime < 1.f)
+	{
+		m_fLerpTime += (_float)TimeDelta * 2.f;
+
+		if (MOD_SYNC == m_eCamMod)
+		{
+			_vector vSyncPos = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncPos(vMyPos, vMyLook, m_fCamHeight, TimeDelta);
+			_vector vLerpPos = XMVectorLerp(m_AttachMatrix.r[3], vSyncPos, m_fLerpTime);
+
+			_vector vSyncLook = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncLook(vMyPos, vMyLook, m_fCamHeight, TimeDelta);
+			_vector vLerpLook = XMVectorLerp(m_AttachMatrix.r[2], vSyncLook, m_fLerpTime);
+
+			static_cast<CCamera_Player*>(m_pPlayerCamera)->Lerp_ActionPos(vLerpPos, vLerpLook);
+		}
+		else if (MOD_ATTACH == m_eCamMod)
+		{
+			_vector vSyncPos = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncPos(vMyPos, vMyLook, m_fCamHeight, TimeDelta);
+			_vector vLerpPos = XMVectorLerp(vSyncPos ,m_AttachMatrix.r[3], m_fLerpTime);
+
+			_vector vSyncLook = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncLook(vMyPos, vMyLook, m_fCamHeight, TimeDelta);
+			_vector vLerpLook = XMVectorLerp(vSyncLook, m_AttachMatrix.r[2], m_fLerpTime);
+
+			static_cast<CCamera_Player*>(m_pPlayerCamera)->Lerp_ActionPos(vLerpPos, vLerpLook);
+		}
+	}
+	else
+	{
+		if (MOD_SYNC == m_eCamMod)
+		{
+			static_cast<CCamera_Player*>(m_pPlayerCamera)->Sync_Target(vMyPos, vMyLook, m_fCamHeight, TimeDelta);
+		}
+		else if (MOD_ATTACH == m_eCamMod)
+		{
+			static_cast<CCamera_Player*>(m_pPlayerCamera)->Attach_Target(m_AttachMatrix);
+		}
+	}
 }
 
 void CCamSpot::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
+}
+
+void CCamSpot::Imgui_RenderProperty()
+{
+	__super::Imgui_RenderProperty();
 }
 
 void CCamSpot::MouseMove(_double TimeDelta)
@@ -105,9 +145,28 @@ void CCamSpot::MouseMove(_double TimeDelta)
 
 		if (m_fCamHeight >= 3.f)
 			m_fCamHeight = 3.f;
-		else if (m_fCamHeight <= -3.f)
-			m_fCamHeight = -3.f;
+		else if (m_fCamHeight <= -6.f)
+			m_fCamHeight = -6.f;
 	}
+}
+
+void CCamSpot::Switch_CamMod()
+{
+	if (MOD_SYNC == m_eCamMod)
+	{
+		m_eCamMod = MOD_ATTACH;
+		m_fLerpTime = 0.f;
+	}
+	else if (MOD_ATTACH == m_eCamMod)
+	{
+		m_eCamMod = MOD_SYNC;
+		m_fLerpTime = 0.f;
+	}
+}
+
+void CCamSpot::SetUp_BoneMatrix(CModel * pModel, _fmatrix Transform)
+{
+	m_AttachMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationZ(XMConvertToRadians(-90.f)) * pModel->GetBoneMatrix("CameraPos") * Transform;
 }
 
 HRESULT CCamSpot::Setup_Components(void)

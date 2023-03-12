@@ -36,7 +36,7 @@ namespace nlohmann
 	};
 }
 
-const _float4x4 CModel::s_DefaultPivot = _float4x4::CreateScale({ 0.01f, 0.01f, 0.01f }) *_float4x4::CreateRotationY(XMConvertToRadians(-180.f));
+_float4x4 CModel::s_DefaultPivot = _float4x4::CreateScale({ 0.01f, 0.01f, 0.01f }) *_float4x4::CreateRotationY(XMConvertToRadians(-180.f));
 const string CModel::s_ModifyFilePath = "../Bin/Resources/Meshes/Scarlet_Nexus/AnimationModifier.json";
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -94,6 +94,24 @@ CModel::CModel(const CModel & rhs)
 	Safe_AddRef(m_pShadowShader);
 }
 
+const _float3* CModel::Get_VerticesPos()
+{
+	return m_Meshes.front()->Get_VerticesPos();
+}
+
+const _uint CModel::Get_NumVertices()
+{
+	return m_Meshes.front()->Get_NumVertices();
+}
+
+const VTXMODEL* CModel::Get_NonAnimBuffer()
+{
+	return m_Meshes.front()->Get_NonAnimBuffer();
+}
+
+
+
+
 CBone * CModel::Get_BonePtr(const char * pBoneName)
 {
 	const auto itr = m_mapBones.find(pBoneName);
@@ -112,11 +130,17 @@ CBone* CModel::Get_BonePtr(const string& strBoneName)
 	return itr->second;
 }
 
-_matrix CModel::GetBoneMatrix(const string& strBoneName)
+_matrix CModel::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
 {
 	CBone* pBone = Get_BonePtr(strBoneName);
 	Assert(pBone != nullptr);
-	return pBone->Get_CombindMatrix() * XMLoadFloat4x4(&m_PivotMatrix);
+
+	if(bPivotapply == true)
+	{
+		return pBone->Get_CombindMatrix() * XMLoadFloat4x4(&m_PivotMatrix);
+	}
+	
+	return pBone->Get_CombindMatrix();
 }
 
 CAnimation* CModel::Find_Animation(const string& strAnimaName)
@@ -158,17 +182,25 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix)
 			m_LocalMoveAnimName = m_CurAnimName;
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
+
+		if (m_mapAnimation[m_CurAnimName]->GetPlayRatio() < m_fBefRatio)
+		{
+			m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+
+		m_fBefRatio = m_mapAnimation[m_CurAnimName]->GetPlayRatio();
 	}
 	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vLocalMove - m_vBefLocalMove));
 	//m_fLastLocalMoveSpeed = 0.f;
 
-	_vector vScale, vRotation, vTrans;
-	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
-	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
-
 	vMovePos = m_vLocalMove - m_vBefLocalMove;
 	XMVectorSetW(vMovePos, 0.f);
 	_float	fLength = XMVectorGetX(XMVector3Length(vMovePos));
+
+	_vector vScale, vRotation, vTrans;
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
 
 	XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_PivotMatrix);
 	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
@@ -220,16 +252,24 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
 			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
+
+		if (m_mapAnimation[srtAnimName]->GetPlayRatio() < m_fSocketBefRatio)
+		{
+			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+
+		m_fSocketBefRatio = m_mapAnimation[srtAnimName]->GetPlayRatio();
 	}
 	m_fLastLocalMoveSpeed = XMVectorGetX(XMVector3Length(m_vSocketLocalMove - m_vSocketBefLocalMove));
-
-	_vector vScale, vRotation, vTrans;
-	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
-	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
 
 	vMovePos = m_vSocketLocalMove - m_vSocketBefLocalMove;
 	XMVectorSetW(vMovePos, 0.f);
 	_float	fLength = XMVectorGetX(XMVector3Length(vMovePos));
+
+	_vector vScale, vRotation, vTrans;
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
 
 	XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_PivotMatrix);
 	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);

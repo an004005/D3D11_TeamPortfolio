@@ -246,7 +246,6 @@ void CEffectSystem::SaveToJson(Json& json)
 	json["ModelProtoTag"] = m_ModelProtoTag;
 	json["ModelFolderDir"] = m_ModelFolderDir;
 
-	vector<string> ModelProtoTag;
 	if(m_bModelSprite == true)
 	{
 		json["ModelDirs"] = m_vecModelDir;
@@ -316,7 +315,9 @@ void CEffectSystem::LoadFromJson(const Json& json)
 
 	if (m_ModelProtoTag.empty() == false)
 	{
+		CModel::s_DefaultPivot = _float4x4::CreateScale({ 0.01f, 0.01f, 0.01f });
 		FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), (CComponent**)&m_pModel));
+		CModel::s_DefaultPivot = _float4x4::CreateScale({ 0.01f, 0.01f, 0.01f }) *_float4x4::CreateRotationY(XMConvertToRadians(-180.f));
 	}
 }
 
@@ -444,24 +445,13 @@ void CEffectSystem::Imgui_RenderProperty()
 
 				for(_uint i =0; i < ModelDirSize; ++i)
 				{
-					// CModel* pModelCom = nullptr;
 					m_vecModelCom.push_back({ dynamic_cast<CModel*>(CGameInstance::GetInstance()->Clone_Component(CGameUtils::s2ws(m_vecModelDir[i]).c_str())) });
-
-					// Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_vecModelDir[i]).c_str(), TEXT("Model"), (CComponent**)&pModelCom);
-					// m_vecModelCom.push_back(pModelCom);
 				}
 				m_pModel = m_vecModelCom[0];
 			}
-			
-			// Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), (CComponent**)&m_pModel);
 		}
 	}
-	
 
-	// if (auto pBillBoard = dynamic_cast<CBillBoardTest*>(m_pBuffer))
-	// {
-	// 	ImGui::InputFloat("BillBoardLife", &pBillBoard->m_fLife);
-	// }
 	ImGui::Checkbox("NormalTex", &m_bNormal);
 
 	ImGui::Checkbox("BillBoard", &m_bBillBoard);
@@ -490,6 +480,7 @@ void CEffectSystem::Imgui_RenderProperty()
 		file << json;
 	});
 
+	
 	
 }
 

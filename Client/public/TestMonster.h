@@ -4,9 +4,6 @@
 #include "Monster.h"
 
 BEGIN(Engine)
-class CShader;
-class CRenderer;
-class CModel;
 class CFSMComponent;
 END
 
@@ -29,9 +26,6 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 private:
-	CShader*				m_pShaderCom = nullptr;
-	CRenderer*				m_pRendererCom = nullptr;
-	CModel*					m_pModelCom = nullptr;
 	CFSMComponent*			m_pFSM = nullptr;
 
 public:

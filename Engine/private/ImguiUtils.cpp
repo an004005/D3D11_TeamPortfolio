@@ -182,3 +182,30 @@ void CImguiUtils::FileDialog_FileSelector(const char* pBtnName, const char* pFil
 	}
 }
 
+void CImguiUtils::InputFloat2(_float2* pVector, const char* str)
+{
+	_float vVec2f[3] = { pVector->x, pVector->y };
+	ImGui::InputFloat2(str, vVec2f);
+	pVector->x = vVec2f[0];
+	pVector->y = vVec2f[1];
+}
+
+void CImguiUtils::InputFloat3(_float3* pVector, const char* str)
+{
+	_float vVec3f[3] = { pVector->x, pVector->y, pVector->z };
+	ImGui::InputFloat3(str, vVec3f);
+	pVector->x = vVec3f[0];
+	pVector->y = vVec3f[1];
+	pVector->z = vVec3f[2];
+}
+
+void CImguiUtils::InputColor(_float4* pVector, const char* str)
+{
+	_float vColor[4] = { pVector->x, pVector->y, pVector->z, pVector->w };
+	ImGui::ColorEdit4(str, vColor);
+	pVector->x = vColor[0];
+	pVector->y = vColor[1];
+	pVector->z = vColor[2];
+	pVector->w = vColor[3];
+}
+

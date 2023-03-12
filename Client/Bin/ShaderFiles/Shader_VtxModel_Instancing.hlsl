@@ -62,27 +62,26 @@ struct PS_OUT
 	float4		vNormal : SV_TARGET1;
 	float4		vDepth : SV_TARGET2;
 	float4		vRMA : SV_TARGET3;
+	float4		vOutline : SV_TARGET4;
+	float4		vFlag : SV_TARGET5;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
-	float flags = PackPostProcessFlag(0.f, SHADER_DEFAULT);
+	float flags = SHADER_DEFAULT;
 
 	Out.vDiffuse = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	// Out.vFlag = flags;
 
 	return Out;
 }
 
-// g_tex_0 : diffuse
-// g_tex_1 : normal
-// g_tex_2 : RMA
-PS_OUT PS_DEFAULT(PS_IN In)
+PS_OUT CommonProcess(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
-
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	if (Out.vDiffuse.a < 0.01f)
 		discard;
@@ -96,19 +95,126 @@ PS_OUT PS_DEFAULT(PS_IN In)
 		vNormal = normalize(mul(vNormal, WorldMatrix));
 	}
 	else
-	{
 		vNormal = In.vNormal.xyz;
-	}
 
-	float flags = PackPostProcessFlag(0.f, SHADER_DEFAULT);
+	float flags = SHADER_DEFAULT;
 
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	// Out.vFlag = flags;
+	return Out;
+}
+
+// g_tex_0 : diffuse
+// g_tex_1 : normal
+// g_tex_2 : RMA
+PS_OUT PS_DEFAULT(PS_IN In)
+{
+	PS_OUT Out = CommonProcess(In);
+
 	if (g_tex_on_2)
 		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
 	else
 		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
 
+	return Out;
+}
+
+// g_tex_0 : diffuse
+// g_tex_1 : normal
+// g_tex_2 : RMA
+// g_tex_3 : detailnormal
+
+PS_OUT PS_DETAIL_N(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	if (Out.vDiffuse.a < 0.01f)
+		discard;
+
+	float3 vNormal;
+	float3 vDetialNormal;
+
+	if (g_tex_on_1 && g_tex_on_3)
+	{
+		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+		vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+		vector		vDetailNormalDesc = g_tex_3.Sample(LinearSampler, In.vTexUV);
+		vDetialNormal = vDetailNormalDesc.xyz * 2.f - 1.f;
+
+		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+		vNormal = normalize(mul(vNormal, WorldMatrix));
+		vDetialNormal = normalize(mul(vDetialNormal, WorldMatrix));
+	}
+	else if (g_tex_on_1)
+	{
+		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+		vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+		vNormal = normalize(mul(vNormal, WorldMatrix));
+	}
+	else
+		vNormal = In.vNormal.xyz;
+
+
+	float flags = SHADER_DEFAULT;
+
+	if (g_tex_on_3)
+	{
+		vNormal += vDetialNormal * g_float_0;
+	}
+	else
+	{
+		Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	}
+	
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	// Out.vFlag = flags;
+	return Out;
+}
+
+// g_tex_0 : diffuse
+// g_tex_1 : normal
+// g_tex_2 : RMA
+// g_tex_3 : emissive
+
+PS_OUT PS_EMISSIVE(PS_IN In)
+{
+	PS_OUT			Out = PS_DEFAULT(In);
+
+	Out.vDepth.z = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+
+	return Out;
+}
+
+// g_tex_0 : diffuse
+// g_tex_1 : normal
+// g_tex_2 : RMA
+PS_OUT PS__ALPHA(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	if (Out.vDiffuse.a < 0.01f)
+		Out.vDiffuse.a = 1.f;
+
+	float3 vNormal;
+	if (g_tex_on_1)
+	{
+		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+		vNormal = vNormalDesc.xyz * 2.f - 1.f;
+		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+		vNormal = normalize(mul(vNormal, WorldMatrix));
+	}
+	else
+		vNormal = In.vNormal.xyz;
+
+	float flags = SHADER_DEFAULT;
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	// Out.vFlag = flags;
 	return Out;
 }
 
@@ -140,5 +246,47 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_DEFAULT();
+	}
+
+	// 2
+	pass Detail_N
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DETAIL_N();
+	}
+
+	// 3
+	pass Emissive
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EMISSIVE();
+	}
+
+	// 4
+	pass Alpha
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS__ALPHA();
 	}
 }

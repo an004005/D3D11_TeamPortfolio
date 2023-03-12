@@ -43,6 +43,7 @@ void CRigidBody::Imgui_RenderProperty()
 
 	ImGui::Checkbox("bTrigger", &m_bTrigger);
 	ImGui::Checkbox("bKinematic", &m_bKinematic);
+	ImGui::InputFloat("Density", &m_fDensity);
 
 	static array<const char*, CT_END> CollTypeNames {
 		"Player", "Monster", "PlayerAtk", "MonsterAtk", "PsychickObj", "Trigger4Player", "Trigger4Monster", "Static", "MonsterPart"

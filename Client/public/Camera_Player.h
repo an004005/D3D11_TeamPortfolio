@@ -4,7 +4,7 @@
 #include "Camera.h"
 
 BEGIN(Engine)
-
+class CControlledRigidBody;
 END
 
 // 플레이어 카메라는 CamSpot을 따라다닌다
@@ -24,14 +24,24 @@ public:
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
+	virtual void AfterPhysX() override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
 public:
 	void	Sync_Target(_fvector TargetPos, _fvector TargetLook, _float CamHeight, _double TimeDelta);
+	void	Attach_Target(_fmatrix AttachMatrix);
+
+	_vector	Get_SyncPos(_fvector TargetPos, _fvector TargetLook, _float CamHeight, _double TimeDelta);	// 원래 위치
+	_vector	Get_SyncLook(_fvector TargetPos, _fvector TargetLook, _float CamHeight, _double TimeDelta);	// 원래 룩
+	
+	void	Lerp_ActionPos(_fvector vPos, _fvector vLook);	// 보간된 위치로 캠 위치 설정
 
 private:
 	HRESULT SetUp_Components();
+
+private:
+	_float	m_fBeforeCamDistance = -1.f;
 
 public:
 	static CCamera_Player* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

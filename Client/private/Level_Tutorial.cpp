@@ -3,11 +3,18 @@
 #include "GameInstance.h"
 #include "Material.h"
 #include "JsonStorage.h"
-#include "GameUtils.h"
-#include "Material.h"
 #include "Imgui_PropertyEditor.h"
 #include "Imgui_LevelSwitcher.h"
-#include "Camera.h"
+#include "Controller.h"
+#include "CamSpot.h"
+#include "EffectSystem.h"
+#include "Player.h"
+#include "Weapon_wp0190.h"
+#include "PostVFX_Scifi.h"
+#include "EffectGroup.h"
+#include "ParticleSystem.h"
+#include "PostVFX_Distortion.h"
+#include "TrailSystem.h"
 
 CLevel_Tutorial::CLevel_Tutorial(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel(pDevice, pContext)
@@ -76,25 +83,46 @@ HRESULT CLevel_Tutorial::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	// CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
-	// {
-	// 	char szFileName[MAX_PATH]{};
-	// 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-	// 	CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
-	// });
+		// player
+	{
+		pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
+		pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
 
-	////인스턴싱 모델들의 프로토타입 생성
-	//CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/",
-	//	[this](const string& fileName)
-	//{
-	//	char szFileExt[MAX_PATH]{};
-	//	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+		{
+			auto pModel_Player = CModel::Create(m_pDevice, m_pContext,
+				"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
 
-	//	if (0 == strcmp(szFileExt, ".static_model"))
-	//	{
-	//		FAILED_CHECK(Create_Model_Instance(s2ws(fileName), fileName.c_str()));
-	//	}
-	//});
+			pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
+			FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
+		}
+
+		_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
+		pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
+		auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
+
+
+
+		{	// 이펙트 프로토타입
+			if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
+				CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
+				return E_FAIL;
+
+			if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
+				CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+				return E_FAIL;
+
+			FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
+			FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
+			FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+			FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
+		}
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"), CController::Create())))
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -130,15 +158,22 @@ HRESULT CLevel_Tutorial::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
-	// const Json& json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/ShadowCam.json");
-	// auto pCam = pGameInstance->Clone_GameObject_Get(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), (void*)&json);
-	// pGameInstance->SetShadowCam(dynamic_cast<CCamera*>(pCam));
 
 	return S_OK;
 }
 
 HRESULT CLevel_Tutorial::Ready_Layer_Player(const _tchar * pLayerTag)
 {
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json PreviewData;
+	PreviewData["Model"] = "Model_Player";
+
+	CGameObject* pPlayer = nullptr;
+	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Player"), &PreviewData));
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
+
 	return S_OK;
 }
 
@@ -154,6 +189,7 @@ HRESULT CLevel_Tutorial::Ready_Layer_Map(const _tchar * pLayerTag)
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+
 	return S_OK;
 }
 
@@ -172,23 +208,6 @@ CLevel_Tutorial * CLevel_Tutorial::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 		Safe_Release(pInstance);
 	}
 	return pInstance;
-}
-
-HRESULT CLevel_Tutorial::Create_Model_Instance(const wstring & pProtoTag, const char * pModelPath)
-{
-	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
-	CComponent* pComponent = nullptr;
-
-	_uint iNumInstance = 300;
-	pComponent = CModel_Instancing::Create(m_pDevice, m_pContext, pModelPath, iNumInstance);
-	assert(pComponent != nullptr);
-
-	FAILED_CHECK(pGameInstance->Add_Prototype(
-		pProtoTag.c_str(),
-		pComponent));
-
-	return S_OK;
 }
 
 void CLevel_Tutorial::Free()

@@ -7,9 +7,12 @@
 BEGIN(Engine)
 class CVIBuffer_Point_Instancing;
 class CRenderer;
+class CVIBuffer_Mesh_Instancing;
+class CModel;
 END
 
 BEGIN(Client)
+
 
 enum class ESpawnShape
 {
@@ -23,12 +26,25 @@ enum class EPointType
 	FLIPBOOK
 };
 
+enum class EBufferType
+{
+	POINT,
+	MESH
+};
+
 class CParticleSystem :	public CGameObject
 {
 public:
 	CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CParticleSystem(const CParticleSystem& rhs);
-	virtual ~CParticleSystem() = default;
+	virtual ~CParticleSystem()
+	{
+		tmp.erase(this);
+	}
+	static set<CParticleSystem*> tmp;
+
+public:
+	CShader* GetShader() { return m_pShader; }
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
@@ -40,16 +56,28 @@ public:
 	virtual void Imgui_RenderProperty() override;
 	void SetLoop(_bool bLoop) { m_bLoop = bLoop; }
 
+
+	HRESULT SetParams();
+	HRESULT	Begin();
 private:
 	void AddPoint();
 	void UpdatePoints(_float fTimeDelta);
 
 private:
+	void AddMesh();
+	void UpdateMeshes(_float fTimeDelta);
+
+private:
+	void Create_MeshData(VTXMATRIX data);
+	_uint FineNearestIndex(_float4 vPos);
+private:
 	ShaderParams m_tParam;
 	CRenderer* m_pRendererCom = nullptr;
 	CShader* m_pShader = nullptr;
-	_uint m_iPassIdx = 0;
-	CVIBuffer_Point_Instancing* m_pBuffer = nullptr;
+	CVIBuffer_Point_Instancing* m_pPointInstanceBuffer = nullptr;
+	CVIBuffer_Mesh_Instancing*	m_pMeshInstanceBuffer = nullptr;
+	CModel*						m_pModel = nullptr;
+
 
 	_bool m_bLocal = true;
 	_uint m_iInstanceNum = 50;
@@ -72,18 +100,55 @@ private:
 	_float2 m_fSize{ 0.1f, 0.1f };
 
 	ESpawnShape m_eShape = ESpawnShape::SPHERE;
+	EBufferType m_eBufferType = EBufferType::POINT;
+
+	_float2 m_fGravityPowerMinMax = { 0.f, 0.f };
+	_float m_fGravityPower = 0.f;
 	_float m_fConeAngleDeg = 30.f;
 	_float m_fConeOriginRadius = 1.f;
 	_float m_fSphereRadius = 4.f;
 
+	_float3 m_vScaleVariation = { 1.f ,1.f,1.f};
+
+	_bool m_bPointInstance = false;
+	_bool m_bMeshInstance = false;
 	_bool m_bFromOrigin = true; // false搁 官款爹 酒公单辑 积己
 	_bool m_bGravity = false;
 	_bool m_bSizeDecreaseByLife = false;
 	_bool m_bSizeIncreaseByLife = false;
 	_float m_fIncreaseMaxSize = 1.f;
 
+	string m_MeshBufferProtoTag;
 
-	list<VTXMATRIX> m_Points;
+	string m_PointBufferProtoTag = "Prototype_Component_PointInstance";
+	string m_ShaderProtoTag = "Prototype_Component_Shader_VtxPointInstance_Particle";
+	string m_ModelProtoTag;
+	// string m_MeshBufferProtoTag;
+
+	list<VTXMATRIX> m_PointList;
+	list<VTXINSTANCE> m_MeshList;
+
+	vector<pair<float, _uint>> m_vecVerticesDistance;
+
+	_float m_fsurfaceThreshold = 0.1f;
+	const _float3* m_vVerticesPos = nullptr;
+private:
+	// For Gravity
+
+	// _bool	m_bGravity;
+	_float	m_fJumpPower;
+	_float	m_fDownSpeed;
+
+	// For Rotation
+	_bool	  m_bRotate = false;
+	_float4x4 m_RotationMatrix = XMMatrixIdentity();
+	_float3	 m_vMeshSize{ 1.f,1.f,1.f };
+	// _float	  m_ArrayRoationToTime[3];
+	_float3	  m_fRotationToTime_Min = {0.f,0.f,0.f};
+	_float3	  m_fRotationToTime_Max = { 0.f,0.f,0.f };
+
+private:
+	// For ParticleGroup
 
 
 public:
@@ -91,5 +156,8 @@ public:
 	virtual CGameObject*	Clone(void* pArg) override;
 	virtual void			Free() override;
 };
+
+
+
 
 END

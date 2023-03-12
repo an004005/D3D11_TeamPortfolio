@@ -41,6 +41,7 @@
 #include "FL_Controller.h"
 
 #include "BuddyLumi.h"
+#include "BdLm_Controller.h"
 
 #include "SkummyPool.h"
 #include "SkMpBullet.h" // SkummPool's Bullet
@@ -50,6 +51,7 @@
 #include "SkPd_Controller.h"
 
 #include "BronJon.h"
+#include "BrJ_Controller.h"
 
 #include "Boss1.h"
 #include "Boss1_AIController.h"
@@ -248,6 +250,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	}
 
 	{
+//		_float4x4	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(90.f));
 		auto pBronJon = CModel::Create(m_pDevice, m_pContext,
 			"../Bin/Resources/Model/AnimModel/Monster/BronJon/BronJon.anim_model");
 		pBronJon->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BronJon/Anim/");
@@ -280,6 +283,8 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FL_Controller"), CFL_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkPd_Controller"), CSkPd_Controller::Create()));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_BdLm_Controller"), CBdLm_Controller::Create()));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_BrJ_Controller"), CBrJ_Controller::Create()));
 
 	return S_OK;
 }
@@ -323,14 +328,14 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Json SkummyPandouModel;
 	SkummyPandouModel["Model"] = "MonsterSkummyPandou";
 	
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPandou"), &SkummyPandouModel)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPandou"), &SkummyPandouModel)))
+		return E_FAIL;*/
 
 	Json BronJonModel;
 	BronJonModel["Model"] = "MonsterBronJon";
 
-	/*if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
-		return E_FAIL;*/
+	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("BronJon"), &BronJonModel)))
+		return E_FAIL;
 
 	return S_OK;
 }

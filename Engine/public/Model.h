@@ -3,7 +3,7 @@
 #include "Component.h"
 
 BEGIN(Engine)
-class CAnimation;
+	class CAnimation;
 
 enum class EBoneMask
 {
@@ -41,10 +41,19 @@ private:
 	virtual ~CModel() = default;
 
 public:
+	// For Particle
+	const _float3* Get_VerticesPos();
+	const _uint	   Get_NumVertices();
+
+	const VTXMODEL* Get_NonAnimBuffer();
+	// const VTXANIMMODEL* Get_AnimBuffer();
+
+	// ~For Particle
+
 	_uint Get_NumMeshes() const { return static_cast<_uint>(m_Meshes.size()); }
 	class CBone* Get_BonePtr(const char* pBoneName);
 	class CBone* Get_BonePtr(const string& strBoneName);
-	_matrix GetBoneMatrix(const string& strBoneName);
+	_matrix GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true);
 	_float4x4 GetPivotMatrix() const { return m_PivotMatrix; }
 	CAnimation* Find_Animation(const string& strAnimaName);
 	void SetPivot(_float4x4 Pivot) { m_PivotMatrix = Pivot; }
@@ -110,8 +119,9 @@ private:	// 이벤트
 	unordered_map<string, std::function<void(void)>>	m_EventFunc;
 	unordered_map<string, vector<OPTIONAL_ROOTMOTION>>	m_mapOptionalRootMotion;
 
+public:
+	static _float4x4 s_DefaultPivot;
 private:
-	static const _float4x4 s_DefaultPivot;
 	static const string s_ModifyFilePath;
 
 // 플레이어 이펙트 부착 툴을 위한 임시 함수
@@ -142,6 +152,7 @@ private:
 	_vector								m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_vector								m_vBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_float								m_fLastLocalMoveSpeed = 0.f;
+	_float								m_fBefRatio = 0.f;
 
 	string								m_szAdditiveAnimName = "";
 	_float								m_fAdditiveRatio = 0.f;
@@ -158,6 +169,7 @@ private:
 	_vector								m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_vector								m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	string								m_szSocketBefAnimName = "";
+	_float								m_fSocketBefRatio = 0.f;
 
 	class CShader* m_pShadowShader = nullptr;
 

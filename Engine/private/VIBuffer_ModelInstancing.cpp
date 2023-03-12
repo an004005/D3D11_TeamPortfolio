@@ -84,7 +84,7 @@ HRESULT CVIBuffer_ModelInstancing::Initialize_Prototype(HANDLE hFile, CModel_Ins
 HRESULT CVIBuffer_ModelInstancing::Initialize(void * pArg)
 {
 
-	m_iInstanceStride = sizeof(VTXMATRIX);
+	m_iInstanceStride = sizeof(VTXMODELMATRIX);
 
 	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
 
@@ -95,8 +95,8 @@ HRESULT CVIBuffer_ModelInstancing::Initialize(void * pArg)
 	m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	m_BufferDesc.MiscFlags = 0;
 
-	VTXMATRIX*			pInstanceVertices = new VTXMATRIX[m_iNumInstance];
-	ZeroMemory(pInstanceVertices, sizeof(VTXMATRIX) * m_iNumInstance);
+	VTXMODELMATRIX*			pInstanceVertices = new VTXMODELMATRIX[m_iNumInstance];
+	ZeroMemory(pInstanceVertices, sizeof(VTXMODELMATRIX) * m_iNumInstance);
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
 	m_SubResourceData.pSysMem = pInstanceVertices;

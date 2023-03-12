@@ -170,6 +170,8 @@ void CScarletMap::Imgui_RenderProperty()
 			pModel->Add_Instance(WorldMatrix);
 			pModel->Map_Meshs();
 			dynamic_cast<CMapInstance_Object*>(pGameObject)->Set_Focus();
+
+			m_pGameObject = pGameObject;
 		}
 
 		else if (m_pModelProtoInfo.second == PROTOINFO::KINETIC)
@@ -192,6 +194,9 @@ void CScarletMap::Imgui_RenderProperty()
 			m_pGameObject = pMapObject;
 		}
 		
+		sort(m_pMapObjects.begin(), m_pMapObjects.end(), [this](CMapObject* pSour, CMapObject* pDest) {
+			return pSour->Get_ModelTag() < pDest->Get_ModelTag();
+		});
 	}
 
 	ImGui::Separator();
@@ -237,23 +242,34 @@ void CScarletMap::Imgui_RenderProperty()
 	ImGui::Separator();
 
 
-	if (ImGui::Button("Delete_Map_Object"))
+	if (ImGui::Button("Delete_MapObject"))
 	{
-		if (m_pModelProtoInfo.second == PROTOINFO::NON_INSTANCE ||
-			m_pModelProtoInfo.second == PROTOINFO::KINETIC)
+		if (dynamic_cast<CMapInstance_Object*>(m_pGameObject) != nullptr)
 		{
-			if (m_pGameObject)
+			if (MSG_BOX_CHECK("Delete Instancing Object?") == IDYES)
 			{
-				m_pGameObject->SetDelete();	
-				m_pMapObjects.erase(remove(m_pMapObjects.begin(), m_pMapObjects.end(), m_pGameObject), m_pMapObjects.end());
-				m_pGameObject = nullptr;
+				if (m_pGameObject)
+				{
+					m_pGameObject->SetDelete();
+					m_pMapObjects.erase(remove(m_pMapObjects.begin(), m_pMapObjects.end(), m_pGameObject), m_pMapObjects.end());
+					m_pGameObject = nullptr;
+				}
 			}
 		}
 	
 		else 
 		{
-			MSG_BOX("Wrong ModelMatch");
+			if (m_pGameObject)
+			{
+				m_pGameObject->SetDelete();
+				m_pMapObjects.erase(remove(m_pMapObjects.begin(), m_pMapObjects.end(), m_pGameObject), m_pMapObjects.end());
+				m_pGameObject = nullptr;
+			}
 		}
+
+		sort(m_pMapObjects.begin(), m_pMapObjects.end(), [this](CMapObject* pSour, CMapObject* pDest) {
+			return pSour->Get_ModelTag() < pDest->Get_ModelTag();
+		});
 	}
 
 	ImGui::Separator();

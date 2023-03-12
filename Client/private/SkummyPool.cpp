@@ -36,7 +36,7 @@ HRESULT CSkummyPool::Initialize_Prototype()
 
 HRESULT CSkummyPool::Initialize(void * pArg)
 {
-	Json SkummyPoolTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Test.json");
+	Json SkummyPoolTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPool/Test.json");
 	pArg = &SkummyPoolTrigger;
 
 	FAILED_CHECK(CMonster::Initialize(pArg));
@@ -65,21 +65,14 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 			pBullet->Set_Owner(this);
 
 			_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
-			_float4x4 fBoneMtx;
-			XMStoreFloat4x4(&fBoneMtx, BoneMtx);
-
-			_vector vPrePos = { fBoneMtx.m[3][0], fBoneMtx.m[3][1], fBoneMtx.m[3][2], fBoneMtx.m[3][3] };
+			_vector vPrePos = BoneMtx.r[3];
 
 			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-			/*vLook = XMVector3Normalize(XMVectorSetY(vLook, 0.f));*/
-
-			_vector vDest = XMVectorSetW(vLook - vPrePos, 0.f);
-			vDest = XMVector3Normalize(XMVectorSetY(vDest, 0.f));
 
 			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
-			pBullet->Set_ShootDir(vDest);
+			pBullet->Set_ShootDir(vLook);
 
-			pBullet->GetTransform()->LookAt(vDest);
+			pBullet->GetTransform()->LookAt(vPrePos + vLook);
 		}
 	});
 	m_pModelCom->Add_EventCaller("Upper", [this]
@@ -148,7 +141,6 @@ void CSkummyPool::Tick(_double TimeDelta)
 	_bool bOnfloor = IsOnFloor();
 
 	// Socket
-
 	if (m_pController->KeyDown(CController::MOUSE_LB))
 	{
 		m_pASM->AttachAnimSocket("Pool", { m_pAtk_Shoot });
@@ -276,7 +268,6 @@ void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_bAirStruck = true;
 		++m_iAirDamage;
 	}
-
 	else
 		m_bStruck = true;
 }
@@ -320,9 +311,6 @@ void CSkummyPool::Free()
 {
 	CMonster::Free();
 
-	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pModelCom);
-	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);

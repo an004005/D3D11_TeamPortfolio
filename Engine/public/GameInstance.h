@@ -46,6 +46,7 @@ public: /* For.GameInstance */
 	static const _tchar*			m_pPrototypeVIRectTag;
 private:
 	_double m_TimeDelta = 0.0;
+	std::function<void()> m_LevelLoadingAsync = nullptr;
 
 public: /* For.GameInstance */
 	HRESULT Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppContextOut);
@@ -170,6 +171,11 @@ public: /* for CameraManager*/
 	_float4 Get_CamPosition(const string& strCamTag);
 	CCamera* FindCamera(const string& strCamTag);
 
+public:/*for GameTimeManager */
+	void ResetTimeRatio();
+	void SetTimeRatioCurve(const string& strCurveTag, _bool bStay = false, const vector<wstring>* ExceptLayers = nullptr);
+
+
 public: // for CImgui_Manager
 	void Render_ImGui();
 	void Render_Update_ImGui();
@@ -203,7 +209,8 @@ private:
 	class CSound_Manager*			m_pSound_Manager = nullptr;
 	class CPhysX_Manager*			m_pPhysX_Manager = nullptr;
 	class CCamera_Manager*			m_pCamera_Manager = nullptr;
-
+	class CCurveManager*			m_pCurve_Manager = nullptr;
+	class CGameTime_Manager*		m_pGameTime_Manager = nullptr;
 	class CImgui_Manager*			m_pImgui_Manager = nullptr;
 
 public:

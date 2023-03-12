@@ -8,15 +8,12 @@
 #include "Animation.h"
 #include "Model.h"
 #include "JsonStorage.h"
-#include "Bone.h"
-
-#include "BrJ_AnimInstance.h"
-#include "FlowerLeg.h"
-#include "Player.h"
-#include "RigidBody.h"
 #include "PhysX_Manager.h"
 
-// TODO : Turn 애님 제어 및 State 추가, 소켓 작업, 충돌
+#include "BrJ_Controller.h"
+#include "BrJ_AnimInstance.h"
+#include "RigidBody.h"
+#include "Player.h"
 
 CBronJon::CBronJon(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -30,631 +27,102 @@ CBronJon::CBronJon(const CBronJon & rhs)
 
 HRESULT CBronJon::Initialize_Prototype()
 {
-	if (FAILED(__super::Initialize_Prototype()))
-		return E_FAIL;
-
-	return S_OK;
+	return CMonster::Initialize_Prototype();
 }
 
 HRESULT CBronJon::Initialize(void * pArg)
 {
-	Json BronJonTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJonTrigger.json");
-	Json BronJonJaw = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJonJaw.json");
+	Json BronJonTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonTrigger.json");
+	pArg = &BronJonTrigger;
 
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
-
-	if (FAILED(SetUp_Components(pArg)))
-		return E_FAIL;
-
-	if (FAILED(Setup_AnimSocket()))
-		return E_FAIL;
-
-
-	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Jaw"),
-		(CComponent**)&m_pJawRBody, &BronJonJaw)))
-		return E_FAIL;
+	FAILED_CHECK(CMonster::Initialize(pArg));
 
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
 		(CComponent**)&m_pTrigger, &BronJonTrigger)))
 		return E_FAIL;
 
-//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 30.f)));
+	// Boss Monster HitBox
 
-	m_pTransformCom->SetSpeed(1.f);
+	Json BronJonJaw = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonJaw.json");
+	Json BronJonLaser = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonEff02.json");
+	Json BronJonArm_L = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonLeftArm.json");
+	Json BronJonArm_R = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRightArm.json");
+	// m_pJawRBody : BiteAtk + Head HitBox
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Jaw"),
+		(CComponent**)&m_pJawRBody, &BronJonJaw)))
+		return E_FAIL;
+	// m_pLaserEffect : LaserAtk
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Laser"),
+		(CComponent**)&m_pLaserEffect, &BronJonLaser)))
+		return E_FAIL;
+	// m_pLeftArm : LeftArm HitBox
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("LeftArm"),
+		(CComponent**)&m_pLeftArm, &BronJonArm_L)))
+		return E_FAIL;
+	// m_pRightArm : RightArm HitBox
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RightArm"),
+		(CComponent**)&m_pRightArm, &BronJonArm_R)))
+		return E_FAIL;
 
-	m_strObjectTag = "Bron_Jon";
+	// ~Boss Monster HitBox
 
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
+		(CComponent**)&m_pRendererCom));
+
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"MonsterBronJon", L"Model", (CComponent**)&m_pModelCom));
+
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Proto_BrJ_Controller"), TEXT("Com_Controller"), (CComponent**)&m_pController));
+
+	// Event Caller
+
+	m_pModelCom->Add_EventCaller("Bite_Start", [this] { m_bAtkBite = true; });
+	m_pModelCom->Add_EventCaller("Bite_End", [this] 
 	{
-		m_pFSM = CFSMComponentBuilder()
-			.InitState("Idle")
-			.AddState("Idle")
-				.OnStart([this]
-				{
-					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					XMStoreFloat3(&m_fMyPos, m_vMyPos);
-					m_fTimeAcc = 0.f;
-				})
-				.Tick([this](_double TimeDelta)
-				{
-					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		m_bAtkBite = false; 
+		ClearDamagedTarget();
+	});
 
-					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					XMStoreFloat3(&m_fStorePos, m_vStorePos);
+	m_pModelCom->Add_EventCaller("Laser_Create", [this] { m_bAtkLaser = true; });
+	m_pModelCom->Add_EventCaller("Laser_Finish", [this]
+	{
+		m_bAtkLaser = false;
+		ClearDamagedTarget();
+	});
 
-					_vector vDir = m_vStorePos - m_vMyPos;
+	m_pModelCom->Add_EventCaller("Groggy_End", [this] { m_bDown = false; });
 
-					m_fTimeAcc += _float(TimeDelta * 1);
+	// ~Event Caller
 
-					/*if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 15.f) && m_fMyPos.z <= (m_fStorePos.z + 15.f) ||
-						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 15.f) && m_fMyPos.z <= (m_fStorePos.z + 15.f) ||
-						m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 15.f) && m_fMyPos.z >= (m_fStorePos.z - 15.f) ||
-						m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 15.f) && m_fMyPos.z >= (m_fStorePos.z - 15.f))*/
-					if (XMVectorGetX(XMVector3Length(vDir)) < 28.f)
-					{
-						if (m_fTimeAcc >= 3.f)
-						{
-							m_bIdle = false;
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 30.f)));
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
+	m_iGroggy_Able = 5;
 
-							/*if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 8.f) && m_fMyPos.z <= (m_fStorePos.z + 8.f) ||
-								m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 8.f) && m_fMyPos.z <= (m_fStorePos.z + 8.f) ||
-								m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 8.f) && m_fMyPos.z >= (m_fStorePos.z - 8.f) ||
-								m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 8.f) && m_fMyPos.z >= (m_fStorePos.z - 8.f))*/
-							if (XMVectorGetX(XMVector3Length(vDir)) < 10.f)
-							{
-								m_bNear = true;
-								m_bFar = false;
+	m_pASM = CBrJ_AnimInstance::Create(m_pModelCom, this);
 
-								if (m_iNearPattern == 0)
-									m_bBiteAtk = true;
+	// 소켓 애니메이션 추가
 
-								if (m_iNearPattern == 1)
-									m_bMoveR_Start = true;
+	m_pAtk_LaserStart = m_pModelCom->Find_Animation("AS_em0800_214_AL_atk_a7_laser2_start");
+	m_pAtk_LaserLoop = m_pModelCom->Find_Animation("AS_em0800_215_AL_atk_a7_laser2_loop");
+	m_pAtk_LaserEnd = m_pModelCom->Find_Animation("AS_em0800_216_AL_atk_a7_laser2_end");
+	m_pAtk_Bite = m_pModelCom->Find_Animation("AS_em0810_201_AL_atk_a1_bite");
 
-								if (m_iNearPattern == 2)
-									m_bMoveB = true;
+	m_pThreat = m_pModelCom->Find_Animation("AS_em0800_160_AL_threat");
 
-								if (m_iNearPattern == 3)
-									m_bLaserAtkStart = true;
+	m_pDamage_L_F = m_pModelCom->Find_Animation("AS_em0800_401_AL_damage_l_F");
+	m_pDamage_L_B = m_pModelCom->Find_Animation("AS_em0800_402_AL_damage_l_B");
 
-								if (m_iNearPattern == 4)
-									m_bMoveL_Start = true;
+	m_pDamage_M_F = m_pModelCom->Find_Animation("AS_em0800_411_AL_damage_m_F");
+	m_pDamage_M_B = m_pModelCom->Find_Animation("AS_em0800_412_AL_damage_m_B");
+	m_pDamage_M_L = m_pModelCom->Find_Animation("AS_em0800_413_AL_damage_m_L");
+	m_pDamage_M_R = m_pModelCom->Find_Animation("AS_em0800_414_AL_damage_m_R");
 
-								if (m_iNearPattern == 5)
-									m_bBiteAtk = true;
+	m_pDownStart = m_pModelCom->Find_Animation("AS_em0800_425_AL_down_start");
+	m_pDownLoop = m_pModelCom->Find_Animation("AS_em0800_480_AL_down_shock");
+	m_pGetUp = m_pModelCom->Find_Animation("AS_em0800_427_AL_getup");
 
-								if (m_iNearPattern == 6)
-									m_bLaserAtkStart = true;
+	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0800_424_AL_dead_down");
 
-								++m_iNearPattern;
-
-								if (m_iNearPattern > 6)
-									m_iNearPattern = 0;
-							}
-
-							else
-							{
-								m_bNear = false;
-								m_bFar = true;
-
-								if (m_iFarPattern == 0)
-									m_bMoveF = true;
-
-								if (m_iFarPattern == 1)
-									m_bLaserAtkStart = true;
-
-								++m_iFarPattern;
-
-								if (m_iFarPattern > 1)
-									m_iFarPattern = 0;
-							}
-						}
-					}
-					else
-					{
-						m_fTimeAcc = 0.f;
-						m_bIdle = true;
-					}
-				})
-
-				.AddTransition("Idle to BiteAtk", "BiteAtk")
-					.Predicator([this]
-					{
-						return m_bNear && !m_bIdle && m_bBiteAtk;
-					})
-
-				.AddTransition("Idle to LaserAtkStart", "LaserAtkStart")
-					.Predicator([this]
-					{
-						return !m_bIdle && m_bLaserAtkStart;
-					})
-
-				.AddTransition("Idle to Threat", "Threat")
-					.Predicator([this]
-					{
-						return m_bNear && !m_bIdle && m_bThreat;
-					})
-				
-				.AddTransition("Idle to MoveF", "MoveF")
-					.Predicator([this]
-					{
-						return m_bFar && !m_bIdle && m_bMoveF;
-					})
-
-				.AddTransition("Idle to MoveB", "MoveB")
-					.Predicator([this]
-					{
-						return m_bNear && !m_bIdle && m_bMoveB;
-					})
-
-				.AddTransition("Idle to MoveL_Start", "MoveL_Start")
-					.Predicator([this]
-					{
-						return m_bNear && !m_bIdle && m_bMoveL_Start;
-					})
-
-				.AddTransition("Idle to MoveR_Start", "MoveR_Start")
-					.Predicator([this]
-					{
-						return m_bNear && !m_bIdle && m_bMoveR_Start;
-					})
-
-			.AddState("BiteAtk")
-				.OnStart([this]
-				{
-					m_bCreateBite = false;
-				})
-				.Tick([this](_double TimeDelta)
-				{
-					CGameInstance* pGameInstance = CGameInstance::GetInstance();
-							
-					auto pAnim = m_pModelCom->GetPlayAnimation();
-
-					if (pAnim->GetPlayRatio() > 0.3 && !m_bCreateBite)
-					{
-						m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-						m_pTransformCom->LookAt(m_vStorePos);
-
-						_matrix matJaw = AttachCollider();
-						_vector vJawPos = matJaw.r[3];
-						_float4 fJawPos;
-						XMStoreFloat4(&fJawPos, vJawPos);
-
-						fJawPos.z += 2.f;
-
-						physx::PxSweepHit hitBuff[5];
-						physx::PxSweepBuffer overlapOut(hitBuff, 5);
-
-						SphereSweepParams params;
-						params.fDistance = 1.f;
-						params.fRadius = 1.5f;
-						params.iTargetType = CTB_PLAYER;
-						params.sweepOut = &overlapOut;
-						params.vPos = fJawPos;//vJawPos;
-						params.vUnitDir = _float3{ 0.f, 0.f, 1.f };
-						params.fVisibleTime = 0.1f; // 보여지는 시간
-						if (pGameInstance->SweepSphere(params))	// 조건
-						{
-							for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
-							{
-								auto pHit = overlapOut.getAnyHit(i);
-								CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
-
-								if (auto pTargetCol = dynamic_cast<CPlayer*>(pCollidedObject))
-								{									
-									DAMAGE_PARAM tParam;
-									tParam.iDamage = 1;
-									tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-									tParam.pCauser = this;
-									pTargetCol->TakeDamage(tParam);
-								}
-							}
-						}
-						//if (pGameInstance->SweepSphere(params))	// 조건
-						//{
-						//	for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
-						//	{
-						//		if (overlapOut.getAnyHit(i).actor)
-						//			int iA = 0;//MSG_BOX("Touch");
-						//		CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor);
-						//	}
-						//}
-						m_bCreateBite = true;
-					}				
-
-					if (pAnim->GetPlayRatio() > 0.98)
-					{
-						m_bIdle = true;
-						m_bBiteAtk = false;
-					}
-				})
-
-				.AddTransition("BiteAtk to Idle", "Idle")
-					.Predicator([this]
-					{
-						return !m_bBiteAtk && m_bIdle;
-					})
-
-			.AddState("Threat")
-				.Tick([this](_double TimeDelta)
-				{
-					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					m_pTransformCom->LookAt(m_vStorePos);
-
-					auto pAnim = m_pModelCom->GetPlayAnimation();
-
-					if (pAnim->GetPlayRatio() > 0.95)
-					{
-						m_bThreat = false;
-						m_bIdle = true;
-					}
-				})
-				.AddTransition("Threat to Idle", "Idle")
-					.Predicator([this]
-					{
-						return !m_bThreat && m_bIdle;
-					})
-
-			.AddState("MoveF")
-				.OnStart([this]
-				{
-					m_fTimeAcc = 0.f;
-				})
-				.Tick([this](_double TimeDelta)
-				{
-					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					XMStoreFloat3(&m_fMyPos, m_vMyPos);
-
-					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					XMStoreFloat3(&m_fStorePos, m_vStorePos);
-					_vector vDir = m_vStorePos - m_vMyPos;
-
-					m_pTransformCom->LookAt(m_vStorePos);
-					m_pTransformCom->Chase(m_vStorePos, 0.05);
-
-					m_fTimeAcc += _float(TimeDelta * 1);					
-
-					if (m_fTimeAcc >= 2)
-					{
-						m_bMoveF = false;
-
-//						if (XMVectorGetX(XMVector3Length(vDir)) < 10.f)
-						/*if (m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 6.f) && m_fMyPos.z <= (m_fStorePos.z + 6.f) ||
-							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z >= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 6.f) && m_fMyPos.z <= (m_fStorePos.z + 6.f) ||
-							m_fMyPos.x <= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x >= (m_fStorePos.x - 6.f) && m_fMyPos.z >= (m_fStorePos.z - 6.f) ||
-							m_fMyPos.x >= m_fStorePos.x && m_fMyPos.z <= m_fStorePos.z && m_fMyPos.x <= (m_fStorePos.x + 6.f) && m_fMyPos.z >= (m_fStorePos.z - 6.f))*/
-						if (XMVectorGetX(XMVector3Length(vDir)) < 10.f)
-						{							
-							m_bIdle = true;
-						}
-
-						else						
-							m_bLaserAtkStart = true;						
-					}					
-				})
-
-				.AddTransition("MoveF to Idle", "Idle")
-					.Predicator([this]
-					{
-						return !m_bMoveF && m_bIdle;
-					})
-
-				.AddTransition("MoveF to LaserAtkStart", "LaserAtkStart")
-					.Predicator([this] 
-					{ 
-						return !m_bMoveF && m_bLaserAtkStart; 
-					})
-
-			.AddState("MoveB")
-				.OnStart([this]
-				{
-					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					m_vDest = m_vMyPos - m_vStorePos;
-
-					m_fTimeAcc = 0.f;
-				})
-				.Tick([this](_double TimeDelta)
-				{
-					m_pTransformCom->Move(0.06, m_vDest);
-
-					m_fTimeAcc += _float(TimeDelta * 1);
-
-					if (m_fTimeAcc >= 2.f)
-					{
-						m_bMoveB = false;
-
-						vector<_uint> vecRandomPattern;
-
-						_uint iLaserAttack = 1;
-						vecRandomPattern.push_back(iLaserAttack);
-
-						_uint iIdle = 2;
-						vecRandomPattern.push_back(iIdle);
-
-						_uint iLeftMove = 3;
-						vecRandomPattern.push_back(iLeftMove);
-
-						_uint iRightMove = 4;
-						vecRandomPattern.push_back(iRightMove);
-
-						random_shuffle(vecRandomPattern.begin(), vecRandomPattern.end());
-
-						_uint iShuffleResult = vecRandomPattern.front();
-
-						if (iShuffleResult == 1)
-							m_bLaserAtkStart = true;
-
-						if (iShuffleResult == 2)
-							m_bIdle = true;
-
-						if (iShuffleResult == 3)
-							m_bMoveL_Start = true;
-
-						if (iShuffleResult == 4)
-							m_bMoveR_Start = true;
-					}
-				})
-
-				.AddTransition("MoveB to LaserAtkStart", "LaserAtkStart")
-					.Predicator([this]
-					{
-						return !m_bMoveB && m_bLaserAtkStart;
-					})
-
-				.AddTransition("MoveB to Idle", "Idle")
-					.Predicator([this]
-					{
-						return !m_bMoveB && m_bIdle;
-					})
-
-				.AddTransition("MoveB to MoveL_Start", "MoveL_Start")
-					.Predicator([this]
-					{
-						return !m_bMoveB && m_bMoveL_Start;
-					})
-
-				.AddTransition("MoveB to MoveR_Start", "MoveR_Start")
-					.Predicator([this]
-					{
-						return !m_bMoveB && m_bMoveR_Start;
-					})
-
-			.AddState("MoveL_Start")
-				.OnStart([this]
-				{
-					m_fTimeAcc = 0.f;
-					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
-				})
-				.Tick([this](_double TimeDelta)
-				{
-					_vector vTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					m_pTransformCom->LookAt(vTargetPos);
-
-					_vector vDest = (m_vMyPos * -1);
-					m_pTransformCom->Move(0.06, vDest);
-
-					auto pAnim = m_pModelCom->GetPlayAnimation();
-
-					if (pAnim->GetPlayRatio() > 0.95)
-					{
-						m_bMoveL_Start = false;
-						m_bMoveL_End = true;
-					}
-				})
-				.AddTransition("MoveL_Start to MoveL_End", "MoveL_End")
-					.Predicator([this]
-					{
-						return !m_bMoveL_Start && m_bMoveL_End;
-					})
-
-			.AddState("MoveL_End")
-				.OnStart([this]
-				{
-					m_fTimeAcc = 0.f;
-					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
-				})
-				.Tick([this](_double TimeDelta) 
-				{
-					_vector vTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					m_pTransformCom->LookAt(vTargetPos);
-
-					_vector vDest = (m_vMyPos * -1);
-					m_pTransformCom->Move(0.06, vDest);
-
-					m_fTimeAcc += _float(TimeDelta * 1);
-
-					if (m_fTimeAcc >= 2.4f)
-					{
-						m_bMoveL_End = false;
-						m_bIdle = true;
-					}
-				})
-				.AddTransition("MoveL_End to Idle", "Idle")
-					.Predicator([this]
-					{
-						return !m_bMoveL_End && m_bIdle;
-					})
-
-			.AddState("MoveR_Start")
-				.OnStart([this]
-				{
-					m_fTimeAcc = 0.f;
-					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
-				})
-				.Tick([this](_double TimeDelta)
-				{
-					_vector vTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					m_pTransformCom->LookAt(vTargetPos);
-
-					_vector vDest = (m_vMyPos * 1);
-					m_pTransformCom->Move(0.06, vDest);
-
-					auto pAnim = m_pModelCom->GetPlayAnimation();
-
-					if (pAnim->GetPlayRatio() > 0.95)
-					{
-						m_bMoveR_Start = false;
-						m_bMoveR_End = true;
-					}
-				})
-				.AddTransition("MoveR_Start to MoveR_End", "MoveR_End")
-					.Predicator([this]
-				{
-					return !m_bMoveR_Start && m_bMoveR_End;
-				})
-
-			.AddState("MoveR_End")
-				.OnStart([this]
-				{
-					m_fTimeAcc = 0.f;
-					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
-				})
-				.Tick([this](_double TimeDelta)
-				{
-					_vector vTargetPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					m_pTransformCom->LookAt(vTargetPos);
-
-					_vector vDest = (m_vMyPos * 1);
-					m_pTransformCom->Move(0.06, vDest);
-
-					m_fTimeAcc += _float(TimeDelta * 1);
-
-					if (m_fTimeAcc >= 2.4f)
-					{
-						m_bMoveR_End = false;
-						m_bIdle = true;
-					}
-				})
-				.AddTransition("MoveR_End to Idle", "Idle")
-					.Predicator([this]
-					{
-						return !m_bMoveR_End && m_bIdle;
-					})
-
-			.AddState("LaserAtkStart")
-				.OnStart([this]
-				{
-					m_bCreateLaser = false;
-				})
-				.Tick([this](_double TimeDelta)
-				{
-					auto pAnim = m_pModelCom->GetPlayAnimation();
-
-					if (pAnim->GetPlayRatio() <= 0.35)
-					{
-						m_vStorePos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-						m_fCorrect = m_vStorePos;
-					}					
-						m_fCorrect.y = 0.f;
-
-					m_pTransformCom->LookAt(m_fCorrect);
-
-					if (pAnim->GetPlayRatio() > 0.97)
-					{
-						m_bLaserAtkStart = false;
-						m_bLaserAtkIng = true;
-					}
-				})
-
-				.AddTransition("LaserAtkStart to LaserAtkIng", "LaserAtkIng")
-					.Predicator([this]
-					{
-						return !m_bLaserAtkStart && m_bLaserAtkIng;
-					})
-
-			.AddState("LaserAtkIng")
-				.OnStart([this]
-				{
-					m_fTimeAcc = 0.f;
-
-					m_vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-					_vector vDir = m_vStorePos - m_vMyPos;
-					
-					if (!m_bCreateLaser)
-					{
-						CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
-						_matrix matWeapon = WeaponRigidBodyMatrix();
-						_vector vWeaponPos = matWeapon.r[3];
-						_float4 fWeaponPos;
-						XMStoreFloat4(&fWeaponPos, vWeaponPos);
-						// 임시 코드						
-
-						physx::PxSweepHit hitBuff[5];
-						physx::PxSweepBuffer overlapOut(hitBuff, 5);
-
-						SphereSweepParams params;
-						params.fDistance = 50.f;
-						params.fRadius = 2.f;
-						params.iTargetType = CTB_PLAYER;
-						params.sweepOut = &overlapOut;
-						params.vPos = fWeaponPos;
-						params.vUnitDir = vDir;//_float3{ 0.f, 0.f, 1.f };
-						params.fVisibleTime = 0.1f; // 보여지는 시간
-						if (pGameInstance->SweepSphere(params))	// 조건
-						{
-							for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
-							{				
-								auto pHit = overlapOut.getAnyHit(i);
-								CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
-								
-								if (auto pTargetCol = dynamic_cast<CPlayer*>(pCollidedObject))
-								{								
-									DAMAGE_PARAM tParam;
-									tParam.iDamage = 1;
-									tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-									tParam.pCauser = this;									
-									pTargetCol->TakeDamage(tParam);
-								}
-							}
-						}					
-					}					
-				})
-
-				.Tick([this](_double TimeDelta)
-				{
-					m_fTimeAcc += _float(TimeDelta * 1);
-
-					if (m_fTimeAcc >= 2.f)
-					{
-						m_bLaserAtkIng = false;
-						m_bLaserAtkEnd = true;
-					}
-
-					else if(m_fTimeAcc >= 1.6f)
-					{
-						// Rigid Body Create
-						m_bCreateLaser = true;
-					}
-				})
-				
-				.AddTransition("LaserAtkIng to LaserAtkEnd", "LaserAtkEnd")
-					.Predicator([this]
-					{
-						return !m_bLaserAtkIng && m_bLaserAtkEnd;
-					})
-
-			.AddState("LaserAtkEnd")
-				.Tick([this](_double TimeDelta)
-				{
-					auto pAnim = m_pModelCom->GetPlayAnimation();
-
-					if (pAnim->GetPlayRatio() > 0.97)
-					{
-						m_bLaserAtkEnd = false;
-						m_bIdle = true;
-					}
-				})
-				.AddTransition("LaserAtkEnd to Idle", "Idle")
-					.Predicator([this]
-					{
-						return !m_bLaserAtkEnd && m_bIdle;
-					})				
-
-			.Build();
-	}
+	// ~소켓 애니메이션 추가
 
 	return S_OK;
 }
@@ -662,85 +130,190 @@ HRESULT CBronJon::Initialize(void * pArg)
 void CBronJon::BeginTick()
 {
 	__super::BeginTick();
+	m_pASM->AttachAnimSocket("BronJon", { m_pModelCom->Find_Animation("AS_em0800_495_AL_press_down_start") });
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 30.f)));
-
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	
-	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
-	{
-		if (iter->GetPrototypeTag() == TEXT("Player"))
-		{
-			m_pPlayer = iter;
-		}
-	}
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(0.f, 0.f, 30.f)));	
 }
 
 void CBronJon::Tick(_double TimeDelta)
 {
 	CMonster::Tick(TimeDelta);
-	
-	
-	m_pFSM->Tick(TimeDelta);
-	m_pASM->Tick(TimeDelta);
-	
+
+	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
+	{
+		return dynamic_cast<CPlayer*>(pObj) != nullptr;
+	});
+	m_pTarget = dynamic_cast<CScarletCharacter*>(pPlayer);
+
+	// Controller
+	m_pController->SetTarget(m_pTarget);
+
+	m_pController->Tick(TimeDelta);
+	_bool bOnfloor = IsOnFloor();
+						// m_iGroggy_Able = 5, 1회 그로기마다 +1씩 되어 갈수록 그로기가 어려워진다.
+	if (m_iGroggyCnt >= m_iGroggy_Able)
+		m_bGroggy = true;
+
+	// 소켓 키 세팅
+
+	if (m_pController->KeyDown(CController::MOUSE_RB))
+	{
+		m_pASM->AttachAnimSocket("BronJon", { m_pAtk_Bite });
+	}
+	if (m_pController->KeyDown(CController::MOUSE_LB))
+	{
+		m_pASM->AttachAnimSocket("BronJon", { m_pAtk_LaserStart, m_pAtk_LaserLoop, m_pAtk_LaserLoop, m_pAtk_LaserLoop, m_pAtk_LaserEnd });
+	}
+	if (m_pController->KeyDown(CController::G))
+	{
+		m_pASM->AttachAnimSocket("BronJon", { m_pThreat });
+	}
+
+	if (m_bStruck || m_pController->KeyDown(CController::NUM_1))
+	{
+		m_bStruck = false;
+		m_pController->ClearCommands();
+
+		if (m_eAtkType == EAttackType::ATK_HEAVY)
+		{
+			if (m_eHitDir == EBaseAxis::NORTH)
+				m_pASM->InputAnimSocket("BronJon", { m_pDamage_M_F });
+
+			else if (m_eHitDir == EBaseAxis::SOUTH)
+				m_pASM->InputAnimSocket("BronJon", { m_pDamage_M_B });
+
+			else if (m_eHitDir == EBaseAxis::WEST)
+				m_pASM->InputAnimSocket("BronJon", { m_pDamage_M_L });
+
+			else if (m_eHitDir == EBaseAxis::EAST)
+				m_pASM->InputAnimSocket("BronJon", { m_pDamage_M_R });
+		}
+	}
+	// Test
+	/*if (m_bGroggy || m_pController->KeyDown(CController::NUhttps://docs.google.com/spreadsheets/d/1JdqLLK8EKbACHrfHNorlPoRP6-GPo6nFquVOk6_Dp9o/edit#gid=324704638M_2))
+	{
+		m_bGroggy = false;
+		m_pController->ClearCommands();
+
+		if (m_eHitDir == EBaseAxis::NORTH)
+			m_pASM->InputAnimSocket("BronJon", { m_pDamage_L_F });
+
+		else if (m_eHitDir == EBaseAxis::SOUTH)
+			m_pASM->InputAnimSocket("BronJon", { m_pDamage_L_B });
+	}*/
+	// m_bGroggy : 그로기 상태 및 Down 애니메이션이 돌기 위한 조건이므로 한번 돌고 바로 false 
+	if (m_bGroggy || m_pController->KeyDown(CController::NUM_4))
+	{		
+		m_bGroggy = false;
+		m_iGroggyCnt = 0;
+		m_iGroggy_Able += 1;
+		m_bDown = true;
+		m_pController->ClearCommands();
+
+		m_pASM->AttachAnimSocket("BronJon", { m_pDownStart, m_pDownLoop, m_pDownLoop, m_pDownLoop, m_pGetUp });
+	}
+
+	// ~소켓 키 세팅
+
 	m_pTrigger->Update_Tick(m_pTransformCom);
+
+	m_fTurnRemain = m_pController->GetTurnRemain();
+	m_vMoveAxis = m_pController->GetMoveAxis();
+
+	m_pASM->Tick(TimeDelta);
+
+	_float fMoveSpeed = 3.f;
+
+	m_vMoveAxis.Normalize();
+
+	const _float fYaw = m_pTransformCom->GetYaw_Radian();
+	_float3 vVelocity;
+	XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
+	m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);	
 }
 
 void CBronJon::Late_Tick(_double TimeDelta)
 {
-	CMonster::Late_Tick(TimeDelta);
+	__super::Late_Tick(TimeDelta);
 
-	if (nullptr != m_pRendererCom)
+	if (m_bAtkBite)
+		Atk_BiteSweep();
+
+	if (m_bAtkLaser)
+		Atk_LaserSweep();
+
+	if (m_iHP <= 0)
+		m_bDead = true;
+
+	if (m_bDead && m_pController->KeyDown(CController::X))
+	{
+		m_pController->ClearCommands();
+		m_pASM->AttachAnimSocket("BronJon", { m_pDeadAnim });
+	}
+
+	if (nullptr != m_pRendererCom && m_bVisible)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
 HRESULT CBronJon::Render()
 {
-	if (FAILED(CMonster::Render()))
-		return E_FAIL;
-
 	m_pModelCom->Render(m_pTransformCom);
-
 	return S_OK;
 }
 
 void CBronJon::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
-	m_pFSM->Imgui_RenderProperty();
-
-}
-
-void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
-{
-	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
-
-	m_eAtkType = tDamageParams.eAttackType;
-
-	m_eHitDir = eHitFrom;
-
-	m_bStruck = true;
+	m_pASM->Imgui_RenderState();
 }
 
 void CBronJon::AfterPhysX()
 {
 	__super::AfterPhysX();
+	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 
-	m_pJawRBody->Update_Tick(AttachCollider());
-
+	m_pJawRBody->Update_Tick(AttachCollider(m_pJawRBody));
 	m_pJawRBody->Update_AfterPhysX(m_pTransformCom);
 
-	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
+	m_pLaserEffect->Update_Tick(AttachCollider(m_pLaserEffect));
+	m_pLaserEffect->Update_AfterPhysX(m_pTransformCom);
+
+	m_pLeftArm->Update_Tick(AttachCollider(m_pLeftArm));
+	m_pLeftArm->Update_AfterPhysX(m_pTransformCom);
+
+	m_pRightArm->Update_Tick(AttachCollider(m_pRightArm));
+	m_pRightArm->Update_AfterPhysX(m_pTransformCom);
 }
 
-void CBronJon::Collision()
+void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
+	m_eHitDir = eHitFrom;
+
+	m_eAtkType = tDamageParams.eAttackType;
+
+	if (m_eAtkType == EAttackType::ATK_HEAVY && !m_bAtkBite && !m_bAtkLaser && !m_bDown)
+	{			
+		++m_iGroggyCnt;
+		m_bStruck = true;	// 체력 다는 조건으로 주면 될듯?
+	}	
 }
 
-_matrix CBronJon::AttachCollider()
+_matrix CBronJon::AttachCollider(CRigidBody* pRigidBody)
 {
-	_matrix	SocketMatrix = m_pModelCom->GetBoneMatrix("Jaw") * m_pTransformCom->Get_WorldMatrix();
+	_matrix	SocketMatrix;
+
+	if (pRigidBody == m_pJawRBody)
+		SocketMatrix = m_pModelCom->GetBoneMatrix("Jaw") * m_pTransformCom->Get_WorldMatrix();
+
+	else if (pRigidBody == m_pLaserEffect)
+		SocketMatrix = m_pModelCom->GetBoneMatrix("Eff02") * m_pTransformCom->Get_WorldMatrix();
+
+	else if (pRigidBody == m_pLeftArm)
+		SocketMatrix = m_pModelCom->GetBoneMatrix("LeftForeArm") * m_pTransformCom->Get_WorldMatrix();
+
+	else if (pRigidBody == m_pRightArm)
+		SocketMatrix = m_pModelCom->GetBoneMatrix("RightForeArm") * m_pTransformCom->Get_WorldMatrix();
 
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
@@ -749,160 +322,53 @@ _matrix CBronJon::AttachCollider()
 	return SocketMatrix;
 }
 
-_matrix CBronJon::WeaponRigidBodyMatrix()
+void CBronJon::Atk_BiteSweep()
 {
-	_matrix	WeaponMatrix = m_pModelCom->GetBoneMatrix("Weapon") * m_pTransformCom->Get_WorldMatrix();
+	Matrix mJawMatrix = m_pJawRBody->GetPxWorldMatrix();
+	_float4 vJawPos = _float4(mJawMatrix.Translation().x, mJawMatrix.Translation().y, mJawMatrix.Translation().z, 1.f);
+	_float3 vLook = _float3(mJawMatrix.Up().x, mJawMatrix.Up().y, mJawMatrix.Up().z);
+	
+	physx::PxSweepHit hitBuffer[5];
+	physx::PxSweepBuffer sweepOut(hitBuffer, 5);
 
-	WeaponMatrix.r[0] = XMVector3Normalize(WeaponMatrix.r[0]);
-	WeaponMatrix.r[1] = XMVector3Normalize(WeaponMatrix.r[1]);
-	WeaponMatrix.r[2] = XMVector3Normalize(WeaponMatrix.r[2]);
-
-	return WeaponMatrix;
+	SphereSweepParams Sparam;
+	Sparam.fVisibleTime = 0.f;
+	Sparam.iTargetType = CTB_PLAYER;
+	Sparam.fRadius = 1.2f;
+	Sparam.fDistance = 1.5f;
+	Sparam.vPos = vJawPos;
+	Sparam.sweepOut = &sweepOut;
+	Sparam.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	
+	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
+		HitTargets(sweepOut, 1, EAttackType::ATK_HEAVY);	
 }
 
-HRESULT CBronJon::Setup_AnimSocket()
+void CBronJon::Atk_LaserSweep()
 {
-	CAnimation*	pAnimation = nullptr;
+	Matrix mLaserMatrix = m_pLaserEffect->GetPxWorldMatrix();
+	_float4 vLaserPos = _float4(mLaserMatrix.Translation().x, mLaserMatrix.Translation().y, mLaserMatrix.Translation().z, 1.f);
+	_float3 vLook = _float3(mLaserMatrix.Up().x, mLaserMatrix.Up().y, mLaserMatrix.Up().z);
 
-	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_411_AL_damage_m_F"));
-	m_GroundDmgSocket.push_back(pAnimation = m_pModelCom->Find_Animation("AS_em0800_411_AL_damage_m_F"));
+	physx::PxSweepHit hitBuffer[5];
+	physx::PxSweepBuffer sweepOut(hitBuffer, 5);
 
-	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_424_AL_dead_down"));
-	m_DeadAnimSocket.push_back(pAnimation = m_pModelCom->Find_Animation("AS_em0800_424_AL_dead_down"));
+	SphereSweepParams Sparam;
+	Sparam.fVisibleTime = 0.f;
+	Sparam.iTargetType = CTB_PLAYER;
+	Sparam.fRadius = 1.4f;
+	Sparam.fDistance = 30.f;
+	Sparam.vPos = vLaserPos;
+	Sparam.sweepOut = &sweepOut;
+	Sparam.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
-	return S_OK;
+	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
+		HitTargets(sweepOut, 1, EAttackType::ATK_HEAVY);
 }
 
-HRESULT CBronJon::Setup_WeakAnimState()
+_bool CBronJon::IsPlayingSocket() const
 {
-	CAnimation* pAnimation = nullptr;
-
-	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_401_AL_damage_l_F"));
-	m_HitLightFoward.push_back(pAnimation);
-
-	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_402_AL_damage_l_B"));
-	m_HitLightBack.push_back(pAnimation);
-
-	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_411_AL_damage_m_F"));
-	m_HitMiddleFoward.push_back(pAnimation);
-
-	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_412_AL_damage_m_B"));
-	m_HitMiddleBack.push_back(pAnimation);
-
-	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_413_AL_damage_m_L"));
-	m_HitMiddleLeft.push_back(pAnimation);
-
-	NULL_CHECK(pAnimation = m_pModelCom->Find_Animation("AS_em0800_414_AL_damage_m_R"));
-	m_HitMiddleRight.push_back(pAnimation);
-
-	{
-		m_pSocketFSM = CFSMComponentBuilder()
-			.InitState("No_Hit")
-			.AddState("No_Hit")
-				.Tick([this](_double TimeDelta) { m_bDamage = false; })
-
-				.AddTransition("No_Hit to Ground_Hit", "Ground_Hit")
-					.Predicator([this] {return m_bStruck; })
-					.Priority(0)
-
-#pragma region Ground_Hit
-
-			.AddState("Ground_Hit")
-				.OnStart([this] 
-				{
-					if (m_eAtkType == EAttackType::ATK_LIGHT)	// 기본 공격(평타)
-					{
-						if (m_eHitDir == EBaseAxis::NORTH)	// NORTH : 전방
-						{
-							m_pASM->InputAnimSocket("BronJon_GroundDmgAnim", m_HitLightFoward);
-							m_Haxistype = HAS_FL;
-						}
-						else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
-						{
-							m_pASM->InputAnimSocket("BronJon_GroundDmgAnim", m_HitLightBack);
-							m_Haxistype = HAS_BL;
-						}
-					}
-
-					else if (m_eAtkType == EAttackType::ATK_MIDDLE)
-					{
-						if (m_eHitDir == EBaseAxis::NORTH) // NORTH : 전방
-						{
-							m_pASM->InputAnimSocket("BronJon_GroundDmgAnim", m_HitMiddleFoward);
-							m_Haxistype = HAS_FM;
-						}
-						else if (m_eHitDir == EBaseAxis::SOUTH)	// SOUTH : 후방
-						{
-							m_pASM->InputAnimSocket("BronJon_GroundDmgAnim", m_HitMiddleBack);
-							m_Haxistype = HAS_BM;
-						}
-						else if (m_eHitDir == EBaseAxis::WEST)	// WEST : 좌측
-						{
-							m_pASM->InputAnimSocket("BronJon_GroundDmgAnim", m_HitMiddleLeft);
-							m_Haxistype = HAS_LM;
-						}
-						else if (m_eHitDir == EBaseAxis::EAST)	// EAST : 우측
-						{
-							m_pASM->InputAnimSocket("BronJon_GroundDmgAnim", m_HitMiddleRight);
-							m_Haxistype = HAS_RM;
-						}
-					}
-				})
-
-				.Tick([this](_double TimeDelta)
-					{
-						m_bDamage = true;
-
-						if (m_pASM->isSocketPassby("BronJon_GroundDmgAnim") > 0.92)
-						{
-							m_bStruck = false;
-						}
-					})
-
-						.AddTransition("Ground_Hit to Ground_Hit", "Ground_Hit")
-							.Predicator([this] {return m_bStruck && m_pASM->isSocketPassby("BronJon_GroundDmgAnim") <= 0.92; })
-							.Priority(0)
-
-						.AddTransition("Ground_Hit to No_Hit", "No_Hit")
-							.Predicator([this] {return !m_bStruck && m_pASM->isSocketAlmostFinish("BronJon_GroundDmgAnim"); })
-							.Priority(0)						
-
-#pragma endregion Ground_Hit
-
-			.Build();
-	}
-
-	return S_OK;
-}
-
-HRESULT CBronJon::SetUp_Components(void * pArg)
-{
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
-		(CComponent**)&m_pRendererCom)))
-		return E_FAIL;
-
-	if (pArg)
-	{
-		Json& json = *static_cast<Json*>(pArg);
-		if (json.contains("Model"))
-		{
-			string ProtoModel = json["Model"];
-			m_ModelName = CGameUtils::s2ws(ProtoModel);
-			FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_ModelName.c_str(), m_ModelName.c_str(),
-				(CComponent**)&m_pModelCom));
-		}
-	}
-
-	m_pASM = CBrJ_AnimInstance::Create(m_pModelCom, this);
-	if (nullptr == m_pASM)
-	{
-		MSG_BOX("BronJon's ASM Failed");
-		return E_FAIL;
-	}
-
-	FAILED_CHECK(Setup_WeakAnimState());
-
-	return S_OK;
+	return m_pASM->isSocketEmpty("BronJon") == false;
 }
 
 CBronJon * CBronJon::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -932,13 +398,13 @@ CGameObject * CBronJon::Clone(void * pArg)
 void CBronJon::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pModelCom);
-	Safe_Release(m_pFSM);
-	Safe_Release(m_pSocketFSM);
+	
 	Safe_Release(m_pASM);
+	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);
 	Safe_Release(m_pJawRBody);
+	Safe_Release(m_pLaserEffect);
+	Safe_Release(m_pLeftArm);
+	Safe_Release(m_pRightArm);
 }
+
