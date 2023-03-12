@@ -53,10 +53,6 @@ void CSASSkillIconUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_8))
-	{
-		asdfasdfasdfasdf = !asdfasdfasdfasdf;
-	}
 
 	//m_pFSM->Tick(TimeDelta);
 

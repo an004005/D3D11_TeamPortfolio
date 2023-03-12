@@ -3,11 +3,7 @@
 #include "Client_Defines.h"
 #include "Canvas.h"
 
-//BEGIN(Engine)
-//class CFSMComponent;
-//END
-
-	BEGIN(Client)
+BEGIN(Client)
 
 class CCanvas_SASSkillMove final : public CCanvas
 {
@@ -33,40 +29,6 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	SKILLINDEX Get_SASSkill() {
-		return m_eSASSkill;
-	}
-	void Set_SASSkill(SKILLINDEX eSkill) {
-		m_eSASSkill = eSkill;
-	}
-
-	SKILLINDEX Get_PreSASSkill() {
-		return m_ePreSASSkill;
-	}
-	void Set_PreSASSkill(SKILLINDEX eSkill) {
-		m_ePreSASSkill = eSkill;
-	}
-
-	SUPERPOWERS	Get_SuperPowers() {
-		return m_eSuperPowers;
-	}
-	void Set_SuperPowers(SUPERPOWERS eSkill) {
-		m_eSuperPowers = eSkill;
-	}
-
-	_bool Get_InputSkill(SKILLINDEX eSkill) {
-		return m_bInputSkill[eSkill];
-	}
-	void Set_InputSkill(SKILLINDEX eSkill, _bool bInput) {
-		m_bInputSkill[eSkill] = bInput;
-	}
-
-	_bool Get_OnSkill() {
-		return m_bOnSkill;
-	}
-	void Set_OnSkill(_bool bOn) {
-		m_bOnSkill = bOn;
-	}
 
 public:
 	void	Info_Tick(); 
@@ -74,16 +36,8 @@ public:
 	void	InputAlt_Tick();
 
 private:
-	class CCanvas* m_pCanvas = { nullptr };
-
-	SKILLINDEX		m_eSASSkill = SKILLINDEX_END;		// UI 들이 같은 객체를 사용하기 때문에 구별하기 위해서
-	SKILLINDEX		m_ePreSASSkill = SKILLINDEX_END;	// 이전에 사용한 스킬
-	SUPERPOWERS		m_eSuperPowers = SUPERPOWERS_END;	// 초능력 종류
-
-	_bool			m_bInputSkill[SKILLINDEX_END] = {};	// 플레이어에서 키를 눌렀을 때
-	_bool			m_bOnSkill = { false };				// 1: 초능력 사용 가능, 0: 초능력 사용 불 가
-
-	_bool			m_bKeyInput[2] = { false };			// [0]Ctrl, [1]Alt 이 동시에 눌리지 않도록 하기 위해서
+	_bool			m_bCtrl = { false };
+	_bool			m_bAlt = { false };
 
 public:
 	static CCanvas_SASSkillMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

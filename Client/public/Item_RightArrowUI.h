@@ -14,7 +14,6 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void	BeginTick() override;
 	virtual void	Tick(_double TimeDelta) override;
 	virtual void	Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
@@ -22,6 +21,11 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
+
+private:
+	_bool	m_bInput = { false };
+	_float	m_fStartX = { 0.0f };
+	_double m_fMoveTimeAcc = { 0.0f };
 
 public:
 	static CItem_RightArrowUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
