@@ -297,7 +297,7 @@ void CRigidBody::CreateActor()
 	if (auto pOwner = TryGetOwner())
 		pxMat = CPhysXUtils::ToFloat4x4(pOwner->GetTransform()->Get_WorldMatrix());
 
-	auto pMtrl = CPhysX_Manager::GetInstance()->FindMaterial("Default");
+	auto pMtrl = CPhysX_Manager::GetInstance()->FindMaterial("NoBounce");
 	m_pActor = pPhysics->createRigidDynamic(physx::PxTransform{pxMat});
 
 	_matrix OriginMatrix = m_OriginTransformMatrix;

@@ -157,7 +157,7 @@ void CPhysX_Manager::Initialize()
 	// create simulation
 	m_Materials.emplace("Default", m_Physics->createMaterial(0.5f, 0.5f, 0.6f));
 	m_Materials.emplace("SmallFriction", m_Physics->createMaterial(0.1f, 0.1f, 0.5f));
-	m_Materials.emplace("NoBounce", m_Physics->createMaterial(0.5f, 0.5f, 0.0f));
+	m_Materials.emplace("NoBounce", m_Physics->createMaterial(0.5f, 0.5f, 0.1f));
 
 #ifdef _DEBUG
 	groundPlane = PxCreatePlane(*m_Physics, physx::PxPlane(0,1,0,30), *FindMaterial("Default"));
@@ -603,6 +603,13 @@ void CPhysX_Manager::DebugRender(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 {
 	if (m_bRenderDebug == false)
 	{
+		for (auto& debugShape : m_DebugShapes)
+		{
+			RemoveActor(*debugShape.pActor);
+			debugShape.pActor->detachShape(*debugShape.pShape);
+			debugShape.pActor->release();
+			debugShape.pShape->release();
+		}
 		m_DebugLines.clear();
 		m_DebugShapes.clear();
 		return;

@@ -12,6 +12,7 @@
 #include "Level_Tutorial.h"
 #include "Level_EnemiesTest.h"
 #include "Level_Batch.h"
+#include "Level_KineticEditor.h"
 
 CImgui_LevelSwitcher::CImgui_LevelSwitcher(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImguiObject(pDevice, pContext)
@@ -86,6 +87,12 @@ void CImgui_LevelSwitcher::Imgui_RenderMenu()
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_BATCH	,
 				CLevel_Loading_Simple::Create<CLevel_Batch>(m_pDevice, m_pContext));
+		}
+		if (ImGui::MenuItem("Level_KineticEditor"))
+		{
+			CGameInstance::GetInstance()->Open_Loading(
+				LEVEL_KINETIC_EDITOR	,
+				CLevel_Loading_Simple::Create<CLevel_KineticEditor>(m_pDevice, m_pContext));
 		}
 		ImGui::EndMenu();
 	}
