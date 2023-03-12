@@ -2565,6 +2565,11 @@ void CPlayer::Event_CollisionStart()
 			m_AttackDesc.pCauser = this;
 			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		}
+		
+		else
+		{
+			int iA = 0;
+		}
 	}
 	else
 	{

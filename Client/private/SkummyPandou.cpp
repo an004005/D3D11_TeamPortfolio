@@ -201,7 +201,7 @@ void CSkummyPandou::Tick(_double TimeDelta)
 				m_pASM->InputAnimSocket("Bee", { m_pDamage_L_B });
 		}
 
-		if (m_eAtkType == EAttackType::ATK_MIDDLE)
+		if (m_eAtkType == EAttackType::ATK_MIDDLE || m_eAtkType == EAttackType::ATK_HEAVY)
 		{
 			if (m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("Bee", { m_pDamage_M_F });
@@ -311,7 +311,7 @@ void CSkummyPandou::TakeDamage(DAMAGE_PARAM tDamageParams)
 		++m_iAirDamage;
 	}
 
-	else
+	if(m_eAtkType != EAttackType::ATK_TO_AIR || m_eAtkType != EAttackType::ATK_END)
 		m_bStruck = true;
 }
 
@@ -432,8 +432,7 @@ CGameObject * CSkummyPandou::Clone(void * pArg)
 
 void CSkummyPandou::Free()
 {
-	__super::Free();
-
+	CMonster::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);

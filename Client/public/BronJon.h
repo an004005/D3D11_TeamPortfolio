@@ -3,12 +3,10 @@
 #include "Monster.h"
 
 BEGIN(Engine)
-class CGameInstance;
-class CAnimationInstance;
-class CAnimation;
 class CFSMComponent;
-class CRigidBody;
 class CGameInstance;
+class CAnimation;
+class CRigidBody;
 END
 
 BEGIN(Client)
@@ -36,12 +34,9 @@ public:
 	_matrix AttachCollider(CRigidBody* pRigidBody);
 
 	void	Atk_BiteSweep();
-
 	void	Atk_LaserSweep();
 
 private:
-
-
 	class CBrJ_Controller*		m_pController = nullptr;
 	class CBrJ_AnimInstance*	m_pASM = nullptr;	
 
@@ -105,10 +100,10 @@ public:
 	_float GetTurnRemain() const { return m_fTurnRemain; }
 	_bool IsPlayingSocket() const;
 
-	public:
-		static CBronJon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-		virtual CGameObject* Clone(void* pArg = nullptr) override;
-		virtual void Free() override;
+public:
+	static CBronJon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg = nullptr) override;
+	virtual void Free() override;
 };
 
 END
