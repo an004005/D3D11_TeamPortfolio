@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "BuddyLumi.h"
+#include <random>
+
 #include "GameInstance.h"
 #include "MathUtils.h"
 #include "GameUtils.h"
@@ -40,9 +42,9 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 
 	FAILED_CHECK(CMonster::Initialize(pArg));
 
-	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
+	/*if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
 		(CComponent**)&m_pTrigger, &BuddyLumiTrigger)))
-		return E_FAIL;
+		return E_FAIL;*/
 	
 	Json BuddyLumiWeapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiWeapon.json");
 
@@ -69,14 +71,15 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 	});
 	m_pModelCom->Add_EventCaller("Successive", [this] 
 	{ 
-		m_fGravity = 36.f;
-		m_fYSpeed = 11.f;
+		m_fGravity = 34.f;
+		m_fYSpeed = 13.f;
 	});
+	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 	// ~Event Caller
-
-	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(1.f, 0.f, 29.f)));
-
+	m_iHP = 900; // ★
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
+
+	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
 	m_pASM = CBdLm_AnimInstance::Create(m_pModelCom, this);
 
@@ -114,8 +117,6 @@ void CBuddyLumi::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("Buddy", { m_pModelCom->Find_Animation("AS_em0400_160_AL_threat") });
-
-	// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(1.f, 0.f, 29.f)));	
 }
 
 void CBuddyLumi::Tick(_double TimeDelta)
@@ -168,7 +169,7 @@ void CBuddyLumi::Tick(_double TimeDelta)
 		m_bOneHit = false;
 	}
 
-	if (m_bStruck || m_pController->KeyDown(CController::Q))
+	if (!m_bAirStruck && m_bStruck || m_pController->KeyDown(CController::Q))
 	{
 		m_bStruck = false;
 		m_pController->ClearCommands();
@@ -176,10 +177,15 @@ void CBuddyLumi::Tick(_double TimeDelta)
 		if (m_eAtkType == EAttackType::ATK_LIGHT)
 		{
 			if (m_eHitDir == EBaseAxis::NORTH)
+			{
 				m_pASM->InputAnimSocket("Buddy", { m_pDamage_L_F });
-
+				m_bHitMove = true;
+			}
 			else
+			{
 				m_pASM->InputAnimSocket("Buddy", { m_pDamage_L_B });
+				m_bHitMove = true;
+			}
 		}
 
 		if (m_eAtkType == EAttackType::ATK_MIDDLE || m_eAtkType == EAttackType::ATK_HEAVY)
@@ -198,8 +204,9 @@ void CBuddyLumi::Tick(_double TimeDelta)
 		}
 	}
 
-	if (m_bAirStruck || m_pController->KeyDown(CController::X))
+	if (!m_bStruck && m_bAirStruck || m_pController->KeyDown(CController::X))
 	{
+		m_bHitMove = false;
 		m_bAirStruck = false;
 		m_pController->ClearCommands();
 		// 추가타 X
@@ -215,7 +222,7 @@ void CBuddyLumi::Tick(_double TimeDelta)
 		else if (m_iAirDamage >= 2)
 		{
 			if (m_iAirDamage > m_iPreAirDamageCnt)
-				m_pASM->AttachAnimSocket("Buddy", { m_pRiseStart });
+				m_pASM->InputAnimSocket("Buddy", { m_pRiseStart });
 
 			m_iPreAirDamageCnt = m_iAirDamage;
 		}
@@ -233,8 +240,7 @@ void CBuddyLumi::Tick(_double TimeDelta)
 			}
 		}
 	}
-
-	m_pTrigger->Update_Tick(m_pTransformCom);
+//	m_pTrigger->Update_Tick(m_pTransformCom);
 
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
@@ -251,10 +257,20 @@ void CBuddyLumi::Tick(_double TimeDelta)
 
 	m_vMoveAxis.Normalize();
 
-	const _float fYaw = m_pTransformCom->GetYaw_Radian();
-	_float3 vVelocity;
-	XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
-	m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+	if (!m_bHitMove)
+	{
+		const _float fYaw = m_pTransformCom->GetYaw_Radian();
+		_float3 vVelocity;
+		XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
+		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+		m_bOneTick = false;
+
+		m_vPreDir = { 0.f, 0.f, 0.f, 0.f };
+		m_vCurDir = { 0.f, 0.f, 0.f, 0.f };
+		m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
+	}
+	else
+		HitDir(TimeDelta);
 }
 
 void CBuddyLumi::Late_Tick(_double TimeDelta)
@@ -263,16 +279,7 @@ void CBuddyLumi::Late_Tick(_double TimeDelta)
 
 	if (m_bAtkSwitch)
 		Swing_SweepCapsule(m_bOneHit);
-
-	if (m_iHP <= 0)
-		m_bDead = true;
-
-	if (m_bDead && m_pController->KeyDown(CController::X))
-	{
-		m_pController->ClearCommands();
-		m_pASM->AttachAnimSocket("Buddy", { m_pDeadAnim });
-	}
-		
+			
 	if (nullptr != m_pRendererCom && m_bVisible)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
@@ -286,6 +293,10 @@ HRESULT CBuddyLumi::Render()
 void CBuddyLumi::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	// HP Bar Check	
+//	ImGui::Text("HP : %d", m_iHP);
+
 	m_pASM->Imgui_RenderState();
 }
 
@@ -305,15 +316,22 @@ void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eHitDir = eHitFrom;
 	
 	m_eAtkType = tDamageParams.eAttackType;
+	m_iHP -= tDamageParams.iDamage;
 
 	if (m_eAtkType == EAttackType::ATK_TO_AIR)
 	{
 		m_bAirStruck = true;
 		++m_iAirDamage;
 	}
-	if (m_eAtkType != EAttackType::ATK_TO_AIR)
-	{
+	if (m_eAtkType != EAttackType::ATK_TO_AIR)	
 		m_bStruck = true;
+	
+	if (m_iHP <= 0)
+	{
+		m_pController->ClearCommands();
+		m_DeathTimeline.PlayFromStart();
+		m_pASM->InputAnimSocket("Buddy", { m_pDeadAnim });
+		m_bDead = true;
 	}
 }
 
@@ -321,7 +339,7 @@ void CBuddyLumi::AfterPhysX()
 {
 	__super::AfterPhysX();
 	// 무기 콜라이더의 Update_Tick(매트릭스) 
-	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
+//	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 
 	m_pWeaponCollider->Update_Tick(AttachCollider(m_pWeaponCollider));
 	m_pWeaponCollider->Update_AfterPhysX(m_pTransformCom);
@@ -380,7 +398,7 @@ void CBuddyLumi::Swing_SweepCapsule(_bool bCol)
 					tParam.vHitNormal = _float3(pHit.normal.x, pHit.normal.y, pHit.normal.z);
 					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					tParam.iDamage = 1;
+					tParam.iDamage = (rand() % 70) + 40;
 
 					pTarget->TakeDamage(tParam);
 
@@ -407,6 +425,38 @@ _matrix CBuddyLumi::AttachCollider(CRigidBody* pRigidBody)
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
 	return SocketMatrix;
+}
+
+void CBuddyLumi::HitDir(_double TimeDelta)
+{	
+	// 몸의 중점을 잡는 뼈
+	_matrix matRef = m_pModelCom->GetBoneMatrix("Reference") * m_pTransformCom->Get_WorldMatrix();
+	_vector vRef = matRef.r[3];
+
+	// 밀려나는 거리만큼의 뼈
+	_matrix matWeak = m_pModelCom->GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
+	_vector vWeak = matWeak.r[3];
+
+	// 현재 위치
+	_vector	vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	if (!m_bOneTick)
+		m_vPreDir = vPosition;
+
+	// 방향
+	_vector vDest = vRef - vWeak;
+
+	m_vCurDir = vDest;
+
+	if (m_bOneTick)
+		m_vFinDir = m_vCurDir - m_vPreDir;
+
+	_float fRange = XMVectorGetX(m_vFinDir);
+
+	m_pTransformCom->LocalMove(m_vFinDir);
+
+	m_vPreDir = m_vCurDir;
+
+	m_bOneTick = true;
 }
 
 _bool CBuddyLumi::IsPlayingSocket() const
@@ -443,6 +493,6 @@ void CBuddyLumi::Free()
 	CMonster::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-	Safe_Release(m_pTrigger);
+//	Safe_Release(m_pTrigger);
 	Safe_Release(m_pWeaponCollider);
 }

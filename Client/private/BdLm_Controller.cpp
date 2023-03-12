@@ -120,11 +120,11 @@ void CBdLm_Controller::Tick_Near(_double TimeDelta)
 	{
 	case 0:
 		AddCommand("Dodge_L", 0.f, &CAIController::Input, NUM_1);
-		AddCommand("Turn", 3.2f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
+		AddCommand("Turn", 2.7f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
 		break;
 	case 1:
 		AddCommand("Dodge_R", 0.f, &CAIController::Input, NUM_2);
-		AddCommand("Turn", 3.2f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
+		AddCommand("Turn", 2.7f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
 		break;
 	case 2:
 		AddCommand("Attack_Swing", 0.f, &CAIController::Input, MOUSE_LB);
@@ -199,7 +199,7 @@ void CBdLm_Controller::Run(EMoveAxis eAxis)
 	{
 	case EMoveAxis::NORTH:
 		m_vMoveAxis.z += 1.f;
-		if (abs(m_fTtoM_Distance) < 3.f)
+		if (abs(m_fTtoM_Distance) < 2.3f)
 		{
 			m_Commands.front().SetFinish();
 		}

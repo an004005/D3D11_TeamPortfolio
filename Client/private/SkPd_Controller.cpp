@@ -133,44 +133,44 @@ void CSkPd_Controller::Tick_Near(_double TimeDelta)
 		AddCommand("Attack_Rush", 0.f, &CAIController::Input, R);
 		AddCommand("Rush", 3.f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
 		break;
-	case 3:
+	/*case 3:
 		AddCommand("Attack_End", 0.f, &CAIController::Input, C);
-		break;
-	case 4:
+		break;*/
+	case 3:
 		AddCommand("Turn", 4.f, &CAIController::TurnToTarget, 1.f);
 		break;
-	case 5:
+	case 4:
 		AddCommand("LeftMove", 2.5f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
 		break;
-	case 6:
+	case 5:
 		AddCommand("Turn", 3.5f, &CAIController::TurnToTarget, 1.f);
 		AddCommand("Threat", 0.f, &CAIController::Input, G);
 		break;
-	case 7:
+	case 6:
 		AddCommand("Turn", 3.f, &CAIController::TurnToTarget, 1.f);
 		break;
-	case 8:
+	case 7:
 		AddCommand("Attack_Start", 0.f, &CAIController::Input, MOUSE_LB);
 		break;
-	case 9:
+	case 8:
 		AddCommand("Attack_Rush", 0.f, &CAIController::Input, R);
 		AddCommand("Rush", 3.f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
 		break;
-	case 10:
+	/*case 10:
 		AddCommand("Attack_End", 0.f, &CAIController::Input, C);
-		break;
-	case 11:
+		break;*/
+	case 9:
 		AddCommand("Turn", 4.f, &CAIController::TurnToTarget, 1.f);
 		break;
-	case 12:
+	case 10:
 		AddCommand("RightMove", 2.5f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
 		break;
-	case 13:
+	case 11:
 		AddCommand("ForwardMove", 1.5f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	}
 
-	m_iNearOrder = (m_iNearOrder + 1) % 14;
+	m_iNearOrder = (m_iNearOrder + 1) % 12;
 }
 
 void CSkPd_Controller::Tick_Mid(_double TimeDelta)
@@ -189,44 +189,44 @@ void CSkPd_Controller::Tick_Mid(_double TimeDelta)
 		AddCommand("Attack_Rush", 0.f, &CAIController::Input, R);
 		AddCommand("Rush", 3.f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
 		break;
+		/*case 3:
+		AddCommand("Attack_End", 0.f, &CAIController::Input, C);
+		break;*/
 	case 3:
-		AddCommand("Attack_End", 0.f, &CAIController::Input, C);		
-		break;
-	case 4:
 		AddCommand("Turn", 4.f, &CAIController::TurnToTarget, 1.f);
 		break;
-	case 5:
+	case 4:
 		AddCommand("LeftMove", 2.5f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
 		break;
-	case 6:
+	case 5:
 		AddCommand("Turn", 3.5f, &CAIController::TurnToTarget, 1.f);
 		AddCommand("Threat", 0.f, &CAIController::Input, G);
 		break;
-	case 7:
+	case 6:
 		AddCommand("Turn", 3.f, &CAIController::TurnToTarget, 1.f);
 		break;
-	case 8:
+	case 7:
 		AddCommand("Attack_Start", 0.f, &CAIController::Input, MOUSE_LB);
 		break;
-	case 9:
+	case 8:
 		AddCommand("Attack_Rush", 0.f, &CAIController::Input, R);
 		AddCommand("Rush", 3.f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
 		break;
-	case 10:
+		/*case 10:
 		AddCommand("Attack_End", 0.f, &CAIController::Input, C);
-		break;
-	case 11:
+		break;*/
+	case 9:
 		AddCommand("Turn", 4.f, &CAIController::TurnToTarget, 1.f);
 		break;
-	case 12:
+	case 10:
 		AddCommand("RightMove", 2.5f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
 		break;
-	case 13:
+	case 11:
 		AddCommand("ForwardMove", 1.5f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	}
 
-	m_iMidOrder = (m_iMidOrder + 1) % 14;
+	m_iMidOrder = (m_iMidOrder + 1) % 12;
 }
 
 void CSkPd_Controller::Tick_Far(_double TimeDelta)
@@ -273,10 +273,6 @@ void CSkPd_Controller::Rush(EMoveAxis eAxis)
 	{
 	case EMoveAxis::NORTH:
 		m_vMoveAxis.z += 1.f;
-		if (abs(m_fTtoM_Distance) < 3.f)
-		{
-			m_Commands.front().SetFinish();
-		}
 		break;
 	case EMoveAxis::NORTH_EAST:
 		m_vMoveAxis.z += 1.f;

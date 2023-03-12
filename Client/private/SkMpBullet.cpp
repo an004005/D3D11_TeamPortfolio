@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SkMpBullet.h"
+#include <random>
 
 #include "GameInstance.h"
 #include "MathUtils.h"
@@ -55,7 +56,7 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 					DAMAGE_PARAM	dParams;
 					dParams.eAttackType = EAttackType::ATK_LIGHT;
 					dParams.eDeBuff = EDeBuffType::DEBUFF_END;
-					dParams.iDamage = 1;
+					dParams.iDamage = (rand() % 50) + 25;
 					dParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					dParams.pCauser = m_pCastOwner;
 
