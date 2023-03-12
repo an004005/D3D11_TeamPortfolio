@@ -99,8 +99,8 @@ HRESULT CLevel_UI::Initialize()
 	if (FAILED(Ready_Layer_UI(L"Layer_UI")))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -129,12 +129,12 @@ HRESULT CLevel_UI::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
-	{
-		char szFileName[MAX_PATH]{};
-		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
-	});
+	//CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
+	//{
+	//	char szFileName[MAX_PATH]{};
+	//	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
+	//	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
+	//});
 
 	{
 		// Canvas_Frount_UI

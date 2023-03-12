@@ -138,7 +138,7 @@
             ]
         }
     ],
-    "First_Directory": "../Bin/Resources/UI/UI_InGameData/PsychokinesisP0_m.json",
+    "First_Directory": "../Bin/Resources/UI/UI_InGameData/PsychokinesisP0_G.json",
     "Fourth_Directory": "",
     "ObjectTag": "PsychokinesisP_GaugeBack",
     "Prototype_GameObject": "ProtoVFX_EffectGroup\u0000",

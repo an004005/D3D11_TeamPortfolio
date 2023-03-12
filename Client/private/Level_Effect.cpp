@@ -67,8 +67,8 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer(TEXT("Layer"))))
 		return E_FAIL;
 	
-	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -383,10 +383,10 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MonsterShild"), TEXT("ProtoVFX_EffectGroup"), &json));
 
 	// Psychokinesis
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_G.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_PsychokinesisGauge_G"), TEXT("ProtoVFX_EffectGroup"), &json));
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_Mouse.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_PsychokinesisGauge_Mouse"), TEXT("ProtoVFX_EffectGroup"), &json));
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_G.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_PsychokinesisGauge_G"), TEXT("ProtoVFX_EffectGroup"), &json));
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_Mouse.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_PsychokinesisGauge_Mouse"), TEXT("ProtoVFX_EffectGroup"), &json));
 
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"));
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterLockonUI"));
