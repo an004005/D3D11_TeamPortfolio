@@ -49,24 +49,28 @@ void CScarletCharacter::Late_Tick(_double TimeDelta)
 	// }
 
 	CGameObject::Late_Tick(TimeDelta);
-	const _vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	const _vector vPrePos = m_vPrePos;
-	const _vector vMoveDelta = vPos - vPrePos;
 
-	// transform 변동사항 적용
-	physx::PxControllerCollisionFlags flags = m_pCollider->MoveDisp(vMoveDelta, (_float)TimeDelta);
-	m_bOnSide = flags & physx::PxControllerCollisionFlag::eCOLLISION_SIDES;
+	if (m_pCollider->IsOnPhysX())
+	{
+		const _vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		const _vector vPrePos = m_vPrePos;
+		const _vector vMoveDelta = vPos - vPrePos;
 
-	// 중력 이동
-	flags = m_pCollider->Move(_float4{0.f, m_fYSpeed, 0.f, 0.f}, (_float)TimeDelta);
-	m_bOnFloor = flags & physx::PxControllerCollisionFlag::eCOLLISION_DOWN;
-	if (m_bOnFloor || !m_bActiveGravity)
-	{
-		m_fYSpeed = 0.f;
-	}
-	else
-	{
-		m_fYSpeed -= m_fGravity * (_float)TimeDelta;
+		// transform 변동사항 적용
+		physx::PxControllerCollisionFlags flags = m_pCollider->MoveDisp(vMoveDelta, (_float)TimeDelta);
+		m_bOnSide = flags & physx::PxControllerCollisionFlag::eCOLLISION_SIDES;
+
+		// 중력 이동
+		flags = m_pCollider->Move(_float4{0.f, m_fYSpeed, 0.f, 0.f}, (_float)TimeDelta);
+		m_bOnFloor = flags & physx::PxControllerCollisionFlag::eCOLLISION_DOWN;
+		if (m_bOnFloor || !m_bActiveGravity)
+		{
+			m_fYSpeed = 0.f;
+		}
+		else
+		{
+			m_fYSpeed -= m_fGravity * (_float)TimeDelta;
+		}
 	}
 }
 
@@ -78,6 +82,10 @@ void CScarletCharacter::AfterPhysX()
 		const _float4 vColliderFootPos = m_pCollider->GetFootPosition();
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vColliderFootPos);
 		m_vPrePos = vColliderFootPos;
+	}
+	else
+	{
+		m_vPrePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	}
 }
 

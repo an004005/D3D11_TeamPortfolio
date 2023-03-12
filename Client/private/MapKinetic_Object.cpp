@@ -87,6 +87,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 void CMapKinetic_Object::BeginTick()
 {
+	__super::BeginTick();
 }
 
 void CMapKinetic_Object::Tick(_double TimeDelta)
