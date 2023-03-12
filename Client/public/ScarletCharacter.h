@@ -40,7 +40,8 @@ protected:
 	virtual void DeBuff_Oil(){}
 
 protected:
-	void		Collision_Check_Capsule(CRigidBody*	AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollision = true, ECOLLIDER_TYPE_BIT ColType = CTB_MONSTER);
+	void		Collision_Check_Capsule(CRigidBody*	AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollision = true, ECOLLIDER_TYPE_BIT ColType = CTB_MONSTER, _bool bContinuity = false);
+	_bool		Collision_Check_Capsule_Improved(CRigidBody* AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollisionCheck = false, ECOLLIDER_TYPE_BIT ColType = CTB_MONSTER);
 	list<CScarletCharacter*>	m_DamagedObjectList;
 
 protected:
@@ -60,8 +61,14 @@ protected:
 	_float m_fDeBuffTime = 0.f;
 	// ~Debuff
 
+// 재충돌 여부, Out이 아니면 재충돌로 판단
 public:
-	_bool isCollision() { return m_iHitTargetCount > 0 ? true : false; }
+	_bool	Get_CollisionDuplicate() { return m_bCollisionDuplicate; }
+	void	Set_CollisionDuplicate(_bool bDuplicate) { m_bCollisionDuplicate = bDuplicate; }
+
+protected:
+	_bool	m_bCollisionDuplicate = false;		// true이면 여전히 충돌중인것임
+// ~재충돌 여부
 
 protected:
 	_uint	m_iHitTargetCount = 0;

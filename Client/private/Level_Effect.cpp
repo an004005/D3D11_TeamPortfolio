@@ -29,6 +29,16 @@
 #include "PostVFX_ColorGrading.h"
 #include "PostVFX_HitDecal.h"
 #include "VFX_Manager.h"
+
+// ~ ¿Á¼öÇöÀÇ ÈçÀû
+#include "Boss1.h"
+#include "Boss1_AIController.h"
+
+#include "MonsterHpUI.h"
+#include "MonsterLockonUI.h"
+#include "MonsterShildUI.h"
+// ~ ¿Á¼öÇöÀÇ ÈçÀû
+
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -57,13 +67,16 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer(TEXT("Layer"))))
 		return E_FAIL;
 	
-	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -145,26 +158,26 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleGroup", CParticleGroup::Create(m_pDevice, m_pContext)));
 
 
-	// ±è±â¹üÀÇ ÈçÀû
-	pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
-	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
+	//// ±è±â¹üÀÇ ÈçÀû
+	//pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
+	//pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
 
-	auto pModel_Player = CModel::Create(m_pDevice, m_pContext,
-		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
+	//auto pModel_Player = CModel::Create(m_pDevice, m_pContext,
+	//	"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
 
-	pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
-	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
+	//pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
+	//FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
 
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
-		CController::Create())))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
+	//	CController::Create())))
+	//	return E_FAIL;
 
-	_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
-	pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
-	auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
-		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
-	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
-	// ~ ±è±â¹üÀÇ ÈçÀû
+	//_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
+	//pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
+	//auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
+	//	"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
+	//FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
+	//// ~ ±è±â¹üÀÇ ÈçÀû
 
 
 
@@ -204,6 +217,34 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	// pModel_VFX = CModel::Create(m_pDevice, m_pContext,
 	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/Default_Attack_4.static_model");
 	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_04", pModel_VFX));
+
+	// ~ ¿Á¼öÇöÀÇ ÈçÀû
+	{
+		auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
+		pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
+
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create())))
+			return E_FAIL;
+	}
+
+	///* For.Prototype_GameObject_MonsterLockonUI */
+	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),
+	//	CMonsterLockonUI::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	///* For.Prototype_GameObject_MonsterHpUI */
+	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterHpUI"),
+	//	CMonsterHpUI::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	///* For.Prototype_GameObject_MonsterShildUI */
+	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterShildUI"),
+	//	CMonsterShildUI::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	// ~ ¿Á¼öÇöÀÇ ÈçÀû
 
 	return S_OK;
 }
@@ -271,6 +312,8 @@ HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Preview", L"MaterialPreview"));
 
+
+
 	return S_OK;
 }
 
@@ -309,6 +352,46 @@ HRESULT CLevel_Effect::Ready_Layer_Map(const _tchar * pLayerTag)
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+	return S_OK;
+}
+
+HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	// º¸½º
+	//auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
+	//_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	//pos.y += 1.f;
+	//pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+
+	// ´«
+	//Json Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_Find.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &Json));
+
+	// Lockon
+	//Json Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_Target.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &Json));
+
+	//Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_TargetRhombus.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &Json));
+
+	// Monster hp
+	//Json Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterHp.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MonsterHp"), TEXT("ProtoVFX_EffectGroup"), &Json));
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterShild.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MonsterShild"), TEXT("ProtoVFX_EffectGroup"), &json));
+
+	// Psychokinesis
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_G.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_PsychokinesisGauge_G"), TEXT("ProtoVFX_EffectGroup"), &json));
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_Mouse.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_PsychokinesisGauge_Mouse"), TEXT("ProtoVFX_EffectGroup"), &json));
+
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"));
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterLockonUI"));
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterShildUI"));
+
 	return S_OK;
 }
 

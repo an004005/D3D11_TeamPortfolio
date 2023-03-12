@@ -226,7 +226,7 @@ _bool CPhysX_Manager::OverlapSphere(const SphereOverlapParams& params)
 	const PxTransform transform(PxVec3{ params.vPos.x, params.vPos.y, params.vPos.z });
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f)
+	if (params.fVisibleTime > 0.f && m_bRenderDebug)
 	{
 		PxShape* pShape = m_Physics->createShape(sphere, *FindMaterial("Default"));
 		AddDebugShape(pShape, transform, params.fVisibleTime);
@@ -259,7 +259,7 @@ _bool CPhysX_Manager::OverlapCapsule(const CapsuleOverlapParams& params)
 	const PxTransform transform(PxVec3{ params.vPos.x, params.vPos.y, params.vPos.z }, PxQuat{Quat.x, Quat.y, Quat.z, Quat.w});
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f)
+	if (params.fVisibleTime > 0.f && m_bRenderDebug)
 	{
 		PxShape* pShape = m_Physics->createShape(capsule, *FindMaterial("Default"));
 		AddDebugShape(pShape, transform, params.fVisibleTime);
@@ -283,7 +283,7 @@ _bool CPhysX_Manager::SweepSphere(const SphereSweepParams& params)
 	vNormalDir.Normalize();
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f || params.fDistance > 0.f)
+	if ((params.fVisibleTime > 0.f || params.fDistance > 0.f) && m_bRenderDebug)
 	{
 		_float fSegment = 0.5f;
 		if (params.fDistance <= 1.f)
@@ -342,7 +342,7 @@ _bool CPhysX_Manager::SweepCapsule(const CapsuleSweepParams& params)
 	vNormalDir.Normalize();
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f || params.fDistance > 0.f)
+	if ((params.fVisibleTime > 0.f || params.fDistance > 0.f) && m_bRenderDebug)
 	{
 		_float fSegment = 0.5f;
 		if (params.fDistance <= 1.f)
@@ -390,7 +390,7 @@ _bool CPhysX_Manager::PxSweepCapsule(const PxCapsuleSweepParams& params)
 	vNormalDir.Normalize();
 
 #ifdef _DEBUG
-	if (params.fVisibleTime > 0.f || params.fDistance > 0.f)
+	if ((params.fVisibleTime > 0.f || params.fDistance > 0.f) && m_bRenderDebug )
 	{
 		_float fSegment = 0.5f;
 		if (params.fDistance <= 1.f)

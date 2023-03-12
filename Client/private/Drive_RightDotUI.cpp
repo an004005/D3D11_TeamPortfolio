@@ -62,9 +62,6 @@ void CDrive_RightDotUI::Imgui_RenderProperty()
 {
 	CUI::Imgui_RenderProperty();
 
-	_int iDriveCount = _int(m_eDriveCount);
-	ImGui::InputInt("Drive Count", &iDriveCount);
-	m_eDriveCount = DRIVECOUNT(iDriveCount);
 }
 
 void CDrive_RightDotUI::SaveToJson(Json & json)
@@ -77,6 +74,15 @@ void CDrive_RightDotUI::LoadFromJson(const Json & json)
 {
 	CUI::LoadFromJson(json);
 
+}
+
+void CDrive_RightDotUI::Set_DriveCount()
+{
+	if (m_iDriveCount >= _uint(TWELVE))
+		return;
+
+	++m_iDriveCount;
+	m_eDriveCount = DRIVECOUNT(m_iDriveCount);
 }
 
 void CDrive_RightDotUI::DriveCount_Tick()

@@ -32,6 +32,7 @@
 #include "SkummyPool.h"
 #include "SkMpBullet.h"
 #include "SkmP_Controller.h"
+#include "BrJ_Controller.h"
 
 #include "TrailSystem.h"
 #include "EffectSystem.h"
@@ -41,6 +42,7 @@
 #include "FlowerLeg.h"
 #include "FL_Controller.h"
 #include "SkmP_Controller.h"
+#include "Imgui_CurveManager.h"
 
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -56,6 +58,7 @@ HRESULT CLevel_PlayerTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -150,24 +153,29 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	// 		CMaterial::Create(m_pDevice, m_pContext, filePath.c_str()));
 	// });
 
-	pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
 	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
 
-	auto pModel_Player = CModel::Create(m_pDevice, m_pContext,
-		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
+	{	// 플레이어 모델과 애니메이션
+		auto pModel_Player = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
+		pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
+		
+		pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
+	}
 
-	pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
-	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
+	{	// 플레이어 컨트롤러
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
+			CController::Create())))
+			return E_FAIL;
+	}
 
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
-		CController::Create())))
-		return E_FAIL;
-
-	_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
-	pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
-	auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
-		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
-	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
+	{	// 무기
+		_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
+		pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
+		auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
+	}
 
 	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
 	
@@ -199,11 +207,12 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 		pBronJon->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BronJon/Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBronJon"), pBronJon));
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BronJon"), CBronJon::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_BrJ_Controller"), CBrJ_Controller::Create()));
 	}
 
 	{	// 이펙트 프로토타입
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
-			CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
+			CPostVFX_Scifi::Create(m_pDevice, m_pContext)))) 
 			return E_FAIL;
 
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
@@ -261,11 +270,7 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 		FAILED_CHECK(pGameInstance->Add_Prototype(L"Prototype_GameObject_FlowerLeg", CFlowerLeg::Create(m_pDevice, m_pContext)));
 
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FL_Controller"), CFL_Controller::Create()));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
-
 	}
-
-	
 
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
@@ -304,6 +309,7 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Player(const _tchar* pLayerTag)
 
 	Json PreviewData;
 	PreviewData["Model"] = "Model_Player";
+	PreviewData["KineticModel"] = "Model_Player";
 
 	CGameObject* pPlayer = nullptr;
 	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Player"), &PreviewData));
@@ -327,7 +333,7 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/ConstructionSite3F.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/KineticTestMap.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
