@@ -28,9 +28,10 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
-	virtual void AfterPhysX();
+	virtual void AfterPhysX() override;
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
+	virtual void SetActive() override;
 
 	void	Strew_Overlap(); // Atk_Strew �浹ü
 	void	Spin_SweepCapsule(_bool bCol);
@@ -121,13 +122,10 @@ private:
 	_bool		m_bStruck = false;
 	_bool		m_bAirStruck = false;
 
-	_bool		m_bMaintain = false;
+	_bool		m_bAirMaintain = false;
 
-	_bool		m_bInvicible = false;
+	_bool		m_bInvisible = false;
 
-	_uint		m_iAirDamage = 0;
-	_uint		m_iPreAirDamageCnt = 0;
-	
 	// HitDir
 	_bool		m_bHitMove = false;
 	

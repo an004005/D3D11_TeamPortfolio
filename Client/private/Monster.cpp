@@ -39,83 +39,43 @@ void CMonster::Imgui_RenderProperty()
 	CScarletCharacter::Imgui_RenderProperty();
 	m_DeathTimeline.Imgui_RenderEditor();
 
-
-	static string szMonsterAnimName = "";
-	if (ImGui::BeginListBox("Animation List"))
+	if (ImGui::CollapsingHeader("Anim Fast Modifier"))
 	{
-		static char szSeachAnim[MAX_PATH] = "";
-		ImGui::InputText("Anim Search", szSeachAnim, MAX_PATH);
-
-		const string strSearch = szSeachAnim;
-		const _bool bSearch = strSearch.empty() == false;
-
-		for (auto& Pair : m_pModelCom->Get_AnimList())
+		static string szMonsterAnimName = "";
+		if (ImGui::BeginListBox("Animation List"))
 		{
-			if (bSearch)
-			{
-				if (Pair.first.find(strSearch) == string::npos)
-					continue;
-			}
+		  static char szSeachAnim[MAX_PATH] = "";
+		  ImGui::InputText("Anim Search", szSeachAnim, MAX_PATH);
 
-			const bool bSelected = szMonsterAnimName == Pair.first;
-			if (bSelected)
-				ImGui::SetItemDefaultFocus();
+		  const string strSearch = szSeachAnim;
+		  const _bool bSearch = strSearch.empty() == false;
 
-			if (ImGui::Selectable(Pair.first.c_str(), bSelected))
-				szMonsterAnimName = Pair.first;
+		  for (auto& Pair : m_pModelCom->Get_AnimList())
+		  {
+		     if (bSearch)
+		     {
+		        if (Pair.first.find(strSearch) == string::npos)
+		           continue;
+		     }
+
+		     const bool bSelected = szMonsterAnimName == Pair.first;
+		     if (bSelected)
+		        ImGui::SetItemDefaultFocus();
+
+		     if (ImGui::Selectable(Pair.first.c_str(), bSelected))
+		        szMonsterAnimName = Pair.first;
+		  }
+		  ImGui::EndListBox();
 		}
-		ImGui::EndListBox();
+
+		if ("" != szMonsterAnimName)
+		  m_pModelCom->Get_AnimList()[szMonsterAnimName]->Imgui_RenderProperty();
 	}
 
-	if ("" != szMonsterAnimName)
-		m_pModelCom->Get_AnimList()[szMonsterAnimName]->Imgui_RenderProperty();
-}
 
-void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
-{
-	if (tDamageParams.vHitPosition.Length() == 0.f)
+	if (ImGui::Button("Activate"))
 	{
-		// 타격점이 원점으로 찍히면 레이캐스트를 쏴서 위치를 판단
-		if (tDamageParams.pCauser != nullptr)
-		{
-			_vector vRayPos = static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
-			vRayPos = XMVectorSetW(vRayPos, 1.f);
-			_vector vRayDir = GetColliderPosition() - static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
-			vRayDir = XMVectorSetW(vRayDir, 0.f);
-
-			physx::PxRaycastHit hitBuffer[1];
-			physx::PxRaycastBuffer rayOut(hitBuffer, 1);
-
-			RayCastParams param;
-			param.rayOut = &rayOut;
-			param.vOrigin = vRayPos;
-			param.vDir = vRayDir;
-			param.fDistance = 10.f;
-			param.iTargetType = CTB_MONSTER;
-			param.fVisibleTime = 5.f;
-			param.bSingle = true;
-			if (CGameInstance::GetInstance()->RayCast(param))
-			{
-				for (int i = 0; i < rayOut.getNbAnyHits(); ++i)
-				{
-					auto pHit = rayOut.getAnyHit(i);
-					CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
-					if (auto pMonster = dynamic_cast<CMonster*>(pCollidedObject))
-					{
-						_vector vHitPos = XMVectorSet(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
-						_vector vEffectDir = tDamageParams.vSlashVector;
-						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, L"Default_Blood_00")->Start_AttachPosition(this, vHitPos, vEffectDir);
-					}
-				}
-			}
-		}
-	}
-	else
-	{
-		// 타격점이 잘 나오면 해당 위치에 생성
-		_vector vHitPos = tDamageParams.vHitPosition;
-		_vector vEffectDir = tDamageParams.vSlashVector;
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, L"Default_Blood_00")->Start_AttachPosition(this, vHitPos, vEffectDir);
+		SetActive();
 	}
 }
 
@@ -242,6 +202,11 @@ void CMonster::MoveTransformJson(Json& jsonDest, void* pArg)
 		Json& json = *static_cast<Json*>(pArg);
 		CTransform::MoveTransformJson(jsonDest, json);
 	}
+}
+
+void CMonster::SetActive()
+{
+	m_bActive = true;
 }
 
 void CMonster::Free()

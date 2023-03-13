@@ -2122,6 +2122,10 @@
             {
                 "EventName": "Spin_Atk",
                 "EventTime": 115.5
+            },
+            {
+                "EventName": "Spin_AtkEnd",
+                "EventTime": 175.0
             }
         ]
     },
@@ -2290,6 +2294,10 @@
             {
                 "EventName": "Successive",
                 "EventTime": 8.0
+            },
+            {
+                "EventName": "AirDamageReset",
+                "EventTime": 50.0
             }
         ]
     },

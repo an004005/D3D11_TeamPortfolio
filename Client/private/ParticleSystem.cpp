@@ -9,18 +9,14 @@
 #include "JsonLib.h"
 #include "Model.h"
 
-set<CParticleSystem*> CParticleSystem::tmp{};
-
 CParticleSystem::CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
-	tmp.insert(this);
 }
 
 CParticleSystem::CParticleSystem(const CParticleSystem& rhs)
 	: CGameObject(rhs)
 {
-	tmp.insert(this);
 }
 
 HRESULT CParticleSystem::Initialize(void* pArg)
@@ -69,12 +65,15 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 
 void CParticleSystem::Tick(_double TimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 		const _float fTimeDelta = (_float)TimeDelta;
 
 		if (m_bLoop == false)
 			m_fDuration -= fTimeDelta;
 		if (m_fDuration < 0.f)
-			m_bDelete = true;
+			m_bVisible = false;
 
 		if (m_eBufferType == EBufferType::MESH)
 		{
@@ -402,7 +401,6 @@ HRESULT CParticleSystem::SetParams()
 
 	if (m_pMeshInstanceBuffer == nullptr && m_eBufferType == EBufferType::POINT)
 	{
-		
 		const _int bRotate = m_bRotate ? 1 : 0;
 		if (FAILED(m_pShader->Set_RawValue("g_bRotate", &bRotate, sizeof(_int))))
 			return E_FAIL;

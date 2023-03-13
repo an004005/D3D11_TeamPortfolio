@@ -92,7 +92,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDiffuse = (float4)1.f;
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	// Out.vFlag = flags;
+	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, 0.f);
 	return Out;
 }
 
@@ -127,7 +127,8 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 		Out.vDiffuse.a = 1.f;
 
 	Out.vNormal = NormalPacking(In);
-	Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	if (g_tex_on_2)
+		Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
 	Out.vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
 	Out.vOutline = g_vec4_0;
 
@@ -172,7 +173,7 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 	}
 
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
-	// Out.vFlag = flags;
+	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, 0.f);
 
 	return Out;
 }
@@ -200,10 +201,10 @@ PS_OUT PS_WIRE_2(PS_IN In)
 	Out.vOutline = g_vec4_0;
 
 	float4 vViewDir = g_vCamPosition - In.vWorldPos;
-	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir), 0.1f);
+	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir.xyz), 0.1f);
 	float4 vWhite = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vDiffuse = lerp(vWhite, Out.vDiffuse, fFresnel);
-	// Out.vFlag = flags;
+	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, 0.f);
 
 	return Out;
 }
@@ -231,7 +232,7 @@ PS_OUT PS_CH100_HAIR_1_3(PS_IN In)
 PS_OUT PS_ch0100_body_0_4(PS_IN In)
 {
 	int bDriveMode = g_int_1;
-	if (bDriveMode)
+	if (bDriveMode && g_tex_on_4)
 	{
 		float4 vMask = g_tex_4.Sample(LinearSampler, In.vTexUV);
 		if (vMask.r == 0.f && vMask.g == 0.f && vMask.b == 0.f)

@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class CRigidBody;
+
 END
 
 enum USAGE { CREATE, USAGE_END};
@@ -38,6 +39,7 @@ private:
 	HRESULT SetUp_Components(void * pArg);
 	void	SetUp_InitInfo(const Json& json); //LoadFromJson에서 실행
 
+	//Monster만 생성
 	void	SetUp_Create(const Json& json);
 private:
 	CRigidBody*			m_pRigidBodyCom = nullptr;
@@ -47,6 +49,7 @@ private:
 
 	/*For Create*/
 	map<wstring, vector<_float4x4>>	m_ProtoWorldMatrixes;
+	vector<class CMonster*>			m_pMonsters;
 	wstring							m_PotoTag = L"";
 
 public:

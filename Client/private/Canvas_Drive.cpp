@@ -64,7 +64,7 @@ HRESULT CCanvas_Drive::Render()
 	_float2 fPlayerHp = dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Get_PlayerHp();
 	_tchar szChildTag[MAX_PATH] = TEXT("");
 
-	if (1000.0f < fPlayerHp.x)
+	if (1000.0f <= fPlayerHp.x)
 	{
 		wsprintf(szChildTag, TEXT("%d"), _int(fPlayerHp.x));
 		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-47.0f, 65.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });

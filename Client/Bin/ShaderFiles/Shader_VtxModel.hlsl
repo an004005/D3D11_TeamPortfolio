@@ -69,7 +69,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDiffuse = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	// Out.vFlag = flags;
+	Out.vFlag = 0.f;
 
 	return Out;
 }
@@ -96,7 +96,7 @@ PS_OUT CommonProcess(PS_IN In)
 
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	// Out.vFlag = flags;
+	Out.vFlag = 0.f;
 	return Out;
 }
 
@@ -115,28 +115,6 @@ PS_OUT PS_DEFAULT(PS_IN In)
 	else
 		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
 
-	// int iOutlineOn = g_int_0;
-	// float fPsychic = g_float_0;
-	// if (iOutlineOn)
-	// 	Out.vOutline = (float4)1.f;
-	// else
-	// 	Out.vOutline = (float4)0.f;
-	//
-	// if (fPsychic > 0.f)
-	// {
-	// 	if (fPsychic >= 1.f)
-	// 	{
-	// 		// todo: 웨이브로 추후 수정
-	// 		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, 0.5f);
-	// 	}
-	// 	else
-	// 	{
-	// 		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, 0.5f);
-	// 		Out.vDepth.z = 1.f - fPsychic;
-	// 	}
-	// }
-
-
 	return Out;
 }
 
@@ -154,6 +132,40 @@ PS_OUT PS_WIRE_FRAME(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	Out.vDiffuse = vector(1.f, 0.f, 1.f, 1.f);
+
+	return Out;
+}
+
+PS_OUT PS_PSYCHIC_DEFAULT_4(PS_IN In)
+{
+	PS_OUT Out = CommonProcess(In);
+
+	if (g_tex_on_2)
+		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	else
+		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
+
+	int iOutlineOn = g_int_0;
+	float fPsychic = g_float_0;
+	if (iOutlineOn)
+		Out.vOutline = (float4)1.f;
+	else
+		Out.vOutline = (float4)0.f;
+	
+	if (fPsychic > 0.f)
+	{
+		if (fPsychic >= 1.f)
+		{
+			// todo: 웨이브로 추후 수정
+			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, 0.5f);
+		}
+		else
+		{
+			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, 0.5f);
+			Out.vDepth.z = 1.f - fPsychic;
+		}
+	}
+
 
 	return Out;
 }
@@ -214,6 +226,20 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_WIRE_FRAME();
+	}
+
+	// 4
+	pass PhychicDefault
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_PSYCHIC_DEFAULT_4();
 	}
 
 }

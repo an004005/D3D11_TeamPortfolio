@@ -54,6 +54,8 @@ private:
 	HRESULT	Setup_Components(void);
 	CController* m_pController = nullptr;
 
+	_float2 m_vMouseMovement;
+
 public:
 	static CCamSpot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

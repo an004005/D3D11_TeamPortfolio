@@ -176,7 +176,6 @@ HRESULT CBoss1::Initialize(void* pArg)
 void CBoss1::BeginTick()
 {
 	CMonster::BeginTick();
-	m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
 
 	m_pModelCom->FindMaterial(L"MI_em0320_GLASS_0")->SetActive(false);
 	m_pGlassMtrl = m_pModelCom->FindMaterial(L"MI_em0320_GLASS_1");
@@ -193,6 +192,8 @@ void CBoss1::BeginTick()
 
 void CBoss1::Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return;
 	CMonster::Tick(TimeDelta);
 
 	// 타겟 가져오기 임시 코드
@@ -263,6 +264,8 @@ void CBoss1::Tick(_double TimeDelta)
 
 void CBoss1::Late_Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return;
 	CMonster::Late_Tick(TimeDelta);
 
 	_int iCurrentHP = m_iPreHP - m_iHP;
@@ -277,6 +280,8 @@ void CBoss1::Late_Tick(_double TimeDelta)
 
 void CBoss1::AfterPhysX()
 {
+	if (!m_bActive)
+		return;
 	CMonster::AfterPhysX();
 }
 
@@ -461,6 +466,12 @@ void CBoss1::DeBuff_Oil()
 	{
 		pMtrl->GetParam().Ints[0] = 2;
 	}
+}
+
+void CBoss1::SetActive()
+{
+	CMonster::SetActive();
+	m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
 }
 
 CBoss1* CBoss1::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

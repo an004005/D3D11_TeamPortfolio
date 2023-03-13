@@ -106,7 +106,11 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	ZeroMemory(&m_PlayerStat, sizeof(PLAYER_STAT));
 	m_PlayerStat.m_iHP = 1000;
+	m_PlayerStat.m_iMaxHP = 1000;
 	m_PlayerStat.m_iKineticEnergy = 100;
+	m_PlayerStat.m_iMaxKineticEnergy = 100;
+	m_PlayerStat.m_iKineticEnergyLevel = 0;
+	m_PlayerStat.m_iKineticEnergyType = 2;
 	ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
@@ -593,10 +597,9 @@ void CPlayer::Initalize_Sas()
 {
 	m_PlayerSasType = ESASType::SAS_END;
 
+	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].Energy = 60.f;
 	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].MaxEnergy = 60.f;
 	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].MinEnergy = 20.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].bUsable = true;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].Energy = 60.f;
 	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].RecoveryRate = 1.f;
 	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].UseRate = 1.f;
 

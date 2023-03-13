@@ -30,6 +30,7 @@ public:
 	virtual _float4x4 GetPivotMatrix() override;
 	//~For Effect
 	_bool IsDead() const { return m_bDead; }
+	virtual void SetActive();
 
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
@@ -44,6 +45,8 @@ protected:
 
 	void MoveTransformJson(Json& jsonDest, void* pArg);
 
+	
+
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;
@@ -55,11 +58,12 @@ protected:
 	_int m_iMaxStamina = 100;
 
 	_bool m_bDead = false;
-	_float m_fDeadDissolve = 0.5f;
 
 	set<CScarletCharacter*> m_DamagedTargetList;
 
 	CSimpleTimeline m_DeathTimeline;
+
+	_bool m_bActive = false;
 
 
 public:

@@ -29,7 +29,8 @@ HRESULT CCanvas_SASInfoRight::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	m_bVisible = true;
+	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+		iter->second->SetVisible(false);
 	
 	return S_OK;
 }
@@ -38,7 +39,6 @@ void CCanvas_SASInfoRight::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
-	
 }
 
 void CCanvas_SASInfoRight::Late_Tick(_double TimeDelta)

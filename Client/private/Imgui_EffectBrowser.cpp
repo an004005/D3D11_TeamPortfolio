@@ -44,7 +44,7 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 
 		if (ImGui::Button("Add New EffectSystem"))
 		{
-			Json EffectJson = CJsonStorage::GetInstance()->FindOrLoadJson(m_EffectSystemTag);
+			Json EffectJson = CJsonStorage::GetInstance()->LoadJson_ForWork(m_EffectSystemTag);
 			if (EffectJson.empty())
 				MSG_BOX("Failed to Add New EffectSystem");
 			else
@@ -63,12 +63,12 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 		m_EffectGroupTag = EffectGroupTag;
 		if (ImGui::Button("Add New EffectGroup"))
 		{
-			Json EffectJson = CJsonStorage::GetInstance()->FindOrLoadJson(m_EffectGroupTag);
+			Json EffectJson = CJsonStorage::GetInstance()->LoadJson_ForWork(m_EffectGroupTag);
 			if (EffectJson.empty())
 				MSG_BOX("Failed to Add New EffectGroup");
 			else
 			{
-				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup"), &EffectJson);
+				dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup"), &EffectJson))->Start_EffectWork();
 			}
 		}
 	}
@@ -84,12 +84,12 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 
 		if (ImGui::Button("Add New ParticleSystem"))
 		{
-			Json EffectJson = CJsonStorage::GetInstance()->FindOrLoadJson(m_ParticleSystemTag);
+			Json EffectJson = CJsonStorage::GetInstance()->LoadJson_ForWork(m_ParticleSystemTag);
 			if (EffectJson.empty())
 				MSG_BOX("Failed to Add New ParticleSystem");
 			else
 			{
-				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_ParticleSystem", TEXT("ProtoVFX_ParticleSystem"), &EffectJson);
+				CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Work_ParticleSystem", L"ProtoVFX_ParticleSystem", &EffectJson);
 			}
 		}
 	}
@@ -105,12 +105,12 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 
 		if (ImGui::Button("Add New ParticleGroup"))
 		{
-			Json EffectJson = CJsonStorage::GetInstance()->FindOrLoadJson(m_ParticleGroupTag);
+			Json EffectJson = CJsonStorage::GetInstance()->LoadJson_ForWork(m_ParticleGroupTag);
 			if (EffectJson.empty())
 				MSG_BOX("Failed to Add New ParticleGroup");
 			else
 			{
-				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_ParticleGroup", TEXT("ProtoVFX_ParticleGroup"), &EffectJson);
+				dynamic_cast<CParticleGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Work_ParticleGroup", L"ProtoVFX_ParticleGroup", &EffectJson))->Start_ParticleWork();
 			}
 		}
 	}
@@ -152,7 +152,7 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 
 					// CVFX_Manager::GetInstance()->GetEffect()
 
-					Json jsonEffect = CJsonStorage::GetInstance()->FindOrLoadJson(Pair.second);
+					Json jsonEffect = CJsonStorage::GetInstance()->LoadJson_ForWork(Pair.second);
 					// CVFX_Manager::GetEffect()
 					dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect))->Start_EffectWork();
 

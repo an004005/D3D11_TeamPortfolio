@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "UI.h"
+//#include "Timeline.h"
 
 BEGIN(Client)
 
@@ -55,6 +56,8 @@ private:
 	_float	m_fAlpha = { 0.0f };
 	_float	m_fStartSizeX = { 0.0f };
 	_float	m_fChangeSizeX = { 0.0f };
+
+	//CSimpleTimeline m_Timeline;
 
 public:
 	static CTutorialUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

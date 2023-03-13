@@ -215,6 +215,14 @@ void CMapKinetic_Object::Imgui_RenderProperty()
 	}
 }
 
+const wstring & CMapKinetic_Object::Get_ModelTag()
+{
+	if ((size_t)m_eCurModelTag >= m_pModelTags.size())
+		return L"";
+
+	return m_pModelTags[m_eCurModelTag];
+}
+
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 {
 	m_pCollider->Set_Kinetic(false);

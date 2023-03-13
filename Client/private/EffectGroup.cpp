@@ -733,6 +733,7 @@ void CEffectGroup::LoadFromJson(const Json& json)
 {
 	CGameObject::LoadFromJson(json);
 
+
 	// for (auto curveJson : json["Curves"])
 	// {
 		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
@@ -1289,7 +1290,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json First_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
+			Json First_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
 			m_pFirst_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &First_Effect));
 
 			const string& strFileName = CGameUtils::GetFileName(m_First_EffectDirectory);
@@ -1313,7 +1314,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json Secon_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
+			Json Secon_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
 			m_pSecond_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Secon_Effect));
 
 			const string& strFileName = CGameUtils::GetFileName(m_Second_EffectDirectory);
@@ -1337,7 +1338,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json Third_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
+			Json Third_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
 			m_pThird_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Third_Effect));
 
 			const string& strFileName = CGameUtils::GetFileName(m_Third_EffectDirectory);
@@ -1361,7 +1362,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json Fourth_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
+			Json Fourth_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
 			m_pFourth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fourth_Effect));
 
 			const string& strFileName = CGameUtils::GetFileName(m_Fourth_EffectDirectory);
@@ -1385,7 +1386,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json Fifth_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
+			Json Fifth_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
 			m_pFifth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fifth_Effect));
 			const string& strFileName = CGameUtils::GetFileName(m_Fifth_EffectDirectory);
 			m_mapEffectSystemTag.emplace(strFileName, m_pFifth_EffectSystem);

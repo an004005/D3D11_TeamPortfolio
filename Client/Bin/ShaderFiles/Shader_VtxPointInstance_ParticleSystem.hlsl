@@ -204,6 +204,36 @@ PS_OUT PS_PARTICLE_DEFAULT(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_PARTICLE_EM0650(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	// float GradientTex = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+	float4 Choose = g_vec4_0;
+	float4 BlendColor = DefaultTex * Choose * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = CalcHDRColor(FinalColor,g_float_0); // color * emissive
+
+	if (g_tex_on_1)
+	{
+		float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+		Out.vColor.a = Mask;
+	}
+	else
+	{
+		// Out.vColor.a = GradientTex;
+		Out.vColor = DefaultTex;
+
+		if (Out.vColor.a < 0.01f)
+			discard;
+	}
+
+
+	return Out;
+}
+
 PS_OUT PS_SPIKE_CHARGE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -367,7 +397,7 @@ technique11 DefaultTechnique
 	//5
 	pass Flow_Particle_Mask_Tex
 	{
-		SetRasterizerState(RS_NonCulling);
+		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_Default, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
@@ -376,5 +406,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_PARTICLE_DEFAULT();
+	}
+
+	//6
+	pass BulletTrailParticle
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_PARTICLE_EM0650();
 	}
 }

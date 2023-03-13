@@ -28,7 +28,7 @@ public:
 
 
 public:
-	const wstring&	Get_ModelTag() { return m_strModelTag; }
+	virtual const wstring&	Get_ModelTag() { return m_strModelTag; }
 
 private:
 	HRESULT	SetUp_Components();

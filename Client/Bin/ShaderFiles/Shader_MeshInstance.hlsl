@@ -106,8 +106,8 @@ PS_OUT PS_MAIN_TEX(PS_IN In)
 
 	Out.vColor = OriginColor;
 
-	if (Out.vColor.a < 0.001f)
-		discard;
+	// if (Out.vColor.a < 0.001f)
+	// 	discard;
 
 	return Out;
 }
@@ -121,6 +121,21 @@ PS_OUT PS_BLEND_TEX(PS_IN In)
 	float4 CalcColor = saturate(FinalColor);
 
 	Out.vColor = CalcColor;
+	Out.vColor.a = OriginColor.a;
+
+	return Out;
+}
+PS_OUT PS_BLEND_TEX_HDR(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	float4 OriginColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 BlendColor = g_vec4_0;
+	float4 FinalColor = OriginColor * BlendColor * 2.0f;
+	float4 CalcColor = saturate(FinalColor);
+	float4 Help = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	
+	Out.vColor = CalcHDRColor(CalcColor, g_float_0);
 	Out.vColor.a = OriginColor.a;
 
 	return Out;
@@ -158,5 +173,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_BLEND_TEX();
+	}
+
+	pass Blend_Tex_HDR //3
+	{
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(DS_Default, 0);
+		SetRasterizerState(RS_NonCulling);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_BLEND_TEX_HDR();
 	}
 }

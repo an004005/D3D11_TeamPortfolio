@@ -256,32 +256,11 @@
     <Filter Include="02.GameObjects\Monster\BuddyLumi\BdLm_Controller">
       <UniqueIdentifier>{7e82e54f-b5b7-4330-be57-352521a4f639}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller">
-      <UniqueIdentifier>{8d065b3d-840e-4ba5-9be7-55d1de3f00f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Trigger">
-      <UniqueIdentifier>{55631933-d0bb-4c2f-a5de-c7e5655b9f86}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="VFX\Particle\ParticleGroup">
-      <UniqueIdentifier>{e8b9645e-c5ce-41d1-b77d-ed2a555a5e24}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="VFX\0. Manager">
-      <UniqueIdentifier>{bded6145-b30d-41c0-bef2-3ac921aa1015}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Levels\02.GamePlay\02. Stage1">
-      <UniqueIdentifier>{bb3692a0-b3da-4d2f-9b8f-6121fa8a6b2a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Front_UI\SASInfoLeft">
       <UniqueIdentifier>{ea0a820a-4dc8-4972-9330-a21a848385ce}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\Front_UI\SASSkillRight">
       <UniqueIdentifier>{ef81e424-8ab1-4dfd-ae18-2316c41c86a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\DescriptionWindow">
-      <UniqueIdentifier>{abb2352e-02f6-4b3c-8379-d3a28a4803fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Monster">
-      <UniqueIdentifier>{1b202ea8-4c32-4399-b17b-b9c184a5027f}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\Boss">
       <UniqueIdentifier>{dc1701f8-365a-4180-94c6-d3de20833679}</UniqueIdentifier>
@@ -289,14 +268,14 @@
     <Filter Include="02.GameObjects\UI\Psychokinesis">
       <UniqueIdentifier>{05a34116-b873-484c-8da2-baafc69d27ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster\boss1\Boss1_AIController">
-      <UniqueIdentifier>{4392880a-c8a6-4b0f-a1ca-2d118db75ace}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\UI\Tutorial">
+      <UniqueIdentifier>{abb2352e-02f6-4b3c-8379-d3a28a4803fd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster\boss1\Boss1_WaterBall">
-      <UniqueIdentifier>{0f87a90b-7254-4d30-91fd-9e68bde42065}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\UI\Alarm">
+      <UniqueIdentifier>{773b5079-4278-4e4c-bf66-8db98ddbbf29}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Bullet">
-      <UniqueIdentifier>{53a029da-cd62-4afd-8139-2be4c8759dc7}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\UI\3DUI">
+      <UniqueIdentifier>{1b202ea8-4c32-4399-b17b-b9c184a5027f}</UniqueIdentifier>
     </Filter>
     <Filter Include="FactoryMethod">
       <UniqueIdentifier>{c339909b-d428-41f4-9c52-dbbf78dbea31}</UniqueIdentifier>
@@ -516,7 +495,6 @@
     <ClInclude Include="..\public\SkmP_AnimInstance.h">
       <Filter>02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
     <ClInclude Include="..\public\SkMpBullet.h">
       <Filter>02.GameObjects\Monster\SkummyPool\SkMpBullet</Filter>
@@ -573,9 +551,6 @@
     <ClInclude Include="..\public\MapNonAnim_Object.h" />
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
-    <ClInclude Include="..\public\SASSkillDefaultUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Canvas_SASSkillMove.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
@@ -665,27 +640,6 @@
     <ClInclude Include="..\public\SkPd_Controller.h">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\BdLm_Controller.h">
-      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h">
-      <Filter>97.ShaderFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\BrJ_Controller.h">
-      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Trigger.h">
-      <Filter>02.GameObjects\Trigger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\ParticleGroup.h">
-      <Filter>VFX\Particle\ParticleGroup</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\VFX_Manager.h">
-      <Filter>VFX\0. Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Level_Stage1.h">
-      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\BdLm_Controller.h" />
     <ClInclude Include="..\public\PlayerInfo_HpBackUI.h">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
@@ -733,31 +687,31 @@
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_Tutorial.h">
-      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+      <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\public\TutorialUI.h">
-      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+      <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Tutorial_CheckUI.h">
-      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+      <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Tutorial_YesNoUI.h">
-      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+      <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Tutorial_TipsUI.h">
-      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+      <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Tutorial_SuccessUI.h">
-      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+      <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MonsterHpUI.h">
-      <Filter>02.GameObjects\UI\Monster</Filter>
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MonsterLockonUI.h">
-      <Filter>02.GameObjects\UI\Monster</Filter>
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MonsterShildUI.h">
-      <Filter>02.GameObjects\UI\Monster</Filter>
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_BossHp.h">
       <Filter>02.GameObjects\UI\Boss</Filter>
@@ -771,19 +725,44 @@
     <ClInclude Include="..\public\Boss_ShildUI.h">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
+    <ClInclude Include="..\public\BrJ_Controller.h" />
+    <ClInclude Include="..\public\ParticleGroup.h" />
+    <ClInclude Include="..\public\Level_Stage1.h" />
+    <ClInclude Include="..\public\Trigger.h" />
+    <ClInclude Include="..\public\VFX_Manager.h" />
+    <ClInclude Include="..\public\Canvas_Alarm.h">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Monster.h">
+      <Filter>02.GameObjects\Monster</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Boss1_AIController.h">
-      <Filter>02.GameObjects\Monster\boss1\Boss1_AIController</Filter>
+      <Filter>02.GameObjects\Monster\boss1</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\WaterBall.h">
-      <Filter>02.GameObjects\Monster\boss1\Boss1_WaterBall</Filter>
+    <ClInclude Include="..\public\NextMapNameUI.h">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Bullet.h">
-      <Filter>02.GameObjects\Bullet</Filter>
+    <ClInclude Include="..\public\Bullet.h" />
+    <ClInclude Include="..\public\WaterBall.h" />
+    <ClInclude Include="..\public\SASSkillNameUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GravikenisisMouseUI.h">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GravikenisisGUI.h">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AttackNumUI.h">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\FactoryMethod.h">
       <Filter>FactoryMethod</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Penetrate.h" />
+    <ClInclude Include="..\public\SAS_Portrait.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -977,7 +956,6 @@
     <ClCompile Include="..\private\SkmP_AnimInstance.cpp">
       <Filter>02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\private\ScarletCharacter.cpp" />
     <ClCompile Include="..\private\SkMpBullet.cpp">
       <Filter>02.GameObjects\Monster\SkummyPool\SkMpBullet</Filter>
@@ -1031,9 +1009,6 @@
     <ClCompile Include="..\private\MapNonAnim_Object.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
-    <ClCompile Include="..\private\SASSkillDefaultUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Canvas_SASSkillMove.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
@@ -1123,15 +1098,6 @@
     <ClCompile Include="..\private\SkPd_Controller.cpp">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BdLm_Controller.cpp">
-      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\BrJ_Controller.cpp">
-      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Trigger.cpp">
-      <Filter>02.GameObjects\Trigger</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\BdLm_Controller.cpp" />
     <ClCompile Include="..\private\PlayerInfo_HpBackUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
@@ -1179,31 +1145,31 @@
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_Tutorial.cpp">
-      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+      <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\private\TutorialUI.cpp">
-      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+      <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Tutorial_CheckUI.cpp">
-      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+      <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Tutorial_YesNoUI.cpp">
-      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+      <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Tutorial_TipsUI.cpp">
-      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+      <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Tutorial_SuccessUI.cpp">
-      <Filter>02.GameObjects\UI\DescriptionWindow</Filter>
+      <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MonsterHpUI.cpp">
-      <Filter>02.GameObjects\UI\Monster</Filter>
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MonsterLockonUI.cpp">
-      <Filter>02.GameObjects\UI\Monster</Filter>
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MonsterShildUI.cpp">
-      <Filter>02.GameObjects\UI\Monster</Filter>
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_BossHp.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
@@ -1217,28 +1183,43 @@
     <ClCompile Include="..\private\Boss_ShildUI.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\ParticleGroup.cpp">
-      <Filter>VFX\Particle\ParticleGroup</Filter>
+    <ClCompile Include="..\private\BrJ_Controller.cpp" />
+    <ClCompile Include="..\private\ParticleGroup.cpp" />
+    <ClCompile Include="..\private\Level_Stage1.cpp" />
+    <ClCompile Include="..\private\Trigger.cpp" />
+    <ClCompile Include="..\private\VFX_Manager.cpp" />
+    <ClCompile Include="..\private\Canvas_Alarm.cpp">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\VFX_Manager.cpp">
-      <Filter>VFX\0. Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Level_Stage1.cpp">
-      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    <ClCompile Include="..\private\Monster.cpp">
+      <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Boss1_AIController.cpp">
-      <Filter>02.GameObjects\Monster\boss1\Boss1_AIController</Filter>
+      <Filter>02.GameObjects\Monster\boss1</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\WaterBall.cpp">
-      <Filter>02.GameObjects\Monster\boss1\Boss1_WaterBall</Filter>
+    <ClCompile Include="..\private\NextMapNameUI.cpp">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Bullet.cpp">
-      <Filter>02.GameObjects\Bullet</Filter>
+    <ClCompile Include="..\private\Bullet.cpp" />
+    <ClCompile Include="..\private\WaterBall.cpp" />
+    <ClCompile Include="..\private\SASSkillNameUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GravikenisisMouseUI.cpp">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GravikenisisGUI.cpp">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AttackNumUI.cpp">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp">
       <Filter>FactoryMethod</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
+    <ClCompile Include="..\private\SAS_Portrait.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1335,8 +1316,6 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonModel.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl">
-      <Filter>97.ShaderFiles</Filter>
-    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
   </ItemGroup>
 </Project>
