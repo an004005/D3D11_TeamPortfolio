@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CSASSkillLightUI final : public CUI
+class CSASSkillNameUI final : public CUI
 {
 private:
-	CSASSkillLightUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSASSkillLightUI(const CSASSkillLightUI& rhs);
+	CSASSkillNameUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSASSkillNameUI(const CSASSkillNameUI& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -24,16 +24,11 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_LightType(const ESASType & eESASType, const _bool bUsable);
-
-private:
-	_bool		m_bBrightness = { false };
-	_float		m_fStrength = { 0.5f };
-
-	_bool		m_bOnSkil = { false };
+	void	Set_ColleagueName(const ESASType & eESASType, const _bool bUsable);
+	void	Set_SuperPower(const ESASType & eESASType, const _bool bUsable);
 
 public:
-	static CSASSkillLightUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSASSkillNameUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

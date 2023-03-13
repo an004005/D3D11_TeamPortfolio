@@ -33,6 +33,7 @@ HRESULT CCanvas_SASInfoLeftMove::Initialize(void* pArg)
 		return E_FAIL;
 
 	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_SASInfoLeftMove", this);
+	m_vMaxDestination = { -3.0f, -7.0f };
 	CCanvas::UIMove_FSM();
 
 	return S_OK;
@@ -42,7 +43,11 @@ void CCanvas_SASInfoLeftMove::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
+	if (0.0f == m_vSASLeftHp.x)
+		return;
+
 	m_pUIMoveFSM->Tick(TimeDelta);
+	CCanvas::UIHit(TimeDelta);
 
 	ChildHp_Tick();
 	RendomTexture(TimeDelta);

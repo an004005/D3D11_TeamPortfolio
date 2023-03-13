@@ -28,6 +28,8 @@ HRESULT CTutorialUI::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_fStartSizeX = m_fSizeX;
+	
+	//m_Timeline.SetCurve("sdfsdf");
 
 	return S_OK;
 }
@@ -38,6 +40,12 @@ void CTutorialUI::Tick(_double TimeDelta)
 
 	Open(TimeDelta);
 	Shut(TimeDelta);
+
+	//_float fOut;
+	//if (m_Timeline.Tick(TimeDelta, fOut))
+	//{
+	//	m_tParams.Floats[0] = fOut;
+	//}
 }
 
 void CTutorialUI::Late_Tick(_double TimeDelta)
@@ -56,7 +64,8 @@ HRESULT CTutorialUI::Render()
 void CTutorialUI::Imgui_RenderProperty()
 {
 	CUI::Imgui_RenderProperty();
-
+	//m_Timeline.Imgui_RenderEditor();
+	// m_Timeline.PlayFromStart(); ??
 }
 
 void CTutorialUI::SaveToJson(Json & json)

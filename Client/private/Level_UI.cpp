@@ -11,6 +11,20 @@
 #include "Material.h"
 #include "Camera.h"
 
+// Player
+#include "Player.h"
+#include "CamSpot.h"
+#include "Weapon_wp0190.h"
+#include "Indicator.h"
+#include "PostVFX_Scifi.h"
+#include "PostVFX_Distortion.h"
+#include "EffectSystem.h"
+#include "EffectGroup.h"
+#include "TrailSystem.h"
+#include "ParticleSystem.h"
+#include "Imgui_CurveManager.h"
+#include "Imgui_PhysX.h"
+
 // Canvas
 #include "Canvas.h"
 #include "Canvas_Item.h"
@@ -27,6 +41,7 @@
 #include "Canvas_ItemMove.h"
 #include "Canvas_Tutorial.h"
 #include "Canvas_BossHp.h"
+#include "Canvas_Alarm.h"
 
 // Default
 #include "DefaultUI.h"
@@ -35,7 +50,7 @@
 #include "SASSkillIconUI.h"
 #include "SASSkillGaugeUI.h"
 #include "SASSkillLightUI.h"
-#include "SASSkillDefaultUI.h"
+#include "SASSkillNameUI.h"
 #include "SASSkillFullCircleUI.h"
 // Direve
 #include "Drive_RightDotUI.h"
@@ -67,11 +82,13 @@
 #include "Tutorial_YesNoUI.h"
 #include "Tutorial_TipsUI.h"
 #include "Tutorial_SuccessUI.h"
-
 // Boss
 #include "Boss_HpUI.h"
 #include "Boss_HpBackUI.h"
 #include "Boss_ShildUI.h"
+// Alarm
+#include "NextMapNameUI.h"
+
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -88,6 +105,8 @@ HRESULT CLevel_UI::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PropertyEditor::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 
 
 	if (FAILED(Ready_Prototypes()))
@@ -99,8 +118,14 @@ HRESULT CLevel_UI::Initialize()
 	if (FAILED(Ready_Layer_UI(L"Layer_UI")))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -135,6 +160,43 @@ HRESULT CLevel_UI::Ready_Prototypes()
 	//	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
 	//	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
 	//});
+
+	pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
+	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
+
+	auto pModel_Player = CModel::Create(m_pDevice, m_pContext,
+		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
+
+	pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
+	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
+		CController::Create())))
+		return E_FAIL;
+
+	_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
+	pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
+	auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
+		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
+	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
+
+	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
+
+
+	{	// 이펙트 프로토타입
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
+			CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
+			CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
+	}
 
 	{
 		// Canvas_Frount_UI
@@ -202,6 +264,11 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CCanvas_BossHp::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
+		/* For.Prototype_GameObject_Canvas_Alarm*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Alarm"),
+			CCanvas_Alarm::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
 	}
 
 	{
@@ -230,8 +297,8 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CSASSkillLightUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		/* For.Prototype_GameObject_SASSkillCtrl_UI */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillDefault_UI"),
-			CSASSkillDefaultUI::Create(m_pDevice, m_pContext))))
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillName_UI"),
+			CSASSkillNameUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		/* For.Prototype_GameObject_SASSkillFullCircle_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillFullCircle_UI"),
@@ -349,7 +416,7 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_SuccessUI"),
 			CTutorial_SuccessUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
+		
 		// Boss
 		/* For.Prototype_GameObject_Boss_HpUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_HpUI"),
@@ -362,6 +429,12 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_Boss_ShildUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_ShildUI"),
 			CBoss_ShildUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		// Alarm
+		/* For.Prototype_GameObject_NextRoomNameUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("NextMapNameUI"),
+			CNextMapNameUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 	}
 
@@ -377,6 +450,21 @@ HRESULT CLevel_UI::Ready_Layer_Camera(const _tchar * pLayerTag)
 	// const Json& json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/ShadowCam.json");
 	// auto pCam = pGameInstance->Clone_GameObject_Get(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), (void*)&json);
 	// pGameInstance->SetShadowCam(dynamic_cast<CCamera*>(pCam));
+
+	return S_OK;
+}
+
+HRESULT CLevel_UI::Ready_Layer_Player(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json PreviewData;
+	PreviewData["Model"] = "Model_Player";
+
+	CGameObject* pPlayer = nullptr;
+	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Player"), &PreviewData));
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
 
 	return S_OK;
 }
@@ -428,7 +516,9 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_BossHp", &json));
 
-
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Alarm", &json));
+	
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
 	//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);
@@ -448,6 +538,22 @@ HRESULT CLevel_UI::Ready_Layer_Map(const _tchar * pLayerTag)
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+	return S_OK;
+}
+
+HRESULT CLevel_UI::Ready_Effect(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	//Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
+	//pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
+
+	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Scifi", &Test);
+
+	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
+
 	return S_OK;
 }
 

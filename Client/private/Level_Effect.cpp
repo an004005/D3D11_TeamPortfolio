@@ -37,6 +37,8 @@
 #include "MonsterHpUI.h"
 #include "MonsterLockonUI.h"
 #include "MonsterShildUI.h"
+#include "GravikenisisGUI.h"
+#include "GravikenisisMouseUI.h"
 // ~ ¿Á¼öÇöÀÇ ÈçÀû
 
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -78,8 +80,8 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
 
-	// if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
-	// 	return E_FAIL;
+	 if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
+	 	return E_FAIL;
 
 	return S_OK;
 }
@@ -221,31 +223,35 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_04", pModel_VFX));
 
 	// ~ ¿Á¼öÇöÀÇ ÈçÀû
-	{
-		auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
-		pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
+	//{
+	//	auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
+	//		"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
+	//	pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
+	//	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
 
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
+	//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext))))
+	//		return E_FAIL;
 
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create())))
-			return E_FAIL;
-	}
+	//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create())))
+	//		return E_FAIL;
+	//}
 
-	///* For.Prototype_GameObject_MonsterLockonUI */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),
-	//	CMonsterLockonUI::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	///* For.Prototype_GameObject_MonsterHpUI */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterHpUI"),
-	//	CMonsterHpUI::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	///* For.Prototype_GameObject_MonsterShildUI */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterShildUI"),
-	//	CMonsterShildUI::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	/* For.Prototype_GameObject_MonsterLockonUI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),
+		CMonsterLockonUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_MonsterHpUI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterHpUI"),
+		CMonsterHpUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_MonsterShildUI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterShildUI"),
+		CMonsterShildUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_GravikenisisGUI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("GravikenisisGUI"),
+		CGravikenisisGUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 	// ~ ¿Á¼öÇöÀÇ ÈçÀû
 
 	return S_OK;
@@ -372,8 +378,8 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &Json));
 
 	// Lockon
-	//Json Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_Target.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &Json));
+	//Json josn = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_Target.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &josn));
 
 	//Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_TargetRhombus.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &Json));
@@ -385,14 +391,19 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MonsterShild"), TEXT("ProtoVFX_EffectGroup"), &json));
 
 	// Psychokinesis
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_G.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_PsychokinesisGauge_G"), TEXT("ProtoVFX_EffectGroup"), &json));
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_Mouse.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_PsychokinesisGauge_Mouse"), TEXT("ProtoVFX_EffectGroup"), &json));
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_G.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_GravikenisisG"), TEXT("ProtoVFX_EffectGroup"), &json));
+	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_Mouse.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_GravikenisisMouse"), TEXT("ProtoVFX_EffectGroup"), &json));
+
+	// AttackNumber
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/AttackNum.json");
+	dynamic_cast<CEffectGroup*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_AttackNum"), TEXT("ProtoVFX_EffectGroup"), &json))->Start_EffectWork();
 
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"));
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterLockonUI"));
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterShildUI"));
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterShildUI")); 
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"GravikenisisGUI")); 
 
 	return S_OK;
 }

@@ -180,6 +180,7 @@
     <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Utils.h" />
     <ClInclude Include="..\public\AIController.h" />
+    <ClInclude Include="..\public\AttackNumUI.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -202,6 +203,7 @@
     <ClInclude Include="..\public\Camera_Player.h" />
     <ClInclude Include="..\public\CamSpot.h" />
     <ClInclude Include="..\public\Canvas.h" />
+    <ClInclude Include="..\public\Canvas_Alarm.h" />
     <ClInclude Include="..\public\Canvas_BossHp.h" />
     <ClInclude Include="..\public\Canvas_Drive.h" />
     <ClInclude Include="..\public\Canvas_DriveMove.h" />
@@ -232,6 +234,9 @@
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
     <ClInclude Include="..\public\Level_KineticEditor.h" />
+    <ClInclude Include="..\public\GravikenisisMouseUI.h" />
+    <ClInclude Include="..\public\GravikenisisGUI.h" />
+    <ClInclude Include="..\public\NextMapNameUI.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
     <ClInclude Include="..\public\Boss_HpUI.h" />
@@ -292,7 +297,7 @@
     <ClInclude Include="..\public\SASInfoRightHpUI.h" />
     <ClInclude Include="..\public\SAS_Portrait.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
-    <ClInclude Include="..\public\SASSkillDefaultUI.h" />
+    <ClInclude Include="..\public\SASSkillNameUI.h" />
     <ClInclude Include="..\public\SASSkillFullCircleUI.h" />
     <ClInclude Include="..\public\SASSkillGaugeUI.h" />
     <ClInclude Include="..\public\SASSkillIconUI.h" />
@@ -337,6 +342,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\AIController.cpp" />
+    <ClCompile Include="..\private\AttackNumUI.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -357,6 +363,7 @@
     <ClCompile Include="..\private\BuddyLumi.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\private\Canvas.cpp" />
+    <ClCompile Include="..\private\Canvas_Alarm.cpp" />
     <ClCompile Include="..\private\Canvas_BossHp.cpp" />
     <ClCompile Include="..\private\Canvas_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
@@ -388,6 +395,9 @@
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
     <ClCompile Include="..\private\Level_KineticEditor.cpp" />
+    <ClCompile Include="..\private\GravikenisisMouseUI.cpp" />
+    <ClCompile Include="..\private\GravikenisisGUI.cpp" />
+    <ClCompile Include="..\private\NextMapNameUI.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />
     <ClCompile Include="..\private\Boss_HpUI.cpp" />
@@ -448,7 +458,7 @@
     <ClCompile Include="..\private\SASInfoRightHpUI.cpp" />
     <ClCompile Include="..\private\SAS_Portrait.cpp" />
     <ClCompile Include="..\private\ScarletCharacter.cpp" />
-    <ClCompile Include="..\private\SASSkillDefaultUI.cpp" />
+    <ClCompile Include="..\private\SASSkillNameUI.cpp" />
     <ClCompile Include="..\private\SASSkillFullCircleUI.cpp" />
     <ClCompile Include="..\private\SASSkillGaugeUI.cpp" />
     <ClCompile Include="..\private\SASSkillIconUI.cpp" />

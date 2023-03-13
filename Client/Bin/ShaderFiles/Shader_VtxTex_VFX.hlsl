@@ -204,6 +204,34 @@ PS_OUT PS_Alpha_Color(PS_IN In)
 
 	return Out;
 }
+// [14] UV cut
+// g_vec2_0 : Print Index
+// g_vec2_1 : [x] RowCnt, [y] ColCnt
+VS_OUT VS_UVCut(VS_IN In)
+{
+	VS_OUT		Out = (VS_OUT)0;
+	matrix matWV = mul(g_WorldMatrix, g_ViewMatrix);
+	matrix matWVP = mul(matWV, g_ProjMatrix);
+
+	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+
+	In.vTexUV.x = In.vTexUV.x + g_vec2_0.x;
+	In.vTexUV.y = In.vTexUV.y + g_vec2_0.y;
+
+	In.vTexUV.x = In.vTexUV.x / g_vec2_1.x;
+	In.vTexUV.y = In.vTexUV.y / g_vec2_1.y;
+
+	Out.vTexUV = In.vTexUV;
+	return Out;
+}
+// g_float_0 : Alpha
+PS_OUT PS_Alpha_Blend(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.a = Out.vColor.a * g_float_0;
+	return Out;
+}
 // ****** ok su hyeon
 
 struct PS_OUT_Flag
@@ -619,7 +647,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
-		SetBlendState(BS_AlphaOne, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
@@ -627,6 +655,20 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_Alpha_Color();
 	}
+	// 14
+	pass Alpha_Blend
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_UVCut();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_Alpha_Blend();
+	}
+	
 	// ok su hyeon
 
 	//14

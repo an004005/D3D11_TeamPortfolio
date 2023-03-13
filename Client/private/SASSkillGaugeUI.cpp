@@ -35,7 +35,6 @@ HRESULT CSASSkillGaugeUI::Initialize(void * pArg)
 
 void CSASSkillGaugeUI::BeginTick()
 {
-	//m_pCanvas = dynamic_cast<CCanvas_SASSkill*>(CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkill")));
 
 }
 
@@ -103,6 +102,130 @@ void CSASSkillGaugeUI::LoadFromJson(const Json & json)
 
 }
 
+void CSASSkillGaugeUI::Set_GaugeType(const ESASType & eESASType, const _float & fGauge)
+{
+	m_tParams.Floats[0] = fGauge;
+	
+	switch (eESASType)
+	{
+	case Client::ESASType::SAS_FIRE: // 발화
+	{
+		m_tParams.Float4s[0] = { 1.0f, 0.857f, 0.841f, 1.0f };
+	}
+		break;
+	case Client::ESASType::SAS_PENETRATE:	// 투시
+	{
+		m_tParams.Float4s[0] = { 0.814f, 1.0f, 0.886f, 1.0f };
+	}
+		break;
+	case Client::ESASType::SAS_HARDBODY:	// 경질화
+	{
+		m_tParams.Float4s[0] = { 1.0f, 0.968f, 0.871f, 1.0f };
+	}
+		break;
+	case Client::ESASType::SAS_TELEPORT:	// 순간이동
+	{
+		m_tParams.Float4s[0] = { 0.803f, 0.977f, 0.981f, 1.0f };
+	}
+		break;
+	case Client::ESASType::SAS_ELETRIC:		// 전기
+	{
+		m_tParams.Float4s[0] = { 0.833f, 0.798f, 0.319f, 1.0f };
+	}
+		break;
+	case Client::ESASType::SAS_SUPERSPEED:	// 초고속
+	{
+		m_tParams.Float4s[0] = { 1.0f, 0.553f, 0.878f, 1.0f };
+	}
+		break;
+	case Client::ESASType::SAS_COPY:		// 복제
+	{
+		m_tParams.Float4s[0] = { 0.598f, 0.781f, 0.981f, 1.0f };
+	}
+		break;
+	case Client::ESASType::SAS_INVISIBLE:	// 투명
+	{
+		m_tParams.Float4s[0] = { 0.280f, 0.754f, 0.657f, 1.0f };
+	}
+		break;
+	case Client::ESASType::SAS_GRAVIKENISIS:	// 염력
+	{
+		m_tParams.Float4s[0] = { 0.928f, 0.803f, 0.981f, 1.0f };
+	}
+		break;
+	case Client::ESASType::SAS_NOT:	// 없어요
+	{
+		m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	}
+		break;
+	default:
+		Assert("Not Gauge : CSASSkillGaugeUI");
+		break;
+	}
+}
+
+void CSASSkillGaugeUI::Set_GaugeBackType(const ESASType & eESASType, const _float & fGauge)
+{
+	m_tParams.Floats[0] = fGauge;
+
+	switch (eESASType)
+	{
+	case Client::ESASType::SAS_FIRE: // 발화
+	{
+		m_tParams.Float4s[0] = { 0.992f, 0.449f, 0.387f, 1.0f };
+	}
+	break;
+	case Client::ESASType::SAS_PENETRATE:	// 투시
+	{
+		m_tParams.Float4s[0] = { 0.378f, 0.754f, 0.217f, 1.0f };
+	}
+	break;
+	case Client::ESASType::SAS_HARDBODY:	// 경질화
+	{
+		m_tParams.Float4s[0] = { 0.989f, 0.761f, 0.401f, 1.0f };
+	}
+	break;
+	case Client::ESASType::SAS_TELEPORT:	// 순간이동
+	{
+		m_tParams.Float4s[0] = { 0.420f, 0.605f, 1.0f, 1.0f };
+	}
+	break;
+	case Client::ESASType::SAS_ELETRIC:		// 전기
+	{
+		m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	}
+	break;
+	case Client::ESASType::SAS_SUPERSPEED:	// 초고속
+	{
+		m_tParams.Float4s[0] = { 1.0f, 0.553f, 0.878f, 1.0f };
+	}
+	break;
+	case Client::ESASType::SAS_COPY:		// 복제
+	{
+		m_tParams.Float4s[0] = { 0.379f, 0.392f, 0.943f, 1.0f };
+	}
+	break;
+	case Client::ESASType::SAS_INVISIBLE:	// 투명
+	{
+		m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	}
+	break;
+	case Client::ESASType::SAS_GRAVIKENISIS:	// 염력
+	{
+		m_tParams.Float4s[0] = { 0.826f, 0.420f, 1.0f, 1.0f };
+	}
+	break;
+	case Client::ESASType::SAS_NOT:	// 없어요
+	{
+		m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	}
+	break;
+	default:
+		Assert("Not Gauge Back : CSASSkillGaugeUI");
+		break;
+	}
+}
+
 void CSASSkillGaugeUI::SkilInfo_Initialize()
 {
 	//static _uint eObjectCount;
@@ -152,7 +275,7 @@ void CSASSkillGaugeUI::ChangeSkill()
 	//	m_tParams.Float4s[0] = { 0.826f, 0.420f, 1.0f, 1.0f };
 	//}
 	//	break;
-	//case CCanvas_SASSkill::PSYCHOKINESIS1:	// 1
+	//case CCanvas_SASSkill::PSYCHOKINESIS1:	// 1 염력
 	//{
 	//	m_tParams.Floats[0] = 1.0f;
 	//	m_tParams.Floats[1] = 1.0f;
@@ -163,7 +286,7 @@ void CSASSkillGaugeUI::ChangeSkill()
 	//	m_tParams.Float4s[0] = { 0.826f, 0.420f, 1.0f, 1.0f };
 	//}
 	//	break;
-	//case CCanvas_SASSkill::IGNITION:	// 2
+	//case CCanvas_SASSkill::IGNITION:	// 2 발화
 	//{
 	//	m_tParams.Floats[0] = 1.0f;
 	//	m_tParams.Floats[1] = 7.0f; 삭제예정
@@ -174,7 +297,7 @@ void CSASSkillGaugeUI::ChangeSkill()
 	//	m_tParams.Float4s[0] = { 0.992f, 0.449f, 0.387f, 1.0f };
 	//}
 	//	break;
-	//case CCanvas_SASSkill::RESHUFFLE:	// 3
+	//case CCanvas_SASSkill::RESHUFFLE:	// 3 경질
 	//{
 	//	m_tParams.Floats[0] = 1.0f;
 	//	m_tParams.Float4s[0] = { 1.0f, 0.968f, 0.871f, 1.0f };
@@ -184,7 +307,7 @@ void CSASSkillGaugeUI::ChangeSkill()
 	//	m_tParams.Float4s[0] = { 0.989f, 0.761f, 0.401f, 1.0f };
 	//}
 	//	break;
-	//case CCanvas_SASSkill::CLAIRVOYANCE:	// 4
+	//case CCanvas_SASSkill::CLAIRVOYANCE:	// 4 투시
 	//{
 	//	m_tParams.Floats[0] = 1.0f;
 	//	m_tParams.Float4s[0] = { 0.814f, 1.0f, 0.886f, 1.0f };
@@ -195,7 +318,7 @@ void CSASSkillGaugeUI::ChangeSkill()
 
 	//}
 	//	break;
-	//case CCanvas_SASSkill::TELEPORTATION:	// 5
+	//case CCanvas_SASSkill::TELEPORTATION:	// 5 순간이동
 	//{
 	//	m_tParams.Floats[0] = 1.0f;
 	//	m_tParams.Float4s[0] = { 0.803f, 0.977f, 0.981f, 1.0f };
@@ -206,7 +329,7 @@ void CSASSkillGaugeUI::ChangeSkill()
 
 	//}
 	//	break;
-	//case CCanvas_SASSkill::TRANSPARENCY:	// 6
+	//case CCanvas_SASSkill::TRANSPARENCY:	// 6 투명
 	//{
 	//	m_tParams.Floats[0] = 1.0f;
 	//	m_tParams.Float4s[0] = { 0.280f, 0.754f, 0.657f, 1.0f };
@@ -217,7 +340,7 @@ void CSASSkillGaugeUI::ChangeSkill()
 
 	//}
 	//	break;
-	//case CCanvas_SASSkill::DISCHARGE:	// 7
+	//case CCanvas_SASSkill::DISCHARGE:	// 7 전기
 	//{
 	//	m_tParams.Floats[0] = 1.0f;
 	//	m_tParams.Float4s[0] = { 0.833f, 0.798f, 0.319f, 1.0f };
@@ -228,7 +351,7 @@ void CSASSkillGaugeUI::ChangeSkill()
 
 	//}
 	//	break;
-	//case CCanvas_SASSkill::COPY:	// 8
+	//case CCanvas_SASSkill::COPY:	// 8 복사
 	//{
 	//	m_tParams.Floats[0] = 1.0f;
 	//	m_tParams.Float4s[0] = { 0.598f, 0.781f, 0.981f, 1.0f };
@@ -239,13 +362,13 @@ void CSASSkillGaugeUI::ChangeSkill()
 
 	//}
 	//	break;
-	//case CCanvas_SASSkill::HIGHSPEED:	// 9
+	//case CCanvas_SASSkill::HIGHSPEED:	// 9 초고속
 	//{
 	//	m_tParams.Float4s[0] = { 1.0f, 0.553f, 0.878f, 1.0f };
 
 	//}
 	//	break;
-	//case CCanvas_SASSkill::NOT:	// 10
+	//case CCanvas_SASSkill::NOT:	// 10 없어요
 	//{
 	//	m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
