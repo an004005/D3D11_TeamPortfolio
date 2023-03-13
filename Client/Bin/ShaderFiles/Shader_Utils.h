@@ -17,6 +17,10 @@ static const float EPSILON = 1e-6f;
 #define SHADER_SCIFI 5.f
 #define SHADER_SCIFI_PLAYER_ATTACK 6.f
 #define SHADER_HIT_DECAL 7.f
+#define SHADER_DISTORTION_STATIC 8.f
+
+#define SHADER_TOON_GRAY_INGNORE 9.f
+#define SHADER_MONSTER_WEAK 10.f
 
 
 #define COL_WHITE float3(1.f, 1.f, 1.f)

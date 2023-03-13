@@ -39,9 +39,9 @@ HRESULT CVIBuffer_Line::Initialize_Prototype()
 
 	VTXLINE vtxLine;
 	ZeroMemory(&vtxLine, sizeof(VTXLINE));
-
-	vector<VTXLINE> tmp(1000, vtxLine);
-
+	
+	vector<VTXLINE> tmp(2000, vtxLine);
+	
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
 	m_SubResourceData.pSysMem = tmp.data();
 	if (FAILED(__super::Create_VertexBuffer()))
