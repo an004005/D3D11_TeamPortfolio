@@ -90,7 +90,7 @@ void CLevel_Effect::Tick(_double TimeDelta)
 
 	if(CGameInstance::GetInstance()->KeyDown(DIK_SPACE))
 	{
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_1")->Start_EffectWork();
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"FlowerLeg_Fall_Rose")->Start_ParticleWork();
 	}
 }
 
