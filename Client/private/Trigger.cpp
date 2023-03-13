@@ -218,7 +218,7 @@ void CTrigger::SetUp_Create(const Json & json)
 				
 				Json jsonWorldMatrix;
 				CTransform::ModifyTransformJson(jsonWorldMatrix, matrix);
-				pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), proto.first.c_str(), &jsonWorldMatrix);
+				pGameInstance->Clone_GameObject_Get(TEXT("Layer_Monster"), proto.first.c_str(), &jsonWorldMatrix);
 			}
 		}
 

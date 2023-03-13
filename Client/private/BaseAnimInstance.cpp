@@ -990,7 +990,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(0)
 
 				.AddTransition("RUN_FRONT to DASH", "DASH")
-				.Predicator([&]()->_bool {return m_bDash; })
+				.Predicator([&]()->_bool {return m_bDash && (CheckAnim("AS_ch0100_036_AL_dash") || CheckAnim("AS_ch0100_136_AL_dash")); })
 				.Duration(0.1f).Priority(0)
 
 				.AddTransition("RUN_FRONT to DASHJUMP_START", "DASHJUMP_START")
@@ -2320,12 +2320,16 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
 		}
 
-		if (m_bSeperateAnim)	// 분리 애니메이션이 돌아가면 하체는 업데이트하자
-		{
-			m_bSeperateSwitch = true;
-		}
+		//if (m_bSeperateAnim)	// 분리 애니메이션이 돌아가면 하체는 업데이트하자
+		//{
+		//	m_bSeperateSwitch = true;
+		//}
+		//else
+		//{
+		//	m_bSeperateSwitch = false;
+		//}
 
-		if (m_bSeperateSwitch)
+		if (m_bSeperateAnim)
 		{
 			m_pModel->SetBoneMask(EBoneMask::OFF_CHILD_EQ, "Spine1");
 
@@ -2334,6 +2338,10 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 			m_pModel->SetBoneMask(EBoneMask::ON_ALL);
 
 			m_fSeperateLerpTime = 0.f;
+		}
+		else
+		{
+			m_pModel->SetBoneMask(EBoneMask::ON_ALL);
 		}
 	}
 	else if (bChange)

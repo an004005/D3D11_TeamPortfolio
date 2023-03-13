@@ -479,9 +479,11 @@ private:
 private:
 	void			Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수
 	void			Kinetic_Combo_MoveToKineticPoint();	// 염력 물체 애니메이션을 돌리기 전에 애니메이션의 위치를 잡아주는 함수
+	void			Kinetic_Combo_AttachLerpObject();	// 염력 물체를 애니메이션 포인트까지 끌고오는 함수
 
 private:
 	_vector			m_vKineticComboRefPoint; // 키네틱 콤보를 할 때 이동해야 하는 포인트
+	_matrix			m_KineticObjectOrigionPos = XMMatrixIdentity();
 
 private:
 	_float4 m_vSplinePoint_01;

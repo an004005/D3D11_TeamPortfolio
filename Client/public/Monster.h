@@ -29,6 +29,7 @@ public:
 	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
 	virtual _float4x4 GetPivotMatrix() override;
 	//~For Effect
+	_bool IsDead() const { return m_bDead; }
 
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);

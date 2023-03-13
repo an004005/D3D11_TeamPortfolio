@@ -42,6 +42,8 @@ HRESULT CWeapon_wp0190::Initialize(void * pArg)
 		}
 	});
 
+	m_pCollider->UpdateChange();
+
 	Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Trail/PlayerSwordTrail.json");
 	m_pTrail = static_cast<CTrailSystem*>(pGameInstance->Clone_GameObject_Get(L"Layer_Player", TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
 
