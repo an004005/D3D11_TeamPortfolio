@@ -82,10 +82,11 @@ void CLevel_EnemiesTest::Tick(_double TimeDelta)
 void CLevel_EnemiesTest::Late_Tick(_double TimeDelta)
 {
 	CLevel::Late_Tick(TimeDelta);
-	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
-	{
-		CGameInstance::GetInstance()->Clone_GameObject(L"test", L"Indicator");
-	}
+	// if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	// {
+	// 	CGameInstance::GetInstance()->Clone_GameObject_Get(L"test", TEXT("FlowerLeg"))
+	// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(20.f, 3.f, 6.f, 1.f));
+	// }
 }
 
 HRESULT CLevel_EnemiesTest::Render()
@@ -129,36 +130,11 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	// CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
-	// {
-	// 	char szFileName[MAX_PATH]{};
-	// 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-	// 	CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
-	// });
-
-	
-	// Å°³×Æ½ ¿ÀºêÁ§Æ® ¸ðµ¨
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",
-		[this](const string& fileName)
-	{
-		char szFileExt[MAX_PATH]{};
-		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
-
-		if (0 == strcmp(szFileExt, ".static_model"))
-		{
-			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str()));
-		}
-	});
-	FAILED_CHECK(pGameInstance->Add_Prototype(L"Proto_KineticObject_Table", CMapKinetic_Object::Create(m_pDevice, m_pContext)));
-
-
-
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
 	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
-
 
 	return S_OK;
 }
@@ -238,10 +214,6 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Kinetic(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json Test;
-	Test["ModelTag"] = "../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Table/Table.static_model";
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Proto_KineticObject_Table"), &Test));
-
 	return S_OK;
 }
 
@@ -252,7 +224,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
 	
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
-	
+
 	return S_OK;
 }
 
