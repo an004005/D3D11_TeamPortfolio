@@ -37,11 +37,7 @@ class CParticleSystem :	public CGameObject
 public:
 	CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CParticleSystem(const CParticleSystem& rhs);
-	virtual ~CParticleSystem()
-	{
-		tmp.erase(this);
-	}
-	static set<CParticleSystem*> tmp;
+	virtual ~CParticleSystem() = default;
 
 public:
 	CShader* GetShader() { return m_pShader; }

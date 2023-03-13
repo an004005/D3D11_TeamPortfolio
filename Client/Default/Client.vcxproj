@@ -227,11 +227,13 @@
     <ClInclude Include="..\public\EffectGroup.h" />
     <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\DefaultUI.h" />
+    <ClInclude Include="..\public\FactoryMethod.h" />
     <ClInclude Include="..\public\Floors.h" />
     <ClInclude Include="..\public\FlowerLeg.h" />
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\GravikenisisMouseUI.h" />
     <ClInclude Include="..\public\GravikenisisGUI.h" />
     <ClInclude Include="..\public\NextMapNameUI.h" />
@@ -284,6 +286,7 @@
     <ClInclude Include="..\public\PlayerInfo_PsychokinesisBackUI.h" />
     <ClInclude Include="..\public\PlayerInfo_PsychokinesisUI.h" />
     <ClInclude Include="..\public\PostVFX_Distortion.h" />
+    <ClInclude Include="..\public\PostVFX_Penetrate.h" />
     <ClInclude Include="..\public\PostVFX_Scifi.h" />
     <ClInclude Include="..\public\PostVFX_WhiteOut.h" />
     <ClInclude Include="..\public\SASInfoLeftHpBackUI.h" />
@@ -384,11 +387,13 @@
     <ClCompile Include="..\private\EffectGroup.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp" />
     <ClCompile Include="..\private\DefaultUI.cpp" />
+    <ClCompile Include="..\private\FactoryMethod.cpp" />
     <ClCompile Include="..\private\Floors.cpp" />
     <ClCompile Include="..\private\FlowerLeg.cpp" />
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\GravikenisisMouseUI.cpp" />
     <ClCompile Include="..\private\GravikenisisGUI.cpp" />
     <ClCompile Include="..\private\NextMapNameUI.cpp" />
@@ -441,6 +446,7 @@
     <ClCompile Include="..\private\PlayerInfo_PsychokinesisBackUI.cpp" />
     <ClCompile Include="..\private\PlayerInfo_PsychokinesisUI.cpp" />
     <ClCompile Include="..\private\PostVFX_Distortion.cpp" />
+    <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
     <ClCompile Include="..\private\PostVFX_Scifi.cpp" />
     <ClCompile Include="..\private\PostVFX_WhiteOut.cpp" />
     <ClCompile Include="..\private\SASInfoLeftHpBothEndsUI.cpp" />

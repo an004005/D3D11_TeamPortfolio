@@ -20,44 +20,10 @@
 #include "RigidBody.h"
 #include "Model_Instancing.h"
 #include "SkyBox.h"
-
-// Effect Setting
-#include "PostVFX_Scifi.h"
-#include "EffectGroup.h"
-#include "ParticleSystem.h"
-#include "PostVFX_Distortion.h"
-
-// Player Setting
-#include "Player.h"
-#include "Controller.h"
-#include "CamSpot.h"
-#include "Weapon_wp0190.h"
-#include "Indicator.h"
+#include "PostVFX_Penetrate.h"
 #include "MapKinetic_Object.h"
-#include "TrailSystem.h"
-#include "EffectSystem.h"
+#include "FactoryMethod.h"
 
-// Monster
-#include "TestMonster.h"
-#include "FlowerLeg.h"
-#include "FL_Controller.h"
-
-#include "BuddyLumi.h"
-#include "BdLm_Controller.h"
-
-#include "SkummyPool.h"
-#include "SkMpBullet.h" // SkummPool's Bullet
-#include "SkmP_Controller.h"
-
-#include "SkummyPandou.h"
-#include "SkPd_Controller.h"
-
-#include "BronJon.h"
-#include "BrJ_Controller.h"
-
-#include "Boss1.h"
-#include "Boss1_AIController.h"
-#include "WaterBall.h"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -116,10 +82,11 @@ void CLevel_EnemiesTest::Tick(_double TimeDelta)
 void CLevel_EnemiesTest::Late_Tick(_double TimeDelta)
 {
 	CLevel::Late_Tick(TimeDelta);
-	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
-	{
-		CGameInstance::GetInstance()->Clone_GameObject(L"test", L"Indicator");
-	}
+	// if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	// {
+	// 	CGameInstance::GetInstance()->Clone_GameObject_Get(L"test", TEXT("FlowerLeg"))
+	// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(20.f, 3.f, 6.f, 1.f));
+	// }
 }
 
 HRESULT CLevel_EnemiesTest::Render()
@@ -163,152 +130,11 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	// CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
-	// {
-	// 	char szFileName[MAX_PATH]{};
-	// 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-	// 	CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str()));
-	// });
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
-	// 02.28 KKB Player
-
-
-	pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
-	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
-
-	auto pModel_Player = CModel::Create(m_pDevice, m_pContext,
-		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
-
-	pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
-	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
-
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
-		CController::Create())))
-		return E_FAIL;
-
-	_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
-	pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
-	auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
-		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
-	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
-
-	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
-	
-	// 키네틱 오브젝트 모델
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",
-		[this](const string& fileName)
-	{
-		char szFileExt[MAX_PATH]{};
-		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
-
-		if (0 == strcmp(szFileExt, ".static_model"))
-		{
-			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str()));
-		}
-	});
-	FAILED_CHECK(pGameInstance->Add_Prototype(L"Proto_KineticObject_Table", CMapKinetic_Object::Create(m_pDevice, m_pContext)));
-
-	// ~02.28 KKB Player
-
-	// Monster
-	
-	{														// Bin\Resources\Model\AnimModel\Monster\Goat
-		auto pGoat = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/AnimModel/Monster/Goat/Goat.anim_model",
-			_float4x4::CreateScale({ 0.1f, 0.1f, 0.1f }));
-		pGoat->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/Goat/Anim/"); // Bin\Resources\Model\AnimModel\Monster\Goat\Anim
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("TestMonsterGoat"), pGoat));
-	}
-	
-	{														
-		auto pFlowerLeg = CModel::Create(m_pDevice, m_pContext, 
-			"../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/FlowerLeg.anim_model");
-		pFlowerLeg->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Anim/"); 
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterFlowerLeg"), pFlowerLeg));
-	}
-
-	{						// Bin\Resources\Model\AnimModel\Monster\BuddyLumi
-		auto pBuddyLumi = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/BuddyLumi.anim_model");
-		pBuddyLumi->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BuddyLumi/Anim/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBuddyLumi"), pBuddyLumi));
-	}
-
-	{
-		auto pSkummyPool = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Model/AnimModel/Monster/SkummyPool/SkummyPool.anim_model");
-		pSkummyPool->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/SkummyPool/Anim/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterSkummyPool"), pSkummyPool));
-	}
-
-	{
-		_float4x4	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(270.f));
-		auto pSkMpBullet = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Model/StaticModel/Monster/SkPmBullet/SkMp_Bullet.static_model", PivotMatrix);
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BulletSkummyPool"), pSkMpBullet));
-	}
-
-	{
-		auto pSkummyPandou = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/SkummyPandou.anim_model");
-		pSkummyPandou->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Anim/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterSkummyPandou"), pSkummyPandou));
-	}
-
-	{
-		auto pBronJon = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Model/AnimModel/Monster/BronJon/BronJon.anim_model");
-		pBronJon->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/BronJon/Anim/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBronJon"), pBronJon));
-	}
-
-	{
-		auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
-		pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
-	}
-
-	// ~Monster
-
-	{	// 이펙트 프로토타입
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
-			CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
-
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
-			CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
-
-		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
-		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
-		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
-		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
-	}
-	
-	// Monster Prototype
-
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("TestMonster"), CTestMonster::Create(m_pDevice, m_pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("FlowerLeg"), CFlowerLeg::Create(m_pDevice, m_pContext)));		
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BuddyLumi"), CBuddyLumi::Create(m_pDevice, m_pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkummyPool"), CSkummyPool::Create(m_pDevice, m_pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkMpBullet"), CSkMpBullet::Create(m_pDevice, m_pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkummyPandou"), CSkummyPandou::Create(m_pDevice, m_pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BronJon"), CBronJon::Create(m_pDevice, m_pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_WaterBall"), CWaterBall::Create(m_pDevice, m_pContext)));
-
-	// Monster Controller
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FL_Controller"), CFL_Controller::Create()));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkPd_Controller"), CSkPd_Controller::Create()));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_BdLm_Controller"), CBdLm_Controller::Create()));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_BrJ_Controller"), CBrJ_Controller::Create()));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create()));
-	// ~Monster Controller
-
-	// ~Monster Prototype
-
-//	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -332,23 +158,28 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 		return E_FAIL;*/
 
 
+	// pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
+	// 	->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(120.f, 3.f, 15.f, 1.f));
+
+	// Test 하지 않는 중인 Monster 넣어두기
+// 	/*
+// 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BuddyLumi"))
+// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(40.f, 3.f, 3.f, 1.f));
+// 	
 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLeg"))
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(20.f, 3.f, 6.f, 1.f));
+// 		
+// 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPool"))
+// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-20.f, 3.f, -3.f, 1.f));
+//
+// 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPandou"))
+// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(100.f, 3.f, 10.f, 1.f));
+//
+// 		
+// 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_MonsterBoss1"))
+// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(200.f, 3.f, 10.f, 1.f));
+// 	*/
 
-	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BuddyLumi"))
-		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(40.f, 3.f, 3.f, 1.f));
-
-	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPool"))
-		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-20.f, 3.f, -3.f, 1.f));
-	
-	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPandou"))
-		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(100.f, 3.f, 10.f, 1.f));
-
-	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
-		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(150.f, 3.f, 15.f, 1.f));
-
-	/*pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_MonsterBoss1"))
-		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(200.f, 3.f, 10.f, 1.f));*/
 
 	/*auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
 	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
@@ -383,10 +214,6 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Kinetic(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json Test;
-	Test["ModelTag"] = "../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Table/Table.static_model";
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Proto_KineticObject_Table"), &Test));
-
 	return S_OK;
 }
 
@@ -394,10 +221,10 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
 	
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
-	
+
 	return S_OK;
 }
 
@@ -413,6 +240,9 @@ HRESULT CLevel_EnemiesTest::Ready_Effect(const _tchar * pLayerTag)
 
 	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
+
+	Json Penetrate = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Penetrate.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Penetrate", &Penetrate);
 
 	return S_OK;
 }

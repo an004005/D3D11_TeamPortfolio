@@ -29,7 +29,7 @@
 #include "PostVFX_ColorGrading.h"
 #include "PostVFX_HitDecal.h"
 #include "VFX_Manager.h"
-
+#include "Imgui_CurveManager.h"
 // ~ ¿Á¼öÇöÀÇ ÈçÀû
 #include "Boss1.h"
 #include "Boss1_AIController.h"
@@ -55,6 +55,8 @@ HRESULT CLevel_Effect::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LevelSwitcher::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
+
 	CVFX_Manager::GetInstance()->Initialize(LEVEL_EFFECT);
 
 	if (FAILED(__super::Initialize()))
@@ -90,7 +92,7 @@ void CLevel_Effect::Tick(_double TimeDelta)
 
 	if(CGameInstance::GetInstance()->KeyDown(DIK_SPACE))
 	{
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_1")->Start_EffectWork();
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"FlowerLeg_Fall_Rose")->Start_ParticleWork();
 	}
 }
 

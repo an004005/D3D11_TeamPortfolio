@@ -104,12 +104,6 @@ HRESULT CLevel_Batch::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	// CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
-	// {
-	// 	char szFileName[MAX_PATH]{};
-	// 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-	// 	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
-	// });
 
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
@@ -179,13 +173,14 @@ HRESULT CLevel_Batch::Ready_Prototypes()
 
 
 	//Monster
-	FAILED_CHECK(Push_Back_Prototype(L"Prototype_GameObject_BronJon", CBronJon::Create(m_pDevice, m_pContext), MONSTER));
-	FAILED_CHECK(Push_Back_Prototype(L"Prototype_GameObject_BuddyLumi", CBuddyLumi::Create(m_pDevice, m_pContext), MONSTER));
-	FAILED_CHECK(Push_Back_Prototype(L"Prototype_GameObject_FlowerLeg", CFlowerLeg::Create(m_pDevice, m_pContext), MONSTER));
-	FAILED_CHECK(Push_Back_Prototype(L"Prototype_GameObject_SkummyPandou", CSkummyPandou::Create(m_pDevice, m_pContext), MONSTER));
-	FAILED_CHECK(Push_Back_Prototype(L"Prototype_GameObject_SkummyPool", CSkummyPool::Create(m_pDevice, m_pContext), MONSTER));
+	FAILED_CHECK(Push_Back_Prototype(L"BronJon", CBronJon::Create(m_pDevice, m_pContext), MONSTER));
+	FAILED_CHECK(Push_Back_Prototype(L"BuddyLumi", CBuddyLumi::Create(m_pDevice, m_pContext), MONSTER));
+	FAILED_CHECK(Push_Back_Prototype(L"FlowerLeg", CFlowerLeg::Create(m_pDevice, m_pContext), MONSTER));
+	FAILED_CHECK(Push_Back_Prototype(L"SkummyPandou", CSkummyPandou::Create(m_pDevice, m_pContext), MONSTER));
+	FAILED_CHECK(Push_Back_Prototype(L"SkummyPool", CSkummyPool::Create(m_pDevice, m_pContext), MONSTER));
 	FAILED_CHECK(Push_Back_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext), MONSTER));
-	//Controller
+
+	//Controller	
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FL_Controller"), CFL_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkPd_Controller"), CSkPd_Controller::Create()));
@@ -246,7 +241,7 @@ HRESULT CLevel_Batch::Ready_Layer_Map(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/ConstructionSite3F.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 	return S_OK;

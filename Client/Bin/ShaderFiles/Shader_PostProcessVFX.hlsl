@@ -80,6 +80,19 @@ PS_OUT PS_MAIN(PS_IN In)
 
 		// return Out;
 	}
+	else if (vFlags.x == SHADER_DISTORTION_STATIC)
+	{
+		float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
+		float2 distortionUV = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(5.f, 5.f), float2(0.f, 0.f));
+		float4 DistortionTex = g_tex_0.Sample(LinearSampler, distortionUV);
+		float fWeight = DistortionTex.r * g_float_1 * 5.f;
+
+		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, (In.vTexUV + fWeight));
+
+		Out.vColor = LDR * (1.f - vFlags.a) + OriginColor * vFlags.a;
+
+		Out.vColor.a = 1.f;
+	}
 	else if(vFlags.y == SHADER_SCIFI_PLAYER_ATTACK)
 	{
 		// float2 randomNormal = g_tex_0.Sample(LinearSampler, In.vTexUV).xy;
@@ -296,6 +309,51 @@ PS_OUT PS_MAIN_ACESFitted_7(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_Penetate_8(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 vFlags = g_FlagTexture.Sample(PointSampler, In.vTexUV);
+	float4 LDR = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (vFlags.z == SHADER_TOON_GRAY_INGNORE)
+	{
+		Out.vColor = LDR;
+		Out.vColor.a = 1.f;
+	}
+	else if (vFlags.z == SHADER_MONSTER_WEAK)
+	{
+		float fGray = dot(LDR.rgb, float3(0.299, 0.587, 0.114));
+		Out.vColor.rgb = float3(1.f, 1.f, 169.f / 255.f) * fGray;
+		Out.vColor.a = 1.f;
+	}
+	else
+	{
+		float fGray = dot(LDR.rgb, float3(0.299, 0.587, 0.114));
+		Out.vColor.rgb = (float3)fGray;
+		Out.vColor.a = 1.f;
+	}
+
+	float fRadius = length(In.vTexUV - float2(0.5f, 0.5f));
+	if (fRadius >= 0.45f)
+	{
+		float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
+		float2 distortionUV = randomNormal * 0.1f + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time * 0.1f));
+		float4 DistortionTex = g_tex_0.Sample(LinearSampler, distortionUV);
+		float fWeight = DistortionTex.r * 0.1f;
+
+		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, (In.vTexUV + fWeight));
+
+		float fRatio = Remap(fRadius, float2(0.45f, 0.707f), float2(0.f, 1.f));
+
+		Out.vColor = lerp(Out.vColor, OriginColor, fRatio);
+	}
+
+	Out.vColor.a = 1.f;
+
+	return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -406,5 +464,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_ACESFitted_7();
+	}
+
+	//8
+	pass Penetrate_8
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_Penetate_8();
 	}
 }

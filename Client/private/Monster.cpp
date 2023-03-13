@@ -3,6 +3,8 @@
 #include "PhysX_Manager.h"
 #include "Material.h"
 #include "Shader.h"
+#include "Model.h"
+#include "Animation.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -35,6 +37,39 @@ void CMonster::Imgui_RenderProperty()
 {
 	CScarletCharacter::Imgui_RenderProperty();
 	m_DeathTimeline.Imgui_RenderEditor();
+
+	if (ImGui::CollapsingHeader("Anim Fast Modifier"))
+	{
+		static string szMonsterAnimName = "";
+		if (ImGui::BeginListBox("Animation List"))
+		{
+		  static char szSeachAnim[MAX_PATH] = "";
+		  ImGui::InputText("Anim Search", szSeachAnim, MAX_PATH);
+
+		  const string strSearch = szSeachAnim;
+		  const _bool bSearch = strSearch.empty() == false;
+
+		  for (auto& Pair : m_pModelCom->Get_AnimList())
+		  {
+		     if (bSearch)
+		     {
+		        if (Pair.first.find(strSearch) == string::npos)
+		           continue;
+		     }
+
+		     const bool bSelected = szMonsterAnimName == Pair.first;
+		     if (bSelected)
+		        ImGui::SetItemDefaultFocus();
+
+		     if (ImGui::Selectable(Pair.first.c_str(), bSelected))
+		        szMonsterAnimName = Pair.first;
+		  }
+		  ImGui::EndListBox();
+		}
+
+		if ("" != szMonsterAnimName)
+		  m_pModelCom->Get_AnimList()[szMonsterAnimName]->Imgui_RenderProperty();
+	}
 }
 
 _float4x4 CMonster::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)

@@ -31,7 +31,11 @@ private:
 	_float4	SetUp_InitPosition();
 	void	ClearMap();
 	void	CreateMapObjectFromLoad(Json& json);
-	 
+
+	//마을맵은 인스턴싱 아닌 애들이 있어서 사용X
+	//모든 모델이 인스턴싱이라는 가정 하에 만든 함수
+	void	RayPicking();
+
 private:
 	vector<pair<wstring, PROTOINFO>>	m_pModelProtos;
 	vector<class CMapObject*>			m_pMapObjects;
@@ -40,6 +44,7 @@ private:
 	CGameObject* 						m_pGameObject = nullptr;
 
 	_int								m_iProtoInfo = INSTANCE;
+	_bool								m_bPick = false;
 public:
 	static CScarletMap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr) override;

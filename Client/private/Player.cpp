@@ -112,7 +112,6 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
 
-	m_pCollider->SetPosition(XMVectorSet(0.f, 2.f, 0.f, 0.f));//SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
 
 	m_pTransformCom->SetTransformDesc({ 5.f, XMConvertToRadians(720.f) });
 
@@ -138,7 +137,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 void CPlayer::BeginTick()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 2.f, 0.f, 1.f));
 	__super::BeginTick();
 
 	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
@@ -148,6 +147,7 @@ void CPlayer::BeginTick()
 			m_pCamSpot = static_cast<CCamSpot*>(iter);
 		}
 	}
+
 
 	// Å×½ºÆ®
 	//m_pKineticAnimModel->SetPlayAnimation("AS_no0000_271_AL_Pcon_cReL_Lv4");
@@ -405,6 +405,9 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 void CPlayer::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	// HP Bar Check	
+	ImGui::Text("HP : %d", m_PlayerStat.m_iHP);
 
 	m_pKineticComboStateMachine->Imgui_RenderProperty();
 
@@ -2652,7 +2655,12 @@ void CPlayer::Event_CollisionStart()
 
 		else if ("ATK_AIR1" == szCurAttackState)
 		{
-
+			m_AttackDesc.eAttackSAS = m_PlayerSasType;
+			m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+			m_AttackDesc.iDamage = (rand() % 50) + 100;
+			m_AttackDesc.pCauser = this;
+			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		}
 
 		else if ("ATK_AIR2" == szCurAttackState)

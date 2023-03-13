@@ -14,12 +14,14 @@ struct VS_OUT
 {
 	float4		vPosition : SV_POSITION;
 	float2		vTexUV : TEXCOORD0;
+	float4		vWorldPos : TEXCOORD1;
 };
 
 struct PS_IN
 {
 	float4		vPosition : SV_POSITION;
 	float2		vTexUV : TEXCOORD0;
+	float4		vWorldPos : TEXCOORD1;
 };
 
 struct PS_OUT
@@ -40,7 +42,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
 	Out.vTexUV = In.vTexUV;
-
+	Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
 	return Out;
 }
 
@@ -51,6 +53,29 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
 
 	// Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+
+	return Out;
+}
+
+PS_OUT PS_EM0650_BULLET_BIRTH_BASE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Default = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	float  FirstMask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+	float  SecondMask = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+
+	float4 Color = float4(g_vec4_0.xyz,1.f);
+
+	float4 BlendColor = Default * Color * 2.0f;
+
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = FinalColor;
+
+	Out.vColor.a = saturate((FirstMask * g_float_0) + (SecondMask * (1 - g_float_0))) * g_float_1;
+
+	
 
 	return Out;
 }
@@ -407,6 +432,36 @@ PS_OUT_Flag PS_SEMI_DISTORTION_FOR_SAS(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_EM0650_BULLET_BIRTH_NOR(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+	float2 TexUV;
+
+	if(g_int_0 == 1)
+		TexUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 4, 4);
+	else
+		TexUV = Get_FlipBookUV(In.vTexUV, g_Time, 0, 4, 4);
+
+	float4 Default = g_tex_0.Sample(LinearSampler, TexUV);
+																
+	float4 NormalTex = g_tex_1.Sample(LinearSampler, TexUV);
+	NormalTex.xyz = NormalTex.xyz * 2.f - 1.f;
+
+	float4 vViewDir = g_vCamPosition - In.vWorldPos;
+	float fFresnel = FresnelEffect(NormalTex.xyz, vViewDir.xyz, 1.5f);
+
+	float4 Vec4Color = g_vec4_0;
+	float4 BlendColor = Default * Vec4Color * 2.0f;
+	float4 FinalColor = saturate(BlendColor * fFresnel);
+
+	Out.vColor = FinalColor;
+	Out.vColor.a = FinalColor.a *g_float_0;
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+
 technique11 DefaultTechnique
 {
 	//0
@@ -615,5 +670,33 @@ technique11 DefaultTechnique
 	}
 	
 	// ok su hyeon
-	
+
+	//14
+	pass FlipBook_Normal
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM0650_BULLET_BIRTH_NOR();
+	}
+
+	//15
+	pass EM_Bullet_Birth_Base
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM0650_BULLET_BIRTH_BASE();
+	}
+
 }

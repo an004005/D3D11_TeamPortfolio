@@ -69,7 +69,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDiffuse = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	// Out.vFlag = flags;
+	Out.vFlag = 0.f;
 
 	return Out;
 }
@@ -96,7 +96,7 @@ PS_OUT CommonProcess(PS_IN In)
 
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	// Out.vFlag = flags;
+	Out.vFlag = 0.f;
 	return Out;
 }
 

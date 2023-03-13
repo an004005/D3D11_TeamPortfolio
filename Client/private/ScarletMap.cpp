@@ -6,6 +6,9 @@
 #include "GameUtils.h"
 #include "MapInstance_Object.h"
 #include "MapKinetic_Object.h"
+#include "PhysX_Manager.h"
+#include "PhysXStaticModel.h"
+
 
 _bool CScarletMap::s_bMapEditor = false;
 
@@ -32,6 +35,9 @@ HRESULT CScarletMap::Initialize(void* pArg)
 	
 	FAILED_CHECK(SetUp_Components());
 
+	m_pModelProtoInfo.first = L"";
+	m_pModelProtoInfo.second = INSTANCE;
+
 	return S_OK;
 }
 
@@ -42,6 +48,7 @@ void CScarletMap::BeginTick()
 void CScarletMap::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+	RayPicking();
 }
 
 void CScarletMap::Late_Tick(_double TimeDelta)
@@ -58,11 +65,6 @@ HRESULT CScarletMap::Render()
 
 void CScarletMap::Imgui_RenderProperty()
 {
-	s_bMapEditor = true;
-	static _bool	bImPlay = false;
-	ImGui::Checkbox("Open MapTool", &bImPlay);
-
-	if (bImPlay == false) return;
 
 	__super::Imgui_RenderProperty();
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -98,8 +100,6 @@ void CScarletMap::Imgui_RenderProperty()
 			if (bSelected)
 				ImGui::SetItemDefaultFocus();
 
-			
-
 			char pStr[MAX_PATH];
 			strcpy(pStr, CGameUtils::GetFileName(ws2s(proto.first)).c_str());
 
@@ -114,6 +114,10 @@ void CScarletMap::Imgui_RenderProperty()
 
 	ImGui::Separator();
 
+	if (ImGui::Checkbox("Picking On", &m_bPick));
+
+	ImGui::Separator();
+
 	static _bool DoInput = false;
 	static _float4 InitPosition = { 0.f, 0.f, 0.f, 1.f };
 	static _float3 Interval = { 0.f, 0.f, 0.f };
@@ -121,86 +125,123 @@ void CScarletMap::Imgui_RenderProperty()
 
 	if (DoInput)
 	{
+		ImGui::SameLine();
+		if (ImGui::Button("SetCurPickPos")) //현재 선택된 객체의 포지션값을 넣어줌
+		{
+			if (m_pGameObject != nullptr)
+			{
+				InitPosition = dynamic_cast<CMapInstance_Object*>(m_pGameObject)->Get_FocusPosition();
+			}
+		}
+
 		ImGui::InputFloat3("SetInitPosition", (float*)&InitPosition);
 		ImGui::InputFloat3("SetIntermal", (float*)&Interval);
 	}
 
+	ImGui::Separator();
+
 	if (ImGui::Button("Create_MapObject"))
 	{
-		if (m_pModelProtoInfo.second == PROTOINFO::NON_INSTANCE)
+		if (m_pModelProtoInfo.first != L"")
 		{
-			Json json;
-			json["ModelTag"] = ws2s(m_pModelProtoInfo.first);
-
-			InitPosition.x += Interval.x;
-			InitPosition.y += Interval.y;
-			InitPosition.z += Interval.z;
-
-			_float4 InitPos = DoInput == false ? SetUp_InitPosition() : InitPosition;
-			json["InitPos"] = InitPos;
-
-			CMapObject* pMapObject = nullptr;
-			pMapObject = dynamic_cast<CMapObject*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapNonAnimObject"), TEXT("Prototype_GameObject_MapNonAnim_Object"), &json));
-			assert(pMapObject != nullptr);
-
-			m_pMapObjects.emplace_back(pMapObject);
-			m_pGameObject = pMapObject;
-		}
-
-		else if (m_pModelProtoInfo.second == PROTOINFO::INSTANCE)
-		{
-			CGameObject* pGameObject = pGameInstance->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pGameObject) {
-				return dynamic_cast<CMapInstance_Object*>(pGameObject)->Get_ModelTag() == m_pModelProtoInfo.first;
-			}, TEXT("Layer_MapInstanceObject"));
-
-			if (pGameObject == nullptr) // ModelTag를 못찾으면 생성
+			if (m_pModelProtoInfo.second == PROTOINFO::NON_INSTANCE)
 			{
 				Json json;
 				json["ModelTag"] = ws2s(m_pModelProtoInfo.first);
 
-				pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapInstanceObject"), TEXT("Prototype_GameObject_MapInstance_Object"), &json);
-				assert(pGameObject != nullptr);
-				m_pMapObjects.emplace_back(dynamic_cast<CMapObject*>(pGameObject));
+				InitPosition.x += Interval.x;
+				InitPosition.y += Interval.y;
+				InitPosition.z += Interval.z;
+
+				_float4 InitPos = DoInput == false ? SetUp_InitPosition() : InitPosition;
+				json["InitPos"] = InitPos;
+
+				CMapObject* pMapObject = nullptr;
+				pMapObject = dynamic_cast<CMapObject*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapNonAnimObject"), TEXT("Prototype_GameObject_MapNonAnim_Object"), &json));
+				assert(pMapObject != nullptr);
+
+				m_pMapObjects.emplace_back(pMapObject);
+				m_pGameObject = pMapObject;
 			}
 
-			CModel_Instancing* pModel = dynamic_cast<CMapInstance_Object*>(pGameObject)->Get_Model_Instancing();
-			assert(pModel != nullptr);
+			else if (m_pModelProtoInfo.second == PROTOINFO::INSTANCE)
+			{
+				CGameObject* pGameObject = pGameInstance->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pGameObject) {
+					return dynamic_cast<CMapInstance_Object*>(pGameObject)->Get_ModelTag() == m_pModelProtoInfo.first;
+				}, TEXT("Layer_MapInstanceObject"));
 
-			InitPosition.x += Interval.x;
-			InitPosition.y += Interval.y;
-			InitPosition.z += Interval.z;
+				if (pGameObject == nullptr) // ModelTag를 못찾으면 생성
+				{
+					Json json;
+					json["ModelTag"] = ws2s(m_pModelProtoInfo.first);
 
-			_matrix		WorldMatrix = XMMatrixTranslation(InitPosition.x, InitPosition.y, InitPosition.z);
-			pModel->Add_Instance(WorldMatrix);
-			pModel->Map_Meshs();
-			dynamic_cast<CMapInstance_Object*>(pGameObject)->Set_Focus();
+					pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapInstanceObject"), TEXT("Prototype_GameObject_MapInstance_Object"), &json);
+					assert(pGameObject != nullptr);
+					m_pMapObjects.emplace_back(dynamic_cast<CMapObject*>(pGameObject));
+				}
 
-			m_pGameObject = pGameObject;
+				CModel_Instancing* pModel = dynamic_cast<CMapInstance_Object*>(pGameObject)->Get_Model_Instancing();
+				assert(pModel != nullptr);
+
+				InitPosition.x += Interval.x;
+				InitPosition.y += Interval.y;
+				InitPosition.z += Interval.z;
+
+				_matrix		WorldMatrix = XMMatrixTranslation(InitPosition.x, InitPosition.y, InitPosition.z);
+				pModel->Add_Instance(WorldMatrix);
+				dynamic_cast<CMapInstance_Object*>(pGameObject)->Create_PhsyX(WorldMatrix);
+				pModel->Map_Meshs();
+				dynamic_cast<CMapInstance_Object*>(pGameObject)->Set_Focus();
+
+				m_pGameObject = pGameObject;
+			}
+
+			else if (m_pModelProtoInfo.second == PROTOINFO::KINETIC)
+			{
+				_bool HaveFile = false;
+				Json json;
+				CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/Map/KineticPreset/",
+					[&](const string& filePath)
+				{
+					string fileName = CGameUtils::GetFileName(filePath);
+					string ModelName = CGameUtils::GetFileName(ws2s(m_pModelProtoInfo.first));
+					if (fileName == ModelName)
+					{
+						HaveFile = true;
+						json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/" + fileName + ".json");
+					}
+				
+				});
+
+				if (HaveFile == true)
+				{
+					
+					InitPosition.x += Interval.x;
+					InitPosition.y += Interval.y;
+					InitPosition.z += Interval.z;
+
+					_float4 InitPos = DoInput == false ? SetUp_InitPosition() : InitPosition;
+					json["InitPos"] = InitPos;
+
+					CMapObject* pMapObject = nullptr;
+					pMapObject = dynamic_cast<CMapObject*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &json));
+					assert(pMapObject != nullptr);
+
+					m_pMapObjects.emplace_back(pMapObject);
+					m_pGameObject = pMapObject;
+				}
+
+				else
+				{
+					MSG_BOX("Can't find JsonFile");
+				}
+				
+			}
+
+			sort(m_pMapObjects.begin(), m_pMapObjects.end(), [this](CMapObject* pSour, CMapObject* pDest) {
+				return pSour->Get_ModelTag() < pDest->Get_ModelTag();
+			});
 		}
-
-		else if (m_pModelProtoInfo.second == PROTOINFO::KINETIC)
-		{
-			Json json;
-			json["ModelTag"] = ws2s(m_pModelProtoInfo.first);
-
-			InitPosition.x += Interval.x;
-			InitPosition.y += Interval.y;
-			InitPosition.z += Interval.z;
-
-			_float4 InitPos = DoInput == false ? SetUp_InitPosition() : InitPosition;
-			json["InitPos"] = InitPos;
-
-			CMapObject* pMapObject = nullptr;
-			pMapObject = dynamic_cast<CMapObject*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &json));
-			assert(pMapObject != nullptr);
-
-			m_pMapObjects.emplace_back(pMapObject);
-			m_pGameObject = pMapObject;
-		}
-		
-		sort(m_pMapObjects.begin(), m_pMapObjects.end(), [this](CMapObject* pSour, CMapObject* pDest) {
-			return pSour->Get_ModelTag() < pDest->Get_ModelTag();
-		});
 	}
 
 	ImGui::Separator();
@@ -236,6 +277,7 @@ void CScarletMap::Imgui_RenderProperty()
 			if (ImGui::Selectable(pStr, bSelected))
 			{
 				m_pGameObject = m_pMapObjects[i];
+				m_pModelProtoInfo.first = m_pMapObjects[i]->Get_ModelTag();
 			}
 
 		}
@@ -384,6 +426,55 @@ void CScarletMap::CreateMapObjectFromLoad(Json & json)
 
 	assert(pMapObject != nullptr);
 	m_pMapObjects.emplace_back(pMapObject);
+}
+
+
+void CScarletMap::RayPicking()
+{
+	if (m_bPick == false) return;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	if (pGameInstance->KeyDown(CInput_Device::DIM_LB))
+	{
+		_float4 vOrigin;
+		_float4 vDir;
+		CGameUtils::GetPickingRay(vOrigin, vDir);
+
+		physx::PxRaycastHit hitBuffer[1];
+		physx::PxRaycastBuffer t(hitBuffer, 1);
+
+		RayCastParams params;
+		params.rayOut = &t;
+		params.vOrigin = vOrigin;
+		params.vDir = vDir;
+		params.fDistance = 1000.f;
+		params.iTargetType = CTB_STATIC;
+		params.bSingle = true;
+
+		if (pGameInstance->RayCast(params))
+		{
+			IM_LOG("Hit Ray");
+			for (int i = 0; i < t.getNbAnyHits(); ++i)
+			{
+				auto p = t.getAnyHit(i);
+				auto pComponent = CPhysXUtils::GetComponent(p.actor);
+
+				
+				auto iter = find_if(m_pMapObjects.begin(), m_pMapObjects.end(), [&](CMapObject* pMapObject) {
+					auto com = dynamic_cast<CMapInstance_Object*>(pMapObject)->Find_PhysXStaticModel(dynamic_cast<CPhysXStaticModel*>(pComponent));
+
+					return com == nullptr ? false : true;
+				});
+
+				if (iter != m_pMapObjects.end())
+				{
+					m_pGameObject = *iter;
+					m_pModelProtoInfo.first = (*iter)->Get_ModelTag();
+				}
+			}
+		}
+	}
 }
 
 CScarletMap * CScarletMap::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

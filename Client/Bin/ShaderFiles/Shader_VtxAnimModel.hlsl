@@ -84,6 +84,12 @@ struct PS_OUT
 	float4		vFlag : SV_TARGET5;
 };
 
+struct PS_OUT_NONLIGHT
+{
+	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1;
+};
+
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -92,7 +98,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDiffuse = (float4)1.f;
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	// Out.vFlag = flags;
+	Out.vFlag = 0.f;
 	return Out;
 }
 
@@ -187,7 +193,7 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 
 
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
-	// Out.vFlag = flags;
+	Out.vFlag = 0.f;
 
 	return Out;
 
@@ -281,6 +287,7 @@ PS_OUT PS_MAIN_EM320_Water_2(PS_IN In)
 		Out.vRMA = float4(0.3f, 0.5f, 1.f, 0.f);
 	}
 
+	Out.vFlag = 0.f;
 
 	return Out;
 }
@@ -334,6 +341,22 @@ PS_OUT PS_MAIN_EM320_Weak_4(PS_IN In)
 			Out.vDepth.z = fHit * 4.f;
 		}
 	}
+	Out.vFlag = float4(0.f, 0.f, SHADER_MONSTER_WEAK, 0.f);
+
+	return Out;
+}
+
+PS_OUT_NONLIGHT PS_MAIN_Invisible_5(PS_IN In)
+{
+	PS_OUT_NONLIGHT			Out = (PS_OUT_NONLIGHT)0.f;
+
+	float4 vNormalPacked = NormalPacking(In);
+	float3 vNormal = vNormalPacked.xyz * 2.f - 1.f;
+	float4 vViewDir = g_vCamPosition - In.vWorldPos;
+	float fFresnel = FresnelEffect(vNormal.xyz, vViewDir.xyz, 1.f);
+
+	Out.vColor = fFresnel;
+	Out.vFlag = float4(SHADER_DISTORTION_STATIC, 0.f, 0.f, fFresnel);
 
 	return Out;
 }
@@ -409,5 +432,18 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_EM320_Weak_4();
 	}
-	
+
+	//5
+	pass Monster_Invisible
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_Invisible_5();
+	}
 }

@@ -116,26 +116,28 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 		m_Timeline.SetTimelineLength((_double)m_fEndTime);
 
-		m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
+		// m_Timeline.SetFinishFunction([this]
+		// {
+		// 	SetDelete();
+		// });
 
-		// if (m_iSelectFinishFunc == 0)
-		// {
-		// 	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
-		// }
-		// else if (m_iSelectFinishFunc == 1)
-		// {
-		// 	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
-		// }
-		// else if (m_iSelectFinishFunc == 2)
-		// {
-		// 	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
-		// }
-		// else if (m_iSelectFinishFunc == 3)
-		// {
-		// 	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
-		// }
-		/*m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
-*/
+		if (m_iSelectFinishFunc == 0)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+		}
+		else if (m_iSelectFinishFunc == 1)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+		}
+		else if (m_iSelectFinishFunc == 2)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+		}
+		else if (m_iSelectFinishFunc == 3)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
+		}
+
 
 	}
 	else
@@ -154,6 +156,14 @@ void CEffectGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate)
 		SetDelete();
 		return;
 	}
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		Set_Transform(SocketMatrix);
+	}
+
 	m_pOwner = pOwner;
 	m_bUpdate = trueisUpdate;
 	m_Timeline.PlayFromStart();
@@ -168,18 +178,17 @@ void CEffectGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool true
 	}
 
 	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_BoneName = BoneName;
 
-	if(trueisUpdate == false)
+	if(m_bUpdate == false)
 	{
-		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, false) * m_pOwner->GetTransform()->Get_WorldMatrix();
+		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
 
 		Set_Transform(SocketMatrix);
 	}
 
-
-	m_BoneName = BoneName;
-	m_bUpdate = trueisUpdate;
-	// m_Timeline.PlayFromStart();t
+	m_Timeline.PlayFromStart();
 }
 
 void CEffectGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _bool usepivot, _bool trueisUpdate)
@@ -190,10 +199,20 @@ void CEffectGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix,
 		return;
 	}
 
-	m_BoneName = BoneName;
+	m_pOwner = pOwner;
 	m_bUpdate = trueisUpdate;
+	m_BoneName = BoneName;
 	m_bUsePivot = usepivot;
 	m_PivotMatrix = PivotMatrix;
+
+	if (m_bUpdate == false)
+	{
+		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		Set_Transform(SocketMatrix);
+	}
+
+	
 	m_Timeline.PlayFromStart();
 }
 
@@ -201,6 +220,8 @@ void CEffectGroup::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
 	m_Timeline.Tick(TimeDelta);
+	VisibleUpdate();
+	
 
 	if(m_bUpdate == true && m_pOwner->IsDeleted() == false)
 	{
@@ -210,14 +231,14 @@ void CEffectGroup::Tick(_double TimeDelta)
 			if(m_bUsePivot)
 			{
 				// 피봇행렬을 쓰는 경우
-				_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix() ;
+				_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix() ;
 
 				Set_Transform(SocketMatrix);
 			}
 			else
 			{
 				// 피봇행렬을 안쓰는 경우
-				_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+				_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
 
 				Set_Transform(SocketMatrix);
 			}
@@ -336,8 +357,42 @@ void CEffectGroup::Imgui_RenderProperty()
 
 	if (item_current_idx != -1)
 	{
+		static _int	iSelectCurve = -1;
+
+		IMGUI_LEFT_LABEL(ImGui::Combo, "Target Curve", &iSelectCurve, m_szCurveTag, CURVE_END);
+		ImGui::SameLine();
+
+		if (ImGui::Button("Add Target Curve"))
+		{
+			if (iSelectCurve == -1 || iSelectCurve > CURVE_END)
+			{
+				MSG_BOX("Wrong Curve Number");
+				return;
+			}
+
+			if (item_current_idx == -1 || item_current_idx > (_int)m_mapEffectSystemTag.size())
+			{
+				MSG_BOX("Wrong EffectTag");
+				return;
+			}
+
+			Add_TargetCurve(item_current_idx, m_szCurveTag[iSelectCurve]);
+
+			iSelectCurve = -1;
+		}
+
 		if (item_current_idx == 0)
 		{
+			static char szCurveTag[MAX_PATH] = "";
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FirstEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
+			{
+				AddEmptyCurve_ForFirst(szCurveTag);
+				ZeroMemory(szCurveTag, MAX_PATH);
+			}
+
 			string CurveOwnerName = ppEffectGroupTag[0];
 
 			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
@@ -362,21 +417,23 @@ void CEffectGroup::Imgui_RenderProperty()
 				itr->second->Imgui_RenderEditor();
 			}
 
-			static char szCurveTag[MAX_PATH] = "";
-			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FirstEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
-			ImGui::SameLine();
-
-			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
-			{
-				AddEmptyCurve_ForFirst(szCurveTag);
-				ZeroMemory(szCurveTag, MAX_PATH);
-			}
+			
 
 			Imgui_RenderEffectSource(item_current_idx);
 
 		}
 		else if (item_current_idx == 1)
 		{
+			static char szCurveTag[MAX_PATH] = "";
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add SecondEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
+			{
+				AddEmptyCurve_ForSecond(szCurveTag);
+				ZeroMemory(szCurveTag, MAX_PATH);
+			}
+
 			string CurveOwnerName = ppEffectGroupTag[1];
 			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
 			static const char* pCurName = "";
@@ -400,20 +457,20 @@ void CEffectGroup::Imgui_RenderProperty()
 				itr->second->Imgui_RenderEditor();
 			}
 
-			static char szCurveTag[MAX_PATH] = "";
-			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add SecondEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
-			ImGui::SameLine();
-
-			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
-			{
-				AddEmptyCurve_ForSecond(szCurveTag);
-				ZeroMemory(szCurveTag, MAX_PATH);
-			}
-
 			Imgui_RenderEffectSource(item_current_idx);
 		}
 		else if (item_current_idx == 2)
 		{
+			static char szCurveTag[MAX_PATH] = "";
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add ThirdEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
+			{
+				AddEmptyCurve_ForThird(szCurveTag);
+				ZeroMemory(szCurveTag, MAX_PATH);
+			}
+
 			string CurveOwnerName = ppEffectGroupTag[2];
 			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
 			static const char* pCurName = "";
@@ -437,21 +494,21 @@ void CEffectGroup::Imgui_RenderProperty()
 				itr->second->Imgui_RenderEditor();
 			}
 
-			static char szCurveTag[MAX_PATH] = "";
-			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add ThirdEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
-			ImGui::SameLine();
-
-			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
-			{
-				AddEmptyCurve_ForThird(szCurveTag);
-				ZeroMemory(szCurveTag, MAX_PATH);
-			}
-
 			Imgui_RenderEffectSource(item_current_idx);
 
 		}
 		else if (item_current_idx == 3)
 		{
+			static char szCurveTag[MAX_PATH] = "";
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FourthEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
+			{
+				AddEmptyCurve_ForFourth(szCurveTag);
+				ZeroMemory(szCurveTag, MAX_PATH);
+			}
+
 			string CurveOwnerName = ppEffectGroupTag[3];
 			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
 			static const char* pCurName = "";
@@ -474,21 +531,21 @@ void CEffectGroup::Imgui_RenderProperty()
 			{
 				itr->second->Imgui_RenderEditor();
 			}
+
+			Imgui_RenderEffectSource(item_current_idx);
+		}
+		else if (item_current_idx == 4)
+		{
 			static char szCurveTag[MAX_PATH] = "";
-			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FourthEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
+			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FifthEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
 			ImGui::SameLine();
 
 			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
 			{
-				AddEmptyCurve_ForFourth(szCurveTag);
+				AddEmptyCurve_ForFifth(szCurveTag);
 				ZeroMemory(szCurveTag, MAX_PATH);
 			}
 
-			Imgui_RenderEffectSource(item_current_idx);
-			
-		}
-		else if (item_current_idx == 4)
-		{
 			string CurveOwnerName = ppEffectGroupTag[4];
 			ImGui::BulletText("[ %s ]'s Curve List", CurveOwnerName.c_str());
 			static const char* pCurName = "";
@@ -511,15 +568,6 @@ void CEffectGroup::Imgui_RenderProperty()
 			{
 				itr->second->Imgui_RenderEditor();
 			}
-			static char szCurveTag[MAX_PATH] = "";
-			IMGUI_LEFT_LABEL(ImGui::InputTextWithHint, "Add FifthEffect's Curve", " Input Curve Tag And Press Add Button", szCurveTag, MAX_PATH);
-			ImGui::SameLine();
-
-			if (ImGui::Button("Add") && strcmp(szCurveTag, ""))
-			{
-				AddEmptyCurve_ForFifth(szCurveTag);
-				ZeroMemory(szCurveTag, MAX_PATH);
-			}
 
 			Imgui_RenderEffectSource(item_current_idx);
 
@@ -532,31 +580,11 @@ void CEffectGroup::Imgui_RenderProperty()
 			ImGui::Text("    [ Please Select EffectGroup Element ] ");
 		}
 
-		static _int	iSelectCurve = -1;
-
-		IMGUI_LEFT_LABEL(ImGui::Combo, "Target Curve", &iSelectCurve, m_szCurveTag, CURVE_END);
-		ImGui::SameLine();
-
-		if(ImGui::Button("Add Target Curve"))
-		{
-			if (iSelectCurve == -1 || iSelectCurve > CURVE_END)
-			{
-				MSG_BOX("Wrong Curve Number");
-				return;
-			}
-
-			if(item_current_idx == -1 || item_current_idx > (_int)m_mapEffectSystemTag.size())
-			{
-				MSG_BOX("Wrong EffectTag");
-				return;
-			}
-
-			Add_TargetCurve(item_current_idx, m_szCurveTag[iSelectCurve]);
-
-			iSelectCurve = -1;
-		}
+		
+		m_Timeline.ImGui_RenderTimelineEvent();
 	}
 	// 커브 추가하는 곳
+
 
 	ImGui::Separator();
 	ImGui::Separator();
@@ -674,6 +702,7 @@ void CEffectGroup::SaveToJson(Json& json)
 void CEffectGroup::LoadFromJson(const Json& json)
 {
 	CGameObject::LoadFromJson(json);
+
 
 	// for (auto curveJson : json["Curves"])
 	// {
@@ -1231,7 +1260,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json First_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
+			Json First_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
 			m_pFirst_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &First_Effect));
 
 			const string& strFileName = CGameUtils::GetFileName(m_First_EffectDirectory);
@@ -1255,7 +1284,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json Secon_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
+			Json Secon_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
 			m_pSecond_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Secon_Effect));
 
 			const string& strFileName = CGameUtils::GetFileName(m_Second_EffectDirectory);
@@ -1279,7 +1308,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json Third_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
+			Json Third_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
 			m_pThird_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Third_Effect));
 
 			const string& strFileName = CGameUtils::GetFileName(m_Third_EffectDirectory);
@@ -1303,7 +1332,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json Fourth_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
+			Json Fourth_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
 			m_pFourth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fourth_Effect));
 
 			const string& strFileName = CGameUtils::GetFileName(m_Fourth_EffectDirectory);
@@ -1327,7 +1356,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json Fifth_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
+			Json Fifth_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
 			m_pFifth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fifth_Effect));
 			const string& strFileName = CGameUtils::GetFileName(m_Fifth_EffectDirectory);
 			m_mapEffectSystemTag.emplace(strFileName, m_pFifth_EffectSystem);
@@ -1430,6 +1459,20 @@ void CEffectGroup::SetReverse()
 _bool CEffectGroup::CheckPlay()
 {
 	return m_Timeline.IsPlay();
+}
+
+void CEffectGroup::VisibleUpdate()
+{
+	if (nullptr != m_pFirst_EffectSystem)
+		m_pFirst_EffectSystem->SetVisible(m_bVisible);
+	if (nullptr != m_pSecond_EffectSystem)
+		m_pSecond_EffectSystem->SetVisible(m_bVisible);
+	if (nullptr != m_pThird_EffectSystem)
+		m_pThird_EffectSystem->SetVisible(m_bVisible);
+	if (nullptr != m_pFourth_EffectSystem)
+		m_pFourth_EffectSystem->SetVisible(m_bVisible);
+	if (nullptr != m_pFifth_EffectSystem)
+		m_pFifth_EffectSystem->SetVisible(m_bVisible);
 }
 
 void CEffectGroup::Set_Transform(_fmatrix matSocket)
@@ -1986,27 +2029,32 @@ void CEffectGroup::Free()
 
 	if(m_pFirst_EffectSystem != nullptr)
 	{
-		m_pFirst_EffectSystem->SetDelete();
+		if(m_pFirst_EffectSystem->IsDeleted() == false)
+			m_pFirst_EffectSystem->SetDelete();
 		Safe_Release(m_pFirst_EffectSystem);
 	}
 	if (m_pSecond_EffectSystem != nullptr)
 	{
-		m_pSecond_EffectSystem->SetDelete();
+		if (m_pSecond_EffectSystem->IsDeleted() == false)
+			m_pSecond_EffectSystem->SetDelete();
 		Safe_Release(m_pSecond_EffectSystem);
 	}
 	if (m_pThird_EffectSystem != nullptr)
 	{
-		m_pThird_EffectSystem->SetDelete();
+		if (m_pThird_EffectSystem->IsDeleted() == false)
+			m_pThird_EffectSystem->SetDelete();
 		Safe_Release(m_pThird_EffectSystem);
 	}
 	if (m_pFourth_EffectSystem != nullptr)
 	{
-		m_pFourth_EffectSystem->SetDelete();
+		if (m_pFourth_EffectSystem->IsDeleted() == false)
+			m_pFourth_EffectSystem->SetDelete();
 		Safe_Release(m_pFourth_EffectSystem);
 	}
 	if (m_pFifth_EffectSystem != nullptr)
 	{
-		m_pFifth_EffectSystem->SetDelete();
+		if (m_pFifth_EffectSystem->IsDeleted() == false)
+			m_pFifth_EffectSystem->SetDelete();
 		Safe_Release(m_pFifth_EffectSystem);
 	}
 

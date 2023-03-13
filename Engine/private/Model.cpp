@@ -970,6 +970,34 @@ HRESULT CModel::RenderMeshOnly(_uint iMeshIdx) const
 	return m_Meshes[iMeshIdx]->Render();
 }
 
+HRESULT CModel::Render_Pass(CTransform* pTransform, _uint iPass)
+{
+	for (size_t i = 0; i < m_Meshes.size(); ++i)
+	{
+		const _uint iMtrlIdx = m_Meshes[i]->Get_MaterialIndex();
+		if (m_Materials[iMtrlIdx]->IsActive() == false)
+			return S_OK;
+
+		if (m_eType == TYPE_ANIM)
+		{
+			_float4x4 BoneMatrices[512];
+			m_Meshes[i]->SetUp_BoneMatrices(BoneMatrices, XMLoadFloat4x4(&m_PivotMatrix));
+			m_Materials[iMtrlIdx]->GetShader()->Set_MatrixArray("g_BoneMatrices", BoneMatrices, 512);
+		}
+
+		m_Materials[iMtrlIdx]->BindMatrices(pTransform);
+		m_Materials[iMtrlIdx]->Begin(iPass);
+		return m_Meshes[i]->Render();
+	}
+
+	return S_OK;
+}
+
+// HRESULT CModel::RenderMesh_Shader(CTransform* pTransform, CShader* pShader, _uint iPass)
+// {
+//
+// }
+
 HRESULT CModel::Render_ShadowDepth(CTransform* pTransform)
 {
 	for (size_t i = 0; i < m_Meshes.size(); ++i)

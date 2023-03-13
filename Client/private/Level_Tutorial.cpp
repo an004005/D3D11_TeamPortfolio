@@ -5,17 +5,7 @@
 #include "JsonStorage.h"
 #include "Imgui_PropertyEditor.h"
 #include "Imgui_LevelSwitcher.h"
-#include "Controller.h"
-#include "CamSpot.h"
-#include "EffectSystem.h"
-#include "Player.h"
-#include "Weapon_wp0190.h"
-#include "PostVFX_Scifi.h"
-#include "EffectGroup.h"
-#include "ParticleSystem.h"
-#include "PostVFX_Distortion.h"
-#include "TrailSystem.h"
-
+#include "FactoryMethod.h"
 CLevel_Tutorial::CLevel_Tutorial(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel(pDevice, pContext)
 {
@@ -81,48 +71,8 @@ HRESULT CLevel_Tutorial::Render()
 
 HRESULT CLevel_Tutorial::Ready_Prototypes()
 {
-	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
-		// player
-	{
-		pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
-		pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
-
-		{
-			auto pModel_Player = CModel::Create(m_pDevice, m_pContext,
-				"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
-
-			pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
-			FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
-		}
-
-		_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
-		pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
-		auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
-		FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
-
-
-
-		{	// 이펙트 프로토타입
-			if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
-				CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
-				return E_FAIL;
-
-			if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
-				CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
-				return E_FAIL;
-
-			FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
-			FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
-			FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
-			FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
-		}
-
-
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"), CController::Create())))
-		return E_FAIL;
-	}
+	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
 
 	return S_OK;
 }

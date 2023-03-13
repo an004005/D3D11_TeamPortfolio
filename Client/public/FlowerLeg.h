@@ -117,28 +117,27 @@ private:
 	_bool m_bOneHit = false;
 	list<CScarletCharacter*> m_CollisionList;
 
-	// Damage
+	// Damaged
 	_bool		m_bStruck = false;
 	_bool		m_bAirStruck = false;
 
-	_bool		m_bMaintain = false;
+	_bool		m_bAirMaintain = false;
 
-	_bool		m_bInvicible = false;
+	_bool		m_bInvisible = false;
 
-	_uint		m_iAirDamage = 0;
-	_uint		m_iPreAirDamageCnt = 0;
-	
+	// HitDir
 	_bool		m_bHitMove = false;
 	
-	// HitDir
 	_vector		m_vPreDir;
 	_vector		m_vCurDir;
 	_vector		m_vFinDir;
 	_bool		m_bOneTick = false;
+	// ~HitDir
 
+	// TakeDamage 
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
-
+	// ~TakeDamage 
 public:
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }

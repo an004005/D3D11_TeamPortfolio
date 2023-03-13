@@ -85,11 +85,74 @@ VS_OUT_NORM VS_MAIN_NORM(VS_IN In)
 	matWVP = mul(matWV, g_ProjMatrix);
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), g_WorldMatrix));
 	Out.vTexUV = In.vTexUV;
+	Out.vProjPos = Out.vPosition;
 	Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
 	Out.vBinormal = normalize(cross(Out.vNormal.xyz, Out.vTangent.xyz));
-	
+
+	return Out;
+}
+
+PS_OUT_NORM PS_DEFAULT_NORM(PS_IN_NORM In)
+{
+	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
+	float flags = SHADER_DEFAULT;
+
+	float3 vNormal = In.vNormal.xyz;
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	// Out.vFlag = flags;
+
+	return Out;
+}
+
+PS_OUT_NORM PS_650_NORM(PS_IN_NORM In)
+{
+	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
+	float flags = SHADER_DEFAULT;
+
+	float3 vNormal = In.vNormal.xyz;
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	vector	vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+
+	float fDissolvePower = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+
+	if (Out.vRMA.b == 0.f)
+	{
+		Out.vRMA.b += g_float_0;
+		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, Out.vColor.a * g_float_1, flags);
+	}
+	else
+	{
+		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, Out.vColor.a * g_float_2, flags);
+	}
+
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+
+
+	Out.vColor.a = 1.f;
+
+	if (g_float_3 >= fDissolvePower)
+	{
+		discard;
+	}
 
 	return Out;
 }
@@ -101,7 +164,6 @@ PS_OUT_NORM PS_MAIN_NORM (PS_IN_NORM In)
 
 	float3 vNormal = In.vNormal.xyz;
 	float2 FlipUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.f, 1, 1);
-	float2 FlipUV2 = Get_FlipBookUV(In.vTexUV, g_Time, 0.f, 4, 4);
 
 	float4 DefaultTex = g_tex_0.Sample(LinearSampler, FlipUV);
 	float4 OriginColor = g_vec4_0;
@@ -131,7 +193,6 @@ PS_OUT_NORM PS_MAIN_NORM (PS_IN_NORM In)
 	{
 		discard;
 	}
-
 	//Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 
 	return Out;
@@ -185,6 +246,24 @@ PS_OUT PS_DEFAULT_MODEL(PS_IN In)
 	return Out;
 }
 
+// Mesh Trail (Gara)
+PS_OUT PS_DEFAULT_MODEL_FLOWUV(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
+	float2 FlowUV = randomNormal * g_float_2 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(g_Time * 2.f, g_Time* 2.f));
+	float Gradient = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+	float4 OriginTex = g_tex_0.Sample(LinearSampler, FlowUV);
+	float4 ChooseColor = g_vec4_0;
+	float4 BlendColor = OriginTex * ChooseColor * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = CalcHDRColor(BlendColor, g_float_1);
+	Out.vColor.a = OriginTex.a * g_float_0 * In.vTexUV.y * Gradient;
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	if (Out.vColor.a <= 0.01f)
+		discard;
+	return Out;
+}
 
 // g_float_0 : 모델 텍스쳐 UV.y 값
 // g_float_1 : UV.y 값 연동된
@@ -465,7 +544,7 @@ technique11 DefaultTechnique
 	pass Normal
 	{
 		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DS_Default, 0);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN_NORM();
@@ -503,7 +582,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_DEFAULT_MODEL();
 	}
 
-	//6
+	//7
 	pass DefaultDistortion
 	{
 		SetRasterizerState(RS_NonCulling);
@@ -515,5 +594,47 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_FLOWERLEG();
+	}
+
+	//8
+	pass TexNormal
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_NORM();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DEFAULT_NORM();
+	}
+
+	//9
+	pass MonsterBulletNormal
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_NORM();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_650_NORM();
+	}
+
+	//10
+	pass DefaultModelFlowUV
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DEFAULT_MODEL_FLOWUV();
 	}
 }

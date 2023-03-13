@@ -277,6 +277,9 @@
     <Filter Include="02.GameObjects\UI\3DUI">
       <UniqueIdentifier>{1b202ea8-4c32-4399-b17b-b9c184a5027f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FactoryMethod">
+      <UniqueIdentifier>{c339909b-d428-41f4-9c52-dbbf78dbea31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -754,6 +757,11 @@
     <ClInclude Include="..\public\AttackNumUI.h">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_KineticEditor.h" />
+    <ClInclude Include="..\public\FactoryMethod.h">
+      <Filter>FactoryMethod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Penetrate.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1205,6 +1213,11 @@
     <ClCompile Include="..\private\AttackNumUI.cpp">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Level_KineticEditor.cpp" />
+    <ClCompile Include="..\private\FactoryMethod.cpp">
+      <Filter>FactoryMethod</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

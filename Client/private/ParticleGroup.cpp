@@ -72,16 +72,16 @@ void CParticleGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool tr
 	}
 
 	m_pOwner = pOwner;
+	m_BoneName = BoneName;
+	m_bUpdate = trueisUpdate;
 
 	if (trueisUpdate == false)
 	{
-		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, false) * m_pOwner->GetTransform()->Get_WorldMatrix();
+		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
 
 		Set_Transform(SocketMatrix);
 	}
 
-	m_BoneName = BoneName;
-	m_bUpdate = trueisUpdate;
 	m_bGenerate = true;
 }
 
@@ -93,10 +93,19 @@ void CParticleGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatri
 		return;
 	}
 
+	m_pOwner = pOwner;
 	m_BoneName = BoneName;
 	m_bUpdate = trueisUpdate;
 	m_bUsePivot = usepivot;
 	m_PivotMatrix = PivotMatrix;
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		Set_Transform(SocketMatrix);
+	}
+
 	m_bGenerate = true;
 }
 
@@ -197,7 +206,7 @@ void CParticleGroup::LoadFromJson(const Json& json)
 		ObjectTag = iter["ObjectTag"];
 		FilePath = iter["ParticleDirectory"];
 
-		Json Particle = CJsonStorage::GetInstance()->FindOrLoadJson(FilePath);
+		Json Particle = CJsonStorage::GetInstance()->LoadJson_ForWork(FilePath);
 		CParticleSystem* pParticleSystem; 
 		pParticleSystem = dynamic_cast<CParticleSystem*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW,TEXT("ProtoVFX_ParticleSystem"), &Particle));
 
@@ -313,7 +322,7 @@ void CParticleGroup::Load_ParticleSystem()
 
 			m_mapParticleSystem.erase("1");
 
-			Json First_Particle = CJsonStorage::GetInstance()->FindOrLoadJson(ParticleProtoTag);
+			Json First_Particle = CJsonStorage::GetInstance()->LoadJson_ForWork(ParticleProtoTag);
 
 			if (First_Particle.empty())
 				MSG_BOX("Failed to Add New ParticleGroup");
@@ -348,7 +357,7 @@ void CParticleGroup::Load_ParticleSystem()
 
 			m_mapParticleSystem.erase("2");
 
-			Json Particle_Json= CJsonStorage::GetInstance()->FindOrLoadJson(ParticleProtoTag);
+			Json Particle_Json= CJsonStorage::GetInstance()->LoadJson_ForWork(ParticleProtoTag);
 			if (Particle_Json.empty())
 				MSG_BOX("Failed to Add New ParticleGroup");
 			else
@@ -382,7 +391,7 @@ void CParticleGroup::Load_ParticleSystem()
 
 			m_mapParticleSystem.erase("3");
 
-			Json Particle_Json = CJsonStorage::GetInstance()->FindOrLoadJson(ParticleProtoTag);
+			Json Particle_Json = CJsonStorage::GetInstance()->LoadJson_ForWork(ParticleProtoTag);
 
 			if (Particle_Json.empty())
 				MSG_BOX("Failed to Add New ParticleGroup");
@@ -416,7 +425,7 @@ void CParticleGroup::Load_ParticleSystem()
 
 			m_mapParticleSystem.erase("4");
 
-			Json Particle_Json = CJsonStorage::GetInstance()->FindOrLoadJson(ParticleProtoTag);
+			Json Particle_Json = CJsonStorage::GetInstance()->LoadJson_ForWork(ParticleProtoTag);
 
 			if(Particle_Json.empty())
 				MSG_BOX("Failed to Add New ParticleGroup");
@@ -450,7 +459,7 @@ void CParticleGroup::Load_ParticleSystem()
 
 			m_mapParticleSystem.erase("5");
 
-			Json Particle_Json = CJsonStorage::GetInstance()->FindOrLoadJson(ParticleProtoTag);
+			Json Particle_Json = CJsonStorage::GetInstance()->LoadJson_ForWork(ParticleProtoTag);
 
 			if (Particle_Json.empty())
 				MSG_BOX("Failed to Add New ParticleGroup");	
@@ -483,7 +492,7 @@ void CParticleGroup::Load_ParticleSystem()
 			
 			m_mapParticleSystem.erase("6");
 
-			Json Particle_Json = CJsonStorage::GetInstance()->FindOrLoadJson(ParticleProtoTag);
+			Json Particle_Json = CJsonStorage::GetInstance()->LoadJson_ForWork(ParticleProtoTag);
 
 			if (Particle_Json.empty())
 				MSG_BOX("Failed to Add New ParticleGroup"); 

@@ -229,7 +229,7 @@ _bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTri
 	param.vUnitDir = _float3(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z);
 	param.fDistance = param.vUnitDir.Length();
 	param.iTargetType = ColType;
-	param.fVisibleTime = 0.f;
+	param.fVisibleTime = 0.1f;
 
 	// 중복 충돌 판단
 	/*for (auto Dupliciation = m_DamagedObjectList.begin(); Dupliciation != m_DamagedObjectList.end(); )
