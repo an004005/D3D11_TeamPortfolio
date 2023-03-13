@@ -42,13 +42,13 @@ HRESULT CScarletMap::Initialize(void* pArg)
 	//
 	CGameInstance* pGameInstance = CGameInstance::GetInstance(); 
 
-	Json Car1 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Car1.json");
-	Car1["InitPos"] = _float4(5.f, 2.f, 5.f, 1.f);
-	pGameInstance->Clone_GameObject(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Car1);
-
-	Json Table = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Table.json");
-	Table["InitPos"] = _float4(-5.f, 2.f, -5.f, 1.f);
-	pGameInstance->Clone_GameObject(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Table);
+	// Json Car1 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Car1.json");
+	// Car1["InitPos"] = _float4(5.f, 2.f, 5.f, 1.f);
+	// pGameInstance->Clone_GameObject(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Car1);
+	//
+	// Json Table = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Table.json");
+	// Table["InitPos"] = _float4(-5.f, 2.f, -5.f, 1.f);
+	// pGameInstance->Clone_GameObject(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Table);
 	return S_OK;
 }
 

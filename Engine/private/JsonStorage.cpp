@@ -56,6 +56,22 @@ void CJsonStorage::LoadJson(const string& strJsonPath)
 	}
 }
 
+const Json& CJsonStorage::LoadJson_ForWork(const string& strJsonPath)
+{
+	auto itr = m_mapJson.find(strJsonPath);
+	if (itr != m_mapJson.end())
+	{
+		m_mapJson.erase(itr);
+	}
+
+	LoadJson(strJsonPath);
+	itr = m_mapJson.find(strJsonPath);
+	if (itr != m_mapJson.end())
+		return m_mapJson.find(strJsonPath)->second;
+
+	return m_EmptyJson;
+}
+
 void CJsonStorage::SaveJson(const string& strJsonPath)
 {
 	const auto itr = m_mapJson.find(strJsonPath);
