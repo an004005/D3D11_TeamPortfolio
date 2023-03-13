@@ -32,6 +32,7 @@ HRESULT CCanvas_DriveMove::Initialize(void* pArg)
 		return E_FAIL;
 
 	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_DriveMove", this);
+	m_vMaxDestination = { 2.0f, -7.0f };
 	CCanvas::UIMove_FSM();
 
 	// Drive UI 의 경우 처음부터 모든 UI 를 보이지 않고 시작한다.	
@@ -41,6 +42,11 @@ HRESULT CCanvas_DriveMove::Initialize(void* pArg)
 	}
 
 	return S_OK;
+}
+
+void CCanvas_DriveMove::BeginTick()
+{
+	CCanvas::BeginTick();
 }
 
 void CCanvas_DriveMove::Tick(_double TimeDelta)

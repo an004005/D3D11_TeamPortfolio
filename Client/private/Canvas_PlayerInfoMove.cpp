@@ -37,23 +37,26 @@ HRESULT CCanvas_PlayerInfoMove::Initialize(void* pArg)
 		return E_FAIL;
 
 	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_PlayerInfoMove", this);
+	m_vMaxDestination = { 0.0f, -7.0f };
 	CCanvas::UIMove_FSM();
+
 
 	return S_OK;
 }
 
 void CCanvas_PlayerInfoMove::BeginTick()
 {
-	list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
-	
-	for (auto iter : plsGameObject)
-	{
-		if (iter->GetPrototypeTag() == L"Player")
-		{
-			m_pPlyaer = dynamic_cast<CPlayer*>(iter);
-			break;
-		}
-	}
+	CCanvas::BeginTick();
+	//list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
+	//
+	//for (auto iter : plsGameObject)
+	//{
+	//	if (iter->GetPrototypeTag() == L"Player")
+	//	{
+	//		m_pPlayer = dynamic_cast<CPlayer*>(iter);
+	//		break;
+	//	}
+	//}
 }
 
 void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
@@ -62,15 +65,12 @@ void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
 
 	m_pUIMoveFSM->Tick(TimeDelta);
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
-		Set_UIMove();
-
-	Set_PlayerHp(_float(m_pPlyaer->Get_PlayerStat().m_iHP), _float(m_pPlyaer->Get_PlayerStat().m_iMaxHP));
+	Set_PlayerHp(_float(m_pPlayer->Get_PlayerStat().m_iHP), _float(m_pPlayer->Get_PlayerStat().m_iMaxHP));
 	Set_PsychokinesisGauge(
-		PSYCHOKINESISLEVEL(m_pPlyaer->Get_PlayerStat().m_iKineticEnergyLevel),
-		PSYCHOKINESISTYPE(m_pPlyaer->Get_PlayerStat().m_iKineticEnergyType), 
-		_float(m_pPlyaer->Get_PlayerStat().m_iKineticEnergy), 
-		_float(m_pPlyaer->Get_PlayerStat().m_iMaxKineticEnergy));
+		PSYCHOKINESISLEVEL(m_pPlayer->Get_PlayerStat().m_iKineticEnergyLevel),
+		PSYCHOKINESISTYPE(m_pPlayer->Get_PlayerStat().m_iKineticEnergyType), 
+		_float(m_pPlayer->Get_PlayerStat().m_iKineticEnergy), 
+		_float(m_pPlayer->Get_PlayerStat().m_iMaxKineticEnergy));
 
 	RendomTexture_Tick(TimeDelta);	// 계속 Hp 가 출력할 전체 개수, 이미지를 계산한다.
 	Arrow_Move(); // 계속 화살표의 좌표를 변경한다.

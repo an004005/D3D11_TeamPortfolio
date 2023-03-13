@@ -134,7 +134,10 @@ public:
 	virtual _float4x4 GetPivotMatrix() override;
 	//~For Effect
 
-	//~For UI
+	//~For UI 
+	_bool		Get_Hit() { return m_bHit; }
+	_bool		Get_Dash() { return m_bDash; }
+
 	_bool		Get_SASSkillInput(const _uint iInputNumber) { return m_bSASSkillInput[iInputNumber]; }
 	void		Set_SASSkillInput(const _uint iInputNumber, const _bool bInput) { m_bSASSkillInput[iInputNumber] = bInput; }
 

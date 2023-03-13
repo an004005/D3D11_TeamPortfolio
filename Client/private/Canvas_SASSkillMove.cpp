@@ -34,6 +34,7 @@ HRESULT CCanvas_SASSkillMove::Initialize(void* pArg)
 		return E_FAIL;
 
 	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_SASSkillMove", this);
+	m_vMaxDestination = { 7.0f, -7.0f };
 	CCanvas::UIMove_FSM();
 	
 	// 처음에 보이지 않을 UI 들
@@ -67,16 +68,18 @@ HRESULT CCanvas_SASSkillMove::Initialize(void* pArg)
 
 void CCanvas_SASSkillMove::BeginTick()
 {
-	list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
+	//list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
 
-	for (auto iter : plsGameObject)
-	{
-		if (iter->GetPrototypeTag() == L"Player")
-		{
-			m_pPlyaer = dynamic_cast<CPlayer*>(iter);
-			break;
-		}
-	}
+	//for (auto iter : plsGameObject)
+	//{
+	//	if (iter->GetPrototypeTag() == L"Player")
+	//	{
+	//		m_pPlayer = dynamic_cast<CPlayer*>(iter);
+	//		break;
+	//	}
+	//}
+
+	CCanvas::BeginTick();
 
 	Set_IconType(1, m_eSASType[ONE0]);
 	Set_IconType(2, m_eSASType[TWO0]);
@@ -151,12 +154,12 @@ void CCanvas_SASSkillMove::Set_SkillInfo(const SKILLINDEX eSKILLINDEX, const ESA
 void CCanvas_SASSkillMove::UseSkill_Tick()
 {
 	// 1
-	if (true == m_pPlyaer->Get_SASSkillInput(0))
+	if (true == m_pPlayer->Get_SASSkillInput(0))
 	{
 		ESASType eSASType = m_eSASType[ONE0];
 
-		_float fCurrentEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-		_float fMinEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eSASType)].MinEnergy;
+		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fMinEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MinEnergy;
 
 		if (ESASType::SAS_NOT != eSASType && fCurrentEnergy > fMinEnergy)
 		{
@@ -168,7 +171,7 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	else
 	{
 		ESASType eSASType = m_eSASType[ONE0];
-		_float fCurrentEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
 
 		dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light1"))->Set_LightType(eSASType, false);
 		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge1"))->Set_GaugeType(eSASType, fCurrentEnergy);
@@ -176,12 +179,12 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	}
 
 	// 2
-	if (true == m_pPlyaer->Get_SASSkillInput(1))
+	if (true == m_pPlayer->Get_SASSkillInput(1))
 	{
 		ESASType eSASType = m_eSASType[TWO0];
 
-		_float fCurrentEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-		_float fMinEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eSASType)].MinEnergy;
+		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fMinEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MinEnergy;
 
 		if (ESASType::SAS_NOT != eSASType && fCurrentEnergy > fMinEnergy)
 		{
@@ -193,7 +196,7 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	else
 	{
 		ESASType eSASType = m_eSASType[TWO0];
-		_float fCurrentEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
 
 		dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light2"))->Set_LightType(eSASType, false);
 		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge2"))->Set_GaugeType(eSASType, fCurrentEnergy);
@@ -201,12 +204,12 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	}
 
 	// 3
-	if (true == m_pPlyaer->Get_SASSkillInput(2))
+	if (true == m_pPlayer->Get_SASSkillInput(2))
 	{
 		ESASType eSASType = m_eSASType[THREE0];
 
-		_float fCurrentEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-		_float fMinEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eSASType)].MinEnergy;
+		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fMinEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MinEnergy;
 
 		if (ESASType::SAS_NOT != eSASType && fCurrentEnergy > fMinEnergy)
 		{
@@ -218,7 +221,7 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	else
 	{
 		ESASType eSASType = m_eSASType[THREE0];
-		_float fCurrentEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
 
 		dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light3"))->Set_LightType(eSASType, false);
 		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge3"))->Set_GaugeType(eSASType, fCurrentEnergy);
@@ -226,12 +229,12 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	}
 
 	// 4
-	if (true == m_pPlyaer->Get_SASSkillInput(3))
+	if (true == m_pPlayer->Get_SASSkillInput(3))
 	{
 		ESASType eSASType = m_eSASType[FOUR0];
 
-		_float fCurrentEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-		_float fMinEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eSASType)].MinEnergy;
+		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fMinEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MinEnergy;
 
 		if (ESASType::SAS_NOT != eSASType && fCurrentEnergy > fMinEnergy)
 		{
@@ -243,7 +246,7 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	else
 	{
 		ESASType eSASType = m_eSASType[FOUR0];
-		_float fCurrentEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
 
 		dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light4"))->Set_LightType(eSASType, false);
 		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge4"))->Set_GaugeType(eSASType, fCurrentEnergy);
@@ -253,8 +256,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 
 void CCanvas_SASSkillMove::Set_IconType(const _uint iIndex, const ESASType & eESASType)
 {
-	_float fCurrentEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eESASType)].Energy;
-	_float fMinEnergy = m_pPlyaer->Get_PlayerStat().Sasese[_int(eESASType)].MinEnergy;
+	_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eESASType)].Energy;
+	_float fMinEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eESASType)].MinEnergy;
 
 	_bool bUsable;
 	if (fCurrentEnergy > fMinEnergy)

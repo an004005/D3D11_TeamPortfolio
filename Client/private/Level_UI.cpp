@@ -112,10 +112,6 @@ HRESULT CLevel_UI::Initialize()
 	if (FAILED(Ready_Prototypes()))
 		return E_FAIL;
 
-
-	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
-		return E_FAIL;
-
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
@@ -128,6 +124,8 @@ HRESULT CLevel_UI::Initialize()
 	if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+		return E_FAIL;
 
 	return S_OK;
 }

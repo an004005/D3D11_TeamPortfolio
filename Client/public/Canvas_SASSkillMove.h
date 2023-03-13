@@ -36,7 +36,7 @@ private:
 	void	UseSkill_Tick();
 
 private:
-	class CPlayer *	m_pPlyaer = { nullptr };
+	//class CPlayer *	m_pPlyaer = { nullptr };
 	ESASType		m_eSASType[SKILLINDEX_END] = { ESASType::SAS_END };
 	
 	_bool			m_bCtrl = { false };

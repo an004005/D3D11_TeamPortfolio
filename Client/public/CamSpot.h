@@ -34,8 +34,6 @@ private:
 	_float	m_fCamHeight = 0.f;
 
 public:
-	_float2	Get_MouseMovement() { return m_vMouseMovement; }
-	
 	void	Switch_CamMod();	// CameraPos에 캠 붙이기
 	void	SetUp_BoneMatrix(CModel* pModel, _fmatrix Transform);
 

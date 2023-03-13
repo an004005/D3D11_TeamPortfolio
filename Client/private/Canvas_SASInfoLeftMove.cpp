@@ -33,6 +33,7 @@ HRESULT CCanvas_SASInfoLeftMove::Initialize(void* pArg)
 		return E_FAIL;
 
 	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_SASInfoLeftMove", this);
+	m_vMaxDestination = { -3.0f, -7.0f };
 	CCanvas::UIMove_FSM();
 
 	return S_OK;
