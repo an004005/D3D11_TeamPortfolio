@@ -375,6 +375,7 @@ public:	//EventCaller¿ë
 	void		Event_FinishFovActionCam();
 
 	void		Event_Kinetic_Throw();
+	void		Event_KineticSlowAction();
 
 private:
 	_bool		m_bCollisionAble = false;

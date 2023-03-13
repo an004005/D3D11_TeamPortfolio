@@ -42,13 +42,28 @@ HRESULT CScarletMap::Initialize(void* pArg)
 	//
 	CGameInstance* pGameInstance = CGameInstance::GetInstance(); 
 
+	CGameObject* pGameObject = nullptr;
+
 	Json Car1 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Car1.json");
 	Car1["InitPos"] = _float4(5.f, 2.f, 5.f, 1.f);
-	pGameInstance->Clone_GameObject(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Car1);
+	pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Car1);
+	pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 1.f));
+
+	Json Car2 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Car1.json");
+	Car2["InitPos"] = _float4(5.f, 2.f, 10.f, 1.f);
+	pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Car2);
+	pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(3.f, 1.f, 0.f, 1.f));
+
+	Json Car3 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Car1.json");
+	Car3["InitPos"] = _float4(5.f, 2.f, 15.f, 1.f);
+	pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Car3);
+	pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(6.f, 1.f, 0.f, 1.f));
 
 	Json Table = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Table.json");
 	Table["InitPos"] = _float4(-5.f, 2.f, -5.f, 1.f);
-	pGameInstance->Clone_GameObject(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Table);
+	pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Table);
+	pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(9.f, 1.f, 0.f, 1.f));
+
 	return S_OK;
 }
 
