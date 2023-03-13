@@ -28,6 +28,7 @@ public:
 	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
 	virtual _float4x4 GetPivotMatrix() override;
 	//~For Effect
+	virtual void SetActive();
 
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
@@ -42,7 +43,7 @@ protected:
 
 	void MoveTransformJson(Json& jsonDest, void* pArg);
 
-	virtual void SetActive();
+	
 
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
