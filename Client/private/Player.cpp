@@ -2631,7 +2631,12 @@ void CPlayer::Event_CollisionStart()
 
 		else if ("ATK_AIR1" == szCurAttackState)
 		{
-
+			m_AttackDesc.eAttackSAS = m_PlayerSasType;
+			m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+			m_AttackDesc.iDamage = (rand() % 50) + 100;
+			m_AttackDesc.pCauser = this;
+			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		}
 
 		else if ("ATK_AIR2" == szCurAttackState)

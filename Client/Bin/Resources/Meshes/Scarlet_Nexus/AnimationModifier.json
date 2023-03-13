@@ -2208,6 +2208,10 @@
             {
                 "EventName": "Successive",
                 "EventTime": 8.0
+            },
+            {
+                "EventName": "AirDamageReset",
+                "EventTime": 50.0
             }
         ]
     },

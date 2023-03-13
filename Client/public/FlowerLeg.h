@@ -121,13 +121,10 @@ private:
 	_bool		m_bStruck = false;
 	_bool		m_bAirStruck = false;
 
-	_bool		m_bMaintain = false;
+	_bool		m_bAirMaintain = false;
 
 	_bool		m_bInvicible = false;
 
-	_uint		m_iAirDamage = 0;
-	_uint		m_iPreAirDamageCnt = 0;
-	
 	// HitDir
 	_bool		m_bHitMove = false;
 	
