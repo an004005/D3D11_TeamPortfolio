@@ -53,6 +53,8 @@ void CCanvas::BeginTick()
 			break;
 		}
 	}
+
+	m_Timeline.SetCurve("UI_Hit");
 }
 
 void CCanvas::Tick(_double TimeDelta)
@@ -60,9 +62,7 @@ void CCanvas::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 
 	if (true == m_pPlayer->Get_Dash())
-	{
 		Set_UIMove();
-	}
 
 	m_fSizeX = (_float)g_iWinSizeX;
 	m_fSizeY = (_float)g_iWinSizeY;
@@ -120,6 +120,8 @@ void CCanvas::Late_Tick(_double TimeDelta)
 void CCanvas::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	m_Timeline.Imgui_RenderEditor();
 
 	ImGui::Separator();
 	static char szChildProtoName[MAX_PATH]{};
@@ -248,17 +250,15 @@ void CCanvas::UIMove_FSM()
 			pCanvas.second->Set_UIMove();
 		});
 
-		++m_iSetOnce;
-		if (0 == m_iSetOnce)
-		{
+		static _int iRandomCount;
+		if (6 == iRandomCount)
+			iRandomCount = 0;
+		if (0 == iRandomCount)
 			m_fRandomDestination = CGameUtils::GetRandFloat(0.0f, 3.0f);
-		}
-		if (6 == m_iSetOnce)
-			m_iSetOnce = 0;
+		++iRandomCount;
 
 		m_vDestination.x = m_vMaxDestination.x - m_fRandomDestination;
 		m_vDestination.y = m_vMaxDestination.y - m_fRandomDestination;
-		IM_LOG("%f \\ %f", m_vDestination.x, m_vDestination.y);
 
 	})
 		.Tick([this](_double TimeDelta) {
@@ -277,7 +277,7 @@ void CCanvas::UIMove_FSM()
 		//IM_LOG("X %f", fDistance);
 		if (0.3f > fDistance)
 		{
-			IM_LOG("X ---------------------%d", m_iSetOnce);
+			IM_LOG("X ---------------------%d");
 			m_bIsDestination = true;
 		}
 	})
@@ -302,7 +302,7 @@ void CCanvas::UIMove_FSM()
 		//IM_LOG("Y %f", fDistance);
 		if (0.3f > fDistance)
 		{
-			IM_LOG("Y --------------------%d", m_iSetOnce);
+			IM_LOG("Y --------------------%d");
 			m_bIsDestination = false;
 			m_bUIMove = false;
 			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
@@ -313,6 +313,16 @@ void CCanvas::UIMove_FSM()
 		return m_bUIMove == false;
 	})
 		.Build();
+}
+
+void CCanvas::UIHit(const _double & TimeDelta)
+{
+	m_Timeline.Tick(TimeDelta, m_fY);
+
+	if (true == m_pPlayer->Get_Hit() || CGameInstance::GetInstance()->KeyDown(DIK_0))
+	{	
+		m_Timeline.PlayFromStart();
+	}
 }
 
 CCanvas * CCanvas::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

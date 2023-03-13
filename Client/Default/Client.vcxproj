@@ -231,6 +231,8 @@
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\GravikenisisMouseUI.h" />
+    <ClInclude Include="..\public\GravikenisisGUI.h" />
     <ClInclude Include="..\public\NextMapNameUI.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
@@ -385,6 +387,8 @@
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\GravikenisisMouseUI.cpp" />
+    <ClCompile Include="..\private\GravikenisisGUI.cpp" />
     <ClCompile Include="..\private\NextMapNameUI.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />

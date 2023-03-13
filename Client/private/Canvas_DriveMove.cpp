@@ -54,6 +54,7 @@ void CCanvas_DriveMove::Tick(_double TimeDelta)
 	CCanvas::Tick(TimeDelta);
 
 	m_pUIMoveFSM->Tick(TimeDelta);	// UI 의 움직임
+	CCanvas::UIHit(TimeDelta);
 
 	// 드라이브 게이지를 계산 시작
 	if (0.0f == m_bDriveGauge)

@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "UI.h"
+#include "Timeline.h"
 
 BEGIN(Engine)
 class CTexture;
@@ -44,10 +45,12 @@ public:
 
 protected:
 	void	UIMove_FSM();
+	void	UIHit(const _double & TimeDelta);
 
 protected:
 	class CPlayer* m_pPlayer = { nullptr };
-	
+	CSimpleTimeline m_Timeline;
+
 	map<wstring, CUI*> m_mapChildUIs;
 
 	CUI*	m_pUI = { nullptr };
@@ -57,7 +60,6 @@ protected:
 	_float2			m_vMaxDestination = { 0.0f, 0.0f };	// 각 캔버스 마다 다른 최대 도착지점
 
 private:
-	_int			m_iSetOnce = { 0 };
 	_float			m_fRandomDestination = { 0.0f };
 	_bool			m_bUIMove = { false };				// SASSkill_UIMove() -> UI를 이동시키고자 할 때 외부에서 Set 을 한다.
 	_bool			m_bIsDestination = { false };		// 목표지점에 도달! 원점으로 이제 돌아가라

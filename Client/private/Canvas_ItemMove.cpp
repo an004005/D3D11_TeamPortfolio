@@ -44,7 +44,7 @@ void CCanvas_ItemMove::Tick(_double TimeDelta)
 	CCanvas::Tick(TimeDelta);
 
 	m_pUIMoveFSM->Tick(TimeDelta);
-
+	CCanvas::UIHit(TimeDelta);
 }
 
 void CCanvas_ItemMove::Imgui_RenderProperty()

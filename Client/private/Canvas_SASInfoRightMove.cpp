@@ -43,7 +43,11 @@ void CCanvas_SASInfoRightMove::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
+	if (0.0f == m_vSASRightHp.x)
+		return;
+
 	m_pUIMoveFSM->Tick(TimeDelta);
+	CCanvas::UIHit(TimeDelta);
 
 	ChildHp_Tick();
 	RendomTexture(TimeDelta);

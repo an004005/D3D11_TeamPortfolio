@@ -60,7 +60,7 @@ enum class ESASType
 	SAS_SUPERSPEED, // 초고속
 	SAS_COPY, // 복제
 	SAS_INVISIBLE, // 투명화
-	SAS_GRAVIKENISIS, // 염력
+	SAS_GRAVIKENISIS, // 염력 
 	SAS_NOT, 
 	SAS_END
 };

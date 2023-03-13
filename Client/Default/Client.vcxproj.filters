@@ -262,9 +262,6 @@
     <Filter Include="02.GameObjects\UI\Front_UI\SASSkillRight">
       <UniqueIdentifier>{ef81e424-8ab1-4dfd-ae18-2316c41c86a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Monster">
-      <UniqueIdentifier>{1b202ea8-4c32-4399-b17b-b9c184a5027f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Boss">
       <UniqueIdentifier>{dc1701f8-365a-4180-94c6-d3de20833679}</UniqueIdentifier>
     </Filter>
@@ -276,6 +273,9 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Alarm">
       <UniqueIdentifier>{773b5079-4278-4e4c-bf66-8db98ddbbf29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\3DUI">
+      <UniqueIdentifier>{1b202ea8-4c32-4399-b17b-b9c184a5027f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -702,13 +702,13 @@
       <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MonsterHpUI.h">
-      <Filter>02.GameObjects\UI\Monster</Filter>
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MonsterLockonUI.h">
-      <Filter>02.GameObjects\UI\Monster</Filter>
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MonsterShildUI.h">
-      <Filter>02.GameObjects\UI\Monster</Filter>
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_BossHp.h">
       <Filter>02.GameObjects\UI\Boss</Filter>
@@ -744,6 +744,12 @@
     <ClInclude Include="..\public\WaterBall.h" />
     <ClInclude Include="..\public\SASSkillNameUI.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GravikenisisMouseUI.h">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GravikenisisGUI.h">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1145,13 +1151,13 @@
       <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MonsterHpUI.cpp">
-      <Filter>02.GameObjects\UI\Monster</Filter>
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MonsterLockonUI.cpp">
-      <Filter>02.GameObjects\UI\Monster</Filter>
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MonsterShildUI.cpp">
-      <Filter>02.GameObjects\UI\Monster</Filter>
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_BossHp.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
@@ -1186,6 +1192,12 @@
     <ClCompile Include="..\private\WaterBall.cpp" />
     <ClCompile Include="..\private\SASSkillNameUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GravikenisisMouseUI.cpp">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GravikenisisGUI.cpp">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

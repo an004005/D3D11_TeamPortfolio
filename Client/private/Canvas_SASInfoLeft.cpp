@@ -29,7 +29,7 @@ HRESULT CCanvas_SASInfoLeft::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	m_bVisible = true;
+	m_bVisible = false;
 
 	return S_OK;
 }

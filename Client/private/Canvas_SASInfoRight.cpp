@@ -29,7 +29,7 @@ HRESULT CCanvas_SASInfoRight::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	m_bVisible = true;
+	m_bVisible = false;
 	
 	return S_OK;
 }
@@ -38,7 +38,6 @@ void CCanvas_SASInfoRight::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
-	
 }
 
 void CCanvas_SASInfoRight::Late_Tick(_double TimeDelta)

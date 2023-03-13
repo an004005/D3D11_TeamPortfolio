@@ -64,6 +64,7 @@ void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
 	CCanvas::Tick(TimeDelta);
 
 	m_pUIMoveFSM->Tick(TimeDelta);
+	CCanvas::UIHit(TimeDelta);
 
 	Set_PlayerHp(_float(m_pPlayer->Get_PlayerStat().m_iHP), _float(m_pPlayer->Get_PlayerStat().m_iMaxHP));
 	Set_PsychokinesisGauge(

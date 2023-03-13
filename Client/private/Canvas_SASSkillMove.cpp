@@ -91,6 +91,7 @@ void CCanvas_SASSkillMove::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 	m_pUIMoveFSM->Tick(TimeDelta);
+	CCanvas::UIHit(TimeDelta);
 
 	UseSkill_Tick();
 
