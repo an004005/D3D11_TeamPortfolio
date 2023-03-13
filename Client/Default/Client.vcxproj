@@ -290,6 +290,7 @@
     <ClInclude Include="..\public\SASInfoRightHpBackUI.h" />
     <ClInclude Include="..\public\SASInfoRightHpBothEndsUI.h" />
     <ClInclude Include="..\public\SASInfoRightHpUI.h" />
+    <ClInclude Include="..\public\SAS_Portrait.h" />
     <ClInclude Include="..\public\ScarletCharacter.h" />
     <ClInclude Include="..\public\SASSkillDefaultUI.h" />
     <ClInclude Include="..\public\SASSkillFullCircleUI.h" />
@@ -445,6 +446,7 @@
     <ClCompile Include="..\private\SASInfoRightHpBackUI.cpp" />
     <ClCompile Include="..\private\SASInfoRightHpBothEndsUI.cpp" />
     <ClCompile Include="..\private\SASInfoRightHpUI.cpp" />
+    <ClCompile Include="..\private\SAS_Portrait.cpp" />
     <ClCompile Include="..\private\ScarletCharacter.cpp" />
     <ClCompile Include="..\private\SASSkillDefaultUI.cpp" />
     <ClCompile Include="..\private\SASSkillFullCircleUI.cpp" />

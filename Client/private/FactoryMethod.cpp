@@ -157,6 +157,7 @@ HRESULT CFactoryMethod::MakePlayerPrototypes(ID3D11Device * pDevice, ID3D11Devic
 
 	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(pDevice, pContext));
 
+	return S_OK;
 }
 
 HRESULT CFactoryMethod::MakeEffectPrototypes(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -176,7 +177,19 @@ HRESULT CFactoryMethod::MakeEffectPrototypes(ID3D11Device * pDevice, ID3D11Devic
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(pDevice, pContext)));
 
+	return S_OK;
+}
 
+HRESULT CFactoryMethod::MakeCH300Prototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	auto pModel_ch300 = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/ch300.anim_model");
+	pModel_ch300->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/Animation/");
+	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch300_Portrail", pModel_ch300));
+
+	return S_OK;
 }
 
 void CFactoryMethod::Free()
