@@ -42,6 +42,8 @@ protected:
 
 	void MoveTransformJson(Json& jsonDest, void* pArg);
 
+	virtual void SetActive();
+
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;
@@ -53,11 +55,12 @@ protected:
 	_int m_iMaxStamina = 100;
 
 	_bool m_bDead = false;
-	_float m_fDeadDissolve = 0.5f;
 
 	set<CScarletCharacter*> m_DamagedTargetList;
 
 	CSimpleTimeline m_DeathTimeline;
+
+	_bool m_bActive = false;
 
 
 public:
