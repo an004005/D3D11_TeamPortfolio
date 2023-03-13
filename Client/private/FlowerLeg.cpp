@@ -1,13 +1,6 @@
 #include "stdafx.h"
 #include "FlowerLeg.h"
-#include <random>
-
 #include "GameInstance.h"
-#include "MathUtils.h"
-#include "GameUtils.h"
-#include "FSMComponent.h"
-#include "AnimationInstance.h"
-#include"Animation.h"
 #include"Model.h"
 #include "JsonStorage.h"
 #include "PhysX_Manager.h"
@@ -16,7 +9,6 @@
 #include "FL_AnimInstance.h"
 #include "RigidBody.h"
 #include "Player.h"
-#include "ControlledRigidBody.h"
 
 CFlowerLeg::CFlowerLeg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -196,6 +188,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	});
 
 	m_pModelCom->Add_EventCaller("Spin_Atk", [this] { m_bAtkSwitch = true; });
+	m_pModelCom->Add_EventCaller("Spin_AtkEnd", [this] { m_bOneHit = true; });
 
 	m_pModelCom->Add_EventCaller("Invincible_Start", [this] { m_bInvisible = true; });
 	m_pModelCom->Add_EventCaller("OverLap", [this] { Strew_Overlap(); });
@@ -220,7 +213,8 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 
-	m_iHP = 1200; // ¡Ú
+	m_iMaxHP = 1200;
+	m_iHP = m_iMaxHP; // ¡Ú
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
@@ -269,11 +263,13 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 void CFlowerLeg::BeginTick()
 {
 	__super::BeginTick();
-	m_pASM->AttachAnimSocket(("UsingControl"), {m_pModelCom->Find_Animation("AS_em0200_160_AL_threat")});
 }
 
 void CFlowerLeg::Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return;
+
 	CMonster::Tick(TimeDelta);
 
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
@@ -458,6 +454,9 @@ void CFlowerLeg::Tick(_double TimeDelta)
 
 void CFlowerLeg::Late_Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return;
+
 	__super::Late_Tick(TimeDelta);
 
 	if (m_bAtkSwitch)	
@@ -498,12 +497,14 @@ void CFlowerLeg::Imgui_RenderProperty()
 
 void CFlowerLeg::AfterPhysX()
 {
+	if (!m_bActive)
+		return;
+
 	__super::AfterPhysX();
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 
 	m_pTailCol->Update_Tick(AttachCollider(m_pTailCol));
 	m_pTailCol->Update_AfterPhysX(m_pTransformCom);
-
 }
 
 void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
@@ -532,6 +533,12 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_pASM->InputAnimSocket("UsingControl", { m_pDeadAnim });
 		m_bDead = true;
 	}
+}
+
+void CFlowerLeg::SetActive()
+{
+	CMonster::SetActive();
+	m_pASM->AttachAnimSocket(("UsingControl"), {m_pModelCom->Find_Animation("AS_em0200_160_AL_threat")});
 }
 
 

@@ -25,8 +25,7 @@ HRESULT CControlledRigidBody::Initialize(void* pArg)
 	m_tDesc.material = CPhysX_Manager::GetInstance()->FindMaterial("Default");
 	m_tDesc.upDirection = { 0.f, 1.f, 0.f };
 
-	// 이 컨트롤러와 충돌하는 타입 선택(컨트롤러의 이동은 scene query기반)
-	m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC;
+
 	m_Filters.mFilterData = &m_MoveFilterData;
 
 	if (pArg == nullptr)
@@ -36,6 +35,7 @@ HRESULT CControlledRigidBody::Initialize(void* pArg)
 
 
 	CreateController();
+
 
 	return S_OK;
 }
@@ -181,6 +181,16 @@ void CControlledRigidBody::CreateController()
 	m_pController->getActor()->userData = this;
 
 	CPhysX_Manager::GetInstance()->RemoveActor(*m_pController->getActor());
+
+	// 이 컨트롤러와 충돌하는 타입 선택(컨트롤러의 이동은 scene query기반)
+	if (m_eColliderType == CT_MONSTER)
+	{
+		m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC;
+	}
+	else 
+	{
+		m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC | CTB_MONSTER_PART;
+	}
 
 	if (auto pOwner = TryGetOwner())
 	{

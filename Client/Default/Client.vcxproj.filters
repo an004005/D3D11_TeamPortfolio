@@ -785,6 +785,7 @@
       <Filter>FactoryMethod</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PostVFX_Penetrate.h" />
+    <ClInclude Include="..\public\SAS_Portrait.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1241,6 +1242,7 @@
       <Filter>FactoryMethod</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
+    <ClCompile Include="..\private\SAS_Portrait.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

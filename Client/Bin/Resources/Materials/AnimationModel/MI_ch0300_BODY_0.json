@@ -1,0 +1,27 @@
+{
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [0.0],
+        "Ints": [
+            0, 0
+        ],
+        "Pass": 4,
+        "Textures": [
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/Texture/T_ch0300_Body_COL.png\u0000",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/Texture/T_ch0300_Body_NML.png\u0000",
+            "",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/Texture/T_ch0300_Body_CTL.png\u0000",
+            ""
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"
+}
