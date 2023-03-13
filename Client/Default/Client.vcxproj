@@ -225,6 +225,7 @@
     <ClInclude Include="..\public\EffectGroup.h" />
     <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\DefaultUI.h" />
+    <ClInclude Include="..\public\FactoryMethod.h" />
     <ClInclude Include="..\public\Floors.h" />
     <ClInclude Include="..\public\FlowerLeg.h" />
     <ClInclude Include="..\public\FL_AnimInstance.h" />
@@ -379,6 +380,7 @@
     <ClCompile Include="..\private\EffectGroup.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp" />
     <ClCompile Include="..\private\DefaultUI.cpp" />
+    <ClCompile Include="..\private\FactoryMethod.cpp" />
     <ClCompile Include="..\private\Floors.cpp" />
     <ClCompile Include="..\private\FlowerLeg.cpp" />
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />

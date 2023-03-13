@@ -90,13 +90,6 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	// CGameUtils::ListFilesRecursive("../Bin/Resources/Materials/", [this](const string& fileName)
-	// {
-	// 	char szFileName[MAX_PATH]{};
-	// 	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-	// 	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(CGameUtils::s2ws(szFileName).c_str(), CMaterial::Create(m_pDevice, m_pContext, fileName.c_str())));
-	// });
-
 	/* 
 	모델 프로토 타입은 굳이 생성 안해도 자동으로 됨.
 	리스트박스에 넣으려고 툴에서만 생성해줌.
@@ -104,17 +97,17 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	*/
 	
 	//일반 모델들의 프로토타입 생성
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/",
-		[this](const string& fileName)
-	{
-		char szFileExt[MAX_PATH]{};
-		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+	//CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/",
+	//	[this](const string& fileName)
+	//{
+	//	char szFileExt[MAX_PATH]{};
+	//	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
 
-		if (0 == strcmp(szFileExt, ".static_model"))
-		{
-			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), KINETIC));
-		}
-	});
+	//	if (0 == strcmp(szFileExt, ".static_model"))
+	//	{
+	//		FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), KINETIC));
+	//	}
+	//});
 
 	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",
 		[this](const string& fileName)
@@ -130,7 +123,7 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 
 
 	//인스턴싱 모델들의 프로토타입 생성
-	/*CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/",
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/",
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
@@ -140,7 +133,7 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 		{
 			FAILED_CHECK(Create_Model_Instance(s2ws(fileName), fileName.c_str()));
 		}
-	});*/
+	});
 
 	//SkyBox
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_Component_Model_SkySphere"),
@@ -176,7 +169,8 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite2F.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
 
 	json["Model_ProtoTypes"] = Json::array();
 

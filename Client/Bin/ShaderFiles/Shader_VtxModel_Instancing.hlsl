@@ -171,6 +171,12 @@ PS_OUT PS_DETAIL_N(PS_IN In)
 	}
 	
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+
+	if (g_tex_on_2)
+		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	else
+		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
+
 	Out.vFlag = 0.f;
 	return Out;
 }
@@ -192,7 +198,7 @@ PS_OUT PS_EMISSIVE(PS_IN In)
 // g_tex_0 : diffuse
 // g_tex_1 : normal
 // g_tex_2 : RMA
-PS_OUT PS__ALPHA(PS_IN In)
+PS_OUT PS_ALPHA(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
@@ -214,7 +220,23 @@ PS_OUT PS__ALPHA(PS_IN In)
 
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	// Out.vFlag = flags;
+
+	if (g_tex_on_2)
+		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	else
+		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
+
 	Out.vFlag = 0.f;
+	return Out;
+}
+
+PS_OUT PS_DISCARD(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	discard;
+
 	return Out;
 }
 
@@ -287,6 +309,20 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS__ALPHA();
+		PixelShader = compile ps_5_0 PS_ALPHA();
+	}
+
+	// 5
+	pass Discard
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DISCARD();
 	}
 }
