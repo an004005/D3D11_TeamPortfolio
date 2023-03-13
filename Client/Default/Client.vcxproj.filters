@@ -778,6 +778,7 @@
       <Filter>02.GameObjects\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_KineticEditor.h" />
+    <ClInclude Include="..\public\PostVFX_Penetrate.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1230,6 +1231,7 @@
       <Filter>02.GameObjects\Bullet</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_KineticEditor.cpp" />
+    <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

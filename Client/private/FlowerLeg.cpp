@@ -197,9 +197,9 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 
 	m_pModelCom->Add_EventCaller("Spin_Atk", [this] { m_bAtkSwitch = true; });
 
-	m_pModelCom->Add_EventCaller("Invincible_Start", [this] { m_bInvicible = true; });
+	m_pModelCom->Add_EventCaller("Invincible_Start", [this] { m_bInvisible = true; });
 	m_pModelCom->Add_EventCaller("OverLap", [this] { Strew_Overlap(); });
-	m_pModelCom->Add_EventCaller("Invincible_End", [this] { m_bInvicible = false; });
+	m_pModelCom->Add_EventCaller("Invincible_End", [this] { m_bInvisible = false; });
 
 	m_pModelCom->Add_EventCaller("Kick_Event", [this] { Kick_SweepSphere(); });
 	m_pModelCom->Add_EventCaller("Upper", [this] 
@@ -461,15 +461,32 @@ void CFlowerLeg::Late_Tick(_double TimeDelta)
 	__super::Late_Tick(TimeDelta);
 
 	if (m_bAtkSwitch)	
-		Spin_SweepCapsule(m_bOneHit);	
-	
-	if (nullptr != m_pRendererCom && m_bVisible)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		Spin_SweepCapsule(m_bOneHit);
+
+	if (m_bVisible)
+	{
+		if (m_bInvisible)
+		{
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
+		}
+		else
+		{
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		}
+	}
 }
 
 HRESULT CFlowerLeg::Render()
 {
-	m_pModelCom->Render(m_pTransformCom);
+	if (m_bInvisible)
+	{
+		m_pModelCom->Render_Pass(m_pTransformCom, 5);
+	}
+	else
+	{
+		m_pModelCom->Render(m_pTransformCom);
+	}
+
 	return S_OK;
 }
 
@@ -505,7 +522,7 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_bAirStruck = true;
 	}
 
-	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bInvicible)
+	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bInvisible)
 		m_bStruck = true;
 
 	if (m_iHP <= 0)

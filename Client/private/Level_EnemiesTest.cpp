@@ -36,6 +36,7 @@
 #include "MapKinetic_Object.h"
 #include "TrailSystem.h"
 #include "EffectSystem.h"
+#include "PostVFX_Penetrate.h"
 
 // Monster
 #include "TestMonster.h"
@@ -425,6 +426,9 @@ HRESULT CLevel_EnemiesTest::Ready_Effect(const _tchar * pLayerTag)
 
 	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
+
+	Json Penetrate = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Penetrate.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Penetrate", &Penetrate);
 
 	return S_OK;
 }

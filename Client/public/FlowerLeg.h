@@ -123,7 +123,7 @@ private:
 
 	_bool		m_bAirMaintain = false;
 
-	_bool		m_bInvicible = false;
+	_bool		m_bInvisible = false;
 
 	// HitDir
 	_bool		m_bHitMove = false;
