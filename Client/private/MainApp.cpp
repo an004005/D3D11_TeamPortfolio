@@ -162,6 +162,9 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_FlowerBullet_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_Plane/VFX_Mesh_Plane_2.static_model", PivotMatrix, 100))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Em0650BulletDeadParticle_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_06.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_Shader_VtxMesh_Instance */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh_Instance"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_MeshInstance.hlsl"), VTXMESH_INSTANCE_DECLARATION::Elements, VTXMESH_INSTANCE_DECLARATION::iNumElements))))

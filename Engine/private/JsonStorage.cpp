@@ -65,6 +65,7 @@ const Json& CJsonStorage::LoadJson_ForWork(const string& strJsonPath)
 	}
 
 	LoadJson(strJsonPath);
+
 	itr = m_mapJson.find(strJsonPath);
 	if (itr != m_mapJson.end())
 		return m_mapJson.find(strJsonPath)->second;

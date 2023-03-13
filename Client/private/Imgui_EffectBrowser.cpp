@@ -68,7 +68,7 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 				MSG_BOX("Failed to Add New EffectGroup");
 			else
 			{
-				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup"), &EffectJson);
+				dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Work_EffectGroup", TEXT("ProtoVFX_EffectGroup"), &EffectJson))->Start_EffectWork();
 			}
 		}
 	}
@@ -89,7 +89,7 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 				MSG_BOX("Failed to Add New ParticleSystem");
 			else
 			{
-				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_ParticleSystem", TEXT("ProtoVFX_ParticleSystem"), &EffectJson);
+				CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Work_ParticleSystem", L"ProtoVFX_ParticleSystem", &EffectJson);
 			}
 		}
 	}
@@ -110,7 +110,7 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 				MSG_BOX("Failed to Add New ParticleGroup");
 			else
 			{
-				CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Work_ParticleGroup", TEXT("ProtoVFX_ParticleGroup"), &EffectJson);
+				dynamic_cast<CParticleGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Work_ParticleGroup", L"ProtoVFX_ParticleGroup", &EffectJson))->Start_ParticleWork();
 			}
 		}
 	}
