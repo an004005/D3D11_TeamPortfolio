@@ -116,11 +116,12 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 void CBuddyLumi::BeginTick()
 {
 	__super::BeginTick();
-	m_pASM->AttachAnimSocket("Buddy", { m_pModelCom->Find_Animation("AS_em0400_160_AL_threat") });
 }
 
 void CBuddyLumi::Tick(_double TimeDelta)
-{	
+{
+	if (!m_bActive)
+		return;
 	CMonster::Tick(TimeDelta);
 
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
@@ -274,7 +275,9 @@ void CBuddyLumi::Tick(_double TimeDelta)
 }
 
 void CBuddyLumi::Late_Tick(_double TimeDelta)
-{	
+{
+	if (!m_bActive)
+		return;
 	__super::Late_Tick(TimeDelta);
 
 	if (m_bAtkSwitch)
@@ -302,6 +305,8 @@ void CBuddyLumi::Imgui_RenderProperty()
 
 void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+	if (m_bDead)
+		return;
 	/*
 	// 예제 코드
 	_vector tmp = _float4{ tDamageParams.vHitFrom.x, tDamageParams.vHitFrom.y , tDamageParams.vHitFrom.z, 1.f };
@@ -337,6 +342,8 @@ void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 void CBuddyLumi::AfterPhysX()
 {
+	if (!m_bActive)
+		return;
 	__super::AfterPhysX();
 	// 무기 콜라이더의 Update_Tick(매트릭스) 
 //	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
@@ -457,6 +464,11 @@ void CBuddyLumi::HitDir(_double TimeDelta)
 	m_vPreDir = m_vCurDir;
 
 	m_bOneTick = true;
+}
+
+void CBuddyLumi::SetActive()
+{
+	CMonster::SetActive();
 }
 
 _bool CBuddyLumi::IsPlayingSocket() const

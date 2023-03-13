@@ -131,12 +131,12 @@ HRESULT CBronJon::Initialize(void * pArg)
 void CBronJon::BeginTick()
 {
 	__super::BeginTick();
-	m_pASM->AttachAnimSocket("BronJon", { m_pModelCom->Find_Animation("AS_em0800_495_AL_press_down_start") });
-
 }
 
 void CBronJon::Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return;
 	CMonster::Tick(TimeDelta);
 
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
@@ -233,6 +233,8 @@ void CBronJon::Tick(_double TimeDelta)
 
 void CBronJon::Late_Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return;
 	__super::Late_Tick(TimeDelta);
 
 	if (m_bAtkBite)
@@ -259,6 +261,8 @@ void CBronJon::Imgui_RenderProperty()
 
 void CBronJon::AfterPhysX()
 {
+	if (!m_bActive)
+		return;
 	__super::AfterPhysX();
 
 	m_pJawRBody->Update_Tick(AttachCollider(m_pJawRBody));
@@ -372,6 +376,12 @@ void CBronJon::Atk_LaserSweep()
 
 	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
 		HitTargets(sweepOut, (rand() % 150) + 25, EAttackType::ATK_HEAVY);
+}
+
+void CBronJon::SetActive()
+{
+	CMonster::SetActive();
+	m_pASM->AttachAnimSocket("BronJon", { m_pModelCom->Find_Animation("AS_em0800_495_AL_press_down_start") });
 }
 
 _bool CBronJon::IsPlayingSocket() const

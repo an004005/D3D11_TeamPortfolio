@@ -115,11 +115,13 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 void CSkummyPandou::BeginTick()
 {
 	__super::BeginTick();
-	m_pASM->AttachAnimSocket("Bee", { m_pModelCom->Find_Animation("AS_em0700_160_AL_threat") });
 }
 
 void CSkummyPandou::Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return
+
 	CMonster::Tick(TimeDelta);
 
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
@@ -287,6 +289,9 @@ void CSkummyPandou::Tick(_double TimeDelta)
 
 void CSkummyPandou::Late_Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return
+
 	__super::Late_Tick(TimeDelta);
 
 	if(nullptr != m_pRendererCom && m_bVisible)
@@ -307,6 +312,9 @@ void CSkummyPandou::Imgui_RenderProperty()
 
 void CSkummyPandou::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+	if (m_bDead)
+		return;
+
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	m_eHitDir = eHitFrom;
 	
@@ -333,6 +341,9 @@ void CSkummyPandou::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 void CSkummyPandou::AfterPhysX()
 {
+	if (!m_bActive)
+		return
+
 	__super::AfterPhysX();	
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 }
@@ -448,6 +459,12 @@ void CSkummyPandou::HitDir(_double TimeDelta)
 	m_vPreDir = m_vCurDir;
 
 	m_bOneTick = true;
+}
+
+void CSkummyPandou::SetActive()
+{
+	CMonster::SetActive();
+	m_pASM->AttachAnimSocket("Bee", { m_pModelCom->Find_Animation("AS_em0700_160_AL_threat") });
 }
 
 _bool CSkummyPandou::IsPlayingSocket() const

@@ -36,6 +36,8 @@ public:
 	void	Atk_BiteSweep();
 	void	Atk_LaserSweep();
 
+	virtual void SetActive() override;
+
 private:
 	class CBrJ_Controller*		m_pController = nullptr;
 	class CBrJ_AnimInstance*	m_pASM = nullptr;	
