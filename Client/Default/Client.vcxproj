@@ -180,6 +180,7 @@
     <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Utils.h" />
     <ClInclude Include="..\public\AIController.h" />
+    <ClInclude Include="..\public\AttackNumUI.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -337,6 +338,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\AIController.cpp" />
+    <ClCompile Include="..\private\AttackNumUI.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

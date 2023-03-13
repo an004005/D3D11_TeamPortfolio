@@ -751,6 +751,9 @@
     <ClInclude Include="..\public\GravikenisisGUI.h">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\AttackNumUI.h">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1197,6 +1200,9 @@
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GravikenisisGUI.cpp">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AttackNumUI.cpp">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
   </ItemGroup>

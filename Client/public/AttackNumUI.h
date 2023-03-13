@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CGravikenisisGUI final : public CGameObject
+class CAttackNumUI final : public CGameObject
 {
 protected:
-	CGravikenisisGUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CGravikenisisGUI(const CGravikenisisGUI& rhs);
+	CAttackNumUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CAttackNumUI(const CAttackNumUI& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -19,13 +19,13 @@ public:
 	virtual void   Imgui_RenderProperty() override;
 
 public:
-	void SetfRatio(const _float & fRatio);
+	void Set_AttackNum(const _int iFour, const _int iThree, const _int iTwo, const _int iOne);
 
 private:
 	class CEffectGroup* m_pGroup = nullptr;
 
 public:
-	static CGravikenisisGUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CAttackNumUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 };

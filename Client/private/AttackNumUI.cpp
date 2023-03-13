@@ -28,8 +28,8 @@ HRESULT CAttackNumUI::Initialize(void * pArg)
 	if (FAILED(CGameObject::Initialize(pArg)))
 		return E_FAIL;
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_G.json");
-	m_pGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_GravikenisisG", L"ProtoVFX_EffectGroup", &json));
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/AttackNum.json");
+	m_pGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_AttackNum", L"ProtoVFX_EffectGroup", &json));
 
 	Safe_AddRef(m_pGroup);
 	Assert(m_pGroup != nullptr);
@@ -49,13 +49,13 @@ void CAttackNumUI::Imgui_RenderProperty()
 
 	static _float fRatio;
 	ImGui::DragFloat("Ratio", &fRatio);
-	SetfRatio(fRatio);
+
 }
 
-void CAttackNumUI::SetfRatio(const _float & fRatio)
+void CAttackNumUI::Set_AttackNum(const _int iFour, const _int iThree, const _int iTwo, const _int iOne)
 {
 	m_pGroup->GetSecondEffect()->GetParams().Floats[0] = fRatio;
-	m_pGroup->GetThirdEffect()->GetParams().Floats[0] = fRatio;
+
 }
 
 CAttackNumUI * CAttackNumUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
