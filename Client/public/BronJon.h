@@ -40,7 +40,6 @@ private:
 	class CBrJ_Controller*		m_pController = nullptr;
 	class CBrJ_AnimInstance*	m_pASM = nullptr;	
 
-	CRigidBody*					m_pTrigger = nullptr;
 	CRigidBody*					m_pJawRBody = nullptr;		// Bite + Head HitBox
 	CRigidBody*					m_pLaserEffect = nullptr;	// Laser
 	CRigidBody*					m_pLeftArm = nullptr;

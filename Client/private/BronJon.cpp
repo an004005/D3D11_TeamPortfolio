@@ -40,16 +40,14 @@ HRESULT CBronJon::Initialize(void * pArg)
 
 	FAILED_CHECK(CMonster::Initialize(pArg));
 
-	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
-		(CComponent**)&m_pTrigger, &BronJonTrigger)))
-		return E_FAIL;
-
 	// Boss Monster HitBox
 
 	Json BronJonJaw = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonJaw.json");
 	Json BronJonLaser = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonEff02.json");
 	Json BronJonArm_L = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonLeftArm.json");
 	Json BronJonArm_R = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRightArm.json");
+	// Json BronJonOuter = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRightArm.json");
+
 	// m_pJawRBody : BiteAtk + Head HitBox
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Jaw"),
 		(CComponent**)&m_pJawRBody, &BronJonJaw)))
@@ -66,6 +64,7 @@ HRESULT CBronJon::Initialize(void * pArg)
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RightArm"),
 		(CComponent**)&m_pRightArm, &BronJonArm_R)))
 		return E_FAIL;
+
 
 	// ~Boss Monster HitBox
 
@@ -216,7 +215,6 @@ void CBronJon::Tick(_double TimeDelta)
 
 	// ~소켓 키 세팅
 
-	m_pTrigger->Update_Tick(m_pTransformCom);
 
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
@@ -262,19 +260,18 @@ void CBronJon::Imgui_RenderProperty()
 void CBronJon::AfterPhysX()
 {
 	__super::AfterPhysX();
-	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 
 	m_pJawRBody->Update_Tick(AttachCollider(m_pJawRBody));
-	m_pJawRBody->Update_AfterPhysX(m_pTransformCom);
+	// m_pJawRBody->Update_AfterPhysX(m_pTransformCom);
 
 	m_pLaserEffect->Update_Tick(AttachCollider(m_pLaserEffect));
-	m_pLaserEffect->Update_AfterPhysX(m_pTransformCom);
+	// m_pLaserEffect->Update_AfterPhysX(m_pTransformCom);
 
 	m_pLeftArm->Update_Tick(AttachCollider(m_pLeftArm));
-	m_pLeftArm->Update_AfterPhysX(m_pTransformCom);
+	// m_pLeftArm->Update_AfterPhysX(m_pTransformCom);
 
 	m_pRightArm->Update_Tick(AttachCollider(m_pRightArm));
-	m_pRightArm->Update_AfterPhysX(m_pTransformCom);
+	// m_pRightArm->Update_AfterPhysX(m_pTransformCom);
 }
 
 void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
@@ -411,7 +408,6 @@ void CBronJon::Free()
 	CMonster::Free();	
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-	Safe_Release(m_pTrigger);
 	Safe_Release(m_pJawRBody);
 	Safe_Release(m_pLaserEffect);
 	Safe_Release(m_pLeftArm);
