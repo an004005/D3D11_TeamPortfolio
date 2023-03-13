@@ -16,6 +16,8 @@ public:
 	const Json& FindOrLoadJson(const string& strJsonPath);
 	void LoadJson(const string& strJsonPath);
 
+	const Json& LoadJson_ForWork(const string& strJsonPath);
+
 	void SaveJson(const string& strJsonPath);
 	void UpdateJson(const string& strJsonPath, const Json& json);
 
