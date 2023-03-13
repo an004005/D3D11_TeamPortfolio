@@ -23,6 +23,7 @@
 #include "MapKinetic_Object.h"
 #include "Material.h"
 #include "VFX_Manager.h"
+#include "PostVFX_Penetrate.h"
 
 
 CMainApp::CMainApp()
@@ -362,6 +363,11 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	/* For. MapKineticObject */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_MapKinetic_Object"),
 		CMapKinetic_Object::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For. ProtoPostVFX_Penetrate */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_Penetrate"),
+		CPostVFX_Penetrate::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;

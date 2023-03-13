@@ -112,6 +112,11 @@ HRESULT CRenderer::Draw_RenderGroup()
 		m_pTarget_Manager->Render_Debug(TEXT("MRT_HDR"));
 
 	}
+	if (CGameInstance::GetInstance()->KeyDown(DIK_F10))
+	{
+		m_bVisibleTargets = !m_bVisibleTargets;
+	}
+
 #endif
 
 	return S_OK;

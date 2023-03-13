@@ -38,17 +38,6 @@ HRESULT CScarletMap::Initialize(void* pArg)
 	m_pModelProtoInfo.first = L"";
 	m_pModelProtoInfo.second = INSTANCE;
 
-
-	//
-	CGameInstance* pGameInstance = CGameInstance::GetInstance(); 
-
-	// Json Car1 = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Car1.json");
-	// Car1["InitPos"] = _float4(5.f, 2.f, 5.f, 1.f);
-	// pGameInstance->Clone_GameObject(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Car1);
-	//
-	// Json Table = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Table.json");
-	// Table["InitPos"] = _float4(-5.f, 2.f, -5.f, 1.f);
-	// pGameInstance->Clone_GameObject(TEXT("Layer_MapKineticObject"), TEXT("Prototype_GameObject_MapKinetic_Object"), &Table);
 	return S_OK;
 }
 
@@ -76,11 +65,6 @@ HRESULT CScarletMap::Render()
 
 void CScarletMap::Imgui_RenderProperty()
 {
-	s_bMapEditor = true;
-	static _bool	bImPlay = false;
-	ImGui::Checkbox("Open MapTool", &bImPlay);
-
-	if (bImPlay == false) return;
 
 	__super::Imgui_RenderProperty();
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -214,18 +198,24 @@ void CScarletMap::Imgui_RenderProperty()
 
 			else if (m_pModelProtoInfo.second == PROTOINFO::KINETIC)
 			{
-			//내일의 나 파이팅
-				/*	Json json;
-					CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/Map/KineticPreset/",
-						[this](const string& fileName)
+				_bool HaveFile = false;
+				Json json;
+				CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/Map/KineticPreset/",
+					[&](const string& filePath)
+				{
+					string fileName = CGameUtils::GetFileName(filePath);
+					string ModelName = CGameUtils::GetFileName(ws2s(m_pModelProtoInfo.first));
+					if (fileName == ModelName)
 					{
-						if (m_pModelProtoInfo.first == s2ws(fileName))
-							json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Map_ConstructionSite2F.json");
-					});
+						HaveFile = true;
+						json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/" + fileName + ".json");
+					}
+				
+				});
 
-
-					json["ModelTag"] = ws2s(m_pModelProtoInfo.first);
-
+				if (HaveFile == true)
+				{
+					
 					InitPosition.x += Interval.x;
 					InitPosition.y += Interval.y;
 					InitPosition.z += Interval.z;
@@ -238,7 +228,14 @@ void CScarletMap::Imgui_RenderProperty()
 					assert(pMapObject != nullptr);
 
 					m_pMapObjects.emplace_back(pMapObject);
-					m_pGameObject = pMapObject;*/
+					m_pGameObject = pMapObject;
+				}
+
+				else
+				{
+					MSG_BOX("Can't find JsonFile");
+				}
+				
 			}
 
 			sort(m_pMapObjects.begin(), m_pMapObjects.end(), [this](CMapObject* pSour, CMapObject* pDest) {
