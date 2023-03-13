@@ -49,6 +49,7 @@ private:
 	T Clamp(T x, T low, T high);
 
 private:
+	//class CPlayer *	m_pPlayer = { nullptr };
 	_float	m_fPsychokinesisGauge = { 0.0f };
 
 	_float	m_fPercentageHp = { 0.0f };	// 캔버스가 가지고 있는 Hp와 Hp에서 직접 가지고 있는 Hp는 다르다. Hp 제엇 직접 가지면 TimeDelta 를 곱해서 천천히 빠진다.

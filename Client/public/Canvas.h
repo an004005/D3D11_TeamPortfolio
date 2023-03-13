@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "UI.h"
+#include "Timeline.h"
 
 BEGIN(Engine)
 class CTexture;
@@ -21,6 +22,7 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void	BeginTick() override;
 	virtual void	Tick(_double TimeDelta) override;
 	virtual void	Late_Tick(_double TimeDelta) override;
 	
@@ -43,14 +45,22 @@ public:
 
 protected:
 	void	UIMove_FSM();
+	void	UIHit(const _double & TimeDelta);
 
 protected:
+	class CPlayer* m_pPlayer = { nullptr };
+	CSimpleTimeline m_Timeline;
+
 	map<wstring, CUI*> m_mapChildUIs;
 
 	CUI*	m_pUI = { nullptr };
 	CFSMComponent*	m_pUIMoveFSM = { nullptr };			// UIMove_FSM() -> 도착지점에 도달했다가 원래 지점으로 돌아가기 위해 함수
 	
+protected:
+	_float2			m_vMaxDestination = { 0.0f, 0.0f };	// 각 캔버스 마다 다른 최대 도착지점
+
 private:
+	_float			m_fRandomDestination = { 0.0f };
 	_bool			m_bUIMove = { false };				// SASSkill_UIMove() -> UI를 이동시키고자 할 때 외부에서 Set 을 한다.
 	_bool			m_bIsDestination = { false };		// 목표지점에 도달! 원점으로 이제 돌아가라
 	_float2			m_vDestination = { 0.0f, 0.0f };	// 도착지점

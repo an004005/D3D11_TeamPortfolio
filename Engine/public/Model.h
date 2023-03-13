@@ -87,6 +87,9 @@ public:
 	HRESULT Render(const _float4x4& WorldMatrix);
 	HRESULT RenderMesh(class CTransform* pTransform, _uint iMeshIdx);
 	HRESULT RenderMeshOnly(_uint iMeshIdx) const;
+	HRESULT Render_Pass(class CTransform* pTransform, _uint iPass);
+	// HRESULT RenderMesh_Shader(class CTransform* pTransform, class CShader* pShader, _uint iPass);
+
 
 	HRESULT Render_ShadowDepth(class CTransform* pTransform);
 

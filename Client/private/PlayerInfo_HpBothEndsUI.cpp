@@ -73,6 +73,7 @@ HRESULT CPlayerInfo_HpBothEndsUI::Render()
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
 
+
 	return S_OK;
 }
 

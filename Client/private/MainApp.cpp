@@ -23,6 +23,7 @@
 #include "MapKinetic_Object.h"
 #include "Material.h"
 #include "VFX_Manager.h"
+#include "PostVFX_Penetrate.h"
 
 
 CMainApp::CMainApp()
@@ -160,6 +161,9 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_FlowerBullet_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_Plane/VFX_Mesh_Plane_2.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Em0650BulletDeadParticle_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_06.static_model", PivotMatrix, 100))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_VtxMesh_Instance */
@@ -359,6 +363,11 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	/* For. MapKineticObject */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_MapKinetic_Object"),
 		CMapKinetic_Object::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For. ProtoPostVFX_Penetrate */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_Penetrate"),
+		CPostVFX_Penetrate::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;

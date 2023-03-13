@@ -53,6 +53,11 @@ void CCamera_Player::Tick(_double TimeDelta)
 
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+	if (pGameInstance->KeyDown(DIK_F11))
+	{
+		SetMainCamera(this);
+	}
+
 	if (IsMainCamera() == false)
 		return;
 }
