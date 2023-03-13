@@ -226,7 +226,7 @@ HRESULT CLevel_Batch::Ready_Layer_Batch(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_Test.json");
+	Json json;// = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_Test.json");
 	
 	json["ProtosInfo"] = Json::array();
 

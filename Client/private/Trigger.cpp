@@ -232,8 +232,6 @@ void CTrigger::SetUp_Create(const Json & json)
 	
 }
 
-
-
 CTrigger * CTrigger::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CTrigger* pInstance = new CTrigger(pDevice, pContext);
