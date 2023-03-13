@@ -29,7 +29,8 @@ HRESULT CCanvas_SASInfoRight::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	m_bVisible = false;
+	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+		iter->second->SetVisible(false);
 	
 	return S_OK;
 }

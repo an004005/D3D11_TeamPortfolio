@@ -394,10 +394,14 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_Mouse.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_GravikenisisMouse"), TEXT("ProtoVFX_EffectGroup"), &json));
 
+	// AttackNumber
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/AttackNumber.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_AttackNumber"), TEXT("ProtoVFX_EffectGroup"), &json));
+
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"));
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterLockonUI"));
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterShildUI")); 
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"GravikenisisGUI")); 
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"GravikenisisGUI")); 
 
 	return S_OK;
 }
