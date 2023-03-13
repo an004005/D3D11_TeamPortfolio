@@ -34,6 +34,7 @@ private:
 private:
 	vector<class CTrigger*>				m_pTriggers;
 	CTrigger*							m_pTrigger = nullptr;
+
 private:
 	vector<pair<wstring, BATCHTYPE>>	m_ProtosInfo;
 	wstring 							m_pProtoTag = L"";

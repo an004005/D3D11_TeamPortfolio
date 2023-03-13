@@ -114,7 +114,7 @@ void CScarletMap::Imgui_RenderProperty()
 
 	ImGui::Separator();
 
-	if (ImGui::Checkbox("Picking On", &m_bPick));
+	ImGui::Checkbox("Picking On", &m_bPick);
 
 	ImGui::Separator();
 
@@ -455,7 +455,7 @@ void CScarletMap::RayPicking()
 		if (pGameInstance->RayCast(params))
 		{
 			IM_LOG("Hit Ray");
-			for (int i = 0; i < t.getNbAnyHits(); ++i)
+			for (_uint i = 0; i < t.getNbAnyHits(); ++i)
 			{
 				auto p = t.getAnyHit(i);
 				auto pComponent = CPhysXUtils::GetComponent(p.actor);

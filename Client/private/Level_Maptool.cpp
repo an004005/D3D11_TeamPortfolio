@@ -93,21 +93,21 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	/* 
 	모델 프로토 타입은 굳이 생성 안해도 자동으로 됨.
 	리스트박스에 넣으려고 툴에서만 생성해줌.
-	그래서 다른 레벨에서는 아래 모델 프로토 타입 생성을 넘겨도 괜찮음.
+	그래서 다른 레벨에서는 아래 모델wd 프로토 타입 생성을 넘겨도 괜찮음.
 	*/
 	
 	//일반 모델들의 프로토타입 생성
-	//CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/",
-	//	[this](const string& fileName)
-	//{
-	//	char szFileExt[MAX_PATH]{};
-	//	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+	/*CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/",
+		[this](const string& fileName)
+	{
+		char szFileExt[MAX_PATH]{};
+		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
 
-	//	if (0 == strcmp(szFileExt, ".static_model"))
-	//	{
-	//		FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), KINETIC));
-	//	}
-	//});
+		if (0 == strcmp(szFileExt, ".static_model"))
+		{
+			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), NON_INSTANCE));
+		}
+	});*/
 
 	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",
 		[this](const string& fileName)
@@ -169,8 +169,8 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite2F.json");
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
 
 	json["Model_ProtoTypes"] = Json::array();
 
