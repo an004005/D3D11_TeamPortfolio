@@ -129,11 +129,12 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 void CSkummyPool::BeginTick()
 {
 	__super::BeginTick();
-//	m_pASM->AttachAnimSocket("Pool", { m_pModelCom->Find_Animation("AS_em0600_160_AL_threat") });
 }
 
 void CSkummyPool::Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return;
 	CMonster::Tick(TimeDelta);
 
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
@@ -254,6 +255,8 @@ void CSkummyPool::Tick(_double TimeDelta)
 
 void CSkummyPool::Late_Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return;
 	__super::Late_Tick(TimeDelta);
 
 	if (nullptr != m_pRendererCom && m_bVisible)
@@ -301,6 +304,8 @@ void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 void CSkummyPool::AfterPhysX()
 {
+	if (!m_bActive)
+		return;
 	__super::AfterPhysX();
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 }
@@ -335,6 +340,12 @@ void CSkummyPool::HitDir(_double TimeDelta)
 	m_vPreDir = m_vCurDir;
 
 	m_bOneTick = true;
+}
+
+void CSkummyPool::SetActive()
+{
+	CMonster::SetActive();
+	m_pASM->AttachAnimSocket("Pool", { m_pModelCom->Find_Animation("AS_em0600_160_AL_threat") });
 }
 
 _bool CSkummyPool::IsPlayingSocket() const

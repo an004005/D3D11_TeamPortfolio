@@ -73,6 +73,7 @@ public:
 
 	// void Tick_Float4x4s_Value(_uint iParamIndex, _float4x4 fValue);
 
+	class CEffectSystem* GetFirstEffect() { return m_pFirst_EffectSystem; }
 	class CEffectSystem* GetSecondEffect() { return m_pSecond_EffectSystem; }
 	class CEffectSystem* GetThirdEffect() { return m_pThird_EffectSystem; }
 	class CEffectSystem* GetFourthEffect() { return m_pFourth_EffectSystem; }

@@ -1,12 +1,11 @@
 #include "stdafx.h"
 #include "..\public\Canvas.h"
 #include "GameInstance.h"
-#include "JsonLib.h"
 #include "JsonStorage.h"
 #include "FSMComponent.h"
 #include "UI_Manager.h"
-
-//_bool CCanvas::m_bUIMove = false;
+#include "GameUtils.h"
+#include "Player.h"
 
 CCanvas::CCanvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -36,12 +35,34 @@ HRESULT CCanvas::Initialize(void * pArg)
 
 	m_bVisible = false;
 
+	//FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_LocalController"), TEXT("Com_Controller"), (CComponent**)&m_pController));
+
 	return S_OK;
+}
+
+void CCanvas::BeginTick()
+{
+	list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
+
+	for (auto iter : plsGameObject)
+	{
+		if (iter->GetPrototypeTag() == L"Player")
+		{
+			m_pPlayer = dynamic_cast<CPlayer*>(iter);
+			Assert(m_pPlayer != nullptr);
+			break;
+		}
+	}
+
+	m_Timeline.SetCurve("UI_Hit");
 }
 
 void CCanvas::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+	if (true == m_pPlayer->Get_Dash())
+		Set_UIMove();
 
 	m_fSizeX = (_float)g_iWinSizeX;
 	m_fSizeY = (_float)g_iWinSizeY;
@@ -99,6 +120,8 @@ void CCanvas::Late_Tick(_double TimeDelta)
 void CCanvas::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	m_Timeline.Imgui_RenderEditor();
 
 	ImGui::Separator();
 	static char szChildProtoName[MAX_PATH]{};
@@ -227,8 +250,16 @@ void CCanvas::UIMove_FSM()
 			pCanvas.second->Set_UIMove();
 		});
 
-		_float2 vRandomPosition = { 5.0f, 5.0f };
-		m_vDestination = { vRandomPosition.x, -vRandomPosition.y };
+		static _int iRandomCount;
+		if (6 == iRandomCount)
+			iRandomCount = 0;
+		if (0 == iRandomCount)
+			m_fRandomDestination = CGameUtils::GetRandFloat(0.0f, 3.0f);
+		++iRandomCount;
+
+		m_vDestination.x = m_vMaxDestination.x - m_fRandomDestination;
+		m_vDestination.y = m_vMaxDestination.y - m_fRandomDestination;
+
 	})
 		.Tick([this](_double TimeDelta) {
 
@@ -243,10 +274,10 @@ void CCanvas::UIMove_FSM()
 		// 목표 지점과 현재 지점을 비교한다.
 		_float fDistance = XMVectorGetX(XMVector4Length(vDestination - vPosition));
 
-		IM_LOG("X %f", fDistance);
-		if (0.2f > fDistance)
+		//IM_LOG("X %f", fDistance);
+		if (0.3f > fDistance)
 		{
-			IM_LOG("X ---------------------");
+			IM_LOG("X ---------------------%d");
 			m_bIsDestination = true;
 		}
 	})
@@ -268,10 +299,10 @@ void CCanvas::UIMove_FSM()
 		// 원래 지점과 현재 지점을 비교한다.
 		_float fDistance = XMVectorGetX(XMVector2Length(vDestination - vPosition));
 
-		IM_LOG("Y %f", fDistance);
-		if (0.2f > fDistance)
+		//IM_LOG("Y %f", fDistance);
+		if (0.3f > fDistance)
 		{
-			IM_LOG("Y --------------------");
+			IM_LOG("Y --------------------%d");
 			m_bIsDestination = false;
 			m_bUIMove = false;
 			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
@@ -282,6 +313,16 @@ void CCanvas::UIMove_FSM()
 		return m_bUIMove == false;
 	})
 		.Build();
+}
+
+void CCanvas::UIHit(const _double & TimeDelta)
+{
+	m_Timeline.Tick(TimeDelta, m_fY);
+
+	if (true == m_pPlayer->Get_Hit() || CGameInstance::GetInstance()->KeyDown(DIK_0))
+	{	
+		m_Timeline.PlayFromStart();
+	}
 }
 
 CCanvas * CCanvas::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -317,4 +358,5 @@ void CCanvas::Free()
 	for (auto& Pair : m_mapChildUIs)
 		Safe_Release(Pair.second);
 	m_mapChildUIs.clear();
+
 }

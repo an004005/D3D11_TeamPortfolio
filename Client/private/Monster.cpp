@@ -70,6 +70,12 @@ void CMonster::Imgui_RenderProperty()
 		if ("" != szMonsterAnimName)
 		  m_pModelCom->Get_AnimList()[szMonsterAnimName]->Imgui_RenderProperty();
 	}
+
+
+	if (ImGui::Button("Activate"))
+	{
+		SetActive();
+	}
 }
 
 _float4x4 CMonster::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
@@ -195,6 +201,11 @@ void CMonster::MoveTransformJson(Json& jsonDest, void* pArg)
 		Json& json = *static_cast<Json*>(pArg);
 		CTransform::MoveTransformJson(jsonDest, json);
 	}
+}
+
+void CMonster::SetActive()
+{
+	m_bActive = true;
 }
 
 void CMonster::Free()

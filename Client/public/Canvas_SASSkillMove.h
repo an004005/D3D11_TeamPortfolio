@@ -8,9 +8,7 @@ BEGIN(Client)
 class CCanvas_SASSkillMove final : public CCanvas
 {
 public:
-	enum OBJECTCOUNT { ONE, TWO, THREE, FOUR };
 	enum SKILLINDEX { ONE0, TWO0, THREE0, FOUR0, ONE1, TWO1, THREE1, FOUR1, SKILLINDEX_END };
-	enum SUPERPOWERS { PSYCHOKINESIS0, PSYCHOKINESIS1, IGNITION, RESHUFFLE, CLAIRVOYANCE, TELEPORTATION, TRANSPARENCY, DISCHARGE, COPY, HIGHSPEED, NOT, SUPERPOWERS_END };
 
 protected:
 	CCanvas_SASSkillMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -28,14 +26,19 @@ public:
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
 
-public:
+private:
+	void	Set_SkillInfo(const SKILLINDEX eSKILLINDEX, const ESASType eESASType);
+	void	Set_IconType(const _uint iIndex, const ESASType & eESASType);
 
-public:
 	void	Info_Tick(); 
 	void	InputCtrl_Tick();
 	void	InputAlt_Tick();
+	void	UseSkill_Tick();
 
 private:
+	//class CPlayer *	m_pPlyaer = { nullptr };
+	ESASType		m_eSASType[SKILLINDEX_END] = { ESASType::SAS_END };
+	
 	_bool			m_bCtrl = { false };
 	_bool			m_bAlt = { false };
 

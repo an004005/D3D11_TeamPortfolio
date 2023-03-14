@@ -33,28 +33,12 @@ HRESULT CSASSkillIconUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	//static _uint eObjectCount;
-	//m_eObjectCount = CUI::OBJECTCOUNT(eObjectCount);
-	//++eObjectCount;
-
-	//if (3 == eObjectCount)
-	//	eObjectCount = 0;
-
 	return S_OK;
-}
-
-void CSASSkillIconUI::BeginTick()
-{
-	//m_pCanvas = dynamic_cast<CCanvas_SASSkill*>(CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, TEXT("Canvas_SASSkill")));
-
 }
 
 void CSASSkillIconUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
-
-
-	//m_pFSM->Tick(TimeDelta);
 
 }
 
@@ -75,86 +59,60 @@ void CSASSkillIconUI::Imgui_RenderProperty()
 {
 	CUI::Imgui_RenderProperty();
 
-	//static array<const char*, SUPERPOWERS_END> arrSuperPowersName{
-	//	"PSYCHOKINESIS0", "PSYCHOKINESIS1", "IGNITION", "RESHUFFLE", "CLAIRVOYANCE", "TELEPORTATION", "TRANSPARENCY", "DISCHARGE", "COPY", "NON"
-	//};
 
-	//if (ImGui::BeginCombo("SAS Skill", arrSuperPowersName[static_cast<_uint>(CUI::Get_SuperPowers())]))
-	//{
-	//	for (int i = PSYCHOKINESIS0; i < SUPERPOWERS_END; ++i)
-	//	{
-	//		const bool bSelected = false;
-	//		if (ImGui::Selectable(arrSuperPowersName[i], bSelected))
-	//			CUI::Set_SuperPowers(SUPERPOWERS(i));
-	//	}
-
-	//	ImGui::EndCombo();
-	//}
 }
 
-void CSASSkillIconUI::SaveToJson(Json & json)
+void CSASSkillIconUI::Set_IconType(const ESASType & eESASType, const _bool bUsable)
 {
-	CUI::SaveToJson(json);
+	_float fSasType;
 
-	//json["SuperPowers"] = CUI::Get_SuperPowers();
-}
+	switch (eESASType)
+	{
+	case Client::ESASType::SAS_FIRE: // 발화
+		fSasType = 2.0f;
+		break;
+	case Client::ESASType::SAS_PENETRATE:	// 투시
+		fSasType = 4.0f;
+		break;
+	case Client::ESASType::SAS_HARDBODY:	// 경질화
+		fSasType = 3.0f;
+		break;
+	case Client::ESASType::SAS_TELEPORT:	// 순간이동
+		fSasType = 5.0f;
+		break;
+	case Client::ESASType::SAS_ELETRIC:		// 전기
+		fSasType = 7.0f;
+		break;
+	case Client::ESASType::SAS_SUPERSPEED:	// 초고속
+		fSasType = 9.0f;
+		break;
+	case Client::ESASType::SAS_COPY:		// 복제
+		fSasType = 8.0f;
+		break;
+	case Client::ESASType::SAS_INVISIBLE:	// 투명
+		fSasType = 6.0f;
+		break;
+	case Client::ESASType::SAS_GRAVIKENISIS:	// 염력
+		fSasType = 1.0f;
+		break;
+	case Client::ESASType::SAS_NOT:	// 없어요
+		fSasType = 10.0f;
+		break;
+	default:
+		Assert("Not Icon Type : CSASSkillIconUI");
+		break;
+	}
 
-void CSASSkillIconUI::LoadFromJson(const Json & json)
-{
-	CUI::LoadFromJson(json);
-
-	//CUI::Set_SuperPowers(SUPERPOWERS(json["SuperPowers"]));
-}
-
-void CSASSkillIconUI::SASSkillIcon_Tick()
-{
-	//if (m_pCanvas->Get_SASSkill() != m_pCanvas->Get_PreSASSkill())
-	//{
-	//	ChangeSkill_Shader(); // 스킬이 바뀌면 쉐이더 값도 변경해준다.
-
-	//	if (true == m_pCanvas->Get_ChangeX())
-	//	{
-	//		switch (m_pCanvas->Get_SASSkill())
-	//		{
-	//		case CCanvas_SASSkill::ONE0:
-	//			break;
-	//		case CCanvas_SASSkill::TWO0:
-	//			break;
-	//		case CCanvas_SASSkill::THREE0:
-	//			break;
-	//		case CCanvas_SASSkill::FOUR0:
-	//			break;
-	//		default:
-	//			assert(!"Wrong Skill Icon Number");
-	//			break;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		switch (m_pCanvas->Get_SASSkill())
-	//		{
-	//		case CCanvas_SASSkill::ONE1:
-	//			break;
-	//		case CCanvas_SASSkill::TWO1:
-	//			break;
-	//		case CCanvas_SASSkill::THREE1:
-	//			break;
-	//		case CCanvas_SASSkill::FOUR1:
-	//			break;
-	//		default:
-	//			assert(!"Wrong Skill Icon Number");
-	//			break;
-	//		}
-	//	}
-
-	//	m_pCanvas->Set_PreSASSkill(m_pCanvas->Get_SASSkill());
-	//}
-}
-
-void CSASSkillIconUI::ChangeSkill_Shader()
-{
-	//m_tParams.Ints[0] = { !m_pCanvas->Get_OnSkill() };
-	//m_tParams.Float2s[0] = { _float(m_pCanvas->Get_SuperPowers()), _float(m_pCanvas->Get_OnSkill()) };
+	if (bUsable)	// 사용 가능 
+	{
+		m_tParams.Ints[0] = 0;
+		m_tParams.Float2s[0] = { fSasType, 1.0f };
+	}
+	else			// 사용 불 가능
+	{
+		m_tParams.Ints[0] = 1;
+		m_tParams.Float2s[0] = { fSasType, 0.0f };
+	}
 }
 
 CSASSkillIconUI * CSASSkillIconUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

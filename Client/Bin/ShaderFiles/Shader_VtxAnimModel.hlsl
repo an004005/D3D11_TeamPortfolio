@@ -150,7 +150,7 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 
 		if (chanB < fDissolve)
 		{
-			fEmissive = 8.f;
+			fEmissive = 5.f;
 		}
 
 		Out.vDiffuse.rgb *= COL_BURNOUT;

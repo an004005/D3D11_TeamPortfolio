@@ -202,26 +202,31 @@ void CTrigger::SetUp_Create(const Json & json)
 {
 	map<string, vector<_float4x4>> tmp = json["Create"];
 
+	//미리 클론 생성
 	for (auto iter : tmp)
 	{
-		wstring wstr = s2ws(iter.first);
-		m_ProtoWorldMatrixes.emplace(wstr, iter.second);
+		for (auto matrix : iter.second)
+		{
+			CGameInstance* pGameInstance = CGameInstance::GetInstance();
+			CMonster* pMonster = nullptr;
+			Json jsonWorldMatrix;
+
+			CTransform::ModifyTransformJson(jsonWorldMatrix, matrix);
+			pMonster = dynamic_cast<CMonster*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_Monster"), s2ws(iter.first).c_str(), &jsonWorldMatrix));
+
+			assert(pMonster != nullptr);
+			m_pMonsters.emplace_back(pMonster);
+		}
+		
 	}
 
 	m_pRigidBodyCom->SetOnTriggerIn([this](CGameObject* pGameObject) {
 
-		for (auto proto : m_ProtoWorldMatrixes)
-		{
-			for (auto matrix : proto.second)
-			{
-				CGameInstance* pGameInstance = CGameInstance::GetInstance();
-				
-				Json jsonWorldMatrix;
-				CTransform::ModifyTransformJson(jsonWorldMatrix, matrix);
-				pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), proto.first.c_str(), &jsonWorldMatrix);
-			}
-		}
+		for_each(m_pMonsters.begin(), m_pMonsters.end(), [](CMonster* pMonster) {
+			pMonster->SetActive();
+		});
 
+		//끝나고 트리거 삭제
 		m_bDelete = true;
 	});
 	

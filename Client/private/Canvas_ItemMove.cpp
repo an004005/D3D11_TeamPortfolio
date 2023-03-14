@@ -28,9 +28,15 @@ HRESULT CCanvas_ItemMove::Initialize(void* pArg)
 		return E_FAIL;
 
 	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_ItemMove", this);
+	m_vMaxDestination = { -7.0f, -7.0f };
 	CCanvas::UIMove_FSM();
 
 	return S_OK;
+}
+
+void CCanvas_ItemMove::BeginTick()
+{
+	CCanvas::BeginTick();
 }
 
 void CCanvas_ItemMove::Tick(_double TimeDelta)
@@ -38,7 +44,7 @@ void CCanvas_ItemMove::Tick(_double TimeDelta)
 	CCanvas::Tick(TimeDelta);
 
 	m_pUIMoveFSM->Tick(TimeDelta);
-
+	CCanvas::UIHit(TimeDelta);
 }
 
 void CCanvas_ItemMove::Imgui_RenderProperty()

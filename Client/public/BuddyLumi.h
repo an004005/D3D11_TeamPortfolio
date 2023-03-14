@@ -38,6 +38,8 @@ public:
 
 	void HitDir(_double TimeDelta);
 
+	virtual void SetActive() override;
+
 private:		
 	class CBdLm_Controller*		m_pController = nullptr;
 	class CBdLm_AnimInstance*	m_pASM = nullptr;

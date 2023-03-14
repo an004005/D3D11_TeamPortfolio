@@ -28,9 +28,10 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
-	virtual void AfterPhysX();
+	virtual void AfterPhysX() override;
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
+	virtual void SetActive() override;
 
 	void	Strew_Overlap(); // Atk_Strew �浹ü
 	void	Spin_SweepCapsule(_bool bCol);

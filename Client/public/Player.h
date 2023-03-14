@@ -28,7 +28,7 @@ typedef struct tagRemote
 	_bool bCanRun = false;	// 달리기 여부
 	_bool bAttackTurn = false;	// 공격 중 회전(카메라 방향) 여부
 
-								// 상태 관련
+	// 상태 관련
 	_bool bOnAir = false;	// 공중 상태 여부
 	_bool bGravity = false;	// 중력 적용 여부
 
@@ -86,7 +86,7 @@ private:
 
 	typedef struct tagSasGage
 	{
-		_float Energy;
+		_float Energy;		// 0~1	
 		_float MaxEnergy;
 		_float MinEnergy;
 
@@ -104,7 +104,7 @@ private:
 		_uint m_iKineticEnergy = 100;
 		_uint m_iMaxKineticEnergy = 100;
 		_uint m_iKineticEnergyLevel = 0;   // 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
-		_uint m_iKineticEnergyType = 0;      // 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
+		_uint m_iKineticEnergyType = 0;    // 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
 		
 		array<SAS_GAGE, SAS_CNT> Sasese{};
 
@@ -134,6 +134,18 @@ public:
 	virtual _float4x4 GetPivotMatrix() override;
 	//~For Effect
 
+	//~For UI 
+	_bool		Get_Hit() { return m_bHit; }
+	_bool		Get_Dash() { return m_bDash; }
+
+	_bool		Get_SASSkillInput(const _uint iInputNumber) { return m_bSASSkillInput[iInputNumber]; }
+	void		Set_SASSkillInput(const _uint iInputNumber, const _bool bInput) { m_bSASSkillInput[iInputNumber] = bInput; }
+
+	PLAYER_STAT	Get_PlayerStat() { return m_PlayerStat; }
+	void		Set_Usable(const ESASType & eESASType, const _bool & bUsable) { m_PlayerStat.Sasese[_int(eESASType)].bUsable = bUsable; }
+
+	ESASType	Get_PlayerSasType() { return m_PlayerSasType; }
+	//~For UI
 
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
@@ -305,6 +317,8 @@ public:
 	_float	GetfYSpeed() { return m_fYSpeed; }
 
 private:
+	_bool	m_bSASSkillInput[4] = { false, false, false, false };
+
 	_bool	m_bHit = false;
 	_bool	m_bBreakFall = false;
 
