@@ -280,6 +280,15 @@
     <Filter Include="FactoryMethod">
       <UniqueIdentifier>{c339909b-d428-41f4-9c52-dbbf78dbea31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Trigger">
+      <UniqueIdentifier>{de696a83-1b14-4455-81e6-aee65fc00158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\02. Stage1">
+      <UniqueIdentifier>{1e272184-8887-431f-937d-de39fd6eeb16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\17.KineticEditor">
+      <UniqueIdentifier>{cf49c083-b25e-424b-aca3-6c741d536048}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -728,8 +737,6 @@
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
     <ClInclude Include="..\public\BrJ_Controller.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
-    <ClInclude Include="..\public\Level_Stage1.h" />
-    <ClInclude Include="..\public\Trigger.h" />
     <ClInclude Include="..\public\VFX_Manager.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
@@ -757,12 +764,20 @@
     <ClInclude Include="..\public\AttackNumUI.h">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\FactoryMethod.h">
       <Filter>FactoryMethod</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PostVFX_Penetrate.h" />
     <ClInclude Include="..\public\SAS_Portrait.h" />
+    <ClInclude Include="..\public\Trigger.h">
+      <Filter>Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Stage1.h">
+      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_KineticEditor.h">
+      <Filter>01.Levels\17.KineticEditor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1185,8 +1200,6 @@
     </ClCompile>
     <ClCompile Include="..\private\BrJ_Controller.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />
-    <ClCompile Include="..\private\Level_Stage1.cpp" />
-    <ClCompile Include="..\private\Trigger.cpp" />
     <ClCompile Include="..\private\VFX_Manager.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
@@ -1214,12 +1227,20 @@
     <ClCompile Include="..\private\AttackNumUI.cpp">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp">
       <Filter>FactoryMethod</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
     <ClCompile Include="..\private\SAS_Portrait.cpp" />
+    <ClCompile Include="..\private\Trigger.cpp">
+      <Filter>Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Stage1.cpp">
+      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_KineticEditor.cpp">
+      <Filter>01.Levels\17.KineticEditor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

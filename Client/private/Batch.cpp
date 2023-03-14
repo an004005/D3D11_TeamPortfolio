@@ -8,7 +8,7 @@
 #include "PhysX_Manager.h"
 #include "ScarletCharacter.h"
 #include "MainApp.h"
-
+#include "Monster.h"
 CBatch::CBatch(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
 {
@@ -344,8 +344,9 @@ void CBatch::RayPicking()
 					CGameObject* pGameObject = nullptr;
 					pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), m_pProtoTag.c_str(), &jsonTransform);
 
-					//pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&vPos));
-					//assert(pGameObject != nullptr);
+					if (dynamic_cast<CMonster*>(pGameObject) != nullptr)
+						dynamic_cast<CMonster*>(pGameObject)->SetActive();
+
 					m_pGameObjects.emplace_back(pGameObject);
 
 					return;
