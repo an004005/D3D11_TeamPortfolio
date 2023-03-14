@@ -4,7 +4,8 @@
 #include "JsonStorage.h"
 #include "EffectGroup.h"
 #include "EffectSystem.h"
-
+#include "VFX_Manager.h"
+#include "Monster.h"
 CMonsterHpUI::CMonsterHpUI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -28,26 +29,36 @@ HRESULT CMonsterHpUI::Initialize(void * pArg)
 	if (FAILED(CGameObject::Initialize(pArg)))
 		return E_FAIL;
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterHp.json");
+	/*Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterHp.json");
 	m_pGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_MonsterHp", L"ProtoVFX_EffectGroup", &json));
+	*/
 
+	return S_OK;
+}
+
+void CMonsterHpUI::BeginTick()
+{
+	m_pGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterHp", TEXT("Layer_MonsterUI"));
 	Safe_AddRef(m_pGroup);
 	Assert(m_pGroup != nullptr);
 
-	return S_OK;
+	//첫 인자에 넣어준 포인터의 뼈를 찾음.
+	m_pGroup->Start_Attach(m_pOwner, "Target_end", true);
 }
 
 void CMonsterHpUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	/*if (m_pOwner != nullptr)
+	if (m_pOwner != nullptr)
 	{
-		_vector vOwnerPosition = m_pOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vOwnerPosition);
-	}*/
+		_uint iHp = dynamic_cast<CMonster*>(m_pOwner)->GetHP();
+		_uint iMaxHp = dynamic_cast<CMonster*>(m_pOwner)->GetMaxHP();
 
-	//m_pGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
+		m_fRatio = (_float)iHp / (_float)iMaxHp;
+		m_fHpBack = m_fRatio;
+		m_pGroup->GetThirdEffect()->GetParams().Floats[0] = m_fRatio;
+	}
 
 	HpBack_Tick(TimeDelta);
 }
@@ -56,31 +67,23 @@ void CMonsterHpUI::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
-	static _float fRatio;
-	ImGui::DragFloat("Ratio", &fRatio);
-	SetHP(fRatio);
+	ImGui::DragFloat("Ratio", &m_fRatio);
+	
 }
 
-void CMonsterHpUI::SetHP(_float fRatio)
-{
-	// 2: HpBack 3: Hp
-	m_fHpBack = fRatio;
-	//m_pGroup->GetSecondEffect()->GetParams().Floats[0] = fRatio;
-	m_pGroup->GetThirdEffect()->GetParams().Floats[0] = fRatio;
-}
 
 void CMonsterHpUI::HpBack_Tick(const _double & TimeDelta)
 {
-	//if (m_fCurrentHpBack > m_fHpBack)
-	//{
-	//	m_fCurrentHpBack -= _float(TimeDelta) * 0.3f;
-	//}
-	//else
-	//{
-	//	m_fCurrentHpBack = m_fHpBack;
-	//}
+	if (m_fCurrentHpBack > m_fHpBack)
+	{
+		m_fCurrentHpBack -= _float(TimeDelta) * 0.3f;
+	}
+	else
+	{
+		m_fCurrentHpBack = m_fHpBack;
+	}
 
-	//m_pGroup->GetSecondEffect()->GetParams().Floats[0] = m_fCurrentHpBack;
+	m_pGroup->GetSecondEffect()->GetParams().Floats[0] = m_fCurrentHpBack;
 }
 
 CMonsterHpUI * CMonsterHpUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -111,6 +114,11 @@ void CMonsterHpUI::Free()
 {
 	__super::Free();
 
-	m_pGroup->SetDelete();
+	if (m_pGroup != nullptr)
+	{
+		if (m_pGroup->IsDeleted() == false)
+			m_pGroup->SetDelete();
+	}
+	
 	Safe_Release(m_pGroup);
 }

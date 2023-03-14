@@ -19,8 +19,8 @@ public:
 	virtual void   Imgui_RenderProperty() override;
 
 private:
-	class CEffectGroup* m_pTargetGroup = nullptr;;
-	class CEffectGroup* m_pTargetRhombusGroup = nullptr;;
+	class CEffectGroup* m_pTargetGroup = nullptr;
+	class CEffectGroup* m_pTargetRhombusGroup = nullptr;
 
 public:
 	static CMonsterLockonUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

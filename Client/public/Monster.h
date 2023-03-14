@@ -30,6 +30,10 @@ public:
 	//~For Effect
 	virtual void SetActive();
 
+public:
+	_uint GetHP() { return m_iHP; }
+	_uint GetMaxHP() { return m_iMaxHP; }
+
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
 	void ClearDamagedTarget();

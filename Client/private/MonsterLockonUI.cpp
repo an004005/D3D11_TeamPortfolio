@@ -4,6 +4,8 @@
 #include "JsonStorage.h"
 #include "EffectGroup.h"
 #include "EffectSystem.h"
+#include "VFX_Manager.h"
+#include "Player.h"
 
 CMonsterLockonUI::CMonsterLockonUI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -28,19 +30,21 @@ HRESULT CMonsterLockonUI::Initialize(void * pArg)
 	if (FAILED(CGameObject::Initialize(pArg)))
 		return E_FAIL;
 
+	//플레이어에서 몬스터를 들고있는데 타겟팅된 몬스터의의 정보를 들고와서 거기서 붙일 뼈를 셋팅해주게한다.
+
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_Target.json");
-	m_pTargetGroup = dynamic_cast<CEffectGroup*>(pGameInstance->Clone_GameObject_Get(LEVEL_NOW, L"Layer_Lockon", L"ProtoVFX_EffectGroup", &json));
-
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_TargetRhombus.json");
-	m_pTargetRhombusGroup = dynamic_cast<CEffectGroup*>(pGameInstance->Clone_GameObject_Get(LEVEL_NOW, L"Layer_Lockon", L"ProtoVFX_EffectGroup", &json));
+	m_pTargetGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Target", TEXT("Layer_MonsterUI"));
+	m_pTargetRhombusGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Target", TEXT("Lockon_TargetRhombus"));
 
 	Safe_AddRef(m_pTargetGroup);
-	Assert(m_pTargetGroup != nullptr);
 	Safe_AddRef(m_pTargetRhombusGroup);
+
+	Assert(m_pTargetGroup != nullptr);
 	Assert(m_pTargetRhombusGroup != nullptr);
 
+	//m_pTargetGroup->Start_Attach(this, "Target", true);
+	//m_pTargetRhombusGroup->Start_Attach(this, "Target", true);
 	return S_OK;
 }
 
@@ -49,8 +53,6 @@ void CMonsterLockonUI::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 	m_pTargetGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
 	//m_pTargetRhombusGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
-
-
 }
 
 void CMonsterLockonUI::Imgui_RenderProperty()

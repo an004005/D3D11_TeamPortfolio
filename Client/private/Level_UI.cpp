@@ -83,7 +83,7 @@
 #include "FactoryMethod.h"
 #include "Monster.h"
 
-
+#include "VFX_Manager.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -102,6 +102,7 @@ HRESULT CLevel_UI::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
+	CVFX_Manager::GetInstance()->Initialize(LEVEL_UI);
 
 
 	if (FAILED(Ready_Prototypes()))
