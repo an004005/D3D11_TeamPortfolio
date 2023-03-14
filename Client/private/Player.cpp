@@ -25,6 +25,7 @@
 #include "EffectGroup.h"
 #include "CamSpot.h"
 #include "VFX_Manager.h"
+#include "MonsterLockonUI.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -165,6 +166,13 @@ void CPlayer::Tick(_double TimeDelta)
 	if (nullptr != m_pTargetedEnemy && (!static_cast<CMonster*>(m_pTargetedEnemy)->IsDead()))
 	{
 		//IM_LOG(ws2s(m_pTargetedEnemy->GetPrototypeTag()).c_str());
+		if (m_pUI_LockOn == nullptr)
+		{
+			CGameInstance* pGameInstance = CGameInstance::GetInstance();
+			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
+			assert(m_pUI_LockOn != nullptr);
+			m_pUI_LockOn->Set_Owner(m_pTargetedEnemy);
+		}
 	}
 
 	// 콤보 연계 시간

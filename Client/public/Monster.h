@@ -10,7 +10,7 @@ class CModel;
 END
 
 BEGIN(Client)
-enum UIPIVOT{NAME, HP, CRUSH, PIVOT_END};
+
 class CMonster abstract : public CScarletCharacter
 {
 protected:
@@ -66,7 +66,7 @@ protected:
 	_bool m_bDead = false;
 	_bool m_bActive = false;
 
-	array<_float4x4, PIVOT_END> m_UI_PivotMatrix;
+	_float4x4 m_UI_PivotMatrix;
 
 	set<CScarletCharacter*> m_DamagedTargetList;
 

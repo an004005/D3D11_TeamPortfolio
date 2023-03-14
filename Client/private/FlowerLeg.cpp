@@ -267,7 +267,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	//실험중이라 생성 안되면 터트림
 	assert(m_pUI_Hp != nullptr);
 	m_pUI_Hp->Set_Owner(this);
-	m_pUI_Hp->SetPivotMatrix(m_UI_PivotMatrix[HP]);
+	m_pUI_Hp->SetPivotMatrix(m_UI_PivotMatrix);
 	return S_OK;
 }
 

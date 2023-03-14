@@ -80,21 +80,15 @@ void CMonster::Imgui_RenderProperty()
 	{
 		SetActive();
 	}
-
-	ImGui::InputFloat4("UI_PivotName", (_float*)m_UI_PivotMatrix[NAME].m[3]);
-	ImGui::InputFloat4("UI_PivotHP", (_float*)m_UI_PivotMatrix[HP].m[3]);
-	ImGui::InputFloat4("UI_PivotCrush", (_float*)m_UI_PivotMatrix[CRUSH].m[3]);
 }
 
 void CMonster::LoadFromJson(const Json & json)
 {
 	__super::LoadFromJson(json);
 
-	m_UI_PivotMatrix.fill(XMMatrixIdentity());
-
-	if (json.contains("UIPivotMatrixes"))
+	if (json.contains("UIPivotMatrix"))
 	{
-		m_UI_PivotMatrix = json["UIPivotMatrixes"];
+		m_UI_PivotMatrix = json["UIPivotMatrix"];
 	}
 }
 

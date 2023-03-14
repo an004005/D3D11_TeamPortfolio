@@ -44,6 +44,7 @@
 
 //UI
 #include "MonsterHpUI.h"
+#include "MonsterLockonUI.h"
 
 CFactoryMethod::CFactoryMethod()
 {
@@ -200,6 +201,7 @@ HRESULT CFactoryMethod::MakeUITestPrototypes(ID3D11Device * pDevice, ID3D11Devic
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterHP", CMonsterHpUI::Create(pDevice, pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterLockon", CMonsterLockonUI::Create(pDevice, pContext)));
 
 	return S_OK;
 }

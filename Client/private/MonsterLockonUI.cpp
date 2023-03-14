@@ -51,7 +51,7 @@ void CMonsterLockonUI::BeginTick()
 	Assert(m_pTargetGroup != nullptr);
 	Assert(m_pTargetRhombusGroup != nullptr);
 
-	//TimeLine 끝나고 유지 : FUNC_STOP
+	//TimeLine 끝나고 유지 : 2
 	m_pTargetGroup->Start_Attach(m_pOwner, "Target", true);
 
 	//TimeLine 끝나고 삭제 : 4
@@ -63,7 +63,10 @@ void CMonsterLockonUI::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 
 	if (m_pOwner == nullptr)
+	{
 		m_bDelete = true;
+		return;
+	}
 
 	//m_pTargetRhombusGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
 }
