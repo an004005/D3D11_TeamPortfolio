@@ -37,7 +37,7 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"BulletSkummyPool", L"Model", (CComponent**)&m_pModelCom));
 	
-	m_fShootSpeed = 12.f;
+	m_fShootSpeed = 18.f;
 
 	m_pTransformCom->SetSpeed(m_fShootSpeed);
 

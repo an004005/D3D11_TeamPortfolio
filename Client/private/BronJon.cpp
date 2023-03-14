@@ -177,14 +177,14 @@ void CBronJon::Tick(_double TimeDelta)
 		m_bStruck = false;
 		m_pController->ClearCommands();
 		// Test
-		if (m_eAtkType == EAttackType::ATK_LIGHT)
+		/*if (m_eAtkType == EAttackType::ATK_LIGHT)
 		{
 			if (m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("BronJon", { m_pDamage_L_F });
 
 			else if (m_eHitDir == EBaseAxis::SOUTH)
 				m_pASM->InputAnimSocket("BronJon", { m_pDamage_L_B });
-		}
+		}*/
 		// ~Test
 		if (m_eAtkType == EAttackType::ATK_HEAVY)
 		{
@@ -288,15 +288,14 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eAtkType = tDamageParams.eAttackType;
 	m_iHP -= tDamageParams.iDamage;
 
-	if (m_eAtkType == EAttackType::ATK_HEAVY && !m_bAtkBite && !m_bAtkLaser && !m_bDown)
-	{			
-		m_bStruck = true;	// 체력 다는 조건으로 주면 될듯?
+	if (m_eAtkType == EAttackType::ATK_HEAVY)
+	{		
 		++m_iGroggyCnt;
+
+		if (!m_bAtkBite && !m_bAtkLaser && !m_bDown)		
+			m_bStruck = true;	// 체력 다는 조건으로 주면 될듯?				
 	}
-
-	if (m_eAtkType == EAttackType::ATK_LIGHT) // ATK_MIDDLE
-		m_bStruck = true;
-
+	
 	if (m_iHP <= 0)
 	{
 		m_pController->ClearCommands();
@@ -306,8 +305,6 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 	}
 	
 //	CGameInstance::GetInstance()->SetTimeRatioCurve("Simple_Increase");
-
-	IM_LOG("yes");
 }
 
 _matrix CBronJon::AttachCollider(CRigidBody* pRigidBody)

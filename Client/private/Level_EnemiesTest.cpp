@@ -158,29 +158,29 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 		return E_FAIL;*/
 
 
-	// pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
-	// 	->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(120.f, 3.f, 15.f, 1.f));
 
 	// Test 하지 않는 중인 Monster 넣어두기
-// 	/*
-// 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BuddyLumi"))
-// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(40.f, 3.f, 3.f, 1.f));
 // 	
-	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLeg"))
-		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(20.f, 3.f, 6.f, 1.f));
-// 		
-// 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPool"))
-// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-20.f, 3.f, -3.f, 1.f));
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(140.f, 3.f, 10.f, 1.f));
 //
-// 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPandou"))
-// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(100.f, 3.f, 10.f, 1.f));
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BuddyLumi"))
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(40.f, 3.f, 3.f, 1.f));
+
 //
-// 		
-// 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_MonsterBoss1"))
-// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(200.f, 3.f, 10.f, 1.f));
-// 	*/
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLeg"))
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(65.f, 3.f, 6.f, 1.f));
+//
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPool"))//
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-40.f, 3.f, -3.f, 1.f));
+//
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPandou"))
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(60.f, 3.f, 10.f, 1.f));
 
-
+//
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_MonsterBoss1"))
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(170.f, 3.f, 10.f, 1.f));
+ 	
 	/*auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
 	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 	pos.y += 1.f;

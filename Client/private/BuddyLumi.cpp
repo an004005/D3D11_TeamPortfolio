@@ -42,15 +42,11 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 
 	FAILED_CHECK(CMonster::Initialize(pArg));
 
-	/*if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Trigger"),
-		(CComponent**)&m_pTrigger, &BuddyLumiTrigger)))
-		return E_FAIL;*/
-	
 	Json BuddyLumiWeapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiWeapon.json");
 
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Weapon"),
 		(CComponent**)&m_pWeaponCollider, &BuddyLumiWeapon)))
-		return E_FAIL;	
+		return E_FAIL;
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
@@ -60,24 +56,38 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Proto_BdLm_Controller"), TEXT("Com_Controller"), (CComponent**)&m_pController));
 
 	// Event Caller
-	
-	m_pModelCom->Add_EventCaller("Swing_Start", [this] { m_bAtkSwitch = true; });
-	m_pModelCom->Add_EventCaller("Swing_End", [this] { m_bAtkSwitch = false; });
+
+	m_pModelCom->Add_EventCaller("Swing_Start", [this] 
+	{ 
+		m_bAtkSwitch = true; 
+		m_bHitMove = true;
+	});
+	m_pModelCom->Add_EventCaller("Swing_End", [this]
+	{
+		m_bHitMove = false;
+		m_bAtkSwitch = false; 
+	});
+
 
 	m_pModelCom->Add_EventCaller("Upper", [this] 
 	{
-		m_fGravity = 22.f;
-		m_fYSpeed = 11.f;  
+		m_fGravity = 20.f;
+		m_fYSpeed = 10.f;  
 	});
 	m_pModelCom->Add_EventCaller("Successive", [this] 
 	{ 
-		m_fGravity = 34.f;
-		m_fYSpeed = 13.f;
+		m_fGravity = 3.f;
+		m_fYSpeed = 1.5f;
+	});
+	m_pModelCom->Add_EventCaller("AirDamageReset", [this]
+	{
+		m_fGravity = 20.f;
+		m_fYSpeed = 0.f;
 	});
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 	// ~Event Caller
 	m_iHP = 900; // ★
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
@@ -132,44 +142,50 @@ void CBuddyLumi::Tick(_double TimeDelta)
 	// Controller
 	m_pController->SetTarget(m_pTarget);
 
-	m_pController->Tick(TimeDelta);
+	if (m_bDead == false)
+		m_pController->Tick(TimeDelta);
+
 	m_bRun = m_pController->IsRun();
 	_bool bOnfloor = IsOnFloor();
 
-	if (m_pController->KeyDown(CController::NUM_1)) 
+	if (!m_bDead && m_pController->KeyDown(CController::NUM_1))
 	{
+		m_bHitMove = false;
 		m_pASM->AttachAnimSocket("Buddy", { m_pDodgeL });
 		m_bAtkSwitch = false;
 		m_bOneHit = false;
 	}
 
-	if (m_pController->KeyDown(CController::NUM_2))
+	if (!m_bDead && m_pController->KeyDown(CController::NUM_2))
 	{
+		m_bHitMove = false;
 		m_pASM->AttachAnimSocket("Buddy", { m_pDodgeR });
 		m_bAtkSwitch = false;
 		m_bOneHit = false;
 	}
 
-	if (m_pController->KeyDown(CController::NUM_3))
+	if (!m_bDead && m_pController->KeyDown(CController::NUM_3))
 	{
+		m_bHitMove = false;
 		m_pASM->AttachAnimSocket("Buddy", { m_pDodgeB });
 		m_bAtkSwitch = false;
 		m_bOneHit = false;
 	}
 
-	if (m_pController->KeyDown(CController::MOUSE_LB))
-	{
+	if (!m_bDead && m_pController->KeyDown(CController::MOUSE_LB))
+	{		
 		m_pASM->AttachAnimSocket("Buddy", { m_pAtk_Swing });
 	}
 
-	if (m_pController->KeyDown(CController::MOUSE_RB))
+	if (!m_bDead && m_pController->KeyDown(CController::MOUSE_RB))
 	{
+		m_bHitMove = false;
 		m_pASM->AttachAnimSocket("Buddy", { m_pThreat });
 		m_bAtkSwitch = false;
 		m_bOneHit = false;
 	}
 
-	if (!m_bAirStruck && m_bStruck || m_pController->KeyDown(CController::Q))
+	if (!m_bDead && !m_bAirStruck && m_bStruck && !m_bAirMaintain || m_pController->KeyDown(CController::Q))
 	{
 		m_bStruck = false;
 		m_pController->ClearCommands();
@@ -204,43 +220,34 @@ void CBuddyLumi::Tick(_double TimeDelta)
 		}
 	}
 
-	if (!m_bStruck && m_bAirStruck || m_pController->KeyDown(CController::X))
+	if (!m_bDead && !m_bStruck && m_bAirStruck && !m_bAirMaintain || m_pController->KeyDown(CController::X))
 	{
 		m_bHitMove = false;
 		m_bAirStruck = false;
 		m_pController->ClearCommands();
-		// 추가타 X
-		if (m_iAirDamage < 2)
-		{
-			if (!m_bMaintain)
-			{
-				m_pASM->AttachAnimSocket("Buddy", { m_pBlowStart });
-				m_bMaintain = true;
-			}
-		}
 
-		else if (m_iAirDamage >= 2)
-		{
-			if (m_iAirDamage > m_iPreAirDamageCnt)
-				m_pASM->InputAnimSocket("Buddy", { m_pRiseStart });
-
-			m_iPreAirDamageCnt = m_iAirDamage;
-		}
+		m_pASM->AttachAnimSocket("Buddy", { m_pBlowStart });
+		m_bAirMaintain = true;
 	}
 
-	if (m_bMaintain)
+	if (m_bAirMaintain && !m_bDead && (m_bStruck || m_bAirStruck))
+	{
+		m_bAirStruck = false;
+		m_bStruck = false;
+		m_pASM->InputAnimSocket("Buddy", { m_pRiseStart });
+	}		
+
+	if (!m_bDead && m_bAirMaintain)
 	{
 		if (m_pASM->isSocketPassby("Buddy", 0.5f))
 		{
 			if (bOnfloor)
 			{
-				m_pASM->InputAnimSocket("Buddy", { m_pBlowLand, m_pGetUp });
-				m_iAirDamage = 0;
-				m_bMaintain = false;
+				m_pASM->InputAnimSocket("Buddy", { m_pBlowLand, m_pGetUp });		
+				m_bAirMaintain = false;
 			}
 		}
 	}
-//	m_pTrigger->Update_Tick(m_pTransformCom);
 
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
@@ -318,15 +325,13 @@ void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eAtkType = tDamageParams.eAttackType;
 	m_iHP -= tDamageParams.iDamage;
 
-	if (m_eAtkType == EAttackType::ATK_TO_AIR)
-	{
-		m_bAirStruck = true;
-		++m_iAirDamage;
-	}
+	if (m_eAtkType == EAttackType::ATK_TO_AIR)	
+		m_bAirStruck = true;	
+	
 	if (m_eAtkType != EAttackType::ATK_TO_AIR)	
 		m_bStruck = true;
 	
-	if (m_iHP <= 0)
+	if (m_iHP <= 0 && !m_bDead)
 	{
 		m_pController->ClearCommands();
 		m_DeathTimeline.PlayFromStart();
@@ -338,12 +343,8 @@ void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 void CBuddyLumi::AfterPhysX()
 {
 	__super::AfterPhysX();
-	// 무기 콜라이더의 Update_Tick(매트릭스) 
-//	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
-
 	m_pWeaponCollider->Update_Tick(AttachCollider(m_pWeaponCollider));
 	m_pWeaponCollider->Update_AfterPhysX(m_pTransformCom);
-
 }
 
 void CBuddyLumi::Swing_SweepCapsule(_bool bCol)
@@ -493,6 +494,5 @@ void CBuddyLumi::Free()
 	CMonster::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-//	Safe_Release(m_pTrigger);
 	Safe_Release(m_pWeaponCollider);
 }
