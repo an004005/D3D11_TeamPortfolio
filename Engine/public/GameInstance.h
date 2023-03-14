@@ -103,6 +103,7 @@ public: /* For.Object_Manager */
 	template<typename T>
 	T* Find_OneObjectByType(_uint iLevelIndex, const _tchar* pLayerTag);
 	class CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
+	void Add_InLayer(const _tchar* pLayerTag, CGameObject* pGameObject);
 
 	void Imgui_ProtoViewer(const _tchar*& szSelectedProto);
 	void Imgui_ObjectViewer(_uint iLevel, CGameObject*& pSelectedObject);

@@ -188,6 +188,7 @@ void CAIController::SetTarget(CScarletCharacter* pTarget)
 
 _bool CAIController::IsCommandRunning()
 {
+	//_bool bTest = m_Commands.empty() == false;
 	return m_Commands.empty() == false;
 }
 
@@ -203,7 +204,7 @@ void CAIController::Move(EMoveAxis eAxis)
 	case EMoveAxis::NORTH:
 		m_vMoveAxis.z += 1.f;
 		// 거리 비교해서 비교값 이하일때 멈추는 기능 추가하기 	
-		if (abs(m_fTtoM_Distance) < 1.4f)
+		if (abs(m_fTtoM_Distance) < 2.5f)
 		{
 			m_Commands.front().SetFinish();
 		}
@@ -262,6 +263,16 @@ void CAIController::Move_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
 {
 	Move(eAxis);
 	TurnToTarget(fSpeedRatio);
+}
+
+void CAIController::Move_TurnToTargetStop(EMoveAxis eAxis, _float fSpeedRatio)
+{
+	Move(eAxis);
+	TurnToTarget(fSpeedRatio);
+	if (abs(m_fTurnRemain) < 0.1f)
+	{
+		m_Commands.front().SetFinish();
+	}
 }
 
 void CAIController::TurnToTargetStop(_float fSpeedRatio)

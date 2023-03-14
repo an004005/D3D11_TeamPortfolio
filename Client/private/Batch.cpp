@@ -59,8 +59,6 @@ HRESULT CBatch::Render()
 
 void CBatch::Imgui_RenderProperty()
 {
-	if (LEVEL_NOW != LEVEL_BATCH) return;
-
 	__super::Imgui_RenderProperty();
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
@@ -213,6 +211,19 @@ void CBatch::Imgui_RenderProperty()
 			}
 
 			ImGui::EndListBox();
+		}
+
+		ImGui::Separator();
+
+		if (ImGui::Button("Delete Object"))
+		{
+			if (m_pGameObject)
+			{
+				m_pGameObjects.erase(remove(m_pGameObjects.begin(), m_pGameObjects.end(), m_pGameObject), m_pGameObjects.end());
+				m_pGameObject->SetDelete();
+				m_pGameObject = nullptr;
+			}
+			
 		}
 
 		ImGui::Separator();

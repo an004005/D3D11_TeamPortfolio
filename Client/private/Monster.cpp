@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "Model.h"
 #include "Animation.h"
+#include "VFX_Manager.h"
 #include "JsonStorage.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -94,6 +95,54 @@ void CMonster::LoadFromJson(const Json & json)
 	if (json.contains("UIPivotMatrixes"))
 	{
 		m_UI_PivotMatrix = json["UIPivotMatrixes"];
+	}
+}
+
+void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
+{
+	if (tDamageParams.vHitPosition.Length() == 0.f)
+	{
+		// 타격점이 원점으로 찍히면 레이캐스트를 쏴서 위치를 판단
+		if (tDamageParams.pCauser != nullptr)
+		{
+			_vector vRayPos = static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
+			vRayPos = XMVectorSetW(vRayPos, 1.f);
+			_vector vRayDir = GetColliderPosition() - static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
+			vRayDir = XMVectorSetW(vRayDir, 0.f);
+
+			physx::PxRaycastHit hitBuffer[1];
+			physx::PxRaycastBuffer rayOut(hitBuffer, 1);
+
+			RayCastParams param;
+			param.rayOut = &rayOut;
+			param.vOrigin = vRayPos;
+			param.vDir = vRayDir;
+			param.fDistance = 10.f;
+			param.iTargetType = CTB_MONSTER;
+			param.fVisibleTime = 5.f;
+			param.bSingle = true;
+			if (CGameInstance::GetInstance()->RayCast(param))
+			{
+				for (int i = 0; i < rayOut.getNbAnyHits(); ++i)
+				{
+					auto pHit = rayOut.getAnyHit(i);
+					CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+					if (auto pMonster = dynamic_cast<CMonster*>(pCollidedObject))
+					{
+						_vector vHitPos = XMVectorSet(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
+						_vector vEffectDir = tDamageParams.vSlashVector;
+						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, L"Default_Blood_00")->Start_AttachPosition(this, vHitPos, vEffectDir);
+					}
+				}
+			}
+		}
+		else
+		{
+			// 타격점이 잘 나오면 해당 위치에 생성
+			_vector vHitPos = tDamageParams.vHitPosition;
+			_vector vEffectDir = tDamageParams.vSlashVector;
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, L"Default_Blood_00")->Start_AttachPosition(this, vHitPos, vEffectDir);
+		}
 	}
 }
 

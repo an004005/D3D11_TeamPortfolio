@@ -22,12 +22,16 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Imgui_RenderProperty() override;
+	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
+
 	virtual void LoadFromJson(const Json& json) override;
 public:
 	//For Effect
 	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
 	virtual _float4x4 GetPivotMatrix() override;
 	//~For Effect
+	_bool IsDead() const { return m_bDead; }
+	_bool IsActive() const { return m_bActive; }
 	virtual void SetActive();
 
 public:

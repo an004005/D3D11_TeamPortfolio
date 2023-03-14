@@ -157,7 +157,7 @@ void CPhysX_Manager::Initialize()
 	// create simulation
 	m_Materials.emplace("Default", m_Physics->createMaterial(0.5f, 0.5f, 0.6f));
 	m_Materials.emplace("SmallFriction", m_Physics->createMaterial(0.1f, 0.1f, 0.5f));
-	m_Materials.emplace("NoBounce", m_Physics->createMaterial(0.5f, 0.5f, 0.1f));
+	m_Materials.emplace("NoBounce", m_Physics->createMaterial(0.5f, 0.5f, 0.3f));
 
 	groundPlane = PxCreatePlane(*m_Physics, physx::PxPlane(0,1,0,30), *FindMaterial("Default"));
 	PxShape* shape;

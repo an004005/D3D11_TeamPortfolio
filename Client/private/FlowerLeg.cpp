@@ -211,12 +211,13 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		m_fGravity = 20.f;
 		m_fYSpeed = 0.f;
 	});
-
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
+	m_pModelCom->Add_EventCaller("Untouch", [this] { m_bUntouchable = true; });
+	m_pModelCom->Add_EventCaller("Untouch_End", [this] { m_bUntouchable = false; });
 
 	m_iMaxHP = 1200;
 	m_iHP = m_iMaxHP; // ¡Ú
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
 	m_pASM = CFL_AnimInstance::Create(m_pModelCom, this);
@@ -534,10 +535,10 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_bAirStruck = true;
 	}
 
-	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bInvisible)
+	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bInvisible && !m_bUntouchable)
 		m_bStruck = true;
 
-	if (m_iHP <= 0)
+	if (m_iHP <= 0 && !m_bDead)
 	{
 		m_pController->ClearCommands();
 		m_DeathTimeline.PlayFromStart();
