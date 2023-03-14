@@ -116,28 +116,34 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 		m_Timeline.SetTimelineLength((_double)m_fEndTime);
 
-		 m_Timeline.SetFinishFunction([this]
-		 {
-		 	SetDelete();
-		 });
+		// m_Timeline.SetFinishFunction([this]
+		// {
+		// 	SetDelete();
+		// });
 
-		 //if (m_iSelectFinishFunc == 0)
-		 //{
-		 //	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
-		 //}
-		 //else if (m_iSelectFinishFunc == 1)
-		 //{
-		 //	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
-		 //}
-		 //else if (m_iSelectFinishFunc == 2)
-		 //{
-		 //	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
-		 //}
-		 //else if (m_iSelectFinishFunc == 3)
-		 //{
-		 //	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
-		 //}
-
+		if (m_iSelectFinishFunc == 0)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+		}
+		else if (m_iSelectFinishFunc == 1)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+		}
+		else if (m_iSelectFinishFunc == 2)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+		}
+		else if (m_iSelectFinishFunc == 3)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
+		}
+		else if(m_iSelectFinishFunc == 4)
+		{
+			m_Timeline.SetFinishFunction([this]
+			{
+				SetDelete();
+			});
+		}
 
 	}
 	else
@@ -149,28 +155,36 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CEffectGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate)
+void CEffectGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate, _bool trueisRemoveScale)
 {
 	if (pOwner == nullptr)
 	{
 		SetDelete();
 		return;
 	}
-	
 	m_pOwner = pOwner;
 	m_bUpdate = trueisUpdate;
+	m_bRemoveScale = trueisRemoveScale;
 
-	if (trueisUpdate == false)
+	if (m_bUpdate == false)
 	{
 		_matrix	SocketMatrix = m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		if (m_bRemoveScale == true)
+		{
+			SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+			SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+			SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+		}
 
 		Set_Transform(SocketMatrix);
 	}
 
+
 	m_Timeline.PlayFromStart();
 }
 
-void CEffectGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool trueisUpdate)
+void CEffectGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool trueisUpdate, _bool trueisRemoveScale)
 {
 	if (pOwner == nullptr)
 	{
@@ -179,20 +193,28 @@ void CEffectGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool true
 	}
 
 	m_pOwner = pOwner;
-	m_BoneName = BoneName;
 	m_bUpdate = trueisUpdate;
+	m_BoneName = BoneName;
+	m_bRemoveScale = trueisRemoveScale;
 
 	if(m_bUpdate == false)
 	{
 		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
 
+		if (m_bRemoveScale == true)
+		{
+			SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+			SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+			SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+		}
+
 		Set_Transform(SocketMatrix);
 	}
 
 	m_Timeline.PlayFromStart();
 }
 
-void CEffectGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _bool usepivot, _bool trueisUpdate)
+void CEffectGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _bool usepivot, _bool trueisUpdate, _bool trueisRemoveScale)
 {
 	if (pOwner == nullptr)
 	{
@@ -205,10 +227,18 @@ void CEffectGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix,
 	m_BoneName = BoneName;
 	m_bUsePivot = usepivot;
 	m_PivotMatrix = PivotMatrix;
+	m_bRemoveScale = trueisRemoveScale;
 
 	if (trueisUpdate == false)
 	{
 		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		if (m_bRemoveScale == true)
+		{
+			SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+			SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+			SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+		}
 
 		Set_Transform(SocketMatrix);
 	}
@@ -249,6 +279,7 @@ void CEffectGroup::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
 	m_Timeline.Tick(TimeDelta);
+
 	VisibleUpdate();
 	
 
@@ -262,12 +293,27 @@ void CEffectGroup::Tick(_double TimeDelta)
 				// 피봇행렬을 쓰는 경우
 				_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix() ;
 
+				if (m_bRemoveScale == true)
+				{
+					SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+					SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+					SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+				}
+
 				Set_Transform(SocketMatrix);
 			}
 			else
 			{
 				// 피봇행렬을 안쓰는 경우
+				
 				_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+				if (m_bRemoveScale == true)
+				{
+					SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+					SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+					SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+				}
 
 				Set_Transform(SocketMatrix);
 			}
@@ -320,14 +366,15 @@ void CEffectGroup::Imgui_RenderProperty()
 		{
 			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
 		}
-		// 삭제 또는 비활성화 만들기
+		else if (m_iSelectFinishFunc == 4)
+		{
+			m_Timeline.SetFinishFunction([this]
+			{
+				SetDelete();
+			});
+		}
 	}
 
-
-	// if(ImGui::Button("PlayFromStart"))
-	// {
-	// 	m_Timeline.PlayFromStart();
-	// }
 
 	m_Timeline.Imgui_RenderEditor();
 
@@ -361,31 +408,11 @@ void CEffectGroup::Imgui_RenderProperty()
 		item_current_idx = -1;
 	}
 
-	// if(ImGui::BeginListBox("##EffectGroup Box", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
-	// {
-	// 	for(_int n= 0; n<m_mapEffectSystemTag.size(); n++)
-	// 	{
-	// 		const _bool is_selected = (item_current_idx == n);
-	//
-	// 		if (ImGui::Selectable(m_mapEffectSystemTag[n].first.c_str(), is_selected))
-	// 		{
-	// 			item_current_idx = n;
-	// 		}
-	//
-	// 		if (is_selected)
-	// 			ImGui::SetItemDefaultFocus();
-	//
-	// 		if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
-	// 		{
-	// 			item_current_idx = -1;
-	// 		}
-	// 			
-	// 	}
-	// 	ImGui::EndListBox();
-	// }
-
 	if (item_current_idx != -1)
 	{
+		if (m_mapEffectSystemTag.size() == 0)
+			return;
+
 		static _int	iSelectCurve = -1;
 
 		IMGUI_LEFT_LABEL(ImGui::Combo, "Target Curve", &iSelectCurve, m_szCurveTag, CURVE_END);
@@ -836,6 +863,13 @@ void CEffectGroup::LoadFromJson(const Json& json)
 	else if (m_iSelectFinishFunc == 3)
 	{
 		m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
+	}
+	else if (m_iSelectFinishFunc == 4)
+	{
+		m_Timeline.SetFinishFunction([this]
+		{
+			SetDelete();
+		});
 	}
 }
 
