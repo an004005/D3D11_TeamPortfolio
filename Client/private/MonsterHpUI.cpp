@@ -32,7 +32,6 @@ HRESULT CMonsterHpUI::Initialize(void * pArg)
 	/*Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterHp.json");
 	m_pGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_MonsterHp", L"ProtoVFX_EffectGroup", &json));
 	*/
-
 	return S_OK;
 }
 
@@ -43,7 +42,8 @@ void CMonsterHpUI::BeginTick()
 	Assert(m_pGroup != nullptr);
 
 	//첫 인자에 넣어준 포인터의 뼈를 찾음.
-	m_pGroup->Start_Attach(m_pOwner, "Target_end", true);
+	//m_pGroup->Start_Attach(m_pOwner, "Target_end", true);
+	m_pGroup->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
 }
 
 void CMonsterHpUI::Tick(_double TimeDelta)
@@ -54,6 +54,12 @@ void CMonsterHpUI::Tick(_double TimeDelta)
 	{
 		_uint iHp = dynamic_cast<CMonster*>(m_pOwner)->GetHP();
 		_uint iMaxHp = dynamic_cast<CMonster*>(m_pOwner)->GetMaxHP();
+
+		if (iHp <= 0)
+		{
+			m_bDelete = true;
+			return;
+		}
 
 		m_fRatio = (_float)iHp / (_float)iMaxHp;
 		m_fHpBack = m_fRatio;
@@ -115,10 +121,7 @@ void CMonsterHpUI::Free()
 	__super::Free();
 
 	if (m_pGroup != nullptr)
-	{
-		if (m_pGroup->IsDeleted() == false)
-			m_pGroup->SetDelete();
-	}
-	
+		m_pGroup->SetDelete();
+
 	Safe_Release(m_pGroup);
 }

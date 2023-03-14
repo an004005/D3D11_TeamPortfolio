@@ -10,7 +10,7 @@ class CModel;
 END
 
 BEGIN(Client)
-
+enum UIPIVOT{NAME, HP, CRUSH, PIVOT_END};
 class CMonster abstract : public CScarletCharacter
 {
 protected:
@@ -22,7 +22,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Imgui_RenderProperty() override;
-
+	virtual void LoadFromJson(const Json& json) override;
 public:
 	//For Effect
 	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
@@ -60,12 +60,15 @@ protected:
 	_int m_iMaxStamina = 100;
 
 	_bool m_bDead = false;
+	_bool m_bActive = false;
+
+	array<_float4x4, PIVOT_END> m_UI_PivotMatrix;
 
 	set<CScarletCharacter*> m_DamagedTargetList;
 
 	CSimpleTimeline m_DeathTimeline;
 
-	_bool m_bActive = false;
+	
 
 
 public:

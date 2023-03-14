@@ -116,27 +116,27 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 		m_Timeline.SetTimelineLength((_double)m_fEndTime);
 
-		// m_Timeline.SetFinishFunction([this]
-		// {
-		// 	SetDelete();
-		// });
+		/* m_Timeline.SetFinishFunction([this]
+		 {
+			SetDelete();
+		 });*/
 
-		if (m_iSelectFinishFunc == 0)
-		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
-		}
-		else if (m_iSelectFinishFunc == 1)
-		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
-		}
-		else if (m_iSelectFinishFunc == 2)
-		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
-		}
-		else if (m_iSelectFinishFunc == 3)
-		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
-		}
+		 if (m_iSelectFinishFunc == 0)
+		 {
+			 m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+		 }
+		 else if (m_iSelectFinishFunc == 1)
+		 {
+			 m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+		 }
+		 else if (m_iSelectFinishFunc == 2)
+		 {
+			 m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+		 }
+		 else if (m_iSelectFinishFunc == 3)
+		 {
+			 m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
+		 }
 
 
 	}
@@ -233,12 +233,20 @@ void CEffectGroup::Tick(_double TimeDelta)
 				// 피봇행렬을 쓰는 경우
 				_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix() ;
 
+				SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+				SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+				SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+
 				Set_Transform(SocketMatrix);
 			}
 			else
 			{
 				// 피봇행렬을 안쓰는 경우
 				_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+				SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+				SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+				SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
 				Set_Transform(SocketMatrix);
 			}

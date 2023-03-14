@@ -261,12 +261,12 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 
 	//HP UI
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	m_pUI_Hp = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_Effect"), TEXT("Prototype_GameObject_MonsterHP")));
+	m_pUI_Hp = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
 	
 	//실험중이라 생성 안되면 터트림
 	assert(m_pUI_Hp != nullptr);
 	m_pUI_Hp->Set_Owner(this);
-
+	m_pUI_Hp->SetPivotMatrix(m_UI_PivotMatrix[HP]);
 	return S_OK;
 }
 

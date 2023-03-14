@@ -30,10 +30,18 @@ HRESULT CMonsterLockonUI::Initialize(void * pArg)
 	if (FAILED(CGameObject::Initialize(pArg)))
 		return E_FAIL;
 
-	//플레이어에서 몬스터를 들고있는데 타겟팅된 몬스터의의 정보를 들고와서 거기서 붙일 뼈를 셋팅해주게한다.
+
+	return S_OK;
+}
+
+void CMonsterLockonUI::BeginTick()
+{
+	//플레이어에서 몬스터를 들고있는데 타겟팅된 몬스터의의 정보를 들고옴
+	//enum FINISHFUNC { FUNC_PLAYFROMSTART, FUNC_RESET, FUNC_STOP, FUNC_REVERSE, FUNC_END };
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
+	//여기서 메니저 그룹에 내 이펙트를 넣어줌.
 	m_pTargetGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Target", TEXT("Layer_MonsterUI"));
 	m_pTargetRhombusGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Target", TEXT("Lockon_TargetRhombus"));
 
@@ -43,15 +51,20 @@ HRESULT CMonsterLockonUI::Initialize(void * pArg)
 	Assert(m_pTargetGroup != nullptr);
 	Assert(m_pTargetRhombusGroup != nullptr);
 
-	//m_pTargetGroup->Start_Attach(this, "Target", true);
-	//m_pTargetRhombusGroup->Start_Attach(this, "Target", true);
-	return S_OK;
+	//TimeLine 끝나고 유지 : FUNC_STOP
+	m_pTargetGroup->Start_Attach(m_pOwner, "Target", true);
+
+	//TimeLine 끝나고 삭제 : 4
+	m_pTargetRhombusGroup->Start_Attach(m_pOwner, "Target", true);
 }
 
 void CMonsterLockonUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-	m_pTargetGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
+
+	if (m_pOwner == nullptr)
+		m_bDelete = true;
+
 	//m_pTargetRhombusGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
 }
 
@@ -90,8 +103,13 @@ void CMonsterLockonUI::Free()
 {
 	__super::Free();
 
-	m_pTargetGroup->SetDelete();
+	if(m_pTargetGroup != nullptr)
+		m_pTargetGroup->SetDelete();
+
 	Safe_Release(m_pTargetGroup);
-	m_pTargetRhombusGroup->SetDelete();
+
+	if (m_pTargetRhombusGroup != nullptr)
+		m_pTargetRhombusGroup->SetDelete();
+
 	Safe_Release(m_pTargetRhombusGroup);
 }

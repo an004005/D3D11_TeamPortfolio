@@ -18,6 +18,10 @@ public:
 	virtual void    Tick(_double TimeDelta) override;
 	virtual void   Imgui_RenderProperty() override;
 
+public:
+	void SetPivotMatrix(_float4x4 pivotMatrix) {
+		m_PivotMatrix = pivotMatrix;
+	}
 
 private:
 	void HpBack_Tick(const _double & TimeDelta);
@@ -25,10 +29,11 @@ private:
 private:
 	class CEffectGroup* m_pGroup = nullptr;
 
-	_float m_fHpBack = { 1.0f };
-	_float m_fCurrentHpBack = { 1.0f };
-	_float m_fRatio = 0.f;
+	_float		m_fHpBack = { 1.0f };
+	_float		m_fCurrentHpBack = { 1.0f };
+	_float		m_fRatio = 0.f;
 
+	_float4x4	m_PivotMatrix;
 public:
 	static CMonsterHpUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
