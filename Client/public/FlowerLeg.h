@@ -139,6 +139,11 @@ private:
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
 	// ~TakeDamage 
+
+
+	//HP UI
+	class CMonsterHpUI*		m_pUI_Hp = nullptr;
+
 public:
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }

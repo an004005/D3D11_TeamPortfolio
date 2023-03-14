@@ -40,7 +40,14 @@ HRESULT CMonsterHpUI::Initialize(void * pArg)
 void CMonsterHpUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-	m_pGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
+
+	/*if (m_pOwner != nullptr)
+	{
+		_vector vOwnerPosition = m_pOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vOwnerPosition);
+	}*/
+
+	//m_pGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
 
 	HpBack_Tick(TimeDelta);
 }
@@ -64,16 +71,16 @@ void CMonsterHpUI::SetHP(_float fRatio)
 
 void CMonsterHpUI::HpBack_Tick(const _double & TimeDelta)
 {
-	if (m_fCurrentHpBack > m_fHpBack)
-	{
-		m_fCurrentHpBack -= _float(TimeDelta) * 0.3f;
-	}
-	else
-	{
-		m_fCurrentHpBack = m_fHpBack;
-	}
+	//if (m_fCurrentHpBack > m_fHpBack)
+	//{
+	//	m_fCurrentHpBack -= _float(TimeDelta) * 0.3f;
+	//}
+	//else
+	//{
+	//	m_fCurrentHpBack = m_fHpBack;
+	//}
 
-	m_pGroup->GetSecondEffect()->GetParams().Floats[0] = m_fCurrentHpBack;
+	//m_pGroup->GetSecondEffect()->GetParams().Floats[0] = m_fCurrentHpBack;
 }
 
 CMonsterHpUI * CMonsterHpUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

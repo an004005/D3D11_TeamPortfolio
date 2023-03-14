@@ -42,17 +42,23 @@ HRESULT CCanvas::Initialize(void * pArg)
 
 void CCanvas::BeginTick()
 {
-	list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
+	CLayer* pLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player");
 
-	for (auto iter : plsGameObject)
+	if (pLayer != nullptr)
 	{
-		if (iter->GetPrototypeTag() == L"Player")
+		list<CGameObject*> plsGameObject = pLayer->GetGameObjects();
+
+		for (auto iter : plsGameObject)
 		{
-			m_pPlayer = dynamic_cast<CPlayer*>(iter);
-			Assert(m_pPlayer != nullptr);
-			break;
+			if (iter->GetPrototypeTag() == L"Player")
+			{
+				m_pPlayer = dynamic_cast<CPlayer*>(iter);
+				Assert(m_pPlayer != nullptr);
+				break;
+			}
 		}
 	}
+	
 
 	m_Timeline.SetCurve("UI_Hit");
 }
@@ -61,8 +67,12 @@ void CCanvas::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	if (true == m_pPlayer->Get_Dash())
-		Set_UIMove();
+	if (m_pPlayer != nullptr)
+	{
+		if (true == m_pPlayer->Get_Dash())
+			Set_UIMove();
+	}
+	
 
 	m_fSizeX = (_float)g_iWinSizeX;
 	m_fSizeY = (_float)g_iWinSizeY;
@@ -318,6 +328,9 @@ void CCanvas::UIMove_FSM()
 void CCanvas::UIHit(const _double & TimeDelta)
 {
 	m_Timeline.Tick(TimeDelta, m_fY);
+
+	if (m_pPlayer == nullptr)
+		return;
 
 	if (true == m_pPlayer->Get_Hit() || CGameInstance::GetInstance()->KeyDown(DIK_0))
 	{	

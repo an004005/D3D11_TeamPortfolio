@@ -10,6 +10,7 @@
 #include "RigidBody.h"
 #include "Player.h"
 
+#include "MonsterHpUI.h"
 CFlowerLeg::CFlowerLeg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -257,6 +258,15 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0200_424_AL_dead_down");
 	// ~소켓 애니메이션 추가
 
+
+	//HP UI
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	m_pUI_Hp = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_Effect"), TEXT("Prototype_GameObject_MonsterHP")));
+	
+	//실험중이라 생성 안되면 터트림
+	assert(m_pUI_Hp != nullptr);
+	m_pUI_Hp->Set_Owner(this);
+
 	return S_OK;
 }
 
@@ -450,6 +460,7 @@ void CFlowerLeg::Tick(_double TimeDelta)
 	}
 	else
 		HitDir(TimeDelta);		
+
 }
 
 void CFlowerLeg::Late_Tick(_double TimeDelta)
