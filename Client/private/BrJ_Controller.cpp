@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "..\public\BrJ_Controller.h"
+#include <random>
+
 #include "BronJon.h"
 #include "FSMComponent.h"
 
@@ -109,19 +111,19 @@ void CBrJ_Controller::Tick_Near(_double TimeDelta)
 	switch (m_iNearOrder)
 	{
 	case 0:
-		AddCommand("MoveL_or_R", 3.3f, &CAIController::Move_TurnToTarget, eMove, 1.f);
+		AddCommand("MoveL_or_R", 2.7f, &CAIController::Move_TurnToTarget, eMove, 1.f);
 		break;
 	case 1:
-		AddCommand("Wait", 2.f, &CAIController::Wait);
+		AddCommand("Wait", 1.3f, &CAIController::Wait);
 		break;
 	case 2:	// Bite_Atk
 		AddCommand("Attack_Bite", 0.f, &CAIController::Input, MOUSE_RB); 
 		break;
 	case 3:
-		AddCommand("MoveL_or_R", 3.3f, &CAIController::Move_TurnToTarget, eMove, 1.f);
+		AddCommand("MoveL_or_R", 2.7f, &CAIController::Move_TurnToTarget, eMove, 1.f);
 		break;
 	case 4:
-		AddCommand("Wait", 2.f, &CAIController::Wait);
+		AddCommand("Wait", 1.3f, &CAIController::Wait);
 		break;
 	case 5:
 		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
@@ -129,14 +131,23 @@ void CBrJ_Controller::Tick_Near(_double TimeDelta)
 		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	case 6:
-		AddCommand("Wait", 2.f, &CAIController::Wait);
+		AddCommand("Wait", 1.3f, &CAIController::Wait);
 		break;
 	case 7:
-		AddCommand("BackMove", 2.5f, &CAIController::Move, EMoveAxis::SOUTH);
+		AddCommand("BackMove", 2.3f, &CAIController::Move, EMoveAxis::SOUTH);
+		break;
+	case 8:
+		AddCommand("Attack_Bite", 0.f, &CAIController::Input, MOUSE_RB);
+		break;
+	case 9:
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Attack_Laser", 0.f, &CAIController::Input, MOUSE_LB);
+		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	}
 
-	m_iNearOrder = (m_iNearOrder + 1) % 8;
+	_uint iRand = (rand() % 2) + 1;
+	m_iNearOrder = (m_iNearOrder + iRand) % 10;
 }
 
 void CBrJ_Controller::Tick_Mid(_double TimeDelta)
@@ -147,10 +158,10 @@ void CBrJ_Controller::Tick_Mid(_double TimeDelta)
 	switch (m_iMidOrder)
 	{
 	case 0:
-		AddCommand("MoveL_or_R", 3.3f, &CAIController::Move_TurnToTarget, eMove, 1.f);
+		AddCommand("MoveL_or_R", 2.7f, &CAIController::Move_TurnToTarget, eMove, 1.f);
 		break;
 	case 1:
-		AddCommand("Wait", 2.f, &CAIController::Wait);
+		AddCommand("Wait", 1.3f, &CAIController::Wait);
 		break;
 	case 2:
 		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
@@ -161,17 +172,23 @@ void CBrJ_Controller::Tick_Mid(_double TimeDelta)
 		AddCommand("Wait", 2.f, &CAIController::Wait);
 		break;
 	case 4: 
-		AddCommand("MoveL_or_R", 3.3f, &CAIController::Move_TurnToTarget, eMove, 1.f);
+		AddCommand("MoveL_or_R", 2.7f, &CAIController::Move_TurnToTarget, eMove, 1.f);
 		break;
 	case 5:
-		AddCommand("Wait", 2.f, &CAIController::Wait);
+		AddCommand("Wait", 1.3f, &CAIController::Wait);
 		break;
 	case 6:
-		AddCommand("ForwardMove", 2.5f, &CAIController::Move, EMoveAxis::NORTH);
+		AddCommand("ForwardMove", 2.3f, &CAIController::Move, EMoveAxis::NORTH);
+		break;
+	case 7:
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Attack_Laser", 0.f, &CAIController::Input, MOUSE_LB);
+		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	}
 
-	m_iMidOrder = (m_iMidOrder + 1) % 7;
+	_uint iRand = (rand() % 2) + 1;
+	m_iMidOrder = (m_iMidOrder + iRand) % 8;
 }
 
 void CBrJ_Controller::Tick_Far(_double TimeDelta)

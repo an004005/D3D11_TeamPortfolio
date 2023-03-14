@@ -2126,6 +2126,14 @@
             {
                 "EventName": "Spin_AtkEnd",
                 "EventTime": 175.0
+            },
+            {
+                "EventName": "Untouch",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Untouch_End",
+                "EventTime": 220.0
             }
         ]
     },
@@ -2157,6 +2165,14 @@
             {
                 "EventName": "Invincible_End",
                 "EventTime": 160.0
+            },
+            {
+                "EventName": "Untouch",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Untouch_End",
+                "EventTime": 200.0
             }
         ]
     },
@@ -2575,12 +2591,16 @@
     },
     "AS_em0400_455_AL_rise_start": {
         "Duration": 90.0,
-        "TickPerSecond": 120.0,
+        "TickPerSecond": 90.0,
         "bLooping": false,
         "vecEvent": [
             {
                 "EventName": "Successive",
                 "EventTime": 3.0
+            },
+            {
+                "EventName": "AirDamageReset",
+                "EventTime": 40.0
             }
         ]
     },
@@ -2628,6 +2648,10 @@
             {
                 "EventName": "Shoot",
                 "EventTime": 100.0
+            },
+            {
+                "EventName": "Muzzle",
+                "EventTime": 91.0
             }
         ]
     },
@@ -2734,6 +2758,10 @@
             {
                 "EventName": "Successive",
                 "EventTime": 9.0
+            },
+            {
+                "EventName": "AirDamageReset",
+                "EventTime": 48.0
             }
         ]
     },
@@ -2792,7 +2820,7 @@
         "vecEvent": [
             {
                 "EventName": "Rush_Start",
-                "EventTime": 85.0
+                "EventTime": 10.0
             }
         ]
     },
@@ -2927,6 +2955,10 @@
             {
                 "EventName": "Successive",
                 "EventTime": 9.0
+            },
+            {
+                "EventName": "AirDamageReset",
+                "EventTime": 50.0
             }
         ]
     },

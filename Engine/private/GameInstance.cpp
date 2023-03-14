@@ -435,7 +435,7 @@ _uint CGameInstance::GetCurLevelIdx()
 	if (nullptr == m_pLevel_Manager)
 		return 0;
 
-	return m_pLevel_Manager->GetCurLevelIdx();
+ 	return m_pLevel_Manager->GetCurLevelIdx();
 }
 
 _bool CGameInstance::IsLoading()

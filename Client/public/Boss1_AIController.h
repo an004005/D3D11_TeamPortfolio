@@ -23,6 +23,7 @@ public:
 	void Tick_Mid(_double TimeDelta);
 	void Tick_Far(_double TimeDelta);
 
+	void Tick_Outside(_double TimeDelta);
 //	void TurnToTargetStop(_float fSpeedRatio = 1.f);
 
 
@@ -36,9 +37,10 @@ private:
 	_uint m_iMidOrder = 0;
 	_uint m_iFarOrder = 0;
 
+	_uint m_iOutOrder = 0;
+
 	_float m_fTurnSlowTime;
 	_float m_fTurnSlowRatio;
-
 
 public:
 	virtual void Free() override;

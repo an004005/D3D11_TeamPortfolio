@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "..\public\SkmP_Controller.h"
+#include <random>
+
 #include "SkummyPool.h"
 #include "FSMComponent.h"
 
@@ -61,8 +63,8 @@ HRESULT CSkmP_Controller::Initialize(void * pArg)
 
 		.Build();
 
-	m_fTurnSlowTime = 0.9f;
-	m_fTurnSlowRatio = 0.4f;
+	m_fTurnSlowTime = 1.5f;
+	m_fTurnSlowRatio = 0.6f;
 
 	return S_OK;
 }
@@ -100,37 +102,41 @@ void CSkmP_Controller::Tick_Near(_double TimeDelta)
 	case 0:
 		AddCommand("ForwardMove", 1.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
-	case 1:
+	/*case 1:
 		AddCommand("Threat", 0.f, &CAIController::Input, R);
+		AddCommand("Wait", 2.f, &CAIController::Wait);
+		break;*/
+	case 1:
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
+//		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	case 2:
-		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
-		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
-		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
+		AddCommand("LeftMove", 2.f, &CAIController::Move_TurnToTargetStop, EMoveAxis::WEST, 1.f);
 		break;
-	case 3:
-		AddCommand("LeftMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
-		break;
-	case 4:
+	/*case 4:
 		AddCommand("Threat", 0.f, &CAIController::Input, R);
-		break;
-	case 5:
+		break;*/
+	case 3:
 		AddCommand("Wait", 2.f, &CAIController::Wait);
 		break;
-	case 6:
+	case 4:
 		AddCommand("BackMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
 		break;
-	case 7:
+	case 5:
 		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
-		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
+//		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
-	case 8:
-		AddCommand("RightMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
+	case 6:
+		AddCommand("RightMove", 2.f, &CAIController::Move_TurnToTargetStop, EMoveAxis::EAST, 1.f);
+		break;
+	case 7:
+		AddCommand("Wait", 2.f, &CAIController::Wait);
 		break;
 	}
-
-	m_iNearOrder = (m_iNearOrder + 1) % 9;
+	_uint iRand = (rand() % 3) + 1;
+	m_iNearOrder = (m_iNearOrder + iRand) % 8;
 }
 
 void CSkmP_Controller::Tick_Far(_double TimeDelta)
@@ -144,37 +150,41 @@ void CSkmP_Controller::Tick_Far(_double TimeDelta)
 	case 0:
 		AddCommand("ForwardMove", 1.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
-	case 1:
+	/*case 1:
 		AddCommand("Threat", 0.f, &CAIController::Input, R);
+		AddCommand("Wait", 2.f, &CAIController::Wait);
+		break;*/
+	case 1:
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
+//		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	case 2:
-		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
-		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
-		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
+		AddCommand("LeftMove", 2.f, &CAIController::Move_TurnToTargetStop, EMoveAxis::WEST, 1.f);
 		break;
-	case 3:
-		AddCommand("LeftMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
-		break;
-	case 4:
+	/*case 4:
 		AddCommand("Threat", 0.f, &CAIController::Input, R);
-		break;
-	case 5:
+		break;*/
+	case 3:
 		AddCommand("Wait", 2.f, &CAIController::Wait);
 		break;
-	case 6:
+	case 4:
 		AddCommand("BackMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
 		break;
-	case 7:
+	case 5:
 		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
-		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
+//		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
-	case 8:
-		AddCommand("RightMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
+	case 6:
+		AddCommand("RightMove", 2.f, &CAIController::Move_TurnToTargetStop, EMoveAxis::EAST, 1.f);
+		break;
+	case 7:
+		AddCommand("Wait", 2.f, &CAIController::Wait);
 		break;
 	}
-
-	m_iFarOrder = (m_iFarOrder + 1) % 9;
+	_uint iRand = (rand() % 3) + 1;
+	m_iFarOrder = (m_iFarOrder + iRand) % 8;
 }
 
 void CSkmP_Controller::Tick_Outside(_double TimeDelta)
