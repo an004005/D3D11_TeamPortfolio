@@ -215,6 +215,9 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 		m_LevelLoadingAsync();
 		m_LevelLoadingAsync = nullptr;
 	}
+
+
+	
 }
 
 void CGameInstance::Clear()
@@ -511,6 +514,11 @@ list<CGameObject*> CGameInstance::Find_AllObjectByPredicator(_uint iLevelIndex, 
 CGameObject * CGameInstance::Find_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag)
 {
 	return m_pObject_Manager->Find_Prototype(iLevelIndex, pPrototypeTag);
+}
+
+void CGameInstance::Add_InLayer(const _tchar * pLayerTag, CGameObject * pGameObject)
+{
+	return m_pObject_Manager->Add_InLayer(pLayerTag, pGameObject);
 }
 
 void CGameInstance::Imgui_ProtoViewer(const _tchar*& szSelectedProto)

@@ -202,7 +202,7 @@ void CTrigger::SetUp_Create(const Json & json)
 {
 	map<string, vector<_float4x4>> tmp = json["Create"];
 
-	//固府 努沸 积己
+	//积己 饶 焊包
 	for (auto iter : tmp)
 	{
 		for (auto matrix : iter.second)
@@ -212,7 +212,7 @@ void CTrigger::SetUp_Create(const Json & json)
 			Json jsonWorldMatrix;
 
 			CTransform::ModifyTransformJson(jsonWorldMatrix, matrix);
-			pMonster = dynamic_cast<CMonster*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_Monster"), s2ws(iter.first).c_str(), &jsonWorldMatrix));
+			pMonster = dynamic_cast<CMonster*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, s2ws(iter.first).c_str(), &jsonWorldMatrix));
 
 			assert(pMonster != nullptr);
 			m_pMonsters.emplace_back(pMonster);
@@ -221,13 +221,16 @@ void CTrigger::SetUp_Create(const Json & json)
 	}
 
 	m_pRigidBodyCom->SetOnTriggerIn([this](CGameObject* pGameObject) {
-
+	
 		for_each(m_pMonsters.begin(), m_pMonsters.end(), [](CMonster* pMonster) {
+			CGameInstance* pGameinstance = CGameInstance::GetInstance();
+			pGameinstance->Add_InLayer(TEXT("Layer_Monster"), pMonster);
 			pMonster->SetActive();
 		});
 
 		//场唱绊 飘府芭 昏力
 		m_bDelete = true;
+		m_pMonsters.clear();
 	});
 	
 }
@@ -264,4 +267,7 @@ void Client::CTrigger::Free()
 {
 	__super::Free();
 	Safe_Release(m_pRigidBodyCom);
+
+	for (auto it : m_pMonsters)
+		Safe_Release(it);
 }

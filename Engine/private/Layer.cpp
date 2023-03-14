@@ -37,7 +37,7 @@ void CLayer::Tick(_double TimeDelta)
 void CLayer::Late_Tick(_double TimeDelta)
 {
 	if (m_bUseTimeRatio)
-		TimeDelta *= CGameTime_Manager::GetInstance()->GetTimeRatio();
+		TimeDelta *= CGameTime_Manager ::GetInstance()->GetTimeRatio();
 
 	for (const auto pGameObject : m_GameObjects)
 		pGameObject->Late_Tick(TimeDelta);
@@ -48,6 +48,7 @@ void CLayer::AfterPhysX()
 	for (const auto pGameObject : m_GameObjects)
 		pGameObject->AfterPhysX();
 }
+
 
 HRESULT CLayer::Add_GameObject(CGameObject * pGameObject)
 {
