@@ -94,8 +94,9 @@ HRESULT CBronJon::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("Groggy_End", [this] { m_bDown = false; });
 
 	// ~Event Caller
-	m_iHP = 5000;
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
+	m_iMaxHP = 5000;
+	m_iHP = m_iMaxHP;
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(110.f));
 	m_iGroggy_Able = 5;
 
 	m_pASM = CBrJ_AnimInstance::Create(m_pModelCom, this);
@@ -158,20 +159,20 @@ void CBronJon::Tick(_double TimeDelta)
 
 	// 소켓 키 세팅
 
-	if (m_pController->KeyDown(CController::MOUSE_RB))
+	if (!m_bDead && m_pController->KeyDown(CController::MOUSE_RB))
 	{
 		m_pASM->AttachAnimSocket("BronJon", { m_pAtk_Bite });
 	}
-	if (m_pController->KeyDown(CController::MOUSE_LB))
+	if (!m_bDead && m_pController->KeyDown(CController::MOUSE_LB))
 	{
 		m_pASM->AttachAnimSocket("BronJon", { m_pAtk_LaserStart, m_pAtk_LaserLoop, m_pAtk_LaserLoop, m_pAtk_LaserLoop, m_pAtk_LaserEnd });
 	}
-	if (m_pController->KeyDown(CController::G))
+	if (!m_bDead && m_pController->KeyDown(CController::G))
 	{
 		m_pASM->AttachAnimSocket("BronJon", { m_pThreat });
 	}
 
-	if (m_bStruck || m_pController->KeyDown(CController::NUM_1))
+	if (!m_bDead && m_bStruck || m_pController->KeyDown(CController::NUM_1))
 	{
 		m_bStruck = false;
 		m_pController->ClearCommands();
@@ -202,7 +203,7 @@ void CBronJon::Tick(_double TimeDelta)
 	}
 	
 	// m_bGroggy : 그로기 상태 및 Down 애니메이션이 돌기 위한 조건이므로 한번 돌고 바로 false 
-	if (m_bGroggy || m_pController->KeyDown(CController::NUM_4))
+	if (!m_bDead && m_bGroggy || m_pController->KeyDown(CController::NUM_4))
 	{		
 		m_bGroggy = false;
 		m_iGroggyCnt = 0;
@@ -256,6 +257,9 @@ HRESULT CBronJon::Render()
 void CBronJon::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	ImGui::Text("HP : %d", m_iHP);
+
 	m_pASM->Imgui_RenderState();
 }
 
@@ -297,7 +301,7 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 			m_bStruck = true;	// 체력 다는 조건으로 주면 될듯?				
 	}
 	
-	if (m_iHP <= 0)
+	if (m_iHP <= 0 && !m_bDead) // + Dead 예외처리 
 	{
 		m_pController->ClearCommands();
 		m_DeathTimeline.PlayFromStart();

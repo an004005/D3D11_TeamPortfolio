@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Boss1.h"
+#include <random>
 
 #include <PhysX_Manager.h>
 
@@ -47,7 +48,8 @@ HRESULT CBoss1::Initialize(void* pArg)
 
 
 	m_fGravity = 25.f;
-	m_iHP = 3000;
+	m_iMaxHP = 10000;
+	m_iHP = m_iMaxHP;
 	m_iPreHP = m_iHP;
 
 	m_pModelCom->Add_EventCaller("JumpAttackStart", [this]
@@ -151,7 +153,7 @@ HRESULT CBoss1::Initialize(void* pArg)
 		}	
 	});
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 35.f)));
+//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 35.f)));
 	
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(100.f));
 
@@ -187,7 +189,7 @@ void CBoss1::BeginTick()
 			continue;
 		m_BodyMtrls.push_back(pMtrl);
 	}
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 35.f)));
+//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 35.f)));
 }
 
 void CBoss1::Tick(_double TimeDelta)
@@ -269,11 +271,9 @@ void CBoss1::Late_Tick(_double TimeDelta)
 	CMonster::Late_Tick(TimeDelta);
 
 	_int iCurrentHP = m_iPreHP - m_iHP;
-	if (iCurrentHP >= 2100)
-	{
+	if (iCurrentHP >= 4000)	
 		m_b2ndPhase = true;
-	}
-
+	
 	if (m_bVisible)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
@@ -289,6 +289,9 @@ void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	if (m_bDead)
 		return;
+
+	__super::TakeDamage(tDamageParams);
+
 
 
 }
