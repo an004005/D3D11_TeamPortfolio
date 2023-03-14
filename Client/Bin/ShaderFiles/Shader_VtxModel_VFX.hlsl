@@ -258,10 +258,53 @@ PS_OUT PS_DEFAULT_MODEL_FLOWUV(PS_IN In)
 	float4 BlendColor = OriginTex * ChooseColor * 2.0f;
 	float4 FinalColor = saturate(BlendColor);
 	Out.vColor = CalcHDRColor(BlendColor, g_float_1);
-	Out.vColor.a = OriginTex.a * g_float_0 * In.vTexUV.y * Gradient;
+	Out.vColor.a = OriginTex.a * g_float_0 * (In.vTexUV.y) * Gradient;
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 	if (Out.vColor.a <= 0.01f)
 		discard;
+	return Out;
+}
+
+// Mesh Trail (Gara)
+PS_OUT PS_BRONJON_LASER(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
+
+	float2 FlowUV = randomNormal * g_float_2+ 
+		TilingAndOffset(In.vTexUV, float2(1.f, 1.f),
+			float2(g_Time, g_Time));
+
+	float4 DistortionTex = g_tex_3.Sample(LinearSampler, FlowUV);
+	float fWeight = DistortionTex.r * g_float_3;
+
+	float2 FlowGradientUV = randomNormal * g_float_2 +
+		TilingAndOffset(In.vTexUV, float2(1.f, 1.f),
+			float2(g_Time, g_Time));
+
+	float Gradient = g_tex_2.Sample(LinearSampler, FlowGradientUV + fWeight).r;
+
+	float4 OriginTex = g_tex_0.Sample(LinearSampler, FlowGradientUV + fWeight);
+
+	float4 ChooseColor = g_vec4_0;
+
+	float4 BlendColor = OriginTex * ChooseColor * 2.0f;
+
+	float GradientAlpha = g_tex_4.Sample(LinearSampler, In.vTexUV).r;
+
+	float StartAlpha = g_tex_5.Sample(LinearSampler, float2(In.vTexUV.x * g_float_4, In.vTexUV.y)).r;
+	
+	Out.vColor = CalcHDRColor(BlendColor, g_float_1);
+	Out.vColor.a = saturate(((OriginTex.a * g_float_0 * Gradient) *GradientAlpha) * StartAlpha);
+	
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.a);
+
+	if (g_float_4 <= 0.f)
+		discard;
+
+	// if (Out.vColor.a <= 0.01f)
+	// 	discard;
+
 	return Out;
 }
 
@@ -477,8 +520,6 @@ PS_OUT PS_MAIN_FIRE_ATTACK(PS_IN In)
 		}
 	}
 
-	
-
 	return Out;
 }
 
@@ -544,7 +585,7 @@ technique11 DefaultTechnique
 	pass Normal
 	{
 		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetDepthStencilState(DS_Default_Blood, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN_NORM();
@@ -636,5 +677,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_DEFAULT_MODEL_FLOWUV();
+	}
+
+	//11
+	pass BronjonLaser
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRONJON_LASER();
 	}
 }

@@ -33,6 +33,9 @@ void CImgui_PropertyEditor::Imgui_RenderTab()
 		m_pSelectedObject->Imgui_RenderProperty();
 		m_pSelectedObject->Imgui_RenderComponentProperties();
 	}
+
+	if (m_pGameInstance->KeyDown(DIK_ESCAPE))
+		m_pSelectedObject = nullptr;
 }
 
 CImgui_PropertyEditor* CImgui_PropertyEditor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
