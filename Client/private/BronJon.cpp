@@ -381,7 +381,7 @@ void CBronJon::Atk_LaserSweep()
 void CBronJon::SetActive()
 {
 	CMonster::SetActive();
-	m_pASM->AttachAnimSocket("BronJon", { m_pModelCom->Find_Animation("AS_em0800_495_AL_press_down_start") });
+	m_pASM->AttachAnimSocket("BronJon", { m_pModelCom->Find_Animation("AS_em0800_160_AL_threat") });
 }
 
 _bool CBronJon::IsPlayingSocket() const

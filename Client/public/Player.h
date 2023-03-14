@@ -183,6 +183,10 @@ private:
 	HRESULT SetUp_KineticComboStateMachine();
 	HRESULT SetUp_JustDodgeStateMachine();
 
+	HRESULT SetUp_AttackDesc();
+
+	unordered_map<string, std::function<void()>>	m_mapCollisionEvent;
+
 	CFSMComponent*		m_pKineticStataMachine = nullptr;
 	CFSMComponent*		m_pHitStateMachine = nullptr;
 	CFSMComponent*		m_pKineticComboStateMachine = nullptr;
@@ -385,6 +389,7 @@ public:	//EventCaller용
 	void		Event_FinishFovActionCam();
 
 	void		Event_Kinetic_Throw();
+	void		Event_KineticSlowAction();
 
 private:
 	_bool		m_bCollisionAble = false;
@@ -474,6 +479,10 @@ private:
 
 private:
 	void			Search_Usable_KineticObject();
+	void			Enemy_Targeting(_bool bNear);
+	void			KineticObject_Targeting();
+
+private:
 	void			Spline_Kinetic(_double TimeDelta);
 	void			Kinetic_Test(_float fRatio);
 	void			Kinetic_ByTurn();
@@ -484,9 +493,11 @@ private:
 private:
 	void			Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수
 	void			Kinetic_Combo_MoveToKineticPoint();	// 염력 물체 애니메이션을 돌리기 전에 애니메이션의 위치를 잡아주는 함수
+	void			Kinetic_Combo_AttachLerpObject();	// 염력 물체를 애니메이션 포인트까지 끌고오는 함수
 
 private:
 	_vector			m_vKineticComboRefPoint; // 키네틱 콤보를 할 때 이동해야 하는 포인트
+	_matrix			m_KineticObjectOrigionPos = XMMatrixIdentity();
 
 private:
 	_float4 m_vSplinePoint_01;

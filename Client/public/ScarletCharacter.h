@@ -32,6 +32,9 @@ public:
 	virtual void Reset() { }
 
 public:
+	_float4	GetColliderPosition(); // 
+
+public:
 	EDeBuffType GetDeBuffType() const { return m_eDeBuff; }
 protected:
 	virtual void Update_DeBuff(_double TimeDelta);

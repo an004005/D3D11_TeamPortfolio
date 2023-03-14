@@ -1365,23 +1365,105 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_231_AL_Cap_sLcLeR_end": {
+        "Duration": 127.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_231_AL_Cap_sLcLeR_loop": {
+        "Duration": 180.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_231_AL_Cap_sLcLeR_start": {
+        "Duration": 45.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_245_AL_Pcon_cLeR_Lv1": {
         "Duration": 131.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Kinetic_Launch",
+                "EventTime": 55.0
+            }
+        ]
     },
     "AS_ch0100_252_AL_Pcon_cLeR_Lv2": {
         "Duration": 157.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Kinetic_Launch",
+                "EventTime": 60.0
+            }
+        ]
+    },
+    "AS_ch0100_259_AL_Pcon_cLeR_Lv3": {
+        "Duration": 140.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Jump",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Kinetic_Slow",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "Kinetic_Launch",
+                "EventTime": 60.0
+            }
+        ]
     },
     "AS_ch0100_264_AL_Pcon_cReL_Lv3": {
         "Duration": 123.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
+    },
+    "AS_ch0100_266_AL_Pcon_cLeR_Lv4": {
+        "Duration": 312.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Jump",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "Gravity_Disable",
+                "EventTime": 90.0
+            },
+            {
+                "EventName": "Gravity_Enable",
+                "EventTime": 200.0
+            },
+            {
+                "EventName": "CamMod",
+                "EventTime": 80.0
+            },
+            {
+                "EventName": "CamMod",
+                "EventTime": 200.0
+            },
+            {
+                "EventName": "Kinetic_Slow",
+                "EventTime": 110.0
+            },
+            {
+                "EventName": "Kinetic_Launch",
+                "EventTime": 170.0
+            }
+        ]
     },
     "AS_ch0100_271_AL_Pcon_cReL_Lv4": {
         "Duration": 312.0,

@@ -990,7 +990,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(0)
 
 				.AddTransition("RUN_FRONT to DASH", "DASH")
-				.Predicator([&]()->_bool {return m_bDash; })
+				.Predicator([&]()->_bool {return m_bDash && (CheckAnim("AS_ch0100_036_AL_dash") || CheckAnim("AS_ch0100_136_AL_dash")); })
 				.Duration(0.1f).Priority(0)
 
 				.AddTransition("RUN_FRONT to DASHJUMP_START", "DASHJUMP_START")
@@ -2270,7 +2270,6 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 {
 	UpdateTargetState(TimeDelta);
 
-	// bool 말고 int 반환해서 어떤 소켓이 끝난건지 받는게 더 좋을듯? 내일해라
 	_bool bChange = CheckFinishedAnimSocket();	
 	_bool bLocalMove = true;
 	_bool vAirEnd = bChange && m_bAir;
@@ -2320,12 +2319,16 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
 		}
 
-		if (m_bSeperateAnim)	// 분리 애니메이션이 돌아가면 하체는 업데이트하자
-		{
-			m_bSeperateSwitch = true;
-		}
+		//if (m_bSeperateAnim)	// 분리 애니메이션이 돌아가면 하체는 업데이트하자
+		//{
+		//	m_bSeperateSwitch = true;
+		//}
+		//else
+		//{
+		//	m_bSeperateSwitch = false;
+		//}
 
-		if (m_bSeperateSwitch)
+		if (m_bSeperateAnim)
 		{
 			m_pModel->SetBoneMask(EBoneMask::OFF_CHILD_EQ, "Spine1");
 
@@ -2334,6 +2337,10 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 			m_pModel->SetBoneMask(EBoneMask::ON_ALL);
 
 			m_fSeperateLerpTime = 0.f;
+		}
+		else
+		{
+			m_pModel->SetBoneMask(EBoneMask::ON_ALL);
 		}
 	}
 	else if (bChange)
@@ -2345,7 +2352,7 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 		else
 		{
 			m_pASM_Base->SetCurState("IDLE");
-			IM_LOG("Change State");
+			//IM_LOG("Change State");
 		}
 
 		m_fLerpTime = 0.f;
@@ -2383,7 +2390,7 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 	if (0.f != XMVectorGetX(XMVector3Length(vLocalMove)))
 		m_vLocalMove = vLocalMove;
 
-	if (bLocalMove && ("" == szCurAnimName))
+	if (bLocalMove/* && ("" == szCurAnimName)*/)
 	{	
 		if (m_pASM_Base->GetCurState()->m_strName.find("WALK_START") != string::npos)
 		{
@@ -2391,11 +2398,17 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 			_vector vLook = XMVector3Normalize(m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_LOOK));
 
 			m_pTargetObject->GetTransform()->LocalMove(vLook * fLength);
+
 		}
 		else
 		{
 			m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
 		}
+	}
+	else
+	{
+		IM_LOG("%d", bLocalMove);
+		IM_LOG(szCurAnimName.c_str());
 	}
 
 	//m_pTargetObject->GetTransform()->TurnByMatrix(m_pModel->GetLocalRotationMatrix(m_pTargetObject->GetTransform()->Get_WorldMatrix()));
@@ -2483,8 +2496,8 @@ void CBaseAnimInstance::Imgui_RenderState()
 void CBaseAnimInstance::InputAnimSocket(const string& strSocName, list<CAnimation*> AnimList)
 {
 	// 기존 소켓을 싹 지우고 이걸로 덮어버림
-
-	m_pModel->Reset_LocalMove(true);
+	if (!m_bSeperateAnim)
+		m_pModel->Reset_LocalMove(true);
 
 //	static_cast<CPlayer*>(m_pTargetObject)->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 
@@ -2507,7 +2520,8 @@ void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimat
 {
 	// 소켓의 애니메이션을 교환하고 보간함, 아닐 경우 그냥 덮어버림
 
-	m_pModel->Reset_LocalMove(true);
+	if (!m_bSeperateAnim)
+		m_pModel->Reset_LocalMove(true);
 
 //	static_cast<CPlayer*>(m_pTargetObject)->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 

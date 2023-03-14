@@ -188,6 +188,9 @@ HRESULT CSkmP_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObjec
 		.Build();
 
 	m_mapAnimSocket.insert({ "Pool", {} });
+
+	m_fLerpDuration = 0.2f;
+
 	return S_OK;
 }
 
