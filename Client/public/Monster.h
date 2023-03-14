@@ -30,6 +30,7 @@ public:
 	virtual _float4x4 GetPivotMatrix() override;
 	//~For Effect
 	_bool IsDead() const { return m_bDead; }
+	_bool IsActive() const { return m_bActive; }
 	virtual void SetActive();
 
 protected:
