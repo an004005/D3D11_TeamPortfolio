@@ -671,7 +671,7 @@ technique11 DefaultTechnique
 	
 	// ok su hyeon
 
-	//14
+	//15
 	pass FlipBook_Normal
 	{
 		SetRasterizerState(RS_Default);
@@ -685,10 +685,10 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_EM0650_BULLET_BIRTH_NOR();
 	}
 
-	//15
+	//16
 	pass EM_Bullet_Birth_Base
 	{
-		SetRasterizerState(RS_Default);
+		SetRasterizerState(RS_NonCulling);
 		SetDepthStencilState(DS_Default, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 

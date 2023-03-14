@@ -17,6 +17,7 @@
 #include "SkMpBullet.h"
 
 #include "RigidBody.h"
+#include "VFX_Manager.h"
 
 // TODO : 소켓 작업, Turn
 
@@ -57,6 +58,11 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 	// Event Caller
 
+	m_pModelCom->Add_EventCaller("Muzzle", [this] 
+	{
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0650_Bullet_Birth")->Start_Attach(this, "Eff02");	
+	});
+
 	m_pModelCom->Add_EventCaller("Shoot", [this] 
 	{
 		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
@@ -68,6 +74,12 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 		if(CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(m_pBullet))
 		{
 			pBullet->Set_Owner(this);
+			// Effect
+			pBullet->Set_TrailParticle(CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Loop"));
+			pBullet->Get_TrailParticle()->Start_NoAttach(pBullet, true);
+			pBullet->Set_BulletEffect(CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Em0650_Bullet_Loop"));
+			pBullet->Get_BulletEffect()->Start_NoAttach(pBullet, true);
+			// ~Effect
 
 			_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
 			_vector vPrePos = BoneMtx.r[3];

@@ -2566,6 +2566,10 @@
             {
                 "EventName": "Shoot",
                 "EventTime": 100.0
+            },
+            {
+                "EventName": "Muzzle",
+                "EventTime": 91.0
             }
         ]
     },

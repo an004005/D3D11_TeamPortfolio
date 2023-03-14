@@ -66,7 +66,7 @@ HRESULT CLevel_PlayerTest::Initialize()
 
 	if (FAILED(Ready_Prototypes()))
 		return E_FAIL;
-
+	
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
