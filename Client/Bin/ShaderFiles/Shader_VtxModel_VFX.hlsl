@@ -585,7 +585,7 @@ technique11 DefaultTechnique
 	pass Normal
 	{
 		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DS_Default_Blood, 0);
+		SetDepthStencilState(DS_Default, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN_NORM();

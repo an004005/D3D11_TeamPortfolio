@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "..\public\BdLm_Controller.h"
+#include <random>
+
 #include "BuddyLumi.h"
 #include "FSMComponent.h"
 
@@ -82,8 +84,8 @@ HRESULT CBdLm_Controller::Initialize(void * pArg)
 
 		.Build();
 
-	m_fTurnSlowTime = 0.9f;
-	m_fTurnSlowRatio = 0.4f;
+	m_fTurnSlowTime = 0.7f;
+	m_fTurnSlowRatio = 0.3f;
 
 	return S_OK;
 }
@@ -123,23 +125,30 @@ void CBdLm_Controller::Tick_Near(_double TimeDelta)
 		AddCommand("Turn", 2.7f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
 		break;
 	case 1:
+		AddCommand("Walk", 1.1f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		break;
+	case 2:
 		AddCommand("Dodge_R", 0.f, &CAIController::Input, NUM_2);
 		AddCommand("Turn", 2.7f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
 		break;
-	case 2:
-		AddCommand("Attack_Swing", 0.f, &CAIController::Input, MOUSE_LB);
-		break;
 	case 3:
+		AddCommand("Walk", 1.1f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		break;
+	case 4:
+		AddCommand("Attack_Swing", 0.f, &CAIController::Input, MOUSE_LB);
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
+		break;
+	case 5:
 		AddCommand("Dodge_B", 0.f, &CAIController::Input, NUM_3);
 		AddCommand("BackMove", 2.3f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
 		break;
-	case 4:
+	case 6:
 		AddCommand("Threat", 0.f, &CAIController::Input, MOUSE_RB);
 		AddCommand("StateTurn", 3.f, &CAIController::TurnToTarget, 1.f);
 		break;	
 	}
-
-	m_iNearOrder = (m_iNearOrder + 1) % 5;
+	_uint iRand = (rand() % 2) + 1;
+	m_iNearOrder = (m_iNearOrder + iRand) % 7;
 }
 
 void CBdLm_Controller::Tick_Mid(_double TimeDelta)

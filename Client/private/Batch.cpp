@@ -8,7 +8,7 @@
 #include "PhysX_Manager.h"
 #include "ScarletCharacter.h"
 #include "MainApp.h"
-
+#include "Monster.h"
 CBatch::CBatch(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
 {
@@ -59,8 +59,6 @@ HRESULT CBatch::Render()
 
 void CBatch::Imgui_RenderProperty()
 {
-	if (LEVEL_NOW != LEVEL_BATCH) return;
-
 	__super::Imgui_RenderProperty();
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
@@ -217,6 +215,19 @@ void CBatch::Imgui_RenderProperty()
 
 		ImGui::Separator();
 
+		if (ImGui::Button("Delete Object"))
+		{
+			if (m_pGameObject)
+			{
+				m_pGameObjects.erase(remove(m_pGameObjects.begin(), m_pGameObjects.end(), m_pGameObject), m_pGameObjects.end());
+				m_pGameObject->SetDelete();
+				m_pGameObject = nullptr;
+			}
+			
+		}
+
+		ImGui::Separator();
+
 		ImGui::BeginChild("Selected Object", { 400.f, 250.f });
 
 		if (m_pGameObject)
@@ -344,8 +355,9 @@ void CBatch::RayPicking()
 					CGameObject* pGameObject = nullptr;
 					pGameObject = pGameInstance->Clone_GameObject_Get(TEXT("Layer_AssortedObj"), m_pProtoTag.c_str(), &jsonTransform);
 
-					//pGameObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&vPos));
-					//assert(pGameObject != nullptr);
+					if (dynamic_cast<CMonster*>(pGameObject) != nullptr)
+						dynamic_cast<CMonster*>(pGameObject)->SetActive();
+
 					m_pGameObjects.emplace_back(pGameObject);
 
 					return;

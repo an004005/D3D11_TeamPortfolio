@@ -725,7 +725,7 @@ technique11 DefaultTechnique
 	//16
 	pass EM_Bullet_Birth_Base
 	{
-		SetRasterizerState(RS_Default);
+		SetRasterizerState(RS_NonCulling);
 		SetDepthStencilState(DS_Default, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
