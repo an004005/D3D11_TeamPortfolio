@@ -7,13 +7,13 @@ VFX_Mesh_Sphere_00_half
 VFX_Mesh_Sphere_01
 ../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
 VFX_Mesh_Sphere_02
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_02.static_model
 VFX_Mesh_Sphere_03
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_03.static_model
 VFX_Mesh_Sphere_04
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_04.static_model
 VFX_Mesh_Sphere_05
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_05.static_model
 VFX_Mesh_Sphere_06
 ../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
 VFX_Mesh_Sphere_06_01
