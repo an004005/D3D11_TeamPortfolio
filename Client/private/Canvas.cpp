@@ -319,7 +319,7 @@ void CCanvas::UIHit(const _double & TimeDelta)
 {
 	m_Timeline.Tick(TimeDelta, m_fY);
 
-	if (true == m_pPlayer->Get_Hit() || CGameInstance::GetInstance()->KeyDown(DIK_0))
+	if (true == m_pPlayer->Get_Hit())
 	{	
 		m_Timeline.PlayFromStart();
 	}

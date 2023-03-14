@@ -188,6 +188,8 @@
     <ClInclude Include="..\public\Batch.h" />
     <ClInclude Include="..\public\BdLm_Controller.h" />
     <ClInclude Include="..\public\Boss1_AIController.h" />
+    <ClInclude Include="..\public\Boss_AppearBackUI.h" />
+    <ClInclude Include="..\public\Boss_AppearUI.h" />
     <ClInclude Include="..\public\Boss_HpBackUI.h" />
     <ClInclude Include="..\public\Boss_ShildUI.h" />
     <ClInclude Include="..\public\BrJ_AnimInstance.h" />
@@ -204,6 +206,7 @@
     <ClInclude Include="..\public\CamSpot.h" />
     <ClInclude Include="..\public\Canvas.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h" />
+    <ClInclude Include="..\public\Canvas_BossAppear.h" />
     <ClInclude Include="..\public\Canvas_BossHp.h" />
     <ClInclude Include="..\public\Canvas_Drive.h" />
     <ClInclude Include="..\public\Canvas_DriveMove.h" />
@@ -349,6 +352,8 @@
     <ClCompile Include="..\private\Batch.cpp" />
     <ClCompile Include="..\private\BdLm_Controller.cpp" />
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
+    <ClCompile Include="..\private\Boss_AppearBackUI.cpp" />
+    <ClCompile Include="..\private\Boss_AppearUI.cpp" />
     <ClCompile Include="..\private\Boss_HpBackUI.cpp" />
     <ClCompile Include="..\private\Boss_ShildUI.cpp" />
     <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
@@ -363,6 +368,7 @@
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\private\Canvas.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp" />
+    <ClCompile Include="..\private\Canvas_BossAppear.cpp" />
     <ClCompile Include="..\private\Canvas_BossHp.cpp" />
     <ClCompile Include="..\private\Canvas_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp" />

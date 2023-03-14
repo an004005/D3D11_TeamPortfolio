@@ -597,6 +597,7 @@ PS_OUT PS_SASSkillGauge0(PS_IN In)	// → 19
 /*******************
 * UVCut → 20 : 텍스처에 따라서 게이지가 차고 줄어들고 한다.
 g_float_0(fProgress) : Gauge (최대 1 최소 0)
+g_vec4_0 : 색상
 /********************/
 PS_OUT PS_Flow(PS_IN In)	// → 20
 {
@@ -826,6 +827,37 @@ PS_OUT PS_RedEmissive(PS_IN In)
 	//Out.vColor = saturate(vTexture0 + vTexture1) * g_vec4_0;
 
 	//return Out;
+}
+
+// [28] 색상 조정 가능 하면서 텍스처 변경
+PS_OUT PS_TextureChange(PS_IN In)	// → 28
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	if (0 == g_int_0)
+	{
+
+		float fProgress = g_float_0;
+
+		float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+		float ProgressMask = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+
+		if (1.f - ProgressMask >= fProgress)
+			discard;
+
+		float4 GlowBase = DefaultTex * g_vec4_0;
+
+		float4 PointTex = g_tex_1.Sample(LinearSampler, In.vTexUV);
+
+		Out.vColor = saturate(GlowBase);
+
+		Out.vColor.a = PointTex.r;
+
+	}
+	else if (1 == g_int_0)
+		Out.vColor = g_tex_3.Sample(LinearSampler, In.vTexUV);
+
+	return Out;
 }
 
 technique11 DefaultTechnique
@@ -1223,4 +1255,19 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_RedEmissive();
 	}
+
+	//28: 텍스처 변경
+	pass TextureChange
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_TextureChange();
+	}
+	
 }

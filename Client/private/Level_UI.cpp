@@ -86,6 +86,8 @@
 #include "Boss_HpUI.h"
 #include "Boss_HpBackUI.h"
 #include "Boss_ShildUI.h"
+#include "Boss_AppearUI.h"
+#include "Boss_AppearBackUI.h"
 // Alarm
 #include "NextMapNameUI.h"
 
@@ -183,7 +185,8 @@ HRESULT CLevel_UI::Ready_Prototypes()
 	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
 
 
-	{	// 이펙트 프로토타입
+	{	
+		// 이펙트 프로토타입
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
 			CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
@@ -435,6 +438,14 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_NextRoomNameUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("NextMapNameUI"),
 			CNextMapNameUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Boss_AppearUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_AppearUI"),
+			CBoss_AppearUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Boss_AppearBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_AppearBackUI"),
+			CBoss_AppearBackUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 	}
 

@@ -265,9 +265,6 @@
     <Filter Include="02.GameObjects\UI\Boss">
       <UniqueIdentifier>{dc1701f8-365a-4180-94c6-d3de20833679}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Psychokinesis">
-      <UniqueIdentifier>{05a34116-b873-484c-8da2-baafc69d27ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Tutorial">
       <UniqueIdentifier>{abb2352e-02f6-4b3c-8379-d3a28a4803fd}</UniqueIdentifier>
     </Filter>
@@ -762,6 +759,15 @@
       <Filter>FactoryMethod</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PostVFX_Penetrate.h" />
+    <ClInclude Include="..\public\Boss_AppearUI.h">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_AppearBackUI.h">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_BossAppear.h">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1218,6 +1224,15 @@
       <Filter>FactoryMethod</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
+    <ClCompile Include="..\private\Boss_AppearUI.cpp">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_AppearBackUI.cpp">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_BossAppear.cpp">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

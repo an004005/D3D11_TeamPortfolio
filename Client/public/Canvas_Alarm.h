@@ -26,6 +26,14 @@ public:
 	void	Set_OpenNextRoomName(const _tchar * pNextRoomName);
 	void	Set_CloseNextRoomName();
 
+	void	Set_Appeart();
+
+private:
+	void	Set_ChildAppeart();
+
+private:
+	_bool	m_bCheck_Appeart = { false };
+
 public:
 	static CCanvas_Alarm* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

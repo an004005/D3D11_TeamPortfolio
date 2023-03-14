@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 
 #include "NextMapNameUI.h"
+#include "Boss_AppearUI.h"
+#include "Boss_AppearBackUI.h"
 
 CCanvas_Alarm::CCanvas_Alarm(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -27,13 +29,17 @@ HRESULT CCanvas_Alarm::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+		iter->second->SetVisible(false);
+
 	return S_OK;
 }
 
 void CCanvas_Alarm::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
-	m_bVisible = true;
+
+	Set_ChildAppeart();
 }
 
 void CCanvas_Alarm::Late_Tick(_double TimeDelta)
@@ -57,12 +63,17 @@ void CCanvas_Alarm::Imgui_RenderProperty()
 
 	if (ImGui::Button("Open Next Map Name UI"))
 	{
-		Set_OpenNextRoomName(L"전인복 메롱");
+		Set_OpenNextRoomName(L"천세의 방");
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Close Next Map Name UI"))
 	{
 		Set_CloseNextRoomName();
+	}
+
+	if (ImGui::Button("Boss Appeart"))
+	{
+		Set_Appeart();
 	}
 }
 
@@ -85,6 +96,27 @@ void CCanvas_Alarm::Set_OpenNextRoomName(const _tchar * pNextRoomName)
 void CCanvas_Alarm::Set_CloseNextRoomName()
 {
 	Find_ChildUI(L"NextMapName")->SetVisible(false);
+}
+
+void CCanvas_Alarm::Set_Appeart()
+{
+	m_bCheck_Appeart = true;
+	dynamic_cast<CBoss_AppearUI*>(Find_ChildUI(L"Boss_Appear"))->Set_Appear();
+	dynamic_cast<CBoss_AppearBackUI*>(Find_ChildUI(L"Boss_AppearBackBackGround"))->Set_AppearBackGround();
+}
+
+void CCanvas_Alarm::Set_ChildAppeart()
+{
+	if (false == m_bCheck_Appeart)
+		return;
+	
+	_int iAppearTextureNum = dynamic_cast<CBoss_AppearUI*>(Find_ChildUI(L"Boss_Appear"))->Get_TextureNum();
+
+	if (29 == iAppearTextureNum)
+	{
+		dynamic_cast<CBoss_AppearBackUI*>(Find_ChildUI(L"Boss_AppearBackBackGround"))->Set_AppearEnd();
+		m_bCheck_Appeart = false;
+	}
 }
 
 CCanvas_Alarm * CCanvas_Alarm::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
