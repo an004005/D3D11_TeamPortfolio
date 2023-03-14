@@ -583,6 +583,16 @@ void CPlayer::Imgui_RenderProperty()
 	}
 }
 
+CGameObject * CPlayer::Get_TargetedEnemy()
+{
+	if (nullptr == m_pTargetedEnemy || static_cast<CMonster*>(m_pTargetedEnemy)->IsDead())
+	{
+		return nullptr;
+	}
+
+	return m_pTargetedEnemy;
+}
+
 void CPlayer::CamBoneTest()
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_7))
@@ -1986,6 +1996,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			if (nullptr != m_pKineticObject)
 			{
 				m_KineticObjectOrigionPos = m_pKineticObject->GetTransform()->Get_WorldMatrix();
+				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_Kinetic(true);
 			}
 
 			if (nullptr != m_pTargetedEnemy)
@@ -2156,6 +2167,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			if (nullptr != m_pKineticObject)
 			{
 				m_KineticObjectOrigionPos = m_pKineticObject->GetTransform()->Get_WorldMatrix();
+				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_Kinetic(true);
 			}
 
 			if (nullptr != m_pTargetedEnemy)
@@ -2327,6 +2339,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			if (nullptr != m_pKineticObject)
 			{
 				m_KineticObjectOrigionPos = m_pKineticObject->GetTransform()->Get_WorldMatrix();
+				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_Kinetic(true);
 			}
 
 			if (nullptr != m_pTargetedEnemy)
@@ -2498,6 +2511,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			if (nullptr != m_pKineticObject)
 			{
 				m_KineticObjectOrigionPos = m_pKineticObject->GetTransform()->Get_WorldMatrix();
+				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_Kinetic(true);
 			}
 
 			if (nullptr != m_pTargetedEnemy)
@@ -3003,7 +3017,7 @@ void CPlayer::Event_FinishFovActionCam()
 
 void CPlayer::Event_Kinetic_Throw()
 {
-	if (nullptr != m_pKineticObject && (nullptr != m_pTargetedEnemy && static_cast<CMonster*>(m_pTargetedEnemy)->IsDead()))
+	if (nullptr != m_pKineticObject && (nullptr != m_pTargetedEnemy && (!static_cast<CMonster*>(m_pTargetedEnemy)->IsDead())))
 	{
 		Vector4 vTargetPos = static_cast<CScarletCharacter*>(m_pTargetedEnemy)->GetColliderPosition();
 		Vector4 vMyPos = m_pKineticObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
