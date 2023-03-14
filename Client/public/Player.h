@@ -159,6 +159,9 @@ public:
 
 	virtual void Imgui_RenderProperty() override;
 
+public:
+	CGameObject*	Get_TargetedEnemy();
+
 private:
 	void CamBoneTest();	// ¾×¼ÇÄ· ¿¹½Ã
 

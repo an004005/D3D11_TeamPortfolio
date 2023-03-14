@@ -583,6 +583,16 @@ void CPlayer::Imgui_RenderProperty()
 	}
 }
 
+CGameObject * CPlayer::Get_TargetedEnemy()
+{
+	if (nullptr == m_pTargetedEnemy || static_cast<CMonster*>(m_pTargetedEnemy)->IsDead())
+	{
+		return nullptr;
+	}
+
+	return m_pTargetedEnemy;
+}
+
 void CPlayer::CamBoneTest()
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_7))
