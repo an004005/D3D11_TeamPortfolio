@@ -744,6 +744,8 @@
     </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
+    <ClInclude Include="..\public\Level_Stage1.h" />
+    <ClInclude Include="..\public\Trigger.h" />
     <ClInclude Include="..\public\VFX_Manager.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
@@ -767,19 +769,20 @@
     <ClInclude Include="..\public\AttackNumUI.h">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\FactoryMethod.h">
       <Filter>FactoryMethod</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PostVFX_Penetrate.h" />
     <ClInclude Include="..\public\SAS_Portrait.h" />
-    <ClInclude Include="..\public\Trigger.h">
-      <Filter>Trigger</Filter>
+    <ClInclude Include="..\public\BdLm_Controller.h">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Level_Stage1.h">
-      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    <ClInclude Include="..\public\BrJ_Controller.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Level_KineticEditor.h">
-      <Filter>01.Levels\17.KineticEditor</Filter>
+    <ClInclude Include="..\public\WaterBall.h">
+      <Filter>02.GameObjects\Monster\boss1</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BdLm_Controller.h">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
@@ -1213,6 +1216,8 @@
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ParticleGroup.cpp" />
+    <ClCompile Include="..\private\Level_Stage1.cpp" />
+    <ClCompile Include="..\private\Trigger.cpp" />
     <ClCompile Include="..\private\VFX_Manager.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
@@ -1236,19 +1241,20 @@
     <ClCompile Include="..\private\AttackNumUI.cpp">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp">
       <Filter>FactoryMethod</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
     <ClCompile Include="..\private\SAS_Portrait.cpp" />
-    <ClCompile Include="..\private\Trigger.cpp">
-      <Filter>Trigger</Filter>
+    <ClCompile Include="..\private\BdLm_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Level_Stage1.cpp">
-      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    <ClCompile Include="..\private\BrJ_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Level_KineticEditor.cpp">
-      <Filter>01.Levels\17.KineticEditor</Filter>
+    <ClCompile Include="..\private\WaterBall.cpp">
+      <Filter>02.GameObjects\Monster\boss1</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BdLm_Controller.cpp">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>

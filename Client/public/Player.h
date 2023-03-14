@@ -159,6 +159,9 @@ public:
 
 	virtual void Imgui_RenderProperty() override;
 
+public:	// 현재 타게팅 된 몬스터 포인터 가져오는 함수
+	CGameObject*	Get_TargetedEnemy();
+
 private:
 	void CamBoneTest();	// 액션캠 예시
 

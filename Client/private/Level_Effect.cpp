@@ -80,8 +80,8 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
 
-	 if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
-	 	return E_FAIL;
+	 // if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
+	 // 	return E_FAIL;
 
 	return S_OK;
 }
