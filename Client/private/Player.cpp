@@ -1996,6 +1996,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			if (nullptr != m_pKineticObject)
 			{
 				m_KineticObjectOrigionPos = m_pKineticObject->GetTransform()->Get_WorldMatrix();
+				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_Kinetic(true);
 			}
 
 			if (nullptr != m_pTargetedEnemy)
@@ -2166,6 +2167,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			if (nullptr != m_pKineticObject)
 			{
 				m_KineticObjectOrigionPos = m_pKineticObject->GetTransform()->Get_WorldMatrix();
+				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_Kinetic(true);
 			}
 
 			if (nullptr != m_pTargetedEnemy)
@@ -2337,6 +2339,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			if (nullptr != m_pKineticObject)
 			{
 				m_KineticObjectOrigionPos = m_pKineticObject->GetTransform()->Get_WorldMatrix();
+				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_Kinetic(true);
 			}
 
 			if (nullptr != m_pTargetedEnemy)
@@ -2508,6 +2511,7 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 			if (nullptr != m_pKineticObject)
 			{
 				m_KineticObjectOrigionPos = m_pKineticObject->GetTransform()->Get_WorldMatrix();
+				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_Kinetic(true);
 			}
 
 			if (nullptr != m_pTargetedEnemy)
