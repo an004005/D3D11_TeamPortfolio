@@ -30,7 +30,7 @@ public:
 	virtual void AfterPhysX();
 
 	void HitDir(_double TimeDelta);
-	virtual void SetActive() override;
+//	virtual void SetActive() override;
 
 private:
 	class CSkmP_Controller*		m_pController = nullptr;

@@ -2124,6 +2124,10 @@
                 "EventTime": 115.5
             },
             {
+                "EventName": "Spin_EffectEnd",
+                "EventTime": 155.0
+            },
+            {
                 "EventName": "Spin_AtkEnd",
                 "EventTime": 175.0
             },
@@ -2139,9 +2143,13 @@
     },
     "AS_em0200_203_AL_atk_a3": {
         "Duration": 210.0,
-        "TickPerSecond": 57.0,
+        "TickPerSecond": 48.0,
         "bLooping": false,
         "vecEvent": [
+            {
+                "EventName": "FallRose_Start",
+                "EventTime": 8.0
+            },
             {
                 "EventName": "Invincible_Start",
                 "EventTime": 85.0
@@ -2165,6 +2173,10 @@
             {
                 "EventName": "Invincible_End",
                 "EventTime": 160.0
+            },
+            {
+                "EventName": "FallRose_End",
+                "EventTime": 205.0
             },
             {
                 "EventName": "Untouch",

@@ -61,7 +61,9 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 					dParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					dParams.pCauser = m_pCastOwner;
 
-					CollisionCheck_Bullet(m_pTransformCom, dParams, 0.3f, ECOLLIDER_TYPE_BIT::CTB_PLAYER);
+					_uint iColType = ECOLLIDER_TYPE_BIT::CTB_PLAYER | ECOLLIDER_TYPE_BIT::CTB_STATIC | ECOLLIDER_TYPE_BIT::CTB_PSYCHICK_OBJ;
+
+					CollisionCheck_Bullet(m_pTransformCom, dParams, 0.3f, iColType);
 
 					if (m_bHitCheck == true)
 					{

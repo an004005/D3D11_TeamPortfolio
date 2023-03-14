@@ -36,7 +36,7 @@ public:
 
 	void		HitDir(_double TimeDelta);
 
-	virtual void SetActive() override;
+//	virtual void SetActive() override;
 
 private:
 	class CSkPd_Controller*	m_pController = nullptr;

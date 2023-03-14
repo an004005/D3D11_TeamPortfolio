@@ -93,8 +93,8 @@ void CBullet::CollisionCheck_Bullet(CTransform* pTransform, DAMAGE_PARAM mParam,
 		for (int i = 0; i < sweepOut.getNbAnyHits(); ++i)
 		{
 			auto pTarget = dynamic_cast<CScarletCharacter*>(CPhysXUtils::GetOnwer(sweepOut.getAnyHit(i).actor));
-			
-			if (pTarget == nullptr)
+
+			if (pTarget == nullptr) // 건물, 염력이 적용되는 물체 등에 대한 예외 처리
 			{
 				m_bHitCheck = true;
 				return;

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "FlowerLeg.h"
 #include "GameInstance.h"
-#include"Model.h"
+#include "Model.h"
 #include "JsonStorage.h"
 #include "PhysX_Manager.h"
 
@@ -9,6 +9,8 @@
 #include "FL_AnimInstance.h"
 #include "RigidBody.h"
 #include "Player.h"
+#include "VFX_Manager.h"
+#include "Material.h"
 
 CFlowerLeg::CFlowerLeg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -187,16 +189,69 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		}
 	});
 
-	m_pModelCom->Add_EventCaller("Spin_Atk", [this] { m_bAtkSwitch = true; });
-	m_pModelCom->Add_EventCaller("Spin_AtkEnd", [this] { m_bOneHit = true; });
+	m_pModelCom->Add_EventCaller("Spin_Atk", [this] 
+	{
+		m_pSpinEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0200_Spin_Attack");
+		m_pSpinEffect->Start_Attach(this, "Target", true);//"Tail4", true);
+		m_bAtkSwitch = true;
+	});
+	m_pModelCom->Add_EventCaller("Spin_EffectEnd", [this]
+	{
+		if (m_bCloned == true)
+		{
+			if (m_pSpinEffect->IsDeleted() == false)
+				m_pSpinEffect->SetDelete();
 
-	m_pModelCom->Add_EventCaller("Invincible_Start", [this] { m_bInvisible = true; });
+			Safe_Release(m_pSpinEffect);
+		}
+	});
+
+	m_pModelCom->Add_EventCaller("Spin_AtkEnd", [this] 
+	{		
+		m_bOneHit = true; 
+	});
+
+	m_pModelCom->Add_EventCaller("FallRose_Start", [this]
+	{
+		m_pFallRoseParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose");
+		m_pFallRoseParticle->Start_Attach(this, "Eff02", true);
+	});
+	
+	m_pModelCom->Add_EventCaller("Invincible_Start", [this] 
+	{
+		// Flower Èð»Ñ¸®´Â Effect
+
+		m_pShootFlwParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Shoot_Flower");
+		m_pShootFlwParticle->Start_Attach(this, "RightFlower5", true);
+	
+
+//		m_bInvisible = true; 
+	});
 	m_pModelCom->Add_EventCaller("OverLap", [this] { Strew_Overlap(); });
-	m_pModelCom->Add_EventCaller("Invincible_End", [this] { m_bInvisible = false; });
+	m_pModelCom->Add_EventCaller("Invincible_End", [this] 
+	{ 
+//		m_bInvisible = false; 
+	});
+
+	m_pModelCom->Add_EventCaller("FallRose_End", [this]
+	{
+		if (m_bCloned == true)
+		{
+			if (m_pShootFlwParticle->IsDeleted() == false)
+				m_pShootFlwParticle->SetDelete();
+
+			Safe_Release(m_pShootFlwParticle);
+		
+			if (m_pFallRoseParticle->IsDeleted() == false)
+				m_pFallRoseParticle->SetDelete();
+
+			Safe_Release(m_pFallRoseParticle);
+		}
+	});
 
 	m_pModelCom->Add_EventCaller("Kick_Event", [this] { Kick_SweepSphere(); });
 	m_pModelCom->Add_EventCaller("Upper", [this] 
-	{
+	{		
 		m_fGravity = 20.f;
 		m_fYSpeed = 10.f; 
 	});
@@ -264,12 +319,13 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 void CFlowerLeg::BeginTick()
 {
 	__super::BeginTick();
+	m_pASM->AttachAnimSocket(("UsingControl"), { m_pModelCom->Find_Animation("AS_em0200_160_AL_threat") });
 }
 
 void CFlowerLeg::Tick(_double TimeDelta)
 {
-	if (!m_bActive)
-		return;
+	/*if (!m_bActive)
+		return;*/
 
 	CMonster::Tick(TimeDelta);
 
@@ -287,6 +343,11 @@ void CFlowerLeg::Tick(_double TimeDelta)
 	
 	m_bRun = m_pController->IsRun();	
 	_bool bOnfloor = IsOnFloor();
+
+	/*if (CGameInstance::GetInstance()->KeyDown(DIK_J))
+	{
+		DeBuff_Fire();
+	}*/
 	
 	if (m_fJumpMoveTime > 0.f)
 	{
@@ -455,8 +516,8 @@ void CFlowerLeg::Tick(_double TimeDelta)
 
 void CFlowerLeg::Late_Tick(_double TimeDelta)
 {
-	if (!m_bActive)
-		return;
+	/*if (!m_bActive)
+		return;*/
 
 	__super::Late_Tick(TimeDelta);
 
@@ -498,8 +559,8 @@ void CFlowerLeg::Imgui_RenderProperty()
 
 void CFlowerLeg::AfterPhysX()
 {
-	if (!m_bActive)
-		return;
+	/*if (!m_bActive)
+		return;*/
 
 	__super::AfterPhysX();
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
@@ -536,11 +597,11 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	}
 }
 
-void CFlowerLeg::SetActive()
-{
-	CMonster::SetActive();
-	m_pASM->AttachAnimSocket(("UsingControl"), {m_pModelCom->Find_Animation("AS_em0200_160_AL_threat")});
-}
+//void CFlowerLeg::SetActive()
+//{
+//	CMonster::SetActive();
+//	m_pASM->AttachAnimSocket(("UsingControl"), {m_pModelCom->Find_Animation("AS_em0200_160_AL_threat")});
+//}
 
 
 void CFlowerLeg::Strew_Overlap()
@@ -741,6 +802,34 @@ void CFlowerLeg::HitDir(_double TimeDelta)
 	m_vPreDir = m_vCurDir;
 
 	m_bOneTick = true;		
+}
+
+void CFlowerLeg::DeBuff_End()
+{
+	for (auto pMtrl : m_pModelCom->GetMaterials())
+	{
+		pMtrl->GetParam().Ints[0] = 0;
+	}
+}
+
+void CFlowerLeg::DeBuff_Fire()
+{
+	m_fDeBuffTime = 8.f;
+	for (auto pMtrl : m_pModelCom->GetMaterials())
+	{
+//		pMtrl->GetParam().Ints[0] = 0;
+		pMtrl->GetParam().Floats[0] = 7.f;
+		pMtrl->GetParam().Float4s[0] = { 0.9f, 0.3f, 0.001f, 1.f };
+	}
+}
+
+void CFlowerLeg::DeBuff_Oil()
+{
+	m_fDeBuffTime = 10.f;
+	for (auto pMtrl : m_pModelCom->GetMaterials())
+	{
+		pMtrl->GetParam().Ints[0] = 2;
+	}
 }
 
 _bool CFlowerLeg::IsPlayingSocket() const

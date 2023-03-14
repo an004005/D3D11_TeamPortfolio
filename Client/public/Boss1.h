@@ -55,7 +55,7 @@ public:
 	virtual void DeBuff_Fire() override;
 	virtual void DeBuff_Oil() override;
 
-	virtual void SetActive() override;
+//	virtual void SetActive() override;
 
 private:
 	class CBoss1_AnimationInstance* m_pASM = nullptr;

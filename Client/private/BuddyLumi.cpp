@@ -130,8 +130,8 @@ void CBuddyLumi::BeginTick()
 
 void CBuddyLumi::Tick(_double TimeDelta)
 {
-	if (!m_bActive)
-		return;
+	/*if (!m_bActive)
+		return;*/
 	CMonster::Tick(TimeDelta);
 
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
@@ -283,8 +283,8 @@ void CBuddyLumi::Tick(_double TimeDelta)
 
 void CBuddyLumi::Late_Tick(_double TimeDelta)
 {
-	if (!m_bActive)
-		return;
+	/*if (!m_bActive)
+		return;*/
 	__super::Late_Tick(TimeDelta);
 
 	if (m_bAtkSwitch)
@@ -347,8 +347,8 @@ void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 void CBuddyLumi::AfterPhysX()
 {
-	if (!m_bActive)
-		return;
+	/*if (!m_bActive)
+		return;*/
 	__super::AfterPhysX();
 	m_pWeaponCollider->Update_Tick(AttachCollider(m_pWeaponCollider));
 	m_pWeaponCollider->Update_AfterPhysX(m_pTransformCom);
@@ -467,10 +467,10 @@ void CBuddyLumi::HitDir(_double TimeDelta)
 	m_bOneTick = true;
 }
 
-void CBuddyLumi::SetActive()
-{
-	CMonster::SetActive();
-}
+//void CBuddyLumi::SetActive()
+//{
+//	CMonster::SetActive();
+//}
 
 _bool CBuddyLumi::IsPlayingSocket() const
 {

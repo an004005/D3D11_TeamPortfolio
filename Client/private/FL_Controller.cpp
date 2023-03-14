@@ -35,7 +35,7 @@ HRESULT CFL_Controller::Initialize(void * pArg)
 			.AddState("Outside")
 				.Tick(this, &CFL_Controller::Tick_Outside)
 
-				.AddTransition("Outside to Far", "Far")
+				.AddTransition("Outside to Near", "Near")
 					.Predicator([this] 
 					{
 						return m_fToTargetDistance <= 20.f;

@@ -120,12 +120,13 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 void CSkummyPandou::BeginTick()
 {
 	__super::BeginTick();
+	m_pASM->AttachAnimSocket("Bee", { m_pModelCom->Find_Animation("AS_em0700_160_AL_threat") });
 }
 
 void CSkummyPandou::Tick(_double TimeDelta)
 {
-	if (!m_bActive)
-		return
+	/*if (!m_bActive)
+		return;*/
 
 	CMonster::Tick(TimeDelta);
 
@@ -284,8 +285,8 @@ void CSkummyPandou::Tick(_double TimeDelta)
 
 void CSkummyPandou::Late_Tick(_double TimeDelta)
 {
-	if (!m_bActive)
-		return
+	/*if (!m_bActive)
+		return;*/
 
 	__super::Late_Tick(TimeDelta);
 
@@ -337,8 +338,8 @@ void CSkummyPandou::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 void CSkummyPandou::AfterPhysX()
 {
-	if (!m_bActive)
-		return
+	/*if (!m_bActive)
+		return;*/
 
 	__super::AfterPhysX();	
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
@@ -455,11 +456,11 @@ void CSkummyPandou::HitDir(_double TimeDelta)
 	m_bOneTick = true;
 }
 
-void CSkummyPandou::SetActive()
-{
-	CMonster::SetActive();
-	m_pASM->AttachAnimSocket("Bee", { m_pModelCom->Find_Animation("AS_em0700_160_AL_threat") });
-}
+//void CSkummyPandou::SetActive()
+//{
+//	CMonster::SetActive();
+//	m_pASM->AttachAnimSocket("Bee", { m_pModelCom->Find_Animation("AS_em0700_160_AL_threat") });
+//}
 
 _bool CSkummyPandou::IsPlayingSocket() const
 {

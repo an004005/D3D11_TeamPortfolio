@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Monster.h"
+#include "EffectGroup.h"
 
 BEGIN(Engine)
 class CFSMComponent;
@@ -38,7 +39,7 @@ public:
 
 	void HitDir(_double TimeDelta);
 
-	virtual void SetActive() override;
+//	virtual void SetActive() override;
 
 private:		
 	class CBdLm_Controller*		m_pController = nullptr;
