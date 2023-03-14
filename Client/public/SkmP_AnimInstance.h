@@ -41,7 +41,7 @@ private:
 
 private:
 	_float	m_fLerpTime = 0.f;
-	_float	m_fLerpDuration = 0.1f;
+	_float	m_fLerpDuration = 0.2f;
 	_bool	m_bLerp = false;
 	_bool	m_bAttach = false;
 

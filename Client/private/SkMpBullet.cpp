@@ -98,19 +98,23 @@ void CSkMpBullet::BeginTick()
 {	
 	CBullet::BeginTick();
 
-	for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
-	{
-		if (iter->GetPrototypeTag() == TEXT("SkummyPool"))
-		{
-			m_pCastOwner = dynamic_cast<CScarletCharacter*>(iter);
-		}
-	}
+	//for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
+	//{
+	//	if (iter->GetPrototypeTag() == TEXT("SkummyPool"))
+	//	{
+	//		m_pCastOwner = dynamic_cast<CScarletCharacter*>(iter);
+	//	}
+	//}
+	m_pCastOwner = dynamic_cast<CScarletCharacter*>(m_pOwner);
+	Safe_AddRef(m_pCastOwner);
 }
 
 void CSkMpBullet::Tick(_double TimeDelta)
 {
 	CBullet::Tick(TimeDelta);
 	m_pFSM->Tick(TimeDelta);
+	if (m_pCastOwner->IsDeleted())
+		SetDelete();
 }
 
 void CSkMpBullet::Late_Tick(_double TimeDelta)
@@ -203,4 +207,5 @@ void CSkMpBullet::Free()
 	__super::Free();
 
 	Safe_Release(m_pFSM);
+	Safe_Release(m_pCastOwner);
 }

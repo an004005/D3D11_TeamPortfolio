@@ -116,27 +116,27 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 		m_Timeline.SetTimelineLength((_double)m_fEndTime);
 
-	/*	 m_Timeline.SetFinishFunction([this]
+		 m_Timeline.SetFinishFunction([this]
 		 {
 		 	SetDelete();
-		 });*/
+		 });
 
-		if (m_iSelectFinishFunc == 0)
-		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
-		}
-		else if (m_iSelectFinishFunc == 1)
-		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
-		}
-		else if (m_iSelectFinishFunc == 2)
-		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
-		}
-		else if (m_iSelectFinishFunc == 3)
-		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
-		}
+		 //if (m_iSelectFinishFunc == 0)
+		 //{
+		 //	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+		 //}
+		 //else if (m_iSelectFinishFunc == 1)
+		 //{
+		 //	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+		 //}
+		 //else if (m_iSelectFinishFunc == 2)
+		 //{
+		 //	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+		 //}
+		 //else if (m_iSelectFinishFunc == 3)
+		 //{
+		 //	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
+		 //}
 
 
 	}
@@ -179,8 +179,8 @@ void CEffectGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool true
 	}
 
 	m_pOwner = pOwner;
-	m_bUpdate = trueisUpdate;
 	m_BoneName = BoneName;
+	m_bUpdate = trueisUpdate;
 
 	if(m_bUpdate == false)
 	{
@@ -206,14 +206,42 @@ void CEffectGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix,
 	m_bUsePivot = usepivot;
 	m_PivotMatrix = PivotMatrix;
 
-	if (m_bUpdate == false)
+	if (trueisUpdate == false)
 	{
-		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
+		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
 
 		Set_Transform(SocketMatrix);
 	}
 
-	
+	m_Timeline.PlayFromStart();
+}
+
+void CEffectGroup::Start_AttachPosition(CGameObject * pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z);
+
+		_vector		vUp = XMVector3Normalize(vDirection);
+		_vector		vRight = XMVector3Normalize(XMVector3Cross(vUp, XMVectorSet(0.f, 0.f, 1.f, 0.f)));
+		_vector		vLook = XMVector3Normalize(XMVector3Cross(vRight, vUp));
+
+		SocketMatrix.r[0] = vRight;
+		SocketMatrix.r[1] = vUp;
+		SocketMatrix.r[2] = vLook;
+
+		Set_Transform(SocketMatrix);
+	}
+
 	m_Timeline.PlayFromStart();
 }
 

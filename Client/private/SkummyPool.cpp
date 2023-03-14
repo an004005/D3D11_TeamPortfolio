@@ -81,16 +81,16 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 			pBullet->Get_BulletEffect()->Start_NoAttach(pBullet, true);
 			// ~Effect
 
-			_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
-			_vector vPrePos = BoneMtx.r[3];
+		//	_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
+		//	_vector vPrePos = BoneMtx.r[3];
 
-			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		//	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
-			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
-			pBullet->Set_ShootDir(vLook);
+		//	pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
+		//	pBullet->Set_ShootDir(vLook);
 
-			pBullet->GetTransform()->LookAt(vPrePos + vLook);
-		}
+		//	pBullet->GetTransform()->LookAt(vPrePos + vLook);
+		//}
 	});
 	m_pModelCom->Add_EventCaller("Upper", [this]
 	{
@@ -289,6 +289,8 @@ void CSkummyPool::Imgui_RenderProperty()
 
 void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+	IM_LOG("Coll");
+
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	// ↑ 공격이 들어올 방향 
 	m_eHitDir = eHitFrom;
@@ -312,6 +314,9 @@ void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_pASM->InputAnimSocket("Pool", { m_pDeadAnim });
 		m_bDead = true;
 	}
+
+	// 타격 이펙트 잡아주는 부분, 몬스터 상위에서 동작
+	__super::TakeDamage(tDamageParams);
 }
 
 void CSkummyPool::AfterPhysX()
