@@ -116,7 +116,6 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 		m_Timeline.SetTimelineLength((_double)m_fEndTime);
 
-//		m_Timeline.SetFinishFunction((CGameObject*)this, &CEffectGroup::SetDelete);
 		 m_Timeline.SetFinishFunction([this]
 		 {
 		 	SetDelete();
@@ -139,7 +138,6 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 		 //	m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
 		 //}
 
-//		 m_Timeline.PlayFromStart();
 
 	}
 	else
@@ -158,6 +156,9 @@ void CEffectGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate)
 		SetDelete();
 		return;
 	}
+	
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
 
 	if (trueisUpdate == false)
 	{
@@ -166,8 +167,6 @@ void CEffectGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate)
 		Set_Transform(SocketMatrix);
 	}
 
-	m_pOwner = pOwner;
-	m_bUpdate = trueisUpdate;
 	m_Timeline.PlayFromStart();
 }
 
