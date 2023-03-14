@@ -39,18 +39,19 @@ void CBoss_AppearUI::Tick(_double TimeDelta)
 		return;
 
 	__super::Tick(TimeDelta);
+	m_Timeline.Tick(TimeDelta, m_tParams.Float4s[0].w);
+
+	if (0 == m_iTexturenum)
+		m_Timeline.PlayFromStart();
 
 	// 29 보스 등장 텍스처가 끝났음을 의미합니다.
-	IM_LOG("X %f", m_tParams.Float4s[0].w);
-	m_Timeline.Tick(TimeDelta, m_tParams.Float4s[0].w);
-	m_Timeline.PlayFromStart();
 	if (29 == m_iTexturenum)
 	{
 		m_dNextTexture_TimeAcc += TimeDelta;
 		if (1.0 < m_dNextTexture_TimeAcc)
 		{
-			m_tParams.Float4s[0].y -= _float(TimeDelta) * 0.3f;
-			m_tParams.Float4s[0].z -= _float(TimeDelta) * 0.3f;
+			m_tParams.Float4s[0].y -= _float(TimeDelta) * 0.5f;
+			m_tParams.Float4s[0].z -= _float(TimeDelta) * 0.5f;
 		}
 
 		if (3.0 < m_dNextTexture_TimeAcc)

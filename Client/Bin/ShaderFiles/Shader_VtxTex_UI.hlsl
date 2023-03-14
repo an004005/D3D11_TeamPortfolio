@@ -860,6 +860,37 @@ PS_OUT PS_TextureChange(PS_IN In)	// → 28
 	return Out;
 }
 
+// [29] 초록색 이미시브 텍스처
+// g_tex_0 : Original Texture
+// g_tex_1 : Emissive Texture
+// g_vec4_0 : Color
+// g_float_0 : Century
+// g_float_1 : ratio
+PS_OUT PS_GreenEmissive(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Emissive = g_tex_1.Sample(LinearSampler, In.vTexUV);
+
+	float Mask = Emissive.g;
+
+	float4 DefaultColor = float4(Emissive.g, Emissive.g, Emissive.g, 0.f);
+
+	float4 BlendColor = DefaultColor  * g_vec4_0 * 2.0f;
+
+	float4 FinalColor = saturate(BlendColor);
+
+	float4 HDRColor = saturate(FinalColor + Texture * g_float_0);
+
+	Out.vColor = CalcHDRColor(HDRColor, g_float_1);
+
+	Out.vColor.a = Mask;
+
+	return Out;
+}
+
+
 technique11 DefaultTechnique
 {
 	//0 : 알파 블랜딩으로 그리기
@@ -1269,5 +1300,20 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_TextureChange();
 	}
+	
+	//29 : 초록색 이미시브 텍스처
+	pass GreenEmissive
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_GreenEmissive();
+	}
+
 	
 }

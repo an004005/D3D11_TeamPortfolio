@@ -5,6 +5,7 @@
 #include "NextMapNameUI.h"
 #include "Boss_AppearUI.h"
 #include "Boss_AppearBackUI.h"
+#include "LevelUpUI.h"
 
 CCanvas_Alarm::CCanvas_Alarm(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -75,6 +76,11 @@ void CCanvas_Alarm::Imgui_RenderProperty()
 	{
 		Set_Appeart();
 	}
+
+	if (ImGui::Button("Level Up"))
+	{
+		Set_LevelUp(20);
+	}
 }
 
 void CCanvas_Alarm::SaveToJson(Json& json)
@@ -103,6 +109,13 @@ void CCanvas_Alarm::Set_Appeart()
 	m_bCheck_Appeart = true;
 	dynamic_cast<CBoss_AppearUI*>(Find_ChildUI(L"Boss_Appear"))->Set_Appear();
 	dynamic_cast<CBoss_AppearBackUI*>(Find_ChildUI(L"Boss_AppearBackBackGround"))->Set_AppearBackGround();
+}
+
+void CCanvas_Alarm::Set_LevelUp(const _uint iLevel)
+{
+	dynamic_cast<CLevelUpUI*>(Find_ChildUI(L"LevelUp"))->Set_LevelUp(iLevel);
+	dynamic_cast<CLevelUpUI*>(Find_ChildUI(L"LevelUpBack"))->Set_LevelUpBack();
+	dynamic_cast<CLevelUpUI*>(Find_ChildUI(L"LevelUpBackGround"))->Set_LevelUpBackGround();
 }
 
 void CCanvas_Alarm::Set_ChildAppeart()

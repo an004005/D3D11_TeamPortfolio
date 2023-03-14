@@ -86,11 +86,11 @@
 #include "Boss_HpUI.h"
 #include "Boss_HpBackUI.h"
 #include "Boss_ShildUI.h"
-#include "Boss_AppearUI.h"
-#include "Boss_AppearBackUI.h"
 // Alarm
 #include "NextMapNameUI.h"
-
+#include "Boss_AppearUI.h"
+#include "Boss_AppearBackUI.h"
+#include "LevelUpUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -447,6 +447,11 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_AppearBackUI"),
 			CBoss_AppearBackUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+		/* For.Prototype_GameObject_LevelUpUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("LevelUpUI"),
+			CLevelUpUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
 	}
 
 	return S_OK;
