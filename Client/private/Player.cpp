@@ -3013,7 +3013,7 @@ void CPlayer::Event_FinishFovActionCam()
 
 void CPlayer::Event_Kinetic_Throw()
 {
-	if (nullptr != m_pKineticObject && (nullptr != m_pTargetedEnemy && static_cast<CMonster*>(m_pTargetedEnemy)->IsDead()))
+	if (nullptr != m_pKineticObject && (nullptr != m_pTargetedEnemy && (!static_cast<CMonster*>(m_pTargetedEnemy)->IsDead())))
 	{
 		Vector4 vTargetPos = static_cast<CScarletCharacter*>(m_pTargetedEnemy)->GetColliderPosition();
 		Vector4 vMyPos = m_pKineticObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
