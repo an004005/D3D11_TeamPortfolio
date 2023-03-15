@@ -267,3 +267,5 @@ ModelManifest.xml
 Environments/
 
 !/Engine/ThirdPartyLib/physx/*
+/Client/Bin/Resources/Environments_Backup
+/Client/Bin/Resources/Environments_v3.31.7z

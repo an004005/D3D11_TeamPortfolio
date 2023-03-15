@@ -83,12 +83,12 @@ HRESULT CLevel_KineticEditor::Ready_Layer_BackGround(const _tchar* pLayerTag)
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
 	// 여기서 모델만 넣고 콜라이더 셋팅 후 json 저장, json을 맵툴에서 로드해서 사용
-	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Car1.json");
-	/*vector<string> modeltags;
-	modeltags.push_back("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Car/pr_Car01_B.static_model");
-	modeltags.push_back("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Car/SM_pr_Car01_BRK.static_model");
+	Json Test;// = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Car1.json");
+	vector<string> modeltags;
 
-	Test["ModelTags"] = modeltags;*/
+	modeltags.push_back("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/FlowerPot/SM_MERGED_cannaFlower.static_model");
+
+	Test["ModelTags"] = modeltags;
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_MapKinetic_Object"), &Test));
 

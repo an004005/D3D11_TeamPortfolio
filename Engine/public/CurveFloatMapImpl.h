@@ -55,8 +55,8 @@ public:
 
 private:
 	// ImVec2* m_pKeyFrames = nullptr;
-	ImVec2 m_KeyFrames[30];
-	const _int m_iMaxPoint = 30;
+	ImVec2 m_KeyFrames[80];
+	const _int m_iMaxPoint = 80;
 	char m_szName[MAX_PATH] = "NonNamed";
 	_int m_iSelection = -1;
 

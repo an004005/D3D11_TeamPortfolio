@@ -39,6 +39,7 @@
 #include "PostVFX_Scifi.h"
 #include "EffectGroup.h"
 #include "ParticleSystem.h"
+#include "ParticleGroup.h"
 #include "PostVFX_Distortion.h"
 #include "SAS_Portrait.h"
 
@@ -177,7 +178,7 @@ HRESULT CFactoryMethod::MakeEffectPrototypes(ID3D11Device * pDevice, ID3D11Devic
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(pDevice, pContext)));
-
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleGroup", CParticleGroup::Create(pDevice, pContext)));
 	return S_OK;
 }
 

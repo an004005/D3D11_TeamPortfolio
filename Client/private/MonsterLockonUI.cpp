@@ -87,9 +87,13 @@ CGameObject * CMonsterLockonUI::Clone(void * pArg)
 void CMonsterLockonUI::Free()
 {
 	__super::Free();
+	if (m_pTargetGroup != nullptr && m_pTargetGroup->IsDeleted() == false)
+		m_pTargetGroup->SetDelete();
 
-	m_pTargetGroup->SetDelete();
 	Safe_Release(m_pTargetGroup);
-	m_pTargetRhombusGroup->SetDelete();
+
+	if (m_pTargetRhombusGroup != nullptr && m_pTargetRhombusGroup->IsDeleted() == false)
+		m_pTargetRhombusGroup->SetDelete();
+
 	Safe_Release(m_pTargetRhombusGroup);
 }

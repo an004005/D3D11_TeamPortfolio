@@ -215,16 +215,29 @@ void CMapKinetic_Object::Imgui_RenderProperty()
 	}
 }
 
+const wstring & CMapKinetic_Object::Get_ModelTag()
+{
+	if ((size_t)m_eCurModelTag >= m_pModelTags.size())
+		return L"";
+
+	return m_pModelTags[m_eCurModelTag];
+}
+
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 {
 	m_pCollider->Set_Kinetic(false);
 	m_pCollider->UpdateChange();
 
-	if(vForce.Length() > 900.f)
-		m_bUsable = false;
+//	if(vForce.Length() > 900.f)
+//		m_bUsable = false;
 
 	m_pCollider->AddForce(vForce);
 	m_pCollider->AddTorque(vTorque);
+}
+
+void CMapKinetic_Object::Set_Kinetic(_bool bKinetic)
+{
+	m_pCollider->Set_Kinetic(bKinetic);
 }
 
 void CMapKinetic_Object::Reset_Transform()

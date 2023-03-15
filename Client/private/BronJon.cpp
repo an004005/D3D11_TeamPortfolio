@@ -94,8 +94,9 @@ HRESULT CBronJon::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("Groggy_End", [this] { m_bDown = false; });
 
 	// ~Event Caller
-	m_iHP = 5000;
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
+	m_iMaxHP = 5000;
+	m_iHP = m_iMaxHP;
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(110.f));
 	m_iGroggy_Able = 5;
 
 	m_pASM = CBrJ_AnimInstance::Create(m_pModelCom, this);
@@ -158,32 +159,32 @@ void CBronJon::Tick(_double TimeDelta)
 
 	// 소켓 키 세팅
 
-	if (m_pController->KeyDown(CController::MOUSE_RB))
+	if (!m_bDead && m_pController->KeyDown(CController::MOUSE_RB))
 	{
 		m_pASM->AttachAnimSocket("BronJon", { m_pAtk_Bite });
 	}
-	if (m_pController->KeyDown(CController::MOUSE_LB))
+	if (!m_bDead && m_pController->KeyDown(CController::MOUSE_LB))
 	{
 		m_pASM->AttachAnimSocket("BronJon", { m_pAtk_LaserStart, m_pAtk_LaserLoop, m_pAtk_LaserLoop, m_pAtk_LaserLoop, m_pAtk_LaserEnd });
 	}
-	if (m_pController->KeyDown(CController::G))
+	if (!m_bDead && m_pController->KeyDown(CController::G))
 	{
 		m_pASM->AttachAnimSocket("BronJon", { m_pThreat });
 	}
 
-	if (m_bStruck || m_pController->KeyDown(CController::NUM_1))
+	if (!m_bDead && m_bStruck || m_pController->KeyDown(CController::NUM_1))
 	{
 		m_bStruck = false;
 		m_pController->ClearCommands();
 		// Test
-		if (m_eAtkType == EAttackType::ATK_LIGHT)
+		/*if (m_eAtkType == EAttackType::ATK_LIGHT)
 		{
 			if (m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("BronJon", { m_pDamage_L_F });
 
 			else if (m_eHitDir == EBaseAxis::SOUTH)
 				m_pASM->InputAnimSocket("BronJon", { m_pDamage_L_B });
-		}
+		}*/
 		// ~Test
 		if (m_eAtkType == EAttackType::ATK_HEAVY)
 		{
@@ -202,7 +203,7 @@ void CBronJon::Tick(_double TimeDelta)
 	}
 	
 	// m_bGroggy : 그로기 상태 및 Down 애니메이션이 돌기 위한 조건이므로 한번 돌고 바로 false 
-	if (m_bGroggy || m_pController->KeyDown(CController::NUM_4))
+	if (!m_bDead && m_bGroggy || m_pController->KeyDown(CController::NUM_4))
 	{		
 		m_bGroggy = false;
 		m_iGroggyCnt = 0;
@@ -256,6 +257,9 @@ HRESULT CBronJon::Render()
 void CBronJon::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	ImGui::Text("HP : %d", m_iHP);
+
 	m_pASM->Imgui_RenderState();
 }
 
@@ -289,16 +293,15 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eAtkType = tDamageParams.eAttackType;
 	m_iHP -= tDamageParams.iDamage;
 
-	if (m_eAtkType == EAttackType::ATK_HEAVY && !m_bAtkBite && !m_bAtkLaser && !m_bDown)
-	{			
-		m_bStruck = true;	// 체력 다는 조건으로 주면 될듯?
+	if (m_eAtkType == EAttackType::ATK_HEAVY)
+	{		
 		++m_iGroggyCnt;
+
+		if (!m_bAtkBite && !m_bAtkLaser && !m_bDown)		
+			m_bStruck = true;	// 체력 다는 조건으로 주면 될듯?				
 	}
-
-	if (m_eAtkType == EAttackType::ATK_LIGHT) // ATK_MIDDLE
-		m_bStruck = true;
-
-	if (m_iHP <= 0)
+	
+	if (m_iHP <= 0 && !m_bDead) // + Dead 예외처리 
 	{
 		m_pController->ClearCommands();
 		m_DeathTimeline.PlayFromStart();
@@ -307,8 +310,6 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 	}
 	
 //	CGameInstance::GetInstance()->SetTimeRatioCurve("Simple_Increase");
-
-	IM_LOG("yes");
 }
 
 _matrix CBronJon::AttachCollider(CRigidBody* pRigidBody)
@@ -381,7 +382,7 @@ void CBronJon::Atk_LaserSweep()
 void CBronJon::SetActive()
 {
 	CMonster::SetActive();
-	m_pASM->AttachAnimSocket("BronJon", { m_pModelCom->Find_Animation("AS_em0800_495_AL_press_down_start") });
+	m_pASM->AttachAnimSocket("BronJon", { m_pModelCom->Find_Animation("AS_em0800_160_AL_threat") });
 }
 
 _bool CBronJon::IsPlayingSocket() const

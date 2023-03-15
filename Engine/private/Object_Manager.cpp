@@ -402,6 +402,29 @@ CGameObject * CObject_Manager::Find_Prototype(_uint iLevelIndex, const _tchar * 
 	return iter->second;
 }
 
+void CObject_Manager::Add_InLayer(const _tchar * pLayerTag, CGameObject * pGameObject)
+{
+	auto iter = Find_Layer(LEVEL_NOW, pLayerTag);
+
+	if (iter == nullptr)
+	{
+		CLayer* pLayer = nullptr;
+		pLayer = CLayer::Create();
+		Assert(pLayer != nullptr);
+
+		FAILED_CHECK(pLayer->Add_GameObject(pGameObject));
+
+		_tchar* pLayerTagCopy = new _tchar[lstrlen(pLayerTag) + 1];
+		lstrcpy(pLayerTagCopy, pLayerTag);
+
+		m_vecLayers[LEVEL_NOW].emplace(pLayerTagCopy, pLayer);
+	}
+	else
+	{
+		FAILED_CHECK(iter->Add_GameObject(pGameObject));
+	}
+}
+
 CLayer * CObject_Manager::Find_Layer(_uint iLevelIndex, const _tchar * pLayerTag)
 {
 	auto	iter = m_vecLayers[iLevelIndex].find(pLayerTag);
