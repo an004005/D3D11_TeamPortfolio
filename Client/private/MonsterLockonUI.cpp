@@ -38,25 +38,24 @@ void CMonsterLockonUI::BeginTick()
 
 	//여기서 메니저 그룹에 내 이펙트를 넣어줌.
 	m_pTargetGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Target", TEXT("Layer_UI"));
-	m_pTargetRhombusGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_TargetRhombus", TEXT("Layer_UI"));
+	//m_pTargetRhombusGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_TargetRhombus", TEXT("Layer_UI"));
 
 	Safe_AddRef(m_pTargetGroup);
-	Safe_AddRef(m_pTargetRhombusGroup);
+	//Safe_AddRef(m_pTargetRhombusGroup);
 
 	Assert(m_pTargetGroup != nullptr);
-	Assert(m_pTargetRhombusGroup != nullptr);
+	//Assert(m_pTargetRhombusGroup != nullptr);
 
 	//TimeLine 끝나고 유지 : 2
 	m_pTargetGroup->Start_Attach(m_pOwner, "Target", true);
 
 	//TimeLine 끝나고 삭제 : 4
-	m_pTargetRhombusGroup->Start_Attach(m_pOwner, "Target", true);
+	//m_pTargetRhombusGroup->Start_Attach(m_pOwner, "Target", true);
 }
 
 void CMonsterLockonUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-
 }
 
 void CMonsterLockonUI::Imgui_RenderProperty()
@@ -97,8 +96,8 @@ void CMonsterLockonUI::Free()
 
 	Safe_Release(m_pTargetGroup);
 
-	if (m_pTargetRhombusGroup != nullptr && m_pTargetRhombusGroup->IsDeleted() == false)
-		m_pTargetRhombusGroup->SetDelete();
+	//if (m_pTargetRhombusGroup != nullptr)
+	//	m_pTargetRhombusGroup->SetDelete();
 
-	Safe_Release(m_pTargetRhombusGroup);
+	//Safe_Release(m_pTargetRhombusGroup);
 }
