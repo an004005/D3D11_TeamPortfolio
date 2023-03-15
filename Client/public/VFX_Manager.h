@@ -16,6 +16,7 @@ enum EFFECT
 	EF_HIT,
 	EF_MONSTER,
 	EF_ENVIRENMENT,
+	EF_UI,
 	EF_END
 };
 
@@ -25,7 +26,9 @@ const static array<string, EFFECT::EF_END> arrayEffectMatch{
 	"../Bin/Resources/Curve/EffectGroup/Elec_Attack/",
 	"../Bin/Resources/Curve/EffectGroup/Blood_Effect/",
 	"../Bin/Resources/Curve/EffectGroup/Monster_Effect/",
-	"../Bin/Resources/Curve/EffectGroup/Envirenment_Effect/" };
+	"../Bin/Resources/Curve/EffectGroup/Envirenment_Effect/",
+	"../Bin/Resources/UI/UI_InGameDataGroup/"
+};
 
 enum PARTICLE
 {

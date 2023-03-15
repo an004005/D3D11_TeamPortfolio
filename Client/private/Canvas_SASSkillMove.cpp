@@ -154,6 +154,8 @@ void CCanvas_SASSkillMove::Set_SkillInfo(const SKILLINDEX eSKILLINDEX, const ESA
 
 void CCanvas_SASSkillMove::UseSkill_Tick()
 {
+	if (m_pPlayer == nullptr)
+		return;
 	// 1
 	if (true == m_pPlayer->Get_SASSkillInput(0))
 	{
@@ -257,6 +259,9 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 
 void CCanvas_SASSkillMove::Set_IconType(const _uint iIndex, const ESASType & eESASType)
 {
+	if (m_pPlayer == nullptr)
+		return;
+
 	_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eESASType)].Energy;
 	_float fMinEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eESASType)].MinEnergy;
 

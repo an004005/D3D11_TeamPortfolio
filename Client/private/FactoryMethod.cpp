@@ -43,6 +43,9 @@
 #include "PostVFX_Distortion.h"
 #include "SAS_Portrait.h"
 
+//UI
+#include "MonsterHpUI.h"
+#include "MonsterLockonUI.h"
 
 CFactoryMethod::CFactoryMethod()
 {
@@ -198,6 +201,16 @@ HRESULT CFactoryMethod::MakeSAS_Portrait_Prototypes(ID3D11Device* pDevice, ID3D1
 		pGameInstance->Add_Prototype(L"ProtoPostVFX_SASPortrait", CPostVFX_SAS_Portrait::Create(pDevice, pContext));
 		
 	}
+
+	return S_OK;
+}
+
+HRESULT CFactoryMethod::MakeUITestPrototypes(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterHP", CMonsterHpUI::Create(pDevice, pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterLockon", CMonsterLockonUI::Create(pDevice, pContext)));
 
 	return S_OK;
 }

@@ -9,7 +9,6 @@
 #include "FL_AnimInstance.h"
 #include "RigidBody.h"
 #include "Player.h"
-
 CFlowerLeg::CFlowerLeg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -451,6 +450,7 @@ void CFlowerLeg::Tick(_double TimeDelta)
 	}
 	else
 		HitDir(TimeDelta);		
+
 }
 
 void CFlowerLeg::Late_Tick(_double TimeDelta)
