@@ -11,6 +11,8 @@ END
 
 BEGIN(Client)
 
+enum MONSTER_UIPIVOT {INFO_BAR, FINDEYES, PIVOT_END};
+
 class CMonster abstract : public CScarletCharacter
 {
 protected:
@@ -37,6 +39,11 @@ public:
 public:
 	_uint GetHP() { return m_iHP; }
 	_uint GetMaxHP() { return m_iMaxHP; }
+	_float4x4	GetUIPivot(MONSTER_UIPIVOT ePivot) { return m_UI_PivotMatrixes[ePivot]; }
+
+public:
+	//UI
+	void TurnEyesOut();
 
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
@@ -51,7 +58,7 @@ protected:
 
 	void MoveTransformJson(Json& jsonDest, void* pArg);
 
-	
+
 
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
@@ -66,7 +73,7 @@ protected:
 	_bool m_bDead = false;
 	_bool m_bActive = false;
 
-	_float4x4 m_UI_PivotMatrix;
+	array<_float4x4, PIVOT_END> m_UI_PivotMatrixes;
 
 	set<CScarletCharacter*> m_DamagedTargetList;
 

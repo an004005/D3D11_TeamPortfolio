@@ -12,7 +12,7 @@
     },
     "ObjectTag": "Flower_Leg",
     "Prototype_GameObject": "FlowerLeg\u0000",
-    "UIPivotMatrix": [
+    "UIPivotMatrixes": [
         [
             1.0,
             0.0,
@@ -45,7 +45,7 @@
             1.0,
             0.0,
             0.0,
-            0.241,
+            0.441,
             0.0,
             1.0   
         ]

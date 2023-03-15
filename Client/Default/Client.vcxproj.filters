@@ -1134,9 +1134,6 @@
     <ClCompile Include="..\private\FL_Controller.cpp">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\SkmP_Controller.cpp">
-      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\SkPd_Controller.cpp">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClCompile>
@@ -1287,6 +1284,9 @@
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_Penetrate.cpp">
       <Filter>VFX\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkmP_Controller.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

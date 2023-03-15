@@ -35,7 +35,7 @@ HRESULT CFL_Controller::Initialize(void * pArg)
 
 			.AddState("Outside")
 				.Tick(this, &CFL_Controller::Tick_Outside)
-
+				.OnExit(dynamic_cast<CMonster*>(m_pCastedOwner), &CMonster::TurnEyesOut)
 				.AddTransition("Outside to Far", "Far")
 					.Predicator([this] 
 					{
@@ -43,15 +43,6 @@ HRESULT CFL_Controller::Initialize(void * pArg)
 					})
 
 			.AddState("Near")
-				.OnStart([this]() {
-						CEffectGroup* pEffectGroup = nullptr;
-						pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", TEXT("Layer_UI"));
-						assert(pEffectGroup != nullptr);
-
-						//TimeLine 끝나고 삭제
-						pEffectGroup->Start_Attach(m_pCastedOwner, "Target", true);
-
-					})
 				.Tick(this, &CFL_Controller::Tick_Near)
 				
 				.AddTransition("Near to Mid", "Mid")
