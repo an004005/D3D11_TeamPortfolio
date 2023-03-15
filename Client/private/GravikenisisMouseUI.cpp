@@ -44,14 +44,14 @@ void CGravikenisisMouseUI::BeginTick()
 	m_pKenisis->GetSecondEffect()->GetParams().Floats[0] = 0.0f;
 	m_pKenisis->GetThirdEffect()->GetParams().Floats[0] = 0.0f;
 
-	// 게이지 부족 UI
-	m_pBanKenisis = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Psychokinesis_BanMouse", TEXT("Layer_UI"));
-	Safe_AddRef(m_pBanKenisis);
-	Assert(m_pBanKenisis != nullptr);
+	//// 게이지 부족 UI
+	//m_pBanKenisis = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Psychokinesis_BanMouse", TEXT("Layer_UI"));
+	//Safe_AddRef(m_pBanKenisis);
+	//Assert(m_pBanKenisis != nullptr);
 
-	m_pBanKenisis->Start_NoAttach(m_pOwner, true);
+	//m_pBanKenisis->Start_NoAttach(m_pOwner, true);
 
-	m_pBanKenisis->GetSecondEffect()->SetVisible(false);
+	//m_pBanKenisis->GetSecondEffect()->SetVisible(false);
 
 	// Player
 	list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
@@ -83,8 +83,8 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 		m_pKenisis->GetSecondEffect()->SetVisible(false);
 		m_pKenisis->GetThirdEffect()->SetVisible(false);
 
-		m_pBanKenisis->GetFirstEffect()->SetVisible(true);
-		m_pBanKenisis->GetSecondEffect()->SetVisible(true);
+		//m_pBanKenisis->GetFirstEffect()->SetVisible(true);
+		//m_pBanKenisis->GetSecondEffect()->SetVisible(true);
 
 		return;
 	}
@@ -96,8 +96,8 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 		m_pKenisis->GetSecondEffect()->SetVisible(true);
 		m_pKenisis->GetThirdEffect()->SetVisible(true);
 
-		m_pBanKenisis->GetFirstEffect()->SetVisible(false);
-		m_pBanKenisis->GetSecondEffect()->SetVisible(false);
+		//m_pBanKenisis->GetFirstEffect()->SetVisible(false);
+		//m_pBanKenisis->GetSecondEffect()->SetVisible(false);
 	}
 
 	if (1.0f <= m_pPlayer->Get_KineticCharge())
@@ -154,4 +154,9 @@ void CGravikenisisMouseUI::Free()
 		m_pKenisis->SetDelete();
 
 	Safe_Release(m_pKenisis);
+
+	if (m_pBanKenisis != nullptr && m_pBanKenisis->IsDeleted() == false)
+		m_pBanKenisis->SetDelete();
+
+	Safe_Release(m_pBanKenisis);
 }

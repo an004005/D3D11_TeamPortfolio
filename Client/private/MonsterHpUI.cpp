@@ -43,16 +43,17 @@ HRESULT CMonsterHpUI::Initialize(void * pArg)
 void CMonsterHpUI::BeginTick()
 {
 	m_pGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterHp", TEXT("Layer_MonsterUI"));
-	//m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterName", TEXT("Layer_MonsterUI"));
+	m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterName", TEXT("Layer_MonsterUI"));
 
 	Safe_AddRef(m_pGroup);
-	//Safe_AddRef(m_pMonsterName);
+	Safe_AddRef(m_pMonsterName);
 
 	Assert(m_pGroup != nullptr);
-	//Assert(m_pMonsterName != nullptr);
+	Assert(m_pMonsterName != nullptr);
+
 	//첫 인자에 넣어준 포인터의 뼈를 찾음.
 	m_pGroup->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
-	//m_pMonsterName->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
+	m_pMonsterName->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
 
 }
 
