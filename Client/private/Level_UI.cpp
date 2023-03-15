@@ -456,7 +456,7 @@ HRESULT CLevel_UI::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	CMonster* pMonster = nullptr;
-	pMonster = dynamic_cast<CMonster*>(pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLeg")));
+	pMonster = dynamic_cast<CMonster*>(pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPandou")));
 
 	assert(pMonster != nullptr);
 	pMonster->SetActive();
