@@ -136,6 +136,8 @@ public:
 	//~For Effect
 
 	//~For UI 
+	_float		Get_KineticCharge() { return m_fKineticCharge; }
+
 	_bool		Get_Hit() { return m_bHit; }
 	_bool		Get_Dash() { return m_bDash; }
 
@@ -444,6 +446,7 @@ private:
 	void		SocketLocalMoveCheck();
 
 	void		Update_TargetUI();
+	void		Create_TargetInfoBar();
 private:
 	_float		m_fNetualTimer = 0.f;
 	void		NetualChecker(_double TimeDelta);

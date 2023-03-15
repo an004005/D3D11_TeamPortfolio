@@ -29,6 +29,7 @@
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
 #include "MonsterLockonUI.h"
+#include "MonsterHpUI.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -1053,6 +1054,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 		.AddState("KINETIC_RB_START")
 			.OnStart([&]() 
 			{ 
+				dynamic_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_IsTargeted();
 				Enemy_Targeting(true);
 				m_pASM->InputAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Start);
 			})
@@ -3455,16 +3457,15 @@ void CPlayer::Update_TargetUI()
 
 	if (m_pSettedTarget != m_pTargetedEnemy)
 	{
-
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 		//원래 타겟이 없다가 생긴 경우
 		if (m_pSettedTarget == nullptr && m_pTargetedEnemy != nullptr)
 		{
-			
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(m_pTargetedEnemy);
+				
 		}
 
 		//원래 타겟이 있었는데 사라진 경우
@@ -3483,9 +3484,34 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn->Set_Owner(m_pTargetedEnemy);
 		}
 
+
+		//info bar 설정
+		if (m_pTargetedEnemy != nullptr)
+			Create_TargetInfoBar();
+	
 		m_pSettedTarget = m_pTargetedEnemy;
 	}
 
+}
+
+void CPlayer::Create_TargetInfoBar()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	//몬스터 info바가 없으면 생성
+	if (dynamic_cast<CMonster*>(m_pTargetedEnemy)->GetHasName() == false)
+	{
+		CMonsterHpUI* pUI_HP = nullptr;
+		pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
+
+		assert(pUI_HP != nullptr);
+		pUI_HP->Set_Owner(m_pTargetedEnemy);
+
+		_float4x4 PivotMatrix = dynamic_cast<CMonster*>(m_pTargetedEnemy)->Get_UIPivotMatrix(INFOBAR);
+		pUI_HP->SetPivotMatrix(PivotMatrix);
+
+		dynamic_cast<CMonster*>(m_pTargetedEnemy)->Set_HasName();
+	}
 }
 
 void CPlayer::NetualChecker(_double TimeDelta)
@@ -3728,6 +3754,8 @@ void CPlayer::KineticObject_OutLineCheck()
 			static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetOutline(true);
 		else
 			static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetOutline(false);
+
+		}
 	}
 }
 

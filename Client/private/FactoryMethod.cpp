@@ -44,8 +44,79 @@
 #include "SAS_Portrait.h"
 
 //UI
+// Canvas
+#include "Canvas.h"
+#include "Canvas_Item.h"
+#include "Canvas_SASInfoLeft.h"
+#include "Canvas_SASInfoLeftMove.h"
+#include "Canvas_SASInfoRight.h"
+#include "Canvas_SASInfoRightMove.h"
+#include "Canvas_PlayerInfo.h"
+#include "Canvas_PlayerInfoMove.h"
+#include "Canvas_Drive.h"
+#include "Canvas_DriveMove.h"
+#include "Canvas_SASSkill.h"
+#include "Canvas_SASSkillMove.h"
+#include "Canvas_ItemMove.h"
+#include "Canvas_Tutorial.h"
+#include "Canvas_BossHp.h"
+#include "Canvas_Alarm.h"
+
+// Default
+#include "DefaultUI.h"
+#include "ButtonUI.h"
+// SAS SKill
+#include "SASSkillIconUI.h"
+#include "SASSkillGaugeUI.h"
+#include "SASSkillLightUI.h"
+#include "SASSkillNameUI.h"
+#include "SASSkillFullCircleUI.h"
+// Direve
+#include "Drive_RightDotUI.h"
+#include "Drive_GaugeUI.h"
+// Item
+#include "Item_NameUI.h"
+#include "Item_IconUI.h"
+#include "Item_GaugeUI.h"
+#include "Item_PushArrowUI.h"
+#include "Item_LeftArrowUI.h"
+#include "Item_RightArrowUI.h"
+// PlayerInfo
+#include "PlayerInfo_HpUI.h"
+#include "PlayerInfo_HpBackUI.h"
+#include "PlayerInfo_HpBothEndsUI.h"
+#include "PlayerInfo_PsychokinesisUI.h"
+#include "PlayerInfo_PsychokinesisBackUI.h"
+#include "PlayerInfo_GaugeBackGround.h"
+// SASInfo Left
+#include "SASInfoLeftHpUI.h"
+#include "SASInfoLeftHpBackUI.h"
+#include "SASInfoLeftHpBothEndsUI.h"
+#include "SASInfoRightHpUI.h"
+#include "SASInfoRightHpBackUI.h"
+#include "SASInfoRightHpBothEndsUI.h"
+// Tutorial
+#include "TutorialUI.h"
+#include "Tutorial_CheckUI.h"
+#include "Tutorial_YesNoUI.h"
+#include "Tutorial_TipsUI.h"
+#include "Tutorial_SuccessUI.h"
+
+//Boss
+#include "Boss_HpUI.h"
+#include "Boss_HpBackUI.h"
+#include "Boss_ShildUI.h"
+
+// Alarm
+#include "NextMapNameUI.h"
+#include "Boss_AppearUI.h"
+#include "Boss_AppearBackUI.h"
+#include "LevelUpUI.h"
+
+// 3D UI
 #include "MonsterHpUI.h"
 #include "MonsterLockonUI.h"
+#include "GravikenisisMouseUI.h"
 
 CFactoryMethod::CFactoryMethod()
 {
@@ -208,6 +279,269 @@ HRESULT CFactoryMethod::MakeUITestPrototypes(ID3D11Device * pDevice, ID3D11Devic
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterLockon", CMonsterLockonUI::Create(pDevice, pContext)));
 
 	return S_OK;
+}
+
+HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+{
+	
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	{
+		// Canvas_Frount_UI
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Item"),
+			CCanvas_Item::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_ItemMove */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_ItemMove"),
+			CCanvas_ItemMove::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASInfoLeft"),
+			CCanvas_SASInfoLeft::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASInfoLeftMove"),
+			CCanvas_SASInfoLeftMove::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_PlayerInfo"),
+			CCanvas_PlayerInfo::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_PlayerInfoMove"),
+			CCanvas_PlayerInfoMove::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Drive"),
+			CCanvas_Drive::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_DriveMove"),
+			CCanvas_DriveMove::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASInfoRight"),
+			CCanvas_SASInfoRight::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASInfoRightMove"),
+			CCanvas_SASInfoRightMove::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_PlayerInfo */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASSkill"),
+			CCanvas_SASSkill::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_SASSkillMove */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SASSkillMove"),
+			CCanvas_SASSkillMove::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_Tutorial*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Tutorial"),
+			CCanvas_Tutorial::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_BossHp*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_BossHp"),
+			CCanvas_BossHp::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_Alarm*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Alarm"),
+			CCanvas_Alarm::Create(pDevice, pContext))))
+			return E_FAIL;
+
+	}
+
+	{
+		// UI
+		/* For.Prototype_GameObject_Default_UI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Default_UI"),
+			CDefaultUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Button_UI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Button_UI"),
+			CButtonUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		// Frount_UI -> SAS Skill
+		/* For.Prototype_GameObject_SASSkillIcon_UI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillIcon_UI"),
+			CSASSkillIconUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_SASSkillGauge_UI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillGauge_UI"),
+			CSASSkillGaugeUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_SASSkillLight_UI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillLight_UI"),
+			CSASSkillLightUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_SASSkillCtrl_UI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillName_UI"),
+			CSASSkillNameUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_SASSkillFullCircle_UI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASSkillFullCircle_UI"),
+			CSASSkillFullCircleUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		// Frount_UI -> Drive
+		/* For.Prototype_GameObject_Drive_RightDotUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Drive_RightDotUI"),
+			CDrive_RightDotUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Drive_RightDotUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Drive_GaugeUI"),
+			CDrive_GaugeUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		// Frount_UI -> Item
+		/* For.Prototype_GameObject_Item_GaugeUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_GaugeUI"),
+			CItem_GaugeUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_IconUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_IconUI"),
+			CItem_IconUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_NameUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_NameUI"),
+			CItem_NameUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_PushArrowUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_PushArrowUI"),
+			CItem_PushArrowUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_LeftArrowUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_LeftArrowUI"),
+			CItem_LeftArrowUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_RightArrowUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_RightArrowUI"),
+			CItem_RightArrowUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		// Frount_UI -> PlayerInfo
+		/* For.Prototype_GameObject_PlayerInfo_HpUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_HpUI"),
+			CPlayerInfo_HpUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_HpBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_HpBackUI"),
+			CPlayerInfo_HpBackUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_HpBothEndsUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_HpBothEndsUI"),
+			CPlayerInfo_HpBothEndsUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_PsychokinesisUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_PsychokinesisUI"),
+			CPlayerInfo_PsychokinesisUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_PsychokinesisBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_PsychokinesisBackUI"),
+			CPlayerInfo_PsychokinesisBackUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_PsychokinesisBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("PlayerInfo_GaugeBackGround"),
+			CPlayerInfo_GaugeBackGround::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		// Frount_UI -> SASInfoLeft
+		/* For.Prototype_GameObject_PlayerInfo_HpUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASInfoLeft_HpUI"),
+			CSASInfoLeftHpUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_HpBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASInfoLeft_HpBackUI"),
+			CSASInfoLeftHpBackUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_HpBothEndsUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASInfoLeft_HpBothEndsUI"),
+			CSASInfoLeftHpBothEndsUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		// Frount_UI -> SASInfoRight
+		/* For.Prototype_GameObject_PlayerInfo_HpUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASInfoRight_HpUI"),
+			CSASInfoRightHpUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_HpBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASInfoRight_HpBackUI"),
+			CSASInfoRightHpBackUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_PlayerInfo_HpBothEndsUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SASInfoRight_HpBothEndsUI"),
+			CSASInfoRightHpBothEndsUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		// Tutorial
+		/* For.Prototype_GameObject_TutorialUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("TutorialUI"),
+			CTutorialUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Tutorial_CheckUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_CheckUI"),
+			CTutorial_CheckUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Tutorial_YesNoUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_YesNoUI"),
+			CTutorial_YesNoUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Tutorial_TipsUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_TipsUI"),
+			CTutorial_TipsUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Tutorial_SuccessUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_SuccessUI"),
+			CTutorial_SuccessUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		// Boss
+		/* For.Prototype_GameObject_Boss_HpUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_HpUI"),
+			CBoss_HpUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Boss_HpBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_HPBackUI"),
+			CBoss_HpBackUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Boss_ShildUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_ShildUI"),
+			CBoss_ShildUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		// Alarm
+		/* For.Prototype_GameObject_NextRoomNameUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("NextMapNameUI"),
+			CNextMapNameUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Boss_AppearUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_AppearUI"),
+			CBoss_AppearUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Boss_AppearBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_AppearBackUI"),
+			CBoss_AppearBackUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_LevelUpUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("LevelUpUI"),
+			CLevelUpUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+	}
+	
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterHP", CMonsterHpUI::Create(pDevice, pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterLockon", CMonsterLockonUI::Create(pDevice, pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_GravikenisisMouseUI", CGravikenisisMouseUI::Create(pDevice, pContext)));
+
 }
 
 void CFactoryMethod::Free()

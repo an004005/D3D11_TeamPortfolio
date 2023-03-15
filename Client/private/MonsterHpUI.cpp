@@ -2,7 +2,6 @@
 #include "..\public\MonsterHpUI.h"
 #include "GameInstance.h"
 #include "JsonStorage.h"
-#include "EffectGroup.h"
 #include "EffectSystem.h"
 #include "VFX_Manager.h"
 #include "Monster.h"
@@ -61,7 +60,7 @@ void CMonsterHpUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 	
-	if (m_pOwner != nullptr)
+	if (m_pOwner != nullptr && m_pGroup != nullptr)
 	{
 		if (dynamic_cast<CMonster*>(m_pOwner)->IsDead())
 		{

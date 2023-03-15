@@ -40,12 +40,15 @@ public:
 public:
 	_uint GetHP() { return m_iHP; }
 	_uint GetMaxHP() { return m_iMaxHP; }
-
+	_bool GetHasName() { return m_bHasName; }
+	_float4x4	Get_UIPivotMatrix(MONSTER_UIPIVOT eUIPivot) {
+		return m_UI_PivotMatrixes[eUIPivot];
+	}
 public:
 	//UI
 	void	TurnEyesOut();
 	virtual void SetUp_UI() {}
-
+	void	Set_HasName() { m_bHasName = true; }
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
 	void ClearDamagedTarget();
@@ -77,6 +80,7 @@ protected:
 
 	_bool m_bDead = false;
 	_bool m_bActive = false;
+	_bool m_bHasName = false;
 
 	array<_float4x4, UIPIVOT_END> m_UI_PivotMatrixes;
 	set<CScarletCharacter*> m_DamagedTargetList;
