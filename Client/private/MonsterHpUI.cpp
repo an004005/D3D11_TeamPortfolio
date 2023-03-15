@@ -52,21 +52,21 @@ void CMonsterHpUI::Tick(_double TimeDelta)
 
 	if (m_pOwner != nullptr)
 	{
-		_uint iHp = dynamic_cast<CMonster*>(m_pOwner)->GetHP();
-		_uint iMaxHp = dynamic_cast<CMonster*>(m_pOwner)->GetMaxHP();
-
-		if (iHp <= 0)
+		if (dynamic_cast<CMonster*>(m_pOwner)->IsDead())
 		{
 			m_bDelete = true;
 			return;
 		}
 
+		_uint iHp = dynamic_cast<CMonster*>(m_pOwner)->GetHP();
+		_uint iMaxHp = dynamic_cast<CMonster*>(m_pOwner)->GetMaxHP();
+
 		m_fRatio = (_float)iHp / (_float)iMaxHp;
 		m_fHpBack = m_fRatio;
 		m_pGroup->GetThirdEffect()->GetParams().Floats[0] = m_fRatio;
-	}
 
-	HpBack_Tick(TimeDelta);
+		HpBack_Tick(TimeDelta);
+	}
 }
 
 void CMonsterHpUI::Imgui_RenderProperty()

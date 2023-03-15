@@ -61,12 +61,14 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 					dParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					dParams.pCauser = m_pCastOwner;
 
-					CollisionCheck_Bullet(m_pTransformCom, dParams, 0.3f, ECOLLIDER_TYPE_BIT::CTB_PLAYER);
+					_uint iColType = ECOLLIDER_TYPE_BIT::CTB_PLAYER | ECOLLIDER_TYPE_BIT::CTB_STATIC | ECOLLIDER_TYPE_BIT::CTB_PSYCHICK_OBJ;
+
+					CollisionCheck_Bullet(m_pTransformCom, dParams, 0.3f, iColType);
 
 					if (m_bHitCheck == true)
 					{
 						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0650_Bullet_Dead")->Start_NoAttach(this, false);
-						CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Dead_Particle")->Start_NoAttach(this, false);
+	//					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Dead_Particle")->Start_NoAttach(this, false);
 									
 						m_bDelete = true;
 					}
@@ -81,7 +83,7 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 						if (fDistance > 30.f)
 						{
 							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0650_Bullet_Dead")->Start_NoAttach(this, false);
-							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Dead_Particle")->Start_NoAttach(this, false);
+	//						CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Dead_Particle")->Start_NoAttach(this, false);
 						   
 							m_bDelete = true;
 						}

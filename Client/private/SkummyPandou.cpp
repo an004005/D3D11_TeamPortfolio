@@ -16,6 +16,8 @@
 #include "SkPd_AnimInstance.h"
 #include "RigidBody.h"
 #include "Player.h"
+#include "VFX_Manager.h"
+
 
 CSkummyPandou::CSkummyPandou(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -55,13 +57,25 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 	// Event Caller
 	m_pModelCom->Add_EventCaller("Rush_Start", [this]
 	{
-		// Effect 积
+		// Effect 积己
+		if (!m_bDead)
+		{
+			m_pDash_Effect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0750_Dash_Attack");
+			m_pDash_Effect->Start_Attach(this, "Hips", true);
+		}
 		m_bAtkToggle = true;
 	});
 
 	m_pModelCom->Add_EventCaller("Rush_End", [this]
 	{
-		// Effect 积己
+		// Effect 秦力
+		if (m_bCloned == true)
+		{
+			if (m_pDash_Effect->IsDeleted() == false)
+				m_pDash_Effect->SetDelete();
+
+			Safe_Release(m_pDash_Effect);		
+		}
 		m_bAtkToggle = false;
 	});
 	
@@ -120,12 +134,13 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 void CSkummyPandou::BeginTick()
 {
 	__super::BeginTick();
+	m_pASM->AttachAnimSocket("Bee", { m_pModelCom->Find_Animation("AS_em0700_160_AL_threat") });
 }
 
 void CSkummyPandou::Tick(_double TimeDelta)
 {
-	if (!m_bActive)
-		return
+	/*if (!m_bActive)
+		return;*/
 
 	CMonster::Tick(TimeDelta);
 
@@ -173,7 +188,7 @@ void CSkummyPandou::Tick(_double TimeDelta)
 
 	if (m_pController->KeyDown(CController::R))
 	{
-		m_pASM->AttachAnimSocket("Bee", { m_pAtk_RushLoop, m_pAtk_RushLoop, m_pAtk_RushLoop, m_pAtk_RushEnd });	
+		m_pASM->AttachAnimSocket("Bee", { m_pAtk_RushLoop, m_pAtk_RushLoop, m_pAtk_RushEnd });	
 	}
 
 	if (!m_bDead && m_pController->KeyDown(CController::G))
@@ -254,6 +269,7 @@ void CSkummyPandou::Tick(_double TimeDelta)
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
 
+	
 	m_pASM->Tick(TimeDelta);
 
 	_float fMoveSpeed = 0.f;
@@ -284,8 +300,8 @@ void CSkummyPandou::Tick(_double TimeDelta)
 
 void CSkummyPandou::Late_Tick(_double TimeDelta)
 {
-	if (!m_bActive)
-		return
+	/*if (!m_bActive)
+		return;*/
 
 	__super::Late_Tick(TimeDelta);
 
@@ -333,12 +349,14 @@ void CSkummyPandou::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_pASM->InputAnimSocket("Bee", { m_pDeadAnim });
 		m_bDead = true;
 	}
+
+	__super::TakeDamage(tDamageParams);
 }
 
 void CSkummyPandou::AfterPhysX()
 {
-	if (!m_bActive)
-		return
+	/*if (!m_bActive)
+		return;*/
 
 	__super::AfterPhysX();	
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
@@ -455,11 +473,11 @@ void CSkummyPandou::HitDir(_double TimeDelta)
 	m_bOneTick = true;
 }
 
-void CSkummyPandou::SetActive()
-{
-	CMonster::SetActive();
-	m_pASM->AttachAnimSocket("Bee", { m_pModelCom->Find_Animation("AS_em0700_160_AL_threat") });
-}
+//void CSkummyPandou::SetActive()
+//{
+//	CMonster::SetActive();
+//	m_pASM->AttachAnimSocket("Bee", { m_pModelCom->Find_Animation("AS_em0700_160_AL_threat") });
+//}
 
 _bool CSkummyPandou::IsPlayingSocket() const
 {
@@ -493,6 +511,15 @@ CGameObject * CSkummyPandou::Clone(void * pArg)
 void CSkummyPandou::Free()
 {
 	CMonster::Free();
+
+	if (m_bCloned == true)
+	{
+		if (m_pDash_Effect != nullptr && m_pDash_Effect->IsDeleted() == false)
+			m_pDash_Effect->SetDelete();
+
+		Safe_Release(m_pDash_Effect);
+	}
+
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);
