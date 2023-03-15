@@ -202,6 +202,9 @@ private:
 	CController*		m_pController = nullptr;
 
 	CModel*				m_pKineticAnimModel = nullptr;
+
+	//UI
+	class CMonsterLockonUI*	m_pUI_LockOn = nullptr;
 //	CRigidBody*			m_pContectRigidBody = nullptr;
 
 private:

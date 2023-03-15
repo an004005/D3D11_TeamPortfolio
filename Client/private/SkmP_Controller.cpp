@@ -5,6 +5,7 @@
 #include "SkummyPool.h"
 #include "FSMComponent.h"
 
+
 CSkmP_Controller::CSkmP_Controller(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CAIController(pDevice, pContext)
 {
@@ -36,7 +37,7 @@ HRESULT CSkmP_Controller::Initialize(void * pArg)
 
 		.AddState("Outside")
 			.Tick(this, &CSkmP_Controller::Tick_Outside)
-
+			.OnExit(dynamic_cast<CMonster*>(m_pCastedOwner), &CMonster::TurnEyesOut)
 			.AddTransition("Outside to Far", "Far")
 				.Predicator([this]
 				{

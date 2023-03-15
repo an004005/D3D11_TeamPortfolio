@@ -6,6 +6,8 @@
 #include "Model.h"
 #include "Animation.h"
 #include "VFX_Manager.h"
+#include "JsonStorage.h"
+#include "MonsterHpUI.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -25,6 +27,16 @@ HRESULT CMonster::Initialize(void* pArg)
 		m_bDelete = true;
 	});
 	m_DeathTimeline.SetCurve("Simple_Increase");
+
+	//HP UI
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CMonsterHpUI* pUI_HP = nullptr;
+	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
+
+	assert(pUI_HP != nullptr);
+	pUI_HP->Set_Owner(this);
+	pUI_HP->SetPivotMatrix(m_UI_PivotMatrixes[INFO_BAR]);
+
 	return S_OK;
 }
 
@@ -76,6 +88,18 @@ void CMonster::Imgui_RenderProperty()
 	if (ImGui::Button("Activate"))
 	{
 		SetActive();
+	}
+}
+
+void CMonster::LoadFromJson(const Json & json)
+{
+	__super::LoadFromJson(json);
+
+	m_UI_PivotMatrixes.fill(XMMatrixIdentity());
+
+	if (json.contains("UIPivotMatrixes"))
+	{
+		m_UI_PivotMatrixes = json["UIPivotMatrixes"];
 	}
 }
 
@@ -250,6 +274,19 @@ void CMonster::MoveTransformJson(Json& jsonDest, void* pArg)
 		Json& json = *static_cast<Json*>(pArg);
 		CTransform::MoveTransformJson(jsonDest, json);
 	}
+}
+
+void CMonster::TurnEyesOut()
+{
+	CMonster* pMonster = this;
+	if (this == nullptr) return;
+
+	CEffectGroup* pEffectGroup = nullptr;
+	pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", TEXT("Layer_UI"));
+	assert(pEffectGroup != nullptr);
+
+	//TimeLine 끝나고 삭제
+	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[FINDEYES], "Target", true);
 }
 
 void CMonster::SetActive()

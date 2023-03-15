@@ -20,6 +20,8 @@ public:
 	_bool isSocketEmpty(const string& strSocName) { return m_mapAnimSocket[strSocName].empty(); }
 	_bool isSocketPassby(const string& strSocName, _float fPlayRatio = 1.f);
 	void AttachAnimSocket(const string& strSocName, const list<CAnimation*>& AnimList);
+	void InputAnimSocket(const string& strSocName, list<CAnimation*> AnimList);
+	_bool CheckSocketAnim(const string& strSocName, const string& AnimName) { return (AnimName == m_mapAnimSocket[strSocName].front()->GetName()) ? true : false; }
 
 private:
 	CAnimationStateMachine* m_pASM = nullptr;

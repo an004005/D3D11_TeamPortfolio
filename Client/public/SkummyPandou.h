@@ -1,6 +1,8 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Monster.h"
+#include "ParticleGroup.h"
+#include "EffectGroup.h"
 
 BEGIN(Engine)
 class CFSMComponent;
@@ -36,13 +38,15 @@ public:
 
 	void		HitDir(_double TimeDelta);
 
-	virtual void SetActive() override;
+//	virtual void SetActive() override;
 
 private:
 	class CSkPd_Controller*	m_pController = nullptr;
 	class CSkPd_AnimInstance* m_pASM = nullptr;
 
 	CRigidBody*				m_pTrigger = nullptr;	
+
+	CEffectGroup*			m_pDash_Effect = nullptr;
 	
 private:
 	CScarletCharacter* m_pTarget = nullptr;

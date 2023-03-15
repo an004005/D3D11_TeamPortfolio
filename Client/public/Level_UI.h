@@ -21,6 +21,7 @@ private:
 	HRESULT Ready_Prototypes();
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Monster(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_UI(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Map(const _tchar* pLayerTag);
 	HRESULT Ready_Effect(const _tchar* pLayerTag);
