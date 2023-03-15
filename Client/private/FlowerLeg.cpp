@@ -13,6 +13,7 @@
 #include "VFX_Manager.h"
 #include "Material.h"
 
+#include "MonsterHpUI.h"
 CFlowerLeg::CFlowerLeg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -524,6 +525,7 @@ void CFlowerLeg::Tick(_double TimeDelta)
 	else
 		HitDir(TimeDelta);		
 
+	
 }
 
 void CFlowerLeg::Late_Tick(_double TimeDelta)
@@ -632,11 +634,36 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	__super::TakeDamage(tDamageParams);
 }
 
-//void CFlowerLeg::SetActive()
-//{
-//	CMonster::SetActive();
-//	m_pASM->AttachAnimSocket(("UsingControl"), {m_pModelCom->Find_Animation("AS_em0200_160_AL_threat")});
-//}
+void CFlowerLeg::SetUp_UI()
+{
+	//HP UI
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CMonsterHpUI* pUI_HP = nullptr;
+	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
+
+	assert(pUI_HP != nullptr);
+	pUI_HP->Set_Owner(this);
+
+	_float4x4 UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.241f, 0.0f, 1.0f
+	);
+
+	pUI_HP->SetPivotMatrix(UI_PivotMatrix);
+
+
+	//FindEye
+	UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		-0.481f, 0.945f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
+}
 
 
 void CFlowerLeg::Strew_Overlap()

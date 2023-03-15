@@ -18,6 +18,7 @@
 #include "Player.h"
 #include "VFX_Manager.h"
 
+#include "MonsterHpUI.h"
 
 CSkummyPandou::CSkummyPandou(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -319,6 +320,37 @@ void CSkummyPandou::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();	
 	m_pASM->Imgui_RenderState();
+}
+
+void CSkummyPandou::SetUp_UI()
+{
+	//HP UI
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CMonsterHpUI* pUI_HP = nullptr;
+	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
+
+	assert(pUI_HP != nullptr);
+	pUI_HP->Set_Owner(this);
+
+	_float4x4 UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.413f, 0.0f, 1.0f
+	);
+
+	pUI_HP->SetPivotMatrix(UI_PivotMatrix);
+
+	//FindEye
+	UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.413f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
+
 }
 
 void CSkummyPandou::TakeDamage(DAMAGE_PARAM tDamageParams)

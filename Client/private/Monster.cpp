@@ -54,13 +54,8 @@ HRESULT CMonster::Initialize(void* pArg)
 
 
 	//HP UI
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	CMonsterHpUI* pUI_HP = nullptr;
-	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
-
-	assert(pUI_HP != nullptr);
-	pUI_HP->Set_Owner(this);
-	pUI_HP->SetPivotMatrix(m_UI_PivotMatrixes[INFO_BAR]);
+	m_UI_PivotMatrixes.fill(XMMatrixIdentity());
+	SetUp_UI();
 
 	return S_OK;
 }
@@ -116,17 +111,7 @@ void CMonster::Imgui_RenderProperty()
 	}
 }
 
-void CMonster::LoadFromJson(const Json & json)
-{
-	__super::LoadFromJson(json);
 
-	m_UI_PivotMatrixes.fill(XMMatrixIdentity());
-
-	if (json.contains("UIPivotMatrixes"))
-	{
-		m_UI_PivotMatrixes = json["UIPivotMatrixes"];
-	}
-}
 
 void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
