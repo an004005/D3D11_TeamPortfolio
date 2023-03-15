@@ -61,7 +61,7 @@ void CMonsterHpUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 	
-	if (m_pOwner != nullptr)
+	if (m_pOwner != nullptr && m_pGroup != nullptr)
 	{
 		if (dynamic_cast<CMonster*>(m_pOwner)->IsDead())
 		{
