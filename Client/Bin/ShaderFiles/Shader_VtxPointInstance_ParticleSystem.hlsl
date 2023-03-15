@@ -109,21 +109,21 @@ void GS_MAIN( point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
 	float3		vRight;
 	float3		vUp;
 
-	if (g_bRotate == 1)
+	if (g_bRotate == 0)
 	{
-		//vLook = (In[0].RotMatrix[0].xyz - In[0].vPosition);
-		//vRight = (normalize(cross(float3(0.f, 1.f, 0.f), vLook)) * PSize.x * 0.5f);
-		//vUp = (normalize(cross(vLook, vRight)) * PSize.y * 0.5f);
-
+		vLook = g_vCamPosition.xyz - In[0].vPosition;
+		vRight = (normalize(cross(float3(0.f, 1.f, 0.f), vLook)) * PSize.x * 0.5f);
+		vUp = (normalize(cross(vLook, vRight)) * PSize.y * 0.5f);
+	}
+	else if(g_bRotate == 1)
+	{
 		vLook = normalize(g_vCamPosition.xyz - In[0].vPosition);
 		vRight = normalize(cross(normalize(In[0].RotMatrix[1].xyz), vLook)) * PSize.x * 0.5f;
 		vUp = normalize(cross(vLook, vRight)) * PSize.y * 0.5f;
-
-
 	}
-	else
+	else if (g_bRotate == 2)
 	{
-		vLook = g_vCamPosition.xyz - In[0].vPosition;
+		vLook = (In[0].RotMatrix[0].xyz - In[0].vPosition);
 		vRight = (normalize(cross(float3(0.f, 1.f, 0.f), vLook)) * PSize.x * 0.5f);
 		vUp = (normalize(cross(vLook, vRight)) * PSize.y * 0.5f);
 	}
@@ -268,6 +268,22 @@ PS_OUT PS_PARTICLE_EM0650(PS_IN In)
 			discard;
 	}
 
+
+	return Out;
+}
+
+PS_OUT PS_FLIPBOOK_SMOKE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 8, 8));
+	float4 vColor = g_vec4_0;
+
+	float4 BlendColor = flipBook * vColor * 2.0f;
+
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = FinalColor;
+	Out.vColor.a = flipBook.r;
 
 	return Out;
 }
@@ -472,5 +488,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_FLIPBOOK_EM320BULLET_TRAIL();
+	}
+
+	//8
+	pass FlipSmoke
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_FLIPBOOK_SMOKE();
 	}
 }

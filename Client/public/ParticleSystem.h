@@ -32,6 +32,13 @@ enum class EBufferType
 	MESH
 };
 
+enum class EBilboardType
+{
+	ALL,
+	LOOK,
+	NONE
+};
+
 class CParticleSystem :	public CGameObject
 {
 public:
@@ -99,6 +106,7 @@ private:
 
 	ESpawnShape m_eShape = ESpawnShape::SPHERE;
 	EBufferType m_eBufferType = EBufferType::POINT;
+	EBilboardType m_eBilboardType = EBilboardType::ALL;
 
 	_float2 m_fGravityPowerMinMax = { 0.f, 0.f };
 	_float m_fGravityPower = 0.f;
@@ -107,6 +115,8 @@ private:
 	_float m_fSphereRadius = 4.f;
 
 	_float3 m_vScaleVariation = { 1.f ,1.f,1.f};
+
+	_bool m_bNonAlphaBlend = false;
 
 	_bool m_bPointInstance = false;
 	_bool m_bMeshInstance = false;
