@@ -1,4 +1,225 @@
 #include "stdafx.h"
 #include "..\public\SAS_Portrait.h"
+#include "GameInstance.h"
+#include "Material.h"
+#include "Animation.h"
+#include "Camera.h"
+#include "JsonStorage.h"
 
+/*********************
+ *CPostVFX_SAS_Portrait
+ *********************/
+CPostVFX_SAS_Portrait::CPostVFX_SAS_Portrait(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CPostProcess(pDevice, pContext)
+{
+}
+
+CPostVFX_SAS_Portrait::CPostVFX_SAS_Portrait(const CPostVFX_SAS_Portrait& rhs)
+	: CPostProcess(rhs)
+{
+}
+
+HRESULT CPostVFX_SAS_Portrait::Initialize(void* pArg)
+{
+	m_tParam.Floats.push_back(1.f);
+	m_tParam.iPass = 9;
+	return CPostProcess::Initialize(pArg);
+}
+
+void CPostVFX_SAS_Portrait::Tick(_double TimeDelta)
+{
+	CPostProcess::Tick(TimeDelta);
+	if (m_tParam.Floats[0] <= 0.f)
+		m_bVisible = false;
+	else
+		m_bVisible = true;
+}
+
+CPostVFX_SAS_Portrait* CPostVFX_SAS_Portrait::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CPostVFX_SAS_Portrait* pInstance = new CPostVFX_SAS_Portrait(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CPostVFX_SAS_Portrait");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CGameObject* CPostVFX_SAS_Portrait::Clone(void* pArg)
+{
+	CPostVFX_SAS_Portrait*		pInstance = new CPostVFX_SAS_Portrait(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CPostVFX_SAS_Portrait");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+/*********************
+ *CSAS_Portrait
+ *********************/
+CSAS_Portrait::CSAS_Portrait(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CGameObject(pDevice, pContext)
+{
+}
+
+CSAS_Portrait::CSAS_Portrait(const CSAS_Portrait& rhs)
+	: CGameObject(rhs)
+{
+}
+
+HRESULT CSAS_Portrait::Initialize(void* pArg)
+{
+	FAILED_CHECK(CGameObject::Initialize(pArg));
+
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
+		(CComponent**)&m_pRendererCom));
+
+	{
+		CModel* pModel = nullptr;
+
+		FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Model_Ch300_Portrail", L"ch300",
+		   (CComponent**)&pModel));
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_FIRE)] = pModel;
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_FIRE)]->FindMaterial(L"MI_ch0300_HOOD_0")->SetActive(false);
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_FIRE)]->FindMaterial(L"MI_ch0300_MASK_0")->SetActive(false);
+
+		for (auto pMtrl : m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_FIRE)]->GetMaterials())
+		{
+			pMtrl->GetParam().iPass = 6;
+		}
+
+		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PortraitCams/ch300_cam.json");
+		_float t = json["FOV"];
+		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_FIRE)] = CGameInstance::GetInstance()->Add_Camera("ch300_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);
+		Safe_AddRef(m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_FIRE)]);
+	}
+
+	{
+		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Portrait.json");
+		m_pPostVFX = dynamic_cast<CPostVFX_SAS_Portrait*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_PostVFX", L"ProtoPostVFX_SASPortrait", (void*)&json));
+		Safe_AddRef(m_pPostVFX);
+	}
+
+	return S_OK;
+}
+
+void CSAS_Portrait::BeginTick()
+{
+	CGameObject::BeginTick();
+}
+
+void CSAS_Portrait::Tick(_double TimeDelta)
+{
+	CGameObject::Tick(TimeDelta);
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_8))
+	{
+		Start_SAS(ESASType::SAS_FIRE);
+	}
+
+	if (m_eCurType != ESASType::SAS_END)
+	{
+		m_SAS_PortraitModels[static_cast<_uint>(m_eCurType)]->Play_Animation(TimeDelta);
+		if (m_SAS_PortraitModels[static_cast<_uint>(m_eCurType)]->GetPlayAnimation()->GetPlayRatio() >= 0.99)
+		{
+			Start_SAS(ESASType::SAS_FIRE);
+
+
+			// m_eCurType = ESASType::SAS_END;
+			// m_pPostVFX->GetParam().Floats[0] = 0.f;
+		}
+
+		_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		_vector vLocalMove = m_SAS_PortraitModels[static_cast<_uint>(m_eCurType)]->GetLocalMove(WorldMatrix);
+		m_pTransformCom->LocalMove(vLocalMove);
+	}
+}
+
+void CSAS_Portrait::Late_Tick(_double TimeDelta)
+{
+	CGameObject::Late_Tick(TimeDelta);
+	if (m_eCurType != ESASType::SAS_END)
+	{
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_PORTRAIT, this);
+	}
+}
+
+HRESULT CSAS_Portrait::Render()
+{
+	if (m_eCurType != ESASType::SAS_END)
+	{
+		m_SAS_PortraitModels[static_cast<_uint>(m_eCurType)]->Render_Cam(m_pTransformCom, m_SAS_PortraitCams[static_cast<_uint>(m_eCurType)]);
+	}
+	return S_OK;
+}
+
+void CSAS_Portrait::Start_SAS(ESASType eType)
+{
+	m_eCurType = eType;
+	switch (m_eCurType)
+	{
+	case ESASType::SAS_FIRE: 
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_FIRE)]->SetPlayAnimation("AS_ch0300_SAS01");
+		break;
+	case ESASType::SAS_PENETRATE: break;
+	case ESASType::SAS_HARDBODY: break;
+	case ESASType::SAS_TELEPORT: break;
+	case ESASType::SAS_ELETRIC: break;
+	case ESASType::SAS_SUPERSPEED: break;
+	case ESASType::SAS_COPY: break;
+	case ESASType::SAS_INVISIBLE: break;
+	case ESASType::SAS_GRAVIKENISIS: break;
+	case ESASType::SAS_NOT: break;
+	case ESASType::SAS_END: break;
+	default:
+		NODEFAULT;
+
+	}
+
+	m_pPostVFX->GetParam().Floats[0] = 1.f;
+	m_pTransformCom->Set_WorldMatrix(_float4x4::Identity);
+}
+
+CSAS_Portrait* CSAS_Portrait::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CSAS_Portrait* pInstance = new CSAS_Portrait(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CSAS_Portrait");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CGameObject* CSAS_Portrait::Clone(void* pArg)
+{
+	CSAS_Portrait*		pInstance = new CSAS_Portrait(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CSAS_Portrait");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void CSAS_Portrait::Free()
+{
+	CGameObject::Free();
+	for (auto& pModel : m_SAS_PortraitModels)
+		Safe_Release(pModel);
+	for (auto& pCam : m_SAS_PortraitCams)
+		Safe_Release(pCam);
+
+	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pPostVFX);
+}
 

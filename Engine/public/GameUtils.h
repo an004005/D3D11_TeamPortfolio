@@ -38,6 +38,8 @@ public:
 
 	static string GetRandomString(_uint iLen = 15);
 
+
+
 	static void HideCursor();
 	static void ShowCursor();
 };

@@ -207,7 +207,7 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	// FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_PostVFX_ColorGrading", CPostVFX_ColorGrading::Create(m_pDevice, m_pContext)));
 
-	CFactoryMethod::MakeCH300Prototypes(m_pDevice, m_pContext);
+	CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext);
 
 	return S_OK;
 }
@@ -247,6 +247,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+	pGameInstance->Clone_GameObject(pLayerTag, L"Prototype_SASPortrait");
+
 #ifdef ADD_PLAYER
 
 	Json PreviewData;
@@ -273,9 +275,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 		// auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 	}
 	{
-		PreviewData["Model"] = "Model_Ch300_Portrail";
-		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
-		auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
+		// PreviewData["Model"] = "Model_Ch300_Portrail";
+		// PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
+		// auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 	}
 
 

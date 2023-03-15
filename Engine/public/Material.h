@@ -22,6 +22,7 @@ public:
 	virtual void SetAnimType(CModel::TYPE eType){}
 	void BindMatrices(class CTransform* pTransform);
 	void BindMatrices(const _float4x4& WorldMatrix);
+	void BindMatrices(class CTransform* pTransform, class CCamera* pCamera);
 	void BindMatrices_Instancing(class CTransform* pTransform);
 	void BindMatrices_Instancing(const _float4x4& WorldMatrix);
 	virtual void Begin();
