@@ -28,7 +28,7 @@ public:
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
-
+	virtual void SetUp_UI() override;
 	virtual void AfterPhysX() override;
 	
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
@@ -48,7 +48,7 @@ private:
 //	CRigidBody*					m_pTrigger = nullptr;
 	CRigidBody*					m_pWeaponCollider = nullptr;
 
-	CEffectGroup*				m_pSwingEffect = nullptr;
+  CEffectGroup*				m_pSwingEffect = nullptr;
 
 private:
 	CScarletCharacter* m_pTarget = nullptr;

@@ -147,7 +147,7 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 				});
 			}
 		}
-		else if (LEVEL_NOW == LEVEL_PLAYERTEST)
+		else if (LEVEL_NOW == LEVEL_PLAYERTEST || LEVEL_NOW == LEVEL_ENEMIESTEST)
 		{
 			if (m_iSelectFinishFunc == 0)
 			{
@@ -231,7 +231,7 @@ void CEffectGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool true
 		SetDelete();
 		return;
 	}
-
+	
 	m_pOwner = pOwner;
 	m_bUpdate = trueisUpdate;
 	m_BoneName = BoneName;
@@ -2145,30 +2145,37 @@ void CEffectGroup::Free()
 		if(m_pFirst_EffectSystem->IsDeleted() == false)
 			m_pFirst_EffectSystem->SetDelete();
 		Safe_Release(m_pFirst_EffectSystem);
+		m_pFirst_EffectSystem = nullptr;
 	}
 	if (m_pSecond_EffectSystem != nullptr)
 	{
 		if (m_pSecond_EffectSystem->IsDeleted() == false)
 			m_pSecond_EffectSystem->SetDelete();
 		Safe_Release(m_pSecond_EffectSystem);
+		m_pSecond_EffectSystem = nullptr;
+
 	}
 	if (m_pThird_EffectSystem != nullptr)
 	{
 		if (m_pThird_EffectSystem->IsDeleted() == false)
 			m_pThird_EffectSystem->SetDelete();
 		Safe_Release(m_pThird_EffectSystem);
+		m_pThird_EffectSystem = nullptr;
+
 	}
 	if (m_pFourth_EffectSystem != nullptr)
 	{
 		if (m_pFourth_EffectSystem->IsDeleted() == false)
 			m_pFourth_EffectSystem->SetDelete();
 		Safe_Release(m_pFourth_EffectSystem);
+		m_pFourth_EffectSystem = nullptr;
 	}
 	if (m_pFifth_EffectSystem != nullptr)
 	{
 		if (m_pFifth_EffectSystem->IsDeleted() == false)
 			m_pFifth_EffectSystem->SetDelete();
 		Safe_Release(m_pFifth_EffectSystem);
+		m_pFifth_EffectSystem = nullptr;
 	}
 
 }

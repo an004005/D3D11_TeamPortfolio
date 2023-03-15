@@ -28,6 +28,7 @@ private:
 
 private:
 	class CEffectGroup* m_pGroup = nullptr;
+	class CEffectGroup* m_pMonsterName = nullptr;
 
 	_float		m_fHpBack = { 1.0f };
 	_float		m_fCurrentHpBack = { 1.0f };

@@ -89,11 +89,6 @@ HRESULT CLevel_Effect::Initialize()
 void CLevel_Effect::Tick(_double TimeDelta)
 {
 	CLevel::Tick(TimeDelta);
-
-	if(CGameInstance::GetInstance()->KeyDown(DIK_SPACE))
-	{
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"FlowerLeg_Fall_Rose")->Start_ParticleWork();
-	}
 }
 
 void CLevel_Effect::Late_Tick(_double TimeDelta)

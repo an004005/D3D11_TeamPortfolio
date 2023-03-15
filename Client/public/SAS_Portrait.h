@@ -1,11 +1,13 @@
 #pragma once
 #include "Client_Defines.h"
 #include "PostProcess.h"
+#include "Timeline.h"
 
 BEGIN(Engine)
 class CModel;
 class CRenderer;
 class CCamera;
+class CCurveFloatImpl;
 END
 
 BEGIN(Client)
@@ -44,8 +46,12 @@ public:
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual void Imgui_RenderProperty() override;
 
 	void Start_SAS(ESASType eType);
+
+	void ResetParams();
+	void TickParams();
 
 private:
 	CRenderer*				m_pRendererCom = nullptr;
@@ -55,6 +61,9 @@ private:
 
 	CPostVFX_SAS_Portrait* m_pPostVFX = nullptr;
 
+	CCurveFloatImpl* m_pDissolveCurve = nullptr;
+	CCurveFloatImpl* m_pColorLerpCurve = nullptr;
+	CCurveFloatImpl* m_pOutlineLerpCurve = nullptr;
 
 public:
 	static CSAS_Portrait* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

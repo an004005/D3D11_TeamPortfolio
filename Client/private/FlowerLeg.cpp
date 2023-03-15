@@ -13,6 +13,7 @@
 #include "VFX_Manager.h"
 #include "Material.h"
 
+#include "MonsterHpUI.h"
 CFlowerLeg::CFlowerLeg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -194,20 +195,15 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	{
 		if (!m_bDead)
 		{
-			m_pSpinEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0200_Spin_Attack");
-			m_pSpinEffect->Start_Attach(this, "Target", true);//"Tail4", true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0200_Spin_Attack")
+					->Start_Attach(this, "Target", false);
+
 		}		
 		m_bAtkSwitch = true;
 	});
 	m_pModelCom->Add_EventCaller("Spin_EffectEnd", [this]
 	{
-		if (m_bCloned == true)
-		{
-			if (m_pSpinEffect->IsDeleted() == false)
-				m_pSpinEffect->SetDelete();
 
-			Safe_Release(m_pSpinEffect);
-		}
 	});
 
 	m_pModelCom->Add_EventCaller("Spin_AtkEnd", [this] 
@@ -219,8 +215,10 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	{
 		if (!m_bDead)
 		{
+//			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose")->Start_Attach(this, "Eff02", true);
 			m_pFallRoseParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose");
 			m_pFallRoseParticle->Start_Attach(this, "Eff02", true);
+			Safe_AddRef(m_pFallRoseParticle);
 		}
 	});
 	
@@ -229,8 +227,10 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		// Flower Èð»Ñ¸®´Â Effect
 		if (!m_bDead)
 		{
+//			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Shoot_Flower")->Start_Attach(this, "RightFlower5", true);
 			m_pShootFlwParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Shoot_Flower");
 			m_pShootFlwParticle->Start_Attach(this, "RightFlower5", true);
+			Safe_AddRef(m_pShootFlwParticle);
 		}
 	
 
@@ -246,15 +246,18 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	{
 		if (m_bCloned == true)
 		{
-			if (m_pShootFlwParticle->IsDeleted() == false)
+			if (m_pShootFlwParticle != nullptr)
+			{
 				m_pShootFlwParticle->SetDelete();
-
-			Safe_Release(m_pShootFlwParticle);
-		
-			if (m_pFallRoseParticle->IsDeleted() == false)
+				Safe_Release(m_pShootFlwParticle);
+				m_pShootFlwParticle = nullptr;
+			}
+			if (m_pFallRoseParticle != nullptr)
+			{
 				m_pFallRoseParticle->SetDelete();
-
-			Safe_Release(m_pFallRoseParticle);
+				Safe_Release(m_pFallRoseParticle);
+				m_pFallRoseParticle = nullptr;
+			}
 		}
 	});
 
@@ -278,7 +281,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("Untouch", [this] { m_bUntouchable = true; });
 	m_pModelCom->Add_EventCaller("Untouch_End", [this] { m_bUntouchable = false; });
 
-	m_iMaxHP = 1200;
+	m_iMaxHP = 1500;
 	m_iHP = m_iMaxHP; // ¡Ú
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
@@ -524,6 +527,7 @@ void CFlowerLeg::Tick(_double TimeDelta)
 	else
 		HitDir(TimeDelta);		
 
+	
 }
 
 void CFlowerLeg::Late_Tick(_double TimeDelta)
@@ -600,24 +604,23 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bInvisible && !m_bUntouchable)
 		m_bStruck = true;
 
-	if (m_bAirStruck)
+	if (m_bAirStruck || m_eAtkType == EAttackType::ATK_HEAVY)
 	{
 		if (m_bCloned == true)
 		{
-			if (m_pShootFlwParticle != nullptr && m_pShootFlwParticle->IsDeleted() == false)
+			if (m_pShootFlwParticle != nullptr)
+			{
 				m_pShootFlwParticle->SetDelete();
+				Safe_Release(m_pShootFlwParticle);
+				m_pShootFlwParticle = nullptr;
+			}
 
-			Safe_Release(m_pShootFlwParticle);
-
-			if (m_pFallRoseParticle != nullptr && m_pFallRoseParticle->IsDeleted() == false)
+			if (m_pFallRoseParticle != nullptr)
+			{
 				m_pFallRoseParticle->SetDelete();
-
-			Safe_Release(m_pFallRoseParticle);
-
-			if (m_pSpinEffect != nullptr && m_pSpinEffect->IsDeleted() == false)
-				m_pSpinEffect->SetDelete();
-
-			Safe_Release(m_pSpinEffect);
+				Safe_Release(m_pFallRoseParticle);
+				m_pFallRoseParticle = nullptr;
+			}
 		}
 	}
 
@@ -632,11 +635,36 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	__super::TakeDamage(tDamageParams);
 }
 
-//void CFlowerLeg::SetActive()
-//{
-//	CMonster::SetActive();
-//	m_pASM->AttachAnimSocket(("UsingControl"), {m_pModelCom->Find_Animation("AS_em0200_160_AL_threat")});
-//}
+void CFlowerLeg::SetUp_UI()
+{
+	//HP UI
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CMonsterHpUI* pUI_HP = nullptr;
+	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
+
+	assert(pUI_HP != nullptr);
+	pUI_HP->Set_Owner(this);
+
+	_float4x4 UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.241f, 0.0f, 1.0f
+	);
+
+	pUI_HP->SetPivotMatrix(UI_PivotMatrix);
+
+
+	//FindEye
+	UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		-0.481f, 0.945f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
+}
 
 
 void CFlowerLeg::Strew_Overlap()
@@ -902,20 +930,17 @@ void CFlowerLeg::Free()
 
 	if (m_bCloned == true)
 	{
-		if (m_pShootFlwParticle != nullptr && m_pShootFlwParticle->IsDeleted() == false)
+		if (m_pShootFlwParticle != nullptr)
+		{
 			m_pShootFlwParticle->SetDelete();
+			Safe_Release(m_pShootFlwParticle);
+		}
 
-		Safe_Release(m_pShootFlwParticle);
-
-		if (m_pFallRoseParticle != nullptr && m_pFallRoseParticle->IsDeleted() == false)
+		if (m_pFallRoseParticle != nullptr)
+		{
 			m_pFallRoseParticle->SetDelete();
-
-		Safe_Release(m_pFallRoseParticle);
-
-		if (m_pSpinEffect != nullptr && m_pSpinEffect->IsDeleted() == false)
-			m_pSpinEffect->SetDelete();
-
-		Safe_Release(m_pSpinEffect);
+			Safe_Release(m_pFallRoseParticle);
+		}
 	}
 
 	Safe_Release(m_pASM);

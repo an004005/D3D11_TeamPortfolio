@@ -20,6 +20,7 @@
 #include "ScarletWeapon.h"
 #include "VFX_Manager.h"
 
+#include "MonsterHpUI.h"
 CBuddyLumi::CBuddyLumi(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -61,8 +62,11 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 	{
 		if (!m_bDead)
 		{
+//			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack")->Start_Attach(this, m_strBoneName, false);
+
 			m_pSwingEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack");
-			m_pSwingEffect->Start_Attach(this, m_strBoneName, false);
+			m_pSwingEffect->Start_Attach(this, m_strBoneName, true);
+			Safe_AddRef(m_pSwingEffect);
 		}
 	});
 
@@ -81,10 +85,12 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 	{
 		if (m_bCloned == true)
 		{
-			if (m_pSwingEffect->IsDeleted() == false)
+			if (m_pSwingEffect != nullptr)
+			{
 				m_pSwingEffect->SetDelete();
-
-			Safe_Release(m_pSwingEffect);
+				Safe_Release(m_pSwingEffect);
+				m_pSwingEffect = nullptr;
+			}
 		}
 	});
 
@@ -105,7 +111,8 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 	});
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 	// ~Event Caller
-	m_iHP = 900; // ¡Ú
+	m_iMaxHP = 1100;
+	m_iHP = m_iMaxHP; // ¡Ú
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 	m_strBoneName = "RightShoulder";
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
@@ -338,6 +345,36 @@ void CBuddyLumi::Imgui_RenderProperty()
 	m_pASM->Imgui_RenderState();
 }
 
+void CBuddyLumi::SetUp_UI()
+{
+	//HP UI
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CMonsterHpUI* pUI_HP = nullptr;
+	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
+
+	assert(pUI_HP != nullptr);
+	pUI_HP->Set_Owner(this);
+
+	_float4x4 UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.41f, 0.0f, 1.0f
+	);
+
+	pUI_HP->SetPivotMatrix(UI_PivotMatrix);
+
+	//FindEye
+	UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		-0.324f, 1.014f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
+}
+
 void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	if (m_bDead)
@@ -364,14 +401,17 @@ void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_eAtkType != EAttackType::ATK_TO_AIR)	
 		m_bStruck = true;
 
-	if (m_bStruck || m_bAirStruck)
+	if (m_eAtkType == EAttackType::ATK_HEAVY || m_bAirStruck)
 	{
 		if (m_bCloned == true)
 		{
-			if (m_pSwingEffect != nullptr && m_pSwingEffect->IsDeleted() == false)
+			if (m_pSwingEffect != nullptr)
+			{
 				m_pSwingEffect->SetDelete();
+				Safe_Release(m_pSwingEffect);
+				m_pSwingEffect = nullptr;
+			}
 
-			Safe_Release(m_pSwingEffect);
 		}
 	}
 	
@@ -548,10 +588,11 @@ void CBuddyLumi::Free()
 
 	if (m_bCloned == true)
 	{
-		if (m_pSwingEffect != nullptr && m_pSwingEffect->IsDeleted() == false)
+		if (m_pSwingEffect != nullptr)
+		{
 			m_pSwingEffect->SetDelete();
-
-		Safe_Release(m_pSwingEffect);
+			Safe_Release(m_pSwingEffect);
+		}
 	}
 
 	Safe_Release(m_pASM);

@@ -175,7 +175,7 @@ private:
 	DAMAGE_DESC		m_DamageDesc;
 	DAMAGE_PARAM	m_AttackDesc;
 	ESASType		m_PlayerSasType;
-	
+
 private:
 	_bool			m_bAttackEnable = false;
 
@@ -208,6 +208,7 @@ private:
 
 	//UI
 	class CMonsterLockonUI*	m_pUI_LockOn = nullptr;
+	CGameObject*		m_pSettedTarget = nullptr;
 //	CRigidBody*			m_pContectRigidBody = nullptr;
 
 private:
@@ -444,6 +445,7 @@ private:
 	void		HitCheck();
 	void		SocketLocalMoveCheck();
 
+	void		Update_TargetUI();
 private:
 	_float		m_fNetualTimer = 0.f;
 	void		NetualChecker(_double TimeDelta);

@@ -42,6 +42,8 @@ public:
 
 	void HitDir(_double TimeDelta);
 
+	void CreateBiteEffect();
+
 private:
 	class CBrJ_Controller*		m_pController = nullptr;
 	class CBrJ_AnimInstance*	m_pASM = nullptr;	
@@ -50,6 +52,9 @@ private:
 	CRigidBody*					m_pLaserEffect = nullptr;	// Laser
 	CRigidBody*					m_pLeftArm = nullptr;
 	CRigidBody*					m_pRightArm = nullptr;
+
+	CEffectGroup*				m_pWaterPool = nullptr;
+
 
 private:
 	CScarletCharacter* m_pTarget = nullptr;

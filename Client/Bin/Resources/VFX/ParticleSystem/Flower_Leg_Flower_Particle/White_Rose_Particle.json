@@ -16,7 +16,7 @@
         1.5
     ],
     "LifeRand": true,
-    "Loop": true,
+    "Loop": false,
     "MeshBufferProtoTag": "Prototype_Component_Sakura_Mesh_Instance",
     "MeshSize": [
         1.0,
