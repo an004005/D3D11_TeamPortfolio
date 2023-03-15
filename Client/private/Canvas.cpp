@@ -48,18 +48,19 @@ void CCanvas::BeginTick()
 	{
 		list<CGameObject*> plsGameObject = pLayer->GetGameObjects();
 
-	for (auto iter : plsGameObject)
-	{
-		if (iter->GetPrototypeTag() == L"Player")
+		for (auto iter : plsGameObject)
 		{
-			m_pPlayer = dynamic_cast<CPlayer*>(iter);
-			Assert(m_pPlayer != nullptr);
-			break;
+			if (iter->GetPrototypeTag() == L"Player")
+			{
+				m_pPlayer = dynamic_cast<CPlayer*>(iter);
+				Assert(m_pPlayer != nullptr);
+				break;
+			}
 		}
+
+		m_Timeline0.SetCurve("UI_CanvasHit_0");
+		m_Timeline1.SetCurve("UI_CanvasHit_1");
 	}
-	
-	m_Timeline0.SetCurve("UI_CanvasHit_0");
-	m_Timeline1.SetCurve("UI_CanvasHit_1");
 }
 
 void CCanvas::Tick(_double TimeDelta)
