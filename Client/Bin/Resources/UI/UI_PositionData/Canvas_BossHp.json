@@ -1,1 +1,268 @@
-{"ChildrenUI":[{"ChildTag":"Boss_HPBack\u0000","ObjectTag":"Boss_HPBack","Pivot":2,"PositionX":0.0,"PositionY":-63.0,"Priority":1,"Prototype_GameObject":"Boss_HPBackUI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.12941177189350128,0.10980392247438431,0.5]],"Float4x4s":[],"Floats":[1.0,0.0],"Ints":[2],"Pass":23,"Textures":["","","..\\Bin\\Resources\\UI\\InGame\\Boss_HpBack.png\u0000"]},"SizeX":542.0,"SizeY":18.0,"Transform":{"WorldMatrix":[379.3999938964844,0.0,0.0,0.0,0.0,12.59999942779541,0.0,0.0,0.0,0.0,1.0,0.0,0.0,297.0,0.0,1.0]}},{"ChildTag":"Boss_Hp\u0000","ObjectTag":"Boss_Hp","Pivot":2,"PositionX":0.0,"PositionY":-63.0,"Priority":2,"Prototype_GameObject":"Boss_HpUI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[],"Float4s":[[0.6705882549285889,0.12156862765550613,0.12156862765550613,1.0]],"Float4x4s":[],"Floats":[1.0,0.0,0.6000000238418579],"Ints":[0,0,2],"Pass":22,"Textures":["","","..\\Bin\\Resources\\UI\\InGame\\Boss_Hp.png\u0000","","","..\\Bin\\Resources\\UI\\InGame\\Boss_HpBack.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"]},"SizeX":542.0,"SizeY":18.0,"Transform":{"WorldMatrix":[379.3999938964844,0.0,0.0,0.0,0.0,12.59999942779541,0.0,0.0,0.0,0.0,1.0,0.0,0.0,297.0,0.0,1.0]}},{"ChildTag":"Boss_HpBackRround\u0000","ObjectTag":"Boss_HpBackRround","Pivot":2,"PositionX":0.0,"PositionY":-66.0,"Priority":0,"Prototype_GameObject":"Default_UI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":["..\\Bin\\Resources\\UI\\InGame\\Boss_HpBackGround.png\u0000"]},"SizeX":588.0,"SizeY":56.0,"Transform":{"WorldMatrix":[411.6000061035156,0.0,0.0,0.0,0.0,39.20000076293945,0.0,0.0,0.0,0.0,1.0,0.0,0.0,294.0,0.0,1.0]}},{"ChildTag":"Boss_Shild\u0000","ObjectTag":"Boss_Shild","Pivot":2,"PositionX":0.0,"PositionY":-77.0,"Priority":0,"Prototype_GameObject":"Boss_ShildUI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.9883513450622559,0.7494009137153625,1.0]],"Float4x4s":[],"Floats":[1.0,0.0],"Ints":[2],"Pass":23,"Textures":["","","..\\Bin\\Resources\\UI\\InGame\\Boss_Shild.png\u0000"]},"SizeX":542.0,"SizeY":18.0,"Transform":{"WorldMatrix":[379.3999938964844,0.0,0.0,0.0,0.0,12.59999942779541,0.0,0.0,0.0,0.0,1.0,0.0,0.0,283.0,0.0,1.0]}}],"ObjectTag":"Canvas_BossHp","Pivot":0,"PositionX":0.0,"PositionY":0.0,"Priority":0,"Prototype_GameObject":"Canvas_BossHp\u0000","ScaleX":0.5,"ScaleY":0.5,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":[]},"SizeX":1280.0,"SizeY":720.0,"Transform":{"WorldMatrix":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "Boss_HPBack\u0000",
+            "ObjectTag": "Boss_HPBack",
+            "Pivot": 2,
+            "PositionX": 0.0,
+            "PositionY": -63.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Boss_HPBackUI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.12941177189350128,
+                        0.10980392247438431,
+                        0.5
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0,
+                    0.0
+                ],
+                "Ints": [
+                    2
+                ],
+                "Pass": 23,
+                "Textures": [
+                    "",
+                    "",
+                    "..\\Bin\\Resources\\UI\\InGame\\Boss_HpBack.png\u0000"
+                ]
+            },
+            "SizeX": 542.0,
+            "SizeY": 18.0,
+            "Transform": {
+                "WorldMatrix": [
+                    379.3999938964844,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    12.59999942779541,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    297.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Boss_Hp\u0000",
+            "ObjectTag": "Boss_Hp",
+            "Pivot": 2,
+            "PositionX": 0.0,
+            "PositionY": -63.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Boss_HpUI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.6705882549285889,
+                        0.12156862765550613,
+                        0.12156862765550613,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0,
+                    0.0,
+                    0.6000000238418579
+                ],
+                "Ints": [
+                    0,
+                    0,
+                    2
+                ],
+                "Pass": 22,
+                "Textures": [
+                    "",
+                    "",
+                    "..\\Bin\\Resources\\UI\\InGame\\Boss_Hp.png\u0000",
+                    "",
+                    "",
+                    "..\\Bin\\Resources\\UI\\InGame\\Boss_HpBack.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 542.0,
+            "SizeY": 18.0,
+            "Transform": {
+                "WorldMatrix": [
+                    379.3999938964844,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    12.59999942779541,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    297.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Boss_HpBackGround\u0000",
+            "ObjectTag": "Boss_HpBackGround",
+            "Pivot": 2,
+            "PositionX": 0.0,
+            "PositionY": -66.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\InGame\\Boss_HpBackGround.png\u0000"
+                ]
+            },
+            "SizeX": 588.0,
+            "SizeY": 56.0,
+            "Transform": {
+                "WorldMatrix": [
+                    411.6000061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    39.20000076293945,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    294.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Boss_Shild\u0000",
+            "ObjectTag": "Boss_Shild",
+            "Pivot": 2,
+            "PositionX": 0.0,
+            "PositionY": -77.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Boss_ShildUI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.9883513450622559,
+                        0.7494009137153625,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0,
+                    0.0
+                ],
+                "Ints": [
+                    2
+                ],
+                "Pass": 23,
+                "Textures": [
+                    "",
+                    "",
+                    "..\\Bin\\Resources\\UI\\InGame\\Boss_Shild.png\u0000"
+                ]
+            },
+            "SizeX": 542.0,
+            "SizeY": 18.0,
+            "Transform": {
+                "WorldMatrix": [
+                    379.3999938964844,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    12.59999942779541,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    283.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "Canvas_BossHp",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 0,
+    "Prototype_GameObject": "Canvas_BossHp\u0000",
+    "ScaleX": 0.5,
+    "ScaleY": 0.5,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1280.0,
+    "SizeY": 720.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

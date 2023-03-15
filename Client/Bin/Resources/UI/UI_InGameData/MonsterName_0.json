@@ -8,7 +8,7 @@
             0.0,
             0.0,
             0.0,
-            1.0,
+            0.10000000149011612,
             0.0,
             0.0,
             0.0,
@@ -16,7 +16,7 @@
             1.0,
             0.0,
             0.0,
-            0.0,
+            0.10000000149011612,
             0.0,
             1.0
         ]
@@ -27,20 +27,18 @@
         "Float2s": [],
         "Float4s": [
             [
-                0.800000011920929,
-                0.20000000298023224,
+                1.0,
+                1.0,
                 1.0,
                 1.0
             ]
         ],
         "Float4x4s": [],
-        "Floats": [
-            1.0
-        ],
+        "Floats": [],
         "Ints": [],
-        "Pass": 13,
+        "Pass": 9,
         "Textures": [
-            "..\\Bin\\Resources\\UI\\InGame\\PsCircle2.dds\u0000"
+            "..\\Bin\\Resources\\UI\\InGame\\Monster\\MonsterNameBackGround.png\u0000"
         ]
     },
     "ShaderProtoTag": "Prototype_Component_Shader_VtxTex_VFX",

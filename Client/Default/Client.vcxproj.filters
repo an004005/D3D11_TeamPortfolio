@@ -806,6 +806,19 @@
     <ClInclude Include="..\public\PostVFX_ColorGrading.h">
       <Filter>VFX\PostProcess</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Penetrate.h" />
+    <ClInclude Include="..\public\Boss_AppearUI.h">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_AppearBackUI.h">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_BossAppear.h">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LevelUpUI.h">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1288,6 +1301,19 @@
     <ClCompile Include="..\private\SkmP_Controller.cpp">
       <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
+    <ClCompile Include="..\private\Boss_AppearUI.cpp">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_AppearBackUI.cpp">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_BossAppear.cpp">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LevelUpUI.cpp">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1385,5 +1411,8 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_VFX_UI.hlsl">
+      <Filter>97.ShaderFiles\UI</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

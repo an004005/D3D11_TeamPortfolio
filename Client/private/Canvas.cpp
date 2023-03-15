@@ -57,10 +57,10 @@ void CCanvas::BeginTick()
 				break;
 			}
 		}
-	}
-	
 
-	m_Timeline.SetCurve("UI_Hit");
+		m_Timeline0.SetCurve("UI_CanvasHit_0");
+		m_Timeline1.SetCurve("UI_CanvasHit_1");
+	}
 }
 
 void CCanvas::Tick(_double TimeDelta)
@@ -131,7 +131,7 @@ void CCanvas::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
-	m_Timeline.Imgui_RenderEditor();
+	m_Timeline1.Imgui_RenderEditor();
 
 	ImGui::Separator();
 	static char szChildProtoName[MAX_PATH]{};
@@ -254,6 +254,9 @@ void CCanvas::UIMove_FSM()
 		.AddState("Move")
 		.OnStart([this]
 	{
+		m_fX = 0.0f;
+		m_fY = 0.0f; 
+		
 		map<wstring, CCanvas*>& canvases = CUI_Manager::GetInstance()->Get_MoveCanvas();
 
 		for_each(canvases.begin(), canvases.end(), [&](pair<wstring, CCanvas*> pCanvas) {
@@ -327,15 +330,27 @@ void CCanvas::UIMove_FSM()
 
 void CCanvas::UIHit(const _double & TimeDelta)
 {
-	m_Timeline.Tick(TimeDelta, m_fY);
+	m_Timeline0.Tick(TimeDelta, m_fY);
+	//m_Timeline1.Tick(TimeDelta, m_fX);
 
 	if (m_pPlayer == nullptr)
 		return;
 
 	if (true == m_pPlayer->Get_Hit() || CGameInstance::GetInstance()->KeyDown(DIK_0))
 	{	
-		m_Timeline.PlayFromStart();
+		m_Timeline0.PlayFromStart();
+		//_int iRndomNum = static_cast<_int>(CGameUtils::GetRandFloat(0.0f, 2.0f));
+
+		//if (0 == iRndomNum)
+		//{
+		//	m_Timeline0.PlayFromStart();
+		//}
+		//else
+		//{
+		//	m_Timeline1.PlayFromStart();
+		//}
 	}
+
 }
 
 CCanvas * CCanvas::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
