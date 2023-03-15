@@ -1,9 +1,8 @@
 #include "stdafx.h"
 #include "..\public\GravikenisisMouseUI.h"
 #include "GameInstance.h"
-#include "JsonStorage.h"
-#include "EffectGroup.h"
-#include "EffectSystem.h"
+#include "VFX_Manager.h"
+#include "MapKinetic_Object.h"
 
 CGravikenisisMouseUI::CGravikenisisMouseUI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -28,20 +27,30 @@ HRESULT CGravikenisisMouseUI::Initialize(void * pArg)
 	if (FAILED(CGameObject::Initialize(pArg)))
 		return E_FAIL;
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("./Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_Mouse.json");
-	m_pGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_GravikenisisMouse", L"ProtoVFX_EffectGroup", &json));
-
-	Safe_AddRef(m_pGroup);
-	Assert(m_pGroup != nullptr);
-
 	return S_OK;
+}
+
+void CGravikenisisMouseUI::BeginTick()
+{
+	m_pKenisis = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"PsychokinesisGauge_Mouse", TEXT("Layer_UI"));
+
+	Safe_AddRef(m_pKenisis);
+	Assert(m_pKenisis != nullptr);
+
+	m_pKenisis->Start_NoAttach(m_pKenisis, true);
 }
 
 void CGravikenisisMouseUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-	m_pGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
 
+	if (m_pKenisis == nullptr)
+		return;
+
+	//if (dynamic_cast<CMapKinetic_Object*>(m_pKenisis)->IsDeleted())
+	//{
+
+	//}
 }
 
 void CGravikenisisMouseUI::Imgui_RenderProperty()
@@ -55,8 +64,8 @@ void CGravikenisisMouseUI::Imgui_RenderProperty()
 
 void CGravikenisisMouseUI::SetfRatio(const _float & fRatio)
 {
-	m_pGroup->GetSecondEffect()->GetParams().Floats[0] = fRatio;
-	m_pGroup->GetThirdEffect()->GetParams().Floats[0] = fRatio;
+	//m_pKenisis->GetSecondEffect()->GetParams().Floats[0] = fRatio;
+	//m_pKenisis->GetThirdEffect()->GetParams().Floats[0] = fRatio;
 }
 
 CGravikenisisMouseUI * CGravikenisisMouseUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -87,8 +96,8 @@ void CGravikenisisMouseUI::Free()
 {
 	__super::Free();
 
-	if (m_pGroup != nullptr && m_pGroup->IsDeleted() == false)
-		m_pGroup->SetDelete();
+	if (m_pKenisis != nullptr && m_pKenisis->IsDeleted() == false)
+		m_pKenisis->SetDelete();
 
-	Safe_Release(m_pGroup);
+	Safe_Release(m_pKenisis);
 }

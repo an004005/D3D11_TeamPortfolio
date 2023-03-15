@@ -40,6 +40,7 @@ void CBoss_AppearUI::Tick(_double TimeDelta)
 
 	__super::Tick(TimeDelta);
 	m_Timeline.Tick(TimeDelta, m_tParams.Float4s[0].w);
+	IM_LOG("X %f", m_tParams.Float4s[0].w);
 
 	if (0 == m_iTexturenum)
 		m_Timeline.PlayFromStart();
