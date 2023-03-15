@@ -227,18 +227,18 @@ HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 						// Model_Player	 
 // MonsterBuddyLumi	MonsterSkummyPool MonsterFlowerLeg MonsterSkummyPandou MonsterBronJon MonsterBoss1
 	Json PreviewData; 
-	PreviewData["Model"] = "Model_Player";//"MonsterBuddyLumi";//"Model_Player";
+	PreviewData["Model"] = "MonsterBoss1";
 
 	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
 		return E_FAIL;
 	
-	auto pPlayer = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
+	/*auto pPlayer = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
 
 	PreviewData["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
 	auto pwp = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
 
 	static_cast<CModelPreviwer*>(pwp)->SetAttachTo("RightWeapon", static_cast<CModelPreviwer*>(pPlayer));
-
+*/
 	return S_OK;
 }
 

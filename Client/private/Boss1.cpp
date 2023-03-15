@@ -172,6 +172,8 @@ HRESULT CBoss1::Initialize(void* pArg)
 	m_pJumpLand = m_pModelCom->Find_Animation("AS_em0300_205_AL_atk_a3_landing");
 	m_pJumpJitabata = m_pModelCom->Find_Animation("AS_em0300_233_AL_atk_a3_jitabata_loop");
 		
+	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0300_411_AL_WT_break");
+
 	return S_OK;
 }
 
@@ -268,11 +270,7 @@ void CBoss1::Late_Tick(_double TimeDelta)
 {
 	/*if (!m_bActive)
 		return;*/
-	CMonster::Late_Tick(TimeDelta);
-
-	_int iCurrentHP = m_iPreHP - m_iHP;
-	if (iCurrentHP >= 4000)	
-		m_b2ndPhase = true;
+	CMonster::Late_Tick(TimeDelta);	
 	
 	if (m_bVisible)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -289,11 +287,32 @@ void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	if (m_bDead)
 		return;
+	
+	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
+	m_eHitDir = eHitFrom;
+
+	m_eAtkType = tDamageParams.eAttackType;
+	m_iHP -= tDamageParams.iDamage;
+
+	_int iCurrentHP = m_iPreHP - m_iHP;
+	if (iCurrentHP >= 4000)
+		m_b2ndPhase = true;
+	// SAS Type에 따른 DeBuff 처리
+	
+	if (tDamageParams.eAttackSAS == ESASType::SAS_FIRE)
+		DeBuff_Fire();
+
+	// ~SAS Type에 따른 DeBuff 처리
+
+	if (m_iHP <= 0 && !m_bDead) // + Dead 예외처리 
+	{
+		m_pController->ClearCommands();
+		m_DeathTimeline.PlayFromStart();
+		m_pASM->InputAnimSocket("FullBody", { m_pDeadAnim });
+		m_bDead = true;
+	}
 
 	__super::TakeDamage(tDamageParams);
-
-
-
 }
 
 HRESULT CBoss1::Render()

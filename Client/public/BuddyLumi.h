@@ -48,6 +48,8 @@ private:
 //	CRigidBody*					m_pTrigger = nullptr;
 	CRigidBody*					m_pWeaponCollider = nullptr;
 
+	CEffectGroup*				m_pSwingEffect = nullptr;
+
 private:
 	CScarletCharacter* m_pTarget = nullptr;
 
@@ -110,6 +112,8 @@ private:
 	_vector		m_vFinDir;
 	_bool		m_bOneTick = false;
 	// ~HitDir
+
+	string		m_strBoneName;
 
 	// TakeDamage 
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;

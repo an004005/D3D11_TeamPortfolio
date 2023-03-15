@@ -93,10 +93,12 @@ private:
 	CAnimation* m_pJumpLand = nullptr;
 	CAnimation* m_pJumpJitabata = nullptr;
 
+	CAnimation* m_pDeadAnim = nullptr;
+
 	vector<CMaterial*> m_BodyMtrls;
 	CMaterial* m_pWeakMtrl = nullptr;
 	CMaterial* m_pGlassMtrl = nullptr;
-
+		
 	// Add PJW
 	_bool	m_b2ndPhase = false;
 	_int	m_iPreHP;

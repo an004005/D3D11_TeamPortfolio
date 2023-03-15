@@ -18,6 +18,7 @@
 #include "Player.h"
 
 #include "ScarletWeapon.h"
+#include "VFX_Manager.h"
 
 CBuddyLumi::CBuddyLumi(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -56,6 +57,14 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Proto_BdLm_Controller"), TEXT("Com_Controller"), (CComponent**)&m_pController));
 
 	// Event Caller
+	m_pModelCom->Add_EventCaller("SwingEff_Start", [this]
+	{
+		if (!m_bDead)
+		{
+			m_pSwingEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack");
+			m_pSwingEffect->Start_Attach(this, m_strBoneName, false);
+		}
+	});
 
 	m_pModelCom->Add_EventCaller("Swing_Start", [this] 
 	{ 
@@ -68,6 +77,16 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 		m_bAtkSwitch = false; 
 	});
 
+	m_pModelCom->Add_EventCaller("SwingEff_End", [this]
+	{
+		if (m_bCloned == true)
+		{
+			if (m_pSwingEffect->IsDeleted() == false)
+				m_pSwingEffect->SetDelete();
+
+			Safe_Release(m_pSwingEffect);
+		}
+	});
 
 	m_pModelCom->Add_EventCaller("Upper", [this] 
 	{
@@ -88,7 +107,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 	// ~Event Caller
 	m_iHP = 900; // ¡Ú
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
-
+	m_strBoneName = "RightShoulder";
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
 	m_pASM = CBdLm_AnimInstance::Create(m_pModelCom, this);
@@ -253,6 +272,7 @@ void CBuddyLumi::Tick(_double TimeDelta)
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
 
+	
 	m_pASM->Tick(TimeDelta);
 
 	_float fMoveSpeed = 0.f;
@@ -304,6 +324,14 @@ void CBuddyLumi::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
+	static char bonename[MAX_PATH]{};
+
+	ImGui::InputText("BoneName", bonename, MAX_PATH);
+	if (ImGui::Button("MonsterChangeBoneName"))
+	{
+		m_strBoneName = bonename;
+	}
+
 	// HP Bar Check	
 //	ImGui::Text("HP : %d", m_iHP);
 
@@ -335,6 +363,17 @@ void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 	
 	if (m_eAtkType != EAttackType::ATK_TO_AIR)	
 		m_bStruck = true;
+
+	if (m_bStruck || m_bAirStruck)
+	{
+		if (m_bCloned == true)
+		{
+			if (m_pSwingEffect != nullptr && m_pSwingEffect->IsDeleted() == false)
+				m_pSwingEffect->SetDelete();
+
+			Safe_Release(m_pSwingEffect);
+		}
+	}
 	
 	if (m_iHP <= 0 && !m_bDead)
 	{
@@ -343,6 +382,8 @@ void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_pASM->InputAnimSocket("Buddy", { m_pDeadAnim });
 		m_bDead = true;
 	}
+
+	__super::TakeDamage(tDamageParams);
 }
 
 void CBuddyLumi::AfterPhysX()
@@ -504,6 +545,15 @@ CGameObject * CBuddyLumi::Clone(void * pArg)
 void CBuddyLumi::Free()
 {
 	CMonster::Free();
+
+	if (m_bCloned == true)
+	{
+		if (m_pSwingEffect != nullptr && m_pSwingEffect->IsDeleted() == false)
+			m_pSwingEffect->SetDelete();
+
+		Safe_Release(m_pSwingEffect);
+	}
+
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pWeaponCollider);

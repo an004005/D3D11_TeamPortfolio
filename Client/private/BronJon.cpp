@@ -90,13 +90,17 @@ HRESULT CBronJon::Initialize(void * pArg)
 		m_bAtkLaser = false;
 		ClearDamagedTarget();
 	});
+	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
+	m_pModelCom->Add_EventCaller("Untouch", [this] { m_bUntouchable = true; });
+	m_pModelCom->Add_EventCaller("Untouch_End", [this] { m_bUntouchable = false; });
 
 	m_pModelCom->Add_EventCaller("Groggy_End", [this] { m_bDown = false; });
 
 	// ~Event Caller
 	m_iMaxHP = 5000;
 	m_iHP = m_iMaxHP;
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(110.f));
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
+	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 	m_iGroggy_Able = 5;
 
 	m_pASM = CBrJ_AnimInstance::Create(m_pModelCom, this);
@@ -189,6 +193,8 @@ void CBronJon::Tick(_double TimeDelta)
 		// ~Test
 		if (m_eAtkType == EAttackType::ATK_HEAVY)
 		{
+			m_bHitMove = true;
+
 			if (m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("BronJon", { m_pDamage_M_F });
 
@@ -206,6 +212,7 @@ void CBronJon::Tick(_double TimeDelta)
 	// m_bGroggy : 그로기 상태 및 Down 애니메이션이 돌기 위한 조건이므로 한번 돌고 바로 false 
 	if (!m_bDead && m_bGroggy || m_pController->KeyDown(CController::NUM_4))
 	{		
+		m_bHitMove = false;
 		m_bGroggy = false;
 		m_iGroggyCnt = 0;
 		m_iGroggy_Able += 1;
@@ -221,16 +228,27 @@ void CBronJon::Tick(_double TimeDelta)
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
 
+	
 	m_pASM->Tick(TimeDelta);
 
 	_float fMoveSpeed = 3.f;
 
 	m_vMoveAxis.Normalize();
 
+	if (!m_bHitMove)
+	{
 	const _float fYaw = m_pTransformCom->GetYaw_Radian();
 	_float3 vVelocity;
 	XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
 	m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);	
+	m_bOneTick = false;
+
+	m_vPreDir = { 0.f, 0.f, 0.f, 0.f };
+	m_vCurDir = { 0.f, 0.f, 0.f, 0.f };
+	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
+	}
+	else
+		HitDir(TimeDelta);
 }
 
 void CBronJon::Late_Tick(_double TimeDelta)
@@ -298,7 +316,7 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 	{		
 		++m_iGroggyCnt;
 
-		if (!m_bAtkBite && !m_bAtkLaser && !m_bDown)		
+		if (!m_bAtkBite && !m_bAtkLaser && !m_bDown && !m_bUntouchable)
 			m_bStruck = true;	// 체력 다는 조건으로 주면 될듯?				
 	}
 	
@@ -311,6 +329,8 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 	}
 	
 //	CGameInstance::GetInstance()->SetTimeRatioCurve("Simple_Increase");
+
+	__super::TakeDamage(tDamageParams);
 }
 
 _matrix CBronJon::AttachCollider(CRigidBody* pRigidBody)
@@ -378,6 +398,38 @@ void CBronJon::Atk_LaserSweep()
 
 	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
 		HitTargets(sweepOut, (rand() % 150) + 25, EAttackType::ATK_HEAVY);
+}
+
+void CBronJon::HitDir(_double TimeDelta)
+{
+	// 몸의 중점을 잡는 뼈
+//	_matrix matRef = m_pModelCom->GetBoneMatrix("Reference") * m_pTransformCom->Get_WorldMatrix();
+	_vector vRef = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);//matRef.r[3];
+
+	// 밀려나는 거리만큼의 뼈
+	_matrix matWeak = m_pModelCom->GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
+	_vector vWeak = matWeak.r[3];
+
+	// 현재 위치
+	_vector	vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	if (!m_bOneTick)
+		m_vPreDir = vPosition;
+
+	// 방향
+	_vector vDest = vRef - vWeak;
+
+	m_vCurDir = vDest;
+
+	if (m_bOneTick)
+		m_vFinDir = m_vCurDir - m_vPreDir;
+
+	_float fRange = XMVectorGetX(m_vFinDir);
+
+	m_pTransformCom->LocalMove(m_vFinDir);
+
+	m_vPreDir = m_vCurDir;
+
+	m_bOneTick = true;
 }
 
 //void CBronJon::SetActive()

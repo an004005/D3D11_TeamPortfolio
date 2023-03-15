@@ -1,6 +1,8 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Monster.h"
+#include "ParticleGroup.h"
+#include "EffectGroup.h"
 
 BEGIN(Engine)
 class CFSMComponent;
@@ -43,6 +45,8 @@ private:
 	class CSkPd_AnimInstance* m_pASM = nullptr;
 
 	CRigidBody*				m_pTrigger = nullptr;	
+
+	CEffectGroup*			m_pDash_Effect = nullptr;
 	
 private:
 	CScarletCharacter* m_pTarget = nullptr;

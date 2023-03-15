@@ -68,7 +68,7 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 					if (m_bHitCheck == true)
 					{
 						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0650_Bullet_Dead")->Start_NoAttach(this, false);
-						CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Dead_Particle")->Start_NoAttach(this, false);
+	//					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Dead_Particle")->Start_NoAttach(this, false);
 									
 						m_bDelete = true;
 					}
@@ -83,7 +83,7 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 						if (fDistance > 30.f)
 						{
 							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0650_Bullet_Dead")->Start_NoAttach(this, false);
-							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Dead_Particle")->Start_NoAttach(this, false);
+	//						CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Dead_Particle")->Start_NoAttach(this, false);
 						   
 							m_bDelete = true;
 						}

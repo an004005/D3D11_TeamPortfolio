@@ -1,6 +1,8 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Monster.h"
+#include "ParticleGroup.h"
+#include "EffectGroup.h"
 
 BEGIN(Engine)
 class CFSMComponent;
@@ -37,6 +39,8 @@ public:
 	void	Atk_LaserSweep();
 
 //	virtual void SetActive() override;
+
+	void HitDir(_double TimeDelta);
 
 private:
 	class CBrJ_Controller*		m_pController = nullptr;
@@ -83,11 +87,20 @@ private:
 	_bool m_bAtkLaser = false;
 	list<CScarletCharacter*> m_CollisionList;
 
+	// HitDir
+	_bool		m_bHitMove = false;
+
+	_vector		m_vPreDir;
+	_vector		m_vCurDir;
+	_vector		m_vFinDir;
+	_bool		m_bOneTick = false;
+	// ~HitDir
 
 	// Damage
 	_bool		m_bStruck = false;
 	_bool		m_bGroggy = false; // AirStruck이 없는 대신에 Groggy 상태가 존재함.
 	_bool		m_bDown = false;
+	_bool		m_bUntouchable = false; // 공격 모션일땐 무적
 	
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;

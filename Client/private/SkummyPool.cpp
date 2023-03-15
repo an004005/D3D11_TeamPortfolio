@@ -60,13 +60,14 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 	m_pModelCom->Add_EventCaller("Muzzle", [this] 
 	{
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0650_Bullet_Birth")->Start_Attach(this, "Eff02");	
+		if (!m_bDead)
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0650_Bullet_Birth")->Start_Attach(this, "Eff02");	
 	});
 
 	m_pModelCom->Add_EventCaller("Shoot", [this] 
 	{
 		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-
+		_vector vTargetColPos = dynamic_cast<CScarletCharacter*>(m_pTarget)->GetColliderPosition();
 		m_pBullet = dynamic_cast<CSkMpBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("SkMpBullet")));	
 		
 //		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("SkMpBullet"));
@@ -76,7 +77,7 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 			pBullet->Set_Owner(this);
 			// Effect
 			pBullet->Set_TrailParticle(CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Loop"));
-			pBullet->Get_TrailParticle()->Start_NoAttach(pBullet, true);
+			pBullet->Get_TrailParticle()->Start_NoAttach(pBullet, false);
 			pBullet->Set_BulletEffect(CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Em0650_Bullet_Loop"));
 			pBullet->Get_BulletEffect()->Start_NoAttach(pBullet, true);
 			// ~Effect
@@ -87,9 +88,10 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
 			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
-			pBullet->Set_ShootDir(vLook);
+			_vector vDest = vTargetColPos - vPrePos;
+			pBullet->Set_ShootDir(vDest); // vLook
 
-			pBullet->GetTransform()->LookAt(vPrePos + vLook);
+			pBullet->GetTransform()->LookAt(vTargetColPos); // vPrePos + vLook);
 		}
 	});
 	m_pModelCom->Add_EventCaller("Upper", [this]
@@ -245,6 +247,7 @@ void CSkummyPool::Tick(_double TimeDelta)
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
 
+	
 	m_pASM->Tick(TimeDelta);
 
 	_float fMoveSpeed = 1.f;

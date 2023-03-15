@@ -191,8 +191,11 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 
 	m_pModelCom->Add_EventCaller("Spin_Atk", [this] 
 	{
-		m_pSpinEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0200_Spin_Attack");
-		m_pSpinEffect->Start_Attach(this, "Target", true);//"Tail4", true);
+		if (!m_bDead)
+		{
+			m_pSpinEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0200_Spin_Attack");
+			m_pSpinEffect->Start_Attach(this, "Target", true);//"Tail4", true);
+		}		
 		m_bAtkSwitch = true;
 	});
 	m_pModelCom->Add_EventCaller("Spin_EffectEnd", [this]
@@ -213,16 +216,21 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 
 	m_pModelCom->Add_EventCaller("FallRose_Start", [this]
 	{
-		m_pFallRoseParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose");
-		m_pFallRoseParticle->Start_Attach(this, "Eff02", true);
+		if (!m_bDead)
+		{
+			m_pFallRoseParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose");
+			m_pFallRoseParticle->Start_Attach(this, "Eff02", true);
+		}
 	});
 	
 	m_pModelCom->Add_EventCaller("Invincible_Start", [this] 
 	{
 		// Flower Èð»Ñ¸®´Â Effect
-
-		m_pShootFlwParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Shoot_Flower");
-		m_pShootFlwParticle->Start_Attach(this, "RightFlower5", true);
+		if (!m_bDead)
+		{
+			m_pShootFlwParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Shoot_Flower");
+			m_pShootFlwParticle->Start_Attach(this, "RightFlower5", true);
+		}
 	
 
 //		m_bInvisible = true; 
@@ -334,7 +342,7 @@ void CFlowerLeg::Tick(_double TimeDelta)
 		return dynamic_cast<CPlayer*>(pObj) != nullptr;
 	});
 	m_pTarget = dynamic_cast<CScarletCharacter*>(pPlayer);
-
+		
 	// Controller
 	m_pController->SetTarget(m_pTarget);
 
@@ -438,6 +446,8 @@ void CFlowerLeg::Tick(_double TimeDelta)
 
 		if (m_eAtkType == EAttackType::ATK_HEAVY)
 		{
+			m_bHitMove = true;
+
 			if(m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("UsingControl", { m_pDamage_M_F });
 
@@ -588,6 +598,27 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bInvisible && !m_bUntouchable)
 		m_bStruck = true;
 
+	if (m_bAirStruck)
+	{
+		if (m_bCloned == true)
+		{
+			if (m_pShootFlwParticle != nullptr && m_pShootFlwParticle->IsDeleted() == false)
+				m_pShootFlwParticle->SetDelete();
+
+			Safe_Release(m_pShootFlwParticle);
+
+			if (m_pFallRoseParticle != nullptr && m_pFallRoseParticle->IsDeleted() == false)
+				m_pFallRoseParticle->SetDelete();
+
+			Safe_Release(m_pFallRoseParticle);
+
+			if (m_pSpinEffect != nullptr && m_pSpinEffect->IsDeleted() == false)
+				m_pSpinEffect->SetDelete();
+
+			Safe_Release(m_pSpinEffect);
+		}
+	}
+
 	if (m_iHP <= 0 && !m_bDead)
 	{
 		m_pController->ClearCommands();
@@ -595,6 +626,8 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_pASM->InputAnimSocket("UsingControl", { m_pDeadAnim });
 		m_bDead = true;
 	}
+
+	__super::TakeDamage(tDamageParams);
 }
 
 //void CFlowerLeg::SetActive()
@@ -771,7 +804,7 @@ _matrix CFlowerLeg::AttachCollider(CRigidBody * pRigidBody)
 
 	return SocketMatrix;
 }
-
+ 
 void CFlowerLeg::HitDir(_double TimeDelta)
 {
 	// ¸öÀÇ ÁßÁ¡À» Àâ´Â »À
@@ -864,6 +897,25 @@ CGameObject * CFlowerLeg::Clone(void * pArg)
 void CFlowerLeg::Free()
 {
 	CMonster::Free();
+
+	if (m_bCloned == true)
+	{
+		if (m_pShootFlwParticle != nullptr && m_pShootFlwParticle->IsDeleted() == false)
+			m_pShootFlwParticle->SetDelete();
+
+		Safe_Release(m_pShootFlwParticle);
+
+		if (m_pFallRoseParticle != nullptr && m_pFallRoseParticle->IsDeleted() == false)
+			m_pFallRoseParticle->SetDelete();
+
+		Safe_Release(m_pFallRoseParticle);
+
+		if (m_pSpinEffect != nullptr && m_pSpinEffect->IsDeleted() == false)
+			m_pSpinEffect->SetDelete();
+
+		Safe_Release(m_pSpinEffect);
+	}
+
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);	
