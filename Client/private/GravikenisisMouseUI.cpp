@@ -79,15 +79,24 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 	// 염력 게이지가 부족 하다면, 
 	if (20.0f > m_pPlayer->Get_PlayerStat().m_iKineticEnergy)
 	{
+		m_pKenisis->GetFirstEffect()->SetVisible(false);
 		m_pKenisis->GetSecondEffect()->SetVisible(false);
+		m_pKenisis->GetThirdEffect()->SetVisible(false);
+
+		m_pBanKenisis->GetFirstEffect()->SetVisible(true);
 		m_pBanKenisis->GetSecondEffect()->SetVisible(true);
+
 		return;
 	}
 	else
 	{
 		SetfRatio(m_pPlayer->Get_KineticCharge());
 
+		m_pKenisis->GetFirstEffect()->SetVisible(true);
 		m_pKenisis->GetSecondEffect()->SetVisible(true);
+		m_pKenisis->GetThirdEffect()->SetVisible(true);
+
+		m_pBanKenisis->GetFirstEffect()->SetVisible(false);
 		m_pBanKenisis->GetSecondEffect()->SetVisible(false);
 	}
 
