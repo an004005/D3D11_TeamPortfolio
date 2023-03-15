@@ -332,6 +332,20 @@ void CBoss1_AnimationInstance::AttachAnimSocket(const string& strSocName, const 
 	m_mapAnimSocket[strSocName] = (AnimList);
 }
 
+void CBoss1_AnimationInstance::InputAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
+{
+	for (auto& iter : m_mapAnimSocket)
+	{
+		if (!iter.second.empty())
+			iter.second.front()->Reset();
+
+		list<CAnimation*> SocketList;
+		iter.second = SocketList;
+	}
+
+	m_mapAnimSocket[strSocName] = (AnimList);
+}
+
 CBoss1_AnimationInstance* CBoss1_AnimationInstance::Create(CModel* pModel, CGameObject* pGameObject)
 {
 	CBoss1_AnimationInstance*		pInstance = new CBoss1_AnimationInstance();

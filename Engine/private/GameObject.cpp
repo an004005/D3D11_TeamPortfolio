@@ -180,6 +180,7 @@ void CGameObject::Free()
 {
 	Safe_Release(m_pTransformCom);
 
+
 	for (auto& Pair : m_Components)
 		Safe_Release(Pair.second);
 

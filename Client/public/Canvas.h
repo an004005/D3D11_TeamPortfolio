@@ -49,7 +49,8 @@ protected:
 
 protected:
 	class CPlayer* m_pPlayer = { nullptr };
-	CSimpleTimeline m_Timeline;
+	CSimpleTimeline m_Timeline0;
+	CSimpleTimeline m_Timeline1;
 
 	map<wstring, CUI*> m_mapChildUIs;
 

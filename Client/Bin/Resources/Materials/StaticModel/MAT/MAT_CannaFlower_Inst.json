@@ -1,18 +1,1 @@
-{
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderInstancingProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Nature/Plants/pr_HouseplantPack/Geometry/T_en_CannaFlower_ALB.dds",
-            "../Bin/Resources/Environments/Prop/10_Props/Nature/Plants/pr_HouseplantPack/Geometry/CannaFlower_LP_Normal.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Nature/Plants/pr_HouseplantPack/Geometry/T_en_CannaFlower_RMA.dds"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass" : 1
-}
+{"InstancingPass":1,"ShaderInstancingProtoTag":"Prototype_Component_Shader_VtxModel_Instancing","ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[0],"Pass":4,"Textures":["../Bin/Resources/Environments/Prop/10_Props/Nature/Plants/pr_HouseplantPack/Geometry/T_en_CannaFlower_ALB.dds\u0000","../Bin/Resources/Environments/Prop/10_Props/Nature/Plants/pr_HouseplantPack/Geometry/CannaFlower_LP_Normal.png\u0000","../Bin/Resources/Environments/Prop/10_Props/Nature/Plants/pr_HouseplantPack/Geometry/T_en_CannaFlower_RMA.dds\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxModel"}

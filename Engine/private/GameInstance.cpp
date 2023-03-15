@@ -19,6 +19,7 @@
 #include "Camera_Manager.h"
 #include "CurveManager.h"
 #include "GameTime_Manager.h"
+#include "CurveFloatMapImpl.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -869,6 +870,11 @@ void CGameInstance::Clear_ImguiObjects()
 void CGameInstance::Imgui_OnOff(_bool bOn)
 {
 	m_pImgui_Manager->ImguiOnOff(bOn);
+}
+
+CCurveFloatImpl * CGameInstance::GetCurve(const string & strCurveTag)
+{
+	return m_pCurve_Manager->GetCurve(strCurveTag);
 }
 
 _vector & CGameInstance::GetPeekingPos()

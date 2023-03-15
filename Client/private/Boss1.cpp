@@ -106,10 +106,13 @@ HRESULT CBoss1::Initialize(void* pArg)
 		End_AttackState();
 	});
 	// Water ball Create + De_buff : Oil
+
+	m_pModelCom->Add_EventCaller("LastSpot", [this] { m_LastSpotTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION); });
 	m_pModelCom->Add_EventCaller("WaterBall", [this] 
 	{ 
-		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-		XMVectorSetY(vTargetPos, 0.f);
+		//_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		//XMVectorSetY(vTargetPos, 0.f);
+		XMVectorSetY(m_LastSpotTargetPos, 0.f);
 
 		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_WaterBall"));		
 		if (CWaterBall* pBullet = dynamic_cast<CWaterBall*>(pObj))
@@ -121,7 +124,7 @@ HRESULT CBoss1::Initialize(void* pArg)
 
 			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
-			_vector vDest = XMVector3Normalize(vTargetPos - vPrePos);
+			_vector vDest = XMVector3Normalize(m_LastSpotTargetPos - vPrePos);
 			
 			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
 			pBullet->Set_ShootDir(vDest);
@@ -172,13 +175,15 @@ HRESULT CBoss1::Initialize(void* pArg)
 	m_pJumpLand = m_pModelCom->Find_Animation("AS_em0300_205_AL_atk_a3_landing");
 	m_pJumpJitabata = m_pModelCom->Find_Animation("AS_em0300_233_AL_atk_a3_jitabata_loop");
 		
+	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0300_411_AL_WT_break");
+
 	return S_OK;
 }
 
 void CBoss1::BeginTick()
 {
 	CMonster::BeginTick();
-
+	m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
 	m_pModelCom->FindMaterial(L"MI_em0320_GLASS_0")->SetActive(false);
 	m_pGlassMtrl = m_pModelCom->FindMaterial(L"MI_em0320_GLASS_1");
 	m_pWeakMtrl = m_pModelCom->FindMaterial(L"MI_em0320_WEAK_0");
@@ -194,8 +199,8 @@ void CBoss1::BeginTick()
 
 void CBoss1::Tick(_double TimeDelta)
 {
-	if (!m_bActive)
-		return;
+	/*if (!m_bActive)
+		return;*/
 	CMonster::Tick(TimeDelta);
 
 	// 타겟 가져오기 임시 코드
@@ -266,13 +271,9 @@ void CBoss1::Tick(_double TimeDelta)
 
 void CBoss1::Late_Tick(_double TimeDelta)
 {
-	if (!m_bActive)
-		return;
-	CMonster::Late_Tick(TimeDelta);
-
-	_int iCurrentHP = m_iPreHP - m_iHP;
-	if (iCurrentHP >= 4000)	
-		m_b2ndPhase = true;
+	/*if (!m_bActive)
+		return;*/
+	CMonster::Late_Tick(TimeDelta);	
 	
 	if (m_bVisible)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -280,8 +281,8 @@ void CBoss1::Late_Tick(_double TimeDelta)
 
 void CBoss1::AfterPhysX()
 {
-	if (!m_bActive)
-		return;
+	/*if (!m_bActive)
+		return;*/
 	CMonster::AfterPhysX();
 }
 
@@ -289,11 +290,32 @@ void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	if (m_bDead)
 		return;
+	
+	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
+	m_eHitDir = eHitFrom;
+
+	m_eAtkType = tDamageParams.eAttackType;
+	m_iHP -= tDamageParams.iDamage;
+
+	_int iCurrentHP = m_iPreHP - m_iHP;
+	if (iCurrentHP >= 4000)
+		m_b2ndPhase = true;
+	// SAS Type에 따른 DeBuff 처리
+	
+	if (tDamageParams.eAttackSAS == ESASType::SAS_FIRE)
+		DeBuff_Fire();
+
+	// ~SAS Type에 따른 DeBuff 처리
+
+	if (m_iHP <= 0 && !m_bDead) // + Dead 예외처리 
+	{
+		m_pController->ClearCommands();
+		m_DeathTimeline.PlayFromStart();
+		m_pASM->InputAnimSocket("FullBody", { m_pDeadAnim });
+		m_bDead = true;
+	}
 
 	__super::TakeDamage(tDamageParams);
-
-
-
 }
 
 HRESULT CBoss1::Render()
@@ -471,11 +493,11 @@ void CBoss1::DeBuff_Oil()
 	}
 }
 
-void CBoss1::SetActive()
-{
-	CMonster::SetActive();
-	m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
-}
+//void CBoss1::SetActive()
+//{
+//	CMonster::SetActive();
+//	m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
+//}
 
 CBoss1* CBoss1::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

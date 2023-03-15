@@ -26,6 +26,7 @@ public:
 	_bool			isSocketPassby(const string& strSocName, _float fPlayRatio = 1.f);
 	_bool			CheckSocketAnim(const string& strSocName, const string& AnimName) { return (AnimName == m_mapAnimSocket[strSocName].front()->GetName()) ? true : false; }
 	_bool			isSocketExactlyEmpty();	// 모든 소켓이 비어있는지?
+	_uint			GetSocketSize(const string& strSocName) { return m_mapAnimSocket[strSocName].size(); }
 	void			ClearAnimSocket(const string& strSocName = "");
 
 	void			SetCurState(const string& szStateName) { m_pASM_Base->SetCurState(szStateName); }

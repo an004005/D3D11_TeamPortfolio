@@ -36,7 +36,7 @@ HRESULT CCamSpot::Initialize(void * pArg)
 	FAILED_CHECK(Setup_Components());
 
 	CTransform::TRANSFORMDESC desc;
-	desc.fSpeedPerSec = 1.f;
+	desc.fSpeedPerSec = 2.f;
 	desc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	m_pTransformCom->SetTransformDesc(desc);
@@ -64,6 +64,12 @@ void CCamSpot::BeginTick()
 void CCamSpot::Tick(_double TimeDelta)
 {
 	MouseMove(TimeDelta);
+
+	//CTransform::TRANSFORMDESC desc;
+	//desc.fSpeedPerSec = 2.f;
+	//desc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+	//m_pTransformCom->SetTransformDesc(desc);
 
 	// CamSpot 이동 AfterPhsyX로 위치 이동
 

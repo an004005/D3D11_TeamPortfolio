@@ -121,29 +121,69 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 		// 	SetDelete();
 		// });
 
-		if (m_iSelectFinishFunc == 0)
+		if(LEVEL_NOW == LEVEL_EFFECT || LEVEL_NOW  == LEVEL_UI )
 		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+			if (m_iSelectFinishFunc == 0)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+			}
+			else if (m_iSelectFinishFunc == 1)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+			}
+			else if (m_iSelectFinishFunc == 2)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+			}
+			else if (m_iSelectFinishFunc == 3)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
+			}
+			else if (m_iSelectFinishFunc == 4)
+			{
+				m_Timeline.SetFinishFunction([this]
+				{
+					SetDelete();
+				});
+			}
 		}
-		else if (m_iSelectFinishFunc == 1)
+		else if (LEVEL_NOW == LEVEL_PLAYERTEST)
 		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+			if (m_iSelectFinishFunc == 0)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+			}
+			else if (m_iSelectFinishFunc == 1)
+			{
+				m_Timeline.SetFinishFunction([this]
+				{
+					SetDelete();
+				});
+			}
+			else if (m_iSelectFinishFunc == 2)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+			}
+			else if (m_iSelectFinishFunc == 3)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
+			}
+			else if (m_iSelectFinishFunc == 4)
+			{
+				m_Timeline.SetFinishFunction([this]
+				{
+					SetDelete();
+				});
+			}
 		}
-		else if (m_iSelectFinishFunc == 2)
-		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
-		}
-		else if (m_iSelectFinishFunc == 3)
-		{
-			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
-		}
-		else if(m_iSelectFinishFunc == 4)
+		else
 		{
 			m_Timeline.SetFinishFunction([this]
 			{
 				SetDelete();
 			});
 		}
+		
 
 	}
 	else

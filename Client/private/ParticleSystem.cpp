@@ -19,6 +19,18 @@ CParticleSystem::CParticleSystem(const CParticleSystem& rhs)
 {
 }
 
+_int CParticleSystem::GetLiveParticleCnt()
+{
+	if(m_eBufferType == EBufferType::POINT)
+	{
+		return m_PointList.size();
+	}
+	else
+	{
+		return m_MeshList.size();
+	}
+}
+
 HRESULT CParticleSystem::Initialize(void* pArg)
 {
 	CGameObject::Initialize(pArg);
@@ -65,15 +77,15 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 
 void CParticleSystem::Tick(_double TimeDelta)
 {
-	if (m_bVisible == false)
-		return;
+	// if (m_bVisible == false)
+	// 	return;
 
 		const _float fTimeDelta = (_float)TimeDelta;
 
 		if (m_bLoop == false)
 			m_fDuration -= fTimeDelta;
 		if (m_fDuration < 0.f)
-			m_bVisible = false;
+			m_iBurstCnt = 0;
 
 		if (m_eBufferType == EBufferType::MESH)
 		{
@@ -168,6 +180,10 @@ void CParticleSystem::SaveToJson(Json& json)
 	json["RotationToTimeMax"] = m_fRotationToTime_Max;
 	json["ScaleVariation"] = m_vScaleVariation;
 	json["MeshSize"] = m_vMeshSize;
+
+	json["RandDirMax"] = m_vRandDir_Max;
+	json["RandDirMin"] = m_vRandDir_Min;
+	json["SphereDetail"] = m_bSphereDetail;
 }
 
 void CParticleSystem::LoadFromJson(const Json& json)
@@ -199,6 +215,21 @@ void CParticleSystem::LoadFromJson(const Json& json)
 	m_fRotationToTime_Max = json["RotationToTimeMax"] ;
 	m_vScaleVariation = json["ScaleVariation"];
 
+	if(json.contains("SphereDetail"))
+	{
+		m_bSphereDetail = json["SphereDetail"];
+	}
+
+	if(json.contains("RandDirMax"))
+	{
+		m_vRandDir_Max = json["RandDirMax"];
+	}
+
+	if(json.contains("RandDirMin"))
+	{
+		m_vRandDir_Min = json["RandDirMin"];
+	}
+
 	if(json.contains("MeshSize"))
 		m_vMeshSize = json["MeshSize"];
 
@@ -212,11 +243,6 @@ void CParticleSystem::LoadFromJson(const Json& json)
 			FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ShaderProtoTag).c_str(), TEXT("Mesh_Instance_Shader"), (CComponent**)&m_pShader));
 		}
 	}
-	
-	// else
-	// {
-	// 	m_pPointInstanceBuffer = CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, m_iInstanceNum);
-	// }
 
 	m_bSizeDecreaseByLife = json["bSizeDecreaseByLife"];
 	if (json.contains("bSizeIncreaseByLife"))
@@ -354,7 +380,16 @@ void CParticleSystem::Imgui_RenderProperty()
 	}
 
 	if (ImGui::RadioButton("Shape Sphere", m_eShape == ESpawnShape::SPHERE))
+	{
 		m_eShape = ESpawnShape::SPHERE;
+
+		ImGui::Checkbox("Sphere Detail", &m_bSphereDetail);
+		if(m_bSphereDetail)
+		{
+			CImguiUtils::InputFloat3(&m_vRandDir_Min, "RandDir_Min");
+			CImguiUtils::InputFloat3(&m_vRandDir_Max, "RandDir_Max");
+		}
+	}
 	ImGui::SameLine();
 	if (ImGui::RadioButton("Shape Cone", m_eShape == ESpawnShape::CONE))
 		m_eShape = ESpawnShape::CONE;
@@ -464,6 +499,8 @@ void CParticleSystem::AddPoint()
 			pointData.vRotPos.x = CGameUtils::GetRandVector3(m_fRotationToTime_Min, m_fRotationToTime_Max).x;
 			pointData.vRotPos.y = CGameUtils::GetRandVector3(m_fRotationToTime_Min, m_fRotationToTime_Max).y;
 			pointData.vRotPos.z = CGameUtils::GetRandVector3(m_fRotationToTime_Min, m_fRotationToTime_Max).z;
+
+			
 		}
 
 		if(m_bGravity == true)
@@ -476,11 +513,20 @@ void CParticleSystem::AddPoint()
 
 		if (m_eShape == ESpawnShape::SPHERE)
 		{
-			const _float3 vRandDir = CGameUtils::GetRandVector3Sphere(_float3::Zero, 1.f);
-			vDir.x = vRandDir.x;
-			vDir.y = vRandDir.y;
-			vDir.z = vRandDir.z;
-
+			if (m_bSphereDetail == false)
+			{
+				const _float3 vRandDir = CGameUtils::GetRandVector3Sphere(_float3::Zero, 1.f);
+				vDir.x = vRandDir.x;
+				vDir.y = vRandDir.y;
+				vDir.z = vRandDir.z;
+			}
+			else
+			{
+				const _float3 vRandDir = CGameUtils::GetRandVector3(m_vRandDir_Min, m_vRandDir_Max);
+				vDir.x = vRandDir.x;
+				vDir.y = vRandDir.y;
+				vDir.z = vRandDir.z;
+			}
 			if (m_bLocal)
 			{
 				vPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);

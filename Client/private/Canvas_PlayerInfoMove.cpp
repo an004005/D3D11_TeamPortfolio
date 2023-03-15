@@ -63,6 +63,9 @@ void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
+	if (m_pPlayer == nullptr)
+		return;
+
 	m_pUIMoveFSM->Tick(TimeDelta);
 	CCanvas::UIHit(TimeDelta);
 

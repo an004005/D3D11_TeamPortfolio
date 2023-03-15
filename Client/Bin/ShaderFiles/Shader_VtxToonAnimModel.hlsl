@@ -157,7 +157,7 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 
 		float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
 		float4 vViewDir = g_vCamPosition - In.vWorldPos;
-		float fFresnel = FresnelEffect(vNormal.xyz, vViewDir.xyz, 2.5f);
+		float fFresnel = FresnelEffect(vNormal.xyz, vViewDir.xyz, 1.f);
 		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, vColor , fFresnel);
 
 		fEmissive *= fFresnel;
