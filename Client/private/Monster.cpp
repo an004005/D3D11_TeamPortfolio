@@ -54,7 +54,6 @@ HRESULT CMonster::Initialize(void* pArg)
 
 
 	//HP UI
-	
 	m_UI_PivotMatrixes.fill(XMMatrixIdentity());
 	SetUp_UI();
 
