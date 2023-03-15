@@ -93,8 +93,7 @@ void CBatch::Imgui_RenderProperty()
 
 	
 	ImGui::Separator();
-
-	if (ImGui::Checkbox("Picking On", &m_bPick));
+	ImGui::Checkbox("Picking On", &m_bPick);
 	
 	ImGui::Separator();
 	if (ImGui::TreeNode("Trigger"))

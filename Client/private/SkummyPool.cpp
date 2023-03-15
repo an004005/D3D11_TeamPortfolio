@@ -18,7 +18,7 @@
 
 #include "RigidBody.h"
 #include "VFX_Manager.h"
-
+#include "MonsterHpUI.h"
 // TODO : 소켓 작업, Turn
 
 CSkummyPool::CSkummyPool(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

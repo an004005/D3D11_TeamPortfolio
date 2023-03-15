@@ -33,6 +33,8 @@ public:
 	static _float RandomFloat(_float fMin = 0.f, _float fMax = 1.f);
 	static _float3 RandomUnitVectorInCone_AxisY(_float fConDegree);
 	static _float4 RandomPosVectorInCircle_FromZero(_float fRadius);
+
+
 };
 
 template <typename T>
