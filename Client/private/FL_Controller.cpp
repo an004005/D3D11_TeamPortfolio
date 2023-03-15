@@ -2,7 +2,8 @@
 #include "..\public\FL_Controller.h"
 #include "FlowerLeg.h"
 #include "FSMComponent.h"
-
+#include "EffectGroup.h"
+#include "VFX_Manager.h"
 CFL_Controller::CFL_Controller(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CAIController(pDevice, pContext)
 {
@@ -42,6 +43,15 @@ HRESULT CFL_Controller::Initialize(void * pArg)
 					})
 
 			.AddState("Near")
+				.OnStart([this]() {
+						CEffectGroup* pEffectGroup = nullptr;
+						pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", TEXT("Layer_UI"));
+						assert(pEffectGroup != nullptr);
+
+						//TimeLine 끝나고 삭제
+						pEffectGroup->Start_Attach(m_pCastedOwner, "Target", true);
+
+					})
 				.Tick(this, &CFL_Controller::Tick_Near)
 				
 				.AddTransition("Near to Mid", "Mid")
