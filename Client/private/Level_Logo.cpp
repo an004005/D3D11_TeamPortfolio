@@ -7,6 +7,8 @@
 #include "Imgui_LevelSwitcher.h"
 #include "JsonStorage.h"
 #include "Level_Maptool.h"
+#include "VFX_Manager.h"
+
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -26,6 +28,7 @@ HRESULT CLevel_Logo::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PropertyEditor::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LevelSwitcher::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
+	CVFX_Manager::GetInstance()->Initialize((LEVEL)LEVEL_NOW);
 
 	return S_OK;
 }

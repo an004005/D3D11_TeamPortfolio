@@ -62,21 +62,22 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 		{
 			m_pDash_Effect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0750_Dash_Attack");
 			m_pDash_Effect->Start_Attach(this, "Hips", true);
+			Safe_AddRef(m_pDash_Effect);
 		}
 		m_bAtkToggle = true;
 	});
 
 	m_pModelCom->Add_EventCaller("Rush_End", [this]
 	{
-		// Effect 해제
-		if (m_bCloned == true)
-		{
-			if (m_pDash_Effect->IsDeleted() == false)
-				m_pDash_Effect->SetDelete();
+		//// Effect 해제
+		//if (m_bCloned == true)
+		//{
+		//	if (m_pDash_Effect->IsDeleted() == false)
+		//		m_pDash_Effect->SetDelete();
 
-			Safe_Release(m_pDash_Effect);		
-		}
-		m_bAtkToggle = false;
+		//	Safe_Release(m_pDash_Effect);		
+		//}
+		//m_bAtkToggle = false;
 	});
 	
 	m_pModelCom->Add_EventCaller("UpperCut", [this]
