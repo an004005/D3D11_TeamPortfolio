@@ -79,6 +79,9 @@
 
 // Alarm
 #include "NextMapNameUI.h"
+#include "Boss_AppearUI.h"
+#include "Boss_AppearBackUI.h"
+#include "LevelUpUI.h"
 
 #include "FactoryMethod.h"
 #include "Monster.h"
@@ -398,6 +401,19 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("NextMapNameUI"),
 			CNextMapNameUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+		/* For.Prototype_GameObject_Boss_AppearUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_AppearUI"),
+			CBoss_AppearUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Boss_AppearBackUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_AppearBackUI"),
+			CBoss_AppearBackUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_LevelUpUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("LevelUpUI"),
+			CLevelUpUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
 	}
 
 	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
