@@ -19,7 +19,7 @@ public:
 	virtual void   Imgui_RenderProperty() override;
 
 public:
-	void Set_AttackNum(const _int iFour, const _int iThree, const _int iTwo, const _int iOne);
+	void Set_AttackNum(const _uint iFour, const _uint iThree, const _uint iTwo, const _uint iOne);
 
 private:
 	class CEffectGroup* m_pGroup = nullptr;

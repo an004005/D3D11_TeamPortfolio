@@ -28,14 +28,34 @@ HRESULT CMonster::Initialize(void* pArg)
 	});
 	m_DeathTimeline.SetCurve("Simple_Increase");
 
-	//HP UI
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	CMonsterHpUI* pUI_HP = nullptr;
-	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
+	m_vecDefaultHit.push_back(L"Default_Blood_00");
+	m_vecDefaultHit.push_back(L"Default_Blood_01");
+	m_vecDefaultHit.push_back(L"Default_Blood_02");
+	m_vecDefaultHit.push_back(L"Default_Blood_03");
+	m_vecDefaultHit.push_back(L"Default_Blood_04");
+	m_vecDefaultHit.push_back(L"Default_Blood_05");
+	m_vecDefaultHit.push_back(L"Default_Blood_06");
 
-	assert(pUI_HP != nullptr);
-	pUI_HP->Set_Owner(this);
-	pUI_HP->SetPivotMatrix(m_UI_PivotMatrixes[INFO_BAR]);
+	m_vecFireHit.push_back(L"Fire_Blood_00");
+	m_vecFireHit.push_back(L"Fire_Blood_01");
+	m_vecFireHit.push_back(L"Fire_Blood_02");
+	m_vecFireHit.push_back(L"Fire_Blood_03");
+	m_vecFireHit.push_back(L"Fire_Blood_04");
+	m_vecFireHit.push_back(L"Fire_Blood_05");
+	m_vecFireHit.push_back(L"Fire_Blood_06");
+
+	m_vecElecHit.push_back(L"Elec_Blood_00");
+	m_vecElecHit.push_back(L"Elec_Blood_01");
+	m_vecElecHit.push_back(L"Elec_Blood_02");
+	m_vecElecHit.push_back(L"Elec_Blood_03");
+	m_vecElecHit.push_back(L"Elec_Blood_04");
+	m_vecElecHit.push_back(L"Elec_Blood_05");
+	m_vecElecHit.push_back(L"Elec_Blood_06");
+
+
+	//HP UI
+	m_UI_PivotMatrixes.fill(XMMatrixIdentity());
+	SetUp_UI();
 
 	return S_OK;
 }
@@ -91,22 +111,33 @@ void CMonster::Imgui_RenderProperty()
 	}
 }
 
-void CMonster::LoadFromJson(const Json & json)
-{
-	__super::LoadFromJson(json);
 
-	m_UI_PivotMatrixes.fill(XMMatrixIdentity());
-
-	if (json.contains("UIPivotMatrixes"))
-	{
-		m_UI_PivotMatrixes = json["UIPivotMatrixes"];
-	}
-}
 
 void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	if (tDamageParams.vHitPosition.Length() == 0.f)
 	{
+		wstring HitEffectName = L"";
+
+		switch (tDamageParams.eAttackSAS)
+		{
+		case ESASType::SAS_FIRE:
+			random_shuffle(m_vecFireHit.begin(), m_vecFireHit.end());
+			HitEffectName = m_vecFireHit.front();
+			break;
+
+		case ESASType::SAS_ELETRIC:
+			random_shuffle(m_vecElecHit.begin(), m_vecElecHit.end());
+			HitEffectName = m_vecElecHit.front();
+			break;
+
+		default:
+			random_shuffle(m_vecDefaultHit.begin(), m_vecDefaultHit.end());
+			HitEffectName = m_vecDefaultHit.front();
+			break;
+		}
+		
+
 		// 타격점이 원점으로 찍히면 레이캐스트를 쏴서 위치를 판단
 		if (tDamageParams.pCauser != nullptr)
 		{
@@ -136,7 +167,7 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 					{
 						_vector vHitPos = XMVectorSet(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
 						_vector vEffectDir = tDamageParams.vSlashVector;
-						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, L"Default_Blood_00")->Start_AttachPosition(this, vHitPos, vEffectDir);
+						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, vHitPos, vEffectDir);
 					}
 				}
 			}
@@ -146,7 +177,7 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 			// 타격점이 잘 나오면 해당 위치에 생성
 			_vector vHitPos = tDamageParams.vHitPosition;
 			_vector vEffectDir = tDamageParams.vSlashVector;
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, L"Default_Blood_00")->Start_AttachPosition(this, vHitPos, vEffectDir);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, vHitPos, vEffectDir);
 		}
 	}
 }

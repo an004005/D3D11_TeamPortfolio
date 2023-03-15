@@ -83,12 +83,14 @@ void CCanvas_BossHp::Set_BossUIRender()
 	Find_ChildUI(L"Boss_Hp")->SetVisible(false);
 	Find_ChildUI(L"Boss_HPBack")->SetVisible(false);
 	Find_ChildUI(L"Boss_Shild")->SetVisible(false);
+	Find_ChildUI(L"Boss_HpBackGround")->SetVisible(false);
 }
 
 void CCanvas_BossHp::Set_BossHp(const _float & fHp)
 {
 	Find_ChildUI(L"Boss_Hp")->SetVisible(true);
 	Find_ChildUI(L"Boss_HPBack")->SetVisible(true);
+	Find_ChildUI(L"Boss_HpBackGround")->SetVisible(true);
 	dynamic_cast<CBoss_HpUI*>(Find_ChildUI(L"Boss_Hp"))->Set_BossHp(fHp);
 	dynamic_cast<CBoss_HpBackUI*>(Find_ChildUI(L"Boss_HPBack"))->Set_BossHp(fHp);
 }

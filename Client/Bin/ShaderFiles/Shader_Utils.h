@@ -21,12 +21,12 @@ static const float EPSILON = 1e-6f;
 
 #define SHADER_TOON_GRAY_INGNORE 9.f
 #define SHADER_MONSTER_WEAK 10.f
-#define SHADER_PORTRAIT 11.f
 
 
 #define COL_WHITE float3(1.f, 1.f, 1.f)
 #define COL_BLACK float3(0.f, 0.f, 0.f)
-#define COL_PURPLE float3(0.545098f, 0.f, 1.f)
+//#define COL_PURPLE float3(0.545098f, 0.f, 1.f)
+#define COL_PURPLE float3(0.945098f, 0.4f, 1.f)
 #define COL_OIL float3(0.470588f, 0.23529f, 0.f)
 #define COL_FIRE float3(0.9f, 0.3f, 0.f)
 #define COL_BURNOUT float3(1.f, 0.4f, 0.f) // ¸ó½ºÅÍ »ç¸Á µðÁ¹ºê »ö

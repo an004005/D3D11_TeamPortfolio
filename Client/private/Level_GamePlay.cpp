@@ -279,6 +279,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 		// PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
 		// auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 	}
+	// {
+	// 	PreviewData["Model"] = "Model_Ch500_Portrait";
+	// 	PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
+	// 	auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
+	// }
 
 
 	// Model_Ch300_Portrail

@@ -178,7 +178,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 		float fNdotL = dot(normalize(vNormal.xyz), normalize(g_vLightDir.xyz));
 		float fDiff = saturate(max(fNdotL, 0.0));
 	
-		fDiff = max(vCTL.r * 1.5f , min(vCTL.g, fDiff));
+		fDiff = max(vCTL.r * 2.f , min(vCTL.g, fDiff));
 		fDiff *= vCTL.b;
 
 		Out.vShade = g_vLightDiffuse * saturate(fDiff);
