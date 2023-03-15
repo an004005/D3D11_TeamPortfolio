@@ -58,7 +58,11 @@ protected:
 
 	void MoveTransformJson(Json& jsonDest, void* pArg);
 
-
+protected:	// 피격 이펙트 색상
+	vector<wstring>			m_vecDefaultHit;
+	vector<wstring>			m_vecFireHit;
+	vector<wstring>			m_vecElecHit;
+	
 
 protected:
 	CRenderer*				m_pRendererCom = nullptr;

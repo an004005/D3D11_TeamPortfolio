@@ -1,1 +1,60 @@
-{"ControlledRigidBody":{"ColliderType":1,"contactOffset":0.10000000149011612,"density":50.0,"height":0.10000000149011612,"maxJumpHeight":3.0,"pushPower":300.0,"radius":2.5,"slopeLimitDegree":45.0,"stepOffset":0.10000000149011612},"ObjectTag":"","Prototype_GameObject":"Prototype_MonsterBoss1\u0000","RigidBody":{"ColliderType":8,"Density":10.0,"OriginTransform":[3.0,0.0,0.0,0.0,0.0,3.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0],"ShapeType":1,"bKinematic":true,"bTrigger":false},"Transform":{"WorldMatrix":[0.45134058594703674,0.0,-0.8923341035842896,0.0,0.0019339792197570205,0.9999911189079285,0.0009782023262232542,0.0,0.8923231363296509,-0.002167250495404005,0.45133501291275024,0.0,0.005754698067903519,0.06903477013111115,0.0,1.0]}}
+{
+    "ControlledRigidBody": {
+        "ColliderType": 1,
+        "contactOffset": 0.10000000149011612,
+        "density": 50.0,
+        "height": 0.10000000149011612,
+        "maxJumpHeight": 3.0,
+        "pushPower": 300.0,
+        "radius": 2.5,
+        "slopeLimitDegree": 10.0,
+        "stepOffset": 0.10000000149011612
+    },
+    "ObjectTag": "",
+    "Prototype_GameObject": "Prototype_MonsterBoss1\u0000",
+    "RigidBody": {
+        "ColliderType": 8,
+        "Density": 10.0,
+        "OriginTransform": [
+            3.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            3.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 1,
+        "bKinematic": true,
+        "bTrigger": false
+    },
+    "Transform": {
+        "WorldMatrix": [
+            0.45134058594703674,
+            0.0,
+            -0.8923341035842896,
+            0.0,
+            0.0019339792197570205,
+            0.9999911189079285,
+            0.0009782023262232542,
+            0.0,
+            0.8923231363296509,
+            -0.002167250495404005,
+            0.45133501291275024,
+            0.0,
+            0.005754698067903519,
+            0.06903477013111115,
+            0.0,
+            1.0
+        ]
+    }
+}

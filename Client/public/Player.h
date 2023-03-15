@@ -12,6 +12,7 @@ class CFSMComponent;
 class CModel;
 class CRenderer;
 class CCamera;
+class CCurveFloatImpl;
 END
 
 BEGIN(Client);
@@ -398,6 +399,8 @@ public:	//EventCaller용
 	void		Event_Kinetic_Throw();
 	void		Event_KineticSlowAction();
 
+	void		Event_Trail(_bool bTrail);
+
 private:
 	_bool		m_bCollisionAble = false;
 	
@@ -522,6 +525,15 @@ private:
 	_float	m_fSwingLerpTimer = 0.f;
 	_bool	m_bRight = false;
 	_vector m_vKineticInitLook;
+
+private:	// 키네틱 테스트용
+	_float	m_fBackStepSpeed = 1.f;
+
+private:	// 플레이어 림라이트, 외곽선 관련
+	CCurveFloatImpl*	m_pCurve = nullptr;
+	void	Start_RimLight(const string& strCurveName);
+	void	Tick_RimLight(_float fRatio);
+	void	End_RimLight();
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
