@@ -190,7 +190,14 @@ HRESULT CFactoryMethod::MakeSAS_Portrait_Prototypes(ID3D11Device* pDevice, ID3D1
 		auto pModel_ch300 = CModel::Create(pDevice, pContext,
 		   "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/ch300.anim_model");
 		pModel_ch300->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/SAS_Anim/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch300_Portrail", pModel_ch300));
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch300_Portrait", pModel_ch300));
+	}
+
+	{
+		auto pModel_ch500 = CModel::Create(pDevice, pContext,
+		   "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/ch500.anim_model");
+		pModel_ch500->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/SAS_Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch500_Portrait", pModel_ch500));
 	}
 
 	{

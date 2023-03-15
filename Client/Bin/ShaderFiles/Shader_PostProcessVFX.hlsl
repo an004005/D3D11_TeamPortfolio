@@ -370,11 +370,11 @@ PS_OUT PS_MAIN_Portrait_9(PS_IN In)
 	float fColorRatio = g_float_1;
 	float fOutlineRatio = g_float_3;
 
-	const float coord[3] = { -2.f, 0.f, 2.f };
+	const float coord[3] = { -4.f, 0.f, 4.f };
 	float fColor = 0.f;
 
 	float4 vPortrait = g_PortraitTexture.Sample(LinearSampler, In.vTexUV);
-	if (vPortrait.x != 0.f && vPortrait.y != 0.f && vPortrait.z != 0.f)
+	if (vPortrait.a != 0.f)
 	{
 		if (!bUseDissolve)
 		{
@@ -382,7 +382,11 @@ PS_OUT PS_MAIN_Portrait_9(PS_IN In)
 			{
 				for (int j = 0; j < 3; j++)
 				{
-					fColor += g_PortraitTexture.Sample(LinearSampler, In.vTexUV + float2(coord[j] / g_iWinCX, coord[i] / g_iWinCY)).a;
+					float fWidthBorderRatio = 4.f / g_iWinCX;
+
+					float2 calcCood = float2(coord[j] / g_iWinCX, coord[i] / g_iWinCY);
+					float2 checkUV = In.vTexUV + calcCood;
+					fColor += g_PortraitTexture.Sample(LinearSampler, checkUV).a;
 				}
 			}
 			fColor /= 9.f;
