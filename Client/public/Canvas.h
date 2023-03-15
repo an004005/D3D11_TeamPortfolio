@@ -39,10 +39,6 @@ public:
 		m_bUIMove = true;
 	}
 
-	void	Set_UIHit() {
-		m_bUIHit = true;
-	}
-
 	map<wstring, CUI*> Get_Map() {	// 삭제 예정
 		return m_mapChildUIs;
 	}
@@ -55,7 +51,6 @@ protected:
 	class CPlayer* m_pPlayer = { nullptr };
 	CSimpleTimeline m_Timeline0;
 	CSimpleTimeline m_Timeline1;
-	CSimpleTimeline m_Timeline2;
 
 	map<wstring, CUI*> m_mapChildUIs;
 
@@ -70,10 +65,6 @@ private:
 	_bool			m_bUIMove = { false };				// SASSkill_UIMove() -> UI를 이동시키고자 할 때 외부에서 Set 을 한다.
 	_bool			m_bIsDestination = { false };		// 목표지점에 도달! 원점으로 이제 돌아가라
 	_float2			m_vDestination = { 0.0f, 0.0f };	// 도착지점
-
-	_bool			m_bUIHit = { false };
-	_float			m_fInterval = { 0.0f };
-	_double			m_dHit_TimeAcc = { 0.0 };
 
 public:
 	static CCanvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

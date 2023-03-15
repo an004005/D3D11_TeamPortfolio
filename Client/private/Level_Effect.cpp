@@ -374,15 +374,15 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 	//pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
 
 	// ´«
-	//Json Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_Find.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &Json));
-
-	// Lockon
-	//Json josn = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_Target.json");
+	//Json josn = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_Find.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &josn));
 
-	//Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_TargetRhombus.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &Json));
+	//// Lockon
+	//josn = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_Target.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &josn));
+
+	//josn = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_TargetRhombus.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &josn));
 
 	// Monster hp
 	//Json Json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterHp.json");
@@ -391,14 +391,17 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_MonsterShild"), TEXT("ProtoVFX_EffectGroup"), &json));
 
 	// Psychokinesis
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_G.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_GravikenisisG"), TEXT("ProtoVFX_EffectGroup"), &json));
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_G.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Gravikenisis_G"), TEXT("ProtoVFX_EffectGroup"), &json));
 	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_Mouse.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_GravikenisisMouse"), TEXT("ProtoVFX_EffectGroup"), &json));
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Gravikenisis_Mouse"), TEXT("ProtoVFX_EffectGroup"), &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Psychokinesis_Circle.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Gravikenisis_Circle"), TEXT("ProtoVFX_EffectGroup"), &json));
 
 	// AttackNumber
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/AttackNum.json");
-	dynamic_cast<CEffectGroup*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_AttackNum"), TEXT("ProtoVFX_EffectGroup"), &json))->Start_EffectWork();
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/AttackNum.json");
+	//dynamic_cast<CEffectGroup*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_AttackNum"), TEXT("ProtoVFX_EffectGroup"), &json))->Start_EffectWork();
 
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"));
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterLockonUI"));
