@@ -30,7 +30,10 @@ HRESULT CBdLm_Controller::Initialize(void * pArg)
 		
 		.AddState("Outside")
 			.Tick(this, &CBdLm_Controller::Tick_Outside)
-
+			.OnExit([this]
+				{
+					m_pCastedOwner->TurnEyesOut();
+				})
 			.AddTransition("Outside to Far", "Far")
 				.Predicator([this]
 				{

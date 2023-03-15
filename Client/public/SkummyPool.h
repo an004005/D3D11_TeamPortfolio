@@ -28,7 +28,7 @@ public:
 	virtual void Imgui_RenderProperty() override;
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 	virtual void AfterPhysX();
-
+	virtual void SetUp_UI() override;
 	void HitDir(_double TimeDelta);
 	virtual void SetActive() override;
 
