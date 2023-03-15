@@ -444,6 +444,7 @@ private:
 	void		SocketLocalMoveCheck();
 
 	void		Update_TargetUI();
+	void		Create_TargetInfoBar();
 private:
 	_float		m_fNetualTimer = 0.f;
 	void		NetualChecker(_double TimeDelta);

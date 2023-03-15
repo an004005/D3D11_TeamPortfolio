@@ -334,12 +334,6 @@ void CSkummyPool::AfterPhysX()
 void CSkummyPool::SetUp_UI()
 {
 	//HP UI
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	CMonsterHpUI* pUI_HP = nullptr;
-	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
-
-	assert(pUI_HP != nullptr);
-	pUI_HP->Set_Owner(this);
 
 	_float4x4 UI_PivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
@@ -348,7 +342,7 @@ void CSkummyPool::SetUp_UI()
 		0.0f, 0.241f, 0.0f, 1.0f
 	);
 
-	pUI_HP->SetPivotMatrix(UI_PivotMatrix);
+	m_UI_PivotMatrixes[INFOBAR] = UI_PivotMatrix;
 
 	//FindEye
 	UI_PivotMatrix = Matrix(
