@@ -10,6 +10,7 @@
 #include "GameUtils.h"
 #include "Model.h"
 #include "Material.h"
+#include "GravikenisisMouseUI.h"
 
 CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
@@ -67,7 +68,9 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 	m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
 		if (!m_bThrow)
+		{
 			return;
+		}
 
 		if (!m_bUsable)
 			return;
@@ -100,6 +103,11 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(18.f) });
 
+	CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
+	pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
+
+	assert(pGravikenisisMouse != nullptr);
+	pGravikenisisMouse->Set_Owner(this);
 
 	return S_OK;
 }
