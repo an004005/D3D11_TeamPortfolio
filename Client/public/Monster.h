@@ -3,6 +3,8 @@
 
 #include "Client_Defines.h"
 #include "ScarletCharacter.h"
+//#include "ParticleGroup.h"
+//#include "EffectGroup.h"
 
 BEGIN(Engine)
 class CRenderer;

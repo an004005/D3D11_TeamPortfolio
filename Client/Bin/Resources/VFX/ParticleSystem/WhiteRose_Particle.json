@@ -1,1 +1,95 @@
-{"BufferType":1,"BurstCnt":2,"ConeDirDegree":60.0,"ConeOriginRadius":1.0,"Duration":5.0,"FromOrigin":true,"GravityPowerMinMax":[1.0,2.0],"IncreaseMaxSize":1.0,"Life":1.0,"LifeMinMax":[1.0,2.0],"LifeRand":true,"Loop":true,"MeshBufferProtoTag":"Prototype_Component_Sakura_Mesh_Instance","ObjectTag":"","Prototype_GameObject":"ProtoVFX_ParticleSystem\u0000","RotationToTimeMax":[0.0,0.0,0.0],"RotationToTimeMin":[0.0,0.0,0.0],"ScaleVariation":[2.0,2.0,2.0],"ShaderParams":{"Float2s":[],"Float4s":[[0.7077382802963257,0.8769495487213135,0.9926039576530457,1.0]],"Float4x4s":[],"Floats":[0.6970000267028809],"Ints":[],"Pass":0,"Textures":[]},"ShaderProtoTag":"Prototype_Component_Shader_VtxMesh_Instance","Shape":1,"SpawnTickTime":0.30000001192092896,"Speed":1.0,"SpeedMinMax":[1.0,2.0],"SpeedRand":true,"SphereRadius":4.0,"Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]},"bGravity":true,"bLocal":true,"bRotate":true,"bSizeDecreaseByLife":true,"bSizeIncreaseByLife":false,"pSize":[2.0,2.0]}
+{
+    "BufferType": 1,
+    "BurstCnt": 2,
+    "ConeDirDegree": 60.0,
+    "ConeOriginRadius": 1.0,
+    "Duration": 5.0,
+    "FromOrigin": true,
+    "GravityPowerMinMax": [
+        1.0,
+        2.0
+    ],
+    "IncreaseMaxSize": 1.0,
+    "Life": 1.0,
+    "LifeMinMax": [
+        1.0,
+        2.0
+    ],
+    "LifeRand": true,
+    "Loop": false,
+    "MeshBufferProtoTag": "Prototype_Component_Sakura_Mesh_Instance",
+    "ObjectTag": "",
+    "Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",
+    "RotationToTimeMax": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "ScaleVariation": [
+        2.0,
+        2.0,
+        2.0
+    ],
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.7077382802963257,
+                0.8769495487213135,
+                0.9926039576530457,
+                1.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [
+            0.6970000267028809
+        ],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxMesh_Instance",
+    "Shape": 1,
+    "SpawnTickTime": 0.30000001192092896,
+    "Speed": 1.0,
+    "SpeedMinMax": [
+        1.0,
+        2.0
+    ],
+    "SpeedRand": true,
+    "SphereRadius": 4.0,
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    "bGravity": true,
+    "bLocal": true,
+    "bRotate": true,
+    "bSizeDecreaseByLife": true,
+    "bSizeIncreaseByLife": false,
+    "pSize": [
+        2.0,
+        2.0
+    ]
+}

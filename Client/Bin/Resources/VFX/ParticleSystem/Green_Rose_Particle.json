@@ -16,7 +16,7 @@
         6.0
     ],
     "LifeRand": true,
-    "Loop": true,
+    "Loop": false,
     "MeshBufferProtoTag": "Prototype_Component_Sakura_Mesh_Instance",
     "ObjectTag": "",
     "Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",

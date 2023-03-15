@@ -124,6 +124,8 @@ void CParticleGroup::Tick(_double TimeDelta)
 
 	VisibleUpdate();
 
+	
+
 	if(m_bUpdate == true && m_pOwner->IsDeleted() == false)
 	{
 		if (m_BoneName != "")
@@ -159,6 +161,22 @@ void CParticleGroup::Tick(_double TimeDelta)
 				iter.second.second->Tick(TimeDelta);
 		}
 	}
+
+	static _int NoGenParticle = 0;
+
+	for (auto iter : m_mapParticleSystem)
+	{
+		if (iter.second.second->GetLiveParticleCnt() == 0)
+		{
+			NoGenParticle++;
+		}
+	}
+
+	if (NoGenParticle == (_int)m_mapParticleSystem.size())
+	{
+		SetDelete();
+	}
+	NoGenParticle = 0;
 }
 
 void CParticleGroup::Late_Tick(_double TimeDelta)
@@ -191,6 +209,8 @@ void CParticleGroup::SaveToJson(Json& json)
 		JsonParticle["ParticleDirectory"] = iter.second.first;
 		json["Particles"].push_back(JsonParticle);
 	}
+
+	json["LifeTime"] = m_fLifeTime;
 }
 
 void CParticleGroup::LoadFromJson(const Json& json)
@@ -212,6 +232,9 @@ void CParticleGroup::LoadFromJson(const Json& json)
 
 		m_mapParticleSystem.emplace(ObjectTag, pair<string,CParticleSystem*>(FilePath, pParticleSystem));
 	}
+	if(json.contains("LifeTime"))
+		m_fLifeTime = json["LifeTime"];
+	
 }
 
 void CParticleGroup::Imgui_RenderProperty()
