@@ -160,7 +160,7 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 
 	FAILED_CHECK(m_pSound_Manager->Initialize("../Bin/Resources/Sound/SoundDesc.json"));
 
-	m_pCurve_Manager->LoadCurves("../Bin/Resources/Curve/CurveManagerData.json");
+	m_pCurve_Manager->LoadCurves("../Bin/Resources/Curve/ManagedCurves/");
 
 	return S_OK;
 }

@@ -13,7 +13,7 @@ public:
 public:
 	class CCurveFloatImpl* GetCurve(const string& strCurveTag);
 
-	void LoadCurves(const char* pCurveJsonPath);
+	void LoadCurves(const char* pCurveJsonDirPath);
 	void SaveCurves();
 	void Imgui_Render();
 
@@ -21,7 +21,7 @@ public:
 
 private:
 	unordered_map<string, class CCurveFloatImpl*> m_Curves;
-	string m_strCurveJsonPath;
+	string m_strCurveJsonDirPath;
 	_float2 m_CurveEditorSize{400.f, 300.f};
 
 public:
