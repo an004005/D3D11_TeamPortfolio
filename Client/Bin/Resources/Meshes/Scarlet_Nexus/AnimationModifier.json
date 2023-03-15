@@ -1365,23 +1365,105 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_231_AL_Cap_sLcLeR_end": {
+        "Duration": 127.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_231_AL_Cap_sLcLeR_loop": {
+        "Duration": 180.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_231_AL_Cap_sLcLeR_start": {
+        "Duration": 45.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_245_AL_Pcon_cLeR_Lv1": {
         "Duration": 131.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Kinetic_Launch",
+                "EventTime": 55.0
+            }
+        ]
     },
     "AS_ch0100_252_AL_Pcon_cLeR_Lv2": {
         "Duration": 157.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Kinetic_Launch",
+                "EventTime": 60.0
+            }
+        ]
+    },
+    "AS_ch0100_259_AL_Pcon_cLeR_Lv3": {
+        "Duration": 140.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Jump",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Kinetic_Slow",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "Kinetic_Launch",
+                "EventTime": 60.0
+            }
+        ]
     },
     "AS_ch0100_264_AL_Pcon_cReL_Lv3": {
         "Duration": 123.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
+    },
+    "AS_ch0100_266_AL_Pcon_cLeR_Lv4": {
+        "Duration": 312.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Jump",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "Gravity_Disable",
+                "EventTime": 90.0
+            },
+            {
+                "EventName": "Gravity_Enable",
+                "EventTime": 200.0
+            },
+            {
+                "EventName": "CamMod",
+                "EventTime": 80.0
+            },
+            {
+                "EventName": "CamMod",
+                "EventTime": 200.0
+            },
+            {
+                "EventName": "Kinetic_Slow",
+                "EventTime": 110.0
+            },
+            {
+                "EventName": "Kinetic_Launch",
+                "EventTime": 170.0
+            }
+        ]
     },
     "AS_ch0100_271_AL_Pcon_cReL_Lv4": {
         "Duration": 312.0,
@@ -2040,6 +2122,18 @@
             {
                 "EventName": "Spin_Atk",
                 "EventTime": 115.5
+            },
+            {
+                "EventName": "Spin_AtkEnd",
+                "EventTime": 175.0
+            },
+            {
+                "EventName": "Untouch",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Untouch_End",
+                "EventTime": 220.0
             }
         ]
     },
@@ -2071,6 +2165,14 @@
             {
                 "EventName": "Invincible_End",
                 "EventTime": 160.0
+            },
+            {
+                "EventName": "Untouch",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Untouch_End",
+                "EventTime": 200.0
             }
         ]
     },
@@ -2489,12 +2591,16 @@
     },
     "AS_em0400_455_AL_rise_start": {
         "Duration": 90.0,
-        "TickPerSecond": 120.0,
+        "TickPerSecond": 90.0,
         "bLooping": false,
         "vecEvent": [
             {
                 "EventName": "Successive",
                 "EventTime": 3.0
+            },
+            {
+                "EventName": "AirDamageReset",
+                "EventTime": 40.0
             }
         ]
     },
@@ -2542,6 +2648,10 @@
             {
                 "EventName": "Shoot",
                 "EventTime": 100.0
+            },
+            {
+                "EventName": "Muzzle",
+                "EventTime": 91.0
             }
         ]
     },
@@ -2648,6 +2758,10 @@
             {
                 "EventName": "Successive",
                 "EventTime": 9.0
+            },
+            {
+                "EventName": "AirDamageReset",
+                "EventTime": 48.0
             }
         ]
     },
@@ -2706,7 +2820,7 @@
         "vecEvent": [
             {
                 "EventName": "Rush_Start",
-                "EventTime": 85.0
+                "EventTime": 10.0
             }
         ]
     },
@@ -2841,6 +2955,10 @@
             {
                 "EventName": "Successive",
                 "EventTime": 9.0
+            },
+            {
+                "EventName": "AirDamageReset",
+                "EventTime": 50.0
             }
         ]
     },

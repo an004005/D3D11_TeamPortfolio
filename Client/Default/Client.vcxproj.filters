@@ -277,6 +277,27 @@
     <Filter Include="FactoryMethod">
       <UniqueIdentifier>{c339909b-d428-41f4-9c52-dbbf78dbea31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Trigger">
+      <UniqueIdentifier>{de696a83-1b14-4455-81e6-aee65fc00158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\02. Stage1">
+      <UniqueIdentifier>{1e272184-8887-431f-937d-de39fd6eeb16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\17.KineticEditor">
+      <UniqueIdentifier>{cf49c083-b25e-424b-aca3-6c741d536048}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller">
+      <UniqueIdentifier>{9f08bacd-e670-43c4-8819-f5112c46f927}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\boss1\Boss1_Controller">
+      <UniqueIdentifier>{b2e59d02-3ca6-4756-83c6-6ac671cdf04c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\boss1\WaterBall">
+      <UniqueIdentifier>{7d98e4ff-3ec3-41c0-b7b6-9a67b3d0b012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Tutorial\Psychokinesis">
+      <UniqueIdentifier>{05a34116-b873-484c-8da2-baafc69d27ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -633,11 +654,9 @@
     <ClInclude Include="..\public\SkmP_Controller.h">
       <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PostVFX_ColorGrading.h" />
     <ClInclude Include="..\public\SkPd_Controller.h">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\BdLm_Controller.h" />
     <ClInclude Include="..\public\PlayerInfo_HpBackUI.h">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClInclude>
@@ -723,7 +742,6 @@
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
-    <ClInclude Include="..\public\BrJ_Controller.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
     <ClInclude Include="..\public\Trigger.h" />
@@ -734,14 +752,10 @@
     <ClInclude Include="..\public\Monster.h">
       <Filter>02.GameObjects\Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Boss1_AIController.h">
-      <Filter>02.GameObjects\Monster\boss1</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\NextMapNameUI.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Bullet.h" />
-    <ClInclude Include="..\public\WaterBall.h" />
     <ClInclude Include="..\public\SASSkillNameUI.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
@@ -757,6 +771,40 @@
     <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\FactoryMethod.h">
       <Filter>FactoryMethod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SAS_Portrait.h" />
+    <ClInclude Include="..\public\BdLm_Controller.h">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrJ_Controller.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\WaterBall.h">
+      <Filter>02.GameObjects\Monster\boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BdLm_Controller.h">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\WaterBall.h">
+      <Filter>02.GameObjects\Monster\boss1\WaterBall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrJ_Controller.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss1_AIController.h">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BdLm_Controller.h">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrJ_Controller.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Penetrate.h">
+      <Filter>VFX\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_ColorGrading.h">
+      <Filter>VFX\PostProcess</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PostVFX_Penetrate.h" />
     <ClInclude Include="..\public\Boss_AppearUI.h">
@@ -1099,14 +1147,9 @@
     <ClCompile Include="..\private\FL_Controller.cpp">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\SkmP_Controller.cpp">
-      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\PostVFX_ColorGrading.cpp" />
     <ClCompile Include="..\private\SkPd_Controller.cpp">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BdLm_Controller.cpp" />
     <ClCompile Include="..\private\PlayerInfo_HpBackUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClCompile>
@@ -1191,7 +1234,6 @@
     <ClCompile Include="..\private\Boss_ShildUI.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BrJ_Controller.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
@@ -1202,14 +1244,10 @@
     <ClCompile Include="..\private\Monster.cpp">
       <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Boss1_AIController.cpp">
-      <Filter>02.GameObjects\Monster\boss1</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\NextMapNameUI.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Bullet.cpp" />
-    <ClCompile Include="..\private\WaterBall.cpp" />
     <ClCompile Include="..\private\SASSkillNameUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
@@ -1225,6 +1263,43 @@
     <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp">
       <Filter>FactoryMethod</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SAS_Portrait.cpp" />
+    <ClCompile Include="..\private\BdLm_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrJ_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\WaterBall.cpp">
+      <Filter>02.GameObjects\Monster\boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BdLm_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\WaterBall.cpp">
+      <Filter>02.GameObjects\Monster\boss1\WaterBall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrJ_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss1_AIController.cpp">
+      <Filter>02.GameObjects\Monster\boss1\Boss1_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BdLm_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrJ_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_ColorGrading.cpp">
+      <Filter>VFX\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Penetrate.cpp">
+      <Filter>VFX\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkmP_Controller.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
     <ClCompile Include="..\private\Boss_AppearUI.cpp">

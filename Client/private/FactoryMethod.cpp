@@ -39,8 +39,13 @@
 #include "PostVFX_Scifi.h"
 #include "EffectGroup.h"
 #include "ParticleSystem.h"
+#include "ParticleGroup.h"
 #include "PostVFX_Distortion.h"
+#include "SAS_Portrait.h"
 
+//UI
+#include "MonsterHpUI.h"
+#include "MonsterLockonUI.h"
 
 CFactoryMethod::CFactoryMethod()
 {
@@ -157,6 +162,7 @@ HRESULT CFactoryMethod::MakePlayerPrototypes(ID3D11Device * pDevice, ID3D11Devic
 
 	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(pDevice, pContext));
 
+	return S_OK;
 }
 
 HRESULT CFactoryMethod::MakeEffectPrototypes(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -175,8 +181,38 @@ HRESULT CFactoryMethod::MakeEffectPrototypes(ID3D11Device * pDevice, ID3D11Devic
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(pDevice, pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleGroup", CParticleGroup::Create(pDevice, pContext)));
+	return S_OK;
+}
 
+HRESULT CFactoryMethod::MakeSAS_Portrait_Prototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
+	{
+		auto pModel_ch300 = CModel::Create(pDevice, pContext,
+		   "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/ch300.anim_model");
+		pModel_ch300->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/SAS_Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch300_Portrail", pModel_ch300));
+	}
+
+	{
+		pGameInstance->Add_Prototype(L"Prototype_SASPortrait", CSAS_Portrait::Create(pDevice, pContext));
+		pGameInstance->Add_Prototype(L"ProtoPostVFX_SASPortrait", CPostVFX_SAS_Portrait::Create(pDevice, pContext));
+		
+	}
+
+	return S_OK;
+}
+
+HRESULT CFactoryMethod::MakeUITestPrototypes(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterHP", CMonsterHpUI::Create(pDevice, pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterLockon", CMonsterLockonUI::Create(pDevice, pContext)));
+
+	return S_OK;
 }
 
 void CFactoryMethod::Free()

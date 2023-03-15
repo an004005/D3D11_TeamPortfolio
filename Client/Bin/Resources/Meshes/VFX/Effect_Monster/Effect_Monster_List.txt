@@ -49,3 +49,22 @@ VFX_Mesh_Monster_Effect_em08000_Weapon
 VFX_Mesh_Monster_Effect_em08200_sp_c06
 ../Bin/Resources/Meshes/VFX/Effect_Monster/VFX_Mesh_Monster_Effect_em08200_sp_c06.static_model
 
+
+em320
+em0320_Bullet
+../Bin/Resources/Meshes/VFX/Effect_Monster/em320/em0320_Bullet.static_model
+
+em0320_LeftHand_Slash
+../Bin/Resources/Meshes/VFX/Effect_Monster/em320/em0320_LeftHand_Slash.static_model
+
+em0320_RightHand_Slash
+../Bin/Resources/Meshes/VFX/Effect_Monster/em320/em0320_RightHand_Slash.static_model
+
+
+
+
+
+em650
+../Bin/Resources/Meshes/VFX/Effect_Monster/em320/VFX_Mesh_Monster_Effect_em08200_sp_c06.static_model
+
+

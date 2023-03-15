@@ -38,6 +38,8 @@ public:
 
 	void HitDir(_double TimeDelta);
 
+	virtual void SetActive() override;
+
 private:		
 	class CBdLm_Controller*		m_pController = nullptr;
 	class CBdLm_AnimInstance*	m_pASM = nullptr;
@@ -97,10 +99,7 @@ private:
 	_bool		m_bStruck = false;
 	_bool		m_bAirStruck = false;
 
-	_bool		m_bMaintain = false;
-
-	_uint		m_iAirDamage = 0;
-	_uint		m_iPreAirDamageCnt = 0;
+	_bool		m_bAirMaintain = false;
 
 	// HitDir
 	_bool		m_bHitMove = false;

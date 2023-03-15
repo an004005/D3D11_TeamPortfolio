@@ -109,7 +109,8 @@ CGameObject * CMonsterShildUI::Clone(void * pArg)
 void CMonsterShildUI::Free()
 {
 	__super::Free();
+	if (m_pGroup != nullptr && m_pGroup->IsDeleted() == false)
+		m_pGroup->SetDelete();
 
-	m_pGroup->SetDelete();
 	Safe_Release(m_pGroup);
 }

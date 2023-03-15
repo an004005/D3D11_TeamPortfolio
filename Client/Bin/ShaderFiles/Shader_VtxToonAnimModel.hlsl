@@ -83,6 +83,12 @@ struct PS_OUT
 	float4		vFlag : SV_TARGET6; // post process ÇÃ·¡±×
 };
 
+struct PS_OUT_NONLIGHT
+{
+	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1;
+};
+
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -127,7 +133,8 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 		Out.vDiffuse.a = 1.f;
 
 	Out.vNormal = NormalPacking(In);
-	Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	if (g_tex_on_2)
+		Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
 	Out.vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
 	Out.vOutline = g_vec4_0;
 
@@ -200,7 +207,7 @@ PS_OUT PS_WIRE_2(PS_IN In)
 	Out.vOutline = g_vec4_0;
 
 	float4 vViewDir = g_vCamPosition - In.vWorldPos;
-	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir), 0.1f);
+	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir.xyz), 0.1f);
 	float4 vWhite = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vDiffuse = lerp(vWhite, Out.vDiffuse, fFresnel);
 	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, 0.f);
@@ -231,7 +238,7 @@ PS_OUT PS_CH100_HAIR_1_3(PS_IN In)
 PS_OUT PS_ch0100_body_0_4(PS_IN In)
 {
 	int bDriveMode = g_int_1;
-	if (bDriveMode)
+	if (bDriveMode && g_tex_on_4)
 	{
 		float4 vMask = g_tex_4.Sample(LinearSampler, In.vTexUV);
 		if (vMask.r == 0.f && vMask.g == 0.f && vMask.b == 0.f)
@@ -300,6 +307,37 @@ PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 		Out.vDiffuse *= vColor;
 	else
 		Out.vDiffuse = vColor;
+	return Out;
+}
+
+PS_OUT_NONLIGHT PS_ToonDefault_Forward_6(PS_IN In)
+{
+	PS_OUT_NONLIGHT Out = (PS_OUT_NONLIGHT)0;
+
+	float4 vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.a = 1.f;
+
+	float4 vNormal = NormalPacking(In);
+	vNormal.xyz = vNormal.xyz * 2.f - 1.f;
+
+	float4 vAMB = 0.f;
+	if (g_tex_on_2)
+		vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	float4 vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
+
+	float3 vLightDir = float3(1.f, -1.f, 1.f);
+	float4 vLightColor = float4(1.f, 1.f, 1.f, 1.f);
+
+	float fNdotL = dot(normalize(vNormal.xyz), normalize(vLightDir.xyz));
+	float fDiff = saturate(max(fNdotL, 0.0));
+	fDiff = max(vCTL.r * 2.f , min(vCTL.g, fDiff));
+	fDiff *= vCTL.b;
+	float4 vShade = vLightColor * saturate(fDiff);
+
+	Out.vColor = saturate(vDiffuse * vShade + vAMB * 0.5f);
+	Out.vColor.a = 1.f;
+	Out.vFlag = float4(0.f, 0.f, SHADER_PORTRAIT, 0.f);
+
 	return Out;
 }
 
@@ -387,6 +425,20 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_ch0100_mask_0_5();
+	}
+
+	// 6
+	pass PS_ToonDefaultForward
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ToonDefault_Forward_6();
 	}
 	
 }

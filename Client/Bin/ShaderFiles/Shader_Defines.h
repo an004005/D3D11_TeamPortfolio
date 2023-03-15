@@ -63,6 +63,15 @@ DepthStencilState DS_Default
 	DepthFunc = less_equal;
 };
 
+DepthStencilState DS_Default_Blood
+{
+	DepthEnable = false;
+DepthWriteMask = all;
+DepthFunc = less;
+
+
+};
+
 DepthStencilState DS_ZEnable_ZWriteEnable_FALSE
 {
 	DepthEnable = false;

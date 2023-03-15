@@ -11,6 +11,7 @@
 #include "Imgui_MapEditor.h"
 #include "Imgui_PhysX.h"
 #include "Imgui_CameraManager.h"
+#include "Imgui_CurveManager.h"
 #include "Model.h"
 #include "JsonLib.h"
 #include "AnimationInstance.h"
@@ -23,6 +24,15 @@
 #include "PostVFX_Penetrate.h"
 #include "MapKinetic_Object.h"
 #include "FactoryMethod.h"
+#include "Trigger.h"
+#include "Batch.h"
+#include "PostVFX_Scifi.h"
+#include "PostVFX_Distortion.h"
+#include "ParticleSystem.h"
+#include "TrailSystem.h"
+#include "EffectGroup.h"
+#include "EffectSystem.h"
+#include "VFX_Manager.h"
 
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -40,6 +50,9 @@ HRESULT CLevel_EnemiesTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
+	CVFX_Manager::GetInstance()->Initialize(LEVEL_ENEMIESTEST);
+
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -51,6 +64,9 @@ HRESULT CLevel_EnemiesTest::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Batch(TEXT("Layer_Batch"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
@@ -77,6 +93,12 @@ HRESULT CLevel_EnemiesTest::Initialize()
 void CLevel_EnemiesTest::Tick(_double TimeDelta)
 {
 	CLevel::Tick(TimeDelta);
+
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_SPACE))
+	{
+		CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, L"em0650_Bullet_Birth")->Start_EffectWork();
+	}
 }
 
 void CLevel_EnemiesTest::Late_Tick(_double TimeDelta)
@@ -129,12 +151,20 @@ HRESULT CLevel_EnemiesTest::Ready_Lights()
 HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
+	
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
 	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
+
+	//Batch
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
+
+	//Trigger
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_GameObject_Trigger"),
+		CTrigger::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -157,30 +187,28 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	/*if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
 		return E_FAIL;*/
 
-
-	// pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
-	// 	->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(120.f, 3.f, 15.f, 1.f));
-
 	// Test 하지 않는 중인 Monster 넣어두기
-// 	/*
-// 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BuddyLumi"))
-// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(40.f, 3.f, 3.f, 1.f));
 // 	
-	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLeg"))
-		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(20.f, 3.f, 6.f, 1.f));
-// 		
-// 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPool"))
-// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-20.f, 3.f, -3.f, 1.f));
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(140.f, 15.f, 110.f, 1.f));
 //
-// 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPandou"))
-// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(100.f, 3.f, 10.f, 1.f));
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BuddyLumi"))
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(40.f, 3.f, 3.f, 1.f));
+
 //
-// 		
-// 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_MonsterBoss1"))
-// 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(200.f, 3.f, 10.f, 1.f));
-// 	*/
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLeg"))
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(65.f, 3.f, 6.f, 1.f));
+//
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPool"))//
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-40.f, 3.f, -3.f, 1.f));
+//
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPandou"))
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(60.f, 3.f, 10.f, 1.f));
 
-
+//
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_MonsterBoss1"))
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(170.f, 3.f, 10.f, 1.f));
+ 	
 	/*auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
 	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 	pos.y += 1.f;
@@ -192,6 +220,16 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 HRESULT CLevel_EnemiesTest::Ready_Layer_Bullet(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();	
+	return S_OK;
+}
+
+HRESULT CLevel_EnemiesTest::Ready_Layer_Batch(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_Test.json");
+
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));
 	return S_OK;
 }
 
@@ -213,7 +251,6 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Player(const _tchar * pLayerTag)
 HRESULT CLevel_EnemiesTest::Ready_Layer_Kinetic(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
 	return S_OK;
 }
 
@@ -221,7 +258,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
 	
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
@@ -232,17 +269,14 @@ HRESULT CLevel_EnemiesTest::Ready_Effect(const _tchar * pLayerTag)
 {
 	 CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	//Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
-	//pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
+	 Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");
+	 pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Scifi", &Test);
 
-	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Scifi", &Test);
+	 Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
+	 pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
 
-	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
-
-	Json Penetrate = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Penetrate.json");
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Penetrate", &Penetrate);
+	//Json Penetrate = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Penetrate.json");
+	//pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Penetrate", &Penetrate);
 
 	return S_OK;
 }

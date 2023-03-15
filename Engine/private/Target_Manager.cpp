@@ -4,6 +4,7 @@
 
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
+#include "Graphic_Device.h"
 
 IMPLEMENT_SINGLETON(CTarget_Manager)
 
@@ -121,8 +122,8 @@ HRESULT CTarget_Manager::Begin_MRT(ID3D11DeviceContext * pContext, const _tchar 
 
 	for (auto& pRTV : *pMRTList)	
 	{
-		if (bClear)
-			pRTV->Clear();
+		// if (bClear)
+		// 	pRTV->Clear();
 
 		pRTVs[iNumViews++] = pRTV->Get_RTV();	
 	}
@@ -151,8 +152,8 @@ HRESULT CTarget_Manager::Begin_MRT_WithDepthStencil(ID3D11DeviceContext* pContex
 
 	for (auto& pRTV : *pMRTList)	
 	{
-		if (bClear)
-			pRTV->Clear();
+		// if (bClear)
+		// 	pRTV->Clear();
 
 		pRTVs[iNumViews++] = pRTV->Get_RTV();	
 	}
@@ -223,6 +224,15 @@ HRESULT CTarget_Manager::Begin_ShadowDepthRenderTarget(ID3D11DeviceContext* pCon
 
 	pContext->RSSetViewports(1, &pRenderTarget->GetViewPortDesc());
 
+	return S_OK;
+}
+
+HRESULT CTarget_Manager::ClearTargets()
+{
+	for (auto& target : m_RenderTargets)
+	{
+		target.second->Clear();
+	}
 	return S_OK;
 }
 
@@ -324,7 +334,6 @@ void CTarget_Manager::Free()
 		Safe_Release(Pair.second);
 
 	m_RenderTargets.clear();
-
 
 #ifdef _DEBUG
 	Safe_Release(m_pShader);

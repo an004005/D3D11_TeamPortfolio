@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "..\public\SkPd_Controller.h"
+#include <random>
+
 #include "SkummyPandou.h"
 #include "FSMComponent.h"
 
@@ -34,11 +36,11 @@ HRESULT CSkPd_Controller::Initialize(void * pArg)
 
 		.AddState("Outside")
 			.Tick(this, &CSkPd_Controller::Tick_Outside)
-
+			.OnExit(dynamic_cast<CMonster*>(m_pCastedOwner), &CMonster::TurnEyesOut)
 			.AddTransition("Outside to Far", "Far")
 				.Predicator([this]
 				{
-					return m_fToTargetDistance <= 28.f;
+					return m_fToTargetDistance <= 33.f;
 				})
 
 		.AddState("Near")
@@ -47,13 +49,13 @@ HRESULT CSkPd_Controller::Initialize(void * pArg)
 			.AddTransition("Near to Mid", "Mid")
 				.Predicator([this]
 				{
-					return m_fToTargetDistance > 5.f && m_fToTargetDistance <= 20.f;
+					return m_fToTargetDistance > 10.f && m_fToTargetDistance <= 22.f;
 				})
 
 			.AddTransition("Near to Far", "Far")
 				.Predicator([this]
 				{
-					return m_fToTargetDistance > 20.f;
+					return m_fToTargetDistance > 22.f;
 				})
 
 		.AddState("Mid")
@@ -61,13 +63,13 @@ HRESULT CSkPd_Controller::Initialize(void * pArg)
 			.AddTransition("Mid to Near", "Near")
 				.Predicator([this]
 				{
-					return m_fToTargetDistance <= 5.f;
+					return m_fToTargetDistance <= 10.f;
 				})
 
 			.AddTransition("Mid to Far", "Far")
 				.Predicator([this]
 				{
-					return m_fToTargetDistance > 20.f;
+					return m_fToTargetDistance > 22.f;
 				})
 
 		.AddState("Far")
@@ -75,13 +77,13 @@ HRESULT CSkPd_Controller::Initialize(void * pArg)
 			.AddTransition("Far to Near", "Near")
 				.Predicator([this]
 				{
-					return m_fToTargetDistance <= 5.f;
+					return m_fToTargetDistance <= 10.f;
 				})
 
 			.AddTransition("Far to Mid", "Mid")
 				.Predicator([this]
 				{
-					return m_fToTargetDistance > 5.f && m_fToTargetDistance <= 20.f;
+					return m_fToTargetDistance > 10.f && m_fToTargetDistance <= 22.f;
 				})
 
 		.Build();
@@ -133,7 +135,7 @@ void CSkPd_Controller::Tick_Near(_double TimeDelta)
 		AddCommand("Attack_Rush", 0.f, &CAIController::Input, R);
 		AddCommand("Rush", 3.f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
 		break;
-	/*case 3:
+		/*case 3:
 		AddCommand("Attack_End", 0.f, &CAIController::Input, C);
 		break;*/
 	case 3:
@@ -156,7 +158,7 @@ void CSkPd_Controller::Tick_Near(_double TimeDelta)
 		AddCommand("Attack_Rush", 0.f, &CAIController::Input, R);
 		AddCommand("Rush", 3.f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
 		break;
-	/*case 10:
+		/*case 10:
 		AddCommand("Attack_End", 0.f, &CAIController::Input, C);
 		break;*/
 	case 9:
@@ -225,7 +227,7 @@ void CSkPd_Controller::Tick_Mid(_double TimeDelta)
 		AddCommand("ForwardMove", 1.5f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	}
-
+	
 	m_iMidOrder = (m_iMidOrder + 1) % 12;
 }
 

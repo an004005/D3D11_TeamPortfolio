@@ -89,6 +89,14 @@ void CScarletCharacter::AfterPhysX()
 	}
 }
 
+_float4 CScarletCharacter::GetColliderPosition()
+{
+	if (nullptr == m_pCollider)
+		return _float4(0.f, 0.f, 0.f, 1.f);
+
+	return m_pCollider->GetPosition();
+}
+
 void CScarletCharacter::Update_DeBuff(_double TimeDelta)
 {
 	if (m_fDeBuffTime > 0.f)
@@ -289,6 +297,10 @@ _bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTri
 					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					tParam.vSlashVector = _float3(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z);
+
+
+					// 플레이어일 경우 타격 이펙트 생성하도록
+
 
 					pTarget->TakeDamage(tParam);
 					pTarget->Set_CollisionDuplicate(true);

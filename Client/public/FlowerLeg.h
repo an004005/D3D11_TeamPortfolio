@@ -28,9 +28,10 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
-	virtual void AfterPhysX();
+	virtual void AfterPhysX() override;
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
+	virtual void SetActive() override;
 
 	void	Strew_Overlap(); // Atk_Strew �浹ü
 	void	Spin_SweepCapsule(_bool bCol);
@@ -124,6 +125,7 @@ private:
 	_bool		m_bAirMaintain = false;
 
 	_bool		m_bInvisible = false;
+	_bool		m_bUntouchable = false;
 
 	// HitDir
 	_bool		m_bHitMove = false;
@@ -138,6 +140,7 @@ private:
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
 	// ~TakeDamage 
+
 public:
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }

@@ -30,6 +30,7 @@ public:
 	virtual void AfterPhysX();
 
 	void HitDir(_double TimeDelta);
+	virtual void SetActive() override;
 
 private:
 	class CSkmP_Controller*		m_pController = nullptr;
@@ -39,7 +40,7 @@ private:
 
 private:
 	CAnimation*			m_pAtk_Shoot = nullptr; // 
-	CAnimation*			m_pThreat = nullptr; // 도발
+//	CAnimation*			m_pThreat = nullptr; // 도발
 
 // Damage
 	CAnimation*			m_pDamage_L_F = nullptr;
@@ -62,10 +63,7 @@ private:
 	_bool		m_bStruck = false;
 	_bool		m_bAirStruck = false;
 
-	_bool		m_bMaintain = false;
-
-	_uint		m_iAirDamage = 0;
-	_uint		m_iPreAirDamageCnt = 0;
+	_bool		m_bAirMaintain = false;
 
 	// HitDir
 	_bool		m_bHitMove = false;
@@ -80,10 +78,9 @@ private:
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
 
 private:
-	_bool			m_bCreateBullet = false;
-
-private:
 	CScarletCharacter* m_pTarget = nullptr;
+
+class	CSkMpBullet*		m_pBullet = nullptr;
 
 	_float3 m_vMoveAxis;
 	_float m_fTurnRemain = 0.f;

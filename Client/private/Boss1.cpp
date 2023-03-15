@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Boss1.h"
+#include <random>
 
 #include <PhysX_Manager.h>
 
@@ -47,7 +48,8 @@ HRESULT CBoss1::Initialize(void* pArg)
 
 
 	m_fGravity = 25.f;
-	m_iHP = 3000;
+	m_iMaxHP = 10000;
+	m_iHP = m_iMaxHP;
 	m_iPreHP = m_iHP;
 
 	m_pModelCom->Add_EventCaller("JumpAttackStart", [this]
@@ -151,7 +153,7 @@ HRESULT CBoss1::Initialize(void* pArg)
 		}	
 	});
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 35.f)));
+//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 35.f)));
 	
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(100.f));
 
@@ -176,7 +178,6 @@ HRESULT CBoss1::Initialize(void* pArg)
 void CBoss1::BeginTick()
 {
 	CMonster::BeginTick();
-	m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
 
 	m_pModelCom->FindMaterial(L"MI_em0320_GLASS_0")->SetActive(false);
 	m_pGlassMtrl = m_pModelCom->FindMaterial(L"MI_em0320_GLASS_1");
@@ -188,11 +189,13 @@ void CBoss1::BeginTick()
 			continue;
 		m_BodyMtrls.push_back(pMtrl);
 	}
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 35.f)));
+//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat3(&_float3(3.f, 0.f, 35.f)));
 }
 
 void CBoss1::Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return;
 	CMonster::Tick(TimeDelta);
 
 	// 타겟 가져오기 임시 코드
@@ -263,20 +266,22 @@ void CBoss1::Tick(_double TimeDelta)
 
 void CBoss1::Late_Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return;
 	CMonster::Late_Tick(TimeDelta);
 
 	_int iCurrentHP = m_iPreHP - m_iHP;
-	if (iCurrentHP >= 2100)
-	{
+	if (iCurrentHP >= 4000)	
 		m_b2ndPhase = true;
-	}
-
+	
 	if (m_bVisible)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
 void CBoss1::AfterPhysX()
 {
+	if (!m_bActive)
+		return;
 	CMonster::AfterPhysX();
 }
 
@@ -284,6 +289,9 @@ void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	if (m_bDead)
 		return;
+
+	__super::TakeDamage(tDamageParams);
+
 
 
 }
@@ -461,6 +469,12 @@ void CBoss1::DeBuff_Oil()
 	{
 		pMtrl->GetParam().Ints[0] = 2;
 	}
+}
+
+void CBoss1::SetActive()
+{
+	CMonster::SetActive();
+	m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
 }
 
 CBoss1* CBoss1::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

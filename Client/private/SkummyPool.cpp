@@ -17,7 +17,8 @@
 #include "SkMpBullet.h"
 
 #include "RigidBody.h"
-
+#include "VFX_Manager.h"
+#include "MonsterHpUI.h"
 // TODO : 소켓 작업, Turn
 
 CSkummyPool::CSkummyPool(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -57,15 +58,28 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 	// Event Caller
 
+	m_pModelCom->Add_EventCaller("Muzzle", [this] 
+	{
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0650_Bullet_Birth")->Start_Attach(this, "Eff02");	
+	});
+
 	m_pModelCom->Add_EventCaller("Shoot", [this] 
 	{
 		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 
-		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("SkMpBullet"));
-		//if (CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(pObj))
-		if(CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(pObj))
+		m_pBullet = dynamic_cast<CSkMpBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("SkMpBullet")));	
+		
+//		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("SkMpBullet"));
+
+		if(CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(m_pBullet))
 		{
 			pBullet->Set_Owner(this);
+			// Effect
+			pBullet->Set_TrailParticle(CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Loop"));
+			pBullet->Get_TrailParticle()->Start_NoAttach(pBullet, true);
+			pBullet->Set_BulletEffect(CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Em0650_Bullet_Loop"));
+			pBullet->Get_BulletEffect()->Start_NoAttach(pBullet, true);
+			// ~Effect
 
 			_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
 			_vector vPrePos = BoneMtx.r[3];
@@ -80,26 +94,31 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 	});
 	m_pModelCom->Add_EventCaller("Upper", [this]
 	{
-		m_fGravity = 22.f;
-		m_fYSpeed = 11.f;
+		m_fGravity = 20.f;
+		m_fYSpeed = 10.f;
 	});
 	m_pModelCom->Add_EventCaller("Successive", [this]
 	{
-		m_fGravity = 34.f;
-		m_fYSpeed = 13.f;
+		m_fGravity = 3.f;
+		m_fYSpeed = 1.5f;
+	});
+	m_pModelCom->Add_EventCaller("AirDamageReset", [this]
+	{
+		m_fGravity = 20.f;
+		m_fYSpeed = 0.f;
 	});
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 	// ~Event Caller
 	
-	m_iHP = 700; // ★
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
+	m_iHP = 800; // ★
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
 	m_pASM = CSkmP_AnimInstance::Create(m_pModelCom, this);
 
 	// Socket 
 	m_pAtk_Shoot = m_pModelCom->Find_Animation("AS_em0600_204_AL_atk_a3_shot");
-	m_pThreat = m_pModelCom->Find_Animation("AS_em0600_160_AL_threat");
+//	m_pThreat = m_pModelCom->Find_Animation("AS_em0600_160_AL_threat");
 
 	m_pDamage_L_F = m_pModelCom->Find_Animation("AS_em0600_401_AL_damage_l_F");
 	m_pDamage_L_B = m_pModelCom->Find_Animation("AS_em0600_402_AL_damage_l_B");
@@ -122,11 +141,12 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 void CSkummyPool::BeginTick()
 {
 	__super::BeginTick();
-	m_pASM->AttachAnimSocket("Pool", { m_pModelCom->Find_Animation("AS_em0600_160_AL_threat") });
 }
 
 void CSkummyPool::Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return;
 	CMonster::Tick(TimeDelta);
 
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
@@ -138,22 +158,23 @@ void CSkummyPool::Tick(_double TimeDelta)
 	// Controller
 	m_pController->SetTarget(m_pTarget);
 
-	m_pController->Tick(TimeDelta);
+	if (m_bDead == false)
+		m_pController->Tick(TimeDelta);
 
 	_bool bOnfloor = IsOnFloor();
 
 	// Socket
-	if (m_pController->KeyDown(CController::MOUSE_LB))
+	if (!m_bDead && m_pController->KeyDown(CController::MOUSE_LB))
 	{
 		m_pASM->AttachAnimSocket("Pool", { m_pAtk_Shoot });
 	}
 
-	if (m_pController->KeyDown(CController::R))
+	/*if (m_pController->KeyDown(CController::R))
 	{
 		m_pASM->AttachAnimSocket("Pool", { m_pThreat });
-	}
+	}*/
 
-	if (!m_bAirStruck && m_bStruck || m_pController->KeyDown(CController::Q))
+	if (!m_bAirStruck && m_bStruck && !m_bAirMaintain || m_pController->KeyDown(CController::Q))
 	{
 		m_bStruck = false;
 		m_pController->ClearCommands();
@@ -189,39 +210,31 @@ void CSkummyPool::Tick(_double TimeDelta)
 		}
 	}
 
-	if (!m_bStruck && m_bAirStruck || m_pController->KeyDown(CController::X))
+	if ((!m_bStruck && m_bAirStruck && !m_bAirMaintain) || m_pController->KeyDown(CController::X))
 	{
 		m_bHitMove = false;
 		m_bAirStruck = false;
 		m_pController->ClearCommands();
-		// 추가타 X
-		if (m_iAirDamage < 2)
-		{
-			if (!m_bMaintain)
-			{
-				m_pASM->AttachAnimSocket("Pool", { m_pBlowStart });
-				m_bMaintain = true;
-			}
-		}
-
-		else if (m_iAirDamage >= 2)
-		{
-			if (m_iAirDamage > m_iPreAirDamageCnt)
-				m_pASM->AttachAnimSocket("Pool", { m_pRiseStart });
-
-			m_iPreAirDamageCnt = m_iAirDamage;
-		}
+		
+		m_pASM->AttachAnimSocket("Pool", { m_pBlowStart });
+		m_bAirMaintain = true;
 	}
 
-	if (m_bMaintain)
+	if (m_bAirMaintain && (m_bStruck || m_bAirStruck))
+	{
+		m_bAirStruck = false;
+		m_bStruck = false;
+		m_pASM->AttachAnimSocket("Pool", { m_pRiseStart });
+	}
+
+	if (m_bAirMaintain)
 	{
 		if (m_pASM->isSocketPassby("Pool", 0.5f))
 		{
 			if (bOnfloor)
 			{
-				m_pASM->InputAnimSocket("Pool", { m_pBlowLand, m_pGetUp });
-				m_iAirDamage = 0;
-				m_bMaintain = false;
+				m_pASM->InputAnimSocket("Pool", { m_pBlowLand, m_pGetUp });				
+				m_bAirMaintain = false;
 			}
 		}
 	}
@@ -254,6 +267,8 @@ void CSkummyPool::Tick(_double TimeDelta)
 
 void CSkummyPool::Late_Tick(_double TimeDelta)
 {
+	if (!m_bActive)
+		return;
 	__super::Late_Tick(TimeDelta);
 
 	if (nullptr != m_pRendererCom && m_bVisible)
@@ -274,6 +289,8 @@ void CSkummyPool::Imgui_RenderProperty()
 
 void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+	IM_LOG("Coll");
+
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	// ↑ 공격이 들어올 방향 
 	m_eHitDir = eHitFrom;
@@ -285,22 +302,27 @@ void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 	{
 		// 공중 피격 정의 
 		m_bAirStruck = true;
-		++m_iAirDamage;
+
 	}
 	if (m_eAtkType != EAttackType::ATK_TO_AIR)	
 		m_bStruck = true;
 	
-	if (m_iHP <= 0)
+	if (m_iHP <= 0 && !m_bDead)
 	{
 		m_pController->ClearCommands();
 		m_DeathTimeline.PlayFromStart();
 		m_pASM->InputAnimSocket("Pool", { m_pDeadAnim });
 		m_bDead = true;
 	}
+
+	// 타격 이펙트 잡아주는 부분, 몬스터 상위에서 동작
+	__super::TakeDamage(tDamageParams);
 }
 
 void CSkummyPool::AfterPhysX()
 {
+	if (!m_bActive)
+		return;
 	__super::AfterPhysX();
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 }
@@ -337,8 +359,16 @@ void CSkummyPool::HitDir(_double TimeDelta)
 	m_bOneTick = true;
 }
 
+void CSkummyPool::SetActive()
+{
+	CMonster::SetActive();
+	m_pASM->AttachAnimSocket("Pool", { m_pModelCom->Find_Animation("AS_em0600_160_AL_threat") });
+}
+
 _bool CSkummyPool::IsPlayingSocket() const
 {
+	_bool bTest = (m_pASM->isSocketEmpty("Pool") == false);
+
 	return m_pASM->isSocketEmpty("Pool") == false;
 }
 
@@ -369,6 +399,7 @@ CGameObject * CSkummyPool::Clone(void * pArg)
 void CSkummyPool::Free()
 {
 	CMonster::Free();
+	Safe_Release(m_pBullet);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);

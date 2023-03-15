@@ -87,6 +87,8 @@ void CAttackNumUI::Free()
 {
 	__super::Free();
 
-	m_pGroup->SetDelete();
+	if (m_pGroup != nullptr && m_pGroup->IsDeleted() == false)
+		m_pGroup->SetDelete();
+	
 	Safe_Release(m_pGroup);
 }

@@ -43,6 +43,8 @@
 #include "FL_Controller.h"
 #include "SkmP_Controller.h"
 #include "Imgui_CurveManager.h"
+#include "VFX_Manager.h"
+#include "ParticleGroup.h"
 
 #include "FactoryMethod.h"
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -60,13 +62,14 @@ HRESULT CLevel_PlayerTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
+	CVFX_Manager::GetInstance()->Initialize(LEVEL_PLAYERTEST);
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Prototypes()))
 		return E_FAIL;
-
+	
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
@@ -224,6 +227,7 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleGroup", CParticleGroup::Create(m_pDevice, m_pContext)));
 	}
 
 
@@ -276,6 +280,8 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	//}
 
 	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeUITestPrototypes(m_pDevice, m_pContext));
+
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
 
@@ -337,8 +343,9 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/KineticTestMap.json");
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/KineticTestMap.json");
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
@@ -379,11 +386,11 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	//pos.y += 1.f;
 	//pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
 
-	Json SkummyPoolModel;
-	SkummyPoolModel["Model"] = "MonsterSkummyPool";
+	//Json SkummyPoolModel;
+	//SkummyPoolModel["Model"] = "MonsterSkummyPool";
 
-	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPool"), &SkummyPoolModel)))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("SkummyPool"), &SkummyPoolModel)))
+	//	return E_FAIL;
 
 	return S_OK;
 }

@@ -32,9 +32,10 @@
 #include "EffectSystem.h"
 #include "PostVFX_ColorGrading.h"
 #include "Imgui_CurveManager.h"
+#include "FactoryMethod.h"
 
 
-#define ADD_PLAYER
+// #define ADD_PLAYER
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -206,6 +207,7 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	// FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_PostVFX_ColorGrading", CPostVFX_ColorGrading::Create(m_pDevice, m_pContext)));
 
+	CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext);
 
 	return S_OK;
 }
@@ -245,6 +247,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+	pGameInstance->Clone_GameObject(pLayerTag, L"Prototype_SASPortrait");
+
 #ifdef ADD_PLAYER
 
 	Json PreviewData;
@@ -263,15 +267,26 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	// Json PreviewData;
-	// PreviewData["Model"] = "MonsterBoss1";
-	// PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
-	// auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
+	Json PreviewData;
 
-	auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
-	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	pos.y += 1.f;
-	pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+	{
+		// PreviewData["Model"] = "MonsterBoss1";
+		// PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
+		// auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
+	}
+	{
+		// PreviewData["Model"] = "Model_Ch300_Portrail";
+		// PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
+		// auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
+	}
+
+
+	// Model_Ch300_Portrail
+
+	// auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
+	// _float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	// pos.y += 1.f;
+	// pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
 
 	return S_OK;
 }

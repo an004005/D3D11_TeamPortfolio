@@ -80,8 +80,8 @@ HRESULT CLevel_Effect::Initialize()
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
 
-	 if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
-	 	return E_FAIL;
+	 // if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
+	 // 	return E_FAIL;
 
 	return S_OK;
 }
@@ -405,7 +405,7 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/AttackNum.json");
 	//dynamic_cast<CEffectGroup*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_AttackNum"), TEXT("ProtoVFX_EffectGroup"), &json))->Start_EffectWork();
 
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"));
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"));
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterLockonUI"));
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterShildUI")); 
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"GravikenisisGUI")); 

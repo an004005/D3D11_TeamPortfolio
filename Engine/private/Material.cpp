@@ -7,6 +7,7 @@
 #include "JsonStorage.h"
 #include "ImguiUtils.h"
 #include "Graphic_Device.h"
+#include "Camera.h"
 
 unordered_map<string, string> CMaterial::s_MtrlPathes{};
 
@@ -171,6 +172,15 @@ void CMaterial::BindMatrices(const _float4x4& WorldMatrix)
 
 	// const _float4x4 ProjInv = CGameInstance::GetInstance()->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_PROJ);
 	// FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrixInv", &ProjInv));
+}
+
+void CMaterial::BindMatrices(CTransform* pTransform, CCamera* pCamera)
+{
+	const _float4 vCamPos = pCamera->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	FAILED_CHECK(pTransform->Bind_ShaderResource(m_pShader, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShader->Set_Matrix("g_ViewMatrix", &pCamera->GetViewMatrix()));
+	FAILED_CHECK(m_pShader->Set_Matrix("g_ProjMatrix", &pCamera->GetProjMatrix()));
+	FAILED_CHECK(m_pShader->Set_RawValue("g_vCamPosition", &vCamPos, sizeof(_float4)));
 }
 
 void CMaterial::BindMatrices_Instancing(CTransform * pTransform)

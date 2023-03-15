@@ -28,13 +28,15 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
-	virtual void AfterPhysX() override;
+	virtual void AfterPhysX();
 
 	_matrix		 AttachCollider(CRigidBody* pRigidBody);
 
 	void		 RushSweep(_bool bCol);
 
 	void		HitDir(_double TimeDelta);
+
+	virtual void SetActive() override;
 
 private:
 	class CSkPd_Controller*	m_pController = nullptr;
@@ -61,10 +63,7 @@ private:
 	_bool		m_bStruck = false;
 	_bool		m_bAirStruck = false;
 
-	_bool		m_bMaintain = false;
-
-	_uint		m_iAirDamage = 0;
-	_uint		m_iPreAirDamageCnt = 0;
+	_bool		m_bAirMaintain = false;
 
 	// HitDir
 	_bool		m_bHitMove = false;
@@ -73,6 +72,7 @@ private:
 	_vector		m_vCurDir;
 	_vector		m_vFinDir;
 	_bool		m_bOneTick = false;
+
 	// ~HitDir
 
 	// TakeDamage

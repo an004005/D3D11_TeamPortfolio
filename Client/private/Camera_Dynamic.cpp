@@ -109,7 +109,7 @@ void CCamera_Dynamic::Imgui_RenderProperty()
 	CCamera::Imgui_RenderProperty();
 
 	ImGui::SliderFloat("MouseSpeed", &m_fMouseSpeed, 0.01f, 0.1f);
-	ImGui::SliderFloat("KeyBoardSpeed", &m_fSpeedPerSec, 5.f, 20.f);
+	ImGui::SliderFloat("KeyBoardSpeed", &m_fSpeedPerSec, 0.1f, 20.f);
 }
 
 HRESULT CCamera_Dynamic::SetUp_Components()

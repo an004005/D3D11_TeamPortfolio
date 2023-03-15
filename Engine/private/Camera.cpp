@@ -17,6 +17,7 @@ CCamera::CCamera(const CCamera & rhs)
 
 HRESULT CCamera::Initialize(void * pArg)
 {
+	m_fNear = 0.1f;
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -26,7 +27,6 @@ HRESULT CCamera::Initialize(void * pArg)
 		m_pTransformCom->LookAt(XMLoadFloat4(&_float4(0.f, 0.f, 0.f, 1.f)));
 	}
 
-	m_fNear = 0.1f;
 	return S_OK;
 }
 
@@ -38,12 +38,14 @@ void CCamera::Tick(_double TimeDelta)
  // 		m_pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransformCom->Get_WorldMatrix_Inverse());
 	// 	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fFOV), m_fWidth / m_fHeight, m_fNear, m_fFar));
 	// }
+
 }
 
 void CCamera::Imgui_RenderProperty()
 {
 	CGameObject::Imgui_RenderProperty();
 	//ImGui::InputFloat("FOV", &m_fFOV);
+	ImGui::Checkbox("Use ViewPortSize", &m_bUseViewPortSize);
 	ImGui::SliderFloat("FOV", &m_fFOV, 0.f, 150.f, "%.1f");
 	ImGui::InputFloat("Width", &m_fWidth);
 	ImGui::InputFloat("Height", &m_fHeight);
@@ -64,6 +66,7 @@ void CCamera::SaveToJson(Json& json)
 	json["Height"] = m_fHeight;
 	json["Near"] = m_fNear;
 	json["Far"] = m_fFar;
+	json["UseViewPortSize"] = m_bUseViewPortSize;
 }
 
 void CCamera::LoadFromJson(const Json& json)
@@ -74,6 +77,8 @@ void CCamera::LoadFromJson(const Json& json)
 	m_fHeight = json["Height"];
 	m_fNear = json["Near"];
 	m_fFar = json["Far"];
+	if (json.contains("UseViewPortSize"))
+		m_bUseViewPortSize = json["UseViewPortSize"];
 }
 
 void CCamera::SetMainCamera()
@@ -96,8 +101,13 @@ _bool CCamera::IsMainCamera() const
 	return CCamera_Manager::GetInstance()->GetMainCam() == this;
 }
 
-_float4x4 CCamera::GetProjMatrix() const
+_float4x4 CCamera::GetProjMatrix()
 {
+	if (m_bUseViewPortSize)
+	{
+		m_fWidth = WINCX;
+		m_fHeight = WINCY;
+	}
 	return XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fFOV), m_fWidth / m_fHeight, m_fNear, m_fFar);
 }
 

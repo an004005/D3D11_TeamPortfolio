@@ -21,6 +21,7 @@ public:
 		RENDER_DECAL,
 		RENDER_DEBUG,
 		RENDER_OUTLINE,
+		RENDER_PORTRAIT,
 		POSTPROCESS_VFX,
 		RENDER_UI,
 		RENDER_END
@@ -79,6 +80,7 @@ private:
 
 	HRESULT	Render_Distortion(const _tchar* pTargetTag);
 	HRESULT Render_Outline();
+	HRESULT Render_Portrait();
 
 
 private:

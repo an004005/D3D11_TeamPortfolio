@@ -21,11 +21,27 @@ HRESULT CBoss1_AIController::Initialize(void* pArg)
 	m_pFSM = CFSMComponentBuilder()
 		.InitState("Start")
 		.AddState("Start")
-			.AddTransition("Start to Near", "Near")
+			.AddTransition("Start to Outside", "Outside")
 				.Predicator([this]
 				{
 					return m_pCastedOwner->IsPlayingSocket() == false;
 				})
+
+		//		.AddTransition("Start to Near", "Near")
+		//			.Predicator([this]
+		//			{
+		//				return m_pCastedOwner->IsPlayingSocket() == false;
+		//			})
+
+		.AddState("Outside")
+			.Tick(this, &CBoss1_AIController::Tick_Outside)
+
+			.AddTransition("Outside to Far", "Far")
+				.Predicator([this]
+				{
+					return m_fToTargetDistance <= 25.f;
+				})
+
 
 		.AddState("Near")
 			.Tick(this, &CBoss1_AIController::Tick_Near)
@@ -189,6 +205,24 @@ void CBoss1_AIController::Tick_Far(_double TimeDelta)
 		break;
 	}
 	m_iFarOrder = (m_iFarOrder + 1) % 7;
+}
+
+void CBoss1_AIController::Tick_Outside(_double TimeDelta)
+{
+	m_eDistance = DIS_OUTSIDE;
+
+	switch (m_iOutOrder)
+	{
+	case 0:
+		AddCommand("Wait", 2.f, &CAIController::Wait);
+		break;
+
+	case 1:
+		AddCommand("Wait", 2.f, &CAIController::Wait);
+		break;
+	}
+
+	m_iOutOrder = (m_iOutOrder + 1) % 2;
 }
 
 //void CBoss1_AIController::TurnToTargetStop(_float fSpeedRatio)

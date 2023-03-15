@@ -2,7 +2,8 @@
 #include "..\public\FL_Controller.h"
 #include "FlowerLeg.h"
 #include "FSMComponent.h"
-
+#include "EffectGroup.h"
+#include "VFX_Manager.h"
 CFL_Controller::CFL_Controller(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CAIController(pDevice, pContext)
 {
@@ -34,7 +35,7 @@ HRESULT CFL_Controller::Initialize(void * pArg)
 
 			.AddState("Outside")
 				.Tick(this, &CFL_Controller::Tick_Outside)
-
+				.OnExit(dynamic_cast<CMonster*>(m_pCastedOwner), &CMonster::TurnEyesOut)
 				.AddTransition("Outside to Far", "Far")
 					.Predicator([this] 
 					{

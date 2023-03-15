@@ -217,6 +217,11 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 	
 	while (--iLoopBreaker)
 	{
+		if (10 >= iLoopBreaker)
+		{
+			int iA = 0;
+		}
+
 		const _bool bNullAnim = m_pCurState->m_Animation == &CAnimation::s_NullAnimation;
 		_bool bChange = false;
 		szNextStateName = "";

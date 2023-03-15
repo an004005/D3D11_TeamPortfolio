@@ -42,7 +42,11 @@ HRESULT CCanvas::Initialize(void * pArg)
 
 void CCanvas::BeginTick()
 {
-	list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
+	CLayer* pLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player");
+
+	if (pLayer != nullptr)
+	{
+		list<CGameObject*> plsGameObject = pLayer->GetGameObjects();
 
 	for (auto iter : plsGameObject)
 	{
@@ -62,8 +66,12 @@ void CCanvas::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	if (true == m_pPlayer->Get_Dash())
-		Set_UIMove();
+	if (m_pPlayer != nullptr)
+	{
+		if (true == m_pPlayer->Get_Dash())
+			Set_UIMove();
+	}
+	
 
 	m_fSizeX = (_float)g_iWinSizeX;
 	m_fSizeY = (_float)g_iWinSizeY;
@@ -323,6 +331,9 @@ void CCanvas::UIHit(const _double & TimeDelta)
 {
 	m_Timeline0.Tick(TimeDelta, m_fY);
 	//m_Timeline1.Tick(TimeDelta, m_fX);
+
+	if (m_pPlayer == nullptr)
+		return;
 
 	if (true == m_pPlayer->Get_Hit() || CGameInstance::GetInstance()->KeyDown(DIK_0))
 	{	

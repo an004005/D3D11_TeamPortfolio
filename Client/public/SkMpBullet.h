@@ -1,7 +1,8 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Bullet.h"
-
+#include "ParticleGroup.h"
+#include "EffectGroup.h"
 BEGIN(Engine)
 class CGameInstance;
 class CModel;
@@ -30,11 +31,20 @@ public:
 
 	virtual void AfterPhysX();
 
+	void Set_TrailParticle(CParticleGroup* pTrail);
+	CParticleGroup* Get_TrailParticle(); 
+
+	void Set_BulletEffect(CEffectGroup* pBulletEffect);
+	CEffectGroup* Get_BulletEffect();
+
 public:
 	void Set_ShootDir(_vector vDest) { m_vDir = XMVector3Normalize(vDest); }
 
 private:
 	CFSMComponent*			m_pFSM = nullptr;
+	// Bullet Loop
+	CParticleGroup*	m_pTrailParticle = nullptr;
+	CEffectGroup*	m_pBulletEffect = nullptr;
 
 private:
 	_vector					m_vDir = { 0.f, 0.f, 0.f, 0.f };
