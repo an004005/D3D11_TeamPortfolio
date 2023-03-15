@@ -396,7 +396,9 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/PsychokinesisGauge_Mouse.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Gravikenisis_Mouse"), TEXT("ProtoVFX_EffectGroup"), &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Psychokinesis_Circle.json");
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Psychokinesis_Circle0.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Gravikenisis_Circle"), TEXT("ProtoVFX_EffectGroup"), &json));
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Psychokinesis_Circle1.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Gravikenisis_Circle"), TEXT("ProtoVFX_EffectGroup"), &json));
 
 	// AttackNumber
