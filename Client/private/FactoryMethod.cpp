@@ -44,8 +44,6 @@
 #include "SAS_Portrait.h"
 
 //UI
-#include "MonsterHpUI.h"
-#include "MonsterLockonUI.h"
 // Canvas
 #include "Canvas.h"
 #include "Canvas_Item.h"
@@ -114,6 +112,12 @@
 #include "Boss_AppearUI.h"
 #include "Boss_AppearBackUI.h"
 #include "LevelUpUI.h"
+
+// 3D UI
+#include "MonsterHpUI.h"
+#include "MonsterLockonUI.h"
+#include "GravikenisisMouseUI.h"
+
 CFactoryMethod::CFactoryMethod()
 {
 }
@@ -538,9 +542,10 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 			return E_FAIL;
 
 	}
-
+	
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterHP", CMonsterHpUI::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterLockon", CMonsterLockonUI::Create(pDevice, pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_GravikenisisMouseUI", CGravikenisisMouseUI::Create(pDevice, pContext)));
 
 }
 

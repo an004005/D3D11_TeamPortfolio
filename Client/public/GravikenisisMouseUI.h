@@ -23,7 +23,10 @@ public:
 	void SetfRatio(const _float & fRatio);
 
 private:
-	class CEffectGroup* m_pKenisis = nullptr;
+	class CEffectGroup* m_pKenisis = { nullptr };
+	class CEffectGroup* m_pBanKenisis = { nullptr };
+
+	class CPlayer* m_pPlayer = { nullptr };
 
 public:
 	static CGravikenisisMouseUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

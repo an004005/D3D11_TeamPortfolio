@@ -1067,6 +1067,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 		.AddState("KINETIC_RB_START")
 			.OnStart([&]() 
 			{ 
+				dynamic_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_IsTargeted();
 				Enemy_Targeting(true);
 				m_pASM->InputAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Start);
 			})
@@ -3699,7 +3700,10 @@ void CPlayer::KineticObject_Targeting()
 		}
 
 		if (nullptr != m_pKineticObject)
+		{
 			static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetOutline();
+
+		}
 	}
 }
 
