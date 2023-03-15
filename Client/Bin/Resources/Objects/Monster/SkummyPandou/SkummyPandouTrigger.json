@@ -1,1 +1,60 @@
-{"ControlledRigidBody":{"ColliderType":1,"contactOffset":0.10000000149011612,"density":10.0,"height":1.0,"maxJumpHeight":3.0,"pushPower":100.0,"radius":0.5,"slopeLimitDegree":45.0,"stepOffset":0.10000000149011612},"ObjectTag":"","Prototype_GameObject":"SkummyPandou\u0000","RigidBody":{"ColliderType":5,"Density":10.0,"OriginTransform":[1.2000000476837158,0.0,0.0,0.0,0.0,1.2000000476837158,0.0,0.0,0.0,0.0,1.2000000476837158,0.0,0.0,0.0,0.0,1.0],"ShapeType":1,"bKinematic":false,"bTrigger":true},"Transform":{"WorldMatrix":[0.7538191676139832,-0.0,0.6570812463760376,0.0,0.0,1.0,0.0,0.0,-0.6570791006088257,0.0,0.7538166642189026,0.0,70.83457946777344,0.029998313635587692,-10.07844352722168,1.0]}}
+{
+    "ControlledRigidBody": {
+        "ColliderType": 1,
+        "contactOffset": 0.10000000149011612,
+        "density": 10.0,
+        "height": 1.0,
+        "maxJumpHeight": 3.0,
+        "pushPower": 100.0,
+        "radius": 0.5,
+        "slopeLimitDegree": 45.0,
+        "stepOffset": 0.10000000149011612
+    },
+    "ObjectTag": "",
+    "Prototype_GameObject": "SkummyPandou\u0000",
+    "RigidBody": {
+        "ColliderType": 5,
+        "Density": 10.0,
+        "OriginTransform": [
+            1.2000000476837158,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.2000000476837158,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.2000000476837158,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 1,
+        "bKinematic": false,
+        "bTrigger": true
+    },
+    "Transform": {
+        "WorldMatrix": [
+            0.4515281021595001,
+            0.0,
+            -0.8922473192214966,
+            0.0,
+            -0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.8922181725502014,
+            0.0,
+            0.4515133202075958,
+            0.0,
+            -147.00631713867188,
+            12.732998847961426,
+            38.422603607177734,
+            1.0
+        ]
+    }
+}

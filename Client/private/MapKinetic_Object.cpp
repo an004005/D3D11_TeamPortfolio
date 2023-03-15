@@ -8,6 +8,9 @@
 #include "ScarletMap.h"
 #include "ImguiUtils.h"
 #include "GameUtils.h"
+#include "Model.h"
+#include "Material.h"
+
 CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
 {
@@ -58,20 +61,25 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 	// m_pCollider->UpdateChange();
 
 	m_bUsable = true;
+	m_bThrow = false;
 
 	// 다이나믹 리지드 바디가 몬스터와 충돌했는지?
 	m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
+		if (!m_bThrow)
+			return;
+
 		if (!m_bUsable)
 			return;
+
+		m_bUsable = false;
 
 		if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
 		{
 			DAMAGE_PARAM tParam;
-			tParam.iDamage = 1;
 			tParam.eAttackType = EAttackType::ATK_HEAVY;
+			tParam.iDamage = 200;
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-			tParam.eAttackType = EAttackType::ATK_HEAVY;
 
 			pMonster->TakeDamage(tParam);
 
@@ -97,11 +105,23 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 void CMapKinetic_Object::BeginTick()
 {
 	__super::BeginTick();
+
+	m_pCollider->UpdateChange();
 }
 
 void CMapKinetic_Object::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+	OutlineMaker();
+
+	if (!m_bUsable)
+	{
+		m_fDeadTimer += (_float)TimeDelta;
+
+		if (m_fDeadTimer >= 5.f)
+			this->SetDelete();
+	}
 
 	m_pCollider->Update_Tick(m_pTransformCom);
 }
@@ -228,9 +248,6 @@ void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 	m_pCollider->Set_Kinetic(false);
 	m_pCollider->UpdateChange();
 
-//	if(vForce.Length() > 900.f)
-//		m_bUsable = false;
-
 	m_pCollider->AddForce(vForce);
 	m_pCollider->AddTorque(vTorque);
 }
@@ -251,6 +268,74 @@ void CMapKinetic_Object::Reset_Transform()
 	m_pCollider->UpdateChange();
 }
 
+void CMapKinetic_Object::OutlineMaker()
+{
+
+	for (auto& Model : m_pModelComs)
+	{
+		for (auto& iter : Model->GetMaterials())
+		{
+			if (0 == iter->GetParam().Ints.size())
+			{
+				iter->GetParam().Ints.push_back(1);
+			}
+			else
+			{
+				iter->GetParam().Ints[0] = 1;
+			}
+		}
+	}
+
+	//if (m_bOutlineChange)
+	//{
+	//	if (m_bOutline)
+	//	{
+	//		m_bOutline = false;
+
+	//		for (auto& Model : m_pModelComs)
+	//		{
+	//			for (auto& iter : Model->GetMaterials())
+	//			{
+	//				if (0 == iter->GetParam().Ints.size())
+	//				{
+	//					iter->GetParam().Ints.push_back(0);
+	//				}
+	//				else
+	//				{
+	//					iter->GetParam().Ints[0] = 0;
+	//				}
+	//				//iter->GetParam().Float4s[0] = { 0.945098f, 0.4f, 1.f, 1.f };
+	//			}
+	//		}
+
+	//		// 아웃라인 없앰
+	//	}
+	//	else
+	//	{
+	//		m_bOutline = true;
+	//		// 아웃라인 생성
+
+	//		for (auto& Model : m_pModelComs)
+	//		{
+	//			for (auto& iter : Model->GetMaterials())
+	//			{
+	//				if (0 == iter->GetParam().Ints.size())
+	//				{
+	//					iter->GetParam().Ints.push_back(1);
+	//				}
+	//				else
+	//				{
+	//					iter->GetParam().Ints[0] = 1;
+	//				}
+	//				//iter->GetParam().Float4s[0] = { 0.945098f, 0.4f, 1.f, 1.f };
+	//			}
+	//		}
+	//	}
+
+	//	m_bOutlineChange = false;
+	//}
+
+}
 
 HRESULT CMapKinetic_Object::SetUp_Components(void* pArg)
 {

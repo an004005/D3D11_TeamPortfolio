@@ -52,6 +52,12 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 				})
 				.Tick([this](_double TimeDelta) 
 				{
+					if (nullptr == m_pCastOwner)
+						return;
+
+					if (m_pCastOwner->IsDeleted())
+						SetDelete();
+
 					m_pTransformCom->Move(TimeDelta, m_vDir);
 
 					DAMAGE_PARAM	dParams;

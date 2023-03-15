@@ -179,13 +179,15 @@ public:/*for GameTimeManager */
 	void ResetTimeRatio();
 	void SetTimeRatioCurve(const string& strCurveTag, _bool bStay = false, const vector<wstring>* ExceptLayers = nullptr);
 
-
 public: // for CImgui_Manager
 	void Render_ImGui();
 	void Render_Update_ImGui();
 	void Add_ImguiObject(class CImguiObject* pImguiObject);
 	void Clear_ImguiObjects();
 	void Imgui_OnOff(_bool bOn);
+
+public: // for Curve_Manager
+	class CCurveFloatImpl* GetCurve(const string& strCurveTag);
 
 public: // for RootAnimation
 	_vector&	GetPeekingPos();
