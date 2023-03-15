@@ -64,8 +64,7 @@ private:
 	
 	CParticleGroup*			m_pFallRoseParticle = nullptr;
 	CParticleGroup*			m_pShootFlwParticle = nullptr;
-		
-	CEffectGroup*			m_pSpinEffect = nullptr;
+
 
 	// Refine
 private:

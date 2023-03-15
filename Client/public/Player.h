@@ -136,6 +136,8 @@ public:
 	//~For Effect
 
 	//~For UI 
+	_float		Get_KineticCharge() { return m_fKineticCharge; }
+
 	_bool		Get_Hit() { return m_bHit; }
 	_bool		Get_Dash() { return m_bDash; }
 

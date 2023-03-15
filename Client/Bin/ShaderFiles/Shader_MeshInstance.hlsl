@@ -38,6 +38,41 @@ struct VS_OUT
 	float		RamainLifeRatio : TEXCOORD2;
 };
 
+struct VS_OUT_NORM
+{
+	float4		vPosition : SV_POSITION;
+	float4		vNormal : NORMAL;
+	float2		vTexUV : TEXCOORD0;
+	float4		vProjPos : TEXCOORD1;
+	float4		vTangent : TANGENT;
+	float3		vBinormal : BINORMAL;
+
+	float		RamainLifeRatio : TEXCOORD2;
+};
+
+struct PS_IN_NORM
+{
+	float4		vPosition : SV_POSITION;
+	float4		vNormal : NORMAL;
+	float2		vTexUV : TEXCOORD0;
+	float4		vProjPos : TEXCOORD1;
+	float4		vTangent : TANGENT;
+	float3		vBinormal : BINORMAL;
+
+	float		RamainLifeRatio : TEXCOORD2;
+
+};
+
+struct PS_OUT_NORM
+{
+	float4		vColor : SV_TARGET0;
+	float4		vNormal : SV_TARGET1;
+	float4		vDepth : SV_TARGET2;
+	float4		vRMA : SV_TARGET3;
+	float4		vOutline : SV_TARGET4;
+	float4		vFlag : SV_TARGET5;
+};
+
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
@@ -73,6 +108,40 @@ VS_OUT VS_MAIN(VS_IN In)
 	return Out;
 }
 
+VS_OUT_NORM VS_MAIN_NORM(VS_IN In)
+{
+	VS_OUT_NORM		Out = (VS_OUT_NORM)0;
+
+	matrix			matWV, matVP;
+	matrix			TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+
+	matVP = mul(g_ViewMatrix, g_ProjMatrix);
+
+	Out.RamainLifeRatio = (1.f - In.vControlData.x / In.vControlData.y);
+	Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), g_WorldMatrix));
+	Out.vProjPos = Out.vPosition;
+	Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
+	Out.vBinormal = normalize(cross(Out.vNormal.xyz, Out.vTangent.xyz));
+
+	if (Out.RamainLifeRatio >= 1.f)
+		Out.RamainLifeRatio = 1.f;
+
+	if (g_bLocal == 1)
+	{
+		Out.vPosition = mul(mul(float4(In.vPosition, 1.f), TransformMatrix), g_WorldMatrix);
+	}
+	else
+	{
+		Out.vPosition = mul(float4(In.vPosition, 1.f), TransformMatrix);
+	}
+
+	Out.vPosition = mul(Out.vPosition, matVP);
+
+	Out.vTexUV = In.vTexUV;
+
+	return Out;
+}
+
 struct PS_IN
 {
 	float4		vPosition : SV_POSITION;
@@ -91,9 +160,40 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
+	
+	// 수명 던지기
+	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0 * In.RamainLifeRatio);
 
 	Out.vColor.a = g_vec4_0.a;
+
+	return Out;
+}
+
+PS_OUT_NORM PS_PLAYER_KINETIC_PARTICLE(PS_IN_NORM In)
+{
+	PS_OUT_NORM		Out = (PS_OUT_NORM)0;
+	float flags = SHADER_DEFAULT;
+
+	float3 vNormal = In.vNormal.xyz;
+
+	float4 BaseTex = g_tex_0.Sample(LinearSampler, In.vTexUV) * 0.1f;
+	float4 Color = g_vec4_0;
+	float4 BlendColor = BaseTex * Color ;
+
+	Out.vColor = saturate(BlendColor);
+
+	vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f) * In.RamainLifeRatio;
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0 * In.RamainLifeRatio, flags);
+
+	// Out.vColor.a = g_vec4_0.a;
+
+	Out.vColor.a = 1.f;
+	Out.vRMA = float4(g_float_1, g_float_2, g_float_3, 0.f);
 
 	return Out;
 }
@@ -184,5 +284,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_BLEND_TEX_HDR();
+	}
+
+	pass Player_KineticParticle //4
+	{
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(DS_Default, 0);
+		SetRasterizerState(RS_Default);
+
+		VertexShader = compile vs_5_0 VS_MAIN_NORM();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_PLAYER_KINETIC_PARTICLE();
 	}
 }

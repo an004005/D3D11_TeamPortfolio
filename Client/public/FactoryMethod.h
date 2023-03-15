@@ -16,6 +16,7 @@ public:
 
 	//UI
 	static HRESULT MakeUITestPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static HRESULT MakeUIPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 public:
 	virtual void Free() override;

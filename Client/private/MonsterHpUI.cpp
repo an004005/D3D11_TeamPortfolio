@@ -2,7 +2,6 @@
 #include "..\public\MonsterHpUI.h"
 #include "GameInstance.h"
 #include "JsonStorage.h"
-#include "EffectGroup.h"
 #include "EffectSystem.h"
 #include "VFX_Manager.h"
 #include "Monster.h"
