@@ -6,7 +6,7 @@
 #include "EffectSystem.h"
 #include "VFX_Manager.h"
 #include "Player.h"
-
+#include "Monster.h"
 CMonsterLockonUI::CMonsterLockonUI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -42,8 +42,8 @@ void CMonsterLockonUI::BeginTick()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	//여기서 메니저 그룹에 내 이펙트를 넣어줌.
-	m_pTargetGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Target", TEXT("Layer_MonsterUI"));
-	m_pTargetRhombusGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Target", TEXT("Lockon_TargetRhombus"));
+	m_pTargetGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Target", TEXT("Layer_UI"));
+	m_pTargetRhombusGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_TargetRhombus", TEXT("Layer_UI"));
 
 	Safe_AddRef(m_pTargetGroup);
 	Safe_AddRef(m_pTargetRhombusGroup);
@@ -62,10 +62,13 @@ void CMonsterLockonUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	if (m_pOwner == nullptr)
+	if (m_pOwner != nullptr)
 	{
-		m_bDelete = true;
-		return;
+		if (dynamic_cast<CMonster*>(m_pOwner)->IsDead())
+		{
+			m_bDelete = true;
+			return;
+		}
 	}
 
 	//m_pTargetRhombusGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
@@ -74,8 +77,6 @@ void CMonsterLockonUI::Tick(_double TimeDelta)
 void CMonsterLockonUI::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
-
-
 }
 
 CMonsterLockonUI * CMonsterLockonUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

@@ -163,17 +163,25 @@ void CPlayer::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	if (nullptr != m_pTargetedEnemy && (!static_cast<CMonster*>(m_pTargetedEnemy)->IsDead()))
+	if (nullptr != m_pTargetedEnemy)
 	{
 		//IM_LOG(ws2s(m_pTargetedEnemy->GetPrototypeTag()).c_str());
-		if (m_pUI_LockOn == nullptr)
+		if (!static_cast<CMonster*>(m_pTargetedEnemy)->IsDead())
 		{
-			CGameInstance* pGameInstance = CGameInstance::GetInstance();
-			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
-			assert(m_pUI_LockOn != nullptr);
-			m_pUI_LockOn->Set_Owner(m_pTargetedEnemy);
+			if (m_pUI_LockOn == nullptr)
+			{
+				CGameInstance* pGameInstance = CGameInstance::GetInstance();
+				m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
+				assert(m_pUI_LockOn != nullptr);
+				m_pUI_LockOn->Set_Owner(m_pTargetedEnemy);
+			}
+		}
+		else
+		{
+			m_pUI_LockOn = nullptr;
 		}
 	}
+	
 
 	// 콤보 연계 시간
 	m_fKineticCombo_Slash -= TimeDelta;
