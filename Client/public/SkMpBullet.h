@@ -31,11 +31,11 @@ public:
 
 	virtual void AfterPhysX();
 
-	void Set_TrailParticle(CParticleGroup* pTrail);
-	CParticleGroup* Get_TrailParticle(); 
+	/*void Set_TrailParticle(CParticleGroup* pTrail);
+	CParticleGroup* Get_TrailParticle();
 
 	void Set_BulletEffect(CEffectGroup* pBulletEffect);
-	CEffectGroup* Get_BulletEffect();
+	CEffectGroup* Get_BulletEffect();*/
 
 public:
 	void Set_ShootDir(_vector vDest) { m_vDir = XMVector3Normalize(vDest); }
@@ -48,6 +48,8 @@ private:
 
 private:
 	_vector					m_vDir = { 0.f, 0.f, 0.f, 0.f };
+	_vector					m_vPrePos;
+	_bool					m_bPrePos = false;
 
 public:
 	static CSkMpBullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -61,8 +61,10 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 		// Effect 생성
 		if (!m_bDead)
 		{
+//			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0750_Dash_Attack")->Start_Attach(this, "Hips", true);
 			m_pDash_Effect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0750_Dash_Attack");
 			m_pDash_Effect->Start_Attach(this, "Hips", true);
+			Safe_AddRef(m_pDash_Effect);
 		}
 		m_bAtkToggle = true;
 	});
@@ -72,10 +74,13 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 		// Effect 해제
 		if (m_bCloned == true)
 		{
-			if (m_pDash_Effect->IsDeleted() == false)
+			if (m_pDash_Effect != nullptr)
+			{
 				m_pDash_Effect->SetDelete();
+				Safe_Release(m_pDash_Effect);
+				m_pDash_Effect = nullptr;
+			}
 
-			Safe_Release(m_pDash_Effect);		
 		}
 		m_bAtkToggle = false;
 	});
@@ -98,8 +103,8 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 	});
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 	// ~Event Caller
-
-	m_iHP = 900; // ★
+	m_iMaxHP = 1000;
+	m_iHP = m_iMaxHP; // ★
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(190.f));	
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 //	m_bActiveGravity = false;
@@ -369,7 +374,7 @@ void CSkummyPandou::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_bAirStruck = true;
 	}
 
-	if (m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkToggle && !m_bDead)
+	if (m_eAtkType != EAttackType::ATK_TO_AIR && !m_bDead)
 	{
 		m_bStruck = true;
 	}
@@ -546,10 +551,11 @@ void CSkummyPandou::Free()
 
 	if (m_bCloned == true)
 	{
-		if (m_pDash_Effect != nullptr && m_pDash_Effect->IsDeleted() == false)
+		if (m_pDash_Effect != nullptr)
+		{
 			m_pDash_Effect->SetDelete();
-
-		Safe_Release(m_pDash_Effect);
+			Safe_Release(m_pDash_Effect);
+		}
 	}
 
 	Safe_Release(m_pASM);

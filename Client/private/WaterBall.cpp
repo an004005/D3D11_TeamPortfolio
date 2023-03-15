@@ -52,6 +52,12 @@ HRESULT CWaterBall::Initialize(void * pArg)
 				})
 				.Tick([this](_double TimeDelta) 
 				{
+					/*if (nullptr == m_pCastOwner)
+						return;
+
+					if (m_pCastOwner->IsDeleted())
+						SetDelete();*/
+
 					// 날아가면서 붙어있을 Effect 관리
 					m_pTransformCom->Move(TimeDelta, m_vDir);
 
@@ -60,7 +66,7 @@ HRESULT CWaterBall::Initialize(void * pArg)
 					dParams.eDeBuff = EDeBuffType::DEBUFF_OIL;
 					dParams.iDamage = 1;
 					dParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					dParams.pCauser = m_pCastOwner;
+//					dParams.pCauser = m_pCastOwner;
 
 					CollisionCheck_Bullet(m_pTransformCom, dParams, 0.5f);//, ECOLLIDER_TYPE_BIT::CTB_PLAYER);
 					if (m_bHitCheck == true)
@@ -72,7 +78,7 @@ HRESULT CWaterBall::Initialize(void * pArg)
 						_vector vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 						_float4 fOrigin;
 						XMStoreFloat4(&fOrigin, vOrigin);
-						_vector vDest = m_pCastOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+						_vector vDest = m_BeforePos;//m_pCastOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 
 						const _vector vDiff = vDest - vOrigin;
 						const _float fDistance = XMVectorGetX(XMVector3LengthEst(vDiff));
@@ -94,19 +100,21 @@ void CWaterBall::BeginTick()
 {
 	CBullet::BeginTick();
 
-	for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
+	/*for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
 	{
 		if (iter->GetPrototypeTag() == TEXT("Prototype_MonsterBoss1"))
 		{
 			m_pCastOwner = dynamic_cast<CScarletCharacter*>(iter);
 		}
-	}
+	}*/
 }
 
 void CWaterBall::Tick(_double TimeDelta)
 {
 	CBullet::Tick(TimeDelta);
 	m_pFSMCom->Tick(TimeDelta);
+	/*if (m_pCastOwner->IsDeleted())
+		SetDelete();*/
 }
 
 void CWaterBall::Late_Tick(_double TimeDelta)
