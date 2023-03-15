@@ -1,11 +1,11 @@
 Prototype_Component_Shader_VtxModel_VFX
 
 VFX_Mesh_Sphere_00
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_00.static_model
 VFX_Mesh_Sphere_00_half
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_00_half.static_model
 VFX_Mesh_Sphere_01
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_01.static_model
 VFX_Mesh_Sphere_02
 ../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_02.static_model
 VFX_Mesh_Sphere_03
@@ -15,23 +15,23 @@ VFX_Mesh_Sphere_04
 VFX_Mesh_Sphere_05
 ../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_05.static_model
 VFX_Mesh_Sphere_06
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_06.static_model
 VFX_Mesh_Sphere_06_01
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_06_01.static_model
 VFX_Mesh_Sphere_07
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_07.static_model
 VFX_Mesh_Sphere_13
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_13.static_model
 VFX_Mesh_Sphere_14
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_14.static_model
 VFX_Mesh_Sphere_15
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_15.static_model
 VFX_Mesh_Sphere_16
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_16.static_model
 VFX_Mesh_Sphere_17
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_17.static_model
 VFX_Mesh_Sphere_18
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_18.static_model
 VFX_Mesh_Sphere_19_HighQual
 ../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
 

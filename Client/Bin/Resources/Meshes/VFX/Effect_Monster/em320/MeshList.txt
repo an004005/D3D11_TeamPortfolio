@@ -1,0 +1,4 @@
+Prototype_Component_Shader_VtxModel_VFX
+../Bin/Resources/Meshes/VFX/Effect_Monster/em320/em0320_Bullet.static_model
+../Bin/Resources/Meshes/VFX/Effect_Monster/em320/em0320_LeftHand_Slash.static_model
+../Bin/Resources/Meshes/VFX/Effect_Monster/em320/em0320_RightHand_Slash.static_model
