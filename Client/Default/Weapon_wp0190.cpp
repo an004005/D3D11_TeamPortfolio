@@ -79,7 +79,7 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 	{
 		switch (m_eSasType)
 		{
-		case ESASType::SAS_GRAVIKENISIS:
+		case ESASType::SAS_NOT:
 			m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 1;
 			break;
 		case ESASType::SAS_FIRE:
