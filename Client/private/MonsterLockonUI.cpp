@@ -62,14 +62,14 @@ void CMonsterLockonUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	if (m_pOwner != nullptr)
+	/*if (m_pOwner != nullptr)
 	{
 		if (dynamic_cast<CMonster*>(m_pOwner)->IsDead())
 		{
-			m_bDelete = true; 
+			m_bDelete = true;
 			return;
 		}
-	}
+	}*/
 
 	//m_pTargetRhombusGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
 }

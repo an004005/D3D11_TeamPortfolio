@@ -51,8 +51,8 @@ protected:
 
 	CSimpleTimeline m_DeathTimeline; // 추후에 정립
 
-protected:
-	CScarletCharacter*		m_pCastOwner = nullptr;
+//protected:
+//	CScarletCharacter*		m_pCastOwner = nullptr;
 
 public:
 	virtual void Free() override;

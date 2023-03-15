@@ -28,7 +28,7 @@ public:
 	virtual void Imgui_RenderProperty() override;
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 	virtual void AfterPhysX();
-
+	virtual void SetUp_UI() override;
 	void HitDir(_double TimeDelta);
 //	virtual void SetActive() override;
 
@@ -80,10 +80,12 @@ private:
 private:
 	CScarletCharacter* m_pTarget = nullptr;
 
-class	CSkMpBullet*		m_pBullet = nullptr;
+//	class	CSkMpBullet*		m_pBullet = nullptr;
 
 	_float3 m_vMoveAxis;
 	_float m_fTurnRemain = 0.f;
+
+	_vector	m_LastSpotTargetPos;
 
 public:
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }

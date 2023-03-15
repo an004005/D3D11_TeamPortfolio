@@ -63,6 +63,9 @@ private:
 
 	class CRigidBody* m_pWeak = nullptr;
 
+	class CRigidBody* m_pLeftArm = nullptr;
+	class CRigidBody* m_pRightArm = nullptr;
+
 	CScarletCharacter* m_pTarget = nullptr;
 
 	_float3 m_vMoveAxis;

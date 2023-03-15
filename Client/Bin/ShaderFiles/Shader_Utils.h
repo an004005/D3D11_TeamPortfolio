@@ -21,7 +21,6 @@ static const float EPSILON = 1e-6f;
 
 #define SHADER_TOON_GRAY_INGNORE 9.f
 #define SHADER_MONSTER_WEAK 10.f
-#define SHADER_PORTRAIT 11.f
 
 
 #define COL_WHITE float3(1.f, 1.f, 1.f)

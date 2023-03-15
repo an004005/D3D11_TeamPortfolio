@@ -487,25 +487,49 @@ void CEffectSystem::Imgui_RenderProperty()
 void CEffectSystem::Tick_Scale_All(_float fValue)
 {
 	fValue *= 2.f;
-	_float3 Scale = m_pTransformCom->Get_Scaled();
 
-	m_pTransformCom->Set_Scaled(_float3(fValue, fValue, fValue));
+	for (auto& childMatrix : m_ChildBuffers)
+	{
+		_matrix MatChild = childMatrix;
+
+		MatChild.r[0] = XMVector3Normalize(MatChild.r[0]) * fValue;
+		MatChild.r[1] = XMVector3Normalize(MatChild.r[1]) * fValue;
+		MatChild.r[2] = XMVector3Normalize(MatChild.r[2]) * fValue;
+		childMatrix = MatChild;
+	}
 }
 
 void CEffectSystem::Tick_Scale_Y(_float fValue)
 {
 	fValue *= 2.f;
-	_float3 Scale = m_pTransformCom->Get_Scaled();
 
-	m_pTransformCom->Set_Scaled(_float3(Scale.x, fValue, Scale.x));
+	for (auto& childMatrix : m_ChildBuffers)
+	{
+		_matrix MatChild = childMatrix;
+
+		MatChild.r[1] = XMVector3Normalize(MatChild.r[1]) * fValue;
+		childMatrix = MatChild;
+	}
 }
+// void CEffectSystem::Tick_Scale_Y(_float fValue)
+// {
+//
+// 	// _float3 Scale = m_pTransformCom->Get_Scaled();
+// 	//
+// 	// m_pTransformCom->Set_Scaled(_float3(Scale.x, fValue, Scale.x));
+// }
 
 void CEffectSystem::Tick_Scale_X(_float fValue)
 {
 	fValue *= 2.f;
-	_float3 Scale = m_pTransformCom->Get_Scaled();
 
-	m_pTransformCom->Set_Scaled(_float3(fValue, Scale.y, Scale.z));
+	for (auto& childMatrix : m_ChildBuffers)
+	{
+		_matrix MatChild = childMatrix;
+
+		MatChild.r[0] = XMVector3Normalize(MatChild.r[0]) * fValue;
+		childMatrix = MatChild;
+	}
 }
 
 void CEffectSystem::Tick_Floats_0(_float fValue)

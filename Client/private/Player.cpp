@@ -166,25 +166,7 @@ void CPlayer::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	if (nullptr != m_pTargetedEnemy)
-	{
-		//IM_LOG(ws2s(m_pTargetedEnemy->GetPrototypeTag()).c_str());
-		if (!static_cast<CMonster*>(m_pTargetedEnemy)->IsDead())
-		{
-			if (m_pUI_LockOn == nullptr)
-			{
-				CGameInstance* pGameInstance = CGameInstance::GetInstance();
-				m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
-				assert(m_pUI_LockOn != nullptr);
-				m_pUI_LockOn->Set_Owner(m_pTargetedEnemy);
-			}
-		}
-		else
-		{
-			m_pUI_LockOn = nullptr;
-		}
-	}
-	
+	Update_TargetUI();
 
 	// 콤보 연계 시간
 	m_fKineticCombo_Slash -= TimeDelta;
@@ -3487,6 +3469,47 @@ void CPlayer::SocketLocalMoveCheck()
 		_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
 		m_pTransformCom->LocalMove(vLocal);
 	}
+}
+
+void CPlayer::Update_TargetUI()
+{
+	//타겟이 사라졌을때, 쓰레기값이 들어가있어서 한번 검사를 시켜줌
+	if (m_pTargetedEnemy != nullptr && static_cast<CMonster*>(m_pTargetedEnemy)->IsDead() == true)
+		Enemy_Targeting(true);
+
+	if (m_pSettedTarget != m_pTargetedEnemy)
+	{
+
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+		//원래 타겟이 없다가 생긴 경우
+		if (m_pSettedTarget == nullptr && m_pTargetedEnemy != nullptr)
+		{
+			
+			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
+			assert(m_pUI_LockOn != nullptr);
+			m_pUI_LockOn->Set_Owner(m_pTargetedEnemy);
+		}
+
+		//원래 타겟이 있었는데 사라진 경우
+		else if (m_pSettedTarget != nullptr && m_pTargetedEnemy == nullptr)
+		{
+			m_pUI_LockOn->SetDelete();
+		}
+
+		//다른 타겟으로 바뀐 경우
+		else if (m_pSettedTarget != nullptr && m_pTargetedEnemy != nullptr)
+		{
+			m_pUI_LockOn->SetDelete();
+
+			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
+			assert(m_pUI_LockOn != nullptr);
+			m_pUI_LockOn->Set_Owner(m_pTargetedEnemy);
+		}
+
+		m_pSettedTarget = m_pTargetedEnemy;
+	}
+
 }
 
 void CPlayer::NetualChecker(_double TimeDelta)

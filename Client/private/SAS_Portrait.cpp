@@ -5,6 +5,8 @@
 #include "Animation.h"
 #include "Camera.h"
 #include "JsonStorage.h"
+#include "CurveManager.h"
+#include "CurveFloatMapImpl.h"
 
 /*********************
  *CPostVFX_SAS_Portrait
@@ -82,7 +84,7 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 	{
 		CModel* pModel = nullptr;
 
-		FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Model_Ch300_Portrail", L"ch300",
+		FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Model_Ch300_Portrait", L"ch300",
 		   (CComponent**)&pModel));
 
 		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_FIRE)] = pModel;
@@ -96,9 +98,29 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 		}
 
 		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PortraitCams/ch300_cam.json");
-		_float t = json["FOV"];
 		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_FIRE)] = CGameInstance::GetInstance()->Add_Camera("ch300_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);
 		Safe_AddRef(m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_FIRE)]);
+	}
+
+	{
+		CModel* pModel = nullptr;
+
+		FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Model_Ch500_Portrait", L"ch500",
+		   (CComponent**)&pModel));
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_PENETRATE)] = pModel;
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_PENETRATE)]->FindMaterial(L"MI_ch0500_HOOD_0")->SetActive(false);
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_PENETRATE)]->FindMaterial(L"MI_ch0500_MASK_0")->SetActive(false);
+
+		for (auto pMtrl : m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_PENETRATE)]->GetMaterials())
+		{
+			pMtrl->GetParam().iPass = 6;
+		}
+
+		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PortraitCams/ch500_cam.json");
+		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_PENETRATE)] = CGameInstance::GetInstance()->Add_Camera("ch500_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);
+		Safe_AddRef(m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_PENETRATE)]);
 	}
 
 	{
@@ -107,6 +129,11 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 		Safe_AddRef(m_pPostVFX);
 	}
 
+
+	m_pDissolveCurve = CCurveManager::GetInstance()->GetCurve("PortraitDissolveCurve");
+	m_pColorLerpCurve = CCurveManager::GetInstance()->GetCurve("PortraitColorLerpRatio");
+	m_pOutlineLerpCurve = CCurveManager::GetInstance()->GetCurve("PortraitOutlineLerpRatio");
+	
 	return S_OK;
 }
 
@@ -123,23 +150,32 @@ void CSAS_Portrait::Tick(_double TimeDelta)
 	{
 		Start_SAS(ESASType::SAS_FIRE);
 	}
+	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	{
+		Start_SAS(ESASType::SAS_PENETRATE);
+	}
 
 	if (m_eCurType != ESASType::SAS_END)
 	{
 		m_SAS_PortraitModels[static_cast<_uint>(m_eCurType)]->Play_Animation(TimeDelta);
-		if (m_SAS_PortraitModels[static_cast<_uint>(m_eCurType)]->GetPlayAnimation()->GetPlayRatio() >= 0.99)
-		{
-			Start_SAS(ESASType::SAS_FIRE);
 
-
-			// m_eCurType = ESASType::SAS_END;
-			// m_pPostVFX->GetParam().Floats[0] = 0.f;
-		}
-
-		_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
-		_vector vLocalMove = m_SAS_PortraitModels[static_cast<_uint>(m_eCurType)]->GetLocalMove(WorldMatrix);
+		const _matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		const _vector vLocalMove = m_SAS_PortraitModels[static_cast<_uint>(m_eCurType)]->GetLocalMove(WorldMatrix);
 		m_pTransformCom->LocalMove(vLocalMove);
+
+		const _float fPlayRatio = m_SAS_PortraitModels[static_cast<_uint>(m_eCurType)]->GetPlayAnimation()->GetPlayRatio();
+
+		m_pPostVFX->GetParam().Floats[1] = m_pColorLerpCurve->GetValue((_double)fPlayRatio);
+		m_pPostVFX->GetParam().Floats[2] = m_pDissolveCurve->GetValue((_double)fPlayRatio);
+		m_pPostVFX->GetParam().Floats[3] = m_pOutlineLerpCurve->GetValue((_double)fPlayRatio);
+		if (fPlayRatio >= 0.99f)
+		{
+			m_eCurType = ESASType::SAS_END;
+			ResetParams();
+		}
 	}
+
+	TickParams();
 }
 
 void CSAS_Portrait::Late_Tick(_double TimeDelta)
@@ -160,15 +196,25 @@ HRESULT CSAS_Portrait::Render()
 	return S_OK;
 }
 
+void CSAS_Portrait::Imgui_RenderProperty()
+{
+	CGameObject::Imgui_RenderProperty();
+}
+
 void CSAS_Portrait::Start_SAS(ESASType eType)
 {
 	m_eCurType = eType;
+	// m_pPostVFX->GetParam().Float4s[0] = _float4(1.f, 0.231f, 0.f, 1.f);
+	// m_pPostVFX->GetParam().Float4s[1] = _float4(0.957f, 0.459f, 0.048f, 1.f);
+
 	switch (m_eCurType)
 	{
 	case ESASType::SAS_FIRE: 
 		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_FIRE)]->SetPlayAnimation("AS_ch0300_SAS01");
 		break;
-	case ESASType::SAS_PENETRATE: break;
+	case ESASType::SAS_PENETRATE:
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_PENETRATE)]->SetPlayAnimation("AS_ch0500_SAS01");
+		 break;
 	case ESASType::SAS_HARDBODY: break;
 	case ESASType::SAS_TELEPORT: break;
 	case ESASType::SAS_ELETRIC: break;
@@ -185,6 +231,33 @@ void CSAS_Portrait::Start_SAS(ESASType eType)
 
 	m_pPostVFX->GetParam().Floats[0] = 1.f;
 	m_pTransformCom->Set_WorldMatrix(_float4x4::Identity);
+}
+
+void CSAS_Portrait::ResetParams()
+{
+	m_pPostVFX->GetParam().Floats[0] = 0.f;
+	m_pPostVFX->GetParam().Floats[2] = 0.f;
+}
+
+void CSAS_Portrait::TickParams()
+{
+	switch (m_eCurType)
+	{
+	case ESASType::SAS_FIRE: 
+		break;
+	case ESASType::SAS_PENETRATE: break;
+	case ESASType::SAS_HARDBODY: break;
+	case ESASType::SAS_TELEPORT: break;
+	case ESASType::SAS_ELETRIC: break;
+	case ESASType::SAS_SUPERSPEED: break;
+	case ESASType::SAS_COPY: break;
+	case ESASType::SAS_INVISIBLE: break;
+	case ESASType::SAS_GRAVIKENISIS: break;
+	case ESASType::SAS_NOT: break;
+	case ESASType::SAS_END: break;
+	default:
+		NODEFAULT;
+	}
 }
 
 CSAS_Portrait* CSAS_Portrait::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
