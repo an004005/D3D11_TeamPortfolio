@@ -576,7 +576,9 @@ void CEffectSystem::Tick_OutroTime(_float fValue)
 
 void CEffectSystem::Tick_Ints_0(_float fValue)
 {
-	m_tParam.Ints[0] = fValue;
+	m_tParam.Ints[0] = (_int)fValue;
+	int a = 3;
+	IM_LOG("%f", fValue);
 }
 
 
