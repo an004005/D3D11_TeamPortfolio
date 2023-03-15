@@ -41,6 +41,7 @@
 #include "ParticleSystem.h"
 #include "ParticleGroup.h"
 #include "PostVFX_Distortion.h"
+#include "SAS_Portrait.h"
 
 
 CFactoryMethod::CFactoryMethod()
@@ -181,14 +182,22 @@ HRESULT CFactoryMethod::MakeEffectPrototypes(ID3D11Device * pDevice, ID3D11Devic
 	return S_OK;
 }
 
-HRESULT CFactoryMethod::MakeCH300Prototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+HRESULT CFactoryMethod::MakeSAS_Portrait_Prototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	auto pModel_ch300 = CModel::Create(pDevice, pContext,
-		"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/ch300.anim_model");
-	pModel_ch300->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/Animation/");
-	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch300_Portrail", pModel_ch300));
+	{
+		auto pModel_ch300 = CModel::Create(pDevice, pContext,
+		   "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/ch300.anim_model");
+		pModel_ch300->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/SAS_Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch300_Portrail", pModel_ch300));
+	}
+
+	{
+		pGameInstance->Add_Prototype(L"Prototype_SASPortrait", CSAS_Portrait::Create(pDevice, pContext));
+		pGameInstance->Add_Prototype(L"ProtoPostVFX_SASPortrait", CPostVFX_SAS_Portrait::Create(pDevice, pContext));
+		
+	}
 
 	return S_OK;
 }

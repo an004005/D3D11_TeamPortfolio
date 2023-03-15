@@ -83,6 +83,12 @@ struct PS_OUT
 	float4		vFlag : SV_TARGET6; // post process ÇÃ·¡±×
 };
 
+struct PS_OUT_NONLIGHT
+{
+	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1;
+};
+
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -304,6 +310,37 @@ PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 	return Out;
 }
 
+PS_OUT_NONLIGHT PS_ToonDefault_Forward_6(PS_IN In)
+{
+	PS_OUT_NONLIGHT Out = (PS_OUT_NONLIGHT)0;
+
+	float4 vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.a = 1.f;
+
+	float4 vNormal = NormalPacking(In);
+	vNormal.xyz = vNormal.xyz * 2.f - 1.f;
+
+	float4 vAMB = 0.f;
+	if (g_tex_on_2)
+		vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	float4 vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
+
+	float3 vLightDir = float3(1.f, -1.f, 1.f);
+	float4 vLightColor = float4(1.f, 1.f, 1.f, 1.f);
+
+	float fNdotL = dot(normalize(vNormal.xyz), normalize(vLightDir.xyz));
+	float fDiff = saturate(max(fNdotL, 0.0));
+	fDiff = max(vCTL.r * 2.f , min(vCTL.g, fDiff));
+	fDiff *= vCTL.b;
+	float4 vShade = vLightColor * saturate(fDiff);
+
+	Out.vColor = saturate(vDiffuse * vShade + vAMB * 0.5f);
+	Out.vColor.a = 1.f;
+	Out.vFlag = float4(0.f, 0.f, SHADER_PORTRAIT, 0.f);
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0
@@ -388,6 +425,20 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_ch0100_mask_0_5();
+	}
+
+	// 6
+	pass PS_ToonDefaultForward
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ToonDefault_Forward_6();
 	}
 	
 }

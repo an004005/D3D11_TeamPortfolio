@@ -88,6 +88,7 @@ public:
 	HRESULT RenderMesh(class CTransform* pTransform, _uint iMeshIdx);
 	HRESULT RenderMeshOnly(_uint iMeshIdx) const;
 	HRESULT Render_Pass(class CTransform* pTransform, _uint iPass);
+	HRESULT Render_Cam(class CTransform* pTransform, class CCamera* pCamera);
 	// HRESULT RenderMesh_Shader(class CTransform* pTransform, class CShader* pShader, _uint iPass);
 
 
