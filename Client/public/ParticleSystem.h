@@ -32,6 +32,13 @@ enum class EBufferType
 	MESH
 };
 
+enum class EBilboardType
+{
+	ALL,
+	LOOK,
+	NONE
+};
+
 class CParticleSystem :	public CGameObject
 {
 public:
@@ -41,7 +48,8 @@ public:
 
 public:
 	CShader* GetShader() { return m_pShader; }
-
+	_float	GetDuration() { return m_fDuration; }
+	_int	GetLiveParticleCnt();
 public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
@@ -52,9 +60,9 @@ public:
 	virtual void Imgui_RenderProperty() override;
 	void SetLoop(_bool bLoop) { m_bLoop = bLoop; }
 
-
 	HRESULT SetParams();
 	HRESULT	Begin();
+
 private:
 	void AddPoint();
 	void UpdatePoints(_float fTimeDelta);
@@ -66,6 +74,7 @@ private:
 private:
 	void Create_MeshData(VTXMATRIX data);
 	_uint FineNearestIndex(_float4 vPos);
+
 private:
 	ShaderParams m_tParam;
 	CRenderer* m_pRendererCom = nullptr;
@@ -97,6 +106,7 @@ private:
 
 	ESpawnShape m_eShape = ESpawnShape::SPHERE;
 	EBufferType m_eBufferType = EBufferType::POINT;
+	EBilboardType m_eBilboardType = EBilboardType::ALL;
 
 	_float2 m_fGravityPowerMinMax = { 0.f, 0.f };
 	_float m_fGravityPower = 0.f;
@@ -105,6 +115,8 @@ private:
 	_float m_fSphereRadius = 4.f;
 
 	_float3 m_vScaleVariation = { 1.f ,1.f,1.f};
+
+	_bool m_bNonAlphaBlend = false;
 
 	_bool m_bPointInstance = false;
 	_bool m_bMeshInstance = false;
@@ -139,6 +151,13 @@ private:
 	_bool	  m_bRotate = false;
 	_float4x4 m_RotationMatrix = XMMatrixIdentity();
 	_float3	 m_vMeshSize{ 1.f,1.f,1.f };
+
+	_float3  m_vRandDir_Max = { 1.f,1.f,1.f };
+
+	_float3  m_vRandDir_Min = { 0.f,0.f,0.f };
+
+	_bool	 m_bSphereDetail = false;
+
 	// _float	  m_ArrayRoationToTime[3];
 	_float3	  m_fRotationToTime_Min = {0.f,0.f,0.f};
 	_float3	  m_fRotationToTime_Max = { 0.f,0.f,0.f };

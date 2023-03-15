@@ -91,6 +91,9 @@ PS_OUT PS_BRON_LASER_START(PS_IN In)
 	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
 	Out.vColor.a = Mask * g_float_1;
 
+	if (g_float_1 == 0.f)
+		discard;
+
 	return Out;
 }
 
@@ -177,7 +180,7 @@ PS_OUT PS_MixTexture(PS_IN In)
 
 	float4 BlendColor = DefaultWhite * g_vec4_0;
 
-	Out.vColor = saturate(BlendColor + Texture * 0.25f) * 3.8f;
+	Out.vColor = saturate(BlendColor + Texture * 0.25f) * 3.0f;
 	Out.vColor.a = Mask;
 
 	return Out;
@@ -699,7 +702,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
-		SetBlendState(BS_AlphaOne, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
@@ -712,7 +715,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
-		SetBlendState(BS_AlphaOne, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;

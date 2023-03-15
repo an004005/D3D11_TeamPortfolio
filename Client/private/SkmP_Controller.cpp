@@ -37,7 +37,10 @@ HRESULT CSkmP_Controller::Initialize(void * pArg)
 
 		.AddState("Outside")
 			.Tick(this, &CSkmP_Controller::Tick_Outside)
-			.OnExit(dynamic_cast<CMonster*>(m_pCastedOwner), &CMonster::TurnEyesOut)
+			.OnExit([this] 
+			{
+				m_pCastedOwner->TurnEyesOut();
+			})
 			.AddTransition("Outside to Far", "Far")
 				.Predicator([this]
 				{

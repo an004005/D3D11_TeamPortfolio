@@ -19,6 +19,18 @@ CParticleSystem::CParticleSystem(const CParticleSystem& rhs)
 {
 }
 
+_int CParticleSystem::GetLiveParticleCnt()
+{
+	if(m_eBufferType == EBufferType::POINT)
+	{
+		return m_PointList.size();
+	}
+	else
+	{
+		return m_MeshList.size();
+	}
+}
+
 HRESULT CParticleSystem::Initialize(void* pArg)
 {
 	CGameObject::Initialize(pArg);
@@ -65,15 +77,15 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 
 void CParticleSystem::Tick(_double TimeDelta)
 {
-	if (m_bVisible == false)
-		return;
+	// if (m_bVisible == false)
+	// 	return;
 
 		const _float fTimeDelta = (_float)TimeDelta;
 
 		if (m_bLoop == false)
 			m_fDuration -= fTimeDelta;
 		if (m_fDuration < 0.f)
-			m_bVisible = false;
+			m_iBurstCnt = 0;
 
 		if (m_eBufferType == EBufferType::MESH)
 		{
@@ -113,7 +125,11 @@ void CParticleSystem::Late_Tick(_double TimeDelta)
 			m_pPointInstanceBuffer->SetInstanceBuffer(&m_PointList);
 			// particle은 작기 때문에 먼저 해도 문제없을 듯
 		}
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+
+		if(m_bNonAlphaBlend == true)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		else
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 	}
 }
 
@@ -168,6 +184,13 @@ void CParticleSystem::SaveToJson(Json& json)
 	json["RotationToTimeMax"] = m_fRotationToTime_Max;
 	json["ScaleVariation"] = m_vScaleVariation;
 	json["MeshSize"] = m_vMeshSize;
+	json["BilboardType"] = m_eBilboardType;
+
+	json["bNonAlpha"] = m_bNonAlphaBlend;
+
+	json["RandDirMax"] = m_vRandDir_Max;
+	json["RandDirMin"] = m_vRandDir_Min;
+	json["SphereDetail"] = m_bSphereDetail;
 }
 
 void CParticleSystem::LoadFromJson(const Json& json)
@@ -199,6 +222,37 @@ void CParticleSystem::LoadFromJson(const Json& json)
 	m_fRotationToTime_Max = json["RotationToTimeMax"] ;
 	m_vScaleVariation = json["ScaleVariation"];
 
+	if (json.contains("BilboardType"))
+	{
+		m_eBilboardType = json["BilboardType"];
+	}
+	else if (m_bRotate == true)
+		m_eBilboardType = EBilboardType::NONE;
+	else if (m_bRotate == false)
+		m_eBilboardType = EBilboardType::LOOK;
+	else
+	{
+		m_eBilboardType = EBilboardType::ALL;
+	}
+
+	if(json.contains("bNonAlpha"))
+		m_bNonAlphaBlend = json["bNonAlpha"];
+
+	if(json.contains("SphereDetail"))
+	{
+		m_bSphereDetail = json["SphereDetail"];
+	}
+
+	if(json.contains("RandDirMax"))
+	{
+		m_vRandDir_Max = json["RandDirMax"];
+	}
+
+	if(json.contains("RandDirMin"))
+	{
+		m_vRandDir_Min = json["RandDirMin"];
+	}
+
 	if(json.contains("MeshSize"))
 		m_vMeshSize = json["MeshSize"];
 
@@ -212,11 +266,6 @@ void CParticleSystem::LoadFromJson(const Json& json)
 			FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ShaderProtoTag).c_str(), TEXT("Mesh_Instance_Shader"), (CComponent**)&m_pShader));
 		}
 	}
-	
-	// else
-	// {
-	// 	m_pPointInstanceBuffer = CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, m_iInstanceNum);
-	// }
 
 	m_bSizeDecreaseByLife = json["bSizeDecreaseByLife"];
 	if (json.contains("bSizeIncreaseByLife"))
@@ -327,6 +376,8 @@ void CParticleSystem::Imgui_RenderProperty()
 
 	ImGui::NewLine();
 
+	ImGui::Checkbox("Render NonAlpha", &m_bNonAlphaBlend);
+
 	ImGui::Checkbox("From Origin", &m_bFromOrigin);
 	ImGui::SameLine();
 	ImGui::Checkbox("Is Local", &m_bLocal);
@@ -354,8 +405,19 @@ void CParticleSystem::Imgui_RenderProperty()
 	}
 
 	if (ImGui::RadioButton("Shape Sphere", m_eShape == ESpawnShape::SPHERE))
+	{
 		m_eShape = ESpawnShape::SPHERE;
-	ImGui::SameLine();
+
+		
+	}
+
+	ImGui::Checkbox("Sphere Detail", &m_bSphereDetail);
+	if (m_bSphereDetail)
+	{
+		CImguiUtils::InputFloat3(&m_vRandDir_Min, "RandDir_Min");
+		CImguiUtils::InputFloat3(&m_vRandDir_Max, "RandDir_Max");
+	}
+
 	if (ImGui::RadioButton("Shape Cone", m_eShape == ESpawnShape::CONE))
 		m_eShape = ESpawnShape::CONE;
 
@@ -376,6 +438,20 @@ void CParticleSystem::Imgui_RenderProperty()
 			m_fConeOriginRadius = 0.f;
 	}
 
+	if (ImGui::RadioButton("Bilboard All", m_eBilboardType == EBilboardType::ALL))
+	{
+		m_eBilboardType = EBilboardType::ALL;
+	}
+
+	if (ImGui::RadioButton("Bilboard LOOK", m_eBilboardType == EBilboardType::LOOK))
+	{
+		m_eBilboardType = EBilboardType::LOOK;
+	}
+
+	if (ImGui::RadioButton("NO Bilboard, Rotate", m_eBilboardType == EBilboardType::NONE))
+	{
+		m_eBilboardType = EBilboardType::NONE;
+	}
 
 	CImguiUtils::FileDialog_FileSelector("Save ParticleSystem to", ".json", "../Bin/Resources/VFX/ParticleSystem/", [this](const string& filePath)
 	{
@@ -401,7 +477,7 @@ HRESULT CParticleSystem::SetParams()
 
 	if (m_pMeshInstanceBuffer == nullptr && m_eBufferType == EBufferType::POINT)
 	{
-		const _int bRotate = m_bRotate ? 1 : 0;
+		const _int bRotate = (_int)m_eBilboardType;
 		if (FAILED(m_pShader->Set_RawValue("g_bRotate", &bRotate, sizeof(_int))))
 			return E_FAIL;
 		if (FAILED(m_pShader->Set_RawValue("g_vCamPosition", &CGameInstance::GetInstance()->Get_CamPosition(), sizeof(_float4))))
@@ -464,6 +540,8 @@ void CParticleSystem::AddPoint()
 			pointData.vRotPos.x = CGameUtils::GetRandVector3(m_fRotationToTime_Min, m_fRotationToTime_Max).x;
 			pointData.vRotPos.y = CGameUtils::GetRandVector3(m_fRotationToTime_Min, m_fRotationToTime_Max).y;
 			pointData.vRotPos.z = CGameUtils::GetRandVector3(m_fRotationToTime_Min, m_fRotationToTime_Max).z;
+
+			
 		}
 
 		if(m_bGravity == true)
@@ -476,11 +554,20 @@ void CParticleSystem::AddPoint()
 
 		if (m_eShape == ESpawnShape::SPHERE)
 		{
-			const _float3 vRandDir = CGameUtils::GetRandVector3Sphere(_float3::Zero, 1.f);
-			vDir.x = vRandDir.x;
-			vDir.y = vRandDir.y;
-			vDir.z = vRandDir.z;
-
+			if (m_bSphereDetail == false)
+			{
+				const _float3 vRandDir = CGameUtils::GetRandVector3Sphere(_float3::Zero, 1.f);
+				vDir.x = vRandDir.x;
+				vDir.y = vRandDir.y;
+				vDir.z = vRandDir.z;
+			}
+			else
+			{
+				const _float3 vRandDir = CGameUtils::GetRandVector3(m_vRandDir_Min, m_vRandDir_Max);
+				vDir.x = vRandDir.x;
+				vDir.y = vRandDir.y;
+				vDir.z = vRandDir.z;
+			}
 			if (m_bLocal)
 			{
 				vPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);

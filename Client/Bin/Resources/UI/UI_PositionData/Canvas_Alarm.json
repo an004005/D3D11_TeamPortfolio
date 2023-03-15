@@ -1,1 +1,377 @@
-{"ChildrenUI":[{"ChildTag":"NextMapName\u0000","ObjectTag":"NextMapName","Pivot":0,"PositionX":0.0,"PositionY":0.0,"Priority":0,"Prototype_GameObject":"NextMapNameUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\NextRoom.png\u0000"]},"SizeX":155.0,"SizeY":55.0,"Transform":{"WorldMatrix":[155.0,0.0,0.0,0.0,0.0,55.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}],"ObjectTag":"Canvas_Alarm","Pivot":0,"PositionX":0.0,"PositionY":0.0,"Priority":0,"Prototype_GameObject":"Canvas_Alarm\u0000","ScaleX":0.5,"ScaleY":0.5,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":[]},"SizeX":1280.0,"SizeY":720.0,"Transform":{"WorldMatrix":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "Boss_Appear\u0000",
+            "ObjectTag": "Boss_Appear",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 50.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Boss_AppearUI\u0000",
+            "ScaleX": 0.7699999809265137,
+            "ScaleY": 0.800000011920929,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        30.0,
+                        1.0
+                    ]
+                ],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.9998999834060669,
+                        0.9998999834060669,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\InGame\\TheOtherAppeared.png\u0000"
+                ]
+            },
+            "SizeX": 570.0,
+            "SizeY": 80.0,
+            "Transform": {
+                "WorldMatrix": [
+                    438.8999938964844,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    64.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    50.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Boss_AppearBackBackGround\u0000",
+            "ObjectTag": "Boss_AppearBackBackGround",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 50.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Boss_AppearBackUI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.0,
+                        0.016727447509765625,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [
+                    0
+                ],
+                "Pass": 28,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\InGame\\TownName0.dds\u0000",
+                    "..\\Bin\\Resources\\UI\\InGame\\TownName1.dds\u0000",
+                    "..\\Bin\\Resources\\UI\\InGame\\TownName2.dds\u0000"
+                ]
+            },
+            "SizeX": 1024.0,
+            "SizeY": 256.0,
+            "Transform": {
+                "WorldMatrix": [
+                    716.7999877929688,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    179.1999969482422,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    50.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "LevelUp\u0000",
+            "ObjectTag": "LevelUp",
+            "Pivot": 6,
+            "PositionX": 0.0,
+            "PositionY": 180.0,
+            "Priority": 2,
+            "Prototype_GameObject": "LevelUpUI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        20.0,
+                        1.0
+                    ]
+                ],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.9998999834060669,
+                        0.9998999834060669,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\InGame\\LEVELUPLv..png\u0000"
+                ]
+            },
+            "SizeX": 438.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    306.6000061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    70.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    -180.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "LevelUpBack\u0000",
+            "ObjectTag": "LevelUpBack",
+            "Pivot": 6,
+            "PositionX": 0.0,
+            "PositionY": 180.0,
+            "Priority": 1,
+            "Prototype_GameObject": "LevelUpUI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 14,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\InGame\\LeveLUp0.png\u0000"
+                ]
+            },
+            "SizeX": 438.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    306.6000061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    70.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    -180.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "LevelUpBackGround\u0000",
+            "ObjectTag": "LevelUpBackGround",
+            "Pivot": 6,
+            "PositionX": 0.0,
+            "PositionY": 180.0,
+            "Priority": 0,
+            "Prototype_GameObject": "LevelUpUI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.20000000298023224,
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 29,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\InGame\\LeveLUp0.png\u0000",
+                    "..\\Bin\\Resources\\UI\\InGame\\LeveLUp1.png\u0000"
+                ]
+            },
+            "SizeX": 438.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    306.6000061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    70.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    -180.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "NextMapName\u0000",
+            "ObjectTag": "NextMapName",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 0.0,
+            "Priority": 0,
+            "Prototype_GameObject": "NextMapNameUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\NextRoom.png\u0000"
+                ]
+            },
+            "SizeX": 155.0,
+            "SizeY": 55.0,
+            "Transform": {
+                "WorldMatrix": [
+                    155.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    55.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "Canvas_Alarm",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 0,
+    "Prototype_GameObject": "Canvas_Alarm\u0000",
+    "ScaleX": 0.5,
+    "ScaleY": 0.5,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1280.0,
+    "SizeY": 720.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

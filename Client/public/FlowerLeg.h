@@ -29,11 +29,12 @@ public:
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
-
+	
 	virtual void AfterPhysX() override;
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
-//	virtual void SetActive() override;
+	//virtual void SetActive() override;
+	virtual void SetUp_UI() override;
 
 	void	Strew_Overlap(); // Atk_Strew �浹ü
 	void	Spin_SweepCapsule(_bool bCol);

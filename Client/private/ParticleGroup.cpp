@@ -41,7 +41,6 @@ HRESULT CParticleGroup::Initialize(void* pArg)
 
 		m_mapParticleSystem.emplace(ObjectTag, pair<string, CParticleSystem*>(FilePath, nullptr));
 	}
-	m_bGenerate = true;
 
 	return S_OK;
 }
@@ -58,6 +57,7 @@ void CParticleGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate)
 		SetDelete();
 		return;
 	}
+
 	m_pOwner = pOwner;
 	m_bUpdate = trueisUpdate;
 	m_bGenerate = true;
@@ -124,6 +124,8 @@ void CParticleGroup::Tick(_double TimeDelta)
 
 	VisibleUpdate();
 
+	
+
 	if(m_bUpdate == true && m_pOwner->IsDeleted() == false)
 	{
 		if (m_BoneName != "")
@@ -158,6 +160,22 @@ void CParticleGroup::Tick(_double TimeDelta)
 			if (iter.second.second != nullptr)
 				iter.second.second->Tick(TimeDelta);
 		}
+
+		static _int NoGenParticle = 0;
+
+		for (auto iter : m_mapParticleSystem)
+		{
+			if (iter.second.second->GetLiveParticleCnt() == 0)
+			{
+				NoGenParticle++;
+			}
+		}
+
+		if (NoGenParticle == (_int)m_mapParticleSystem.size())
+		{
+			SetDelete();
+		}
+		NoGenParticle = 0;
 	}
 }
 
@@ -191,6 +209,8 @@ void CParticleGroup::SaveToJson(Json& json)
 		JsonParticle["ParticleDirectory"] = iter.second.first;
 		json["Particles"].push_back(JsonParticle);
 	}
+
+	json["LifeTime"] = m_fLifeTime;
 }
 
 void CParticleGroup::LoadFromJson(const Json& json)
@@ -212,6 +232,9 @@ void CParticleGroup::LoadFromJson(const Json& json)
 
 		m_mapParticleSystem.emplace(ObjectTag, pair<string,CParticleSystem*>(FilePath, pParticleSystem));
 	}
+	if(json.contains("LifeTime"))
+		m_fLifeTime = json["LifeTime"];
+	
 }
 
 void CParticleGroup::Imgui_RenderProperty()
@@ -287,6 +310,9 @@ void CParticleGroup::Load_ParticleSystem()
 {
 	ImGui::Separator();
 	ImGui::Separator();
+
+	ImGui::Checkbox("Generate", &m_bGenerate);
+
 	ImGui::NewLine();
 	static _int iParticleSize = 0;
 	iParticleSize = m_mapParticleSystem.size();
@@ -518,8 +544,11 @@ void CParticleGroup::ImGui_RenderParticleSystem(_int iSelectParticle)
 	for(auto iter :m_mapParticleSystem)
 	{
 		ImGui::Begin("First_Particle");
-		if(iter.second.second != nullptr )
+		if (iter.second.second != nullptr)
+		{
 			iter.second.second->Imgui_RenderProperty();
+			iter.second.second->GetShader()->Imgui_RenderProperty();
+		}
 		ImGui::End();
 	}
 
@@ -531,7 +560,9 @@ void CParticleGroup::VisibleUpdate()
 	for(auto iter : m_mapParticleSystem)
 	{
 		if (iter.second.second != nullptr)
+		{
 			iter.second.second->SetVisible(m_bVisible);
+		}
 	}
 }
 
@@ -578,7 +609,10 @@ void CParticleGroup::Free()
 		for (auto iter : m_mapParticleSystem)
 		{
 			if (iter.second.second != nullptr)
+			{
 				Safe_Release(iter.second.second);
+				iter.second.second = nullptr;
+			}
 		}
 	}
 

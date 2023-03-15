@@ -31,7 +31,7 @@ void CGameTime_Manager::ResetTimeRatio()
 	m_Timeline.SetStay(false);
 
 	for (auto& layer : CObject_Manager::GetInstance()->GetLayers(LEVEL_NOW))
-		layer.second->SetUseTimeRatio(true);
+		layer.second->SetUseTimeRatio(false);
 }
 
 void CGameTime_Manager::SetTimeRatioCurve(const string& strCurveTag, _bool bStay, const vector<wstring>* ExceptLayers)
@@ -49,11 +49,11 @@ void CGameTime_Manager::SetTimeRatioCurve(const string& strCurveTag, _bool bStay
 	});
 	m_Timeline.PlayFromStart();
 
+	for (auto& layer : CObject_Manager::GetInstance()->GetLayers(LEVEL_NOW))
+		layer.second->SetUseTimeRatio(true);
+
 	if (ExceptLayers)
 	{
-		for (auto& layer : CObject_Manager::GetInstance()->GetLayers(LEVEL_NOW))
-			layer.second->SetUseTimeRatio(true);
-
 		for (auto& layerTag : *ExceptLayers)
 		{
 			if (auto pLayer = CObject_Manager::GetInstance()->GetLayer(LEVEL_NOW, layerTag.c_str()))

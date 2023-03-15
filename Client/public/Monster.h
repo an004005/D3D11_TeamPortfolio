@@ -13,8 +13,7 @@ END
 
 BEGIN(Client)
 
-enum MONSTER_UIPIVOT {INFO_BAR, FINDEYES, PIVOT_END};
-
+enum MONSTER_UIPIVOT { INFOBAR, FINDEYES, UIPIVOT_END};
 class CMonster abstract : public CScarletCharacter
 {
 protected:
@@ -28,7 +27,6 @@ public:
 	virtual void Imgui_RenderProperty() override;
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 
-	virtual void LoadFromJson(const Json& json) override;
 public:
 	//For Effect
 	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
@@ -41,11 +39,11 @@ public:
 public:
 	_uint GetHP() { return m_iHP; }
 	_uint GetMaxHP() { return m_iMaxHP; }
-	_float4x4	GetUIPivot(MONSTER_UIPIVOT ePivot) { return m_UI_PivotMatrixes[ePivot]; }
 
 public:
 	//UI
-	void TurnEyesOut();
+	void	TurnEyesOut();
+	virtual void SetUp_UI() {}
 
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
@@ -60,7 +58,11 @@ protected:
 
 	void MoveTransformJson(Json& jsonDest, void* pArg);
 
-
+protected:	// 피격 이펙트 색상
+	vector<wstring>			m_vecDefaultHit;
+	vector<wstring>			m_vecFireHit;
+	vector<wstring>			m_vecElecHit;
+	
 
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
@@ -75,8 +77,7 @@ protected:
 	_bool m_bDead = false;
 	_bool m_bActive = false;
 
-	array<_float4x4, PIVOT_END> m_UI_PivotMatrixes;
-
+	array<_float4x4, UIPIVOT_END> m_UI_PivotMatrixes;
 	set<CScarletCharacter*> m_DamagedTargetList;
 
 	CSimpleTimeline m_DeathTimeline;

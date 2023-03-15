@@ -20,6 +20,7 @@
 #include "ScarletWeapon.h"
 #include "VFX_Manager.h"
 
+#include "MonsterHpUI.h"
 CBuddyLumi::CBuddyLumi(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -342,6 +343,36 @@ void CBuddyLumi::Imgui_RenderProperty()
 //	ImGui::Text("HP : %d", m_iHP);
 
 	m_pASM->Imgui_RenderState();
+}
+
+void CBuddyLumi::SetUp_UI()
+{
+	//HP UI
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CMonsterHpUI* pUI_HP = nullptr;
+	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
+
+	assert(pUI_HP != nullptr);
+	pUI_HP->Set_Owner(this);
+
+	_float4x4 UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.41f, 0.0f, 1.0f
+	);
+
+	pUI_HP->SetPivotMatrix(UI_PivotMatrix);
+
+	//FindEye
+	UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		-0.324f, 1.014f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
 }
 
 void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)

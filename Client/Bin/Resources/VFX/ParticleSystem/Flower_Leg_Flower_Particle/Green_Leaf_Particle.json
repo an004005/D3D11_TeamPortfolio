@@ -16,7 +16,7 @@
         2.0
     ],
     "LifeRand": false,
-    "Loop": true,
+    "Loop": false,
     "MeshBufferProtoTag": "Prototype_Component_LongLeaf_Mesh_Instance",
     "MeshSize": [
         1.0,

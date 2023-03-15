@@ -6,6 +6,11 @@
 #include "EffectSystem.h"
 #include "VFX_Manager.h"
 #include "Monster.h"
+
+// Monster Name : m_pGroup->GetThirdEffect()->GetParams().Float2s[0]
+// x : 1~20 레벨 입력할 때 (-1) 해서 넣어주면 된다. ex) 레벨 1을 주고 싶다면 1을 넣고, 내부에서는 x에 (-1) = 0을 넣어주면 결과로 레벨 1 출력
+// y : [0] 브론욘 [1] 스커미 팡뒤 [2] 바일 풀 [3] 버디 러미 [4] 바스 포즈 [5] 경건 페리
+
 CMonsterHpUI::CMonsterHpUI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -28,28 +33,34 @@ HRESULT CMonsterHpUI::Initialize(void * pArg)
 {
 	if (FAILED(CGameObject::Initialize(pArg)))
 		return E_FAIL;
-
+	
 	/*Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterHp.json");
 	m_pGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_MonsterHp", L"ProtoVFX_EffectGroup", &json));
 	*/
+
 	return S_OK;
 }
 
 void CMonsterHpUI::BeginTick()
 {
 	m_pGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterHp", TEXT("Layer_MonsterUI"));
-	Safe_AddRef(m_pGroup);
-	Assert(m_pGroup != nullptr);
+	//m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterName", TEXT("Layer_MonsterUI"));
 
+	Safe_AddRef(m_pGroup);
+	//Safe_AddRef(m_pMonsterName);
+
+	Assert(m_pGroup != nullptr);
+	//Assert(m_pMonsterName != nullptr);
 	//첫 인자에 넣어준 포인터의 뼈를 찾음.
-	//m_pGroup->Start_Attach(m_pOwner, "Target_end", true);
 	m_pGroup->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
+	//m_pMonsterName->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
+
 }
 
 void CMonsterHpUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-
+	
 	if (m_pOwner != nullptr)
 	{
 		if (dynamic_cast<CMonster*>(m_pOwner)->IsDead())
@@ -76,7 +87,6 @@ void CMonsterHpUI::Imgui_RenderProperty()
 	ImGui::DragFloat("Ratio", &m_fRatio);
 	
 }
-
 
 void CMonsterHpUI::HpBack_Tick(const _double & TimeDelta)
 {
@@ -121,7 +131,16 @@ void CMonsterHpUI::Free()
 	__super::Free();
 
 	if (m_pGroup != nullptr)
+	{
 		m_pGroup->SetDelete();
+		Safe_Release(m_pGroup);
+	}
+	
 
-	Safe_Release(m_pGroup);
+	if (m_pMonsterName != nullptr)
+	{
+		m_pMonsterName->SetDelete();
+		Safe_Release(m_pMonsterName);
+	}
+	
 }

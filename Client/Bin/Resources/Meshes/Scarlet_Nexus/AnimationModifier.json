@@ -932,6 +932,14 @@
             {
                 "EventName": "Trail_Off",
                 "EventTime": 15.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 10.0
             }
         ]
     },
@@ -1004,12 +1012,20 @@
             {
                 "EventName": "Fire_Attack_Dash_01",
                 "EventTime": 14.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 25.0
             }
         ]
     },
     "AS_ch0100_216_AL_atk_dash1_start": {
         "Duration": 32.0,
-        "TickPerSecond": 32.0,
+        "TickPerSecond": 64.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -1049,6 +1065,14 @@
             {
                 "EventName": "Fire_Attack_Dash_02_002",
                 "EventTime": 16.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 25.0
             }
         ]
     },
@@ -1078,6 +1102,14 @@
             {
                 "EventName": "Fire_Attack_Dash_03",
                 "EventTime": 22.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 5.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 35.0
             }
         ]
     },
@@ -1107,6 +1139,14 @@
             {
                 "EventName": "Fire_Attack_Dash_03",
                 "EventTime": 50.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 5.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 65.0
             }
         ]
     },

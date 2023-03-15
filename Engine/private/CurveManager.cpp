@@ -2,6 +2,7 @@
 #include "..\public\CurveManager.h"
 #include "CurveFloatMapImpl.h"
 #include "JsonStorage.h"
+#include "GameUtils.h"
 
 IMPLEMENT_SINGLETON(CCurveManager);
 
@@ -18,40 +19,32 @@ CCurveFloatImpl* CCurveManager::GetCurve(const string& strCurveTag)
 	return nullptr;
 }
 
-void CCurveManager::LoadCurves(const char* pCurveJsonPath)
+void CCurveManager::LoadCurves(const char* pCurveJsonDirPath)
 {
-	m_strCurveJsonPath = pCurveJsonPath;
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(pCurveJsonPath);
+	m_strCurveJsonDirPath = pCurveJsonDirPath;
 
-	if(json.contains("CurveWindowSize"))
-		m_CurveEditorSize = json["CurveWindowSize"];
-
-	for (auto curve : json["Curves"])
+	CGameUtils::ListFiles(m_strCurveJsonDirPath, [this](const string& filePath)
 	{
-		auto pCurve = CCurveFloatImpl::Create(&curve);
+		std::ifstream ifs(filePath);
+		Json curveJson = Json::parse(ifs);
+		auto pCurve = CCurveFloatImpl::Create(&curveJson);
 		m_Curves.emplace(pCurve->GetName(), pCurve);
-	}
+	});
 }
 
 void CCurveManager::SaveCurves()
 {
-	Json json;
-	json["Curves"] = Json::array();
-
-	json["CurveWindowSize"] = m_CurveEditorSize;
-
 	for (auto curve : m_Curves)
 	{
 		if (auto pCurveImpl = curve.second)
 		{
 			Json curveJson;
 			pCurveImpl->SaveToJson(curveJson);
-			json["Curves"].push_back(curveJson);
+			string curveFilePath = m_strCurveJsonDirPath + pCurveImpl->GetName() + ".json";
+			std::ofstream file(curveFilePath);
+			file << curveJson;
 		}
 	}
-	
-	std::ofstream file(m_strCurveJsonPath);
-	file << json;
 }
 
 void CCurveManager::Imgui_Render()

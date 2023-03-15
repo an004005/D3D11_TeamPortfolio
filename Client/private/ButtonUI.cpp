@@ -4,7 +4,6 @@
 #include "JsonLib.h"
 #include "GameUtils.h"
 
-
 CButtonUI::CButtonUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {

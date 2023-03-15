@@ -157,7 +157,7 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 
 		float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
 		float4 vViewDir = g_vCamPosition - In.vWorldPos;
-		float fFresnel = FresnelEffect(vNormal.xyz, vViewDir.xyz, 2.5f);
+		float fFresnel = FresnelEffect(vNormal.xyz, vViewDir.xyz, 1.f);
 		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, vColor , fFresnel);
 
 		fEmissive *= fFresnel;
@@ -315,7 +315,6 @@ PS_OUT_NONLIGHT PS_ToonDefault_Forward_6(PS_IN In)
 	PS_OUT_NONLIGHT Out = (PS_OUT_NONLIGHT)0;
 
 	float4 vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	Out.vColor.a = 1.f;
 
 	float4 vNormal = NormalPacking(In);
 	vNormal.xyz = vNormal.xyz * 2.f - 1.f;
@@ -336,7 +335,6 @@ PS_OUT_NONLIGHT PS_ToonDefault_Forward_6(PS_IN In)
 
 	Out.vColor = saturate(vDiffuse * vShade + vAMB * 0.5f);
 	Out.vColor.a = 1.f;
-	Out.vFlag = float4(0.f, 0.f, SHADER_PORTRAIT, 0.f);
 
 	return Out;
 }
