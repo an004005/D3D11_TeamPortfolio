@@ -42,6 +42,14 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 
 	m_pTransformCom->SetSpeed(m_fShootSpeed);
 
+	m_pTrailParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Loop");
+	m_pTrailParticle->Start_NoAttach(this, true);
+	Safe_AddRef(m_pTrailParticle);
+
+	m_pBulletEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Em0650_Bullet_Loop");
+	m_pBulletEffect->Start_NoAttach(this, true);
+	Safe_AddRef(m_pBulletEffect);
+
 	{
 		m_pFSM = CFSMComponentBuilder()
 			.InitState("Shoot")			
@@ -49,9 +57,22 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 				.OnStart([this]
 				{					
 					m_BeforePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					
 				})
 				.Tick([this](_double TimeDelta) 
 				{
+					/*if (nullptr == m_pCastOwner)
+						return;*/
+
+						/*if (m_pCastOwner->IsDeleted())
+							SetDelete();*/
+
+					if (!m_bPrePos)
+					{
+						m_vPrePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+						m_bPrePos = true;
+					}
+
 					m_pTransformCom->Move(TimeDelta, m_vDir);
 
 					DAMAGE_PARAM	dParams;
@@ -59,7 +80,7 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 					dParams.eDeBuff = EDeBuffType::DEBUFF_END;
 					dParams.iDamage = (rand() % 50) + 25;
 					dParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					dParams.pCauser = m_pCastOwner;
+	//				dParams.pCauser = m_pCastOwner;
 
 					_uint iColType = ECOLLIDER_TYPE_BIT::CTB_PLAYER | ECOLLIDER_TYPE_BIT::CTB_STATIC | ECOLLIDER_TYPE_BIT::CTB_PSYCHICK_OBJ;
 
@@ -68,22 +89,21 @@ HRESULT CSkMpBullet::Initialize(void * pArg)
 					if (m_bHitCheck == true)
 					{
 						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0650_Bullet_Dead")->Start_NoAttach(this, false);
-	//					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Dead_Particle")->Start_NoAttach(this, false);
+						CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Dead_Particle")->Start_NoAttach(this, false);
 									
 						m_bDelete = true;
 					}
 					else
 					{																						
 						_vector vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-						_vector vDest = m_pCastOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-
-						const _vector vDiff = vDest - vOrigin;
+						
+						const _vector vDiff = m_vPrePos - vOrigin;
 						const _float fDistance = XMVectorGetX(XMVector3LengthEst(vDiff));
 
 						if (fDistance > 30.f)
 						{
 							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0650_Bullet_Dead")->Start_NoAttach(this, false);
-	//						CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Dead_Particle")->Start_NoAttach(this, false);
+							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Dead_Particle")->Start_NoAttach(this, false);
 						   
 							m_bDelete = true;
 						}
@@ -107,16 +127,17 @@ void CSkMpBullet::BeginTick()
 	//		m_pCastOwner = dynamic_cast<CScarletCharacter*>(iter);
 	//	}
 	//}
-	m_pCastOwner = dynamic_cast<CScarletCharacter*>(m_pOwner);
-	Safe_AddRef(m_pCastOwner);
+	/*m_pCastOwner = dynamic_cast<CScarletCharacter*>(m_pOwner);
+	Safe_AddRef(m_pCastOwner);*/
 }
 
 void CSkMpBullet::Tick(_double TimeDelta)
 {
 	CBullet::Tick(TimeDelta);
 	m_pFSM->Tick(TimeDelta);
-	if (m_pCastOwner->IsDeleted())
-		SetDelete();
+
+	/*if (m_pCastOwner->IsDeleted())
+		SetDelete();*/
 }
 
 void CSkMpBullet::Late_Tick(_double TimeDelta)
@@ -143,31 +164,31 @@ void CSkMpBullet::AfterPhysX()
 	__super::AfterPhysX();	
 }
 
-void CSkMpBullet::Set_TrailParticle(CParticleGroup * pTrail)
-{
-	 m_pTrailParticle = pTrail; 
-}
-
-CParticleGroup * CSkMpBullet::Get_TrailParticle()
-{
-	if (m_pTrailParticle == nullptr)
-		return nullptr;
-
-	 return m_pTrailParticle; 
-}
-
-void CSkMpBullet::Set_BulletEffect(CEffectGroup * pBulletEffect)
-{
-	m_pBulletEffect = pBulletEffect;
-}
-
-CEffectGroup * CSkMpBullet::Get_BulletEffect()
-{
-	if (m_pBulletEffect == nullptr)
-		return nullptr;
-
-	return m_pBulletEffect;
-}
+//void CSkMpBullet::Set_TrailParticle(CParticleGroup * pTrail)
+//{
+//	 m_pTrailParticle = pTrail; 
+//}
+//
+//CParticleGroup * CSkMpBullet::Get_TrailParticle()
+//{
+//	if (m_pTrailParticle == nullptr)
+//		return nullptr;
+//
+//	 return m_pTrailParticle; 
+//}
+//
+//void CSkMpBullet::Set_BulletEffect(CEffectGroup * pBulletEffect)
+//{
+//	m_pBulletEffect = pBulletEffect;
+//}
+//
+//CEffectGroup * CSkMpBullet::Get_BulletEffect()
+//{
+//	if (m_pBulletEffect == nullptr)
+//		return nullptr;
+//
+//	return m_pBulletEffect;
+//}
 
 CSkMpBullet * CSkMpBullet::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
@@ -195,19 +216,35 @@ CGameObject * CSkMpBullet::Clone(void * pArg)
 
 void CSkMpBullet::Free()
 {
-	if (m_bCloned == true)
+	/*if (m_bCloned == true)
 	{
 		if (m_pTrailParticle->IsDeleted() == false)
 			m_pTrailParticle->SetDelete();
 
 		if (m_pBulletEffect->IsDeleted() == false)
 			m_pBulletEffect->SetDelete();
-			
+
 		Safe_Release(m_pTrailParticle);
 		Safe_Release(m_pBulletEffect);
-	}
+	}*/
 	__super::Free();
 
 	Safe_Release(m_pFSM);
-	Safe_Release(m_pCastOwner);
+
+	if (m_bCloned == true)
+	{
+		if (m_pBulletEffect != nullptr)
+		{
+			m_pBulletEffect->SetDelete();
+			Safe_Release(m_pBulletEffect);
+		}
+
+		if (m_pTrailParticle != nullptr)
+		{
+			m_pTrailParticle->SetDelete();
+			Safe_Release(m_pTrailParticle);
+		}
+	}
+
+//	Safe_Release(m_pCastOwner);
 }

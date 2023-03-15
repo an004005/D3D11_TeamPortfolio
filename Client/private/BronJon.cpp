@@ -16,6 +16,7 @@
 #include "BrJ_AnimInstance.h"
 #include "RigidBody.h"
 #include "Player.h"
+#include "VFX_Manager.h"
 
 CBronJon::CBronJon(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -90,6 +91,15 @@ HRESULT CBronJon::Initialize(void * pArg)
 		m_bAtkLaser = false;
 		ClearDamagedTarget();
 	});
+	m_pModelCom->Add_EventCaller("LaserEff_Start", [this] 
+	{
+		_matrix			PivotMatrix = XMMatrixIdentity();
+
+		PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Laser")->Start_AttachPivot(this, PivotMatrix, "Eff02", true, true, true);
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Laser_Mouth")->Start_Attach(this, "Eff02", true);
+	});
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 	m_pModelCom->Add_EventCaller("Untouch", [this] { m_bUntouchable = true; });
 	m_pModelCom->Add_EventCaller("Untouch_End", [this] { m_bUntouchable = false; });
@@ -104,7 +114,13 @@ HRESULT CBronJon::Initialize(void * pArg)
 	m_iGroggy_Able = 5;
 
 	m_pASM = CBrJ_AnimInstance::Create(m_pModelCom, this);
-
+	
+//	_matrix			PivotMatrix = XMMatrixIdentity();
+//	PivotMatrix = XMMatrixTranslation(0.f, 0.1f, 0.f) * XMMatrixScaling(10.f, 1.f, 10.f); // Y = 0.1f로 수정
+	m_pWaterPool = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water");
+//	m_pWaterPool->Start_AttachPivot(this, PivotMatrix, "Eff01", true, true, false);
+	m_pWaterPool->Start_Attach(this, "Eff01", true);
+	Safe_AddRef(m_pWaterPool);
 	// 소켓 애니메이션 추가
 
 	m_pAtk_LaserStart = m_pModelCom->Find_Animation("AS_em0800_214_AL_atk_a7_laser2_start");
@@ -150,7 +166,7 @@ void CBronJon::Tick(_double TimeDelta)
 		return dynamic_cast<CPlayer*>(pObj) != nullptr;
 	});
 	m_pTarget = dynamic_cast<CScarletCharacter*>(pPlayer);
-
+		
 	// Controller
 	m_pController->SetTarget(m_pTarget);
 
@@ -314,10 +330,11 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 	if (m_eAtkType == EAttackType::ATK_HEAVY)
 	{		
-		++m_iGroggyCnt;
-
 		if (!m_bAtkBite && !m_bAtkLaser && !m_bDown && !m_bUntouchable)
+		{
+			++m_iGroggyCnt;
 			m_bStruck = true;	// 체력 다는 조건으로 주면 될듯?				
+		}
 	}
 	
 	if (m_iHP <= 0 && !m_bDead) // + Dead 예외처리 
@@ -375,7 +392,10 @@ void CBronJon::Atk_BiteSweep()
 	Sparam.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	
 	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
+	{
+//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Bite_OnHit")->st
 		HitTargets(sweepOut, (rand() % 80) + 25, EAttackType::ATK_HEAVY);
+	}
 }
 
 void CBronJon::Atk_LaserSweep()
@@ -432,6 +452,26 @@ void CBronJon::HitDir(_double TimeDelta)
 	m_bOneTick = true;
 }
 
+void CBronJon::CreateBiteEffect()
+{
+	/*_vector vRayPos = static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
+	vRayPos = XMVectorSetW(vRayPos, 1.f);
+	_vector vRayDir = GetColliderPosition() - static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
+	vRayDir = XMVectorSetW(vRayDir, 0.f);
+
+	physx::PxRaycastHit hitBuffer[1];
+	physx::PxRaycastBuffer rayOut(hitBuffer, 1);
+
+	RayCastParams param;
+	param.rayOut = &rayOut;
+	param.vOrigin = vRayPos;
+	param.vDir = vRayDir;
+	param.fDistance = 10.f;
+	param.iTargetType = CTB_MONSTER;
+	param.fVisibleTime = 5.f;
+	param.bSingle = true;*/
+}
+
 //void CBronJon::SetActive()
 //{
 //	CMonster::SetActive();
@@ -470,6 +510,16 @@ CGameObject * CBronJon::Clone(void * pArg)
 void CBronJon::Free()
 {
 	CMonster::Free();	
+
+	if (m_bCloned == true)
+	{
+		if (m_pWaterPool != nullptr)
+		{
+			m_pWaterPool->SetDelete();
+			Safe_Release(m_pWaterPool);
+		}
+	}
+
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pJawRBody);

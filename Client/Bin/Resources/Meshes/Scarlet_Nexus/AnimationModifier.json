@@ -2705,6 +2705,10 @@
             {
                 "EventName": "Muzzle",
                 "EventTime": 91.0
+            },
+            {
+                "EventName": "LastSpot",
+                "EventTime": 5.0
             }
         ]
     },
@@ -3122,6 +3126,10 @@
             {
                 "EventName": "Laser_Create",
                 "EventTime": 130.0
+            },
+            {
+                "EventName": "LaserEff_Start",
+                "EventTime": 90.5
             }
         ]
     },
@@ -3156,7 +3164,6 @@
                 "EventTime": 70.0
             }
         ]
-        
     },
     "AS_em0800_402_AL_damage_l_B": {
         "Duration": 75.0,

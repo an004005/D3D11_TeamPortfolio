@@ -63,23 +63,27 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 		if (!m_bDead)
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0650_Bullet_Birth")->Start_Attach(this, "Eff02");	
 	});
-
+	m_pModelCom->Add_EventCaller("LastSpot", [this] 
+	{
+		_vector vTargetColPos = dynamic_cast<CScarletCharacter*>(m_pTarget)->GetColliderPosition();
+		m_LastSpotTargetPos = vTargetColPos;
+	});
 	m_pModelCom->Add_EventCaller("Shoot", [this] 
 	{
-		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-		_vector vTargetColPos = dynamic_cast<CScarletCharacter*>(m_pTarget)->GetColliderPosition();
-		m_pBullet = dynamic_cast<CSkMpBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("SkMpBullet")));	
+//		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+//		_vector vTargetColPos = dynamic_cast<CScarletCharacter*>(m_pTarget)->GetColliderPosition();
+//		m_pBullet = dynamic_cast<CSkMpBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("SkMpBullet")));	
 		
-//		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("SkMpBullet"));
+		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("SkMpBullet"));
 
-		if(CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(m_pBullet))
+		if(CSkMpBullet* pBullet = dynamic_cast<CSkMpBullet*>(pObj))
 		{
 			pBullet->Set_Owner(this);
 			// Effect
-			pBullet->Set_TrailParticle(CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Loop"));
-			pBullet->Get_TrailParticle()->Start_NoAttach(pBullet, false);
-			pBullet->Set_BulletEffect(CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Em0650_Bullet_Loop"));
-			pBullet->Get_BulletEffect()->Start_NoAttach(pBullet, true);
+//			pBullet->Set_TrailParticle(CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650_Bullet_Loop"));
+//			pBullet->Get_TrailParticle()->Start_NoAttach(pBullet, true);
+//			pBullet->Set_BulletEffect(CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Em0650_Bullet_Loop"));
+//			pBullet->Get_BulletEffect()->Start_NoAttach(pBullet, true);
 			// ~Effect
 
 			_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
@@ -88,10 +92,10 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
 			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
-			_vector vDest = vTargetColPos - vPrePos;
+			_vector vDest = m_LastSpotTargetPos - vPrePos;
 			pBullet->Set_ShootDir(vDest); // vLook
 
-			pBullet->GetTransform()->LookAt(vTargetColPos); // vPrePos + vLook);
+			pBullet->GetTransform()->LookAt(m_LastSpotTargetPos); // vPrePos + vLook);
 		}
 	});
 	m_pModelCom->Add_EventCaller("Upper", [this]
@@ -112,7 +116,8 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 	// ~Event Caller
 	
-	m_iHP = 800; // ★
+	m_iMaxHP = 800;
+	m_iHP = m_iMaxHP;// ★
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
@@ -157,7 +162,7 @@ void CSkummyPool::Tick(_double TimeDelta)
 		return dynamic_cast<CPlayer*>(pObj) != nullptr;
 	});
 	m_pTarget = dynamic_cast<CScarletCharacter*>(pPlayer);
-	
+
 	// Controller
 	m_pController->SetTarget(m_pTarget);
 
@@ -293,8 +298,6 @@ void CSkummyPool::Imgui_RenderProperty()
 
 void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
-	IM_LOG("Coll");
-
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	// ↑ 공격이 들어올 방향 
 	m_eHitDir = eHitFrom;
@@ -403,7 +406,7 @@ CGameObject * CSkummyPool::Clone(void * pArg)
 void CSkummyPool::Free()
 {
 	CMonster::Free();
-	Safe_Release(m_pBullet);
+//	Safe_Release(m_pBullet);
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);
