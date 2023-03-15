@@ -188,6 +188,8 @@
     <ClInclude Include="..\public\Batch.h" />
     <ClInclude Include="..\public\BdLm_Controller.h" />
     <ClInclude Include="..\public\Boss1_AIController.h" />
+    <ClInclude Include="..\public\Boss_AppearBackUI.h" />
+    <ClInclude Include="..\public\Boss_AppearUI.h" />
     <ClInclude Include="..\public\Boss_HpBackUI.h" />
     <ClInclude Include="..\public\Boss_ShildUI.h" />
     <ClInclude Include="..\public\BrJ_AnimInstance.h" />
@@ -204,6 +206,7 @@
     <ClInclude Include="..\public\CamSpot.h" />
     <ClInclude Include="..\public\Canvas.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h" />
+    <ClInclude Include="..\public\Canvas_BossAppear.h" />
     <ClInclude Include="..\public\Canvas_BossHp.h" />
     <ClInclude Include="..\public\Canvas_Drive.h" />
     <ClInclude Include="..\public\Canvas_DriveMove.h" />
@@ -233,6 +236,7 @@
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\LevelUpUI.h" />
     <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\GravikenisisMouseUI.h" />
     <ClInclude Include="..\public\GravikenisisGUI.h" />
@@ -350,6 +354,8 @@
     <ClCompile Include="..\private\Batch.cpp" />
     <ClCompile Include="..\private\BdLm_Controller.cpp" />
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
+    <ClCompile Include="..\private\Boss_AppearBackUI.cpp" />
+    <ClCompile Include="..\private\Boss_AppearUI.cpp" />
     <ClCompile Include="..\private\Boss_HpBackUI.cpp" />
     <ClCompile Include="..\private\Boss_ShildUI.cpp" />
     <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
@@ -364,6 +370,7 @@
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\private\Canvas.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp" />
+    <ClCompile Include="..\private\Canvas_BossAppear.cpp" />
     <ClCompile Include="..\private\Canvas_BossHp.cpp" />
     <ClCompile Include="..\private\Canvas_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
@@ -394,6 +401,7 @@
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\LevelUpUI.cpp" />
     <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\GravikenisisMouseUI.cpp" />
     <ClCompile Include="..\private\GravikenisisGUI.cpp" />
@@ -538,6 +546,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_VFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_UI.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_VFX_UI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonModel.hlsl" />
   </ItemGroup>

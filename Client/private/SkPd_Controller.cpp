@@ -136,7 +136,7 @@ void CSkPd_Controller::Tick_Near(_double TimeDelta)
 		break;
 	case 2:
 		AddCommand("Attack_Rush", 0.f, &CAIController::Input, R);
-		AddCommand("Rush", 3.f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
+		AddCommand("Rush", 2.1f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
 		break;
 		/*case 3:
 		AddCommand("Attack_End", 0.f, &CAIController::Input, C);
@@ -159,7 +159,7 @@ void CSkPd_Controller::Tick_Near(_double TimeDelta)
 		break;
 	case 8:
 		AddCommand("Attack_Rush", 0.f, &CAIController::Input, R);
-		AddCommand("Rush", 3.f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
+		AddCommand("Rush", 2.1f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
 		break;
 		/*case 10:
 		AddCommand("Attack_End", 0.f, &CAIController::Input, C);
@@ -192,7 +192,7 @@ void CSkPd_Controller::Tick_Mid(_double TimeDelta)
 		break;
 	case 2:
 		AddCommand("Attack_Rush", 0.f, &CAIController::Input, R);
-		AddCommand("Rush", 3.f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
+		AddCommand("Rush", 2.1f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
 		break;
 		/*case 3:
 		AddCommand("Attack_End", 0.f, &CAIController::Input, C);
@@ -215,7 +215,7 @@ void CSkPd_Controller::Tick_Mid(_double TimeDelta)
 		break;
 	case 8:
 		AddCommand("Attack_Rush", 0.f, &CAIController::Input, R);
-		AddCommand("Rush", 3.f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
+		AddCommand("Rush", 2.1f, &CSkPd_Controller::Rush, EMoveAxis::NORTH);
 		break;
 		/*case 10:
 		AddCommand("Attack_End", 0.f, &CAIController::Input, C);

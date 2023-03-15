@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Monster.h"
+#include "EffectGroup.h"
 
 BEGIN(Engine)
 class CFSMComponent;
@@ -38,7 +39,7 @@ public:
 
 	void HitDir(_double TimeDelta);
 
-	virtual void SetActive() override;
+//	virtual void SetActive() override;
 
 private:		
 	class CBdLm_Controller*		m_pController = nullptr;
@@ -46,6 +47,8 @@ private:
 
 //	CRigidBody*					m_pTrigger = nullptr;
 	CRigidBody*					m_pWeaponCollider = nullptr;
+
+	CEffectGroup*				m_pSwingEffect = nullptr;
 
 private:
 	CScarletCharacter* m_pTarget = nullptr;
@@ -109,6 +112,8 @@ private:
 	_vector		m_vFinDir;
 	_bool		m_bOneTick = false;
 	// ~HitDir
+
+	string		m_strBoneName;
 
 	// TakeDamage 
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;

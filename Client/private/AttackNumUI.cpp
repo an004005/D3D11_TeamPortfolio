@@ -47,12 +47,10 @@ void CAttackNumUI::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
-	static _float fRatio;
-	ImGui::DragFloat("Ratio", &fRatio);
 
 }
 
-void CAttackNumUI::Set_AttackNum(const _int iFour, const _int iThree, const _int iTwo, const _int iOne)
+void CAttackNumUI::Set_AttackNum(const _uint iFour, const _uint iThree, const _uint iTwo, const _uint iOne)
 {
 	m_pGroup->GetFirstEffect()->GetParams().Float2s[_float(iFour), 0.0f];
 	m_pGroup->GetSecondEffect()->GetParams().Float2s[_float(iThree), 0.0f];

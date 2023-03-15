@@ -55,7 +55,7 @@ public:
 	virtual void DeBuff_Fire() override;
 	virtual void DeBuff_Oil() override;
 
-	virtual void SetActive() override;
+//	virtual void SetActive() override;
 
 private:
 	class CBoss1_AnimationInstance* m_pASM = nullptr;
@@ -93,11 +93,14 @@ private:
 	CAnimation* m_pJumpLand = nullptr;
 	CAnimation* m_pJumpJitabata = nullptr;
 
+	CAnimation* m_pDeadAnim = nullptr;
+
 	vector<CMaterial*> m_BodyMtrls;
 	CMaterial* m_pWeakMtrl = nullptr;
 	CMaterial* m_pGlassMtrl = nullptr;
-
+		
 	// Add PJW
+	_vector	m_LastSpotTargetPos;
 	_bool	m_b2ndPhase = false;
 	_int	m_iPreHP;
 

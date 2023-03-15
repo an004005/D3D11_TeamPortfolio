@@ -1,6 +1,8 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Monster.h"
+#include "ParticleGroup.h"
+#include "EffectGroup.h"
 
 BEGIN(Engine)
 class CFSMComponent;
@@ -31,7 +33,7 @@ public:
 	virtual void AfterPhysX() override;
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
-	virtual void SetActive() override;
+	//virtual void SetActive() override;
 	virtual void SetUp_UI() override;
 
 	void	Strew_Overlap(); // Atk_Strew �浹ü
@@ -44,6 +46,12 @@ public:
 
 	CRigidBody* Get_TailCol() { return m_pTailCol; }
 
+	// De buff
+	virtual void DeBuff_End() override;
+	virtual void DeBuff_Fire() override;
+	virtual void DeBuff_Oil() override;
+	// ~De buff
+
 private:
 	class CFL_Controller*	m_pController = nullptr;
 	class CFL_AnimInstance*		m_pASM = nullptr;
@@ -54,6 +62,11 @@ private:
 	CRigidBody*				m_pLeftLeg = nullptr;
 	CRigidBody*				m_pRightLeg = nullptr;
 	
+	CParticleGroup*			m_pFallRoseParticle = nullptr;
+	CParticleGroup*			m_pShootFlwParticle = nullptr;
+		
+	CEffectGroup*			m_pSpinEffect = nullptr;
+
 	// Refine
 private:
 	CScarletCharacter* m_pTarget = nullptr;
