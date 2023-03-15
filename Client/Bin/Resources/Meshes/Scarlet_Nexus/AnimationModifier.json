@@ -2467,6 +2467,10 @@
         "bLooping": false,
         "vecEvent": [
             {
+                "EventName": "LastSpot",
+                "EventTime": 3.0
+            },
+            {
                 "EventName": "WaterBall",
                 "EventTime": 58.0
             }

@@ -106,10 +106,13 @@ HRESULT CBoss1::Initialize(void* pArg)
 		End_AttackState();
 	});
 	// Water ball Create + De_buff : Oil
+
+	m_pModelCom->Add_EventCaller("LastSpot", [this] { m_LastSpotTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION); });
 	m_pModelCom->Add_EventCaller("WaterBall", [this] 
 	{ 
-		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-		XMVectorSetY(vTargetPos, 0.f);
+		//_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		//XMVectorSetY(vTargetPos, 0.f);
+		XMVectorSetY(m_LastSpotTargetPos, 0.f);
 
 		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_WaterBall"));		
 		if (CWaterBall* pBullet = dynamic_cast<CWaterBall*>(pObj))
@@ -121,7 +124,7 @@ HRESULT CBoss1::Initialize(void* pArg)
 
 			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
-			_vector vDest = XMVector3Normalize(vTargetPos - vPrePos);
+			_vector vDest = XMVector3Normalize(m_LastSpotTargetPos - vPrePos);
 			
 			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
 			pBullet->Set_ShootDir(vDest);

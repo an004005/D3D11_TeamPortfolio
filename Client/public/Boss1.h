@@ -100,6 +100,7 @@ private:
 	CMaterial* m_pGlassMtrl = nullptr;
 		
 	// Add PJW
+	_vector	m_LastSpotTargetPos;
 	_bool	m_b2ndPhase = false;
 	_int	m_iPreHP;
 

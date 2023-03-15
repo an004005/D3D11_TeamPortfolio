@@ -16,6 +16,7 @@
 #include "SkPd_AnimInstance.h"
 #include "RigidBody.h"
 #include "Player.h"
+#include "VFX_Manager.h"
 
 
 CSkummyPandou::CSkummyPandou(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
