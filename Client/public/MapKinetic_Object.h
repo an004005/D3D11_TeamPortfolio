@@ -49,6 +49,14 @@ public:
 	void	Reset_Transform();
 	EKineticType GetType() const { return m_eType; }
 
+public:
+	void	SetOutline() { m_bOutlineChange = true; }
+
+private:
+	void	OutlineMaker();
+	_bool	m_bOutlineChange = false;
+	_bool	m_bOutline = false;
+
 private:
 	HRESULT	SetUp_Components(void* pArg);
 
@@ -60,10 +68,13 @@ private:
 
 	KineticModeltag			m_eCurModelTag = Tag_End;
 public:
+	void				SetThrow() { m_bThrow = true; }
 	_bool				Usable() { return m_bUsable; }
 
 private:
+	_bool				m_bThrow = false;
 	_bool				m_bUsable = true;
+	_float				m_fDeadTimer = 0.f;
 
 public:
 	static CMapKinetic_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

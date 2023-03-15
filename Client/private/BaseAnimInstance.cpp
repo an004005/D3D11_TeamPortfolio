@@ -31,7 +31,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({false, false, false, false, false, true, true, true, true, false});
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false })
+					.Event_Trail(false);
 			})
 
 				.AddTransition("IDLE to JUMP_FALL", "JUMP_FALL")
@@ -82,8 +83,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_021_AL_run_start_F"))
 			.StartEvent([&]() 
 			{ 
-				//static_cast<CPlayer*>(m_pTargetObject)
-				//	->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+				static_cast<CPlayer*>(m_pTargetObject)
+					->Event_Trail(false);
 			})
 
 				.AddTransition("WALK to RUNJUMP_FALL", "RUNJUMP_FALL")
@@ -753,7 +754,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
-					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false })
+					.Event_Trail(false);
 			})
 
 				.AddTransition("DASH to DASHJUMP_FALL", "DASHJUMP_FALL")
