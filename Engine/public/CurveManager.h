@@ -3,7 +3,7 @@
 
 BEGIN(Engine)
 
-class CCurveManager : public CBase
+class ENGINE_DLL CCurveManager : public CBase
 {
 	DECLARE_SINGLETON(CCurveManager)
 public:

@@ -362,33 +362,56 @@ PS_OUT PS_MAIN_Portrait_9(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4 vOutlineColor = g_vec4_0;
+	float4 vColor = g_vec4_0;
+	float4 vOutlineColor = g_vec4_1;
+	float fDissolve = g_float_2;
+	float fGradient =  g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+	bool bUseDissolve = fDissolve > 0.f;
+	float fColorRatio = g_float_1;
+	float fOutlineRatio = g_float_3;
 
-	const float coord[3] = { -1.5, 0.f, 1.5 };
+	const float coord[3] = { -2.f, 0.f, 2.f };
 	float fColor = 0.f;
 
-	// float4 LDR = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
 	float4 vPortrait = g_PortraitTexture.Sample(LinearSampler, In.vTexUV);
 	if (vPortrait.x != 0.f && vPortrait.y != 0.f && vPortrait.z != 0.f)
 	{
-		for (int i = 0; i < 3; i++)
+		if (!bUseDissolve)
 		{
-			for (int j = 0; j < 3; j++)
+			for (int i = 0; i < 3; i++)
 			{
-				fColor += g_PortraitTexture.Sample(LinearSampler, In.vTexUV + float2(coord[j] / g_iWinCX, coord[i] / g_iWinCY)).a;
+				for (int j = 0; j < 3; j++)
+				{
+					fColor += g_PortraitTexture.Sample(LinearSampler, In.vTexUV + float2(coord[j] / g_iWinCX, coord[i] / g_iWinCY)).a;
+				}
 			}
+			fColor /= 9.f;
 		}
-		fColor /= 9.f;
 
-
-		if (fColor != 1.f)
+		if (!bUseDissolve && fColor != 1.f)
 		{
-			Out.vColor = vOutlineColor;
+
+			Out.vColor = vOutlineColor * (1.f - fOutlineRatio);
 		}
 		else
 		{
 			float fGrain = g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, (float2)10.f, (float2)0.f));
-			Out.vColor = lerp(vPortrait, g_vec4_0, g_float_1) * fGrain;
+			Out.vColor = lerp(vPortrait, vColor, fColorRatio) * fGrain;
+
+			if (bUseDissolve)
+			{
+				float noise = g_tex_1.Sample(LinearSampler, TilingAndOffset(In.vTexUV, (float2)4.f, (float2)0.f)).r;
+				noise *= g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+				noise *= fGradient;
+				if (noise < fDissolve)
+				{
+					Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+				}
+				else
+				{
+					Out.vColor *= noise;
+				}
+			}
 		}
 	}
 	else
