@@ -66,7 +66,7 @@ void CMonsterLockonUI::Tick(_double TimeDelta)
 	{
 		if (dynamic_cast<CMonster*>(m_pOwner)->IsDead())
 		{
-			m_bDelete = true;
+			m_bDelete = true; 
 			return;
 		}
 	}
