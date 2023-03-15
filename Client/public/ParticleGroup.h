@@ -36,6 +36,8 @@ public:
 private:
 	// [ObjectTag : Key] [Value : <Directory, Ptr>]
 	unordered_map<string, pair<string, CParticleSystem*>> m_mapParticleSystem;
+
+	_float  m_fLifeTime = 10.f;
 	_bool	m_bGenerate = false;
 	_bool	m_bUpdate = false;
 	_bool	m_bUsePivot = false;

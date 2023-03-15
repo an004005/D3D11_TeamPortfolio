@@ -74,10 +74,11 @@ VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
 
-	float4x4 RotationMatrix = float4x4(In.vRotRight, In.vRotUp, In.vRotLook, vector(0.f,0.f,0.f,1.f));
-
-
 	matrix InstanceData = In.Matrix;
+
+	float4x4 RotationMatrix = float4x4(In.vRotRight, float4(matrix_look(InstanceData), 0.f), In.vRotLook, vector(0.f,0.f,0.f,1.f));
+
+
 	Out.CurLife = InstanceData[3][3];
 	Out.RamainLifeRatio = (1.f - InstanceData[3][3] / InstanceData[1][3]);
 	Out.vSize = float2(InstanceData[1][0], InstanceData[1][1]);
@@ -110,9 +111,15 @@ void GS_MAIN( point GS_IN In[1], inout TriangleStream<GS_OUT> Vertices)
 
 	if (g_bRotate == 1)
 	{
-		vLook = (In[0].RotMatrix[0].xyz - In[0].vPosition);
-		vRight = (normalize(cross(float3(0.f, 1.f, 0.f), vLook)) * PSize.x * 0.5f);
-		vUp = (normalize(cross(vLook, vRight)) * PSize.y * 0.5f);
+		//vLook = (In[0].RotMatrix[0].xyz - In[0].vPosition);
+		//vRight = (normalize(cross(float3(0.f, 1.f, 0.f), vLook)) * PSize.x * 0.5f);
+		//vUp = (normalize(cross(vLook, vRight)) * PSize.y * 0.5f);
+
+		vLook = normalize(g_vCamPosition.xyz - In[0].vPosition);
+		vRight = normalize(cross(normalize(In[0].RotMatrix[1].xyz), vLook)) * PSize.x * 0.5f;
+		vUp = normalize(cross(vLook, vRight)) * PSize.y * 0.5f;
+
+
 	}
 	else
 	{
@@ -170,6 +177,37 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	Out.vColor = gradient * g_vec4_0 * g_float_0; // color * emissive
 	Out.vColor.a = gradient;
+
+	if (Out.vColor.a < 0.01f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT PS_FLIPBOOK_EM320BULLET_TRAIL(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float2 TEXUV = Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 4, 4);
+
+	float4 Default = g_tex_0.Sample(LinearSampler, TEXUV);
+
+	float4 Color = g_vec4_0;
+
+	float4 BlendColor = Default * Color * 2.0;
+
+
+	float4 NormalTex = g_tex_1.Sample(LinearSampler, TEXUV);
+	NormalTex.xyz = NormalTex.xyz * 2.f - 1.f;
+
+	float4 vViewDir = g_vCamPosition - In.vPosition;
+	float fFresnel = FresnelEffect(NormalTex.xyz, vViewDir.xyz, 3.f);
+
+	float4 FinalColor = saturate(BlendColor * fFresnel);
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0); // color * emissive
+
+	Out.vColor.a = Default.r * g_float_1;
 
 	if (Out.vColor.a < 0.01f)
 		discard;
@@ -420,5 +458,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_PARTICLE_EM0650();
+	}
+
+	//7
+	pass EMTUTORIALBOSS_BULLET_TRAIL
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_FLIPBOOK_EM320BULLET_TRAIL();
 	}
 }
