@@ -115,11 +115,11 @@ HRESULT CBronJon::Initialize(void * pArg)
 
 	m_pASM = CBrJ_AnimInstance::Create(m_pModelCom, this);
 	
-//	_matrix			PivotMatrix = XMMatrixIdentity();
-//	PivotMatrix = XMMatrixTranslation(0.f, 0.1f, 0.f) * XMMatrixScaling(10.f, 1.f, 10.f); // Y = 0.1f로 수정
+	_matrix			PivotMatrix = XMMatrixIdentity();
+	PivotMatrix = XMMatrixTranslation(0.f, 0.1f, 0.f) * XMMatrixScaling(10.f, 1.f, 10.f); // Y = 0.1f로 수정
 	m_pWaterPool = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water");
-//	m_pWaterPool->Start_AttachPivot(this, PivotMatrix, "Eff01", true, true, false);
-	m_pWaterPool->Start_Attach(this, "Eff01", true);
+	m_pWaterPool->Start_AttachPivot(this, PivotMatrix, "Eff01", true, true, false);
+//	m_pWaterPool->Start_Attach(this, "Eff01", true);
 	Safe_AddRef(m_pWaterPool);
 	// 소켓 애니메이션 추가
 
