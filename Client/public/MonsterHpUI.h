@@ -23,6 +23,8 @@ public:
 		m_PivotMatrix = pivotMatrix;
 	}
 
+	void Set_MonsterInfo(const _int iLevel, const _int iName);
+
 private:
 	void HpBack_Tick(const _double & TimeDelta);
 
@@ -35,6 +37,10 @@ private:
 	_float		m_fRatio = 0.f;
 
 	_float4x4	m_PivotMatrix;
+
+	_int		m_iMonsterLevel = { 0 };
+	_int		m_iMonsterName = { 0 };
+
 public:
 	static CMonsterHpUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

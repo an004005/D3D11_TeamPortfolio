@@ -656,6 +656,9 @@ void CFlowerLeg::SetUp_UI()
 	);
 
 	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
+
+	iMonsterLevel = 7;
+	m_eMonsterName = FLOWERLEG;
 }
 
 

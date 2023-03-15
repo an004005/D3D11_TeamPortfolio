@@ -349,6 +349,9 @@ void CSkummyPandou::SetUp_UI()
 
 	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
 
+	iMonsterLevel = 6;
+	m_eMonsterName = SKUMMYPANDOU;
+
 }
 
 void CSkummyPandou::TakeDamage(DAMAGE_PARAM tDamageParams)

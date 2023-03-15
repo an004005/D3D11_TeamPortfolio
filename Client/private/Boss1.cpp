@@ -324,6 +324,12 @@ HRESULT CBoss1::Render()
 	return S_OK;
 }
 
+void CBoss1::SetUp_UI()
+{
+	iMonsterLevel = 10;
+	m_eMonsterName = GODLYFERRY;
+}
+
 void CBoss1::Imgui_RenderProperty()
 {
 	CMonster::Imgui_RenderProperty();

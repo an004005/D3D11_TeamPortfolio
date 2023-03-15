@@ -3515,6 +3515,10 @@ void CPlayer::Create_TargetInfoBar()
 		_float4x4 PivotMatrix = dynamic_cast<CMonster*>(m_pTargetedEnemy)->Get_UIPivotMatrix(INFOBAR);
 		pUI_HP->SetPivotMatrix(PivotMatrix);
 
+		_int iLevel = dynamic_cast<CMonster*>(m_pTargetedEnemy)->Get_MonsterLevel();
+		_int iName = dynamic_cast<CMonster*>(m_pTargetedEnemy)->Get_MonsterName();
+		pUI_HP->Set_MonsterInfo(iLevel, iName);
+
 		dynamic_cast<CMonster*>(m_pTargetedEnemy)->Set_HasName();
 	}
 }

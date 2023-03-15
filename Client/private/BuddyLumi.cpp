@@ -366,6 +366,9 @@ void CBuddyLumi::SetUp_UI()
 	);
 
 	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
+
+	iMonsterLevel = 3;
+	m_eMonsterName = BUDDYLUMI;
 }
 
 void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)

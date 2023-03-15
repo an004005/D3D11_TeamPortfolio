@@ -357,6 +357,8 @@ void CSkummyPool::SetUp_UI()
 
 	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
 
+	iMonsterLevel = 1;
+	m_eMonsterName = SKUMMYPOOL;
 }
 
 void CSkummyPool::HitDir(_double TimeDelta)

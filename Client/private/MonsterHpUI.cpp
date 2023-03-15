@@ -55,6 +55,8 @@ void CMonsterHpUI::BeginTick()
 	m_pGroup->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
 	m_pMonsterName->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
 
+	// y : [0] 브론욘 [1] 스커미 팡뒤 [2] 바일 풀 [3] 버디 러미 [4] 바스 포즈 [5] 경건 페리
+	m_pMonsterName->GetSecondEffect()->GetParams().Float2s[0] = { _float(m_iMonsterLevel - 1), _float(m_iMonsterName) };
 }
 
 void CMonsterHpUI::Tick(_double TimeDelta)
@@ -86,6 +88,13 @@ void CMonsterHpUI::Imgui_RenderProperty()
 
 	ImGui::DragFloat("Ratio", &m_fRatio);
 	
+}
+
+void CMonsterHpUI::Set_MonsterInfo(const _int iLevel, const _int iName)
+{
+	m_iMonsterLevel = iLevel;
+	m_iMonsterName = iName;
+
 }
 
 void CMonsterHpUI::HpBack_Tick(const _double & TimeDelta)

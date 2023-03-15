@@ -16,6 +16,9 @@ BEGIN(Client)
 enum MONSTER_UIPIVOT { INFOBAR, FINDEYES, UIPIVOT_END};
 class CMonster abstract : public CScarletCharacter
 {
+public:
+	enum MONSTER_NAME { BRONJON, SKUMMYPANDOU, SKUMMYPOOL, BUDDYLUMI, FLOWERLEG, GODLYFERRY, MONSTERNAME_END };
+
 protected:
 	CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMonster(const CScarletCharacter& rhs);
@@ -43,6 +46,14 @@ public:
 	_float4x4	Get_UIPivotMatrix(MONSTER_UIPIVOT eUIPivot) {
 		return m_UI_PivotMatrixes[eUIPivot];
 	}
+
+	_int Get_MonsterLevel() {
+		return iMonsterLevel;
+	}
+	_int Get_MonsterName() {
+		return _int(m_eMonsterName);
+	}
+
 public:
 	//UI
 	void	TurnEyesOut();
@@ -82,10 +93,11 @@ protected:
 	_bool m_bHasName = false;
 
 	array<_float4x4, UIPIVOT_END> m_UI_PivotMatrixes;
+
 	set<CScarletCharacter*> m_DamagedTargetList;
-
 	CSimpleTimeline m_DeathTimeline;
-
+	_uint	iMonsterLevel = { 0 };
+	MONSTER_NAME m_eMonsterName = { MONSTERNAME_END };
 	
 
 
