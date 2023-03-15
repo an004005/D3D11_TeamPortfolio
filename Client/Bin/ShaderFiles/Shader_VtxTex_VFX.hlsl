@@ -91,6 +91,9 @@ PS_OUT PS_BRON_LASER_START(PS_IN In)
 	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
 	Out.vColor.a = Mask * g_float_1;
 
+	if (g_float_1 == 0.f)
+		discard;
+
 	return Out;
 }
 
