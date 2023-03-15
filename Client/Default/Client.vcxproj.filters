@@ -265,9 +265,6 @@
     <Filter Include="02.GameObjects\UI\Boss">
       <UniqueIdentifier>{dc1701f8-365a-4180-94c6-d3de20833679}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Psychokinesis">
-      <UniqueIdentifier>{05a34116-b873-484c-8da2-baafc69d27ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Tutorial">
       <UniqueIdentifier>{abb2352e-02f6-4b3c-8379-d3a28a4803fd}</UniqueIdentifier>
     </Filter>
@@ -297,6 +294,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Monster\boss1\WaterBall">
       <UniqueIdentifier>{7d98e4ff-3ec3-41c0-b7b6-9a67b3d0b012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Tutorial\Psychokinesis">
+      <UniqueIdentifier>{05a34116-b873-484c-8da2-baafc69d27ca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -654,7 +654,6 @@
     <ClInclude Include="..\public\SkmP_Controller.h">
       <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PostVFX_ColorGrading.h" />
     <ClInclude Include="..\public\SkPd_Controller.h">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClInclude>
@@ -773,7 +772,6 @@
     <ClInclude Include="..\public\FactoryMethod.h">
       <Filter>FactoryMethod</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PostVFX_Penetrate.h" />
     <ClInclude Include="..\public\SAS_Portrait.h" />
     <ClInclude Include="..\public\BdLm_Controller.h">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
@@ -795,6 +793,18 @@
     </ClInclude>
     <ClInclude Include="..\public\Boss1_AIController.h">
       <Filter>02.GameObjects\Monster\boss1\Boss1_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BdLm_Controller.h">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrJ_Controller.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Penetrate.h">
+      <Filter>VFX\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_ColorGrading.h">
+      <Filter>VFX\PostProcess</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1124,10 +1134,6 @@
     <ClCompile Include="..\private\FL_Controller.cpp">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\SkmP_Controller.cpp">
-      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\PostVFX_ColorGrading.cpp" />
     <ClCompile Include="..\private\SkPd_Controller.cpp">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClCompile>
@@ -1245,7 +1251,6 @@
     <ClCompile Include="..\private\FactoryMethod.cpp">
       <Filter>FactoryMethod</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
     <ClCompile Include="..\private\SAS_Portrait.cpp" />
     <ClCompile Include="..\private\BdLm_Controller.cpp">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
@@ -1267,6 +1272,21 @@
     </ClCompile>
     <ClCompile Include="..\private\Boss1_AIController.cpp">
       <Filter>02.GameObjects\Monster\boss1\Boss1_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BdLm_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrJ_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_ColorGrading.cpp">
+      <Filter>VFX\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Penetrate.cpp">
+      <Filter>VFX\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkmP_Controller.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

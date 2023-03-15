@@ -52,7 +52,44 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
 
-	// Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+	return Out;
+}
+
+PS_OUT PS_BRON_BITE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Default = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Mask = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	Default.a = Mask.r;
+	float4 Color = g_vec4_0;
+	float4 BlendColor = Default * Color * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	float fDissolvePower = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+	Out.vColor.a *= g_float_1;
+
+	if (g_float_2 >= fDissolvePower)
+		discard;
+
+	return Out;
+}
+
+PS_OUT PS_BRON_LASER_START(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Default = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4 ChooseColor = g_vec4_0;
+	float4 BlendColor = Default * g_vec4_0 * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+	Out.vColor.a = Mask * g_float_1;
 
 	return Out;
 }
@@ -355,7 +392,30 @@ PS_OUT_Flag PS_MASK_TEX_DISTORTION(PS_IN In)
 	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
 	
 	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
-	Out.vFlag = float4(0.f, 0.f, 0.f, Mask);
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, BlendColor.a);
+
+	return Out;
+}
+
+PS_OUT_Flag PS_TEX_DISTORTION_DISCARD_OP(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float Mask = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y)).r;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	BlendColor.a = Mask * g_float_1;
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = 0.f;//CalcHDRColor(FinalColor, g_float_0);
+	
+	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, BlendColor.a);
+
+	if(g_float_1 <= 0)
+	{
+		discard;
+	}
 
 	return Out;
 }
@@ -413,8 +473,6 @@ PS_OUT_Flag PS_SEMI_DISTORTION_FOR_SAS(PS_IN In)
 
 	float fDissolvePower = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
 
-	
-
 	Out.vColor = CalcHDRColor(FinalColor, g_float_2);
 
 	// if (FinalColor.r <= 0.5f)
@@ -461,6 +519,39 @@ PS_OUT_Flag PS_EM0650_BULLET_BIRTH_NOR(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_BRON_WATER(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float2 randomNormal = g_tex_3.Sample(LinearSampler, In.vTexUV).xy;
+	float2 FlowUV = randomNormal * g_float_2 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(g_Time, g_Time));
+
+	float4 DistortionTex = g_tex_4.Sample(LinearSampler, FlowUV);
+
+	float fWeight = DistortionTex.g * g_float_3;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	float4 Default = g_tex_1.Sample(LinearSampler, In.vTexUV + fWeight);
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+	float4 NormalTex = g_tex_2.Sample(LinearSampler, FlowUV);
+
+	NormalTex.xyz = NormalTex.xyz * 2.f - 1.f;
+
+	float4 vViewDir = g_vCamPosition - In.vWorldPos;
+
+	float fFresnel = FresnelEffect(NormalTex.xyz, vViewDir.xyz, g_float_0);
+
+	float4 Vec4Color = g_vec4_0;
+	float4 BlendColor = Default * Vec4Color * 2.0f;
+	float4 FinalColor = saturate(BlendColor * fFresnel);
+
+	Out.vColor = FinalColor;
+	Out.vColor.a = saturate( g_float_1 * Mask);
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -699,4 +790,59 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_EM0650_BULLET_BIRTH_BASE();
 	}
 
+	//17
+	pass MaskTexDistortion_Discard
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_TEX_DISTORTION_DISCARD_OP();
+	}
+
+	//18
+	pass Bron_Laser_Start
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRON_LASER_START();
+	}
+
+	//19
+	pass Bron_Bite
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRON_BITE();
+	}
+
+	//20
+	pass Bron_Water
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRON_WATER();
+	}
 }

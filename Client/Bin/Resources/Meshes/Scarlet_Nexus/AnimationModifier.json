@@ -2164,6 +2164,10 @@
                 "EventTime": 115.5
             },
             {
+                "EventName": "Spin_EffectEnd",
+                "EventTime": 155.0
+            },
+            {
                 "EventName": "Spin_AtkEnd",
                 "EventTime": 175.0
             },
@@ -2179,9 +2183,13 @@
     },
     "AS_em0200_203_AL_atk_a3": {
         "Duration": 210.0,
-        "TickPerSecond": 57.0,
+        "TickPerSecond": 48.0,
         "bLooping": false,
         "vecEvent": [
+            {
+                "EventName": "FallRose_Start",
+                "EventTime": 8.0
+            },
             {
                 "EventName": "Invincible_Start",
                 "EventTime": 85.0
@@ -2205,6 +2213,10 @@
             {
                 "EventName": "Invincible_End",
                 "EventTime": 160.0
+            },
+            {
+                "EventName": "FallRose_End",
+                "EventTime": 205.0
             },
             {
                 "EventName": "Untouch",
@@ -2439,11 +2451,40 @@
             }
         ]
     },
-    "AS_em0300_415_AL_damage_m_F": {
-        "Duration": 240.0,
-        "TickPerSecond": 48.0,
+    "AS_em0300_411_AL_WT_break": {
+        "Duration": 70.0,
+        "TickPerSecond": 37.0,
         "bLooping": false,
         "vecEvent": []
+    },
+    "AS_em0300_415_AL_damage_m_F": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0300_416_AL_damage_m_B": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0300_417_AL_damage_m_L": {
+        "Duration": 240.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0300_427_AL_getup": {
+        "Duration": 70.0,
+        "TickPerSecond": 36.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Wake_Up",
+                "EventTime": 65.0
+            }
+        ]
     },
     "AS_em0320_225_AL_atk7_spin": {
         "Duration": 200.0,
@@ -2465,6 +2506,10 @@
         "TickPerSecond": 48.0,
         "bLooping": false,
         "vecEvent": [
+            {
+                "EventName": "LastSpot",
+                "EventTime": 3.0
+            },
             {
                 "EventName": "WaterBall",
                 "EventTime": 58.0
@@ -2525,6 +2570,14 @@
             {
                 "EventName": "Swing_End",
                 "EventTime": 184.0
+            },
+            {
+                "EventName": "SwingEff_Start",
+                "EventTime": 153.0
+            },
+            {
+                "EventName": "SwingEff_End",
+                "EventTime": 190.0
             }
         ]
     },
@@ -3103,6 +3156,10 @@
         "bLooping": false,
         "vecEvent": [
             {
+                "EventName": "Untouch",
+                "EventTime": 5.0
+            },
+            {
                 "EventName": "Laser_Create",
                 "EventTime": 130.0
             }
@@ -3120,6 +3177,10 @@
         "bLooping": false,
         "vecEvent": [
             {
+                "EventName": "Untouch_End",
+                "EventTime": 55.0
+            },
+            {
                 "EventName": "Laser_Finish",
                 "EventTime": 5.0
             }
@@ -3129,37 +3190,68 @@
         "Duration": 75.0,
         "TickPerSecond": 57.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Damage_End",
+                "EventTime": 70.0
+            }
+        ]
+        
     },
     "AS_em0800_402_AL_damage_l_B": {
         "Duration": 75.0,
         "TickPerSecond": 57.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Damage_End",
+                "EventTime": 70.0
+            }
+        ]
     },
     "AS_em0800_411_AL_damage_m_F": {
         "Duration": 240.0,
         "TickPerSecond": 64.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Damage_End",
+                "EventTime": 235.0
+            }
+        ]
     },
     "AS_em0800_412_AL_damage_m_B": {
         "Duration": 240.0,
         "TickPerSecond": 81.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Damage_End",
+                "EventTime": 235.0
+            }
+        ]
     },
     "AS_em0800_413_AL_damage_m_L": {
         "Duration": 240.0,
         "TickPerSecond": 83.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Damage_End",
+                "EventTime": 235.0
+            }
+        ]
     },
     "AS_em0800_414_AL_damage_m_R": {
         "Duration": 240.0,
         "TickPerSecond": 93.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Damage_End",
+                "EventTime": 235.0
+            }
+        ]
     },
     "AS_em0800_424_AL_dead_down": {
         "Duration": 130.0,
@@ -3208,12 +3300,20 @@
         "bLooping": false,
         "vecEvent": [
             {
+                "EventName": "Untouch",
+                "EventTime": 5.0
+            },
+            {
                 "EventName": "Bite_Start",
                 "EventTime": 48.20000076293945
             },
             {
                 "EventName": "Bite_End",
                 "EventTime": 100.0
+            },
+            {
+                "EventName": "Untouch_End",
+                "EventTime": 125.0
             }
         ]
     },

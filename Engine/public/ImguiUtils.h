@@ -26,6 +26,9 @@ public:
 	static void InputFloat2(_float2* pVector, const char* str);
 	static void InputFloat3(_float3* pVector, const char* str);
 	static void InputColor(_float4* pVector, const char* str);
+
+	// imgui로 본 월드매트릭스 정보 "그대로" 넣으면 월드매트릭스 나오는 함수
+	static _float4x4 CreateMatrixFromImGuizmoData(_float3 vPos, _float3 vRot, _float3 vScale);
 };
 
 END
