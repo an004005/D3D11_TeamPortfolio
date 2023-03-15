@@ -98,6 +98,8 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 		}
 	});
 
+	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(18.f) });
+
 
 	return S_OK;
 }
@@ -271,7 +273,7 @@ void CMapKinetic_Object::Reset_Transform()
 void CMapKinetic_Object::OutlineMaker()
 {
 
-	for (auto& Model : m_pModelComs)
+	/*for (auto& Model : m_pModelComs)
 	{
 		for (auto& iter : Model->GetMaterials())
 		{
@@ -284,7 +286,7 @@ void CMapKinetic_Object::OutlineMaker()
 				iter->GetParam().Ints[0] = 1;
 			}
 		}
-	}
+	}*/
 
 	//if (m_bOutlineChange)
 	//{
