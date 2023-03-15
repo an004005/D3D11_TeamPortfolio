@@ -976,7 +976,7 @@ HRESULT CModel::Render_Pass(CTransform* pTransform, _uint iPass)
 	{
 		const _uint iMtrlIdx = m_Meshes[i]->Get_MaterialIndex();
 		if (m_Materials[iMtrlIdx]->IsActive() == false)
-			return S_OK;
+			continue;
 
 		if (m_eType == TYPE_ANIM)
 		{
@@ -987,7 +987,30 @@ HRESULT CModel::Render_Pass(CTransform* pTransform, _uint iPass)
 
 		m_Materials[iMtrlIdx]->BindMatrices(pTransform);
 		m_Materials[iMtrlIdx]->Begin(iPass);
-		return m_Meshes[i]->Render();
+		FAILED_CHECK(m_Meshes[i]->Render());
+	}
+
+	return S_OK;
+}
+
+HRESULT CModel::Render_Cam(CTransform* pTransform, CCamera* pCamera)
+{
+	for (size_t i = 0; i < m_Meshes.size(); ++i)
+	{
+		const _uint iMtrlIdx = m_Meshes[i]->Get_MaterialIndex();
+		if (m_Materials[iMtrlIdx]->IsActive() == false)
+			continue;
+
+		if (m_eType == TYPE_ANIM)
+		{
+			_float4x4 BoneMatrices[512];
+			m_Meshes[i]->SetUp_BoneMatrices(BoneMatrices, XMLoadFloat4x4(&m_PivotMatrix));
+			m_Materials[iMtrlIdx]->GetShader()->Set_MatrixArray("g_BoneMatrices", BoneMatrices, 512);
+		}
+
+		m_Materials[iMtrlIdx]->BindMatrices(pTransform, pCamera);
+		m_Materials[iMtrlIdx]->Begin();
+		FAILED_CHECK(m_Meshes[i]->Render());
 	}
 
 	return S_OK;

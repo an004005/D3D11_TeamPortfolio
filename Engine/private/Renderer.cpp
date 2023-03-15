@@ -65,6 +65,10 @@ HRESULT CRenderer::Draw_RenderGroup()
 	_float fGamma = CHDR::GetInstance()->GetGamma();
 	m_pShader->Set_RawValue("g_Gamma", &fGamma, sizeof(_float));
 
+	m_pTarget_Manager->ClearTargets();
+
+	if (FAILED(Render_Portrait()))
+		return E_FAIL;
 	if (FAILED(Render_ShadowDepth()))
 		return E_FAIL;
 	if (FAILED(Render_NonAlphaBlend()))
@@ -72,7 +76,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (FAILED(Render_LightAcc()))
 		return E_FAIL;
 
-	m_pTarget_Manager->GetTarget(TEXT("Target_Flag"))->SetIgnoreClearOnce();
+	// m_pTarget_Manager->GetTarget(TEXT("Target_Flag"))->SetIgnoreClearOnce();
 	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_HDR"))))
 		return E_FAIL;
 
@@ -198,6 +202,10 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_HDR"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, &_float4(0.8f, 0.8f, 0.8f, 0.f))))
 		return E_FAIL;
 
+	/* For.Target_Portrait */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Portrait"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.0f, 0.0f, 0.f))))
+		return E_FAIL;
+
 	/* For.Target_LDR */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_LDR1"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.5f, 0.5f, 0.5f, 1.f))))
 		return E_FAIL;
@@ -255,6 +263,9 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_HDR"), TEXT("Target_Flag"))))
 		return E_FAIL;
 	// ~For Effect
+
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Portrait"), TEXT("Target_Portrait"))))
+		return E_FAIL;
 
 
 	// Ready_ShadowDepthResources(8192, 8192);
@@ -430,6 +441,7 @@ HRESULT CRenderer::Render_NonAlphaBlend()
 		return E_FAIL;
 
 	/* Diffuse + Normal */
+	// m_pTarget_Manager->GetTarget(TEXT("Target_Flag"))->SetIgnoreClearOnce();
 	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Deferred"))))
 		return E_FAIL;
 
@@ -466,11 +478,11 @@ HRESULT CRenderer::Render_NonAlphaBlend()
 		return E_FAIL;
 
 	// toon deferred
-	m_pTarget_Manager->GetTarget(TEXT("Target_Diffuse"))->SetIgnoreClearOnce();
-	m_pTarget_Manager->GetTarget(TEXT("Target_Normal"))->SetIgnoreClearOnce();
-	m_pTarget_Manager->GetTarget(TEXT("Target_Depth"))->SetIgnoreClearOnce();
-	m_pTarget_Manager->GetTarget(TEXT("Target_OutlineFlag"))->SetIgnoreClearOnce();
-	m_pTarget_Manager->GetTarget(TEXT("Target_Flag"))->SetIgnoreClearOnce();
+	// m_pTarget_Manager->GetTarget(TEXT("Target_Diffuse"))->SetIgnoreClearOnce();
+	// m_pTarget_Manager->GetTarget(TEXT("Target_Normal"))->SetIgnoreClearOnce();
+	// m_pTarget_Manager->GetTarget(TEXT("Target_Depth"))->SetIgnoreClearOnce();
+	// m_pTarget_Manager->GetTarget(TEXT("Target_OutlineFlag"))->SetIgnoreClearOnce();
+	// m_pTarget_Manager->GetTarget(TEXT("Target_Flag"))->SetIgnoreClearOnce();
 	
 	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_ToonDeferred"))))
 		return E_FAIL;
@@ -659,6 +671,13 @@ HRESULT CRenderer::Render_HDR()
 
 HRESULT CRenderer::Render_PostProcess()
 {
+	D3D11_VIEWPORT			ViewPortDesc;
+	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
+	
+	_uint		iNumViewports = 1;
+	
+	m_pContext->RSGetViewports(&iNumViewports, &ViewPortDesc);
+
 	if (FAILED(m_pShader_PostProcess->Set_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
 	if (FAILED(m_pShader_PostProcess->Set_Matrix("g_ViewMatrix", &m_ViewMatrix)))
@@ -697,7 +716,11 @@ HRESULT CRenderer::Render_PostProcess()
 			return E_FAIL;
 		if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_DepthMaintainTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Depth_Maintain")))))
 			return E_FAIL;
-
+		if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_PortraitTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Portrait")))))
+			return E_FAIL;
+		m_pShader_PostProcess->Set_RawValue("g_iWinCX", &ViewPortDesc.Width, sizeof(_float));
+		m_pShader_PostProcess->Set_RawValue("g_iWinCY", &ViewPortDesc.Height, sizeof(_float));
+		
 		// For Effect
 		if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_FlagTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Flag")))))
 			return E_FAIL;
@@ -793,6 +816,28 @@ HRESULT CRenderer::Render_Outline()
 	
 	m_pShader->Begin(4);
 	m_pVIBuffer->Render();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Portrait()
+{
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Portrait"))))
+		return E_FAIL;
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_PORTRAIT])
+	{
+		if (nullptr != pGameObject)
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+	m_RenderObjects[RENDER_PORTRAIT].clear();
+
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext, TEXT("MRT_Portrait"))))
+		return E_FAIL;
+
+	CGraphic_Device::GetInstance()->Clear_DepthStencil_View();
 
 	return S_OK;
 }

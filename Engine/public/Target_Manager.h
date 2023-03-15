@@ -29,7 +29,7 @@ public:
 	HRESULT Begin_RenderTarget(ID3D11DeviceContext* pContext, const _tchar* pTargetTag);
 	HRESULT Begin_ShadowDepthRenderTarget(ID3D11DeviceContext* pContext, const _tchar* pTargetTag);
 
-
+	HRESULT ClearTargets();
 	HRESULT Resize(ID3D11DeviceContext * pContext);
 
 	void CopyRenderTarget(ID3D11DeviceContext * pContext, const _tchar* pDstTag, const _tchar* pSrcTag);
@@ -54,6 +54,7 @@ private:
 private:
 	ID3D11RenderTargetView*				m_pBackBufferView = nullptr;
 	ID3D11DepthStencilView*				m_pDepthStencilView = nullptr;
+
 
 	D3D11_VIEWPORT						m_OriginViewPort;
 
