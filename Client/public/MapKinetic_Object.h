@@ -50,12 +50,12 @@ public:
 	EKineticType GetType() const { return m_eType; }
 
 public:
-	void	SetOutline() { m_bOutlineChange = true; }
+	void	SetOutline(_bool bOutLine) { m_bOutline = bOutLine; }
 
 private:
 	void	OutlineMaker();
-	_bool	m_bOutlineChange = false;
 	_bool	m_bOutline = false;
+	_bool	m_bBeforeOutline = false;
 
 private:
 	HRESULT	SetUp_Components(void* pArg);

@@ -318,6 +318,13 @@ void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
 	__super::TakeDamage(tDamageParams);
 }
 
+_float4 CBoss1::GetKineticTargetPos()
+{
+	_float3 vTemp = m_pWeak->GetPxWorldMatrix().Translation();
+
+	return _float4(vTemp.x, vTemp.y, vTemp.z, 1.f);
+}
+
 HRESULT CBoss1::Render()
 {
 	m_pModelCom->Render(m_pTransformCom);

@@ -117,6 +117,9 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 
 	OutlineMaker();
 
+	if (m_bThrow)
+		m_bUsable = false;
+
 	if (!m_bUsable)
 	{
 		m_fDeadTimer += (_float)TimeDelta;
@@ -272,71 +275,45 @@ void CMapKinetic_Object::Reset_Transform()
 
 void CMapKinetic_Object::OutlineMaker()
 {
-
-	/*for (auto& Model : m_pModelComs)
+	if (m_bOutline != m_bBeforeOutline)
 	{
-		for (auto& iter : Model->GetMaterials())
+		if (m_bOutline)
 		{
-			if (0 == iter->GetParam().Ints.size())
+			for (auto& Model : m_pModelComs)
 			{
-				iter->GetParam().Ints.push_back(1);
-			}
-			else
-			{
-				iter->GetParam().Ints[0] = 1;
+				for (auto& iter : Model->GetMaterials())
+				{
+					if (0 == iter->GetParam().Ints.size())
+					{
+						iter->GetParam().Ints.push_back(0);
+					}
+					else
+					{
+						iter->GetParam().Ints[0] = 1;
+					}
+				}
 			}
 		}
-	}*/
+		else
+		{
+			for (auto& Model : m_pModelComs)
+			{
+				for (auto& iter : Model->GetMaterials())
+				{
+					if (0 == iter->GetParam().Ints.size())
+					{
+						iter->GetParam().Ints.push_back(0);
+					}
+					else
+					{
+						iter->GetParam().Ints[0] = 0;
+					}
+				}
+			}
+		}
+	}
 
-	//if (m_bOutlineChange)
-	//{
-	//	if (m_bOutline)
-	//	{
-	//		m_bOutline = false;
-
-	//		for (auto& Model : m_pModelComs)
-	//		{
-	//			for (auto& iter : Model->GetMaterials())
-	//			{
-	//				if (0 == iter->GetParam().Ints.size())
-	//				{
-	//					iter->GetParam().Ints.push_back(0);
-	//				}
-	//				else
-	//				{
-	//					iter->GetParam().Ints[0] = 0;
-	//				}
-	//				//iter->GetParam().Float4s[0] = { 0.945098f, 0.4f, 1.f, 1.f };
-	//			}
-	//		}
-
-	//		// ¾Æ¿ô¶óÀÎ ¾ø¾Ú
-	//	}
-	//	else
-	//	{
-	//		m_bOutline = true;
-	//		// ¾Æ¿ô¶óÀÎ »ý¼º
-
-	//		for (auto& Model : m_pModelComs)
-	//		{
-	//			for (auto& iter : Model->GetMaterials())
-	//			{
-	//				if (0 == iter->GetParam().Ints.size())
-	//				{
-	//					iter->GetParam().Ints.push_back(1);
-	//				}
-	//				else
-	//				{
-	//					iter->GetParam().Ints[0] = 1;
-	//				}
-	//				//iter->GetParam().Float4s[0] = { 0.945098f, 0.4f, 1.f, 1.f };
-	//			}
-	//		}
-	//	}
-
-	//	m_bOutlineChange = false;
-	//}
-
+	m_bBeforeOutline = m_bOutline;
 }
 
 HRESULT CMapKinetic_Object::SetUp_Components(void* pArg)

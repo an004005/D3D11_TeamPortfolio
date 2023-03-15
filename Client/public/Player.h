@@ -492,6 +492,7 @@ private:
 	void			Search_Usable_KineticObject();
 	void			Enemy_Targeting(_bool bNear);
 	void			KineticObject_Targeting();
+	void			KineticObject_OutLineCheck();
 
 private:
 	void			Spline_Kinetic(_double TimeDelta);

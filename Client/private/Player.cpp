@@ -166,6 +166,7 @@ void CPlayer::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	KineticObject_OutLineCheck();
 	Update_TargetUI();
 
 	// 콤보 연계 시간
@@ -380,6 +381,11 @@ void CPlayer::Late_Tick(_double TimeDelta)
 
 	for (auto& iter : m_vecWeapon)
 		iter->Late_Tick(TimeDelta);
+
+	if (nullptr != m_pKineticObject)
+	{
+		static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetOutline(true);
+	}
 
 	if (m_bVisible && (nullptr != m_pRenderer))
 		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
@@ -1121,18 +1127,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 
 				if (nullptr != m_pKineticObject)
 				{
-					if (nullptr != m_pTargetedEnemy)
-					{
-						Event_Kinetic_Throw();
-					}
-					else
-					{
-						_float3 vForce = { XMVectorGetX(m_vCamLook), XMVectorGetY(m_vCamLook), XMVectorGetZ(m_vCamLook) };
-						vForce = XMVector3Normalize(vForce);
-						vForce *= 1000.f;
-						static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(vForce);
-					}
-
+					Event_Kinetic_Throw();
 				}
 			})
 			.Tick([&](double fTimeDelta) 
@@ -1198,22 +1193,8 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			.OnStart([&]() 
 			{ 
 				m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw02_Start);
-				if (nullptr != m_pTargetedEnemy)
-				{
-					Vector4 vTargetPos = m_pTargetedEnemy->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-					Vector4 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					Vector4 vDir = vTargetPos - vMyPos;
+				Event_Kinetic_Throw();
 
-					_float3 vForce = { vDir.x, vDir.y, vDir.z };
-					vForce *= 1000.f;
-					static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(vForce);
-				}
-				else
-				{
-					_float3 vForce = { XMVectorGetX(m_vCamLook), XMVectorGetY(m_vCamLook), XMVectorGetZ(m_vCamLook) };
-					vForce *= 1000.f;
-					static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(vForce);
-				}
 			})
 			.Tick([&](double fTimeDelta) {m_bKineticMove = true; })
 
@@ -1310,17 +1291,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			{ 
 				if (nullptr != m_pKineticObject)
 				{
-					if (nullptr != m_pTargetedEnemy)
-					{
-						Event_Kinetic_Throw();
-					}
-					else
-					{
-						_float3 vForce = { XMVectorGetX(m_vCamLook), XMVectorGetY(m_vCamLook), XMVectorGetZ(m_vCamLook) };
-						vForce = XMVector3Normalize(vForce);
-						vForce *= 1000.f;
-						static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(vForce);
-					}
+					Event_Kinetic_Throw();
 				}
 			})
 			.Tick([&](double TimeDelta) 
@@ -2737,7 +2708,7 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 			.OnStart([&]()
 			{
 				CGameInstance::GetInstance()->SetTimeRatioCurve("JustDodge_Income");	// 슬로우
-				CGameInstance::GetInstance()->SetCameraFovCurve("Charge01_ActionCam");
+//				CGameInstance::GetInstance()->SetCameraFovCurve("Charge01_ActionCam");
 			})
 			.Tick([&](double fTimeDelta)
 			{
@@ -2749,7 +2720,7 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 			{
 				m_pASM->SetCurState("IDLE");
 
-				CGameInstance::GetInstance()->ReleaseCameraFovCurve();
+//				CGameInstance::GetInstance()->ReleaseCameraFovCurve();
 			})
 			
 				.AddTransition("JUSTDODGE_USABLE to JUSEDODGE_NONUSE", "JUSTDODGE_NONUSE")
@@ -2810,7 +2781,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	m_mapCollisionEvent.emplace("ATK_A3", [this]()
 	{
 		m_AttackDesc.eAttackSAS = m_PlayerSasType;
-		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 100) + 200;
 		m_AttackDesc.pCauser = this;
@@ -2828,7 +2799,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	m_mapCollisionEvent.emplace("ATK_A5", [this]()
 	{
 		m_AttackDesc.eAttackSAS = m_PlayerSasType;
-		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 200) + 300;
 		m_AttackDesc.pCauser = this;
@@ -2927,8 +2898,6 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
-
-
 	m_mapCollisionEvent.emplace("AS_ch0100_207_AL_atk_justdodge", [this]()
 	{
 
@@ -3134,14 +3103,21 @@ void CPlayer::Event_Kinetic_Throw()
 {
 	if (nullptr != m_pKineticObject && (nullptr != m_pTargetedEnemy && (!static_cast<CMonster*>(m_pTargetedEnemy)->IsDead())))
 	{
-		Vector4 vTargetPos = static_cast<CScarletCharacter*>(m_pTargetedEnemy)->GetColliderPosition();
+		Vector4 vTargetPos = static_cast<CMonster*>(m_pTargetedEnemy)->GetKineticTargetPos();
 		Vector4 vMyPos = m_pKineticObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 		Vector4 vDir = vTargetPos - vMyPos;
 		vDir.w = 0.f;
 		vDir = XMVector3Normalize(vDir);
 
-
 		_float3 vForce = { vDir.x, vDir.y, vDir.z };
+		vForce *= 1500.f;
+		static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(vForce);
+		static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetThrow();
+	}
+	else
+	{
+		_float3 vForce = { XMVectorGetX(m_vCamLook), XMVectorGetY(m_vCamLook), XMVectorGetZ(m_vCamLook) };
+		vForce = XMVector3Normalize(vForce);
 		vForce *= 1500.f;
 		static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(vForce);
 		static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetThrow();
@@ -3566,8 +3542,8 @@ HRESULT CPlayer::Setup_Parts()
 	WEAPON_DESC		Desc;
 	ZeroMemory(&Desc, sizeof(WEAPON_DESC));
 	Desc.m_PivotMatrix = m_pModel->GetPivotMatrix();
-	Desc.m_pSocket = m_pModel->Get_BonePtr("RightWeapon");
-	Desc.m_pTransform = m_pTransformCom;
+	//Desc.m_pSocket = m_pModel->Get_BonePtr("RightWeapon");
+	//Desc.m_pTransform = m_pTransformCom;
 	Desc.m_pJson = &Weapon;
 
 //	pGameInstance->Clone_GameObject(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
@@ -3706,9 +3682,6 @@ void CPlayer::KineticObject_Targeting()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	if (nullptr != m_pKineticObject)
-		static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetOutline();
-
 	m_pKineticObject = nullptr;
 
 	_uint iCount = 0;
@@ -3725,23 +3698,36 @@ void CPlayer::KineticObject_Targeting()
 
 		for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects())
 		{
-			if (false == static_cast<CMapKinetic_Object*>(iter)->Usable())
-				continue;
-
-			_vector vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-			_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-			_float fCurDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
-
-			if (fDistance > fCurDistance)
+			if (static_cast<CMapKinetic_Object*>(iter)->Usable())
 			{
-				fDistance = fCurDistance;
-				m_pKineticObject = iter;
+				_vector vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+				_float fCurDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
+
+				if (fDistance > fCurDistance)
+				{
+					fDistance = fCurDistance;
+					m_pKineticObject = iter;
+				}
 			}
 		}
+	}
+}
 
-		if (nullptr != m_pKineticObject)
-			static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetOutline();
+void CPlayer::KineticObject_OutLineCheck()
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	if (nullptr == m_pKineticObject)
+		return;
+
+	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects())
+	{
+		if(iter == m_pKineticObject)
+			static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetOutline(true);
+		else
+			static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetOutline(false);
 	}
 }
 

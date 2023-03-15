@@ -35,6 +35,7 @@ public:
 	_bool IsDead() const { return m_bDead; }
 	_bool IsActive() const { return m_bActive; }
 	virtual void SetActive();
+	virtual _float4	GetKineticTargetPos() { return GetColliderPosition(); }
 
 public:
 	_uint GetHP() { return m_iHP; }

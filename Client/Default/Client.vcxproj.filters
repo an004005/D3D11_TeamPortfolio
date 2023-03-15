@@ -298,6 +298,9 @@
     <Filter Include="02.GameObjects\UI\Tutorial\Psychokinesis">
       <UniqueIdentifier>{05a34116-b873-484c-8da2-baafc69d27ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FlowerLeg_EX">
+      <UniqueIdentifier>{8676bf82-0ab3-405f-b844-d3514f4a0421}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -991,9 +994,6 @@
     <ClCompile Include="..\private\FlowerLeg.cpp">
       <Filter>02.GameObjects\Monster\FlowerLeg</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BuddyLumi.cpp">
-      <Filter>02.GameObjects\Monster\BuddyLumi</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\BdLm_AnimInstance.cpp">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_AnimInstance</Filter>
     </ClCompile>
@@ -1313,6 +1313,9 @@
     </ClCompile>
     <ClCompile Include="..\private\LevelUpUI.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BuddyLumi.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
