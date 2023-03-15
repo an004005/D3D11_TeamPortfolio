@@ -209,3 +209,10 @@ void CImguiUtils::InputColor(_float4* pVector, const char* str)
 	pVector->w = vColor[3];
 }
 
+_float4x4 CImguiUtils::CreateMatrixFromImGuizmoData(_float3 vPos, _float3 vRot, _float3 vScale)
+{
+	_float4x4 Out;
+	ImGuizmo::RecomposeMatrixFromComponents((float*)&vPos, (float*)&vRot, (float*)&vScale, reinterpret_cast<float*>(&Out));
+	return Out;
+}
+

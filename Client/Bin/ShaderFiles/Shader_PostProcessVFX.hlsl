@@ -11,10 +11,14 @@ texture2D		g_LDRTexture;
 texture2D		g_NormalTexture; 
 texture2D		g_DepthTexture;
 texture2D		g_DepthMaintainTexture;
+texture2D		g_PortraitTexture;
 
 texture2D		g_DiffuseTexture;
 texture2D		g_ShadeTexture;
 texture2D		g_SpecularTexture;
+
+float g_iWinCX;
+float g_iWinCY;
 
 struct VS_IN
 {
@@ -354,6 +358,46 @@ PS_OUT PS_MAIN_Penetate_8(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_Portrait_9(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 vOutlineColor = g_vec4_0;
+
+	const float coord[3] = { -1.5, 0.f, 1.5 };
+	float fColor = 0.f;
+
+	// float4 LDR = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+	float4 vPortrait = g_PortraitTexture.Sample(LinearSampler, In.vTexUV);
+	if (vPortrait.x != 0.f && vPortrait.y != 0.f && vPortrait.z != 0.f)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				fColor += g_PortraitTexture.Sample(LinearSampler, In.vTexUV + float2(coord[j] / g_iWinCX, coord[i] / g_iWinCY)).a;
+			}
+		}
+		fColor /= 9.f;
+
+
+		if (fColor != 1.f)
+		{
+			Out.vColor = vOutlineColor;
+		}
+		else
+		{
+			float fGrain = g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, (float2)10.f, (float2)0.f));
+			Out.vColor = lerp(vPortrait, g_vec4_0, g_float_1) * fGrain;
+		}
+	}
+	else
+		Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor.a = 1.f;
+	return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -478,5 +522,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_Penetate_8();
+	}
+
+	//9
+	pass Portrait_9
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_Portrait_9();
 	}
 }

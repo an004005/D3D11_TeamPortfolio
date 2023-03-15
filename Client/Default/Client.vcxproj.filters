@@ -636,11 +636,9 @@
     <ClInclude Include="..\public\SkmP_Controller.h">
       <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PostVFX_ColorGrading.h" />
     <ClInclude Include="..\public\SkPd_Controller.h">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\BdLm_Controller.h" />
     <ClInclude Include="..\public\PlayerInfo_HpBackUI.h">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClInclude>
@@ -726,7 +724,6 @@
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
-    <ClInclude Include="..\public\BrJ_Controller.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
     <ClInclude Include="..\public\Trigger.h" />
@@ -761,8 +758,19 @@
     <ClInclude Include="..\public\FactoryMethod.h">
       <Filter>FactoryMethod</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PostVFX_Penetrate.h" />
     <ClInclude Include="..\public\SAS_Portrait.h" />
+    <ClInclude Include="..\public\BdLm_Controller.h">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrJ_Controller.h">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Penetrate.h">
+      <Filter>VFX\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_ColorGrading.h">
+      <Filter>VFX\PostProcess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1094,11 +1102,9 @@
     <ClCompile Include="..\private\SkmP_Controller.cpp">
       <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PostVFX_ColorGrading.cpp" />
     <ClCompile Include="..\private\SkPd_Controller.cpp">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BdLm_Controller.cpp" />
     <ClCompile Include="..\private\PlayerInfo_HpBackUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
     </ClCompile>
@@ -1183,7 +1189,6 @@
     <ClCompile Include="..\private\Boss_ShildUI.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BrJ_Controller.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
@@ -1218,8 +1223,19 @@
     <ClCompile Include="..\private\FactoryMethod.cpp">
       <Filter>FactoryMethod</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
     <ClCompile Include="..\private\SAS_Portrait.cpp" />
+    <ClCompile Include="..\private\BdLm_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrJ_Controller.cpp">
+      <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_ColorGrading.cpp">
+      <Filter>VFX\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Penetrate.cpp">
+      <Filter>VFX\PostProcess</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

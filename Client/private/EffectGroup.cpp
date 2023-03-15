@@ -608,7 +608,17 @@ void CEffectGroup::Imgui_RenderProperty()
 	ppEffectTag.clear();
 
 	Safe_Delete_Array(ppEffectGroupTag);
-		
+
+
+	ImGui::Checkbox("Use Pivot", &m_bUsePivot);
+	if (m_bUsePivot)
+	{
+		if (ImGui::CollapsingHeader("Pivot Matrix"))
+		{
+			static GUIZMO_INFO tInfo;
+			CImguiUtils::Render_Guizmo(&m_PivotMatrix, tInfo, true, true);
+		}
+	}
 }
 
 void CEffectGroup::SaveToJson(Json& json)

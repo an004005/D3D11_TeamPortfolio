@@ -36,7 +36,7 @@ public:
 	void SetNear(_float fNear) { m_fNear = fNear; }
 	void SetFar(_float fFar) { m_fFar = fFar; }
 
-	_float4x4 GetProjMatrix() const;
+	_float4x4 GetProjMatrix();
 	_float4x4 GetViewMatrix() const { return m_pTransformCom->Get_WorldMatrix_Inverse(); }
 
 private:
@@ -47,6 +47,7 @@ private:
 	_float m_fHeight = 720.f;
 	_float m_fNear = 0.1f;
 	_float m_fFar = 1000.f;
+	_bool m_bUseViewPortSize = true;
 
 public:		
 	virtual CGameObject* Clone(void* pArg = nullptr) = 0;
