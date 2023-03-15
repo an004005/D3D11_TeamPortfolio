@@ -3350,6 +3350,7 @@ void CPlayer::SocketLocalMoveCheck()
 
 void CPlayer::Update_TargetUI()
 {
+	//타겟이 사라졌을때, 쓰레기값이 들어가있어서 한번 검사를 시켜줌
 	if (m_pTargetedEnemy != nullptr && static_cast<CMonster*>(m_pTargetedEnemy)->IsDead() == true)
 		Enemy_Targeting(true);
 
