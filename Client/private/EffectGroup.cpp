@@ -271,7 +271,7 @@ void CEffectGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix,
 
 	if (trueisUpdate == false)
 	{
-		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
 
 		if (m_bRemoveScale == true)
 		{
