@@ -120,11 +120,12 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
 
-
 	m_pTransformCom->SetTransformDesc({ 5.f, XMConvertToRadians(720.f) });
 
 	m_pPlayerCam = m_pGameInstance->Add_Camera("PlayerCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Player");
 	Safe_AddRef(m_pPlayerCam);
+
+	m_pModel->FindMaterial(L"MI_ch0100_HOOD_0")->SetActive(false);
 
 	Initalize_Sas();
 
@@ -490,10 +491,6 @@ void CPlayer::Imgui_RenderProperty()
 	// ÀÌÆåÆ® ÀåÂø Åø
 	if (ImGui::CollapsingHeader("Effect_Attach"))
 	{
-		static char cEffectName[MAX_PATH]{};
-		static string szEffectName = "";
-
-		static char cAninName[MAX_PATH]{};
 		static string szAnimName = "";
 		static _float fEffectPlayTime = 0.f;
 		static _float fEffectSize = 1.f;
@@ -502,11 +499,11 @@ void CPlayer::Imgui_RenderProperty()
 		static _float fPrePlayTime = 0.f;
 		_float fCurPlayTime = m_pModel->GetPlayAnimation()->GetPlayTime();
 
+		static char szSeachAnim[MAX_PATH] = "";
+		ImGui::InputText("Anim Search", szSeachAnim, MAX_PATH);
+
 		if (ImGui::BeginListBox("Animation List"))
 		{
-			static char szSeachAnim[MAX_PATH] = "";
-			ImGui::InputText("Anim Search", szSeachAnim, MAX_PATH);
-
 			const string strSearch = szSeachAnim;
 			const _bool bSearch = strSearch.empty() == false;
 
@@ -528,68 +525,20 @@ void CPlayer::Imgui_RenderProperty()
 			ImGui::EndListBox();
 		}
 
-		if (ImGui::BeginListBox("Default Effect List"))
-		{
-			static char szSeachDefault[MAX_PATH] = "";
-			ImGui::InputText("Default Effect Search", szSeachDefault, MAX_PATH);
-
-			const string strSearch = szSeachDefault;
-			const _bool bSearch = strSearch.empty() == false;
-
-			
-			for (auto& Pair : m_mapDefaultEffect)
-			{
-				if (bSearch)
-				{
-					if (Pair.first.find(strSearch) == string::npos)
-						continue;
-				}
-
-				const bool bSelected = szEffectName == Pair.first;
-				if (bSelected)
-					ImGui::SetItemDefaultFocus();
-
-				if (ImGui::Selectable(Pair.first.c_str(), bSelected))
-					szEffectName = Pair.first;
-			}
-			ImGui::EndListBox();
-		}
-
-		if (ImGui::BeginListBox("Fire Effect List"))
-		{
-			static char szSeachFire[MAX_PATH] = "";
-			ImGui::InputText("Fire Effect Search", szSeachFire, MAX_PATH);
-
-			const string strSearch = szSeachFire;
-			const _bool bSearch = strSearch.empty() == false;
-
-			for (auto& Pair : m_mapFireEffect)
-			{
-				if (bSearch)
-				{
-					if (Pair.first.find(strSearch) == string::npos)
-						continue;
-				}
-
-				const bool bSelected = szEffectName == Pair.first;
-				if (bSelected)
-					ImGui::SetItemDefaultFocus();
-
-				if (ImGui::Selectable(Pair.first.c_str(), bSelected))
-					szEffectName = Pair.first;
-			}
-			ImGui::EndListBox();
-		}
-
-		ImGui::InputFloat("Effect_Size", &fEffectSize);
-		ImGui::InputText("Effect_Bone", cBoneName, MAX_PATH);
-		ImGui::InputFloat("Effect_Time", &fEffectPlayTime);
+		static char cEffectName[MAX_PATH]{};
+		static string szEffectName = "";
+		ImGui::InputText("Effect Search", cEffectName, MAX_PATH);
+		szEffectName = cEffectName;
 
 		if ((m_pModel->GetPlayAnimation()->GetName() == szAnimName) &&
 			(fPrePlayTime <= fEffectPlayTime) &&
 			(fCurPlayTime > fEffectPlayTime))
 		{
-			Event_Effect(szEffectName, fEffectSize, cBoneName);
+			//Event_Effect(szEffectName, fEffectSize, cBoneName);
+			//if (m_PlayerSasType == ESASType::SAS_NOT)
+			//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, s2ws(szEffectName))->Start_Attach(this, szBoneName);
+			//else if (m_PlayerSasType == ESASType::SAS_FIRE)
+			//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, s2ws(szEffectName))->Start_Attach(this, szBoneName);
 		}
 
 		fPrePlayTime = fCurPlayTime;

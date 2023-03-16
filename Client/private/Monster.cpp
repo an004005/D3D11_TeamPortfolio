@@ -154,7 +154,7 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 			param.vOrigin = vRayPos;
 			param.vDir = vRayDir;
 			param.fDistance = 10.f;
-			param.iTargetType = CTB_MONSTER;
+			param.iTargetType = CTB_MONSTER | CTB_MONSTER_PART | CTB_MONSTER_RANGE;
 			param.fVisibleTime = 5.f;
 			param.bSingle = true;
 			if (CGameInstance::GetInstance()->RayCast(param))
