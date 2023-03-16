@@ -410,10 +410,11 @@ PS_OUT_Flag PS_TEX_DISTORTION_DISCARD_OP(PS_IN In)
 	float4 BlendColor = defaultColor * OriginColor * 2.0f;
 	BlendColor.a = Mask * g_float_1;
 	float4 FinalColor = saturate(BlendColor);
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
+
 	Out.vColor = 0.f;//CalcHDRColor(FinalColor, g_float_0);
 	
 	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
-	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, BlendColor.a);
 
 	if(g_float_1 <= 0)
 	{

@@ -298,6 +298,9 @@
     <Filter Include="02.GameObjects\UI\Tutorial\Psychokinesis">
       <UniqueIdentifier>{05a34116-b873-484c-8da2-baafc69d27ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="VFX\Particle\ParticleGroup">
+      <UniqueIdentifier>{f465b88f-dbb3-4679-a8d4-76b67ddacdbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -742,10 +745,8 @@
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
-    <ClInclude Include="..\public\ParticleGroup.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
     <ClInclude Include="..\public\Trigger.h" />
-    <ClInclude Include="..\public\VFX_Manager.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
@@ -818,6 +819,12 @@
     </ClInclude>
     <ClInclude Include="..\public\LevelUpUI.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VFX_Manager.h">
+      <Filter>VFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ParticleGroup.h">
+      <Filter>VFX\Particle\ParticleGroup</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1234,10 +1241,8 @@
     <ClCompile Include="..\private\Boss_ShildUI.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\ParticleGroup.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
-    <ClCompile Include="..\private\VFX_Manager.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
@@ -1313,6 +1318,12 @@
     </ClCompile>
     <ClCompile Include="..\private\LevelUpUI.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VFX_Manager.cpp">
+      <Filter>VFX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ParticleGroup.cpp">
+      <Filter>VFX\Particle\ParticleGroup</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
