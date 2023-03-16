@@ -540,6 +540,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Shadow.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_VFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstanceTrail_VFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstance_ParticleSystem.hlsl" />
