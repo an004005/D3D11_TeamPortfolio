@@ -12,6 +12,8 @@
 #include "Model_Instancing.h"
 #include "SkyBox.h"
 #include "Imgui_PostProcess.h"
+#include "FactoryMethod.h"
+#include "VFX_Manager.h"
 
 CLevel_Maptool::CLevel_Maptool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -25,6 +27,7 @@ HRESULT CLevel_Maptool::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LevelSwitcher::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
+	CVFX_Manager::GetInstance()->Initialize(LEVEL_MAPTOOL);
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -134,6 +137,10 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 			FAILED_CHECK(Create_Model_Instance(s2ws(fileName), fileName.c_str()));
 		}
 	});
+
+
+	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
 
 	//SkyBox
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_Component_Model_SkySphere"),

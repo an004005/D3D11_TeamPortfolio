@@ -77,7 +77,7 @@ float3 Specular_IBL(float3 N, float3 V, float lodBias)
 
     float mip = lodBias * 5;
     float3 dir = reflect(-V, N);
-    return g_RadianceTexture.SampleLevel(CubeSampler, dir, mip) * 0.3f;
+    return g_RadianceTexture.SampleLevel(CubeSampler, dir, mip);
 }
 
 
