@@ -554,6 +554,7 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterLockon", CMonsterLockonUI::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_GravikenisisMouseUI", CGravikenisisMouseUI::Create(pDevice, pContext)));
 
+	return S_OK;
 }
 
 void CFactoryMethod::Free()
