@@ -346,27 +346,17 @@ PS_OUT PS_MAIN_PLAYER_TEXT_PARTICLE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-
-
-	float2 vTileOffsetUV = TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0, g_Time));
-
-	float2 MixUV = Get_FlipBookUV(vTileOffsetUV, g_Time + In.CurLife, 3.0, 4, 4);
-	float2 TexUV =  Get_FlipBookUV(In.vTexUV, g_Time + In.CurLife, 2.0, 4, 4);
+	float2 MixUV = Get_FlipBookUV(In.vTexUV,  In.CurLife, 1 , 4, 4);
 
 	float4 MixColor = g_tex_0.Sample(LinearSampler, MixUV);
+	float4 Color = g_vec4_0;
 
-	float4 TexColor = g_tex_1.Sample(LinearSampler, TexUV);
+	float4 BlendColor = MixColor * Color * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
 
-	// if(TexColor.a < 0.0001f)
-	// 	discard;
+	Out.vColor = CalcHDRColor(FinalColor, saturate(g_float_0 *In.RamainLifeRatio));
 
-	float gradient = g_float_1;
-
-	float4 CalcColor = float4(saturate(MixColor.rgb * TexColor.rgb), gradient);
-
-	Out.vColor = CalcHDRColor(CalcColor, g_float_0);
-
-	Out.vColor.a = TexColor.a * gradient;
+	Out.vColor.a = saturate(MixColor.r * In.RamainLifeRatio);
 
 
 
