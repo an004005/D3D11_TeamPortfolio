@@ -295,9 +295,6 @@
     <Filter Include="02.GameObjects\Monster\boss1\WaterBall">
       <UniqueIdentifier>{7d98e4ff-3ec3-41c0-b7b6-9a67b3d0b012}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Tutorial\Psychokinesis">
-      <UniqueIdentifier>{05a34116-b873-484c-8da2-baafc69d27ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="VFX\Particle\ParticleGroup">
       <UniqueIdentifier>{f465b88f-dbb3-4679-a8d4-76b67ddacdbc}</UniqueIdentifier>
     </Filter>
