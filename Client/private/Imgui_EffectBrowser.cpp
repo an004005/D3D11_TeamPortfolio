@@ -124,8 +124,8 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 		if (ImGui::Button("Refresh_Effect Folder"))
 		{
 			// LoadEffects("../Bin/Resources/Curve/EffectGroup/Fire_Attack/");
-			// LoadEffects("../Bin/Resources/Curve/EffectGroup/Elec_Attack/");
-			LoadEffects("../Bin/Resources/Curve/EffectGroup/Default_Attack/");
+			LoadEffects("../Bin/Resources/Curve/EffectGroup/Elec_Attack/");
+			// LoadEffects("../Bin/Resources/Curve/EffectGroup/Default_Attack/");
 			// LoadEffects("../Bin/Resources/Curve/EffectGroup/NeedToWork/");
 		}
 
