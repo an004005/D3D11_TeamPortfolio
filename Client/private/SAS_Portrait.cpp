@@ -151,14 +151,14 @@ void CSAS_Portrait::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_8))
-	{
-		Start_SAS(ESASType::SAS_FIRE);
-	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
-	{
-		Start_SAS(ESASType::SAS_PENETRATE);
-	}
+	// if (CGameInstance::GetInstance()->KeyDown(DIK_8))
+	// {
+	// 	Start_SAS(ESASType::SAS_FIRE);
+	// }
+	// if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	// {
+	// 	Start_SAS(ESASType::SAS_PENETRATE);
+	// }
 
 	if (m_eCurType != ESASType::SAS_END)
 	{
