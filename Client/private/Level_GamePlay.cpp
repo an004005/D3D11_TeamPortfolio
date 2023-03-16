@@ -33,6 +33,8 @@
 #include "PostVFX_ColorGrading.h"
 #include "Imgui_CurveManager.h"
 #include "FactoryMethod.h"
+#include "PostVFX_Penetrate.h"
+#include "VFX_Manager.h"
 
 
 // #define ADD_PLAYER
@@ -55,6 +57,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AnimModifier::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
+	CVFX_Manager::GetInstance()->Initialize(LEVEL_GAMEPLAY);
 
 	if (FAILED(Ready_Prototypes()))
 		return E_FAIL;
@@ -188,18 +191,7 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 	}
 #endif
 
-	{
-		auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
-		pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
-	}
-
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create())))
-		return E_FAIL;
+	
 
 	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
 
@@ -208,6 +200,9 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 	// FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_PostVFX_ColorGrading", CPostVFX_ColorGrading::Create(m_pDevice, m_pContext)));
 
 	CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext);
+	CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext);
+	CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext);
+	CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext);
 
 	return S_OK;
 }
@@ -288,10 +283,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	// Model_Ch300_Portrail
 
-	// auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
-	// _float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	// pos.y += 1.f;
-	// pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+	auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
+	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	pos.y += 1.f;
+	pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 1.f, 5.f, 1.f));
 
 	return S_OK;
 }
@@ -315,6 +313,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect()
 
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"Prototype_PostVFX_ColorGrading");
 
+
+	Json Penetrate = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Penetrate.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Penetrate", &Penetrate);
+
+	
 	return S_OK;
 }
 
