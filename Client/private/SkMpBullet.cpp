@@ -215,18 +215,7 @@ CGameObject * CSkMpBullet::Clone(void * pArg)
 }
 
 void CSkMpBullet::Free()
-{
-	/*if (m_bCloned == true)
-	{
-		if (m_pTrailParticle->IsDeleted() == false)
-			m_pTrailParticle->SetDelete();
-
-		if (m_pBulletEffect->IsDeleted() == false)
-			m_pBulletEffect->SetDelete();
-
-		Safe_Release(m_pTrailParticle);
-		Safe_Release(m_pBulletEffect);
-	}*/
+{	
 	__super::Free();
 
 	Safe_Release(m_pFSM);

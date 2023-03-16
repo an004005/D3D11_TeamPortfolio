@@ -3234,19 +3234,23 @@ void CPlayer::Create_TargetInfoBar()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	//몬스터 info바가 없으면 생성
-	if (dynamic_cast<CMonster*>(m_pTargetedEnemy)->GetHasName() == false)
-	{
-		CMonsterHpUI* pUI_HP = nullptr;
-		pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
+	if (dynamic_cast<CMonster*>(m_pTargetedEnemy)->GetHasName() == true)
+		return;
 
-		assert(pUI_HP != nullptr);
-		pUI_HP->Set_Owner(m_pTargetedEnemy);
+	CMonsterHpUI* pUI_HP = nullptr;
+	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
 
-		_float4x4 PivotMatrix = dynamic_cast<CMonster*>(m_pTargetedEnemy)->Get_UIPivotMatrix(INFOBAR);
-		pUI_HP->SetPivotMatrix(PivotMatrix);
+	assert(pUI_HP != nullptr);
+	pUI_HP->Set_Owner(m_pTargetedEnemy);
 
-		dynamic_cast<CMonster*>(m_pTargetedEnemy)->Set_HasName();
-	}
+	_float4x4 PivotMatrix = dynamic_cast<CMonster*>(m_pTargetedEnemy)->Get_UIPivotMatrix(INFOBAR);
+	pUI_HP->SetPivotMatrix(PivotMatrix);
+
+	_int iLevel = dynamic_cast<CMonster*>(m_pTargetedEnemy)->Get_MonsterLevel();
+	_int iName = dynamic_cast<CMonster*>(m_pTargetedEnemy)->Get_MonsterName();
+	pUI_HP->Set_MonsterInfo(iLevel, iName);
+
+	dynamic_cast<CMonster*>(m_pTargetedEnemy)->Set_HasName();
 }
 
 void CPlayer::NetualChecker(_double TimeDelta)
@@ -3476,6 +3480,7 @@ void CPlayer::KineticObject_Targeting()
 	}
 }
 
+
 void CPlayer::KineticObject_OutLineCheck()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
@@ -3491,9 +3496,17 @@ void CPlayer::KineticObject_OutLineCheck()
 		else
 		{
 			if (iter == m_pKineticObject)
+			{
 				static_cast<CMapKinetic_Object*>(iter)->SetOutline(true);
+				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_CameRange(false);
+
+			}
 			else
+			{
 				static_cast<CMapKinetic_Object*>(iter)->SetOutline(false);
+				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_CameRange(true);
+
+			}
 		}
 	}
 }

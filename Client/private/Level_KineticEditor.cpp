@@ -86,7 +86,7 @@ HRESULT CLevel_KineticEditor::Ready_Layer_BackGround(const _tchar* pLayerTag)
 	Json Test;// = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Car1.json");
 	vector<string> modeltags;
 
-	modeltags.push_back("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/FlowerPot/SM_MERGED_cannaFlower.static_model");
+	modeltags.push_back("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/GarbageCan/garbageCan.static_model");
 
 	Test["ModelTags"] = modeltags;
 

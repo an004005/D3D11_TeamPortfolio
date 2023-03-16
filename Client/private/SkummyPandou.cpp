@@ -56,23 +56,21 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Proto_SkPd_Controller"), TEXT("Com_Controller"), (CComponent**)&m_pController));
 
 	// Event Caller
-	m_pModelCom->Add_EventCaller("Rush_Start", [this]
+	m_pModelCom->Add_EventCaller("Rush_Start", [this] { m_bAtkToggle = true; });
+	m_pModelCom->Add_EventCaller("DashEff", [this]
 	{
-		// Effect 생성
 		if (!m_bDead)
 		{
-//			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0750_Dash_Attack")->Start_Attach(this, "Hips", true);
-			m_pDash_Effect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0750_Dash_Attack");
-			m_pDash_Effect->Start_Attach(this, "Hips", true);
-			Safe_AddRef(m_pDash_Effect);
+			_matrix PivotMatrix = XMMatrixIdentity();
+			PivotMatrix = XMMatrixRotationAxis(_float4(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f)) * XMMatrixScaling(18.f, 18.f, 18.f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0750_Dash_Attack")->Start_AttachPivot(this, PivotMatrix, "Target_end", true, true);
 		}
-		m_bAtkToggle = true;
 	});
 
 	m_pModelCom->Add_EventCaller("Rush_End", [this]
 	{
 		// Effect 해제
-		if (m_bCloned == true)
+		/*if (m_bCloned == true)
 		{
 			if (m_pDash_Effect != nullptr)
 			{
@@ -81,7 +79,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 				m_pDash_Effect = nullptr;
 			}
 
-		}
+		}*/
 		m_bAtkToggle = false;
 	});
 	
@@ -104,7 +102,7 @@ HRESULT CSkummyPandou::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 	// ~Event Caller
 	m_iMaxHP = 1000;
-	m_iHP = m_iMaxHP; // ★
+	m_iHP = 1000; // ★
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(190.f));	
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 //	m_bActiveGravity = false;
@@ -141,6 +139,8 @@ void CSkummyPandou::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("Bee", { m_pModelCom->Find_Animation("AS_em0700_160_AL_threat") });
+	m_iMaxHP = 1000;
+	m_iHP = 1000; // ★
 }
 
 void CSkummyPandou::Tick(_double TimeDelta)
@@ -216,7 +216,6 @@ void CSkummyPandou::Tick(_double TimeDelta)
 				m_pASM->InputAnimSocket("Bee", { m_pDamage_L_F });
 				m_bHitMove = true;
 			}
-
 			else
 			{
 				m_pASM->InputAnimSocket("Bee", { m_pDamage_L_B });
@@ -226,6 +225,8 @@ void CSkummyPandou::Tick(_double TimeDelta)
 
 		if (m_eAtkType == EAttackType::ATK_MIDDLE || m_eAtkType == EAttackType::ATK_HEAVY)
 		{
+			m_bHitMove = true;
+
 			if (m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("Bee", { m_pDamage_M_F });
 
@@ -281,7 +282,7 @@ void CSkummyPandou::Tick(_double TimeDelta)
 	_float fMoveSpeed = 0.f;
 
 	if (m_bRush)
-		fMoveSpeed = 15.f;
+		fMoveSpeed = 11.f;
 
 	else
 		fMoveSpeed = 2.5f;
@@ -348,6 +349,9 @@ void CSkummyPandou::SetUp_UI()
 	);
 
 	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
+
+	iMonsterLevel = 6;
+	m_eMonsterName = SKUMMYPANDOU;
 
 }
 
@@ -545,14 +549,14 @@ void CSkummyPandou::Free()
 {
 	CMonster::Free();
 
-	if (m_bCloned == true)
+	/*if (m_bCloned == true)
 	{
 		if (m_pDash_Effect != nullptr)
 		{
 			m_pDash_Effect->SetDelete();
 			Safe_Release(m_pDash_Effect);
 		}
-	}
+	}*/
 
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);

@@ -82,6 +82,8 @@ public:
 	class CEffectSystem* GetThirdEffect() { return m_pThird_EffectSystem; }
 	class CEffectSystem* GetFourthEffect() { return m_pFourth_EffectSystem; }
 
+	void Set_GroupVisible(const _bool bVisible) { m_bGroupVisible = bVisible; }
+
 protected:
 	void AddEmptyCurve(string strCurveName);
 
@@ -130,6 +132,7 @@ private:
 	string m_BoneName = "";
 	_float4x4 m_PivotMatrix = XMMatrixIdentity();
 
+	_bool	m_bGroupVisible = { true };
 
 private:
 	_float	m_fEndTime = 0.f;

@@ -18,6 +18,8 @@ END
 // #define DEBUG_SPHERE(vOrigin, fRadius) 
 // #endif
 
+#define LAYER_SAS L"Layer_SAS"
+
 BEGIN(Client)
 
 enum class EMoveAxis

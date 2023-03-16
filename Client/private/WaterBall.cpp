@@ -11,6 +11,7 @@
 
 #include "Boss1.h"
 #include "Player.h"
+#include "VFX_Manager.h"
 
 CWaterBall::CWaterBall(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBullet(pDevice, pContext)
@@ -36,10 +37,18 @@ HRESULT CWaterBall::Initialize(void * pArg)
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"BulletSkummyPool", L"Model", (CComponent**)&m_pModelCom));
 	
-	m_fShootSpeed = 30.f;
+	m_fShootSpeed = 24.f;
 
 	m_pTransformCom->SetSpeed(m_fShootSpeed);
 	
+	m_pBulletEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet");
+	m_pBulletEffect->Start_NoAttach(this, true);
+	Safe_AddRef(m_pBulletEffect);
+
+	m_pTrailParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Bullet_Trail_Particle");
+	m_pTrailParticle->Start_NoAttach(this, true);
+	Safe_AddRef(m_pTrailParticle);
+
 	// FSM 세팅
 	{
 		m_pFSMCom = CFSMComponentBuilder()
@@ -58,33 +67,48 @@ HRESULT CWaterBall::Initialize(void * pArg)
 					if (m_pCastOwner->IsDeleted())
 						SetDelete();*/
 
+					if (!m_bPrePos)
+					{
+						m_vPrePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+						m_bPrePos = true;
+					}
+
 					// 날아가면서 붙어있을 Effect 관리
 					m_pTransformCom->Move(TimeDelta, m_vDir);
 
 					DAMAGE_PARAM	dParams;
 					dParams.eAttackType = EAttackType::ATK_HEAVY;
 					dParams.eDeBuff = EDeBuffType::DEBUFF_OIL;
-					dParams.iDamage = 1;
+					dParams.iDamage = 100;
 					dParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 //					dParams.pCauser = m_pCastOwner;
 
-					CollisionCheck_Bullet(m_pTransformCom, dParams, 0.5f);//, ECOLLIDER_TYPE_BIT::CTB_PLAYER);
+					_uint iColType = ECOLLIDER_TYPE_BIT::CTB_PLAYER | ECOLLIDER_TYPE_BIT::CTB_STATIC | ECOLLIDER_TYPE_BIT::CTB_PSYCHICK_OBJ;
+
+					CollisionCheck_Bullet(m_pTransformCom, dParams, 0.5f, iColType);
 					if (m_bHitCheck == true)
 					{
+						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_1")->Start_NoAttach(this, false);
+						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_2")->Start_NoAttach(this, false);
+						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_3")->Start_NoAttach(this, false);
+
 						m_bDelete = true;
 					}
 					else
 					{
 						_vector vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-						_float4 fOrigin;
-						XMStoreFloat4(&fOrigin, vOrigin);
+	
 						_vector vDest = m_BeforePos;//m_pCastOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 
 						const _vector vDiff = vDest - vOrigin;
 						const _float fDistance = XMVectorGetX(XMVector3LengthEst(vDiff));
 
 						if (abs(fDistance > 70.f))// || fOrigin.y <= 0.f)
-						{					
+						{			
+							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_1")->Start_NoAttach(this, false);
+							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_2")->Start_NoAttach(this, false);
+							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_3")->Start_NoAttach(this, false);
+
 							m_bDelete = true;
 						}
 					}				
@@ -127,7 +151,7 @@ void CWaterBall::Late_Tick(_double TimeDelta)
 
 HRESULT CWaterBall::Render()
 {
-	m_pModelCom->Render(m_pTransformCom);
+//	m_pModelCom->Render(m_pTransformCom);
 	return S_OK;
 }
 
@@ -168,5 +192,21 @@ CGameObject * CWaterBall::Clone(void * pArg)
 void CWaterBall::Free()
 {
 	__super::Free();
+
+	if (m_bCloned == true)
+	{
+		if (m_pBulletEffect != nullptr)
+		{
+			m_pBulletEffect->SetDelete();
+			Safe_Release(m_pBulletEffect);
+		}
+
+		if (m_pTrailParticle != nullptr)
+		{
+			m_pTrailParticle->SetDelete();
+			Safe_Release(m_pTrailParticle);
+		}
+	}
+
 	Safe_Release(m_pFSMCom);
 }

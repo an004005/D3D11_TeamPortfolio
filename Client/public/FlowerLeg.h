@@ -136,7 +136,7 @@ private:
 
 	_bool		m_bAirMaintain = false;
 
-	_bool		m_bInvisible = false;
+//	_bool		m_bInvisible = false;
 	_bool		m_bUntouchable = false;
 
 	// HitDir
