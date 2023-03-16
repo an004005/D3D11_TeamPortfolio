@@ -48,6 +48,12 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 		(CComponent**)&m_pTrigger, &SkummyPoolTrigger)))
 		return E_FAIL;
 
+	Json SkummyPoolRange = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPool/SkummyPoolRange.json");
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"), 
+		(CComponent**)&m_pRange, &SkummyPoolRange)))
+		return E_FAIL;
+	
+
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
@@ -248,6 +254,7 @@ void CSkummyPool::Tick(_double TimeDelta)
 	}
 
 	m_pTrigger->Update_Tick(m_pTransformCom);
+	m_pRange->Update_Tick(m_pTransformCom);
 
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
@@ -435,4 +442,5 @@ void CSkummyPool::Free()
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);
+	Safe_Release(m_pRange);
 }

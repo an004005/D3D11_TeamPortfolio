@@ -50,6 +50,12 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 		(CComponent**)&m_pWeaponCollider, &BuddyLumiWeapon)))
 		return E_FAIL;
 
+	Json BuddyLumiRange = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiRange.json");
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
+		(CComponent**)&m_pRange, &BuddyLumiRange)))
+		return E_FAIL;
+	
+
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
@@ -426,6 +432,8 @@ void CBuddyLumi::AfterPhysX()
 	__super::AfterPhysX();
 	m_pWeaponCollider->Update_Tick(AttachCollider(m_pWeaponCollider));
 	m_pWeaponCollider->Update_AfterPhysX(m_pTransformCom);
+
+	m_pRange->Update_Tick(m_pTransformCom);
 }
 
 void CBuddyLumi::Swing_SweepCapsule(_bool bCol)
@@ -591,4 +599,5 @@ void CBuddyLumi::Free()
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pWeaponCollider);
+	Safe_Release(m_pRange);
 }

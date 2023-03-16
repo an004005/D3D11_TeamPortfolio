@@ -46,6 +46,9 @@ HRESULT CBoss1::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Com_Weak"), (CComponent**)&m_pWeak, pArg));
 
+	Json BossRnage = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_Rnage.json");
+	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
+		(CComponent**)&m_pRange, &BossRnage));
 
 	m_fGravity = 25.f;
 	m_iMaxHP = 10000;
@@ -266,6 +269,8 @@ void CBoss1::Tick(_double TimeDelta)
 
 	const _matrix WeakBoneMatrix = m_pModelCom->GetBoneMatrix("Water") * m_pTransformCom->Get_WorldMatrix();
 	m_pWeak->Update_Tick(WeakBoneMatrix);
+
+	m_pRange->Update_Tick(m_pTransformCom->Get_WorldMatrix());
 	Tick_AttackState();
 }
 
@@ -536,4 +541,5 @@ void CBoss1::Free()
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pWeak);
+	Safe_Release(m_pRange);
 }

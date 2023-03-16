@@ -65,12 +65,18 @@ void CMaterial::SaveToJson(Json& json)
 	CShader::SaveShaderParam(m_tParams, json);
 
 	char szProtoTag[MAX_PATH];
-	CGameUtils::wc2c(m_pShader->GetPrototypeTag(), szProtoTag);
-	json["ShaderProtoTag"] = szProtoTag;
+	if (m_pShader)
+	{
+		CGameUtils::wc2c(m_pShader->GetPrototypeTag(), szProtoTag);
+		json["ShaderProtoTag"] = szProtoTag;
+	}
 
-	CGameUtils::wc2c(m_pShaderInstancing->GetPrototypeTag(), szProtoTag);
-	json["ShaderInstancingProtoTag"] = szProtoTag;
-	json["InstancingPass"] = m_iInstancingPass;
+	if (m_pShaderInstancing)
+	{
+		CGameUtils::wc2c(m_pShaderInstancing->GetPrototypeTag(), szProtoTag);
+		json["ShaderInstancingProtoTag"] = szProtoTag;
+		json["InstancingPass"] = m_iInstancingPass;
+	}
 }
 
 void CMaterial::Imgui_RenderProperty()
@@ -82,12 +88,12 @@ void CMaterial::Imgui_RenderProperty()
 
 	ImGui::Separator();
 
-	if (ImGui::CollapsingHeader("Shader"))
+	if (m_pShader && ImGui::CollapsingHeader("Shader"))
 	{
 		m_pShader->Imgui_RenderProperty();
 	}
 	ImGui::Separator();
-	if (ImGui::CollapsingHeader("Instancing Shader"))
+	if (m_pShaderInstancing && ImGui::CollapsingHeader("Instancing Shader"))
 		m_pShaderInstancing->Imgui_RenderProperty();
 	ImGui::Separator();
 
