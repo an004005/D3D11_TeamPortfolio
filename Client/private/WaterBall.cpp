@@ -45,9 +45,9 @@ HRESULT CWaterBall::Initialize(void * pArg)
 	m_pBulletEffect->Start_NoAttach(this, true);
 	Safe_AddRef(m_pBulletEffect);
 
-	/*m_pTrailParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Bullet_Trail_Particle");
+	m_pTrailParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Bullet_Trail_Particle");
 	m_pTrailParticle->Start_NoAttach(this, true);
-	Safe_AddRef(m_pTrailParticle);*/
+	Safe_AddRef(m_pTrailParticle);
 
 	// FSM ¼¼ÆÃ
 	{
@@ -88,9 +88,9 @@ HRESULT CWaterBall::Initialize(void * pArg)
 					CollisionCheck_Bullet(m_pTransformCom, dParams, 0.5f, iColType);
 					if (m_bHitCheck == true)
 					{
-	//					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_1")->Start_NoAttach(this, false);
-	//					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_2")->Start_NoAttach(this, false);
-	//					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_3")->Start_NoAttach(this, false);
+						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_1")->Start_NoAttach(this, false);
+						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_2")->Start_NoAttach(this, false);
+						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_3")->Start_NoAttach(this, false);
 
 						m_bDelete = true;
 					}
@@ -105,9 +105,9 @@ HRESULT CWaterBall::Initialize(void * pArg)
 
 						if (abs(fDistance > 70.f))// || fOrigin.y <= 0.f)
 						{			
-	//						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_1")->Start_NoAttach(this, false);
-	//						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_2")->Start_NoAttach(this, false);
-	//						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_3")->Start_NoAttach(this, false);
+							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_1")->Start_NoAttach(this, false);
+							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_2")->Start_NoAttach(this, false);
+							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_3")->Start_NoAttach(this, false);
 
 							m_bDelete = true;
 						}
@@ -201,11 +201,11 @@ void CWaterBall::Free()
 			Safe_Release(m_pBulletEffect);
 		}
 
-		/*if (m_pTrailParticle != nullptr)
+		if (m_pTrailParticle != nullptr)
 		{
 			m_pTrailParticle->SetDelete();
 			Safe_Release(m_pTrailParticle);
-		}*/
+		}
 	}
 
 	Safe_Release(m_pFSMCom);
