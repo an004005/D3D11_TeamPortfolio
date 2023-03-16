@@ -305,6 +305,12 @@ void CBronJon::Imgui_RenderProperty()
 	m_pASM->Imgui_RenderState();
 }
 
+void CBronJon::SetUp_UI()
+{
+	iMonsterLevel = 5;
+	m_eMonsterName = BRONJON;
+}
+
 void CBronJon::AfterPhysX()
 {
 	/*if (!m_bActive)

@@ -40,7 +40,6 @@ HRESULT CCanvas_PlayerInfoMove::Initialize(void* pArg)
 	m_vMaxDestination = { 0.0f, -7.0f };
 	CCanvas::UIMove_FSM();
 
-
 	return S_OK;
 }
 
@@ -57,6 +56,13 @@ void CCanvas_PlayerInfoMove::BeginTick()
 	//		break;
 	//	}
 	//}
+
+	Set_PlayerHp(_float(m_pPlayer->Get_PlayerStat().m_iHP), _float(m_pPlayer->Get_PlayerStat().m_iMaxHP));
+	Set_PsychokinesisGauge(
+		PSYCHOKINESISLEVEL(m_pPlayer->Get_PlayerStat().m_iKineticEnergyLevel),
+		PSYCHOKINESISTYPE(m_pPlayer->Get_PlayerStat().m_iKineticEnergyType),
+		_float(m_pPlayer->Get_PlayerStat().m_iKineticEnergy),
+		_float(m_pPlayer->Get_PlayerStat().m_iMaxKineticEnergy));
 }
 
 void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)

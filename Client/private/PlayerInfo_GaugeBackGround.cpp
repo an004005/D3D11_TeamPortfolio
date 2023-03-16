@@ -27,6 +27,8 @@ HRESULT CPlayerInfo_GaugeBackGround::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	m_tParams.Floats[0] = 0.5f;
+
 	return S_OK;
 }
 

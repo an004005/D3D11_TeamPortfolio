@@ -17,6 +17,8 @@
 #include "WaterBall.h" // Oil_Bullet
 #include "VFX_Manager.h"
 
+#include "Canvas_Alarm.h"
+
 CBoss1::CBoss1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -407,6 +409,12 @@ HRESULT CBoss1::Render()
 {
 	m_pModelCom->Render(m_pTransformCom);
 	return S_OK;
+}
+
+void CBoss1::SetUp_UI()
+{
+	iMonsterLevel = 10;
+	m_eMonsterName = GODLYFERRY;
 }
 
 void CBoss1::Imgui_RenderProperty()
