@@ -252,7 +252,7 @@ PS_OUT PS_PARTICLE_EM0650(PS_IN In)
 	float4 BlendColor = DefaultTex * Choose * 2.0f;
 	float4 FinalColor = saturate(BlendColor);
 
-	Out.vColor = CalcHDRColor(FinalColor,g_float_0); // color * emissive
+	Out.vColor = CalcHDRColor(FinalColor,g_float_0 * In.RamainLifeRatio); // color * emissive
 
 	if (g_tex_on_1)
 	{

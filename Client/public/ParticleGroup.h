@@ -29,6 +29,8 @@ public:
 public:
 	void		Start_ParticleWork();
 
+	void		Start_NoAttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
+
 	void		Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
 	void		Start_Attach(CGameObject* pOwner, string BoneName, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
 	void		Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _bool usepivot = false, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
