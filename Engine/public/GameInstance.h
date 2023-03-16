@@ -178,6 +178,7 @@ public: /* for CameraManager*/
 public:/*for GameTimeManager */
 	void ResetTimeRatio();
 	void SetTimeRatioCurve(const string& strCurveTag, _bool bStay = false, const vector<wstring>* ExceptLayers = nullptr);
+	void SetTimeRatio(_float fTimeRatio, const vector<wstring>* ExceptLayers = nullptr);
 
 public: // for CImgui_Manager
 	void Render_ImGui();
