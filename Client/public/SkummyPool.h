@@ -37,6 +37,7 @@ private:
 	class CSkmP_AnimInstance*	m_pASM = nullptr;
 	
 	CRigidBody*					m_pTrigger = nullptr;
+	CRigidBody*					m_pRange = nullptr;
 
 private:
 	CAnimation*			m_pAtk_Shoot = nullptr; // 

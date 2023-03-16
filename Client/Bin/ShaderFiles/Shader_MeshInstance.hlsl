@@ -180,7 +180,7 @@ PS_OUT_NORM PS_PLAYER_KINETIC_PARTICLE(PS_IN_NORM In)
 	float4 Color = g_vec4_0;
 	float4 BlendColor = BaseTex * Color ;
 
-	Out.vColor = saturate(BlendColor);
+	Out.vColor = saturate(Color);
 
 	vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
 	vNormal = vNormalDesc.xyz * 2.f - 1.f;
@@ -188,7 +188,7 @@ PS_OUT_NORM PS_PLAYER_KINETIC_PARTICLE(PS_IN_NORM In)
 	vNormal = normalize(mul(vNormal, WorldMatrix));
 
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f) * In.RamainLifeRatio;
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0 * In.RamainLifeRatio, flags);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, saturate(g_float_0 * In.RamainLifeRatio), flags);
 
 	// Out.vColor.a = g_vec4_0.a;
 

@@ -185,11 +185,11 @@ void CControlledRigidBody::CreateController()
 	// 이 컨트롤러와 충돌하는 타입 선택(컨트롤러의 이동은 scene query기반)
 	if (m_eColliderType == CT_MONSTER)
 	{
-		m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC;
+		m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC | CTB_PLAYER_RANGE;
 	}
 	else 
 	{
-		m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC | CTB_MONSTER_PART;
+		m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC | CTB_MONSTER_PART | CTB_MONSTER_RANGE;
 	}
 
 	if (auto pOwner = TryGetOwner())

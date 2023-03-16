@@ -1,0 +1,1 @@
+{"LifeTime":10.0,"ObjectTag":"em0320_Bullet_Trail_Particle","Particles":[{"ObjectTag":"em0320_Bullet_Trail_Particle","ParticleDirectory":"../Bin/Resources/VFX/ParticleSystem/em0320/em0320_Bullet_Trail_Particle.json"}],"Prototype_GameObject":"ProtoVFX_ParticleGroup\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}

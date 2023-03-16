@@ -96,6 +96,9 @@ PS_OUT PS_MAIN(PS_IN In)
 		Out.vColor = LDR * (1.f - vFlags.a) + OriginColor * vFlags.a;
 
 		Out.vColor.a = 1.f;
+
+		// if (vFlags.a <= 0.001f)
+		// 	discard;
 	}
 	else if(vFlags.y == SHADER_SCIFI_PLAYER_ATTACK)
 	{
@@ -328,7 +331,7 @@ PS_OUT PS_MAIN_Penetate_8(PS_IN In)
 	else if (vFlags.z == SHADER_MONSTER_WEAK)
 	{
 		float fGray = dot(LDR.rgb, float3(0.299, 0.587, 0.114));
-		Out.vColor.rgb = float3(1.f, 1.f, 169.f / 255.f) * fGray;
+		Out.vColor.rgb = float3(1.f, 1.f, 169.f / 255.f) * fGray * 1.5f;
 		Out.vColor.a = 1.f;
 	}
 	else

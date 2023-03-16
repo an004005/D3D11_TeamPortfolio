@@ -836,6 +836,11 @@ void CGameInstance::SetTimeRatioCurve(const string& strCurveTag, _bool bStay, co
 	m_pGameTime_Manager->SetTimeRatioCurve(strCurveTag, bStay, ExceptLayers);
 }
 
+void CGameInstance::SetTimeRatio(_float fTimeRatio, const vector<wstring>* ExceptLayers)
+{
+	m_pGameTime_Manager->SetTimeRatio(fTimeRatio, ExceptLayers);
+}
+
 /*************************
  *	CImgui_Manager
  *************************/

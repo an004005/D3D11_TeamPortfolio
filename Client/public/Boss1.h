@@ -40,6 +40,7 @@ public:
 	virtual void AfterPhysX() override;
 	
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
+	virtual _float4	GetKineticTargetPos() override;
 
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
@@ -65,6 +66,8 @@ private:
 
 	class CRigidBody* m_pLeftArm = nullptr;
 	class CRigidBody* m_pRightArm = nullptr;
+
+	CRigidBody* m_pRange = nullptr;
 
 	CScarletCharacter* m_pTarget = nullptr;
 

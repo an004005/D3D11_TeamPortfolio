@@ -48,6 +48,12 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 		(CComponent**)&m_pTrigger, &SkummyPoolTrigger)))
 		return E_FAIL;
 
+	Json SkummyPoolRange = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPool/SkummyPoolRange.json");
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"), 
+		(CComponent**)&m_pRange, &SkummyPoolRange)))
+		return E_FAIL;
+	
+
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
@@ -248,6 +254,7 @@ void CSkummyPool::Tick(_double TimeDelta)
 	}
 
 	m_pTrigger->Update_Tick(m_pTransformCom);
+	m_pRange->Update_Tick(m_pTransformCom);
 
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
@@ -337,12 +344,6 @@ void CSkummyPool::AfterPhysX()
 void CSkummyPool::SetUp_UI()
 {
 	//HP UI
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	CMonsterHpUI* pUI_HP = nullptr;
-	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
-
-	assert(pUI_HP != nullptr);
-	pUI_HP->Set_Owner(this);
 
 	_float4x4 UI_PivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
@@ -351,7 +352,7 @@ void CSkummyPool::SetUp_UI()
 		0.0f, 0.241f, 0.0f, 1.0f
 	);
 
-	pUI_HP->SetPivotMatrix(UI_PivotMatrix);
+	m_UI_PivotMatrixes[INFOBAR] = UI_PivotMatrix;
 
 	//FindEye
 	UI_PivotMatrix = Matrix(
@@ -441,4 +442,5 @@ void CSkummyPool::Free()
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);
+	Safe_Release(m_pRange);
 }

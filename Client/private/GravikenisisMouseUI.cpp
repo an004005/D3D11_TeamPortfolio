@@ -73,6 +73,12 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 	if (m_pKenisis == nullptr)
 		return;
 	
+	if (m_pOwner == nullptr)
+	{
+		m_bDelete = true;
+		return;
+	}
+
 	if (false == dynamic_cast<CMapKinetic_Object*>(m_pOwner)->Get_IsTargeted())
 		return;
 		

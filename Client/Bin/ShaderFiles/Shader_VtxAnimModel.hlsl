@@ -328,9 +328,9 @@ PS_OUT PS_MAIN_EM320_Weak_4(PS_IN In)
 		float4 vWeak = g_Weak01.Sample(LinearSampler, distortionUV * 5.f);
 		if (vWeak.a > 0.1f)
 		{
-			float time = sin(g_Time);
+			float time = sin(g_Time * 1.5f);
 			Out.vDiffuse.xyz = lerp(Out.vDiffuse.xyz, float3(1.f, 0.3f, 0.f), vWeak.a);
-			Out.vDepth.z = vWeak.a * 2.5f * (time + 1.f);
+			Out.vDepth.z = vWeak.a * 1.5f * (time + 2.f);
 			Out.vRMA.g = 0.f;
 			Out.vRMA.r = 1.f;
 		}
@@ -357,6 +357,25 @@ PS_OUT_NONLIGHT PS_MAIN_Invisible_5(PS_IN In)
 
 	Out.vColor = fFresnel;
 	Out.vFlag = float4(SHADER_DISTORTION_STATIC, 0.f, 0.f, fFresnel);
+
+	return Out;
+}
+
+PS_OUT em800_Weak_6(PS_IN In)
+{
+	PS_OUT			Out = PS_MAIN_DEFAULT(In);
+
+	float time = sin(g_Time * 1.5f);
+	Out.vDiffuse.xyz *= float3(1.f, 1.f, 0.f);
+	Out.vDepth.z = time + 2.f;
+
+	float fHit = g_float_1;
+	if (fHit > 0.f)
+	{
+		Out.vDepth.z = fHit + 2.f;
+	}
+	Out.vDepth.w = SHADER_NONE_SHADE;
+	Out.vFlag = float4(0.f, 0.f, SHADER_MONSTER_WEAK, 0.f);
 
 	return Out;
 }
@@ -445,5 +464,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_Invisible_5();
+	}
+
+	//6
+	pass em800_Weak_6
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 em800_Weak_6();
 	}
 }

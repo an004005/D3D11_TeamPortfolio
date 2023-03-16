@@ -86,7 +86,6 @@ struct PS_OUT
 struct PS_OUT_NONLIGHT
 {
 	float4		vColor : SV_TARGET0;
-	float4		vFlag : SV_TARGET1;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -339,6 +338,24 @@ PS_OUT_NONLIGHT PS_ToonDefault_Forward_6(PS_IN In)
 	return Out;
 }
 
+PS_OUT_NONLIGHT PS_WIRE_Forward_7(PS_IN In)
+{
+	PS_OUT_NONLIGHT			Out = (PS_OUT_NONLIGHT)0;
+
+	float4 vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	if (vDiffuse.a < 0.001f)
+		discard;
+
+	float4 vNormal = NormalPacking(In);
+	vNormal.xyz = vNormal.xyz * 2.f - 1.f;
+
+	float4 vViewDir = g_vCamPosition - In.vWorldPos;
+	float fFresnel = FresnelEffect(vNormal.xyz, normalize(vViewDir.xyz), 0.5f);
+	Out.vColor.rgb = lerp(COL_WHITE, COL_FIRE, fFresnel);
+	Out.vColor.a = 1.f;
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0
@@ -438,7 +455,20 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_ToonDefault_Forward_6();
 	}
-	
+
+	// 7
+	pass PS_ToonWireForward
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_WIRE_Forward_7();
+	}
 }
 
 
