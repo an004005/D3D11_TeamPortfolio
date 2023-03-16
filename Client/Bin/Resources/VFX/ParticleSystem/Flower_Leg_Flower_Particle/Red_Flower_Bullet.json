@@ -82,7 +82,7 @@
         ]
     },
     "bGravity": false,
-    "bLocal": true,
+    "bLocal": false,
     "bRotate": false,
     "bSizeDecreaseByLife": false,
     "bSizeIncreaseByLife": false,
