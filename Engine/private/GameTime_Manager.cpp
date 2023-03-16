@@ -68,6 +68,9 @@ void CGameTime_Manager::SetTimeRatio(_float fTimeRatio, const vector<wstring>* E
 {
 	m_TimeRatio = fTimeRatio;
 
+	for (auto& layer : CObject_Manager::GetInstance()->GetLayers(LEVEL_NOW))
+		layer.second->SetUseTimeRatio(true);
+
 	if (ExceptLayers)
 	{
 		for (auto& layerTag : *ExceptLayers)
