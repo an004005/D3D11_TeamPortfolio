@@ -107,14 +107,14 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
    CGameInstance* pGameInstance = CGameInstance::GetInstance();
    CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Player"));
 
-   if (pLayer != nullptr)
-   {
-      CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
-      pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
-
-      assert(pGravikenisisMouse != nullptr);
-      pGravikenisisMouse->Set_Owner(this);
-   }
+   // if (pLayer != nullptr)
+   // {
+   //    CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
+   //    pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
+   //
+   //    assert(pGravikenisisMouse != nullptr);
+   //    pGravikenisisMouse->Set_Owner(this);
+   // }
 
 	return S_OK;
 }

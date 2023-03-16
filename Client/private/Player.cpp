@@ -284,6 +284,7 @@ void CPlayer::Tick(_double TimeDelta)
 	}
 
 	SocketLocalMoveCheck();
+	m_pRange->Update_Tick(m_pTransformCom);
 
 	if (pGameInstance->KeyDown(DIK_F1))
 	{
@@ -393,7 +394,6 @@ void CPlayer::AfterPhysX()
 	{
 		static_cast<CScarletWeapon*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
 	}
-
 	m_pCamSpot->SetUp_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
 }
 
@@ -786,12 +786,17 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 
 		//FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody",
 		//	L"ContectRigidBody", (CComponent**)&m_pContectRigidBody, pArg));
+		
 	}
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_LocalController"), TEXT("Com_Controller"),
 		(CComponent**)&m_pController));
 	
 	NULL_CHECK(m_pASM = CBaseAnimInstance::Create(m_pModel, this));
+
+	Json PlayerCollider = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Player/PlayerRange.json");
+	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody",
+		L"PlayerRangeCollider", (CComponent**)&m_pRange, &PlayerCollider));
 
 	return S_OK;
 }
@@ -4134,6 +4139,7 @@ void CPlayer::Free()
 	Safe_Release(m_pKineticAnimModel);
 
 	Safe_Release(m_pCurve);
+	Safe_Release(m_pRange);
 
 //	Safe_Release(m_pContectRigidBody);
 }

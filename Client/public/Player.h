@@ -485,6 +485,7 @@ private:
 
 	CCamera*	m_pPlayerCam = nullptr;
 	CCamSpot*	m_pCamSpot = nullptr;
+	CRigidBody* m_pRange = nullptr;
 
 //private:
 //	void			Attack_Effect(const string& szBoneName, _float fSize);
