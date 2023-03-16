@@ -68,14 +68,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 	m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
 		if (!m_bThrow)
-		{
 			return;
-		}
-
-		if (!m_bUsable)
-			return;
-
-		m_bUsable = false;
 
 		if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
 		{
@@ -85,6 +78,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 			pMonster->TakeDamage(tParam);
+			m_bHit = true;
 
 			// 충돌이 발생하면 플레이어의 키네틱 콤보 상태를 1로 올려준다.
 			if (CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player") != nullptr)
@@ -103,11 +97,11 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(18.f) });
 
-	CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
-	pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
+	//CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
+	//pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
 
-	assert(pGravikenisisMouse != nullptr);
-	pGravikenisisMouse->Set_Owner(this);
+	//assert(pGravikenisisMouse != nullptr);
+	//pGravikenisisMouse->Set_Owner(this);
 
 	return S_OK;
 }
@@ -132,7 +126,9 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 	{
 		m_fDeadTimer += (_float)TimeDelta;
 
-		if (m_fDeadTimer >= 5.f)
+		if (m_bHit && m_fDeadTimer >= 1.f)
+			this->SetDelete();
+		else if (m_fDeadTimer >= 5.f)
 			this->SetDelete();
 	}
 

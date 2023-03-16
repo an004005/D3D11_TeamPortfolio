@@ -646,6 +646,10 @@ void CEffectSystem::Free()
 			Safe_Release(m_vecModelCom[i]);
 			m_pModel = nullptr;
 		}
+		else
+		{
+			Safe_Release(m_vecModelCom[i]);
+		}
 	}
 	Safe_Release(m_pModel);
 
