@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "..\public\FL_Controller.h"
-#include "FlowerLeg.h"
+#include "..\public\FLInvisible_Controller.h"
+#include "FlowerLeg_Invisible.h"
 #include "FSMComponent.h"
 #include "EffectGroup.h"
 #include "VFX_Manager.h"
-CFL_Controller::CFL_Controller(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CFLInvisible_Controller::CFLInvisible_Controller(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CAIController(pDevice, pContext)
 {
 }
 
-CFL_Controller::CFL_Controller(const CFL_Controller & rhs)
+CFLInvisible_Controller::CFLInvisible_Controller(const CFLInvisible_Controller & rhs)
 	: CAIController(rhs)
 {
 }
 
-HRESULT CFL_Controller::Initialize(void * pArg)
+HRESULT CFLInvisible_Controller::Initialize(void * pArg)
 {
 	FAILED_CHECK(CAIController::Initialize(pArg));
 		
@@ -34,7 +34,7 @@ HRESULT CFL_Controller::Initialize(void * pArg)
 					})*/
 
 			.AddState("Outside")
-				.Tick(this, &CFL_Controller::Tick_Outside)
+				.Tick(this, &CFLInvisible_Controller::Tick_Outside)
 				.OnExit([this]
 					{
 						m_pCastedOwner->TurnEyesOut();
@@ -46,7 +46,7 @@ HRESULT CFL_Controller::Initialize(void * pArg)
 					})
 
 			.AddState("Near")
-				.Tick(this, &CFL_Controller::Tick_Near)
+				.Tick(this, &CFLInvisible_Controller::Tick_Near)
 				
 				.AddTransition("Near to Mid", "Mid")
 					.Predicator([this] 
@@ -61,7 +61,7 @@ HRESULT CFL_Controller::Initialize(void * pArg)
 					})
 
 			.AddState("Mid")
-				.Tick(this, &CFL_Controller::Tick_Mid)
+				.Tick(this, &CFLInvisible_Controller::Tick_Mid)
 				.AddTransition("Mid to Near", "Near")
 					.Predicator([this] 
 					{
@@ -75,7 +75,7 @@ HRESULT CFL_Controller::Initialize(void * pArg)
 					})
 
 			.AddState("Far")
-				.Tick(this, &CFL_Controller::Tick_Far)
+				.Tick(this, &CFLInvisible_Controller::Tick_Far)
 				.AddTransition("Far to Near", "Near")
 					.Predicator([this]
 					{
@@ -96,14 +96,14 @@ HRESULT CFL_Controller::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CFL_Controller::BeginTick()
+void CFLInvisible_Controller::BeginTick()
 {
 	CAIController::BeginTick();
-	m_pCastedOwner = dynamic_cast<CFlowerLeg*>(TryGetOwner());
+	m_pCastedOwner = dynamic_cast<CFlowerLeg_Invisible*>(TryGetOwner());
 	Assert(m_pCastedOwner != nullptr);
 }
 
-void CFL_Controller::AI_Tick(_double TimeDelta)
+void CFLInvisible_Controller::AI_Tick(_double TimeDelta)
 {
 	m_bRun = false;
 
@@ -120,7 +120,7 @@ void CFL_Controller::AI_Tick(_double TimeDelta)
 	}
 }
 
-void CFL_Controller::Tick_Near(_double TimeDelta)
+void CFLInvisible_Controller::Tick_Near(_double TimeDelta)
 {
 	m_eDistance = DIS_NEAR;
 	// 1. È¸Àü °ø°Ý 2. Èð»Ñ¸®±â °ø°Ý 3. È¸ÇÇ(ÁÂ, ¿ì, µÚ) 4. Walk
@@ -154,7 +154,7 @@ void CFL_Controller::Tick_Near(_double TimeDelta)
 
 }
 
-void CFL_Controller::Tick_Mid(_double TimeDelta)
+void CFLInvisible_Controller::Tick_Mid(_double TimeDelta)
 {
 	m_eDistance = DIS_MIDDLE;
 
@@ -164,13 +164,13 @@ void CFL_Controller::Tick_Mid(_double TimeDelta)
 		AddCommand("WalkTurn", 1.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	case 1:
-		AddCommand("Run", 4.f, &CFL_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		AddCommand("Run", 4.f, &CFLInvisible_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	}
 	m_iMidOrder = (m_iMidOrder + 1) % 2;
 }
 
-void CFL_Controller::Tick_Far(_double TimeDelta)
+void CFLInvisible_Controller::Tick_Far(_double TimeDelta)
 {
 	m_eDistance = DIS_FAR;
 
@@ -188,7 +188,7 @@ void CFL_Controller::Tick_Far(_double TimeDelta)
 	m_iFarOrder = (m_iFarOrder + 1) % 2;
 }
 
-void CFL_Controller::Tick_Outside(_double TimeDelta)
+void CFLInvisible_Controller::Tick_Outside(_double TimeDelta)
 {
 	m_eDistance = DIS_OUTSIDE;
 
@@ -207,7 +207,7 @@ void CFL_Controller::Tick_Outside(_double TimeDelta)
 }
 
 
-void CFL_Controller::Run(EMoveAxis eAxis)
+void CFLInvisible_Controller::Run(EMoveAxis eAxis)
 {
 	m_bRun = true;
 
@@ -253,21 +253,21 @@ void CFL_Controller::Run(EMoveAxis eAxis)
 	}
 }
 
-void CFL_Controller::Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
+void CFLInvisible_Controller::Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
 {
 	Run(eAxis);
 	TurnToTarget(fSpeedRatio);
 }
 
-void CFL_Controller::Free()
+void CFLInvisible_Controller::Free()
 {
 	CAIController::Free();
 	Safe_Release(m_pFSM);
 }
 
-CComponent * CFL_Controller::Clone(void * pArg)
+CComponent * CFLInvisible_Controller::Clone(void * pArg)
 {
-	CFL_Controller*		pInstance = new CFL_Controller(*this);
+	CFLInvisible_Controller*		pInstance = new CFLInvisible_Controller(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -278,9 +278,9 @@ CComponent * CFL_Controller::Clone(void * pArg)
 	return pInstance;
 }
 
-CFL_Controller * CFL_Controller::Create()
+CFLInvisible_Controller * CFLInvisible_Controller::Create()
 {
-	CFL_Controller*		pInstance = new CFL_Controller(nullptr, nullptr);
+	CFLInvisible_Controller*		pInstance = new CFLInvisible_Controller(nullptr, nullptr);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{

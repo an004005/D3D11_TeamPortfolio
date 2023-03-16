@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "FlowerLeg.h"
+#include "FlowerLeg_Invisible.h"
 #include "GameInstance.h"
 #include "Model.h"
 #include "JsonStorage.h"
 #include "PhysX_Manager.h"
 
-#include "FL_Controller.h"
-#include "FL_AnimInstance.h"
+#include "FLInvisible_Controller.h"
+#include "FLInvisible_AnimInstance.h"
 #include "RigidBody.h"
 #include "Player.h"
 
@@ -14,22 +14,22 @@
 #include "Material.h"
 
 #include "MonsterHpUI.h"
-CFlowerLeg::CFlowerLeg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CFlowerLeg_Invisible::CFlowerLeg_Invisible(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
 {
 }
 
-CFlowerLeg::CFlowerLeg(const CFlowerLeg & rhs)
+CFlowerLeg_Invisible::CFlowerLeg_Invisible(const CFlowerLeg_Invisible & rhs)
 	: CMonster(rhs)
 {
 }
 
-HRESULT CFlowerLeg::Initialize_Prototype()
+HRESULT CFlowerLeg_Invisible::Initialize_Prototype()
 {
 	return CMonster::Initialize_Prototype();
 }
 
-HRESULT CFlowerLeg::Initialize(void * pArg)
+HRESULT CFlowerLeg_Invisible::Initialize(void * pArg)
 {
 	Json FlowerLegJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegTrigger.json");
 	MoveTransformJson(FlowerLegJson, pArg);
@@ -50,17 +50,12 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		(CComponent**)&m_pTailCol, &FlowerLegTailCol)))
 		return E_FAIL;
 
-	Json FlowerLegRangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegRange.json");
-	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
-		(CComponent**)&m_pRange, &FlowerLegRangeCol)))
-		return E_FAIL;
-
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"MonsterFlowerLeg", L"Model", (CComponent**)&m_pModelCom));
 
-	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Proto_FL_Controller"), TEXT("Com_Controller"), (CComponent**)&m_pController));
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Proto_FLInvisible_Controller"), TEXT("Com_Controller"), (CComponent**)&m_pController));
 
 	m_pModelCom->Add_EventCaller("JumpAttackStart", [this]
 	{	
@@ -237,14 +232,12 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 			m_pShootFlwParticle->Start_Attach(this, "RightFlower5", true);
 			Safe_AddRef(m_pShootFlwParticle);
 		}
-	
 
-//		m_bInvisible = true; 
 	});
 	m_pModelCom->Add_EventCaller("OverLap", [this] { Strew_Overlap(); });
 	m_pModelCom->Add_EventCaller("Invincible_End", [this] 
 	{ 
-//		m_bInvisible = false; 
+
 	});
 
 	m_pModelCom->Add_EventCaller("FallRose_End", [this]
@@ -287,11 +280,11 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("Untouch_End", [this] { m_bUntouchable = false; });
 
 	m_iMaxHP = 1500;
-	m_iHP = 1500; // ★
+	m_iHP = m_iMaxHP; // ★
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
-	m_pASM = CFL_AnimInstance::Create(m_pModelCom, this);
+	m_pASM = CFLInvisible_AnimInstance::Create(m_pModelCom, this);
 
 	// 소켓 애니메이션 추가
 	m_pAtk_Spin = m_pModelCom->Find_Animation("AS_em0200_202_AL_atk_a2");
@@ -333,15 +326,15 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CFlowerLeg::BeginTick()
+void CFlowerLeg_Invisible::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket(("UsingControl"), { m_pModelCom->Find_Animation("AS_em0200_160_AL_threat") });
 	m_iMaxHP = 1500;
-	m_iHP = 1500; // ★
+	m_iHP = m_iMaxHP; // ★
 }
 
-void CFlowerLeg::Tick(_double TimeDelta)
+void CFlowerLeg_Invisible::Tick(_double TimeDelta)
 {
 	/*if (!m_bActive)
 		return;*/
@@ -535,45 +528,61 @@ void CFlowerLeg::Tick(_double TimeDelta)
 		HitDir(TimeDelta);		
 }
 
-void CFlowerLeg::Late_Tick(_double TimeDelta)
+void CFlowerLeg_Invisible::Late_Tick(_double TimeDelta)
 {
 	/*if (!m_bActive)
 		return;*/
 
 	__super::Late_Tick(TimeDelta);
 
-	if (m_bAtkSwitch)	
+	if (m_bAtkSwitch)
 		Spin_SweepCapsule(m_bOneHit);
-	
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);	
+
+
+	if (m_bInvisible)
+	{
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	}
+	else
+	{
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
+	}
+
 }
 
-HRESULT CFlowerLeg::Render()
-{	
-	m_pModelCom->Render(m_pTransformCom);
+HRESULT CFlowerLeg_Invisible::Render()
+{
+	if (m_bInvisible)
+	{
+		m_pModelCom->Render(m_pTransformCom);
+	}
+	else
+	{
+		m_pModelCom->Render_Pass(m_pTransformCom, 5);		
+	}
+
 	return S_OK;
 }
 
-void CFlowerLeg::Imgui_RenderProperty()
+void CFlowerLeg_Invisible::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 	m_pASM->Imgui_RenderState();
 }
 
-void CFlowerLeg::AfterPhysX()
+void CFlowerLeg_Invisible::AfterPhysX()
 {
 	/*if (!m_bActive)
 		return;*/
 
 	__super::AfterPhysX();
-	m_pRange->Update_Tick(AttachCollider(m_pRange));
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 
 	m_pTailCol->Update_Tick(AttachCollider(m_pTailCol));
 	m_pTailCol->Update_AfterPhysX(m_pTransformCom);
 }
 
-void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
+void CFlowerLeg_Invisible::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	if (m_bDead)
 		return;
@@ -582,16 +591,25 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eHitDir = eHitFrom;
 	
 	m_eAtkType = tDamageParams.eAttackType;
-	m_iHP -= tDamageParams.iDamage;
-	
-	if (m_eAtkType == EAttackType::ATK_TO_AIR)
+		
+	if (tDamageParams.eAttackSAS == ESASType::SAS_INVISIBLE)
 	{
-		m_bAirStruck = true;
-		m_bUntouchable = false;
-	}
+		m_bInvisible = true;
+		m_iHP -= tDamageParams.iDamage;
 
-	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bUntouchable)
-		m_bStruck = true;
+		if (m_eAtkType == EAttackType::ATK_TO_AIR)
+		{
+			m_bAirStruck = true;
+			m_bUntouchable = false;
+		}
+
+		if (m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bUntouchable)
+			m_bStruck = true;
+	}
+	else
+	{
+		m_bInvisible = false;
+	}
 
 	if (m_bAirStruck || m_eAtkType == EAttackType::ATK_HEAVY)
 	{
@@ -624,9 +642,16 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	__super::TakeDamage(tDamageParams);
 }
 
-void CFlowerLeg::SetUp_UI()
+void CFlowerLeg_Invisible::SetUp_UI()
 {
 	//HP UI
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CMonsterHpUI* pUI_HP = nullptr;
+	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
+
+	assert(pUI_HP != nullptr);
+	pUI_HP->Set_Owner(this);
+
 	_float4x4 UI_PivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
@@ -634,7 +659,8 @@ void CFlowerLeg::SetUp_UI()
 		0.0f, 0.241f, 0.0f, 1.0f
 	);
 
-	m_UI_PivotMatrixes[INFOBAR] = UI_PivotMatrix;
+	pUI_HP->SetPivotMatrix(UI_PivotMatrix);
+
 
 	//FindEye
 	UI_PivotMatrix = Matrix(
@@ -645,13 +671,10 @@ void CFlowerLeg::SetUp_UI()
 	);
 
 	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
-
-	iMonsterLevel = 7;
-	m_eMonsterName = FLOWERLEG;
 }
 
 
-void CFlowerLeg::Strew_Overlap()
+void CFlowerLeg_Invisible::Strew_Overlap()
 {	
 	_float fLength = 1.f;
 
@@ -701,7 +724,7 @@ void CFlowerLeg::Strew_Overlap()
 	}
 }
 
-void CFlowerLeg::Spin_SweepCapsule(_bool bCol)
+void CFlowerLeg_Invisible::Spin_SweepCapsule(_bool bCol)
 {
 	if (bCol)
 	{
@@ -768,7 +791,7 @@ void CFlowerLeg::Spin_SweepCapsule(_bool bCol)
 	m_BeforePos = vTailPos;
 }
 
-void CFlowerLeg::Kick_SweepSphere()
+void CFlowerLeg_Invisible::Kick_SweepSphere()
 {
 	physx::PxSweepHit hitBuffer[5];
 	physx::PxSweepBuffer sweepOut(hitBuffer, 5);
@@ -805,15 +828,13 @@ void CFlowerLeg::Kick_SweepSphere()
 	}
 }
 
-_matrix CFlowerLeg::AttachCollider(CRigidBody * pRigidBody)
+_matrix CFlowerLeg_Invisible::AttachCollider(CRigidBody * pRigidBody)
 {
 	_matrix SocketMatrix;
 
 	if (pRigidBody == m_pTailCol)
 		SocketMatrix = m_pModelCom->GetBoneMatrix("Tail4") * m_pTransformCom->Get_WorldMatrix();
-	else if (pRigidBody == m_pRange)
-		SocketMatrix = m_pTransformCom->Get_WorldMatrix();
-
+	
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
@@ -821,7 +842,7 @@ _matrix CFlowerLeg::AttachCollider(CRigidBody * pRigidBody)
 	return SocketMatrix;
 }
  
-void CFlowerLeg::HitDir(_double TimeDelta)
+void CFlowerLeg_Invisible::HitDir(_double TimeDelta)
 {
 	// 몸의 중점을 잡는 뼈
 	_matrix matRef = m_pModelCom->GetBoneMatrix("Reference") * m_pTransformCom->Get_WorldMatrix();
@@ -853,7 +874,7 @@ void CFlowerLeg::HitDir(_double TimeDelta)
 	m_bOneTick = true;		
 }
 
-void CFlowerLeg::DeBuff_End()
+void CFlowerLeg_Invisible::DeBuff_End()
 {
 	for (auto pMtrl : m_pModelCom->GetMaterials())
 	{
@@ -861,18 +882,18 @@ void CFlowerLeg::DeBuff_End()
 	}
 }
 
-void CFlowerLeg::DeBuff_Fire()
+void CFlowerLeg_Invisible::DeBuff_Fire()
 {
 	m_fDeBuffTime = 8.f;
 	for (auto pMtrl : m_pModelCom->GetMaterials())
 	{
 //		pMtrl->GetParam().Ints[0] = 0;
 		pMtrl->GetParam().Floats[0] = 7.f;
-		pMtrl->GetParam().Float4s[0] = _float4{ 0.9f, 0.3f, 0.001f, 1.f };
+		pMtrl->GetParam().Float4s[0] = { 0.9f, 0.3f, 0.001f, 1.f };
 	}
 }
 
-void CFlowerLeg::DeBuff_Oil()
+void CFlowerLeg_Invisible::DeBuff_Oil()
 {
 	m_fDeBuffTime = 10.f;
 	for (auto pMtrl : m_pModelCom->GetMaterials())
@@ -881,14 +902,14 @@ void CFlowerLeg::DeBuff_Oil()
 	}
 }
 
-_bool CFlowerLeg::IsPlayingSocket() const
+_bool CFlowerLeg_Invisible::IsPlayingSocket() const
 {
 	return m_pASM->isSocketEmpty("UsingControl") == false;
 }
 
-CFlowerLeg * CFlowerLeg::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CFlowerLeg_Invisible * CFlowerLeg_Invisible::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CFlowerLeg* pInstance = new CFlowerLeg(pDevice, pContext);
+	CFlowerLeg_Invisible* pInstance = new CFlowerLeg_Invisible(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -898,9 +919,9 @@ CFlowerLeg * CFlowerLeg::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pC
 	return pInstance;
 }
 
-CGameObject * CFlowerLeg::Clone(void * pArg)
+CGameObject * CFlowerLeg_Invisible::Clone(void * pArg)
 {
-	CFlowerLeg*		pInstance = new CFlowerLeg(*this);
+	CFlowerLeg_Invisible*		pInstance = new CFlowerLeg_Invisible(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -910,7 +931,7 @@ CGameObject * CFlowerLeg::Clone(void * pArg)
 	return pInstance;
 }
 
-void CFlowerLeg::Free()
+void CFlowerLeg_Invisible::Free()
 {
 	CMonster::Free();
 
@@ -933,7 +954,6 @@ void CFlowerLeg::Free()
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);	
 	Safe_Release(m_pTailCol);
-	Safe_Release(m_pRange);
 }
 
 /*	기존의 initialize
