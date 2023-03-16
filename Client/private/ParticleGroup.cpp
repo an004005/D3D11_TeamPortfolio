@@ -50,7 +50,7 @@ void CParticleGroup::Start_ParticleWork()
 	m_bGenerate = true;
 }
 
-void CParticleGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate)
+void CParticleGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate, _bool trueisRemoveScale)
 {
 	if (pOwner == nullptr)
 	{
@@ -58,12 +58,29 @@ void CParticleGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate)
 		return;
 	}
 
+	m_bRemoveScale = trueisRemoveScale;
 	m_pOwner = pOwner;
 	m_bUpdate = trueisUpdate;
+
+	if (m_bUpdate == false)
+	{
+		_matrix	SocketMatrix = m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		if (m_bRemoveScale == true)
+		{
+			SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+			SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+			SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+		}
+
+		Set_Transform(SocketMatrix);
+	}
+
+	
 	m_bGenerate = true;
 }
 
-void CParticleGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool trueisUpdate)
+void CParticleGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool trueisUpdate, _bool trueisRemoveScale)
 {
 	if (pOwner == nullptr)
 	{
@@ -74,10 +91,18 @@ void CParticleGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool tr
 	m_pOwner = pOwner;
 	m_BoneName = BoneName;
 	m_bUpdate = trueisUpdate;
+	m_bRemoveScale = trueisRemoveScale;
 
-	if (trueisUpdate == false)
+	if (m_bUpdate == false)
 	{
 		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		if (m_bRemoveScale == true)
+		{
+			SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+			SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+			SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+		}
 
 		Set_Transform(SocketMatrix);
 	}
@@ -85,7 +110,7 @@ void CParticleGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool tr
 	m_bGenerate = true;
 }
 
-void CParticleGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _bool usepivot,	_bool trueisUpdate)
+void CParticleGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _bool usepivot,	_bool trueisUpdate, _bool trueisRemoveScale)
 {
 	if (pOwner == nullptr)
 	{
@@ -98,16 +123,55 @@ void CParticleGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatri
 	m_bUpdate = trueisUpdate;
 	m_bUsePivot = usepivot;
 	m_PivotMatrix = PivotMatrix;
+	m_bRemoveScale = trueisRemoveScale;
 
 	if (trueisUpdate == false)
 	{
-		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
+		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		if (m_bRemoveScale == true)
+		{
+			SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+			SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+			SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+		}
 
 		Set_Transform(SocketMatrix);
 	}
 
 	m_bGenerate = true;
 }
+
+void CParticleGroup::Start_AttachPosition(CGameObject* pOwner, _float4 vPosition, _float4 vDirection,
+	_bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z);
+
+		_vector		vUp = XMVector3Normalize(vDirection);
+		_vector		vRight = XMVector3Normalize(XMVector3Cross(vUp, XMVectorSet(0.f, 0.f, 1.f, 0.f)));
+		_vector		vLook = XMVector3Normalize(XMVector3Cross(vRight, vUp));
+
+		SocketMatrix.r[0] = vRight;
+		SocketMatrix.r[1] = vUp;
+		SocketMatrix.r[2] = vLook;
+
+		Set_Transform(SocketMatrix);
+	}
+
+	m_bGenerate = true;
+}
+
 
 void CParticleGroup::Set_Transform(_matrix socket)
 {
@@ -562,6 +626,8 @@ void CParticleGroup::VisibleUpdate()
 		if (iter.second.second != nullptr)
 		{
 			iter.second.second->SetVisible(m_bVisible);
+
+			iter.second.second->GetTransform()->Set_WorldMatrix(m_pTransformCom->Get_WorldMatrix());
 		}
 	}
 }
