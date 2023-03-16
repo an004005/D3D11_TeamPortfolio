@@ -209,6 +209,55 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_USE_KINETIC_CIRCLE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 White = g_tex_4.Sample(LinearSampler, In.vTexUV);
+
+	float2 randomNormal = g_tex_2.Sample(LinearSampler, In.vTexUV * 2.f).xy;
+	float2 FlowUV = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(g_float_1, g_Time));
+	float2 FlowUV2 = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(10.f, 10.f), float2(g_Time, g_float_1));
+
+	float4 Default = g_tex_0.Sample(LinearSampler, FlowUV);
+
+	float4 NoiseTex = g_tex_1.Sample(LinearSampler, (FlowUV));
+	float4 NoiseTex2 = g_tex_1.Sample(LinearSampler, (FlowUV2));
+
+	float4 Color = g_vec4_0;
+	float4 BlendColor = White * Color * 2.0f;
+
+	if (BlendColor.a != 0.f)
+	{
+		BlendColor -= NoiseTex.r;
+		BlendColor -= NoiseTex2.r;
+	}
+
+	float4 FinalColor = saturate(BlendColor);
+
+
+	if(NoiseTex.r >= 0.7f)
+	{
+		Out.vColor = CalcHDRColor(BlendColor, 10.f);
+	}
+	else
+	{
+		Out.vColor = CalcHDRColor(FinalColor, g_float_2);
+	}
+
+	float Mask = g_tex_3.Sample(LinearSampler, FlowUV2).r;
+
+	Out.vColor.a = saturate(Default.r * g_float_3 * Mask);
+
+	float fDissolvePower = g_tex_5.Sample(LinearSampler, FlowUV).r;
+
+	if (g_float_5 >= fDissolvePower)
+		Out.vColor.a = 0.f;
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.a * g_float_4);
+	return Out;
+}
+
 PS_OUT PS_BRON_LASER_MOUTH(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -687,7 +736,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_650_NORM();
+		PixelShader = compile ps_5_0 PS_650_NORM(); 
 	}
 
 	//10
@@ -745,4 +794,19 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_TUTORIALBOSS_SPIN();
 	}
+
+	//14
+	pass PlayerUseKineticCircle
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_USE_KINETIC_CIRCLE();
+	}
+
 }
