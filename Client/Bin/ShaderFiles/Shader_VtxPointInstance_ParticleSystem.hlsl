@@ -276,14 +276,14 @@ PS_OUT PS_FLIPBOOK_SMOKE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 8, 8));
+	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0, 1, 1));
 	float4 vColor = g_vec4_0;
 
 	float4 BlendColor = flipBook * vColor * 2.0f;
 
 	float4 FinalColor = saturate(BlendColor);
 	Out.vColor = FinalColor;
-	Out.vColor.a = flipBook.r;
+	Out.vColor.a = flipBook.a * In.RamainLifeRatio;
 
 	return Out;
 }
