@@ -295,6 +295,9 @@ void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	if (m_bDead)
 		return;
+
+	if (tDamageParams.iDamage > 500 || tDamageParams.iDamage < 0)
+		tDamageParams.iDamage = 100;
 	
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	m_eHitDir = eHitFrom;

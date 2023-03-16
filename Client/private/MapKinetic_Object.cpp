@@ -70,6 +70,9 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 		if (!m_bThrow)
 			return;
 
+		if (m_bHit)
+			return;
+
 		if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
 		{
 			DAMAGE_PARAM tParam;
