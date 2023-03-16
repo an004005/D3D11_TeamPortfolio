@@ -298,6 +298,9 @@
     <Filter Include="02.GameObjects\UI\Tutorial\Psychokinesis">
       <UniqueIdentifier>{05a34116-b873-484c-8da2-baafc69d27ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="VFX\Particle\ParticleGroup">
+      <UniqueIdentifier>{f465b88f-dbb3-4679-a8d4-76b67ddacdbc}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29">
       <UniqueIdentifier>{6fe012a7-b825-4a73-bf5c-a86e9368c9a9}</UniqueIdentifier>
     </Filter>
@@ -751,10 +754,8 @@
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
-    <ClInclude Include="..\public\ParticleGroup.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
     <ClInclude Include="..\public\Trigger.h" />
-    <ClInclude Include="..\public\VFX_Manager.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
@@ -827,6 +828,12 @@
     </ClInclude>
     <ClInclude Include="..\public\LevelUpUI.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VFX_Manager.h">
+      <Filter>VFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ParticleGroup.h">
+      <Filter>VFX\Particle\ParticleGroup</Filter>
     </ClInclude>
     <ClInclude Include="..\public\FlowerLeg_Invisible.h">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29</Filter>
@@ -1008,9 +1015,6 @@
     </ClCompile>
     <ClCompile Include="..\private\FlowerLeg.cpp">
       <Filter>02.GameObjects\Monster\FlowerLeg</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\BuddyLumi.cpp">
-      <Filter>02.GameObjects\Monster\BuddyLumi</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BdLm_AnimInstance.cpp">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_AnimInstance</Filter>
@@ -1252,10 +1256,8 @@
     <ClCompile Include="..\private\Boss_ShildUI.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\ParticleGroup.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
-    <ClCompile Include="..\private\VFX_Manager.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
@@ -1331,6 +1333,15 @@
     </ClCompile>
     <ClCompile Include="..\private\LevelUpUI.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VFX_Manager.cpp">
+      <Filter>VFX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ParticleGroup.cpp">
+      <Filter>VFX\Particle\ParticleGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BuddyLumi.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi</Filter>
     </ClCompile>
     <ClCompile Include="..\private\FlowerLeg_Invisible.cpp">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29</Filter>

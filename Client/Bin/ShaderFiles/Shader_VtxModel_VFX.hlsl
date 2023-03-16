@@ -322,13 +322,13 @@ PS_OUT PS_BRONJON_LASER(PS_IN In)
 	Out.vColor = CalcHDRColor(BlendColor, g_float_1);
 	Out.vColor.a = saturate(((OriginTex.a * g_float_0 * Gradient) *GradientAlpha) * StartAlpha);
 	
-	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.a);
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, 0.f);
 
 	if (g_float_4 <= 0.f)
 		discard;
 
-	// if (Out.vColor.a <= 0.01f)
-	// 	discard;
+	if (Out.vColor.a <= 0.001f)
+		discard;
 
 	return Out;
 }

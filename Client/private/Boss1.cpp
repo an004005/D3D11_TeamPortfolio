@@ -47,6 +47,9 @@ HRESULT CBoss1::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Com_Weak"), (CComponent**)&m_pWeak, pArg));
 
+	Json BossRnage = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_Rnage.json");
+	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
+		(CComponent**)&m_pRange, &BossRnage));
 	// 0315 Ãß°¡
 	Json BossHeadJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_Head.json");
 	Json BossLeftArmJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_LeftArm.json");
@@ -307,6 +310,8 @@ void CBoss1::Tick(_double TimeDelta)
 	m_pLeftArm->Update_Tick(AttachCollider(m_pLeftArm));
 	m_pRightArm->Update_Tick(AttachCollider(m_pRightArm));
 
+
+	m_pRange->Update_Tick(m_pTransformCom->Get_WorldMatrix());
 	Tick_AttackState();
 }
 
@@ -389,6 +394,13 @@ _matrix CBoss1::AttachCollider(CRigidBody * pRigidBody)
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
 	return SocketMatrix;
+}
+
+_float4 CBoss1::GetKineticTargetPos()
+{
+	_float3 vTemp = m_pWeak->GetPxWorldMatrix().Translation();
+
+	return _float4(vTemp.x, vTemp.y, vTemp.z, 1.f);
 }
 
 HRESULT CBoss1::Render()
@@ -605,4 +617,5 @@ void CBoss1::Free()
 	Safe_Release(m_pHead);
 	Safe_Release(m_pLeftArm);
 	Safe_Release(m_pRightArm);
+	Safe_Release(m_pRange);
 }

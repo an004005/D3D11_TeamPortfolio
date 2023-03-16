@@ -50,6 +50,11 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		(CComponent**)&m_pTailCol, &FlowerLegTailCol)))
 		return E_FAIL;
 
+	Json FlowerLegRangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegRange.json");
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
+		(CComponent**)&m_pRange, &FlowerLegRangeCol)))
+		return E_FAIL;
+
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
@@ -561,6 +566,7 @@ void CFlowerLeg::AfterPhysX()
 		return;*/
 
 	__super::AfterPhysX();
+	m_pRange->Update_Tick(AttachCollider(m_pRange));
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 
 	m_pTailCol->Update_Tick(AttachCollider(m_pTailCol));
@@ -621,13 +627,6 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 void CFlowerLeg::SetUp_UI()
 {
 	//HP UI
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	CMonsterHpUI* pUI_HP = nullptr;
-	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
-
-	assert(pUI_HP != nullptr);
-	pUI_HP->Set_Owner(this);
-
 	_float4x4 UI_PivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
@@ -635,8 +634,7 @@ void CFlowerLeg::SetUp_UI()
 		0.0f, 0.241f, 0.0f, 1.0f
 	);
 
-	pUI_HP->SetPivotMatrix(UI_PivotMatrix);
-
+	m_UI_PivotMatrixes[INFOBAR] = UI_PivotMatrix;
 
 	//FindEye
 	UI_PivotMatrix = Matrix(
@@ -810,7 +808,9 @@ _matrix CFlowerLeg::AttachCollider(CRigidBody * pRigidBody)
 
 	if (pRigidBody == m_pTailCol)
 		SocketMatrix = m_pModelCom->GetBoneMatrix("Tail4") * m_pTransformCom->Get_WorldMatrix();
-	
+	else if (pRigidBody == m_pRange)
+		SocketMatrix = m_pTransformCom->Get_WorldMatrix();
+
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
@@ -865,7 +865,7 @@ void CFlowerLeg::DeBuff_Fire()
 	{
 //		pMtrl->GetParam().Ints[0] = 0;
 		pMtrl->GetParam().Floats[0] = 7.f;
-		pMtrl->GetParam().Float4s[0] = { 0.9f, 0.3f, 0.001f, 1.f };
+		pMtrl->GetParam().Float4s[0] = _float4{ 0.9f, 0.3f, 0.001f, 1.f };
 	}
 }
 
@@ -930,6 +930,7 @@ void CFlowerLeg::Free()
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);	
 	Safe_Release(m_pTailCol);
+	Safe_Release(m_pRange);
 }
 
 /*	±‚¡∏¿« initialize

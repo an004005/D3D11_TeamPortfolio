@@ -1,0 +1,115 @@
+{
+    "BilboardType": 0,
+    "BufferType": 0,
+    "BurstCnt": 15,
+    "ConeDirDegree": 45.0,
+    "ConeOriginRadius": 0.20000000298023224,
+    "Duration": 1.0,
+    "FromOrigin": true,
+    "GravityPowerMinMax": [
+        0.0,
+        0.0
+    ],
+    "IncreaseMaxSize": 1.0,
+    "Life": 3.0,
+    "LifeMinMax": [
+        0.699999988079071,
+        0.800000011920929
+    ],
+    "LifeRand": true,
+    "Loop": false,
+    "MeshBufferProtoTag": "",
+    "MeshSize": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",
+    "RandDirMax": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "RandDirMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMax": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "ScaleVariation": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.3422388434410095,
+                0.34220460057258606,
+                0.34220460057258606,
+                1.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [
+            0.014999999664723873
+        ],
+        "Ints": [],
+        "Pass": 8,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_ev_smoke_kai_001.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxPointInstance_Particle",
+    "Shape": 1,
+    "SpawnTickTime": 0.9900000095367432,
+    "Speed": 1.0,
+    "SpeedMinMax": [
+        0.6000000238418579,
+        1.2000000476837158
+    ],
+    "SpeedRand": true,
+    "SphereDetail": false,
+    "SphereRadius": 4.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.9329915642738342,
+            -0.24999430775642395,
+            -0.2588129937648773,
+            0.0,
+            0.18529143929481506,
+            0.9503303170204163,
+            -0.24999448657035828,
+            0.0,
+            0.3084675371646881,
+            0.18529443442821503,
+            0.9330098628997803,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    "bGravity": false,
+    "bLocal": false,
+    "bNonAlpha": false,
+    "bRotate": false,
+    "bSizeDecreaseByLife": true,
+    "bSizeIncreaseByLife": false,
+    "pSize": [
+        0.5,
+        0.5
+    ]
+}

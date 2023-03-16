@@ -564,9 +564,14 @@ void CParticleSystem::AddPoint()
 			else
 			{
 				const _float3 vRandDir = CGameUtils::GetRandVector3(m_vRandDir_Min, m_vRandDir_Max);
-				vDir.x = vRandDir.x;
-				vDir.y = vRandDir.y;
-				vDir.z = vRandDir.z;
+
+				const _float vRandDirX = CGameUtils::GetRandFloat(m_vRandDir_Min.x, m_vRandDir_Max.x);
+				const _float vRandDirY = CGameUtils::GetRandFloat(m_vRandDir_Min.y, m_vRandDir_Max.y);
+				const _float vRandDirZ = CGameUtils::GetRandFloat(m_vRandDir_Min.z, m_vRandDir_Max.z);
+
+				vDir.x = vRandDirX;
+				vDir.y = vRandDirY;
+				vDir.z = vRandDirZ;
 			}
 			if (m_bLocal)
 			{
@@ -583,7 +588,16 @@ void CParticleSystem::AddPoint()
 				vPos.x += vRanPos.x;
 				vPos.y += vRanPos.y;
 				vPos.z += vRanPos.z;
+
+				if(m_bSphereDetail == true)
+				{
+					const _float3 vRanPos = CGameUtils::GetRandVector3Sphere(m_vRandDir_Min, m_vRandDir_Max.x);
+					vPos.x += vRanPos.x;
+					vPos.y += vRanPos.y;
+					vPos.z += vRanPos.z;
+				}
 			}
+			
 		}
 		if (m_eShape == ESpawnShape::CONE)
 		{

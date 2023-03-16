@@ -21,7 +21,6 @@ enum KineticModeltag
 	Tag_End
 };
 
-
 class CMapKinetic_Object : public CMapObject
 {
 private:
@@ -44,18 +43,18 @@ public:
 	virtual const wstring&	Get_ModelTag() override;
 
 public:
-	void	Add_Physical(_float3 vForce = { 0.f, 0.f, 0.f }, _float3 vTorque = {0.f, 0.f, 0.f});
+	void	Add_Physical(_float3 vForce = { 0.f, 0.f, 0.f }, _float3 vTorque = { 0.f, 0.f, 0.f });
 	void	Set_Kinetic(_bool bKinetic);
 	void	Reset_Transform();
 	EKineticType GetType() const { return m_eType; }
 
 public:
-	void	SetOutline() { m_bOutlineChange = true; }
+	void	SetOutline(_bool bOutLine) { m_bOutline = bOutLine; }
 
 private:
 	void	OutlineMaker();
-	_bool	m_bOutlineChange = false;
 	_bool	m_bOutline = false;
+	_bool	m_bBeforeOutline = false;
 
 private:
 	HRESULT	SetUp_Components(void* pArg);
@@ -69,12 +68,23 @@ private:
 	KineticModeltag			m_eCurModelTag = Tag_End;
 public:
 	void				SetThrow() { m_bThrow = true; }
+	_bool				GetThrow() { return m_bThrow; }
 	_bool				Usable() { return m_bUsable; }
+
+	_bool				Get_IsTargeted() {
+		return m_bIsTargeted;
+	}
+	void				Set_IsTargeted() {
+		m_bIsTargeted = true;
+	}
 
 private:
 	_bool				m_bThrow = false;
 	_bool				m_bUsable = true;
+	_bool				m_bHit = false;
 	_float				m_fDeadTimer = 0.f;
+
+	_bool				m_bIsTargeted = { false };
 
 public:
 	static CMapKinetic_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

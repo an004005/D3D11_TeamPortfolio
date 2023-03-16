@@ -213,8 +213,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 //		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(40.f, 3.f, 3.f, 1.f));
 
 //
-//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLeg"))
-//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(65.f, 3.f, 6.f, 1.f));
+	// pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLeg"))
+	// 	->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 3.f, 0.f, 1.f));
 //
 //	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPool"))//
 //		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-40.f, 3.f, -3.f, 1.f));
@@ -226,10 +226,10 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 //	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_MonsterBoss1"))
 //		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(170.f, 3.f, 10.f, 1.f));
  	
-	/*auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
-	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	pos.y += 1.f;
-	pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);*/
+	// auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
+	// _float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	// pos.y += 1.f;
+	// pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
 	
 	return S_OK;
 }

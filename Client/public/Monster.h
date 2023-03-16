@@ -35,10 +35,15 @@ public:
 	_bool IsDead() const { return m_bDead; }
 	_bool IsActive() const { return m_bActive; }
 	virtual void SetActive();
+	virtual _float4	GetKineticTargetPos() { return GetColliderPosition(); }
 
 public:
 	_uint GetHP() { return m_iHP; }
 	_uint GetMaxHP() { return m_iMaxHP; }
+	_bool GetHasName() { return m_bHasName; }
+	_float4x4	Get_UIPivotMatrix(MONSTER_UIPIVOT eUIPivot) {
+		return m_UI_PivotMatrixes[eUIPivot];
+	}
 
 	void	SetInvisible(_bool bInvisibleOut);
 	_bool	GetInvisible();
@@ -47,7 +52,7 @@ public:
 	//UI
 	void	TurnEyesOut();
 	virtual void SetUp_UI() {}
-
+	void	Set_HasName() { m_bHasName = true; }
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
 	void ClearDamagedTarget();
@@ -79,6 +84,7 @@ protected:
 
 	_bool m_bDead = false;
 	_bool m_bActive = false;
+	_bool m_bHasName = false;
 
 	_bool	m_bInvisible = false;
 

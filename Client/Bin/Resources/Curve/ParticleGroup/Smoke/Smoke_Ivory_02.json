@@ -1,0 +1,1 @@
+{"LifeTime":10.0,"ObjectTag":"Smoke_Ivory_02","Particles":[{"ObjectTag":"Smoke_Ivory_02","ParticleDirectory":"../Bin/Resources/VFX/ParticleSystem/Smoke/Smoke_Ivory_02.json"}],"Prototype_GameObject":"ProtoVFX_ParticleGroup\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
