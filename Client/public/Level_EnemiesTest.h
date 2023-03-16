@@ -19,6 +19,7 @@ public:
 private:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Prototypes();
+	HRESULT Ready_Layer_BackGround(const wstring& pLayerTag);
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Monster(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Bullet(const _tchar* pLayerTag);

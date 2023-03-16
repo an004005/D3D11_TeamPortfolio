@@ -211,8 +211,8 @@ void CBdLm_Controller::Run(EMoveAxis eAxis)
 	{
 	case EMoveAxis::NORTH:
 		m_vMoveAxis.z += 1.f;
-		if (abs(m_fTtoM_Distance) < 2.3f)
-		{
+		if (abs(m_fTtoM_Distance) < 2.2f)
+		{			
 			m_Commands.front().SetFinish();
 		}
 		break;

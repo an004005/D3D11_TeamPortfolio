@@ -40,6 +40,9 @@ public:
 	_uint GetHP() { return m_iHP; }
 	_uint GetMaxHP() { return m_iMaxHP; }
 
+	void	SetInvisible(_bool bInvisibleOut);
+	_bool	GetInvisible();
+
 public:
 	//UI
 	void	TurnEyesOut();
@@ -76,6 +79,8 @@ protected:
 
 	_bool m_bDead = false;
 	_bool m_bActive = false;
+
+	_bool	m_bInvisible = false;
 
 	array<_float4x4, UIPIVOT_END> m_UI_PivotMatrixes;
 	set<CScarletCharacter*> m_DamagedTargetList;

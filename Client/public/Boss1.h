@@ -41,6 +41,8 @@ public:
 	
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 
+	_matrix AttachCollider(CRigidBody* pRigidBody);
+
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_float GetTurnRemain() const { return m_fTurnRemain; }
@@ -63,8 +65,11 @@ private:
 
 	class CRigidBody* m_pWeak = nullptr;
 
+	class CRigidBody* m_pHead = nullptr;
+
 	class CRigidBody* m_pLeftArm = nullptr;
 	class CRigidBody* m_pRightArm = nullptr;
+	
 
 	CScarletCharacter* m_pTarget = nullptr;
 

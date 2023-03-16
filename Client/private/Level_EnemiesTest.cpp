@@ -62,6 +62,9 @@ HRESULT CLevel_EnemiesTest::Initialize()
 
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
+	
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -170,6 +173,16 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	return S_OK;
 }
 
+HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	// For_SkySphere
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Env", TEXT("Prototype_GameObject_SkyBox")));
+
+	return S_OK;
+}
+
 HRESULT CLevel_EnemiesTest::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -184,12 +197,15 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Camera(const _tchar * pLayerTag)
 HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
+	
 	/*if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
 		return E_FAIL;*/
 
 	// Test 하지 않는 중인 Monster 넣어두기
 // 	
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLegInvisible"))
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-10.f, 15.f, 50.f, 1.f));
+
 //	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
 //		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(140.f, 15.f, 110.f, 1.f));
 //

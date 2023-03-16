@@ -112,7 +112,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 	// ~Event Caller
 	m_iMaxHP = 1100;
-	m_iHP = m_iMaxHP; // ¡Ú
+	m_iHP = 1100; // ¡Ú
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 	m_strBoneName = "RightShoulder";
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
@@ -152,6 +152,8 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 void CBuddyLumi::BeginTick()
 {
 	__super::BeginTick();
+	m_iMaxHP = 1100;
+	m_iHP = 1100; // ¡Ú
 }
 
 void CBuddyLumi::Tick(_double TimeDelta)
@@ -233,6 +235,8 @@ void CBuddyLumi::Tick(_double TimeDelta)
 
 		if (m_eAtkType == EAttackType::ATK_MIDDLE || m_eAtkType == EAttackType::ATK_HEAVY)
 		{
+			m_bHitMove = true;
+
 			if (m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("Buddy", { m_pDamage_M_F });
 
@@ -417,10 +421,22 @@ void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 	
 	if (m_iHP <= 0 && !m_bDead)
 	{
-		m_pController->ClearCommands();
-		m_DeathTimeline.PlayFromStart();
-		m_pASM->InputAnimSocket("Buddy", { m_pDeadAnim });
-		m_bDead = true;
+		_bool bFloor = IsOnFloor();
+
+		if (bFloor)
+		{
+			m_pController->ClearCommands();
+			m_DeathTimeline.PlayFromStart();
+			m_pASM->InputAnimSocket("Buddy", { m_pDeadAnim });
+			m_bDead = true;
+		}
+		else
+		{
+			m_pController->ClearCommands();
+			m_DeathTimeline.PlayFromStart();			
+			m_bDead = true;
+		}
+		
 	}
 
 	__super::TakeDamage(tDamageParams);

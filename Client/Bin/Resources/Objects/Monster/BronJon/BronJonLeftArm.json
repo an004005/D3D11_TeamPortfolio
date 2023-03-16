@@ -1,1 +1,1 @@
-{"RigidBody":{"ColliderType":8,"Density":10.0,"OriginTransform":[1.600000023841858,0.0,0.0,0.0,0.0,1.600000023841858,0.0,0.0,0.0,0.0,1.600000023841858,0.0,0.0,0.0,0.0,1.0],"ShapeType":1,"bKinematic":true,"bTrigger":false}}
+{"RigidBody":{"ColliderType":8,"Density":10.0,"OriginTransform":[2.0,0.0,0.0,0.0,0.0,2.0,0.0,0.0,0.0,0.0,2.0,0.0,0.0,0.0,0.0,1.0],"ShapeType":1,"bKinematic":true,"bTrigger":false}}

@@ -307,6 +307,16 @@ void CMonster::MoveTransformJson(Json& jsonDest, void* pArg)
 	}
 }
 
+void CMonster::SetInvisible(_bool bInvisibleOut)
+{
+	m_bInvisible = bInvisibleOut; 
+}
+
+_bool CMonster::GetInvisible()
+{
+	return m_bInvisible;
+}
+
 void CMonster::TurnEyesOut()
 {
 	CMonster* pMonster = this;

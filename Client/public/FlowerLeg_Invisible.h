@@ -14,12 +14,12 @@ END
 BEGIN(Client)
 
 
-class CFlowerLeg : public CMonster
+class CFlowerLeg_Invisible : public CMonster
 {
 private:
-	CFlowerLeg(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CFlowerLeg(const CFlowerLeg& rhs);
-	virtual ~CFlowerLeg() = default;
+	CFlowerLeg_Invisible(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CFlowerLeg_Invisible(const CFlowerLeg_Invisible& rhs);
+	virtual ~CFlowerLeg_Invisible() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -53,8 +53,8 @@ public:
 	// ~De buff
 
 private:
-	class CFL_Controller*	m_pController = nullptr;
-	class CFL_AnimInstance*		m_pASM = nullptr;
+	class CFLInvisible_Controller*	m_pController = nullptr;
+	class CFLInvisible_AnimInstance*		m_pASM = nullptr;
 	
 	CRigidBody*				m_pTrigger = nullptr;
 	CRigidBody*				m_pTailCol = nullptr;
@@ -166,7 +166,7 @@ public:
 	// ~Refine
 
 public:
-	static CFlowerLeg* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CFlowerLeg_Invisible* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
