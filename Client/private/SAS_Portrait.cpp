@@ -96,6 +96,9 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 		{
 			pMtrl->GetParam().iPass = 6;
 		}
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_FIRE)]->FindMaterial(L"MI_ch0300_WIRE_0")->GetParam().iPass = 7;
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_FIRE)]->FindMaterial(L"MI_ch0300_WIRE_1")->GetParam().iPass = 7;
+
 
 		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PortraitCams/ch300_cam.json");
 		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_FIRE)] = CGameInstance::GetInstance()->Add_Camera("ch300_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);
@@ -117,6 +120,8 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 		{
 			pMtrl->GetParam().iPass = 6;
 		}
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_PENETRATE)]->FindMaterial(L"MI_ch0500_WIRE_0")->GetParam().iPass = 7;
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_PENETRATE)]->FindMaterial(L"MI_ch0500_WIRE_1")->GetParam().iPass = 7;
 
 		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PortraitCams/ch500_cam.json");
 		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_PENETRATE)] = CGameInstance::GetInstance()->Add_Camera("ch500_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);

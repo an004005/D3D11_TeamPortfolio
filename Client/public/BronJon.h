@@ -53,6 +53,7 @@ private:
 	CRigidBody*					m_pLaserEffect = nullptr;	// Laser
 	CRigidBody*					m_pLeftArm = nullptr;
 	CRigidBody*					m_pRightArm = nullptr;
+	CRigidBody*					m_pRange = nullptr;
 
 	CEffectGroup*				m_pWaterPool = nullptr;
 

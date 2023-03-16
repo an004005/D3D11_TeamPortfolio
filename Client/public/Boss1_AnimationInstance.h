@@ -2,6 +2,10 @@
 #include "AnimationInstance.h"
 #include "Client_Defines.h"
 
+BEGIN(Engine)
+class CAnimation;
+END
+
 BEGIN(Client)
 
 class CBoss1_AnimationInstance : public CAnimationInstance

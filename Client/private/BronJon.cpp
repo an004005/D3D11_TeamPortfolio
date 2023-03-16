@@ -47,6 +47,7 @@ HRESULT CBronJon::Initialize(void * pArg)
 	Json BronJonLaser = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonEff02.json");
 	Json BronJonArm_L = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonLeftArm.json");
 	Json BronJonArm_R = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRightArm.json");
+	Json BronJonRange = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRange.json");
 	// Json BronJonOuter = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRightArm.json");
 
 	// m_pJawRBody : BiteAtk + Head HitBox
@@ -66,6 +67,9 @@ HRESULT CBronJon::Initialize(void * pArg)
 		(CComponent**)&m_pRightArm, &BronJonArm_R)))
 		return E_FAIL;
 
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
+		(CComponent**)&m_pRange, &BronJonRange)))
+		return E_FAIL;
 
 	// ~Boss Monster HitBox
 
@@ -321,6 +325,8 @@ void CBronJon::AfterPhysX()
 
 	m_pRightArm->Update_Tick(AttachCollider(m_pRightArm));
 	// m_pRightArm->Update_AfterPhysX(m_pTransformCom);
+
+	m_pRange->Update_Tick(AttachCollider(m_pRange));
 }
 
 void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
@@ -371,6 +377,9 @@ _matrix CBronJon::AttachCollider(CRigidBody* pRigidBody)
 
 	else if (pRigidBody == m_pRightArm)
 		SocketMatrix = m_pModelCom->GetBoneMatrix("RightForeArm") * m_pTransformCom->Get_WorldMatrix();
+
+	else if (pRigidBody == m_pRange)
+		SocketMatrix = m_pTransformCom->Get_WorldMatrix();
 
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
@@ -532,5 +541,6 @@ void CBronJon::Free()
 	Safe_Release(m_pLaserEffect);
 	Safe_Release(m_pLeftArm);
 	Safe_Release(m_pRightArm);
+	Safe_Release(m_pRange);
 }
 

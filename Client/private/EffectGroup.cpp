@@ -695,8 +695,6 @@ void CEffectGroup::Imgui_RenderProperty()
 		file << json;
 	});	
 
-	// Imgui_RenderEffectSource();
-
 	for (auto iter : ppEffectTag)
 	{
 		Safe_Delete_Array(iter);
