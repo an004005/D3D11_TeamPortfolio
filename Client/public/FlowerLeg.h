@@ -58,9 +58,8 @@ private:
 	
 	CRigidBody*				m_pTrigger = nullptr;
 	CRigidBody*				m_pTailCol = nullptr;
+	CRigidBody*				m_pRange = nullptr;
 
-	CRigidBody*				m_pLeftLeg = nullptr;
-	CRigidBody*				m_pRightLeg = nullptr;
 	
 	CParticleGroup*			m_pFallRoseParticle = nullptr;
 	CParticleGroup*			m_pShootFlwParticle = nullptr;
@@ -137,7 +136,7 @@ private:
 
 	_bool		m_bAirMaintain = false;
 
-	_bool		m_bInvisible = false;
+//	_bool		m_bInvisible = false;
 	_bool		m_bUntouchable = false;
 
 	// HitDir

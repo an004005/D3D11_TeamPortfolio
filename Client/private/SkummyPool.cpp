@@ -48,6 +48,12 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 		(CComponent**)&m_pTrigger, &SkummyPoolTrigger)))
 		return E_FAIL;
 
+	Json SkummyPoolRange = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPool/SkummyPoolRange.json");
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"), 
+		(CComponent**)&m_pRange, &SkummyPoolRange)))
+		return E_FAIL;
+	
+
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
@@ -92,7 +98,7 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
 			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
-			_vector vDest = m_LastSpotTargetPos - vPrePos;
+			_vector vDest = XMVector3Normalize(m_LastSpotTargetPos - vPrePos);
 			pBullet->Set_ShootDir(vDest); // vLook
 
 			pBullet->GetTransform()->LookAt(m_LastSpotTargetPos); // vPrePos + vLook);
@@ -117,7 +123,7 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 	// ~Event Caller
 	
 	m_iMaxHP = 800;
-	m_iHP = m_iMaxHP;// ¡Ú
+	m_iHP = 800;// ¡Ú
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
@@ -149,12 +155,17 @@ void CSkummyPool::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("Pool", { m_pModelCom->Find_Animation("AS_em0600_160_AL_threat") });
+	m_iMaxHP = 800;
+	m_iHP = 800;// ¡Ú
 }
 
 void CSkummyPool::Tick(_double TimeDelta)
 {
 	/*if (!m_bActive)
 		return;*/
+	if (m_iHP > m_iMaxHP)
+		m_iHP = m_iMaxHP;
+
 	CMonster::Tick(TimeDelta);
 
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
@@ -248,6 +259,7 @@ void CSkummyPool::Tick(_double TimeDelta)
 	}
 
 	m_pTrigger->Update_Tick(m_pTransformCom);
+	m_pRange->Update_Tick(m_pTransformCom);
 
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
@@ -357,6 +369,8 @@ void CSkummyPool::SetUp_UI()
 
 	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
 
+	iMonsterLevel = 1;
+	m_eMonsterName = SKUMMYPOOL;
 }
 
 void CSkummyPool::HitDir(_double TimeDelta)
@@ -435,4 +449,5 @@ void CSkummyPool::Free()
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);
+	Safe_Release(m_pRange);
 }

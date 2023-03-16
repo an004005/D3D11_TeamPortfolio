@@ -64,6 +64,25 @@ void CGameTime_Manager::SetTimeRatioCurve(const string& strCurveTag, _bool bStay
 	}
 }
 
+void CGameTime_Manager::SetTimeRatio(_float fTimeRatio, const vector<wstring>* ExceptLayers)
+{
+	m_TimeRatio = fTimeRatio;
+
+	for (auto& layer : CObject_Manager::GetInstance()->GetLayers(LEVEL_NOW))
+		layer.second->SetUseTimeRatio(true);
+
+	if (ExceptLayers)
+	{
+		for (auto& layerTag : *ExceptLayers)
+		{
+			if (auto pLayer = CObject_Manager::GetInstance()->GetLayer(LEVEL_NOW, layerTag.c_str()))
+			{
+				pLayer->SetUseTimeRatio(false);
+			}
+		}
+	}
+}
+
 void CGameTime_Manager::Imgui_Render()
 {
 	ImGui::InputFloat("TimeRatio", &m_TimeRatio);

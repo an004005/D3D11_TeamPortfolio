@@ -20,7 +20,7 @@ public:
 	virtual void AI_Tick(_double TimeDelta) override;
 	
 	void Tick_Near(_double TimeDelta);
-	void Tick_Mid(_double TimeDelta);
+//	void Tick_Mid(_double TimeDelta);
 	void Tick_Far(_double TimeDelta);
 	void Tick_Outside(_double TimeDelta);
 
@@ -34,7 +34,7 @@ private:
 	class CSkummyPandou* m_pCastedOwner = nullptr;
 	
 	_uint m_iNearOrder = 0;
-	_uint m_iMidOrder = 0;
+//	_uint m_iMidOrder = 0;
 	_uint m_iFarOrder = 0;
 	_uint m_iOutOrder = 0;
 

@@ -47,8 +47,9 @@ private:
 
 //	CRigidBody*					m_pTrigger = nullptr;
 	CRigidBody*					m_pWeaponCollider = nullptr;
+	CRigidBody*					m_pRange = nullptr;
 
-  CEffectGroup*				m_pSwingEffect = nullptr;
+	CEffectGroup*				m_pSwingEffect = nullptr;
 
 private:
 	CScarletCharacter* m_pTarget = nullptr;

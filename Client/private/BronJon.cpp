@@ -47,6 +47,7 @@ HRESULT CBronJon::Initialize(void * pArg)
 	Json BronJonLaser = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonEff02.json");
 	Json BronJonArm_L = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonLeftArm.json");
 	Json BronJonArm_R = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRightArm.json");
+	Json BronJonRange = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRange.json");
 	// Json BronJonOuter = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRightArm.json");
 
 	// m_pJawRBody : BiteAtk + Head HitBox
@@ -66,6 +67,9 @@ HRESULT CBronJon::Initialize(void * pArg)
 		(CComponent**)&m_pRightArm, &BronJonArm_R)))
 		return E_FAIL;
 
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
+		(CComponent**)&m_pRange, &BronJonRange)))
+		return E_FAIL;
 
 	// ~Boss Monster HitBox
 
@@ -94,10 +98,9 @@ HRESULT CBronJon::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("LaserEff_Start", [this] 
 	{
 		_matrix			PivotMatrix = XMMatrixIdentity();
-
 		PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Laser")->Start_AttachPivot(this, PivotMatrix, "Eff02", true, true, true);
-
+	
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Laser_Mouth")->Start_Attach(this, "Eff02", true);
 	});
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
@@ -114,12 +117,12 @@ HRESULT CBronJon::Initialize(void * pArg)
 	m_iGroggy_Able = 5;
 
 	m_pASM = CBrJ_AnimInstance::Create(m_pModelCom, this);
+//	m_pWaterPool->Start_Attach(this, "Eff01", true);
 	
 	_matrix			PivotMatrix = XMMatrixIdentity();
-	PivotMatrix = XMMatrixTranslation(0.f, 0.1f, 0.f) * XMMatrixScaling(10.f, 1.f, 10.f); // Y = 0.1f로 수정
+	PivotMatrix = XMMatrixTranslation(0.f, 0.1f, 0.f) * XMMatrixScaling(10.f, 1.f, 10.f); 
 	m_pWaterPool = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water");
 	m_pWaterPool->Start_AttachPivot(this, PivotMatrix, "Eff01", true, true, false);
-//	m_pWaterPool->Start_Attach(this, "Eff01", true);
 	Safe_AddRef(m_pWaterPool);
 	// 소켓 애니메이션 추가
 
@@ -153,6 +156,8 @@ void CBronJon::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("BronJon", { m_pModelCom->Find_Animation("AS_em0800_160_AL_threat") });
+	m_iMaxHP = 5000;
+	m_iHP = m_iMaxHP;
 }
 
 void CBronJon::Tick(_double TimeDelta)
@@ -183,14 +188,17 @@ void CBronJon::Tick(_double TimeDelta)
 	if (!m_bDead && m_pController->KeyDown(CController::MOUSE_RB))
 	{
 		m_pASM->AttachAnimSocket("BronJon", { m_pAtk_Bite });
+		m_bHitMove = false;
 	}
 	if (!m_bDead && m_pController->KeyDown(CController::MOUSE_LB))
 	{
 		m_pASM->AttachAnimSocket("BronJon", { m_pAtk_LaserStart, m_pAtk_LaserLoop, m_pAtk_LaserLoop, m_pAtk_LaserLoop, m_pAtk_LaserEnd });
+		m_bHitMove = false;
 	}
 	if (!m_bDead && m_pController->KeyDown(CController::G))
 	{
 		m_pASM->AttachAnimSocket("BronJon", { m_pThreat });
+		m_bHitMove = false;
 	}
 
 	if (!m_bDead && m_bStruck || m_pController->KeyDown(CController::NUM_1))
@@ -239,32 +247,31 @@ void CBronJon::Tick(_double TimeDelta)
 	}
 
 	// ~소켓 키 세팅
-
-
+	
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
-
-	
+		
 	m_pASM->Tick(TimeDelta);
 
 	_float fMoveSpeed = 3.f;
 
 	m_vMoveAxis.Normalize();
 
-	if (!m_bHitMove)
-	{
-	const _float fYaw = m_pTransformCom->GetYaw_Radian();
-	_float3 vVelocity;
-	XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
-	m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);	
-	m_bOneTick = false;
+	/*if (!m_bHitMove)
+	{*/
+		const _float fYaw = m_pTransformCom->GetYaw_Radian();
+		_float3 vVelocity;
+		XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
+		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+		m_bOneTick = false;
+		m_bSavePos = false;
 
-	m_vPreDir = { 0.f, 0.f, 0.f, 0.f };
-	m_vCurDir = { 0.f, 0.f, 0.f, 0.f };
-	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
-	}
+		m_vPreDir = { 0.f, 0.f, 0.f, 0.f };
+		m_vCurDir = { 0.f, 0.f, 0.f, 0.f };
+		m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
+	/*}
 	else
-		HitDir(TimeDelta);
+		HitDir(TimeDelta);*/
 }
 
 void CBronJon::Late_Tick(_double TimeDelta)
@@ -298,6 +305,12 @@ void CBronJon::Imgui_RenderProperty()
 	m_pASM->Imgui_RenderState();
 }
 
+void CBronJon::SetUp_UI()
+{
+	iMonsterLevel = 5;
+	m_eMonsterName = BRONJON;
+}
+
 void CBronJon::AfterPhysX()
 {
 	/*if (!m_bActive)
@@ -315,6 +328,8 @@ void CBronJon::AfterPhysX()
 
 	m_pRightArm->Update_Tick(AttachCollider(m_pRightArm));
 	// m_pRightArm->Update_AfterPhysX(m_pTransformCom);
+
+	m_pRange->Update_Tick(AttachCollider(m_pRange));
 }
 
 void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
@@ -326,7 +341,17 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eHitDir = eHitFrom;
 
 	m_eAtkType = tDamageParams.eAttackType;
-	m_iHP -= tDamageParams.iDamage;
+	
+
+	if (tDamageParams.pContactComponent == m_pLeftArm || 
+		tDamageParams.pContactComponent == m_pRightArm)
+	{
+		m_iHP -= _int(tDamageParams.iDamage * 2);
+	}
+	else
+	{
+		m_iHP -= tDamageParams.iDamage;
+	}
 
 	if (m_eAtkType == EAttackType::ATK_HEAVY)
 	{		
@@ -355,7 +380,7 @@ _matrix CBronJon::AttachCollider(CRigidBody* pRigidBody)
 	_matrix	SocketMatrix;
 
 	if (pRigidBody == m_pJawRBody)
-		SocketMatrix = m_pModelCom->GetBoneMatrix("Jaw") * m_pTransformCom->Get_WorldMatrix();
+		SocketMatrix = m_pModelCom->GetBoneMatrix("Eff02") * m_pTransformCom->Get_WorldMatrix();
 
 	else if (pRigidBody == m_pLaserEffect)
 		SocketMatrix = m_pModelCom->GetBoneMatrix("Eff02") * m_pTransformCom->Get_WorldMatrix();
@@ -365,6 +390,9 @@ _matrix CBronJon::AttachCollider(CRigidBody* pRigidBody)
 
 	else if (pRigidBody == m_pRightArm)
 		SocketMatrix = m_pModelCom->GetBoneMatrix("RightForeArm") * m_pTransformCom->Get_WorldMatrix();
+
+	else if (pRigidBody == m_pRange)
+		SocketMatrix = m_pTransformCom->Get_WorldMatrix();
 
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
@@ -424,7 +452,12 @@ void CBronJon::HitDir(_double TimeDelta)
 {
 	// 몸의 중점을 잡는 뼈
 //	_matrix matRef = m_pModelCom->GetBoneMatrix("Reference") * m_pTransformCom->Get_WorldMatrix();
-	_vector vRef = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);//matRef.r[3];
+//	_vector vRef = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);//matRef.r[3];
+	if (!m_bSavePos)
+	{
+		m_vSavePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		m_bSavePos = true;
+	}
 
 	// 밀려나는 거리만큼의 뼈
 	_matrix matWeak = m_pModelCom->GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
@@ -436,14 +469,14 @@ void CBronJon::HitDir(_double TimeDelta)
 		m_vPreDir = vPosition;
 
 	// 방향
-	_vector vDest = vRef - vWeak;
+	_vector vDest = m_vSavePos - vWeak;
 
 	m_vCurDir = vDest;
 
 	if (m_bOneTick)
 		m_vFinDir = m_vCurDir - m_vPreDir;
 
-	_float fRange = XMVectorGetX(m_vFinDir);
+//	_float fRange = XMVectorGetX(m_vFinDir);
 
 	m_pTransformCom->LocalMove(m_vFinDir);
 
@@ -526,5 +559,6 @@ void CBronJon::Free()
 	Safe_Release(m_pLaserEffect);
 	Safe_Release(m_pLeftArm);
 	Safe_Release(m_pRightArm);
+	Safe_Release(m_pRange);
 }
 

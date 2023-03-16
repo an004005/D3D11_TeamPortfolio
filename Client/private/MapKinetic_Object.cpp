@@ -39,9 +39,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 		if (json.contains("InitPos"))
 		{
 			_float4 InitPos = json["InitPos"];
-			_float4x4 WorldMatrix = XMMatrixTranslationFromVector(InitPos);
-			CTransform::ModifyTransformJson(json, WorldMatrix);
-			// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&InitPos));
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&InitPos));
 		}
 	}
 
@@ -68,14 +66,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 	m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
 		if (!m_bThrow)
-		{
 			return;
-		}
-
-		if (!m_bUsable)
-			return;
-
-		m_bUsable = false;
 
 		if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
 		{
@@ -85,6 +76,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 			pMonster->TakeDamage(tParam);
+			m_bHit = true;
 
 			// 충돌이 발생하면 플레이어의 키네틱 콤보 상태를 1로 올려준다.
 			if (CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player") != nullptr)
@@ -103,11 +95,18 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(18.f) });
 
-	CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
-	pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
+	//툴에서 쓸때 플레이어가 없을수있으니 체크
+   CGameInstance* pGameInstance = CGameInstance::GetInstance();
+   CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Player"));
 
-	assert(pGravikenisisMouse != nullptr);
-	pGravikenisisMouse->Set_Owner(this);
+   // if (pLayer != nullptr)
+   // {
+   //    CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
+   //    pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
+   //
+   //    assert(pGravikenisisMouse != nullptr);
+   //    pGravikenisisMouse->Set_Owner(this);
+   // }
 
 	return S_OK;
 }
@@ -125,11 +124,16 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 
 	OutlineMaker();
 
+	if (m_bThrow)
+		m_bUsable = false;
+
 	if (!m_bUsable)
 	{
 		m_fDeadTimer += (_float)TimeDelta;
 
-		if (m_fDeadTimer >= 5.f)
+		if (m_bHit && m_fDeadTimer >= 1.f)
+			this->SetDelete();
+		else if (m_fDeadTimer >= 5.f)
 			this->SetDelete();
 	}
 
@@ -280,71 +284,45 @@ void CMapKinetic_Object::Reset_Transform()
 
 void CMapKinetic_Object::OutlineMaker()
 {
-
-	/*for (auto& Model : m_pModelComs)
+	if (m_bOutline != m_bBeforeOutline)
 	{
-		for (auto& iter : Model->GetMaterials())
+		if (m_bOutline)
 		{
-			if (0 == iter->GetParam().Ints.size())
+			for (auto& Model : m_pModelComs)
 			{
-				iter->GetParam().Ints.push_back(1);
-			}
-			else
-			{
-				iter->GetParam().Ints[0] = 1;
+				for (auto& iter : Model->GetMaterials())
+				{
+					if (0 == iter->GetParam().Ints.size())
+					{
+						iter->GetParam().Ints.push_back(0);
+					}
+					else
+					{
+						iter->GetParam().Ints[0] = 1;
+					}
+				}
 			}
 		}
-	}*/
+		else
+		{
+			for (auto& Model : m_pModelComs)
+			{
+				for (auto& iter : Model->GetMaterials())
+				{
+					if (0 == iter->GetParam().Ints.size())
+					{
+						iter->GetParam().Ints.push_back(0);
+					}
+					else
+					{
+						iter->GetParam().Ints[0] = 0;
+					}
+				}
+			}
+		}
+	}
 
-	//if (m_bOutlineChange)
-	//{
-	//	if (m_bOutline)
-	//	{
-	//		m_bOutline = false;
-
-	//		for (auto& Model : m_pModelComs)
-	//		{
-	//			for (auto& iter : Model->GetMaterials())
-	//			{
-	//				if (0 == iter->GetParam().Ints.size())
-	//				{
-	//					iter->GetParam().Ints.push_back(0);
-	//				}
-	//				else
-	//				{
-	//					iter->GetParam().Ints[0] = 0;
-	//				}
-	//				//iter->GetParam().Float4s[0] = { 0.945098f, 0.4f, 1.f, 1.f };
-	//			}
-	//		}
-
-	//		// 아웃라인 없앰
-	//	}
-	//	else
-	//	{
-	//		m_bOutline = true;
-	//		// 아웃라인 생성
-
-	//		for (auto& Model : m_pModelComs)
-	//		{
-	//			for (auto& iter : Model->GetMaterials())
-	//			{
-	//				if (0 == iter->GetParam().Ints.size())
-	//				{
-	//					iter->GetParam().Ints.push_back(1);
-	//				}
-	//				else
-	//				{
-	//					iter->GetParam().Ints[0] = 1;
-	//				}
-	//				//iter->GetParam().Float4s[0] = { 0.945098f, 0.4f, 1.f, 1.f };
-	//			}
-	//		}
-	//	}
-
-	//	m_bOutlineChange = false;
-	//}
-
+	m_bBeforeOutline = m_bOutline;
 }
 
 HRESULT CMapKinetic_Object::SetUp_Components(void* pArg)

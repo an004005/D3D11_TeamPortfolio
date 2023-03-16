@@ -25,6 +25,8 @@ public:
 private:
 	class CEffectGroup* m_pKenisis = { nullptr };
 	class CEffectGroup* m_pBanKenisis = { nullptr };
+	class CEffectGroup* m_pAppealCircle_0 = { nullptr };
+	class CEffectGroup* m_pAppealCircle_1 = { nullptr };
 
 	class CPlayer* m_pPlayer = { nullptr };
 

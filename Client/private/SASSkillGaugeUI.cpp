@@ -145,7 +145,7 @@ void CSASSkillGaugeUI::Set_GaugeType(const ESASType & eESASType, const _float & 
 		break;
 	case Client::ESASType::SAS_INVISIBLE:	// Åõ¸í
 	{
-		m_tParams.Float4s[0] = { 0.280f, 0.754f, 0.657f, 1.0f };
+		m_tParams.Float4s[0] = { 0.0f, 1.0f, 0.8f, 1.0f };
 	}
 		break;
 	case Client::ESASType::SAS_GRAVIKENISIS:	// ¿°·Â
@@ -207,7 +207,7 @@ void CSASSkillGaugeUI::Set_GaugeBackType(const ESASType & eESASType, const _floa
 	break;
 	case Client::ESASType::SAS_INVISIBLE:	// Åõ¸í
 	{
-		m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		m_tParams.Float4s[0] = { 0.732f, 0.732f, 0.732f, 1.0f };
 	}
 	break;
 	case Client::ESASType::SAS_GRAVIKENISIS:	// ¿°·Â

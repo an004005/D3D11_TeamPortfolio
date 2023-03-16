@@ -50,6 +50,11 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		(CComponent**)&m_pTailCol, &FlowerLegTailCol)))
 		return E_FAIL;
 
+	Json FlowerLegRangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegRange.json");
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
+		(CComponent**)&m_pRange, &FlowerLegRangeCol)))
+		return E_FAIL;
+
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
@@ -282,7 +287,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("Untouch_End", [this] { m_bUntouchable = false; });
 
 	m_iMaxHP = 1500;
-	m_iHP = m_iMaxHP; // °⁄
+	m_iHP = 1500; // °⁄
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
@@ -332,6 +337,8 @@ void CFlowerLeg::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket(("UsingControl"), { m_pModelCom->Find_Animation("AS_em0200_160_AL_threat") });
+	m_iMaxHP = 1500;
+	m_iHP = 1500; // °⁄
 }
 
 void CFlowerLeg::Tick(_double TimeDelta)
@@ -526,8 +533,6 @@ void CFlowerLeg::Tick(_double TimeDelta)
 	}
 	else
 		HitDir(TimeDelta);		
-
-	
 }
 
 void CFlowerLeg::Late_Tick(_double TimeDelta)
@@ -539,31 +544,13 @@ void CFlowerLeg::Late_Tick(_double TimeDelta)
 
 	if (m_bAtkSwitch)	
 		Spin_SweepCapsule(m_bOneHit);
-
-	if (m_bVisible)
-	{
-		if (m_bInvisible)
-		{
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
-		}
-		else
-		{
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		}
-	}
+	
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);	
 }
 
 HRESULT CFlowerLeg::Render()
-{
-	if (m_bInvisible)
-	{
-		m_pModelCom->Render_Pass(m_pTransformCom, 5);
-	}
-	else
-	{
-		m_pModelCom->Render(m_pTransformCom);
-	}
-
+{	
+	m_pModelCom->Render(m_pTransformCom);
 	return S_OK;
 }
 
@@ -579,6 +566,7 @@ void CFlowerLeg::AfterPhysX()
 		return;*/
 
 	__super::AfterPhysX();
+	m_pRange->Update_Tick(AttachCollider(m_pRange));
 	m_pTrigger->Update_AfterPhysX(m_pTransformCom);
 
 	m_pTailCol->Update_Tick(AttachCollider(m_pTailCol));
@@ -599,9 +587,10 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_eAtkType == EAttackType::ATK_TO_AIR)
 	{
 		m_bAirStruck = true;
+		m_bUntouchable = false;
 	}
 
-	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bInvisible && !m_bUntouchable)
+	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bUntouchable)
 		m_bStruck = true;
 
 	if (m_bAirStruck || m_eAtkType == EAttackType::ATK_HEAVY)
@@ -656,6 +645,9 @@ void CFlowerLeg::SetUp_UI()
 	);
 
 	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
+
+	iMonsterLevel = 7;
+	m_eMonsterName = FLOWERLEG;
 }
 
 
@@ -819,7 +811,9 @@ _matrix CFlowerLeg::AttachCollider(CRigidBody * pRigidBody)
 
 	if (pRigidBody == m_pTailCol)
 		SocketMatrix = m_pModelCom->GetBoneMatrix("Tail4") * m_pTransformCom->Get_WorldMatrix();
-	
+	else if (pRigidBody == m_pRange)
+		SocketMatrix = m_pTransformCom->Get_WorldMatrix();
+
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
@@ -874,7 +868,7 @@ void CFlowerLeg::DeBuff_Fire()
 	{
 //		pMtrl->GetParam().Ints[0] = 0;
 		pMtrl->GetParam().Floats[0] = 7.f;
-		pMtrl->GetParam().Float4s[0] = { 0.9f, 0.3f, 0.001f, 1.f };
+		pMtrl->GetParam().Float4s[0] = _float4{ 0.9f, 0.3f, 0.001f, 1.f };
 	}
 }
 
@@ -939,6 +933,7 @@ void CFlowerLeg::Free()
 	Safe_Release(m_pController);
 	Safe_Release(m_pTrigger);	
 	Safe_Release(m_pTailCol);
+	Safe_Release(m_pRange);
 }
 
 /*	±‚¡∏¿« initialize

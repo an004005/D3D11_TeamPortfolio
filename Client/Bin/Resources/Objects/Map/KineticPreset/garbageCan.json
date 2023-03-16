@@ -1,0 +1,71 @@
+{
+    "KineticType": 0,
+    "LocalMatrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -0.4993336498737335,
+        0.0,
+        1.0
+    ],
+    "ModelTags": [
+        "../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/GarbageCan/garbageCan.static_model\u0000"
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "Prototype_GameObject_MapKinetic_Object\u0000",
+    "RigidBody": {
+        "ColliderType": 4,
+        "Density": 10.0,
+        "OriginTransform": [
+            0.495538592338562,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5110708475112915,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 0,
+        "bKinematic": false,
+        "bTrigger": false
+    },
+    "Transform": {
+        "WorldMatrix": [
+            0.9999991059303284,
+            -4.455654925550334e-05,
+            -0.001352369086816907,
+            0.0,
+            3.809749978245236e-05,
+            0.9999886155128479,
+            -0.004775748588144779,
+            0.0,
+            0.0013525665272027254,
+            0.004775692708790302,
+            0.9999877214431763,
+            0.0,
+            0.002277913736179471,
+            0.5690543055534363,
+            -0.006714222952723503,
+            1.0
+        ]
+    }
+}

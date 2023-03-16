@@ -28,6 +28,7 @@ public:
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
+	virtual void SetUp_UI() override;
 
 	virtual void AfterPhysX();
 
@@ -52,9 +53,9 @@ private:
 	CRigidBody*					m_pLaserEffect = nullptr;	// Laser
 	CRigidBody*					m_pLeftArm = nullptr;
 	CRigidBody*					m_pRightArm = nullptr;
+	CRigidBody*					m_pRange = nullptr;
 
 	CEffectGroup*				m_pWaterPool = nullptr;
-
 
 private:
 	CScarletCharacter* m_pTarget = nullptr;
@@ -99,6 +100,9 @@ private:
 	_vector		m_vCurDir;
 	_vector		m_vFinDir;
 	_bool		m_bOneTick = false;
+
+	_vector		m_vSavePos;
+	_bool		m_bSavePos;
 	// ~HitDir
 
 	// Damage

@@ -11,6 +11,7 @@ END
 
 BEGIN(Client)
 
+enum MAPOBJ_TYPE { MAP_NONANIM, MAP_INSTANCE, MAP_KINETIC, MAPTYPE_END };
 class CMapObject abstract : public CGameObject
 {
 protected:
@@ -29,7 +30,7 @@ public:
 
 public:
 	virtual const wstring&	Get_ModelTag() { return m_strModelTag; }
-
+	MAPOBJ_TYPE				Get_MapObjType() { return m_eMapobjType;}
 private:
 	HRESULT	SetUp_Components();
 
@@ -38,7 +39,8 @@ protected:
 
 protected:
 	wstring					m_strModelTag;
-	
+	MAPOBJ_TYPE				m_eMapobjType = MAPTYPE_END;
+
 public:
 	CGameObject* Clone(void* pArg = nullptr) override { return nullptr; }
 	void Free() override;

@@ -17,6 +17,7 @@ public:
 
 	void ResetTimeRatio();
 	void SetTimeRatioCurve(const string& strCurveTag, _bool bStay = false, const vector<wstring>* ExceptLayers = nullptr);
+	void SetTimeRatio(_float fTimeRatio, const vector<wstring>* ExceptLayers = nullptr);
 
 	void Imgui_Render();
 

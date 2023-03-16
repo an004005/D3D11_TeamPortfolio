@@ -96,6 +96,9 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 		{
 			pMtrl->GetParam().iPass = 6;
 		}
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_FIRE)]->FindMaterial(L"MI_ch0300_WIRE_0")->GetParam().iPass = 7;
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_FIRE)]->FindMaterial(L"MI_ch0300_WIRE_1")->GetParam().iPass = 7;
+
 
 		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PortraitCams/ch300_cam.json");
 		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_FIRE)] = CGameInstance::GetInstance()->Add_Camera("ch300_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);
@@ -117,6 +120,8 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 		{
 			pMtrl->GetParam().iPass = 6;
 		}
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_PENETRATE)]->FindMaterial(L"MI_ch0500_WIRE_0")->GetParam().iPass = 7;
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_PENETRATE)]->FindMaterial(L"MI_ch0500_WIRE_1")->GetParam().iPass = 7;
 
 		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PortraitCams/ch500_cam.json");
 		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_PENETRATE)] = CGameInstance::GetInstance()->Add_Camera("ch500_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);
@@ -146,14 +151,14 @@ void CSAS_Portrait::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_8))
-	{
-		Start_SAS(ESASType::SAS_FIRE);
-	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
-	{
-		Start_SAS(ESASType::SAS_PENETRATE);
-	}
+	// if (CGameInstance::GetInstance()->KeyDown(DIK_8))
+	// {
+	// 	Start_SAS(ESASType::SAS_FIRE);
+	// }
+	// if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	// {
+	// 	Start_SAS(ESASType::SAS_PENETRATE);
+	// }
 
 	if (m_eCurType != ESASType::SAS_END)
 	{
@@ -172,6 +177,11 @@ void CSAS_Portrait::Tick(_double TimeDelta)
 		{
 			m_eCurType = ESASType::SAS_END;
 			ResetParams();
+		}
+
+		if (fPlayRatio > 0.95f)
+		{
+			CGameInstance::GetInstance()->ResetTimeRatio();
 		}
 	}
 
@@ -206,6 +216,8 @@ void CSAS_Portrait::Start_SAS(ESASType eType)
 	m_eCurType = eType;
 	// m_pPostVFX->GetParam().Float4s[0] = _float4(1.f, 0.231f, 0.f, 1.f);
 	// m_pPostVFX->GetParam().Float4s[1] = _float4(0.957f, 0.459f, 0.048f, 1.f);
+	const vector<wstring> except = { LAYER_SAS };
+	CGameInstance::GetInstance()->SetTimeRatioCurve("SAS_StopTimer", false, &except);
 
 	switch (m_eCurType)
 	{

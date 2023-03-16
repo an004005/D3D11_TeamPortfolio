@@ -50,6 +50,12 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 		(CComponent**)&m_pWeaponCollider, &BuddyLumiWeapon)))
 		return E_FAIL;
 
+	Json BuddyLumiRange = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiRange.json");
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
+		(CComponent**)&m_pRange, &BuddyLumiRange)))
+		return E_FAIL;
+	
+
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
@@ -112,7 +118,7 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 	// ~Event Caller
 	m_iMaxHP = 1100;
-	m_iHP = m_iMaxHP; // ¡Ú
+	m_iHP = 1100; // ¡Ú
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 	m_strBoneName = "RightShoulder";
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
@@ -152,6 +158,8 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 void CBuddyLumi::BeginTick()
 {
 	__super::BeginTick();
+	m_iMaxHP = 1100;
+	m_iHP = 1100; // ¡Ú
 }
 
 void CBuddyLumi::Tick(_double TimeDelta)
@@ -233,6 +241,8 @@ void CBuddyLumi::Tick(_double TimeDelta)
 
 		if (m_eAtkType == EAttackType::ATK_MIDDLE || m_eAtkType == EAttackType::ATK_HEAVY)
 		{
+			m_bHitMove = true;
+
 			if (m_eHitDir == EBaseAxis::NORTH)
 				m_pASM->InputAnimSocket("Buddy", { m_pDamage_M_F });
 
@@ -366,6 +376,9 @@ void CBuddyLumi::SetUp_UI()
 	);
 
 	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
+
+	iMonsterLevel = 3;
+	m_eMonsterName = BUDDYLUMI;
 }
 
 void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
@@ -410,10 +423,22 @@ void CBuddyLumi::TakeDamage(DAMAGE_PARAM tDamageParams)
 	
 	if (m_iHP <= 0 && !m_bDead)
 	{
-		m_pController->ClearCommands();
-		m_DeathTimeline.PlayFromStart();
-		m_pASM->InputAnimSocket("Buddy", { m_pDeadAnim });
-		m_bDead = true;
+		_bool bFloor = IsOnFloor();
+
+		if (bFloor)
+		{
+			m_pController->ClearCommands();
+			m_DeathTimeline.PlayFromStart();
+			m_pASM->InputAnimSocket("Buddy", { m_pDeadAnim });
+			m_bDead = true;
+		}
+		else
+		{
+			m_pController->ClearCommands();
+			m_DeathTimeline.PlayFromStart();			
+			m_bDead = true;
+		}
+		
 	}
 
 	__super::TakeDamage(tDamageParams);
@@ -426,6 +451,8 @@ void CBuddyLumi::AfterPhysX()
 	__super::AfterPhysX();
 	m_pWeaponCollider->Update_Tick(AttachCollider(m_pWeaponCollider));
 	m_pWeaponCollider->Update_AfterPhysX(m_pTransformCom);
+
+	m_pRange->Update_Tick(m_pTransformCom);
 }
 
 void CBuddyLumi::Swing_SweepCapsule(_bool bCol)
@@ -591,4 +618,5 @@ void CBuddyLumi::Free()
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pWeaponCollider);
+	Safe_Release(m_pRange);
 }

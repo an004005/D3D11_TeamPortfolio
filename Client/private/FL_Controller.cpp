@@ -149,7 +149,8 @@ void CFL_Controller::Tick_Near(_double TimeDelta)
 		break;
 	}
 
-	m_iNearOrder = (m_iNearOrder + 1) % 7;
+	_uint iRand = (rand() % 3) + 1;
+	m_iNearOrder = (m_iNearOrder + iRand) % 7;
 
 }
 

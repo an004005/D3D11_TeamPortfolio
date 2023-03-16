@@ -46,7 +46,7 @@ private:
 
 	CRigidBody*				m_pTrigger = nullptr;	
 
-	CEffectGroup*			m_pDash_Effect = nullptr;
+//	CEffectGroup*			m_pDash_Effect = nullptr;
 	
 private:
 	CScarletCharacter* m_pTarget = nullptr;
