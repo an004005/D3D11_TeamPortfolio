@@ -58,6 +58,10 @@ void CParticleGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate, _bo
 		return;
 	}
 
+	m_bRemoveScale = trueisRemoveScale;
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+
 	if (m_bUpdate == false)
 	{
 		_matrix	SocketMatrix = m_pOwner->GetTransform()->Get_WorldMatrix();
@@ -72,9 +76,7 @@ void CParticleGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate, _bo
 		Set_Transform(SocketMatrix);
 	}
 
-	m_bRemoveScale = trueisRemoveScale;
-	m_pOwner = pOwner;
-	m_bUpdate = trueisUpdate;
+	
 	m_bGenerate = true;
 }
 
