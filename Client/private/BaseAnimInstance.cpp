@@ -27,7 +27,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 #pragma region IDLE
 		.AddState("IDLE")
-			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_002_AL_wait02"))
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_001_AL_wait01"))
 			.StartEvent([&]() 
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)

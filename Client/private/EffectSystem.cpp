@@ -636,14 +636,23 @@ void CEffectSystem::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pBuffer);
-	Safe_Release(m_pModel);
 
 	_uint ModelSize = (_uint)m_vecModelCom.size();
 
 	for(_uint i =0;i<ModelSize; ++i)
 	{
-		Safe_Release(m_vecModelCom[i]);
+		if (m_pModel == m_vecModelCom[i])
+		{
+			Safe_Release(m_vecModelCom[i]);
+			m_pModel = nullptr;
+		}
+		else
+		{
+			Safe_Release(m_vecModelCom[i]);
+		}
 	}
+	Safe_Release(m_pModel);
+
 	m_vecModelCom.clear();
 
 	for (auto e : m_tParam.Textures)

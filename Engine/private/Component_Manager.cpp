@@ -122,14 +122,14 @@ CComponent* CComponent_Manager::Handle_FindPrototypeFailed(_uint iLevelIndex, co
 			}
 		}
 
-		FAILED_CHECK(Add_Prototype(iLevelIndex, pPrototypeTag, 
+		FAILED_CHECK(Add_Prototype(LEVEL_STATIC, pPrototypeTag, 
 			CTexture::Create(
 				CGraphic_Device::GetInstance()->GetDevice(), 
 				CGraphic_Device::GetInstance()->GetContext(),
 				pPrototypeTag, 
 				iTexCnt)))
 
-		if (CComponent* pCom = Find_Prototype(iLevelIndex, pPrototypeTag))
+		if (CComponent* pCom = Find_Prototype(LEVEL_STATIC, pPrototypeTag))
 			return pCom;
 	}
 
@@ -140,14 +140,14 @@ CComponent* CComponent_Manager::Handle_FindPrototypeFailed(_uint iLevelIndex, co
 		char szModelPath[MAX_PATH];
 		CGameUtils::wc2c(pPrototypeTag, szModelPath);
 	
-		FAILED_CHECK(Add_Prototype(iLevelIndex, pPrototypeTag,
+		FAILED_CHECK(Add_Prototype(LEVEL_STATIC, pPrototypeTag,
 			CModel::Create(
 				CGraphic_Device::GetInstance()->GetDevice(),
 				CGraphic_Device::GetInstance()->GetContext(),
 				szModelPath
 			)));
 	
-		if (CComponent* pCom = Find_Prototype(iLevelIndex, pPrototypeTag))
+		if (CComponent* pCom = Find_Prototype(LEVEL_STATIC, pPrototypeTag))
 			return pCom;
 	}
 
