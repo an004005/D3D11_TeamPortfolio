@@ -178,7 +178,9 @@ void CLevelUpUI::LevelUpBackGround_Tick(const _double & TimeDelta)
 {
 	if (false == m_bLevelUpBackGround)
 		return;
-
+	
+	IM_LOG("X %f", m_tParams.Floats[0]);
+	
 	m_Timeline.Tick(TimeDelta, m_tParams.Floats[0]);
 
 	if(0.0 == m_dLevelBakcGround_TimeAcc)

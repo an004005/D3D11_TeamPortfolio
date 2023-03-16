@@ -23,7 +23,9 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_BossHp(const _float & fHp);
+	void	Set_BossHp(const _float & fHp) {
+		m_fHp = fHp;
+	}
 
 private:
 	_float	m_fHp = { 0.0f };

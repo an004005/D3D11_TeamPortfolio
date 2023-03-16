@@ -315,8 +315,6 @@ void CBoss1::Tick(_double TimeDelta)
 
 	m_pRange->Update_Tick(m_pTransformCom->Get_WorldMatrix());
 	Tick_AttackState();
-
-	//Set_UI(TimeDelta);
 }
 
 void CBoss1::Late_Tick(_double TimeDelta)
@@ -420,12 +418,7 @@ void CBoss1::SetUp_UI()
 {
 	iMonsterLevel = 10;
 	m_eMonsterName = GODLYFERRY;
-
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
-	//CGameObject* pBossHp = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_UI", L"Canvas_Alarm", &json);
-	//dynamic_cast<CCanvas_Alarm*>(pBossHp)->Set_Appeart();
 }
-
 
 void CBoss1::Imgui_RenderProperty()
 {

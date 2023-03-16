@@ -232,21 +232,21 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	//}
 
 	/* For.Prototype_GameObject_MonsterLockonUI */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),
-	//	CMonsterLockonUI::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	///* For.Prototype_GameObject_MonsterHpUI */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterHpUI"),
-	//	CMonsterHpUI::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	///* For.Prototype_GameObject_MonsterShildUI */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterShildUI"),
-	//	CMonsterShildUI::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	///* For.Prototype_GameObject_GravikenisisGUI */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("GravikenisisGUI"),
-	//	CGravikenisisGUI::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),
+		CMonsterLockonUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_MonsterHpUI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterHpUI"),
+		CMonsterHpUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_MonsterShildUI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterShildUI"),
+		CMonsterShildUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_GravikenisisGUI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("GravikenisisGUI"),
+		CGravikenisisGUI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 	// ~ ¿Á¼öÇöÀÇ ÈçÀû
 
 	return S_OK;
@@ -407,11 +407,6 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 	// AttackNumber
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/AttackNum.json");
 	//dynamic_cast<CEffectGroup*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_AttackNum"), TEXT("ProtoVFX_EffectGroup"), &json))->Start_EffectWork();
-
-	// NoticeNeon
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/NoticeNeon_fire.json");
-	//dynamic_cast<CEffectGroup*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_NoticeNeon_fire"), TEXT("ProtoVFX_EffectGroup"), &json))->Start_EffectWork();
-
 
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"));
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterLockonUI"));

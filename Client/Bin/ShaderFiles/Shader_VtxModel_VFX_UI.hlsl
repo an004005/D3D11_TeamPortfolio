@@ -50,12 +50,10 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
+
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
-	
 	return Out;
 }
-
-
 
 technique11 DefaultTechnique
 {
@@ -72,6 +70,5 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
-
 
 }

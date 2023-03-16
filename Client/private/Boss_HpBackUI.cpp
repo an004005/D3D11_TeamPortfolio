@@ -74,17 +74,6 @@ void CBoss_HpBackUI::LoadFromJson(const Json & json)
 
 }
 
-void CBoss_HpBackUI::Set_BossHp(const _float & fHp)
-{
-	if (0.0f >= fHp)
-	{
-		m_bVisible = false;
-		return;
-	}
-
-	m_fHp = fHp;
-}
-
 CBoss_HpBackUI * CBoss_HpBackUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
  	CBoss_HpBackUI*		pInstance = new CBoss_HpBackUI(pDevice, pContext);

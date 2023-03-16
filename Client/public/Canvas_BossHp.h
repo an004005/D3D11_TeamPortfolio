@@ -23,7 +23,7 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	//void	Set_BossUIRender();
+	void	Set_BossUIRender();
 
 	void	Set_BossHp(const _float & fHp); // 0~1 사이로 계산된 값을 던지기! currenthp/maxhp
 	void	Set_BossShild(const _float & fShild);

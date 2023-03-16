@@ -78,13 +78,13 @@ void CCanvas_BossHp::LoadFromJson(const Json & json)
 	CCanvas::LoadFromJson(json);
 }
 
-//void CCanvas_BossHp::Set_BossUIRender()
-//{
-//	Find_ChildUI(L"Boss_Hp")->SetVisible(false);
-//	Find_ChildUI(L"Boss_HPBack")->SetVisible(false);
-//	Find_ChildUI(L"Boss_Shild")->SetVisible(false);
-//	Find_ChildUI(L"Boss_HpBackGround")->SetVisible(false);
-//}
+void CCanvas_BossHp::Set_BossUIRender()
+{
+	Find_ChildUI(L"Boss_Hp")->SetVisible(false);
+	Find_ChildUI(L"Boss_HPBack")->SetVisible(false);
+	Find_ChildUI(L"Boss_Shild")->SetVisible(false);
+	Find_ChildUI(L"Boss_HpBackGround")->SetVisible(false);
+}
 
 void CCanvas_BossHp::Set_BossHp(const _float & fHp)
 {

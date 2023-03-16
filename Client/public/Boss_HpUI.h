@@ -23,7 +23,9 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_BossHp(const _float & fHp);
+	void	Set_BossHp(const _float & fHp) {
+		m_tParams.Floats[0] = fHp;
+	}
 
 public:
 	static CBoss_HpUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

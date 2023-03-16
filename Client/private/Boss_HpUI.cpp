@@ -65,17 +65,6 @@ void CBoss_HpUI::LoadFromJson(const Json & json)
 
 }
 
-void CBoss_HpUI::Set_BossHp(const _float & fHp)
-{
-	if (0.0f >= fHp)
-	{
-		m_bVisible = false;
-		return;
-	}
-	
-	m_tParams.Floats[0] = fHp;
-}
-
 CBoss_HpUI * CBoss_HpUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
  	CBoss_HpUI*		pInstance = new CBoss_HpUI(pDevice, pContext);
