@@ -3489,7 +3489,6 @@ void CPlayer::KineticObject_Targeting()
 	}
 }
 
-
 void CPlayer::KineticObject_OutLineCheck()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
@@ -3505,17 +3504,18 @@ void CPlayer::KineticObject_OutLineCheck()
 		else
 		{
 			if (iter == m_pKineticObject)
-			{
 				static_cast<CMapKinetic_Object*>(iter)->SetOutline(true);
-				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_CameRange(false);
-
-			}
 			else
-			{
 				static_cast<CMapKinetic_Object*>(iter)->SetOutline(false);
-				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_CameRange(true);
-
-			}
+	
+			if (nullptr != m_pKineticObject)
+		{
+			static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetOutline();
+			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_CameRange(true);
+		}
+		else
+		{
+			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_CameRange(false);
 		}
 	}
 }
