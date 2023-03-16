@@ -38,20 +38,35 @@ void CGravikenisisMouseUI::BeginTick()
 	m_pKenisis = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"PsychokinesisGauge_Mouse", TEXT("Layer_UI"));
 	Safe_AddRef(m_pKenisis);
 	Assert(m_pKenisis != nullptr);
-
 	m_pKenisis->Start_NoAttach(m_pOwner, true);
 
+	m_pKenisis->Set_GroupVisible(true);
 	m_pKenisis->GetSecondEffect()->GetParams().Floats[0] = 0.0f;
 	m_pKenisis->GetThirdEffect()->GetParams().Floats[0] = 0.0f;
 
-	//// 게이지 부족 UI
-	//m_pBanKenisis = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Psychokinesis_BanMouse", TEXT("Layer_UI"));
-	//Safe_AddRef(m_pBanKenisis);
-	//Assert(m_pBanKenisis != nullptr);
 
-	//m_pBanKenisis->Start_NoAttach(m_pOwner, true);
+	// 게이지 부족 UI
+	m_pBanKenisis = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Psychokinesis_BanMouse", TEXT("Layer_UI"));
+	Safe_AddRef(m_pBanKenisis);
+	Assert(m_pBanKenisis != nullptr);
+	m_pBanKenisis->Start_NoAttach(m_pOwner, true);
 
-	//m_pBanKenisis->GetSecondEffect()->SetVisible(false);
+	m_pBanKenisis->Set_GroupVisible(false);
+
+	// 어필 원_1
+	m_pAppealCircle_0 = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Psychokinesis_Circle0", TEXT("Layer_UI"));
+	Safe_AddRef(m_pAppealCircle_0);
+	Assert(m_pAppealCircle_0 != nullptr);
+	m_pAppealCircle_0->Start_NoAttach(m_pOwner, true);
+
+	m_pAppealCircle_0->Set_GroupVisible(false);
+	// 어필 원_2
+	m_pAppealCircle_1 = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Psychokinesis_Circle1", TEXT("Layer_UI"));
+	Safe_AddRef(m_pAppealCircle_1);
+	Assert(m_pAppealCircle_1 != nullptr);
+	m_pAppealCircle_1->Start_NoAttach(m_pOwner, true);
+
+	m_pAppealCircle_1->Set_GroupVisible(false);
 
 	// Player
 	list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
@@ -72,39 +87,51 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 
 	if (m_pKenisis == nullptr || m_pOwner == nullptr)
 		return;
+	
+	// 나 염력 사용하라고 어필 하는 원
+	if (true == dynamic_cast<CMapKinetic_Object*>(m_pOwner)->Get_CameRange())
+	{
+		if (0.0f == m_pPlayer->Get_KineticCharge())	// 들리고 있지 않은 상태
+		{
+			m_pAppealCircle_0->Set_GroupVisible(true);
+			m_pAppealCircle_1->Set_GroupVisible(true);
+		}
+		else	// 들리고 있는 상태
+		{
+			m_pAppealCircle_0->Set_GroupVisible(false);
+			m_pAppealCircle_1->Set_GroupVisible(false);
+		}
+	}
 
-	if (false == dynamic_cast<CMapKinetic_Object*>(m_pOwner)->Get_IsTargeted())
+	// Get_IsTargeted 플레이어와 상호작용이 시작된 오브젝트
+	if (false == dynamic_cast<CMapKinetic_Object*>(m_pOwner)->Get_IsTargeted())	
 		return;
 		
-	// 염력 게이지가 부족 하다면, 
+	// 염력 게이지가 부족 하다면, 금지 Icon 으로 변경하고 return 시킨다.
 	if (20.0f > m_pPlayer->Get_PlayerStat().m_iKineticEnergy)
 	{
-		m_pKenisis->GetFirstEffect()->SetVisible(false);
-		m_pKenisis->GetSecondEffect()->SetVisible(false);
-		m_pKenisis->GetThirdEffect()->SetVisible(false);
-
-		//m_pBanKenisis->GetFirstEffect()->SetVisible(true);
-		//m_pBanKenisis->GetSecondEffect()->SetVisible(true);
+		m_pBanKenisis->Set_GroupVisible(true);
+		
+		m_pKenisis->Set_GroupVisible(false);
+		m_pAppealCircle_0->Set_GroupVisible(false);
+		m_pAppealCircle_1->Set_GroupVisible(false);
 
 		return;
 	}
-	else
-	{
-		SetfRatio(m_pPlayer->Get_KineticCharge());
 
-		m_pKenisis->GetFirstEffect()->SetVisible(true);
-		m_pKenisis->GetSecondEffect()->SetVisible(true);
-		m_pKenisis->GetThirdEffect()->SetVisible(true);
+	// 염력 사용이 가능할 때 
+	m_pBanKenisis->Set_GroupVisible(false);
 
-		//m_pBanKenisis->GetFirstEffect()->SetVisible(false);
-		//m_pBanKenisis->GetSecondEffect()->SetVisible(false);
-	}
+	m_pKenisis->Set_GroupVisible(true);
 
-	if (1.0f <= m_pPlayer->Get_KineticCharge())
+	SetfRatio(m_pPlayer->Get_KineticCharge());	// 염력 게이지를 사용하는 만큼 게이지가 올라간다. (사용하지 않으면 내려간다.)
+	if (1.0f <= m_pPlayer->Get_KineticCharge())	// 최대 1초가 넘어간 객체는 게이지를 지운다.
 	{
 		m_bDelete = true;
 		return;
 	}
+
+
 }
 
 void CGravikenisisMouseUI::Imgui_RenderProperty()

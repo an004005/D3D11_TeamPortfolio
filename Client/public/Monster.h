@@ -47,6 +47,12 @@ public:
 		return m_UI_PivotMatrixes[eUIPivot];
 	}
 
+public:
+	//UI
+	void	TurnEyesOut();
+	virtual void SetUp_UI() {}
+	void	Set_HasName() { m_bHasName = true; }
+
 	_int Get_MonsterLevel() {
 		return iMonsterLevel;
 	}
@@ -54,11 +60,6 @@ public:
 		return _int(m_eMonsterName);
 	}
 
-public:
-	//UI
-	void	TurnEyesOut();
-	virtual void SetUp_UI() {}
-	void	Set_HasName() { m_bHasName = true; }
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
 	void ClearDamagedTarget();

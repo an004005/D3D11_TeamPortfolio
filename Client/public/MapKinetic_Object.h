@@ -77,12 +77,20 @@ public:
 		m_bIsTargeted = true;
 	}
 
+	_bool				Get_CameRange() {
+		return m_bCameRange;
+	}
+	void				Set_CameRange(const _bool bCameRange) {
+		m_bCameRange = bCameRange;
+	}
+
 private:
 	_bool				m_bThrow = false;
 	_bool				m_bUsable = true;
 	_float				m_fDeadTimer = 0.f;
 
 	_bool				m_bIsTargeted = { false };
+	_bool				m_bCameRange = { false };
 
 public:
 	static CMapKinetic_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
