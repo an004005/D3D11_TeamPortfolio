@@ -402,6 +402,8 @@ public:	//EventCaller용
 	void		Event_KineticSlowAction();
 
 	void		Event_Trail(_bool bTrail);
+	void		Event_Dust();
+	void		Event_KineticCircleEffect();
 
 private:
 	_bool		m_bCollisionAble = false;
@@ -538,8 +540,8 @@ private:	// 플레이어 림라이트, 외곽선 관련
 	void	End_RimLight();
 
 private:
-	_float	m_fThrowPower = 50000.f;
-	_float	m_fChargePower = 1000.f;
+	_float	m_fThrowPower = 100000.f;
+	_float	m_fChargePower = 3000.f;
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
