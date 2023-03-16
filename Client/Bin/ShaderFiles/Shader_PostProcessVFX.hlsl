@@ -96,6 +96,9 @@ PS_OUT PS_MAIN(PS_IN In)
 		Out.vColor = LDR * (1.f - vFlags.a) + OriginColor * vFlags.a;
 
 		Out.vColor.a = 1.f;
+
+		// if (vFlags.a <= 0.001f)
+		// 	discard;
 	}
 	else if(vFlags.y == SHADER_SCIFI_PLAYER_ATTACK)
 	{

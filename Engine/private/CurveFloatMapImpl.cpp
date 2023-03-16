@@ -182,7 +182,7 @@ void CCurveFloatImpl::Imgui_RenderEditor()
 
 	const _float2 vSize = CCurveManager::GetInstance()->GetCurveEditorSize();
 
-	if (ImGui::Curve(m_szName, ImVec2{vSize.x,  vSize.y}, 20, m_KeyFrames, &m_iSelection, m_RangeMin, m_RangeMax))
+	if (ImGui::Curve(m_szName, ImVec2{vSize.x,  vSize.y}, 80, m_KeyFrames, &m_iSelection, m_RangeMin, m_RangeMax))
 	{// 그래프 변경시 true 반환됨
 	}
 }
