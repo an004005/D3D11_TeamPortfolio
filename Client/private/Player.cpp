@@ -919,8 +919,10 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(m_PlayerSasType, false);
 	});
 
-	//m_pModel->Add_EventCaller(""
-	//)
+	m_pModel->Add_EventCaller("Eff03_Particle", [&]()
+	{
+		Event_Eff03_Particle();
+	});
 
 	return S_OK;
 }
@@ -1013,6 +1015,8 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 		.AddState("KINETIC_RB_START")
 			.OnStart([&]() 
 			{ 
+				Event_KineticCircleEffect();
+
 				dynamic_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_IsTargeted();
 				Enemy_Targeting(true);
 				m_pASM->InputAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Start);
@@ -2878,6 +2882,15 @@ void CPlayer::Event_Dust()
 
 void CPlayer::Event_KineticCircleEffect()
 {
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Kinetic_BaseCircle")->Start_Attach(this, "Eff01");
+	_matrix MatScale = XMMatrixIdentity() * XMMatrixScaling(10.f, 10.f, 10.f);
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Kinetic_Particle")->Start_AttachPivot(this, MatScale, "Reference",true,false);
+}
+
+void CPlayer::Event_Eff03_Particle()
+{
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Text_Particle_NoLoop")->Start_Attach(this, "Eff03");
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Text_Particle_NoLoop")->Start_Attach(this, "Eff03");
 }
 
 void CPlayer::Reset_Charge()

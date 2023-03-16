@@ -404,6 +404,7 @@ public:	//EventCaller¿ë
 	void		Event_Trail(_bool bTrail);
 	void		Event_Dust();
 	void		Event_KineticCircleEffect();
+	void		Event_Eff03_Particle();
 
 private:
 	_bool		m_bCollisionAble = false;

@@ -101,7 +101,7 @@ void CParticleGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatri
 
 	if (trueisUpdate == false)
 	{
-		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
+		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
 
 		Set_Transform(SocketMatrix);
 	}
