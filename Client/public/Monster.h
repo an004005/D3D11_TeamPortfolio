@@ -44,6 +44,10 @@ public:
 	_float4x4	Get_UIPivotMatrix(MONSTER_UIPIVOT eUIPivot) {
 		return m_UI_PivotMatrixes[eUIPivot];
 	}
+
+	void	SetInvisible(_bool bInvisibleOut);
+	_bool	GetInvisible();
+
 public:
 	//UI
 	void	TurnEyesOut();
@@ -81,6 +85,8 @@ protected:
 	_bool m_bDead = false;
 	_bool m_bActive = false;
 	_bool m_bHasName = false;
+
+	_bool	m_bInvisible = false;
 
 	array<_float4x4, UIPIVOT_END> m_UI_PivotMatrixes;
 	set<CScarletCharacter*> m_DamagedTargetList;

@@ -301,6 +301,15 @@
     <Filter Include="VFX\Particle\ParticleGroup">
       <UniqueIdentifier>{f465b88f-dbb3-4679-a8d4-76b67ddacdbc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29">
+      <UniqueIdentifier>{6fe012a7-b825-4a73-bf5c-a86e9368c9a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\Controller">
+      <UniqueIdentifier>{a9b5e39b-f1ab-4eea-8514-1ba7a5fc21fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM">
+      <UniqueIdentifier>{889711dc-b345-4bdf-9c49-c3181c53954d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -826,6 +835,15 @@
     <ClInclude Include="..\public\ParticleGroup.h">
       <Filter>VFX\Particle\ParticleGroup</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\FlowerLeg_Invisible.h">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FLInvisible_Controller.h">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FLInvisible_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1324,6 +1342,15 @@
     </ClCompile>
     <ClCompile Include="..\private\BuddyLumi.cpp">
       <Filter>02.GameObjects\Monster\BuddyLumi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FlowerLeg_Invisible.cpp">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FLInvisible_Controller.cpp">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FLInvisible_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

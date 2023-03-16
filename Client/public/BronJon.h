@@ -56,7 +56,6 @@ private:
 
 	CEffectGroup*				m_pWaterPool = nullptr;
 
-
 private:
 	CScarletCharacter* m_pTarget = nullptr;
 
@@ -100,6 +99,9 @@ private:
 	_vector		m_vCurDir;
 	_vector		m_vFinDir;
 	_bool		m_bOneTick = false;
+
+	_vector		m_vSavePos;
+	_bool		m_bSavePos;
 	// ~HitDir
 
 	// Damage
