@@ -578,6 +578,9 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_bDead)
 		return;
 
+	if (tDamageParams.iDamage > 500 || tDamageParams.iDamage < 0)
+		tDamageParams.iDamage = 100;
+
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	m_eHitDir = eHitFrom;
 	
@@ -645,6 +648,9 @@ void CFlowerLeg::SetUp_UI()
 	);
 
 	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
+
+	iMonsterLevel = 7;
+	m_eMonsterName = FLOWERLEG;
 }
 
 

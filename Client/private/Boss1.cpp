@@ -17,6 +17,8 @@
 #include "WaterBall.h" // Oil_Bullet
 #include "VFX_Manager.h"
 
+#include "Canvas_Alarm.h"
+
 CBoss1::CBoss1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -342,6 +344,9 @@ void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	if (m_bDead)
 		return;
+
+	if (tDamageParams.iDamage > 500 || tDamageParams.iDamage < 0)
+		tDamageParams.iDamage = 100;
 	
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	m_eHitDir = eHitFrom;
@@ -413,6 +418,12 @@ HRESULT CBoss1::Render()
 {
 	m_pModelCom->Render(m_pTransformCom);
 	return S_OK;
+}
+
+void CBoss1::SetUp_UI()
+{
+	iMonsterLevel = 10;
+	m_eMonsterName = GODLYFERRY;
 }
 
 void CBoss1::Imgui_RenderProperty()

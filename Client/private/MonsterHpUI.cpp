@@ -43,40 +43,43 @@ HRESULT CMonsterHpUI::Initialize(void * pArg)
 void CMonsterHpUI::BeginTick()
 {
 	m_pGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterHp", TEXT("Layer_MonsterUI"));
-	//m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterName", TEXT("Layer_MonsterUI"));
+	m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterName", TEXT("Layer_MonsterUI"));
 
 	Safe_AddRef(m_pGroup);
-	//Safe_AddRef(m_pMonsterName);
+	Safe_AddRef(m_pMonsterName);
 
 	Assert(m_pGroup != nullptr);
-	//Assert(m_pMonsterName != nullptr);
+	Assert(m_pMonsterName != nullptr);
+
 	//첫 인자에 넣어준 포인터의 뼈를 찾음.
 	m_pGroup->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
-	//m_pMonsterName->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
+	m_pMonsterName->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
 
+	// y : [0] 브론욘 [1] 스커미 팡뒤 [2] 바일 풀 [3] 버디 러미 [4] 바스 포즈 [5] 경건 페리
+	m_pMonsterName->GetSecondEffect()->GetParams().Float2s[0] = { _float(m_iMonsterLevel - 1), _float(m_iMonsterName) };
 }
 
 void CMonsterHpUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 	
-	if (m_pOwner != nullptr && m_pGroup != nullptr)
+	if (m_pGroup == nullptr || m_pOwner == nullptr) return;
+	
+	if (dynamic_cast<CMonster*>(m_pOwner)->IsDead())
 	{
-		if (dynamic_cast<CMonster*>(m_pOwner)->IsDead())
-		{
-			m_bDelete = true;
-			return;
-		}
-
-		_uint iHp = dynamic_cast<CMonster*>(m_pOwner)->GetHP();
-		_uint iMaxHp = dynamic_cast<CMonster*>(m_pOwner)->GetMaxHP();
-
-		m_fRatio = (_float)iHp / (_float)iMaxHp;
-		m_fHpBack = m_fRatio;
-		m_pGroup->GetThirdEffect()->GetParams().Floats[0] = m_fRatio;
-
-		HpBack_Tick(TimeDelta);
+		m_bDelete = true;
+		return;
 	}
+
+	_uint iHp = dynamic_cast<CMonster*>(m_pOwner)->GetHP();
+	_uint iMaxHp = dynamic_cast<CMonster*>(m_pOwner)->GetMaxHP();
+
+	m_fRatio = (_float)iHp / (_float)iMaxHp;
+	m_fHpBack = m_fRatio;
+	m_pGroup->GetThirdEffect()->GetParams().Floats[0] = m_fRatio;
+
+	HpBack_Tick(TimeDelta);
+
 }
 
 void CMonsterHpUI::Imgui_RenderProperty()
@@ -85,6 +88,13 @@ void CMonsterHpUI::Imgui_RenderProperty()
 
 	ImGui::DragFloat("Ratio", &m_fRatio);
 	
+}
+
+void CMonsterHpUI::Set_MonsterInfo(const _int iLevel, const _int iName)
+{
+	m_iMonsterLevel = iLevel;
+	m_iMonsterName = iName;
+
 }
 
 void CMonsterHpUI::HpBack_Tick(const _double & TimeDelta)

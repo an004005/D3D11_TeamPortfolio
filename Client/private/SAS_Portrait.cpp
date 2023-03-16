@@ -151,14 +151,14 @@ void CSAS_Portrait::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_8))
-	{
-		Start_SAS(ESASType::SAS_FIRE);
-	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
-	{
-		Start_SAS(ESASType::SAS_PENETRATE);
-	}
+	// if (CGameInstance::GetInstance()->KeyDown(DIK_8))
+	// {
+	// 	Start_SAS(ESASType::SAS_FIRE);
+	// }
+	// if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	// {
+	// 	Start_SAS(ESASType::SAS_PENETRATE);
+	// }
 
 	if (m_eCurType != ESASType::SAS_END)
 	{
@@ -177,6 +177,11 @@ void CSAS_Portrait::Tick(_double TimeDelta)
 		{
 			m_eCurType = ESASType::SAS_END;
 			ResetParams();
+		}
+
+		if (fPlayRatio > 0.95f)
+		{
+			CGameInstance::GetInstance()->ResetTimeRatio();
 		}
 	}
 
@@ -211,6 +216,8 @@ void CSAS_Portrait::Start_SAS(ESASType eType)
 	m_eCurType = eType;
 	// m_pPostVFX->GetParam().Float4s[0] = _float4(1.f, 0.231f, 0.f, 1.f);
 	// m_pPostVFX->GetParam().Float4s[1] = _float4(0.957f, 0.459f, 0.048f, 1.f);
+	const vector<wstring> except = { LAYER_SAS };
+	CGameInstance::GetInstance()->SetTimeRatioCurve("SAS_StopTimer", false, &except);
 
 	switch (m_eCurType)
 	{

@@ -16,6 +16,9 @@ BEGIN(Client)
 enum MONSTER_UIPIVOT { INFOBAR, FINDEYES, UIPIVOT_END};
 class CMonster abstract : public CScarletCharacter
 {
+public:
+	enum MONSTER_NAME { BRONJON, SKUMMYPANDOU, SKUMMYPOOL, BUDDYLUMI, FLOWERLEG, GODLYFERRY, MONSTERNAME_END };
+
 protected:
 	CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMonster(const CScarletCharacter& rhs);
@@ -53,6 +56,14 @@ public:
 	void	TurnEyesOut();
 	virtual void SetUp_UI() {}
 	void	Set_HasName() { m_bHasName = true; }
+
+	_int Get_MonsterLevel() {
+		return iMonsterLevel;
+	}
+	_int Get_MonsterName() {
+		return _int(m_eMonsterName);
+	}
+
 protected:
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
 	void ClearDamagedTarget();
@@ -67,10 +78,13 @@ protected:
 	void MoveTransformJson(Json& jsonDest, void* pArg);
 
 protected:	// 피격 이펙트 색상
+	vector<wstring>			m_vecDefaultBlood;
+	vector<wstring>			m_vecFireBlood;
+	vector<wstring>			m_vecElecBlood;
+
 	vector<wstring>			m_vecDefaultHit;
 	vector<wstring>			m_vecFireHit;
 	vector<wstring>			m_vecElecHit;
-	
 
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
@@ -89,10 +103,11 @@ protected:
 	_bool	m_bInvisible = false;
 
 	array<_float4x4, UIPIVOT_END> m_UI_PivotMatrixes;
+
 	set<CScarletCharacter*> m_DamagedTargetList;
-
 	CSimpleTimeline m_DeathTimeline;
-
+	_uint	iMonsterLevel = { 0 };
+	MONSTER_NAME m_eMonsterName = { MONSTERNAME_END };
 	
 
 

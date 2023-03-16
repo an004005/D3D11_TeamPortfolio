@@ -39,9 +39,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 		if (json.contains("InitPos"))
 		{
 			_float4 InitPos = json["InitPos"];
-			_float4x4 WorldMatrix = XMMatrixTranslationFromVector(InitPos);
-			CTransform::ModifyTransformJson(json, WorldMatrix);
-			// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&InitPos));
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&InitPos));
 		}
 	}
 
@@ -68,6 +66,9 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 	m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
 		if (!m_bThrow)
+			return;
+
+		if (m_bHit)
 			return;
 
 		if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))

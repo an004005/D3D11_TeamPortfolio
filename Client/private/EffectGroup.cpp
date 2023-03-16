@@ -1581,6 +1581,22 @@ _bool CEffectGroup::CheckPlay()
 
 void CEffectGroup::VisibleUpdate()
 {
+	if (false == m_bGroupVisible)
+	{
+		if (nullptr != m_pFirst_EffectSystem)
+			m_pFirst_EffectSystem->SetVisible(m_bGroupVisible);
+		if (nullptr != m_pSecond_EffectSystem)
+			m_pSecond_EffectSystem->SetVisible(m_bGroupVisible);
+		if (nullptr != m_pThird_EffectSystem)
+			m_pThird_EffectSystem->SetVisible(m_bGroupVisible);
+		if (nullptr != m_pFourth_EffectSystem)
+			m_pFourth_EffectSystem->SetVisible(m_bGroupVisible);
+		if (nullptr != m_pFifth_EffectSystem)
+			m_pFifth_EffectSystem->SetVisible(m_bGroupVisible);
+
+		return;
+	}
+
 	if (nullptr != m_pFirst_EffectSystem)
 		m_pFirst_EffectSystem->SetVisible(m_bVisible);
 	if (nullptr != m_pSecond_EffectSystem)

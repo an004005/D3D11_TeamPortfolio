@@ -310,6 +310,10 @@ void CSkummyPool::Imgui_RenderProperty()
 
 void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+
+	if (tDamageParams.iDamage > 500 || tDamageParams.iDamage < 0)
+		tDamageParams.iDamage = 100;
+
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	// ↑ 공격이 들어올 방향 
 	m_eHitDir = eHitFrom;
@@ -369,6 +373,8 @@ void CSkummyPool::SetUp_UI()
 
 	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
 
+	iMonsterLevel = 1;
+	m_eMonsterName = SKUMMYPOOL;
 }
 
 void CSkummyPool::HitDir(_double TimeDelta)

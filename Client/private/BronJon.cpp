@@ -305,6 +305,12 @@ void CBronJon::Imgui_RenderProperty()
 	m_pASM->Imgui_RenderState();
 }
 
+void CBronJon::SetUp_UI()
+{
+	iMonsterLevel = 5;
+	m_eMonsterName = BRONJON;
+}
+
 void CBronJon::AfterPhysX()
 {
 	/*if (!m_bActive)
@@ -328,6 +334,9 @@ void CBronJon::AfterPhysX()
 
 void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+	if (tDamageParams.iDamage > 500 || tDamageParams.iDamage < 0)
+		tDamageParams.iDamage = 100;
+
 	if (m_bDead)
 		return;
 
