@@ -303,43 +303,44 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 
 
 	// 그림자 연산
-	// float fViewZ = vDepth.y * g_Far;
-	//
-	// vector vPixelWorld;
-	// vPixelWorld.x = In.vTexUV.x * 2.f - 1.f;
-	// vPixelWorld.y = In.vTexUV.y * -2.f + 1.f;
-	// vPixelWorld.z = vDepth.x; /* 0 ~ 1 */
-	// vPixelWorld.w = 1.0f;
-	// vPixelWorld *= fViewZ; // pixcel clip space
-	//
-	// vPixelWorld = mul(vPixelWorld, g_ProjMatrixInv); // pixel view space
-	// vPixelWorld = mul(vPixelWorld, g_ViewMatrixInv); // pixel world space
-	//
-	// vector		vLightViewSpace = mul(vPixelWorld, g_LightViewMatrix);;
-	// vector		vLightClipSpace = mul(vLightViewSpace, g_LightProjMatrix);
-	// float2		vNewUV;
-	// vNewUV.x = (vLightClipSpace.x / vLightClipSpace.w) * 0.5f + 0.5f;
-	// vNewUV.y = (vLightClipSpace.y / vLightClipSpace.w) * -0.5f + 0.5f;
-	//
-	// // float fBias = 0.1f;
-	// float2 TexcelSize = float2( 1.0 / 8192.0,  1.0 / 8192.0);
-	// float fShadowRate = 0.f;
-	//
-	// for (int y = -1; y <= 1; ++y)
-	// {
-	// 	for (int x = -1; x <= 1; ++x)
-	// 	{
-	// 		float2 offset = float2(x, y) * TexcelSize;
-	// 		vector		vShadowDepthInfo = g_ShadowDepthTexture.Sample(LinearSampler, vNewUV + offset);
-	// 		if (vLightViewSpace.z - 0.1f > vShadowDepthInfo.x * g_Far)
-	// 			fShadowRate += 1.f;
-	// 	}
-	// }
-	//
-	// fShadowRate /= 9.f;
-	// fShadowRate *= 0.3f;
-	//
-	// Out.vColor *= (1.f - fShadowRate);
+	float fViewZ = vDepth.y * g_Far;
+	
+	vector vPixelWorld;
+	vPixelWorld.x = In.vTexUV.x * 2.f - 1.f;
+	vPixelWorld.y = In.vTexUV.y * -2.f + 1.f;
+	vPixelWorld.z = vDepth.x; /* 0 ~ 1 */
+	vPixelWorld.w = 1.0f;
+	vPixelWorld *= fViewZ; // pixcel clip space
+	
+	vPixelWorld = mul(vPixelWorld, g_ProjMatrixInv); // pixel view space
+	vPixelWorld = mul(vPixelWorld, g_ViewMatrixInv); // pixel world space
+	
+	vector		vLightViewSpace = mul(vPixelWorld, g_LightViewMatrix);;
+	vector		vLightClipSpace = mul(vLightViewSpace, g_LightProjMatrix);
+	float2		vNewUV;
+	vNewUV.x = (vLightClipSpace.x / vLightClipSpace.w) * 0.5f + 0.5f;
+	vNewUV.y = (vLightClipSpace.y / vLightClipSpace.w) * -0.5f + 0.5f;
+	
+	float2 TexcelSize = float2( 1.0 / 8192.0,  1.0 / 8192.0);
+
+	float fShadowRate = 0.;
+
+	for (int y = -1; y <= 1; ++y)
+	{
+		for (int x = -1; x <= 1; ++x)
+		{
+			float2 offset = float2(x, y) * TexcelSize;
+			vector		vShadowDepthInfo = g_ShadowDepthTexture.Sample(LinearSampler, vNewUV + offset);
+			if (vLightViewSpace.z - 0.1f > vShadowDepthInfo.x * g_Far)
+				fShadowRate += 1.f;
+		}
+	}
+	
+
+	fShadowRate /= 9.f;
+	fShadowRate *= 0.7f;
+	
+	Out.vColor *= (1.f - fShadowRate);
 
 	return Out;
 }

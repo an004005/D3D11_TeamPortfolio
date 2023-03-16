@@ -27,8 +27,10 @@ protected:
 public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
+	virtual void Late_Tick(_double TimeDelta) override;
 	virtual void Imgui_RenderProperty() override;
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
+	virtual HRESULT Render_ShadowDepth() override;
 
 public:
 	//For Effect

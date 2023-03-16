@@ -391,7 +391,10 @@ void CPlayer::Late_Tick(_double TimeDelta)
 	}
 
 	if (m_bVisible && (nullptr != m_pRenderer))
+	{
 		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
+		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
+	}
 }
 
 void CPlayer::AfterPhysX()
@@ -412,6 +415,12 @@ HRESULT CPlayer::Render()
 
 	m_pModel->Render(m_pTransformCom);
 
+	return S_OK;
+}
+
+HRESULT CPlayer::Render_ShadowDepth()
+{
+	m_pModel->Render_ShadowDepth(m_pTransformCom);
 	return S_OK;
 }
 

@@ -268,8 +268,8 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 
 
-	// Ready_ShadowDepthResources(8192, 8192);
-	Ready_ShadowDepthResources(128, 128);
+	Ready_ShadowDepthResources(8192, 8192);
+	// Ready_ShadowDepthResources(128, 128);
 
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer)
@@ -402,6 +402,20 @@ HRESULT CRenderer::Render_Priority()
 
 HRESULT CRenderer::Render_ShadowDepth()
 {
+#ifdef _DEBUG
+	if (CGameInstance::GetInstance()->KeyDown(DIK_F8))
+		m_bShadow = !m_bShadow;
+
+	if (m_bShadow == false)
+	{
+		for (auto& pGameObject : m_RenderObjects[RENDER_SHADOWDEPTH])
+		{
+			Safe_Release(pGameObject);
+		}
+		m_RenderObjects[RENDER_SHADOWDEPTH].clear();
+	}
+#endif
+
 	m_pContext->ClearDepthStencilView(m_pShadowDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 	D3D11_VIEWPORT			ViewportDesc;
 	ZeroMemory(&ViewportDesc, sizeof ViewportDesc);
@@ -571,13 +585,17 @@ HRESULT CRenderer::Render_Blend()
 	if (FAILED(m_pShader->Set_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	// if (FAILED(m_pShader->Set_Matrix("g_LightViewMatrix", CLight_Manager::GetInstance()->GetDirectionalLightView())))
-	// 	return E_FAIL;
-	// if (FAILED(m_pShader->Set_Matrix("g_LightProjMatrix", CLight_Manager::GetInstance()->GetDirectionalLightProj())))
-	// 	return E_FAIL;
+	if (FAILED(m_pShader->Set_Matrix("g_LightViewMatrix", CLight_Manager::GetInstance()->GetShadowLightView())))
+		return E_FAIL;
+	if (FAILED(m_pShader->Set_Matrix("g_LightProjMatrix", CLight_Manager::GetInstance()->GetShadowLightProj())))
+		return E_FAIL;
+	if (FAILED(m_pShader->Set_ShaderResourceView("g_ShadowDepthTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_ShadowDepth")))))
+		return E_FAIL;
 
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
 	if (FAILED(m_pShader->Set_Matrix("g_ViewMatrixInv", &pPipeLine->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShader->Set_Matrix("g_ProjMatrixInv", &pPipeLine->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_DiffuseTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Diffuse")))))
@@ -588,8 +606,7 @@ HRESULT CRenderer::Render_Blend()
 		return E_FAIL;
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_DepthTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Depth")))))
 		return E_FAIL;
-	// if (FAILED(m_pShader->Set_ShaderResourceView("g_ShadowDepthTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_ShadowDepth")))))
-	// 	return E_FAIL;
+
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_NormalTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Normal")))))
 		return E_FAIL;
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_RMATexture", m_pTarget_Manager->Get_SRV(TEXT("Target_RMA")))))

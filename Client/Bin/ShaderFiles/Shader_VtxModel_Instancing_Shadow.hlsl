@@ -2,7 +2,6 @@
 #include "Shader_Defines.h"
 #include "Shader_Params.h"
 
-matrix			g_BoneMatrices[512];
 
 struct VS_IN
 {
@@ -10,8 +9,8 @@ struct VS_IN
 	float3		vNormal : NORMAL;
 	float2		vTexUV : TEXCOORD0;
 	float3		vTangent : TANGENT;
-	uint4		vBlendIndex : BLENDINDEX;
-	float4		vBlendWeight : BLENDWEIGHT;
+
+	row_major float4x4	Matrix : WORLD;
 };
 
 struct VS_OUT
@@ -24,21 +23,12 @@ VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
 
-
 	matrix		matWV, matWVP;
 
 	matWV = mul(g_WorldMatrix, g_ViewMatrix);
 	matWVP = mul(matWV, g_ProjMatrix);
 
-	float			fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
-
-	matrix			BoneMatrix = g_BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x +
-		g_BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y +
-		g_BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
-		g_BoneMatrices[In.vBlendIndex.w] * fWeightW;
-
-	vector			vPosition = mul(float4(In.vPosition, 1.f), BoneMatrix);
-	vector			vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
+	vector		vPosition = mul(float4(In.vPosition.xyz, 1.f), In.Matrix);
 
 	Out.vPosition = mul(vPosition, matWVP);
 	Out.vProjPos = Out.vPosition;
@@ -59,17 +49,18 @@ struct PS_OUT
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-	PS_OUT			Out = (PS_OUT)0.f;
+	PS_OUT			Out = (PS_OUT)0;
 
 	Out.vLightDepth.r = In.vProjPos.w / g_Far;
+	
 	Out.vLightDepth.a = 1.f;
-
 	return Out;
 }
 
+
 technique11 DefaultTechnique
 {
-	//0
+	// 0
 	pass Default
 	{
 		SetRasterizerState(RS_Default);

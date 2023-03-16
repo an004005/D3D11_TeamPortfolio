@@ -157,6 +157,7 @@ public:
 	virtual void Late_Tick(_double TimeDelta);
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render();
+	virtual HRESULT Render_ShadowDepth() override;
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams);
 
