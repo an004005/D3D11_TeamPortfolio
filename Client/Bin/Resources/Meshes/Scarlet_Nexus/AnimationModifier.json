@@ -2504,6 +2504,10 @@
                 "EventTime": 70.0
             },
             {
+                "EventName": "SpinEff",
+                "EventTime": 78.0
+            },
+            {
                 "EventName": "AttackEnd",
                 "EventTime": 150.0
             }

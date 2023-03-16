@@ -126,6 +126,12 @@ HRESULT CBoss1::Initialize(void* pArg)
 	{
 		Start_AttackState(SPIN);
 	});
+	m_pModelCom->Add_EventCaller("SpinEff", [this]
+	{
+		_matrix			PivotMatrix = XMMatrixIdentity();
+		PivotMatrix = XMMatrixScaling(20.f, 20.f, 20.f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Spin_Attack")->Start_AttachPivot(this, PivotMatrix, "Reference", true, false, true);
+	});
 	m_pModelCom->Add_EventCaller("AttackEnd", [this]
 	{
 		End_AttackState();
