@@ -16,6 +16,8 @@
 
 #include "WaterBall.h" // Oil_Bullet
 
+#include "Canvas_Alarm.h"
+
 CBoss1::CBoss1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
 {
