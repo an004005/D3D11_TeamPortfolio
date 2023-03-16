@@ -114,15 +114,15 @@ HRESULT CBoss1::Initialize(void* pArg)
 	});
 	m_pModelCom->Add_EventCaller("SwingL_Eff", [this]
 	{
-		_matrix PivotMatrix = XMMatrixIdentity();
-		PivotMatrix = XMMatrixScaling(60.f, 60.f, 60.f);
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")->Start_AttachPivot(this, PivotMatrix, "Eff02", true, false);
+		/*_matrix PivotMatrix = XMMatrixIdentity();
+		PivotMatrix = XMMatrixScaling(60.f, 60.f, 60.f);*/
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")->Start_Attach(this, "Eff02", true, false);
 	});
 	m_pModelCom->Add_EventCaller("SwingR_Eff", [this]
 	{
-		_matrix PivotMatrix = XMMatrixIdentity();
-		PivotMatrix = XMMatrixScaling(60.f, 60.f, 60.f);
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")->Start_AttachPivot(this, PivotMatrix, "Eff02", true, false);
+		/*_matrix PivotMatrix = XMMatrixIdentity();
+		PivotMatrix = XMMatrixScaling(60.f, 60.f, 60.f);*/
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")->Start_Attach(this, "Eff02", true, false);
 	});
 	m_pModelCom->Add_EventCaller("Start_Spin", [this]
 	{
