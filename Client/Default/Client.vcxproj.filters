@@ -998,9 +998,6 @@
     <ClCompile Include="..\private\FlowerLeg.cpp">
       <Filter>02.GameObjects\Monster\FlowerLeg</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BuddyLumi.cpp">
-      <Filter>02.GameObjects\Monster\BuddyLumi</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\BdLm_AnimInstance.cpp">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_AnimInstance</Filter>
     </ClCompile>
@@ -1324,6 +1321,9 @@
     </ClCompile>
     <ClCompile Include="..\private\ParticleGroup.cpp">
       <Filter>VFX\Particle\ParticleGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BuddyLumi.cpp">
+      <Filter>02.GameObjects\Monster\BuddyLumi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

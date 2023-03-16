@@ -82,6 +82,8 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	Ready_Layer_Effect();
 
+	Ready_Layer_SASPortrait(LAYER_SAS);
+
 	// m_TestSound.CloneSound("Ambient_Bridge");
 	// m_TestSound.PlaySound("Ambient_Bridge");
 
@@ -242,7 +244,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	pGameInstance->Clone_GameObject(pLayerTag, L"Prototype_SASPortrait");
 
 #ifdef ADD_PLAYER
 
@@ -284,10 +285,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	// Model_Ch300_Portrail
 
-	// auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
-	// _float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	// pos.y += 1.f;
-	// pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+	auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
+	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	pos.y += 1.f;
+	pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
 
 
 
@@ -319,6 +320,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect()
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Penetrate", &Penetrate);
 
 	
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_SASPortrait(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	pGameInstance->Clone_GameObject(pLayerTag, L"Prototype_SASPortrait");
+
 	return S_OK;
 }
 

@@ -130,7 +130,11 @@ void CScarletMap::Imgui_RenderProperty()
 		{
 			if (m_pGameObject != nullptr)
 			{
-				InitPosition = dynamic_cast<CMapInstance_Object*>(m_pGameObject)->Get_FocusPosition();
+				if (dynamic_cast<CMapObject*>(m_pGameObject)->Get_MapObjType() == MAP_INSTANCE)
+					InitPosition = dynamic_cast<CMapInstance_Object*>(m_pGameObject)->Get_FocusPosition();
+
+				else
+					InitPosition = m_pGameObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 			}
 		}
 
@@ -462,9 +466,18 @@ void CScarletMap::RayPicking()
 
 				
 				auto iter = find_if(m_pMapObjects.begin(), m_pMapObjects.end(), [&](CMapObject* pMapObject) {
-					auto com = dynamic_cast<CMapInstance_Object*>(pMapObject)->Find_PhysXStaticModel(dynamic_cast<CPhysXStaticModel*>(pComponent));
 
-					return com == nullptr ? false : true;
+					//인스턴싱 물체면 안에 matrix를 추가로 탐색한다.
+					if (pMapObject->Get_MapObjType() == INSTANCE)
+					{
+						auto com = dynamic_cast<CMapInstance_Object*>(pMapObject)->Find_PhysXStaticModel(dynamic_cast<CPhysXStaticModel*>(pComponent));
+						return com == nullptr ? false : true;
+					}
+					else
+					{
+						return true;
+					}
+				
 				});
 
 				if (iter != m_pMapObjects.end())

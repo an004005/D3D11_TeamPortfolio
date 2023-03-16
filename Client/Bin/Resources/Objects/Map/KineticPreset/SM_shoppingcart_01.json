@@ -1,0 +1,71 @@
+{
+    "KineticType": 0,
+    "LocalMatrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -0.5033972263336182,
+        0.0,
+        1.0
+    ],
+    "ModelTags": [
+        "../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/ShoppingCart/SM_shoppingcart_01.static_model\u0000"
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "Prototype_GameObject_MapKinetic_Object\u0000",
+    "RigidBody": {
+        "ColliderType": 4,
+        "Density": 10.0,
+        "OriginTransform": [
+            0.86031574010849,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.8284665942192078,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.4077998697757721,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 0,
+        "bKinematic": false,
+        "bTrigger": false
+    },
+    "Transform": {
+        "WorldMatrix": [
+            0.9999995827674866,
+            -2.8824404580518603e-05,
+            -0.0009089414961636066,
+            0.0,
+            2.4621625925647095e-05,
+            0.9999893307685852,
+            -0.004623488523066044,
+            0.0,
+            0.000909065012820065,
+            0.004623464308679104,
+            0.9999889135360718,
+            0.0,
+            0.0032230024226009846,
+            0.48324131965637207,
+            -0.007427419535815716,
+            1.0
+        ]
+    }
+}
