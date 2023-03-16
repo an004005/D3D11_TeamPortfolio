@@ -49,9 +49,10 @@ void CMonsterHpUI::BeginTick()
 	//Safe_AddRef(m_pMonsterName);
 
 	Assert(m_pGroup != nullptr);
+	m_pGroup->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
+
 	//Assert(m_pMonsterName != nullptr);
 	//첫 인자에 넣어준 포인터의 뼈를 찾음.
-	m_pGroup->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
 	//m_pMonsterName->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
 
 }
@@ -60,23 +61,23 @@ void CMonsterHpUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 	
-	if (m_pOwner != nullptr)
+	if (m_pGroup == nullptr || m_pOwner == nullptr) return;
+	
+	if (dynamic_cast<CMonster*>(m_pOwner)->IsDead())
 	{
-		if (dynamic_cast<CMonster*>(m_pOwner)->IsDead())
-		{
-			m_bDelete = true;
-			return;
-		}
-
-		_uint iHp = dynamic_cast<CMonster*>(m_pOwner)->GetHP();
-		_uint iMaxHp = dynamic_cast<CMonster*>(m_pOwner)->GetMaxHP();
-
-		m_fRatio = (_float)iHp / (_float)iMaxHp;
-		m_fHpBack = m_fRatio;
-		m_pGroup->GetThirdEffect()->GetParams().Floats[0] = m_fRatio;
-
-		HpBack_Tick(TimeDelta);
+		m_bDelete = true;
+		return;
 	}
+
+	_uint iHp = dynamic_cast<CMonster*>(m_pOwner)->GetHP();
+	_uint iMaxHp = dynamic_cast<CMonster*>(m_pOwner)->GetMaxHP();
+
+	m_fRatio = (_float)iHp / (_float)iMaxHp;
+	m_fHpBack = m_fRatio;
+	m_pGroup->GetThirdEffect()->GetParams().Floats[0] = m_fRatio;
+
+	HpBack_Tick(TimeDelta);
+
 }
 
 void CMonsterHpUI::Imgui_RenderProperty()

@@ -57,6 +57,9 @@ HRESULT CMapInstance_Object::Initialize(void * pArg)
 	}
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+
+	m_eMapobjType = MAP_INSTANCE;
+
 	return S_OK;
 }
 
@@ -125,6 +128,19 @@ void CMapInstance_Object::Imgui_RenderProperty()
 		{
 			const bool bSelected = (i == m_iIndex);
 
+			/*
+			스케일값 바꾼 객체들 피직스에 안들어가서 찾아내려고 임시로 만듦
+
+			_matrix mat = WorldMatrixs[i];
+				_float3 vScale = {
+					XMVectorGetX(XMVector3Length(mat.r[0])),
+					XMVectorGetX(XMVector3Length(mat.r[1])),
+					XMVectorGetX(XMVector3Length(mat.r[2]))
+				};
+
+				if(vScale.x - 1.f <= 0.0001f && vScale.y - 1.f <= 0.0001f && vScale.z - 1.f <= 0.0001f)
+					continue;
+	*/
 			if (bSelected)
 				ImGui::SetItemDefaultFocus();
 

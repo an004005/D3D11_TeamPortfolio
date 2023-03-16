@@ -56,7 +56,6 @@ void CMonsterLockonUI::BeginTick()
 void CMonsterLockonUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-
 }
 
 void CMonsterLockonUI::Imgui_RenderProperty()

@@ -39,9 +39,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 		if (json.contains("InitPos"))
 		{
 			_float4 InitPos = json["InitPos"];
-			_float4x4 WorldMatrix = XMMatrixTranslationFromVector(InitPos);
-			CTransform::ModifyTransformJson(json, WorldMatrix);
-			// m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&InitPos));
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&InitPos));
 		}
 	}
 
@@ -103,12 +101,22 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(18.f) });
 
-	CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
-	pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
+	//툴에서 쓸때 플레이어가 없을수있으니 체크
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Player"));
 
-	assert(pGravikenisisMouse != nullptr);
-	pGravikenisisMouse->Set_Owner(this);
+	if (pLayer != nullptr)
+	{
+		CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
+		pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
 
+		assert(pGravikenisisMouse != nullptr);
+		pGravikenisisMouse->Set_Owner(this);
+	}
+
+
+	m_eMapobjType = MAP_KINETIC;
+	
 	return S_OK;
 }
 

@@ -39,6 +39,8 @@ HRESULT CMapNonAnim_Object::Initialize(void * pArg)
 		}
 	}
 
+	m_eMapobjType = MAP_NONANIM;
+
 	return S_OK;
 }
 

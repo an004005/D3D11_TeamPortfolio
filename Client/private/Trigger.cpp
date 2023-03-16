@@ -202,6 +202,16 @@ void CTrigger::SetUp_Create(const Json & json)
 {
 	map<string, vector<_float4x4>> tmp = json["Create"];
 
+	//수정시 데이터를 불러오기 위해
+	if (LEVEL_NOW == LEVEL_BATCH)
+	{
+
+		//맵을 그냥 복사하는건데 같은 테그가 있을리가?
+		for (auto it : tmp)
+			m_ProtoWorldMatrixes.emplace(s2ws(it.first), it.second);
+		
+	}
+
 	//생성 후 보관
 	for (auto iter : tmp)
 	{
