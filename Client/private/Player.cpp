@@ -1001,12 +1001,12 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			})
 			.Priority(0)
 
-			.AddTransition("NO_USE_KINETIC to KINETIC_RB_AIR_START", "KINETIC_RB_AIR_START")
-			.Predicator([&]()->_bool 
-			{
-				return m_bKineticRB && m_bAir && (nullptr != m_pKineticObject && true == static_cast<CMapKinetic_Object*>(m_pKineticObject)->Usable()) && !m_bHit;
-			})
-			.Priority(0)
+			//.AddTransition("NO_USE_KINETIC to KINETIC_RB_AIR_START", "KINETIC_RB_AIR_START")
+			//.Predicator([&]()->_bool 
+			//{
+			//	return m_bKineticRB && m_bAir && (nullptr != m_pKineticObject && true == static_cast<CMapKinetic_Object*>(m_pKineticObject)->Usable()) && !m_bHit;
+			//})
+			//.Priority(0)
 
 #pragma region KineticRB
 
@@ -2869,6 +2869,15 @@ void CPlayer::Event_KineticSlowAction()
 void CPlayer::Event_Trail(_bool bTrail)
 {
 	static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(bTrail);
+}
+
+void CPlayer::Event_Dust()
+{
+	//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::)
+}
+
+void CPlayer::Event_KineticCircleEffect()
+{
 }
 
 void CPlayer::Reset_Charge()
