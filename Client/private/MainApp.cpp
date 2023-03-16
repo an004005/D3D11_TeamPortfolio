@@ -25,6 +25,15 @@
 #include "VFX_Manager.h"
 #include "PostVFX_Penetrate.h"
 
+#include "PostVFX_Scifi.h"
+#include "EffectGroup.h"
+#include "ParticleSystem.h"
+#include "ParticleGroup.h"
+#include "PostVFX_Distortion.h"
+#include "SAS_Portrait.h"
+#include "EffectSystem.h"
+#include "TrailSystem.h"
+
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -135,6 +144,20 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_Scifi"),
+		CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_Distortion"),
+		CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_ParticleGroup", CParticleGroup::Create(m_pDevice, m_pContext)));
 
 	/* For.Prototype_Component_Shader_VtxPosRect */	
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPosRect"),
