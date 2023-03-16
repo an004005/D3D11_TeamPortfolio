@@ -334,6 +334,9 @@ void CBronJon::AfterPhysX()
 
 void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+	if (tDamageParams.iDamage > 500 || tDamageParams.iDamage < 0)
+		tDamageParams.iDamage = 100;
+
 	if (m_bDead)
 		return;
 
