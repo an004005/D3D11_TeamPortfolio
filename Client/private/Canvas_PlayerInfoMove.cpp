@@ -57,6 +57,9 @@ void CCanvas_PlayerInfoMove::BeginTick()
 	//	}
 	//}
 
+	if (nullptr == m_pPlayer)
+		return;
+
 	Set_PlayerHp(_float(m_pPlayer->Get_PlayerStat().m_iHP), _float(m_pPlayer->Get_PlayerStat().m_iMaxHP));
 	Set_PsychokinesisGauge(
 		PSYCHOKINESISLEVEL(m_pPlayer->Get_PlayerStat().m_iKineticEnergyLevel),

@@ -9,6 +9,7 @@
 #include "ScarletCharacter.h"
 #include "MainApp.h"
 #include "Monster.h"
+
 CBatch::CBatch(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
 {
@@ -62,7 +63,7 @@ void CBatch::Imgui_RenderProperty()
 	__super::Imgui_RenderProperty();
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	const char*	BatchTypes[BATCHTYPE::TYPE_END] = { "MONSTER", "OTEHR" };
+	const char*	BatchTypes[BATCHTYPE::TYPE_END] = { "MONSTER", "TUTOTIAL" };
 	ImGui::Combo("ProtoFilter", &m_Filter, BatchTypes, IM_ARRAYSIZE(BatchTypes));
 
 	ImGui::Separator();
@@ -91,7 +92,6 @@ void CBatch::Imgui_RenderProperty()
 		ImGui::EndListBox();
 	}
 
-	
 	ImGui::Separator();
 	ImGui::Checkbox("Picking On", &m_bPick);
 	
@@ -149,6 +149,14 @@ void CBatch::Imgui_RenderProperty()
 			if (m_pTrigger != nullptr && m_pGameObject != nullptr)
 			{
 				m_pTrigger->Set_ForCreate(m_pGameObject->GetPrototypeTag(), m_pGameObject->GetTransform()->Get_WorldMatrix());
+			}
+		}
+
+		if (ImGui::Button("Set_Tutorial"))
+		{
+			if (m_pTrigger != nullptr)
+			{
+				m_pTrigger->Set_ForTutorial(m_eTutorial);
 			}
 		}
 
@@ -242,7 +250,25 @@ void CBatch::Imgui_RenderProperty()
 		ImGui::TreePop();
 	}
 
-	
+	// Tutorial
+	ImGui::Separator();
+	ImGui::Separator();
+
+	static array<const char*, CCanvas_Tutorial::TUTORIAL::TUTORIAL_END> arrPivotName{
+		"LOCKON", "FIGHTINGSTYLE", "SPECIALATTACK", "ADDRUSHATTACK", "ADDPSYCHOKINESISATTACK", "STRENGTHENATTACK"
+	};
+
+	if (ImGui::BeginCombo("Pivot", arrPivotName[static_cast<_uint>(m_eTutorial)]))
+	{
+		for (int i = 0; i < CCanvas_Tutorial::TUTORIAL::TUTORIAL_END; ++i)
+		{
+			const bool bSelected = false;
+			if (ImGui::Selectable(arrPivotName[i], bSelected))
+				m_eTutorial = static_cast<CCanvas_Tutorial::TUTORIAL>(i);
+		}
+
+		ImGui::EndCombo();
+	}
 
 
 }

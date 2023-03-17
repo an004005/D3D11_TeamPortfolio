@@ -295,9 +295,6 @@
     <Filter Include="02.GameObjects\Monster\boss1\WaterBall">
       <UniqueIdentifier>{7d98e4ff-3ec3-41c0-b7b6-9a67b3d0b012}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Tutorial\Psychokinesis">
-      <UniqueIdentifier>{05a34116-b873-484c-8da2-baafc69d27ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="VFX\Particle\ParticleGroup">
       <UniqueIdentifier>{f465b88f-dbb3-4679-a8d4-76b67ddacdbc}</UniqueIdentifier>
     </Filter>
@@ -309,6 +306,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM">
       <UniqueIdentifier>{889711dc-b345-4bdf-9c49-c3181c53954d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Invantory">
+      <UniqueIdentifier>{776d7a33-79da-4f1d-aeee-85ee99adcbc0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -844,6 +844,12 @@
     <ClInclude Include="..\public\FLInvisible_AnimInstance.h">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\NoticeNeonUI.h">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\NoticeNeonUI.h">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1351,6 +1357,12 @@
     </ClCompile>
     <ClCompile Include="..\private\FLInvisible_AnimInstance.cpp">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NoticeNeonUI.cpp">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NoticeNeonUI.cpp">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

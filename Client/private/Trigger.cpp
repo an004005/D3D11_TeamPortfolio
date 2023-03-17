@@ -9,7 +9,8 @@
 #include "BronJon.h"
 #include "ImGuizmo.h"
 #include "JsonLib.h"
-
+#include "JsonStorage.h"
+#include "Canvas_Tutorial.h"
 
 CTrigger::CTrigger(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -71,8 +72,13 @@ void CTrigger::SaveToJson(OUT Json & json)
 			string str = ws2s(iter.first);
 			tmp.emplace(str, iter.second);
 		}
-		
+
 		json["Create"] = tmp;
+	}
+	else if(m_eUsage == TUTORIAL)
+	{
+		json["Tutorial"] = m_eTutorial;
+
 	}
 	else
 	{
@@ -116,45 +122,52 @@ void Client::CTrigger::Imgui_RenderProperty()
 
 	__super::Imgui_RenderProperty();
 
-	if (ImGui::BeginListBox("Trigger List"))
+	if (m_eUsage == CREATE)
 	{
-		for (auto iter : m_ProtoWorldMatrixes)
+		if (ImGui::BeginListBox("Trigger List"))
 		{
-			const bool bSelected = (iter.first == m_PotoTag);
-
-			if (bSelected)
-				ImGui::SetItemDefaultFocus();
-
-			const string str = ws2s(iter.first);
-
-			if (ImGui::Selectable(str.c_str(), bSelected))
+			for (auto iter : m_ProtoWorldMatrixes)
 			{
-				m_PotoTag = iter.first;
+				const bool bSelected = (iter.first == m_PotoTag);
+
+				if (bSelected)
+					ImGui::SetItemDefaultFocus();
+
+				const string str = ws2s(iter.first);
+
+				if (ImGui::Selectable(str.c_str(), bSelected))
+				{
+					m_PotoTag = iter.first;
+				}
+			}
+
+			ImGui::EndListBox();
+		}
+
+
+		auto iter = m_ProtoWorldMatrixes.find(m_PotoTag);
+
+		if (iter != m_ProtoWorldMatrixes.end())
+		{
+			_int iCount = 0;
+			for (auto matrix : (*iter).second)
+			{
+				const string str = "WorldMatrix " + to_string(iCount++);
+				ImGui::Selectable(str.c_str(), false);
 			}
 		}
-
-		ImGui::EndListBox();
 	}
-
-	
-	auto iter = m_ProtoWorldMatrixes.find(m_PotoTag);
-
-	if (iter != m_ProtoWorldMatrixes.end())
+	else if (m_eUsage == TUTORIAL)
 	{
-		_int iCount = 0;
-		for (auto matrix : (*iter).second)
-		{
-			const string str = "WorldMatrix " + to_string(iCount++);
-			ImGui::Selectable(str.c_str(), false);
-		}
 	}
+
 	
 
 	ImGui::End();
 }
 
 void CTrigger::Set_ForCreate(const wstring& ProtoTag, const _float4x4 WorldMatrix)
-{	
+{
 	m_eUsage = CREATE;
 
 	auto& iter = m_ProtoWorldMatrixes.find(ProtoTag);
@@ -169,6 +182,14 @@ void CTrigger::Set_ForCreate(const wstring& ProtoTag, const _float4x4 WorldMatri
 	{
 		iter->second.emplace_back(WorldMatrix);
 	}
+}
+
+void CTrigger::Set_ForTutorial(CCanvas_Tutorial::TUTORIAL eTutorial)
+{
+	m_eUsage = TUTORIAL;
+
+	m_eTutorial = eTutorial;
+
 }
 
 HRESULT CTrigger::SetUp_Components(void * pArg)
@@ -188,6 +209,9 @@ void CTrigger::SetUp_InitInfo(const Json & json)
 	{
 	case CREATE:
 		SetUp_Create(json);
+		break;
+	case TUTORIAL:
+		SetUp_Tutorial(json);
 		break;
 	case USAGE_END:
 		assert(!"No Usage In Data");
@@ -227,11 +251,11 @@ void CTrigger::SetUp_Create(const Json & json)
 			assert(pMonster != nullptr);
 			m_pMonsters.emplace_back(pMonster);
 		}
-		
+
 	}
 
 	m_pRigidBodyCom->SetOnTriggerIn([this](CGameObject* pGameObject) {
-	
+
 		for_each(m_pMonsters.begin(), m_pMonsters.end(), [](CMonster* pMonster) {
 			CGameInstance* pGameinstance = CGameInstance::GetInstance();
 			pGameinstance->Add_InLayer(TEXT("Layer_Monster"), pMonster);
@@ -243,6 +267,21 @@ void CTrigger::SetUp_Create(const Json & json)
 		m_pMonsters.clear();
 	});
 	
+}
+
+void CTrigger::SetUp_Tutorial(const Json & json)
+{
+	m_eTutorial = json["Tutorial"];
+	Json jsonTutorial = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Tutorial.json");
+	m_pTutorial = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_UI", L"Canvas_Tutorial", &jsonTutorial);
+
+	m_pRigidBodyCom->SetOnTriggerIn([this](CGameObject* pGameObject) {
+
+		dynamic_cast<CCanvas_Tutorial*>(m_pTutorial)->Set_Tutorial(m_eTutorial);
+
+		//끝나고 트리거 삭제
+		m_bDelete = true;
+	});
 }
 
 CTrigger * CTrigger::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
