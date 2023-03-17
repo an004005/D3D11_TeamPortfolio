@@ -25,6 +25,9 @@
 
 #include "WaterBall.h"
 
+#include "FlowerLeg_Invisible.h"
+#include "FLInvisible_Controller.h"
+
 // Player Setting
 #include "Player.h"
 #include "Controller.h"
@@ -189,7 +192,8 @@ HRESULT CFactoryMethod::MakeEnermyPrototypes(ID3D11Device* pDevice, ID3D11Device
 		pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
 	}
-
+	// Invisible
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("FlowerLegInvisible"), CFlowerLeg_Invisible::Create(pDevice, pContext)));
 	// ~Invisible
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("FlowerLeg"), CFlowerLeg::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BuddyLumi"), CBuddyLumi::Create(pDevice, pContext)));
@@ -199,7 +203,8 @@ HRESULT CFactoryMethod::MakeEnermyPrototypes(ID3D11Device* pDevice, ID3D11Device
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BronJon"), CBronJon::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_WaterBall"), CWaterBall::Create(pDevice, pContext)));
-
+	// Invisible
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FLInvisible_Controller"), CFLInvisible_Controller::Create()));
 	// ~Invisible
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FL_Controller"), CFL_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));

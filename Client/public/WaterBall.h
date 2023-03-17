@@ -1,6 +1,8 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Bullet.h"
+#include "ParticleGroup.h"
+#include "EffectGroup.h"
 
 BEGIN(Engine)
 class CGameInstance;
@@ -34,8 +36,13 @@ public:
 private:
 	CFSMComponent*	m_pFSMCom = nullptr;
 
+	CParticleGroup*	m_pTrailParticle = nullptr;
+	CEffectGroup*	m_pBulletEffect = nullptr;
+
 private:
 	_vector			m_vDir = { 0.f, 0.f, 0.f, 0.f };
+	_vector					m_vPrePos;
+	_bool					m_bPrePos = false;
 
 public:
 	static CWaterBall* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

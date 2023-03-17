@@ -16,7 +16,7 @@
             "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_Barrels01/T_pr_Barrel01_Oil_NML.png",
             "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_Barrels01/T_pr_Barrels01_Oil_RMA.png"
         ],
-        "Pass": 1
+        "Pass": 4
     },
     "InstancingPass": 1
 }

@@ -62,6 +62,9 @@ HRESULT CLevel_EnemiesTest::Initialize()
 
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
+	
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -85,6 +88,9 @@ HRESULT CLevel_EnemiesTest::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_UI(TEXT("Layer_FrontUI"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -157,7 +163,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
-	FAILED_CHECK(CFactoryMethod::MakeUITestPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
@@ -166,6 +172,16 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_GameObject_Trigger"),
 		CTrigger::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	// For_SkySphere
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Env", TEXT("Prototype_GameObject_SkyBox")));
 
 	return S_OK;
 }
@@ -184,14 +200,17 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Camera(const _tchar * pLayerTag)
 HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
+	
 	/*if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
 		return E_FAIL;*/
 
 	// Test 하지 않는 중인 Monster 넣어두기
 // 	
-	// pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
-		// ->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 4.f, 0.f, 1.f));
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLegInvisible"))
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-10.f, 15.f, 50.f, 1.f));
+
+//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
+//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(140.f, 15.f, 110.f, 1.f));
 //
 //	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BuddyLumi"))
 //		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(40.f, 3.f, 3.f, 1.f));
@@ -262,6 +281,66 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
 	
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+
+	return S_OK;
+}
+
+HRESULT CLevel_EnemiesTest::Ready_Layer_UI(const _tchar * pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	// Frount_UI Canvas_FrontUI 
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Item.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Item", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_ItemMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_ItemMove", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfoLeft.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfoLeft", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfoLeftMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfoLeftMove", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_PlayerInfo.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_PlayerInfo", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_PlayerInfoMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_PlayerInfoMove", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Drive.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Drive", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_DriveMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_DriveMove", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfoRight.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfoRight", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASInfoRightMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASInfoRightMove", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASSkill.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkill", &json));		// 움직이지 않은 UI
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASSkillMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkillMove", &json));	// 움직이는 UI
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Tutorial.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Tutorial", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_BossHp", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Alarm", &json));
+
+	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
+	//{
+	//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);
+	//	wstring protoTag = s2ws(json["Prototype_GameObject"]);
+	//	pGameInstance->Clone_GameObject(pLayerTag, protoTag.c_str(), &json);
+	//});
 
 	return S_OK;
 }

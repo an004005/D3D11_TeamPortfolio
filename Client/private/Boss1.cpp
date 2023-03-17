@@ -15,10 +15,14 @@
 #include "Material.h"
 
 #include "WaterBall.h" // Oil_Bullet
+#include "VFX_Manager.h"
+
+#include "Canvas_Alarm.h"
+#include "Canvas_BossHp.h"
 
 CBoss1::CBoss1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
-{
+{  
 }
 
 CBoss1::CBoss1(const CBoss1& rhs)
@@ -49,9 +53,18 @@ HRESULT CBoss1::Initialize(void* pArg)
 	Json BossRnage = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_Rnage.json");
 	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
 		(CComponent**)&m_pRange, &BossRnage));
+	// 0315 추가
+	Json BossHeadJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_Head.json");
+	Json BossLeftArmJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_LeftArm.json");
+	Json BossRightArmJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_RightArm.json");
+
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Com_Head"), (CComponent**)&m_pHead, &BossHeadJson));
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Com_LeftArm"), (CComponent**)&m_pLeftArm, &BossLeftArmJson));
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Com_RightArm"), (CComponent**)&m_pRightArm, &BossRightArmJson));
+	// ~0315 추가
 
 	m_fGravity = 25.f;
-	m_iMaxHP = 10000;
+	m_iMaxHP = 1000;
 	m_iHP = m_iMaxHP;
 	m_iPreHP = m_iHP;
 
@@ -93,12 +106,24 @@ HRESULT CBoss1::Initialize(void* pArg)
 	});
 
 	m_pModelCom->Add_EventCaller("Start_SweepRight", [this]
-	{
+	{		
 		Start_AttackState(RIGHT_SWEEP);
 	});
 	m_pModelCom->Add_EventCaller("Start_SweepLeft", [this]
-	{
+	{		
 		Start_AttackState(LEFT_SWEEP);
+	});
+	m_pModelCom->Add_EventCaller("SwingL_Eff", [this]
+	{
+		_matrix PivotMatrix = XMMatrixIdentity();
+		PivotMatrix = XMMatrixScaling(60.f, 60.f, 60.f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")->Start_AttachPivot(this, PivotMatrix, "Eff02", true, false);
+	});
+	m_pModelCom->Add_EventCaller("SwingR_Eff", [this]
+	{
+		_matrix PivotMatrix = XMMatrixIdentity();
+		PivotMatrix = XMMatrixScaling(60.f, 60.f, 60.f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")->Start_AttachPivot(this, PivotMatrix, "Eff02", true, false);
 	});
 	m_pModelCom->Add_EventCaller("Start_Spin", [this]
 	{
@@ -110,7 +135,11 @@ HRESULT CBoss1::Initialize(void* pArg)
 	});
 	// Water ball Create + De_buff : Oil
 
-	m_pModelCom->Add_EventCaller("LastSpot", [this] { m_LastSpotTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION); });
+	m_pModelCom->Add_EventCaller("LastSpot", [this] 
+	{ 
+		//_vector vTargetColPos = dynamic_cast<CScarletCharacter*>(m_pTarget)->GetColliderPosition();
+		m_LastSpotTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION); 
+	});
 	m_pModelCom->Add_EventCaller("WaterBall", [this] 
 	{ 
 		//_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
@@ -132,7 +161,7 @@ HRESULT CBoss1::Initialize(void* pArg)
 			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
 			pBullet->Set_ShootDir(vDest);
 			
-			pBullet->GetTransform()->LookAt(vPrePos + vLook);
+			pBullet->GetTransform()->LookAt(m_LastSpotTargetPos);//vPrePos + vLook);
 
 			if (m_b2ndPhase)
 			{
@@ -143,14 +172,14 @@ HRESULT CBoss1::Initialize(void* pArg)
 				CWaterBall* pBullet3 = dynamic_cast<CWaterBall*>(pObj3);
 
 				// 2nd Bullet
-				_matrix		RotMatAxis = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(10.f));
+				_matrix		RotMatAxis = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(15.f));
 				_vector vRight = XMVector3TransformNormal(vDest, RotMatAxis);
 				pBullet2->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
 				pBullet2->Set_ShootDir(vRight);
 				pBullet2->GetTransform()->LookAt(vPrePos + vRight);
 
 				// 3rd Bullet
-				_matrix		RotMatAxisRev = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-10.f));
+				_matrix		RotMatAxisRev = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-15.f));
 				_vector vLeft = XMVector3TransformNormal(vDest, RotMatAxisRev);
 				pBullet3->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
 				pBullet3->Set_ShootDir(vLeft);
@@ -206,6 +235,8 @@ void CBoss1::Tick(_double TimeDelta)
 		return;*/
 	CMonster::Tick(TimeDelta);
 
+	Create_BossUI();
+	
 	// 타겟 가져오기 임시 코드
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
    {
@@ -267,8 +298,23 @@ void CBoss1::Tick(_double TimeDelta)
 	m_vMoveAxis = m_pController->GetMoveAxis();
 	m_pASM->Tick(TimeDelta);
 
-	const _matrix WeakBoneMatrix = m_pModelCom->GetBoneMatrix("Water") * m_pTransformCom->Get_WorldMatrix();
+	/*const _matrix WeakBoneMatrix = m_pModelCom->GetBoneMatrix("Water") * m_pTransformCom->Get_WorldMatrix();
 	m_pWeak->Update_Tick(WeakBoneMatrix);
+
+	const _matrix HeadBoneMatrix = m_pModelCom->GetBoneMatrix("Water") * m_pTransformCom->Get_WorldMatrix();
+	m_pHead->Update_Tick(HeadBoneMatrix);
+
+	const _matrix LeftArmBoneMatrix = m_pModelCom->GetBoneMatrix("Water") * m_pTransformCom->Get_WorldMatrix();
+	m_pLeftArm->Update_Tick(LeftArmBoneMatrix);
+
+	const _matrix RightArmBoneMatrix = m_pModelCom->GetBoneMatrix("Water") * m_pTransformCom->Get_WorldMatrix();
+	m_pRightArm->Update_Tick(RightArmBoneMatrix);*/
+
+	m_pWeak->Update_Tick(AttachCollider(m_pWeak));
+	m_pHead->Update_Tick(AttachCollider(m_pHead));
+	m_pLeftArm->Update_Tick(AttachCollider(m_pLeftArm));
+	m_pRightArm->Update_Tick(AttachCollider(m_pRightArm));
+
 
 	m_pRange->Update_Tick(m_pTransformCom->Get_WorldMatrix());
 	Tick_AttackState();
@@ -295,13 +341,25 @@ void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	if (m_bDead)
 		return;
+
+	if (tDamageParams.iDamage > 500 || tDamageParams.iDamage < 0)
+		tDamageParams.iDamage = 100;
 	
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	m_eHitDir = eHitFrom;
 
 	m_eAtkType = tDamageParams.eAttackType;
-	m_iHP -= tDamageParams.iDamage;
+	
+	if (tDamageParams.pContactComponent == m_pWeak)
+	{
+		m_iHP -= _int(tDamageParams.iDamage * 2);
+	}
+	else
+	{
+		m_iHP -= tDamageParams.iDamage;
+	}
 
+	// 2Phase
 	_int iCurrentHP = m_iPreHP - m_iHP;
 	if (iCurrentHP >= 4000)
 		m_b2ndPhase = true;
@@ -321,6 +379,36 @@ void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
 	}
 
 	__super::TakeDamage(tDamageParams);
+}
+
+_matrix CBoss1::AttachCollider(CRigidBody * pRigidBody)
+{
+	_matrix SocketMatrix;
+
+	if (pRigidBody == m_pWeak)
+		SocketMatrix = m_pModelCom->GetBoneMatrix("Water") * m_pTransformCom->Get_WorldMatrix();
+
+	else if (pRigidBody == m_pHead)
+		SocketMatrix = m_pModelCom->GetBoneMatrix("HoseC") * m_pTransformCom->Get_WorldMatrix();
+
+	else if (pRigidBody == m_pLeftArm)
+		SocketMatrix = m_pModelCom->GetBoneMatrix("LeftElbow") * m_pTransformCom->Get_WorldMatrix();
+
+	else if (pRigidBody == m_pRightArm)
+		SocketMatrix = m_pModelCom->GetBoneMatrix("RightElbow") * m_pTransformCom->Get_WorldMatrix();
+
+	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+
+	return SocketMatrix;
+}
+
+_float4 CBoss1::GetKineticTargetPos()
+{
+	_float3 vTemp = m_pWeak->GetPxWorldMatrix().Translation();
+
+	return _float4(vTemp.x, vTemp.y, vTemp.z, 1.f);
 }
 
 HRESULT CBoss1::Render()
@@ -504,6 +592,29 @@ void CBoss1::DeBuff_Oil()
 	}
 }
 
+void CBoss1::Create_BossUI()
+{
+	static _bool PresentUI = false;
+
+	if(m_pUI_BossHP != nullptr)
+		m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
+
+	if (PresentUI == true) return;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	Json json;
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
+	m_pUI_BossHP = dynamic_cast<CCanvas_BossHp*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHp", &json));
+	m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+	m_pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_Alarm", &json));
+	m_pUI_Alarm->Set_Appeart();
+
+	PresentUI = true;
+}
+
 //void CBoss1::SetActive()
 //{
 //	CMonster::SetActive();
@@ -540,5 +651,16 @@ void CBoss1::Free()
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pWeak);
+	Safe_Release(m_pHead);
+	Safe_Release(m_pLeftArm);
+	Safe_Release(m_pRightArm);
 	Safe_Release(m_pRange);
+
+
+	//for. BossUI
+	if (m_pUI_BossHP != nullptr)
+		m_pUI_BossHP->SetDelete();
+
+	if (m_pUI_Alarm != nullptr)
+		m_pUI_Alarm->SetDelete();
 }

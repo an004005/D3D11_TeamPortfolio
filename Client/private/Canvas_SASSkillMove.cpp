@@ -169,8 +169,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 		if (ESASType::SAS_NOT != eSASType && fCurrentEnergy > fMinEnergy)
 		{
 			dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light1"))->Set_LightType(eSASType, true);
-			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge1"))->Set_GaugeType(eSASType, fCurrentEnergy);
-			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge1Back"))->Set_GaugeBackType(eSASType, fCurrentEnergy);
+			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge1"))->Set_GaugeType(eSASType, fRatio);
+			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge1Back"))->Set_GaugeBackType(eSASType, fRatio);
 		}
 	}
 	else
@@ -182,8 +182,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light1"))->Set_LightType(eSASType, false);
-		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge1"))->Set_GaugeType(eSASType, fCurrentEnergy);
-		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge1Back"))->Set_GaugeBackType(eSASType, fCurrentEnergy);
+		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge1"))->Set_GaugeType(eSASType, fRatio);
+		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge1Back"))->Set_GaugeBackType(eSASType, fRatio);
 	}
 
 	// 2
@@ -199,8 +199,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 		if (ESASType::SAS_NOT != eSASType && fCurrentEnergy > fMinEnergy)
 		{
 			dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light2"))->Set_LightType(eSASType, true);
-			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge2"))->Set_GaugeType(eSASType, fCurrentEnergy);
-			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge2Back"))->Set_GaugeBackType(eSASType, fCurrentEnergy);
+			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge2"))->Set_GaugeType(eSASType, fRatio);
+			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge2Back"))->Set_GaugeBackType(eSASType, fRatio);
 		}
 	}
 	else
@@ -212,8 +212,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light2"))->Set_LightType(eSASType, false);
-		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge2"))->Set_GaugeType(eSASType, fCurrentEnergy);
-		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge2Back"))->Set_GaugeBackType(eSASType, fCurrentEnergy);
+		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge2"))->Set_GaugeType(eSASType, fRatio);
+		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge2Back"))->Set_GaugeBackType(eSASType, fRatio);
 	}
 
 	// 3

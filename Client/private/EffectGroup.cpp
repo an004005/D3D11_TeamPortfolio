@@ -155,10 +155,12 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			}
 			else if (m_iSelectFinishFunc == 1)
 			{
-				m_Timeline.SetFinishFunction([this]
-				{
-					SetDelete();
-				});
+				// m_Timeline.SetFinishFunction([this]
+				// {
+				// 	SetDelete();
+				// });
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+
 			}
 			else if (m_iSelectFinishFunc == 2)
 			{
@@ -175,6 +177,13 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 					SetDelete();
 				});
 			}
+		}
+		else if ((LEVEL_NOW == LEVEL_LOGO))
+		{
+			m_Timeline.SetFinishFunction([this]
+			{
+				SetDelete();
+			});
 		}
 		else
 		{
@@ -271,7 +280,7 @@ void CEffectGroup::Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix,
 
 	if (trueisUpdate == false)
 	{
-		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
 
 		if (m_bRemoveScale == true)
 		{
@@ -1371,7 +1380,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json First_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
+			Json First_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
 			m_pFirst_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &First_Effect));
 
 			const string& strFileName = CGameUtils::GetFileName(m_First_EffectDirectory);
@@ -1395,7 +1404,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json Secon_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
+			Json Secon_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
 			m_pSecond_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Secon_Effect));
 
 			const string& strFileName = CGameUtils::GetFileName(m_Second_EffectDirectory);
@@ -1419,7 +1428,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json Third_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
+			Json Third_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
 			m_pThird_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Third_Effect));
 
 			const string& strFileName = CGameUtils::GetFileName(m_Third_EffectDirectory);
@@ -1443,7 +1452,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json Fourth_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
+			Json Fourth_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
 			m_pFourth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fourth_Effect));
 
 			const string& strFileName = CGameUtils::GetFileName(m_Fourth_EffectDirectory);
@@ -1467,7 +1476,7 @@ void CEffectGroup::Load_EffectSystem()
 				return;
 			}
 
-			Json Fifth_Effect = CJsonStorage::GetInstance()->LoadJson_ForWork(EffectProtoTag);
+			Json Fifth_Effect = CJsonStorage::GetInstance()->FindOrLoadJson(EffectProtoTag);
 			m_pFifth_EffectSystem = dynamic_cast<CEffectSystem*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectGroup", L"ProtoVFX_EffectSystem", &Fifth_Effect));
 			const string& strFileName = CGameUtils::GetFileName(m_Fifth_EffectDirectory);
 			m_mapEffectSystemTag.emplace(strFileName, m_pFifth_EffectSystem);

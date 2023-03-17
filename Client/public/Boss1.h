@@ -42,6 +42,9 @@ public:
 	virtual void AfterPhysX() override;
 	
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
+	virtual _float4	GetKineticTargetPos() override;
+
+	_matrix AttachCollider(CRigidBody* pRigidBody);
 
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
@@ -58,6 +61,8 @@ public:
 	virtual void DeBuff_Oil() override;
 
 //	virtual void SetActive() override;
+private:
+	void Create_BossUI();
 
 private:
 	class CBoss1_AnimationInstance* m_pASM = nullptr;
@@ -65,8 +70,11 @@ private:
 
 	class CRigidBody* m_pWeak = nullptr;
 
+	class CRigidBody* m_pHead = nullptr;
+
 	class CRigidBody* m_pLeftArm = nullptr;
 	class CRigidBody* m_pRightArm = nullptr;
+	
 
 	CRigidBody* m_pRange = nullptr;
 
@@ -114,6 +122,9 @@ private:
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
 
+	//UI
+	class CCanvas_Alarm*		m_pUI_Alarm = nullptr;
+	class CCanvas_BossHp*		m_pUI_BossHP = nullptr;
 public:
 	static CBoss1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

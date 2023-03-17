@@ -75,7 +75,7 @@ void CTrigger::SaveToJson(OUT Json & json)
 
 		json["Create"] = tmp;
 	}
-	else if (m_eUsage == TUTORIAL)
+	else if(m_eUsage == TUTORIAL)
 	{
 		json["Tutorial"] = m_eTutorial;
 
@@ -161,7 +161,7 @@ void Client::CTrigger::Imgui_RenderProperty()
 	{
 	}
 
-
+	
 
 	ImGui::End();
 }
@@ -233,7 +233,7 @@ void CTrigger::SetUp_Create(const Json & json)
 		//맵을 그냥 복사하는건데 같은 테그가 있을리가?
 		for (auto it : tmp)
 			m_ProtoWorldMatrixes.emplace(s2ws(it.first), it.second);
-
+		
 	}
 
 	//생성 후 보관
@@ -266,7 +266,7 @@ void CTrigger::SetUp_Create(const Json & json)
 		m_bDelete = true;
 		m_pMonsters.clear();
 	});
-
+	
 }
 
 void CTrigger::SetUp_Tutorial(const Json & json)

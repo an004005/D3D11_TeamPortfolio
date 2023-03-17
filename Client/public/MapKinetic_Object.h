@@ -53,8 +53,8 @@ public:
 
 private:
 	void	OutlineMaker();
-	_bool	m_bOutlineChange = false;
 	_bool	m_bOutline = false;
+	_bool	m_bBeforeOutline = false;
 
 private:
 	HRESULT	SetUp_Components(void* pArg);
@@ -88,6 +88,7 @@ public:
 private:
 	_bool				m_bThrow = false;
 	_bool				m_bUsable = true;
+	_bool				m_bHit = false;
 	_float				m_fDeadTimer = 0.f;
 
 	_bool				m_bIsTargeted = { false };

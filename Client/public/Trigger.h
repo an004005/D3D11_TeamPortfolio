@@ -8,7 +8,7 @@ class CRigidBody;
 
 END
 
-enum USAGE { CREATE, TUTORIAL, USAGE_END };
+enum USAGE { CREATE, TUTORIAL, USAGE_END};
 
 BEGIN(Client)
 class CTrigger final :  public CGameObject
@@ -34,14 +34,16 @@ public:
 
 public:
 	void	Set_ForCreate(const wstring& ProtoTag, const _float4x4 WorldMatrix);
-	void	Set_ForTutorial(CCanvas_Tutorial::TUTORIAL eTutorial);
 
+	void	Set_ForTutorial(CCanvas_Tutorial::TUTORIAL eTutorial);
+	
 private:
 	HRESULT SetUp_Components(void * pArg);
 	void	SetUp_InitInfo(const Json& json); //LoadFromJson에서 실행
 
 	//Monster만 생성
 	void	SetUp_Create(const Json& json);
+
 	void	SetUp_Tutorial(const Json& json);
 
 private:

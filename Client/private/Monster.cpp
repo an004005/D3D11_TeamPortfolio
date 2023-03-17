@@ -28,30 +28,38 @@ HRESULT CMonster::Initialize(void* pArg)
 	});
 	m_DeathTimeline.SetCurve("Simple_Increase");
 
-	m_vecDefaultHit.push_back(L"Default_Blood_00");
-	m_vecDefaultHit.push_back(L"Default_Blood_01");
-	m_vecDefaultHit.push_back(L"Default_Blood_02");
-	m_vecDefaultHit.push_back(L"Default_Blood_03");
-	m_vecDefaultHit.push_back(L"Default_Blood_04");
-	m_vecDefaultHit.push_back(L"Default_Blood_05");
-	m_vecDefaultHit.push_back(L"Default_Blood_06");
+	m_vecDefaultBlood.push_back(L"Default_Blood_00");
+	m_vecDefaultBlood.push_back(L"Default_Blood_01");
+	m_vecDefaultBlood.push_back(L"Default_Blood_02");
+	m_vecDefaultBlood.push_back(L"Default_Blood_03");
+	m_vecDefaultBlood.push_back(L"Default_Blood_04");
+	m_vecDefaultBlood.push_back(L"Default_Blood_05");
+	m_vecDefaultBlood.push_back(L"Default_Blood_06");
 
-	m_vecFireHit.push_back(L"Fire_Blood_00");
-	m_vecFireHit.push_back(L"Fire_Blood_01");
-	m_vecFireHit.push_back(L"Fire_Blood_02");
-	m_vecFireHit.push_back(L"Fire_Blood_03");
-	m_vecFireHit.push_back(L"Fire_Blood_04");
-	m_vecFireHit.push_back(L"Fire_Blood_05");
-	m_vecFireHit.push_back(L"Fire_Blood_06");
+	m_vecFireBlood.push_back(L"Fire_Blood_00");
+	m_vecFireBlood.push_back(L"Fire_Blood_01");
+	m_vecFireBlood.push_back(L"Fire_Blood_02");
+	m_vecFireBlood.push_back(L"Fire_Blood_03");
+	m_vecFireBlood.push_back(L"Fire_Blood_04");
+	m_vecFireBlood.push_back(L"Fire_Blood_05");
+	m_vecFireBlood.push_back(L"Fire_Blood_06");
 
-	m_vecElecHit.push_back(L"Elec_Blood_00");
-	m_vecElecHit.push_back(L"Elec_Blood_01");
-	m_vecElecHit.push_back(L"Elec_Blood_02");
-	m_vecElecHit.push_back(L"Elec_Blood_03");
-	m_vecElecHit.push_back(L"Elec_Blood_04");
-	m_vecElecHit.push_back(L"Elec_Blood_05");
-	m_vecElecHit.push_back(L"Elec_Blood_06");
+	m_vecElecBlood.push_back(L"Elec_Blood_00");
+	m_vecElecBlood.push_back(L"Elec_Blood_01");
+	m_vecElecBlood.push_back(L"Elec_Blood_02");
+	m_vecElecBlood.push_back(L"Elec_Blood_03");
+	m_vecElecBlood.push_back(L"Elec_Blood_04");
+	m_vecElecBlood.push_back(L"Elec_Blood_05");
+	m_vecElecBlood.push_back(L"Elec_Blood_06");
 
+	m_vecDefaultHit.push_back(L"Default_Attack_OnHit_00");
+	m_vecDefaultHit.push_back(L"Default_Attack_OnHit_01");
+
+	m_vecFireHit.push_back(L"Fire_Attack_OnHit_00");
+	m_vecFireHit.push_back(L"Fire_Attack_OnHit_01");
+
+	m_vecElecHit.push_back(L"Elec_Attack_OnHit_00");
+	m_vecElecHit.push_back(L"Elec_Attack_OnHit_01");
 
 	//HP UI
 	m_UI_PivotMatrixes.fill(XMMatrixIdentity());
@@ -115,71 +123,81 @@ void CMonster::Imgui_RenderProperty()
 
 void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
-	//if (tDamageParams.vHitPosition.Length() == 0.f)
-	//{
-	//	wstring HitEffectName = L"";
+	if (tDamageParams.vHitPosition.Length() == 0.f)
+	{
+		wstring HitBloodName = L"";
+		wstring HitEffectName = L"";
 
-	//	switch (tDamageParams.eAttackSAS)
-	//	{
-	//	case ESASType::SAS_FIRE:
-	//		random_shuffle(m_vecFireHit.begin(), m_vecFireHit.end());
-	//		HitEffectName = m_vecFireHit.front();
-	//		break;
+		switch (tDamageParams.eAttackSAS)
+		{
+		case ESASType::SAS_FIRE:
+			random_shuffle(m_vecFireBlood.begin(), m_vecFireBlood.end());
+			random_shuffle(m_vecFireHit.begin(), m_vecFireHit.end());
 
-	//	case ESASType::SAS_ELETRIC:
-	//		random_shuffle(m_vecElecHit.begin(), m_vecElecHit.end());
-	//		HitEffectName = m_vecElecHit.front();
-	//		break;
+			HitBloodName = m_vecFireBlood.front();
+			HitEffectName = m_vecFireHit.front();
+			break;
 
-	//	default:
-	//		random_shuffle(m_vecDefaultHit.begin(), m_vecDefaultHit.end());
-	//		HitEffectName = m_vecDefaultHit.front();
-	//		break;
-	//	}
-	//	
+		case ESASType::SAS_ELETRIC:
+			random_shuffle(m_vecElecBlood.begin(), m_vecElecBlood.end());
+			random_shuffle(m_vecElecHit.begin(), m_vecElecHit.end());
 
-	//	// 타격점이 원점으로 찍히면 레이캐스트를 쏴서 위치를 판단
-	//	if (tDamageParams.pCauser != nullptr)
-	//	{
-	//		_vector vRayPos = static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
-	//		vRayPos = XMVectorSetW(vRayPos, 1.f);
-	//		_vector vRayDir = GetColliderPosition() - static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
-	//		vRayDir = XMVectorSetW(vRayDir, 0.f);
+			HitBloodName = m_vecElecBlood.front();
+			HitEffectName = m_vecElecHit.front();
+			break;
 
-	////		physx::PxRaycastHit hitBuffer[1];
-	////		physx::PxRaycastBuffer rayOut(hitBuffer, 1);
+		default:
+			random_shuffle(m_vecDefaultBlood.begin(), m_vecDefaultBlood.end());
+			random_shuffle(m_vecDefaultHit.begin(), m_vecDefaultHit.end());
 
-	//		RayCastParams param;
-	//		param.rayOut = &rayOut;
-	//		param.vOrigin = vRayPos;
-	//		param.vDir = vRayDir;
-	//		param.fDistance = 10.f;
-	//		param.iTargetType = CTB_MONSTER;
-	//		param.fVisibleTime = 5.f;
-	//		param.bSingle = true;
-	//		if (CGameInstance::GetInstance()->RayCast(param))
-	//		{
-	//			for (int i = 0; i < rayOut.getNbAnyHits(); ++i)
-	//			{
-	//				auto pHit = rayOut.getAnyHit(i);
-	//				CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
-	//				if (auto pMonster = dynamic_cast<CMonster*>(pCollidedObject))
-	//				{
-	//					_vector vHitPos = XMVectorSet(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
-	//					_vector vEffectDir = tDamageParams.vSlashVector;
-	//					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, vHitPos, vEffectDir);
-	//				}
-	//			}
-	//		}
-	//	}
-	//	else
-	//	{
-	//		// 타격점이 잘 나오면 해당 위치에 생성
-	//		_vector vHitPos = tDamageParams.vHitPosition;
-	//		_vector vEffectDir = tDamageParams.vSlashVector;
-	//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, vHitPos, vEffectDir);
-	//	}
-	//}
+			HitBloodName = m_vecDefaultBlood.front();
+			HitEffectName = m_vecDefaultHit.front();
+			break;
+		}
+		
+
+		// 타격점이 원점으로 찍히면 레이캐스트를 쏴서 위치를 판단
+		if (tDamageParams.pCauser != nullptr)
+		{
+			_vector vRayPos = static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
+			vRayPos = XMVectorSetW(vRayPos, 1.f);
+			_vector vRayDir = GetColliderPosition() - static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
+			vRayDir = XMVectorSetW(vRayDir, 0.f);
+
+			physx::PxRaycastHit hitBuffer[1];
+			physx::PxRaycastBuffer rayOut(hitBuffer, 1);
+
+			RayCastParams param;
+			param.rayOut = &rayOut;
+			param.vOrigin = vRayPos;
+			param.vDir = vRayDir;
+			param.fDistance = 10.f;
+			param.iTargetType = CTB_MONSTER | CTB_MONSTER_PART | CTB_MONSTER_RANGE;
+			param.fVisibleTime = 5.f;
+			param.bSingle = true;
+			if (CGameInstance::GetInstance()->RayCast(param))
+			{
+				for (int i = 0; i < rayOut.getNbAnyHits(); ++i)
+				{
+					auto pHit = rayOut.getAnyHit(i);
+					CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+					if (auto pMonster = dynamic_cast<CMonster*>(pCollidedObject))
+					{
+						_vector vHitPos = XMVectorSet(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
+						_vector vEffectDir = tDamageParams.vSlashVector;
+						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)->Start_AttachPosition(this, vHitPos, vEffectDir);
+					}
+				}
+			}
+		}
+		else
+		{
+			// 타격점이 잘 나오면 해당 위치에 생성
+			_vector vHitPos = tDamageParams.vHitPosition;
+			_vector vEffectDir = tDamageParams.vSlashVector;
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)->Start_AttachPosition(this, vHitPos, vEffectDir);
+		}
+	}
 }
 
 _float4x4 CMonster::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
@@ -305,6 +323,16 @@ void CMonster::MoveTransformJson(Json& jsonDest, void* pArg)
 		Json& json = *static_cast<Json*>(pArg);
 		CTransform::MoveTransformJson(jsonDest, json);
 	}
+}
+
+void CMonster::SetInvisible(_bool bInvisibleOut)
+{
+	m_bInvisible = bInvisibleOut; 
+}
+
+_bool CMonster::GetInvisible()
+{
+	return m_bInvisible;
 }
 
 void CMonster::TurnEyesOut()

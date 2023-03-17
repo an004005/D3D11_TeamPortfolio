@@ -14,8 +14,8 @@ class CTrailSystem;
 typedef struct tagWeaponDesc
 {
 	_float4x4	m_PivotMatrix;
-	CBone*		m_pSocket;
-	CTransform*	m_pTransform;
+	//CBone*		m_pSocket;
+	//CTransform*	m_pTransform;
 	void*		m_pJson;
 }WEAPON_DESC;
 

@@ -287,7 +287,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("Untouch_End", [this] { m_bUntouchable = false; });
 
 	m_iMaxHP = 1500;
-	m_iHP = m_iMaxHP; // ¡Ú
+	m_iHP = 1500; // ¡Ú
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
@@ -337,6 +337,8 @@ void CFlowerLeg::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket(("UsingControl"), { m_pModelCom->Find_Animation("AS_em0200_160_AL_threat") });
+	m_iMaxHP = 1500;
+	m_iHP = 1500; // ¡Ú
 }
 
 void CFlowerLeg::Tick(_double TimeDelta)
@@ -531,8 +533,6 @@ void CFlowerLeg::Tick(_double TimeDelta)
 	}
 	else
 		HitDir(TimeDelta);		
-
-	
 }
 
 void CFlowerLeg::Late_Tick(_double TimeDelta)
@@ -544,31 +544,13 @@ void CFlowerLeg::Late_Tick(_double TimeDelta)
 
 	if (m_bAtkSwitch)	
 		Spin_SweepCapsule(m_bOneHit);
-
-	if (m_bVisible)
-	{
-		if (m_bInvisible)
-		{
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
-		}
-		else
-		{
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		}
-	}
+	
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);	
 }
 
 HRESULT CFlowerLeg::Render()
-{
-	if (m_bInvisible)
-	{
-		m_pModelCom->Render_Pass(m_pTransformCom, 5);
-	}
-	else
-	{
-		m_pModelCom->Render(m_pTransformCom);
-	}
-
+{	
+	m_pModelCom->Render(m_pTransformCom);
 	return S_OK;
 }
 
@@ -596,6 +578,9 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_bDead)
 		return;
 
+	if (tDamageParams.iDamage > 500 || tDamageParams.iDamage < 0)
+		tDamageParams.iDamage = 100;
+
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	m_eHitDir = eHitFrom;
 	
@@ -605,9 +590,10 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_eAtkType == EAttackType::ATK_TO_AIR)
 	{
 		m_bAirStruck = true;
+		m_bUntouchable = false;
 	}
 
-	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bInvisible && !m_bUntouchable)
+	if(m_eAtkType != EAttackType::ATK_TO_AIR && !m_bAtkSwitch && !m_bUntouchable)
 		m_bStruck = true;
 
 	if (m_bAirStruck || m_eAtkType == EAttackType::ATK_HEAVY)

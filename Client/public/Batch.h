@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Client_Defines.h"
 #include "Level_Batch.h"
+#include "Canvas_Tutorial.h"
 
 BEGIN(Engine)
 class CGameObject;
@@ -43,6 +44,9 @@ private:
 	CGameObject*						m_pGameObject = nullptr;
 	_int								m_Filter = BATCHTYPE::MONSTER;
 	_bool								m_bPick = false;
+
+	CCanvas_Tutorial::TUTORIAL	m_eTutorial = { CCanvas_Tutorial::TUTORIAL::LOCKON };
+
 public:
 	static CBatch* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr) override;

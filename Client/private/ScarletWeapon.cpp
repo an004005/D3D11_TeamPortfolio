@@ -22,8 +22,8 @@ HRESULT CScarletWeapon::Initialize(void * pArg)
 	if (pArg)
 	{
 		memcpy(&m_Desc, pArg, sizeof(WEAPON_DESC));
-		Safe_AddRef(m_Desc.m_pSocket);
-		Safe_AddRef(m_Desc.m_pTransform);
+		//Safe_AddRef(m_Desc.m_pSocket);
+		//Safe_AddRef(m_Desc.m_pTransform);
 	}
 
 	FAILED_CHECK(CGameObject::Initialize(m_Desc.m_pJson));
@@ -71,11 +71,11 @@ void CScarletWeapon::Free()
 
 	if (m_bCloned)
 	{
-		Safe_Release(m_Desc.m_pSocket);
-		Safe_Release(m_Desc.m_pTransform);
+		//Safe_Release(m_Desc.m_pSocket);
+		//Safe_Release(m_Desc.m_pTransform);
+		Safe_Release(m_pTrail);
 	}
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pModel);
 	Safe_Release(m_pCollider);
-	Safe_Release(m_pTrail);
 }

@@ -47,6 +47,9 @@
 #include "ParticleGroup.h"
 
 #include "FactoryMethod.h"
+#include "Imgui_EffectBrowser.h"
+#include "PostVFX_ColorGrading.h"
+
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -62,7 +65,9 @@ HRESULT CLevel_PlayerTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
-	CVFX_Manager::GetInstance()->Initialize(LEVEL_PLAYERTEST);
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_EffectBrowser::Create(m_pDevice, m_pContext));
+
+//	CVFX_Manager::GetInstance()->Initialize(LEVEL_PLAYERTEST);
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -99,6 +104,8 @@ HRESULT CLevel_PlayerTest::Initialize()
 
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_FrontUI"))))
 		return E_FAIL;
+
+	Ready_Layer_SASPortrait();
 
 	return S_OK;
 }
@@ -226,6 +233,10 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 			CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_PostVFX_ColorGrading"),
+			CPostVFX_ColorGrading::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
@@ -284,6 +295,7 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 
 	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
 
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
@@ -336,7 +348,7 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Batch(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_Test.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_ConstructionSite3F.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_Tutorial.json");
@@ -470,12 +482,23 @@ HRESULT CLevel_PlayerTest::Ready_Effect(const _tchar * pLayerTag)
 
 	//Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
 	//pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
-	
+
+	Json ColorGrading = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/ColorGrading.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"Prototype_PostVFX_ColorGrading", &ColorGrading);
+
 	Json Test = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Scifi", &Test);
 
 	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
+
+	return S_OK;
+}
+
+HRESULT CLevel_PlayerTest::Ready_Layer_SASPortrait()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	pGameInstance->Clone_GameObject(LAYER_SAS, L"Prototype_SASPortrait");
 
 	return S_OK;
 }

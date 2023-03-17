@@ -2403,6 +2403,10 @@
                 "EventTime": 80.0
             },
             {
+                "EventName": "SwingL_Eff",
+                "EventTime": 58.0
+            },
+            {
                 "EventName": "Start_SweepLeft",
                 "EventTime": 30.0
             }
@@ -2416,6 +2420,10 @@
             {
                 "EventName": "Start_SweepRight",
                 "EventTime": 30.0
+            },
+            {
+                "EventName": "SwingR_Eff",
+                "EventTime": 58.0
             },
             {
                 "EventName": "AttackEnd",
@@ -2918,6 +2926,10 @@
             {
                 "EventName": "Rush_Start",
                 "EventTime": 10.0
+            },
+            {
+                "EventName": "DashEff",
+                "EventTime": 85.0
             }
         ]
     },
@@ -3201,7 +3213,7 @@
         "vecEvent": [
             {
                 "EventName": "Damage_End",
-                "EventTime": 70.0
+                "EventTime": 30.0
             }
         ]
     },
@@ -3212,7 +3224,7 @@
         "vecEvent": [
             {
                 "EventName": "Damage_End",
-                "EventTime": 70.0
+                "EventTime": 30.0
             }
         ]
     },
@@ -3223,7 +3235,7 @@
         "vecEvent": [
             {
                 "EventName": "Damage_End",
-                "EventTime": 235.0
+                "EventTime": 30.0
             }
         ]
     },
@@ -3234,7 +3246,7 @@
         "vecEvent": [
             {
                 "EventName": "Damage_End",
-                "EventTime": 235.0
+                "EventTime": 30.0
             }
         ]
     },
@@ -3245,7 +3257,7 @@
         "vecEvent": [
             {
                 "EventName": "Damage_End",
-                "EventTime": 235.0
+                "EventTime": 30.0
             }
         ]
     },
@@ -3256,7 +3268,7 @@
         "vecEvent": [
             {
                 "EventName": "Damage_End",
-                "EventTime": 235.0
+                "EventTime": 30.0
             }
         ]
     },

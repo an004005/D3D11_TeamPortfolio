@@ -7,7 +7,7 @@ class CComponent;
 class CGameObject;
 END;
 
-enum BATCHTYPE { MONSTER, TUTOTIAL, TYPE_END };
+enum BATCHTYPE { MONSTER , TUTOTIAL, TYPE_END };
 BEGIN(Client)
 class CLevel_Batch : public CLevel
 {

@@ -48,6 +48,9 @@ public:
 		return m_UI_PivotMatrixes[eUIPivot];
 	}
 
+	void	SetInvisible(_bool bInvisibleOut);
+	_bool	GetInvisible();
+
 public:
 	//UI
 	void	TurnEyesOut();
@@ -75,10 +78,13 @@ protected:
 	void MoveTransformJson(Json& jsonDest, void* pArg);
 
 protected:	// 피격 이펙트 색상
+	vector<wstring>			m_vecDefaultBlood;
+	vector<wstring>			m_vecFireBlood;
+	vector<wstring>			m_vecElecBlood;
+
 	vector<wstring>			m_vecDefaultHit;
 	vector<wstring>			m_vecFireHit;
 	vector<wstring>			m_vecElecHit;
-	
 
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
@@ -93,6 +99,8 @@ protected:
 	_bool m_bDead = false;
 	_bool m_bActive = false;
 	_bool m_bHasName = false;
+
+	_bool	m_bInvisible = false;
 
 	array<_float4x4, UIPIVOT_END> m_UI_PivotMatrixes;
 

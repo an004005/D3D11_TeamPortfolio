@@ -25,6 +25,15 @@
 #include "VFX_Manager.h"
 #include "PostVFX_Penetrate.h"
 
+#include "PostVFX_Scifi.h"
+#include "EffectGroup.h"
+#include "ParticleSystem.h"
+#include "ParticleGroup.h"
+#include "PostVFX_Distortion.h"
+#include "SAS_Portrait.h"
+#include "EffectSystem.h"
+#include "TrailSystem.h"
+
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -72,7 +81,7 @@ void CMainApp::Tick(_double TimeDelta)
 		return;
 
 	m_pGameInstance->Tick_Engine(TimeDelta);
-}
+ }
 
 HRESULT CMainApp::Render()
 {
@@ -135,6 +144,20 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_Scifi"),
+		CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_Distortion"),
+		CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_ParticleGroup", CParticleGroup::Create(m_pDevice, m_pContext)));
 
 	/* For.Prototype_Component_Shader_VtxPosRect */	
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPosRect"),
@@ -284,6 +307,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	/* For.Prototype_Component_Shader_VtxModel_VFX */	
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel_VFX"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel_VFX.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Shader_VtxModel_VFX_UI */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel_VFX_UI"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel_VFX_UI.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_Trail_VFX */	

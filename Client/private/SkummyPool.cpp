@@ -98,7 +98,7 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
 			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
-			_vector vDest = m_LastSpotTargetPos - vPrePos;
+			_vector vDest = XMVector3Normalize(m_LastSpotTargetPos - vPrePos);
 			pBullet->Set_ShootDir(vDest); // vLook
 
 			pBullet->GetTransform()->LookAt(m_LastSpotTargetPos); // vPrePos + vLook);
@@ -123,7 +123,7 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 	// ~Event Caller
 	
 	m_iMaxHP = 800;
-	m_iHP = m_iMaxHP;// ★
+	m_iHP = 800;// ★
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 
@@ -155,12 +155,17 @@ void CSkummyPool::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("Pool", { m_pModelCom->Find_Animation("AS_em0600_160_AL_threat") });
+	m_iMaxHP = 800;
+	m_iHP = 800;// ★
 }
 
 void CSkummyPool::Tick(_double TimeDelta)
 {
 	/*if (!m_bActive)
 		return;*/
+	if (m_iHP > m_iMaxHP)
+		m_iHP = m_iMaxHP;
+
 	CMonster::Tick(TimeDelta);
 
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
@@ -305,6 +310,10 @@ void CSkummyPool::Imgui_RenderProperty()
 
 void CSkummyPool::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+
+	if (tDamageParams.iDamage > 500 || tDamageParams.iDamage < 0)
+		tDamageParams.iDamage = 100;
+
 	EBaseAxis eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 	// ↑ 공격이 들어올 방향 
 	m_eHitDir = eHitFrom;
