@@ -1,5 +1,6 @@
 #pragma once
 
+BEGIN(Engine)
 class CDoOnce
 {
 public:
@@ -18,3 +19,4 @@ public:
 private:
 	_bool m_bDo = false;
 };
+END

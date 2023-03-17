@@ -146,8 +146,8 @@ void CBrJ_Controller::Tick_Near(_double TimeDelta)
 		break;
 	}
 
-	_uint iRand = (rand() % 2) + 1;
-	m_iNearOrder = (m_iNearOrder + iRand) % 10;
+//	_uint iRand = (rand() % 2) + 1;
+	m_iNearOrder = (m_iNearOrder + 1) % 10;
 }
 
 void CBrJ_Controller::Tick_Mid(_double TimeDelta)
@@ -187,8 +187,8 @@ void CBrJ_Controller::Tick_Mid(_double TimeDelta)
 		break;
 	}
 
-	_uint iRand = (rand() % 2) + 1;
-	m_iMidOrder = (m_iMidOrder + iRand) % 8;
+//	_uint iRand = (rand() % 2) + 1;
+	m_iMidOrder = (m_iMidOrder + 1) % 8;
 }
 
 void CBrJ_Controller::Tick_Far(_double TimeDelta)

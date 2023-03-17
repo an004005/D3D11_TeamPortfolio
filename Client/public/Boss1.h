@@ -61,6 +61,11 @@ public:
 	virtual void DeBuff_Oil() override;
 
 //	virtual void SetActive() override;
+private:
+	void Create_BossUI();
+
+	void SmokeEffectCreate();
+	void JitabataSmokeEffect();
 
 private:
 	class CBoss1_AnimationInstance* m_pASM = nullptr;
@@ -84,6 +89,7 @@ private:
 	_bool m_bDown = false;
 	_bool m_bMiddleDown = false;
 
+	_bool m_bTest = false;
 
 	_bool m_bJumpAttack = false;
 	_float3 m_vOnJumpMoveVelocity;
@@ -120,6 +126,9 @@ private:
 	EBaseAxis	m_eHitDir = EBaseAxis::AXIS_END;
 	EAttackType	m_eAtkType = EAttackType::ATK_END;
 
+	//UI
+	class CCanvas_Alarm*		m_pUI_Alarm = nullptr;
+	class CCanvas_BossHp*		m_pUI_BossHP = nullptr;
 public:
 	static CBoss1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

@@ -65,6 +65,8 @@ HRESULT CMonster::Initialize(void* pArg)
 	m_UI_PivotMatrixes.fill(XMMatrixIdentity());
 	SetUp_UI();
 
+	m_SoundStore.CloneSound("fx_impact_flesh");
+
 	return S_OK;
 }
 
@@ -192,6 +194,9 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 						_vector vHitPos = XMVectorSet(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
 						_vector vEffectDir = tDamageParams.vSlashVector;
 						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)->Start_AttachPosition(this, vHitPos, vEffectDir);
+
+						_float4 vPos = vHitPos;
+						m_SoundStore.PlaySound("fx_impact_flesh", &vPos);
 						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, vHitPos, vEffectDir);
 					}
 				}
@@ -203,6 +208,9 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 			_vector vHitPos = tDamageParams.vHitPosition;
 			_vector vEffectDir = tDamageParams.vSlashVector;
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)->Start_AttachPosition(this, vHitPos, vEffectDir);
+
+			_float4 vPos = vHitPos;
+			m_SoundStore.PlaySound("fx_impact_flesh", &vPos);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, vHitPos, vEffectDir);
 		}
 	}

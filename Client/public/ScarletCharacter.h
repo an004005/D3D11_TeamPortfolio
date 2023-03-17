@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 #include "GameInstance.h"
 #include "SoundStore.h"
+#include "HelperClasses.h"
 
 BEGIN(Engine)
 class CControlledRigidBody;
