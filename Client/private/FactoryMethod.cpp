@@ -117,6 +117,7 @@
 #include "MonsterHpUI.h"
 #include "MonsterLockonUI.h"
 #include "GravikenisisMouseUI.h"
+#include "NoticeNeonUI.h"
 
 CFactoryMethod::CFactoryMethod()
 {
@@ -189,6 +190,7 @@ HRESULT CFactoryMethod::MakeEnermyPrototypes(ID3D11Device* pDevice, ID3D11Device
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
 	}
 
+	// ~Invisible
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("FlowerLeg"), CFlowerLeg::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BuddyLumi"), CBuddyLumi::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkummyPool"), CSkummyPool::Create(pDevice, pContext)));
@@ -198,6 +200,7 @@ HRESULT CFactoryMethod::MakeEnermyPrototypes(ID3D11Device* pDevice, ID3D11Device
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_WaterBall"), CWaterBall::Create(pDevice, pContext)));
 
+	// ~Invisible
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FL_Controller"), CFL_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkPd_Controller"), CSkPd_Controller::Create()));
@@ -240,19 +243,7 @@ HRESULT CFactoryMethod::MakeEffectPrototypes(ID3D11Device * pDevice, ID3D11Devic
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
-		CPostVFX_Scifi::Create(pDevice, pContext))))
-		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
-		CPostVFX_Distortion::Create(pDevice, pContext))))
-		return E_FAIL;
-
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(pDevice, pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(pDevice, pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(pDevice, pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(pDevice, pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleGroup", CParticleGroup::Create(pDevice, pContext)));
 	return S_OK;
 }
 
@@ -262,14 +253,14 @@ HRESULT CFactoryMethod::MakeSAS_Portrait_Prototypes(ID3D11Device* pDevice, ID3D1
 
 	{
 		auto pModel_ch300 = CModel::Create(pDevice, pContext,
-		   "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/ch300.anim_model");
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/ch300.anim_model");
 		pModel_ch300->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/SAS_Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch300_Portrait", pModel_ch300));
 	}
 
 	{
 		auto pModel_ch500 = CModel::Create(pDevice, pContext,
-		   "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/ch500.anim_model");
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/ch500.anim_model");
 		pModel_ch500->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/SAS_Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch500_Portrait", pModel_ch500));
 	}
@@ -277,7 +268,7 @@ HRESULT CFactoryMethod::MakeSAS_Portrait_Prototypes(ID3D11Device* pDevice, ID3D1
 	{
 		pGameInstance->Add_Prototype(L"Prototype_SASPortrait", CSAS_Portrait::Create(pDevice, pContext));
 		pGameInstance->Add_Prototype(L"ProtoPostVFX_SASPortrait", CPostVFX_SAS_Portrait::Create(pDevice, pContext));
-		
+
 	}
 
 	return S_OK;
@@ -295,7 +286,7 @@ HRESULT CFactoryMethod::MakeUITestPrototypes(ID3D11Device * pDevice, ID3D11Devic
 
 HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	
+
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 	{
 		// Canvas_Frount_UI
@@ -549,10 +540,11 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 			return E_FAIL;
 
 	}
-	
+
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterHP", CMonsterHpUI::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterLockon", CMonsterLockonUI::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_GravikenisisMouseUI", CGravikenisisMouseUI::Create(pDevice, pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_NoticeNeonUI", CNoticeNeonUI::Create(pDevice, pContext)));
 
 	return S_OK;
 }

@@ -241,6 +241,7 @@
     <ClInclude Include="..\public\GravikenisisMouseUI.h" />
     <ClInclude Include="..\public\GravikenisisGUI.h" />
     <ClInclude Include="..\public\NextMapNameUI.h" />
+    <ClInclude Include="..\public\NoticeNeonUI.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
     <ClInclude Include="..\public\Boss_HpUI.h" />
@@ -406,6 +407,7 @@
     <ClCompile Include="..\private\GravikenisisMouseUI.cpp" />
     <ClCompile Include="..\private\GravikenisisGUI.cpp" />
     <ClCompile Include="..\private\NextMapNameUI.cpp" />
+    <ClCompile Include="..\private\NoticeNeonUI.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />
     <ClCompile Include="..\private\Boss_HpUI.cpp" />

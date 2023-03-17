@@ -163,6 +163,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 
 		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
 		_float fMinEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MinEnergy;
+		_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		if (ESASType::SAS_NOT != eSASType && fCurrentEnergy > fMinEnergy)
 		{
@@ -174,7 +176,10 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	else
 	{
 		ESASType eSASType = m_eSASType[ONE0];
+
 		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light1"))->Set_LightType(eSASType, false);
 		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge1"))->Set_GaugeType(eSASType, fCurrentEnergy);
@@ -188,6 +193,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 
 		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
 		_float fMinEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MinEnergy;
+		_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		if (ESASType::SAS_NOT != eSASType && fCurrentEnergy > fMinEnergy)
 		{
@@ -199,7 +206,10 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	else
 	{
 		ESASType eSASType = m_eSASType[TWO0];
+
 		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light2"))->Set_LightType(eSASType, false);
 		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge2"))->Set_GaugeType(eSASType, fCurrentEnergy);
@@ -213,22 +223,27 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 
 		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
 		_float fMinEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MinEnergy;
+		_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		if (ESASType::SAS_NOT != eSASType && fCurrentEnergy > fMinEnergy)
 		{
 			dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light3"))->Set_LightType(eSASType, true);
-			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge3"))->Set_GaugeType(eSASType, fCurrentEnergy);
-			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge3Back"))->Set_GaugeBackType(eSASType, fCurrentEnergy);
+			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge3"))->Set_GaugeType(eSASType, fRatio);
+			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge3Back"))->Set_GaugeBackType(eSASType, fRatio);
 		}
 	}
 	else
 	{
 		ESASType eSASType = m_eSASType[THREE0];
+
 		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light3"))->Set_LightType(eSASType, false);
-		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge3"))->Set_GaugeType(eSASType, fCurrentEnergy);
-		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge3Back"))->Set_GaugeBackType(eSASType, fCurrentEnergy);
+		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge3"))->Set_GaugeType(eSASType, fRatio);
+		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge3Back"))->Set_GaugeBackType(eSASType, fRatio);
 	}
 
 	// 4
@@ -238,22 +253,27 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 
 		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
 		_float fMinEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MinEnergy;
+		_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		if (ESASType::SAS_NOT != eSASType && fCurrentEnergy > fMinEnergy)
 		{
 			dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light4"))->Set_LightType(eSASType, true);
-			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge4"))->Set_GaugeType(eSASType, fCurrentEnergy);
-			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge4Back"))->Set_GaugeBackType(eSASType, fCurrentEnergy);
+			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge4"))->Set_GaugeType(eSASType, fRatio);
+			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge4Back"))->Set_GaugeBackType(eSASType, fRatio);
 		}
 	}
 	else
 	{
 		ESASType eSASType = m_eSASType[FOUR0];
+
 		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light4"))->Set_LightType(eSASType, false);
-		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge4"))->Set_GaugeType(eSASType, fCurrentEnergy);
-		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge4Back"))->Set_GaugeBackType(eSASType, fCurrentEnergy);
+		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge4"))->Set_GaugeType(eSASType, fRatio);
+		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge4Back"))->Set_GaugeBackType(eSASType, fRatio);
 	}
 }
 

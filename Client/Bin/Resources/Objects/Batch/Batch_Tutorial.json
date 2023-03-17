@@ -1,0 +1,77 @@
+{
+    "ObjectTag": "",
+    "Prototype_GameObject": "Prototype_GameObject_Batch\u0000",
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    "Triggers": [
+        {
+            "ObjectTag": "",
+            "Prototype_GameObject": "Prototype_GameObject_Trigger\u0000",
+            "RigidBody": {
+                "ColliderType": 4,
+                "Density": 10.0,
+                "OriginTransform": [
+                    10.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    10.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "ShapeType": 0,
+                "bKinematic": false,
+                "bTrigger": true
+            },
+            "Transform": {
+                "WorldMatrix": [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    4.274173736572266,
+                    1.6336532831192017,
+                    17.053916931152344,
+                    1.0
+                ]
+            },
+            "Tutorial": 0,
+            "Usage": 1
+        }
+    ]
+}

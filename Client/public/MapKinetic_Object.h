@@ -49,7 +49,7 @@ public:
 	EKineticType GetType() const { return m_eType; }
 
 public:
-	void	SetOutline() { m_bOutlineChange = true; }
+	void	SetOutline(_bool bOutLine) { m_bOutline = bOutLine; }
 
 private:
 	void	OutlineMaker();
@@ -68,6 +68,7 @@ private:
 	KineticModeltag			m_eCurModelTag = Tag_End;
 public:
 	void				SetThrow() { m_bThrow = true; }
+	_bool				GetThrow() { return m_bThrow; }
 	_bool				Usable() { return m_bUsable; }
 
 	_bool				Get_IsTargeted() {

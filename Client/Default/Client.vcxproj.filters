@@ -301,6 +301,9 @@
     <Filter Include="VFX\Particle\ParticleGroup">
       <UniqueIdentifier>{f465b88f-dbb3-4679-a8d4-76b67ddacdbc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\Invantory">
+      <UniqueIdentifier>{776d7a33-79da-4f1d-aeee-85ee99adcbc0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -826,6 +829,9 @@
     <ClInclude Include="..\public\ParticleGroup.h">
       <Filter>VFX\Particle\ParticleGroup</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\NoticeNeonUI.h">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1324,6 +1330,9 @@
     </ClCompile>
     <ClCompile Include="..\private\ParticleGroup.cpp">
       <Filter>VFX\Particle\ParticleGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NoticeNeonUI.cpp">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
