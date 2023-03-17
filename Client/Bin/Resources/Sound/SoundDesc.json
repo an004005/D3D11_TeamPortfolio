@@ -173,6 +173,25 @@
             "Loop" : false,
             "MinDistance": 5.0,
             "MaxDistance" : 20.0
+        },
+
+        {
+            "Name" : "fx_kinetic_lifting",
+            "SoundFiles" : ["Kinetic/fx_kinetic_lifting_1.wav", "Kinetic/fx_kinetic_lifting_2.wav", "Kinetic/fx_kinetic_lifting_3.wav" ],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "fx_kinetic_shot",
+            "SoundFiles" : ["Kinetic/fx_kinetic_shot_1.wav", "Kinetic/fx_kinetic_shot_2.wav", "Kinetic/fx_kinetic_shot_3.wav" ],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
         }
     ]
 }

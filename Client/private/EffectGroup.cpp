@@ -147,7 +147,7 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 				});
 			}
 		}
-		else if (LEVEL_NOW == LEVEL_PLAYERTEST || LEVEL_NOW == LEVEL_ENEMIESTEST)
+		else if (LEVEL_NOW == LEVEL_ENEMIESTEST)
 		{
 			if (m_iSelectFinishFunc == 0)
 			{
@@ -159,6 +159,37 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 				// {
 				// 	SetDelete();
 				// });
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+
+			}
+			else if (m_iSelectFinishFunc == 2)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+			}
+			else if (m_iSelectFinishFunc == 3)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
+			}
+			else if (m_iSelectFinishFunc == 4)
+			{
+				m_Timeline.SetFinishFunction([this]
+				{
+					SetDelete();
+				});
+			}
+		}
+		else if (LEVEL_NOW == LEVEL_PLAYERTEST)
+		{
+			if (m_iSelectFinishFunc == 0)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+			}
+			else if (m_iSelectFinishFunc == 1)
+			{
+				 m_Timeline.SetFinishFunction([this]
+				 {
+				 	SetDelete();
+				 });
 				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
 
 			}

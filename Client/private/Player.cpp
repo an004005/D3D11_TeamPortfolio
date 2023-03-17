@@ -2502,6 +2502,9 @@ HRESULT CPlayer::SetUp_Sound()
 	m_SoundStore.CloneSound("move_run");
 	m_SoundStore.CloneSound("move_walk");
 
+	m_SoundStore.CloneSound("fx_kinetic_lifting");
+	m_SoundStore.CloneSound("fx_kinetic_shot");
+
 
 	m_pModel->Add_EventCaller("attack_nor_1", [this] {Event_EffectSound("attack_nor_1"); });
 	m_pModel->Add_EventCaller("attack_nor_2", [this] {Event_EffectSound("attack_nor_2"); });
@@ -2525,6 +2528,9 @@ HRESULT CPlayer::SetUp_Sound()
 	m_pModel->Add_EventCaller("move_jump", [this] {m_SoundStore.PlaySound("move_jump", m_pTransformCom); });
 	m_pModel->Add_EventCaller("move_run", [this] {m_SoundStore.PlaySound("move_run", m_pTransformCom); });
 	m_pModel->Add_EventCaller("move_walk", [this] {m_SoundStore.PlaySound("move_walk", m_pTransformCom); });
+
+	m_pModel->Add_EventCaller("fx_kinetic_lifting", [this] {m_SoundStore.PlaySound("fx_kinetic_lifting", m_pTransformCom); });
+	m_pModel->Add_EventCaller("fx_kinetic_shot", [this] {m_SoundStore.PlaySound("fx_kinetic_shot", m_pTransformCom); });
 
 	return S_OK;
 }
@@ -2858,12 +2864,12 @@ void CPlayer::Event_EffectSound(const string& strSoundName)
 	switch (m_PlayerSasType)
 	{
 	case ESASType::SAS_END:
-		if (strSoundName.find("nor") == string::npos)
+		if (strSoundName.find("nor") != string::npos)
 			m_SoundStore.PlaySound(strSoundName, m_pTransformCom);
 			break;
 		break;
 	case ESASType::SAS_FIRE:
-		if (strSoundName.find("fire") == string::npos)
+		if (strSoundName.find("fire") != string::npos)
 			m_SoundStore.PlaySound(strSoundName, m_pTransformCom);
 			break;
 		break;
@@ -2964,7 +2970,7 @@ void CPlayer::Event_KineticCircleEffect()
 {
 	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Kinetic_BaseCircle")->Start_Attach(this, "Eff01");
 	_matrix MatScale = XMMatrixIdentity() * XMMatrixScaling(10.f, 10.f, 10.f);
-	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Kinetic_Particle")->Start_AttachPivot(this, MatScale, "Reference",true,false);
+//	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Kinetic_Particle")->Start_AttachPivot(this, MatScale, "Reference",true,false);
 }
 
 void CPlayer::Event_Eff03_Particle()
