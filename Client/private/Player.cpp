@@ -30,6 +30,7 @@
 #include "CurveFloatMapImpl.h"
 #include "MonsterLockonUI.h"
 #include "MonsterHpUI.h"
+#include "ImguiUtils.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -226,6 +227,19 @@ void CPlayer::Tick(_double TimeDelta)
 		m_pKineticStataMachine->SetState("NO_USE_KINETIC");
 		m_pJustDodgeStateMachine->SetState("JUSTDODGE_NONUSE");
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false);
+
+		if (nullptr != m_pKineticObject && static_cast<CMapKinetic_Object*>(m_pKineticObject)->Usable())
+		{
+			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_Kinetic(false);
+		}
+
+		m_pCurve = nullptr;
+
+		for (auto& iter : m_pModel->GetMaterials())
+		{
+			iter->GetParam().Floats[0] = 0.f;
+			iter->GetParam().Float4s[0] = { 0.f, 0.f, 0.f, 0.f };
+		}
 	}
 
 	//IM_LOG(m_pKineticComboStateMachine->GetCurStateName());
@@ -458,6 +472,17 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 void CPlayer::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	if (ImGui::CollapsingHeader("pivot1"))
+	{
+		static GUIZMO_INFO tp1;
+		CImguiUtils::Render_Guizmo(&pivot1, tp1, true, true);
+	}
+	if (ImGui::CollapsingHeader("pivot2"))
+	{
+		static GUIZMO_INFO tp2;
+		CImguiUtils::Render_Guizmo(&pivot2, tp2, true, true);
+	}
 
 	ImGui::InputFloat("ThrowPower", &m_fThrowPower);
 	ImGui::InputFloat("ChargePower", &m_fChargePower);
@@ -876,12 +901,26 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Default_Attack_Upper", [&]() {Event_Effect("Default_Attack_Upper"); });
 	
 	// Fire Effect
-	m_pModel->Add_EventCaller("Fire_Attack_1", [&]() {Event_Effect("Fire_Attack_1"); });
-	m_pModel->Add_EventCaller("Fire_Attack_1_001", [&]() {Event_Effect("Fire_Attack_1_001"); });
-	m_pModel->Add_EventCaller("Fire_Attack_2", [&]() {Event_Effect("Fire_Attack_2"); });
+	//m_pModel->Add_EventCaller("Fire_Attack_1", [&]() 
+	//{
+	//	//if (m_PlayerSasType == ESASType::SAS_FIRE)
+	//	//{
+
+	//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_1")->Start_AttachPivot(this, pivot1, "Eff01", true);
+	//	//}
+	//});
+
+	//m_pModel->Add_EventCaller("Fire_Attack_2", [&]() 
+	//{
+	//	//if (m_PlayerSasType == ESASType::SAS_FIRE)
+	//	//{
+
+	//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_2")->Start_AttachPivot(this, pivot2, "Eff01", true);
+	//	//}
+	//});
 	m_pModel->Add_EventCaller("Fire_Attack_3", [&]() {Event_Effect("Fire_Attack_3"); });
 	m_pModel->Add_EventCaller("Fire_Attack_3_Double_twist", [&]() {Event_Effect("Fire_Attack_3_Double_twist"); });
-	m_pModel->Add_EventCaller("Fire_Attack_3_twist", [&]() {Event_Effect("Fire_Attack_3_twist"); });
+	m_pModel->Add_EventCaller("Fire_Attack_3_twist", [&]() {Event_Effect("Fire_Attack_3_Double_twist"); });
 	m_pModel->Add_EventCaller("Fire_Attack_4", [&]() {Event_Effect("Fire_Attack_4"); });
 	m_pModel->Add_EventCaller("Fire_Attack_4_001", [&]() {Event_Effect("Fire_Attack_4_001"); });
 	m_pModel->Add_EventCaller("Fire_Attack_5", [&]() {Event_Effect("Fire_Attack_5"); });
@@ -915,12 +954,17 @@ HRESULT CPlayer::SetUp_EffectEvent()
 
 	m_pModel->Add_EventCaller("Trail_On", [&]() 
 	{ 
-		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(true); 
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(true);
 	});
 
 	m_pModel->Add_EventCaller("Trail_Off", [&]() 
 	{
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false);
+	});
+
+	m_pModel->Add_EventCaller("FireParticle_On", [&]()
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Player_Sas_Fire_Sword_Particle")->Start_Attach(this, "Eff01", true);
 	});
 
 	m_pModel->Add_EventCaller("WeaponBright_On", [&]()
@@ -2496,6 +2540,20 @@ HRESULT CPlayer::SetUp_Sound()
 	m_SoundStore.CloneSound("attack_nor_spindown");
 	m_SoundStore.CloneSound("attack_nor_upper");
 
+	m_SoundStore.CloneSound("attack_fire_1");
+	m_SoundStore.CloneSound("attack_fire_2");
+	m_SoundStore.CloneSound("attack_fire_3");
+	m_SoundStore.CloneSound("attack_fire_4");
+	m_SoundStore.CloneSound("attack_fire_5");
+	m_SoundStore.CloneSound("attack_fire_charge_lv1");
+	m_SoundStore.CloneSound("attack_fire_charge_lv2");
+	m_SoundStore.CloneSound("attack_fire_dashattack");
+	m_SoundStore.CloneSound("attack_fire_jumpattack_1");
+	m_SoundStore.CloneSound("attack_fire_jumpattack_2");
+	m_SoundStore.CloneSound("attack_fire_spin");
+	m_SoundStore.CloneSound("attack_fire_spindown");
+	m_SoundStore.CloneSound("attack_fire_upper");
+
 	m_SoundStore.CloneSound("move_dash");
 	m_SoundStore.CloneSound("move_foot_stop");
 	m_SoundStore.CloneSound("move_jump");
@@ -2504,6 +2562,15 @@ HRESULT CPlayer::SetUp_Sound()
 
 	m_SoundStore.CloneSound("fx_kinetic_lifting");
 	m_SoundStore.CloneSound("fx_kinetic_shot");
+
+	m_SoundStore.CloneSound("attack_kinetic_combo_1_1");
+	m_SoundStore.CloneSound("attack_kinetic_combo_1_2");
+
+	m_SoundStore.CloneSound("attack_kinetic_combo_spin_1");
+	m_SoundStore.CloneSound("attack_kinetic_combo_spin_2");
+
+	m_SoundStore.CloneSound("fx_kinetic_air");
+	m_SoundStore.CloneSound("fx_kinetic_backdash");
 
 
 	m_pModel->Add_EventCaller("attack_nor_1", [this] {Event_EffectSound("attack_nor_1"); });
@@ -2523,6 +2590,25 @@ HRESULT CPlayer::SetUp_Sound()
 
 	m_pModel->Add_EventCaller("attack_nor_upper", [this] {Event_EffectSound("attack_nor_upper"); });
 
+
+	m_pModel->Add_EventCaller("attack_fire_1", [this] {Event_EffectSound("attack_fire_1"); });
+	m_pModel->Add_EventCaller("attack_fire_2", [this] {Event_EffectSound("attack_fire_2"); });
+	m_pModel->Add_EventCaller("attack_fire_3", [this] {Event_EffectSound("attack_fire_3"); });
+	m_pModel->Add_EventCaller("attack_fire_4", [this] {Event_EffectSound("attack_fire_4"); });
+	m_pModel->Add_EventCaller("attack_fire_5", [this] {Event_EffectSound("attack_fire_5"); });
+	m_pModel->Add_EventCaller("attack_fire_charge_lv1", [this] {Event_EffectSound("attack_fire_charge_lv1"); });
+	m_pModel->Add_EventCaller("attack_fire_charge_lv2", [this] {Event_EffectSound("attack_fire_charge_lv2"); });
+	m_pModel->Add_EventCaller("attack_fire_dashattack", [this] {Event_EffectSound("attack_fire_dashattack"); });
+
+	m_pModel->Add_EventCaller("attack_fire_jumpattack_1", [this] {Event_EffectSound("attack_fire_jumpattack_1"); });
+	m_pModel->Add_EventCaller("attack_fire_jumpattack_2", [this] {Event_EffectSound("attack_fire_jumpattack_2"); });
+
+	m_pModel->Add_EventCaller("attack_fire_spin", [this] {Event_EffectSound("attack_fire_spin"); });
+	m_pModel->Add_EventCaller("attack_fire_spindown", [this] {Event_EffectSound("attack_fire_spindown"); });
+
+	m_pModel->Add_EventCaller("attack_fire_upper", [this] {Event_EffectSound("attack_fire_upper"); });
+
+
 	m_pModel->Add_EventCaller("move_dash", [this] {m_SoundStore.PlaySound("move_dash", m_pTransformCom); });
 	m_pModel->Add_EventCaller("move_foot_stop", [this] {m_SoundStore.PlaySound("move_foot_stop", m_pTransformCom); });
 	m_pModel->Add_EventCaller("move_jump", [this] {m_SoundStore.PlaySound("move_jump", m_pTransformCom); });
@@ -2531,6 +2617,14 @@ HRESULT CPlayer::SetUp_Sound()
 
 	m_pModel->Add_EventCaller("fx_kinetic_lifting", [this] {m_SoundStore.PlaySound("fx_kinetic_lifting", m_pTransformCom); });
 	m_pModel->Add_EventCaller("fx_kinetic_shot", [this] {m_SoundStore.PlaySound("fx_kinetic_shot", m_pTransformCom); });
+
+	m_pModel->Add_EventCaller("attack_kinetic_combo_1_1", [this] {m_SoundStore.PlaySound("attack_kinetic_combo_1_1", m_pTransformCom); });
+	m_pModel->Add_EventCaller("attack_kinetic_combo_1_2", [this] {m_SoundStore.PlaySound("attack_kinetic_combo_1_2", m_pTransformCom); });
+	m_pModel->Add_EventCaller("attack_kinetic_combo_spin_1", [this] {m_SoundStore.PlaySound("attack_kinetic_combo_1_2", m_pTransformCom); });
+	m_pModel->Add_EventCaller("attack_kinetic_combo_spin_2", [this] {m_SoundStore.PlaySound("attack_kinetic_combo_1_2", m_pTransformCom); });
+
+	m_pModel->Add_EventCaller("fx_kinetic_air", [this] {m_SoundStore.PlaySound("fx_kinetic_air", m_pTransformCom); });
+	m_pModel->Add_EventCaller("fx_kinetic_backdash", [this] {m_SoundStore.PlaySound("fx_kinetic_backdash", m_pTransformCom); });
 
 	return S_OK;
 }
@@ -2938,15 +3032,20 @@ void CPlayer::Event_Kinetic_Throw()
 		vForce *= m_fThrowPower * g_fTimeDelta;
 		static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(vForce);
 		static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetThrow();
+
+		m_SoundStore.PlaySound("fx_kinetic_shot", m_pTransformCom);
 	}
-	else
+	else if (nullptr != m_pKineticObject)
 	{
 		_float3 vForce = { XMVectorGetX(m_vCamLook), XMVectorGetY(m_vCamLook), XMVectorGetZ(m_vCamLook) };
 		vForce = XMVector3Normalize(vForce);
 		vForce *= m_fThrowPower * g_fTimeDelta;
 		static_cast<CMapKinetic_Object*>(m_pKineticObject)->Add_Physical(vForce);
 		static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetThrow();
+
+		m_SoundStore.PlaySound("fx_kinetic_shot", m_pTransformCom);
 	}
+
 
 	//m_PlayerStat.m_iKineticEnergy -= 30;
 }
@@ -2970,7 +3069,7 @@ void CPlayer::Event_KineticCircleEffect()
 {
 	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Kinetic_BaseCircle")->Start_Attach(this, "Eff01");
 	_matrix MatScale = XMMatrixIdentity() * XMMatrixScaling(10.f, 10.f, 10.f);
-//	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Kinetic_Particle")->Start_AttachPivot(this, MatScale, "Reference",true,false);
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Kinetic_Particle")->Start_AttachPivot(this, MatScale, "Reference",true,false);
 }
 
 void CPlayer::Event_Eff03_Particle()

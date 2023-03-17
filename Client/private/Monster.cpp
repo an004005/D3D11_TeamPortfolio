@@ -198,6 +198,11 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 						_float4 vPos = vHitPos;
 						m_SoundStore.PlaySound("fx_impact_flesh", &vPos);
 						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, vHitPos, vEffectDir);
+
+						/*if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY)
+						{
+							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Throw_Kinetic_Distortion")->Start_AttachPosition(this, vHitPos, vEffectDir);
+						}*/
 					}
 				}
 			}
@@ -212,6 +217,11 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 			_float4 vPos = vHitPos;
 			m_SoundStore.PlaySound("fx_impact_flesh", &vPos);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, vHitPos, vEffectDir);
+
+			/*if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY)
+			{
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Throw_Kinetic_Distortion")->Start_AttachPosition(this, vHitPos, vEffectDir);
+			}*/
 		}
 	}
 }

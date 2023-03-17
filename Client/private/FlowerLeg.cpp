@@ -344,6 +344,7 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	m_SoundStore.CloneSound("mon_5_sprayattack");
 	m_SoundStore.CloneSound("mon_5_step");
 	m_SoundStore.CloneSound("mon_5_voice_laugh");
+	m_SoundStore.CloneSound("mon_5_rush");
 
 	m_pModelCom->Add_EventCaller("mon_5_backdodge", [this] {m_SoundStore.PlaySound("mon_5_backdodge", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_5_sidedodge", [this] {m_SoundStore.PlaySound("mon_5_sidedodge", m_pTransformCom); });
