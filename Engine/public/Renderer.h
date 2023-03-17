@@ -65,6 +65,7 @@ private:
 
 	class CTexture* m_pEnv = nullptr;
 	class CTexture* m_pEnv2 = nullptr;
+	_bool m_bShadow = true;
 
 private:
 	HRESULT Render_Priority();

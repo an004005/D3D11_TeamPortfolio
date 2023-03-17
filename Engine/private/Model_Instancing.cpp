@@ -101,7 +101,7 @@ HRESULT CModel_Instancing::Initialize_Prototype(const char * pModelFilePath,  _u
 	Ready_Materials(hFile);
 	
 	m_pShadowShader = dynamic_cast<CShader*>(CGameInstance::GetInstance()
-		->Clone_Component(LEVEL_STATIC, L"Prototype_Component_Shader_VtxModel_Shadow"));
+		->Clone_Component(LEVEL_STATIC, L"Prototype_Component_Shader_VtxModelInstancing_Shadow"));
 
 
 	CloseHandle(hFile);

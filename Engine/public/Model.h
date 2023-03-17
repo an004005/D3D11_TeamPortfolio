@@ -93,6 +93,7 @@ public:
 
 
 	HRESULT Render_ShadowDepth(class CTransform* pTransform);
+	HRESULT Render_ShadowDepth(const _float4x4& WorldMatrix);
 
 	void LoadAnimations(const char* pAnimDir);
 

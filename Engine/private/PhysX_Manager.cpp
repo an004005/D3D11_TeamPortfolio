@@ -174,6 +174,11 @@ void CPhysX_Manager::Initialize()
 
 void CPhysX_Manager::Simulate(_double TimeDelta)
 {
+#ifdef _DEBUG
+	if (CGameInstance::GetInstance()->KeyDown(DIK_F9))
+		m_bRenderDebug = !m_bRenderDebug;
+#endif
+
 	m_Scene->simulate((_float)TimeDelta);
 }
 

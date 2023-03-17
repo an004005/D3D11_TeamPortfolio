@@ -1048,6 +1048,32 @@ HRESULT CModel::Render_ShadowDepth(CTransform* pTransform)
 	return S_OK;
 }
 
+HRESULT CModel::Render_ShadowDepth(const _float4x4& WorldMatrix)
+{
+	for (size_t i = 0; i < m_Meshes.size(); ++i)
+	{
+		const _uint iMtrlIdx = m_Meshes[i]->Get_MaterialIndex();
+		if (m_Materials[iMtrlIdx]->IsActive() == false)
+			continue;
+
+		if (m_eType == TYPE_ANIM)
+		{
+			_float4x4 BoneMatrices[512];
+			m_Meshes[i]->SetUp_BoneMatrices(BoneMatrices, XMLoadFloat4x4(&m_PivotMatrix));
+			m_pShadowShader->Set_MatrixArray("g_BoneMatrices", BoneMatrices, 512);
+		}
+
+		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_WorldMatrix", &WorldMatrix));
+		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ViewMatrix", CLight_Manager::GetInstance()->GetShadowLightView()));
+		FAILED_CHECK(m_pShadowShader->Set_Matrix("g_ProjMatrix", CLight_Manager::GetInstance()->GetShadowLightProj()));
+
+		m_pShadowShader->Begin(0);
+		m_Meshes[i]->Render();
+	}
+
+	return S_OK;
+}
+
 void CModel::LoadAnimations(const char* pAnimDir)
 {
 	Assert(m_eType == TYPE_ANIM);
