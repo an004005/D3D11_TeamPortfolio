@@ -152,6 +152,27 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 
 	// ~소켓 애니메이션 추가
 
+	//Sound
+	m_SoundStore.CloneSound("mon_1_attack_ready_creaking");
+	m_SoundStore.CloneSound("mon_1_attack_voice");
+	m_SoundStore.CloneSound("mon_1_attack_whoosh");
+	m_SoundStore.CloneSound("mon_1_backspin_step");
+	m_SoundStore.CloneSound("mon_1_fx_death");
+	m_SoundStore.CloneSound("mon_1_run");
+	m_SoundStore.CloneSound("mon_1_sidestep_1_step");
+	m_SoundStore.CloneSound("mon_1_voice_attack_ready");
+	m_SoundStore.CloneSound("mon_1_walk");
+
+	m_pModelCom->Add_EventCaller("mon_1_attack_ready_creaking", [this] {m_SoundStore.PlaySound("mon_1_attack_ready_creaking", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_1_attack_voice", [this] {m_SoundStore.PlaySound("mon_1_attack_voice", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_1_attack_whoosh", [this] {m_SoundStore.PlaySound("mon_1_attack_whoosh", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_1_backspin_step", [this] {m_SoundStore.PlaySound("mon_1_backspin_step", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_1_fx_death", [this] {m_SoundStore.PlaySound("mon_1_fx_death", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_1_run", [this] {m_SoundStore.PlaySound("mon_1_run", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_1_sidestep_1_step", [this] {m_SoundStore.PlaySound("mon_1_sidestep_1_step", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_1_voice_attack_ready", [this] {m_SoundStore.PlaySound("mon_1_voice_attack_ready", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_1_walk", [this] {m_SoundStore.PlaySound("mon_1_walk", m_pTransformCom); });
+
 	return S_OK;
 }
 
