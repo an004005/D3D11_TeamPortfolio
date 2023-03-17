@@ -107,11 +107,16 @@ HRESULT CLevel_PlayerTest::Initialize()
 
 	Ready_Layer_SASPortrait();
 
+	m_BGM.CloneSound("Ambient_Bridge");
+
 	return S_OK;
 }
 
 void CLevel_PlayerTest::Tick(_double TimeDelta)
 {
+	if (m_BGMOnce.IsNotDo())
+		m_BGM.PlaySound("Ambient_Bridge");
+
 	CLevel::Tick(TimeDelta);
 }
 

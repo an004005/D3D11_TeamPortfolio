@@ -2083,19 +2083,42 @@
         "Duration": 90.0,
         "TickPerSecond": 60.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_5_step",
+                "EventTime": 22.0
+            },
+            {
+                "EventName": "mon_5_step",
+                "EventTime": 70.0
+            }
+        ]
     },
     "AS_em0200_106_AL_walk02": {
         "Duration": 60.0,
         "TickPerSecond": 40.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_5_step",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "mon_5_step",
+                "EventTime": 45.0
+            }
+        ]
     },
     "AS_em0200_107_AL_run": {
         "Duration": 120.0,
         "TickPerSecond": 48.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_5_rush",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0200_135_AL_dodge_B_start": {
         "Duration": 30.0,
@@ -2105,6 +2128,10 @@
             {
                 "EventName": "DodgeB_Start",
                 "EventTime": 13.199999809265137
+            },
+            {
+                "EventName": "mon_5_backdodge",
+                "EventTime": 13.0
             }
         ]
     },
@@ -2112,7 +2139,12 @@
         "Duration": 28.0,
         "TickPerSecond": 38.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_5_step",
+                "EventTime": 6.0
+            }
+        ]
     },
     "AS_em0200_140_AL_dodge_L_start": {
         "Duration": 30.0,
@@ -2129,7 +2161,12 @@
         "Duration": 28.0,
         "TickPerSecond": 36.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_5_step",
+                "EventTime": 6.0
+            }
+        ]
     },
     "AS_em0200_145_AL_dodge_R_start": {
         "Duration": 30.0,
@@ -2139,6 +2176,10 @@
             {
                 "EventName": "DodgeR_Start",
                 "EventTime": 16.0
+            },
+            {
+                "EventName": "mon_5_sidedodge",
+                "EventTime": 16.0
             }
         ]
     },
@@ -2146,7 +2187,12 @@
         "Duration": 28.0,
         "TickPerSecond": 40.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_5_step",
+                "EventTime": 6.0
+            }
+        ]
     },
     "AS_em0200_160_AL_threat": {
         "Duration": 300.0,
@@ -2178,6 +2224,14 @@
             {
                 "EventName": "Untouch_End",
                 "EventTime": 220.0
+            },
+            {
+                "EventName": "mon_5_bellattack_ready",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "mon_5_bellattack",
+                "EventTime": 115.0
             }
         ]
     },
@@ -2225,6 +2279,14 @@
             {
                 "EventName": "Untouch_End",
                 "EventTime": 200.0
+            },
+            {
+                "EventName": "mon_5_sprayattack_ready",
+                "EventTime": 7.0
+            },
+            {
+                "EventName": "mon_5_sprayattack",
+                "EventTime": 90.0
             }
         ]
     },
@@ -2240,6 +2302,14 @@
             {
                 "EventName": "Kick_Event",
                 "EventTime": 108.0
+            },
+            {
+                "EventName": "mon_5_jumpattack_ready",
+                "EventTime": 5.0
+            },
+            {
+                "EventName": "mon_5_jumpattack_jump",
+                "EventTime": 60.0
             }
         ]
     },
@@ -2247,7 +2317,12 @@
         "Duration": 56.0,
         "TickPerSecond": 44.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_5_jumpattack_kick",
+                "EventTime": 9.0
+            }
+        ]
     },
     "AS_em0200_401_AL_damage_l_F": {
         "Duration": 63.0,
