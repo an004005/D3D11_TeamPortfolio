@@ -194,13 +194,13 @@ void CGravikenisisMouseUI::Free()
 
 	Safe_Release(m_pBanKenisis);
 
-	if (m_pBanKenisis != nullptr && m_pBanKenisis->IsDeleted() == false)
-		m_pBanKenisis->SetDelete();
+	if (m_pAppealCircle_0 != nullptr && m_pAppealCircle_0->IsDeleted() == false)
+		m_pAppealCircle_0->SetDelete();
 
 	Safe_Release(m_pAppealCircle_0);
 
-	if (m_pBanKenisis != nullptr && m_pBanKenisis->IsDeleted() == false)
-		m_pBanKenisis->SetDelete();
+	if (m_pAppealCircle_1 != nullptr && m_pAppealCircle_1->IsDeleted() == false)
+		m_pAppealCircle_1->SetDelete();
 
 	Safe_Release(m_pAppealCircle_1);
 }
