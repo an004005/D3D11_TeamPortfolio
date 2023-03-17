@@ -81,7 +81,7 @@ void CMainApp::Tick(_double TimeDelta)
 		return;
 
 	m_pGameInstance->Tick_Engine(TimeDelta);
-}
+ }
 
 HRESULT CMainApp::Render()
 {
