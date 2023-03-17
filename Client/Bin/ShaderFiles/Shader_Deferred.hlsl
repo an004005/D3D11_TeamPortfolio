@@ -338,13 +338,12 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	
 
 	fShadowRate /= 9.f;
-	fShadowRate *= 0.7f;
+	fShadowRate *= 0.3f;
 	
 	Out.vColor *= (1.f - fShadowRate);
 
 	return Out;
 }
-
 
 
 PS_OUT PS_OUTLINE(PS_IN In)

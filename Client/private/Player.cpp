@@ -103,6 +103,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_AttackDesc()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_Sound()))
+		return E_FAIL;
+
 	//Load_DefaultEffects("../Bin/Resources/Curve/Default_Attack/");
 	//Load_DefaultEffects("../Bin/Resources/Curve/Fire_Attack/");
 
@@ -824,6 +827,8 @@ HRESULT CPlayer::SetUp_Event()
 
 	m_pModel->Add_EventCaller("Kinetic_Launch", [&]() {Event_Kinetic_Throw(); });
 	m_pModel->Add_EventCaller("Kinetic_Slow", [&]() {Event_KineticSlowAction(); });
+
+
 	
 	return S_OK;
 }
@@ -2471,6 +2476,55 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_Sound()
+{
+	m_SoundStore.CloneSound("attack_nor_1");
+	m_SoundStore.CloneSound("attack_nor_2");
+	m_SoundStore.CloneSound("attack_nor_3");
+	m_SoundStore.CloneSound("attack_nor_4");
+	m_SoundStore.CloneSound("attack_nor_5");
+	m_SoundStore.CloneSound("attack_nor_charge_lv1");
+	m_SoundStore.CloneSound("attack_nor_charge_lv2");
+	m_SoundStore.CloneSound("attack_nor_dashattack");
+	m_SoundStore.CloneSound("attack_nor_jumpattack_1");
+	m_SoundStore.CloneSound("attack_nor_jumpattack_2");
+	m_SoundStore.CloneSound("attack_nor_spin");
+	m_SoundStore.CloneSound("attack_nor_spindown");
+	m_SoundStore.CloneSound("attack_nor_upper");
+
+	m_SoundStore.CloneSound("move_dash");
+	m_SoundStore.CloneSound("move_foot_stop");
+	m_SoundStore.CloneSound("move_jump");
+	m_SoundStore.CloneSound("move_run");
+	m_SoundStore.CloneSound("move_walk");
+
+
+	m_pModel->Add_EventCaller("attack_nor_1", [this] {Event_EffectSound("attack_nor_1"); });
+	m_pModel->Add_EventCaller("attack_nor_2", [this] {Event_EffectSound("attack_nor_2"); });
+	m_pModel->Add_EventCaller("attack_nor_3", [this] {Event_EffectSound("attack_nor_3"); });
+	m_pModel->Add_EventCaller("attack_nor_4", [this] {Event_EffectSound("attack_nor_4"); });
+	m_pModel->Add_EventCaller("attack_nor_5", [this] {Event_EffectSound("attack_nor_5"); });
+	m_pModel->Add_EventCaller("attack_nor_charge_lv1", [this] {Event_EffectSound("attack_nor_charge_lv1"); });
+	m_pModel->Add_EventCaller("attack_nor_charge_lv2", [this] {Event_EffectSound("attack_nor_charge_lv2"); });
+	m_pModel->Add_EventCaller("attack_nor_dashattack", [this] {Event_EffectSound("attack_nor_dashattack"); });
+
+	m_pModel->Add_EventCaller("attack_nor_jumpattack_1", [this] {Event_EffectSound("attack_nor_jumpattack_1"); });
+	m_pModel->Add_EventCaller("attack_nor_jumpattack_2", [this] {Event_EffectSound("attack_nor_jumpattack_2"); });
+
+	m_pModel->Add_EventCaller("attack_nor_spin", [this] {Event_EffectSound("attack_nor_spin"); });
+	m_pModel->Add_EventCaller("attack_nor_spindown", [this] {Event_EffectSound("attack_nor_spindown"); });
+
+	m_pModel->Add_EventCaller("attack_nor_upper", [this] {Event_EffectSound("attack_nor_upper"); });
+
+	m_pModel->Add_EventCaller("move_dash", [this] {m_SoundStore.PlaySound("move_dash", m_pTransformCom); });
+	m_pModel->Add_EventCaller("move_foot_stop", [this] {m_SoundStore.PlaySound("move_foot_stop", m_pTransformCom); });
+	m_pModel->Add_EventCaller("move_jump", [this] {m_SoundStore.PlaySound("move_jump", m_pTransformCom); });
+	m_pModel->Add_EventCaller("move_run", [this] {m_SoundStore.PlaySound("move_run", m_pTransformCom); });
+	m_pModel->Add_EventCaller("move_walk", [this] {m_SoundStore.PlaySound("move_walk", m_pTransformCom); });
+
+	return S_OK;
+}
+
 HRESULT CPlayer::SetUp_AttackDesc()
 {
 	m_mapCollisionEvent.emplace("ATK_A1", [this]()
@@ -2793,6 +2847,23 @@ void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 	//
 	// if (nullptr != pEffect)
 	// 	pEffect->Set_Transform(SocketMatrix);
+}
+
+void CPlayer::Event_EffectSound(const string& strSoundName)
+{
+	switch (m_PlayerSasType)
+	{
+	case ESASType::SAS_END:
+		if (strSoundName.find("nor") == string::npos)
+			m_SoundStore.PlaySound(strSoundName, m_pTransformCom);
+			break;
+		break;
+	case ESASType::SAS_FIRE:
+		if (strSoundName.find("fire") == string::npos)
+			m_SoundStore.PlaySound(strSoundName, m_pTransformCom);
+			break;
+		break;
+	}
 }
 
 void CPlayer::Event_CollisionStart()
