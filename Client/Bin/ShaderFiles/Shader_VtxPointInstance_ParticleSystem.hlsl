@@ -258,6 +258,8 @@ PS_OUT PS_PARTICLE_EM0650(PS_IN In)
 	{
 		float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
 		Out.vColor.a = Mask;
+		if (Mask <= 0.f)
+			discard;
 	}
 	else
 	{
@@ -284,6 +286,28 @@ PS_OUT PS_FLIPBOOK_SMOKE(PS_IN In)
 	float4 FinalColor = saturate(BlendColor);
 	Out.vColor = FinalColor;
 	Out.vColor.a = flipBook.a * In.RamainLifeRatio;
+
+	return Out;
+}
+
+PS_OUT PS_SAS_FIRE_PARTICLE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 4, 4));
+	// float4 vColor = g_vec4_0;
+
+	// float4 BlendColor = flipBook * vColor * 2.0f;
+
+	// float4 FinalColor = saturate(BlendColor);
+	Out.vColor = CalcHDRColor(flipBook, g_float_0) ;
+
+	float4 flipAlpha = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 4, 4));
+
+	Out.vColor.a = flipAlpha.r ;
+
+	if (flipAlpha.r <= 0.2f)
+		discard;
 
 	return Out;
 }
@@ -492,5 +516,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_FLIPBOOK_SMOKE();
+	}
+
+	//9
+	pass SasFireParticle
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SAS_FIRE_PARTICLE();
 	}
 }

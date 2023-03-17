@@ -312,7 +312,6 @@ void CParticleGroup::LoadFromJson(const Json& json)
 {
 	CGameObject::LoadFromJson(json);
 
-	// ToDO:: 컨테이너에 제대로 안들어감
 	for(auto iter : json["Particles"])
 	{
 		string ObjectTag;

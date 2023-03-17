@@ -155,11 +155,11 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			}
 			else if (m_iSelectFinishFunc == 1)
 			{
-				// m_Timeline.SetFinishFunction([this]
-				// {
-				// 	SetDelete();
-				// });
-				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+				m_Timeline.SetFinishFunction([this]
+				{
+					SetDelete();
+				});
+				// m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
 
 			}
 			else if (m_iSelectFinishFunc == 2)
