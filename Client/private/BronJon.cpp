@@ -11,6 +11,7 @@
 #include "Model.h"
 #include "JsonStorage.h"
 #include "PhysX_Manager.h"
+#include "Material.h"
 
 #include "BrJ_Controller.h"
 #include "BrJ_AnimInstance.h"
@@ -42,6 +43,7 @@ HRESULT CBronJon::Initialize(void * pArg)
 	FAILED_CHECK(CMonster::Initialize(pArg));
 
 	// Boss Monster HitBox
+	Json BronJonBite = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonBite.json");
 
 	Json BronJonJaw = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonJaw.json");
 	Json BronJonLaser = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonEff02.json");
@@ -51,6 +53,9 @@ HRESULT CBronJon::Initialize(void * pArg)
 	// Json BronJonOuter = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRightArm.json");
 
 	// m_pJawRBody : BiteAtk + Head HitBox
+	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Bite"),
+		(CComponent**)&m_pBiteTrigger, &BronJonBite)))
+		return E_FAIL;
 	if (FAILED(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Jaw"),
 		(CComponent**)&m_pJawRBody, &BronJonJaw)))
 		return E_FAIL;
@@ -82,7 +87,11 @@ HRESULT CBronJon::Initialize(void * pArg)
 
 	// Event Caller
 
-	m_pModelCom->Add_EventCaller("Bite_Start", [this] { m_bAtkBite = true; });
+	m_pModelCom->Add_EventCaller("Bite_Start", [this] 
+	{
+//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Bite_OnHit")->Start_Attach(this, "Jaw", true);
+		m_bAtkBite = true;
+	});
 	m_pModelCom->Add_EventCaller("Bite_End", [this] 
 	{
 		m_bAtkBite = false; 
@@ -112,7 +121,7 @@ HRESULT CBronJon::Initialize(void * pArg)
 	// ~Event Caller
 	m_iMaxHP = 5000;
 	m_iHP = m_iMaxHP;
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(70.f));
 	m_vFinDir = { 0.f, 0.f, 0.f, 0.f };
 	m_iGroggy_Able = 5;
 
@@ -192,7 +201,7 @@ void CBronJon::Tick(_double TimeDelta)
 	}
 	if (!m_bDead && m_pController->KeyDown(CController::MOUSE_LB))
 	{
-		m_pASM->AttachAnimSocket("BronJon", { m_pAtk_LaserStart, m_pAtk_LaserLoop, m_pAtk_LaserLoop, m_pAtk_LaserLoop, m_pAtk_LaserEnd });
+		m_pASM->AttachAnimSocket("BronJon", { m_pAtk_LaserStart, /*m_pAtk_LaserLoop,*/ m_pAtk_LaserLoop, m_pAtk_LaserLoop, m_pAtk_LaserEnd });
 		m_bHitMove = false;
 	}
 	if (!m_bDead && m_pController->KeyDown(CController::G))
@@ -317,6 +326,8 @@ void CBronJon::AfterPhysX()
 		return;*/
 	__super::AfterPhysX();
 
+	m_pBiteTrigger->Update_Tick(AttachCollider(m_pBiteTrigger));
+
 	m_pJawRBody->Update_Tick(AttachCollider(m_pJawRBody));
 	// m_pJawRBody->Update_AfterPhysX(m_pTransformCom);
 
@@ -364,6 +375,12 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 			m_bStruck = true;	// 체력 다는 조건으로 주면 될듯?				
 		}
 	}
+
+	if (tDamageParams.eAttackSAS == ESASType::SAS_FIRE)
+		DeBuff_Fire();
+
+	/*else if (tDamageParams.eAttackSAS == ESASType::SAS_END)
+		DeBuff_End();*/
 	
 	if (m_iHP <= 0 && !m_bDead) // + Dead 예외처리 
 	{
@@ -381,6 +398,9 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 _matrix CBronJon::AttachCollider(CRigidBody* pRigidBody)
 {
 	_matrix	SocketMatrix;
+
+	if(pRigidBody == m_pBiteTrigger)
+		SocketMatrix = m_pModelCom->GetBoneMatrix("Jaw") * m_pTransformCom->Get_WorldMatrix();
 
 	if (pRigidBody == m_pJawRBody)
 		SocketMatrix = m_pModelCom->GetBoneMatrix("Eff02") * m_pTransformCom->Get_WorldMatrix();
@@ -406,7 +426,7 @@ _matrix CBronJon::AttachCollider(CRigidBody* pRigidBody)
 
 void CBronJon::Atk_BiteSweep()
 {
-	Matrix mJawMatrix = m_pJawRBody->GetPxWorldMatrix();
+	Matrix mJawMatrix = m_pBiteTrigger->GetPxWorldMatrix();
 	_float4 vJawPos = _float4(mJawMatrix.Translation().x, mJawMatrix.Translation().y, mJawMatrix.Translation().z, 1.f);
 	_float3 vLook = _float3(mJawMatrix.Up().x, mJawMatrix.Up().y, mJawMatrix.Up().z);
 	
@@ -416,16 +436,48 @@ void CBronJon::Atk_BiteSweep()
 	SphereSweepParams Sparam;
 	Sparam.fVisibleTime = 0.f;
 	Sparam.iTargetType = CTB_PLAYER;
-	Sparam.fRadius = 1.2f;
-	Sparam.fDistance = 1.5f;
+	Sparam.fRadius = 1.35f;
+	Sparam.fDistance = 1.8f;
 	Sparam.vPos = vJawPos;
 	Sparam.sweepOut = &sweepOut;
 	Sparam.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	
 	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
 	{
-//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Bite_OnHit")->st
-		HitTargets(sweepOut, (rand() % 80) + 25, EAttackType::ATK_HEAVY);
+		BiteToEffect(sweepOut, (rand() % 80) + 25, EAttackType::ATK_HEAVY);
+//		HitTargets(sweepOut, (rand() % 80) + 25, EAttackType::ATK_HEAVY);
+	}
+}
+
+void CBronJon::BiteToEffect(physx::PxSweepBuffer & sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff)
+{
+	for (int i = 0; i < sweepOut.getNbAnyHits(); ++i)
+	{
+		auto pTarget = dynamic_cast<CScarletCharacter*>(CPhysXUtils::GetOnwer(sweepOut.getAnyHit(i).actor));
+		if (pTarget == nullptr)
+			continue;
+
+		if (CheckDamagedTarget(pTarget))
+		{
+			DAMAGE_PARAM tDamageParams;
+			tDamageParams.iDamage = iDamage;
+			tDamageParams.eAttackType = eAtkType;
+			tDamageParams.eDeBuff = eDeBuff;
+			tDamageParams.pCauser = this;
+			tDamageParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+			memcpy(&tDamageParams.vHitPosition, &sweepOut.getAnyHit(i).position, sizeof(_float3));
+			memcpy(&tDamageParams.vHitNormal, &sweepOut.getAnyHit(i).normal, sizeof(_float3));
+
+			_vector vBitePosition = { tDamageParams.vHitPosition.x, tDamageParams.vHitPosition.y, tDamageParams.vHitPosition.z, 1.f };
+			
+			_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+			_vector vTargetPos = tDamageParams.vHitPosition;
+			_vector vDest = XMVector3Normalize(vTargetPos - vMyPos);
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Bite_OnHit")->Start_AttachPosition(this, vBitePosition, vDest, true);
+
+			pTarget->TakeDamage(tDamageParams);
+		}
 	}
 }
 
@@ -508,6 +560,32 @@ void CBronJon::CreateBiteEffect()
 	param.bSingle = true;*/
 }
 
+void CBronJon::DeBuff_End()
+{
+	for (auto pMtrl : m_BodyMtrls)
+	{
+		pMtrl->GetParam().Ints[0] = 0;
+	}
+}
+
+void CBronJon::DeBuff_Fire()
+{
+	m_fDeBuffTime = 8.f;
+	for (auto pMtrl : m_BodyMtrls)
+	{
+		pMtrl->GetParam().Ints[0] = 1;
+	}
+}
+
+void CBronJon::DeBuff_Oil()
+{
+	m_fDeBuffTime = 10.f;
+	for (auto pMtrl : m_BodyMtrls)
+	{
+		pMtrl->GetParam().Ints[0] = 2;
+	}
+}
+
 //void CBronJon::SetActive()
 //{
 //	CMonster::SetActive();
@@ -558,6 +636,7 @@ void CBronJon::Free()
 
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
+	Safe_Release(m_pBiteTrigger);
 	Safe_Release(m_pJawRBody);
 	Safe_Release(m_pLaserEffect);
 	Safe_Release(m_pLeftArm);

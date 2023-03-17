@@ -2404,7 +2404,7 @@
             },
             {
                 "EventName": "SwingL_Eff",
-                "EventTime": 58.0
+                "EventTime": 67.0
             },
             {
                 "EventName": "Start_SweepLeft",
@@ -2423,7 +2423,7 @@
             },
             {
                 "EventName": "SwingR_Eff",
-                "EventTime": 58.0
+                "EventTime": 67.0
             },
             {
                 "EventName": "AttackEnd",
@@ -2446,13 +2446,26 @@
         "Duration": 45.0,
         "TickPerSecond": 48.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Smash",
+                "EventTime": 4.0
+            }
+        ]
     },
     "AS_em0300_233_AL_atk_a3_jitabata_loop": {
         "Duration": 32.0,
         "TickPerSecond": 40.0,
         "bLooping": false,
         "vecEvent": [
+            {
+                "EventName": "Smash",
+                "EventTime": 25.0
+            },
+            {
+                "EventName": "Jitabata_Smoke",
+                "EventTime": 18.0
+            },
             {
                 "EventName": "Jitabata",
                 "EventTime": 30.0
@@ -2504,8 +2517,20 @@
                 "EventTime": 70.0
             },
             {
+                "EventName": "SpinEff",
+                "EventTime": 73.0
+            },     
+            {
+                "EventName": "SpinEff",
+                "EventTime": 120.0
+            },    
+            {
                 "EventName": "AttackEnd",
                 "EventTime": 150.0
+            },
+            {
+                "EventName": "SmokeGrey",
+                "EventTime": 153.0
             }
         ]
     },
