@@ -148,6 +148,18 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 
 	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0600_424_AL_dead_down");
 
+
+	m_SoundStore.CloneSound("mon_2_attack_ready");
+	m_SoundStore.CloneSound("mon_2_attack_shoot");
+	m_SoundStore.CloneSound("mon_2_fx_death");
+	m_SoundStore.CloneSound("mon_2_move");
+
+	m_pModelCom->Add_EventCaller("mon_2_attack_ready", [this] {m_SoundStore.PlaySound("mon_2_attack_ready", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_2_attack_shoot", [this] {m_SoundStore.PlaySound("mon_2_attack_shoot", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_2_fx_death", [this] {m_SoundStore.PlaySound("mon_2_fx_death", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_2_move", [this] {m_SoundStore.PlaySound("mon_2_move", m_pTransformCom); });
+	
+
 	return S_OK;
 }
 

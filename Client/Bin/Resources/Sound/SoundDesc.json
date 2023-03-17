@@ -321,6 +321,146 @@
             "Loop" : false,
             "MinDistance": 5.0,
             "MaxDistance" : 20.0
+        },
+
+
+
+        {
+            "Name" : "mon_2_attack_ready",
+            "SoundFiles" : ["Monsters/Monster_2/mon_2_attack_ready.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_2_attack_shoot",
+            "SoundFiles" : ["Monsters/Monster_2/mon_2_attack_shoot.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_2_fx_death",
+            "SoundFiles" : ["Monsters/Monster_2/mon_2_fx_death.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_2_move",
+            "SoundFiles" : ["Monsters/Monster_2/mon_2_move_1.wav",
+            "Monsters/Monster_2/mon_2_move_2.wav",
+            "Monsters/Monster_2/mon_2_move_3.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+
+
+
+        {
+            "Name" : "mon_1_attack_ready_creaking",
+            "SoundFiles" : ["Monsters/Monster_1/mon_1_attack_ready_creaking.wav",
+            "Monsters/Monster_2/mon_2_move_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_1_attack_voice",
+            "SoundFiles" : ["Monsters/Monster_1/mon_1_attack_voice_1.wav",
+            "Monsters/Monster_1/mon_1_attack_voice_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_1_attack_whoosh",
+            "SoundFiles" : ["Monsters/Monster_1/mon_1_attack_whoosh.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_1_backspin_step",
+            "SoundFiles" : ["Monsters/Monster_1/mon_1_backspin_step1.wav",
+            "Monsters/Monster_1/mon_1_backspin_step2.wav",
+            "Monsters/Monster_1/mon_1_backspin_step3.wav",
+            "Monsters/Monster_1/mon_1_backspin_step4.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_1_fx_death",
+            "SoundFiles" : ["Monsters/Monster_1/mon_1_fx_death.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_1_run",
+            "SoundFiles" : ["Monsters/Monster_1/mon_1_run_1.wav",
+            "Monsters/Monster_1/mon_1_run_2.wav",
+            "Monsters/Monster_1/mon_1_run_3.wav",
+            "Monsters/Monster_1/mon_1_run_4.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_1_sidestep_1_step",
+            "SoundFiles" : ["Monsters/Monster_1/mon_1_sidestep_1_step_1.wav",
+            "Monsters/Monster_1/mon_1_sidestep_1_step_2.wav",
+            "Monsters/Monster_1/mon_1_sidestep_1_step_3.wav",
+            "Monsters/Monster_1/mon_1_sidestep_1_step_4.wav",
+            "Monsters/Monster_1/mon_1_sidestep_1_step_5.wav",
+            "Monsters/Monster_1/mon_1_sidestep_1_step_6.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_1_voice_attack_ready",
+            "SoundFiles" : ["Monsters/Monster_1/mon_1_voice_attack_ready_1.wav",
+            "Monsters/Monster_1/mon_1_voice_attack_ready_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_1_walk",
+            "SoundFiles" : ["Monsters/Monster_1/mon_1_walk_1.wav",
+            "Monsters/Monster_1/mon_1_walk_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
         }
     ]
 }
