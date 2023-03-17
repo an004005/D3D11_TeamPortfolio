@@ -1036,7 +1036,6 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 		.AddState("KINETIC_RB_START")
 		.OnStart([&]()
 	{
-		dynamic_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_IsTargeted();
 		Enemy_Targeting(true);
 		m_pASM->InputAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Start);
 	})
@@ -3227,6 +3226,7 @@ void CPlayer::Update_NotiveNeon()
 		Json json;
 		json["NoticeNeon"] = "NoticeNeon_HP";
 		m_pNeonUI = dynamic_cast<CNoticeNeonUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_NoticeNeonUI"), &json));
+		//m_pNeonUI->SetOwner(this);
 	}
 	
 	// ªË¡¶
@@ -3563,13 +3563,13 @@ void CPlayer::KineticObject_OutLineCheck()
 			if (iter == m_pKineticObject)
 			{
 				static_cast<CMapKinetic_Object*>(iter)->SetOutline(true);
-				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_CameRange(false);
+				static_cast<CMapKinetic_Object*>(iter)->Set_CameRange(true);
 
 			}
 			else
 			{
 				static_cast<CMapKinetic_Object*>(iter)->SetOutline(false);
-				static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_CameRange(true);
+				static_cast<CMapKinetic_Object*>(iter)->Set_CameRange(false);
 
 			}
 		}

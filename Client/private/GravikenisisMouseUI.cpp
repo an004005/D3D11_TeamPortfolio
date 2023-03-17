@@ -95,29 +95,32 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 
 	_bool CameRange = kinetic->Get_CameRange();
 
-	if (true == dynamic_cast<CMapKinetic_Object*>(m_pOwner)->Get_CameRange())
+	if (false == dynamic_cast<CMapKinetic_Object*>(m_pOwner)->Get_CameRange())
 	{
-		if (0.0f == m_pPlayer->Get_KineticCharge())	// 들리고 있지 않은 상태
-		{
-			m_pAppealCircle_0->Set_GroupVisible(true);
-			m_pAppealCircle_1->Set_GroupVisible(true);
-		}
-		else	// 들리고 있는 상태
-		{
-			m_pAppealCircle_0->Set_GroupVisible(false);
-			m_pAppealCircle_1->Set_GroupVisible(false);
-		}
+		m_pKenisis->Set_GroupVisible(false);
+		m_pBanKenisis->Set_GroupVisible(false);
+		m_pAppealCircle_0->Set_GroupVisible(false);
+		m_pAppealCircle_1->Set_GroupVisible(false);
+		
+		return;
 	}
 
-	// Get_IsTargeted 플레이어와 상호작용이 시작된 오브젝트
-	if (false == dynamic_cast<CMapKinetic_Object*>(m_pOwner)->Get_IsTargeted())	
-		return;
-		
+	if (0.0f == m_pPlayer->Get_KineticCharge())	// 들리고 있지 않은 상태
+	{
+		m_pAppealCircle_0->Set_GroupVisible(true);
+		m_pAppealCircle_1->Set_GroupVisible(true);
+	}
+	else	// 들리고 있는 상태
+	{
+		m_pAppealCircle_0->Set_GroupVisible(false);
+		m_pAppealCircle_1->Set_GroupVisible(false);
+	}
+
 	// 염력 게이지가 부족 하다면, 금지 Icon 으로 변경하고 return 시킨다.
 	if (20.0f > m_pPlayer->Get_PlayerStat().m_iKineticEnergy)
 	{
 		m_pBanKenisis->Set_GroupVisible(true);
-		
+
 		m_pKenisis->Set_GroupVisible(false);
 		m_pAppealCircle_0->Set_GroupVisible(false);
 		m_pAppealCircle_1->Set_GroupVisible(false);
@@ -126,9 +129,8 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 	}
 
 	// 염력 사용이 가능할 때 
-	m_pBanKenisis->Set_GroupVisible(false);
-
 	m_pKenisis->Set_GroupVisible(true);
+	m_pBanKenisis->Set_GroupVisible(false);
 
 	SetfRatio(m_pPlayer->Get_KineticCharge());	// 염력 게이지를 사용하는 만큼 게이지가 올라간다. (사용하지 않으면 내려간다.)
 	if (1.0f <= m_pPlayer->Get_KineticCharge())	// 최대 1초가 넘어간 객체는 게이지를 지운다.
@@ -136,7 +138,6 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 		m_bDelete = true;
 		return;
 	}
-
 
 }
 
@@ -192,4 +193,14 @@ void CGravikenisisMouseUI::Free()
 		m_pBanKenisis->SetDelete();
 
 	Safe_Release(m_pBanKenisis);
+
+	if (m_pBanKenisis != nullptr && m_pBanKenisis->IsDeleted() == false)
+		m_pBanKenisis->SetDelete();
+
+	Safe_Release(m_pAppealCircle_0);
+
+	if (m_pBanKenisis != nullptr && m_pBanKenisis->IsDeleted() == false)
+		m_pBanKenisis->SetDelete();
+
+	Safe_Release(m_pAppealCircle_1);
 }

@@ -71,13 +71,6 @@ public:
 	_bool				GetThrow() { return m_bThrow; }
 	_bool				Usable() { return m_bUsable; }
 
-	_bool				Get_IsTargeted() {
-		return m_bIsTargeted;
-	}
-	void				Set_IsTargeted() {
-		m_bIsTargeted = true;
-	}
-
 	_bool				Get_CameRange() {
 		return m_bCameRange;
 	}
@@ -91,7 +84,6 @@ private:
 	_bool				m_bHit = false;
 	_float				m_fDeadTimer = 0.f;
 
-	_bool				m_bIsTargeted = { false };
 	_bool				m_bCameRange = { false };
 
 public:
