@@ -536,6 +536,11 @@ void CGameInstance::Imgui_ObjectViewer(_uint iLevel, CGameObject*& pSelectedObje
 	m_pObject_Manager->Imgui_ObjectViewer(iLevel, pSelectedObject);
 }
 
+_bool CGameInstance::Check_ObjectAlive(CGameObject * pObject)
+{
+	return CObject_Manager::Check_ObjectAlive(pObject);
+}
+
 void CGameInstance::Imgui_LayerCombo(_uint iLevel, const _tchar*& pLayerName)
 {
 	m_pObject_Manager->Imgui_LayerCombo(iLevel, pLayerName);

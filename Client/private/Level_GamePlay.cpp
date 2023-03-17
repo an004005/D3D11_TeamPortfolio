@@ -282,7 +282,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	// }
 
 	{
-		PreviewData["Model"] = "MonsterFlowerLeg";
+		PreviewData["Model"] = "MonsterBuddyLumi";
 		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
 		auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 	}

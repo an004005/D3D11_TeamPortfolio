@@ -39,10 +39,6 @@ public:
 		m_bUIMove = true;
 	}
 
-	map<wstring, CUI*> Get_Map() {	// 삭제 예정
-		return m_mapChildUIs;
-	}
-
 protected:
 	void	UIMove_FSM();
 	void	UIHit(const _double & TimeDelta);
