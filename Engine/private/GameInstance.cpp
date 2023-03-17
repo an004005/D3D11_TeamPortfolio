@@ -142,6 +142,10 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 			m_iStaticLevelIndex, TEXT("Prototype_Component_Shader_VtxModel_Shadow"), 
 			CShader::Create(*ppDeviceOut, *ppContextOut, L"../Bin/ShaderFiles/Shader_VtxModel_Shadow.hlsl", VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements))))
 			return E_FAIL;
+		if (FAILED(m_pComponent_Manager->Add_Prototype(
+			m_iStaticLevelIndex, TEXT("Prototype_Component_Shader_VtxModelInstancing_Shadow"), 
+			CShader::Create(*ppDeviceOut, *ppContextOut, L"../Bin/ShaderFiles/Shader_VtxModel_Instancing_Shadow.hlsl", VTXMODEL_INSTANCE_DECLARATION::Elements, VTXMODEL_INSTANCE_DECLARATION::iNumElements))))
+			return E_FAIL;
 	}
 
 	// null animation 셋팅

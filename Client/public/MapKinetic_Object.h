@@ -36,6 +36,7 @@ public:
 	void Late_Tick(_double TimeDelta) override;
 	virtual void AfterPhysX();
 	HRESULT Render() override;
+	virtual HRESULT Render_ShadowDepth() override;
 	virtual void LoadFromJson(const Json& json) override;
 	virtual void SaveToJson(Json& json) override;
 	virtual void Imgui_RenderProperty() override;

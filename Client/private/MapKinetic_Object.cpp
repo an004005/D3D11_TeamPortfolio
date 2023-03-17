@@ -102,14 +102,14 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
    CGameInstance* pGameInstance = CGameInstance::GetInstance();
    CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Player"));
 
-   // if (pLayer != nullptr)
-   // {
-   //    CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
-   //    pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
-   //
-   //    assert(pGravikenisisMouse != nullptr);
-   //    pGravikenisisMouse->Set_Owner(this);
-   // }
+   if (pLayer != nullptr)
+   {
+	   CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
+	   pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
+
+	   assert(pGravikenisisMouse != nullptr);
+	   pGravikenisisMouse->Set_Owner(this);
+   }
 
 	return S_OK;
 }
@@ -155,14 +155,25 @@ void CMapKinetic_Object::AfterPhysX()
 
 HRESULT CMapKinetic_Object::Render()
 {
-	if (m_bVisible == false) return S_OK;
-
 	FAILED_CHECK(__super::Render());
 
-	const _matrix WorldMatrix = m_LocalMatrix * m_pTransformCom->Get_WorldMatrix();
 
 	if(m_eCurModelTag != Tag_End)
+	{
+		const _matrix WorldMatrix = m_LocalMatrix * m_pTransformCom->Get_WorldMatrix();
 		FAILED_CHECK(m_pModelComs[m_eCurModelTag]->Render(WorldMatrix));
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapKinetic_Object::Render_ShadowDepth()
+{
+	if(m_eCurModelTag != Tag_End)
+	{
+		const _matrix WorldMatrix = m_LocalMatrix * m_pTransformCom->Get_WorldMatrix();
+		m_pModelComs[m_eCurModelTag]->Render_ShadowDepth(WorldMatrix);
+	}
 
 	return S_OK;
 }
@@ -262,7 +273,7 @@ const wstring & CMapKinetic_Object::Get_ModelTag()
 
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 {
-	m_pCollider->Set_Kinetic(false);
+ 	m_pCollider->Set_Kinetic(false);
 	m_pCollider->UpdateChange();
 
 	m_pCollider->AddForce(vForce);
