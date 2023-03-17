@@ -107,7 +107,7 @@ void CTutorial_YesNoUI::Object_Tick(const _double & TimeDelta)
 		break;
 
 	default:
-		assert(!"Wrong No ObjectNumber");
+		//assert(!"Wrong No ObjectNumber");
 		break;
 	}
 }
