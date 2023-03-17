@@ -47,6 +47,37 @@ HRESULT CParticleGroup::Initialize(void* pArg)
 
 void CParticleGroup::Start_ParticleWork()
 {
+	// m_bGenerate = true;
+}
+
+void CParticleGroup::Start_NoAttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, _bool trueisUpdate,
+	_bool trueisRemoveScale)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_PivotMatrix = PivotMatrix;
+	m_bRemoveScale = trueisRemoveScale;
+
+	if (m_bUpdate == false)
+	{
+		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		if (m_bRemoveScale == true)
+		{
+			SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+			SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+			SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+		}
+
+		Set_Transform(SocketMatrix);
+	}
+
+
 	m_bGenerate = true;
 }
 
@@ -281,7 +312,6 @@ void CParticleGroup::LoadFromJson(const Json& json)
 {
 	CGameObject::LoadFromJson(json);
 
-	// ToDO:: 컨테이너에 제대로 안들어감
 	for(auto iter : json["Particles"])
 	{
 		string ObjectTag;
@@ -335,6 +365,12 @@ void CParticleGroup::Imgui_RenderProperty()
 
 	if(item_current_idx != -1)
 	{
+		if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
+		{
+			item_current_idx = -1;
+			return;
+		}
+
 		for (auto iter : m_mapParticleSystem)
 		{
 			if(!strcmp(iter.first.c_str(), ppParticleTag[item_current_idx]))
@@ -368,6 +404,7 @@ void CParticleGroup::Imgui_RenderProperty()
 
 	Safe_Delete_Array(ppParticleTag);
 
+	
 }
 
 void CParticleGroup::Load_ParticleSystem()

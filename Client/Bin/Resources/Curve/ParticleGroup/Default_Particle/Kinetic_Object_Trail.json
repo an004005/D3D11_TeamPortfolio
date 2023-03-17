@@ -1,0 +1,1 @@
+{"LifeTime":10.0,"ObjectTag":"","Particles":[{"ObjectTag":"Kinetic_Object_Trail","ParticleDirectory":"../Bin/Resources/VFX/ParticleSystem/Player_Kinetic_Particle/Kinetic_Object_Trail.json"}],"Prototype_GameObject":"ProtoVFX_ParticleGroup\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}

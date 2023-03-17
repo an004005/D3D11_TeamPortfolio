@@ -245,9 +245,9 @@ PS_OUT PS_USE_KINETIC_CIRCLE(PS_IN In)
 		Out.vColor = CalcHDRColor(FinalColor, g_float_2);
 	}
 
-	float Mask = g_tex_3.Sample(LinearSampler, FlowUV2).r;
+	float Mask = g_tex_3.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 8,8)).r;
 
-	Out.vColor.a = saturate(Default.r * g_float_3 * Mask);
+	Out.vColor.a = saturate(g_float_3 * Mask);
 
 	float fDissolvePower = g_tex_5.Sample(LinearSampler, FlowUV).r;
 

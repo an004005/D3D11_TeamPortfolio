@@ -18,10 +18,11 @@
 #include "VFX_Manager.h"
 
 #include "Canvas_Alarm.h"
+#include "Canvas_BossHp.h"
 
 CBoss1::CBoss1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
-{
+{  
 }
 
 CBoss1::CBoss1(const CBoss1& rhs)
@@ -63,7 +64,7 @@ HRESULT CBoss1::Initialize(void* pArg)
 	// ~0315 추가
 
 	m_fGravity = 25.f;
-	m_iMaxHP = 10000;
+	m_iMaxHP = 1000;
 	m_iHP = m_iMaxHP;
 	m_iPreHP = m_iHP;
 
@@ -103,7 +104,15 @@ HRESULT CBoss1::Initialize(void* pArg)
 			End_AttackState();
 		}
 	});
-
+	m_pModelCom->Add_EventCaller("Jitabata_Smoke", [this] 
+	{
+//		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, "", false);
+		JitabataSmokeEffect();
+	});
+	m_pModelCom->Add_EventCaller("Smash", [this] // TODO : 확인해볼것
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Rock_Particle")->Start_Attach(this, "Reference", false);
+	});
 	m_pModelCom->Add_EventCaller("Start_SweepRight", [this]
 	{		
 		Start_AttackState(RIGHT_SWEEP);
@@ -114,24 +123,31 @@ HRESULT CBoss1::Initialize(void* pArg)
 	});
 	m_pModelCom->Add_EventCaller("SwingL_Eff", [this]
 	{
-		_matrix PivotMatrix = XMMatrixIdentity();
-		PivotMatrix = XMMatrixScaling(60.f, 60.f, 60.f);
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")->Start_AttachPivot(this, PivotMatrix, "Eff02", true, false);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")->Start_Attach(this, "Eff02", true, false);
 	});
 	m_pModelCom->Add_EventCaller("SwingR_Eff", [this]
 	{
-		_matrix PivotMatrix = XMMatrixIdentity();
-		PivotMatrix = XMMatrixScaling(60.f, 60.f, 60.f);
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")->Start_AttachPivot(this, PivotMatrix, "Eff02", true, false);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")->Start_Attach(this, "Eff02", true, false);
 	});
 	m_pModelCom->Add_EventCaller("Start_Spin", [this]
 	{
 		Start_AttackState(SPIN);
 	});
+	m_pModelCom->Add_EventCaller("SpinEff", [this]
+	{
+		_matrix PivotMatrix = XMMatrixIdentity();
+		PivotMatrix = XMMatrixScaling(3.f, 3.f, 3.f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Spin_Attack")->Start_AttachPivot(this, PivotMatrix, "Target", true, false, false);
+	});
 	m_pModelCom->Add_EventCaller("AttackEnd", [this]
 	{
 		End_AttackState();
 	});
+	m_pModelCom->Add_EventCaller("SmokeGrey", [this]
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, "Reference", false);
+	});
+
 	// Water ball Create + De_buff : Oil
 
 	m_pModelCom->Add_EventCaller("LastSpot", [this] 
@@ -207,7 +223,7 @@ HRESULT CBoss1::Initialize(void* pArg)
 	m_pJumpJitabata = m_pModelCom->Find_Animation("AS_em0300_233_AL_atk_a3_jitabata_loop");
 		
 	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0300_411_AL_WT_break");
-
+	
 	return S_OK;
 }
 
@@ -234,6 +250,8 @@ void CBoss1::Tick(_double TimeDelta)
 		return;*/
 	CMonster::Tick(TimeDelta);
 
+	Create_BossUI();
+	
 	// 타겟 가져오기 임시 코드
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
    {
@@ -251,6 +269,12 @@ void CBoss1::Tick(_double TimeDelta)
 		m_fJumpMoveTime -= (_float)TimeDelta;
 	}
 
+	/*if (!m_bTest)
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Rock_Particle")->Start_Attach(this, "Reference" ,false);
+		m_bTest = true;
+	}*/
+	
 	if (m_pController->KeyDown(CController::MOUSE_LB))
 	{
 		const _vector vLookAt = pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
@@ -365,6 +389,9 @@ void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (tDamageParams.eAttackSAS == ESASType::SAS_FIRE)
 		DeBuff_Fire();
 
+	/*else if (tDamageParams.eAttackSAS == ESASType::SAS_END)
+		DeBuff_End();*/
+
 	// ~SAS Type에 따른 DeBuff 처리
 
 	if (m_iHP <= 0 && !m_bDead) // + Dead 예외처리 
@@ -430,6 +457,11 @@ void CBoss1::Imgui_RenderProperty()
 		m_iHP -= 50;
 	}
 	ImGui::Text("2ndPhase : %d", m_b2ndPhase);
+
+	if (ImGui::Button("bool_False"))
+	{
+		m_bTest = false;
+	}
 
 	m_pASM->Imgui_RenderState();
 }
@@ -498,7 +530,7 @@ void CBoss1::Tick_AttackState()
 			tParams.vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			if (CGameInstance::GetInstance()->OverlapSphere(tParams))
 			{
-				HitTargets(overlapOut, 1, EAttackType::ATK_HEAVY);
+				HitTargets(overlapOut, 50, EAttackType::ATK_HEAVY);
 			}
 		}
 		break;
@@ -515,7 +547,7 @@ void CBoss1::Tick_AttackState()
 			//tParams.vPos.y += 2.f;
 			if (CGameInstance::GetInstance()->OverlapSphere(tParams))
 			{
-				HitTargets(overlapOut, 1, EAttackType::ATK_HEAVY);
+				HitTargets(overlapOut, 70, EAttackType::ATK_HEAVY);
 			}
 		}
 		break;
@@ -542,7 +574,7 @@ void CBoss1::Tick_AttackState()
 
 		if (CGameInstance::GetInstance()->SweepSphere(tParams))
 		{
-			HitTargets(sweepOut, 1, EAttackType::ATK_HEAVY);
+			HitTargets(sweepOut, 30, EAttackType::ATK_HEAVY);
 		}
 
 		m_vSweepPrePos = vAttackPos;
@@ -589,6 +621,68 @@ void CBoss1::DeBuff_Oil()
 	}
 }
 
+void CBoss1::SmokeEffectCreate()
+{
+	// 지훈아 이거 수정해줭....
+	/*vector<wstring> vecSmokeParticle;
+	wstring Smoke_Decided = L"";
+
+	vecSmokeParticle.push_back(L"Smoke_WhiteGray_00");
+	vecSmokeParticle.push_back(L"Smoke_WhiteGray_01");
+	vecSmokeParticle.push_back(L"Smoke_WhiteGray_02");
+	vecSmokeParticle.push_back(L"Smoke_WhiteGray_03");
+	vecSmokeParticle.push_back(L"Smoke_WhiteGray_04");
+
+	random_shuffle(vecSmokeParticle.begin(), vecSmokeParticle.end());
+
+	Smoke_Decided = vecSmokeParticle.front();*/
+
+	// 먼지 이펙트 생성
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, "Reference", false);
+}
+
+void CBoss1::JitabataSmokeEffect()
+{
+	vector<string> vecSmokePosition;
+	string Smoke_Decided;
+
+	vecSmokePosition.push_back("LeftCenterHandRing");
+	vecSmokePosition.push_back("LeftHandRing");
+	vecSmokePosition.push_back("RightBackHandThumb3");
+	vecSmokePosition.push_back("RightHandMiddle1");
+	vecSmokePosition.push_back("LeftBackHandRing");
+	vecSmokePosition.push_back("WeakA7");
+
+	random_shuffle(vecSmokePosition.begin(), vecSmokePosition.end());
+
+	Smoke_Decided = vecSmokePosition.front();
+
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, Smoke_Decided, false);
+}
+
+void CBoss1::Create_BossUI()
+{
+	static _bool PresentUI = false;
+
+	if(m_pUI_BossHP != nullptr)
+		m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
+
+	if (PresentUI == true) return;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	Json json;
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
+	m_pUI_BossHP = dynamic_cast<CCanvas_BossHp*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHp", &json));
+	m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+	m_pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_Alarm", &json));
+	m_pUI_Alarm->Set_Appeart();
+
+	PresentUI = true;
+}
+
 //void CBoss1::SetActive()
 //{
 //	CMonster::SetActive();
@@ -629,4 +723,12 @@ void CBoss1::Free()
 	Safe_Release(m_pLeftArm);
 	Safe_Release(m_pRightArm);
 	Safe_Release(m_pRange);
+
+
+	//for. BossUI
+	if (m_pUI_BossHP != nullptr)
+		m_pUI_BossHP->SetDelete();
+
+	if (m_pUI_Alarm != nullptr)
+		m_pUI_Alarm->SetDelete();
 }

@@ -89,6 +89,12 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 		return;
 	
 	// 나 염력 사용하라고 어필 하는 원
+
+	CGameObject* pGameObject = m_pOwner;
+	CMapKinetic_Object* kinetic = dynamic_cast<CMapKinetic_Object*>(m_pOwner);
+
+	_bool CameRange = kinetic->Get_CameRange();
+
 	if (true == dynamic_cast<CMapKinetic_Object*>(m_pOwner)->Get_CameRange())
 	{
 		if (0.0f == m_pPlayer->Get_KineticCharge())	// 들리고 있지 않은 상태

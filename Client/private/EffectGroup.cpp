@@ -155,11 +155,11 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			}
 			else if (m_iSelectFinishFunc == 1)
 			{
-				// m_Timeline.SetFinishFunction([this]
-				// {
-				// 	SetDelete();
-				// });
-				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+				m_Timeline.SetFinishFunction([this]
+				{
+					SetDelete();
+				});
+				// m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
 
 			}
 			else if (m_iSelectFinishFunc == 2)
@@ -202,6 +202,37 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 	}
 
 	return S_OK;
+}
+
+void CEffectGroup::Start_NoAttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, _bool trueisUpdate,
+	_bool trueisRemoveScale)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_PivotMatrix = PivotMatrix;
+	m_bRemoveScale = trueisRemoveScale;
+
+	if (m_bUpdate == false)
+	{
+		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		if (m_bRemoveScale == true)
+		{
+			SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+			SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+			SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+		}
+
+		Set_Transform(SocketMatrix);
+	}
+
+
+	m_Timeline.PlayFromStart();
 }
 
 void CEffectGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate, _bool trueisRemoveScale)
@@ -370,7 +401,28 @@ void CEffectGroup::Tick(_double TimeDelta)
 		else
 		{
 			// 뼈에 안붙이는 경우
-			Set_Transform(m_pOwner->GetTransform()->Get_WorldMatrix());
+			if(m_bUsePivot == true)
+			{
+				Set_Transform(m_PivotMatrix * m_pOwner->GetTransform()->Get_WorldMatrix());
+			}
+			else if (m_vPosition.z != 0.f)
+			{
+				if (nullptr != m_pFirst_EffectSystem)
+					m_pFirst_EffectSystem->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, m_vPosition);
+				if (nullptr != m_pSecond_EffectSystem)
+					m_pSecond_EffectSystem->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, m_vPosition);
+				if (nullptr != m_pThird_EffectSystem)
+					m_pThird_EffectSystem->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, m_vPosition);
+				if (nullptr != m_pFourth_EffectSystem)
+					m_pFourth_EffectSystem->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, m_vPosition);
+				if (nullptr != m_pFifth_EffectSystem)
+					m_pFifth_EffectSystem->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, m_vPosition);
+			}
+			else
+			{
+				Set_Transform(m_pOwner->GetTransform()->Get_WorldMatrix());
+			}
+			
 		}
 	}
 	
@@ -1628,6 +1680,27 @@ void CEffectGroup::Set_Transform(_fmatrix matSocket)
 void CEffectGroup::Start_EffectWork()
 {
 	m_Timeline.PlayFromStart();
+}
+
+void CEffectGroup::Start_AttachOnlyPos(_float4 vPos, _bool trueisUpdate)
+{
+	m_vPosition = vPos;
+
+	m_bUpdate = trueisUpdate;
+
+	if(m_bUpdate == false)
+	{
+		if (nullptr != m_pFirst_EffectSystem)
+			m_pFirst_EffectSystem->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, m_vPosition);
+		if (nullptr != m_pSecond_EffectSystem)
+			m_pSecond_EffectSystem->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, m_vPosition);
+		if (nullptr != m_pThird_EffectSystem)
+			m_pThird_EffectSystem->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, m_vPosition);
+		if (nullptr != m_pFourth_EffectSystem)
+			m_pFourth_EffectSystem->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, m_vPosition);
+		if (nullptr != m_pFifth_EffectSystem)
+			m_pFifth_EffectSystem->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, m_vPosition);
+	}
 }
 
 
