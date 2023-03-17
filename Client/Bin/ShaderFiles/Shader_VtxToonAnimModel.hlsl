@@ -197,7 +197,7 @@ PS_OUT PS_WIRE_2(PS_IN In)
 
 	float flags = SHADER_NONE_SHADE;
 
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 2.4f, flags);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 2.f, flags);
 	// Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
 	// Out.vCTL = float4(0.5f, 0.8f, 1.f, 0.f);
 
@@ -206,7 +206,7 @@ PS_OUT PS_WIRE_2(PS_IN In)
 	Out.vOutline = g_vec4_0;
 
 	float4 vViewDir = g_vCamPosition - In.vWorldPos;
-	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir.xyz), 0.1f);
+	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir.xyz), 0.5f);
 	float4 vWhite = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vDiffuse = lerp(vWhite, Out.vDiffuse, fFresnel);
 	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, 0.f);

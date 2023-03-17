@@ -9,6 +9,170 @@
             "Loop" : true,
             "MinDistance": 2.0,
             "MaxDistance" : 30.0
+        },
+        {
+            "Name" : "attack_nor_1",
+            "SoundFiles" : ["Attack/Normal/attack_nor_1.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "attack_nor_2",
+            "SoundFiles" : ["Attack/Normal/attack_nor_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "attack_nor_3",
+            "SoundFiles" : ["Attack/Normal/attack_nor_3.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "attack_nor_4",
+            "SoundFiles" : ["Attack/Normal/attack_nor_4.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "attack_nor_5",
+            "SoundFiles" : ["Attack/Normal/attack_nor_5.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+
+        {
+            "Name" : "attack_nor_charge_lv1",
+            "SoundFiles" : ["Attack/Normal/attack_nor_charge_lv1.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "attack_nor_charge_lv2",
+            "SoundFiles" : ["Attack/Normal/attack_nor_charge_lv2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "attack_nor_dashattack",
+            "SoundFiles" : ["Attack/Normal/attack_nor_dashattack.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "attack_nor_jumpattack_1",
+            "SoundFiles" : ["Attack/Normal/attack_nor_jumpattack_1.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "attack_nor_jumpattack_2",
+            "SoundFiles" : ["Attack/Normal/attack_nor_jumpattack_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "attack_nor_spin",
+            "SoundFiles" : ["Attack/Normal/attack_nor_spin.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "attack_nor_spindown",
+            "SoundFiles" : ["Attack/Normal/attack_nor_spindown.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "attack_nor_upper",
+            "SoundFiles" : ["Attack/Normal/attack_nor_upper.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+
+        {
+            "Name" : "move_dash",
+            "SoundFiles" : ["Move/move_dash_1.wav", "Move/move_dash_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "move_foot_stop",
+            "SoundFiles" : ["Move/move_foot_stop_1.wav", "Move/move_foot_stop_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "move_jump",
+            "SoundFiles" : ["Move/move_jump_1.wav", "Move/move_jump_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "move_run",
+            "SoundFiles" : ["Move/move_run_1.wav", "Move/move_run_2.wav", "Move/move_run_3.wav", "Move/move_run_4.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "move_walk",
+            "SoundFiles" : ["Move/move_walk_1.wav", "Move/move_walk_2.wav", "Move/move_walk_3.wav", "Move/move_walk_4.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
         }
     ]
 }

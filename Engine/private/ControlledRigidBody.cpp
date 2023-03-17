@@ -34,6 +34,7 @@ HRESULT CControlledRigidBody::Initialize(void* pArg)
 	}
 
 
+	m_tDesc.density = 100.f;
 	CreateController();
 
 
@@ -213,7 +214,7 @@ void CControlledRigidBody::SetDefaultValue()
 	m_tDesc.radius = 0.5f;
 	m_tDesc.height = 1.f;
 	m_tDesc.contactOffset = 0.1f;
-	m_tDesc.density = 10.f;
+	m_tDesc.density = 100.f;
 	m_fSlopeLimitDegree = 45.f;
 	m_tDesc.slopeLimit = cosf(XMConvertToRadians(m_fSlopeLimitDegree));
 	m_tDesc.stepOffset = 0.1f;
