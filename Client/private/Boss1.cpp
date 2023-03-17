@@ -18,10 +18,11 @@
 #include "VFX_Manager.h"
 
 #include "Canvas_Alarm.h"
+#include "Canvas_BossHp.h"
 
 CBoss1::CBoss1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
-{
+{  
 }
 
 CBoss1::CBoss1(const CBoss1& rhs)
@@ -63,7 +64,7 @@ HRESULT CBoss1::Initialize(void* pArg)
 	// ~0315 추가
 
 	m_fGravity = 25.f;
-	m_iMaxHP = 10000;
+	m_iMaxHP = 1000;
 	m_iHP = m_iMaxHP;
 	m_iPreHP = m_iHP;
 
@@ -234,6 +235,8 @@ void CBoss1::Tick(_double TimeDelta)
 		return;*/
 	CMonster::Tick(TimeDelta);
 
+	Create_BossUI();
+	
 	// 타겟 가져오기 임시 코드
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
    {
@@ -589,6 +592,29 @@ void CBoss1::DeBuff_Oil()
 	}
 }
 
+void CBoss1::Create_BossUI()
+{
+	static _bool PresentUI = false;
+
+	if(m_pUI_BossHP != nullptr)
+		m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
+
+	if (PresentUI == true) return;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	Json json;
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
+	m_pUI_BossHP = dynamic_cast<CCanvas_BossHp*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHp", &json));
+	m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+	m_pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_Alarm", &json));
+	m_pUI_Alarm->Set_Appeart();
+
+	PresentUI = true;
+}
+
 //void CBoss1::SetActive()
 //{
 //	CMonster::SetActive();
@@ -629,4 +655,12 @@ void CBoss1::Free()
 	Safe_Release(m_pLeftArm);
 	Safe_Release(m_pRightArm);
 	Safe_Release(m_pRange);
+
+
+	//for. BossUI
+	if (m_pUI_BossHP != nullptr)
+		m_pUI_BossHP->SetDelete();
+
+	if (m_pUI_Alarm != nullptr)
+		m_pUI_Alarm->SetDelete();
 }

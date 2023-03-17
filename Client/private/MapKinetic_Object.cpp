@@ -102,14 +102,14 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
    CGameInstance* pGameInstance = CGameInstance::GetInstance();
    CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Player"));
 
-   // if (pLayer != nullptr)
-   // {
-   //    CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
-   //    pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
-   //
-   //    assert(pGravikenisisMouse != nullptr);
-   //    pGravikenisisMouse->Set_Owner(this);
-   // }
+   if (pLayer != nullptr)
+   {
+	   CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
+	   pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
+
+	   assert(pGravikenisisMouse != nullptr);
+	   pGravikenisisMouse->Set_Owner(this);
+   }
 
 	return S_OK;
 }
@@ -262,7 +262,7 @@ const wstring & CMapKinetic_Object::Get_ModelTag()
 
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 {
-	m_pCollider->Set_Kinetic(false);
+ 	m_pCollider->Set_Kinetic(false);
 	m_pCollider->UpdateChange();
 
 	m_pCollider->AddForce(vForce);
