@@ -74,6 +74,12 @@ void CMonster::Tick(_double TimeDelta)
 	Update_DeadDissolve(TimeDelta);
 }
 
+void CMonster::Late_Tick(_double TimeDelta)
+{
+	CScarletCharacter::Late_Tick(TimeDelta);
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
+}
+
 void CMonster::Imgui_RenderProperty()
 {
 	CScarletCharacter::Imgui_RenderProperty();
@@ -200,6 +206,12 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, vHitPos, vEffectDir);
 		}
 	}
+}
+
+HRESULT CMonster::Render_ShadowDepth()
+{
+	m_pModelCom->Render_ShadowDepth(m_pTransformCom);
+	return S_OK;
 }
 
 _float4x4 CMonster::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)

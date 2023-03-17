@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Client_Defines.h"
 #include "GameInstance.h"
+#include "SoundStore.h"
 
 BEGIN(Engine)
 class CControlledRigidBody;
@@ -63,6 +64,8 @@ protected:
 	EDeBuffType m_eDeBuff = EDeBuffType::DEBUFF_END;
 	_float m_fDeBuffTime = 0.f;
 	// ~Debuff
+
+	CSoundStore m_SoundStore;
 
 // 재충돌 여부, Out이 아니면 재충돌로 판단
 public:
