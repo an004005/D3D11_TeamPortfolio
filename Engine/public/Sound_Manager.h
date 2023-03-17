@@ -40,6 +40,7 @@ public:
 
 	void Stop_All();
 	void Stop(CSound* pSound);
+	void SetVolume(CSound* pSound, _float fVolume);
 
 	FMOD_SYSTEM* GetSystem() { return m_pSystem; }
 
