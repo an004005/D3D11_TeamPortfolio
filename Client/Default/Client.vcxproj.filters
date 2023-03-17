@@ -310,6 +310,9 @@
     <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM">
       <UniqueIdentifier>{889711dc-b345-4bdf-9c49-c3181c53954d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Player\BaseAnimInstance_EX">
+      <UniqueIdentifier>{6648e768-73dd-4c7a-bbfd-bfd039f56894}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

@@ -179,6 +179,22 @@ private:
 private:
 	_bool			m_bAttackEnable = false;
 
+private:	// FSM에서 관리할 값들
+	CFSMComponent*		m_pFSM = nullptr;		// 염력, 저스트닷지 등 특수 상태
+	HRESULT				SetUp_FSM();
+
+	// 대기시간
+	_float	m_fHoldOnTime = 0.f;
+
+	// 일반 염력 사용
+	_float	m_fKineticCharge = 0.f;					// 염력 차지 시간, 기본적으로 1초
+
+	// 콤보 염력 사용
+	_float	m_fKineticCombo_Slash[4] = { 0.f, };	// 평타 타격 시 갱신
+	_float	m_fKineticCombo_Kinetic[4] = { 0.f, };	// 키네틱 타격 시 갱신
+	// 저스트닷지 사용
+
+
 private:
 	HRESULT SetUp_Components(void* pArg);
 	HRESULT SetUp_RigidBody();
@@ -189,6 +205,8 @@ private:
 	HRESULT SetUp_KineticComboStateMachine();
 	HRESULT SetUp_JustDodgeStateMachine();
 
+	HRESULT SetUp_Socket();
+
 	HRESULT SetUp_AttackDesc();
 
 	unordered_map<string, std::function<void()>>	m_mapCollisionEvent;
@@ -198,7 +216,7 @@ private:
 	CFSMComponent*		m_pKineticComboStateMachine = nullptr;
 	CFSMComponent*		m_pJustDodgeStateMachine = nullptr;
 
-	CBaseAnimInstance*	m_pASM = nullptr;
+	CBaseAnimInstance*	m_pASM = nullptr;		// 일반 상태
 
 	CRenderer*			m_pRenderer = nullptr;
 	CModel*				m_pModel = nullptr;
@@ -217,29 +235,13 @@ private:
 	list<CAnimation*>	m_TransNeutralSocket;
 
 private:	// 염력 소켓 애니메이션
-	list<CAnimation*>	m_Kinetic_RB_Start;
-	list<CAnimation*>	m_Kinetic_RB_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Charge;
 	list<CAnimation*>	m_Kinetic_RB_Cancel;
+	list<CAnimation*>	m_Kinetic_RB_Throw;
 
-	list<CAnimation*>	m_Kinetic_RB_Throw01_Start;
-	list<CAnimation*>	m_Kinetic_RB_Throw01_Loop;
-	list<CAnimation*>	m_Kinetic_RB_Throw01_Cancel;
-
-	list<CAnimation*>	m_Kinetic_RB_Throw02_Start;
-	list<CAnimation*>	m_Kinetic_RB_Throw02_Loop;
-	list<CAnimation*>	m_Kinetic_RB_Throw02_Cancel;
-
-	list<CAnimation*>	m_Kinetic_RB_Air_Start;
-	list<CAnimation*>	m_Kinetic_RB_Air_Loop;
+	list<CAnimation*>	m_Kinetic_RB_Air_Charge;
 	list<CAnimation*>	m_Kinetic_RB_Air_Cancel;
-
-	list<CAnimation*>	m_Kinetic_RB_Air_Throw01_Start;
-	list<CAnimation*>	m_Kinetic_RB_Air_Throw01_Loop;
-	list<CAnimation*>	m_Kinetic_RB_Air_Throw01_Cancel;
-
-	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Start;
-	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Loop;
-	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Cancel;
+	list<CAnimation*>	m_Kinetic_RB_Air_Throw;
 
 private:	// 키네틱 연계기 소켓 애니메이션
 	list<CAnimation*>	m_KineticCombo_Slash01;	// 키네틱 돌진베기
@@ -357,10 +359,6 @@ private:
 	_float  m_fBefCharge = 0.f;			// 실제 차지 전
 	_float	m_fCharge[3] = { 0.f, };	// 실제 차지
 
-	_float	m_fKineticCombo_Slash = 0.f;	// 평타 타격 시 갱신
-	_float	m_fKineticCombo_Kinetic = 0.f;	// 키네틱 타격 시 갱신
-	_float	m_fKineticCharge = 0.f;			// 염력 차지 시간, 기본적으로 1초
-
 	_bool	m_bKineticCombo = false;	// 현재 공격 진행중인지?
 	
 	_float	m_fJustDodgeAble = 0.f;
@@ -409,7 +407,7 @@ private:
 	_bool		m_bCollisionAble = false;
 	
 public:
-	void		Set_KineticCombo_Kinetic() { m_fKineticCombo_Kinetic = 10.f; }	// 키네틱 오브젝트에서 지정, 충돌 발생시 콤보 가능하도록 해준다.
+	void		Set_KineticCombo_Kinetic();// 키네틱 오브젝트에서 지정, 충돌 발생시 콤보 가능하도록 해준다.
 
 private:
 	void		Reset_Charge();

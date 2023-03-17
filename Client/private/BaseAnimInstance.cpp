@@ -2321,15 +2321,6 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
 		}
 
-		//if (m_bSeperateAnim)	// 분리 애니메이션이 돌아가면 하체는 업데이트하자
-		//{
-		//	m_bSeperateSwitch = true;
-		//}
-		//else
-		//{
-		//	m_bSeperateSwitch = false;
-		//}
-
 		if (m_bSeperateAnim)
 		{
 			m_pModel->SetBoneMask(EBoneMask::OFF_CHILD_EQ, "Spine1");
@@ -2664,11 +2655,11 @@ void CBaseAnimInstance::SpairAnimationChecker()
 	{
 		for (auto& iter : m_pASM_Base->Get_MapStates())
 		{
-			if (m_pASM_Base->GetCurState() == iter.second)
-			{
-				iter.second->m_bSpairClearFlag = true;	// 변경 요청
-				continue;
-			}
+			//if (m_pASM_Base->GetCurState() == iter.second)
+			//{
+			//	iter.second->m_bSpairClearFlag = true;	// 변경 요청
+			//	continue;
+			//}
 			
 			iter.second->m_SpairAnimation = nullptr;
 		}

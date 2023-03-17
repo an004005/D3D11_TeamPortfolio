@@ -33,12 +33,8 @@ struct ENGINE_DLL CAnimState : public CBase
 	CAnimation* m_Animation = nullptr;
 	CAnimation*	m_SpairAnimation = nullptr;					// 스테이트는 유지하되 애니메이션만 변경
 	std::function<void(void)> m_StartEvent = nullptr;		// 애니메이션이 시작될 때 발생하는 이벤트, 있으면 실행시키게 하자
-	std::function<_bool(void)> m_OptionalEvent = nullptr;	// 매개변수로 받은 프레임을 넘어갈 때 발생하는 이벤트, 있으면 실행시키게 하자
+	std::function<void(_double)> m_TickEvent = nullptr;
 	std::function<void(void)> m_FinishEvent = nullptr;		// 애니메이션이 종료될 때 발생하는 이벤트, 있으면 실행시키게 하자
-
-	_bool m_bOptionalEvent = true;
-	_bool m_bSpairClearFlag = false;						// 스페어 애니메이션 클리어 플래그
-	//이게 true이면 스페어 애니메이션이 끝날 경우 제거하고 기존 애니메이션으로 변경한 후 스페어를 제거한다.
 
 public:
 	CAnimState(const string& szStateName) :m_strName(szStateName) {};
@@ -72,7 +68,6 @@ public:
 	_bool  isLerping();
 
 	void	SetSpairAnim(const string& stateName, CAnimation* pSpairAnim);
-	void	ResetSpairAnim();
 
 public:
 	unordered_map<string, CAnimState*>&	Get_MapStates() { return m_mapStates; }
@@ -202,19 +197,19 @@ public:
 		return *this;
 	}
 
+	CASMBuilder& TickEvent(std::function<void(_double)> TickEvent)
+	{
+		Assert(m_pBuildAnimState != nullptr);
+		Assert(m_pBuildAnimState->m_StartEvent == nullptr);
+		m_pBuildAnimState->m_TickEvent = TickEvent;
+		return *this;
+	}
+
 	CASMBuilder& FinishEvent(std::function<void(void)> FinishEvent)
 	{
 		Assert(m_pBuildAnimState != nullptr);
 		Assert(m_pBuildAnimState->m_FinishEvent == nullptr);
 		m_pBuildAnimState->m_FinishEvent = FinishEvent;
-		return *this;
-	}
-
-	CASMBuilder& OptionalEvent(std::function<_bool(void)> OptionalEvent)
-	{
-		Assert(m_pBuildAnimState != nullptr);
-		Assert(m_pBuildAnimState->m_OptionalEvent == nullptr);
-		m_pBuildAnimState->m_OptionalEvent = OptionalEvent;
 		return *this;
 	}
 

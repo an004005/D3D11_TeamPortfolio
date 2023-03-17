@@ -196,6 +196,9 @@
     <Filter Include="01.Utility\03.Components\06.Model\Instancing">
       <UniqueIdentifier>{38dc0079-48ff-40b9-a5e2-f65a35d0c524}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\06.Model\CharacterStateMachine">
+      <UniqueIdentifier>{7491f482-c56a-4ac6-8911-f57ddc6dc776}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
