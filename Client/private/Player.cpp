@@ -30,7 +30,8 @@
 #include "CurveFloatMapImpl.h"
 #include "MonsterLockonUI.h"
 #include "MonsterHpUI.h"
-
+#include "NoticeNeonUI.h"
+#include "JsonLib.h"
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
 {
@@ -170,6 +171,7 @@ void CPlayer::Tick(_double TimeDelta)
 
 	KineticObject_OutLineCheck();
 	Update_TargetUI();
+	Update_NotiveNeon();
 
 	// 콤보 연계 시간
 	m_fKineticCombo_Slash -= TimeDelta;
@@ -447,6 +449,8 @@ void CPlayer::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
+	ImGui::DragInt("Hp", (_int*)(&m_PlayerStat.m_iHP));
+
 	ImGui::InputFloat("ThrowPower", &m_fThrowPower);
 	ImGui::InputFloat("ChargePower", &m_fChargePower);
 
@@ -646,10 +650,29 @@ void CPlayer::Initalize_Sas()
 void CPlayer::SasMgr()
 {
 	ESASType InputSas = ESASType::SAS_END;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_1))	InputSas = ESASType::SAS_TELEPORT;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_2))	InputSas = ESASType::SAS_PENETRATE;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_3))	InputSas = ESASType::SAS_HARDBODY;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_4))	InputSas = ESASType::SAS_FIRE;
+	if (CGameInstance::GetInstance()->KeyDown(DIK_1))
+	{
+		InputSas = ESASType::SAS_TELEPORT;
+		m_bSASSkillInput[0] = !m_bSASSkillInput[0];
+	}
+	if (CGameInstance::GetInstance()->KeyDown(DIK_2))
+	{
+		InputSas = ESASType::SAS_PENETRATE;
+		m_bSASSkillInput[1] = !m_bSASSkillInput[1];
+
+	}
+	if (CGameInstance::GetInstance()->KeyDown(DIK_3))
+	{
+		InputSas = ESASType::SAS_HARDBODY;
+		m_bSASSkillInput[2] = !m_bSASSkillInput[2];
+
+	}
+	if (CGameInstance::GetInstance()->KeyDown(DIK_4))
+	{
+		InputSas = ESASType::SAS_FIRE;
+		m_bSASSkillInput[3] = !m_bSASSkillInput[3];
+
+	}
 	if (CGameInstance::GetInstance()->KeyDown(DIK_5))	InputSas = ESASType::SAS_SUPERSPEED;
 	if (CGameInstance::GetInstance()->KeyDown(DIK_6))	InputSas = ESASType::SAS_COPY;
 	if (CGameInstance::GetInstance()->KeyDown(DIK_7))	InputSas = ESASType::SAS_INVISIBLE;
@@ -3193,6 +3216,39 @@ void CPlayer::SocketLocalMoveCheck()
 	}
 }
 
+void CPlayer::Update_NotiveNeon()
+{
+	// 체력이 10% 이하일때 생성
+	static _bool bCreate = false;
+	if (false == bCreate && 0.1f > _float(m_PlayerStat.m_iHP) / m_PlayerStat.m_iMaxHP)
+	{
+		bCreate = true;
+
+		Json json;
+		json["NoticeNeon"] = "NoticeNeon_HP";
+		m_pNeonUI = dynamic_cast<CNoticeNeonUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_NoticeNeonUI"), &json));
+	}
+	
+	// 삭제
+	if (nullptr != m_pNeonUI)
+	{
+		if (true == m_pNeonUI->doKill())
+		{
+			m_pNeonUI->SetDelete();
+		}
+	}
+
+	// 리셋
+	if (0.1f < _float(m_PlayerStat.m_iHP) / m_PlayerStat.m_iMaxHP)
+	{
+		if (nullptr != m_pNeonUI)
+		{
+			m_pNeonUI->SetDelete();
+		}
+			bCreate = false;
+	}
+}
+
 void CPlayer::Update_TargetUI()
 {
 	//타겟이 사라졌을때, 쓰레기값이 들어가있어서 한번 검사를 시켜줌
@@ -3236,6 +3292,7 @@ void CPlayer::Update_TargetUI()
 		m_pSettedTarget = m_pTargetedEnemy;
 	}
 
+	
 }
 
 void CPlayer::Create_TargetInfoBar()

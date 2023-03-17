@@ -207,9 +207,12 @@ private:
 	CModel*				m_pKineticAnimModel = nullptr;
 
 	//UI
+	class CNoticeNeonUI* m_pNeonUI = { nullptr };
 	class CMonsterLockonUI*	m_pUI_LockOn = nullptr;
 	CGameObject*		m_pSettedTarget = nullptr;
 //	CRigidBody*			m_pContectRigidBody = nullptr;
+
+	_bool	m_bSASSkillInput[4] = { false, false, false, false };
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -331,8 +334,6 @@ public:
 	_float	GetfYSpeed() { return m_fYSpeed; }
 
 private:
-	_bool	m_bSASSkillInput[4] = { false, false, false, false };
-
 	_bool	m_bHit = false;
 	_bool	m_bBreakFall = false;
 
@@ -447,6 +448,7 @@ private:
 	void		HitCheck();
 	void		SocketLocalMoveCheck();
 
+	void		Update_NotiveNeon();
 	void		Update_TargetUI();
 	void		Create_TargetInfoBar();
 private:

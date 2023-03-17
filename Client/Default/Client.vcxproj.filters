@@ -841,6 +841,9 @@
     <ClInclude Include="..\public\FLInvisible_AnimInstance.h">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\NoticeNeonUI.h">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1348,6 +1351,9 @@
     </ClCompile>
     <ClCompile Include="..\private\FLInvisible_AnimInstance.cpp">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NoticeNeonUI.cpp">
+      <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
