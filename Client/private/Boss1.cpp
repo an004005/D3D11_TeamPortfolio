@@ -64,7 +64,7 @@ HRESULT CBoss1::Initialize(void* pArg)
 	// ~0315 추가
 
 	m_fGravity = 25.f;
-	m_iMaxHP = 1000;
+	m_iMaxHP = 5000;
 	m_iHP = m_iMaxHP;
 	m_iPreHP = m_iHP;
 
@@ -382,10 +382,14 @@ void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 	// 2Phase
 	_int iCurrentHP = m_iPreHP - m_iHP;
-	if (iCurrentHP >= 4000)
+	if (iCurrentHP >= 2000 && !m_b2ndPhase)
+	{
+		m_pController->ClearCommands();
+		m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
 		m_b2ndPhase = true;
-	// SAS Type에 따른 DeBuff 처리
-	
+	}
+
+	// SAS Type에 따른 DeBuff 처리	
 	if (tDamageParams.eAttackSAS == ESASType::SAS_FIRE)
 		DeBuff_Fire();
 
