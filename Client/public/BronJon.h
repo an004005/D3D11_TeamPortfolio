@@ -37,6 +37,9 @@ public:
 	_matrix AttachCollider(CRigidBody* pRigidBody);
 
 	void	Atk_BiteSweep();
+
+	void	BiteToEffect(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
+
 	void	Atk_LaserSweep();
 
 //	virtual void SetActive() override;
@@ -45,10 +48,15 @@ public:
 
 	void CreateBiteEffect();
 
+	virtual void DeBuff_End() override;
+	virtual void DeBuff_Fire() override;
+	virtual void DeBuff_Oil() override;
+
 private:
 	class CBrJ_Controller*		m_pController = nullptr;
 	class CBrJ_AnimInstance*	m_pASM = nullptr;	
 
+	CRigidBody*					m_pBiteTrigger = nullptr;
 	CRigidBody*					m_pJawRBody = nullptr;		// Bite + Head HitBox
 	CRigidBody*					m_pLaserEffect = nullptr;	// Laser
 	CRigidBody*					m_pLeftArm = nullptr;
@@ -87,6 +95,8 @@ private:
 	CAnimation* m_pGetUp = nullptr;
 
 	CAnimation* m_pDeadAnim = nullptr;
+
+	vector<CMaterial*> m_BodyMtrls;
 	
 	// Attack
 	_bool m_bAtkBite = false;

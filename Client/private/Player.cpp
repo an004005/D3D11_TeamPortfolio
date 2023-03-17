@@ -424,23 +424,23 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 	{
 		m_fJustDodgeAble = 10.f;
 	}
-	//else
-	//{
-	//	m_bHit = true;
+	else
+	{
+		m_bHit = true;
 
-	//	m_DamageDesc.m_iDamage = tDamageParams.iDamage;
-	//	m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
-	//	m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat3(&tDamageParams.vHitFrom);
-	//	m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, XMLoadFloat3(&tDamageParams.vHitFrom));
+		m_DamageDesc.m_iDamage = tDamageParams.iDamage;
+		m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
+		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat3(&tDamageParams.vHitFrom);
+		m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, XMLoadFloat3(&tDamageParams.vHitFrom));
 
-	//	// 체력 깎이는 부분
-	//	m_PlayerStat.m_iHP -= tDamageParams.iDamage;
+		// 체력 깎이는 부분
+		m_PlayerStat.m_iHP -= tDamageParams.iDamage;
 
-	//	if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
-	//	{
-	//		m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
-	//	}
-	//}
+		if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
+		{
+			m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+		}
+	}
 }
 
 void CPlayer::Imgui_RenderProperty()
