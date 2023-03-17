@@ -81,7 +81,7 @@ HRESULT CWaterBall::Initialize(void * pArg)
 					dParams.eDeBuff = EDeBuffType::DEBUFF_OIL;
 					dParams.iDamage = 100;
 					dParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-//					dParams.pCauser = m_pCastOwner;
+//					dParams.pCauser = this;
 
 					_uint iColType = ECOLLIDER_TYPE_BIT::CTB_PLAYER | ECOLLIDER_TYPE_BIT::CTB_STATIC | ECOLLIDER_TYPE_BIT::CTB_PSYCHICK_OBJ;
 

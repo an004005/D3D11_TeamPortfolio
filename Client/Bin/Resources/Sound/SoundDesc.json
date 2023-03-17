@@ -325,7 +325,7 @@
             "SoundFiles" : ["Monsters/Monster_5/mon_5_step_1.wav", 
             "Monsters/Monster_5/mon_5_step_2.wav",
              "Monsters/Monster_5/mon_5_step_3.wav",
-              "Monsters/Monster_5/mon_5_step_4.wav",
+              "Monsters/Monster_5/mon_5_step_4.wav",                    
                "Monsters/Monster_5/mon_5_step_5.wav", 
                "Monsters/Monster_5/mon_5_step_6.wav",
                 "Monsters/Monster_5/mon_5_step_7.wav"],
@@ -492,6 +492,54 @@
             "Name" : "mon_1_walk",
             "SoundFiles" : ["Monsters/Monster_1/mon_1_walk_1.wav",
             "Monsters/Monster_1/mon_1_walk_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_4_attack_bite",
+            "SoundFiles" : ["Monsters/Monster_4/mon_4_attack_bite.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_4_attack_laser",
+            "SoundFiles" : ["Monsters/Monster_4/mon_4_attack_laser.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_4_groggy",
+            "SoundFiles" : ["Monsters/Monster_4/mon_4_groggy.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_4_impact_fly",
+            "SoundFiles" : ["Monsters/Monster_4/mon_4_impact_fly_1.wav",
+            "Monsters/Monster_4/mon_4_impact_fly_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },        
+        {
+            "Name" : "mon_4_move",
+            "SoundFiles" : ["Monsters/Monster_4/mon_4_move_1.wav",
+            "Monsters/Monster_4/mon_4_move_2.wav", 
+            "Monsters/Monster_4/mon_4_move_3.wav"],
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
