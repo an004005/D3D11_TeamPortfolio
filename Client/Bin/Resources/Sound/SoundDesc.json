@@ -11,6 +11,42 @@
             "MaxDistance" : 30.0
         },
         {
+            "Name" : "A Sedated Heart",
+            "SoundFiles" : ["SoundTrack/1-07 - A Sedated Heart.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.1,
+            "Loop" : true,
+            "MinDistance": 2.0,
+            "MaxDistance" : 30.0
+        },
+        {
+            "Name" : "Attention Please",
+            "SoundFiles" : ["SoundTrack/1-12 - Attention Please.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.1,
+            "Loop" : true,
+            "MinDistance": 2.0,
+            "MaxDistance" : 30.0
+        },
+        {
+            "Name" : "Abandoned Subway to Suoh Line 9",
+            "SoundFiles" : ["SoundTrack/1-33 - Abandoned Subway to Suoh Line 9 -the other-.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.1,
+            "Loop" : true,
+            "MinDistance": 2.0,
+            "MaxDistance" : 30.0
+        },
+        {
+            "Name" : "The OSF -Advance",
+            "SoundFiles" : ["SoundTrack/1-04 - The OSF -Advance!-.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.1,
+            "Loop" : true,
+            "MinDistance": 2.0,
+            "MaxDistance" : 30.0
+        },
+        {
             "Name" : "attack_nor_1",
             "SoundFiles" : ["Attack/Normal/attack_nor_1.wav"],
             "2DSound" : false,

@@ -76,6 +76,7 @@ void CSound::SetVolume(_float fVolume)
 	m_fVolume = fVolume;
 }
 
+
 _bool CSound::IsPlaying()
 {
 	return CSound_Manager::GetInstance()->IsPlaying(this);

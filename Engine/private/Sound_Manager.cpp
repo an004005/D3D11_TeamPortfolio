@@ -266,6 +266,19 @@ void CSound_Manager::Stop(CSound* pSound)
 	}
 }
 
+void CSound_Manager::SetVolume(CSound* pSound, _float fVolume)
+{
+	pSound->SetVolume(fVolume);
+
+	FMOD_CHANNEL* pChannel = FindChannel(pSound);
+	if (pChannel)
+	{
+		FMOD_Channel_SetPaused(pChannel, TRUE);
+		FMOD_Channel_SetVolume(pChannel, fVolume * m_fMasterVolume);
+		FMOD_Channel_SetPaused(pChannel, FALSE);
+	}
+}
+
 CSound* CSound_Manager::CloneSound(const string& soundName)
 {
 	auto itr = m_Sounds.find(soundName);

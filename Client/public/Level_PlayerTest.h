@@ -38,6 +38,9 @@ private:
 	CSoundStore m_BGM;
 	CDoOnce m_BGMOnce;
 
+	_bool m_bBossBGM = false;
+	_bool m_bMiddleBGM = false;
+	CDoOnce m_BGMChange;
 public:
 	static CLevel_PlayerTest* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
