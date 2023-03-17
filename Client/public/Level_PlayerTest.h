@@ -1,6 +1,8 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Level.h"
+#include "SoundStore.h"
+#include "HelperClasses.h"
 
 class CLevel_PlayerTest : public CLevel
 {
@@ -33,6 +35,8 @@ private:
 
 private:
 	//vector<pair<wstring, PROTOINFO>> m_pProtosTags;
+	CSoundStore m_BGM;
+	CDoOnce m_BGMOnce;
 
 public:
 	static CLevel_PlayerTest* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

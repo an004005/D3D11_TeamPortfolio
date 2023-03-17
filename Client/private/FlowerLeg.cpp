@@ -330,6 +330,34 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0200_424_AL_dead_down");
 	// ~소켓 애니메이션 추가
 
+	m_SoundStore.CloneSound("mon_5_fx_death");
+	m_SoundStore.CloneSound("mon_5_impact_voice");
+
+	m_SoundStore.CloneSound("mon_5_backdodge");
+	m_SoundStore.CloneSound("mon_5_sidedodge");
+	m_SoundStore.CloneSound("mon_5_bellattack_ready");
+	m_SoundStore.CloneSound("mon_5_bellattack");
+	m_SoundStore.CloneSound("mon_5_jumpattack_ready");
+	m_SoundStore.CloneSound("mon_5_jumpattack_jump");
+	m_SoundStore.CloneSound("mon_5_jumpattack_kick");
+	m_SoundStore.CloneSound("mon_5_sprayattack_ready");
+	m_SoundStore.CloneSound("mon_5_sprayattack");
+	m_SoundStore.CloneSound("mon_5_step");
+	m_SoundStore.CloneSound("mon_5_voice_laugh");
+
+	m_pModelCom->Add_EventCaller("mon_5_backdodge", [this] {m_SoundStore.PlaySound("mon_5_backdodge", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_sidedodge", [this] {m_SoundStore.PlaySound("mon_5_sidedodge", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_bellattack_ready", [this] {m_SoundStore.PlaySound("mon_5_bellattack_ready", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_bellattack", [this] {m_SoundStore.PlaySound("mon_5_bellattack", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_jumpattack_ready", [this] {m_SoundStore.PlaySound("mon_5_jumpattack_ready", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_jumpattack_jump", [this] {m_SoundStore.PlaySound("mon_5_jumpattack_jump", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_jumpattack_kick", [this] {m_SoundStore.PlaySound("mon_5_jumpattack_kick", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_sprayattack_ready", [this] {m_SoundStore.PlaySound("mon_5_sprayattack_ready", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_sprayattack", [this] {m_SoundStore.PlaySound("mon_5_sprayattack", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_step", [this] {m_SoundStore.PlaySound("mon_5_step", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_rush", [this] {m_SoundStore.PlaySound("mon_5_rush", m_pTransformCom); });
+
+
 	return S_OK;
 }
 
@@ -337,6 +365,7 @@ void CFlowerLeg::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket(("UsingControl"), { m_pModelCom->Find_Animation("AS_em0200_160_AL_threat") });
+	
 	m_iMaxHP = 1500;
 	m_iHP = 1500; // ★
 }
@@ -345,6 +374,8 @@ void CFlowerLeg::Tick(_double TimeDelta)
 {
 	/*if (!m_bActive)
 		return;*/
+	if (m_Laugh.IsNotDo())
+		m_SoundStore.PlaySound("mon_5_voice_laugh");
 
 	CMonster::Tick(TimeDelta);
 
@@ -622,7 +653,10 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_DeathTimeline.PlayFromStart();
 		m_pASM->InputAnimSocket("UsingControl", { m_pDeadAnim });
 		m_bDead = true;
+		m_SoundStore.PlaySound("mon_5_fx_death", m_pTransformCom);
 	}
+
+	m_SoundStore.PlaySound("mon_5_impact_voice", m_pTransformCom);
 
 	__super::TakeDamage(tDamageParams);
 }
