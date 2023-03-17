@@ -2598,11 +2598,11 @@
             {
                 "EventName": "SpinEff",
                 "EventTime": 73.0
-            },     
+            },
             {
                 "EventName": "SpinEff",
                 "EventTime": 120.0
-            },    
+            },
             {
                 "EventName": "AttackEnd",
                 "EventTime": 150.0
@@ -2634,11 +2634,27 @@
         "bLooping": true,
         "vecEvent": []
     },
+    "AS_em0400_105_AL_walk01": {
+        "Duration": 800.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "mon_1_walk",
+                "EventTime": 0.0
+            }
+        ]
+    },
     "AS_em0400_106_AL_walk02": {
         "Duration": 120.0,
         "TickPerSecond": 63.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_1_walk",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0400_107_AL_run01": {
         "Duration": 285.0,
@@ -2646,23 +2662,49 @@
         "bLooping": true,
         "vecEvent": []
     },
+    "AS_em0400_108_AL_run02": {
+        "Duration": 100.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "mon_1_run",
+                "EventTime": 0.0
+            }
+        ]
+    },
     "AS_em0400_135_AL_dodge_B": {
         "Duration": 180.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_1_sidestep_1_step",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0400_140_AL_dodge_L": {
         "Duration": 209.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_1_sidestep_1_step",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0400_145_AL_dodge_R": {
         "Duration": 209.0,
         "TickPerSecond": 55.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_1_backspin_step",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0400_160_AL_threat": {
         "Duration": 200.0,
@@ -2673,7 +2715,7 @@
     "AS_em0400_200_AL_atk_a1": {
         "Duration": 420.0,
         "TickPerSecond": 60.0,
-        "bLooping": false,
+        "bLooping": true,
         "vecEvent": [
             {
                 "EventName": "Swing_Start",
@@ -2690,6 +2732,29 @@
             {
                 "EventName": "SwingEff_End",
                 "EventTime": 190.0
+            },
+            {
+                "EventName": "mon_1_attack_voice",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "mon_1_attack_whoosh",
+                "EventTime": 163.0
+            }
+        ]
+    },
+    "AS_em0400_201_AL_atk_a2": {
+        "Duration": 300.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "mon_1_attack_voice",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "mon_1_attack_whoosh",
+                "EventTime": 180.0
             }
         ]
     },
@@ -2769,7 +2834,12 @@
         "Duration": 203.0,
         "TickPerSecond": 100.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_1_fx_death",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0400_427_AL_getup_01": {
         "Duration": 110.0,
@@ -2785,6 +2855,10 @@
             {
                 "EventName": "Upper",
                 "EventTime": 2.5
+            },
+            {
+                "EventName": "mon_1_voice_attack_ready",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2792,7 +2866,23 @@
         "Duration": 60.0,
         "TickPerSecond": 37.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_1_attack_voice",
+                "EventTime": 0.0
+            }
+        ]
+    },
+    "AS_em0400_442_AL_blow_start_B": {
+        "Duration": 130.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "mon_1_voice_attack_ready",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0400_455_AL_rise_start": {
         "Duration": 90.0,
@@ -2819,31 +2909,62 @@
         "Duration": 81.0,
         "TickPerSecond": 55.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_2_move",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0600_109_AL_walk_B": {
         "Duration": 42.0,
         "TickPerSecond": 55.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_2_move",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0600_112_AL_walk_L": {
         "Duration": 42.0,
         "TickPerSecond": 55.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_2_move",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0600_115_AL_walk_R": {
         "Duration": 42.0,
         "TickPerSecond": 55.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_2_move",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0600_160_AL_threat": {
         "Duration": 200.0,
         "TickPerSecond": 64.0,
         "bLooping": false,
         "vecEvent": []
+    },
+    "AS_em0600_202_AL_atk_a2_oilwalk_start": {
+        "Duration": 132.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "mon_2_attack_ready",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0600_204_AL_atk_a3_shot": {
         "Duration": 150.0,
@@ -2861,6 +2982,10 @@
             {
                 "EventName": "LastSpot",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "mon_2_attack_shoot",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2934,7 +3059,12 @@
         "Duration": 90.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_2_fx_death",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0600_427_AL_getup": {
         "Duration": 60.0,

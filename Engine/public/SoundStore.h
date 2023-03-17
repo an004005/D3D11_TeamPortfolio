@@ -18,6 +18,7 @@ public:
 	void Stop(const string& SoundName);
 	void StopAll();
 	void StopAllLoop();
+	void SetVolume(const string& SoundName, _float fVolume);
 
 	void PlaySound(const string& SoundName, CTransform* pTransform);
 	void Update_3DAttribute(const string& SoundName, CTransform* pTransform);
