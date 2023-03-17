@@ -64,6 +64,9 @@ public:
 private:
 	void Create_BossUI();
 
+	void SmokeEffectCreate();
+	void JitabataSmokeEffect();
+
 private:
 	class CBoss1_AnimationInstance* m_pASM = nullptr;
 	class CBoss1_AIController*		m_pController = nullptr;
@@ -86,6 +89,7 @@ private:
 	_bool m_bDown = false;
 	_bool m_bMiddleDown = false;
 
+	_bool m_bTest = false;
 
 	_bool m_bJumpAttack = false;
 	_float3 m_vOnJumpMoveVelocity;

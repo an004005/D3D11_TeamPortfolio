@@ -57,7 +57,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AnimModifier::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
-	CVFX_Manager::GetInstance()->Initialize(LEVEL_GAMEPLAY);
+	// CVFX_Manager::GetInstance()->Initialize(LEVEL_GAMEPLAY);
 
 	if (FAILED(Ready_Prototypes()))
 		return E_FAIL;
@@ -281,14 +281,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	// 	auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 	// }
 
+	{
+		PreviewData["Model"] = "MonsterBuddyLumi";
+		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
+		auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
+	}
 
 
 	// Model_Ch300_Portrail
 
-	auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
-	_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	pos.y += 1.f;
-	pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+	// auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
+	// _float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	// pos.y += 1.f;
+	// pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
 
 
 

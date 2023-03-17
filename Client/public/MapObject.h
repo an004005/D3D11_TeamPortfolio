@@ -27,7 +27,6 @@ public:
 	void Late_Tick(_double TimeDelta) override;
 	HRESULT Render() override;
 
-
 public:
 	virtual const wstring&	Get_ModelTag() { return m_strModelTag; }
 	MAPOBJ_TYPE				Get_MapObjType() { return m_eMapobjType;}

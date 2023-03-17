@@ -107,11 +107,16 @@ HRESULT CLevel_PlayerTest::Initialize()
 
 	Ready_Layer_SASPortrait();
 
+	m_BGM.CloneSound("Ambient_Bridge");
+
 	return S_OK;
 }
 
 void CLevel_PlayerTest::Tick(_double TimeDelta)
 {
+	if (m_BGMOnce.IsNotDo())
+		m_BGM.PlaySound("Ambient_Bridge");
+
 	CLevel::Tick(TimeDelta);
 }
 
@@ -320,6 +325,11 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Camera(const _tchar* pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/ShadowCam.json");
+
+	CGameInstance::GetInstance()->Add_Camera("ShadowCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic", &json);
+	CGameInstance::GetInstance()->SetShadowCam(CGameInstance::GetInstance()->FindCamera("ShadowCamera"));
 	//
 	// if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
 	// 	return E_FAIL;

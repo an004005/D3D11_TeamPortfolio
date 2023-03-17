@@ -108,6 +108,7 @@ public: /* For.Object_Manager */
 	void Imgui_ProtoViewer(const _tchar*& szSelectedProto);
 	void Imgui_ObjectViewer(_uint iLevel, CGameObject*& pSelectedObject);
 	void Imgui_LayerCombo(_uint iLevel, OUT const _tchar*& pLayerName);
+	_bool Check_ObjectAlive(CGameObject* pObject);
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, class CComponent* pPrototype);

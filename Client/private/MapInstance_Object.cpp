@@ -91,6 +91,12 @@ HRESULT CMapInstance_Object::Render()
 	return S_OK;
 }
 
+HRESULT CMapInstance_Object::Render_ShadowDepth()
+{
+	m_pModel_InstancingCom->Render_ShadowDepth(m_pTransformCom);
+	return S_OK;
+}
+
 void CMapInstance_Object::LoadFromJson(const Json & json)
 {
 	__super::LoadFromJson(json);

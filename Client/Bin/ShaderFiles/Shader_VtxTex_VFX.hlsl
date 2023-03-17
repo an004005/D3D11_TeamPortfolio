@@ -330,6 +330,24 @@ PS_OUT_Flag PS_DISTORTION(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_DISTORTION_DEFAULT(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float Mask = Out.vColor.r * g_float_0;
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
+
+	Out.vColor = 0;
+
+	if (g_float_0 <= 0.f)
+		discard;
+
+	return Out;
+}
+
 // g_tex_0 : Default White
 // g_vec4_0 : Origin Color
 
@@ -358,6 +376,59 @@ PS_OUT_Flag PS_DISTORTION_FLIPBOOK(PS_IN In)
 
 	return Out;
 }
+
+PS_OUT_Flag PS_KINETIC_DEAD_FLIPBOOK(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+
+	float4 Default_White = g_tex_0.Sample(LinearSampler, In.vTexUV); // Not Use Plz Fix
+																	 //////
+	float2 TexUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 4, 4);
+	float  Mask = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 4,4)).r;
+	/////
+	// float4 OriginColor = g_vec4_0;
+	// float4 BlendColor = Default_White * OriginColor * 2.0f;
+	// float4 FinalColor = saturate(BlendColor);
+	Out.vColor = Mask * g_vec4_0;
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	// Out.vColor.r = 1.f; 
+	Out.vColor.a = Mask * g_float_0;
+
+	// Out.vColor.a = 1 - Out.vColor.r;
+
+
+
+	return Out;
+}
+
+PS_OUT_Flag PS_FLOWLEG_FLIPBOOK(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+
+	float4 Default_White = g_tex_0.Sample(LinearSampler, In.vTexUV); // Not Use Plz Fix
+																	 //////
+	float2 TexUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 4, 4);
+	float  Mask = g_tex_1.Sample(LinearSampler, TexUV).r;
+	///
+	 float4 OriginColor = g_vec4_0;
+	 float4 BlendColor = Default_White * OriginColor * 2.0f;
+	 float4 FinalColor = saturate(BlendColor);
+	 Out.vColor.xyz = FinalColor.xyz;
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask * g_float_0);
+
+	// Out.vColor.r = 1.f; 
+	Out.vColor.a = Mask * g_float_0;
+
+	// Out.vColor.a = 1 - Out.vColor.r;
+
+
+
+	return Out;
+}
+
 
 // g_tex_0 : Default White
 // g_vec4_0 : OriginColor
@@ -397,6 +468,25 @@ PS_OUT_Flag PS_MASK_TEX_DISTORTION(PS_IN In)
 	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
 	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, BlendColor.a);
 
+	return Out;
+}
+
+PS_OUT_Flag PS_MASK_TEX_DISTORTION_SMOKE(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float Mask = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 4,4)).r;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	BlendColor.a = Mask * g_float_1;
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+
+	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
+	if (g_float_1 <= 0.f)
+		discard;
 	return Out;
 }
 
@@ -848,5 +938,61 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_BRON_WATER();
+	}
+
+	//21
+	pass FlowDistortionFlipBook
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_FLOWLEG_FLIPBOOK();
+	}
+
+	//22
+	pass MaskTexDistortion_NON_Z_WRITE
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MASK_TEX_DISTORTION_SMOKE();
+	}
+
+	//23
+	pass DefaultDistortion
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DISTORTION_DEFAULT();
+	}
+
+	//24
+	pass KineticDeadHlip
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_KINETIC_DEAD_FLIPBOOK();
 	}
 }

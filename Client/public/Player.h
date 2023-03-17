@@ -157,6 +157,7 @@ public:
 	virtual void Late_Tick(_double TimeDelta);
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render();
+	virtual HRESULT Render_ShadowDepth() override;
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams);
 
@@ -188,6 +189,7 @@ private:
 	HRESULT	SetUp_HitStateMachine();
 	HRESULT SetUp_KineticComboStateMachine();
 	HRESULT SetUp_JustDodgeStateMachine();
+	HRESULT SetUp_Sound();
 
 	HRESULT SetUp_AttackDesc();
 
@@ -392,6 +394,7 @@ public:	//EventCaller¿ë
 	void		Event_LookAtMove() { LookAtDir(m_vMoveDir); }
 
 	void		Event_Effect(string szEffectName, _float fSize = 1.f, string szBoneName = "Eff01");
+	void		Event_EffectSound(const string& strSoundName);
 
 	void		Event_CollisionStart();
 	void		Event_collisionEnd();

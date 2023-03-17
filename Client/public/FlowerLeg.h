@@ -64,7 +64,7 @@ private:
 	CParticleGroup*			m_pFallRoseParticle = nullptr;
 	CParticleGroup*			m_pShootFlwParticle = nullptr;
 
-
+	CDoOnce m_Laugh;
 	// Refine
 private:
 	CScarletCharacter* m_pTarget = nullptr;

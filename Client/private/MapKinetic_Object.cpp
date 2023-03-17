@@ -155,14 +155,25 @@ void CMapKinetic_Object::AfterPhysX()
 
 HRESULT CMapKinetic_Object::Render()
 {
-	if (m_bVisible == false) return S_OK;
-
 	FAILED_CHECK(__super::Render());
 
-	const _matrix WorldMatrix = m_LocalMatrix * m_pTransformCom->Get_WorldMatrix();
 
 	if(m_eCurModelTag != Tag_End)
+	{
+		const _matrix WorldMatrix = m_LocalMatrix * m_pTransformCom->Get_WorldMatrix();
 		FAILED_CHECK(m_pModelComs[m_eCurModelTag]->Render(WorldMatrix));
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapKinetic_Object::Render_ShadowDepth()
+{
+	if(m_eCurModelTag != Tag_End)
+	{
+		const _matrix WorldMatrix = m_LocalMatrix * m_pTransformCom->Get_WorldMatrix();
+		m_pModelComs[m_eCurModelTag]->Render_ShadowDepth(WorldMatrix);
+	}
 
 	return S_OK;
 }

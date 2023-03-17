@@ -142,6 +142,10 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 			m_iStaticLevelIndex, TEXT("Prototype_Component_Shader_VtxModel_Shadow"), 
 			CShader::Create(*ppDeviceOut, *ppContextOut, L"../Bin/ShaderFiles/Shader_VtxModel_Shadow.hlsl", VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements))))
 			return E_FAIL;
+		if (FAILED(m_pComponent_Manager->Add_Prototype(
+			m_iStaticLevelIndex, TEXT("Prototype_Component_Shader_VtxModelInstancing_Shadow"), 
+			CShader::Create(*ppDeviceOut, *ppContextOut, L"../Bin/ShaderFiles/Shader_VtxModel_Instancing_Shadow.hlsl", VTXMODEL_INSTANCE_DECLARATION::Elements, VTXMODEL_INSTANCE_DECLARATION::iNumElements))))
+			return E_FAIL;
 	}
 
 	// null animation 셋팅
@@ -530,6 +534,11 @@ void CGameInstance::Imgui_ProtoViewer(const _tchar*& szSelectedProto)
 void CGameInstance::Imgui_ObjectViewer(_uint iLevel, CGameObject*& pSelectedObject)
 {
 	m_pObject_Manager->Imgui_ObjectViewer(iLevel, pSelectedObject);
+}
+
+_bool CGameInstance::Check_ObjectAlive(CGameObject * pObject)
+{
+	return CObject_Manager::Check_ObjectAlive(pObject);
 }
 
 void CGameInstance::Imgui_LayerCombo(_uint iLevel, const _tchar*& pLayerName)

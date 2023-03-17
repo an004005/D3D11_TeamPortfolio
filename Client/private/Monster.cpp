@@ -65,6 +65,8 @@ HRESULT CMonster::Initialize(void* pArg)
 	m_UI_PivotMatrixes.fill(XMMatrixIdentity());
 	SetUp_UI();
 
+	m_SoundStore.CloneSound("fx_impact_flesh");
+
 	return S_OK;
 }
 
@@ -72,6 +74,12 @@ void CMonster::Tick(_double TimeDelta)
 {
 	CScarletCharacter::Tick(TimeDelta);
 	Update_DeadDissolve(TimeDelta);
+}
+
+void CMonster::Late_Tick(_double TimeDelta)
+{
+	CScarletCharacter::Late_Tick(TimeDelta);
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 }
 
 void CMonster::Imgui_RenderProperty()
@@ -186,6 +194,9 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 						_vector vHitPos = XMVectorSet(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
 						_vector vEffectDir = tDamageParams.vSlashVector;
 						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)->Start_AttachPosition(this, vHitPos, vEffectDir);
+
+						_float4 vPos = vHitPos;
+						m_SoundStore.PlaySound("fx_impact_flesh", &vPos);
 					}
 				}
 			}
@@ -196,8 +207,17 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 			_vector vHitPos = tDamageParams.vHitPosition;
 			_vector vEffectDir = tDamageParams.vSlashVector;
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)->Start_AttachPosition(this, vHitPos, vEffectDir);
+
+			_float4 vPos = vHitPos;
+			m_SoundStore.PlaySound("fx_impact_flesh", &vPos);
 		}
 	}
+}
+
+HRESULT CMonster::Render_ShadowDepth()
+{
+	m_pModelCom->Render_ShadowDepth(m_pTransformCom);
+	return S_OK;
 }
 
 _float4x4 CMonster::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
