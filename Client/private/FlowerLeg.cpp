@@ -14,6 +14,7 @@
 #include "Material.h"
 
 #include "MonsterHpUI.h"
+
 CFlowerLeg::CFlowerLeg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -206,9 +207,10 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		}		
 		m_bAtkSwitch = true;
 	});
-	m_pModelCom->Add_EventCaller("Spin_EffectEnd", [this]
+	m_pModelCom->Add_EventCaller("LightOn", [this]
 	{
-
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0200_Tail_Bell")
+			->Start_Attach(this, "Tail6", false);
 	});
 
 	m_pModelCom->Add_EventCaller("Spin_AtkEnd", [this] 
@@ -330,6 +332,35 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0200_424_AL_dead_down");
 	// ~소켓 애니메이션 추가
 
+	m_SoundStore.CloneSound("mon_5_fx_death");
+	m_SoundStore.CloneSound("mon_5_impact_voice");
+
+	m_SoundStore.CloneSound("mon_5_backdodge");
+	m_SoundStore.CloneSound("mon_5_sidedodge");
+	m_SoundStore.CloneSound("mon_5_bellattack_ready");
+	m_SoundStore.CloneSound("mon_5_bellattack");
+	m_SoundStore.CloneSound("mon_5_jumpattack_ready");
+	m_SoundStore.CloneSound("mon_5_jumpattack_jump");
+	m_SoundStore.CloneSound("mon_5_jumpattack_kick");
+	m_SoundStore.CloneSound("mon_5_sprayattack_ready");
+	m_SoundStore.CloneSound("mon_5_sprayattack");
+	m_SoundStore.CloneSound("mon_5_step");
+	m_SoundStore.CloneSound("mon_5_voice_laugh");
+	m_SoundStore.CloneSound("mon_5_rush");
+
+	m_pModelCom->Add_EventCaller("mon_5_backdodge", [this] {m_SoundStore.PlaySound("mon_5_backdodge", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_sidedodge", [this] {m_SoundStore.PlaySound("mon_5_sidedodge", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_bellattack_ready", [this] {m_SoundStore.PlaySound("mon_5_bellattack_ready", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_bellattack", [this] {m_SoundStore.PlaySound("mon_5_bellattack", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_jumpattack_ready", [this] {m_SoundStore.PlaySound("mon_5_jumpattack_ready", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_jumpattack_jump", [this] {m_SoundStore.PlaySound("mon_5_jumpattack_jump", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_jumpattack_kick", [this] {m_SoundStore.PlaySound("mon_5_jumpattack_kick", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_sprayattack_ready", [this] {m_SoundStore.PlaySound("mon_5_sprayattack_ready", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_sprayattack", [this] {m_SoundStore.PlaySound("mon_5_sprayattack", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_step", [this] {m_SoundStore.PlaySound("mon_5_step", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_rush", [this] {m_SoundStore.PlaySound("mon_5_rush", m_pTransformCom); });
+
+
 	return S_OK;
 }
 
@@ -337,14 +368,17 @@ void CFlowerLeg::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket(("UsingControl"), { m_pModelCom->Find_Animation("AS_em0200_160_AL_threat") });
-	m_iMaxHP = 1500;
-	m_iHP = 1500; // ★
+	
+	m_iMaxHP = 3000;
+	m_iHP = 3000; // ★
 }
 
 void CFlowerLeg::Tick(_double TimeDelta)
 {
 	/*if (!m_bActive)
 		return;*/
+	if (m_Laugh.IsNotDo())
+		m_SoundStore.PlaySound("mon_5_voice_laugh");
 
 	CMonster::Tick(TimeDelta);
 
@@ -622,7 +656,10 @@ void CFlowerLeg::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_DeathTimeline.PlayFromStart();
 		m_pASM->InputAnimSocket("UsingControl", { m_pDeadAnim });
 		m_bDead = true;
+		m_SoundStore.PlaySound("mon_5_fx_death", m_pTransformCom);
 	}
+
+	m_SoundStore.PlaySound("mon_5_impact_voice", m_pTransformCom);
 
 	__super::TakeDamage(tDamageParams);
 }
@@ -682,7 +719,7 @@ void CFlowerLeg::Strew_Overlap()
 	param.vPos = XMVectorSetW(fFinish, 1.f);
 	param.overlapOut = &overlapOut;
 
-	_float3 paramPos = param.vPos;
+//	_float3 paramPos = param.vPos;
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
@@ -696,7 +733,7 @@ void CFlowerLeg::Strew_Overlap()
 				tParam.iDamage = (rand() % 30) + 20; 
 				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				tParam.pCauser = this;
-				tParam.vHitPosition = paramPos;
+				tParam.vHitPosition = param.vPos;
 				tParam.eAttackType = EAttackType::ATK_LIGHT;
 				pTarget->TakeDamage(tParam);
 			}
@@ -753,8 +790,8 @@ void CFlowerLeg::Spin_SweepCapsule(_bool bCol)
 					DAMAGE_PARAM tParam;
 
 					tParam.pCauser = this;
-					tParam.vHitNormal = _float3(pHit.normal.x, pHit.normal.y, pHit.normal.z);
-					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
+					tParam.vHitNormal = _float4(pHit.normal.x, pHit.normal.y, pHit.normal.z, 0.f);
+					tParam.vHitPosition = _float4(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					tParam.iDamage = (rand() % 80) + 40;
 					tParam.eAttackType = EAttackType::ATK_MIDDLE;
@@ -785,7 +822,7 @@ void CFlowerLeg::Kick_SweepSphere()
 	Sparam.sweepOut = &sweepOut;
 	Sparam.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
-	_float3 paramPos = Sparam.vPos;
+//	_float3 paramPos = Sparam.vPos;
 	
 	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
 	{
@@ -800,7 +837,7 @@ void CFlowerLeg::Kick_SweepSphere()
 				param.eAttackType = EAttackType::ATK_HEAVY;
 				param.pCauser = this;
 				param.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-				param.vHitPosition = paramPos;
+				param.vHitPosition = Sparam.vPos;
 				
 				pTarget->TakeDamage(param);
 			}

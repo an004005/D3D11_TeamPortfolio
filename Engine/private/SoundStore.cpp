@@ -77,6 +77,14 @@ void CSoundStore::StopAllLoop()
 			CSound_Manager::GetInstance()->Stop(sound.second);
 }
 
+void CSoundStore::SetVolume(const string& SoundName, _float fVolume)
+{
+	auto itr = m_Sounds.find(SoundName);
+	Assert(itr != m_Sounds.end());
+
+	CSound_Manager::GetInstance()->SetVolume(itr->second, fVolume);
+}
+
 void CSoundStore::PlaySound(const string& SoundName, CTransform* pTransform)
 {
 	auto itr = m_Sounds.find(SoundName);

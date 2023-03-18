@@ -13,6 +13,7 @@ class CModel;
 class CRenderer;
 class CCamera;
 class CCurveFloatImpl;
+class CGameObject;
 END
 
 BEGIN(Client);
@@ -87,7 +88,7 @@ private:
 
 	typedef struct tagSasGage
 	{
-		_float Energy;		// 0~1	
+		_float Energy;
 		_float MaxEnergy;
 		_float MinEnergy;
 
@@ -377,6 +378,8 @@ private:
 
 	EMoveDir	m_eMoveDir = DIR_END;
 
+	_vector		m_vCamLook;
+
 public:	// ASM용, 상태마다 리모컨 값을 싹 다 지정하지 않으면 점프했는데 공중부양하고 그럼
 	CPlayer&	SetAbleState(REMOTE	tagRemote);
 
@@ -443,6 +446,10 @@ public:
 	void		SetGravity_Optional(_float fGravity) { m_fYSpeed = fGravity; }
 	void		SmoothTurn_Attack(_double TimeDelta);
 
+public:
+	void		Update_TargetUI();
+	void		Create_TargetInfoBar(CGameObject* pTarget);
+
 private:
 	void		BehaviorCheck(_double TimeDelta);
 	void		MoveStateCheck(_double TimeDelta);
@@ -450,8 +457,6 @@ private:
 	void		HitCheck();
 	void		SocketLocalMoveCheck();
 
-	void		Update_TargetUI();
-	void		Create_TargetInfoBar();
 private:
 	_float		m_fNetualTimer = 0.f;
 	void		NetualChecker(_double TimeDelta);
@@ -509,7 +514,6 @@ private:
 	void			Kinetic_ByTurn();
 	CGameObject*	m_pKineticObject = nullptr;
 	CGameObject*	m_pTargetedEnemy = nullptr;
-	_vector			m_vCamLook;
 
 private:
 	void			Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수

@@ -98,6 +98,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(18.f) });
 
+
 	//툴에서 쓸때 플레이어가 없을수있으니 체크
    CGameInstance* pGameInstance = CGameInstance::GetInstance();
    CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Player"));

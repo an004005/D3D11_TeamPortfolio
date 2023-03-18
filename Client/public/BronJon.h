@@ -65,6 +65,8 @@ private:
 
 	CEffectGroup*				m_pWaterPool = nullptr;
 
+	CDoOnce m_Laugh;
+
 private:
 	CScarletCharacter* m_pTarget = nullptr;
 

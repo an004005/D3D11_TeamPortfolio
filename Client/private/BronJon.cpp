@@ -90,6 +90,7 @@ HRESULT CBronJon::Initialize(void * pArg)
 	m_pModelCom->Add_EventCaller("Bite_Start", [this] 
 	{
 //		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Bite_OnHit")->Start_Attach(this, "Jaw", true);
+		m_SoundStore.PlaySound("mon_4_attack_bite", m_pTransformCom);
 		m_bAtkBite = true;
 	});
 	m_pModelCom->Add_EventCaller("Bite_End", [this] 
@@ -99,6 +100,7 @@ HRESULT CBronJon::Initialize(void * pArg)
 	});
 
 	m_pModelCom->Add_EventCaller("Laser_Create", [this] { m_bAtkLaser = true; });
+	m_pModelCom->Add_EventCaller("LaserSound_Start", [this] { m_SoundStore.PlaySound("mon_4_attack_laser", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("Laser_Finish", [this]
 	{
 		m_bAtkLaser = false;
@@ -158,6 +160,14 @@ HRESULT CBronJon::Initialize(void * pArg)
 
 	// ~소켓 애니메이션 추가
 
+	m_SoundStore.CloneSound("mon_4_attack_bite");
+	m_SoundStore.CloneSound("mon_4_attack_laser");
+	m_SoundStore.CloneSound("mon_4_groggy");
+	m_SoundStore.CloneSound("mon_4_impact_fly");
+	m_SoundStore.CloneSound("mon_4_move");
+
+	m_pModelCom->Add_EventCaller("mon_4_move", [this] {m_SoundStore.PlaySound("mon_4_move", m_pTransformCom); });
+
 	return S_OK;
 }
 
@@ -173,6 +183,10 @@ void CBronJon::Tick(_double TimeDelta)
 {
 	/*if (!m_bActive)
 		return;*/
+
+		/*if (m_Laugh.IsNotDo())
+			m_SoundStore.PlaySound("mon_4_move_1");*/
+
 	CMonster::Tick(TimeDelta);
 
 	auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
@@ -251,7 +265,7 @@ void CBronJon::Tick(_double TimeDelta)
 		m_iGroggy_Able += 1;
 		m_bDown = true;
 		m_pController->ClearCommands();
-
+		m_SoundStore.PlaySound("mon_4_groggy", m_pTransformCom);
 		m_pASM->AttachAnimSocket("BronJon", { m_pDownStart, m_pDownLoop, m_pDownLoop, m_pDownLoop, m_pGetUp });
 	}
 
@@ -361,6 +375,7 @@ void CBronJon::TakeDamage(DAMAGE_PARAM tDamageParams)
 		tDamageParams.pContactComponent == m_pRightArm)
 	{
 		m_iHP -= _int(tDamageParams.iDamage * 2);
+		m_SoundStore.PlaySound("mon_4_impact_fly", m_pTransformCom);
 	}
 	else
 	{

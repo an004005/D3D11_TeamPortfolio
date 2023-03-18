@@ -19,6 +19,7 @@
 
 #include "Canvas_Alarm.h"
 #include "Canvas_BossHp.h"
+#include "ControlledRigidBody.h"
 
 CBoss1::CBoss1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
@@ -64,7 +65,7 @@ HRESULT CBoss1::Initialize(void* pArg)
 	// ~0315 추가
 
 	m_fGravity = 25.f;
-	m_iMaxHP = 1000;
+	m_iMaxHP = 5000;
 	m_iHP = m_iMaxHP;
 	m_iPreHP = m_iHP;
 
@@ -152,8 +153,8 @@ HRESULT CBoss1::Initialize(void* pArg)
 
 	m_pModelCom->Add_EventCaller("LastSpot", [this] 
 	{ 
-		//_vector vTargetColPos = dynamic_cast<CScarletCharacter*>(m_pTarget)->GetColliderPosition();
-		m_LastSpotTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION); 
+		_vector vTargetColPos = dynamic_cast<CScarletCharacter*>(m_pTarget)->GetColliderPosition();
+		m_LastSpotTargetPos = vTargetColPos;//m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION); 
 	});
 	m_pModelCom->Add_EventCaller("WaterBall", [this] 
 	{ 
@@ -224,6 +225,7 @@ HRESULT CBoss1::Initialize(void* pArg)
 		
 	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0300_411_AL_WT_break");
 	
+	m_pCollider->SetMoveFilter(CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC);
 	return S_OK;
 }
 
@@ -382,10 +384,14 @@ void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 	// 2Phase
 	_int iCurrentHP = m_iPreHP - m_iHP;
-	if (iCurrentHP >= 4000)
+	if (iCurrentHP >= 2000 && !m_b2ndPhase)
+	{
+//		m_pController->ClearCommands();
+//		m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
 		m_b2ndPhase = true;
-	// SAS Type에 따른 DeBuff 처리
-	
+	}
+
+	// SAS Type에 따른 DeBuff 처리	
 	if (tDamageParams.eAttackSAS == ESASType::SAS_FIRE)
 		DeBuff_Fire();
 

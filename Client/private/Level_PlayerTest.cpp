@@ -49,6 +49,7 @@
 #include "FactoryMethod.h"
 #include "Imgui_EffectBrowser.h"
 #include "PostVFX_ColorGrading.h"
+#include "SkyBox.h"
 
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -78,40 +79,102 @@ HRESULT CLevel_PlayerTest::Initialize()
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
+	if (FAILED(Ready_Layer_Terrain(PLAYERTEST_LAYER_TERRAIN)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+	if (FAILED(Ready_Layer_Player(PLATERTEST_LAYER_PLAYER)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	if (FAILED(Ready_Layer_Camera(PLAYERTEST_LAYER_CAMERA)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Batch(TEXT("Layer_Batch"))))
+	if (FAILED(Ready_Layer_Batch(PLAYERTEST_LAYER_BATCH)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
+	if (FAILED(Ready_Layer_Map(PLAYERTEST_LAYER_MAP)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Kinetic(TEXT("Layer_Kinetic"))))
+	if (FAILED(Ready_Layer_Kinetic(PLAYERTEST_LAYER_KINETIC)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+	if (FAILED(Ready_Layer_Monster(PLAYERTEST_LAYER_MONSTER)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
+	if (FAILED(Ready_Effect(PLAYERTEST_LAYER_POSTVFX)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_UI(TEXT("Layer_FrontUI"))))
+	if (FAILED(Ready_Layer_UI(PLAYERTEST_LAYER_FRONTUI)))
 		return E_FAIL;
 
 	Ready_Layer_SASPortrait();
+
+	m_BGM.CloneSound("Ambient_Bridge");
+	m_BGM.CloneSound("A Sedated Heart");
+	m_BGM.CloneSound("Attention Please"); 
+	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
+	m_BGM.CloneSound("The OSF -Advance"); // 기본 bgm
 
 	return S_OK;
 }
 
 void CLevel_PlayerTest::Tick(_double TimeDelta)
 {
+	if (m_BGMOnce.IsNotDo())
+		m_BGM.PlaySound("The OSF -Advance");
+
+	if (m_bMiddleBGM == false)
+	{
+		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		{
+			for (auto pObj : pMonsterLayer->GetGameObjects())
+			{
+				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
+				{
+					m_BGM.StopAllLoop();
+					m_bMiddleBGM = true;
+					m_BGM.PlaySound("Abandoned Subway to Suoh Line 9");
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		{
+			for (auto pObj : pMonsterLayer->GetGameObjects())
+			{
+				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
+				{
+					break;
+				}
+			}
+			if (m_BGMChange.IsNotDo())
+			{
+				m_BGM.StopAllLoop();
+				m_BGM.PlaySound("A Sedated Heart");
+			}
+		}
+	}
+
+	if (m_bBossBGM == false)
+	{
+		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		{
+			for (auto pObj : pMonsterLayer->GetGameObjects())
+			{
+				if (auto pBoss = dynamic_cast<CBoss1*>(pObj))
+				{
+					m_BGM.StopAllLoop();
+					m_bBossBGM = true;
+					m_BGM.PlaySound("Attention Please");
+					break;
+				}
+			}
+		}
+	}
+
+
 	CLevel::Tick(TimeDelta);
 }
 
@@ -305,6 +368,8 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 		CTrigger::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
+
 	return S_OK;
 }
 
@@ -352,10 +417,14 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Player(const _tchar* pLayerTag)
 HRESULT CLevel_PlayerTest::Ready_Layer_Batch(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_ConstructionSite3F.json");
-
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));
+
+	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_Tutorial.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));
+
 	return S_OK;
 }
 
@@ -464,6 +533,8 @@ HRESULT CLevel_PlayerTest::Ready_Layer_UI(const _tchar* pLayerTag)
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Alarm", &json));
+
+
 
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
