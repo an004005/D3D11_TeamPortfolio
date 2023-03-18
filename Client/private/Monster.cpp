@@ -131,7 +131,7 @@ void CMonster::Imgui_RenderProperty()
 
 void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
-	if (tDamageParams.vHitPosition.Length() == 0.f)
+	if (tDamageParams.vHitPosition == _float4(0.f, 0.f, 0.f, 1.f))
 	{
 		wstring HitBloodName = L"";
 		wstring HitEffectName = L"";

@@ -84,7 +84,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
 
-	Out.RamainLifeRatio = (1.f - In.vControlData.x / In.vControlData.y);
+	Out.RamainLifeRatio = saturate(1.f - In.vControlData.x / In.vControlData.y);
 
 	if (Out.RamainLifeRatio >= 1.f)
 		Out.RamainLifeRatio = 1.f;
@@ -117,7 +117,7 @@ VS_OUT_NORM VS_MAIN_NORM(VS_IN In)
 
 	matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-	Out.RamainLifeRatio = (1.f - In.vControlData.x / In.vControlData.y);
+	Out.RamainLifeRatio = saturate(1.f - In.vControlData.x / In.vControlData.y);
 	Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), g_WorldMatrix));
 	Out.vProjPos = Out.vPosition;
 	Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));

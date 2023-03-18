@@ -21,6 +21,7 @@ class CBaseAnimInstance;
 class CController;
 class CEffectGroup;
 class CCamSpot;
+class CSAS_Portrait;
 
 typedef struct tagRemote
 {
@@ -182,6 +183,7 @@ private:
 	CModel*				m_pKineticAnimModel = nullptr;
 
 	//UI
+	class CNoticeNeonUI* m_pNeonUI = { nullptr };
 	class CMonsterLockonUI*	m_pUI_LockOn = nullptr;
 	CGameObject*		m_pSettedTarget = nullptr;
 //	CRigidBody*			m_pContectRigidBody = nullptr;
@@ -430,6 +432,9 @@ private:
 	void		SocketLocalMoveCheck();
 
 private:
+	void		Update_NotiveNeon();
+
+private:
 	_float		m_fNetualTimer = 0.f;
 	void		NetualChecker(_double TimeDelta);
 
@@ -531,6 +536,10 @@ private:
 
 	_float4x4 pivot1;
 	_float4x4 pivot2;
+
+private:
+	CSAS_Portrait* m_pSasPortrait = nullptr;
+
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

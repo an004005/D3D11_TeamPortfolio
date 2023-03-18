@@ -100,17 +100,17 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 
 	//툴에서 쓸때 플레이어가 없을수있으니 체크
-   //CGameInstance* pGameInstance = CGameInstance::GetInstance();
-   //CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Player"));
+   CGameInstance* pGameInstance = CGameInstance::GetInstance();
+   CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Player"));
 
-   //if (pLayer != nullptr)
-   //{
-	  // CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
-	  // pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
+   if (pLayer != nullptr)
+   {
+	   CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
+	   pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
 
-	  // assert(pGravikenisisMouse != nullptr);
-	  // pGravikenisisMouse->Set_Owner(this);
-   //}
+	   assert(pGravikenisisMouse != nullptr);
+	   pGravikenisisMouse->Set_Owner(this);
+   }
 
 	return S_OK;
 }
