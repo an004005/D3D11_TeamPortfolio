@@ -14,6 +14,7 @@
 #include "Material.h"
 
 #include "MonsterHpUI.h"
+
 CFlowerLeg::CFlowerLeg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
 {
@@ -206,9 +207,10 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		}		
 		m_bAtkSwitch = true;
 	});
-	m_pModelCom->Add_EventCaller("Spin_EffectEnd", [this]
+	m_pModelCom->Add_EventCaller("LightOn", [this]
 	{
-
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0200_Tail_Bell")
+			->Start_Attach(this, "Tail6", false);
 	});
 
 	m_pModelCom->Add_EventCaller("Spin_AtkEnd", [this] 
@@ -367,8 +369,8 @@ void CFlowerLeg::BeginTick()
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket(("UsingControl"), { m_pModelCom->Find_Animation("AS_em0200_160_AL_threat") });
 	
-	m_iMaxHP = 1500;
-	m_iHP = 1500; // ¡Ú
+	m_iMaxHP = 3000;
+	m_iHP = 3000; // ¡Ú
 }
 
 void CFlowerLeg::Tick(_double TimeDelta)

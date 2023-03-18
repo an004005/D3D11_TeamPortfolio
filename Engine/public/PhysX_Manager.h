@@ -71,7 +71,7 @@ private:
 
 	static array<array<ECOLLISION_TYPE, CT_END>, CT_END> s_CollisionTable;
 
-	_bool m_bRenderDebug = true;
+	_bool m_bRenderDebug = false;
 	_bool m_bShowTable = false;
 
 	physx::PxRigidStatic* groundPlane;
