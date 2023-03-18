@@ -300,13 +300,15 @@ _bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTri
 
 
 					// 플레이어일 경우 타격 이펙트 생성하도록
-
-
 					pTarget->TakeDamage(tParam);
 					pTarget->Set_CollisionDuplicate(true);
 
 					// 이미 충돌했던 대상을 리스트에 추가
 					m_DamagedObjectList.push_back(pTarget);
+
+					//플레이어가 공격했을때 몬스터에 target ui 생성
+					/*if (dynamic_cast<CPlayer*>(tParam.pCauser) != nullptr)
+						dynamic_cast<CPlayer*>(tParam.pCauser)->Create_TargetInfoBar(pTarget);*/
 				}
 			}
 		}
