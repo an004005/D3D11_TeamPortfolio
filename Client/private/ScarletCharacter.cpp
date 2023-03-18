@@ -196,8 +196,8 @@ void CScarletCharacter::Collision_Check_Capsule(CRigidBody * AttackTrigger, DAMA
 					// 내부에서 자체적으로 계산할 값
 					tParam.pCauser = this;
 					tParam.pContactComponent = CPhysXUtils::GetComponent(pHit.actor);
-					tParam.vHitNormal = _float3(pHit.normal.x, pHit.normal.y, pHit.normal.z);
-					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
+					tParam.vHitNormal = _float4(pHit.normal.x, pHit.normal.y, pHit.normal.z, 0.f);
+					tParam.vHitPosition = _float4(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				
 					pTarget->TakeDamage(tParam);
@@ -293,10 +293,10 @@ _bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTri
 					// 내부에서 자체적으로 계산할 값
 					tParam.pCauser = this;
 					tParam.pContactComponent = CPhysXUtils::GetComponent(pHit.actor);
-					tParam.vHitNormal = _float3(pHit.normal.x, pHit.normal.y, pHit.normal.z);
-					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
+					tParam.vHitNormal = _float4(pHit.normal.x, pHit.normal.y, pHit.normal.z, 0.f);
+					tParam.vHitPosition = _float4(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					tParam.vSlashVector = _float3(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z);
+					tParam.vSlashVector = _float4(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z, 0.f);
 
 
 					// 플레이어일 경우 타격 이펙트 생성하도록

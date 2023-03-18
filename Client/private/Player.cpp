@@ -31,6 +31,8 @@
 #include "MonsterLockonUI.h"
 #include "MonsterHpUI.h"
 
+#include "PlayerInfoManager.h"
+
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
 {
@@ -104,6 +106,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 		return E_FAIL;
 
 	if (FAILED(SetUp_Sound()))
+		return E_FAIL;
+
+	if (FAILED(CPlayerInfoManager::GetInstance()->Initialize()))
 		return E_FAIL;
 
 	//Load_DefaultEffects("../Bin/Resources/Curve/Default_Attack/");
@@ -442,8 +447,8 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 		m_DamageDesc.m_iDamage = tDamageParams.iDamage;
 		m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
-		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat3(&tDamageParams.vHitFrom);
-		m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, XMLoadFloat3(&tDamageParams.vHitFrom));
+		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
+		m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 
 		// 체력 깎이는 부분
 		m_PlayerStat.m_iHP -= tDamageParams.iDamage;
@@ -1027,7 +1032,6 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 		.AddState("KINETIC_RB_START")
 			.OnStart([&]() 
 			{ 
-				dynamic_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_IsTargeted();
 				Enemy_Targeting(true);
 				m_pASM->InputAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Start);
 			})
