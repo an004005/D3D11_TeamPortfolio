@@ -243,6 +243,7 @@
     <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\GravikenisisMouseUI.h" />
     <ClInclude Include="..\public\GravikenisisGUI.h" />
+    <ClInclude Include="..\public\MonsterEx.h" />
     <ClInclude Include="..\public\NextMapNameUI.h" />
     <ClInclude Include="..\public\NoticeNeonUI.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
@@ -412,6 +413,7 @@
     <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\GravikenisisMouseUI.cpp" />
     <ClCompile Include="..\private\GravikenisisGUI.cpp" />
+    <ClCompile Include="..\private\MonsterEx.cpp" />
     <ClCompile Include="..\private\NextMapNameUI.cpp" />
     <ClCompile Include="..\private\NoticeNeonUI.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />

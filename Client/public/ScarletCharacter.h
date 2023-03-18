@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "SoundStore.h"
 #include "HelperClasses.h"
+#include "VFX_Manager.h"
 
 BEGIN(Engine)
 class CControlledRigidBody;
