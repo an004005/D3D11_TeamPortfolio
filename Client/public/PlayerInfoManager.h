@@ -28,16 +28,18 @@ typedef struct tagSasGage
 
 typedef struct tagPlayerStatus
 {
-	_uint m_iHP = 100;
-	_uint m_iMaxHP = 100;
-	_uint m_iKineticEnergy = 100;
-	_uint m_iMaxKineticEnergy = 100;
-	_uint m_iKineticEnergyLevel = 0;   // 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
-	_uint m_iKineticEnergyType = 0;    // 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
+	_uint m_iHP;
+	_uint m_iMaxHP;
+	_uint m_iKineticEnergy;
+	_uint m_iMaxKineticEnergy;
+	_uint m_iKineticEnergyLevel;   // 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
+	_uint m_iKineticEnergyType;    // 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
 
 	array<SAS_GAGE, SAS_CNT> Sasese{};
 
 }	PLAYER_STAT;
+
+enum CHANGETYPE { CHANGE_INCREASE, CHANGE_DECREASE, CHANGE_END };
 
 class CPlayerInfoManager final : public CBase
 {
@@ -57,7 +59,16 @@ public:	// Get
 	CGameObject*	Get_TargetedMonster();
 
 public:	// Set
-	//void			Change_PlayerHP(_int)
+	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
+	void			Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP);
+
+	void			Set_PlayerKineticEnergy(_uint iEnergy) { m_tPlayerStat.m_iKineticEnergy = iEnergy; }
+	void			Change_PlayerKineticEnergy(CHANGETYPE eType, _uint ChangeEnergy);
+
+	void			Set_KineticEnergyLevel(_uint iType) { m_tPlayerStat.m_iKineticEnergyType = iType; }
+	void			Set_KineticEnetgyType(_uint iType) { m_tPlayerStat.m_iKineticEnergyLevel = iType; }
+
+	void			Set_SasType(ESASType eType);
 
 	HRESULT			Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
@@ -65,7 +76,7 @@ public:	// Set
 
 private:	// 스탯 정보 관련
 	PLAYER_STAT		m_tPlayerStat;
-	ESASType		m_ePlayerSasType;
+	list<ESASType>	m_PlayerSasTypeList;
 
 private:	// 상호작용 관련
 	CGameObject*	m_pKineticObject;

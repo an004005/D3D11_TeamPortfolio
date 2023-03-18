@@ -30,8 +30,6 @@ HRESULT CPlayerInfoManager::Initialize()
 
 #pragma region SAS정보 초기화
 
-	m_ePlayerSasType = ESASType::SAS_END;
-
 	m_tPlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].Energy = 60.f;
 	m_tPlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].MaxEnergy = 60.f;
 	m_tPlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].MinEnergy = 20.f;
@@ -137,6 +135,67 @@ CGameObject * CPlayerInfoManager::Get_TargetedMonster()
 	if (true == static_cast<CMonster*>(m_pTargetedMonster)->IsDead()) return nullptr;	// 죽은 상태이면
 
 	return m_pTargetedMonster;
+}
+
+void CPlayerInfoManager::Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP)
+{
+	if		(CHANGE_INCREASE == eType)		m_tPlayerStat.m_iHP += ChangeHP;
+	else if (CHANGE_DECREASE == eType)		m_tPlayerStat.m_iHP -= ChangeHP;
+
+	if (m_tPlayerStat.m_iHP > m_tPlayerStat.m_iMaxHP)	m_tPlayerStat.m_iHP = m_tPlayerStat.m_iMaxHP;
+	if (m_tPlayerStat.m_iHP < 0)						m_tPlayerStat.m_iHP = 0;
+}
+
+void CPlayerInfoManager::Change_PlayerKineticEnergy(CHANGETYPE eType, _uint ChangeEnergy)
+{
+	if		(CHANGE_INCREASE == eType)		m_tPlayerStat.m_iKineticEnergy += ChangeEnergy;
+	else if (CHANGE_DECREASE == eType)		m_tPlayerStat.m_iKineticEnergy -= ChangeEnergy;
+
+	if (m_tPlayerStat.m_iKineticEnergy > m_tPlayerStat.m_iMaxKineticEnergy)	m_tPlayerStat.m_iKineticEnergy = m_tPlayerStat.m_iMaxKineticEnergy;
+	if (m_tPlayerStat.m_iKineticEnergy < 0)									m_tPlayerStat.m_iKineticEnergy = 0;
+}
+
+void CPlayerInfoManager::Set_SasType(ESASType eType)
+{
+	// SAS 추가 -> 겹치는건 빼고, 넣을건 넣고, 총 3개까지
+	// SASList가 비어있으면 SAS_NOT으로 적용되게 하자
+
+	switch (eType)
+	{
+		case ESASType::SAS_FIRE:
+		{
+			break;
+		}
+		case ESASType::SAS_ELETRIC:
+		{
+			break;
+		}
+		case ESASType::SAS_HARDBODY:
+		{
+			break;
+		}
+		case ESASType::SAS_PENETRATE:
+		{
+			break;
+		}
+		case ESASType::SAS_SUPERSPEED:
+		{
+			break;
+		}
+		case ESASType::SAS_TELEPORT:
+		{
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
+
+	for (auto& SAS : m_PlayerSasTypeList)
+	{
+
+	}
 }
 
 HRESULT CPlayerInfoManager::Set_KineticObject(CGameObject * pKineticObject)

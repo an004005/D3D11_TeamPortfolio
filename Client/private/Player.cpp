@@ -920,7 +920,10 @@ HRESULT CPlayer::SetUp_EffectEvent()
 
 	m_pModel->Add_EventCaller("Trail_On", [&]() 
 	{ 
-		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(true); 
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(true);
+
+		_matrix matWeaponCollider = static_cast<CScarletWeapon*>(m_vecWeapon.front())->Get_WeaponCenterMatrix();
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, matWeaponCollider.r[3], matWeaponCollider.r[0], true);
 	});
 
 	m_pModel->Add_EventCaller("Trail_Off", [&]() 
@@ -1020,23 +1023,16 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			})
 			.Priority(0)
 
-			//.AddTransition("NO_USE_KINETIC to KINETIC_RB_AIR_START", "KINETIC_RB_AIR_START")
-			//.Predicator([&]()->_bool 
-			//{
-			//	return m_bKineticRB && m_bAir && (nullptr != m_pKineticObject && true == static_cast<CMapKinetic_Object*>(m_pKineticObject)->Usable()) && !m_bHit;
-			//})
-			//.Priority(0)
-
 #pragma region KineticRB
 
 		.AddState("KINETIC_RB_START")
 			.OnStart([&]() 
-			{ 
+			{
 				Enemy_Targeting(true);
 				m_pASM->InputAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Start);
 			})
-			.Tick([&](double fTimeDelta) 
-			{ 
+			.Tick([&](double fTimeDelta)
+			{
 				m_bKineticMove = true;
 			})
 			.AddTransition("KINETIC_RB_START to NO_USE_KINETIC", "NO_USE_KINETIC")
@@ -2826,8 +2822,6 @@ void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 			break;
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, EffectName)->Start_Attach(this, szBoneName);
 //		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"FlowerLeg_Fall_Rose")->Start_Attach(this, "Eff01",true);
-		// Effect = CJsonStorage::GetInstance()->FindOrLoadJson(m_mapDefaultEffect[szEffectName]);
-		// pEffect = static_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_PlayerEffect", L"ProtoVFX_EffectGroup", &Effect));
 		break;
 	case ESASType::SAS_FIRE:
 		if (szEffectName.find("Fire") == string::npos)	// Fire키워드 없으면 거름
@@ -2840,17 +2834,6 @@ void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 
 	if (pEffect == nullptr)
 		return;
-
-	//pEffect->SetPlay();
-	
-	// _matrix	SocketMatrix = m_pModel->GetPivotMatrix() * m_pModel->GetBoneMatrix(szBoneName) * m_pTransformCom->Get_WorldMatrix();
-	//
-	// SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]) * fSize;
-	// SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]) * fSize;
-	// SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]) * fSize;
-	//
-	// if (nullptr != pEffect)
-	// 	pEffect->Set_Transform(SocketMatrix);
 }
 
 void CPlayer::Event_EffectSound(const string& strSoundName)

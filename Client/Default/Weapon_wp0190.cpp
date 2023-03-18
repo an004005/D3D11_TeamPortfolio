@@ -75,11 +75,16 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 	
 	//m_pTrail->Tick(TimeDelta);
 
+	if (m_bTrailOn)
+	{
+
+	}
+
 	if (m_bBright)
 	{
 		switch (m_eSasType)
 		{
-		case ESASType::SAS_NOT:
+		case ESASType::SAS_END:
 			m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 1;
 			break;
 		case ESASType::SAS_FIRE:

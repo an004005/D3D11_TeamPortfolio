@@ -8,7 +8,7 @@
 #include "GameUtils.h"
 #include "Material.h"
 #include "MaterialPreview.h"
-
+#include "ScarletWeapon.h"
 
 CParticleGroup::CParticleGroup(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -200,6 +200,31 @@ void CParticleGroup::Start_AttachPosition(CGameObject* pOwner, _float4 vPosition
 		Set_Transform(SocketMatrix);
 	}
 
+	m_bGenerate = true;
+}
+
+void CParticleGroup::Start_AttachSword(CGameObject * pOwner)
+{
+	// 무기만 넣어라
+
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = false;
+
+	
+	_matrix WeaponMatrix = static_cast<CScarletWeapon*>(pOwner)->Get_WeaponCenterMatrix();
+
+	_matrix	SocketMatrix = {	XMVector3Normalize(WeaponMatrix.r[0]),
+								XMVector3Normalize(WeaponMatrix.r[1]),
+								XMVector3Normalize(WeaponMatrix.r[2]),
+								XMVector3Normalize(WeaponMatrix.r[3]) };
+
+	Set_Transform(SocketMatrix);
 	m_bGenerate = true;
 }
 
@@ -664,7 +689,7 @@ void CParticleGroup::VisibleUpdate()
 		{
 			iter.second.second->SetVisible(m_bVisible);
 
-			iter.second.second->GetTransform()->Set_WorldMatrix(m_pTransformCom->Get_WorldMatrix());
+			//iter.second.second->GetTransform()->Set_WorldMatrix(m_pTransformCom->Get_WorldMatrix());
 		}
 	}
 }
