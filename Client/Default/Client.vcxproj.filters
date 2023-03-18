@@ -1476,5 +1476,8 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing_Shadow.hlsl">
       <Filter>97.ShaderFiles\Shadow</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl">
+      <Filter>97.ShaderFiles\UI</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

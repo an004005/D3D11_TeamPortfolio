@@ -284,7 +284,7 @@ void CParticleSystem::LoadFromJson(const Json& json)
 
 void CParticleSystem::Imgui_RenderProperty()
 {
-	CGameObject::Imgui_RenderProperty();
+	__super::Imgui_RenderProperty();
 
 	ImGui::Separator();
 	CShader::Imgui_RenderShaderParams(m_tParam);
