@@ -219,8 +219,6 @@ void CParticleGroup::Tick(_double TimeDelta)
 
 	VisibleUpdate();
 
-	
-
 	if(m_bUpdate == true && m_pOwner->IsDeleted() == false)
 	{
 		if (m_BoneName != "")
@@ -379,7 +377,8 @@ void CParticleGroup::Imgui_RenderProperty()
 				ImGui::Begin(iter.first.c_str());
 
 				iter.second.second->Imgui_RenderProperty();
-				iter.second.second->GetShader()->Imgui_RenderProperty();
+				iter.second.second->Imgui_RenderComponentProperties();
+				
 				ImGui::End();
 				ImGui::EndTabBar();
 			}
@@ -664,7 +663,7 @@ void CParticleGroup::VisibleUpdate()
 		{
 			iter.second.second->SetVisible(m_bVisible);
 
-			iter.second.second->GetTransform()->Set_WorldMatrix(m_pTransformCom->Get_WorldMatrix());
+			// iter.second.second->GetTransform()->Set_WorldMatrix(m_pTransformCom->Get_WorldMatrix());
 		}
 	}
 }
