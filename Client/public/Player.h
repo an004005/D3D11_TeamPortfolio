@@ -484,8 +484,8 @@ private:
 	void			Spline_Kinetic(_double TimeDelta);
 	void			Kinetic_Test(_float fRatio);
 	void			Kinetic_ByTurn();
-	CGameObject*	m_pKineticObject = nullptr;
-	CGameObject*	m_pTargetedEnemy = nullptr;
+//	CGameObject*	m_pKineticObject = nullptr;
+//	CGameObject*	m_pTargetedEnemy = nullptr;
 
 private:
 	void			Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수

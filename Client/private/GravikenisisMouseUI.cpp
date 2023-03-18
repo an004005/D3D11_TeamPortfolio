@@ -86,7 +86,7 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	if (m_pKenisis == nullptr || m_pOwner == nullptr)
+	if (m_pKenisis == nullptr || CGameInstance::GetInstance()->Check_ObjectAlive(m_pOwner) == false)
 		return;
 	
 	// 나 염력 사용하라고 어필 하는 원
