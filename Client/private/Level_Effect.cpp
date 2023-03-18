@@ -57,8 +57,6 @@ HRESULT CLevel_Effect::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 
-	CVFX_Manager::GetInstance()->Initialize(LEVEL_EFFECT);
-
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 

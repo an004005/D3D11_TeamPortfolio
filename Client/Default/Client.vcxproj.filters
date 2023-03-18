@@ -850,6 +850,9 @@
     <ClInclude Include="..\public\NoticeNeonUI.h">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_BossHpMove.h">
+      <Filter>02.GameObjects\UI\Boss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1363,6 +1366,9 @@
     </ClCompile>
     <ClCompile Include="..\private\NoticeNeonUI.cpp">
       <Filter>02.GameObjects\UI\3DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_BossHpMove.cpp">
+      <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -63,6 +63,8 @@
 #include "Canvas_ItemMove.h"
 #include "Canvas_Tutorial.h"
 #include "Canvas_BossHp.h"
+#include "Canvas_BossHpMove.h"
+#include "Canvas_BossHpMove.h"
 #include "Canvas_Alarm.h"
 
 // Default
@@ -357,6 +359,10 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 		/* For.Prototype_GameObject_Canvas_BossHp*/
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_BossHp"),
 			CCanvas_BossHp::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_BossHpMove*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_BossHpMove"),
+			CCanvas_BossHpMove::Create(pDevice, pContext))))
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_Alarm*/

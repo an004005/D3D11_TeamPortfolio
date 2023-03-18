@@ -22,6 +22,9 @@ public:
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
 
+public:
+	void	Set_Render();
+
 private:
 	_float2 m_vFontPos = { 0.0f, 0.0f };
 

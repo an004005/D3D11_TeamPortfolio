@@ -30,6 +30,7 @@
 #include "Canvas_ItemMove.h"
 #include "Canvas_Tutorial.h"
 #include "Canvas_BossHp.h"
+#include "Canvas_BossHpMove.h"
 #include "Canvas_Alarm.h"
 
 // Default
@@ -102,10 +103,9 @@ HRESULT CLevel_UI::Initialize()
 	CGameInstance::GetInstance()->Clear_ImguiObjects();
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PropertyEditor::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
-	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
-	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
-	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
-	CVFX_Manager::GetInstance()->Initialize(LEVEL_UI);
+	//CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
+	//CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
+	//CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 
 
 	if (FAILED(Ready_Prototypes()))
@@ -120,14 +120,14 @@ HRESULT CLevel_UI::Initialize()
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
-		return E_FAIL;
+	//if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
+	//	return E_FAIL;
 
 	/*if (FAILED(Ready_Layer_Player(L"Layer_Player")))
 		return E_FAIL;*/
 
-	if (FAILED(Ready_Layer_Monster(L"Layer_Monster")))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Monster(L"Layer_Monster")))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -227,6 +227,10 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_Canvas_BossHp*/
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_BossHp"),
 			CCanvas_BossHp::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_BossHpMove*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_BossHpMove"),
+			CCanvas_BossHpMove::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_Alarm*/
@@ -416,9 +420,9 @@ HRESULT CLevel_UI::Ready_Prototypes()
 
 	}
 
-	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
-	FAILED_CHECK(CFactoryMethod::MakeUITestPrototypes(m_pDevice, m_pContext));
-	FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
+	//FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
+	//FAILED_CHECK(CFactoryMethod::MakeUITestPrototypes(m_pDevice, m_pContext));
+	//FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -508,11 +512,14 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Tutorial.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Tutorial", &json));
 
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_BossHp", &json));
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_BossHp", &json));
 
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Alarm", &json));
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_BossHpMove", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Alarm", &json));
 	
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{

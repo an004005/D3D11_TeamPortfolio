@@ -5,6 +5,7 @@
 #include "UI_Manager.h"
 #include "MathUtils.h"
 
+#include "Canvas_SASInfoLeft.h"
 #include "SASInfoLeftHpUI.h"
 #include "SASInfoLeftHpBackUI.h"
 #include "SASInfoLeftHpBothEndsUI.h"
@@ -77,6 +78,14 @@ void CCanvas_SASInfoLeftMove::SaveToJson(Json& json)
 void CCanvas_SASInfoLeftMove::LoadFromJson(const Json & json)
 {
 	CCanvas::LoadFromJson(json);
+}
+
+void CCanvas_SASInfoLeftMove::Set_SASLeftHp(const _float & fHp, const _float & fMaxHp)
+{
+	m_fHp = fHp / fMaxHp;
+	m_vSASLeftHp = { fHp ,fMaxHp };
+
+	dynamic_cast<CCanvas_SASInfoLeft*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_SASInfoLeft"))->Set_Render();
 }
 
 void CCanvas_SASInfoLeftMove::ChildHp_Tick()
