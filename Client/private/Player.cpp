@@ -3306,40 +3306,43 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(m_pTargetedEnemy);
+			m_pUI_LockOn->Set_UIPivotMatrix(dynamic_cast<CMonster*>(m_pTargetedEnemy)->Get_UIPivotMatrix(FINDEYES));
 		}
-
 
 		//info bar 설정
 		if (m_pTargetedEnemy != nullptr)
-			Create_TargetInfoBar();
+			Create_TargetInfoBar(m_pTargetedEnemy);
 	
 		m_pSettedTarget = m_pTargetedEnemy;
 	}
 
 }
 
-void CPlayer::Create_TargetInfoBar()
+void CPlayer::Create_TargetInfoBar(CGameObject* pTarget)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
+	CMonster* pMonster = dynamic_cast<CMonster*>(pTarget);
+	if (pMonster == nullptr) return;
+	
 	//몬스터 info바가 없으면 생성
-	if (dynamic_cast<CMonster*>(m_pTargetedEnemy)->GetHasName() == true)
+	if (pMonster->GetHasName() == true)
 		return;
 
 	CMonsterHpUI* pUI_HP = nullptr;
 	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
 
 	assert(pUI_HP != nullptr);
-	pUI_HP->Set_Owner(m_pTargetedEnemy);
+	pUI_HP->Set_Owner(pTarget);
 
-	_float4x4 PivotMatrix = dynamic_cast<CMonster*>(m_pTargetedEnemy)->Get_UIPivotMatrix(INFOBAR);
+	_float4x4 PivotMatrix = pMonster->Get_UIPivotMatrix(INFOBAR);
 	pUI_HP->SetPivotMatrix(PivotMatrix);
 
-	_int iLevel = dynamic_cast<CMonster*>(m_pTargetedEnemy)->Get_MonsterLevel();
-	_int iName = dynamic_cast<CMonster*>(m_pTargetedEnemy)->Get_MonsterName();
+	_int iLevel = pMonster->Get_MonsterLevel();
+	_int iName = pMonster->Get_MonsterName();
 	pUI_HP->Set_MonsterInfo(iLevel, iName);
 
-	dynamic_cast<CMonster*>(m_pTargetedEnemy)->Set_HasName();
+	pMonster->Set_HasName();
 }
 
 void CPlayer::NetualChecker(_double TimeDelta)

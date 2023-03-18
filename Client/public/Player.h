@@ -13,6 +13,7 @@ class CModel;
 class CRenderer;
 class CCamera;
 class CCurveFloatImpl;
+class CGameObject;
 END
 
 BEGIN(Client);
@@ -443,6 +444,10 @@ public:
 	void		SetGravity_Optional(_float fGravity) { m_fYSpeed = fGravity; }
 	void		SmoothTurn_Attack(_double TimeDelta);
 
+public:
+	void		Update_TargetUI();
+	void		Create_TargetInfoBar(CGameObject* pTarget);
+
 private:
 	void		BehaviorCheck(_double TimeDelta);
 	void		MoveStateCheck(_double TimeDelta);
@@ -450,8 +455,6 @@ private:
 	void		HitCheck();
 	void		SocketLocalMoveCheck();
 
-	void		Update_TargetUI();
-	void		Create_TargetInfoBar();
 private:
 	_float		m_fNetualTimer = 0.f;
 	void		NetualChecker(_double TimeDelta);
