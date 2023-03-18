@@ -176,6 +176,7 @@ private:
 	DAMAGE_DESC		m_DamageDesc;
 	DAMAGE_PARAM	m_AttackDesc;
 	ESASType		m_PlayerSasType;
+	class CSAS_Portrait* m_pSasPortrait = nullptr;
 
 private:
 	_bool			m_bAttackEnable = false;
@@ -408,6 +409,7 @@ public:	//EventCaller용
 	void		Event_Trail(_bool bTrail);
 	void		Event_Dust();
 	void		Event_KineticCircleEffect();
+	void		Event_Eff03_Particle();
 
 private:
 	_bool		m_bCollisionAble = false;
@@ -545,8 +547,20 @@ private:	// 플레이어 림라이트, 외곽선 관련
 	void	End_RimLight();
 
 private:
-	_float	m_fThrowPower = 100000.f;
-	_float	m_fChargePower = 3000.f;
+	_float	m_fThrowPower = 200000.f;
+	_float	m_fChargePower = 6000.f;
+
+	_float	m_fRotX = 0.f;
+	_float  m_fRotY = 0.f;
+	_float	m_fRotZ = 0.f;
+	_float	m_fTransX = 0.f;
+	_float	m_fTransY = 0.f;
+	_float	m_fTransZ = 0.f;
+
+	_float4x4 pivot1;
+	_float4x4 pivot2;
+
+	_double m_KineticRecovery = 0.f;
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
