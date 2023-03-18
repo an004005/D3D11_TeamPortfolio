@@ -203,28 +203,19 @@ void CParticleGroup::Start_AttachPosition(CGameObject* pOwner, _float4 vPosition
 	m_bGenerate = true;
 }
 
-void CParticleGroup::Start_AttachSword(CGameObject * pOwner)
+void CParticleGroup::Start_AttachSword(CGameObject* pWeapon, _bool trueisUpdate)
 {
 	// 무기만 넣어라
 
-	if (pOwner == nullptr)
+	if (pWeapon == nullptr)
 	{
 		SetDelete();
 		return;
 	}
 
-	m_pOwner = pOwner;
-	m_bUpdate = false;
+	m_pAttachWeapon = pWeapon;
+	m_bUpdate = trueisUpdate;
 
-	
-	_matrix WeaponMatrix = static_cast<CScarletWeapon*>(pOwner)->Get_WeaponCenterMatrix();
-
-	_matrix	SocketMatrix = {	XMVector3Normalize(WeaponMatrix.r[0]),
-								XMVector3Normalize(WeaponMatrix.r[1]),
-								XMVector3Normalize(WeaponMatrix.r[2]),
-								XMVector3Normalize(WeaponMatrix.r[3]) };
-
-	Set_Transform(SocketMatrix);
 	m_bGenerate = true;
 }
 
@@ -244,7 +235,9 @@ void CParticleGroup::Tick(_double TimeDelta)
 
 	VisibleUpdate();
 
-	if(m_bUpdate == true && m_pOwner->IsDeleted() == false)
+
+
+	if(m_bUpdate == true && (nullptr != m_pOwner) && m_pOwner->IsDeleted() == false && (nullptr == m_pAttachWeapon))
 	{
 		if (m_BoneName != "")
 		{
@@ -263,6 +256,17 @@ void CParticleGroup::Tick(_double TimeDelta)
 
 				Set_Transform(SocketMatrix);
 			}
+		}
+		else if (nullptr != m_pAttachWeapon)
+		{
+			_matrix WeaponMatrix = static_cast<CScarletWeapon*>(m_pAttachWeapon)->Get_WeaponCenterMatrix();
+
+			_matrix	SocketMatrix = { XMVector3Normalize(WeaponMatrix.r[0]),
+				XMVector3Normalize(WeaponMatrix.r[1]),
+				XMVector3Normalize(WeaponMatrix.r[2]),
+				WeaponMatrix.r[3] };
+
+			Set_Transform(SocketMatrix);
 		}
 		else
 		{

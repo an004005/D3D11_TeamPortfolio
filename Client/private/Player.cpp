@@ -922,8 +922,10 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	{ 
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(true);
 
-		_matrix matWeaponCollider = static_cast<CScarletWeapon*>(m_vecWeapon.front())->Get_WeaponCenterMatrix();
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, matWeaponCollider.r[3], matWeaponCollider.r[0], true);
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
+
+		/*_matrix matWeaponCollider = static_cast<CScarletWeapon*>(m_vecWeapon.front())->Get_WeaponCenterMatrix();
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, matWeaponCollider.r[3], matWeaponCollider.r[0], true);*/
 	});
 
 	m_pModel->Add_EventCaller("Trail_Off", [&]() 
