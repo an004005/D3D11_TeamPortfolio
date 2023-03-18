@@ -111,19 +111,6 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(CPlayerInfoManager::GetInstance()->Initialize()))
 		return E_FAIL;
 
-	//Load_DefaultEffects("../Bin/Resources/Curve/Default_Attack/");
-	//Load_DefaultEffects("../Bin/Resources/Curve/Fire_Attack/");
-
-	Load_Effect("../Bin/Resources/Curve/Default_Attack/");
-	Load_Effect("../Bin/Resources/Curve/Fire_Attack/");
-
-	ZeroMemory(&m_PlayerStat, sizeof(PLAYER_STAT));
-	m_PlayerStat.m_iHP = 1000;
-	m_PlayerStat.m_iMaxHP = 1000;
-	m_PlayerStat.m_iKineticEnergy = 100;
-	m_PlayerStat.m_iMaxKineticEnergy = 100;
-	m_PlayerStat.m_iKineticEnergyLevel = 0;
-	m_PlayerStat.m_iKineticEnergyType = 2;
 	ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
@@ -134,19 +121,6 @@ HRESULT CPlayer::Initialize(void * pArg)
 	Safe_AddRef(m_pPlayerCam);
 
 	m_pModel->FindMaterial(L"MI_ch0100_HOOD_0")->SetActive(false);
-
-	Initalize_Sas();
-
-	//CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-	//Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
-	//m_pEffect = pGameInstance->Clone_GameObject_Get(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);
-	
-		/*Json ScifiEffect = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_DefaultAttack_1.json");
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoVFX_EffectSystem", &ScifiEffect);*/
-	
-	//m_pPlayerCam = dynamic_cast<CCamera*>(m_pGameInstance->Clone_GameObject_Get(L"Layer_Camera", TEXT("Prototype_GameObject_Camera_Player")));
-	//Assert(m_pPlayerCam != nullptr);
-	//Safe_AddRef(m_pPlayerCam);
 
 	return S_OK;
 }
@@ -175,6 +149,8 @@ void CPlayer::BeginTick()
 void CPlayer::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+	CPlayerInfoManager::GetInstance()->Tick(TimeDelta);
 
 	KineticObject_OutLineCheck();
 	Update_TargetUI();
@@ -451,7 +427,7 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 
 		// 체력 깎이는 부분
-		m_PlayerStat.m_iHP -= tDamageParams.iDamage;
+		CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
 
 		if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
 		{
@@ -468,7 +444,7 @@ void CPlayer::Imgui_RenderProperty()
 	ImGui::InputFloat("ChargePower", &m_fChargePower);
 
 	// HP Bar Check	
-	ImGui::Text("HP : %d", m_PlayerStat.m_iHP);
+	ImGui::Text("HP : %d", CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP);
 
 	m_pKineticStataMachine->Imgui_RenderProperty();
 
@@ -593,73 +569,6 @@ void CPlayer::CamBoneTest()
 	}
 }
 
-void CPlayer::Initalize_Sas()
-{
-	m_PlayerSasType = ESASType::SAS_END;
-
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].Energy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].MaxEnergy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].MinEnergy = 20.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].RecoveryRate = 1.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].UseRate = 1.f;
-
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_PENETRATE)].MaxEnergy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_PENETRATE)].MinEnergy = 20.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_PENETRATE)].bUsable = true;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_PENETRATE)].Energy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_PENETRATE)].RecoveryRate = 1.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_PENETRATE)].UseRate = 1.f;
-
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_COPY)].MaxEnergy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_COPY)].MinEnergy = 20.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_COPY)].bUsable = true;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_COPY)].Energy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_COPY)].RecoveryRate = 1.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_COPY)].UseRate = 1.f;
-
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_ELETRIC)].MaxEnergy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_ELETRIC)].MinEnergy = 20.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_ELETRIC)].bUsable = true;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_ELETRIC)].Energy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_ELETRIC)].RecoveryRate = 1.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_ELETRIC)].UseRate = 1.f;
-
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_GRAVIKENISIS)].MaxEnergy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_GRAVIKENISIS)].MinEnergy = 20.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_GRAVIKENISIS)].bUsable = true;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_GRAVIKENISIS)].Energy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_GRAVIKENISIS)].RecoveryRate = 1.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_GRAVIKENISIS)].UseRate = 1.f;
-
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_HARDBODY)].MaxEnergy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_HARDBODY)].MinEnergy = 20.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_HARDBODY)].bUsable = true;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_HARDBODY)].Energy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_HARDBODY)].RecoveryRate = 1.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_HARDBODY)].UseRate = 1.f;
-
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_INVISIBLE)].MaxEnergy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_INVISIBLE)].MinEnergy = 20.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_INVISIBLE)].bUsable = true;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_INVISIBLE)].Energy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_INVISIBLE)].RecoveryRate = 1.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_INVISIBLE)].UseRate = 1.f;
-
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_SUPERSPEED)].MaxEnergy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_SUPERSPEED)].MinEnergy = 20.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_SUPERSPEED)].bUsable = true;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_SUPERSPEED)].Energy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_SUPERSPEED)].RecoveryRate = 1.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_SUPERSPEED)].UseRate = 1.f;
-
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_TELEPORT)].MaxEnergy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_TELEPORT)].MinEnergy = 20.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_TELEPORT)].bUsable = true;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_TELEPORT)].Energy = 60.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_TELEPORT)].RecoveryRate = 1.f;
-	m_PlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_TELEPORT)].UseRate = 1.f;
-}
-
 void CPlayer::SasMgr()
 {
 	ESASType InputSas = ESASType::SAS_END;
@@ -674,7 +583,40 @@ void CPlayer::SasMgr()
 
 	if (InputSas != ESASType::SAS_END)
 	{
-		if (!m_PlayerStat.Sasese[static_cast<_uint>(InputSas)].bUsable)
+		// 해당 SAS를 사용중인지 아닌지 판단
+		_bool bSasIsUsing = false;
+		for (auto& SAS : CPlayerInfoManager::GetInstance()->Get_PlayerSasList())
+		{
+			if (InputSas == SAS) { bSasIsUsing = true; break; }
+		}
+
+		// 입력받은 SAS가 최소 사용 요건에 만족하지 못하며 사용중이 아닐 경우 사용 불가능 메시지 발생
+		if (false == CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[static_cast<_uint>(InputSas)].bUsable &&
+			false == bSasIsUsing)
+		{
+			IM_LOG("Sas_Unusable");
+		}
+		else
+		{
+			// 입력받은 SAS가 사용 중일 경우
+			if (bSasIsUsing)
+			{
+				CPlayerInfoManager::GetInstance()->Finish_SasType(InputSas);
+			}
+			else // 사용중이지 않을 경우
+			{
+				m_pASM->SetCurState("IDLE");
+				SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
+				list<CAnimation*> SasDamage;
+				SasDamage.push_back(m_pModel->Find_Animation("AS_ch0100_410_AL_damage_sas"));
+				m_pASM->InputAnimSocket("Common_AnimSocket", SasDamage);
+
+				CPlayerInfoManager::GetInstance()->Set_SasType(InputSas);
+			}
+		}
+
+		/*if (!m_PlayerStat.Sasese[static_cast<_uint>(InputSas)].bUsable)
 		{
 			IM_LOG("Sas_Unusable");
 		}
@@ -701,38 +643,38 @@ void CPlayer::SasMgr()
 					m_PlayerStat.Sasese[static_cast<_uint>(InputSas)].bUsable = false;
 				}
 			}
-		}
+		}*/
 	}
 
-	for (_uint i = 0; i < SAS_CNT; ++i)
-	{
-		if (i == static_cast<_uint>(m_PlayerSasType))
-		{
-			// 현재 사용중인 SAS
+	//for (_uint i = 0; i < SAS_CNT; ++i)
+	//{
+	//	if (i == static_cast<_uint>(m_PlayerSasType))
+	//	{
+	//		// 현재 사용중인 SAS
 
-			m_PlayerStat.Sasese[i].Energy -= (g_fTimeDelta * m_PlayerStat.Sasese[i].UseRate);
+	//		m_PlayerStat.Sasese[i].Energy -= (g_fTimeDelta * m_PlayerStat.Sasese[i].UseRate);
 
-			if (0.f >= m_PlayerStat.Sasese[i].Energy)
-			{
-				m_PlayerSasType = ESASType::SAS_END;
-				m_PlayerStat.Sasese[i].bUsable = false;
-			}
-		}
-		else
-		{
-			m_PlayerStat.Sasese[i].Energy += (g_fTimeDelta * m_PlayerStat.Sasese[i].RecoveryRate);
+	//		if (0.f >= m_PlayerStat.Sasese[i].Energy)
+	//		{
+	//			m_PlayerSasType = ESASType::SAS_END;
+	//			m_PlayerStat.Sasese[i].bUsable = false;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		m_PlayerStat.Sasese[i].Energy += (g_fTimeDelta * m_PlayerStat.Sasese[i].RecoveryRate);
 
-			if (m_PlayerStat.Sasese[i].MaxEnergy <= m_PlayerStat.Sasese[i].Energy)
-			{
-				m_PlayerStat.Sasese[i].Energy = m_PlayerStat.Sasese[i].MaxEnergy;
-			}
+	//		if (m_PlayerStat.Sasese[i].MaxEnergy <= m_PlayerStat.Sasese[i].Energy)
+	//		{
+	//			m_PlayerStat.Sasese[i].Energy = m_PlayerStat.Sasese[i].MaxEnergy;
+	//		}
 
-			if (m_PlayerStat.Sasese[i].MinEnergy <= m_PlayerStat.Sasese[i].Energy)
-			{
-				m_PlayerStat.Sasese[i].bUsable = true;
-			}
-		}
-	}
+	//		if (m_PlayerStat.Sasese[i].MinEnergy <= m_PlayerStat.Sasese[i].Energy)
+	//		{
+	//			m_PlayerStat.Sasese[i].bUsable = true;
+	//		}
+	//	}
+	//}
 
 //	if (m_PlayerSasType != ESASType::SAS_END)
 //		IM_LOG("%f", m_PlayerStat.Sasese[static_cast<_uint>(m_PlayerSasType)].Energy);
@@ -886,7 +828,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Fire_Attack_2", [&]() {Event_Effect("Fire_Attack_2"); });
 	m_pModel->Add_EventCaller("Fire_Attack_3", [&]() {Event_Effect("Fire_Attack_3"); });
 	m_pModel->Add_EventCaller("Fire_Attack_3_Double_twist", [&]() {Event_Effect("Fire_Attack_3_Double_twist"); });
-	m_pModel->Add_EventCaller("Fire_Attack_3_twist", [&]() {Event_Effect("Fire_Attack_3_twist"); });
+	m_pModel->Add_EventCaller("Fire_Attack_3_twist", [&]() {Event_Effect("Fire_Attack_3_Double_twist"); });
 	m_pModel->Add_EventCaller("Fire_Attack_4", [&]() {Event_Effect("Fire_Attack_4"); });
 	m_pModel->Add_EventCaller("Fire_Attack_4_001", [&]() {Event_Effect("Fire_Attack_4_001"); });
 	m_pModel->Add_EventCaller("Fire_Attack_5", [&]() {Event_Effect("Fire_Attack_5"); });
@@ -921,9 +863,6 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Trail_On", [&]() 
 	{ 
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(true);
-
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
-
 		/*_matrix matWeaponCollider = static_cast<CScarletWeapon*>(m_vecWeapon.front())->Get_WeaponCenterMatrix();
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, matWeaponCollider.r[3], matWeaponCollider.r[0], true);*/
 	});
@@ -935,12 +874,12 @@ HRESULT CPlayer::SetUp_EffectEvent()
 
 	m_pModel->Add_EventCaller("WeaponBright_On", [&]()
 	{
-		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(m_PlayerSasType, true);
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, true);
 	});
 
 	m_pModel->Add_EventCaller("WeaponBright_Off", [&]()
 	{
-		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(m_PlayerSasType, false);
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, false);
 	});
 
 	//m_pModel->Add_EventCaller(""
@@ -2531,7 +2470,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 {
 	m_mapCollisionEvent.emplace("ATK_A1", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 50) + 100;
@@ -2540,7 +2479,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATK_A2", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 100) + 100;
@@ -2549,7 +2488,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATK_A3", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 100) + 200;
@@ -2558,7 +2497,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATK_A4", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 50) + 100;
@@ -2567,7 +2506,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATK_A5", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 200) + 300;
@@ -2576,7 +2515,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATTACK_DASH_END", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = 100;
@@ -2585,7 +2524,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATTACK_NONCHARGE", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = 100;
@@ -2594,7 +2533,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("CHARGE_ATTACK_01", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 50) + 100;
@@ -2603,7 +2542,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("CHARGE_ATTACK_02", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 100) + 100;
@@ -2612,7 +2551,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("CHARGE_ATTACK_03", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 100) + 200;
@@ -2621,7 +2560,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATK_AIR1", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 50) + 100;
@@ -2630,7 +2569,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATK_AIR2", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 50) + 100;
@@ -2639,7 +2578,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATK_AIR_NONCHARGE", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 50) + 100;
@@ -2648,7 +2587,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATK_AIR_CHARGE_START", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 50) + 100;
@@ -2657,7 +2596,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATK_AIR_CHARGE_FALL", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 50) + 100;
@@ -2666,7 +2605,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATTACK_UPPER_START", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_TO_AIR;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 100) + 200;
@@ -2675,7 +2614,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("AS_ch0100_207_AL_atk_justdodge", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = 100;
@@ -2684,7 +2623,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("AS_ch0100_216_AL_atk_dash1_start", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = 100;
@@ -2693,7 +2632,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("AS_ch0100_217_AL_atk_dash2_end", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = 100;
@@ -2702,7 +2641,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("AS_ch0100_218_AL_atk_dash3_end", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = 100;
@@ -2711,7 +2650,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("AS_ch0100_219_AL_atk_dash4_end", [this]()
 	{
-		m_AttackDesc.eAttackSAS = m_PlayerSasType;
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = 100;
@@ -2817,18 +2756,18 @@ void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 
 	wstring EffectName = s2ws(szEffectName);
 
-	switch (m_PlayerSasType)
+	switch (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type)
 	{
-	case ESASType::SAS_END:
+	case ESASType::SAS_NOT:
 		if (szEffectName.find("Fire") != string::npos)	// Fire키워드 들어간 이펙트는 거름
 			break;
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, EffectName)->Start_Attach(this, szBoneName);
-//		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"FlowerLeg_Fall_Rose")->Start_Attach(this, "Eff01",true);
 		break;
 	case ESASType::SAS_FIRE:
 		if (szEffectName.find("Fire") == string::npos)	// Fire키워드 없으면 거름
 			break;
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, EffectName)->Start_Attach(this, szBoneName);
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
 //		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, EffectName)->Start_AttachPivot(this, m_pModel->GetPivotMatrix(), szBoneName, true);
 
 		break;
@@ -2840,9 +2779,9 @@ void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 
 void CPlayer::Event_EffectSound(const string& strSoundName)
 {
-	switch (m_PlayerSasType)
+	switch (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type)
 	{
-	case ESASType::SAS_END:
+	case ESASType::SAS_NOT:
 		if (strSoundName.find("nor") == string::npos)
 			m_SoundStore.PlaySound(strSoundName, m_pTransformCom);
 			break;
@@ -2859,7 +2798,7 @@ void CPlayer::Event_CollisionStart()
 {
 	m_bAttackEnable = true;
 
-	static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(m_PlayerSasType, true);
+	static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, true);
 
 	if (m_pASM->isSocketExactlyEmpty())
 	{
@@ -2887,7 +2826,7 @@ void CPlayer::Event_CollisionStart()
 
 void CPlayer::Event_collisionEnd()
 {
-	static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(m_PlayerSasType, false);
+	static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, false);
 
 	m_bAttackEnable = false;
 }
@@ -2927,7 +2866,7 @@ void CPlayer::Event_Kinetic_Throw()
 		static_cast<CMapKinetic_Object*>(m_pKineticObject)->SetThrow();
 	}
 
-	//m_PlayerStat.m_iKineticEnergy -= 30;
+	CPlayerInfoManager::GetInstance()->Change_PlayerKineticEnergy(CHANGE_DECREASE, 30);
 }
 
 void CPlayer::Event_KineticSlowAction()
@@ -3240,7 +3179,7 @@ void CPlayer::HitCheck()
 		m_bCanTurn_Attack = false;
 		m_bKineticCombo = false;
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false);
-		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(m_PlayerSasType, false);
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, false);
 		Event_collisionEnd();
 	}
 

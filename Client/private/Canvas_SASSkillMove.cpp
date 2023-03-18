@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "FSMComponent.h"
 #include "UI_Manager.h"
+#include "PlayerInfoManager.h"
 
 #include "Player.h"
 #include "SASSkillIconUI.h"
@@ -161,8 +162,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	{
 		ESASType eSASType = m_eSASType[ONE0];
 
-		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-		_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+		_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
 		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		if (ESASType::SAS_NOT != eSASType)
@@ -178,8 +179,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 
 		if (ESASType::SAS_NOT != eSASType)
 		{
-			_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-			_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+			_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
 			_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 			dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light1"))->Set_LightType(eSASType, false);
@@ -193,8 +194,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	{
 		ESASType eSASType = m_eSASType[TWO0];
 
-		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-		_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+		_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
 		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		if (ESASType::SAS_NOT != eSASType)
@@ -210,8 +211,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 
 		if (ESASType::SAS_NOT != eSASType)
 		{
-			_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-			_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+			_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
 			_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 			dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light2"))->Set_LightType(eSASType, false);
@@ -225,8 +226,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	{
 		ESASType eSASType = m_eSASType[THREE0];
 
-		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-		_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+		_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
 		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		if (ESASType::SAS_NOT != eSASType)
@@ -242,8 +243,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 
 		if (ESASType::SAS_NOT != eSASType)
 		{
-			_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-			_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+			_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
 			_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 			dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light3"))->Set_LightType(eSASType, false);
@@ -257,8 +258,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	{
 		ESASType eSASType = m_eSASType[FOUR0];
 
-		_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-		_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+		_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+		_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
 		_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 		if (ESASType::SAS_NOT != eSASType)
@@ -274,8 +275,8 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 
 		if (ESASType::SAS_NOT != eSASType)
 		{
-			_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-			_float fMaxEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+			_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
 			_float fRatio = fCurrentEnergy / fMaxEnergy;
 
 			dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light4"))->Set_LightType(eSASType, false);
@@ -290,8 +291,8 @@ void CCanvas_SASSkillMove::Set_IconType(const _uint iIndex, const ESASType & eES
 	if (m_pPlayer == nullptr)
 		return;
 
-	_float fCurrentEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eESASType)].Energy;
-	_float fMinEnergy = m_pPlayer->Get_PlayerStat().Sasese[_int(eESASType)].MinEnergy;
+	_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eESASType)].Energy;
+	_float fMinEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eESASType)].MinEnergy;
 
 	_bool bUsable;
 	if (fCurrentEnergy > fMinEnergy)

@@ -86,32 +86,6 @@ private:
 
 	}MOVELIMIT;
 
-	typedef struct tagSasGage
-	{
-		_float Energy;
-		_float MaxEnergy;
-		_float MinEnergy;
-
-		_float RecoveryRate;
-		_float UseRate;
-
-		_bool bUsable = false;
-
-	} SAS_GAGE;
-
-	typedef struct tagPlayerStatus
-	{
-		_uint m_iHP = 100;
-		_uint m_iMaxHP = 100;
-		_uint m_iKineticEnergy = 100;
-		_uint m_iMaxKineticEnergy = 100;
-		_uint m_iKineticEnergyLevel = 0;   // 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
-		_uint m_iKineticEnergyType = 0;    // 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
-		
-		array<SAS_GAGE, SAS_CNT> Sasese{};
-
-	}PLAYER_STAT;
-
 	typedef struct tagDamageDesc
 	{
 		_int		m_iDamage;
@@ -145,10 +119,10 @@ public:
 	_bool		Get_SASSkillInput(const _uint iInputNumber) { return m_bSASSkillInput[iInputNumber]; }
 	void		Set_SASSkillInput(const _uint iInputNumber, const _bool bInput) { m_bSASSkillInput[iInputNumber] = bInput; }
 
-	PLAYER_STAT	Get_PlayerStat() { return m_PlayerStat; }
-	void		Set_Usable(const ESASType & eESASType, const _bool & bUsable) { m_PlayerStat.Sasese[_int(eESASType)].bUsable = bUsable; }
+//	PLAYER_STAT	Get_PlayerStat() { return m_PlayerStat; }
+//	void		Set_Usable(const ESASType & eESASType, const _bool & bUsable) { m_PlayerStat.Sasese[_int(eESASType)].bUsable = bUsable; }
 
-	ESASType	Get_PlayerSasType() { return m_PlayerSasType; }
+//	ESASType	Get_PlayerSasType() { return m_PlayerSasType; }
 	//~For UI
 
 	virtual HRESULT Initialize_Prototype();
@@ -171,12 +145,10 @@ private:
 	void CamBoneTest();	// 액션캠 예시
 
 private:
-	void			Initalize_Sas();
 	void			SasMgr();
-	PLAYER_STAT		m_PlayerStat;
+//	PLAYER_STAT		m_PlayerStat;
 	DAMAGE_DESC		m_DamageDesc;
 	DAMAGE_PARAM	m_AttackDesc;
-	ESASType		m_PlayerSasType;
 
 private:
 	_bool			m_bAttackEnable = false;

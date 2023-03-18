@@ -257,22 +257,22 @@ void CParticleGroup::Tick(_double TimeDelta)
 				Set_Transform(SocketMatrix);
 			}
 		}
-		else if (nullptr != m_pAttachWeapon)
-		{
-			_matrix WeaponMatrix = static_cast<CScarletWeapon*>(m_pAttachWeapon)->Get_WeaponCenterMatrix();
-
-			_matrix	SocketMatrix = { XMVector3Normalize(WeaponMatrix.r[0]),
-				XMVector3Normalize(WeaponMatrix.r[1]),
-				XMVector3Normalize(WeaponMatrix.r[2]),
-				WeaponMatrix.r[3] };
-
-			Set_Transform(SocketMatrix);
-		}
 		else
 		{
 			// 뼈에 안붙이는 경우
 			Set_Transform(m_pOwner->GetTransform()->Get_WorldMatrix());
 		}
+	}
+	else if (nullptr != m_pAttachWeapon)
+	{
+		_matrix WeaponMatrix = static_cast<CScarletWeapon*>(m_pAttachWeapon)->Get_WeaponCenterMatrix();
+
+		_matrix	SocketMatrix = { XMVector3Normalize(WeaponMatrix.r[0]),
+			XMVector3Normalize(WeaponMatrix.r[1]),
+			XMVector3Normalize(WeaponMatrix.r[2]),
+			WeaponMatrix.r[3] + WeaponMatrix.r[0] };
+
+		Set_Transform(SocketMatrix);
 	}
 
 	if (m_bGenerate == true)

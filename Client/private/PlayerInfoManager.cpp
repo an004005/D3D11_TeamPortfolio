@@ -23,12 +23,14 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.m_iKineticEnergy = 100;
 	m_tPlayerStat.m_iMaxKineticEnergy = 100;
 
-	m_tPlayerStat.m_iKineticEnergyLevel = 2;
+	m_tPlayerStat.m_iKineticEnergyLevel = 0;
 	m_tPlayerStat.m_iKineticEnergyType = 2;
 
 #pragma endregion 플레이어 기본 스탯 초기화
 
 #pragma region SAS정보 초기화
+
+	m_tPlayerStat.m_eAttack_SAS_Type = ESASType::SAS_NOT;
 
 	m_tPlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].Energy = 60.f;
 	m_tPlayerStat.Sasese[static_cast<_uint>(ESASType::SAS_FIRE)].MaxEnergy = 60.f;
@@ -99,30 +101,32 @@ HRESULT CPlayerInfoManager::Initialize()
 	return S_OK;
 }
 
-void CPlayerInfoManager::Tick()
+void CPlayerInfoManager::Tick(_double TimeDelta)
 {
 	// 사용이 불가능한 객체를 바로 null로 채워주기 위해 매 틱 작동한다.
 	// 플레이어에서 값을 사용할 것이므로 플레이어의 가장 첫 틱에서 동작하게 하자
 
 	if (nullptr == m_pKineticObject) m_pKineticObject = nullptr;
-	if (true == m_pKineticObject->IsDeleted()) m_pKineticObject = nullptr;
-	if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pKineticObject)) m_pKineticObject = nullptr;
-	if (false == static_cast<CMapKinetic_Object*>(m_pKineticObject)->Usable()) m_pKineticObject = nullptr;
-	if (true == static_cast<CMapKinetic_Object*>(m_pKineticObject)->GetThrow()) m_pKineticObject = nullptr;
+	else if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pKineticObject)) m_pKineticObject = nullptr;
+	else if (true == m_pKineticObject->IsDeleted()) m_pKineticObject = nullptr;
+	else if (false == static_cast<CMapKinetic_Object*>(m_pKineticObject)->Usable()) m_pKineticObject = nullptr;
+	else if (true == static_cast<CMapKinetic_Object*>(m_pKineticObject)->GetThrow()) m_pKineticObject = nullptr;
 
 	if (nullptr == m_pTargetedMonster) m_pTargetedMonster = nullptr;
-	if (true == m_pTargetedMonster->IsDeleted()) m_pTargetedMonster = nullptr;
-	if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pTargetedMonster)) m_pTargetedMonster = nullptr;
-	if (true == static_cast<CMonster*>(m_pTargetedMonster)->IsDead()) m_pTargetedMonster = nullptr;
+	else if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pTargetedMonster)) m_pTargetedMonster = nullptr;
+	else if (true == m_pTargetedMonster->IsDeleted()) m_pTargetedMonster = nullptr;
+	else if (true == static_cast<CMonster*>(m_pTargetedMonster)->IsDead()) m_pTargetedMonster = nullptr;
+
+	SAS_Checker();
 }
 
 CGameObject * CPlayerInfoManager::Get_KineticObject()
 {
 	if (nullptr == m_pKineticObject) return nullptr;	// null이면
-	if (true == m_pKineticObject->IsDeleted()) return nullptr;	// 지워졌으면
-	if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pKineticObject)) return nullptr;	// 유효하지 않은 주소이면
-	if (false == static_cast<CMapKinetic_Object*>(m_pKineticObject)->Usable()) return nullptr;		// 이미 사용한 객체이면
-	if (true == static_cast<CMapKinetic_Object*>(m_pKineticObject)->GetThrow()) return nullptr;		// 던져진 객체이면
+	else if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pKineticObject)) return nullptr;	// 유효하지 않은 주소이면
+	else if (true == m_pKineticObject->IsDeleted()) return nullptr;	// 지워졌으면
+	else if (false == static_cast<CMapKinetic_Object*>(m_pKineticObject)->Usable()) return nullptr;		// 이미 사용한 객체이면
+	else if (true == static_cast<CMapKinetic_Object*>(m_pKineticObject)->GetThrow()) return nullptr;		// 던져진 객체이면
 
 	return m_pKineticObject;
 }
@@ -130,9 +134,9 @@ CGameObject * CPlayerInfoManager::Get_KineticObject()
 CGameObject * CPlayerInfoManager::Get_TargetedMonster()
 {
 	if (nullptr == m_pTargetedMonster) return nullptr;	// null이면
-	if (true == m_pTargetedMonster->IsDeleted()) return nullptr;	// 지워졌으면
-	if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pTargetedMonster)) return nullptr;	// 유효하지 않은 주소이면
-	if (true == static_cast<CMonster*>(m_pTargetedMonster)->IsDead()) return nullptr;	// 죽은 상태이면
+	else if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pTargetedMonster)) return nullptr;	// 유효하지 않은 주소이면
+	else if (true == m_pTargetedMonster->IsDeleted()) return nullptr;	// 지워졌으면
+	else if (true == static_cast<CMonster*>(m_pTargetedMonster)->IsDead()) return nullptr;	// 죽은 상태이면
 
 	return m_pTargetedMonster;
 }
@@ -164,26 +168,38 @@ void CPlayerInfoManager::Set_SasType(ESASType eType)
 	{
 		case ESASType::SAS_FIRE:
 		{
+			for (auto SAS = m_PlayerSasTypeList.begin(); SAS != m_PlayerSasTypeList.end();)
+			{
+				if ((*SAS) == ESASType::SAS_ELETRIC)
+					SAS = m_PlayerSasTypeList.erase(SAS);
+				else
+					++SAS;
+			}
+
+			m_PlayerSasTypeList.push_back(eType);
+
 			break;
 		}
 		case ESASType::SAS_ELETRIC:
 		{
+			for (auto SAS = m_PlayerSasTypeList.begin(); SAS != m_PlayerSasTypeList.end();)
+			{
+				if ((*SAS) == ESASType::SAS_FIRE)
+					SAS = m_PlayerSasTypeList.erase(SAS);
+				else
+					++SAS;
+			}
+
+			m_PlayerSasTypeList.push_back(eType);
+
 			break;
 		}
 		case ESASType::SAS_HARDBODY:
-		{
-			break;
-		}
 		case ESASType::SAS_PENETRATE:
-		{
-			break;
-		}
 		case ESASType::SAS_SUPERSPEED:
-		{
-			break;
-		}
 		case ESASType::SAS_TELEPORT:
 		{
+			m_PlayerSasTypeList.push_back(eType);
 			break;
 		}
 		default:
@@ -192,33 +208,112 @@ void CPlayerInfoManager::Set_SasType(ESASType eType)
 		}
 	}
 
-	for (auto& SAS : m_PlayerSasTypeList)
+	if (3 < m_PlayerSasTypeList.size())
 	{
+		m_PlayerSasTypeList.pop_front();
+	}
+}
 
+void CPlayerInfoManager::Finish_SasType(ESASType eType)
+{
+	for (auto SAS = m_PlayerSasTypeList.begin(); SAS != m_PlayerSasTypeList.end();)
+	{
+		if ((*SAS) == eType) 
+		{ 
+			if (m_tPlayerStat.Sasese[static_cast<_uint>(*SAS)].MinEnergy >
+				m_tPlayerStat.Sasese[static_cast<_uint>(*SAS)].Energy)
+			{
+				m_tPlayerStat.Sasese[static_cast<_uint>(*SAS)].bUsable = false;
+			}
+
+			SAS = m_PlayerSasTypeList.erase(SAS);
+
+			break;
+		}
+		else 
+		{
+			++SAS;
+		}
 	}
 }
 
 HRESULT CPlayerInfoManager::Set_KineticObject(CGameObject * pKineticObject)
 {
-	NULL_CHECK(pKineticObject);
-
-	if (true == m_pKineticObject->IsDeleted()) return E_FAIL;										// 지워졌으면
-	if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pKineticObject)) return E_FAIL;	// 유효하지 않은 주소이면
-	if (false == static_cast<CMapKinetic_Object*>(m_pKineticObject)->Usable()) return E_FAIL;		// 이미 사용한 객체이면
-	if (true == static_cast<CMapKinetic_Object*>(m_pKineticObject)->GetThrow()) return E_FAIL;		// 던져진 객체이면
+	if (nullptr == pKineticObject) { m_pKineticObject = nullptr; return S_OK; }
+	else if (true == m_pKineticObject->IsDeleted()) return E_FAIL;										// 지워졌으면
+	else if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pKineticObject)) return E_FAIL;	// 유효하지 않은 주소이면
+	else if (false == static_cast<CMapKinetic_Object*>(m_pKineticObject)->Usable()) return E_FAIL;		// 이미 사용한 객체이면
+	else if (true == static_cast<CMapKinetic_Object*>(m_pKineticObject)->GetThrow()) return E_FAIL;		// 던져진 객체이면
 	
 	m_pKineticObject = pKineticObject;
+	return S_OK;
 }
 
 HRESULT CPlayerInfoManager::Set_TargetedMonster(CGameObject * pTargetedMonster)
 {
-	NULL_CHECK(pTargetedMonster);
-
-	if (true == m_pTargetedMonster->IsDeleted()) return E_FAIL;	// 지워졌으면
-	if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pTargetedMonster)) return E_FAIL;	// 유효하지 않은 주소이면
-	if (true == static_cast<CMonster*>(m_pTargetedMonster)->IsDead()) return E_FAIL;	// 죽은 상태이면
+	if (nullptr == pTargetedMonster) { m_pTargetedMonster = nullptr; return S_OK; }
+	else if (true == m_pTargetedMonster->IsDeleted()) return E_FAIL;	// 지워졌으면
+	else if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pTargetedMonster)) return E_FAIL;	// 유효하지 않은 주소이면
+	else if (true == static_cast<CMonster*>(m_pTargetedMonster)->IsDead()) return E_FAIL;	// 죽은 상태이면
 
 	m_pTargetedMonster = pTargetedMonster;
+	return S_OK;
+}
+
+void CPlayerInfoManager::SAS_Checker()
+{
+	for (_uint i = 0; i < SAS_CNT; ++i)
+	{
+		const auto Result = find(m_PlayerSasTypeList.begin(), m_PlayerSasTypeList.end(), static_cast<ESASType>(i));
+
+		if (Result == m_PlayerSasTypeList.end())
+		{
+			// 사용중이지 않음, 회복
+			m_tPlayerStat.Sasese[i].Energy += (g_fTimeDelta * m_tPlayerStat.Sasese[i].RecoveryRate);
+
+			if (m_tPlayerStat.Sasese[i].MaxEnergy <= m_tPlayerStat.Sasese[i].Energy)
+			{
+				m_tPlayerStat.Sasese[i].Energy = m_tPlayerStat.Sasese[i].MaxEnergy;
+			}
+
+			if (m_tPlayerStat.Sasese[i].MinEnergy <= m_tPlayerStat.Sasese[i].Energy)
+			{
+				m_tPlayerStat.Sasese[i].bUsable = true;
+			}
+		}
+		else
+		{
+			// 사용중임, 감소
+			m_tPlayerStat.Sasese[i].Energy -= (g_fTimeDelta * m_tPlayerStat.Sasese[i].UseRate);
+
+			if (0.f >= m_tPlayerStat.Sasese[i].Energy)
+			{
+
+				for (auto SAS = m_PlayerSasTypeList.begin(); SAS != m_PlayerSasTypeList.end();)
+				{
+					if ((*SAS) == static_cast<ESASType>(i))
+					{
+						SAS = m_PlayerSasTypeList.erase(SAS);
+						m_tPlayerStat.Sasese[i].bUsable = false;
+						break;
+					}
+					else
+						++SAS;
+				}
+
+			}
+		}
+	}
+
+	m_tPlayerStat.m_eAttack_SAS_Type = ESASType::SAS_NOT;
+
+	const auto FireCheck = find(m_PlayerSasTypeList.begin(), m_PlayerSasTypeList.end(), ESASType::SAS_FIRE);
+	if (FireCheck != m_PlayerSasTypeList.end())
+		m_tPlayerStat.m_eAttack_SAS_Type = ESASType::SAS_FIRE;
+
+	const auto ElecCheck = find(m_PlayerSasTypeList.begin(), m_PlayerSasTypeList.end(), ESASType::SAS_ELETRIC);
+	if (ElecCheck != m_PlayerSasTypeList.end())
+		m_tPlayerStat.m_eAttack_SAS_Type = ESASType::SAS_ELETRIC;
 }
 
 void CPlayerInfoManager::Free()

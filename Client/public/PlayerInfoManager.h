@@ -35,9 +35,20 @@ typedef struct tagPlayerStatus
 	_uint m_iKineticEnergyLevel;   // 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
 	_uint m_iKineticEnergyType;    // 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
 
+	ESASType m_eAttack_SAS_Type;
+
 	array<SAS_GAGE, SAS_CNT> Sasese{};
 
 }	PLAYER_STAT;
+
+typedef struct tagDamageDesc
+{
+	_int		m_iDamage;
+	_vector		m_vHitDir;
+	EAttackType	m_iDamageType;
+	EBaseAxis	m_eHitDir;
+
+}	DAMAGE_DESC;
 
 enum CHANGETYPE { CHANGE_INCREASE, CHANGE_DECREASE, CHANGE_END };
 
@@ -51,12 +62,14 @@ private:
 
 public:
 	HRESULT	Initialize();
-	void	Tick();	// 실시간으로 타겟 정보를 갱신하기 위함
+	void	Tick(_double TimeDelta);	// 실시간으로 타겟 정보를 갱신하기 위함
 
 public:	// Get
 	PLAYER_STAT		Get_PlayerStat() const { return m_tPlayerStat; }
+	list<ESASType>	Get_PlayerSasList() const { return m_PlayerSasTypeList; }
 	CGameObject*	Get_KineticObject();
 	CGameObject*	Get_TargetedMonster();
+
 
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
@@ -69,6 +82,7 @@ public:	// Set
 	void			Set_KineticEnetgyType(_uint iType) { m_tPlayerStat.m_iKineticEnergyLevel = iType; }
 
 	void			Set_SasType(ESASType eType);
+	void			Finish_SasType(ESASType eType);
 
 	HRESULT			Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
@@ -82,6 +96,8 @@ private:	// 상호작용 관련
 	CGameObject*	m_pKineticObject;
 	CGameObject*	m_pTargetedMonster;
 
+private:	// 기능 정리 함수
+	void			SAS_Checker();
 
 public:
 	virtual void Free() override;
