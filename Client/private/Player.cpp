@@ -33,6 +33,7 @@
 #include "NoticeNeonUI.h"
 #include "JsonLib.h"
 #include "ImguiUtils.h"
+#include "SAS_Portrait.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -163,6 +164,14 @@ void CPlayer::BeginTick()
 		}
 	}
 
+	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, LAYER_SAS)->GetGameObjects())
+	{
+		if (auto pSasPortrait = dynamic_cast<CSAS_Portrait*>(iter))
+		{
+			m_pSasPortrait = pSasPortrait;
+		}
+	}
+
 
 	// 테스트
 	//m_pKineticAnimModel->SetPlayAnimation("AS_no0000_271_AL_Pcon_cReL_Lv4");
@@ -174,9 +183,29 @@ void CPlayer::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	if (m_bOnBattle)
+	{
+		m_PlayerStat.m_iKineticEnergyType = 0;
+	}
+	else
+	{
+		m_PlayerStat.m_iKineticEnergyType = 2;
+
+	}
+
 	KineticObject_OutLineCheck();
 	Update_TargetUI();
 	Update_NotiveNeon();
+
+	m_KineticRecovery += TimeDelta;
+	if (m_KineticRecovery >= 1.f)
+	{
+		m_KineticRecovery = 0.f;
+		m_PlayerStat.m_iKineticEnergy += 3;
+
+		if (m_PlayerStat.m_iKineticEnergy >= 100)
+			m_PlayerStat.m_iKineticEnergy = 100;
+	}
 
 	// 콤보 연계 시간
 	m_fKineticCombo_Slash -= TimeDelta;
@@ -212,8 +241,8 @@ void CPlayer::Tick(_double TimeDelta)
 
 	HitCheck();
 
-	if (!m_bHit)
-		m_pJustDodgeStateMachine->Tick(TimeDelta);
+	//if (!m_bHit)
+		//m_pJustDodgeStateMachine->Tick(TimeDelta);
 
 	if (!m_bHit && (false == m_bKineticCombo)) // 콤보 타이밍이 아닐 때에는 일반 염력
 	{
@@ -228,7 +257,7 @@ void CPlayer::Tick(_double TimeDelta)
 	{
 		m_pKineticComboStateMachine->SetState("KINETIC_COMBO_NOUSE");
 		m_pKineticStataMachine->SetState("NO_USE_KINETIC");
-		m_pJustDodgeStateMachine->SetState("JUSTDODGE_NONUSE");
+		//m_pJustDodgeStateMachine->SetState("JUSTDODGE_NONUSE");
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false);
 
 		if (nullptr != m_pKineticObject && static_cast<CMapKinetic_Object*>(m_pKineticObject)->Usable())
@@ -467,7 +496,7 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 		if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
 		{
-			m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+			//m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 		}
 	}
 }
@@ -709,7 +738,6 @@ void CPlayer::SasMgr()
 	{
 		InputSas = ESASType::SAS_FIRE;
 		m_bSASSkillInput[3] = !m_bSASSkillInput[3];
-
 	}
 	if (CGameInstance::GetInstance()->KeyDown(DIK_5))	InputSas = ESASType::SAS_SUPERSPEED;
 	if (CGameInstance::GetInstance()->KeyDown(DIK_6))	InputSas = ESASType::SAS_COPY;
@@ -733,6 +761,11 @@ void CPlayer::SasMgr()
 				SasDamage.push_back(m_pModel->Find_Animation("AS_ch0100_410_AL_damage_sas"));
 				m_pASM->InputAnimSocket("Common_AnimSocket", SasDamage);
 				m_PlayerSasType = InputSas;
+
+				if (ESASType::SAS_FIRE == InputSas)
+				{
+					m_pSasPortrait->Start_SAS(InputSas);
+				}
 			}
 			else if (m_PlayerSasType == InputSas)
 			{
@@ -3070,7 +3103,7 @@ void CPlayer::Event_Kinetic_Throw()
 	}
 
 
-	//m_PlayerStat.m_iKineticEnergy -= 30;
+	m_PlayerStat.m_iKineticEnergy -= 15;
 }
 
 void CPlayer::Event_KineticSlowAction()
