@@ -307,8 +307,8 @@
     <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM">
       <UniqueIdentifier>{889711dc-b345-4bdf-9c49-c3181c53954d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Invantory">
-      <UniqueIdentifier>{776d7a33-79da-4f1d-aeee-85ee99adcbc0}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\UI\Main_UI">
+      <UniqueIdentifier>{d267f306-d688-42b8-9978-a34ae516a2f5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -823,9 +823,6 @@
     <ClInclude Include="..\public\Boss_AppearBackUI.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_BossAppear.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\LevelUpUI.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
@@ -852,6 +849,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Canvas_BossHpMove.h">
       <Filter>02.GameObjects\UI\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MainUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Main.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1337,9 +1340,6 @@
     <ClCompile Include="..\private\Boss_AppearBackUI.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_BossAppear.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\LevelUpUI.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
@@ -1369,6 +1369,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Canvas_BossHpMove.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MainUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Main.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

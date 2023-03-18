@@ -13,6 +13,9 @@
 
 #include "Imgui_CurveManager.h"
 #include "Imgui_PhysX.h"
+#include "FactoryMethod.h"
+#include "VFX_Manager.h"
+#include "Monster.h"
 
 // Canvas
 #include "Canvas.h"
@@ -32,6 +35,7 @@
 #include "Canvas_BossHp.h"
 #include "Canvas_BossHpMove.h"
 #include "Canvas_Alarm.h"
+#include "Canvas_Main.h"
 
 // Default
 #include "DefaultUI.h"
@@ -72,22 +76,17 @@
 #include "Tutorial_YesNoUI.h"
 #include "Tutorial_TipsUI.h"
 #include "Tutorial_SuccessUI.h"
-
 //Boss
 #include "Boss_HpUI.h"
 #include "Boss_HpBackUI.h"
 #include "Boss_ShildUI.h"
-
 // Alarm
 #include "NextMapNameUI.h"
 #include "Boss_AppearUI.h"
 #include "Boss_AppearBackUI.h"
 #include "LevelUpUI.h"
-
-#include "FactoryMethod.h"
-#include "Monster.h"
-
-#include "VFX_Manager.h"
+// Main
+#include "MainUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -236,6 +235,11 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_Canvas_Alarm*/
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Alarm"),
 			CCanvas_Alarm::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_Main*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Main"),
+			CCanvas_Main::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 	}
@@ -418,6 +422,12 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CLevelUpUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
+		// Main
+		/* For.Prototype_GameObject_MainUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("MainUI"),
+			CMainUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
 	}
 
 	//FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
@@ -476,6 +486,9 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Item.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Item", &json));
 
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Main.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Main", &json));
+
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_ItemMove.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_ItemMove", &json));
 
@@ -520,7 +533,8 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Alarm", &json));
-	
+
+
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
 	//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);

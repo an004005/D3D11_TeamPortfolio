@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Canvas_Item.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
 
 CCanvas_Item::CCanvas_Item(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -24,6 +25,8 @@ HRESULT CCanvas_Item::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
+
+	CUI_Manager::GetInstance()->Add_Canvas(L"Canvas_Item", this);
 
 	return S_OK;
 }

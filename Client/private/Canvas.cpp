@@ -353,6 +353,14 @@ void CCanvas::UIHit(const _double & TimeDelta)
 
 }
 
+void CCanvas::TempOff(const _bool & bOff)
+{
+	CUI::TempOff(bOff);
+
+	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+		iter->second->TempOff(bOff);
+}
+
 CCanvas * CCanvas::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CCanvas*		pInstance = new CCanvas(pDevice, pContext);

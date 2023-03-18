@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Canvas_Alarm.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
 
 #include "NextMapNameUI.h"
 #include "Boss_AppearUI.h"
@@ -21,6 +22,8 @@ HRESULT CCanvas_Alarm::Initialize_Prototype()
 {
 	if (FAILED(CCanvas::Initialize_Prototype()))
 		return E_FAIL;
+
+	CUI_Manager::GetInstance()->Add_Canvas(L"Canvas_Alarm", this);
 
 	return S_OK;
 }

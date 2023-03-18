@@ -89,6 +89,7 @@ void CCanvas_Drive::Imgui_RenderProperty()
 	static _float fPosition[2];
 	ImGui::DragFloat2("Font Position", fPosition);
 	m_vFontPos = { fPosition[0], fPosition[1] };
+
 }
 
 void CCanvas_Drive::SaveToJson(Json& json)

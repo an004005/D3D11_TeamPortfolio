@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Canvas.h"
 #include "Client_Defines.h"
+#include "UI.h"
 
 BEGIN(Client)
 
-class CCanvas_BossAppear : public CCanvas
+class CMainUI final : public CUI
 {
-protected:
-	CCanvas_BossAppear(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CCanvas_BossAppear(const CCanvas_BossAppear& rhs);
+private:
+	CMainUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMainUI(const CMainUI& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -23,8 +23,8 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	static CCanvas_BossAppear* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CCanvas* Clone(void* pArg = nullptr) override;
+	static CMainUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 

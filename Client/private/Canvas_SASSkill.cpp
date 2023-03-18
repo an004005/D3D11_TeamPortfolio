@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Canvas_SASSkill.h"
 #include "GameInstance.h"
-#include "GameUtils.h"
+#include "UI_Manager.h"
 
 CCanvas_SASSkill::CCanvas_SASSkill(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -25,6 +25,8 @@ HRESULT CCanvas_SASSkill::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
+
+	CUI_Manager::GetInstance()->Add_Canvas(L"Canvas_SASSkill", this);
 
 	// 처음에 보이지 않을 UI 들
 	Find_ChildUI(L"SASSkill_CtrlText1")->SetVisible(false);

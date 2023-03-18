@@ -1,1 +1,140 @@
-{"ChildrenUI":[{"ChildTag":"Boss_HpBackGround\u0000","ObjectTag":"Boss_HpBackGround","Pivot":2,"PositionX":0.0,"PositionY":-90.0,"Priority":0,"Prototype_GameObject":"Default_UI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":["..\\Bin\\Resources\\UI\\InGame\\Boss_HpBackGround.png\u0000"]},"SizeX":588.0,"SizeY":56.0,"Transform":{"WorldMatrix":[588.0,0.0,0.0,0.0,0.0,56.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,360.0,0.0,1.0]}},{"ChildTag":"Boss_Name\u0000","ObjectTag":"Boss_Name","Pivot":2,"PositionX":-228.0,"PositionY":-47.0,"Priority":0,"Prototype_GameObject":"Default_UI\u0000","ScaleX":0.5,"ScaleY":0.550000011920929,"ShaderParams":{"Float2s":[[0.0,0.0],[20.0,6.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\InGame\\MonsterName.png\u0000"]},"SizeX":438.0,"SizeY":50.0,"Transform":{"WorldMatrix":[219.0,0.0,0.0,0.0,0.0,27.5,0.0,0.0,0.0,0.0,1.0,0.0,-228.0,403.0,0.0,1.0]}}],"ObjectTag":"Canvas_BossHp","Pivot":0,"PositionX":0.0,"PositionY":0.0,"Priority":0,"Prototype_GameObject":"Canvas_BossHp\u0000","ScaleX":0.5,"ScaleY":0.5,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":[]},"SizeX":1600.0,"SizeY":900.0,"Transform":{"WorldMatrix":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "Boss_HpBackGround\u0000",
+            "ObjectTag": "Boss_HpBackGround",
+            "Pivot": 2,
+            "PositionX": 0.0,
+            "PositionY": -90.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\InGame\\Boss_HpBackGround.png\u0000"
+                ]
+            },
+            "SizeX": 588.0,
+            "SizeY": 56.0,
+            "Transform": {
+                "WorldMatrix": [
+                    588.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    56.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    360.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Boss_Name\u0000",
+            "ObjectTag": "Boss_Name",
+            "Pivot": 2,
+            "PositionX": -228.0,
+            "PositionY": -47.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.5,
+            "ScaleY": 0.550000011920929,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        20.0,
+                        6.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\InGame\\MonsterName.png\u0000"
+                ]
+            },
+            "SizeX": 438.0,
+            "SizeY": 50.0,
+            "Transform": {
+                "WorldMatrix": [
+                    219.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    27.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -228.0,
+                    403.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "Canvas_BossHp",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 0,
+    "Prototype_GameObject": "Canvas_BossHp\u0000",
+    "ScaleX": 0.5,
+    "ScaleY": 0.5,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

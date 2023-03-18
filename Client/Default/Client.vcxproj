@@ -206,7 +206,7 @@
     <ClInclude Include="..\public\CamSpot.h" />
     <ClInclude Include="..\public\Canvas.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h" />
-    <ClInclude Include="..\public\Canvas_BossAppear.h" />
+    <ClInclude Include="..\public\Canvas_Main.h" />
     <ClInclude Include="..\public\Canvas_BossHp.h" />
     <ClInclude Include="..\public\Canvas_BossHpMove.h" />
     <ClInclude Include="..\public\Canvas_Drive.h" />
@@ -244,6 +244,7 @@
     <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\GravikenisisMouseUI.h" />
     <ClInclude Include="..\public\GravikenisisGUI.h" />
+    <ClInclude Include="..\public\MainUI.h" />
     <ClInclude Include="..\public\NextMapNameUI.h" />
     <ClInclude Include="..\public\NoticeNeonUI.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
@@ -375,7 +376,7 @@
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\private\Canvas.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp" />
-    <ClCompile Include="..\private\Canvas_BossAppear.cpp" />
+    <ClCompile Include="..\private\Canvas_Main.cpp" />
     <ClCompile Include="..\private\Canvas_BossHp.cpp" />
     <ClCompile Include="..\private\Canvas_BossHpMove.cpp" />
     <ClCompile Include="..\private\Canvas_Tutorial.cpp" />
@@ -414,6 +415,7 @@
     <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\GravikenisisMouseUI.cpp" />
     <ClCompile Include="..\private\GravikenisisGUI.cpp" />
+    <ClCompile Include="..\private\MainUI.cpp" />
     <ClCompile Include="..\private\NextMapNameUI.cpp" />
     <ClCompile Include="..\private\NoticeNeonUI.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />

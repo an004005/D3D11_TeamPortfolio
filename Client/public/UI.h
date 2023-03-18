@@ -54,6 +54,8 @@ protected:
 	CUI(const CUI& rhs);
 
 public:
+	void	TempOff(const _bool bOff);
+
 	_float2	GetScreenSpaceLeftTop();
 	void SetCanvasSize(CanvasRect CanvasSize) { m_CanvasSize = CanvasSize; }
 	
@@ -121,7 +123,6 @@ protected:
 	ShaderParams		m_tParams;
 
 protected:
-
 	_uint				m_iPriority = 0;			// 낮을 수록 뒤에 그려진다.
 
 	_float				m_fX = 0.0f;
@@ -136,9 +137,10 @@ protected:
 	// 현재 위치 기준 자전 각도
 	_float m_fRadianRotation = 0.f;
 
-
 	CanvasRect			m_CanvasSize;
 	UI_PIVOT			m_ePivot = UI_PIVOT::CENTER;
+	
+	_bool				m_bTempOff = { false };
 
 public:
 	virtual CGameObject* Clone(void* pArg = nullptr) override = 0;
