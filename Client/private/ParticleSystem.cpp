@@ -191,6 +191,7 @@ void CParticleSystem::SaveToJson(Json& json)
 	json["RandDirMax"] = m_vRandDir_Max;
 	json["RandDirMin"] = m_vRandDir_Min;
 	json["SphereDetail"] = m_bSphereDetail;
+	json["UseMeshData"] = m_bUseMeshData;
 }
 
 void CParticleSystem::LoadFromJson(const Json& json)
@@ -221,6 +222,11 @@ void CParticleSystem::LoadFromJson(const Json& json)
 	m_fRotationToTime_Min = json["RotationToTimeMin"] ;
 	m_fRotationToTime_Max = json["RotationToTimeMax"] ;
 	m_vScaleVariation = json["ScaleVariation"];
+
+	if(json.contains("UseMeshData"))
+	{
+		m_bUseMeshData = json["UseMeshData"];
+	}
 
 	if (json.contains("BilboardType"))
 	{
@@ -377,6 +383,8 @@ void CParticleSystem::Imgui_RenderProperty()
 	ImGui::NewLine();
 
 	ImGui::Checkbox("Render NonAlpha", &m_bNonAlphaBlend);
+	ImGui::SameLine();
+	ImGui::Checkbox("Use Mesh Data", &m_bUseMeshData);
 
 	ImGui::Checkbox("From Origin", &m_bFromOrigin);
 	ImGui::SameLine();
@@ -520,6 +528,7 @@ void CParticleSystem::AddPoint()
 	 * look.xyz : 이동 방향
 	 * look.w : 이동 속력
 	 */
+	
 	for (_uint i = 0; i < (_uint)m_iBurstCnt; ++i)
 	{
 		if (m_PointList.size() >= m_iInstanceNum)
@@ -540,8 +549,6 @@ void CParticleSystem::AddPoint()
 			pointData.vRotPos.x = CGameUtils::GetRandVector3(m_fRotationToTime_Min, m_fRotationToTime_Max).x;
 			pointData.vRotPos.y = CGameUtils::GetRandVector3(m_fRotationToTime_Min, m_fRotationToTime_Max).y;
 			pointData.vRotPos.z = CGameUtils::GetRandVector3(m_fRotationToTime_Min, m_fRotationToTime_Max).z;
-
-			
 		}
 
 		if(m_bGravity == true)
@@ -616,27 +623,23 @@ void CParticleSystem::AddPoint()
 			}
 		}
 
-		if (m_pModel != nullptr)
+		if (m_bUseMeshData == true)
 		{
-			Create_MeshData(pointData);
-
 			_uint VBSize = m_pModel->Get_NumVertices();
-			VBSize /= 100;
 
-			_uint iRand = rand() % VBSize;
-
-			pointData.NearestIndex = iRand;
 			const VTXMODEL* pNonAnimBuffer = m_pModel->Get_NonAnimBuffer();
+			Assert(VBSize > 0);
+			_uint iRandomVtx = (_uint)CGameUtils::GetRandFloat(0.f, (_float)(VBSize - 1));
+			
+			_float3 v3Pos = pNonAnimBuffer[iRandomVtx].vPosition;
+			vPos = _float4{ v3Pos.x, v3Pos.y, v3Pos.z, 1.f };
 
-			_float4 BufferPos = _float4(pNonAnimBuffer[pointData.NearestIndex].vPosition.x, pNonAnimBuffer[pointData.NearestIndex].vPosition.y, pNonAnimBuffer[pointData.NearestIndex].vPosition.z, 1.f);
-
-			vPos = BufferPos;
+			if (m_bLocal == false)
+			{
+				vPos = XMVector3TransformCoord(vPos, m_pTransformCom->Get_WorldMatrix());
+			}
 		}
-		else
-		{
-			pointData.NearestIndex = 0;
-		}
-
+		
 		pointData.vUp.w = fLife;
 		pointData.vLook = vDir * fSpeed;
 		pointData.vPosition = vPos;
@@ -653,44 +656,8 @@ void CParticleSystem::UpdatePoints(_float fTimeDelta)
 		data.vPosition.w += fTimeDelta;
 		_float4 vNewPos;
 
-		if(m_pModel != nullptr)
-		{
-			// _float4 ParticlePos = _float4(data.vPosition.x, data.vPosition.y, data.vPosition.z, 1.f);
-			//
-			// // UINT nearestVertex = FineNearestIndex(ParticlePos);
-			const VTXMODEL* pNonAnimBuffer = m_pModel->Get_NonAnimBuffer();
-			//
-			// _uint VBSize = m_pModel->Get_NumVertices();
-			// // VBSize /= 100;
-			// //
-			// // _uint iRand = rand() % VBSize ;
-			//
-			// _float4 BufferPos = _float4(pNonAnimBuffer[data.NearestIndex].vPosition.x, pNonAnimBuffer[data.NearestIndex].vPosition.y, pNonAnimBuffer[data.NearestIndex].vPosition.z, 1.f);
-			//
-			// // 파티클이 이동한 방향
-			// _float4 dir = ParticlePos - BufferPos;
-			//
-			// // 메시의 표면 노말 벡터
-			_float4 normal = _float4(pNonAnimBuffer[data.NearestIndex].vNormal.x, pNonAnimBuffer[data.NearestIndex].vNormal.y, 
-				pNonAnimBuffer[data.NearestIndex].vNormal.z, 0.f);
-			//
-			// _float3 DotData = XMVector3Dot(dir, normal);
-			//
-			// _float3 CalcPos = (DotData * normal) ;
-			//
-			// _float4 FinalCalcPos = _float4(CalcPos.x, CalcPos.y, CalcPos.z, 0.f);
-			//
-			// // 파티클의 위치 보정
-			// _float4 correctedPos = ParticlePos - FinalCalcPos;
-
-			vNewPos = data.vPosition + data.vLook * fTimeDelta ;
-			vNewPos.w = data.vPosition.w;
-		}
-		else
-		{
-			vNewPos = data.vPosition + data.vLook  * fTimeDelta;
-			vNewPos.w = data.vPosition.w;
-		}
+		vNewPos = data.vPosition + data.vLook  * fTimeDelta;
+		vNewPos.w = data.vPosition.w;
 
 		if (m_bGravity == true)
 		{
@@ -701,8 +668,6 @@ void CParticleSystem::UpdatePoints(_float fTimeDelta)
 				data.vLook.y = -20.f;
 			}
 		}
-
-		
 
 		data.vPosition = vNewPos;
 
@@ -756,46 +721,46 @@ void CParticleSystem::Create_MeshData(VTXMATRIX data)
 	if (m_pModel == nullptr)
 		return;
 
-	m_vecVerticesDistance.clear();
+	//m_vecVerticesDistance.clear();
 
-	if (m_pModel != nullptr)
-	{
-		// const _float3* pVerticesPos = m_pModel->Get_VerticesPos();
-		const VTXMODEL* pNonAnimBuffer = m_pModel->Get_NonAnimBuffer();
+	//if (m_pModel != nullptr)
+	//{
+	//	// const _float3* pVerticesPos = m_pModel->Get_VerticesPos();
+	//	const VTXMODEL* pNonAnimBuffer = m_pModel->Get_NonAnimBuffer();
 
-		_uint VBSize = m_pModel->Get_NumVertices();
-		float minDistance = FLT_MAX;
-		VBSize /= 100;
+	//	_uint VBSize = m_pModel->Get_NumVertices();
+	//	float minDistance = FLT_MAX;
+	//	VBSize /= 100;
 
-		for (_uint i = 0; i < VBSize; ++i)
-		{
-			_float4 VertexPos = _float4(pNonAnimBuffer[i].vPosition.x, pNonAnimBuffer[i].vPosition.y, pNonAnimBuffer[i].vPosition.z, 1.f);
+	//	for (_uint i = 0; i < VBSize; ++i)
+	//	{
+	//		_float4 VertexPos = _float4(pNonAnimBuffer[i].vPosition.x, pNonAnimBuffer[i].vPosition.y, pNonAnimBuffer[i].vPosition.z, 1.f);
 
-			_float4 ParticlePos = _float4(data.vPosition.x, data.vPosition.y, data.vPosition.z, 1.f);
-			float distance = XMVectorGetX(ParticlePos - VertexPos);
+	//		_float4 ParticlePos = _float4(data.vPosition.x, data.vPosition.y, data.vPosition.z, 1.f);
+	//		float distance = XMVectorGetX(ParticlePos - VertexPos);
 
-			if (distance < minDistance)
-				minDistance = distance;
+	//		if (distance < minDistance)
+	//			minDistance = distance;
 
-			m_vecVerticesDistance.push_back({ minDistance, i });
-		}
+	//		m_vecVerticesDistance.push_back({ minDistance, i });
+	//	}
 
-		// 각 정점의 인덱스를 최소 거리 순으로 정렬
-		sort(m_vecVerticesDistance.begin(), m_vecVerticesDistance.end());
+	//	// 각 정점의 인덱스를 최소 거리 순으로 정렬
+	//	sort(m_vecVerticesDistance.begin(), m_vecVerticesDistance.end());
 
 
-		// 파티클이 메시 위에 있는지 여부를 저장할 변수 초기화
-		// data.bOnSurface = false;
+	//	// 파티클이 메시 위에 있는지 여부를 저장할 변수 초기화
+	//	// data.bOnSurface = false;
 
-		// 메시의 각 정점에 대해 파티클이 해당 정점 근처에 있는지 확인
-		// for (UINT i = 0; i < m_vecVerticesDistance.size(); ++i)
-		// {
-			// 최소 거리가 임계값 이하인 파티클이 존재할 경우 해당 파티클이 메시 위에 있음
-			// if (m_vecVerticesDistance[i].first < m_fsurfaceThreshold)
-				// data[m_vecVerticesDistance[i].second].isOnSurface = true;
-		// }
+	//	// 메시의 각 정점에 대해 파티클이 해당 정점 근처에 있는지 확인
+	//	// for (UINT i = 0; i < m_vecVerticesDistance.size(); ++i)
+	//	// {
+	//		// 최소 거리가 임계값 이하인 파티클이 존재할 경우 해당 파티클이 메시 위에 있음
+	//		// if (m_vecVerticesDistance[i].first < m_fsurfaceThreshold)
+	//			// data[m_vecVerticesDistance[i].second].isOnSurface = true;
+	//	// }
 
-	}
+	//}
 }
 _uint CParticleSystem::FineNearestIndex(_float4 vPos)
 {
@@ -833,6 +798,7 @@ _uint CParticleSystem::FineNearestIndex(_float4 vPos)
 
 	return irand;
 }
+
 void CParticleSystem::AddMesh()
 {
 	/*
@@ -856,8 +822,6 @@ void CParticleSystem::AddMesh()
 		_float fSpeed = m_fSpeed;
 		_float3 vDir;
 		_float4 vPos;
-
-		
 
 		if (m_bRotate == true)
 		{
@@ -912,6 +876,23 @@ void CParticleSystem::AddMesh()
 			else
 			{
 				vPos = XMVector3TransformCoord(vRandPos, m_pTransformCom->Get_WorldMatrix());
+			}
+		}
+
+		if (m_bUseMeshData == true)
+		{
+			_uint VBSize = m_pModel->Get_NumVertices();
+
+			const VTXMODEL* pNonAnimBuffer = m_pModel->Get_NonAnimBuffer();
+			Assert(VBSize > 0);
+			_uint iRandomVtx = (_uint)CGameUtils::GetRandFloat(0.f, (_float)(VBSize - 1));
+
+			_float3 v3Pos = pNonAnimBuffer[iRandomVtx].vPosition;
+			vPos = _float4{ v3Pos.x, v3Pos.y, v3Pos.z, 1.f };
+
+			if (m_bLocal == false)
+			{
+				vPos = XMVector3TransformCoord(vPos, m_pTransformCom->Get_WorldMatrix());
 			}
 		}
 

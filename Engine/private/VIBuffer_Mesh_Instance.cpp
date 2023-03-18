@@ -94,51 +94,13 @@ HRESULT CVIBuffer_Mesh_Instancing::Initialize_Prototype(const char* pModelFilePa
 
 #pragma region INSTANCEBUFFER
 	
-	m_iInstanceStride = sizeof(VTXINSTANCE);
+	m_iInstanceStride = sizeof(VTXINSTANCE_DRAWDATA);
+	m_iInitNumInstance = iNumInstance;
 	m_iNumInstance = iNumInstance;
-
-	//ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
-	//m_BufferDesc.ByteWidth = m_iInstanceStride * m_iNumInstance;
-	//m_BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	//m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//m_BufferDesc.StructureByteStride = m_iInstanceStride;
-	//m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	//m_BufferDesc.MiscFlags = 0;
-
-	//VTXINSTANCE*		pInstance = new VTXINSTANCE[m_iNumInstance];
-	//ZeroMemory(pInstance, sizeof(VTXINSTANCE));
-
-	//for (_uint i = 0; i < m_iNumInstance; ++i)
-	//{
-	//	pInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f);
-	//	pInstance[i].vUp = _float4(0.f, 1.f, 0.f, 0.f);
-	//	pInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
-	//	pInstance[i].vPosition = _float4(0.f, 0.f, 0.f, 1.f);
-
-	//	pInstance[i].vColor = _float4(0.f, 0.f, 0.f, 1.f);
-
-	//	pInstance[i].vRandDir = _float3(0.f, 0.f, 0.f);
-	//	pInstance[i].fLifeTime = 0.f;
-	//	pInstance[i].fGravityPower = 0.f;
-
-	//}
-
-	//ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-	//m_SubResourceData.pSysMem = pInstance;
-	//// m_SubResourceData.p
-	//if (FAILED(m_pDevice->CreateBuffer(&m_BufferDesc, &m_SubResourceData, &m_pInstanceBuffer)))
-	//	return E_FAIL;
-
-	//Safe_Delete_Array(pInstance);
-
 
 #pragma endregion
 
 #pragma region INDEXBUFFER
-	// m_iIndicesSizePerPrimitive = sizeof(FACEINDICES32);
-	// m_iNumIndices = 3 * m_iNumPrimitive;
-	// m_eIndexFormat = DXGI_FORMAT_R32_UINT;
-	// m_eTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
 
@@ -175,7 +137,7 @@ HRESULT CVIBuffer_Mesh_Instancing::Initialize_Prototype(const char* pModelFilePa
 
 HRESULT CVIBuffer_Mesh_Instancing::Initialize(void* pArg)
 {
-	VTXINSTANCE*		pInstance = new VTXINSTANCE[m_iNumInstance];
+	VTXINSTANCE_DRAWDATA*		pInstance = new VTXINSTANCE_DRAWDATA[m_iNumInstance];
 
 	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
 	m_BufferDesc.ByteWidth = m_iInstanceStride * m_iNumInstance;
@@ -185,7 +147,7 @@ HRESULT CVIBuffer_Mesh_Instancing::Initialize(void* pArg)
 	m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	m_BufferDesc.MiscFlags = 0;
 
-	ZeroMemory(pInstance, sizeof(VTXINSTANCE) * m_iNumInstance);
+	ZeroMemory(pInstance, sizeof(VTXINSTANCE_DRAWDATA) * m_iNumInstance);
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pInstance;
@@ -277,16 +239,17 @@ float CVIBuffer_Mesh_Instancing::GetRandomFloat(float lowBound, float highBound)
 
 void CVIBuffer_Mesh_Instancing::SetInstanceBuffer(VTXINSTANCE* pBuffer, _uint iSize)
 {
-	m_iNumInstance = iSize;
-	if (m_iNumInstance > m_iInitNumInstance)
-		m_iNumInstance = m_iInitNumInstance;
+	// ¾È¾¸
+	//m_iNumInstance = iSize;
+	//if (m_iNumInstance > m_iInitNumInstance)
+	//	m_iNumInstance = m_iInitNumInstance;
 
-	D3D11_MAPPED_SUBRESOURCE			SubResource;
-	ZeroMemory(&SubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+	//D3D11_MAPPED_SUBRESOURCE			SubResource;
+	//ZeroMemory(&SubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
-	m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
-	memcpy(SubResource.pData, pBuffer, sizeof(VTXINSTANCE) * m_iNumInstance);
-	m_pContext->Unmap(m_pInstanceBuffer, 0);
+	//m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
+	//memcpy(SubResource.pData, pBuffer, sizeof(VTXINSTANCE_DRAWDATA) * m_iNumInstance);
+	//m_pContext->Unmap(m_pInstanceBuffer, 0);
 }
 
 void CVIBuffer_Mesh_Instancing::SetInstanceBuffer(list<VTXINSTANCE>* pBuffer)
@@ -294,15 +257,25 @@ void CVIBuffer_Mesh_Instancing::SetInstanceBuffer(list<VTXINSTANCE>* pBuffer)
 	m_iNumInstance = (_uint)pBuffer->size();
 	if (m_iNumInstance > m_iInitNumInstance)
 		m_iNumInstance = m_iInitNumInstance;
+	IM_LOG("%d", m_iNumInstance);
 
 	D3D11_MAPPED_SUBRESOURCE			SubResource;
 	ZeroMemory(&SubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+	VTXINSTANCE_DRAWDATA tmp;
 
 	m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
 	_uint iIdx = 0;
 	for (auto& data : *pBuffer)
 	{
-		((VTXINSTANCE*)SubResource.pData)[iIdx] = data;
+		tmp.vRight = data.vRight;
+		tmp.vUp = data.vUp;
+		tmp.vLook = data.vLook;
+		tmp.vPosition = data.vPosition;
+		//tmp.vColor = data.vColor;
+
+		//memcpy(&tmp, &data, sizeof(VTXINSTANCE_DRAWDATA));
+		((VTXINSTANCE_DRAWDATA*)SubResource.pData)[iIdx] = tmp;
 		++iIdx;
 		if (iIdx >= m_iNumInstance)
 			break;
