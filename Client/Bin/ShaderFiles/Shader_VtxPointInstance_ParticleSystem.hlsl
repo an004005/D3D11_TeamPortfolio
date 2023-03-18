@@ -294,7 +294,7 @@ PS_OUT PS_SAS_FIRE_PARTICLE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 4, 4));
+	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.03, 4, 4));
 	// float4 vColor = g_vec4_0;
 
 	// float4 BlendColor = flipBook * vColor * 2.0f;
@@ -302,7 +302,7 @@ PS_OUT PS_SAS_FIRE_PARTICLE(PS_IN In)
 	// float4 FinalColor = saturate(BlendColor);
 	Out.vColor = CalcHDRColor(flipBook, g_float_0) ;
 
-	float4 flipAlpha = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 4, 4));
+	float4 flipAlpha = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.03, 4, 4));
 
 	Out.vColor.a = flipAlpha.r ;
 
