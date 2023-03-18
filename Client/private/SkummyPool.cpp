@@ -167,8 +167,8 @@ void CSkummyPool::BeginTick()
 {
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket("Pool", { m_pModelCom->Find_Animation("AS_em0600_160_AL_threat") });
-	m_iMaxHP = 2000;
-	m_iHP = 2000;// ¡Ú
+	m_iMaxHP = 800;
+	m_iHP = 800;// ¡Ú
 }
 
 void CSkummyPool::Tick(_double TimeDelta)

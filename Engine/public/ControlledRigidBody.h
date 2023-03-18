@@ -42,8 +42,6 @@ public:
 	void SetPosition(const _float4& vPos);
 	void SetFootPosition(const _float4& vPos);
 
-	void SetMoveFilter(_uint iFilterFlags);
-
 	_float4 GetPosition();
 	_float4 GetFootPosition();
 

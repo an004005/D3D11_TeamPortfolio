@@ -369,8 +369,8 @@ void CFlowerLeg::BeginTick()
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket(("UsingControl"), { m_pModelCom->Find_Animation("AS_em0200_160_AL_threat") });
 	
-	m_iMaxHP = 3000;
-	m_iHP = 3000; // ¡Ú
+	m_iMaxHP = 1500;
+	m_iHP = 1500; // ¡Ú
 }
 
 void CFlowerLeg::Tick(_double TimeDelta)

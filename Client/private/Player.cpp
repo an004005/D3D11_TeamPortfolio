@@ -30,6 +30,9 @@
 #include "CurveFloatMapImpl.h"
 #include "MonsterLockonUI.h"
 #include "MonsterHpUI.h"
+#include "NoticeNeonUI.h"
+#include "JsonLib.h"
+#include "ImguiUtils.h"
 
 #include "PlayerInfoManager.h"
 
@@ -139,7 +142,13 @@ void CPlayer::BeginTick()
 		}
 	}
 
-
+	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, LAYER_SAS)->GetGameObjects())
+	{
+		if (auto pSasPortrait = dynamic_cast<CSAS_Portrait*>(iter))
+		{
+			m_pSasPortrait = pSasPortrait;
+		}
+	}
 	// 테스트
 	//m_pKineticAnimModel->SetPlayAnimation("AS_no0000_271_AL_Pcon_cReL_Lv4");
 
@@ -149,6 +158,16 @@ void CPlayer::BeginTick()
 void CPlayer::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+	if (m_bOnBattle)
+	{
+		m_PlayerStat.m_iKineticEnergyType = 0;
+	}
+	else
+	{
+		m_PlayerStat.m_iKineticEnergyType = 2;
+
+	}
 
 	CPlayerInfoManager::GetInstance()->Tick(TimeDelta);
 
@@ -189,8 +208,8 @@ void CPlayer::Tick(_double TimeDelta)
 
 	HitCheck();
 
-	if(!m_bHit)
-		m_pJustDodgeStateMachine->Tick(TimeDelta);
+	/*if(!m_bHit)
+		m_pJustDodgeStateMachine->Tick(TimeDelta);*/
 
 	if (!m_bHit && (false == m_bKineticCombo)) // 콤보 타이밍이 아닐 때에는 일반 염력
 	{
@@ -572,10 +591,29 @@ void CPlayer::CamBoneTest()
 void CPlayer::SasMgr()
 {
 	ESASType InputSas = ESASType::SAS_END;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_1))	InputSas = ESASType::SAS_TELEPORT;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_2))	InputSas = ESASType::SAS_PENETRATE;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_3))	InputSas = ESASType::SAS_HARDBODY;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_4))	InputSas = ESASType::SAS_FIRE;
+	if (CGameInstance::GetInstance()->KeyDown(DIK_1))
+	{
+		InputSas = ESASType::SAS_TELEPORT;
+		m_bSASSkillInput[0] = !m_bSASSkillInput[0];
+	}
+	if (CGameInstance::GetInstance()->KeyDown(DIK_2))
+	{
+		InputSas = ESASType::SAS_PENETRATE;
+		m_bSASSkillInput[1] = !m_bSASSkillInput[1];
+
+	}
+	if (CGameInstance::GetInstance()->KeyDown(DIK_3))
+	{
+		InputSas = ESASType::SAS_HARDBODY;
+		m_bSASSkillInput[2] = !m_bSASSkillInput[2];
+
+	}
+	if (CGameInstance::GetInstance()->KeyDown(DIK_4))
+	{
+		InputSas = ESASType::SAS_FIRE;
+		m_bSASSkillInput[3] = !m_bSASSkillInput[3];
+
+	}
 	if (CGameInstance::GetInstance()->KeyDown(DIK_5))	InputSas = ESASType::SAS_SUPERSPEED;
 	if (CGameInstance::GetInstance()->KeyDown(DIK_6))	InputSas = ESASType::SAS_COPY;
 	if (CGameInstance::GetInstance()->KeyDown(DIK_7))	InputSas = ESASType::SAS_INVISIBLE;
@@ -615,7 +653,7 @@ void CPlayer::SasMgr()
 				CPlayerInfoManager::GetInstance()->Set_SasType(InputSas);
 			}
 		}
-
+	}
 		/*if (!m_PlayerStat.Sasese[static_cast<_uint>(InputSas)].bUsable)
 		{
 			IM_LOG("Sas_Unusable");
@@ -2866,7 +2904,7 @@ void CPlayer::Event_Kinetic_Throw()
 		static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->SetThrow();
 	}
 
-	CPlayerInfoManager::GetInstance()->Change_PlayerKineticEnergy(CHANGE_DECREASE, 30);
+	CPlayerInfoManager::GetInstance()->Change_PlayerKineticEnergy(CHANGE_DECREASE, 15);
 }
 
 void CPlayer::Event_KineticSlowAction()

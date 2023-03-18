@@ -522,6 +522,16 @@ private:
 	_float	m_fThrowPower = 100000.f;
 	_float	m_fChargePower = 3000.f;
 
+	_float	m_fRotX = 0.f;
+	_float  m_fRotY = 0.f;
+	_float	m_fRotZ = 0.f;
+	_float	m_fTransX = 0.f;
+	_float	m_fTransY = 0.f;
+	_float	m_fTransZ = 0.f;
+
+	_float4x4 pivot1;
+	_float4x4 pivot2;
+
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
