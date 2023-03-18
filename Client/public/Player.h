@@ -13,6 +13,7 @@ class CModel;
 class CRenderer;
 class CCamera;
 class CCurveFloatImpl;
+class CGameObject;
 END
 
 BEGIN(Client);
@@ -29,7 +30,7 @@ typedef struct tagRemote
 	_bool bCanRun = false;	// 달리기 여부
 	_bool bAttackTurn = false;	// 공격 중 회전(카메라 방향) 여부
 
-								// 상태 관련
+	// 상태 관련
 	_bool bOnAir = false;	// 공중 상태 여부
 	_bool bGravity = false;	// 중력 적용 여부
 
@@ -40,14 +41,14 @@ typedef struct tagRemote
 
 	_bool bLocalRevise = false;
 
-	tagRemote(_bool bCanTurn, _bool bCanMove, _bool bCanRun, _bool bAttackTurn,
-		_bool bOnAir, _bool bGravity,
-		_bool bMoveLimitReset, _bool bAttackLimitReset, _bool bChargeReset,
-		_bool bLocalRevise)
-		:bCanTurn(bCanTurn), bCanMove(bCanMove), bCanRun(bCanRun), bAttackTurn(bAttackTurn),
-		bOnAir(bOnAir), bGravity(bGravity),
+	tagRemote(	_bool bCanTurn, _bool bCanMove, _bool bCanRun, _bool bAttackTurn,
+				_bool bOnAir, _bool bGravity, 
+				_bool bMoveLimitReset, _bool bAttackLimitReset, _bool bChargeReset,
+				_bool bLocalRevise)
+	:bCanTurn(bCanTurn), bCanMove(bCanMove), bCanRun(bCanRun), bAttackTurn(bAttackTurn), 
+		bOnAir(bOnAir), bGravity(bGravity), 
 		bMoveLimitReset(bMoveLimitReset), bAttackLimitReset(bAttackLimitReset), bChargeReset(bChargeReset),
-		bLocalRevise(bLocalRevise) {}
+		bLocalRevise(bLocalRevise){}
 
 }REMOTE;
 
@@ -74,7 +75,7 @@ private:
 	}ATTACKLIMIT;
 
 	typedef struct tagMoveLimit
-	{
+	{	
 		// 현재 값
 		_uint m_iDoubleJump = 1;
 		_uint m_iAirDodge = 1;
@@ -106,7 +107,7 @@ private:
 		_uint m_iMaxKineticEnergy = 100;
 		_uint m_iKineticEnergyLevel = 0;   // 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
 		_uint m_iKineticEnergyType = 0;    // 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
-
+		
 		array<SAS_GAGE, SAS_CNT> Sasese{};
 
 	}PLAYER_STAT;
@@ -176,7 +177,6 @@ private:
 	DAMAGE_DESC		m_DamageDesc;
 	DAMAGE_PARAM	m_AttackDesc;
 	ESASType		m_PlayerSasType;
-	class CSAS_Portrait* m_pSasPortrait = nullptr;
 
 private:
 	_bool			m_bAttackEnable = false;
@@ -210,12 +210,9 @@ private:
 	CModel*				m_pKineticAnimModel = nullptr;
 
 	//UI
-	class CNoticeNeonUI* m_pNeonUI = { nullptr };
 	class CMonsterLockonUI*	m_pUI_LockOn = nullptr;
 	CGameObject*		m_pSettedTarget = nullptr;
-	//	CRigidBody*			m_pContectRigidBody = nullptr;
-
-	_bool	m_bSASSkillInput[4] = { false, false, false, false };
+//	CRigidBody*			m_pContectRigidBody = nullptr;
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -252,7 +249,7 @@ private:	// 키네틱 연계기 소켓 애니메이션
 	list<CAnimation*>	m_KineticCombo_Slash02;	// 키네틱 X자 베기
 	list<CAnimation*>	m_KineticCombo_Slash03;	// 키네틱 돌려베기(3단)
 	list<CAnimation*>	m_KineticCombo_Slash04;	// 키네틱 돌려베기(4단)
-
+	
 	list<CAnimation*>	m_KineticCombo_sLcLeR_Start;
 	list<CAnimation*>	m_KineticCombo_sLcLeR_End;
 	list<CAnimation*>	m_KineticCombo_sLcLeL_Start;
@@ -275,7 +272,7 @@ private:	// 키네틱 연계기 소켓 애니메이션
 	list<CAnimation*>	m_KineticCombo_Pcon_cLeL_Lv1;
 	list<CAnimation*>	m_KineticCombo_Pcon_cReR_Lv1;
 	list<CAnimation*>	m_KineticCombo_Pcon_cReL_Lv1;
-
+										
 	list<CAnimation*>	m_KineticCombo_Pcon_cLeR_Lv2;
 	list<CAnimation*>	m_KineticCombo_Pcon_cLeL_Lv2;
 	list<CAnimation*>	m_KineticCombo_Pcon_cReR_Lv2;
@@ -337,6 +334,8 @@ public:
 	_float	GetfYSpeed() { return m_fYSpeed; }
 
 private:
+	_bool	m_bSASSkillInput[4] = { false, false, false, false };
+
 	_bool	m_bHit = false;
 	_bool	m_bBreakFall = false;
 
@@ -366,7 +365,7 @@ private:
 	_float	m_fKineticCharge = 0.f;			// 염력 차지 시간, 기본적으로 1초
 
 	_bool	m_bKineticCombo = false;	// 현재 공격 진행중인지?
-
+	
 	_float	m_fJustDodgeAble = 0.f;
 
 	_float	m_fJumpPower = 10.f;
@@ -409,11 +408,10 @@ public:	//EventCaller용
 	void		Event_Trail(_bool bTrail);
 	void		Event_Dust();
 	void		Event_KineticCircleEffect();
-	void		Event_Eff03_Particle();
 
 private:
 	_bool		m_bCollisionAble = false;
-
+	
 public:
 	void		Set_KineticCombo_Kinetic() { m_fKineticCombo_Kinetic = 10.f; }	// 키네틱 오브젝트에서 지정, 충돌 발생시 콤보 가능하도록 해준다.
 
@@ -435,7 +433,7 @@ private:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
 
 public:
 	_bool		isPlayerAttack(void);	// 공격 중인 애니메이션일 때 true 반환
-
+	
 public:
 	_bool		BeforeCharge(_float fBeforeCharge);
 	_bool		Charge(_uint iNum, _float fCharge);
@@ -446,6 +444,10 @@ public:
 	void		SetGravity_Optional(_float fGravity) { m_fYSpeed = fGravity; }
 	void		SmoothTurn_Attack(_double TimeDelta);
 
+public:
+	void		Update_TargetUI();
+	void		Create_TargetInfoBar(CGameObject* pTarget);
+
 private:
 	void		BehaviorCheck(_double TimeDelta);
 	void		MoveStateCheck(_double TimeDelta);
@@ -453,9 +455,6 @@ private:
 	void		HitCheck();
 	void		SocketLocalMoveCheck();
 
-	void		Update_NotiveNeon();
-	void		Update_TargetUI();
-	void		Create_TargetInfoBar();
 private:
 	_float		m_fNetualTimer = 0.f;
 	void		NetualChecker(_double TimeDelta);
@@ -482,10 +481,10 @@ private:
 	vector<CGameObject*>	m_vecWeapon;
 
 private:
-	Vector3		m_vMoveDir = Vector3();
-	Vector4		m_vLastDir = Vector4();
-	Vector4		m_vBefPos = Vector4();
-	Matrix		m_vMatCamRot = Matrix();
+	Vector3		m_vMoveDir		= Vector3();
+	Vector4		m_vLastDir		= Vector4();
+	Vector4		m_vBefPos		= Vector4();
+	Matrix		m_vMatCamRot	= Matrix();
 
 private:
 	_bool		m_bTestKey = false;
@@ -497,9 +496,9 @@ private:
 	CCamSpot*	m_pCamSpot = nullptr;
 	CRigidBody* m_pRange = nullptr;
 
-	//private:
-	//	void			Attack_Effect(const string& szBoneName, _float fSize);
-	//	CEffectGroup*	m_pEffect = nullptr;
+//private:
+//	void			Attack_Effect(const string& szBoneName, _float fSize);
+//	CEffectGroup*	m_pEffect = nullptr;
 
 private:
 	void			Search_Usable_KineticObject();
@@ -547,20 +546,8 @@ private:	// 플레이어 림라이트, 외곽선 관련
 	void	End_RimLight();
 
 private:
-	_float	m_fThrowPower = 200000.f;
-	_float	m_fChargePower = 6000.f;
-
-	_float	m_fRotX = 0.f;
-	_float  m_fRotY = 0.f;
-	_float	m_fRotZ = 0.f;
-	_float	m_fTransX = 0.f;
-	_float	m_fTransY = 0.f;
-	_float	m_fTransZ = 0.f;
-
-	_float4x4 pivot1;
-	_float4x4 pivot2;
-
-	_double m_KineticRecovery = 0.f;
+	_float	m_fThrowPower = 100000.f;
+	_float	m_fChargePower = 3000.f;
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
