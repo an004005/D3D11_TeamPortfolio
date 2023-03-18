@@ -1,1 +1,109 @@
-{"BilboardType":1,"BufferType":0,"BurstCnt":7,"ConeDirDegree":30.0,"ConeOriginRadius":1.0,"Duration":0.4000000059604645,"FromOrigin":false,"GravityPowerMinMax":[0.0,0.0],"IncreaseMaxSize":2.0,"Life":0.800000011920929,"LifeMinMax":[1.0,0.800000011920929],"LifeRand":true,"Loop":true,"MeshBufferProtoTag":"","MeshSize":[1.0,1.0,1.0],"ObjectTag":"","Prototype_GameObject":"ProtoVFX_ParticleSystem\u0000","RandDirMax":[1.0,1.0,1.0],"RandDirMin":[0.0,0.0,0.0],"RotationToTimeMax":[0.0,0.0,0.0],"RotationToTimeMin":[0.0,0.0,0.0],"ScaleVariation":[1.0,1.0,1.0],"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[3.0],"Ints":[],"Pass":9,"Textures":["..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_fir_007.png\u0000","..\\Bin\\Resources\\Texture\\VFX\\T_ef_ev_anm_fir_001_MSK.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxPointInstance_Particle","Shape":0,"SpawnTickTime":0.029999999329447746,"Speed":0.009999999776482582,"SpeedMinMax":[0.10000000149011612,1.5],"SpeedRand":true,"SphereDetail":false,"SphereRadius":0.30000001192092896,"Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]},"bGravity":false,"bLocal":false,"bNonAlpha":false,"bRotate":true,"bSizeDecreaseByLife":true,"bSizeIncreaseByLife":true,"pSize":[1.0,1.0]}
+{
+    "BilboardType": 1,
+    "BufferType": 0,
+    "BurstCnt": 7,
+    "ConeDirDegree": 30.0,
+    "ConeOriginRadius": 1.0,
+    "Duration": 0.4000000059604645,
+    "FromOrigin": false,
+    "GravityPowerMinMax": [
+        0.0,
+        0.0
+    ],
+    "IncreaseMaxSize": 2.0,
+    "Life": 0.800000011920929,
+    "LifeMinMax": [
+        1.0,
+        0.800000011920929
+    ],
+    "LifeRand": true,
+    "Loop": false,
+    "MeshBufferProtoTag": "",
+    "MeshSize": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",
+    "RandDirMax": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "RandDirMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMax": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "ScaleVariation": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [
+            3.0
+        ],
+        "Ints": [],
+        "Pass": 9,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_fir_007.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_ev_anm_fir_001_MSK.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxPointInstance_Particle",
+    "Shape": 0,
+    "SpawnTickTime": 0.029999999329447746,
+    "Speed": 0.009999999776482582,
+    "SpeedMinMax": [
+        0.10000000149011612,
+        1.5
+    ],
+    "SpeedRand": true,
+    "SphereDetail": false,
+    "SphereRadius": 0.30000001192092896,
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    "bGravity": false,
+    "bLocal": false,
+    "bNonAlpha": false,
+    "bRotate": true,
+    "bSizeDecreaseByLife": true,
+    "bSizeIncreaseByLife": true,
+    "pSize": [
+        1.0,
+        1.0
+    ]
+}
