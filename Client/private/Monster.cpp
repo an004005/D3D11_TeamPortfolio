@@ -203,12 +203,15 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 						if (tDamageParams.eAttackSAS == ESASType::SAS_NOT)
 							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Default_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
 						else if (tDamageParams.eAttackSAS == ESASType::SAS_FIRE)
+						{
 							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Player_Fire_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
+							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, vHitPos, vEffectDir);
+						}
 						else if (tDamageParams.eAttackSAS == ESASType::SAS_ELETRIC)
 							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Player_Elec_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
 					
 					
-						//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Circle_Distortion_NonFlip_Short")->Start_AttachPosition(this, vHitPos, vEffectDir);
+						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Circle_Distortion_NonFlip_Short")->Start_AttachPosition(this, vHitPos, vEffectDir);
 					
 					}
 				}
@@ -229,11 +232,14 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 		if (tDamageParams.eAttackSAS == ESASType::SAS_NOT)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Default_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
 		else if (tDamageParams.eAttackSAS == ESASType::SAS_FIRE)
+		{
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Player_Fire_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, vHitPos, vEffectDir);
+		}
 		else if (tDamageParams.eAttackSAS == ESASType::SAS_ELETRIC)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Player_Elec_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
 
-		//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Circle_Distortion_NonFlip_Short")->Start_AttachPosition(this, vHitPos, vEffectDir);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Circle_Distortion_NonFlip_Short")->Start_AttachPosition(this, vHitPos, vEffectDir);
 	}
 }
 
