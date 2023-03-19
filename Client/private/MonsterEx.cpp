@@ -3,6 +3,13 @@
 #include "Model.h"
 #include "Animation.h"
 #include "Renderer.h"
+#include "PhysX_Manager.h"
+#include "Material.h"
+#include "GameUtils.h"
+#include "Player.h"
+#include "RigidBody.h"
+#include "FSMComponent.h"
+#include "TestTarget.h"
 
 vector<wstring>			CMonsterEx::s_vecDefaultBlood{
 	L"Default_Blood_00",
@@ -64,9 +71,12 @@ HRESULT CMonsterEx::Initialize(void* pArg)
 	});
 	m_DeathTimeline.SetCurve("Simple_Increase");
 
-	SetUpComponents(pArg);
-	SetupSound();
+	m_FireTick.Initialize(1.0, false);
 
+	SetUpComponents(pArg);
+	SetUpSound();
+	SetUpAnimationEvent();
+	SetUpFSM();
 
 	return S_OK;
 }
@@ -74,18 +84,29 @@ HRESULT CMonsterEx::Initialize(void* pArg)
 void CMonsterEx::Tick(_double TimeDelta)
 {
 	CScarletCharacter::Tick(TimeDelta);
+	FindTarget();
+	Update_DeadDissolve(TimeDelta);
 }
 
 void CMonsterEx::Late_Tick(_double TimeDelta)
 {
 	CScarletCharacter::Late_Tick(TimeDelta);
 	if (m_bVisible)
+	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	}
+
+	m_eLastAttackType = EAttackType::ATK_END;
+	m_eHitFrom = EBaseAxis::AXIS_END;
+	m_bHitWeak = false;
 }
 
 void CMonsterEx::Imgui_RenderProperty()
 {
 	CScarletCharacter::Imgui_RenderProperty();
+	ImGui::Checkbox("Use TestTarget", &m_bFindTestTarget);
+
 	m_DeathTimeline.Imgui_RenderEditor();
 
 	if (ImGui::CollapsingHeader("Anim Fast Modifier"))
@@ -134,7 +155,7 @@ void CMonsterEx::SetUpComponents(void* pArg)
 		(CComponent**)&m_pRendererCom));
 }
 
-void CMonsterEx::SetupSound()
+void CMonsterEx::SetUpSound()
 {
 	if (m_strDeathSoundTag.empty() == false)
 		m_SoundStore.CloneSound(m_strDeathSoundTag);
@@ -145,6 +166,70 @@ void CMonsterEx::SetupSound()
 }
 
 void CMonsterEx::TakeDamage(DAMAGE_PARAM tDamageParams)
+{
+	if (m_bDead)
+		return;
+
+	// 이상한 데미지 들어오는거 감지용, 버그 다 찾으면 지우기
+	Assert(tDamageParams.iDamage > 0);
+	Assert(tDamageParams.iDamage < 20000);
+
+	// ex) 데미지 100 => 90 ~ 110 랜덤으로 변경
+	const _int iDamageRandomRange = tDamageParams.iDamage / 5;
+	const _int iDamageRandomize = (_int)CMathUtils::RandomUInt((_uint)iDamageRandomRange);
+	tDamageParams.iDamage += iDamageRandomize - iDamageRandomRange / 2;
+
+	m_eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
+	m_eLastAttackType = tDamageParams.eAttackType;
+	m_bHitWeak = IsWeak(dynamic_cast<CRigidBody*>(tDamageParams.pContactComponent));
+
+	CheckDeBuff(tDamageParams.eDeBuff);
+	HitEffect(tDamageParams);
+	CheckCrushGage(tDamageParams);
+	CheckHP(tDamageParams);
+}
+
+void CMonsterEx::SetBrainCrush()
+{
+	if (m_iCrushGage <= 0)
+	{
+		m_DeathTimeline.PlayFromStart();
+	}
+}
+
+void CMonsterEx::SetDead()
+{
+	if (m_bDead)
+		return;
+	if (m_iCrushGage <= 0)
+		return;
+
+	m_bDead = true;
+	m_DeathTimeline.PlayFromStart();
+}
+
+void CMonsterEx::FindTarget()
+{
+	if (m_bFindTestTarget)
+	{
+		auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
+		{
+			return dynamic_cast<CTestTarget*>(pObj) != nullptr;
+		});
+		m_pTarget = dynamic_cast<CScarletCharacter*>(pPlayer);
+	}
+	else
+	{
+		// todo 임시 코드, AI추가되면 바꿔야됨
+		auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
+		{
+			return dynamic_cast<CPlayer*>(pObj) != nullptr;
+		}, PLATERTEST_LAYER_PLAYER);
+		m_pTarget = dynamic_cast<CScarletCharacter*>(pPlayer);
+	}
+}
+
+void CMonsterEx::HitEffect(DAMAGE_PARAM& tDamageParams)
 {
 	wstring HitBloodName;
 	wstring HitEffectName;
@@ -168,17 +253,214 @@ void CMonsterEx::TakeDamage(DAMAGE_PARAM tDamageParams)
 	}
 	
 
-	_float4 vHitPos = _float4(tDamageParams.vHitPosition.x, tDamageParams.vHitPosition.y, tDamageParams.vHitPosition.z, 0.f);
-	_float4 vEffectDir = _float4(tDamageParams.vSlashVector.x, tDamageParams.vSlashVector.y, tDamageParams.vSlashVector.z, 0.f);
-
 	if (HitBloodName.empty() == false)
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)->Start_AttachPosition(this, vHitPos, vEffectDir);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 	if (HitEffectName.empty() == false)
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, vHitPos, vEffectDir);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 
-	m_SoundStore.PlaySound(m_strImpactTag, &vHitPos);
+
+	if (m_strImpactTag.empty() == false)
+		m_SoundStore.PlaySound(m_strImpactTag, &tDamageParams.vHitPosition);
 	if (m_strImpactVoiceTag.empty() == false)
-		m_SoundStore.PlaySound(m_strImpactVoiceTag, &vHitPos);
+		m_SoundStore.PlaySound(m_strImpactVoiceTag, &tDamageParams.vHitPosition);
+}
+
+void CMonsterEx::CheckDeBuff(EDeBuffType eDeBuff)
+{
+	switch (eDeBuff)
+	{
+	case EDeBuffType::DEBUFF_FIRE:
+		if (m_eDeBuff == EDeBuffType::DEBUFF_OIL 
+			|| CGameUtils::GetRandFloat() >= m_fFireResist)
+			m_eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		break;
+	case EDeBuffType::DEBUFF_OIL: 
+		m_eDeBuff = EDeBuffType::DEBUFF_OIL;
+		break;
+	case EDeBuffType::DEBUFF_THUNDER:
+		if (m_eDeBuff == EDeBuffType::DEBUFF_WATER 
+			|| CGameUtils::GetRandFloat() >= m_fThunderResist)
+			m_eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		break;
+	case EDeBuffType::DEBUFF_WATER:
+		m_eDeBuff = EDeBuffType::DEBUFF_WATER;
+		break;
+	case EDeBuffType::DEBUFF_END:
+		break;
+	default: 
+		NODEFAULT;
+	}
+}
+
+void CMonsterEx::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
+{
+	if (m_bHasCrushGage)
+	{
+		_int iDamage = tDamageParams.iDamage;
+		if (m_bHitWeak)
+			iDamage *= 2;
+
+		if (tDamageParams.eAttackSAS == ESASType::SAS_HARDBODY)
+			iDamage *= 3;
+
+		switch (m_eLastAttackType)
+		{
+		case EAttackType::ATK_LIGHT: break;
+		case EAttackType::ATK_MIDDLE: break;
+		case EAttackType::ATK_HEAVY:
+			iDamage *= 2;
+			break;
+		case EAttackType::ATK_TO_AIR: break;
+		case EAttackType::ATK_END: break;
+		default: 
+			NODEFAULT;
+		}
+
+		m_iCrushGage -= iDamage / 10;
+		if (m_iCrushGage < 0)
+			m_iCrushGage = 0;
+	}	
+}
+
+void CMonsterEx::CheckHP(DAMAGE_PARAM& tDamageParams)
+{
+	_int iDamage = tDamageParams.iDamage;
+	if (m_bHitWeak)
+		iDamage *= 2;
+
+	m_iHP -= iDamage;
+	if (m_iHP < 0)
+	{
+		if (m_iCrushGage > 0)
+			SetDead();
+		m_iHP = 0;
+	}
+}
+
+void CMonsterEx::Update_DeadDissolve(_double TimeDelta)
+{
+	_float fOut = 0.f;
+	if (m_DeathTimeline.Tick(TimeDelta, fOut))
+	{
+		for (auto pMtrl : m_pModelCom->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[0] = fOut;
+		}
+	}
+}
+
+void CMonsterEx::DeBuff_End()
+{
+	for (auto pMtrl : m_pModelCom->GetMaterials())
+	{
+		pMtrl->GetParam().Ints[0] = 0;
+	}
+}
+
+void CMonsterEx::DeBuff_Fire()
+{
+	m_fDeBuffTime = 8.f;
+	for (auto pMtrl : m_pModelCom->GetMaterials())
+	{
+		pMtrl->GetParam().Ints[0] = 1;
+	}
+}
+
+void CMonsterEx::DeBuff_Oil()
+{
+	m_fDeBuffTime = 10.f;
+	for (auto pMtrl : m_pModelCom->GetMaterials())
+	{
+		pMtrl->GetParam().Ints[0] = 2;
+	}
+}
+
+void CMonsterEx::Update_DeBuff(_double TimeDelta)
+{
+	CScarletCharacter::Update_DeBuff(TimeDelta);
+		
+	if (m_eDeBuff == EDeBuffType::DEBUFF_FIRE)
+	{
+		m_FireTick.Tick(TimeDelta);
+		if (m_FireTick.Use())
+		{
+			DAMAGE_PARAM tParam;
+			tParam.iDamage = _uint((_float)m_iMaxHP / 100.f * (1.f - m_fFireResist));
+			tParam.pCauser = this;
+			TakeDamage(tParam);
+		}
+	}
+}
+
+void CMonsterEx::MoveJsonData(Json& jsonDest, void* pArg)
+{
+	if (pArg)
+	{
+		Json& json = *static_cast<Json*>(pArg);
+		CTransform::MoveTransformJson(jsonDest, json);
+	}
+}
+
+_bool CMonsterEx::CheckDamagedTarget(CScarletCharacter* pTarget)
+{
+	const auto itr = m_DamagedTargetList.find(pTarget);
+	if (itr == m_DamagedTargetList.end())
+	{
+		m_DamagedTargetList.insert(pTarget);
+		return true;
+	}
+
+	return false;
+}
+
+void CMonsterEx::ClearDamagedTarget()
+{
+	m_DamagedTargetList.clear();
+}
+
+void CMonsterEx::HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff)
+{
+	for (int i = 0; i < sweepOut.getNbAnyHits(); ++i)
+	{
+		auto pTarget = dynamic_cast<CScarletCharacter*>(CPhysXUtils::GetOnwer(sweepOut.getAnyHit(i).actor));
+		if (pTarget == nullptr)
+			continue;
+
+		if (CheckDamagedTarget(pTarget))
+		{
+			DAMAGE_PARAM tDamageParams;
+			tDamageParams.iDamage = iDamage;
+			tDamageParams.eAttackType = eAtkType;
+			tDamageParams.eDeBuff = eDeBuff;
+			tDamageParams.pCauser = this;
+			tDamageParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+			memcpy(&tDamageParams.vHitPosition, &sweepOut.getAnyHit(i).position, sizeof(_float3));
+			memcpy(&tDamageParams.vHitNormal, &sweepOut.getAnyHit(i).normal, sizeof(_float3));
+			pTarget->TakeDamage(tDamageParams);
+		}
+	}
+}
+
+void CMonsterEx::HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff)
+{
+	for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+	{
+		auto pTarget = dynamic_cast<CScarletCharacter*>(CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor));
+		if (pTarget == nullptr)
+			continue;
+
+		if (CheckDamagedTarget(pTarget))
+		{
+			DAMAGE_PARAM tDamageParams;
+			tDamageParams.iDamage = iDamage;
+			tDamageParams.eAttackType = eAtkType;
+			tDamageParams.eDeBuff = eDeBuff;
+			tDamageParams.pCauser = this;
+			tDamageParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+			tDamageParams.vHitPosition = tDamageParams.vHitFrom;
+			pTarget->TakeDamage(tDamageParams);
+		}
+	}
 }
 
 void CMonsterEx::Free()
@@ -186,4 +468,5 @@ void CMonsterEx::Free()
 	CScarletCharacter::Free();
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pModelCom);
+	Safe_Release(m_pFSM);
 }

@@ -7,6 +7,7 @@
 BEGIN(Engine)
 class CRenderer;
 class CModel;
+class CFSMComponent;
 END
 
 BEGIN(Client)
@@ -29,9 +30,12 @@ public:
 	virtual HRESULT Render_ShadowDepth() override;
 
 	virtual void SetUpComponents(void* pArg);
-	virtual void SetupSound();
+	virtual void SetUpSound();
+	virtual void SetUpAnimationEvent(){}
+	virtual void SetUpFSM() {}
 
-	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
+	virtual void TakeDamage(DAMAGE_PARAM tDamwageParams) override;
+	virtual void SetBrainCrush();
 	
 public:
 	_float GetHpRatio() const { return (_float)m_iHP / (_float)m_iMaxHP; }
@@ -40,8 +44,31 @@ public:
 	virtual _float4	GetKineticTargetPos() { return GetColliderPosition(); }
 
 protected:
+	// take damage 관련 함수
+	virtual void HitEffect(DAMAGE_PARAM& tDamageParams);
+	virtual void CheckDeBuff(EDeBuffType eDeBuff);
+	virtual _bool IsWeak(CRigidBody* pHitPart) { return false; }
+	virtual void CheckCrushGage(DAMAGE_PARAM& tDamageParams);
+	virtual void CheckHP(DAMAGE_PARAM& tDamageParams);
+	// ~
+
 	// 몬스터가 죽으면 실행해야할 코드들 넣기
 	virtual void SetDead();
+
+	virtual void FindTarget();
+	virtual void Update_DeadDissolve(_double TimeDelta);
+
+	virtual void Update_DeBuff(_double TimeDelta) override;
+	virtual void DeBuff_End() override;
+	virtual void DeBuff_Fire() override;
+	virtual void DeBuff_Oil() override;
+	virtual void MoveJsonData(Json& jsonDest, void* pArg);
+
+	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
+	void ClearDamagedTarget();
+	void HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
+	void HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
+
 
 protected:
 	static vector<wstring>			s_vecDefaultBlood;
@@ -55,12 +82,17 @@ protected:
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;
+	CScarletCharacter*		m_pTarget = nullptr;
+	CFSMComponent*			m_pFSM = nullptr;
+	_bool m_bFindTestTarget = false;
 
+	_int m_iAtkDamage = 50;
 	_int m_iHP = 100;
 	_int m_iMaxHP = 100;
 
 	_int m_iCrushGage = 100;
 	_int m_iMaxCrushGage = 100;
+	_bool m_bHasCrushGage = false;
 
 	_bool m_bDead = false;
 	set<CScarletCharacter*> m_DamagedTargetList;
@@ -69,8 +101,18 @@ protected:
 	_uint	iMonsterLevel = { 0 };
 	MONSTER_NAME m_eMonsterName = { MONSTERNAME_END };
 
+	// Late tick에서 다시 초기화해줌.
+	EAttackType m_eLastAttackType = EAttackType::ATK_END;
+	EBaseAxis m_eHitFrom = EBaseAxis::AXIS_END;
+	_bool m_bHitWeak = false;
+	//
+
+	_float m_fFireResist = 0.6f; // 높을 수록 안걸림
+	_float m_fThunderResist = 0.6f; // 높을 수록 안걸림
+	CCoolTimeHelper m_FireTick;
+
+	string m_strImpactTag = "fx_impact_flesh";
 	string m_strDeathSoundTag;
-	string m_strImpactTag;
 	string m_strImpactVoiceTag;
 
 public:

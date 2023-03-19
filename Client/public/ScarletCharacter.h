@@ -5,6 +5,7 @@
 #include "SoundStore.h"
 #include "HelperClasses.h"
 #include "VFX_Manager.h"
+#include "TimerHelper.h"
 
 BEGIN(Engine)
 class CControlledRigidBody;

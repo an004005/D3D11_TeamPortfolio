@@ -17,6 +17,7 @@ HRESULT CVFX_Manager::Initialize(LEVEL eLevel)
 	FAILED_CHECK(CreateEffect(eLevel));
 	FAILED_CHECK(CreateParticle(eLevel));
 
+#ifndef _DEBUG
 	for (_uint i = 0; i < EFFECT::EF_END; ++i)
 	{
 		for (auto& EffectName : Effects[i])
@@ -32,6 +33,7 @@ HRESULT CVFX_Manager::Initialize(LEVEL eLevel)
 			GetParticle((PARTICLE)i, ParticleName)->SetDelete();
 		}
 	}
+#endif
 
 	//GetEffect(EFFECT::EF_HIT, L"Default_Blood_00")->SetDelete();
 

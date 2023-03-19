@@ -230,6 +230,9 @@
     <ClInclude Include="..\public\EffectGroup.h" />
     <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\DefaultUI.h" />
+    <ClInclude Include="..\public\EM0200.h" />
+    <ClInclude Include="..\public\EM0200_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0200_Controller.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
     <ClInclude Include="..\public\FLInvisible_AnimInstance.h" />
     <ClInclude Include="..\public\FLInvisible_Controller.h" />
@@ -327,6 +330,7 @@
     <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\TestCamera.h" />
+    <ClInclude Include="..\public\TestTarget.h" />
     <ClInclude Include="..\public\Trigger.h" />
     <ClInclude Include="..\public\TutorialUI.h" />
     <ClInclude Include="..\public\Tutorial_CheckUI.h" />
@@ -401,6 +405,9 @@
     <ClCompile Include="..\private\EffectGroup.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp" />
     <ClCompile Include="..\private\DefaultUI.cpp" />
+    <ClCompile Include="..\private\EM0200.cpp" />
+    <ClCompile Include="..\private\EM0200_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0200_Controller.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />
     <ClCompile Include="..\private\FLInvisible_AnimInstance.cpp" />
     <ClCompile Include="..\private\FLInvisible_Controller.cpp" />
@@ -498,6 +505,7 @@
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\TestCamera.cpp" />
+    <ClCompile Include="..\private\TestTarget.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
     <ClCompile Include="..\private\TutorialUI.cpp" />
     <ClCompile Include="..\private\Tutorial_CheckUI.cpp" />
