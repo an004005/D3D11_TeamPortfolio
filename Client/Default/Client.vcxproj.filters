@@ -310,8 +310,8 @@
     <Filter Include="02.GameObjects\UI\Main_UI">
       <UniqueIdentifier>{d267f306-d688-42b8-9978-a34ae516a2f5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Player\PlayerInfoManager">
-      <UniqueIdentifier>{4689ecf3-9a9c-4a26-8dea-8de02afafce7}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\UI\Main_UI\Canvas">
+      <UniqueIdentifier>{a84ad824-2ee4-49a4-8b5f-2249e5b4eaa9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -850,20 +850,30 @@
     <ClInclude Include="..\public\NoticeNeonUI.h">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PlayerInfoManager.h">
-      <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Canvas_BossHpMove.h">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MainUI.h">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_Main.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\BasicInfoUI.h">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerInfoManager.h" />
+    <ClInclude Include="..\public\Canvas_Main.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Party.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_MainItem.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_BrainMap.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Equipment.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1376,20 +1386,30 @@
     <ClCompile Include="..\private\NoticeNeonUI.cpp">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PlayerInfoManager.cpp">
-      <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Canvas_BossHpMove.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MainUI.cpp">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_Main.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\BasicInfoUI.cpp">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerInfoManager.cpp" />
+    <ClCompile Include="..\private\Canvas_Main.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Party.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Equipment.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_BrainMap.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_MainItem.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1494,8 +1514,6 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing_Shadow.hlsl">
       <Filter>97.ShaderFiles\Shadow</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl">
-      <Filter>97.ShaderFiles\UI</Filter>
-    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl" />
   </ItemGroup>
 </Project>

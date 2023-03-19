@@ -898,52 +898,35 @@ PS_OUT PS_RedAndGreen(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4 color = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Emissive = g_tex_0.Sample(LinearSampler, In.vTexUV);
 
-	// 빨간색의 경우, 색상값 변경과 알파값 조절
-	if (color.r >= 0.95 && color.g <= 0.05 && color.b <= 0.05)
-	{
-		color.r = 0.5; // 빨간색의 R 값을 조절
-		color.g = 0.0; // 빨간색의 G 값을 0으로 변경
-		color.b = 0.0; // 빨간색의 B 값을 0으로 변경
-		color.a *= 0.5; // 빨간색의 알파 값을 조절
-	}
+	float Mask = Emissive.g;
 
-	// 초록색의 경우, 다른 색상으로 변경
-	if (color.r <= 0.05 && color.g >= 0.95 && color.b <= 0.05)
-	{
-		color.rgb = float3(0.0, 1.0, 1.0); // 초록색을 Cyan으로 변경
-	}
+	float4 DefaultColor = float4(Emissive.g, Emissive.g, Emissive.g, 0.f);
 
-	Out.vColor = color;
+	float4 BlendColor = DefaultColor  * float4(1.0f, 1.0f, 1.0f, 1.0f) * 2.0f;
 
-	//float fProgress = g_float_0;
+	float4 FinalColor = saturate(BlendColor);
 
-	//float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	//float ProgressMask = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+	float4 HDRColor = saturate(FinalColor * 1.0f);
 
-	//if (1.f - ProgressMask >= fProgress)
-	//	discard;
+	Out.vColor = CalcHDRColor(HDRColor, 0.5f);
 
-	//float4 GlowBase = DefaultTex * g_vec4_0;
-
-	//float4 PointTex = g_tex_1.Sample(LinearSampler, In.vTexUV);
-
-	//Out.vColor = saturate(GlowBase);
-
-	//Out.vColor.a = PointTex.r;
+	Out.vColor.a = Mask;
 
 	return Out;
+}
 
-	//PS_OUT			Out = (PS_OUT)0;
+PS_OUT PS_AlphaColor_M(PS_IN In)	// → 31
+{
+	PS_OUT			Out = (PS_OUT)0;
 
-	//float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	//float4 Emissive = g_tex_1.Sample(LinearSampler, In.vTexUV);
-	//Emissive = lerp(Emissive, g_vec4_0, g_float_0);
+	float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
 
-	//Out.vColor = Texture * Emissive;
+	float4 MixTexture = saturate(g_vec4_0 * Texture * 2.0f);
+	Out.vColor = MixTexture;
 
-	//return Out;
+	return Out;
 }
 
 technique11 DefaultTechnique
@@ -1386,4 +1369,19 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_RedAndGreen();
 	}
+
+	//31 : Main UI 뒷 배경
+	pass Alpha_Color
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff); // BS_BlackCut
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_AlphaColor_M();
+	}
+	
 }

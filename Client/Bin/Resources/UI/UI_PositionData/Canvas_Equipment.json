@@ -1,0 +1,87 @@
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "Party_BasicInfo\u0000",
+            "ObjectTag": "Party_BasicInfo",
+            "Pivot": 2,
+            "PositionX": 0.0,
+            "PositionY": 0.0,
+            "Priority": 1,
+            "Prototype_GameObject": "BasicInfoUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\Basic Information.png\u0000"
+                ]
+            },
+            "SizeX": 600.0,
+            "SizeY": 335.0,
+            "Transform": {
+                "WorldMatrix": [
+                    510.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    284.75,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    416.0,
+                    -144.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "Canvas_Equipment",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 0,
+    "Prototype_GameObject": "Canvas_Equipment\u0000",
+    "ScaleX": 0.5,
+    "ScaleY": 0.5,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}
