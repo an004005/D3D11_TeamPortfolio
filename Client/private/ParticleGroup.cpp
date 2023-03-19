@@ -371,14 +371,15 @@ void CParticleGroup::Imgui_RenderProperty()
 
 		for (auto iter : m_mapParticleSystem)
 		{
-			if(!strcmp(iter.first.c_str(), ppParticleTag[item_current_idx]))
+			if (!strcmp(iter.first.c_str(), ppParticleTag[item_current_idx]))
 			{
 				ImGui::BeginTabBar("ParticleGroup_Viewer");
 				ImGui::Begin(iter.first.c_str());
-
-				iter.second.second->Imgui_RenderProperty();
-				iter.second.second->Imgui_RenderComponentProperties();
-				
+				if (iter.second.second != nullptr)
+				{
+					iter.second.second->Imgui_RenderProperty();
+					iter.second.second->Imgui_RenderComponentProperties();
+				}
 				ImGui::End();
 				ImGui::EndTabBar();
 			}
@@ -703,6 +704,8 @@ void CParticleGroup::Free()
 				iter.second.second->SetDelete();
 		}
 	}
+
+	m_ParticleTag.clear();
 
 	__super::Free();
 

@@ -17,6 +17,8 @@ CParticleSystem::CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 CParticleSystem::CParticleSystem(const CParticleSystem& rhs)
 	: CGameObject(rhs)
 {
+	m_ModelProtoTag = "";
+	m_iInstanceNum = 1000;
 }
 
 _int CParticleSystem::GetLiveParticleCnt()
@@ -187,11 +189,13 @@ void CParticleSystem::SaveToJson(Json& json)
 	json["BilboardType"] = m_eBilboardType;
 
 	json["bNonAlpha"] = m_bNonAlphaBlend;
-
+	json["ModelProtoTag"] = m_ModelProtoTag;
 	json["RandDirMax"] = m_vRandDir_Max;
 	json["RandDirMin"] = m_vRandDir_Min;
 	json["SphereDetail"] = m_bSphereDetail;
 	json["UseMeshData"] = m_bUseMeshData;
+
+
 }
 
 void CParticleSystem::LoadFromJson(const Json& json)
@@ -226,6 +230,16 @@ void CParticleSystem::LoadFromJson(const Json& json)
 	if(json.contains("UseMeshData"))
 	{
 		m_bUseMeshData = json["UseMeshData"];
+	}
+
+	if(json.contains("ModelProtoTag"))
+	{
+		m_ModelProtoTag = json["ModelProtoTag"];
+
+		if (m_ModelProtoTag != "")
+		{
+			FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), (CComponent**)&m_pModel));
+		}
 	}
 
 	if (json.contains("BilboardType"))
@@ -623,7 +637,7 @@ void CParticleSystem::AddPoint()
 			}
 		}
 
-		if (m_bUseMeshData == true)
+		if (m_bUseMeshData == true && m_pModel != nullptr)
 		{
 			_uint VBSize = m_pModel->Get_NumVertices();
 
@@ -879,7 +893,7 @@ void CParticleSystem::AddMesh()
 			}
 		}
 
-		if (m_bUseMeshData == true)
+		if (m_bUseMeshData == true && m_pModel != nullptr)
 		{
 			_uint VBSize = m_pModel->Get_NumVertices();
 
