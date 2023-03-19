@@ -1349,6 +1349,14 @@
             {
                 "EventName": "attack_fire_dashattack",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Default_Attack_Dash_End",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_End",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1384,12 +1392,8 @@
                 "EventTime": 30.0
             },
             {
-                "EventName": "Fire_Attack_Dash_Hold_001",
+                "EventName": "Fire_Attack_Dash_Hold_003",
                 "EventTime": 15.0
-            },
-            {
-                "EventName": "Fire_Attack_Dash_Hold_002",
-                "EventTime": 20.0
             },
             {
                 "EventName": "Collision_Start",

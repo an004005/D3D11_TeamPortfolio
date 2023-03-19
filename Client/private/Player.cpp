@@ -869,6 +869,15 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Default_Attack_Air_Attack_1", [&]() {Event_Effect("Default_Attack_Air_Attack_1"); });
 	m_pModel->Add_EventCaller("Default_Attack_Air_Attack_2", [&]() {Event_Effect("Default_Attack_Air_Attack_2"); });
 	m_pModel->Add_EventCaller("Default_Attack_Air_Attack_Chase", [&]() {Event_Effect("Default_Attack_Air_Attack_Chase"); });
+	m_pModel->Add_EventCaller("Default_Attack_Dash_End", [&]() 
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_NOT)
+		{
+			_float4x4 EffectPivotMatrix =
+				XMMatrixTranslation(0.f, -1.1f, -1.5f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_Air_Dash_0")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+	});
 	m_pModel->Add_EventCaller("Default_Attack_Air_Dash_0", [&]() {Event_Effect("Default_Attack_Air_Dash_0"); });
 	m_pModel->Add_EventCaller("Default_Attack_Air_Dash_1", [&]() {Event_Effect("Default_Attack_Air_Dash_1"); });
 	m_pModel->Add_EventCaller("Default_Attack_Air_Hold_0", [&]() {Event_Effect("Default_Attack_Air_Hold_0"); });
@@ -899,12 +908,12 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 		{
-			_float4x4 EffectPivotMatrix2 =
+			_float4x4 EffectPivotMatrix =
 				XMMatrixRotationX(XMConvertToRadians(180.f))
 				* XMMatrixRotationY(XMConvertToRadians(-45.f))
 				* XMMatrixRotationZ(XMConvertToRadians(135.f))
 				* XMMatrixTranslation(0.f, 1.f, -1.f);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_1_001")->Start_AttachPivot(this, EffectPivotMatrix2, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_1_001")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
 		}
 	});
@@ -921,7 +930,17 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	});
 	m_pModel->Add_EventCaller("Fire_Attack_3", [&]() {Event_Effect("Fire_Attack_3"); });
 	m_pModel->Add_EventCaller("Fire_Attack_3_Double_twist", [&]() {Event_Effect("Fire_Attack_3_Double_twist"); });
-	m_pModel->Add_EventCaller("Fire_Attack_3_twist", [&]() {Event_Effect("Fire_Attack_3_Double_twist"); });
+	m_pModel->Add_EventCaller("Fire_Attack_3_twist", [&]() 
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
+		{
+			_float4x4 EffectPivotMatrix =
+				XMMatrixTranslation(0.f, 0.f, -2.f);
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_3_Double_twist")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
+		}
+	});
 	m_pModel->Add_EventCaller("Fire_Attack_4", [&]() {Event_Effect("Fire_Attack_4"); });
 	m_pModel->Add_EventCaller("Fire_Attack_4_001", [&]() {Event_Effect("Fire_Attack_4_001"); });
 	m_pModel->Add_EventCaller("Fire_Attack_5", [&]() {Event_Effect("Fire_Attack_5"); });
@@ -929,6 +948,16 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Fire_Attack_Air_2", [&]() {Event_Effect("Fire_Attack_Air_2"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Air_Chase", [&]() {Event_Effect("Fire_Attack_Air_Chase"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_0", [&]() {Event_Effect("Fire_Attack_Air_dash_0"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_End", [&]() 
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
+		{
+			_float4x4 EffectPivotMatrix =
+				XMMatrixTranslation(0.f, -1.1f, -1.f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Air_dash_0")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
+		}
+	});
 	m_pModel->Add_EventCaller("Fire_AttacK_Air_dash_0_001", [&]() {Event_Effect("Fire_AttacK_Air_dash_0_001"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1", [&]() {Event_Effect("Fire_Attack_Air_dash_1"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1_001", [&]() {Event_Effect("Fire_Attack_Air_dash_1_001"); });
@@ -945,9 +974,44 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_001", [&]() {Event_Effect("Fire_Attack_Dash_02_001"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_002", [&]() {Event_Effect("Fire_Attack_Dash_02_002"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_03", [&]() {Event_Effect("Fire_Attack_Dash_03"); });
-	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_001", [&]() {Event_Effect("Fire_Attack_Dash_Hold_001"); });
-	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_002", [&]() {Event_Effect("Fire_Attack_Dash_Hold_002"); });
-	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_003", [&]() {Event_Effect("Fire_Attack_Dash_Hold_003"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_001", [&]() 
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
+		{
+			/*_float4x4 EffectPivotMatrix2 =
+				XMMatrixRotationX(XMConvertToRadians(180.f))
+				* XMMatrixRotationY(XMConvertToRadians(-45.f))
+				* XMMatrixRotationZ(XMConvertToRadians(135.f))
+				* XMMatrixTranslation(0.f, 1.f, -1.f);*/
+			//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Dash_Hold_001")->Start_AttachPivot(this, pivot1, "Eff01", true);
+			//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
+		}
+	});
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_002", [&]() 
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
+		{
+			/*_float4x4 EffectPivotMatrix2 =
+				XMMatrixRotationX(XMConvertToRadians(180.f))
+				* XMMatrixRotationY(XMConvertToRadians(-45.f))
+				* XMMatrixRotationZ(XMConvertToRadians(135.f))
+				* XMMatrixTranslation(0.f, 1.f, -1.f);*/
+			//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Dash_Hold_002")->Start_AttachPivot(this, pivot2, "Eff01", true);
+			//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
+		}
+	});
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_003", [&]() 
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
+		{
+			_float4x4 EffectPivotMatrix =
+				XMMatrixScaling(1.5f, 1.5f, 1.5f)
+				* XMMatrixTranslation(-2.f, -1.5f, 2.f);
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Dash_Hold_003")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
+		}
+	});
 	m_pModel->Add_EventCaller("Fire_Attack_Justdodge_01", [&]() {Event_Effect("Fire_Attack_Justdodge_01"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Justdodge_02", [&]() {Event_Effect("Fire_Attack_Justdodge_02"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Justdodge_03", [&]() {Event_Effect("Fire_Attack_Justdodge_03"); });
