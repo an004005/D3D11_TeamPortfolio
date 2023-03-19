@@ -8,7 +8,7 @@
 #include "GameUtils.h"
 #include "Material.h"
 #include "MaterialPreview.h"
-
+#include "ScarletWeapon.h"
 
 CParticleGroup::CParticleGroup(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -203,6 +203,22 @@ void CParticleGroup::Start_AttachPosition(CGameObject* pOwner, _float4 vPosition
 	m_bGenerate = true;
 }
 
+void CParticleGroup::Start_AttachSword(CGameObject* pWeapon, _bool trueisUpdate)
+{
+	// 무기만 넣어라
+
+	if (pWeapon == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pAttachWeapon = pWeapon;
+	m_bUpdate = trueisUpdate;
+
+	m_bGenerate = true;
+}
+
 
 void CParticleGroup::Set_Transform(_matrix socket)
 {
@@ -219,7 +235,9 @@ void CParticleGroup::Tick(_double TimeDelta)
 
 	VisibleUpdate();
 
-	if(m_bUpdate == true && m_pOwner->IsDeleted() == false)
+
+
+	if(m_bUpdate == true && (nullptr != m_pOwner) && m_pOwner->IsDeleted() == false && (nullptr == m_pAttachWeapon))
 	{
 		if (m_BoneName != "")
 		{
@@ -244,6 +262,17 @@ void CParticleGroup::Tick(_double TimeDelta)
 			// 뼈에 안붙이는 경우
 			Set_Transform(m_pOwner->GetTransform()->Get_WorldMatrix());
 		}
+	}
+	else if (nullptr != m_pAttachWeapon)
+	{
+		_matrix WeaponMatrix = static_cast<CScarletWeapon*>(m_pAttachWeapon)->Get_WeaponCenterMatrix();
+
+		_matrix	SocketMatrix = { XMVector3Normalize(WeaponMatrix.r[0]),
+			XMVector3Normalize(WeaponMatrix.r[1]),
+			XMVector3Normalize(WeaponMatrix.r[2]),
+			WeaponMatrix.r[3] + WeaponMatrix.r[0] };
+
+		Set_Transform(SocketMatrix);
 	}
 
 	if (m_bGenerate == true)

@@ -179,8 +179,8 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 void CBuddyLumi::BeginTick()
 {
 	__super::BeginTick();
-	m_iMaxHP = 2000;
-	m_iHP = 2000; // ¡Ú
+	m_iMaxHP = 1100;
+	m_iHP = 1100; // ¡Ú
 }
 
 void CBuddyLumi::Tick(_double TimeDelta)
