@@ -890,6 +890,61 @@ PS_OUT PS_GreenEmissive(PS_IN In)
 	return Out;
 }
 
+/*******************
+* MixinColors → 30 : Main UI 에서
+
+/********************/
+PS_OUT PS_RedAndGreen(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 color = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	// 빨간색의 경우, 색상값 변경과 알파값 조절
+	if (color.r >= 0.95 && color.g <= 0.05 && color.b <= 0.05)
+	{
+		color.r = 0.5; // 빨간색의 R 값을 조절
+		color.g = 0.0; // 빨간색의 G 값을 0으로 변경
+		color.b = 0.0; // 빨간색의 B 값을 0으로 변경
+		color.a *= 0.5; // 빨간색의 알파 값을 조절
+	}
+
+	// 초록색의 경우, 다른 색상으로 변경
+	if (color.r <= 0.05 && color.g >= 0.95 && color.b <= 0.05)
+	{
+		color.rgb = float3(0.0, 1.0, 1.0); // 초록색을 Cyan으로 변경
+	}
+
+	Out.vColor = color;
+
+	//float fProgress = g_float_0;
+
+	//float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	//float ProgressMask = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+
+	//if (1.f - ProgressMask >= fProgress)
+	//	discard;
+
+	//float4 GlowBase = DefaultTex * g_vec4_0;
+
+	//float4 PointTex = g_tex_1.Sample(LinearSampler, In.vTexUV);
+
+	//Out.vColor = saturate(GlowBase);
+
+	//Out.vColor.a = PointTex.r;
+
+	return Out;
+
+	//PS_OUT			Out = (PS_OUT)0;
+
+	//float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	//float4 Emissive = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	//Emissive = lerp(Emissive, g_vec4_0, g_float_0);
+
+	//Out.vColor = Texture * Emissive;
+
+	//return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -1315,5 +1370,20 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_GreenEmissive();
 	}
 
-	
+
+
+	// Main UI
+	//30 : 빨간색 초록색
+	pass MixinColors
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff); // BS_BlackCut
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_RedAndGreen();
+	}
 }

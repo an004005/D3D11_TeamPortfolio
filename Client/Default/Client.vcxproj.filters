@@ -856,6 +856,9 @@
     <ClInclude Include="..\public\Canvas_Main.h">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BasicInfoUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1374,6 +1377,9 @@
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_Main.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BasicInfoUI.cpp">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
   </ItemGroup>

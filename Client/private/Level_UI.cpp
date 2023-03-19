@@ -87,6 +87,7 @@
 #include "LevelUpUI.h"
 // Main
 #include "MainUI.h"
+#include "BasicInfoUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -125,8 +126,8 @@ HRESULT CLevel_UI::Initialize()
 	/*if (FAILED(Ready_Layer_Player(L"Layer_Player")))
 		return E_FAIL;*/
 
-	//if (FAILED(Ready_Layer_Monster(L"Layer_Monster")))
-	//	return E_FAIL;
+		//if (FAILED(Ready_Layer_Monster(L"Layer_Monster")))
+		//	return E_FAIL;
 
 	return S_OK;
 }
@@ -389,7 +390,7 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_SuccessUI"),
 			CTutorial_SuccessUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-		
+
 		// Boss
 		/* For.Prototype_GameObject_Boss_HpUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_HpUI"),
@@ -426,6 +427,10 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_MainUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("MainUI"),
 			CMainUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_BasicInfoUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("BasicInfoUI"),
+			CBasicInfoUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 	}

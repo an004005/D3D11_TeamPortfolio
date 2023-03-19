@@ -54,6 +54,7 @@ protected:
 	CUI(const CUI& rhs);
 
 public:
+	_bool	Get_TempOff() { return m_bTempOff; }
 	void	TempOff(const _bool bOff);
 
 	_float2	GetScreenSpaceLeftTop();

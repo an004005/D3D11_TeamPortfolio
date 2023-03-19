@@ -185,6 +185,7 @@
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\BasicInfoUI.h" />
     <ClInclude Include="..\public\Batch.h" />
     <ClInclude Include="..\public\BdLm_Controller.h" />
     <ClInclude Include="..\public\Boss1_AIController.h" />
@@ -357,6 +358,7 @@
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\BasicInfoUI.cpp" />
     <ClCompile Include="..\private\Batch.cpp" />
     <ClCompile Include="..\private\BdLm_Controller.cpp" />
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
