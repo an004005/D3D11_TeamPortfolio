@@ -661,7 +661,7 @@ void CBoss1::JitabataSmokeEffect()
 
 	Smoke_Decided = vecSmokePosition.front();
 
-	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, Smoke_Decided, false);
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, Smoke_Decided, false, true);
 }
 
 void CBoss1::Create_BossUI()

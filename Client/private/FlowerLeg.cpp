@@ -223,8 +223,10 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		if (!m_bDead)
 		{
 //			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose")->Start_Attach(this, "Eff02", true);
-			m_pFallRoseParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose");
-			m_pFallRoseParticle->Start_Attach(this, "Eff02", true);
+			// m_pFallRoseParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose");
+			// m_pFallRoseParticle->Start_Attach(this, "Eff02", true, true);
+
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose")->Start_ParticleWork();
 			Safe_AddRef(m_pFallRoseParticle);
 		}
 	});
