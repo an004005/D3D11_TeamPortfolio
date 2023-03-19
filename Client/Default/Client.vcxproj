@@ -252,6 +252,7 @@
     <ClInclude Include="..\public\MonsterHpUI.h" />
     <ClInclude Include="..\public\MonsterLockonUI.h" />
     <ClInclude Include="..\public\MonsterShildUI.h" />
+    <ClInclude Include="..\public\PlayerInfoManager.h" />
     <ClInclude Include="..\public\PostVFX_ColorGrading.h" />
     <ClInclude Include="..\public\PostVFX_HitDecal.h" />
     <ClInclude Include="..\public\Imgui_EffectBrowser.h" />
@@ -422,6 +423,7 @@
     <ClCompile Include="..\private\MonsterHpUI.cpp" />
     <ClCompile Include="..\private\MonsterLockonUI.cpp" />
     <ClCompile Include="..\private\MonsterShildUI.cpp" />
+    <ClCompile Include="..\private\PlayerInfoManager.cpp" />
     <ClCompile Include="..\private\PostVFX_ColorGrading.cpp" />
     <ClCompile Include="..\private\PostVFX_HitDecal.cpp" />
     <ClCompile Include="..\private\Imgui_EffectBrowser.cpp" />
@@ -545,6 +547,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing_Shadow.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Shadow.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_VFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstanceTrail_VFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstance_ParticleSystem.hlsl" />

@@ -716,7 +716,7 @@ void CFlowerLeg_Invisible::Strew_Overlap()
 				tParam.iDamage = (rand() % 30) + 20; 
 				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				tParam.pCauser = this;
-				tParam.vHitPosition = paramPos;
+				tParam.vHitPosition = param.vPos;
 				tParam.eAttackType = EAttackType::ATK_LIGHT;
 				pTarget->TakeDamage(tParam);
 			}
@@ -773,8 +773,8 @@ void CFlowerLeg_Invisible::Spin_SweepCapsule(_bool bCol)
 					DAMAGE_PARAM tParam;
 
 					tParam.pCauser = this;
-					tParam.vHitNormal = _float3(pHit.normal.x, pHit.normal.y, pHit.normal.z);
-					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
+					tParam.vHitNormal = _float4(pHit.normal.x, pHit.normal.y, pHit.normal.z, 0.f);
+					tParam.vHitPosition = _float4(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					tParam.iDamage = (rand() % 80) + 40;
 					tParam.eAttackType = EAttackType::ATK_MIDDLE;
@@ -820,7 +820,7 @@ void CFlowerLeg_Invisible::Kick_SweepSphere()
 				param.eAttackType = EAttackType::ATK_HEAVY;
 				param.pCauser = this;
 				param.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-				param.vHitPosition = paramPos;
+				param.vHitPosition = Sparam.vPos;
 				
 				pTarget->TakeDamage(param);
 			}

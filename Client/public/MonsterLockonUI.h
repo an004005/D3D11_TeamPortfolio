@@ -18,10 +18,15 @@ public:
 	virtual void    Tick(_double TimeDelta) override;
 	virtual void   Imgui_RenderProperty() override;
 
+public:
+	void	Set_UIPivotMatrix(_float4x4 pivotmatrix) {
+		m_UI_PivotMatrix = pivotmatrix;
+	}
 private:
 	class CEffectGroup* m_pTargetGroup = nullptr;
 	class CEffectGroup* m_pTargetRhombusGroup = nullptr;
 
+	_float4x4			m_UI_PivotMatrix = XMMatrixIdentity();
 public:
 	static CMonsterLockonUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
