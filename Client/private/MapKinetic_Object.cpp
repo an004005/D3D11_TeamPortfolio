@@ -82,7 +82,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 			pMonster->TakeDamage(tParam);
 			m_bHit = true;
 
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Kinetic_Dead_Effect_00"))
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, TEXT("Default_Kinetic_Dead_Effect_00"))
 				->Start_AttachOnlyPos(tParam.vHitFrom);
 
 			// 충돌이 발생하면 플레이어의 키네틱 콤보 상태를 1로 올려준다.
