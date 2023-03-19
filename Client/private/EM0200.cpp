@@ -184,17 +184,10 @@ void CEM0200::SetUpAnimationEvent()
 			m_pShootFlwParticle->Start_Attach(this, "RightFlower5", true);
 			Safe_AddRef(m_pShootFlwParticle);
 		}
-	
-
-//		m_bInvisible = true; 
 	});
 
 	// 머리흔들어서 꽃뿌리기 공격
 	m_pModelCom->Add_EventCaller("OverLap", [this] { Strew_Overlap(); });
-	m_pModelCom->Add_EventCaller("Invincible_End", [this] 
-	{ 
-//		m_bInvisible = false; 
-	});
 
 	m_pModelCom->Add_EventCaller("FallRose_End", [this]
 	{
@@ -266,8 +259,14 @@ void CEM0200::SetUpFSM()
 			})
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this]{ return m_bDead; })
+
+			.AddTransition("Idle to Hit_ToAir", "Hit_ToAir")
+				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_TO_AIR; })
+			.AddTransition("Idle to Hit_Mid_Heavy", "Hit_Mid_Heavy")
+				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_MIDDLE; })
 			.AddTransition("Idle to Hit_Light", "Hit_Light")
-				.Predicator([this] { return m_eLastAttackType == EAttackType::ATK_LIGHT; })
+				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_LIGHT; })
+
 			.AddTransition("Idle to SpinAtk", "SpinAtk")
 				.Predicator([this]{ return m_eInput == CController::R; })
 			.AddTransition("Idle to FlowerShower", "FlowerShower")
@@ -278,8 +277,6 @@ void CEM0200::SetUpFSM()
 				.Predicator([this]{ return m_eInput == CController::MOUSE_RB; })
 			.AddTransition("Idle to Dodge", "Dodge")
 				.Predicator([this]{ return m_eInput == CController::NUM_1 || m_eInput == CController::NUM_2 || m_eInput == CController::NUM_3; })
-
-
 
 		.AddState("SpinAtk")
 			.OnStart([this]
@@ -300,7 +297,7 @@ void CEM0200::SetUpFSM()
 			.AddTransition("SpinAtk to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eLastAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 
@@ -313,7 +310,7 @@ void CEM0200::SetUpFSM()
 			.AddTransition("FlowerShower to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eLastAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 
@@ -350,7 +347,7 @@ void CEM0200::SetUpFSM()
 			.AddTransition("SpinAtk to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eLastAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 
@@ -393,7 +390,7 @@ void CEM0200::SetUpFSM()
 			.AddTransition("Dodge to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eLastAttackType != EAttackType::ATK_END;
+					return m_bDead || m_eCurAttackType != EAttackType::ATK_END;
 				})
 		.AddState("DodgeStop")
 			.OnStart([this]
@@ -411,7 +408,7 @@ void CEM0200::SetUpFSM()
 			.AddTransition("DodgeStop to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eLastAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.99f);
+					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.99f);
 				})
 
 
@@ -424,18 +421,65 @@ void CEM0200::SetUpFSM()
 			.AddTransition("Threat to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eLastAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 
+
 		.AddState("Hit_Light")
+			.OnStart([this]
+			{
+				//FSM의 상태가 변경 되면, 현 상태의 Exit과 변경될 상태의 Start를 실행하고 종료,
+				// Tick은 상태 변경 후 다음 틱 부터 실행된다.
+				Play_LightHitAnim();
+			})
+			.Tick([this](_double)
+			{
+				if (m_eCurAttackType == EAttackType::ATK_LIGHT)
+				{
+					Play_LightHitAnim();
+				}
+			})
+			.AddTransition("Hit_Light to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f)
+					|| (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
+				})
+
+
 		.AddState("Hit_Mid_Heavy")
+			.OnStart([this]
+			{
+				Play_MidHitAnim();
+			})
+			.Tick([this](_double)
+			{
+				if (m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_MIDDLE)
+				{
+					Play_MidHitAnim();
+				}
+			})
+			.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f)
+					|| m_eCurAttackType == EAttackType::ATK_TO_AIR;
+				})
 		.AddState("Death")
 			.OnStart([this]
 			{
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_424_AL_dead_down");
 			})
+
+
+
 		.AddState("Hit_ToAir")
+			.OnStart([this]
+			{
+				
+			})
+
 		.AddState("OnAir")
 		.AddState("Hit_OnAir")
 		
@@ -610,6 +654,37 @@ void CEM0200::Dodge_VelocityCalc()
 
 	const _float fYaw = m_pTransformCom->GetYaw_Radian();
 	m_vOnJumpMoveVelocity = XMVector3TransformNormal(vDirection * (fDistance / fJumpMoveTime), XMMatrixRotationY(fYaw));
+}
+
+void CEM0200::Play_LightHitAnim()
+{
+	if (m_eSimpleHitFrom == ESimpleAxis::NORTH)
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_401_AL_damage_l_F");
+	else
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_402_AL_damage_l_B");
+}
+
+void CEM0200::Play_MidHitAnim()
+{
+	switch (m_eHitFrom)
+	{
+	case EBaseAxis::NORTH: 
+		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_411_AL_damage_m_F");
+		break;
+	case EBaseAxis::EAST: 
+		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_414_AL_damage_m_R");
+		break;
+	case EBaseAxis::SOUTH:
+		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_412_AL_damage_m_B");
+		break;
+	case EBaseAxis::WEST:
+		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_413_AL_damage_m_L");
+		break;
+	case EBaseAxis::AXIS_END:
+		FALLTHROUGH;
+	default:
+		NODEFAULT;
+	}
 }
 
 _bool CEM0200::IsPlayingSocket() const

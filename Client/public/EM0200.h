@@ -26,20 +26,23 @@ public:
 	virtual void SetUpAnimationEvent() override;
 	virtual void SetUpFSM() override;
 
-
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
+	virtual void AfterPhysX() override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 	
-	virtual void AfterPhysX() override;
 
 protected:
 	void	Strew_Overlap(); // FlowerShower АјАн
 	void	Spin_SweepCapsule();
 	void	Kick_SweepSphere();
 	void	Dodge_VelocityCalc();
+
+private:
+	void Play_LightHitAnim();
+	void Play_MidHitAnim();
 
 private:
 	class CEM0200_Controller*		m_pController = nullptr;

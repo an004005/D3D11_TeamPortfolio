@@ -26,6 +26,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
+	virtual void AfterPhysX() override;
 	virtual void Imgui_RenderProperty() override;
 	virtual HRESULT Render_ShadowDepth() override;
 
@@ -101,9 +102,12 @@ protected:
 	_uint	iMonsterLevel = { 0 };
 	MONSTER_NAME m_eMonsterName = { MONSTERNAME_END };
 
-	// Late tick에서 다시 초기화해줌.
-	EAttackType m_eLastAttackType = EAttackType::ATK_END;
+	// AfterPhysX에서 다시 초기화해줌.
+
+	EAttackType m_ePreAttackType = EAttackType::ATK_END; // 이전 프레임에서 받은 공격 타입
+	EAttackType m_eCurAttackType = EAttackType::ATK_END; // 현 프레임에서 받은 공격 타입
 	EBaseAxis m_eHitFrom = EBaseAxis::AXIS_END;
+	ESimpleAxis m_eSimpleHitFrom = ESimpleAxis::AXIS_END;
 	_bool m_bHitWeak = false;
 	//
 

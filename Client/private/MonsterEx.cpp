@@ -96,9 +96,16 @@ void CMonsterEx::Late_Tick(_double TimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	}
+}
 
-	m_eLastAttackType = EAttackType::ATK_END;
+void CMonsterEx::AfterPhysX()
+{
+	CScarletCharacter::AfterPhysX();
+
+	m_ePreAttackType = m_eCurAttackType;
+	m_eCurAttackType = EAttackType::ATK_END;
 	m_eHitFrom = EBaseAxis::AXIS_END;
+	m_eSimpleHitFrom = ESimpleAxis::AXIS_END;
 	m_bHitWeak = false;
 }
 
@@ -179,8 +186,8 @@ void CMonsterEx::TakeDamage(DAMAGE_PARAM tDamageParams)
 	const _int iDamageRandomize = (_int)CMathUtils::RandomUInt((_uint)iDamageRandomRange);
 	tDamageParams.iDamage += iDamageRandomize - iDamageRandomRange / 2;
 
-	m_eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
-	m_eLastAttackType = tDamageParams.eAttackType;
+	m_eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom, &m_eSimpleHitFrom);
+	m_eCurAttackType = tDamageParams.eAttackType;
 	m_bHitWeak = IsWeak(dynamic_cast<CRigidBody*>(tDamageParams.pContactComponent));
 
 	CheckDeBuff(tDamageParams.eDeBuff);
@@ -303,7 +310,7 @@ void CMonsterEx::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 		if (tDamageParams.eAttackSAS == ESASType::SAS_HARDBODY)
 			iDamage *= 3;
 
-		switch (m_eLastAttackType)
+		switch (m_eCurAttackType)
 		{
 		case EAttackType::ATK_LIGHT: break;
 		case EAttackType::ATK_MIDDLE: break;
