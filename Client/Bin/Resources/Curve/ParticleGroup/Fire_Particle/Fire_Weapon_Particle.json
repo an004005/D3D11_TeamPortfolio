@@ -1,0 +1,1 @@
+{"LifeTime":10.0,"ObjectTag":"","Particles":[{"ObjectTag":"Player_Fire_Weapon_Particle","ParticleDirectory":"../Bin/Resources/VFX/ParticleSystem/Player_Sword_Particle/Player_Fire_Weapon_Particle.json"}],"Prototype_GameObject":"ProtoVFX_ParticleGroup\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
