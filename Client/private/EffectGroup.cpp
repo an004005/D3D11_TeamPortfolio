@@ -1732,6 +1732,8 @@ void CEffectGroup::Start_AttachOnlyPos(_float4 vPos, _bool trueisUpdate)
 		if (nullptr != m_pFifth_EffectSystem)
 			m_pFifth_EffectSystem->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, m_vPosition);
 	}
+
+	m_Timeline.PlayFromStart();
 }
 
 

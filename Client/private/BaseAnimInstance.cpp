@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "GameInstance.h"
 #include "HelperClasses.h"
+#include "VFX_Manager.h"
 
 HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject)
 {

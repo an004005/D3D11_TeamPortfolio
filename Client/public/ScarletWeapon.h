@@ -31,6 +31,7 @@ public:
 	virtual void Late_Tick(_double TimeDelta) override;
 
 public:
+	_matrix	Get_WeaponCenterMatrix();
 	void	Setup_BoneMatrix(CModel* pModel, _fmatrix Transform);
 
 public:
@@ -52,7 +53,7 @@ public:
 	void		Set_Bright(ESASType eType, _bool bBright);
 
 protected:
-	ESASType	m_eSasType = ESASType::SAS_GRAVIKENISIS;
+	ESASType	m_eSasType = ESASType::SAS_END;
 	_bool		m_bBright = false;
 
 protected:
