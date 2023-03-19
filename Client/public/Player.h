@@ -540,6 +540,8 @@ private:
 private:
 	CSAS_Portrait* m_pSasPortrait = nullptr;
 
+private:
+	vector<wstring>	m_vecRandomLandingDustName;
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

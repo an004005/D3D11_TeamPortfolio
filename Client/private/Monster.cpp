@@ -131,39 +131,39 @@ void CMonster::Imgui_RenderProperty()
 
 void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+	wstring HitBloodName = L"";
+	wstring HitEffectName = L"";
+
+	switch (tDamageParams.eAttackSAS)
+	{
+	case ESASType::SAS_FIRE:
+		random_shuffle(m_vecFireBlood.begin(), m_vecFireBlood.end());
+		random_shuffle(m_vecFireHit.begin(), m_vecFireHit.end());
+
+		HitBloodName = m_vecFireBlood.front();
+		HitEffectName = m_vecFireHit.front();
+		break;
+
+	case ESASType::SAS_ELETRIC:
+		random_shuffle(m_vecElecBlood.begin(), m_vecElecBlood.end());
+		random_shuffle(m_vecElecHit.begin(), m_vecElecHit.end());
+
+		HitBloodName = m_vecElecBlood.front();
+		HitEffectName = m_vecElecHit.front();
+		break;
+
+	default:
+		random_shuffle(m_vecDefaultBlood.begin(), m_vecDefaultBlood.end());
+		random_shuffle(m_vecDefaultHit.begin(), m_vecDefaultHit.end());
+
+		HitBloodName = m_vecDefaultBlood.front();
+		HitEffectName = m_vecDefaultHit.front();
+		break;
+	}
+
+
 	if (tDamageParams.vHitPosition == _float4(0.f, 0.f, 0.f, 1.f))
 	{
-		wstring HitBloodName = L"";
-		wstring HitEffectName = L"";
-
-		switch (tDamageParams.eAttackSAS)
-		{
-		case ESASType::SAS_FIRE:
-			random_shuffle(m_vecFireBlood.begin(), m_vecFireBlood.end());
-			random_shuffle(m_vecFireHit.begin(), m_vecFireHit.end());
-
-			HitBloodName = m_vecFireBlood.front();
-			HitEffectName = m_vecFireHit.front();
-			break;
-
-		case ESASType::SAS_ELETRIC:
-			random_shuffle(m_vecElecBlood.begin(), m_vecElecBlood.end());
-			random_shuffle(m_vecElecHit.begin(), m_vecElecHit.end());
-
-			HitBloodName = m_vecElecBlood.front();
-			HitEffectName = m_vecElecHit.front();
-			break;
-
-		default:
-			random_shuffle(m_vecDefaultBlood.begin(), m_vecDefaultBlood.end());
-			random_shuffle(m_vecDefaultHit.begin(), m_vecDefaultHit.end());
-
-			HitBloodName = m_vecDefaultBlood.front();
-			HitEffectName = m_vecDefaultHit.front();
-			break;
-		}
-		
-
 		// 타격점이 원점으로 찍히면 레이캐스트를 쏴서 위치를 판단
 		if (tDamageParams.pCauser != nullptr)
 		{
@@ -199,30 +199,35 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 						m_SoundStore.PlaySound("fx_impact_flesh", &vPos);
 						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, vHitPos, vEffectDir);
 
-						/*if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY)
-						{
-							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Throw_Kinetic_Distortion")->Start_AttachPosition(this, vHitPos, vEffectDir);
-						}*/
+
+						if (tDamageParams.eAttackSAS == ESASType::SAS_NOT)
+							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Default_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
+						else if (tDamageParams.eAttackSAS == ESASType::SAS_FIRE)
+							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Player_Fire_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
+						else if (tDamageParams.eAttackSAS == ESASType::SAS_ELETRIC)
+							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Player_Elec_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
 					}
 				}
 			}
 		}
-		else
-		{
-			// 타격점이 잘 나오면 해당 위치에 생성
-			_vector vHitPos = tDamageParams.vHitPosition;
-			_vector vEffectDir = tDamageParams.vSlashVector;
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)->Start_AttachPosition(this, vHitPos, vEffectDir);
+	}
+	else
+	{
+		// 타격점이 잘 나오면 해당 위치에 생성
+		_vector vHitPos = tDamageParams.vHitPosition;
+		_vector vEffectDir = tDamageParams.vSlashVector;
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)->Start_AttachPosition(this, vHitPos, vEffectDir);
 
-			_float4 vPos = vHitPos;
-			m_SoundStore.PlaySound("fx_impact_flesh", &vPos);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, vHitPos, vEffectDir);
+		_float4 vPos = vHitPos;
+		m_SoundStore.PlaySound("fx_impact_flesh", &vPos);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, vHitPos, vEffectDir);
 
-			/*if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY)
-			{
-				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Throw_Kinetic_Distortion")->Start_AttachPosition(this, vHitPos, vEffectDir);
-			}*/
-		}
+		if (tDamageParams.eAttackSAS == ESASType::SAS_NOT)
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Default_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
+		else if (tDamageParams.eAttackSAS == ESASType::SAS_FIRE)
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Player_Fire_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
+		else if (tDamageParams.eAttackSAS == ESASType::SAS_ELETRIC)
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Player_Elec_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
 	}
 }
 

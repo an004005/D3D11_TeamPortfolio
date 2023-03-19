@@ -6,6 +6,7 @@
 #include "GameUtils.h"
 #include "ImguiUtils.h"
 #include "JsonLib.h"
+#include "PlayerInfoManager.h"
 
 CTrailSystem::CTrailSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -62,6 +63,20 @@ void CTrailSystem::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
 	m_pBuffer->Tick(TimeDelta);
+
+	// SAS에 따른 트레일 색상값 변경
+	list<ESASType>	TrailType = CPlayerInfoManager::GetInstance()->Get_PlayerSasList();
+
+	m_vColor = _float4(215.f / 255.f, 66.f / 255.f, 248.f / 255.f, 1.f);
+
+	const auto FireCheck = find(TrailType.begin(), TrailType.end(), ESASType::SAS_FIRE);
+	if (FireCheck != TrailType.end())
+		m_vColor = _float4(1.f, 180.f / 255.f, 45.f / 255.f, 1.f);
+
+	//const auto ElecCheck = find(TrailType.begin(), TrailType.end(), ESASType::SAS_ELETRIC);
+	//if (ElecCheck != TrailType.end())
+	//	m_vColor = _float4(1.f, 180.f / 255.f, 45.f / 255.f, 1.f);
+	// ~SAS에 따른 트레일 색상값 변경
 
 	if (m_vPrePoses.size() > 3)
 	{
