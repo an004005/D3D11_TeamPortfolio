@@ -140,7 +140,7 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 public:	// 현재 타게팅 된 몬스터 포인터 가져오는 함수
-	CGameObject*	Get_TargetedEnemy();
+//	CGameObject*	Get_TargetedEnemy();
 
 private:
 	void CamBoneTest();	// 액션캠 예시
@@ -187,6 +187,15 @@ private:
 	class CMonsterLockonUI*	m_pUI_LockOn = nullptr;
 	CGameObject*		m_pSettedTarget = nullptr;
 //	CRigidBody*			m_pContectRigidBody = nullptr;
+
+private:	// 특수연출용 FSM
+	HRESULT				SetUp_TrainStateMachine();
+	CFSMComponent*		m_pTrainStateMachine_Left = nullptr;
+
+private:	// 특수연출용 소켓 애니메이션
+	list<CAnimation*>	m_Train_Charge_L;	// 좌측 기차 차지
+	list<CAnimation*>	m_Train_Cancel_L;	// 좌측 기차 취소
+	list<CAnimation*>	m_Train_Throw_L;	// 좌측 기차 던짐
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -339,6 +348,7 @@ private:
 	_float	m_fKineticCharge = 0.f;			// 염력 차지 시간, 기본적으로 1초
 
 	_bool	m_bKineticCombo = false;	// 현재 공격 진행중인지?
+	_bool	m_bKineticSpecial = false;	// 염력 특수 연출중인지?
 	
 	_float	m_fJustDodgeAble = 0.f;
 

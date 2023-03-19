@@ -2349,6 +2349,36 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_372_AL_Cap_sLcLeL_end": {
+        "Duration": 143.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_372_AL_Cap_sLcLeL_loop": {
+        "Duration": 312.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_372_AL_Cap_sLcLeL_start": {
+        "Duration": 30.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_372_AL_mg_train_L": {
+        "Duration": 305.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_372_AL_mg_train_R": {
+        "Duration": 306.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_401_AL_damage_l_F": {
         "Duration": 69.0,
         "TickPerSecond": 50.0,

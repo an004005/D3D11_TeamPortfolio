@@ -115,6 +115,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(CPlayerInfoManager::GetInstance()->Initialize()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_TrainStateMachine()))
+		return E_FAIL;
+
 	ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
@@ -216,10 +219,17 @@ void CPlayer::Tick(_double TimeDelta)
 
 	HitCheck();
 
+	// Æ¯¼ö±â
+	if (!m_bHit)
+	{
+		m_pTrainStateMachine_Left->Tick(TimeDelta);
+	}
+	// ~Æ¯¼ö±â
+
 	/*if(!m_bHit)
 		m_pJustDodgeStateMachine->Tick(TimeDelta);*/
 
-	if (!m_bHit && (false == m_bKineticCombo)) // ÄÞº¸ Å¸ÀÌ¹ÖÀÌ ¾Æ´Ò ¶§¿¡´Â ÀÏ¹Ý ¿°·Â
+	if (!m_bHit && (false == m_bKineticCombo) && (false == m_bKineticSpecial)) // ÄÞº¸ Å¸ÀÌ¹ÖÀÌ ¾Æ´Ò ¶§¿¡´Â ÀÏ¹Ý ¿°·Â
 	{
 		m_pKineticStataMachine->Tick(TimeDelta);
 
@@ -231,16 +241,18 @@ void CPlayer::Tick(_double TimeDelta)
 				->Start_AttachPosition(CPlayerInfoManager::GetInstance()->Get_KineticObject(), vPos, _float4(0.f, 1.f, 0.f, 0.f), true);
 		}*/
 	}
-	if (!m_bHit) // ÄÞº¸ Å¸ÀÌ¹Ö¿¡´Â ÄÞº¸ ¿°·Â
+	if (!m_bHit && (false == m_bKineticSpecial)) // ÄÞº¸ Å¸ÀÌ¹Ö¿¡´Â ÄÞº¸ ¿°·Â
 	{
 		m_pKineticComboStateMachine->Tick(TimeDelta);
 		//m_pKineticStataMachine->SetState("NO_USE_KINETIC");
 	}
-	else
+
+	if (m_bHit)
 	{
 		m_pKineticComboStateMachine->SetState("KINETIC_COMBO_NOUSE");
 		m_pKineticStataMachine->SetState("NO_USE_KINETIC");
 		m_pJustDodgeStateMachine->SetState("JUSTDODGE_NONUSE");
+		m_pTrainStateMachine_Left->SetState("TRAIN_LEFT_NOUSE");
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false);
 	}
 
@@ -293,16 +305,23 @@ void CPlayer::Tick(_double TimeDelta)
 
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+	if (pGameInstance->KeyDown(DIK_J))
+	{
+		list<CAnimation*> TestAnim;
+		TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_372_AL_mg_train_L"));
+		m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
+		static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+	}
 	if (pGameInstance->KeyDown(DIK_K))
 	{
 		list<CAnimation*> TestAnim;
-		TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_207_AL_atk_justdodge"));
+		TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_372_AL_mg_train_R"));
 		m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
+		static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 	}
-
 	if (pGameInstance->KeyPressing(DIK_L))
 	{
-		//Kinetic_Combo_Test();
+		static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 	}
 
 	SocketLocalMoveCheck();
@@ -492,7 +511,7 @@ void CPlayer::Imgui_RenderProperty()
 	// HP Bar Check	
 	ImGui::Text("HP : %d", CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP);
 
-	m_pKineticStataMachine->Imgui_RenderProperty();
+	m_pTrainStateMachine_Left->Imgui_RenderProperty();
 
 	ImGui::SliderFloat("PlayerTurnSpeed", &m_fTurnSpeed, 0.f, 1000.f);
 	if (ImGui::Button("TurnAccess"))
@@ -2886,6 +2905,121 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_TrainStateMachine()
+{
+	CAnimation*	pAnimation = nullptr;
+
+	// ÁÂÃø Â÷Áö
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_372_AL_Cap_sLcLeL_start"));
+	m_Train_Charge_L.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_372_AL_Cap_sLcLeL_loop"));
+	m_Train_Charge_L.push_back(pAnimation);
+	// ÁÂÃø Äµ½½
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_372_AL_Cap_sLcLeL_end"));
+	m_Train_Cancel_L.push_back(pAnimation);
+	// ÁÂÃø ´øÁö±â
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_372_AL_mg_train_L"));
+	m_Train_Throw_L.push_back(pAnimation);
+
+	m_pTrainStateMachine_Left = 
+		CFSMComponentBuilder()
+		.InitState("TRAIN_LEFT_NOUSE")
+
+		.AddState("TRAIN_LEFT_NOUSE")
+		.OnStart([&]() 
+		{
+			m_bKineticSpecial = false;
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			
+		})
+		.OnExit([&]()
+		{
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+		})
+
+			.AddTransition("TRAIN_LEFT_NOUSE to TRAIN_LEFT_CHARGE", "TRAIN_LEFT_CHARGE")
+			.Predicator([&]()->_bool { return m_bKineticG; })
+			.Priority(0)
+
+
+		.AddState("TRAIN_LEFT_CHARGE")
+		.OnStart([&]() 
+		{
+			m_bKineticSpecial = true;
+			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_Train_Charge_L);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_fKineticCharge += (_float)fTimeDelta;
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+
+			.AddTransition("TRAIN_LEFT_CHARGE to TRAIN_LEFT_THROW", "TRAIN_LEFT_THROW")
+			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
+			.Priority(0)
+
+			.AddTransition("TRAIN_LEFT_CHARGE to TRAIN_LEFT_CANCEL", "TRAIN_LEFT_CANCEL")
+			.Predicator([&]()->_bool { return !m_bKineticG; })
+			.Priority(0)
+
+		.AddState("TRAIN_LEFT_CANCEL")
+		.OnStart([&]()
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Train_Cancel_L);
+		})
+		.OnExit([&]()
+		{
+			m_bKineticSpecial = false;
+		})
+
+			.AddTransition("TRAIN_LEFT_CANCEL to TRAIN_LEFT_NOUSE", "TRAIN_LEFT_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket") || m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB || m_bKineticG); 
+			})
+			.Priority(0)
+
+		.AddState("TRAIN_LEFT_THROW")
+		.OnStart([&]() 
+		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_Train_Throw_L);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			
+		})
+		.OnExit([&]()
+		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			m_fKineticCharge = 0.f;
+		})
+
+			.AddTransition("TRAIN_LEFT_THROW to TRAIN_LEFT_NOUSE", "TRAIN_LEFT_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket") || 
+					( ((m_pASM->isSocketPassby("Kinetic_Special_AnimSocket"), 0.8f) && (m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB))));
+			})
+			.Priority(0)
+
+
+		.Build();
+
+	// Â÷Áö / Äµ½½ / µ¿ÀÛ 3°³·Î ½ºÅ×ÀÌÆ® ºÐÇÒ
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Setup_AnimSocket()
 {
 	CAnimation*	pAnimation = nullptr;
@@ -4211,6 +4345,8 @@ void CPlayer::Free()
 
 	Safe_Release(m_pCurve);
 	Safe_Release(m_pRange);
+
+	Safe_Release(m_pTrainStateMachine_Left);
 
 //	Safe_Release(m_pContectRigidBody);
 }
