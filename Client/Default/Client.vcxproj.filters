@@ -878,6 +878,7 @@
     <ClInclude Include="..\public\Enemy.h">
       <Filter>02.GameObjects\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Imgui_Batch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1411,6 +1412,7 @@
     <ClCompile Include="..\private\Enemy.cpp">
       <Filter>02.GameObjects\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Imgui_Batch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
