@@ -315,6 +315,19 @@ void CParticleGroup::Late_Tick(_double TimeDelta)
 	}
 }
 
+void CParticleGroup::AfterPhysX()
+{
+	__super::AfterPhysX();
+	if (m_bGenerate == true)
+	{
+		for (auto iter : m_mapParticleSystem)
+		{
+			if (iter.second.second != nullptr)
+				iter.second.second->AfterPhysX();
+		}
+	}
+}
+
 void CParticleGroup::SaveToJson(Json& json)
 {
 	if (m_mapParticleSystem.empty() == true)

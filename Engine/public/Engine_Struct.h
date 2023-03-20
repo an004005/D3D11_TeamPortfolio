@@ -222,6 +222,7 @@ namespace Engine
 		_float4			vUp;
 		_float4			vLook;
 		_float4			vPosition;
+		_float4			vColor;
 	}VTXINSTANCE_DRAWDATA;
 
 	typedef struct tagVertex_Instance
@@ -239,6 +240,7 @@ namespace Engine
 		_float			fGravityPower;
 		_float			fLifeTime;
 		_float			fCurLifeTime;
+		class CRigidBody* pRigidBody = nullptr;
 	}VTXINSTANCE;
 
 	/*******************

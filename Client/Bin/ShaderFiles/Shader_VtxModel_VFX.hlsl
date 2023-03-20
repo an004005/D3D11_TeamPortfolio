@@ -320,6 +320,22 @@ PS_OUT PS_DEFAULT_MODEL(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_ATTACK_SLASH_LINE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 OriginTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 BlendColor = OriginTex * Color * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+	Out.vColor.a *= saturate(OriginTex.r * g_float_1);
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	return Out;
+}
+
 // Mesh Trail (Gara)
 PS_OUT PS_DEFAULT_MODEL_FLOWUV(PS_IN In)
 {
@@ -809,4 +825,18 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_USE_KINETIC_CIRCLE();
 	}
 
+
+	//15
+	pass PlayerSlashLine
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ATTACK_SLASH_LINE();
+	}
 }

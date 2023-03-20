@@ -2,6 +2,7 @@
 #include "VIBuffer_Mesh_Instance.h"
 
 #include "GameUtils.h"
+#include "RigidBody.h"
 
 CVIBuffer_Mesh_Instancing::CVIBuffer_Mesh_Instancing(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer_Instancing(pDevice, pContext)
@@ -272,7 +273,7 @@ void CVIBuffer_Mesh_Instancing::SetInstanceBuffer(list<VTXINSTANCE>* pBuffer)
 		tmp.vUp = data.vUp;
 		tmp.vLook = data.vLook;
 		tmp.vPosition = data.vPosition;
-		//tmp.vColor = data.vColor;
+		tmp.vColor = data.vColor;
 
 		//memcpy(&tmp, &data, sizeof(VTXINSTANCE_DRAWDATA));
 		((VTXINSTANCE_DRAWDATA*)SubResource.pData)[iIdx] = tmp;
