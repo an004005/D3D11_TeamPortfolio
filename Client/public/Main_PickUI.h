@@ -31,6 +31,9 @@ public:
 	}
 
 private:
+	void	CurrentPick(const _double & TimeDelta);
+
+private:
 	_bool	m_vOnButton = { false };
 
 	_tchar*	m_szText = { L"" };

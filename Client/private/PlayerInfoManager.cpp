@@ -26,7 +26,40 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.m_iKineticEnergyLevel = 2;
 	m_tPlayerStat.m_iKineticEnergyType = 2;
 
+	m_tHanabiStat.iExp = 0;
+	m_tHanabiStat.iMaxExp = 100;
+	m_tHanabiStat.iLevel = 1;
+	m_tHanabiStat.iSprbrPower = 110;
+	m_tHanabiStat.iAttack = 30;
+	m_tHanabiStat.iDefense = 15;
+
 #pragma endregion 플레이어 기본 스탯 초기화
+
+#pragma region	멤버 기본 스탯 초기화
+
+	m_tHanabiStat.m_bMember = false;
+	m_tHanabiStat.iHP = 1700;
+	m_tHanabiStat.iMaxHP = 1700;
+	m_tHanabiStat.iExp = 0;
+	m_tHanabiStat.iMaxExp = 100;
+	m_tHanabiStat.iLevel = 1;
+	m_tHanabiStat.iBondLevel = 1;
+	m_tHanabiStat.iSprbrPower = 276;
+	m_tHanabiStat.iAttack = 50;
+	m_tHanabiStat.iDefense = 20;
+
+	m_tTsugumiStat.m_bMember = false;
+	m_tTsugumiStat.iHP = 1300;
+	m_tTsugumiStat.iMaxHP = 1300;
+	m_tTsugumiStat.iExp = 0;
+	m_tTsugumiStat.iMaxExp = 100;
+	m_tTsugumiStat.iLevel = 1;
+	m_tTsugumiStat.iBondLevel = 1;
+	m_tTsugumiStat.iSprbrPower = 325;
+	m_tTsugumiStat.iAttack = 60;
+	m_tTsugumiStat.iDefense = 10;
+
+#pragma endregion	멤버 기본 스탯 초기화
 
 #pragma region SAS정보 초기화
 
@@ -149,6 +182,8 @@ HRESULT CPlayerInfoManager::Set_KineticObject(CGameObject * pKineticObject)
 	if (true == static_cast<CMapKinetic_Object*>(m_pKineticObject)->GetThrow()) return E_FAIL;		// 던져진 객체이면
 	
 	m_pKineticObject = pKineticObject;
+
+	return S_OK;
 }
 
 HRESULT CPlayerInfoManager::Set_TargetedMonster(CGameObject * pTargetedMonster)
@@ -160,6 +195,8 @@ HRESULT CPlayerInfoManager::Set_TargetedMonster(CGameObject * pTargetedMonster)
 	if (true == static_cast<CMonster*>(m_pTargetedMonster)->IsDead()) return E_FAIL;	// 죽은 상태이면
 
 	m_pTargetedMonster = pTargetedMonster;
+
+	return S_OK;
 }
 
 void CPlayerInfoManager::Free()

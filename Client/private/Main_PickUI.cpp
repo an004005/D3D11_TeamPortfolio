@@ -33,6 +33,8 @@ void CMain_PickUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	CurrentPick(TimeDelta);
+
 	if (true == IsCursorOn(CGameUtils::GetClientCursor()) &&
 		CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
@@ -75,6 +77,13 @@ void CMain_PickUI::SaveToJson(Json & json)
 void CMain_PickUI::LoadFromJson(const Json & json)
 {
 	CUI::LoadFromJson(json);
+
+}
+
+void CMain_PickUI::CurrentPick(const _double & TimeDelta)
+{
+	if (false == m_vOnButton) return;
+
 
 }
 
