@@ -240,6 +240,7 @@ namespace Engine
 		_float			fGravityPower;
 		_float			fLifeTime;
 		_float			fCurLifeTime;
+		class CRigidBody* pRigidBody = nullptr;
 	}VTXINSTANCE;
 
 	/*******************

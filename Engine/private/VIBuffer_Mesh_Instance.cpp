@@ -2,6 +2,7 @@
 #include "VIBuffer_Mesh_Instance.h"
 
 #include "GameUtils.h"
+#include "RigidBody.h"
 
 CVIBuffer_Mesh_Instancing::CVIBuffer_Mesh_Instancing(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer_Instancing(pDevice, pContext)
