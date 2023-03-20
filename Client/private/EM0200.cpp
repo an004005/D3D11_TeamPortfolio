@@ -7,12 +7,12 @@
 #include "EM0200_Controller.h"
 
 CEM0200::CEM0200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CMonsterEx(pDevice, pContext)
+	: CEnemy(pDevice, pContext)
 {
 }
 
 CEM0200::CEM0200(const CEM0200& rhs)
-	: CMonsterEx(rhs)
+	: CEnemy(rhs)
 {
 }
 
@@ -34,7 +34,7 @@ HRESULT CEM0200::Initialize(void* pArg)
 		iMonsterLevel = 2;
 	}
 
-	FAILED_CHECK(CMonsterEx::Initialize(pArg));
+	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eMonsterName = FLOWERLEG;
 	m_bHasCrushGage = false;
@@ -45,7 +45,7 @@ HRESULT CEM0200::Initialize(void* pArg)
 
 void CEM0200::SetUpComponents(void* pArg)
 {
-	CMonsterEx::SetUpComponents(pArg);
+	CEnemy::SetUpComponents(pArg);
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em200", L"Model", (CComponent**)&m_pModelCom));
 
 	// 꼬리 충돌체
@@ -71,7 +71,7 @@ void CEM0200::SetUpComponents(void* pArg)
 
 void CEM0200::SetUpSound()
 {
-	CMonsterEx::SetUpSound();
+	CEnemy::SetUpSound();
 
 	m_SoundStore.CloneSound("mon_5_backdodge");
 	m_SoundStore.CloneSound("mon_5_sidedodge");
@@ -101,7 +101,7 @@ void CEM0200::SetUpSound()
 
 void CEM0200::SetUpAnimationEvent()
 {
-	CMonsterEx::SetUpAnimationEvent();
+	CEnemy::SetUpAnimationEvent();
 
 	m_pModelCom->Add_EventCaller("JumpAttackStart", [this]
 	{
@@ -109,7 +109,7 @@ void CEM0200::SetUpAnimationEvent()
 		{
 			m_bJumpAttack = true;
 			m_fGravity = 80.f;
-			m_fYSpeed = 30.f;
+			m_fYSpeed = 27.f;
 
 			_vector vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			vOrigin = XMVectorSetY(vOrigin, 0.f);
@@ -208,31 +208,25 @@ void CEM0200::SetUpAnimationEvent()
 		}
 	});
 
-	m_pModelCom->Add_EventCaller("Kick_Event", [this] { Kick_SweepSphere(); });
-	m_pModelCom->Add_EventCaller("Upper", [this] 
-	{		
-		m_fGravity = 20.f;
-		m_fYSpeed = 10.f; 
-	});
+	//m_pModelCom->Add_EventCaller("Kick_Event", [this] { Kick_SweepSphere(); });
+
+	// 공중에서 추가타 맞을 때
 	m_pModelCom->Add_EventCaller("Successive", [this] 
 	{ 
 		m_fGravity = 3.f;
 		m_fYSpeed = 1.5f;
 	});
+	// 공중에서 추가타 맞고 다시 떨어지는 순간
 	m_pModelCom->Add_EventCaller("AirDamageReset", [this] 
 	{ 
 		m_fGravity = 20.f;
 		m_fYSpeed = 0.f;
 	});
-	m_pModelCom->Add_EventCaller("Damage_End", [this]
-	{
-		// m_bHitMove = false;
-	});
 }
 
 void CEM0200::SetUpFSM()
 {
-	CMonsterEx::SetUpFSM();
+	CEnemy::SetUpFSM();
 
 	/*
 	 *input R : spin 공격
@@ -477,24 +471,44 @@ void CEM0200::SetUpFSM()
 		.AddState("Hit_ToAir")
 			.OnStart([this]
 			{
-				
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_432_AL_blow_start_F");
+				m_fYSpeed = 10.f; 
 			})
-
-		.AddState("OnAir")
-		.AddState("Hit_OnAir")
-		
-
+			.Tick([this](_double)
+			{
+				// 공중 추가타로 살짝 올라가는 애님
+				if (m_eCurAttackType != EAttackType::ATK_END)
+				{
+					m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_455_AL_rise_start");
+				}
+			})
+			.AddTransition("Hit_ToAir to OnFloorGetup", "OnFloorGetup")
+				.Predicator([this]
+				{
+					return !m_bPreOnFloor && m_bOnFloor;
+				})
+		.AddState("OnFloorGetup")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", {"AS_em0200_433_AL_blow_landing_F", "AS_em0200_427_AL_getup"});
+				m_fGravity = 20.f;
+			})
+			.AddTransition("OnFloorGetup to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketEmpty("FullBody");
+				})
 		.Build();
 }
 
 void CEM0200::BeginTick()
 {
-	CMonsterEx::BeginTick();
+	CEnemy::BeginTick();
 }
 
 void CEM0200::Tick(_double TimeDelta)
 {
-	CMonsterEx::Tick(TimeDelta);
+	CEnemy::Tick(TimeDelta);
 
 	m_pController->SetTarget(m_pTarget);
 	if (m_bDead == false)
@@ -529,7 +543,7 @@ void CEM0200::Tick(_double TimeDelta)
 
 void CEM0200::Late_Tick(_double TimeDelta)
 {
-	CMonsterEx::Late_Tick(TimeDelta);
+	CEnemy::Late_Tick(TimeDelta);
 }
 
 HRESULT CEM0200::Render()
@@ -540,7 +554,7 @@ HRESULT CEM0200::Render()
 
 void CEM0200::Imgui_RenderProperty()
 {
-	CMonsterEx::Imgui_RenderProperty();
+	CEnemy::Imgui_RenderProperty();
 	if (ImGui::CollapsingHeader("ASM"))
 	{
 		m_pASM->Imgui_RenderState();
@@ -549,7 +563,7 @@ void CEM0200::Imgui_RenderProperty()
 
 void CEM0200::AfterPhysX()
 {
-	CMonsterEx::AfterPhysX();
+	CEnemy::AfterPhysX();
 
 	m_pRange->Update_Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pTailCol->Update_Tick(m_pModelCom->GetBoneMatrix("Tail4") * m_pTransformCom->Get_WorldMatrix());
@@ -718,7 +732,7 @@ CGameObject* CEM0200::Clone(void* pArg)
 
 void CEM0200::Free()
 {
-	CMonsterEx::Free();
+	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pTailCol);

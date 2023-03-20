@@ -55,7 +55,8 @@ protected:
 	CControlledRigidBody* m_pCollider = nullptr;
 	CGameInstance* m_pGameInstance = nullptr;
 	_float4 m_vPrePos;
-	_bool m_bOnFloor = false;
+	_bool m_bPreOnFloor = false; // 이전 프레임에서 땅을 밝고 있는지 확인용
+	_bool m_bOnFloor = false; // 현 프레임에서 땅 밝고 있는지 여부
 	_bool m_bOnSide = false;
 
 	_bool m_bActiveGravity = true;

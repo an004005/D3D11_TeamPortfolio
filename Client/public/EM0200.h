@@ -1,5 +1,5 @@
 #pragma once
-#include "MonsterEx.h"
+#include "Enemy.h"
 #include "Controller.h"
 
 BEGIN(Engine)
@@ -11,7 +11,8 @@ END
 
 BEGIN(Client)
 
-class CEM0200 : public CMonsterEx
+// FlowerLeg (본명: 바스포즈)
+class CEM0200 : public CEnemy
 {
 private:
 	CEM0200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -32,7 +33,13 @@ public:
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
-	
+
+public:
+	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
+	_float3 GetMoveAxis() const { return m_vMoveAxis; }
+	_float GetTurnRemain() const { return m_fTurnRemain; }
+	_bool IsPlayingSocket() const;		
+	_bool IsRun() const { return m_bRun; }
 
 protected:
 	void	Strew_Overlap(); // FlowerShower 공격
@@ -57,12 +64,9 @@ private:
 	CDoOnce m_Laugh;
 
 private:
-
 	_float3 m_vMoveAxis;
 	_float m_fTurnRemain = 0.f;
 
-	_bool m_bDown = false; // 공중 피격 후 낙하하여 Down 된 상태. 보스와 달리 단순 Down 뿐
-	
 	// Jump, dodge
 	_bool m_bJumpAttack = false;
 	_float3 m_vOnJumpMoveVelocity;
@@ -79,13 +83,6 @@ private:
 
 	CController::EHandleInput m_eInput;
 
-
-public:
-	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
-	_float3 GetMoveAxis() const { return m_vMoveAxis; }
-	_float GetTurnRemain() const { return m_fTurnRemain; }
-	_bool IsPlayingSocket() const;		
-	_bool IsRun() const { return m_bRun; }
 
 public:
 	static CEM0200* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

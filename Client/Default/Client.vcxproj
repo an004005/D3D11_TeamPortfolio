@@ -233,6 +233,7 @@
     <ClInclude Include="..\public\EM0200.h" />
     <ClInclude Include="..\public\EM0200_AnimInstance.h" />
     <ClInclude Include="..\public\EM0200_Controller.h" />
+    <ClInclude Include="..\public\Enemy_AnimInstance.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
     <ClInclude Include="..\public\FLInvisible_AnimInstance.h" />
     <ClInclude Include="..\public\FLInvisible_Controller.h" />
@@ -246,7 +247,7 @@
     <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\GravikenisisMouseUI.h" />
     <ClInclude Include="..\public\GravikenisisGUI.h" />
-    <ClInclude Include="..\public\MonsterEx.h" />
+    <ClInclude Include="..\public\Enemy.h" />
     <ClInclude Include="..\public\NextMapNameUI.h" />
     <ClInclude Include="..\public\NoticeNeonUI.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
@@ -408,6 +409,7 @@
     <ClCompile Include="..\private\EM0200.cpp" />
     <ClCompile Include="..\private\EM0200_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0200_Controller.cpp" />
+    <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />
     <ClCompile Include="..\private\FLInvisible_AnimInstance.cpp" />
     <ClCompile Include="..\private\FLInvisible_Controller.cpp" />
@@ -421,7 +423,7 @@
     <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\GravikenisisMouseUI.cpp" />
     <ClCompile Include="..\private\GravikenisisGUI.cpp" />
-    <ClCompile Include="..\private\MonsterEx.cpp" />
+    <ClCompile Include="..\private\Enemy.cpp" />
     <ClCompile Include="..\private\NextMapNameUI.cpp" />
     <ClCompile Include="..\private\NoticeNeonUI.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />

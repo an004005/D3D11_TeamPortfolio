@@ -12,15 +12,15 @@ END
 
 BEGIN(Client)
 
-class CMonsterEx abstract : public CScarletCharacter
+class CEnemy abstract : public CScarletCharacter
 {
 public:
 	enum MONSTER_NAME { BRONJON, SKUMMYPANDOU, SKUMMYPOOL, BUDDYLUMI, FLOWERLEG, GODLYFERRY, MONSTERNAME_END };
 
 protected:
-	CMonsterEx(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMonsterEx(const CScarletCharacter& rhs);
-	virtual ~CMonsterEx() = default;
+	CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEnemy(const CScarletCharacter& rhs);
+	virtual ~CEnemy() = default;
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
@@ -103,8 +103,6 @@ protected:
 	MONSTER_NAME m_eMonsterName = { MONSTERNAME_END };
 
 	// AfterPhysX에서 다시 초기화해줌.
-
-	EAttackType m_ePreAttackType = EAttackType::ATK_END; // 이전 프레임에서 받은 공격 타입
 	EAttackType m_eCurAttackType = EAttackType::ATK_END; // 현 프레임에서 받은 공격 타입
 	EBaseAxis m_eHitFrom = EBaseAxis::AXIS_END;
 	ESimpleAxis m_eSimpleHitFrom = ESimpleAxis::AXIS_END;

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\public\MonsterEx.h"
+#include "..\public\Enemy.h"
 #include "Model.h"
 #include "Animation.h"
 #include "Renderer.h"
@@ -11,7 +11,7 @@
 #include "FSMComponent.h"
 #include "TestTarget.h"
 
-vector<wstring>			CMonsterEx::s_vecDefaultBlood{
+vector<wstring>			CEnemy::s_vecDefaultBlood{
 	L"Default_Blood_00",
 	L"Default_Blood_01",
 	L"Default_Blood_02",
@@ -20,7 +20,7 @@ vector<wstring>			CMonsterEx::s_vecDefaultBlood{
 	L"Default_Blood_05",
 	L"Default_Blood_06"
 };
-vector<wstring>			CMonsterEx::s_vecFireBlood{
+vector<wstring>			CEnemy::s_vecFireBlood{
 	L"Fire_Blood_00",
 	L"Fire_Blood_01",
 	L"Fire_Blood_02",
@@ -29,7 +29,7 @@ vector<wstring>			CMonsterEx::s_vecFireBlood{
 	L"Fire_Blood_05",
 	L"Fire_Blood_06"
 };
-vector<wstring>			CMonsterEx::s_vecElecBlood{
+vector<wstring>			CEnemy::s_vecElecBlood{
 	L"Elec_Blood_00",
 	L"Elec_Blood_01",
 	L"Elec_Blood_02",
@@ -39,30 +39,30 @@ vector<wstring>			CMonsterEx::s_vecElecBlood{
 	L"Elec_Blood_06",
 };
 
-vector<wstring>			CMonsterEx::s_vecDefaultHit{
+vector<wstring>			CEnemy::s_vecDefaultHit{
 	L"Default_Attack_OnHit_00",
 	L"Default_Attack_OnHit_01"
 };
-vector<wstring>			CMonsterEx::s_vecFireHit{
+vector<wstring>			CEnemy::s_vecFireHit{
 	L"Fire_Attack_OnHit_00",
 	L"Fire_Attack_OnHit_01"
 };
-vector<wstring>			CMonsterEx::s_vecElecHit{
+vector<wstring>			CEnemy::s_vecElecHit{
 	L"Elec_Attack_OnHit_00",
 	L"Elec_Attack_OnHit_01"
 };
 
-CMonsterEx::CMonsterEx(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CEnemy::CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CScarletCharacter(pDevice, pContext)
 {
 }
 
-CMonsterEx::CMonsterEx(const CScarletCharacter& rhs)
+CEnemy::CEnemy(const CScarletCharacter& rhs)
 	: CScarletCharacter(rhs)
 {
 }
 
-HRESULT CMonsterEx::Initialize(void* pArg)
+HRESULT CEnemy::Initialize(void* pArg)
 {
 	FAILED_CHECK(CScarletCharacter::Initialize(pArg));
 	m_DeathTimeline.SetFinishFunction([this]
@@ -81,14 +81,14 @@ HRESULT CMonsterEx::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CMonsterEx::Tick(_double TimeDelta)
+void CEnemy::Tick(_double TimeDelta)
 {
 	CScarletCharacter::Tick(TimeDelta);
 	FindTarget();
 	Update_DeadDissolve(TimeDelta);
 }
 
-void CMonsterEx::Late_Tick(_double TimeDelta)
+void CEnemy::Late_Tick(_double TimeDelta)
 {
 	CScarletCharacter::Late_Tick(TimeDelta);
 	if (m_bVisible)
@@ -98,18 +98,17 @@ void CMonsterEx::Late_Tick(_double TimeDelta)
 	}
 }
 
-void CMonsterEx::AfterPhysX()
+void CEnemy::AfterPhysX()
 {
 	CScarletCharacter::AfterPhysX();
 
-	m_ePreAttackType = m_eCurAttackType;
 	m_eCurAttackType = EAttackType::ATK_END;
 	m_eHitFrom = EBaseAxis::AXIS_END;
 	m_eSimpleHitFrom = ESimpleAxis::AXIS_END;
 	m_bHitWeak = false;
 }
 
-void CMonsterEx::Imgui_RenderProperty()
+void CEnemy::Imgui_RenderProperty()
 {
 	CScarletCharacter::Imgui_RenderProperty();
 	ImGui::Checkbox("Use TestTarget", &m_bFindTestTarget);
@@ -150,19 +149,19 @@ void CMonsterEx::Imgui_RenderProperty()
 	}
 }
 
-HRESULT CMonsterEx::Render_ShadowDepth()
+HRESULT CEnemy::Render_ShadowDepth()
 {
 	m_pModelCom->Render_ShadowDepth(m_pTransformCom);
 	return S_OK;
 }
 
-void CMonsterEx::SetUpComponents(void* pArg)
+void CEnemy::SetUpComponents(void* pArg)
 {
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 }
 
-void CMonsterEx::SetUpSound()
+void CEnemy::SetUpSound()
 {
 	if (m_strDeathSoundTag.empty() == false)
 		m_SoundStore.CloneSound(m_strDeathSoundTag);
@@ -172,7 +171,7 @@ void CMonsterEx::SetUpSound()
 		m_SoundStore.CloneSound(m_strImpactVoiceTag);
 }
 
-void CMonsterEx::TakeDamage(DAMAGE_PARAM tDamageParams)
+void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	if (m_bDead)
 		return;
@@ -196,7 +195,7 @@ void CMonsterEx::TakeDamage(DAMAGE_PARAM tDamageParams)
 	CheckHP(tDamageParams);
 }
 
-void CMonsterEx::SetBrainCrush()
+void CEnemy::SetBrainCrush()
 {
 	if (m_iCrushGage <= 0)
 	{
@@ -204,7 +203,7 @@ void CMonsterEx::SetBrainCrush()
 	}
 }
 
-void CMonsterEx::SetDead()
+void CEnemy::SetDead()
 {
 	if (m_bDead)
 		return;
@@ -215,7 +214,7 @@ void CMonsterEx::SetDead()
 	m_DeathTimeline.PlayFromStart();
 }
 
-void CMonsterEx::FindTarget()
+void CEnemy::FindTarget()
 {
 	if (m_bFindTestTarget)
 	{
@@ -236,7 +235,7 @@ void CMonsterEx::FindTarget()
 	}
 }
 
-void CMonsterEx::HitEffect(DAMAGE_PARAM& tDamageParams)
+void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 {
 	wstring HitBloodName;
 	wstring HitEffectName;
@@ -272,7 +271,7 @@ void CMonsterEx::HitEffect(DAMAGE_PARAM& tDamageParams)
 		m_SoundStore.PlaySound(m_strImpactVoiceTag, &tDamageParams.vHitPosition);
 }
 
-void CMonsterEx::CheckDeBuff(EDeBuffType eDeBuff)
+void CEnemy::CheckDeBuff(EDeBuffType eDeBuff)
 {
 	switch (eDeBuff)
 	{
@@ -299,7 +298,7 @@ void CMonsterEx::CheckDeBuff(EDeBuffType eDeBuff)
 	}
 }
 
-void CMonsterEx::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
+void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 {
 	if (m_bHasCrushGage)
 	{
@@ -329,7 +328,7 @@ void CMonsterEx::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 	}	
 }
 
-void CMonsterEx::CheckHP(DAMAGE_PARAM& tDamageParams)
+void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 {
 	_int iDamage = tDamageParams.iDamage;
 	if (m_bHitWeak)
@@ -344,7 +343,7 @@ void CMonsterEx::CheckHP(DAMAGE_PARAM& tDamageParams)
 	}
 }
 
-void CMonsterEx::Update_DeadDissolve(_double TimeDelta)
+void CEnemy::Update_DeadDissolve(_double TimeDelta)
 {
 	_float fOut = 0.f;
 	if (m_DeathTimeline.Tick(TimeDelta, fOut))
@@ -356,7 +355,7 @@ void CMonsterEx::Update_DeadDissolve(_double TimeDelta)
 	}
 }
 
-void CMonsterEx::DeBuff_End()
+void CEnemy::DeBuff_End()
 {
 	for (auto pMtrl : m_pModelCom->GetMaterials())
 	{
@@ -364,7 +363,7 @@ void CMonsterEx::DeBuff_End()
 	}
 }
 
-void CMonsterEx::DeBuff_Fire()
+void CEnemy::DeBuff_Fire()
 {
 	m_fDeBuffTime = 8.f;
 	for (auto pMtrl : m_pModelCom->GetMaterials())
@@ -373,7 +372,7 @@ void CMonsterEx::DeBuff_Fire()
 	}
 }
 
-void CMonsterEx::DeBuff_Oil()
+void CEnemy::DeBuff_Oil()
 {
 	m_fDeBuffTime = 10.f;
 	for (auto pMtrl : m_pModelCom->GetMaterials())
@@ -382,7 +381,7 @@ void CMonsterEx::DeBuff_Oil()
 	}
 }
 
-void CMonsterEx::Update_DeBuff(_double TimeDelta)
+void CEnemy::Update_DeBuff(_double TimeDelta)
 {
 	CScarletCharacter::Update_DeBuff(TimeDelta);
 		
@@ -399,7 +398,7 @@ void CMonsterEx::Update_DeBuff(_double TimeDelta)
 	}
 }
 
-void CMonsterEx::MoveJsonData(Json& jsonDest, void* pArg)
+void CEnemy::MoveJsonData(Json& jsonDest, void* pArg)
 {
 	if (pArg)
 	{
@@ -408,7 +407,7 @@ void CMonsterEx::MoveJsonData(Json& jsonDest, void* pArg)
 	}
 }
 
-_bool CMonsterEx::CheckDamagedTarget(CScarletCharacter* pTarget)
+_bool CEnemy::CheckDamagedTarget(CScarletCharacter* pTarget)
 {
 	const auto itr = m_DamagedTargetList.find(pTarget);
 	if (itr == m_DamagedTargetList.end())
@@ -420,12 +419,12 @@ _bool CMonsterEx::CheckDamagedTarget(CScarletCharacter* pTarget)
 	return false;
 }
 
-void CMonsterEx::ClearDamagedTarget()
+void CEnemy::ClearDamagedTarget()
 {
 	m_DamagedTargetList.clear();
 }
 
-void CMonsterEx::HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff)
+void CEnemy::HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff)
 {
 	for (int i = 0; i < sweepOut.getNbAnyHits(); ++i)
 	{
@@ -448,7 +447,7 @@ void CMonsterEx::HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttac
 	}
 }
 
-void CMonsterEx::HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff)
+void CEnemy::HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff)
 {
 	for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
 	{
@@ -470,7 +469,7 @@ void CMonsterEx::HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EA
 	}
 }
 
-void CMonsterEx::Free()
+void CEnemy::Free()
 {
 	CScarletCharacter::Free();
 	Safe_Release(m_pRendererCom);
