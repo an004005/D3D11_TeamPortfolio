@@ -202,6 +202,15 @@ void CRigidBody::AddTorque(_float3 vTorque)
 	}
 }
 
+void CRigidBody::AddVelocity(_float3 vVelocity)
+{
+	if (false == (m_bTrigger && m_bKinematic))
+	{
+		physx::PxVec3 PxForce = physx::PxVec3(vVelocity.x, vVelocity.y, vVelocity.z);
+		m_pActor->addForce(PxForce, physx::PxForceMode::eVELOCITY_CHANGE);
+	}
+}
+
 void CRigidBody::Set_Kinetic(_bool bKinematic)
 {
 	m_bKinematic = bKinematic;

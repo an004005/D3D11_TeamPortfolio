@@ -27,6 +27,8 @@
 
 #include "FlowerLeg_Invisible.h"
 #include "FLInvisible_Controller.h"
+#include "EM0200.h"
+#include "TestTarget.h"
 
 // Player Setting
 #include "Player.h"
@@ -214,6 +216,23 @@ HRESULT CFactoryMethod::MakeEnermyPrototypes(ID3D11Device* pDevice, ID3D11Device
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_BdLm_Controller"), CBdLm_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_BrJ_Controller"), CBrJ_Controller::Create()));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create()));
+
+	return S_OK;
+}
+
+HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	{
+		auto pEM200Model = CModel::Create(pDevice, pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/FlowerLeg.anim_model");
+		pEM200Model->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em200"), pEM200Model));
+	}
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em200"), CEM0200::Create(pDevice, pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("TestTarget"), CTestTarget::Create(pDevice, pContext)));
 
 	return S_OK;
 }

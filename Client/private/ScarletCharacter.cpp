@@ -49,6 +49,7 @@ void CScarletCharacter::Late_Tick(_double TimeDelta)
 	// }
 
 	CGameObject::Late_Tick(TimeDelta);
+	m_bPreOnFloor = m_bOnFloor;
 
 	if (m_pCollider->IsOnPhysX())
 	{

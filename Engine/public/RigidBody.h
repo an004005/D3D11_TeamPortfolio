@@ -35,6 +35,9 @@ public:
 	void AddForce(_float3 vForce);
 	void AddTorque(_float3 vTorque);
 
+	void AddVelocity(_float3 vVelocity);
+
+
 	void Set_Kinetic(_bool bKinematic);
 	void Set_Trigger() { m_bTrigger = true; }
 	void Set_ColliderType(ECOLLIDER_TYPE eType) { m_eColliderType = eType; }

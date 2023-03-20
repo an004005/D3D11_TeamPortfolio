@@ -18,6 +18,7 @@
 #include "VFX_Manager.h"
 
 #include "Canvas_Alarm.h"
+#include "Canvas_BossHp.h"
 #include "Canvas_BossHpMove.h"
 #include "ControlledRigidBody.h"
 
@@ -153,8 +154,8 @@ HRESULT CBoss1::Initialize(void* pArg)
 
 	m_pModelCom->Add_EventCaller("LastSpot", [this] 
 	{ 
-		_vector vTargetColPos = dynamic_cast<CScarletCharacter*>(m_pTarget)->GetColliderPosition();
-		m_LastSpotTargetPos = vTargetColPos;//m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION); 
+		//_vector vTargetColPos = dynamic_cast<CScarletCharacter*>(m_pTarget)->GetColliderPosition();
+		m_LastSpotTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION); 
 	});
 	m_pModelCom->Add_EventCaller("WaterBall", [this] 
 	{ 
@@ -225,7 +226,6 @@ HRESULT CBoss1::Initialize(void* pArg)
 		
 	m_pDeadAnim = m_pModelCom->Find_Animation("AS_em0300_411_AL_WT_break");
 	
-	m_pCollider->SetMoveFilter(CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC);
 	return S_OK;
 }
 
@@ -386,8 +386,8 @@ void CBoss1::TakeDamage(DAMAGE_PARAM tDamageParams)
 	_int iCurrentHP = m_iPreHP - m_iHP;
 	if (iCurrentHP >= 2000 && !m_b2ndPhase)
 	{
-//		m_pController->ClearCommands();
-//		m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
+		m_pController->ClearCommands();
+		m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
 		m_b2ndPhase = true;
 	}
 
@@ -663,7 +663,7 @@ void CBoss1::JitabataSmokeEffect()
 
 	Smoke_Decided = vecSmokePosition.front();
 
-	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, Smoke_Decided, false);
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, Smoke_Decided, false, true);
 }
 
 void CBoss1::Create_BossUI()

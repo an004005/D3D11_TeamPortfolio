@@ -29,7 +29,7 @@ public:
 	void SetInstanceBuffer(list<VTXINSTANCE>* pBuffer);
 
 protected:
-	_uint m_iInitNumInstance;
+	_uint m_iInitNumInstance = 0;
 	string m_strName = "";
 
 	_uint				m_iMaterialIndex = 0;

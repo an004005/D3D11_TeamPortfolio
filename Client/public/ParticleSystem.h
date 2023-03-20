@@ -39,6 +39,7 @@ enum class EBilboardType
 	NONE
 };
 
+
 class CParticleSystem :	public CGameObject
 {
 public:
@@ -55,6 +56,7 @@ public:
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual void AfterPhysX() override;
 	virtual void SaveToJson(Json& json) override;
 	virtual void LoadFromJson(const Json& json) override;
 	virtual void Imgui_RenderProperty() override;
@@ -82,7 +84,9 @@ private:
 	CVIBuffer_Point_Instancing* m_pPointInstanceBuffer = nullptr;
 	CVIBuffer_Mesh_Instancing*	m_pMeshInstanceBuffer = nullptr;
 	CModel*						m_pModel = nullptr;
+	CModel*						m_pMeshCurveModel = nullptr;
 
+	_bool m_bUseMeshData = false;
 
 	_bool m_bLocal = true;
 	_uint m_iInstanceNum = 50;
@@ -130,7 +134,9 @@ private:
 
 	string m_PointBufferProtoTag = "Prototype_Component_PointInstance";
 	string m_ShaderProtoTag = "Prototype_Component_Shader_VtxPointInstance_Particle";
-	string m_ModelProtoTag;
+	string m_ModelProtoTag = "";
+	string m_MeshCurveModelProtoTag = "";
+
 	// string m_MeshBufferProtoTag;
 
 	list<VTXMATRIX> m_PointList;
@@ -161,6 +167,9 @@ private:
 	// _float	  m_ArrayRoationToTime[3];
 	_float3	  m_fRotationToTime_Min = {0.f,0.f,0.f};
 	_float3	  m_fRotationToTime_Max = { 0.f,0.f,0.f };
+
+	_bool m_bMeshCurve = false;
+	_bool m_bPhysX = false;
 
 private:
 	// For ParticleGroup

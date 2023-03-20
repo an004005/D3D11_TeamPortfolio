@@ -313,6 +313,12 @@
     <Filter Include="02.GameObjects\UI\Main_UI\Canvas">
       <UniqueIdentifier>{a84ad824-2ee4-49a4-8b5f-2249e5b4eaa9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy">
+      <UniqueIdentifier>{613f3e82-7d40-451d-bc3d-3f67636096c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\em200">
+      <UniqueIdentifier>{84b1a188-d10b-4c9a-b15e-4fdda0d7bf57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -890,6 +896,22 @@
     <ClInclude Include="..\public\FullUI.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EM0200.h">
+      <Filter>02.GameObjects\Enemy\em200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0200_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\em200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0200_Controller.h">
+      <Filter>02.GameObjects\Enemy\em200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TestTarget.h" />
+    <ClInclude Include="..\public\Enemy_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy.h">
+      <Filter>02.GameObjects\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1440,6 +1462,22 @@
     </ClCompile>
     <ClCompile Include="..\private\FullUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0200.cpp">
+      <Filter>02.GameObjects\Enemy\em200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0200_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\em200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0200_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\em200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TestTarget.cpp" />
+    <ClCompile Include="..\private\Enemy_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy.cpp">
+      <Filter>02.GameObjects\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

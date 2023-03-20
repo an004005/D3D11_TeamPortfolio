@@ -5,6 +5,7 @@
 #include "UI_Manager.h"
 #include "MathUtils.h"
 
+#include "PlayerInfoManager.h"
 #include "Player.h"
 #include "PlayerInfo_HpUI.h"
 #include "PlayerInfo_HpBackUI.h"
@@ -60,12 +61,12 @@ void CCanvas_PlayerInfoMove::BeginTick()
 	if (nullptr == m_pPlayer)
 		return;
 
-	Set_PlayerHp(_float(m_pPlayer->Get_PlayerStat().m_iHP), _float(m_pPlayer->Get_PlayerStat().m_iMaxHP));
+	Set_PlayerHp(_float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP), _float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxHP));
 	Set_PsychokinesisGauge(
-		PSYCHOKINESISLEVEL(m_pPlayer->Get_PlayerStat().m_iKineticEnergyLevel),
-		PSYCHOKINESISTYPE(m_pPlayer->Get_PlayerStat().m_iKineticEnergyType),
-		_float(m_pPlayer->Get_PlayerStat().m_iKineticEnergy),
-		_float(m_pPlayer->Get_PlayerStat().m_iMaxKineticEnergy));
+		PSYCHOKINESISLEVEL(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyLevel),
+		PSYCHOKINESISTYPE(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyType),
+		_float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergy),
+		_float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxKineticEnergy));
 }
 
 void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
@@ -78,12 +79,12 @@ void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
 	m_pUIMoveFSM->Tick(TimeDelta);
 	CCanvas::UIHit(TimeDelta);
 
-	Set_PlayerHp(_float(m_pPlayer->Get_PlayerStat().m_iHP), _float(m_pPlayer->Get_PlayerStat().m_iMaxHP));
+	Set_PlayerHp(_float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP), _float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxHP));
 	Set_PsychokinesisGauge(
-		PSYCHOKINESISLEVEL(m_pPlayer->Get_PlayerStat().m_iKineticEnergyLevel),
-		PSYCHOKINESISTYPE(m_pPlayer->Get_PlayerStat().m_iKineticEnergyType), 
-		_float(m_pPlayer->Get_PlayerStat().m_iKineticEnergy), 
-		_float(m_pPlayer->Get_PlayerStat().m_iMaxKineticEnergy));
+		PSYCHOKINESISLEVEL(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyLevel),
+		PSYCHOKINESISTYPE(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyType),
+		_float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergy),
+		_float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxKineticEnergy));
 
 	RendomTexture_Tick(TimeDelta);	// 계속 Hp 가 출력할 전체 개수, 이미지를 계산한다.
 	Arrow_Move(); // 계속 화살표의 좌표를 변경한다.

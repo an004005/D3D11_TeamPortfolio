@@ -137,11 +137,6 @@ void CControlledRigidBody::SetFootPosition(const _float4& vPos)
 	m_pController->setFootPosition({(_double)vPos.x, (_double)vPos.y, (_double)vPos.z});
 }
 
-void CControlledRigidBody::SetMoveFilter(_uint iFilterFlags)
-{
-	m_MoveFilterData.word0 = iFilterFlags;
-}
-
 _float4 CControlledRigidBody::GetPosition()
 {
 	const auto vPos = m_pController->getPosition();
@@ -172,6 +167,20 @@ PxControllerCollisionFlags CControlledRigidBody::MoveDisp(_float4 vPosDelta, _fl
 _bool CControlledRigidBody::IsOnPhysX()
 {
 	return m_pController != nullptr && m_pController->getActor()->getScene() != nullptr;
+}
+
+void CControlledRigidBody::SetActive(_bool bActive)
+{
+	if (bActive)
+	{
+		if (IsOnPhysX() == false)
+			CPhysX_Manager::GetInstance()->AddActor(*m_pController->getActor());
+	}
+	else
+	{
+		if (IsOnPhysX())
+			CPhysX_Manager::GetInstance()->RemoveActor(*m_pController->getActor());
+	}
 }
 
 void CControlledRigidBody::CreateController()

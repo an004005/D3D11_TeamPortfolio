@@ -203,7 +203,7 @@ namespace Engine
 		_float4			vRotPos;
 
 		_float			fGravityPower;
-		_bool			bOnSurfase;
+		// _bool			bOnSurfase;
 
 		_uint		NearestIndex;
 	}VTXMATRIX;
@@ -216,13 +216,21 @@ namespace Engine
 
 	// ~ For Particle PointInstance 
 
+	typedef struct tagVertex_Instance_DrawData
+	{
+		_float4			vRight;
+		_float4			vUp;
+		_float4			vLook;
+		_float4			vPosition;
+		_float4			vColor;
+	}VTXINSTANCE_DRAWDATA;
+
 	typedef struct tagVertex_Instance
 	{
 		_float4			vRight;
 		_float4			vUp;
 		_float4			vLook;
 		_float4			vPosition;
-
 		_float4			vColor;
 
 		_float3			vEulerRad;
@@ -232,6 +240,7 @@ namespace Engine
 		_float			fGravityPower;
 		_float			fLifeTime;
 		_float			fCurLifeTime;
+		class CRigidBody* pRigidBody = nullptr;
 	}VTXINSTANCE;
 
 	/*******************

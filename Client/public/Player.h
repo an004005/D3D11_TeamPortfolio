@@ -21,6 +21,7 @@ class CBaseAnimInstance;
 class CController;
 class CEffectGroup;
 class CCamSpot;
+class CSAS_Portrait;
 
 typedef struct tagRemote
 {
@@ -86,32 +87,6 @@ private:
 
 	}MOVELIMIT;
 
-	typedef struct tagSasGage
-	{
-		_float Energy;
-		_float MaxEnergy;
-		_float MinEnergy;
-
-		_float RecoveryRate;
-		_float UseRate;
-
-		_bool bUsable = false;
-
-	} SAS_GAGE;
-
-	typedef struct tagPlayerStatus
-	{
-		_uint m_iHP = 100;
-		_uint m_iMaxHP = 100;
-		_uint m_iKineticEnergy = 100;
-		_uint m_iMaxKineticEnergy = 100;
-		_uint m_iKineticEnergyLevel = 0;   // 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
-		_uint m_iKineticEnergyType = 0;    // 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
-		
-		array<SAS_GAGE, SAS_CNT> Sasese{};
-
-	}PLAYER_STAT;
-
 	typedef struct tagDamageDesc
 	{
 		_int		m_iDamage;
@@ -145,10 +120,10 @@ public:
 	_bool		Get_SASSkillInput(const _uint iInputNumber) { return m_bSASSkillInput[iInputNumber]; }
 	void		Set_SASSkillInput(const _uint iInputNumber, const _bool bInput) { m_bSASSkillInput[iInputNumber] = bInput; }
 
-	PLAYER_STAT	Get_PlayerStat() { return m_PlayerStat; }
-	void		Set_Usable(const ESASType & eESASType, const _bool & bUsable) { m_PlayerStat.Sasese[_int(eESASType)].bUsable = bUsable; }
+//	PLAYER_STAT	Get_PlayerStat() { return m_PlayerStat; }
+//	void		Set_Usable(const ESASType & eESASType, const _bool & bUsable) { m_PlayerStat.Sasese[_int(eESASType)].bUsable = bUsable; }
 
-	ESASType	Get_PlayerSasType() { return m_PlayerSasType; }
+//	ESASType	Get_PlayerSasType() { return m_PlayerSasType; }
 	//~For UI
 
 	virtual HRESULT Initialize_Prototype();
@@ -165,18 +140,16 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 public:	// 현재 타게팅 된 몬스터 포인터 가져오는 함수
-	CGameObject*	Get_TargetedEnemy();
+//	CGameObject*	Get_TargetedEnemy();
 
 private:
 	void CamBoneTest();	// 액션캠 예시
 
 private:
-	void			Initalize_Sas();
 	void			SasMgr();
-	PLAYER_STAT		m_PlayerStat;
+//	PLAYER_STAT		m_PlayerStat;
 	DAMAGE_DESC		m_DamageDesc;
 	DAMAGE_PARAM	m_AttackDesc;
-	ESASType		m_PlayerSasType;
 
 private:
 	_bool			m_bAttackEnable = false;
@@ -210,9 +183,19 @@ private:
 	CModel*				m_pKineticAnimModel = nullptr;
 
 	//UI
+	class CNoticeNeonUI* m_pNeonUI = { nullptr };
 	class CMonsterLockonUI*	m_pUI_LockOn = nullptr;
 	CGameObject*		m_pSettedTarget = nullptr;
 //	CRigidBody*			m_pContectRigidBody = nullptr;
+
+private:	// 특수연출용 FSM
+	HRESULT				SetUp_TrainStateMachine();
+	CFSMComponent*		m_pTrainStateMachine_Left = nullptr;
+
+private:	// 특수연출용 소켓 애니메이션
+	list<CAnimation*>	m_Train_Charge_L;	// 좌측 기차 차지
+	list<CAnimation*>	m_Train_Cancel_L;	// 좌측 기차 취소
+	list<CAnimation*>	m_Train_Throw_L;	// 좌측 기차 던짐
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -365,6 +348,7 @@ private:
 	_float	m_fKineticCharge = 0.f;			// 염력 차지 시간, 기본적으로 1초
 
 	_bool	m_bKineticCombo = false;	// 현재 공격 진행중인지?
+	_bool	m_bKineticSpecial = false;	// 염력 특수 연출중인지?
 	
 	_float	m_fJustDodgeAble = 0.f;
 
@@ -458,6 +442,9 @@ private:
 	void		SocketLocalMoveCheck();
 
 private:
+	void		Update_NotiveNeon();
+
+private:
 	_float		m_fNetualTimer = 0.f;
 	void		NetualChecker(_double TimeDelta);
 
@@ -512,8 +499,8 @@ private:
 	void			Spline_Kinetic(_double TimeDelta);
 	void			Kinetic_Test(_float fRatio);
 	void			Kinetic_ByTurn();
-	CGameObject*	m_pKineticObject = nullptr;
-	CGameObject*	m_pTargetedEnemy = nullptr;
+//	CGameObject*	m_pKineticObject = nullptr;
+//	CGameObject*	m_pTargetedEnemy = nullptr;
 
 private:
 	void			Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수
@@ -549,6 +536,22 @@ private:	// 플레이어 림라이트, 외곽선 관련
 private:
 	_float	m_fThrowPower = 100000.f;
 	_float	m_fChargePower = 3000.f;
+
+	_float	m_fRotX = 0.f;
+	_float  m_fRotY = 0.f;
+	_float	m_fRotZ = 0.f;
+	_float	m_fTransX = 0.f;
+	_float	m_fTransY = 0.f;
+	_float	m_fTransZ = 0.f;
+
+	_float4x4 pivot1;
+	_float4x4 pivot2;
+
+private:
+	CSAS_Portrait* m_pSasPortrait = nullptr;
+
+private:
+	vector<wstring>	m_vecRandomLandingDustName;
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
