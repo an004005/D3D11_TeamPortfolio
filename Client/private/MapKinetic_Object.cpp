@@ -12,6 +12,7 @@
 #include "Material.h"
 #include "GravikenisisMouseUI.h"
 #include "VFX_Manager.h"
+#include "ParticleGroup.h"
 
 CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
@@ -78,6 +79,8 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
 				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
+
+			ReleaseParticle();
 		}
 
 		if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
@@ -105,6 +108,8 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 					}
 				}
 			}
+
+			ReleaseParticle();
 		}
 	});
 
@@ -152,20 +157,6 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 		else if (m_fDeadTimer >= 5.f)
 			this->SetDelete();
 	}
-
-	if (m_bParticleSetting)
-	{
-		_float4 vDir = XMLoadFloat4(&m_vBeforePos) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		_float4 vScale = _float4(
-			m_pCollider->GetPxWorldMatrix().Right().Length(), 
-			m_pCollider->GetPxWorldMatrix().Up().Length(), 
-			m_pCollider->GetPxWorldMatrix().Forward().Length(), 0.f);
-
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Trail"))
-			->Start_AttachPosition_Scaling(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), vDir, vScale);
-	}
-
-	m_vBeforePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 	m_pCollider->Update_Tick(m_pTransformCom);
 }
@@ -364,6 +355,27 @@ void CMapKinetic_Object::OutlineMaker()
 	}
 
 	m_bBeforeOutline = m_bOutline;
+}
+
+void CMapKinetic_Object::SetParticle()
+{
+	_float4 vScale = _float4(
+		m_pCollider->GetPxWorldMatrix().Right().Length(),
+		m_pCollider->GetPxWorldMatrix().Up().Length(),
+		m_pCollider->GetPxWorldMatrix().Forward().Length(), 0.f);
+
+	m_pParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Trail"));
+	m_pParticle->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f ,0.f), true);
+}
+
+void CMapKinetic_Object::ReleaseParticle()
+{
+	if (nullptr != m_pParticle)
+	{
+		m_pParticle->SetDelete();
+		Safe_Release(m_pParticle);
+		m_pParticle = nullptr;
+	}
 }
 
 HRESULT CMapKinetic_Object::SetUp_Components(void* pArg)
