@@ -319,6 +319,12 @@
     <Filter Include="02.GameObjects\Enemy\em200">
       <UniqueIdentifier>{84b1a188-d10b-4c9a-b15e-4fdda0d7bf57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\KineticObject">
+      <UniqueIdentifier>{c1e6af62-d5ed-4e86-bb32-69cdbc587c23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\KineticObject\KienticObjcet_Special">
+      <UniqueIdentifier>{969b68e4-dfb2-4fcd-8505-544621318f56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -878,6 +884,12 @@
     <ClInclude Include="..\public\Enemy.h">
       <Filter>02.GameObjects\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\KineticObject.h">
+      <Filter>02.GameObjects\KineticObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\KineticObject_Special.h">
+      <Filter>02.GameObjects\KineticObject\KienticObjcet_Special</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1410,6 +1422,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Enemy.cpp">
       <Filter>02.GameObjects\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\KineticObject.cpp">
+      <Filter>02.GameObjects\KineticObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\KineticObject_Special.cpp">
+      <Filter>02.GameObjects\KineticObject\KienticObjcet_Special</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -393,7 +393,9 @@ public:	//EventCaller¿ë
 
 	void		Event_Trail(_bool bTrail);
 	void		Event_Dust();
+
 	void		Event_KineticCircleEffect();
+	void		Event_KineticCircleEffect_Attach();
 
 private:
 	_bool		m_bCollisionAble = false;
@@ -446,6 +448,7 @@ private:
 
 private:
 	_float		m_fNetualTimer = 0.f;
+	_float		m_fBattleParticleTime = 0.f; // ±ÛÀÚ »Ð»Ð
 	void		NetualChecker(_double TimeDelta);
 
 public:

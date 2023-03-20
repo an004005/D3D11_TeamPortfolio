@@ -203,6 +203,36 @@ void CParticleGroup::Start_AttachPosition(CGameObject* pOwner, _float4 vPosition
 	m_bGenerate = true;
 }
 
+void CParticleGroup::Start_AttachPosition_Scaling(CGameObject * pOwner, _float4 vPosition, _float4 vDirection, _float4 vScale, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+
+	if (trueisUpdate == false)
+	{
+		_matrix ScaleMatrix = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
+		_matrix	SocketMatrix = XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z);
+
+		_vector		vUp = XMVector3Normalize(vDirection);
+		_vector		vRight = XMVector3Normalize(XMVector3Cross(vUp, XMVectorSet(0.f, 0.f, 1.f, 0.f)));
+		_vector		vLook = XMVector3Normalize(XMVector3Cross(vRight, vUp));
+
+		SocketMatrix.r[0] = vRight;
+		SocketMatrix.r[1] = vUp;
+		SocketMatrix.r[2] = vLook;
+
+		Set_Transform(ScaleMatrix * SocketMatrix);
+	}
+
+	m_bGenerate = true;
+}
+
 void CParticleGroup::Start_AttachSword(CGameObject* pWeapon, _bool trueisUpdate)
 {
 	// 무기만 넣어라

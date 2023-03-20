@@ -232,14 +232,6 @@ void CPlayer::Tick(_double TimeDelta)
 	if (!m_bHit && (false == m_bKineticCombo) && (false == m_bKineticSpecial)) // 콤보 타이밍이 아닐 때에는 일반 염력
 	{
 		m_pKineticStataMachine->Tick(TimeDelta);
-
-		// 키네틱물체 사용중에 붙는 파티클 -> 사용중인경우 체크하기 -> FSM에서 붙이기
-		/*if ((m_pKineticStataMachine->GetCurStateName() != "NO_USE_KINETIC") && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()))
-		{
-			_vector vPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Trail"))
-				->Start_AttachPosition(CPlayerInfoManager::GetInstance()->Get_KineticObject(), vPos, _float4(0.f, 1.f, 0.f, 0.f), true);
-		}*/
 	}
 	if (!m_bHit && (false == m_bKineticSpecial)) // 콤보 타이밍에는 콤보 염력
 	{
@@ -254,9 +246,15 @@ void CPlayer::Tick(_double TimeDelta)
 		m_pJustDodgeStateMachine->SetState("JUSTDODGE_NONUSE");
 		m_pTrainStateMachine_Left->SetState("TRAIN_LEFT_NOUSE");
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false);
-	}
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, false);
 
-	//IM_LOG(m_pKineticComboStateMachine->GetCurStateName());
+		m_pCurve = nullptr;
+		for (auto& iter : m_pModel->GetMaterials())
+		{
+			iter->GetParam().Floats[0] = 0.f;
+			iter->GetParam().Float4s[0] = { 0.f, 0.f, 0.f, 0.f };
+		}
+	}
 
 	SeperateCheck();
 
@@ -983,7 +981,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_3_Double_twist")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);		//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
 		}
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_3_twist_Particle", [&]()
+	m_pModel->Add_EventCaller("Fire_Attack_3_ttticle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 		{
@@ -1014,6 +1012,8 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_5_Particle"))->Start_Attach(this, "Eff01");
 	});
+
+	m_pModel->Add_EventCaller("Fire_Attack_5_PreEffect", [&]() {Event_Effect("Fire_Attack_5_PreEffect"); });
 
 	m_pModel->Add_EventCaller("Fire_Attack_Air_1", [&]() {Event_Effect("Fire_Attack_Air_1"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Air_1_Particle", [&]()
@@ -1213,16 +1213,17 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, m_vecRandomLandingDustName.front())->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
 	});
 
-	/*m_pModel->Add_EventCaller("FlameParticle", [&]()
+	m_pModel->Add_EventCaller("KineticCircle", [&]()
 	{
-		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-		{
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
-		}
-	});*/
+		Event_KineticCircleEffect();
+		m_SoundStore.PlaySound("fx_kinetic_lifting", m_pTransformCom);
+	});
 
-	//m_pModel->Add_EventCaller(""
-	//)
+	m_pModel->Add_EventCaller("KineticCircle_Attach", [&]()
+	{
+		Event_KineticCircleEffect_Attach();
+		m_SoundStore.PlaySound("fx_kinetic_lifting", m_pTransformCom);
+	});
 
 	return S_OK;
 }
@@ -1308,10 +1309,9 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 		.AddState("KINETIC_RB_START")
 			.OnStart([&]() 
 			{
-				Event_KineticCircleEffect();
-
 				Enemy_Targeting(true);
 				m_pASM->InputAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Start);
+				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->SetParticle(true);
 			})
 			.Tick([&](double fTimeDelta)
 			{
@@ -1360,6 +1360,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 		.AddState("KINETIC_RB_CANCEL")
 			.OnStart([&]() 
 			{ 
+				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->SetParticle(false);
 				m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Cancel); 
 			})
 			.Tick([&](double fTimeDelta) {m_bKineticMove = true; })
@@ -3412,6 +3413,11 @@ void CPlayer::Event_KineticCircleEffect()
 //	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Kinetic_Particle")->Start_AttachPivot(this, MatScale, "Reference", true, false);
 }
 
+void CPlayer::Event_KineticCircleEffect_Attach()
+{
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Kinetic_BaseCircle")->Start_Attach(this, "Eff01", true);
+}
+
 void CPlayer::Reset_Charge()
 {
 	m_fBefCharge = 0.f;
@@ -3842,8 +3848,21 @@ void CPlayer::NetualChecker(_double TimeDelta)
 		m_fNetualTimer = 0.f;
 	}
 
+	if (m_bOnBattle)	// 전투 중 파티클 생성
+	{
+		m_fBattleParticleTime += (_float)TimeDelta;
+
+		if (1.f < m_fBattleParticleTime)
+		{
+			m_fBattleParticleTime = 0.f;
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Text_Particle_NoLoop"))
+				->Start_Attach(this, "BackHair");
+		}
+	}
+
 	if (m_bOnBattle && (m_fNetualTimer >= 10.f))
 	{
+		m_fBattleParticleTime = 0.f;
 		m_bOnBattle = false;
 		m_pASM->InputAnimSocket("Netual_Saperate_Animation", m_TransNeutralSocket);
 	}

@@ -2055,6 +2055,10 @@
             {
                 "EventName": "Kinetic_Launch",
                 "EventTime": 55.0
+            },
+            {
+                "EventName": "KineticCircle",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2066,6 +2070,10 @@
             {
                 "EventName": "Kinetic_Launch",
                 "EventTime": 60.0
+            },
+            {
+                "EventName": "KineticCircle",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2085,6 +2093,10 @@
             {
                 "EventName": "Kinetic_Launch",
                 "EventTime": 60.0
+            },
+            {
+                "EventName": "KineticCircle",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2126,6 +2138,10 @@
             {
                 "EventName": "Kinetic_Launch",
                 "EventTime": 170.0
+            },
+            {
+                "EventName": "KineticCircle",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2168,7 +2184,7 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "fx_kinetic_lifting",
+                "EventName": "KineticCircle",
                 "EventTime": 0.0
             }
         ]

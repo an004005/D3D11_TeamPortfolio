@@ -57,6 +57,13 @@ private:
 	_bool	m_bOutline = false;
 	_bool	m_bBeforeOutline = false;
 
+public:
+	void	SetParticle(_bool bParticle) { m_bParticleSetting = bParticle; }
+
+private:
+	_bool	m_bParticleSetting = false;
+	_float4	m_vBeforePos = _float4(0.f, 0.f, 0.f, 1.f);
+
 private:
 	HRESULT	SetUp_Components(void* pArg);
 

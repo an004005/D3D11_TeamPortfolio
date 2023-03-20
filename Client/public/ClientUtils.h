@@ -32,6 +32,14 @@ END
 
 BEGIN(Client)
 
+enum class EKineticAttackType
+{
+	KINETIC_ATTACK_DEFAULT,
+	KINETIC_ATTACK_TRAIN,
+	
+	KINETIC_ATTACK_END
+};
+
 enum class EMoveAxis
 {
 	NORTH,
@@ -109,6 +117,7 @@ typedef struct tagDamageParam
 	_float4 vHitPosition; // 공격 히트 위치
 	_float4 vHitNormal; // 공격 히트 위치의 노멀
 	_float4 vSlashVector; // 검 공격의 베는 방향(vHitPosition 기준)
+	EKineticAttackType eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_END; // 충돌한 염력체 타입
 	ESASType eAttackSAS = ESASType::SAS_END; // 공격 타입(몬스터는 SAS_END 고정)
 	EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END; // 공격에 디버프 포함 여부
 	EAttackType eAttackType = EAttackType::ATK_LIGHT;
