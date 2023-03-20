@@ -1349,6 +1349,14 @@
             {
                 "EventName": "attack_fire_dashattack",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Default_Attack_Dash_End",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_End",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1384,12 +1392,8 @@
                 "EventTime": 30.0
             },
             {
-                "EventName": "Fire_Attack_Dash_Hold_001",
+                "EventName": "Fire_Attack_Dash_Hold_003",
                 "EventTime": 15.0
-            },
-            {
-                "EventName": "Fire_Attack_Dash_Hold_002",
-                "EventTime": 20.0
             },
             {
                 "EventName": "Collision_Start",
@@ -1627,10 +1631,6 @@
                 "EventTime": 9.0
             },
             {
-                "EventName": "Fire_Attack_Air_1",
-                "EventTime": 9.0
-            },
-            {
                 "EventName": "Collision_Start",
                 "EventTime": 8.0
             },
@@ -1645,6 +1645,10 @@
             {
                 "EventName": "attack_fire_jumpattack_1",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_1",
+                "EventTime": 5.0
             }
         ]
     },
@@ -1666,10 +1670,6 @@
                 "EventTime": 15.0
             },
             {
-                "EventName": "Fire_Attack_Air_2",
-                "EventTime": 13.0
-            },
-            {
                 "EventName": "Collision_Start",
                 "EventTime": 10.0
             },
@@ -1684,6 +1684,10 @@
             {
                 "EventName": "attack_fire_jumpattack_2",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_2",
+                "EventTime": 5.0
             }
         ]
     },
@@ -2342,6 +2346,36 @@
     "AS_ch0100_329_AL_throw_LR_start": {
         "Duration": 50.0,
         "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_372_AL_Cap_sLcLeL_end": {
+        "Duration": 143.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_372_AL_Cap_sLcLeL_loop": {
+        "Duration": 312.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_372_AL_Cap_sLcLeL_start": {
+        "Duration": 30.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_372_AL_mg_train_L": {
+        "Duration": 305.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_372_AL_mg_train_R": {
+        "Duration": 306.0,
+        "TickPerSecond": 40.0,
         "bLooping": false,
         "vecEvent": []
     },
