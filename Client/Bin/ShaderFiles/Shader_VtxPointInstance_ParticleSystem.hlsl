@@ -354,16 +354,12 @@ PS_OUT PS_SAS_FIRE_WEAPON_PARTICLE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.03, 3, 3));
-	// float4 vColor = g_vec4_0;
+	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 3, 3));
 
-	// float4 BlendColor = flipBook * vColor * 2.0f;
-
-	// float4 FinalColor = saturate(BlendColor);
 	Out.vColor = CalcHDRColor(flipBook, g_float_0);
 
 
-	float4 flipAlpha = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.03, 3, 3));
+	float4 flipAlpha = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 3, 3));
 
 
 	Out.vColor.a = flipAlpha.r;
@@ -598,7 +594,7 @@ technique11 DefaultTechnique
 	pass SasFireWeaponParticle
 	{
 		SetRasterizerState(RS_NonCulling);
-		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetDepthStencilState(DS_Default, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
