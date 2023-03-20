@@ -30,16 +30,22 @@ public:
 		m_vOnButton = false;
 	}
 
+	void	Set_InitializeAlpha() {
+		m_vOnAlpha = true;
+	}
+	void	Set_OnAlpha() {
+		m_vOnAlpha = false;
+	}
+
 private:
 	void	CurrentPick(const _double & TimeDelta);
 
 private:
 	_bool	m_vOnButton = { false };
+	_bool	m_vOnAlpha = { false };
 
-	_tchar*	m_szText = { L"" };
-	_float2 m_vPosition = { 0.0f, 0.0f };
-	_float2 m_vSize = { 0.0f, 0.0f };
-
+	_bool	m_vAlphaDwon = { false };
+	_float	m_fAlpha = { 0.0f };
 
 public:
 	static CMain_PickUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

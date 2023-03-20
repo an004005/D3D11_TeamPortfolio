@@ -64,6 +64,12 @@ void CMain_SkillNameUI::LoadFromJson(const Json & json)
 
 }
 
+void CMain_SkillNameUI::Set_Name(const _float & fIcon)
+{
+	//[0] 염력 [1] 염력 [2] 발화 [3] 경질화 [4] 투시 [5] 순간이동 [6] 투명화 [7] 방전 [8] 복제 [9] 초고속
+	m_tParams.Float2s[0].y = fIcon;
+}
+
 CMain_SkillNameUI * CMain_SkillNameUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
  	CMain_SkillNameUI*		pInstance = new CMain_SkillNameUI(pDevice, pContext);

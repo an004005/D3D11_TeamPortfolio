@@ -70,6 +70,9 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Start_Level(LEVEL_LOGO)))
 		return E_FAIL;
 
+	if (FAILED(CPlayerInfoManager::GetInstance()->Initialize()))
+		return E_FAIL;
+
 // #ifndef _DEBUG
 	// CGameInstance::GetInstance()->Imgui_OnOff(false);
 // #endif

@@ -30,7 +30,23 @@ HRESULT CMain_FaceUI::Initialize(void * pArg)
 
 void CMain_FaceUI::Tick(_double TimeDelta)
 {
+	if (false == m_bChange) return;
+
 	__super::Tick(TimeDelta);
+
+	if (0.0 == m_dChange_TimeAcc)
+	{
+		m_tParams.Float2s[1].y = 1;
+	}
+
+	m_dChange_TimeAcc += TimeDelta;
+	if (0.3 < m_dChange_TimeAcc)
+	{
+		m_bChange = false;
+		m_dChange_TimeAcc = 0.0;
+		m_tParams.Float2s[1].y = 11;
+		m_tParams.Float2s[0].y = m_fFaceNum;
+	}
 }
 
 void CMain_FaceUI::Late_Tick(_double TimeDelta)
@@ -62,6 +78,15 @@ void CMain_FaceUI::LoadFromJson(const Json & json)
 {
 	CUI::LoadFromJson(json);
 
+}
+
+void CMain_FaceUI::Set_Face(const _float & fFace)
+{
+	//[0] 유이토 [1] 카사네 [2] 하나비 [3] 겜마 [4] 츠구미 [5] 루카 [6] 카케로 [7] 시덴 [8] 쿄카 [9] 아라시
+	m_bChange = true;
+	m_fFaceNum = fFace;
+	
+	//m_tParams.Float2s[0].y = fFace;
 }
 
 CMain_FaceUI * CMain_FaceUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

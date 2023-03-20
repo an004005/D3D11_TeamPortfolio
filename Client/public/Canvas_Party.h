@@ -5,6 +5,25 @@
 
 BEGIN(Client)
 
+typedef struct tagPickInfo
+{
+	_tchar* szName = { L"" };
+	_tchar* szSASNumber = { L"" };
+	_uint	iLevel = { 0 };
+	_uint	iExp = { 0 };
+	_uint	iMaxExp = { 0 };
+	_uint	iRemainingExp = { 0 };
+	_uint	iBondLevel = { 0 };
+	_uint	iHP = { 0 };
+	_uint	iMaxHP = { 0 };
+	_uint	iSprbrPower = { 0 };
+	_uint	iAttack = { 0 };
+	_uint	iDefense = { 0 };
+
+}PICKINFO;
+
+enum SASMEMBER { YUITO, HANABI, TSUGUMI, SASMEMBER_END };
+
 class CCanvas_Party : public CCanvas
 {
 protected:
@@ -23,10 +42,14 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 private:
+	void	CurrentPick_Tick();
 	void	PickInfo();
 
 private:
-	_float2	m_vPosition = { 0.0f, 0.0f };
+	PICKINFO	m_tPickIngo = {};
+	SASMEMBER	m_eSASMember = { YUITO };
+
+	_float2	m_vPosition = { 0.0f, 0.0f };	// Test
 
 public:
 	static CCanvas_Party* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

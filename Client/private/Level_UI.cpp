@@ -88,7 +88,7 @@
 // Main
 #include "FullUI.h"
 #include "Main_FaceUI.h"
-#include "Main_HpBarUI.h"
+#include "Main_BarUI.h"
 #include "Main_PickUI.h"
 #include "Main_SkillIconUI.h"
 #include "Main_SkillNameUI.h"
@@ -436,9 +436,9 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_FaceUI"),
 			CMain_FaceUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-		/* For.Prototype_GameObject_Main_HpBarUI */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_HpBarUI"),
-			CMain_HpBarUI::Create(m_pDevice, m_pContext))))
+		/* For.Prototype_GameObject_Main_BarUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_BarUI"),
+			CMain_BarUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		/* For.Prototype_GameObject_Main_PickUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_PickUI"),

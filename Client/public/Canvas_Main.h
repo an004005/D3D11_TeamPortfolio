@@ -35,8 +35,12 @@ private:
 private:
 	CCanvas*	m_arrCanvass[MAINCANVAS_END];
 	MAINCANVAS	m_eMainCanvas = { PARTY };
+	_tchar*		m_szManuText = { L"" };
 	
 	_bool	m_bMainUI = { false };
+
+	_float2	m_vPosition = { 0.0f, 0.0f };
+
 
 public:
 	static CCanvas_Main* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

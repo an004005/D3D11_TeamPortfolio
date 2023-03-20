@@ -2,6 +2,8 @@
 #include "..\public\Main_SkillIconUI.h"
 #include "GameInstance.h"
 
+// m_tParams.Float2s[0].x : [0] 염력 [1] 염력 [2] 발화 [3] 경질 [4] 투시 [5] 순간이동 [6] 투명 [7] 방전 [8] 복제 [9] 초고속
+
 CMain_SkillIconUI::CMain_SkillIconUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
@@ -16,7 +18,7 @@ HRESULT CMain_SkillIconUI::Initialize_Prototype()
 {
 	if (FAILED(CUI::Initialize_Prototype()))
 		return E_FAIL;
-
+	
 	return S_OK;
 }
 
@@ -31,6 +33,7 @@ HRESULT CMain_SkillIconUI::Initialize(void * pArg)
 void CMain_SkillIconUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
 }
 
 void CMain_SkillIconUI::Late_Tick(_double TimeDelta)
@@ -62,6 +65,12 @@ void CMain_SkillIconUI::LoadFromJson(const Json & json)
 {
 	CUI::LoadFromJson(json);
 
+}
+
+void CMain_SkillIconUI::Set_Icon(const _float & fIcon)
+{
+	// [0] 염력 [1] 염력 [2] 발화 [3] 경질 [4] 투시 [5] 순간이동 [6] 투명 [7] 방전 [8] 복제 [9] 초고속
+	m_tParams.Float2s[0].x = fIcon;
 }
 
 CMain_SkillIconUI * CMain_SkillIconUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

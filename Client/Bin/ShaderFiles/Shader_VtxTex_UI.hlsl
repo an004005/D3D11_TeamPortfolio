@@ -1384,4 +1384,19 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_AlphaColor_M();
 	}
 	
+	//32 : 이미지 그대로 사용하는 체력바
+	pass TextureBar
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_UI_ProgressBar();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_UI_Tex_Alpha();
+	}
+
+
 }

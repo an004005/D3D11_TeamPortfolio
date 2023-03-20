@@ -40,6 +40,7 @@ HRESULT CCanvas_Main::Initialize(void* pArg)
 	fill_n(m_arrCanvass, _int(MAINCANVAS_END), nullptr);
 	Add_MainCanvas();
 	m_bVisible = true;
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_InitializeAlpha();	// 처음에 해당 버튼에 불이 들어올 수 있도록
 
 	return S_OK;
 }
@@ -72,7 +73,7 @@ HRESULT CCanvas_Main::Render()
 		return E_FAIL;
 
 	_float2 vFontSize = { 0.5f, 0.5f };
-	_float4 vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
+	_float4 vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	// 상단
@@ -96,13 +97,13 @@ HRESULT CCanvas_Main::Render()
 
 	// 하단
 	vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Main_BasicInfo"))->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", L"파티 멤버를 변경합니다.", vPosition + _float2(80.0f, 21.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_szManuText, vPosition + _float2(170.0f, 38.0f), 0.f, vFontSize, vColor);
 
-	pGameInstance->Render_Font(L"Pretendard32", L"BP", vPosition + _float2(1000.0f, 21.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"BP", vPosition + _float2(1214.0f, 34.0f), 0.f, vFontSize, vColor);
 
-	pGameInstance->Render_Font(L"Pretendard32", L"K", vPosition + _float2(1000.0f, 21.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"K", vPosition + _float2(1350.0f, 36.0f), 0.f, vFontSize, vColor);
 
-	pGameInstance->Render_Font(L"Pretendard32", L"시계", vPosition + _float2(1000.0f, 21.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"시계", vPosition + _float2(1531.0f, 39.0f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }
@@ -111,6 +112,8 @@ void CCanvas_Main::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
+	ImGui::DragFloat("X", &m_vPosition.x);
+	ImGui::DragFloat("Y", &m_vPosition.y);
 }
 
 void CCanvas_Main::SaveToJson(Json& json)
@@ -179,6 +182,37 @@ void CCanvas_Main::KeyInput()
 
 		// MainUI 들을 끄고 켜기를 한다.
 		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bMainUI);
+
+		switch (m_eMainCanvas)
+		{
+		case Client::CCanvas_Main::PARTY:
+		{
+			m_szManuText = L"파티 멤버를 변경합니다.";
+
+		}
+			break;
+		case Client::CCanvas_Main::ITEM:
+		{
+			m_szManuText = L"소지 아이템을 확인합니다.";
+
+		}
+			break;
+		case Client::CCanvas_Main::EQUIPMENT:
+		{
+			m_szManuText = L"장비를 변경합니다.";
+
+		}
+			break;
+		case Client::CCanvas_Main::BRAINMAP:
+		{
+			m_szManuText = L"BP를 소비해서 스킬을 습득합니다.";
+
+		}
+			break;
+		default:
+			Assert("Non-existent Menu");
+			break;
+		}
 	}
 }
 
@@ -189,9 +223,11 @@ void CCanvas_Main::Menu_Tick()
 		m_eMainCanvas = PARTY;
 
 		Canvas_Visible();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Set_OnButton();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnButton();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Set_OnAlpha();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnAlpha();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Set_OnAlpha();
+
 	}
 
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Get_OnButton())
@@ -199,9 +235,11 @@ void CCanvas_Main::Menu_Tick()
 		m_eMainCanvas = ITEM;
 
 		Canvas_Visible();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_OnButton();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnButton();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_OnAlpha();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnAlpha();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Set_OnAlpha();
+
 	}
 
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Get_OnButton())
@@ -209,9 +247,11 @@ void CCanvas_Main::Menu_Tick()
 		m_eMainCanvas = EQUIPMENT;
 
 		Canvas_Visible();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_OnButton();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Set_OnButton();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_OnAlpha();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Set_OnAlpha();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Set_OnAlpha();
+
 	}
 
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Get_OnButton())
@@ -219,9 +259,11 @@ void CCanvas_Main::Menu_Tick()
 		m_eMainCanvas = BRAINMAP;
 
 		Canvas_Visible();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_OnButton();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Set_OnButton();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_OnAlpha();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Set_OnAlpha();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnAlpha();
+
 	}
 
 }

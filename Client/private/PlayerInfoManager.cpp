@@ -26,14 +26,17 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.m_iKineticEnergyLevel = 0;
 	m_tPlayerStat.m_iKineticEnergyType = 2;
 
-	m_tHanabiStat.iExp = 0;
-	m_tHanabiStat.iMaxExp = 100;
-	m_tHanabiStat.iLevel = 1;
-	m_tHanabiStat.iSprbrPower = 110;
-	m_tHanabiStat.iAttack = 30;
-	m_tHanabiStat.iDefense = 15;
+	m_tPlayerStat.iExp = 0;
+	m_tPlayerStat.iMaxExp = 100;
+	m_tPlayerStat.iLevel = 1;
+	m_tPlayerStat.iSprbrPower = 110;
+	m_tPlayerStat.iAttack = 30;
+	m_tPlayerStat.iDefense = 15;
 
 #pragma endregion 플레이어 기본 스탯 초기화
+
+	ZeroMemory(&m_tHanabiStat, sizeof(HANABI_STAT));
+	ZeroMemory(&m_tTsugumiStat, sizeof(TSUGUMI_STAT));
 
 #pragma region	멤버 기본 스탯 초기화
 

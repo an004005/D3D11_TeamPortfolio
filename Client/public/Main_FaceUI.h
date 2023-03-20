@@ -23,6 +23,14 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
+	void	Set_Face(const _float & fFace);
+
+private:
+	_bool	m_bChange = { false };
+	_float	m_fFaceNum = { 0.0f };
+	_double m_dChange_TimeAcc = { 0.0 };
+
+public:
 	static CMain_FaceUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;

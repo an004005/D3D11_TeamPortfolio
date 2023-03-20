@@ -33,14 +33,17 @@ void CMain_PickUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	CurrentPick(TimeDelta);
-
 	if (true == IsCursorOn(CGameUtils::GetClientCursor()) &&
 		CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
 		m_vOnButton = true;
+		m_vOnAlpha = true;
 		IM_LOG("Button %i", _int(m_vOnButton));
 	}
+
+	CurrentPick(TimeDelta);
+
+
 }
 
 void CMain_PickUI::Late_Tick(_double TimeDelta)
@@ -82,9 +85,33 @@ void CMain_PickUI::LoadFromJson(const Json & json)
 
 void CMain_PickUI::CurrentPick(const _double & TimeDelta)
 {
-	if (false == m_vOnButton) return;
+	if (false == m_vOnAlpha)
+	{
+		m_fAlpha = 0.1f;
+		m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, m_fAlpha };
+		return;
+	}
 
+	if (true == m_vAlphaDwon)
+	{
+		m_fAlpha -= _float(TimeDelta) * 0.15f;
 
+		if (0.05f > m_fAlpha)
+		{
+			m_vAlphaDwon = false;
+		}
+	}
+	else
+	{
+		m_fAlpha += _float(TimeDelta) * 0.15f;
+
+		if (0.1f < m_fAlpha)
+		{
+			m_vAlphaDwon = true;
+		}
+	}
+
+	m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, m_fAlpha };
 }
 
 CMain_PickUI * CMain_PickUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

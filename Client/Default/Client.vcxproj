@@ -256,7 +256,7 @@
     <ClInclude Include="..\public\Enemy.h" />
     <ClInclude Include="..\public\FullUI.h" />
     <ClInclude Include="..\public\Main_FaceUI.h" />
-    <ClInclude Include="..\public\Main_HpBarUI.h" />
+    <ClInclude Include="..\public\Main_BarUI.h" />
     <ClInclude Include="..\public\Main_SkillIconUI.h" />
     <ClInclude Include="..\public\Main_SkillNameUI.h" />
     <ClInclude Include="..\public\NextMapNameUI.h" />
@@ -444,7 +444,7 @@
     <ClCompile Include="..\private\Enemy.cpp" />
     <ClCompile Include="..\private\FullUI.cpp" />
     <ClCompile Include="..\private\Main_FaceUI.cpp" />
-    <ClCompile Include="..\private\Main_HpBarUI.cpp" />
+    <ClCompile Include="..\private\Main_BarUI.cpp" />
     <ClCompile Include="..\private\Main_SkillIconUI.cpp" />
     <ClCompile Include="..\private\Main_SkillNameUI.cpp" />
     <ClCompile Include="..\private\NextMapNameUI.cpp" />

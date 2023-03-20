@@ -884,9 +884,6 @@
     <ClInclude Include="..\public\Main_FaceUI.h">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Main_HpBarUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Main_SkillIconUI.h">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClInclude>
@@ -911,6 +908,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Enemy.h">
       <Filter>02.GameObjects\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_BarUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1451,9 +1451,6 @@
     <ClCompile Include="..\private\Main_FaceUI.cpp">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Main_HpBarUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Main_SkillIconUI.cpp">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
@@ -1478,6 +1475,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Enemy.cpp">
       <Filter>02.GameObjects\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_BarUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
