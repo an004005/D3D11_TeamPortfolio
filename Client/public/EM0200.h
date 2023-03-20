@@ -66,6 +66,7 @@ private:
 private:
 	_float3 m_vMoveAxis;
 	_float m_fTurnRemain = 0.f;
+	_bool m_bHitAir = false;
 
 	// Jump, dodge
 	_bool m_bJumpAttack = false;

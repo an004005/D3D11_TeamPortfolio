@@ -890,6 +890,7 @@
     <ClInclude Include="..\public\Special_Train.h">
       <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Imgui_Batch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1429,6 +1430,7 @@
     <ClCompile Include="..\private\Special_Train.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Imgui_Batch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
