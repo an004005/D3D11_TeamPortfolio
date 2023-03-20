@@ -34,6 +34,8 @@
 #include "EffectSystem.h"
 #include "TrailSystem.h"
 
+#include "PlayerInfoManager.h"
+
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -435,6 +437,7 @@ void CMainApp::Free()
 {
 	CVFX_Manager::GetInstance()->DestroyInstance();
 	CUI_Manager::GetInstance()->DestroyInstance();
+	CPlayerInfoManager::GetInstance()->DestroyInstance();
 
 	m_pGameInstance->Clear_ImguiObjects();
 	m_pGameInstance->Clear();

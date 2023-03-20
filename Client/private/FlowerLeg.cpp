@@ -223,8 +223,10 @@ HRESULT CFlowerLeg::Initialize(void * pArg)
 		if (!m_bDead)
 		{
 //			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose")->Start_Attach(this, "Eff02", true);
-			m_pFallRoseParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose");
-			m_pFallRoseParticle->Start_Attach(this, "Eff02", true);
+			// m_pFallRoseParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose");
+			// m_pFallRoseParticle->Start_Attach(this, "Eff02", true, true);
+
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose")->Start_ParticleWork();
 			Safe_AddRef(m_pFallRoseParticle);
 		}
 	});
@@ -369,8 +371,8 @@ void CFlowerLeg::BeginTick()
 	__super::BeginTick();
 	m_pASM->AttachAnimSocket(("UsingControl"), { m_pModelCom->Find_Animation("AS_em0200_160_AL_threat") });
 	
-	m_iMaxHP = 3000;
-	m_iHP = 3000; // ¡Ú
+	m_iMaxHP = 1500;
+	m_iHP = 1500; // ¡Ú
 }
 
 void CFlowerLeg::Tick(_double TimeDelta)
@@ -719,7 +721,7 @@ void CFlowerLeg::Strew_Overlap()
 	param.vPos = XMVectorSetW(fFinish, 1.f);
 	param.overlapOut = &overlapOut;
 
-	_float3 paramPos = param.vPos;
+//	_float3 paramPos = param.vPos;
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
@@ -733,7 +735,7 @@ void CFlowerLeg::Strew_Overlap()
 				tParam.iDamage = (rand() % 30) + 20; 
 				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				tParam.pCauser = this;
-				tParam.vHitPosition = paramPos;
+				tParam.vHitPosition = param.vPos;
 				tParam.eAttackType = EAttackType::ATK_LIGHT;
 				pTarget->TakeDamage(tParam);
 			}
@@ -790,8 +792,8 @@ void CFlowerLeg::Spin_SweepCapsule(_bool bCol)
 					DAMAGE_PARAM tParam;
 
 					tParam.pCauser = this;
-					tParam.vHitNormal = _float3(pHit.normal.x, pHit.normal.y, pHit.normal.z);
-					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
+					tParam.vHitNormal = _float4(pHit.normal.x, pHit.normal.y, pHit.normal.z, 0.f);
+					tParam.vHitPosition = _float4(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					tParam.iDamage = (rand() % 80) + 40;
 					tParam.eAttackType = EAttackType::ATK_MIDDLE;
@@ -822,7 +824,7 @@ void CFlowerLeg::Kick_SweepSphere()
 	Sparam.sweepOut = &sweepOut;
 	Sparam.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
-	_float3 paramPos = Sparam.vPos;
+//	_float3 paramPos = Sparam.vPos;
 	
 	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
 	{
@@ -837,7 +839,7 @@ void CFlowerLeg::Kick_SweepSphere()
 				param.eAttackType = EAttackType::ATK_HEAVY;
 				param.pCauser = this;
 				param.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-				param.vHitPosition = paramPos;
+				param.vHitPosition = Sparam.vPos;
 				
 				pTarget->TakeDamage(param);
 			}

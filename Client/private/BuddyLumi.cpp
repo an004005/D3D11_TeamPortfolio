@@ -179,8 +179,8 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 void CBuddyLumi::BeginTick()
 {
 	__super::BeginTick();
-	m_iMaxHP = 2000;
-	m_iHP = 2000; // ¡Ú
+	m_iMaxHP = 1100;
+	m_iHP = 1100; // ¡Ú
 }
 
 void CBuddyLumi::Tick(_double TimeDelta)
@@ -528,8 +528,8 @@ void CBuddyLumi::Swing_SweepCapsule(_bool bCol)
 					DAMAGE_PARAM tParam;
 
 					tParam.pCauser = this;
-					tParam.vHitNormal = _float3(pHit.normal.x, pHit.normal.y, pHit.normal.z);
-					tParam.vHitPosition = _float3(pHit.position.x, pHit.position.y, pHit.position.z);
+					tParam.vHitNormal = _float4(pHit.normal.x, pHit.normal.y, pHit.normal.z, 0.f);
+					tParam.vHitPosition = _float4(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					tParam.iDamage = (rand() % 70) + 40;
 

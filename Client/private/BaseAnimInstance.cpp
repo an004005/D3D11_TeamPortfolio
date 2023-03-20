@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "GameInstance.h"
 #include "HelperClasses.h"
+#include "VFX_Manager.h"
 
 HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject)
 {
@@ -2264,6 +2265,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 	m_mapAnimSocket.emplace("Kinetic_Combo_AnimSocket", SocketList);
 	m_mapAnimSocket.emplace("JustDodge_AnimSocket", SocketList);
 	m_mapAnimSocket.emplace("Common_AnimSocket", SocketList);
+	m_mapAnimSocket.emplace("Kinetic_Special_AnimSocket", SocketList);
 
 	return S_OK;
 }

@@ -79,31 +79,31 @@ HRESULT CLevel_PlayerTest::Initialize()
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
+	if (FAILED(Ready_Layer_Terrain(PLAYERTEST_LAYER_TERRAIN)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+	if (FAILED(Ready_Layer_Player(PLATERTEST_LAYER_PLAYER)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	if (FAILED(Ready_Layer_Camera(PLAYERTEST_LAYER_CAMERA)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Batch(TEXT("Layer_Batch"))))
+	if (FAILED(Ready_Layer_Batch(PLAYERTEST_LAYER_BATCH)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
+	if (FAILED(Ready_Layer_Map(PLAYERTEST_LAYER_MAP)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Kinetic(TEXT("Layer_Kinetic"))))
+	if (FAILED(Ready_Layer_Kinetic(PLAYERTEST_LAYER_KINETIC)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+	if (FAILED(Ready_Layer_Monster(PLAYERTEST_LAYER_MONSTER)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
+	if (FAILED(Ready_Effect(PLAYERTEST_LAYER_POSTVFX)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_UI(TEXT("Layer_FrontUI"))))
+	if (FAILED(Ready_Layer_UI(PLAYERTEST_LAYER_FRONTUI)))
 		return E_FAIL;
 
 	Ready_Layer_SASPortrait();
@@ -417,6 +417,7 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Player(const _tchar* pLayerTag)
 HRESULT CLevel_PlayerTest::Ready_Layer_Batch(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_ConstructionSite3F.json");
@@ -533,8 +534,6 @@ HRESULT CLevel_PlayerTest::Ready_Layer_UI(const _tchar* pLayerTag)
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Alarm", &json));
-
-
 
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{

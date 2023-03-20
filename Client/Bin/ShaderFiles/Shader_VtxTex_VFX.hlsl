@@ -330,6 +330,22 @@ PS_OUT_Flag PS_DISTORTION(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_DISTORTION_PLAYER(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.r * g_float_0);
+
+	Out.vColor = 0;
+	Out.vColor.a *= g_float_0;
+
+	return Out;
+}
+
+
 PS_OUT_Flag PS_DISTORTION_DEFAULT(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -994,5 +1010,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_KINETIC_DEAD_FLIPBOOK();
+	}
+
+	//25
+	pass PlayerDistortion
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DISTORTION_PLAYER();
 	}
 }

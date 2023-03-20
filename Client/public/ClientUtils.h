@@ -1,6 +1,16 @@
 #pragma once
 #include "Client_Defines.h"
 
+#define PLAYERTEST_LAYER_TERRAIN	TEXT("Layer_Terrain")
+#define PLATERTEST_LAYER_PLAYER		TEXT("Layer_Player")
+#define PLAYERTEST_LAYER_CAMERA		TEXT("Layer_Camera")
+#define PLAYERTEST_LAYER_BATCH		TEXT("Layer_Batch")
+#define PLAYERTEST_LAYER_MAP		TEXT("Layer_Map")
+#define PLAYERTEST_LAYER_KINETIC	TEXT("Layer_Kinetic")
+#define PLAYERTEST_LAYER_MONSTER	TEXT("Layer_Monster")
+#define PLAYERTEST_LAYER_POSTVFX	TEXT("Layer_PostVFX")
+#define PLAYERTEST_LAYER_FRONTUI	TEXT("Layer_FrontUI")
+
 BEGIN(Engine)
 class CTransform;
 class CComponent;
@@ -42,6 +52,13 @@ enum class EBaseAxis
 	EAST,//right
 	SOUTH,//back
 	WEST,//left
+	AXIS_END
+};
+
+enum class ESimpleAxis
+{
+	NORTH,//look
+	SOUTH,//back
 	AXIS_END
 };
 
@@ -88,10 +105,10 @@ enum class EAttackType
 typedef struct tagDamageParam
 {
 	_int iDamage;
-	_float3 vHitFrom; // 공격자의 위치
-	_float3 vHitPosition; // 공격 히트 위치
-	_float3 vHitNormal; // 공격 히트 위치의 노멀
-	_float3 vSlashVector; // 검 공격의 베는 방향(vHitPosition 기준)
+	_float4 vHitFrom; // 공격자의 위치
+	_float4 vHitPosition; // 공격 히트 위치
+	_float4 vHitNormal; // 공격 히트 위치의 노멀
+	_float4 vSlashVector; // 검 공격의 베는 방향(vHitPosition 기준)
 	ESASType eAttackSAS = ESASType::SAS_END; // 공격 타입(몬스터는 SAS_END 고정)
 	EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END; // 공격에 디버프 포함 여부
 	EAttackType eAttackType = EAttackType::ATK_LIGHT;
@@ -115,7 +132,7 @@ public:
 	static EMoveAxis MoveAxisToEnum(_float3 vMoveAxis);
 	static EBaseAxis MoveAxisToBaseEnum(_float3 vMoveAxis);
 	static const string& AxisEnumToStr(EMoveAxis eAxis);
-	static EBaseAxis GetDamageFromAxis(CTransform* pTransform, _fvector vFrom);
+	static EBaseAxis GetDamageFromAxis(CTransform* pTransform, _fvector vFrom, ESimpleAxis* pSimpleAxis = nullptr);
 	static EBaseTurn TurnDeltaToEnum(_float fTurnDelta);
 
 public:

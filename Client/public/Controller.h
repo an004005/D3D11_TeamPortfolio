@@ -96,7 +96,7 @@ public:
 	_float2 GetMouseAxis() const { return m_vMouseAxis; }
 	// _uint GetInputMask() const { return m_iInputMask; }
 
-	void Invalidate();
+	virtual void Invalidate();
 	void SetInputLock(_bool bLock) { m_bInputLock = bLock; }
 	_bool IsCursorLock() const { return m_bCursorLock; }
 

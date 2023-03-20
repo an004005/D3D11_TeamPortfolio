@@ -39,6 +39,7 @@ enum class EBilboardType
 	NONE
 };
 
+
 class CParticleSystem :	public CGameObject
 {
 public:
@@ -83,6 +84,7 @@ private:
 	CVIBuffer_Mesh_Instancing*	m_pMeshInstanceBuffer = nullptr;
 	CModel*						m_pModel = nullptr;
 
+	_bool m_bUseMeshData = false;
 
 	_bool m_bLocal = true;
 	_uint m_iInstanceNum = 50;

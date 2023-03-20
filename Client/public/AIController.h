@@ -74,6 +74,7 @@ public:
 
 	_bool IsCommandRunning();
 	void ClearCommands();
+	virtual void Invalidate() override;
 
 
 	// 기본 command 함수, 커맨드 함수의 인자는 레퍼런스 사용 금지!
@@ -86,6 +87,8 @@ public:
 	void Wait();
 
 	DISTANCE CurrentDistance() const { return m_eDistance; }
+	EHandleInput GetAIInput() const { return m_eInput; }
+	void SetActive(_bool bActive) { m_bActive = bActive; }
 
 protected:
 	class CScarletCharacter* m_pTarget = nullptr;
@@ -100,6 +103,10 @@ protected:
 	DISTANCE m_eDistance = DIS_END;
 
 	_float m_fTtoM_Distance = 0.f;
+
+	EHandleInput m_eInput = HANDLE_END;
+
+	_bool m_bActive = true;
 	
 
 public:
