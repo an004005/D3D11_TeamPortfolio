@@ -90,7 +90,7 @@ void CCanvas::Tick(_double TimeDelta)
 	for (auto& Pair : m_mapChildUIs)
 		Pair.second->SetCanvasSize(ThisCanvasSize);
 	
-	// map 으로 보관하고 있는 캔버스의 Tick() 을 돌린다.
+	// map 으로 보관하고 있는 UI의 Tick() 을 돌린다.
 	for (auto iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end();)
 	{
 		const auto ChildPair = *iter;
@@ -110,8 +110,6 @@ void CCanvas::Tick(_double TimeDelta)
 
 void CCanvas::Late_Tick(_double TimeDelta)
 {
-	__super::Late_Tick(TimeDelta);
-
 	vector<CUI*> tmpUI;
 	tmpUI.reserve(m_mapChildUIs.size());
 
@@ -125,6 +123,8 @@ void CCanvas::Late_Tick(_double TimeDelta)
 
 	for (auto pUI : tmpUI)
 		pUI->Late_Tick(TimeDelta);
+
+	__super::Late_Tick(TimeDelta);
 }
 
 void CCanvas::Imgui_RenderProperty()

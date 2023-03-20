@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CMainUI final : public CUI
+class CMain_HpBarUI final : public CUI
 {
 private:
-	CMainUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMainUI(const CMainUI& rhs);
+	CMain_HpBarUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMain_HpBarUI(const CMain_HpBarUI& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -23,7 +23,7 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	static CMainUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMain_HpBarUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

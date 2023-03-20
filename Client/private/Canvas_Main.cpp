@@ -8,7 +8,8 @@
 #include "Canvas_MainItem.h"
 #include "Canvas_Equipment.h"
 #include "Canvas_BrainMap.h"
-#include "ButtonUI.h"
+#include "DefaultUI.h"
+#include "Main_PickUI.h"
 
 CCanvas_Main::CCanvas_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -38,6 +39,7 @@ HRESULT CCanvas_Main::Initialize(void* pArg)
 
 	fill_n(m_arrCanvass, _int(MAINCANVAS_END), nullptr);
 	Add_MainCanvas();
+	m_bVisible = true;
 
 	return S_OK;
 }
@@ -68,6 +70,28 @@ HRESULT CCanvas_Main::Render()
 {
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
+
+	_float fFontSize = 0.5f;
+	_float4 vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	_float2 vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->GetScreenSpaceLeftTop();
+	pGameInstance->Render_Font(L"Pretendard32", L"파티", vPosition + _float2(80.0f, 21.0f), 0.f, { fFontSize, fFontSize }, vColor);
+
+	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->GetScreenSpaceLeftTop();
+	pGameInstance->Render_Font(L"Pretendard32", L"아이템", vPosition + _float2(75.0f, 22.0f), 0.f, { fFontSize, fFontSize }, vColor);
+
+	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->GetScreenSpaceLeftTop();
+	pGameInstance->Render_Font(L"Pretendard32", L"장비", vPosition + _float2(80.0f, 22.0f), 0.f, { fFontSize, fFontSize }, vColor);
+
+	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->GetScreenSpaceLeftTop();
+	pGameInstance->Render_Font(L"Pretendard32", L"브레인 맵", vPosition + _float2(62.0f, 24.0f), 0.f, { fFontSize, fFontSize }, vColor);
+
+	vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Main_Menu_B"))->GetScreenSpaceLeftTop();
+	pGameInstance->Render_Font(L"Pretendard32", L"???", vPosition + _float2(140.0f, 41.0f), 0.f, { fFontSize, fFontSize }, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"???", vPosition + _float2(315.0f, 41.0f), 0.f, { fFontSize, fFontSize }, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"???", vPosition + _float2(485.0f, 38.0f), 0.f, { fFontSize, fFontSize }, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"???", vPosition + _float2(660.0f, 35.0f), 0.f, { fFontSize, fFontSize }, vColor);
 
 	return S_OK;
 }
@@ -149,36 +173,36 @@ void CCanvas_Main::KeyInput()
 
 void CCanvas_Main::Menu_Tick()
 {
-	if (true == dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_Party"))->Get_OnButton())
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Get_OnButton())
 	{
 		m_eMainCanvas = PARTY;
 
 		Canvas_Visible();
-		dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_Party"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_OnButton();
 	}
 
-	if (true == dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_Itme"))->Get_OnButton())
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Get_OnButton())
 	{
 		m_eMainCanvas = ITEM;
 
 		Canvas_Visible();
-		dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_Itme"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Set_OnButton();
 	}
 
-	if (true == dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_Equipment"))->Get_OnButton())
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Get_OnButton())
 	{
 		m_eMainCanvas = EQUIPMENT;
 
 		Canvas_Visible();
-		dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnButton();
 	}
 
-	if (true == dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Get_OnButton())
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Get_OnButton())
 	{
 		m_eMainCanvas = BRAINMAP;
 
 		Canvas_Visible();
-		dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Set_OnButton();
 	}
 
 }

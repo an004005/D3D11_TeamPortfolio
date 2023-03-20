@@ -853,9 +853,6 @@
     <ClInclude Include="..\public\Canvas_BossHpMove.h">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MainUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\BasicInfoUI.h">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClInclude>
@@ -874,6 +871,24 @@
     </ClInclude>
     <ClInclude Include="..\public\Canvas_Equipment.h">
       <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_PickUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_FaceUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_HpBarUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_SkillIconUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_SkillNameUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FullUI.h">
+      <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1389,9 +1404,6 @@
     <ClCompile Include="..\private\Canvas_BossHpMove.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MainUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\BasicInfoUI.cpp">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
@@ -1410,6 +1422,24 @@
     </ClCompile>
     <ClCompile Include="..\private\Canvas_MainItem.cpp">
       <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_PickUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_FaceUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_HpBarUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_SkillIconUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_SkillNameUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FullUI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

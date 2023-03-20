@@ -34,11 +34,10 @@ void CButtonUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	if (true == IsCursorOn(CGameUtils::GetClientCursor()) && 
+	if (true == IsCursorOn(CGameUtils::GetClientCursor()) &&
 		CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
-		m_vOnButton = true;
-		IM_LOG("Button %i", _int(m_vOnButton));
+		IM_LOG("Button %i", 125563);
 	}
 }
 
@@ -57,7 +56,7 @@ void CButtonUI::Imgui_RenderProperty()
 
 CButtonUI * CButtonUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
- 	CButtonUI*		pInstance = new CButtonUI(pDevice, pContext);
+	CButtonUI*		pInstance = new CButtonUI(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
