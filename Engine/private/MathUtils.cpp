@@ -230,3 +230,8 @@ _float4 CMathUtils::RandomPosVectorInCircle_FromZero(_float fRadius)
 	return _float4{x, 0.f, z, 1.f};
 }
 
+_uint CMathUtils::RandomUInt(_uint iMax)
+{
+	return (_uint)RandomFloat(0.f, (_float)iMax);
+}
+

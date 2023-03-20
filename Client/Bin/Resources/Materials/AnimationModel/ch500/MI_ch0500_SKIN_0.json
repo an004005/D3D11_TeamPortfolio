@@ -19,8 +19,7 @@
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/Texture/T_ch0500_Skin_COL.png",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/Texture/T_ch0500_Skin_NML.png",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/Texture/T_ch0500_Skin_AMB.png",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/Texture/T_ch0500_Skin_CTL.png",
-            ""
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/Texture/T_ch0500_Skin_CTL.png"
         ],
         "Pass" : 1
     }

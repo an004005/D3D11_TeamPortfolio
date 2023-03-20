@@ -55,6 +55,13 @@ enum class EBaseAxis
 	AXIS_END
 };
 
+enum class ESimpleAxis
+{
+	NORTH,//look
+	SOUTH,//back
+	AXIS_END
+};
+
 enum class EBaseTurn
 {
 	TURN_LEFT,
@@ -125,7 +132,7 @@ public:
 	static EMoveAxis MoveAxisToEnum(_float3 vMoveAxis);
 	static EBaseAxis MoveAxisToBaseEnum(_float3 vMoveAxis);
 	static const string& AxisEnumToStr(EMoveAxis eAxis);
-	static EBaseAxis GetDamageFromAxis(CTransform* pTransform, _fvector vFrom);
+	static EBaseAxis GetDamageFromAxis(CTransform* pTransform, _fvector vFrom, ESimpleAxis* pSimpleAxis = nullptr);
 	static EBaseTurn TurnDeltaToEnum(_float fTurnDelta);
 
 public:
