@@ -704,68 +704,20 @@ void CPlayer::SasMgr()
 			}
 		}
 	}
-		/*if (!m_PlayerStat.Sasese[static_cast<_uint>(InputSas)].bUsable)
+
+	if (m_pSasPortrait->isFinish())
+	{
+
+		switch (CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 		{
-			IM_LOG("Sas_Unusable");
+			case ESASType::SAS_FIRE:
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Sas_Fire_Start"))->Start_Attach(this, "Sheath");
+				break;
+			default:
+				break;
 		}
-		else
-		{
-			if (m_PlayerSasType != InputSas)
-			{
-				m_pASM->SetCurState("IDLE");
-				SetAbleState({ false, false, false, false, false, true, true, true, true, false });
-
-				list<CAnimation*> SasDamage;
-				SasDamage.push_back(m_pModel->Find_Animation("AS_ch0100_410_AL_damage_sas"));
-				m_pASM->InputAnimSocket("Common_AnimSocket", SasDamage);
-				m_PlayerSasType = InputSas;
-			}
-			else if (m_PlayerSasType == InputSas)
-			{
-				IM_LOG("Sas End");
-
-				m_PlayerSasType = ESASType::SAS_END;
-
-				if (m_PlayerStat.Sasese[static_cast<_uint>(InputSas)].MinEnergy > m_PlayerStat.Sasese[static_cast<_uint>(InputSas)].Energy)
-				{
-					m_PlayerStat.Sasese[static_cast<_uint>(InputSas)].bUsable = false;
-				}
-			}
-		}*/
+	}
 }
-
-	//for (_uint i = 0; i < SAS_CNT; ++i)
-	//{
-	//	if (i == static_cast<_uint>(m_PlayerSasType))
-	//	{
-	//		// 현재 사용중인 SAS
-
-	//		m_PlayerStat.Sasese[i].Energy -= (g_fTimeDelta * m_PlayerStat.Sasese[i].UseRate);
-
-	//		if (0.f >= m_PlayerStat.Sasese[i].Energy)
-	//		{
-	//			m_PlayerSasType = ESASType::SAS_END;
-	//			m_PlayerStat.Sasese[i].bUsable = false;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		m_PlayerStat.Sasese[i].Energy += (g_fTimeDelta * m_PlayerStat.Sasese[i].RecoveryRate);
-
-	//		if (m_PlayerStat.Sasese[i].MaxEnergy <= m_PlayerStat.Sasese[i].Energy)
-	//		{
-	//			m_PlayerStat.Sasese[i].Energy = m_PlayerStat.Sasese[i].MaxEnergy;
-	//		}
-
-	//		if (m_PlayerStat.Sasese[i].MinEnergy <= m_PlayerStat.Sasese[i].Energy)
-	//		{
-	//			m_PlayerStat.Sasese[i].bUsable = true;
-	//		}
-	//	}
-	//}
-
-//	if (m_PlayerSasType != ESASType::SAS_END)
-//		IM_LOG("%f", m_PlayerStat.Sasese[static_cast<_uint>(m_PlayerSasType)].Energy);
 
 
 
@@ -879,10 +831,26 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Default_Attack_4_1", [&]() {Event_Effect("Default_Attack_4_1"); });
 	m_pModel->Add_EventCaller("Default_Attack_4_2", [&]() {Event_Effect("Default_Attack_4_2"); });
 	m_pModel->Add_EventCaller("Default_Attack_4_3", [&]() {Event_Effect("Default_Attack_4_3"); });
-	m_pModel->Add_EventCaller("Default_Attack_5", [&]() {Event_Effect("Default_Attack_5"); });
+	m_pModel->Add_EventCaller("Default_Attack_5", [&]() 
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_NOT)
+		{
+			_float4x4 EffectPivotMatrix =
+				XMMatrixTranslation(0.f, -1.5f, -1.f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_5")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+	});
 	m_pModel->Add_EventCaller("Default_Attack_5_BackGround", [&]() {Event_Effect("Default_Attack_5_BackGround"); });
 	m_pModel->Add_EventCaller("Default_Attack_5_Final", [&]() {Event_Effect("Default_Attack_5_Final"); });
-	m_pModel->Add_EventCaller("Default_Attack_5_PreEffect", [&]() {Event_Effect("Default_Attack_5_PreEffect"); });
+	m_pModel->Add_EventCaller("Default_Attack_5_PreEffect", [&]()
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_NOT)
+		{
+			_float4x4 EffectPivotMatrix =
+				XMMatrixTranslation(0.f, 1.f, 0.5f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_5_PreEffect")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+	});
 	m_pModel->Add_EventCaller("Default_Attack_Air_Attack_1", [&]() {Event_Effect("Default_Attack_Air_Attack_1"); });
 	m_pModel->Add_EventCaller("Default_Attack_Air_Attack_2", [&]() {Event_Effect("Default_Attack_Air_Attack_2"); });
 	m_pModel->Add_EventCaller("Default_Attack_Air_Attack_Chase", [&]() {Event_Effect("Default_Attack_Air_Attack_Chase"); });
@@ -1015,7 +983,16 @@ HRESULT CPlayer::SetUp_EffectEvent()
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_5_Particle"))->Start_Attach(this, "Eff01");
 	});
 
-	m_pModel->Add_EventCaller("Fire_Attack_5_PreEffect", [&]() {Event_Effect("Fire_Attack_5_PreEffect"); });
+	m_pModel->Add_EventCaller("Fire_Attack_5_PreEffect", [&]() 
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
+		{
+			_float4x4 EffectPivotMatrix = XMMatrixTranslation(0.f, 1.f, 0.5f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_5_PreEffect")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+
+//		Event_Effect("Fire_Attack_5_PreEffect");
+	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Air_1", [&]() {Event_Effect("Fire_Attack_Air_1"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Air_1_Particle", [&]()
@@ -3233,6 +3210,21 @@ _bool CPlayer::BeforeCharge(_float fBeforeCharge)
 
 _bool CPlayer::Charge(_uint iNum, _float fCharge)
 {
+	if (m_bChargeEffect && (m_fCharge[2] == 0.f))
+	{
+		m_bChargeEffect = false;
+
+		ESASType CurSas = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
+
+		if (ESASType::SAS_NOT == CurSas)
+		{
+			_matrix EffectPivot =  XMMatrixScaling(2.f, 2.f ,2.f) * XMMatrixRotationX(XMConvertToRadians(-90.f));
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Twist"))->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, true);
+		}
+
+	}
+
+
 	if (fCharge > m_fCharge[iNum])
 	{
 		m_fCharge[iNum] += g_fTimeDelta;
@@ -3240,6 +3232,9 @@ _bool CPlayer::Charge(_uint iNum, _float fCharge)
 	}
 	else
 	{
+		if (0 == iNum)
+			m_bChargeEffect = true;
+
 		return true;
 	}
 }

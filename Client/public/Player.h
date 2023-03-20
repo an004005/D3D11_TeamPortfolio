@@ -425,6 +425,7 @@ public:
 public:
 	_bool		BeforeCharge(_float fBeforeCharge);
 	_bool		Charge(_uint iNum, _float fCharge);
+	_bool		m_bChargeEffect = false;
 
 public:
 	void		Jump();

@@ -371,11 +371,7 @@ void CMapKinetic_Object::SetParticle()
 void CMapKinetic_Object::ReleaseParticle()
 {
 	if (nullptr != m_pParticle)
-	{
 		m_pParticle->SetDelete();
-		Safe_Release(m_pParticle);
-		m_pParticle = nullptr;
-	}
 }
 
 HRESULT CMapKinetic_Object::SetUp_Components(void* pArg)
@@ -430,4 +426,5 @@ void CMapKinetic_Object::Free()
 		Safe_Release(Model);
 	
 	Safe_Release(m_pCollider);
+	Safe_Release(m_pParticle);
 }

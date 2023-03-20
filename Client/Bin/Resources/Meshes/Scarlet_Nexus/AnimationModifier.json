@@ -1066,6 +1066,14 @@
             {
                 "EventName": "Fire_Attack_5_Particle",
                 "EventTime": 60.0
+            },
+            {
+                "EventName": "Default_Attack_5_PreEffect",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Fire_Attack_5_PreEffect",
+                "EventTime": 20.0
             }
         ]
     },
