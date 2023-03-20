@@ -548,7 +548,37 @@ PS_OUT_Flag PS_MASK_TEX(PS_IN In)
 	if (Mask < 0.f)
 		discard;
 
+	if (g_float_1 <= 0.f)
+		discard;
+
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+PS_OUT_Flag PS_MASK_TEX_DISTORTION_CHARGE(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float Mask = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y)).r;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	// BlendColor.a = Mask * g_float_1;
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+
+	float Pattern = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+	Out.vColor.a = Pattern * Mask * g_float_1;
+
+	if (Mask < 0.f)
+		discard;
+
+	if (g_float_1 <= 0.f)
+		discard;
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.a);
+
 
 	return Out;
 }
@@ -1018,5 +1048,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_DISTORTION_PLAYER();
+	}
+
+	//26
+	pass Mask_Semi_Distortion_Charge
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MASK_TEX_DISTORTION_CHARGE();
 	}
 }
