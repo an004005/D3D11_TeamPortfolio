@@ -11,6 +11,7 @@
 #include "Model.h"
 #include "Material.h"
 #include "GravikenisisMouseUI.h"
+#include "VFX_Manager.h"
 
 CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
@@ -81,6 +82,9 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 			pMonster->TakeDamage(tParam);
 			m_bHit = true;
 
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, TEXT("Default_Kinetic_Dead_Effect_00"))
+				->Start_AttachOnlyPos(tParam.vHitFrom);
+
 			// 충돌이 발생하면 플레이어의 키네틱 콤보 상태를 1로 올려준다.
 			if (CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player") != nullptr)
 			{
@@ -100,17 +104,17 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 
 	//툴에서 쓸때 플레이어가 없을수있으니 체크
-   CGameInstance* pGameInstance = CGameInstance::GetInstance();
-   CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Player"));
+   //CGameInstance* pGameInstance = CGameInstance::GetInstance();
+   //CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Player"));
 
-   if (pLayer != nullptr)
-   {
-	   CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
-	   pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
+   //if (pLayer != nullptr)
+   //{
+	  // CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
+	  // pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
 
-	   assert(pGravikenisisMouse != nullptr);
-	   pGravikenisisMouse->Set_Owner(this);
-   }
+	  // assert(pGravikenisisMouse != nullptr);
+	  // pGravikenisisMouse->Set_Owner(this);
+   //}
 
 	return S_OK;
 }

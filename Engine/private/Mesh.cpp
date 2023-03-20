@@ -15,6 +15,7 @@ CMesh::CMesh(const CMesh & rhs)
 	, m_strName(rhs.m_strName)
 	, m_iMaterialIndex(rhs.m_iMaterialIndex)
 	, m_BoneNames(rhs.m_BoneNames)
+	, m_pNonAnimModelBufferData(rhs.m_pNonAnimModelBufferData)
 {
 }
 
@@ -161,7 +162,8 @@ HRESULT CMesh::Ready_VertexBuffer_NonAnimModel(HANDLE hFile, CModel* pModel)
 	if (FAILED(__super::Create_VertexBuffer()))
 		return E_FAIL;
 
-	Safe_Delete_Array(pNonAnimVertices);
+	m_pNonAnimModelBufferData = pNonAnimVertices;
+	//Safe_Delete_Array(pNonAnimVertices);
 
 	return S_OK;
 }
@@ -245,4 +247,10 @@ void CMesh::Free()
 		Safe_Release(pBone);
 
 	m_Bones.clear();
+
+	if (m_isCloned == false)
+	{
+		Safe_Delete_Array(m_pNonAnimModelBufferData);
+
+	}
 }

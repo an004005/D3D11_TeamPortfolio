@@ -137,11 +137,6 @@ void CControlledRigidBody::SetFootPosition(const _float4& vPos)
 	m_pController->setFootPosition({(_double)vPos.x, (_double)vPos.y, (_double)vPos.z});
 }
 
-void CControlledRigidBody::SetMoveFilter(_uint iFilterFlags)
-{
-	m_MoveFilterData.word0 = iFilterFlags;
-}
-
 _float4 CControlledRigidBody::GetPosition()
 {
 	const auto vPos = m_pController->getPosition();

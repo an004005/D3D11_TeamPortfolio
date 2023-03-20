@@ -34,8 +34,8 @@ public:
 	void		Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
 	void		Start_Attach(CGameObject* pOwner, string BoneName, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
 	void		Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _bool usepivot = false, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
-	// void		Start_AttachPosition(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate = false);
 	void		Start_AttachPosition(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate = false);
+	void		Start_AttachSword(CGameObject* pWeapon, _bool trueisUpdate = false);
 
 private:
 	// [ObjectTag : Key] [Value : <Directory, Ptr>]
@@ -48,6 +48,9 @@ private:
 	_bool	m_bUsePivot = false;
 	string m_BoneName = "";
 	_float4x4 m_PivotMatrix = XMMatrixIdentity();
+
+private:
+	CGameObject* m_pAttachWeapon = nullptr;
 
 public:
 	virtual void Late_Tick(_double TimeDelta) override;
