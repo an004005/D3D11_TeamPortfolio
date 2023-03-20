@@ -205,7 +205,7 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 						else if (tDamageParams.eAttackSAS == ESASType::SAS_FIRE)
 						{
 							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Player_Fire_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
-							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, vHitPos, vEffectDir);
+							//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, vHitPos, vEffectDir);
 						}
 						else if (tDamageParams.eAttackSAS == ESASType::SAS_ELETRIC)
 							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Player_Elec_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
@@ -234,7 +234,7 @@ void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 		else if (tDamageParams.eAttackSAS == ESASType::SAS_FIRE)
 		{
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Player_Fire_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, vHitPos, vEffectDir);
+			//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, vHitPos, vEffectDir);
 		}
 		else if (tDamageParams.eAttackSAS == ESASType::SAS_ELETRIC)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Player_Elec_Sword_Particle")->Start_AttachPosition(this, vHitPos, vEffectDir);
