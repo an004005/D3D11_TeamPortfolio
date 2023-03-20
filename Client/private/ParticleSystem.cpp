@@ -8,6 +8,7 @@
 #include "GameUtils.h"
 #include "JsonLib.h"
 #include "Model.h"
+#include "RigidBody.h"
 
 CParticleSystem::CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -151,6 +152,26 @@ HRESULT CParticleSystem::Render()
 	return S_OK;
 }
 
+void CParticleSystem::AfterPhysX()
+{
+	CGameObject::AfterPhysX();
+	if (m_bPhysX)
+	{
+		for (auto& data : m_MeshList)
+		{
+			_float4x4 WorldMatrix = data.pRigidBody->GetPxWorldMatrix();
+
+			memcpy(&data.vRight, &WorldMatrix.m[0], sizeof(_float4));
+			memcpy(&data.vUp, &WorldMatrix.m[1], sizeof(_float4));
+			memcpy(&data.vLook, &WorldMatrix.m[2], sizeof(_float4));
+			memcpy(&data.vPosition, &WorldMatrix.m[3], sizeof(_float4));
+			data.vRight *= data.vSize.x;
+			data.vUp *= data.vSize.y;
+			data.vLook *= data.vSize.z;
+		}
+	}
+}
+
 void CParticleSystem::SaveToJson(Json& json)
 {
 	CGameObject::SaveToJson(json);
@@ -194,7 +215,8 @@ void CParticleSystem::SaveToJson(Json& json)
 	json["RandDirMin"] = m_vRandDir_Min;
 	json["SphereDetail"] = m_bSphereDetail;
 	json["UseMeshData"] = m_bUseMeshData;
-
+	json["bPhysX"] = m_bPhysX;
+	json["bMeshCurve"] = m_bMeshCurve;
 
 }
 
@@ -226,6 +248,21 @@ void CParticleSystem::LoadFromJson(const Json& json)
 	m_fRotationToTime_Min = json["RotationToTimeMin"] ;
 	m_fRotationToTime_Max = json["RotationToTimeMax"] ;
 	m_vScaleVariation = json["ScaleVariation"];
+
+	if(json.contains("bMeshCurve"))
+	{
+		m_bMeshCurve = json["bMeshCurve"];
+
+		if (m_MeshCurveModelProtoTag != "")
+		{
+			FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_MeshCurveModelProtoTag).c_str(), TEXT("MeshCurveModel"), (CComponent**)&m_pMeshCurveModel));
+		}
+	}
+
+	if(json.contains("bPhysX"))
+	{
+		m_bPhysX = json["bPhysX"];
+	}
 
 	if(json.contains("UseMeshData"))
 	{
@@ -309,6 +346,7 @@ void CParticleSystem::Imgui_RenderProperty()
 	ImGui::Separator();
 	CShader::Imgui_RenderShaderParams(m_tParam);
 	ImGui::Separator();
+	ImGui::Checkbox("PhysX", &m_bPhysX);
 
 	{
 		char BufferProtoTag[MAX_PATH];
@@ -340,14 +378,28 @@ void CParticleSystem::Imgui_RenderProperty()
 	{
 		char ModelProtoTag[MAX_PATH];
 		strcpy(ModelProtoTag, m_ModelProtoTag.c_str());
-		ImGui::InputText("MeshCurve ProtoTag", ModelProtoTag, MAX_PATH);
+		ImGui::InputText("MeshData ProtoTag", ModelProtoTag, MAX_PATH);
 		m_ModelProtoTag = ModelProtoTag;
 		ImGui::SameLine();
-		if (ImGui::Button("ReCreate MeshCurve"))
+		if (ImGui::Button("ReCreate MeshData"))
 		{
 			Safe_Release(m_pModel);
 			Delete_Component(TEXT("Model"));
 			FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_ModelProtoTag).c_str(), TEXT("Model"), (CComponent**)&m_pModel));
+		}
+	}
+
+	{
+		char MeshModelProtoTag[MAX_PATH];
+		strcpy(MeshModelProtoTag, m_MeshCurveModelProtoTag.c_str());
+		ImGui::InputText("MeshCurve ProtoTag", MeshModelProtoTag, MAX_PATH);
+		m_MeshCurveModelProtoTag = MeshModelProtoTag;
+		ImGui::SameLine();
+		if (ImGui::Button("ReCreate MeshCurve"))
+		{
+			Safe_Release(m_pMeshCurveModel);
+			Delete_Component(TEXT("MeshCurveModel"));
+			FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_MeshCurveModelProtoTag).c_str(), TEXT("MeshCurveModel"), (CComponent**)&m_pMeshCurveModel));
 		}
 	}
 	ImGui::Separator();
@@ -920,6 +972,27 @@ void CParticleSystem::AddMesh()
 		MeshData.vUp = _float4(0.f, MeshData.vSize.y, 0.f, 0.f);
 		MeshData.vLook = _float4(0.f, 0.f, MeshData.vSize.z, 0.f);
 
+		if (m_bPhysX)
+		{
+			Json json;
+			json["RigidBody"]["bKinematic"] = false;
+			json["RigidBody"]["bTrigger"] = false;
+			json["RigidBody"]["Density"] = 10;
+			json["RigidBody"]["ColliderType"] = CT_STATIC;
+			json["RigidBody"]["OriginTransform"] = _float4x4::CreateScale(MeshData.vSize);
+			json["RigidBody"]["ShapeType"] = CRigidBody::TYPE_BOX;
+			auto pRigidBody = dynamic_cast<CRigidBody*>(CGameInstance::GetInstance()->Clone_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", &json));
+			pRigidBody->SetPxWorldMatrix(_float4x4::CreateTranslation(MeshData.vPosition.x, MeshData.vPosition.y, MeshData.vPosition.z));
+			pRigidBody->BeginTick();
+
+
+			pRigidBody->AddVelocity(MeshData.vVelocity);
+			pRigidBody->AddTorque(MeshData.vVelocity * 0.00001f);
+
+			MeshData.pRigidBody = pRigidBody;
+			Assert(pRigidBody != nullptr);
+		}
+
 		
 		m_MeshList.push_back(MeshData);
 	}
@@ -931,45 +1004,51 @@ void CParticleSystem::UpdateMeshes(_float fTimeDelta)
 	{
 		data.fCurLifeTime += fTimeDelta;
 
-		_float4 MovePos = data.vPosition + (data.vVelocity * fTimeDelta);
-
-		if (m_bSizeDecreaseByLife == true)
+		if (m_bPhysX == false)
 		{
-			data.vSize = data.vSize - (m_vScaleVariation * fTimeDelta);
-		}
-		else
-		{
-			data.vSize = data.vSize + (m_vScaleVariation * fTimeDelta);
-		}
+			_float4 MovePos = data.vPosition + (data.vVelocity * fTimeDelta);
 
-		if (m_bGravity == true)
-		{
-			data.vVelocity.y -= data.fGravityPower * fTimeDelta;
-
-			if (data.vVelocity.y <= -20.f)
+			if (m_bSizeDecreaseByLife == true)
 			{
-				data.vVelocity.y = -20.f;
+				data.vSize = data.vSize - (m_vScaleVariation * fTimeDelta);
 			}
-		}
+			else
+			{
+				data.vSize = data.vSize + (m_vScaleVariation * fTimeDelta);
+			}
 
-		if (m_bRotate)
-		{
-			_matrix rot = XMMatrixRotationRollPitchYaw(data.vEulerRad.x * fTimeDelta, data.vEulerRad.y * fTimeDelta, data.vEulerRad.z * fTimeDelta);
+			if (m_bGravity == true)
+			{
+				data.vVelocity.y -= data.fGravityPower * fTimeDelta;
 
-			data.vRight = XMVector3Normalize(XMVector4Transform(data.vRight, rot)) * data.vSize.x;
-			data.vUp = XMVector3Normalize(XMVector4Transform(data.vUp, rot)) *data.vSize.y;
-			data.vLook = XMVector3Normalize(XMVector4Transform(data.vLook, rot)) *data.vSize.z;
+				if (data.vVelocity.y <= -20.f)
+				{
+					data.vVelocity.y = -20.f;
+				}
+			}
+
+			if (m_bRotate)
+			{
+				_matrix rot = XMMatrixRotationRollPitchYaw(data.vEulerRad.x * fTimeDelta, data.vEulerRad.y * fTimeDelta, data.vEulerRad.z * fTimeDelta);
+
+				data.vRight = XMVector3Normalize(XMVector4Transform(data.vRight, rot)) * data.vSize.x;
+				data.vUp = XMVector3Normalize(XMVector4Transform(data.vUp, rot)) *data.vSize.y;
+				data.vLook = XMVector3Normalize(XMVector4Transform(data.vLook, rot)) *data.vSize.z;
+				data.vPosition = _float4(MovePos.x, MovePos.y, MovePos.z, 1.f);
+			}
+
+			data.vRight = XMVector3Normalize(data.vRight) * data.vSize.x;
+			data.vUp = XMVector3Normalize(data.vUp) *data.vSize.y;
+			data.vLook = XMVector3Normalize(data.vLook) * data.vSize.z;
 			data.vPosition = _float4(MovePos.x, MovePos.y, MovePos.z, 1.f);
 		}
 
-		
-
-		data.vRight = XMVector3Normalize(data.vRight) * data.vSize.x;
-		data.vUp = XMVector3Normalize(data.vUp) *data.vSize.y;
-		data.vLook = XMVector3Normalize(data.vLook) * data.vSize.z;
-		data.vPosition = _float4(MovePos.x, MovePos.y, MovePos.z, 1.f);
-
 		data.vColor = _float4(data.fCurLifeTime, data.fLifeTime, 0.f, 0.f);
+
+		if (data.fCurLifeTime >= data.fLifeTime)
+		{
+			Safe_Release(data.pRigidBody);
+		}
 	}
 
 	m_MeshList.remove_if([this](const VTXINSTANCE& data)
@@ -1012,6 +1091,8 @@ void CParticleSystem::Free()
 	CGameObject::Free();
 
 	m_PointList.clear();
+	for (auto& meshInst : m_MeshList)
+		Safe_Release(meshInst.pRigidBody);
 	m_MeshList.clear();
 
 	Safe_Release(m_pRendererCom);
@@ -1019,6 +1100,8 @@ void CParticleSystem::Free()
 	Safe_Release(m_pMeshInstanceBuffer);
 	Safe_Release(m_pShader);
 	Safe_Release(m_pModel);
+	Safe_Release(m_pMeshCurveModel);
+
 
 	for (auto e : m_tParam.Textures)
 		Safe_Release(e.first);

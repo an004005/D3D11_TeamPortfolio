@@ -82,11 +82,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
 	
-	Out.RamainLifeRatio = saturate(1.f - In.vControlData.x / In.vControlData.y);
-
-
-	if (Out.RamainLifeRatio >= 1.f)
-		Out.RamainLifeRatio = 1.f;
+	Out.RamainLifeRatio = saturate((In.vControlData.y - In.vControlData.x )/ In.vControlData.y);
 
 	if(g_bLocal == 1)
 	{
@@ -117,15 +113,12 @@ VS_OUT_NORM VS_MAIN_NORM(VS_IN In)
 
 	matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-	Out.RamainLifeRatio = saturate(1.f - In.vControlData.x / In.vControlData.y);
+	Out.RamainLifeRatio = saturate((In.vControlData.y - In.vControlData.x )/ In.vControlData.y);
 
 	Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), g_WorldMatrix));
 	Out.vProjPos = Out.vPosition;
 	Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
 	Out.vBinormal = normalize(cross(Out.vNormal.xyz, Out.vTangent.xyz));
-
-	if (Out.RamainLifeRatio >= 1.f)
-		Out.RamainLifeRatio = 1.f;
 
 	if (g_bLocal == 1)
 	{
@@ -188,8 +181,8 @@ PS_OUT_NORM PS_PLAYER_KINETIC_PARTICLE(PS_IN_NORM In)
 	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
 	vNormal = normalize(mul(vNormal, WorldMatrix));
 
-	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f) * In.RamainLifeRatio;
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, saturate(g_float_0 * In.RamainLifeRatio), flags);
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0 * In.RamainLifeRatio, flags);
 
 	// Out.vColor.a = g_vec4_0.a;
 
