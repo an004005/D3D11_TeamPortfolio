@@ -272,7 +272,7 @@ void CVIBuffer_Mesh_Instancing::SetInstanceBuffer(list<VTXINSTANCE>* pBuffer)
 		tmp.vUp = data.vUp;
 		tmp.vLook = data.vLook;
 		tmp.vPosition = data.vPosition;
-		//tmp.vColor = data.vColor;
+		tmp.vColor = data.vColor;
 
 		//memcpy(&tmp, &data, sizeof(VTXINSTANCE_DRAWDATA));
 		((VTXINSTANCE_DRAWDATA*)SubResource.pData)[iIdx] = tmp;

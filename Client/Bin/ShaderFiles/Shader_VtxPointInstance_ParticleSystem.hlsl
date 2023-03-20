@@ -80,7 +80,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 
 	Out.CurLife = InstanceData[3][3];
-	Out.RamainLifeRatio = (1.f - InstanceData[3][3] / InstanceData[1][3]);
+	Out.RamainLifeRatio = ((InstanceData[1][3] - InstanceData[3][3] )/ InstanceData[1][3]);
 	Out.vSize = float2(InstanceData[1][0], InstanceData[1][1]);
 	Out.vPosition = matrix_postion(InstanceData);
 
