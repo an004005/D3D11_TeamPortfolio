@@ -9,6 +9,8 @@
 #include "JsonStorage.h"
 #include "MonsterHpUI.h"
 
+
+
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CScarletCharacter(pDevice, pContext)
 {
@@ -126,8 +128,6 @@ void CMonster::Imgui_RenderProperty()
 		SetActive();
 	}
 }
-
-
 
 void CMonster::TakeDamage(DAMAGE_PARAM tDamageParams)
 {

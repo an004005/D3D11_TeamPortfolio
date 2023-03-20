@@ -58,6 +58,7 @@ public:
 	}
 
 	_bool IsOnPhysX();
+	void SetActive(_bool bActive);
 
 protected:
 	void CreateController();

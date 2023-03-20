@@ -169,6 +169,20 @@ _bool CControlledRigidBody::IsOnPhysX()
 	return m_pController != nullptr && m_pController->getActor()->getScene() != nullptr;
 }
 
+void CControlledRigidBody::SetActive(_bool bActive)
+{
+	if (bActive)
+	{
+		if (IsOnPhysX() == false)
+			CPhysX_Manager::GetInstance()->AddActor(*m_pController->getActor());
+	}
+	else
+	{
+		if (IsOnPhysX())
+			CPhysX_Manager::GetInstance()->RemoveActor(*m_pController->getActor());
+	}
+}
+
 void CControlledRigidBody::CreateController()
 {
 	ReleaseController();
