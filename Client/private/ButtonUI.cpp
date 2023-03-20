@@ -34,11 +34,11 @@ void CButtonUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-	if (true == IsCursorOn(CGameUtils::GetClientCursor()) && pGameInstance->KeyDown(CInput_Device::DIM_LB))
+	if (true == IsCursorOn(CGameUtils::GetClientCursor()) && 
+		CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
-		IM_LOG("X %f", m_fSizeX * m_vScale.x);
-		IM_LOG("Y %f", m_fSizeY * m_vScale.x);
+		m_vOnButton = true;
+		IM_LOG("Button %i", _int(m_vOnButton));
 	}
 }
 

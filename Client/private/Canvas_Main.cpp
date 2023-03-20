@@ -8,6 +8,7 @@
 #include "Canvas_MainItem.h"
 #include "Canvas_Equipment.h"
 #include "Canvas_BrainMap.h"
+#include "ButtonUI.h"
 
 CCanvas_Main::CCanvas_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -46,6 +47,7 @@ void CCanvas_Main::Tick(_double TimeDelta)
 	CCanvas::Tick(TimeDelta);
 
 	KeyInput();
+	Menu_Tick();
 
 	if (false == m_bMainUI) return;
 
@@ -84,22 +86,6 @@ void CCanvas_Main::SaveToJson(Json& json)
 void CCanvas_Main::LoadFromJson(const Json & json)
 {
 	CCanvas::LoadFromJson(json);
-}
-
-void CCanvas_Main::KeyInput()
-{
-	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
-	{
-		m_bMainUI = !m_bMainUI;
-
-		// m_bMainUI 와 반대로 동작한다.
-		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-			iter->second->SetVisible(m_bMainUI);
-		CUI_Manager::GetInstance()->Set_TempOff(m_bMainUI);	
-
-		// MainUI 들을 끄고 켜기를 한다.
-		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bMainUI); 
-	}
 }
 
 HRESULT CCanvas_Main::Add_MainCanvas()
@@ -143,6 +129,72 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 	m_arrCanvass[BRAINMAP] = dynamic_cast<CCanvas_BrainMap*>(pCanvas);
 
 	return S_OK;
+}
+
+void CCanvas_Main::KeyInput()
+{
+	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
+	{
+		m_bMainUI = !m_bMainUI;
+
+		// m_bMainUI 와 반대로 동작한다.
+		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+			iter->second->SetVisible(m_bMainUI);
+		CUI_Manager::GetInstance()->Set_TempOff(m_bMainUI);
+
+		// MainUI 들을 끄고 켜기를 한다.
+		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bMainUI);
+	}
+}
+
+void CCanvas_Main::Menu_Tick()
+{
+	if (true == dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_Party"))->Get_OnButton())
+	{
+		m_eMainCanvas = PARTY;
+
+		Canvas_Visible();
+		dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_Party"))->Set_OnButton();
+	}
+
+	if (true == dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_Itme"))->Get_OnButton())
+	{
+		m_eMainCanvas = ITEM;
+
+		Canvas_Visible();
+		dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_Itme"))->Set_OnButton();
+	}
+
+	if (true == dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_Equipment"))->Get_OnButton())
+	{
+		m_eMainCanvas = EQUIPMENT;
+
+		Canvas_Visible();
+		dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnButton();
+	}
+
+	if (true == dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Get_OnButton())
+	{
+		m_eMainCanvas = BRAINMAP;
+
+		Canvas_Visible();
+		dynamic_cast<CButtonUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Set_OnButton();
+	}
+
+}
+
+void CCanvas_Main::Canvas_Visible()
+{
+	for (_int i = 0; i < MAINCANVAS_END; ++i)
+	{
+		if (i == m_eMainCanvas)
+		{
+			m_arrCanvass[i]->SetVisible(m_bMainUI);	// 해당 캔버스의 UI를 그린다.
+			continue;
+		}
+
+		m_arrCanvass[i]->SetVisible(!m_bMainUI);	// 나머지 캔버스는 그리지 않는다.
+	}
 }
 
 CCanvas_Main * CCanvas_Main::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

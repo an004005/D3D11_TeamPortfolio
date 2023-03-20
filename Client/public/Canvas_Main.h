@@ -29,7 +29,9 @@ private:
 	HRESULT	Add_MainCanvas();
 
 	void	KeyInput();
-
+	void	Menu_Tick();
+	void	Canvas_Visible();
+	
 private:
 	CCanvas*	m_arrCanvass[MAINCANVAS_END];
 	MAINCANVAS	m_eMainCanvas = { PARTY };

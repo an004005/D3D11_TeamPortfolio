@@ -20,6 +20,17 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 
 public:
+	_bool	Get_OnButton() {
+		return m_vOnButton;
+	}
+	void	Set_OnButton() {
+		m_vOnButton = false;
+	}
+
+private:
+	_bool	m_vOnButton = { false };
+
+public:
 	static CButtonUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
