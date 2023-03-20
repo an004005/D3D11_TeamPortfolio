@@ -1,0 +1,128 @@
+#pragma once
+#include "ScarletCharacter.h"
+#include "Client_Defines.h"
+#include "Timeline.h"
+#include "MathUtils.h"
+
+BEGIN(Engine)
+class CRenderer;
+class CModel;
+class CFSMComponent;
+END
+
+BEGIN(Client)
+
+class CEnemy abstract : public CScarletCharacter
+{
+public:
+	enum MONSTER_NAME { BRONJON, SKUMMYPANDOU, SKUMMYPOOL, BUDDYLUMI, FLOWERLEG, GODLYFERRY, MONSTERNAME_END };
+
+protected:
+	CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEnemy(const CScarletCharacter& rhs);
+	virtual ~CEnemy() = default;
+
+public:
+	virtual HRESULT Initialize(void* pArg) override;
+	virtual void Tick(_double TimeDelta) override;
+	virtual void Late_Tick(_double TimeDelta) override;
+	virtual void AfterPhysX() override;
+	virtual void Imgui_RenderProperty() override;
+	virtual HRESULT Render_ShadowDepth() override;
+
+	virtual void SetUpComponents(void* pArg);
+	virtual void SetUpSound();
+	virtual void SetUpAnimationEvent(){}
+	virtual void SetUpFSM() {}
+
+	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
+	virtual void SetBrainCrush();
+	
+public:
+	_float GetHpRatio() const { return (_float)m_iHP / (_float)m_iMaxHP; }
+	_float GetCrushGageRatio() const { return (_float)m_iCrushGage / (_float)m_iMaxCrushGage; }
+	_bool IsDead() const { return m_bDead; }
+	virtual _float4	GetKineticTargetPos() { return GetColliderPosition(); }
+
+public:
+	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
+	virtual _float4x4 GetPivotMatrix() override;
+
+protected:
+	// take damage 관련 함수
+	virtual void HitEffect(DAMAGE_PARAM& tDamageParams);
+	virtual void CheckDeBuff(EDeBuffType eDeBuff);
+	virtual _bool IsWeak(CRigidBody* pHitPart) { return false; }
+	virtual void CheckCrushGage(DAMAGE_PARAM& tDamageParams);
+	virtual void CheckHP(DAMAGE_PARAM& tDamageParams);
+	// ~
+
+	// 몬스터가 죽으면 실행해야할 코드들 넣기
+	virtual void SetDead();
+
+	virtual void FindTarget();
+	virtual void Update_DeadDissolve(_double TimeDelta);
+
+	virtual void Update_DeBuff(_double TimeDelta) override;
+	virtual void DeBuff_End() override;
+	virtual void DeBuff_Fire() override;
+	virtual void DeBuff_Oil() override;
+	virtual void MoveJsonData(Json& jsonDest, void* pArg);
+
+	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
+	void ClearDamagedTarget();
+	void HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
+	void HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
+
+
+protected:
+	static vector<wstring>			s_vecDefaultBlood;
+	static vector<wstring>			s_vecFireBlood;
+	static vector<wstring>			s_vecElecBlood;
+
+	static vector<wstring>			s_vecDefaultHit;
+	static vector<wstring>			s_vecFireHit;
+	static vector<wstring>			s_vecElecHit;
+
+protected:
+	CRenderer*				m_pRendererCom = nullptr;
+	CModel*					m_pModelCom = nullptr;
+	CScarletCharacter*		m_pTarget = nullptr;
+	CFSMComponent*			m_pFSM = nullptr;
+	_bool m_bFindTestTarget = false;
+
+	_int m_iAtkDamage = 50;
+	_int m_iHP = 100;
+	_int m_iMaxHP = 100;
+
+	_int m_iCrushGage = 100;
+	_int m_iMaxCrushGage = 100;
+	_bool m_bHasCrushGage = false;
+
+	_bool m_bDead = false;
+	set<CScarletCharacter*> m_DamagedTargetList;
+	CSimpleTimeline m_DeathTimeline;
+
+	_uint	iMonsterLevel = { 0 };
+	MONSTER_NAME m_eMonsterName = { MONSTERNAME_END };
+
+	// AfterPhysX에서 다시 초기화해줌.
+	EAttackType m_eCurAttackType = EAttackType::ATK_END; // 현 프레임에서 받은 공격 타입
+	EBaseAxis m_eHitFrom = EBaseAxis::AXIS_END;
+	ESimpleAxis m_eSimpleHitFrom = ESimpleAxis::AXIS_END;
+	_bool m_bHitWeak = false;
+	//
+
+	_float m_fFireResist = 0.6f; // 높을 수록 안걸림
+	_float m_fThunderResist = 0.6f; // 높을 수록 안걸림
+	CCoolTimeHelper m_FireTick;
+
+	string m_strImpactTag = "fx_impact_flesh";
+	string m_strDeathSoundTag;
+	string m_strImpactVoiceTag;
+
+public:
+	virtual void Free() override;
+};
+
+END

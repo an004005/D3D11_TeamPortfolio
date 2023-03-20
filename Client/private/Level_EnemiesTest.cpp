@@ -3,37 +3,24 @@
 
 #include "GameInstance.h"
 #include "Material.h" 
-#include "GameUtils.h"
 #include "Imgui_PropertyEditor.h"
 #include "Imgui_PostProcess.h"
 #include "Imgui_LevelSwitcher.h"
 #include "Imgui_AnimModifier.h"
-#include "Imgui_MapEditor.h"
 #include "Imgui_PhysX.h"
 #include "Imgui_CameraManager.h"
 #include "Imgui_CurveManager.h"
 #include "Model.h"
 #include "JsonLib.h"
-#include "AnimationInstance.h"
-#include "Texture.h"
-#include "MapNonAnim_Object.h"
 #include "JsonStorage.h"
-#include "RigidBody.h"
-#include "Model_Instancing.h"
 #include "SkyBox.h"
-#include "PostVFX_Penetrate.h"
-#include "MapKinetic_Object.h"
 #include "FactoryMethod.h"
 #include "Trigger.h"
 #include "Batch.h"
-#include "PostVFX_Scifi.h"
-#include "PostVFX_Distortion.h"
-#include "ParticleSystem.h"
-#include "TrailSystem.h"
 #include "EffectGroup.h"
-#include "EffectSystem.h"
 #include "VFX_Manager.h"
 
+#define ADD_PLAYER
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -51,7 +38,6 @@ HRESULT CLevel_EnemiesTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
-	CVFX_Manager::GetInstance()->Initialize(LEVEL_ENEMIESTEST);
 
 
 	if (FAILED(__super::Initialize()))
@@ -92,6 +78,8 @@ HRESULT CLevel_EnemiesTest::Initialize()
 
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_FrontUI"))))
 		return E_FAIL;
+
+	Ready_Layer_SASPortrait();
 
 	return S_OK;
 }
@@ -160,11 +148,15 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
+#ifdef ADD_PLAYER
 	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
-	FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
+#endif
 	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 
+	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
+	
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
 
@@ -200,7 +192,16 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Camera(const _tchar * pLayerTag)
 HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+
+	// pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("TestTarget"))
+		// ->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
+
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em200"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
+
 	
+
 	/*if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
 		return E_FAIL;*/
 
@@ -247,9 +248,9 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Batch(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_ConstructionSite3F.json");
-
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));
+	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_ConstructionSite3F.json");
+	//
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));
 	return S_OK;
 }
 
@@ -257,13 +258,15 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Player(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+#ifdef ADD_PLAYER
 	Json PreviewData;
 	PreviewData["Model"] = "Model_Player";
-
+	
 	CGameObject* pPlayer = nullptr;
 	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Player"), &PreviewData));
-
+	
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
+#endif
 
 	return S_OK;
 }
@@ -341,6 +344,14 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_UI(const _tchar * pLayerTag)
 	//	wstring protoTag = s2ws(json["Prototype_GameObject"]);
 	//	pGameInstance->Clone_GameObject(pLayerTag, protoTag.c_str(), &json);
 	//});
+
+	return S_OK;
+}
+
+HRESULT CLevel_EnemiesTest::Ready_Layer_SASPortrait()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	pGameInstance->Clone_GameObject(LAYER_SAS, L"Prototype_SASPortrait");
 
 	return S_OK;
 }

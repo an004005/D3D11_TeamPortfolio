@@ -67,7 +67,7 @@ const string& CClientUtils::AxisEnumToStr(EMoveAxis eAxis)
 	return strs[static_cast<_uint>(eAxis)];
 }
 
-EBaseAxis CClientUtils::GetDamageFromAxis(CTransform* pTransform, _fvector vFrom)
+EBaseAxis CClientUtils::GetDamageFromAxis(CTransform* pTransform, _fvector vFrom, ESimpleAxis* pSimpleAxis)
 {
 	// vLook 기준
 	// 시계방향으로 - 180
@@ -92,6 +92,14 @@ EBaseAxis CClientUtils::GetDamageFromAxis(CTransform* pTransform, _fvector vFrom
 		eAxis = EBaseAxis::WEST;
 	else
 		eAxis = EBaseAxis::SOUTH;
+
+	if (pSimpleAxis != nullptr)
+	{
+		if (-90.f <= fDeg && fDeg <= 90.f)
+			*pSimpleAxis = ESimpleAxis::NORTH;
+		else
+			*pSimpleAxis = ESimpleAxis::SOUTH;
+	}
 
 	return eAxis;
 }

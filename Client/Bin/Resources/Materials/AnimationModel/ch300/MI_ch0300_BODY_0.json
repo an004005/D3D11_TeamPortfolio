@@ -18,7 +18,7 @@
         "Textures": [
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/Texture/T_ch0300_Body_COL.png\u0000",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/Texture/T_ch0300_Body_NML.png\u0000",
-            "",
+            "../Bin/Resources/00_Common/03_Texture/T_cm_Fil_Glay.png",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/Texture/T_ch0300_Body_CTL.png\u0000",
             ""
         ]
