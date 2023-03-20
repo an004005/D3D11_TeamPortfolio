@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\public\KineticObject.h"
+#include "..\public\SpecialObject.h"
 #include "Model.h"
 #include "RigidBody.h"
 #include "GameInstance.h"
@@ -12,43 +12,59 @@
 #include "GravikenisisMouseUI.h"
 #include "VFX_Manager.h"
 
-CKineticObject::CKineticObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CSpecialObject::CSpecialObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
 {
 }
 
-CKineticObject::CKineticObject(const CKineticObject & rhs)
+CSpecialObject::CSpecialObject(const CSpecialObject & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CKineticObject::Initialize_Prototype()
+HRESULT CSpecialObject::Initialize_Prototype()
 {
 	FAILED_CHECK(__super::Initialize_Prototype());
 
 	return S_OK;
 }
 
-HRESULT CKineticObject::Initialize(void * pArg)
+HRESULT CSpecialObject::Initialize(void * pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
-	FAILED_CHECK(SetUp_Components());
+	if (pArg)
+	{
+		Json& json = *static_cast<Json*>(pArg);
+		if (json.contains("InitPos"))
+		{
+			_float4 InitPos = json["InitPos"];
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&InitPos));
+		}
+	}
+
+	FAILED_CHECK(SetUp_Components(pArg));
 
 	return S_OK;
 }
 
-void CKineticObject::BeginTick()
+void CSpecialObject::BeginTick()
 {
 	__super::BeginTick();
+
+	m_pCollider->UpdateChange();
 }
 
-void CKineticObject::Tick(_double TimeDelta)
+void CSpecialObject::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+	OutlineMaker();
+
+	m_pCollider->Update_Tick(m_pTransformCom);
 }
 
-void CKineticObject::Late_Tick(_double TimeDelta)
+void CSpecialObject::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
@@ -59,19 +75,27 @@ void CKineticObject::Late_Tick(_double TimeDelta)
 	}
 }
 
-void CKineticObject::AfterPhysX()
+void CSpecialObject::AfterPhysX()
 {
 	__super::AfterPhysX();
+
+	m_pCollider->Update_AfterPhysX(m_pTransformCom);
 }
 
-HRESULT CKineticObject::Render()
+HRESULT CSpecialObject::Render()
 {
 	FAILED_CHECK(__super::Render());
+
+	if(m_eCurModelTag != Tag_End)
+	{
+		const _matrix WorldMatrix = m_LocalMatrix * m_pTransformCom->Get_WorldMatrix();
+		FAILED_CHECK(m_pModelComs[m_eCurModelTag]->Render(WorldMatrix));
+	}
 
 	return S_OK;
 }
 
-HRESULT CKineticObject::Render_ShadowDepth()
+HRESULT CSpecialObject::Render_ShadowDepth()
 {
 	if (m_eCurModelTag != Tag_End)
 	{
@@ -82,11 +106,11 @@ HRESULT CKineticObject::Render_ShadowDepth()
 	return S_OK;
 }
 
-void CKineticObject::Imgui_RenderProperty()
+void CSpecialObject::Imgui_RenderProperty()
 {
 }
 
-void CKineticObject::OutlineMaker()
+void CSpecialObject::OutlineMaker()
 {
 	if (m_bOutline != m_bBeforeOutline)
 	{
@@ -129,7 +153,7 @@ void CKineticObject::OutlineMaker()
 	m_bBeforeOutline = m_bOutline;
 }
 
-HRESULT CKineticObject::SetUp_Components()
+HRESULT CSpecialObject::SetUp_Components(void* pArg)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
@@ -137,10 +161,12 @@ HRESULT CKineticObject::SetUp_Components()
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
+	m_eCurModelTag = Tag_default;
+
 	return S_OK;
 }
 
-void CKineticObject::Free()
+void CSpecialObject::Free()
 {
 	__super::Free();
 

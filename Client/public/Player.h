@@ -555,6 +555,9 @@ private:
 	CSAS_Portrait* m_pSasPortrait = nullptr;
 
 private:
+	CParticleGroup*	m_pSwordParticle = nullptr;
+
+private:
 	vector<wstring>	m_vecRandomLandingDustName;
 
 public:

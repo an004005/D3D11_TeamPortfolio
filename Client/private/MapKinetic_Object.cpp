@@ -175,7 +175,6 @@ HRESULT CMapKinetic_Object::Render()
 {
 	FAILED_CHECK(__super::Render());
 
-
 	if(m_eCurModelTag != Tag_End)
 	{
 		const _matrix WorldMatrix = m_LocalMatrix * m_pTransformCom->Get_WorldMatrix();
@@ -426,5 +425,4 @@ void CMapKinetic_Object::Free()
 		Safe_Release(Model);
 	
 	Safe_Release(m_pCollider);
-	Safe_Release(m_pParticle);
 }

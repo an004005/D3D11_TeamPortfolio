@@ -34,6 +34,7 @@
 #include "JsonLib.h"
 #include "ImguiUtils.h"
 #include "SAS_Portrait.h"
+#include "Weapon_wp0190.h"
 
 #include "PlayerInfoManager.h"
 
@@ -685,6 +686,11 @@ void CPlayer::SasMgr()
 			if (bSasIsUsing)
 			{
 				CPlayerInfoManager::GetInstance()->Finish_SasType(InputSas);
+
+				if (ESASType::SAS_FIRE == InputSas)
+				{
+					m_pSwordParticle->SetDelete();
+				}
 			}
 			else // 사용중이지 않을 경우
 			{
@@ -707,11 +713,14 @@ void CPlayer::SasMgr()
 
 	if (m_pSasPortrait->isFinish())
 	{
+		_matrix EffectPivot = XMMatrixIdentity();
 
 		switch (CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 		{
 			case ESASType::SAS_FIRE:
 				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Sas_Fire_Start"))->Start_Attach(this, "Sheath");
+				m_pSwordParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Weapon_Particle"));
+				m_pSwordParticle->Start_Attach(this, "RightWeapon", true);
 				break;
 			default:
 				break;
@@ -3210,31 +3219,27 @@ _bool CPlayer::BeforeCharge(_float fBeforeCharge)
 
 _bool CPlayer::Charge(_uint iNum, _float fCharge)
 {
-	if (m_bChargeEffect && (m_fCharge[2] == 0.f))
-	{
-		m_bChargeEffect = false;
-
-		ESASType CurSas = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
-
-		if (ESASType::SAS_NOT == CurSas)
-		{
-			_matrix EffectPivot =  XMMatrixScaling(2.f, 2.f ,2.f) * XMMatrixRotationX(XMConvertToRadians(-90.f));
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Twist"))->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, true);
-		}
-
-	}
-
-
 	if (fCharge > m_fCharge[iNum])
 	{
 		m_fCharge[iNum] += g_fTimeDelta;
+
+		if ((1 == iNum) && fCharge <= m_fCharge[iNum])
+		{
+		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Effect_01"))->Start_Attach(this, "RightWeapon");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Charge_White_Particle"))->Start_Attach(this, "RightWeapon");
+			IM_LOG("Shine");
+		}
+		if ((2 == iNum) && fCharge <= m_fCharge[iNum])
+		{
+		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Effect_02"))->Start_Attach(this, "RightWeapon");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Charge_White_Particle"))->Start_Attach(this, "RightWeapon");
+			IM_LOG("Shine");
+		}
+
 		return false;
 	}
 	else
 	{
-		if (0 == iNum)
-			m_bChargeEffect = true;
-
 		return true;
 	}
 }

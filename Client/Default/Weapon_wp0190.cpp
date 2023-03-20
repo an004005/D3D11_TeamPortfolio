@@ -127,6 +127,18 @@ HRESULT CWeapon_wp0190::Render()
 	return S_OK;
 }
 
+void CWeapon_wp0190::SetFire()
+{
+	m_pParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Weapon_Particle"));
+	m_pParticle->Start_AttachSword(this, true);
+}
+
+void CWeapon_wp0190::ReleaseFire()
+{
+	if (nullptr != m_pParticle)
+		m_pParticle->SetDelete();
+}
+
 HRESULT CWeapon_wp0190::SetUp_Components()
 {
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),

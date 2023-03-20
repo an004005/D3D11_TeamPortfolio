@@ -1,15 +1,15 @@
 #pragma once
-#include "KineticObject.h"
+#include "SpecialObject.h"
+#include "Client_Defines.h"
 
 BEGIN(Client)
 
-class CKineticObject_Special :
-	public CKineticObject
+class CSpecial_Train : public CSpecialObject
 {
 private:
-	CKineticObject_Special(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CKineticObject_Special(const CKineticObject_Special& rhs);
-	virtual ~CKineticObject_Special() = default;
+	CSpecial_Train(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSpecial_Train(const CSpecial_Train& rhs);
+	virtual ~CSpecial_Train() = default;
 
 public:
 	HRESULT Initialize_Prototype() override;
@@ -25,9 +25,12 @@ public:
 
 	virtual void Imgui_RenderProperty() override;
 
-public:
+private:
+	HRESULT	SetUp_Components(void* pArg);
 
-	CGameObject* Clone(void* pArg = nullptr) override { return nullptr; }
+public:
+	static CSpecial_Train* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CGameObject* Clone(void* pArg = nullptr)override;
 	void Free() override;
 };
 

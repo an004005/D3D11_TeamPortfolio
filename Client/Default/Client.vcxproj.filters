@@ -319,11 +319,11 @@
     <Filter Include="02.GameObjects\Enemy\em200">
       <UniqueIdentifier>{84b1a188-d10b-4c9a-b15e-4fdda0d7bf57}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\KineticObject">
+    <Filter Include="02.GameObjects\SpecialObject">
       <UniqueIdentifier>{c1e6af62-d5ed-4e86-bb32-69cdbc587c23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\KineticObject\KienticObjcet_Special">
-      <UniqueIdentifier>{969b68e4-dfb2-4fcd-8505-544621318f56}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\SpecialObject\Special_Train">
+      <UniqueIdentifier>{e5298caa-d4e0-4fcc-95d9-9424cdefe837}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -884,11 +884,11 @@
     <ClInclude Include="..\public\Enemy.h">
       <Filter>02.GameObjects\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\KineticObject.h">
-      <Filter>02.GameObjects\KineticObject</Filter>
+    <ClInclude Include="..\public\SpecialObject.h">
+      <Filter>02.GameObjects\SpecialObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\KineticObject_Special.h">
-      <Filter>02.GameObjects\KineticObject\KienticObjcet_Special</Filter>
+    <ClInclude Include="..\public\Special_Train.h">
+      <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1423,11 +1423,11 @@
     <ClCompile Include="..\private\Enemy.cpp">
       <Filter>02.GameObjects\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\KineticObject.cpp">
-      <Filter>02.GameObjects\KineticObject</Filter>
+    <ClCompile Include="..\private\SpecialObject.cpp">
+      <Filter>02.GameObjects\SpecialObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\KineticObject_Special.cpp">
-      <Filter>02.GameObjects\KineticObject\KienticObjcet_Special</Filter>
+    <ClCompile Include="..\private\Special_Train.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

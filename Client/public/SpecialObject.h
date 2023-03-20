@@ -18,13 +18,13 @@ enum KineticModeltag
 	Tag_End
 };
 
-class CKineticObject :
+class CSpecialObject :
 	public CGameObject
 {
 protected:
-	CKineticObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CKineticObject(const CKineticObject& rhs);
-	virtual ~CKineticObject() = default;
+	CSpecialObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSpecialObject(const CSpecialObject& rhs);
+	virtual ~CSpecialObject() = default;
 
 public:
 	HRESULT Initialize_Prototype() override;
@@ -47,7 +47,7 @@ protected:
 	_bool	m_bBeforeOutline = false;
 
 protected:
-	HRESULT	SetUp_Components();
+	HRESULT	SetUp_Components(void* pArg);
 
 	CRenderer*				m_pRendererCom = nullptr;
 	vector<CModel*>			m_pModelComs;
@@ -56,7 +56,9 @@ protected:
 
 protected:
 	_float4x4				m_LocalMatrix;
-	KineticModeltag			m_eCurModelTag = Tag_End;
+
+protected:
+	KineticModeltag			m_eCurModelTag;
 
 public:
 	CGameObject* Clone(void* pArg = nullptr)override { return nullptr; }
