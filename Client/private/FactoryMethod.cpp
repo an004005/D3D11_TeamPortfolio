@@ -192,6 +192,15 @@ HRESULT CFactoryMethod::MakeEnermyPrototypes(ID3D11Device* pDevice, ID3D11Device
 		pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
 	}
+
+	{
+		//µå¸±¸»
+		auto pEM0110 = CModel::Create(pDevice, pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/em0100/Model/SM_em0110.anim_model");
+		pEM0110->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0100/Animation/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pEM0110));
+	}
+
 	// Invisible
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("FlowerLegInvisible"), CFlowerLeg_Invisible::Create(pDevice, pContext)));
 	// ~Invisible

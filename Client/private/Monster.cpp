@@ -369,15 +369,12 @@ _bool CMonster::GetInvisible()
 
 void CMonster::TurnEyesOut()
 {
-	CMonster* pMonster = this;
-	if (this == nullptr) return;
-
 	CEffectGroup* pEffectGroup = nullptr;
 	pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", TEXT("Layer_UI"));
 	assert(pEffectGroup != nullptr);
 
 	//TimeLine 끝나고 삭제
-	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[FINDEYES], "Target", true);
+	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[FINDEYES], "Target", true, true);
 }
 
 void CMonster::SetActive()
