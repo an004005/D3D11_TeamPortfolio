@@ -20,6 +20,7 @@
 #include "EffectGroup.h"
 #include "VFX_Manager.h"
 
+#define ADD_PLAYER
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -77,6 +78,8 @@ HRESULT CLevel_EnemiesTest::Initialize()
 
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_FrontUI"))))
 		return E_FAIL;
+
+	Ready_Layer_SASPortrait();
 
 	return S_OK;
 }
@@ -145,7 +148,10 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
+#ifdef ADD_PLAYER
 	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
+#endif
 	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 
@@ -252,6 +258,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Player(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+#ifdef ADD_PLAYER
 	Json PreviewData;
 	PreviewData["Model"] = "Model_Player";
 	
@@ -259,8 +266,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Player(const _tchar * pLayerTag)
 	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Player"), &PreviewData));
 	
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
-
-
+#endif
 
 	return S_OK;
 }
@@ -338,6 +344,14 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_UI(const _tchar * pLayerTag)
 	//	wstring protoTag = s2ws(json["Prototype_GameObject"]);
 	//	pGameInstance->Clone_GameObject(pLayerTag, protoTag.c_str(), &json);
 	//});
+
+	return S_OK;
+}
+
+HRESULT CLevel_EnemiesTest::Ready_Layer_SASPortrait()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	pGameInstance->Clone_GameObject(LAYER_SAS, L"Prototype_SASPortrait");
 
 	return S_OK;
 }

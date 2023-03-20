@@ -35,7 +35,7 @@ public:
 	virtual void SetUpAnimationEvent(){}
 	virtual void SetUpFSM() {}
 
-	virtual void TakeDamage(DAMAGE_PARAM tDamwageParams) override;
+	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 	virtual void SetBrainCrush();
 	
 public:
@@ -43,6 +43,10 @@ public:
 	_float GetCrushGageRatio() const { return (_float)m_iCrushGage / (_float)m_iMaxCrushGage; }
 	_bool IsDead() const { return m_bDead; }
 	virtual _float4	GetKineticTargetPos() { return GetColliderPosition(); }
+
+public:
+	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
+	virtual _float4x4 GetPivotMatrix() override;
 
 protected:
 	// take damage 관련 함수

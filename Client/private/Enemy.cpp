@@ -235,6 +235,22 @@ void CEnemy::FindTarget()
 	}
 }
 
+_float4x4 CEnemy::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
+{
+	if (m_pModelCom->Get_BonePtr(strBoneName) == nullptr)
+		return XMMatrixIdentity();
+
+	return m_pModelCom->GetBoneMatrix(strBoneName, bPivotapply);
+}
+
+_float4x4 CEnemy::GetPivotMatrix()
+{
+	if (m_pModelCom == nullptr)
+		return XMMatrixIdentity();
+
+	return m_pModelCom->GetPivotMatrix();
+}
+
 void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 {
 	wstring HitBloodName;
