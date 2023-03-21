@@ -92,6 +92,7 @@
 #include "Main_PickUI.h"
 #include "Main_SkillIconUI.h"
 #include "Main_SkillNameUI.h"
+#include "ItemIconUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -254,11 +255,16 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Default_UI"),
 			CDefaultUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
 		/* For.Prototype_GameObject_Button_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Button_UI"),
 			CButtonUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+		/* For.Prototype_GameObject_Main_ItemIconUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("ItemIconUI"),
+			CItemIconUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+
 
 		// Frount_UI -> SAS Skill
 		/* For.Prototype_GameObject_SASSkillIcon_UI */
@@ -453,6 +459,7 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			return E_FAIL;
 
 
+		
 	}
 
 	//FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));

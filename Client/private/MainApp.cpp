@@ -73,8 +73,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(CPlayerInfoManager::GetInstance()->Initialize()))
 		return E_FAIL;
 
-	if (FAILED(CItem_Manager::GetInstance()->Initialize()))
-		return E_FAIL;
+	FAILED_CHECK(CItem_Manager::GetInstance()->Initialize())
 
 // #ifndef _DEBUG
 	// CGameInstance::GetInstance()->Imgui_OnOff(false);

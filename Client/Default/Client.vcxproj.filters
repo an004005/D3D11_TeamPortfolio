@@ -927,6 +927,12 @@
     <ClInclude Include="..\public\Item_Manager.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_ItemWindow.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ItemIconUI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1507,6 +1513,12 @@
       <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_Manager.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_ItemWindow.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ItemIconUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
   </ItemGroup>

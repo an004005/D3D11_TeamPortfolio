@@ -37,6 +37,9 @@ void CItem_IconUI::BeginTick()
 void CItem_IconUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
+	// ItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUI 이거 쓰지 말고 ItemIconUIItemIconUIItemIconUI 이거 써!!!
+	// ItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUI 이거 쓰지 말고 ItemIconUIItemIconUIItemIconUI 이거 써!!!
+	// ItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUI 이거 쓰지 말고 ItemIconUIItemIconUIItemIconUI 이거 써!!!
 
 }
 

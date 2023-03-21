@@ -5,6 +5,8 @@
 
 BEGIN(Client)
 
+// ItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUI 이거 쓰지 말고 ItemIconUIItemIconUIItemIconUI 이거 써!!!
+
 class CItem_IconUI final : public CUI
 {
 private:

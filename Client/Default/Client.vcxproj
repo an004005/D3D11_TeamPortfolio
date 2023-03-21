@@ -209,6 +209,7 @@
     <ClInclude Include="..\public\Canvas_Alarm.h" />
     <ClInclude Include="..\public\Canvas_BrainMap.h" />
     <ClInclude Include="..\public\Canvas_Equipment.h" />
+    <ClInclude Include="..\public\Canvas_ItemWindow.h" />
     <ClInclude Include="..\public\Canvas_Main.h" />
     <ClInclude Include="..\public\Canvas_BossHp.h" />
     <ClInclude Include="..\public\Canvas_BossHpMove.h" />
@@ -253,6 +254,7 @@
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\ItemIconUI.h" />
     <ClInclude Include="..\public\Item_Manager.h" />
     <ClInclude Include="..\public\LevelUpUI.h" />
     <ClInclude Include="..\public\Level_KineticEditor.h" />
@@ -401,6 +403,7 @@
     <ClCompile Include="..\private\Canvas_Alarm.cpp" />
     <ClCompile Include="..\private\Canvas_BrainMap.cpp" />
     <ClCompile Include="..\private\Canvas_Equipment.cpp" />
+    <ClCompile Include="..\private\Canvas_ItemWindow.cpp" />
     <ClCompile Include="..\private\Canvas_Main.cpp" />
     <ClCompile Include="..\private\Canvas_BossHp.cpp" />
     <ClCompile Include="..\private\Canvas_BossHpMove.cpp" />
@@ -446,6 +449,7 @@
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\ItemIconUI.cpp" />
     <ClCompile Include="..\private\Item_Manager.cpp" />
     <ClCompile Include="..\private\LevelUpUI.cpp" />
     <ClCompile Include="..\private\Level_KineticEditor.cpp" />

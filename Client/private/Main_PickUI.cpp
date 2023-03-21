@@ -83,20 +83,10 @@ void CMain_PickUI::CurrentPick(const _double & TimeDelta)
 	{
 		m_fAlpha = 0.1f;
 
-		switch (m_vColorType)
-		{
-		case 0:
-			m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, m_fAlpha };
-			break;
-
-		case 1:
-			m_tParams.Float4s[0] = { 0.27f, 0.25f, 0.2f, m_fAlpha };
-			break;
-
-		default:
-			m_vColorType = 0;
-			break;
-		}
+		//if(0 == m_vColorType)
+		//	m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, m_fAlpha };
+		//else if(1 == m_vColorType)
+		//	m_tParams.Float4s[0] = { 0.27f, 0.25f, 0.2f, m_fAlpha };
 
 		return;
 	}
@@ -120,20 +110,10 @@ void CMain_PickUI::CurrentPick(const _double & TimeDelta)
 		}
 	}
 
-	switch (m_vColorType)
-	{
-	case 0:
+	if (0 == m_vColorType)
 		m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, m_fAlpha };
-		break;
-
-	case 1:
+	else if (1 == m_vColorType)
 		m_tParams.Float4s[0] = { 0.27f, 0.25f, 0.2f, m_fAlpha };
-		break;
-
-	default:
-		m_vColorType = 0;
-		break;
-	}
 }
 
 CMain_PickUI * CMain_PickUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

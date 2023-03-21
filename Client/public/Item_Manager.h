@@ -14,6 +14,8 @@ public:
 	{
 		MAINITEM	eType = { MAINITEM_END };
 		_bool		bNew = { false };
+		_bool		bPick = { false };
+		_bool		bIsWindow = { false };
 		_uint		iCount = { 0 };
 		_uint		iMaxCount = { 0 };
 		_uint		iWeaponAttack = { 0 };
@@ -29,20 +31,29 @@ public:
 public:
 	HRESULT	Initialize();
 	
-public:	// Get
+public:
 	vector<pair<wstring, ITEMINFO>>	Get_ItmeInfo() {
 		return m_vecItem;
 	}
+	void	Set_ItemInfo(const _int iIndex, const ITEMINFO & tItemInfo) {
+		m_vecItem[iIndex].second = tItemInfo;
+	}
+	void	Set_ItemCount(const wstring & wszName, const _uint iCount);
 
-public:	// Set
-	void	Set_ItemInfo(const wstring & wszName, const ITEMINFO & tItemInfo) {
-		m_vecItem.emplace_back(wszName, tItemInfo);
+
+	_float2	Get_ItemIndexPos(const size_t iIndex) {
+		return m_arrItemIndexPos[iIndex];
+	}
+	_float2	Get_IconIndexPos(const size_t iIndex) {
+		return m_arrIconIndexPos[iIndex];
 	}
 
 private:
 	MAINITEM	m_eMainItem = { MAINITEM_END };
 
 	vector<pair<wstring, ITEMINFO>>	m_vecItem;
+	array<_float2, 17>	m_arrItemIndexPos;
+	array<_float2, 17>	m_arrIconIndexPos;
 
 public:
 	virtual void Free() override;
