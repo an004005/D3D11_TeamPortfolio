@@ -98,7 +98,7 @@ HRESULT CLevel_PlayerTest::Initialize()
 	if (FAILED(Ready_Layer_Map(PLAYERTEST_LAYER_MAP)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Kinetic(PLAYERTEST_LAYER_KINETIC)))
+	if (FAILED(Ready_Layer_Kinetic(LAYER_KINETIC)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Monster(PLAYERTEST_LAYER_MONSTER)))

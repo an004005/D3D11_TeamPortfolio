@@ -13,6 +13,7 @@
 #include "GravikenisisMouseUI.h"
 #include "VFX_Manager.h"
 #include "ParticleGroup.h"
+#include "Enemy.h"
 
 CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
@@ -83,7 +84,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 			ReleaseParticle();
 		}
 
-		if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
+		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 		{
 			DAMAGE_PARAM tParam;
 			tParam.eAttackType = EAttackType::ATK_HEAVY;

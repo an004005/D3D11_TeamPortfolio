@@ -116,8 +116,8 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 	if (nullptr == m_pTargetedMonster) m_pTargetedMonster = nullptr;
 	else if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pTargetedMonster)) m_pTargetedMonster = nullptr;
 	else if (true == m_pTargetedMonster->IsDeleted()) m_pTargetedMonster = nullptr;
-	else if (true == static_cast<CMonster*>(m_pTargetedMonster)->IsDead()) m_pTargetedMonster = nullptr;
-	//else if (true == static_cast<CEnemy*>(m_pTargetedMonster)->IsDead()) m_pTargetedMonster = nullptr;
+	//else if (true == static_cast<CMonster*>(m_pTargetedMonster)->IsDead()) m_pTargetedMonster = nullptr;
+	else if (true == static_cast<CEnemy*>(m_pTargetedMonster)->IsDead()) m_pTargetedMonster = nullptr;
 
 	if (nullptr == m_pSpecialObject) m_pSpecialObject = nullptr;
 	else if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialObject)) m_pSpecialObject = nullptr;
@@ -142,8 +142,8 @@ CGameObject * CPlayerInfoManager::Get_TargetedMonster()
 	if (nullptr == m_pTargetedMonster) return nullptr;	// null이면
 	else if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pTargetedMonster)) return nullptr;	// 유효하지 않은 주소이면
 	else if (true == m_pTargetedMonster->IsDeleted()) return nullptr;	// 지워졌으면
-	else if (true == static_cast<CMonster*>(m_pTargetedMonster)->IsDead()) return nullptr;	// 죽은 상태이면
-	//else if (true == static_cast<CEnemy*>(m_pTargetedMonster)->IsDead()) return nullptr;
+	//else if (true == static_cast<CMonster*>(m_pTargetedMonster)->IsDead()) return nullptr;	// 죽은 상태이면
+	else if (true == static_cast<CEnemy*>(m_pTargetedMonster)->IsDead()) return nullptr;
 
 	return m_pTargetedMonster;
 }
@@ -270,8 +270,8 @@ HRESULT CPlayerInfoManager::Set_TargetedMonster(CGameObject * pTargetedMonster)
 	if (nullptr == pTargetedMonster) { m_pTargetedMonster = nullptr; return S_OK; }
 	else if (false == CGameInstance::GetInstance()->Check_ObjectAlive(pTargetedMonster)) return E_FAIL;	// 유효하지 않은 주소이면
 	else if (true == pTargetedMonster->IsDeleted()) return E_FAIL;	// 지워졌으면
-	else if (true == static_cast<CMonster*>(pTargetedMonster)->IsDead()) return E_FAIL;	// 죽은 상태이면
-	//else if (true == static_cast<CEnemy*>(pTargetedMonster)->IsDead()) return E_FAIL;	// 죽은 상태이면
+	//else if (true == static_cast<CMonster*>(pTargetedMonster)->IsDead()) return E_FAIL;	// 죽은 상태이면
+	else if (true == static_cast<CEnemy*>(pTargetedMonster)->IsDead()) return E_FAIL;	// 죽은 상태이면
 
 	m_pTargetedMonster = pTargetedMonster;
 	return S_OK;
