@@ -284,7 +284,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	{
 		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
 		Out.vColor = vShade * pow(2.f, vDepth.b);
-		Out.vColor.a = vShade.a;
+		Out.vColor.a = saturate(vShade.a);
 		if (0.0f == Out.vColor.a)
 			discard;
 	}

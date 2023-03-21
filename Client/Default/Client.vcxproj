@@ -319,6 +319,7 @@
     <ClInclude Include="..\public\SASSkillLightUI.h" />
     <ClInclude Include="..\public\ScarletMap.h" />
     <ClInclude Include="..\public\ScarletWeapon.h" />
+    <ClInclude Include="..\public\SimpleTrigger.h" />
     <ClInclude Include="..\public\SkMpBullet.h" />
     <ClInclude Include="..\public\SkmP_AnimInstance.h" />
     <ClInclude Include="..\public\SkmP_Controller.h" />
@@ -330,10 +331,12 @@
     </ClInclude>
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
+    <ClInclude Include="..\public\SpawnTrigger.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\TestCamera.h" />
     <ClInclude Include="..\public\TestTarget.h" />
     <ClInclude Include="..\public\Trigger.h" />
+    <ClInclude Include="..\public\TriggerEx.h" />
     <ClInclude Include="..\public\TutorialUI.h" />
     <ClInclude Include="..\public\Tutorial_CheckUI.h" />
     <ClInclude Include="..\public\Tutorial_SuccessUI.h" />
@@ -496,6 +499,7 @@
     <ClCompile Include="..\private\SASSkillLightUI.cpp" />
     <ClCompile Include="..\private\ScarletMap.cpp" />
     <ClCompile Include="..\private\ScarletWeapon.cpp" />
+    <ClCompile Include="..\private\SimpleTrigger.cpp" />
     <ClCompile Include="..\private\SkMpBullet.cpp" />
     <ClCompile Include="..\private\SkmP_AnimInstance.cpp" />
     <ClCompile Include="..\private\SkmP_Controller.cpp" />
@@ -507,10 +511,12 @@
     </ClCompile>
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
+    <ClCompile Include="..\private\SpawnTrigger.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\TestCamera.cpp" />
     <ClCompile Include="..\private\TestTarget.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
+    <ClCompile Include="..\private\TriggerEx.cpp" />
     <ClCompile Include="..\private\TutorialUI.cpp" />
     <ClCompile Include="..\private\Tutorial_CheckUI.cpp" />
     <ClCompile Include="..\private\Tutorial_SuccessUI.cpp" />

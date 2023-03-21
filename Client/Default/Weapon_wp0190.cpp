@@ -7,6 +7,7 @@
 #include "Monster.h"
 #include "PhysX_Manager.h"
 #include "Material.h"
+#include "Enemy.h"
 
 CWeapon_wp0190::CWeapon_wp0190(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CScarletWeapon(pDevice, pContext)
@@ -35,7 +36,7 @@ HRESULT CWeapon_wp0190::Initialize(void * pArg)
 
 	m_pCollider->SetOnTriggerOut([this](CGameObject* pGameObject)
 	{
-		if (auto pTarget = dynamic_cast<CMonster*>(pGameObject))
+		if (auto pTarget = dynamic_cast<CEnemy*>(pGameObject))
 		{
 			pTarget->Set_CollisionDuplicate(false);
 			IM_LOG("Test");

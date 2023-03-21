@@ -9,6 +9,16 @@
             "Layer": "Layer_Kinetic",
             "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Bench.json",
             "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer" : "Layer_Trigger",
+            "JsonPath": "",
+            "ProtoTag" : "Prototype_SpawnTrigger"
+        },
+        {
+            "Layer" : "Layer_Trigger",
+            "JsonPath": "",
+            "ProtoTag" : "Prototype_SimpleTrigger"
         }
     ]
 }

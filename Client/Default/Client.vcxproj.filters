@@ -319,6 +319,12 @@
     <Filter Include="02.GameObjects\Enemy\em200">
       <UniqueIdentifier>{84b1a188-d10b-4c9a-b15e-4fdda0d7bf57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Map\Batch">
+      <UniqueIdentifier>{d938f9c6-37d2-4792-8bf7-eb19360e9644}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map\Trigger">
+      <UniqueIdentifier>{249a436b-b980-4085-8ad1-f1abe2dc7c87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -878,7 +884,18 @@
     <ClInclude Include="..\public\Enemy.h">
       <Filter>02.GameObjects\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Imgui_Batch.h" />
+    <ClInclude Include="..\public\Imgui_Batch.h">
+      <Filter>02.GameObjects\Map\Batch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TriggerEx.h">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpawnTrigger.h">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SimpleTrigger.h">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1412,7 +1429,18 @@
     <ClCompile Include="..\private\Enemy.cpp">
       <Filter>02.GameObjects\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Imgui_Batch.cpp" />
+    <ClCompile Include="..\private\Imgui_Batch.cpp">
+      <Filter>02.GameObjects\Map\Batch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TriggerEx.cpp">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpawnTrigger.cpp">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SimpleTrigger.cpp">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
