@@ -30,11 +30,15 @@ HRESULT CMain_SkillNameUI::Initialize(void * pArg)
 
 void CMain_SkillNameUI::Tick(_double TimeDelta)
 {
+	if (false == m_bVisible) return;
+	
 	__super::Tick(TimeDelta);
 }
 
 void CMain_SkillNameUI::Late_Tick(_double TimeDelta)
 {
+	if (false == m_bVisible) return;
+	
 	__super::Late_Tick(TimeDelta);
 }
 

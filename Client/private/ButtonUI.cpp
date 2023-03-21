@@ -32,6 +32,8 @@ HRESULT CButtonUI::Initialize(void * pArg)
 
 void CButtonUI::Tick(_double TimeDelta)
 {
+	if (false == m_bVisible)	return;
+
 	__super::Tick(TimeDelta);
 
 	if (true == IsCursorOn(CGameUtils::GetClientCursor()) &&

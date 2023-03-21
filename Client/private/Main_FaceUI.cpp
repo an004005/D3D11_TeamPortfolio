@@ -51,6 +51,8 @@ void CMain_FaceUI::Tick(_double TimeDelta)
 
 void CMain_FaceUI::Late_Tick(_double TimeDelta)
 {
+	if (false == m_bVisible) return;
+	
 	__super::Late_Tick(TimeDelta);
 }
 

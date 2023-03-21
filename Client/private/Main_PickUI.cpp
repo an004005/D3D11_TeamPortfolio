@@ -31,6 +31,8 @@ HRESULT CMain_PickUI::Initialize(void * pArg)
 
 void CMain_PickUI::Tick(_double TimeDelta)
 {
+	if (false == m_bVisible) return;
+
 	__super::Tick(TimeDelta);
 
 	if (true == IsCursorOn(CGameUtils::GetClientCursor()) &&

@@ -47,13 +47,13 @@ HRESULT CCanvas_Main::Initialize(void* pArg)
 
 void CCanvas_Main::Tick(_double TimeDelta)
 {
-	CCanvas::Tick(TimeDelta);
-
 	KeyInput();
-	Menu_Tick();
 
 	if (false == m_bMainUI) return;
 
+	CCanvas::Tick(TimeDelta);
+
+	Menu_Tick();
 	m_arrCanvass[m_eMainCanvas]->Tick(TimeDelta);
 }
 

@@ -30,11 +30,15 @@ HRESULT CMain_BarUI::Initialize(void * pArg)
 
 void CMain_BarUI::Tick(_double TimeDelta)
 {
+	if (false == m_bVisible) return;
+	
 	__super::Tick(TimeDelta);
 }
 
 void CMain_BarUI::Imgui_RenderProperty()
 {
+	if (false == m_bVisible) return;
+	
 	CUI::Imgui_RenderProperty();
 
 }

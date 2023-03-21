@@ -32,12 +32,16 @@ HRESULT CMain_SkillIconUI::Initialize(void * pArg)
 
 void CMain_SkillIconUI::Tick(_double TimeDelta)
 {
+	if (false == m_bVisible) return;
+
 	__super::Tick(TimeDelta);
 
 }
 
 void CMain_SkillIconUI::Late_Tick(_double TimeDelta)
 {
+	if (false == m_bVisible) return;
+
 	__super::Late_Tick(TimeDelta);
 }
 

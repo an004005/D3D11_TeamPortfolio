@@ -51,11 +51,15 @@ void CCanvas_Party::Tick(_double TimeDelta)
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(m_bVisible);
 
+	if (false == m_bVisible) return;
+
 	CurrentPick_Tick();
 }
 
 void CCanvas_Party::Late_Tick(_double TimeDelta)
 {
+	if (false == m_bVisible) return;
+	
 	CCanvas::Late_Tick(TimeDelta);
 
 }
@@ -104,6 +108,9 @@ HRESULT CCanvas_Party::Render()
 	pGameInstance->Render_Font(L"Pretendard32", L"방어력", vPosition + _float2(203.0f, 207.0f), 0.f, vFontSmaillSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(350.0f, 205.0f), 0.f, vFontSmaillSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"작전", vPosition + _float2(96.0f, 228.0f), 0.f, vFontSmaillSize, vColor);
+	if (m_eSASMember == YUITO)	pGameInstance->Render_Font(L"Pretendard32", L"----", vPosition + _float2(276.0f, 255.0f), 0.f, { 0.4f, 0.4f }, vColor);
+	else pGameInstance->Render_Font(L"Pretendard32", L"자유롭게 싸워라", vPosition + _float2(246.0f, 255.0f), 0.f, { 0.4f, 0.4f }, vColor);
+
 
 	// -------------------------------------------------------------------
 	vFontBigSize = { 0.35f, 0.35f };
