@@ -1,0 +1,5 @@
+../Bin/Resources/VFX/ParticleSystem/Player_Sword_Particle/Sas_Fire_MeshData_Particle/
+
+../Bin/Resources/VFX/ParticleSystem/Player_Sword_Particle/Sas_Fire_MeshData_NoHdr_Particle/
+
+../Bin/Resources/VFX/ParticleSystem/Player_Sword_Particle/Sas_Fire_MeshData_Hdr_Particle/

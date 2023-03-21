@@ -24,9 +24,10 @@ public:
 	void InputAnimSocketOne(const string& strSocName, const string& strAnimName);
 	void AttachAnimSocketOne(const string& strSocName, const string& strAnimName);
 
-	void InputAnimSocket(const string& strSocName, const list<string>& AnimNameList);
-	void AttachAnimSocket(const string& strSocName, const list<string>& AnimNameList);
+	
 	const string&	GetCurSocketAnimName();
+	void InputAnimSocketMany(const string& strSocName, const list<string>& AnimNameList);
+	void AttachAnimSocketMany(const string& strSocName, const list<string>& AnimNameList);
 
 protected:
 	CAnimationStateMachine* m_pASM_Base = nullptr;

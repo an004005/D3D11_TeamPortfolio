@@ -25,7 +25,6 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
-	virtual void AfterPhysX() override;
 	virtual void Imgui_RenderProperty() override;
 	virtual HRESULT Render_ShadowDepth() override;
 
@@ -36,6 +35,8 @@ public:
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 	virtual void SetBrainCrush();
+
+	virtual void SetEnemyBatchDataStat(ENEMY_STAT tStat);
 	
 public:
 	_float GetHpRatio() const { return (_float)m_iHP / (_float)m_iMaxHP; }
@@ -54,6 +55,8 @@ protected:
 	virtual _bool IsWeak(CRigidBody* pHitPart) { return false; }
 	virtual void CheckCrushGage(DAMAGE_PARAM& tDamageParams);
 	virtual void CheckHP(DAMAGE_PARAM& tDamageParams);
+	// Tick의 제일 마지막에서 실행한다.
+	void ResetHitData();
 	// ~
 
 	// 몬스터가 죽으면 실행해야할 코드들 넣기

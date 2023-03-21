@@ -99,16 +99,6 @@ void CEnemy::Late_Tick(_double TimeDelta)
 	}
 }
 
-void CEnemy::AfterPhysX()
-{
-	CScarletCharacter::AfterPhysX();
-
-	m_eCurAttackType = EAttackType::ATK_END;
-	m_eHitFrom = EBaseAxis::AXIS_END;
-	m_eSimpleHitFrom = ESimpleAxis::AXIS_END;
-	m_bHitWeak = false;
-}
-
 void CEnemy::Imgui_RenderProperty()
 {
 	CScarletCharacter::Imgui_RenderProperty();
@@ -204,6 +194,16 @@ void CEnemy::SetBrainCrush()
 	}
 }
 
+void CEnemy::SetEnemyBatchDataStat(ENEMY_STAT tStat)
+{
+	m_iMaxHP = tStat.iMaxHP;
+	m_iHP = m_iMaxHP;
+	m_iMaxCrushGage = tStat.iMaxCrushGage;
+	m_iCrushGage = m_iMaxCrushGage;
+	m_iAtkDamage = tStat.iAtkDamage;
+	iMonsterLevel = tStat.iLevel;
+}
+
 void CEnemy::SetDead()
 {
 	if (m_bDead)
@@ -254,6 +254,38 @@ _float4x4 CEnemy::GetPivotMatrix()
 
 void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 {
+	if (tDamageParams.vHitPosition == _float4(0.f, 0.f, 0.f, 1.f) && tDamageParams.pCauser != nullptr)
+	{
+		_vector vRayPos = static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
+		vRayPos = XMVectorSetW(vRayPos, 1.f);
+		_vector vRayDir = GetColliderPosition() - static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
+		vRayDir = XMVectorSetW(vRayDir, 0.f);
+
+		physx::PxRaycastHit hitBuffer[1];
+		physx::PxRaycastBuffer rayOut(hitBuffer, 1);
+
+		RayCastParams param;
+		param.rayOut = &rayOut;
+		param.vOrigin = vRayPos;
+		param.vDir = vRayDir;
+		param.fDistance = 10.f;
+		param.iTargetType = CTB_MONSTER | CTB_MONSTER_PART | CTB_MONSTER_RANGE;
+		param.fVisibleTime = 5.f;
+		param.bSingle = true;
+		if (CGameInstance::GetInstance()->RayCast(param))
+		{
+			for (int i = 0; i < rayOut.getNbAnyHits(); ++i)
+			{
+				auto pHit = rayOut.getAnyHit(i);
+				CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+				if (auto pEnemy = dynamic_cast<CEnemy*>(pCollidedObject))
+				{
+					tDamageParams.vHitPosition = XMVectorSet(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
+				}
+			}
+		}
+	}
+
 	wstring HitBloodName;
 	wstring HitEffectName;
 
@@ -262,16 +294,20 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 	case ESASType::SAS_FIRE:
 		HitBloodName = s_vecFireBlood[CMathUtils::RandomUInt(s_vecFireBlood.size() - 1)];
 		HitEffectName = s_vecFireHit[CMathUtils::RandomUInt(s_vecFireHit.size() - 1)];
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Player_Fire_Sword_Particle")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 		break;
 
 	case ESASType::SAS_ELETRIC:
 		HitBloodName = s_vecElecBlood[CMathUtils::RandomUInt(s_vecElecBlood.size() - 1)];
 		HitEffectName = s_vecElecHit[CMathUtils::RandomUInt(s_vecElecHit.size() - 1)];
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Player_Elec_Sword_Particle")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 		break;
 
 	case ESASType::SAS_NOT:
 		HitBloodName = s_vecDefaultBlood[CMathUtils::RandomUInt(s_vecDefaultBlood.size() - 1)];
 		HitEffectName = s_vecDefaultHit[CMathUtils::RandomUInt(s_vecDefaultHit.size() - 1)];
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Default_Sword_Particle")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 		break;
 	}
 	
@@ -281,6 +317,7 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 	if (HitEffectName.empty() == false)
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Circle_Distortion_NonFlip_Short")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 
 	if (m_strImpactTag.empty() == false)
 		m_SoundStore.PlaySound(m_strImpactTag, &tDamageParams.vHitPosition);
@@ -358,6 +395,14 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 			SetDead();
 		m_iHP = 0;
 	}
+}
+
+void CEnemy::ResetHitData()
+{
+	m_eCurAttackType = EAttackType::ATK_END;
+	m_eHitFrom = EBaseAxis::AXIS_END;
+	m_eSimpleHitFrom = ESimpleAxis::AXIS_END;
+	m_bHitWeak = false;
 }
 
 void CEnemy::Update_DeadDissolve(_double TimeDelta)

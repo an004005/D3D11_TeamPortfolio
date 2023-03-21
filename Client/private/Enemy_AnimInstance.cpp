@@ -157,7 +157,7 @@ void CEnemy_AnimInstance::AttachAnimSocketOne(const string& strSocName, const st
 	m_mapAnimSocket[strSocName] = { m_pModel->Find_Animation(strAnimName) };
 }
 
-void CEnemy_AnimInstance::InputAnimSocket(const string& strSocName, const list<string>& AnimNameList)
+void CEnemy_AnimInstance::InputAnimSocketMany(const string& strSocName, const list<string>& AnimNameList)
 {
 	for (auto& iter : m_mapAnimSocket)
 	{
@@ -174,7 +174,7 @@ void CEnemy_AnimInstance::InputAnimSocket(const string& strSocName, const list<s
 	m_mapAnimSocket[strSocName] = AnimList;
 }
 
-void CEnemy_AnimInstance::AttachAnimSocket(const string& strSocName, const list<string>& AnimNameList)
+void CEnemy_AnimInstance::AttachAnimSocketMany(const string& strSocName, const list<string>& AnimNameList)
 {
 	const auto itr = m_mapAnimSocket.find(strSocName);
 	Assert(itr != m_mapAnimSocket.end());

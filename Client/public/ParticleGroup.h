@@ -54,6 +54,7 @@ private:
 
 public:
 	virtual void Late_Tick(_double TimeDelta) override;
+	virtual void AfterPhysX() override;
 private:
 	list<char*>		m_ParticleTag;
 

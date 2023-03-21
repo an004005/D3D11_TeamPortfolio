@@ -248,6 +248,7 @@
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\Imgui_Batch.h" />
     <ClInclude Include="..\public\LevelUpUI.h" />
     <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\GravikenisisMouseUI.h" />
@@ -430,6 +431,7 @@
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\Imgui_Batch.cpp" />
     <ClCompile Include="..\private\LevelUpUI.cpp" />
     <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\GravikenisisMouseUI.cpp" />

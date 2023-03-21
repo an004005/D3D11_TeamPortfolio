@@ -893,6 +893,7 @@
     <ClInclude Include="..\public\EM0650_Controller.h">
       <Filter>02.GameObjects\Enemy\EM0650</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Imgui_Batch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1444,6 +1445,7 @@
     <ClCompile Include="..\private\EM0650_Controller.cpp">
       <Filter>02.GameObjects\Enemy\EM0650</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Imgui_Batch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

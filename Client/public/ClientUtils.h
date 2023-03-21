@@ -129,6 +129,15 @@ typedef struct tagDamageParam
 	class CScarletCharacter* pCauser = nullptr; // 공격자 포인터
 } DAMAGE_PARAM;
 
+typedef struct tagEnemyStat
+{
+	_int iMaxHP = 100;
+	_int iMaxCrushGage = 100;
+	_bool bHasCrushGage = false;
+	_int iAtkDamage = 10;
+	_uint iLevel = 1;
+} ENEMY_STAT;
+
 enum
 {
 	MOVE_AXIS_CNT = static_cast<_uint>(EMoveAxis::AXIS_END),
@@ -137,6 +146,7 @@ enum
 	SAS_CNT = static_cast<_uint>(ESASType::SAS_END),
 	DEBUFF_CNT = static_cast<_uint>(EDeBuffType::DEBUFF_END),
 	ATK_TYPE_CNT = static_cast<_uint>(EAttackType::ATK_END),
+	SIMPLE_AXIS_CNT = static_cast<_uint>(ESimpleAxis::AXIS_END)
 };
 
 class CClientUtils
