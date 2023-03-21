@@ -113,6 +113,7 @@ void CEM0200_Controller::AI_Tick(_double TimeDelta)
 
 	if (m_pTarget == nullptr)
 		return;
+
 	// 대상과의 거리 
 	m_fToTargetDistance = XMVectorGetX(XMVector3LengthEst(
 		m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)
@@ -170,14 +171,14 @@ void CEM0200_Controller::Tick_Mid(_double TimeDelta)
 		AddCommand("Run", 2.f, &CEM0200_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	case 2:
-		AddCommand("Turn", 2.5f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		AddCommand("Turn", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		AddCommand("Jump", 0.f, &CAIController::Input, MOUSE_RB);
 		break;
 	case 3:
 		AddCommand("Threat", 0.f, &CAIController::Input, C);
 		break;
 	}
-	m_iMidOrder = (m_iMidOrder + 1) % 2;
+	m_iMidOrder = (m_iMidOrder + 1) % 4;
 }
 
 void CEM0200_Controller::Tick_Far(_double TimeDelta)

@@ -102,6 +102,19 @@ enum class EAttackType
 	ATK_END
 };
 
+enum class EEnemyName
+{ 
+	BRONJON,
+	SKUMMYPANDOU,
+	SKUMMYPOOL,
+	BUDDYLUMI,
+	EM0200,
+	EM0320, 
+	EM0700,
+	MONSTERNAME_END 
+};
+
+
 typedef struct tagDamageParam
 {
 	_int iDamage;

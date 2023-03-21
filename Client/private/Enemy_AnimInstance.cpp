@@ -191,6 +191,19 @@ void CEnemy_AnimInstance::AttachAnimSocket(const string& strSocName, const list<
 	m_mapAnimSocket[strSocName] = AnimList;
 }
 
+const string & CEnemy_AnimInstance::GetCurSocketAnimName()
+{
+	for (auto& iter : m_mapAnimSocket)
+	{
+		if (!iter.second.empty())
+		{
+			return iter.second.front()->GetName();
+		}
+	}
+
+	return "";
+}
+
 void CEnemy_AnimInstance::Free()
 {
 	CAnimationInstance::Free();

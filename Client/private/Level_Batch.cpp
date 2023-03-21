@@ -179,7 +179,7 @@ HRESULT CLevel_Batch::Ready_Prototypes()
 	FAILED_CHECK(Push_Back_Prototype(L"BuddyLumi", CBuddyLumi::Create(m_pDevice, m_pContext), MONSTER));
 	FAILED_CHECK(Push_Back_Prototype(L"FlowerLeg", CFlowerLeg::Create(m_pDevice, m_pContext), MONSTER));
 	FAILED_CHECK(Push_Back_Prototype(L"SkummyPandou", CSkummyPandou::Create(m_pDevice, m_pContext), MONSTER));
-	FAILED_CHECK(Push_Back_Prototype(L"SkummyPool", CSkummyPool::Create(m_pDevice, m_pContext), MONSTER));
+	FAILED_CHECK(Push_Back_Prototype(L"SkummyPool", CEM0650::Create(m_pDevice, m_pContext), MONSTER));
 	FAILED_CHECK(Push_Back_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext), MONSTER));
 
 	//Controller	

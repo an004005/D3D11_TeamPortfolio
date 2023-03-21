@@ -28,6 +28,7 @@
 #include "FlowerLeg_Invisible.h"
 #include "FLInvisible_Controller.h"
 #include "EM0200.h"
+#include "EM0700.h"
 #include "TestTarget.h"
 
 // Player Setting
@@ -195,20 +196,12 @@ HRESULT CFactoryMethod::MakeEnermyPrototypes(ID3D11Device* pDevice, ID3D11Device
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
 	}
 
-	{
-		//µå¸±¸»
-		auto pEM0110 = CModel::Create(pDevice, pContext,
-			"../Bin/Resources/Model/AnimModel/Monster/em0100/Model/SM_em0110.anim_model");
-		pEM0110->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0100/Animation/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pEM0110));
-	}
-
 	// Invisible
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("FlowerLegInvisible"), CFlowerLeg_Invisible::Create(pDevice, pContext)));
 	// ~Invisible
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("FlowerLeg"), CFlowerLeg::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BuddyLumi"), CBuddyLumi::Create(pDevice, pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkummyPool"), CSkummyPool::Create(pDevice, pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkummyPool"), CEM0650::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkMpBullet"), CSkMpBullet::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkummyPandou"), CSkummyPandou::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BronJon"), CBronJon::Create(pDevice, pContext)));
@@ -240,6 +233,16 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em200"), CEM0200::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("TestTarget"), CTestTarget::Create(pDevice, pContext)));
+
+
+	{
+		auto pEM700Model = CModel::Create(pDevice, pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/em0700/Model/SM_em0700.anim_model");
+		pEM700Model->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0700/Animation/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em700"), pEM700Model));
+	}
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em700"), CEM0700::Create(pDevice, pContext)));
 
 	return S_OK;
 }

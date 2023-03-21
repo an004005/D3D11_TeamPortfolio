@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "RigidBody.h"
 #include "FSMComponent.h"
+#include "Enemy_AnimInstance.h"
 #include "TestTarget.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
@@ -483,6 +484,13 @@ void CEnemy::HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttac
 			pTarget->TakeDamage(tDamageParams);
 		}
 	}
+}
+
+void CEnemy::SocketLocalMove(CEnemy_AnimInstance * pASM)
+{
+	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	_vector vLocalMove = m_pModelCom->GetLocalMove(WorldMatrix, pASM->GetCurSocketAnimName());
+	m_pTransformCom->LocalMove(vLocalMove);
 }
 
 void CEnemy::Free()

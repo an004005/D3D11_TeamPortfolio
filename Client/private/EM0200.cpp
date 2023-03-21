@@ -36,7 +36,7 @@ HRESULT CEM0200::Initialize(void* pArg)
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eMonsterName = FLOWERLEG;
+	m_eMonsterName = EEnemyName::EM0200;
 	m_bHasCrushGage = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 

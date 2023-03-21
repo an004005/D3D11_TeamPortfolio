@@ -20,7 +20,7 @@
 #include "EffectGroup.h"
 #include "VFX_Manager.h"
 
-#define ADD_PLAYER
+//#define ADD_PLAYER
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -164,6 +164,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_GameObject_Trigger"),
 		CTrigger::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -174,6 +175,13 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
 
 	// For_SkySphere
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Env", TEXT("Prototype_GameObject_SkyBox")));
+
+	Json PreviewData;
+	{
+		PreviewData["Model"] = "Prototype_Model_em700";
+		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
+		auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag.c_str(), TEXT("ModelPreview"), &PreviewData);
+	}
 
 	return S_OK;
 }
@@ -194,13 +202,15 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 
-	// pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("TestTarget"))
-		// ->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
+	 pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("TestTarget"))
+		 ->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
 
-	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em200"))
+	/*pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em200"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));*/
+
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em700"))
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
 
-	
 
 	/*if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
 		return E_FAIL;*/
