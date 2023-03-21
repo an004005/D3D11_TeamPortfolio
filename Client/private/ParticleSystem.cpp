@@ -9,6 +9,8 @@
 #include "JsonLib.h"
 #include "Model.h"
 #include "RigidBody.h"
+#include "CurveManager.h"
+#include "CurveFloatMapImpl.h"
 
 CParticleSystem::CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -75,6 +77,9 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 			m_pPointInstanceBuffer = CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, m_iInstanceNum);
 		}
 	}
+
+	Start_Timeline();
+
 	return S_OK;
 }
 
@@ -82,6 +87,12 @@ void CParticleSystem::Tick(_double TimeDelta)
 {
 	// if (m_bVisible == false)
 	// 	return;
+
+	if (m_bCurveDir)
+	{
+		m_VtxStartTimeline.Tick(TimeDelta, m_fMeshVtxStartRatio);
+		m_VtxRangeTimeline.Tick(TimeDelta, m_fMeshVtxRangeRatio);
+	}
 
 		const _float fTimeDelta = (_float)TimeDelta;
 
@@ -112,6 +123,8 @@ void CParticleSystem::Tick(_double TimeDelta)
 				AddPoint();
 			}
 		}
+
+
 }
 
 void CParticleSystem::Late_Tick(_double TimeDelta)
@@ -211,6 +224,8 @@ void CParticleSystem::SaveToJson(Json& json)
 
 	json["bNonAlpha"] = m_bNonAlphaBlend;
 	json["ModelProtoTag"] = m_ModelProtoTag;
+	json["ModelCurveProtoTag"] = m_MeshCurveModelProtoTag;
+
 	json["RandDirMax"] = m_vRandDir_Max;
 	json["RandDirMin"] = m_vRandDir_Min;
 	json["SphereDetail"] = m_bSphereDetail;
@@ -218,6 +233,14 @@ void CParticleSystem::SaveToJson(Json& json)
 	json["bPhysX"] = m_bPhysX;
 	json["bMeshCurve"] = m_bMeshCurve;
 
+	json["bCurveDir"] = m_bCurveDir;
+	json["XDirCurveName"] = m_strXDirCurveName;
+	json["YDirCurveName"] = m_strYDirCurveName;
+	json["ZDirCurveName"] = m_strZDirCurveName;
+
+
+	json["VtxStartTimelineCurve"] = m_VtxStartTimeline.GetCurveName();
+	json["VtxRangeTimelineCurve"] = m_VtxRangeTimeline.GetCurveName();
 }
 
 void CParticleSystem::LoadFromJson(const Json& json)
@@ -249,13 +272,28 @@ void CParticleSystem::LoadFromJson(const Json& json)
 	m_fRotationToTime_Max = json["RotationToTimeMax"] ;
 	m_vScaleVariation = json["ScaleVariation"];
 
+	if(json.contains("bCurveDir"))
+	{
+		m_bCurveDir = json["bCurveDir"];
+
+		if(m_bCurveDir == true)
+		{
+			m_strXDirCurveName = json["XDirCurveName"];
+			m_strYDirCurveName = json["YDirCurveName"];
+			m_strZDirCurveName = json["ZDirCurveName"];
+		}
+	}
+
 	if(json.contains("bMeshCurve"))
 	{
 		m_bMeshCurve = json["bMeshCurve"];
 
-		if (m_MeshCurveModelProtoTag != "")
+		if (json.contains("ModelCurveProtoTag"))
 		{
-			FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_MeshCurveModelProtoTag).c_str(), TEXT("MeshCurveModel"), (CComponent**)&m_pMeshCurveModel));
+			m_MeshCurveModelProtoTag = json["ModelCurveProtoTag"];
+
+			if(m_MeshCurveModelProtoTag != "")
+				FAILED_CHECK(Add_Component(LEVEL_NOW, CGameUtils::s2ws(m_MeshCurveModelProtoTag).c_str(), TEXT("MeshCurveModel"), (CComponent**)&m_pMeshCurveModel));
 		}
 	}
 
@@ -313,6 +351,12 @@ void CParticleSystem::LoadFromJson(const Json& json)
 	if(json.contains("MeshSize"))
 		m_vMeshSize = json["MeshSize"];
 
+	if(json.contains("MeshDir"))
+	{
+		m_bCurveDir = json["MeshDir"];
+
+	}
+
 	if(m_eBufferType == EBufferType::MESH)
 	{
 		if (json.contains("MeshBufferProtoTag"))
@@ -336,17 +380,58 @@ void CParticleSystem::LoadFromJson(const Json& json)
 	if (json.contains("IncreaseMaxSize"))
 		m_fIncreaseMaxSize = json["IncreaseMaxSize"];
 
-
+	if (json.contains("VtxStartTimelineCurve"))
+		m_VtxStartTimeline.SetCurve(json["VtxStartTimelineCurve"]);
+	if (json.contains("VtxRangeTimelineCurve"))
+		m_VtxRangeTimeline.SetCurve(json["VtxRangeTimelineCurve"]);
 }
 
 void CParticleSystem::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
+
+	ImGui::SliderFloat("VtxStartRatio", &m_fMeshVtxStartRatio, 0.f, 1.f);
+	ImGui::SliderFloat("VtxRangeRatio", &m_fMeshVtxRangeRatio, 0.f, 1.f);
+
+	ImGui::Checkbox("CurveDir", &m_bCurveDir);
+	static char szXDirCurveName[MAX_PATH]{};
+	static char szYDirCurveName[MAX_PATH]{};
+	static char szZDirCurveName[MAX_PATH]{};
+	strcpy_s(szXDirCurveName, m_strXDirCurveName.c_str());
+	strcpy_s(szYDirCurveName, m_strYDirCurveName.c_str());
+	strcpy_s(szZDirCurveName, m_strZDirCurveName.c_str());
+	ImGui::InputText("XDir CurveName", szXDirCurveName, MAX_PATH);
+	ImGui::InputText("YDir CurveName", szYDirCurveName, MAX_PATH);
+	ImGui::InputText("ZDir CurveName", szZDirCurveName, MAX_PATH);
+	m_strXDirCurveName = szXDirCurveName;
+	m_strYDirCurveName = szYDirCurveName;
+	m_strZDirCurveName = szZDirCurveName;
+
+	static _int iCurveIdx = 0;
+	ImGui::InputInt("CurveID", &iCurveIdx);
+	switch (iCurveIdx)
+	{
+	case 0:
+		m_VtxStartTimeline.Imgui_RenderEditor();
+		break;
+	case 1:
+		m_VtxRangeTimeline.SetID(iCurveIdx);
+		m_VtxRangeTimeline.Imgui_RenderEditor();
+		break;
+	}
+
+	if (ImGui::Button("StartAllTimeline"))
+	{
+		Start_Timeline();
+	}
+
 	ImGui::Separator();
 	CShader::Imgui_RenderShaderParams(m_tParam);
 	ImGui::Separator();
 	ImGui::Checkbox("PhysX", &m_bPhysX);
+	ImGui::SameLine();
+	ImGui::Checkbox("MeshCurve", &m_bMeshCurve);
 
 	{
 		char BufferProtoTag[MAX_PATH];
@@ -583,6 +668,12 @@ HRESULT CParticleSystem::Begin()
 	return m_pShader->Begin(m_tParam.iPass);
 }
 
+void CParticleSystem::Start_Timeline()
+{
+	m_VtxStartTimeline.PlayFromStart();
+	m_VtxRangeTimeline.PlayFromStart();
+}
+
 void CParticleSystem::AddPoint()
 {/*
 	 * pos.xyz = 로컬 또는 월드 위치
@@ -689,7 +780,7 @@ void CParticleSystem::AddPoint()
 			}
 		}
 
-		if (m_bUseMeshData == true && m_pModel != nullptr)
+		if (m_bUseMeshData == true && m_pModel != nullptr && m_bMeshCurve == false)
 		{
 			_uint VBSize = m_pModel->Get_NumVertices();
 
@@ -703,6 +794,49 @@ void CParticleSystem::AddPoint()
 			if (m_bLocal == false)
 			{
 				vPos = XMVector3TransformCoord(vPos, m_pTransformCom->Get_WorldMatrix());
+			}
+		}
+
+		if (m_pMeshCurveModel != nullptr && m_bMeshCurve == true)
+		{
+			_uint VBSize = m_pMeshCurveModel->Get_NumVertices();
+			const VTXMODEL* pNonAnimBuffer = m_pMeshCurveModel->Get_NonAnimBuffer();
+			Assert(VBSize > 0);
+
+			_float fStartIdx = m_fMeshVtxStartRatio * VBSize;
+			_float fEndIdx = fStartIdx + m_fMeshVtxRangeRatio * VBSize;
+			if (fEndIdx > (_float)VBSize - 1.f)
+			{
+				fEndIdx = (_float)VBSize - 1.f;
+			}
+
+			_uint iRandomVtx = (_uint)CGameUtils::GetRandFloat(fStartIdx, fEndIdx);
+			
+
+			_float3 v3Pos = pNonAnimBuffer[iRandomVtx].vPosition;
+			vPos = _float4{ v3Pos.x, v3Pos.y, v3Pos.z, 1.f };
+
+			if (m_bLocal == false)
+			{
+				vPos = XMVector3TransformCoord(vPos, m_pTransformCom->Get_WorldMatrix());
+			}
+
+			// if (m_bLocal)
+			// {
+			// 	vPos = XMVector3TransformCoord(vPos, m_pTransformCom->Get_WorldMatrix());
+			// }
+			// else
+			// {
+			// 	vPos = XMVector3TransformNormal(vPos, m_pTransformCom->Get_WorldMatrix());
+			// 	// vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+			// }
+
+			if (iRandomVtx > 0)
+			{
+				_float3 v3PrePos = pNonAnimBuffer[iRandomVtx - 1].vPosition;
+				_float3 vUVDir = v3Pos - v3PrePos;
+				vUVDir.Normalize();
+				vDir = _float4{ vUVDir.x, vUVDir.y, vUVDir.z, 0.f };
 			}
 		}
 		
@@ -747,6 +881,46 @@ void CParticleSystem::UpdatePoints(_float fTimeDelta)
 			data.vRotUp =  FUp;
 			data.vRotLook = FLook;
 		}
+
+
+
+		if (m_bCurveDir)
+		{
+			_float fCurLife = data.vPosition.w;
+			_float fLifeRatio = fCurLife;
+
+			_float fLength = data.vLook.Length();
+
+			if (auto pCurve = CCurveManager::GetInstance()->GetCurve(m_strXDirCurveName))
+			{
+				data.vLook.x += pCurve->GetValue(fLifeRatio) - 0.5f;
+			}
+			if (auto pCurve = CCurveManager::GetInstance()->GetCurve(m_strYDirCurveName))
+			{
+				data.vLook.y += pCurve->GetValue(fLifeRatio) - 0.5f;
+			}
+			if (auto pCurve = CCurveManager::GetInstance()->GetCurve(m_strZDirCurveName))
+			{
+				data.vLook.z += pCurve->GetValue(fLifeRatio) - 0.5f;
+			}
+			// if (m_bLocal == true)
+			// {
+			// 	const _matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+			// 	XMVector3TransformNormal(data.vLook, WorldMatrix);
+			// }
+
+			//Todo : 이거 때매 로컬이 안잡힘 속도는 같은데 방향이 좀 이상하다.
+			
+			if(m_bLocal == true)
+			{
+				data.vLook.Normalize();
+				data.vLook *= fLength;	
+			}
+			
+
+			
+		}
+
 	}
 
 	m_PointList.remove_if([this](const VTXMATRIX& data)
@@ -773,8 +947,6 @@ void CParticleSystem::UpdatePoints(_float fTimeDelta)
 			instanceData.vUp.z = XMVectorGetX(XMVector3Length(vCamPos - XMLoadFloat4(&instanceData.vPosition)));
 		}
 	}
-
-	
 
 	m_PointList.sort([](const VTXMATRIX& left, const VTXMATRIX& right)->_bool
 	{
@@ -956,10 +1128,14 @@ void CParticleSystem::AddMesh()
 			_float3 v3Pos = pNonAnimBuffer[iRandomVtx].vPosition;
 			vPos = _float4{ v3Pos.x, v3Pos.y, v3Pos.z, 1.f };
 
-			if (m_bLocal == false)
+			if (m_bLocal)
 			{
 				vPos = XMVector3TransformCoord(vPos, m_pTransformCom->Get_WorldMatrix());
 			}
+			// else
+			// {
+			// 	vPos = XMVector3TransformCoord(vPos, m_pTransformCom->Get_WorldMatrix());
+			// }
 		}
 
 		MeshData.vPosition = vPos;
