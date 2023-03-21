@@ -38,7 +38,7 @@ HRESULT CWeapon_wp0190::Initialize(void * pArg)
 		if (auto pTarget = dynamic_cast<CMonster*>(pGameObject))
 		{
 			pTarget->Set_CollisionDuplicate(false);
-			IM_LOG("Test");
+			//IM_LOG("Test");
 		}
 	});
 

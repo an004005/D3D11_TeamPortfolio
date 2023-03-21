@@ -20,13 +20,22 @@ public:
 	virtual void AfterPhysX();
 	HRESULT Render() override;
 
-	virtual void LoadFromJson(const Json& json) override {}
-	virtual void SaveToJson(Json& json) override {}
+	virtual void LoadFromJson(const Json& json) override;
+	virtual void SaveToJson(Json& json) override;
 
 	virtual void Imgui_RenderProperty() override;
 
+public:
+	void	Activate_Animation(_bool bActivate) { m_bActivate = bActivate; }
+	void	Train_Set_Animation(const string& szAnimName);
+	_float4	GetActionPoint();
+
 private:
 	HRESULT	SetUp_Components(void* pArg);
+
+private:
+	_vector m_vLerpVector = XMVectorSet(0.f, 0.f, 0.f, 0.f);	// 보간안쓸라고 만든거
+	_bool	m_bActivate = false;
 
 public:
 	static CSpecial_Train* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

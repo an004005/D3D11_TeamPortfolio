@@ -499,6 +499,9 @@ private:
 	void			KineticObject_Targeting();
 	void			KineticObject_OutLineCheck();
 
+	void			SpecialObject_Targeting();
+	void			SpecialObject_OutLineCheck();
+
 private:
 	void			Spline_Kinetic(_double TimeDelta);
 	void			Kinetic_Test(_float fRatio);

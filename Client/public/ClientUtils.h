@@ -107,6 +107,7 @@ enum class EAttackType
 	ATK_MIDDLE,
 	ATK_HEAVY,
 	ATK_TO_AIR,
+	ATK_DOWN,
 	ATK_END
 };
 

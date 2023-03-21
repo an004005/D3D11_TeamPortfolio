@@ -11,12 +11,7 @@ END
 
 BEGIN(Client)
 
-enum KineticModeltag
-{
-	Tag_default,
-	Tag_broken,
-	Tag_End
-};
+enum ESpecialType { SPECIAL_TRAIN, SPECAIL_END };
 
 class CSpecialObject :
 	public CGameObject
@@ -36,15 +31,24 @@ public:
 	HRESULT Render() override;
 	virtual HRESULT Render_ShadowDepth() override;
 
-	virtual void LoadFromJson(const Json& json) override {}
-	virtual void SaveToJson(Json& json) override {}
+	virtual void LoadFromJson(const Json& json) override;
+	virtual void SaveToJson(Json& json) override;
 
 	virtual void Imgui_RenderProperty() override;
+
+public:
+	ESpecialType Get_SpecialType() const { return m_eSpecialObejctType; }
+
+protected:
+	ESpecialType m_eSpecialObejctType = SPECAIL_END;
 
 protected:
 	void	OutlineMaker();
 	_bool	m_bOutline = false;
 	_bool	m_bBeforeOutline = false;
+
+public:
+	void	SetOutline(_bool bOutLine) { m_bOutline = bOutLine; }
 
 protected:
 	HRESULT	SetUp_Components(void* pArg);
@@ -58,7 +62,7 @@ protected:
 	_float4x4				m_LocalMatrix;
 
 protected:
-	KineticModeltag			m_eCurModelTag;
+	wstring					m_strModelTag;
 
 public:
 	CGameObject* Clone(void* pArg = nullptr)override { return nullptr; }

@@ -51,6 +51,9 @@
 #include "PostVFX_ColorGrading.h"
 #include "SkyBox.h"
 
+#include "Special_Train.h"
+#include "Imgui_Batch.h"
+
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -67,6 +70,7 @@ HRESULT CLevel_PlayerTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_EffectBrowser::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
 
 //	CVFX_Manager::GetInstance()->Initialize(LEVEL_PLAYERTEST);
 
@@ -230,6 +234,8 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	// 		CMaterial::Create(m_pDevice, m_pContext, filePath.c_str()));
 	// });
 
+	//CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext);
+
 	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
 
 	{	// 플레이어 모델과 애니메이션
@@ -359,6 +365,7 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
@@ -444,11 +451,14 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 
 HRESULT CLevel_PlayerTest::Ready_Layer_Kinetic(const _tchar * pLayerTag)
 {
-	/*CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json Test;
-	Test["ModelTags"] = "../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Table/Table.static_model";
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Proto_KineticObject_Table"), &Test));*/
+	pGameInstance->Add_EmptyLayer(LEVEL_NOW, pLayerTag);
+
+	//Json Test;
+	//Test["ModelTags"] = "../Bin/Resources/Model/AnimModel/Kinetic/Train/Train.anim_model";
+	//CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_GameObject_Special_Train"), &Test)
+	//	->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 0.f, 0.f, 1.f));
 
 	return S_OK;
 }

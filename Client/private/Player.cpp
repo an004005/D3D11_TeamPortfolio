@@ -35,8 +35,12 @@
 #include "ImguiUtils.h"
 #include "SAS_Portrait.h"
 #include "Weapon_wp0190.h"
+#include "SpecialObject.h"
 
 #include "PlayerInfoManager.h"
+#include "Special_Train.h"
+
+#include "Enemy.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -86,7 +90,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(Setup_Parts()))
 		return E_FAIL;
 
-	if (FAILED(SetUp_Event()))	//-> 이건 진짜 천천히 보자...
+	if (FAILED(SetUp_Event()))
 		return E_FAIL;
 
 	if (FAILED(SetUp_EffectEvent()))
@@ -184,6 +188,7 @@ void CPlayer::Tick(_double TimeDelta)
 	CPlayerInfoManager::GetInstance()->Tick(TimeDelta);
 
 	KineticObject_OutLineCheck();
+	SpecialObject_OutLineCheck();
 	Update_TargetUI();
 
 	// 콤보 연계 시간
@@ -221,9 +226,20 @@ void CPlayer::Tick(_double TimeDelta)
 	HitCheck();
 
 	// 특수기
+	if (false == m_bKineticSpecial)
+	{
+		SpecialObject_Targeting();
+	}
+
 	if (!m_bHit)
 	{
-		m_pTrainStateMachine_Left->Tick(TimeDelta);
+		if (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+		{
+			if (SPECIAL_TRAIN == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
+			{
+				m_pTrainStateMachine_Left->Tick(TimeDelta);
+			}
+		}
 	}
 	// ~특수기
 
@@ -510,6 +526,7 @@ void CPlayer::Imgui_RenderProperty()
 	// HP Bar Check	
 	ImGui::Text("HP : %d", CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP);
 
+	m_pKineticStataMachine->Imgui_RenderProperty();
 	m_pTrainStateMachine_Left->Imgui_RenderProperty();
 
 	ImGui::SliderFloat("PlayerTurnSpeed", &m_fTurnSpeed, 0.f, 1000.f);
@@ -2980,7 +2997,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	m_mapCollisionEvent.emplace("ATK_AIR_CHARGE_FALL", [this]()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
-		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eAttackType = EAttackType::ATK_DOWN;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = (rand() % 50) + 100;
 		m_AttackDesc.pCauser = this;
@@ -3074,7 +3091,7 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			
+			m_bKineticSpecial = false;
 		})
 		.OnExit([&]()
 		{
@@ -3083,7 +3100,11 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		})
 
 			.AddTransition("TRAIN_LEFT_NOUSE to TRAIN_LEFT_CHARGE", "TRAIN_LEFT_CHARGE")
-			.Predicator([&]()->_bool { return m_bKineticG; })
+			.Predicator([&]()->_bool 
+			{
+				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
+				return m_bKineticG && bResult;
+			})
 			.Priority(0)
 
 
@@ -3092,10 +3113,16 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		{
 			m_bKineticSpecial = true;
 			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_Train_Charge_L);
+			//static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Train_Set_Animation("AS_mg02_372_train_cap_L");
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Activate_Animation(true);
 		})
 		.Tick([&](double fTimeDelta)
 		{
 			m_fKineticCharge += (_float)fTimeDelta;
+
+
 		})
 		.OnExit([&]()
 		{
@@ -3114,6 +3141,11 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		.OnStart([&]()
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Train_Cancel_L);
+
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Train_Set_Animation("AS_mg02_372_train_cancel_L");
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Activate_Animation(true);
+
+			//static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 		})
 		.OnExit([&]()
 		{
@@ -3130,7 +3162,11 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		.AddState("TRAIN_LEFT_THROW")
 		.OnStart([&]() 
 		{
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Train_Set_Animation("AS_mg02_372_train_start_L");
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Activate_Animation(true);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+
+
 			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_Train_Throw_L);
 		})
 		.Tick([&](double fTimeDelta)
@@ -3225,15 +3261,15 @@ _bool CPlayer::Charge(_uint iNum, _float fCharge)
 
 		if ((1 == iNum) && fCharge <= m_fCharge[iNum])
 		{
-		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Effect_01"))->Start_Attach(this, "RightWeapon");
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Effect_01"))->Start_Attach(this, "RightWeapon");
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Charge_White_Particle"))->Start_Attach(this, "RightWeapon");
-			IM_LOG("Shine");
+			//IM_LOG("Shine");
 		}
 		if ((2 == iNum) && fCharge <= m_fCharge[iNum])
 		{
-		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Effect_02"))->Start_Attach(this, "RightWeapon");
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Effect_02"))->Start_Attach(this, "RightWeapon");
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Charge_White_Particle"))->Start_Attach(this, "RightWeapon");
-			IM_LOG("Shine");
+			//IM_LOG("Shine");
 		}
 
 		return false;
@@ -3363,6 +3399,7 @@ void CPlayer::Event_Kinetic_Throw()
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Kinetic_Shoot_Smoke"))->Start_AttachPosition(this, vKineticPos, _float4(0.f, 1.f, 0.f, 0.f));
 
 		Vector4 vTargetPos = static_cast<CMonster*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetKineticTargetPos();
+		//Vector4 vTargetPos = static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetKineticTargetPos();
 		Vector4 vMyPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 		Vector4 vDir = vTargetPos - vMyPos;
 		vDir.w = 0.f;
@@ -3731,6 +3768,15 @@ void CPlayer::SocketLocalMoveCheck()
 		_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
 		m_pTransformCom->LocalMove(vLocal);
 	}
+
+	// ??되나이거
+	if (!m_pASM->isSocketEmpty("Kinetic_Special_AnimSocket"))
+	{
+		string szCurAnimName = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetName();
+		_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
+		//IM_LOG("%f %f %f", XMVectorGetX(vLocal), XMVectorGetY(vLocal), XMVectorGetZ(vLocal));
+		m_pTransformCom->LocalMove(vLocal);
+	}
 }
 
 void CPlayer::Update_NotiveNeon()
@@ -3801,6 +3847,7 @@ void CPlayer::Update_TargetUI()
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
 			m_pUI_LockOn->Set_UIPivotMatrix(dynamic_cast<CMonster*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Get_UIPivotMatrix(FINDEYES));
+			//m_pUI_LockOn->Set_UIPivotMatrix(dynamic_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Get_UIPivotMatrix(FINDEYES));
 		}
 
 		//info bar 설정
@@ -3996,6 +4043,7 @@ void CPlayer::Enemy_Targeting(_bool bNear)
 		for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
 		{
 			if ((!static_cast<CMonster*>(iter)->IsDead()) && (!static_cast<CMonster*>(iter)->GetInvisible()))
+			//if ((!static_cast<CEnemy*>(iter)->IsDead()))
 			{
 				_vector vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 				_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -4105,6 +4153,63 @@ void CPlayer::KineticObject_OutLineCheck()
 				static_cast<CMapKinetic_Object*>(iter)->SetOutline(false);
 				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_CameRange(false);
 
+			}
+		}
+	}
+}
+
+void CPlayer::SpecialObject_Targeting()
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	CPlayerInfoManager::GetInstance()->Set_SpecialObject(nullptr);
+
+	if (pGameInstance->GetLayer(LEVEL_NOW, PLAYERTEST_LAYER_KINETIC) == nullptr
+		|| pGameInstance->GetLayer(LEVEL_NOW, PLAYERTEST_LAYER_KINETIC)->GetGameObjects().empty())
+	{
+		return;
+	}
+	else
+	{
+		_float fDistance = 20.f;
+
+		for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, PLAYERTEST_LAYER_KINETIC)->GetGameObjects())
+		{
+			_vector vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+			_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+			_float fCurDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
+
+			if (fDistance > fCurDistance)
+			{
+				fDistance = fCurDistance;
+				CPlayerInfoManager::GetInstance()->Set_SpecialObject(iter);
+			}
+		}
+	}
+}
+
+void CPlayer::SpecialObject_OutLineCheck()
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, PLAYERTEST_LAYER_KINETIC)->GetGameObjects())
+	{
+		if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+		{
+			static_cast<CSpecialObject*>(iter)->SetOutline(false);
+		}
+		else
+		{
+			if (iter == CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+			{
+				static_cast<CSpecialObject*>(iter)->SetOutline(true);
+				//static_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_CameRange(true);
+			}
+			else
+			{
+				static_cast<CSpecialObject*>(iter)->SetOutline(false);
+				//static_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_CameRange(false);
 			}
 		}
 	}

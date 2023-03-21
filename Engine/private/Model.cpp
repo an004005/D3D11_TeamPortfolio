@@ -248,14 +248,14 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
 		if (m_szSocketBefAnimName != srtAnimName)
 		{
 			m_szSocketBefAnimName = srtAnimName;
-			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			//m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			//return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 
 		if (m_mapAnimation[srtAnimName]->GetPlayRatio() < m_fSocketBefRatio)
 		{
-			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			//m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 
@@ -466,6 +466,76 @@ _vector CModel::GetLocalRotationDelta()
 
 	_vector vRotationDelta = XMQuaternionMultiply(XMQuaternionConjugate(m_vBefLocalRotation), m_vLocalRotation);
 	return vRotationDelta;
+}
+
+_vector CModel::GetSpecialLocalMove(_fmatrix WorldMatrix)
+{
+	_vector vMovePos;
+	ZeroMemory(&vMovePos, sizeof(_vector));
+
+	m_vBefSpecialLocalMove = m_vSpecialLocalMove;
+	m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+
+	if (m_CurAnimName != "")
+	{
+		m_vSpecialLocalMove = m_mapAnimation[m_CurAnimName]->GetSpecialLocalMove();
+
+		if (XMVector3Equal(m_vSpecialLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
+		{
+			m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vBefSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+
+		if (m_mapAnimation[m_CurAnimName]->IsFinished())
+		{
+			m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vBefSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+
+		if (m_szBefSpecialAnimName != m_CurAnimName)
+		{
+//			m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vBefSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_szBefSpecialAnimName = m_CurAnimName;
+//			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+
+		if (m_mapAnimation[m_CurAnimName]->GetPlayRatio() < m_fBefSpecialRatio)
+		{
+//			m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vBefSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+
+		m_fBefSpecialRatio = m_mapAnimation[m_CurAnimName]->GetPlayRatio();
+	}
+
+	vMovePos = m_vSpecialLocalMove - m_vBefSpecialLocalMove;
+	XMVectorSetW(vMovePos, 0.f);
+
+	_vector vScale, vRotation, vTrans;
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, WorldMatrix);
+	_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
+
+	XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_PivotMatrix);
+	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
+	vMovePos = XMVector3TransformNormal(vMovePos, PivotRotation);
+
+	//_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
+	//vMovePos = XMVector3TransformNormal(vMovePos, ModifyRotation);
+
+	vMovePos = XMVector3TransformNormal(vMovePos, WorldRotation);
+
+	XMVectorSetW(vMovePos, 0.f);
+
+	return vMovePos;
+}
+
+void CModel::Reset_SpecialLocalMove()
+{
+	m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	m_vBefSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 }
 
 HRESULT CModel::Initialize_Prototype(const char * pModelFilePath)

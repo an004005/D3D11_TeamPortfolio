@@ -2499,7 +2499,7 @@
     },
     "AS_ch0100_372_AL_Cap_sLcLeL_start": {
         "Duration": 30.0,
-        "TickPerSecond": 40.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -2541,7 +2541,7 @@
     },
     "AS_ch0100_406_AL_damage_air": {
         "Duration": 145.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 145.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -4373,6 +4373,30 @@
                 "EventTime": 125.0
             }
         ]
+    },
+    "AS_mg02_372_train_cancel_L": {
+        "Duration": 57.0,
+        "TickPerSecond": 57.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_mg02_372_train_cap_L": {
+        "Duration": 150.0,
+        "TickPerSecond": 75.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_mg02_372_train_end_L": {
+        "Duration": 189.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_mg02_372_train_start_L": {
+        "Duration": 117.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "ch0100": {
         "mapRootMotion": {
