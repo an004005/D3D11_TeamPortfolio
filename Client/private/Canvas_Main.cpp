@@ -112,8 +112,6 @@ void CCanvas_Main::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	ImGui::DragFloat("X", &m_vPosition.x);
-	ImGui::DragFloat("Y", &m_vPosition.y);
 }
 
 void CCanvas_Main::SaveToJson(Json& json)
@@ -182,37 +180,6 @@ void CCanvas_Main::KeyInput()
 
 		// MainUI 들을 끄고 켜기를 한다.
 		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bMainUI);
-
-		switch (m_eMainCanvas)
-		{
-		case Client::CCanvas_Main::PARTY:
-		{
-			m_szManuText = L"파티 멤버를 변경합니다.";
-
-		}
-			break;
-		case Client::CCanvas_Main::ITEM:
-		{
-			m_szManuText = L"소지 아이템을 확인합니다.";
-
-		}
-			break;
-		case Client::CCanvas_Main::EQUIPMENT:
-		{
-			m_szManuText = L"장비를 변경합니다.";
-
-		}
-			break;
-		case Client::CCanvas_Main::BRAINMAP:
-		{
-			m_szManuText = L"BP를 소비해서 스킬을 습득합니다.";
-
-		}
-			break;
-		default:
-			Assert("Non-existent Menu");
-			break;
-		}
 	}
 }
 
@@ -221,6 +188,7 @@ void CCanvas_Main::Menu_Tick()
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Get_OnButton())
 	{
 		m_eMainCanvas = PARTY;
+		m_szManuText = L"파티 멤버를 변경합니다.";
 
 		Canvas_Visible();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_OnButton();
@@ -233,6 +201,7 @@ void CCanvas_Main::Menu_Tick()
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Get_OnButton())
 	{
 		m_eMainCanvas = ITEM;
+		m_szManuText = L"소지 아이템을 확인합니다.";
 
 		Canvas_Visible();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Set_OnButton();
@@ -245,6 +214,7 @@ void CCanvas_Main::Menu_Tick()
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Get_OnButton())
 	{
 		m_eMainCanvas = EQUIPMENT;
+		m_szManuText = L"장비를 변경합니다.";
 
 		Canvas_Visible();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnButton();
@@ -257,6 +227,7 @@ void CCanvas_Main::Menu_Tick()
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Get_OnButton())
 	{
 		m_eMainCanvas = BRAINMAP;
+		m_szManuText = L"BP를 소비해서 스킬을 습득합니다.";
 
 		Canvas_Visible();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Set_OnButton();

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Canvas_Equipment.h"
 #include "GameInstance.h"
-#include "UI_Manager.h"
 
 CCanvas_Equipment::CCanvas_Equipment(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)

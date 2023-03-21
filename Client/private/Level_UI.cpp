@@ -130,8 +130,8 @@ HRESULT CLevel_UI::Initialize()
 	/*if (FAILED(Ready_Layer_Player(L"Layer_Player")))
 		return E_FAIL;*/
 
-		//if (FAILED(Ready_Layer_Monster(L"Layer_Monster")))
-		//	return E_FAIL;
+	//if (FAILED(Ready_Layer_Monster(L"Layer_Monster")))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -246,7 +246,6 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Main"),
 			CCanvas_Main::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
 	}
 
 	{

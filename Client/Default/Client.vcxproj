@@ -217,6 +217,10 @@
     <ClInclude Include="..\public\Canvas_Item.h" />
     <ClInclude Include="..\public\Canvas_ItemMove.h" />
     <ClInclude Include="..\public\Canvas_MainItem.h" />
+    <ClInclude Include="..\public\Canvas_MainItemAll.h" />
+    <ClInclude Include="..\public\Canvas_MainItemBattle.h" />
+    <ClInclude Include="..\public\Canvas_MainItemEtc.h" />
+    <ClInclude Include="..\public\Canvas_MainItemWeapon.h" />
     <ClInclude Include="..\public\Canvas_Party.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
@@ -249,6 +253,7 @@
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\Item_Manager.h" />
     <ClInclude Include="..\public\LevelUpUI.h" />
     <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\GravikenisisMouseUI.h" />
@@ -400,6 +405,10 @@
     <ClCompile Include="..\private\Canvas_BossHp.cpp" />
     <ClCompile Include="..\private\Canvas_BossHpMove.cpp" />
     <ClCompile Include="..\private\Canvas_MainItem.cpp" />
+    <ClCompile Include="..\private\Canvas_MainItemAll.cpp" />
+    <ClCompile Include="..\private\Canvas_MainItemBattle.cpp" />
+    <ClCompile Include="..\private\Canvas_MainItemEtc.cpp" />
+    <ClCompile Include="..\private\Canvas_MainItemWeapon.cpp" />
     <ClCompile Include="..\private\Canvas_Party.cpp" />
     <ClCompile Include="..\private\Canvas_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
@@ -437,6 +446,7 @@
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\Item_Manager.cpp" />
     <ClCompile Include="..\private\LevelUpUI.cpp" />
     <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\GravikenisisMouseUI.cpp" />

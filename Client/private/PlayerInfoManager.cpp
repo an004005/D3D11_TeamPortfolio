@@ -40,10 +40,10 @@ HRESULT CPlayerInfoManager::Initialize()
 
 #pragma region	∏‚πˆ ±‚∫ª Ω∫≈» √ ±‚»≠
 
-	m_tHanabiStat.m_bMember = false;
+	m_tHanabiStat.bMember = false;
 	m_tHanabiStat.iHP = 1700;
 	m_tHanabiStat.iMaxHP = 1700;
-	m_tHanabiStat.iExp = 0;
+	m_tHanabiStat.iExp = 50;
 	m_tHanabiStat.iMaxExp = 100;
 	m_tHanabiStat.iLevel = 1;
 	m_tHanabiStat.iBondLevel = 1;
@@ -51,7 +51,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tHanabiStat.iAttack = 50;
 	m_tHanabiStat.iDefense = 20;
 
-	m_tTsugumiStat.m_bMember = false;
+	m_tTsugumiStat.bMember = false;
 	m_tTsugumiStat.iHP = 1300;
 	m_tTsugumiStat.iMaxHP = 1300;
 	m_tTsugumiStat.iExp = 0;

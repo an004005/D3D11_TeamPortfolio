@@ -42,6 +42,7 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 private:
+	void	ChildRender_Tick();
 	void	CurrentPick_Tick();
 	void	PickInfo();
 

@@ -49,7 +49,7 @@ typedef struct tagPlayerStatus
 
 typedef struct tagHanabiStatus
 {
-	_bool m_bMember = { false };
+	_bool bMember = { false };
 
 	_uint iHP = { 0 };
 	_uint iMaxHP = { 0 };
@@ -65,7 +65,7 @@ typedef struct tagHanabiStatus
 
 typedef struct tagTsugumiStatus
 {
-	_bool m_bMember = { false };
+	_bool bMember = { false };
 
 	_uint iHP = { 0 };
 	_uint iMaxHP = { 0 };
@@ -126,6 +126,9 @@ public:	// Set
 
 	HRESULT			Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
+
+	void			Set_HanabiMemvber() { m_tHanabiStat.bMember = true; }
+	void			Set_TsugumiMemvber() { m_tTsugumiStat.bMember = true; }
 
 
 private:	// 스탯 정보 관련

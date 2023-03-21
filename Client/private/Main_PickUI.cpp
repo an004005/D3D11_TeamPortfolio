@@ -90,7 +90,7 @@ void CMain_PickUI::CurrentPick(const _double & TimeDelta)
 	if (false == m_vOnAlpha)
 	{
 		m_fAlpha = 0.1f;
-		m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, m_fAlpha };
+	//	m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, m_fAlpha };
 		return;
 	}
 
