@@ -28,6 +28,7 @@ public:
 	list<CGameObject*> Find_AllObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred);
 	class CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 	void Add_InLayer(const _tchar* pLayerTag, CGameObject* pGameObject);
+	void Add_EmptyLayer(_uint iLevelIndex, const _tchar* pLayerTag);
 
 	void Tick(_double TimeDelta);
 	void Late_Tick(_double TimeDelta);
