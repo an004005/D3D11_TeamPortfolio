@@ -319,7 +319,7 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 		HitBloodName = s_vecFireBlood[CMathUtils::RandomUInt(s_vecFireBlood.size() - 1)];
 		HitEffectName = s_vecFireHit[CMathUtils::RandomUInt(s_vecFireHit.size() - 1)];
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Player_Fire_Sword_Particle")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
+//		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 		break;
 
 	case ESASType::SAS_ELETRIC:

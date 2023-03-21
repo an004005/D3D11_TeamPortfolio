@@ -11,6 +11,11 @@
             "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
         },
         {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_Train.json",
+            "ProtoTag": "Prototype_GameObject_Special_Train"
+        },
+        {
             "Layer" : "Layer_Trigger",
             "JsonPath": "",
             "ProtoTag" : "Prototype_SpawnTrigger"

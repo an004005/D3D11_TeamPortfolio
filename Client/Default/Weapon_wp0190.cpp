@@ -36,10 +36,11 @@ HRESULT CWeapon_wp0190::Initialize(void * pArg)
 
 	m_pCollider->SetOnTriggerOut([this](CGameObject* pGameObject)
 	{
+		//if (auto pTarget = dynamic_cast<CMonster*>(pGameObject))
 		if (auto pTarget = dynamic_cast<CEnemy*>(pGameObject))
 		{
 			pTarget->Set_CollisionDuplicate(false);
-			IM_LOG("Test");
+			//IM_LOG("Test");
 		}
 	});
 
@@ -85,7 +86,7 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 	{
 		switch (m_eSasType)
 		{
-		case ESASType::SAS_END:
+		case ESASType::SAS_NOT:
 			m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 1;
 			break;
 		case ESASType::SAS_FIRE:
@@ -126,6 +127,18 @@ HRESULT CWeapon_wp0190::Render()
 //	m_pTrail->Render();
 
 	return S_OK;
+}
+
+void CWeapon_wp0190::SetFire()
+{
+	m_pParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Weapon_Particle"));
+	m_pParticle->Start_AttachSword(this, true);
+}
+
+void CWeapon_wp0190::ReleaseFire()
+{
+	if (nullptr != m_pParticle)
+		m_pParticle->SetDelete();
 }
 
 HRESULT CWeapon_wp0190::SetUp_Components()

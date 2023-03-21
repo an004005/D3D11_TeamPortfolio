@@ -442,15 +442,12 @@ void CObject_Manager::Add_InLayer(const _tchar * pLayerTag, CGameObject * pGameO
 	}
 }
 
-void CObject_Manager::Add_EmptyLayer(_uint iLevelIndex, const _tchar* pLayerTag)
+void CObject_Manager::Add_EmptyLayer(_uint iLevelIndex, const _tchar * pLayerTag)
 {
 	auto iter = Find_Layer(LEVEL_NOW, pLayerTag);
 
 	if (iter != nullptr)
-	{
-		IM_WARN("Exist Layer!");
 		return;
-	}
 
 	CLayer* pLayer = nullptr;
 	pLayer = CLayer::Create();

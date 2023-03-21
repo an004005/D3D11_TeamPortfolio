@@ -380,6 +380,54 @@ PS_OUT em800_Weak_6(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_KINETIC_7(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float fDissolve = g_float_0;
+	float fEmissive = 0.f;
+	float flags = SHADER_DEFAULT;
+
+
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	if (Out.vDiffuse.a < 0.01f)
+		discard;
+
+	Out.vNormal = NormalPacking(In);
+	if (g_tex_on_2)
+		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	else
+		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
+
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
+	Out.vFlag = 0.f;
+
+	int iOutlineOn = g_int_0;
+	float fPsychic = g_float_0;
+
+	if (iOutlineOn)
+		Out.vOutline = (float4)1.f;
+	else
+		Out.vOutline = (float4)0.f;
+
+	if (fPsychic > 0.f)
+	{
+		if (fPsychic >= 1.f)
+		{
+			// todo: 웨이브로 추후 수정
+			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, 0.5f);
+		}
+		else
+		{
+			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, 0.5f);
+			Out.vDepth.z = 1.f - fPsychic;
+		}
+	}
+
+	return Out;
+
+}
+
 technique11 DefaultTechnique
 {
 	//0
@@ -478,5 +526,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 em800_Weak_6();
+	}
+
+	//7
+	pass Kinetic_Object
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_KINETIC_7();
 	}
 }

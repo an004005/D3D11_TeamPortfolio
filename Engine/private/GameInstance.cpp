@@ -531,9 +531,9 @@ void CGameInstance::Add_InLayer(const _tchar * pLayerTag, CGameObject * pGameObj
 	return m_pObject_Manager->Add_InLayer(pLayerTag, pGameObject);
 }
 
-void CGameInstance::Add_EmptyLayer(_uint iLevelIndex, const _tchar* pLayerTag)
+void CGameInstance::Add_EmptyLayer(_uint iLevelIndex, const _tchar * pLayerTag)
 {
-	m_pObject_Manager->Add_EmptyLayer(iLevelIndex, pLayerTag);
+	return m_pObject_Manager->Add_EmptyLayer(iLevelIndex, pLayerTag);
 }
 
 void CGameInstance::Imgui_ProtoViewer(const _tchar*& szSelectedProto)
