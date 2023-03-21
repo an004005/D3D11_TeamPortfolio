@@ -233,6 +233,9 @@
     <ClInclude Include="..\public\EM0200.h" />
     <ClInclude Include="..\public\EM0200_AnimInstance.h" />
     <ClInclude Include="..\public\EM0200_Controller.h" />
+    <ClInclude Include="..\public\EM0650.h" />
+    <ClInclude Include="..\public\EM0650_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0650_Controller.h" />
     <ClInclude Include="..\public\EM0700.h" />
     <ClInclude Include="..\public\EM0700_Controller.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h" />
@@ -412,6 +415,9 @@
     <ClCompile Include="..\private\EM0200.cpp" />
     <ClCompile Include="..\private\EM0200_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0200_Controller.cpp" />
+    <ClCompile Include="..\private\EM0650.cpp" />
+    <ClCompile Include="..\private\EM0650_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0650_Controller.cpp" />
     <ClCompile Include="..\private\EM0700.cpp" />
     <ClCompile Include="..\private\EM0700_Controller.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />

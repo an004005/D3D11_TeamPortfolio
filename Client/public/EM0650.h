@@ -13,12 +13,12 @@ BEGIN(Client)
 
 // 초(고속)파리 :: 방도 팡뒤(Bangdo Fandu)
 
-class CEM0700 : public CEnemy
+class CEM0650 : public CEnemy
 {
 private:
-	CEM0700(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CEM0700(const CEM0700& rhs);
-	virtual ~CEM0700() = default;
+	CEM0650(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEM0650(const CEM0650& rhs);
+	virtual ~CEM0650() = default;
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
@@ -43,11 +43,14 @@ private:
 	//충돌 관련 함수 정의
 
 private:
-	class CEM0700_Controller*		m_pController = nullptr;
-	class CEM0700_AnimInstance*		m_pASM = nullptr;
+	class CEM0650_Controller*		m_pController = nullptr;
+	class CEM0650_AnimInstance*		m_pASM = nullptr;
 
 	//충돌
-	CRigidBody*				m_pRange = nullptr;
+	CRigidBody*					m_pTrigger = nullptr;
+	CRigidBody*					m_pRange = nullptr;
+
+
 
 	//파티클
 	CParticleGroup*			m_pFallRoseParticle = nullptr;
@@ -62,7 +65,7 @@ private:
 	_float3						m_vDirection;
 	CController::EHandleInput	m_eInput;
 public:
-	static CEM0700* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEM0650* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
