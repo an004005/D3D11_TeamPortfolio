@@ -39,6 +39,12 @@ HRESULT CCanvas_MainItem::Initialize(void* pArg)
 	m_bVisible = false;
 	Add_MainCanvas();
 
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Set_InitializeAlpha();
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Set_ColorType(1);
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuBattle"))->Set_ColorType(1);
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->Set_ColorType(1);
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuEtc"))->Set_ColorType(1);
+
 	return S_OK;
 }
 
@@ -49,19 +55,48 @@ void CCanvas_MainItem::Tick(_double TimeDelta)
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(m_bVisible);
 
+	if (false == m_bVisible)
+		m_arrCanvass[m_eMainItem]->SetVisible(m_bVisible);
+
 	Menu_Tick();
-}
-
-void CCanvas_MainItem::Late_Tick(_double TimeDelta)
-{
-	CCanvas::Late_Tick(TimeDelta);
-
 }
 
 HRESULT CCanvas_MainItem::Render()
 {
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
+
+	_float2 vFontSize = { 0.45f, 0.45f };
+	_float4 vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	_float2 vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->GetScreenSpaceLeftTop();
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Get_OnAlpha())
+		vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+	else
+		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	pGameInstance->Render_Font(L"Pretendard32", L"모두", vPosition + _float2(78.0f, 7.0f), 0.f, vFontSize, vColor);
+
+	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuBattle"))->GetScreenSpaceLeftTop();
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuBattle"))->Get_OnAlpha())
+		vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+	else
+		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	pGameInstance->Render_Font(L"Pretendard32", L"배틀 아이템", vPosition + _float2(55.0f, 8.0f), 0.f, vFontSize, vColor);
+
+	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->GetScreenSpaceLeftTop();
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->Get_OnAlpha())
+		vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+	else
+		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	pGameInstance->Render_Font(L"Pretendard32", L"무기", vPosition + _float2(79.0f, 8.0f), 0.f, vFontSize, vColor);
+
+	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuEtc"))->GetScreenSpaceLeftTop();
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuEtc"))->Get_OnAlpha())
+		vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+	else
+		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	pGameInstance->Render_Font(L"Pretendard32", L"기타", vPosition + _float2(79.0f, 8.0f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }
@@ -70,6 +105,8 @@ void CCanvas_MainItem::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
+	ImGui::DragFloat("X", &m_vPosssss.x);
+	ImGui::DragFloat("Y", &m_vPosssss.y);
 }
 
 void CCanvas_MainItem::SaveToJson(Json& json)
@@ -133,7 +170,7 @@ void CCanvas_MainItem::Menu_Tick()
 
 		Canvas_Visible();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Set_OnButton();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->Set_OnAlpha();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuBattle"))->Set_OnAlpha();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->Set_OnAlpha();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuEtc"))->Set_OnAlpha();
 

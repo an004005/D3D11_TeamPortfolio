@@ -30,11 +30,18 @@ public:
 		m_vOnButton = false;
 	}
 
+	_bool	Get_OnAlpha() {
+		return m_vOnAlpha;
+	}
 	void	Set_InitializeAlpha() {
 		m_vOnAlpha = true;
 	}
 	void	Set_OnAlpha() {
 		m_vOnAlpha = false;
+	}
+
+	void	Set_ColorType(const _uint & iType = 0) {
+		m_vColorType = iType;
 	}
 
 private:
@@ -43,6 +50,7 @@ private:
 private:
 	_bool	m_vOnButton = { false };
 	_bool	m_vOnAlpha = { false };
+	_uint	m_vColorType = { 0 };
 
 	_bool	m_vAlphaDwon = { false };
 	_float	m_fAlpha = { 0.0f };

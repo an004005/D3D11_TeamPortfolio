@@ -35,7 +35,7 @@
 #include "TrailSystem.h"
 
 #include "PlayerInfoManager.h"
-
+#include "Item_Manager.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -71,6 +71,9 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	if (FAILED(CPlayerInfoManager::GetInstance()->Initialize()))
+		return E_FAIL;
+
+	if (FAILED(CItem_Manager::GetInstance()->Initialize()))
 		return E_FAIL;
 
 // #ifndef _DEBUG
@@ -441,6 +444,7 @@ void CMainApp::Free()
 	CVFX_Manager::GetInstance()->DestroyInstance();
 	CUI_Manager::GetInstance()->DestroyInstance();
 	CPlayerInfoManager::GetInstance()->DestroyInstance();
+	CItem_Manager::GetInstance()->DestroyInstance();
 
 	m_pGameInstance->Clear_ImguiObjects();
 	m_pGameInstance->Clear();

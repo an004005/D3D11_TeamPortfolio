@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "..\public\Canvas_MainItemAll.h"
 #include "GameInstance.h"
+#include "Item_Manager.h"
+
+#include "DefaultUI.h"
 
 CCanvas_MainItemAll::CCanvas_MainItemAll(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -51,6 +54,18 @@ HRESULT CCanvas_MainItemAll::Render()
 {
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
+
+	//_tchar szText[MAX_PATH] = TEXT("");
+	//_float2 vFontSize = { 0.4f, 0.4f };
+	//_float4 vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	//CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	//// »ó´Ü
+	//_float2 vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Item_ItemInfo"))->GetScreenSpaceLeftTop();
+	//vector<pair<wstring, CItem_Manager::ITEMINFO>>	vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
+	//pGameInstance->Render_Font(L"Pretendard32", vecItemInfo[0].first.c_str(), vPosition + _float2(m_vPosssss), 0.f, vFontSize, vColor);
+	//wsprintf(szText, TEXT("%d"), vecItemInfo[0].second.iCount);
+	//pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(m_vPosssss), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }

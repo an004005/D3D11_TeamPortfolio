@@ -44,8 +44,6 @@ void CMain_PickUI::Tick(_double TimeDelta)
 	}
 
 	CurrentPick(TimeDelta);
-
-
 }
 
 void CMain_PickUI::Late_Tick(_double TimeDelta)
@@ -57,12 +55,6 @@ HRESULT CMain_PickUI::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
-
-	//CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
-	//_float2 vPosition = GetScreenSpaceLeftTop();
-	//pGameInstance->Render_Font(L"Pretendard32", m_szText, vPosition + m_vPosition, 0.f, m_vSize/*, { 1.0f, 0.99f, 0.87f, 1.0f }*/);
-
 
 	return S_OK;
 }
@@ -90,7 +82,22 @@ void CMain_PickUI::CurrentPick(const _double & TimeDelta)
 	if (false == m_vOnAlpha)
 	{
 		m_fAlpha = 0.1f;
-	//	m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, m_fAlpha };
+
+		switch (m_vColorType)
+		{
+		case 0:
+			m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, m_fAlpha };
+			break;
+
+		case 1:
+			m_tParams.Float4s[0] = { 0.27f, 0.25f, 0.2f, m_fAlpha };
+			break;
+
+		default:
+			m_vColorType = 0;
+			break;
+		}
+
 		return;
 	}
 
@@ -113,7 +120,20 @@ void CMain_PickUI::CurrentPick(const _double & TimeDelta)
 		}
 	}
 
-	m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, m_fAlpha };
+	switch (m_vColorType)
+	{
+	case 0:
+		m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, m_fAlpha };
+		break;
+
+	case 1:
+		m_tParams.Float4s[0] = { 0.27f, 0.25f, 0.2f, m_fAlpha };
+		break;
+
+	default:
+		m_vColorType = 0;
+		break;
+	}
 }
 
 CMain_PickUI * CMain_PickUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

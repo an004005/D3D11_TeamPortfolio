@@ -26,7 +26,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.m_iKineticEnergyLevel = 0;
 	m_tPlayerStat.m_iKineticEnergyType = 2;
 
-	m_tPlayerStat.iExp = 0;
+	m_tPlayerStat.iExp = 50;
 	m_tPlayerStat.iMaxExp = 100;
 	m_tPlayerStat.iLevel = 1;
 	m_tPlayerStat.iSprbrPower = 110;

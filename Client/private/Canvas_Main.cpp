@@ -112,6 +112,7 @@ void CCanvas_Main::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
+
 }
 
 void CCanvas_Main::SaveToJson(Json& json)
@@ -236,7 +237,6 @@ void CCanvas_Main::Menu_Tick()
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnAlpha();
 
 	}
-
 }
 
 void CCanvas_Main::Canvas_Visible()
