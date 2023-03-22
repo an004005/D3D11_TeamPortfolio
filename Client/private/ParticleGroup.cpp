@@ -282,7 +282,7 @@ void CParticleGroup::Tick(_double TimeDelta)
 			if (iter.second.second != nullptr)
 			{
 				iter.second.second->Tick(TimeDelta);
-				iter.second.second->Start_Timeline();
+				// iter.second.second->Start_Timeline();
 			}
 		}
 

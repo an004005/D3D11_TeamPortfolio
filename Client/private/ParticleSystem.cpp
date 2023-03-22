@@ -716,7 +716,7 @@ void CParticleSystem::AddPoint()
 		if (m_bSpeedRand)
 			fSpeed = CGameUtils::GetRandFloat(m_fSpeedMinMax.x, m_fSpeedMinMax.y);
 
-		if (m_eShape == ESpawnShape::SPHERE)
+		if (m_eShape == ESpawnShape::SPHERE && m_bCurveDir == false)
 		{
 			if (m_bSphereDetail == false)
 			{
@@ -761,9 +761,8 @@ void CParticleSystem::AddPoint()
 					vPos.z += vRanPos.z;
 				}
 			}
-			
 		}
-		if (m_eShape == ESpawnShape::CONE)
+		else if (m_eShape == ESpawnShape::CONE && m_bCurveDir == false)
 		{
 			_vector vYAxis_RandomDir = CMathUtils::RandomUnitVectorInCone_AxisY(m_fConeAngleDeg);
 			vDir = XMVector3TransformNormal(vYAxis_RandomDir, m_pTransformCom->Get_WorldMatrix());
@@ -821,27 +820,25 @@ void CParticleSystem::AddPoint()
 				vPos = XMVector3TransformCoord(vPos, m_pTransformCom->Get_WorldMatrix());
 			}
 
-			// if (m_bLocal)
-			// {
-			// 	vPos = XMVector3TransformCoord(vPos, m_pTransformCom->Get_WorldMatrix());
-			// }
-			// else
-			// {
-			// 	vPos = XMVector3TransformNormal(vPos, m_pTransformCom->Get_WorldMatrix());
-			// 	// vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-			// }
-
 			if (iRandomVtx > 0)
 			{
-				_float3 v3PrePos = pNonAnimBuffer[iRandomVtx - 1].vPosition;
-				_float3 vUVDir = v3Pos - v3PrePos;
+				_float4 vPrePos = _float4{ pNonAnimBuffer[iRandomVtx - 1].vPosition.x, pNonAnimBuffer[iRandomVtx - 1].vPosition .y, pNonAnimBuffer[iRandomVtx - 1].vPosition .z, 1.f};
+
+				if (m_bLocal == false)
+				{
+					vPrePos = XMVector3TransformCoord(vPrePos, m_pTransformCom->Get_WorldMatrix());
+				}
+
+				_float4 vUVDir = vPos - vPrePos;
 				vUVDir.Normalize();
-				vDir = _float4{ vUVDir.x, vUVDir.y, vUVDir.z, 0.f };
+				vDir = vUVDir;
 			}
 		}
 		
 		pointData.vUp.w = fLife;
+
 		pointData.vLook = vDir * fSpeed;
+
 		pointData.vPosition = vPos;
 		pointData.vPosition.w = 0.f;
 
@@ -889,7 +886,7 @@ void CParticleSystem::UpdatePoints(_float fTimeDelta)
 			_float fCurLife = data.vPosition.w;
 			_float fLifeRatio = fCurLife;
 
-			_float fLength = data.vLook.Length();
+			data.vLook.Normalize();
 
 			if (auto pCurve = CCurveManager::GetInstance()->GetCurve(m_strXDirCurveName))
 			{
@@ -903,22 +900,17 @@ void CParticleSystem::UpdatePoints(_float fTimeDelta)
 			{
 				data.vLook.z += pCurve->GetValue(fLifeRatio) - 0.5f;
 			}
-			// if (m_bLocal == true)
-			// {
-			// 	const _matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
-			// 	XMVector3TransformNormal(data.vLook, WorldMatrix);
-			// }
+			// data.vLook.Normalize();
 
-			//Todo : 이거 때매 로컬이 안잡힘 속도는 같은데 방향이 좀 이상하다.
-			
 			if(m_bLocal == true)
 			{
-				data.vLook.Normalize();
-				data.vLook *= fLength;	
+				data.vLook *= CGameUtils::GetRandFloat(m_fSpeedMinMax.x, m_fSpeedMinMax.y);
 			}
-			
-
-			
+			else
+			{
+				const _matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+				data.vLook = XMVector3TransformNormal(data.vLook, WorldMatrix) * CGameUtils::GetRandFloat(m_fSpeedMinMax.x, m_fSpeedMinMax.y);
+			}
 		}
 
 	}
