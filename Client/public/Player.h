@@ -186,7 +186,6 @@ private:
 	class CNoticeNeonUI* m_pNeonUI = { nullptr };
 	class CMonsterLockonUI*	m_pUI_LockOn = nullptr;
 	CGameObject*		m_pSettedTarget = nullptr;
-//	CRigidBody*			m_pContectRigidBody = nullptr;
 
 private:	// 특수연출용 FSM
 	HRESULT				SetUp_TrainStateMachine();
@@ -194,6 +193,9 @@ private:	// 특수연출용 FSM
 
 	HRESULT				SetUp_TelephonePoleStateMachine();
 	CFSMComponent*		m_pTelephonePoleStateMachine_Left = nullptr;
+
+	HRESULT				SetUp_BrainCrashStateMachine();
+	CFSMComponent*		m_pBrainCrashStateMachine = nullptr;
 
 private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_Train_Charge_L;	// 좌측 기차 차지
@@ -207,6 +209,9 @@ private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_TelephonePole_Wait_L;		// 추가타 대기
 	list<CAnimation*>	m_TelephonePole_End_L;		// 추가타 발생하지 않고 종료됨
 	list<CAnimation*>	m_TelephonePole_Swing_L;	// 좌측 전봇대 추가 휘두름
+
+	list<CAnimation*>	m_BrainCrash_CutScene;
+	list<CAnimation*>	m_BrainCrash_Activate;
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -360,6 +365,7 @@ private:
 
 	_bool	m_bKineticCombo = false;	// 현재 공격 진행중인지?
 	_bool	m_bKineticSpecial = false;	// 염력 특수 연출중인지?
+	_bool	m_bBrainCrash = false;		// 브레인 크러시 사용중인지?
 	
 	_float	m_fJustDodgeAble = 0.f;
 
@@ -517,8 +523,6 @@ private:
 	void			Spline_Kinetic(_double TimeDelta);
 	void			Kinetic_Test(_float fRatio);
 	void			Kinetic_ByTurn();
-//	CGameObject*	m_pKineticObject = nullptr;
-//	CGameObject*	m_pTargetedEnemy = nullptr;
 
 private:
 	void			Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수
@@ -528,6 +532,8 @@ private:
 private:
 	_vector			m_vKineticComboRefPoint; // 키네틱 콤보를 할 때 이동해야 하는 포인트
 	_matrix			m_KineticObjectOrigionPos = XMMatrixIdentity();
+	
+	_matrix			m_SpecialObjectOriginPos =  XMMatrixIdentity();
 
 private:
 	_float4 m_vSplinePoint_01;

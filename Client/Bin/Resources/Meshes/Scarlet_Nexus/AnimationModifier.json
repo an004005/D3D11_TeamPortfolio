@@ -2772,6 +2772,12 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_BrainCrash_Cutin": {
+        "Duration": 49.0,
+        "TickPerSecond": 49.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0200_002_AL_wait02": {
         "Duration": 2256.0,
         "TickPerSecond": 24.0,

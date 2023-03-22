@@ -6,6 +6,8 @@
 #include "Model.h"
 #include "RigidBody.h"
 #include "MathUtils.h"
+#include "Animation.h"
+#include "ImguiUtils.h"
 
 CSpecial_TelephonePole::CSpecial_TelephonePole(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -41,12 +43,15 @@ void CSpecial_TelephonePole::BeginTick()
 {
 	__super::BeginTick();
 
+	m_PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixTranslation(0.f, 2.f, 0.f);
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(CMathUtils::RandomFloat(-20.f, 20.f)));
 }
 
 void CSpecial_TelephonePole::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+	m_pTransformCom->SetTransformDesc({ 0.5f, XMConvertToRadians(90.f) });
 }
 
 void CSpecial_TelephonePole::Late_Tick(_double TimeDelta)
@@ -90,6 +95,17 @@ void CSpecial_TelephonePole::SaveToJson(Json & json)
 void CSpecial_TelephonePole::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	if (ImGui::CollapsingHeader("pivot1"))
+	{
+		static GUIZMO_INFO tp1;
+		CImguiUtils::Render_Guizmo(&pivot1, tp1, true, true);
+	}
+	if (ImGui::CollapsingHeader("pivot2"))
+	{
+		static GUIZMO_INFO tp2;
+		CImguiUtils::Render_Guizmo(&pivot2, tp2, true, true);
+	}
 }
 
 void CSpecial_TelephonePole::TelephonePole_Bend(_float4 vPlayerPos, _float fForce)
@@ -110,9 +126,69 @@ void CSpecial_TelephonePole::TelephonePole_Bend(_float4 vPlayerPos, _float fForc
 	m_pTransformCom->Turn_Fixed(vAxis, XMConvertToRadians(fForce));
 }
 
-void CSpecial_TelephonePole::TelephonePole_PullOut(_float fForce)
+void CSpecial_TelephonePole::TelephonePole_PullOut(_float4 vPlayerPos, _float fForce)
 {
-	m_pTransformCom->Move(fForce, _float3(0.f, 1.f, 0.f));
+	_float4 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_float4 vLookDir = vPlayerPos - vMyPos;
+	vLookDir.w = 0.f;
+
+	_float4 vAxis = XMVector3Cross(_float4(0.f, 1.f, 0.f, 0.f), vLookDir);
+
+	m_pTransformCom->Turn_Fixed(vAxis, XMConvertToRadians(pow(fForce, 7.f) * 7.f));
+
+	m_pTransformCom->Move(pow(fForce, 10.f), _float3(0.f, 1.f, 0.f));
+}
+
+void CSpecial_TelephonePole::TelephonePole_AttachLerp(CModel * pModel, CTransform* pTransform, _float fRatio)
+{
+	pModel->GetPlayAnimation()->Update_Bones_SyncRatio(0.f);
+	pModel->Compute_CombindTransformationMatrix();
+
+	_matrix	SocketMatrix = m_PivotMatrix * pModel->GetBoneMatrix("Waist") * pTransform->Get_WorldMatrix();
+
+	_float fScale_Right = XMVectorGetX(XMVector3Length(m_CatchMatrix.r[0]));
+	_float fScale_Up = XMVectorGetX(XMVector3Length(m_CatchMatrix.r[1]));
+	_float fScale_Look = XMVectorGetX(XMVector3Length(m_CatchMatrix.r[2]));
+
+	if (1.f < fRatio)
+	{
+		fRatio = 1.f;
+	}
+
+	_vector vSrcScale, vSrcRot, vSrcPos;
+	_vector vDstScale, vDstRot, vDstPos;
+	XMMatrixDecompose(&vSrcScale, &vSrcRot, &vSrcPos, m_CatchMatrix);
+	XMMatrixDecompose(&vDstScale, &vDstRot, &vDstPos, SocketMatrix);
+
+	_vector vLerpScale = XMVectorLerp(vSrcScale, vDstScale, fRatio);
+	_vector vLerpRot = XMVectorLerp(vSrcRot, vDstRot, fRatio);
+	_vector vLerpTrans = XMVectorLerp(vSrcPos, vDstPos, fRatio);
+
+	vLerpScale = XMVectorSet(fScale_Right, fScale_Up, fScale_Look, 1.f);
+
+	_matrix matLerp = XMMatrixAffineTransformation(vLerpScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vLerpRot, vLerpTrans);
+
+	m_pTransformCom->Set_WorldMatrix(matLerp);
+	m_pTransformCom->Set_Scaled(_float3(fScale_Right, fScale_Up, fScale_Look));
+}
+
+void CSpecial_TelephonePole::TelephonePole_Swing(CModel * pModel, CTransform* pTransform, _float fPlayTime)
+{
+	pModel->GetPlayAnimation()->Update_Bones_SyncRatio(fPlayTime);
+	pModel->Compute_CombindTransformationMatrix();
+
+	_matrix	SocketMatrix = m_PivotMatrix * pModel->GetBoneMatrix("Waist") * pTransform->Get_WorldMatrix();
+
+	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+
+	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
+}
+
+void CSpecial_TelephonePole::SetCatchPoint()
+{
+	m_CatchMatrix = m_pTransformCom->Get_WorldMatrix();
 }
 
 void CSpecial_TelephonePole::SetUp_BoneMatrix(CModel * pModel, _fmatrix WorldMatrix)

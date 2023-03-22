@@ -1,1 +1,128 @@
-{"BilboardType":1,"BufferType":0,"BurstCnt":10,"ConeDirDegree":30.0,"ConeOriginRadius":1.0,"Duration":0.5,"FromOrigin":true,"GravityPowerMinMax":[0.0,0.0],"IncreaseMaxSize":1.0,"Life":1.0,"LifeMinMax":[1.0,1.0],"LifeRand":true,"Loop":false,"MeshBufferProtoTag":"","MeshSize":[1.0,1.0,1.0],"ModelCurveProtoTag":"../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_03.static_model","ModelProtoTag":"../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_03.static_model","ObjectTag":"","Prototype_GameObject":"ProtoVFX_ParticleSystem\u0000","RandDirMax":[1.0,1.0,1.0],"RandDirMin":[0.0,0.0,0.0],"RotationToTimeMax":[0.0,0.0,0.0],"RotationToTimeMin":[0.0,0.0,0.0],"ScaleVariation":[1.0,1.0,1.0],"ShaderParams":{"Float2s":[],"Float4s":[[0.06828136742115021,0.015094680711627007,0.15826940536499023,1.0]],"Float4x4s":[],"Floats":[6.0,1.0],"Ints":[],"Pass":13,"Textures":["..\\Bin\\Resources\\Texture\\VFX\\T_White_01.png\u0000","..\\Bin\\Resources\\Texture\\VFX\\T_ef_one_lin_013.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxPointInstance_Particle","Shape":0,"SpawnTickTime":0.009999999776482582,"Speed":1.0,"SpeedMinMax":[0.4000000059604645,0.5],"SpeedRand":true,"SphereDetail":false,"SphereRadius":4.0,"Transform":{"WorldMatrix":[15.0,0.0,0.0,0.0,0.0,15.0,0.0,0.0,0.0,0.0,15.0,0.0,0.0,0.0,0.0,1.0]},"UseMeshData":true,"VtxRangeTimelineCurve":"Simple_Increase","VtxStartTimelineCurve":"Simple_Decrease","XDirCurveName":"Charge_2_X","YDirCurveName":"Charge_2_Y","ZDirCurveName":"Charge_2_Z","bCurveDir":true,"bGravity":false,"bLocal":true,"bMeshCurve":true,"bNonAlpha":false,"bPhysX":false,"bRotate":true,"bSizeDecreaseByLife":false,"bSizeIncreaseByLife":false,"pSize":[0.20000000298023224,0.05000000074505806]}
+{
+    "BilboardType": 1,
+    "BufferType": 0,
+    "BurstCnt": 10,
+    "ConeDirDegree": 30.0,
+    "ConeOriginRadius": 1.0,
+    "Duration": 1.0,
+    "FromOrigin": true,
+    "GravityPowerMinMax": [
+        0.0,
+        0.0
+    ],
+    "IncreaseMaxSize": 1.0,
+    "Life": 1.0,
+    "LifeMinMax": [
+        1.0,
+        1.0
+    ],
+    "LifeRand": true,
+    "Loop": false,
+    "MeshBufferProtoTag": "",
+    "MeshSize": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ModelCurveProtoTag": "../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_03.static_model",
+    "ModelProtoTag": "../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_03.static_model",
+    "ObjectTag": "",
+    "Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",
+    "RandDirMax": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "RandDirMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMax": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "ScaleVariation": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.06828136742115021,
+                0.015094680711627007,
+                0.15826940536499023,
+                1.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [
+            6.0,
+            1.0
+        ],
+        "Ints": [],
+        "Pass": 13,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_White_01.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_one_lin_013.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxPointInstance_Particle",
+    "Shape": 0,
+    "SpawnTickTime": 0.009999999776482582,
+    "Speed": 1.0,
+    "SpeedMinMax": [
+        0.4000000059604645,
+        0.5
+    ],
+    "SpeedRand": true,
+    "SphereDetail": false,
+    "SphereRadius": 4.0,
+    "Transform": {
+        "WorldMatrix": [
+            15.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            15.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            15.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    "UseMeshData": true,
+    "VtxRangeTimelineCurve": "Simple_Increase",
+    "VtxStartTimelineCurve": "Simple_Decrease",
+    "XDirCurveName": "Charge_2_X",
+    "YDirCurveName": "Charge_2_Y",
+    "ZDirCurveName": "Charge_2_Z",
+    "bCurveDir": true,
+    "bGravity": false,
+    "bLocal": true,
+    "bMeshCurve": true,
+    "bNonAlpha": false,
+    "bPhysX": false,
+    "bRotate": true,
+    "bSizeDecreaseByLife": false,
+    "bSizeIncreaseByLife": false,
+    "pSize": [
+        0.20000000298023224,
+        0.05000000074505806
+    ]
+}
