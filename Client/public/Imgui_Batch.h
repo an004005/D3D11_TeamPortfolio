@@ -35,7 +35,6 @@ public:
 	static void RunBatchFile(const string& strBatchFilePath);
 
 private:
-	_bool GetPosFromRayCast(_float4& vPos);
 	_bool GetObjFromRayCast(CGameObject*& pObj, _uint iTargetType = CTB_STATIC);
 	void CloneBatchPreset(_float4 vPos, size_t iPresetIdx);
 

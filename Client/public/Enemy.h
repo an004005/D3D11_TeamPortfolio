@@ -38,6 +38,7 @@ public:
 	virtual void SetBrainCrush();
 
 	virtual void SetEnemyBatchDataStat(ENEMY_STAT tStat);
+	virtual ENEMY_STAT GetEnemyBatchDataStat();
 	
 public:
 	_float GetHpRatio() const { return (_float)m_iHP / (_float)m_iMaxHP; }

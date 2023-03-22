@@ -177,6 +177,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
 	// For_SkySphere
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Env", TEXT("Prototype_GameObject_SkyBox")));
 
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/tests.json");
 	return S_OK;
 }
 
@@ -199,8 +200,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	// pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("TestTarget"))
 		// ->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
 
-	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em200"))
-		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
+	// pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em200"))
+		// ->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
 
 	
 
@@ -220,7 +221,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 //
 	// pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLeg"))
-	// 	->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 3.f, 0.f, 1.f));
+		// ->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 3.f, 0.f, 1.f));
 //
 //	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPool"))//
 //		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-40.f, 3.f, -3.f, 1.f));

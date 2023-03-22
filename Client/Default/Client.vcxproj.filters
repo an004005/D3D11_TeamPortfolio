@@ -325,6 +325,12 @@
     <Filter Include="02.GameObjects\SpecialObject\Special_Train">
       <UniqueIdentifier>{e5298caa-d4e0-4fcc-95d9-9424cdefe837}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Map\Batch">
+      <UniqueIdentifier>{d938f9c6-37d2-4792-8bf7-eb19360e9644}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map\Trigger">
+      <UniqueIdentifier>{249a436b-b980-4085-8ad1-f1abe2dc7c87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -890,7 +896,18 @@
     <ClInclude Include="..\public\Special_Train.h">
       <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Imgui_Batch.h" />
+    <ClInclude Include="..\public\Imgui_Batch.h">
+      <Filter>02.GameObjects\Map\Batch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TriggerEx.h">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpawnTrigger.h">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SimpleTrigger.h">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1430,7 +1447,18 @@
     <ClCompile Include="..\private\Special_Train.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Imgui_Batch.cpp" />
+    <ClCompile Include="..\private\Imgui_Batch.cpp">
+      <Filter>02.GameObjects\Map\Batch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TriggerEx.cpp">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpawnTrigger.cpp">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SimpleTrigger.cpp">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
