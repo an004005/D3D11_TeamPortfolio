@@ -39,6 +39,7 @@
 // Kinetic Object
 #include "SpecialObject.h"
 #include "Special_Train.h"
+#include "Special_TelephonePole.h"
 
 // Player Setting
 #include "Player.h"
@@ -329,6 +330,13 @@ HRESULT CFactoryMethod::MakeSAS_Portrait_Prototypes(ID3D11Device* pDevice, ID3D1
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	{
+		auto pModel_ch100 = CModel::Create(pDevice, pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
+		pModel_ch100->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Portrait/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch100_Portrait", pModel_ch100));
+	}
+
+	{
 		auto pModel_ch300 = CModel::Create(pDevice, pContext,
 			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/ch300.anim_model");
 		pModel_ch300->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/SAS_Anim/");
@@ -362,6 +370,10 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_Train", CSpecial_Train::Create(pDevice, pContext)));
 
 
+	auto pModel_TelephonePole = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/TelephonePole/Pole_A.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_TelephonePole", pModel_TelephonePole));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_TelephonePole", CSpecial_TelephonePole::Create(pDevice, pContext)));
 
 	return S_OK;
 }

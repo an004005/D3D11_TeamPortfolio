@@ -20,7 +20,7 @@ public:
 	void InputAnimSocket(const string& strSocName, list<CAnimation*> AnimList);
 	void AttachAnimSocket(const string& strSocName, const list<CAnimation*>& AnimList);
 	_bool CheckSocketAnim(const string& strSocName, const string& AnimName) { return (AnimName == m_mapAnimSocket[strSocName].front()->GetName()) ? true : false; }
-	void ClearSocketAnim(const string& strSocName);
+	void ClearSocketAnim(const string& strSocName, _float fLerpTime = 0.1f);
 
 	void InputAnimSocketOne(const string& strSocName, const string& strAnimName);
 	void AttachAnimSocketOne(const string& strSocName, const string& strAnimName);
@@ -34,7 +34,7 @@ protected:
 	CAnimationStateMachine* m_pASM_Base = nullptr;
 
 	_float	m_fLerpTime = 0.f;
-	_float	m_fLerpDuration = 10.f;
+	_float	m_fLerpDuration = 0.1f;
 	_bool m_bAttach = false;
 
 public:

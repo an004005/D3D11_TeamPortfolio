@@ -1199,7 +1199,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				 .Duration(0.1f).Priority(1)
 				
 				 .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_03", "CHARGE_ATTACK_03")
-				 .Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(2, 1.5f)); })
+				 .Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(2, 2.5f)); })
 				 .Duration(0.1f).Priority(0)
 				
 				 .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_CANCEL", "CHARGE_CANCEL")
@@ -2279,6 +2279,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 	m_mapAnimSocket.emplace("JustDodge_AnimSocket", SocketList);
 	m_mapAnimSocket.emplace("Common_AnimSocket", SocketList);
 	m_mapAnimSocket.emplace("Kinetic_Special_AnimSocket", SocketList);
+	m_mapAnimSocket.emplace("BrainCrash_AnimSocket", SocketList);
 
 	return S_OK;
 }
@@ -2329,6 +2330,9 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 			m_fLerpTime = 0.f;	// 어태치면 바로 보간
 			m_bSeperateSwitch = false;
 			m_bAttach = false;
+
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+			m_fLerpTime += (_float)TimeDelta;
 		}
 		else
 		{
@@ -2422,11 +2426,11 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 			m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
 		}
 	}
-	else
-	{
-		IM_LOG("%d", bLocalMove);
-		IM_LOG(szCurAnimName.c_str());
-	}
+	//else
+	//{
+	//	IM_LOG("%d", bLocalMove);
+	//	IM_LOG(szCurAnimName.c_str());
+	//}
 
 	//m_pTargetObject->GetTransform()->TurnByMatrix(m_pModel->GetLocalRotationMatrix(m_pTargetObject->GetTransform()->Get_WorldMatrix()));
 
@@ -2537,32 +2541,48 @@ void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimat
 {
 	// 소켓의 애니메이션을 교환하고 보간함, 아닐 경우 그냥 덮어버림
 
+	//if (!m_bSeperateAnim)
+	//	m_pModel->Reset_LocalMove(true);
+
+	//for (auto& iter : m_mapAnimSocket)
+	//{
+	//	if (!iter.second.empty())
+	//		iter.second.front()->Reset();
+
+	//	list<CAnimation*> SocketList;
+	//	iter.second = SocketList;
+	//}
+
+	//const auto List = m_mapAnimSocket.find(strSocName);
+
+	//if (List != m_mapAnimSocket.end())
+	//{
+	//	if (!List->second.empty())
+	//	{
+	//		m_bAttach = true;
+	//		List->second.front()->Reset();
+	//	}
+	//	m_mapAnimSocket[strSocName] = (AnimList);
+	//}
+
+	//m_bSeperateSwitch = false;
+
 	if (!m_bSeperateAnim)
 		m_pModel->Reset_LocalMove(true);
 
-//	static_cast<CPlayer*>(m_pTargetObject)->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
-
-//	m_pASM_Base->SetCurState("IDLE");
-
 	for (auto& iter : m_mapAnimSocket)
 	{
-		if (!iter.second.empty())
-			iter.second.front()->Reset();
-
-		list<CAnimation*> SocketList;
-		iter.second = SocketList;
-	}
-
-	const auto List = m_mapAnimSocket.find(strSocName);
-
-	if (List != m_mapAnimSocket.end())
-	{
-		if (!List->second.empty())
+		if (iter.first == strSocName)
 		{
 			m_bAttach = true;
-			List->second.front()->Reset();
+			iter.second.front()->Reset();
+			iter.second = (AnimList);
 		}
-		m_mapAnimSocket[strSocName] = (AnimList);
+		else
+		{
+			list<CAnimation*> SocketList;
+			iter.second = SocketList;
+		}
 	}
 
 	m_bSeperateSwitch = false;

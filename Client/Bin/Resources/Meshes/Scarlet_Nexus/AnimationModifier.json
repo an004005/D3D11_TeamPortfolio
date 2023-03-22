@@ -2449,6 +2449,12 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_325_AL_throw_LR_start": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_326_AL_throw_RL_end": {
         "Duration": 50.0,
         "TickPerSecond": 50.0,
@@ -2467,6 +2473,12 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_326_AL_throw_RR_start": {
+        "Duration": 40.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_329_AL_throw_LR_end": {
         "Duration": 50.0,
         "TickPerSecond": 50.0,
@@ -2481,6 +2493,18 @@
     },
     "AS_ch0100_329_AL_throw_LR_start": {
         "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_331_AL_swing_L": {
+        "Duration": 140.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_331_AL_swing_R": {
+        "Duration": 140.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
@@ -2745,6 +2769,12 @@
     "AS_ch0100_481_AL_down_B_shock": {
         "Duration": 180.0,
         "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_BrainCrash_Cutin": {
+        "Duration": 49.0,
+        "TickPerSecond": 49.0,
         "bLooping": false,
         "vecEvent": []
     },

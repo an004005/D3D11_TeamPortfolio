@@ -343,6 +343,9 @@
     <Filter Include="02.GameObjects\Map\Trigger">
       <UniqueIdentifier>{249a436b-b980-4085-8ad1-f1abe2dc7c87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_TelephonePole">
+      <UniqueIdentifier>{934d218b-129b-4ba9-95b6-835e98c0e6c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

@@ -351,6 +351,7 @@
     </ClInclude>
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
+    <ClInclude Include="..\public\Special_TelephonePole.h" />
     <ClInclude Include="..\public\Special_Train.h" />
     <ClInclude Include="..\public\SpawnTrigger.h" />
     <ClInclude Include="..\public\Terrain.h" />
@@ -552,6 +553,7 @@
     </ClCompile>
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
+    <ClCompile Include="..\private\Special_TelephonePole.cpp" />
     <ClCompile Include="..\private\Special_Train.cpp" />
     <ClCompile Include="..\private\SpawnTrigger.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />

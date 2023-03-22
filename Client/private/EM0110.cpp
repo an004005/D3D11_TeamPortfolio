@@ -186,7 +186,7 @@ void CEM0110::SetUpFSM()
 			{
 				//돌려차기를 했으면 회전한 방향으로 쳐다보게 함
 				AfterLocal180Turn();
-				m_pASM->ClearSocketAnim("FullBody");
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
 
 				//if (m_pASM->GetCurSocketAnimName() == "AS_em0100_230_AL_atk_g1_turn_L")
 				//{
@@ -352,11 +352,11 @@ _bool CEM0110::IsPlayingSocket() const
 
 void CEM0110::AfterLocal180Turn()
 {
-	/*IM_LOG("Turn");
+	IM_LOG("Turn");
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	vPos -= XMVector3Normalize(vLook) * 10.f;
-	m_pTransformCom->LookAt(vPos);*/
+	m_pTransformCom->LookAt(vPos);
 }
 
 void CEM0110::Define_TurningKickAnim()
