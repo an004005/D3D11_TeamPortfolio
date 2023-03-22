@@ -9,13 +9,12 @@
 CEM0200::CEM0200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
 {
-	m_eMonsterName = FLOWERLEG;
+	m_eMonsterName = EEnemyName::EM0200;
 }
 
 CEM0200::CEM0200(const CEM0200& rhs)
 	: CEnemy(rhs)
 {
-	m_eMonsterName = FLOWERLEG;
 }
 
 HRESULT CEM0200::Initialize(void* pArg)
@@ -35,11 +34,12 @@ HRESULT CEM0200::Initialize(void* pArg)
 		m_bHasCrushGage = false;
 
 		m_iAtkDamage = 50;
-		m_iLevel = 2;
+		iMonsterLevel = 2;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
+	m_eMonsterName = EEnemyName::EM0200;
 	m_bHasCrushGage = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 
@@ -60,6 +60,7 @@ void CEM0200::SetUpComponents(void* pArg)
 	Json FlowerLegRangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegRange.json");
 	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
 		(CComponent**)&m_pRange, &FlowerLegRangeCol))
+
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM0200_Controller::Create();
@@ -112,7 +113,7 @@ void CEM0200::SetUpAnimationEvent()
 		{
 			m_bJumpAttack = true;
 			m_fGravity = 80.f;
-			m_fYSpeed = 27.f;
+			m_fYSpeed = 20.f;
 
 			_vector vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			vOrigin = XMVectorSetY(vOrigin, 0.f);
@@ -285,6 +286,7 @@ void CEM0200::SetUpFSM()
 		.AddState("SpinAtk")
 			.OnStart([this]
 			{
+				ClearDamagedTarget();
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_202_AL_atk_a2");
 			})
 			.Tick([this](_double TimeDelta)
@@ -432,8 +434,6 @@ void CEM0200::SetUpFSM()
 				{
 					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.99f);
 				})
-
-
 
 		.AddState("Threat")
 			.OnStart([this]
@@ -630,10 +630,7 @@ void CEM0200::Strew_Overlap()
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
-		for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
-		{
-			HitTargets(overlapOut, m_iAtkDamage * 0.6f, EAttackType::ATK_LIGHT);
-		}
+		HitTargets(overlapOut, m_iAtkDamage * 0.6f, EAttackType::ATK_LIGHT);
 	}
 }
 
@@ -680,10 +677,7 @@ void CEM0200::Kick_SweepSphere()
 
 	if (CGameInstance::GetInstance()->SweepSphere(tParams))
 	{
-		for (int i = 0; i < sweepOut.getNbAnyHits(); ++i)
-		{
-			HitTargets(sweepOut, m_iAtkDamage * 2, EAttackType::ATK_HEAVY);
-		}
+		HitTargets(sweepOut, m_iAtkDamage * 2, EAttackType::ATK_HEAVY);
 	}
 }
 
@@ -691,7 +685,7 @@ void CEM0200::Dodge_VelocityCalc()
 {
 	m_bDodge = true;
 	m_fGravity = 80.f;
-	m_fYSpeed = 10.f;
+	m_fYSpeed = 7.f;
 
 	const _float fJumpMoveTime = (2 * m_fYSpeed) / m_fGravity;
 

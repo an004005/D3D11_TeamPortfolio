@@ -113,3 +113,18 @@ EBaseTurn CClientUtils::TurnDeltaToEnum(_float fTurnDelta)
 	else
 		return EBaseTurn::TURN_RIGHT;
 }
+
+string CClientUtils::GetEnemyProtoTag(EEnemyName eName)
+{
+	static array<string, ENEMY_CNT> s_EnemyNames{
+	   "NotUsing",
+	   "NotUsing",
+	   "NotUsing",
+	   "NotUsing",
+	   "Monster_em200",
+	   "NotUsing", 
+	   "NotUsing",
+	};
+
+	return s_EnemyNames[static_cast<_uint>(eName)];
+}

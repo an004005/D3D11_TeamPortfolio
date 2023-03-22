@@ -16,6 +16,16 @@
             "ProtoTag": "Prototype_GameObject_Special_Train"
         },
         {
+            "Layer" : "Layer_Trigger",
+            "JsonPath": "",
+            "ProtoTag" : "Prototype_SpawnTrigger"
+        },
+        {
+            "Layer" : "Layer_Trigger",
+            "JsonPath": "",
+            "ProtoTag" : "Prototype_SimpleTrigger"
+        },
+        {
             "Layer": "Layer_Kinetic",
             "JsonPath": "../Bin/Resources/Objects/KineticSpecial_TelephonePole.json",
             "ProtoTag": "Prototype_GameObject_Special_TelephonePole"

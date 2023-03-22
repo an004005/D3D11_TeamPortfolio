@@ -38,7 +38,7 @@ public:
 
 	static string GetRandomString(_uint iLen = 15);
 
-
+	static _bool GetPosFromRayCast(_float4& vPos);
 
 	static void HideCursor();
 	static void ShowCursor();
