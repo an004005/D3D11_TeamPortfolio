@@ -171,6 +171,11 @@ void CCurveFloatImpl::LoadFromJson(const Json& json)
 
 _float CCurveFloatImpl::GetValue(_double Frame)
 {
+	if (Frame < m_RangeMin.x)
+		Frame = m_RangeMin.x;
+	else if (Frame > m_RangeMax.x)
+		Frame = m_RangeMax.x;
+
 	return ImGui::CurveValueSmooth((_float)Frame, m_iMaxPoint, m_KeyFrames);
 }
 

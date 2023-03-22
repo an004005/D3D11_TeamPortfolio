@@ -2,6 +2,7 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 #include "Shader.h"
+#include "Timeline.h"
 
 
 BEGIN(Engine)
@@ -65,6 +66,7 @@ public:
 	HRESULT SetParams();
 	HRESULT	Begin();
 
+	void		Start_Timeline();
 private:
 	void AddPoint();
 	void UpdatePoints(_float fTimeDelta);
@@ -85,6 +87,20 @@ private:
 	CVIBuffer_Mesh_Instancing*	m_pMeshInstanceBuffer = nullptr;
 	CModel*						m_pModel = nullptr;
 	CModel*						m_pMeshCurveModel = nullptr;
+
+	_float m_fMeshVtxRangeRatio = 0.f;
+	_float m_fMeshVtxStartRatio = 0.f;
+
+	_bool m_bCurveDir = false;
+
+	string m_strXDirCurveName = "";
+	string m_strYDirCurveName = "";
+	string m_strZDirCurveName = "";
+
+	CSimpleTimeline m_VtxStartTimeline;
+	CSimpleTimeline m_VtxRangeTimeline;
+
+
 
 	_bool m_bUseMeshData = false;
 
