@@ -91,8 +91,6 @@ void CCanvas_ItemWindow::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	ImGui::DragFloat("X", &m_vPosssss.x);
-	ImGui::DragFloat("Y", &m_vPosssss.y);
 }
 
 void CCanvas_ItemWindow::SaveToJson(Json& json)

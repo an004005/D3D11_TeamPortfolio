@@ -30,10 +30,10 @@ HRESULT CCanvas_MainItemBattle::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-		iter->second->SetVisible(false);
-
 	m_bVisible = false;
+
+	for (vector<pair<wstring, class CCanvas_ItemWindow*>>::iterator iter = m_vecItemCanvass.begin(); iter != m_vecItemCanvass.end(); ++iter)
+		iter->second->SetVisible(m_bVisible);
 
 	/* For.Prototype_GameObject_Canvas_ItemWindow */
 	if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_ItemWindow"), CCanvas_ItemWindow::Create(m_pDevice, m_pContext))))
@@ -46,12 +46,29 @@ HRESULT CCanvas_MainItemBattle::Initialize(void* pArg)
 
 void CCanvas_MainItemBattle::Tick(_double TimeDelta)
 {
-	if (false == m_bVisible) return;
+	if (false == m_bVisible)
+	{
+		for (vector<pair<wstring, class CCanvas_ItemWindow*>>::iterator iter = m_vecItemCanvass.begin(); iter != m_vecItemCanvass.end(); ++iter)
+			iter->second->SetVisible(false);
+
+		m_bBeSeen = false;
+		return;
+	}
+	else
+	{
+		if (false == m_bBeSeen)
+		{
+			m_bBeSeen = true;
+
+			for (size_t i = 0; i < STORAGE; ++i)
+			{
+				if(L"-" != m_vecItemCanvass[i].first)
+					m_vecItemCanvass[i].second->SetVisible(true);
+			}
+		}
+	}
 
 	CCanvas::Tick(TimeDelta);
-
-	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-		iter->second->SetVisible(m_bVisible);
 
 	Item_Tick();
 	ChildPickUI_Tick();
@@ -130,7 +147,7 @@ void CCanvas_MainItemBattle::Add_ItemCanvas(const size_t & iIndex)
 
 void CCanvas_MainItemBattle::Item_Tick()
 {
-	// 계속 아이템의 개수를 확인해서 1개 이상 이라면 Item Canvas 를 띄운다.
+	// 계속 아이템의 개수를 확인해서 1개 이상 이라면 Item Canvas 를 띄우고 개수가 0개가 되었다면 지운다.
 	m_vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
 
 	for (_int i = 0; i < m_vecItemInfo.size(); ++i)
@@ -181,9 +198,7 @@ void CCanvas_MainItemBattle::ChildPickUI_Tick()
 	for (size_t i = 0; i < STORAGE; ++i)
 	{
 		if (i == m_iPickIndex)
-		{
 			continue;
-		}
 		else
 			m_vecItemCanvass[i].second->Set_OnAlpha();
 	}

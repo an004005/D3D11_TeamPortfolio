@@ -34,6 +34,8 @@ private:
 	size_t				m_iPrePickIndex = { 0 };
 	vector<pair<wstring, CItem_Manager::ITEMINFO>> m_vecItemInfo;
 
+	_bool				m_bBeSeen = { false };
+
 public:
 	static CCanvas_MainItemBattle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

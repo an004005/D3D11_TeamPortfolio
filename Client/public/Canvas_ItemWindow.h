@@ -31,7 +31,6 @@ public:
 
 private:
 	size_t		m_iItemInfoIndex = { 0 };
-	_float2		m_vPosssss = { 0.0f, 0.0f };
 
 public:
 	static CCanvas_ItemWindow* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
