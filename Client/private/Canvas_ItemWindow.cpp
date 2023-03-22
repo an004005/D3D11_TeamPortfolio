@@ -105,7 +105,22 @@ void CCanvas_ItemWindow::LoadFromJson(const Json & json)
 	CCanvas::LoadFromJson(json);
 }
 
-void CCanvas_ItemWindow::Set_ItemWindow(const _float2 & fItemPos, const _float2 & fIconPos, const _int iIndex)
+_bool CCanvas_ItemWindow::Get_OnButton()
+{
+	return 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Itme_B"))->Get_OnButton();
+}
+
+void CCanvas_ItemWindow::Set_OnButton()
+{
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Itme_B"))->Set_OnButton();
+}
+
+void CCanvas_ItemWindow::Set_OnAlpha()
+{
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Itme_B"))->Set_OnAlpha();
+}
+
+void CCanvas_ItemWindow::Set_ItemWindow(const _float2 & fItemPos, const _float2 & fIconPos, const size_t iIndex)
 {
 	m_bVisible = true;
 	m_iItemInfoIndex = iIndex;

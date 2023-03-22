@@ -23,10 +23,14 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_ItemWindow(const _float2 & fItemPos, const _float2 & fIconPos, const _int iIndex);
+	_bool	Get_OnButton();
+	void	Set_OnButton();
+	void	Set_OnAlpha();
+
+	void	Set_ItemWindow(const _float2 & fItemPos, const _float2 & fIconPos, const size_t iIndex);
 
 private:
-	_int		m_iItemInfoIndex = { 0 };
+	size_t		m_iItemInfoIndex = { 0 };
 	_float2		m_vPosssss = { 0.0f, 0.0f };
 
 public:

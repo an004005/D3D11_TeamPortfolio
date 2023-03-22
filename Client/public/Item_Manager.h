@@ -3,6 +3,8 @@
 #include "Client_Defines.h"
 #include "Base.h"
 
+#define STORAGE 17
+
 class CItem_Manager final : public CBase
 {
 	DECLARE_SINGLETON(CItem_Manager)
@@ -35,7 +37,7 @@ public:
 	vector<pair<wstring, ITEMINFO>>	Get_ItmeInfo() {
 		return m_vecItem;
 	}
-	void	Set_ItemInfo(const _int iIndex, const ITEMINFO & tItemInfo) {
+	void	Set_ItemInfo(const size_t iIndex, const ITEMINFO & tItemInfo) {
 		m_vecItem[iIndex].second = tItemInfo;
 	}
 	void	Set_ItemCount(const wstring & wszName, const _uint iCount);

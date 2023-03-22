@@ -135,7 +135,7 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 		return E_FAIL;
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Party.json");
-	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_UI", L"Canvas_Party", &json);
+	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_Party", &json);
 	m_arrCanvass[PARTY] = dynamic_cast<CCanvas_Party*>(pCanvas);
 
 	/* For.Prototype_GameObject_Canvas_MainItem*/
@@ -144,7 +144,7 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 		return E_FAIL;
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainItem.json");
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_UI", L"Canvas_MainItem", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_MainItem", &json);
 	m_arrCanvass[ITEM] = dynamic_cast<CCanvas_MainItem*>(pCanvas);
 
 	/* For.Prototype_GameObject_Canvas_Equipment */
@@ -153,7 +153,7 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 		return E_FAIL;
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Equipment.json");
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_UI", L"Canvas_Equipment", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_Equipment", &json);
 	m_arrCanvass[EQUIPMENT] = dynamic_cast<CCanvas_Equipment*>(pCanvas);
 
 	/* For.Prototype_GameObject_Canvas_BrainMap */
@@ -162,7 +162,7 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 		return E_FAIL;
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BrainMap.json");
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_UI", L"Canvas_BrainMap", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_BrainMap", &json);
 	m_arrCanvass[BRAINMAP] = dynamic_cast<CCanvas_BrainMap*>(pCanvas);
 
 	return S_OK;
