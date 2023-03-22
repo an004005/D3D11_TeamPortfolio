@@ -2,10 +2,8 @@
 #include "..\public\Canvas_MainItemKinds.h"
 #include "GameInstance.h"
 #include "JsonStorage.h"
-#include "UI_Manager.h"
 
 #include "Canvas_ItemWindow.h"
-#include "Main_PickUI.h"
 
 CCanvas_MainItemKinds::CCanvas_MainItemKinds(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -206,9 +204,12 @@ void CCanvas_MainItemKinds::Item_Tick()
 				return pair.first == m_vecItemInfo[i].first;
 			});
 
-			iter->first = L"-";
-			iter->second->SetVisible(false);
-			//m_vecItemCanvass.erase(iter);
+			if (iter != m_vecItemCanvass.end())
+			{
+				iter->first = L"-";
+				iter->second->SetVisible(false);
+				//m_vecItemCanvass.erase(iter);
+			}
 		}
 	}
 }
@@ -216,7 +217,6 @@ void CCanvas_MainItemKinds::Item_Tick()
 void CCanvas_MainItemKinds::ChildPickUI_Tick()
 {
 	// 계속 자식 UI의 Button 을 확인해서 선택 되었는지 확인한다.
-
 	for (size_t i = 0; i < STORAGE; ++i)
 	{
 		if (true == m_vecItemCanvass[i].second->Get_OnButton())

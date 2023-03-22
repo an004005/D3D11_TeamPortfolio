@@ -10,7 +10,7 @@ class CItem_Manager final : public CBase
 	DECLARE_SINGLETON(CItem_Manager)
 
 public:
-	enum MAINITEM { ALL, BATTLE, WEAPON, ETC, MAINITEM_END };
+	enum MAINITEM { BATTLE, WEAPON, ETC, MAINITEM_END };
 
 	typedef struct tagItemInfo
 	{

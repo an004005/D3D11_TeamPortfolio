@@ -99,7 +99,7 @@ HRESULT CCanvas_MainItem::Render()
 	else
 		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
 	pGameInstance->Render_Font(L"Pretendard32", L"기타", vPosition + _float2(79.0f, 8.0f), 0.f, vFontSize, vColor);
-
+	vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
 	// ------- 아이템 상세 설명
 
 	// 아이템 이름
@@ -161,15 +161,19 @@ HRESULT CCanvas_MainItem::Add_MainCanvas()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+	/* For.Prototype_GameObject_Canvas_Party */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_MainItemAll"),
+		CCanvas_MainItemAll::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainItemAll.json");
+	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_MainItemUI", L"Canvas_MainItemAll", &json);
+	m_arrCanvass[ALL] = dynamic_cast<CCanvas_MainItemAll*>(pCanvas);
+
 	/* For.Prototype_GameObject_Canvas_MainItemKinds*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_MainItemKinds"),
 		CCanvas_MainItemKinds::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainItemKinds.json");
-	json["ITemType"] = CItem_Manager::MAINITEM::ALL;
-	CGameObject * pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_MainItemUI", L"Canvas_MainItemKinds", &json);
-	m_arrCanvass[ALL] = dynamic_cast<CCanvas_MainItemKinds*>(pCanvas);
 
 	json["ITemType"] = CItem_Manager::MAINITEM::BATTLE;
 	pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_MainItemUI", L"Canvas_MainItemKinds", &json);
@@ -289,6 +293,10 @@ void CCanvas_MainItem::Canvas_Visible()
 
 		m_arrCanvass[i]->SetVisible(!m_bVisible);	// 나머지 캔버스는 그리지 않는다.
 	}
+}
+
+void CCanvas_MainItem::PickInfo_Tick()
+{
 }
 
 CCanvas_MainItem * CCanvas_MainItem::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

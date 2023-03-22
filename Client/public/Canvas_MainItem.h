@@ -33,8 +33,7 @@ private:
 private:
 	CCanvas*	m_arrCanvass[MAINITEM_END];
 	MAINITEM	m_eMainItem = { ALL };
-
-
+	
 	_float2		m_vPosssss = { 0.0f, 0.0f };
 
 public:
