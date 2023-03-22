@@ -33,6 +33,7 @@
 // Kinetic Object
 #include "SpecialObject.h"
 #include "Special_Train.h"
+#include "Special_TelephonePole.h"
 
 // Player Setting
 #include "Player.h"
@@ -313,6 +314,10 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_Train", CSpecial_Train::Create(pDevice, pContext)));
 
 
+	auto pModel_TelephonePole = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/TelephonePole/Pole_A.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_TelephonePole", pModel_TelephonePole));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_TelephonePole", CSpecial_TelephonePole::Create(pDevice, pContext)));
 
 	return S_OK;
 }

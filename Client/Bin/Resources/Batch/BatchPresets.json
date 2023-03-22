@@ -14,6 +14,11 @@
             "Layer": "Layer_Kinetic",
             "JsonPath": "../Bin/Resources/Objects/KineticSpecial_Train.json",
             "ProtoTag": "Prototype_GameObject_Special_Train"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_TelephonePole.json",
+            "ProtoTag": "Prototype_GameObject_Special_TelephonePole"
         }
     ]
 }

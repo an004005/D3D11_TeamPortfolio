@@ -192,10 +192,21 @@ private:	// 특수연출용 FSM
 	HRESULT				SetUp_TrainStateMachine();
 	CFSMComponent*		m_pTrainStateMachine_Left = nullptr;
 
+	HRESULT				SetUp_TelephonePoleStateMachine();
+	CFSMComponent*		m_pTelephonePoleStateMachine_Left = nullptr;
+
 private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_Train_Charge_L;	// 좌측 기차 차지
 	list<CAnimation*>	m_Train_Cancel_L;	// 좌측 기차 취소
 	list<CAnimation*>	m_Train_Throw_L;	// 좌측 기차 던짐
+
+	list<CAnimation*>	m_TelephonePole_Charge_L;	// 좌측 전봇대 차지
+	list<CAnimation*>	m_TelephonePole_Cancel_L;	// 좌측 전봇대 취소
+	list<CAnimation*>	m_TelephonePole_Start_L;	// 좌측 전봇대 뽑음
+	list<CAnimation*>	m_TelephonePole_Throw_L;	// 좌측 전봇대 휘두름
+	list<CAnimation*>	m_TelephonePole_Wait_L;		// 추가타 대기
+	list<CAnimation*>	m_TelephonePole_End_L;		// 추가타 발생하지 않고 종료됨
+	list<CAnimation*>	m_TelephonePole_Swing_L;	// 좌측 전봇대 추가 휘두름
 
 private:
 	HRESULT				Setup_AnimSocket();

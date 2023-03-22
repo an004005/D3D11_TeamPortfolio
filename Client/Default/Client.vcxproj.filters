@@ -325,6 +325,9 @@
     <Filter Include="02.GameObjects\SpecialObject\Special_Train">
       <UniqueIdentifier>{e5298caa-d4e0-4fcc-95d9-9424cdefe837}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_TelephonePole">
+      <UniqueIdentifier>{934d218b-129b-4ba9-95b6-835e98c0e6c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -891,6 +894,9 @@
       <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui_Batch.h" />
+    <ClInclude Include="..\public\Special_TelephonePole.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TelephonePole</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1431,6 +1437,9 @@
       <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Imgui_Batch.cpp" />
+    <ClCompile Include="..\private\Special_TelephonePole.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TelephonePole</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

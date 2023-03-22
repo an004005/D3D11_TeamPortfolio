@@ -39,6 +39,7 @@
 
 #include "PlayerInfoManager.h"
 #include "Special_Train.h"
+#include "Special_TelephonePole.h"
 
 #include "Enemy.h"
 
@@ -122,6 +123,10 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	if (FAILED(SetUp_TrainStateMachine()))
 		return E_FAIL;
+
+	if (FAILED(SetUp_TelephonePoleStateMachine()))
+		return E_FAIL;
+
 
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
 
@@ -240,6 +245,11 @@ void CPlayer::Tick(_double TimeDelta)
 			if (SPECIAL_TRAIN == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
 			{
 				m_pTrainStateMachine_Left->Tick(TimeDelta);
+			}
+
+			if (SPECIAL_TELEPHONEPOLE == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
+			{
+				m_pTelephonePoleStateMachine_Left->Tick(TimeDelta);
 			}
 		}
 	}
@@ -600,6 +610,13 @@ void CPlayer::Imgui_RenderProperty()
 					szAnimName = Pair.first;
 			}
 			ImGui::EndListBox();
+		}
+
+		if (ImGui::Button("InputSocket"))
+		{
+			list<CAnimation*> TestAnimSocket;
+			TestAnimSocket.push_back(m_pModel->Get_AnimList()[szAnimName]);
+			m_pASM->InputAnimSocket("Common_AnimSocket", TestAnimSocket);
 		}
 
 		static char cEffectName[MAX_PATH]{};
@@ -3197,6 +3214,233 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
+{
+	CAnimation*	pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_start0"));
+	m_TelephonePole_Charge_L.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_loop0"));
+	m_TelephonePole_Charge_L.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_end0"));
+	m_TelephonePole_Cancel_L.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_325_AL_throw_LL_start"));
+	m_TelephonePole_Start_L.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_325_AL_throw_LR_start"));
+	m_TelephonePole_Throw_L.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_325_AL_throw_LR_loop"));
+	m_TelephonePole_Wait_L.push_back(pAnimation);
+	 
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_325_AL_throw_LR_end"));
+	m_TelephonePole_End_L.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_331_AL_swing_L"));
+	m_TelephonePole_Swing_L.push_back(pAnimation);
+
+
+	m_pTelephonePoleStateMachine_Left =
+		CFSMComponentBuilder()
+		.InitState("TELEPHONEPOLE_LEFT_NOUSE")
+
+		.AddState("TELEPHONEPOLE_LEFT_NOUSE")
+		.OnStart([&]()
+		{
+			m_bKineticSpecial = false;
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_bKineticSpecial = false;
+		})
+		.OnExit([&]()
+		{
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+		})
+			.AddTransition("TELEPHONEPOLE_LEFT_NOUSE to TELEPHONEPOLE_LEFT_CHARGE", "TELEPHONEPOLE_LEFT_CHARGE")
+			.Predicator([&]()->_bool 
+			{
+				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
+				return m_bKineticG && bResult;
+			})
+			.Priority(0)
+
+
+		.AddState("TELEPHONEPOLE_LEFT_CHARGE")
+		.OnStart([&]() 
+		{
+			m_bKineticSpecial = true;
+			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_Charge_L);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			if (m_fKineticCharge > 1.f)
+			{
+				static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+					->TelephonePole_Bend(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), CMathUtils::RandomFloat(0.f, 0.5f));
+			}
+
+			m_fKineticCharge += (_float)fTimeDelta;
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("TELEPHONEPOLE_LEFT_CHARGE to TELEPHONEPOLE_LEFT_START", "TELEPHONEPOLE_LEFT_START")
+			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
+			.Priority(0)
+
+			.AddTransition("TELEPHONEPOLE_LEFT_CHARGE to TELEPHONEPOLE_LEFT_CANCEL", "TELEPHONEPOLE_LEFT_CANCEL")
+			.Predicator([&]()->_bool { return !m_bKineticG; })
+			.Priority(0)
+
+
+		.AddState("TELEPHONEPOLE_LEFT_CANCEL")
+		.OnStart([&]()
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_Cancel_L);
+		})
+		.OnExit([&]()
+		{
+			m_bKineticSpecial = false;
+		})
+
+			.AddTransition("TELEPHONEPOLE_LEFT_CANCEL to TELEPHONEPOLE_LEFT_NOUSE", "TELEPHONEPOLE_LEFT_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket") || m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB || m_bKineticG); 
+			})
+			.Priority(0)
+
+
+		.AddState("TELEPHONEPOLE_LEFT_START")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_Start_L);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+				->TelephonePole_PullOut(1.f - m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio());
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("TELEPHONEPOLE_LEFT_START to TELEPHONEPOLE_LEFT_START", "TELEPHONEPOLE_LEFT_THROW")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket")); 
+			})
+			.Priority(0)
+
+
+		.AddState("TELEPHONEPOLE_LEFT_THROW")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_Throw_L);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			
+		})
+		.OnExit([&]()
+		{
+			CGameInstance::GetInstance()->SetTimeRatioCurve("TelephonePoleSlow");
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("TELEPHONEPOLE_LEFT_THROW to TELEPHONEPOLE_LEFT_WAIT", "TELEPHONEPOLE_LEFT_WAIT")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
+			})
+			.Priority(0)
+
+
+		.AddState("TELEPHONEPOLE_LEFT_WAIT")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_Swing_L);
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			
+		})
+		.OnExit([&]()
+		{
+			CGameInstance::GetInstance()->ResetTimeRatio();
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("TELEPHONEPOLE_LEFT_WAIT to TELEPHONEPOLE_LEFT_SWING", "TELEPHONEPOLE_LEFT_SWING")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_bLeftClick; 
+			})
+			.Priority(0)
+
+			.AddTransition("TELEPHONEPOLE_LEFT_WAIT to TELEPHONEPOLE_LEFT_END", "TELEPHONEPOLE_LEFT_END")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.05f));
+			})
+			.Priority(0)
+
+
+		.AddState("TELEPHONEPOLE_LEFT_END")
+		.OnStart([&]() 
+		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_End_L);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("TELEPHONEPOLE_LEFT_END to TELEPHONEPOLE_LEFT_NOUSE", "TELEPHONEPOLE_LEFT_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
+			})
+			.Priority(0)
+
+
+		.AddState("TELEPHONEPOLE_LEFT_SWING")
+		.OnStart([&]() 
+		{
+			//static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			//m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_Swing_L);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			
+		})
+		.OnExit([&]()
+		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("TELEPHONEPOLE_LEFT_SWING to TELEPHONEPOLE_LEFT_NOUSE", "TELEPHONEPOLE_LEFT_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket")); 
+			})
+			.Priority(0)
+
+		.Build();
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Setup_AnimSocket()
 {
 	CAnimation*	pAnimation = nullptr;
@@ -4625,6 +4869,7 @@ void CPlayer::Free()
 	Safe_Release(m_pRange);
 
 	Safe_Release(m_pTrainStateMachine_Left);
+	Safe_Release(m_pTelephonePoleStateMachine_Left);
 
 //	Safe_Release(m_pContectRigidBody);
 }
