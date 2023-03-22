@@ -859,9 +859,6 @@
     <ClInclude Include="..\public\Canvas_BossHpMove.h">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\BasicInfoUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\PlayerInfoManager.h" />
     <ClInclude Include="..\public\Canvas_Main.h">
       <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
@@ -1438,9 +1435,6 @@
     <ClCompile Include="..\private\Canvas_BossHpMove.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BasicInfoUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\PlayerInfoManager.cpp" />
     <ClCompile Include="..\private\Canvas_Main.cpp">
       <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
@@ -1607,13 +1601,5 @@
       <Filter>97.ShaderFiles\Shadow</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\public\Canvas_MainItemAll.h">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
-    </None>
-    <None Include="..\private\Canvas_MainItemAll.cpp">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
-    </None>
   </ItemGroup>
 </Project>

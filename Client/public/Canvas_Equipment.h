@@ -22,6 +22,15 @@ public:
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
 
+private:
+	void	ChildUIPick();
+
+private:
+	_int	m_iItmeInfoPickCount = { 0 };
+	_int	m_iItmeWindowPickCount = { 0 };
+
+	_float2	m_Posssss = { 0.0f, 0.0f };
+
 public:
 	static CCanvas_Equipment* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

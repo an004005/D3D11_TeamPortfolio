@@ -15,6 +15,7 @@ HRESULT CItem_Manager::Initialize()
 	tItemInfo.bNew = false;
 	tItemInfo.iCount = 0;
 	tItemInfo.iMaxCount = 10;
+	tItemInfo.iWeaponNum = 0;
 	tItemInfo.iWeaponAttack = 0;
 
 	tItemInfo.vIconIndex = { 1.0f, 0.0f };
@@ -72,17 +73,26 @@ HRESULT CItem_Manager::Initialize()
 	tItemInfo.iWeaponAttack = 27;
 	tItemInfo.vIconIndex = { 4.0f, 2.0f };
 
+	tItemInfo.iWeaponNum = 1;
 	tItemInfo.szItemEx[0] = L"유이토가 훈련생 시절부터 애용하는 검.";
 	tItemInfo.szItemEx[1] = L"칼날이 얇고 가벼워, 초급에서 중급 정도의 전투기술로도";
 	tItemInfo.szItemEx[2] = L"다루기 쉽다. 고대 명검의 이름이 붙어 있다.";
 	tItemInfo.szItemEx[3] = L" ";
 	m_vecItem.emplace_back(L"묘호 무라마사", tItemInfo);
 
+	tItemInfo.iWeaponNum = 2;
 	tItemInfo.szItemEx[0] = L"무기 테스트.";
 	tItemInfo.szItemEx[1] = L"칼날이 얇고 가벼워, 초급에서 중급 정도의 전투기술로도";
 	tItemInfo.szItemEx[2] = L"다루기 쉽다. 고대 명검의 이름이 붙어 있다.";
 	tItemInfo.szItemEx[3] = L" ";
 	m_vecItem.emplace_back(L"무기 테스트", tItemInfo);
+
+	tItemInfo.iWeaponNum = 3;
+	tItemInfo.szItemEx[0] = L"무기 테스트2.";
+	tItemInfo.szItemEx[1] = L"칼날이 얇고 가벼워, 초급에서 중급 정도의 전투기술로도";
+	tItemInfo.szItemEx[2] = L"다루기 쉽다. 고대 명검의 이름이 붙어 있다.";
+	tItemInfo.szItemEx[3] = L" ";
+	m_vecItem.emplace_back(L"무기 테스트2", tItemInfo);
 
 	////////////////////////////////////////////////////////////////////////////////
 	tItemInfo.eType = ETC;

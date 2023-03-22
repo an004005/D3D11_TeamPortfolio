@@ -82,7 +82,10 @@ HRESULT CCanvas_ItemWindow::Render()
 	
 	_tchar szText[MAX_PATH] = TEXT("");
 	wsprintf(szText, TEXT("%d"), ItemInfo.second.iCount);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(580.0f - fMinusPosition, 17.0f), 0.f, vFontSize, vColor);
+	if(CItem_Manager::MAINITEM::BATTLE == ItemInfo.second.eType)
+		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(580.0f - fMinusPosition, 17.0f), 0.f, vFontSize, vColor);
+	else
+		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(580.0f, 17.0f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }

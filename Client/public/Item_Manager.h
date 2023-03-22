@@ -19,6 +19,7 @@ public:
 		_bool		bPick = { false };
 		_uint		iCount = { 0 };
 		_uint		iMaxCount = { 0 };
+		_uint		iWeaponNum = { 0 };		// [0] Weapont 이 아닌 [1] 현재 사용 중인 무기 [2] 변경 하고자 하는 무기 [3] 그 외 무기
 		_uint		iWeaponAttack = { 0 };
 		_float2		vIconIndex = { 0.0f, 0.0f };
 		_tchar*		szItemEx[4] = {};

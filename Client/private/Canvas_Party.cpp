@@ -85,7 +85,7 @@ HRESULT CCanvas_Party::Render()
 	pGameInstance->Render_Font(L"Pretendard32", m_tPickIngo.szName, vPosition + _float2(95.0f, 52.0f), 0.f, vFontBigSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", m_tPickIngo.szSASNumber, vPosition + _float2(433.0f, 56.0f), 0.f, vFontBigSize * 0.5f, vColor);
 
-	wsprintf(szText, TEXT("%d"), 32);
+	wsprintf(szText, TEXT("%d"), m_tPickIngo.iLevel);
 	pGameInstance->Render_Font(L"Pretendard32", L"·¹º§", vPosition + _float2(95.0f, 95.0f), 0.f, vFontSmaillSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(125.0f, 87.0f), 0.f, vFontBigSize, vColor);
 	wsprintf(szText, TEXT("%d"), m_tPickIngo.iRemainingExp);

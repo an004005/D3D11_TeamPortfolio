@@ -185,7 +185,6 @@
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="..\public\BasicInfoUI.h" />
     <ClInclude Include="..\public\Batch.h" />
     <ClInclude Include="..\public\BdLm_Controller.h" />
     <ClInclude Include="..\public\Boss1_AIController.h" />
@@ -218,7 +217,6 @@
     <ClInclude Include="..\public\Canvas_Item.h" />
     <ClInclude Include="..\public\Canvas_ItemMove.h" />
     <ClInclude Include="..\public\Canvas_MainItem.h" />
-    <None Include="..\public\Canvas_MainItemAll.h" />
     <ClInclude Include="..\public\Canvas_MainItemKinds.h" />
     <ClInclude Include="..\public\Canvas_Party.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
@@ -379,7 +377,6 @@
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\private\BasicInfoUI.cpp" />
     <ClCompile Include="..\private\Batch.cpp" />
     <ClCompile Include="..\private\BdLm_Controller.cpp" />
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
@@ -406,7 +403,6 @@
     <ClCompile Include="..\private\Canvas_BossHp.cpp" />
     <ClCompile Include="..\private\Canvas_BossHpMove.cpp" />
     <ClCompile Include="..\private\Canvas_MainItem.cpp" />
-    <None Include="..\private\Canvas_MainItemAll.cpp" />
     <ClCompile Include="..\private\Canvas_MainItemKinds.cpp" />
     <ClCompile Include="..\private\Canvas_Party.cpp" />
     <ClCompile Include="..\private\Canvas_Tutorial.cpp" />

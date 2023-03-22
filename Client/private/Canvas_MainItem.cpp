@@ -160,15 +160,6 @@ HRESULT CCanvas_MainItem::Add_MainCanvas()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	///* For.Prototype_GameObject_Canvas_Party */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_MainItemAll"),
-	//	CCanvas_MainItemAll::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainItemAll.json");
-	//CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_MainItemUI", L"Canvas_MainItemAll", &json);
-	//m_arrCanvass[ALL] = dynamic_cast<CCanvas_MainItemAll*>(pCanvas);
-
 	/* For.Prototype_GameObject_Canvas_MainItemKinds*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_MainItemKinds"),
 		CCanvas_MainItemKinds::Create(m_pDevice, m_pContext))))
@@ -190,46 +181,6 @@ HRESULT CCanvas_MainItem::Add_MainCanvas()
 	json["ITemType"] = CItem_Manager::MAINITEM::ETC;
 	pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_MainItemUI", L"Canvas_MainItemKinds", &json);
 	m_arrCanvass[ETC] = dynamic_cast<CCanvas_MainItemKinds*>(pCanvas);
-
-
-
-
-	///* For.Prototype_GameObject_Canvas_Party */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_MainItemAll"),
-	//	CCanvas_MainItemAll::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainItemAll.json");
-	//CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_MainItemUI", L"Canvas_MainItemAll", &json);
-	//m_arrCanvass[ALL] = dynamic_cast<CCanvas_MainItemAll*>(pCanvas);
-
-	///* For.Prototype_GameObject_Canvas_MainItemKinds*/
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_MainItemBattle"),
-	//	CCanvas_MainItemBattle::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainItemBattle.json");
-	//json["ITemType"] = CItem_Manager::MAINITEM::ALL;
-	//pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_MainItemUI", L"Canvas_MainItemBattle", &json);
-	//m_arrCanvass[BATTLE] = dynamic_cast<CCanvas_MainItemBattle*>(pCanvas);
-
-	///* For.Prototype_GameObject_Canvas_Equipment */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_MainItemWeapon"),
-	//	CCanvas_MainItemWeapon::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainItemWeapon.json");
-	//pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_MainItemUI", L"Canvas_MainItemWeapon", &json);
-	//m_arrCanvass[WEAPON] = dynamic_cast<CCanvas_MainItemWeapon*>(pCanvas);
-
-	///* For.Prototype_GameObject_Canvas_BrainMap */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_MainItemEtc"),
-	//	CCanvas_MainItemEtc::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainItemEtc.json");
-	//pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_MainItemUI", L"Canvas_MainItemEtc", &json);
-	//m_arrCanvass[ETC] = dynamic_cast<CCanvas_MainItemEtc*>(pCanvas);
 
 	return S_OK;
 }
