@@ -133,12 +133,6 @@
     <Filter Include="96.Test">
       <UniqueIdentifier>{057aa277-d73a-4379-bf1d-ed33bde7fe89}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster\SkummyPool">
-      <UniqueIdentifier>{773075e2-bc28-4393-8e82-36474691f893}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance">
-      <UniqueIdentifier>{d05ad475-8f00-4e1d-a167-7bb09014504b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Weapon">
       <UniqueIdentifier>{5c27df65-18ab-49b1-bd63-62f0d992e42f}</UniqueIdentifier>
     </Filter>
@@ -156,9 +150,6 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
       <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\SkummyPool\SkMpBullet">
-      <UniqueIdentifier>{81b8a892-455d-4368-8398-fd91cc4bf17e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Monster\SkummyPandou">
       <UniqueIdentifier>{77a8119b-8713-49c4-b0ae-773fc0c8cd4b}</UniqueIdentifier>
@@ -228,9 +219,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Controller">
       <UniqueIdentifier>{4bc20954-31cf-4cfc-b16b-78107c6eb677}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\SkummyPool\SkmP_Controller">
-      <UniqueIdentifier>{e5c3d8c2-d736-4e9d-a9c2-b6b7648712eb}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Monster\SkummyPandou\SkPd_Controller">
       <UniqueIdentifier>{b3a20596-311c-4cc2-9a39-7c8e58f2e12f}</UniqueIdentifier>
@@ -316,8 +304,32 @@
     <Filter Include="02.GameObjects\Enemy">
       <UniqueIdentifier>{613f3e82-7d40-451d-bc3d-3f67636096c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Enemy\em200">
+    <Filter Include="02.GameObjects\Enemy\EM0200">
       <UniqueIdentifier>{84b1a188-d10b-4c9a-b15e-4fdda0d7bf57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0700">
+      <UniqueIdentifier>{3095864c-0aba-4f4a-b50c-b39ab5f41484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0650">
+      <UniqueIdentifier>{773075e2-bc28-4393-8e82-36474691f893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPool">
+      <UniqueIdentifier>{9efaf15f-1d25-4b75-a3ce-86c59c3420bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMBullet">
+      <UniqueIdentifier>{a944af05-3a1b-4f20-a2a8-a850121955b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0400">
+      <UniqueIdentifier>{aedd1f3b-1e80-44dc-abe1-9bce70899337}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0210">
+      <UniqueIdentifier>{d5c491b1-ef13-4fdc-90f3-660e554d7e4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0220">
+      <UniqueIdentifier>{43cb5a1e-088b-403e-b14e-1305bb87c088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0110">
+      <UniqueIdentifier>{b40f83b7-220e-428f-929f-0ff0c446fd92}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\SpecialObject">
       <UniqueIdentifier>{c1e6af62-d5ed-4e86-bb32-69cdbc587c23}</UniqueIdentifier>
@@ -540,16 +552,7 @@
     <ClInclude Include="..\public\TestObject.h">
       <Filter>96.Test</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\SkummyPool.h">
-      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\SkmP_AnimInstance.h">
-      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\ScarletCharacter.h" />
-    <ClInclude Include="..\public\SkMpBullet.h">
-      <Filter>02.GameObjects\Monster\SkummyPool\SkMpBullet</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\SkummyPandou.h">
       <Filter>02.GameObjects\Monster\SkummyPandou</Filter>
     </ClInclude>
@@ -683,9 +686,6 @@
     </ClInclude>
     <ClInclude Include="..\public\FL_Controller.h">
       <Filter>02.GameObjects\Monster\FlowerLeg\FL_Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\SkmP_Controller.h">
-      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SkPd_Controller.h">
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
@@ -875,13 +875,13 @@
       <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0200.h">
-      <Filter>02.GameObjects\Enemy\em200</Filter>
+      <Filter>02.GameObjects\Enemy\EM0200</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0200_AnimInstance.h">
-      <Filter>02.GameObjects\Enemy\em200</Filter>
+      <Filter>02.GameObjects\Enemy\EM0200</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0200_Controller.h">
-      <Filter>02.GameObjects\Enemy\em200</Filter>
+      <Filter>02.GameObjects\Enemy\EM0200</Filter>
     </ClInclude>
     <ClInclude Include="..\public\TestTarget.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h">
@@ -890,11 +890,66 @@
     <ClInclude Include="..\public\Enemy.h">
       <Filter>02.GameObjects\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\SpecialObject.h">
-      <Filter>02.GameObjects\SpecialObject</Filter>
+    <ClInclude Include="..\public\EM0700.h">
+      <Filter>02.GameObjects\Enemy\EM0700</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Special_Train.h">
-      <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
+    <ClInclude Include="..\public\EM0700_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM0700</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkmP_AnimInstance.h">
+      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkMpBullet.h">
+      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkummyPool.h">
+      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SkmP_Controller.h">
+      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0650.h">
+      <Filter>02.GameObjects\Enemy\EM0650</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0650_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM0650</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0650_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM0650</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_Batch.h" />
+    <ClInclude Include="..\public\EM0700_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM0700</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EnemyBullet.h">
+      <Filter>02.GameObjects\Enemy\EMBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0400_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM0400</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0400_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM0400</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0400.h">
+      <Filter>02.GameObjects\Enemy\EM0400</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0210.h">
+      <Filter>02.GameObjects\Enemy\EM0210</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0210_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM0210</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0210_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM0210</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0110.h">
+      <Filter>02.GameObjects\Enemy\EM0110</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0110_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM0110</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0110_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM0110</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui_Batch.h">
       <Filter>02.GameObjects\Map\Batch</Filter>
@@ -1092,16 +1147,7 @@
     <ClCompile Include="..\private\TestObject.cpp">
       <Filter>96.Test</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\SkummyPool.cpp">
-      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\SkmP_AnimInstance.cpp">
-      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_AnimInstance</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\ScarletCharacter.cpp" />
-    <ClCompile Include="..\private\SkMpBullet.cpp">
-      <Filter>02.GameObjects\Monster\SkummyPool\SkMpBullet</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\SkummyPandou.cpp">
       <Filter>02.GameObjects\Monster\SkummyPandou</Filter>
     </ClCompile>
@@ -1382,9 +1428,6 @@
     <ClCompile Include="..\private\PostVFX_Penetrate.cpp">
       <Filter>VFX\PostProcess</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\SkmP_Controller.cpp">
-      <Filter>02.GameObjects\Monster\SkummyPool\SkmP_Controller</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
     <ClCompile Include="..\private\Boss_AppearUI.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
@@ -1426,13 +1469,13 @@
       <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0200.cpp">
-      <Filter>02.GameObjects\Enemy\em200</Filter>
+      <Filter>02.GameObjects\Enemy\EM0200</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0200_AnimInstance.cpp">
-      <Filter>02.GameObjects\Enemy\em200</Filter>
+      <Filter>02.GameObjects\Enemy\EM0200</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0200_Controller.cpp">
-      <Filter>02.GameObjects\Enemy\em200</Filter>
+      <Filter>02.GameObjects\Enemy\EM0200</Filter>
     </ClCompile>
     <ClCompile Include="..\private\TestTarget.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp">
@@ -1441,11 +1484,72 @@
     <ClCompile Include="..\private\Enemy.cpp">
       <Filter>02.GameObjects\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\EM0700.cpp">
+      <Filter>02.GameObjects\Enemy\EM0700</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0700_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM0700</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkmP_AnimInstance.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkMpBullet.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkummyPool.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SkmP_Controller.cpp">
+      <Filter>02.GameObjects\Monster\SkummyPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0650.cpp">
+      <Filter>02.GameObjects\Enemy\EM0650</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0650_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM0650</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0650_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM0650</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\SpecialObject.cpp">
       <Filter>02.GameObjects\SpecialObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Special_Train.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_Batch.cpp" />
+    <ClCompile Include="..\private\EM0700_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM0700</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EnemyBullet.cpp">
+      <Filter>02.GameObjects\Enemy\EMBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0400_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM0400</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0400.cpp">
+      <Filter>02.GameObjects\Enemy\EM0400</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0400_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM0400</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0210.cpp">
+      <Filter>02.GameObjects\Enemy\EM0210</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0210_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM0210</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0210_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM0210</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0110.cpp">
+      <Filter>02.GameObjects\Enemy\EM0110</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0110_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM0110</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0110_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM0110</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Imgui_Batch.cpp">
       <Filter>02.GameObjects\Map\Batch</Filter>

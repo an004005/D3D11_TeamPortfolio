@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "RigidBody.h"
 #include "FSMComponent.h"
+#include "Enemy_AnimInstance.h"
 #include "TestTarget.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
@@ -108,9 +109,9 @@ void CEnemy::Imgui_RenderProperty()
 		ImGui::InputInt("MaxHP", &m_iMaxHP);
 		ImGui::InputInt("MaxCrushGage", &m_iMaxCrushGage);
 		ImGui::Checkbox("HasCrushGage", &m_bHasCrushGage);
-		_int iLevel = m_iLevel;
+		_int iLevel = iMonsterLevel;
 		ImGui::InputInt("Level", &iLevel);
-		m_iLevel = iLevel;
+		iMonsterLevel = iLevel;
 		ImGui::InputInt("AtkDamage", &m_iAtkDamage);
 	}
 
@@ -214,7 +215,7 @@ void CEnemy::SetEnemyBatchDataStat(ENEMY_STAT tStat)
 	m_iCrushGage = m_iMaxCrushGage;
 	m_bHasCrushGage = tStat.bHasCrushGage;
 	m_iAtkDamage = tStat.iAtkDamage;
-	m_iLevel = tStat.iLevel;
+	iMonsterLevel = tStat.iLevel;
 }
 
 ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
@@ -224,7 +225,7 @@ ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
 	tStat.iMaxCrushGage = m_iMaxCrushGage;
 	tStat.bHasCrushGage = m_bHasCrushGage;
 	tStat.iAtkDamage = m_iAtkDamage;
-	tStat.iLevel = m_iLevel;
+	tStat.iLevel = iMonsterLevel;
 	return tStat;
 }
 
@@ -553,6 +554,13 @@ void CEnemy::HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttac
 			pTarget->TakeDamage(tDamageParams);
 		}
 	}
+}
+
+void CEnemy::SocketLocalMove(CEnemy_AnimInstance * pASM)
+{
+	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	_vector vLocalMove = m_pModelCom->GetLocalMove(WorldMatrix, pASM->GetCurSocketAnimName());
+	m_pTransformCom->LocalMove(vLocalMove);
 }
 
 void CEnemy::Free()

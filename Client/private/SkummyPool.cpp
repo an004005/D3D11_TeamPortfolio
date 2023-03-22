@@ -53,7 +53,6 @@ HRESULT CSkummyPool::Initialize(void * pArg)
 		(CComponent**)&m_pRange, &SkummyPoolRange)))
 		return E_FAIL;
 	
-
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 

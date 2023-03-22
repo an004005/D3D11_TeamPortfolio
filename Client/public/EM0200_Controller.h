@@ -26,7 +26,6 @@ public:
 	void Tick_Far(_double TimeDelta);
 	void Tick_Outside(_double TimeDelta);
 
-	void Run(EMoveAxis eAxis);
 	void Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio = 1.f);
 
 private:

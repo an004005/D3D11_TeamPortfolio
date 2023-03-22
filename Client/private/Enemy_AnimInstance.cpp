@@ -63,10 +63,15 @@ void CEnemy_AnimInstance::Tick(_double TimeDelta)
 	{
 		bLocalMove = false;
 
+		//Idle로 변하기 전의 애니메이션 저장
+		CAnimation* pPreAnim = m_pASM_Base->GetCurState()->m_Animation;
+
 		m_pASM_Base->SetCurState("Idle");
 		//m_pASM_Base->GetCurState()->m_Animation->Reset();
 		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
-		m_fLerpTime = 0.f;
+
+		//if(pPreAnim->GetInterpolation() == true)
+			m_fLerpTime = 0.f;
 	}
 	else if (m_fLerpTime < m_fLerpDuration)
 	{
@@ -130,6 +135,19 @@ void CEnemy_AnimInstance::AttachAnimSocket(const string& strSocName, const list<
 	m_mapAnimSocket[strSocName] = (AnimList);
 }
 
+void CEnemy_AnimInstance::ClearSocketAnim(const string & strSocName)
+{
+	if (!m_mapAnimSocket[strSocName].empty())
+	{
+		for (auto& iter : m_mapAnimSocket[strSocName])
+		{
+			iter->Reset();
+		}
+	}
+
+	m_mapAnimSocket[strSocName].clear();
+}
+
 void CEnemy_AnimInstance::InputAnimSocketOne(const string& strSocName, const string& strAnimName)
 {
 	for (auto& iter : m_mapAnimSocket)
@@ -189,6 +207,19 @@ void CEnemy_AnimInstance::AttachAnimSocketMany(const string& strSocName, const l
 		AnimList.push_back(m_pModel->Find_Animation(strAnimName));
 
 	m_mapAnimSocket[strSocName] = AnimList;
+}
+
+const string & CEnemy_AnimInstance::GetCurSocketAnimName()
+{
+	for (auto& iter : m_mapAnimSocket)
+	{
+		if (!iter.second.empty())
+		{
+			return iter.second.front()->GetName();
+		}
+	}
+
+	return "";
 }
 
 void CEnemy_AnimInstance::Free()

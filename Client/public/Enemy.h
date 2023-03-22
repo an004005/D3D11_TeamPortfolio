@@ -15,7 +15,6 @@ BEGIN(Client)
 class CEnemy abstract : public CScarletCharacter
 {
 public:
-	enum MONSTER_NAME { BRONJON, SKUMMYPANDOU, SKUMMYPOOL, BUDDYLUMI, FLOWERLEG, GODLYFERRY, MONSTERNAME_END };
 
 protected:
 	CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -78,7 +77,7 @@ protected:
 	void HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
 	void HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
 
-
+	void SocketLocalMove(class CEnemy_AnimInstance* pASM);
 protected:
 	static vector<wstring>			s_vecDefaultBlood;
 	static vector<wstring>			s_vecFireBlood;
@@ -93,6 +92,7 @@ protected:
 	CModel*					m_pModelCom = nullptr;
 	CScarletCharacter*		m_pTarget = nullptr;
 	CFSMComponent*			m_pFSM = nullptr;
+	
 	_bool m_bFindTestTarget = false;
 
 	_int m_iAtkDamage = 50;
@@ -107,8 +107,8 @@ protected:
 	set<CScarletCharacter*> m_DamagedTargetList;
 	CSimpleTimeline m_DeathTimeline;
 
-	_uint	m_iLevel = { 0 };
-	MONSTER_NAME m_eMonsterName = { MONSTERNAME_END };
+	_uint	iMonsterLevel = { 0 };
+	EEnemyName m_eMonsterName = { EEnemyName::ENEMY_NAME_END };
 
 	// AfterPhysX에서 다시 초기화해줌.
 	EAttackType m_eCurAttackType = EAttackType::ATK_END; // 현 프레임에서 받은 공격 타입
