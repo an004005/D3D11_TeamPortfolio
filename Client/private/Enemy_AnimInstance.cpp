@@ -7,10 +7,14 @@
 HRESULT CEnemy_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameObject)
 {
 	return CAnimationInstance::Initialize(pModel, pGameObject);
+
+	m_fLerpDuration = 0.1f;
 }
 
 void CEnemy_AnimInstance::Tick(_double TimeDelta)
 {
+	_float	m_fLerpDuration = 0.1f;
+
 	UpdateTargetState(TimeDelta);
 
 	_bool bChange = CheckFinishedAnimSocket();
@@ -135,7 +139,7 @@ void CEnemy_AnimInstance::AttachAnimSocket(const string& strSocName, const list<
 	m_mapAnimSocket[strSocName] = (AnimList);
 }
 
-void CEnemy_AnimInstance::ClearSocketAnim(const string & strSocName)
+void CEnemy_AnimInstance::ClearSocketAnim(const string & strSocName, _float fLerpTime)
 {
 	if (!m_mapAnimSocket[strSocName].empty())
 	{
@@ -146,6 +150,8 @@ void CEnemy_AnimInstance::ClearSocketAnim(const string & strSocName)
 	}
 
 	m_mapAnimSocket[strSocName].clear();
+
+	m_fLerpTime = fLerpTime;
 }
 
 void CEnemy_AnimInstance::InputAnimSocketOne(const string& strSocName, const string& strAnimName)
