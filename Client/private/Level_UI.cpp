@@ -36,6 +36,7 @@
 #include "Canvas_BossHpMove.h"
 #include "Canvas_Alarm.h"
 #include "Canvas_Main.h"
+#include "Canvas_ItemWindow.h"
 
 // Default
 #include "DefaultUI.h"
@@ -246,6 +247,10 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_Canvas_Main*/
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Main"),
 			CCanvas_Main::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_ItemWindow */
+		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_ItemWindow"),
+			CCanvas_ItemWindow::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 	}
 

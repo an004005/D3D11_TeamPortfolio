@@ -912,16 +912,7 @@
     <ClInclude Include="..\public\Main_BarUI.h">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_MainItemEtc.h">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Canvas_MainItemWeapon.h">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Canvas_MainItemAll.h">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Canvas_MainItemBattle.h">
       <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Item_Manager.h">
@@ -932,6 +923,9 @@
     </ClInclude>
     <ClInclude Include="..\public\ItemIconUI.h">
       <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_MainItemKinds.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1500,16 +1494,7 @@
     <ClCompile Include="..\private\Main_BarUI.cpp">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_MainItemEtc.cpp">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_MainItemBattle.cpp">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Canvas_MainItemAll.cpp">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_MainItemWeapon.cpp">
       <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_Manager.cpp">
@@ -1520,6 +1505,9 @@
     </ClCompile>
     <ClCompile Include="..\private\ItemIconUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_MainItemKinds.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

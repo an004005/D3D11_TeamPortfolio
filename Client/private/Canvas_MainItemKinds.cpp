@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\public\Canvas_MainItemBattle.h"
+#include "..\public\Canvas_MainItemKinds.h"
 #include "GameInstance.h"
 #include "JsonStorage.h"
 #include "UI_Manager.h"
@@ -7,17 +7,17 @@
 #include "Canvas_ItemWindow.h"
 #include "Main_PickUI.h"
 
-CCanvas_MainItemBattle::CCanvas_MainItemBattle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCanvas_MainItemKinds::CCanvas_MainItemKinds(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
 }
 
-CCanvas_MainItemBattle::CCanvas_MainItemBattle(const CCanvas_MainItemBattle& rhs)
+CCanvas_MainItemKinds::CCanvas_MainItemKinds(const CCanvas_MainItemKinds& rhs)
 	: CCanvas(rhs)
 {
 }
 
-HRESULT CCanvas_MainItemBattle::Initialize_Prototype()
+HRESULT CCanvas_MainItemKinds::Initialize_Prototype()
 {
 	if (FAILED(CCanvas::Initialize_Prototype()))
 		return E_FAIL;
@@ -25,40 +25,57 @@ HRESULT CCanvas_MainItemBattle::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CCanvas_MainItemBattle::Initialize(void* pArg)
+HRESULT CCanvas_MainItemKinds::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	FAILED_CHECK(Initialize_ItemCanvas());
+
 	m_bVisible = false;
+	m_iPickIndex = 99;
+	m_iPrePickIndex = 99;
 
 	for (vector<pair<wstring, class CCanvas_ItemWindow*>>::iterator iter = m_vecItemCanvass.begin(); iter != m_vecItemCanvass.end(); ++iter)
 		iter->second->SetVisible(m_bVisible);
 
-	/* For.Prototype_GameObject_Canvas_ItemWindow */
-	if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_ItemWindow"), CCanvas_ItemWindow::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	FAILED_CHECK(Initialize_ItemCanvas());
 
 	return S_OK;
 }
 
-void CCanvas_MainItemBattle::Tick(_double TimeDelta)
+void CCanvas_MainItemKinds::Tick(_double TimeDelta)
 {
 	if (false == m_bVisible)
 	{
-		for (vector<pair<wstring, class CCanvas_ItemWindow*>>::iterator iter = m_vecItemCanvass.begin(); iter != m_vecItemCanvass.end(); ++iter)
-			iter->second->SetVisible(false);
-
 		m_bBeSeen = false;
+
+		if (false == m_bPickInitialize)
+		{
+			m_bPickInitialize = true;
+
+			for (vector<pair<wstring, class CCanvas_ItemWindow*>>::iterator iter = m_vecItemCanvass.begin(); iter != m_vecItemCanvass.end(); ++iter)
+				iter->second->SetVisible(false);
+
+			m_vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
+			for (size_t i = 0; i < m_vecItemInfo.size(); ++i)
+			{
+				m_vecItemInfo[i].second.bPick = false;
+				CItem_Manager::GetInstance()->Set_ItemInfo(i, m_vecItemInfo[i].second);
+			}
+		}
+
 		return;
 	}
 	else
 	{
+		// 다른 메뉴를 갔다 왔을 때 이전 데이터 기록을 한 번 불러오기 위한 작업
 		if (false == m_bBeSeen)
 		{
+			m_bPickInitialize = false;
 			m_bBeSeen = true;
+
+			m_iPickIndex = 99;
+			m_iPrePickIndex = 99;
 
 			for (size_t i = 0; i < STORAGE; ++i)
 			{
@@ -74,7 +91,7 @@ void CCanvas_MainItemBattle::Tick(_double TimeDelta)
 	ChildPickUI_Tick();
 }
 
-HRESULT CCanvas_MainItemBattle::Render()
+HRESULT CCanvas_MainItemKinds::Render()
 {
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
@@ -82,7 +99,7 @@ HRESULT CCanvas_MainItemBattle::Render()
 	return S_OK;
 }
 
-void CCanvas_MainItemBattle::Imgui_RenderProperty()
+void CCanvas_MainItemKinds::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
@@ -100,6 +117,20 @@ void CCanvas_MainItemBattle::Imgui_RenderProperty()
 		CItem_Manager::GetInstance()->Set_ItemCount(L"SAS 보급수", iSASNum);
 	}
 
+	if (ImGui::Button("DDD"))
+	{
+		static _int ddd;
+		++ddd;
+		CItem_Manager::GetInstance()->Set_ItemCount(L"묘호 무라마사", ddd);
+	}
+
+	if (ImGui::Button("TTT"))
+	{
+		static _int TTT;
+		++TTT;
+		CItem_Manager::GetInstance()->Set_ItemCount(L"수수께끼의 텍스트 데이터", TTT);
+	}
+
 	if (ImGui::Button("Delete SAS"))
 	{
 		CItem_Manager::GetInstance()->Set_ItemCount(L"SAS 보급수", 0);
@@ -112,7 +143,12 @@ void CCanvas_MainItemBattle::Imgui_RenderProperty()
 	}
 }
 
-HRESULT CCanvas_MainItemBattle::Initialize_ItemCanvas()
+void CCanvas_MainItemKinds::LoadFromJson(const Json & json)
+{
+	m_eMainItem = json["ITemType"];
+}
+
+HRESULT CCanvas_MainItemKinds::Initialize_ItemCanvas()
 {
 	m_vecItemCanvass.resize(STORAGE);
 
@@ -129,7 +165,7 @@ HRESULT CCanvas_MainItemBattle::Initialize_ItemCanvas()
 	return S_OK;
 }
 
-void CCanvas_MainItemBattle::Add_ItemCanvas(const size_t & iIndex)
+void CCanvas_MainItemKinds::Add_ItemCanvas(const size_t & iIndex)
 {
 	// 현재 비어있는 캔버스를 확인하고 값을 채워준다.
 	for (size_t i = 0; i < STORAGE; ++i)
@@ -145,14 +181,14 @@ void CCanvas_MainItemBattle::Add_ItemCanvas(const size_t & iIndex)
 	}
 }
 
-void CCanvas_MainItemBattle::Item_Tick()
+void CCanvas_MainItemKinds::Item_Tick()
 {
 	// 계속 아이템의 개수를 확인해서 1개 이상 이라면 Item Canvas 를 띄우고 개수가 0개가 되었다면 지운다.
 	m_vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
 
 	for (_int i = 0; i < m_vecItemInfo.size(); ++i)
 	{
-		if (CItem_Manager::BATTLE == m_vecItemInfo[i].second.eType && false == m_vecItemInfo[i].second.bIsWindow && 0 < m_vecItemInfo[i].second.iCount)
+		if (m_eMainItem == m_vecItemInfo[i].second.eType && false == m_vecItemInfo[i].second.bIsWindow && 0 < m_vecItemInfo[i].second.iCount)
 		{
 			m_iItemIndex = i;
 			m_vecItemInfo[m_iItemIndex].second.bIsWindow = true;
@@ -161,7 +197,7 @@ void CCanvas_MainItemBattle::Item_Tick()
 			break;
 		}
 
-		if (CItem_Manager::BATTLE == m_vecItemInfo[i].second.eType && true == m_vecItemInfo[i].second.bIsWindow && 0 == m_vecItemInfo[i].second.iCount)
+		if (m_eMainItem == m_vecItemInfo[i].second.eType && true == m_vecItemInfo[i].second.bIsWindow && 0 == m_vecItemInfo[i].second.iCount)
 		{
 			m_vecItemInfo[i].second.bIsWindow = false;
 			CItem_Manager::GetInstance()->Set_ItemInfo(i, m_vecItemInfo[i].second);
@@ -177,7 +213,7 @@ void CCanvas_MainItemBattle::Item_Tick()
 	}
 }
 
-void CCanvas_MainItemBattle::ChildPickUI_Tick()
+void CCanvas_MainItemKinds::ChildPickUI_Tick()
 {
 	// 계속 자식 UI의 Button 을 확인해서 선택 되었는지 확인한다.
 
@@ -221,31 +257,31 @@ void CCanvas_MainItemBattle::ChildPickUI_Tick()
 	m_iPrePickIndex = m_iPickIndex;
 }
 
-CCanvas_MainItemBattle * CCanvas_MainItemBattle::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CCanvas_MainItemKinds * CCanvas_MainItemKinds::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CCanvas_MainItemBattle*		pInstance = new CCanvas_MainItemBattle(pDevice, pContext);
+	CCanvas_MainItemKinds*		pInstance = new CCanvas_MainItemKinds(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CCanvas_MainItemBattle");
+		MSG_BOX("Failed to Created : CCanvas_MainItemKinds");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CCanvas * CCanvas_MainItemBattle::Clone(void * pArg)
+CCanvas * CCanvas_MainItemKinds::Clone(void * pArg)
 {
-	CCanvas_MainItemBattle*		pInstance = new CCanvas_MainItemBattle(*this);
+	CCanvas_MainItemKinds*		pInstance = new CCanvas_MainItemKinds(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CCanvas_MainItemBattle");
+		MSG_BOX("Failed to Cloned : CCanvas_MainItemKinds");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CCanvas_MainItemBattle::Free()
+void CCanvas_MainItemKinds::Free()
 {
 	CCanvas::Free();
 

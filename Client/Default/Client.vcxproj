@@ -219,9 +219,7 @@
     <ClInclude Include="..\public\Canvas_ItemMove.h" />
     <ClInclude Include="..\public\Canvas_MainItem.h" />
     <ClInclude Include="..\public\Canvas_MainItemAll.h" />
-    <ClInclude Include="..\public\Canvas_MainItemBattle.h" />
-    <ClInclude Include="..\public\Canvas_MainItemEtc.h" />
-    <ClInclude Include="..\public\Canvas_MainItemWeapon.h" />
+    <ClInclude Include="..\public\Canvas_MainItemKinds.h" />
     <ClInclude Include="..\public\Canvas_Party.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
@@ -409,9 +407,7 @@
     <ClCompile Include="..\private\Canvas_BossHpMove.cpp" />
     <ClCompile Include="..\private\Canvas_MainItem.cpp" />
     <ClCompile Include="..\private\Canvas_MainItemAll.cpp" />
-    <ClCompile Include="..\private\Canvas_MainItemBattle.cpp" />
-    <ClCompile Include="..\private\Canvas_MainItemEtc.cpp" />
-    <ClCompile Include="..\private\Canvas_MainItemWeapon.cpp" />
+    <ClCompile Include="..\private\Canvas_MainItemKinds.cpp" />
     <ClCompile Include="..\private\Canvas_Party.cpp" />
     <ClCompile Include="..\private\Canvas_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
