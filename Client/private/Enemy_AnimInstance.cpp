@@ -49,7 +49,7 @@ void CEnemy_AnimInstance::Tick(_double TimeDelta)
 		}
 		else if (m_bAttach)
 		{
-			m_fLerpTime = 0.f;	// 어태치면 바로 보간
+			m_fLerpTime = 0.f;
 			m_bAttach = false;
 		}
 		else

@@ -510,6 +510,10 @@ _bool CAnimationInstance::CheckFinishedAnimSocket()
 
 				return true;
 			}
+			else if (pAnim->IsLooping() && pAnim->IsFinished())
+			{
+				pAnim->Reset();
+			}
 		}
 	}
 	return false;

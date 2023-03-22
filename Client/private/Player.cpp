@@ -2090,17 +2090,17 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			m_fKineticCharge += (_float)fTimeDelta;
 		})
 
-			.AddTransition("KINETIC_COMBO_KINETIC01_CHARGE to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
-			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
-			.Priority(0)
+			//.AddTransition("KINETIC_COMBO_KINETIC01_CHARGE to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
+			//.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
+			//.Priority(0)
 		
 			.AddTransition("KINETIC_COMBO_KINETIC01_CHARGE to KINETIC_COMBO_KINETIC01_CANCEL", "KINETIC_COMBO_KINETIC01_CANCEL")
 			.Predicator([&]()->_bool {return !m_bKineticRB; })
 			.Priority(0)
 
-			.AddTransition("KINETIC_COMBO_KINETIC01_CHARGE to KINETIC_COMBO_KINETIC01_THROW", "KINETIC_COMBO_KINETIC01_THROW")
-			.Predicator([&]()->_bool {return (m_fKineticCharge > 1.f); })
-			.Priority(1)
+			//.AddTransition("KINETIC_COMBO_KINETIC01_CHARGE to KINETIC_COMBO_KINETIC01_THROW", "KINETIC_COMBO_KINETIC01_THROW")
+			//.Predicator([&]()->_bool {return (m_fKineticCharge > 1.f); })
+			//.Priority(1)
 
 		.AddState("KINETIC_COMBO_KINETIC01_CANCEL")
 		.OnStart([&]()
