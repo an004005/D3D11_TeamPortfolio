@@ -93,9 +93,8 @@ HRESULT CEM0200_Controller::Initialize(void* pArg)
 	m_fTurnSlowRatio = 0.4f;
 
 	m_iNearOrder = CMathUtils::RandomUInt(6);
-	m_iMidOrder = CMathUtils::RandomUInt(5);
-	m_iFarOrder = CMathUtils::RandomUInt(5);
-	m_iOutOrder = CMathUtils::RandomUInt(5);
+	m_iMidOrder = CMathUtils::RandomUInt(3);
+	m_iFarOrder = CMathUtils::RandomUInt(1);
 
 	return S_OK;
 }
@@ -217,55 +216,11 @@ void CEM0200_Controller::Tick_Outside(_double TimeDelta)
 	m_iOutOrder = (m_iOutOrder + 1) % 2;
 }
 
-void CEM0200_Controller::Run(EMoveAxis eAxis)
-{
-	m_bRun = true;
-
-	switch (eAxis)
-	{
-	case EMoveAxis::NORTH:
-		m_vMoveAxis.z += 1.f;
-		if (abs(m_fTtoM_Distance) < 2.f)
-		{
-			m_Commands.front().SetFinish();
-		}
-	case EMoveAxis::NORTH_EAST:
-		m_vMoveAxis.z += 1.f;
-		m_vMoveAxis.x += 1.f;
-		break;			 
-	case EMoveAxis::EAST:
-		m_vMoveAxis.x += 1.f;
-		break;
-	case EMoveAxis::SOUTH_EAST:
-		m_vMoveAxis.z -= 1.f;
-		m_vMoveAxis.x += 1.f;
-		break;
-	case EMoveAxis::SOUTH:
-		m_vMoveAxis.z -= 1.f;
-		break;
-	case EMoveAxis::SOUTH_WEST:
-		m_vMoveAxis.z -= 1.f;
-		m_vMoveAxis.x -= 1.f;
-		break;
-	case EMoveAxis::WEST:
-		m_vMoveAxis.x -= 1.f;
-		break;
-	case EMoveAxis::NORTH_WEST:
-		m_vMoveAxis.z += 1.f;
-		m_vMoveAxis.x -= 1.f;
-		break;
-	case EMoveAxis::CENTER:
-		FALLTHROUGH;
-	case EMoveAxis::AXIS_END:
-		break;
-	default:
-		NODEFAULT;
-	}
-}
 
 void CEM0200_Controller::Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
 {
-	Run(eAxis);
+	m_bRun = true;
+	Move(eAxis);
 	TurnToTarget(fSpeedRatio);
 }
 

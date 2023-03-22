@@ -21,7 +21,6 @@ public:
 
 
 	void Tick_Near(_double TimeDelta);
-	void Tick_Mid(_double TimeDelta);
 	void Tick_Far(_double TimeDelta);
 	void Tick_Outside(_double TimeDelta);
 
@@ -35,9 +34,10 @@ private:
 	_float m_fToTargetDistance;
 	
 	_uint m_iNearOrder = 0;
-	_uint m_iMidOrder = 0;
 	_uint m_iFarOrder = 0;
-	_uint m_iOutOrder = 0;
+
+	_float m_fTurnSlowTime;
+	_float m_fTurnSlowRatio;
 
 public:
 	static CEM0650_Controller* Create();

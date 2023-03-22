@@ -27,8 +27,13 @@
 
 #include "FlowerLeg_Invisible.h"
 #include "FLInvisible_Controller.h"
+#include "EM0110.h"
 #include "EM0200.h"
-#include "EM0700.h"
+#include "EM0210.h"
+#include "EM0400.h"
+#include "EM0650.h"
+#include "EM0700.h" 
+#include "EnemyBullet.h"
 #include "TestTarget.h"
 
 // Player Setting
@@ -224,25 +229,57 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	{
-		auto pEM200Model = CModel::Create(pDevice, pContext,
-			"../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/FlowerLeg.anim_model");
-		pEM200Model->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Anim/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em200"), pEM200Model));
-	}
-
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em200"), CEM0200::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("TestTarget"), CTestTarget::Create(pDevice, pContext)));
 
 
-	{
-		auto pEM700Model = CModel::Create(pDevice, pContext,
-			"../Bin/Resources/Model/AnimModel/Monster/em0700/Model/SM_em0700.anim_model");
-		pEM700Model->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0700/Animation/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em700"), pEM700Model));
-	}
 
+	auto pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/FlowerLeg.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Anim/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em200"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em200"), CEM0200::Create(pDevice, pContext)));
+
+	/* EM0700*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0700/Model/SM_em0700.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0700/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em700"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em700"), CEM0700::Create(pDevice, pContext)));
+
+	/* EM0650*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0600/Model/SM_em0650.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0600/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em650"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em650"), CEM0650::Create(pDevice, pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("EnemyBullet"), CEnemyBullet::Create(pDevice, pContext)));
+
+	/* EM0400*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0400/Model/SM_em0400.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0400/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em400"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em400"), CEM0400::Create(pDevice, pContext)));
+
+	/* EM0210*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0200/Model/SM_em0210.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0200/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em210"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em210"), CEM0210::Create(pDevice, pContext)));
+
+	/* EM0110*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0100/Model/SM_em0110.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0100/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em110"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em110"), CEM0110::Create(pDevice, pContext)));
 
 	return S_OK;
 }

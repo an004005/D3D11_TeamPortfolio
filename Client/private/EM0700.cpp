@@ -8,6 +8,7 @@
 CEM0700::CEM0700(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
+	m_eMonsterName = EEnemyName::EM0700;
 }
 
 CEM0700::CEM0700(const CEM0700 & rhs)

@@ -11,7 +11,7 @@ END
 
 BEGIN(Client)
 
-// 초(고속)파리 :: 방도 팡뒤(Bangdo Fandu)
+// 스커미 풀
 
 class CEM0700 : public CEnemy
 {

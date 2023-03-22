@@ -13,13 +13,21 @@ public:
 private:
 	// 이 아래 다 써야되는게 아니라 필요한것만 선언해서 사용할것(예제로 두겠음)
 	_bool			m_bMove = false;
-	_bool			m_bEscape = false;
+	_bool			m_bIdle = false;
+	_bool			m_bAir = false;
+	_bool			m_bPreAir = false;
 
 	_float3 m_vMoveAxis;
 	EBaseAxis m_eMoveAxis = EBaseAxis::AXIS_END;
 	EBaseAxis m_ePreMoveAxis = EBaseAxis::AXIS_END;
 	EBaseTurn m_eTurn = EBaseTurn::TURN_END;
 	_float m_fTurnRemain = 0.f;
+
+private:
+	_float	m_fLerpTime = 0.f;
+	_float	m_fLerpDuration = 0.2f;
+	_bool	m_bLerp = false;
+	_bool	m_bAttach = false;
 
 public:
 	static CEM0650_AnimInstance* Create(CModel* pModel, CGameObject* pGameObject);

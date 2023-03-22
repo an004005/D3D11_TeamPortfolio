@@ -15,7 +15,6 @@ CEM0200::CEM0200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CEM0200::CEM0200(const CEM0200& rhs)
 	: CEnemy(rhs)
 {
-	m_eMonsterName = EEnemyName::EM0200;
 }
 
 HRESULT CEM0200::Initialize(void* pArg)
@@ -286,6 +285,7 @@ void CEM0200::SetUpFSM()
 		.AddState("SpinAtk")
 			.OnStart([this]
 			{
+				ClearDamagedTarget();
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_202_AL_atk_a2");
 			})
 			.Tick([this](_double TimeDelta)
@@ -433,8 +433,6 @@ void CEM0200::SetUpFSM()
 				{
 					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.99f);
 				})
-
-
 
 		.AddState("Threat")
 			.OnStart([this]
@@ -631,10 +629,7 @@ void CEM0200::Strew_Overlap()
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
-		for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
-		{
-			HitTargets(overlapOut, m_iAtkDamage * 0.6f, EAttackType::ATK_LIGHT);
-		}
+		HitTargets(overlapOut, m_iAtkDamage * 0.6f, EAttackType::ATK_LIGHT);
 	}
 }
 
@@ -681,10 +676,7 @@ void CEM0200::Kick_SweepSphere()
 
 	if (CGameInstance::GetInstance()->SweepSphere(tParams))
 	{
-		for (int i = 0; i < sweepOut.getNbAnyHits(); ++i)
-		{
-			HitTargets(sweepOut, m_iAtkDamage * 2, EAttackType::ATK_HEAVY);
-		}
+		HitTargets(sweepOut, m_iAtkDamage * 2, EAttackType::ATK_HEAVY);
 	}
 }
 

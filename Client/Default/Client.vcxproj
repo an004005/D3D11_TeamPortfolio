@@ -230,14 +230,25 @@
     <ClInclude Include="..\public\EffectGroup.h" />
     <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\DefaultUI.h" />
+    <ClInclude Include="..\public\EM0110.h" />
+    <ClInclude Include="..\public\EM0110_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0110_Controller.h" />
     <ClInclude Include="..\public\EM0200.h" />
     <ClInclude Include="..\public\EM0200_AnimInstance.h" />
     <ClInclude Include="..\public\EM0200_Controller.h" />
+    <ClInclude Include="..\public\EM0210.h" />
+    <ClInclude Include="..\public\EM0210_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0210_Controller.h" />
+    <ClInclude Include="..\public\EM0400.h" />
+    <ClInclude Include="..\public\EM0400_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0400_Controller.h" />
     <ClInclude Include="..\public\EM0650.h" />
     <ClInclude Include="..\public\EM0650_AnimInstance.h" />
     <ClInclude Include="..\public\EM0650_Controller.h" />
     <ClInclude Include="..\public\EM0700.h" />
+    <ClInclude Include="..\public\EM0700_AnimInstance.h" />
     <ClInclude Include="..\public\EM0700_Controller.h" />
+    <ClInclude Include="..\public\EnemyBullet.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
     <ClInclude Include="..\public\FLInvisible_AnimInstance.h" />
@@ -356,7 +367,6 @@
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
     <ClInclude Include="..\public\WaterBall.h" />
     <ClInclude Include="Client.h" />
-    <ClInclude Include="EM0700_AnimInstance.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -413,14 +423,25 @@
     <ClCompile Include="..\private\EffectGroup.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp" />
     <ClCompile Include="..\private\DefaultUI.cpp" />
+    <ClCompile Include="..\private\EM0110.cpp" />
+    <ClCompile Include="..\private\EM0110_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0110_Controller.cpp" />
     <ClCompile Include="..\private\EM0200.cpp" />
     <ClCompile Include="..\private\EM0200_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0200_Controller.cpp" />
+    <ClCompile Include="..\private\EM0210.cpp" />
+    <ClCompile Include="..\private\EM0210_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0210_Controller.cpp" />
+    <ClCompile Include="..\private\EM0400.cpp" />
+    <ClCompile Include="..\private\EM0400_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0400_Controller.cpp" />
     <ClCompile Include="..\private\EM0650.cpp" />
     <ClCompile Include="..\private\EM0650_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0650_Controller.cpp" />
     <ClCompile Include="..\private\EM0700.cpp" />
+    <ClCompile Include="..\private\EM0700_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0700_Controller.cpp" />
+    <ClCompile Include="..\private\EnemyBullet.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />
     <ClCompile Include="..\private\FLInvisible_AnimInstance.cpp" />
@@ -539,7 +560,6 @@
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
     <ClCompile Include="..\private\WaterBall.cpp" />
     <ClCompile Include="Client.cpp" />
-    <ClCompile Include="EM0700_AnimInstance.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

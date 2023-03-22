@@ -316,6 +316,21 @@
     <Filter Include="02.GameObjects\Monster\SkummyPool">
       <UniqueIdentifier>{9efaf15f-1d25-4b75-a3ce-86c59c3420bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMBullet">
+      <UniqueIdentifier>{a944af05-3a1b-4f20-a2a8-a850121955b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0400">
+      <UniqueIdentifier>{aedd1f3b-1e80-44dc-abe1-9bce70899337}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0210">
+      <UniqueIdentifier>{d5c491b1-ef13-4fdc-90f3-660e554d7e4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0220">
+      <UniqueIdentifier>{43cb5a1e-088b-403e-b14e-1305bb87c088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0110">
+      <UniqueIdentifier>{b40f83b7-220e-428f-929f-0ff0c446fd92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -866,9 +881,6 @@
     <ClInclude Include="..\public\EM0700.h">
       <Filter>02.GameObjects\Enemy\EM0700</Filter>
     </ClInclude>
-    <ClInclude Include="EM0700_AnimInstance.h">
-      <Filter>02.GameObjects\Enemy\EM0700</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\EM0700_Controller.h">
       <Filter>02.GameObjects\Enemy\EM0700</Filter>
     </ClInclude>
@@ -894,6 +906,39 @@
       <Filter>02.GameObjects\Enemy\EM0650</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui_Batch.h" />
+    <ClInclude Include="..\public\EM0700_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM0700</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EnemyBullet.h">
+      <Filter>02.GameObjects\Enemy\EMBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0400_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM0400</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0400_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM0400</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0400.h">
+      <Filter>02.GameObjects\Enemy\EM0400</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0210.h">
+      <Filter>02.GameObjects\Enemy\EM0210</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0210_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM0210</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0210_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM0210</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0110.h">
+      <Filter>02.GameObjects\Enemy\EM0110</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0110_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM0110</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0110_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM0110</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1418,9 +1463,6 @@
     <ClCompile Include="..\private\EM0700.cpp">
       <Filter>02.GameObjects\Enemy\EM0700</Filter>
     </ClCompile>
-    <ClCompile Include="EM0700_AnimInstance.cpp">
-      <Filter>02.GameObjects\Enemy\EM0700</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\EM0700_Controller.cpp">
       <Filter>02.GameObjects\Enemy\EM0700</Filter>
     </ClCompile>
@@ -1446,6 +1488,39 @@
       <Filter>02.GameObjects\Enemy\EM0650</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Imgui_Batch.cpp" />
+    <ClCompile Include="..\private\EM0700_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM0700</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EnemyBullet.cpp">
+      <Filter>02.GameObjects\Enemy\EMBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0400_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM0400</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0400.cpp">
+      <Filter>02.GameObjects\Enemy\EM0400</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0400_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM0400</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0210.cpp">
+      <Filter>02.GameObjects\Enemy\EM0210</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0210_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM0210</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0210_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM0210</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0110.cpp">
+      <Filter>02.GameObjects\Enemy\EM0110</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0110_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM0110</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0110_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM0110</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

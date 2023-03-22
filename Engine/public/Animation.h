@@ -36,6 +36,7 @@ public:
 	_double GetPlayTime() const { return m_PlayTime; }
 	_double GetTickPerSec() const { return m_TickPerSecond; }
 	_float GetPlayRatio() const { return static_cast<_float>(m_PlayTime / m_Duration); }
+	_bool	GetInterpolation() { return m_bInterpolation; }
 	_bool IsFinished() const { return m_bFinished; }
 	_bool IsLooping() const { return m_bLooping; }
 
@@ -45,6 +46,7 @@ public:
 	void SetTickPerSec(_double TickPerSec) { m_TickPerSecond = TickPerSec; }
 	void SetStay(_bool bStay) { m_bStay = bStay; }
 	void SetPlayRatio(_double PlayRatio) { m_PlayTime = m_Duration * PlayRatio; }
+	void SetInterpolation(_bool bInterp) { m_bInterpolation = bInterp; }
 	void Reset();
 
 	void SetLocalRotation(_bool bLocalRotation);
@@ -86,6 +88,8 @@ private:
 	// 애니메이션 끝나면 마지작 프레임 유지
 	_bool								m_bStay = false;
 
+	//Idle 상태로 갈 때 보간 할지 말지 결정
+	_bool								m_bInterpolation = true;
 	// 로컬 좌표 이동
 	_vector								m_vLocalMove;
 	_vector								m_vLocalRotation;

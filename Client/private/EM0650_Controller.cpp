@@ -15,10 +15,11 @@ CEM0650_Controller::CEM0650_Controller(const CEM0650_Controller & rhs)
 
 HRESULT CEM0650_Controller::Initialize(void * pArg)
 {
-	m_iNearOrder = CMathUtils::RandomUInt(1);
-	m_iMidOrder = CMathUtils::RandomUInt(2);
-	m_iFarOrder = CMathUtils::RandomUInt(1);
-	m_iOutOrder = CMathUtils::RandomUInt(1);
+	m_iNearOrder = CMathUtils::RandomUInt(5);
+	m_iFarOrder = CMathUtils::RandomUInt(7);
+
+	m_fTurnSlowTime = 1.5f;
+	m_fTurnSlowRatio = 0.6f;
 
 	return S_OK;
 }
@@ -35,7 +36,6 @@ void CEM0650_Controller::BeginTick()
 
 void CEM0650_Controller::AI_Tick(_double TimeDelta)
 {
-
 	if (m_pTarget == nullptr)
 		return;
 
@@ -57,35 +57,35 @@ void CEM0650_Controller::Tick_Near(_double TimeDelta)
 	switch (m_iNearOrder)
 	{
 	case 0:
-		AddCommand("Escape", 0.f, &CAIController::Input, SPACE);
+		AddCommand("ForwardMove", 1.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
+	
 	case 1:
-		AddCommand("Attack_a1", 0.f, &CAIController::Input, NUM_1);
-		break;
-	}
-
-	m_iNearOrder = (m_iNearOrder + 1) % 2;
-}
-
-void CEM0650_Controller::Tick_Mid(_double TimeDelta)
-{ 
-	m_eDistance = DIS_MIDDLE;
-
-	switch (m_iMidOrder)
-	{
-	case 0:
-		AddCommand("RandomMove_L", 0.f, &CAIController::Input, MOUSE_LB);
-		break;
-	case 1:
-		AddCommand("RandomMove_R", 0.f, &CAIController::Input, MOUSE_RB);
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
+																	//		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
 		break;
 	case 2:
-		AddCommand("Threat", 0.f, &CAIController::Input, C);
+		AddCommand("LeftMove", 2.f, &CAIController::Move_TurnToTargetStop, EMoveAxis::WEST, 1.f);
+		break;
+
+	case 3:
+		AddCommand("BackMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
+		break;
+
+	case 4:
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot												//		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
+		break;
+
+	case 5:
+		AddCommand("RightMove", 2.f, &CAIController::Move_TurnToTargetStop, EMoveAxis::EAST, 1.f);
 		break;
 	}
-
-	m_iMidOrder = (m_iMidOrder + 1) % 3;
+	
+	m_iNearOrder = (m_iNearOrder + 1) % 6;
 }
+
 
 void CEM0650_Controller::Tick_Far(_double TimeDelta)
 {
@@ -94,42 +94,55 @@ void CEM0650_Controller::Tick_Far(_double TimeDelta)
 	switch (m_iFarOrder)
 	{
 	case 0:
-		AddCommand("Turn", 1.5f, &CAIController::TurnToTarget, 1.f);
-		AddCommand("Attack_a3", 0.f, &CAIController::Input, NUM_2);
+		AddCommand("ForwardMove", 1.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
+
 	case 1:
-		AddCommand("Threat", 0.f, &CAIController::Input, C);
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot															//		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
+		break;
+
+	case 2:
+		AddCommand("LeftMove", 2.f, &CAIController::Move_TurnToTargetStop, EMoveAxis::WEST, 1.f);
+		break;
+	
+	case 3:
+		AddCommand("Wait", 2.f, &CAIController::Wait);
+		break;
+
+	case 4:
+		AddCommand("BackMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
+		break;
+
+	case 5:
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot														//		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
+		break;
+
+	case 6:
+		AddCommand("RightMove", 2.f, &CAIController::Move_TurnToTargetStop, EMoveAxis::EAST, 1.f);
+		break;
+
+	case 7:
+		AddCommand("Wait", 2.f, &CAIController::Wait);
 		break;
 	}
 
-	m_iFarOrder = (m_iFarOrder + 1) % 2;
+	m_iFarOrder = (m_iFarOrder + 1) % 8;
 }
 
 void CEM0650_Controller::Tick_Outside(_double TimeDelta)
 {
-
 	m_eDistance = DIS_OUTSIDE;
-
-	switch (m_iOutOrder)
-	{
-	case 0:
-		AddCommand("Wait", 2.f, &CAIController::Wait);
-		break;
-	case 1:
-		AddCommand("Threat", 0.f, &CAIController::Input, C);
-		break;
-	}
-	m_iOutOrder = (m_iFarOrder + 1) % 2;
+	AddCommand("Wait", 2.f, &CAIController::Wait);
 }
 
 void CEM0650_Controller::DefineState(_double TimeDelta)
 {
 	if (m_pCastedOwner->IsPlayingSocket() == true) return;
 
-	if (m_fToTargetDistance <= 4.f)
+	if (m_fToTargetDistance <= 8.f)
 		Tick_Near(TimeDelta);
-	else if (m_fToTargetDistance <= 12.f)
-		Tick_Mid(TimeDelta);
 	else if (m_fToTargetDistance <= 20.f)
 		Tick_Far(TimeDelta);
 	else
