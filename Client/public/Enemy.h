@@ -108,7 +108,7 @@ protected:
 	CSimpleTimeline m_DeathTimeline;
 
 	_uint	iMonsterLevel = { 0 };
-	EEnemyName m_eMonsterName = { EEnemyName::MONSTERNAME_END };
+	EEnemyName m_eMonsterName = { EEnemyName::ENEMY_NAME_END };
 
 	// AfterPhysX에서 다시 초기화해줌.
 	EAttackType m_eCurAttackType = EAttackType::ATK_END; // 현 프레임에서 받은 공격 타입

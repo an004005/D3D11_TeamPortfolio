@@ -109,9 +109,9 @@ void CEnemy::Imgui_RenderProperty()
 		ImGui::InputInt("MaxHP", &m_iMaxHP);
 		ImGui::InputInt("MaxCrushGage", &m_iMaxCrushGage);
 		ImGui::Checkbox("HasCrushGage", &m_bHasCrushGage);
-		_int iLevel = m_iLevel;
+		_int iLevel = iMonsterLevel;
 		ImGui::InputInt("Level", &iLevel);
-		m_iLevel = iLevel;
+		iMonsterLevel = iLevel;
 		ImGui::InputInt("AtkDamage", &m_iAtkDamage);
 	}
 
@@ -225,7 +225,7 @@ ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
 	tStat.iMaxCrushGage = m_iMaxCrushGage;
 	tStat.bHasCrushGage = m_bHasCrushGage;
 	tStat.iAtkDamage = m_iAtkDamage;
-	tStat.iLevel = m_iLevel;
+	tStat.iLevel = iMonsterLevel;
 	return tStat;
 }
 
