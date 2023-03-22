@@ -22,7 +22,6 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 private:
-	HRESULT	Initialize_ItemCanvas();
 	void	Add_ItemCanvas(const size_t & iIndex);
 	void	Item_Tick();
 	void	ChildPickUI_Tick();
@@ -30,7 +29,6 @@ private:
 private:
 	vector<pair<wstring, class CCanvas_ItemWindow*>>	m_vecItemCanvass;
 
-	size_t				m_iItemIndex = { 0 };
 	size_t				m_iPickIndex = { 0 };
 	size_t				m_iPrePickIndex = { 0 };
 	vector<pair<wstring, CItem_Manager::ITEMINFO>> m_vecItemInfo;

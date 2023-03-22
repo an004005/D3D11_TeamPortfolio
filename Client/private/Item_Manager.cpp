@@ -13,7 +13,6 @@ HRESULT CItem_Manager::Initialize()
 	ITEMINFO	tItemInfo;
 	tItemInfo.eType = BATTLE;
 	tItemInfo.bNew = false;
-	tItemInfo.bIsWindow = false;
 	tItemInfo.iCount = 0;
 	tItemInfo.iMaxCount = 10;
 	tItemInfo.iWeaponAttack = 0;
@@ -71,13 +70,19 @@ HRESULT CItem_Manager::Initialize()
 	tItemInfo.eType = WEAPON;
 	tItemInfo.iMaxCount = 1;
 	tItemInfo.iWeaponAttack = 27;
-
 	tItemInfo.vIconIndex = { 4.0f, 2.0f };
+
 	tItemInfo.szItemEx[0] = L"유이토가 훈련생 시절부터 애용하는 검.";
 	tItemInfo.szItemEx[1] = L"칼날이 얇고 가벼워, 초급에서 중급 정도의 전투기술로도";
 	tItemInfo.szItemEx[2] = L"다루기 쉽다. 고대 명검의 이름이 붙어 있다.";
 	tItemInfo.szItemEx[3] = L" ";
 	m_vecItem.emplace_back(L"묘호 무라마사", tItemInfo);
+
+	tItemInfo.szItemEx[0] = L"무기 테스트.";
+	tItemInfo.szItemEx[1] = L"칼날이 얇고 가벼워, 초급에서 중급 정도의 전투기술로도";
+	tItemInfo.szItemEx[2] = L"다루기 쉽다. 고대 명검의 이름이 붙어 있다.";
+	tItemInfo.szItemEx[3] = L" ";
+	m_vecItem.emplace_back(L"무기 테스트", tItemInfo);
 
 	////////////////////////////////////////////////////////////////////////////////
 	tItemInfo.eType = ETC;
@@ -90,6 +95,12 @@ HRESULT CItem_Manager::Initialize()
 	tItemInfo.szItemEx[2] = L"병원을 포기하면서 회수되지 않고 그대로 버려진 모양.";
 	tItemInfo.szItemEx[3] = L" "; // 내용물은 브레인 메시지 화면에서 확인할 수 있다.
 	m_vecItem.emplace_back(L"수수께끼의 텍스트 데이터", tItemInfo);
+
+	tItemInfo.szItemEx[0] = L"구 토벌군병원에서 주운 텍스트 데이터.";
+	tItemInfo.szItemEx[1] = L"누군가의 개인적인 메모 같다. 괴이의 습격으로 인해";
+	tItemInfo.szItemEx[2] = L"병원을 포기하면서 회수되지 않고 그대로 버려진 모양.";
+	tItemInfo.szItemEx[3] = L" "; 
+	m_vecItem.emplace_back(L"기타 테스트", tItemInfo);
 
 	// ----------------------------------------------------------------------------- Position
 	m_arrItemIndexPos.fill(_float2(0.0f, 0.0f));

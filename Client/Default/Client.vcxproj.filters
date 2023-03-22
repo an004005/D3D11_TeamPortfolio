@@ -912,9 +912,6 @@
     <ClInclude Include="..\public\Main_BarUI.h">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_MainItemAll.h">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Item_Manager.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
@@ -1494,9 +1491,6 @@
     <ClCompile Include="..\private\Main_BarUI.cpp">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_MainItemAll.cpp">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Item_Manager.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
@@ -1613,5 +1607,13 @@
       <Filter>97.ShaderFiles\Shadow</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\public\Canvas_MainItemAll.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </None>
+    <None Include="..\private\Canvas_MainItemAll.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </None>
   </ItemGroup>
 </Project>

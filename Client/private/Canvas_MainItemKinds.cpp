@@ -28,7 +28,7 @@ HRESULT CCanvas_MainItemKinds::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	FAILED_CHECK(Initialize_ItemCanvas());
+	//FAILED_CHECK(Initialize_ItemCanvas());
 
 	m_bVisible = false;
 	m_iPickIndex = 99;
@@ -36,7 +36,6 @@ HRESULT CCanvas_MainItemKinds::Initialize(void* pArg)
 
 	for (vector<pair<wstring, class CCanvas_ItemWindow*>>::iterator iter = m_vecItemCanvass.begin(); iter != m_vecItemCanvass.end(); ++iter)
 		iter->second->SetVisible(m_bVisible);
-
 
 	return S_OK;
 }
@@ -75,10 +74,9 @@ void CCanvas_MainItemKinds::Tick(_double TimeDelta)
 			m_iPickIndex = 99;
 			m_iPrePickIndex = 99;
 
-			for (size_t i = 0; i < STORAGE; ++i)
+			for (size_t i = 0; i < m_vecItemCanvass.size(); ++i)
 			{
-				if(L"-" != m_vecItemCanvass[i].first)
-					m_vecItemCanvass[i].second->SetVisible(true);
+				m_vecItemCanvass[i].second->SetVisible(true);
 			}
 		}
 	}
@@ -107,37 +105,62 @@ void CCanvas_MainItemKinds::Imgui_RenderProperty()
 		++iNum;
 		CItem_Manager::GetInstance()->Set_ItemCount(L"회복(소) 젤리", iNum);
 	}
-
+	ImGui::SameLine();
+	if (ImGui::Button("All Jelly"))
+	{
+		static _int iNum;
+		++iNum;
+		CItem_Manager::GetInstance()->Set_ItemCount(L"전체: 회복(소) 젤리", iNum);
+	}
+	ImGui::SameLine();
 	if (ImGui::Button("SAS"))
 	{
 		static _int iSASNum;
 		++iSASNum;
 		CItem_Manager::GetInstance()->Set_ItemCount(L"SAS 보급수", iSASNum);
 	}
-
-	if (ImGui::Button("DDD"))
-	{
-		static _int ddd;
-		++ddd;
-		CItem_Manager::GetInstance()->Set_ItemCount(L"묘호 무라마사", ddd);
-	}
-
-	if (ImGui::Button("TTT"))
-	{
-		static _int TTT;
-		++TTT;
-		CItem_Manager::GetInstance()->Set_ItemCount(L"수수께끼의 텍스트 데이터", TTT);
-	}
-
+	ImGui::SameLine();
 	if (ImGui::Button("Delete SAS"))
 	{
 		CItem_Manager::GetInstance()->Set_ItemCount(L"SAS 보급수", 0);
 	}
 
-	if (ImGui::Button("Info"))
+	if (ImGui::Button("Weapon1"))
 	{
-		m_vecItemInfo[m_iItemIndex].second.bPick = true;
-		CItem_Manager::GetInstance()->Set_ItemInfo(m_iItemIndex, m_vecItemInfo[m_iItemIndex].second);
+		static _int ddd;
+		++ddd;
+		CItem_Manager::GetInstance()->Set_ItemCount(L"묘호 무라마사", ddd);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Weapon2"))
+	{
+		static _int ttt;
+		++ttt;
+		CItem_Manager::GetInstance()->Set_ItemCount(L"무기 테스트", ttt);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Delete Weapon2"))
+	{
+		CItem_Manager::GetInstance()->Set_ItemCount(L"무기 테스트", 0);
+	}
+
+	if (ImGui::Button("Etc1"))
+	{
+		static _int TTT;
+		++TTT;
+		CItem_Manager::GetInstance()->Set_ItemCount(L"수수께끼의 텍스트 데이터", TTT);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Etc2"))
+	{
+		static _int ccc;
+		++ccc;
+		CItem_Manager::GetInstance()->Set_ItemCount(L"기타 테스트", ccc);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Delete Ect2"))
+	{
+		CItem_Manager::GetInstance()->Set_ItemCount(L"기타 테스트", 0);
 	}
 }
 
@@ -146,37 +169,21 @@ void CCanvas_MainItemKinds::LoadFromJson(const Json & json)
 	m_eMainItem = json["ITemType"];
 }
 
-HRESULT CCanvas_MainItemKinds::Initialize_ItemCanvas()
-{
-	m_vecItemCanvass.resize(STORAGE);
-
-	for (size_t i = 0; i < m_vecItemCanvass.size(); ++i)
-	{
-		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_ItemWindow.json");
-		CCanvas_ItemWindow* pCanvas = dynamic_cast<CCanvas_ItemWindow*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Lyaer_ItemWindowUI", L"Canvas_ItemWindow", &json));
-		if (nullptr == pCanvas)	return E_FAIL;
-
-		m_vecItemCanvass[i].first = L"-";
-		m_vecItemCanvass[i].second = pCanvas;
-	}
-
-	return S_OK;
-}
-
 void CCanvas_MainItemKinds::Add_ItemCanvas(const size_t & iIndex)
 {
-	// 현재 비어있는 캔버스를 확인하고 값을 채워준다.
-	for (size_t i = 0; i < STORAGE; ++i)
+	for (size_t i = 0; i < m_vecItemCanvass.size(); ++i)
 	{
-		if (L"-" == m_vecItemCanvass[i].first)
-		{
-			m_vecItemCanvass[i].first = m_vecItemInfo[m_iItemIndex].first;
-			m_vecItemCanvass[i].second->Set_ItemWindow(CItem_Manager::GetInstance()->Get_ItemIndexPos(i), CItem_Manager::GetInstance()->Get_IconIndexPos(i), m_iItemIndex);
+		if (m_vecItemCanvass[i].first == m_vecItemInfo[iIndex].first)
 			return;
-		}
-
-		if (i == STORAGE)	Assert(!"Full Item Window");
 	}
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_ItemWindow.json");
+	CCanvas_ItemWindow* pCanvas = dynamic_cast<CCanvas_ItemWindow*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Lyaer_ItemWindowUI", L"Canvas_ItemWindow", &json));
+	assert(pCanvas != nullptr && "Failed to Cloned ItemWindow");
+
+	size_t iVecSize = m_vecItemCanvass.size();
+	pCanvas->Set_ItemWindow(CItem_Manager::GetInstance()->Get_ItemIndexPos(iVecSize), CItem_Manager::GetInstance()->Get_IconIndexPos(iVecSize), iIndex);
+	m_vecItemCanvass.emplace_back(m_vecItemInfo[iIndex].first, pCanvas);
 }
 
 void CCanvas_MainItemKinds::Item_Tick()
@@ -186,29 +193,25 @@ void CCanvas_MainItemKinds::Item_Tick()
 
 	for (_int i = 0; i < m_vecItemInfo.size(); ++i)
 	{
-		if (m_eMainItem == m_vecItemInfo[i].second.eType && false == m_vecItemInfo[i].second.bIsWindow && 0 < m_vecItemInfo[i].second.iCount)
+		if (0 < m_vecItemInfo[i].second.iCount)
 		{
-			m_iItemIndex = i;
-			m_vecItemInfo[m_iItemIndex].second.bIsWindow = true;
-			CItem_Manager::GetInstance()->Set_ItemInfo(m_iItemIndex, m_vecItemInfo[m_iItemIndex].second);
-			Add_ItemCanvas(m_iItemIndex);
-			break;
+			if (CItem_Manager::MAINITEM::ALL == m_eMainItem || m_eMainItem == m_vecItemInfo[i].second.eType)
+				Add_ItemCanvas(i);
 		}
 
-		if (m_eMainItem == m_vecItemInfo[i].second.eType && true == m_vecItemInfo[i].second.bIsWindow && 0 == m_vecItemInfo[i].second.iCount)
+		if (0 == m_vecItemInfo[i].second.iCount)
 		{
-			m_vecItemInfo[i].second.bIsWindow = false;
-			CItem_Manager::GetInstance()->Set_ItemInfo(i, m_vecItemInfo[i].second);
-
-			auto iter = find_if(m_vecItemCanvass.begin(), m_vecItemCanvass.end(), [&](pair<wstring, CCanvas_ItemWindow*> pair) {
-				return pair.first == m_vecItemInfo[i].first;
-			});
-
-			if (iter != m_vecItemCanvass.end())
+			if (CItem_Manager::MAINITEM::ALL == m_eMainItem || m_eMainItem == m_vecItemInfo[i].second.eType)
 			{
-				iter->first = L"-";
-				iter->second->SetVisible(false);
-				//m_vecItemCanvass.erase(iter);
+				auto iter = find_if(m_vecItemCanvass.begin(), m_vecItemCanvass.end(), [&](pair<wstring, CCanvas_ItemWindow*> pair) {
+					return pair.first == m_vecItemInfo[i].first;
+				});
+
+				if (iter != m_vecItemCanvass.end())
+				{
+					(*iter).second->SetDelete();
+					m_vecItemCanvass.erase(iter);
+				}
 			}
 		}
 	}
@@ -217,7 +220,7 @@ void CCanvas_MainItemKinds::Item_Tick()
 void CCanvas_MainItemKinds::ChildPickUI_Tick()
 {
 	// 계속 자식 UI의 Button 을 확인해서 선택 되었는지 확인한다.
-	for (size_t i = 0; i < STORAGE; ++i)
+	for (size_t i = 0; i < m_vecItemCanvass.size(); ++i)
 	{
 		if (true == m_vecItemCanvass[i].second->Get_OnButton())
 		{
@@ -231,7 +234,7 @@ void CCanvas_MainItemKinds::ChildPickUI_Tick()
 		return;
 
 	// Pick 된 Item 을 제외한 캔버스의 색을 변경한다.
-	for (size_t i = 0; i < STORAGE; ++i)
+	for (size_t i = 0; i < m_vecItemCanvass.size(); ++i)
 	{
 		if (i == m_iPickIndex)
 			continue;

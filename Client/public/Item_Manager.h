@@ -3,21 +3,20 @@
 #include "Client_Defines.h"
 #include "Base.h"
 
-#define STORAGE 17
+//#define STORAGE 17
 
 class CItem_Manager final : public CBase
 {
 	DECLARE_SINGLETON(CItem_Manager)
 
 public:
-	enum MAINITEM { BATTLE, WEAPON, ETC, MAINITEM_END };
+	enum MAINITEM { ALL, BATTLE, WEAPON, ETC, MAINITEM_END };
 
 	typedef struct tagItemInfo
 	{
 		MAINITEM	eType = { MAINITEM_END };
 		_bool		bNew = { false };
 		_bool		bPick = { false };
-		_bool		bIsWindow = { false };
 		_uint		iCount = { 0 };
 		_uint		iMaxCount = { 0 };
 		_uint		iWeaponAttack = { 0 };
