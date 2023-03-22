@@ -7,6 +7,7 @@ class CModel;
 END
 
 BEGIN(Client)
+class CParticleGroup;
 
 enum EKineticType
 {
@@ -56,6 +57,13 @@ private:
 	void	OutlineMaker();
 	_bool	m_bOutline = false;
 	_bool	m_bBeforeOutline = false;
+
+public:
+	void	SetParticle();
+	void	ReleaseParticle();
+
+private:
+	CParticleGroup*	m_pParticle = nullptr;
 
 private:
 	HRESULT	SetUp_Components(void* pArg);

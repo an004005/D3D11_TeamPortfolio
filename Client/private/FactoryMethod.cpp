@@ -30,6 +30,10 @@
 #include "EM0200.h"
 #include "TestTarget.h"
 
+// Kinetic Object
+#include "SpecialObject.h"
+#include "Special_Train.h"
+
 // Player Setting
 #include "Player.h"
 #include "Controller.h"
@@ -294,6 +298,21 @@ HRESULT CFactoryMethod::MakeSAS_Portrait_Prototypes(ID3D11Device* pDevice, ID3D1
 		pGameInstance->Add_Prototype(L"ProtoPostVFX_SASPortrait", CPostVFX_SAS_Portrait::Create(pDevice, pContext));
 
 	}
+
+	return S_OK;
+}
+
+HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	auto pModel_Train = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Kinetic/Train/Train.anim_model");
+	pModel_Train->LoadAnimations("../Bin/Resources/Model/AnimModel/Kinetic/Train/Animation/");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_Train", pModel_Train));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_Train", CSpecial_Train::Create(pDevice, pContext)));
+
+
 
 	return S_OK;
 }

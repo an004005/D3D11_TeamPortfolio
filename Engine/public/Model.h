@@ -70,6 +70,10 @@ public:
 	_vector GetLocalRotationDelta();
 
 public:
+	_vector GetSpecialLocalMove(_fmatrix WorldMatrix);
+	void	Reset_SpecialLocalMove();
+
+public:
 	virtual HRESULT Initialize_Prototype(const char* pModelFilePath);
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Imgui_RenderProperty() override;
@@ -175,6 +179,12 @@ private:
 	_vector								m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	string								m_szSocketBefAnimName = "";
 	_float								m_fSocketBefRatio = 0.f;
+
+	// 키네틱 오브젝트는 Reference가 루트모션을 담당하지 않아서 새로 만듦
+	_vector								m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	_vector								m_vBefSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	string								m_szBefSpecialAnimName = "";
+	_float								m_fBefSpecialRatio = 0.f;
 
 	class CShader* m_pShadowShader = nullptr;
 

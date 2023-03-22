@@ -319,6 +319,12 @@
     <Filter Include="02.GameObjects\Enemy\em200">
       <UniqueIdentifier>{84b1a188-d10b-4c9a-b15e-4fdda0d7bf57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\SpecialObject">
+      <UniqueIdentifier>{c1e6af62-d5ed-4e86-bb32-69cdbc587c23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_Train">
+      <UniqueIdentifier>{e5298caa-d4e0-4fcc-95d9-9424cdefe837}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -878,6 +884,13 @@
     <ClInclude Include="..\public\Enemy.h">
       <Filter>02.GameObjects\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\SpecialObject.h">
+      <Filter>02.GameObjects\SpecialObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_Train.h">
+      <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_Batch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1411,6 +1424,13 @@
     <ClCompile Include="..\private\Enemy.cpp">
       <Filter>02.GameObjects\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\SpecialObject.cpp">
+      <Filter>02.GameObjects\SpecialObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_Train.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_Batch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

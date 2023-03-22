@@ -177,6 +177,7 @@ void CSAS_Portrait::Tick(_double TimeDelta)
 		{
 			m_eCurType = ESASType::SAS_END;
 			ResetParams();
+			m_bFinish = true;
 		}
 
 		if (fPlayRatio > 0.95f)
@@ -270,6 +271,17 @@ void CSAS_Portrait::TickParams()
 	default:
 		NODEFAULT;
 	}
+}
+
+_bool CSAS_Portrait::isFinish()
+{
+	if (m_bFinish)
+	{
+		m_bFinish = false;
+		return true;
+	}
+
+	return false;
 }
 
 CSAS_Portrait* CSAS_Portrait::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

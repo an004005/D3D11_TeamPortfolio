@@ -112,6 +112,12 @@ void CChannel::Update_TransformMatrix(_double PlayTime)
 		}
 	}
 
+	if ("Train_Root" == m_strName)
+	{
+		m_vSpecialLocalMove = vPosition;
+		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	}
+
 	TransformMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 	m_pBone->Set_TransformMatrix(TransformMatrix);	
 }

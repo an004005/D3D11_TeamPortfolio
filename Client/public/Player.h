@@ -393,7 +393,9 @@ public:	//EventCaller¿ë
 
 	void		Event_Trail(_bool bTrail);
 	void		Event_Dust();
+
 	void		Event_KineticCircleEffect();
+	void		Event_KineticCircleEffect_Attach();
 
 private:
 	_bool		m_bCollisionAble = false;
@@ -423,6 +425,7 @@ public:
 public:
 	_bool		BeforeCharge(_float fBeforeCharge);
 	_bool		Charge(_uint iNum, _float fCharge);
+	_bool		m_bChargeEffect = false;
 
 public:
 	void		Jump();
@@ -446,6 +449,7 @@ private:
 
 private:
 	_float		m_fNetualTimer = 0.f;
+	_float		m_fBattleParticleTime = 0.f; // ±ÛÀÚ »Ð»Ð
 	void		NetualChecker(_double TimeDelta);
 
 public:
@@ -494,6 +498,9 @@ private:
 	void			Enemy_Targeting(_bool bNear);
 	void			KineticObject_Targeting();
 	void			KineticObject_OutLineCheck();
+
+	void			SpecialObject_Targeting();
+	void			SpecialObject_OutLineCheck();
 
 private:
 	void			Spline_Kinetic(_double TimeDelta);
@@ -549,6 +556,9 @@ private:
 
 private:
 	CSAS_Portrait* m_pSasPortrait = nullptr;
+
+private:
+	CParticleGroup*	m_pSwordParticle = nullptr;
 
 private:
 	vector<wstring>	m_vecRandomLandingDustName;

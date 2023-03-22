@@ -19,6 +19,7 @@
 #include "Batch.h"
 #include "EffectGroup.h"
 #include "VFX_Manager.h"
+#include "Imgui_Batch.h"
 
 #define ADD_PLAYER
 
@@ -38,6 +39,7 @@ HRESULT CLevel_EnemiesTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
 
 
 	if (FAILED(__super::Initialize()))
@@ -87,7 +89,6 @@ HRESULT CLevel_EnemiesTest::Initialize()
 void CLevel_EnemiesTest::Tick(_double TimeDelta)
 {
 	CLevel::Tick(TimeDelta);
-
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_SPACE))
 	{
@@ -156,6 +157,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 	
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));

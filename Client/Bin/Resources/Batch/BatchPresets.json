@@ -1,0 +1,19 @@
+{
+    "Presets" :[
+        {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
+            "ProtoTag": "Monster_em200"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Bench.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_Train.json",
+            "ProtoTag": "Prototype_GameObject_Special_Train"
+        }
+    ]
+}
