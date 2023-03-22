@@ -123,7 +123,7 @@ enum class EEnemyName
 	EM0400,
 	EM0650,
 	EM0700,
-	MONSTERNAME_END 
+	ENEMY_NAME_END
 };
 
 
@@ -159,7 +159,8 @@ enum
 	SAS_CNT = static_cast<_uint>(ESASType::SAS_END),
 	DEBUFF_CNT = static_cast<_uint>(EDeBuffType::DEBUFF_END),
 	ATK_TYPE_CNT = static_cast<_uint>(EAttackType::ATK_END),
-	SIMPLE_AXIS_CNT = static_cast<_uint>(ESimpleAxis::AXIS_END)
+	SIMPLE_AXIS_CNT = static_cast<_uint>(ESimpleAxis::AXIS_END),
+	ENEMY_CNT = static_cast<_uint>(EEnemyName::ENEMY_NAME_END)
 };
 
 class CClientUtils
@@ -170,6 +171,7 @@ public:
 	static const string& AxisEnumToStr(EMoveAxis eAxis);
 	static EBaseAxis GetDamageFromAxis(CTransform* pTransform, _fvector vFrom, ESimpleAxis* pSimpleAxis = nullptr);
 	static EBaseTurn TurnDeltaToEnum(_float fTurnDelta);
+	static string GetEnemyProtoTag(EEnemyName eName);
 
 public:
 	static const _tchar* const s_DebugLayer;

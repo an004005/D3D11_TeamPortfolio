@@ -61,6 +61,7 @@ void CEM0200::SetUpComponents(void* pArg)
 	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
 		(CComponent**)&m_pRange, &FlowerLegRangeCol))
 
+
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM0200_Controller::Create();
 	m_pController->Initialize(nullptr);
@@ -112,7 +113,7 @@ void CEM0200::SetUpAnimationEvent()
 		{
 			m_bJumpAttack = true;
 			m_fGravity = 80.f;
-			m_fYSpeed = 27.f;
+			m_fYSpeed = 20.f;
 
 			_vector vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			vOrigin = XMVectorSetY(vOrigin, 0.f);
@@ -684,7 +685,7 @@ void CEM0200::Dodge_VelocityCalc()
 {
 	m_bDodge = true;
 	m_fGravity = 80.f;
-	m_fYSpeed = 10.f;
+	m_fYSpeed = 7.f;
 
 	const _float fJumpMoveTime = (2 * m_fYSpeed) / m_fGravity;
 

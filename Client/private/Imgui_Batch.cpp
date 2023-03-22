@@ -85,7 +85,7 @@ void CImgui_Batch::Imgui_RenderTab()
 	if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
 		_float4 vPos;
-		if (bClickClone && GetPosFromRayCast(vPos))
+		if (bClickClone && CGameUtils::GetPosFromRayCast(vPos))
 		{
 			CloneBatchPreset(vPos, iSelectedPresetIdx);
 			bClickClone = false;
@@ -123,6 +123,12 @@ void CImgui_Batch::Imgui_RenderTab()
 		}
 		ImGui::EndListBox();
 	}
+
+	if (m_SelectedBatchObj.pObj && CGameInstance::GetInstance()->Check_ObjectAlive(m_SelectedBatchObj.pObj) == false)
+	{
+		m_SelectedBatchObj.pObj = nullptr;
+	}
+
 	if (m_SelectedBatchObj.pObj)
 	{
 		ImGui::Text("Select BatchObject ProtoTag : %s", m_SelectedBatchObj.tPreset.strProtoTag.c_str());
@@ -243,36 +249,6 @@ void CImgui_Batch::RunBatchFile(const string& strBatchFilePath)
 			pObj->GetTransform()->Set_WorldMatrix(WorldMatrix);
 		}
 	}
-}
-
-_bool CImgui_Batch::GetPosFromRayCast(_float4& vPos)
-{
-	_float4 vOrigin;
-	_float4 vDir;
-	CGameUtils::GetPickingRay(vOrigin, vDir);
-
-	physx::PxRaycastHit hitBuffer[1];
-	physx::PxRaycastBuffer t(hitBuffer, 1);
-
-	RayCastParams params;
-	params.rayOut = &t;
-	params.vOrigin = vOrigin;
-	params.vDir = vDir;
-	params.fDistance = 3000.f;
-	params.iTargetType = CTB_STATIC;
-	params.bSingle = true;
-
-	if (CGameInstance::GetInstance()->RayCast(params))
-	{
-		for (int i = 0; i < t.getNbAnyHits(); ++i)
-		{
-			auto p = t.getAnyHit(i);
-
-			vPos = _float4{ p.position.x, p.position.y + 1.f, p.position.z, 1.f };
-			return true;
-		}
-	}
-	return false;
 }
 
 _bool CImgui_Batch::GetObjFromRayCast(CGameObject*& pObj, _uint iTargetType)

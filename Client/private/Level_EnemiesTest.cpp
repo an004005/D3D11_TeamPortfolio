@@ -188,6 +188,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
 
 
 
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/tests.json");
 	return S_OK;
 }
 
