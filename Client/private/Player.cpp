@@ -34,8 +34,13 @@
 #include "JsonLib.h"
 #include "ImguiUtils.h"
 #include "SAS_Portrait.h"
+#include "Weapon_wp0190.h"
+#include "SpecialObject.h"
 
 #include "PlayerInfoManager.h"
+#include "Special_Train.h"
+
+#include "Enemy.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -85,7 +90,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(Setup_Parts()))
 		return E_FAIL;
 
-	if (FAILED(SetUp_Event()))	//-> 이건 진짜 천천히 보자...
+	if (FAILED(SetUp_Event()))
 		return E_FAIL;
 
 	if (FAILED(SetUp_EffectEvent()))
@@ -117,6 +122,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	if (FAILED(SetUp_TrainStateMachine()))
 		return E_FAIL;
+
+	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
 
 	ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 
@@ -183,6 +190,7 @@ void CPlayer::Tick(_double TimeDelta)
 	CPlayerInfoManager::GetInstance()->Tick(TimeDelta);
 
 	KineticObject_OutLineCheck();
+	SpecialObject_OutLineCheck();
 	Update_TargetUI();
 
 	// 콤보 연계 시간
@@ -220,9 +228,20 @@ void CPlayer::Tick(_double TimeDelta)
 	HitCheck();
 
 	// 특수기
+	if (false == m_bKineticSpecial)
+	{
+		SpecialObject_Targeting();
+	}
+
 	if (!m_bHit)
 	{
-		m_pTrainStateMachine_Left->Tick(TimeDelta);
+		if (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+		{
+			if (SPECIAL_TRAIN == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
+			{
+				m_pTrainStateMachine_Left->Tick(TimeDelta);
+			}
+		}
 	}
 	// ~특수기
 
@@ -232,14 +251,6 @@ void CPlayer::Tick(_double TimeDelta)
 	if (!m_bHit && (false == m_bKineticCombo) && (false == m_bKineticSpecial)) // 콤보 타이밍이 아닐 때에는 일반 염력
 	{
 		m_pKineticStataMachine->Tick(TimeDelta);
-
-		// 키네틱물체 사용중에 붙는 파티클 -> 사용중인경우 체크하기 -> FSM에서 붙이기
-		/*if ((m_pKineticStataMachine->GetCurStateName() != "NO_USE_KINETIC") && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()))
-		{
-			_vector vPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Trail"))
-				->Start_AttachPosition(CPlayerInfoManager::GetInstance()->Get_KineticObject(), vPos, _float4(0.f, 1.f, 0.f, 0.f), true);
-		}*/
 	}
 	if (!m_bHit && (false == m_bKineticSpecial)) // 콤보 타이밍에는 콤보 염력
 	{
@@ -254,9 +265,15 @@ void CPlayer::Tick(_double TimeDelta)
 		m_pJustDodgeStateMachine->SetState("JUSTDODGE_NONUSE");
 		m_pTrainStateMachine_Left->SetState("TRAIN_LEFT_NOUSE");
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false);
-	}
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, false);
 
-	//IM_LOG(m_pKineticComboStateMachine->GetCurStateName());
+		m_pCurve = nullptr;
+		for (auto& iter : m_pModel->GetMaterials())
+		{
+			iter->GetParam().Floats[0] = 0.f;
+			iter->GetParam().Float4s[0] = { 0.f, 0.f, 0.f, 0.f };
+		}
+	}
 
 	SeperateCheck();
 
@@ -511,6 +528,7 @@ void CPlayer::Imgui_RenderProperty()
 	// HP Bar Check	
 	ImGui::Text("HP : %d", CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP);
 
+	m_pKineticStataMachine->Imgui_RenderProperty();
 	m_pTrainStateMachine_Left->Imgui_RenderProperty();
 
 	ImGui::SliderFloat("PlayerTurnSpeed", &m_fTurnSpeed, 0.f, 1000.f);
@@ -687,6 +705,11 @@ void CPlayer::SasMgr()
 			if (bSasIsUsing)
 			{
 				CPlayerInfoManager::GetInstance()->Finish_SasType(InputSas);
+
+				if (ESASType::SAS_FIRE == InputSas)
+				{
+					m_pSwordParticle->SetDelete();
+				}
 			}
 			else // 사용중이지 않을 경우
 			{
@@ -706,68 +729,23 @@ void CPlayer::SasMgr()
 			}
 		}
 	}
-		/*if (!m_PlayerStat.Sasese[static_cast<_uint>(InputSas)].bUsable)
+
+	if (m_pSasPortrait->isFinish())
+	{
+		_matrix EffectPivot = XMMatrixIdentity();
+
+		switch (CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 		{
-			IM_LOG("Sas_Unusable");
+			case ESASType::SAS_FIRE:
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Sas_Fire_Start"))->Start_Attach(this, "Sheath");
+				m_pSwordParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Weapon_Particle"));
+				m_pSwordParticle->Start_Attach(this, "RightWeapon", true);
+				break;
+			default:
+				break;
 		}
-		else
-		{
-			if (m_PlayerSasType != InputSas)
-			{
-				m_pASM->SetCurState("IDLE");
-				SetAbleState({ false, false, false, false, false, true, true, true, true, false });
-
-				list<CAnimation*> SasDamage;
-				SasDamage.push_back(m_pModel->Find_Animation("AS_ch0100_410_AL_damage_sas"));
-				m_pASM->InputAnimSocket("Common_AnimSocket", SasDamage);
-				m_PlayerSasType = InputSas;
-			}
-			else if (m_PlayerSasType == InputSas)
-			{
-				IM_LOG("Sas End");
-
-				m_PlayerSasType = ESASType::SAS_END;
-
-				if (m_PlayerStat.Sasese[static_cast<_uint>(InputSas)].MinEnergy > m_PlayerStat.Sasese[static_cast<_uint>(InputSas)].Energy)
-				{
-					m_PlayerStat.Sasese[static_cast<_uint>(InputSas)].bUsable = false;
-				}
-			}
-		}*/
+	}
 }
-
-	//for (_uint i = 0; i < SAS_CNT; ++i)
-	//{
-	//	if (i == static_cast<_uint>(m_PlayerSasType))
-	//	{
-	//		// 현재 사용중인 SAS
-
-	//		m_PlayerStat.Sasese[i].Energy -= (g_fTimeDelta * m_PlayerStat.Sasese[i].UseRate);
-
-	//		if (0.f >= m_PlayerStat.Sasese[i].Energy)
-	//		{
-	//			m_PlayerSasType = ESASType::SAS_END;
-	//			m_PlayerStat.Sasese[i].bUsable = false;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		m_PlayerStat.Sasese[i].Energy += (g_fTimeDelta * m_PlayerStat.Sasese[i].RecoveryRate);
-
-	//		if (m_PlayerStat.Sasese[i].MaxEnergy <= m_PlayerStat.Sasese[i].Energy)
-	//		{
-	//			m_PlayerStat.Sasese[i].Energy = m_PlayerStat.Sasese[i].MaxEnergy;
-	//		}
-
-	//		if (m_PlayerStat.Sasese[i].MinEnergy <= m_PlayerStat.Sasese[i].Energy)
-	//		{
-	//			m_PlayerStat.Sasese[i].bUsable = true;
-	//		}
-	//	}
-	//}
-
-//	if (m_PlayerSasType != ESASType::SAS_END)
-//		IM_LOG("%f", m_PlayerStat.Sasese[static_cast<_uint>(m_PlayerSasType)].Energy);
 
 
 
@@ -881,10 +859,26 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Default_Attack_4_1", [&]() {Event_Effect("Default_Attack_4_1"); });
 	m_pModel->Add_EventCaller("Default_Attack_4_2", [&]() {Event_Effect("Default_Attack_4_2"); });
 	m_pModel->Add_EventCaller("Default_Attack_4_3", [&]() {Event_Effect("Default_Attack_4_3"); });
-	m_pModel->Add_EventCaller("Default_Attack_5", [&]() {Event_Effect("Default_Attack_5"); });
+	m_pModel->Add_EventCaller("Default_Attack_5", [&]() 
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_NOT)
+		{
+			_float4x4 EffectPivotMatrix =
+				XMMatrixTranslation(0.f, -1.5f, -1.f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_5")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+	});
 	m_pModel->Add_EventCaller("Default_Attack_5_BackGround", [&]() {Event_Effect("Default_Attack_5_BackGround"); });
 	m_pModel->Add_EventCaller("Default_Attack_5_Final", [&]() {Event_Effect("Default_Attack_5_Final"); });
-	m_pModel->Add_EventCaller("Default_Attack_5_PreEffect", [&]() {Event_Effect("Default_Attack_5_PreEffect"); });
+	m_pModel->Add_EventCaller("Default_Attack_5_PreEffect", [&]()
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_NOT)
+		{
+			_float4x4 EffectPivotMatrix =
+				XMMatrixTranslation(0.f, 1.f, 0.5f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_5_PreEffect")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+	});
 	m_pModel->Add_EventCaller("Default_Attack_Air_Attack_1", [&]() {Event_Effect("Default_Attack_Air_Attack_1"); });
 	m_pModel->Add_EventCaller("Default_Attack_Air_Attack_2", [&]() {Event_Effect("Default_Attack_Air_Attack_2"); });
 	m_pModel->Add_EventCaller("Default_Attack_Air_Attack_Chase", [&]() {Event_Effect("Default_Attack_Air_Attack_Chase"); });
@@ -933,6 +927,17 @@ HRESULT CPlayer::SetUp_EffectEvent()
 				* XMMatrixRotationZ(XMConvertToRadians(135.f))
 				* XMMatrixTranslation(0.f, 1.f, -1.f);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_1_001")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+	});
+	m_pModel->Add_EventCaller("Fire_Attack_1_Particle", [&]()
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
+		{
+			_float4x4 EffectPivotMatrix =
+				XMMatrixRotationX(XMConvertToRadians(180.f))
+				* XMMatrixRotationY(XMConvertToRadians(-45.f))
+				* XMMatrixRotationZ(XMConvertToRadians(135.f))
+				* XMMatrixTranslation(0.f, 1.f, -1.f);
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_1_001_Particle"))->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
@@ -943,77 +948,109 @@ HRESULT CPlayer::SetUp_EffectEvent()
 			_float4x4 EffectPivotMatrix = XMMatrixScaling(3.f, 3.f, 3.f)
 				* XMMatrixRotationZ(XMConvertToRadians(160.f))
 				* XMMatrixTranslation(0.f, 0.75f, 0.25f);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_2")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);	//		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_2")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+	});
+	m_pModel->Add_EventCaller("Fire_Attack_2_Particle", [&]()
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
+		{
+			_float4x4 EffectPivotMatrix = XMMatrixScaling(3.f, 3.f, 3.f)
+				* XMMatrixRotationZ(XMConvertToRadians(160.f))
+				* XMMatrixTranslation(0.f, 0.75f, 0.25f);
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_2_Particle"))->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_3", [&]() 
+	m_pModel->Add_EventCaller("Fire_Attack_3", [&]() {Event_Effect("Fire_Attack_3"); });
+	m_pModel->Add_EventCaller("Fire_Attack_3_Particle", [&]()
 	{
-		Event_Effect("Fire_Attack_3");
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_3_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_3_Double_twist", [&]() {Event_Effect("Fire_Attack_3_Double_twist"); });
+
 	m_pModel->Add_EventCaller("Fire_Attack_3_twist", [&]() 
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 		{
 			_float4x4 EffectPivotMatrix =
 				XMMatrixTranslation(0.f, 0.f, -2.f);
-
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_3_Double_twist")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Fire_Attack_3_Twist_Particle")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);			//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_3_Double_twist")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);		//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
 		}
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_4", [&]() 
+	m_pModel->Add_EventCaller("Fire_Attack_3_twist_Particle", [&]()
 	{
-		Event_Effect("Fire_Attack_4");
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
+		{
+			_float4x4 EffectPivotMatrix =
+				XMMatrixScaling(10.f, 10.f, 10.f) *
+				XMMatrixTranslation(0.f, 0.f, -2.f);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Fire_Attack_3_Twist_Particle")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", false);	
+		
+		}
+	});
 
+	m_pModel->Add_EventCaller("Fire_Attack_4", [&]() {Event_Effect("Fire_Attack_4"); });
+	m_pModel->Add_EventCaller("Fire_Attack_4_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_4_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_4_001", [&]() 
-	{
-		Event_Effect("Fire_Attack_4_001");
 
+	m_pModel->Add_EventCaller("Fire_Attack_4_001", [&]() {Event_Effect("Fire_Attack_4_001"); });
+	m_pModel->Add_EventCaller("Fire_Attack_4_001_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_4_001_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_5", [&]() 
-	{
-		Event_Effect("Fire_Attack_5");
 
+
+	m_pModel->Add_EventCaller("Fire_Attack_5", [&]() {Event_Effect("Fire_Attack_5"); });
+	m_pModel->Add_EventCaller("Fire_Attack_5_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_5_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Air_1", [&]() 
-	{
-		Event_Effect("Fire_Attack_Air_1");
 
+	m_pModel->Add_EventCaller("Fire_Attack_5_PreEffect", [&]() 
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
+		{
+			_float4x4 EffectPivotMatrix = XMMatrixTranslation(0.f, 1.f, 0.5f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_5_PreEffect")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+
+//		Event_Effect("Fire_Attack_5_PreEffect");
+	});
+
+	m_pModel->Add_EventCaller("Fire_Attack_Air_1", [&]() {Event_Effect("Fire_Attack_Air_1"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_1_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_1_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Air_2", [&]() 
-	{
-		Event_Effect("Fire_Attack_Air_2");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Air_2", [&]() {Event_Effect("Fire_Attack_Air_2"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_2_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_2_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Air_Chase", [&]() 
-	{
-		Event_Effect("Fire_Attack_Air_Chase");
 
+
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Chase", [&]() {Event_Effect("Fire_Attack_Air_Chase"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_chase_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_chase_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_0", [&]() 
-	{
-		Event_Effect("Fire_Attack_Air_dash_0");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_0", [&]() {Event_Effect("Fire_Attack_Air_dash_0"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_0_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_dash_0_Particle"))->Start_Attach(this, "Eff01");
 	});
+
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_End", [&]() 
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
@@ -1021,123 +1058,110 @@ HRESULT CPlayer::SetUp_EffectEvent()
 			_float4x4 EffectPivotMatrix =
 				XMMatrixTranslation(0.f, -1.1f, -1.f);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Air_dash_0")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+	});
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_End_Particle", [&]()
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
+		{
+			_float4x4 EffectPivotMatrix =
+				XMMatrixTranslation(0.f, -1.1f, -1.f);
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_dash_0_Particle"))->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
+
+
 	m_pModel->Add_EventCaller("Fire_AttacK_Air_dash_0_001", [&]() {Event_Effect("Fire_AttacK_Air_dash_0_001"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1", [&]() {Event_Effect("Fire_Attack_Air_dash_1"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1_001", [&]() {Event_Effect("Fire_Attack_Air_dash_1_001"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1_002", [&]() {Event_Effect("Fire_Attack_Air_dash_1_002"); });
-	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold", [&]() 
-	{
-		Event_Effect("Fire_Attack_Air_Hold");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold", [&]() {Event_Effect("Fire_Attack_Air_Hold");});
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_Hold_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_1", [&]() 
-	{
-		Event_Effect("Fire_Attack_Air_Hold_1");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_1", [&]() {Event_Effect("Fire_Attack_Air_Hold_1");});
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_1_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_Hold_1_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_2", [&]() 
-	{
-		Event_Effect("Fire_Attack_Air_Hold_2");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_2", [&]() {Event_Effect("Fire_Attack_Air_Hold_2");});
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_2_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_Hold_2_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_Landing", [&]() 
-	{
-		Event_Effect("Fire_Attack_Air_Hold_Landing");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_Landing", [&]() {Event_Effect("Fire_Attack_Air_Hold_Landing");});
+	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_Landing_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_Hold_Landing_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Charge03", [&]() 
-	{
-		Event_Effect("Fire_Attack_Charge03");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Charge03", [&]() {Event_Effect("Fire_Attack_Charge03");});
+	m_pModel->Add_EventCaller("Fire_Attack_Charge03_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Charge03_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Charge03_001", [&]() 
-	{
-		Event_Effect("Fire_Attack_Charge03_001");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Charge03_001", [&]() {Event_Effect("Fire_Attack_Charge03_001");});
+	m_pModel->Add_EventCaller("Fire_Attack_Charge03_001_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Charge03_001_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Charge03_002", [&]() 
-	{
-		Event_Effect("Fire_Attack_Charge03_002");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Charge03_002", [&]() {Event_Effect("Fire_Attack_Charge03_002");});
+	m_pModel->Add_EventCaller("Fire_Attack_Charge03_002_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Charge03_002_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Dash_00", [&]() 
-	{
-		Event_Effect("Fire_Attack_Dash_00");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_00", [&]() {Event_Effect("Fire_Attack_Dash_00");});
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_00_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_00_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Dash_01", [&]() 
-	{
-		Event_Effect("Fire_Attack_Dash_01");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_01", [&]() {Event_Effect("Fire_Attack_Dash_01");});
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_01_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_01_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_001", [&]() 
-	{
-		Event_Effect("Fire_Attack_Dash_02_001");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_001", [&]() {Event_Effect("Fire_Attack_Dash_02_001");});
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_001_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_02_001_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_002", [&]() 
-	{
-		Event_Effect("Fire_Attack_Dash_02_002");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_002", [&]() {Event_Effect("Fire_Attack_Dash_02_002");});
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_002_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_02_002_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Dash_03", [&]() 
-	{
-		Event_Effect("Fire_Attack_Dash_03");
 
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_03", [&]() {Event_Effect("Fire_Attack_Dash_03");});
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_03_Particle", [&]()
+	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_03_Particle"))->Start_Attach(this, "Eff01");
 	});
-	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_001", [&]() 
-	{
-		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-		{
-			/*_float4x4 EffectPivotMatrix2 =
-				XMMatrixRotationX(XMConvertToRadians(180.f))
-				* XMMatrixRotationY(XMConvertToRadians(-45.f))
-				* XMMatrixRotationZ(XMConvertToRadians(135.f))
-				* XMMatrixTranslation(0.f, 1.f, -1.f);*/
-			//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Dash_Hold_001")->Start_AttachPivot(this, pivot1, "Eff01", true);
-			//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
-		}
-	});
-	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_002", [&]() 
-	{
-		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-		{
-			/*_float4x4 EffectPivotMatrix2 =
-				XMMatrixRotationX(XMConvertToRadians(180.f))
-				* XMMatrixRotationY(XMConvertToRadians(-45.f))
-				* XMMatrixRotationZ(XMConvertToRadians(135.f))
-				* XMMatrixTranslation(0.f, 1.f, -1.f);*/
-			//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Dash_Hold_002")->Start_AttachPivot(this, pivot2, "Eff01", true);
-			//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
-		}
-	});
+
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_001", [&]() {});
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_002", [&]() {});
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_003", [&]() 
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
@@ -1145,18 +1169,26 @@ HRESULT CPlayer::SetUp_EffectEvent()
 			_float4x4 EffectPivotMatrix =
 				XMMatrixScaling(1.5f, 1.5f, 1.5f)
 				* XMMatrixTranslation(-2.f, -1.5f, 2.f);
-
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Dash_Hold_003")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_Hold_003_Particle"))->Start_AttachPivot(this, EffectPivotMatrix,"Eff01", true);
 		}
 	});
+	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_003_Particle", [&]()
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
+		{
+			_float4x4 EffectPivotMatrix =
+				XMMatrixScaling(1.5f, 1.5f, 1.5f)
+				* XMMatrixTranslation(-2.f, -1.5f, 2.f);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_Hold_003_Particle"))->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+	});
+
 	m_pModel->Add_EventCaller("Fire_Attack_Justdodge_01", [&]() {Event_Effect("Fire_Attack_Justdodge_01"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Justdodge_02", [&]() {Event_Effect("Fire_Attack_Justdodge_02"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Justdodge_03", [&]() {Event_Effect("Fire_Attack_Justdodge_03"); });
-	m_pModel->Add_EventCaller("Fire_Attack_Upper", [&]() 
+	m_pModel->Add_EventCaller("Fire_Attack_Upper", [&]() {Event_Effect("Fire_Attack_Upper");});
+	m_pModel->Add_EventCaller("Fire_Attack_Upper_Particle", [&]() 
 	{
-		Event_Effect("Fire_Attack_Upper");
-
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Upper_Particle"))->Start_Attach(this, "Eff01");
 	});
@@ -1188,16 +1220,17 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, m_vecRandomLandingDustName.front())->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
 	});
 
-	/*m_pModel->Add_EventCaller("FlameParticle", [&]()
+	m_pModel->Add_EventCaller("KineticCircle", [&]()
 	{
-		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-		{
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
-		}
-	});*/
+		Event_KineticCircleEffect();
+		m_SoundStore.PlaySound("fx_kinetic_lifting", m_pTransformCom);
+	});
 
-	//m_pModel->Add_EventCaller(""
-	//)
+	m_pModel->Add_EventCaller("KineticCircle_Attach", [&]()
+	{
+		Event_KineticCircleEffect_Attach();
+		m_SoundStore.PlaySound("fx_kinetic_lifting", m_pTransformCom);
+	});
 
 	return S_OK;
 }
@@ -1283,10 +1316,9 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 		.AddState("KINETIC_RB_START")
 			.OnStart([&]() 
 			{
-				Event_KineticCircleEffect();
-
 				Enemy_Targeting(true);
 				m_pASM->InputAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Start);
+				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->SetParticle();
 			})
 			.Tick([&](double fTimeDelta)
 			{
@@ -1335,6 +1367,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 		.AddState("KINETIC_RB_CANCEL")
 			.OnStart([&]() 
 			{ 
+				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->ReleaseParticle();
 				m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Cancel); 
 			})
 			.Tick([&](double fTimeDelta) {m_bKineticMove = true; })
@@ -2842,7 +2875,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -2851,7 +2884,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 100) + 100;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -2860,7 +2893,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 100) + 200;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -2869,7 +2902,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -2878,7 +2911,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 200) + 300;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -2905,7 +2938,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -2914,7 +2947,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 100) + 100;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -2923,7 +2956,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 100) + 200;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -2932,7 +2965,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -2941,7 +2974,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -2950,7 +2983,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -2959,16 +2992,16 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
 	m_mapCollisionEvent.emplace("ATK_AIR_CHARGE_FALL", [this]()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
-		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eAttackType = EAttackType::ATK_DOWN;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 50) + 100;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -2977,7 +3010,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_TO_AIR;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = (rand() % 100) + 200;
+		m_AttackDesc.iDamage = 100;
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3060,7 +3093,7 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			
+			m_bKineticSpecial = false;
 		})
 		.OnExit([&]()
 		{
@@ -3069,7 +3102,11 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		})
 
 			.AddTransition("TRAIN_LEFT_NOUSE to TRAIN_LEFT_CHARGE", "TRAIN_LEFT_CHARGE")
-			.Predicator([&]()->_bool { return m_bKineticG; })
+			.Predicator([&]()->_bool 
+			{
+				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
+				return m_bKineticG && bResult;
+			})
 			.Priority(0)
 
 
@@ -3078,10 +3115,16 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		{
 			m_bKineticSpecial = true;
 			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_Train_Charge_L);
+			//static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Train_Set_Animation("AS_mg02_372_train_cap_L");
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Activate_Animation(true);
 		})
 		.Tick([&](double fTimeDelta)
 		{
 			m_fKineticCharge += (_float)fTimeDelta;
+
+
 		})
 		.OnExit([&]()
 		{
@@ -3100,6 +3143,11 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		.OnStart([&]()
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Train_Cancel_L);
+
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Train_Set_Animation("AS_mg02_372_train_cancel_L");
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Activate_Animation(true);
+
+			//static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 		})
 		.OnExit([&]()
 		{
@@ -3116,7 +3164,11 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		.AddState("TRAIN_LEFT_THROW")
 		.OnStart([&]() 
 		{
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Train_Set_Animation("AS_mg02_372_train_start_L");
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Activate_Animation(true);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+
+
 			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_Train_Throw_L);
 		})
 		.Tick([&](double fTimeDelta)
@@ -3208,6 +3260,20 @@ _bool CPlayer::Charge(_uint iNum, _float fCharge)
 	if (fCharge > m_fCharge[iNum])
 	{
 		m_fCharge[iNum] += g_fTimeDelta;
+
+		if ((1 == iNum) && fCharge <= m_fCharge[iNum])
+		{
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Effect_01"))->Start_Attach(this, "RightWeapon");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Charge_White_Particle"))->Start_Attach(this, "RightWeapon");
+			//IM_LOG("Shine");
+		}
+		if ((2 == iNum) && fCharge <= m_fCharge[iNum])
+		{
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Effect_02"))->Start_Attach(this, "RightWeapon");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Charge_White_Particle"))->Start_Attach(this, "RightWeapon");
+			//IM_LOG("Shine");
+		}
+
 		return false;
 	}
 	else
@@ -3334,7 +3400,8 @@ void CPlayer::Event_Kinetic_Throw()
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Throw_Kinetic_Distortion"))->Start_AttachOnlyPos(vKineticPos);
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Kinetic_Shoot_Smoke"))->Start_AttachPosition(this, vKineticPos, _float4(0.f, 1.f, 0.f, 0.f));
 
-		Vector4 vTargetPos = static_cast<CMonster*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetKineticTargetPos();
+		//Vector4 vTargetPos = static_cast<CMonster*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetKineticTargetPos();
+		Vector4 vTargetPos = static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetKineticTargetPos();
 		Vector4 vMyPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 		Vector4 vDir = vTargetPos - vMyPos;
 		vDir.w = 0.f;
@@ -3385,6 +3452,11 @@ void CPlayer::Event_KineticCircleEffect()
 	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Kinetic_BaseCircle")->Start_Attach(this, "Eff01");
 	_matrix MatScale = XMMatrixIdentity() * XMMatrixScaling(10.f, 10.f, 10.f);
 //	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Kinetic_Particle")->Start_AttachPivot(this, MatScale, "Reference", true, false);
+}
+
+void CPlayer::Event_KineticCircleEffect_Attach()
+{
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Kinetic_BaseCircle")->Start_Attach(this, "Eff01", true);
 }
 
 void CPlayer::Reset_Charge()
@@ -3698,6 +3770,15 @@ void CPlayer::SocketLocalMoveCheck()
 		_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
 		m_pTransformCom->LocalMove(vLocal);
 	}
+
+	// ??되나이거
+	if (!m_pASM->isSocketEmpty("Kinetic_Special_AnimSocket"))
+	{
+		string szCurAnimName = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetName();
+		_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
+		//IM_LOG("%f %f %f", XMVectorGetX(vLocal), XMVectorGetY(vLocal), XMVectorGetZ(vLocal));
+		m_pTransformCom->LocalMove(vLocal);
+	}
 }
 
 void CPlayer::Update_NotiveNeon()
@@ -3767,7 +3848,8 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
-			m_pUI_LockOn->Set_UIPivotMatrix(dynamic_cast<CMonster*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Get_UIPivotMatrix(FINDEYES));
+			//m_pUI_LockOn->Set_UIPivotMatrix(dynamic_cast<CMonster*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Get_UIPivotMatrix(FINDEYES));
+			//m_pUI_LockOn->Set_UIPivotMatrix(dynamic_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Get_UIPivotMatrix(FINDEYES));
 		}
 
 		//info bar 설정
@@ -3817,8 +3899,21 @@ void CPlayer::NetualChecker(_double TimeDelta)
 		m_fNetualTimer = 0.f;
 	}
 
+	if (m_bOnBattle)	// 전투 중 파티클 생성
+	{
+		m_fBattleParticleTime += (_float)TimeDelta;
+
+		if (1.f < m_fBattleParticleTime)
+		{
+			m_fBattleParticleTime = 0.f;
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Text_Particle_NoLoop"))
+				->Start_Attach(this, "BackHair");
+		}
+	}
+
 	if (m_bOnBattle && (m_fNetualTimer >= 10.f))
 	{
+		m_fBattleParticleTime = 0.f;
 		m_bOnBattle = false;
 		m_pASM->InputAnimSocket("Netual_Saperate_Animation", m_TransNeutralSocket);
 	}
@@ -3949,7 +4044,8 @@ void CPlayer::Enemy_Targeting(_bool bNear)
 		list<CGameObject*>	DistanceList;
 		for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
 		{
-			if ((!static_cast<CMonster*>(iter)->IsDead()) && (!static_cast<CMonster*>(iter)->GetInvisible()))
+			//if ((!static_cast<CMonster*>(iter)->IsDead()) && (!static_cast<CMonster*>(iter)->GetInvisible()))
+			if ((!static_cast<CEnemy*>(iter)->IsDead()))
 			{
 				_vector vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 				_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -4059,6 +4155,63 @@ void CPlayer::KineticObject_OutLineCheck()
 				static_cast<CMapKinetic_Object*>(iter)->SetOutline(false);
 				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_CameRange(false);
 
+			}
+		}
+	}
+}
+
+void CPlayer::SpecialObject_Targeting()
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	CPlayerInfoManager::GetInstance()->Set_SpecialObject(nullptr);
+
+	if (pGameInstance->GetLayer(LEVEL_NOW, LAYER_KINETIC) == nullptr
+		|| pGameInstance->GetLayer(LEVEL_NOW, LAYER_KINETIC)->GetGameObjects().empty())
+	{
+		return;
+	}
+	else
+	{
+		_float fDistance = 20.f;
+
+		for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, LAYER_KINETIC)->GetGameObjects())
+		{
+			_vector vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+			_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+			_float fCurDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
+
+			if (fDistance > fCurDistance)
+			{
+				fDistance = fCurDistance;
+				CPlayerInfoManager::GetInstance()->Set_SpecialObject(iter);
+			}
+		}
+	}
+}
+
+void CPlayer::SpecialObject_OutLineCheck()
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, LAYER_KINETIC)->GetGameObjects())
+	{
+		if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+		{
+			static_cast<CSpecialObject*>(iter)->SetOutline(false);
+		}
+		else
+		{
+			if (iter == CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+			{
+				static_cast<CSpecialObject*>(iter)->SetOutline(true);
+				//static_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_CameRange(true);
+			}
+			else
+			{
+				static_cast<CSpecialObject*>(iter)->SetOutline(false);
+				//static_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_CameRange(false);
 			}
 		}
 	}

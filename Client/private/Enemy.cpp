@@ -167,6 +167,8 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_bDead)
 		return;
 
+	//IM_LOG("Enemy Damage");
+
 	// 이상한 데미지 들어오는거 감지용, 버그 다 찾으면 지우기
 	Assert(tDamageParams.iDamage > 0);
 	Assert(tDamageParams.iDamage < 20000);
@@ -295,7 +297,7 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 		HitBloodName = s_vecFireBlood[CMathUtils::RandomUInt(s_vecFireBlood.size() - 1)];
 		HitEffectName = s_vecFireHit[CMathUtils::RandomUInt(s_vecFireHit.size() - 1)];
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Player_Fire_Sword_Particle")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
+//		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 		break;
 
 	case ESASType::SAS_ELETRIC:

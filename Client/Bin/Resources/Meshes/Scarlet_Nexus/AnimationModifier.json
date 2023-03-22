@@ -846,6 +846,10 @@
             {
                 "EventName": "Fire_Attack_1",
                 "EventTime": 8.0
+            },
+            {
+                "EventName": "Fire_Attack_1_Particle",
+                "EventTime": 20.0
             }
         ]
     },
@@ -889,6 +893,10 @@
             {
                 "EventName": "Fire_Attack_2",
                 "EventTime": 12.0
+            },
+            {
+                "EventName": "Fire_Attack_2_Particle",
+                "EventTime": 25.0
             }
         ]
     },
@@ -936,6 +944,14 @@
             {
                 "EventName": "LandingDust",
                 "EventTime": 32.0
+            },
+            {
+                "EventName": "Fire_Attack_3_Particle",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "Fire_Attack_3_twist_Particle",
+                "EventTime": 45.0
             }
         ]
     },
@@ -987,6 +1003,14 @@
             {
                 "EventName": "attack_fire_4",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_4_001_Particle",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Fire_Attack_4_Particle",
+                "EventTime": 45.0
             }
         ]
     },
@@ -1038,6 +1062,18 @@
             {
                 "EventName": "attack_fire_5",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_5_Particle",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "Default_Attack_5_PreEffect",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Fire_Attack_5_PreEffect",
+                "EventTime": 20.0
             }
         ]
     },
@@ -1081,6 +1117,10 @@
             {
                 "EventName": "attack_fire_upper",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Upper_Particle",
+                "EventTime": 20.0
             }
         ]
     },
@@ -1236,6 +1276,14 @@
             {
                 "EventName": "attack_fire_charge_lv1",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Charge03_001_Particle",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Fire_Attack_Charge03_002_Particle",
+                "EventTime": 50.0
             }
         ]
     },
@@ -1279,6 +1327,14 @@
             {
                 "EventName": "attack_fire_charge_lv2",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Charge03_001_Particle",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "Fire_Attack_Charge03_002_Particle",
+                "EventTime": 70.0
             }
         ]
     },
@@ -1318,6 +1374,10 @@
             {
                 "EventName": "attack_fire_charge_lv2",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Charge03_Particle",
+                "EventTime": 80.0
             }
         ]
     },
@@ -1357,6 +1417,10 @@
             {
                 "EventName": "Fire_Attack_Dash_End",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_End_Particle",
+                "EventTime": 10.0
             }
         ]
     },
@@ -1406,6 +1470,10 @@
             {
                 "EventName": "attack_nor_spin",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_Hold_003_Particle",
+                "EventTime": 20.0
             }
         ]
     },
@@ -1441,6 +1509,10 @@
             {
                 "EventName": "attack_kinetic_combo_1_1",
                 "EventTime": 10.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_01_Particle",
+                "EventTime": 25.0
             }
         ]
     },
@@ -1502,6 +1574,14 @@
             {
                 "EventName": "attack_kinetic_combo_1_2",
                 "EventTime": 10.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_02_001_Particle",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_02_002_Particle",
+                "EventTime": 33.0
             }
         ]
     },
@@ -1551,6 +1631,10 @@
             {
                 "EventName": "attack_kinetic_combo_spin_1",
                 "EventTime": 25.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_03_Particle",
+                "EventTime": 35.0
             }
         ]
     },
@@ -1604,6 +1688,10 @@
             {
                 "EventName": "attack_kinetic_combo_spin_2",
                 "EventTime": 45.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_03_Particle",
+                "EventTime": 60.0
             }
         ]
     },
@@ -1649,6 +1737,10 @@
             {
                 "EventName": "Fire_Attack_Air_1",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_1_Particle",
+                "EventTime": 14.0
             }
         ]
     },
@@ -1688,6 +1780,10 @@
             {
                 "EventName": "Fire_Attack_Air_2",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_2_Particle",
+                "EventTime": 20.0
             }
         ]
     },
@@ -1757,6 +1853,14 @@
             {
                 "EventName": "LandingDust",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_Hold_Landing_Particle",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Fire_Attack_3_twist_Particle",
+                "EventTime": 20.0
             }
         ]
     },
@@ -1820,6 +1924,18 @@
             {
                 "EventName": "attack_fire_spindown",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_Hold_Particle",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_Hold_1_Particle",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_Hold_2_Particle",
+                "EventTime": 40.0
             }
         ]
     },
@@ -1863,6 +1979,10 @@
             {
                 "EventName": "attack_nor_spin",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_Hold_003_Particle",
+                "EventTime": 20.0
             }
         ]
     },
@@ -1943,6 +2063,10 @@
             {
                 "EventName": "Kinetic_Launch",
                 "EventTime": 55.0
+            },
+            {
+                "EventName": "KineticCircle",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1954,6 +2078,10 @@
             {
                 "EventName": "Kinetic_Launch",
                 "EventTime": 60.0
+            },
+            {
+                "EventName": "KineticCircle",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1973,6 +2101,10 @@
             {
                 "EventName": "Kinetic_Launch",
                 "EventTime": 60.0
+            },
+            {
+                "EventName": "KineticCircle",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2014,6 +2146,10 @@
             {
                 "EventName": "Kinetic_Launch",
                 "EventTime": 170.0
+            },
+            {
+                "EventName": "KineticCircle",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2056,7 +2192,7 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "fx_kinetic_lifting",
+                "EventName": "KineticCircle",
                 "EventTime": 0.0
             }
         ]
@@ -2363,7 +2499,7 @@
     },
     "AS_ch0100_372_AL_Cap_sLcLeL_start": {
         "Duration": 30.0,
-        "TickPerSecond": 40.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -2405,7 +2541,7 @@
     },
     "AS_ch0100_406_AL_damage_air": {
         "Duration": 145.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 145.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -4267,6 +4403,30 @@
                 "EventTime": 125.0
             }
         ]
+    },
+    "AS_mg02_372_train_cancel_L": {
+        "Duration": 57.0,
+        "TickPerSecond": 57.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_mg02_372_train_cap_L": {
+        "Duration": 150.0,
+        "TickPerSecond": 75.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_mg02_372_train_end_L": {
+        "Duration": 189.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_mg02_372_train_start_L": {
+        "Duration": 117.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "ch0100": {
         "mapRootMotion": {

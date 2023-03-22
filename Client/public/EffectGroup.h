@@ -60,6 +60,7 @@ public:
 	// void		Start_Attach(CGameObject* pOwner, string BoneName = "", _bool trueisUpdate = false);
 	// void		Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName,_bool usepivot = false, _bool trueisUpdate = false);
 	void		Start_AttachPosition(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate = false);
+	void		Start_AttachSword(CGameObject* pWeapon, _bool trueisUpdate = false);
 
 public:
 	// For Graph
@@ -137,6 +138,9 @@ private:
 	_float4x4 m_PivotMatrix = XMMatrixIdentity();
 
 	_bool	m_bGroupVisible = { true };
+
+private:
+	CGameObject* m_pAttachWeapon = nullptr;
 
 private:
 	_float	m_fEndTime = 0.f;

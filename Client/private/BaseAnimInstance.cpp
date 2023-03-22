@@ -5,6 +5,7 @@
 #include "GameInstance.h"
 #include "HelperClasses.h"
 #include "VFX_Manager.h"
+#include "PlayerInfoManager.h"
 
 HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject)
 {
@@ -1171,6 +1172,18 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
 					->SetAbleState({ false, false, false, false, false, true, true, false, false, false });
+
+				ESASType CurSas = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
+				if (ESASType::SAS_NOT == CurSas)
+				{
+					_matrix EffectPivot = XMMatrixScaling(2.f, 2.f, 2.f) * XMMatrixRotationX(XMConvertToRadians(-90.f));
+					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Twist"))->Start_AttachPivot(m_pTargetObject, EffectPivot, "RightWeapon", true, true);
+				}
+				else if (ESASType::SAS_FIRE == CurSas)
+				{
+					_matrix EffectPivot = XMMatrixScaling(2.f, 2.f, 2.f) * XMMatrixRotationX(XMConvertToRadians(-90.f));
+					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Fire_Attack_Charge_Twist"))->Start_AttachPivot(m_pTargetObject, EffectPivot, "RightWeapon", true, true);
+				}
 			})
 
 				 .AddTransition("ATTACK_CHARGE_LOOP to JUMP_FALL", "JUMP_FALL")
@@ -1186,7 +1199,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				 .Duration(0.1f).Priority(1)
 				
 				 .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_03", "CHARGE_ATTACK_03")
-				 .Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(2, 1.5f)) && (!m_bCharge); })
+				 .Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(2, 1.5f)); })
 				 .Duration(0.1f).Priority(0)
 				
 				 .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_CANCEL", "CHARGE_CANCEL")

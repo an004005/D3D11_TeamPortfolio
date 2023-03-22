@@ -331,6 +331,12 @@
     <Filter Include="02.GameObjects\Enemy\EM0110">
       <UniqueIdentifier>{b40f83b7-220e-428f-929f-0ff0c446fd92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\SpecialObject">
+      <UniqueIdentifier>{c1e6af62-d5ed-4e86-bb32-69cdbc587c23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_Train">
+      <UniqueIdentifier>{e5298caa-d4e0-4fcc-95d9-9424cdefe837}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1486,6 +1492,12 @@
     </ClCompile>
     <ClCompile Include="..\private\EM0650_Controller.cpp">
       <Filter>02.GameObjects\Enemy\EM0650</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpecialObject.cpp">
+      <Filter>02.GameObjects\SpecialObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_Train.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Imgui_Batch.cpp" />
     <ClCompile Include="..\private\EM0700_AnimInstance.cpp">

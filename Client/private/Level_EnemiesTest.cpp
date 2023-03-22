@@ -90,7 +90,6 @@ void CLevel_EnemiesTest::Tick(_double TimeDelta)
 {
 	CLevel::Tick(TimeDelta);
 
-
 	if (CGameInstance::GetInstance()->KeyDown(DIK_SPACE))
 	{
 		CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, L"em0650_Bullet_Birth")->Start_EffectWork();
@@ -158,6 +157,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 	
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
