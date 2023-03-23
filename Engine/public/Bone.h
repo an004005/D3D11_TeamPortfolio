@@ -4,9 +4,9 @@
 
 BEGIN(Engine)
 
-class CBone final : public CBase
+class CBone : public CBase
 {
-private:
+protected:
 	CBone();
 	virtual ~CBone() = default;
 
@@ -24,6 +24,7 @@ public:
 	}
 
 	CBone* GetParent() { return m_pParent; }
+	const vector<CBone*>& GetChildren() { return m_Children; }
 
 	void Set_OffsetMatrix(_float4x4 OffsetMatrix) {
 		m_OffsetMatrix = OffsetMatrix;
@@ -43,7 +44,7 @@ public:
 	void DisableToChildRecursive(_bool bDisable);
 
 public:
-	HRESULT Initialize(const Json& jBone, CBone* pParent);
+	virtual HRESULT Initialize(const Json& jBone, CBone* pParent);
 	void Compute_CombindTransformationMatrix_StartRoot();
 	void Compute_CombindTransformationMatrix();
 
@@ -51,10 +52,8 @@ public:
 
 	void MakeDFSTravelVector(OUT vector<CBone*>& vectorOut);
 
-private:
 
-
-private:
+protected:
 	string				m_strName;
 	_float4x4			m_OffsetMatrix;
 	_float4x4			m_TransformMatrix;

@@ -84,6 +84,30 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 	{
 		CModel* pModel = nullptr;
 
+		FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Model_Ch100_Portrait", L"ch100",
+			(CComponent**)&pModel));
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_NOT)] = pModel;
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_NOT)]->FindMaterial(L"MI_ch0100_HOOD_0")->SetActive(false);
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_NOT)]->FindMaterial(L"MI_ch0100_MASK_0")->SetActive(false);
+
+		for (auto pMtrl : m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_NOT)]->GetMaterials())
+		{
+			pMtrl->GetParam().iPass = 6;
+		}
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_NOT)]->FindMaterial(L"MI_ch0100_WIRE_0")->GetParam().iPass = 7;
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_NOT)]->FindMaterial(L"MI_ch0100_WIRE_1")->GetParam().iPass = 7;
+
+
+		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PortraitCams/ch100_cam.json");
+		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_NOT)] = CGameInstance::GetInstance()->Add_Camera("ch100_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);
+		Safe_AddRef(m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_NOT)]);
+	}
+
+	{
+		CModel* pModel = nullptr;
+
 		FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Model_Ch300_Portrait", L"ch300",
 		   (CComponent**)&pModel));
 
@@ -159,6 +183,10 @@ void CSAS_Portrait::Tick(_double TimeDelta)
 	// {
 	// 	Start_SAS(ESASType::SAS_PENETRATE);
 	// }
+	 if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	 {
+	 	Start_SAS(ESASType::SAS_NOT);
+	 }
 
 	if (m_eCurType != ESASType::SAS_END)
 	{
@@ -232,10 +260,13 @@ void CSAS_Portrait::Start_SAS(ESASType eType)
 	case ESASType::SAS_TELEPORT: break;
 	case ESASType::SAS_ELETRIC: break;
 	case ESASType::SAS_SUPERSPEED: break;
+
 	case ESASType::SAS_COPY: break;
 	case ESASType::SAS_INVISIBLE: break;
 	case ESASType::SAS_GRAVIKENISIS: break;
-	case ESASType::SAS_NOT: break;
+	case ESASType::SAS_NOT: 
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_NOT)]->SetPlayAnimation("AS_ch0100_BrainCrash_Cutin");
+		break;
 	case ESASType::SAS_END: break;
 	default:
 		NODEFAULT;

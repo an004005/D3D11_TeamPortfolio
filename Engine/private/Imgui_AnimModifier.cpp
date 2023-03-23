@@ -292,6 +292,25 @@ void CImgui_AnimModifier::RootMotionMaker()
 	}
 }
 
+void CImgui_AnimModifier::ActionCamMaker()
+{
+	if (ImGui::CollapsingHeader("ActionCamMaker"))
+	{
+		if (m_pPreview && m_pPreview->GetPlayAnimation())
+		{
+			m_szAnimName = m_pPreview->GetPlayAnimation()->GetName();
+			m_fRatio = m_pPreview->GetPlayAnimation()->GetPlayRatio();
+
+			ImGui::Text(m_szAnimName.c_str());
+		}
+
+		if (ImGui::Button("Capture"))
+		{
+
+		}
+	}
+}
+
 void CImgui_AnimModifier::Free()
 {
 	__super::Free();

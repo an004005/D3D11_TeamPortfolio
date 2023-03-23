@@ -112,6 +112,9 @@ public:
 	void CopyState(STATE eState, CTransform* pFrom);
 	void CopyWorld(CTransform* pFrom);
 
+	/* 돌진한다 */
+	//틱마다 이동한 거리 반환
+	_float RushToTarget(_fvector vTargetPos, _double TimeDelta);
 public:
 	HRESULT Bind_ShaderResource(class CShader* pShaderCom, const char* pConstantName);
 

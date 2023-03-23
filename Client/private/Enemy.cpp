@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "RigidBody.h"
 #include "FSMComponent.h"
+#include "Enemy_AnimInstance.h"
 #include "TestTarget.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
@@ -103,6 +104,17 @@ void CEnemy::Imgui_RenderProperty()
 	CScarletCharacter::Imgui_RenderProperty();
 	ImGui::Checkbox("Use TestTarget", &m_bFindTestTarget);
 
+	if (ImGui::CollapsingHeader("Edit Stat"))
+	{
+		ImGui::InputInt("MaxHP", &m_iMaxHP);
+		ImGui::InputInt("MaxCrushGage", &m_iMaxCrushGage);
+		ImGui::Checkbox("HasCrushGage", &m_bHasCrushGage);
+		_int iLevel = iMonsterLevel;
+		ImGui::InputInt("Level", &iLevel);
+		iMonsterLevel = iLevel;
+		ImGui::InputInt("AtkDamage", &m_iAtkDamage);
+	}
+
 	m_DeathTimeline.Imgui_RenderEditor();
 
 	if (ImGui::CollapsingHeader("Anim Fast Modifier"))
@@ -166,7 +178,6 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_bDead)
 		return;
 
-	//IM_LOG("Enemy Damage");
 
 	// 이상한 데미지 들어오는거 감지용, 버그 다 찾으면 지우기
 	Assert(tDamageParams.iDamage > 0);
@@ -180,6 +191,7 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom, &m_eSimpleHitFrom);
 	m_eCurAttackType = tDamageParams.eAttackType;
 	m_bHitWeak = IsWeak(dynamic_cast<CRigidBody*>(tDamageParams.pContactComponent));
+
 
 	CheckDeBuff(tDamageParams.eDeBuff);
 	HitEffect(tDamageParams);
@@ -201,8 +213,20 @@ void CEnemy::SetEnemyBatchDataStat(ENEMY_STAT tStat)
 	m_iHP = m_iMaxHP;
 	m_iMaxCrushGage = tStat.iMaxCrushGage;
 	m_iCrushGage = m_iMaxCrushGage;
+	m_bHasCrushGage = tStat.bHasCrushGage;
 	m_iAtkDamage = tStat.iAtkDamage;
-	m_iLevel = tStat.iLevel;
+	iMonsterLevel = tStat.iLevel;
+}
+
+ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
+{
+	ENEMY_STAT tStat;
+	tStat.iMaxHP = m_iMaxHP;
+	tStat.iMaxCrushGage = m_iMaxCrushGage;
+	tStat.bHasCrushGage = m_bHasCrushGage;
+	tStat.iAtkDamage = m_iAtkDamage;
+	tStat.iLevel = iMonsterLevel;
+	return tStat;
 }
 
 void CEnemy::SetDead()
@@ -530,6 +554,13 @@ void CEnemy::HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttac
 			pTarget->TakeDamage(tDamageParams);
 		}
 	}
+}
+
+void CEnemy::SocketLocalMove(CEnemy_AnimInstance * pASM)
+{
+	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	_vector vLocalMove = m_pModelCom->GetLocalMove(WorldMatrix, pASM->GetCurSocketAnimName());
+	m_pTransformCom->LocalMove(vLocalMove);
 }
 
 void CEnemy::Free()
