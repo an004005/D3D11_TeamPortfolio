@@ -157,6 +157,23 @@ CGameObject* CObject_Manager::Clone_GameObject_NoLayer(_uint iLevelIndex, const 
 	return pCloned;
 }
 
+CGameObject* CObject_Manager::Clone_GameObject_NoLayerNoBegin(_uint iLevelIndex, const _tchar* pPrototypeTag,
+	void* pArg)
+{
+	CGameObject*		pPrototype = Find_Prototype(iLevelIndex, pPrototypeTag);
+	if (nullptr == pPrototype)
+	{
+		// clone할 때 못 찾으면 static도 찾아본다.
+		pPrototype = Find_Prototype(LEVEL_STATIC, pPrototypeTag);
+		if (nullptr == pPrototype)
+			return nullptr;
+	}
+
+	auto pCloned = pPrototype->Clone(pArg);
+
+	return pCloned;
+}
+
 wcmap<class CLayer*>& CObject_Manager::GetLayers(_uint iLevelIndex)
 {
 	Assert(iLevelIndex < m_iNumLevels);

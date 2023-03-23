@@ -496,6 +496,11 @@ CGameObject* CGameInstance::Clone_GameObject_NoLayer(_uint iLevelIndex, const _t
 	return m_pObject_Manager->Clone_GameObject_NoLayer(iLevelIndex, pPrototypeTag, pArg);
 }
 
+CGameObject* CGameInstance::Clone_GameObject_NoLayerNoBegin(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg)
+{
+	return m_pObject_Manager->Clone_GameObject_NoLayerNoBegin(iLevelIndex, pPrototypeTag, pArg);
+}
+
 wcmap<class CLayer*>& CGameInstance::GetLayers(_uint iLevelIndex)
 {
 	return m_pObject_Manager->GetLayers(iLevelIndex);

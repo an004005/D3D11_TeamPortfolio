@@ -11,7 +11,7 @@ END
 
 BEGIN(Client)
 
-enum ESpecialType { SPECIAL_TRAIN, SPECAIL_END };
+enum ESpecialType { SPECIAL_TRAIN, SPECIAL_TELEPHONEPOLE, SPECIAL_HBEAM_BUNDLE, SPECIAL_HBEAM_SINGLE, SPECAIL_END };
 
 class CSpecialObject :
 	public CGameObject

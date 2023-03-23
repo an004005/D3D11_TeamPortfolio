@@ -37,10 +37,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
+	
+#ifdef _DEBUG
+		char* pValue2 = NULL;
+		size_t len = NULL;
+		_dupenv_s(&pValue2, &len, "INBOK");
+		if (pValue2 != nullptr)
+		{
+			g_iWinSizeX = 900;
+			g_iWinSizeY = 650;
+		}
+		free(pValue2);
+#endif
 
 #ifdef _DEBUG
-	char* pValue2 = NULL;
-	size_t len = NULL;
+	pValue2 = NULL;
+	len = NULL;
 	_dupenv_s(&pValue2, &len, "SHADER");
 	if (pValue2 != nullptr)
 	{

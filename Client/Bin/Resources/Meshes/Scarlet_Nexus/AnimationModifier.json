@@ -1,4 +1,10 @@
 {
+    "AS_BC_em_common_ch0100_end": {
+        "Duration": 207.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_021_AL_run_start_F": {
         "Duration": 30.0,
         "TickPerSecond": 50.0,
@@ -2449,6 +2455,18 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_325_AL_throw_LR_loop": {
+        "Duration": 160.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_325_AL_throw_LR_start": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_326_AL_throw_RL_end": {
         "Duration": 50.0,
         "TickPerSecond": 50.0,
@@ -2467,6 +2485,12 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_326_AL_throw_RR_start": {
+        "Duration": 40.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_329_AL_throw_LR_end": {
         "Duration": 50.0,
         "TickPerSecond": 50.0,
@@ -2482,6 +2506,42 @@
     "AS_ch0100_329_AL_throw_LR_start": {
         "Duration": 50.0,
         "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_331_AL_swing_L": {
+        "Duration": 140.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_331_AL_swing_R": {
+        "Duration": 140.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_333_AL_rotation_cancel": {
+        "Duration": 80.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_333_AL_rotation_end": {
+        "Duration": 155.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_333_AL_rotation_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 20.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_333_AL_rotation_start": {
+        "Duration": 30.0,
+        "TickPerSecond": 30.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -2745,6 +2805,12 @@
     "AS_ch0100_481_AL_down_B_shock": {
         "Duration": 180.0,
         "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_BrainCrash_Cutin": {
+        "Duration": 49.0,
+        "TickPerSecond": 49.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -3142,6 +3208,36 @@
             }
         ]
     },
+    "AS_em0210_211_AL_somersault": {
+        "Duration": 160.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Somersault_Start",
+                "EventTime": 76.0
+            },
+            {
+                "EventName": "Somersault_End",
+                "EventTime": 80.0
+            }
+        ]
+    },
+    "AS_em0210_212_AL_spin": {
+        "Duration": 180.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Spin_Start",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "Spin_End",
+                "EventTime": 120.0
+            }
+        ]
+    },
     "AS_em0300_111_AL_walk_L_start": {
         "Duration": 60.0,
         "TickPerSecond": 48.0,
@@ -3373,8 +3469,8 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "mon_1_sidestep_1_step",
-                "EventTime": 0.0
+                "EventName": "Dodge_B_Start",
+                "EventTime": 3.0
             }
         ]
     },
@@ -3384,8 +3480,8 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "mon_1_sidestep_1_step",
-                "EventTime": 0.0
+                "EventName": "Dodge_L_Start",
+                "EventTime": 3.0
             }
         ]
     },
@@ -3395,8 +3491,8 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "mon_1_backspin_step",
-                "EventTime": 0.0
+                "EventName": "Dodge_R_Start",
+                "EventTime": 3.0
             }
         ]
     },
@@ -3831,13 +3927,13 @@
     "AS_em0700_121_AL_randommove_L": {
         "Duration": 120.0,
         "TickPerSecond": 14.0,
-        "bLooping": true,
+        "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_122_AL_randommove_R": {
         "Duration": 120.0,
         "TickPerSecond": 14.0,
-        "bLooping": true,
+        "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_160_AL_threat": {

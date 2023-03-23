@@ -12,6 +12,7 @@ END
 BEGIN(Client)
 
 // FlowerLeg (본명: 바스포즈)
+// MadeBy Captin
 class CEM0200 : public CEnemy
 {
 private:

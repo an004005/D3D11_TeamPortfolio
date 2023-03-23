@@ -27,12 +27,21 @@
 
 #include "FlowerLeg_Invisible.h"
 #include "FLInvisible_Controller.h"
+#include "EM0110.h"
 #include "EM0200.h"
+#include "EM0210.h"
+#include "EM0400.h"
+#include "EM0650.h"
+#include "EM0700.h" 
+#include "EnemyBullet.h"
 #include "TestTarget.h"
 
 // Kinetic Object
 #include "SpecialObject.h"
 #include "Special_Train.h"
+#include "Special_TelephonePole.h"
+#include "Special_HBeam_Bundle.h"
+#include "Special_HBeam_Single.h"
 
 // Player Setting
 #include "Player.h"
@@ -199,6 +208,7 @@ HRESULT CFactoryMethod::MakeEnermyPrototypes(ID3D11Device* pDevice, ID3D11Device
 		pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
 	}
+
 	// Invisible
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("FlowerLegInvisible"), CFlowerLeg_Invisible::Create(pDevice, pContext)));
 	// ~Invisible
@@ -227,15 +237,57 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	{
-		auto pEM200Model = CModel::Create(pDevice, pContext,
-			"../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/FlowerLeg.anim_model");
-		pEM200Model->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Anim/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em200"), pEM200Model));
-	}
-
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em200"), CEM0200::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("TestTarget"), CTestTarget::Create(pDevice, pContext)));
+
+
+
+	auto pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/FlowerLeg.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/FlowerLeg/Anim/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em200"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em200"), CEM0200::Create(pDevice, pContext)));
+
+	/* EM0700*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0700/Model/SM_em0700.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0700/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em700"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em700"), CEM0700::Create(pDevice, pContext)));
+
+	/* EM0650*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0600/Model/SM_em0650.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0600/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em650"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em650"), CEM0650::Create(pDevice, pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("EnemyBullet"), CEnemyBullet::Create(pDevice, pContext)));
+
+	/* EM0400*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0400/Model/SM_em0400.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0400/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em400"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em400"), CEM0400::Create(pDevice, pContext)));
+
+	/* EM0210*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0200/Model/SM_em0210.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0200/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em210"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em210"), CEM0210::Create(pDevice, pContext)));
+
+	/* EM0110*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0100/Model/SM_em0110.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0100/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em110"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em110"), CEM0110::Create(pDevice, pContext)));
 
 	return S_OK;
 }
@@ -284,6 +336,13 @@ HRESULT CFactoryMethod::MakeSAS_Portrait_Prototypes(ID3D11Device* pDevice, ID3D1
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	{
+		auto pModel_ch100 = CModel::Create(pDevice, pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
+		pModel_ch100->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Portrait/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch100_Portrait", pModel_ch100));
+	}
+
+	{
 		auto pModel_ch300 = CModel::Create(pDevice, pContext,
 			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/ch300.anim_model");
 		pModel_ch300->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/SAS_Anim/");
@@ -317,6 +376,22 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_Train", CSpecial_Train::Create(pDevice, pContext)));
 
 
+	auto pModel_TelephonePole = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/TelephonePole/Pole_A.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_TelephonePole", pModel_TelephonePole));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_TelephonePole", CSpecial_TelephonePole::Create(pDevice, pContext)));
+
+
+	auto pModel_HBeam_Bundle = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Bundle.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_HBeam_Bundle", pModel_HBeam_Bundle));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Bundle", CSpecial_HBeam_Bundle::Create(pDevice, pContext)));
+
+
+	auto pModel_HBeam_Single = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_HBeam_Single", pModel_HBeam_Single));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Single", CSpecial_HBeam_Single::Create(pDevice, pContext)));
 
 	return S_OK;
 }

@@ -310,7 +310,10 @@ void CParticleGroup::Tick(_double TimeDelta)
 		for (auto iter : m_mapParticleSystem)
 		{
 			if (iter.second.second != nullptr)
+			{
 				iter.second.second->Tick(TimeDelta);
+				// iter.second.second->Start_Timeline();
+			}
 		}
 
 		static _int NoGenParticle = 0;

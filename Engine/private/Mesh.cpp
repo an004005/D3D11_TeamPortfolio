@@ -177,6 +177,12 @@ HRESULT CMesh::Ready_VertexBuffer_NonAnimModel(HANDLE hFile, CModel* pModel)
 		return E_FAIL;
 
 	m_pNonAnimModelBufferData = pNonAnimVertices;
+
+
+	sort(m_pNonAnimModelBufferData, m_pNonAnimModelBufferData + m_iNumVertices, [](const VTXMODEL& left, const VTXMODEL& right)
+	{
+		return (left.vTexUV.x + left.vTexUV.y) < ((right.vTexUV.x + right.vTexUV.y));
+	});
 	//Safe_Delete_Array(pNonAnimVertices);
 
 	return S_OK;
