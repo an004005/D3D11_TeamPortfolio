@@ -95,7 +95,7 @@ void CPhysX_Manager::Initialize()
 	physx::PxPvdTransport* transport = physx::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
 	m_PVD->connect(*transport, physx::PxPvdInstrumentationFlag::eALL);
 	m_Physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, m_ToleranceScale, true, m_PVD);
-
+	PxInitExtensions(*m_Physics, m_PVD);
 #else
 	m_Physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, m_ToleranceScale);
 #endif
@@ -131,10 +131,10 @@ void CPhysX_Manager::Initialize()
 	// m_Scene->setVisualizationParameter(physx::PxVisualizationParameter::eACTOR_AXES, 2.0f);
 	// m_Scene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_EDGES, 1);
 	m_Scene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_SHAPES, 1);
-	m_Scene->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_POINT, 2);
-	m_Scene->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_NORMAL, 2);
-	m_Scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 1.0f);
-	m_Scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 1.0f);
+	// m_Scene->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_POINT, 2);
+	// m_Scene->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_NORMAL, 2);
+	// m_Scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 1.0f);
+	// m_Scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 1.0f);
 
 	auto pContext = CGraphic_Device::GetInstance()->GetContext();
 	auto pDevice = CGraphic_Device::GetInstance()->GetDevice();
@@ -158,6 +158,7 @@ void CPhysX_Manager::Initialize()
 	m_Materials.emplace("Default", m_Physics->createMaterial(0.5f, 0.5f, 0.6f));
 	m_Materials.emplace("SmallFriction", m_Physics->createMaterial(0.1f, 0.1f, 0.5f));
 	m_Materials.emplace("NoBounce", m_Physics->createMaterial(0.5f, 0.5f, 0.3f));
+	m_Materials.emplace("SmallBounce", m_Physics->createMaterial(0.5f, 0.5f, 0.1f));
 
 	groundPlane = PxCreatePlane(*m_Physics, physx::PxPlane(0,1,0,30), *FindMaterial("Default"));
 	PxShape* shape;
@@ -731,6 +732,7 @@ void CPhysX_Manager::Free()
 	m_Physics->release();
 
 #ifdef _DEBUG
+	PxCloseExtensions();
 	m_PVD->disconnect();
 	m_PVD->getTransport()->release();
 	m_PVD->release();

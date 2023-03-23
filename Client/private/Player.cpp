@@ -36,6 +36,7 @@
 #include "SAS_Portrait.h"
 #include "Weapon_wp0190.h"
 #include "SpecialObject.h"
+#include "SAS_Cable.h"
 
 #include "PlayerInfoManager.h"
 #include "Special_Train.h"
@@ -449,6 +450,10 @@ void CPlayer::Late_Tick(_double TimeDelta)
 		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
 		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 	}
+
+
+	m_pSAS_Cable->Tick(TimeDelta);
+	m_pSAS_Cable->Late_Tick(TimeDelta);
 }
 
 void CPlayer::AfterPhysX()
@@ -523,6 +528,14 @@ void CPlayer::Imgui_RenderProperty()
 	{
 		static GUIZMO_INFO tp2;
 		CImguiUtils::Render_Guizmo(&pivot2, tp2, true, true);
+	}
+
+	if (ImGui::CollapsingHeader("SAS_Cable"))
+	{
+		ImGui::Indent(20.f);
+		m_pSAS_Cable->Imgui_RenderProperty();
+		m_pSAS_Cable->Imgui_RenderComponentProperties();
+		ImGui::Unindent(20.f);
 	}
 
 	// HP Bar Check	
@@ -782,6 +795,10 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	Json PlayerCollider = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Player/PlayerRange.json");
 	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody",
 		L"PlayerRangeCollider", (CComponent**)&m_pRange, &PlayerCollider));
+
+	m_pSAS_Cable = dynamic_cast<CSAS_Cable*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Prototype_GameObject_SASCable"));
+	Assert(m_pSAS_Cable != nullptr);
+	m_pSAS_Cable->SetTargetInfo(m_pTransformCom, m_pModel);
 
 	return S_OK;
 }
@@ -4625,6 +4642,7 @@ void CPlayer::Free()
 	Safe_Release(m_pRange);
 
 	Safe_Release(m_pTrainStateMachine_Left);
+	Safe_Release(m_pSAS_Cable);
 
 //	Safe_Release(m_pContectRigidBody);
 }

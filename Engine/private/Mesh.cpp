@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "Bone.h"
 #include "GameUtils.h"
+#include "PxBone.h"
 
 CMesh::CMesh(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CVIBuffer(pDevice, pContext)
@@ -126,6 +127,19 @@ void CMesh::SetUp_BoneMatrices(_float4x4 * pBoneMatrices, _fmatrix PivotMatrix)
 			pBone->Get_OffsetMatrix()
 			* pBone->Get_CombindMatrix()
 			* PivotMatrix);
+	}
+}
+
+void CMesh::SetUp_PxBoneMatrices(_float4x4* pBoneMatrices, _fmatrix WorldMatrixInv)
+{
+	_uint		iNumBones = 0;
+
+	if (m_BoneNames.empty())
+		XMStoreFloat4x4(&pBoneMatrices[0], _float4x4::Identity);
+
+	for (const auto& pBone : m_Bones)
+	{
+		XMStoreFloat4x4(&pBoneMatrices[iNumBones++], pBone->Get_OffsetMatrix() * static_cast<CPxBone*>(pBone)->GetCombindMatrix_WithPivot(WorldMatrixInv));
 	}
 }
 

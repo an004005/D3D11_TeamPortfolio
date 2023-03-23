@@ -891,6 +891,7 @@
       <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Imgui_Batch.h" />
+    <ClInclude Include="..\public\SAS_Cable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1431,6 +1432,7 @@
       <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Imgui_Batch.cpp" />
+    <ClCompile Include="..\private\SAS_Cable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

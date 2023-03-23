@@ -273,6 +273,27 @@ _bool CRigidBody::IsOnPhysX()
 	return m_pActor != nullptr && m_pActor->getScene() != nullptr;
 }
 
+void CRigidBody::AttachTo(CRigidBody* pParent, _float y, _float z, _float fTol, _float fBounceTol)
+{
+	m_OriginTransformMatrix = _float4x4::CreateScale(0.1f, 0.1f, 0.1f);
+	m_fDensity = fBounceTol;
+	m_eShapeType = TYPE_SPHERE;
+	CreateActor();
+
+
+	auto pPhysx = CPhysX_Manager::GetInstance()->GetPhysics();
+	
+	auto joint = physx::PxSphericalJointCreate(*pPhysx, pParent->m_pActor, physx::PxTransform{0.f, 0.f, -0.06f}, m_pActor, physx::PxTransform{0.f, 0.f, 0.06f});
+	joint->setConstraintFlag(physx::PxConstraintFlag::ePROJECTION, true);
+	joint->setProjectionLinearTolerance(fTol);
+
+	joint->setLimitCone(physx::PxJointLimitCone(y, z, 0.01f));
+	joint->setSphericalJointFlag(physx::PxSphericalJointFlag::eLIMIT_ENABLED, true);
+
+	CPhysX_Manager::GetInstance()->AddActor(*m_pActor);
+
+}
+
 void CRigidBody::ReleaseActor()
 {
 	if (m_pActor)

@@ -53,6 +53,7 @@
 
 #include "Special_Train.h"
 #include "Imgui_Batch.h"
+#include "SAS_Cable.h"
 
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -235,6 +236,9 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	// });
 
 	//CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext);
+	{// SAS ÄÉÀÌºí
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SASCable", CSAS_Cable::Create(m_pDevice, m_pContext)));
+	}
 
 	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
 
