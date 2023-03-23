@@ -248,6 +248,8 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\PhysX_Manager.h" />
     <ClInclude Include="..\public\PipeLine.h" />
     <ClInclude Include="..\public\PostProcess.h" />
+    <ClInclude Include="..\public\PxBone.h" />
+    <ClInclude Include="..\public\PxModel.h" />
     <ClInclude Include="..\public\Renderer.h" />
     <ClInclude Include="..\public\RenderTarget.h" />
     <ClInclude Include="..\public\RigidBody.h" />
@@ -340,6 +342,8 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\PhysX_Manager.cpp" />
     <ClCompile Include="..\private\PipeLine.cpp" />
     <ClCompile Include="..\private\PostProcess.cpp" />
+    <ClCompile Include="..\private\PxBone.cpp" />
+    <ClCompile Include="..\private\PxModel.cpp" />
     <ClCompile Include="..\private\Renderer.cpp" />
     <ClCompile Include="..\private\RenderTarget.cpp" />
     <ClCompile Include="..\private\RigidBody.cpp" />

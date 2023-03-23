@@ -60,6 +60,7 @@
 #include "ParticleGroup.h"
 #include "PostVFX_Distortion.h"
 #include "SAS_Portrait.h"
+#include "SAS_Cable.h"
 
 //UI
 // Canvas
@@ -295,6 +296,10 @@ HRESULT CFactoryMethod::MakePlayerPrototypes(ID3D11Device * pDevice, ID3D11Devic
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
+	{// SAS ÄÉÀÌºí
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SASCable", CSAS_Cable::Create(pDevice, pContext)));
+	}
+
 	pGameInstance->Add_Prototype(L"Player", CPlayer::Create(pDevice, pContext));
 	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(pDevice, pContext));
 
@@ -314,7 +319,6 @@ HRESULT CFactoryMethod::MakePlayerPrototypes(ID3D11Device * pDevice, ID3D11Devic
 		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
 	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
 
-	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(pDevice, pContext));
 
 	return S_OK;
 }

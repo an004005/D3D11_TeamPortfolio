@@ -583,6 +583,7 @@ private:
 
 private:
 	CSAS_Portrait* m_pSasPortrait = nullptr;
+	class CSAS_Cable* m_pSAS_Cable = nullptr;
 
 private:
 	CParticleGroup*	m_pSwordParticle = nullptr;

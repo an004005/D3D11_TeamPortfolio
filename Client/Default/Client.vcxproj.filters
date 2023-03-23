@@ -987,6 +987,8 @@
     <ClInclude Include="..\public\Special_HBeam_Single.h">
       <Filter>02.GameObjects\SpecialObject\Special_HBeam_Single</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Imgui_Batch.h" />
+    <ClInclude Include="..\public\SAS_Cable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1596,6 +1598,7 @@
     <ClCompile Include="..\private\Special_HBeam_Single.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_HBeam_Single</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\SAS_Cable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

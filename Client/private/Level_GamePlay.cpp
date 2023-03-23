@@ -35,6 +35,8 @@
 #include "FactoryMethod.h"
 #include "PostVFX_Penetrate.h"
 #include "VFX_Manager.h"
+#include "SAS_Cable.h"
+#include "Indicator.h"
 
 
 // #define ADD_PLAYER
@@ -93,10 +95,10 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
-	{
-		CGameInstance::GetInstance()->Clone_GameObject(L"LayerTest", L"Indicator");
-	}
+	// if (CGameInstance::GetInstance()->KeyDown(DIK_0))
+	// {
+	// 	CGameInstance::GetInstance()->Clone_GameObject(L"LayerTest", L"Indicator");
+	// }
 }
 
 void CLevel_GamePlay::Late_Tick(_double TimeDelta)
@@ -195,7 +197,6 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	
 
-	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
@@ -205,6 +206,10 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 	CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext);
 	CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext);
 	CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext);
+
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SAS_Cable", CSAS_Cable::Create(m_pDevice, m_pContext)));
+	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -216,10 +221,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
 
 	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
 
+	// pGameInstance->Clone_GameObject(pLayerTag, L"Indicator");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SAS_Cable")));
+	
 	return S_OK;
 }
 
@@ -281,11 +289,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	// 	auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 	// }
 
-	{
-		PreviewData["Model"] = "MonsterBuddyLumi";
-		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
-		auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
-	}
 
 
 	// Model_Ch300_Portrail
