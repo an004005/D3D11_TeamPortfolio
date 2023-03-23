@@ -15,15 +15,18 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	Tick(_double TimeDelta) override;
-	virtual void	Late_Tick(_double TimeDelta) override;
-	virtual HRESULT Render() override;
 
 	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	//void	Set_IconPick(const _uint iIndex, )
+	void	Set_Pick() {
+		m_bPick = true;
+	}
+
+private:
+	_float	m_fAlpha = { 0.0f };
+	_bool	m_bAlphaDwon = { false };
+	_bool	m_bPick = { false };
 
 public:
 	static CMain_BrainMapIconPickUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

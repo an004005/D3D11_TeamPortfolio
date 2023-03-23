@@ -5,6 +5,8 @@
 #include "Item_Manager.h"
 
 #include "DefaultUI.h"
+#include "Main_OnMouseUI.h"
+#include "Main_BrainMapIconPickUI.h"
 
 CCanvas_BrainMap::CCanvas_BrainMap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -29,10 +31,36 @@ HRESULT CCanvas_BrainMap::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	m_bVisible = false;
+
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+	{
 		iter->second->SetVisible(false);
 
-	m_bVisible = false;
+		wstring	wsIcon = L"";
+		if (10 > m_iIconCount)
+			wsIcon = L"Icon__0" + to_wstring(m_iIconCount);
+		else
+			wsIcon = L"Icon__" + to_wstring(m_iIconCount);
+
+		if (iter->first == wsIcon)
+		{
+			++m_iIconCount;
+			m_vecIconUI.push_back(dynamic_cast<CMain_OnMouseUI*>((*iter).second));
+		}
+
+		wstring	wsLink = L"";
+		if (10 > m_iLinkCount)
+			wsLink = L"Icon__0" + to_wstring(m_iLinkCount);
+		else
+			wsLink = L"Icon__" + to_wstring(m_iLinkCount);
+
+		if (iter->first == wsLink)
+		{
+			++m_iLinkCount;
+			m_vecLinkUI.push_back(iter->second);
+		}
+	}
 
 	return S_OK;
 }
@@ -43,6 +71,8 @@ void CCanvas_BrainMap::Tick(_double TimeDelta)
 
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(m_bVisible);
+
+	OnIcon_Tick();
 
 }
 
@@ -114,8 +144,6 @@ void CCanvas_BrainMap::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	ImGui::DragFloat("X", &m_vPosssss.x);
-	ImGui::DragFloat("y", &m_vPosssss.y);
 }
 
 void CCanvas_BrainMap::SaveToJson(Json& json)
@@ -128,10 +156,18 @@ void CCanvas_BrainMap::LoadFromJson(const Json & json)
 	CCanvas::LoadFromJson(json);
 }
 
-void CCanvas_BrainMap::IconPick_Tick()
+void CCanvas_BrainMap::OnIcon_Tick()
 {
+	for (size_t i = 0; i < m_vecIconUI.size(); ++i)
+	{
+		// 아이콘 위에 마우스가 올라갔을 때
+		if (true == m_vecIconUI[i]->Get_OnMouse())
+			Find_ChildUI(L"Icon_Pick")->Set_Position(m_vecIconUI[i]->Get_Position());
 
-
+		// 아이콘을 클릭 했을 때
+		if (true == m_vecIconUI[i]->Get_OnButton())
+			dynamic_cast<CMain_BrainMapIconPickUI*>(Find_ChildUI(L"Icon_Pick"))->Set_Pick();
+	}
 }
 
 CCanvas_BrainMap * CCanvas_BrainMap::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

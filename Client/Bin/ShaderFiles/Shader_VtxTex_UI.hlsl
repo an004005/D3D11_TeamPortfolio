@@ -943,6 +943,46 @@ PS_OUT PS_Alpha_Color2(PS_IN In)	// → 32
 	return Out;
 }
 
+VS_OUT1 VS_Test(VS_IN In)
+{
+	VS_OUT1		Out = (VS_OUT1)0;
+	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
+
+	Out.vPosition = mul(float4(In.vPosition, 1.f), matWP);
+
+	In.vTexUV.x = In.vTexUV.x + g_vec2_0.x;
+	In.vTexUV.y = In.vTexUV.y + g_vec2_0.y;
+
+	In.vTexUV.x = In.vTexUV.x / g_vec2_1.x;
+	In.vTexUV.y = In.vTexUV.y / g_vec2_1.y;
+
+	Out.vTexUV1 = In.vTexUV;
+
+	In.vTexUV.x = In.vTexUV.x + g_vec2_2.x;
+	In.vTexUV.y = In.vTexUV.y + g_vec2_2.y;
+
+	In.vTexUV.x = In.vTexUV.x / g_vec2_1.x;
+	In.vTexUV.y = In.vTexUV.y / g_vec2_1.y;
+
+	Out.vTexUV = In.vTexUV;
+
+	return Out;
+}
+
+PS_OUT PS_Test(PS_IN1 In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4  vTextureColor;
+	float4  vGlowColor;
+
+	vTextureColor = g_tex_0.Sample(LinearSampler, In.vTexUV1);
+	vGlowColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor = vTextureColor * vGlowColor;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0 : 알파 블랜딩으로 그리기
@@ -1426,4 +1466,16 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_Alpha_Color2();	// 색상 조정
 	}
 	
+	pass Test
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_Test();		// 텍스처의 원하는 부분만 출력
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_Test();	// 색상 조정
+	}
 }

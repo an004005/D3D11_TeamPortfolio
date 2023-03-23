@@ -31,36 +31,36 @@ HRESULT CMain_BrainMapIconPickUI::Initialize(void * pArg)
 void CMain_BrainMapIconPickUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-}
 
-void CMain_BrainMapIconPickUI::Late_Tick(_double TimeDelta)
-{
-	__super::Late_Tick(TimeDelta);
-}
+	if (true == m_bPick)
+	{
+		m_fAlpha = 1.0f;
+		m_bPick = false;
+	}
 
-HRESULT CMain_BrainMapIconPickUI::Render()
-{
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	if (true == m_bAlphaDwon)
+	{
+		m_fAlpha -= _float(TimeDelta) * 0.5f;
 
-	return S_OK;
+		if (0.2f > m_fAlpha)
+			m_bAlphaDwon = false;
+	}
+	else
+	{
+		m_fAlpha += _float(TimeDelta) * 0.5f;
+
+		if (0.6f < m_fAlpha)
+			m_bAlphaDwon = true;
+	}
+
+	m_tParams.Floats[0] = m_fAlpha;
+
+
 }
 
 void CMain_BrainMapIconPickUI::Imgui_RenderProperty()
 {
 	CUI::Imgui_RenderProperty();
-
-}
-
-void CMain_BrainMapIconPickUI::SaveToJson(Json & json)
-{
-	CUI::SaveToJson(json);
-
-}
-
-void CMain_BrainMapIconPickUI::LoadFromJson(const Json & json)
-{
-	CUI::LoadFromJson(json);
 
 }
 

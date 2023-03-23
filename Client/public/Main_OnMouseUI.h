@@ -23,7 +23,12 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-
+	_bool	Get_OnMouse() {
+		return m_bOnMouse;
+	}
+	_bool	Get_OnButton() {
+		return m_bOnButton;
+	}
 
 private:
 	void	CurrentOnMouse(const _double & TimeDelta);

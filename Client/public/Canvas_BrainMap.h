@@ -23,12 +23,17 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 private:
-	void	IconPick_Tick();
+	void	OnIcon_Tick();
 
 private:
+	vector<class CMain_OnMouseUI*>	m_vecIconUI;
+	vector<CUI*>	m_vecLinkUI;
+
+	_uint	m_iIconCount = { 0 };
+	_uint	m_iLinkCount = { 0 };
+	
 	_bool	m_bAcquired = { false };
 
-	_float2 m_vPosssss = { 0.0f, 0.0f };
 
 public:
 	static CCanvas_BrainMap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

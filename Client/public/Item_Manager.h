@@ -25,9 +25,15 @@ public:
 		_tchar*		szItemEx[4] = {};
 
 	}ITEMINFO;
+	
+	enum BRAINTYPE { DRIVE, ENHANCE, EXPANSION, ASSISTANCE, BRAINFIELD, BRAINTYPE_END };
+	enum BRAINCOLOR { GREEN, YELLOW, RAD, PURPLE, BRAINCOLOR_END };
 
 	typedef struct tagBrainInfo
 	{
+		BRAINTYPE	eType = { BRAINTYPE_END };
+		BRAINCOLOR	eColor = { BRAINCOLOR_END };
+		_int		iBP = { 0 };
 		_tchar*		szBrainName = {};
 		_tchar*		szBrainEx[4] = {};
 
