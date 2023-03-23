@@ -266,6 +266,18 @@
             }
         ]
     },
+    "AS_ch0100_051_AL_sas_dodge_F_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_051_AL_sas_dodge_F_stop_Telepo": {
+        "Duration": 41.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_053_AL_dodge_R_start": {
         "Duration": 22.0,
         "TickPerSecond": 50.0,
@@ -291,6 +303,18 @@
                 "EventTime": 5.0
             }
         ]
+    },
+    "AS_ch0100_053_AL_sas_dodge_R_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_053_AL_sas_dodge_R_stop_Telepo": {
+        "Duration": 41.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_ch0100_055_AL_dodge_B_start": {
         "Duration": 22.0,
@@ -318,6 +342,18 @@
             }
         ]
     },
+    "AS_ch0100_055_AL_sas_dodge_B_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_055_AL_sas_dodge_B_stop_Telepo": {
+        "Duration": 41.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_057_AL_dodge_L_start": {
         "Duration": 22.0,
         "TickPerSecond": 50.0,
@@ -343,6 +379,18 @@
                 "EventTime": 5.0
             }
         ]
+    },
+    "AS_ch0100_057_AL_sas_dodge_L_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_057_AL_sas_dodge_L_stop_Telepo": {
+        "Duration": 41.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_ch0100_061_AL_air_dodge_F": {
         "Duration": 25.0,
@@ -708,6 +756,18 @@
             }
         ]
     },
+    "AS_ch0100_151_AL_sas_dodge_F_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_151_AL_sas_dodge_F_stop_Telepo": {
+        "Duration": 52.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_153_AL_dodge_R_start": {
         "Duration": 23.0,
         "TickPerSecond": 50.0,
@@ -733,6 +793,18 @@
                 "EventTime": 5.0
             }
         ]
+    },
+    "AS_ch0100_153_AL_sas_dodge_R_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_153_AL_sas_dodge_R_stop_Telepo": {
+        "Duration": 52.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_ch0100_155_AL_dodge_B_dash": {
         "Duration": 30.0,
@@ -766,6 +838,18 @@
             }
         ]
     },
+    "AS_ch0100_155_AL_sas_dodge_B_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_155_AL_sas_dodge_B_stop_Telepo": {
+        "Duration": 52.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_157_AL_dodge_L_start": {
         "Duration": 22.0,
         "TickPerSecond": 50.0,
@@ -791,6 +875,18 @@
                 "EventTime": 5.0
             }
         ]
+    },
+    "AS_ch0100_157_AL_sas_dodge_L_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_157_AL_sas_dodge_L_stop_Telepo": {
+        "Duration": 52.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_ch0100_161_AL_air_dodge_F": {
         "Duration": 25.0,

@@ -748,6 +748,11 @@ void CPlayer::SasMgr()
 				if (ESASType::SAS_FIRE == InputSas)
 				{
 					m_pSwordParticle->SetDelete();
+					m_pSAS_Cable->UnEquipCable();
+				}
+				else if (ESASType::SAS_TELEPORT == InputSas)
+				{
+					m_pASM->Add_SpairSasMotion(ESASType::SAS_NOT);
 				}
 			}
 			else // 사용중이지 않을 경우
@@ -762,6 +767,10 @@ void CPlayer::SasMgr()
 				if (ESASType::SAS_FIRE == InputSas)
 				{
 					m_pSasPortrait->Start_SAS(InputSas);
+				}
+				else if (ESASType::SAS_TELEPORT == InputSas)
+				{
+					m_pASM->Add_SpairSasMotion(ESASType::SAS_TELEPORT);
 				}
 
 				CPlayerInfoManager::GetInstance()->Set_SasType(InputSas);
@@ -782,6 +791,7 @@ void CPlayer::SasMgr()
 				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Sas_Fire_Start"))->Start_Attach(this, "Sheath");
 				m_pSwordParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Weapon_Particle"));
 				m_pSwordParticle->Start_Attach(this, "RightWeapon", true);
+				m_pSAS_Cable->EquipCable(ESASType::SAS_FIRE);
 				break;
 			default:
 				break;
@@ -3854,6 +3864,12 @@ _bool CPlayer::isPlayerAttack(void)
 	}
 
 	if (szCurAnim.find("AS_ch0100_5") != string::npos)
+	{
+		m_bOnBattle = true;
+		return true;
+	}
+
+	if (!CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty())
 	{
 		m_bOnBattle = true;
 		return true;
