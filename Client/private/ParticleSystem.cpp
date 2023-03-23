@@ -802,6 +802,12 @@ void CParticleSystem::AddPoint()
 			const VTXMODEL* pNonAnimBuffer = m_pMeshCurveModel->Get_NonAnimBuffer();
 			Assert(VBSize > 0);
 
+			if (m_fMeshVtxStartRatio <= 0.f)
+				m_fMeshVtxStartRatio = 0.f;
+			if (m_fMeshVtxRangeRatio <= 0.f)
+				m_fMeshVtxRangeRatio = 0.f;
+
+
 			_float fStartIdx = m_fMeshVtxStartRatio * VBSize;
 			_float fEndIdx = fStartIdx + m_fMeshVtxRangeRatio * VBSize;
 			if (fEndIdx > (_float)VBSize - 1.f)
