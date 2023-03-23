@@ -197,6 +197,9 @@ private:	// 특수연출용 FSM
 	HRESULT				SetUp_BrainCrashStateMachine();
 	CFSMComponent*		m_pBrainCrashStateMachine = nullptr;
 
+	HRESULT				SetUp_HBeamStateMachine();
+	CFSMComponent*		m_pHBeamStateMachine_Left = nullptr;
+
 private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_Train_Charge_L;	// 좌측 기차 차지
 	list<CAnimation*>	m_Train_Cancel_L;	// 좌측 기차 취소
@@ -212,6 +215,13 @@ private:	// 특수연출용 소켓 애니메이션
 
 	list<CAnimation*>	m_BrainCrash_CutScene;
 	list<CAnimation*>	m_BrainCrash_Activate;
+
+	list<CAnimation*>	m_HBeam_Charge_L;			// 좌측 H빔 차지
+	list<CAnimation*>	m_HBeam_Cancel_L;			// 좌측 H빔 취소
+	list<CAnimation*>	m_HBeam_Throw_L;			// 좌측 H빔 던짐
+	list<CAnimation*>	m_HBeam_Rotation_L;			// 좌측 H빔 추가타 대기 및 루프
+	list<CAnimation*>	m_HBeam_End_L;				// 추가타 종료
+	list<CAnimation*>	m_HBeam_Finish_L;			// 좌측 H빔 마무리
 
 private:
 	HRESULT				Setup_AnimSocket();
