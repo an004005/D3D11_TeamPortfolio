@@ -32,7 +32,7 @@ HRESULT CSpecial_TelephonePole::Initialize(void * pArg)
 
 	FAILED_CHECK(SetUp_Components(pArg));
 
-	m_pTransformCom->SetTransformDesc({ 0.1f, XMConvertToRadians(90.f) });
+	m_pTransformCom->SetTransformDesc({ 0.5f, XMConvertToRadians(90.f) });
 
 	m_eSpecialObejctType = SPECIAL_TELEPHONEPOLE;
 
@@ -51,7 +51,7 @@ void CSpecial_TelephonePole::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	m_pTransformCom->SetTransformDesc({ 0.5f, XMConvertToRadians(90.f) });
+	//m_pTransformCom->SetTransformDesc({ 0.5f, XMConvertToRadians(90.f) });
 }
 
 void CSpecial_TelephonePole::Late_Tick(_double TimeDelta)

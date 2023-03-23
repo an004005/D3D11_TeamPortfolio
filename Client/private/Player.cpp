@@ -40,6 +40,8 @@
 #include "PlayerInfoManager.h"
 #include "Special_Train.h"
 #include "Special_TelephonePole.h"
+#include "Special_HBeam_Bundle.h"
+#include "Special_HBeam_Single.h"
 
 #include "Enemy.h"
 
@@ -130,9 +132,13 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_BrainCrashStateMachine()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_HBeamStateMachine()))
+		return E_FAIL;
+
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
 
 	ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
+	ZeroMemory(&m_AttackDesc, sizeof(DAMAGE_PARAM));
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
 
@@ -255,6 +261,11 @@ void CPlayer::Tick(_double TimeDelta)
 			if (SPECIAL_TELEPHONEPOLE == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
 			{
 				m_pTelephonePoleStateMachine_Left->Tick(TimeDelta);
+			}
+
+			if (SPECIAL_HBEAM_BUNDLE == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
+			{
+				m_pHBeamStateMachine_Left->Tick(TimeDelta);
 			}
 		}
 	}
@@ -497,20 +508,20 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 	}
 	else
 	{
-		m_bHit = true;
+		//m_bHit = true;
 
-		m_DamageDesc.m_iDamage = tDamageParams.iDamage;
-		m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
-		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
-		m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
+		//m_DamageDesc.m_iDamage = tDamageParams.iDamage;
+		//m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
+		//m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
+		//m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 
-		// 체력 깎이는 부분
-		CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
+		//// 체력 깎이는 부분
+		//CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
 
-		if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
-		{
-			m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
-		}
+		//if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
+		//{
+		//	m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+		//}
 	}
 }
 
@@ -745,12 +756,13 @@ void CPlayer::SasMgr()
 		}
 	}
 
-	if (m_pSasPortrait->isFinish())
+	if (!CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty())
 	{
-		_matrix EffectPivot = XMMatrixIdentity();
-
-		if (!CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty())
+		if (m_pSasPortrait->isFinish())
 		{
+			_matrix EffectPivot = XMMatrixIdentity();
+
+
 			switch (CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 			{
 			case ESASType::SAS_FIRE:
@@ -761,6 +773,7 @@ void CPlayer::SasMgr()
 			default:
 				break;
 			}
+
 		}
 	}
 }
@@ -3545,6 +3558,249 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_HBeamStateMachine()
+{
+	CAnimation*	pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_start0"));
+	m_HBeam_Charge_L.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_loop0"));
+	m_HBeam_Charge_L.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_end0"));
+	m_HBeam_Cancel_L.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_325_AL_throw_LR_start"));
+	m_HBeam_Throw_L.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_325_AL_throw_LR_loop"));
+	m_HBeam_Throw_L.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_333_AL_rotation_start"));
+	m_HBeam_Rotation_L.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_333_AL_rotation_loop"));
+	m_HBeam_Rotation_L.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_333_AL_rotation_cancel"));
+	m_HBeam_End_L.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_333_AL_rotation_end"));
+	m_HBeam_Finish_L.push_back(pAnimation);
+
+	m_pHBeamStateMachine_Left =
+		CFSMComponentBuilder()
+		.InitState("HBEAM_LEFT_NOUSE")
+
+		.AddState("HBEAM_LEFT_NOUSE")
+		.OnStart([&]()
+		{
+			m_bKineticSpecial = false;
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_bKineticSpecial = false;
+		})
+		.OnExit([&]()
+		{
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+		})
+			.AddTransition("HBEAM_LEFT_NOUSE to HBEAM_LEFT_CHARGE", "HBEAM_LEFT_CHARGE")
+			.Predicator([&]()->_bool 
+			{
+				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
+				return m_bKineticG && bResult;
+			})
+			.Priority(0)
+
+
+		.AddState("HBEAM_LEFT_CHARGE")
+		.OnStart([&]() 
+		{
+			m_bKineticSpecial = true;
+			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Charge_L);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Drift();
+
+			m_fKineticCharge += (_float)fTimeDelta;
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("HBEAM_LEFT_CHARGE to HBEAM_LEFT_THROW", "HBEAM_LEFT_THROW")
+			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
+			.Priority(0)
+
+			.AddTransition("HBEAM_LEFT_CHARGE to HBEAM_LEFT_CANCEL", "HBEAM_LEFT_CANCEL")
+			.Predicator([&]()->_bool { return !m_bKineticG; })
+			.Priority(0)
+
+
+		.AddState("HBEAM_LEFT_CANCEL")
+		.OnStart([&]()
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Cancel_L);
+		})
+		.OnExit([&]()
+		{
+			m_bKineticSpecial = false;
+		})
+
+			.AddTransition("HBEAM_LEFT_CANCEL to HBEAM_LEFT_CANCEL", "HBEAM_LEFT_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket") || m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB || m_bKineticG); 
+			})
+			.Priority(0)
+
+
+		.AddState("HBEAM_LEFT_THROW")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Throw_L);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			if (2 == m_pASM->GetSocketSize("Kinetic_Special_AnimSocket") &&
+				0.8f <= m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio())
+			{
+
+				if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+				{
+					_float4 vObjPos = CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_float4 vTargetPos = static_cast<CScarletCharacter*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetColliderPosition();
+					_vector vDir = XMLoadFloat4(&vTargetPos) - XMLoadFloat4(&vObjPos);
+					XMVectorSetW(vDir, 0.f);
+					vDir = XMVector3Normalize(vDir);
+					static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Throw(vDir);
+				}
+				else
+				{
+					_float4 vCamLook = CGameInstance::GetInstance()->Get_CamLook();
+					vCamLook.Normalize();
+					static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Throw(vCamLook);
+				}
+			}
+		})
+		.OnExit([&]()
+		{
+			CGameInstance::GetInstance()->SetTimeRatioCurve("TelephonePoleSlow");
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("HBEAM_LEFT_THROW to HBEAM_LEFT_WAIT", "HBEAM_LEFT_WAIT")
+			.Predicator([&]()->_bool 
+			{ 
+				return (false == static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_isDecomposed());
+			})
+			.Priority(0)
+
+		.AddState("HBEAM_LEFT_WAIT")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Rotation_L);
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			
+		})
+		.OnExit([&]()
+		{
+			CGameInstance::GetInstance()->ResetTimeRatio();
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("HBEAM_LEFT_WAIT to HBEAM_LEFT_ROTATION", "HBEAM_LEFT_ROTATION")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_bLeftClick; 
+			})
+			.Priority(0)
+
+			.AddTransition("HBEAM_LEFT_WAIT to HBEAM_LEFT_END", "HBEAM_LEFT_END")
+			.Predicator([&]()->_bool 
+			{ 
+				return (0.05f <= m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio());
+			})
+			.Priority(0)
+
+
+		.AddState("HBEAM_LEFT_END")
+		.OnStart([&]() 
+		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_End_L);
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_SetKinetic(true);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Finish();
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("HBEAM_LEFT_END to HBEAM_LEFT_NOUSE", "HBEAM_LEFT_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
+			})
+			.Priority(0)
+
+		.AddState("HBEAM_LEFT_ROTATION")
+		.OnStart([&]() 
+		{
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Catch();
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Turn();
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("HBEAM_LEFT_ROTATION to HBEAM_LEFT_FINISH", "HBEAM_LEFT_FINISH")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket")); 
+			})
+			.Priority(0)
+
+		.AddState("HBEAM_LEFT_FINISH")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Finish_L);
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Turn();
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			if (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.2f))
+				static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Finish();
+			else
+				static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Turn();
+		})
+		.OnExit([&]()
+		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("HBEAM_LEFT_FINISH to HBEAM_LEFT_NOUSE", "HBEAM_LEFT_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket")); 
+			})
+			.Priority(0)
+
+		.Build();
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Setup_AnimSocket()
 {
 	CAnimation*	pAnimation = nullptr;
@@ -4977,14 +5233,6 @@ void CPlayer::Free()
 		Safe_Release(iter);
 	m_vecWeapon.clear();
 
-	//for (auto& iter : m_mapPlayerEffect)
-	//	Safe_Release(iter);
-	//m_mapPlayerEffect.clear();
-
-	//for (auto& iter : m_mapFireEffect)
-	//	Safe_Release(iter);
-	//m_mapFireEffect.clear();
-
 	Safe_Release(m_pKineticComboStateMachine);
 	Safe_Release(m_pKineticStataMachine);
 	Safe_Release(m_pHitStateMachine);
@@ -5004,6 +5252,7 @@ void CPlayer::Free()
 	Safe_Release(m_pTrainStateMachine_Left);
 	Safe_Release(m_pTelephonePoleStateMachine_Left);
 	Safe_Release(m_pBrainCrashStateMachine);
+	Safe_Release(m_pHBeamStateMachine_Left);
 
 //	Safe_Release(m_pContectRigidBody);
 }
