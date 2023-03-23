@@ -53,7 +53,7 @@ private:
 	_bool	m_bThrow = false;
 	_bool	m_bRenderOption = true;	//	true¸é ¹øµé ·»´õ, false¸é ½Ì±Û ·»´õ
 	CDoOnce tt;
-	_float	m_fThrowPower = 680.f;
+	_float	m_fThrowPower = 300.f;
 
 public:
 	static CSpecial_HBeam_Bundle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
