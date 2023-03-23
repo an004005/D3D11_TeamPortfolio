@@ -38,9 +38,9 @@ void CMain_PickUI::Tick(_double TimeDelta)
 	if (true == IsCursorOn(CGameUtils::GetClientCursor()) &&
 		CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
-		m_vOnButton = true;
-		m_vOnAlpha = true;
-		IM_LOG("Button %i", _int(m_vOnButton));
+		m_bOnButton = true;
+		m_bOnAlpha = true;
+		IM_LOG("Button %i", _int(m_bOnButton));
 	}
 
 	CurrentPick(TimeDelta);
@@ -79,25 +79,25 @@ void CMain_PickUI::LoadFromJson(const Json & json)
 
 void CMain_PickUI::CurrentPick(const _double & TimeDelta)
 {
-	if (false == m_vOnAlpha)
+	if (false == m_bOnAlpha)
 	{
 		m_fAlpha = 0.1f;
 
-		//if(0 == m_vColorType)
+		//if(0 == m_iColorType)
 		//	m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, m_fAlpha };
-		//else if(1 == m_vColorType)
+		//else if(1 == m_iColorType)
 		//	m_tParams.Float4s[0] = { 0.27f, 0.25f, 0.2f, m_fAlpha };
 
 		return;
 	}
 
-	if (true == m_vAlphaDwon)
+	if (true == m_bAlphaDwon)
 	{
 		m_fAlpha -= _float(TimeDelta) * 0.15f;
 
 		if (0.05f > m_fAlpha)
 		{
-			m_vAlphaDwon = false;
+			m_bAlphaDwon = false;
 		}
 	}
 	else
@@ -106,13 +106,13 @@ void CMain_PickUI::CurrentPick(const _double & TimeDelta)
 
 		if (0.1f < m_fAlpha)
 		{
-			m_vAlphaDwon = true;
+			m_bAlphaDwon = true;
 		}
 	}
 
-	if (0 == m_vColorType)
+	if (0 == m_iColorType)
 		m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, m_fAlpha };
-	else if (1 == m_vColorType)
+	else if (1 == m_iColorType)
 		m_tParams.Float4s[0] = { 0.27f, 0.25f, 0.2f, m_fAlpha };
 }
 

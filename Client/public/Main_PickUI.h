@@ -24,35 +24,35 @@ public:
 
 public:
 	_bool	Get_OnButton() {
-		return m_vOnButton;
+		return m_bOnButton;
 	}
 	void	Set_OnButton() {
-		m_vOnButton = false;
+		m_bOnButton = false;
 	}
 
 	_bool	Get_OnAlpha() {
-		return m_vOnAlpha;
+		return m_bOnAlpha;
 	}
 	void	Set_InitializeAlpha() {
-		m_vOnAlpha = true;
+		m_bOnAlpha = true;
 	}
 	void	Set_OnAlpha() {
-		m_vOnAlpha = false;
+		m_bOnAlpha = false;
 	}
 
 	void	Set_ColorType(const _uint & iType = 0) {
-		m_vColorType = iType;
+		m_iColorType = iType;
 	}
 
 private:
 	void	CurrentPick(const _double & TimeDelta);
 
 private:
-	_bool	m_vOnButton = { false };
-	_bool	m_vOnAlpha = { false };
-	_uint	m_vColorType = { 0 };
+	_bool	m_bOnButton = { false };
+	_bool	m_bOnAlpha = { false };
+	_uint	m_iColorType = { 0 };
 
-	_bool	m_vAlphaDwon = { false };
+	_bool	m_bAlphaDwon = { false };
 	_float	m_fAlpha = { 0.0f };
 
 public:

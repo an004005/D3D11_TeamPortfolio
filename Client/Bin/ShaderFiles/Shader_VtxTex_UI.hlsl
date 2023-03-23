@@ -355,10 +355,10 @@ PS_OUT PS_Alpha_Color(PS_IN In)	// → 13
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	if (g_int_0)
+	/*if (g_int_0)
 		Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV) * g_vec4_0;
 	else
-		Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+		*/Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
 
 	return Out;
 }
@@ -929,6 +929,20 @@ PS_OUT PS_AlphaColor_M(PS_IN In)	// → 31
 	return Out;
 }
 
+// g_int_0 : [0] 이미지 색상 사용, [1] 내가 지정한 색상 사용
+// g_vec4_0 : 변경할 색상과 알파값
+PS_OUT PS_Alpha_Color2(PS_IN In)	// → 32
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	if (g_int_0)
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV) * g_vec4_0;
+	else
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0 : 알파 블랜딩으로 그리기
@@ -1126,7 +1140,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_Alpha_Color();	// 색상 조정
+		PixelShader = compile ps_5_0 PS_Alpha_Color();	// 색상 조정 안 하는 것으로 바꿈
 	}
 
 	//14
@@ -1398,5 +1412,18 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_UI_Tex_Alpha();
 	}
 
+	//33 : 13번이랑 똑같이 텍스처를 바꾸는데 색상 조정을 한다.
+	pass UVCutAndColor
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
+		VertexShader = compile vs_5_0 VS_UVCut();		// 텍스처의 원하는 부분만 출력
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_Alpha_Color2();	// 색상 조정
+	}
+	
 }

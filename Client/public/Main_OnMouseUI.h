@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Canvas.h"
 #include "Client_Defines.h"
+#include "UI.h"
 
 BEGIN(Client)
 
-class CCanvas_BrainMap : public CCanvas
+class CMain_OnMouseUI final : public CUI
 {
-protected:
-	CCanvas_BrainMap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CCanvas_BrainMap(const CCanvas_BrainMap& rhs);
+private:
+	CMain_OnMouseUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMain_OnMouseUI(const CMain_OnMouseUI& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -22,17 +22,19 @@ public:
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
 
-private:
-	void	IconPick_Tick();
+public:
+
 
 private:
-	_bool	m_bAcquired = { false };
+	void	CurrentOnMouse(const _double & TimeDelta);
 
-	_float2 m_vPosssss = { 0.0f, 0.0f };
+private:
+	_bool	m_bOnMouse = { false };
+	_bool	m_bOnButton = { false };
 
 public:
-	static CCanvas_BrainMap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CCanvas* Clone(void* pArg = nullptr) override;
+	static CMain_OnMouseUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 

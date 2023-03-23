@@ -26,6 +26,13 @@ public:
 
 	}ITEMINFO;
 
+	typedef struct tagBrainInfo
+	{
+		_tchar*		szBrainName = {};
+		_tchar*		szBrainEx[4] = {};
+
+	}BRAININFO;
+
 public:
 	CItem_Manager();
 	virtual ~CItem_Manager() = default;
@@ -50,12 +57,23 @@ public:
 		return m_arrIconIndexPos[iIndex];
 	}
 
+	vector<BRAININFO>	Get_BrainInfo() {
+		return m_vecBrain;
+	}
+
+private:
+	void	ItemIndex_Intiialize();
+	void	ItemInfo_Intiialize();
+	void	Brain_Intiialize();
+
 private:
 	MAINITEM	m_eMainItem = { MAINITEM_END };
 
-	vector<pair<wstring, ITEMINFO>>	m_vecItem;
 	array<_float2, 17>	m_arrItemIndexPos;
 	array<_float2, 17>	m_arrIconIndexPos;
+	vector<pair<wstring, ITEMINFO>>	m_vecItem;
+	
+	vector<BRAININFO>	m_vecBrain;
 
 public:
 	virtual void Free() override;

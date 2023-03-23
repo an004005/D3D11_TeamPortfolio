@@ -70,8 +70,8 @@ HRESULT CCanvas_Equipment::Render()
 
 	// 중간 하단 정보
 	_float2	vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Equipment_BasicInfo"))->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", L"유이토 스메라기", vPosition + _float2(95.0f, 52.0f), 0.f, vFontBigSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"WSY567369", vPosition + _float2(433.0f, 56.0f), 0.f, vFontBigSize * 0.5f, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"유이토 스메라기", vPosition + _float2(95.0f, 53.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"WSY567369", vPosition + _float2(432.0f, 58.0f), 0.f, vFontBigSize * 0.5f, vColor);
 
 	wsprintf(szText, TEXT("%d"), tStat.iLevel);
 	pGameInstance->Render_Font(L"Pretendard32", L"레벨", vPosition + _float2(95.0f, 95.0f), 0.f, vFontSmaillSize, vColor);
@@ -90,7 +90,7 @@ HRESULT CCanvas_Equipment::Render()
 	pGameInstance->Render_Font(L"Pretendard32", L"공격력", vPosition + _float2(203.0f, 183.0f), 0.f, vFontSmaillSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(350.0f, 182.0f), 0.f, vFontSmaillSize, vColor);
 	wsprintf(szText, TEXT("%d"), tStat.iDefense);
-	pGameInstance->Render_Font(L"Pretendard32", L"방어력", vPosition + _float2(203.0f, 207.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"방어력", vPosition + _float2(203.0f, 206.0f), 0.f, vFontSmaillSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(350.0f, 205.0f), 0.f, vFontSmaillSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"작전", vPosition + _float2(96.0f, 228.0f), 0.f, vFontSmaillSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"----", vPosition + _float2(276.0f, 255.0f), 0.f, { 0.4f, 0.4f }, vColor);

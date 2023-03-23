@@ -40,6 +40,7 @@ typedef struct tagPlayerStatus
 	_uint iSprbrPower = { 0 };
 	_uint iAttack = { 0 };
 	_uint iDefense = { 0 };
+	_uint iBP = { 0 };
 
 	ESASType m_eAttack_SAS_Type;
 

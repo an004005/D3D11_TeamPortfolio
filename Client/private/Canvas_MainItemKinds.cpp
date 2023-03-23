@@ -188,6 +188,8 @@ void CCanvas_MainItemKinds::Add_ItemCanvas(const size_t & iIndex)
 
 void CCanvas_MainItemKinds::Item_Tick()
 {
+	_bool isDelete = false;
+
 	// 계속 아이템의 개수를 확인해서 1개 이상 이라면 Item Canvas 를 띄우고 개수가 0개가 되었다면 지운다.
 	m_vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
 
@@ -199,6 +201,8 @@ void CCanvas_MainItemKinds::Item_Tick()
 				Add_ItemCanvas(i);
 		}
 
+		
+
 		if (0 == m_vecItemInfo[i].second.iCount)
 		{
 			if (CItem_Manager::MAINITEM::ALL == m_eMainItem || m_eMainItem == m_vecItemInfo[i].second.eType)
@@ -209,12 +213,24 @@ void CCanvas_MainItemKinds::Item_Tick()
 
 				if (iter != m_vecItemCanvass.end())
 				{
-					(*iter).second->SetDelete();
-					m_vecItemCanvass.erase(iter);
+					isDelete = true;
+					break;
+				
+					/*(*iter).second->SetDelete();
+					m_vecItemCanvass.erase(iter);*/
 				}
 			}
 		}
 	}
+
+	if (isDelete == true)
+	{
+		for (auto itr : m_vecItemCanvass)
+			itr.second->SetDelete();
+
+		m_vecItemCanvass.clear();
+	}
+	
 }
 
 void CCanvas_MainItemKinds::ChildPickUI_Tick()

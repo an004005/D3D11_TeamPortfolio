@@ -94,6 +94,8 @@
 #include "Main_SkillIconUI.h"
 #include "Main_SkillNameUI.h"
 #include "ItemIconUI.h"
+#include "Main_OnMouseUI.h"
+#include "Main_BrainMapIconPickUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -462,8 +464,14 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_SkillNameUI"),
 			CMain_SkillNameUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
-
+		/* For.Prototype_GameObject_Main_OnMouseUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_OnMouseUI"),
+			CMain_OnMouseUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_BrainMapIconPickUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_BrainMapIconPickUI"),
+			CMain_BrainMapIconPickUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 		
 	}
 

@@ -10,6 +10,61 @@ CItem_Manager::CItem_Manager()
 
 HRESULT CItem_Manager::Initialize()
 {
+	ItemIndex_Intiialize();
+	ItemInfo_Intiialize();
+	Brain_Intiialize();
+
+	return S_OK;
+}
+
+void CItem_Manager::Set_ItemCount(const wstring & wszName, const _uint iCount)
+{
+	auto iter = find_if(m_vecItem.begin(), m_vecItem.end(), [&](pair<wstring, ITEMINFO> pair) {
+		return pair.first == wszName;
+	});
+
+	if (iter != m_vecItem.end())
+		(*iter).second.iCount = iCount;
+}
+
+void CItem_Manager::ItemIndex_Intiialize()
+{
+	m_arrItemIndexPos.fill(_float2(0.0f, 0.0f));
+	m_arrIconIndexPos.fill(_float2(0.0f, 0.0f));
+
+	m_arrItemIndexPos[0] = { -306.0f, 270.0f };
+	m_arrItemIndexPos[1] = { 306.0f, 270.0f };
+	m_arrItemIndexPos[2] = { -306.0f, 210.0f };
+	m_arrItemIndexPos[3] = { 306.0f, 210.0f };
+	m_arrItemIndexPos[4] = { -306.0f, 150.0f };
+	m_arrItemIndexPos[5] = { 306.0f, 150.0f };
+	m_arrItemIndexPos[6] = { -306.0f, 90.0f };
+	m_arrItemIndexPos[7] = { 306.0f, 90.0f };
+	m_arrItemIndexPos[8] = { -306.0f, 30.0f };
+	m_arrItemIndexPos[9] = { 306.0f, 30.0f };
+	m_arrItemIndexPos[10] = { -306.0f, -30.0f };
+	m_arrItemIndexPos[11] = { 306.0f, -30.0f };
+	m_arrItemIndexPos[12] = { -306.0f, -90.0f };
+	m_arrItemIndexPos[13] = { 306.0f, -90.0f };
+	//
+	m_arrIconIndexPos[0] = { -566.0f, 271.0f };
+	m_arrIconIndexPos[1] = { 46.0f, 271.0f };
+	m_arrIconIndexPos[2] = { -566.0f, 211.0f };
+	m_arrIconIndexPos[3] = { 46.0f, 211.0f };
+	m_arrIconIndexPos[4] = { -566.0f, 151.0f };
+	m_arrIconIndexPos[5] = { 46.0f, 151.0f };
+	m_arrIconIndexPos[6] = { -566.0f, 91.0f };
+	m_arrIconIndexPos[7] = { 46.0f, 91.0f };
+	m_arrIconIndexPos[8] = { -566.0f, 31.0f };
+	m_arrIconIndexPos[9] = { 46.0f, 31.0f };
+	m_arrIconIndexPos[10] = { -566.0f, -29.0f };
+	m_arrIconIndexPos[11] = { 46.0f, -29.0f };
+	m_arrIconIndexPos[12] = { -566.0f, -29.0f };
+	m_arrIconIndexPos[13] = { 46.0f, -89.0f };
+}
+
+void CItem_Manager::ItemInfo_Intiialize()
+{
 	ITEMINFO	tItemInfo;
 	tItemInfo.eType = BATTLE;
 	tItemInfo.bNew = false;
@@ -109,54 +164,29 @@ HRESULT CItem_Manager::Initialize()
 	tItemInfo.szItemEx[0] = L"구 토벌군병원에서 주운 텍스트 데이터.";
 	tItemInfo.szItemEx[1] = L"누군가의 개인적인 메모 같다. 괴이의 습격으로 인해";
 	tItemInfo.szItemEx[2] = L"병원을 포기하면서 회수되지 않고 그대로 버려진 모양.";
-	tItemInfo.szItemEx[3] = L" "; 
+	tItemInfo.szItemEx[3] = L" ";
 	m_vecItem.emplace_back(L"기타 테스트", tItemInfo);
-
-	// ----------------------------------------------------------------------------- Position
-	m_arrItemIndexPos.fill(_float2(0.0f, 0.0f));
-	m_arrIconIndexPos.fill(_float2(0.0f, 0.0f));
-
-	m_arrItemIndexPos[0] = { -306.0f, 270.0f };
-	m_arrItemIndexPos[1] = { 306.0f, 270.0f };
-	m_arrItemIndexPos[2] = { -306.0f, 210.0f };
-	m_arrItemIndexPos[3] = { 306.0f, 210.0f };
-	m_arrItemIndexPos[4] = { -306.0f, 150.0f };
-	m_arrItemIndexPos[5] = { 306.0f, 150.0f };
-	m_arrItemIndexPos[6] = { -306.0f, 90.0f };
-	m_arrItemIndexPos[7] = { 306.0f, 90.0f };
-	m_arrItemIndexPos[8] = { -306.0f, 30.0f };
-	m_arrItemIndexPos[9] = { 306.0f, 30.0f };
-	m_arrItemIndexPos[10] = { -306.0f, -30.0f };
-	m_arrItemIndexPos[11] = { 306.0f, -30.0f };
-	m_arrItemIndexPos[12] = { -306.0f, -90.0f };
-	m_arrItemIndexPos[13] = { 306.0f, -90.0f };
-	//
-	m_arrIconIndexPos[0] = { -566.0f, 271.0f };
-	m_arrIconIndexPos[1] = { 46.0f, 271.0f };
-	m_arrIconIndexPos[2] = { -566.0f, 211.0f };
-	m_arrIconIndexPos[3] = { 46.0f, 211.0f };
-	m_arrIconIndexPos[4] = { -566.0f, 151.0f };
-	m_arrIconIndexPos[5] = { 46.0f, 151.0f };
-	m_arrIconIndexPos[6] = { -566.0f, 91.0f };
-	m_arrIconIndexPos[7] = { 46.0f, 91.0f };
-	m_arrIconIndexPos[8] = { -566.0f, 31.0f };
-	m_arrIconIndexPos[9] = { 46.0f, 31.0f };
-	m_arrIconIndexPos[10] = { -566.0f, -29.0f };
-	m_arrIconIndexPos[11] = { 46.0f, -29.0f };
-	m_arrIconIndexPos[12] = { -566.0f, -29.0f };
-	m_arrIconIndexPos[13] = { 46.0f, -89.0f };
-
-	return S_OK;
 }
 
-void CItem_Manager::Set_ItemCount(const wstring & wszName, const _uint iCount)
+void CItem_Manager::Brain_Intiialize()
 {
-	auto iter = find_if(m_vecItem.begin(), m_vecItem.end(), [&](pair<wstring, ITEMINFO> pair) {
-		return pair.first == wszName;
-	});
+	BRAININFO	tBrainInfo;
 
-	if (iter != m_vecItem.end())
-		(*iter).second.iCount = iCount;
+	tBrainInfo.szBrainName = L"체력 자동 회복";
+	tBrainInfo.szBrainEx[0] = L"비전투 시 체력이 서서히 회복된다.";
+	tBrainInfo.szBrainEx[1] = L"";
+	tBrainInfo.szBrainEx[2] = L"";
+	tBrainInfo.szBrainEx[3] = L"";
+
+	m_vecBrain.push_back(tBrainInfo);
+
+	tBrainInfo.szBrainName = L"오버 킬";
+	tBrainInfo.szBrainEx[0] = L"크러시 게이지가 다 깍여 활동을 정지한";
+	tBrainInfo.szBrainEx[1] = L"적에게 공격을 명중시키면 EXP 보너스가 증가한다.";
+	tBrainInfo.szBrainEx[2] = L"단, 브레인 크러시로밖에 쓰러뜨릴 수 없는 강적의 경우,";
+	tBrainInfo.szBrainEx[3] = L"체력을 다 깍은 상황에서는 효과가 없다.";
+
+	m_vecBrain.push_back(tBrainInfo);
 }
 
 void CItem_Manager::Free()
