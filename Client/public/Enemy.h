@@ -117,6 +117,7 @@ protected:
 	EBaseAxis m_eHitFrom = EBaseAxis::AXIS_END;
 	ESimpleAxis m_eSimpleHitFrom = ESimpleAxis::AXIS_END;
 	_bool m_bHitWeak = false;
+	_bool m_bAirToDown = false;
 	//
 
 	_float m_fFireResist = 0.6f; // 높을 수록 안걸림

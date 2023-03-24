@@ -153,8 +153,7 @@ void CEM0200_Controller::Tick_Near(_double TimeDelta)
 		break;
 	}
 
-	_uint iRand = (rand() % 3) + 1;
-	m_iNearOrder = (m_iNearOrder + iRand) % 7;
+	m_iNearOrder = (m_iNearOrder + 1) % 7;
 }
 
 void CEM0200_Controller::Tick_Mid(_double TimeDelta)

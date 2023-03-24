@@ -346,6 +346,15 @@
     <Filter Include="02.GameObjects\SpecialObject\Special_TelephonePole">
       <UniqueIdentifier>{934d218b-129b-4ba9-95b6-835e98c0e6c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_HBeam_Bundle">
+      <UniqueIdentifier>{2e941601-6095-49d4-a77e-e5d1f860474f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_HBeam_Single">
+      <UniqueIdentifier>{ca41eb78-703f-4029-ad82-7f5d5fb86b01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM320%28boss1%29">
+      <UniqueIdentifier>{8fd30798-7bae-4e4f-8baa-2d2103a4c132}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Enemy\EM0220\EM0221">
       <UniqueIdentifier>{54a5507c-ab97-49a1-9ecd-483f0f313dde}</UniqueIdentifier>
     </Filter>
@@ -967,6 +976,32 @@
     <ClInclude Include="..\public\SimpleTrigger.h">
       <Filter>02.GameObjects\Map\Trigger</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Special_TelephonePole.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TelephonePole</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_Train.h">
+      <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpecialObject.h">
+      <Filter>02.GameObjects\SpecialObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_HBeam_Bundle.h">
+      <Filter>02.GameObjects\SpecialObject\Special_HBeam_Bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_HBeam_Single.h">
+      <Filter>02.GameObjects\SpecialObject\Special_HBeam_Single</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_Batch.h" />
+    <ClInclude Include="..\public\SAS_Cable.h" />
+    <ClInclude Include="..\public\EM0320.h">
+      <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0320_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0320_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\SpecialObject.h" />
     <ClInclude Include="..\public\Special_TelephonePole.h" />
     <ClInclude Include="..\public\Special_Train.h" />
@@ -1585,6 +1620,25 @@
     </ClCompile>
     <ClCompile Include="..\private\SimpleTrigger.cpp">
       <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TelephonePole.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TelephonePole</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_HBeam_Bundle.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_HBeam_Bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_HBeam_Single.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_HBeam_Single</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SAS_Cable.cpp" />
+    <ClCompile Include="..\private\EM0320.cpp">
+      <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0320_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0320_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Special_TelephonePole.cpp" />
     <ClCompile Include="..\private\EM0220.cpp">

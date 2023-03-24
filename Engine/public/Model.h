@@ -30,12 +30,12 @@ typedef struct tagOptionalRootMotion
 	_float4 vOptionalRootVector;
 }OPTIONAL_ROOTMOTION;
 
-class ENGINE_DLL CModel final : public CComponent
+class ENGINE_DLL CModel : public CComponent
 {
 public:
 	enum TYPE { TYPE_NONANIM, TYPE_ANIM, TYPE_END };
 
-private:
+protected:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CModel(const CModel& rhs);
 	virtual ~CModel() = default;
@@ -137,10 +137,11 @@ private:
 public:
 	unordered_map<string, CAnimation*>	Get_AnimList() const { return m_mapAnimation; }
 
-private:
+protected:
 	string								m_strName;
 	TYPE								m_eType = TYPE_END;
 	_float4x4							m_PivotMatrix;
+	_bool								m_bPx = false;
 
 	/* 하나의 모델은 교체가 가능한 여러개의 메시로 구성되어있다. */
 	vector<class CMesh*>				m_Meshes;

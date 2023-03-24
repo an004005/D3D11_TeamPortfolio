@@ -106,6 +106,8 @@ enum class EAttackType
 	ATK_LIGHT,
 	ATK_MIDDLE,
 	ATK_HEAVY,
+	ATK_SPECIAL_LOOP,
+	ATK_SPECIAL_END,
 	ATK_TO_AIR,
 	ATK_DOWN,
 	ATK_END
@@ -173,6 +175,7 @@ public:
 	static EBaseAxis GetDamageFromAxis(CTransform* pTransform, _fvector vFrom, ESimpleAxis* pSimpleAxis = nullptr);
 	static EBaseTurn TurnDeltaToEnum(_float fTurnDelta);
 	static string GetEnemyProtoTag(EEnemyName eName);
+	static _float4 GetDirFromAxis(EBaseAxis eAxis);
 
 public:
 	static const _tchar* const s_DebugLayer;

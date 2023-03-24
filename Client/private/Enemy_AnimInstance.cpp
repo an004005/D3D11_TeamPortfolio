@@ -13,7 +13,7 @@ HRESULT CEnemy_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameObject
 
 void CEnemy_AnimInstance::Tick(_double TimeDelta)
 {
-	_float	m_fLerpDuration = 0.1f;
+	m_fLerpDuration = 0.1f;
 
 	UpdateTargetState(TimeDelta);
 

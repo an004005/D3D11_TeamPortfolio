@@ -12,6 +12,8 @@
 #include "ImguiUtils.h"
 #include "Light_Manager.h"
 #include "JsonStorage.h"
+#include "PxBone.h"
+#include "PxModel.h"
 
 namespace nlohmann
 {
@@ -49,6 +51,7 @@ CModel::CModel(const CModel & rhs)
 	, m_strName(rhs.m_strName)
 	, m_eType(rhs.m_eType)
 	, m_PivotMatrix(rhs.m_PivotMatrix)
+	, m_bPx(rhs.m_bPx)
 	, m_pShadowShader(rhs.m_pShadowShader)
 	, m_mapOptionalRootMotion(rhs.m_mapOptionalRootMotion)
 {
@@ -497,7 +500,7 @@ _vector CModel::GetSpecialLocalMove(_fmatrix WorldMatrix)
 
 		if (m_szBefSpecialAnimName != m_CurAnimName)
 		{
-//			m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vBefSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_szBefSpecialAnimName = m_CurAnimName;
 //			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
@@ -505,7 +508,7 @@ _vector CModel::GetSpecialLocalMove(_fmatrix WorldMatrix)
 
 		if (m_mapAnimation[m_CurAnimName]->GetPlayRatio() < m_fBefSpecialRatio)
 		{
-//			m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vBefSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 
@@ -626,9 +629,12 @@ void CModel::Imgui_RenderProperty()
 
 	if (m_eType == TYPE_ANIM)
 	{
-		ImGui::Text("Pivot");
-		static GUIZMO_INFO tInfo;
-		CImguiUtils::Render_Guizmo(&m_PivotMatrix, tInfo, true, true);
+		if (ImGui::CollapsingHeader("Pivot Editor"))
+		{
+			ImGui::Text("Pivot");
+			static GUIZMO_INFO tInfo;
+			CImguiUtils::Render_Guizmo(&m_PivotMatrix, tInfo, true, true);
+		}
 
 		ImGui::Separator();
 		if (ImGui::CollapsingHeader("Anim Viewer"))
@@ -699,29 +705,33 @@ void CModel::Imgui_RenderProperty()
 	}
 
 
-	 if (ImGui::BeginListBox("Animations Additive"))
-	 {
-		 for (auto& iter : m_mapAnimation)
+	if (ImGui::CollapsingHeader("Additive anim view"))
+	{
+		 if (ImGui::BeginListBox("Animations Additive"))
 		 {
-			 const bool bSelected = m_szAdditiveAnimName == iter.first;
-			 if (bSelected)
-				 ImGui::SetItemDefaultFocus();
-
-			 if (ImGui::Selectable(iter.second->GetName().c_str(), bSelected))
+			 for (auto& iter : m_mapAnimation)
 			 {
-				 m_szAdditiveAnimName = iter.first;
-			 }
-		 }
-	
-	 	ImGui::EndListBox();
-	 }
-	 ImGui::SliderFloat("additiveRatio", &m_fAdditiveRatio, 0.f, 3.f);
+				 const bool bSelected = m_szAdditiveAnimName == iter.first;
+				 if (bSelected)
+					 ImGui::SetItemDefaultFocus();
 
-	 if (ImGui::Button("Additive Delete"))
-	 {
-		 m_mapAnimation[m_szAdditiveAnimName]->Reset();
-		 m_szAdditiveAnimName = "";
-	 }
+				 if (ImGui::Selectable(iter.second->GetName().c_str(), bSelected))
+				 {
+					 m_szAdditiveAnimName = iter.first;
+				 }
+			 }
+		
+	 		ImGui::EndListBox();
+		 }
+		 ImGui::SliderFloat("additiveRatio", &m_fAdditiveRatio, 0.f, 3.f);
+
+		 if (ImGui::Button("Additive Delete"))
+		 {
+			 m_mapAnimation[m_szAdditiveAnimName]->Reset();
+			 m_szAdditiveAnimName = "";
+		 }
+	}
+
 
 
 	if (ImGui::CollapsingHeader("Material Viewer"))
@@ -1275,7 +1285,13 @@ void CModel::SaveModifiedData(Json & json)
 
 void CModel::Ready_Bones(const Json& jBone, CBone* pParent)
 {
-	CBone*		pBone = CBone::Create(jBone, pParent);
+	CBone*		pBone = nullptr;
+
+	if (m_bPx)
+		pBone = CPxBone::Create(jBone, pParent);
+	else
+		pBone = CBone::Create(jBone, pParent);
+
 	Assert(pBone != nullptr);
 
 	if (pParent == nullptr)

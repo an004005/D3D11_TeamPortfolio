@@ -289,6 +289,7 @@ _bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTri
 					bCollisionResult = true;
 
 					DAMAGE_PARAM tParam;
+					ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
 					memcpy(&tParam, &DamageParam, sizeof(DAMAGE_PARAM));
 
 					// 내부에서 자체적으로 계산할 값

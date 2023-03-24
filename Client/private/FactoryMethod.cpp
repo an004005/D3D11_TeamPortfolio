@@ -42,6 +42,8 @@
 #include "SpecialObject.h"
 #include "Special_Train.h"
 #include "Special_TelephonePole.h"
+#include "Special_HBeam_Bundle.h"
+#include "Special_HBeam_Single.h"
 
 // Player Setting
 #include "Player.h"
@@ -60,6 +62,7 @@
 #include "ParticleGroup.h"
 #include "PostVFX_Distortion.h"
 #include "SAS_Portrait.h"
+#include "SAS_Cable.h"
 
 //UI
 // Canvas
@@ -132,6 +135,7 @@
 #include "LevelUpUI.h"
 
 // 3D UI
+#include "EM0320.h"
 #include "MonsterHpUI.h"
 #include "MonsterLockonUI.h"
 #include "GravikenisisMouseUI.h"
@@ -247,6 +251,15 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em200"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em200"), CEM0200::Create(pDevice, pContext)));
 
+	{
+		auto pEm320Model = CModel::Create(pDevice, pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
+		pEm320Model->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em320"), pEm320Model));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Monster_em320"), CEM0320::Create(pDevice, pContext)));
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_WaterBall"), CWaterBall::Create(pDevice, pContext)));
+	}
+
 	/* EM0700*/
 	pEMModel = CModel::Create(pDevice, pContext,
 		"../Bin/Resources/Model/AnimModel/Monster/em0700/Model/SM_em0700.anim_model");
@@ -311,6 +324,10 @@ HRESULT CFactoryMethod::MakePlayerPrototypes(ID3D11Device * pDevice, ID3D11Devic
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
+	{// SAS ÄÉÀÌºí
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SASCable", CSAS_Cable::Create(pDevice, pContext)));
+	}
+
 	pGameInstance->Add_Prototype(L"Player", CPlayer::Create(pDevice, pContext));
 	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(pDevice, pContext));
 
@@ -330,7 +347,6 @@ HRESULT CFactoryMethod::MakePlayerPrototypes(ID3D11Device * pDevice, ID3D11Devic
 		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
 	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
 
-	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(pDevice, pContext));
 
 	return S_OK;
 }
@@ -392,6 +408,18 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 		"../Bin/Resources/Model/StaticModel/Kinetic/TelephonePole/Pole_A.static_model");
 	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_TelephonePole", pModel_TelephonePole));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_TelephonePole", CSpecial_TelephonePole::Create(pDevice, pContext)));
+
+
+	auto pModel_HBeam_Bundle = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Bundle.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_HBeam_Bundle", pModel_HBeam_Bundle));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Bundle", CSpecial_HBeam_Bundle::Create(pDevice, pContext)));
+
+
+	auto pModel_HBeam_Single = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_HBeam_Single", pModel_HBeam_Single));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Single", CSpecial_HBeam_Single::Create(pDevice, pContext)));
 
 	return S_OK;
 }
