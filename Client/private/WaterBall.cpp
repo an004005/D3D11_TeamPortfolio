@@ -35,7 +35,6 @@ HRESULT CWaterBall::Initialize(void * pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
-	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"BulletSkummyPool", L"Model", (CComponent**)&m_pModelCom));
 	
 	m_fShootSpeed = 29.f;
 
@@ -49,73 +48,6 @@ HRESULT CWaterBall::Initialize(void * pArg)
 	m_pTrailParticle->Start_NoAttach(this, true);
 	Safe_AddRef(m_pTrailParticle);
 
-	// FSM 세팅
-	{
-		m_pFSMCom = CFSMComponentBuilder()
-			.InitState("Shoot")
-			.AddState("Shoot")
-				.OnStart([this] 
-				{			
-					m_BeforePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					// Effect 생성
-				})
-				.Tick([this](_double TimeDelta) 
-				{
-					/*if (nullptr == m_pCastOwner)
-						return;
-
-					if (m_pCastOwner->IsDeleted())
-						SetDelete();*/
-
-					if (!m_bPrePos)
-					{
-						m_vPrePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-						m_bPrePos = true;
-					}
-
-					// 날아가면서 붙어있을 Effect 관리
-					m_pTransformCom->Move(TimeDelta, m_vDir);
-
-					DAMAGE_PARAM	dParams;
-					dParams.eAttackType = EAttackType::ATK_HEAVY;
-					dParams.eDeBuff = EDeBuffType::DEBUFF_OIL;
-					dParams.iDamage = 100;
-					dParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-//					dParams.pCauser = this;
-
-					_uint iColType = ECOLLIDER_TYPE_BIT::CTB_PLAYER | ECOLLIDER_TYPE_BIT::CTB_STATIC | ECOLLIDER_TYPE_BIT::CTB_PSYCHICK_OBJ;
-
-					CollisionCheck_Bullet(m_pTransformCom, dParams, 0.5f, iColType);
-					if (m_bHitCheck == true)
-					{
-						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_1")->Start_NoAttach(this, false);
-						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_2")->Start_NoAttach(this, false);
-						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_3")->Start_NoAttach(this, false);
-
-						m_bDelete = true;
-					}
-					else
-					{
-						_vector vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	
-						_vector vDest = m_BeforePos;//m_pCastOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-
-						const _vector vDiff = vDest - vOrigin;
-						const _float fDistance = XMVectorGetX(XMVector3LengthEst(vDiff));
-
-						if (abs(fDistance > 70.f))// || fOrigin.y <= 0.f)
-						{			
-							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_1")->Start_NoAttach(this, false);
-							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_2")->Start_NoAttach(this, false);
-							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_3")->Start_NoAttach(this, false);
-
-							m_bDelete = true;
-						}
-					}				
-				})
-			
-			.Build();
-	}
 
 	return S_OK;
 }
@@ -123,46 +55,45 @@ HRESULT CWaterBall::Initialize(void * pArg)
 void CWaterBall::BeginTick()
 {
 	CBullet::BeginTick();
-
-	/*for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
-	{
-		if (iter->GetPrototypeTag() == TEXT("Prototype_MonsterBoss1"))
-		{
-			m_pCastOwner = dynamic_cast<CScarletCharacter*>(iter);
-		}
-	}*/
 }
 
 void CWaterBall::Tick(_double TimeDelta)
 {
 	CBullet::Tick(TimeDelta);
-	m_pFSMCom->Tick(TimeDelta);
-	/*if (m_pCastOwner->IsDeleted())
-		SetDelete();*/
-}
+	if (m_fLife > 0.f)
+		m_fLife -= (_float)TimeDelta;
+	else
+		m_bDelete = true;
 
-void CWaterBall::Late_Tick(_double TimeDelta)
-{
-	CBullet::Late_Tick(TimeDelta);
+	m_BeforePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
-	if (nullptr != m_pRendererCom && m_bVisible)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-}
+	m_pTransformCom->Go_Straight(TimeDelta);
 
-HRESULT CWaterBall::Render()
-{
-//	m_pModelCom->Render(m_pTransformCom);
-	return S_OK;
-}
+	DAMAGE_PARAM	dParams;
+	dParams.eAttackType = EAttackType::ATK_HEAVY;
+	dParams.eDeBuff = EDeBuffType::DEBUFF_OIL;
+	dParams.iDamage = m_iDamage;
+	dParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	dParams.pCauser = nullptr;
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pOwner))
+	{
+		if (auto pScarletCharacter = dynamic_cast<CScarletCharacter*>(m_pOwner))
+			dParams.pCauser = pScarletCharacter;
+	}
 
-void CWaterBall::Imgui_RenderProperty()
-{
-	CBullet::Imgui_RenderProperty();
-}
+	_uint iColType = ECOLLIDER_TYPE_BIT::CTB_PLAYER | ECOLLIDER_TYPE_BIT::CTB_STATIC | ECOLLIDER_TYPE_BIT::CTB_PSYCHICK_OBJ;
 
-void CWaterBall::AfterPhysX()
-{
-	__super::AfterPhysX();
+	CollisionCheck_Bullet(m_pTransformCom, dParams, 0.5f, iColType);
+
+
+	if (m_bHitCheck == true || m_bDelete == true) // hit 체크 및 life 다 떨어진거 체크
+	{
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_1")->Start_NoAttach(this, false);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_2")->Start_NoAttach(this, false);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_3")->Start_NoAttach(this, false);
+
+		m_bDelete = true;
+	}
 }
 
 CWaterBall * CWaterBall::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -199,14 +130,14 @@ void CWaterBall::Free()
 		{
 			m_pBulletEffect->SetDelete();
 			Safe_Release(m_pBulletEffect);
+			m_pBulletEffect = nullptr;
 		}
 
 		if (m_pTrailParticle != nullptr)
 		{
 			m_pTrailParticle->SetDelete();
 			Safe_Release(m_pTrailParticle);
+			m_pTrailParticle = nullptr;
 		}
 	}
-
-	Safe_Release(m_pFSMCom);
 }

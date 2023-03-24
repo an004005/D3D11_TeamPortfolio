@@ -248,6 +248,9 @@
     <ClInclude Include="..\public\EM0700.h" />
     <ClInclude Include="..\public\EM0700_AnimInstance.h" />
     <ClInclude Include="..\public\EM0700_Controller.h" />
+    <ClInclude Include="..\public\EM0320.h" />
+    <ClInclude Include="..\public\EM0320_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0320_Controller.h" />
     <ClInclude Include="..\public\EnemyBullet.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
@@ -453,6 +456,9 @@
     <ClCompile Include="..\private\EM0700.cpp" />
     <ClCompile Include="..\private\EM0700_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0700_Controller.cpp" />
+    <ClCompile Include="..\private\EM0320.cpp" />
+    <ClCompile Include="..\private\EM0320_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0320_Controller.cpp" />
     <ClCompile Include="..\private\EnemyBullet.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />

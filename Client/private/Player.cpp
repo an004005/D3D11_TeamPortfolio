@@ -4523,7 +4523,7 @@ void CPlayer::Event_Kinetic_Throw()
 
 		m_SoundStore.PlaySound("fx_kinetic_shot", m_pTransformCom);
 	}
-	else
+	else if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
 	{
 		_vector vKineticPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Throw_Kinetic_Distortion"))->Start_AttachOnlyPos(vKineticPos);
