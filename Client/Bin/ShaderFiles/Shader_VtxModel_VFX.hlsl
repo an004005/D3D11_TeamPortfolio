@@ -116,6 +116,41 @@ PS_OUT_NORM PS_DEFAULT_NORM(PS_IN_NORM In)
 	return Out;
 }
 
+PS_OUT_NORM PS_EM220_NORM(PS_IN_NORM In)
+{
+	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
+	float flags = SHADER_DEFAULT;
+
+	float3 vNormal = In.vNormal.xyz;
+	float4 Tex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = Tex * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	// Tex.r >= g_float_1 / 255.f
+	if (Out.vRMA.g <= 158.f/255.f && Tex.r >= 130.f / 255.f)
+	{
+		Out.vColor = Final;
+		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0, flags);
+
+	}
+	else
+	{
+		Out.vColor = Tex;
+		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	}
+	vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+
+
+	return Out;
+}
+
 PS_OUT_NORM PS_EM0110_BUBLLE(PS_IN_NORM In)
 {
 	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
@@ -414,8 +449,11 @@ PS_OUT PS_DEFAULT_MODEL_FLOWUV(PS_IN In)
 	Out.vColor = CalcHDRColor(BlendColor, g_float_1);
 	Out.vColor.a = OriginTex.a * g_float_0 * (In.vTexUV.y) * Gradient;
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
 	if (Out.vColor.a <= 0.01f)
 		discard;
+
+
 	return Out;
 }
 
@@ -930,6 +968,20 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM0110_BUBLLE();
+	}
+
+	//18
+	pass em220Norm
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_NORM();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM220_NORM();
 	}
 
 }

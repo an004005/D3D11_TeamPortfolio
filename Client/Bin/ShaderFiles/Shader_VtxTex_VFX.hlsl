@@ -435,6 +435,26 @@ PS_OUT_Flag PS_KINETIC_DEAD_FLIPBOOK(PS_IN In)
 	return Out;
 }
 
+// PS_OUT_Flag PS_EM110_BUG(PS_IN In)
+// {
+// 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+//
+// 	float2 TexUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 2, 1);
+//
+//
+// 	float4 Default_White = g_tex_0.Sample(LinearSampler, TexUV);
+// 	float4 Color = g_vec4_0;
+// 	float4 Blend = Default_White * Color * 2.0f;
+// 	float4 Final = saturate(Blend);
+//
+// 	Out.vColor = CalcHDRColor(Final, g_float_0);
+// 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+//
+// 	Out.vColor.a *= g_float_1;
+//
+// 	return Out;
+// }
+
 PS_OUT_Flag PS_FLOWLEG_FLIPBOOK(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -1132,4 +1152,6 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_USE_SAS_GEAR_TEX();
 	}
+
+
 }
