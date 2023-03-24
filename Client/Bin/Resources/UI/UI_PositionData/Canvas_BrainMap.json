@@ -288,11 +288,119 @@
             }
         },
         {
+            "ChildTag": "IconGauge_0\u0000",
+            "ObjectTag": "IconGauge_0",
+            "Pivot": 0,
+            "PositionX": -332.0,
+            "PositionY": -70.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Main_BrainGaugeUI\u0000",
+            "ScaleX": 0.949999988079071,
+            "ScaleY": 0.9399999976158142,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.37212663888931274,
+                        0.31092172861099243,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 19,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Main_UI\\BrainMap\\IconGauge0_68.64.png\u0000"
+                ]
+            },
+            "SizeX": 54.0,
+            "SizeY": 54.0,
+            "Transform": {
+                "WorldMatrix": [
+                    -51.212520599365234,
+                    -2.99459171295166,
+                    0.0,
+                    0.0,
+                    2.963069438934326,
+                    -50.673439025878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -332.0,
+                    -70.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "IconGauge_1\u0000",
+            "ObjectTag": "IconGauge_1",
+            "Pivot": 0,
+            "PositionX": -332.0,
+            "PositionY": -70.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Main_BrainGaugeUI\u0000",
+            "ScaleX": 0.949999988079071,
+            "ScaleY": 0.9399999976158142,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.627806544303894,
+                        0.5869521498680115,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 19,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Main_UI\\BrainMap\\IconGauge1_68.64.png\u0000"
+                ]
+            },
+            "SizeX": 54.0,
+            "SizeY": 54.0,
+            "Transform": {
+                "WorldMatrix": [
+                    -51.212520599365234,
+                    -2.99459171295166,
+                    0.0,
+                    0.0,
+                    2.963069438934326,
+                    -50.673439025878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -332.0,
+                    -70.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
             "ChildTag": "Icon_Pick\u0000",
             "ObjectTag": "Icon_Pick",
             "Pivot": 0,
-            "PositionX": -44.0,
-            "PositionY": -263.0,
+            "PositionX": -617.0,
+            "PositionY": -211.0,
             "Priority": 5,
             "Prototype_GameObject": "Main_BrainMapIconPickUI\u0000",
             "ScaleX": 1.25,
@@ -302,7 +410,7 @@
                 "Float4s": [],
                 "Float4x4s": [],
                 "Floats": [
-                    0.21555665135383606
+                    0.4617030620574951
                 ],
                 "Ints": [],
                 "Pass": 25,
@@ -326,8 +434,8 @@
                     0.0,
                     1.0,
                     0.0,
-                    -44.0,
-                    -263.0,
+                    -617.0,
+                    -211.0,
                     0.0,
                     1.0
                 ]
@@ -399,8 +507,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -452,8 +560,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -505,8 +613,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -558,8 +666,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        3.0,
-                        0.0
+                        2.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -611,8 +719,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -664,8 +772,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        2.0,
-                        0.0
+                        1.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -717,8 +825,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        3.0,
-                        0.0
+                        2.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -770,8 +878,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -823,8 +931,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -876,8 +984,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -929,8 +1037,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        2.0,
-                        0.0
+                        1.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -982,8 +1090,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        3.0,
-                        0.0
+                        2.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -1088,8 +1196,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -1141,8 +1249,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        3.0,
-                        0.0
+                        2.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -1194,8 +1302,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        2.0,
-                        0.0
+                        1.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -1300,8 +1408,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        3.0,
-                        0.0
+                        2.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -1353,8 +1461,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        0.0,
-                        2.0
+                        3.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -1406,8 +1514,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        2.0,
-                        0.0
+                        1.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -1459,8 +1567,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        2.0
+                        0.0,
+                        5.0
                     ],
                     [
                         4.0,
@@ -1512,8 +1620,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        2.0
+                        0.0,
+                        5.0
                     ],
                     [
                         4.0,
@@ -1618,8 +1726,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        3.0,
-                        0.0
+                        2.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -1671,8 +1779,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        2.0
+                        0.0,
+                        5.0
                     ],
                     [
                         4.0,
@@ -1724,8 +1832,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        2.0
+                        0.0,
+                        5.0
                     ],
                     [
                         4.0,
@@ -1778,7 +1886,7 @@
                 "Float2s": [
                     [
                         0.0,
-                        2.0
+                        5.0
                     ],
                     [
                         4.0,
@@ -1830,8 +1938,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        2.0
+                        3.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -1884,7 +1992,7 @@
                 "Float2s": [
                     [
                         1.0,
-                        2.0
+                        5.0
                     ],
                     [
                         4.0,
@@ -1936,8 +2044,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        0.0,
-                        0.0
+                        3.0,
+                        2.0
                     ],
                     [
                         4.0,
@@ -1989,8 +2097,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        0.0
+                        0.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -2042,8 +2150,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        0.0
+                        0.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -2095,8 +2203,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        2.0,
-                        1.0
+                        1.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -2149,7 +2257,7 @@
                 "Float2s": [
                     [
                         1.0,
-                        2.0
+                        5.0
                     ],
                     [
                         4.0,
@@ -2201,8 +2309,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        2.0,
-                        1.0
+                        1.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -2254,8 +2362,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        2.0,
-                        1.0
+                        1.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -2307,8 +2415,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        0.0
+                        0.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -2361,7 +2469,7 @@
                 "Float2s": [
                     [
                         1.0,
-                        0.0
+                        5.0
                     ],
                     [
                         4.0,
@@ -2466,8 +2574,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        0.0,
-                        0.0
+                        3.0,
+                        2.0
                     ],
                     [
                         4.0,
@@ -2519,8 +2627,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        0.0,
-                        1.0
+                        3.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -2572,8 +2680,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        0.0,
-                        1.0
+                        3.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -2625,8 +2733,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        0.0,
-                        1.0
+                        3.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -2678,8 +2786,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -2731,8 +2839,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -2784,8 +2892,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -2837,8 +2945,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        0.0,
-                        1.0
+                        3.0,
+                        3.0
                     ],
                     [
                         4.0,
@@ -2890,8 +2998,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -2996,8 +3104,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        0.0,
-                        2.0
+                        3.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -3049,8 +3157,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        0.0,
-                        0.0
+                        3.0,
+                        2.0
                     ],
                     [
                         4.0,
@@ -3102,8 +3210,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -3155,8 +3263,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -3208,8 +3316,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -3262,7 +3370,7 @@
                 "Float2s": [
                     [
                         3.0,
-                        1.0
+                        4.0
                     ],
                     [
                         4.0,
@@ -3314,8 +3422,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -3367,8 +3475,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
-                        1.0
+                        0.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -3421,7 +3529,7 @@
                 "Float2s": [
                     [
                         3.0,
-                        1.0
+                        4.0
                     ],
                     [
                         4.0,
@@ -3474,7 +3582,7 @@
                 "Float2s": [
                     [
                         3.0,
-                        1.0
+                        4.0
                     ],
                     [
                         4.0,
@@ -3527,7 +3635,7 @@
                 "Float2s": [
                     [
                         3.0,
-                        0.0
+                        4.0
                     ],
                     [
                         4.0,
@@ -6482,12 +6590,12 @@
             "SizeY": 32.0,
             "Transform": {
                 "WorldMatrix": [
-                    -12.359785079956055,
-                    52.97731399536133,
+                    -12.359786033630371,
+                    52.977317810058594,
                     0.0,
                     0.0,
-                    -26.488656997680664,
-                    -6.179892539978027,
+                    -26.488658905029297,
+                    -6.1798930168151855,
                     0.0,
                     0.0,
                     0.0,
@@ -6545,6 +6653,196 @@
                     0.0,
                     -82.0,
                     -57.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SkillAcquisition\u0000",
+            "ObjectTag": "SkillAcquisition",
+            "Pivot": 0,
+            "PositionX": -3.0,
+            "PositionY": 23.0,
+            "Priority": 13,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\BrainMap\\Skill acquisition.png\u0000"
+                ]
+            },
+            "SizeX": 626.0,
+            "SizeY": 313.0,
+            "Transform": {
+                "WorldMatrix": [
+                    532.1000366210938,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    266.0500183105469,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -3.0,
+                    23.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SkillAcquisitionBorderLine\u0000",
+            "ObjectTag": "SkillAcquisitionBorderLine",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 0.0,
+            "Priority": 11,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\BrainMap\\Skill acquisition border line.png\u0000"
+                ]
+            },
+            "SizeX": 638.0,
+            "SizeY": 299.0,
+            "Transform": {
+                "WorldMatrix": [
+                    542.2999877929688,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    254.15000915527344,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SkillAcquisitionBorderLine_B\u0000",
+            "ObjectTag": "SkillAcquisitionBorderLine_B",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 0.0,
+            "Priority": 12,
+            "Prototype_GameObject": "Main_PickUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.25
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\BrainMap\\Skill acquisition border line_B.png\u0000"
+                ]
+            },
+            "SizeX": 638.0,
+            "SizeY": 299.0,
+            "Transform": {
+                "WorldMatrix": [
+                    542.2999877929688,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    254.15000915527344,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SkillAcquisition_B\u0000",
+            "ObjectTag": "SkillAcquisition_B",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 0.0,
+            "Priority": 10,
+            "Prototype_GameObject": "FullUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.20000000298023224
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 1600.0,
+            "SizeY": 900.0,
+            "Transform": {
+                "WorldMatrix": [
+                    1600.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    900.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
                     0.0,
                     1.0
                 ]

@@ -97,6 +97,7 @@
 #include "Main_OnMouseUI.h"
 #include "Main_OnMouseColorUI.h"
 #include "Main_BrainMapIconPickUI.h"
+#include "Main_BrainGaugeUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -477,7 +478,10 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_OnMouseColorUI"),
 			CMain_OnMouseColorUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
+		/* For.Prototype_GameObject_Main_BrainGaugeUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_BrainGaugeUI"),
+			CMain_BrainGaugeUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 		
 	}
 

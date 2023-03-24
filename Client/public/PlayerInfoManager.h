@@ -130,6 +130,9 @@ public:	// Set
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
+	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
+	
+	// SAS
 	void			Set_HanabiMemvber() { m_tHanabiStat.bMember = true; }
 	void			Set_TsugumiMemvber() { m_tTsugumiStat.bMember = true; }
 

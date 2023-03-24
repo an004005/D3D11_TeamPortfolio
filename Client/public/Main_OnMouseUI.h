@@ -30,11 +30,21 @@ public:
 	_bool	Get_OnButton() {
 		return m_bOnButton;
 	}
+	void	Set_OnButton() {
+		m_bOnButton = false;
+	}
 
 	CCanvas_BrainMap::BRAININFO	Get_BrainInfo() {
 		return m_BrainInfo;
 	}
 	void	Set_BrainInfo(CCanvas_BrainMap::BRAININFO tBrainInfo);
+
+	void	Set_IconIndex(const _float2 & fIndex);
+	void	Set_BrainUse();
+
+	_float2	Get_CurrentIconIndex() {
+		return m_tParams.Float2s[0];
+	}
 
 private:
 	class CMain_OnMouseColorUI* m_pMouseColorUI = { nullptr };

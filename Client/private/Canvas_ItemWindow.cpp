@@ -159,4 +159,5 @@ CCanvas * CCanvas_ItemWindow::Clone(void * pArg)
 void CCanvas_ItemWindow::Free()
 {
 	CCanvas::Free();
+
 }

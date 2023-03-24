@@ -38,7 +38,16 @@ void CMain_OnMouseUI::Tick(_double TimeDelta)
 {
 	m_pMouseColorUI->Tick(TimeDelta);
 
-	if (false == m_bVisible) return;
+	if (false == m_bVisible)
+	{
+		m_pMouseColorUI->SetVisible(false);
+		return;
+	}
+	else
+	{
+		if(true == m_BrainInfo.bUse)
+			m_pMouseColorUI->SetVisible(true);
+	}
 
 	__super::Tick(TimeDelta);
 
@@ -47,11 +56,11 @@ void CMain_OnMouseUI::Tick(_double TimeDelta)
 	else
 		m_bOnMouse = false;
 
-	if (true == IsCursorOn(CGameUtils::GetClientCursor()) && CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
+	if (true == IsCursorOn(CGameUtils::GetClientCursor()) && CGameInstance::GetInstance()->KeyPressing(CInput_Device::DIM_LB))
 		m_bOnButton = true;
 
 	if (true == IsCursorOn(CGameUtils::GetClientCursor()) && CGameInstance::GetInstance()->KeyUp(CInput_Device::DIM_LB))
-		m_bOnButton = false;
+		m_bOnButton = true;
 
 }
 
@@ -92,8 +101,10 @@ void CMain_OnMouseUI::LoadFromJson(const Json & json)
 
 void CMain_OnMouseUI::Set_BrainInfo(CCanvas_BrainMap::BRAININFO tBrainInfo)
 {
+	// 각 아이콘의 정보를 셋팅하면서
 	m_BrainInfo = tBrainInfo;
 
+	// 뒤에 뜨는 색상 Icon 생성하기
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Main_OnMouseColorUI.json");
 	m_pMouseColorUI = dynamic_cast<CMain_OnMouseColorUI*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Main_OnMouseColorUI", &json));
 	
@@ -109,6 +120,22 @@ void CMain_OnMouseUI::Set_BrainInfo(CCanvas_BrainMap::BRAININFO tBrainInfo)
 
 	m_pMouseColorUI->Set_IconColor(fColor);
 	m_pMouseColorUI->Set_Position({ m_fX, m_fY });
+}
+
+void CMain_OnMouseUI::Set_IconIndex(const _float2 & fIndex)
+{
+	// 레벨에 따라 구매할 수 있으면 흰색 구매할 수 없으면 검정색 아이콘 설정
+	m_tParams.Float2s[0] = fIndex;
+}
+
+void CMain_OnMouseUI::Set_BrainUse()
+{
+	// 아이콘 흰색으로 변경
+	m_tParams.Float2s[0] = m_BrainInfo.vOnIconIndex;
+	// 이 브레인은 이제 사용할 수 있음
+	m_BrainInfo.bUse = true;
+	// 그러면서 처음에 생성해 둔 Icon Color 도 출력한다.
+	m_pMouseColorUI->SetVisible(true);
 }
 
 CMain_OnMouseUI * CMain_OnMouseUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -137,6 +164,8 @@ CUI * CMain_OnMouseUI::Clone(void * pArg)
 
 void CMain_OnMouseUI::Free()
 {
+	Safe_Release(m_pMouseColorUI);
+
 	__super::Free();
 
 }

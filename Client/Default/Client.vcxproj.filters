@@ -1041,6 +1041,9 @@
     <ClInclude Include="..\public\Main_OnMouseColorUI.h">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Main_BrainGaugeUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1701,6 +1704,9 @@
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Main_OnMouseColorUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_BrainGaugeUI.cpp">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
   </ItemGroup>

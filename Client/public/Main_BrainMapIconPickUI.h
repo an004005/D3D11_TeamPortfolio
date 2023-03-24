@@ -19,8 +19,8 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 
 public:
-	void	Set_Pick() {
-		m_bPick = true;
+	void	Set_Pick(const _bool bPick) {
+		m_bPick = bPick;
 	}
 
 private:

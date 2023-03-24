@@ -34,7 +34,7 @@ void CMain_BrainMapIconPickUI::Tick(_double TimeDelta)
 
 	if (true == m_bPick)
 	{
-		m_fAlpha = 1.0f;
+		m_fAlpha = 0.9f;
 		m_bPick = false;
 	}
 
@@ -42,7 +42,7 @@ void CMain_BrainMapIconPickUI::Tick(_double TimeDelta)
 	{
 		m_fAlpha -= _float(TimeDelta) * 0.5f;
 
-		if (0.2f > m_fAlpha)
+		if (0.3f > m_fAlpha)
 			m_bAlphaDwon = false;
 	}
 	else

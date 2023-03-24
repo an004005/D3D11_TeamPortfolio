@@ -25,7 +25,7 @@ HRESULT CMain_OnMouseColorUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	//m_bVisible = false;
+	m_bVisible = false;
 
 	return S_OK;
 }
