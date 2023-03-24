@@ -2,7 +2,6 @@
 #include "..\public\Canvas_BrainMap.h"
 #include "GameInstance.h"
 #include "PlayerInfoManager.h"
-#include "Item_Manager.h"
 
 #include "DefaultUI.h"
 #include "Main_OnMouseUI.h"
@@ -45,8 +44,11 @@ HRESULT CCanvas_BrainMap::Initialize(void* pArg)
 
 		if (iter->first == wsIcon)
 		{
+			CMain_OnMouseUI* pMouseUI = dynamic_cast<CMain_OnMouseUI*>((*iter).second);
+			pMouseUI->Set_BrainInfo(CItem_Manager::GetInstance()->Get_BrainInfo()[m_iIconCount]);
+			m_vecIconUI.push_back(pMouseUI);
+
 			++m_iIconCount;
-			m_vecIconUI.push_back(dynamic_cast<CMain_OnMouseUI*>((*iter).second));
 		}
 
 		wstring	wsLink = L"";
@@ -108,17 +110,16 @@ HRESULT CCanvas_BrainMap::Render()
 	pGameInstance->Render_Font(L"Pretendard32", L"방어력", vPosition + _float2(120.0f, 75.0f), 0.f, vFontSmaillSize, vColor);
 
 	// 마우스 커서 가 올라갔을 때 또는 클릭이 되었을 때 정보가 떠야 한다.
-	/*if ()
-		return S_OK;*/
+	if (CItem_Manager::BRAINTYPE_END ==  m_BrainInfo.eType)
+		return S_OK;
 
 	vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"BrainExplanation"))->GetScreenSpaceLeftTop();
 
-	CItem_Manager::BRAININFO tBrainInfo = CItem_Manager::GetInstance()->Get_BrainInfo()[1];
-	pGameInstance->Render_Font(L"Pretendard32", tBrainInfo.szBrainName, vPosition + _float2(100.0f, 120.0f), 0.f, { 0.6f, 0.6f }, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", tBrainInfo.szBrainEx[0], vPosition + _float2(100.0f, 510.0f), 0.f, vFontBigSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", tBrainInfo.szBrainEx[1], vPosition + _float2(100.0f, 540.0f), 0.f, vFontBigSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", tBrainInfo.szBrainEx[2], vPosition + _float2(100.0f, 570.0f), 0.f, vFontBigSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", tBrainInfo.szBrainEx[3], vPosition + _float2(100.0f, 600.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_BrainInfo.szBrainName, vPosition + _float2(100.0f, 120.0f), 0.f, { 0.6f, 0.6f }, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_BrainInfo.szBrainEx[0], vPosition + _float2(100.0f, 510.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_BrainInfo.szBrainEx[1], vPosition + _float2(100.0f, 540.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_BrainInfo.szBrainEx[2], vPosition + _float2(100.0f, 570.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_BrainInfo.szBrainEx[3], vPosition + _float2(100.0f, 600.0f), 0.f, vFontBigSize, vColor);
 
 	if (true == m_bAcquired)
 	{
@@ -129,8 +130,6 @@ HRESULT CCanvas_BrainMap::Render()
 		// 내 현재 BP
 		wsprintf(szText, TEXT("/      %d BP"), CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP);
 		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(141.0f, 675.0f), 0.f, vFontBigSize, vColor);
-
-		
 
 		// UITODO : 그 아이콘의 BP 도 띄워주어야 한다. + 내 BP가 부족하다면 vColor 로 색상을 변경해준다.
 		wsprintf(szText, TEXT("%d"), 55);
@@ -162,7 +161,10 @@ void CCanvas_BrainMap::OnIcon_Tick()
 	{
 		// 아이콘 위에 마우스가 올라갔을 때
 		if (true == m_vecIconUI[i]->Get_OnMouse())
+		{
 			Find_ChildUI(L"Icon_Pick")->Set_Position(m_vecIconUI[i]->Get_Position());
+			m_BrainInfo = m_vecIconUI[i]->Get_BrainInfo();
+		}
 
 		// 아이콘을 클릭 했을 때
 		if (true == m_vecIconUI[i]->Get_OnButton())

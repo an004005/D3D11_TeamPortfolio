@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "UI.h"
+#include "Item_Manager.h"
 
 BEGIN(Client)
 
@@ -30,10 +31,19 @@ public:
 		return m_bOnButton;
 	}
 
+	CItem_Manager::BRAININFO	Get_BrainInfo() {
+		return m_BrainInfo;
+	}
+	void	Set_BrainInfo(CItem_Manager::BRAININFO tBrainInfo);
+
+
 private:
 	void	CurrentOnMouse(const _double & TimeDelta);
 
 private:
+	class CMain_OnMouseColorUI* m_pMouseColorUI = { nullptr };
+	CItem_Manager::BRAININFO	m_BrainInfo;
+
 	_bool	m_bOnMouse = { false };
 	_bool	m_bOnButton = { false };
 

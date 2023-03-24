@@ -33,7 +33,9 @@ public:
 	{
 		BRAINTYPE	eType = { BRAINTYPE_END };
 		BRAINCOLOR	eColor = { BRAINCOLOR_END };
-		_int		iBP = { 0 };
+
+		_uint		iBP = { 0 };
+		_uint		iLevel = { 0 };
 		_tchar*		szBrainName = {};
 		_tchar*		szBrainEx[4] = {};
 

@@ -2,6 +2,7 @@
 
 #include "Canvas.h"
 #include "Client_Defines.h"
+#include "Item_Manager.h"
 
 BEGIN(Client)
 
@@ -28,6 +29,8 @@ private:
 private:
 	vector<class CMain_OnMouseUI*>	m_vecIconUI;
 	vector<CUI*>	m_vecLinkUI;
+
+	CItem_Manager::BRAININFO	m_BrainInfo;
 
 	_uint	m_iIconCount = { 0 };
 	_uint	m_iLinkCount = { 0 };

@@ -261,6 +261,7 @@
     <ClInclude Include="..\public\Main_BrainMapIconPickUI.h" />
     <ClInclude Include="..\public\Main_FaceUI.h" />
     <ClInclude Include="..\public\Main_BarUI.h" />
+    <ClInclude Include="..\public\Main_OnMouseColorUI.h" />
     <ClInclude Include="..\public\Main_OnMouseUI.h" />
     <ClInclude Include="..\public\Main_SkillIconUI.h" />
     <ClInclude Include="..\public\Main_SkillNameUI.h" />
@@ -454,6 +455,7 @@
     <ClCompile Include="..\private\Main_BrainMapIconPickUI.cpp" />
     <ClCompile Include="..\private\Main_FaceUI.cpp" />
     <ClCompile Include="..\private\Main_BarUI.cpp" />
+    <ClCompile Include="..\private\Main_OnMouseColorUI.cpp" />
     <ClCompile Include="..\private\Main_OnMouseUI.cpp" />
     <ClCompile Include="..\private\Main_SkillIconUI.cpp" />
     <ClCompile Include="..\private\Main_SkillNameUI.cpp" />
