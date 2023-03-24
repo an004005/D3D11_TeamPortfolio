@@ -240,6 +240,10 @@
     <ClInclude Include="..\public\EM0210.h" />
     <ClInclude Include="..\public\EM0210_AnimInstance.h" />
     <ClInclude Include="..\public\EM0210_Controller.h" />
+    <ClInclude Include="..\public\EM0220.h" />
+    <ClInclude Include="..\public\EM0220_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0220_Controller.h" />
+    <ClInclude Include="..\public\EM0221.h" />
     <ClInclude Include="..\public\EM0400.h" />
     <ClInclude Include="..\public\EM0400_AnimInstance.h" />
     <ClInclude Include="..\public\EM0400_Controller.h" />
@@ -450,6 +454,10 @@
     <ClCompile Include="..\private\EM0210.cpp" />
     <ClCompile Include="..\private\EM0210_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0210_Controller.cpp" />
+    <ClCompile Include="..\private\EM0220.cpp" />
+    <ClCompile Include="..\private\EM0220_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0220_Controller.cpp" />
+    <ClCompile Include="..\private\EM0221.cpp" />
     <ClCompile Include="..\private\EM0400.cpp" />
     <ClCompile Include="..\private\EM0400_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0400_Controller.cpp" />

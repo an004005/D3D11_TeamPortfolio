@@ -21,7 +21,7 @@
 #include "VFX_Manager.h"
 #include "Imgui_Batch.h"
 
-//#define ADD_PLAYER
+#define ADD_PLAYER
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -71,7 +71,7 @@ HRESULT CLevel_EnemiesTest::Initialize()
 
 	if (FAILED(Ready_Layer_Kinetic(TEXT("Layer_Kinetic"))))
 		return E_FAIL;
-		
+
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
 
@@ -153,7 +153,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
 #endif
-	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
+	//FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
@@ -167,7 +167,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 		CTrigger::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
+//	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -179,14 +179,12 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
 	// For_SkySphere
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Env", TEXT("Prototype_GameObject_SkyBox")));
 
-	Json PreviewData;
-	{
-		PreviewData["Model"] = "Prototype_Model_em110";
-		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
-		auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag.c_str(), TEXT("ModelPreview"), &PreviewData);
-	}
-
-
+	//Json PreviewData;
+	//{
+	//	PreviewData["Model"] = "Prototype_Model_em110";
+	//	PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
+	//	auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag.c_str(), TEXT("ModelPreview"), &PreviewData);
+	//}
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/tests.json");
 	return S_OK;
@@ -198,6 +196,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	// if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
 	// 	return E_FAIL;
+
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
 	return S_OK;
@@ -230,6 +229,9 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em110"))
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
+
+	/*pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em110"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));*/
 	return S_OK;
 }
 

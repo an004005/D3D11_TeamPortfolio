@@ -2,6 +2,7 @@
 #include "Client_Defines.h"
 #include "ImguiObject.h"
 #include "ScarletCharacter.h"
+#include "HelperClasses.h"
 
 BEGIN(Engine)
 class CGameInstance;
@@ -147,6 +148,7 @@ private:
 
 private:
 	void			SasMgr();
+	void			Visible_Check();
 //	PLAYER_STAT		m_PlayerStat;
 	DAMAGE_DESC		m_DamageDesc;
 	DAMAGE_PARAM	m_AttackDesc;
@@ -186,6 +188,21 @@ private:
 	class CNoticeNeonUI* m_pNeonUI = { nullptr };
 	class CMonsterLockonUI*	m_pUI_LockOn = nullptr;
 	CGameObject*		m_pSettedTarget = nullptr;
+
+private:	// SAS 특수기 FSM
+	HRESULT				SetUp_TeleportStateMachine();
+	CFSMComponent*		m_pTeleportStateMachine = nullptr;
+
+private:
+	_float				m_fTeleportAttack_GC = 0.f;	// 다음 공격으로 이어가게 하기 위함
+	_float4				m_vTeleportPos = { 0.f, 0.f, 0.f, 1.f };
+	list<CAnimation*>	m_Teleport_FloorAttack_Start;
+	list<CAnimation*>	m_Teleport_FloorAttack_End;
+
+	list<CAnimation*>	m_Teleport_AirAttack_Start;
+	list<CAnimation*>	m_Teleport_AirAttack_End;
+	list<CAnimation*>	m_Teleport_AirAttack_Fall;
+	list<CAnimation*>	m_Teleport_AirAttack_Landing;
 
 private:	// 특수연출용 FSM
 	HRESULT				SetUp_TrainStateMachine();
@@ -448,7 +465,8 @@ private:	// 현재 상태에 따라 제어, 회전이 가능한지, 움직임이 가능한지?
 
 public:
 	_bool		isPlayerAttack(void);	// 공격 중인 애니메이션일 때 true 반환
-	
+	_bool		isPlayerNonAttack(void);	// 비전투 체크
+
 public:
 	_bool		BeforeCharge(_float fBeforeCharge);
 	_bool		Charge(_uint iNum, _float fCharge);
@@ -580,10 +598,16 @@ private:
 
 	_float4x4 pivot1;
 	_float4x4 pivot2;
+	_float4x4 pivot3;
+	_float4x4 pivot4;
+	_float4x4 pivot5;
+
+	CDoOnce	SasOn;
 
 private:
 	CSAS_Portrait* m_pSasPortrait = nullptr;
 	class CSAS_Cable* m_pSAS_Cable = nullptr;
+	void SasGearEffect();
 
 private:
 	CParticleGroup*	m_pSwordParticle = nullptr;
