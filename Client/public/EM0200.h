@@ -63,8 +63,6 @@ private:
 	CParticleGroup*			m_pFallRoseParticle = nullptr;
 	CParticleGroup*			m_pShootFlwParticle = nullptr;
 
-	CDoOnce m_Laugh;
-
 private:
 	_float3 m_vMoveAxis;
 	_float m_fTurnRemain = 0.f;

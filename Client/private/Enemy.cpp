@@ -387,8 +387,8 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 	if (m_bHasCrushGage)
 	{
 		_int iDamage = tDamageParams.iDamage;
-		if (m_bHitWeak)
-			iDamage *= 2;
+		// if (m_bHitWeak)
+			// iDamage *= 2;
 
 		if (tDamageParams.eAttackSAS == ESASType::SAS_HARDBODY)
 			iDamage *= 3;

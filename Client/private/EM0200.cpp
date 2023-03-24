@@ -579,6 +579,7 @@ void CEM0200::SetUpFSM()
 void CEM0200::BeginTick()
 {
 	CEnemy::BeginTick();
+	m_SoundStore.PlaySound("mon_5_voice_laugh");
 }
 
 void CEM0200::Tick(_double TimeDelta)

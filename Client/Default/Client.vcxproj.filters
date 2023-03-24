@@ -352,6 +352,9 @@
     <Filter Include="02.GameObjects\SpecialObject\Special_HBeam_Single">
       <UniqueIdentifier>{ca41eb78-703f-4029-ad82-7f5d5fb86b01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM320%28boss1%29">
+      <UniqueIdentifier>{8fd30798-7bae-4e4f-8baa-2d2103a4c132}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -989,6 +992,15 @@
     </ClInclude>
     <ClInclude Include="..\public\Imgui_Batch.h" />
     <ClInclude Include="..\public\SAS_Cable.h" />
+    <ClInclude Include="..\public\EM0320.h">
+      <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0320_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0320_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1599,6 +1611,15 @@
       <Filter>02.GameObjects\SpecialObject\Special_HBeam_Single</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SAS_Cable.cpp" />
+    <ClCompile Include="..\private\EM0320.cpp">
+      <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0320_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0320_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
