@@ -241,7 +241,8 @@ void CPlayer::Tick(_double TimeDelta)
 	BehaviorCheck(TimeDelta);
 
 	// SAS특수
-	m_pTeleportStateMachine->Tick(TimeDelta);
+	if (CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_TELEPORT)) 
+		m_pTeleportStateMachine->Tick(TimeDelta);
 	// ~SAS특수
 
 	m_pHitStateMachine->Tick(TimeDelta);
@@ -3120,12 +3121,24 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATK_AIR_CHARGE_START", [this]()
 	{
-		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
-		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
-		m_AttackDesc.pCauser = this;
-		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		if (m_pModel->GetPlayAnimation()->GetPlayRatio() <= 0.75f)
+		{
+			m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
+			m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+			m_AttackDesc.iDamage = 100;
+			m_AttackDesc.pCauser = this;
+			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		}
+		else
+		{
+			m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
+			m_AttackDesc.eAttackType = EAttackType::ATK_DOWN;
+			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+			m_AttackDesc.iDamage = 100;
+			m_AttackDesc.pCauser = this;
+			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		}
 	});
 	m_mapCollisionEvent.emplace("ATK_AIR_CHARGE_FALL", [this]()
 	{

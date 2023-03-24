@@ -126,6 +126,16 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 	SAS_Checker();
 }
 
+_bool CPlayerInfoManager::Get_isSasUsing(ESASType eType)
+{
+	for (auto& iter : m_PlayerSasTypeList)
+	{
+		if (iter == eType)
+			return true;
+	}
+	return false;
+}
+
 CGameObject * CPlayerInfoManager::Get_KineticObject()
 {
 	if (nullptr == m_pKineticObject) return nullptr;	// null¿Ã∏È
