@@ -140,6 +140,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
+	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_PLAYEREFFECT);
 
 	ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 	ZeroMemory(&m_AttackDesc, sizeof(DAMAGE_PARAM));
@@ -629,8 +630,6 @@ void CPlayer::Imgui_RenderProperty()
 	{
 		static string szAnimName = "";
 		static _float fEffectPlayTime = 0.f;
-		static _float fEffectSize = 1.f;
-		static char cBoneName[MAX_PATH]{ "Eff01" };
 
 		static _float fPrePlayTime = 0.f;
 		_float fCurPlayTime = m_pModel->GetPlayAnimation()->GetPlayTime();
@@ -673,15 +672,18 @@ void CPlayer::Imgui_RenderProperty()
 		ImGui::InputText("Effect Search", cEffectName, MAX_PATH);
 		szEffectName = cEffectName;
 
+		static char cBoneName[MAX_PATH]{};
+		static string szBoneName = "";
+		ImGui::InputText("Bone Search", cBoneName, MAX_PATH);
+		szBoneName = cBoneName;
+
+		ImGui::InputFloat("EffectTime", &fEffectPlayTime);
+
 		if ((m_pModel->GetPlayAnimation()->GetName() == szAnimName) &&
 			(fPrePlayTime <= fEffectPlayTime) &&
 			(fCurPlayTime > fEffectPlayTime))
 		{
-			//Event_Effect(szEffectName, fEffectSize, cBoneName);
-			//if (m_PlayerSasType == ESASType::SAS_NOT)
-			//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, s2ws(szEffectName))->Start_Attach(this, szBoneName);
-			//else if (m_PlayerSasType == ESASType::SAS_FIRE)
-			//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, s2ws(szEffectName))->Start_Attach(this, szBoneName);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, s2ws(szEffectName), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, pivot1, szBoneName, true);
 		}
 
 		fPrePlayTime = fCurPlayTime;
@@ -780,6 +782,12 @@ void CPlayer::SasMgr()
 				else if (ESASType::SAS_TELEPORT == InputSas)
 				{
 					m_pASM->Add_SpairSasMotion(ESASType::SAS_NOT);
+					m_pSAS_Cable->UnEquipCable();
+				}
+				else if (ESASType::SAS_ELETRIC == InputSas)
+				{
+					m_pASM->Add_SpairSasMotion(ESASType::SAS_NOT);
+					m_pSAS_Cable->UnEquipCable();
 				}
 			}
 			else // 사용중이지 않을 경우
@@ -798,6 +806,11 @@ void CPlayer::SasMgr()
 					m_pASM->Add_SpairSasMotion(ESASType::SAS_TELEPORT);
 					m_pSAS_Cable->EquipCable(ESASType::SAS_TELEPORT);
 				}
+				else if (ESASType::SAS_ELETRIC == InputSas)
+				{
+					m_pASM->Add_SpairSasMotion(ESASType::SAS_ELETRIC);
+					m_pSAS_Cable->EquipCable(ESASType::SAS_ELETRIC);
+				}
 
 				CPlayerInfoManager::GetInstance()->Set_SasType(InputSas);
 			}
@@ -810,8 +823,8 @@ void CPlayer::SasMgr()
 		{
 			if (ESASType::SAS_FIRE == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 			{
-				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Sas_Fire_Start"))->Start_Attach(this, "Sheath");
-				m_pSwordParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Weapon_Particle"));
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Sas_Fire_Start"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+				m_pSwordParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Weapon_Particle"), LAYER_PLAYEREFFECT);
 				m_pSwordParticle->Start_Attach(this, "RightWeapon", true);
 			}
 
@@ -865,6 +878,12 @@ void CPlayer::Visible_Check()
 			iter->SetVisible(false);
 
 		m_pSAS_Cable->SetVisible(false);
+
+		if (TeleportEffect.IsNotDo())
+		{
+			TeleportEndEffect.Reset();
+			TeleportEffectMaker();
+		}
 	}
 	else
 	{
@@ -874,6 +893,12 @@ void CPlayer::Visible_Check()
 			iter->SetVisible(true);
 
 		m_pSAS_Cable->SetVisible(true);
+
+		if (TeleportEndEffect.IsNotDo())
+		{
+			TeleportEffect.Reset();
+			TeleportEffectMaker();
+		}
 	}
 }
 
@@ -997,7 +1022,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		{
 			_float4x4 EffectPivotMatrix =
 				XMMatrixTranslation(0.f, -1.5f, -1.f);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_5")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_5", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
 	m_pModel->Add_EventCaller("Default_Attack_5_BackGround", [&]() {Event_Effect("Default_Attack_5_BackGround"); });
@@ -1008,7 +1033,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		{
 			_float4x4 EffectPivotMatrix =
 				XMMatrixTranslation(0.f, 1.f, 0.5f);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_5_PreEffect")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_5_PreEffect", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
 	m_pModel->Add_EventCaller("Default_Attack_Air_Attack_1", [&]() {Event_Effect("Default_Attack_Air_Attack_1"); });
@@ -1020,7 +1045,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		{
 			_float4x4 EffectPivotMatrix =
 				XMMatrixTranslation(0.f, -1.1f, -1.5f);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_Air_Dash_0")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_Air_Dash_0", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
 	m_pModel->Add_EventCaller("Default_Attack_Air_Dash_0", [&]() {Event_Effect("Default_Attack_Air_Dash_0"); });
@@ -1058,7 +1083,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 				* XMMatrixRotationY(XMConvertToRadians(-45.f))
 				* XMMatrixRotationZ(XMConvertToRadians(135.f))
 				* XMMatrixTranslation(0.f, 1.f, -1.f);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_1_001")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_1_001", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
 	m_pModel->Add_EventCaller("Fire_Attack_1_Particle", [&]()
@@ -1070,7 +1095,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 				* XMMatrixRotationY(XMConvertToRadians(-45.f))
 				* XMMatrixRotationZ(XMConvertToRadians(135.f))
 				* XMMatrixTranslation(0.f, 1.f, -1.f);
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_1_001_Particle"))->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_1_001_Particle"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
 	m_pModel->Add_EventCaller("Fire_Attack_2", [&]() 
@@ -1080,7 +1105,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 			_float4x4 EffectPivotMatrix = XMMatrixScaling(3.f, 3.f, 3.f)
 				* XMMatrixRotationZ(XMConvertToRadians(160.f))
 				* XMMatrixTranslation(0.f, 0.75f, 0.25f);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_2")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_2", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
 	m_pModel->Add_EventCaller("Fire_Attack_2_Particle", [&]()
@@ -1090,14 +1115,14 @@ HRESULT CPlayer::SetUp_EffectEvent()
 			_float4x4 EffectPivotMatrix = XMMatrixScaling(3.f, 3.f, 3.f)
 				* XMMatrixRotationZ(XMConvertToRadians(160.f))
 				* XMMatrixTranslation(0.f, 0.75f, 0.25f);
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_2_Particle"))->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_2_Particle"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
 	m_pModel->Add_EventCaller("Fire_Attack_3", [&]() {Event_Effect("Fire_Attack_3"); });
 	m_pModel->Add_EventCaller("Fire_Attack_3_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_3_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_3_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_3_twist", [&]() 
@@ -1106,7 +1131,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		{
 			_float4x4 EffectPivotMatrix =
 				XMMatrixTranslation(0.f, 0.f, -2.f);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_3_Double_twist")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);		//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_3_Double_twist", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);		//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
 		}
 	});
 	m_pModel->Add_EventCaller("Fire_Attack_3_twist_Particle", [&]()
@@ -1116,7 +1141,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 			_float4x4 EffectPivotMatrix =
 				XMMatrixScaling(10.f, 10.f, 10.f) *
 				XMMatrixTranslation(0.f, 0.f, -2.f);
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Fire_Attack_3_Twist_Particle")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", false);	
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Fire_Attack_3_Twist_Particle", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", false);
 		
 		}
 	});
@@ -1125,14 +1150,14 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Fire_Attack_4_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_4_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_4_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_4_001", [&]() {Event_Effect("Fire_Attack_4_001"); });
 	m_pModel->Add_EventCaller("Fire_Attack_4_001_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_4_001_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_4_001_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 
@@ -1140,7 +1165,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Fire_Attack_5_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_5_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_5_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_5_PreEffect", [&]() 
@@ -1148,7 +1173,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 		{
 			_float4x4 EffectPivotMatrix = XMMatrixTranslation(0.f, 1.f, 0.5f);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_5_PreEffect")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_5_PreEffect", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 
 //		Event_Effect("Fire_Attack_5_PreEffect");
@@ -1158,14 +1183,14 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Fire_Attack_Air_1_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_1_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_1_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Air_2", [&]() {Event_Effect("Fire_Attack_Air_2"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Air_2_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_2_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_2_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 
@@ -1173,14 +1198,14 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Fire_Attack_Air_chase_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_chase_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_chase_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_0", [&]() {Event_Effect("Fire_Attack_Air_dash_0"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_0_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_dash_0_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_dash_0_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_End", [&]() 
@@ -1189,7 +1214,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		{
 			_float4x4 EffectPivotMatrix =
 				XMMatrixTranslation(0.f, -1.1f, -1.f);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Air_dash_0")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Air_dash_0", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_End_Particle", [&]()
@@ -1198,7 +1223,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		{
 			_float4x4 EffectPivotMatrix =
 				XMMatrixTranslation(0.f, -1.1f, -1.f);
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_dash_0_Particle"))->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_dash_0_Particle"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
 
@@ -1212,84 +1237,84 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_Hold_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_Hold_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_1", [&]() {Event_Effect("Fire_Attack_Air_Hold_1");});
 	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_1_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_Hold_1_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_Hold_1_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_2", [&]() {Event_Effect("Fire_Attack_Air_Hold_2");});
 	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_2_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_Hold_2_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_Hold_2_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_Landing", [&]() {Event_Effect("Fire_Attack_Air_Hold_Landing");});
 	m_pModel->Add_EventCaller("Fire_Attack_Air_Hold_Landing_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_Hold_Landing_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_Hold_Landing_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Charge03", [&]() {Event_Effect("Fire_Attack_Charge03");});
 	m_pModel->Add_EventCaller("Fire_Attack_Charge03_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Charge03_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Charge03_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Charge03_001", [&]() {Event_Effect("Fire_Attack_Charge03_001");});
 	m_pModel->Add_EventCaller("Fire_Attack_Charge03_001_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Charge03_001_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Charge03_001_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Charge03_002", [&]() {Event_Effect("Fire_Attack_Charge03_002");});
 	m_pModel->Add_EventCaller("Fire_Attack_Charge03_002_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Charge03_002_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Charge03_002_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_00", [&]() {Event_Effect("Fire_Attack_Dash_00");});
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_00_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_00_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_00_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_01", [&]() {Event_Effect("Fire_Attack_Dash_01");});
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_01_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_01_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_01_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_001", [&]() {Event_Effect("Fire_Attack_Dash_02_001");});
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_001_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_02_001_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_02_001_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_002", [&]() {Event_Effect("Fire_Attack_Dash_02_002");});
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_02_002_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_02_002_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_02_002_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_03", [&]() {Event_Effect("Fire_Attack_Dash_03");});
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_03_Particle", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_03_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_03_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_001", [&]() {});
@@ -1301,7 +1326,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 			_float4x4 EffectPivotMatrix =
 				XMMatrixScaling(1.5f, 1.5f, 1.5f)
 				* XMMatrixTranslation(-2.f, -1.5f, 2.f);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Dash_Hold_003")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Dash_Hold_003", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
 	m_pModel->Add_EventCaller("Fire_Attack_Dash_Hold_003_Particle", [&]()
@@ -1311,7 +1336,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 			_float4x4 EffectPivotMatrix =
 				XMMatrixScaling(1.5f, 1.5f, 1.5f)
 				* XMMatrixTranslation(-2.f, -1.5f, 2.f);
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_Hold_003_Particle"))->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Dash_Hold_003_Particle"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 		}
 	});
 
@@ -1322,7 +1347,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Fire_Attack_Upper_Particle", [&]() 
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Upper_Particle"))->Start_Attach(this, "Eff01");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Upper_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
 	m_pModel->Add_EventCaller("Elec_Attack_1", [&]() {Event_Effect("Elec_Attack_1", 1.f, "Eff02"); });
@@ -1396,7 +1421,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	{
 		random_shuffle(m_vecRandomLandingDustName.begin(), m_vecRandomLandingDustName.end());
 
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, m_vecRandomLandingDustName.front())->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, m_vecRandomLandingDustName.front(), LAYER_PLAYEREFFECT)->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
 	});
 
 	m_pModel->Add_EventCaller("KineticCircle", [&]()
@@ -3314,7 +3339,7 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 		})
 		.OnExit([&]() 
 		{
-
+			TeleportEffectMaker();
 		})
 		.AddTransition("TELEPORTATTACK_NOUSE to TELEPORTATTACK_FLOOR_START", "TELEPORTATTACK_FLOOR_START")
 		.Predicator([&]()->_bool 
@@ -3388,6 +3413,7 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 			}
 
 			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, m_vTeleportPos);
+
 		})
 		.Tick([&](double fTimeDelta) 
 		{
@@ -3412,6 +3438,8 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 				iter->SetVisible(true);
 
 			m_pSAS_Cable->SetVisible(true);
+
+			TeleportEffectMaker();
 		})
 		.Tick([&](double fTimeDelta) 
 		{
@@ -3494,6 +3522,7 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 			}
 
 			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, m_vTeleportPos);
+
 		})
 		.Tick([&](double fTimeDelta) 
 		{
@@ -3521,6 +3550,8 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 				iter->SetVisible(true);
 
 			m_pSAS_Cable->SetVisible(true);
+
+			TeleportEffectMaker();
 		})
 		.Tick([&](double fTimeDelta) 
 		{
@@ -3553,7 +3584,7 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 
 			m_pSAS_Cable->SetVisible(false);
 
-			//m_fYSpeed = 0.f;
+			TeleportEffectMaker();
 
 		})
 		.Tick([&](double fTimeDelta) 
@@ -3572,6 +3603,8 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 				iter->SetVisible(true);
 
 			m_pSAS_Cable->SetVisible(true);
+
+			TeleportEffectMaker();
 		})
 		.AddTransition("TELEPORTATTACK_AIR_LANDING_START to TELEPORTATTACK_NOUSE", "TELEPORTATTACK_NOUSE")
 		.Predicator([&]()->_bool 
@@ -3583,6 +3616,16 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 	.Build();
 
 	return S_OK;
+}
+
+void CPlayer::TeleportEffectMaker()
+{
+	_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+	wstring strTeleportEffectName = m_vecRandomTeleportEffect[CMathUtils::RandomUInt(m_vecRandomTeleportEffect.size() - 1)];
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, strTeleportEffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath", true);
+
+	_matrix matTex = XMMatrixScaling(1.f, 1.f, 1.f) * XMMatrixTranslation(0.f, 0.f, 0.f);
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Sas_Teleport_Attach_Player_Tex", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matTex, "Sheath", true, true);
 }
 
 HRESULT CPlayer::SetUp_TrainStateMachine()
@@ -4410,35 +4453,35 @@ _bool CPlayer::Charge(_uint iNum, _float fCharge)
 
 		if ((0 == iNum) && fCharge <= m_fCharge[iNum])
 		{
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Effect_01"))->Start_Attach(this, "RightWeapon");
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Charge_White_Particle"))->Start_Attach(this, "RightWeapon");
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Effect_01"), LAYER_PLAYEREFFECT)->Start_Attach(this, "RightWeapon");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Charge_White_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "RightWeapon");
 
 			if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_NOT)
 			{
 				_matrix EffectPivot = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(XMConvertToRadians(-90.f));
-				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Default_Charge_1_MeshParticle"))->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
+				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Default_Charge_1_MeshParticle"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
 			}
 			else if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			{
 				_matrix EffectPivot = XMMatrixScaling(5.f, 5.f, 5.f) * XMMatrixRotationX(XMConvertToRadians(-90.f));
-				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Fire_Charge_1_MeshParticle"))->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
+				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Fire_Charge_1_MeshParticle"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
 			}
 
 		}
 		if ((1 == iNum) && fCharge <= m_fCharge[iNum])
 		{
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Effect_02"))->Start_Attach(this, "RightWeapon");
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Charge_White_Particle"))->Start_Attach(this, "RightWeapon");
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Effect_02"), LAYER_PLAYEREFFECT)->Start_Attach(this, "RightWeapon");
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Charge_White_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "RightWeapon");
 			
 			if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_NOT)
 			{
 				_matrix EffectPivot = XMMatrixScaling(6.f, 6.f, 6.f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(-20.f)) * XMMatrixTranslation(0.f, 0.4f, -0.5f);
-				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Default_Charge_2_MeshParticle"))->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
+				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Default_Charge_2_MeshParticle"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
 			}
 			else if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			{
 				_matrix EffectPivot = XMMatrixScaling(5.f, 5.f, 5.f) * XMMatrixRotationX(XMConvertToRadians(-90.f));
-				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Fire_Charge_2_MeshParticle"))->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
+				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Fire_Charge_2_MeshParticle"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
 			}
 		}
 
@@ -4470,9 +4513,6 @@ CPlayer & CPlayer::SetAbleState(REMOTE tagRemote)
 
 void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 {
-	CEffectGroup* pEffect = nullptr;
-	Json Effect;
-
 	wstring EffectName = s2ws(szEffectName);
 
 	switch (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type)
@@ -4480,22 +4520,19 @@ void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 	case ESASType::SAS_NOT:
 		if (szEffectName.find("Fire") != string::npos || szEffectName.find("Elec") != string::npos)
 			break;
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, EffectName)->Start_Attach(this, szBoneName);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, szBoneName);
 		break;
 	case ESASType::SAS_FIRE:
 		if (szEffectName.find("Fire") == string::npos)
 			break;
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, EffectName)->Start_Attach(this, szBoneName);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, szBoneName);
 		break;
 	case ESASType::SAS_ELETRIC:
 		if (szEffectName.find("Elec") == string::npos)
 			break;
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName)->Start_Attach(this, szBoneName);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, szBoneName);
 		break;
 	}
-
-	if (pEffect == nullptr)
-		return;
 }
 
 void CPlayer::Event_EffectSound(const string& strSoundName)
@@ -4513,6 +4550,12 @@ void CPlayer::Event_EffectSound(const string& strSoundName)
 			break;
 		break;
 	}
+}
+
+void CPlayer::Event_ElecEffect(string szEffectName, string szBoneName)
+{
+	wstring EffectName = s2ws(szEffectName);
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, pivot1, szBoneName, true);
 }
 
 void CPlayer::Event_CollisionStart()
@@ -4568,8 +4611,8 @@ void CPlayer::Event_Kinetic_Throw()
 	if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject() && (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster()))
 	{
 		_vector vKineticPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Throw_Kinetic_Distortion"))->Start_AttachOnlyPos(vKineticPos);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Kinetic_Shoot_Smoke"))->Start_AttachPosition(this, vKineticPos, _float4(0.f, 1.f, 0.f, 0.f));
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Throw_Kinetic_Distortion"), LAYER_PLAYEREFFECT)->Start_AttachOnlyPos(vKineticPos);
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Kinetic_Shoot_Smoke"), LAYER_PLAYEREFFECT)->Start_AttachPosition(this, vKineticPos, _float4(0.f, 1.f, 0.f, 0.f));
 
 		//Vector4 vTargetPos = static_cast<CMonster*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetKineticTargetPos();
 		Vector4 vTargetPos = static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetKineticTargetPos();
@@ -4588,8 +4631,8 @@ void CPlayer::Event_Kinetic_Throw()
 	else if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
 	{
 		_vector vKineticPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Throw_Kinetic_Distortion"))->Start_AttachOnlyPos(vKineticPos);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Kinetic_Shoot_Smoke"))->Start_AttachPosition(this, vKineticPos, _float4(0.f, 1.f, 0.f, 0.f));
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Throw_Kinetic_Distortion"), LAYER_PLAYEREFFECT)->Start_AttachOnlyPos(vKineticPos);
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Kinetic_Shoot_Smoke"), LAYER_PLAYEREFFECT)->Start_AttachPosition(this, vKineticPos, _float4(0.f, 1.f, 0.f, 0.f));
 
 		_float3 vForce = { XMVectorGetX(m_vCamLook), XMVectorGetY(m_vCamLook), XMVectorGetZ(m_vCamLook) };
 		vForce = XMVector3Normalize(vForce);
@@ -4620,14 +4663,14 @@ void CPlayer::Event_Dust()
 
 void CPlayer::Event_KineticCircleEffect()
 {
-	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Kinetic_BaseCircle")->Start_Attach(this, "Eff01");
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Kinetic_BaseCircle", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	_matrix MatScale = XMMatrixIdentity() * XMMatrixScaling(10.f, 10.f, 10.f);
 //	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Kinetic_Particle")->Start_AttachPivot(this, MatScale, "Reference", true, false);
 }
 
 void CPlayer::Event_KineticCircleEffect_Attach()
 {
-	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Kinetic_BaseCircle")->Start_Attach(this, "Eff01", true);
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Kinetic_BaseCircle", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", true);
 }
 
 void CPlayer::Reset_Charge()
@@ -5094,7 +5137,7 @@ void CPlayer::NetualChecker(_double TimeDelta)
 		if (1.f < m_fBattleParticleTime)
 		{
 			m_fBattleParticleTime = 0.f;
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Text_Particle_NoLoop"))
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Text_Particle_NoLoop"), LAYER_PLAYEREFFECT)
 				->Start_Attach(this, "BackHair");
 		}
 	}
@@ -5758,35 +5801,35 @@ void CPlayer::SasGearEffect()
 		* XMMatrixRotationX(XMConvertToRadians(-180.f))
 		* XMMatrixRotationZ(XMConvertToRadians(-180.f))
 		* XMMatrixTranslation(0.17f, 0.09f, 0.2f);
-	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Use_Sas_Gear"))
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Use_Sas_Gear"), LAYER_PLAYEREFFECT)
 		->Start_AttachPivot(this, Pivot01, "Sheath", true, true);
 
 	_float4x4 Pivot02 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
 		* XMMatrixRotationX(XMConvertToRadians(-180.f))
 		* XMMatrixRotationZ(XMConvertToRadians(-180.f))
 		* XMMatrixTranslation(-0.17f, 0.1f, 0.2f);
-	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Use_Sas_Gear"))
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Use_Sas_Gear"), LAYER_PLAYEREFFECT)
 		->Start_AttachPivot(this, Pivot02, "Sheath", true, true);
 
 	_float4x4 Pivot03 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
 		* XMMatrixRotationX(XMConvertToRadians(-180.f))
 		* XMMatrixRotationZ(XMConvertToRadians(-180.f))
 		* XMMatrixTranslation(0.1f, -0.1f, 0.2f);
-	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Use_Sas_Gear"))
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Use_Sas_Gear"), LAYER_PLAYEREFFECT)
 		->Start_AttachPivot(this, Pivot03, "Sheath", true, true);
 
 	_float4x4 Pivot04 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
 		* XMMatrixRotationX(XMConvertToRadians(-180.f))
 		* XMMatrixRotationZ(XMConvertToRadians(-180.f))
 		* XMMatrixTranslation(0.08f, -0.3f, 0.08f);
-	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Use_Sas_Gear"))
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Use_Sas_Gear"), LAYER_PLAYEREFFECT)
 		->Start_AttachPivot(this, Pivot04, "Sheath", true, true);
 
 	_float4x4 Pivot05 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
 		* XMMatrixRotationX(XMConvertToRadians(-180.f))
 		* XMMatrixRotationZ(XMConvertToRadians(-180.f))
 		* XMMatrixTranslation(-0.172f, -0.274f, 0.045f);
-	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Use_Sas_Gear"))
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Use_Sas_Gear"), LAYER_PLAYEREFFECT)
 		->Start_AttachPivot(this, Pivot05, "Sheath", true, true);
 }
 

@@ -490,39 +490,39 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(0)
 
 				.AddTransition("ATK_A1 to ATK_A2", "ATK_A2")
-				.Predicator([&]()->_bool {return m_bLeftClick && (0.15f <= m_fPlayRatio) && (0.3f > m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && (!m_bLerp); })
+				.Predicator([&]()->_bool {return m_bLeftClick && (0.15f <= m_fPlayRatio) && (0.3f > m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1") || CheckAnim("AS_ch0100_201_AL_atk_a1_Electric")) && (!m_bLerp); })
 				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("REPEAT", "ATK_A1")
-				.Predicator([&]()->_bool {return m_bLeftClick && (0.3f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && (!m_bLerp); })
+				.Predicator([&]()->_bool {return m_bLeftClick && (0.3f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1") || CheckAnim("AS_ch0100_201_AL_atk_a1_Electric")) && (!m_bLerp); })
 				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("ATK_A1 to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
-				.Predicator([&]()->_bool {return m_bNonCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+				.Predicator([&]()->_bool {return m_bNonCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1") || CheckAnim("AS_ch0100_201_AL_atk_a1_Electric")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("ATK_A1 to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
-				.Predicator([&]()->_bool {return m_bCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+				.Predicator([&]()->_bool {return m_bCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1") || CheckAnim("AS_ch0100_201_AL_atk_a1_Electric")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
 				.Duration(0.1f).Priority(2)
 
 				.AddTransition("ATK_A1 to ATTACK_UPPER_START", "ATTACK_UPPER_START")
-				.Predicator([&]()->_bool {return m_bLeftClick && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && m_bUpper; })
+				.Predicator([&]()->_bool {return m_bLeftClick && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1") || CheckAnim("AS_ch0100_201_AL_atk_a1_Electric")) && m_bUpper; })
 				.Duration(0.1f)
 				.Priority(0)
 
 				.AddTransition("ATK_A1 to JUMP_START", "JUMP_START")
-				.Predicator([&]()->_bool {return m_bJump && (0.3f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && (!m_bLerp); })
+				.Predicator([&]()->_bool {return m_bJump && (0.3f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1") || CheckAnim("AS_ch0100_201_AL_atk_a1_Electric")) && (!m_bLerp); })
 				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("ATK_A1 to DASH", "DASH")
-				.Predicator([&]()->_bool {return m_bDash && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")); })
+				.Predicator([&]()->_bool {return m_bDash && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1") || CheckAnim("AS_ch0100_201_AL_atk_a1_Electric")); })
 				.Duration(0.1f).Priority(0)
 
 				.AddTransition("ATK_A1 to WALK", "WALK")
-				.Predicator([&]()->_bool {return m_bWalk && (0.3f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1")) && (!m_bLerp); })
+				.Predicator([&]()->_bool {return m_bWalk && (0.3f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_201_AL_atk_a1") || CheckAnim("AS_ch0100_201_AL_atk_a1_Electric")) && (!m_bLerp); })
 				.Duration(0.1f)
 				.Priority(100)
 
@@ -544,39 +544,39 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(0)
 
 				.AddTransition("ATK_A2 to ATK_A3", "ATK_A3")
-				.Predicator([&]()->_bool {return m_bLeftClick && (0.15f <= m_fPlayRatio) && (0.5f > m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")) && (!m_bLerp); })
+				.Predicator([&]()->_bool {return m_bLeftClick && (0.15f <= m_fPlayRatio) && (0.5f > m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2") || CheckAnim("AS_ch0100_202_AL_atk_a2_Electric")) && (!m_bLerp); })
 				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("ATK_A2 to ATTACK_UPPER_START", "ATTACK_UPPER_START")
-				.Predicator([&]()->_bool {return m_bLeftClick && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")) && m_bUpper; })
+				.Predicator([&]()->_bool {return m_bLeftClick && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2") || CheckAnim("AS_ch0100_202_AL_atk_a2_Electric")) && m_bUpper; })
 				.Duration(0.1f)
 				.Priority(0)
 
 				.AddTransition("ATK_A2 to ATK_A1", "ATK_A1")
-				.Predicator([&]()->_bool {return m_bLeftClick && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")) && (!m_bLerp); })
+				.Predicator([&]()->_bool {return m_bLeftClick && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2") || CheckAnim("AS_ch0100_202_AL_atk_a2_Electric")) && (!m_bLerp); })
 				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("ATK_A2 to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
-				.Predicator([&]()->_bool {return m_bNonCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+				.Predicator([&]()->_bool {return m_bNonCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2") || CheckAnim("AS_ch0100_202_AL_atk_a2_Electric")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("ATK_A2 to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
-				.Predicator([&]()->_bool {return m_bCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+				.Predicator([&]()->_bool {return m_bCharge && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2") || CheckAnim("AS_ch0100_202_AL_atk_a2_Electric")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
 				.Duration(0.1f).Priority(2)
 
 				.AddTransition("ATK_A2 to JUMP_START", "JUMP_START")
-				.Predicator([&]()->_bool {return m_bJump && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")) && (!m_bLerp); })
+				.Predicator([&]()->_bool {return m_bJump && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2") || CheckAnim("AS_ch0100_202_AL_atk_a2_Electric")) && (!m_bLerp); })
 				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("ATK_A2 to DASH", "DASH")
-				.Predicator([&]()->_bool {return m_bDash && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")); })
+				.Predicator([&]()->_bool {return m_bDash && (0.15f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2") || CheckAnim("AS_ch0100_202_AL_atk_a2_Electric")); })
 				.Duration(0.1f).Priority(0)
 
 				.AddTransition("ATK_A2 to WALK", "WALK")
-				.Predicator([&]()->_bool {return m_bWalk && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2")) && (!m_bLerp); })
+				.Predicator([&]()->_bool {return m_bWalk && (0.5f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_202_AL_atk_a2") || CheckAnim("AS_ch0100_202_AL_atk_a2_Electric")) && (!m_bLerp); })
 				.Duration(0.1f)
 				.Priority(100)
 
@@ -598,39 +598,39 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f).Priority(0)
 
 				.AddTransition("ATK_A3 to ATK_A4", "ATK_A4")
-				.Predicator([&]()->_bool {return m_bLeftClick && (0.25f <= m_fPlayRatio) && (0.65f > m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")) && (!m_bLerp); })
+				.Predicator([&]()->_bool {return m_bLeftClick && (0.25f <= m_fPlayRatio) && (0.65f > m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3") || CheckAnim("AS_ch0100_203_AL_atk_a3_Electric")) && (!m_bLerp); })
 				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("ATK_A3 to ATTACK_UPPER_START", "ATTACK_UPPER_START")
-				.Predicator([&]()->_bool {return m_bLeftClick && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")) && m_bUpper; })
+				.Predicator([&]()->_bool {return m_bLeftClick && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3") || CheckAnim("AS_ch0100_203_AL_atk_a3_Electric")) && m_bUpper; })
 				.Duration(0.1f)
 				.Priority(0)
 
 				.AddTransition("ATK_A3 to ATK_A1", "ATK_A1")
-				.Predicator([&]()->_bool {return m_bLeftClick && (0.65f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")) && (!m_bLerp); })
+				.Predicator([&]()->_bool {return m_bLeftClick && (0.65f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3") || CheckAnim("AS_ch0100_203_AL_atk_a3_Electric")) && (!m_bLerp); })
 				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("ATK_A3 to ATTACK_NONCHARGE", "ATTACK_NONCHARGE")
-				.Predicator([&]()->_bool {return m_bNonCharge && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
+				.Predicator([&]()->_bool {return m_bNonCharge && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3") || CheckAnim("AS_ch0100_203_AL_atk_a3_Electric")) && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_NONCHARGE_FLOOR); })
 				.Duration(0.1f).Priority(1)
 
 				.AddTransition("ATK_A3 to ATTACK_CHARGE_START", "ATTACK_CHARGE_START")
-				.Predicator([&]()->_bool {return m_bCharge && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
+				.Predicator([&]()->_bool {return m_bCharge && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3") || CheckAnim("AS_ch0100_203_AL_atk_a3_Electric")) && static_cast<CPlayer*>(m_pTargetObject)->BeforeCharge(0.2f); })
 				.Duration(0.1f).Priority(2)
 
 				.AddTransition("ATK_A3 to JUMP_START", "JUMP_START")
-				.Predicator([&]()->_bool {return m_bJump && (0.65f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")) && (!m_bLerp); })
+				.Predicator([&]()->_bool {return m_bJump && (0.65f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3") || CheckAnim("AS_ch0100_203_AL_atk_a3_Electric")) && (!m_bLerp); })
 				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("ATK_A3 to DASH", "DASH")
-				.Predicator([&]()->_bool {return m_bDash && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")); })
+				.Predicator([&]()->_bool {return m_bDash && (0.25f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3") || CheckAnim("AS_ch0100_203_AL_atk_a3_Electric")); })
 				.Duration(0.1f).Priority(0)
 
 				.AddTransition("ATK_A3 to WALK", "WALK")
-				.Predicator([&]()->_bool {return m_bWalk && (0.65f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3")) && (!m_bLerp); })
+				.Predicator([&]()->_bool {return m_bWalk && (0.65f <= m_fPlayRatio) && (CheckAnim("AS_ch0100_203_AL_atk_a3") || CheckAnim("AS_ch0100_203_AL_atk_a3_Electric")) && (!m_bLerp); })
 				.Duration(0.1f)
 				.Priority(100)
 
@@ -1212,12 +1212,12 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				if (ESASType::SAS_NOT == CurSas)
 				{
 					_matrix EffectPivot = XMMatrixScaling(2.f, 2.f, 2.f) * XMMatrixRotationX(XMConvertToRadians(-90.f));
-					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Twist"))->Start_AttachPivot(m_pTargetObject, EffectPivot, "RightWeapon", true, true);
+					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Twist"), LAYER_PLAYEREFFECT)->Start_AttachPivot(m_pTargetObject, EffectPivot, "RightWeapon", true, true);
 				}
 				else if (ESASType::SAS_FIRE == CurSas)
 				{
 					_matrix EffectPivot = XMMatrixScaling(2.f, 2.f, 2.f) * XMMatrixRotationX(XMConvertToRadians(-90.f));
-					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Fire_Attack_Charge_Twist"))->Start_AttachPivot(m_pTargetObject, EffectPivot, "RightWeapon", true, true);
+					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Fire_Attack_Charge_Twist"), LAYER_PLAYEREFFECT)->Start_AttachPivot(m_pTargetObject, EffectPivot, "RightWeapon", true, true);
 				}
 			})
 

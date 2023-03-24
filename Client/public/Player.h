@@ -192,6 +192,7 @@ private:
 private:	// SAS 특수기 FSM
 	HRESULT				SetUp_TeleportStateMachine();
 	CFSMComponent*		m_pTeleportStateMachine = nullptr;
+	void				TeleportEffectMaker();
 
 private:
 	_float				m_fTeleportAttack_GC = 0.f;	// 다음 공격으로 이어가게 하기 위함
@@ -425,6 +426,7 @@ public:	//EventCaller용
 
 	void		Event_Effect(string szEffectName, _float fSize = 1.f, string szBoneName = "Eff01");
 	void		Event_EffectSound(const string& strSoundName);
+	void		Event_ElecEffect(string szEffectName, string szBoneName = "Eff01");
 
 	void		Event_CollisionStart();
 	void		Event_collisionEnd();
@@ -603,6 +605,8 @@ private:
 	_float4x4 pivot5;
 
 	CDoOnce	SasOn;
+	CDoOnce	TeleportEffect;
+	CDoOnce TeleportEndEffect;
 
 private:
 	CSAS_Portrait* m_pSasPortrait = nullptr;
@@ -614,6 +618,14 @@ private:
 
 private:
 	vector<wstring>	m_vecRandomLandingDustName;
+
+private:
+	vector<wstring>	m_vecRandomTeleportEffect{
+			L"Sas_Teleport_Effect_A",
+			L"Sas_Teleport_Effect_B",
+			L"Sas_Teleport_Effect_C",
+			L"Sas_Teleport_Effect_D"
+		};
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

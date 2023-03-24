@@ -10,6 +10,7 @@
 #define PLAYERTEST_LAYER_MONSTER	TEXT("Layer_Monster")
 #define PLAYERTEST_LAYER_POSTVFX	TEXT("Layer_PostVFX")
 #define PLAYERTEST_LAYER_FRONTUI	TEXT("Layer_FrontUI")
+#define LAYER_PLAYEREFFECT			TEXT("Layer_PlayerEffect")
 
 BEGIN(Engine)
 class CTransform;

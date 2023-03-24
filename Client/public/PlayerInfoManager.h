@@ -35,6 +35,8 @@ typedef struct tagPlayerStatus
 	_uint m_iKineticEnergyLevel;   // 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
 	_uint m_iKineticEnergyType;    // 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
 
+	_float m_fBaseAttackDamage;
+
 	ESASType m_eAttack_SAS_Type;
 
 	array<SAS_GAGE, SAS_CNT> Sasese{};
@@ -99,6 +101,9 @@ private:	// 상호작용 관련
 	CGameObject*	m_pKineticObject;
 	CGameObject*	m_pTargetedMonster;
 	CGameObject*	m_pSpecialObject;
+
+private:
+	_float			m_fBaseAttackDamage;
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

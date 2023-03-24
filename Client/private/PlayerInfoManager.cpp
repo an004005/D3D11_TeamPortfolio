@@ -27,6 +27,8 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.m_iKineticEnergyLevel = 0;
 	m_tPlayerStat.m_iKineticEnergyType = 2;
 
+	m_tPlayerStat.m_fBaseAttackDamage = 100.f;
+
 #pragma endregion 플레이어 기본 스탯 초기화
 
 #pragma region SAS정보 초기화

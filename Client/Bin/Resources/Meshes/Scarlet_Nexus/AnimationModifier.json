@@ -955,6 +955,12 @@
             }
         ]
     },
+    "AS_ch0100_201_AL_atk_a1_Electric": {
+        "Duration": 140.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_202_AL_atk_a2": {
         "Duration": 137.0,
         "TickPerSecond": 50.0,
@@ -1001,6 +1007,12 @@
                 "EventTime": 25.0
             }
         ]
+    },
+    "AS_ch0100_202_AL_atk_a2_Electric": {
+        "Duration": 137.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_ch0100_203_AL_atk_a3": {
         "Duration": 171.0,
@@ -1056,6 +1068,12 @@
                 "EventTime": 45.0
             }
         ]
+    },
+    "AS_ch0100_203_AL_atk_a3_Electric": {
+        "Duration": 171.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_ch0100_204_AL_atk_a4": {
         "Duration": 209.0,
