@@ -11,6 +11,7 @@
 #include "FSMComponent.h"
 #include "Enemy_AnimInstance.h"
 #include "TestTarget.h"
+#include "PlayerInfoManager.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
 	L"Default_Blood_00",
@@ -178,7 +179,6 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_bDead)
 		return;
 
-
 	// 이상한 데미지 들어오는거 감지용, 버그 다 찾으면 지우기
 	Assert(tDamageParams.iDamage > 0);
 	Assert(tDamageParams.iDamage < 20000);
@@ -191,6 +191,11 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom, &m_eSimpleHitFrom);
 	m_eCurAttackType = tDamageParams.eAttackType;
 	m_bHitWeak = IsWeak(dynamic_cast<CRigidBody*>(tDamageParams.pContactComponent));
+	if (tDamageParams.eAttackType == EAttackType::ATK_DOWN)
+	{
+		tDamageParams.eAttackType = EAttackType::ATK_MIDDLE;
+		m_bAirToDown = true;
+	}
 
 
 	CheckDeBuff(tDamageParams.eDeBuff);
@@ -382,8 +387,8 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 	if (m_bHasCrushGage)
 	{
 		_int iDamage = tDamageParams.iDamage;
-		if (m_bHitWeak)
-			iDamage *= 2;
+		// if (m_bHitWeak)
+			// iDamage *= 2;
 
 		if (tDamageParams.eAttackSAS == ESASType::SAS_HARDBODY)
 			iDamage *= 3;
@@ -410,8 +415,8 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 {
 	_int iDamage = tDamageParams.iDamage;
-	if (m_bHitWeak)
-		iDamage *= 2;
+	// if (m_bHitWeak)
+	// 	iDamage *= 2;
 
 	m_iHP -= iDamage;
 	if (m_iHP < 0)
@@ -422,12 +427,26 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 	}
 }
 
+_bool CEnemy::CheckSASType(ESASType eSASType)
+{
+	auto lsSAS = CPlayerInfoManager::GetInstance()->Get_PlayerSasList();
+
+	for (auto SAS : lsSAS)
+	{
+		if (eSASType == SAS)
+			return true;
+	}
+
+	return false;
+}
+
 void CEnemy::ResetHitData()
 {
 	m_eCurAttackType = EAttackType::ATK_END;
 	m_eHitFrom = EBaseAxis::AXIS_END;
 	m_eSimpleHitFrom = ESimpleAxis::AXIS_END;
 	m_bHitWeak = false;
+	m_bAirToDown = false;
 }
 
 void CEnemy::Update_DeadDissolve(_double TimeDelta)

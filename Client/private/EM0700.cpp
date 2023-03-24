@@ -233,7 +233,6 @@ void CEM0700::Tick(_double TimeDelta)
 	//변수 업데이트
 	m_eInput = m_pController->GetAIInput();
 
-
 	//ASM, FSM tick
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);

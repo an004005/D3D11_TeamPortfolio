@@ -1,10 +1,6 @@
 #pragma once
 #include "AIController.h"
 
-BEGIN(Engine)
-class CFSMComponent;
-END
-
 BEGIN(Client)
 
 class CEM0210_Controller : public CAIController
@@ -40,10 +36,6 @@ private:
 	_uint m_iNearOrder = 0;
 	_uint m_iMidOrder = 0;
 	_uint m_iFarOrder = 0;
-
-
-	_float m_fTurnSlowTime;
-	_float m_fTurnSlowRatio;
 
 	_bool m_bRun = false;
 public:

@@ -128,3 +128,28 @@ string CClientUtils::GetEnemyProtoTag(EEnemyName eName)
 
 	return s_EnemyNames[static_cast<_uint>(eName)];
 }
+
+_float4 CClientUtils::GetDirFromAxis(EBaseAxis eAxis)
+{
+	_float4 vOut = _float4::Zero;
+	switch (eAxis)
+	{
+	case EBaseAxis::NORTH:
+		vOut.z = 1.f;
+		break;
+	case EBaseAxis::EAST:
+		vOut.x = 1.f;
+		break;
+	case EBaseAxis::SOUTH: 
+		vOut.z = -1.f;
+		break;
+	case EBaseAxis::WEST: 
+		vOut.x = -1.f;
+		break;
+	case EBaseAxis::AXIS_END:
+		FALLTHROUGH
+	default: 
+		NODEFAULT;
+	}
+	return vOut;
+}

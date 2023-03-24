@@ -124,6 +124,8 @@ void CEnemy_AnimInstance::InputAnimSocket(const string& strSocName, list<CAnimat
 	}
 
 	m_mapAnimSocket[strSocName] = (AnimList);
+
+	
 }
 
 void CEnemy_AnimInstance::AttachAnimSocket(const string& strSocName, const list<CAnimation*>& AnimList)

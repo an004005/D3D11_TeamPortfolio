@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "Camera.h"
+#include "HelperClasses.h"
 
 BEGIN(Engine)
 class CControlledRigidBody;

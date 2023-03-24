@@ -15,18 +15,16 @@ CEM0110_Controller::CEM0110_Controller(const CEM0110_Controller & rhs)
 
 HRESULT CEM0110_Controller::Initialize(void * pArg)
 {
-	m_iNearOrder = CMathUtils::RandomUInt(1);
-	m_iMidOrder = CMathUtils::RandomUInt(3);
-	m_iFarOrder = CMathUtils::RandomUInt(2);
+	m_iNearOrder = CMathUtils::RandomUInt(3);
+	m_iMidOrder = CMathUtils::RandomUInt(1);
+	m_iFarOrder = CMathUtils::RandomUInt(1);
 
+	//near : 발차기, 돌진, 광역기
+	//공격 하고나서 무조건 한턴 쉼. wait 또는 walk(상하좌우 다)
+	//mid : 돌진 또는 run 후 멀어지면 한번 쉬고 돌진 or 광역기
+	//far : walk or wait 
 
-	// Walk
-	// Walk_B
-	// Run
-	// Threat
-	// Attack_turn (돌려차기, 뒷발차기중 플레이어 위치에 따라 애니메이션 결정)
-	// Attack_c1 (장판)
-	// Attack_b2 (돌진)
+	//돌진은 벽 앞에서 멈춤
 
 
 	
@@ -65,40 +63,24 @@ void CEM0110_Controller::Tick_Near(_double TimeDelta)
 {
 	m_eDistance = DIS_NEAR;
 
-	/*
-	기본 걷기(그냥 look방향으로 걸음)
-	AddCommand("Walk", 2.f, &CAIController::Move, EMoveAxis::NORTH);
-
-	//플레이어 쳐다보면서 뒷걸음
-	AddCommand("Walk_BTurn", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
-
-	//플레이어 쪽으로 달려감
-	AddCommand("RunTurn", 2.f, &CEM0110_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
-	*/
-
+	//가까이에 있을때는 돌려차기랑, 광역기 두개만 사용
+	
 	switch (m_iNearOrder)
 	{
 	case 0:
 		AddCommand("Attack_turn", 0.f, &CAIController::Input, R);
+		AddCommand("Wait", 2.f, &CAIController::Wait);
 		break;
-	case 1:
-		AddCommand("Walk_BTurn", 2.f, &CAIController::Move, EMoveAxis::SOUTH);
+	case 2:
+		AddCommand("Walk", 2.f, &CAIController::Move, EMoveAxis::NORTH);
 		break;
-	//case 2:
-	//	AddCommand("RunTurn", 2.f, &CEM0110_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
-	//	break;
-	//case 3:
-	//	AddCommand("Attack_c1", 0.f, &CAIController::Input, G);
-	//	break;
-	//case 4:
-	//	AddCommand("Walk_BTurn", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
-	//	break;
-	//case 5:
-	//	AddCommand("RunTurn", 2.f, &CEM0110_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
-	//	break;
+	case 3:
+		AddCommand("Attack_c1", 0.f, &CAIController::Input, G);
+		AddCommand("Wait", 2.f, &CAIController::Wait);
+		break;
 	}
 	
-	m_iNearOrder = (m_iNearOrder + 1) % 2;
+	m_iNearOrder = (m_iNearOrder + 1) % 4;
 }
 
 void CEM0110_Controller::Tick_Mid(_double TimeDelta)
@@ -110,18 +92,14 @@ void CEM0110_Controller::Tick_Mid(_double TimeDelta)
 	case 0:
 		AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Attack_b2", 0.f, &CAIController::Input, C);
+		AddCommand("Walk", 2.5f, &CAIController::Move, EMoveAxis::NORTH);
 		break;
 	case 1:
-		AddCommand("Walk", 2.f, &CAIController::Move, EMoveAxis::NORTH);
-		break;
-	case 2:
-		AddCommand("Walk_BTurn", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
-		break;
-	case 3:
-		AddCommand("Run", 2.f, &CEM0110_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		AddCommand("Run", 1.5f, &CEM0110_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
 	}
-	m_iMidOrder = (m_iMidOrder + 1) % 4;
+
+	m_iMidOrder = (m_iMidOrder + 1) % 2;
 }
 
 
@@ -132,10 +110,10 @@ void CEM0110_Controller::Tick_Far(_double TimeDelta)
 	switch (m_iFarOrder)
 	{
 	case 0:
-		AddCommand("Walk", 2.f, &CAIController::Move, EMoveAxis::NORTH);
+		AddCommand("Walk", 4.f, &CAIController::Move, EMoveAxis::NORTH);
 		break;
 	case 1:
-		AddCommand("Threat", 0.f, &CAIController::Input, CTRL);
+		AddCommand("Wait", 3.f, &CAIController::Wait);
 		break;
 	}
 
@@ -146,7 +124,7 @@ void CEM0110_Controller::Tick_Far(_double TimeDelta)
 void CEM0110_Controller::Tick_Outside(_double TimeDelta)
 {
 	m_eDistance = DIS_OUTSIDE;
-	AddCommand("Attack_c1", 0.f, &CAIController::Input, G);
+	AddCommand("Wait", 0.f, &CAIController::Wait);
 }
 
 
@@ -161,17 +139,16 @@ void CEM0110_Controller::DefineState(_double TimeDelta)
 {
 	if (m_pCastedOwner->IsPlayingSocket() == true) return;
 
-	if (m_fToTargetDistance <= 8.f)
+	if (m_fToTargetDistance <= 5.f)
 		Tick_Near(TimeDelta);
-	else if (m_fToTargetDistance <= 15.f)
+	else if (m_fToTargetDistance <= 13.f)
 		Tick_Mid(TimeDelta);
 	else if (m_fToTargetDistance <= 25.f)
 		Tick_Far(TimeDelta);
 	else
 		Tick_Outside(TimeDelta);
+
 }
-
-
 
 CEM0110_Controller * CEM0110_Controller::Create()
 {

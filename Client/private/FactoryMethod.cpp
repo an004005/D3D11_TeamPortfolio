@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\public\FactoryMethod.h"
 #include "GameInstance.h"
-
+#include "Model.h"
 // Monster
 #include "TestMonster.h"
 #include "FlowerLeg.h"
@@ -30,11 +30,14 @@
 #include "EM0110.h"
 #include "EM0200.h"
 #include "EM0210.h"
+#include "EM0220.h"
+#include "EM0221.h"
 #include "EM0400.h"
 #include "EM0650.h"
 #include "EM0700.h" 
 #include "EnemyBullet.h"
 #include "TestTarget.h"
+#include "WaterBall.h"
 
 // Kinetic Object
 #include "SpecialObject.h"
@@ -133,6 +136,7 @@
 #include "LevelUpUI.h"
 
 // 3D UI
+#include "EM0320.h"
 #include "MonsterHpUI.h"
 #include "MonsterLockonUI.h"
 #include "GravikenisisMouseUI.h"
@@ -248,6 +252,15 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em200"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em200"), CEM0200::Create(pDevice, pContext)));
 
+	{
+		auto pEm320Model = CModel::Create(pDevice, pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
+		pEm320Model->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em320"), pEm320Model));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Monster_em320"), CEM0320::Create(pDevice, pContext)));
+ 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_WaterBall"), CWaterBall::Create(pDevice, pContext)));
+	}
+
 	/* EM0700*/
 	pEMModel = CModel::Create(pDevice, pContext,
 		"../Bin/Resources/Model/AnimModel/Monster/em0700/Model/SM_em0700.anim_model");
@@ -280,6 +293,22 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em210"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em210"), CEM0210::Create(pDevice, pContext)));
+
+	/* EM0220*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0200/Model/SM_em0220.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0200/AnimFor0220/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em220"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em220"), CEM0220::Create(pDevice, pContext)));
+
+	/* EM0221*/
+	pEMModel = CModel::Create(
+		pDevice,
+		pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0200/Model/SM_em0221.static_model");
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em221"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em221"), CEM0221::Create(pDevice, pContext)));
 
 	/* EM0110*/
 	pEMModel = CModel::Create(pDevice, pContext,
