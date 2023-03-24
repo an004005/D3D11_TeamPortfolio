@@ -11,7 +11,7 @@ END
 
 BEGIN(Client)
 
-// 스커미 풀
+// 초(고속)파리 :: 방도 팡뒤(Bangdo Fandu)
 
 class CEM0700 : public CEnemy
 {
@@ -49,17 +49,11 @@ private:
 	//충돌
 	CRigidBody*				m_pRange = nullptr;
 
-	//파티클
-	CParticleGroup*			m_pFallRoseParticle = nullptr;
-	CParticleGroup*			m_pShootFlwParticle = nullptr;
-
-	//유틸
-	CDoOnce m_Laugh;
-
 private:
 	//원시 데이터
 	_float						m_fDistance = 0.f;
 	_float3						m_vDirection;
+
 	CController::EHandleInput	m_eInput;
 public:
 	static CEM0700* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -346,6 +346,9 @@
     <Filter Include="02.GameObjects\SpecialObject\Special_TelephonePole">
       <UniqueIdentifier>{934d218b-129b-4ba9-95b6-835e98c0e6c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0220\EM0221">
+      <UniqueIdentifier>{54a5507c-ab97-49a1-9ecd-483f0f313dde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -779,7 +782,6 @@
     </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
-    <ClInclude Include="..\public\Trigger.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
@@ -789,7 +791,6 @@
     <ClInclude Include="..\public\NextMapNameUI.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Bullet.h" />
     <ClInclude Include="..\public\SASSkillNameUI.h">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClInclude>
@@ -965,6 +966,27 @@
     </ClInclude>
     <ClInclude Include="..\public\SimpleTrigger.h">
       <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpecialObject.h" />
+    <ClInclude Include="..\public\Special_TelephonePole.h" />
+    <ClInclude Include="..\public\Special_Train.h" />
+    <ClInclude Include="..\public\EM0220.h">
+      <Filter>02.GameObjects\Enemy\EM0220</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0220_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM0220</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0220_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM0220</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0221.h">
+      <Filter>02.GameObjects\Enemy\EM0220\EM0221</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Trigger.h">
+      <Filter>Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bullet.h">
+      <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1370,7 +1392,6 @@
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Stage1.cpp" />
-    <ClCompile Include="..\private\Trigger.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
@@ -1380,7 +1401,6 @@
     <ClCompile Include="..\private\NextMapNameUI.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Bullet.cpp" />
     <ClCompile Include="..\private\SASSkillNameUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
     </ClCompile>
@@ -1565,6 +1585,25 @@
     </ClCompile>
     <ClCompile Include="..\private\SimpleTrigger.cpp">
       <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TelephonePole.cpp" />
+    <ClCompile Include="..\private\EM0220.cpp">
+      <Filter>02.GameObjects\Enemy\EM0220</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0220_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM0220</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0220_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM0220</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0221.cpp">
+      <Filter>02.GameObjects\Enemy\EM0220\EM0221</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Trigger.cpp">
+      <Filter>Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bullet.cpp">
+      <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

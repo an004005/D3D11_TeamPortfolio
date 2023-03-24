@@ -7,6 +7,8 @@
 #include "EM0110_Controller.h"
 #include "EnemyBullet.h"
 #include "PhysX_Manager.h"
+#include "CurveManager.h"
+#include "CurveFloatMapImpl.h"
 
 CEM0110::CEM0110(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -40,8 +42,7 @@ HRESULT CEM0110::Initialize(void * pArg)
 
 	m_eMonsterName = EEnemyName::EM0110;
 	m_bHasCrushGage = true;
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
-	m_pTransformCom->SetSpeed(3.f);
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	return S_OK;
 }
 
@@ -54,11 +55,11 @@ void CEM0110::SetUpComponents(void * pArg)
 		(CComponent**)&m_pModelCom));
 
 	//Create Collider
-	//FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("TailCol"),
-	//	(CComponent**)&m_pTailCol, pArg));
+	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("BodyCol"),
+		(CComponent**)&m_pBody, pArg));
 
-	//FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("WeaponCol"),
-	//	(CComponent**)&m_pWeaponCol, pArg));
+	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("HindLegsCol"),
+		(CComponent**)&m_pHindLegs, pArg));
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM0110_Controller::Create();
@@ -81,6 +82,18 @@ void CEM0110::SetUpAnimationEvent()
 	CEnemy::SetUpAnimationEvent();
 
 	// Event Caller
+	
+	m_pModelCom->Add_EventCaller("Turn_R_Start", [this] { m_bAttack = true;	});
+	m_pModelCom->Add_EventCaller("Turn_R_End", [this] { m_bAttack = false;	});
+
+	m_pModelCom->Add_EventCaller("Turn_L_Start", [this] { m_bAttack = true;	});
+	m_pModelCom->Add_EventCaller("Turn_L_End", [this] { m_bAttack = false;	});
+
+	m_pModelCom->Add_EventCaller("AOE_Start", [this] { m_bAttack = true;	});
+	m_pModelCom->Add_EventCaller("AOE_End", [this] { m_bAttack = false;	});
+
+	m_pModelCom->Add_EventCaller("Rush_Start", [this] { m_bAttack = true;	});
+	m_pModelCom->Add_EventCaller("Rush_End", [this] { m_bAttack = false;	});
 
 }
 
@@ -92,8 +105,6 @@ void CEM0110::SetUpFSM()
 	R : Attack_turn (발차기)
 	G : Attack_c1 (장판)
 	C : Attack_b2 (돌진)
-
-	CTRL : Threat
 	*/
 
 	m_pFSM = CFSMComponentBuilder()
@@ -117,8 +128,6 @@ void CEM0110::SetUpFSM()
 				.Predicator([this] { return m_eInput == CController::G; })
 			.AddTransition("Idle to Attack_b2_Start", "Attack_b2_Start")
 				.Predicator([this] { return m_eInput == CController::C; })
-			.AddTransition("Idle to Threat", "Threat")
-				.Predicator([this] { return m_eInput == CController::CTRL; })
 		
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -166,37 +175,37 @@ void CEM0110::SetUpFSM()
 				.AddTransition("OnFloorGetup to Idle", "Idle")
 				.Predicator([this]
 			{
-				return  m_pASM->isSocketEmpty("FullBody");
+				return  m_bDead || m_pASM->isSocketEmpty("FullBody");
 			})
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-		//돌려차기
+		//발차기
 		.AddState("Attack_turn")
 			.OnStart([this]
 			{
 				Define_TurningKickAnim();
+				ClearDamagedTarget();
 			})
 			.Tick([this](_double) 
 			{
 				SocketLocalMove(m_pASM);
-			/*	if (m_bAttack)
-					SweepCapsule(m_pTailCol);*/
+
+				if (m_bAttack)
+					Kick_SweepSphere();
 			})
 			.OnExit([this]
 			{
 				//돌려차기를 했으면 회전한 방향으로 쳐다보게 함
-				AfterLocal180Turn();
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-
-				//if (m_pASM->GetCurSocketAnimName() == "AS_em0100_230_AL_atk_g1_turn_L")
-				//{
-				//	//m_pModelCom->GetPlayAnimation()->SetInterpolation(false);
-				//}
+				if (m_pASM->GetCurSocketAnimName() == "AS_em0100_230_AL_atk_g1_turn_L")
+				{
+					AfterLocal180Turn();		
+					m_pASM->ClearSocketAnim("FullBody", 0.f);
+				}
 			})
 			.AddTransition("Attack_turn to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.6667f);
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 		//장판
 		.AddState("Attack_c1")
@@ -217,15 +226,27 @@ void CEM0110::SetUpFSM()
 		.AddState("Attack_b2_Start")
 			.OnStart([this]
 			{
-				m_fRushDistance = 0.f;
-				m_vRushDirection = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				//m_vRushDirection = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				m_bRush = true;
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0110_206_AL_atk_b2_start");
+				ClearDamagedTarget();
+			})
+			.Tick([this](_double) 
+			{
+				SocketLocalMove(m_pASM);
+
+				if (m_bAttack)
+				{
+					Rush_Overlap();
+					Rush_SweepCapsule();
+				}
 			})
 			.AddTransition("Attack_b2_Start to Attack_b2_Loop", "Attack_b2_Loop")
 				.Predicator([this]
 				{
 					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
+
 		.AddState("Attack_b2_Loop")
 			.OnStart([this]
 			{
@@ -234,7 +255,9 @@ void CEM0110::SetUpFSM()
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				m_fRushDistance += m_pTransformCom->RushToTarget(m_vRushDirection, TimeDelta);
+				SocketLocalMove(m_pASM);
+				Rush_Overlap();
+				Rush_SweepCapsule();
 			})
 			.OnExit([this]
 			{
@@ -243,16 +266,22 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_b2_Loop to Attack_b2_Stop", "Attack_b2_Stop")
 				.Predicator([this]
 				{
-					return m_bDead || m_fRushDistance >= 15.f;
+					return m_bDead || !m_bRush;
 				})
+
 		.AddState("Attack_b2_Stop")
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0110_208_AL_atk_b2_stop");
 			})
+			.Tick([this](_double)
+			{
+				SocketLocalMove(m_pASM);
+			})
 			.OnExit([this]
 			{
 				AfterLocal180Turn();
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
 			.AddTransition("Attack_b2_Stop to Idle", "Idle")
 				.Predicator([this]
@@ -261,19 +290,6 @@ void CEM0110::SetUpFSM()
 				})
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-		.AddState("Threat")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0100_160_AL_threat");
-			})
-			.AddTransition("Threat to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.95f);
-				})
-
-///////////////////////////////////////////////////////////////////////////////////////////
-
 		.Build();
 }
 
@@ -305,16 +321,7 @@ void CEM0110::Tick(_double TimeDelta)
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
 
-	const _float fMoveSpeed = m_bRun ? 3.f : 1.f;
-
-	if (m_vMoveAxis.LengthSquared() > 0.f)
-	{
-		const _float fYaw = m_pTransformCom->GetYaw_Radian();
-		_float3 vVelocity;
-		XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
-		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
-	}
-
+	Adjust_MoveAxis(TimeDelta);
 	ResetHitData();
 }
 
@@ -368,10 +375,35 @@ void CEM0110::Define_TurningKickAnim()
 	_float fAngle = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyLook), XMVector3Normalize(vTargetPos - vMyPos)));
 
 	//0~ 90도 사이(정면)
-	//if(fAngle > 0)
+	if(fAngle > 0)
 		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0100_230_AL_atk_g1_turn_L");
-	//else
-	//	m_pASM->AttachAnimSocketOne("FullBody", "AS_em0100_241_AL_atk_h1_turn_R");
+	else
+		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0100_241_AL_atk_h1_turn_R");
+
+}
+
+void CEM0110::Adjust_MoveAxis(_double TimeDelta)
+{
+	_float fMoveSpeed = 0.f;
+
+	if (m_bRun)
+		fMoveSpeed = 3.f;
+	else
+	{
+		if (m_pModelCom->GetPlayAnimation() != nullptr)
+		{
+			fMoveSpeed = CCurveManager::GetInstance()->GetCurve("em0110_Walk")
+				->GetValue(m_pModelCom->GetPlayAnimation()->GetPlayRatio());
+		}
+	}
+
+	if (m_vMoveAxis.LengthSquared() > 0.f)
+	{
+		const _float fYaw = m_pTransformCom->GetYaw_Radian();
+		_float3 vVelocity;
+		XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
+		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+	}
 
 }
 
@@ -412,6 +444,87 @@ void CEM0110::SweepCapsule(CRigidBody * pCol)
 	m_BeforePos = vTailPos;
 }
 
+void CEM0110::Rush_Overlap()
+{
+
+	//Length로 Bone의 위치에서부터 바라보는 방향으로 원하는 지점까지의 거리를 지정
+	_float fLength = 7.f;
+
+	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
+
+	_vector vBoneVector = BoneMatrix.r[3];
+	_float3 fBone = vBoneVector;
+
+	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	vMyLook = XMVectorSetY(vMyLook, 0.f);
+	_float3 fDest = vMyLook;
+
+	_float3 fFinish = { (fBone.x + fLength * fDest.x), fBone.y, (fBone.z + fLength * fDest.z) };
+
+	physx::PxOverlapHit hitBuffer[3];
+	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
+
+	SphereOverlapParams param;
+	param.fVisibleTime = 0.1f;
+	param.iTargetType = CTB_STATIC;
+	param.fRadius = 3.f;
+	param.vPos = XMVectorSetW(fFinish, 1.f);
+	param.overlapOut = &overlapOut;
+
+	if (CGameInstance::GetInstance()->OverlapSphere(param))
+	{
+		m_bRush = false;
+	}
+
+}
+
+void CEM0110::Rush_SweepCapsule()
+{
+	_float4x4 BodyMatrix = m_pBody->GetPxWorldMatrix();
+	_float4 vBodyPos = _float4{ BodyMatrix.m[3][0], BodyMatrix.m[3][1], BodyMatrix.m[3][2], BodyMatrix.m[3][3] };
+
+	physx::PxSweepHit hitBuffer[3];
+	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
+
+	PxCapsuleSweepParams tParams;
+	tParams.sweepOut = &sweepOut;
+	tParams.CapsuleGeo = m_pBody->Get_CapsuleGeometry();
+	tParams.pxTransform = m_pBody->Get_PxTransform();
+
+	_float4	vDir = vBodyPos - m_BeforePos;
+	tParams.vUnitDir = _float3(vDir.x, vDir.y, vDir.z);
+	tParams.fDistance = tParams.vUnitDir.Length();
+	tParams.iTargetType = CTB_PLAYER;
+	tParams.fVisibleTime = 0.2f;
+
+	if (CGameInstance::GetInstance()->PxSweepCapsule(tParams))
+	{
+		HitTargets(sweepOut, m_iAtkDamage * 1.5f, EAttackType::ATK_TO_AIR);
+	}
+
+	m_BeforePos = vBodyPos;
+}
+
+void CEM0110::Kick_SweepSphere()
+{
+	physx::PxSweepHit hitBuffer[3];
+	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
+
+	SphereSweepParams tParams;
+	tParams.fVisibleTime = 0.2f;
+	tParams.iTargetType = CTB_PLAYER;
+	tParams.fRadius = 1.f;
+	tParams.fDistance = 1.f;
+	tParams.vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	tParams.sweepOut = &sweepOut;
+	tParams.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
+	if (CGameInstance::GetInstance()->SweepSphere(tParams))
+	{
+		HitTargets(sweepOut, m_iAtkDamage * 1.3f, EAttackType::ATK_TO_AIR);
+	}
+}
+
 
 CEM0110 * CEM0110::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
@@ -443,4 +556,6 @@ void CEM0110::Free()
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pRange);
+	Safe_Release(m_pBody);
+	Safe_Release(m_pHindLegs);
 }

@@ -30,6 +30,8 @@
 #include "EM0110.h"
 #include "EM0200.h"
 #include "EM0210.h"
+#include "EM0220.h"
+#include "EM0221.h"
 #include "EM0400.h"
 #include "EM0650.h"
 #include "EM0700.h" 
@@ -277,6 +279,22 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em210"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em210"), CEM0210::Create(pDevice, pContext)));
+
+	/* EM0220*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0200/Model/SM_em0220.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0200/AnimFor0220/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em220"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em220"), CEM0220::Create(pDevice, pContext)));
+
+	/* EM0221*/
+	pEMModel = CModel::Create(
+		pDevice,
+		pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0200/Model/SM_em0221.static_model");
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em221"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em221"), CEM0221::Create(pDevice, pContext)));
 
 	/* EM0110*/
 	pEMModel = CModel::Create(pDevice, pContext,

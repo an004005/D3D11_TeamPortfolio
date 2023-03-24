@@ -4,6 +4,7 @@
 #include "Timeline.h"
 #include "MathUtils.h"
 
+
 BEGIN(Engine)
 class CRenderer;
 class CModel;
@@ -56,6 +57,7 @@ protected:
 	virtual _bool IsWeak(CRigidBody* pHitPart) { return false; }
 	virtual void CheckCrushGage(DAMAGE_PARAM& tDamageParams);
 	virtual void CheckHP(DAMAGE_PARAM& tDamageParams);
+	virtual _bool CheckSASType(ESASType eSASType);
 	// Tick의 제일 마지막에서 실행한다.
 	void ResetHitData();
 	// ~
@@ -110,7 +112,7 @@ protected:
 	_uint	iMonsterLevel = { 0 };
 	EEnemyName m_eMonsterName = { EEnemyName::ENEMY_NAME_END };
 
-	// AfterPhysX에서 다시 초기화해줌.
+	// 
 	EAttackType m_eCurAttackType = EAttackType::ATK_END; // 현 프레임에서 받은 공격 타입
 	EBaseAxis m_eHitFrom = EBaseAxis::AXIS_END;
 	ESimpleAxis m_eSimpleHitFrom = ESimpleAxis::AXIS_END;

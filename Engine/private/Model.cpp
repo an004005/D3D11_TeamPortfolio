@@ -248,15 +248,16 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
 		if (m_szSocketBefAnimName != srtAnimName)
 		{
 			m_szSocketBefAnimName = srtAnimName;
-			//m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			//return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 
 		if (m_mapAnimation[srtAnimName]->GetPlayRatio() < m_fSocketBefRatio)
 		{
-			//m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			//return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 
 		m_fSocketBefRatio = m_mapAnimation[srtAnimName]->GetPlayRatio();
@@ -851,6 +852,22 @@ void CModel::Imgui_RenderProperty()
 
 		}
 	}
+
+	//ImGui::BeginChild("Pivot", { 500, 200 });
+
+	//static _bool m_bUsePivot = false;
+
+	//ImGui::Checkbox("Use Pivot", &m_bUsePivot);
+	//if (m_bUsePivot)
+	//{
+	//	if (ImGui::CollapsingHeader("Pivot Matrix"))
+	//	{
+	//		static GUIZMO_INFO tInfo;
+	//		CImguiUtils::Render_Guizmo(&m_PivotMatrix, tInfo, true, true);
+	//	}
+	//}
+
+	//ImGui::EndChild();
 }
 
 void CModel::SetPlayAnimation(const string& strAnimName)

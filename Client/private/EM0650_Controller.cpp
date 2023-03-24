@@ -15,12 +15,11 @@ CEM0650_Controller::CEM0650_Controller(const CEM0650_Controller & rhs)
 
 HRESULT CEM0650_Controller::Initialize(void * pArg)
 {
-	m_iNearOrder = CMathUtils::RandomUInt(5);
-	m_iFarOrder = CMathUtils::RandomUInt(7);
+	m_iMidOrder = CMathUtils::RandomUInt(3);
 
-	m_fTurnSlowTime = 1.5f;
-	m_fTurnSlowRatio = 0.6f;
-
+	//플레이어와 거리가 가까워지면 후퇴,
+	//플레이어와 거리가 어느정도 되면 좌, 우 이동 또는 공격
+	//플레이어와 거리가 멀어지면 플레이어쪽으로 이동
 	return S_OK;
 }
 
@@ -53,82 +52,37 @@ void CEM0650_Controller::AI_Tick(_double TimeDelta)
 void CEM0650_Controller::Tick_Near(_double TimeDelta)
 {
 	m_eDistance = DIS_NEAR;
-
-	switch (m_iNearOrder)
-	{
-	case 0:
-		AddCommand("ForwardMove", 1.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
-		break;
-	
-	case 1:
-		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
-		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
-																	//		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
-		break;
-	case 2:
-		AddCommand("LeftMove", 2.f, &CAIController::Move_TurnToTargetStop, EMoveAxis::WEST, 1.f);
-		break;
-
-	case 3:
-		AddCommand("BackMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
-		break;
-
-	case 4:
-		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
-		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot												//		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
-		break;
-
-	case 5:
-		AddCommand("RightMove", 2.f, &CAIController::Move_TurnToTargetStop, EMoveAxis::EAST, 1.f);
-		break;
-	}
-	
-	m_iNearOrder = (m_iNearOrder + 1) % 6;
+	AddCommand("BackMove", 2.5f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
 }
 
+void CEM0650_Controller::Tick_Mid(_double TimeDelta)
+{
+	m_eDistance = DIS_MIDDLE;
+	switch (m_iMidOrder)
+	{
+	case 0:
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
+		break;
+	case 1:
+		AddCommand("RightMove", 3.5f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
+		break;
+	case 2:
+		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
+		break;
+	case 3:
+		AddCommand("LeftMove", 3.5f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
+		break;
+	}
+
+	m_iMidOrder = (m_iMidOrder + 1) % 4;
+}
 
 void CEM0650_Controller::Tick_Far(_double TimeDelta)
 {
 	m_eDistance = DIS_FAR;
-
-	switch (m_iFarOrder)
-	{
-	case 0:
-		AddCommand("ForwardMove", 1.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
-		break;
-
-	case 1:
-		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
-		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot															//		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
-		break;
-
-	case 2:
-		AddCommand("LeftMove", 2.f, &CAIController::Move_TurnToTargetStop, EMoveAxis::WEST, 1.f);
-		break;
-	
-	case 3:
-		AddCommand("Wait", 2.f, &CAIController::Wait);
-		break;
-
-	case 4:
-		AddCommand("BackMove", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
-		break;
-
-	case 5:
-		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
-		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot														//		AddCommand("TurnSlow", m_fTurnSlowTime, &CAIController::TurnToTarget, m_fTurnSlowRatio);
-		break;
-
-	case 6:
-		AddCommand("RightMove", 2.f, &CAIController::Move_TurnToTargetStop, EMoveAxis::EAST, 1.f);
-		break;
-
-	case 7:
-		AddCommand("Wait", 2.f, &CAIController::Wait);
-		break;
-	}
-
-	m_iFarOrder = (m_iFarOrder + 1) % 8;
+	AddCommand("ForwardMove", 2.5f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 }
 
 void CEM0650_Controller::Tick_Outside(_double TimeDelta)
@@ -143,7 +97,9 @@ void CEM0650_Controller::DefineState(_double TimeDelta)
 
 	if (m_fToTargetDistance <= 8.f)
 		Tick_Near(TimeDelta);
-	else if (m_fToTargetDistance <= 20.f)
+	else if (m_fToTargetDistance <= 13.f)
+		Tick_Mid(TimeDelta);
+	else if (m_fToTargetDistance <= 18.f)
 		Tick_Far(TimeDelta);
 	else
 		Tick_Outside(TimeDelta);

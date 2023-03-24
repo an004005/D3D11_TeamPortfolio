@@ -119,6 +119,7 @@ enum class EEnemyName
 	EM0110,
 	EM0200,
 	EM0210,
+	EM0220,
 	EM0320, 
 	EM0400,
 	EM0650,

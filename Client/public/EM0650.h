@@ -11,7 +11,7 @@ END
 
 BEGIN(Client)
 
-// 초(고속)파리 :: 방도 팡뒤(Bangdo Fandu)
+// 스커미 풀
 
 class CEM0650 : public CEnemy
 {
@@ -53,7 +53,6 @@ private:
 	class CEM0650_AnimInstance*		m_pASM = nullptr;
 
 	//충돌
-	CRigidBody*					m_pTrigger = nullptr;
 	CRigidBody*					m_pRange = nullptr;
 
 private:
