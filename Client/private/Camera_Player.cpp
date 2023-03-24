@@ -141,6 +141,8 @@ void CCamera_Player::Sync_Target(_fvector TargetPos, _fvector TargetLook, _float
 		fDistance = min(m_fBeforeCamDistance + (TimeDelta * 10.f * ((fStdDistance - m_fBeforeCamDistance) / fStdDistance)), fDistance);
 	}
 
+	if (fDistance < -10.f || fDistance > 10.f) fDistance = 5.f;
+
 	m_fBeforeCamDistance = fDistance;
 	
 	_vector vCamPos = TargetPos + XMVector3Normalize(vSyncDir) * fDistance;
