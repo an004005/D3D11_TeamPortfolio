@@ -106,6 +106,8 @@ void CCamera_Player::Imgui_RenderProperty()
 
 void CCamera_Player::Sync_Target(_fvector TargetPos, _fvector TargetLook, _float CamHeight, _double TimeDelta)
 {
+	if (false == IsMainCamera()) return;
+
 	_vector vLook = TargetLook;
 
 	vLook = XMVector3Normalize(TargetLook) * -3.f;
