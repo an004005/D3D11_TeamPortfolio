@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\public\FactoryMethod.h"
 #include "GameInstance.h"
-
+#include "Model.h"
 // Monster
 #include "TestMonster.h"
 #include "FlowerLeg.h"
@@ -37,6 +37,7 @@
 #include "EM0700.h" 
 #include "EnemyBullet.h"
 #include "TestTarget.h"
+#include "WaterBall.h"
 
 // Kinetic Object
 #include "SpecialObject.h"
@@ -257,7 +258,7 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 		pEm320Model->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em320"), pEm320Model));
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Monster_em320"), CEM0320::Create(pDevice, pContext)));
-		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_WaterBall"), CWaterBall::Create(pDevice, pContext)));
+ 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_WaterBall"), CWaterBall::Create(pDevice, pContext)));
 	}
 
 	/* EM0700*/
