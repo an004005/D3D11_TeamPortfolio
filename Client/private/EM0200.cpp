@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "..\public\EM0200.h"
+
+#include <CurveManager.h>
 #include <FSMComponent.h>
 #include "JsonStorage.h"
 #include "RigidBody.h"
@@ -71,6 +73,8 @@ void CEM0200::SetUpComponents(void* pArg)
 
 	// ASM
 	m_pASM = CEM0200_AnimInstance::Create(m_pModelCom, this);
+
+	m_HeavyAttackPushTimeline.SetCurve("Simple_Decrease");
 }
 
 void CEM0200::SetUpSound()
@@ -113,7 +117,7 @@ void CEM0200::SetUpAnimationEvent()
 		{
 			m_bJumpAttack = true;
 			m_fGravity = 80.f;
-			m_fYSpeed = 20.f;
+			m_fYSpeed = 25.f;
 
 			_vector vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			vOrigin = XMVectorSetY(vOrigin, 0.f);
@@ -268,9 +272,14 @@ void CEM0200::SetUpFSM()
 			.AddTransition("Idle to Hit_ToAir", "Hit_ToAir")
 				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_TO_AIR; })
 			.AddTransition("Idle to Hit_Mid_Heavy", "Hit_Mid_Heavy")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_MIDDLE; })
+				.Predicator([this] { return 
+					m_eCurAttackType == EAttackType::ATK_HEAVY 
+					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
 			.AddTransition("Idle to Hit_Light", "Hit_Light")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_LIGHT; })
+				.Predicator([this] { return 
+					m_eCurAttackType == EAttackType::ATK_LIGHT
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP; })
 
 			.AddTransition("Idle to SpinAtk", "SpinAtk")
 				.Predicator([this]{ return m_eInput == CController::R; })
@@ -303,7 +312,12 @@ void CEM0200::SetUpFSM()
 			.AddTransition("SpinAtk to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead
+					|| m_pASM->isSocketPassby("FullBody", 0.95f)
+					|| m_eCurAttackType == EAttackType::ATK_TO_AIR
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
 				})
 
 
@@ -331,7 +345,12 @@ void CEM0200::SetUpFSM()
 			.AddTransition("FlowerShower to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead
+					|| m_pASM->isSocketPassby("FullBody", 0.95f)
+					|| m_eCurAttackType == EAttackType::ATK_TO_AIR
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
 				})
 
 
@@ -368,7 +387,12 @@ void CEM0200::SetUpFSM()
 			.AddTransition("SpinAtk to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead
+					|| m_pASM->isSocketPassby("FullBody", 0.95f)
+					|| m_eCurAttackType == EAttackType::ATK_TO_AIR
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
 				})
 
 
@@ -457,7 +481,7 @@ void CEM0200::SetUpFSM()
 			})
 			.Tick([this](_double)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_LIGHT)
+				if (m_eCurAttackType == EAttackType::ATK_LIGHT || m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP)
 				{
 					Play_LightHitAnim();
 				}
@@ -465,7 +489,8 @@ void CEM0200::SetUpFSM()
 			.AddTransition("Hit_Light to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f)
+					return m_bDead
+					|| m_pASM->isSocketPassby("FullBody", 0.95f)
 					|| (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
 				})
 
@@ -474,19 +499,31 @@ void CEM0200::SetUpFSM()
 			.OnStart([this]
 			{
 				Play_MidHitAnim();
+				HeavyAttackPushStart();
 			})
-			.Tick([this](_double)
+			.Tick([this](_double TimeDelta)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_MIDDLE)
+				if (m_eCurAttackType == EAttackType::ATK_HEAVY 
+					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
 				{
+					HeavyAttackPushStart();
 					Play_MidHitAnim();
+				}
+
+				_float fPower;
+				if (m_HeavyAttackPushTimeline.Tick(TimeDelta, fPower))
+				{
+					m_pTransformCom->MoveVelocity(TimeDelta, m_vPushVelocity * fPower);
 				}
 			})
 			.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f)
-					|| m_eCurAttackType == EAttackType::ATK_TO_AIR;
+					return m_bDead
+					|| m_pASM->isSocketPassby("FullBody", 0.95f)
+					|| m_eCurAttackType == EAttackType::ATK_TO_AIR
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
 				})
 		.AddState("Death")
 			.OnStart([this]
@@ -507,7 +544,11 @@ void CEM0200::SetUpFSM()
 			{
 				// 공중 추가타로 살짝 올라가는 애님
 				m_bHitAir = true;
-				if (m_eCurAttackType != EAttackType::ATK_END)
+				if (m_bAirToDown)
+				{
+					m_fYSpeed = -20.f;
+				}
+				else if (m_eCurAttackType != EAttackType::ATK_END)
 				{
 					m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_455_AL_rise_start");
 				}
@@ -694,6 +735,19 @@ void CEM0200::Dodge_VelocityCalc()
 
 	const _float fYaw = m_pTransformCom->GetYaw_Radian();
 	m_vOnJumpMoveVelocity = XMVector3TransformNormal(vDirection * (fDistance / fJumpMoveTime), XMMatrixRotationY(fYaw));
+}
+
+void CEM0200::HeavyAttackPushStart()
+{
+	if (m_eCurAttackType == EAttackType::ATK_MIDDLE || m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
+	{
+		m_HeavyAttackPushTimeline.PlayFromStart();
+		m_vPushVelocity = CClientUtils::GetDirFromAxis(m_eHitFrom);
+		m_vPushVelocity *= -4.f; // 공격 온 방향의 반대로 이동
+
+		const _float fYaw = m_pTransformCom->GetYaw_Radian();
+		m_vPushVelocity = XMVector3TransformNormal(m_vPushVelocity, XMMatrixRotationY(fYaw));
+	}
 }
 
 void CEM0200::Play_LightHitAnim()

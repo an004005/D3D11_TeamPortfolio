@@ -191,6 +191,11 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eHitFrom = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom, &m_eSimpleHitFrom);
 	m_eCurAttackType = tDamageParams.eAttackType;
 	m_bHitWeak = IsWeak(dynamic_cast<CRigidBody*>(tDamageParams.pContactComponent));
+	if (tDamageParams.eAttackType == EAttackType::ATK_DOWN)
+	{
+		tDamageParams.eAttackType = EAttackType::ATK_MIDDLE;
+		m_bAirToDown = true;
+	}
 
 
 	CheckDeBuff(tDamageParams.eDeBuff);
@@ -410,8 +415,8 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 {
 	_int iDamage = tDamageParams.iDamage;
-	if (m_bHitWeak)
-		iDamage *= 2;
+	// if (m_bHitWeak)
+	// 	iDamage *= 2;
 
 	m_iHP -= iDamage;
 	if (m_iHP < 0)
@@ -428,6 +433,7 @@ void CEnemy::ResetHitData()
 	m_eHitFrom = EBaseAxis::AXIS_END;
 	m_eSimpleHitFrom = ESimpleAxis::AXIS_END;
 	m_bHitWeak = false;
+	m_bAirToDown = false;
 }
 
 void CEnemy::Update_DeadDissolve(_double TimeDelta)
