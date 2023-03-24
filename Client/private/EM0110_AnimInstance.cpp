@@ -14,51 +14,34 @@ HRESULT CEM0110_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObj
 			.AddTransition("Idle to Walk", "Walk")
 				.Predicator([this] 
 				{
-					return m_bMove && m_eMoveAxis == EBaseAxis::NORTH;
+					return m_bMove && m_eMoveAxis == EBaseAxis::NORTH && !m_bRun;
 				})
-				.Duration(0.2f)
+				.Duration(0.1f)
 
-			.AddTransition("Idle to Walk_B", "Walk_B")
-				.Predicator([this]
-				{
-					return m_bMove && m_eMoveAxis == EBaseAxis::SOUTH;
-				})
-				.Duration(0.2f)
 			.AddTransition("Idle to Run", "Run")
-				.Predicator([this]	{ return m_bRun; })
-				.Duration(0.2f)
+				.Predicator([this]
+				{ 
+					return m_bRun; 
+				})
+				.Duration(0.1f)
 
 		.AddState("Walk")
 			.SetAnimation(*m_pModel->Find_Animation("AS_em0100_155_AL_walk"))
 			.AddTransition("Walk to Idle", "Idle")
-				.Predicator([this] { return !m_bMove && !m_bRun; })
-				.Duration(0.2f)
-
-			.AddTransition("Walk to Run", "Run")
-				.Predicator([this] {return m_bRun; })
-				.Duration(0.2f)
-
-		.AddState("Walk_B")
-			.SetAnimation(*m_pModel->Find_Animation("AS_em0100_158_AL_walk_B"))
-			.AddTransition("Walk_B to Idle", "Idle")
-				.Predicator([this] { return !m_bMove && !m_bRun; })
-				.Duration(0.2f)
-
-			.AddTransition("Walk_B to Run", "Run")
-				.Predicator([this] {return m_bRun; })
-				.Duration(0.2f)
+				.Predicator([this] 
+				{
+					return !m_bMove || m_bRun;
+				})
+				.Duration(0.1f)
 
 		.AddState("Run")
 			.SetAnimation(*m_pModel->Find_Animation("AS_em0100_156_AL_run"))
-
 			.AddTransition("Run to Idle", "Idle")
-				.Predicator([this] { return !m_bMove && !m_bRun; })
-				.Duration(0.2f)
-
-			.AddTransition("Run to Walk", "Walk")
-				.Predicator([this] {return !m_bRun && m_bMove; })
-				.Duration(0.2f)
-
+				.Predicator([this]
+				{ 
+					return !m_bRun;
+				})
+				.Duration(0.1f)
 		.Build();
 
 	m_mapAnimSocket.insert({ "FullBody",{} });
