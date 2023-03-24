@@ -36,6 +36,8 @@ HRESULT CMain_OnMouseUI::Initialize(void * pArg)
 
 void CMain_OnMouseUI::Tick(_double TimeDelta)
 {
+	m_pMouseColorUI->Tick(TimeDelta);
+
 	if (false == m_bVisible) return;
 
 	__super::Tick(TimeDelta);
@@ -55,6 +57,9 @@ void CMain_OnMouseUI::Tick(_double TimeDelta)
 
 void CMain_OnMouseUI::Late_Tick(_double TimeDelta)
 {
+	m_pMouseColorUI->Late_Tick(TimeDelta);
+	//m_pMouseColorUI->SetVisible(true);
+
 	__super::Late_Tick(TimeDelta);
 }
 
@@ -90,7 +95,7 @@ void CMain_OnMouseUI::Set_BrainInfo(CItem_Manager::BRAININFO tBrainInfo)
 	m_BrainInfo = tBrainInfo;
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Main_OnMouseColorUI.json");
-	m_pMouseColorUI = dynamic_cast<CMain_OnMouseColorUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_UI", L"Main_OnMouseColorUI", &json));
+	m_pMouseColorUI = dynamic_cast<CMain_OnMouseColorUI*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Main_OnMouseColorUI", &json));
 	
 	_float fColor = 0.0f;
 	if (CItem_Manager::GREEN == m_BrainInfo.eColor)
@@ -104,11 +109,6 @@ void CMain_OnMouseUI::Set_BrainInfo(CItem_Manager::BRAININFO tBrainInfo)
 
 	m_pMouseColorUI->Set_IconColor(fColor);
 	m_pMouseColorUI->Set_Position({ m_fX, m_fY });
-}
-
-void CMain_OnMouseUI::CurrentOnMouse(const _double & TimeDelta)
-{
-
 }
 
 CMain_OnMouseUI * CMain_OnMouseUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

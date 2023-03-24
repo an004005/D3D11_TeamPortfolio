@@ -36,10 +36,6 @@ public:
 	}
 	void	Set_BrainInfo(CItem_Manager::BRAININFO tBrainInfo);
 
-
-private:
-	void	CurrentOnMouse(const _double & TimeDelta);
-
 private:
 	class CMain_OnMouseColorUI* m_pMouseColorUI = { nullptr };
 	CItem_Manager::BRAININFO	m_BrainInfo;

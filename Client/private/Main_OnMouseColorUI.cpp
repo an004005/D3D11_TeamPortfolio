@@ -35,34 +35,9 @@ void CMain_OnMouseColorUI::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 }
 
-void CMain_OnMouseColorUI::Late_Tick(_double TimeDelta)
-{
-	__super::Late_Tick(TimeDelta);
-}
-
-HRESULT CMain_OnMouseColorUI::Render()
-{
-	if (FAILED(__super::Render()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
 void CMain_OnMouseColorUI::Imgui_RenderProperty()
 {
 	CUI::Imgui_RenderProperty();
-
-}
-
-void CMain_OnMouseColorUI::SaveToJson(Json & json)
-{
-	CUI::SaveToJson(json);
-
-}
-
-void CMain_OnMouseColorUI::LoadFromJson(const Json & json)
-{
-	CUI::LoadFromJson(json);
 
 }
 
