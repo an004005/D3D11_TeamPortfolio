@@ -817,7 +817,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 							CheckAnim("AS_ch0100_051_AL_sas_dodge_F_start_Telepo") ||
 							CheckAnim("AS_ch0100_151_AL_sas_dodge_F_start_Telepo"));
 				})
-				.Duration(0.05f)
+				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("DASH_START_FRONT to DASH_END_FRONT", "DASH_END_FRONT")
@@ -845,7 +845,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 							CheckAnim("AS_ch0100_051_AL_sas_dodge_F_stop_Telepo") || 
 							CheckAnim("AS_ch0100_151_AL_sas_dodge_F_stop_Telepo"));
 				})
-				.Duration(0.05f)
+				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("DASH_END_FRONT to IDLE", "IDLE")
@@ -874,7 +874,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 							CheckAnim("AS_ch0100_057_AL_sas_dodge_L_start_Telepo") || 
 							CheckAnim("AS_ch0100_157_AL_sas_dodge_L_start_Telepo"));
 				})
-				.Duration(0.05f)
+				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("DASH_START_LEFT to DASHJUMP_START", "DASHJUMP_START")
@@ -923,7 +923,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 							CheckAnim("AS_ch0100_053_AL_sas_dodge_R_start_Telepo") || 
 							CheckAnim("AS_ch0100_153_AL_sas_dodge_R_start_Telepo"));
 				})
-				.Duration(0.05f)
+				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("DASH_START_RIGHT to DASHJUMP_START", "DASHJUMP_START")
@@ -1000,7 +1000,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 						CheckAnim("AS_ch0100_055_AL_sas_dodge_B_stop_Telepo") || 
 						CheckAnim("AS_ch0100_155_AL_sas_dodge_B_stop_Telepo"));
 			})
-				.Duration(0.05f)
+				.Duration(0.1f)
 				.Priority(100)
 
 				.AddTransition("DASH_START_BACK to JUMP_START", "JUMP_START")
@@ -2315,6 +2315,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 	m_mapAnimSocket.emplace("Common_AnimSocket", SocketList);
 	m_mapAnimSocket.emplace("Kinetic_Special_AnimSocket", SocketList);
 	m_mapAnimSocket.emplace("BrainCrash_AnimSocket", SocketList);
+	m_mapAnimSocket.emplace("SAS_Special_AnimSocket", SocketList);
 
 	return S_OK;
 }
@@ -2609,8 +2610,10 @@ void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimat
 	{
 		if (iter.first == strSocName)
 		{
+			if (!iter.second.empty())
+				iter.second.front()->Reset();
+
 			m_bAttach = true;
-			iter.second.front()->Reset();
 			iter.second = (AnimList);
 		}
 		else

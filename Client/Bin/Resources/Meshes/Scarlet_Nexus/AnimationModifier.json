@@ -1532,6 +1532,55 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_214_AL_sas_dash_end_Telepo": {
+        "Duration": 144.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Trail_On",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 12.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 12.0
+            },
+            {
+                "EventName": "Default_Attack_Dash_End",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_End",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_End_Particle",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "attack_nor_dashattack",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "attack_fire_dashattack",
+                "EventTime": 0.0
+            }
+        ]
+    },
+    "AS_ch0100_214_AL_sas_dash_start_Telepo": {
+        "Duration": 16.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_215_AL_atk_dash_hold": {
         "Duration": 195.0,
         "TickPerSecond": 50.0,
@@ -2703,7 +2752,7 @@
     },
     "AS_ch0100_410_AL_damage_sas": {
         "Duration": 69.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 69.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -5032,6 +5081,52 @@
                         0.0
                     ],
                     "StartTime": 0.0010000000474974513
+                }
+            ],
+            "AS_ch0100_214_AL_sas_dash_end_Telepo": [
+                {
+                    "AnimName": "AS_ch0100_214_AL_sas_dash_end_Telepo",
+                    "EndTime": 20.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.5,
+                        0.0
+                    ],
+                    "StartTime": 0.0
+                },
+                {
+                    "AnimName": "AS_ch0100_214_AL_sas_dash_end_Telepo",
+                    "EndTime": 40.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.25,
+                        0.0
+                    ],
+                    "StartTime": 20.0
+                },
+                {
+                    "AnimName": "AS_ch0100_214_AL_sas_dash_end_Telepo",
+                    "EndTime": 50.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612,
+                        0.0
+                    ],
+                    "StartTime": 40.0
+                },
+                {
+                    "AnimName": "AS_ch0100_214_AL_sas_dash_end_Telepo",
+                    "EndTime": 80.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.25,
+                        0.0
+                    ],
+                    "StartTime": 60.0
                 }
             ],
             "AS_ch0100_215_AL_atk_dash_hold": [

@@ -35,14 +35,21 @@ public:
 	void SetTargetInfo(CTransform* pTargetTransform, CModel* pTargetModel);
 	void EquipCable(ESASType eType);
 	void UnEquipCable();
+	_bool GetIsActive();
+	_matrix GetTargetMatrix();
+
+	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true);
+	virtual _float4x4 GetPivotMatrix();
 
 private:
 	_matrix CalcSocketMatrix(_int iIdx, _fmatrix TargetWorldMatrix);
+	_matrix CalcEffSocketMatrix(_int iIdx, _fmatrix TargetWorldMatrix);
 
 
 private:
 	array<CPxModel*, CABLE_CNT> m_CableModels{};
 	array<_float4x4, CABLE_CNT> m_CablePivots{};
+	array<_float4x4, CABLE_CNT> m_EffectPivots{};
 	CAnimation* m_pWatchAnim = nullptr;
 
 	CTransform* m_pTargetTransform = nullptr;
