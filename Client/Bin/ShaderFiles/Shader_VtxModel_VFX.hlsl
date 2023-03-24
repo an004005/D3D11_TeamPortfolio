@@ -374,17 +374,6 @@ PS_OUT PS_BRON_LASER_MOUTH(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_DEFAULT_DISTORTION(PS_IN In)
-{
-	PS_OUT			Out = (PS_OUT)0;
-
-	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
-
-	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, 0.f);
-
-	return Out;
-}
-
 PS_OUT PS_FLOWERLEG(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;

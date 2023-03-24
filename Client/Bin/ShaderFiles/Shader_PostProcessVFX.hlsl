@@ -72,7 +72,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	if(vFlags.x == SHADER_DISTORTION)
 	{
 		float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
-		float2 distortionUV = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time));
+		float2 distortionUV = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(g_Time * 0.5f, g_Time * 0.5f));
 		float4 DistortionTex = g_tex_0.Sample(LinearSampler, distortionUV);
 		float fWeight = DistortionTex.r * g_float_1;
 
@@ -137,7 +137,6 @@ PS_OUT PS_MAIN(PS_IN In)
 
 		Out.vColor.a = 1.f;
 	}
-
 	else
 		Out.vColor = LDR;
 
