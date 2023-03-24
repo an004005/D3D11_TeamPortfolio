@@ -11,6 +11,7 @@
 #include "FSMComponent.h"
 #include "Enemy_AnimInstance.h"
 #include "TestTarget.h"
+#include "PlayerInfoManager.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
 	L"Default_Blood_00",
@@ -192,8 +193,6 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_bHitWeak = IsWeak(dynamic_cast<CRigidBody*>(tDamageParams.pContactComponent));
 	if (tDamageParams.eAttackType == EAttackType::ATK_DOWN)
 	{
-		IM_LOG("DDDDDDDDoown");
-
 		tDamageParams.eAttackType = EAttackType::ATK_MIDDLE;
 		m_bAirToDown = true;
 	}
@@ -426,6 +425,19 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 			SetDead();
 		m_iHP = 0;
 	}
+}
+
+_bool CEnemy::CheckSASType(ESASType eSASType)
+{
+	auto lsSAS = CPlayerInfoManager::GetInstance()->Get_PlayerSasList();
+
+	for (auto SAS : lsSAS)
+	{
+		if (eSASType == SAS)
+			return true;
+	}
+
+	return false;
 }
 
 void CEnemy::ResetHitData()
