@@ -3,6 +3,7 @@
 #include "Light.h"
 #include "GameInstance.h"
 #include "Camera.h"
+#include "Graphic_Device.h"
 
 IMPLEMENT_SINGLETON(CLight_Manager)
 
@@ -55,6 +56,11 @@ void CLight_Manager::Render_Light(CVIBuffer_Rect * pVIBuffer, CShader * pShader)
 
 		Light.second->Render(pVIBuffer, pShader);
 	}
+
+	for (auto& Light : m_TempLights)
+	{
+		Light.first->Render(pVIBuffer, pShader);
+	}
 }
 
 void CLight_Manager::Clear()
@@ -64,8 +70,56 @@ void CLight_Manager::Clear()
 
 	m_Lights.clear();
 
+	for (auto Light : m_TempLights)
+		Safe_Release(Light.first);
+	m_TempLights.clear();
+
 	Safe_Release(m_pShadowCam);
 	m_pShadowCam = nullptr;
+}
+
+void CLight_Manager::AddLifePointLight(_float fLife, const _float4& vPos, _float fRange, const _float4& vColor)
+{
+	LIGHTDESC tDesc;
+	ZeroMemory(&tDesc, sizeof(LIGHTDESC));
+	tDesc.eType = LIGHTDESC::TYPE_POINT;
+	tDesc.vPosition = vPos;
+	tDesc.fRange = fRange;
+	tDesc.vDiffuse = vColor;
+
+	auto pLight = CLight::Create(
+		CGraphic_Device::GetInstance()->GetDevice(),
+		CGraphic_Device::GetInstance()->GetContext(),
+		tDesc);
+	m_TempLights.push_back({pLight, fLife});
+}
+
+void CLight_Manager::AddLifeCapsuleLight(_float fLife, const _float4& vStart, const _float4& vEnd, _float fRange, const _float4& vColor)
+{
+	LIGHTDESC tDesc;
+	ZeroMemory(&tDesc, sizeof(LIGHTDESC));
+	tDesc.eType = LIGHTDESC::TYPE_CAPSULE;
+	tDesc.vCapsuleStart = vStart;
+	tDesc.vCapsuleEnd = vEnd;
+	tDesc.fRange = fRange;
+	tDesc.vDiffuse = vColor;
+
+	auto pLight = CLight::Create(
+		CGraphic_Device::GetInstance()->GetDevice(),
+		CGraphic_Device::GetInstance()->GetContext(),
+		tDesc);
+	m_TempLights.push_back({pLight, fLife});
+}
+
+void CLight_Manager::Tick(_double TimeDelta)
+{
+	for (auto& Light : m_TempLights)
+		Light.second -= (_float)TimeDelta;
+
+	m_TempLights.remove_if([](const pair<class CLight*, _float>& Light)
+	{
+		return Light.second <= 0.f;
+	});
 }
 
 void CLight_Manager::SetShadowCam(CCamera* pShadowCam)

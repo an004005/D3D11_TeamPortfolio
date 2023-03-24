@@ -44,6 +44,16 @@
             "Layer": "Layer_Kinetic",
             "JsonPath": "../Bin/Resources/Objects/KineticSpecial_HBeam_Single.json",
             "ProtoTag": "Prototype_GameObject_Special_HBeam_Single"
+        },
+        {
+            "Layer": "Layer_Map",
+            "JsonPath": "",
+            "ProtoTag": "Prototype_PointLight"
+        },
+        {
+            "Layer": "Layer_Map",
+            "JsonPath": "",
+            "ProtoTag": "Prototype_CapsuleLight"
         }
     ]
 }

@@ -1001,6 +1001,12 @@
     <ClInclude Include="..\public\EM0320_Controller.h">
       <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PointLight.h">
+      <Filter>02.GameObjects\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CapsuleLight.h">
+      <Filter>02.GameObjects\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1619,6 +1625,12 @@
     </ClCompile>
     <ClCompile Include="..\private\EM0320_Controller.cpp">
       <Filter>02.GameObjects\Enemy\EM320%28boss1%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PointLight.cpp">
+      <Filter>02.GameObjects\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CapsuleLight.cpp">
+      <Filter>02.GameObjects\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -190,6 +190,7 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 
 	m_pObject_Manager->Tick(TimeDelta);
 	m_pLevel_Manager->Tick(TimeDeltaModified);
+	m_pLight_Manager->Tick(TimeDeltaModified);
 
 	m_pObject_Manager->Late_Tick(TimeDelta);
 	m_pLevel_Manager->Late_Tick(TimeDeltaModified);
@@ -700,6 +701,16 @@ void CGameInstance::ClearLight()
 void CGameInstance::SetShadowCam(CCamera* pShadowCam)
 {
 	m_pLight_Manager->SetShadowCam(pShadowCam);
+}
+
+void CGameInstance::AddLifePointLight(_float fLife, _float4 vPos, _float fRange, _float4 vColor)
+{
+	m_pLight_Manager->AddLifePointLight(fLife, vPos, fRange, vColor);
+}
+
+void CGameInstance::AddLifeCapsuleLight(_float fLife, _float4 vStart, _float4 vEnd, _float fRange, _float4 vColor)
+{
+	m_pLight_Manager->AddLifeCapsuleLight(fLife, vStart, vEnd, fRange, vColor);
 }
 
 /*************************
