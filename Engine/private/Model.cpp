@@ -251,14 +251,14 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
 		if (m_szSocketBefAnimName != srtAnimName)
 		{
 			m_szSocketBefAnimName = srtAnimName;
-			//m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			//return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 
 		if (m_mapAnimation[srtAnimName]->GetPlayRatio() < m_fSocketBefRatio)
 		{
-			//m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSocketLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vSocketBefLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 
@@ -499,7 +499,7 @@ _vector CModel::GetSpecialLocalMove(_fmatrix WorldMatrix)
 
 		if (m_szBefSpecialAnimName != m_CurAnimName)
 		{
-//			m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vBefSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_szBefSpecialAnimName = m_CurAnimName;
 //			return XMVectorSet(0.f, 0.f, 0.f, 0.f);
@@ -507,7 +507,7 @@ _vector CModel::GetSpecialLocalMove(_fmatrix WorldMatrix)
 
 		if (m_mapAnimation[m_CurAnimName]->GetPlayRatio() < m_fBefSpecialRatio)
 		{
-//			m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 			m_vBefSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
 

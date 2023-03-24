@@ -514,7 +514,9 @@ void CEM0200::SetUpFSM()
 				_float fPower;
 				if (m_HeavyAttackPushTimeline.Tick(TimeDelta, fPower))
 				{
-					m_pTransformCom->MoveVelocity(TimeDelta, m_vPushVelocity * fPower);
+					_float3 vVelocity = { m_vPushVelocity.x, m_vPushVelocity.y, m_vPushVelocity.z };
+					m_pTransformCom->MoveVelocity(TimeDelta, vVelocity * fPower);
+					//m_pTransformCom->MoveVelocity(TimeDelta, m_vPushVelocity * fPower);
 				}
 			})
 			.AddTransition("Hit_Mid_Heavy to Idle", "Idle")

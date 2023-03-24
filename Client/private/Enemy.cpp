@@ -178,7 +178,6 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_bDead)
 		return;
 
-
 	// 이상한 데미지 들어오는거 감지용, 버그 다 찾으면 지우기
 	Assert(tDamageParams.iDamage > 0);
 	Assert(tDamageParams.iDamage < 20000);
@@ -193,6 +192,8 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_bHitWeak = IsWeak(dynamic_cast<CRigidBody*>(tDamageParams.pContactComponent));
 	if (tDamageParams.eAttackType == EAttackType::ATK_DOWN)
 	{
+		IM_LOG("DDDDDDDDoown");
+
 		tDamageParams.eAttackType = EAttackType::ATK_MIDDLE;
 		m_bAirToDown = true;
 	}
