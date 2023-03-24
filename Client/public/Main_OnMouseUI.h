@@ -2,7 +2,7 @@
 
 #include "Client_Defines.h"
 #include "UI.h"
-#include "Item_Manager.h"
+#include "Canvas_BrainMap.h"
 
 BEGIN(Client)
 
@@ -31,14 +31,14 @@ public:
 		return m_bOnButton;
 	}
 
-	CItem_Manager::BRAININFO	Get_BrainInfo() {
+	CCanvas_BrainMap::BRAININFO	Get_BrainInfo() {
 		return m_BrainInfo;
 	}
-	void	Set_BrainInfo(CItem_Manager::BRAININFO tBrainInfo);
+	void	Set_BrainInfo(CCanvas_BrainMap::BRAININFO tBrainInfo);
 
 private:
 	class CMain_OnMouseColorUI* m_pMouseColorUI = { nullptr };
-	CItem_Manager::BRAININFO	m_BrainInfo;
+	CCanvas_BrainMap::BRAININFO	m_BrainInfo;
 
 	_bool	m_bOnMouse = { false };
 	_bool	m_bOnButton = { false };

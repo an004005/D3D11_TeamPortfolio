@@ -90,7 +90,7 @@ void CMain_OnMouseUI::LoadFromJson(const Json & json)
 
 }
 
-void CMain_OnMouseUI::Set_BrainInfo(CItem_Manager::BRAININFO tBrainInfo)
+void CMain_OnMouseUI::Set_BrainInfo(CCanvas_BrainMap::BRAININFO tBrainInfo)
 {
 	m_BrainInfo = tBrainInfo;
 
@@ -98,13 +98,13 @@ void CMain_OnMouseUI::Set_BrainInfo(CItem_Manager::BRAININFO tBrainInfo)
 	m_pMouseColorUI = dynamic_cast<CMain_OnMouseColorUI*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Main_OnMouseColorUI", &json));
 	
 	_float fColor = 0.0f;
-	if (CItem_Manager::GREEN == m_BrainInfo.eColor)
+	if (CCanvas_BrainMap::GREEN == m_BrainInfo.eColor)
 		fColor = 0.0f;
-	else if (CItem_Manager::YELLOW == m_BrainInfo.eColor)
+	else if (CCanvas_BrainMap::YELLOW == m_BrainInfo.eColor)
 		fColor = 1.0f;
-	else if (CItem_Manager::RAD == m_BrainInfo.eColor)
+	else if (CCanvas_BrainMap::RAD == m_BrainInfo.eColor)
 		fColor = 2.0f;
-	else if (CItem_Manager::PURPLE == m_BrainInfo.eColor)
+	else if (CCanvas_BrainMap::PURPLE == m_BrainInfo.eColor)
 		fColor = 3.0f;
 
 	m_pMouseColorUI->Set_IconColor(fColor);

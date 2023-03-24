@@ -25,21 +25,6 @@ public:
 		_tchar*		szItemEx[4] = {};
 
 	}ITEMINFO;
-	
-	enum BRAINTYPE { DRIVE, ENHANCE, EXPANSION, ASSISTANCE, BRAINFIELD, BRAINTYPE_END };
-	enum BRAINCOLOR { GREEN, YELLOW, RAD, PURPLE, BRAINCOLOR_END };
-
-	typedef struct tagBrainInfo
-	{
-		BRAINTYPE	eType = { BRAINTYPE_END };
-		BRAINCOLOR	eColor = { BRAINCOLOR_END };
-
-		_uint		iBP = { 0 };
-		_uint		iLevel = { 0 };
-		_tchar*		szBrainName = {};
-		_tchar*		szBrainEx[4] = {};
-
-	}BRAININFO;
 
 public:
 	CItem_Manager();
@@ -65,14 +50,9 @@ public:
 		return m_arrIconIndexPos[iIndex];
 	}
 
-	vector<BRAININFO>	Get_BrainInfo() {
-		return m_vecBrain;
-	}
-
 private:
 	void	ItemIndex_Intiialize();
 	void	ItemInfo_Intiialize();
-	void	Brain_Intiialize();
 
 private:
 	MAINITEM	m_eMainItem = { MAINITEM_END };
@@ -80,8 +60,6 @@ private:
 	array<_float2, 17>	m_arrItemIndexPos;
 	array<_float2, 17>	m_arrIconIndexPos;
 	vector<pair<wstring, ITEMINFO>>	m_vecItem;
-	
-	vector<BRAININFO>	m_vecBrain;
 
 public:
 	virtual void Free() override;
