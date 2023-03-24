@@ -15,7 +15,6 @@ BEGIN(Client)
 class CEnemy abstract : public CScarletCharacter
 {
 public:
-	enum MONSTER_NAME { BRONJON, SKUMMYPANDOU, SKUMMYPOOL, BUDDYLUMI, FLOWERLEG, GODLYFERRY, MONSTERNAME_END };
 
 protected:
 	CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -26,7 +25,6 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
-	virtual void AfterPhysX() override;
 	virtual void Imgui_RenderProperty() override;
 	virtual HRESULT Render_ShadowDepth() override;
 
@@ -37,6 +35,9 @@ public:
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 	virtual void SetBrainCrush();
+
+	virtual void SetEnemyBatchDataStat(ENEMY_STAT tStat);
+	virtual ENEMY_STAT GetEnemyBatchDataStat();
 	
 public:
 	_float GetHpRatio() const { return (_float)m_iHP / (_float)m_iMaxHP; }
@@ -55,6 +56,8 @@ protected:
 	virtual _bool IsWeak(CRigidBody* pHitPart) { return false; }
 	virtual void CheckCrushGage(DAMAGE_PARAM& tDamageParams);
 	virtual void CheckHP(DAMAGE_PARAM& tDamageParams);
+	// Tick의 제일 마지막에서 실행한다.
+	void ResetHitData();
 	// ~
 
 	// 몬스터가 죽으면 실행해야할 코드들 넣기
@@ -74,7 +77,7 @@ protected:
 	void HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
 	void HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
 
-
+	void SocketLocalMove(class CEnemy_AnimInstance* pASM);
 protected:
 	static vector<wstring>			s_vecDefaultBlood;
 	static vector<wstring>			s_vecFireBlood;
@@ -89,6 +92,7 @@ protected:
 	CModel*					m_pModelCom = nullptr;
 	CScarletCharacter*		m_pTarget = nullptr;
 	CFSMComponent*			m_pFSM = nullptr;
+	
 	_bool m_bFindTestTarget = false;
 
 	_int m_iAtkDamage = 50;
@@ -104,7 +108,7 @@ protected:
 	CSimpleTimeline m_DeathTimeline;
 
 	_uint	iMonsterLevel = { 0 };
-	MONSTER_NAME m_eMonsterName = { MONSTERNAME_END };
+	EEnemyName m_eMonsterName = { EEnemyName::ENEMY_NAME_END };
 
 	// AfterPhysX에서 다시 초기화해줌.
 	EAttackType m_eCurAttackType = EAttackType::ATK_END; // 현 프레임에서 받은 공격 타입

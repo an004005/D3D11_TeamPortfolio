@@ -737,6 +737,18 @@ void CTransform::CopyWorld(CTransform* pFrom)
 	m_WorldMatrix = pFrom->Get_WorldMatrix_f4x4();
 }
 
+_float CTransform::RushToTarget(_fvector vDirection, _double TimeDelta)
+{
+	_vector vPosition = Get_State(STATE_TRANSLATION);
+	
+	_float fDistance = m_TransformDesc.fSpeedPerSec * TimeDelta;
+	vPosition += XMVector3Normalize(vDirection) * fDistance;
+
+	Set_State(STATE_TRANSLATION, vPosition);
+
+	return fDistance;
+}
+
 HRESULT CTransform::Bind_ShaderResource(CShader* pShaderCom, const char* pConstantName)
 {
 	if (nullptr == pShaderCom)

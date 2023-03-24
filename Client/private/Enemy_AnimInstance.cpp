@@ -7,10 +7,14 @@
 HRESULT CEnemy_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameObject)
 {
 	return CAnimationInstance::Initialize(pModel, pGameObject);
+
+	m_fLerpDuration = 0.1f;
 }
 
 void CEnemy_AnimInstance::Tick(_double TimeDelta)
 {
+	m_fLerpDuration = 0.1f;
+
 	UpdateTargetState(TimeDelta);
 
 	_bool bChange = CheckFinishedAnimSocket();
@@ -49,7 +53,7 @@ void CEnemy_AnimInstance::Tick(_double TimeDelta)
 		}
 		else if (m_bAttach)
 		{
-			m_fLerpTime = 0.f;	// 어태치면 바로 보간
+			m_fLerpTime = 0.f;
 			m_bAttach = false;
 		}
 		else
@@ -63,10 +67,15 @@ void CEnemy_AnimInstance::Tick(_double TimeDelta)
 	{
 		bLocalMove = false;
 
+		//Idle로 변하기 전의 애니메이션 저장
+		CAnimation* pPreAnim = m_pASM_Base->GetCurState()->m_Animation;
+
 		m_pASM_Base->SetCurState("Idle");
 		//m_pASM_Base->GetCurState()->m_Animation->Reset();
 		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
-		m_fLerpTime = 0.f;
+
+		//if(pPreAnim->GetInterpolation() == true)
+			m_fLerpTime = 0.f;
 	}
 	else if (m_fLerpTime < m_fLerpDuration)
 	{
@@ -130,6 +139,21 @@ void CEnemy_AnimInstance::AttachAnimSocket(const string& strSocName, const list<
 	m_mapAnimSocket[strSocName] = (AnimList);
 }
 
+void CEnemy_AnimInstance::ClearSocketAnim(const string & strSocName, _float fLerpTime)
+{
+	if (!m_mapAnimSocket[strSocName].empty())
+	{
+		for (auto& iter : m_mapAnimSocket[strSocName])
+		{
+			iter->Reset();
+		}
+	}
+
+	m_mapAnimSocket[strSocName].clear();
+
+	m_fLerpTime = fLerpTime;
+}
+
 void CEnemy_AnimInstance::InputAnimSocketOne(const string& strSocName, const string& strAnimName)
 {
 	for (auto& iter : m_mapAnimSocket)
@@ -157,7 +181,7 @@ void CEnemy_AnimInstance::AttachAnimSocketOne(const string& strSocName, const st
 	m_mapAnimSocket[strSocName] = { m_pModel->Find_Animation(strAnimName) };
 }
 
-void CEnemy_AnimInstance::InputAnimSocket(const string& strSocName, const list<string>& AnimNameList)
+void CEnemy_AnimInstance::InputAnimSocketMany(const string& strSocName, const list<string>& AnimNameList)
 {
 	for (auto& iter : m_mapAnimSocket)
 	{
@@ -174,7 +198,7 @@ void CEnemy_AnimInstance::InputAnimSocket(const string& strSocName, const list<s
 	m_mapAnimSocket[strSocName] = AnimList;
 }
 
-void CEnemy_AnimInstance::AttachAnimSocket(const string& strSocName, const list<string>& AnimNameList)
+void CEnemy_AnimInstance::AttachAnimSocketMany(const string& strSocName, const list<string>& AnimNameList)
 {
 	const auto itr = m_mapAnimSocket.find(strSocName);
 	Assert(itr != m_mapAnimSocket.end());
@@ -189,6 +213,19 @@ void CEnemy_AnimInstance::AttachAnimSocket(const string& strSocName, const list<
 		AnimList.push_back(m_pModel->Find_Animation(strAnimName));
 
 	m_mapAnimSocket[strSocName] = AnimList;
+}
+
+const string & CEnemy_AnimInstance::GetCurSocketAnimName()
+{
+	for (auto& iter : m_mapAnimSocket)
+	{
+		if (!iter.second.empty())
+		{
+			return iter.second.front()->GetName();
+		}
+	}
+
+	return "";
 }
 
 void CEnemy_AnimInstance::Free()

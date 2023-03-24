@@ -9,6 +9,7 @@
 CEM0200::CEM0200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
 {
+	m_eMonsterName = EEnemyName::EM0200;
 }
 
 CEM0200::CEM0200(const CEM0200& rhs)
@@ -19,16 +20,18 @@ CEM0200::CEM0200(const CEM0200& rhs)
 HRESULT CEM0200::Initialize(void* pArg)
 {
 	Json em0200_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegTrigger.json");
-	MoveJsonData(em0200_json, pArg);
 	pArg = &em0200_json;
 
 	m_strDeathSoundTag = "mon_5_fx_death";
 	m_strImpactVoiceTag = "mon_5_impact_voice";
 
-	// 배치툴에서 조절할 수 있게 하기
+	// 배치에서 지정하지 않을 때의 기본 스텟
 	{
 		m_iMaxHP = 3000;
 		m_iHP = 3000; // ★
+		m_iCrushGage = 400;
+		m_iMaxCrushGage = 400;
+		m_bHasCrushGage = false;
 
 		m_iAtkDamage = 50;
 		iMonsterLevel = 2;
@@ -36,7 +39,7 @@ HRESULT CEM0200::Initialize(void* pArg)
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eMonsterName = FLOWERLEG;
+	m_eMonsterName = EEnemyName::EM0200;
 	m_bHasCrushGage = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 
@@ -57,6 +60,7 @@ void CEM0200::SetUpComponents(void* pArg)
 	Json FlowerLegRangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegRange.json");
 	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
 		(CComponent**)&m_pRange, &FlowerLegRangeCol))
+
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM0200_Controller::Create();
@@ -109,7 +113,7 @@ void CEM0200::SetUpAnimationEvent()
 		{
 			m_bJumpAttack = true;
 			m_fGravity = 80.f;
-			m_fYSpeed = 27.f;
+			m_fYSpeed = 20.f;
 
 			_vector vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			vOrigin = XMVectorSetY(vOrigin, 0.f);
@@ -167,7 +171,12 @@ void CEM0200::SetUpAnimationEvent()
 	{
 		if (!m_bDead)
 		{
-//			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose")->Start_Attach(this, "Eff02", true);
+			if (m_pFallRoseParticle)
+			{
+				m_pFallRoseParticle->SetDelete();
+				Safe_Release(m_pFallRoseParticle);
+				m_pFallRoseParticle = nullptr;
+			}
 			m_pFallRoseParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Fall_Rose");
 			m_pFallRoseParticle->Start_Attach(this, "Eff02", true);
 			Safe_AddRef(m_pFallRoseParticle);
@@ -179,7 +188,12 @@ void CEM0200::SetUpAnimationEvent()
 		// Flower 흩뿌리는 Effect
 		if (!m_bDead)
 		{
-//			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Shoot_Flower")->Start_Attach(this, "RightFlower5", true);
+			if (m_pShootFlwParticle)
+			{
+				m_pShootFlwParticle->SetDelete();
+				Safe_Release(m_pShootFlwParticle);
+				m_pShootFlwParticle = nullptr;
+			}
 			m_pShootFlwParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200_Shoot_Flower");
 			m_pShootFlwParticle->Start_Attach(this, "RightFlower5", true);
 			Safe_AddRef(m_pShootFlwParticle);
@@ -191,20 +205,17 @@ void CEM0200::SetUpAnimationEvent()
 
 	m_pModelCom->Add_EventCaller("FallRose_End", [this]
 	{
-		if (m_bCloned == true)
+		if (m_pShootFlwParticle)
 		{
-			if (m_pShootFlwParticle != nullptr)
-			{
-				m_pShootFlwParticle->SetDelete();
-				Safe_Release(m_pShootFlwParticle);
-				m_pShootFlwParticle = nullptr;
-			}
-			if (m_pFallRoseParticle != nullptr)
-			{
-				m_pFallRoseParticle->SetDelete();
-				Safe_Release(m_pFallRoseParticle);
-				m_pFallRoseParticle = nullptr;
-			}
+			m_pShootFlwParticle->SetDelete();
+			Safe_Release(m_pShootFlwParticle);
+			m_pShootFlwParticle = nullptr;
+		}
+		if (m_pFallRoseParticle)
+		{
+			m_pFallRoseParticle->SetDelete();
+			Safe_Release(m_pFallRoseParticle);
+			m_pFallRoseParticle = nullptr;
 		}
 	});
 
@@ -275,6 +286,7 @@ void CEM0200::SetUpFSM()
 		.AddState("SpinAtk")
 			.OnStart([this]
 			{
+				ClearDamagedTarget();
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_202_AL_atk_a2");
 			})
 			.Tick([this](_double TimeDelta)
@@ -300,6 +312,21 @@ void CEM0200::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_203_AL_atk_a3");
+			})
+			.OnExit([this]
+			{
+				if (m_pShootFlwParticle)
+				{
+					m_pShootFlwParticle->SetDelete();
+					Safe_Release(m_pShootFlwParticle);
+					m_pShootFlwParticle = nullptr;
+				}
+				if (m_pFallRoseParticle)
+				{
+					m_pFallRoseParticle->SetDelete();
+					Safe_Release(m_pFallRoseParticle);
+					m_pFallRoseParticle = nullptr;
+				}
 			})
 			.AddTransition("FlowerShower to Idle", "Idle")
 				.Predicator([this]
@@ -376,6 +403,12 @@ void CEM0200::SetUpFSM()
 					m_pTransformCom->MoveVelocity(TimeDelta, m_vOnJumpMoveVelocity);
 				}
 			})
+			.OnExit([this]
+			{
+				m_pController->SetActive(true);
+				m_bDodge = false;
+				m_fGravity = 20.f;
+			})
 			.AddTransition("Dodge to DodgeStop", "DodgeStop")
 				.Predicator([this]
 				{
@@ -389,9 +422,6 @@ void CEM0200::SetUpFSM()
 		.AddState("DodgeStop")
 			.OnStart([this]
 			{
-				m_pController->SetActive(true);
-				m_bDodge = false;
-				m_fGravity = 20.f;
 				if (CMathUtils::FloatCmp(m_vDodgeDir.x, -1.f))
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_141AL_dodge_L_stop");
 				else if (CMathUtils::FloatCmp(m_vDodgeDir.z, -1.f))
@@ -404,8 +434,6 @@ void CEM0200::SetUpFSM()
 				{
 					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.99f);
 				})
-
-
 
 		.AddState("Threat")
 			.OnStart([this]
@@ -472,25 +500,31 @@ void CEM0200::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_432_AL_blow_start_F");
-				m_fYSpeed = 10.f; 
+				m_fGravity = 20.f;
+				m_fYSpeed = 12.f; 
 			})
 			.Tick([this](_double)
 			{
 				// 공중 추가타로 살짝 올라가는 애님
+				m_bHitAir = true;
 				if (m_eCurAttackType != EAttackType::ATK_END)
 				{
 					m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_455_AL_rise_start");
 				}
 			})
+			.OnExit([this]
+			{
+				m_bHitAir = false;
+			})
 			.AddTransition("Hit_ToAir to OnFloorGetup", "OnFloorGetup")
 				.Predicator([this]
 				{
-					return !m_bPreOnFloor && m_bOnFloor;
+					return !m_bPreOnFloor && m_bOnFloor && m_bHitAir;
 				})
 		.AddState("OnFloorGetup")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", {"AS_em0200_433_AL_blow_landing_F", "AS_em0200_427_AL_getup"});
+				m_pASM->InputAnimSocketMany("FullBody", {"AS_em0200_433_AL_blow_landing_F", "AS_em0200_427_AL_getup"});
 				m_fGravity = 20.f;
 			})
 			.AddTransition("OnFloorGetup to Idle", "Idle")
@@ -523,14 +557,9 @@ void CEM0200::Tick(_double TimeDelta)
 	m_eInput = m_pController->GetAIInput();
 
 	m_pFSM->Tick(TimeDelta);
-
-	_float fMoveSpeed = 0.f;
-	if (m_bRun)
-		fMoveSpeed = 4.f;
-	else
-		fMoveSpeed = 2.f;
-
 	m_pASM->Tick(TimeDelta);
+
+	const _float fMoveSpeed = m_bRun ? 4.f : 2.f;
 
 	if (m_vMoveAxis.LengthSquared() > 0.f)
 	{
@@ -539,6 +568,9 @@ void CEM0200::Tick(_double TimeDelta)
 		XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
 		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
 	}
+
+	// Tick의 제일 마지막에서 실행한다.
+	ResetHitData();
 }
 
 void CEM0200::Late_Tick(_double TimeDelta)
@@ -598,10 +630,7 @@ void CEM0200::Strew_Overlap()
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
-		for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
-		{
-			HitTargets(overlapOut, m_iAtkDamage * 0.6f, EAttackType::ATK_LIGHT);
-		}
+		HitTargets(overlapOut, m_iAtkDamage * 0.6f, EAttackType::ATK_LIGHT);
 	}
 }
 
@@ -648,10 +677,7 @@ void CEM0200::Kick_SweepSphere()
 
 	if (CGameInstance::GetInstance()->SweepSphere(tParams))
 	{
-		for (int i = 0; i < sweepOut.getNbAnyHits(); ++i)
-		{
-			HitTargets(sweepOut, m_iAtkDamage * 2, EAttackType::ATK_HEAVY);
-		}
+		HitTargets(sweepOut, m_iAtkDamage * 2, EAttackType::ATK_HEAVY);
 	}
 }
 
@@ -659,7 +685,7 @@ void CEM0200::Dodge_VelocityCalc()
 {
 	m_bDodge = true;
 	m_fGravity = 80.f;
-	m_fYSpeed = 10.f;
+	m_fYSpeed = 7.f;
 
 	const _float fJumpMoveTime = (2 * m_fYSpeed) / m_fGravity;
 
@@ -683,16 +709,16 @@ void CEM0200::Play_MidHitAnim()
 	switch (m_eHitFrom)
 	{
 	case EBaseAxis::NORTH: 
-		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_411_AL_damage_m_F");
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_411_AL_damage_m_F");
 		break;
 	case EBaseAxis::EAST: 
-		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_414_AL_damage_m_R");
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_414_AL_damage_m_R");
 		break;
 	case EBaseAxis::SOUTH:
-		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_412_AL_damage_m_B");
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_412_AL_damage_m_B");
 		break;
 	case EBaseAxis::WEST:
-		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0200_413_AL_damage_m_L");
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_413_AL_damage_m_L");
 		break;
 	case EBaseAxis::AXIS_END:
 		FALLTHROUGH;
@@ -737,4 +763,17 @@ void CEM0200::Free()
 	Safe_Release(m_pController);
 	Safe_Release(m_pTailCol);
 	Safe_Release(m_pRange);
+
+	if (m_pShootFlwParticle)
+	{
+		m_pShootFlwParticle->SetDelete();
+		Safe_Release(m_pShootFlwParticle);
+		m_pShootFlwParticle = nullptr;
+	}
+	if (m_pFallRoseParticle)
+	{
+		m_pFallRoseParticle->SetDelete();
+		Safe_Release(m_pFallRoseParticle);
+		m_pFallRoseParticle = nullptr;
+	}
 }

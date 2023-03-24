@@ -51,6 +51,10 @@
 #include "PostVFX_ColorGrading.h"
 #include "SkyBox.h"
 
+#include "Special_Train.h"
+#include "Imgui_Batch.h"
+#include "SAS_Cable.h"
+
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -67,6 +71,7 @@ HRESULT CLevel_PlayerTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_EffectBrowser::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
 
 //	CVFX_Manager::GetInstance()->Initialize(LEVEL_PLAYERTEST);
 
@@ -94,7 +99,7 @@ HRESULT CLevel_PlayerTest::Initialize()
 	if (FAILED(Ready_Layer_Map(PLAYERTEST_LAYER_MAP)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Kinetic(PLAYERTEST_LAYER_KINETIC)))
+	if (FAILED(Ready_Layer_Kinetic(LAYER_KINETIC)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Monster(PLAYERTEST_LAYER_MONSTER)))
@@ -230,6 +235,11 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	// 		CMaterial::Create(m_pDevice, m_pContext, filePath.c_str()));
 	// });
 
+	//CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext);
+	{// SAS 케이블
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SASCable", CSAS_Cable::Create(m_pDevice, m_pContext)));
+	}
+
 	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
 
 	{	// 플레이어 모델과 애니메이션
@@ -338,7 +348,7 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	//	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BulletSkummyPool"), pSkMpBullet));
 	//}
 
-	//FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkummyPool"), CSkummyPool::Create(m_pDevice, m_pContext)));
+	//FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkummyPool"), CEM0650::Create(m_pDevice, m_pContext)));
 	//FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkMpBullet"), CSkMpBullet::Create(m_pDevice, m_pContext)));
 	//FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_SkmP_Controller"), CSkmP_Controller::Create()));
 	//// ~스커미풀
@@ -356,9 +366,10 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	//	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FL_Controller"), CFL_Controller::Create()));
 	//}
 
-	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
@@ -420,8 +431,8 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Batch(const _tchar * pLayerTag)
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_ConstructionSite3F.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_ConstructionSite3F.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));
 
 	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_Tutorial.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));
@@ -444,11 +455,14 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 
 HRESULT CLevel_PlayerTest::Ready_Layer_Kinetic(const _tchar * pLayerTag)
 {
-	/*CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json Test;
-	Test["ModelTags"] = "../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Table/Table.static_model";
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Proto_KineticObject_Table"), &Test));*/
+	pGameInstance->Add_EmptyLayer(LEVEL_NOW, pLayerTag);
+
+	//Json Test;
+	//Test["ModelTags"] = "../Bin/Resources/Model/AnimModel/Kinetic/Train/Train.anim_model";
+	//CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_GameObject_Special_Train"), &Test)
+	//	->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 0.f, 0.f, 1.f));
 
 	return S_OK;
 }

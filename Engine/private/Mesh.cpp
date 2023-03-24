@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "Bone.h"
 #include "GameUtils.h"
+#include "PxBone.h"
 
 CMesh::CMesh(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CVIBuffer(pDevice, pContext)
@@ -129,6 +130,19 @@ void CMesh::SetUp_BoneMatrices(_float4x4 * pBoneMatrices, _fmatrix PivotMatrix)
 	}
 }
 
+void CMesh::SetUp_PxBoneMatrices(_float4x4* pBoneMatrices, _fmatrix WorldMatrixInv)
+{
+	_uint		iNumBones = 0;
+
+	if (m_BoneNames.empty())
+		XMStoreFloat4x4(&pBoneMatrices[0], _float4x4::Identity);
+
+	for (const auto& pBone : m_Bones)
+	{
+		XMStoreFloat4x4(&pBoneMatrices[iNumBones++], pBone->Get_OffsetMatrix() * static_cast<CPxBone*>(pBone)->GetCombindMatrix_WithPivot(WorldMatrixInv));
+	}
+}
+
 HRESULT CMesh::Ready_VertexBuffer_NonAnimModel(HANDLE hFile, CModel* pModel)
 {
 	m_iStride = sizeof(VTXMODEL);
@@ -163,6 +177,12 @@ HRESULT CMesh::Ready_VertexBuffer_NonAnimModel(HANDLE hFile, CModel* pModel)
 		return E_FAIL;
 
 	m_pNonAnimModelBufferData = pNonAnimVertices;
+
+
+	sort(m_pNonAnimModelBufferData, m_pNonAnimModelBufferData + m_iNumVertices, [](const VTXMODEL& left, const VTXMODEL& right)
+	{
+		return (left.vTexUV.x + left.vTexUV.y) < ((right.vTexUV.x + right.vTexUV.y));
+	});
 	//Safe_Delete_Array(pNonAnimVertices);
 
 	return S_OK;

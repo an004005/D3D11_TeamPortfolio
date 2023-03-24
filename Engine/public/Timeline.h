@@ -318,6 +318,7 @@ public:
 	void SetStay(_bool bStay) { m_bStay = bStay; }
 
 	void Imgui_RenderEditor();
+	void SetID(_uint iID) { m_iID = iID; }
 
 	_bool IsPlay() { return m_bPlay; }
 
@@ -335,6 +336,7 @@ public:
 
 	void SetCurve(const string& strCurveTag);
 	void ReleaseCurve();
+	string GetCurveName();
 
 private:
 	_double m_CurFrame = 0.0;
@@ -343,6 +345,7 @@ private:
 
 	function<void()> m_FinFunction = nullptr;
 	class CCurveFloatImpl* m_pCurve = nullptr;
+	_uint m_iID = 0;
 
 public:
 	virtual void Free() override;

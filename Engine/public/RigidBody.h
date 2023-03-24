@@ -65,6 +65,8 @@ public:
 	physx::PxTransform			Get_PxTransform();
 	_bool IsOnPhysX();
 
+	void AttachTo(CRigidBody* pParent, _float y, _float z, _float fTol, _float fBounceTol);
+
 protected:
 	void ReleaseActor();
 	void CreateActor();

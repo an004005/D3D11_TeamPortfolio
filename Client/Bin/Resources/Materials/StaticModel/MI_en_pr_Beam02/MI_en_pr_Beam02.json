@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderInstancingProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [0],
+        "Floats" : [0.0],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Model/StaticModel/Kinetic/HBeam/Texture/T_pr_Beam_ALB.png",
+            "../Bin/Resources/Model/StaticModel/Kinetic/HBeam/Texture/T_pr_Beam_NML.png",
+            "../Bin/Resources/Model/StaticModel/Kinetic/HBeam/Texture/T_pr_Beam_RMA.png"
+        ],
+        "Pass" : 4
+    },
+    "InstancingPass" : 1
+}

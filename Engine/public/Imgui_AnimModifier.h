@@ -7,6 +7,14 @@ BEGIN(Engine)
 
 class CBaseAnimInstance;
 
+typedef struct tagCamKeyFrame
+{
+	string		m_szAnimName;
+	_float4		m_vKeyFramePos;
+	_float		m_fKeyFrameRatio;
+
+}CAMKEYFRAME;
+
 /************************
  * CModelPreviwer
  ************************/
@@ -70,6 +78,15 @@ public:
 
 private:
 	void RootMotionMaker(); // 루트모션메이커
+
+private:
+	void ActionCamMaker();	// 액션캠메이커
+
+	string				m_szAnimName = "";
+	_float4				m_vOrigin = _float4(0.f, 0.f, 0.f, 1.f);
+	_float				m_fRatio = 0.f;
+	list<CAMKEYFRAME>	m_CamFrameList;
+
 
 private:
 	class CGameObject* m_pSelectedObject = nullptr;

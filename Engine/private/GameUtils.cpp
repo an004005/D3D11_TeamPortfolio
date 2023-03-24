@@ -304,6 +304,36 @@ string CGameUtils::GetRandomString(_uint iLen)
     return str;
 }
 
+_bool CGameUtils::GetPosFromRayCast(_float4& vPos)
+{
+	_float4 vOrigin;
+	_float4 vDir;
+	CGameUtils::GetPickingRay(vOrigin, vDir);
+
+	physx::PxRaycastHit hitBuffer[1];
+	physx::PxRaycastBuffer t(hitBuffer, 1);
+
+	RayCastParams params;
+	params.rayOut = &t;
+	params.vOrigin = vOrigin;
+	params.vDir = vDir;
+	params.fDistance = 3000.f;
+	params.iTargetType = CTB_STATIC;
+	params.bSingle = true;
+
+	if (CGameInstance::GetInstance()->RayCast(params))
+	{
+		for (int i = 0; i < t.getNbAnyHits(); ++i)
+		{
+			auto p = t.getAnyHit(i);
+
+			vPos = _float4{ p.position.x, p.position.y + 1.f, p.position.z, 1.f };
+			return true;
+		}
+	}
+	return false;
+}
+
 void CGameUtils::HideCursor()
 {
 	while (::ShowCursor(FALSE) >= 0);

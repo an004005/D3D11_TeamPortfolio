@@ -12,6 +12,7 @@ END
 BEGIN(Client)
 
 // FlowerLeg (본명: 바스포즈)
+// MadeBy Captin
 class CEM0200 : public CEnemy
 {
 private:
@@ -66,6 +67,7 @@ private:
 private:
 	_float3 m_vMoveAxis;
 	_float m_fTurnRemain = 0.f;
+	_bool m_bHitAir = false;
 
 	// Jump, dodge
 	_bool m_bJumpAttack = false;

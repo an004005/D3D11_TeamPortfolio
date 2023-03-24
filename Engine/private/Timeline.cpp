@@ -514,7 +514,8 @@ void CSimpleTimeline::Stop()
 
 void CSimpleTimeline::Imgui_RenderEditor()
 {
-	if (ImGui::CollapsingHeader("Simple Timeline"))
+	string headerName = "Simple Timeline " + to_string(m_iID);
+	if (ImGui::CollapsingHeader(headerName.c_str()))
 	{
 		if (ImGui::Button("Play"))
 		{
@@ -555,6 +556,15 @@ void CSimpleTimeline::ReleaseCurve()
 {
 	Safe_Release(m_pCurve);
 	m_pCurve = nullptr;
+}
+
+string CSimpleTimeline::GetCurveName()
+{
+	if (m_pCurve)
+	{
+		return m_pCurve->GetName();
+	}
+	return "";
 }
 
 void CSimpleTimeline::Free()

@@ -1,4 +1,10 @@
 {
+    "AS_BC_em_common_ch0100_end": {
+        "Duration": 207.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_021_AL_run_start_F": {
         "Duration": 30.0,
         "TickPerSecond": 50.0,
@@ -846,6 +852,10 @@
             {
                 "EventName": "Fire_Attack_1",
                 "EventTime": 8.0
+            },
+            {
+                "EventName": "Fire_Attack_1_Particle",
+                "EventTime": 20.0
             }
         ]
     },
@@ -889,6 +899,10 @@
             {
                 "EventName": "Fire_Attack_2",
                 "EventTime": 12.0
+            },
+            {
+                "EventName": "Fire_Attack_2_Particle",
+                "EventTime": 25.0
             }
         ]
     },
@@ -936,6 +950,14 @@
             {
                 "EventName": "LandingDust",
                 "EventTime": 32.0
+            },
+            {
+                "EventName": "Fire_Attack_3_Particle",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "Fire_Attack_3_twist_Particle",
+                "EventTime": 45.0
             }
         ]
     },
@@ -987,6 +1009,14 @@
             {
                 "EventName": "attack_fire_4",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_4_001_Particle",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Fire_Attack_4_Particle",
+                "EventTime": 45.0
             }
         ]
     },
@@ -1038,6 +1068,18 @@
             {
                 "EventName": "attack_fire_5",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_5_Particle",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "Default_Attack_5_PreEffect",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Fire_Attack_5_PreEffect",
+                "EventTime": 20.0
             }
         ]
     },
@@ -1081,6 +1123,10 @@
             {
                 "EventName": "attack_fire_upper",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Upper_Particle",
+                "EventTime": 20.0
             }
         ]
     },
@@ -1236,6 +1282,14 @@
             {
                 "EventName": "attack_fire_charge_lv1",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Charge03_001_Particle",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Fire_Attack_Charge03_002_Particle",
+                "EventTime": 50.0
             }
         ]
     },
@@ -1279,6 +1333,14 @@
             {
                 "EventName": "attack_fire_charge_lv2",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Charge03_001_Particle",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "Fire_Attack_Charge03_002_Particle",
+                "EventTime": 70.0
             }
         ]
     },
@@ -1318,6 +1380,10 @@
             {
                 "EventName": "attack_fire_charge_lv2",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Charge03_Particle",
+                "EventTime": 80.0
             }
         ]
     },
@@ -1357,6 +1423,10 @@
             {
                 "EventName": "Fire_Attack_Dash_End",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_End_Particle",
+                "EventTime": 10.0
             }
         ]
     },
@@ -1406,6 +1476,10 @@
             {
                 "EventName": "attack_nor_spin",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_Hold_003_Particle",
+                "EventTime": 20.0
             }
         ]
     },
@@ -1441,6 +1515,10 @@
             {
                 "EventName": "attack_kinetic_combo_1_1",
                 "EventTime": 10.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_01_Particle",
+                "EventTime": 25.0
             }
         ]
     },
@@ -1502,6 +1580,14 @@
             {
                 "EventName": "attack_kinetic_combo_1_2",
                 "EventTime": 10.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_02_001_Particle",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_02_002_Particle",
+                "EventTime": 33.0
             }
         ]
     },
@@ -1551,6 +1637,10 @@
             {
                 "EventName": "attack_kinetic_combo_spin_1",
                 "EventTime": 25.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_03_Particle",
+                "EventTime": 35.0
             }
         ]
     },
@@ -1604,6 +1694,10 @@
             {
                 "EventName": "attack_kinetic_combo_spin_2",
                 "EventTime": 45.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_03_Particle",
+                "EventTime": 60.0
             }
         ]
     },
@@ -1649,6 +1743,10 @@
             {
                 "EventName": "Fire_Attack_Air_1",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_1_Particle",
+                "EventTime": 14.0
             }
         ]
     },
@@ -1688,6 +1786,10 @@
             {
                 "EventName": "Fire_Attack_Air_2",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_2_Particle",
+                "EventTime": 20.0
             }
         ]
     },
@@ -1757,6 +1859,14 @@
             {
                 "EventName": "LandingDust",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_Hold_Landing_Particle",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Fire_Attack_3_twist_Particle",
+                "EventTime": 20.0
             }
         ]
     },
@@ -1820,6 +1930,18 @@
             {
                 "EventName": "attack_fire_spindown",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_Hold_Particle",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_Hold_1_Particle",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Fire_Attack_Air_Hold_2_Particle",
+                "EventTime": 40.0
             }
         ]
     },
@@ -1863,6 +1985,10 @@
             {
                 "EventName": "attack_nor_spin",
                 "EventTime": 5.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_Hold_003_Particle",
+                "EventTime": 20.0
             }
         ]
     },
@@ -1943,6 +2069,10 @@
             {
                 "EventName": "Kinetic_Launch",
                 "EventTime": 55.0
+            },
+            {
+                "EventName": "KineticCircle",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1954,6 +2084,10 @@
             {
                 "EventName": "Kinetic_Launch",
                 "EventTime": 60.0
+            },
+            {
+                "EventName": "KineticCircle",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1973,6 +2107,10 @@
             {
                 "EventName": "Kinetic_Launch",
                 "EventTime": 60.0
+            },
+            {
+                "EventName": "KineticCircle",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2014,6 +2152,10 @@
             {
                 "EventName": "Kinetic_Launch",
                 "EventTime": 170.0
+            },
+            {
+                "EventName": "KineticCircle",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2056,7 +2198,7 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "fx_kinetic_lifting",
+                "EventName": "KineticCircle",
                 "EventTime": 0.0
             }
         ]
@@ -2313,6 +2455,18 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_325_AL_throw_LR_loop": {
+        "Duration": 160.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_325_AL_throw_LR_start": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_326_AL_throw_RL_end": {
         "Duration": 50.0,
         "TickPerSecond": 50.0,
@@ -2328,6 +2482,12 @@
     "AS_ch0100_326_AL_throw_RL_start": {
         "Duration": 30.0,
         "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_326_AL_throw_RR_start": {
+        "Duration": 40.0,
+        "TickPerSecond": 40.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -2349,6 +2509,42 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_331_AL_swing_L": {
+        "Duration": 140.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_331_AL_swing_R": {
+        "Duration": 140.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_333_AL_rotation_cancel": {
+        "Duration": 80.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_333_AL_rotation_end": {
+        "Duration": 155.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_333_AL_rotation_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 20.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_333_AL_rotation_start": {
+        "Duration": 30.0,
+        "TickPerSecond": 30.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_372_AL_Cap_sLcLeL_end": {
         "Duration": 143.0,
         "TickPerSecond": 50.0,
@@ -2363,7 +2559,7 @@
     },
     "AS_ch0100_372_AL_Cap_sLcLeL_start": {
         "Duration": 30.0,
-        "TickPerSecond": 40.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -2405,7 +2601,7 @@
     },
     "AS_ch0100_406_AL_damage_air": {
         "Duration": 145.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 145.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -2609,6 +2805,12 @@
     "AS_ch0100_481_AL_down_B_shock": {
         "Duration": 180.0,
         "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_BrainCrash_Cutin": {
+        "Duration": 49.0,
+        "TickPerSecond": 49.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -3006,6 +3208,36 @@
             }
         ]
     },
+    "AS_em0210_211_AL_somersault": {
+        "Duration": 160.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Somersault_Start",
+                "EventTime": 76.0
+            },
+            {
+                "EventName": "Somersault_End",
+                "EventTime": 80.0
+            }
+        ]
+    },
+    "AS_em0210_212_AL_spin": {
+        "Duration": 180.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Spin_Start",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "Spin_End",
+                "EventTime": 120.0
+            }
+        ]
+    },
     "AS_em0300_111_AL_walk_L_start": {
         "Duration": 60.0,
         "TickPerSecond": 48.0,
@@ -3237,8 +3469,8 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "mon_1_sidestep_1_step",
-                "EventTime": 0.0
+                "EventName": "Dodge_B_Start",
+                "EventTime": 3.0
             }
         ]
     },
@@ -3248,8 +3480,8 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "mon_1_sidestep_1_step",
-                "EventTime": 0.0
+                "EventName": "Dodge_L_Start",
+                "EventTime": 3.0
             }
         ]
     },
@@ -3259,8 +3491,8 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "mon_1_backspin_step",
-                "EventTime": 0.0
+                "EventName": "Dodge_R_Start",
+                "EventTime": 3.0
             }
         ]
     },
@@ -3695,13 +3927,13 @@
     "AS_em0700_121_AL_randommove_L": {
         "Duration": 120.0,
         "TickPerSecond": 14.0,
-        "bLooping": true,
+        "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_122_AL_randommove_R": {
         "Duration": 120.0,
         "TickPerSecond": 14.0,
-        "bLooping": true,
+        "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_160_AL_threat": {
@@ -4237,6 +4469,30 @@
                 "EventTime": 125.0
             }
         ]
+    },
+    "AS_mg02_372_train_cancel_L": {
+        "Duration": 57.0,
+        "TickPerSecond": 57.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_mg02_372_train_cap_L": {
+        "Duration": 150.0,
+        "TickPerSecond": 75.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_mg02_372_train_end_L": {
+        "Duration": 189.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_mg02_372_train_start_L": {
+        "Duration": 117.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "ch0100": {
         "mapRootMotion": {

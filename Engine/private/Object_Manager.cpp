@@ -157,6 +157,23 @@ CGameObject* CObject_Manager::Clone_GameObject_NoLayer(_uint iLevelIndex, const 
 	return pCloned;
 }
 
+CGameObject* CObject_Manager::Clone_GameObject_NoLayerNoBegin(_uint iLevelIndex, const _tchar* pPrototypeTag,
+	void* pArg)
+{
+	CGameObject*		pPrototype = Find_Prototype(iLevelIndex, pPrototypeTag);
+	if (nullptr == pPrototype)
+	{
+		// clone할 때 못 찾으면 static도 찾아본다.
+		pPrototype = Find_Prototype(LEVEL_STATIC, pPrototypeTag);
+		if (nullptr == pPrototype)
+			return nullptr;
+	}
+
+	auto pCloned = pPrototype->Clone(pArg);
+
+	return pCloned;
+}
+
 wcmap<class CLayer*>& CObject_Manager::GetLayers(_uint iLevelIndex)
 {
 	Assert(iLevelIndex < m_iNumLevels);
@@ -423,6 +440,23 @@ void CObject_Manager::Add_InLayer(const _tchar * pLayerTag, CGameObject * pGameO
 	{
 		FAILED_CHECK(iter->Add_GameObject(pGameObject));
 	}
+}
+
+void CObject_Manager::Add_EmptyLayer(_uint iLevelIndex, const _tchar * pLayerTag)
+{
+	auto iter = Find_Layer(LEVEL_NOW, pLayerTag);
+
+	if (iter != nullptr)
+		return;
+
+	CLayer* pLayer = nullptr;
+	pLayer = CLayer::Create();
+	Assert(pLayer != nullptr);
+
+	_tchar* pLayerTagCopy = new _tchar[lstrlen(pLayerTag) + 1];
+	lstrcpy(pLayerTagCopy, pLayerTag);
+
+	m_vecLayers[LEVEL_NOW].emplace(pLayerTagCopy, pLayer);
 }
 
 CLayer * CObject_Manager::Find_Layer(_uint iLevelIndex, const _tchar * pLayerTag)

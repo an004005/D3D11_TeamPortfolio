@@ -108,6 +108,7 @@ public:	// Get
 	list<ESASType>	Get_PlayerSasList() const { return m_PlayerSasTypeList; }
 	CGameObject*	Get_KineticObject();
 	CGameObject*	Get_TargetedMonster();
+	CGameObject*	Get_SpecialObject();
 
 	HANABI_STAT		Get_HanabiStat() const { return m_tHanabiStat; }
 	TSUGUMI_STAT	Get_TsugumiStat() const { return m_tTsugumiStat; }
@@ -127,6 +128,7 @@ public:	// Set
 
 	HRESULT			Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
+	HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
 	void			Set_HanabiMemvber() { m_tHanabiStat.bMember = true; }
 	void			Set_TsugumiMemvber() { m_tTsugumiStat.bMember = true; }
@@ -142,6 +144,7 @@ private:	// 스탯 정보 관련
 private:	// 상호작용 관련
 	CGameObject*	m_pKineticObject;
 	CGameObject*	m_pTargetedMonster;
+	CGameObject*	m_pSpecialObject;
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

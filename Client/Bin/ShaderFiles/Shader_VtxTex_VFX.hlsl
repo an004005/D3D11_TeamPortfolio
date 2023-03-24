@@ -345,6 +345,32 @@ PS_OUT_Flag PS_DISTORTION_PLAYER(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_DISTORTION_PLAYER_B(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = White * Color * 2.0f;
+	float4 Tex = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4 Noise = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	float Mask = g_tex_3.Sample(LinearSampler, In.vTexUV);
+	Blend.a = Tex.r;
+
+
+	float4 vViewDir = g_vCamPosition - In.vWorldPos;
+	float fFresnel = FresnelEffect(Noise.xyz, vViewDir.xyz, 0.1f);
+	float4 FinalColor = saturate(Blend * fFresnel);
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0) * g_float_0;
+	Out.vColor.a = Tex.r * Noise.r* g_float_0;
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask * g_float_1);
+
+	if (g_float_1 <= 0.f)
+		discard;
+
+	return Out;
+}
 
 PS_OUT_Flag PS_DISTORTION_DEFAULT(PS_IN In)
 {
@@ -393,22 +419,18 @@ PS_OUT_Flag PS_KINETIC_DEAD_FLIPBOOK(PS_IN In)
 
 
 	float4 Default_White = g_tex_0.Sample(LinearSampler, In.vTexUV); // Not Use Plz Fix
-																	 //////
+	float4 Color = g_vec4_0;
+	float4 Blend = Default_White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	//////
 	float2 TexUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 4, 4);
 	float  Mask = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 4,4)).r;
-	/////
-	// float4 OriginColor = g_vec4_0;
-	// float4 BlendColor = Default_White * OriginColor * 2.0f;
-	// float4 FinalColor = saturate(BlendColor);
-	Out.vColor = Mask * g_vec4_0;
+
+
+	Out.vColor = CalcHDRColor(Final, g_float_0);
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 
-	// Out.vColor.r = 1.f; 
-	Out.vColor.a = Mask * g_float_0;
-
-	// Out.vColor.a = 1 - Out.vColor.r;
-
-
+	Out.vColor.a = Mask * g_float_1;
 
 	return Out;
 }
@@ -538,6 +560,51 @@ PS_OUT_Flag PS_MASK_TEX(PS_IN In)
 	float4 OriginColor = g_vec4_0;
 	float Mask = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y)).r;
 	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+
+	float Pattern = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+	Out.vColor.a = Pattern * Mask * g_float_1;
+
+	if (Mask < 0.f)
+		discard;
+
+	if (g_float_1 <= 0.f)
+		discard;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+PS_OUT_Flag PS_USE_SAS_GEAR_TEX(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+	
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+	Out.vColor.a *= g_float_1;
+
+	if (g_float_1 <= 0.f)
+		discard;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+PS_OUT_Flag PS_MASK_TEX_DISTORTION_CHARGE(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float Mask = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y)).r;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
 	// BlendColor.a = Mask * g_float_1;
 	float4 FinalColor = saturate(BlendColor);
 	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
@@ -548,7 +615,11 @@ PS_OUT_Flag PS_MASK_TEX(PS_IN In)
 	if (Mask < 0.f)
 		discard;
 
-	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	if (g_float_1 <= 0.f)
+		discard;
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.a);
+
 
 	return Out;
 }
@@ -993,7 +1064,7 @@ technique11 DefaultTechnique
 	}
 
 	//24
-	pass KineticDeadHlip
+	pass KineticDeadFlip
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_Default, 0);
@@ -1007,7 +1078,7 @@ technique11 DefaultTechnique
 	}
 
 	//25
-	pass PlayerDistortion
+	pass PlayerDistortionA
 	{
 		SetRasterizerState(RS_NonCulling);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
@@ -1018,5 +1089,47 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_DISTORTION_PLAYER();
+	}
+
+	//26
+	pass Mask_Semi_Distortion_Charge
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MASK_TEX_DISTORTION_CHARGE();
+	}
+
+	//27
+	pass PlayerDistortionB
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DISTORTION_PLAYER_B();
+	}
+
+	//28
+	pass SimpleMaskTex
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_USE_SAS_GEAR_TEX();
 	}
 }

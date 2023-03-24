@@ -289,6 +289,7 @@ _bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTri
 					bCollisionResult = true;
 
 					DAMAGE_PARAM tParam;
+					ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
 					memcpy(&tParam, &DamageParam, sizeof(DAMAGE_PARAM));
 
 					// 내부에서 자체적으로 계산할 값
@@ -303,6 +304,8 @@ _bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTri
 					// 플레이어일 경우 타격 이펙트 생성하도록
 					pTarget->TakeDamage(tParam);
 					pTarget->Set_CollisionDuplicate(true);
+
+					IM_LOG(ws2s(pTarget->GetPrototypeTag()).c_str());
 
 					// 이미 충돌했던 대상을 리스트에 추가
 					m_DamagedObjectList.push_back(pTarget);

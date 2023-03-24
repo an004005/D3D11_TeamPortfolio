@@ -535,6 +535,12 @@
       <Filter>01.Utility\02.GameObject\Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Line.h" />
+    <ClInclude Include="..\public\PxBone.h">
+      <Filter>01.Utility\03.Components\06.Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PxModel.h">
+      <Filter>01.Utility\03.Components\06.Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -844,6 +850,12 @@
       <Filter>01.Utility\02.GameObject\Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Line.cpp" />
+    <ClCompile Include="..\private\PxBone.cpp">
+      <Filter>01.Utility\03.Components\06.Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PxModel.cpp">
+      <Filter>01.Utility\03.Components\06.Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">

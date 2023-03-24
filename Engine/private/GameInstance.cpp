@@ -496,6 +496,11 @@ CGameObject* CGameInstance::Clone_GameObject_NoLayer(_uint iLevelIndex, const _t
 	return m_pObject_Manager->Clone_GameObject_NoLayer(iLevelIndex, pPrototypeTag, pArg);
 }
 
+CGameObject* CGameInstance::Clone_GameObject_NoLayerNoBegin(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg)
+{
+	return m_pObject_Manager->Clone_GameObject_NoLayerNoBegin(iLevelIndex, pPrototypeTag, pArg);
+}
+
 wcmap<class CLayer*>& CGameInstance::GetLayers(_uint iLevelIndex)
 {
 	return m_pObject_Manager->GetLayers(iLevelIndex);
@@ -524,6 +529,11 @@ CGameObject * CGameInstance::Find_Prototype(_uint iLevelIndex, const _tchar * pP
 void CGameInstance::Add_InLayer(const _tchar * pLayerTag, CGameObject * pGameObject)
 {
 	return m_pObject_Manager->Add_InLayer(pLayerTag, pGameObject);
+}
+
+void CGameInstance::Add_EmptyLayer(_uint iLevelIndex, const _tchar * pLayerTag)
+{
+	return m_pObject_Manager->Add_EmptyLayer(iLevelIndex, pLayerTag);
 }
 
 void CGameInstance::Imgui_ProtoViewer(const _tchar*& szSelectedProto)

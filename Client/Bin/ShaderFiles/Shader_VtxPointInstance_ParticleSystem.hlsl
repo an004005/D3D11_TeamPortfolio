@@ -358,9 +358,7 @@ PS_OUT PS_SAS_FIRE_WEAPON_PARTICLE(PS_IN In)
 
 	Out.vColor = CalcHDRColor(flipBook, g_float_0);
 
-
 	float4 flipAlpha = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 3, 3));
-
 
 	Out.vColor.a = flipAlpha.r;
 
@@ -369,6 +367,51 @@ PS_OUT PS_SAS_FIRE_WEAPON_PARTICLE(PS_IN In)
 
 	return Out;
 }
+
+PS_OUT PS_SAS_DEFAULT_WEAPON_PARTICLE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = White * Color * 2.0f;
+	float4 Final = saturate(Blend) ;
+	
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+
+	Out.vColor = CalcHDRColor(Final, g_float_0);
+	Out.vColor.a = Mask * g_float_1 * In.RamainLifeRatio;
+
+	if(g_float_1 <= 0.f)
+	{
+		discard;
+	}
+
+	return Out;
+}
+
+PS_OUT PS_USE_MESHCURVE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+
+	Out.vColor = CalcHDRColor(Final, g_float_0);
+	Out.vColor.a = Mask * g_float_1 * In.RamainLifeRatio;
+
+	if (g_float_1 <= 0.f)
+	{
+		discard;
+	}
+
+	return Out;
+}
+
 
 PS_OUT PS_SPIKE_CHARGE(PS_IN In)
 {
@@ -616,5 +659,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_PARTICLE_KINETICOBJECT();
+	}
+
+	//12
+	pass SasDefaultWeaponParticle
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SAS_DEFAULT_WEAPON_PARTICLE();
+	}
+
+	//13
+	pass USEMESHCURVE
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_USE_MESHCURVE();
 	}
 }

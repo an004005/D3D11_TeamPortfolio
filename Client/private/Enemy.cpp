@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "RigidBody.h"
 #include "FSMComponent.h"
+#include "Enemy_AnimInstance.h"
 #include "TestTarget.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
@@ -98,20 +99,21 @@ void CEnemy::Late_Tick(_double TimeDelta)
 	}
 }
 
-void CEnemy::AfterPhysX()
-{
-	CScarletCharacter::AfterPhysX();
-
-	m_eCurAttackType = EAttackType::ATK_END;
-	m_eHitFrom = EBaseAxis::AXIS_END;
-	m_eSimpleHitFrom = ESimpleAxis::AXIS_END;
-	m_bHitWeak = false;
-}
-
 void CEnemy::Imgui_RenderProperty()
 {
 	CScarletCharacter::Imgui_RenderProperty();
 	ImGui::Checkbox("Use TestTarget", &m_bFindTestTarget);
+
+	if (ImGui::CollapsingHeader("Edit Stat"))
+	{
+		ImGui::InputInt("MaxHP", &m_iMaxHP);
+		ImGui::InputInt("MaxCrushGage", &m_iMaxCrushGage);
+		ImGui::Checkbox("HasCrushGage", &m_bHasCrushGage);
+		_int iLevel = iMonsterLevel;
+		ImGui::InputInt("Level", &iLevel);
+		iMonsterLevel = iLevel;
+		ImGui::InputInt("AtkDamage", &m_iAtkDamage);
+	}
 
 	m_DeathTimeline.Imgui_RenderEditor();
 
@@ -176,6 +178,7 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_bDead)
 		return;
 
+
 	// 이상한 데미지 들어오는거 감지용, 버그 다 찾으면 지우기
 	Assert(tDamageParams.iDamage > 0);
 	Assert(tDamageParams.iDamage < 20000);
@@ -189,6 +192,7 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_eCurAttackType = tDamageParams.eAttackType;
 	m_bHitWeak = IsWeak(dynamic_cast<CRigidBody*>(tDamageParams.pContactComponent));
 
+
 	CheckDeBuff(tDamageParams.eDeBuff);
 	HitEffect(tDamageParams);
 	CheckCrushGage(tDamageParams);
@@ -201,6 +205,28 @@ void CEnemy::SetBrainCrush()
 	{
 		m_DeathTimeline.PlayFromStart();
 	}
+}
+
+void CEnemy::SetEnemyBatchDataStat(ENEMY_STAT tStat)
+{
+	m_iMaxHP = tStat.iMaxHP;
+	m_iHP = m_iMaxHP;
+	m_iMaxCrushGage = tStat.iMaxCrushGage;
+	m_iCrushGage = m_iMaxCrushGage;
+	m_bHasCrushGage = tStat.bHasCrushGage;
+	m_iAtkDamage = tStat.iAtkDamage;
+	iMonsterLevel = tStat.iLevel;
+}
+
+ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
+{
+	ENEMY_STAT tStat;
+	tStat.iMaxHP = m_iMaxHP;
+	tStat.iMaxCrushGage = m_iMaxCrushGage;
+	tStat.bHasCrushGage = m_bHasCrushGage;
+	tStat.iAtkDamage = m_iAtkDamage;
+	tStat.iLevel = iMonsterLevel;
+	return tStat;
 }
 
 void CEnemy::SetDead()
@@ -253,6 +279,38 @@ _float4x4 CEnemy::GetPivotMatrix()
 
 void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 {
+	if (tDamageParams.vHitPosition == _float4(0.f, 0.f, 0.f, 1.f) && tDamageParams.pCauser != nullptr)
+	{
+		_vector vRayPos = static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
+		vRayPos = XMVectorSetW(vRayPos, 1.f);
+		_vector vRayDir = GetColliderPosition() - static_cast<CScarletCharacter*>(tDamageParams.pCauser)->GetColliderPosition();
+		vRayDir = XMVectorSetW(vRayDir, 0.f);
+
+		physx::PxRaycastHit hitBuffer[1];
+		physx::PxRaycastBuffer rayOut(hitBuffer, 1);
+
+		RayCastParams param;
+		param.rayOut = &rayOut;
+		param.vOrigin = vRayPos;
+		param.vDir = vRayDir;
+		param.fDistance = 10.f;
+		param.iTargetType = CTB_MONSTER | CTB_MONSTER_PART | CTB_MONSTER_RANGE;
+		param.fVisibleTime = 5.f;
+		param.bSingle = true;
+		if (CGameInstance::GetInstance()->RayCast(param))
+		{
+			for (int i = 0; i < rayOut.getNbAnyHits(); ++i)
+			{
+				auto pHit = rayOut.getAnyHit(i);
+				CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+				if (auto pEnemy = dynamic_cast<CEnemy*>(pCollidedObject))
+				{
+					tDamageParams.vHitPosition = XMVectorSet(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
+				}
+			}
+		}
+	}
+
 	wstring HitBloodName;
 	wstring HitEffectName;
 
@@ -261,16 +319,20 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 	case ESASType::SAS_FIRE:
 		HitBloodName = s_vecFireBlood[CMathUtils::RandomUInt(s_vecFireBlood.size() - 1)];
 		HitEffectName = s_vecFireHit[CMathUtils::RandomUInt(s_vecFireHit.size() - 1)];
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Player_Fire_Sword_Particle")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
+//		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 		break;
 
 	case ESASType::SAS_ELETRIC:
 		HitBloodName = s_vecElecBlood[CMathUtils::RandomUInt(s_vecElecBlood.size() - 1)];
 		HitEffectName = s_vecElecHit[CMathUtils::RandomUInt(s_vecElecHit.size() - 1)];
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Player_Elec_Sword_Particle")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 		break;
 
 	case ESASType::SAS_NOT:
 		HitBloodName = s_vecDefaultBlood[CMathUtils::RandomUInt(s_vecDefaultBlood.size() - 1)];
 		HitEffectName = s_vecDefaultHit[CMathUtils::RandomUInt(s_vecDefaultHit.size() - 1)];
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Default_Sword_Particle")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 		break;
 	}
 	
@@ -280,6 +342,7 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 	if (HitEffectName.empty() == false)
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Circle_Distortion_NonFlip_Short")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 
 	if (m_strImpactTag.empty() == false)
 		m_SoundStore.PlaySound(m_strImpactTag, &tDamageParams.vHitPosition);
@@ -357,6 +420,14 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 			SetDead();
 		m_iHP = 0;
 	}
+}
+
+void CEnemy::ResetHitData()
+{
+	m_eCurAttackType = EAttackType::ATK_END;
+	m_eHitFrom = EBaseAxis::AXIS_END;
+	m_eSimpleHitFrom = ESimpleAxis::AXIS_END;
+	m_bHitWeak = false;
 }
 
 void CEnemy::Update_DeadDissolve(_double TimeDelta)
@@ -483,6 +554,13 @@ void CEnemy::HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttac
 			pTarget->TakeDamage(tDamageParams);
 		}
 	}
+}
+
+void CEnemy::SocketLocalMove(CEnemy_AnimInstance * pASM)
+{
+	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	_vector vLocalMove = m_pModelCom->GetLocalMove(WorldMatrix, pASM->GetCurSocketAnimName());
+	m_pTransformCom->LocalMove(vLocalMove);
 }
 
 void CEnemy::Free()

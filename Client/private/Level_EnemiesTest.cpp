@@ -19,8 +19,9 @@
 #include "Batch.h"
 #include "EffectGroup.h"
 #include "VFX_Manager.h"
+#include "Imgui_Batch.h"
 
-#define ADD_PLAYER
+//#define ADD_PLAYER
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -38,6 +39,7 @@ HRESULT CLevel_EnemiesTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
 
 
 	if (FAILED(__super::Initialize()))
@@ -87,7 +89,6 @@ HRESULT CLevel_EnemiesTest::Initialize()
 void CLevel_EnemiesTest::Tick(_double TimeDelta)
 {
 	CLevel::Tick(TimeDelta);
-
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_SPACE))
 	{
@@ -156,6 +157,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 	
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
@@ -164,6 +166,8 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_GameObject_Trigger"),
 		CTrigger::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -175,6 +179,16 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
 	// For_SkySphere
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Env", TEXT("Prototype_GameObject_SkyBox")));
 
+	Json PreviewData;
+	{
+		PreviewData["Model"] = "Prototype_Model_em110";
+		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
+		auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag.c_str(), TEXT("ModelPreview"), &PreviewData);
+	}
+
+
+
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/tests.json");
 	return S_OK;
 }
 
@@ -193,48 +207,29 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-
-	// pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("TestTarget"))
-		// ->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
-
-	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em200"))
+#ifndef ADD_PLAYER
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("TestTarget"))
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
+#endif // !ADD_PLAYER
 
-	
 
-	/*if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
-		return E_FAIL;*/
+	/*pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em200"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));*/
 
-	// Test 하지 않는 중인 Monster 넣어두기
-// 	
-//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLegInvisible"))
-//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-10.f, 15.f, 50.f, 1.f));
+		/*pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em700"))
+			->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));*/
 
-//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
-//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(140.f, 15.f, 110.f, 1.f));
-//
-//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BuddyLumi"))
-//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(40.f, 3.f, 3.f, 1.f));
+	/* pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em650"))
+		 ->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));*/
 
-//
-	// pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLeg"))
-	// 	->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 3.f, 0.f, 1.f));
-//
-//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPool"))//
-//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-40.f, 3.f, -3.f, 1.f));
-//
-//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPandou"))
-//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(60.f, 3.f, 10.f, 1.f));
+	/*pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em400"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));*/
 
-//
-//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_MonsterBoss1"))
-//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(170.f, 3.f, 10.f, 1.f));
- 	
-	// auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
-	// _float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	// pos.y += 1.f;
-	// pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
-	
+	//pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em210"))
+	//	->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
+
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em110"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
 	return S_OK;
 }
 

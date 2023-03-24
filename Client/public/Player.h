@@ -186,16 +186,42 @@ private:
 	class CNoticeNeonUI* m_pNeonUI = { nullptr };
 	class CMonsterLockonUI*	m_pUI_LockOn = nullptr;
 	CGameObject*		m_pSettedTarget = nullptr;
-//	CRigidBody*			m_pContectRigidBody = nullptr;
 
 private:	// 특수연출용 FSM
 	HRESULT				SetUp_TrainStateMachine();
 	CFSMComponent*		m_pTrainStateMachine_Left = nullptr;
 
+	HRESULT				SetUp_TelephonePoleStateMachine();
+	CFSMComponent*		m_pTelephonePoleStateMachine_Left = nullptr;
+
+	HRESULT				SetUp_BrainCrashStateMachine();
+	CFSMComponent*		m_pBrainCrashStateMachine = nullptr;
+
+	HRESULT				SetUp_HBeamStateMachine();
+	CFSMComponent*		m_pHBeamStateMachine_Left = nullptr;
+
 private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_Train_Charge_L;	// 좌측 기차 차지
 	list<CAnimation*>	m_Train_Cancel_L;	// 좌측 기차 취소
 	list<CAnimation*>	m_Train_Throw_L;	// 좌측 기차 던짐
+
+	list<CAnimation*>	m_TelephonePole_Charge_L;	// 좌측 전봇대 차지
+	list<CAnimation*>	m_TelephonePole_Cancel_L;	// 좌측 전봇대 취소
+	list<CAnimation*>	m_TelephonePole_Start_L;	// 좌측 전봇대 뽑음
+	list<CAnimation*>	m_TelephonePole_Throw_L;	// 좌측 전봇대 휘두름
+	list<CAnimation*>	m_TelephonePole_Wait_L;		// 추가타 대기
+	list<CAnimation*>	m_TelephonePole_End_L;		// 추가타 발생하지 않고 종료됨
+	list<CAnimation*>	m_TelephonePole_Swing_L;	// 좌측 전봇대 추가 휘두름
+
+	list<CAnimation*>	m_BrainCrash_CutScene;
+	list<CAnimation*>	m_BrainCrash_Activate;
+
+	list<CAnimation*>	m_HBeam_Charge_L;			// 좌측 H빔 차지
+	list<CAnimation*>	m_HBeam_Cancel_L;			// 좌측 H빔 취소
+	list<CAnimation*>	m_HBeam_Throw_L;			// 좌측 H빔 던짐
+	list<CAnimation*>	m_HBeam_Rotation_L;			// 좌측 H빔 추가타 대기 및 루프
+	list<CAnimation*>	m_HBeam_End_L;				// 추가타 종료
+	list<CAnimation*>	m_HBeam_Finish_L;			// 좌측 H빔 마무리
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -349,6 +375,7 @@ private:
 
 	_bool	m_bKineticCombo = false;	// 현재 공격 진행중인지?
 	_bool	m_bKineticSpecial = false;	// 염력 특수 연출중인지?
+	_bool	m_bBrainCrash = false;		// 브레인 크러시 사용중인지?
 	
 	_float	m_fJustDodgeAble = 0.f;
 
@@ -393,7 +420,9 @@ public:	//EventCaller용
 
 	void		Event_Trail(_bool bTrail);
 	void		Event_Dust();
+
 	void		Event_KineticCircleEffect();
+	void		Event_KineticCircleEffect_Attach();
 
 private:
 	_bool		m_bCollisionAble = false;
@@ -423,6 +452,7 @@ public:
 public:
 	_bool		BeforeCharge(_float fBeforeCharge);
 	_bool		Charge(_uint iNum, _float fCharge);
+	_bool		m_bChargeEffect = false;
 
 public:
 	void		Jump();
@@ -446,6 +476,7 @@ private:
 
 private:
 	_float		m_fNetualTimer = 0.f;
+	_float		m_fBattleParticleTime = 0.f; // 글자 뿅뿅
 	void		NetualChecker(_double TimeDelta);
 
 public:
@@ -495,12 +526,13 @@ private:
 	void			KineticObject_Targeting();
 	void			KineticObject_OutLineCheck();
 
+	void			SpecialObject_Targeting();
+	void			SpecialObject_OutLineCheck();
+
 private:
 	void			Spline_Kinetic(_double TimeDelta);
 	void			Kinetic_Test(_float fRatio);
 	void			Kinetic_ByTurn();
-//	CGameObject*	m_pKineticObject = nullptr;
-//	CGameObject*	m_pTargetedEnemy = nullptr;
 
 private:
 	void			Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수
@@ -510,6 +542,8 @@ private:
 private:
 	_vector			m_vKineticComboRefPoint; // 키네틱 콤보를 할 때 이동해야 하는 포인트
 	_matrix			m_KineticObjectOrigionPos = XMMatrixIdentity();
+	
+	_matrix			m_SpecialObjectOriginPos =  XMMatrixIdentity();
 
 private:
 	_float4 m_vSplinePoint_01;
@@ -549,6 +583,10 @@ private:
 
 private:
 	CSAS_Portrait* m_pSasPortrait = nullptr;
+	class CSAS_Cable* m_pSAS_Cable = nullptr;
+
+private:
+	CParticleGroup*	m_pSwordParticle = nullptr;
 
 private:
 	vector<wstring>	m_vecRandomLandingDustName;

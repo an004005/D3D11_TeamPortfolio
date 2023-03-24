@@ -1,9 +1,14 @@
 Prototype_Component_Shader_VtxModel_VFX
 
 
+VFX_Ver2_Dash_Mesh.static_model
+../Bin/Resources/Meshes/VFX_Ver2/VFX_Ver2_Dash_Mesh.static_model
 
+VFX_Ver2_Bubble.static_model
+../Bin/Resources/Meshes/VFX_Ver2/VFX_Ver2_Bubble.static_model
 
-
+VFX_Ver2_Cly_002
+../Bin/Resources/Meshes/VFX_Ver2/VFX_Ver2_Cly_002.static_model
 
 
 SM_ef_Attack_00

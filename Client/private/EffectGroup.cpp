@@ -9,6 +9,7 @@
 #include "GameUtils.h"
 #include "Material.h"
 #include "MaterialPreview.h"
+#include "ScarletWeapon.h"
 
 CEffectGroup::CEffectGroup(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -386,6 +387,22 @@ void CEffectGroup::Start_AttachPosition(CGameObject * pOwner, _float4 vPosition,
 	m_Timeline.PlayFromStart();
 }
 
+void CEffectGroup::Start_AttachSword(CGameObject * pWeapon, _bool trueisUpdate)
+{
+	// 무기만 넣어라
+
+	if (pWeapon == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pAttachWeapon = pWeapon;
+	m_bUpdate = trueisUpdate;
+
+	m_Timeline.PlayFromStart();
+}
+
 void CEffectGroup::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
@@ -394,7 +411,7 @@ void CEffectGroup::Tick(_double TimeDelta)
 	VisibleUpdate();
 	
 
-	if(m_bUpdate == true && m_pOwner->IsDeleted() == false)
+	if(m_bUpdate == true && (nullptr != m_pOwner) && m_pOwner->IsDeleted() == false && (nullptr == m_pAttachWeapon))
 	{
 		if(m_BoneName != "")
 		{
@@ -455,6 +472,17 @@ void CEffectGroup::Tick(_double TimeDelta)
 			}
 			
 		}
+	}
+	else if (nullptr != m_pAttachWeapon)
+	{
+		_matrix WeaponMatrix = static_cast<CScarletWeapon*>(m_pAttachWeapon)->Get_WeaponCenterMatrix();
+
+		_matrix	SocketMatrix = { XMVector3Normalize(WeaponMatrix.r[1]),
+			XMVector3Normalize(WeaponMatrix.r[0]),
+			XMVector3Normalize(WeaponMatrix.r[2]),
+			WeaponMatrix.r[3]};
+
+		Set_Transform(SocketMatrix);
 	}
 	
 }
