@@ -1039,6 +1039,9 @@
     <ClInclude Include="..\public\EM0750_AnimInstance.h">
       <Filter>02.GameObjects\Enemy\EM750</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\TipTrigger.h">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1694,6 +1697,9 @@
     </ClCompile>
     <ClCompile Include="..\private\EM0750_Controller.cpp">
       <Filter>02.GameObjects\Enemy\EM750</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TipTrigger.cpp">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

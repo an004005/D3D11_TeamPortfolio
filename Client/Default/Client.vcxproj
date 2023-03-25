@@ -376,6 +376,7 @@
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\TestCamera.h" />
     <ClInclude Include="..\public\TestTarget.h" />
+    <ClInclude Include="..\public\TipTrigger.h" />
     <ClInclude Include="..\public\Trigger.h" />
     <ClInclude Include="..\public\TriggerEx.h" />
     <ClInclude Include="..\public\TutorialUI.h" />
@@ -597,6 +598,7 @@
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\TestCamera.cpp" />
     <ClCompile Include="..\private\TestTarget.cpp" />
+    <ClCompile Include="..\private\TipTrigger.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
     <ClCompile Include="..\private\TriggerEx.cpp" />
     <ClCompile Include="..\private\TutorialUI.cpp" />
