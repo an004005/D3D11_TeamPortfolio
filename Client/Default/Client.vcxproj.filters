@@ -355,6 +355,12 @@
     <Filter Include="02.GameObjects\Enemy\EM0800">
       <UniqueIdentifier>{ea366a02-5446-4163-9037-e8e37c831263}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM750">
+      <UniqueIdentifier>{9d6c3de0-d02c-4853-9517-59036dc8712b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Utils\GameManager">
+      <UniqueIdentifier>{06cdc04f-f459-43b4-9056-619815dcdb64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1021,6 +1027,18 @@
     <ClInclude Include="..\public\EM0800_Controller.h">
       <Filter>02.GameObjects\Enemy\EM0800</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\GameManager.h">
+      <Filter>02.GameObjects\Utils\GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0750.h">
+      <Filter>02.GameObjects\Enemy\EM750</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0750_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM750</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0750_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM750</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1664,6 +1682,18 @@
     </ClCompile>
     <ClCompile Include="..\private\EM0800_AnimInstance.cpp">
       <Filter>02.GameObjects\Enemy\EM0800</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameManager.cpp">
+      <Filter>02.GameObjects\Utils\GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0750.cpp">
+      <Filter>02.GameObjects\Enemy\EM750</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0750_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM750</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0750_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM750</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

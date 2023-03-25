@@ -19,19 +19,27 @@ void CGameTime_Manager::Tick(_double TimeDelta)
 	}
 	else
 	{
-		m_TimeRatio = 1.f;
+		m_TimeRatio = m_DefaultTimeRatio;
 	}
 }
 
 void CGameTime_Manager::ResetTimeRatio()
 {
 	m_Timeline.Stop();
-	m_TimeRatio = 1.f;
+	m_TimeRatio = m_DefaultTimeRatio;
 	m_Timeline.ReleaseCurve();
 	m_Timeline.SetStay(false);
 
 	for (auto& layer : CObject_Manager::GetInstance()->GetLayers(LEVEL_NOW))
-		layer.second->SetUseTimeRatio(false);
+		layer.second->SetUseTimeRatio(true);
+
+	for (auto& layerTag : m_DefaultExceptLayers)
+	{
+		if (auto pLayer = CObject_Manager::GetInstance()->GetLayer(LEVEL_NOW, layerTag.c_str()))
+		{
+			pLayer->SetUseTimeRatio(false);
+		}
+	}
 }
 
 void CGameTime_Manager::SetTimeRatioCurve(const string& strCurveTag, _bool bStay, const vector<wstring>* ExceptLayers)
@@ -64,15 +72,25 @@ void CGameTime_Manager::SetTimeRatioCurve(const string& strCurveTag, _bool bStay
 	}
 }
 
+void CGameTime_Manager::ResetDefaultTimeRatio()
+{
+	m_DefaultTimeRatio = 1.f;
+	m_DefaultExceptLayers.clear();
+	for (auto& layer : CObject_Manager::GetInstance()->GetLayers(LEVEL_NOW))
+		layer.second->SetUseTimeRatio(true);
+}
+
 void CGameTime_Manager::SetTimeRatio(_float fTimeRatio, const vector<wstring>* ExceptLayers)
 {
 	m_TimeRatio = fTimeRatio;
+	m_DefaultTimeRatio = fTimeRatio;
 
 	for (auto& layer : CObject_Manager::GetInstance()->GetLayers(LEVEL_NOW))
 		layer.second->SetUseTimeRatio(true);
 
 	if (ExceptLayers)
 	{
+		m_DefaultExceptLayers = *ExceptLayers;
 		for (auto& layerTag : *ExceptLayers)
 		{
 			if (auto pLayer = CObject_Manager::GetInstance()->GetLayer(LEVEL_NOW, layerTag.c_str()))
@@ -81,6 +99,26 @@ void CGameTime_Manager::SetTimeRatio(_float fTimeRatio, const vector<wstring>* E
 			}
 		}
 	}
+	else
+	{
+		m_DefaultExceptLayers.clear();
+	}
+}
+
+void CGameTime_Manager::SetLayerTimeRatio(_float fLayerTimeRatio, const wstring& strLayerTag)
+{
+	if (auto pLayer = CObject_Manager::GetInstance()->GetLayer(LEVEL_NOW, strLayerTag.c_str()))
+	{
+		pLayer->SetLayerTimeRatio(fLayerTimeRatio);
+	}
+}
+
+void CGameTime_Manager::ClearAllTimeRatio()
+{
+	ResetDefaultTimeRatio();
+	ResetTimeRatio();
+	for (auto& layer : CObject_Manager::GetInstance()->GetLayers(LEVEL_NOW))
+		layer.second->SetLayerTimeRatio(1.f);
 }
 
 void CGameTime_Manager::Imgui_Render()

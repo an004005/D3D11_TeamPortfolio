@@ -412,6 +412,7 @@ HRESULT CGameInstance::Open_Loading(_uint iNewLevelIdx, CLoadingLevel* pLoadingL
 
 	m_LevelLoadingAsync = [this, iNewLevelIdx, pLoadingLevel]
 	{
+		Clear_ImguiObjects();
 		m_pLight_Manager->Clear();
 		m_pCamera_Manager->Clear();
 		FAILED_CHECK(m_pLevel_Manager->Open_Loading(iNewLevelIdx, pLoadingLevel));
@@ -869,6 +870,21 @@ void CGameInstance::SetTimeRatioCurve(const string& strCurveTag, _bool bStay, co
 void CGameInstance::SetTimeRatio(_float fTimeRatio, const vector<wstring>* ExceptLayers)
 {
 	m_pGameTime_Manager->SetTimeRatio(fTimeRatio, ExceptLayers);
+}
+
+void CGameInstance::SetLayerTimeRatio(_float fLayerTimeRatio, const wstring& strLayerTag)
+{
+	m_pGameTime_Manager->SetLayerTimeRatio(fLayerTimeRatio, strLayerTag);
+}
+
+void CGameInstance::ResetDefaultTimeRatio()
+{
+	m_pGameTime_Manager->ResetDefaultTimeRatio();
+}
+
+void CGameInstance::ClearAllTimeRatio()
+{
+	m_pGameTime_Manager->ClearAllTimeRatio();
 }
 
 /*************************

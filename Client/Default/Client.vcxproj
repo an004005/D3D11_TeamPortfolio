@@ -256,6 +256,9 @@
     <ClInclude Include="..\public\EM0320.h" />
     <ClInclude Include="..\public\EM0320_AnimInstance.h" />
     <ClInclude Include="..\public\EM0320_Controller.h" />
+    <ClInclude Include="..\public\EM0750.h" />
+    <ClInclude Include="..\public\EM0750_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0750_Controller.h" />
     <ClInclude Include="..\public\EM0800.h" />
     <ClInclude Include="..\public\EM0800_AnimInstance.h" />
     <ClInclude Include="..\public\EM0800_Controller.h" />
@@ -270,6 +273,7 @@
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\GameManager.h" />
     <ClInclude Include="..\public\PointLight.h" />
     <ClInclude Include="..\public\SAS_Cable.h" />
     <ClInclude Include="..\public\SpecialObject.h">
@@ -473,6 +477,9 @@
     <ClCompile Include="..\private\EM0320.cpp" />
     <ClCompile Include="..\private\EM0320_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0320_Controller.cpp" />
+    <ClCompile Include="..\private\EM0750.cpp" />
+    <ClCompile Include="..\private\EM0750_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0750_Controller.cpp" />
     <ClCompile Include="..\private\EM0800.cpp" />
     <ClCompile Include="..\private\EM0800_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0800_Controller.cpp" />
@@ -487,6 +494,7 @@
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\GameManager.cpp" />
     <ClCompile Include="..\private\PointLight.cpp" />
     <ClCompile Include="..\private\SAS_Cable.cpp" />
     <ClCompile Include="..\private\SpecialObject.cpp">

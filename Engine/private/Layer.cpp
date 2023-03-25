@@ -16,6 +16,7 @@ void CLayer::Tick(_double TimeDelta)
 {
 	if (m_bUseTimeRatio)
 		TimeDelta *= CGameTime_Manager::GetInstance()->GetTimeRatio();
+	TimeDelta *= m_fLayerTimeRatio;
 
 	for (auto itr = m_GameObjects.begin(); itr != m_GameObjects.end();)
 	{
@@ -38,6 +39,7 @@ void CLayer::Late_Tick(_double TimeDelta)
 {
 	if (m_bUseTimeRatio)
 		TimeDelta *= CGameTime_Manager ::GetInstance()->GetTimeRatio();
+	TimeDelta *= (_float)m_fLayerTimeRatio;
 
 	for (const auto pGameObject : m_GameObjects)
 		pGameObject->Late_Tick(TimeDelta);
