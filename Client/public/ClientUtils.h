@@ -126,6 +126,7 @@ enum class EEnemyName
 	EM0400,
 	EM0650,
 	EM0700,
+	EM0800,
 	ENEMY_NAME_END
 };
 
