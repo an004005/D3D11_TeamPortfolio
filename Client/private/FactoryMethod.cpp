@@ -276,6 +276,12 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em650"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em650"), CEM0650::Create(pDevice, pContext)));
+
+	/* Bullet*/
+	_float4x4	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(270.f));
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Monster/SkPmBullet/SkMp_Bullet.static_model", PivotMatrix);
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BulletSkummyPool"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("EnemyBullet"), CEnemyBullet::Create(pDevice, pContext)));
 
 	/* EM0400*/

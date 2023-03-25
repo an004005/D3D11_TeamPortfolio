@@ -80,7 +80,7 @@ private:
 	_bool		m_IsBeat = false;
 
 	//플레이어  순간이동 상태 확인
-	_bool		m_bTeleport = false;
+	//_bool		m_bTeleport = false;
 
 	CController::EHandleInput	m_eInput;
 	
