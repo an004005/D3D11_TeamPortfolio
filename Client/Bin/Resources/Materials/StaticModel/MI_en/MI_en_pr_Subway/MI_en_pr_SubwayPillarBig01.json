@@ -1,0 +1,19 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [1.47183],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/CommonLC/LC08_LC10/T_pr_HWPillar02_ALB.png",
+            "../Bin/Resources/Environments/Location/CommonLC/LC08_LC10/T_pr_HWPillar02_NML.png",
+            "../Bin/Resources/Environments/Location/CommonLC/LC08_LC10/T_pr_HWPillar02_RMA.png",
+            "../Bin/Resources/Environments/00_Common/03_Texture/T_Detail_N.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 2
+}
