@@ -442,6 +442,25 @@ PS_OUT_Flag PS_DISTORTION_FLIPBOOK(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_DEFAULT_CHARGING_1_DISTORTION(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+
+	float2 TexUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.02, 4, 4);
+	float  Mask = g_tex_0.Sample(LinearSampler, TexUV).r;
+	Out.vColor= CalcHDRColor(g_vec4_0, g_float_1);
+	Out.vColor.a = Mask * g_float_0;
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.a);
+
+	// Out.vColor.a = 0.f;
+
+	if (g_float_0 <= 0.f)
+		discard;
+
+	return Out;
+}
+
 PS_OUT_Flag PS_EM0220_EXPLODE(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -537,7 +556,6 @@ PS_OUT_Flag PS_SAS_TELEPORT_EF(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
 
-
 	float4 Default= g_tex_0.Sample(LinearSampler, In.vTexUV); 
 																
 	float2 TexUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.1, 2, 2);
@@ -547,7 +565,7 @@ PS_OUT_Flag PS_SAS_TELEPORT_EF(PS_IN In)
 
 	Out.vColor.a = Default.a * Mask * g_float_1;
 
-	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, 0.f);
 
 	return Out;
 }
@@ -1267,4 +1285,18 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_SAS_TELEPORT_EF();
 	}
 
+
+	//32
+	pass DistortionFlipBook_ColorDistortion
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DEFAULT_CHARGING_1_DISTORTION();
+	}
 }
