@@ -137,7 +137,7 @@ float3 LightSurface(
 
     // // Add specular radiance 
     float3 specular_env = Specular_IBL(N, V, roughness);
-    acc_color += c_spec * specular_env;
+    acc_color += c_spec * 0.1f;
 
     return acc_color;
 }

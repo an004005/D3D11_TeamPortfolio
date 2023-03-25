@@ -39,6 +39,7 @@ texture2D		g_OutlineFlagTexture;
 TextureCube     g_IrradianceTexture;
 TextureCube     g_RadianceTexture;
 
+
 float g_Gamma = 2.2f;
 
 float g_iWinCX;
@@ -290,7 +291,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	
 	vPixelWorld = mul(vPixelWorld, g_ProjMatrixInv); // pixel view space
 	vPixelWorld = mul(vPixelWorld, g_ViewMatrixInv); // pixel world space
-	
+
 	vector		vLightViewSpace = mul(vPixelWorld, g_LightViewMatrix);;
 	vector		vLightClipSpace = mul(vLightViewSpace, g_LightProjMatrix);
 	float2		vNewUV;
@@ -314,7 +315,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	
 
 	fShadowRate /= 9.f;
-	fShadowRate *= 0.3f;
+	fShadowRate *= 0.5f;
 	
 	Out.vColor *= (1.f - fShadowRate);
 

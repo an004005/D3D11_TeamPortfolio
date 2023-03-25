@@ -12,6 +12,7 @@
 #include "Enemy_AnimInstance.h"
 #include "TestTarget.h"
 #include "PlayerInfoManager.h"
+#include "GameManager.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
 	L"Default_Blood_00",
@@ -202,6 +203,20 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	HitEffect(tDamageParams);
 	CheckCrushGage(tDamageParams);
 	CheckHP(tDamageParams);
+
+	ENEMY_DAMAGE_REPORT tReport;
+	tReport.pCauser = tDamageParams.pCauser;
+	tReport.pTaker = this;
+	tReport.iTakeDamage = tDamageParams.iDamage;
+	tReport.eAttackSAS = tDamageParams.eAttackSAS;
+	if (m_ePreDeBuff != m_eDeBuff)
+		tReport.eBeDeBuff = m_eDeBuff;
+	tReport.eKineticAtkType = tDamageParams.eKineticAtkType;
+	tReport.eAttackType = tDamageParams.eAttackType;
+	tReport.bDead = m_bDead;
+	tReport.bHitWeak = m_bHitWeak;
+
+	CGameManager::GetInstance()->ConsumeEnemyDamageReport(tReport);
 }
 
 void CEnemy::SetBrainCrush()
