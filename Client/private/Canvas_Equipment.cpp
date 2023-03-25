@@ -34,9 +34,25 @@ HRESULT CCanvas_Equipment::Initialize(void* pArg)
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
 
+
 	m_bVisible = false;
 
+	// 원래의 위치
+	m_arrAddWeaponPos.fill(1.0f);
+	m_arrStartWeaponPos.fill(0.0f);
+	m_arrStartWeaponPos[0] = Find_ChildUI(L"Equipment_CurrentWeapon_B1")->Get_Position().y;
+	m_arrStartWeaponPos[1] = Find_ChildUI(L"Equipment_CurrentWeapon_B2")->Get_Position().y;
+	m_arrStartWeaponPos[2] = Find_ChildUI(L"Equipment_CurrentWeapon_B3")->Get_Position().y;
+
 	return S_OK;
+}
+
+void CCanvas_Equipment::BeginTick()
+{
+	// 처음에 현재 무기의 위치로 옮겨 둔다.
+	Find_ChildUI(L"Equipment_CurrentWeapon_B1")->Set_Position(Find_ChildUI(L"Equipment_CurrentWeapon_B")->Get_Position());
+	Find_ChildUI(L"Equipment_CurrentWeapon_B2")->Set_Position(Find_ChildUI(L"Equipment_CurrentWeapon_B")->Get_Position());
+	Find_ChildUI(L"Equipment_CurrentWeapon_B3")->Set_Position(Find_ChildUI(L"Equipment_CurrentWeapon_B")->Get_Position());
 }
 
 void CCanvas_Equipment::Tick(_double TimeDelta)
@@ -44,9 +60,35 @@ void CCanvas_Equipment::Tick(_double TimeDelta)
 	CCanvas::Tick(TimeDelta);
 
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+	{
+		//if (true == m_bVisible)
+		//{
+		//	wstring	wsCurrentWeapon = L"Equipment_CurrentWeapon" + to_wstring(m_iCurrentWeaponCount);
+		//	if (iter->first == wsCurrentWeapon)
+		//	{
+		//		++m_iCurrentWeaponCount;
+		//		if (4 == m_iCurrentWeaponCount)
+		//			m_iCurrentWeaponCount = 1;
+		//		continue;
+		//	}
+		//	wsCurrentWeapon = L"Equipment_CurrentWeapon_B" + to_wstring(m_iCurrentWeaponBCount);
+		//	if (iter->first == wsCurrentWeapon)
+		//	{
+		//		++m_iCurrentWeaponBCount;
+		//		if (4 == m_iCurrentWeaponBCount)
+		//			m_iCurrentWeaponBCount = 1;
+		//		continue;
+		//	}
+		//}
+
 		iter->second->SetVisible(m_bVisible);
+	}
+
+	if (false == m_bVisible) return;
 
 	ChildUIPick();
+	CurrentWeapon(TimeDelta);
+
 }
 
 void CCanvas_Equipment::Late_Tick(_double TimeDelta)
@@ -101,7 +143,7 @@ HRESULT CCanvas_Equipment::Render()
 	for (size_t i = 0; i < ItemInfo.size(); i++)
 	{
 		// 왼쪽 현재 사용 중 무기 이름 _1, 2, 3
-		if (1 == m_iItmeWindowPickCount)
+		if (1 == m_bItmeWindowPick)
 		{
 			vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Equipment_CurrentWeapon1"))->GetScreenSpaceLeftTop();
 			if (CItem_Manager::MAINITEM::WEAPON == ItemInfo[i].second.eType && 1 == ItemInfo[i].second.iWeaponNum)
@@ -198,8 +240,6 @@ void CCanvas_Equipment::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	ImGui::DragFloat("X", &m_Posssss.x);
-	ImGui::DragFloat("Y", &m_Posssss.y);
 }
 
 void CCanvas_Equipment::SaveToJson(Json& json)
@@ -228,19 +268,67 @@ void CCanvas_Equipment::ChildUIPick()
 		}
 	}
 
+
+}
+
+void CCanvas_Equipment::CurrentWeapon(const _double & TimeDelta)
+{
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Equipment_CurrentWeapon_B"))->Get_OnButton())
 	{
-		// [0][2] 초기화 상태 [1] 한 번 누른 상태(여러개 무기를 선택할 수 있어야 한다.)
-		++m_iItmeWindowPickCount;
-		if (2 == m_iItmeWindowPickCount)
-			m_iItmeWindowPickCount = 0;
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Equipment_CurrentWeapon_B"))->Set_OnButton();	// 버튼 누른거 끄기
 
-		if (false == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Equipment_CurrentWeapon_B"))->Get_OnAlpha())
-		{
-			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Equipment_CurrentWeapon_B"))->Set_OnButton();
-			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Equipment_CurrentWeapon_B"))->Set_OnAlpha();
-		}
 	}
+
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Equipment_CurrentWeapon_B"))->Get_OnAlpha())
+	{
+		if (m_arrStartWeaponPos[0] < Find_ChildUI(L"Equipment_CurrentWeapon_B1")->Get_Position().y)
+		{
+			m_arrAddWeaponPos[0] = Find_ChildUI(L"Equipment_CurrentWeapon_B")->Get_Position().y;
+			m_arrAddWeaponPos[0] -= _float(TimeDelta) * 10.0f;
+			Find_ChildUI(L"Equipment_CurrentWeapon_B")->Set_Position({ 287.0f, m_arrAddWeaponPos[0] });
+			Find_ChildUI(L"Equipment_CurrentWeapon_B1")->Set_Position({ 287.0f, m_arrAddWeaponPos[0] });
+		}
+		else
+		{
+			Find_ChildUI(L"Equipment_CurrentWeapon_B")->Set_Position({ 287.0f, m_arrStartWeaponPos[0] });
+			Find_ChildUI(L"Equipment_CurrentWeapon_B1")->Set_Position({ 287.0f, m_arrStartWeaponPos[0] });
+		}
+
+		CCanvas::Find_ChildUI(L"Equipment_CurrentWeapon1")->SetVisible(true);
+		CCanvas::Find_ChildUI(L"Equipment_CurrentWeapon2")->SetVisible(true);
+		CCanvas::Find_ChildUI(L"Equipment_CurrentWeapon3")->SetVisible(true);
+		CCanvas::Find_ChildUI(L"Equipment_CurrentWeapon_B1")->SetVisible(true);
+		CCanvas::Find_ChildUI(L"Equipment_CurrentWeapon_B2")->SetVisible(true);
+		CCanvas::Find_ChildUI(L"Equipment_CurrentWeapon_B3")->SetVisible(true);
+	}
+	else
+	{
+		if (m_arrStartWeaponPos[0] >= Find_ChildUI(L"Equipment_CurrentWeapon_B1")->Get_Position().y)
+		{
+			m_arrAddWeaponPos[0] = Find_ChildUI(L"Equipment_CurrentWeapon_B")->Get_Position().y;
+			m_arrAddWeaponPos[0] += _float(TimeDelta);
+			Find_ChildUI(L"Equipment_CurrentWeapon_B")->Set_Position({ 287.0f, m_arrAddWeaponPos[0] });
+			Find_ChildUI(L"Equipment_CurrentWeapon_B1")->Set_Position({ 287.0f, m_arrAddWeaponPos[0] });
+		}
+		else
+		{
+			Find_ChildUI(L"Equipment_CurrentWeapon_B")->Set_Position({ 287.0f, 102.0f });
+			Find_ChildUI(L"Equipment_CurrentWeapon_B1")->Set_Position({ 287.0f, 102.0f });
+		}
+
+
+
+		CCanvas::Find_ChildUI(L"Equipment_CurrentWeapon1")->SetVisible(false);
+		CCanvas::Find_ChildUI(L"Equipment_CurrentWeapon2")->SetVisible(false);
+		CCanvas::Find_ChildUI(L"Equipment_CurrentWeapon3")->SetVisible(false);
+		CCanvas::Find_ChildUI(L"Equipment_CurrentWeapon_B1")->SetVisible(false);
+		CCanvas::Find_ChildUI(L"Equipment_CurrentWeapon_B2")->SetVisible(false);
+		CCanvas::Find_ChildUI(L"Equipment_CurrentWeapon_B3")->SetVisible(false);
+	}
+
+
+
+
 }
 
 CCanvas_Equipment * CCanvas_Equipment::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

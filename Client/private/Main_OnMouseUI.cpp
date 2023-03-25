@@ -129,7 +129,7 @@ void CMain_OnMouseUI::Set_IconIndex(const _float2 & fIndex)
 }
 
 void CMain_OnMouseUI::Set_BrainUse()
-{
+{ 
 	// 아이콘 흰색으로 변경
 	m_tParams.Float2s[0] = m_BrainInfo.vOnIconIndex;
 	// 이 브레인은 이제 사용할 수 있음

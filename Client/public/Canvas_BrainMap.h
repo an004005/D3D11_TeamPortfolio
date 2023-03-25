@@ -20,10 +20,11 @@ public:
 		_uint		iLevel = { 0 };
 		_tchar*		szBrainName = {};
 		_tchar*		szBrainEx[4] = {};
-		_bool		bUse = { false };		// 이 값만 Icon 에서 변경 예정
-		_bool		bLink = { false };
+		_bool		bUse = { false };
 		_float2		vOnIconIndex = { 0.0f, 0.0f };
 		_float2		vOffIconIndex = { 0.0f, 0.0f };
+		
+		array<_int, 3>	arrNeighbor;
 
 	}BRAININFO;
 
@@ -59,7 +60,6 @@ private:
 
 	void	OnIcon_Tick();
 	void	IconPick(const size_t iIndex);
-	void	IconLevel(const size_t iIndex);
 	void	SkillAcquisition_Tick(const _double & TimeDelta);	// 계속 알림창이 뜰 때를 계속 확인한다.
 	void	OnLick_Tick();
 
@@ -77,7 +77,7 @@ private:
 	size_t	m_iCurrentIndex = { 0 };
 	
 	_bool	m_bSkillAcquisition = { false }; // BP가 부족해서 뜨는 알림창
-	array<_uint, BRAINTYPE_END>	m_arrCurrentLevel;
+	array<_uint, BRAINTYPE_END>	m_arrCurrentHighLevel;
 
 	_tchar*	m_szAlarmText = L"";
 

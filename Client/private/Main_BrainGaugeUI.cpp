@@ -34,8 +34,8 @@ void CMain_BrainGaugeUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	IM_LOG("UI Down %i", m_bChargeGauge);
-	IM_LOG("----------------Gauge %i", m_tParams.Floats[0]);
+	//IM_LOG("UI Down %i", m_bChargeGauge);
+	//IM_LOG("----------------Gauge %i", m_tParams.Floats[0]);
 	if (true == m_bChargeGauge)
 	{
 		m_tParams.Floats[0] += _float(TimeDelta) * 0.5f;

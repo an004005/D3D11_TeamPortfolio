@@ -46,6 +46,10 @@ public:
 		return m_tParams.Float2s[0];
 	}
 
+	void	Set_OnIcon() {
+		m_tParams.Float2s[0] = m_BrainInfo.vOnIconIndex;
+	}
+
 private:
 	class CMain_OnMouseColorUI* m_pMouseColorUI = { nullptr };
 	CCanvas_BrainMap::BRAININFO	m_BrainInfo;

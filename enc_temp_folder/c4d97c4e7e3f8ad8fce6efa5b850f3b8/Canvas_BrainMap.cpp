@@ -617,8 +617,8 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.eType = EXPANSION;
 	tBrainInfo.eColor = YELLOW;
 	tBrainInfo.bUse = false;
-	tBrainInfo.vOnIconIndex = { 1.0f, 2.0f };
-	tBrainInfo.vOffIconIndex = { 0.0f, 5.0f };
+	tBrainInfo.vOnIconIndex = { 0.0f, 5.0f };
+	tBrainInfo.vOffIconIndex = { 1.0f, 2.0f };
 	tBrainInfo.arrNeighbor = { 27, 29, -1 };
 	tBrainInfo.szBrainName = L"2단 차지 공격";
 	tBrainInfo.szBrainEx[0] = L"[C] 길게 누르기로 힘을 모은 후, 한 단계 더 힘을 모으고";

@@ -231,6 +231,7 @@ void CCanvas_Party::CurrentPick_Tick()
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_01_Leader_B"))->Set_OnButton();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_02_Member_B"))->Set_OnAlpha();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_03_Member_B"))->Set_OnAlpha();
+		Find_ChildUI(L"Party_InfoPick")->Set_Position(Find_ChildUI(L"Party_01_Leader_B")->Get_Position());
 
 	}
 
@@ -244,6 +245,7 @@ void CCanvas_Party::CurrentPick_Tick()
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_02_Member_B"))->Set_OnButton();
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_01_Leader_B"))->Set_OnAlpha();
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_03_Member_B"))->Set_OnAlpha();
+			Find_ChildUI(L"Party_InfoPick")->Set_Position(Find_ChildUI(L"Party_02_Member_B")->Get_Position());
 
 		}
 	}
@@ -262,6 +264,7 @@ void CCanvas_Party::CurrentPick_Tick()
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_03_Member_B"))->Set_OnButton();
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_01_Leader_B"))->Set_OnAlpha();
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_02_Member_B"))->Set_OnAlpha();
+			Find_ChildUI(L"Party_InfoPick")->Set_Position(Find_ChildUI(L"Party_03_Member_B")->Get_Position());
 
 		}
 

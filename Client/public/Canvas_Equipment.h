@@ -14,6 +14,7 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void	BeginTick() override;
 	virtual void	Tick(_double TimeDelta) override;
 	virtual void	Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
@@ -24,12 +25,17 @@ public:
 
 private:
 	void	ChildUIPick();
+	void	CurrentWeapon(const _double & TimeDelta);
 
 private:
 	_int	m_iItmeInfoPickCount = { 0 };
-	_int	m_iItmeWindowPickCount = { 0 };
 
-	_float2	m_Posssss = { 0.0f, 0.0f };
+	_bool	m_bItmeWindowPick = { false };
+	array<_float, 3> m_arrStartWeaponPos;
+	array<_float, 3> m_arrAddWeaponPos;
+
+	_uint	m_iCurrentWeaponCount = { 1 };
+	_uint	m_iCurrentWeaponBCount = { 1 };
 
 public:
 	static CCanvas_Equipment* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

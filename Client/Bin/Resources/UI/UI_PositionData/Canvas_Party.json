@@ -802,7 +802,7 @@
                 "Float2s": [
                     [
                         1.0,
-                        4.0
+                        0.0
                     ],
                     [
                         1.0,
@@ -946,7 +946,7 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        4.0,
+                        0.0,
                         0.0
                     ],
                     [
@@ -1143,7 +1143,7 @@
                 "Float2s": [
                     [
                         0.0,
-                        4.0
+                        0.0
                     ],
                     [
                         2.0,
@@ -1384,6 +1384,50 @@
             }
         },
         {
+            "ChildTag": "Party_InfoPick\u0000",
+            "ObjectTag": "Party_InfoPick",
+            "Pivot": 8,
+            "PositionX": 255.0,
+            "PositionY": 300.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\InfoPick.png\u0000"
+                ]
+            },
+            "SizeX": 480.0,
+            "SizeY": 114.0,
+            "Transform": {
+                "WorldMatrix": [
+                    408.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    96.9000015258789,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -545.0,
+                    300.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
             "ChildTag": "Party_Line\u0000",
             "ObjectTag": "Party_Line",
             "Pivot": 8,
@@ -1490,7 +1534,7 @@
         "Textures": []
     },
     "SizeX": 1600.0,
-    "SizeY": 904.0,
+    "SizeY": 900.0,
     "Transform": {
         "WorldMatrix": [
             0.0,
