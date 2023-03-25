@@ -15,10 +15,16 @@ CEM0700_Controller::CEM0700_Controller(const CEM0700_Controller & rhs)
 
 HRESULT CEM0700_Controller::Initialize(void * pArg)
 {
-	m_iNearOrder = CMathUtils::RandomUInt(1);
-	m_iMidOrder = CMathUtils::RandomUInt(2);
-	m_iFarOrder = CMathUtils::RandomUInt(1);
+	m_iNearOrder = CMathUtils::RandomUInt(3);
+	m_iMidOrder = CMathUtils::RandomUInt(3);
 	m_iOutOrder = CMathUtils::RandomUInt(1);
+
+	//near : 회피( randomR, randomL, escape) , 돌진
+	//mid :  발사, move
+	//far :  move(발사 거리가 될때까지 앞으로 옴)
+
+	//escape하면 뒤로 감
+	//random은 제자리 돌아옴
 
 	return S_OK;
 }
@@ -54,17 +60,30 @@ void CEM0700_Controller::Tick_Near(_double TimeDelta)
 {
 	m_eDistance = DIS_NEAR;
 
+
+	//escape 실행시 몬스터에서 뒤에 벽이있는지 판단하에
+	//있으면 randommove, 없으면 escape 실행
+
 	switch (m_iNearOrder)
 	{
 	case 0:
+		AddCommand("Turn", 1.f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Escape", 0.f, &CAIController::Input, SPACE);
 		break;
 	case 1:
-		AddCommand("Attack_a1", 0.f, &CAIController::Input, NUM_1);
+		AddCommand("Turn", 1.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Escape", 0.f, &CAIController::Input, SPACE);
+		break;
+	case 2:
+		AddCommand("Turn", 1.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Escape", 0.f, &CAIController::Input, SPACE);
+		break;
+	case 3:
+		AddCommand("Rush", 0.f, &CAIController::Input, C);
 		break;
 	}
 
-	m_iNearOrder = (m_iNearOrder + 1) % 2;
+	m_iNearOrder = (m_iNearOrder + 1) % 4;
 }
 
 void CEM0700_Controller::Tick_Mid(_double TimeDelta)
@@ -74,40 +93,34 @@ void CEM0700_Controller::Tick_Mid(_double TimeDelta)
 	switch (m_iMidOrder)
 	{
 	case 0:
-		AddCommand("RandomMove_L", 0.f, &CAIController::Input, MOUSE_LB);
+		AddCommand("Turn", 1.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Shot", 0.f, &CAIController::Input, R);
 		break;
 	case 1:
-		AddCommand("RandomMove_R", 0.f, &CAIController::Input, MOUSE_RB);
+		AddCommand("Turn", 1.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
 		break;
 	case 2:
-		AddCommand("Threat", 0.f, &CAIController::Input, C);
+		AddCommand("Turn", 1.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Shot", 0.f, &CAIController::Input, R);
+		break;
+	case 3:
+		AddCommand("Turn", 1.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
 		break;
 	}
 
-	m_iMidOrder = (m_iMidOrder + 1) % 3;
+	m_iMidOrder = (m_iMidOrder + 1) % 4;
 }
 
 void CEM0700_Controller::Tick_Far(_double TimeDelta)
 {
 	m_eDistance = DIS_FAR;
-
-	switch (m_iFarOrder)
-	{
-	case 0:
-		AddCommand("Turn", 1.5f, &CAIController::TurnToTarget, 1.f);
-		AddCommand("Attack_a3", 0.f, &CAIController::Input, NUM_2);
-		break;
-	case 1:
-		AddCommand("Threat", 0.f, &CAIController::Input, C);
-		break;
-	}
-
-	m_iFarOrder = (m_iFarOrder + 1) % 2;
+	AddCommand("Move", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 }
 
 void CEM0700_Controller::Tick_Outside(_double TimeDelta)
 {
-
 	m_eDistance = DIS_OUTSIDE;
 
 	switch (m_iOutOrder)
@@ -116,24 +129,33 @@ void CEM0700_Controller::Tick_Outside(_double TimeDelta)
 		AddCommand("Wait", 2.f, &CAIController::Wait);
 		break;
 	case 1:
-		AddCommand("Threat", 0.f, &CAIController::Input, C);
+		AddCommand("Threat", 0.f, &CAIController::Input, SHIFT);
 		break;
 	}
-	m_iOutOrder = (m_iFarOrder + 1) % 2;
+	m_iOutOrder = (m_iOutOrder + 1) % 2;
+
 }
 
 void CEM0700_Controller::DefineState(_double TimeDelta)
 {
 	if (m_pCastedOwner->IsPlayingSocket() == true) return;
 
-	if (m_fToTargetDistance <= 4.f)
+	//if (m_fToTargetDistance <= 8.f)
+	//	Tick_Near(TimeDelta);
+	//else if (m_fToTargetDistance <= 15.f)
+	//	Tick_Mid(TimeDelta);
+	//else if (m_fToTargetDistance <= 25.f)
+	//	Tick_Far(TimeDelta);
+	//else
+	//	Tick_Outside(TimeDelta);
+
+	if (m_fToTargetDistance <= 8.f)
 		Tick_Near(TimeDelta);
-	else if (m_fToTargetDistance <= 12.f)
+	else if (m_fToTargetDistance <= 15.f)
 		Tick_Mid(TimeDelta);
-	else if (m_fToTargetDistance <= 20.f)
-		Tick_Far(TimeDelta);
 	else
-		Tick_Outside(TimeDelta);
+		Tick_Far(TimeDelta);
+	
 }
 
 

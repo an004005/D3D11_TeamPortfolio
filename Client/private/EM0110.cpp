@@ -197,10 +197,9 @@ void CEM0110::SetUpFSM()
 			{
 				//돌려차기를 했으면 회전한 방향으로 쳐다보게 함
 				if (m_pASM->GetCurSocketAnimName() == "AS_em0100_230_AL_atk_g1_turn_L")
-				{
 					AfterLocal180Turn();		
-					m_pASM->ClearSocketAnim("FullBody", 0.f);
-				}
+			
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
 			.AddTransition("Attack_turn to Idle", "Idle")
 				.Predicator([this]
@@ -241,6 +240,10 @@ void CEM0110::SetUpFSM()
 					Rush_SweepCapsule();
 				}
 			})
+			.OnExit([this]
+			{
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
+			})
 			.AddTransition("Attack_b2_Start to Attack_b2_Loop", "Attack_b2_Loop")
 				.Predicator([this]
 				{
@@ -261,7 +264,7 @@ void CEM0110::SetUpFSM()
 			})
 			.OnExit([this]
 			{
-				m_pASM->ClearSocketAnim("FullBody");
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
 			.AddTransition("Attack_b2_Loop to Attack_b2_Stop", "Attack_b2_Stop")
 				.Predicator([this]
@@ -416,33 +419,6 @@ void CEM0110::Play_HeavbyHitAnim()
 		m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_452_AL_damage_l_B02");
 }
 
-void CEM0110::SweepCapsule(CRigidBody * pCol)
-{
-	Matrix ColMatrix = pCol->GetPxWorldMatrix();
-	_float4 vTailPos = _float4(ColMatrix.Translation().x, ColMatrix.Translation().y, ColMatrix.Translation().z, 1.f);
-
-	physx::PxSweepHit hitBuffer[5];
-	physx::PxSweepBuffer SweepOut(hitBuffer, 5);
-
-	PxCapsuleSweepParams param;
-	param.sweepOut = &SweepOut;
-	param.CapsuleGeo = pCol->Get_CapsuleGeometry();
-	param.pxTransform = pCol->Get_PxTransform();
-
-	_float4	vDir = vTailPos - m_BeforePos;
-
-	param.vUnitDir = _float3(vDir.x, vDir.y, vDir.z);
-	param.fDistance = param.vUnitDir.Length();
-	param.iTargetType = CTB_PLAYER;
-	param.fVisibleTime = 0.f;
-
-	if (CGameInstance::GetInstance()->PxSweepCapsule(param))
-	{
-		HitTargets(SweepOut, m_iAtkDamage * 1.5f, EAttackType::ATK_HEAVY);
-	}
-
-	m_BeforePos = vTailPos;
-}
 
 void CEM0110::Rush_Overlap()
 {

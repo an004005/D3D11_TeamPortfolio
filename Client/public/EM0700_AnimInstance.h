@@ -11,15 +11,10 @@ public:
 	virtual void UpdateTargetState(_double TimeDelta) override;
 
 private:
-	// 이 아래 다 써야되는게 아니라 필요한것만 선언해서 사용할것(예제로 두겠음)
 	_bool			m_bMove = false;
-	_bool			m_bEscape = false;
 
 	_float3 m_vMoveAxis;
 	EBaseAxis m_eMoveAxis = EBaseAxis::AXIS_END;
-	EBaseAxis m_ePreMoveAxis = EBaseAxis::AXIS_END;
-	EBaseTurn m_eTurn = EBaseTurn::TURN_END;
-	_float m_fTurnRemain = 0.f;
 
 public:
 	static CEM0700_AnimInstance* Create(CModel* pModel, CGameObject* pGameObject);

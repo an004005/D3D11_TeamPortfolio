@@ -36,7 +36,6 @@ private:
 	
 	_uint m_iNearOrder = 0;
 	_uint m_iMidOrder = 0;
-	_uint m_iFarOrder = 0;
 	_uint m_iOutOrder = 0;
 
 public:
