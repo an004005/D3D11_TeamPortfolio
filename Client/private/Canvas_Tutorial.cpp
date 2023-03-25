@@ -134,6 +134,10 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 		return;
 	}
 
+	//CGameInstance::GetInstance()->SetTimeRatio(0.1f, PLAYERTEST_LAYER_FRONTUI);
+	// SetTimeRatio
+
+
 	_bool	bInvisblePush = dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_InvisibleBox"))->Get_Invisible();
 
 	if (true == bInvisblePush)
