@@ -1,6 +1,151 @@
 {
     "ChildrenUI": [
         {
+            "ChildTag": "BRAIN_\u0000",
+            "ObjectTag": "BRAIN_",
+            "Pivot": 0,
+            "PositionX": -277.0,
+            "PositionY": -214.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Main_BrainUI\u0000",
+            "ScaleX": 0.8999999761581421,
+            "ScaleY": 0.8999999761581421,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.100000023841858,
+                    1.0
+                ],
+                "Ints": [
+                    3,
+                    1
+                ],
+                "Pass": 34,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\BrainMap\\BRAIN.png\u0000"
+                ]
+            },
+            "SizeX": 129.0,
+            "SizeY": 110.0,
+            "Transform": {
+                "WorldMatrix": [
+                    116.0999984741211,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    99.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -277.0,
+                    -214.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "BRAIN_KIND\u0000",
+            "ObjectTag": "BRAIN_KIND",
+            "Pivot": 0,
+            "PositionX": -276.0,
+            "PositionY": 4.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\BrainMap\\Brain kind.png\u0000"
+                ]
+            },
+            "SizeX": 264.0,
+            "SizeY": 128.0,
+            "Transform": {
+                "WorldMatrix": [
+                    224.40000915527344,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    108.80000305175781,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -276.0,
+                    4.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "BRAIN_MAP\u0000",
+            "ObjectTag": "BRAIN_MAP",
+            "Pivot": 0,
+            "PositionX": -278.0,
+            "PositionY": -253.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.6843281984329224,
+                        0.37656211853027344,
+                        0.37656211853027344,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\BrainMap\\BRAINMAP.png\u0000"
+                ]
+            },
+            "SizeX": 215.0,
+            "SizeY": 83.0,
+            "Transform": {
+                "WorldMatrix": [
+                    182.75,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    70.55000305175781,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -278.0,
+                    -253.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
             "ChildTag": "B_Default_Picture\u0000",
             "ObjectTag": "B_Default_Picture",
             "Pivot": 0,
@@ -309,7 +454,7 @@
                 ],
                 "Float4x4s": [],
                 "Floats": [
-                    1.0
+                    -1164.1982421875
                 ],
                 "Ints": [],
                 "Pass": 19,
@@ -322,12 +467,12 @@
             "SizeY": 54.0,
             "Transform": {
                 "WorldMatrix": [
-                    -51.212520599365234,
-                    -2.99459171295166,
+                    -51.2125244140625,
+                    -2.9945919513702393,
                     0.0,
                     0.0,
-                    2.963069438934326,
-                    -50.673439025878906,
+                    2.9630696773529053,
+                    -50.67344284057617,
                     0.0,
                     0.0,
                     0.0,
@@ -363,7 +508,7 @@
                 ],
                 "Float4x4s": [],
                 "Floats": [
-                    1.0
+                    -1164.1982421875
                 ],
                 "Ints": [],
                 "Pass": 19,
@@ -376,12 +521,12 @@
             "SizeY": 54.0,
             "Transform": {
                 "WorldMatrix": [
-                    -51.212520599365234,
-                    -2.99459171295166,
+                    -51.2125244140625,
+                    -2.9945919513702393,
                     0.0,
                     0.0,
-                    2.963069438934326,
-                    -50.673439025878906,
+                    2.9630696773529053,
+                    -50.67344284057617,
                     0.0,
                     0.0,
                     0.0,
@@ -399,8 +544,8 @@
             "ChildTag": "Icon_Pick\u0000",
             "ObjectTag": "Icon_Pick",
             "Pivot": 0,
-            "PositionX": -617.0,
-            "PositionY": -211.0,
+            "PositionX": -73.0,
+            "PositionY": -178.0,
             "Priority": 5,
             "Prototype_GameObject": "Main_BrainMapIconPickUI\u0000",
             "ScaleX": 1.25,
@@ -410,7 +555,7 @@
                 "Float4s": [],
                 "Float4x4s": [],
                 "Floats": [
-                    0.4617030620574951
+                    0.4980711042881012
                 ],
                 "Ints": [],
                 "Pass": 25,
@@ -434,8 +579,8 @@
                     0.0,
                     1.0,
                     0.0,
-                    -617.0,
-                    -211.0,
+                    -73.0,
+                    -178.0,
                     0.0,
                     1.0
                 ]
@@ -1355,8 +1500,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        2.0,
-                        2.0
+                        1.0,
+                        5.0
                     ],
                     [
                         4.0,
@@ -1885,8 +2030,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        0.0,
-                        5.0
+                        3.0,
+                        4.0
                     ],
                     [
                         4.0,
@@ -1938,8 +2083,8 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        3.0,
-                        4.0
+                        0.0,
+                        5.0
                     ],
                     [
                         4.0,
@@ -3669,50 +3814,6 @@
                     0.0,
                     -44.0,
                     -263.0,
-                    0.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "ChildTag": "Skeleton\u0000",
-            "ObjectTag": "Skeleton",
-            "Pivot": 0,
-            "PositionX": -277.0,
-            "PositionY": 20.0,
-            "Priority": 2,
-            "Prototype_GameObject": "Default_UI\u0000",
-            "ScaleX": 0.8500000238418579,
-            "ScaleY": 0.8500000238418579,
-            "ShaderParams": {
-                "Float2s": [],
-                "Float4s": [],
-                "Float4x4s": [],
-                "Floats": [],
-                "Ints": [],
-                "Pass": 0,
-                "Textures": [
-                    "..\\Bin\\Resources\\UI\\Main_UI\\BrainMap\\Skeleton.png\u0000"
-                ]
-            },
-            "SizeX": 1115.0,
-            "SizeY": 820.0,
-            "Transform": {
-                "WorldMatrix": [
-                    947.75,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    697.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    0.0,
-                    -277.0,
-                    20.0,
                     0.0,
                     1.0
                 ]
@@ -6590,12 +6691,12 @@
             "SizeY": 32.0,
             "Transform": {
                 "WorldMatrix": [
-                    -12.359786033630371,
-                    52.977317810058594,
+                    -12.359785079956055,
+                    52.97731399536133,
                     0.0,
                     0.0,
-                    -26.488658905029297,
-                    -6.1798930168151855,
+                    -26.488656997680664,
+                    -6.179892539978027,
                     0.0,
                     0.0,
                     0.0,
@@ -6653,6 +6754,50 @@
                     0.0,
                     -82.0,
                     -57.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Skeleton\u0000",
+            "ObjectTag": "Skeleton",
+            "Pivot": 0,
+            "PositionX": -277.0,
+            "PositionY": 20.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\BrainMap\\Skeleton.png\u0000"
+                ]
+            },
+            "SizeX": 1115.0,
+            "SizeY": 820.0,
+            "Transform": {
+                "WorldMatrix": [
+                    947.75,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    697.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -277.0,
+                    20.0,
                     0.0,
                     1.0
                 ]

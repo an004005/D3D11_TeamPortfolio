@@ -943,42 +943,25 @@ PS_OUT PS_Alpha_Color2(PS_IN In)	// → 32
 	return Out;
 }
 
-VS_OUT1 VS_Test(VS_IN In)
-{
-	VS_OUT1		Out = (VS_OUT1)0;
-	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
-
-	Out.vPosition = mul(float4(In.vPosition, 1.f), matWP);
-
-	In.vTexUV.x = In.vTexUV.x + g_vec2_0.x;
-	In.vTexUV.y = In.vTexUV.y + g_vec2_0.y;
-
-	In.vTexUV.x = In.vTexUV.x / g_vec2_1.x;
-	In.vTexUV.y = In.vTexUV.y / g_vec2_1.y;
-
-	Out.vTexUV1 = In.vTexUV;
-
-	In.vTexUV.x = In.vTexUV.x + g_vec2_2.x;
-	In.vTexUV.y = In.vTexUV.y + g_vec2_2.y;
-
-	In.vTexUV.x = In.vTexUV.x / g_vec2_1.x;
-	In.vTexUV.y = In.vTexUV.y / g_vec2_1.y;
-
-	Out.vTexUV = In.vTexUV;
-
-	return Out;
-}
-
-PS_OUT PS_Test(PS_IN1 In)
+PS_OUT PS_BRAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4  vTextureColor;
-	float4  vGlowColor;
+	float4 Emissive = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_0, g_int_0, g_int_1));
 
-	vTextureColor = g_tex_0.Sample(LinearSampler, In.vTexUV1);
-	vGlowColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	Out.vColor = vTextureColor * vGlowColor;
+	float Mask = Emissive.g;
+
+	float4 DefaultColor = float4(Emissive.g, Emissive.g, Emissive.g, 0.f);
+
+	float4 BlendColor = DefaultColor  * float4(0.506f, 0.451f, 0.345f, 1.0f) * 2.0f;
+
+	float4 FinalColor = saturate(BlendColor);
+
+	float4 HDRColor = saturate(FinalColor * 1.0f);
+
+	Out.vColor = CalcHDRColor(HDRColor, g_float_1);
+
+	Out.vColor.a = Mask;
 
 	return Out;
 }
@@ -1466,16 +1449,17 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_Alpha_Color2();	// 색상 조정
 	}
 	
-	pass Test
+	// 34 : 브레인 맵에서 브레인 띄우기
+	pass BRAIN
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
-		VertexShader = compile vs_5_0 VS_Test();		// 텍스처의 원하는 부분만 출력
+		VertexShader = compile vs_5_0 VS_MAIN();		// 텍스처의 원하는 부분만 출력
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_Test();	// 색상 조정
+		PixelShader = compile ps_5_0 PS_BRAIN();	// 색상 조정
 	}
 }

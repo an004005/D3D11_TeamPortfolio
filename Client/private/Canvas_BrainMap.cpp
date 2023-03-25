@@ -1580,17 +1580,37 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 
 void CCanvas_BrainMap::IconLevel(const size_t iIndex)
 {
-	if (false == m_vecIconUI[iIndex]->Get_BrainInfo().bUse || 60 == iIndex)
+	if (60 == iIndex)
 		return;
 
-	// 현재 bUse가 true 인 Icon 의 Level 을 담아준다.
 	BRAINTYPE eCurrentType = m_vecIconUI[iIndex]->Get_BrainInfo().eType;
 	_uint iBrainLevel = m_vecIconUI[iIndex]->Get_BrainInfo().iLevel;
-	m_arrCurrentLevel[eCurrentType] = iBrainLevel;
+	if (true == m_vecIconUI[iIndex]->Get_BrainInfo().bUse)
+	{
+		// 현재 bUse가 true 인 Icon 의 Level 을 담아준다.
+		m_arrCurrentLevel[eCurrentType] = iBrainLevel;
 
-	// 현재 사용 가능한 아이콘의 레벨을 비교해서 다음 레벨을 흰색으로 변경하기 위한 코드
-	if (m_arrCurrentLevel[eCurrentType] <= iBrainLevel)
-		m_vecIconUI[iIndex + 1]->Set_IconIndex(m_vecBrain[iIndex + 1].vOnIconIndex);
+		// 현재 사용 가능한 아이콘의 레벨을 비교해서 다음 레벨을 흰색으로 변경하기 위한 코드
+		if (eCurrentType == m_vecIconUI[iIndex]->Get_BrainInfo().eType)
+		{
+			if (m_arrCurrentLevel[eCurrentType] + 1 <= iBrainLevel)
+				m_vecIconUI[iIndex]->Set_IconIndex(m_vecBrain[iIndex].vOnIconIndex);
+		}
+	}
+
+
+
+	
+
+
+
+	/*
+		if (m_arrCurrentLevel[eCurrentType] <= iBrainLevel)
+		{
+			m_vecIconUI[iIndex + 1]->Set_IconIndex(m_vecBrain[iIndex + 1].vOnIconIndex);
+
+
+		}*/
 }
 
 void CCanvas_BrainMap::SkillAcquisition_Tick(const _double & TimeDelta)
