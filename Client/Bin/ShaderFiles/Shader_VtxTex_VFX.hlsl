@@ -484,6 +484,46 @@ PS_OUT_Flag PS_EM0220_EXPLODE(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_EM1100_STAMP_SMOKE(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float2 TexUV;
+
+	if (g_int_0 > 0)
+		TexUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.03, 8, 8);
+	else
+		TexUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.00, 8, 8);
+
+	float4 Tex = g_tex_0.Sample(LinearSampler, TexUV);
+
+	Out.vColor = CalcHDRColor(Tex, g_float_0);
+	Out.vColor *=  g_float_1;
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (g_float_1 <= 0.f)
+		discard;
+
+	return Out;
+}
+
+
+PS_OUT_Flag PS_EM1100_STAMP_SMOKE_NOFLIP(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 Tex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor = Tex;
+	Out.vColor *= g_float_0;
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (g_float_0 <= 0.f)
+		discard;
+
+	return Out;
+}
+
 PS_OUT_Flag PS_KINETIC_DEAD_FLIPBOOK(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -1298,5 +1338,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_DEFAULT_CHARGING_1_DISTORTION();
+	}
+
+	//33
+	pass Em1100_Stamp_Smoke
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_STAMP_SMOKE();
+	}
+
+	//34
+	pass Em1100_Stamp_Smoke_NoFlip
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_STAMP_SMOKE_NOFLIP();
 	}
 }

@@ -896,15 +896,15 @@ void CParticleSystem::UpdatePoints(_float fTimeDelta)
 
 			if (auto pCurve = CCurveManager::GetInstance()->GetCurve(m_strXDirCurveName))
 			{
-				data.vLook.x += pCurve->GetValue(fLifeRatio) - 0.5f;
+				data.vLook.x += pCurve->GetValue(fLifeRatio) * 2.f - 1.f;
 			}
 			if (auto pCurve = CCurveManager::GetInstance()->GetCurve(m_strYDirCurveName))
 			{
-				data.vLook.y += pCurve->GetValue(fLifeRatio) - 0.5f;
+				data.vLook.y += pCurve->GetValue(fLifeRatio) * 2.f - 1.f;
 			}
 			if (auto pCurve = CCurveManager::GetInstance()->GetCurve(m_strZDirCurveName))
 			{
-				data.vLook.z += pCurve->GetValue(fLifeRatio) - 0.5f;
+				data.vLook.z += pCurve->GetValue(fLifeRatio) * 2.f - 1.f;
 			}
 			// data.vLook.Normalize();
 

@@ -45,6 +45,9 @@ struct PS_OUT
 	float4		vDiffuse : SV_TARGET0;
 	float4		vNormal : SV_TARGET1;
 	float4		vDepth : SV_TARGET2;
+	float4		vRMA : SV_TARGET3;
+	float4		vOutline : SV_TARGET4;
+	float4		vFlag : SV_TARGET5;
 };
 
 // g_float_0 : dissolve
@@ -57,7 +60,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	vTexUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
 
 	vector vDepthDesc = g_DepthTex.Sample(LinearSampler, vTexUV);
-	if (vDepthDesc.w != 4.f) // map object가 아니면 decal적용 하지 않는다.
+	if (vDepthDesc.w != 1.f) // map object가 아니면 decal적용 하지 않는다.
 		discard;
 
 	float fViewZ = vDepthDesc.y * g_Far;
@@ -77,15 +80,100 @@ PS_OUT PS_MAIN(PS_IN In)
 	clip(0.5f - ObjectAbsPos);
 
 	float2 decalUV = vLocalPos.xz + 0.5f;
+
+	
+
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, decalUV);
-	Out.vDiffuse.a *= (1.f - saturate(g_float_0));
+	Out.vDiffuse.a = g_tex_2.Sample(LinearSampler, decalUV).r;
+
 	if (Out.vDiffuse.a < 0.01f)
 		discard;
 
+	float4 Normal = g_tex_1.Sample(LinearSampler, decalUV) * 2.f - 1.f;
+	float4 BlendNormal = Normal * (g_NormalTex.Sample(LinearSampler, decalUV) * 2.f - 1.f);
+	BlendNormal = saturate(BlendNormal * 0.5f + 0.5f);
 	Out.vNormal = g_NormalTex.Sample(LinearSampler, vTexUV);
+
+
+	Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
 	Out.vDepth = g_DepthTex.Sample(LinearSampler, vTexUV);
+	Out.vOutline = float4(0.f, 0.f, 0.f, 0.f);
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 	// emissive
 	Out.vDepth.z = 0.5f * Out.vDiffuse.a;
+
+	return Out;
+}
+
+PS_OUT PS_HIT_DECAL(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float2 vTexUV;
+	vTexUV.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
+	vTexUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
+
+	vector vDepthDesc = g_DepthTex.Sample(LinearSampler, vTexUV);
+	if (vDepthDesc.w != 1.f) // map object가 아니면 decal적용 하지 않는다.
+		discard;
+
+	float fViewZ = vDepthDesc.y * g_Far;
+	vector vProjPos = (vector)0.f;
+
+	// 투영행렬을 만드는 과정.
+	vProjPos.x = (vTexUV.x *  2.f - 1.f) * fViewZ;
+	vProjPos.y = (vTexUV.y * -2.f + 1.f) * fViewZ;
+	vProjPos.z = (vDepthDesc.x) * fViewZ;
+	vProjPos.w = fViewZ;
+
+	vector vViewPos = mul(vProjPos, g_ProjMatrixInv);
+	vector vWorldPos = mul(vViewPos, g_ViewMatrixInv);
+	vector vLocalPos = mul(vWorldPos, g_WorldMatrixInv);
+
+	float3	ObjectAbsPos = abs(vLocalPos.xyz);
+	clip(0.5f - ObjectAbsPos);
+
+	float2 decalUV = vLocalPos.xz + 0.5f;
+
+	float4 Default = g_tex_0.Sample(LinearSampler, decalUV);
+
+
+	float Mask = g_tex_1.Sample(LinearSampler, decalUV).r;
+	float4 Line = g_tex_2.Sample(LinearSampler, decalUV);
+
+	Line = Line * g_vec4_1;
+
+
+	Out.vDiffuse.a = Mask;
+
+	if (Out.vDiffuse.a < 0.001f)
+		discard;
+
+	Out.vNormal = g_NormalTex.Sample(LinearSampler, vTexUV);
+
+	Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
+
+	if (Line.a != 0.f)
+	{
+		Out.vDiffuse = Default + Line;
+		float4 Depth = g_DepthTex.Sample(LinearSampler, vTexUV);
+		Out.vDepth = Depth;
+		Out.vDepth.z =(Line.r * g_float_0);
+	}
+	else
+	{
+		Out.vDiffuse = Default;
+		float4 Depth = g_DepthTex.Sample(LinearSampler, vTexUV);
+		Out.vDepth = Depth;
+		Out.vDepth.z = 0.f;
+	}
+	Out.vDiffuse.a = Mask;
+
+	Out.vOutline = float4(0.f, 0.f, 0.f, 0.f);
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	// emissive
+	Out.vDiffuse = saturate(Out.vDiffuse * g_vec4_0);
 
 	return Out;
 }
@@ -229,21 +317,7 @@ technique11 DefaultTechnique
 	}
 
 	// 1
-	pass SpikeCrack
-	{
-		SetRasterizerState(RS_NonCulling);
-		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
-		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
-
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
-		HullShader = NULL;
-		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_SPIKE_CRACK();
-	}
-
-	// 2
-	pass FireWallBot
+	pass HittDecal
 	{
 		SetRasterizerState(RS_NonCulling);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
@@ -253,6 +327,8 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_FIREWALL_BOT();
+		PixelShader = compile ps_5_0 PS_HIT_DECAL();
 	}
+
+
 }

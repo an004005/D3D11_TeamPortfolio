@@ -385,6 +385,26 @@ PS_OUT PS_FLOWERLEG(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_EM0200_SPIN(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float2 CalcUV = float2(In.vTexUV.x + g_float_0, In.vTexUV.y);
+
+	Out.vColor = g_tex_0.Sample(LinearSampler, CalcUV);
+	Out.vColor.a = Out.vColor.r * g_float_1;
+	Out.vFlag = float4(0.f, 0.f, 0.f, Out.vColor.a);
+
+	float	fDissolve = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+	float	fBlendDissolve = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+	float   MixDissolve = saturate(fDissolve * fBlendDissolve);
+
+	if (g_float_2 <= MixDissolve)
+		discard;
+
+	return Out;
+}
+
 PS_OUT PS_TUTORIALBOSS_SPIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -405,6 +425,22 @@ PS_OUT PS_DEFAULT_MODEL(PS_IN In)
 	Out.vColor = CalcHDRColor(OriginTex, g_float_0);
 
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	return Out;
+}
+
+PS_OUT PS_EM1100_STAMP(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 OriginTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor = OriginTex;
+	Out.vColor.a = OriginTex.r * g_float_0;
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (g_float_0 <= 0.f)
+		discard;
+
 	return Out;
 }
 
@@ -973,4 +1009,31 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_EM220_NORM();
 	}
 
+	//19
+	pass EM0200Spin
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM0200_SPIN();
+	}
+
+	//20
+	pass em1100Stamp
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_STAMP();
+	}
 }
