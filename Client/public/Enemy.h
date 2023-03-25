@@ -41,6 +41,7 @@ public:
 	virtual ENEMY_STAT GetEnemyBatchDataStat();
 	
 public:
+	//0 ~ 1 »çÀÌ°ª
 	_float GetHpRatio() const { return (_float)m_iHP / (_float)m_iMaxHP; }
 	_float GetCrushGageRatio() const { return (_float)m_iCrushGage / (_float)m_iMaxCrushGage; }
 	_bool IsDead() const { return m_bDead; }

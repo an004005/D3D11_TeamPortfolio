@@ -210,7 +210,7 @@ void CAIController::Move(EMoveAxis eAxis)
 	case EMoveAxis::NORTH:
 		m_vMoveAxis.z += 1.f;
 		// 거리 비교해서 비교값 이하일때 멈추는 기능 추가하기 	
-		if (abs(m_fTtoM_Distance) < 2.f)
+		if (abs(m_fTtoM_Distance) < m_fTargetDist)
 		{
 			m_Commands.front().SetFinish();
 		}

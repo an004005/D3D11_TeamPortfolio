@@ -259,6 +259,9 @@
     <ClInclude Include="..\public\EM0800.h" />
     <ClInclude Include="..\public\EM0800_AnimInstance.h" />
     <ClInclude Include="..\public\EM0800_Controller.h" />
+    <ClInclude Include="..\public\EM1100.h" />
+    <ClInclude Include="..\public\EM1100_AnimInstance.h" />
+    <ClInclude Include="..\public\EM1100_Controller.h" />
     <ClInclude Include="..\public\EnemyBullet.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
@@ -476,6 +479,9 @@
     <ClCompile Include="..\private\EM0800.cpp" />
     <ClCompile Include="..\private\EM0800_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0800_Controller.cpp" />
+    <ClCompile Include="..\private\EM1100.cpp" />
+    <ClCompile Include="..\private\EM1100_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM1100_Controller.cpp" />
     <ClCompile Include="..\private\EnemyBullet.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />

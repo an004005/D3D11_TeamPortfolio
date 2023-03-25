@@ -11,14 +11,14 @@ END
 
 BEGIN(Client)
 
-// 브론존
+// 초(고속)파리 :: 방도 팡뒤(Bangdo Fandu)
 
-class CEM0800 : public CEnemy
+class CEM1100 : public CEnemy
 {
 private:
-	CEM0800(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CEM0800(const CEM0800& rhs);
-	virtual ~CEM0800() = default;
+	CEM1100(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEM1100(const CEM1100& rhs);
+	virtual ~CEM1100() = default;
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
@@ -37,37 +37,34 @@ public:
 public:
 	//행동 관련 함수 정의
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
+	_bool IsRun() const { return m_bRun; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
-	_float GetTurnRemain() const { return m_fTurnRemain; }
 	_bool IsPlayingSocket() const;
 
-	void Play_LightHitAnim();
+//	void Play_LightHitAnim();
 	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
+
+	_bool IsTargetFront();
 
 private:
 	//충돌 관련 함수 정의
 
 private:
-	class CEM0800_Controller*		m_pController = nullptr;
-	class CEM0800_AnimInstance*		m_pASM = nullptr;
+	class CEM1100_Controller*		m_pController = nullptr;
+	class CEM1100_AnimInstance*		m_pASM = nullptr;
 
 	//충돌
 	CRigidBody*				m_pRange = nullptr;
 	CRigidBody*				m_pBody = nullptr;
 
 private:
-	_float3						m_vMoveAxis;
-	_float						m_fTurnRemain = 0.f;
+	_float3						 m_vMoveAxis;
 	_bool						m_bHitAir = false;
-	
-	// HitDir
-	_bool		m_bHitMove = false;
-
-	// Attack
-	_bool m_bAtkBite = false;
-	_bool m_bAtkLaser = false;
-	_float	m_fLaserTime = 0.f;
+	_bool						m_bRun = false;
+	//Rush
+	_bool						m_bRush = false;
+	_bool						m_bChangeDir = false;
 
 	CController::EHandleInput	m_eInput;
 
@@ -75,7 +72,7 @@ private:
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
 public:
-	static CEM0800* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEM1100* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

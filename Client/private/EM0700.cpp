@@ -264,7 +264,7 @@ void CEM0700::SetUpFSM()
 		.AddState("Rush_Start")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_202_AL_atk_a1_loop");
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_201_AL_atk_a1_start");
 				Rush_Start();
 				ClearDamagedTarget();
 			})

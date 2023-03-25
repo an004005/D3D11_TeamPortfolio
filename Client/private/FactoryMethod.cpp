@@ -36,6 +36,7 @@
 #include "EM0650.h"
 #include "EM0700.h" 
 #include "EM0800.h"
+#include "EM1100.h"
 #include "EnemyBullet.h"
 #include "TestTarget.h"
 #include "WaterBall.h"
@@ -269,6 +270,14 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em700"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em700"), CEM0700::Create(pDevice, pContext)));
+
+	/* EM1100*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em1100/Model/SM_em1100.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em1100/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em1100"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em1100"), CEM1100::Create(pDevice, pContext)));
 
 	/* EM0800*/
 	pEMModel = CModel::Create(pDevice, pContext,

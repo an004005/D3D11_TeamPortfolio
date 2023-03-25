@@ -123,15 +123,6 @@ void CEM0800::SetUpFSM()
 {
 	CEnemy::SetUpFSM();
 
-	/*
-	SPACE : Escape
-	NUM_1 : Attack_a1 (돌진 공격)
-	NUM_2 : Attack_a3 (원거리 공격)
-	MOUSE_LB : RandomMove_L
-	MOUSE_RB : RandomMove_R
-	Threat : C
-	*/
-
 	m_pFSM = CFSMComponentBuilder()
 		.InitState("Idle")
 		.AddState("Idle")

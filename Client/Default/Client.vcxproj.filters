@@ -355,6 +355,12 @@
     <Filter Include="02.GameObjects\Enemy\EM0800">
       <UniqueIdentifier>{ea366a02-5446-4163-9037-e8e37c831263}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM1100">
+      <UniqueIdentifier>{f6b6e84e-dfd1-4fa6-b5f7-2a99166097d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM1200">
+      <UniqueIdentifier>{61165ce0-fb67-4415-a32c-0df79482337c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1021,6 +1027,15 @@
     <ClInclude Include="..\public\EM0800_Controller.h">
       <Filter>02.GameObjects\Enemy\EM0800</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EM1100_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM1100</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM1100_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM1100</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM1100.h">
+      <Filter>02.GameObjects\Enemy\EM1100</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1664,6 +1679,15 @@
     </ClCompile>
     <ClCompile Include="..\private\EM0800_AnimInstance.cpp">
       <Filter>02.GameObjects\Enemy\EM0800</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM1100_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM1100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM1100_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM1100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM1100.cpp">
+      <Filter>02.GameObjects\Enemy\EM1100</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
