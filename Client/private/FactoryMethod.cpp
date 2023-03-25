@@ -143,6 +143,9 @@
 #include "MonsterLockonUI.h"
 #include "GravikenisisMouseUI.h"
 #include "NoticeNeonUI.h"
+#include "SimpleTrigger.h"
+#include "SpawnTrigger.h"
+#include "TipTrigger.h"
 
 CFactoryMethod::CFactoryMethod()
 {
@@ -447,6 +450,19 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
 	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_HBeam_Single", pModel_HBeam_Single));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Single", CSpecial_HBeam_Single::Create(pDevice, pContext)));
+
+	return S_OK;
+}
+
+HRESULT CFactoryMethod::MakeTriggerPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_SpawnTrigger"), CSpawnTrigger::Create(pDevice, pContext))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_SimpleTrigger"), CSimpleTrigger::Create(pDevice, pContext))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_TipTrigger"), CTipTrigger::Create(pDevice, pContext))))
+		return E_FAIL;
 
 	return S_OK;
 }
