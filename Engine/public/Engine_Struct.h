@@ -47,22 +47,25 @@ namespace Engine
 	/* 방향성광원, 점광원 : 방향벡터가 필요하다. */
 	typedef struct tagLightDesc
 	{
-		enum TYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_FOV, TYPE_END };
+		enum TYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_FOV, TYPE_CAPSULE, TYPE_END };
 
 		TYPE				eType;
 
 		bool				isEnable;
 
-		XMFLOAT4			vDirection;
+		_float4			vDirection;
 
 		/* 모든 정점(픽셀)이 받는 빛의 방향벡터가 다 다르게 표현되어야하기때문이다. */
 		/* 셰)이더내에서 빛의 방향벡터를 구해서 연산한다. */
-		XMFLOAT4			vPosition;
-		float				fRange;		
+		_float4			vPosition;
+		float				fRange;
 
-		XMFLOAT4			vDiffuse;
-		XMFLOAT4			vAmbient;
-		XMFLOAT4			vSpecular;
+		_float4				vCapsuleEnd;
+		_float4				vCapsuleStart;
+
+		_float4			vDiffuse;
+		_float4			vAmbient;
+		_float4			vSpecular;
 	}LIGHTDESC;	
 
 	typedef struct tagKeyframe
@@ -203,7 +206,7 @@ namespace Engine
 		_float4			vRotPos;
 
 		_float			fGravityPower;
-		_bool			bOnSurfase;
+		// _bool			bOnSurfase;
 
 		_uint		NearestIndex;
 	}VTXMATRIX;
@@ -216,13 +219,21 @@ namespace Engine
 
 	// ~ For Particle PointInstance 
 
+	typedef struct tagVertex_Instance_DrawData
+	{
+		_float4			vRight;
+		_float4			vUp;
+		_float4			vLook;
+		_float4			vPosition;
+		_float4			vColor;
+	}VTXINSTANCE_DRAWDATA;
+
 	typedef struct tagVertex_Instance
 	{
 		_float4			vRight;
 		_float4			vUp;
 		_float4			vLook;
 		_float4			vPosition;
-
 		_float4			vColor;
 
 		_float3			vEulerRad;
@@ -232,6 +243,7 @@ namespace Engine
 		_float			fGravityPower;
 		_float			fLifeTime;
 		_float			fCurLifeTime;
+		class CRigidBody* pRigidBody = nullptr;
 	}VTXINSTANCE;
 
 	/*******************

@@ -75,6 +75,7 @@ public:
 	void Go_Right(_double TimeDelta);
 	void Move(_double TimeDelta, _float3 vDir);
 	void MoveVelocity(_double TimeDelta, _float3 vVelocity);
+	void MoveVelocity(_double TimeDelta, _float4 vVelocity);
 	_vector MoveVelocity_Get(_double TimeDelta, _float3 vVelocity);
 	void MoveVelocity_Navi(_double TimeDelta, _float3 vVelocity, class CNavigation* pNavi, _int& iCellIdx);
 	void LocalMove(_float3 vDir, _float fRange = 1.f);
@@ -112,6 +113,9 @@ public:
 	void CopyState(STATE eState, CTransform* pFrom);
 	void CopyWorld(CTransform* pFrom);
 
+	/* 돌진한다 */
+	//틱마다 이동한 거리 반환
+	_float RushToTarget(_fvector vTargetPos, _double TimeDelta);
 public:
 	HRESULT Bind_ShaderResource(class CShader* pShaderCom, const char* pConstantName);
 

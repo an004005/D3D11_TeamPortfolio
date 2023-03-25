@@ -1,6 +1,16 @@
 #pragma once
 #include "Client_Defines.h"
 
+#define PLAYERTEST_LAYER_TERRAIN	TEXT("Layer_Terrain")
+#define PLATERTEST_LAYER_PLAYER		TEXT("Layer_Player")
+#define PLAYERTEST_LAYER_CAMERA		TEXT("Layer_Camera")
+#define PLAYERTEST_LAYER_BATCH		TEXT("Layer_Batch")
+#define PLAYERTEST_LAYER_MAP		TEXT("Layer_Map")
+#define LAYER_KINETIC				TEXT("Layer_Kinetic")
+#define PLAYERTEST_LAYER_MONSTER	TEXT("Layer_Monster")
+#define PLAYERTEST_LAYER_POSTVFX	TEXT("Layer_PostVFX")
+#define PLAYERTEST_LAYER_FRONTUI	TEXT("Layer_FrontUI")
+
 BEGIN(Engine)
 class CTransform;
 class CComponent;
@@ -22,6 +32,14 @@ END
 
 BEGIN(Client)
 
+enum class EKineticAttackType
+{
+	KINETIC_ATTACK_DEFAULT,
+	KINETIC_ATTACK_TRAIN,
+	
+	KINETIC_ATTACK_END
+};
+
 enum class EMoveAxis
 {
 	NORTH,
@@ -42,6 +60,13 @@ enum class EBaseAxis
 	EAST,//right
 	SOUTH,//back
 	WEST,//left
+	AXIS_END
+};
+
+enum class ESimpleAxis
+{
+	NORTH,//look
+	SOUTH,//back
 	AXIS_END
 };
 
@@ -81,23 +106,54 @@ enum class EAttackType
 	ATK_LIGHT,
 	ATK_MIDDLE,
 	ATK_HEAVY,
+	ATK_SPECIAL_LOOP,
+	ATK_SPECIAL_END,
 	ATK_TO_AIR,
+	ATK_DOWN,
 	ATK_END
 };
 
+enum class EEnemyName
+{ 
+	BRONJON,
+	SKUMMYPANDOU,
+	SKUMMYPOOL,
+	EM0110,
+	EM0200,
+	EM0210,
+	EM0220,
+	EM0320, 
+	EM0400,
+	EM0650,
+	EM0700,
+	EM0800,
+	ENEMY_NAME_END
+};
+
+
 typedef struct tagDamageParam
 {
-	_int iDamage;
-	_float3 vHitFrom; // 공격자의 위치
-	_float3 vHitPosition; // 공격 히트 위치
-	_float3 vHitNormal; // 공격 히트 위치의 노멀
-	_float3 vSlashVector; // 검 공격의 베는 방향(vHitPosition 기준)
+	_uint iDamage;
+	_float4 vHitFrom; // 공격자의 위치
+	_float4 vHitPosition; // 공격 히트 위치
+	_float4 vHitNormal; // 공격 히트 위치의 노멀
+	_float4 vSlashVector; // 검 공격의 베는 방향(vHitPosition 기준)
+	EKineticAttackType eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_END; // 충돌한 염력체 타입
 	ESASType eAttackSAS = ESASType::SAS_END; // 공격 타입(몬스터는 SAS_END 고정)
 	EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END; // 공격에 디버프 포함 여부
 	EAttackType eAttackType = EAttackType::ATK_LIGHT;
 	CComponent* pContactComponent = nullptr;
 	class CScarletCharacter* pCauser = nullptr; // 공격자 포인터
 } DAMAGE_PARAM;
+
+typedef struct tagEnemyStat
+{
+	_int iMaxHP = 100;
+	_int iMaxCrushGage = 100;
+	_bool bHasCrushGage = false;
+	_int iAtkDamage = 10;
+	_uint iLevel = 1;
+} ENEMY_STAT;
 
 enum
 {
@@ -107,6 +163,8 @@ enum
 	SAS_CNT = static_cast<_uint>(ESASType::SAS_END),
 	DEBUFF_CNT = static_cast<_uint>(EDeBuffType::DEBUFF_END),
 	ATK_TYPE_CNT = static_cast<_uint>(EAttackType::ATK_END),
+	SIMPLE_AXIS_CNT = static_cast<_uint>(ESimpleAxis::AXIS_END),
+	ENEMY_CNT = static_cast<_uint>(EEnemyName::ENEMY_NAME_END)
 };
 
 class CClientUtils
@@ -115,8 +173,10 @@ public:
 	static EMoveAxis MoveAxisToEnum(_float3 vMoveAxis);
 	static EBaseAxis MoveAxisToBaseEnum(_float3 vMoveAxis);
 	static const string& AxisEnumToStr(EMoveAxis eAxis);
-	static EBaseAxis GetDamageFromAxis(CTransform* pTransform, _fvector vFrom);
+	static EBaseAxis GetDamageFromAxis(CTransform* pTransform, _fvector vFrom, ESimpleAxis* pSimpleAxis = nullptr);
 	static EBaseTurn TurnDeltaToEnum(_float fTurnDelta);
+	static string GetEnemyProtoTag(EEnemyName eName);
+	static _float4 GetDirFromAxis(EBaseAxis eAxis);
 
 public:
 	static const _tchar* const s_DebugLayer;

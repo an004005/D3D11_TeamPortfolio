@@ -67,7 +67,7 @@ const string& CClientUtils::AxisEnumToStr(EMoveAxis eAxis)
 	return strs[static_cast<_uint>(eAxis)];
 }
 
-EBaseAxis CClientUtils::GetDamageFromAxis(CTransform* pTransform, _fvector vFrom)
+EBaseAxis CClientUtils::GetDamageFromAxis(CTransform* pTransform, _fvector vFrom, ESimpleAxis* pSimpleAxis)
 {
 	// vLook 기준
 	// 시계방향으로 - 180
@@ -93,6 +93,14 @@ EBaseAxis CClientUtils::GetDamageFromAxis(CTransform* pTransform, _fvector vFrom
 	else
 		eAxis = EBaseAxis::SOUTH;
 
+	if (pSimpleAxis != nullptr)
+	{
+		if (-90.f <= fDeg && fDeg <= 90.f)
+			*pSimpleAxis = ESimpleAxis::NORTH;
+		else
+			*pSimpleAxis = ESimpleAxis::SOUTH;
+	}
+
 	return eAxis;
 }
 
@@ -104,4 +112,44 @@ EBaseTurn CClientUtils::TurnDeltaToEnum(_float fTurnDelta)
 		return EBaseTurn::TURN_LEFT;
 	else
 		return EBaseTurn::TURN_RIGHT;
+}
+
+string CClientUtils::GetEnemyProtoTag(EEnemyName eName)
+{
+	static array<string, ENEMY_CNT> s_EnemyNames{
+	   "NotUsing",
+	   "NotUsing",
+	   "NotUsing",
+	   "NotUsing",
+	   "Monster_em200",
+	   "NotUsing", 
+	   "NotUsing",
+	};
+
+	return s_EnemyNames[static_cast<_uint>(eName)];
+}
+
+_float4 CClientUtils::GetDirFromAxis(EBaseAxis eAxis)
+{
+	_float4 vOut = _float4::Zero;
+	switch (eAxis)
+	{
+	case EBaseAxis::NORTH:
+		vOut.z = 1.f;
+		break;
+	case EBaseAxis::EAST:
+		vOut.x = 1.f;
+		break;
+	case EBaseAxis::SOUTH: 
+		vOut.z = -1.f;
+		break;
+	case EBaseAxis::WEST: 
+		vOut.x = -1.f;
+		break;
+	case EBaseAxis::AXIS_END:
+		FALLTHROUGH
+	default: 
+		NODEFAULT;
+	}
+	return vOut;
 }

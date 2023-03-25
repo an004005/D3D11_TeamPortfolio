@@ -80,7 +80,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 
 	Out.CurLife = InstanceData[3][3];
-	Out.RamainLifeRatio = (1.f - InstanceData[3][3] / InstanceData[1][3]);
+	Out.RamainLifeRatio = ((InstanceData[1][3] - InstanceData[3][3] )/ InstanceData[1][3]);
 	Out.vSize = float2(InstanceData[1][0], InstanceData[1][1]);
 	Out.vPosition = matrix_postion(InstanceData);
 
@@ -270,6 +270,42 @@ PS_OUT PS_PARTICLE_EM0650(PS_IN In)
 			discard;
 	}
 
+	if (Out.vColor.a <= 0.f)
+		discard; 
+
+	return Out;
+}
+
+PS_OUT PS_PARTICLE_KINETICOBJECT(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	// float GradientTex = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+	float4 Choose = g_vec4_0;
+	float4 BlendColor = DefaultTex * Choose * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0); // color * emissive
+
+	if (g_tex_on_1)
+	{
+		float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+		Out.vColor.a = Mask * In.RamainLifeRatio;
+		if (Mask <= 0.f)
+			discard;
+	}
+	else
+	{
+		// Out.vColor.a = GradientTex;
+		Out.vColor = DefaultTex;
+
+		if (Out.vColor.a < 0.01f)
+			discard;
+	}
+
+	if (Out.vColor.a <= 0.f)
+		discard;
 
 	return Out;
 }
@@ -290,27 +326,109 @@ PS_OUT PS_FLIPBOOK_SMOKE(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_EM110_BUG(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.03f, 1, 2));
+	float4 vColor = g_vec4_0;
+
+	float4 BlendColor = flipBook * vColor * 2.0f;
+
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0) ;
+	Out.vColor.a = flipBook.a * In.RamainLifeRatio;
+
+	return Out;
+}
+
+
 PS_OUT PS_SAS_FIRE_PARTICLE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 4, 4));
+	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.03, 4, 4));
 	// float4 vColor = g_vec4_0;
 
 	// float4 BlendColor = flipBook * vColor * 2.0f;
 
 	// float4 FinalColor = saturate(BlendColor);
 	Out.vColor = CalcHDRColor(flipBook, g_float_0) ;
+	
 
-	float4 flipAlpha = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 4, 4));
+	float4 flipAlpha = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.03, 4, 4));
 
-	Out.vColor.a = flipAlpha.r ;
+
+	Out.vColor.a = flipAlpha.r;
 
 	if (flipAlpha.r <= 0.2f)
 		discard;
 
 	return Out;
 }
+
+PS_OUT PS_SAS_FIRE_WEAPON_PARTICLE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 3, 3));
+
+	Out.vColor = CalcHDRColor(flipBook, g_float_0);
+
+	float4 flipAlpha = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 3, 3));
+
+	Out.vColor.a = flipAlpha.r;
+
+	if (flipAlpha.r <= 0.2f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT PS_SAS_DEFAULT_WEAPON_PARTICLE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = White * Color * 2.0f;
+	float4 Final = saturate(Blend) ;
+	
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+
+	Out.vColor = CalcHDRColor(Final, g_float_0);
+	Out.vColor.a = Mask * g_float_1 * In.RamainLifeRatio;
+
+	if(g_float_1 <= 0.f)
+	{
+		discard;
+	}
+
+	return Out;
+}
+
+PS_OUT PS_USE_MESHCURVE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+
+	Out.vColor = CalcHDRColor(Final, g_float_0);
+	Out.vColor.a = Mask * g_float_1 * In.RamainLifeRatio;
+
+	if (g_float_1 <= 0.f)
+	{
+		discard;
+	}
+
+	return Out;
+}
+
 
 PS_OUT PS_SPIKE_CHARGE(PS_IN In)
 {
@@ -522,7 +640,7 @@ technique11 DefaultTechnique
 	pass SasFireParticle
 	{
 		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DS_Default, 0);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -530,5 +648,75 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SAS_FIRE_PARTICLE();
+	}
+
+	//10
+	pass SasFireWeaponParticle
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SAS_FIRE_WEAPON_PARTICLE();
+	}
+
+	//11
+	pass KineticObjectTrail
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_PARTICLE_KINETICOBJECT();
+	}
+
+	//12
+	pass SasDefaultWeaponParticle
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SAS_DEFAULT_WEAPON_PARTICLE();
+	}
+
+	//13
+	pass USEMESHCURVE
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_USE_MESHCURVE();
+	}
+
+	//14
+	pass Em110Bug
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM110_BUG();
 	}
 }

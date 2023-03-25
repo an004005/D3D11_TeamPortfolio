@@ -53,6 +53,11 @@ private:
 
 	_float		m_fFar = 6.f;
 
+private:	// 액션캠 관련 변수
+	_float4			m_vOrigin = _float4(0.f, 0.f, 0.f, 1.f);
+	list<_float4>	m_CamKeyFrameList;
+	string			m_szActionAnimName = "";
+
 public:
 	virtual void Free() override;
 	

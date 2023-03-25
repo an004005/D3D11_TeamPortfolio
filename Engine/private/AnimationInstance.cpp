@@ -508,7 +508,15 @@ _bool CAnimationInstance::CheckFinishedAnimSocket()
 				if (PairSoc.second.empty() && PairSoc.first.find("Kinetic") != (string::npos))
 					return false;
 
+				//몬스터
+				//if (PairSoc.second.empty() && PairSoc.first.find("Kinetic_Combo_AnimSocket") != (string::npos))
+				//	return true;
+
 				return true;
+			}
+			else if (pAnim->IsLooping() && pAnim->IsFinished())
+			{
+				pAnim->Reset();
 			}
 		}
 	}

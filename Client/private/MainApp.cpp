@@ -34,6 +34,12 @@
 #include "EffectSystem.h"
 #include "TrailSystem.h"
 
+#include "PlayerInfoManager.h"
+#include "SpawnTrigger.h"
+#include "SimpleTrigger.h"
+#include "PointLight.h"
+#include "CapsuleLight.h"
+
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -357,7 +363,15 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_RigidBody"), CRigidBody::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_SpawnTrigger"), CSpawnTrigger::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_SimpleTrigger"), CSimpleTrigger::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_PointLight"), CPointLight::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_CapsuleLight"), CCapsuleLight::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
 	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Regular32"), TEXT("../Bin/Resources/Fonts/kim_regular32.spritefont"))))
 	//	return E_FAIL;
 	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Bold32"), TEXT("../Bin/Resources/Fonts/kim_bold32.spritefont"))))
@@ -435,6 +449,7 @@ void CMainApp::Free()
 {
 	CVFX_Manager::GetInstance()->DestroyInstance();
 	CUI_Manager::GetInstance()->DestroyInstance();
+	CPlayerInfoManager::GetInstance()->DestroyInstance();
 
 	m_pGameInstance->Clear_ImguiObjects();
 	m_pGameInstance->Clear();

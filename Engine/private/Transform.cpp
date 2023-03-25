@@ -164,6 +164,14 @@ void CTransform::MoveVelocity(_double TimeDelta, _float3 vVelocity)
 	Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
+void CTransform::MoveVelocity(_double TimeDelta, _float4 vVelocity)
+{
+	vVelocity.w = 0.f;
+	_vector	vPosition = Get_State(CTransform::STATE_TRANSLATION);
+	vPosition += XMLoadFloat4(&vVelocity) * static_cast<_float>(TimeDelta);
+	Set_State(CTransform::STATE_TRANSLATION, vPosition);
+}
+
 _vector CTransform::MoveVelocity_Get(_double TimeDelta, _float3 vVelocity)
 {
 	_vector	vPosition = Get_State(CTransform::STATE_TRANSLATION);
@@ -735,6 +743,18 @@ void CTransform::CopyState(STATE eState, CTransform* pFrom)
 void CTransform::CopyWorld(CTransform* pFrom)
 {
 	m_WorldMatrix = pFrom->Get_WorldMatrix_f4x4();
+}
+
+_float CTransform::RushToTarget(_fvector vDirection, _double TimeDelta)
+{
+	_vector vPosition = Get_State(STATE_TRANSLATION);
+	
+	_float fDistance = m_TransformDesc.fSpeedPerSec * TimeDelta;
+	vPosition += XMVector3Normalize(vDirection) * fDistance;
+
+	Set_State(STATE_TRANSLATION, vPosition);
+
+	return fDistance;
 }
 
 HRESULT CTransform::Bind_ShaderResource(CShader* pShaderCom, const char* pConstantName)

@@ -96,6 +96,7 @@ public: /* For.Object_Manager */
 	CGameObject* Clone_GameObject_Get(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pPrototypeTag, void* pArg = nullptr);
 	CGameObject* Clone_GameObject_Get(const _tchar* pLayerTag, const _tchar* pPrototypeTag, void* pArg = nullptr);
 	CGameObject* Clone_GameObject_NoLayer(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg = nullptr);
+	CGameObject* Clone_GameObject_NoLayerNoBegin(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg = nullptr);
 	wcmap<class CLayer*>& GetLayers(_uint iLevelIndex);
 	CLayer* GetLayer(_uint iLevelIndex, const _tchar* pLayerTag);
 	CGameObject* Find_ObjectByPredicator(_uint iLevelIndex, std::function<_bool(CGameObject*)> Pred, const _tchar* pLayerTag = nullptr);
@@ -104,6 +105,7 @@ public: /* For.Object_Manager */
 	T* Find_OneObjectByType(_uint iLevelIndex, const _tchar* pLayerTag);
 	class CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 	void Add_InLayer(const _tchar* pLayerTag, CGameObject* pGameObject);
+	void Add_EmptyLayer(_uint iLevelIndex, const _tchar* pLayerTag);
 
 	void Imgui_ProtoViewer(const _tchar*& szSelectedProto);
 	void Imgui_ObjectViewer(_uint iLevel, CGameObject*& pSelectedObject);
@@ -137,6 +139,8 @@ public: /* For.Light_Manager */
 	void Delete_Light(const string& strLightTag);
 	void ClearLight();
 	void SetShadowCam(class CCamera* pShadowCam);
+	void AddLifePointLight(_float fLife, _float4 vPos, _float fRange, _float4 vColor);
+	void AddLifeCapsuleLight(_float fLife, _float4 vStart, _float4 vEnd, _float fRange, _float4 vColor);
 
 public: /* For.Font_Manager */
 	HRESULT Add_Font(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pFontTag, const _tchar* pFontFilePath);

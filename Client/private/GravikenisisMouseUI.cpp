@@ -5,6 +5,7 @@
 #include "EffectSystem.h"
 #include "MapKinetic_Object.h"
 #include "Player.h"
+#include "PlayerInfoManager.h"
 
 CGravikenisisMouseUI::CGravikenisisMouseUI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -85,7 +86,7 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	if (m_pKenisis == nullptr || m_pOwner == nullptr)
+	if (m_pKenisis == nullptr || CGameInstance::GetInstance()->Check_ObjectAlive(m_pOwner) == false)
 		return;
 	
 	// 나 염력 사용하라고 어필 하는 원
@@ -117,7 +118,7 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 	}
 
 	// 염력 게이지가 부족 하다면, 금지 Icon 으로 변경하고 return 시킨다.
-	if (20.0f > m_pPlayer->Get_PlayerStat().m_iKineticEnergy)
+	if (20.0f > CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergy)
 	{
 		m_pBanKenisis->Set_GroupVisible(true);
 

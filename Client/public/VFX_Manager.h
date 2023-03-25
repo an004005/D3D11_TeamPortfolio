@@ -13,6 +13,7 @@ enum EFFECT
 	EF_DEFAULT_ATTACK,
 	EF_FIRE_ATTACK,
 	EF_ELEC_ATTACK,
+	EF_SAS,
 	EF_HIT,
 	EF_MONSTER,
 	EF_ENVIRENMENT,
@@ -24,6 +25,7 @@ const static array<string, EFFECT::EF_END> arrayEffectMatch{
 	"../Bin/Resources/Curve/EffectGroup/Default_Attack/",
 	"../Bin/Resources/Curve/EffectGroup/Fire_Attack/",
 	"../Bin/Resources/Curve/EffectGroup/Elec_Attack/",
+	"../Bin/Resources/Curve/EffectGroup/Sas_Effect/",
 	"../Bin/Resources/Curve/EffectGroup/Blood_Effect/",
 	"../Bin/Resources/Curve/EffectGroup/Monster_Effect/",
 	"../Bin/Resources/Curve/EffectGroup/Envirenment_Effect/",
@@ -35,6 +37,7 @@ enum PARTICLE
 	PS_DEFAULT_ATTACK,
 	PS_FIRE_ATTACK,
 	PS_ELEC_ATTACK,
+	PS_SAS,
 	PS_HIT,
 	PS_MONSTER,
 	PS_ENVIRENMENT,
@@ -45,6 +48,7 @@ const static array<string, PARTICLE::PS_END> arrayParticleMatch{
 	"../Bin/Resources/Curve/ParticleGroup/Default_Particle/",
 	"../Bin/Resources/Curve/ParticleGroup/Fire_Particle/",
 	"../Bin/Resources/Curve/ParticleGroup/Elec_Particle/",
+	"../Bin/Resources/Curve/ParticleGroup/Sas_Particle/",
 	"../Bin/Resources/Curve/ParticleGroup/Blood_Particle/",
 	"../Bin/Resources/Curve/ParticleGroup/Monster_Particle/",
 	"../Bin/Resources/Curve/ParticleGroup/Envirenment_Particle/",
@@ -66,8 +70,8 @@ public:
 
 public:
 	// For Effect
-	CEffectGroup*	GetEffect(EFFECT eType, wstring wstrEffectTag, const _tchar* wszLayerTag = strEffectLayerTag);
-	CEffectGroup*	Find_Effect(EFFECT eType, wstring wstrEffectTag, const _tchar* wszLayerTag);
+	CEffectGroup*	GetEffect(EFFECT eType, const wstring& wstrEffectTag, const _tchar* wszLayerTag = strEffectLayerTag);
+	CEffectGroup*	Find_Effect(EFFECT eType, const wstring& wstrEffectTag, const _tchar* wszLayerTag);
 	CEffectGroup*	Add_Effect(string strEffectDir, const _tchar* wszLayerTag);
 
 private:
@@ -76,8 +80,8 @@ private:
 	//~ For Effect
 public:
 	// For Particle
-	CParticleGroup* GetParticle(PARTICLE eType, wstring wstrParticleTag, const _tchar* wszLayerTag = strParticleLayerTag);
-	CParticleGroup* Find_Particle(PARTICLE eType, wstring wstrParticleTag, const _tchar* wszLayerTag);
+	CParticleGroup* GetParticle(PARTICLE eType, const wstring& wstrParticleTag, const _tchar* wszLayerTag = strParticleLayerTag);
+	CParticleGroup* Find_Particle(PARTICLE eType, const wstring& wstrParticleTag, const _tchar* wszLayerTag);
 	CParticleGroup* Add_Particle(string strParticleDir, const _tchar* wszLayerTag);
 
 private:

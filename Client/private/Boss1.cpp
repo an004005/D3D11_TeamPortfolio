@@ -174,7 +174,7 @@ HRESULT CBoss1::Initialize(void* pArg)
 			_vector vDest = XMVector3Normalize(m_LastSpotTargetPos - vPrePos);
 			
 			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
-			pBullet->Set_ShootDir(vDest);
+			// pBullet->Set_ShootDir(vDest);
 			
 			pBullet->GetTransform()->LookAt(m_LastSpotTargetPos);//vPrePos + vLook);
 
@@ -190,14 +190,14 @@ HRESULT CBoss1::Initialize(void* pArg)
 				_matrix		RotMatAxis = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(15.f));
 				_vector vRight = XMVector3TransformNormal(vDest, RotMatAxis);
 				pBullet2->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
-				pBullet2->Set_ShootDir(vRight);
+				// pBullet2->Set_ShootDir(vRight);
 				pBullet2->GetTransform()->LookAt(vPrePos + vRight);
 
 				// 3rd Bullet
 				_matrix		RotMatAxisRev = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-15.f));
 				_vector vLeft = XMVector3TransformNormal(vDest, RotMatAxisRev);
 				pBullet3->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
-				pBullet3->Set_ShootDir(vLeft);
+				// pBullet3->Set_ShootDir(vLeft);
 				pBullet3->GetTransform()->LookAt(vPrePos + vLeft);
 			}			
 		}	
@@ -661,7 +661,7 @@ void CBoss1::JitabataSmokeEffect()
 
 	Smoke_Decided = vecSmokePosition.front();
 
-	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, Smoke_Decided, false);
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, Smoke_Decided, false, true);
 }
 
 void CBoss1::Create_BossUI()

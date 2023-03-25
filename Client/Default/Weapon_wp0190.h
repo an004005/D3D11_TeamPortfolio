@@ -6,6 +6,7 @@ class CRigidBody;
 END
 
 BEGIN(Client)
+class CParticleGroup;
 
 class CWeapon_wp0190 : public CScarletWeapon
 {
@@ -22,6 +23,13 @@ public:
 	virtual void Late_Tick(_double TimeDelta);
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render();
+
+public:
+	void		SetFire();
+	void		ReleaseFire();
+
+private:
+	CParticleGroup*	m_pParticle = nullptr;
 
 private:
 	_vector		m_vBeforePos;

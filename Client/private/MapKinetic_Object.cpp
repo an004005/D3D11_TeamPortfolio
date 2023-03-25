@@ -11,6 +11,9 @@
 #include "Model.h"
 #include "Material.h"
 #include "GravikenisisMouseUI.h"
+#include "VFX_Manager.h"
+#include "ParticleGroup.h"
+#include "Enemy.h"
 
 CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
@@ -71,7 +74,17 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 		if (m_bHit)
 			return;
 
-		if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
+		if (auto pStatic = dynamic_cast<CMapObject*>(pGameObject))
+		{
+			m_bHit = true;
+
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
+				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
+
+			ReleaseParticle();
+		}
+
+		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 		{
 			DAMAGE_PARAM tParam;
 			tParam.eAttackType = EAttackType::ATK_HEAVY;
@@ -80,6 +93,9 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 			pMonster->TakeDamage(tParam);
 			m_bHit = true;
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, TEXT("Default_Kinetic_Dead_Effect_00"))
+				->Start_AttachOnlyPos(tParam.vHitFrom);
 
 			// 충돌이 발생하면 플레이어의 키네틱 콤보 상태를 1로 올려준다.
 			if (CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player") != nullptr)
@@ -93,23 +109,26 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 					}
 				}
 			}
+
+			ReleaseParticle();
 		}
 	});
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(18.f) });
 
+
 	//툴에서 쓸때 플레이어가 없을수있으니 체크
-   CGameInstance* pGameInstance = CGameInstance::GetInstance();
-   CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Player"));
+   //CGameInstance* pGameInstance = CGameInstance::GetInstance();
+   //CLayer* pLayer = pGameInstance->GetLayer(LEVEL_NOW, TEXT("Layer_Player"));
 
-   if (pLayer != nullptr)
-   {
-	   CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
-	   pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
+   //if (pLayer != nullptr)
+   //{
+	  // CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
+	  // pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
 
-	   assert(pGravikenisisMouse != nullptr);
-	   pGravikenisisMouse->Set_Owner(this);
-   }
+	  // assert(pGravikenisisMouse != nullptr);
+	  // pGravikenisisMouse->Set_Owner(this);
+   //}
 
 	return S_OK;
 }
@@ -156,7 +175,6 @@ void CMapKinetic_Object::AfterPhysX()
 HRESULT CMapKinetic_Object::Render()
 {
 	FAILED_CHECK(__super::Render());
-
 
 	if(m_eCurModelTag != Tag_End)
 	{
@@ -337,6 +355,23 @@ void CMapKinetic_Object::OutlineMaker()
 	}
 
 	m_bBeforeOutline = m_bOutline;
+}
+
+void CMapKinetic_Object::SetParticle()
+{
+	_float4 vScale = _float4(
+		m_pCollider->GetPxWorldMatrix().Right().Length(),
+		m_pCollider->GetPxWorldMatrix().Up().Length(),
+		m_pCollider->GetPxWorldMatrix().Forward().Length(), 0.f);
+
+	m_pParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Trail"));
+	m_pParticle->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f ,0.f), true);
+}
+
+void CMapKinetic_Object::ReleaseParticle()
+{
+	if (nullptr != m_pParticle)
+		m_pParticle->SetDelete();
 }
 
 HRESULT CMapKinetic_Object::SetUp_Components(void* pArg)

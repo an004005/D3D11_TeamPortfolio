@@ -43,6 +43,7 @@ public:
 public:
 	void SetUp_MeshBones(class CModel* pModel);
 	void SetUp_BoneMatrices(_float4x4* pBoneMatrices, _fmatrix PivotMatrix);
+	void SetUp_PxBoneMatrices(_float4x4* pBoneMatrices, _fmatrix WorldMatrixInv);
 
 	const string& GetName() const { return m_strName; }
 

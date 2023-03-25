@@ -17,6 +17,7 @@ HRESULT CVFX_Manager::Initialize(LEVEL eLevel)
 	FAILED_CHECK(CreateEffect(eLevel));
 	FAILED_CHECK(CreateParticle(eLevel));
 
+#ifndef _DEBUG
 	for (_uint i = 0; i < EFFECT::EF_END; ++i)
 	{
 		for (auto& EffectName : Effects[i])
@@ -32,33 +33,26 @@ HRESULT CVFX_Manager::Initialize(LEVEL eLevel)
 			GetParticle((PARTICLE)i, ParticleName)->SetDelete();
 		}
 	}
+#endif
 
 	//GetEffect(EFFECT::EF_HIT, L"Default_Blood_00")->SetDelete();
 
 	return S_OK;
 }
 
-CEffectGroup* CVFX_Manager::GetEffect(EFFECT eType, wstring wstrEffectTag, const _tchar* wszLayerTag)
+CEffectGroup* CVFX_Manager::GetEffect(EFFECT eType, const wstring& wstrEffectTag, const _tchar* wszLayerTag)
 {
 	return Find_Effect(eType, wstrEffectTag, wszLayerTag);
 }
 
-CEffectGroup* CVFX_Manager::Find_Effect(EFFECT eType, wstring wstrEffectTag, const _tchar* wszLayerTag)
+CEffectGroup* CVFX_Manager::Find_Effect(EFFECT eType, const wstring& wstrEffectTag, const _tchar* wszLayerTag)
 {
 	auto iter = Effects[eType].find(wstrEffectTag);
 
 	if (iter == Effects[eType].end())
 		return nullptr;
 
-	string Dirpath = arrayEffectMatch[eType];
-
-	wstring Tmp = wstrEffectTag + L".json";
-
-	string EffectName = ws2s(Tmp);
-
-	string EffectDir = Dirpath + EffectName;
-
-	// string FinalEffectDir = EffectDir ;
+	string EffectDir = arrayEffectMatch[eType] + ws2s(wstrEffectTag + L".json");
 
 	return Add_Effect(EffectDir, wszLayerTag);
 }
@@ -79,12 +73,12 @@ CEffectGroup* CVFX_Manager::Add_Effect(string strEffectDir, const _tchar* wszLay
 	return pEffect;
 }
 
-CParticleGroup* CVFX_Manager::GetParticle(PARTICLE eType, wstring wstrParticleTag, const _tchar* wszLayerTag)
+CParticleGroup* CVFX_Manager::GetParticle(PARTICLE eType, const wstring& wstrParticleTag, const _tchar* wszLayerTag)
 {
 	return Find_Particle(eType, wstrParticleTag, wszLayerTag);
 }
 
-CParticleGroup* CVFX_Manager::Find_Particle(PARTICLE eType, wstring wstrParticleTag, const _tchar* wszLayerTag)
+CParticleGroup* CVFX_Manager::Find_Particle(PARTICLE eType, const wstring& wstrParticleTag, const _tchar* wszLayerTag)
 {
 	auto iter = Particles[eType].find(wstrParticleTag);
 

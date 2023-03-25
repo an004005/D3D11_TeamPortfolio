@@ -23,6 +23,7 @@ static const float EPSILON = 1e-6f;
 #define SHADER_MONSTER_WEAK 10.f
 
 
+
 #define COL_WHITE float3(1.f, 1.f, 1.f)
 #define COL_BLACK float3(0.f, 0.f, 0.f)
 //#define COL_PURPLE float3(0.545098f, 0.f, 1.f)

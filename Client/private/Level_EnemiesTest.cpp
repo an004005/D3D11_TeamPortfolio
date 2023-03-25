@@ -3,37 +3,25 @@
 
 #include "GameInstance.h"
 #include "Material.h" 
-#include "GameUtils.h"
 #include "Imgui_PropertyEditor.h"
 #include "Imgui_PostProcess.h"
 #include "Imgui_LevelSwitcher.h"
 #include "Imgui_AnimModifier.h"
-#include "Imgui_MapEditor.h"
 #include "Imgui_PhysX.h"
 #include "Imgui_CameraManager.h"
 #include "Imgui_CurveManager.h"
 #include "Model.h"
 #include "JsonLib.h"
-#include "AnimationInstance.h"
-#include "Texture.h"
-#include "MapNonAnim_Object.h"
 #include "JsonStorage.h"
-#include "RigidBody.h"
-#include "Model_Instancing.h"
 #include "SkyBox.h"
-#include "PostVFX_Penetrate.h"
-#include "MapKinetic_Object.h"
 #include "FactoryMethod.h"
 #include "Trigger.h"
 #include "Batch.h"
-#include "PostVFX_Scifi.h"
-#include "PostVFX_Distortion.h"
-#include "ParticleSystem.h"
-#include "TrailSystem.h"
 #include "EffectGroup.h"
-#include "EffectSystem.h"
 #include "VFX_Manager.h"
+#include "Imgui_Batch.h"
 
+//#define ADD_PLAYER
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -51,8 +39,7 @@ HRESULT CLevel_EnemiesTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
-	CVFX_Manager::GetInstance()->Initialize(LEVEL_ENEMIESTEST);
-
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -83,7 +70,7 @@ HRESULT CLevel_EnemiesTest::Initialize()
 
 	if (FAILED(Ready_Layer_Kinetic(TEXT("Layer_Kinetic"))))
 		return E_FAIL;
-		
+
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
 
@@ -93,13 +80,14 @@ HRESULT CLevel_EnemiesTest::Initialize()
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_FrontUI"))))
 		return E_FAIL;
 
+	Ready_Layer_SASPortrait();
+
 	return S_OK;
 }
 
 void CLevel_EnemiesTest::Tick(_double TimeDelta)
 {
 	CLevel::Tick(TimeDelta);
-
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_SPACE))
 	{
@@ -160,11 +148,16 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
+#ifdef ADD_PLAYER
 	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
-	FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
-	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
+#endif
+	//FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 
+	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
+	
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
 
@@ -172,6 +165,8 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_GameObject_Trigger"),
 		CTrigger::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+//	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -183,6 +178,14 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
 	// For_SkySphere
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Env", TEXT("Prototype_GameObject_SkyBox")));
 
+	//Json PreviewData;
+	//{
+	//	PreviewData["Model"] = "Prototype_Model_em110";
+	//	PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
+	//	auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag.c_str(), TEXT("ModelPreview"), &PreviewData);
+	//}
+
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/tests.json");
 	return S_OK;
 }
 
@@ -192,6 +195,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	// if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"))))
 	// 	return E_FAIL;
+
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
 	return S_OK;
@@ -200,40 +204,33 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Camera(const _tchar * pLayerTag)
 HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	
-	/*if (FAILED(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("TestMonster"))))
-		return E_FAIL;*/
 
-	// Test 하지 않는 중인 Monster 넣어두기
-// 	
-//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLegInvisible"))
-//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-10.f, 15.f, 50.f, 1.f));
+#ifndef ADD_PLAYER
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("TestTarget"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
+#endif // !ADD_PLAYER
 
-//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BronJon"))
-//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(140.f, 15.f, 110.f, 1.f));
-//
-//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("BuddyLumi"))
-//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(40.f, 3.f, 3.f, 1.f));
 
-//
-	// pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("FlowerLeg"))
-	// 	->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 3.f, 0.f, 1.f));
-//
-//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPool"))//
-//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(-40.f, 3.f, -3.f, 1.f));
-//
-//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("SkummyPandou"))
-//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(60.f, 3.f, 10.f, 1.f));
+	/*pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em200"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));*/
 
-//
-//	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_MonsterBoss1"))
-//		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(170.f, 3.f, 10.f, 1.f));
- 	
-	// auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
-	// _float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	// pos.y += 1.f;
-	// pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
-	
+		/*pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em700"))
+			->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));*/
+
+	/* pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em650"))
+		 ->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));*/
+
+	/*pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em400"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));*/
+
+	//pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em210"))
+	//	->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
+
+	/*pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em700"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 5.f, 0.f, 1.f));*/
+
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em800"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 3.f, 0.f, 1.f));
 	return S_OK;
 }
 
@@ -247,9 +244,9 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Batch(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_ConstructionSite3F.json");
-
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));
+	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_ConstructionSite3F.json");
+	//
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));
 	return S_OK;
 }
 
@@ -257,13 +254,15 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Player(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+#ifdef ADD_PLAYER
 	Json PreviewData;
 	PreviewData["Model"] = "Model_Player";
-
+	
 	CGameObject* pPlayer = nullptr;
 	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Player"), &PreviewData));
-
+	
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
+#endif
 
 	return S_OK;
 }
@@ -341,6 +340,14 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_UI(const _tchar * pLayerTag)
 	//	wstring protoTag = s2ws(json["Prototype_GameObject"]);
 	//	pGameInstance->Clone_GameObject(pLayerTag, protoTag.c_str(), &json);
 	//});
+
+	return S_OK;
+}
+
+HRESULT CLevel_EnemiesTest::Ready_Layer_SASPortrait()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	pGameInstance->Clone_GameObject(LAYER_SAS, L"Prototype_SASPortrait");
 
 	return S_OK;
 }

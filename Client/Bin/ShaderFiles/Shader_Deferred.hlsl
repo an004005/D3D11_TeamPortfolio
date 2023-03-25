@@ -11,6 +11,8 @@ matrix			g_LightProjMatrix;
 vector			g_vLightDir;
 vector			g_vLightPos;
 float			g_fLightRange;
+vector			g_vCapsuleStart;
+vector			g_vCapsuleEnd;
 
 vector			g_vLightDiffuse;
 vector			g_vLightAmbient;
@@ -166,7 +168,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	    const float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz); // view vector
 
 		Out.vShade.rgb = LightSurface(V, vNormal.xyz, g_vLightDiffuse.xyz, g_vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
-		Out.vShade.a = vDiffuse.a;
+		Out.vShade.a = 1.f;
 
 		return Out;
 
@@ -200,6 +202,8 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	vector		vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	vector		vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
+	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).w;
+	if (fShaderFlag == SHADER_TOON) discard;
 
 	float		fViewZ = vDepthDesc.y * g_Far;
 
@@ -220,41 +224,13 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	float		fDistance = length(vLightDir);
 	float		fAtt = max((g_fLightRange - fDistance), 0.f) / g_fLightRange;
 
-	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).w;
 
 	if (fShaderFlag == SHADER_DEFAULT)
 	{
-		vector		vRMA = g_RMATexture.Sample(LinearSampler, In.vTexUV);
-
-		float3 albedo = vDiffuse.rgb;
-		float metalness = vRMA.g;
-		float roughness = vRMA.r;
-		float AO = vRMA.b;
-
-	    const float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz); // view vector
-
-		float3 vLightColorIntencity = g_vLightDiffuse.xyz * fAtt;
-		Out.vShade.rgb = LightSurface(V, vNormal.xyz, vLightColorIntencity, vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
-		Out.vShade.a = vDiffuse.a;
+		Out.vShade = g_vLightDiffuse * saturate(saturate(dot(normalize(vLightDir) * -1.f, normalize(vNormal)))) * fAtt;
+		Out.vShade.a = 1.f;	
 	}
-	else if (fShaderFlag == SHADER_TOON)
-	{
-		float4 vCTL = g_CTLTexture.Sample(LinearSampler, In.vTexUV);
 
-		float fNdotL = dot(normalize(vNormal.xyz), normalize(g_vLightDir.xyz));
-		float fDiff = saturate(max(fNdotL, 0.0));
-	
-		fDiff = max(vCTL.r , min(vCTL.g, fDiff));
-		fDiff *= vCTL.b * fAtt;
-
-		Out.vShade = g_vLightDiffuse * saturate(fDiff);
-		Out.vShade.a = 1.f;
-		
-		// vector		vLook = vWorldPos - g_vCamPosition;
-		// float spec = GetSpecular(vNormal.xyz, vLook.xyz, vLightDir.xyz, 30.f);
-		// Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec * fAtt;
-	}
-	
 	return Out;
 }
 
@@ -284,7 +260,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	{
 		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
 		Out.vColor = vShade * pow(2.f, vDepth.b);
-		Out.vColor.a = vShade.a;
+		Out.vColor.a = saturate(vShade.a);
 		if (0.0f == Out.vColor.a)
 			discard;
 	}
@@ -381,6 +357,61 @@ PS_OUT PS_OUTLINE(PS_IN In)
 	return Out;
 }
 
+PS_OUT_LIGHT PS_MAIN_CAPSULE(PS_IN In)
+{
+	PS_OUT_LIGHT			Out = (PS_OUT_LIGHT)0;
+
+	float fShaderFlag = g_DepthTexture.Sample(PointSampler, In.vTexUV).w;
+	if (fShaderFlag == SHADER_TOON) 
+		discard;
+
+	vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	vector		vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
+	vector		vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
+
+	float		fViewZ = vDepthDesc.y * g_Far;
+
+	/* 0 ~ 1 => -1 ~ 1 */
+	vector		vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
+
+	vector		vWorldPos;
+	vWorldPos.x = In.vTexUV.x * 2.f - 1.f;
+	vWorldPos.y = In.vTexUV.y * -2.f + 1.f;
+	vWorldPos.z = vDepthDesc.x; /* 0 ~ 1 */
+	vWorldPos.w = 1.0f;
+ 
+	vWorldPos *= fViewZ;
+	vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+	vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+
+	// g_vLightPos : Capsule Center pos;
+	// g_fLightRange : Capsule Radius
+
+    
+    // Calculate capsule axis vector
+    float3 capsuleAxis = g_vCapsuleEnd.xyz - g_vCapsuleStart.xyz;
+
+	float3 vectorToPoint = vWorldPos.xyz - g_vCapsuleStart.xyz;
+	float t = dot(vectorToPoint, capsuleAxis) / dot(capsuleAxis, capsuleAxis);
+	float3 closestPoint = g_vCapsuleStart.xyz + saturate(t) * capsuleAxis;
+    
+    // Calculate closest point on capsule axis to vertex
+    // float3 closestPoint = g_vCapsuleStart.xyz + dot(vWorldPos.xyz - g_vCapsuleStart.xyz, capsuleAxis) / dot(capsuleAxis, capsuleAxis) * capsuleAxis;
+	// float3 vectorToVertex = vWorldPos.xyz - closestPoint;
+	float		fDistance = length(vWorldPos.xyz - closestPoint);
+	vector		vLightDir = float4(vWorldPos.xyz - closestPoint, 0.f);
+	float		fAtt = max((g_fLightRange - fDistance), 0.f) / g_fLightRange;
+
+
+	if (fShaderFlag == SHADER_DEFAULT)
+	{
+		Out.vShade = g_vLightDiffuse * saturate(saturate(dot(normalize(vLightDir) * -1.f, normalize(vNormal)))) * fAtt;
+		Out.vShade.a = 1.f;	
+	}
+
+	
+	return Out;
+}
 
 
 RasterizerState RS_Default
@@ -504,5 +535,17 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_OUTLINE();
+	}
+
+	// 5
+	pass Light_Capsule
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_One, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_CAPSULE();
 	}
 }

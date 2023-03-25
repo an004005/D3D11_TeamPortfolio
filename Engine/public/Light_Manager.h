@@ -18,6 +18,11 @@ public:
 	void Render_Light(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader);
 	void Clear();
 
+	void AddLifePointLight(_float fLife, const _float4& vPos, _float fRange, const _float4& vColor);
+	void AddLifeCapsuleLight(_float fLife, const _float4& vStart, const _float4& vEnd, _float fRange, const _float4& vColor);
+
+	void Tick(_double TimeDelta);
+
 	const _float4x4* GetShadowLightView() const { return &m_ShadowLightView; }
 	const _float4x4* GetShadowLightProj() const { return &m_ShadowLightProj; }
 	void SetShadowCam(class CCamera* pShadowCam);
@@ -27,8 +32,10 @@ public:
 
 	void Imgui_Render();
 
+
 private:
 	unordered_map<string, class CLight*> m_Lights;
+	list<pair<class CLight*, _float>> m_TempLights;
 
 	CCamera* m_pShadowCam = nullptr;
 	_float4x4 m_ShadowLightView;

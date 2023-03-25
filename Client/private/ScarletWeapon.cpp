@@ -35,8 +35,15 @@ void CScarletWeapon::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
-	if (nullptr != m_pRenderer)
+	if (nullptr != m_pRenderer && m_bVisible)
 		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
+}
+
+_matrix CScarletWeapon::Get_WeaponCenterMatrix()
+{
+	_matrix vWeaponCenterMatrix = m_pCollider->GetPxWorldMatrix();
+
+	return vWeaponCenterMatrix;
 }
 
 void CScarletWeapon::Setup_BoneMatrix(CModel* pModel, _fmatrix Transform)

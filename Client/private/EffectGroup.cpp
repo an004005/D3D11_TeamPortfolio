@@ -9,6 +9,7 @@
 #include "GameUtils.h"
 #include "Material.h"
 #include "MaterialPreview.h"
+#include "ScarletWeapon.h"
 
 CEffectGroup::CEffectGroup(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -147,7 +148,7 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 				});
 			}
 		}
-		else if (LEVEL_NOW == LEVEL_PLAYERTEST || LEVEL_NOW == LEVEL_ENEMIESTEST)
+		else if (LEVEL_NOW == LEVEL_ENEMIESTEST)
 		{
 			if (m_iSelectFinishFunc == 0)
 			{
@@ -160,6 +161,37 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 					SetDelete();
 				});
 				// m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+
+			}
+			else if (m_iSelectFinishFunc == 2)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+			}
+			else if (m_iSelectFinishFunc == 3)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
+			}
+			else if (m_iSelectFinishFunc == 4)
+			{
+				m_Timeline.SetFinishFunction([this]
+				{
+					SetDelete();
+				});
+			}
+		}
+		else if (LEVEL_NOW == LEVEL_PLAYERTEST)
+		{
+			if (m_iSelectFinishFunc == 0)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+			}
+			else if (m_iSelectFinishFunc == 1)
+			{
+				 m_Timeline.SetFinishFunction([this]
+				 {
+				 	SetDelete();
+				 });
+				//m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
 
 			}
 			else if (m_iSelectFinishFunc == 2)
@@ -355,6 +387,22 @@ void CEffectGroup::Start_AttachPosition(CGameObject * pOwner, _float4 vPosition,
 	m_Timeline.PlayFromStart();
 }
 
+void CEffectGroup::Start_AttachSword(CGameObject * pWeapon, _bool trueisUpdate)
+{
+	// 무기만 넣어라
+
+	if (pWeapon == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pAttachWeapon = pWeapon;
+	m_bUpdate = trueisUpdate;
+
+	m_Timeline.PlayFromStart();
+}
+
 void CEffectGroup::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
@@ -363,7 +411,7 @@ void CEffectGroup::Tick(_double TimeDelta)
 	VisibleUpdate();
 	
 
-	if(m_bUpdate == true && m_pOwner->IsDeleted() == false)
+	if(m_bUpdate == true && (nullptr != m_pOwner) && m_pOwner->IsDeleted() == false && (nullptr == m_pAttachWeapon))
 	{
 		if(m_BoneName != "")
 		{
@@ -424,6 +472,17 @@ void CEffectGroup::Tick(_double TimeDelta)
 			}
 			
 		}
+	}
+	else if (nullptr != m_pAttachWeapon)
+	{
+		_matrix WeaponMatrix = static_cast<CScarletWeapon*>(m_pAttachWeapon)->Get_WeaponCenterMatrix();
+
+		_matrix	SocketMatrix = { XMVector3Normalize(WeaponMatrix.r[1]),
+			XMVector3Normalize(WeaponMatrix.r[0]),
+			XMVector3Normalize(WeaponMatrix.r[2]),
+			WeaponMatrix.r[3]};
+
+		Set_Transform(SocketMatrix);
 	}
 	
 }
@@ -868,88 +927,29 @@ void CEffectGroup::LoadFromJson(const Json& json)
 {
 	CGameObject::LoadFromJson(json);
 
-
-	// for (auto curveJson : json["Curves"])
-	// {
-		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-		// m_Curves.emplace(pCurve->GetName(), pCurve);
-	// }
-
 	if (json.contains("First_Directory"))
 	{
 		m_First_EffectDirectory = json["First_Directory"];
-
-		
 	}
 
 	if (json.contains("Second_Directory"))
 	{
 		m_Second_EffectDirectory = json["Second_Directory"];
-
-		// if (json.contains("SecondEffect_Curves"))
-		// {
-		// 	for (auto curveJson : json["SecondEffect_Curves"])
-		// 	{
-		// 		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-		// 		// m_SecondEffect_Curves.emplace(pCurve->GetName(), pCurve);
-		// 		// AddEmptyCurve_ForSecond(pCurve->GetName());
-		//
-		// 		LoadAndSetCurve_Second(&curveJson);
-		//
-		// 	}
-		// }
 	}
 
 	if (json.contains("Third_Directory"))
 	{
 		m_Third_EffectDirectory = json["Third_Directory"];
-
-		// if (json.contains("ThirdEffect_Curves"))
-		// {
-		// 	for (auto curveJson : json["ThirdEffect_Curves"])
-		// 	{
-		// 		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-		// 		// m_ThirdEffect_Curves.emplace(pCurve->GetName(), pCurve);
-		// 		// AddEmptyCurve_ForThird(pCurve->GetName());
-		//
-		// 		LoadAndSetCurve_Third(&curveJson);
-		//
-		// 	}
-		// }
 	}
 
 	if (json.contains("Fourth_Directory"))
 	{
 		m_Fourth_EffectDirectory = json["Fourth_Directory"];
-
-		// if (json.contains("FourthEffect_Curves"))
-		// {
-		// 	for (auto curveJson : json["FourthEffect_Curves"])
-		// 	{
-		// 		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-		// 		// m_FourthEffect_Curves.emplace(pCurve->GetName(), pCurve);
-		// 		// AddEmptyCurve_ForFourth(pCurve->GetName());
-		//
-		// 		LoadAndSetCurve_Fourth(&curveJson);
-		// 	}
-		// }
 	}
 
 	if (json.contains("Fifth_Directory"))
 	{
 		m_Fifth_EffectDirectory = json["Fifth_Directory"];
-
-		// if (json.contains("FifthEffect_Curves"))
-		// {
-		// 	for (auto curveJson : json["FifthEffect_Curves"])
-		// 	{
-		// 		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-		// 		// m_FifthEffect_Curves.emplace(pCurve->GetName(), pCurve);
-		// 		// AddEmptyCurve_ForFifth(pCurve->GetName());
-		//
-		// 		LoadAndSetCurve_Fifth(&curveJson);
-		// 	}
-		// }
 	}
 
 	json["End_Time"].get_to<_float>(m_fEndTime);
@@ -1701,6 +1701,8 @@ void CEffectGroup::Start_AttachOnlyPos(_float4 vPos, _bool trueisUpdate)
 		if (nullptr != m_pFifth_EffectSystem)
 			m_pFifth_EffectSystem->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, m_vPosition);
 	}
+
+	m_Timeline.PlayFromStart();
 }
 
 

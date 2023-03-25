@@ -190,6 +190,7 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 
 	m_pObject_Manager->Tick(TimeDelta);
 	m_pLevel_Manager->Tick(TimeDeltaModified);
+	m_pLight_Manager->Tick(TimeDeltaModified);
 
 	m_pObject_Manager->Late_Tick(TimeDelta);
 	m_pLevel_Manager->Late_Tick(TimeDeltaModified);
@@ -496,6 +497,11 @@ CGameObject* CGameInstance::Clone_GameObject_NoLayer(_uint iLevelIndex, const _t
 	return m_pObject_Manager->Clone_GameObject_NoLayer(iLevelIndex, pPrototypeTag, pArg);
 }
 
+CGameObject* CGameInstance::Clone_GameObject_NoLayerNoBegin(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg)
+{
+	return m_pObject_Manager->Clone_GameObject_NoLayerNoBegin(iLevelIndex, pPrototypeTag, pArg);
+}
+
 wcmap<class CLayer*>& CGameInstance::GetLayers(_uint iLevelIndex)
 {
 	return m_pObject_Manager->GetLayers(iLevelIndex);
@@ -524,6 +530,11 @@ CGameObject * CGameInstance::Find_Prototype(_uint iLevelIndex, const _tchar * pP
 void CGameInstance::Add_InLayer(const _tchar * pLayerTag, CGameObject * pGameObject)
 {
 	return m_pObject_Manager->Add_InLayer(pLayerTag, pGameObject);
+}
+
+void CGameInstance::Add_EmptyLayer(_uint iLevelIndex, const _tchar * pLayerTag)
+{
+	return m_pObject_Manager->Add_EmptyLayer(iLevelIndex, pLayerTag);
 }
 
 void CGameInstance::Imgui_ProtoViewer(const _tchar*& szSelectedProto)
@@ -690,6 +701,16 @@ void CGameInstance::ClearLight()
 void CGameInstance::SetShadowCam(CCamera* pShadowCam)
 {
 	m_pLight_Manager->SetShadowCam(pShadowCam);
+}
+
+void CGameInstance::AddLifePointLight(_float fLife, _float4 vPos, _float fRange, _float4 vColor)
+{
+	m_pLight_Manager->AddLifePointLight(fLife, vPos, fRange, vColor);
+}
+
+void CGameInstance::AddLifeCapsuleLight(_float fLife, _float4 vStart, _float4 vEnd, _float fRange, _float4 vColor)
+{
+	m_pLight_Manager->AddLifeCapsuleLight(fLife, vStart, vEnd, fRange, vColor);
 }
 
 /*************************

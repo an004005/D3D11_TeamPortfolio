@@ -47,9 +47,10 @@ CAIController::CAIController(const CAIController& rhs)
 void CAIController::Tick(_double TimeDelta)
 {
 	Invalidate();
+	m_eInput = HANDLE_END;
 	m_fTurnRemain = 0.f;
 
-	if (m_pTarget == nullptr)
+	if (m_pTarget == nullptr || m_bActive == false)
 	{
 		ClearCommands();
 		return;
@@ -188,13 +189,18 @@ void CAIController::SetTarget(CScarletCharacter* pTarget)
 
 _bool CAIController::IsCommandRunning()
 {
-	//_bool bTest = m_Commands.empty() == false;
 	return m_Commands.empty() == false;
 }
 
 void CAIController::ClearCommands()
 {
 	m_Commands.clear();	
+}
+
+void CAIController::Invalidate()
+{
+	CController::Invalidate();
+	m_eInput = HANDLE_END;
 }
 
 void CAIController::Move(EMoveAxis eAxis)
@@ -257,6 +263,7 @@ void CAIController::TurnToTarget(_float fSpeedRatio)
 void CAIController::Input(EHandleInput eInput)
 {
 	m_InputState[eInput] = KEY_STATE::DOWN;
+	m_eInput = eInput;
 }
 
 void CAIController::Move_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)

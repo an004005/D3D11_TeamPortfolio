@@ -409,8 +409,8 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 	//dynamic_cast<CEffectGroup*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_AttackNum"), TEXT("ProtoVFX_EffectGroup"), &json))->Start_EffectWork();
 
 	// NoticeNeon
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/NoticeNeon_fire.json");
-	dynamic_cast<CEffectGroup*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_NoticeNeon_fire"), TEXT("ProtoVFX_EffectGroup"), &json))->Start_EffectWork();
+	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/NoticeNeon_fire.json");
+	// dynamic_cast<CEffectGroup*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_NoticeNeon_fire"), TEXT("ProtoVFX_EffectGroup"), &json))->Start_EffectWork();
 
 
 

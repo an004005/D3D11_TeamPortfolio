@@ -42,6 +42,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_bFinished(rhs.m_bFinished)
 	, m_bLooping(rhs.m_bLooping)
 	, m_vLocalMove(rhs.m_vLocalMove)
+	, m_vSpecialLocalMove(rhs.m_vSpecialLocalMove)
 {
 	m_Channels.reserve(rhs.m_Channels.size());
 	for (auto& channel : rhs.m_Channels)
@@ -81,6 +82,7 @@ HRESULT CAnimation::Initialize(const char* pAnimFilePath)
 	CloseHandle(hFile);
 
 	m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 
 	return S_OK;
 }
@@ -120,6 +122,10 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 				//m_vLocalQuaternion = pChannel->GetLocalQuaternion();
 				//m_vLocalEular = pChannel->GetLocalEular();
 			}
+			if ("Train_Root" == pChannel->GetChannelName())
+			{
+				m_vSpecialLocalMove = pChannel->GetSpecialLocalMove();
+			}
 		}
 		// 이벤트 실행
 		for (auto& iter : m_vecEvent)
@@ -141,6 +147,10 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 				m_vLocalMove = pChannel->GetLocalMove();
 				m_vLocalRotation = pChannel->GetLocalRotation();
 				//m_vLocalQuaternion = pChannel->GetLocalQuaternion();
+			}
+			if ("Train_Root" == pChannel->GetChannelName())
+			{
+				m_vSpecialLocalMove = pChannel->GetSpecialLocalMove();
 			}
 		}
 		for (auto& iter : m_vecEvent)

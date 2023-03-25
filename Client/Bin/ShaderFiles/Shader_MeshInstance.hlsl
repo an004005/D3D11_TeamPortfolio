@@ -22,20 +22,18 @@ struct VS_IN
 	float2		vTexUV : TEXCOORD0;
 	float3		vTangent : TANGENT;
 
-	float4		vRight : TEXCOORD1;
-	float4		vUp : TEXCOORD2;
-	float4		vLook : TEXCOORD3;
-	float4		vTranslation : TEXCOORD4;
-	float4		vControlData : TEXCOORD5;
+	row_major float4x4	Matrix : WORLD;
+	float4		vControlData : TEXCOORD1;
+
 };
 
 struct VS_OUT
 {
 	float4		vPosition : SV_POSITION;
 	float2		vTexUV : TEXCOORD0;
-	float4		vChangeColor : TEXCOORD1;
+	//float4		vChangeColor : TEXCOORD1;
 
-	float		RamainLifeRatio : TEXCOORD2;
+	float		RamainLifeRatio : TEXCOORD1;
 };
 
 struct VS_OUT_NORM
@@ -78,16 +76,13 @@ VS_OUT VS_MAIN(VS_IN In)
 	VS_OUT		Out = (VS_OUT)0;
 
 	matrix			matWV, matVP;
-	matrix			TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+	matrix			TransformMatrix = In.Matrix;
 
 	//matWV = mul(g_WorldMatrix, g_ViewMatrix);
 	matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-
-	Out.RamainLifeRatio = (1.f - In.vControlData.x / In.vControlData.y);
-
-	if (Out.RamainLifeRatio >= 1.f)
-		Out.RamainLifeRatio = 1.f;
+	
+	Out.RamainLifeRatio = saturate((In.vControlData.y - In.vControlData.x )/ In.vControlData.y);
 
 	if(g_bLocal == 1)
 	{
@@ -113,18 +108,17 @@ VS_OUT_NORM VS_MAIN_NORM(VS_IN In)
 	VS_OUT_NORM		Out = (VS_OUT_NORM)0;
 
 	matrix			matWV, matVP;
-	matrix			TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+	matrix			TransformMatrix = In.Matrix;
+	// matrix			TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
 
 	matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-	Out.RamainLifeRatio = (1.f - In.vControlData.x / In.vControlData.y);
+	Out.RamainLifeRatio = saturate((In.vControlData.y - In.vControlData.x )/ In.vControlData.y);
+
 	Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), g_WorldMatrix));
 	Out.vProjPos = Out.vPosition;
 	Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
 	Out.vBinormal = normalize(cross(Out.vNormal.xyz, Out.vTangent.xyz));
-
-	if (Out.RamainLifeRatio >= 1.f)
-		Out.RamainLifeRatio = 1.f;
 
 	if (g_bLocal == 1)
 	{
@@ -146,8 +140,8 @@ struct PS_IN
 {
 	float4		vPosition : SV_POSITION;
 	float2		vTexUV : TEXCOORD0;
-	float4		vChangeColor : TEXCOORD1;
-	float		RamainLifeRatio : TEXCOORD2;
+	//float4		vChangeColor : TEXCOORD1;
+	float		RamainLifeRatio : TEXCOORD1;
 };
 
 struct PS_OUT
@@ -187,8 +181,8 @@ PS_OUT_NORM PS_PLAYER_KINETIC_PARTICLE(PS_IN_NORM In)
 	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
 	vNormal = normalize(mul(vNormal, WorldMatrix));
 
-	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f) * In.RamainLifeRatio;
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, saturate(g_float_0 * In.RamainLifeRatio), flags);
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0 * In.RamainLifeRatio, flags);
 
 	// Out.vColor.a = g_vec4_0.a;
 
@@ -205,7 +199,7 @@ PS_OUT PS_MAIN_TEX(PS_IN In)
 	float4 OriginColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
 
 	Out.vColor = OriginColor;
-
+	// Out.vColor.a = 1.f;
 	// if (Out.vColor.a < 0.001f)
 	// 	discard;
 
@@ -250,6 +244,8 @@ technique11 DefaultTechnique
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
@@ -261,6 +257,8 @@ technique11 DefaultTechnique
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_TEX();
 	}
 
@@ -272,6 +270,8 @@ technique11 DefaultTechnique
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_BLEND_TEX();
 	}
 
@@ -283,6 +283,8 @@ technique11 DefaultTechnique
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_BLEND_TEX_HDR();
 	}
 
@@ -294,6 +296,8 @@ technique11 DefaultTechnique
 
 		VertexShader = compile vs_5_0 VS_MAIN_NORM();
 		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_PLAYER_KINETIC_PARTICLE();
 	}
 }

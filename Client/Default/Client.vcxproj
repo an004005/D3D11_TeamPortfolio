@@ -220,6 +220,7 @@
     <ClInclude Include="..\public\Canvas_SASInfoRightMove.h" />
     <ClInclude Include="..\public\Canvas_SASSkill.h" />
     <ClInclude Include="..\public\Canvas_SASSkillMove.h" />
+    <ClInclude Include="..\public\CapsuleLight.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
@@ -230,6 +231,36 @@
     <ClInclude Include="..\public\EffectGroup.h" />
     <ClInclude Include="..\public\EffectSystem.h" />
     <ClInclude Include="..\public\DefaultUI.h" />
+    <ClInclude Include="..\public\EM0110.h" />
+    <ClInclude Include="..\public\EM0110_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0110_Controller.h" />
+    <ClInclude Include="..\public\EM0200.h" />
+    <ClInclude Include="..\public\EM0200_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0200_Controller.h" />
+    <ClInclude Include="..\public\EM0210.h" />
+    <ClInclude Include="..\public\EM0210_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0210_Controller.h" />
+    <ClInclude Include="..\public\EM0220.h" />
+    <ClInclude Include="..\public\EM0220_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0220_Controller.h" />
+    <ClInclude Include="..\public\EM0221.h" />
+    <ClInclude Include="..\public\EM0400.h" />
+    <ClInclude Include="..\public\EM0400_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0400_Controller.h" />
+    <ClInclude Include="..\public\EM0650.h" />
+    <ClInclude Include="..\public\EM0650_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0650_Controller.h" />
+    <ClInclude Include="..\public\EM0700.h" />
+    <ClInclude Include="..\public\EM0700_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0700_Controller.h" />
+    <ClInclude Include="..\public\EM0320.h" />
+    <ClInclude Include="..\public\EM0320_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0320_Controller.h" />
+    <ClInclude Include="..\public\EM0800.h" />
+    <ClInclude Include="..\public\EM0800_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0800_Controller.h" />
+    <ClInclude Include="..\public\EnemyBullet.h" />
+    <ClInclude Include="..\public\Enemy_AnimInstance.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
     <ClInclude Include="..\public\FLInvisible_AnimInstance.h" />
     <ClInclude Include="..\public\FLInvisible_Controller.h" />
@@ -239,10 +270,18 @@
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\PointLight.h" />
+    <ClInclude Include="..\public\SAS_Cable.h" />
+    <ClInclude Include="..\public\SpecialObject.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_Batch.h" />
     <ClInclude Include="..\public\LevelUpUI.h" />
     <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\GravikenisisMouseUI.h" />
     <ClInclude Include="..\public\GravikenisisGUI.h" />
+    <ClInclude Include="..\public\Enemy.h" />
     <ClInclude Include="..\public\NextMapNameUI.h" />
     <ClInclude Include="..\public\NoticeNeonUI.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
@@ -251,6 +290,7 @@
     <ClInclude Include="..\public\MonsterHpUI.h" />
     <ClInclude Include="..\public\MonsterLockonUI.h" />
     <ClInclude Include="..\public\MonsterShildUI.h" />
+    <ClInclude Include="..\public\PlayerInfoManager.h" />
     <ClInclude Include="..\public\PostVFX_ColorGrading.h" />
     <ClInclude Include="..\public\PostVFX_HitDecal.h" />
     <ClInclude Include="..\public\Imgui_EffectBrowser.h" />
@@ -312,6 +352,7 @@
     <ClInclude Include="..\public\SASSkillLightUI.h" />
     <ClInclude Include="..\public\ScarletMap.h" />
     <ClInclude Include="..\public\ScarletWeapon.h" />
+    <ClInclude Include="..\public\SimpleTrigger.h" />
     <ClInclude Include="..\public\SkMpBullet.h" />
     <ClInclude Include="..\public\SkmP_AnimInstance.h" />
     <ClInclude Include="..\public\SkmP_Controller.h" />
@@ -323,9 +364,16 @@
     </ClInclude>
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
+    <ClInclude Include="..\public\Special_HBeam_Bundle.h" />
+    <ClInclude Include="..\public\Special_HBeam_Single.h" />
+    <ClInclude Include="..\public\Special_TelephonePole.h" />
+    <ClInclude Include="..\public\Special_Train.h" />
+    <ClInclude Include="..\public\SpawnTrigger.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\TestCamera.h" />
+    <ClInclude Include="..\public\TestTarget.h" />
     <ClInclude Include="..\public\Trigger.h" />
+    <ClInclude Include="..\public\TriggerEx.h" />
     <ClInclude Include="..\public\TutorialUI.h" />
     <ClInclude Include="..\public\Tutorial_CheckUI.h" />
     <ClInclude Include="..\public\Tutorial_SuccessUI.h" />
@@ -391,6 +439,7 @@
     <ClCompile Include="..\private\Camera_Player.cpp" />
     <ClCompile Include="..\private\CamSpot.cpp" />
     <ClCompile Include="..\private\Canvas_SASSkillMove.cpp" />
+    <ClCompile Include="..\private\CapsuleLight.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\Drive_GaugeUI.cpp" />
@@ -399,6 +448,36 @@
     <ClCompile Include="..\private\EffectGroup.cpp" />
     <ClCompile Include="..\private\EffectSystem.cpp" />
     <ClCompile Include="..\private\DefaultUI.cpp" />
+    <ClCompile Include="..\private\EM0110.cpp" />
+    <ClCompile Include="..\private\EM0110_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0110_Controller.cpp" />
+    <ClCompile Include="..\private\EM0200.cpp" />
+    <ClCompile Include="..\private\EM0200_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0200_Controller.cpp" />
+    <ClCompile Include="..\private\EM0210.cpp" />
+    <ClCompile Include="..\private\EM0210_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0210_Controller.cpp" />
+    <ClCompile Include="..\private\EM0220.cpp" />
+    <ClCompile Include="..\private\EM0220_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0220_Controller.cpp" />
+    <ClCompile Include="..\private\EM0221.cpp" />
+    <ClCompile Include="..\private\EM0400.cpp" />
+    <ClCompile Include="..\private\EM0400_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0400_Controller.cpp" />
+    <ClCompile Include="..\private\EM0650.cpp" />
+    <ClCompile Include="..\private\EM0650_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0650_Controller.cpp" />
+    <ClCompile Include="..\private\EM0700.cpp" />
+    <ClCompile Include="..\private\EM0700_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0700_Controller.cpp" />
+    <ClCompile Include="..\private\EM0320.cpp" />
+    <ClCompile Include="..\private\EM0320_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0320_Controller.cpp" />
+    <ClCompile Include="..\private\EM0800.cpp" />
+    <ClCompile Include="..\private\EM0800_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0800_Controller.cpp" />
+    <ClCompile Include="..\private\EnemyBullet.cpp" />
+    <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />
     <ClCompile Include="..\private\FLInvisible_AnimInstance.cpp" />
     <ClCompile Include="..\private\FLInvisible_Controller.cpp" />
@@ -408,10 +487,18 @@
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\PointLight.cpp" />
+    <ClCompile Include="..\private\SAS_Cable.cpp" />
+    <ClCompile Include="..\private\SpecialObject.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_Batch.cpp" />
     <ClCompile Include="..\private\LevelUpUI.cpp" />
     <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\GravikenisisMouseUI.cpp" />
     <ClCompile Include="..\private\GravikenisisGUI.cpp" />
+    <ClCompile Include="..\private\Enemy.cpp" />
     <ClCompile Include="..\private\NextMapNameUI.cpp" />
     <ClCompile Include="..\private\NoticeNeonUI.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />
@@ -420,6 +507,7 @@
     <ClCompile Include="..\private\MonsterHpUI.cpp" />
     <ClCompile Include="..\private\MonsterLockonUI.cpp" />
     <ClCompile Include="..\private\MonsterShildUI.cpp" />
+    <ClCompile Include="..\private\PlayerInfoManager.cpp" />
     <ClCompile Include="..\private\PostVFX_ColorGrading.cpp" />
     <ClCompile Include="..\private\PostVFX_HitDecal.cpp" />
     <ClCompile Include="..\private\Imgui_EffectBrowser.cpp" />
@@ -481,6 +569,7 @@
     <ClCompile Include="..\private\SASSkillLightUI.cpp" />
     <ClCompile Include="..\private\ScarletMap.cpp" />
     <ClCompile Include="..\private\ScarletWeapon.cpp" />
+    <ClCompile Include="..\private\SimpleTrigger.cpp" />
     <ClCompile Include="..\private\SkMpBullet.cpp" />
     <ClCompile Include="..\private\SkmP_AnimInstance.cpp" />
     <ClCompile Include="..\private\SkmP_Controller.cpp" />
@@ -492,9 +581,16 @@
     </ClCompile>
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
+    <ClCompile Include="..\private\Special_HBeam_Bundle.cpp" />
+    <ClCompile Include="..\private\Special_HBeam_Single.cpp" />
+    <ClCompile Include="..\private\Special_TelephonePole.cpp" />
+    <ClCompile Include="..\private\Special_Train.cpp" />
+    <ClCompile Include="..\private\SpawnTrigger.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\TestCamera.cpp" />
+    <ClCompile Include="..\private\TestTarget.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
+    <ClCompile Include="..\private\TriggerEx.cpp" />
     <ClCompile Include="..\private\TutorialUI.cpp" />
     <ClCompile Include="..\private\Tutorial_CheckUI.cpp" />
     <ClCompile Include="..\private\Tutorial_SuccessUI.cpp" />
@@ -543,6 +639,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing_Shadow.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Shadow.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_VFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstanceTrail_VFX.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstance_ParticleSystem.hlsl" />
