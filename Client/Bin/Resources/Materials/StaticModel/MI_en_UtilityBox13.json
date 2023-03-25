@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Prop/10_Props/Interior/pr_Subway_Station/Utility_Box_13_BaseColor.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Interior/pr_Subway_Station/Utility_Box_13_Normal.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Interior/pr_Subway_Station/T_en_Utility_Box_13_RMA.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}

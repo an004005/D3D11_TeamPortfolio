@@ -39,6 +39,8 @@
 #include "SimpleTrigger.h"
 #include "PointLight.h"
 #include "CapsuleLight.h"
+#include "GameManager.h"
+#include "PostVFX_ColorGrading.h"
 
 
 CMainApp::CMainApp()
@@ -71,6 +73,9 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototype_GameObject()))
 		return E_FAIL;
 
+	// 기본 게임매니저 셋팅
+	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
+
 	if (FAILED(Start_Level(LEVEL_LOGO)))
 		return E_FAIL;
 
@@ -87,6 +92,7 @@ void CMainApp::Tick(_double TimeDelta)
 		return;
 
 	m_pGameInstance->Tick_Engine(TimeDelta);
+	CGameManager::GetInstance()->Tick(TimeDelta);
  }
 
 HRESULT CMainApp::Render()
@@ -157,6 +163,15 @@ HRESULT CMainApp::Ready_Prototype_Component()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_Distortion"),
 		CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_PostVFX_ColorGrading"),
+		CPostVFX_ColorGrading::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For. ProtoPostVFX_Penetrate */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_Penetrate"),
+		CPostVFX_Penetrate::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
@@ -363,10 +378,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_RigidBody"), CRigidBody::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_SpawnTrigger"), CSpawnTrigger::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_SimpleTrigger"), CSimpleTrigger::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_PointLight"), CPointLight::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_CapsuleLight"), CCapsuleLight::Create(m_pDevice, m_pContext))))
@@ -425,10 +437,7 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 		CMapKinetic_Object::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
-	/* For. ProtoPostVFX_Penetrate */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_Penetrate"),
-		CPostVFX_Penetrate::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -450,6 +459,7 @@ void CMainApp::Free()
 	CVFX_Manager::GetInstance()->DestroyInstance();
 	CUI_Manager::GetInstance()->DestroyInstance();
 	CPlayerInfoManager::GetInstance()->DestroyInstance();
+	CGameManager::DestroyInstance();
 
 	m_pGameInstance->Clear_ImguiObjects();
 	m_pGameInstance->Clear();

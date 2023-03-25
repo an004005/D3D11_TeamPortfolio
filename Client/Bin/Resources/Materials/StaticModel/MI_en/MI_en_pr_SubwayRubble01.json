@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Subway/pr_SubwayRubble01/T_pr_SubwayRubble01_ALB.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Subway/pr_SubwayRubble01/T_pr_SubwayRubble01_NML.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Subway/pr_SubwayRubble01/T_pr_SubwayRubble01_RMA.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}
