@@ -126,6 +126,16 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 	else if (true == m_pSpecialObject->IsDeleted()) m_pSpecialObject = nullptr;
 
 	SAS_Checker();
+
+	_uint iCnt = 0;
+	int Test[3] = { -1, -1, -1 };
+	for (auto& iter : m_PlayerSasTypeList)
+	{
+		Test[iCnt] = (int)iter;
+		iCnt++;
+	}
+
+	IM_LOG("SAS : %d %d %d", Test[0], Test[1], Test[2]);
 }
 
 _bool CPlayerInfoManager::Get_isSasUsing(ESASType eType)

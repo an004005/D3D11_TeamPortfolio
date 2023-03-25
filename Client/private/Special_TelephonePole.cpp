@@ -45,12 +45,16 @@ void CSpecial_TelephonePole::BeginTick()
 
 	m_PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixTranslation(0.f, 2.f, 0.f);
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(CMathUtils::RandomFloat(-20.f, 20.f)));
+
+	m_pCollider->Set_Kinetic(true);
+	m_pCollider->UpdateChange();
 }
 
 void CSpecial_TelephonePole::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	m_pCollider->Update_Tick(m_pTransformCom);
 	//m_pTransformCom->SetTransformDesc({ 0.5f, XMConvertToRadians(90.f) });
 }
 
@@ -62,6 +66,8 @@ void CSpecial_TelephonePole::Late_Tick(_double TimeDelta)
 void CSpecial_TelephonePole::AfterPhysX()
 {
 	__super::AfterPhysX();
+
+	m_pCollider->Update_AfterPhysX(m_pTransformCom);
 }
 
 HRESULT CSpecial_TelephonePole::Render()

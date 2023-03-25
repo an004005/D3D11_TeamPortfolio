@@ -32,10 +32,16 @@ public:
 	void			SetCurState(const string& szStateName) { m_pASM_Base->SetCurState(szStateName); }
 
 public:
+	void			Add_Teleport_Motion();
+	void			Release_Teleport_Motion();
+	void			Add_Eletric_Motion();
+	void			Release_Eletric_Motion();
+
 	void			Add_SpairSasMotion(ESASType eSasType);
 
 protected:
 	void			SpairAnimationChecker();
+	void			SpairAnimationManager();
 
 protected:
 	_bool	CheckAnim(const string& szAnimName);
@@ -59,6 +65,8 @@ protected:	// 대상의 상태
 
 	_bool	m_bSeperateAnim = false;
 	_bool	m_bOnBattle = false;
+
+	list<ESASType>	m_SasList;
 
 	_bool	m_bOnFloor = false;
 

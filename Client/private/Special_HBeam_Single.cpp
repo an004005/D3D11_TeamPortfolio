@@ -32,7 +32,7 @@ HRESULT CSpecial_HBeam_Single::Initialize(void * pArg)
 
 	FAILED_CHECK(SetUp_Components(pArg));
 
-	m_pTransformCom->SetTransformDesc({ 0.1f, XMConvertToRadians(90.f) });
+	m_pTransformCom->SetTransformDesc({ 0.1f, XMConvertToRadians(1000.f) });
 
 	m_eSpecialObejctType = SPECIAL_HBEAM_SINGLE;
 

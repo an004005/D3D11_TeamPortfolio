@@ -2535,15 +2535,29 @@ void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
 
 	m_bLerp = m_pASM_Base->isLerping();
 
-
+	// 애니메이션 변경 확인하는 부분
 	_bool bBefOnBattle = m_bOnBattle;
 	m_bOnBattle = pPlayer->isBattle();
+	list<ESASType> BefSasList = m_SasList;
+	m_SasList = CPlayerInfoManager::GetInstance()->Get_PlayerSasList();
 
-	// 전투,비전투가 변경되면 스페어 애니메이션 관리
-	if (bBefOnBattle != m_bOnBattle)
+	_bool bSasChange = false;
+	for (auto& iter : BefSasList)
 	{
-		SpairAnimationChecker();
+		if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(iter))
+		{
+			bSasChange = true;
+			break;
+		}
 	}
+
+	_bool bSpairCheck = (bBefOnBattle != m_bOnBattle) || (bSasChange);
+
+	if (bSpairCheck)
+	{
+		SpairAnimationManager();
+	}
+	// ~애니메이션 변경 확인하는 부분
 }
 
 void CBaseAnimInstance::Imgui_RenderState()
@@ -2685,6 +2699,22 @@ void CBaseAnimInstance::ClearAnimSocket(const string & strSocName)
 	}
 
 	m_bSeperateSwitch = false;
+}
+
+void CBaseAnimInstance::Add_Teleport_Motion()
+{
+}
+
+void CBaseAnimInstance::Release_Teleport_Motion()
+{
+}
+
+void CBaseAnimInstance::Add_Eletric_Motion()
+{
+}
+
+void CBaseAnimInstance::Release_Eletric_Motion()
+{
 }
 
 void CBaseAnimInstance::Add_SpairSasMotion(ESASType eSasType)
@@ -2891,6 +2921,227 @@ void CBaseAnimInstance::SpairAnimationChecker()
 			iter.second->m_SpairAnimation = nullptr;
 		}
 	}
+}
+
+void CBaseAnimInstance::SpairAnimationManager()
+{
+	// 전투, 비전투 상태 체크 및 SAS상태 체크하여 변경이 일어났으면 애니메이션을 갈아끼워주는 역할을 진행
+	_bool bIsBattle = m_bOnBattle;
+	_bool bIsTeleport = CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_TELEPORT);
+	_bool bIsEletric = CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_ELETRIC);
+
+	// 변경을 확인했으므로 SpairAnim을 싹 비움
+	// Spair가 꺼질 때 현재 재생중인 애니메이션은 꺼지면 안됨 -> 이거 변경할 것
+	for (auto& iter : m_pASM_Base->Get_MapStates())
+	{
+		if (m_pASM_Base->GetCurState() == iter.second)
+		{
+			iter.second->m_ReserveAnimation = iter.second->m_Animation;
+			//iter.second->m_ReserveAnimation->Reset(); -> 필요없나봅니다
+		}
+		else
+		{
+			iter.second->m_SpairAnimation = nullptr;
+		}
+	}
+
+	/*
+	분기 종류
+	1. 일반 전투 상태일 때
+	2. Teleport 사용중인 상태일 때
+	3. Eletric 사용중인 상태일 때
+	4. Teleport와 Eletric 전부 사용중인 상태일 때
+	*/
+
+	if (true == bIsBattle && false == bIsTeleport && false == bIsEletric)
+	{
+		// 1. 일반 전투 상태일 때
+		m_pASM_Base->SetSpairAnim("IDLE", m_pModel->Find_Animation("AS_ch0100_101_AL_wait01"));
+		m_pASM_Base->SetSpairAnim("WALK", m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"));
+		m_pASM_Base->SetSpairAnim("WALK_START_FRONT", m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"));
+		m_pASM_Base->SetSpairAnim("WALK_START_LEFT", m_pModel->Find_Animation("AS_ch0100_122_AL_run_start_L"));
+		m_pASM_Base->SetSpairAnim("WALK_START_RIGHT", m_pModel->Find_Animation("AS_ch0100_123_AL_run_start_R"));
+		m_pASM_Base->SetSpairAnim("WALK_START_BACK_LEFT", m_pModel->Find_Animation("AS_ch0100_124_AL_run_start_BL"));
+		m_pASM_Base->SetSpairAnim("WALK_START_BACK_RIGHT", m_pModel->Find_Animation("AS_ch0100_125_AL_run_start_BR"));
+		m_pASM_Base->SetSpairAnim("WALK_LOOP", m_pModel->Find_Animation("AS_ch0100_126_AL_run"));
+		m_pASM_Base->SetSpairAnim("WALK_END", m_pModel->Find_Animation("AS_ch0100_128_AL_run_end"));
+		m_pASM_Base->SetSpairAnim("DASH", m_pModel->Find_Animation("AS_ch0100_151_AL_dodge_F_start"));
+		m_pASM_Base->SetSpairAnim("DASH_START_FRONT", m_pModel->Find_Animation("AS_ch0100_151_AL_dodge_F_start"));
+		m_pASM_Base->SetSpairAnim("DASH_END_FRONT", m_pModel->Find_Animation("AS_ch0100_151_AL_dodge_F_stop"));
+		m_pASM_Base->SetSpairAnim("DASH_START_LEFT", m_pModel->Find_Animation("AS_ch0100_157_AL_dodge_L_start"));
+		m_pASM_Base->SetSpairAnim("DASH_END_LEFT", m_pModel->Find_Animation("AS_ch0100_157_AL_dodge_L_stop"));
+		m_pASM_Base->SetSpairAnim("DASH_START_RIGHT", m_pModel->Find_Animation("AS_ch0100_153_AL_dodge_R_start"));
+		m_pASM_Base->SetSpairAnim("DASH_END_RIGHT", m_pModel->Find_Animation("AS_ch0100_153_AL_dodge_R_stop"));
+		m_pASM_Base->SetSpairAnim("DASH_START_BACK", m_pModel->Find_Animation("AS_ch0100_155_AL_dodge_B_start"));
+		m_pASM_Base->SetSpairAnim("DASH_END_BACK", m_pModel->Find_Animation("AS_ch0100_155_AL_dodge_B_stop"));
+		m_pASM_Base->SetSpairAnim("RUN_FRONT", m_pModel->Find_Animation("AS_ch0100_136_AL_dash"));
+		m_pASM_Base->SetSpairAnim("RUN_END", m_pModel->Find_Animation("AS_ch0100_138_AL_dash_stop"));
+		m_pASM_Base->SetSpairAnim("JUMP_START", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_start"));
+		m_pASM_Base->SetSpairAnim("JUMP_RISE", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_rise"));
+		m_pASM_Base->SetSpairAnim("JUMP_FALL", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_fall"));
+		m_pASM_Base->SetSpairAnim("JUMP_LANDING", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_landing"));
+		m_pASM_Base->SetSpairAnim("DOUBLE_JUMP_RISE", m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_START", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_start"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_rise"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_FALL", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_fall"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_LANDING", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_landing"));
+		m_pASM_Base->SetSpairAnim("DOUBLE_RUNJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_START", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_start"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_rise"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_FALL", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_fall"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_LANDING", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_landing"));
+		m_pASM_Base->SetSpairAnim("DOUBLE_DASHJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE", m_pModel->Find_Animation("AS_ch0100_161_AL_air_dodge_F"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_FRONT", m_pModel->Find_Animation("AS_ch0100_161_AL_air_dodge_F"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_BACK", m_pModel->Find_Animation("AS_ch0100_165_AL_air_dodge_B"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_LEFT", m_pModel->Find_Animation("AS_ch0100_167_AL_air_dodge_L"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_RIGHT", m_pModel->Find_Animation("AS_ch0100_163_AL_air_dodge_R"));
+	}
+	else if (true == bIsBattle && true == bIsTeleport && false == bIsEletric)
+	{
+		// 2. Teleport 사용중인 상태일 때
+		m_pASM_Base->SetSpairAnim("IDLE", m_pModel->Find_Animation("AS_ch0100_101_AL_wait01"));
+		m_pASM_Base->SetSpairAnim("WALK", m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"));
+		m_pASM_Base->SetSpairAnim("WALK_START_FRONT", m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"));
+		m_pASM_Base->SetSpairAnim("WALK_START_LEFT", m_pModel->Find_Animation("AS_ch0100_122_AL_run_start_L"));
+		m_pASM_Base->SetSpairAnim("WALK_START_RIGHT", m_pModel->Find_Animation("AS_ch0100_123_AL_run_start_R"));
+		m_pASM_Base->SetSpairAnim("WALK_START_BACK_LEFT", m_pModel->Find_Animation("AS_ch0100_124_AL_run_start_BL"));
+		m_pASM_Base->SetSpairAnim("WALK_START_BACK_RIGHT", m_pModel->Find_Animation("AS_ch0100_125_AL_run_start_BR"));
+		m_pASM_Base->SetSpairAnim("WALK_LOOP", m_pModel->Find_Animation("AS_ch0100_126_AL_run"));
+		m_pASM_Base->SetSpairAnim("WALK_END", m_pModel->Find_Animation("AS_ch0100_128_AL_run_end"));
+
+		m_pASM_Base->SetSpairAnim("DASH", m_pModel->Find_Animation("AS_ch0100_151_AL_sas_dodge_F_start_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_START_FRONT", m_pModel->Find_Animation("AS_ch0100_151_AL_sas_dodge_F_start_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_END_FRONT", m_pModel->Find_Animation("AS_ch0100_151_AL_sas_dodge_F_stop_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_START_LEFT", m_pModel->Find_Animation("AS_ch0100_157_AL_sas_dodge_L_start_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_END_LEFT", m_pModel->Find_Animation("AS_ch0100_157_AL_sas_dodge_L_stop_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_START_RIGHT", m_pModel->Find_Animation("AS_ch0100_153_AL_sas_dodge_R_start_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_END_RIGHT", m_pModel->Find_Animation("AS_ch0100_153_AL_sas_dodge_R_stop_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_START_BACK", m_pModel->Find_Animation("AS_ch0100_155_AL_sas_dodge_B_start_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_END_BACK", m_pModel->Find_Animation("AS_ch0100_155_AL_sas_dodge_B_stop_Telepo"));
+
+		m_pASM_Base->SetSpairAnim("RUN_FRONT", m_pModel->Find_Animation("AS_ch0100_136_AL_dash"));
+		m_pASM_Base->SetSpairAnim("RUN_END", m_pModel->Find_Animation("AS_ch0100_138_AL_dash_stop"));
+		m_pASM_Base->SetSpairAnim("JUMP_START", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_start"));
+		m_pASM_Base->SetSpairAnim("JUMP_RISE", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_rise"));
+		m_pASM_Base->SetSpairAnim("JUMP_FALL", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_fall"));
+		m_pASM_Base->SetSpairAnim("JUMP_LANDING", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_landing"));
+		m_pASM_Base->SetSpairAnim("DOUBLE_JUMP_RISE", m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_START", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_start"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_rise"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_FALL", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_fall"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_LANDING", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_landing"));
+		m_pASM_Base->SetSpairAnim("DOUBLE_RUNJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_START", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_start"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_rise"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_FALL", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_fall"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_LANDING", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_landing"));
+		m_pASM_Base->SetSpairAnim("DOUBLE_DASHJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE", m_pModel->Find_Animation("AS_ch0100_161_AL_air_dodge_F"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_FRONT", m_pModel->Find_Animation("AS_ch0100_161_AL_air_dodge_F"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_BACK", m_pModel->Find_Animation("AS_ch0100_165_AL_air_dodge_B"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_LEFT", m_pModel->Find_Animation("AS_ch0100_167_AL_air_dodge_L"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_RIGHT", m_pModel->Find_Animation("AS_ch0100_163_AL_air_dodge_R"));
+	}
+	else if (true == bIsBattle && false == bIsTeleport && true == bIsEletric)
+	{
+		// 3. Eletric 사용중인 상태일 때
+		m_pASM_Base->SetSpairAnim("ATK_A1", m_pModel->Find_Animation("AS_ch0100_201_AL_atk_a1_Electric"));
+		m_pASM_Base->SetSpairAnim("ATK_A2", m_pModel->Find_Animation("AS_ch0100_202_AL_atk_a2_Electric"));
+		m_pASM_Base->SetSpairAnim("ATK_A3", m_pModel->Find_Animation("AS_ch0100_203_AL_atk_a3_Electric"));
+
+		m_pASM_Base->SetSpairAnim("IDLE", m_pModel->Find_Animation("AS_ch0100_101_AL_wait01"));
+		m_pASM_Base->SetSpairAnim("WALK", m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"));
+		m_pASM_Base->SetSpairAnim("WALK_START_FRONT", m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"));
+		m_pASM_Base->SetSpairAnim("WALK_START_LEFT", m_pModel->Find_Animation("AS_ch0100_122_AL_run_start_L"));
+		m_pASM_Base->SetSpairAnim("WALK_START_RIGHT", m_pModel->Find_Animation("AS_ch0100_123_AL_run_start_R"));
+		m_pASM_Base->SetSpairAnim("WALK_START_BACK_LEFT", m_pModel->Find_Animation("AS_ch0100_124_AL_run_start_BL"));
+		m_pASM_Base->SetSpairAnim("WALK_START_BACK_RIGHT", m_pModel->Find_Animation("AS_ch0100_125_AL_run_start_BR"));
+		m_pASM_Base->SetSpairAnim("WALK_LOOP", m_pModel->Find_Animation("AS_ch0100_126_AL_run"));
+		m_pASM_Base->SetSpairAnim("WALK_END", m_pModel->Find_Animation("AS_ch0100_128_AL_run_end"));
+		m_pASM_Base->SetSpairAnim("DASH", m_pModel->Find_Animation("AS_ch0100_151_AL_dodge_F_start"));
+		m_pASM_Base->SetSpairAnim("DASH_START_FRONT", m_pModel->Find_Animation("AS_ch0100_151_AL_dodge_F_start"));
+		m_pASM_Base->SetSpairAnim("DASH_END_FRONT", m_pModel->Find_Animation("AS_ch0100_151_AL_dodge_F_stop"));
+		m_pASM_Base->SetSpairAnim("DASH_START_LEFT", m_pModel->Find_Animation("AS_ch0100_157_AL_dodge_L_start"));
+		m_pASM_Base->SetSpairAnim("DASH_END_LEFT", m_pModel->Find_Animation("AS_ch0100_157_AL_dodge_L_stop"));
+		m_pASM_Base->SetSpairAnim("DASH_START_RIGHT", m_pModel->Find_Animation("AS_ch0100_153_AL_dodge_R_start"));
+		m_pASM_Base->SetSpairAnim("DASH_END_RIGHT", m_pModel->Find_Animation("AS_ch0100_153_AL_dodge_R_stop"));
+		m_pASM_Base->SetSpairAnim("DASH_START_BACK", m_pModel->Find_Animation("AS_ch0100_155_AL_dodge_B_start"));
+		m_pASM_Base->SetSpairAnim("DASH_END_BACK", m_pModel->Find_Animation("AS_ch0100_155_AL_dodge_B_stop"));
+		m_pASM_Base->SetSpairAnim("RUN_FRONT", m_pModel->Find_Animation("AS_ch0100_136_AL_dash"));
+		m_pASM_Base->SetSpairAnim("RUN_END", m_pModel->Find_Animation("AS_ch0100_138_AL_dash_stop"));
+		m_pASM_Base->SetSpairAnim("JUMP_START", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_start"));
+		m_pASM_Base->SetSpairAnim("JUMP_RISE", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_rise"));
+		m_pASM_Base->SetSpairAnim("JUMP_FALL", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_fall"));
+		m_pASM_Base->SetSpairAnim("JUMP_LANDING", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_landing"));
+		m_pASM_Base->SetSpairAnim("DOUBLE_JUMP_RISE", m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_START", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_start"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_rise"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_FALL", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_fall"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_LANDING", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_landing"));
+		m_pASM_Base->SetSpairAnim("DOUBLE_RUNJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_START", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_start"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_rise"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_FALL", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_fall"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_LANDING", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_landing"));
+		m_pASM_Base->SetSpairAnim("DOUBLE_DASHJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE", m_pModel->Find_Animation("AS_ch0100_161_AL_air_dodge_F"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_FRONT", m_pModel->Find_Animation("AS_ch0100_161_AL_air_dodge_F"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_BACK", m_pModel->Find_Animation("AS_ch0100_165_AL_air_dodge_B"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_LEFT", m_pModel->Find_Animation("AS_ch0100_167_AL_air_dodge_L"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_RIGHT", m_pModel->Find_Animation("AS_ch0100_163_AL_air_dodge_R"));
+	}
+	else if (true == bIsBattle && true == bIsTeleport && true == bIsEletric)
+	{
+		// 4. Teleport와 Eletric 전부 사용중인 상태일 때
+		m_pASM_Base->SetSpairAnim("ATK_A1", m_pModel->Find_Animation("AS_ch0100_201_AL_atk_a1_Electric"));
+		m_pASM_Base->SetSpairAnim("ATK_A2", m_pModel->Find_Animation("AS_ch0100_202_AL_atk_a2_Electric"));
+		m_pASM_Base->SetSpairAnim("ATK_A3", m_pModel->Find_Animation("AS_ch0100_203_AL_atk_a3_Electric"));
+
+		m_pASM_Base->SetSpairAnim("IDLE", m_pModel->Find_Animation("AS_ch0100_101_AL_wait01"));
+		m_pASM_Base->SetSpairAnim("WALK", m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"));
+		m_pASM_Base->SetSpairAnim("WALK_START_FRONT", m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"));
+		m_pASM_Base->SetSpairAnim("WALK_START_LEFT", m_pModel->Find_Animation("AS_ch0100_122_AL_run_start_L"));
+		m_pASM_Base->SetSpairAnim("WALK_START_RIGHT", m_pModel->Find_Animation("AS_ch0100_123_AL_run_start_R"));
+		m_pASM_Base->SetSpairAnim("WALK_START_BACK_LEFT", m_pModel->Find_Animation("AS_ch0100_124_AL_run_start_BL"));
+		m_pASM_Base->SetSpairAnim("WALK_START_BACK_RIGHT", m_pModel->Find_Animation("AS_ch0100_125_AL_run_start_BR"));
+		m_pASM_Base->SetSpairAnim("WALK_LOOP", m_pModel->Find_Animation("AS_ch0100_126_AL_run"));
+		m_pASM_Base->SetSpairAnim("WALK_END", m_pModel->Find_Animation("AS_ch0100_128_AL_run_end"));
+
+		m_pASM_Base->SetSpairAnim("DASH", m_pModel->Find_Animation("AS_ch0100_151_AL_sas_dodge_F_start_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_START_FRONT", m_pModel->Find_Animation("AS_ch0100_151_AL_sas_dodge_F_start_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_END_FRONT", m_pModel->Find_Animation("AS_ch0100_151_AL_sas_dodge_F_stop_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_START_LEFT", m_pModel->Find_Animation("AS_ch0100_157_AL_sas_dodge_L_start_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_END_LEFT", m_pModel->Find_Animation("AS_ch0100_157_AL_sas_dodge_L_stop_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_START_RIGHT", m_pModel->Find_Animation("AS_ch0100_153_AL_sas_dodge_R_start_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_END_RIGHT", m_pModel->Find_Animation("AS_ch0100_153_AL_sas_dodge_R_stop_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_START_BACK", m_pModel->Find_Animation("AS_ch0100_155_AL_sas_dodge_B_start_Telepo"));
+		m_pASM_Base->SetSpairAnim("DASH_END_BACK", m_pModel->Find_Animation("AS_ch0100_155_AL_sas_dodge_B_stop_Telepo"));
+
+		m_pASM_Base->SetSpairAnim("RUN_FRONT", m_pModel->Find_Animation("AS_ch0100_136_AL_dash"));
+		m_pASM_Base->SetSpairAnim("RUN_END", m_pModel->Find_Animation("AS_ch0100_138_AL_dash_stop"));
+		m_pASM_Base->SetSpairAnim("JUMP_START", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_start"));
+		m_pASM_Base->SetSpairAnim("JUMP_RISE", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_rise"));
+		m_pASM_Base->SetSpairAnim("JUMP_FALL", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_fall"));
+		m_pASM_Base->SetSpairAnim("JUMP_LANDING", m_pModel->Find_Animation("AS_ch0100_141_AL_jump_landing"));
+		m_pASM_Base->SetSpairAnim("DOUBLE_JUMP_RISE", m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_START", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_start"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_rise"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_FALL", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_fall"));
+		m_pASM_Base->SetSpairAnim("RUNJUMP_LANDING", m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_landing"));
+		m_pASM_Base->SetSpairAnim("DOUBLE_RUNJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_START", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_start"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_rise"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_FALL", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_fall"));
+		m_pASM_Base->SetSpairAnim("DASHJUMP_LANDING", m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_landing"));
+		m_pASM_Base->SetSpairAnim("DOUBLE_DASHJUMP_RISE", m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE", m_pModel->Find_Animation("AS_ch0100_161_AL_air_dodge_F"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_FRONT", m_pModel->Find_Animation("AS_ch0100_161_AL_air_dodge_F"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_BACK", m_pModel->Find_Animation("AS_ch0100_165_AL_air_dodge_B"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_LEFT", m_pModel->Find_Animation("AS_ch0100_167_AL_air_dodge_L"));
+		m_pASM_Base->SetSpairAnim("AIR_DODGE_RIGHT", m_pModel->Find_Animation("AS_ch0100_163_AL_air_dodge_R"));
+	}
+
 }
 
 _bool CBaseAnimInstance::CheckAnim(const string & szAnimName)

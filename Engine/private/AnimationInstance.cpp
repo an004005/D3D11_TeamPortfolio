@@ -331,25 +331,28 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 					if (m_pCurState->m_SpairAnimation->IsFinished())
 					{
 						m_pCurState->m_SpairAnimation->Reset();
-					}
 
-					m_pCurState->m_SpairAnimation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
-
-					if (m_pCurState->m_bSpairClearFlag)
-					{
-						m_pCurState->m_SpairAnimation = nullptr;
-						m_pCurState->m_bSpairClearFlag = false;
-						m_fSpairTransitionTime = 0.f;
+						if (nullptr != m_pCurState->m_ReserveAnimation && (m_pCurState->m_Animation != m_pCurState->m_ReserveAnimation))
+						{
+							// 스페어 애니메이션이 종료되었고 리저브 애니메이션이 존재하며, 일반 모션과 리저브 모션이 다를 경우 스페어 모션을 리저브 모션으로 변경
+							m_pCurState->m_SpairAnimation = m_pCurState->m_ReserveAnimation;
+							m_pCurState->m_ReserveAnimation = nullptr;
+						}
+						else if (nullptr != m_pCurState->m_ReserveAnimation && (m_pCurState->m_Animation == m_pCurState->m_ReserveAnimation))
+						{
+							// 스페어 애니메이션이 종료되었고 리저브 애니메이션이 존재하며, 일반 모션과 리저브 모션이 같을 경우 스페어 모션과 리저브 모션을 전부 제거
+							m_pCurState->m_SpairAnimation = nullptr;
+							m_pCurState->m_ReserveAnimation = nullptr;
+						}
 					}
+					
+					// 스페어 애니메이션과 리저브 애니메이션이 전부 비워진(else if) 경우 일반 애니메이션의 업데이트를 돌리기 위함
+					if (nullptr != m_pCurState->m_SpairAnimation)
+						m_pCurState->m_SpairAnimation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+					else
+						m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+
 				}
-				// 스페어가 빌 때 보간을 하지 않아도 이상하지 않은가? 그러면 SpairFlag를 사용할 필요가 없어진다.
-				/*else if (m_fSpairTransitionTime < m_fTransitionDuration)
-				{
-					m_pCurState->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fSpairTransitionTime / m_fTransitionDuration);
-					m_fSpairTransitionTime += (_float)TimeDelta;
-
-					m_bLerp = true;
-				}*/
 				else
 				{
 					if (m_pCurState->m_Animation->IsFinished())
@@ -410,10 +413,14 @@ void CAnimationStateMachine::SetSpairAnim(const string & stateName, CAnimation *
 	if (nullptr == pSpairAnim)
 		return;
 
-	if (nullptr != pState->second->m_SpairAnimation)
-		return;
-
-	pState->second->m_SpairAnimation = pSpairAnim;
+	if (nullptr == pState->second->m_SpairAnimation)
+	{
+		pState->second->m_SpairAnimation = pSpairAnim;
+	}
+	else
+	{
+		pState->second->m_ReserveAnimation = pSpairAnim;
+	}
 }
 
 void CAnimationStateMachine::ResetSpairAnim()

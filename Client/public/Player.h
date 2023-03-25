@@ -218,6 +218,9 @@ private:	// 특수연출용 FSM
 	HRESULT				SetUp_HBeamStateMachine();
 	CFSMComponent*		m_pHBeamStateMachine_Left = nullptr;
 
+	HRESULT				SetUp_DropObjectStateMachine();
+	CFSMComponent*		m_pDropObjectStateMachine = nullptr;
+
 private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_Train_Charge_L;	// 좌측 기차 차지
 	list<CAnimation*>	m_Train_Cancel_L;	// 좌측 기차 취소
@@ -240,6 +243,10 @@ private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_HBeam_Rotation_L;			// 좌측 H빔 추가타 대기 및 루프
 	list<CAnimation*>	m_HBeam_End_L;				// 추가타 종료
 	list<CAnimation*>	m_HBeam_Finish_L;			// 좌측 H빔 마무리
+
+	list<CAnimation*>	m_DropObject_Charge;		// 낙하물체 차지
+	list<CAnimation*>	m_DropObject_Cancel;		// 낙하 취소
+	list<CAnimation*>	m_DropObject_Drop;			// 떨구기
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -426,7 +433,7 @@ public:	//EventCaller용
 
 	void		Event_Effect(string szEffectName, _float fSize = 1.f, string szBoneName = "Eff01");
 	void		Event_EffectSound(const string& strSoundName);
-	void		Event_ElecEffect(string szEffectName, string szBoneName = "Eff01");
+	void		Event_ElecEffect(string szEffectName);
 
 	void		Event_CollisionStart();
 	void		Event_collisionEnd();
@@ -607,6 +614,10 @@ private:
 	CDoOnce	SasOn;
 	CDoOnce	TeleportEffect;
 	CDoOnce TeleportEndEffect;
+	CDoOnce DropObject;
+
+private:
+	_bool	m_bEffectUpdate = false;
 
 private:
 	CSAS_Portrait* m_pSasPortrait = nullptr;

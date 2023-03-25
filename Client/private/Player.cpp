@@ -43,6 +43,7 @@
 #include "Special_TelephonePole.h"
 #include "Special_HBeam_Bundle.h"
 #include "Special_HBeam_Single.h"
+#include "Special_DropObject_Bundle.h"
 
 #include "Enemy.h"
 
@@ -137,6 +138,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 		return E_FAIL;
 
 	if (FAILED(SetUp_TeleportStateMachine()))
+		return E_FAIL;
+
+	if (FAILED(SetUp_DropObjectStateMachine()))
 		return E_FAIL;
 
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
@@ -276,6 +280,11 @@ void CPlayer::Tick(_double TimeDelta)
 			if (SPECIAL_HBEAM_BUNDLE == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
 			{
 				m_pHBeamStateMachine_Left->Tick(TimeDelta);
+			}
+
+			if (SPECIAL_DROPOBJECT_BUNDLE == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
+			{
+				m_pDropObjectStateMachine->Tick(TimeDelta);
 			}
 		}
 	}
@@ -546,11 +555,6 @@ void CPlayer::Imgui_RenderProperty()
 	ImGui::InputFloat("ThrowPower", &m_fThrowPower);
 	ImGui::InputFloat("ChargePower", &m_fChargePower);
 
-	if (ImGui::CollapsingHeader("pivot1"))
-	{
-		static GUIZMO_INFO tp1;
-		CImguiUtils::Render_Guizmo(&pivot1, tp1, true, true);
-	}
 	if (ImGui::CollapsingHeader("pivot2"))
 	{
 		static GUIZMO_INFO tp2;
@@ -667,6 +671,8 @@ void CPlayer::Imgui_RenderProperty()
 			m_pASM->InputAnimSocket("Common_AnimSocket", TestAnimSocket);
 		}
 
+
+		// 실질적인 이펙트 붙이기
 		static char cEffectName[MAX_PATH]{};
 		static string szEffectName = "";
 		ImGui::InputText("Effect Search", cEffectName, MAX_PATH);
@@ -679,11 +685,16 @@ void CPlayer::Imgui_RenderProperty()
 
 		ImGui::InputFloat("EffectTime", &fEffectPlayTime);
 
+		ImGui::Checkbox("EffectUpdate", &m_bEffectUpdate);
+
+		static GUIZMO_INFO tp1;
+		CImguiUtils::Render_Guizmo(&pivot1, tp1, true, true);
+
 		if ((m_pModel->GetPlayAnimation()->GetName() == szAnimName) &&
 			(fPrePlayTime <= fEffectPlayTime) &&
 			(fCurPlayTime > fEffectPlayTime))
 		{
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, s2ws(szEffectName), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, pivot1, szBoneName, true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, s2ws(szEffectName), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, pivot1, szBoneName, true, m_bEffectUpdate);
 		}
 
 		fPrePlayTime = fCurPlayTime;
@@ -781,12 +792,12 @@ void CPlayer::SasMgr()
 				}
 				else if (ESASType::SAS_TELEPORT == InputSas)
 				{
-					m_pASM->Add_SpairSasMotion(ESASType::SAS_NOT);
+					//m_pASM->Add_SpairSasMotion(ESASType::SAS_NOT);
 					m_pSAS_Cable->UnEquipCable();
 				}
 				else if (ESASType::SAS_ELETRIC == InputSas)
 				{
-					m_pASM->Add_SpairSasMotion(ESASType::SAS_NOT);
+					//m_pASM->Add_SpairSasMotion(ESASType::SAS_NOT);
 					m_pSAS_Cable->UnEquipCable();
 				}
 			}
@@ -803,12 +814,10 @@ void CPlayer::SasMgr()
 				}
 				else if (ESASType::SAS_TELEPORT == InputSas)
 				{
-					m_pASM->Add_SpairSasMotion(ESASType::SAS_TELEPORT);
 					m_pSAS_Cable->EquipCable(ESASType::SAS_TELEPORT);
 				}
 				else if (ESASType::SAS_ELETRIC == InputSas)
 				{
-					m_pASM->Add_SpairSasMotion(ESASType::SAS_ELETRIC);
 					m_pSAS_Cable->EquipCable(ESASType::SAS_ELETRIC);
 				}
 
@@ -1350,51 +1359,51 @@ HRESULT CPlayer::SetUp_EffectEvent()
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Upper_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
 	});
 
-	m_pModel->Add_EventCaller("Elec_Attack_1", [&]() {Event_Effect("Elec_Attack_1", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_1_001", [&]() {Event_Effect("Elec_Attack_1_001", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_2", [&]() {Event_Effect("Elec_Attack_2", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_3", [&]() {Event_Effect("Elec_Attack_3", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_3_001", [&]() {Event_Effect("Elec_Attack_3_001", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_4_001", [&]() {Event_Effect("Elec_Attack_4_001", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_4_002", [&]() {Event_Effect("Elec_Attack_4_002", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_4_003", [&]() {Event_Effect("Elec_Attack_4_003", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_4_004", [&]() {Event_Effect("Elec_Attack_4_004", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_4_005", [&]() {Event_Effect("Elec_Attack_4_005", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_5", [&]() {Event_Effect("Elec_Attack_5", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Air_1", [&]() {Event_Effect("Elec_Attack_Air_1", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Air_2", [&]() {Event_Effect("Elec_Attack_Air_2", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Air_Chase", [&]() {Event_Effect("Elec_Attack_Air_Chase", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Air_Dash_0", [&]() {Event_Effect("Elec_Attack_Air_Dash_0", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Air_Dash_1", [&]() {Event_Effect("Elec_Attack_Air_Dash_1", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Air_Dash_1_001", [&]() {Event_Effect("Elec_Attack_Air_Dash_1_001", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_00", [&]() {Event_Effect("Elec_Attack_Air_Hold_00", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_01", [&]() {Event_Effect("Elec_Attack_Air_Hold_01", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_02", [&]() {Event_Effect("Elec_Attack_Air_Hold_02", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_03", [&]() {Event_Effect("Elec_Attack_Air_Hold_03", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_04", [&]() {Event_Effect("Elec_Attack_Air_Hold_04", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_05", [&]() {Event_Effect("Elec_Attack_Air_Hold_05", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_Landing", [&]() {Event_Effect("Elec_Attack_Air_Hold_Landing", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Charge_01", [&]() {Event_Effect("Elec_Attack_Charge_01", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Charge_02", [&]() {Event_Effect("Elec_Attack_Charge_02", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Charge_03", [&]() {Event_Effect("Elec_Attack_Charge_03", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Dash_1", [&]() {Event_Effect("Elec_Attack_Dash_1", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Dash_2_001", [&]() {Event_Effect("Elec_Attack_Dash_2_001", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Dash_2_002", [&]() {Event_Effect("Elec_Attack_Dash_2_002", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Dash_3", [&]() {Event_Effect("Elec_Attack_Dash_3", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Dash_End", [&]() {Event_Effect("Elec_Attack_Dash_End", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_0", [&]() {Event_Effect("Elec_Attack_Dash_Hold_0", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_1", [&]() {Event_Effect("Elec_Attack_Dash_Hold_1", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_2", [&]() {Event_Effect("Elec_Attack_Dash_Hold_2", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_3", [&]() {Event_Effect("Elec_Attack_Dash_Hold_3", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_4", [&]() {Event_Effect("Elec_Attack_Dash_Hold_4", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_0", [&]() {Event_Effect("Elec_Attack_Justdodge_0", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_1", [&]() {Event_Effect("Elec_Attack_Justdodge_1", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_2", [&]() {Event_Effect("Elec_Attack_Justdodge_2", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_3", [&]() {Event_Effect("Elec_Attack_Justdodge_3", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_4", [&]() {Event_Effect("Elec_Attack_Justdodge_4", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_5", [&]() {Event_Effect("Elec_Attack_Justdodge_5", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Upper_0", [&]() {Event_Effect("Elec_Attack_Upper_0", 1.f, "Eff02"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Upper_1", [&]() {Event_Effect("Elec_Attack_Upper_1", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_1", [&]() {Event_ElecEffect("Elec_Attack_1"); });
+	m_pModel->Add_EventCaller("Elec_Attack_1_001", [&]() {Event_ElecEffect("Elec_Attack_1_001"); });
+	m_pModel->Add_EventCaller("Elec_Attack_2", [&]() {Event_ElecEffect("Elec_Attack_2"); });
+	m_pModel->Add_EventCaller("Elec_Attack_3", [&]() {Event_ElecEffect("Elec_Attack_3"); });
+	m_pModel->Add_EventCaller("Elec_Attack_3_001", [&]() {Event_ElecEffect("Elec_Attack_3_001"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_001", [&]() {Event_ElecEffect("Elec_Attack_4_001"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_002", [&]() {Event_ElecEffect("Elec_Attack_4_002"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_003", [&]() {Event_ElecEffect("Elec_Attack_4_003"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_004", [&]() {Event_ElecEffect("Elec_Attack_4_004"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_005", [&]() {Event_ElecEffect("Elec_Attack_4_005"); });
+	m_pModel->Add_EventCaller("Elec_Attack_5", [&]() {Event_ElecEffect("Elec_Attack_5"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_1", [&]() {Event_ElecEffect("Elec_Attack_Air_1"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_2", [&]() {Event_ElecEffect("Elec_Attack_Air_2"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Chase", [&]() {Event_ElecEffect("Elec_Attack_Air_Chase"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Dash_0", [&]() {Event_ElecEffect("Elec_Attack_Air_Dash_0"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Dash_1", [&]() {Event_ElecEffect("Elec_Attack_Air_Dash_1"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Dash_1_001", [&]() {Event_ElecEffect("Elec_Attack_Air_Dash_1_001"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_00", [&]() {Event_ElecEffect("Elec_Attack_Air_Hold_00"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_01", [&]() {Event_ElecEffect("Elec_Attack_Air_Hold_01"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_02", [&]() {Event_ElecEffect("Elec_Attack_Air_Hold_02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_03", [&]() {Event_ElecEffect("Elec_Attack_Air_Hold_03"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_04", [&]() {Event_ElecEffect("Elec_Attack_Air_Hold_04"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_05", [&]() {Event_ElecEffect("Elec_Attack_Air_Hold_05"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_Landing", [&]() {Event_ElecEffect("Elec_Attack_Air_Hold_Landing"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Charge_01", [&]() {Event_ElecEffect("Elec_Attack_Charge_01"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Charge_02", [&]() {Event_ElecEffect("Elec_Attack_Charge_02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Charge_03", [&]() {Event_ElecEffect("Elec_Attack_Charge_03"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_1", [&]() {Event_ElecEffect("Elec_Attack_Dash_1"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_2_001", [&]() {Event_ElecEffect("Elec_Attack_Dash_2_001"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_2_002", [&]() {Event_ElecEffect("Elec_Attack_Dash_2_002"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_3", [&]() {Event_ElecEffect("Elec_Attack_Dash_3"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_End", [&]() {Event_ElecEffect("Elec_Attack_Dash_End"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_0", [&]() {Event_ElecEffect("Elec_Attack_Dash_Hold_0"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_1", [&]() {Event_ElecEffect("Elec_Attack_Dash_Hold_1"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_2", [&]() {Event_ElecEffect("Elec_Attack_Dash_Hold_2"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_3", [&]() {Event_ElecEffect("Elec_Attack_Dash_Hold_3"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_4", [&]() {Event_ElecEffect("Elec_Attack_Dash_Hold_4"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_0", [&]() {Event_ElecEffect("Elec_Attack_Justdodge_0"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_1", [&]() {Event_ElecEffect("Elec_Attack_Justdodge_1"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_2", [&]() {Event_ElecEffect("Elec_Attack_Justdodge_2"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_3", [&]() {Event_ElecEffect("Elec_Attack_Justdodge_3"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_4", [&]() {Event_ElecEffect("Elec_Attack_Justdodge_4"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_5", [&]() {Event_ElecEffect("Elec_Attack_Justdodge_5"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Upper_0", [&]() {Event_ElecEffect("Elec_Attack_Upper_0"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Upper_1", [&]() {Event_ElecEffect("Elec_Attack_Upper_1"); });
 
 
 	m_pModel->Add_EventCaller("Trail_On", [&]() 
@@ -1482,13 +1491,6 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 	m_Kinetic_RB_Air_Throw01_Start.push_back(m_pModel->Find_Animation("AS_ch0100_312_AL_AirCap_throw1_start"));
 	m_Kinetic_RB_Air_Throw01_Loop.push_back(m_pModel->Find_Animation("AS_ch0100_312_AL_AirCap_throw1_loop"));
 	m_Kinetic_RB_Air_Throw01_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_312_AL_AirCap_throw1_cancel"));
-
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_313_AL_AirCap_throw2_start"));
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_313_AL_AirCap_throw2_loop"));
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_313_AL_AirCap_throw2_cancel"));
-	m_Kinetic_RB_Air_Throw02_Start.push_back(m_pModel->Find_Animation("AS_ch0100_313_AL_AirCap_throw2_start"));
-	m_Kinetic_RB_Air_Throw02_Loop.push_back(m_pModel->Find_Animation("AS_ch0100_313_AL_AirCap_throw2_loop"));
-	m_Kinetic_RB_Air_Throw02_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_313_AL_AirCap_throw2_cancel"));
 
 	// ~염력에 사용할 애니메이션 추가
 
@@ -3079,7 +3081,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3088,7 +3090,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3097,7 +3099,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3106,7 +3108,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3115,7 +3117,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3124,7 +3126,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3133,7 +3135,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3142,7 +3144,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3151,7 +3153,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3160,7 +3162,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3169,7 +3171,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3178,7 +3180,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3187,7 +3189,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3198,7 +3200,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 			m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 			m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-			m_AttackDesc.iDamage = 100;
+			m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 			m_AttackDesc.pCauser = this;
 			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		}
@@ -3207,7 +3209,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 			m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 			m_AttackDesc.eAttackType = EAttackType::ATK_DOWN;
 			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-			m_AttackDesc.iDamage = 100;
+			m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 			m_AttackDesc.pCauser = this;
 			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		}
@@ -3217,7 +3219,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_DOWN;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3226,7 +3228,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_TO_AIR;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3235,7 +3237,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3244,7 +3246,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3253,7 +3255,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3262,7 +3264,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3271,7 +3273,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3280,7 +3282,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -3289,7 +3291,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = 100;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -4335,6 +4337,117 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_DropObjectStateMachine()
+{
+	CAnimation*	pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_334_AL_fall_start"));
+	m_DropObject_Charge.push_back(m_pModel->Find_Animation("AS_ch0100_334_AL_fall_start"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_334_AL_fall_loop"));
+	m_DropObject_Charge.push_back(m_pModel->Find_Animation("AS_ch0100_334_AL_fall_loop"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_334_AL_fall_cancel"));
+	m_DropObject_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_334_AL_fall_cancel"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_334_AL_fall_end"));
+	m_DropObject_Drop.push_back(m_pModel->Find_Animation("AS_ch0100_334_AL_fall_end"));
+
+	m_pDropObjectStateMachine =
+		CFSMComponentBuilder().InitState("DROP_NOUSE")
+
+		.AddState("DROP_NOUSE")
+		.OnStart([&]()
+		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			m_bKineticSpecial = false;
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_bKineticSpecial = false;
+		})
+		.OnExit([&]()
+		{
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+		})
+			.AddTransition("DROP_NOUSE to DROP_CHARGE", "DROP_CHARGE")
+			.Predicator([&]()->_bool 
+			{
+				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
+				return m_bKineticG && bResult;
+			})
+			.Priority(0)
+
+		.AddState("DROP_CHARGE")
+		.OnStart([&]() 
+		{
+			m_bKineticSpecial = true;
+			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_DropObject_Charge);
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_fKineticCharge += (_float)fTimeDelta;
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("DROP_CHARGE to DROP_THROW", "DROP_THROW")
+			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
+			.Priority(0)
+
+			.AddTransition("DROP_CHARGE to DROP_CANCEL", "DROP_CANCEL")
+			.Predicator([&]()->_bool { return !m_bKineticG; })
+			.Priority(0)
+
+		.AddState("DROP_CANCEL")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_DropObject_Cancel);
+		})
+		.OnExit([&]()
+		{
+			m_bKineticSpecial = false;
+		})
+			.AddTransition("DROP_CANCEL to DROP_NOUSE", "DROP_NOUSE")
+			.Predicator([&]()->_bool { return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket") || m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB || m_bKineticG);  })
+			.Priority(0)
+
+		.AddState("DROP_THROW")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_DropObject_Drop);
+
+			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Set_Kinetic(false);
+			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->DropObject_Floating();
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			if (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.24f) && DropObject.IsNotDo())
+			{
+				static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->DropObject_Drop();
+			}
+		})
+		.OnExit([&]()
+		{
+			DropObject.Reset();
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("DROP_THROW to DROP_NOUSE", "DROP_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket");
+			})
+			.Priority(0)
+
+		.Build();
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Setup_AnimSocket()
 {
 	CAnimation*	pAnimation = nullptr;
@@ -4552,10 +4665,170 @@ void CPlayer::Event_EffectSound(const string& strSoundName)
 	}
 }
 
-void CPlayer::Event_ElecEffect(string szEffectName, string szBoneName)
+void CPlayer::Event_ElecEffect(string szEffectName)
 {
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type != ESASType::SAS_ELETRIC)
+		return;
+
 	wstring EffectName = s2ws(szEffectName);
-	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, pivot1, szBoneName, true);
+
+	if (szEffectName == "Elec_Attack_1")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(1.f, 0.f, 1.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_2")
+	{
+		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f) * 
+			XMMatrixRotationX(XMConvertToRadians(70.f)) *
+			XMMatrixRotationY(XMConvertToRadians(-90.f)) *
+			XMMatrixRotationZ(XMConvertToRadians(90.f)) *
+			XMMatrixTranslation(0.f, 0.5f, -2.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_3")
+	{
+		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f) *
+			XMMatrixTranslation(0.f, 0.f, 1.f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_4_002")
+	{
+		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_4_003")
+	{
+		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_4_004")
+	{
+		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_5")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.f, 0.f, -1.f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Air_1")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Air_2")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Air_Hold_00")
+	{	
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Air_Hold_01")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Air_Hold_02")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Air_Hold_03")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Air_Hold_04")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Air_Hold_05")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Air_Hold_Landing")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Charge_01")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Charge_02")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Charge_03")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Dash_1")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Dash_2_001")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Dash_2_002")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Dash_3")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Dash_End")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Dash_Hold_0")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Dash_Hold_3")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Dash_Hold_4")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Upper_0")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Upper_1")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_1_001")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) 
+			* XMMatrixRotationY(XMConvertToRadians(90.f))
+			* XMMatrixTranslation(5.f, -2.f, -1.25f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
 }
 
 void CPlayer::Event_CollisionStart()
@@ -5891,6 +6164,7 @@ void CPlayer::Free()
 	Safe_Release(m_pHBeamStateMachine_Left);
 	Safe_Release(m_pTeleportStateMachine);
 	Safe_Release(m_pSAS_Cable);
+	Safe_Release(m_pDropObjectStateMachine);
 
 //	Safe_Release(m_pContectRigidBody);
 }

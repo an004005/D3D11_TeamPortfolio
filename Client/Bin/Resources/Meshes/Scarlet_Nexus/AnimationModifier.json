@@ -959,7 +959,12 @@
         "Duration": 140.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Elec_Attack_1",
+                "EventTime": 11.199999809265137
+            }
+        ]
     },
     "AS_ch0100_202_AL_atk_a2": {
         "Duration": 137.0,
@@ -1012,7 +1017,12 @@
         "Duration": 137.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Elec_Attack_2",
+                "EventTime": 10.0
+            }
+        ]
     },
     "AS_ch0100_203_AL_atk_a3": {
         "Duration": 171.0,
@@ -1073,7 +1083,12 @@
         "Duration": 171.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Elec_Attack_3",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_ch0100_204_AL_atk_a4": {
         "Duration": 209.0,
@@ -1131,6 +1146,18 @@
             {
                 "EventName": "Fire_Attack_4_Particle",
                 "EventTime": 45.0
+            },
+            {
+                "EventName": "Elec_Attack_4_002",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_4_003",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "Elec_Attack_4_004",
+                "EventTime": 35.0
             }
         ]
     },
@@ -1194,6 +1221,10 @@
             {
                 "EventName": "Fire_Attack_5_PreEffect",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_5",
+                "EventTime": 45.0
             }
         ]
     },
@@ -1241,6 +1272,14 @@
             {
                 "EventName": "Fire_Attack_Upper_Particle",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Upper_0",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Elec_Attack_Upper_1",
+                "EventTime": 10.0
             }
         ]
     },
@@ -1404,6 +1443,10 @@
             {
                 "EventName": "Fire_Attack_Charge03_002_Particle",
                 "EventTime": 50.0
+            },
+            {
+                "EventName": "Elec_Attack_Charge_01",
+                "EventTime": 38.0
             }
         ]
     },
@@ -1455,6 +1498,14 @@
             {
                 "EventName": "Fire_Attack_Charge03_002_Particle",
                 "EventTime": 70.0
+            },
+            {
+                "EventName": "Elec_Attack_Charge_02",
+                "EventTime": 52.0
+            },
+            {
+                "EventName": "Elec_Attack_Charge_03",
+                "EventTime": 54.0
             }
         ]
     },
@@ -1498,6 +1549,14 @@
             {
                 "EventName": "Fire_Attack_Charge03_Particle",
                 "EventTime": 80.0
+            },
+            {
+                "EventName": "Elec_Attack_Charge_02",
+                "EventTime": 63.0
+            },
+            {
+                "EventName": "Elec_Attack_Charge_03",
+                "EventTime": 65.0
             }
         ]
     },
@@ -1643,6 +1702,18 @@
             {
                 "EventName": "Fire_Attack_Dash_Hold_003_Particle",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_0",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_3",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_4",
+                "EventTime": 25.0
             }
         ]
     },
@@ -1910,6 +1981,10 @@
             {
                 "EventName": "Fire_Attack_Air_1_Particle",
                 "EventTime": 14.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_1",
+                "EventTime": 15.0
             }
         ]
     },
@@ -1953,6 +2028,10 @@
             {
                 "EventName": "Fire_Attack_Air_2_Particle",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_2",
+                "EventTime": 15.0
             }
         ]
     },
@@ -2021,6 +2100,10 @@
             {
                 "EventName": "Fire_Attack_3_twist_Particle",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_Landing",
+                "EventTime": 1.0
             }
         ]
     },
@@ -2104,6 +2187,30 @@
             {
                 "EventName": "Collision_Start",
                 "EventTime": 45.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_00",
+                "EventTime": 5.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_01",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_02",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_03",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_04",
+                "EventTime": 25.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_05",
+                "EventTime": 30.0
             }
         ]
     },
@@ -2151,6 +2258,18 @@
             {
                 "EventName": "Fire_Attack_Dash_Hold_003_Particle",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_0",
+                "EventTime": 14.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_3",
+                "EventTime": 18.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_4",
+                "EventTime": 22.0
             }
         ]
     },
@@ -2704,6 +2823,30 @@
     "AS_ch0100_333_AL_rotation_start": {
         "Duration": 30.0,
         "TickPerSecond": 30.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_334_AL_fall_cancel": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_334_AL_fall_end": {
+        "Duration": 125.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_334_AL_fall_loop": {
+        "Duration": 95.0,
+        "TickPerSecond": 50.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_334_AL_fall_start": {
+        "Duration": 15.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -4773,6 +4916,19 @@
                     "StartTime": 0.0
                 }
             ],
+            "AS_ch0100_201_AL_atk_a1_Electric": [
+                {
+                    "AnimName": "AS_ch0100_201_AL_atk_a1_Electric",
+                    "EndTime": 10.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        3.0,
+                        0.0
+                    ],
+                    "StartTime": 0.0
+                }
+            ],
             "AS_ch0100_202_AL_atk_a2": [
                 {
                     "AnimName": "AS_ch0100_202_AL_atk_a2",
@@ -4797,9 +4953,46 @@
                     "StartTime": 37.0
                 }
             ],
+            "AS_ch0100_202_AL_atk_a2_Electric": [
+                {
+                    "AnimName": "AS_ch0100_202_AL_atk_a2_Electric",
+                    "EndTime": 12.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "StartTime": 1.0
+                },
+                {
+                    "AnimName": "AS_ch0100_202_AL_atk_a2_Electric",
+                    "EndTime": 62.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.4000000059604645,
+                        0.0
+                    ],
+                    "StartTime": 37.0
+                }
+            ],
             "AS_ch0100_203_AL_atk_a3": [
                 {
                     "AnimName": "AS_ch0100_203_AL_atk_a3",
+                    "EndTime": 33.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        2.0,
+                        0.0
+                    ],
+                    "StartTime": 5.0
+                }
+            ],
+            "AS_ch0100_203_AL_atk_a3_Electric": [
+                {
+                    "AnimName": "AS_ch0100_203_AL_atk_a3_Electric",
                     "EndTime": 33.0,
                     "RootVector": [
                         0.0,
