@@ -35,6 +35,7 @@ HRESULT CCanvas_BrainMap::Initialize(void* pArg)
 	m_bVisible = false;
 	Brain_Intiialize();
 	ChildUI_Intiialize();
+	Link_Initialize();
 
 	m_arrCurrentLevel.fill(0);
 
@@ -46,10 +47,41 @@ void CCanvas_BrainMap::Tick(_double TimeDelta)
 	CCanvas::Tick(TimeDelta);
 
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-		iter->second->SetVisible(m_bVisible);
+	{
+		if (true == m_bVisible)
+		{
+			// Lick 의 m_bVisible 은 이 캔버스가 true 일 때는 건들이지 않는다.
+			wstring	wbSLink = L"";
+			if (10 > m_iLinkCount)
+				wbSLink = L"Link__0" + to_wstring(m_iLinkCount);
+			else
+				wbSLink = L"Link__" + to_wstring(m_iLinkCount);
 
+			if (iter->first == wbSLink)
+			{
+				++m_iLinkCount;
+				if (56 == m_iLinkCount)
+					m_iLinkCount = 0;
+				continue;
+			}
+
+			wstring	wbSLinkS = L"Link__S_0" + to_wstring(m_iLinkSCount);
+			if (iter->first == wbSLinkS)
+			{
+				++m_iLinkSCount;
+				if (4 == m_iLinkSCount)
+					m_iLinkSCount = 0;
+				continue;
+			}
+		}
+
+		iter->second->SetVisible(m_bVisible);
+	}
+
+	if (false == m_bVisible) return;
 	OnIcon_Tick();
 	SkillAcquisition_Tick(TimeDelta);
+	OnLick_Tick();
 }
 
 void CCanvas_BrainMap::Late_Tick(_double TimeDelta)
@@ -79,8 +111,8 @@ HRESULT CCanvas_BrainMap::Render()
 
 		vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"SkillAcquisition"))->GetScreenSpaceLeftTop();
 		wsprintf(szText, TEXT("<%s>"), m_CurrentBrainInfo.szBrainName);
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(125.0f, 150.0f), 0.f, vFontSmaillSize*1.5f, vColor);
-		pGameInstance->Render_Font(L"Pretendard32", m_szAlarmText, vPosition + _float2(125.0f, 200.0f), 0.f, vFontSmaillSize*1.5f, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(130.0f, 150.0f), 0.f, vFontSmaillSize*1.5f, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", m_szAlarmText, vPosition + _float2(130.0f, 200.0f), 0.f, vFontSmaillSize*1.5f, vColor);
 		
 		vColor = { 0.488f, 0.427f, 0.384f, 1.0f };
 	}
@@ -1165,19 +1197,323 @@ void CCanvas_BrainMap::ChildUI_Intiialize()
 
 			++m_iIconCount;
 		}
-
-		wstring	wsLink = L"";
-		if (10 > m_iLinkCount)
-			wsLink = L"Icon__0" + to_wstring(m_iLinkCount);
-		else
-			wsLink = L"Icon__" + to_wstring(m_iLinkCount);
-
-		if (iter->first == wsLink)
-		{
-			++m_iLinkCount;
-			m_vecLinkUI.push_back(iter->second);
-		}
 	}
+}
+
+void CCanvas_BrainMap::Link_Initialize()
+{
+	LINKINFO	tLinkInfo;
+
+	tLinkInfo.bSLink = false;
+
+	tLinkInfo.iIconIndex0 = 0;
+	tLinkInfo.iIconIndex1 = 1;
+	tLinkInfo.iLickIndex = 0;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 1;
+	tLinkInfo.iIconIndex1 = 4;
+	tLinkInfo.iLickIndex = 1;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 4;
+	tLinkInfo.iIconIndex1 = 5;
+	tLinkInfo.iLickIndex = 2;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 5;
+	tLinkInfo.iIconIndex1 = 6;
+	tLinkInfo.iLickIndex = 3;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 6;
+	tLinkInfo.iIconIndex1 = 7;
+	tLinkInfo.iLickIndex = 4;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 6;
+	tLinkInfo.iIconIndex1 = 7;
+	tLinkInfo.iLickIndex = 4;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 1;
+	tLinkInfo.iIconIndex1 = 2;
+	tLinkInfo.iLickIndex = 5;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 2;
+	tLinkInfo.iIconIndex1 = 3;
+	tLinkInfo.iLickIndex = 6;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 59;
+	tLinkInfo.iIconIndex1 = 60;
+	tLinkInfo.iLickIndex = 7;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 8;
+	tLinkInfo.iIconIndex1 = 9;
+	tLinkInfo.iLickIndex = 8;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 10;
+	tLinkInfo.iIconIndex1 = 11;
+	tLinkInfo.iLickIndex = 9;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 11;
+	tLinkInfo.iIconIndex1 = 12;
+	tLinkInfo.iLickIndex = 10;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 8;
+	tLinkInfo.iIconIndex1 = 0;
+	tLinkInfo.iLickIndex = 11;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 10;
+	tLinkInfo.iIconIndex1 = 15;
+	tLinkInfo.iLickIndex = 12;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 13;
+	tLinkInfo.iIconIndex1 = 14;
+	tLinkInfo.iLickIndex = 13;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 15;
+	tLinkInfo.iIconIndex1 = 14;
+	tLinkInfo.iLickIndex = 14;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 16;
+	tLinkInfo.iIconIndex1 = 15;
+	tLinkInfo.iLickIndex = 15;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 13;
+	tLinkInfo.iIconIndex1 = 17;
+	tLinkInfo.iLickIndex = 16;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 18;
+	tLinkInfo.iIconIndex1 = 17;
+	tLinkInfo.iLickIndex = 17;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 13;
+	tLinkInfo.iIconIndex1 = 19;
+	tLinkInfo.iLickIndex = 18;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 19;
+	tLinkInfo.iIconIndex1 = 20;
+	tLinkInfo.iLickIndex = 19;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 21;
+	tLinkInfo.iIconIndex1 = 22;
+	tLinkInfo.iLickIndex = 20;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 22;
+	tLinkInfo.iIconIndex1 = 24;
+	tLinkInfo.iLickIndex = 21;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 24;
+	tLinkInfo.iIconIndex1 = 25;
+	tLinkInfo.iLickIndex = 22;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 25;
+	tLinkInfo.iIconIndex1 = 26;
+	tLinkInfo.iLickIndex = 23;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 26;
+	tLinkInfo.iIconIndex1 = 27;
+	tLinkInfo.iLickIndex = 24;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 27;
+	tLinkInfo.iIconIndex1 = 28;
+	tLinkInfo.iLickIndex = 25;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 26;
+	tLinkInfo.iIconIndex1 = 29;
+	tLinkInfo.iLickIndex = 26;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 22;
+	tLinkInfo.iIconIndex1 = 23;
+	tLinkInfo.iLickIndex = 27;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 22;
+	tLinkInfo.iIconIndex1 = 30;
+	tLinkInfo.iLickIndex = 28;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 23;
+	tLinkInfo.iIconIndex1 = 31;
+	tLinkInfo.iLickIndex = 29;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 31;
+	tLinkInfo.iIconIndex1 = 32;
+	tLinkInfo.iLickIndex = 30;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 32;
+	tLinkInfo.iIconIndex1 = 33;
+	tLinkInfo.iLickIndex = 31;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 33;
+	tLinkInfo.iIconIndex1 = 34;
+	tLinkInfo.iLickIndex = 32;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 35;
+	tLinkInfo.iIconIndex1 = 34;
+	tLinkInfo.iLickIndex = 33;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 34;
+	tLinkInfo.iIconIndex1 = 36;
+	tLinkInfo.iLickIndex = 34;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 32;
+	tLinkInfo.iIconIndex1 = 37;
+	tLinkInfo.iLickIndex = 35;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 37;
+	tLinkInfo.iIconIndex1 = 38;
+	tLinkInfo.iLickIndex = 36;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 39;
+	tLinkInfo.iIconIndex1 = 40;
+	tLinkInfo.iLickIndex = 37;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 40;
+	tLinkInfo.iIconIndex1 = 41;
+	tLinkInfo.iLickIndex = 38;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 41;
+	tLinkInfo.iIconIndex1 = 42;
+	tLinkInfo.iLickIndex = 39;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 42;
+	tLinkInfo.iIconIndex1 = 43;
+	tLinkInfo.iLickIndex = 40;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 42;
+	tLinkInfo.iIconIndex1 = 44;
+	tLinkInfo.iLickIndex = 41;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 44;
+	tLinkInfo.iIconIndex1 = 45;
+	tLinkInfo.iLickIndex = 42;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 39;
+	tLinkInfo.iIconIndex1 = 46;
+	tLinkInfo.iLickIndex = 43;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 46;
+	tLinkInfo.iIconIndex1 = 48;
+	tLinkInfo.iLickIndex = 44;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 46;
+	tLinkInfo.iIconIndex1 = 47;
+	tLinkInfo.iLickIndex = 45;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 51;
+	tLinkInfo.iIconIndex1 = 48;
+	tLinkInfo.iLickIndex = 46;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 51;
+	tLinkInfo.iIconIndex1 = 52;
+	tLinkInfo.iLickIndex = 47;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 49;
+	tLinkInfo.iIconIndex1 = 50;
+	tLinkInfo.iLickIndex = 48;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 50;
+	tLinkInfo.iIconIndex1 = 53;
+	tLinkInfo.iLickIndex = 49;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 49;
+	tLinkInfo.iIconIndex1 = 54;
+	tLinkInfo.iLickIndex = 50;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 54;
+	tLinkInfo.iIconIndex1 = 55;
+	tLinkInfo.iLickIndex = 51;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 55;
+	tLinkInfo.iIconIndex1 = 56;
+	tLinkInfo.iLickIndex = 52;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 55;
+	tLinkInfo.iIconIndex1 = 57;
+	tLinkInfo.iLickIndex = 53;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 49;
+	tLinkInfo.iIconIndex1 = 58;
+	tLinkInfo.iLickIndex = 54;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 58;
+	tLinkInfo.iIconIndex1 = 59;
+	tLinkInfo.iLickIndex = 55;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	// S 자 모양 Link
+	tLinkInfo.bSLink = true;
+
+	tLinkInfo.iIconIndex0 = 9;
+	tLinkInfo.iIconIndex1 = 10;
+	tLinkInfo.iLickIndex = 0;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 20;
+	tLinkInfo.iIconIndex1 = 21;
+	tLinkInfo.iLickIndex = 1;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 37;
+	tLinkInfo.iIconIndex1 = 41;
+	tLinkInfo.iLickIndex = 2;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
+	tLinkInfo.iIconIndex0 = 50;
+	tLinkInfo.iIconIndex1 = 51;
+	tLinkInfo.iLickIndex = 3;
+	m_vecOnLinkInfo.push_back(tLinkInfo);
+
 }
 
 void CCanvas_BrainMap::OnIcon_Tick()
@@ -1207,6 +1543,7 @@ void CCanvas_BrainMap::OnIcon_Tick()
 
 		// 레벨에 따른 아이콘 구매할 수 있는 정도
 		IconLevel(i);
+
 	}
 }
 
@@ -1276,6 +1613,35 @@ void CCanvas_BrainMap::SkillAcquisition_Tick(const _double & TimeDelta)
 	}
 }
 
+void CCanvas_BrainMap::OnLick_Tick()
+{
+	for (size_t i = 0; i < m_vecOnLinkInfo.size(); ++i)
+	{
+		size_t iIconIndex0 = m_vecOnLinkInfo[i].iIconIndex0;
+		size_t iIconIndex1 = m_vecOnLinkInfo[i].iIconIndex1;
+
+		_bool	bIconUse0 = m_vecIconUI[iIconIndex0]->Get_BrainInfo().bUse;
+		_bool	bIconUse1 = m_vecIconUI[iIconIndex1]->Get_BrainInfo().bUse;
+
+		if (true == bIconUse0 && true == bIconUse1)
+		{
+			_tchar szText[MAX_PATH] = TEXT("");
+			if (true == m_vecOnLinkInfo[i].bSLink)
+			{
+				wsprintf(szText, TEXT("Link__S_0%d"), m_vecOnLinkInfo[i].iLickIndex);
+			}
+			else
+			{
+				if (10 > m_vecOnLinkInfo[i].iLickIndex)
+					wsprintf(szText, TEXT("Link__0%d"), m_vecOnLinkInfo[i].iLickIndex);
+				else
+					wsprintf(szText, TEXT("Link__%d"), m_vecOnLinkInfo[i].iLickIndex);
+			}
+			Find_ChildUI(szText)->SetVisible(true);
+		}
+	}
+}
+
 CCanvas_BrainMap * CCanvas_BrainMap::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CCanvas_BrainMap*		pInstance = new CCanvas_BrainMap(pDevice, pContext);
@@ -1305,5 +1671,6 @@ void CCanvas_BrainMap::Free()
 	CCanvas::Free();
 
 	m_vecBrain.clear();
-
+	m_vecIconUI.clear();
+	m_vecOnLinkInfo.clear();
 }

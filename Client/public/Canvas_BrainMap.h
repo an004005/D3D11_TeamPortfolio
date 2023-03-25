@@ -27,6 +27,16 @@ public:
 
 	}BRAININFO;
 
+	typedef struct tagLickInfo
+	{
+		_bool	bSLink = { false };
+		size_t	iIconIndex0 = { 0 };
+		size_t	iIconIndex1 = { 0 };
+		size_t	iLickIndex = { 0 };
+
+	}LINKINFO;
+
+
 protected:
 	CCanvas_BrainMap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CCanvas_BrainMap(const CCanvas_BrainMap& rhs);
@@ -45,21 +55,24 @@ public:
 private:
 	void	Brain_Intiialize();
 	void	ChildUI_Intiialize(); // 이미 맵에 저장된 UI들 이긴 하지만, 각각 따로 돌려야 하는 경우가 많아서 필요한 Icon 그리고 Lick 끼리 모아두기 위해서
+	void	Link_Initialize();
 
 	void	OnIcon_Tick();
 	void	IconPick(const size_t iIndex);
 	void	IconLevel(const size_t iIndex);
 	void	SkillAcquisition_Tick(const _double & TimeDelta);	// 계속 알림창이 뜰 때를 계속 확인한다.
+	void	OnLick_Tick();
 
 private:
 	vector<BRAININFO>	m_vecBrain;
+	vector<LINKINFO>	m_vecOnLinkInfo;
 	vector<class CMain_OnMouseUI*>	m_vecIconUI;
-	vector<CUI*>	m_vecLinkUI;
 
 	BRAININFO	m_CurrentBrainInfo;
 
 	_uint	m_iIconCount = { 0 };
 	_uint	m_iLinkCount = { 0 };
+	_uint	m_iLinkSCount = { 0 };
 
 	size_t	m_iCurrentIndex = { 0 };
 	
