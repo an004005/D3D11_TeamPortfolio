@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/LC08/props/pr_SubwayGenerator01/T_pr_SubwayGenerator01_ALB.png",
+            "../Bin/Resources/Environments/Location/LC08/props/pr_SubwayGenerator01/T_pr_SubwayGenerator01_NML.png",
+            "../Bin/Resources/Environments/Location/LC08/props/pr_SubwayGenerator01/T_pr_SubwayGenerator01_RMA.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}

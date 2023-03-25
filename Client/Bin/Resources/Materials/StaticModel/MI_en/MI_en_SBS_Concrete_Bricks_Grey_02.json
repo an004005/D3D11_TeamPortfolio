@@ -1,0 +1,19 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [1],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Concrete-asphalt/asphalt_regular/T_SBSMI_Asphalt_Regular_01_ALB.png",
+            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Concrete-asphalt/cellular_concrete/T_SBMS_Cellular_Concrete_INST_NML.png",
+            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Concrete-asphalt/cellular_concrete/T_SBMS_Cellular_Concrete_INST_RMA.png",
+            "../Bin/Resources/Environments/00_Common/03_Texture/T_Detail_N.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 2
+}

@@ -1,0 +1,19 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/00_Common/99_Marketplace/Subway/03_Texture/Tunnel/Wire/T_TunnelWire_D.png",
+            "../Bin/Resources/Environments/00_Common/99_Marketplace/Subway/03_Texture/Tunnel/Wire/T_TunnelWire_N.png",
+            "../Bin/Resources/Environments/00_Common/99_Marketplace/Subway/03_Texture/Tunnel/Wire/T_TunnelWire_SRM.png",
+            "../Bin/Resources/Environments/00_Common/99_Marketplace/Subway/03_Texture/Tunnel/Wire/T_TunnelWire_E.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 3
+}

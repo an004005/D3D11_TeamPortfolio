@@ -1,0 +1,19 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/pr_Stairs01/T_pr_Stairs01_ALB.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/pr_Stairs01/T_pr_Stairs01_NML.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/pr_Stairs01/T_pr_Stairs01_RMA.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/pr_Stairs01/T_pr_Stairs01_EMI.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 3
+}

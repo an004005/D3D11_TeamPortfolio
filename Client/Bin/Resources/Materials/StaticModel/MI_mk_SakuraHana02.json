@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/LC10/props/Sakura/T_SakuraHana04_ALB.png",
+            "../Bin/Resources/00_Common/03_Texture/T_cm_Fil_Normal.png",          
+            ""
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}

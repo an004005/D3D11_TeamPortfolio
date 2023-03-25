@@ -1,0 +1,72 @@
+{
+    "KineticType": 0,
+    "LocalMatrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.308884620666504,
+        -0.33706560730934143,
+        1.0
+    ],
+    "ModelTags": [
+        "../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Tutorial_Kinetic/pr_Car05.static_model\u0000",
+        "../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Tutorial_Kinetic/SM_pr_Car05_BRK.static_model\u0000"
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "Prototype_GameObject_MapKinetic_Object\u0000",
+    "RigidBody": {
+        "ColliderType": 4,
+        "Density": 10.0,
+        "OriginTransform": [
+            1.5795170068740845,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2.5,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            4.026444435119629,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 0,
+        "bKinematic": false,
+        "bTrigger": false
+    },
+    "Transform": {
+        "WorldMatrix": [
+            -6.9141387939453125e-06,
+            -1.0,
+            -9.641051292419434e-06,
+            0.0,
+            0.9661720991134644,
+            -9.179115295410156e-06,
+            0.257898211479187,
+            0.0,
+            -0.257898211479187,
+            -7.525086402893066e-06,
+            0.9661720991134644,
+            0.0,
+            -30.210302352905273,
+            -29.21024513244629,
+            10.735552787780762,
+            1.0
+        ]
+    }
+}
