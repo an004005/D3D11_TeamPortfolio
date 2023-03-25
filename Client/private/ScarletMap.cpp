@@ -463,7 +463,7 @@ void CScarletMap::RayPicking()
 			{
 				auto p = t.getAnyHit(i);
 				auto pComponent = CPhysXUtils::GetComponent(p.actor);
-
+				
 				
 				auto iter = find_if(m_pMapObjects.begin(), m_pMapObjects.end(), [&](CMapObject* pMapObject) {
 

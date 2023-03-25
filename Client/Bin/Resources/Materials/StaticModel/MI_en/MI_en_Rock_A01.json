@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Stone/french_coastline_rock_block/T_SBSMI_French_Coastline_Rock_Block_01_ALB.png",
+            "../Bin/Resources/Environments/Location/LC19/Props/Rock/T_HienoRock_A_NML.png",
+            "../Bin/Resources/Environments/Location/LC19/Props/Rock/T_HienoRock_A_SROH_2.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}

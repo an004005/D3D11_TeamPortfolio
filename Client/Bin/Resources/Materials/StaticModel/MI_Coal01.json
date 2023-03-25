@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/CommonLC/LC08_LC60/T_Coal01_BC.png",
+            "../Bin/Resources/Environments/Location/CommonLC/LC08_LC60/T_Coal01_N.png",
+            "../Bin/Resources/Environments/Location/CommonLC/LC08_LC60/T_Coal01_RMA.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}

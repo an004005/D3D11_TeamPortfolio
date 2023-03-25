@@ -2715,7 +2715,7 @@
     "AS_em0400_200_AL_atk_a1": {
         "Duration": 420.0,
         "TickPerSecond": 60.0,
-        "bLooping": true,
+        "bLooping": false,
         "vecEvent": [
             {
                 "EventName": "Swing_Start",
