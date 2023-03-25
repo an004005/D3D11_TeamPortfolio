@@ -21,7 +21,7 @@
 #include "VFX_Manager.h"
 #include "Imgui_Batch.h"
 
-//#define ADD_PLAYER
+#define ADD_PLAYER
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -230,7 +230,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 5.f, 0.f, 1.f));*/
 
 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em700"))
-		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 3.f, 0.f, 1.f));
 	return S_OK;
 }
 

@@ -352,6 +352,9 @@
     <Filter Include="02.GameObjects\Enemy\EM0320">
       <UniqueIdentifier>{c47b4ee9-693a-4fcc-b215-a3fede0dd4ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0800">
+      <UniqueIdentifier>{ea366a02-5446-4163-9037-e8e37c831263}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1009,6 +1012,15 @@
     <ClInclude Include="..\public\CapsuleLight.h">
       <Filter>02.GameObjects\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EM0800.h">
+      <Filter>02.GameObjects\Enemy\EM0800</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0800_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM0800</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0800_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM0800</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1643,6 +1655,15 @@
     </ClCompile>
     <ClCompile Include="..\private\CapsuleLight.cpp">
       <Filter>02.GameObjects\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0800_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM0800</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0800.cpp">
+      <Filter>02.GameObjects\Enemy\EM0800</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0800_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM0800</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
