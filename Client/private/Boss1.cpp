@@ -152,8 +152,8 @@ HRESULT CBoss1::Initialize(void* pArg)
 
 	m_pModelCom->Add_EventCaller("LastSpot", [this] 
 	{ 
-		//_vector vTargetColPos = dynamic_cast<CScarletCharacter*>(m_pTarget)->GetColliderPosition();
-		m_LastSpotTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION); 
+		_vector vTargetColPos = dynamic_cast<CScarletCharacter*>(m_pTarget)->GetColliderPosition();
+		m_LastSpotTargetPos = vTargetColPos;//m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION); 
 	});
 	m_pModelCom->Add_EventCaller("WaterBall", [this] 
 	{ 

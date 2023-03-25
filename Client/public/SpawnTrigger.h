@@ -30,6 +30,8 @@ public:
 	virtual void TriggerInEvent(CGameObject* pObject) override;
 	virtual _bool CheckTriggeredObject(CGameObject* pObject) override;
 
+	_bool IsStarted() const { return m_bStart; }
+
 private:
 	vector<list<EnemyWithPos>> m_SpawnEnemies;
 	vector<list<CEnemy*>> m_WaitingEnemies;

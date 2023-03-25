@@ -19,11 +19,13 @@ public:
 	
 	list<class CGameObject*>& GetGameObjects() { return m_GameObjects; }
 	void SetUseTimeRatio(_bool bUse) { m_bUseTimeRatio = bUse; }
+	void SetLayerTimeRatio(_float fLayerTimeRatio) { m_fLayerTimeRatio = fLayerTimeRatio; }
 
 private:
 	list<class CGameObject*>			m_GameObjects;
 	typedef list<class CGameObject*>	GAMEOBJECTS;
 	_bool m_bUseTimeRatio = true;
+	_float m_fLayerTimeRatio = 1.f;
 
 public:
 	static CLayer* Create();

@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/LC08/props/pr_PipeGalvanized01re/T_pr_PipeGalvanized01re_ALB.png",
+            "../Bin/Resources/Environments/Location/LC08/props/pr_PipeGalvanized01re/T_pr_PipeGalvanized01re_NML.png",
+            "../Bin/Resources/Environments/Location/LC08/props/pr_PipeGalvanized01re/T_pr_PipeGalvanized01re_RMA.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}

@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/00_Common/99_Marketplace/Subway_Tunnel/03_Texture/Unique/TX_tunnel_light_glass_ALB.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_street/TX_tunnel_light_glass_NRM.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_street/TX_tunnel_light_glass_RMA.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}

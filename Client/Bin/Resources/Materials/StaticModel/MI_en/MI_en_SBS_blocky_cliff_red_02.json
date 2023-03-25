@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Stone/blocky_cliff_red/T_SBSMI_Blocky_Cliff_Red_02_ALB.png",
+            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Stone/blocky_cliff_red/T_SBSMI_Blocky_Cliff_Red_02_NML.png",
+            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Stone/blocky_cliff_red/T_SBSMI_Blocky_Cliff_Red_02_RMA.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}

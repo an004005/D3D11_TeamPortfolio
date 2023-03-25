@@ -4331,15 +4331,21 @@
         "bLooping": true,
         "vecEvent": []
     },
+    "AS_em0700_120_AL_escape": {
+        "Duration": 75.0,
+        "TickPerSecond": 35.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0700_121_AL_randommove_L": {
         "Duration": 120.0,
-        "TickPerSecond": 14.0,
+        "TickPerSecond": 30.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_122_AL_randommove_R": {
         "Duration": 120.0,
-        "TickPerSecond": 14.0,
+        "TickPerSecond": 30.0,
         "bLooping": false,
         "vecEvent": []
     },

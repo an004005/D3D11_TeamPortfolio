@@ -85,8 +85,10 @@ HRESULT CLevel_KineticEditor::Ready_Layer_BackGround(const _tchar* pLayerTag)
 	// 여기서 모델만 넣고 콜라이더 셋팅 후 json 저장, json을 맵툴에서 로드해서 사용
 	Json Test;// = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/KineticPreset/Normal_Car1.json");
 	vector<string> modeltags;
-
-	modeltags.push_back("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/GarbageCan/garbageCan.static_model");
+										// Model/StaticModel/MapStaicModels/Kinetic/GarbageCan/garbageCan.static_model
+	modeltags.push_back("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Tutorial_Kinetic/SM_pr_ConcreteBarriersA_01_lo.static_model");
+	modeltags.push_back("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Tutorial_Kinetic/SM_pr_ConcreteBarriersA_01_lo_DM.static_model");
+					
 
 	Test["ModelTags"] = modeltags;
 
