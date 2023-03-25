@@ -326,6 +326,23 @@ PS_OUT PS_FLIPBOOK_SMOKE(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_EM110_BUG(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.03f, 1, 2));
+	float4 vColor = g_vec4_0;
+
+	float4 BlendColor = flipBook * vColor * 2.0f;
+
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0) ;
+	Out.vColor.a = flipBook.a * In.RamainLifeRatio;
+
+	return Out;
+}
+
+
 PS_OUT PS_SAS_FIRE_PARTICLE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -687,5 +704,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_USE_MESHCURVE();
+	}
+
+	//14
+	pass Em110Bug
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM110_BUG();
 	}
 }

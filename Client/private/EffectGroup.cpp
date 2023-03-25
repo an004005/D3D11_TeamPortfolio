@@ -927,88 +927,29 @@ void CEffectGroup::LoadFromJson(const Json& json)
 {
 	CGameObject::LoadFromJson(json);
 
-
-	// for (auto curveJson : json["Curves"])
-	// {
-		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-		// m_Curves.emplace(pCurve->GetName(), pCurve);
-	// }
-
 	if (json.contains("First_Directory"))
 	{
 		m_First_EffectDirectory = json["First_Directory"];
-
-		
 	}
 
 	if (json.contains("Second_Directory"))
 	{
 		m_Second_EffectDirectory = json["Second_Directory"];
-
-		// if (json.contains("SecondEffect_Curves"))
-		// {
-		// 	for (auto curveJson : json["SecondEffect_Curves"])
-		// 	{
-		// 		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-		// 		// m_SecondEffect_Curves.emplace(pCurve->GetName(), pCurve);
-		// 		// AddEmptyCurve_ForSecond(pCurve->GetName());
-		//
-		// 		LoadAndSetCurve_Second(&curveJson);
-		//
-		// 	}
-		// }
 	}
 
 	if (json.contains("Third_Directory"))
 	{
 		m_Third_EffectDirectory = json["Third_Directory"];
-
-		// if (json.contains("ThirdEffect_Curves"))
-		// {
-		// 	for (auto curveJson : json["ThirdEffect_Curves"])
-		// 	{
-		// 		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-		// 		// m_ThirdEffect_Curves.emplace(pCurve->GetName(), pCurve);
-		// 		// AddEmptyCurve_ForThird(pCurve->GetName());
-		//
-		// 		LoadAndSetCurve_Third(&curveJson);
-		//
-		// 	}
-		// }
 	}
 
 	if (json.contains("Fourth_Directory"))
 	{
 		m_Fourth_EffectDirectory = json["Fourth_Directory"];
-
-		// if (json.contains("FourthEffect_Curves"))
-		// {
-		// 	for (auto curveJson : json["FourthEffect_Curves"])
-		// 	{
-		// 		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-		// 		// m_FourthEffect_Curves.emplace(pCurve->GetName(), pCurve);
-		// 		// AddEmptyCurve_ForFourth(pCurve->GetName());
-		//
-		// 		LoadAndSetCurve_Fourth(&curveJson);
-		// 	}
-		// }
 	}
 
 	if (json.contains("Fifth_Directory"))
 	{
 		m_Fifth_EffectDirectory = json["Fifth_Directory"];
-
-		// if (json.contains("FifthEffect_Curves"))
-		// {
-		// 	for (auto curveJson : json["FifthEffect_Curves"])
-		// 	{
-		// 		// auto pCurve = CCurveFloatImpl::Create(&curveJson);
-		// 		// m_FifthEffect_Curves.emplace(pCurve->GetName(), pCurve);
-		// 		// AddEmptyCurve_ForFifth(pCurve->GetName());
-		//
-		// 		LoadAndSetCurve_Fifth(&curveJson);
-		// 	}
-		// }
 	}
 
 	json["End_Time"].get_to<_float>(m_fEndTime);

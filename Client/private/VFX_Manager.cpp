@@ -54,16 +54,6 @@ CEffectGroup* CVFX_Manager::Find_Effect(EFFECT eType, const wstring& wstrEffectT
 
 	string EffectDir = arrayEffectMatch[eType] + ws2s(wstrEffectTag + L".json");
 
-	// string Dirpath = arrayEffectMatch[eType];
-	//
-	// wstring Tmp = wstrEffectTag + L".json";
-	//
-	// string EffectName = ws2s(Tmp);
-	//
-	// string EffectDir = Dirpath + EffectName;
-
-	// string FinalEffectDir = EffectDir ;
-
 	return Add_Effect(EffectDir, wszLayerTag);
 }
 

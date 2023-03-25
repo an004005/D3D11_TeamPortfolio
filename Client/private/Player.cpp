@@ -1325,6 +1325,53 @@ HRESULT CPlayer::SetUp_EffectEvent()
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Upper_Particle"))->Start_Attach(this, "Eff01");
 	});
 
+	m_pModel->Add_EventCaller("Elec_Attack_1", [&]() {Event_Effect("Elec_Attack_1", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_1_001", [&]() {Event_Effect("Elec_Attack_1_001", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_2", [&]() {Event_Effect("Elec_Attack_2", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_3", [&]() {Event_Effect("Elec_Attack_3", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_3_001", [&]() {Event_Effect("Elec_Attack_3_001", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_001", [&]() {Event_Effect("Elec_Attack_4_001", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_002", [&]() {Event_Effect("Elec_Attack_4_002", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_003", [&]() {Event_Effect("Elec_Attack_4_003", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_004", [&]() {Event_Effect("Elec_Attack_4_004", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_005", [&]() {Event_Effect("Elec_Attack_4_005", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_5", [&]() {Event_Effect("Elec_Attack_5", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_1", [&]() {Event_Effect("Elec_Attack_Air_1", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_2", [&]() {Event_Effect("Elec_Attack_Air_2", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Chase", [&]() {Event_Effect("Elec_Attack_Air_Chase", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Dash_0", [&]() {Event_Effect("Elec_Attack_Air_Dash_0", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Dash_1", [&]() {Event_Effect("Elec_Attack_Air_Dash_1", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Dash_1_001", [&]() {Event_Effect("Elec_Attack_Air_Dash_1_001", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_00", [&]() {Event_Effect("Elec_Attack_Air_Hold_00", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_01", [&]() {Event_Effect("Elec_Attack_Air_Hold_01", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_02", [&]() {Event_Effect("Elec_Attack_Air_Hold_02", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_03", [&]() {Event_Effect("Elec_Attack_Air_Hold_03", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_04", [&]() {Event_Effect("Elec_Attack_Air_Hold_04", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_05", [&]() {Event_Effect("Elec_Attack_Air_Hold_05", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_Landing", [&]() {Event_Effect("Elec_Attack_Air_Hold_Landing", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Charge_01", [&]() {Event_Effect("Elec_Attack_Charge_01", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Charge_02", [&]() {Event_Effect("Elec_Attack_Charge_02", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Charge_03", [&]() {Event_Effect("Elec_Attack_Charge_03", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_1", [&]() {Event_Effect("Elec_Attack_Dash_1", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_2_001", [&]() {Event_Effect("Elec_Attack_Dash_2_001", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_2_002", [&]() {Event_Effect("Elec_Attack_Dash_2_002", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_3", [&]() {Event_Effect("Elec_Attack_Dash_3", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_End", [&]() {Event_Effect("Elec_Attack_Dash_End", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_0", [&]() {Event_Effect("Elec_Attack_Dash_Hold_0", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_1", [&]() {Event_Effect("Elec_Attack_Dash_Hold_1", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_2", [&]() {Event_Effect("Elec_Attack_Dash_Hold_2", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_3", [&]() {Event_Effect("Elec_Attack_Dash_Hold_3", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_4", [&]() {Event_Effect("Elec_Attack_Dash_Hold_4", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_0", [&]() {Event_Effect("Elec_Attack_Justdodge_0", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_1", [&]() {Event_Effect("Elec_Attack_Justdodge_1", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_2", [&]() {Event_Effect("Elec_Attack_Justdodge_2", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_3", [&]() {Event_Effect("Elec_Attack_Justdodge_3", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_4", [&]() {Event_Effect("Elec_Attack_Justdodge_4", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_5", [&]() {Event_Effect("Elec_Attack_Justdodge_5", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Upper_0", [&]() {Event_Effect("Elec_Attack_Upper_0", 1.f, "Eff02"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Upper_1", [&]() {Event_Effect("Elec_Attack_Upper_1", 1.f, "Eff02"); });
+
+
 	m_pModel->Add_EventCaller("Trail_On", [&]() 
 	{ 
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(true);
@@ -4431,17 +4478,19 @@ void CPlayer::Event_Effect(string szEffectName, _float fSize, string szBoneName)
 	switch (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type)
 	{
 	case ESASType::SAS_NOT:
-		if (szEffectName.find("Fire") != string::npos)	// Fire키워드 들어간 이펙트는 거름
+		if (szEffectName.find("Fire") != string::npos || szEffectName.find("Elec") != string::npos)
 			break;
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, EffectName)->Start_Attach(this, szBoneName);
 		break;
 	case ESASType::SAS_FIRE:
-		if (szEffectName.find("Fire") == string::npos)	// Fire키워드 없으면 거름
+		if (szEffectName.find("Fire") == string::npos)
 			break;
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, EffectName)->Start_Attach(this, szBoneName);
-//		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachSword(m_vecWeapon.front(), true);
-//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, EffectName)->Start_AttachPivot(this, m_pModel->GetPivotMatrix(), szBoneName, true);
-
+		break;
+	case ESASType::SAS_ELETRIC:
+		if (szEffectName.find("Elec") == string::npos)
+			break;
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName)->Start_Attach(this, szBoneName);
 		break;
 	}
 

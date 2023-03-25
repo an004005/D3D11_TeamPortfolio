@@ -1,6 +1,12 @@
 Prototype_Component_Shader_VtxModel_VFX
 
 
+VFX_Ver2_em0220_Boom
+../Bin/Resources/Meshes/VFX_Ver2/VFX_Ver2_em0220_Boom.static_model
+
+VFX_Ver2_em0210_Bullet
+../Bin/Resources/Meshes/VFX_Ver2/VFX_Ver2_em0210_Bullet.static_model
+
 VFX_Ver2_Dash_Mesh.static_model
 ../Bin/Resources/Meshes/VFX_Ver2/VFX_Ver2_Dash_Mesh.static_model
 

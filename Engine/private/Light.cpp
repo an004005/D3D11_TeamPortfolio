@@ -47,6 +47,9 @@ HRESULT CLight::Render(CVIBuffer_Rect * pVIBuffer, CShader * pShader)
 {
 	_uint		iPassIndex = 1;
 
+	if (m_LightDesc.isEnable == false)
+		return S_OK;
+
 	if (LIGHTDESC::TYPE_DIRECTIONAL == m_LightDesc.eType)
 	{
 		if (FAILED(pShader->Set_RawValue("g_vLightDir", &m_LightDesc.vDirection, sizeof(_float4))))
@@ -63,6 +66,17 @@ HRESULT CLight::Render(CVIBuffer_Rect * pVIBuffer, CShader * pShader)
 			return E_FAIL;
 
 		iPassIndex = 2;
+	}
+	else if (LIGHTDESC::TYPE_CAPSULE == m_LightDesc.eType)
+	{
+		if (FAILED(pShader->Set_RawValue("g_fLightRange", &m_LightDesc.fRange, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(pShader->Set_RawValue("g_vCapsuleStart", &m_LightDesc.vCapsuleStart, sizeof(_float4))))
+			return E_FAIL;
+		if (FAILED(pShader->Set_RawValue("g_vCapsuleEnd", &m_LightDesc.vCapsuleEnd, sizeof(_float4))))
+			return E_FAIL;
+		
+		iPassIndex = 5;
 	}
 	// else if (LIGHTDESC::TYPE_FOV == m_LightDesc.eType)
 	// {
@@ -97,9 +111,6 @@ void CLight::Imgui_Render()
 		ImGui::Checkbox("Enable", &m_LightDesc.isEnable);
 		ImGui::InputFloat4("Direction", (float*)&m_LightDesc.vDirection);
 
-		ImGui::ColorEdit4("Diffuse", (float*)&m_LightDesc.vDiffuse, ImGuiColorEditFlags_PickerHueWheel);
-		ImGui::ColorEdit4("Ambient", (float*)&m_LightDesc.vAmbient, ImGuiColorEditFlags_PickerHueWheel);
-		ImGui::ColorEdit4("Speclar", (float*)&m_LightDesc.vSpecular, ImGuiColorEditFlags_PickerHueWheel);
 	}
 	else if (m_LightDesc.eType == LIGHTDESC::TYPE_POINT)
 	{
@@ -107,11 +118,19 @@ void CLight::Imgui_Render()
 		ImGui::Checkbox("Enable", &m_LightDesc.isEnable);
 		ImGui::InputFloat3("Pos", (float*)&m_LightDesc.vPosition);
 		ImGui::InputFloat("Range", &m_LightDesc.fRange);
-
-		ImGui::ColorEdit4("Diffuse", (float*)&m_LightDesc.vDiffuse, ImGuiColorEditFlags_PickerHueWheel);
-		ImGui::ColorEdit4("Ambient", (float*)&m_LightDesc.vAmbient, ImGuiColorEditFlags_PickerHueWheel);
-		ImGui::ColorEdit4("Speclar", (float*)&m_LightDesc.vSpecular, ImGuiColorEditFlags_PickerHueWheel);
 	}
+	else if (m_LightDesc.eType == LIGHTDESC::TYPE_CAPSULE)
+	{
+		ImGui::Text("Capsule Light");
+		ImGui::Checkbox("Enable", &m_LightDesc.isEnable);
+		ImGui::InputFloat("Capsule Radius", &m_LightDesc.fRange);
+		ImGui::InputFloat4("Capsule Start", (float*)&m_LightDesc.vCapsuleStart);
+		ImGui::InputFloat4("Capsule End", (float*)&m_LightDesc.vCapsuleEnd);
+	}
+
+	ImGui::ColorEdit4("Diffuse", (float*)&m_LightDesc.vDiffuse, ImGuiColorEditFlags_PickerHueWheel);
+	ImGui::ColorEdit4("Ambient", (float*)&m_LightDesc.vAmbient, ImGuiColorEditFlags_PickerHueWheel);
+	ImGui::ColorEdit4("Specular", (float*)&m_LightDesc.vSpecular, ImGuiColorEditFlags_PickerHueWheel);
 }
 
 // void CLight::Update(_fmatrix CamWorldMatrix, _float4* vFrustumCorners)

@@ -139,6 +139,8 @@ public: /* For.Light_Manager */
 	void Delete_Light(const string& strLightTag);
 	void ClearLight();
 	void SetShadowCam(class CCamera* pShadowCam);
+	void AddLifePointLight(_float fLife, _float4 vPos, _float fRange, _float4 vColor);
+	void AddLifeCapsuleLight(_float fLife, _float4 vStart, _float4 vEnd, _float fRange, _float4 vColor);
 
 public: /* For.Font_Manager */
 	HRESULT Add_Font(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pFontTag, const _tchar* pFontFilePath);
