@@ -182,7 +182,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	Json PreviewData;
 
 	{
-		PreviewData["Model"] = "Prototype_Model_em200";
+		PreviewData["Model"] = "Prototype_Model_em750";
 		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
 		auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 	}

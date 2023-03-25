@@ -411,11 +411,16 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 		switch (m_eCurAttackType)
 		{
 		case EAttackType::ATK_LIGHT: break;
+		case EAttackType::ATK_SPECIAL_LOOP: break;
 		case EAttackType::ATK_MIDDLE: break;
+
 		case EAttackType::ATK_HEAVY:
+			FALLTHROUGH;
+		case EAttackType::ATK_SPECIAL_END:
 			iDamage *= 2;
 			break;
 		case EAttackType::ATK_TO_AIR: break;
+		case EAttackType::ATK_DOWN: break;
 		case EAttackType::ATK_END: break;
 		default: 
 			NODEFAULT;

@@ -256,6 +256,9 @@
     <ClInclude Include="..\public\EM0320.h" />
     <ClInclude Include="..\public\EM0320_AnimInstance.h" />
     <ClInclude Include="..\public\EM0320_Controller.h" />
+    <ClInclude Include="..\public\EM0750.h" />
+    <ClInclude Include="..\public\EM0750_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0750_Controller.h" />
     <ClInclude Include="..\public\EM0800.h" />
     <ClInclude Include="..\public\EM0800_AnimInstance.h" />
     <ClInclude Include="..\public\EM0800_Controller.h" />
@@ -474,6 +477,9 @@
     <ClCompile Include="..\private\EM0320.cpp" />
     <ClCompile Include="..\private\EM0320_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0320_Controller.cpp" />
+    <ClCompile Include="..\private\EM0750.cpp" />
+    <ClCompile Include="..\private\EM0750_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0750_Controller.cpp" />
     <ClCompile Include="..\private\EM0800.cpp" />
     <ClCompile Include="..\private\EM0800_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0800_Controller.cpp" />
