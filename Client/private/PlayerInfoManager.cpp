@@ -344,6 +344,7 @@ void CPlayerInfoManager::SAS_Checker()
 					{
 						SAS = m_PlayerSasTypeList.erase(SAS);
 						m_tPlayerStat.Sasese[i].bUsable = false;
+
 						break;
 					}
 					else

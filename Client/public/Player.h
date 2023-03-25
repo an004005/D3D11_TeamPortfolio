@@ -622,6 +622,7 @@ private:
 private:
 	CSAS_Portrait* m_pSasPortrait = nullptr;
 	class CSAS_Cable* m_pSAS_Cable = nullptr;
+	class CPostVFX_Penetrate* m_pSAS_Penetrate = nullptr;
 	void SasGearEffect();
 
 private:

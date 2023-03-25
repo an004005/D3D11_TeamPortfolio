@@ -41,6 +41,7 @@ private:
 
 private:
 	_float4x4	m_AssemblyPosition;
+	_float4x4	m_OptionalMatrix;
 
 public:
 	static CSpecial_DropObject_Single* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

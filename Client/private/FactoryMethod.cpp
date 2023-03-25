@@ -456,7 +456,7 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 
 	auto pModel_DropObject_Single = CModel::Create(pDevice, pContext,
 		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
-	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_DropObject_Single", pModel_HBeam_Single));
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_DropObject_Single", pModel_DropObject_Single));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_DropObject_Single", CSpecial_DropObject_Single::Create(pDevice, pContext)));
 
 	return S_OK;

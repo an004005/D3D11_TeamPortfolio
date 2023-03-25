@@ -299,7 +299,26 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 				m_pCurState->m_Animation->Reset();
 
 			if (m_pCurState->m_SpairAnimation != nullptr)
+			{
 				m_pCurState->m_SpairAnimation->Reset();
+
+				if (m_pCurState->m_Animation == m_pCurState->m_SpairAnimation)
+					m_pCurState->m_SpairAnimation = nullptr;
+			}
+
+			if (m_pCurState->m_ReserveAnimation != nullptr)
+			{
+				if (m_pCurState->m_Animation == m_pCurState->m_ReserveAnimation)
+				{
+					m_pCurState->m_SpairAnimation = nullptr;
+					m_pCurState->m_ReserveAnimation = nullptr;
+				}
+				else if (m_pCurState->m_Animation != m_pCurState->m_ReserveAnimation)
+				{
+					m_pCurState->m_SpairAnimation = m_pCurState->m_ReserveAnimation;
+					m_pCurState->m_ReserveAnimation = nullptr;
+				}
+			}
 		}
 		else
 		{
@@ -413,9 +432,13 @@ void CAnimationStateMachine::SetSpairAnim(const string & stateName, CAnimation *
 	if (nullptr == pSpairAnim)
 		return;
 
-	if (nullptr == pState->second->m_SpairAnimation)
+	if (nullptr == pState->second->m_SpairAnimation && nullptr == pState->second->m_ReserveAnimation)
 	{
 		pState->second->m_SpairAnimation = pSpairAnim;
+	}
+	else if (nullptr == pState->second->m_SpairAnimation && nullptr != pState->second->m_ReserveAnimation)
+	{
+		pState->second->m_ReserveAnimation = pSpairAnim;
 	}
 	else
 	{

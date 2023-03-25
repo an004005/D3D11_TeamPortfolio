@@ -578,6 +578,7 @@ HRESULT CLevel_PlayerTest::Ready_Effect(const _tchar * pLayerTag)
 	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
 
+
 	return S_OK;
 }
 

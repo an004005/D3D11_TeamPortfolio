@@ -43,9 +43,10 @@ void CSpecial_DropObject_Single::BeginTick()
 {
 	__super::BeginTick();
 
-	m_pCollider->Activate(false);
 	m_pCollider->Set_Kinetic(true);
 	m_pCollider->UpdateChange();
+
+	m_pCollider->Activate(false);
 }
 
 void CSpecial_DropObject_Single::Tick(_double TimeDelta)
@@ -83,6 +84,9 @@ void CSpecial_DropObject_Single::LoadFromJson(const Json & json)
 
 	if (json.contains("LocalMatrix"))
 		m_LocalMatrix = json["LocalMatrix"];
+
+	//if (json.contains("OptionalMatrix"))
+	//	m_OptionalMatrix = json["OptionalMatrix"];
 }
 
 void CSpecial_DropObject_Single::SaveToJson(Json & json)
@@ -93,11 +97,19 @@ void CSpecial_DropObject_Single::SaveToJson(Json & json)
 		json["ModelTags"].push_back(ws2s(tag));
 
 	json["LocalMatrix"] = m_LocalMatrix;
+
+	//json["OptionalMatrix"] = m_OptionalMatrix;
 }
 
 void CSpecial_DropObject_Single::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	//if (ImGui::CollapsingHeader("ChildGizmo"))
+	//{
+	//	static GUIZMO_INFO Drop;
+	//	CImguiUtils::Render_Guizmo(&m_OptionalMatrix, Drop, true, true);
+	//}
 }
 
 void CSpecial_DropObject_Single::Set_ChildMatrix(_float4x4 matrix)

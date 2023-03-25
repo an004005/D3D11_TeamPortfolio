@@ -46,6 +46,7 @@
 #include "Special_DropObject_Bundle.h"
 
 #include "Enemy.h"
+#include "PostVFX_Penetrate.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -155,6 +156,10 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pPlayerCam = m_pGameInstance->Add_Camera("PlayerCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Player");
 	Safe_AddRef(m_pPlayerCam);
+
+	Json Penetrate = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Penetrate.json");
+	m_pSAS_Penetrate = dynamic_cast<CPostVFX_Penetrate*>(m_pGameInstance->Clone_GameObject_Get(LAYER_PLAYEREFFECT, L"ProtoPostVFX_Penetrate", &Penetrate));
+	Safe_AddRef(m_pSAS_Penetrate);
 
 	m_pModel->FindMaterial(L"MI_ch0100_HOOD_0")->SetActive(false);
 
@@ -800,6 +805,11 @@ void CPlayer::SasMgr()
 					//m_pASM->Add_SpairSasMotion(ESASType::SAS_NOT);
 					m_pSAS_Cable->UnEquipCable();
 				}
+				else if (ESASType::SAS_PENETRATE == InputSas)
+				{
+					m_pSAS_Cable->UnEquipCable();
+					m_pSAS_Penetrate->GetParam().Floats[0] = 0.f;
+				}
 			}
 			else // 사용중이지 않을 경우
 			{
@@ -820,6 +830,10 @@ void CPlayer::SasMgr()
 				{
 					m_pSAS_Cable->EquipCable(ESASType::SAS_ELETRIC);
 				}
+				else if (ESASType::SAS_PENETRATE == InputSas)
+				{
+					m_pSAS_Cable->EquipCable(ESASType::SAS_PENETRATE);
+				}
 
 				CPlayerInfoManager::GetInstance()->Set_SasType(InputSas);
 			}
@@ -837,30 +851,18 @@ void CPlayer::SasMgr()
 				m_pSwordParticle->Start_Attach(this, "RightWeapon", true);
 			}
 
+			if (ESASType::SAS_PENETRATE== CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
+			{
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Sas_Fire_Start"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+				m_pSAS_Penetrate->GetParam().Floats[0] = 1.f;	// 끄는건 0, 시점 찾아서 넣을 것
+			}
+
 			m_pASM->SetCurState("IDLE");
 			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 
 			list<CAnimation*> SasDamage;
 			SasDamage.push_back(m_pModel->Find_Animation("AS_ch0100_410_AL_damage_sas"));
 			m_pASM->InputAnimSocket("Common_AnimSocket", SasDamage);
-		}
-	}
-
-	if (!CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty())
-	{
-		if (m_pSasPortrait->isFinish())
-		{
-			_matrix EffectPivot = XMMatrixIdentity();
-
-
-			switch (CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
-			{
-			case ESASType::SAS_FIRE:
-				break;
-			default:
-				break;
-			}
-
 		}
 	}
 
@@ -1609,6 +1611,8 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			.AddTransition("KINETIC_RB_THROW_01_START to NO_USE_KINETIC", "NO_USE_KINETIC")
 			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket") || m_bLeftClick || m_bDash || m_bJump; })
 			.Priority(0)
+
+#pragma endregion KineticRB_Throw
 
 		.Build();
 
@@ -6165,6 +6169,6 @@ void CPlayer::Free()
 	Safe_Release(m_pTeleportStateMachine);
 	Safe_Release(m_pSAS_Cable);
 	Safe_Release(m_pDropObjectStateMachine);
-
+	Safe_Release(m_pSAS_Penetrate);
 //	Safe_Release(m_pContectRigidBody);
 }
