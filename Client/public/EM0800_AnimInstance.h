@@ -16,6 +16,8 @@ private:
 	_float3 m_vMoveAxis;
 	EBaseAxis m_eMoveAxis = EBaseAxis::AXIS_END;
 
+	EBaseTurn m_eTurn = EBaseTurn::TURN_END;
+	_float m_fTurnRemain = 0.f;
 public:
 	static CEM0800_AnimInstance* Create(CModel* pModel, CGameObject* pGameObject);
 	virtual void Free() override;

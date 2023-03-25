@@ -27,8 +27,8 @@ HRESULT CEM0800::Initialize(void * pArg)
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
-		m_iMaxHP = 3000;
-		m_iHP = 3000; // ★
+		m_iMaxHP = 5000;
+		m_iHP = m_iMaxHP;
 
 		m_iAtkDamage = 50;
 		iMonsterLevel = 2;
@@ -36,12 +36,11 @@ HRESULT CEM0800::Initialize(void * pArg)
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eMonsterName = EEnemyName::EM0700;
+	m_eMonsterName = EEnemyName::EM0800;
 	m_bHasCrushGage = true;
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
-	m_pTransformCom->SetSpeed(7.f);
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(70.f));
+	m_fGravity = 20.f;
 
-	m_fGravity = 0.f;
 	return S_OK;
 }
 
@@ -80,6 +79,44 @@ void CEM0800::SetUpSound()
 void CEM0800::SetUpAnimationEvent()
 {
 	CEnemy::SetUpAnimationEvent();
+
+	// Event Caller
+
+	//m_pModelCom->Add_EventCaller("Bite_Start", [this]
+	//{
+	//	//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Bite_OnHit")->Start_Attach(this, "Jaw", true);
+	//	m_SoundStore.PlaySound("mon_4_attack_bite", m_pTransformCom);
+	//	m_bAtkBite = true;
+	//});
+	//m_pModelCom->Add_EventCaller("Bite_End", [this]
+	//{
+	//	m_bAtkBite = false;
+	//	ClearDamagedTarget();
+	//});
+
+	/*m_pModelCom->Add_EventCaller("Laser_Create", [this] { m_bAtkLaser = true; });
+	m_pModelCom->Add_EventCaller("LaserSound_Start", [this] { m_SoundStore.PlaySound("mon_4_attack_laser", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("Laser_Finish", [this]
+	{
+		m_bAtkLaser = false;
+		ClearDamagedTarget();
+	});
+*/
+
+	//m_pModelCom->Add_EventCaller("LaserEff_Start", [this]
+	//{
+	//	_matrix			PivotMatrix = XMMatrixIdentity();
+	//	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Laser")->Start_AttachPivot(this, PivotMatrix, "Eff02", true, true, true);
+
+	//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Laser_Mouth")->Start_Attach(this, "Eff02", true);
+	//});
+	//m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
+	//m_pModelCom->Add_EventCaller("Untouch", [this] { m_bUntouchable = true; });
+	//m_pModelCom->Add_EventCaller("Untouch_End", [this] { m_bUntouchable = false; });
+
+	//m_pModelCom->Add_EventCaller("Groggy_End", [this] { m_bDown = false; });
+
 }
 
 void CEM0800::SetUpFSM()
@@ -101,54 +138,21 @@ void CEM0800::SetUpFSM()
 			.AddTransition("Idle to Death" , "Death")
 				.Predicator([this] { return m_bDead; })
 
-			.AddTransition("Idle to Hit_ToAir", "Hit_ToAir")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_TO_AIR; })
 			.AddTransition("Idle to Hit_Mid_Heavy", "Hit_Mid_Heavy")
 				.Predicator([this] { return
 					m_eCurAttackType == EAttackType::ATK_HEAVY
 					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
 					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
-			.AddTransition("Idle to Hit_Light", "Hit_Light")
-				.Predicator([this] { return
-					m_eCurAttackType == EAttackType::ATK_LIGHT
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP; })
+		
+			.AddTransition("Idle to Bite", "Bite")
+				.Predicator([this] { return m_eInput == CController::MOUSE_RB; })
 
-			.AddTransition("Idle to Escape", "Escape")
-				.Predicator([this] { return m_eInput == CController::SPACE; })
-
-			.AddTransition("Idle to Threat", "Threat")
-				.Predicator([this] { return m_eInput == CController::SHIFT; })
-
-			.AddTransition("Idle to Rush_Start", "Rush_Start")
-				.Predicator([this] { return m_eInput == CController::C; })
-
-			.AddTransition("Idle to Shot", "Shot")
-				.Predicator([this] { return m_eInput == CController::R; })
-			
+			.AddTransition("Idle to Laser_Start", "Laser_Start")
+				.Predicator([this] { return m_eInput == CController::MOUSE_LB; })
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-		.AddState("Hit_Light")
-			.OnStart([this]
-			{
-				Play_LightHitAnim();
-			})
-			.Tick([this](_double)
-			{
-				if (m_eCurAttackType == EAttackType::ATK_LIGHT || m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP)
-				{
-					Play_LightHitAnim();
-				}
-			})
-			.AddTransition("Hit_Light to Idle", "Idle")
-				.Predicator([this]
-			{
-				return m_bDead
-					|| m_pASM->isSocketPassby("FullBody", 0.95f)
-					|| (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
-			})
 
-
-			.AddState("Hit_Mid_Heavy")
+		.AddState("Hit_Mid_Heavy")
 				.OnStart([this]
 			{
 				Play_MidHitAnim();
@@ -156,6 +160,7 @@ void CEM0800::SetUpFSM()
 			})
 			.Tick([this](_double TimeDelta)
 			{
+				SocketLocalMove(m_pASM);
 				if (m_eCurAttackType == EAttackType::ATK_HEAVY
 					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
 					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
@@ -172,6 +177,10 @@ void CEM0800::SetUpFSM()
 					//m_pTransformCom->MoveVelocity(TimeDelta, m_vPushVelocity * fPower);
 				}
 			})
+			.OnExit([this]
+			{
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
+			})
 			.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
@@ -183,89 +192,26 @@ void CEM0800::SetUpFSM()
 		.AddState("Death")
 				.OnStart([this]
 				{
-					m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_474_AL_dead_down02");
+					m_pASM->InputAnimSocketOne("FullBody", "AS_em0800_424_AL_dead_down");
 				})
 
-
-
-		.AddState("Hit_ToAir")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_432_AL_blow_start_F");
-				m_fGravity = 20.f;
-				m_fYSpeed = 12.f;
-			})
-			.Tick([this](_double)
-			{
-				// 공중 추가타로 살짝 올라가는 애님
-				m_bHitAir = true;
-				if (m_bAirToDown)
-				{
-					m_fYSpeed = -20.f;
-				}
-				else if (m_eCurAttackType != EAttackType::ATK_END)
-				{
-					m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_455_AL_rise_start");
-				}
-			})
-			.OnExit([this]
-			{
-				m_bHitAir = false;
-			})
-			.AddTransition("Hit_ToAir to OnFloorGetup", "OnFloorGetup")
-				.Predicator([this]
-				{
-					return !m_bPreOnFloor && m_bOnFloor && m_bHitAir;
-				})
 		.AddState("OnFloorGetup")
 			.OnStart([this]
 			{
-				m_pASM->InputAnimSocketMany("FullBody", { "AS_em0700_433_AL_blow_landing_F", "AS_em0700_427_AL_getup" });
-				m_fGravity = 20.f;
+				m_pASM->InputAnimSocketMany("FullBody", { "AS_em0800_427_AL_getup" });
 			})
 			.AddTransition("OnFloorGetup to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketEmpty("FullBody");
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-		.AddState("Escape")
+		.AddState("Bite")
 			.OnStart([this]
 			{
-				SelectEscapeAnim_Overlap();
-			})
-			.Tick([this](_double) {	
-				SocketLocalMove(m_pASM);
-			})
-			.AddTransition("Escape to Idle", "Idle")
-				.Predicator([this]
-			{
-				return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.95f);
-			})
-
-///////////////////////////////////////////////////////////////////////////////////////////
-
-		.AddState("Threat")
-			.OnStart([this]
-			{
-				m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_160_AL_threat");
-			})
-			.AddTransition("Threat to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.95f);
-				})
-
-///////////////////////////////////////////////////////////////////////////////////////////
-
-		//시작과 끝은 로컬이 있음
-		.AddState("Rush_Start")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_202_AL_atk_a1_loop");
-				Rush_Start();
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0810_201_AL_atk_a1_bite");
 				ClearDamagedTarget();
 			})
 			.Tick([this](_double TimeDelta)
@@ -276,53 +222,7 @@ void CEM0800::SetUpFSM()
 			{
 				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
-			.AddTransition("Rush_Start to Rush_Loop", "Rush_Loop")
-				.Predicator([this]
-			{
-				return  m_pASM->isSocketPassby("FullBody", 0.95f);
-			})
 			.AddTransition("Rush_Start to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead || (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
-				})
-
-		.AddState("Rush_Loop")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_202_AL_atk_a1_loop");
-				m_pModelCom->GetPlayAnimation()->SetLooping(true);	
-				m_bRush = true;
-			})
-			.Tick([this](_double TimeDelta)
-			{
-				Rush(TimeDelta);
-				Rush_Overlap();
-				Rush_SweepCapsule();
-			})
-			.OnExit([this] {
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-			})
-			.AddTransition("Rush_Loop to Rush_End", "Rush_End")
-				.Predicator([this]
-				{
-					return m_bDead || !m_bRush;
-				})
-
-		.AddState("Rush_End")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_203_AL_atk_a1_end");
-			})
-			.Tick([this](_double)
-			{
-				SocketLocalMove(m_pASM);
-			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-			})
-			.AddTransition("Rush_End to Idle", "Idle")
 				.Predicator([this]
 				{
 					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
@@ -330,16 +230,42 @@ void CEM0800::SetUpFSM()
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-		.AddState("Shot")
+		.AddState("Laser_Start")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0710_207_AL_atk_a3");
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_214_AL_atk_a7_laser2_start");
 			})
-			.OnExit([this] 
+			.AddTransition("Laser_Start to Laser_Loop", "Laser_Loop")
+				.Predicator([this]
 			{
-				Shot();
+				return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 			})
-				.AddTransition("AS_em0710_207_AL_atk_a3 to Idle", "Idle")
+		.AddState("Laser_Loop")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_215_AL_atk_a7_laser2_loop");
+				m_pModelCom->GetPlayAnimation()->SetLooping(true);
+				m_fLaserTime = 0.f;
+			})
+			.Tick([this](_double TimeDetla)
+			{
+				m_fLaserTime += TimeDetla;
+			})
+			.OnExit([this]
+			{
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
+			})
+			.AddTransition("Laser_Loop to Laser_End", "Laser_End")
+				.Predicator([this]
+			{
+				return m_bDead || m_fLaserTime >= 3.f;
+			})
+		.AddState("Laser_End")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_216_AL_atk_a7_laser2_end");
+			})
+			.AddTransition("Laser_End to Idle", "Idle")
 				.Predicator([this]
 			{
 				return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
@@ -382,6 +308,7 @@ void CEM0800::Tick(_double TimeDelta)
 		m_pController->Invalidate();
 
 	//변수 업데이트
+	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
 	m_vMoveAxis.Normalize();
 	m_eInput = m_pController->GetAIInput();
@@ -437,9 +364,9 @@ _bool CEM0800::IsPlayingSocket() const
 void CEM0800::Play_LightHitAnim()
 {
 	if (m_eSimpleHitFrom == ESimpleAxis::NORTH)
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_401_AL_damage_l_F");
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0800_401_AL_damage_l_F");
 	else
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_402_AL_damage_l_B");
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0800_402_AL_damage_l_B");
 }
 
 void CEM0800::Play_MidHitAnim()
@@ -447,16 +374,16 @@ void CEM0800::Play_MidHitAnim()
 	switch (m_eHitFrom)
 	{
 	case EBaseAxis::NORTH:
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_411_AL_damage_m_F");
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0800_411_AL_damage_m_F");
 		break;
 	case EBaseAxis::EAST:
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_414_AL_damage_m_R");
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0800_414_AL_damage_m_R");
 		break;
 	case EBaseAxis::SOUTH:
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_412_AL_damage_m_B");
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0800_412_AL_damage_m_B");
 		break;
 	case EBaseAxis::WEST:
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_413_AL_damage_m_L");
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0800_413_AL_damage_m_L");
 		break;
 	case EBaseAxis::AXIS_END:
 		FALLTHROUGH;
@@ -476,183 +403,6 @@ void CEM0800::HeavyAttackPushStart()
 		const _float fYaw = m_pTransformCom->GetYaw_Radian();
 		m_vPushVelocity = XMVector3TransformNormal(m_vPushVelocity, XMMatrixRotationY(fYaw));
 	}
-}
-
-void CEM0800::SelectRandomMoveAnim()
-{
-	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
-
-	_float fAngle = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyRight), XMVector3Normalize(vTargetPos - vMyPos)));
-
-	//오른쪽
-	if (fAngle > 0)
-		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_122_AL_randommove_R");
-	else
-		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_121_AL_randommove_L");
-}
-
-void CEM0800::Rush_Start()
-{
-	//한틱만 실행시켜줘야함
-	_matrix MyBone = XMLoadFloat4x4(&GetBoneMatrix("Target"));
-	_vector vMyBonePos = (MyBone * m_pTransformCom->Get_WorldMatrix()).r[3];
-
-	_matrix TargetBone = XMLoadFloat4x4(&m_pTarget->GetBoneMatrix("Waist"));
-	_vector TargetBonePos = (TargetBone * m_pTarget->GetTransform()->Get_WorldMatrix()).r[3];
-
-	//공격하는 벡터
-	_vector vStartDir = TargetBonePos - vMyBonePos;
-	XMStoreFloat4(&m_vStartDir, vStartDir);
-
-	_vector vInterval = XMVectorSetY(TargetBonePos, XMVectorGetY(vMyBonePos) - XMVectorGetY(TargetBonePos)) * 2.f;
-
-	//공격 끝나고 올라가는 벡터
-	_vector vEndDir = vStartDir + vInterval;
-	XMStoreFloat4(&m_vEndDir, vEndDir);
-	//
-}
-
-void CEM0800::Rush(_double TimeDelta)
-{
-	_matrix MyBone = XMLoadFloat4x4(&GetBoneMatrix("Target"));
-	_vector vMyBonePos = (MyBone * m_pTransformCom->Get_WorldMatrix()).r[3];
-
-	if (m_bChangeDir == false)
-	{
-		_matrix TargetBone = XMLoadFloat4x4(&m_pTarget->GetBoneMatrix("Waist"));
-		_vector TargetBonePos = (TargetBone * m_pTarget->GetTransform()->Get_WorldMatrix()).r[3];
-
-		_float fDist = XMVectorGetX(XMVector4Length(TargetBonePos- vMyBonePos));
-
-		if (fDist <= 0.2f)
-			m_bChangeDir = true;
-	}
-	else
-	{
-		_float fDist = XMVectorGetX(XMVector4Length(vMyBonePos - XMLoadFloat4(&m_vEndDir)));
-
-		if (fDist <= 0.2f)
-			m_bRush = false;
-	}
-
-	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	vMyPos += XMVector3Normalize(m_vStartDir) * 5.f * TimeDelta;
-
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vMyPos);
-
-}
-
-void CEM0800::Shot()
-{
-	auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("EnemyBullet"));
-
-	if (CEnemyBullet* pBullet = dynamic_cast<CEnemyBullet*>(pObj))
-	{
-		pBullet->Set_Owner(this);
-
-		_vector vBonePos = (m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix()).r[3];
-		_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-
-		//입에 달려있는 뼈가 없어서 몬스터 입 뒤쪽에있는 Target뼈에서 앞쪽으로 당겨준다.
-		vBonePos += XMVector3Normalize(vLook) * 3.f;
-		pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vBonePos);
-		pBullet->GetTransform()->LookAt(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
-	}
-}
-
-
-
-void CEM0800::SelectEscapeAnim_Overlap()
-{
-	//뒤에 벽이 있는지 체크
-	_float fLength = -5.f;
-
-	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
-
-	_vector vBoneVector = BoneMatrix.r[3];
-	_float3 fBone = vBoneVector;
-
-	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	vMyLook = XMVectorSetY(vMyLook, 0.f);
-	_float3 fDest = vMyLook;
-
-	_float3 fFinish = { (fBone.x + fLength * fDest.x), fBone.y, (fBone.z + fLength * fDest.z) };
-
-	physx::PxOverlapHit hitBuffer[3];
-	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
-
-	SphereOverlapParams param;
-	param.fVisibleTime = 0.1f;
-	param.iTargetType = CTB_STATIC;
-	param.fRadius = 3.f;
-	param.vPos = XMVectorSetW(fFinish, 1.f);
-	param.overlapOut = &overlapOut;
-
-	if (CGameInstance::GetInstance()->OverlapSphere(param))
-		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_120_AL_escape");
-	else
-		SelectRandomMoveAnim();
-}
-
-void CEM0800::Rush_Overlap()
-{
-	//Length로 Bone의 위치에서부터 바라보는 방향으로 원하는 지점까지의 거리를 지정
-	_float fLength = 7.f;
-
-	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
-
-	_vector vBoneVector = BoneMatrix.r[3];
-	_float3 fBone = vBoneVector;
-
-	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	vMyLook = XMVectorSetY(vMyLook, 0.f);
-	_float3 fDest = vMyLook;
-
-	_float3 fFinish = { (fBone.x + fLength * fDest.x), fBone.y, (fBone.z + fLength * fDest.z) };
-
-	physx::PxOverlapHit hitBuffer[3];
-	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
-
-	SphereOverlapParams param;
-	param.fVisibleTime = 0.1f;
-	param.iTargetType = CTB_STATIC;
-	param.fRadius = 3.f;
-	param.vPos = XMVectorSetW(fFinish, 1.f);
-	param.overlapOut = &overlapOut;
-
-	if (CGameInstance::GetInstance()->OverlapSphere(param))
-	{
-		m_bRush = false;
-	}
-}
-
-void CEM0800::Rush_SweepCapsule()
-{
-	_float4x4 BodyMatrix = m_pBody->GetPxWorldMatrix();
-	_float4 vBodyPos = _float4{ BodyMatrix.m[3][0], BodyMatrix.m[3][1], BodyMatrix.m[3][2], BodyMatrix.m[3][3] };
-
-	physx::PxSweepHit hitBuffer[3];
-	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
-
-	PxCapsuleSweepParams tParams;
-	tParams.sweepOut = &sweepOut;
-	tParams.CapsuleGeo = m_pBody->Get_CapsuleGeometry();
-	tParams.pxTransform = m_pBody->Get_PxTransform();
-
-	_float4	vDir = vBodyPos - m_BeforePos;
-	tParams.vUnitDir = _float3(vDir.x, vDir.y, vDir.z);
-	tParams.fDistance = tParams.vUnitDir.Length();
-	tParams.iTargetType = CTB_PLAYER;
-	tParams.fVisibleTime = 0.2f;
-
-	if (CGameInstance::GetInstance()->PxSweepCapsule(tParams))
-	{
-		HitTargets(sweepOut, m_iAtkDamage * 1.5f, EAttackType::ATK_TO_AIR);
-	}
-
-	m_BeforePos = vBodyPos;
 }
 
 
