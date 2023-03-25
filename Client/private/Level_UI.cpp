@@ -99,6 +99,7 @@
 #include "Main_BrainMapIconPickUI.h"
 #include "Main_BrainGaugeUI.h"
 #include "Main_BrainUI.h"
+#include "Main_OnePickUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -486,6 +487,10 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_Main_BrainUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_BrainUI"),
 			CMain_BrainUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_OnePickUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_OnePickUI"),
+			CMain_OnePickUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		
 	}

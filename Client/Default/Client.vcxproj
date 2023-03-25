@@ -268,6 +268,7 @@
     <ClInclude Include="..\public\FPSCamera.h" />
     <ClInclude Include="..\public\Main_BrainGaugeUI.h" />
     <ClInclude Include="..\public\Main_BrainUI.h" />
+    <ClInclude Include="..\public\Main_OnePickUI.h" />
     <ClInclude Include="..\public\SAS_Cable.h" />
     <ClInclude Include="..\public\SpecialObject.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -493,6 +494,7 @@
     <ClCompile Include="..\private\FPSCamera.cpp" />
     <ClCompile Include="..\private\Main_BrainGaugeUI.cpp" />
     <ClCompile Include="..\private\Main_BrainUI.cpp" />
+    <ClCompile Include="..\private\Main_OnePickUI.cpp" />
     <ClCompile Include="..\private\SAS_Cable.cpp" />
     <ClCompile Include="..\private\SpecialObject.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
