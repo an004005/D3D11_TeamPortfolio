@@ -11,6 +11,7 @@
 #include "Special_DropObject_Single.h"
 #include "MapObject.h"
 #include "Enemy.h"
+#include "PlayerInfoManager.h"
 
 CSpecial_DropObject_Bundle::CSpecial_DropObject_Bundle(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -124,6 +125,17 @@ void CSpecial_DropObject_Bundle::Tick(_double TimeDelta)
 
 		for (auto& iter : m_pObject_Single)
 			iter->Tick(TimeDelta);
+	}
+
+	if (CPlayerInfoManager::GetInstance()->Get_SpecialObject() == this)
+	{
+		for (auto& iter : m_pObject_Single)
+			static_cast<CSpecial_DropObject_Single*>(iter)->SetOutline(true);
+	}
+	else
+	{
+		for (auto& iter : m_pObject_Single)
+			static_cast<CSpecial_DropObject_Single*>(iter)->SetOutline(false);
 	}
 }
 

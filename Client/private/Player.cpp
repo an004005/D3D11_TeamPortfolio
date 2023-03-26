@@ -148,6 +148,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_PLAYEREFFECT);
+	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
 
 	ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 	ZeroMemory(&m_AttackDesc, sizeof(DAMAGE_PARAM));
@@ -184,7 +185,7 @@ void CPlayer::BeginTick()
 		pStartPos->SetDelete();
 	}
 
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 2.f, 0.f, 1.f));
+//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(-5.f, 2.f, 5.f, 1.f));
 	__super::BeginTick();
 
 	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
@@ -5858,7 +5859,6 @@ void CPlayer::KineticObject_Targeting()
 void CPlayer::KineticObject_OutLineCheck()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
 
 	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects())
 	{
