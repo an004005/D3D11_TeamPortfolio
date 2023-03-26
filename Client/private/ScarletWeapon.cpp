@@ -35,6 +35,7 @@ void CScarletWeapon::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
+	m_pModel->Tick(TimeDelta);
 	if (nullptr != m_pRenderer && m_bVisible)
 		m_pRenderer->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
 }

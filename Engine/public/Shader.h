@@ -69,6 +69,7 @@ public:
 	HRESULT Set_Invalidate_Textures();
 	HRESULT Set_Params(const ShaderParams& tParam);
 	HRESULT Begin_Params(const ShaderParams& tParam);
+	void Tick(_double TimeDelta);
 
 	void SetCommonTexture(const char* pConstantName, const char* pTexFilePath);
 

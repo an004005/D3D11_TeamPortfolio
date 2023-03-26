@@ -65,7 +65,7 @@ HRESULT CLevel_Tutorial::Initialize()
 
 	Ready_Layer_SASPortrait();
 
-	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/trigger_tip.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Tutorial/TutorialBatch_Enemy.json");
 
 	return S_OK;
 }
@@ -235,9 +235,6 @@ HRESULT CLevel_Tutorial::Ready_Layer_Effect(const _tchar * pLayerTag)
 
 	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
-
-	Json Penetrate = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Penetrate.json");
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Penetrate", &Penetrate);
 
 	return S_OK;
 }
