@@ -125,7 +125,7 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	//});
 
 	//인스턴싱 모델들의 프로토타입 생성						// TutorialMap	FinalBossStage	Subway_Hospital
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/TutorialMap/",
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/Subway_Hospital/",
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
@@ -175,7 +175,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 																
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Test.json");			// Map_Subway
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Subway.json");			// Map_Subway
 		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_FinalBossStage.json");	// Map_FinalBossStage
 		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Test.json");	// Map_Test
 	
