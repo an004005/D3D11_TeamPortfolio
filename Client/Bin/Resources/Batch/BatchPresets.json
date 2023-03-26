@@ -84,6 +84,11 @@
             "Layer": "Layer_Map",
             "JsonPath": "",
             "ProtoTag": "Prototype_CapsuleLight"
+        },
+        {
+            "Layer": "Layer_Trigger",
+            "JsonPath": "",
+            "ProtoTag": "Prototype_PlayerStartPosition"
         }
     ]
 }

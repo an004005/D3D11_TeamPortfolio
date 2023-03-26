@@ -19,8 +19,8 @@ CEM0650::CEM0650(const CEM0650 & rhs)
 
 HRESULT CEM0650::Initialize(void * pArg)
 {
-	//Json em0200_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegTrigger.json");
-	//pArg = &em0200_json;
+	Json em0650_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPool/Test.json");
+	pArg = &em0650_json;
 
 	/*m_strDeathSoundTag = "mon_5_fx_death";
 	m_strImpactVoiceTag = "mon_5_impact_voice";*/

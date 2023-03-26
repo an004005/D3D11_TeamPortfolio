@@ -1042,6 +1042,9 @@
     <ClInclude Include="..\public\TipTrigger.h">
       <Filter>02.GameObjects\Map\Trigger</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PlayerStartPosition.h">
+      <Filter>02.GameObjects\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1700,6 +1703,9 @@
     </ClCompile>
     <ClCompile Include="..\private\TipTrigger.cpp">
       <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerStartPosition.cpp">
+      <Filter>02.GameObjects\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

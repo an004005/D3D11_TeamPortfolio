@@ -41,6 +41,7 @@
 #include "CapsuleLight.h"
 #include "GameManager.h"
 #include "PostVFX_ColorGrading.h"
+#include "PlayerStartPosition.h"
 
 
 CMainApp::CMainApp()
@@ -382,6 +383,8 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_PointLight"), CPointLight::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_CapsuleLight"), CCapsuleLight::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_PlayerStartPosition"), CPlayerStartPosition::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
 	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Regular32"), TEXT("../Bin/Resources/Fonts/kim_regular32.spritefont"))))

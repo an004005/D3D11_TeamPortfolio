@@ -406,6 +406,17 @@ void CEffectGroup::Start_AttachSword(CGameObject * pWeapon, _bool trueisUpdate)
 void CEffectGroup::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
+	if (m_pFirst_EffectSystem)
+		m_pFirst_EffectSystem->GetShader()->Tick(TimeDelta);
+	if (m_pSecond_EffectSystem)
+		m_pSecond_EffectSystem->GetShader()->Tick(TimeDelta);
+	if (m_pThird_EffectSystem)
+		m_pThird_EffectSystem->GetShader()->Tick(TimeDelta);
+	if (m_pFourth_EffectSystem)
+		m_pFourth_EffectSystem->GetShader()->Tick(TimeDelta);
+	if (m_pFifth_EffectSystem)
+		m_pFifth_EffectSystem->GetShader()->Tick(TimeDelta);
+
 	m_Timeline.Tick(TimeDelta);
 
 	VisibleUpdate();

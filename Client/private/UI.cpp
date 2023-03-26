@@ -85,6 +85,7 @@ void CUI::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
+	m_pShaderCom->Tick(TimeDelta);
 	if (m_bVisible)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 }

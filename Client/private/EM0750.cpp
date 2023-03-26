@@ -316,19 +316,6 @@ void CEM0750::SetUpFSM()
 					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
-///////////////////////////////////////////////////////////////////////////////////////////
-
-		.AddState("Threat")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_160_AL_threat");
-			})
-			.AddTransition("Threat to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-			})
-
 
 				///////////////////////////////////////////////////////////////////////////////////////////
 
