@@ -12,7 +12,7 @@ END
 BEGIN(Client)
 
 // FlowerLeg (본명: 바스포즈)
-// MadeBy Captin
+// MadeBy Captain
 class CEM0200 : public CEnemy
 {
 private:
@@ -47,6 +47,7 @@ protected:
 	void	Spin_SweepCapsule();
 	void	Kick_SweepSphere();
 	void	Dodge_VelocityCalc();
+	void	HeavyAttackPushStart();
 
 private:
 	void Play_LightHitAnim();
@@ -61,8 +62,6 @@ private:
 	
 	CParticleGroup*			m_pFallRoseParticle = nullptr;
 	CParticleGroup*			m_pShootFlwParticle = nullptr;
-
-	CDoOnce m_Laugh;
 
 private:
 	_float3 m_vMoveAxis;
@@ -84,6 +83,9 @@ private:
 	_bool m_bRun = false;
 
 	CController::EHandleInput m_eInput;
+
+	CSimpleTimeline m_HeavyAttackPushTimeline;
+	_float4 m_vPushVelocity;
 
 
 public:

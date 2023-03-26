@@ -164,6 +164,14 @@ void CTransform::MoveVelocity(_double TimeDelta, _float3 vVelocity)
 	Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
+void CTransform::MoveVelocity(_double TimeDelta, _float4 vVelocity)
+{
+	vVelocity.w = 0.f;
+	_vector	vPosition = Get_State(CTransform::STATE_TRANSLATION);
+	vPosition += XMLoadFloat4(&vVelocity) * static_cast<_float>(TimeDelta);
+	Set_State(CTransform::STATE_TRANSLATION, vPosition);
+}
+
 _vector CTransform::MoveVelocity_Get(_double TimeDelta, _float3 vVelocity)
 {
 	_vector	vPosition = Get_State(CTransform::STATE_TRANSLATION);

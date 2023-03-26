@@ -8,38 +8,24 @@
 #include "Controller.h"
 #include "Floors.h"
 #include "JsonStorage.h"
-#include "GameUtils.h"
-#include "Material.h"
 #include "Imgui_PropertyEditor.h"
 #include "Imgui_PostProcess.h"
 #include "Imgui_PhysX.h"
-#include "TestCamera.h"
 #include "Boss1.h"
-#include "Boss1_AIController.h"
-#include "CamSpot.h"
-#include "EffectSystem.h"
 #include "Indicator.h"
 #include "Player.h"
-#include "Weapon_wp0190.h"
 #include "SkyBox.h"
 
-#include "MapKinetic_Object.h"
-#include "PostVFX_Scifi.h"
-#include "EffectGroup.h"
-#include "ParticleSystem.h"
-#include "PostVFX_Distortion.h"
-#include "TrailSystem.h"
-#include "EffectSystem.h"
-#include "PostVFX_ColorGrading.h"
 #include "Imgui_CurveManager.h"
 #include "FactoryMethod.h"
-#include "PostVFX_Penetrate.h"
+#include "Imgui_Batch.h"
+#include "Imgui_LevelSwitcher.h"
 #include "VFX_Manager.h"
 #include "SAS_Cable.h"
-#include "Indicator.h"
+#include "Imgui_CameraManager.h"
+#include "Imgui_LightManager.h"
 
-
-// #define ADD_PLAYER
+#define ADD_PLAYER
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -53,13 +39,18 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 
 	CGameInstance::GetInstance()->Clear_ImguiObjects();
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LevelSwitcher::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PropertyEditor::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
-	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AnimModifier::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
-	// CVFX_Manager::GetInstance()->Initialize(LEVEL_GAMEPLAY);
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LightManager::Create(m_pDevice, m_pContext));
+
+
 
 	if (FAILED(Ready_Prototypes()))
 		return E_FAIL;
@@ -85,6 +76,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	Ready_Layer_Effect();
 
 	Ready_Layer_SASPortrait(LAYER_SAS);
+
+	CGameInstance::GetInstance()->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
 
 	// m_TestSound.CloneSound("Ambient_Bridge");
 	// m_TestSound.PlaySound("Ambient_Bridge");
@@ -155,61 +148,23 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 #ifdef ADD_PLAYER
 	// player
 	{
-		pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
-		pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
-
-		{
-			auto pModel_Player = CModel::Create(m_pDevice, m_pContext,
-				"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
-
-			pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
-			FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
-		}
-
-		_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
-		pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
-		auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
-		FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
-
-
-
-	{	// 이펙트 프로토타입
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Scifi"),
-			CPostVFX_Scifi::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
-
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("ProtoPostVFX_Distortion"),
-			CPostVFX_Distortion::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
-
-		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
-		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
-		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
-		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
-	}
-
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"), CController::Create())))
-		return E_FAIL;
-
+	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
 	}
 #endif
 
 	
+	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
 
 
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
 	// FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_PostVFX_ColorGrading", CPostVFX_ColorGrading::Create(m_pDevice, m_pContext)));
 
-	CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext);
-	CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext);
 	CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext);
 	CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext);
+	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 
-
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SAS_Cable", CSAS_Cable::Create(m_pDevice, m_pContext)));
-	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
 	return S_OK;
 }
@@ -220,14 +175,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
 
-	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/DownTown.json");
-	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Tutorial.json");
-	// FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
 
-	// pGameInstance->Clone_GameObject(pLayerTag, L"Indicator");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SAS_Cable")));
-	
+	Json PreviewData;
+
+	{
+		PreviewData["Model"] = "Prototype_Model_em750";
+		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
+		auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
+	}
+
 	return S_OK;
 }
 
@@ -237,11 +196,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/ShadowCam.json");
 
-	//
-	// const Json& json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/ShadowCam.json");
-	// auto pCam = pGameInstance->Clone_GameObject_Get(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), (void*)&json);
-	// pGameInstance->SetShadowCam(dynamic_cast<CCamera*>(pCam));
+	CGameInstance::GetInstance()->Add_Camera("ShadowCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic", &json);
+	CGameInstance::GetInstance()->SetShadowCam(CGameInstance::GetInstance()->FindCamera("ShadowCamera"));
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -271,13 +229,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	Json PreviewData;
 
-	{
-		// PreviewData["Model"] = "MonsterBoss1";
-		// PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
-		// auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
-	}
 	{
 		// PreviewData["Model"] = "Model_Ch300_Portrail";
 		// PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
@@ -334,7 +286,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect()
 HRESULT CLevel_GamePlay::Ready_Layer_SASPortrait(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	pGameInstance->Clone_GameObject(pLayerTag, L"Prototype_SASPortrait");
+	pGameInstance->Clone_GameObject(LAYER_SAS, L"Prototype_SASPortrait");
 
 	return S_OK;
 }

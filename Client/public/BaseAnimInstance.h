@@ -31,6 +31,9 @@ public:
 
 	void			SetCurState(const string& szStateName) { m_pASM_Base->SetCurState(szStateName); }
 
+public:
+	void			Add_SpairSasMotion(ESASType eSasType);
+
 protected:
 	void			SpairAnimationChecker();
 

@@ -39,7 +39,7 @@ HRESULT CEM0650::Initialize(void * pArg)
 	m_eMonsterName = EEnemyName::EM0650;
 	m_bHasCrushGage = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
-	m_pTransformCom->SetSpeed(7.f);
+	m_pTransformCom->SetSpeed(2.f);
 
 	return S_OK;
 }
@@ -144,7 +144,7 @@ void CEM0650::SetUpFSM()
 			.AddTransition("Idle to Hit_Light", "Hit_Light")
 				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_LIGHT; })
 
-			.AddTransition("Idle to Attack", "Attack")
+			.AddTransition("Idle to Attack_Shot", "Attack_Shot")
 				.Predicator([this] { return m_eInput == CController::MOUSE_LB; })
 	
 
@@ -233,7 +233,7 @@ void CEM0650::SetUpFSM()
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-		.AddState("Attack")
+		.AddState("Attack_Shot")
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0600_204_AL_atk_a3_shot");
@@ -251,14 +251,11 @@ void CEM0650::SetUpFSM()
 void CEM0650::BeginTick()
 {
 	CEnemy::BeginTick();
-	m_pASM->AttachAnimSocket("Pool", { m_pModelCom->Find_Animation("AS_em0600_160_AL_threat") });
+	//m_pASM->AttachAnimSocket("Pool", { m_pModelCom->Find_Animation("AS_em0600_160_AL_threat") });
 }
 
 void CEM0650::Tick(_double TimeDelta)
 {
-	if (m_iHP > m_iMaxHP)
-		m_iHP = m_iMaxHP;
-
 	CEnemy::Tick(TimeDelta);
 
 	//AIInstance tick
@@ -279,7 +276,7 @@ void CEM0650::Tick(_double TimeDelta)
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
 
-	const _float fMoveSpeed = 2.f;
+	const _float fMoveSpeed = 1.2f;
 
 	if (m_vMoveAxis.LengthSquared() > 0.f)
 	{

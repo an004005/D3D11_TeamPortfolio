@@ -11,7 +11,7 @@ END
 
 BEGIN(Client)
 
-// 스커미 풀
+// 초(고속)파리 :: 방도 팡뒤(Bangdo Fandu)
 
 class CEM0700 : public CEnemy
 {
@@ -36,31 +36,47 @@ public:
 
 public:
 	//행동 관련 함수 정의
+	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
+	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_bool IsPlayingSocket() const;
-	void Attack_a1_Loop(_double TimeDelta);
 
+	void Play_LightHitAnim();
+	void Play_MidHitAnim();
+	void HeavyAttackPushStart();
+
+	void SelectRandomMoveAnim();
+	void Rush_Start();
+	void Rush(_double TimeDelta);
+	void Shot();
 private:
 	//충돌 관련 함수 정의
-
+	void SelectEscapeAnim_Overlap();
+	void Rush_Overlap();
+	void Rush_SweepCapsule();
 private:
 	class CEM0700_Controller*		m_pController = nullptr;
 	class CEM0700_AnimInstance*		m_pASM = nullptr;
 
 	//충돌
 	CRigidBody*				m_pRange = nullptr;
-
-	//파티클
-	CParticleGroup*			m_pFallRoseParticle = nullptr;
-	CParticleGroup*			m_pShootFlwParticle = nullptr;
-
-	//유틸
-	CDoOnce m_Laugh;
+	CRigidBody*				m_pBody = nullptr;
 
 private:
-	//원시 데이터
-	_float						m_fDistance = 0.f;
-	_float3						m_vDirection;
+	_float3						 m_vMoveAxis;
+	_bool						m_bHitAir = false;
+	
+	//Rush
+	_bool						m_bRush = false;
+	_bool						m_bChangeDir = false;
+	_float4						m_vStartDir;
+	_float4						m_vEndDir;
+
+
 	CController::EHandleInput	m_eInput;
+
+	//Heavy coll
+	CSimpleTimeline m_HeavyAttackPushTimeline;
+	_float4 m_vPushVelocity;
 public:
 	static CEM0700* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

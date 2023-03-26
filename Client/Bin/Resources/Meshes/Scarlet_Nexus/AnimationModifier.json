@@ -266,6 +266,18 @@
             }
         ]
     },
+    "AS_ch0100_051_AL_sas_dodge_F_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_051_AL_sas_dodge_F_stop_Telepo": {
+        "Duration": 41.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_053_AL_dodge_R_start": {
         "Duration": 22.0,
         "TickPerSecond": 50.0,
@@ -291,6 +303,18 @@
                 "EventTime": 5.0
             }
         ]
+    },
+    "AS_ch0100_053_AL_sas_dodge_R_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_053_AL_sas_dodge_R_stop_Telepo": {
+        "Duration": 41.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_ch0100_055_AL_dodge_B_start": {
         "Duration": 22.0,
@@ -318,6 +342,18 @@
             }
         ]
     },
+    "AS_ch0100_055_AL_sas_dodge_B_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_055_AL_sas_dodge_B_stop_Telepo": {
+        "Duration": 41.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_057_AL_dodge_L_start": {
         "Duration": 22.0,
         "TickPerSecond": 50.0,
@@ -343,6 +379,18 @@
                 "EventTime": 5.0
             }
         ]
+    },
+    "AS_ch0100_057_AL_sas_dodge_L_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_057_AL_sas_dodge_L_stop_Telepo": {
+        "Duration": 41.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_ch0100_061_AL_air_dodge_F": {
         "Duration": 25.0,
@@ -708,6 +756,18 @@
             }
         ]
     },
+    "AS_ch0100_151_AL_sas_dodge_F_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_151_AL_sas_dodge_F_stop_Telepo": {
+        "Duration": 52.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_153_AL_dodge_R_start": {
         "Duration": 23.0,
         "TickPerSecond": 50.0,
@@ -733,6 +793,18 @@
                 "EventTime": 5.0
             }
         ]
+    },
+    "AS_ch0100_153_AL_sas_dodge_R_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_153_AL_sas_dodge_R_stop_Telepo": {
+        "Duration": 52.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_ch0100_155_AL_dodge_B_dash": {
         "Duration": 30.0,
@@ -766,6 +838,18 @@
             }
         ]
     },
+    "AS_ch0100_155_AL_sas_dodge_B_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_155_AL_sas_dodge_B_stop_Telepo": {
+        "Duration": 52.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_157_AL_dodge_L_start": {
         "Duration": 22.0,
         "TickPerSecond": 50.0,
@@ -791,6 +875,18 @@
                 "EventTime": 5.0
             }
         ]
+    },
+    "AS_ch0100_157_AL_sas_dodge_L_start_Telepo": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_157_AL_sas_dodge_L_stop_Telepo": {
+        "Duration": 52.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_ch0100_161_AL_air_dodge_F": {
         "Duration": 25.0,
@@ -1436,6 +1532,55 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_214_AL_sas_dash_end_Telepo": {
+        "Duration": 144.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Trail_On",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 12.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 12.0
+            },
+            {
+                "EventName": "Default_Attack_Dash_End",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_End",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Fire_Attack_Dash_End_Particle",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "attack_nor_dashattack",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "attack_fire_dashattack",
+                "EventTime": 0.0
+            }
+        ]
+    },
+    "AS_ch0100_214_AL_sas_dash_start_Telepo": {
+        "Duration": 16.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_215_AL_atk_dash_hold": {
         "Duration": 195.0,
         "TickPerSecond": 50.0,
@@ -1820,12 +1965,7 @@
         "Duration": 5.0,
         "TickPerSecond": 24.0,
         "bLooping": false,
-        "vecEvent": [
-            {
-                "EventName": "Collision_Start",
-                "EventTime": 0.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_ch0100_227_AL_atk_air_hold_landing": {
         "Duration": 66.0,
@@ -1847,10 +1987,6 @@
             {
                 "EventName": "Fire_Attack_3_twist",
                 "EventTime": 5.0
-            },
-            {
-                "EventName": "Collision_Start",
-                "EventTime": 0.0
             },
             {
                 "EventName": "Collision_End",
@@ -1942,6 +2078,14 @@
             {
                 "EventName": "Fire_Attack_Air_Hold_2_Particle",
                 "EventTime": 40.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 45.0
             }
         ]
     },
@@ -2607,7 +2751,7 @@
     },
     "AS_ch0100_410_AL_damage_sas": {
         "Duration": 69.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 69.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -2830,6 +2974,79 @@
             {
                 "EventName": "Test2",
                 "EventTime": 300.0
+            }
+        ]
+    },
+    "AS_em0100_230_AL_atk_g1_turn_L": {
+        "Duration": 180.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Turn_L_Start",
+                "EventTime": 43.0
+            },
+            {
+                "EventName": "Turn_L_End",
+                "EventTime": 66.0
+            }
+        ]
+    },
+    "AS_em0100_241_AL_atk_h1_turn_R": {
+        "Duration": 115.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Turn_R_Start",
+                "EventTime": 55.0
+            },
+            {
+                "EventName": "Turn_R_End",
+                "EventTime": 70.0
+            }
+        ]
+    },
+    "AS_em0110_206_AL_atk_b2_start": {
+        "Duration": 117.0,
+        "TickPerSecond": 35.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Rush_Start",
+                "EventTime": 78.0
+            }
+        ]
+    },
+    "AS_em0110_207_AL_atk_b2_loop": {
+        "Duration": 41.0,
+        "TickPerSecond": 35.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0110_208_AL_atk_b2_stop": {
+        "Duration": 99.0,
+        "TickPerSecond": 35.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Rush_End",
+                "EventTime": 35.0
+            }
+        ]
+    },
+    "AS_em0110_209_AL_atk_c1": {
+        "Duration": 546.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "AOE_Start",
+                "EventTime": 155.0
+            },
+            {
+                "EventName": "AOE_End",
+                "EventTime": 444.0
             }
         ]
     },
@@ -3210,7 +3427,7 @@
     },
     "AS_em0210_211_AL_somersault": {
         "Duration": 160.0,
-        "TickPerSecond": 24.0,
+        "TickPerSecond": 35.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -3225,7 +3442,7 @@
     },
     "AS_em0210_212_AL_spin": {
         "Duration": 180.0,
-        "TickPerSecond": 24.0,
+        "TickPerSecond": 35.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -3237,6 +3454,35 @@
                 "EventTime": 120.0
             }
         ]
+    },
+    "AS_em0220_215_AL_Shot2": {
+        "Duration": 49.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Shot",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Shot",
+                "EventTime": 23.0
+            },
+            {
+                "EventName": "Shot",
+                "EventTime": 36.0
+            },
+            {
+                "EventName": "Shot",
+                "EventTime": 48.0
+            }
+        ]
+    },
+    "AS_em0220_217_AL_Counter": {
+        "Duration": 110.0,
+        "TickPerSecond": 80.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_em0300_111_AL_walk_L_start": {
         "Duration": 60.0,
@@ -3924,15 +4170,21 @@
         "bLooping": true,
         "vecEvent": []
     },
+    "AS_em0700_120_AL_escape": {
+        "Duration": 75.0,
+        "TickPerSecond": 35.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0700_121_AL_randommove_L": {
         "Duration": 120.0,
-        "TickPerSecond": 14.0,
+        "TickPerSecond": 30.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_122_AL_randommove_R": {
         "Duration": 120.0,
-        "TickPerSecond": 14.0,
+        "TickPerSecond": 30.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -4936,6 +5188,52 @@
                         0.0
                     ],
                     "StartTime": 0.0010000000474974513
+                }
+            ],
+            "AS_ch0100_214_AL_sas_dash_end_Telepo": [
+                {
+                    "AnimName": "AS_ch0100_214_AL_sas_dash_end_Telepo",
+                    "EndTime": 20.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.5,
+                        0.0
+                    ],
+                    "StartTime": 0.0
+                },
+                {
+                    "AnimName": "AS_ch0100_214_AL_sas_dash_end_Telepo",
+                    "EndTime": 40.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.25,
+                        0.0
+                    ],
+                    "StartTime": 20.0
+                },
+                {
+                    "AnimName": "AS_ch0100_214_AL_sas_dash_end_Telepo",
+                    "EndTime": 50.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612,
+                        0.0
+                    ],
+                    "StartTime": 40.0
+                },
+                {
+                    "AnimName": "AS_ch0100_214_AL_sas_dash_end_Telepo",
+                    "EndTime": 80.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.25,
+                        0.0
+                    ],
+                    "StartTime": 60.0
                 }
             ],
             "AS_ch0100_215_AL_atk_dash_hold": [

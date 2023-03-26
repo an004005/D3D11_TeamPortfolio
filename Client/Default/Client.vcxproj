@@ -227,6 +227,7 @@
     <ClInclude Include="..\public\Canvas_SASInfoRightMove.h" />
     <ClInclude Include="..\public\Canvas_SASSkill.h" />
     <ClInclude Include="..\public\Canvas_SASSkillMove.h" />
+    <ClInclude Include="..\public\CapsuleLight.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
@@ -246,6 +247,10 @@
     <ClInclude Include="..\public\EM0210.h" />
     <ClInclude Include="..\public\EM0210_AnimInstance.h" />
     <ClInclude Include="..\public\EM0210_Controller.h" />
+    <ClInclude Include="..\public\EM0220.h" />
+    <ClInclude Include="..\public\EM0220_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0220_Controller.h" />
+    <ClInclude Include="..\public\EM0221.h" />
     <ClInclude Include="..\public\EM0400.h" />
     <ClInclude Include="..\public\EM0400_AnimInstance.h" />
     <ClInclude Include="..\public\EM0400_Controller.h" />
@@ -255,6 +260,15 @@
     <ClInclude Include="..\public\EM0700.h" />
     <ClInclude Include="..\public\EM0700_AnimInstance.h" />
     <ClInclude Include="..\public\EM0700_Controller.h" />
+    <ClInclude Include="..\public\EM0320.h" />
+    <ClInclude Include="..\public\EM0320_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0320_Controller.h" />
+    <ClInclude Include="..\public\EM0750.h" />
+    <ClInclude Include="..\public\EM0750_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0750_Controller.h" />
+    <ClInclude Include="..\public\EM0800.h" />
+    <ClInclude Include="..\public\EM0800_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0800_Controller.h" />
     <ClInclude Include="..\public\EnemyBullet.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
@@ -266,6 +280,8 @@
     <ClInclude Include="..\public\FL_AnimInstance.h" />
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
+    <ClInclude Include="..\public\GameManager.h" />
+    <ClInclude Include="..\public\PointLight.h" />
     <ClInclude Include="..\public\Main_BrainGaugeUI.h" />
     <ClInclude Include="..\public\Main_BrainUI.h" />
     <ClInclude Include="..\public\Main_OnePickUI.h" />
@@ -381,6 +397,7 @@
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\TestCamera.h" />
     <ClInclude Include="..\public\TestTarget.h" />
+    <ClInclude Include="..\public\TipTrigger.h" />
     <ClInclude Include="..\public\Trigger.h" />
     <ClInclude Include="..\public\TriggerEx.h" />
     <ClInclude Include="..\public\TutorialUI.h" />
@@ -455,6 +472,7 @@
     <ClCompile Include="..\private\Camera_Player.cpp" />
     <ClCompile Include="..\private\CamSpot.cpp" />
     <ClCompile Include="..\private\Canvas_SASSkillMove.cpp" />
+    <ClCompile Include="..\private\CapsuleLight.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\Drive_GaugeUI.cpp" />
@@ -472,6 +490,10 @@
     <ClCompile Include="..\private\EM0210.cpp" />
     <ClCompile Include="..\private\EM0210_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0210_Controller.cpp" />
+    <ClCompile Include="..\private\EM0220.cpp" />
+    <ClCompile Include="..\private\EM0220_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0220_Controller.cpp" />
+    <ClCompile Include="..\private\EM0221.cpp" />
     <ClCompile Include="..\private\EM0400.cpp" />
     <ClCompile Include="..\private\EM0400_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0400_Controller.cpp" />
@@ -481,6 +503,15 @@
     <ClCompile Include="..\private\EM0700.cpp" />
     <ClCompile Include="..\private\EM0700_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0700_Controller.cpp" />
+    <ClCompile Include="..\private\EM0320.cpp" />
+    <ClCompile Include="..\private\EM0320_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0320_Controller.cpp" />
+    <ClCompile Include="..\private\EM0750.cpp" />
+    <ClCompile Include="..\private\EM0750_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0750_Controller.cpp" />
+    <ClCompile Include="..\private\EM0800.cpp" />
+    <ClCompile Include="..\private\EM0800_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0800_Controller.cpp" />
     <ClCompile Include="..\private\EnemyBullet.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />
@@ -492,6 +523,8 @@
     <ClCompile Include="..\private\FL_AnimInstance.cpp" />
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
+    <ClCompile Include="..\private\GameManager.cpp" />
+    <ClCompile Include="..\private\PointLight.cpp" />
     <ClCompile Include="..\private\Main_BrainGaugeUI.cpp" />
     <ClCompile Include="..\private\Main_BrainUI.cpp" />
     <ClCompile Include="..\private\Main_OnePickUI.cpp" />
@@ -607,6 +640,7 @@
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\TestCamera.cpp" />
     <ClCompile Include="..\private\TestTarget.cpp" />
+    <ClCompile Include="..\private\TipTrigger.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
     <ClCompile Include="..\private\TriggerEx.cpp" />
     <ClCompile Include="..\private\TutorialUI.cpp" />

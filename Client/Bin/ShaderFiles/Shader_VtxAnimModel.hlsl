@@ -338,7 +338,7 @@ PS_OUT PS_MAIN_EM320_Weak_4(PS_IN In)
 		float fHit = g_float_1;
 		if (fHit > 0.f)
 		{
-			Out.vDepth.z = fHit * 4.f;
+			Out.vDepth.z += fHit * 6.f;
 		}
 	}
 	Out.vFlag = float4(0.f, 0.f, SHADER_MONSTER_WEAK, 0.f);

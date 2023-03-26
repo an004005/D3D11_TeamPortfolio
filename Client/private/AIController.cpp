@@ -189,7 +189,6 @@ void CAIController::SetTarget(CScarletCharacter* pTarget)
 
 _bool CAIController::IsCommandRunning()
 {
-	//_bool bTest = m_Commands.empty() == false;
 	return m_Commands.empty() == false;
 }
 

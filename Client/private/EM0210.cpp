@@ -546,4 +546,7 @@ void CEM0210::Free()
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pRange);
+	Safe_Release(m_pTailCol);
+	Safe_Release(m_pWeaponCol);
+
 }

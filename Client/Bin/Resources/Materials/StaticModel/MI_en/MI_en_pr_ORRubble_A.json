@@ -1,0 +1,19 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [0.995132],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/LC08/props/pr_SubwayTunnel02/T_ORRubble_A_ALB.png",
+            "../Bin/Resources/Environments/Location/LC08/props/pr_SubwayTunnel02/T_ORRubble_A_NML.png",
+            "../Bin/Resources/Environments/Location/LC08/props/pr_SubwayTunnel02/T_ORRubble_A_RMA.png",
+            "../Bin/Resources/Environments/Location/LC08/props/pr_SubwayTunnel02/DC/T_DC_SubwayTunnel02_B_NML.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 2
+}

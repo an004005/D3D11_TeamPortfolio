@@ -106,6 +106,7 @@ public:
 public:	// Get
 	PLAYER_STAT		Get_PlayerStat() const { return m_tPlayerStat; }
 	list<ESASType>	Get_PlayerSasList() const { return m_PlayerSasTypeList; }
+	_bool			Get_isSasUsing(ESASType eType);
 	CGameObject*	Get_KineticObject();
 	CGameObject*	Get_TargetedMonster();
 	CGameObject*	Get_SpecialObject();

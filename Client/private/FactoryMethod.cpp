@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\public\FactoryMethod.h"
 #include "GameInstance.h"
-
+#include "Model.h"
 // Monster
 #include "TestMonster.h"
 #include "FlowerLeg.h"
@@ -30,11 +30,15 @@
 #include "EM0110.h"
 #include "EM0200.h"
 #include "EM0210.h"
+#include "EM0220.h"
+#include "EM0221.h"
 #include "EM0400.h"
 #include "EM0650.h"
 #include "EM0700.h" 
+#include "EM0800.h"
 #include "EnemyBullet.h"
 #include "TestTarget.h"
+#include "WaterBall.h"
 
 // Kinetic Object
 #include "SpecialObject.h"
@@ -135,10 +139,15 @@
 #include "LevelUpUI.h"
 
 // 3D UI
+#include "EM0320.h"
+#include "EM0750.h"
 #include "MonsterHpUI.h"
 #include "MonsterLockonUI.h"
 #include "GravikenisisMouseUI.h"
 #include "NoticeNeonUI.h"
+#include "SimpleTrigger.h"
+#include "SpawnTrigger.h"
+#include "TipTrigger.h"
 
 CFactoryMethod::CFactoryMethod()
 {
@@ -250,6 +259,25 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em200"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em200"), CEM0200::Create(pDevice, pContext)));
 
+	{
+		auto pEm320Model = CModel::Create(pDevice, pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
+		pEm320Model->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em320"), pEm320Model));
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Monster_em320"), CEM0320::Create(pDevice, pContext)));
+ 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_WaterBall"), CWaterBall::Create(pDevice, pContext)));
+	}
+
+	{
+		/* EM0750*/
+		pEMModel = CModel::Create(pDevice, pContext,
+			"../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/SkummyPandou.anim_model");
+		pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Anim/");
+
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em750"), pEMModel));
+		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em750"), CEM0750::Create(pDevice, pContext)));
+	}
+
 	/* EM0700*/
 	pEMModel = CModel::Create(pDevice, pContext,
 		"../Bin/Resources/Model/AnimModel/Monster/em0700/Model/SM_em0700.anim_model");
@@ -258,6 +286,14 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em700"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em700"), CEM0700::Create(pDevice, pContext)));
 
+	/* EM0800*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0800/Model/SM_em0800.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0800/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em800"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em800"), CEM0800::Create(pDevice, pContext)));
+
 	/* EM0650*/
 	pEMModel = CModel::Create(pDevice, pContext,
 		"../Bin/Resources/Model/AnimModel/Monster/em0600/Model/SM_em0650.anim_model");
@@ -265,6 +301,12 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em650"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em650"), CEM0650::Create(pDevice, pContext)));
+
+	/* Bullet*/
+	_float4x4	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(270.f));
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Monster/SkPmBullet/SkMp_Bullet.static_model", PivotMatrix);
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BulletSkummyPool"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("EnemyBullet"), CEnemyBullet::Create(pDevice, pContext)));
 
 	/* EM0400*/
@@ -282,6 +324,22 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em210"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em210"), CEM0210::Create(pDevice, pContext)));
+
+	/* EM0220*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0200/Model/SM_em0220.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em0200/AnimFor0220/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em220"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em220"), CEM0220::Create(pDevice, pContext)));
+
+	/* EM0221*/
+	pEMModel = CModel::Create(
+		pDevice,
+		pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em0200/Model/SM_em0221.static_model");
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em221"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em221"), CEM0221::Create(pDevice, pContext)));
 
 	/* EM0110*/
 	pEMModel = CModel::Create(pDevice, pContext,
@@ -394,6 +452,19 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
 	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_HBeam_Single", pModel_HBeam_Single));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Single", CSpecial_HBeam_Single::Create(pDevice, pContext)));
+
+	return S_OK;
+}
+
+HRESULT CFactoryMethod::MakeTriggerPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_SpawnTrigger"), CSpawnTrigger::Create(pDevice, pContext))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_SimpleTrigger"), CSimpleTrigger::Create(pDevice, pContext))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_TipTrigger"), CTipTrigger::Create(pDevice, pContext))))
+		return E_FAIL;
 
 	return S_OK;
 }

@@ -4,6 +4,7 @@
 #include "PxModel.h"
 #include "Animation.h"
 #include "ImguiUtils.h"
+#include "VFX_Manager.h"
 
 CSAS_Cable::CSAS_Cable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -30,6 +31,12 @@ HRESULT CSAS_Cable::Initialize_Prototype()
 	m_CablePivots[3] = CImguiUtils::CreateMatrixFromImGuizmoData({ 0.000f, 0.000f, -0.135f }, {-180.000f,  13.680f, -180.000f}, _float3::One);
 	m_CablePivots[4] = CImguiUtils::CreateMatrixFromImGuizmoData({ -0.130f, 0.000f, -0.127f }, {-180.000f, 4.923f, -180.000f}, _float3::One);
 
+	//m_EffectPivots[0] = CImguiUtils::CreateMatrixFromImGuizmoData({ -0.109f, 0.152f, -0.173f }, { 90.f, 0.f, -0.f }, { 0.1f, 0.1f, 0.1f });
+	//m_EffectPivots[1] = CImguiUtils::CreateMatrixFromImGuizmoData({ -0.130f, 0.244f, 0.128f }, { 90.f, 0.f, -0.f }, { 0.1f, 0.1f, 0.1f });
+	//m_EffectPivots[2] = CImguiUtils::CreateMatrixFromImGuizmoData({ -0.01f, 0.088f, 0.029f }, { -180.f, 0.f, -180.f }, { 0.1f, 0.1f, 0.1f });
+	//m_EffectPivots[3] = CImguiUtils::CreateMatrixFromImGuizmoData({ -0.024f, -0.041f, 0.058f }, { -180.f, 0.f, -180.f }, { 0.1f, 0.1f, 0.1f });
+	//m_EffectPivots[4] = CImguiUtils::CreateMatrixFromImGuizmoData({ -0.215f, -0.063f, 0.063f }, { -180.f, 0.f, -180.f }, { 0.1f, 0.1f, 0.1f });
+
 	return S_OK;
 }
 
@@ -51,6 +58,13 @@ HRESULT CSAS_Cable::Initialize(void* pArg)
 	m_pWatchAnim = m_CableModels[0]->Find_Animation("AS_co0101_001_start01");
 	m_pWatchAnim->SetLooping(false);
 
+
+	m_CableModels[0]->Find_Animation("AS_co0101_001_start01")->SetTickPerSec(m_CableModels[0]->Find_Animation("AS_co0101_001_start01")->GetTickPerSec() * 2.f);
+	m_CableModels[1]->Find_Animation("AS_co0101_001_start02")->SetTickPerSec(m_CableModels[0]->Find_Animation("AS_co0101_001_start02")->GetTickPerSec() * 2.f);
+	m_CableModels[2]->Find_Animation("AS_co0101_001_start03")->SetTickPerSec(m_CableModels[0]->Find_Animation("AS_co0101_001_start03")->GetTickPerSec() * 2.f);
+	m_CableModels[3]->Find_Animation("AS_co0101_001_start04")->SetTickPerSec(m_CableModels[0]->Find_Animation("AS_co0101_001_start04")->GetTickPerSec() * 2.f);
+	m_CableModels[4]->Find_Animation("AS_co0101_001_start05")->SetTickPerSec(m_CableModels[0]->Find_Animation("AS_co0101_001_start05")->GetTickPerSec() * 2.f);
+
 	return S_OK;
 }
 
@@ -65,6 +79,22 @@ void CSAS_Cable::Tick(_double TimeDelta)
 	// {
 	// 	UnEquipCable();
 	// }
+
+	_matrix TargetWorldMatrix = m_pTargetTransform->Get_WorldMatrix();
+
+	//for (int i = 0; i < CABLE_CNT; ++i)
+	//{
+	//	if (4 != i) continue;
+
+	//	string strBoneName = "";
+	//	if ((0 == i) || (1 == i)) strBoneName = "Neck";
+	//	else strBoneName = "String";
+
+	//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Use_Sas_Gear"))
+	//		->Start_AttachPivot(m_pTargetModel->TryGetOwner(), m_EffectPivots[i], strBoneName, true, false);
+
+	//	CalcEffSocketMatrix(i, TargetWorldMatrix);
+	//}
 
 	if (m_bActive && m_bVisible)
 	{
@@ -106,18 +136,18 @@ HRESULT CSAS_Cable::Render()
 void CSAS_Cable::Imgui_RenderProperty()
 {
 	CGameObject::Imgui_RenderProperty();
-	// static int iIdx = 0;
-	//
-	// ImGui::InputInt("Idx", &iIdx);
-	// if (iIdx < 0 || iIdx >= CABLE_CNT)
-	// 	iIdx = 0;
-	//
-	// static GUIZMO_INFO tinfo;
-	// CImguiUtils::Render_Guizmo(&m_CablePivots[iIdx], tinfo, true, true);
-	//
-	// static char test[MAX_PATH]{};
-	// ImGui::InputText("test", test, MAX_PATH);
-	// socket = test;
+	 static int iIdx = 0;
+	
+	 ImGui::InputInt("Idx", &iIdx);
+	 if (iIdx < 0 || iIdx >= CABLE_CNT)
+	 	iIdx = 0;
+	
+	 static GUIZMO_INFO tinfo;
+	 CImguiUtils::Render_Guizmo(&m_EffectPivots[iIdx], tinfo, true, true);
+	
+	 static char test[MAX_PATH]{};
+	 ImGui::InputText("test", test, MAX_PATH);
+	 socket = test;
 }
 
 void CSAS_Cable::SetTargetInfo(CTransform* pTargetTransform, CModel* pTargetModel)
@@ -143,6 +173,21 @@ void CSAS_Cable::EquipCable(ESASType eType)
 	m_CableModels[2]->SetPlayAnimation("AS_co0101_001_start03");
 	m_CableModels[3]->SetPlayAnimation("AS_co0101_001_start04");
 	m_CableModels[4]->SetPlayAnimation("AS_co0101_001_start05");
+
+	//_matrix TargetWorldMatrix = m_pTargetTransform->Get_WorldMatrix();
+
+	//for (int i = 0; i < CABLE_CNT; ++i)
+	//{
+	//	string strBoneName = "";
+	//	if ((0 == i) || (1 == i)) strBoneName = "Neck";
+	//	else strBoneName = "String";
+
+	//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Use_Sas_Gear"))
+	//		->Start_AttachPivot(m_pTargetModel->TryGetOwner(), m_EffectPivots[i], strBoneName, true, false);
+
+	//	CalcEffSocketMatrix(i, TargetWorldMatrix);
+	//}
+
 	m_bActive = true;
 }
 
@@ -153,6 +198,32 @@ void CSAS_Cable::UnEquipCable()
 		m_CableModels[i]->ActivatePhysX(false);
 	}
 	m_bActive = false;
+}
+
+_bool CSAS_Cable::GetIsActive()
+{
+	return m_CableModels[0]->IsActivePhysX();
+}
+
+_matrix CSAS_Cable::GetTargetMatrix()
+{
+	return m_pTargetTransform->Get_WorldMatrix();
+}
+
+_float4x4 CSAS_Cable::GetBoneMatrix(const string & strBoneName, _bool bPivotapply)
+{
+	if (m_pTargetModel->Get_BonePtr(strBoneName) == nullptr)
+		return XMMatrixIdentity();
+
+	return m_pTargetModel->GetBoneMatrix(strBoneName, bPivotapply);
+}
+
+_float4x4 CSAS_Cable::GetPivotMatrix()
+{
+	if (m_pTargetModel == nullptr)
+		return XMMatrixIdentity();
+
+	return m_pTargetModel->GetPivotMatrix();
 }
 
 _matrix CSAS_Cable::CalcSocketMatrix(_int iIdx, _fmatrix TargetWorldMatrix)
@@ -179,6 +250,37 @@ _matrix CSAS_Cable::CalcSocketMatrix(_int iIdx, _fmatrix TargetWorldMatrix)
 		break;
 	case 4:
 		SocketMatrix = XMLoadFloat4x4(&m_CablePivots[iIdx]) * m_pTargetModel->GetBoneMatrix("String") * TargetWorldMatrix;
+		break;
+	default:
+		NODEFAULT;
+	}
+	return SocketMatrix;
+}
+
+_matrix CSAS_Cable::CalcEffSocketMatrix(_int iIdx, _fmatrix TargetWorldMatrix)
+{
+	_matrix SocketMatrix;
+	 //string boneName = "String";
+	 //if (m_pTargetModel->Get_BonePtr(socket) != nullptr)
+	 //{
+	 //	boneName = socket;
+	 //}
+	switch (iIdx)
+	{
+	case 0:
+		SocketMatrix = XMLoadFloat4x4(&m_EffectPivots[iIdx]) * m_pTargetModel->GetBoneMatrix("Neck") * TargetWorldMatrix;
+		break;
+	case 1:
+		SocketMatrix = XMLoadFloat4x4(&m_EffectPivots[iIdx]) * m_pTargetModel->GetBoneMatrix("Neck") * TargetWorldMatrix;
+		break;
+	case 2:
+		SocketMatrix = XMLoadFloat4x4(&m_EffectPivots[iIdx]) * m_pTargetModel->GetBoneMatrix("String") * TargetWorldMatrix;
+		break;
+	case 3:
+		SocketMatrix = XMLoadFloat4x4(&m_EffectPivots[iIdx]) * m_pTargetModel->GetBoneMatrix("String") * TargetWorldMatrix;
+		break;
+	case 4:
+		SocketMatrix = XMLoadFloat4x4(&m_EffectPivots[iIdx]) * m_pTargetModel->GetBoneMatrix("String") * TargetWorldMatrix;
 		break;
 	default:
 		NODEFAULT;

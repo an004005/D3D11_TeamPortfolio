@@ -7,6 +7,7 @@ class CFSMComponent;
 class CGameInstance;
 class CAnimation;
 class CRigidBody;
+class CCurveMananger;
 END
 
 BEGIN(Client)
@@ -43,13 +44,16 @@ public:
 	_bool IsRun() const { return m_bRun; }
 	void AfterLocal180Turn();
 	void Define_TurningKickAnim();
-	
+	void Adjust_MoveAxis(_double TimeDelta);
+
 private:
 	void Play_HeavbyHitAnim();
-	void SweepCapsule(CRigidBody* pCol);
 
 private:
 	//충돌 관련 함수 정의
+	void Rush_Overlap();
+	void Rush_SweepCapsule();
+	void Kick_SweepSphere();
 
 private:
 	class CEM0110_Controller*		m_pController = nullptr;
@@ -57,6 +61,8 @@ private:
 
 	//충돌
 	CRigidBody*					m_pRange = nullptr;
+	CRigidBody*					m_pBody = nullptr;
+	CRigidBody*					m_pHindLegs = nullptr;
 
 	CEffectGroup*				m_pSwingEffect = nullptr;
 
@@ -68,8 +74,8 @@ private:
 	_float m_fTurnRemain = 0.f;
 
 	//rush
-	_float m_fRushDistance = 0.f;
 	_float3 m_vRushDirection;
+	_bool	m_bRush = false;
 
 	// Attack
 	_bool		m_bAttack = false;

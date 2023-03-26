@@ -117,14 +117,45 @@ EBaseTurn CClientUtils::TurnDeltaToEnum(_float fTurnDelta)
 string CClientUtils::GetEnemyProtoTag(EEnemyName eName)
 {
 	static array<string, ENEMY_CNT> s_EnemyNames{
-	   "NotUsing",
-	   "NotUsing",
-	   "NotUsing",
-	   "NotUsing",
-	   "Monster_em200",
-	   "NotUsing", 
-	   "NotUsing",
+	   "NotUsing", // 말
+		"Monster_em200", // 플라워레그
+	   "NotUsing", // 투명
+	   "NotUsing", // 베이스포스
+	   "Monster_em320", // 보스1
+	   "Monster_em400",  // 버디러미
+	   "Monster_em650", // 스쿠미풀
+	   "NotUsing", // 초파리
+	   "Monster_em750", // 파리
+	   "Monster_em800", // 브론존
+	   "NotUsing", // 물
+	   "NotUsing", // 나오미
+	   "NotUsing", // 중대장
 	};
 
 	return s_EnemyNames[static_cast<_uint>(eName)];
+}
+
+_float4 CClientUtils::GetDirFromAxis(EBaseAxis eAxis)
+{
+	_float4 vOut = _float4::Zero;
+	switch (eAxis)
+	{
+	case EBaseAxis::NORTH:
+		vOut.z = 1.f;
+		break;
+	case EBaseAxis::EAST:
+		vOut.x = 1.f;
+		break;
+	case EBaseAxis::SOUTH: 
+		vOut.z = -1.f;
+		break;
+	case EBaseAxis::WEST: 
+		vOut.x = -1.f;
+		break;
+	case EBaseAxis::AXIS_END:
+		FALLTHROUGH
+	default: 
+		NODEFAULT;
+	}
+	return vOut;
 }

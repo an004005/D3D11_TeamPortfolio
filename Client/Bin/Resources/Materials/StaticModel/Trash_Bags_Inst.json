@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_Industrial_Decor_Pack/Trash_Bags_Color.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_Industrial_Decor_Pack/Trash_Bags_Normal.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_Industrial_Decor_Pack/Trash_Bags_Channel.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}
