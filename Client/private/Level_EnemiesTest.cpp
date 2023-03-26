@@ -21,7 +21,7 @@
 #include "VFX_Manager.h"
 #include "Imgui_Batch.h"
 
-//#define ADD_PLAYER
+#define ADD_PLAYER
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -166,7 +166,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 		CTrigger::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-//	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
+	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -180,9 +180,10 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
 
 	//Json PreviewData;
 	//{
-	//	PreviewData["Model"] = "Prototype_Model_em110";
+	//	PreviewData["Model"] = "Prototype_Model_em1100";
 	//	PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
 	//	auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag.c_str(), TEXT("ModelPreview"), &PreviewData);
+	//
 	//}
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/tests.json");
@@ -231,6 +232,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em1100"))
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(3.f, 3.f, 3.f, 1.f));
+
 	return S_OK;
 }
 
@@ -277,7 +279,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 																// Map_ConstructionSite3F
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
 	
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 

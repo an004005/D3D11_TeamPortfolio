@@ -28,6 +28,9 @@ public:
 
 	void Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio = 1.f);
 
+public:
+	_bool IsRun() { return m_bRun; }
+
 private:
 	void DefineState(_double TimeDelta);
 
@@ -40,8 +43,9 @@ private:
 	_bool	m_bRun = false;
 
 	_uint m_iMidOrder = 0;
+	_uint m_iFarOrder = 0;
 
-	_double m_dRushCoolTime[COOL_END] = { 0.0, 15.0 };
+	_double m_dRushCoolTime[COOL_END] = { 0.0, 40.0 };
 
 
 public:

@@ -49,7 +49,10 @@ HRESULT CEM1100_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObj
 		.AddState("Run_Start")
 			.SetAnimation(*m_pModel->Find_Animation("AS_em1100_107_AL_run_start"))
 			.AddTransition("Run_Start to Run_Loop", "Run_Loop")
-				.Predicator([this] { return !m_bRun || isSocketPassby("FullBody", 0.95f); })
+				.Predicator([this] 
+				{ 
+					return !m_bRun || static_cast<CEM1100*>(m_pTargetObject)->Get_RunStart();
+				})
 				.Duration(0.1f)
 
 		.AddState("Run_Loop")

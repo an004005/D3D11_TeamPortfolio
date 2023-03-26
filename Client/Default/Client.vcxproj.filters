@@ -355,17 +355,20 @@
     <Filter Include="02.GameObjects\Enemy\EM0800">
       <UniqueIdentifier>{ea366a02-5446-4163-9037-e8e37c831263}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Enemy\EM750">
-      <UniqueIdentifier>{9d6c3de0-d02c-4853-9517-59036dc8712b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Utils\GameManager">
-      <UniqueIdentifier>{06cdc04f-f459-43b4-9056-619815dcdb64}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Enemy\EM1100">
       <UniqueIdentifier>{f6b6e84e-dfd1-4fa6-b5f7-2a99166097d5}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Enemy\EM1200">
       <UniqueIdentifier>{61165ce0-fb67-4415-a32c-0df79482337c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM750">
+      <UniqueIdentifier>{30894673-a85c-4561-a24d-c88173551c33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="30. GameManager">
+      <UniqueIdentifier>{cb57ec25-6234-4298-9582-1b732464e268}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.Component\01.Controller\AIController">
+      <UniqueIdentifier>{04a4534d-be99-4559-897f-94efed7b0e98}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -704,7 +707,6 @@
     <ClInclude Include="..\public\TestCamera.h">
       <Filter>02.GameObjects\Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\AIController.h" />
     <ClInclude Include="..\public\PostVFX_HitDecal.h">
       <Filter>97.ShaderFiles\PostProcess\HitDecal</Filter>
     </ClInclude>
@@ -799,7 +801,6 @@
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
-    <ClInclude Include="..\public\Level_Stage1.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
@@ -821,7 +822,6 @@
     <ClInclude Include="..\public\AttackNumUI.h">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\FactoryMethod.h">
       <Filter>FactoryMethod</Filter>
     </ClInclude>
@@ -905,7 +905,6 @@
     <ClInclude Include="..\public\EM0200_Controller.h">
       <Filter>02.GameObjects\Enemy\EM0200</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\TestTarget.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h">
       <Filter>02.GameObjects\Enemy</Filter>
     </ClInclude>
@@ -1033,21 +1032,6 @@
     <ClInclude Include="..\public\EM0800_Controller.h">
       <Filter>02.GameObjects\Enemy\EM0800</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\GameManager.h">
-      <Filter>02.GameObjects\Utils\GameManager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\EM0750.h">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\EM0750_Controller.h">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\EM0750_AnimInstance.h">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\TipTrigger.h">
-      <Filter>02.GameObjects\Map\Trigger</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\EM1100_AnimInstance.h">
       <Filter>02.GameObjects\Enemy\EM1100</Filter>
     </ClInclude>
@@ -1056,6 +1040,33 @@
     </ClInclude>
     <ClInclude Include="..\public\EM1100.h">
       <Filter>02.GameObjects\Enemy\EM1100</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0750_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM750</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0750.h">
+      <Filter>02.GameObjects\Enemy\EM750</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0750_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM750</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_KineticEditor.h">
+      <Filter>01.Levels\17.KineticEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Stage1.h">
+      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GameManager.h">
+      <Filter>30. GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AIController.h">
+      <Filter>50.Component\01.Controller\AIController</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TestTarget.h">
+      <Filter>Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TipTrigger.h">
+      <Filter>Trigger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1366,7 +1377,6 @@
     <ClCompile Include="..\private\TestCamera.cpp">
       <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\AIController.cpp" />
     <ClCompile Include="..\private\PostVFX_HitDecal.cpp">
       <Filter>97.ShaderFiles\PostProcess\HitDecal</Filter>
     </ClCompile>
@@ -1460,7 +1470,6 @@
     <ClCompile Include="..\private\Boss_ShildUI.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Level_Stage1.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
@@ -1482,7 +1491,6 @@
     <ClCompile Include="..\private\AttackNumUI.cpp">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp">
       <Filter>FactoryMethod</Filter>
     </ClCompile>
@@ -1569,7 +1577,6 @@
     <ClCompile Include="..\private\EM0200_Controller.cpp">
       <Filter>02.GameObjects\Enemy\EM0200</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\TestTarget.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp">
       <Filter>02.GameObjects\Enemy</Filter>
     </ClCompile>
@@ -1701,8 +1708,14 @@
     <ClCompile Include="..\private\EM0800_AnimInstance.cpp">
       <Filter>02.GameObjects\Enemy\EM0800</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\GameManager.cpp">
-      <Filter>02.GameObjects\Utils\GameManager</Filter>
+    <ClCompile Include="..\private\EM1100_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM1100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM1100_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM1100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM1100.cpp">
+      <Filter>02.GameObjects\Enemy\EM1100</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0750.cpp">
       <Filter>02.GameObjects\Enemy\EM750</Filter>
@@ -1713,17 +1726,23 @@
     <ClCompile Include="..\private\EM0750_Controller.cpp">
       <Filter>02.GameObjects\Enemy\EM750</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Level_KineticEditor.cpp">
+      <Filter>01.Levels\17.KineticEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Stage1.cpp">
+      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameManager.cpp">
+      <Filter>30. GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AIController.cpp">
+      <Filter>50.Component\01.Controller\AIController</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TestTarget.cpp">
+      <Filter>Trigger</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\TipTrigger.cpp">
-      <Filter>02.GameObjects\Map\Trigger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\EM1100_AnimInstance.cpp">
-      <Filter>02.GameObjects\Enemy\EM1100</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\EM1100_Controller.cpp">
-      <Filter>02.GameObjects\Enemy\EM1100</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\EM1100.cpp">
-      <Filter>02.GameObjects\Enemy\EM1100</Filter>
+      <Filter>Trigger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

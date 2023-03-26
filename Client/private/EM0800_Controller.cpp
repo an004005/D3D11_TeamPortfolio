@@ -46,6 +46,7 @@ void CEM0800_Controller::AI_Tick(_double TimeDelta)
 	if (m_pTarget == nullptr)
 		return;
 
+
 	// 대상과의 거리 
 	m_fToTargetDistance = XMVectorGetX(XMVector3LengthEst(
 		m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)

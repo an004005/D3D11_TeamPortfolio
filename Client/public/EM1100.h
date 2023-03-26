@@ -35,11 +35,17 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 public:
+	void	Set_RunStart(_bool bRunStart) { m_bRun_Start = bRunStart; }
+	_bool	Get_RunStart() { return m_bRun_Start; }
+
+public:
 	//행동 관련 함수 정의
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_bool IsRun() const { return m_bRun; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_bool IsPlayingSocket() const;
+	void Dodge_VelocityCalc();
+	void AfterLocal180Turn();
 
 //	void Play_LightHitAnim();
 	void Play_MidHitAnim();
@@ -49,6 +55,9 @@ public:
 
 private:
 	//충돌 관련 함수 정의
+	void Rush_SweepCapsule();
+	void TailSwing_SweepSphere();
+	void Stamp_Overlap();
 
 private:
 	class CEM1100_Controller*		m_pController = nullptr;
@@ -56,16 +65,25 @@ private:
 
 	//충돌
 	CRigidBody*				m_pRange = nullptr;
-	CRigidBody*				m_pBody = nullptr;
+	CRigidBody*				m_pHead = nullptr;
 
 private:
 	_float3						 m_vMoveAxis;
 	_bool						m_bHitAir = false;
-	_bool						m_bRun = false;
-	//Rush
-	_bool						m_bRush = false;
-	_bool						m_bChangeDir = false;
 
+	_bool						m_bRun = false;
+	//달리기 전 준비모션이 있어서 진짜 움직여야하는 타이밍
+	_bool						m_bRun_Start = false;
+
+	//Attack
+	_bool						m_bRush = false;
+	_bool						m_bTailSwing = false;
+	_float4						vTailPos;
+	//Dodge
+	_bool						m_bDodge = false;
+	_float3						m_vOnJumpMoveVelocity;
+
+	
 	CController::EHandleInput	m_eInput;
 
 	//Heavy coll

@@ -15,10 +15,10 @@ CEM1100_Controller::CEM1100_Controller(const CEM1100_Controller & rhs)
 
 HRESULT CEM1100_Controller::Initialize(void * pArg)
 {
-	m_iMidOrder = CMathUtils::RandomUInt(3);
-
+	m_iMidOrder = CMathUtils::RandomUInt(1);
+	m_iFarOrder = CMathUtils::RandomUInt(2);
 	//Move함수 시 플레이어와 거리가 어느정도까지 가까워졌을때 멈출지를 정해줌
-	m_fTargetDist = 3.f;
+	m_fTargetDist = 5.f;
 
 
 	//near :  닷지 , 꼬리치기(꼬리치기후 회전하면서 도망감, 플레이어가 뒤에 있을때만)
@@ -49,6 +49,7 @@ void CEM1100_Controller::AI_Tick(_double TimeDelta)
 		return;
 
 	m_bRun = false;
+	m_dRushCoolTime[CURTIME] += TimeDelta;
 
 	// 대상과의 거리 
 	m_fToTargetDistance = XMVectorGetX(XMVector3LengthEst(
@@ -84,24 +85,29 @@ void CEM1100_Controller::Tick_Mid(_double TimeDelta)
 	switch (m_iMidOrder)
 	{
 	case 0:
-		AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
-		AddCommand("WaterAttack", 0.f, &CAIController::Input, W);
-		AddCommand("Wait", 1.f, &CAIController::Wait);
+		if (m_pCastedOwner->IsTargetFront())
+		{
+			AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
+			AddCommand("WaterAttack", 0.f, &CAIController::Input, W);
+			AddCommand("Wait", 1.f, &CAIController::Wait);
+		}
+		else
+			AddCommand("TailSwing", 0.f, &CAIController::Input, T);
 		break;
 	case 1:
-		AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
+		if (m_pCastedOwner->IsTargetFront())
+		{
+			AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
+			AddCommand("Stamp", 0.f, &CAIController::Input, S);
+			AddCommand("Wait", 1.f, &CAIController::Wait);
+		}
+		else
+			AddCommand("TailSwing", 0.f, &CAIController::Input, T);
 		break;
-	case 2:
-		AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
-		AddCommand("Stamp", 0.f, &CAIController::Input, S);
-		AddCommand("Wait", 1.f, &CAIController::Wait);
-		break;
-	case 3:
-		AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
-		break;
+	
 	}
 
-	m_iMidOrder = (m_iMidOrder + 1) % 4;
+	m_iMidOrder = (m_iMidOrder + 1) % 2;
 }
 
 void CEM1100_Controller::Tick_Far(_double TimeDelta)
@@ -110,6 +116,7 @@ void CEM1100_Controller::Tick_Far(_double TimeDelta)
 
 	if (m_dRushCoolTime[CURTIME] >= m_dRushCoolTime[MAXTIME])
 	{
+		//rush하기전 준비동작이 길어서 거기서 Turn을 해줌
 		AddCommand("Rush", 0.f, &CAIController::Input, R);
 		AddCommand("Wait", 1.5f, &CAIController::Wait);
 		m_dRushCoolTime[CURTIME] = 0.0;
@@ -118,16 +125,35 @@ void CEM1100_Controller::Tick_Far(_double TimeDelta)
 
 	if (m_pCastedOwner->GetHpRatio() >= 0.5f)
 	{
-		AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
-		AddCommand("Run", 1.f, &CEM1100_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		switch (m_iFarOrder)
+		{
+		case 0:
+		case 1:
+			AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
+			AddCommand("Run", 5.f, &CEM1100_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
+			break;
+		case 2:
+			AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
+			break;
+		}
+		
 	}
 	else
 	{
-		AddCommand("ElectricBall", 0.f, &CAIController::Input, E);
-		AddCommand("Wait", 1.5f, &CAIController::Wait);
+		switch (m_iFarOrder)
+		{
+		case 0:
+		case 1:
+			AddCommand("ElectricBall", 0.f, &CAIController::Input, E);
+			AddCommand("Wait", 1.5f, &CAIController::Wait);
+			break;
+		case 2:
+			AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
+			break;
+		}
 	}
 	
-	m_dRushCoolTime[CURTIME] += TimeDelta;
+	m_iMidOrder = (m_iMidOrder + 1) % 3;
 }
 
 void CEM1100_Controller::Tick_Outside(_double TimeDelta)
@@ -139,17 +165,22 @@ void CEM1100_Controller::Tick_Outside(_double TimeDelta)
 void CEM1100_Controller::Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
 {
 	m_bRun = true;
-	Move(eAxis);
-	TurnToTarget(fSpeedRatio);
+
+	//이벤트로 실제로 뛰는 타이밍
+	if (m_pCastedOwner->Get_RunStart())
+	{
+		Move(eAxis);
+		TurnToTarget(fSpeedRatio);
+	}
 }
 
 void CEM1100_Controller::DefineState(_double TimeDelta)
 {
 	if (m_pCastedOwner->IsPlayingSocket() == true) return;
 
-	if (m_fToTargetDistance <= 3.f)
+	if (m_fToTargetDistance <= 5.f)
 		Tick_Near(TimeDelta);
-	else if (m_fToTargetDistance <= 8.f)
+	else if (m_fToTargetDistance <= 10.f)
 		Tick_Mid(TimeDelta);
 	else if (m_fToTargetDistance <= 30.f)
 		Tick_Far(TimeDelta);

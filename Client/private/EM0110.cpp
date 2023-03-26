@@ -362,7 +362,6 @@ _bool CEM0110::IsPlayingSocket() const
 
 void CEM0110::AfterLocal180Turn()
 {
-	IM_LOG("Turn");
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	vPos -= XMVector3Normalize(vLook) * 10.f;
