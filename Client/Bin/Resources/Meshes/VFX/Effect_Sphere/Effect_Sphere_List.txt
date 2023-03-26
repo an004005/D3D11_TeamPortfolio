@@ -33,7 +33,7 @@ VFX_Mesh_Sphere_17
 VFX_Mesh_Sphere_18
 ../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_18.static_model
 VFX_Mesh_Sphere_19_HighQual
-../Bin/Resources/Meshes/VFX/Effect_Sphere/.static_model
+../Bin/Resources/Meshes/VFX/Effect_Sphere/VFX_Mesh_Sphere_19_HighQual.static_model
 
 
 
