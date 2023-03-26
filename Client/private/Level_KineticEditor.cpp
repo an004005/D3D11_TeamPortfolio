@@ -89,7 +89,7 @@ HRESULT CLevel_KineticEditor::Ready_Layer_BackGround(const _tchar* pLayerTag)
 	modeltags.push_back("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/HBeam/HBeam_Single.static_model");
 	
 						//Bin\Resources\Model\StaticModel\MapStaicModels\Kinetic\HBeam
-
+	_uint iA = 0;
 	Test["ModelTags"] = modeltags;
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_MapKinetic_Object"), &Test));
