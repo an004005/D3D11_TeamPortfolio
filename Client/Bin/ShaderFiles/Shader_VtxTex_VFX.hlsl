@@ -524,6 +524,97 @@ PS_OUT_Flag PS_EM1100_STAMP_SMOKE_NOFLIP(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_EM1100_ELEC_BULLET_START(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 Tex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = Tex * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	float2 FlipUV;
+	if(g_int_0 >0)
+		FlipUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 8, 8);
+	else
+		FlipUV = Get_FlipBookUV(In.vTexUV, 0.f, 0.05, 8, 8);
+
+	float4 FlipTex = g_tex_1.Sample(LinearSampler, FlipUV);
+
+	FlipTex = CalcHDRColor(FlipTex, g_float_3);
+
+	Out.vColor = CalcHDRColor(Final + FlipTex, g_float_0);
+
+	Out.vColor.a = (FlipTex.r * g_float_1) + (Tex.r * g_float_2);
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (g_float_2 <= 0.f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT_Flag PS_EM1100_ELEC_BULLET_LOOP(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 Tex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = Tex * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	float2 FlipUV;
+	float4 FlipTex;
+	if (g_int_0 == 1)
+	{
+		FlipUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 8, 8);
+		FlipTex = g_tex_1.Sample(LinearSampler, FlipUV);
+
+	}
+	else if (g_int_0 == 2)
+	{
+		FlipUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 3, 3);
+		FlipTex = g_tex_2.Sample(LinearSampler, FlipUV);
+	}
+	else if (g_int_0 == 3)
+	{
+		FlipUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.1, 4, 4);
+		FlipTex = g_tex_3.Sample(LinearSampler, FlipUV);
+	}
+	else
+	{
+		FlipUV = Get_FlipBookUV(In.vTexUV, 0.f, 0.05, 1, 1);
+		FlipTex = (vector)0.f;
+	}
+
+	if (FlipTex.r >= 0.f)
+		FlipTex = CalcHDRColor(FlipTex, g_float_3);
+	else
+		FlipTex = (vector)0.f;
+
+	FlipTex *= g_float_1;
+	float4 OutlineTex = g_tex_4.Sample(LinearSampler, In.vTexUV);
+	float4 BlendColor = OutlineTex * g_vec4_2 * 2.0f;
+	float4 OutFinal = saturate(BlendColor);
+	OutlineTex = CalcHDRColor(OutFinal, g_float_5);
+
+	float4 MixColor = Final + OutlineTex * 2.0f ;
+
+	if(FlipTex.r > 0.f)
+		Out.vColor = CalcHDRColor(Final + FlipTex, g_float_0);
+	else
+		Out.vColor = CalcHDRColor(Final, g_float_0);
+
+	Out.vColor += OutlineTex;
+	Out.vColor.a = (FlipTex.r * g_float_1) + (Tex.r * g_float_2) + (OutlineTex.r * g_float_4);
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (g_float_2 <= 0.f)
+		discard;
+
+	return Out;
+}
+
 PS_OUT_Flag PS_KINETIC_DEAD_FLIPBOOK(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -1366,5 +1457,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM1100_STAMP_SMOKE_NOFLIP();
+	}
+
+	//35
+	pass Em1100_ElecBulletStart
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_ELEC_BULLET_START();
+	}
+
+	//36
+	pass Em1100_ElecBulletLoop
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_ELEC_BULLET_LOOP();
 	}
 }
