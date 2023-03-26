@@ -45,7 +45,10 @@ void CEffectSystem::BeginTick()
 
 void CEffectSystem::Tick(_double TimeDelta)
 {
-	
+	if (LEVEL_NOW == LEVEL_EFFECT || LEVEL_NOW == LEVEL_UI)
+	{
+		m_pShaderCom->Tick(TimeDelta);
+	}
 }
 
 void CEffectSystem::Late_Tick(_double TimeDelta)

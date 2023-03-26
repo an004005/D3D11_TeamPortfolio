@@ -78,6 +78,9 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 		}
 	}
 
+	if(m_bTurn == true)
+		m_pTransformCom->SetRotPerSec(XMConvertToRadians(m_fTurnAngle));
+
 	Start_Timeline();
 
 	return S_OK;
@@ -125,6 +128,15 @@ void CParticleSystem::Tick(_double TimeDelta)
 			}
 		}
 
+	if(m_bTurn == true)
+	{
+		if (m_fTurnAngle != 0.f)
+		{
+			m_pTransformCom->SetRotPerSec(XMConvertToRadians(m_fTurnAngle));
+			m_pTransformCom->Turn(m_fTurnAxis, TimeDelta);
+		}
+		// m_pTransformCom->Rotation(m_pTransformCom->Get_State(CTransform::STATE_UP), m_fTurnAxis.x);
+	}
 
 }
 
@@ -146,7 +158,7 @@ void CParticleSystem::Late_Tick(_double TimeDelta)
 		if(m_bNonAlphaBlend == true)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		else
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND_FIRST, this);
 	}
 }
 
@@ -238,8 +250,9 @@ void CParticleSystem::SaveToJson(Json& json)
 	json["XDirCurveName"] = m_strXDirCurveName;
 	json["YDirCurveName"] = m_strYDirCurveName;
 	json["ZDirCurveName"] = m_strZDirCurveName;
-
-
+	json["bTurn"] = m_bTurn;
+	json["TurnAxis"] = m_fTurnAxis;
+	json["TurnAngle"] = m_fTurnAngle;
 	json["VtxStartTimelineCurve"] = m_VtxStartTimeline.GetCurveName();
 	json["VtxRangeTimelineCurve"] = m_VtxRangeTimeline.GetCurveName();
 }
@@ -272,6 +285,17 @@ void CParticleSystem::LoadFromJson(const Json& json)
 	m_fRotationToTime_Min = json["RotationToTimeMin"] ;
 	m_fRotationToTime_Max = json["RotationToTimeMax"] ;
 	m_vScaleVariation = json["ScaleVariation"];
+
+	if (json.contains("bTurn"))
+	{
+		m_bTurn = json["bTurn"];
+	}
+
+	if(json.contains("TurnAxis"))
+		m_fTurnAxis = json["TurnAxis"];
+
+	if (json.contains("TurnAngle"))
+		m_fTurnAngle = json["TurnAngle"];
 
 	if(json.contains("bCurveDir"))
 	{
@@ -526,8 +550,14 @@ void CParticleSystem::Imgui_RenderProperty()
 	else
 		ImGui::InputFloat2("P Size", (float*)&m_fSize);
 
+	ImGui::Checkbox("IsTurn", &m_bTurn);
 
+	if (m_bTurn == true)
+	{
+		CImguiUtils::InputFloat3(&m_fTurnAxis, "Turn Axis");
+		ImGui::InputFloat("Turn Speed", &m_fTurnAngle);
 
+	}
 
 	ImGui::Separator();
 	ImGui::Separator();

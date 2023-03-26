@@ -133,10 +133,12 @@ private:
 	_float m_fConeAngleDeg = 30.f;
 	_float m_fConeOriginRadius = 1.f;
 	_float m_fSphereRadius = 4.f;
-
+	_float3 m_fTurnAxis = { 0.f,0.f,0.f };
+	_float  m_fTurnAngle = 0.f;
 	_float3 m_vScaleVariation = { 1.f ,1.f,1.f};
 
 	_bool m_bNonAlphaBlend = false;
+	_bool m_bTurn = false;
 
 	_bool m_bPointInstance = false;
 	_bool m_bMeshInstance = false;
