@@ -287,7 +287,6 @@ HRESULT CShader::Set_Params(const ShaderParams& tParam)
 	if (FAILED(Set_Invalidate_Textures()))
 		return E_FAIL;
 
-	m_fTime += TIME_DELTA;
 	if (FAILED(Set_RawValue("g_Time", &m_fTime, sizeof(_float))))
 		return E_FAIL;
 
@@ -337,6 +336,11 @@ HRESULT CShader::Begin_Params(const ShaderParams& tParam)
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CShader::Tick(_double TimeDelta)
+{
+	m_fTime += (_float)TimeDelta;
 }
 
 void CShader::SetCommonTexture(const char* pConstantName, const char* pTexFilePath)

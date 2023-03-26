@@ -11,6 +11,10 @@
 #define PLAYERTEST_LAYER_POSTVFX	TEXT("Layer_PostVFX")
 #define PLAYERTEST_LAYER_FRONTUI	TEXT("Layer_FrontUI")
 
+
+
+#define LAYER_TRIGGER				TEXT("Layer_Trigger")
+
 BEGIN(Engine)
 class CTransform;
 class CComponent;
@@ -115,17 +119,19 @@ enum class EAttackType
 
 enum class EEnemyName
 { 
-	BRONJON,
-	SKUMMYPANDOU,
-	SKUMMYPOOL,
-	EM0110,
-	EM0200,
-	EM0210,
-	EM0220,
-	EM0320, 
-	EM0400,
-	EM0650,
-	EM0700,
+	EM0110, // 말
+	EM0200, // 플라워레그
+	EM0210, // 투명
+	EM0220, // 베이스 포스
+	EM0320, // 보스1
+	EM0400, // 버디러미
+	EM0650, // 스쿠미풀
+	EM0700, // 초파리
+	EM0750,  // 파리
+	EM0800, // 브론존
+	EM1100, //  물
+	EM1200, //  나오미
+	EM8210, // 중대장
 	ENEMY_NAME_END
 };
 

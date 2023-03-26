@@ -87,6 +87,7 @@ void CParticleSystem::Tick(_double TimeDelta)
 {
 	// if (m_bVisible == false)
 	// 	return;
+	m_pShader->Tick(TimeDelta);
 
 	if (m_bCurveDir)
 	{

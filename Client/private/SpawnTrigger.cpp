@@ -136,11 +136,11 @@ void CSpawnTrigger::LoadFromJson(const Json& json)
 void CSpawnTrigger::Imgui_RenderProperty()
 {
 	CTriggerEx::Imgui_RenderProperty();
-	static _uint iSpawnOrder = 0;
 	static EEnemyName eSelectEnemyEnum = EEnemyName::EM0200;
 	static list<CEnemy*> TmpEnemies;
 
-	ImGui::Text("Current Order : %d", iSpawnOrder);
+	const _int iOrder = (_int)m_SpawnEnemies.size();
+	ImGui::Text("Current Order : %d", iOrder);
 	if (ImGui::BeginCombo("EnemyName", CClientUtils::GetEnemyProtoTag(eSelectEnemyEnum).c_str()))
 	{
 		for (int i = 0; i < ENEMY_CNT; ++i)
@@ -153,7 +153,7 @@ void CSpawnTrigger::Imgui_RenderProperty()
 	}
 
 	static _bool bClickClone = false;
-	ImGui::Checkbox("Click Clone Once", &bClickClone);
+	ImGui::Checkbox("Click Enemy Clone Once", &bClickClone);
 	if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB) && bClickClone)
 	{
 		_float4 vPos;
@@ -191,6 +191,10 @@ void CSpawnTrigger::Imgui_RenderProperty()
 		}
 		if (ImGui::Button("Delete Select Obj") && pSelectEnemy)
 		{
+			TmpEnemies.remove_if([this](CEnemy* pEnemy)
+			{
+				return pEnemy == pSelectEnemy;
+			});
 			pSelectEnemy->SetDelete();
 			pSelectEnemy = nullptr;
 		}
@@ -222,7 +226,6 @@ void CSpawnTrigger::Imgui_RenderProperty()
 		}
 
 		m_SpawnEnemies.push_back(tDataList);
-		++iSpawnOrder;
 		TmpEnemies.clear();
 	}
 }

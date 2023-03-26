@@ -1,5 +1,6 @@
 {
     "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
     "ShaderParams" : {
         "Ints" : [],
         "Floats" : [],
@@ -7,10 +8,11 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Rubble/RubbleAndDebris/03_Texture/Props_Rebar_Color_Texture.dds",
+            "../Bin/Resources/Environments/Prop/10_Props/Rubble/RubbleAndDebris/03_Texture/Props_Rebar_Color_Texture.png",
             "../Bin/Resources/Environments/Prop/10_Props/Rubble/RubbleAndDebris/03_Texture/Props_Rebar_NM_Texture.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Rubble/RubbleAndDebris/03_Texture/Props_Rebar_ORM_Texture_RMA.dds"
+            "../Bin/Resources/Environments/Prop/10_Props/Rubble/RubbleAndDebris/03_Texture/Props_Rebar_ORM_Texture_RMA.png"
         ],
         "Pass" : 1
-    }
+    },
+    "InstancingPass": 1
 }

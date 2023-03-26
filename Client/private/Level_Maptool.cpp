@@ -112,21 +112,20 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 		}
 	});*/
 
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",
-		[this](const string& fileName)
-	{
-		char szFileExt[MAX_PATH]{};
-		_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+	//CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/",
+	//	[this](const string& fileName)
+	//{
+	//	char szFileExt[MAX_PATH]{};
+	//	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
 
-		if (0 == strcmp(szFileExt, ".static_model"))
-		{
-			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), KINETIC));
-		}
-	});
+	//	if (0 == strcmp(szFileExt, ".static_model"))
+	//	{
+	//		FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), KINETIC));
+	//	}
+	//});
 
-
-	//인스턴싱 모델들의 프로토타입 생성
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/",
+	//인스턴싱 모델들의 프로토타입 생성						// TutorialMap	FinalBossStage	Subway_Hospital
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/Subway_Hospital/",
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
@@ -137,7 +136,7 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 			FAILED_CHECK(Create_Model_Instance(s2ws(fileName), fileName.c_str()));
 		}
 	});
-
+		// ★ Frustum Culling
 
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
@@ -175,8 +174,11 @@ HRESULT CLevel_Maptool::Ready_Layer_Camera(const wstring& pLayerTag)
 HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
+																
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Subway.json");			// Map_Subway
+		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_FinalBossStage.json");	// Map_FinalBossStage
+		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Test.json");	// Map_Test
+	
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
 
 	json["Model_ProtoTypes"] = Json::array();

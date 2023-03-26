@@ -23,8 +23,8 @@ CEM0400::CEM0400(const CEM0400 & rhs)
 
 HRESULT CEM0400::Initialize(void * pArg)
 {
-	//Json em0200_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegTrigger.json");
-	//pArg = &em0200_json;
+	Json em0400_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiTrigger.json");
+	pArg = &em0400_json;
 
 	/*m_strDeathSoundTag = "mon_5_fx_death";
 	m_strImpactVoiceTag = "mon_5_impact_voice";*/
@@ -55,8 +55,9 @@ void CEM0400::SetUpComponents(void * pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em400", L"Model", (CComponent**)&m_pModelCom));
 
 	//Create Collider
+	Json BuddyLumiWeapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiWeapon.json");
 	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Weapon"),
-		(CComponent**)&m_pWeaponCollider, pArg));
+		(CComponent**)&m_pWeaponCollider, &BuddyLumiWeapon));
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM0400_Controller::Create();
@@ -389,6 +390,7 @@ void CEM0400::Late_Tick(_double TimeDelta)
 void CEM0400::AfterPhysX()
 {
 	CEnemy::AfterPhysX();
+	m_pWeaponCollider->Update_Tick(m_pModelCom->GetBoneMatrix("RightWeapon") * m_pTransformCom->Get_WorldMatrix());
 }
 
 HRESULT CEM0400::Render()
@@ -514,4 +516,5 @@ void CEM0400::Free()
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pRange);
+	Safe_Release(m_pWeaponCollider);
 }

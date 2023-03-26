@@ -48,7 +48,6 @@ public:
 
 private:
 	void Play_HeavbyHitAnim();
-	void SweepCapsule(CRigidBody* pCol);
 
 private:
 	//충돌 관련 함수 정의

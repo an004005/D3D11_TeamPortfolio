@@ -190,6 +190,7 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 
 	m_pObject_Manager->Tick(TimeDelta);
 	m_pLevel_Manager->Tick(TimeDeltaModified);
+	m_pLight_Manager->Tick(TimeDeltaModified);
 
 	m_pObject_Manager->Late_Tick(TimeDelta);
 	m_pLevel_Manager->Late_Tick(TimeDeltaModified);
@@ -411,6 +412,7 @@ HRESULT CGameInstance::Open_Loading(_uint iNewLevelIdx, CLoadingLevel* pLoadingL
 
 	m_LevelLoadingAsync = [this, iNewLevelIdx, pLoadingLevel]
 	{
+		Clear_ImguiObjects();
 		m_pLight_Manager->Clear();
 		m_pCamera_Manager->Clear();
 		FAILED_CHECK(m_pLevel_Manager->Open_Loading(iNewLevelIdx, pLoadingLevel));
@@ -702,6 +704,16 @@ void CGameInstance::SetShadowCam(CCamera* pShadowCam)
 	m_pLight_Manager->SetShadowCam(pShadowCam);
 }
 
+void CGameInstance::AddLifePointLight(_float fLife, _float4 vPos, _float fRange, _float4 vColor)
+{
+	m_pLight_Manager->AddLifePointLight(fLife, vPos, fRange, vColor);
+}
+
+void CGameInstance::AddLifeCapsuleLight(_float fLife, _float4 vStart, _float4 vEnd, _float fRange, _float4 vColor)
+{
+	m_pLight_Manager->AddLifeCapsuleLight(fLife, vStart, vEnd, fRange, vColor);
+}
+
 /*************************
  *	CFont_Manager
  *************************/
@@ -858,6 +870,21 @@ void CGameInstance::SetTimeRatioCurve(const string& strCurveTag, _bool bStay, co
 void CGameInstance::SetTimeRatio(_float fTimeRatio, const vector<wstring>* ExceptLayers)
 {
 	m_pGameTime_Manager->SetTimeRatio(fTimeRatio, ExceptLayers);
+}
+
+void CGameInstance::SetLayerTimeRatio(_float fLayerTimeRatio, const wstring& strLayerTag)
+{
+	m_pGameTime_Manager->SetLayerTimeRatio(fLayerTimeRatio, strLayerTag);
+}
+
+void CGameInstance::ResetDefaultTimeRatio()
+{
+	m_pGameTime_Manager->ResetDefaultTimeRatio();
+}
+
+void CGameInstance::ClearAllTimeRatio()
+{
+	m_pGameTime_Manager->ClearAllTimeRatio();
 }
 
 /*************************

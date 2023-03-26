@@ -136,7 +136,7 @@ void CEM0220::SetUpFSM()
 			.AddTransition("Idle to Attack_Shot", "Attack_Shot")
 				.Predicator([this] { return m_eInput == CController::C; })
 			.AddTransition("Idle to Guard_Start", "Guard_Start")
-				.Predicator([this] { return m_eInput == CController::SHIFT || m_bTeleport == false; })
+				.Predicator([this] { return m_eInput == CController::SHIFT; })
 		
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -317,7 +317,7 @@ void CEM0220::Tick(_double TimeDelta)
 	//변수 업데이트
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_eInput = m_pController->GetAIInput();
-	m_bTeleport = CheckSASType(ESASType::SAS_TELEPORT);
+	//m_bTeleport = CheckSASType(ESASType::SAS_TELEPORT);
 
 	//ASM, FSM tick
 	m_pFSM->Tick(TimeDelta);

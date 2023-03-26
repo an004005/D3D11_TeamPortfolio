@@ -66,14 +66,13 @@ HRESULT CBuddyLumi::Initialize(void * pArg)
 	// Event Caller
 	m_pModelCom->Add_EventCaller("SwingEff_Start", [this]
 	{
-		if (!m_bDead)
-		{
+		
 //			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack")->Start_Attach(this, m_strBoneName, false);
 
 			m_pSwingEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack");
 			m_pSwingEffect->Start_Attach(this, m_strBoneName, true);
 			Safe_AddRef(m_pSwingEffect);
-		}
+		
 	});
 
 	m_pModelCom->Add_EventCaller("Swing_Start", [this] 

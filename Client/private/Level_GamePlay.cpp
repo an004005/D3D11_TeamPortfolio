@@ -23,7 +23,7 @@
 #include "VFX_Manager.h"
 #include "SAS_Cable.h"
 #include "Imgui_CameraManager.h"
-
+#include "Imgui_LightManager.h"
 
 #define ADD_PLAYER
 
@@ -48,6 +48,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LightManager::Create(m_pDevice, m_pContext));
+
 
 
 	if (FAILED(Ready_Prototypes()))
@@ -180,7 +182,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	Json PreviewData;
 
 	{
-		PreviewData["Model"] = "Prototype_Model_em200";
+		PreviewData["Model"] = "Prototype_Model_em750";
 		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
 		auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 	}
@@ -194,11 +196,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/ShadowCam.json");
 
-	//
-	// const Json& json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/ShadowCam.json");
-	// auto pCam = pGameInstance->Clone_GameObject_Get(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), (void*)&json);
-	// pGameInstance->SetShadowCam(dynamic_cast<CCamera*>(pCam));
+	CGameInstance::GetInstance()->Add_Camera("ShadowCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic", &json);
+	CGameInstance::GetInstance()->SetShadowCam(CGameInstance::GetInstance()->FindCamera("ShadowCamera"));
 
 	RELEASE_INSTANCE(CGameInstance);
 
