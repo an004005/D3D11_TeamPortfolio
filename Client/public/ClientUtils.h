@@ -11,6 +11,10 @@
 #define PLAYERTEST_LAYER_POSTVFX	TEXT("Layer_PostVFX")
 #define PLAYERTEST_LAYER_FRONTUI	TEXT("Layer_FrontUI")
 
+
+
+#define LAYER_TRIGGER				TEXT("Layer_Trigger")
+
 BEGIN(Engine)
 class CTransform;
 class CComponent;

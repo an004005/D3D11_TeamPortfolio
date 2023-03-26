@@ -36,7 +36,10 @@ public:
 	virtual void Reset() { }
 
 public:
-	_float4	GetColliderPosition(); // 
+	_float4	GetColliderPosition(); //
+
+	// 피직스 무시하는 강제 이동
+	void SetWorldMatrix(_float4x4 WorldMatrix);
 
 public:
 	EDeBuffType GetDeBuffType() const { return m_eDeBuff; }

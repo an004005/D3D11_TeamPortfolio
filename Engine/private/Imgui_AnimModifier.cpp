@@ -173,7 +173,10 @@ HRESULT CImgui_AnimModifier::Initialize(void* pArg)
 void CImgui_AnimModifier::Imgui_RenderTab()
 {
 	m_pGameInstance->Imgui_ObjectViewer(LEVEL_NOW,m_pSelectedObject);
-	
+
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSelectedObject) == false)
+		m_pSelectedObject = nullptr;
+
 	if (m_pSelectedObject)
 	{
 		ImGui::Separator();

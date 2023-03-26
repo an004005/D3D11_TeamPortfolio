@@ -29,6 +29,7 @@ public:
 	void ImguiOnOff(_bool bOn) { m_bOn = bOn; }
 
 private:
+	mutex m_mtx;
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
 
