@@ -103,10 +103,7 @@ void CCanvas_Tutorial::Tutorial_Tick()
 		wsprintf(szTag, TEXT("Tutorial0"));
 		break;
 	case Client::CCanvas_Tutorial::FIGHTINGSTYLE:
-	{
 		wsprintf(szTag, TEXT("Tutorial1"));
-
-	}
 		break;
 	case Client::CCanvas_Tutorial::SPECIALATTACK:
 		wsprintf(szTag, TEXT("Tutorial3"));
@@ -149,27 +146,61 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 	vector<wstring> except { PLAYERTEST_LAYER_FRONTUI };
 	CGameInstance::GetInstance()->SetTimeRatio(0.0f, &except);
 
-	_bool	bInvisblePush = dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_InvisibleBox"))->Get_Invisible();
-
-	if (true == bInvisblePush)
+	if (FIGHTINGSTYLE == m_arrTutorial[eTUTORIAL])
 	{
-		if (false == m_bCheckOpen)
+		_bool	bNextPage = dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_ZNextPage"))->Get_NextPage();
+
+		if (false == bNextPage)	// bNextPage : false->Tutorial1 / true->Tutorial2
 		{
-			m_bCheckOpen = true;
-			Find_ChildUI(L"Tutorial_YesBox")->SetVisible(true);
-			Find_ChildUI(L"Tutorial_Icon0")->SetVisible(true);
-			Find_ChildUI(L"Tutorial_Icon1")->SetVisible(true);
-			Find_ChildUI(L"Tutorial_Icon2")->SetVisible(true);
-			dynamic_cast<CTutorial_CheckUI*>(Find_ChildUI(L"Tutorial_Check0"))->Set_OnTutorial();
+			Find_ChildUI(L"Tutorial_ZNextPage")->Set_Position({ 207.0f, -190.0f });
+			dynamic_cast<CTutorialUI*>(Find_ChildUI(L"Tutorial1"))->SetVisible(true);
+			dynamic_cast<CTutorialUI*>(Find_ChildUI(L"Tutorial2"))->SetVisible(false);
 		}
-
-		KeyInput_Yes();
-		KeyInput_No();
-		Check_Tick();
-
-		if (FIGHTINGSTYLE == m_arrTutorial[eTUTORIAL])
+		else
 		{
-			NextInput();
+			Find_ChildUI(L"Tutorial_ZNextPage")->Set_Position({ 135.0f, -190.0f });
+			dynamic_cast<CTutorialUI*>(Find_ChildUI(L"Tutorial1"))->SetVisible(false);
+			dynamic_cast<CTutorialUI*>(Find_ChildUI(L"Tutorial2"))->SetVisible(true);
+
+			_bool	bInvisblePush = dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_InvisibleBox"))->Get_Invisible();
+
+			if (true == bInvisblePush)
+			{
+				if (false == m_bCheckOpen)
+				{
+					m_bCheckOpen = true;
+					Find_ChildUI(L"Tutorial_YesBox")->SetVisible(true);
+					Find_ChildUI(L"Tutorial_Icon0")->SetVisible(true);
+					Find_ChildUI(L"Tutorial_Icon1")->SetVisible(true);
+					Find_ChildUI(L"Tutorial_Icon2")->SetVisible(true);
+					dynamic_cast<CTutorial_CheckUI*>(Find_ChildUI(L"Tutorial_Check0"))->Set_OnTutorial();
+				}
+
+				KeyInput_Yes();
+				KeyInput_No();
+				Check_Tick();
+			}
+		}
+	}
+	else
+	{
+		_bool	bInvisblePush = dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_InvisibleBox"))->Get_Invisible();
+
+		if (true == bInvisblePush)
+		{
+			if (false == m_bCheckOpen)
+			{
+				m_bCheckOpen = true;
+				Find_ChildUI(L"Tutorial_YesBox")->SetVisible(true);
+				Find_ChildUI(L"Tutorial_Icon0")->SetVisible(true);
+				Find_ChildUI(L"Tutorial_Icon1")->SetVisible(true);
+				Find_ChildUI(L"Tutorial_Icon2")->SetVisible(true);
+				dynamic_cast<CTutorial_CheckUI*>(Find_ChildUI(L"Tutorial_Check0"))->Set_OnTutorial();
+			}
+
+			KeyInput_Yes();
+			KeyInput_No();
+			Check_Tick();
 		}
 	}
 

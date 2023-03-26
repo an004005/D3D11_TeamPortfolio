@@ -72,6 +72,8 @@ private:	// Tutorial
 	_bool		m_bCheckOpen = { false };
 	_bool		m_bCheckClose = { false };
 
+	_int		m_iFightingStyle = { 0 };
+
 private:	// Tips
 	TIPS		m_eTips = { TIPS_END };
 	_bool		m_arrTips[TIPS_END] = {};
