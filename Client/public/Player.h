@@ -149,6 +149,7 @@ private:
 private:
 	void			SasMgr();
 	void			Visible_Check();
+	void			SasStateCheck();
 //	PLAYER_STAT		m_PlayerStat;
 	DAMAGE_DESC		m_DamageDesc;
 	DAMAGE_PARAM	m_AttackDesc;
@@ -321,6 +322,9 @@ private:	// 키네틱 연계기 소켓 애니메이션
 	list<CAnimation*>	m_KineticCombo_Pcon_cLeL_Lv4;
 	list<CAnimation*>	m_KineticCombo_Pcon_cReR_Lv4;
 	list<CAnimation*>	m_KineticCombo_Pcon_cReL_Lv4;
+
+	list<CAnimation*>	m_KineticCombo_AirCap;
+	list<CAnimation*>	m_KineticCombo_Pcon;
 
 private:	// 피격 소켓 애니메이션
 	list<CAnimation*>	m_Hit_FL_Level01;

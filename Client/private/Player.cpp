@@ -150,7 +150,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 	ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 	ZeroMemory(&m_AttackDesc, sizeof(DAMAGE_PARAM));
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
+//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
 
 	m_pTransformCom->SetTransformDesc({ 5.f, XMConvertToRadians(720.f) });
 
@@ -176,7 +176,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 void CPlayer::BeginTick()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 2.f, 0.f, 1.f));
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(-80.f, 13.f, 52.f, 1.f));
+
 	__super::BeginTick();
 
 	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
@@ -277,17 +278,17 @@ void CPlayer::Tick(_double TimeDelta)
 				m_pTrainStateMachine_Left->Tick(TimeDelta);
 			}
 
-			if (SPECIAL_TELEPHONEPOLE == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
+			else if (SPECIAL_TELEPHONEPOLE == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
 			{
 				m_pTelephonePoleStateMachine_Left->Tick(TimeDelta);
 			}
 
-			if (SPECIAL_HBEAM_BUNDLE == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
+			else if (SPECIAL_HBEAM_BUNDLE == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
 			{
 				m_pHBeamStateMachine_Left->Tick(TimeDelta);
 			}
 
-			if (SPECIAL_DROPOBJECT_BUNDLE == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
+			else if (SPECIAL_DROPOBJECT_BUNDLE == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
 			{
 				m_pDropObjectStateMachine->Tick(TimeDelta);
 			}
@@ -314,8 +315,12 @@ void CPlayer::Tick(_double TimeDelta)
 		m_pKineticStataMachine->SetState("NO_USE_KINETIC");
 		m_pJustDodgeStateMachine->SetState("JUSTDODGE_NONUSE");
 		m_pTrainStateMachine_Left->SetState("TRAIN_LEFT_NOUSE");
+		m_pTelephonePoleStateMachine_Left->SetState("TELEPHONEPOLE_LEFT_NOUSE");
+		m_pHBeamStateMachine_Left->SetState("HBEAM_LEFT_NOUSE");
+		m_pDropObjectStateMachine->SetState("DROP_NOUSE");
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false);
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, false);
+		static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
 
 		m_pCurve = nullptr;
 		for (auto& iter : m_pModel->GetMaterials())
@@ -335,7 +340,7 @@ void CPlayer::Tick(_double TimeDelta)
 
 		_float fSpeedControl = 0.f;
 
-		if (m_bWalk)				fSpeedControl = g_fTimeDelta;
+		if (m_bWalk)				fSpeedControl = TimeDelta;
 
 		if (m_bCanRun)				fSpeedControl *= 2.f;
 
@@ -532,24 +537,34 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_pModel->GetPlayAnimation()->GetName().find("dodge") != string::npos &&
 		m_pASM->isSocketExactlyEmpty())
 	{
-		m_fJustDodgeAble = 10.f;
+		m_fJustDodgeAble = 2.f;
+	}
+	else if (CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_HARDBODY))
+	{
+		// 경질화는 피격 시 데미지를 무시하고 게이지를 10 깎는다
+		IM_LOG("No Damage");
+		CPlayerInfoManager::GetInstance()->Change_SasEnergy(CHANGETYPE::CHANGE_DECREASE, ESASType::SAS_HARDBODY, 10.f);
+	}
+	else if (m_bKineticSpecial)
+	{
+		IM_LOG("Special No");
 	}
 	else
 	{
-		//m_bHit = true;
+		m_bHit = true;
 
-		//m_DamageDesc.m_iDamage = tDamageParams.iDamage;
-		//m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
-		//m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
-		//m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
+		m_DamageDesc.m_iDamage = tDamageParams.iDamage;
+		m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
+		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
+		m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 
-		//// 체력 깎이는 부분
-		//CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
+		// 체력 깎이는 부분
+		CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
 
-		//if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
-		//{
-		//	m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
-		//}
+		if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
+		{
+			m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+		}
 	}
 }
 
@@ -743,24 +758,23 @@ void CPlayer::SasMgr()
 	if (CGameInstance::GetInstance()->KeyDown(DIK_1))
 	{
 		InputSas = ESASType::SAS_TELEPORT;
-		m_bSASSkillInput[0] = !m_bSASSkillInput[0];
+		m_bSASSkillInput[0] = true;
 	}
 	if (CGameInstance::GetInstance()->KeyDown(DIK_2))
 	{
 		InputSas = ESASType::SAS_PENETRATE;
-		m_bSASSkillInput[1] = !m_bSASSkillInput[1];
-
+		m_bSASSkillInput[1] = true;
 	}
 	if (CGameInstance::GetInstance()->KeyDown(DIK_3))
 	{
 		InputSas = ESASType::SAS_HARDBODY;
-		m_bSASSkillInput[2] = !m_bSASSkillInput[2];
+		m_bSASSkillInput[2] = true;
 
 	}
 	if (CGameInstance::GetInstance()->KeyDown(DIK_4))
 	{
 		InputSas = ESASType::SAS_FIRE;
-		m_bSASSkillInput[3] = !m_bSASSkillInput[3];
+		m_bSASSkillInput[3] = true;
 
 	}
 	if (CGameInstance::GetInstance()->KeyDown(DIK_5))	InputSas = ESASType::SAS_SUPERSPEED;
@@ -792,23 +806,15 @@ void CPlayer::SasMgr()
 
 				if (ESASType::SAS_FIRE == InputSas)
 				{
-					if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSwordParticle)) m_pSwordParticle->SetDelete();
-					m_pSAS_Cable->UnEquipCable();
 				}
 				else if (ESASType::SAS_TELEPORT == InputSas)
 				{
-					//m_pASM->Add_SpairSasMotion(ESASType::SAS_NOT);
-					m_pSAS_Cable->UnEquipCable();
 				}
 				else if (ESASType::SAS_ELETRIC == InputSas)
 				{
-					//m_pASM->Add_SpairSasMotion(ESASType::SAS_NOT);
-					m_pSAS_Cable->UnEquipCable();
 				}
 				else if (ESASType::SAS_PENETRATE == InputSas)
 				{
-					m_pSAS_Cable->UnEquipCable();
-					m_pSAS_Penetrate->GetParam().Floats[0] = 0.f;
 				}
 			}
 			else // 사용중이지 않을 경우
@@ -834,6 +840,14 @@ void CPlayer::SasMgr()
 				{
 					m_pSAS_Cable->EquipCable(ESASType::SAS_PENETRATE);
 				}
+				else if (ESASType::SAS_HARDBODY == InputSas)
+				{
+					m_pSAS_Cable->EquipCable(ESASType::SAS_HARDBODY);
+				}
+				else if (ESASType::SAS_SUPERSPEED == InputSas)
+				{
+					m_pSAS_Cable->EquipCable(ESASType::SAS_SUPERSPEED);
+				}
 
 				CPlayerInfoManager::GetInstance()->Set_SasType(InputSas);
 			}
@@ -853,18 +867,34 @@ void CPlayer::SasMgr()
 
 			if (ESASType::SAS_PENETRATE== CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 			{
-				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Sas_Fire_Start"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+				//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Sas_Fire_Start"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
 				m_pSAS_Penetrate->GetParam().Floats[0] = 1.f;	// 끄는건 0, 시점 찾아서 넣을 것
 			}
 
-			m_pASM->SetCurState("IDLE");
-			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			if (ESASType::SAS_SUPERSPEED == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
+			{
+				const vector<wstring> except = { 
+					LAYER_SAS, 
+					PLAYERTEST_LAYER_CAMERA, 
+					PLAYERTEST_LAYER_FRONTUI, 
+					LAYER_PLAYEREFFECT, 
+					PLATERTEST_LAYER_PLAYER,
+					LAYER_KINETIC,
+					LAYER_MAPKINETICOBJECT
+				};
+				CGameInstance::GetInstance()->SetTimeRatio(0.01f, &except);
+			}
 
-			list<CAnimation*> SasDamage;
-			SasDamage.push_back(m_pModel->Find_Animation("AS_ch0100_410_AL_damage_sas"));
-			m_pASM->InputAnimSocket("Common_AnimSocket", SasDamage);
+			//m_pASM->SetCurState("IDLE");
+			//SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
+			//list<CAnimation*> SasDamage;
+			//SasDamage.push_back(m_pModel->Find_Animation("AS_ch0100_410_AL_damage_sas"));
+			//m_pASM->InputAnimSocket("Common_AnimSocket", SasDamage);
 		}
 	}
+
+	SasStateCheck();
 
 	Visible_Check();
 }
@@ -910,6 +940,44 @@ void CPlayer::Visible_Check()
 			TeleportEffect.Reset();
 			TeleportEffectMaker();
 		}
+	}
+}
+
+void CPlayer::SasStateCheck()
+{
+	// SAS 특수효과의 종료 담당
+
+	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_FIRE))
+	{
+		m_bSASSkillInput[3] = false;
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSwordParticle)) m_pSwordParticle->SetDelete();
+	}
+
+	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_PENETRATE))
+	{
+		m_bSASSkillInput[1] = false;
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSAS_Penetrate)) m_pSAS_Penetrate->GetParam().Floats[0] = 0.f;
+	}
+
+	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_TELEPORT))
+	{
+		m_bSASSkillInput[0] = false;
+	}
+
+	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_HARDBODY))
+	{
+		m_bSASSkillInput[2] = false;
+	}
+
+	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_SUPERSPEED))
+	{
+		CGameInstance::GetInstance()->ResetDefaultTimeRatio();
+	}
+
+
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty())
+	{
+		m_pSAS_Cable->UnEquipCable();
 	}
 }
 
@@ -2110,6 +2178,11 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_271_AL_Pcon_cReL_Lv4"));
 	m_KineticCombo_Pcon_cReL_Lv4.push_back(pAnimation);
 
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_273_AL_AirCap_start"));
+	m_KineticCombo_AirCap.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_279_AL_AirPcon"));
+	m_KineticCombo_Pcon.push_back(pAnimation);
+
 m_pKineticComboStateMachine = CFSMComponentBuilder()
 
 		.InitState("KINETIC_COMBO_NOUSE")
@@ -2123,7 +2196,11 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			m_fKineticCombo_Slash = 0.f;
 
 			m_pASM->ClearAnimSocket("Kinetic_Combo_AnimSocket");
-			m_pASM->SetCurState("IDLE");
+
+			if(!m_bAir)
+				m_pASM->SetCurState("IDLE");
+			else
+				m_pASM->SetCurState("JUMP_FALL");
 
 			// 림라이트 종료
 			m_pCurve = nullptr;
@@ -2167,6 +2244,10 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 
 			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_KINETIC01_CHARGE", "KINETIC_COMBO_KINETIC01_CHARGE")
 			.Predicator([&]()->_bool { return !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && !m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Priority(0)
+
+			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_AIR_CAP", "KINETIC_COMBO_AIR_CAP")
+			.Predicator([&]()->_bool { return !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
 #pragma region 슬래시 콤보 1
@@ -2892,6 +2973,123 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 
 
 #pragma endregion 키네틱 콤보 4
+
+#pragma region 공중 콤보 키네틱
+
+			.AddState("KINETIC_COMBO_AIR_CAP")
+			.OnStart([&]() 
+			{
+				m_bSeperateAnim = false;
+				m_bKineticMove = false;
+				m_bKineticCombo = true;
+
+				SetAbleState({ false, false, false, false, true, false, true, true, true, false });
+
+				m_pASM->SetCurState("JUMP_FALL");
+				m_pKineticStataMachine->SetState("NO_USE_KINETIC");
+
+				KineticObject_Targeting();
+
+				if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+					Enemy_Targeting(true);
+
+				if (CPlayerInfoManager::GetInstance()->Get_KineticObject())
+				{
+					m_KineticObjectOrigionPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
+					static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Kinetic(true);
+				}
+
+				if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+				{
+					LookTarget();
+				}
+
+				m_fKineticCombo_Slash = 0.f;
+				m_fKineticCharge = 0.f;
+				m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_AirCap);
+
+				m_pKineticAnimModel->SetPlayAnimation("AS_no0000_279_AL_AirPcon");
+				Kinetic_Combo_MoveToKineticPoint();
+
+				// 임시로 뒤로 빠지게 하는 코드
+				m_vKineticComboRefPoint = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (m_pTransformCom->Get_State(CTransform::STATE_LOOK) * -5.f);
+			})
+			.Tick([&](double fTimeDelta)
+			{
+				if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+				{
+					_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					_vector vDirEnemy = m_vKineticComboRefPoint - vMyPos;
+
+					_float fDistance = XMVectorGetX(XMVector3Length(vDirEnemy));
+
+					_vector vLerpPos = XMVectorLerp(vMyPos, m_vKineticComboRefPoint, min(m_fKineticCharge, 1.f));
+					m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
+
+					Kinetic_Combo_AttachLerpObject();
+				}
+
+				if (m_pASM->GetSocketAnimation("Kinetic_Combo_AnimSocket") != nullptr)
+					m_fKineticCharge = m_pASM->GetSocketAnimation("Kinetic_Combo_AnimSocket")->GetPlayRatio();
+				else
+					m_fKineticCharge = 0.f;
+			})
+
+				.AddTransition("KINETIC_COMBO_AIR_CAP to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
+				.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
+				.Priority(0)
+
+				.AddTransition("KINETIC_COMBO_AIR_CAP to KINETIC_COMBO_AIR_PCON", "KINETIC_COMBO_AIR_PCON")
+				.Predicator([&]()->_bool { return m_pASM->isSocketAlmostFinish("Kinetic_Combo_AnimSocket"); })
+				.Priority(0)
+
+			.AddState("KINETIC_COMBO_AIR_PCON")
+			.OnStart([&]()
+			{
+				// 림라이트 커브 생성
+				Start_RimLight("Kinetic_Combo_01_RimLight");
+
+				m_fKineticCharge = 0.f;
+				m_fKineticCombo_Kinetic = 0.f;
+				m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Pcon);
+
+				Kinetic_Combo_KineticAnimation();
+			})
+			.Tick([&](double fTimeDelta)
+			{
+				// 림라이트 커브 동작 (애니메이션 재생 속도에 맞춰서)
+				_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Combo_AnimSocket")->GetPlayRatio();
+				Tick_RimLight(fRatio);
+
+
+				if (!m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"))
+				{
+					string szCurAnimName = m_pASM->GetSocketAnimation("Kinetic_Combo_AnimSocket")->GetName();
+					_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
+					m_pTransformCom->LocalMove(vLocal);
+				}
+
+				Kinetic_Combo_KineticAnimation();
+			})
+			.OnExit([&]()
+			{
+				m_pCurve = nullptr;
+
+				// 림라이트 종료
+				End_RimLight();
+
+				m_bActiveGravity = true;
+			})
+
+			.AddTransition("KINETIC_COMBO_AIR_PCON to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
+			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
+			.Priority(0)
+
+			.AddTransition("KINETIC_COMBO_AIR_PCON to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
+			.Predicator([&]()->_bool { return m_pASM->isSocketAlmostFinish("Kinetic_Combo_AnimSocket"); })
+			.Priority(0)
+
+#pragma endregion 공중 콤보 키네틱
 
 		.Build();
 
@@ -3750,6 +3948,7 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		{
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 			m_fKineticCharge = 0.f;
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->SetDelete();
 		})
 
 			.AddTransition("TRAIN_LEFT_THROW to TRAIN_LEFT_NOUSE", "TRAIN_LEFT_NOUSE")
@@ -3920,11 +4119,14 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 				static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
 					->TelephonePole_Swing(m_pKineticAnimModel, m_pTransformCom, fPlayTime - (fDuration * 0.5f));
 			}
+
+			static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->TelephonePole_Collision_On();
 		})
 		.OnExit([&]()
 		{
 			CGameInstance::GetInstance()->SetTimeRatioCurve("TelephonePoleSlow");
 			m_fKineticCharge = 0.f;
+			static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->TelephonePole_Collision_Off();
 		})
 			.AddTransition("TELEPHONEPOLE_LEFT_THROW to TELEPHONEPOLE_LEFT_WAIT", "TELEPHONEPOLE_LEFT_WAIT")
 			.Predicator([&]()->_bool 
@@ -3977,6 +4179,7 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 		.OnExit([&]()
 		{
 			m_fKineticCharge = 0.f;
+			static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->TelephonePole_SetDeadTimer();
 		})
 			.AddTransition("TELEPHONEPOLE_LEFT_END to TELEPHONEPOLE_LEFT_NOUSE", "TELEPHONEPOLE_LEFT_NOUSE")
 			.Predicator([&]()->_bool 
@@ -4009,11 +4212,15 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 				static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
 					->TelephonePole_Swing(m_pKineticAnimModel, m_pTransformCom, fPlayTime - (fDuration * 0.1f));
 			}
+
+			static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->TelephonePole_Collision_On();
 		})
 		.OnExit([&]()
 		{
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 			m_fKineticCharge = 0.f;
+			static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->TelephonePole_Collision_Off();
+			static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->TelephonePole_SetDeadTimer();
 		})
 			.AddTransition("TELEPHONEPOLE_LEFT_SWING to TELEPHONEPOLE_LEFT_NOUSE", "TELEPHONEPOLE_LEFT_NOUSE")
 			.Predicator([&]()->_bool 
@@ -4299,6 +4506,8 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		.Tick([&](double fTimeDelta)
 		{
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Turn();
+
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Collision();
 		})
 		.OnExit([&]()
 		{

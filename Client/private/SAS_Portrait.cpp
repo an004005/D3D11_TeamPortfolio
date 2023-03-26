@@ -183,10 +183,10 @@ void CSAS_Portrait::Tick(_double TimeDelta)
 	// {
 	// 	Start_SAS(ESASType::SAS_PENETRATE);
 	// }
-	 if (CGameInstance::GetInstance()->KeyDown(DIK_9))
-	 {
-	 	Start_SAS(ESASType::SAS_NOT);
-	 }
+	 //if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	 //{
+	 //	Start_SAS(ESASType::SAS_NOT);
+	 //}
 
 	if (m_eCurType != ESASType::SAS_END)
 	{

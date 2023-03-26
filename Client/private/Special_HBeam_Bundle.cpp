@@ -11,6 +11,7 @@
 #include "Special_HBeam_Single.h"
 #include "MapObject.h"
 #include "Enemy.h"
+#include "PhysX_Manager.h"
 
 CSpecial_HBeam_Bundle::CSpecial_HBeam_Bundle(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -75,6 +76,19 @@ void CSpecial_HBeam_Bundle::BeginTick()
 
 void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 {
+	if (m_bDeadCheck)
+	{
+		m_fDeadTime -= (_float)TimeDelta;
+
+		if (0.f >= m_fDeadTime)
+		{
+			for (auto& iter : m_pHBeam_Single)
+				iter->SetDelete();
+
+			this->SetDelete();
+		}
+	}
+
 	if (m_bRenderOption)
 	{
 		__super::Tick(TimeDelta);
@@ -97,6 +111,8 @@ void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 				static_cast<CSpecial_HBeam_Single*>(iter)->Set_Kinetic(false);
 			}
 		}
+
+		m_fCollisionTime += (_float)TimeDelta;
 
 		m_pCollider->Activate(false);
 		for (auto& iter : m_pHBeam_Single)
@@ -214,12 +230,98 @@ void CSpecial_HBeam_Bundle::HBeam_Single_Finish()
 {
 	for (auto& iter : m_pHBeam_Single)
 		static_cast<CSpecial_HBeam_Single*>(iter)->HBeam_Finish();
+
+	HBeam_Explosion();
+	HBeam_SetDeadTimer();
 }
 
 void CSpecial_HBeam_Bundle::HBeam_Single_SetKinetic(_bool bKinetic)
 {
 	for (auto& iter : m_pHBeam_Single)
 		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Kinetic(bKinetic);
+}
+
+void CSpecial_HBeam_Bundle::HBeam_Collision()
+{
+	if (m_fCollisionTime >= 0.5f)
+	{
+		physx::PxSweepHit hitBuffer[4];
+		physx::PxSweepBuffer overlapOut(hitBuffer, 4);
+		SphereSweepParams params2;
+		params2.sweepOut = &overlapOut;
+		params2.fRadius = 10.f;
+		params2.vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 20.f, 0.f, 0.f);
+		params2.vUnitDir = XMVectorSet(0.f, -1.f, 0.f, 0.f);
+		params2.fDistance = 20.f;
+		params2.iTargetType = CTB_MONSTER | CTB_MONSTER_PART;
+		params2.fVisibleTime = 1.f;
+
+		if (CGameInstance::GetInstance()->SweepSphere(params2))
+		{
+			for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+			{
+				auto pHit = overlapOut.getAnyHit(i);
+				CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+				if (auto pMonster = dynamic_cast<CEnemy*>(pCollidedObject))
+				{
+					DAMAGE_PARAM tParam;
+					ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+					tParam.eAttackSAS = ESASType::SAS_END;
+					tParam.eAttackType = EAttackType::ATK_SPECIAL_LOOP;
+					tParam.eDeBuff = EDeBuffType::DEBUFF_END;
+					tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
+					tParam.iDamage = 100;
+
+					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					pMonster->TakeDamage(tParam);
+				}
+			}
+		}
+
+		m_fCollisionTime = 0.f;
+	}
+}
+
+void CSpecial_HBeam_Bundle::HBeam_Explosion()
+{
+	physx::PxSweepHit hitBuffer[4];
+	physx::PxSweepBuffer overlapOut(hitBuffer, 4);
+	SphereSweepParams params2;
+	params2.sweepOut = &overlapOut;
+	params2.fRadius = 10.f;
+	params2.vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 20.f, 0.f, 0.f);
+	params2.vUnitDir = XMVectorSet(0.f, -1.f, 0.f, 0.f);
+	params2.fDistance = 20.f;
+	params2.iTargetType = CTB_MONSTER | CTB_MONSTER_PART;
+	params2.fVisibleTime = 1.f;
+
+	if (CGameInstance::GetInstance()->SweepSphere(params2))
+	{
+		for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+		{
+			auto pHit = overlapOut.getAnyHit(i);
+			CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+			if (auto pMonster = dynamic_cast<CEnemy*>(pCollidedObject))
+			{
+				DAMAGE_PARAM tParam;
+				ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+				tParam.eAttackSAS = ESASType::SAS_END;
+				tParam.eAttackType = EAttackType::ATK_SPECIAL_END;
+				tParam.eDeBuff = EDeBuffType::DEBUFF_END;
+				tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
+				tParam.iDamage = 500;
+
+				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				pMonster->TakeDamage(tParam);
+			}
+		}
+	}
+}
+
+void CSpecial_HBeam_Bundle::HBeam_SetDeadTimer()
+{
+	m_bDeadCheck = true;
+	m_fDeadTime = 3.f;
 }
 
 HRESULT CSpecial_HBeam_Bundle::SetUp_Components(void * pArg)
@@ -305,4 +407,10 @@ CGameObject * CSpecial_HBeam_Bundle::Clone(void * pArg)
 void CSpecial_HBeam_Bundle::Free()
 {
 	__super::Free();
+
+	for (auto& iter : m_pHBeam_Single)
+	{
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(iter))
+			Safe_Release(iter);
+	}
 }

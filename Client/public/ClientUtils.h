@@ -11,6 +11,7 @@
 #define PLAYERTEST_LAYER_POSTVFX	TEXT("Layer_PostVFX")
 #define PLAYERTEST_LAYER_FRONTUI	TEXT("Layer_FrontUI")
 #define LAYER_PLAYEREFFECT			TEXT("Layer_PlayerEffect")
+#define LAYER_MAPKINETICOBJECT		TEXT("Layer_MapKineticObject")
 
 BEGIN(Engine)
 class CTransform;

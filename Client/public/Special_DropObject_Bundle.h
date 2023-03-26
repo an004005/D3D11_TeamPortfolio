@@ -51,6 +51,9 @@ private:
 	_float	m_fThrowPower = 300.f;
 	CDoOnce	Decompose;
 
+	_bool  m_bDeadCheck = false;
+	_float m_fDeadTime = 0.f;
+
 private:
 	vector<_float4x4>	m_vecChildMatrix;
 

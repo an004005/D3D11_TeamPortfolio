@@ -47,16 +47,26 @@ HRESULT CSpecial_DropObject_Bundle::Initialize(void * pArg)
 		if (auto pStatic = dynamic_cast<CMapObject*>(pGameObject))
 		{
 			m_bDecompose = true;
+			m_bDeadCheck = true;
+			m_fDeadTime = 3.f;
 		}
 
 		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 		{
 			DAMAGE_PARAM tParam;
-			tParam.eAttackType = EAttackType::ATK_HEAVY;
-			tParam.iDamage = 200;
+			ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+			tParam.eAttackSAS = ESASType::SAS_END;
+			tParam.eAttackType = EAttackType::ATK_SPECIAL_END;
+			tParam.eDeBuff = EDeBuffType::DEBUFF_END;
+			tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
+			tParam.iDamage = 1000;
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
+			static_cast<CEnemy*>(pMonster)->TakeDamage(tParam);
+
 			m_bDecompose = true;
+			m_bDeadCheck = true;
+			m_fDeadTime = 3.f;
 		}
 	});
 
@@ -75,6 +85,19 @@ void CSpecial_DropObject_Bundle::BeginTick()
 
 void CSpecial_DropObject_Bundle::Tick(_double TimeDelta)
 {
+	if (m_bDeadCheck)
+	{
+		m_fDeadTime -= (_float)TimeDelta;
+
+		if (0.f >= m_fDeadTime)
+		{
+			for (auto& iter : m_pObject_Single)
+				iter->SetDelete();
+
+			this->SetDelete();
+		}
+	}
+
 	if (!m_bDecompose)
 	{
 		__super::Tick(TimeDelta);
@@ -283,4 +306,10 @@ CGameObject * CSpecial_DropObject_Bundle::Clone(void * pArg)
 void CSpecial_DropObject_Bundle::Free()
 {
 	__super::Free();
+	
+	for (auto& iter : m_pObject_Single)
+	{
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(iter))
+			Safe_Release(iter);
+	}
 }

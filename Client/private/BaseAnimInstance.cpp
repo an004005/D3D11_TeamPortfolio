@@ -2711,7 +2711,7 @@ void CBaseAnimInstance::SpairAnimationManager()
 	// Spair가 꺼질 때 현재 재생중인 애니메이션은 꺼지면 안됨 -> 이거 변경할 것
 	for (auto& iter : m_pASM_Base->Get_MapStates())
 	{
-		if (m_pASM_Base->GetCurState() == iter.second)
+		if (m_pASM_Base->GetCurState() == iter.second && (m_bOnBattle))
 		{
 			iter.second->m_ReserveAnimation = iter.second->m_Animation;
 			//iter.second->m_ReserveAnimation->Reset(); -> 필요없나봅니다

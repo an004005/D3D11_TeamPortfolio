@@ -88,6 +88,8 @@ public:	// Set
 	void			Set_SasType(ESASType eType);
 	void			Finish_SasType(ESASType eType);
 
+	void			Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasType, _float iChangeEnergy);
+
 	HRESULT			Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);

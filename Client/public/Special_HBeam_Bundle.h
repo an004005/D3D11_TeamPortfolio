@@ -39,6 +39,16 @@ public:
 	void	HBeam_Single_Finish();
 	void	HBeam_Single_SetKinetic(_bool bKinetic);
 
+	void	HBeam_Collision();
+	void	HBeam_Explosion();
+
+	void	HBeam_SetDeadTimer();
+
+private:
+	_bool  m_bDeadCheck = false;
+	_float m_fDeadTime = 0.f;
+	_float m_fCollisionTime = 0.f;
+
 public:
 	_bool	HBeam_isDecomposed() { return m_bRenderOption; }	// false면 디컴포즈된거임
 

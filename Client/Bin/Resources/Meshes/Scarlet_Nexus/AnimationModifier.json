@@ -2467,6 +2467,23 @@
             }
         ]
     },
+    "AS_ch0100_273_AL_AirCap_start": {
+        "Duration": 45.0,
+        "TickPerSecond": 90.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_279_AL_AirPcon": {
+        "Duration": 80.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Kinetic_Launch",
+                "EventTime": 37.0
+            }
+        ]
+    },
     "AS_ch0100_301_AL_capture_wait_loop": {
         "Duration": 120.0,
         "TickPerSecond": 100.0,
