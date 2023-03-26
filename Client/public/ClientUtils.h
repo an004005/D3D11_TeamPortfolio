@@ -13,6 +13,10 @@
 #define LAYER_PLAYEREFFECT			TEXT("Layer_PlayerEffect")
 #define LAYER_MAPKINETICOBJECT		TEXT("Layer_MapKineticObject")
 
+
+
+#define LAYER_TRIGGER				TEXT("Layer_Trigger")
+
 BEGIN(Engine)
 class CTransform;
 class CComponent;

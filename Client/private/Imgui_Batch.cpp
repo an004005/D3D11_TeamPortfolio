@@ -63,7 +63,17 @@ void CImgui_Batch::Imgui_RenderTab()
 			if (bSelected)
 				ImGui::SetItemDefaultFocus();
 
-			string strViewName = m_BatchPresets[i].strLayer + "/" + m_BatchPresets[i].strProtoTag;
+			string strViewName;
+			if (m_BatchPresets[i].strJsonPath.empty())
+			{
+				strViewName = m_BatchPresets[i].strLayer + "/" + m_BatchPresets[i].strProtoTag;
+			}
+			else
+			{
+				string jsonName = CGameUtils::GetFileName(m_BatchPresets[i].strJsonPath);
+				strViewName = m_BatchPresets[i].strLayer + "/" + jsonName + "/" + m_BatchPresets[i].strProtoTag;
+			}
+			
 			if (ImGui::Selectable(strViewName.c_str(), bSelected))
 				iSelectedPresetIdx = i;
 		}

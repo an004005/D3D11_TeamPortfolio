@@ -16,6 +16,7 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 public:
+	void Tick(_double TimeDelta);
 	class CShader* GetShader() { return m_pShader; }
 	class CShader* GetShaderInstancing() { return m_pShaderInstancing; }
 

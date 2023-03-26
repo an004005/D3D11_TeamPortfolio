@@ -1061,6 +1061,12 @@
     <ClInclude Include="..\public\Special_DropObject_Single.h">
       <Filter>02.GameObjects\SpecialObject\Special_DropObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\TipTrigger.h">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerStartPosition.h">
+      <Filter>02.GameObjects\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1713,6 +1719,12 @@
     </ClCompile>
     <ClCompile Include="..\private\EM0750_Controller.cpp">
       <Filter>02.GameObjects\Enemy\EM750</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TipTrigger.cpp">
+      <Filter>02.GameObjects\Map\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerStartPosition.cpp">
+      <Filter>02.GameObjects\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Special_HBeam_Bundle.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>

@@ -167,6 +167,7 @@ public:
 	
 	CFSMComponentBuilder& AddState(const char* pNodeName)
 	{
+		Assert(m_mapStates.find(pNodeName) == m_mapStates.end());
 		m_pBuildTransition = nullptr;
 		m_pBuildState = new FSM_STATE(pNodeName);
 		m_mapStates.emplace(pNodeName, m_pBuildState);

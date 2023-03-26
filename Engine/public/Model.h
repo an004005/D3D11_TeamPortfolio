@@ -41,6 +41,8 @@ protected:
 	virtual ~CModel() = default;
 
 public:
+	void Tick(_double TimeDelta);
+
 	// For Particle
 	const _float3* Get_VerticesPos();
 	const _uint	   Get_NumVertices();

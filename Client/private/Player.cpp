@@ -47,6 +47,8 @@
 
 #include "Enemy.h"
 #include "PostVFX_Penetrate.h"
+#include "PlayerStartPosition.h"
+
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -150,7 +152,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 	ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 	ZeroMemory(&m_AttackDesc, sizeof(DAMAGE_PARAM));
 
-//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
+	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 0.f));
 
 	m_pTransformCom->SetTransformDesc({ 5.f, XMConvertToRadians(720.f) });
 
@@ -176,8 +178,13 @@ HRESULT CPlayer::Initialize(void * pArg)
 void CPlayer::BeginTick()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(-80.f, 13.f, 52.f, 1.f));
+	if (auto pStartPos = pGameInstance->Find_OneObjectByType<CPlayerStartPosition>(LEVEL_NOW, LAYER_TRIGGER))
+	{
+		m_pTransformCom->CopyWorld(pStartPos->GetTransform());
+		pStartPos->SetDelete();
+	}
 
+	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 2.f, 0.f, 1.f));
 	__super::BeginTick();
 
 	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
@@ -204,6 +211,7 @@ void CPlayer::BeginTick()
 void CPlayer::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+	m_pModel->Tick(TimeDelta);
 
 	if (m_bOnBattle)
 	{

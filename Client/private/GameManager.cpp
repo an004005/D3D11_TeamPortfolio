@@ -16,6 +16,7 @@ void CGameManager::SetGameManager(CGameManager* pGameManager)
 {
 	Safe_Release(s_GameManager);
 	s_GameManager = pGameManager;
+	// Safe_AddRef(s_GameManager);
 }
 
 _uint CGameManager::DestroyInstance()
