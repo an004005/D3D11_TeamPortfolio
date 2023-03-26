@@ -98,6 +98,13 @@ _float4 CScarletCharacter::GetColliderPosition()
 	return m_pCollider->GetPosition();
 }
 
+void CScarletCharacter::SetWorldMatrix(_float4x4 WorldMatrix)
+{
+	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
+	if (m_pCollider && m_pCollider->IsOnPhysX())
+		m_pCollider->SetFootPosition(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+}
+
 void CScarletCharacter::Update_DeBuff(_double TimeDelta)
 {
 	if (m_fDeBuffTime > 0.f)

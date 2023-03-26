@@ -49,7 +49,7 @@
                         1.0
                     ]
                 },
-                "TutorialType": 0
+                "TutorialType": 1
             },
             "Preset": {
                 "JsonPath": "",
@@ -124,7 +124,7 @@
                         1.0
                     ]
                 },
-                "TutorialType": 0
+                "TutorialType": 4
             },
             "Preset": {
                 "JsonPath": "",

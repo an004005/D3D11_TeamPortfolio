@@ -89,6 +89,7 @@ void CEnemy::Tick(_double TimeDelta)
 	CScarletCharacter::Tick(TimeDelta);
 	FindTarget();
 	Update_DeadDissolve(TimeDelta);
+	m_pModelCom->Tick(TimeDelta);
 }
 
 void CEnemy::Late_Tick(_double TimeDelta)

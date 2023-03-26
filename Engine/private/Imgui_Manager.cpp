@@ -134,6 +134,7 @@ void CImgui_Manager::Tick_Imgui()
 {
 	if (!m_bOn)
 		return;
+	lock_guard<mutex> lockGuard(m_mtx);
 
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -147,6 +148,7 @@ void CImgui_Manager::Render_Imgui()
 {
 	if (!m_bOn)
 		return;
+	lock_guard<mutex> lockGuard(m_mtx);
 
 	ImGui_DockSpace();
 
@@ -208,6 +210,7 @@ void CImgui_Manager::Render_Update_ImGui()
 {
 	if (!m_bOn)
 		return;
+	lock_guard<mutex> lockGuard(m_mtx);
 
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
@@ -255,12 +258,14 @@ void CImgui_Manager::ImGui_DockSpace()
 
 void CImgui_Manager::Add_ImguiObject(CImguiObject* pImguiObject)
 {
+	lock_guard<mutex> lockGuard(m_mtx);
 	if (pImguiObject)
 		m_vecObj.push_back(pImguiObject);
 }
 
 void CImgui_Manager::Clear_ImguiObjects()
 {
+	lock_guard<mutex> lockGuard(m_mtx);
 	for (auto& e : m_vecObj)
 		Safe_Release(e);
 	m_vecObj.clear();
