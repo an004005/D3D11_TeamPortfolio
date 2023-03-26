@@ -97,19 +97,19 @@ void CCanvas_Tutorial::Tutorial_Tick()
 	case Client::CCanvas_Tutorial::LOCKON:
 		wsprintf(szTag, TEXT("Tutorial0"));
 		break;
-	case Client::CCanvas_Tutorial::FIGHTINGSTYLE:
+	case Client::CCanvas_Tutorial::FIGHTINGSTYLE1:
 		wsprintf(szTag, TEXT("Tutorial1"));
 		break;
-	case Client::CCanvas_Tutorial::SPECIALATTACK:
+	case Client::CCanvas_Tutorial::FIGHTINGSTYLE2:
 		wsprintf(szTag, TEXT("Tutorial2"));
 		break;
-	case Client::CCanvas_Tutorial::ADDRUSHATTACK:
+	case Client::CCanvas_Tutorial::SPECIALATTACK:
 		wsprintf(szTag, TEXT("Tutorial3"));
 		break;
-	case Client::CCanvas_Tutorial::ADDPSYCHOKINESISATTACK:
+	case Client::CCanvas_Tutorial::ADDRUSHATTACK:
 		wsprintf(szTag, TEXT("Tutorial4"));
 		break;
-	case Client::CCanvas_Tutorial::STRENGTHENATTACK:
+	case Client::CCanvas_Tutorial::ADDPSYCHOKINESISATTACK:
 		wsprintf(szTag, TEXT("Tutorial5"));
 		break;
 	default:
@@ -166,7 +166,7 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 	}
 
 	// ÃÊ±âÈ­
-	if (2 == m_iYesCount)
+	if (2 == m_iYesCount || CGameInstance::GetInstance()->KeyDown(DIK_0))
 	{
 		if (false == m_bCheckClose)
 		{
@@ -200,7 +200,7 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 			m_bCheckClose = false;
 
 			CGameInstance::GetInstance()->ResetTimeRatio();
-			//SetDelete();
+			SetDelete();
 		}
 	}
 
@@ -384,6 +384,7 @@ void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag)
 			m_eTips = TIPS_END;
 			m_iTipsOpen = false;
 			m_arrTips[eTIPS] = false;
+			SetDelete();
 		}
 	}
 }
@@ -401,6 +402,7 @@ void CCanvas_Tutorial::Success_Tick(const _double & TimeDelta)
 		m_bSuccess_TimeAcc = 0.0;
 		m_bSuccess = false;
 		Find_ChildUI(L"Tutorial_Success")->SetVisible(false);
+		SetDelete();
 	}
 }
 

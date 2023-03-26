@@ -66,6 +66,7 @@ HRESULT CLevel_Tutorial::Initialize()
 	Ready_Layer_SASPortrait();
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Tutorial/TutorialBatch_Enemy.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Tutorial/Tutorial_UI.json");
 
 	return S_OK;
 }

@@ -24,8 +24,8 @@ void CTipTrigger::SaveToJson(Json& json)
 void CTipTrigger::LoadFromJson(const Json& json)
 {
 	CTriggerEx::LoadFromJson(json);
-	//m_bTutorialOrTips = json["TutorialOrTips"];
-	//m_eTips = json["TipsType"];
+	m_bTutorialOrTips = json["TutorialOrTips"];
+	m_eTips = json["TipsType"];
 	m_eTutorialType = json["TutorialType"];
 }
 
@@ -51,7 +51,7 @@ void CTipTrigger::TriggerInEvent(CGameObject* pObject)
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Tutorial.json");
 	auto pTips = dynamic_cast<CCanvas_Tutorial*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_FRONTUI, L"Canvas_Tutorial", &json));
 
-	if (true == m_bTutorialOrTips)
+ 	if (true == m_bTutorialOrTips)
 		pTips->Set_Tips(m_eTips);
 	else
 		pTips->Set_Tutorial(m_eTutorialType);
