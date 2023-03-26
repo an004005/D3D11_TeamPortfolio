@@ -179,8 +179,8 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 
 	m_pGameTime_Manager->Tick(TimeDelta);
 
+	m_TimeDelta = TimeDelta;
 	const _double TimeDeltaModified = TimeDelta * m_pGameTime_Manager->GetTimeRatio();
-	m_TimeDelta = TimeDeltaModified;
 
 	/* 입력장치의 상태를 갱신받아온다. */
 	m_pInput_Device->Invalidate_Input_Device();

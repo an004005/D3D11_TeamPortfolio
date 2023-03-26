@@ -1,28 +1,31 @@
 #include "stdafx.h"
-#include "..\public\PostVFX_Penetrate.h"
+#include "..\public\PostVFX_SuperSpeed.h"
 
-CPostVFX_Penetrate::CPostVFX_Penetrate(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+
+CPostVFX_SuperSpeed::CPostVFX_SuperSpeed(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPostProcess(pDevice, pContext)
 {
 }
 
-CPostVFX_Penetrate::CPostVFX_Penetrate(const CPostVFX_Penetrate& rhs)
+CPostVFX_SuperSpeed::CPostVFX_SuperSpeed(const CPostVFX_SuperSpeed& rhs)
 	: CPostProcess(rhs)
 {
 }
 
-HRESULT CPostVFX_Penetrate::Initialize(void* pArg)
+HRESULT CPostVFX_SuperSpeed::Initialize(void* pArg)
 {
 	FAILED_CHECK(CPostProcess::Initialize(pArg));
 
-	m_iPriority = 1000;
-	m_tParam.iPass = 8;
+	m_iPriority = 998;
+	m_tParam.iPass = 11;
 	if (m_tParam.Floats.empty())
 		m_tParam.Floats.push_back(0.f);
+	m_tParam.Floats[0] = 0.f;
+
 	return S_OK;
 }
 
-void CPostVFX_Penetrate::Tick(_double TimeDelta)
+void CPostVFX_SuperSpeed::Tick(_double TimeDelta)
 {
 	CPostProcess::Tick(TimeDelta);
 
@@ -45,4 +48,9 @@ void CPostVFX_Penetrate::Tick(_double TimeDelta)
 		m_bVisible = false;
 	else
 		m_bVisible = true;
+}
+
+void CPostVFX_SuperSpeed::Active(_bool bActive)
+{
+	m_bActive = bActive;
 }
