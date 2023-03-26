@@ -280,9 +280,6 @@
     <Filter Include="02.GameObjects\Monster\boss1\Boss1_Controller">
       <UniqueIdentifier>{b2e59d02-3ca6-4756-83c6-6ac671cdf04c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster\boss1\WaterBall">
-      <UniqueIdentifier>{7d98e4ff-3ec3-41c0-b7b6-9a67b3d0b012}</UniqueIdentifier>
-    </Filter>
     <Filter Include="VFX\Particle\ParticleGroup">
       <UniqueIdentifier>{f465b88f-dbb3-4679-a8d4-76b67ddacdbc}</UniqueIdentifier>
     </Filter>
@@ -369,6 +366,15 @@
     </Filter>
     <Filter Include="50.Component\01.Controller\AIController">
       <UniqueIdentifier>{04a4534d-be99-4559-897f-94efed7b0e98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMBullet\RedBullet">
+      <UniqueIdentifier>{2a57c407-e349-4fd8-99f2-8e508b157e3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMBullet\OilBullet">
+      <UniqueIdentifier>{7d98e4ff-3ec3-41c0-b7b6-9a67b3d0b012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMBullet\ElectricBullet">
+      <UniqueIdentifier>{53e11f2c-66d8-4166-948c-aeb499f89c39}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -832,9 +838,6 @@
     <ClInclude Include="..\public\BrJ_Controller.h">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\WaterBall.h">
-      <Filter>02.GameObjects\Monster\boss1</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\BdLm_Controller.h">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
     </ClInclude>
@@ -941,9 +944,6 @@
     <ClInclude Include="..\public\Imgui_Batch.h" />
     <ClInclude Include="..\public\EM0700_AnimInstance.h">
       <Filter>02.GameObjects\Enemy\EM0700</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\EnemyBullet.h">
-      <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0400_Controller.h">
       <Filter>02.GameObjects\Enemy\EM0400</Filter>
@@ -1067,6 +1067,21 @@
     </ClInclude>
     <ClInclude Include="..\public\TipTrigger.h">
       <Filter>Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM1200_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM1200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM1200_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM1200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM1200.h">
+      <Filter>02.GameObjects\Enemy\EM1200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\RedBullet.h">
+      <Filter>02.GameObjects\Enemy\EMBullet\RedBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\OilBullet.h">
+      <Filter>02.GameObjects\Enemy\EMBullet\OilBullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1501,9 +1516,6 @@
     <ClCompile Include="..\private\BrJ_Controller.cpp">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\WaterBall.cpp">
-      <Filter>02.GameObjects\Monster\boss1</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\BdLm_Controller.cpp">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
     </ClCompile>
@@ -1619,9 +1631,6 @@
     <ClCompile Include="..\private\Imgui_Batch.cpp" />
     <ClCompile Include="..\private\EM0700_AnimInstance.cpp">
       <Filter>02.GameObjects\Enemy\EM0700</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\EnemyBullet.cpp">
-      <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0400_Controller.cpp">
       <Filter>02.GameObjects\Enemy\EM0400</Filter>
@@ -1743,6 +1752,21 @@
     </ClCompile>
     <ClCompile Include="..\private\TipTrigger.cpp">
       <Filter>Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM1200_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM1200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM1200.cpp">
+      <Filter>02.GameObjects\Enemy\EM1200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM1200_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM1200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\RedBullet.cpp">
+      <Filter>02.GameObjects\Enemy\EMBullet\RedBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\OilBullet.cpp">
+      <Filter>02.GameObjects\Enemy\EMBullet\OilBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

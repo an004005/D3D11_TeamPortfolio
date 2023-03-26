@@ -15,17 +15,12 @@ CEM0800_Controller::CEM0800_Controller(const CEM0800_Controller & rhs)
 
 HRESULT CEM0800_Controller::Initialize(void * pArg)
 {
-	m_iNearOrder = CMathUtils::RandomUInt(9);
-	m_iMidOrder = CMathUtils::RandomUInt(7);
-	m_iFarOrder = CMathUtils::RandomUInt(3);
-	//m_iOutOrder = CMathUtils::RandomUInt(1);
+	m_iNearOrder = CMathUtils::RandomUInt(2);
+	m_iMidOrder = CMathUtils::RandomUInt(2);
 
-	//near : 회피( randomR, randomL, escape) , 돌진
-	//mid :  발사, move
-	//far :  move(발사 거리가 될때까지 앞으로 옴)
+	//near : 깨물기, (+추가로 물에 들어갔다 나오는거, 체력50퍼 아래에서 실행)
+	//mid : 레이저
 
-	//escape하면 뒤로 감
-	//random은 제자리 돌아옴
 
 	return S_OK;
 }
@@ -42,10 +37,10 @@ void CEM0800_Controller::BeginTick()
 
 void CEM0800_Controller::AI_Tick(_double TimeDelta)
 {
-
 	if (m_pTarget == nullptr)
 		return;
 
+	m_bTurn = false;
 
 	// 대상과의 거리 
 	m_fToTargetDistance = XMVectorGetX(XMVector3LengthEst(
@@ -61,143 +56,75 @@ void CEM0800_Controller::AI_Tick(_double TimeDelta)
 void CEM0800_Controller::Tick_Near(_double TimeDelta)
 {
 	m_eDistance = DIS_NEAR;
-	// 1. 좌 우 뒤 이동(플레이어 보면서) 2. 전방 물기 공격 3. 레이저 공격
-	EMoveAxis eMove = rand() % 2 ? EMoveAxis::WEST : EMoveAxis::EAST;
+	//AS_em0800_212_AL_atk_a6_circumference2
 	switch (m_iNearOrder)
 	{
 	case 0:
-		AddCommand("MoveL_or_R", 2.7f, &CAIController::Move_TurnToTarget, eMove, 1.f);
+		AddCommand("Turn", 3.f, &CEM0800_Controller::DefineTurnCommand);
+		AddCommand("Bite", 0.f, &CAIController::Input, B);
+		AddCommand("Wait", 1.f, &CAIController::Wait);
 		break;
 	case 1:
-		AddCommand("Wait", 1.3f, &CAIController::Wait);
-		break;
-	case 2:	// Bite_Atk
-		AddCommand("Attack_Bite", 0.f, &CAIController::Input, MOUSE_RB);
+	case 2:
+		AddCommand("Move", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
+		AddCommand("Wait", 1.f, &CAIController::Wait);
 		break;
 	case 3:
-		AddCommand("MoveL_or_R", 2.7f, &CAIController::Move_TurnToTarget, eMove, 1.f);
-		break;
-	case 4:
-		AddCommand("Wait", 1.3f, &CAIController::Wait);
-		break;
-	case 5:
-		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
-		AddCommand("Attack_Laser", 0.f, &CAIController::Input, MOUSE_LB);
-		AddCommand("TurnSlow", 0.7f, &CAIController::TurnToTarget, 0.5f);
-		break;
-	case 6:
-		AddCommand("Wait", 1.3f, &CAIController::Wait);
-		break;
-	case 7:
-		AddCommand("BackMove", 2.3f, &CAIController::Move, EMoveAxis::SOUTH);
-		break;
-	case 8:
-		AddCommand("Attack_Bite", 0.f, &CAIController::Input, MOUSE_RB);
-		break;
-	case 9:
-		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
-		AddCommand("Attack_Laser", 0.f, &CAIController::Input, MOUSE_LB);
-		AddCommand("TurnSlow", 0.7f, &CAIController::TurnToTarget, 0.5f);
+		AddCommand("Submergence", 0.f, &CAIController::Input, S);
+		AddCommand("Wait", 1.5f, &CAIController::Wait);
 		break;
 	}
 
-	//	_uint iRand = (rand() % 2) + 1;
-	m_iNearOrder = (m_iNearOrder + 1) % 10;
+	const _int iPattern = m_pCastedOwner->GetHpRatio() >= 0.5f ? 3 : 4;
+	m_iNearOrder = (m_iNearOrder + 1) % iPattern;
 }
 
 void CEM0800_Controller::Tick_Mid(_double TimeDelta)
 { 
 	m_eDistance = DIS_MIDDLE;
 	EMoveAxis eMove = rand() % 2 ? EMoveAxis::WEST : EMoveAxis::EAST;
-	// 1. 좌 우 앞 이동 2. 레이저 공격
+
 	switch (m_iMidOrder)
 	{
 	case 0:
-		AddCommand("MoveL_or_R", 2.7f, &CAIController::Move_TurnToTarget, eMove, 1.f);
-		break;
 	case 1:
-		AddCommand("Wait", 1.3f, &CAIController::Wait);
+		AddCommand("Move", 2.5f, &CAIController::Move_TurnToTarget, eMove, 1.f);
+		AddCommand("Wait", 1.f, &CAIController::Wait);	
 		break;
 	case 2:
-		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
-		AddCommand("Attack_Laser", 0.f, &CAIController::Input, MOUSE_LB);
-		AddCommand("TurnSlow", 0.7f, &CAIController::TurnToTarget, 0.5f);
-		break;
-	case 3:
-		AddCommand("Wait", 2.f, &CAIController::Wait);
-		break;
-	case 4:
-		AddCommand("MoveL_or_R", 2.7f, &CAIController::Move_TurnToTarget, eMove, 1.f);
-		break;
-	case 5:
-		AddCommand("Wait", 1.3f, &CAIController::Wait);
-		break;
-	case 6:
-		AddCommand("ForwardMove", 2.3f, &CAIController::Move, EMoveAxis::NORTH);
-		break;
-	case 7:
-		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
-		AddCommand("Attack_Laser", 0.f, &CAIController::Input, MOUSE_LB);
-		AddCommand("TurnSlow", 0.7f, &CAIController::TurnToTarget, 0.5f);
+		AddCommand("Turn", 3.f, &CEM0800_Controller::DefineTurnCommand);
+		AddCommand("Laser", 0.f, &CAIController::Input, L);
+		AddCommand("Wait", 1.f, &CAIController::Wait);
 		break;
 	}
 
-	//	_uint iRand = (rand() % 2) + 1;
-	m_iMidOrder = (m_iMidOrder + 1) % 8;
+	m_iMidOrder = (m_iMidOrder + 1) % 3;
 }
 
 void CEM0800_Controller::Tick_Far(_double TimeDelta)
 {
 	m_eDistance = DIS_FAR;
-
-	switch (m_iFarOrder)
-	{
-	case 0:
-		AddCommand("Wait", 4.f, &CAIController::Wait);
-		break;
-	case 1:
-		AddCommand("Wait", 4.f, &CAIController::Wait);
-		break;
-	case 2:
-		AddCommand("Threat", 0.f, &CAIController::Input, G);
-		break;
-	case 3:
-		AddCommand("Wait", 4.f, &CAIController::Wait);
-		break;
-	}
-
-	m_iFarOrder = (m_iFarOrder + 1) % 4;
-}
-
-void CEM0800_Controller::Tick_Outside(_double TimeDelta)
-{
-	m_eDistance = DIS_OUTSIDE;
-
-	switch (m_iOutOrder)
-	{
-	case 0:
-		AddCommand("Wait", 2.f, &CAIController::Wait);
-		break;
-	case 1:
-		AddCommand("Threat", 0.f, &CAIController::Input, SHIFT);
-		break;
-	}
-	m_iOutOrder = (m_iOutOrder + 1) % 2;
-
+	AddCommand("Wait", 2.f, &CAIController::Wait);
 }
 
 void CEM0800_Controller::DefineState(_double TimeDelta)
 {
 	if (m_pCastedOwner->IsPlayingSocket() == true) return;
 
-	if (m_fToTargetDistance <= 8.f)
+	if (m_fToTargetDistance <= 7.f)
 		Tick_Near(TimeDelta);
-	else if (m_fToTargetDistance <= 20.f)
+	else if (m_fToTargetDistance <= 15.f)
 		Tick_Mid(TimeDelta);
 	else
 		Tick_Far(TimeDelta);
-	
+}
 
+void CEM0800_Controller::DefineTurnCommand()
+{
+	m_bTurn = true;
+	m_eTurn =  m_pCastedOwner->FindTargetDirection();
+	const _float fSpeedRatio = m_eTurn == EBaseTurn::TURN_END ? 1.f : 7.f;
+	TurnToTargetStop(fSpeedRatio);
 }
 
 

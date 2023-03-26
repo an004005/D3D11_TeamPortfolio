@@ -5,11 +5,11 @@
 #include "RigidBody.h"
 #include "EM0800_AnimInstance.h"
 #include "EM0800_Controller.h"
-#include "EnemyBullet.h"
+
 CEM0800::CEM0800(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
-	m_eMonsterName = EEnemyName::EM0700;
+	m_eEnemyName = EEnemyName::EM0800;
 }
 
 CEM0800::CEM0800(const CEM0800 & rhs)
@@ -19,8 +19,8 @@ CEM0800::CEM0800(const CEM0800 & rhs)
 
 HRESULT CEM0800::Initialize(void * pArg)
 {
-	//Json em0200_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegTrigger.json");
-	//pArg = &em0200_json;
+	Json em0800_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0800/em0800Base.json");
+	pArg = &em0800_json;
 
 	/*m_strDeathSoundTag = "mon_5_fx_death";
 	m_strImpactVoiceTag = "mon_5_impact_voice";*/
@@ -31,12 +31,12 @@ HRESULT CEM0800::Initialize(void * pArg)
 		m_iHP = m_iMaxHP;
 
 		m_iAtkDamage = 50;
-		iMonsterLevel = 2;
+		iEemeyLevel = 2;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eMonsterName = EEnemyName::EM0800;
+	m_eEnemyName = EEnemyName::EM0800;
 	m_bHasCrushGage = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(70.f));
 	m_fGravity = 20.f;
@@ -55,10 +55,6 @@ void CEM0800::SetUpComponents(void * pArg)
 
 	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeColl"),
 		(CComponent**)&m_pRange, pArg));
-
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("BodyColl"),
-		(CComponent**)&m_pBody))
-		
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM0800_Controller::Create();
@@ -81,41 +77,36 @@ void CEM0800::SetUpAnimationEvent()
 	CEnemy::SetUpAnimationEvent();
 
 	// Event Caller
-
-	//m_pModelCom->Add_EventCaller("Bite_Start", [this]
-	//{
-	//	//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Bite_OnHit")->Start_Attach(this, "Jaw", true);
-	//	m_SoundStore.PlaySound("mon_4_attack_bite", m_pTransformCom);
-	//	m_bAtkBite = true;
-	//});
-	//m_pModelCom->Add_EventCaller("Bite_End", [this]
-	//{
-	//	m_bAtkBite = false;
-	//	ClearDamagedTarget();
-	//});
-
-	/*m_pModelCom->Add_EventCaller("Laser_Create", [this] { m_bAtkLaser = true; });
-	m_pModelCom->Add_EventCaller("LaserSound_Start", [this] { m_SoundStore.PlaySound("mon_4_attack_laser", m_pTransformCom); });
-	m_pModelCom->Add_EventCaller("Laser_Finish", [this]
+	m_pModelCom->Add_EventCaller("Laser_Charge", [this]
 	{
-		m_bAtkLaser = false;
-		ClearDamagedTarget();
+		_matrix			PivotMatrix = XMMatrixIdentity();
+		PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Laser")->Start_AttachPivot(this, PivotMatrix, "Eff02", true, true, true);
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Laser_Mouth")->Start_Attach(this, "Eff02", true);
 	});
-*/
 
-	//m_pModelCom->Add_EventCaller("LaserEff_Start", [this]
-	//{
-	//	_matrix			PivotMatrix = XMMatrixIdentity();
-	//	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
-	//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Laser")->Start_AttachPivot(this, PivotMatrix, "Eff02", true, true, true);
+	m_pModelCom->Add_EventCaller("Laser_Launch", [this]
+	{
+		ClearDamagedTarget();
+		m_bLaser = true;
+	});
 
-	//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Laser_Mouth")->Start_Attach(this, "Eff02", true);
-	//});
-	//m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
-	//m_pModelCom->Add_EventCaller("Untouch", [this] { m_bUntouchable = true; });
-	//m_pModelCom->Add_EventCaller("Untouch_End", [this] { m_bUntouchable = false; });
+	//Bite 중 깨물었을때
+	m_pModelCom->Add_EventCaller("Bite", [this]
+	{
+		ClearDamagedTarget();
+		Bite_Overlap();
 
-	//m_pModelCom->Add_EventCaller("Groggy_End", [this] { m_bDown = false; });
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Bite_OnHit")->Start_Attach(this, "Jaw", true);
+		//m_SoundStore.PlaySound("mon_4_attack_bite", m_pTransformCom);
+	});
+
+	//Submergence에서 물위로 뛰어오르는 타이밍
+	m_pModelCom->Add_EventCaller("m_bComeUp", [this]
+	{
+		m_bComeUp = true;
+	});
 
 }
 
@@ -123,6 +114,13 @@ void CEM0800::SetUpFSM()
 {
 	CEnemy::SetUpFSM();
 
+	/*
+
+	L : Laser
+	S : Submergence
+	B : Bite
+
+	*/
 	m_pFSM = CFSMComponentBuilder()
 		.InitState("Idle")
 		.AddState("Idle")
@@ -136,10 +134,13 @@ void CEM0800::SetUpFSM()
 					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
 		
 			.AddTransition("Idle to Bite", "Bite")
-				.Predicator([this] { return m_eInput == CController::MOUSE_RB; })
+				.Predicator([this] { return m_eInput == CController::B; })
 
 			.AddTransition("Idle to Laser_Start", "Laser_Start")
-				.Predicator([this] { return m_eInput == CController::MOUSE_LB; })
+				.Predicator([this] { return m_eInput == CController::L; })
+
+			.AddTransition("Idle to Submergence", "Submergence")
+				.Predicator([this] { return m_eInput == CController::S; })
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -198,20 +199,12 @@ void CEM0800::SetUpFSM()
 				})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-
+	
+		//로컬 x, event에서 깨물때 데미지 처리
 		.AddState("Bite")
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0810_201_AL_atk_a1_bite");
-				ClearDamagedTarget();
-			})
-			.Tick([this](_double TimeDelta)
-			{
-				SocketLocalMove(m_pASM);
-			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
 			.AddTransition("Rush_Start to Idle", "Idle")
 				.Predicator([this]
@@ -219,64 +212,86 @@ void CEM0800::SetUpFSM()
 					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
-///////////////////////////////////////////////////////////////////////////////////////////
 
+		//로컬 x, event에서 레이서 충전, 시작 알림
 		.AddState("Laser_Start")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_214_AL_atk_a7_laser2_start");
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_208_AL_atk_a4_laser_start");
+			})
+			.Tick([this](_double)
+			{
+				if (m_bLaser)
+				{
+					Laser_SweepSphere();
+				}
 			})
 			.AddTransition("Laser_Start to Laser_Loop", "Laser_Loop")
 				.Predicator([this]
 			{
 				return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 			})
+
 		.AddState("Laser_Loop")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_215_AL_atk_a7_laser2_loop");
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_209_AL_atk_a4_laser_loop");
 				m_pModelCom->GetPlayAnimation()->SetLooping(true);
 				m_fLaserTime = 0.f;
 			})
 			.Tick([this](_double TimeDetla)
 			{
 				m_fLaserTime += TimeDetla;
+				Laser_SweepSphere();
 			})
 			.OnExit([this]
 			{
 				m_pASM->ClearSocketAnim("FullBody", 0.f);
+				m_bLaser = false;
 			})
 			.AddTransition("Laser_Loop to Laser_End", "Laser_End")
 				.Predicator([this]
 			{
 				return m_bDead || m_fLaserTime >= 3.f;
 			})
+
 		.AddState("Laser_End")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_216_AL_atk_a7_laser2_end");
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_210_AL_atk_a4_laser_end");
 			})
 			.AddTransition("Laser_End to Idle", "Idle")
 				.Predicator([this]
-			{
-				return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-			})
-
-///////////////////////////////////////////////////////////////////////////////////////////
-
-		.AddState("Threat")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_160_AL_threat");
-			})
-			.AddTransition("Threat to Idle", "Idle")
-				.Predicator([this]
 				{
 					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-			})
+				})
 
+		
+		//event에서 물위로 올라올때 알려줌(TICK에서 플레이어 바라보게)
+		.AddState("Submergence")
+				.OnStart([this]
+				{
+					m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_212_AL_atk_a6_circumference2");
+					ClearDamagedTarget();
+				})
+				.Tick([this](_double TimeDetla)
+				{
+					Submergence_Overlap();
 
-				///////////////////////////////////////////////////////////////////////////////////////////
+					if (m_bComeUp)
+						m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDetla);
+				})
+				.OnExit([this]
+				{
+					m_bComeUp = false;
+				})
+				.AddTransition("Submergence to Idle", "Idle")
+					.Predicator([this]
+					{
+						return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					})
+
+///////////////////////////////////////////////////////////////////////////////////////////
 
 		.Build();
 }
@@ -299,16 +314,17 @@ void CEM0800::Tick(_double TimeDelta)
 		m_pController->Invalidate();
 
 	//변수 업데이트
-	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
 	m_vMoveAxis.Normalize();
+	m_eTurn = m_pController->GetBaseTurn();
+	m_bTurn = m_pController->IsTurn();
 	m_eInput = m_pController->GetAIInput();
 
 	//ASM, FSM tick
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
 
-	const _float fMoveSpeed = 2.f;
+	const _float fMoveSpeed = 1.f;
 
 	if (m_vMoveAxis.LengthSquared() > 0.f)
 	{
@@ -396,6 +412,101 @@ void CEM0800::HeavyAttackPushStart()
 	}
 }
 
+EBaseTurn CEM0800::FindTargetDirection()
+{
+	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	
+	_float fAngle = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyLook), XMVector3Normalize(vTargetPos - vMyPos)));
+
+	//뒤에 있음
+	if (fAngle < 0)	
+	{
+		_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+		fAngle = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyRight), XMVector3Normalize(vTargetPos - vMyPos)));
+
+		if (fAngle > 0) //오른쪽에 있음
+			return EBaseTurn::TURN_RIGHT;
+		else
+			return EBaseTurn::TURN_LEFT;
+	}
+
+	return EBaseTurn::TURN_END;
+}
+
+void CEM0800::Bite_Overlap()
+{
+	_float fLength = 2.f;
+
+	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Jaw") * m_pTransformCom->Get_WorldMatrix();
+
+	_vector vBoneVector = BoneMatrix.r[3];
+	_float3 fBone = vBoneVector;
+
+	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	vMyLook = XMVectorSetY(vMyLook, 0.f);
+	_float3 fDest = vMyLook;
+
+	_float3 fFinish = { (fBone.x + fLength * fDest.x), fBone.y, (fBone.z + fLength * fDest.z) };
+
+	physx::PxOverlapHit hitBuffer[3];
+	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
+
+	SphereOverlapParams param;
+	param.fVisibleTime = 0.1f;
+	param.iTargetType = CTB_PLAYER;
+	param.fRadius = 1.3f;
+	param.vPos = XMVectorSetW(fFinish, 1.f);
+	param.overlapOut = &overlapOut;
+
+	if (CGameInstance::GetInstance()->OverlapSphere(param))
+	{
+		HitTargets(overlapOut, m_iAtkDamage * 2.f, EAttackType::ATK_HEAVY);
+	}
+}
+
+void CEM0800::Submergence_Overlap()
+{
+	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+	physx::PxOverlapHit hitBuffer[3];
+	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
+
+	SphereOverlapParams param;
+	param.fVisibleTime = 0.1f;
+	param.iTargetType = CTB_PLAYER;
+	param.fRadius = 3.f;
+	param.vPos = vMyPos;
+	param.overlapOut = &overlapOut;
+
+	if (CGameInstance::GetInstance()->OverlapSphere(param))
+	{
+		HitTargets(overlapOut, m_iAtkDamage * 2.f, EAttackType::ATK_TO_AIR);
+	}
+}
+
+void CEM0800::Laser_SweepSphere()
+{
+	Matrix mLaserMatrix = GetBoneMatrix("Weapon");
+	_float4 vLaserPos = _float4(mLaserMatrix.Translation().x, mLaserMatrix.Translation().y, mLaserMatrix.Translation().z, 1.f);
+
+	physx::PxSweepHit hitBuffer[5];
+	physx::PxSweepBuffer sweepOut(hitBuffer, 5);
+
+	SphereSweepParams Sparam;
+	Sparam.fVisibleTime = 0.f;
+	Sparam.iTargetType = CTB_PLAYER;
+	Sparam.fRadius = 1.4f;
+	Sparam.fDistance = 2.f;
+	Sparam.vPos = vLaserPos;
+	Sparam.sweepOut = &sweepOut;
+	Sparam.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
+	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
+		HitTargets(sweepOut, (rand() % 150) + 25, EAttackType::ATK_DOWN);
+}
+
 
 CEM0800 * CEM0800::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
@@ -427,5 +538,4 @@ void CEM0800::Free()
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pRange);
-	Safe_Release(m_pBody);
 }

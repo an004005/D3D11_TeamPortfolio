@@ -5,11 +5,11 @@
 #include "RigidBody.h"
 #include "EM0700_AnimInstance.h"
 #include "EM0700_Controller.h"
-#include "EnemyBullet.h"
+#include "RedBullet.h"
 CEM0700::CEM0700(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
-	m_eMonsterName = EEnemyName::EM0700;
+	m_eEnemyName = EEnemyName::EM0700;
 }
 
 CEM0700::CEM0700(const CEM0700 & rhs)
@@ -31,12 +31,12 @@ HRESULT CEM0700::Initialize(void * pArg)
 		m_iHP = 3000; // ¡Ú
 
 		m_iAtkDamage = 50;
-		iMonsterLevel = 2;
+		iEemeyLevel = 2;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eMonsterName = EEnemyName::EM0700;
+	m_eEnemyName = EEnemyName::EM0700;
 	m_bHasCrushGage = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_pTransformCom->SetSpeed(7.f);
@@ -547,9 +547,9 @@ void CEM0700::Rush(_double TimeDelta)
 
 void CEM0700::Shot()
 {
-	auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("EnemyBullet"));
+	auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_RedBullet"));
 
-	if (CEnemyBullet* pBullet = dynamic_cast<CEnemyBullet*>(pObj))
+	if (CRedBullet* pBullet = dynamic_cast<CRedBullet*>(pObj))
 	{
 		pBullet->Set_Owner(this);
 

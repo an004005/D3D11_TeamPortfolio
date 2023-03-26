@@ -21,7 +21,7 @@
 #include "VFX_Manager.h"
 #include "Imgui_Batch.h"
 
-#define ADD_PLAYER
+//#define ADD_PLAYER
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -77,8 +77,8 @@ HRESULT CLevel_EnemiesTest::Initialize()
 	if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_UI(TEXT("Layer_FrontUI"))))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_UI(TEXT("Layer_FrontUI"))))
+		return E_FAIL;*/
 
 	Ready_Layer_SASPortrait();
 
@@ -180,10 +180,10 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
 
 	//Json PreviewData;
 	//{
-	//	PreviewData["Model"] = "Prototype_Model_em1100";
+	//	PreviewData["Model"] = "Prototype_Model_em800";
 	//	PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
 	//	auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag.c_str(), TEXT("ModelPreview"), &PreviewData);
-	//
+
 	//}
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/tests.json");
@@ -230,7 +230,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 	//pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em700"))
 	//	->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(3.f, 2.f, 3.f, 1.f));
 
-	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em1100"))
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em800"))
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(3.f, 3.f, 3.f, 1.f));
 
 	return S_OK;

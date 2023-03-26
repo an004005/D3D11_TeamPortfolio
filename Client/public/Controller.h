@@ -77,6 +77,7 @@ public:
 		T,
 		W,
 		S,
+		L,
 		HANDLE_END
 	};
 protected:

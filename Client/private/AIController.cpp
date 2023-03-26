@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\public\AIController.h"
 #include "ScarletCharacter.h"
-
+#include "Enemy.h"
 AICommand::AICommand(const AICommand& other): m_Callback(other.m_Callback),
                                               m_fDuration(other.m_fDuration),
                                               m_strName(other.m_strName)
@@ -82,6 +82,13 @@ void CAIController::Tick(_double TimeDelta)
 			m_Commands.pop_front();
 		else
 			break;
+	}
+
+	//UI 처음 플레이어 발견
+	if ((m_eDistance == DIS_MIDDLE || m_eDistance == DIS_NEAR) && !m_bFirstFindTarget)
+	{
+		dynamic_cast<CEnemy*>(pOwner)->TurnEyesOut();
+		m_bFirstFindTarget = true;
 	}
 }
 

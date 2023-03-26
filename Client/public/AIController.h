@@ -111,7 +111,8 @@ protected:
 
 	_bool m_bActive = true;
 	
-
+	//UI 눈동자 생성
+	_bool	m_bFirstFindTarget = false;
 public:
 	virtual void Free() override;
 };

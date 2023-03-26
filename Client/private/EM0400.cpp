@@ -5,7 +5,6 @@
 #include "RigidBody.h"
 #include "EM0400_AnimInstance.h"
 #include "EM0400_Controller.h"
-#include "EnemyBullet.h"
 #include "PhysX_Manager.h"
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
@@ -13,7 +12,7 @@
 CEM0400::CEM0400(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
-	m_eMonsterName = EEnemyName::EM0400;
+	m_eEnemyName = EEnemyName::EM0400;
 }
 
 CEM0400::CEM0400(const CEM0400 & rhs)
@@ -31,17 +30,17 @@ HRESULT CEM0400::Initialize(void * pArg)
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
-		m_iMaxHP = 1100;
-		m_iHP = 1100; // ★
+		m_iMaxHP = 600;
+		m_iHP = 600; // ★
 
 		m_iAtkDamage = 50;
-		iMonsterLevel = 2;
+		iEemeyLevel = 2;
 		m_strBoneName = "RightShoulder";
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eMonsterName = EEnemyName::EM0400;
+	m_eEnemyName = EEnemyName::EM0400;
 	m_bHasCrushGage = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 

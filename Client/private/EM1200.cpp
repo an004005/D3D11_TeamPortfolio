@@ -1,26 +1,25 @@
 #include "stdafx.h"
-#include "..\public\EM1100.h"
+#include "..\public\EM1200.h"
 #include <FSMComponent.h>
 #include "JsonStorage.h"
 #include "RigidBody.h"
-#include "EM1100_AnimInstance.h"
-#include "EM1100_Controller.h"
-
-CEM1100::CEM1100(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+#include "EM1200_AnimInstance.h"
+#include "EM1200_Controller.h"
+CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
-	m_eEnemyName = EEnemyName::EM1100;
+	m_eEnemyName = EEnemyName::EM1200;
 }
 
-CEM1100::CEM1100(const CEM1100 & rhs)
+CEM1200::CEM1200(const CEM1200 & rhs)
 	: CEnemy(rhs)
 {
 }
 
-HRESULT CEM1100::Initialize(void * pArg)
+HRESULT CEM1200::Initialize(void * pArg)
 {
-	Json em1100_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1100/em1100Base.json");
-	pArg = &em1100_json;
+	//Json em1200_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1100/em1100Base.json");
+	//pArg = &em1200_json;
 
 	/*m_strDeathSoundTag = "mon_5_fx_death";
 	m_strImpactVoiceTag = "mon_5_impact_voice";*/
@@ -36,7 +35,7 @@ HRESULT CEM1100::Initialize(void * pArg)
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eEnemyName = EEnemyName::EM1100;
+	m_eEnemyName = EEnemyName::EM1200;
 	m_bHasCrushGage = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(120.f));
 
@@ -44,10 +43,10 @@ HRESULT CEM1100::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CEM1100::SetUpComponents(void * pArg)
+void CEM1200::SetUpComponents(void * pArg)
 {
 	CEnemy::SetUpComponents(pArg);
-	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em1100", L"Model", (CComponent**)&m_pModelCom));
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em1200", L"Model", (CComponent**)&m_pModelCom));
 
 	// 범위 충돌체(플레이어가 몬스터 위로 못 올라가게한다.)
 	/*Json FlowerLegRangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegRange.json");*/
@@ -60,22 +59,22 @@ void CEM1100::SetUpComponents(void * pArg)
 		
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
-	m_pController = CEM1100_Controller::Create();
+	m_pController = CEM1200_Controller::Create();
 	m_pController->Initialize(nullptr);
 	m_Components.emplace(L"Controller", m_pController);
 	Safe_AddRef(m_pController);
 	m_pController->SetOwner(this);
 
 	// ASM
-	m_pASM = CEM1100_AnimInstance::Create(m_pModelCom, this);
+	m_pASM = CEM1200_AnimInstance::Create(m_pModelCom, this);
 }
 
-void CEM1100::SetUpSound()
+void CEM1200::SetUpSound()
 {
 	CEnemy::SetUpSound();
 }
 
-void CEM1100::SetUpAnimationEvent()
+void CEM1200::SetUpAnimationEvent()
 {
 	CEnemy::SetUpAnimationEvent();
 	
@@ -123,7 +122,7 @@ void CEM1100::SetUpAnimationEvent()
 
 }
 
-void CEM1100::SetUpFSM()
+void CEM1200::SetUpFSM()
 {
 	CEnemy::SetUpFSM();
 
@@ -550,12 +549,12 @@ void CEM1100::SetUpFSM()
 		.Build();
 }
 
-void CEM1100::BeginTick()
+void CEM1200::BeginTick()
 {
 	CEnemy::BeginTick();
 }
 
-void CEM1100::Tick(_double TimeDelta)
+void CEM1200::Tick(_double TimeDelta)
 {
 	CEnemy::Tick(TimeDelta);
 
@@ -602,23 +601,23 @@ void CEM1100::Tick(_double TimeDelta)
 	ResetHitData();
 }
 
-void CEM1100::Late_Tick(_double TimeDelta)
+void CEM1200::Late_Tick(_double TimeDelta)
 {
 	CEnemy::Late_Tick(TimeDelta);
 }
 
-void CEM1100::AfterPhysX()
+void CEM1200::AfterPhysX()
 {
 	CEnemy::AfterPhysX();
 }
 
-HRESULT CEM1100::Render()
+HRESULT CEM1200::Render()
 {
 	m_pModelCom->Render(m_pTransformCom);
 	return S_OK;
 }
 
-void CEM1100::Imgui_RenderProperty()
+void CEM1200::Imgui_RenderProperty()
 {
 	CEnemy::Imgui_RenderProperty();
 	if (ImGui::CollapsingHeader("ASM"))
@@ -628,12 +627,12 @@ void CEM1100::Imgui_RenderProperty()
 	m_pFSM->Imgui_RenderProperty();
 }
 
-_bool CEM1100::IsPlayingSocket() const
+_bool CEM1200::IsPlayingSocket() const
 {
 	return m_pASM->isSocketEmpty("FullBody") == false;
 }
 
-//void CEM1100::Play_LightHitAnim()
+//void CEM1200::Play_LightHitAnim()
 //{
 //	if (m_eSimpleHitFrom == ESimpleAxis::NORTH)
 //		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_401_AL_damage_l_F");
@@ -641,7 +640,7 @@ _bool CEM1100::IsPlayingSocket() const
 //		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_402_AL_damage_l_B");
 //}
 
-void CEM1100::Play_MidHitAnim()
+void CEM1200::Play_MidHitAnim()
 {
 	switch (m_eHitFrom)
 	{
@@ -664,7 +663,7 @@ void CEM1100::Play_MidHitAnim()
 	}
 }
 
-void CEM1100::HeavyAttackPushStart()
+void CEM1200::HeavyAttackPushStart()
 {
 	if (m_eCurAttackType == EAttackType::ATK_MIDDLE || m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
 	{
@@ -677,7 +676,7 @@ void CEM1100::HeavyAttackPushStart()
 	}
 }
 
-_bool CEM1100::IsTargetFront()
+_bool CEM1200::IsTargetFront()
 {
 	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -693,7 +692,7 @@ _bool CEM1100::IsTargetFront()
 
 }
 
-void CEM1100::Rush_SweepCapsule()
+void CEM1200::Rush_SweepCapsule()
 {
 	_float4x4 HeadMatrix = m_pHead->GetPxWorldMatrix();
 	_float4 vHeadPos = _float4{ HeadMatrix.m[3][0], HeadMatrix.m[3][1], HeadMatrix.m[3][2], HeadMatrix.m[3][3] };
@@ -720,7 +719,7 @@ void CEM1100::Rush_SweepCapsule()
 	m_BeforePos = vHeadPos;
 }
 
-void CEM1100::TailSwing_SweepSphere()
+void CEM1200::TailSwing_SweepSphere()
 {
 	physx::PxSweepHit hitBuffer[3];
 	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
@@ -748,7 +747,7 @@ void CEM1100::TailSwing_SweepSphere()
 	m_BeforePos = vTailPos;
 }
 
-void CEM1100::Stamp_Overlap()
+void CEM1200::Stamp_Overlap()
 {	
 	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("RightHand") * m_pTransformCom->Get_WorldMatrix();
 
@@ -771,7 +770,7 @@ void CEM1100::Stamp_Overlap()
 	}
 }
 
-void CEM1100::Dodge_VelocityCalc()
+void CEM1200::Dodge_VelocityCalc()
 {
 	m_bDodge = true;
 	m_fGravity = 100.f;
@@ -786,7 +785,7 @@ void CEM1100::Dodge_VelocityCalc()
 	m_vOnJumpMoveVelocity = XMVector3TransformNormal(XMVector3Normalize(vDirection) * (fDistance / fJumpMoveTime), XMMatrixRotationY(fYaw));
 }
 
-void CEM1100::AfterLocal180Turn()
+void CEM1200::AfterLocal180Turn()
 {
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
@@ -795,31 +794,31 @@ void CEM1100::AfterLocal180Turn()
 }
 
 
-CEM1100 * CEM1100::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CEM1200 * CEM1200::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CEM1100* pInstance = new CEM1100(pDevice, pContext);
+	CEM1200* pInstance = new CEM1200(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CEM1100");
+		MSG_BOX("Failed to Created : CEM1200");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject * CEM1100::Clone(void * pArg)
+CGameObject * CEM1200::Clone(void * pArg)
 {
-	CEM1100*		pInstance = new CEM1100(*this);
+	CEM1200*		pInstance = new CEM1200(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CEM1100");
+		MSG_BOX("Failed to Cloned : CEM1200");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CEM1100::Free()
+void CEM1200::Free()
 {
 	CEnemy::Free();
 	Safe_Release(m_pASM);

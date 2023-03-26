@@ -4,22 +4,21 @@
 
 BEGIN(Client)
 
-class CEM0800_AnimInstance : public CEnemy_AnimInstance
+class CEM1200_AnimInstance : public CEnemy_AnimInstance
 {
 public:
 	virtual HRESULT Initialize(CModel* pModel, CGameObject* pGameObject) override;
 	virtual void UpdateTargetState(_double TimeDelta) override;
 
 private:
-	_bool		m_bMove = false;
+	_bool			m_bMove = false;
+	_bool			m_bRun = false;
 
-	_float3		m_vMoveAxis;
-	EBaseAxis	m_eMoveAxis = EBaseAxis::AXIS_END;
-	EBaseTurn	m_eTurn = EBaseTurn::TURN_END;
-	_bool		m_bTurn = false;
+	_float3 m_vMoveAxis;
+	EBaseAxis m_eMoveAxis = EBaseAxis::AXIS_END;
 
 public:
-	static CEM0800_AnimInstance* Create(CModel* pModel, CGameObject* pGameObject);
+	static CEM1200_AnimInstance* Create(CModel* pModel, CGameObject* pGameObject);
 	virtual void Free() override;
 };
 

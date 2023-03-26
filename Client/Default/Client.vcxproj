@@ -265,7 +265,10 @@
     <ClInclude Include="..\public\EM1100.h" />
     <ClInclude Include="..\public\EM1100_AnimInstance.h" />
     <ClInclude Include="..\public\EM1100_Controller.h" />
-    <ClInclude Include="..\public\EnemyBullet.h" />
+    <ClInclude Include="..\public\EM1200.h" />
+    <ClInclude Include="..\public\EM1200_AnimInstance.h" />
+    <ClInclude Include="..\public\EM1200_Controller.h" />
+    <ClInclude Include="..\public\RedBullet.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
     <ClInclude Include="..\public\FLInvisible_AnimInstance.h" />
@@ -397,7 +400,7 @@
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
-    <ClInclude Include="..\public\WaterBall.h" />
+    <ClInclude Include="..\public\OilBullet.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -490,7 +493,10 @@
     <ClCompile Include="..\private\EM1100.cpp" />
     <ClCompile Include="..\private\EM1100_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM1100_Controller.cpp" />
-    <ClCompile Include="..\private\EnemyBullet.cpp" />
+    <ClCompile Include="..\private\EM1200.cpp" />
+    <ClCompile Include="..\private\EM1200_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM1200_Controller.cpp" />
+    <ClCompile Include="..\private\RedBullet.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />
     <ClCompile Include="..\private\FLInvisible_AnimInstance.cpp" />
@@ -622,7 +628,7 @@
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
-    <ClCompile Include="..\private\WaterBall.cpp" />
+    <ClCompile Include="..\private\OilBullet.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
