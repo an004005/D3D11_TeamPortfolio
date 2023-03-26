@@ -244,6 +244,7 @@ void CTutorial_YesNoUI::InvisibleBox()
 	if (true == bCursor && true == bKeyDown)
 	{
 		m_bInvisible = true;
+		IM_LOG("CTutorial_YesNoUI : Button");
 	}
 }
 		

@@ -55,7 +55,7 @@ private:
 	void	Tips(const TIPS & eTIPS, const _tchar * pChildTag);
 
 private:
-	void	Success_Tick();
+	void	Success_Tick(const _double & TimeDelta);
 
 private:	// Tutorial
 	TUTORIAL	m_eTutorial = { TUTORIAL_END };
@@ -71,7 +71,7 @@ private:	// Tutorial
 	_bool		m_bCheckOpen = { false };
 	_bool		m_bCheckClose = { false };
 
-private:	// Tios
+private:	// Tips
 	TIPS		m_eTips = { TIPS_END };
 	_bool		m_arrTips[TIPS_END] = {};
 
@@ -79,6 +79,7 @@ private:	// Tios
 
 private:	// Success
 	_bool		m_bSuccess = { false };
+	_double		m_bSuccess_TimeAcc = { 0.0 };
 
 public:
 	static CCanvas_Tutorial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
