@@ -40,6 +40,11 @@ void CCanvas_Tutorial::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
+	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
+	{
+		CGameObject::SetDelete();
+	}
+
 	Tutorial_Tick();
 	Tips_Tick();
 	Success_Tick(TimeDelta);
@@ -97,11 +102,11 @@ void CCanvas_Tutorial::Tutorial_Tick()
 	case Client::CCanvas_Tutorial::LOCKON:
 		wsprintf(szTag, TEXT("Tutorial0"));
 		break;
-	case Client::CCanvas_Tutorial::FIGHTINGSTYLE1:
+	case Client::CCanvas_Tutorial::FIGHTINGSTYLE:
+	{
 		wsprintf(szTag, TEXT("Tutorial1"));
-		break;
-	case Client::CCanvas_Tutorial::FIGHTINGSTYLE2:
-		wsprintf(szTag, TEXT("Tutorial2"));
+
+	}
 		break;
 	case Client::CCanvas_Tutorial::SPECIALATTACK:
 		wsprintf(szTag, TEXT("Tutorial3"));
@@ -122,15 +127,18 @@ void CCanvas_Tutorial::Tutorial_Tick()
 
 void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChildTag)
 {
+	// 외부에서 m_arrTutorial[튜토리얼 타입] 을 true 로 변경하면 실행된다.
 	if (false == m_arrTutorial[eTUTORIAL])
 		return;
 
+	// 만약에 존재하지 않는 튜토리얼 이라면 메시지 박스를 띄운다. (예전에 테스트 용으로 하나만 만들어 놔서 다른 애들을 누를 때를 위한 예외처리 였다.)
 	if (nullptr == Find_ChildUI(pChildTag))
 	{
 		MSG_BOX("Objects Already Deleted");
 		return;
 	}
 
+	// 이제 위에서 Set 한 튜토리얼 타입을 Set 해준다.
 	if (false == m_bTutorialOpen)
 	{
 		m_bTutorialOpen = true;
@@ -139,16 +147,11 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 	}
 
 	vector<wstring> except { PLAYERTEST_LAYER_FRONTUI };
-	CGameInstance::GetInstance()->SetTimeRatio(0.05f, &except);
+	CGameInstance::GetInstance()->SetTimeRatio(0.0f, &except);
 
 	_bool	bInvisblePush = dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_InvisibleBox"))->Get_Invisible();
+
 	if (true == bInvisblePush)
-	{
-		IM_LOG("----------------true");
-
-	}
-
-	if (true == bInvisblePush || CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
 	{
 		if (false == m_bCheckOpen)
 		{
@@ -163,10 +166,15 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 		KeyInput_Yes();
 		KeyInput_No();
 		Check_Tick();
+
+		if (FIGHTINGSTYLE == m_arrTutorial[eTUTORIAL])
+		{
+			NextInput();
+		}
 	}
 
 	// 초기화
-	if (2 == m_iYesCount || CGameInstance::GetInstance()->KeyDown(DIK_0))
+	if (2 == m_iYesCount)
 	{
 		if (false == m_bCheckClose)
 		{
@@ -199,7 +207,7 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 			m_bCheckOpen = false;
 			m_bCheckClose = false;
 
-			CGameInstance::GetInstance()->ResetTimeRatio();
+			CGameInstance::GetInstance()->ResetDefaultTimeRatio();
 			SetDelete();
 		}
 	}
@@ -309,6 +317,11 @@ void CCanvas_Tutorial::KeyInput_No()
 		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon1"))->Set_Position(_float2(-51.0f, -52.0f));
 		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_Position(_float2(-49.0f, -52.0f));
 	}
+}
+
+void CCanvas_Tutorial::NextInput()
+{
+
 }
 
 void CCanvas_Tutorial::Tips_Tick()

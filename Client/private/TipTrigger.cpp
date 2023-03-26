@@ -44,6 +44,7 @@ void CTipTrigger::Imgui_RenderProperty()
 	_int iTutorial = m_eTutorialType;
 	ImGui::InputInt("Tutorial Type", &iTutorial);
 	m_eTutorialType = (CCanvas_Tutorial::TUTORIAL)iTutorial;
+
 }
 
 void CTipTrigger::TriggerInEvent(CGameObject* pObject)

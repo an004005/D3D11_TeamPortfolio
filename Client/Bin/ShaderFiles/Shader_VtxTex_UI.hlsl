@@ -1177,7 +1177,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_Alpha_Color();	// 색상 조정
+		PixelShader = compile ps_5_0 PS_Alpha_Color2();	// 색상 조정
 	}
 
 	//15: Texture 3장을 섞고, 외곽선을 뚜렸하게하고, UV 를 시계방향으로 조절 가능하다.

@@ -27,12 +27,15 @@ HRESULT CTutorial_YesNoUI::Initialize(void * pArg)
 		return E_FAIL;
 
 	// 0: 테두리 마름모 /1: 작은 마름로 /2: 화살표 /3: 보이지 않는다./ 4: No (-52) /5:Yes (-19)/ 
-	static _int iObjectCount;
+	static _int iObjectCount = 0;
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
 
 	if(2 == m_iObjectNumber)
 		m_tParams.Float4s[0].w = 0.0f;
+
+	if (6 == iObjectCount)
+		iObjectCount = 0;
 
 	return S_OK;
 }
