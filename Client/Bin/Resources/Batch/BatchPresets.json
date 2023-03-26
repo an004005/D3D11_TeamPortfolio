@@ -11,8 +11,33 @@
             "ProtoTag": "Monster_em320"
         },
         {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
+            "ProtoTag": "Monster_em750"
+        },
+        {
             "Layer": "Layer_MapKineticObject",
             "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Bench.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_pr_ConcreteBarriersA_01_lo.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Car01_B.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Car05.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Car02.json",
             "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
         },
         {
@@ -29,6 +54,11 @@
             "Layer" : "Layer_Trigger",
             "JsonPath": "",
             "ProtoTag" : "Prototype_SimpleTrigger"
+        },
+        {
+            "Layer" : "Layer_Trigger",
+            "JsonPath": "",
+            "ProtoTag" : "Prototype_TipTrigger"
         },
         {
             "Layer": "Layer_Kinetic",
@@ -54,6 +84,11 @@
             "Layer": "Layer_Map",
             "JsonPath": "",
             "ProtoTag": "Prototype_CapsuleLight"
+        },
+        {
+            "Layer": "Layer_Trigger",
+            "JsonPath": "",
+            "ProtoTag": "Prototype_PlayerStartPosition"
         }
     ]
 }

@@ -184,6 +184,9 @@ public:/*for GameTimeManager */
 	void ResetTimeRatio();
 	void SetTimeRatioCurve(const string& strCurveTag, _bool bStay = false, const vector<wstring>* ExceptLayers = nullptr);
 	void SetTimeRatio(_float fTimeRatio, const vector<wstring>* ExceptLayers = nullptr);
+	void SetLayerTimeRatio(_float fLayerTimeRatio, const wstring& strLayerTag);
+	void ResetDefaultTimeRatio();
+	void ClearAllTimeRatio();
 
 public: // for CImgui_Manager
 	void Render_ImGui();

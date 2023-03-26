@@ -153,6 +153,14 @@ void CMaterial::Imgui_RenderProperty()
 
 }
 
+void CMaterial::Tick(_double TimeDelta)
+{
+	if (m_pShader)
+		m_pShader->Tick(TimeDelta);
+	if (m_pShaderInstancing)
+		m_pShaderInstancing->Tick(TimeDelta);
+}
+
 void CMaterial::BindMatrices(CTransform* pTransform)
 {
 	FAILED_CHECK(pTransform->Bind_ShaderResource(m_pShader, "g_WorldMatrix"));

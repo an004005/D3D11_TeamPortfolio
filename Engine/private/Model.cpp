@@ -97,6 +97,12 @@ CModel::CModel(const CModel & rhs)
 	Safe_AddRef(m_pShadowShader);
 }
 
+void CModel::Tick(_double TimeDelta)
+{
+	for (auto pMtrl : m_Materials)
+		pMtrl->Tick(TimeDelta);
+}
+
 const _float3* CModel::Get_VerticesPos()
 {
 	return m_Meshes.front()->Get_VerticesPos();
