@@ -13,6 +13,11 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
 
+	void Active(_bool bActive) { m_bActive = bActive; }
+
+private:
+	_bool m_bActive = false;
+
 public:
 	DECLARE_CREATE(CPostVFX_Penetrate)
 	DECLARE_CLONE(CPostVFX_Penetrate)

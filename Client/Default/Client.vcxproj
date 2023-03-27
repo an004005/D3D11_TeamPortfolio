@@ -282,6 +282,8 @@
     <ClInclude Include="..\public\GameManager.h" />
     <ClInclude Include="..\public\PlayerStartPosition.h" />
     <ClInclude Include="..\public\PointLight.h" />
+    <ClInclude Include="..\public\PostVFX_SuperSpeed.h" />
+    <ClInclude Include="..\public\PostVFX_Teleport.h" />
     <ClInclude Include="..\public\SAS_Cable.h" />
     <ClInclude Include="..\public\SpecialObject.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -382,6 +384,7 @@
     <ClInclude Include="..\public\Special_TelephonePole.h" />
     <ClInclude Include="..\public\Special_Train.h" />
     <ClInclude Include="..\public\SpawnTrigger.h" />
+    <ClInclude Include="..\public\SuperSpeedTrail.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\TestCamera.h" />
     <ClInclude Include="..\public\TestTarget.h" />
@@ -513,6 +516,8 @@
     <ClCompile Include="..\private\GameManager.cpp" />
     <ClCompile Include="..\private\PlayerStartPosition.cpp" />
     <ClCompile Include="..\private\PointLight.cpp" />
+    <ClCompile Include="..\private\PostVFX_SuperSpeed.cpp" />
+    <ClCompile Include="..\private\PostVFX_Teleport.cpp" />
     <ClCompile Include="..\private\SAS_Cable.cpp" />
     <ClCompile Include="..\private\SpecialObject.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -613,6 +618,7 @@
     <ClCompile Include="..\private\Special_TelephonePole.cpp" />
     <ClCompile Include="..\private\Special_Train.cpp" />
     <ClCompile Include="..\private\SpawnTrigger.cpp" />
+    <ClCompile Include="..\private\SuperSpeedTrail.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\TestCamera.cpp" />
     <ClCompile Include="..\private\TestTarget.cpp" />

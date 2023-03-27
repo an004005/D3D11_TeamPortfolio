@@ -541,6 +541,9 @@
     <ClInclude Include="..\public\PxModel.h">
       <Filter>01.Utility\03.Components\06.Model</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\LambdaRenderObject.h">
+      <Filter>81.Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -855,6 +858,9 @@
     </ClCompile>
     <ClCompile Include="..\private\PxModel.cpp">
       <Filter>01.Utility\03.Components\06.Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LambdaRenderObject.cpp">
+      <Filter>81.Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
