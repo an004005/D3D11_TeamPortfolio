@@ -63,13 +63,13 @@ void CEM0800::SetUpComponents(void * pArg)
 	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("TrunkColl"),
 		(CComponent**)&m_pTrunk, &BronJonJaw));
 
-	// m_pLeftArm : LeftArm HitBox
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("LeftArm"),
-		(CComponent**)&m_pWeak[static_cast<_int>(EEnemyWeak::LEFT)], &BronJonArm_L));
+	//// m_pLeftArm : LeftArm HitBox
+	//FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("LeftArm"),
+	//	(CComponent**)&m_pWeak[static_cast<_int>(EEnemyWeak::LEFT)], &BronJonArm_L));
 
-	// m_pRightArm : RightArm HitBox
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RightArm"),
-		(CComponent**)&m_pWeak[static_cast<_int>(EEnemyWeak::RIGHT)], &BronJonArm_R));
+	//// m_pRightArm : RightArm HitBox
+	//FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RightArm"),
+	//	(CComponent**)&m_pWeak[static_cast<_int>(EEnemyWeak::RIGHT)], &BronJonArm_R));
 
 
 
@@ -381,8 +381,8 @@ void CEM0800::AfterPhysX()
 	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	m_pRange->Update_Tick(WorldMatrix);
 	m_pTrunk->Update_Tick(m_pModelCom->GetBoneMatrix("Eff02") * WorldMatrix);
-	m_pWeak[static_cast<_int>(EEnemyWeak::LEFT)]->Update_Tick(m_pModelCom->GetBoneMatrix("LeftForeArm") * WorldMatrix);
-	m_pWeak[static_cast<_int>(EEnemyWeak::RIGHT)]->Update_Tick(m_pModelCom->GetBoneMatrix("RightForeArm") * WorldMatrix);
+	/*m_pWeak[static_cast<_int>(EEnemyWeak::LEFT)]->Update_Tick(m_pModelCom->GetBoneMatrix("LeftForeArm") * WorldMatrix);
+	m_pWeak[static_cast<_int>(EEnemyWeak::RIGHT)]->Update_Tick(m_pModelCom->GetBoneMatrix("RightForeArm") * WorldMatrix);*/
 }
 
 HRESULT CEM0800::Render()
