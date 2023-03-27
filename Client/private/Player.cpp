@@ -332,6 +332,9 @@ void CPlayer::Tick(_double TimeDelta)
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, false);
 		static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
 
+		if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
+			static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Kinetic(false);
+
 		m_pCurve = nullptr;
 		for (auto& iter : m_pModel->GetMaterials())
 		{

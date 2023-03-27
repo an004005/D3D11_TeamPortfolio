@@ -370,7 +370,7 @@ void CMapKinetic_Object::SetParticle()
 
 void CMapKinetic_Object::ReleaseParticle()
 {
-	if (nullptr != m_pParticle)
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pParticle))
 		m_pParticle->SetDelete();
 }
 
