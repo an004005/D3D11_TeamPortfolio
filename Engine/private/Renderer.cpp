@@ -84,6 +84,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 		return E_FAIL;
 	if (FAILED(Render_Blend()))
 		return E_FAIL;
+	if (FAILED(Render_Decal()))
+		return E_FAIL;
 	if (FAILED(Render_NonLight()))
 		return E_FAIL;
 	if (FAILED(Render_AlphaBlend()))
@@ -180,15 +182,15 @@ HRESULT CRenderer::Initialize_Prototype()
 	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_OutlineFlag"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, &_float4(0.f, 0.f, 0.f, 0.f)));
 
 
-	/* For.Target_Diffuse_Copy */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Diffuse_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.0f, 0.0f, 0.f))))
-		return E_FAIL;
-	/* For.Target_Normal_Copy */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Normal_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(1.f, 1.f, 1.f, 1.f))))
-		return E_FAIL;
-	/* For.Target_Depth_Copy */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Depth_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(0.f, 1.f, 0.f, 1.f))))
-		return E_FAIL;	
+	///* For.Target_Diffuse_Copy */
+	//if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Diffuse_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.0f, 0.0f, 0.f))))
+	//	return E_FAIL;
+	///* For.Target_Normal_Copy */
+	//if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Normal_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(1.f, 1.f, 1.f, 1.f))))
+	//	return E_FAIL;
+	///* For.Target_Depth_Copy */
+	//if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Depth_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(0.f, 1.f, 0.f, 1.f))))
+	//	return E_FAIL;	
 
 	/* For.Target_Shade */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Shade"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, &_float4(0.0f, 0.0f, 0.0f, 1.f))))
@@ -471,23 +473,6 @@ HRESULT CRenderer::Render_NonAlphaBlend()
 		m_RenderObjects[RENDER_NONALPHABLEND].clear();
 	}
 
-	{
-		// Decal Rendering 하기위해서 기존 diffuse, normal, depth를 복사해 SRV로 사용한다.
-		m_pTarget_Manager->CopyRenderTarget(m_pContext, L"Target_Diffuse_Copy", L"Target_Diffuse");
-		m_pTarget_Manager->CopyRenderTarget(m_pContext, L"Target_Normal_Copy", L"Target_Normal");
-		m_pTarget_Manager->CopyRenderTarget(m_pContext, L"Target_Depth_Copy", L"Target_Depth");
-
-		for (auto& pGameObject : m_RenderObjects[RENDER_DECAL])
-		{
-			if (nullptr != pGameObject)
-				pGameObject->Render();
-
-			Safe_Release(pGameObject);
-		}
-
-		m_RenderObjects[RENDER_DECAL].clear();
-	}
-
 	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext, TEXT("MRT_Deferred"))))
 		return E_FAIL;
 
@@ -709,6 +694,7 @@ HRESULT CRenderer::Render_PostProcess()
 	m_pContext->OMGetRenderTargets(1, &pBackBufferView, &pDepthStencilView);
 	m_pContext->GSSetShader(nullptr, nullptr, 0);
 
+	m_pShader_PostProcess->Tick(TIME_DELTA);
 
 	if (m_RenderObjects[POSTPROCESS_VFX].empty() == false)
 	{
@@ -731,8 +717,8 @@ HRESULT CRenderer::Render_PostProcess()
 			return E_FAIL;
 		if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_DepthTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Depth")))))
 			return E_FAIL;
-		if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_DepthMaintainTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Depth_Maintain")))))
-			return E_FAIL;
+		//if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_DepthMaintainTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Depth_Maintain")))))
+		//	return E_FAIL;
 		if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_PortraitTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Portrait")))))
 			return E_FAIL;
 		m_pShader_PostProcess->Set_RawValue("g_iWinCX", &ViewPortDesc.Width, sizeof(_float));
@@ -805,6 +791,27 @@ HRESULT CRenderer::Render_UI()
 
 	m_RenderObjects[RENDER_UI].clear();
 
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Decal()
+{
+	{
+		// Decal Rendering 하기위해서 기존 diffuse, normal, depth를 복사해 SRV로 사용한다.
+		// m_pTarget_Manager->CopyRenderTarget(m_pContext, L"Target_Diffuse_Copy", L"Target_Diffuse");
+		// m_pTarget_Manager->CopyRenderTarget(m_pContext, L"Target_Normal_Copy", L"Target_Normal");
+		// m_pTarget_Manager->CopyRenderTarget(m_pContext, L"Target_Depth_Copy", L"Target_Depth");
+
+		for (auto& pGameObject : m_RenderObjects[RENDER_DECAL])
+		{
+			if (nullptr != pGameObject)
+				pGameObject->Render();
+
+			Safe_Release(pGameObject);
+		}
+
+		m_RenderObjects[RENDER_DECAL].clear();
+	}
 	return S_OK;
 }
 

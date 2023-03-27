@@ -11,7 +11,7 @@
 CEM0200::CEM0200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
 {
-	m_eMonsterName = EEnemyName::EM0200;
+	m_eEnemyName = EEnemyName::EM0200;
 }
 
 CEM0200::CEM0200(const CEM0200& rhs)
@@ -36,12 +36,12 @@ HRESULT CEM0200::Initialize(void* pArg)
 		m_bHasCrushGage = false;
 
 		m_iAtkDamage = 50;
-		iMonsterLevel = 2;
+		iEemeyLevel = 2;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eMonsterName = EEnemyName::EM0200;
+	m_eEnemyName = EEnemyName::EM0200;
 	m_bHasCrushGage = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 
@@ -491,7 +491,9 @@ void CEM0200::SetUpFSM()
 				{
 					return m_bDead
 					|| m_pASM->isSocketPassby("FullBody", 0.95f)
-					|| (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
+					|| (m_eCurAttackType != EAttackType::ATK_LIGHT 
+						&& m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP 
+						&& m_eCurAttackType != EAttackType::ATK_END);
 				})
 
 

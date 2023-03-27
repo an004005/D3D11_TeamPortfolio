@@ -42,6 +42,9 @@
 #include "GameManager.h"
 #include "PostVFX_ColorGrading.h"
 #include "PlayerStartPosition.h"
+#include "PostVFX_Teleport.h"
+#include "PostVFX_SuperSpeed.h"
+#include "SuperSpeedTrail.h"
 #include "Item_Manager.h"
 
 CMainApp::CMainApp()
@@ -179,6 +182,19 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_Penetrate"),
 		CPostVFX_Penetrate::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	/* For. ProtoPostVFX_Teleport */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_Teleport"),
+		CPostVFX_Teleport::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For. ProtoPostVFX_SuperSpeed */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_SuperSpeed"),
+		CPostVFX_SuperSpeed::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For. Prototype_Component_SuperSpeedTrail */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_SuperSpeedTrail"),
+		CSuperSpeedTrail::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
@@ -240,10 +256,13 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxTex.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_Shader_VtxModel*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements))))
-		return E_FAIL;
+	{
+		/* For.Prototype_Component_Shader_VtxModel*/
+		auto pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements);
+		pShader->SetCommonTexture("g_KineticWave", "../Bin/Resources/Texture/VFX/T_ef_scl_noi_054.png");
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"), pShader)))
+			return E_FAIL;
+	}
 
 	/* For.Prototype_Component_Shader_VtxModel_Instancing*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel_Instancing"),
@@ -257,6 +276,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		pShader->SetCommonTexture("g_Vanish_Noise", "../Bin/Resources/Model/AnimModel/Monster/Common/Texture/T_em0000_vanish_noise.png");
 		pShader->SetCommonTexture("g_Weak_Noise", "../Bin/Resources/Model/AnimModel/Monster/Common/Texture/T_em0000_weak_noise.png");
 		pShader->SetCommonTexture("g_WaveTile", "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_Wave_Tile_00.dds");
+		pShader->SetCommonTexture("g_scl_noise_004", "../Bin/Resources/Texture/VFX/T_ef_ev_scl_noi_004.png");
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimModel"), pShader)))
 			return E_FAIL;
 	}
@@ -265,6 +285,8 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		/* For.Prototype_Component_Shader_VtxToonAnimModel*/
 		auto pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxToonAnimModel.hlsl"), VTXANIMMODEL_DECLARATION::Elements, VTXANIMMODEL_DECLARATION::iNumElements);
 		pShader->SetCommonTexture("g_WaveTile", "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_Wave_Tile_00.dds");
+		pShader->SetCommonTexture("g_scl_noise_030", "../Bin/Resources/Texture/VFX/T_ef_scl_noi_030.png");
+		pShader->SetCommonTexture("g_scl_noise_004", "../Bin/Resources/Texture/VFX/T_ef_ev_scl_noi_004.png");
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxToonAnimModel"), pShader)))
 			return E_FAIL;
 	}

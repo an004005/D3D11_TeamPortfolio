@@ -11,7 +11,7 @@
 #include "EM0320_Controller.h"
 #include "FSMComponent.h"
 
-#include "WaterBall.h" // Oil_Bullet
+#include "OilBullet.h" // Oil_Bullet
 #include "VFX_Manager.h"
 
 #include "Canvas_Alarm.h"
@@ -41,12 +41,12 @@ HRESULT CEM0320::Initialize(void* pArg)
 		m_bHasCrushGage = false;
 
 		m_iAtkDamage = 200;
-		iMonsterLevel = 7;
+		iEemeyLevel = 7;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eMonsterName = EEnemyName::EM0320;
+	m_eEnemyName = EEnemyName::EM0320;
 	m_bHasCrushGage = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(100.f));
 
@@ -622,8 +622,8 @@ void CEM0320::CheckHP(DAMAGE_PARAM& tDamageParams)
 
 void CEM0320::FireWaterBall()
 {
-	auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_WaterBall"));		
-	if (CWaterBall* pBullet = dynamic_cast<CWaterBall*>(pObj))
+	auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_OilBullet"));		
+	if (COilBullet* pBullet = dynamic_cast<COilBullet*>(pObj))
 	{
 		pBullet->Set_Owner(this);
 
@@ -636,14 +636,14 @@ void CEM0320::FireWaterBall()
 
 		if (m_b2ndPhase)
 		{
-			auto pBulletLeft = dynamic_cast<CWaterBall*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_WaterBall")));
+			auto pBulletLeft = dynamic_cast<COilBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_OilBullet")));
 			pBulletLeft->Set_Owner(this);
 			pBulletLeft->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vSpawnPos);
 			pBulletLeft->GetTransform()->LookAt(m_LastSpotTargetPos);
 			pBulletLeft->GetTransform()->Turn_Fixed(pBulletLeft->GetTransform()->Get_State(CTransform::STATE_UP), -XMConvertToRadians(fangle));
 			pBulletLeft->SetDamage(m_iAtkDamage);
 
-			auto pBulletRight = dynamic_cast<CWaterBall*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_WaterBall")));
+			auto pBulletRight = dynamic_cast<COilBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_OilBullet")));
 			pBulletRight->Set_Owner(this);
 			pBulletRight->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vSpawnPos);
 			pBulletRight->GetTransform()->LookAt(m_LastSpotTargetPos);

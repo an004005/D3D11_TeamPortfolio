@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "WaterBall.h"
+#include "OilBullet.h"
 
 #include "GameInstance.h"
 #include "MathUtils.h"
@@ -13,22 +13,22 @@
 #include "Player.h"
 #include "VFX_Manager.h"
 
-CWaterBall::CWaterBall(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+COilBullet::COilBullet(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBullet(pDevice, pContext)
 {
 }
 
-CWaterBall::CWaterBall(const CWaterBall & rhs)
+COilBullet::COilBullet(const COilBullet & rhs)
 	: CBullet(rhs)
 {
 }
 
-HRESULT CWaterBall::Initialize_Prototype()
+HRESULT COilBullet::Initialize_Prototype()
 {
 	return CBullet::Initialize_Prototype();
 }
 
-HRESULT CWaterBall::Initialize(void * pArg)
+HRESULT COilBullet::Initialize(void * pArg)
 {
 	FAILED_CHECK(CBullet::Initialize(pArg));
 
@@ -52,12 +52,12 @@ HRESULT CWaterBall::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CWaterBall::BeginTick()
+void COilBullet::BeginTick()
 {
 	CBullet::BeginTick();
 }
 
-void CWaterBall::Tick(_double TimeDelta)
+void COilBullet::Tick(_double TimeDelta)
 {
 	CBullet::Tick(TimeDelta);
 	if (m_fLife > 0.f)
@@ -96,31 +96,31 @@ void CWaterBall::Tick(_double TimeDelta)
 	}
 }
 
-CWaterBall * CWaterBall::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+COilBullet * COilBullet::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CWaterBall* pInstance = new CWaterBall(pDevice, pContext);
+	COilBullet* pInstance = new COilBullet(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CWaterBall");
+		MSG_BOX("Failed to Created : COilBullet");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject * CWaterBall::Clone(void * pArg)
+CGameObject * COilBullet::Clone(void * pArg)
 {
-	CWaterBall*		pInstance = new CWaterBall(*this);
+	COilBullet*		pInstance = new COilBullet(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CWaterBall");
+		MSG_BOX("Failed to Cloned : COilBullet");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CWaterBall::Free()
+void COilBullet::Free()
 {
 	__super::Free();
 

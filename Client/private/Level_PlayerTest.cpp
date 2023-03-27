@@ -419,6 +419,7 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Player(const _tchar* pLayerTag)
 
 	CGameObject* pPlayer = nullptr;
 	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Player"), &PreviewData));
+	pPlayer->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(-5.f, 2.f, 5.f, 1.f));
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
 
@@ -446,7 +447,7 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/KineticTestMap.json");
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json"); // Map_ConstructionSite3F
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Subway.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
@@ -567,6 +568,7 @@ HRESULT CLevel_PlayerTest::Ready_Effect(const _tchar * pLayerTag)
 
 	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
+
 
 	return S_OK;
 }

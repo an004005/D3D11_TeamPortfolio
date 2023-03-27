@@ -107,7 +107,7 @@ PS_OUT PS_MAIN(PS_IN In)
 		// float2 TiltingUV = TilingAndOffset(In.vTexUV, float2(40.f, 40.f), float2( 0.f, 0.f));
 
 
-		float4 ScifiTex = g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, float2(30.f, 1.f), float2(g_Time * 0.1f, g_Time)) );
+		float4 ScifiTex = g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(g_Time * 0.1f, g_Time)) );
 		float fWeight = ScifiTex.r * g_float_0;
 
 		float4 ScifiNoiseTex = g_tex_1.Sample(LinearSampler, (In.vTexUV + fWeight));
@@ -344,9 +344,9 @@ PS_OUT PS_MAIN_Penetate_8(PS_IN In)
 	if (fRadius >= 0.45f)
 	{
 		float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
-		float2 distortionUV = randomNormal * 0.1f + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time * 0.1f));
+		float2 distortionUV = randomNormal * g_float_0 * 0.3f + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time * 0.2f));
 		float4 DistortionTex = g_tex_0.Sample(LinearSampler, distortionUV);
-		float fWeight = DistortionTex.r * 0.1f;
+		float fWeight = DistortionTex.r * g_float_0 * g_float_1;
 
 		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, (In.vTexUV + fWeight));
 
@@ -427,6 +427,73 @@ PS_OUT PS_MAIN_Portrait_9(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_Teleport_10(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 vFlags = g_FlagTexture.Sample(PointSampler, In.vTexUV);
+	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.a = 1.f;
+
+	float alpha = vFlags.a;
+
+	if (vFlags.z == SHADER_TOON_GRAY_INGNORE && alpha > 0.f)
+	{
+		float3 colorNoise = g_tex_0.Sample(LinearSampler, In.vTexUV * 50.f).rgb;
+		Out.vColor.rgb *= colorNoise;
+	}
+
+	return Out;
+}
+
+PS_OUT PS_MAIN_SuperSpeed_11(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 vFlags = g_FlagTexture.Sample(PointSampler, In.vTexUV);
+	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (vFlags.z != SHADER_TOON_GRAY_INGNORE)
+	{
+		float fRadius = length(In.vTexUV - float2(0.5f, 0.5f));
+		if (fRadius >= 0.35f)
+		{
+			float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
+			float2 distortionUV = randomNormal * g_float_0 * 0.3f + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time * 0.4f));
+			float4 DistortionTex = g_tex_0.Sample(LinearSampler, distortionUV);
+			float fWeight = DistortionTex.r * g_float_0 * g_float_1;
+		
+			float4 OriginColor = g_LDRTexture.Sample(LinearSampler, (In.vTexUV + fWeight));
+		
+			float fRatio = Remap(fRadius, float2(0.35f, 0.707f), float2(0.f, 1.f));
+		
+			Out.vColor = lerp(Out.vColor, OriginColor, fRatio);
+		}
+
+		float blend = g_float_0 * 0.5f; // 0.5를 최대 값으로 사용하기 위함
+
+		float COLORS = 16.f; // LUT 가로 개수?
+
+		float maxColor = COLORS - 1.0;
+		float4 col = Out.vColor;
+		float halfColX = 0.5f / 256.f; // LUT텍스쳐 가로 픽셀 사이즈
+		float halfColY = 0.5f / 16.f; // LUT텍스쳐 세로 픽셀 사이즈
+		float threshold = maxColor / COLORS;
+
+		float xOffset = halfColX + col.r * threshold / COLORS;
+		float yOffset = halfColY + col.g * threshold;
+		float cell = floor(col.b * maxColor);
+
+		float2 lutPos = float2(cell / COLORS + xOffset, yOffset);
+		float4 gradedCol = g_tex_2.Sample(LinearSampler, lutPos);
+		 
+		Out.vColor = lerp(col, gradedCol, blend);
+
+		Out.vColor.a = 1.f;
+	}
+
+	return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -565,5 +632,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_Portrait_9();
+	}
+
+	//10
+	pass Teleport_10
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_Teleport_10();
+	}
+
+	//11
+	pass SuperSpeed_11
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_SuperSpeed_11();
 	}
 }

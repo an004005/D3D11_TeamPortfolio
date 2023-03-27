@@ -216,7 +216,7 @@ if(Event == "Air_Hold_2")
 em0100 
 
 
-
+Decal 그룹 작업 후 호스맨 마저 작업
 
 
 

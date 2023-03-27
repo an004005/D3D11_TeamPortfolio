@@ -4,7 +4,7 @@
 #include "JsonStorage.h"
 #include "EffectSystem.h"
 #include "VFX_Manager.h"
-#include "Monster.h"
+#include "Enemy.h"
 
 // Monster Name : m_pGroup->GetThirdEffect()->GetParams().Float2s[0]
 // x : 1~20 레벨 입력할 때 (-1) 해서 넣어주면 된다. ex) 레벨 1을 주고 싶다면 1을 넣고, 내부에서는 x에 (-1) = 0을 넣어주면 결과로 레벨 1 출력
@@ -73,16 +73,13 @@ void CMonsterHpUI::Tick(_double TimeDelta)
 	
 	if (m_pGroup == nullptr || m_pOwner == nullptr) return;
 	
-	if (dynamic_cast<CMonster*>(m_pOwner)->IsDead())
+	if (dynamic_cast<CEnemy*>(m_pOwner)->IsDead())
 	{
 		m_bDelete = true;
 		return;
 	}
 
-	_uint iHp = dynamic_cast<CMonster*>(m_pOwner)->GetHP();
-	_uint iMaxHp = dynamic_cast<CMonster*>(m_pOwner)->GetMaxHP();
-
-	m_fRatio = (_float)iHp / (_float)iMaxHp;
+	m_fRatio = dynamic_cast<CEnemy*>(m_pOwner)->GetHpRatio();
 	m_fHpBack = m_fRatio;
 	m_pGroup->GetThirdEffect()->GetParams().Floats[0] = m_fRatio;
 

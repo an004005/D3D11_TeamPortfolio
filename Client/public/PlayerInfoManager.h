@@ -42,6 +42,8 @@ typedef struct tagPlayerStatus
 	_uint iDefense = { 0 };
 	_uint iBP = { 0 };
 
+	_float m_fBaseAttackDamage;
+
 	ESASType m_eAttack_SAS_Type;
 
 	array<SAS_GAGE, SAS_CNT> Sasese{};
@@ -127,6 +129,8 @@ public:	// Set
 	void			Set_SasType(ESASType eType);
 	void			Finish_SasType(ESASType eType);
 
+	void			Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasType, _float iChangeEnergy);
+
 	HRESULT			Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
@@ -149,6 +153,9 @@ private:	// 상호작용 관련
 	CGameObject*	m_pKineticObject;
 	CGameObject*	m_pTargetedMonster;
 	CGameObject*	m_pSpecialObject;
+
+private:
+	_float			m_fBaseAttackDamage;
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

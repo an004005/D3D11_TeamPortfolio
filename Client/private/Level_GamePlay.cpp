@@ -175,17 +175,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Tutorial.json");
+	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
 
-	Json PreviewData;
-
-	{
-		PreviewData["Model"] = "Prototype_Model_em750";
-		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
-		auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
-	}
+	// Json PreviewData;
+	//
+	// {
+	// 	PreviewData["Model"] = "Prototype_Model_em750";
+	// 	PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
+	// 	auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
+	// }
 
 	return S_OK;
 }
@@ -273,13 +274,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect()
 	Json Distortion = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Distortion/Distortion_PostVFX.json");
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Distortion", &Distortion);
 
-	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"Prototype_PostVFX_ColorGrading");
+	Json ColorGrading = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/ColorGrading.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"Prototype_PostVFX_ColorGrading", &ColorGrading);
 
 
 	Json Penetrate = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Penetrate.json");
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Penetrate", &Penetrate);
 
-	
+	Json Teleport = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Teleport.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_Teleport", &Teleport);
+
+	Json SuperSpeed = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/SuperSpeed.json");
+	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"ProtoPostVFX_SuperSpeed", &SuperSpeed);
+
 	return S_OK;
 }
 

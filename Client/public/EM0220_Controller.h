@@ -33,9 +33,6 @@ private:
 
 private:
 	class CEM0220* m_pCastedOwner = nullptr;
-
-private:
-	_float m_fToTargetDistance;
 	
 public:
 	static CEM0220_Controller* Create();

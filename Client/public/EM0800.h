@@ -11,8 +11,7 @@ END
 
 BEGIN(Client)
 
-// 초(고속)파리 :: 방도 팡뒤(Bangdo Fandu)
-
+// 브론존
 class CEM0800 : public CEnemy
 {
 private:
@@ -38,36 +37,43 @@ public:
 	//행동 관련 함수 정의
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
-	_float GetTurnRemain() const { return m_fTurnRemain; }
 	_bool IsPlayingSocket() const;
+	_bool	IsTurn() { return m_bTurn; }
+	EBaseTurn GetBaseTurn() { return m_eTurn; }
 
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
 
+	EBaseTurn FindTargetDirection();
 private:
 	//충돌 관련 함수 정의
+	void Bite_Overlap();
+	void Submergence_Overlap();
+	void Laser_SweepSphere();
 
 private:
 	class CEM0800_Controller*		m_pController = nullptr;
 	class CEM0800_AnimInstance*		m_pASM = nullptr;
 
-	//충돌
-	CRigidBody*				m_pRange = nullptr;
-	CRigidBody*				m_pBody = nullptr;
+	unordered_map<string, CRigidBody*> m_pRigidBodies;
+
+	CEffectGroup*				m_pWaterPool = nullptr;
 
 private:
 	_float3						m_vMoveAxis;
-	_float						m_fTurnRemain = 0.f;
-	_bool						m_bHitAir = false;
-	
-	// HitDir
-	_bool		m_bHitMove = false;
+	EBaseTurn					m_eTurn = EBaseTurn::TURN_END;
+	_bool						m_bTurn = false;
+
 
 	// Attack
-	_bool m_bAtkBite = false;
-	_bool m_bAtkLaser = false;
+	_bool m_bLaser = false;
 	_float	m_fLaserTime = 0.f;
+	_bool m_bComeUp = false;
+	
+	//WaterPool
+	_bool		m_bHasWaterPool = false;
+
 
 	CController::EHandleInput	m_eInput;
 

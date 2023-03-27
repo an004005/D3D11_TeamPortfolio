@@ -89,6 +89,16 @@
             "Layer": "Layer_Trigger",
             "JsonPath": "",
             "ProtoTag": "Prototype_PlayerStartPosition"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_DropObject_Bundle.json",
+            "ProtoTag": "Prototype_GameObject_Special_DropObject_Bundle"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_DropObject_Single.json",
+            "ProtoTag": "Prototype_GameObject_Special_DropObject_Single"
         }
     ]
 }

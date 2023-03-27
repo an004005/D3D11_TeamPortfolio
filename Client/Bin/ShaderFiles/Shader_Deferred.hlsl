@@ -21,7 +21,7 @@ vector			g_vLightSpecular;
 vector			g_vCamPosition;
 
 vector			g_vMtrlAmbient = (vector)1.f;
-vector			g_vMtrlSpecular = (vector)0.5f;
+vector			g_vMtrlSpecular = (vector)1.f;
 
 texture2D		g_Texture; /* 디버그용텍스처*/
 texture2D		g_NormalTexture; 
@@ -188,7 +188,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 		Out.vShade.a = 1.f;
 		
 		// vector		vLook = vWorldPos - g_vCamPosition;
-		// float spec = GetSpecular(vNormal.xyz, vLook.xyz, g_vLightDir.xyz, 256.f);
+		// float spec = GetSpecular(vNormal.xyz, vLook.xyz, g_vLightDir.xyz, 4.f);
 		// spec = smoothstep(0.005f, 0.01f, spec);
 		// Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec;
 	}
@@ -298,12 +298,14 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	vNewUV.x = (vLightClipSpace.x / vLightClipSpace.w) * 0.5f + 0.5f;
 	vNewUV.y = (vLightClipSpace.y / vLightClipSpace.w) * -0.5f + 0.5f;
 	
-	float2 TexcelSize = float2( 1.0 / 8192.0,  1.0 / 8192.0);
+	const float2 TexcelSize = float2( 1.0 / 8192.0,  1.0 / 8192.0);
 
-	float fShadowRate = 0.;
+	float fShadowRate = 0.f;
 
+	[unroll]
 	for (int y = -1; y <= 1; ++y)
 	{
+		[unroll]
 		for (int x = -1; x <= 1; ++x)
 		{
 			float2 offset = float2(x, y) * TexcelSize;

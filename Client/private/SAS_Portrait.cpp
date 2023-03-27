@@ -25,6 +25,7 @@ HRESULT CPostVFX_SAS_Portrait::Initialize(void* pArg)
 {
 	m_tParam.Floats.push_back(1.f);
 	m_tParam.iPass = 9;
+	m_iPriority = 1100;
 	return CPostProcess::Initialize(pArg);
 }
 
@@ -183,10 +184,10 @@ void CSAS_Portrait::Tick(_double TimeDelta)
 	// {
 	// 	Start_SAS(ESASType::SAS_PENETRATE);
 	// }
-	 if (CGameInstance::GetInstance()->KeyDown(DIK_9))
-	 {
-	 	Start_SAS(ESASType::SAS_NOT);
-	 }
+	 //if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	 //{
+	 //	Start_SAS(ESASType::SAS_NOT);
+	 //}
 
 	if (m_eCurType != ESASType::SAS_END)
 	{

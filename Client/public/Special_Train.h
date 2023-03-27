@@ -28,6 +28,11 @@ public:
 public:
 	void	Activate_Animation(_bool bActivate) { m_bActivate = bActivate; }
 	void	Train_Set_Animation(const string& szAnimName);
+
+	void	Train_Collision_On();
+	void	Train_Collision_Off();
+
+	void	Train_SetDeadTimer();
 	_float4	GetActionPoint();
 
 private:
@@ -36,6 +41,8 @@ private:
 private:
 	_vector m_vLerpVector = XMVectorSet(0.f, 0.f, 0.f, 0.f);	// 보간안쓸라고 만든거
 	_bool	m_bActivate = false;
+	_float	m_fDeadTimer = 0.f;
+	_bool	m_bDeadCheck = false;
 
 public:
 	static CSpecial_Train* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

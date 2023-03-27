@@ -32,6 +32,7 @@ struct ENGINE_DLL CAnimState : public CBase
 	vector<CAnimTransition*> m_Transitions;				// 현재 스테이트가 가지는 트랜지션의 벡터
 	CAnimation* m_Animation = nullptr;
 	CAnimation*	m_SpairAnimation = nullptr;					// 스테이트는 유지하되 애니메이션만 변경
+	CAnimation*	m_ReserveAnimation = nullptr;				// 스페어 애니메이션이 진행중일 때 해당 애니메이션을 추가하여 스페어가 끝나고 변경될 수 있도록 한다. 이때 일반 애니메이션과 리저브가 동일하면 그냥 스페어를 비워버린다.
 	std::function<void(void)> m_StartEvent = nullptr;		// 애니메이션이 시작될 때 발생하는 이벤트, 있으면 실행시키게 하자
 	std::function<_bool(void)> m_OptionalEvent = nullptr;	// 매개변수로 받은 프레임을 넘어갈 때 발생하는 이벤트, 있으면 실행시키게 하자
 	std::function<void(void)> m_FinishEvent = nullptr;		// 애니메이션이 종료될 때 발생하는 이벤트, 있으면 실행시키게 하자

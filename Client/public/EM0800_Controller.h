@@ -23,21 +23,24 @@ public:
 	void Tick_Near(_double TimeDelta);
 	void Tick_Mid(_double TimeDelta);
 	void Tick_Far(_double TimeDelta);
-	void Tick_Outside(_double TimeDelta);
+
+public:
+	_bool	IsTurn() { return m_bTurn; }
+	EBaseTurn GetBaseTurn() { return m_eTurn; }
 
 private:
 	void DefineState(_double TimeDelta);
+	void DefineTurnCommand();
 
 private:
 	class CEM0800* m_pCastedOwner = nullptr;
 
 private:
-	_float m_fToTargetDistance;
-	
+	EBaseTurn m_eTurn = EBaseTurn::TURN_END;
+	_bool	m_bTurn = false;
+
 	_uint m_iNearOrder = 0;
 	_uint m_iMidOrder = 0;
-	_uint m_iFarOrder = 0;
-	_uint m_iOutOrder = 0;
 
 public:
 	static CEM0800_Controller* Create();

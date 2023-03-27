@@ -11,6 +11,9 @@
 #include "Material.h"
 #include "GravikenisisMouseUI.h"
 #include "VFX_Manager.h"
+#include "PhysX_Manager.h"
+#include "Enemy.h"
+#include "ScarletCharacter.h"
 
 CSpecialObject::CSpecialObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
@@ -163,6 +166,102 @@ void CSpecialObject::Imgui_RenderProperty()
 	//	}
 	//	ImGui::EndListBox();
 	//}
+}
+
+_bool CSpecialObject::Collision_Check_Capsule(CRigidBody * AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollisionCheck)
+{
+	if (!bCollisionCheck)
+	{
+		m_DamagedObjectList.clear();
+		return false;
+	}
+
+	Matrix ColliderWorld = AttackTrigger->GetPxWorldMatrix();
+	_float4 vPos = _float4(ColliderWorld.Translation().x, ColliderWorld.Translation().y, ColliderWorld.Translation().z, 1.f);
+	_float3 vLook = _float3(ColliderWorld.Up().x, ColliderWorld.Up().y, ColliderWorld.Up().z);
+
+	physx::PxSweepHit hitBuffer[4];
+	physx::PxSweepBuffer overlapOut(hitBuffer, 4);
+	PxCapsuleSweepParams param;
+	param.sweepOut = &overlapOut;
+	param.CapsuleGeo = AttackTrigger->Get_CapsuleGeometry();
+	param.pxTransform = AttackTrigger->Get_PxTransform();
+
+	_float4	vWeaponDir = vPos - m_BeforePos;
+
+	param.vUnitDir = _float3(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z);
+	param.fDistance = param.vUnitDir.Length();
+	param.iTargetType = CTB_MONSTER | CTB_MONSTER_PART | CTB_MONSTER_RANGE;
+	param.fVisibleTime = 0.1f;
+
+	_bool	bCollisionResult = false;	// 충돌이 일어났는가?
+
+	if (CGameInstance::GetInstance()->PxSweepCapsule(param))
+	{
+		for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+		{
+			auto pHit = overlapOut.getAnyHit(i);
+			CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+			if (auto pTarget = dynamic_cast<CScarletCharacter*>(pCollidedObject))
+			{
+				_bool bDamagedTarget = true; // 충돌이 가능한 타겟인가?
+				for (auto Dupliciation = m_DamagedObjectList.begin(); Dupliciation != m_DamagedObjectList.end();)
+				{
+					if ((*Dupliciation) == pTarget)
+					{
+						if (false == (*Dupliciation)->Get_CollisionDuplicate())
+						{
+							Dupliciation = m_DamagedObjectList.erase(Dupliciation);
+						}
+						else
+						{
+							Dupliciation++;
+							bDamagedTarget = false;
+						}
+					}
+					else
+					{
+						Dupliciation++;
+					}
+				}
+
+				if (bDamagedTarget)
+				{
+					bCollisionResult = true;
+
+					DAMAGE_PARAM tParam;
+					ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+					memcpy(&tParam, &DamageParam, sizeof(DAMAGE_PARAM));
+
+					// 내부에서 자체적으로 계산할 값
+					tParam.pCauser = nullptr;
+					tParam.pContactComponent = CPhysXUtils::GetComponent(pHit.actor);
+					tParam.vHitNormal = _float4(pHit.normal.x, pHit.normal.y, pHit.normal.z, 0.f);
+					tParam.vHitPosition = _float4(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
+					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					tParam.vSlashVector = _float4(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z, 0.f);
+
+
+					// 플레이어일 경우 타격 이펙트 생성하도록
+					pTarget->TakeDamage(tParam);
+					pTarget->Set_CollisionDuplicate(true);
+
+					IM_LOG(ws2s(pTarget->GetPrototypeTag()).c_str());
+
+					// 이미 충돌했던 대상을 리스트에 추가
+					m_DamagedObjectList.push_back(pTarget);
+
+					//플레이어가 공격했을때 몬스터에 target ui 생성
+					/*if (dynamic_cast<CPlayer*>(tParam.pCauser) != nullptr)
+					dynamic_cast<CPlayer*>(tParam.pCauser)->Create_TargetInfoBar(pTarget);*/
+				}
+			}
+		}
+	}
+
+	m_BeforePos = vPos;
+
+	return bCollisionResult;
 }
 
 void CSpecialObject::OutlineMaker()

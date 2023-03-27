@@ -27,6 +27,8 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.m_iKineticEnergyLevel = 0;
 	m_tPlayerStat.m_iKineticEnergyType = 2;
 
+	m_tPlayerStat.m_fBaseAttackDamage = 100.f;
+
 	m_tPlayerStat.iExp = 50;
 	m_tPlayerStat.iMaxExp = 100;
 	m_tPlayerStat.iLevel = 1;
@@ -161,6 +163,16 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 	else if (true == m_pSpecialObject->IsDeleted()) m_pSpecialObject = nullptr;
 
 	SAS_Checker();
+
+	/*_uint iCnt = 0;
+	int Test[3] = { -1, -1, -1 };
+	for (auto& iter : m_PlayerSasTypeList)
+	{
+		Test[iCnt] = (int)iter;
+		iCnt++;
+	}*/
+
+	//IM_LOG("SAS : %d %d %d", Test[0], Test[1], Test[2]);
 }
 
 _bool CPlayerInfoManager::Get_isSasUsing(ESASType eType)
@@ -300,6 +312,17 @@ void CPlayerInfoManager::Finish_SasType(ESASType eType)
 	}
 }
 
+void CPlayerInfoManager::Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasType, _float iChangeEnergy)
+{
+	if (CHANGE_INCREASE == eChangeType)				m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy += iChangeEnergy;
+	else if (CHANGE_DECREASE == eChangeType)		m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy -= iChangeEnergy;
+
+	if (m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy > m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].MaxEnergy)
+		m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy = m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].MaxEnergy;
+	if (m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy < 0.f)
+		m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy = 0.f;
+}
+
 HRESULT CPlayerInfoManager::Set_KineticObject(CGameObject * pKineticObject)
 {
 	if (nullptr == pKineticObject) { m_pKineticObject = nullptr; return S_OK; }
@@ -369,6 +392,7 @@ void CPlayerInfoManager::SAS_Checker()
 					{
 						SAS = m_PlayerSasTypeList.erase(SAS);
 						m_tPlayerStat.Sasese[i].bUsable = false;
+
 						break;
 					}
 					else

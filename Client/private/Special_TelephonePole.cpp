@@ -8,6 +8,7 @@
 #include "MathUtils.h"
 #include "Animation.h"
 #include "ImguiUtils.h"
+#include "Enemy.h"
 
 CSpecial_TelephonePole::CSpecial_TelephonePole(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -36,6 +37,15 @@ HRESULT CSpecial_TelephonePole::Initialize(void * pArg)
 
 	m_eSpecialObejctType = SPECIAL_TELEPHONEPOLE;
 
+	m_pCollider->SetOnTriggerOut([this](CGameObject* pGameObject)
+	{
+		// Capsule Collision Check¸¦ À§ÇÔ
+		if (auto pTarget = dynamic_cast<CEnemy*>(pGameObject))
+		{
+			pTarget->Set_CollisionDuplicate(false);
+		}
+	});
+
 	return S_OK;
 }
 
@@ -45,12 +55,24 @@ void CSpecial_TelephonePole::BeginTick()
 
 	m_PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixTranslation(0.f, 2.f, 0.f);
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(CMathUtils::RandomFloat(-20.f, 20.f)));
+
+	m_pCollider->Set_Kinetic(true);
+	m_pCollider->UpdateChange();
 }
 
 void CSpecial_TelephonePole::Tick(_double TimeDelta)
 {
+	if (m_bDeadCheck)
+	{
+		m_fDeadTime -= (_float)TimeDelta;
+
+		if (0.f >= m_fDeadTime)
+			this->SetDelete();
+	}
+
 	__super::Tick(TimeDelta);
 
+	m_pCollider->Update_Tick(m_pTransformCom);
 	//m_pTransformCom->SetTransformDesc({ 0.5f, XMConvertToRadians(90.f) });
 }
 
@@ -62,6 +84,8 @@ void CSpecial_TelephonePole::Late_Tick(_double TimeDelta)
 void CSpecial_TelephonePole::AfterPhysX()
 {
 	__super::AfterPhysX();
+
+	m_pCollider->Update_AfterPhysX(m_pTransformCom);
 }
 
 HRESULT CSpecial_TelephonePole::Render()
@@ -184,6 +208,33 @@ void CSpecial_TelephonePole::TelephonePole_Swing(CModel * pModel, CTransform* pT
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
 	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
+}
+
+void CSpecial_TelephonePole::TelephonePole_Collision_On()
+{
+	DAMAGE_PARAM tParam;
+	ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+	tParam.eAttackSAS = ESASType::SAS_END;
+	tParam.eAttackType = EAttackType::ATK_SPECIAL_END;
+	tParam.eDeBuff = EDeBuffType::DEBUFF_END;
+	tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
+	tParam.iDamage = 500;
+
+	Collision_Check_Capsule(m_pCollider, tParam, true);
+}
+
+void CSpecial_TelephonePole::TelephonePole_Collision_Off()
+{
+	DAMAGE_PARAM tParam;
+	ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+
+	Collision_Check_Capsule(m_pCollider, tParam, false);
+}
+
+void CSpecial_TelephonePole::TelephonePole_SetDeadTimer()
+{
+	m_bDeadCheck = true;
+	m_fDeadTime = 3.f;
 }
 
 void CSpecial_TelephonePole::SetCatchPoint()
