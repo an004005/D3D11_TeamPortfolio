@@ -47,7 +47,7 @@
 #include "SASSkillLightUI.h"
 #include "SASSkillNameUI.h"
 #include "SASSkillFullCircleUI.h"
-// Direve
+// Drive
 #include "Drive_RightDotUI.h"
 #include "Drive_GaugeUI.h"
 // Item
@@ -76,7 +76,7 @@
 #include "Tutorial_CheckUI.h"
 #include "Tutorial_YesNoUI.h"
 #include "Tutorial_TipsUI.h"
-#include "Tutorial_SuccessUI.h"
+
 //Boss
 #include "Boss_HpUI.h"
 #include "Boss_HpBackUI.h"
@@ -408,10 +408,6 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		/* For.Prototype_GameObject_Tutorial_TipsUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_TipsUI"),
 			CTutorial_TipsUI::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
-		/* For.Prototype_GameObject_Tutorial_SuccessUI */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_SuccessUI"),
-			CTutorial_SuccessUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 		// Boss

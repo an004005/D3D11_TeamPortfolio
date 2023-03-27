@@ -129,7 +129,6 @@
 #include "Tutorial_CheckUI.h"
 #include "Tutorial_YesNoUI.h"
 #include "Tutorial_TipsUI.h"
-#include "Tutorial_SuccessUI.h"
 
 //Boss
 #include "Boss_HpUI.h"
@@ -729,10 +728,6 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 		/* For.Prototype_GameObject_Tutorial_TipsUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_TipsUI"),
 			CTutorial_TipsUI::Create(pDevice, pContext))))
-			return E_FAIL;
-		/* For.Prototype_GameObject_Tutorial_SuccessUI */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_SuccessUI"),
-			CTutorial_SuccessUI::Create(pDevice, pContext))))
 			return E_FAIL;
 
 		// Boss

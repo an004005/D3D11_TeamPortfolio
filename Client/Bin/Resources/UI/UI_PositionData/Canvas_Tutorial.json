@@ -1,1 +1,1274 @@
-{"ChildrenUI":[{"ChildTag":"Tutorial0\u0000","ObjectTag":"Tutorial0","Pivot":0,"PositionX":0.0,"PositionY":50.0,"Priority":0,"Prototype_GameObject":"TutorialUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[1.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Tutorial0.png\u0000"]},"SizeX":600.0,"SizeY":550.0,"Transform":{"WorldMatrix":[600.0,0.0,0.0,0.0,0.0,550.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,50.0,0.0,1.0]}},{"ChildTag":"Tutorial1\u0000","ObjectTag":"Tutorial1","Pivot":0,"PositionX":0.0,"PositionY":50.0,"Priority":0,"Prototype_GameObject":"TutorialUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[1.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Tutorial1.png\u0000"]},"SizeX":600.0,"SizeY":550.0,"Transform":{"WorldMatrix":[600.0,0.0,0.0,0.0,0.0,550.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,50.0,0.0,1.0]}},{"ChildTag":"Tutorial2\u0000","ObjectTag":"Tutorial2","Pivot":0,"PositionX":0.0,"PositionY":50.0,"Priority":0,"Prototype_GameObject":"TutorialUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[1.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Tutorial2.png\u0000"]},"SizeX":600.0,"SizeY":550.0,"Transform":{"WorldMatrix":[600.0,0.0,0.0,0.0,0.0,550.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,50.0,0.0,1.0]}},{"ChildTag":"Tutorial3\u0000","ObjectTag":"Tutorial3","Pivot":0,"PositionX":0.0,"PositionY":50.0,"Priority":0,"Prototype_GameObject":"TutorialUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[1.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Tutorial3.png\u0000"]},"SizeX":600.0,"SizeY":550.0,"Transform":{"WorldMatrix":[600.0,0.0,0.0,0.0,0.0,550.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,50.0,0.0,1.0]}},{"ChildTag":"Tutorial4\u0000","ObjectTag":"Tutorial4","Pivot":0,"PositionX":0.0,"PositionY":50.0,"Priority":0,"Prototype_GameObject":"TutorialUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[1.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Tutorial4.png\u0000"]},"SizeX":600.0,"SizeY":550.0,"Transform":{"WorldMatrix":[600.0,0.0,0.0,0.0,0.0,550.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,50.0,0.0,1.0]}},{"ChildTag":"Tutorial5\u0000","ObjectTag":"Tutorial5","Pivot":0,"PositionX":0.0,"PositionY":50.0,"Priority":0,"Prototype_GameObject":"TutorialUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[1.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Tutorial5.png\u0000"]},"SizeX":600.0,"SizeY":550.0,"Transform":{"WorldMatrix":[600.0,0.0,0.0,0.0,0.0,550.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,50.0,0.0,1.0]}},{"ChildTag":"Tutorial_Check0\u0000","ObjectTag":"Tutorial_Check0","Pivot":0,"PositionX":0.0,"PositionY":0.0,"Priority":0,"Prototype_GameObject":"Tutorial_CheckUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[1.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check0.png\u0000"]},"SizeX":420.0,"SizeY":200.0,"Transform":{"WorldMatrix":[420.0,0.0,0.0,0.0,0.0,200.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}},{"ChildTag":"Tutorial_Icon0\u0000","ObjectTag":"Tutorial_Icon0","Pivot":0,"PositionX":-50.0,"PositionY":-19.0,"Priority":2,"Prototype_GameObject":"Tutorial_YesNoUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.4692297577857971,0.4841350317001343,1.0]],"Float4x4s":[],"Floats":[0.699999988079071],"Ints":[],"Pass":26,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check_Icon0.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check_Icon1.png\u0000"]},"SizeX":64.0,"SizeY":64.0,"Transform":{"WorldMatrix":[64.0,0.0,0.0,0.0,0.0,64.0,0.0,0.0,0.0,0.0,1.0,0.0,-50.0,-19.0,0.0,1.0]}},{"ChildTag":"Tutorial_Icon1\u0000","ObjectTag":"Tutorial_Icon1","Pivot":0,"PositionX":-50.0,"PositionY":-19.0,"Priority":3,"Prototype_GameObject":"Tutorial_YesNoUI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.4959107041358948,0.36582326889038086,1.0]],"Float4x4s":[],"Floats":[],"Ints":[1],"Pass":14,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check_Icon2.png\u0000"]},"SizeX":64.0,"SizeY":64.0,"Transform":{"WorldMatrix":[44.79999923706055,0.0,0.0,0.0,0.0,44.79999923706055,0.0,0.0,0.0,0.0,1.0,0.0,-50.0,-19.0,0.0,1.0]}},{"ChildTag":"Tutorial_Icon2\u0000","ObjectTag":"Tutorial_Icon2","Pivot":0,"PositionX":-49.0,"PositionY":-19.0,"Priority":2,"Prototype_GameObject":"Tutorial_YesNoUI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.4941176474094391,0.364705890417099,0.0]],"Float4x4s":[],"Floats":[],"Ints":[1],"Pass":14,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check_Icon3.png\u0000"]},"SizeX":64.0,"SizeY":64.0,"Transform":{"WorldMatrix":[44.79999923706055,0.0,0.0,0.0,0.0,44.79999923706055,0.0,0.0,0.0,0.0,1.0,0.0,-49.0,-19.0,0.0,1.0]}},{"ChildTag":"Tutorial_InvisibleBox\u0000","ObjectTag":"Tutorial_InvisibleBox","Pivot":0,"PositionX":237.0,"PositionY":-189.0,"Priority":0,"Prototype_GameObject":"Tutorial_YesNoUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"]},"SizeX":60.0,"SizeY":30.0,"Transform":{"WorldMatrix":[60.0,0.0,0.0,0.0,0.0,30.0,0.0,0.0,0.0,0.0,1.0,0.0,237.0,-189.0,0.0,1.0]}},{"ChildTag":"Tutorial_NoBox\u0000","ObjectTag":"Tutorial_NoBox","Pivot":0,"PositionX":0.0,"PositionY":-53.0,"Priority":1,"Prototype_GameObject":"Tutorial_YesNoUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.31869226694107056,0.2534939646720886,0.5]],"Float4x4s":[],"Floats":[],"Ints":[1],"Pass":14,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check_No.png\u0000"]},"SizeX":355.0,"SizeY":33.0,"Transform":{"WorldMatrix":[355.0,0.0,0.0,0.0,0.0,33.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,-53.0,0.0,1.0]}},{"ChildTag":"Tutorial_Success\u0000","ObjectTag":"Tutorial_Success","Pivot":0,"PositionX":0.0,"PositionY":179.0,"Priority":0,"Prototype_GameObject":"Default_UI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.007000000216066837],"Ints":[2,1],"Pass":9,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\256,64_SUCCESS!.dds\u0000"]},"SizeX":256.0,"SizeY":128.0,"Transform":{"WorldMatrix":[256.0,0.0,0.0,0.0,0.0,128.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,179.0,0.0,1.0]}},{"ChildTag":"Tutorial_Tips0\u0000","ObjectTag":"Tutorial_Tips0","Pivot":1,"PositionX":200.0,"PositionY":-200.0,"Priority":0,"Prototype_GameObject":"Tutorial_TipsUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS0.png\u0000"]},"SizeX":352.0,"SizeY":154.0,"Transform":{"WorldMatrix":[352.0,0.0,0.0,0.0,0.0,154.0,0.0,0.0,0.0,0.0,1.0,0.0,-600.0,250.0,0.0,1.0]}},{"ChildTag":"Tutorial_Tips1\u0000","ObjectTag":"Tutorial_Tips1","Pivot":1,"PositionX":200.0,"PositionY":-200.0,"Priority":0,"Prototype_GameObject":"Tutorial_TipsUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS1.png\u0000"]},"SizeX":352.0,"SizeY":154.0,"Transform":{"WorldMatrix":[352.0,0.0,0.0,0.0,0.0,154.0,0.0,0.0,0.0,0.0,1.0,0.0,-600.0,250.0,0.0,1.0]}},{"ChildTag":"Tutorial_Tips10\u0000","ObjectTag":"Tutorial_Tips10","Pivot":1,"PositionX":200.0,"PositionY":-200.0,"Priority":0,"Prototype_GameObject":"Tutorial_TipsUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS10.png\u0000"]},"SizeX":352.0,"SizeY":154.0,"Transform":{"WorldMatrix":[352.0,0.0,0.0,0.0,0.0,154.0,0.0,0.0,0.0,0.0,1.0,0.0,-600.0,250.0,0.0,1.0]}},{"ChildTag":"Tutorial_Tips2\u0000","ObjectTag":"Tutorial_Tips2","Pivot":1,"PositionX":200.0,"PositionY":-200.0,"Priority":0,"Prototype_GameObject":"Tutorial_TipsUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS2.png\u0000"]},"SizeX":352.0,"SizeY":154.0,"Transform":{"WorldMatrix":[352.0,0.0,0.0,0.0,0.0,154.0,0.0,0.0,0.0,0.0,1.0,0.0,-600.0,250.0,0.0,1.0]}},{"ChildTag":"Tutorial_Tips3\u0000","ObjectTag":"Tutorial_Tips3","Pivot":1,"PositionX":200.0,"PositionY":-200.0,"Priority":0,"Prototype_GameObject":"Tutorial_TipsUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS3.png\u0000"]},"SizeX":352.0,"SizeY":154.0,"Transform":{"WorldMatrix":[352.0,0.0,0.0,0.0,0.0,154.0,0.0,0.0,0.0,0.0,1.0,0.0,-600.0,250.0,0.0,1.0]}},{"ChildTag":"Tutorial_Tips4\u0000","ObjectTag":"Tutorial_Tips4","Pivot":1,"PositionX":200.0,"PositionY":-200.0,"Priority":0,"Prototype_GameObject":"Tutorial_TipsUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS4.png\u0000"]},"SizeX":352.0,"SizeY":154.0,"Transform":{"WorldMatrix":[352.0,0.0,0.0,0.0,0.0,154.0,0.0,0.0,0.0,0.0,1.0,0.0,-600.0,250.0,0.0,1.0]}},{"ChildTag":"Tutorial_Tips5\u0000","ObjectTag":"Tutorial_Tips5","Pivot":1,"PositionX":200.0,"PositionY":-200.0,"Priority":0,"Prototype_GameObject":"Tutorial_TipsUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS5.png\u0000"]},"SizeX":352.0,"SizeY":154.0,"Transform":{"WorldMatrix":[352.0,0.0,0.0,0.0,0.0,154.0,0.0,0.0,0.0,0.0,1.0,0.0,-600.0,250.0,0.0,1.0]}},{"ChildTag":"Tutorial_Tips6\u0000","ObjectTag":"Tutorial_Tips6","Pivot":1,"PositionX":200.0,"PositionY":-200.0,"Priority":0,"Prototype_GameObject":"Tutorial_TipsUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS6.png\u0000"]},"SizeX":352.0,"SizeY":154.0,"Transform":{"WorldMatrix":[352.0,0.0,0.0,0.0,0.0,154.0,0.0,0.0,0.0,0.0,1.0,0.0,-600.0,250.0,0.0,1.0]}},{"ChildTag":"Tutorial_Tips7\u0000","ObjectTag":"Tutorial_Tips7","Pivot":1,"PositionX":200.0,"PositionY":-200.0,"Priority":0,"Prototype_GameObject":"Tutorial_TipsUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS7.png\u0000"]},"SizeX":352.0,"SizeY":154.0,"Transform":{"WorldMatrix":[352.0,0.0,0.0,0.0,0.0,154.0,0.0,0.0,0.0,0.0,1.0,0.0,-600.0,250.0,0.0,1.0]}},{"ChildTag":"Tutorial_Tips8\u0000","ObjectTag":"Tutorial_Tips8","Pivot":1,"PositionX":200.0,"PositionY":-200.0,"Priority":0,"Prototype_GameObject":"Tutorial_TipsUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS8.png\u0000"]},"SizeX":352.0,"SizeY":154.0,"Transform":{"WorldMatrix":[352.0,0.0,0.0,0.0,0.0,154.0,0.0,0.0,0.0,0.0,1.0,0.0,-600.0,250.0,0.0,1.0]}},{"ChildTag":"Tutorial_Tips9\u0000","ObjectTag":"Tutorial_Tips9","Pivot":1,"PositionX":200.0,"PositionY":-200.0,"Priority":0,"Prototype_GameObject":"Tutorial_TipsUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":25,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS9.png\u0000"]},"SizeX":352.0,"SizeY":154.0,"Transform":{"WorldMatrix":[352.0,0.0,0.0,0.0,0.0,154.0,0.0,0.0,0.0,0.0,1.0,0.0,-600.0,250.0,0.0,1.0]}},{"ChildTag":"Tutorial_YesBox\u0000","ObjectTag":"Tutorial_YesBox","Pivot":0,"PositionX":0.0,"PositionY":-20.0,"Priority":1,"Prototype_GameObject":"Tutorial_YesNoUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.31869226694107056,0.2534939646720886,0.5]],"Float4x4s":[],"Floats":[],"Ints":[1],"Pass":14,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check_Yes.png\u0000"]},"SizeX":355.0,"SizeY":33.0,"Transform":{"WorldMatrix":[355.0,0.0,0.0,0.0,0.0,33.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,-20.0,0.0,1.0]}},{"ChildTag":"Tutorial_ZNextPage\u0000","ObjectTag":"Tutorial_ZNextPage","Pivot":0,"PositionX":135.0,"PositionY":-190.0,"Priority":1,"Prototype_GameObject":"Tutorial_YesNoUI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"]},"SizeX":110.0,"SizeY":30.0,"Transform":{"WorldMatrix":[110.0,0.0,0.0,0.0,0.0,30.0,0.0,0.0,0.0,0.0,1.0,0.0,135.0,-190.0,0.0,1.0]}}],"ObjectTag":"Canvas_Tutorial","Pivot":0,"PositionX":0.0,"PositionY":0.0,"Priority":0,"Prototype_GameObject":"Canvas_Tutorial\u0000","ScaleX":0.5,"ScaleY":0.5,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":[]},"SizeX":1600.0,"SizeY":900.0,"Transform":{"WorldMatrix":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "Tutorial0\u0000",
+            "ObjectTag": "Tutorial0",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 50.0,
+            "Priority": 0,
+            "Prototype_GameObject": "TutorialUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Tutorial0.png\u0000"
+                ]
+            },
+            "SizeX": 600.0,
+            "SizeY": 550.0,
+            "Transform": {
+                "WorldMatrix": [
+                    600.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    550.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    50.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial1\u0000",
+            "ObjectTag": "Tutorial1",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 50.0,
+            "Priority": 0,
+            "Prototype_GameObject": "TutorialUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Tutorial1.png\u0000"
+                ]
+            },
+            "SizeX": 600.0,
+            "SizeY": 550.0,
+            "Transform": {
+                "WorldMatrix": [
+                    600.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    550.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    50.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial2\u0000",
+            "ObjectTag": "Tutorial2",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 50.0,
+            "Priority": 0,
+            "Prototype_GameObject": "TutorialUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Tutorial2.png\u0000"
+                ]
+            },
+            "SizeX": 600.0,
+            "SizeY": 550.0,
+            "Transform": {
+                "WorldMatrix": [
+                    600.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    550.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    50.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial3\u0000",
+            "ObjectTag": "Tutorial3",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 50.0,
+            "Priority": 0,
+            "Prototype_GameObject": "TutorialUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Tutorial3.png\u0000"
+                ]
+            },
+            "SizeX": 600.0,
+            "SizeY": 550.0,
+            "Transform": {
+                "WorldMatrix": [
+                    600.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    550.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    50.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial4\u0000",
+            "ObjectTag": "Tutorial4",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 50.0,
+            "Priority": 0,
+            "Prototype_GameObject": "TutorialUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Tutorial4.png\u0000"
+                ]
+            },
+            "SizeX": 600.0,
+            "SizeY": 550.0,
+            "Transform": {
+                "WorldMatrix": [
+                    600.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    550.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    50.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial5\u0000",
+            "ObjectTag": "Tutorial5",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 50.0,
+            "Priority": 0,
+            "Prototype_GameObject": "TutorialUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Tutorial5.png\u0000"
+                ]
+            },
+            "SizeX": 600.0,
+            "SizeY": 550.0,
+            "Transform": {
+                "WorldMatrix": [
+                    600.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    550.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    50.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Check0\u0000",
+            "ObjectTag": "Tutorial_Check0",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 0.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_CheckUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check0.png\u0000"
+                ]
+            },
+            "SizeX": 420.0,
+            "SizeY": 200.0,
+            "Transform": {
+                "WorldMatrix": [
+                    420.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    200.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Icon0\u0000",
+            "ObjectTag": "Tutorial_Icon0",
+            "Pivot": 0,
+            "PositionX": -50.0,
+            "PositionY": -19.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Tutorial_YesNoUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.4692297577857971,
+                        0.4841350317001343,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.699999988079071
+                ],
+                "Ints": [],
+                "Pass": 26,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check_Icon0.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check_Icon1.png\u0000"
+                ]
+            },
+            "SizeX": 64.0,
+            "SizeY": 64.0,
+            "Transform": {
+                "WorldMatrix": [
+                    64.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    64.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -50.0,
+                    -19.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Icon1\u0000",
+            "ObjectTag": "Tutorial_Icon1",
+            "Pivot": 0,
+            "PositionX": -50.0,
+            "PositionY": -19.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Tutorial_YesNoUI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.4959107041358948,
+                        0.36582326889038086,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 14,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check_Icon2.png\u0000"
+                ]
+            },
+            "SizeX": 64.0,
+            "SizeY": 64.0,
+            "Transform": {
+                "WorldMatrix": [
+                    44.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    44.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -50.0,
+                    -19.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Icon2\u0000",
+            "ObjectTag": "Tutorial_Icon2",
+            "Pivot": 0,
+            "PositionX": -49.0,
+            "PositionY": -19.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Tutorial_YesNoUI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.4941176474094391,
+                        0.364705890417099,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 14,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check_Icon3.png\u0000"
+                ]
+            },
+            "SizeX": 64.0,
+            "SizeY": 64.0,
+            "Transform": {
+                "WorldMatrix": [
+                    44.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    44.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -49.0,
+                    -19.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_InvisibleBox\u0000",
+            "ObjectTag": "Tutorial_InvisibleBox",
+            "Pivot": 0,
+            "PositionX": 237.0,
+            "PositionY": -189.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_YesNoUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 60.0,
+            "SizeY": 30.0,
+            "Transform": {
+                "WorldMatrix": [
+                    60.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    30.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    237.0,
+                    -189.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_NoBox\u0000",
+            "ObjectTag": "Tutorial_NoBox",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": -53.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Tutorial_YesNoUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.31869226694107056,
+                        0.2534939646720886,
+                        0.5
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 14,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check_No.png\u0000"
+                ]
+            },
+            "SizeX": 355.0,
+            "SizeY": 33.0,
+            "Transform": {
+                "WorldMatrix": [
+                    355.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    33.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    -53.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Success\u0000",
+            "ObjectTag": "Tutorial_Success",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 179.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.1
+                ],
+                "Ints": [
+                    2,
+                    1
+                ],
+                "Pass": 9,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\256,64_SUCCESS!.dds\u0000"
+                ]
+            },
+            "SizeX": 256.0,
+            "SizeY": 128.0,
+            "Transform": {
+                "WorldMatrix": [
+                    256.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    128.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    179.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Tips0\u0000",
+            "ObjectTag": "Tutorial_Tips0",
+            "Pivot": 1,
+            "PositionX": 200.0,
+            "PositionY": -200.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_TipsUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS0.png\u0000"
+                ]
+            },
+            "SizeX": 352.0,
+            "SizeY": 154.0,
+            "Transform": {
+                "WorldMatrix": [
+                    352.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    154.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -600.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Tips1\u0000",
+            "ObjectTag": "Tutorial_Tips1",
+            "Pivot": 1,
+            "PositionX": 200.0,
+            "PositionY": -200.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_TipsUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS1.png\u0000"
+                ]
+            },
+            "SizeX": 352.0,
+            "SizeY": 154.0,
+            "Transform": {
+                "WorldMatrix": [
+                    352.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    154.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -600.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Tips10\u0000",
+            "ObjectTag": "Tutorial_Tips10",
+            "Pivot": 1,
+            "PositionX": 200.0,
+            "PositionY": -200.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_TipsUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS10.png\u0000"
+                ]
+            },
+            "SizeX": 352.0,
+            "SizeY": 154.0,
+            "Transform": {
+                "WorldMatrix": [
+                    352.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    154.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -600.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Tips2\u0000",
+            "ObjectTag": "Tutorial_Tips2",
+            "Pivot": 1,
+            "PositionX": 200.0,
+            "PositionY": -200.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_TipsUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS2.png\u0000"
+                ]
+            },
+            "SizeX": 352.0,
+            "SizeY": 154.0,
+            "Transform": {
+                "WorldMatrix": [
+                    352.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    154.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -600.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Tips3\u0000",
+            "ObjectTag": "Tutorial_Tips3",
+            "Pivot": 1,
+            "PositionX": 200.0,
+            "PositionY": -200.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_TipsUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS3.png\u0000"
+                ]
+            },
+            "SizeX": 352.0,
+            "SizeY": 154.0,
+            "Transform": {
+                "WorldMatrix": [
+                    352.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    154.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -600.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Tips4\u0000",
+            "ObjectTag": "Tutorial_Tips4",
+            "Pivot": 1,
+            "PositionX": 200.0,
+            "PositionY": -200.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_TipsUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS4.png\u0000"
+                ]
+            },
+            "SizeX": 352.0,
+            "SizeY": 154.0,
+            "Transform": {
+                "WorldMatrix": [
+                    352.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    154.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -600.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Tips5\u0000",
+            "ObjectTag": "Tutorial_Tips5",
+            "Pivot": 1,
+            "PositionX": 200.0,
+            "PositionY": -200.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_TipsUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS5.png\u0000"
+                ]
+            },
+            "SizeX": 352.0,
+            "SizeY": 154.0,
+            "Transform": {
+                "WorldMatrix": [
+                    352.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    154.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -600.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Tips6\u0000",
+            "ObjectTag": "Tutorial_Tips6",
+            "Pivot": 1,
+            "PositionX": 200.0,
+            "PositionY": -200.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_TipsUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS6.png\u0000"
+                ]
+            },
+            "SizeX": 352.0,
+            "SizeY": 154.0,
+            "Transform": {
+                "WorldMatrix": [
+                    352.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    154.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -600.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Tips7\u0000",
+            "ObjectTag": "Tutorial_Tips7",
+            "Pivot": 1,
+            "PositionX": 200.0,
+            "PositionY": -200.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_TipsUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS7.png\u0000"
+                ]
+            },
+            "SizeX": 352.0,
+            "SizeY": 154.0,
+            "Transform": {
+                "WorldMatrix": [
+                    352.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    154.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -600.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Tips8\u0000",
+            "ObjectTag": "Tutorial_Tips8",
+            "Pivot": 1,
+            "PositionX": 200.0,
+            "PositionY": -200.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_TipsUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS8.png\u0000"
+                ]
+            },
+            "SizeX": 352.0,
+            "SizeY": 154.0,
+            "Transform": {
+                "WorldMatrix": [
+                    352.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    154.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -600.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_Tips9\u0000",
+            "ObjectTag": "Tutorial_Tips9",
+            "Pivot": 1,
+            "PositionX": 200.0,
+            "PositionY": -200.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Tutorial_TipsUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\TIPS9.png\u0000"
+                ]
+            },
+            "SizeX": 352.0,
+            "SizeY": 154.0,
+            "Transform": {
+                "WorldMatrix": [
+                    352.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    154.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -600.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_YesBox\u0000",
+            "ObjectTag": "Tutorial_YesBox",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": -20.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Tutorial_YesNoUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.31869226694107056,
+                        0.2534939646720886,
+                        0.5
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 14,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Check_Yes.png\u0000"
+                ]
+            },
+            "SizeX": 355.0,
+            "SizeY": 33.0,
+            "Transform": {
+                "WorldMatrix": [
+                    355.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    33.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    -20.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Tutorial_ZNextPage\u0000",
+            "ObjectTag": "Tutorial_ZNextPage",
+            "Pivot": 0,
+            "PositionX": 135.0,
+            "PositionY": -190.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Tutorial_YesNoUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 110.0,
+            "SizeY": 30.0,
+            "Transform": {
+                "WorldMatrix": [
+                    110.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    30.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    135.0,
+                    -190.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "Canvas_Tutorial",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 0,
+    "Prototype_GameObject": "Canvas_Tutorial\u0000",
+    "ScaleX": 0.5,
+    "ScaleY": 0.5,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}
