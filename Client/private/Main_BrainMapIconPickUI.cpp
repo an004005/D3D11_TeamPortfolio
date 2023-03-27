@@ -38,19 +38,19 @@ void CMain_BrainMapIconPickUI::Tick(_double TimeDelta)
 		m_bPick = false;
 	}
 
-	if (true == m_bAlphaDwon)
+	if (true == m_fAlphaDown)
 	{
 		m_fAlpha -= _float(TimeDelta) * 0.5f;
 
 		if (0.3f > m_fAlpha)
-			m_bAlphaDwon = false;
+			m_fAlphaDown = false;
 	}
 	else
 	{
 		m_fAlpha += _float(TimeDelta) * 0.5f;
 
 		if (0.6f < m_fAlpha)
-			m_bAlphaDwon = true;
+			m_fAlphaDown = true;
 	}
 
 	m_tParams.Floats[0] = m_fAlpha;

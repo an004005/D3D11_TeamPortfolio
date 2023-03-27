@@ -22,10 +22,6 @@ HRESULT CGameManager_Tutorial::Initialize()
 
 void CGameManager_Tutorial::Tick(_double TimeDelta)
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_P))
-	{
-		m_bKineticAttackAndLockOn[1] = true;
-	}
 
 }
 
@@ -42,19 +38,22 @@ void CGameManager_Tutorial::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport
 		}
 	}
 
-	if (m_bKineticAttackAndLockOn[1] = false)
+	if (m_bKineticAttackAndLockOn[1] == false)
 	{
 		if (m_bKineticAttackAndLockOn[0] == true)
 		{
 			if (tReport.eAttackType == EAttackType::ATK_HEAVY)
 			{
 				m_bKineticAttackAndLockOn[1] = true;
-
-				if (m_bKineticAttackAndLockOn[2] == true)
-				{
-					m_pCanvas_Tutorial->Set_Success();
-				}
 			}
+		}
+	}
+
+	if (m_bKineticAttackAndLockOn[2] == false)
+	{
+		if (m_bKineticAttackAndLockOn[2] == true)
+		{
+			m_pCanvas_Tutorial->Set_Success();
 		}
 	}
 

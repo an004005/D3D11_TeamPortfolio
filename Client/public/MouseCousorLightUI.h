@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CMain_BrainMapIconPickUI final : public CUI
+class CMouseCousorLightUI final : public CUI
 {
 private:
-	CMain_BrainMapIconPickUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMain_BrainMapIconPickUI(const CMain_BrainMapIconPickUI& rhs);
+	CMouseCousorLightUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMouseCousorLightUI(const CMouseCousorLightUI& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -19,17 +19,18 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 
 public:
-	void	Set_Pick(const _bool bPick) {
-		m_bPick = bPick;
+	void	Set_MouseLight(const _bool	bLight) {
+		m_fMouseLight = bLight;
+		m_bVisible = bLight;
 	}
 
 private:
-	_float	m_fAlpha = { 0.0f };
+	_bool	m_fMouseLight = { false };
 	_bool	m_fAlphaDown = { false };
-	_bool	m_bPick = { false };
+	_float	m_fAlpha = { 0.0f };
 
 public:
-	static CMain_BrainMapIconPickUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMouseCousorLightUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

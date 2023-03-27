@@ -84,13 +84,13 @@ void CMain_OnePickUI::CurrentPick(const _double & TimeDelta)
 		return;
 	}
 
-	if (true == m_bAlphaDwon)
+	if (true == m_fAlphaDown)
 	{
 		m_fAlpha -= _float(TimeDelta) * 0.15f;
 
 		if (0.05f > m_fAlpha)
 		{
-			m_bAlphaDwon = false;
+			m_fAlphaDown = false;
 		}
 	}
 	else
@@ -99,7 +99,7 @@ void CMain_OnePickUI::CurrentPick(const _double & TimeDelta)
 
 		if (0.1f < m_fAlpha)
 		{
-			m_bAlphaDwon = true;
+			m_fAlphaDown = true;
 		}
 	}
 

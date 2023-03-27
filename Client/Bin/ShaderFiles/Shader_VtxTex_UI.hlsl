@@ -966,6 +966,22 @@ PS_OUT PS_BRAIN(PS_IN In)
 	return Out;
 }
 
+/*******************
+* → 35 : 2장의 텍스처 중 원하는 텍스처를 출력한다.
+g_int_0 : [0] 0번 텍스처 [1] 1번 텍스처 사용
+/********************/
+PS_OUT PS_TEXTURECAHNGE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	if (0 == g_int_0)
+		Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	else if (1 == g_int_0)
+		Out.vColor = g_tex_1.Sample(LinearSampler, In.vTexUV);
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0 : 알파 블랜딩으로 그리기
@@ -1461,5 +1477,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_BRAIN();	// 색상 조정
+	}
+
+	// 35 : 2장의 텍스처 번갈아 가면서 사용하기
+	pass TEXTURECAHNGE
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();	
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_TEXTURECAHNGE();
 	}
 }

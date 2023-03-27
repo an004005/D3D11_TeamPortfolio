@@ -52,7 +52,7 @@ private:
 	_bool	m_bOnAlpha = { false };
 	_uint	m_iColorType = { 0 };
 
-	_bool	m_bAlphaDwon = { false };
+	_bool	m_fAlphaDown = { false };
 	_float	m_fAlpha = { 0.0f };
 
 public:

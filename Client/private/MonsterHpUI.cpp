@@ -106,7 +106,7 @@ void CMonsterHpUI::HpBack_Tick(const _double & TimeDelta)
 {
 	if (m_fCurrentHpBack > m_fHpBack)
 	{
-		m_fCurrentHpBack -= _float(TimeDelta) * 0.3f;
+		m_fCurrentHpBack -= _float(TimeDelta) * 0.1f;
 	}
 	else
 	{

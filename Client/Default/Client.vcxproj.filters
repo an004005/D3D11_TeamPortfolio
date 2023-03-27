@@ -847,9 +847,6 @@
     <ClInclude Include="..\public\BdLm_Controller.h">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\WaterBall.h">
-      <Filter>02.GameObjects\Monster\boss1\WaterBall</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\BrJ_Controller.h">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
     </ClInclude>
@@ -1167,9 +1164,6 @@
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerStartPosition.h" />
-    <ClInclude Include="..\public\GameManager_Tutorial.h">
-      <Filter>02.GameObjects\Utils\GameManager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\PostVFX_Teleport.h">
       <Filter>VFX\PostProcess</Filter>
     </ClInclude>
@@ -1177,6 +1171,13 @@
       <Filter>VFX\PostProcess</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SuperSpeedTrail.h" />
+    <ClInclude Include="..\public\GameManager_Tutorial.h" />
+    <ClInclude Include="..\public\MouseCousorUI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MouseCousorLightUI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1613,9 +1614,6 @@
     <ClCompile Include="..\private\BdLm_Controller.cpp">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\WaterBall.cpp">
-      <Filter>02.GameObjects\Monster\boss1\WaterBall</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\BrJ_Controller.cpp">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
     </ClCompile>
@@ -1921,9 +1919,6 @@
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerStartPosition.cpp" />
-    <ClCompile Include="..\private\GameManager_Tutorial.cpp">
-      <Filter>02.GameObjects\Utils\GameManager</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Special_HBeam_Bundle.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>
     </ClCompile>
@@ -1946,6 +1941,13 @@
       <Filter>VFX\PostProcess</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SuperSpeedTrail.cpp" />
+    <ClCompile Include="..\private\GameManager_Tutorial.cpp" />
+    <ClCompile Include="..\private\MouseCousorUI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MouseCousorLightUI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

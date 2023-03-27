@@ -100,6 +100,9 @@
 #include "Main_BrainGaugeUI.h"
 #include "Main_BrainUI.h"
 #include "Main_OnePickUI.h"
+// Mouse
+#include "MouseCousorUI.h"
+#include "MouseCousorLightUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -493,6 +496,16 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CMain_OnePickUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		
+		// Mouse
+		/* For.Prototype_GameObject_MouseCousorUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("MouseCousorUI"),
+			CMouseCousorUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_MouseCousorUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("MouseCousorLightUI"),
+			CMouseCousorLightUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		
 	}
 
 	//FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
@@ -599,14 +612,18 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Main.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Main", &json));
 
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/MouseCousorUI.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MouseCousorUI", &json));
+
+
+	
+
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
 	//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);
 	//	wstring protoTag = s2ws(json["Prototype_GameObject"]);
 	//	pGameInstance->Clone_GameObject(pLayerTag, protoTag.c_str(), &json);
 	//});
-
-
 
 	return S_OK;
 }
