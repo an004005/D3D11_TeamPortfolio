@@ -7,6 +7,7 @@ matrix			g_BoneMatrices[512];
 
 Texture2D g_WaveTile;
 Texture2D g_scl_noise_030;
+Texture2D g_scl_noise_004;
 
 struct VS_IN
 {
@@ -87,6 +88,7 @@ struct PS_OUT
 struct PS_OUT_NONLIGHT
 {
 	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1; // post process 플래그
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -206,10 +208,20 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 	return Out;
 }
 
+// g_float_0 : empty
+// g_float_1 : empty
+// g_float_2 : 텔레포트 디솔브
 // g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_WIRE_2(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
+
+	float fTeleportDissolve = g_float_2;
+	if (fTeleportDissolve > 0.f)
+	{
+		if (saturate(g_scl_noise_030.Sample(LinearSampler, In.vTexUV * 2.f).g + 0.2f) <= fTeleportDissolve)
+			discard;
+	}
 
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	if (Out.vDiffuse.a < 0.001f)
@@ -232,7 +244,7 @@ PS_OUT PS_WIRE_2(PS_IN In)
 	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir.xyz), 0.5f);
 	float4 vWhite = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vDiffuse = lerp(vWhite, Out.vDiffuse, fFresnel);
-	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, 0.f);
+	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, fTeleportDissolve);
 
 	return Out;
 }
@@ -247,7 +259,7 @@ PS_OUT PS_CH100_HAIR_1_3(PS_IN In)
 	float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
 	float4 vViewDir = g_vCamPosition - In.vWorldPos;
 	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir), 1.5f);
-	float4 vColor = float4(1.f, 26.f/255.f, 0.f, 1.f);
+	const float4 vColor = float4(1.f, 26.f/255.f, 0.f, 1.f);
 	Out.vDiffuse = lerp(Out.vDiffuse, vColor, fFresnel);
 
 	return Out;
@@ -381,6 +393,25 @@ PS_OUT_NONLIGHT PS_WIRE_Forward_7(PS_IN In)
 	return Out;
 }
 
+PS_OUT_NONLIGHT PS_SuperSpeedTrail_8(PS_IN In)
+{
+	PS_OUT_NONLIGHT			Out = (PS_OUT_NONLIGHT)0;
+
+	float fNoise = g_scl_noise_004.Sample(LinearSampler, In.vTexUV * 2.f).r;
+	float fLifeRatio = saturate(g_float_0);
+	if (fLifeRatio <= 0.5f)
+	{
+		float fRemapRatio = Remap(fLifeRatio, float2(0.f, 0.5f), float2(0.f, 1.f));
+		if (fRemapRatio< fNoise)
+			discard;
+	}
+
+	Out.vColor.rgb = COL_PINK;
+	Out.vColor.a = 0.3f;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0
@@ -495,7 +526,19 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_WIRE_Forward_7();
 	}
 
+	// 8
+	pass SuperSpeedTrail_8
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SuperSpeedTrail_8();
+	}
 }
 
 

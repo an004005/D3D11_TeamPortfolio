@@ -1119,10 +1119,23 @@ HRESULT CModel::Render_Cam(CTransform* pTransform, CCamera* pCamera)
 	return S_OK;
 }
 
-// HRESULT CModel::RenderMesh_Shader(CTransform* pTransform, CShader* pShader, _uint iPass)
-// {
-//
-// }
+HRESULT CModel::Render_NoUpdateBone(const _float4x4& WorldMatrix)
+{
+	for (size_t i = 0; i < m_Meshes.size(); ++i)
+	{
+		const _uint iMtrlIdx = m_Meshes[i]->Get_MaterialIndex();
+		if (m_Materials[iMtrlIdx]->IsActive() == false)
+			continue;
+
+		m_Materials[iMtrlIdx]->GetShader()->Set_MatrixArray("g_BoneMatrices", m_BoneMatrices[i].data(), 512);
+
+		m_Materials[iMtrlIdx]->BindMatrices(WorldMatrix);
+		m_Materials[iMtrlIdx]->Begin();
+		FAILED_CHECK(m_Meshes[i]->Render());
+	}
+
+	return S_OK;
+}
 
 HRESULT CModel::Render_ShadowDepth(CTransform* pTransform)
 {
@@ -1282,6 +1295,30 @@ CMaterial* CModel::FindMaterial(const _tchar* pMtrlProtoTag)
 	}
 
 	return nullptr;
+}
+
+CModel* CModel::CloneModelPose()
+{
+	if (m_eType == TYPE_NONANIM)
+		return nullptr;
+
+	CModel* pModelClone = new CModel(m_pDevice, m_pContext);
+
+	pModelClone->m_Meshes.reserve(m_Meshes.size());
+	for (auto& pMesh : m_Meshes)
+		pModelClone->m_Meshes.push_back(dynamic_cast<CMesh*>(pMesh->Clone()));
+
+	pModelClone->m_Materials.reserve(m_Materials.size());
+	for (auto pMtrl : m_Materials)
+		pModelClone->m_Materials.push_back((CMaterial*)pMtrl->Clone(nullptr));
+
+	pModelClone->m_BoneMatrices.resize(m_Meshes.size());
+	for (size_t i = 0; i < m_Meshes.size(); ++i)
+	{
+		m_Meshes[i]->SetUp_BoneMatrices(pModelClone->m_BoneMatrices[i].data(), XMLoadFloat4x4(&m_PivotMatrix));
+	}
+
+	return pModelClone;
 }
 
 void CModel::SaveModifiedData(Json & json)

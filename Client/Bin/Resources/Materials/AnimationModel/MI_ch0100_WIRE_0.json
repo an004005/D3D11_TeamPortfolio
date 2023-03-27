@@ -1,1 +1,27 @@
-{"ShaderParams":{"Float2s":[],"Float4s":[[0.49440914392471313,0.21221038699150085,0.21221038699150085,1.0],[0.6674338579177856,0.0,0.0,0.0]],"Float4x4s":[],"Floats":[1.0],"Ints":[],"Pass":2,"Textures":["..\\Bin\\Resources\\Meshes\\Scarlet_Nexus\\AnimModels\\Player\\Texture\\T_cm_Fil_White.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxToonAnimModel"}
+{
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.49440914392471313,
+                0.21221038699150085,
+                0.21221038699150085,
+                1.0
+            ],
+            [
+                0.6674338579177856,
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [1.0, 0.0, 0.0, 0.0],
+        "Ints": [],
+        "Pass": 2,
+        "Textures": [
+            "..\\Bin\\Resources\\Meshes\\Scarlet_Nexus\\AnimModels\\Player\\Texture\\T_cm_Fil_White.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"
+}

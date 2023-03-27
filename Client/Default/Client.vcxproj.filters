@@ -1051,6 +1051,7 @@
     <ClInclude Include="..\public\PostVFX_SuperSpeed.h">
       <Filter>VFX\PostProcess</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\SuperSpeedTrail.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1719,6 +1720,7 @@
     <ClCompile Include="..\private\PostVFX_SuperSpeed.cpp">
       <Filter>VFX\PostProcess</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\SuperSpeedTrail.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

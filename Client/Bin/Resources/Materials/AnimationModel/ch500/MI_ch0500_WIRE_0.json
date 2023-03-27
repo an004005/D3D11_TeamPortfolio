@@ -10,7 +10,7 @@
             ]
         ],
         "Float4x4s": [],
-        "Floats": [],
+        "Floats": [1.0, 0.0, 0.0, 0.0],
         "Ints": [],
         "Pass": 2,
         "Textures": [

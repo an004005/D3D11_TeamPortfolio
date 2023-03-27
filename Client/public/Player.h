@@ -607,6 +607,7 @@ private:
 private:
 	CSAS_Portrait* m_pSasPortrait = nullptr;
 	class CSAS_Cable* m_pSAS_Cable = nullptr;
+	class CSuperSpeedTrail* m_pTrail = nullptr;
 	void SasGearEffect();
 
 private:

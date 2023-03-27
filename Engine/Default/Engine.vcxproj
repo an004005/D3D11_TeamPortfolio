@@ -230,6 +230,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\Input_Device.h" />
     <ClInclude Include="..\public\JsonLib.h" />
     <ClInclude Include="..\public\JsonStorage.h" />
+    <ClInclude Include="..\public\LambdaRenderObject.h" />
     <ClInclude Include="..\public\Layer.h" />
     <ClInclude Include="..\public\Level.h" />
     <ClInclude Include="..\public\Level_Manager.h" />
@@ -324,6 +325,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\Input_Device.cpp" />
     <ClCompile Include="..\private\JsonLib.cpp" />
     <ClCompile Include="..\private\JsonStorage.cpp" />
+    <ClCompile Include="..\private\LambdaRenderObject.cpp" />
     <ClCompile Include="..\private\Layer.cpp" />
     <ClCompile Include="..\private\Level.cpp" />
     <ClCompile Include="..\private\Level_Manager.cpp" />

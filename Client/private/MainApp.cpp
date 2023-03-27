@@ -44,6 +44,7 @@
 #include "PlayerStartPosition.h"
 #include "PostVFX_Teleport.h"
 #include "PostVFX_SuperSpeed.h"
+#include "SuperSpeedTrail.h"
 
 
 CMainApp::CMainApp()
@@ -185,6 +186,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CPostVFX_SuperSpeed::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For. Prototype_Component_SuperSpeedTrail */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_SuperSpeedTrail"),
+		CSuperSpeedTrail::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
@@ -262,6 +268,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		pShader->SetCommonTexture("g_Vanish_Noise", "../Bin/Resources/Model/AnimModel/Monster/Common/Texture/T_em0000_vanish_noise.png");
 		pShader->SetCommonTexture("g_Weak_Noise", "../Bin/Resources/Model/AnimModel/Monster/Common/Texture/T_em0000_weak_noise.png");
 		pShader->SetCommonTexture("g_WaveTile", "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_Wave_Tile_00.dds");
+		pShader->SetCommonTexture("g_scl_noise_004", "../Bin/Resources/Texture/VFX/T_ef_ev_scl_noi_004.png");
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimModel"), pShader)))
 			return E_FAIL;
 	}
@@ -271,6 +278,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		auto pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxToonAnimModel.hlsl"), VTXANIMMODEL_DECLARATION::Elements, VTXANIMMODEL_DECLARATION::iNumElements);
 		pShader->SetCommonTexture("g_WaveTile", "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_Wave_Tile_00.dds");
 		pShader->SetCommonTexture("g_scl_noise_030", "../Bin/Resources/Texture/VFX/T_ef_scl_noi_030.png");
+		pShader->SetCommonTexture("g_scl_noise_004", "../Bin/Resources/Texture/VFX/T_ef_ev_scl_noi_004.png");
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxToonAnimModel"), pShader)))
 			return E_FAIL;
 	}

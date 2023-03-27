@@ -20,6 +20,7 @@
 #include "CurveManager.h"
 #include "GameTime_Manager.h"
 #include "CurveFloatMapImpl.h"
+#include "LambdaRenderObject.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -146,6 +147,8 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 			m_iStaticLevelIndex, TEXT("Prototype_Component_Shader_VtxModelInstancing_Shadow"), 
 			CShader::Create(*ppDeviceOut, *ppContextOut, L"../Bin/ShaderFiles/Shader_VtxModel_Instancing_Shadow.hlsl", VTXMODEL_INSTANCE_DECLARATION::Elements, VTXMODEL_INSTANCE_DECLARATION::iNumElements))))
 			return E_FAIL;
+
+		FAILED_CHECK(m_pObject_Manager->Add_Prototype(m_iStaticLevelIndex, L"LambdaRenderObject", CLambdaRenderObject::Create(*ppDeviceOut, *ppContextOut)));
 	}
 
 	// null animation 셋팅
@@ -167,6 +170,11 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 
 	m_pCurve_Manager->LoadCurves("../Bin/Resources/Curve/ManagedCurves/");
 
+	for (int i = 0; i < 100; ++i)
+	{
+		m_LambdaRenderQ.push_back(dynamic_cast<CLambdaRenderObject*>(Clone_GameObject_NoLayerNoBegin(m_iStaticLevelIndex, L"LambdaRenderObject")));
+	}
+
 	return S_OK;
 }
 
@@ -176,6 +184,14 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 		nullptr == m_pLevel_Manager || 
 		nullptr == m_pObject_Manager)
 		return;
+
+	for (auto pUsedLambdaRender : m_UsedLambdaRenderQ)
+	{
+		pUsedLambdaRender->SetRenderFunction(nullptr);
+		m_LambdaRenderQ.push_back(pUsedLambdaRender);
+	}
+	m_UsedLambdaRenderQ.clear();
+	
 
 	m_pGameTime_Manager->Tick(TimeDelta);
 
@@ -887,6 +903,27 @@ void CGameInstance::ClearAllTimeRatio()
 	m_pGameTime_Manager->ClearAllTimeRatio();
 }
 
+void CGameInstance::LambdaRenderRequest(const _float4x4& WorldMatrix, const std::function<void()>& RenderFunction,
+	CRenderer::RENDERGROUP eRenderGroup)
+{
+	if (m_LambdaRenderQ.empty())
+	{
+		for (int i = 0; i < 10; ++i)
+		{
+			m_LambdaRenderQ.push_back(dynamic_cast<CLambdaRenderObject*>(Clone_GameObject_NoLayerNoBegin(m_iStaticLevelIndex, L"LambdaRenderObject")));
+		}
+	}
+
+	auto pLambdaRender = m_LambdaRenderQ.back();
+	m_LambdaRenderQ.pop_back();
+
+	pLambdaRender->SetRenderFunction(RenderFunction);
+	pLambdaRender->GetTransform()->Set_WorldMatrix(WorldMatrix);
+	m_pRenderer->Add_RenderGroup(eRenderGroup, pLambdaRender);
+
+	m_UsedLambdaRenderQ.push_back(pLambdaRender);
+}
+
 /*************************
  *	CImgui_Manager
  *************************/
@@ -985,6 +1022,13 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {
+	for (auto pLambdaRender : m_LambdaRenderQ)
+		Safe_Release(pLambdaRender);
+	m_LambdaRenderQ.clear();
+	for (auto pLambdaRender : m_UsedLambdaRenderQ)
+		Safe_Release(pLambdaRender);
+	m_UsedLambdaRenderQ.clear();
+
 	Safe_Release(m_pCamera_Manager);
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pFrustum);
