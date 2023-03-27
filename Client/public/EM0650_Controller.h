@@ -27,7 +27,6 @@ private:
 	class CEM0650* m_pCastedOwner = nullptr;
 
 private:
-	_float m_fToTargetDistance;
 	
 	_uint m_iMidOrder = 0;
 public:

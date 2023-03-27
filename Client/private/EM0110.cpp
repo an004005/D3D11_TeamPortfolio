@@ -5,7 +5,6 @@
 #include "RigidBody.h"
 #include "EM0110_AnimInstance.h"
 #include "EM0110_Controller.h"
-#include "EnemyBullet.h"
 #include "PhysX_Manager.h"
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
@@ -13,7 +12,7 @@
 CEM0110::CEM0110(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
-	m_eMonsterName = EEnemyName::EM0110;
+	m_eEnemyName = EEnemyName::EM0110;
 }
 
 CEM0110::CEM0110(const CEM0110 & rhs)
@@ -35,12 +34,12 @@ HRESULT CEM0110::Initialize(void * pArg)
 		m_iHP = 1100; // ¡Ú
 
 		m_iAtkDamage = 50;
-		iMonsterLevel = 2;
+		iEemeyLevel = 2;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eMonsterName = EEnemyName::EM0110;
+	m_eEnemyName = EEnemyName::EM0110;
 	m_bHasCrushGage = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	return S_OK;
@@ -362,7 +361,6 @@ _bool CEM0110::IsPlayingSocket() const
 
 void CEM0110::AfterLocal180Turn()
 {
-	IM_LOG("Turn");
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	vPos -= XMVector3Normalize(vLook) * 10.f;

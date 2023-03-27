@@ -1,0 +1,27 @@
+{
+    "RigidBody": {
+        "ColliderType": 8,
+        "Density": 10.0,
+        "OriginTransform": [
+            0.800000011920929,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.800000011920929,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.800000011920929,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 1,
+        "bKinematic": false,
+        "bTrigger": true
+    }
+}

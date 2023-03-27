@@ -4669,30 +4669,15 @@
     },
     "AS_em0800_110_AL_walk_B_loop": {
         "Duration": 359.0,
-        "TickPerSecond": 80.0,
+        "TickPerSecond": 50.0,
         "bLooping": true,
-        "vecEvent": [
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 23.0
-            },
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 103.0
-            },
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 183.0
-            },
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 263.0
-            },
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 343.0
-            }
-        ]
+        "vecEvent": []
+    },
+    "AS_em0800_110_AL_walk_B_loop.001": {
+        "Duration": 359.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_em0800_112_AL_walk_L_start": {
         "Duration": 31.0,
@@ -4707,14 +4692,9 @@
     },
     "AS_em0800_113_AL_walk_L_loop": {
         "Duration": 61.0,
-        "TickPerSecond": 61.0,
+        "TickPerSecond": 60.0,
         "bLooping": true,
-        "vecEvent": [
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 30.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_em0800_115_AL_walk_R_start": {
         "Duration": 31.0,
@@ -4729,36 +4709,21 @@
     },
     "AS_em0800_116_AL_walk_R_loop": {
         "Duration": 61.0,
-        "TickPerSecond": 61.0,
+        "TickPerSecond": 60.0,
         "bLooping": true,
-        "vecEvent": [
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 30.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_em0800_150_AL_turn_R": {
         "Duration": 46.0,
-        "TickPerSecond": 38.0,
+        "TickPerSecond": 50.0,
         "bLooping": true,
-        "vecEvent": [
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 24.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_em0800_152_AL_turn_L": {
         "Duration": 46.0,
-        "TickPerSecond": 38.0,
+        "TickPerSecond": 60.0,
         "bLooping": true,
-        "vecEvent": [
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 24.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_em0800_160_AL_threat": {
         "Duration": 240.0,
@@ -4766,28 +4731,43 @@
         "bLooping": false,
         "vecEvent": []
     },
-    "AS_em0800_214_AL_atk_a7_laser2_start": {
+    "AS_em0800_208_AL_atk_a4_laser_start": {
         "Duration": 155.0,
-        "TickPerSecond": 52.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "Untouch",
-                "EventTime": 5.0
+                "EventName": "Laser_Charge",
+                "EventTime": 90.0
             },
             {
-                "EventName": "Laser_Create",
-                "EventTime": 130.0
-            },
-            {
-                "EventName": "LaserEff_Start",
-                "EventTime": 90.5
-            },
-            {
-                "EventName": "LaserSound_Start",
-                "EventTime": 30.0
+                "EventName": "Laser_Launch",
+                "EventTime": 100.0
             }
         ]
+    },
+    "AS_em0800_210_AL_atk_a4_laser_end": {
+        "Duration": 65.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_212_AL_atk_a6_circumference2": {
+        "Duration": 280.0,
+        "TickPerSecond": 55.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "ComeUp",
+                "EventTime": 120.0
+            }
+        ]
+    },
+    "AS_em0800_214_AL_atk_a7_laser2_start": {
+        "Duration": 155.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_em0800_215_AL_atk_a7_laser2_loop": {
         "Duration": 45.0,
@@ -4919,24 +4899,124 @@
     },
     "AS_em0810_201_AL_atk_a1_bite": {
         "Duration": 130.0,
-        "TickPerSecond": 70.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "Untouch",
-                "EventTime": 5.0
-            },
+                "EventName": "Bite",
+                "EventTime": 57.0
+            }
+        ]
+    },
+    "AS_em1100_107_AL_run_start": {
+        "Duration": 54.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": [
             {
-                "EventName": "Bite_Start",
-                "EventTime": 48.20000076293945
-            },
+                "EventName": "Run_Start",
+                "EventTime": 47.0
+            }
+        ]
+    },
+    "AS_em1100_108_AL_run_loop": {
+        "Duration": 36.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1100_135_AL_dodge_B_start": {
+        "Duration": 100.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": [
             {
-                "EventName": "Bite_End",
+                "EventName": "Dodge_Start",
+                "EventTime": 30.0
+            }
+        ]
+    },
+    "AS_em1100_202_AL_atk_a1_bringdown_start": {
+        "Duration": 33.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Stamp",
+                "EventTime": 8.0
+            }
+        ]
+    },
+    "AS_em1100_204_AL_atk_a2_tailall": {
+        "Duration": 176.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "TailSwing_End",
                 "EventTime": 100.0
             },
             {
-                "EventName": "Untouch_End",
-                "EventTime": 125.0
+                "EventName": "TailSwing_Start",
+                "EventTime": 70.0
+            }
+        ]
+    },
+    "AS_em1100_208_AL_atk_a3_guidanceshot_end": {
+        "Duration": 66.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1100_208_AL_atk_a3_guidanceshot_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 35.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Shot",
+                "EventTime": 26.0
+            }
+        ]
+    },
+    "AS_em1100_215_AL_atk_a5_drainage_end": {
+        "Duration": 242.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1100_215_AL_atk_a5_drainage_omen": {
+        "Duration": 143.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1100_215_AL_atk_a5_drainage_start": {
+        "Duration": 77.0,
+        "TickPerSecond": 32.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1120_211_AL_atk_a4_sliding_end": {
+        "Duration": 180.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1120_211_AL_atk_a4_sliding_omen": {
+        "Duration": 120.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1120_211_AL_atk_a4_sliding_start": {
+        "Duration": 65.0,
+        "TickPerSecond": 32.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Rush_Start",
+                "EventTime": 19.0
             }
         ]
     },

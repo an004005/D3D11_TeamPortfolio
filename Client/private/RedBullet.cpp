@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "EnemyBullet.h"
+#include "RedBullet.h"
 #include <random>
 
 #include "GameInstance.h"
@@ -14,22 +14,22 @@
 #include "Player.h"
 #include "VFX_Manager.h"
 
-CEnemyBullet::CEnemyBullet(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CRedBullet::CRedBullet(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBullet(pDevice, pContext)
 {
 }
 
-CEnemyBullet::CEnemyBullet(const CEnemyBullet & rhs)
+CRedBullet::CRedBullet(const CRedBullet & rhs)
 	: CBullet(rhs)
 {
 }
 
-HRESULT CEnemyBullet::Initialize_Prototype()
+HRESULT CRedBullet::Initialize_Prototype()
 {
 	return CBullet::Initialize_Prototype();
 }
 
-HRESULT CEnemyBullet::Initialize(void * pArg)
+HRESULT CRedBullet::Initialize(void * pArg)
 {
 	FAILED_CHECK(CBullet::Initialize(pArg));
 
@@ -105,18 +105,18 @@ HRESULT CEnemyBullet::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CEnemyBullet::BeginTick()
+void CRedBullet::BeginTick()
 {
 	CBullet::BeginTick();
 }
 
-void CEnemyBullet::Tick(_double TimeDelta)
+void CRedBullet::Tick(_double TimeDelta)
 {
 	CBullet::Tick(TimeDelta);
 	m_pFSM->Tick(TimeDelta);
 }
 
-void CEnemyBullet::Late_Tick(_double TimeDelta)
+void CRedBullet::Late_Tick(_double TimeDelta)
 {
 	CBullet::Late_Tick(TimeDelta);
 
@@ -124,47 +124,47 @@ void CEnemyBullet::Late_Tick(_double TimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
-HRESULT CEnemyBullet::Render()
+HRESULT CRedBullet::Render()
 {
 	//m_pModelCom->Render(m_pTransformCom);
 	return S_OK;
 }
 
-void CEnemyBullet::Imgui_RenderProperty()
+void CRedBullet::Imgui_RenderProperty()
 {
 	CBullet::Imgui_RenderProperty();
 }
 
-void CEnemyBullet::AfterPhysX()
+void CRedBullet::AfterPhysX()
 {
 	__super::AfterPhysX();
 }
 
-CEnemyBullet * CEnemyBullet::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CRedBullet * CRedBullet::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CEnemyBullet* pInstance = new CEnemyBullet(pDevice, pContext);
+	CRedBullet* pInstance = new CRedBullet(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CEnemyBullet");
+		MSG_BOX("Failed to Created : CRedBullet");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject * CEnemyBullet::Clone(void * pArg)
+CGameObject * CRedBullet::Clone(void * pArg)
 {
-	CEnemyBullet*		pInstance = new CEnemyBullet(*this);
+	CRedBullet*		pInstance = new CRedBullet(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CEnemyBullet");
+		MSG_BOX("Failed to Cloned : CRedBullet");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CEnemyBullet::Free()
+void CRedBullet::Free()
 {
 	__super::Free();
 

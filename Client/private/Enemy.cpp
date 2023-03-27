@@ -130,9 +130,9 @@ void CEnemy::Imgui_RenderProperty()
 		ImGui::InputInt("MaxHP", &m_iMaxHP);
 		ImGui::InputInt("MaxCrushGage", &m_iMaxCrushGage);
 		ImGui::Checkbox("HasCrushGage", &m_bHasCrushGage);
-		_int iLevel = iMonsterLevel;
+		_int iLevel = iEemeyLevel;
 		ImGui::InputInt("Level", &iLevel);
-		iMonsterLevel = iLevel;
+		iEemeyLevel = iLevel;
 		ImGui::InputInt("AtkDamage", &m_iAtkDamage);
 	}
 
@@ -254,7 +254,7 @@ void CEnemy::SetEnemyBatchDataStat(ENEMY_STAT tStat)
 	m_iCrushGage = m_iMaxCrushGage;
 	m_bHasCrushGage = tStat.bHasCrushGage;
 	m_iAtkDamage = tStat.iAtkDamage;
-	iMonsterLevel = tStat.iLevel;
+	iEemeyLevel = tStat.iLevel;
 }
 
 ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
@@ -264,7 +264,7 @@ ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
 	tStat.iMaxCrushGage = m_iMaxCrushGage;
 	tStat.bHasCrushGage = m_bHasCrushGage;
 	tStat.iAtkDamage = m_iAtkDamage;
-	tStat.iLevel = iMonsterLevel;
+	tStat.iLevel = iEemeyLevel;
 	return tStat;
 }
 
@@ -298,6 +298,16 @@ void CEnemy::FindTarget()
 		}, PLATERTEST_LAYER_PLAYER);
 		m_pTarget = dynamic_cast<CScarletCharacter*>(pPlayer);
 	}
+}
+
+void CEnemy::TurnEyesOut()
+{
+	CEffectGroup* pEffectGroup = nullptr;
+	pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", TEXT("Layer_UI"));
+	assert(pEffectGroup != nullptr);
+
+	//TimeLine 끝나고 삭제
+	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true);
 }
 
 _float4x4 CEnemy::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
