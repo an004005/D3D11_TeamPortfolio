@@ -428,6 +428,22 @@ PS_OUT PS_DEFAULT_MODEL(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_EM1100_ELEC_BULLET_EXPLODE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float2 TilltingUV = TilingAndOffset(In.vTexUV, float2(10.f, 10.f), float2(0.f, 0.f));
+
+	float2 TEXUV = Get_FlipBookUV(TilltingUV, g_Time, 0.05, 8, 8);
+	float4 OriginTex = g_tex_0.Sample(LinearSampler, TEXUV);
+
+	Out.vColor = CalcHDRColor(OriginTex, g_float_0);
+	Out.vColor.a = OriginTex.r;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	return Out;
+}
+
 PS_OUT PS_EM1100_STAMP(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -1035,5 +1051,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM1100_STAMP();
+	}
+
+	//21
+	pass Em1100_ElecBullet_Explode
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_ELEC_BULLET_EXPLODE();
 	}
 }

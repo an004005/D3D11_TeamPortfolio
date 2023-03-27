@@ -632,6 +632,32 @@ HRESULT CRenderer::Render_NonLight()
 HRESULT CRenderer::Render_AlphaBlend()
 {
 	// HDR
+	for (auto& pGameObject : m_RenderObjects[RENDER_ALPHABLEND_FIRST])
+	{
+		if (nullptr != pGameObject)
+			pGameObject->Compute_CamDistance();
+	}
+
+
+	m_RenderObjects[RENDER_ALPHABLEND_FIRST].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
+	{
+		return pSour->GetCamDistance() > pDest->GetCamDistance();
+	});
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_ALPHABLEND_FIRST])
+	{
+		if (nullptr != pGameObject)
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+
+	m_RenderObjects[RENDER_ALPHABLEND_FIRST].clear();
+
+
+
+	///////////////////////////////
+	// HDR
 	for (auto& pGameObject : m_RenderObjects[RENDER_ALPHABLEND])
 	{
 		if (nullptr != pGameObject)
