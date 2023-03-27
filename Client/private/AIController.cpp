@@ -85,10 +85,13 @@ void CAIController::Tick(_double TimeDelta)
 	}
 
 	//UI 처음 플레이어 발견
-	if ((m_eDistance == DIS_MIDDLE || m_eDistance == DIS_NEAR) && !m_bFirstFindTarget)
+	if (m_bDetectTarget == false &&
+		(m_eDistance == DIS_NEAR ||
+		 m_eDistance == DIS_MIDDLE || 
+		 m_eDistance == DIS_FAR))
 	{
 		dynamic_cast<CEnemy*>(pOwner)->TurnEyesOut();
-		m_bFirstFindTarget = true;
+		m_bDetectTarget = true;
 	}
 }
 
@@ -217,7 +220,7 @@ void CAIController::Move(EMoveAxis eAxis)
 	case EMoveAxis::NORTH:
 		m_vMoveAxis.z += 1.f;
 		// 거리 비교해서 비교값 이하일때 멈추는 기능 추가하기 	
-		if (abs(m_fTtoM_Distance) < m_fTargetDist)
+		if (abs(m_fTtoM_Distance) < m_fNearestTargetDist)
 		{
 			m_Commands.front().SetFinish();
 		}

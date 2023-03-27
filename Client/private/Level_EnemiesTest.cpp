@@ -68,8 +68,8 @@ HRESULT CLevel_EnemiesTest::Initialize()
 	if (FAILED(Ready_Layer_Bullet(TEXT("Layer_Bullet"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Kinetic(TEXT("Layer_Kinetic"))))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Kinetic(TEXT("Layer_Kinetic"))))
+		return E_FAIL;*/
 
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
@@ -153,10 +153,10 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
 #endif
 	//FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
-	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
+	//FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
-	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
+	//FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 	
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));

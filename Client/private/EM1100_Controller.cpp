@@ -18,8 +18,7 @@ HRESULT CEM1100_Controller::Initialize(void * pArg)
 	m_iMidOrder = CMathUtils::RandomUInt(1);
 	m_iFarOrder = CMathUtils::RandomUInt(2);
 	//Move함수 시 플레이어와 거리가 어느정도까지 가까워졌을때 멈출지를 정해줌
-	m_fTargetDist = 5.f;
-
+	m_fNearestTargetDist = 5.f;
 
 	//near :  닷지 , 꼬리치기(꼬리치기후 회전하면서 도망감, 플레이어가 뒤에 있을때만)
 	//mid : 물대포 ,주먹, 
@@ -50,11 +49,6 @@ void CEM1100_Controller::AI_Tick(_double TimeDelta)
 
 	m_bRun = false;
 	m_dRushCoolTime[CURTIME] += TimeDelta;
-
-	// 대상과의 거리 
-	m_fToTargetDistance = XMVectorGetX(XMVector3LengthEst(
-		m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)
-		- m_pCastedOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)));
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
@@ -178,11 +172,11 @@ void CEM1100_Controller::DefineState(_double TimeDelta)
 {
 	if (m_pCastedOwner->IsPlayingSocket() == true) return;
 
-	if (m_fToTargetDistance <= 5.f)
+	if (m_fTtoM_Distance <= 5.f)
 		Tick_Near(TimeDelta);
-	else if (m_fToTargetDistance <= 10.f)
+	else if (m_fTtoM_Distance <= 10.f)
 		Tick_Mid(TimeDelta);
-	else if (m_fToTargetDistance <= 30.f)
+	else if (m_fTtoM_Distance <= 30.f)
 		Tick_Far(TimeDelta);
 	else
 		Tick_Outside(TimeDelta);

@@ -105,14 +105,14 @@ protected:
 	_float m_fTtoM_Distance = 0.f;
 
 	//Move시 플레이어 앞에서 멈추는 거리
-	_float	m_fTargetDist = 2.f;
+	_float	m_fNearestTargetDist = 2.f;
 
 	EHandleInput m_eInput = HANDLE_END;
 
 	_bool m_bActive = true;
 	
 	//UI 눈동자 생성
-	_bool	m_bFirstFindTarget = false;
+	_bool	m_bDetectTarget = false;
 public:
 	virtual void Free() override;
 };

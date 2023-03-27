@@ -36,7 +36,6 @@ private:
 	class CEM0800* m_pCastedOwner = nullptr;
 
 private:
-	_float m_fToTargetDistance;
 	EBaseTurn m_eTurn = EBaseTurn::TURN_END;
 	_bool	m_bTurn = false;
 

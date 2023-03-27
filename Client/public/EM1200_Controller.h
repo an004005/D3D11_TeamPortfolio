@@ -37,9 +37,7 @@ private:
 private:
 	class CEM1200* m_pCastedOwner = nullptr;
 
-private:
-	_float m_fToTargetDistance;
-	
+private:	
 	_bool	m_bRun = false;
 
 	_uint m_iMidOrder = 0;

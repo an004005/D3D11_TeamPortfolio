@@ -29,7 +29,6 @@ public:
 
 private:
 	CFSMComponent* m_pFSM = nullptr;
-	_float m_fToTargetDistance;
 	class CEM0320* m_pCastedOwner = nullptr;
 
 
