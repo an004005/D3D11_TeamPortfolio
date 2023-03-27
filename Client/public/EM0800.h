@@ -56,9 +56,7 @@ private:
 	class CEM0800_Controller*		m_pController = nullptr;
 	class CEM0800_AnimInstance*		m_pASM = nullptr;
 
-	CRigidBody*					m_pRange = nullptr;
-	CRigidBody*					m_pTrunk = nullptr;
-	CRigidBody*					m_pWeak[2]{ nullptr };
+	unordered_map<string, CRigidBody*> m_pRigidBodies;
 
 	CEffectGroup*				m_pWaterPool = nullptr;
 
