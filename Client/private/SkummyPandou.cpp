@@ -331,27 +331,27 @@ void CSkummyPandou::Imgui_RenderProperty()
 void CSkummyPandou::SetUp_UI()
 {
 	//HP UI
-	_float4x4 UI_PivotMatrix = Matrix(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.413f, 0.0f, 1.0f
-	);
+	//_float4x4 UI_PivotMatrix = Matrix(
+	//	1.0f, 0.0f, 0.0f, 0.0f,
+	//	0.0f, 1.0f, 0.0f, 0.0f,
+	//	0.0f, 0.0f, 1.0f, 0.0f,
+	//	0.0f, 0.413f, 0.0f, 1.0f
+	//);
 
-	m_UI_PivotMatrixes[INFOBAR] = UI_PivotMatrix;
+	//m_UI_PivotMatrixes[INFOBAR] = UI_PivotMatrix;
 
-	//FindEye
-	UI_PivotMatrix = Matrix(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.413f, 0.0f, 1.0f
-	);
+	////FindEye
+	//UI_PivotMatrix = Matrix(
+	//	1.0f, 0.0f, 0.0f, 0.0f,
+	//	0.0f, 1.0f, 0.0f, 0.0f,
+	//	0.0f, 0.0f, 1.0f, 0.0f,
+	//	0.0f, 0.413f, 0.0f, 1.0f
+	//);
 
-	m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
+	//m_UI_PivotMatrixes[FINDEYES] = UI_PivotMatrix;
 
-	iMonsterLevel = 6;
-	m_eMonsterName = SKUMMYPANDOU;
+	//iMonsterLevel = 6;
+	//m_eMonsterName = SKUMMYPANDOU;
 
 }
 

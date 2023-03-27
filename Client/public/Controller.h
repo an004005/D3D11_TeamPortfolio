@@ -73,6 +73,11 @@ public:
 		R,
 		X,
 		G,
+		B,
+		T,
+		W,
+		S,
+		L,
 		HANDLE_END
 	};
 protected:

@@ -11,14 +11,14 @@ END
 
 BEGIN(Client)
 
-// 브론존
+// 초(고속)파리 :: 방도 팡뒤(Bangdo Fandu)
 
-class CEM0800 : public CEnemy
+class CEM1100 : public CEnemy
 {
 private:
-	CEM0800(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CEM0800(const CEM0800& rhs);
-	virtual ~CEM0800() = default;
+	CEM1100(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEM1100(const CEM1100& rhs);
+	virtual ~CEM1100() = default;
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
@@ -35,50 +35,62 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 public:
+	void	Set_RunStart(_bool bRunStart) { m_bRun_Start = bRunStart; }
+	_bool	Get_RunStart() { return m_bRun_Start; }
+
+public:
 	//행동 관련 함수 정의
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
+	_bool IsRun() const { return m_bRun; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_bool IsPlayingSocket() const;
-	_bool	IsTurn() { return m_bTurn; }
-	EBaseTurn GetBaseTurn() { return m_eTurn; }
+	void Dodge_VelocityCalc();
+	void AfterLocal180Turn();
 
-	void Play_LightHitAnim();
+//	void Play_LightHitAnim();
 	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
 
-	EBaseTurn FindTargetDirection();
-private:
-	//충돌 관련 함수 정의
-	void Bite_Overlap();
-	void Submergence_Overlap();
-	void Laser_SweepSphere();
+	_bool IsTargetFront();
 
 private:
-	class CEM0800_Controller*		m_pController = nullptr;
-	class CEM0800_AnimInstance*		m_pASM = nullptr;
+	//충돌 관련 함수 정의
+	void Rush_SweepCapsule();
+	void TailSwing_SweepSphere();
+	void Stamp_Overlap();
+
+private:
+	class CEM1100_Controller*		m_pController = nullptr;
+	class CEM1100_AnimInstance*		m_pASM = nullptr;
 
 	//충돌
 	CRigidBody*				m_pRange = nullptr;
+	CRigidBody*				m_pHead = nullptr;
 
 private:
-	_float3						m_vMoveAxis;
-	EBaseTurn					m_eTurn = EBaseTurn::TURN_END;
-	_bool						m_bTurn = false;
+	_float3						 m_vMoveAxis;
+	_bool						m_bHitAir = false;
 
+	_bool						m_bRun = false;
+	//달리기 전 준비모션이 있어서 진짜 움직여야하는 타이밍
+	_bool						m_bRun_Start = false;
 
-	// Attack
-	_bool m_bLaser = false;
-	_float	m_fLaserTime = 0.f;
-	_bool m_bComeUp = false;
+	//Attack
+	_bool						m_bRush = false;
+	_bool						m_bTailSwing = false;
+	_float4						vTailPos;
+	//Dodge
+	_bool						m_bDodge = false;
+	_float3						m_vOnJumpMoveVelocity;
+
 	
-
 	CController::EHandleInput	m_eInput;
 
 	//Heavy coll
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
 public:
-	static CEM0800* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEM1100* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
