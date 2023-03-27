@@ -27,7 +27,13 @@ void CSuperSpeedTrail::BeginTick()
 void CSuperSpeedTrail::Tick(_double TimeDelta)
 {
 	if (m_bActive == false)
+	{
+		for (auto& pTrail : m_pGhostTrails)
+			Safe_Release(pTrail.pPoseModel);
+		m_pGhostTrails.clear();
 		return;
+	}
+
 
 	if (m_pOwnerModel == nullptr)
 		return;
@@ -98,13 +104,6 @@ void CSuperSpeedTrail::SetOwnerModel(CModel* pModel)
 void CSuperSpeedTrail::SetActive(_bool bActive)
 {
 	m_bActive = bActive;
-
-	if (m_bActive == false)
-	{
-		for (auto& pTrail : m_pGhostTrails)
-			Safe_Release(pTrail.pPoseModel);
-		m_pGhostTrails.clear();
-	}
 }
 
 CSuperSpeedTrail* CSuperSpeedTrail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

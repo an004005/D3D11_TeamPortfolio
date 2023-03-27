@@ -25,6 +25,7 @@ HRESULT CPostVFX_SAS_Portrait::Initialize(void* pArg)
 {
 	m_tParam.Floats.push_back(1.f);
 	m_tParam.iPass = 9;
+	m_iPriority = 1100;
 	return CPostProcess::Initialize(pArg);
 }
 

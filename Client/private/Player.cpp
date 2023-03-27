@@ -49,6 +49,8 @@
 #include "PostVFX_Penetrate.h"
 #include "PlayerStartPosition.h"
 #include "SuperSpeedTrail.h"
+#include "PostVFX_SuperSpeed.h"
+#include "PostVFX_Teleport.h"
 
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -164,6 +166,15 @@ HRESULT CPlayer::Initialize(void * pArg)
 	Json Penetrate = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Penetrate.json");
 	m_pSAS_Penetrate = dynamic_cast<CPostVFX_Penetrate*>(m_pGameInstance->Clone_GameObject_Get(LAYER_PLAYEREFFECT, L"ProtoPostVFX_Penetrate", &Penetrate));
 	Safe_AddRef(m_pSAS_Penetrate);
+
+	Json SuperSpeed = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/SuperSpeed.json");
+	m_pSuperSpeedPostVFX = dynamic_cast<CPostVFX_SuperSpeed*>(m_pGameInstance->Clone_GameObject_Get(LAYER_PLAYEREFFECT, L"ProtoPostVFX_SuperSpeed", &SuperSpeed));
+	Safe_AddRef(m_pSuperSpeedPostVFX);
+
+	Json Teleport = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Teleport.json");
+	m_pTeleportPostVFX = dynamic_cast<CPostVFX_Teleport*>(m_pGameInstance->Clone_GameObject_Get(LAYER_PLAYEREFFECT, L"ProtoPostVFX_Teleport", &Teleport));
+	Safe_AddRef(m_pTeleportPostVFX);
+	m_pTeleportPostVFX->GetParam().Floats[0] = 1.f;
 
 	m_pModel->FindMaterial(L"MI_ch0100_HOOD_0")->SetActive(false);
 
@@ -885,7 +896,8 @@ void CPlayer::SasMgr()
 			if (ESASType::SAS_PENETRATE== CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 			{
 				//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Sas_Fire_Start"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
-				m_pSAS_Penetrate->GetParam().Floats[0] = 1.f;	// 끄는건 0, 시점 찾아서 넣을 것
+				//m_pSAS_Penetrate->GetParam().Floats[0] = 1.f;	// 끄는건 0, 시점 찾아서 넣을 것
+				m_pSAS_Penetrate->Active(true);
 			}
 
 			if (ESASType::SAS_SUPERSPEED == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
@@ -900,7 +912,18 @@ void CPlayer::SasMgr()
 					LAYER_MAPKINETICOBJECT
 				};
 				CGameInstance::GetInstance()->SetTimeRatio(0.01f, &except);
+
+				m_pTrail->SetActive(true);
+				m_pSuperSpeedPostVFX->Active(true);
 			}
+
+
+			//for (auto pMtrl : m_pModel->GetMaterials())
+			//{
+			//	//pMtrl->GetParam().Floats[1] += TimeDelta; // 1까지, 
+			//	// 1 -> 경질화
+			//	// 2 -> 텔레포트, 촉수에도 해야됨
+			//}
 
 			//m_pASM->SetCurState("IDLE");
 			//SetAbleState({ false, false, false, false, false, true, true, true, true, false });
@@ -973,7 +996,7 @@ void CPlayer::SasStateCheck()
 	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_PENETRATE))
 	{
 		m_bSASSkillInput[1] = false;
-		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSAS_Penetrate)) m_pSAS_Penetrate->GetParam().Floats[0] = 0.f;
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSAS_Penetrate)) m_pSAS_Penetrate->Active(false);
 	}
 
 	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_TELEPORT))
@@ -989,6 +1012,8 @@ void CPlayer::SasStateCheck()
 	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_SUPERSPEED))
 	{
 		CGameInstance::GetInstance()->ResetDefaultTimeRatio();
+		m_pSuperSpeedPostVFX->Active(false);
+		m_pTrail->SetActive(false);
 	}
 
 
@@ -1075,7 +1100,7 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 
 	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_SuperSpeedTrail", L"SuperSpeedTrail", (CComponent**)&m_pTrail));
 	m_pTrail->SetOwnerModel(m_pModel);
-	m_pTrail->SetActive(true);
+	//m_pTrail->SetActive(true);
 
 	return S_OK;
 }
@@ -6650,5 +6675,7 @@ void CPlayer::Free()
 
 	Safe_Release(m_pDropObjectStateMachine);
 	Safe_Release(m_pSAS_Penetrate);
+	Safe_Release(m_pSuperSpeedPostVFX);
+	Safe_Release(m_pTeleportPostVFX);
 //	Safe_Release(m_pContectRigidBody);
 }

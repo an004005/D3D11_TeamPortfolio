@@ -16,7 +16,7 @@ HRESULT CPostVFX_Scifi::Initialize(void* pArg)
 {
 	FAILED_CHECK(CPostProcess::Initialize(pArg));
 
-	m_iPriority = 9999;
+	m_iPriority = 11;
 
 	// if(pArg == nullptr)
 	// {
