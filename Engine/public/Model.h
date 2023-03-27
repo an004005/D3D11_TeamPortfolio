@@ -95,6 +95,7 @@ public:
 	HRESULT RenderMeshOnly(_uint iMeshIdx) const;
 	HRESULT Render_Pass(class CTransform* pTransform, _uint iPass);
 	HRESULT Render_Cam(class CTransform* pTransform, class CCamera* pCamera);
+	HRESULT Render_NoUpdateBone(const _float4x4& WorldMatrix);
 	// HRESULT RenderMesh_Shader(class CTransform* pTransform, class CShader* pShader, _uint iPass);
 
 
@@ -109,6 +110,10 @@ public:
 
 	const vector<class CMaterial*>& GetMaterials() { return m_Materials; }
 	class CMaterial* FindMaterial(const _tchar* pMtrlProtoTag);
+
+	// 현재 실행중인 애니메이션 동작 고정한 모델 카피
+	// 스태틱 메쉬처럼 Render_NoUpdateBone 함수로만 랜더 하기(업데이트하면 터짐)
+	CModel* CloneModelPose();
 
 private:
 	void SaveModifiedData(Json& json);
@@ -190,6 +195,9 @@ protected:
 	_float								m_fBefSpecialRatio = 0.f;
 
 	class CShader* m_pShadowShader = nullptr;
+
+	vector<array<_float4x4, 512>> m_BoneMatrices;
+
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const char* pModelFilePath, _float4x4 PivotMatrix = s_DefaultPivot);

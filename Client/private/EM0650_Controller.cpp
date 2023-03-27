@@ -38,11 +38,6 @@ void CEM0650_Controller::AI_Tick(_double TimeDelta)
 	if (m_pTarget == nullptr)
 		return;
 
-	// 대상과의 거리 
-	m_fToTargetDistance = XMVectorGetX(XMVector3LengthEst(
-		m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)
-		- m_pCastedOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)));
-
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
 		DefineState(TimeDelta);
@@ -95,11 +90,11 @@ void CEM0650_Controller::DefineState(_double TimeDelta)
 {
 	if (m_pCastedOwner->IsPlayingSocket() == true) return;
 
-	if (m_fToTargetDistance <= 8.f)
+	if (m_fTtoM_Distance <= 8.f)
 		Tick_Near(TimeDelta);
-	else if (m_fToTargetDistance <= 13.f)
+	else if (m_fTtoM_Distance <= 13.f)
 		Tick_Mid(TimeDelta);
-	else if (m_fToTargetDistance <= 18.f)
+	else if (m_fTtoM_Distance <= 18.f)
 		Tick_Far(TimeDelta);
 	else
 		Tick_Outside(TimeDelta);

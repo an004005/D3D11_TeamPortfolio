@@ -2,6 +2,8 @@
 #include "Shader_Defines.h"
 #include "Shader_Params.h"
 
+Texture2D g_KineticWave;
+
 struct VS_IN
 {
 	float3		vPosition : POSITION;
@@ -156,8 +158,8 @@ PS_OUT PS_PSYCHIC_DEFAULT_4(PS_IN In)
 	{
 		if (fPsychic >= 1.f)
 		{
-			// todo: 웨이브로 추후 수정
-			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, 0.5f);
+			float fWave = g_KineticWave.Sample(LinearSampler, TilingAndOffset(In.vTexUV, 1.f, float2(g_Time * 0.25f, 0.f))).r;
+			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, fWave);
 		}
 		else
 		{

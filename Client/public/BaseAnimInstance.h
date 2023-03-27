@@ -31,11 +31,8 @@ public:
 
 	void			SetCurState(const string& szStateName) { m_pASM_Base->SetCurState(szStateName); }
 
-public:
-	void			Add_SpairSasMotion(ESASType eSasType);
-
 protected:
-	void			SpairAnimationChecker();
+	void			SpairAnimationManager();
 
 protected:
 	_bool	CheckAnim(const string& szAnimName);
@@ -59,6 +56,7 @@ protected:	// 대상의 상태
 
 	_bool	m_bSeperateAnim = false;
 	_bool	m_bOnBattle = false;
+	_bool	m_bBefSasUsingCheck[8];
 
 	_bool	m_bOnFloor = false;
 

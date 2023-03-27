@@ -41,7 +41,7 @@ HRESULT CEM0200_Controller::Initialize(void* pArg)
 				.AddTransition("Outside to Far", "Far")
 					.Predicator([this] 
 					{
-						return m_fToTargetDistance <= 20.f;
+						return m_fTtoM_Distance <= 20.f;
 					})
 
 			.AddState("Near")
@@ -50,13 +50,13 @@ HRESULT CEM0200_Controller::Initialize(void* pArg)
 				.AddTransition("Near to Mid", "Mid")
 					.Predicator([this] 
 					{
-						return m_fToTargetDistance > 4.f && m_fToTargetDistance <= 12.f;
+						return m_fTtoM_Distance > 4.f && m_fTtoM_Distance <= 12.f;
 					})
 
 				.AddTransition("Near to Far", "Far")
 					.Predicator([this] 
 					{
-						return m_fToTargetDistance > 12.f;
+						return m_fTtoM_Distance > 12.f;
 					})
 
 			.AddState("Mid")
@@ -64,13 +64,13 @@ HRESULT CEM0200_Controller::Initialize(void* pArg)
 				.AddTransition("Mid to Near", "Near")
 					.Predicator([this] 
 					{
-						return m_fToTargetDistance <= 4.f;
+						return m_fTtoM_Distance <= 4.f;
 					})
 
 				.AddTransition("Mid to Far", "Far")
 					.Predicator([this]
 					{
-						return m_fToTargetDistance > 12.f;
+						return m_fTtoM_Distance > 12.f;
 					})
 
 			.AddState("Far")
@@ -78,13 +78,13 @@ HRESULT CEM0200_Controller::Initialize(void* pArg)
 				.AddTransition("Far to Near", "Near")
 					.Predicator([this]
 					{
-						return m_fToTargetDistance <= 4.f;
+						return m_fTtoM_Distance <= 4.f;
 					})
 				
 				.AddTransition("Far to Mid", "Mid")
 					.Predicator([this] 
 					{
-						return m_fToTargetDistance > 4.f && m_fToTargetDistance <= 12.f;
+						return m_fTtoM_Distance > 4.f && m_fTtoM_Distance <= 12.f;
 					})
 
 			.Build();
@@ -112,11 +112,6 @@ void CEM0200_Controller::AI_Tick(_double TimeDelta)
 
 	if (m_pTarget == nullptr)
 		return;
-
-	// 대상과의 거리 
-	m_fToTargetDistance = XMVectorGetX(XMVector3LengthEst(
-		m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)
-		- m_pCastedOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)));
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{

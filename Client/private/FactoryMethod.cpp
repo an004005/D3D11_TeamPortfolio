@@ -23,7 +23,7 @@
 #include "Boss1.h"
 #include "Boss1_AIController.h"
 
-#include "WaterBall.h"
+#include "OilBullet.h"
 
 #include "FlowerLeg_Invisible.h"
 #include "FLInvisible_Controller.h"
@@ -36,9 +36,11 @@
 #include "EM0650.h"
 #include "EM0700.h" 
 #include "EM0800.h"
-#include "EnemyBullet.h"
+#include "EM1100.h"
+#include "EM1200.h"
+#include "RedBullet.h"
 #include "TestTarget.h"
-#include "WaterBall.h"
+#include "OilBullet.h"
 
 // Kinetic Object
 #include "SpecialObject.h"
@@ -46,6 +48,8 @@
 #include "Special_TelephonePole.h"
 #include "Special_HBeam_Bundle.h"
 #include "Special_HBeam_Single.h"
+#include "Special_DropObject_Bundle.h"
+#include "Special_DropObject_Single.h"
 
 // Player Setting
 #include "Player.h"
@@ -228,7 +232,7 @@ HRESULT CFactoryMethod::MakeEnermyPrototypes(ID3D11Device* pDevice, ID3D11Device
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("SkummyPandou"), CSkummyPandou::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BronJon"), CBronJon::Create(pDevice, pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(pDevice, pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_WaterBall"), CWaterBall::Create(pDevice, pContext)));
+	//FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_WaterBall"), CWaterBall::Create(pDevice, pContext)));
 	// Invisible
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FLInvisible_Controller"), CFLInvisible_Controller::Create()));
 	// ~Invisible
@@ -263,7 +267,7 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 		pEm320Model->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em320"), pEm320Model));
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Monster_em320"), CEM0320::Create(pDevice, pContext)));
- 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_WaterBall"), CWaterBall::Create(pDevice, pContext)));
+ 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_OilBullet"), COilBullet::Create(pDevice, pContext)));
 	}
 
 	{
@@ -283,6 +287,22 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em700"), pEMModel));
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em700"), CEM0700::Create(pDevice, pContext)));
+
+	/* EM1200*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em1200/Model/SM_em1200.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em1200/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em1200"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em1200"), CEM1200::Create(pDevice, pContext)));
+
+	/* EM1100*/
+	pEMModel = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Monster/em1100/Model/SM_em1100.anim_model");
+	pEMModel->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/em1100/Animation/");
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_Model_em1100"), pEMModel));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Monster_em1100"), CEM1100::Create(pDevice, pContext)));
 
 	/* EM0800*/
 	pEMModel = CModel::Create(pDevice, pContext,
@@ -305,7 +325,7 @@ HRESULT CFactoryMethod::MakeMonsterExPrototypes(ID3D11Device* pDevice, ID3D11Dev
 	pEMModel = CModel::Create(pDevice, pContext,
 		"../Bin/Resources/Model/StaticModel/Monster/SkPmBullet/SkMp_Bullet.static_model", PivotMatrix);
 	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("BulletSkummyPool"), pEMModel));
-	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("EnemyBullet"), CEnemyBullet::Create(pDevice, pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Prototype_RedBullet"), CRedBullet::Create(pDevice, pContext)));
 
 	/* EM0400*/
 	pEMModel = CModel::Create(pDevice, pContext,
@@ -450,6 +470,15 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
 	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_HBeam_Single", pModel_HBeam_Single));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Single", CSpecial_HBeam_Single::Create(pDevice, pContext)));
+
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_DropObject_Bundle", CSpecial_DropObject_Bundle::Create(pDevice, pContext)));
+
+
+	auto pModel_DropObject_Single = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_DropObject_Single", pModel_DropObject_Single));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_DropObject_Single", CSpecial_DropObject_Single::Create(pDevice, pContext)));
 
 	return S_OK;
 }

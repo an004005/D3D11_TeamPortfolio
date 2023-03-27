@@ -13,6 +13,7 @@ END
 
 BEGIN(Client)
 
+enum ENEMY_UIPIVOT { ENEMY_INFOBAR, ENEMY_FINDEYES, ENEMY_UIPIVOT_END };
 class CEnemy abstract : public CScarletCharacter
 {
 public:
@@ -41,11 +42,21 @@ public:
 	virtual ENEMY_STAT GetEnemyBatchDataStat();
 	
 public:
+	//0 ~ 1 사이값
 	_float GetHpRatio() const { return (_float)m_iHP / (_float)m_iMaxHP; }
 	_float GetCrushGageRatio() const { return (_float)m_iCrushGage / (_float)m_iMaxCrushGage; }
 	_bool IsDead() const { return m_bDead; }
 	virtual _float4	GetKineticTargetPos() { return GetColliderPosition(); }
 
+	//ui
+	_float4x4	Get_UIPivotMatrix(ENEMY_UIPIVOT eUIPivot) {
+		return m_UI_PivotMatrixes[eUIPivot]; }
+	_bool	GetHasName() { return m_bHasName; }
+	_int	Get_EnemyName() { return _int(m_eEnemyName); }
+	_int	Get_EnemyLevel() { return iEemeyLevel; }
+	void	Set_HasName() { m_bHasName = true; }	
+	void	TurnEyesOut();
+	//
 public:
 	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
 	virtual _float4x4 GetPivotMatrix() override;
@@ -89,6 +100,10 @@ protected:
 	static vector<wstring>			s_vecFireHit;
 	static vector<wstring>			s_vecElecHit;
 
+	static vector<wstring>			s_vecDefaultDecal;
+	static vector<wstring>			s_vecFireDecal;
+	static vector<wstring>			s_vecElecDecal;
+
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;
@@ -109,8 +124,8 @@ protected:
 	set<CScarletCharacter*> m_DamagedTargetList;
 	CSimpleTimeline m_DeathTimeline;
 
-	_uint	iMonsterLevel = { 0 };
-	EEnemyName m_eMonsterName = { EEnemyName::ENEMY_NAME_END };
+	_uint	iEemeyLevel = { 0 };
+	EEnemyName m_eEnemyName = { EEnemyName::ENEMY_NAME_END };
 
 	// 
 	EAttackType m_eCurAttackType = EAttackType::ATK_END; // 현 프레임에서 받은 공격 타입
@@ -127,6 +142,12 @@ protected:
 	string m_strImpactTag = "fx_impact_flesh";
 	string m_strDeathSoundTag;
 	string m_strImpactVoiceTag;
+
+
+	//ui
+	_bool m_bHasName = false;
+	array<_float4x4, ENEMY_UIPIVOT_END> m_UI_PivotMatrixes;
+	//
 
 public:
 	virtual void Free() override;

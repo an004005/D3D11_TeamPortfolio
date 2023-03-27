@@ -12,10 +12,10 @@ HRESULT CEM0800_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObj
 		.AddState("Idle")
 			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_101_AL_wait01"))
 
-			.AddTransition("Idle to Walk_F", "Walk_F")
-				.Predicator([this] { return m_bMove && m_eMoveAxis == EBaseAxis::NORTH; })
+			.AddTransition("Idle to Walk_B", "Walk_B")
+				.Predicator([this] { return m_bMove  && m_eMoveAxis == EBaseAxis::SOUTH; })
 				.Duration(0.1f)
-
+	
 			.AddTransition("Idle to Walk_L", "Walk_L")
 				.Predicator([this] { return m_bMove  && m_eMoveAxis == EBaseAxis::WEST; })
 				.Duration(0.1f)
@@ -25,18 +25,20 @@ HRESULT CEM0800_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObj
 				.Duration(0.1f)
 
 			.AddTransition("Idle to Turn_R", "Turn_R")
-				.Predicator([this] { return m_eTurn == EBaseTurn::TURN_RIGHT; })
+				.Predicator([this] { return m_bTurn  && m_eTurn == EBaseTurn::TURN_RIGHT; })
 				.Duration(0.1f)
 
 			.AddTransition("Idle to Turn_L", "Turn_L")
-				.Predicator([this] { return m_eTurn == EBaseTurn::TURN_LEFT; })
+				.Predicator([this] { return m_bTurn  && m_eTurn == EBaseTurn::TURN_LEFT; })
 				.Duration(0.1f)
+	
 
-		.AddState("Walk_F")
-			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_106_AL_walk01_loop"))
-			.AddTransition("Walk_F to Idle", "Idle")
+		.AddState("Walk_B")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_110_AL_walk_B_loop"))
+			.AddTransition("Walk_B to Idle", "Idle")
 				.Predicator([this] { return !m_bMove; })
 				.Duration(0.1f)
+
 
 		.AddState("Walk_L")
 			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_113_AL_walk_L_loop"))
@@ -53,13 +55,13 @@ HRESULT CEM0800_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObj
 		.AddState("Turn_R")
 			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_150_AL_turn_R"))
 			.AddTransition("Turn_R to Idle", "Idle")
-				.Predicator([this] { return m_eTurn != EBaseTurn::TURN_RIGHT; })
+				.Predicator([this] { return !m_bTurn; })
 				.Duration(0.1f)
 
 		.AddState("Turn_L")
 			.SetAnimation(*m_pModel->Find_Animation("AS_em0800_152_AL_turn_L"))
 			.AddTransition("Turn_L to Idle", "Idle")
-				.Predicator([this] { return m_eTurn != EBaseTurn::TURN_LEFT; })
+				.Predicator([this] { return !m_bTurn; })
 				.Duration(0.1f)
 
 		.Build();
@@ -76,9 +78,9 @@ void CEM0800_AnimInstance::UpdateTargetState(_double TimeDelta)
 
 	m_vMoveAxis = pEM0800->GetMoveAxis();
 	m_eMoveAxis = CClientUtils::MoveAxisToBaseEnum(m_vMoveAxis);
+	m_eTurn = pEM0800->GetBaseTurn();
+	m_bTurn = pEM0800->IsTurn();
 
-	m_fTurnRemain = pEM0800->GetTurnRemain();
-	m_eTurn = CClientUtils::TurnDeltaToEnum(m_fTurnRemain);
 }
 
 CEM0800_AnimInstance * CEM0800_AnimInstance::Create(CModel * pModel, CGameObject * pGameObject)

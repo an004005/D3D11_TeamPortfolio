@@ -27,10 +27,9 @@ public:
 	void Tick_Outside(_double TimeDelta);
 
 	void Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio = 1.f);
-
+	
 private:
 	CFSMComponent* m_pFSM = nullptr;
-	_float m_fToTargetDistance;
 	class CEM0200* m_pCastedOwner = nullptr;
 	
 	_uint m_iNearOrder = 0;

@@ -955,6 +955,21 @@
             }
         ]
     },
+    "AS_ch0100_201_AL_atk_a1_Electric": {
+        "Duration": 140.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Elec_Attack_1",
+                "EventTime": 11.199999809265137
+            },
+            {
+                "EventName": "Elec_Attack_1_Shoot",
+                "EventTime": 15.0
+            }
+        ]
+    },
     "AS_ch0100_202_AL_atk_a2": {
         "Duration": 137.0,
         "TickPerSecond": 50.0,
@@ -999,6 +1014,21 @@
             {
                 "EventName": "Fire_Attack_2_Particle",
                 "EventTime": 25.0
+            }
+        ]
+    },
+    "AS_ch0100_202_AL_atk_a2_Electric": {
+        "Duration": 137.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Elec_Attack_2",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Elec_Attack_2_Shoot",
+                "EventTime": 15.0
             }
         ]
     },
@@ -1057,6 +1087,21 @@
             }
         ]
     },
+    "AS_ch0100_203_AL_atk_a3_Electric": {
+        "Duration": 171.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Elec_Attack_3",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "Elec_Attack_3_Shoot",
+                "EventTime": 40.0
+            }
+        ]
+    },
     "AS_ch0100_204_AL_atk_a4": {
         "Duration": 209.0,
         "TickPerSecond": 50.0,
@@ -1112,6 +1157,30 @@
             },
             {
                 "EventName": "Fire_Attack_4_Particle",
+                "EventTime": 45.0
+            },
+            {
+                "EventName": "Elec_Attack_4_002",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_4_003",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "Elec_Attack_4_004",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Elec_Attack_4_002_Shoot",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Elec_Attack_4_003_Shoot",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "Elec_Attack_4_004_Shoot",
                 "EventTime": 45.0
             }
         ]
@@ -1176,6 +1245,14 @@
             {
                 "EventName": "Fire_Attack_5_PreEffect",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_5",
+                "EventTime": 45.0
+            },
+            {
+                "EventName": "Elec_Attack_5_Shoot",
+                "EventTime": 50.0
             }
         ]
     },
@@ -1223,6 +1300,14 @@
             {
                 "EventName": "Fire_Attack_Upper_Particle",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Upper_0",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Elec_Attack_Upper_1",
+                "EventTime": 10.0
             }
         ]
     },
@@ -1386,6 +1471,10 @@
             {
                 "EventName": "Fire_Attack_Charge03_002_Particle",
                 "EventTime": 50.0
+            },
+            {
+                "EventName": "Elec_Attack_Charge_01",
+                "EventTime": 38.0
             }
         ]
     },
@@ -1437,6 +1526,14 @@
             {
                 "EventName": "Fire_Attack_Charge03_002_Particle",
                 "EventTime": 70.0
+            },
+            {
+                "EventName": "Elec_Attack_Charge_02",
+                "EventTime": 52.0
+            },
+            {
+                "EventName": "Elec_Attack_Charge_03",
+                "EventTime": 54.0
             }
         ]
     },
@@ -1480,6 +1577,14 @@
             {
                 "EventName": "Fire_Attack_Charge03_Particle",
                 "EventTime": 80.0
+            },
+            {
+                "EventName": "Elec_Attack_Charge_02",
+                "EventTime": 63.0
+            },
+            {
+                "EventName": "Elec_Attack_Charge_03",
+                "EventTime": 65.0
             }
         ]
     },
@@ -1625,6 +1730,22 @@
             {
                 "EventName": "Fire_Attack_Dash_Hold_003_Particle",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_0",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_3",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_4",
+                "EventTime": 25.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_4_Shoot",
+                "EventTime": 30.0
             }
         ]
     },
@@ -1892,6 +2013,14 @@
             {
                 "EventName": "Fire_Attack_Air_1_Particle",
                 "EventTime": 14.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_1",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_1_Shoot",
+                "EventTime": 15.0
             }
         ]
     },
@@ -1935,6 +2064,14 @@
             {
                 "EventName": "Fire_Attack_Air_2_Particle",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_2",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_2_Shoot",
+                "EventTime": 15.0
             }
         ]
     },
@@ -2003,6 +2140,10 @@
             {
                 "EventName": "Fire_Attack_3_twist_Particle",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_Landing",
+                "EventTime": 1.0
             }
         ]
     },
@@ -2086,6 +2227,30 @@
             {
                 "EventName": "Collision_Start",
                 "EventTime": 45.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_00",
+                "EventTime": 5.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_01",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_02",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_03",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_04",
+                "EventTime": 25.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Hold_05",
+                "EventTime": 30.0
             }
         ]
     },
@@ -2133,6 +2298,18 @@
             {
                 "EventName": "Fire_Attack_Dash_Hold_003_Particle",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_0",
+                "EventTime": 14.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_3",
+                "EventTime": 18.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_4",
+                "EventTime": 22.0
             }
         ]
     },
@@ -2327,6 +2504,23 @@
             {
                 "EventName": "Gravity_Enable",
                 "EventTime": 200.0
+            }
+        ]
+    },
+    "AS_ch0100_273_AL_AirCap_start": {
+        "Duration": 45.0,
+        "TickPerSecond": 90.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_279_AL_AirPcon": {
+        "Duration": 80.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Kinetic_Launch",
+                "EventTime": 37.0
             }
         ]
     },
@@ -2686,6 +2880,30 @@
     "AS_ch0100_333_AL_rotation_start": {
         "Duration": 30.0,
         "TickPerSecond": 30.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_334_AL_fall_cancel": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_334_AL_fall_end": {
+        "Duration": 125.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_334_AL_fall_loop": {
+        "Duration": 95.0,
+        "TickPerSecond": 50.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_ch0100_334_AL_fall_start": {
+        "Duration": 15.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -4451,30 +4669,15 @@
     },
     "AS_em0800_110_AL_walk_B_loop": {
         "Duration": 359.0,
-        "TickPerSecond": 80.0,
+        "TickPerSecond": 50.0,
         "bLooping": true,
-        "vecEvent": [
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 23.0
-            },
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 103.0
-            },
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 183.0
-            },
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 263.0
-            },
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 343.0
-            }
-        ]
+        "vecEvent": []
+    },
+    "AS_em0800_110_AL_walk_B_loop.001": {
+        "Duration": 359.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_em0800_112_AL_walk_L_start": {
         "Duration": 31.0,
@@ -4489,14 +4692,9 @@
     },
     "AS_em0800_113_AL_walk_L_loop": {
         "Duration": 61.0,
-        "TickPerSecond": 61.0,
+        "TickPerSecond": 60.0,
         "bLooping": true,
-        "vecEvent": [
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 30.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_em0800_115_AL_walk_R_start": {
         "Duration": 31.0,
@@ -4511,36 +4709,21 @@
     },
     "AS_em0800_116_AL_walk_R_loop": {
         "Duration": 61.0,
-        "TickPerSecond": 61.0,
+        "TickPerSecond": 60.0,
         "bLooping": true,
-        "vecEvent": [
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 30.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_em0800_150_AL_turn_R": {
         "Duration": 46.0,
-        "TickPerSecond": 38.0,
+        "TickPerSecond": 50.0,
         "bLooping": true,
-        "vecEvent": [
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 24.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_em0800_152_AL_turn_L": {
         "Duration": 46.0,
-        "TickPerSecond": 38.0,
+        "TickPerSecond": 60.0,
         "bLooping": true,
-        "vecEvent": [
-            {
-                "EventName": "mon_4_move",
-                "EventTime": 24.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_em0800_160_AL_threat": {
         "Duration": 240.0,
@@ -4548,28 +4731,43 @@
         "bLooping": false,
         "vecEvent": []
     },
-    "AS_em0800_214_AL_atk_a7_laser2_start": {
+    "AS_em0800_208_AL_atk_a4_laser_start": {
         "Duration": 155.0,
-        "TickPerSecond": 52.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "Untouch",
-                "EventTime": 5.0
+                "EventName": "Laser_Charge",
+                "EventTime": 90.0
             },
             {
-                "EventName": "Laser_Create",
-                "EventTime": 130.0
-            },
-            {
-                "EventName": "LaserEff_Start",
-                "EventTime": 90.5
-            },
-            {
-                "EventName": "LaserSound_Start",
-                "EventTime": 30.0
+                "EventName": "Laser_Launch",
+                "EventTime": 100.0
             }
         ]
+    },
+    "AS_em0800_210_AL_atk_a4_laser_end": {
+        "Duration": 65.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_212_AL_atk_a6_circumference2": {
+        "Duration": 280.0,
+        "TickPerSecond": 55.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "ComeUp",
+                "EventTime": 120.0
+            }
+        ]
+    },
+    "AS_em0800_214_AL_atk_a7_laser2_start": {
+        "Duration": 155.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_em0800_215_AL_atk_a7_laser2_loop": {
         "Duration": 45.0,
@@ -4701,24 +4899,124 @@
     },
     "AS_em0810_201_AL_atk_a1_bite": {
         "Duration": 130.0,
-        "TickPerSecond": 70.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "Untouch",
-                "EventTime": 5.0
-            },
+                "EventName": "Bite",
+                "EventTime": 57.0
+            }
+        ]
+    },
+    "AS_em1100_107_AL_run_start": {
+        "Duration": 54.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": [
             {
-                "EventName": "Bite_Start",
-                "EventTime": 48.20000076293945
-            },
+                "EventName": "Run_Start",
+                "EventTime": 47.0
+            }
+        ]
+    },
+    "AS_em1100_108_AL_run_loop": {
+        "Duration": 36.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1100_135_AL_dodge_B_start": {
+        "Duration": 100.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": [
             {
-                "EventName": "Bite_End",
+                "EventName": "Dodge_Start",
+                "EventTime": 30.0
+            }
+        ]
+    },
+    "AS_em1100_202_AL_atk_a1_bringdown_start": {
+        "Duration": 33.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Stamp",
+                "EventTime": 8.0
+            }
+        ]
+    },
+    "AS_em1100_204_AL_atk_a2_tailall": {
+        "Duration": 176.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "TailSwing_End",
                 "EventTime": 100.0
             },
             {
-                "EventName": "Untouch_End",
-                "EventTime": 125.0
+                "EventName": "TailSwing_Start",
+                "EventTime": 70.0
+            }
+        ]
+    },
+    "AS_em1100_208_AL_atk_a3_guidanceshot_end": {
+        "Duration": 66.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1100_208_AL_atk_a3_guidanceshot_start": {
+        "Duration": 60.0,
+        "TickPerSecond": 35.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Shot",
+                "EventTime": 26.0
+            }
+        ]
+    },
+    "AS_em1100_215_AL_atk_a5_drainage_end": {
+        "Duration": 242.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1100_215_AL_atk_a5_drainage_omen": {
+        "Duration": 143.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1100_215_AL_atk_a5_drainage_start": {
+        "Duration": 77.0,
+        "TickPerSecond": 32.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1120_211_AL_atk_a4_sliding_end": {
+        "Duration": 180.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1120_211_AL_atk_a4_sliding_omen": {
+        "Duration": 120.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1120_211_AL_atk_a4_sliding_start": {
+        "Duration": 65.0,
+        "TickPerSecond": 32.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Rush_Start",
+                "EventTime": 19.0
             }
         ]
     },
@@ -4761,6 +5059,19 @@
                     "StartTime": 0.0
                 }
             ],
+            "AS_ch0100_201_AL_atk_a1_Electric": [
+                {
+                    "AnimName": "AS_ch0100_201_AL_atk_a1_Electric",
+                    "EndTime": 10.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        3.0,
+                        0.0
+                    ],
+                    "StartTime": 0.0
+                }
+            ],
             "AS_ch0100_202_AL_atk_a2": [
                 {
                     "AnimName": "AS_ch0100_202_AL_atk_a2",
@@ -4785,9 +5096,46 @@
                     "StartTime": 37.0
                 }
             ],
+            "AS_ch0100_202_AL_atk_a2_Electric": [
+                {
+                    "AnimName": "AS_ch0100_202_AL_atk_a2_Electric",
+                    "EndTime": 12.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "StartTime": 1.0
+                },
+                {
+                    "AnimName": "AS_ch0100_202_AL_atk_a2_Electric",
+                    "EndTime": 62.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        0.4000000059604645,
+                        0.0
+                    ],
+                    "StartTime": 37.0
+                }
+            ],
             "AS_ch0100_203_AL_atk_a3": [
                 {
                     "AnimName": "AS_ch0100_203_AL_atk_a3",
+                    "EndTime": 33.0,
+                    "RootVector": [
+                        0.0,
+                        0.0,
+                        2.0,
+                        0.0
+                    ],
+                    "StartTime": 5.0
+                }
+            ],
+            "AS_ch0100_203_AL_atk_a3_Electric": [
+                {
+                    "AnimName": "AS_ch0100_203_AL_atk_a3_Electric",
                     "EndTime": 33.0,
                     "RootVector": [
                         0.0,

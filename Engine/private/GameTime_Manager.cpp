@@ -76,8 +76,8 @@ void CGameTime_Manager::ResetDefaultTimeRatio()
 {
 	m_DefaultTimeRatio = 1.f;
 	m_DefaultExceptLayers.clear();
-	for (auto& layer : CObject_Manager::GetInstance()->GetLayers(LEVEL_NOW))
-		layer.second->SetUseTimeRatio(true);
+	//for (auto& layer : CObject_Manager::GetInstance()->GetLayers(LEVEL_NOW))
+	//	layer.second->SetUseTimeRatio(true);
 }
 
 void CGameTime_Manager::SetTimeRatio(_float fTimeRatio, const vector<wstring>* ExceptLayers)

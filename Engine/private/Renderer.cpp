@@ -720,6 +720,7 @@ HRESULT CRenderer::Render_PostProcess()
 	m_pContext->OMGetRenderTargets(1, &pBackBufferView, &pDepthStencilView);
 	m_pContext->GSSetShader(nullptr, nullptr, 0);
 
+	m_pShader_PostProcess->Tick(TIME_DELTA);
 
 	if (m_RenderObjects[POSTPROCESS_VFX].empty() == false)
 	{

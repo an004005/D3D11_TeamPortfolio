@@ -5,13 +5,12 @@
 #include "RigidBody.h"
 #include "EM0210_AnimInstance.h"
 #include "EM0210_Controller.h"
-#include "EnemyBullet.h"
 #include "PhysX_Manager.h"
 
 CEM0210::CEM0210(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
-	m_eMonsterName = EEnemyName::EM0210;
+	m_eEnemyName = EEnemyName::EM0210;
 }
 
 CEM0210::CEM0210(const CEM0210 & rhs)
@@ -33,13 +32,12 @@ HRESULT CEM0210::Initialize(void * pArg)
 		m_iHP = 1100; // ¡Ú
 
 		m_iAtkDamage = 50;
-		iMonsterLevel = 2;
-		m_strBoneName = "RightShoulder";
+		iEemeyLevel = 2;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eMonsterName = EEnemyName::EM0210;
+	m_eEnemyName = EEnemyName::EM0210;
 	m_bHasCrushGage = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 

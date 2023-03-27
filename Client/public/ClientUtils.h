@@ -10,6 +10,8 @@
 #define PLAYERTEST_LAYER_MONSTER	TEXT("Layer_Monster")
 #define PLAYERTEST_LAYER_POSTVFX	TEXT("Layer_PostVFX")
 #define PLAYERTEST_LAYER_FRONTUI	TEXT("Layer_FrontUI")
+#define LAYER_PLAYEREFFECT			TEXT("Layer_PlayerEffect")
+#define LAYER_MAPKINETICOBJECT		TEXT("Layer_MapKineticObject")
 
 
 
@@ -18,6 +20,7 @@
 BEGIN(Engine)
 class CTransform;
 class CComponent;
+class CRigidBody;
 END
 
 // #ifdef _DEBUG
@@ -134,7 +137,6 @@ enum class EEnemyName
 	EM8210, // ¡ﬂ¥Î¿Â
 	ENEMY_NAME_END
 };
-
 
 typedef struct tagDamageParam
 {
