@@ -143,6 +143,8 @@ void CMapKinetic_Object::BeginTick()
 void CMapKinetic_Object::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+	if(m_eCurModelTag != Tag_End)
+		m_pModelComs[m_eCurModelTag]->Tick(TimeDelta);
 
 	OutlineMaker();
 
