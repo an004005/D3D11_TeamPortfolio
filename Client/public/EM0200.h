@@ -71,9 +71,9 @@ private:
 	// Jump, dodge
 	_bool m_bJumpAttack = false;
 	_float3 m_vOnJumpMoveVelocity;
-
-	_float4 m_vDodgeDir;
+	
 	_bool m_bDodge = false;
+	_float4	m_vDodgeDir;
 	// ~ Jump, dodge
 	
 	// spin atk

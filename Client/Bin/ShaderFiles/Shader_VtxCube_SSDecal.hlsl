@@ -2,10 +2,7 @@
 #include "Shader_Params.h"
 #include "Shader_Utils.h"
 
-Texture2D g_DiffuseTex;
-Texture2D g_NormalTex;
 Texture2D g_DepthTex;
-
 
 struct VS_IN
 {
@@ -43,8 +40,7 @@ struct PS_IN
 struct PS_OUT
 {
 	float4		vDiffuse : SV_TARGET0;
-	float4		vNormal : SV_TARGET1;
-	float4		vDepth : SV_TARGET2;
+	float4		vFlag : SV_TARGET1;
 };
 
 // g_float_0 : dissolve
@@ -57,7 +53,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	vTexUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
 
 	vector vDepthDesc = g_DepthTex.Sample(LinearSampler, vTexUV);
-	if (vDepthDesc.w != 4.f) // map object가 아니면 decal적용 하지 않는다.
+	if (vDepthDesc.w != 1.f) // map object가 아니면 decal적용 하지 않는다.
 		discard;
 
 	float fViewZ = vDepthDesc.y * g_Far;
@@ -77,35 +73,39 @@ PS_OUT PS_MAIN(PS_IN In)
 	clip(0.5f - ObjectAbsPos);
 
 	float2 decalUV = vLocalPos.xz + 0.5f;
+
+	
+
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, decalUV);
-	Out.vDiffuse.a *= (1.f - saturate(g_float_0));
+	Out.vDiffuse.a = g_tex_2.Sample(LinearSampler, decalUV).r;
+
 	if (Out.vDiffuse.a < 0.01f)
 		discard;
 
-	Out.vNormal = g_NormalTex.Sample(LinearSampler, vTexUV);
-	Out.vDepth = g_DepthTex.Sample(LinearSampler, vTexUV);
-	// emissive
-	Out.vDepth.z = 0.5f * Out.vDiffuse.a;
+	float4 Normal = g_tex_1.Sample(LinearSampler, decalUV) * 2.f - 1.f;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
 
 	return Out;
 }
 
-PS_OUT PS_SPIKE_CRACK(PS_IN In)
+PS_OUT PS_HIT_DECAL(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-    float2 vTexUV;
+	float2 vTexUV;
 	vTexUV.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
 	vTexUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
 
 	vector vDepthDesc = g_DepthTex.Sample(LinearSampler, vTexUV);
-	if (vDepthDesc.w != 4.f) // map object가 아니면 decal적용 하지 않는다.
+	if (vDepthDesc.w != 1.f) // map object가 아니면 decal적용 하지 않는다.
 		discard;
 
 	float fViewZ = vDepthDesc.y * g_Far;
 	vector vProjPos = (vector)0.f;
 
-    // 투영행렬을 만드는 과정.
+	// 투영행렬을 만드는 과정.
 	vProjPos.x = (vTexUV.x *  2.f - 1.f) * fViewZ;
 	vProjPos.y = (vTexUV.y * -2.f + 1.f) * fViewZ;
 	vProjPos.z = (vDepthDesc.x) * fViewZ;
@@ -116,101 +116,105 @@ PS_OUT PS_SPIKE_CRACK(PS_IN In)
 	vector vLocalPos = mul(vWorldPos, g_WorldMatrixInv);
 
 	float3	ObjectAbsPos = abs(vLocalPos.xyz);
-	clip(0.5f - ObjectAbsPos); 
+	clip(0.5f - ObjectAbsPos);
 
 	float2 decalUV = vLocalPos.xz + 0.5f;
 
+	float4 Default = g_tex_0.Sample(LinearSampler, decalUV);
 
-	// 1 to 0
-	float fDissolve = g_float_0;
-	float2 centerUV = float2(0.5f, 0.5f);
+
+	float Mask = g_tex_1.Sample(LinearSampler, decalUV).r;
+	float4 Line = g_tex_2.Sample(LinearSampler, decalUV);
+
+
+
+	Out.vDiffuse.a = Mask;
+
+
+
+	if (Line.a != 0.f)
+	{
+		Line = Line * g_vec4_0;
+		Out.vDiffuse = CalcHDRColor(Line, g_float_0);
+		float4 Depth = g_DepthTex.Sample(LinearSampler, vTexUV);
+		Out.vDiffuse.a = Line.r;
+	}
+	else
+	{
+		float4 Color = float4(g_float_1,g_float_2, g_float_3, 1.f);
+		Out.vDiffuse = CalcHDRColor(Default * Color, g_float_4);
+		Out.vDiffuse.a = Mask * g_float_5;
+	}
+
+	Out.vDiffuse.a *= g_float_6;
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vDiffuse.a * g_float_7 * g_float_6);
+	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, 1.f);
+
+
+	return Out;
+}
+
+PS_OUT PS_EM650_DECAL(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float2 vTexUV;
+	vTexUV.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
+	vTexUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
+
+	vector vDepthDesc = g_DepthTex.Sample(LinearSampler, vTexUV);
+	if (vDepthDesc.w != 1.f) // map object가 아니면 decal적용 하지 않는다.
+		discard;
+
+	float fViewZ = vDepthDesc.y * g_Far;
+	vector vProjPos = (vector)0.f;
+
+	// 투영행렬을 만드는 과정.
+	vProjPos.x = (vTexUV.x *  2.f - 1.f) * fViewZ;
+	vProjPos.y = (vTexUV.y * -2.f + 1.f) * fViewZ;
+	vProjPos.z = (vDepthDesc.x) * fViewZ;
+	vProjPos.w = fViewZ;
+
+	vector vViewPos = mul(vProjPos, g_ProjMatrixInv);
+	vector vWorldPos = mul(vViewPos, g_ViewMatrixInv);
+	vector vLocalPos = mul(vWorldPos, g_WorldMatrixInv);
+
+	float3	ObjectAbsPos = abs(vLocalPos.xyz);
+	clip(0.5f - ObjectAbsPos);
+
+	float2 decalUV = vLocalPos.xz + 0.5f;
+	float2 TexUV;
+
+	if (g_int_0 > 0)
+	{
+		TexUV = Get_FlipBookUV(decalUV, g_Time, 0.05, 4, 4);
+	}
+	else
+		TexUV = Get_FlipBookUV(decalUV, 0.f, 0.05, 4, 4);
+
+	float4 Default = g_tex_0.Sample(LinearSampler, TexUV);
+	float Mask = Default.r;
+
+	// float Mask = g_tex_1.Sample(LinearSampler, decalUV);
+
+	float4 Color = g_vec4_0;
+	float4 Blend = Default * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	Out.vDiffuse = CalcHDRColor(Final, g_float_0);
+	Out.vDiffuse.a = Mask * g_float_1;
+
+	if (g_float_1 <= 0.f)
+		discard;
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vDiffuse.a * g_float_2);
+
+
 	
-	if (length(decalUV - centerUV) > (1.f - fDissolve) * 0.5)
-		discard;
 
-	float2 toCenter = normalize(centerUV - decalUV) * fDissolve * 0.2f;
-
-	float2 offsetUV = TilingAndOffset(decalUV, float2(2.f, 2.f), toCenter);
-	float crackNoise = g_tex_1.Sample(LinearSampler, offsetUV).r;
-
-	if (crackNoise <= fDissolve)
-		discard;
-
-	Out.vDiffuse = (float4)0.f;
-	Out.vDiffuse.a = 1.f;
-	if (Out.vDiffuse.a < 0.1f)
-		discard;
-
-	Out.vNormal = (float4)0;
-	Out.vDepth = g_DepthTex.Sample(LinearSampler, vTexUV);
 
 	return Out;
 }
 
-PS_OUT PS_FIREWALL_BOT(PS_IN In)
-{
-	// SSD 기본 
-	PS_OUT			Out = (PS_OUT)0;
-
-    float2 vTexUV;
-	vTexUV.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
-	vTexUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
-
-	vector vDepthDesc = g_DepthTex.Sample(LinearSampler, vTexUV);
-	if (vDepthDesc.w != 4.f) // map object가 아니면 decal적용 하지 않는다.
-		discard;
-
-	float fViewZ = vDepthDesc.y * g_Far;
-	vector vProjPos = (vector)0.f;
-
-    // 투영행렬을 만드는 과정.
-	vProjPos.x = (vTexUV.x *  2.f - 1.f) * fViewZ;
-	vProjPos.y = (vTexUV.y * -2.f + 1.f) * fViewZ;
-	vProjPos.z = (vDepthDesc.x) * fViewZ;
-	vProjPos.w = fViewZ;
-
-	vector vViewPos = mul(vProjPos, g_ProjMatrixInv);
-	vector vWorldPos = mul(vViewPos, g_ViewMatrixInv);
-	vector vLocalPos = mul(vWorldPos, g_WorldMatrixInv);
-
-	float3	ObjectAbsPos = abs(vLocalPos.xyz);
-	clip(0.5f - ObjectAbsPos); 
-	float2 decalUV = vLocalPos.xz + 0.5f;
-
-	Out.vDepth = g_DepthTex.Sample(LinearSampler, vTexUV);
-	// ~SSD 기본 
-	float4 vNormalDesc = g_NormalTex.Sample(LinearSampler, vTexUV);
-	vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
-	clip(dot(vNormal.xyz, float3(0.f, 1.f, 0.f)) - radians(30.f));
-
-
-	Out.vNormal = float4(0.f, 1.f, 0.f, 0.f);
-
-	float time = g_Time * 0.2f;
-	float fDissolve = g_float_0;
-
-	float2 OffsetUV = TilingAndOffset(decalUV, float2(1.f, 1.f), float2(time, time));
-	float4 flow = g_tex_2.Sample(LinearSampler, decalUV);
-	float2 distortionUV = flow.xy * (float2)0.3 + OffsetUV;
-
-	float4 color =  float4(1.f, 68.f / 255.f, 51.f/255.f, 1.f); // orange red
-	float4 mask = g_tex_0.Sample(LinearSampler, distortionUV);
-	float4 glow = g_tex_1.Sample(LinearSampler, decalUV);
-
-	if (glow.r <= fDissolve)
-		discard;
-
-	Out.vDiffuse = (mask.r + glow.r) * color * 2.f;
-	Out.vDiffuse.a = glow.r;
-	Out.vDepth.z = 1.f;
-
-	if (Out.vDiffuse.a < 0.03f)
-		discard;
-
-	Out.vDiffuse.a = saturate(Out.vDiffuse.a + 0.2f);
-
-	return Out;
-}
 
 technique11 DefaultTechnique
 {
@@ -229,21 +233,7 @@ technique11 DefaultTechnique
 	}
 
 	// 1
-	pass SpikeCrack
-	{
-		SetRasterizerState(RS_NonCulling);
-		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
-		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
-
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
-		HullShader = NULL;
-		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_SPIKE_CRACK();
-	}
-
-	// 2
-	pass FireWallBot
+	pass HittDecal
 	{
 		SetRasterizerState(RS_NonCulling);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
@@ -253,6 +243,20 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_FIREWALL_BOT();
+		PixelShader = compile ps_5_0 PS_HIT_DECAL();
 	}
+	// 2
+	pass Em0650Decal
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM650_DECAL();
+	}
+
 }

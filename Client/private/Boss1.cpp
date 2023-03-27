@@ -14,7 +14,7 @@
 #include "RigidBody.h"
 #include "Material.h"
 
-#include "WaterBall.h" // Oil_Bullet
+#include "OilBullet.h" // Oil_Bullet
 #include "VFX_Manager.h"
 
 #include "Canvas_Alarm.h"
@@ -161,8 +161,8 @@ HRESULT CBoss1::Initialize(void* pArg)
 		//XMVectorSetY(vTargetPos, 0.f);
 		XMVectorSetY(m_LastSpotTargetPos, 0.f);
 
-		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_WaterBall"));		
-		if (CWaterBall* pBullet = dynamic_cast<CWaterBall*>(pObj))
+		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_OilBullet"));		
+		if (COilBullet* pBullet = dynamic_cast<COilBullet*>(pObj))
 		{
 			pBullet->Set_Owner(this);
 
@@ -180,11 +180,11 @@ HRESULT CBoss1::Initialize(void* pArg)
 
 			if (m_b2ndPhase)
 			{
-				auto pObj2 = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_WaterBall"));
-				auto pObj3 = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_WaterBall"));
+				auto pObj2 = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_OilBullet"));
+				auto pObj3 = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_OilBullet"));
 
-				CWaterBall* pBullet2 = dynamic_cast<CWaterBall*>(pObj2);
-				CWaterBall* pBullet3 = dynamic_cast<CWaterBall*>(pObj3);
+				COilBullet* pBullet2 = dynamic_cast<COilBullet*>(pObj2);
+				COilBullet* pBullet3 = dynamic_cast<COilBullet*>(pObj3);
 
 				// 2nd Bullet
 				_matrix		RotMatAxis = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(15.f));
