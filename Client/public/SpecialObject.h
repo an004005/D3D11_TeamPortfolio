@@ -10,8 +10,16 @@ class CShader;
 END
 
 BEGIN(Client)
+class CScarletCharacter;
 
-enum ESpecialType { SPECIAL_TRAIN, SPECIAL_TELEPHONEPOLE, SPECIAL_HBEAM_BUNDLE, SPECIAL_HBEAM_SINGLE, SPECAIL_END };
+enum ESpecialType { 
+	SPECIAL_TRAIN, 
+	SPECIAL_TELEPHONEPOLE, 
+	SPECIAL_HBEAM_BUNDLE, 
+	SPECIAL_HBEAM_SINGLE,
+	SPECIAL_DROPOBJECT_BUNDLE,
+	SPECIAL_DROPOBJECT_SINGLE,
+	SPECAIL_END };
 
 class CSpecialObject :
 	public CGameObject
@@ -30,7 +38,6 @@ public:
 	virtual void AfterPhysX();
 	HRESULT Render() override;
 	virtual HRESULT Render_ShadowDepth() override;
-
 	virtual void LoadFromJson(const Json& json) override;
 	virtual void SaveToJson(Json& json) override;
 
@@ -38,6 +45,13 @@ public:
 
 public:
 	ESpecialType Get_SpecialType() const { return m_eSpecialObejctType; }
+
+protected:
+	_bool						Collision_Check_Capsule(CRigidBody* AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollisionCheck = false);
+	list<CScarletCharacter*>	m_DamagedObjectList;
+
+protected:
+	_float4 m_BeforePos = _float4(0.f, 0.f, 0.f, 1.f);
 
 protected:
 	ESpecialType m_eSpecialObejctType = SPECAIL_END;

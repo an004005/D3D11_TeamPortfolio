@@ -36,6 +36,7 @@ private:
 
 public:
 	void	Switch_CamMod();	// CameraPos에 캠 붙이기
+	void	Reset_CamMod();
 	void	SetUp_BoneMatrix(CModel* pModel, _fmatrix Transform);
 
 private:

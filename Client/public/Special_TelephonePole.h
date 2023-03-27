@@ -35,7 +35,16 @@ public:
 	void	TelephonePole_AttachLerp(CModel* pModel, CTransform* pTransform, _float fRatio);
 	void	TelephonePole_Swing(CModel* pModel, CTransform* pTransform, _float fPlayTime);
 
+	void	TelephonePole_Collision_On();
+	void	TelephonePole_Collision_Off();
+
+	void	TelephonePole_SetDeadTimer();
+
 	void	SetCatchPoint();
+
+private:
+	_bool  m_bDeadCheck = false;
+	_float m_fDeadTime = 0.f;
 
 public:
 	void	SetUp_BoneMatrix(CModel* pModel, _fmatrix WorldMatrix);

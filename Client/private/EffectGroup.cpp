@@ -10,6 +10,8 @@
 #include "Material.h"
 #include "MaterialPreview.h"
 #include "ScarletWeapon.h"
+#include "PhysX_Manager.h"
+#include "Enemy.h"
 
 CEffectGroup::CEffectGroup(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -403,6 +405,71 @@ void CEffectGroup::Start_AttachSword(CGameObject * pWeapon, _bool trueisUpdate)
 	m_Timeline.PlayFromStart();
 }
 
+void CEffectGroup::Start_AttachMove(CGameObject * pOwner, string BoneName, _float4 vDirection, _bool trueisUpdate, _bool trueisRemoveScale)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_BoneName = BoneName;
+	m_bRemoveScale = trueisRemoveScale;
+	m_vMoveDir = vDirection;
+
+	if (m_bUpdate == false)
+	{
+		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		if (m_bRemoveScale == true)
+		{
+			SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+			SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+			SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+		}
+		m_OriginMoveMatrix = SocketMatrix;
+		Set_Transform(SocketMatrix);
+	}
+
+	m_Timeline.PlayFromStart();
+}
+
+void CEffectGroup::Start_AttachPivotMove(CGameObject * pOwner, _float4x4 PivotMatrix, string BoneName, _float4 vDirection, _bool usepivot, _bool trueisUpdate, _bool trueisRemoveScale)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_BoneName = BoneName;
+	m_bUsePivot = usepivot;
+	m_PivotMatrix = PivotMatrix;
+	m_bRemoveScale = trueisRemoveScale;
+	m_vMoveDir = vDirection;
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		if (m_bRemoveScale == true)
+		{
+			SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+			SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+			SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+		}
+
+		m_OriginMoveMatrix = SocketMatrix;
+		Set_Transform(SocketMatrix);
+	}
+
+	m_Timeline.PlayFromStart();
+}
+
 void CEffectGroup::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
@@ -439,6 +506,12 @@ void CEffectGroup::Tick(_double TimeDelta)
 					SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 				}
 
+				if (m_vMoveDir.Length() != 0.f)
+				{
+					SocketMatrix = XMMatrixTranslation(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * SocketMatrix;
+					m_vMoveDir = m_vMoveDir + (m_vMoveDir)* TimeDelta;
+				}
+
 				Set_Transform(SocketMatrix);
 			}
 			else
@@ -452,6 +525,12 @@ void CEffectGroup::Tick(_double TimeDelta)
 					SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 					SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 					SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+				}
+
+				if (m_vMoveDir.Length() != 0.f)
+				{
+					SocketMatrix = XMMatrixTranslation(m_vMoveDir.x, m_vMoveDir.y, m_vMoveDir.z) * SocketMatrix;
+					m_vMoveDir = m_vMoveDir + (m_vMoveDir)* TimeDelta;
 				}
 
 				Set_Transform(SocketMatrix);
@@ -484,6 +563,15 @@ void CEffectGroup::Tick(_double TimeDelta)
 			
 		}
 	}
+	else if (m_vMoveDir.Length() != 0.f)
+	{
+		_vector vPos = m_OriginMoveMatrix.r[3];
+		_vector vOriginPos = vPos;
+		m_vMoveDir.w = 0.f;
+		vPos += m_vMoveDir * TimeDelta * 40.f;
+		m_OriginMoveMatrix.r[3] = vPos;
+		Set_Transform(m_OriginMoveMatrix);
+	}
 	else if (nullptr != m_pAttachWeapon)
 	{
 		_matrix WeaponMatrix = static_cast<CScarletWeapon*>(m_pAttachWeapon)->Get_WeaponCenterMatrix();
@@ -495,7 +583,6 @@ void CEffectGroup::Tick(_double TimeDelta)
 
 		Set_Transform(SocketMatrix);
 	}
-	
 }
 
 void CEffectGroup::Imgui_RenderProperty()
