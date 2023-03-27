@@ -18,6 +18,7 @@
 BEGIN(Engine)
 class CTransform;
 class CComponent;
+class CRigidBody;
 END
 
 // #ifdef _DEBUG
@@ -135,6 +136,11 @@ enum class EEnemyName
 	ENEMY_NAME_END
 };
 
+typedef struct Rigidbodystruct
+{
+	unordered_set<CRigidBody*> pRigidBodies;
+
+} ENEMY_RIGIDBODIES;
 
 typedef struct tagDamageParam
 {

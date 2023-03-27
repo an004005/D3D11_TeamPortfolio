@@ -31,8 +31,6 @@ private:
 	class CEM0210* m_pCastedOwner = nullptr;
 
 private:
-	_float m_fToTargetDistance;
-	
 	_uint m_iNearOrder = 0;
 	_uint m_iMidOrder = 0;
 	_uint m_iFarOrder = 0;

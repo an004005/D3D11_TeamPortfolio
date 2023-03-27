@@ -42,11 +42,6 @@ void CEM0800_Controller::AI_Tick(_double TimeDelta)
 
 	m_bTurn = false;
 
-	// 대상과의 거리 
-	m_fToTargetDistance = XMVectorGetX(XMVector3LengthEst(
-		m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)
-		- m_pCastedOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)));
-
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
 		DefineState(TimeDelta);
@@ -111,9 +106,9 @@ void CEM0800_Controller::DefineState(_double TimeDelta)
 {
 	if (m_pCastedOwner->IsPlayingSocket() == true) return;
 
-	if (m_fToTargetDistance <= 7.f)
+	if (m_fTtoM_Distance <= 7.f)
 		Tick_Near(TimeDelta);
-	else if (m_fToTargetDistance <= 15.f)
+	else if (m_fTtoM_Distance <= 20.f)
 		Tick_Mid(TimeDelta);
 	else
 		Tick_Far(TimeDelta);
@@ -123,7 +118,7 @@ void CEM0800_Controller::DefineTurnCommand()
 {
 	m_bTurn = true;
 	m_eTurn =  m_pCastedOwner->FindTargetDirection();
-	const _float fSpeedRatio = m_eTurn == EBaseTurn::TURN_END ? 1.f : 7.f;
+	const _float fSpeedRatio = m_eTurn == EBaseTurn::TURN_END ? 1.f : 10.f;
 	TurnToTargetStop(fSpeedRatio);
 }
 

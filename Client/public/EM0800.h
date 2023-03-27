@@ -12,7 +12,6 @@ END
 BEGIN(Client)
 
 // 브론존
-
 class CEM0800 : public CEnemy
 {
 private:
@@ -57,8 +56,11 @@ private:
 	class CEM0800_Controller*		m_pController = nullptr;
 	class CEM0800_AnimInstance*		m_pASM = nullptr;
 
-	//충돌
-	CRigidBody*				m_pRange = nullptr;
+	CRigidBody*					m_pRange = nullptr;
+	CRigidBody*					m_pTrunk = nullptr;
+	CRigidBody*					m_pWeak[2]{ nullptr };
+
+	CEffectGroup*				m_pWaterPool = nullptr;
 
 private:
 	_float3						m_vMoveAxis;
@@ -71,6 +73,9 @@ private:
 	_float	m_fLaserTime = 0.f;
 	_bool m_bComeUp = false;
 	
+	//WaterPool
+	_bool		m_bHasWaterPool = false;
+
 
 	CController::EHandleInput	m_eInput;
 
