@@ -281,6 +281,7 @@
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
     <ClInclude Include="..\public\GameManager.h" />
+    <ClInclude Include="..\public\GameManager_Tutorial.h" />
     <ClInclude Include="..\public\PlayerStartPosition.h" />
     <ClInclude Include="..\public\PointLight.h" />
     <ClInclude Include="..\public\Main_BrainGaugeUI.h" />
@@ -525,6 +526,7 @@
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
     <ClCompile Include="..\private\GameManager.cpp" />
+    <ClCompile Include="..\private\GameManager_Tutorial.cpp" />
     <ClCompile Include="..\private\PlayerStartPosition.cpp" />
     <ClCompile Include="..\private\PointLight.cpp" />
     <ClCompile Include="..\private\Main_BrainGaugeUI.cpp" />

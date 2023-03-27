@@ -15,6 +15,7 @@
 #include "Imgui_CurveManager.h"
 #include "Imgui_PhysX.h"
 #include "SkyBox.h"
+#include "GameManager_Tutorial.h"
 
 #define ADD_PLAYER
 
@@ -67,6 +68,10 @@ HRESULT CLevel_Tutorial::Initialize()
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Tutorial/TutorialBatch_Enemy.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Tutorial/Tutorial_UI.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Tutorial/MapKineticObject_Test.json");
+
+	// 기본 게임매니저 셋팅
+	CGameManager_Tutorial::SetGameManager(CGameManager_Tutorial::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -259,4 +264,6 @@ CLevel_Tutorial * CLevel_Tutorial::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 void CLevel_Tutorial::Free()
 {
 	__super::Free();
+
+	CGameManager_Tutorial::GetInstance()->DestroyInstance();
 }

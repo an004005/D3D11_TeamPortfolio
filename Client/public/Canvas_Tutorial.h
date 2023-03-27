@@ -49,14 +49,14 @@ private:
 
 	void	KeyInput_Yes();
 	void	KeyInput_No();
-	void	NextInput();
 
 private:
-	void	Tips_Tick();
-	void	Tips(const TIPS & eTIPS, const _tchar * pChildTag);
+	void	Tips_Tick(const _double & TimeDelta);
+	void	Tips(const TIPS & eTIPS, const _tchar * pChildTag, const _double & TimeDelta);
 
 private:
 	void	Success_Tick(const _double & TimeDelta);
+	void	DeleteSuccess_Tick(const _double & TimeDelta);
 
 private:	// Tutorial
 	TUTORIAL	m_eTutorial = { TUTORIAL_END };
@@ -73,12 +73,15 @@ private:	// Tutorial
 	_bool		m_bCheckClose = { false };
 
 	_int		m_iFightingStyle = { 0 };
+	_bool		m_bEnter = { false };
 
 private:	// Tips
 	TIPS		m_eTips = { TIPS_END };
 	_bool		m_arrTips[TIPS_END] = {};
 
 	_bool		m_iTipsOpen = { false };
+
+	_double		m_dTips_TimeAcc = { 0.0 };
 
 private:	// Success
 	_bool		m_bSuccess = { false };

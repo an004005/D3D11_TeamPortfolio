@@ -2,6 +2,8 @@
 #include "..\public\Canvas_Tutorial.h"
 #include "GameInstance.h"
 
+#include "PlayerInfoManager.h"
+#include "GameManager_Tutorial.h"
 #include "TutorialUI.h"
 #include "Tutorial_CheckUI.h"
 #include "Tutorial_YesNoUI.h"
@@ -42,11 +44,12 @@ void CCanvas_Tutorial::Tick(_double TimeDelta)
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 	{
+		CGameInstance::GetInstance()->ResetDefaultTimeRatio();
 		CGameObject::SetDelete();
 	}
 
 	Tutorial_Tick();
-	Tips_Tick();
+	Tips_Tick(TimeDelta);
 	Success_Tick(TimeDelta);
 }
 
@@ -140,13 +143,17 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 	{
 		m_bTutorialOpen = true;
 		dynamic_cast<CTutorialUI*>(Find_ChildUI(pChildTag))->Set_OnTutorial();
+
+		if(FIGHTINGSTYLE == eTUTORIAL)
+			dynamic_cast<CTutorialUI*>(Find_ChildUI(L"Tutorial2"))->Set_OnTutorial();
+
 		return;
 	}
 
 	vector<wstring> except { PLAYERTEST_LAYER_FRONTUI };
 	CGameInstance::GetInstance()->SetTimeRatio(0.0f, &except);
 
-	if (FIGHTINGSTYLE == m_arrTutorial[eTUTORIAL])
+	if (FIGHTINGSTYLE == eTUTORIAL)
 	{
 		_bool	bNextPage = dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_ZNextPage"))->Get_NextPage();
 
@@ -164,7 +171,10 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 
 			_bool	bInvisblePush = dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_InvisibleBox"))->Get_Invisible();
 
-			if (true == bInvisblePush)
+			if(CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
+				m_bEnter = !m_bEnter;
+
+			if (true == bInvisblePush || true == m_bEnter)
 			{
 				if (false == m_bCheckOpen)
 				{
@@ -186,7 +196,10 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 	{
 		_bool	bInvisblePush = dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_InvisibleBox"))->Get_Invisible();
 
-		if (true == bInvisblePush)
+		if (CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
+			m_bEnter = !m_bEnter;
+
+		if (true == bInvisblePush || true == m_bEnter)
 		{
 			if (false == m_bCheckOpen)
 			{
@@ -222,7 +235,14 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 		if (true == dynamic_cast<CTutorial_CheckUI*>(Find_ChildUI(L"Tutorial_Check0"))->Get_End())
 		{
 			Find_ChildUI(L"Tutorial_Check0")->SetVisible(false);
-			dynamic_cast<CTutorialUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
+
+			if (FIGHTINGSTYLE == eTUTORIAL)
+			{
+				dynamic_cast<CTutorialUI*>(Find_ChildUI(L"Tutorial2"))->Set_OffTutorial();
+				dynamic_cast<CTutorialUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
+			}
+			else
+				dynamic_cast<CTutorialUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
 		}
 
 		if (true == dynamic_cast<CTutorialUI*>(Find_ChildUI(pChildTag))->Get_End())
@@ -296,7 +316,18 @@ void CCanvas_Tutorial::Check_Tick()
 
 void CCanvas_Tutorial::KeyInput_Yes()
 {
-	if (false == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_YesBox"))->Get_InputYes())
+	if (CGameInstance::GetInstance()->KeyDown(DIK_UP))
+	{
+		Find_ChildUI(L"Tutorial_YesBox")->SetVisible(true);
+		Find_ChildUI(L"Tutorial_NoBox")->SetVisible(false);
+
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon0"))->Set_Position(_float2(-50.0f, -19.0f));
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon1"))->Set_Position(_float2(-51.0f, -19.0f));
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_Position(_float2(-49.0f, -19.0f));
+	}
+
+	if (false == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_YesBox"))->Get_InputYes() /*||
+		Find_ChildUI(L"Tutorial_Icon0")->Get_Position().x == -19.0f && true == CGameInstance::GetInstance()->KeyDown(DIK_RETURN)*/)
 	{
 		m_bYesPush = false;
 		return;
@@ -324,7 +355,18 @@ void CCanvas_Tutorial::KeyInput_Yes()
 
 void CCanvas_Tutorial::KeyInput_No()
 {
-	if (false == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_NoBox"))->Get_InputNo())
+	if (CGameInstance::GetInstance()->KeyDown(DIK_DOWN))
+	{
+		Find_ChildUI(L"Tutorial_YesBox")->SetVisible(false);
+		Find_ChildUI(L"Tutorial_NoBox")->SetVisible(true);
+
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon0"))->Set_Position(_float2(-50.0f, -52.0f));
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon1"))->Set_Position(_float2(-51.0f, -52.0f));
+		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_Position(_float2(-49.0f, -52.0f));
+	}
+
+	if (false == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_NoBox"))->Get_InputNo() ||
+		Find_ChildUI(L"Tutorial_Icon0")->Get_Position().x == -52.0f && true == CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
 	{
 		m_bNoPush = false;
 		return;
@@ -350,12 +392,7 @@ void CCanvas_Tutorial::KeyInput_No()
 	}
 }
 
-void CCanvas_Tutorial::NextInput()
-{
-
-}
-
-void CCanvas_Tutorial::Tips_Tick()
+void CCanvas_Tutorial::Tips_Tick(const _double & TimeDelta)
 {
 	if (TIPS_END == m_eTips)
 		return;
@@ -402,10 +439,10 @@ void CCanvas_Tutorial::Tips_Tick()
 		break;
 	}
 
-	Tips(m_eTips, szTag);
+	Tips(m_eTips, szTag, TimeDelta);
 }
 
-void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag)
+void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag, const _double & TimeDelta)
 {
 	if (nullptr == Find_ChildUI(pChildTag))
 		return;
@@ -416,19 +453,93 @@ void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag)
 		dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OnTutorial();
 	}
 
-	if (false == m_arrTips[eTIPS])
-		return;
-
-	if (true == m_arrTips[eTIPS])
+	// 원하는 타이밍에 Tips 을 끄고 싶을 때 if 문 추가
+	if (TIPS4 == m_eTips)
 	{
-		dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
-
-		if (true == dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Get_End())
+		m_dTips_TimeAcc += TimeDelta;
+		if (3.0 < m_dTips_TimeAcc)
 		{
-			m_eTips = TIPS_END;
-			m_iTipsOpen = false;
-			m_arrTips[eTIPS] = false;
-			SetDelete();
+			dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
+
+			if (true == dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Get_End())
+				SetDelete();
+		}
+	}
+	if (TIPS0 == m_eTips)
+	{
+		if (true == dynamic_cast<CGameManager_Tutorial*>(CGameManager::GetInstance())->Get_KineticAttackCheck())
+		{
+			dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
+
+			if (true == dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Get_End())
+			{
+				SetDelete();
+			}
+		}
+	}
+	if (TIPS1 == m_eTips)
+	{
+		m_dTips_TimeAcc += TimeDelta;
+		if (3.0 < m_dTips_TimeAcc)
+		{
+			dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
+
+			if (true == dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Get_End())
+			{
+				m_eTips = TIPS2;
+				dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(L"Tutorial_Tips2"))->Set_OnTutorial();
+			}
+		}
+	}
+	if (TIPS2 == m_eTips)
+	{
+		dynamic_cast<CGameManager_Tutorial*>(CGameManager::GetInstance())->Set_KineticAttackAndLockOn();
+		if (true == dynamic_cast<CGameManager_Tutorial*>(CGameManager::GetInstance())->Get_KineticAttackAndLockOn() &&
+			nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+		{
+			dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
+			dynamic_cast<CGameManager_Tutorial*>(CGameManager::GetInstance())->Set_KineticAttackAndLockOnSuccess();
+		}
+	}
+	if (TIPS3 == m_eTips)
+	{
+		dynamic_cast<CGameManager_Tutorial*>(CGameManager::GetInstance())->Set_FlatHit();
+		if (true == dynamic_cast<CGameManager_Tutorial*>(CGameManager::GetInstance())->Get_FlatHit())
+		{
+			dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
+
+			if (true == dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Get_End())
+			{
+				m_eTutorial = ADDPSYCHOKINESISATTACK;
+			}
+		}
+	}
+	if (TIPS7 == m_eTips)
+	{
+		if (true == dynamic_cast<CGameManager_Tutorial*>(CGameManager::GetInstance())->Get_HitAir())
+		{
+			dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
+
+			if (true == dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Get_End())
+			{
+				SetDelete();
+			}
+		}
+	}
+	// 외부에서 꺼주는 경우
+	else
+	{
+		if (true == m_arrTips[eTIPS])
+		{
+			dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
+
+			if (true == dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Get_End())
+			{
+				m_eTips = TIPS_END;
+				m_iTipsOpen = false;
+				m_arrTips[eTIPS] = false;
+				SetDelete();
+			}
 		}
 	}
 }
@@ -441,12 +552,11 @@ void CCanvas_Tutorial::Success_Tick(const _double & TimeDelta)
 	Find_ChildUI(L"Tutorial_Success")->SetVisible(true);
 
 	m_bSuccess_TimeAcc += TimeDelta;
-	if (1.5 < m_bSuccess_TimeAcc)
+	if (2.0 < m_bSuccess_TimeAcc)
 	{
-		m_bSuccess_TimeAcc = 0.0;
 		m_bSuccess = false;
+		m_bSuccess_TimeAcc = 0.0;
 		Find_ChildUI(L"Tutorial_Success")->SetVisible(false);
-		SetDelete();
 	}
 }
 

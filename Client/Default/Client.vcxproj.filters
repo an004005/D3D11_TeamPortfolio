@@ -1103,8 +1103,9 @@
     <ClInclude Include="..\public\Main_OnePickUI.h">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PlayerStartPosition.h">
-      <Filter>02.GameObjects\Utils</Filter>
+    <ClInclude Include="..\public\PlayerStartPosition.h" />
+    <ClInclude Include="..\public\GameManager_Tutorial.h">
+      <Filter>02.GameObjects\Utils\GameManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1826,8 +1827,9 @@
     <ClCompile Include="..\private\Main_OnePickUI.cpp">
       <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PlayerStartPosition.cpp">
-      <Filter>02.GameObjects\Utils</Filter>
+    <ClCompile Include="..\private\PlayerStartPosition.cpp" />
+    <ClCompile Include="..\private\GameManager_Tutorial.cpp">
+      <Filter>02.GameObjects\Utils\GameManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
