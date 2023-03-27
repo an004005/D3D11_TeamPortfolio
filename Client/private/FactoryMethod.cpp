@@ -424,12 +424,36 @@ HRESULT CFactoryMethod::MakeSAS_Portrait_Prototypes(ID3D11Device* pDevice, ID3D1
 		pModel_ch300->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/SAS_Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch300_Portrait", pModel_ch300));
 	}
+	{
+		auto pModel_ch400 = CModel::Create(pDevice, pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch400/ch400.anim_model");
+		pModel_ch400->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch400/SAS_Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch400_Portrait", pModel_ch400));
+	}
 
 	{
 		auto pModel_ch500 = CModel::Create(pDevice, pContext,
 			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/ch500.anim_model");
 		pModel_ch500->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/SAS_Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch500_Portrait", pModel_ch500));
+	}
+	{
+		auto pModel_ch600 = CModel::Create(pDevice, pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch600/ch600.anim_model");
+		pModel_ch600->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch600/SAS_Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch600_Portrait", pModel_ch600));
+	}
+	{
+		auto pModel_ch800 = CModel::Create(pDevice, pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch800/ch800.anim_model");
+		pModel_ch800->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch800/SAS_Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch800_Portrait", pModel_ch800));
+	}
+	{
+		auto pModel_ch1000 = CModel::Create(pDevice, pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch1000/ch1000.anim_model");
+		pModel_ch1000->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch1000/SAS_Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Ch1000_Portrait", pModel_ch1000));
 	}
 
 	{

@@ -85,6 +85,11 @@ struct PS_OUT
 	float4		vFlag : SV_TARGET6; // post process ÇÃ·¡±×
 };
 
+struct PS_OUT_FORWARD
+{
+	float4		vColor : SV_TARGET0;
+};
+
 struct PS_OUT_NONLIGHT
 {
 	float4		vColor : SV_TARGET0;
@@ -346,9 +351,9 @@ PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 	return Out;
 }
 
-PS_OUT_NONLIGHT PS_ToonDefault_Forward_6(PS_IN In)
+PS_OUT_FORWARD PS_ToonDefault_Forward_6(PS_IN In)
 {
-	PS_OUT_NONLIGHT Out = (PS_OUT_NONLIGHT)0;
+	PS_OUT_FORWARD Out = (PS_OUT_FORWARD)0;
 
 	float4 vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
 
@@ -375,9 +380,9 @@ PS_OUT_NONLIGHT PS_ToonDefault_Forward_6(PS_IN In)
 	return Out;
 }
 
-PS_OUT_NONLIGHT PS_WIRE_Forward_7(PS_IN In)
+PS_OUT_FORWARD PS_WIRE_Forward_7(PS_IN In)
 {
-	PS_OUT_NONLIGHT			Out = (PS_OUT_NONLIGHT)0;
+	PS_OUT_FORWARD			Out = (PS_OUT_FORWARD)0;
 
 	float4 vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	if (vDiffuse.a < 0.001f)
