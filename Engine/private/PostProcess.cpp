@@ -31,6 +31,7 @@ void CPostProcess::Late_Tick(_double TimeDelta)
 {
 	if (m_bVisible)
 		m_pRenderer->Add_RenderGroup(CRenderer::POSTPROCESS_VFX, this);
+	
 }
 
 void CPostProcess::LoadFromJson(const Json& json)

@@ -4,7 +4,6 @@
 #define IDENTITY_MATRIX float4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
 
 
-
 static const float PI = 3.14159265f;
 static const float EPSILON = 1e-6f;
 
@@ -32,6 +31,7 @@ static const float EPSILON = 1e-6f;
 #define COL_OIL float3(0.1725, 0.1058f, 0.00392f)
 #define COL_FIRE float3(0.9f, 0.3f, 0.f)
 #define COL_BURNOUT float3(1.f, 0.4f, 0.f) // 몬스터 사망 디졸브 색
+#define COL_PINK float3(1.f, 0.0784f, 0.5764f) // 초고속
 
 float2 Get_FlipBookUV(float2 vRectUV, float fCurTime, float fFrameTime, int iRowCnt, int iColCnt)
 {

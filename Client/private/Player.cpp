@@ -46,6 +46,7 @@
 
 #include "Enemy.h"
 #include "PlayerStartPosition.h"
+#include "SuperSpeedTrail.h"
 
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -202,6 +203,7 @@ void CPlayer::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 	m_pModel->Tick(TimeDelta);
+	m_pTrail->Tick(TimeDelta);
 
 	if (m_bOnBattle)
 	{
@@ -923,6 +925,10 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	m_pSAS_Cable = dynamic_cast<CSAS_Cable*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Prototype_GameObject_SASCable"));
 	Assert(m_pSAS_Cable != nullptr);
 	m_pSAS_Cable->SetTargetInfo(m_pTransformCom, m_pModel);
+
+	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_SuperSpeedTrail", L"SuperSpeedTrail", (CComponent**)&m_pTrail));
+	m_pTrail->SetOwnerModel(m_pModel);
+	m_pTrail->SetActive(true);
 
 	return S_OK;
 }
@@ -5856,6 +5862,7 @@ void CPlayer::Free()
 	Safe_Release(m_pHBeamStateMachine_Left);
 	Safe_Release(m_pTeleportStateMachine);
 	Safe_Release(m_pSAS_Cable);
+	Safe_Release(m_pTrail);
 
 //	Safe_Release(m_pContectRigidBody);
 }
