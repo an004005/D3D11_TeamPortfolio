@@ -106,13 +106,16 @@ void CSpecial_DropObject_Bundle::Tick(_double TimeDelta)
 		m_pCollider->Update_Tick(m_pTransformCom);
 
 		for (auto& iter : m_pObject_Single)
+		{
 			static_cast<CSpecial_DropObject_Single*>(iter)->Sync_position(m_pTransformCom);
+			static_cast<CSpecial_DropObject_Single*>(iter)->Tick(TimeDelta);
+		}
 	}
 	else
 	{
 		if (Decompose.IsNotDo())
 		{
-			Safe_Release(m_pCollider);
+			//Safe_Release(m_pCollider);
 
 			for (auto& iter : m_pObject_Single)
 			{
@@ -202,6 +205,9 @@ void CSpecial_DropObject_Bundle::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
+	ImGui::InputFloat("ThrowPower", &m_fThrowPower);
+	ImGui::InputFloat("FloatPower", &m_fFloatPower);
+
 	static int iChildNum = 0;
 	ImGui::InputInt("ChildNum", &iChildNum, 1);
 
@@ -226,14 +232,14 @@ void CSpecial_DropObject_Bundle::Set_Kinetic(_bool bKinetic)
 
 void CSpecial_DropObject_Bundle::DropObject_Floating()
 {
-	m_pCollider->AddVelocity({0.f, 5.f, 0.f});
+	m_pCollider->AddVelocity({0.f, m_fFloatPower * g_fTimeDelta, 0.f});
 	m_pCollider->AddTorque({0.f, 0.f, 0.f});
 }
 
 void CSpecial_DropObject_Bundle::DropObject_Drop()
 {
 	m_bThrow = true;
-	m_pCollider->AddVelocity({ 0.f, -30.f, 0.f });
+	m_pCollider->AddVelocity({ 0.f, m_fThrowPower * (-g_fTimeDelta), 0.f });
 	m_pCollider->AddTorque({ 0.f, 0.f, 0.f });
 }
 

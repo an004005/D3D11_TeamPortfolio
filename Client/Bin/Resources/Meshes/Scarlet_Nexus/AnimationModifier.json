@@ -963,6 +963,10 @@
             {
                 "EventName": "Elec_Attack_1",
                 "EventTime": 11.199999809265137
+            },
+            {
+                "EventName": "Elec_Attack_1_Shoot",
+                "EventTime": 15.0
             }
         ]
     },
@@ -1021,6 +1025,10 @@
             {
                 "EventName": "Elec_Attack_2",
                 "EventTime": 10.0
+            },
+            {
+                "EventName": "Elec_Attack_2_Shoot",
+                "EventTime": 15.0
             }
         ]
     },
@@ -1087,6 +1095,10 @@
             {
                 "EventName": "Elec_Attack_3",
                 "EventTime": 30.0
+            },
+            {
+                "EventName": "Elec_Attack_3_Shoot",
+                "EventTime": 40.0
             }
         ]
     },
@@ -1158,6 +1170,18 @@
             {
                 "EventName": "Elec_Attack_4_004",
                 "EventTime": 35.0
+            },
+            {
+                "EventName": "Elec_Attack_4_002_Shoot",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Elec_Attack_4_003_Shoot",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "Elec_Attack_4_004_Shoot",
+                "EventTime": 45.0
             }
         ]
     },
@@ -1225,6 +1249,10 @@
             {
                 "EventName": "Elec_Attack_5",
                 "EventTime": 45.0
+            },
+            {
+                "EventName": "Elec_Attack_5_Shoot",
+                "EventTime": 50.0
             }
         ]
     },
@@ -1714,6 +1742,10 @@
             {
                 "EventName": "Elec_Attack_Dash_Hold_4",
                 "EventTime": 25.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_Hold_4_Shoot",
+                "EventTime": 30.0
             }
         ]
     },
@@ -1985,6 +2017,10 @@
             {
                 "EventName": "Elec_Attack_Air_1",
                 "EventTime": 15.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_1_Shoot",
+                "EventTime": 15.0
             }
         ]
     },
@@ -2031,6 +2067,10 @@
             },
             {
                 "EventName": "Elec_Attack_Air_2",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_2_Shoot",
                 "EventTime": 15.0
             }
         ]

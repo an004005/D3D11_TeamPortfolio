@@ -48,7 +48,8 @@ private:
 	_bool	m_bThrow = false;
 	_bool	m_bDecompose = false;
 	CDoOnce tt;
-	_float	m_fThrowPower = 300.f;
+	_float	m_fThrowPower = 2000.f;
+	_float	m_fFloatPower = 300.f;
 	CDoOnce	Decompose;
 
 	_bool  m_bDeadCheck = false;

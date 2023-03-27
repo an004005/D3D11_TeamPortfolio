@@ -50,7 +50,7 @@ void CSpecial_HBeam_Single::BeginTick()
 
 void CSpecial_HBeam_Single::Tick(_double TimeDelta)
 {
-	m_pTransformCom->SetTransformDesc({ 0.1f, XMConvertToRadians(1000.f) });
+	m_pTransformCom->SetTransformDesc({ 0.1f, XMConvertToRadians(1500.f) });
 
 	__super::Tick(TimeDelta);
 
@@ -127,7 +127,7 @@ void CSpecial_HBeam_Single::HBeam_Finish()
 	m_pCollider->Set_Kinetic(false);
 	m_pCollider->UpdateChange();
 
-	m_pCollider->AddForce({ 0.f, 300.f, 0.f });
+	m_pCollider->AddVelocity({ 0.f, 1000.f * g_fTimeDelta, 0.f });
 	m_pCollider->AddTorque({ 500.f, 0.f, 0.f });
 }
 

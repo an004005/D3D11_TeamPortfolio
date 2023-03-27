@@ -150,12 +150,15 @@ private:
 	void			SasMgr();
 	void			Visible_Check();
 	void			SasStateCheck();
+	void			ElecSweep();
 //	PLAYER_STAT		m_PlayerStat;
 	DAMAGE_DESC		m_DamageDesc;
 	DAMAGE_PARAM	m_AttackDesc;
 
 private:
 	_bool			m_bAttackEnable = false;
+	_bool			m_bJustDodge_Activate = false;		// 저스트닷지 공격 발동중
+	_bool			m_bKineticSpecial_Activate = false;	// 특수오브젝트 공격 발동중
 
 private:
 	HRESULT SetUp_Components(void* pArg);
@@ -346,6 +349,7 @@ private:	// 피격 소켓 애니메이션
 
 	list<CAnimation*>	m_BreakFall_Front;
 	list<CAnimation*>	m_BreakFall_Back;
+	list<CAnimation*>	m_BreakFall_Landing;
 
 private:	// 피격 관련 변수
 	_vector	m_vHitDir;
@@ -599,8 +603,8 @@ private:	// 플레이어 림라이트, 외곽선 관련
 	void	End_RimLight();
 
 private:
-	_float	m_fThrowPower = 100000.f;
-	_float	m_fChargePower = 3000.f;
+	_float	m_fThrowPower = 2000.f;
+	_float	m_fChargePower = 50.f;
 
 	_float	m_fRotX = 0.f;
 	_float  m_fRotY = 0.f;

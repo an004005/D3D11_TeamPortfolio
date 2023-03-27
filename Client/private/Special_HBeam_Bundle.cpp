@@ -103,7 +103,7 @@ void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 	{
 		if (tt.IsNotDo())
 		{
-			Safe_Release(m_pCollider);
+			//Safe_Release(m_pCollider);
 
 			for (auto& iter : m_pHBeam_Single)
 			{
@@ -180,13 +180,14 @@ void CSpecial_HBeam_Bundle::Imgui_RenderProperty()
 	__super::Imgui_RenderProperty();
 
 	ImGui::InputFloat("ThrowPower", &m_fThrowPower);
+	ImGui::InputFloat("FloatPower", &m_fFloatPower);
 }
 
 void CSpecial_HBeam_Bundle::HBeam_Drift()
 {
-	_float3 vForce = _float3(0.f, m_fThrowPower * g_fTimeDelta, 0.f);
+	_float3 vForce = _float3(0.f, m_fFloatPower * g_fTimeDelta, 0.f);
 	_float3 vTorque = _float3(CMathUtils::RandomFloat(-1.f, 1.f), CMathUtils::RandomFloat(-1.f, 1.f), CMathUtils::RandomFloat(-1.f, 1.f));
-	m_pCollider->AddForce(vForce);
+	m_pCollider->AddVelocity(vForce);
 	m_pCollider->AddTorque(vTorque);
 }
 
@@ -200,9 +201,9 @@ void CSpecial_HBeam_Bundle::HBeam_Throw(_float4 vDir)
 	_float3 vTorque = { 0.f, 2000.f, 0.f };
 	vForce.Normalize();
 
-	vForce *= (100000.f * g_fTimeDelta);
+	vForce *= (m_fThrowPower * g_fTimeDelta);
 
-//	m_pCollider->AddForce(vForce);
+	m_pCollider->AddVelocity(vForce);
 	m_pCollider->AddTorque(vTorque);
 }
 
