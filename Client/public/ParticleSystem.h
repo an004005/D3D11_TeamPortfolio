@@ -15,6 +15,7 @@ END
 BEGIN(Client)
 
 
+
 enum class ESpawnShape
 {
 	SPHERE,
@@ -43,6 +44,12 @@ enum class EBilboardType
 
 class CParticleSystem :	public CGameObject
 {
+
+public:
+	enum FINISHFUNC { FUNC_PLAYFROMSTART, FUNC_RESET, FUNC_STOP, FUNC_REVERSE, FUNC_END };
+	enum CURVETYPE { CURVE_SCALE_ALL, CURVE_SCALE_Y, CURVE_SCALE_X, CURVE_FLOATS_0, CURVE_FLOATS_1, CURVE_FLOATS_2, CURVE_FLOATS_3, CURVE_FLOATS_4, CURVE_FLOATS_5, CURVE_FLOATS_6, CURVE_FLOATS_7, CURVE_FLOATS_8, CURVE_FLOATS_9, CURVE_COLORCHANGE, CURVE_INTS_0, CURVE_END };
+
+
 public:
 	CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CParticleSystem(const CParticleSystem& rhs);
@@ -76,8 +83,7 @@ private:
 	void UpdateMeshes(_float fTimeDelta);
 
 private:
-	void Create_MeshData(VTXMATRIX data);
-	_uint FineNearestIndex(_float4 vPos);
+
 
 private:
 	ShaderParams m_tParam;
@@ -188,10 +194,37 @@ private:
 
 	_bool m_bMeshCurve = false;
 	_bool m_bPhysX = false;
+public:
+	// For Curves
+	void Tick_Scale_All(_float fValue);
+	void Tick_Scale_Y(_float fValue);
+	void Tick_Scale_X(_float fValue);
 
+	void Tick_Floats_0(_float fValue);
+	void Tick_Floats_1(_float fValue);
+	void Tick_Floats_2(_float fValue);
+	void Tick_Floats_3(_float fValue);
+	void Tick_Floats_4(_float fValue);
+	void Tick_Floats_5(_float fValue);
+	void Tick_Floats_6(_float fValue);
+	void Tick_Floats_7(_float fValue);
+	void Tick_Floats_8(_float fValue);
+	void Tick_Floats_9(_float fValue);
+	void Tick_ColorChange(_float fValue);
+	// For Int 
+	void Tick_Ints_0(_float fValue);
+
+	void AddTargetCurve(const string& strCurveName, CCurveFloatImpl* pCurve = nullptr);
 private:
-	// For ParticleGroup
+	// For MainCurve
+	_bool		m_bUseMainCurve = false;
+	CTimeline	m_Timeline;
+	cmap<CCurveFloatImpl*> m_Curves;
 
+	_float		m_fEndTime = 0.f;
+	_int	m_iSelectFinishFunc = FUNC_RESET;
+	char*		m_szFuncName[FUNC_END] = { "PlayFromStart",  "Reset", "Stop", "Reverse" };
+	char*		m_szCurveTag[CURVE_END] = { "ObjectScale_All", "ObjectScale_Y","ObjectScale_X", "Floats_0", "Floats_1", "Floats_2", "Floats_3","Floats_4","Floats_5","Floats_6", "Floats_7",  "Floats_8", "Floats_9", "Color_Change", "Ints_0" };
 
 public:
 	static CParticleSystem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
