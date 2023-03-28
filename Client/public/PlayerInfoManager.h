@@ -94,6 +94,12 @@ public:	// Set
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
+	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
+
+
+public:
+	HRESULT			Release_CamSpot();
+
 
 private:	// 스탯 정보 관련
 	PLAYER_STAT		m_tPlayerStat;
@@ -103,6 +109,9 @@ private:	// 상호작용 관련
 	CGameObject*	m_pKineticObject;
 	CGameObject*	m_pTargetedMonster;
 	CGameObject*	m_pSpecialObject;
+
+private:
+	CGameObject*	m_pCamSpot = nullptr;
 
 private:
 	_float			m_fBaseAttackDamage;

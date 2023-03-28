@@ -264,7 +264,7 @@ void CPlayer::Tick(_double TimeDelta)
 	}
 	if (CGameInstance::GetInstance()->KeyDown(DIK_E))
 	{
-
+		static_cast<CCamSpot*>(m_pCamSpot)->Random_Shaking(1.f);
 	}
 	if (CGameInstance::GetInstance()->KeyDown(DIK_R))
 	{
@@ -1048,7 +1048,11 @@ void CPlayer::SasStateCheck()
 		}
 
 		m_bSASSkillInput[3] = false;
-		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSwordParticle)) m_pSwordParticle->SetDelete();
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSwordParticle))
+		{
+			m_pSwordParticle->SetDelete();
+			m_pSwordParticle = nullptr;
+		}
 	}
 
 	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_PENETRATE))
@@ -5964,6 +5968,7 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pChargeParticle))
 		{
 			m_pChargeParticle->Delete_Particles();
+			m_pChargeParticle = nullptr;
 		}
 	}
 

@@ -39,6 +39,9 @@ public:
 	void	Reset_CamMod();
 	void	SetUp_BoneMatrix(CModel* pModel, _fmatrix Transform);
 
+public:
+	void	Random_Shaking(_float fShakePower);
+
 private:
 	ECamMod	m_eCamMod = MOD_SYNC;
 	_matrix	m_AttachMatrix = XMMatrixIdentity();
