@@ -429,6 +429,26 @@ PS_OUT PS_KINETIC_PARTICLE_CURVE(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_KINETIC_TRUCK_OIL(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float2 TEXUV = Get_FlipBookUV(In.vTexUV, In.CurLife, 0.1, 4, 4);
+	float4 Default = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = Default * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	float Mask = g_tex_1.Sample(LinearSampler, TEXUV).r;
+
+	Out.vColor = CalcHDRColor(Final, g_float_0);
+
+	Out.vColor.a = saturate(Mask * In.RamainLifeRatio * g_float_1);
+
+	if (Out.vColor.a <= 0.01f)
+		discard;
+
+	return Out;
+}
+
 PS_OUT PS_EM1100_ELEC_BULLET_EXPLODE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -887,5 +907,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_KINETIC_PARTICLE_CURVE();
+	}
+
+	//20
+	pass KineticTruckOil
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_KINETIC_TRUCK_OIL();
 	}
 }
