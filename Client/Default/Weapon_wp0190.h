@@ -32,7 +32,7 @@ private:
 	CParticleGroup*	m_pParticle = nullptr;
 
 private:
-	_vector		m_vBeforePos;
+	_float4		m_vBeforePos;
 
 private:
 	HRESULT		SetUp_Components();

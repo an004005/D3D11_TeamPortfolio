@@ -30,6 +30,7 @@ static const float EPSILON = 1e-6f;
 // #define COL_OIL float3(0.470588f, 0.23529f, 0.f)
 #define COL_OIL float3(0.1725, 0.1058f, 0.00392f)
 #define COL_FIRE float3(0.9f, 0.3f, 0.f)
+#define COL_ELEC float3(247.f / 255.f, 255.f / 255.f, 19.f / 255.f)
 #define COL_BURNOUT float3(1.f, 0.4f, 0.f) // 몬스터 사망 디졸브 색
 #define COL_PINK float3(1.f, 0.0784f, 0.5764f) // 초고속
 #define COL_CABLE_RED float3(1.f, 0.07843f, 0.f)

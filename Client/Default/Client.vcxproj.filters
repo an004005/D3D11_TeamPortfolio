@@ -382,6 +382,9 @@
     <Filter Include="02.GameObjects\Enemy\EMBullet\ElectricBullet">
       <UniqueIdentifier>{53e11f2c-66d8-4166-948c-aeb499f89c39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_TankLorry">
+      <UniqueIdentifier>{b12936c4-bc60-410c-9473-2decf22ba875}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -847,9 +850,6 @@
     <ClInclude Include="..\public\BdLm_Controller.h">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\WaterBall.h">
-      <Filter>02.GameObjects\Monster\boss1\WaterBall</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\BrJ_Controller.h">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
     </ClInclude>
@@ -1115,6 +1115,18 @@
       <Filter>VFX\PostProcess</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SuperSpeedTrail.h" />
+    <ClInclude Include="..\public\Special_TankLorry.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_TankLorry_Head.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_TankLorry_Trailer.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_TankLorry_Tank.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1551,9 +1563,6 @@
     <ClCompile Include="..\private\BdLm_Controller.cpp">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\WaterBall.cpp">
-      <Filter>02.GameObjects\Monster\boss1\WaterBall</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\BrJ_Controller.cpp">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
     </ClCompile>
@@ -1822,6 +1831,18 @@
       <Filter>VFX\PostProcess</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SuperSpeedTrail.cpp" />
+    <ClCompile Include="..\private\Special_TankLorry.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TankLorry_Head.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TankLorry_Trailer.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TankLorry_Tank.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

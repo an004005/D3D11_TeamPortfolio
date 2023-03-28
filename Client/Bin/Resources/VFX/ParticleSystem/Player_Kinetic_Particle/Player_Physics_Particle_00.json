@@ -1,1 +1,123 @@
-{"BilboardType":1,"BufferType":1,"BurstCnt":15,"ConeDirDegree":15.0,"ConeOriginRadius":10.0,"Duration":1.0,"EndTime":0.0,"FinishFunc":1,"FromOrigin":true,"GravityPowerMinMax":[2.0,3.0],"IncreaseMaxSize":1.0,"Life":5.0,"LifeMinMax":[1.5,3.0],"LifeRand":true,"Loop":false,"MeshBufferProtoTag":"Prototype_Component_Rock_A_Mesh_Instance","MeshSize":[0.009999999776482582,0.009999999776482582,0.009999999776482582],"ModelCurveProtoTag":"","ModelProtoTag":"","ObjectTag":"","Prototype_GameObject":"ProtoVFX_ParticleSystem\u0000","RandDirMax":[1.0,1.0,1.0],"RandDirMin":[0.0,0.0,0.0],"RotationToTimeMax":[0.0,0.0,0.0],"RotationToTimeMin":[0.0,0.0,0.0],"ScaleVariation":[0.0,0.0,0.0],"ShaderParams":{"Float2s":[],"Float4s":[[0.05054541677236557,0.0,0.11247944831848145,1.0]],"Float4x4s":[],"Floats":[3.0,1.0,0.0,1.0],"Ints":[],"Pass":4,"Textures":["..\\Bin\\Resources\\Texture\\VFX\\T_en_RockA_AO.png\u0000","..\\Bin\\Resources\\Texture\\VFX\\T_en_RockA_NML.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxMesh_Instance","Shape":1,"SpawnTickTime":0.699999988079071,"Speed":1.0,"SpeedMinMax":[8.0,10.0],"SpeedRand":true,"SphereDetail":false,"SphereRadius":4.0,"Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]},"TurnAngle":0.0,"TurnAxis":[0.0,0.0,0.0],"UseMeshData":false,"VtxRangeRatioValue":0.0,"VtxRangeTimelineCurve":"","VtxStartRatioValue":0.0,"VtxStartTimelineCurve":"","XDirCurveName":"","YDirCurveName":"","ZDirCurveName":"","bCurveDir":false,"bGravity":true,"bLocal":false,"bMeshCurve":false,"bNonAlpha":true,"bPhysX":true,"bRotate":false,"bSizeDecreaseByLife":false,"bSizeIncreaseByLife":false,"bTurn":false,"bUseMainCurve":false,"pSize":[0.10000000149011612,0.10000000149011612]}
+{
+    "BilboardType": 1,
+    "BufferType": 1,
+    "BurstCnt": 15,
+    "ConeDirDegree": 15.0,
+    "ConeOriginRadius": 10.0,
+    "Duration": 1.0,
+    "FromOrigin": true,
+    "GravityPowerMinMax": [
+        2.0,
+        3.0
+    ],
+    "IncreaseMaxSize": 1.0,
+    "Life": 5.0,
+    "LifeMinMax": [
+        1.5,
+        3.0
+    ],
+    "LifeRand": true,
+    "Loop": false,
+    "MeshBufferProtoTag": "Prototype_Component_Rock_A_Mesh_Instance",
+    "MeshSize": [
+        0.009999999776482582,
+        0.009999999776482582,
+        0.009999999776482582
+    ],
+    "ModelProtoTag": "",
+    "ObjectTag": "",
+    "Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",
+    "RandDirMax": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "RandDirMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMax": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "ScaleVariation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.05054541677236557,
+                0.0,
+                0.11247944831848145,
+                1.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [
+            3.0,
+            1.0,
+            0.0,
+            1.0
+        ],
+        "Ints": [],
+        "Pass": 4,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_en_RockA_AO.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_en_RockA_NML.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxMesh_Instance",
+    "Shape": 1,
+    "SpawnTickTime": 0.699999988079071,
+    "Speed": 1.0,
+    "SpeedMinMax": [
+        8.0,
+        10.0
+    ],
+    "SpeedRand": true,
+    "SphereDetail": false,
+    "SphereRadius": 4.0,
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    "UseMeshData": false,
+    "bGravity": true,
+    "bLocal": false,
+    "bMeshCurve": false,
+    "bNonAlpha": true,
+    "bPhysX": true,
+    "bRotate": false,
+    "bSizeDecreaseByLife": false,
+    "bSizeIncreaseByLife": false,
+    "pSize": [
+        0.10000000149011612,
+        0.10000000149011612
+    ]
+}
