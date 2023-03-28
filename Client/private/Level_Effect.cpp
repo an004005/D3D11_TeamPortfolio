@@ -33,12 +33,14 @@
 // ~ ¿Á¼öÇöÀÇ ÈçÀû
 #include "Boss1.h"
 #include "Boss1_AIController.h"
+#include "FactoryMethod.h"
 
 #include "MonsterHpUI.h"
 #include "MonsterLockonUI.h"
 #include "MonsterShildUI.h"
 #include "GravikenisisGUI.h"
 #include "GravikenisisMouseUI.h"
+#include "Imgui_Batch.h"
 // ~ ¿Á¼öÇöÀÇ ÈçÀû
 
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -56,7 +58,7 @@ HRESULT CLevel_Effect::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
-
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
 	CVFX_Manager::GetInstance()->Initialize(LEVEL_EFFECT);
 
 	if (FAILED(__super::Initialize()))
@@ -147,6 +149,8 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 		return E_FAIL;
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
+
+	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 
 	// ~ForSky
 
