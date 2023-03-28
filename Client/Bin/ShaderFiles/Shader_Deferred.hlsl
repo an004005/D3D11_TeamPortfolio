@@ -41,9 +41,11 @@ TextureCube     g_RadianceTexture;
 
 float3			g_vFogColor;
 float3			g_vHighlightColor;
+float3			g_vDirToSun;
 float			g_fStartDepth;
 float			g_fGlobalDensity;
 float			g_fHeightFalloff;
+int				g_bFog;
 
 
 float g_Gamma = 2.2f;
@@ -241,6 +243,38 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	return Out;
 }
 
+
+float3 ApplyFog(float3 originalColor, float eyePosY, float3 eyeToPixel)
+{
+	float pixelDist = length( eyeToPixel );
+	float3 eyeToPixelNorm = eyeToPixel / pixelDist;
+
+	// Find the fog staring distance to pixel distance
+	float fogDist = max(pixelDist - g_fStartDepth, 0.0);
+
+	// Distance based fog intensity
+	float fogHeightDensityAtViewer = exp( -g_fHeightFalloff * eyePosY );
+	float fogDistInt = fogDist * fogHeightDensityAtViewer;
+
+	// Height based fog intensity
+	float eyeToPixelY = eyeToPixel.y * ( fogDist / pixelDist );
+	float t = g_fHeightFalloff * eyeToPixelY;
+	const float thresholdT = 0.01;
+	float fogHeightInt = abs( t ) > thresholdT ?
+		( 1.0 - exp( -t ) ) / t : 1.0;
+
+	// Combine both factors to get the final factor
+	float fogFinalFactor = exp( -g_fGlobalDensity * fogDistInt * fogHeightInt );
+
+	// Find the sun highlight and use it to blend the fog color
+	float sunHighlightFactor = saturate(dot(eyeToPixelNorm, normalize(g_vDirToSun)));
+	sunHighlightFactor = pow(sunHighlightFactor, 8.0);
+	float3 fogFinalColor = lerp(g_vFogColor, g_vHighlightColor, sunHighlightFactor);
+
+	return lerp(fogFinalColor, originalColor, fogFinalFactor);
+}
+
+
 PS_OUT PS_MAIN_BLEND(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
@@ -284,6 +318,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 		discard;
 	}
 
+	float3 eyeToPixel;
 
 	// 그림자 연산
 	float fViewZ = vDepth.y * g_Far;
@@ -297,6 +332,8 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	
 	vPixelWorld = mul(vPixelWorld, g_ProjMatrixInv); // pixel view space
 	vPixelWorld = mul(vPixelWorld, g_ViewMatrixInv); // pixel world space
+
+	eyeToPixel = vPixelWorld - g_vCamPosition;
 
 	vector		vLightViewSpace = mul(vPixelWorld, g_LightViewMatrix);;
 	vector		vLightClipSpace = mul(vLightViewSpace, g_LightProjMatrix);
@@ -326,6 +363,9 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	fShadowRate *= 0.5f;
 	
 	Out.vColor *= (1.f - fShadowRate);
+
+	if (g_bFog)
+		Out.vColor.rgb = ApplyFog(Out.vColor.rgb, g_vCamPosition.y, eyeToPixel);
 
 	return Out;
 }
