@@ -25,6 +25,8 @@ public:
 public:
 	void	Set_EnemyUI(const EEnemyName eEnemyName, const _uint iLevel);
 
+	void	Set_Visible();	// UI_Mananger ¿¡¼­ ·»´õ¸¦ ´Ù ²ø ¶§ »ç¿ë
+
 private:
 	void	EnemyUIAdd_Tick(const _double & TimeDelta);
 

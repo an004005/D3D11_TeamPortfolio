@@ -1181,7 +1181,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_Alpha_Color();	// 색상 조정 안 하는 것으로 바꿈
 	}
 
-	//14
+	//14 : 색상만 조정
 	pass ColorChange
 	{
 		SetRasterizerState(RS_Default);

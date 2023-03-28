@@ -52,8 +52,6 @@ void CTalk_FaceUI::Tick(_double TimeDelta)
 	{
 		m_tParams.Float2s[1].y = 20;
 	}
-
-
 }
 
 HRESULT CTalk_FaceUI::Render()

@@ -5,16 +5,15 @@
 
 BEGIN(Client)
 
-class CItem_NameUI final : public CUI
+class CItem_LightUI final : public CUI
 {
 private:
-	CItem_NameUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CItem_NameUI(const CItem_NameUI& rhs);
+	CItem_LightUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CItem_LightUI(const CItem_LightUI& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void	BeginTick() override;
 	virtual void	Tick(_double TimeDelta) override;
 	virtual void	Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
@@ -24,10 +23,20 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_ItemName(const _float & fIndex);
+	void	Set_ItemLightUse() {
+		m_bUse = true;
+		m_fAlphaDown = false;
+		m_dAlpha_TimeAcc = 0.0;
+	}
 
 public:
-	static CItem_NameUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	_bool	m_bUse = { false };
+	_bool	m_fAlphaDown = { false };
+	_float	m_fAlpha = { 0.0f };
+	_double	m_dAlpha_TimeAcc = { 0.0 };
+
+public:
+	static CItem_LightUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

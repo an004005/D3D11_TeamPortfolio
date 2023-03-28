@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "JsonLib.h"
 
+// 초록색 : 0.5f, 1.0f, 0.4f, 안씀
 // m_tParams.Floats[0] 을 이용해서 게이지를 조절한다.
 
 CItem_GaugeUI::CItem_GaugeUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -33,54 +34,38 @@ HRESULT CItem_GaugeUI::Initialize(void * pArg)
 
 void CItem_GaugeUI::Tick(_double TimeDelta)
 {
-	CUI::Tick(TimeDelta);
-
 	if (false == m_bCooldownTimeStart)
 		return;
 
-	m_tParams.Floats[0] = 1.0f - (_float(TimeDelta) / 10.0f);	// UITODO : 여기서 Item 의 쿨타임을 조절할 수 있습니다.
+	CUI::Tick(TimeDelta);
 
-	if (0.0f > m_tParams.Floats[0])
+	if (true == m_fRatioDown)
 	{
-		m_tParams.Floats[0] = 1.0f;
-		m_bCooldownTimeStart = false;
+		m_fRatio -= _float(TimeDelta) * 0.1f;
+
+		if (0.0f > m_fRatio)
+			m_fRatioDown = false;
 	}
-}
+	else
+	{
+		m_fRatio += _float(TimeDelta) * 0.1f;
 
-void CItem_GaugeUI::Late_Tick(_double TimeDelta)
-{
-	CUI::Late_Tick(TimeDelta);
-}
+		if (1.0f < m_fRatio)
+		{
+			m_tParams.Floats[0] = 1.0f;
+			m_bCooldownTimeStart = false;
+		}
+	}
 
-HRESULT CItem_GaugeUI::Render()
-{
-	if (FAILED(CUI::Render()))
-		return E_FAIL;
+	m_tParams.Floats[0] = m_fRatio;
 
-	return S_OK;
-}
+	//m_tParams.Floats[0] = 1.0f - (_float(TimeDelta) / 10.0f);	// UITODO : 여기서 Item 의 쿨타임을 조절할 수 있습니다.
 
-void CItem_GaugeUI::Imgui_RenderProperty()
-{
-	CUI::Imgui_RenderProperty();
-
-}
-
-void CItem_GaugeUI::SaveToJson(Json & json)
-{
-	CUI::SaveToJson(json);
-
-}
-
-void CItem_GaugeUI::LoadFromJson(const Json & json)
-{
-	CUI::LoadFromJson(json);
-
-}
-
-void CItem_GaugeUI::Gauge_Tick(const _double & dTimeDelta)
-{
-
+	//if (0.0f > m_tParams.Floats[0])
+	//{
+	//	m_tParams.Floats[0] = 1.0f;
+	//	m_bCooldownTimeStart = false;
+	//}
 }
 
 CItem_GaugeUI * CItem_GaugeUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

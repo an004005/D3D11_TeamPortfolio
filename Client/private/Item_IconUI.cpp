@@ -25,6 +25,9 @@ HRESULT CItem_IconUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	m_fStartSize.x = m_fSizeX;
+	m_fStartSize.y = m_fSizeY;
+
 	return S_OK;
 }
 
@@ -37,10 +40,20 @@ void CItem_IconUI::BeginTick()
 void CItem_IconUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
-	// ItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUI 이거 쓰지 말고 ItemIconUIItemIconUIItemIconUI 이거 써!!!
-	// ItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUI 이거 쓰지 말고 ItemIconUIItemIconUIItemIconUI 이거 써!!!
-	// ItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUIItemIconUI 이거 쓰지 말고 ItemIconUIItemIconUIItemIconUI 이거 써!!!
 
+	if (m_bUse == false) return;
+
+	m_fSizeX += _float(TimeDelta) * 13.0f;
+	m_fSizeY += _float(TimeDelta) * 13.0f;
+
+	m_dSizeChange_TimeAcc += TimeDelta;
+	if (1.0 < m_dSizeChange_TimeAcc)
+	{
+		m_bUse = false;
+		m_fSizeX = m_fStartSize.x;
+		m_fSizeY = m_fStartSize.y;
+		m_dSizeChange_TimeAcc = 0.0;
+	}
 }
 
 void CItem_IconUI::Late_Tick(_double TimeDelta)
@@ -72,6 +85,11 @@ void CItem_IconUI::LoadFromJson(const Json & json)
 {
 	CUI::LoadFromJson(json);
 
+}
+
+void CItem_IconUI::Set_IconIndex(const _float2 & fIconIndex)
+{
+	m_tParams.Float2s[0] = fIconIndex;
 }
 
 CItem_IconUI * CItem_IconUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Item_NameUI.h"
 #include "GameInstance.h"
-#include "JsonLib.h"
 
 CItem_NameUI::CItem_NameUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -31,7 +30,6 @@ HRESULT CItem_NameUI::Initialize(void * pArg)
 
 void CItem_NameUI::BeginTick()
 {
-
 
 }
 
@@ -72,6 +70,13 @@ void CItem_NameUI::LoadFromJson(const Json & json)
 {
 	CUI::LoadFromJson(json);
 
+}
+
+void CItem_NameUI::Set_ItemName(const _float & fIndex)
+{
+	// [0] 회복(소)젤리 [1] 회복(중)젤리 [2] 회복(대)젤리 [3] 전체: 회복 (소) 젤리 [4] 전체: 회복 (중) 젤리 [5] 전체: 회복 (대) 젤리 
+	// [6] 정상화 태블릿 [7] 전체: 정상화 태블릿 [8] 브레인 필드 기어 [9] SAS 보급수
+	m_tParams.Float2s[0].x = fIndex;
 }
 
 CItem_NameUI * CItem_NameUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

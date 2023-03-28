@@ -45,37 +45,6 @@ void CMain_PickUI::Tick(_double TimeDelta)
 	CurrentPick(TimeDelta);
 }
 
-void CMain_PickUI::Late_Tick(_double TimeDelta)
-{
-	__super::Late_Tick(TimeDelta);
-}
-
-HRESULT CMain_PickUI::Render()
-{
-	if (FAILED(__super::Render()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-void CMain_PickUI::Imgui_RenderProperty()
-{
-	CUI::Imgui_RenderProperty();
-
-}
-
-void CMain_PickUI::SaveToJson(Json & json)
-{
-	CUI::SaveToJson(json);
-
-}
-
-void CMain_PickUI::LoadFromJson(const Json & json)
-{
-	CUI::LoadFromJson(json);
-
-}
-
 void CMain_PickUI::CurrentPick(const _double & TimeDelta)
 {
 	if (false == m_bOnAlpha)

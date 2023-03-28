@@ -32,19 +32,19 @@ void CMain_BrainUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	if (true == m_bValueDwon)
+	if (true == m_bValueDown)
 	{
 		m_fValue -= _float(TimeDelta) * 2.0f;
 
 		if (0.0f > m_fValue)
-			m_bValueDwon = false;
+			m_bValueDown = false;
 	}
 	else
 	{
 		m_fValue += _float(TimeDelta) * 2.0f;
 
 		if (1.1f < m_fValue)
-			m_bValueDwon = true;
+			m_bValueDown = true;
 	}
 
 	m_tParams.Floats[1] = m_fValue;

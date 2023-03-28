@@ -21,6 +21,9 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
+	void	Set_CanvasItme();
+
+public:
 	static CCanvas_Item* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;

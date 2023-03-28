@@ -20,7 +20,7 @@ public:
 
 private:
 	_float	m_fValue = { 0.0f };
-	_bool	m_bValueDwon = { false };
+	_bool	m_bValueDown = { false };
 
 public:
 	static CMain_BrainUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

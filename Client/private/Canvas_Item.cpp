@@ -3,6 +3,9 @@
 #include "GameInstance.h"
 #include "UI_Manager.h"
 
+#include "Item_IconUI.h"
+#include "Item_LightUI.h"
+
 CCanvas_Item::CCanvas_Item(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
@@ -50,6 +53,13 @@ void CCanvas_Item::SaveToJson(Json& json)
 void CCanvas_Item::LoadFromJson(const Json & json)
 {
 	CCanvas::LoadFromJson(json);
+}
+
+void CCanvas_Item::Set_CanvasItme()
+{
+	dynamic_cast<CItem_LightUI*>(Find_ChildUI(L"Item_Light"))->Set_ItemLightUse();
+	dynamic_cast<CItem_IconUI*>(Find_ChildUI(L"Item_Icon"))->Set_ItemIconUse();
+
 }
 
 CCanvas_Item * CCanvas_Item::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

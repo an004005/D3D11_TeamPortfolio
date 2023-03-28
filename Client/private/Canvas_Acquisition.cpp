@@ -23,8 +23,6 @@ HRESULT CCanvas_Acquisition::Initialize_Prototype()
 	if (FAILED(CCanvas::Initialize_Prototype()))
 		return E_FAIL;
 
-	CUI_Manager::GetInstance()->Add_Canvas(L"Canvas_Acquisition", this);
-
 	return S_OK;
 }
 
@@ -32,6 +30,8 @@ HRESULT CCanvas_Acquisition::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
+
+	CUI_Manager::GetInstance()->Add_Canvas(L"Canvas_Acquisition", this);
 
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
@@ -163,6 +163,14 @@ void CCanvas_Acquisition::Set_EnemyUI(const EEnemyName eEnemyName, const _uint i
 	assert(pUI != nullptr && "Failed to Clone : CAcquisitionUI");
 
 	m_AcquisitionUIList.emplace_back(pUI);
+}
+
+void CCanvas_Acquisition::Set_Visible()
+{
+	for (auto iter = m_AcquisitionUIList.begin(); iter != m_AcquisitionUIList.end(); ++iter)
+	{
+		(*iter)->SetVisible(false);
+	}
 }
 
 void CCanvas_Acquisition::EnemyUIAdd_Tick(const _double & TimeDelta)

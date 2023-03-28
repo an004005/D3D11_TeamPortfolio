@@ -4,6 +4,10 @@
 #include "FSMComponent.h"
 #include "UI_Manager.h"
 
+#include "Canvas_Item.h"
+#include "Item_PushArrowUI.h"
+#include "Item_GaugeUI.h"
+
 CCanvas_ItemMove::CCanvas_ItemMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
@@ -45,6 +49,8 @@ void CCanvas_ItemMove::Tick(_double TimeDelta)
 
 	m_pUIMoveFSM->Tick(TimeDelta);
 	CCanvas::UIHit(TimeDelta);
+
+	Key_Input();
 }
 
 void CCanvas_ItemMove::Imgui_RenderProperty()
@@ -60,6 +66,24 @@ void CCanvas_ItemMove::SaveToJson(Json& json)
 void CCanvas_ItemMove::LoadFromJson(const Json & json)
 {
 	CCanvas::LoadFromJson(json);
+}
+
+void CCanvas_ItemMove::Key_Input()
+{
+	if (CGameInstance::GetInstance()->KeyDown(DIK_DOWN))
+	{
+		// 화살표 이동하기
+		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrow"))->Set_Input();
+		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrowBack"))->Set_Input();
+
+		// Icon 사이즈 커지기, Icon 에 Light 깜박깜박
+		dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_CanvasItme();
+
+		// 게이지 사용하기
+		dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Set_CooldownTimeStart();
+		dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_GaugeBack"))->Set_CooldownTimeStart();
+		
+	}
 }
 
 CCanvas_ItemMove * CCanvas_ItemMove::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

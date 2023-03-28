@@ -21,8 +21,6 @@ HRESULT CCanvas_LeftTalk::Initialize_Prototype()
 	if (FAILED(CCanvas::Initialize_Prototype()))
 		return E_FAIL;
 
-	CUI_Manager::GetInstance()->Add_Canvas(L"CCanvas_LeftTalk", this);
-
 	return S_OK;
 }
 
@@ -30,6 +28,8 @@ HRESULT CCanvas_LeftTalk::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
+
+	CUI_Manager::GetInstance()->Add_Canvas(L"CCanvas_LeftTalk", this);
 
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);

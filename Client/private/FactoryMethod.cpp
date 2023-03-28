@@ -110,6 +110,7 @@
 // Item
 #include "Item_NameUI.h"
 #include "Item_IconUI.h"
+#include "Item_LightUI.h"
 #include "Item_GaugeUI.h"
 #include "Item_PushArrowUI.h"
 #include "Item_LeftArrowUI.h"
@@ -680,6 +681,10 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 		/* For.Prototype_GameObject_Item_IconUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_IconUI"),
 			CItem_IconUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Item_LightUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_LightUI"),
+			CItem_LightUI::Create(pDevice, pContext))))
 			return E_FAIL;
 		/* For.Prototype_GameObject_Item_NameUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Item_NameUI"),

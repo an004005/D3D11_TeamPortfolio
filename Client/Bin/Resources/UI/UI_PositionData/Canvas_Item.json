@@ -113,7 +113,7 @@
             "PositionX": 110.0,
             "PositionY": 130.0,
             "Priority": 0,
-            "Prototype_GameObject": "Item_IconUI\u0000",
+            "Prototype_GameObject": "ItemIconUI\u0000",
             "ScaleX": 1.2999999523162842,
             "ScaleY": 1.2999999523162842,
             "ShaderParams": {
@@ -175,7 +175,7 @@
             "PositionX": 247.0,
             "PositionY": 138.0,
             "Priority": 0,
-            "Prototype_GameObject": "Item_IconUI\u0000",
+            "Prototype_GameObject": "ItemIconUI\u0000",
             "ScaleX": 1.2999999523162842,
             "ScaleY": 1.2999999523162842,
             "ShaderParams": {
@@ -225,6 +225,59 @@
                     0.0,
                     -553.0,
                     -312.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Item_Light\u0000",
+            "ObjectTag": "Item_Light",
+            "Pivot": 7,
+            "PositionX": 180.0,
+            "PositionY": 135.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Item_LightUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.4000000059604645,
+                        1.0,
+                        0.4000000059604645,
+                        0.25
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 14,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Item_Light.png\u0000"
+                ]
+            },
+            "SizeX": 256.0,
+            "SizeY": 256.0,
+            "Transform": {
+                "WorldMatrix": [
+                    217.60000610351563,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    217.60000610351563,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -620.0,
+                    -315.0,
                     0.0,
                     1.0
                 ]
