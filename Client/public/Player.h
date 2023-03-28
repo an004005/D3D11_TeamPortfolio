@@ -149,12 +149,16 @@ private:
 private:
 	void			SasMgr();
 	void			Visible_Check();
+	void			SasStateCheck();
+	void			ElecSweep();
 //	PLAYER_STAT		m_PlayerStat;
 	DAMAGE_DESC		m_DamageDesc;
 	DAMAGE_PARAM	m_AttackDesc;
 
 private:
 	_bool			m_bAttackEnable = false;
+	_bool			m_bJustDodge_Activate = false;		// 저스트닷지 공격 발동중
+	_bool			m_bKineticSpecial_Activate = false;	// 특수오브젝트 공격 발동중
 
 private:
 	HRESULT SetUp_Components(void* pArg);
@@ -192,6 +196,7 @@ private:
 private:	// SAS 특수기 FSM
 	HRESULT				SetUp_TeleportStateMachine();
 	CFSMComponent*		m_pTeleportStateMachine = nullptr;
+	void				TeleportEffectMaker();
 
 private:
 	_float				m_fTeleportAttack_GC = 0.f;	// 다음 공격으로 이어가게 하기 위함
@@ -217,6 +222,9 @@ private:	// 특수연출용 FSM
 	HRESULT				SetUp_HBeamStateMachine();
 	CFSMComponent*		m_pHBeamStateMachine_Left = nullptr;
 
+	HRESULT				SetUp_DropObjectStateMachine();
+	CFSMComponent*		m_pDropObjectStateMachine = nullptr;
+
 private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_Train_Charge_L;	// 좌측 기차 차지
 	list<CAnimation*>	m_Train_Cancel_L;	// 좌측 기차 취소
@@ -239,6 +247,10 @@ private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_HBeam_Rotation_L;			// 좌측 H빔 추가타 대기 및 루프
 	list<CAnimation*>	m_HBeam_End_L;				// 추가타 종료
 	list<CAnimation*>	m_HBeam_Finish_L;			// 좌측 H빔 마무리
+
+	list<CAnimation*>	m_DropObject_Charge;		// 낙하물체 차지
+	list<CAnimation*>	m_DropObject_Cancel;		// 낙하 취소
+	list<CAnimation*>	m_DropObject_Drop;			// 떨구기
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -314,6 +326,9 @@ private:	// 키네틱 연계기 소켓 애니메이션
 	list<CAnimation*>	m_KineticCombo_Pcon_cReR_Lv4;
 	list<CAnimation*>	m_KineticCombo_Pcon_cReL_Lv4;
 
+	list<CAnimation*>	m_KineticCombo_AirCap;
+	list<CAnimation*>	m_KineticCombo_Pcon;
+
 private:	// 피격 소켓 애니메이션
 	list<CAnimation*>	m_Hit_FL_Level01;
 	list<CAnimation*>	m_Hit_F_Level01;
@@ -334,6 +349,7 @@ private:	// 피격 소켓 애니메이션
 
 	list<CAnimation*>	m_BreakFall_Front;
 	list<CAnimation*>	m_BreakFall_Back;
+	list<CAnimation*>	m_BreakFall_Landing;
 
 private:	// 피격 관련 변수
 	_vector	m_vHitDir;
@@ -425,6 +441,7 @@ public:	//EventCaller용
 
 	void		Event_Effect(string szEffectName, _float fSize = 1.f, string szBoneName = "Eff01");
 	void		Event_EffectSound(const string& strSoundName);
+	void		Event_ElecEffect(string szEffectName);
 
 	void		Event_CollisionStart();
 	void		Event_collisionEnd();
@@ -586,8 +603,8 @@ private:	// 플레이어 림라이트, 외곽선 관련
 	void	End_RimLight();
 
 private:
-	_float	m_fThrowPower = 100000.f;
-	_float	m_fChargePower = 3000.f;
+	_float	m_fThrowPower = 2000.f;
+	_float	m_fChargePower = 50.f;
 
 	_float	m_fRotX = 0.f;
 	_float  m_fRotY = 0.f;
@@ -603,11 +620,20 @@ private:
 	_float4x4 pivot5;
 
 	CDoOnce	SasOn;
+	CDoOnce	TeleportEffect;
+	CDoOnce TeleportEndEffect;
+	CDoOnce DropObject;
+
+private:
+	_bool	m_bEffectUpdate = false;
 
 private:
 	CSAS_Portrait* m_pSasPortrait = nullptr;
 	class CSAS_Cable* m_pSAS_Cable = nullptr;
 	class CSuperSpeedTrail* m_pTrail = nullptr;
+	class CPostVFX_SuperSpeed* m_pSuperSpeedPostVFX = nullptr;
+	class CPostVFX_Penetrate* m_pSAS_Penetrate = nullptr;
+	class CPostVFX_Teleport* m_pTeleportPostVFX = nullptr;
 	void SasGearEffect();
 
 private:
@@ -615,6 +641,14 @@ private:
 
 private:
 	vector<wstring>	m_vecRandomLandingDustName;
+
+private:
+	vector<wstring>	m_vecRandomTeleportEffect{
+			L"Sas_Teleport_Effect_A",
+			L"Sas_Teleport_Effect_B",
+			L"Sas_Teleport_Effect_C",
+			L"Sas_Teleport_Effect_D"
+		};
 
 public:
 	static CPlayer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

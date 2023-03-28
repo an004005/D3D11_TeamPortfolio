@@ -61,6 +61,8 @@ public:
 	// void		Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName,_bool usepivot = false, _bool trueisUpdate = false);
 	void		Start_AttachPosition(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate = false);
 	void		Start_AttachSword(CGameObject* pWeapon, _bool trueisUpdate = false);
+	void		Start_AttachMove(CGameObject* pOwner, string BoneName, _float4 vDirection, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
+	void		Start_AttachPivotMove(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _float4 vDirection, _bool usepivot = false, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
 
 public:
 	// For Graph
@@ -136,6 +138,9 @@ private:
 	_bool	m_bRemoveScale = false;
 	string m_BoneName = "";
 	_float4x4 m_PivotMatrix = XMMatrixIdentity();
+
+	_matrix m_OriginMoveMatrix = XMMatrixIdentity();
+	_float4 m_vMoveDir = _float4::Zero;
 
 	_bool	m_bGroupVisible = { true };
 

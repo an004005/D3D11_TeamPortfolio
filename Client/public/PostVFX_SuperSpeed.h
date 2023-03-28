@@ -3,7 +3,7 @@
 #include "Client_Defines.h"
 #include "Timeline.h"
 
-BEGIN(Engine)
+BEGIN(Client)
 
 class CPostVFX_SuperSpeed : public CPostProcess
 {

@@ -48,6 +48,8 @@
 #include "Special_TelephonePole.h"
 #include "Special_HBeam_Bundle.h"
 #include "Special_HBeam_Single.h"
+#include "Special_DropObject_Bundle.h"
+#include "Special_DropObject_Single.h"
 
 // Player Setting
 #include "Player.h"
@@ -492,6 +494,15 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
 	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_HBeam_Single", pModel_HBeam_Single));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Single", CSpecial_HBeam_Single::Create(pDevice, pContext)));
+
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_DropObject_Bundle", CSpecial_DropObject_Bundle::Create(pDevice, pContext)));
+
+
+	auto pModel_DropObject_Single = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_DropObject_Single", pModel_DropObject_Single));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_DropObject_Single", CSpecial_DropObject_Single::Create(pDevice, pContext)));
 
 	return S_OK;
 }

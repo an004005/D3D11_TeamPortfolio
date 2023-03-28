@@ -253,7 +253,10 @@ void CObject_Manager::Tick(_double TimeDelta)
 	if (!m_vecBeginTicks[m_iUpdatedLevel].empty())
 	{
 		for (const auto pGameObject : m_vecBeginTicks[m_iUpdatedLevel])
-			pGameObject->BeginTick();
+		{
+			if (Check_ObjectAlive(pGameObject))
+				pGameObject->BeginTick();
+		}
 		m_vecBeginTicks[m_iUpdatedLevel].clear();
 	}
 

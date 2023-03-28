@@ -296,7 +296,7 @@ void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
  	m_pCollider->Set_Kinetic(false);
 	m_pCollider->UpdateChange();
 
-	m_pCollider->AddForce(vForce);
+	m_pCollider->AddVelocity(vForce);
 	m_pCollider->AddTorque(vTorque);
 }
 
@@ -372,7 +372,7 @@ void CMapKinetic_Object::SetParticle()
 
 void CMapKinetic_Object::ReleaseParticle()
 {
-	if (nullptr != m_pParticle)
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pParticle))
 		m_pParticle->SetDelete();
 }
 

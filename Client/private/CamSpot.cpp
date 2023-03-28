@@ -224,6 +224,15 @@ void CCamSpot::Switch_CamMod()
 	}
 }
 
+void CCamSpot::Reset_CamMod()
+{
+	if (MOD_ATTACH == m_eCamMod)
+	{
+		m_eCamMod = MOD_SYNC;
+		m_fLerpTime = 0.f;
+	}
+}
+
 void CCamSpot::SetUp_BoneMatrix(CModel * pModel, _fmatrix Transform)
 {
 	m_AttachMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationZ(XMConvertToRadians(-90.f)) * pModel->GetBoneMatrix("CameraPos") * Transform;

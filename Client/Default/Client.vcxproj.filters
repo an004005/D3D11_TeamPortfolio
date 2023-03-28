@@ -349,6 +349,12 @@
     <Filter Include="02.GameObjects\Enemy\EM0320">
       <UniqueIdentifier>{c47b4ee9-693a-4fcc-b215-a3fede0dd4ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_HBeam">
+      <UniqueIdentifier>{3d3141ae-cb50-4e98-be7f-6a2ccd5a7c65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_DropObject">
+      <UniqueIdentifier>{582dd83f-6fa4-40bd-a589-1e0ae3c72dd6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Enemy\EM0800">
       <UniqueIdentifier>{ea366a02-5446-4163-9037-e8e37c831263}</UniqueIdentifier>
     </Filter>
@@ -984,9 +990,6 @@
     <ClInclude Include="..\public\SimpleTrigger.h">
       <Filter>02.GameObjects\Map\Trigger</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\SpecialObject.h" />
-    <ClInclude Include="..\public\Special_TelephonePole.h" />
-    <ClInclude Include="..\public\Special_Train.h" />
     <ClInclude Include="..\public\EM0220.h">
       <Filter>02.GameObjects\Enemy\EM0220</Filter>
     </ClInclude>
@@ -1006,8 +1009,6 @@
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SAS_Cable.h" />
-    <ClInclude Include="..\public\Special_HBeam_Bundle.h" />
-    <ClInclude Include="..\public\Special_HBeam_Single.h" />
     <ClInclude Include="..\public\EM0320.h">
       <Filter>02.GameObjects\Enemy\EM0320</Filter>
     </ClInclude>
@@ -1049,6 +1050,27 @@
     </ClInclude>
     <ClInclude Include="..\public\EM0750_AnimInstance.h">
       <Filter>02.GameObjects\Enemy\EM750</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_HBeam_Bundle.h">
+      <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_HBeam_Single.h">
+      <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_TelephonePole.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TelephonePole</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_Train.h">
+      <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpecialObject.h">
+      <Filter>02.GameObjects\SpecialObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_DropObject_Bundle.h">
+      <Filter>02.GameObjects\SpecialObject\Special_DropObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_DropObject_Single.h">
+      <Filter>02.GameObjects\SpecialObject\Special_DropObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_KineticEditor.h">
       <Filter>01.Levels\17.KineticEditor</Filter>
@@ -1681,7 +1703,6 @@
     <ClCompile Include="..\private\SimpleTrigger.cpp">
       <Filter>02.GameObjects\Map\Trigger</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Special_TelephonePole.cpp" />
     <ClCompile Include="..\private\EM0220.cpp">
       <Filter>02.GameObjects\Enemy\EM0220</Filter>
     </ClCompile>
@@ -1701,8 +1722,6 @@
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SAS_Cable.cpp" />
-    <ClCompile Include="..\private\Special_HBeam_Bundle.cpp" />
-    <ClCompile Include="..\private\Special_HBeam_Single.cpp" />
     <ClCompile Include="..\private\EM0320.cpp">
       <Filter>02.GameObjects\Enemy\EM0320</Filter>
     </ClCompile>
@@ -1780,6 +1799,21 @@
     </ClCompile>
     <ClCompile Include="..\private\PlayerStartPosition.cpp">
       <Filter>02.GameObjects\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_HBeam_Bundle.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_HBeam_Single.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TelephonePole.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TelephonePole</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_DropObject_Bundle.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_DropObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_DropObject_Single.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_DropObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_Teleport.cpp">
       <Filter>VFX\PostProcess</Filter>
