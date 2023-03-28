@@ -323,18 +323,6 @@ HRESULT CPlayerInfoManager::Set_SpecialObject(CGameObject * pSpecialObject)
 HRESULT CPlayerInfoManager::Set_CamSpot(CGameObject * pCamSpot)
 {
 	m_pCamSpot = pCamSpot;
-	Safe_AddRef(m_pCamSpot);
-
-	return S_OK;
-}
-
-HRESULT CPlayerInfoManager::Release_CamSpot()
-{
-	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCamSpot))
-	{
-		Safe_Release(m_pCamSpot);
-		m_pCamSpot = nullptr;
-	}
 
 	return S_OK;
 }

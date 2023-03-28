@@ -288,8 +288,6 @@ CGameObject * CCamSpot::Clone(void * pArg)
 
 void CCamSpot::Free()
 {
-	CPlayerInfoManager::GetInstance()->Release_CamSpot();
-
 	__super::Free();
 	Safe_Release(m_pTargetObject);
 	Safe_Release(m_pPlayerCamera);

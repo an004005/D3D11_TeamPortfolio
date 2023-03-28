@@ -97,10 +97,6 @@ public:	// Set
 	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
 
 
-public:
-	HRESULT			Release_CamSpot();
-
-
 private:	// 스탯 정보 관련
 	PLAYER_STAT		m_tPlayerStat;
 	list<ESASType>	m_PlayerSasTypeList;

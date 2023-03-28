@@ -264,7 +264,7 @@ void CPlayer::Tick(_double TimeDelta)
 	}
 	if (CGameInstance::GetInstance()->KeyDown(DIK_E))
 	{
-		static_cast<CCamSpot*>(m_pCamSpot)->Random_Shaking(1.f);
+		//static_cast<CCamSpot*>(m_pCamSpot)->Random_Shaking(1.f);
 	}
 	if (CGameInstance::GetInstance()->KeyDown(DIK_R))
 	{
