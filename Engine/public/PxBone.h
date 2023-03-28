@@ -21,6 +21,10 @@ public:
 
 	void SetNotControlledWorld(const _float4x4& NotControlledWorld) { m_NotControlledWorld = NotControlledWorld; }
 
+	static _float fDensity;
+	static _float fTolerance;
+	static _float fAngle;
+
 
 private:
 	void ReleaseActor();

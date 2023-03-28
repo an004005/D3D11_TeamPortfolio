@@ -114,6 +114,10 @@ HRESULT CTarget_Manager::Begin_MRT(ID3D11DeviceContext * pContext, const _tchar 
 	if (nullptr == pMRTList)
 		return E_FAIL;
 
+	ID3D11ShaderResourceView*		pSRVs[8] = { nullptr };
+
+	pContext->PSSetShaderResources(0, 8, pSRVs);
+
 	pContext->OMGetRenderTargets(1, &m_pBackBufferView, &m_pDepthStencilView);
 
 	ID3D11RenderTargetView*		pRTVs[8] = { nullptr };
@@ -144,7 +148,12 @@ HRESULT CTarget_Manager::Begin_MRT_WithDepthStencil(ID3D11DeviceContext* pContex
 	if (nullptr == pMRTList)
 		return E_FAIL;
 
+	ID3D11ShaderResourceView*		pSRVs[8] = { nullptr };
+
+	pContext->PSSetShaderResources(0, 8, pSRVs);
+
 	pContext->OMGetRenderTargets(1, &m_pBackBufferView, &m_pDepthStencilView);
+
 
 	ID3D11RenderTargetView*		pRTVs[8] = { nullptr };
 
