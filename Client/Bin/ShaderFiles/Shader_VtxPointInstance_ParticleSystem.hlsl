@@ -80,7 +80,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 
 	Out.CurLife = InstanceData[3][3];
-	Out.RamainLifeRatio = ((InstanceData[1][3] - InstanceData[3][3] )/ InstanceData[1][3]);
+	Out.RamainLifeRatio = saturate(((InstanceData[1][3] - InstanceData[3][3] )/ InstanceData[1][3]));
 	Out.vSize = float2(InstanceData[1][0], InstanceData[1][1]);
 	Out.vPosition = matrix_postion(InstanceData);
 
@@ -227,7 +227,7 @@ PS_OUT PS_PARTICLE_DEFAULT(PS_IN In)
 	if(g_tex_on_1)
 	{
 		float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
-		Out.vColor.a = Mask;
+		Out.vColor.a = Mask * In.RamainLifeRatio;
 	}
 	else
 	{
@@ -320,6 +320,7 @@ PS_OUT PS_FLIPBOOK_SMOKE(PS_IN In)
 	float4 BlendColor = flipBook * vColor * 2.0f;
 
 	float4 FinalColor = saturate(BlendColor);
+
 	Out.vColor = FinalColor;
 	Out.vColor.a = flipBook.a * In.RamainLifeRatio;
 
@@ -333,11 +334,17 @@ PS_OUT PS_EM110_BUG(PS_IN In)
 	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.03f, 1, 2));
 	float4 vColor = g_vec4_0;
 
+	if (flipBook.r <= 0.f)
+		discard;
+
 	float4 BlendColor = flipBook * vColor * 2.0f;
 
 	float4 FinalColor = saturate(BlendColor);
 	Out.vColor = CalcHDRColor(FinalColor, g_float_0) ;
 	Out.vColor.a = flipBook.a * In.RamainLifeRatio;
+
+	if (Out.vColor.a <= 0.001f)
+		discard;
 
 	return Out;
 }
@@ -348,20 +355,75 @@ PS_OUT PS_SAS_FIRE_PARTICLE(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.03, 4, 4));
-	// float4 vColor = g_vec4_0;
-
-	// float4 BlendColor = flipBook * vColor * 2.0f;
-
-	// float4 FinalColor = saturate(BlendColor);
 	Out.vColor = CalcHDRColor(flipBook, g_float_0) ;
-	
 
 	float4 flipAlpha = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.03, 4, 4));
 
-
-	Out.vColor.a = flipAlpha.r;
+	Out.vColor.a = flipAlpha.r * In.RamainLifeRatio;
 
 	if (flipAlpha.r <= 0.2f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT PS_EM1100_Dust(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.03f, 1, 2));
+	float4 vColor = g_vec4_0;
+
+	if (flipBook.r <= 0.f)
+		discard;
+
+	float4 BlendColor = flipBook * vColor * 2.0f;
+
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = CalcHDRColor(vColor, g_float_0);
+	Out.vColor.a = flipBook.a * In.RamainLifeRatio;
+
+	if (Out.vColor.a <= 0.01f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT PS_EM1100_ELEC_BULLET_HDRDIRST(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float2 TEXUV = Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 4, 4);
+	float4 flipBook = g_tex_0.Sample(LinearSampler, TEXUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = flipBook * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	float Mask = g_tex_1.Sample(LinearSampler, TEXUV).r;
+
+	Out.vColor = CalcHDRColor(Final, g_float_0);
+
+	Out.vColor.a = Mask * In.RamainLifeRatio;
+
+	if (Out.vColor.a <= 0.01f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT PS_EM1100_ELEC_BULLET_EXPLODE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float2 TEXUV = Get_FlipBookUV(In.vTexUV, In.CurLife, 0.02, 8, 8);
+	float4 flipBook = g_tex_0.Sample(LinearSampler, TEXUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = flipBook * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	float Mask = g_tex_1.Sample(LinearSampler, TEXUV).r;
+
+	Out.vColor = CalcHDRColor(Final, g_float_0);
+
+	Out.vColor.a = Mask * In.RamainLifeRatio;
+
+	if (Out.vColor.a <= 0.1f)
 		discard;
 
 	return Out;
@@ -377,7 +439,7 @@ PS_OUT PS_SAS_FIRE_WEAPON_PARTICLE(PS_IN In)
 
 	float4 flipAlpha = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 3, 3));
 
-	Out.vColor.a = flipAlpha.r;
+	Out.vColor.a = flipAlpha.r* In.RamainLifeRatio;
 
 	if (flipAlpha.r <= 0.2f)
 		discard;
@@ -421,7 +483,7 @@ PS_OUT PS_USE_MESHCURVE(PS_IN In)
 	Out.vColor = CalcHDRColor(Final, g_float_0);
 	Out.vColor.a = Mask * g_float_1 * In.RamainLifeRatio;
 
-	if (g_float_1 <= 0.f)
+	if (g_float_1 <= 0.f || Out.vColor.a <= 0.1f)
 	{
 		discard;
 	}
@@ -488,7 +550,7 @@ PS_OUT PS_MAIN_PLAYER_TEXT_PARTICLE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float2 MixUV = Get_FlipBookUV(In.vTexUV,  In.CurLife, 1 , 4, 4);
+	float2 MixUV = Get_FlipBookUV(In.vTexUV, In.CurLife, 1 , 4, 4);
 
 	float4 MixColor = g_tex_0.Sample(LinearSampler, MixUV);
 	float4 Color = g_vec4_0;
@@ -500,10 +562,27 @@ PS_OUT PS_MAIN_PLAYER_TEXT_PARTICLE(PS_IN In)
 
 	Out.vColor.a = saturate(MixColor.r * In.RamainLifeRatio);
 
+	if (Out.vColor.a < 0.01f)
+		discard;
 
+	return Out;
+}
 
-	// if (Out.vColor.a < 0.01f)
-	// 	discard;
+PS_OUT PS_SAS_LINE_TRAIL(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float2 MixUV = Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 4, 4);
+
+	float4 MixColor = g_tex_0.Sample(LinearSampler, MixUV);
+	float4 Color = g_vec4_0;
+
+	float4 BlendColor = MixColor * Color * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+
+	Out.vColor.a = saturate(MixColor.r * In.RamainLifeRatio);
 
 	return Out;
 }
@@ -718,5 +797,61 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM110_BUG();
+	}
+
+	//15
+	pass Em1100HdrDust
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_ELEC_BULLET_HDRDIRST();
+	}
+
+	//16
+	pass Em1100Dust
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_Dust();
+	}
+
+	//17
+	pass Em1100Explode
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_ELEC_BULLET_EXPLODE();
+	}
+
+	//18
+	pass SAS_TRAIL_PARTICLE
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SAS_LINE_TRAIL();
 	}
 }

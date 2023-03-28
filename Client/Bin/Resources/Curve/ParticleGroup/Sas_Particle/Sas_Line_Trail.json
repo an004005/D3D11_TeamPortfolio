@@ -1,0 +1,1 @@
+{"LifeTime":10.0,"ObjectTag":"Sas_Line_Trail","Particles":[{"ObjectTag":"Sas_Line_Trail","ParticleDirectory":"../Bin/Resources/VFX/ParticleSystem/Player_Sas_Particle/Sas_Line_Trail.json"}],"Prototype_GameObject":"ProtoVFX_ParticleGroup\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}

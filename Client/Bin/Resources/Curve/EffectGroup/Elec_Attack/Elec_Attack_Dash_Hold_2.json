@@ -936,7 +936,7 @@
             ]
         }
     ],
-    "First_Directory": "../Bin/Resources/VFX/EffectSystem/Player_Elec_Attack/Elec_Attack_Air_Hold_02.json",
+    "First_Directory": "../Bin/Resources/VFX/EffectSystem/Player_Elec_Attack/Elec_Attack_Dash_Hold_2.json",
     "Fourth_Directory": "",
     "ObjectTag": "Elec_Attack_Dash_Hold_02",
     "Prototype_GameObject": "ProtoVFX_EffectGroup\u0000",

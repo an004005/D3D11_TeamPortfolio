@@ -36,6 +36,11 @@ _int CParticleSystem::GetLiveParticleCnt()
 	}
 }
 
+void CParticleSystem::Remote_BurstCnt_Zero()
+{
+	m_iBurstCnt = 0;
+}
+
 HRESULT CParticleSystem::Initialize(void* pArg)
 {
 	CGameObject::Initialize(pArg);
@@ -78,6 +83,14 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 		}
 	}
 
+	if(m_bTurn == true)
+		m_pTransformCom->SetRotPerSec(XMConvertToRadians(m_fTurnAngle));
+
+	if(m_bUseMainCurve == true)
+	{
+		m_Timeline.PlayFromStart();
+	}
+
 	Start_Timeline();
 
 	return S_OK;
@@ -88,6 +101,7 @@ void CParticleSystem::Tick(_double TimeDelta)
 	// if (m_bVisible == false)
 	// 	return;
 	m_pShader->Tick(TimeDelta);
+	m_Timeline.Tick(TimeDelta);
 
 	if (m_bCurveDir)
 	{
@@ -125,6 +139,15 @@ void CParticleSystem::Tick(_double TimeDelta)
 			}
 		}
 
+	if(m_bTurn == true)
+	{
+		if (m_fTurnAngle != 0.f)
+		{
+			m_pTransformCom->SetRotPerSec(XMConvertToRadians(m_fTurnAngle));
+			m_pTransformCom->Turn(m_fTurnAxis, TimeDelta);
+		}
+		// m_pTransformCom->Rotation(m_pTransformCom->Get_State(CTransform::STATE_UP), m_fTurnAxis.x);
+	}
 
 }
 
@@ -146,7 +169,7 @@ void CParticleSystem::Late_Tick(_double TimeDelta)
 		if(m_bNonAlphaBlend == true)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		else
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND_FIRST, this);
 	}
 }
 
@@ -238,10 +261,36 @@ void CParticleSystem::SaveToJson(Json& json)
 	json["XDirCurveName"] = m_strXDirCurveName;
 	json["YDirCurveName"] = m_strYDirCurveName;
 	json["ZDirCurveName"] = m_strZDirCurveName;
-
+	json["bTurn"] = m_bTurn;
+	json["TurnAxis"] = m_fTurnAxis;
+	json["TurnAngle"] = m_fTurnAngle;
 
 	json["VtxStartTimelineCurve"] = m_VtxStartTimeline.GetCurveName();
 	json["VtxRangeTimelineCurve"] = m_VtxRangeTimeline.GetCurveName();
+	json["VtxStartRatioValue"] = m_fMeshVtxStartRatio;
+	json["VtxRangeRatioValue"] = m_fMeshVtxRangeRatio;
+
+	json["bUseMainCurve"] = m_bUseMainCurve;
+
+	if(m_bUseMainCurve == true)
+	{
+		for(auto pCurves : m_Curves)
+		{
+			Json CurveJson;
+			pCurves.second->SaveToJson(CurveJson);
+			json["Curves"].push_back(CurveJson);
+		}
+	}
+
+	if (m_iSelectFinishFunc >= FUNC_PLAYFROMSTART && m_iSelectFinishFunc < FUNC_END)
+		json["FinishFunc"] = m_iSelectFinishFunc;
+	else
+		json["FinishFunc"] = FUNC_RESET;
+
+	if (m_fEndTime >= 0.f)
+		json["EndTime"] = m_fEndTime;
+	else
+		json["EndTime"] = 0.f;
 }
 
 void CParticleSystem::LoadFromJson(const Json& json)
@@ -272,6 +321,17 @@ void CParticleSystem::LoadFromJson(const Json& json)
 	m_fRotationToTime_Min = json["RotationToTimeMin"] ;
 	m_fRotationToTime_Max = json["RotationToTimeMax"] ;
 	m_vScaleVariation = json["ScaleVariation"];
+
+	if (json.contains("bTurn"))
+	{
+		m_bTurn = json["bTurn"];
+	}
+
+	if(json.contains("TurnAxis"))
+		m_fTurnAxis = json["TurnAxis"];
+
+	if (json.contains("TurnAngle"))
+		m_fTurnAngle = json["TurnAngle"];
 
 	if(json.contains("bCurveDir"))
 	{
@@ -385,6 +445,64 @@ void CParticleSystem::LoadFromJson(const Json& json)
 		m_VtxStartTimeline.SetCurve(json["VtxStartTimelineCurve"]);
 	if (json.contains("VtxRangeTimelineCurve"))
 		m_VtxRangeTimeline.SetCurve(json["VtxRangeTimelineCurve"]);
+	if(json.contains("bUseMainCurve"))
+		m_bUseMainCurve = json["bUseMainCurve"];
+
+	if (json.contains("EndTime"))
+		json["EndTime"].get_to<_float>(m_fEndTime);
+	else
+		m_fEndTime = 0.f;
+
+
+	if (m_bUseMainCurve == true)
+	{
+		json["FinishFunc"].get_to<_int>(m_iSelectFinishFunc);
+
+		m_Timeline.SetTimelineLength((_double)m_fEndTime);
+
+		if (m_iSelectFinishFunc == 0)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+		}
+		else if (m_iSelectFinishFunc == 1)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+		}
+		else if (m_iSelectFinishFunc == 2)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+		}
+		else if (m_iSelectFinishFunc == 3)
+		{
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
+		}
+		else
+			m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+
+		if (json.contains("Curves"))
+		{
+			for (auto curveJson : json["Curves"])
+			{
+				Json JsonCurve = curveJson;
+				auto pCurve = CCurveFloatImpl::Create(&JsonCurve);
+				AddTargetCurve(pCurve->GetName(), pCurve);
+			}
+		}
+		else
+			m_bUseMainCurve = false;
+	}
+
+	if(json.contains("VtxStartRatioValue"))
+	{
+		m_fMeshVtxStartRatio = json["VtxStartRatioValue"];
+	}
+
+	if (json.contains("VtxRangeRatioValue"))
+	{
+		m_fMeshVtxRangeRatio = json["VtxRangeRatioValue"];
+	}
+
+
 }
 
 void CParticleSystem::Imgui_RenderProperty()
@@ -498,7 +616,7 @@ void CParticleSystem::Imgui_RenderProperty()
 	ImGui::Separator();
 
 	ImGui::InputFloat("Duration", &m_fDuration);
-	ImGui::Checkbox("Loop", &m_bLoop);
+	ImGui::Checkbox("Particle Loop", &m_bLoop);
 	ImGui::InputFloat("SpawnTickTime", &m_fSpawnTickTime);
 
 	ImGui::InputInt("Burst Cnt", &m_iBurstCnt);
@@ -526,8 +644,14 @@ void CParticleSystem::Imgui_RenderProperty()
 	else
 		ImGui::InputFloat2("P Size", (float*)&m_fSize);
 
+	ImGui::Checkbox("IsTurn", &m_bTurn);
 
+	if (m_bTurn == true)
+	{
+		CImguiUtils::InputFloat3(&m_fTurnAxis, "Turn Axis");
+		ImGui::InputFloat("Turn Speed", &m_fTurnAngle);
 
+	}
 
 	ImGui::Separator();
 	ImGui::Separator();
@@ -611,6 +735,89 @@ void CParticleSystem::Imgui_RenderProperty()
 	if (ImGui::RadioButton("NO Bilboard, Rotate", m_eBilboardType == EBilboardType::NONE))
 	{
 		m_eBilboardType = EBilboardType::NONE;
+	}
+
+	ImGui::Checkbox("Use Main Curve", &m_bUseMainCurve);
+
+	if(m_bUseMainCurve == true)
+	{
+		static _int	iSelectCurve = -1;
+
+		IMGUI_LEFT_LABEL(ImGui::Combo, "Target Curve", &iSelectCurve, m_szCurveTag, CURVE_END);
+		ImGui::SameLine();
+
+		if (ImGui::Button("Add Target Curve"))
+		{
+			if (iSelectCurve == -1 || iSelectCurve > CURVE_END)
+			{
+				MSG_BOX("Wrong Curve Number");
+				return;
+			}
+
+			AddTargetCurve(m_szCurveTag[iSelectCurve]);
+
+			iSelectCurve = -1;
+		}
+
+		ImGui::BulletText("Timeline_Options");
+		ImGui::SliderFloat("Set_EndTime", &m_fEndTime, 0.f, 30.f);
+		ImGui::SameLine();
+		if (ImGui::Button("Set_End"))
+		{
+			m_Timeline.SetTimelineLength(m_fEndTime);
+		}
+
+		ImGui::Combo("FinishFunc", &m_iSelectFinishFunc, m_szFuncName, FUNC_END);
+		ImGui::SameLine();
+		if (ImGui::Button("Set_Fin-Function"))
+		{
+			if (m_iSelectFinishFunc == 0)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
+			}
+			else if (m_iSelectFinishFunc == 1)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
+			}
+			else if (m_iSelectFinishFunc == 2)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
+			}
+			else if (m_iSelectFinishFunc == 3)
+			{
+				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
+			}
+			else if (m_iSelectFinishFunc == 4)
+			{
+				m_Timeline.SetFinishFunction([this]
+				{
+					SetDelete();
+				});
+			}
+		}
+
+		m_Timeline.Imgui_RenderEditor();
+		ImGui::BulletText("Particle Curve List");
+		static const char* pCurName = "";
+		if (ImGui::BeginListBox("##Particles Curve List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+		{
+			for (auto pCurve : m_Curves)
+			{
+				const bool bSelected = strcmp(pCurve.first, pCurName) == 0;
+				if (bSelected)
+					ImGui::SetItemDefaultFocus();
+				if (ImGui::Selectable(pCurve.first, bSelected))
+					pCurName = pCurve.first;
+			}
+			ImGui::EndListBox();
+		}
+
+		auto itr = m_Curves.find(pCurName);
+
+		if (itr != m_Curves.end())
+		{
+			itr->second->Imgui_RenderEditor();
+		}
 	}
 
 	CImguiUtils::FileDialog_FileSelector("Save ParticleSystem to", ".json", "../Bin/Resources/VFX/ParticleSystem/", [this](const string& filePath)
@@ -953,88 +1160,6 @@ void CParticleSystem::UpdatePoints(_float fTimeDelta)
 	});
 }
 
-void CParticleSystem::Create_MeshData(VTXMATRIX data)
-{
-	if (m_pModel == nullptr)
-		return;
-
-	//m_vecVerticesDistance.clear();
-
-	//if (m_pModel != nullptr)
-	//{
-	//	// const _float3* pVerticesPos = m_pModel->Get_VerticesPos();
-	//	const VTXMODEL* pNonAnimBuffer = m_pModel->Get_NonAnimBuffer();
-
-	//	_uint VBSize = m_pModel->Get_NumVertices();
-	//	float minDistance = FLT_MAX;
-	//	VBSize /= 100;
-
-	//	for (_uint i = 0; i < VBSize; ++i)
-	//	{
-	//		_float4 VertexPos = _float4(pNonAnimBuffer[i].vPosition.x, pNonAnimBuffer[i].vPosition.y, pNonAnimBuffer[i].vPosition.z, 1.f);
-
-	//		_float4 ParticlePos = _float4(data.vPosition.x, data.vPosition.y, data.vPosition.z, 1.f);
-	//		float distance = XMVectorGetX(ParticlePos - VertexPos);
-
-	//		if (distance < minDistance)
-	//			minDistance = distance;
-
-	//		m_vecVerticesDistance.push_back({ minDistance, i });
-	//	}
-
-	//	// 각 정점의 인덱스를 최소 거리 순으로 정렬
-	//	sort(m_vecVerticesDistance.begin(), m_vecVerticesDistance.end());
-
-
-	//	// 파티클이 메시 위에 있는지 여부를 저장할 변수 초기화
-	//	// data.bOnSurface = false;
-
-	//	// 메시의 각 정점에 대해 파티클이 해당 정점 근처에 있는지 확인
-	//	// for (UINT i = 0; i < m_vecVerticesDistance.size(); ++i)
-	//	// {
-	//		// 최소 거리가 임계값 이하인 파티클이 존재할 경우 해당 파티클이 메시 위에 있음
-	//		// if (m_vecVerticesDistance[i].first < m_fsurfaceThreshold)
-	//			// data[m_vecVerticesDistance[i].second].isOnSurface = true;
-	//	// }
-
-	//}
-}
-_uint CParticleSystem::FineNearestIndex(_float4 vPos)
-{
-	_uint VBSize = m_pModel->Get_NumVertices();
-	VBSize /= 100;
-
-	float minDistance = FLT_MAX;
-
-	m_vecVerticesDistance.clear();
-
-	for (_uint i = 0; i < VBSize; ++i)
-	{
-		// const _float3* pVerticesPos = m_pModel->Get_VerticesPos();
-		const VTXMODEL* pNonAnimBuffer = m_pModel->Get_NonAnimBuffer();
-
-		_float4 VertexPos = _float4(pNonAnimBuffer[i].vPosition.x, pNonAnimBuffer[i].vPosition.y, pNonAnimBuffer[i].vPosition.z, 1.f);
-
-		_float4 ParticlePos = _float4(vPos.x, vPos.y, vPos.z, 1.f);
-
-		float distance = XMVectorGetX(ParticlePos - VertexPos);
-
-		if (distance < minDistance)
-		{
-			minDistance = distance;
-		}
-
-		m_vecVerticesDistance.push_back({ minDistance, i });
-	}
-	// 각 정점의 인덱스를 최소 거리 순으로 정렬
-	sort(m_vecVerticesDistance.begin(), m_vecVerticesDistance.end());
-
-	_uint isize = (_uint)m_vecVerticesDistance.size();
-
-	_uint irand = rand() % isize;
-
-	return irand;
-}
 
 void CParticleSystem::AddMesh()
 {
@@ -1237,6 +1362,186 @@ void CParticleSystem::UpdateMeshes(_float fTimeDelta)
 	});
 }
 
+void CParticleSystem::AddTargetCurve(const string& strCurveName, CCurveFloatImpl* pCurve)
+{
+	if(pCurve == nullptr)
+		pCurve = CCurveFloatImpl::Create(strCurveName);
+
+	auto itr = m_Curves.find(strCurveName.c_str());
+	if (itr != m_Curves.end())
+		return;
+
+	m_Curves.emplace(pCurve->GetName(), pCurve);
+
+	if (strCurveName == "ObjectScale_All")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Scale_All, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "ObjectScale_Y")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Scale_Y, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (!strcmp(pCurve->GetName(), "ObjectScale_X"))
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Scale_X, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Floats_0")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Floats_0, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Floats_1")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Floats_1, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Floats_2")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Floats_2, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Floats_3")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Floats_3, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Floats_4")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Floats_4, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Floats_5")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Floats_5, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Floats_6")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Floats_6, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Floats_7")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Floats_7, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Floats_8")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Floats_8, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Floats_9")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Floats_9, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Color_Change")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_ColorChange, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else if (strCurveName == "Ints_0")
+	{
+		m_Timeline.SetCurve(this, &CParticleSystem::Tick_Ints_0, m_Curves.find(strCurveName.c_str())->second);
+		Safe_AddRef(m_Curves.find(strCurveName.c_str())->second);
+	}
+	else
+	{
+		MSG_BOX("Failed to SetCurve");
+	}
+}
+
+void CParticleSystem::Tick_Scale_All(_float fValue)
+{
+	fValue *= 2.f;
+
+	m_pTransformCom->Set_Scaled(_float3(fValue, fValue, fValue));
+}
+
+ void CParticleSystem::Tick_Scale_Y(_float fValue)
+{
+	_float3 Scale = m_pTransformCom->Get_Scaled();
+	 	
+	m_pTransformCom->Set_Scaled(_float3(Scale.x, fValue, Scale.x));
+}
+
+void CParticleSystem::Tick_Scale_X(_float fValue)
+{
+	_float3 Scale = m_pTransformCom->Get_Scaled();
+
+	m_pTransformCom->Set_Scaled(_float3(fValue, Scale.y, Scale.x));
+}
+
+ void CParticleSystem::Tick_Floats_0(_float fValue)
+{
+	 m_tParam.Floats[0] = fValue;
+ }
+
+ void CParticleSystem::Tick_Floats_1(_float fValue)
+{
+	 m_tParam.Floats[1] = fValue;
+ }
+
+void CParticleSystem::Tick_Floats_2(_float fValue)
+{
+	m_tParam.Floats[2] = fValue;
+}
+
+void CParticleSystem::Tick_Floats_3(_float fValue)
+{
+	m_tParam.Floats[3] = fValue;
+}
+
+void CParticleSystem::Tick_Floats_4(_float fValue)
+{
+	m_tParam.Floats[4] = fValue;
+}
+
+void CParticleSystem::Tick_Floats_5(_float fValue)
+{
+	m_tParam.Floats[5] = fValue;
+}
+
+void CParticleSystem::Tick_Floats_6(_float fValue)
+{
+	m_tParam.Floats[6] = fValue;
+}
+
+void CParticleSystem::Tick_Floats_7(_float fValue)
+{
+	m_tParam.Floats[7] = fValue;
+}
+void CParticleSystem::Tick_Floats_8(_float fValue)
+{
+	m_tParam.Floats[8] = fValue;
+}
+void CParticleSystem::Tick_Floats_9(_float fValue)
+{
+	m_tParam.Floats[9] = fValue;
+}
+
+void CParticleSystem::Tick_ColorChange(_float fValue)
+{
+	if (m_tParam.Float4s.size() < 2)
+		return;
+
+	_float4 vChangeColor = m_tParam.Float4s[1];
+
+	_float4 vOutColor = m_tParam.Float4s[0] * (1.f - fValue);
+	_float4 vInColor = vChangeColor * (fValue);
+
+	m_tParam.Float4s[0] = vOutColor + vInColor;
+}
+
+
+void CParticleSystem::Tick_Ints_0(_float fValue)
+{
+	m_tParam.Ints[0] = (_int)fValue;
+}
+
 CParticleSystem* CParticleSystem::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CParticleSystem*		pInstance = new CParticleSystem(pDevice, pContext);
@@ -1263,7 +1568,11 @@ CGameObject* CParticleSystem::Clone(void* pArg)
 
 void CParticleSystem::Free()
 {
-	CGameObject::Free();
+	__super::Free();
+
+	for (auto pCurve : m_Curves)
+		Safe_Release(pCurve.second);
+	m_Curves.clear();
 
 	m_PointList.clear();
 	for (auto& meshInst : m_MeshList)
@@ -1281,3 +1590,5 @@ void CParticleSystem::Free()
 	for (auto e : m_tParam.Textures)
 		Safe_Release(e.first);
 }
+
+
