@@ -32,6 +32,12 @@ CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 		m_bVisibleTargets = true;
 	free(pValue2);
 #endif
+
+	m_vFogColor = _float3(0.5f ,0.5f, 0.5f);
+	m_fStartDepth = 37.f;
+	m_vHighlightColor = _float3(0.8f, 0.7f, 0.4f);
+	m_fGlobalDensity = 1.5f;
+	m_fHeightFalloff = 0.2f;
 }
 
 HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pGameObject)
@@ -64,6 +70,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 {
 	_float fGamma = CHDR::GetInstance()->GetGamma();
 	m_pShader->Set_RawValue("g_Gamma", &fGamma, sizeof(_float));
+	if (false == CLight_Manager::GetInstance()->IsShadowCamOn())
+		m_bShadow = false;
 
 	m_pTarget_Manager->ClearTargets();
 
@@ -407,6 +415,7 @@ HRESULT CRenderer::Render_ShadowDepth()
 #ifdef _DEBUG
 	if (CGameInstance::GetInstance()->KeyDown(DIK_F8))
 		m_bShadow = !m_bShadow;
+#endif
 
 	if (m_bShadow == false)
 	{
@@ -415,8 +424,8 @@ HRESULT CRenderer::Render_ShadowDepth()
 			Safe_Release(pGameObject);
 		}
 		m_RenderObjects[RENDER_SHADOWDEPTH].clear();
+		return S_OK;
 	}
-#endif
 
 	m_pContext->ClearDepthStencilView(m_pShadowDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 	D3D11_VIEWPORT			ViewportDesc;
@@ -560,6 +569,7 @@ HRESULT CRenderer::Render_LightAcc()
 
 HRESULT CRenderer::Render_Blend()
 {
+	// _float3 vDirToSun = CLight_Manager::get
 	// HDR
 	if (FAILED(m_pShader->Set_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
