@@ -750,7 +750,7 @@ void CEM1100::TailSwing_SweepSphere()
 
 void CEM1100::Stamp_Overlap()
 {	
-	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("RightHand") * m_pTransformCom->Get_WorldMatrix();
+	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
 
 	_vector vBoneVector = BoneMatrix.r[3];
 	_float3 fBone = vBoneVector;
@@ -761,13 +761,13 @@ void CEM1100::Stamp_Overlap()
 	SphereOverlapParams param;
 	param.fVisibleTime = 0.1f;
 	param.iTargetType = CTB_PLAYER;
-	param.fRadius = 2.f;
+	param.fRadius = 3.f;
 	param.vPos = XMVectorSetW(fBone, 1.f);
 	param.overlapOut = &overlapOut;
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
-		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_HEAVY);
+		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_DOWN);
 	}
 }
 

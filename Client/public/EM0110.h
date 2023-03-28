@@ -43,7 +43,6 @@ public:
 	_bool IsPlayingSocket() const;
 	_bool IsRun() const { return m_bRun; }
 	void AfterLocal180Turn();
-	void Define_TurningKickAnim();
 	void Adjust_MoveAxis(_double TimeDelta);
 
 private:
@@ -52,19 +51,15 @@ private:
 private:
 	//충돌 관련 함수 정의
 	void Rush_Overlap();
-	void Rush_SweepCapsule();
+	void Rush_SweepSphere();
 	void Kick_SweepSphere();
 
 private:
 	class CEM0110_Controller*		m_pController = nullptr;
 	class CEM0110_AnimInstance*		m_pASM = nullptr;
 
-	//충돌
-	CRigidBody*					m_pRange = nullptr;
-	CRigidBody*					m_pBody = nullptr;
-	CRigidBody*					m_pHindLegs = nullptr;
-
-	CEffectGroup*				m_pSwingEffect = nullptr;
+	CParticleGroup*				m_pBugParticle = nullptr;
+	CEffectGroup*				m_pRushEffect = nullptr;
 
 	// Swing Attack
 	list<CScarletCharacter*> m_CollisionList;
@@ -84,6 +79,7 @@ private:
 	_bool m_bRun = false;
 
 	CController::EHandleInput	m_eInput;
+
 public:
 	static CEM0110* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

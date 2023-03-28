@@ -250,6 +250,53 @@ ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
 	return tStat;
 }
 
+void CEnemy::Add_RigidBody(const string & KeyName, void * pArg)
+{
+	CRigidBody* pRigidBody = nullptr;
+
+	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), s2ws(KeyName).c_str(),
+		(CComponent**)&pRigidBody, pArg));
+
+	m_pRigidBodies.emplace(KeyName, pRigidBody);
+}
+
+CRigidBody * CEnemy::GetRigidBody(const string & KeyName)
+{
+	auto pRigidBody = m_pRigidBodies.find(KeyName);
+	assert(pRigidBody != m_pRigidBodies.end() && "Wrong RigidBody KeyName!");
+
+	return (*pRigidBody).second;
+}
+
+_bool CEnemy::IsTargetFront(_float fAngle)
+{
+	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
+	_float fLookRadian = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyLook), XMVector3Normalize(vTargetPos - vMyPos)));
+	
+	if (fLookRadian > cosf(XMConvertToRadians(fAngle)))
+		return true;
+
+	return false;
+}
+
+_bool CEnemy::IsTargetRight(_float fAngle)
+{
+	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+
+	_float fRightRadian = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyRight), XMVector3Normalize(vTargetPos - vMyPos)));
+
+	if (fRightRadian > cosf(XMConvertToRadians(fAngle)))
+		return true;
+
+	return false;
+}
+
+
 void CEnemy::SetDead()
 {
 	if (m_bDead)
@@ -619,4 +666,9 @@ void CEnemy::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
+
+	for (auto it : m_pRigidBodies)
+		Safe_Release(it.second);
+
+	m_pRigidBodies.clear();
 }

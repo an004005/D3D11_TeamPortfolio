@@ -147,7 +147,7 @@ void CEM1100_Controller::Tick_Far(_double TimeDelta)
 		}
 	}
 	
-	m_iMidOrder = (m_iMidOrder + 1) % 3;
+	m_iFarOrder = (m_iFarOrder + 1) % 3;
 }
 
 void CEM1100_Controller::Tick_Outside(_double TimeDelta)

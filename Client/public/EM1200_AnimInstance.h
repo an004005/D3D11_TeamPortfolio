@@ -13,9 +13,8 @@ public:
 private:
 	_bool			m_bMove = false;
 	_bool			m_bRun = false;
-
-	_float3 m_vMoveAxis;
-	EBaseAxis m_eMoveAxis = EBaseAxis::AXIS_END;
+	_bool			m_bChangePhase = false;
+	EBaseTurn		m_eTurn = EBaseTurn::TURN_END;
 
 public:
 	static CEM1200_AnimInstance* Create(CModel* pModel, CGameObject* pGameObject);

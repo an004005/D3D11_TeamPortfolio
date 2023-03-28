@@ -25,6 +25,7 @@ public:
 	void Tick_Far(_double TimeDelta);
 	void Tick_Outside(_double TimeDelta);
 
+	void RunOrTurn(EMoveAxis eAxis, _float fSpeedRatio = 1.f);
 	void Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio = 1.f);
 	_bool IsRun() const { return m_bRun; }
 

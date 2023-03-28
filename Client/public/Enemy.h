@@ -12,6 +12,7 @@ class CFSMComponent;
 END
 
 BEGIN(Client)
+using RigidBodies = unordered_map<string, CRigidBody*>;
 
 enum ENEMY_UIPIVOT { ENEMY_INFOBAR, ENEMY_FINDEYES, ENEMY_UIPIVOT_END };
 class CEnemy abstract : public CScarletCharacter
@@ -48,6 +49,7 @@ public:
 	_bool IsDead() const { return m_bDead; }
 	virtual _float4	GetKineticTargetPos() { return GetColliderPosition(); }
 
+	void HealFullHp() { m_iHP = m_iMaxHP; }
 	//ui
 	_float4x4	Get_UIPivotMatrix(ENEMY_UIPIVOT eUIPivot) {
 		return m_UI_PivotMatrixes[eUIPivot]; }
@@ -61,6 +63,10 @@ public:
 	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
 	virtual _float4x4 GetPivotMatrix() override;
 
+
+	//Target 방향 확인
+	_bool IsTargetFront(_float fAngle = 90.f);
+	_bool IsTargetRight(_float fAngle = 90.f);
 protected:
 	// take damage 관련 함수
 	virtual void HitEffect(DAMAGE_PARAM& tDamageParams);
@@ -90,7 +96,14 @@ protected:
 	void HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
 	void HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
 
+	//로컬움직임 적용. 다른 애니메이션을 넣어주기 전에 ClearSocketAnim 꼭 해줘야함!!
 	void SocketLocalMove(class CEnemy_AnimInstance* pASM);
+
+	//RigidBoyd 관리
+	void	Add_RigidBody(const string& KeyName, void* pArg = nullptr);
+	CRigidBody* GetRigidBody(const string& KeyName);
+
+	
 protected:
 	static vector<wstring>			s_vecDefaultBlood;
 	static vector<wstring>			s_vecFireBlood;
@@ -105,7 +118,8 @@ protected:
 	CModel*					m_pModelCom = nullptr;
 	CScarletCharacter*		m_pTarget = nullptr;
 	CFSMComponent*			m_pFSM = nullptr;
-	
+	RigidBodies				m_pRigidBodies;
+
 	_bool m_bFindTestTarget = false;
 
 	_int m_iAtkDamage = 50;

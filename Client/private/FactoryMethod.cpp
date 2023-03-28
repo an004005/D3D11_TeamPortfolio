@@ -372,7 +372,7 @@ HRESULT CFactoryMethod::MakePlayerPrototypes(ID3D11Device * pDevice, ID3D11Devic
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	{// SAS ÄÉÀÌºí
+	{// SAS ì¼€ì´ë¸”
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SASCable", CSAS_Cable::Create(pDevice, pContext)));
 	}
 
@@ -464,10 +464,10 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Bundle", CSpecial_HBeam_Bundle::Create(pDevice, pContext)));
 
 
-	auto pModel_HBeam_Single = CModel::Create(pDevice, pContext,
-		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
-	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_HBeam_Single", pModel_HBeam_Single));
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Single", CSpecial_HBeam_Single::Create(pDevice, pContext)));
+	//auto pModel_HBeam_Single = CModel::Create(pDevice, pContext,
+	//	"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
+	//FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_HBeam_Single", pModel_HBeam_Single));
+	//FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Single", CSpecial_HBeam_Single::Create(pDevice, pContext)));
 
 	return S_OK;
 }
