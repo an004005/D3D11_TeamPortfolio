@@ -869,10 +869,12 @@ void CPlayer::SasMgr()
 				}
 				else if (ESASType::SAS_TELEPORT == InputSas)
 				{
+					m_pSasPortrait->Start_SAS(InputSas);
 					m_pSAS_Cable->EquipCable(ESASType::SAS_TELEPORT);
 				}
 				else if (ESASType::SAS_ELETRIC == InputSas)
 				{
+					m_pSasPortrait->Start_SAS(InputSas);
 					m_pSAS_Cable->EquipCable(ESASType::SAS_ELETRIC);
 				}
 				else if (ESASType::SAS_PENETRATE == InputSas)
@@ -882,10 +884,12 @@ void CPlayer::SasMgr()
 				}
 				else if (ESASType::SAS_HARDBODY == InputSas)
 				{
+					m_pSasPortrait->Start_SAS(InputSas);
 					m_pSAS_Cable->EquipCable(ESASType::SAS_HARDBODY);
 				}
 				else if (ESASType::SAS_SUPERSPEED == InputSas)
 				{
+					m_pSasPortrait->Start_SAS(InputSas);
 					m_pSAS_Cable->EquipCable(ESASType::SAS_SUPERSPEED);
 				}
 

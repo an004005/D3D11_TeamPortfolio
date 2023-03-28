@@ -62,8 +62,8 @@ private:
 	_float m_fTimeBeforePhysX = 0.5f;
 	_float m_fDisappearTime = 0.2f;
 	_float m_fMaxDisappearTime = 0.2f;
-	_float m_fRedDissolveTime = 10.f;
-	_float m_fMaxRedDissolveTime = 10.f;
+	_float m_fRedDissolveTime = 25.f;
+	_float m_fMaxRedDissolveTime = 25.f;
 
 	string socket;
 

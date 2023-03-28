@@ -88,6 +88,9 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 		case ESASType::SAS_FIRE:
 			m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 2;
 			break;
+			case ESASType::SAS_ELETRIC:
+			m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 3;
+			break;
 		default:
 			m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 0;
 			break;
