@@ -39,8 +39,8 @@ public:
 	_bool GetIsActive();
 	_matrix GetTargetMatrix();
 
-	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true);
-	virtual _float4x4 GetPivotMatrix();
+	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
+	virtual _float4x4 GetPivotMatrix() override;
 
 private:
 	_matrix CalcSocketMatrix(_int iIdx, _fmatrix TargetWorldMatrix);
@@ -59,6 +59,11 @@ private:
 	CRenderer* m_pRendererCom = nullptr;
 
 	_bool m_bActive = false;
+	_float m_fTimeBeforePhysX = 0.5f;
+	_float m_fDisappearTime = 0.2f;
+	_float m_fMaxDisappearTime = 0.2f;
+	_float m_fRedDissolveTime = 10.f;
+	_float m_fMaxRedDissolveTime = 10.f;
 
 	string socket;
 

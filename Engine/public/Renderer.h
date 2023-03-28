@@ -68,6 +68,13 @@ private:
 	class CTexture* m_pEnv2 = nullptr;
 	_bool m_bShadow = true;
 
+
+	_float3 m_vFogColor;
+	_float m_fStartDepth;
+	_float3 m_vHighlightColor;
+	_float m_fGlobalDensity;
+	_float m_fHeightFalloff;
+
 private:
 	HRESULT Render_Priority();
 	HRESULT Render_ShadowDepth();

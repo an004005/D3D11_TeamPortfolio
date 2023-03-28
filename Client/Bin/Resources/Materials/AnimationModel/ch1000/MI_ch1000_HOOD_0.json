@@ -1,0 +1,26 @@
+    {
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxToonAnimModel",
+    "ShaderParams" : {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [0.0, 0.0, 0.0, 0.0],
+        "Ints": [
+            0
+        ],
+        "Textures" : [
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch1000/Texture/T_ch1000_Hood_COL.png",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch1000/Texture/T_ch1000_Hood_NML.png",
+            "../Bin/Resources/00_Common/03_Texture/T_cm_Fil_Glay.png",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch1000/Texture/T_ch1000_Hood_CTL.png"
+        ],
+        "Pass" : 1
+    }
+}

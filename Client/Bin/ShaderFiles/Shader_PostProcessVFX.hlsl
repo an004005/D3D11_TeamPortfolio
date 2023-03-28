@@ -321,6 +321,7 @@ PS_OUT PS_MAIN_Penetate_8(PS_IN In)
 
 	float4 vFlags = g_FlagTexture.Sample(PointSampler, In.vTexUV);
 	float4 LDR = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+	float fDissolve = g_float_0;
 
 	if (vFlags.z == SHADER_TOON_GRAY_INGNORE)
 	{
@@ -329,14 +330,14 @@ PS_OUT PS_MAIN_Penetate_8(PS_IN In)
 	}
 	else if (vFlags.z == SHADER_MONSTER_WEAK)
 	{
-		float fGray = dot(LDR.rgb, float3(0.299, 0.587, 0.114));
-		Out.vColor.rgb = float3(1.f, 1.f, 169.f / 255.f) * fGray * 1.5f;
+		float3 vWeak = dot(LDR.rgb, float3(0.299, 0.587, 0.114)) * float3(1.f, 1.f, 169.f / 255.f) * 1.5f;
+		Out.vColor.rgb = lerp(LDR.rgb, vWeak, fDissolve);
 		Out.vColor.a = 1.f;
 	}
 	else
 	{
-		float fGray = dot(LDR.rgb, float3(0.299, 0.587, 0.114));
-		Out.vColor.rgb = (float3)fGray;
+		float3 vGray = dot(LDR.rgb, float3(0.299, 0.587, 0.114));
+		Out.vColor.rgb = lerp(LDR.rgb, vGray, fDissolve);
 		Out.vColor.a = 1.f;
 	}
 
@@ -344,9 +345,9 @@ PS_OUT PS_MAIN_Penetate_8(PS_IN In)
 	if (fRadius >= 0.45f)
 	{
 		float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
-		float2 distortionUV = randomNormal * g_float_0 * 0.3f + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time * 0.2f));
+		float2 distortionUV = randomNormal * fDissolve * 0.3f + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time * 0.2f));
 		float4 DistortionTex = g_tex_0.Sample(LinearSampler, distortionUV);
-		float fWeight = DistortionTex.r * g_float_0 * g_float_1;
+		float fWeight = DistortionTex.r * fDissolve * g_float_1;
 
 		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, (In.vTexUV + fWeight));
 

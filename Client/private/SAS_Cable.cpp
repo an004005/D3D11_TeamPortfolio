@@ -81,7 +81,7 @@ void CSAS_Cable::Tick(_double TimeDelta)
 	// 	UnEquipCable();
 	// }
 
-	_matrix TargetWorldMatrix = m_pTargetTransform->Get_WorldMatrix();
+	// _matrix TargetWorldMatrix = m_pTargetTransform->Get_WorldMatrix();
 
 	//for (int i = 0; i < CABLE_CNT; ++i)
 	//{
@@ -97,21 +97,56 @@ void CSAS_Cable::Tick(_double TimeDelta)
 	//	CalcEffSocketMatrix(i, TargetWorldMatrix);
 	//}
 
-	if (m_bActive && m_bVisible)
+	if (m_bActive && m_pWatchAnim->IsFinished() && m_CableModels[0]->IsActivePhysX() == false)
 	{
-		_matrix TargetWorldMatrix = m_pTargetTransform->Get_WorldMatrix();
-		for (int i = 0; i < CABLE_CNT; ++i)
+		if (m_fTimeBeforePhysX < 0.f)
 		{
-			m_CableModels[i]->Update_Tick(TimeDelta, CalcSocketMatrix(i, TargetWorldMatrix));
+			for (int i = 0; i < CABLE_CNT; ++i)
+			{
+				m_CableModels[i]->ActivatePhysX(true);
+			}
+		}
+		else
+			m_fTimeBeforePhysX -= (_float)TimeDelta;
+	}
+	else if (!m_bActive)
+	{
+		if (m_fDisappearTime > 0.f)
+		{
+			m_fDisappearTime -= (_float)TimeDelta;
+			for (int i = 0; i < CABLE_CNT; ++i)
+			{
+				for (auto pMtrl : m_CableModels[i]->GetMaterials())
+					pMtrl->GetParam().Floats[0] = 1.f - (m_fDisappearTime / m_fMaxDisappearTime);
+			}
+		}
+		else
+		{
+			m_fDisappearTime = 0.f;
+			m_bVisible = false;
+			for (int i = 0; i < CABLE_CNT; ++i)
+			{
+				m_CableModels[i]->ActivatePhysX(false);
+				for (auto pMtrl : m_CableModels[i]->GetMaterials())
+					pMtrl->GetParam().Floats[0] = 0.f;
+			}
 		}
 	}
 
 
-	if (m_bActive && m_pWatchAnim->IsFinished() && m_CableModels[0]->IsActivePhysX() == false)
+	if (m_bVisible)
 	{
+		if (m_fRedDissolveTime > 0.f)
+			m_fRedDissolveTime -= (_float)TimeDelta;
+		else
+			m_fRedDissolveTime = 0.f;
+
+		_matrix TargetWorldMatrix = m_pTargetTransform->Get_WorldMatrix();
 		for (int i = 0; i < CABLE_CNT; ++i)
 		{
-			m_CableModels[i]->ActivatePhysX(true);
+			for (auto pMtrl : m_CableModels[i]->GetMaterials())
+				pMtrl->GetParam().Floats[1] = m_fRedDissolveTime / m_fMaxRedDissolveTime;
+			m_CableModels[i]->Update_Tick(TimeDelta, CalcSocketMatrix(i, TargetWorldMatrix));
 		}
 	}
 }
@@ -120,7 +155,7 @@ void CSAS_Cable::Late_Tick(_double TimeDelta)
 {
 	CGameObject::Late_Tick(TimeDelta);
 
-	if (m_bActive && m_bVisible)
+	if (m_bVisible)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
 }
 
@@ -163,17 +198,24 @@ void CSAS_Cable::SetTargetInfo(CTransform* pTargetTransform, CModel* pTargetMode
 
 void CSAS_Cable::EquipCable(ESASType eType)
 {
-	m_CableModels[0]->ActivatePhysX(false);
-	m_CableModels[1]->ActivatePhysX(false);
-	m_CableModels[2]->ActivatePhysX(false);
-	m_CableModels[3]->ActivatePhysX(false);
-	m_CableModels[4]->ActivatePhysX(false);
+	m_fTimeBeforePhysX = 0.5f;
+	m_fRedDissolveTime = m_fMaxRedDissolveTime;
+
+	for (int i = 0; i < CABLE_CNT; ++i)
+	{
+		m_CableModels[i]->ActivatePhysX(false);
+		for (auto pMtrl : m_CableModels[i]->GetMaterials())
+			pMtrl->GetParam().Floats[0] = 0.f;
+	}
 
 	m_CableModels[0]->SetPlayAnimation("AS_co0101_001_start01");
 	m_CableModels[1]->SetPlayAnimation("AS_co0101_001_start02");
 	m_CableModels[2]->SetPlayAnimation("AS_co0101_001_start03");
 	m_CableModels[3]->SetPlayAnimation("AS_co0101_001_start04");
 	m_CableModels[4]->SetPlayAnimation("AS_co0101_001_start05");
+
+	m_bActive = true;
+	m_bVisible = true;
 
 	//_matrix TargetWorldMatrix = m_pTargetTransform->Get_WorldMatrix();
 
@@ -188,17 +230,15 @@ void CSAS_Cable::EquipCable(ESASType eType)
 
 	//	CalcEffSocketMatrix(i, TargetWorldMatrix);
 	//}
-
-	m_bActive = true;
 }
 
 void CSAS_Cable::UnEquipCable()
 {
-	for (int i = 0; i < CABLE_CNT; ++i)
+	if (m_bActive)
 	{
-		m_CableModels[i]->ActivatePhysX(false);
+		m_bActive = false;
+		m_fDisappearTime = m_fMaxDisappearTime;
 	}
-	m_bActive = false;
 }
 
 void CSAS_Cable::CableTeleportDissolve(_float fRange)
@@ -214,7 +254,7 @@ void CSAS_Cable::CableTeleportDissolve(_float fRange)
 
 _bool CSAS_Cable::GetIsActive()
 {
-	return m_CableModels[0]->IsActivePhysX();
+	return m_bActive && m_pWatchAnim->IsFinished();
 }
 
 _matrix CSAS_Cable::GetTargetMatrix()

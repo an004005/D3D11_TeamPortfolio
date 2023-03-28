@@ -130,14 +130,14 @@ float3 LightSurface(
 
     // // Add diffuse irradiance
     float3 diffuse_env = Diffuse_IBL(N);
-    acc_color += c_diff * diffuse_env;
+    acc_color += c_diff * 1.f;
 
     // acc_color += c_diff * 0.4f;
 
 
     // // Add specular radiance 
     float3 specular_env = Specular_IBL(N, V, roughness);
-    acc_color += c_spec * 0.1f;
+    acc_color += c_spec * 0.5f;
 
     return acc_color;
 }
