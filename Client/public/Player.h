@@ -160,6 +160,7 @@ private:
 	_float			m_fTeleportDissolve = 0.f;
 	_float			m_fHardbodyDissolve = 0.f;
 	_bool			m_bTeleport = false;
+	_bool			m_bBeforeSAS_Using[SAS_CNT] = { false, };
 
 private:
 	_bool			m_bAttackEnable = false;
@@ -650,6 +651,7 @@ private:
 	class CPostVFX_Penetrate* m_pSAS_Penetrate = nullptr;
 	class CPostVFX_Teleport* m_pTeleportPostVFX = nullptr;
 	void SasGearEffect();
+	void SasGearReleaseEffect();
 
 private:
 	CParticleGroup*	m_pSwordParticle = nullptr;

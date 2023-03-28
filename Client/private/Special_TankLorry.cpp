@@ -56,6 +56,9 @@ void CSpecial_TankLorry::Tick(_double TimeDelta)
 {
 	if (m_bDeadCheck)
 	{
+		static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->SetOutline(false);
+		static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->SetOutline(false);
+
 		m_fDeadTime -= (_float)TimeDelta;
 
 		if (0.f >= m_fDeadTime)
@@ -64,6 +67,19 @@ void CSpecial_TankLorry::Tick(_double TimeDelta)
 			m_pTankLorry_Trailer->SetDelete();
 
 			this->SetDelete();
+		}
+	}
+	else
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_SpecialObject() == this)
+		{
+			static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->SetOutline(true);
+			static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->SetOutline(true);
+		}
+		else
+		{
+			static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->SetOutline(false);
+			static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->SetOutline(false);
 		}
 	}
 
@@ -189,6 +205,9 @@ void CSpecial_TankLorry::TankLorry_Explosion()
 
 	CGameInstance::GetInstance()->SetTimeRatioCurve("TankLorry_Slow");
 	CGameInstance::GetInstance()->AddLifePointLight(3.f, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 10.f, { 1.f, 0.f, 0.f, 1.f });
+
+	m_bDeadCheck = true;
+	m_fDeadTime = 6.f;
 }
 
 void CSpecial_TankLorry::TankLorry_Cheage_TankIndex(_uint iIndex)

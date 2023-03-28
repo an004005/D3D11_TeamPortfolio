@@ -898,22 +898,27 @@ void CPlayer::SasMgr()
 	{
 		if (SasOn.IsNotDo())
 		{
+			// 공통
+			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Docking_Finished"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
+
 			if (ESASType::SAS_FIRE == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 			{
-				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Sas_Fire_Start"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_FIRE"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
 				m_pSwordParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Weapon_Particle"), LAYER_PLAYEREFFECT);
 				m_pSwordParticle->Start_Attach(this, "RightWeapon", true);
 			}
 
 			if (ESASType::SAS_PENETRATE== CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 			{
-				//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Sas_Fire_Start"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
-				//m_pSAS_Penetrate->GetParam().Floats[0] = 1.f;	// 끄는건 0, 시점 찾아서 넣을 것
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_PENETRATE"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
 				m_pSAS_Penetrate->Active(true);
 			}
 
 			if (ESASType::SAS_SUPERSPEED == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 			{
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_SUPERSPEED"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+
 				const vector<wstring> except = { 
 					LAYER_SAS, 
 					PLAYERTEST_LAYER_CAMERA, 
@@ -929,6 +934,15 @@ void CPlayer::SasMgr()
 				m_pSuperSpeedPostVFX->Active(true);
 			}
 
+			if (ESASType::SAS_TELEPORT == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
+			{
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_TELEPORT"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			}
+
+			if (ESASType::SAS_HARDBODY == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
+			{
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_HARDBODY"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			}
 
 			//for (auto pMtrl : m_pModel->GetMaterials())
 			//{
@@ -965,35 +979,11 @@ void CPlayer::Visible_Check()
 		m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_155_AL_sas_dodge_B_start_Telepo" ||
 		m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_157_AL_sas_dodge_L_start_Telepo")
 	{
-		//m_bVisible = false;
 		m_bTeleport = false;
-
-		//for (auto& iter : m_vecWeapon)
-		//	iter->SetVisible(false);
-
-		//m_pSAS_Cable->SetVisible(false);
-
-		//if (TeleportEffect.IsNotDo())
-		//{
-		//	TeleportEndEffect.Reset();
-		//	//TeleportEffectMaker();
-		//}
 	}
 	else
 	{
-		//m_bVisible = true;
 		m_bTeleport = true;
-
-		//for (auto& iter : m_vecWeapon)
-		//	iter->SetVisible(true);
-
-		//m_pSAS_Cable->SetVisible(true);
-
-		//if (TeleportEndEffect.IsNotDo())
-		//{
-		//	TeleportEffect.Reset();
-		//	//TeleportEffectMaker();
-		//}
 	}
 
 	if (false == m_bTeleport)
@@ -1042,23 +1032,56 @@ void CPlayer::SasStateCheck()
 
 	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_FIRE))
 	{
+		if (m_bBeforeSAS_Using[(_uint)ESASType::SAS_FIRE])
+		{
+			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
+			SasGearReleaseEffect();
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+		}
+
 		m_bSASSkillInput[3] = false;
 		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSwordParticle)) m_pSwordParticle->SetDelete();
 	}
 
 	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_PENETRATE))
 	{
+		if (m_bBeforeSAS_Using[(_uint)ESASType::SAS_PENETRATE])
+		{
+			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
+			SasGearReleaseEffect();
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+		}
+
 		m_bSASSkillInput[1] = false;
 		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSAS_Penetrate)) m_pSAS_Penetrate->Active(false);
 	}
 
 	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_TELEPORT))
 	{
+		if (m_bBeforeSAS_Using[(_uint)ESASType::SAS_TELEPORT])
+		{
+			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
+			SasGearReleaseEffect();
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+		}
+
 		m_bSASSkillInput[0] = false;
+		m_pTeleportStateMachine->SetState("TELEPORTATTACK_NOUSE");
 	}
 
 	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_HARDBODY))
 	{
+		if (m_bBeforeSAS_Using[(_uint)ESASType::SAS_HARDBODY])
+		{
+			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
+			SasGearReleaseEffect();
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+		}
+
 		m_bSASSkillInput[2] = false;
 
 		if (0.f <= m_fHardbodyDissolve)
@@ -1086,6 +1109,29 @@ void CPlayer::SasStateCheck()
 
 	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_SUPERSPEED))
 	{
+		if (m_bBeforeSAS_Using[(_uint)ESASType::SAS_SUPERSPEED])
+		{
+			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
+			SasGearReleaseEffect();
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+		}
+
+		CGameInstance::GetInstance()->ResetDefaultTimeRatio();
+		m_pSuperSpeedPostVFX->Active(false);
+		m_pTrail->SetActive(false);
+	}
+
+	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_ELETRIC))
+	{
+		if (m_bBeforeSAS_Using[(_uint)ESASType::SAS_ELETRIC])
+		{
+			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
+			SasGearReleaseEffect();
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+		}
+
 		CGameInstance::GetInstance()->ResetDefaultTimeRatio();
 		m_pSuperSpeedPostVFX->Active(false);
 		m_pTrail->SetActive(false);
@@ -1095,6 +1141,11 @@ void CPlayer::SasStateCheck()
 	if (CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty())
 	{
 		m_pSAS_Cable->UnEquipCable();
+	}
+
+	for (_uint i = 0; i < SAS_CNT; ++i)
+	{
+		m_bBeforeSAS_Using[i] = CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType(i));
 	}
 }
 
@@ -1660,9 +1711,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_0", [&]() {Event_ElecEffect("Elec_Attack_Dash_Hold_0"); });
 	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_1", [&]() {Event_ElecEffect("Elec_Attack_Dash_Hold_1"); });
 	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_2", [&]() {Event_ElecEffect("Elec_Attack_Dash_Hold_2"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_3", [&]() {Event_ElecEffect("Elec_Attack_Dash_Hold_3"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_4", [&]() {Event_ElecEffect("Elec_Attack_Dash_Hold_4"); });
-	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_4_Shoot", [&]() {Event_ElecEffect("Elec_Attack_Dash_Hold_4_Shoot"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_2_Shoot", [&]() {Event_ElecEffect("Elec_Attack_Dash_Hold_2_Shoot"); });
 	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_0", [&]() {Event_ElecEffect("Elec_Attack_Justdodge_0"); });
 	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_1", [&]() {Event_ElecEffect("Elec_Attack_Justdodge_1"); });
 	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_2", [&]() {Event_ElecEffect("Elec_Attack_Justdodge_2"); });
@@ -4950,6 +4999,7 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
 			m_bKineticSpecial = false;
 		})
 		.OnExit([&]()
@@ -5503,31 +5553,26 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
 	}
-	if (szEffectName == "Elec_Attack_Dash_End")
-	{
-		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-	}
 	if (szEffectName == "Elec_Attack_Dash_Hold_0")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
 	}
-	if (szEffectName == "Elec_Attack_Dash_Hold_3")
+	if (szEffectName == "Elec_Attack_Dash_Hold_1")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
 	}
-	if (szEffectName == "Elec_Attack_Dash_Hold_4")
+	if (szEffectName == "Elec_Attack_Dash_Hold_2")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
 	}
-	if (szEffectName == "Elec_Attack_Dash_Hold_4_Shoot")
+	if (szEffectName == "Elec_Attack_Dash_Hold_2_Shoot")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		_float4 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, L"Elec_Attack_Dash_Hold_4", LAYER_PLAYEREFFECT)->Start_AttachPivotMove(this, matEffect, "Eff01", vLook, true);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, L"Elec_Attack_Dash_Hold_2", LAYER_PLAYEREFFECT)->Start_AttachPivotMove(this, matEffect, "Eff01", vLook, true);
 		ElecSweep();
 	}
 	if (szEffectName == "Elec_Attack_Upper_0")
@@ -5574,6 +5619,17 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
 	}
 	if (szEffectName == "Elec_Attack_Justdodge_5")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+
+	if (szEffectName == "Elec_Attack_Dash_End")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.f, -1.f, -1.f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, L"Elec_Attack_Air_Dash_0", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+	if (szEffectName == "Elec_Attack_Air_Dash_0")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
@@ -6870,6 +6926,44 @@ void CPlayer::SasGearEffect()
 		* XMMatrixTranslation(-0.172f, -0.274f, 0.045f);
 	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Use_Sas_Gear"), LAYER_PLAYEREFFECT)
 		->Start_AttachPivot(this, Pivot05, "Sheath", true, true);
+}
+
+void CPlayer::SasGearReleaseEffect()
+{
+	//_float4x4 Pivot01 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
+	//	* XMMatrixRotationX(XMConvertToRadians(-180.f))
+	//	* XMMatrixRotationZ(XMConvertToRadians(-180.f))
+	//	* XMMatrixTranslation(0.17f, 0.09f, 0.2f);
+	//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
+	//	->Start_AttachPivot(this, Pivot01, "Sheath", true, true);
+
+	//_float4x4 Pivot02 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
+	//	* XMMatrixRotationX(XMConvertToRadians(-180.f))
+	//	* XMMatrixRotationZ(XMConvertToRadians(-180.f))
+	//	* XMMatrixTranslation(-0.17f, 0.1f, 0.2f);
+	//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
+	//	->Start_AttachPivot(this, Pivot02, "Sheath", true, true);
+
+	//_float4x4 Pivot03 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
+	//	* XMMatrixRotationX(XMConvertToRadians(-180.f))
+	//	* XMMatrixRotationZ(XMConvertToRadians(-180.f))
+	//	* XMMatrixTranslation(0.1f, -0.1f, 0.2f);
+	//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
+	//	->Start_AttachPivot(this, Pivot03, "Sheath", true, true);
+
+	//_float4x4 Pivot04 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
+	//	* XMMatrixRotationX(XMConvertToRadians(-180.f))
+	//	* XMMatrixRotationZ(XMConvertToRadians(-180.f))
+	//	* XMMatrixTranslation(0.08f, -0.3f, 0.08f);
+	//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
+	//	->Start_AttachPivot(this, Pivot04, "Sheath", true, true);
+
+	//_float4x4 Pivot05 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
+	//	* XMMatrixRotationX(XMConvertToRadians(-180.f))
+	//	* XMMatrixRotationZ(XMConvertToRadians(-180.f))
+	//	* XMMatrixTranslation(-0.172f, -0.274f, 0.045f);
+	//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
+	//	->Start_AttachPivot(this, Pivot05, "Sheath", true, true);
 }
 
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

@@ -9,6 +9,9 @@
 #include "Animation.h"
 #include "ImguiUtils.h"
 
+#include "PhysX_Manager.h"
+#include "Enemy.h"
+
 #include "MathUtils.h"
 
 CSpecial_TankLorry_Trailer::CSpecial_TankLorry_Trailer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -164,6 +167,39 @@ void CSpecial_TankLorry_Trailer::Exploision()
 	_float3 vVelocity = { 0.f, 300.f * g_fTimeDelta, 0.f };
 
 	m_pCollider->AddVelocity(vVelocity);
+
+	physx::PxSweepHit hitBuffer[4];
+	physx::PxSweepBuffer overlapOut(hitBuffer, 4);
+	SphereSweepParams params2;
+	params2.sweepOut = &overlapOut;
+	params2.fRadius = 20.f;
+	params2.vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	params2.vUnitDir = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	params2.fDistance = 0.f;
+	params2.iTargetType = CTB_MONSTER | CTB_MONSTER_PART;
+	params2.fVisibleTime = 1.f;
+
+	if (CGameInstance::GetInstance()->SweepSphere(params2))
+	{
+		for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+		{
+			auto pHit = overlapOut.getAnyHit(i);
+			CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+			if (auto pMonster = dynamic_cast<CEnemy*>(pCollidedObject))
+			{
+				DAMAGE_PARAM tParam;
+				ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+				tParam.eAttackSAS = ESASType::SAS_FIRE;
+				tParam.eAttackType = EAttackType::ATK_SPECIAL_END;
+				tParam.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+				tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
+				tParam.iDamage = 9999;
+
+				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				pMonster->TakeDamage(tParam);
+			}
+		}
+	}
 }
 
 void CSpecial_TankLorry_Trailer::Change_Tank(_uint iIdx)
