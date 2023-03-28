@@ -147,6 +147,9 @@ private:
 	void CamBoneTest();	// 액션캠 예시
 
 private:
+	_double			m_fTimeDelta = 0.f;
+
+private:
 	void			SasMgr();
 	void			Visible_Check();
 	void			SasStateCheck();
@@ -154,6 +157,10 @@ private:
 //	PLAYER_STAT		m_PlayerStat;
 	DAMAGE_DESC		m_DamageDesc;
 	DAMAGE_PARAM	m_AttackDesc;
+	_float			m_fTeleportDissolve = 0.f;
+	_float			m_fHardbodyDissolve = 0.f;
+	_bool			m_bTeleport = false;
+	_bool			m_bBeforeSAS_Using[SAS_CNT] = { false, };
 
 private:
 	_bool			m_bAttackEnable = false;
@@ -225,6 +232,9 @@ private:	// 특수연출용 FSM
 	HRESULT				SetUp_DropObjectStateMachine();
 	CFSMComponent*		m_pDropObjectStateMachine = nullptr;
 
+	HRESULT				SetUp_TankLorryStateMachine();
+	CFSMComponent*		m_pTankLorryStateMachine = nullptr;
+
 private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_Train_Charge_L;	// 좌측 기차 차지
 	list<CAnimation*>	m_Train_Cancel_L;	// 좌측 기차 취소
@@ -251,6 +261,10 @@ private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_DropObject_Charge;		// 낙하물체 차지
 	list<CAnimation*>	m_DropObject_Cancel;		// 낙하 취소
 	list<CAnimation*>	m_DropObject_Drop;			// 떨구기
+
+	list<CAnimation*>	m_TankLorry_Start;			// 탱크로리 차지
+	list<CAnimation*>	m_TankLorry_Cancel;			// 탱크로리 취소
+	list<CAnimation*>	m_TankLorry_Finish;			// 탱크로리 폭발
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -623,6 +637,8 @@ private:
 	CDoOnce	TeleportEffect;
 	CDoOnce TeleportEndEffect;
 	CDoOnce DropObject;
+	CDoOnce TankLorry;
+	CDoOnce	TankLorry_Exploision;
 
 private:
 	_bool	m_bEffectUpdate = false;
@@ -635,9 +651,11 @@ private:
 	class CPostVFX_Penetrate* m_pSAS_Penetrate = nullptr;
 	class CPostVFX_Teleport* m_pTeleportPostVFX = nullptr;
 	void SasGearEffect();
+	void SasGearReleaseEffect();
 
 private:
 	CParticleGroup*	m_pSwordParticle = nullptr;
+	CParticleGroup* m_pChargeParticle = nullptr;
 
 private:
 	vector<wstring>	m_vecRandomLandingDustName;

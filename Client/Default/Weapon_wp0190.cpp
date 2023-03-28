@@ -75,12 +75,8 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 
 	m_pTrail->SetActive(m_bTrailOn);
 	
-	//m_pTrail->Tick(TimeDelta);
-
-	if (m_bTrailOn)
-	{
-
-	}
+	_float4 vCurPos = { m_pCollider->GetPxWorldMatrix().Translation().x, m_pCollider->GetPxWorldMatrix().Translation().y, m_pCollider->GetPxWorldMatrix().Translation().z, 1.f };
+	m_vSlashVector = vCurPos - m_vBeforePos;
 
 	if (m_bBright)
 	{
@@ -91,6 +87,9 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 			break;
 		case ESASType::SAS_FIRE:
 			m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 2;
+			break;
+			case ESASType::SAS_ELETRIC:
+			m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 3;
 			break;
 		default:
 			m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 0;
@@ -103,6 +102,8 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 	}
 	
 	//Collision_Check();
+
+	m_vBeforePos = vCurPos;
 }
 
 void CWeapon_wp0190::Late_Tick(_double TimeDelta)
