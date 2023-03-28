@@ -2,6 +2,7 @@
 
 #include "Canvas.h"
 #include "Client_Defines.h"
+#include <queue>
 
 BEGIN(Client)
 
@@ -23,24 +24,19 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void   Tick(_double TimeDelta) override;
-	virtual void   Late_Tick(_double TimeDelta) override;
-	virtual HRESULT Render() override;
-
-	virtual void   Imgui_RenderProperty() override;
-	virtual void   SaveToJson(Json& json) override;
-	virtual void   LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_Talk(const size_t iIndex);
-
-	void	TalkInfo_Initialize();
+	void	Add_Talk(const size_t iIndex);
 
 private:
-	vector<TALKINFO>	m_vecTalkInfo;
+	void	Show_Talk();
 
-	_bool	m_bTalk = { false };
-	_double	m_dTalk_TimeAcc = { 0.0 };
-	
+private:
+	std::queue<TALKINFO>	m_qCurrentTalk;
+
+	_bool		m_bRunning = false;
+	_double		m_dTalk_TimeAcc = { 3.0 };
+
 public:
 	static CCanvas_LeftTalk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

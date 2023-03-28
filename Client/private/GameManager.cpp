@@ -1,3 +1,4 @@
+
 #include "stdafx.h"
 #include "..\public\GameManager.h"
 #include "JsonStorage.h"
@@ -56,7 +57,9 @@ void CGameManager::Tick(_double TimeDelta)
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 	{
 		pCanvas_Acquisition->Set_EnemyUI(EEnemyName::EM0400, 5);
-		pCanvas_LeftTalk->Set_Talk(0);
+		pCanvas_LeftTalk->Add_Talk(0);
+		pCanvas_LeftTalk->Add_Talk(1);
+		pCanvas_LeftTalk->Add_Talk(2);
 	}
 }
 
