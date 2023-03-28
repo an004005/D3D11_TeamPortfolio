@@ -39,6 +39,12 @@ texture2D		g_OutlineFlagTexture;
 TextureCube     g_IrradianceTexture;
 TextureCube     g_RadianceTexture;
 
+float3			g_vFogColor;
+float3			g_vHighlightColor;
+float			g_fStartDepth;
+float			g_fGlobalDensity;
+float			g_fHeightFalloff;
+
 
 float g_Gamma = 2.2f;
 
@@ -168,7 +174,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 
 	    const float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz); // view vector
 
-		Out.vShade.rgb = LightSurface(V, vNormal.xyz, g_vLightDiffuse.xyz, g_vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
+		Out.vShade.rgb = AO * LightSurface(V, vNormal.xyz, g_vLightDiffuse.xyz, g_vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
 		Out.vShade.a = 1.f;
 
 		return Out;

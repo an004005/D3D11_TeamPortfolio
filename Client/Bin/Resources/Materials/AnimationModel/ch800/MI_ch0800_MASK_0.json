@@ -1,0 +1,28 @@
+{
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [0.0, 0.0, 0.0, 0.0],
+        "Ints": [
+            0
+        ],
+        "Pass": 5,
+        "Textures": [
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch800/Texture/T_ch0800_Mask_COL.png\u0000",
+            "",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Mask_AMB.dds\u0000",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch800/Texture/T_ch0800_Mask_CTL.png\u0000",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ef_scl_noi_013.png\u0000",
+            "..\\Bin\\Resources\\Meshes\\Scarlet_Nexus\\AnimModels\\Player\\Texture\\T_PatternMap.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"
+}
