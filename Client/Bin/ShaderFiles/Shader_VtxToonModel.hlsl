@@ -121,6 +121,12 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 		Out.vDiffuse = float4(COL_FIRE, 1.f);
 		fEmissive = 4.f;
 	}
+	else if (iColorFlag == 3) // Àü±â
+	{
+		flags = SHADER_NONE_SHADE;
+		Out.vDiffuse = float4(COL_ELEC, 1.f);
+		fEmissive = 4.f;
+	}
 	else
 	{
 		Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);

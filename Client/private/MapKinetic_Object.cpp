@@ -303,6 +303,7 @@ void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 void CMapKinetic_Object::Set_Kinetic(_bool bKinetic)
 {
 	m_pCollider->Set_Kinetic(bKinetic);
+	m_pCollider->UpdateChange();
 }
 
 void CMapKinetic_Object::Reset_Transform()

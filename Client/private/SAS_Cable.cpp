@@ -241,6 +241,17 @@ void CSAS_Cable::UnEquipCable()
 	}
 }
 
+void CSAS_Cable::CableTeleportDissolve(_float fRange)
+{
+	for (auto& iter : m_CableModels)
+	{
+		for (auto pMtrl : iter->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[2] = fRange;
+		}
+	}
+}
+
 _bool CSAS_Cable::GetIsActive()
 {
 	return m_bActive && m_pWatchAnim->IsFinished();
