@@ -93,6 +93,7 @@ CUI * CMouseCousorUI::Clone(void * pArg)
 
 void CMouseCousorUI::Free()
 {
+	Safe_Release(m_pMouseLight);
 	__super::Free();
 
 }

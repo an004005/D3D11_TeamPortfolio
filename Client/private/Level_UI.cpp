@@ -16,6 +16,7 @@
 #include "FactoryMethod.h"
 #include "VFX_Manager.h"
 #include "Monster.h"
+#include "GameManager.h"
 
 // Canvas
 #include "Canvas.h"
@@ -37,6 +38,7 @@
 #include "Canvas_Alarm.h"
 #include "Canvas_Main.h"
 #include "Canvas_ItemWindow.h"
+#include "Canvas_Acquisition.h"
 
 // Default
 #include "DefaultUI.h"
@@ -100,9 +102,13 @@
 #include "Main_BrainGaugeUI.h"
 #include "Main_BrainUI.h"
 #include "Main_OnePickUI.h"
+
 // Mouse
 #include "MouseCousorUI.h"
 #include "MouseCousorLightUI.h"
+
+// Acquisition
+#include "AcquisitionUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -122,9 +128,11 @@ HRESULT CLevel_UI::Initialize()
 	//CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 	//CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 
+	CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext);
+	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
-	if (FAILED(Ready_Prototypes()))
-		return E_FAIL;
+	//if (FAILED(Ready_Prototypes()))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -144,12 +152,16 @@ HRESULT CLevel_UI::Initialize()
 	//if (FAILED(Ready_Layer_Monster(L"Layer_Monster")))
 	//	return E_FAIL;
 
+
 	return S_OK;
 }
 
 void CLevel_UI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+	CGameManager::GetInstance()->Tick(TimeDelta);
+
 }
 
 void CLevel_UI::Late_Tick(_double TimeDelta)
@@ -261,6 +273,13 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_ItemWindow"),
 			CCanvas_ItemWindow::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+
+		///* For.Prototype_GameObject_Canvas_Acquisition */
+		//if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_Acquisition"),
+		//	CCanvas_Acquisition::Create(m_pDevice, m_pContext))))
+		//	return E_FAIL;
+
+
 	}
 
 	{
@@ -502,6 +521,13 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CMouseCousorLightUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		
+		// Acquisition
+		/* For.Prototype_GameObject_AcquisitionUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("AcquisitionUI"),
+			CAcquisitionUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+
 	}
 
 	//FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
@@ -611,9 +637,6 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/MouseCousorUI.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MouseCousorUI", &json));
 
-
-	
-
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
 	//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);
@@ -665,5 +688,7 @@ CLevel_UI * CLevel_UI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pCon
 void CLevel_UI::Free()
 {
 	__super::Free();
+	CGameManager::GetInstance()->DestroyInstance();
+
 }
 

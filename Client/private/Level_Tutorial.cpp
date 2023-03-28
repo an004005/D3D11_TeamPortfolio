@@ -79,6 +79,9 @@ HRESULT CLevel_Tutorial::Initialize()
 void CLevel_Tutorial::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+	CGameManager_Tutorial::GetInstance()->Tick(TimeDelta);
+
 }
 
 void CLevel_Tutorial::Late_Tick(_double TimeDelta)

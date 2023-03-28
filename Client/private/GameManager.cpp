@@ -1,5 +1,9 @@
 #include "stdafx.h"
 #include "..\public\GameManager.h"
+#include "JsonStorage.h"
+#include "GameInstance.h"
+
+#include "Canvas_Acquisition.h"
 
 CGameManager* CGameManager::s_GameManager = nullptr;
 
@@ -33,18 +37,28 @@ _uint CGameManager::DestroyInstance()
 
 HRESULT CGameManager::Initialize()
 {
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Acquisition.json");
+	pCanvas = dynamic_cast<CCanvas_Acquisition*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Acquisition", &json));
+	assert(pCanvas != nullptr && "Failed to Clone : CCanvas_Acquisition");
+
 	return S_OK;
 }
 
 void CGameManager::Tick(_double TimeDelta)
 {
+	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
+	{
+		pCanvas->Set_EnemyUI(EEnemyName::EM0400, 5);
+
+	}
 }
 
 void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
 {
-
-
-
+	if (tReport.bDead)
+	{
+		pCanvas->Set_EnemyUI(tReport.eName, tReport.eStat.iLevel);
+	}
 
 }
 

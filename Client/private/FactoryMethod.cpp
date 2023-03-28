@@ -71,6 +71,7 @@
 #include "SAS_Cable.h"
 
 //UI
+
 // Canvas
 #include "Canvas.h"
 #include "Canvas_Item.h"
@@ -88,8 +89,10 @@
 #include "Canvas_Tutorial.h"
 #include "Canvas_BossHp.h"
 #include "Canvas_BossHpMove.h"
-#include "Canvas_BossHpMove.h"
 #include "Canvas_Alarm.h"
+#include "Canvas_Main.h"
+#include "Canvas_ItemWindow.h"
+#include "Canvas_Acquisition.h"
 
 // Default
 #include "DefaultUI.h"
@@ -100,7 +103,7 @@
 #include "SASSkillLightUI.h"
 #include "SASSkillNameUI.h"
 #include "SASSkillFullCircleUI.h"
-// Direve
+// Drive
 #include "Drive_RightDotUI.h"
 #include "Drive_GaugeUI.h"
 // Item
@@ -129,17 +132,34 @@
 #include "Tutorial_CheckUI.h"
 #include "Tutorial_YesNoUI.h"
 #include "Tutorial_TipsUI.h"
-
 //Boss
 #include "Boss_HpUI.h"
 #include "Boss_HpBackUI.h"
 #include "Boss_ShildUI.h"
-
 // Alarm
 #include "NextMapNameUI.h"
 #include "Boss_AppearUI.h"
 #include "Boss_AppearBackUI.h"
 #include "LevelUpUI.h"
+// Main
+#include "FullUI.h"
+#include "Main_FaceUI.h"
+#include "Main_BarUI.h"
+#include "Main_PickUI.h"
+#include "Main_SkillIconUI.h"
+#include "Main_SkillNameUI.h"
+#include "ItemIconUI.h"
+#include "Main_OnMouseUI.h"
+#include "Main_OnMouseColorUI.h"
+#include "Main_BrainMapIconPickUI.h"
+#include "Main_BrainGaugeUI.h"
+#include "Main_BrainUI.h"
+#include "Main_OnePickUI.h"
+// Mouse
+#include "MouseCousorUI.h"
+#include "MouseCousorLightUI.h"
+// Acquisition
+#include "AcquisitionUI.h"
 
 // 3D UI
 #include "EM0320.h"
@@ -497,16 +517,6 @@ HRESULT CFactoryMethod::MakeTriggerPrototypes(ID3D11Device* pDevice, ID3D11Devic
 	return S_OK;
 }
 
-HRESULT CFactoryMethod::MakeUITestPrototypes(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterHP", CMonsterHpUI::Create(pDevice, pContext)));
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterLockon", CMonsterLockonUI::Create(pDevice, pContext)));
-
-	return S_OK;
-}
-
 HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 
@@ -586,6 +596,21 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 			CCanvas_Alarm::Create(pDevice, pContext))))
 			return E_FAIL;
 
+		/* For.Prototype_GameObject_Canvas_Main*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Main"),
+			CCanvas_Main::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_ItemWindow */
+		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_ItemWindow"),
+			CCanvas_ItemWindow::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_Acquisition */
+		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_Acquisition"),
+			CCanvas_Acquisition::Create(pDevice, pContext))))
+			return E_FAIL;
+
+
 	}
 
 	{
@@ -594,11 +619,16 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Default_UI"),
 			CDefaultUI::Create(pDevice, pContext))))
 			return E_FAIL;
-
 		/* For.Prototype_GameObject_Button_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Button_UI"),
 			CButtonUI::Create(pDevice, pContext))))
 			return E_FAIL;
+		/* For.Prototype_GameObject_Main_ItemIconUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("ItemIconUI"),
+			CItemIconUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+
 
 		// Frount_UI -> SAS Skill
 		/* For.Prototype_GameObject_SASSkillIcon_UI */
@@ -761,6 +791,73 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("LevelUpUI"),
 			CLevelUpUI::Create(pDevice, pContext))))
 			return E_FAIL;
+
+		// Main
+		/* For.Prototype_GameObject_MainUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("FullUI"),
+			CFullUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_FaceUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_FaceUI"),
+			CMain_FaceUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_BarUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_BarUI"),
+			CMain_BarUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_PickUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_PickUI"),
+			CMain_PickUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_SkillIconUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_SkillIconUI"),
+			CMain_SkillIconUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_SkillNameUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_SkillNameUI"),
+			CMain_SkillNameUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_OnMouseUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_OnMouseUI"),
+			CMain_OnMouseUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_BrainMapIconPickUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_BrainMapIconPickUI"),
+			CMain_BrainMapIconPickUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_OnMouseColorUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_OnMouseColorUI"),
+			CMain_OnMouseColorUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_BrainGaugeUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_BrainGaugeUI"),
+			CMain_BrainGaugeUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_BrainUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_BrainUI"),
+			CMain_BrainUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_OnePickUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_OnePickUI"),
+			CMain_OnePickUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		// Mouse
+		/* For.Prototype_GameObject_MouseCousorUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("MouseCousorUI"),
+			CMouseCousorUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_MouseCousorUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("MouseCousorLightUI"),
+			CMouseCousorLightUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+		// Acquisition
+		/* For.Prototype_GameObject_AcquisitionUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("AcquisitionUI"),
+			CAcquisitionUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
 
 	}
 

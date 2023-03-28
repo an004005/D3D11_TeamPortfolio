@@ -8,6 +8,8 @@ typedef struct tagEnemyDamageReport
 {
 	class CScarletCharacter* pCauser = nullptr;
 	class CEnemy* pTaker = nullptr;
+	EEnemyName eName;
+	ENEMY_STAT eStat;
 	_uint iTakeDamage = 0;
 	ESASType eAttackSAS = ESASType::SAS_END;
 	EDeBuffType eBeDeBuff = EDeBuffType::DEBUFF_END; // 걸린 상태이상
@@ -48,6 +50,9 @@ public:
 protected:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pContext = nullptr;
+
+private:
+	class CCanvas_Acquisition* pCanvas = { nullptr };
 
 public:
 	static CGameManager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

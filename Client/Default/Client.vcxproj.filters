@@ -1175,6 +1175,12 @@
     <ClInclude Include="..\public\MouseCousorLightUI.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_Acquisition.h">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AcquisitionUI.h">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1941,6 +1947,12 @@
     </ClCompile>
     <ClCompile Include="..\private\MouseCousorLightUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Acquisition.cpp">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AcquisitionUI.cpp">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

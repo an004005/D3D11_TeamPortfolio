@@ -179,6 +179,7 @@
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Params.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Utils.h" />
+    <ClInclude Include="..\public\AcquisitionUI.h" />
     <ClInclude Include="..\public\AIController.h" />
     <ClInclude Include="..\public\AttackNumUI.h" />
     <ClInclude Include="..\public\BackGround.h" />
@@ -205,6 +206,7 @@
     <ClInclude Include="..\public\Camera_Player.h" />
     <ClInclude Include="..\public\CamSpot.h" />
     <ClInclude Include="..\public\Canvas.h" />
+    <ClInclude Include="..\public\Canvas_Acquisition.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h" />
     <ClInclude Include="..\public\Canvas_BrainMap.h" />
     <ClInclude Include="..\public\Canvas_Equipment.h" />
@@ -437,6 +439,7 @@
     <ClInclude Include="Weapon_wp0190.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\AcquisitionUI.cpp" />
     <ClCompile Include="..\private\AIController.cpp" />
     <ClCompile Include="..\private\AttackNumUI.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
@@ -461,6 +464,7 @@
     <ClCompile Include="..\private\BuddyLumi.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\private\Canvas.cpp" />
+    <ClCompile Include="..\private\Canvas_Acquisition.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp" />
     <ClCompile Include="..\private\Canvas_BrainMap.cpp" />
     <ClCompile Include="..\private\Canvas_Equipment.cpp" />
