@@ -1036,8 +1036,11 @@ void CPlayer::SasStateCheck()
 		{
 			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
 			SasGearReleaseEffect();
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			_matrix MatEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatEffect, "Sheath", true);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Dead_Particles"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
 		}
 
 		m_bSASSkillInput[3] = false;
@@ -1050,8 +1053,11 @@ void CPlayer::SasStateCheck()
 		{
 			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
 			SasGearReleaseEffect();
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			_matrix MatEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatEffect, "Sheath", true);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Dead_Particles"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
 		}
 
 		m_bSASSkillInput[1] = false;
@@ -1064,8 +1070,11 @@ void CPlayer::SasStateCheck()
 		{
 			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
 			SasGearReleaseEffect();
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			_matrix MatEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatEffect, "Sheath", true);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Dead_Particles"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
 		}
 
 		m_bSASSkillInput[0] = false;
@@ -1078,8 +1087,11 @@ void CPlayer::SasStateCheck()
 		{
 			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
 			SasGearReleaseEffect();
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			_matrix MatEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatEffect, "Sheath", true);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Dead_Particles"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
 		}
 
 		m_bSASSkillInput[2] = false;
@@ -1113,8 +1125,11 @@ void CPlayer::SasStateCheck()
 		{
 			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
 			SasGearReleaseEffect();
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			_matrix MatEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatEffect, "Sheath", true);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Dead_Particles"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
 		}
 
 		CGameInstance::GetInstance()->ResetDefaultTimeRatio();
@@ -1128,13 +1143,12 @@ void CPlayer::SasStateCheck()
 		{
 			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
 			SasGearReleaseEffect();
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			_matrix MatEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatEffect, "Sheath", true);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Dead_Particles"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
 		}
-
-		CGameInstance::GetInstance()->ResetDefaultTimeRatio();
-		m_pSuperSpeedPostVFX->Active(false);
-		m_pTrail->SetActive(false);
 	}
 
 
@@ -5253,7 +5267,7 @@ _bool CPlayer::Charge(_uint iNum, _float fCharge)
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Default_Attack_Charge_Effect_01"), LAYER_PLAYEREFFECT)->Start_Attach(this, "RightWeapon");
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Charge_White_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "RightWeapon");
 
-			if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_NOT)
+		/*	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_NOT)
 			{
 				_matrix EffectPivot = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(XMConvertToRadians(-90.f));
 				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Default_Charge_1_MeshParticle"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
@@ -5262,7 +5276,7 @@ _bool CPlayer::Charge(_uint iNum, _float fCharge)
 			{
 				_matrix EffectPivot = XMMatrixScaling(5.f, 5.f, 5.f) * XMMatrixRotationX(XMConvertToRadians(-90.f));
 				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Fire_Charge_1_MeshParticle"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
-			}
+			}*/
 
 		}
 		if ((1 == iNum) && fCharge <= m_fCharge[iNum])
@@ -5273,12 +5287,14 @@ _bool CPlayer::Charge(_uint iNum, _float fCharge)
 			if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_NOT)
 			{
 				_matrix EffectPivot = XMMatrixScaling(6.f, 6.f, 6.f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(-20.f)) * XMMatrixTranslation(0.f, 0.4f, -0.5f);
-				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Default_Charge_2_MeshParticle"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
+				m_pChargeParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Default_Charge_2_MeshParticle"), LAYER_PLAYEREFFECT);
+				m_pChargeParticle->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
 			}
 			else if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 			{
 				_matrix EffectPivot = XMMatrixScaling(5.f, 5.f, 5.f) * XMMatrixRotationX(XMConvertToRadians(-90.f));
-				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Fire_Charge_2_MeshParticle"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
+				m_pChargeParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Fire_Charge_2_MeshParticle"), LAYER_PLAYEREFFECT);
+				m_pChargeParticle->Start_AttachPivot(this, EffectPivot, "RightWeapon", true, false);
 			}
 		}
 
@@ -5937,6 +5953,14 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 
 	//if (m_bLeftClick)
 	//	m_fKineticCombo_Slash = 10.f;
+
+	if (m_pASM->GetCurStateName().find("ATTACK_CHARGE_LOOP") == string::npos)
+	{
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pChargeParticle))
+		{
+			m_pChargeParticle->Delete_Particles();
+		}
+	}
 
 	m_vCamLook = pGameInstance->Get_CamLook();
 }
@@ -6930,40 +6954,40 @@ void CPlayer::SasGearEffect()
 
 void CPlayer::SasGearReleaseEffect()
 {
-	//_float4x4 Pivot01 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
-	//	* XMMatrixRotationX(XMConvertToRadians(-180.f))
-	//	* XMMatrixRotationZ(XMConvertToRadians(-180.f))
-	//	* XMMatrixTranslation(0.17f, 0.09f, 0.2f);
-	//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
-	//	->Start_AttachPivot(this, Pivot01, "Sheath", true, true);
+	_float4x4 Pivot01 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
+		* XMMatrixRotationX(XMConvertToRadians(-180.f))
+		* XMMatrixRotationZ(XMConvertToRadians(-180.f))
+		* XMMatrixTranslation(0.17f, 0.09f, 0.2f);
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
+		->Start_AttachPivot(this, Pivot01, "Sheath", true, true);
 
-	//_float4x4 Pivot02 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
-	//	* XMMatrixRotationX(XMConvertToRadians(-180.f))
-	//	* XMMatrixRotationZ(XMConvertToRadians(-180.f))
-	//	* XMMatrixTranslation(-0.17f, 0.1f, 0.2f);
-	//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
-	//	->Start_AttachPivot(this, Pivot02, "Sheath", true, true);
+	_float4x4 Pivot02 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
+		* XMMatrixRotationX(XMConvertToRadians(-180.f))
+		* XMMatrixRotationZ(XMConvertToRadians(-180.f))
+		* XMMatrixTranslation(-0.17f, 0.1f, 0.2f);
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
+		->Start_AttachPivot(this, Pivot02, "Sheath", true, true);
 
-	//_float4x4 Pivot03 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
-	//	* XMMatrixRotationX(XMConvertToRadians(-180.f))
-	//	* XMMatrixRotationZ(XMConvertToRadians(-180.f))
-	//	* XMMatrixTranslation(0.1f, -0.1f, 0.2f);
-	//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
-	//	->Start_AttachPivot(this, Pivot03, "Sheath", true, true);
+	_float4x4 Pivot03 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
+		* XMMatrixRotationX(XMConvertToRadians(-180.f))
+		* XMMatrixRotationZ(XMConvertToRadians(-180.f))
+		* XMMatrixTranslation(0.1f, -0.1f, 0.2f);
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
+		->Start_AttachPivot(this, Pivot03, "Sheath", true, true);
 
-	//_float4x4 Pivot04 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
-	//	* XMMatrixRotationX(XMConvertToRadians(-180.f))
-	//	* XMMatrixRotationZ(XMConvertToRadians(-180.f))
-	//	* XMMatrixTranslation(0.08f, -0.3f, 0.08f);
-	//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
-	//	->Start_AttachPivot(this, Pivot04, "Sheath", true, true);
+	_float4x4 Pivot04 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
+		* XMMatrixRotationX(XMConvertToRadians(-180.f))
+		* XMMatrixRotationZ(XMConvertToRadians(-180.f))
+		* XMMatrixTranslation(0.08f, -0.3f, 0.08f);
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
+		->Start_AttachPivot(this, Pivot04, "Sheath", true, true);
 
-	//_float4x4 Pivot05 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
-	//	* XMMatrixRotationX(XMConvertToRadians(-180.f))
-	//	* XMMatrixRotationZ(XMConvertToRadians(-180.f))
-	//	* XMMatrixTranslation(-0.172f, -0.274f, 0.045f);
-	//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
-	//	->Start_AttachPivot(this, Pivot05, "Sheath", true, true);
+	_float4x4 Pivot05 = XMMatrixScaling(0.1f, 0.1f, 0.1f)
+		* XMMatrixRotationX(XMConvertToRadians(-180.f))
+		* XMMatrixRotationZ(XMConvertToRadians(-180.f))
+		* XMMatrixTranslation(-0.172f, -0.274f, 0.045f);
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Dead_Sas_Gear"), LAYER_PLAYEREFFECT)
+		->Start_AttachPivot(this, Pivot05, "Sheath", true, true);
 }
 
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

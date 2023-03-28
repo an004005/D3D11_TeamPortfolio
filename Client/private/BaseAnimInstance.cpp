@@ -1234,7 +1234,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				 .Duration(0.1f).Priority(1)
 				
 				 .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_ATTACK_03", "CHARGE_ATTACK_03")
-				 .Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(2, 2.5f)); })
+				 .Predicator([&]() { return (static_cast<CPlayer*>(m_pTargetObject)->Charge(2, 1.5f)) && (!m_bCharge); })
 				 .Duration(0.1f).Priority(0)
 				
 				 .AddTransition("ATTACK_CHARGE_LOOP to CHARGE_CANCEL", "CHARGE_CANCEL")

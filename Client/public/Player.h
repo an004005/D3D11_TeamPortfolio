@@ -655,6 +655,7 @@ private:
 
 private:
 	CParticleGroup*	m_pSwordParticle = nullptr;
+	CParticleGroup* m_pChargeParticle = nullptr;
 
 private:
 	vector<wstring>	m_vecRandomLandingDustName;
