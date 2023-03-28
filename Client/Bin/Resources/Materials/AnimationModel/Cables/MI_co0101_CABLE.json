@@ -10,16 +10,17 @@
             ]
         ],
         "Float4x4s": [],
-        "Floats": [0.0],
+        "Floats": [0.0, 0.0, 0.0, 0.0],
         "Ints": [
             0, 0
         ],
-        "Pass": 1,
+        "Pass": 9,
         "Textures": [
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Cables/Texture/T_co0100_cable_COL.png\u0000",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Cables/Texture/T_co0100_cable_NML.png\u0000",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Cables/Texture/T_co0100_cable_AMB.png\u0000",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Cables/Texture/T_co0100_cable_CTL.png\u0000"
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Cables/Texture/T_co0100_cable_CTL.png\u0000",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Cables/Texture/T_ef_scl_noi_012.png\u0000"
         ]
     },
     "ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"

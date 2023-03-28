@@ -417,6 +417,59 @@ PS_OUT_NONLIGHT PS_SuperSpeedTrail_8(PS_IN In)
 	return Out;
 }
 
+// g_float_0 : 케이블 삭제 디솔브 (0 디폴트, 1 사라짐)
+// g_float_1 : sas 붉은 색 디솔브
+// g_float_2 : 텔레포트 디솔브
+// g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
+PS_OUT PS_SAS_CABLE_9(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float fTeleportDissolve = g_float_2;
+	if (fTeleportDissolve > 0.f)
+	{
+		if (saturate(g_scl_noise_030.Sample(LinearSampler, In.vTexUV * 2.f).g + 0.2f) <= fTeleportDissolve)
+			discard;
+	}
+
+	float fDissolve = g_float_0;
+	float fNoiseDissolve = g_tex_4.Sample(LinearSampler, In.vTexUV * 2.f).r;
+	if (fNoiseDissolve < fDissolve)
+		discard;
+
+
+	float fEmissive = 0.f;
+	float flags = SHADER_TOON;
+
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vNormal = NormalPacking(In);
+	Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	Out.vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
+	Out.vOutline = g_vec4_0;
+
+
+	float fRedDissolve = g_float_1;
+	// if (In.vTexUV.y <= fRedDissolve)
+	// 	fRedDissolve = 1.f;
+	// else
+	// 	fRedDissolve = 0.f;
+
+	if (Out.vCTL.a <= 0.001f)
+	{
+		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, float3(0.8f, 0.35f, 0.f), fRedDissolve);
+		fEmissive += 1.f;
+	}
+	else
+		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_CABLE_RED, fRedDissolve);
+
+
+
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
+	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, fTeleportDissolve);
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0
@@ -543,6 +596,20 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SuperSpeedTrail_8();
+	}
+
+	// 9
+	pass SAS_Cable_8
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SAS_CABLE_9();
 	}
 }
 

@@ -280,7 +280,9 @@ void CSAS_Portrait::Tick(_double TimeDelta)
 	// 	// Start_SAS(ESASType::SAS_HARDBODY);
 	// 	// Start_SAS(ESASType::SAS_TELEPORT);
 	// 	// Start_SAS(ESASType::SAS_ELETRIC);
-	// 	Start_SAS(ESASType::SAS_SUPERSPEED);
+	// 	// Start_SAS(ESASType::SAS_FIRE);
+	// 	// Start_SAS(ESASType::SAS_PENETRATE);
+	// 	// Start_SAS(ESASType::SAS_SUPERSPEED);
 	// }
 	 // if (CGameInstance::GetInstance()->KeyDown(DIK_9))
 	 // {

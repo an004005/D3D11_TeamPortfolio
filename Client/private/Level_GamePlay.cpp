@@ -25,7 +25,7 @@
 #include "Imgui_CameraManager.h"
 #include "Imgui_LightManager.h"
 
-// #define ADD_PLAYER
+#define ADD_PLAYER
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -149,10 +149,10 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 	// player
 	{
 	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
 	}
 #endif
 
-	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
 	
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
 

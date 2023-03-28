@@ -2,6 +2,10 @@
 #include "..\public\PxBone.h"
 #include "PhysX_Manager.h"
 
+// cable 101 기준 적절한 값
+_float CPxBone::fDensity = 10.f;
+_float CPxBone::fTolerance = 0.01f;
+_float CPxBone::fAngle = 20.f;
 
 HRESULT CPxBone::Initialize(const Json& jBone, CBone* pParent)
 {
@@ -24,7 +28,10 @@ void CPxBone::CreateJointsRecur(physx::PxRigidDynamic* pParentActor, const _floa
 	auto pMtrl = CPhysX_Manager::GetInstance()->FindMaterial("SmallBounce");
 	m_pActor = pPhysics->createRigidDynamic(physx::PxTransform{ CPhysXUtils::ToFloat4x4(_float4x4::Identity) });
 	m_pActor->setGlobalPose(physx::PxTransform{ CPhysXUtils::ToFloat4x4(NoScaleBoneMatrix) });
-	physx::PxRigidBodyExt::updateMassAndInertia(*m_pActor, 10.f);
+	if (m_Children.empty())
+		physx::PxRigidBodyExt::updateMassAndInertia(*m_pActor, fDensity * 5.f);
+	else
+		physx::PxRigidBodyExt::updateMassAndInertia(*m_pActor, fDensity);
 
 
 	if (pParentActor)
@@ -59,15 +66,15 @@ void CPxBone::CreateJointsRecur(physx::PxRigidDynamic* pParentActor, const _floa
 		{
 			auto joint = physx::PxD6JointCreate(*pPhysics, pParentActor, LocalFrame0, m_pActor, LocalFrame1);
 			joint->setConstraintFlag(physx::PxConstraintFlag::ePROJECTION, true);
-			joint->setProjectionLinearTolerance(0.01f);
+			joint->setProjectionLinearTolerance(fTolerance);
 			// joint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eLIMITED);
 			// joint->setTwistLimit(physx::PxJointAngularLimitPair(-XMConvertToRadians(20.f), XMConvertToRadians(20.f), 0.01f));
 
 			joint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eLIMITED);
 			joint->setMotion(physx::PxD6Axis::eSWING2, physx::PxD6Motion::eLIMITED);
-			joint->setSwingLimit(physx::PxJointLimitCone(XMConvertToRadians(30.f), XMConvertToRadians(30.f), 0.01f));
+			joint->setSwingLimit(physx::PxJointLimitCone(XMConvertToRadians(fAngle), XMConvertToRadians(fAngle), 0.01f));
 
-			joint->setDistanceLimit(physx::PxJointLinearLimit(0.f, physx::PxSpring(1.f, 1.f)));
+			joint->setDistanceLimit(physx::PxJointLinearLimit(0.f, physx::PxSpring(0.f, 0.f)));
 		}
 	}
 	else
