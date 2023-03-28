@@ -262,13 +262,21 @@ void CPlayer::Tick(_double TimeDelta)
 	{
 		Enemy_Targeting(false);
 	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_E))
+	if (CGameInstance::GetInstance()->KeyPressing(DIK_E))
 	{
-
+		CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.1f);
 	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_R))
+	if (CGameInstance::GetInstance()->KeyPressing(DIK_NUMPAD1))
 	{
-
+		CPlayerInfoManager::GetInstance()->Camera_Axis_Sliding({1.f, 0.f, 0.f, 0.f}, 0.1f);
+	}
+	if (CGameInstance::GetInstance()->KeyPressing(DIK_NUMPAD2))
+	{
+		CPlayerInfoManager::GetInstance()->Camera_Axis_Sliding({ 0.f, 1.f, 0.f, 0.f }, 0.1f);
+	}
+	if (CGameInstance::GetInstance()->KeyPressing(DIK_NUMPAD3))
+	{
+		CPlayerInfoManager::GetInstance()->Camera_Axis_Sliding({ 0.f, 0.f, 1.f, 0.f }, 0.1f);
 	}
 
 	 if (m_pPlayerCam->IsMainCamera())
@@ -456,6 +464,8 @@ void CPlayer::Tick(_double TimeDelta)
 		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
 		m_DamageDesc.m_iDamageType = EAttackType::ATK_TO_AIR;
 	}
+
+	CPlayerInfoManager::GetInstance()->Set_PlayerWorldMatrix(m_pTransformCom->Get_WorldMatrix());
 
 	/*if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
@@ -1048,7 +1058,11 @@ void CPlayer::SasStateCheck()
 		}
 
 		m_bSASSkillInput[3] = false;
-		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSwordParticle)) m_pSwordParticle->SetDelete();
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSwordParticle))
+		{
+			m_pSwordParticle->SetDelete();
+			m_pSwordParticle = nullptr;
+		}
 	}
 
 	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_PENETRATE))
@@ -5964,6 +5978,7 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pChargeParticle))
 		{
 			m_pChargeParticle->Delete_Particles();
+			m_pChargeParticle = nullptr;
 		}
 	}
 

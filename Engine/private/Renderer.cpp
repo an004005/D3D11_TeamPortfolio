@@ -70,8 +70,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 {
 	_float fGamma = CHDR::GetInstance()->GetGamma();
 	m_pShader->Set_RawValue("g_Gamma", &fGamma, sizeof(_float));
-	if (false == CLight_Manager::GetInstance()->IsShadowCamOn())
-		m_bShadow = false;
+	m_bShadow = CLight_Manager::GetInstance()->IsShadowCamOn();
 
 	m_pTarget_Manager->ClearTargets();
 
@@ -413,8 +412,11 @@ HRESULT CRenderer::Render_Priority()
 HRESULT CRenderer::Render_ShadowDepth()
 {
 #ifdef _DEBUG
+	static _bool bShadowRenderForce = true;
 	if (CGameInstance::GetInstance()->KeyDown(DIK_F8))
-		m_bShadow = !m_bShadow;
+		bShadowRenderForce = !bShadowRenderForce;
+
+	m_bShadow = bShadowRenderForce;
 #endif
 
 	if (m_bShadow == false)
