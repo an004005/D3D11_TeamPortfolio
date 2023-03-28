@@ -1,0 +1,55 @@
+{
+    "BillBoardType": 0,
+    "BufferProtoTag": "Prototype_Component_VIBuffer_Rect",
+    "Children": [
+        [
+            0.38782984018325806,
+            0.851617157459259,
+            -0.3526093661785126,
+            0.0,
+            -4.038212864543311e-06,
+            0.3825533390045166,
+            0.9239329695701599,
+            0.0,
+            0.9217289686203003,
+            -0.35832729935646057,
+            0.14836901426315308,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    ],
+    "ModelFolderDir": "",
+    "ModelProtoTag": "../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_07.static_model",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.12109506130218506,
+                0.00732542434707284,
+                0.0,
+                1.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [
+            1.0,
+            6.0,
+            1.0
+        ],
+        "Ints": [],
+        "Pass": 22,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\Decal_Line_Reverse_A.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_scl_noi_048.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxModel_VFX",
+    "bBillBoard": false,
+    "bDecal": false,
+    "bModelSprite": false,
+    "bNormal": false,
+    "bUseDepth": false
+}
