@@ -44,13 +44,13 @@ public:
 
 private:
 	_matrix CalcSocketMatrix(_int iIdx, _fmatrix TargetWorldMatrix);
-	_matrix CalcEffSocketMatrix(_int iIdx, _fmatrix TargetWorldMatrix);
-
 
 private:
 	array<CPxModel*, CABLE_CNT> m_CableModels{};
 	array<_float4x4, CABLE_CNT> m_CablePivots{};
-	array<_float4x4, CABLE_CNT> m_EffectPivots{};
+	array<class CParticleGroup*, CABLE_CNT> m_TrailParticles{};
+
+
 	CAnimation* m_pWatchAnim = nullptr;
 
 	CTransform* m_pTargetTransform = nullptr;
@@ -62,8 +62,8 @@ private:
 	_float m_fTimeBeforePhysX = 0.5f;
 	_float m_fDisappearTime = 0.2f;
 	_float m_fMaxDisappearTime = 0.2f;
-	_float m_fRedDissolveTime = 25.f;
-	_float m_fMaxRedDissolveTime = 25.f;
+	_float m_fRedDissolveTime = 50.f;
+	_float m_fMaxRedDissolveTime = 50.f;
 
 	string socket;
 

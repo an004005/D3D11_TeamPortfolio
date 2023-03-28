@@ -715,6 +715,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_VFX_UI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonModel.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\SSAO.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

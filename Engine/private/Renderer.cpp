@@ -15,6 +15,7 @@
 #include "Light_Manager.h"
 #include "PhysX_Manager.h"
 #include "JsonStorage.h"
+#include "SSAOManager.h"
 
 
 CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -84,6 +85,14 @@ HRESULT CRenderer::Draw_RenderGroup()
 		return E_FAIL;
 	if (FAILED(Render_NonAlphaBlend()))
 		return E_FAIL;
+
+	if (CGameInstance::GetInstance()->GetMainCam())
+	{
+		CSSAOManager::GetInstance()->Compute(
+			m_pTarget_Manager->GetTarget(L"Target_Depth")->Get_SRV(),
+			m_pTarget_Manager->GetTarget(L"Target_Normal")->Get_SRV());
+	}
+
 	if (FAILED(Render_LightAcc()))
 		return E_FAIL;
 
@@ -410,6 +419,12 @@ void CRenderer::Imgui_RenderOtherWindow()
 	ImGui::Checkbox("Visible Targets", &m_bVisibleTargets);
 #endif
 
+	_int iSampleRadius = CSSAOManager::GetInstance()->GetSampleRadius();
+	_float fRadius = CSSAOManager::GetInstance()->GetRadius();
+	ImGui::InputInt("SSASSampleRadius(max64)", &iSampleRadius);
+	ImGui::InputFloat("Radius(max100)", &fRadius);
+	CSSAOManager::GetInstance()->SetParameters(iSampleRadius, fRadius);
+
 	ImGui::Checkbox("bFog", &m_bFog);
 	ImGui::ColorEdit4("FogColor", (float*)&m_tFogDesc.vFogColor, ImGuiColorEditFlags_PickerHueWheel);
 	ImGui::ColorEdit4("FogHighlightColor", (float*)&m_tFogDesc.vHighlightColor, ImGuiColorEditFlags_PickerHueWheel);
@@ -586,6 +601,9 @@ HRESULT CRenderer::Render_LightAcc()
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_CTLTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_CTL")))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Set_ShaderResourceView("g_AOTexture", CSSAOManager::GetInstance()->GetSSAOSRV())))
 		return E_FAIL;
 	
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();

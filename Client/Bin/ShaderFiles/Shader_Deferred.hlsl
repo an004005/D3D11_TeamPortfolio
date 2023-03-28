@@ -39,6 +39,8 @@ texture2D		g_OutlineFlagTexture;
 TextureCube     g_IrradianceTexture;
 TextureCube     g_RadianceTexture;
 
+Texture2D<float> g_AOTexture;
+
 float3			g_vFogColor;
 float3			g_vHighlightColor;
 float3			g_vDirToSun;
@@ -176,7 +178,9 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 
 	    const float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz); // view vector
 
-		Out.vShade.rgb = AO * LightSurface(V, vNormal.xyz, g_vLightDiffuse.xyz, g_vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
+		float fSSAO = g_AOTexture.Sample(LinearSampler, In.vTexUV);
+
+		Out.vShade.rgb = fSSAO * LightSurface(V, vNormal.xyz, g_vLightDiffuse.xyz, g_vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
 		Out.vShade.a = 1.f;
 
 		return Out;
@@ -192,7 +196,9 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 		fDiff = max(vCTL.r * 2.f , min(vCTL.g, fDiff));
 		fDiff *= vCTL.b;
 
-		Out.vShade = g_vLightDiffuse * saturate(fDiff);
+		float fSSAO = g_AOTexture.Sample(LinearSampler, In.vTexUV);
+
+		Out.vShade = g_vLightDiffuse * saturate(fDiff) * fSSAO;
 		Out.vShade.a = 1.f;
 		
 		// vector		vLook = vWorldPos - g_vCamPosition;
