@@ -14,6 +14,8 @@ CGameManager_Tutorial::CGameManager_Tutorial(ID3D11Device* pDevice, ID3D11Device
 
 HRESULT CGameManager_Tutorial::Initialize()
 {
+	__super::Initialize();
+
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Tutorial.json");
 	m_pCanvas_Tutorial = dynamic_cast<CCanvas_Tutorial*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_FRONTUI, L"Canvas_Tutorial", &json));
 	Assert(m_pCanvas_Tutorial != nullptr, "Failed to Clone : m_pCanvas_Tutorial");

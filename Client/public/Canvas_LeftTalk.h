@@ -5,11 +5,19 @@
 
 BEGIN(Client)
 
-class CCanvas_Acquisition : public CCanvas
+typedef struct tagTalkInfo
+{
+	_float2	fFace = { 0.0f, 0.0f };
+	wstring wsTalk0 = L"";
+	wstring wsTalk1 = L"";
+
+}TALKINFO;
+
+class CCanvas_LeftTalk : public CCanvas
 {
 protected:
-	CCanvas_Acquisition(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CCanvas_Acquisition(const CCanvas_Acquisition& rhs);
+	CCanvas_LeftTalk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCanvas_LeftTalk(const CCanvas_LeftTalk& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -23,21 +31,18 @@ public:
 	virtual void   LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_EnemyUI(const EEnemyName eEnemyName, const _uint iLevel);
+	void	Set_Talk(const size_t iIndex);
+
+	void	TalkInfo_Initialize();
 
 private:
-	void	EnemyUIAdd_Tick(const _double & TimeDelta);
+	vector<TALKINFO>	m_vecTalkInfo;
 
-	void	AllPositionChange();
-	void	DeleteUI();
-
-private:
-	list<class CAcquisitionUI*> m_AcquisitionUIList;
+	_bool	m_bTalk = { false };
+	_double	m_dTalk_TimeAcc = { 0.0 };
 	
-	_double	m_dEnemyClone_TimeAcc = { 0.0 };
-
 public:
-	static CCanvas_Acquisition* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CCanvas_LeftTalk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

@@ -126,7 +126,7 @@ HRESULT CLevel_UI::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
 	//CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
 	//CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
-	//CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 
 	CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext);
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
@@ -637,6 +637,10 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/MouseCousorUI.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MouseCousorUI", &json));
 
+	// Ãß°¡
+	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_LeftTalk", &json));
+	
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
 	//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);

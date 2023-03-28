@@ -1,12 +1,14 @@
 {
-    "ObjectTag": "Acquisition",
-    "Pivot": 4,
-    "PositionX": -167.0,
-    "PositionY": -80.0,
+    "ChildrenUI": [
+    ],
+    "ObjectTag": "Canvas_Acquisition",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
     "Priority": 0,
-    "Prototype_GameObject": "AcquisitionUI\u0000",
-    "ScaleX": 1.0,
-    "ScaleY": 1.0,
+    "Prototype_GameObject": "Canvas_Acquisition\u0000",
+    "ScaleX": 0.5,
+    "ScaleY": 0.5,
     "ShaderParams": {
         "Float2s": [],
         "Float4s": [],
@@ -14,28 +16,26 @@
         "Floats": [],
         "Ints": [],
         "Pass": 0,
-        "Textures": [
-            "..\\Bin\\Resources\\UI\\Short_UI\\AcquisitionUI.png\u0000"
-        ]
+        "Textures": []
     },
-    "SizeX": 334.0,
-    "SizeY": 28.0,
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
     "Transform": {
         "WorldMatrix": [
-            334.0,
             0.0,
             0.0,
             0.0,
             0.0,
-            28.0,
+            0.0,
+            0.0,
             0.0,
             0.0,
             0.0,
             0.0,
             1.0,
             0.0,
-            633.0,
-            -80.0,
+            0.0,
+            0.0,
             0.0,
             1.0
         ]

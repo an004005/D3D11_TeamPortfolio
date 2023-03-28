@@ -93,6 +93,7 @@
 #include "Canvas_Main.h"
 #include "Canvas_ItemWindow.h"
 #include "Canvas_Acquisition.h"
+#include "Canvas_LeftTalk.h"
 
 // Default
 #include "DefaultUI.h"
@@ -160,6 +161,9 @@
 #include "MouseCousorLightUI.h"
 // Acquisition
 #include "AcquisitionUI.h"
+// Left Talk
+#include "Talk_FaceUI.h"
+#include "Talk_BackGroundUI.h"
 
 // 3D UI
 #include "EM0320.h"
@@ -610,6 +614,12 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 			CCanvas_Acquisition::Create(pDevice, pContext))))
 			return E_FAIL;
 
+		/* For.Prototype_GameObject_Canvas_LeftTalk */
+		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_LeftTalk"),
+			CCanvas_LeftTalk::Create(pDevice, pContext))))
+			return E_FAIL;
+
+
 
 	}
 
@@ -858,6 +868,15 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 			CAcquisitionUI::Create(pDevice, pContext))))
 			return E_FAIL;
 
+		// Left Talk
+		/* For.Prototype_GameObject_Talk_FaceUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Talk_FaceUI"),
+			CTalk_FaceUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Talk_BackGroundUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Talk_BackGroundUI"),
+			CTalk_BackGroundUI::Create(pDevice, pContext))))
+			return E_FAIL;
 
 	}
 

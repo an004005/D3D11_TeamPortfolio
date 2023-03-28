@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "..\public\Main_FaceUI.h"
-#include "GameInstance.h"
 
 CMain_FaceUI::CMain_FaceUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -47,39 +46,6 @@ void CMain_FaceUI::Tick(_double TimeDelta)
 		m_tParams.Float2s[1].y = 11;
 		m_tParams.Float2s[0].y = m_fFaceNum;
 	}
-}
-
-void CMain_FaceUI::Late_Tick(_double TimeDelta)
-{
-	if (false == m_bVisible) return;
-	
-	__super::Late_Tick(TimeDelta);
-}
-
-HRESULT CMain_FaceUI::Render()
-{
-	if (FAILED(__super::Render()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-void CMain_FaceUI::Imgui_RenderProperty()
-{
-	CUI::Imgui_RenderProperty();
-
-}
-
-void CMain_FaceUI::SaveToJson(Json & json)
-{
-	CUI::SaveToJson(json);
-
-}
-
-void CMain_FaceUI::LoadFromJson(const Json & json)
-{
-	CUI::LoadFromJson(json);
-
 }
 
 void CMain_FaceUI::Set_Face(const _float & fFace)

@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 
 #include "Canvas_Acquisition.h"
+#include "Canvas_LeftTalk.h"
 
 CGameManager* CGameManager::s_GameManager = nullptr;
 
@@ -37,9 +38,15 @@ _uint CGameManager::DestroyInstance()
 
 HRESULT CGameManager::Initialize()
 {
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Acquisition.json");
-	pCanvas = dynamic_cast<CCanvas_Acquisition*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Acquisition", &json));
-	assert(pCanvas != nullptr && "Failed to Clone : CCanvas_Acquisition");
+	pCanvas_Acquisition = dynamic_cast<CCanvas_Acquisition*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Acquisition", &json));
+	assert(pCanvas_Acquisition != nullptr && "Failed to Clone : Canvas_Acquisition");
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");
+	pCanvas_LeftTalk = dynamic_cast<CCanvas_LeftTalk*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_LeftTalk", &json));
+	assert(pCanvas_LeftTalk != nullptr && "Failed to Clone : Canvas_LeftTalk");
 
 	return S_OK;
 }
@@ -48,8 +55,8 @@ void CGameManager::Tick(_double TimeDelta)
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 	{
-		pCanvas->Set_EnemyUI(EEnemyName::EM0400, 5);
-
+		pCanvas_Acquisition->Set_EnemyUI(EEnemyName::EM0400, 5);
+		pCanvas_LeftTalk->Set_Talk(0);
 	}
 }
 
@@ -57,7 +64,7 @@ void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
 {
 	if (tReport.bDead)
 	{
-		pCanvas->Set_EnemyUI(tReport.eName, tReport.eStat.iLevel);
+		pCanvas_Acquisition->Set_EnemyUI(tReport.eName, tReport.eStat.iLevel);
 	}
 
 }

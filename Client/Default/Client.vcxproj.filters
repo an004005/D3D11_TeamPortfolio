@@ -382,6 +382,9 @@
     <Filter Include="02.GameObjects\Enemy\EMBullet\ElectricBullet">
       <UniqueIdentifier>{53e11f2c-66d8-4166-948c-aeb499f89c39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\Short">
+      <UniqueIdentifier>{13c84b28-6101-40b9-8629-d92de65f760f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1176,10 +1179,19 @@
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_Acquisition.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short</Filter>
     </ClInclude>
     <ClInclude Include="..\public\AcquisitionUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_LeftTalk.h">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Talk_BackGroundUI.h">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Talk_FaceUI.h">
+      <Filter>02.GameObjects\UI\Short</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1580,9 +1592,6 @@
     <ClCompile Include="..\private\Boss_ShildUI.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_Alarm.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Monster.cpp">
       <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
@@ -1948,11 +1957,23 @@
     <ClCompile Include="..\private\MouseCousorLightUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_Acquisition.cpp">
+    <ClCompile Include="..\private\Canvas_Alarm.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Canvas_Acquisition.cpp">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\AcquisitionUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_LeftTalk.cpp">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Talk_BackGroundUI.cpp">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Talk_FaceUI.cpp">
+      <Filter>02.GameObjects\UI\Short</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

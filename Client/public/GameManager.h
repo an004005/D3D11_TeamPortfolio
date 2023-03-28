@@ -52,7 +52,8 @@ protected:
 	ID3D11DeviceContext*	m_pContext = nullptr;
 
 private:
-	class CCanvas_Acquisition* pCanvas = { nullptr };
+	class CCanvas_Acquisition* pCanvas_Acquisition = { nullptr };
+	class CCanvas_LeftTalk* pCanvas_LeftTalk = { nullptr };
 
 public:
 	static CGameManager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

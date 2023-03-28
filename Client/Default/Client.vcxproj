@@ -211,6 +211,7 @@
     <ClInclude Include="..\public\Canvas_BrainMap.h" />
     <ClInclude Include="..\public\Canvas_Equipment.h" />
     <ClInclude Include="..\public\Canvas_ItemWindow.h" />
+    <ClInclude Include="..\public\Canvas_LeftTalk.h" />
     <ClInclude Include="..\public\Canvas_Main.h" />
     <ClInclude Include="..\public\Canvas_BossHp.h" />
     <ClInclude Include="..\public\Canvas_BossHpMove.h" />
@@ -411,6 +412,8 @@
     <ClInclude Include="..\public\Special_Train.h" />
     <ClInclude Include="..\public\SpawnTrigger.h" />
     <ClInclude Include="..\public\SuperSpeedTrail.h" />
+    <ClInclude Include="..\public\Talk_BackGroundUI.h" />
+    <ClInclude Include="..\public\Talk_FaceUI.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\TestCamera.h" />
     <ClInclude Include="..\public\TestTarget.h" />
@@ -469,6 +472,7 @@
     <ClCompile Include="..\private\Canvas_BrainMap.cpp" />
     <ClCompile Include="..\private\Canvas_Equipment.cpp" />
     <ClCompile Include="..\private\Canvas_ItemWindow.cpp" />
+    <ClCompile Include="..\private\Canvas_LeftTalk.cpp" />
     <ClCompile Include="..\private\Canvas_Main.cpp" />
     <ClCompile Include="..\private\Canvas_BossHp.cpp" />
     <ClCompile Include="..\private\Canvas_BossHpMove.cpp" />
@@ -670,6 +674,8 @@
     <ClCompile Include="..\private\Special_Train.cpp" />
     <ClCompile Include="..\private\SpawnTrigger.cpp" />
     <ClCompile Include="..\private\SuperSpeedTrail.cpp" />
+    <ClCompile Include="..\private\Talk_BackGroundUI.cpp" />
+    <ClCompile Include="..\private\Talk_FaceUI.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\TestCamera.cpp" />
     <ClCompile Include="..\private\TestTarget.cpp" />

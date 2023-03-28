@@ -39,7 +39,7 @@ void CAcquisitionUI::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 
 	m_dDead_TimeAcc += TimeDelta;
-	if (0.3 > m_dDead_TimeAcc)
+	if (0.5 > m_dDead_TimeAcc)
 	{
 		std::random_device rd;
 		std::mt19937 g(rd());

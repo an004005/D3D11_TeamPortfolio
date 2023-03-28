@@ -350,7 +350,6 @@ VS_OUT VS_UVCut(VS_IN In)	// → 13
 }
 
 // g_int_0 : [0] 이미지 색상 사용, [1] 내가 지정한 색상 사용
-// g_vec4_0 : 변경할 색상과 알파값
 PS_OUT PS_Alpha_Color(PS_IN In)	// → 13
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -936,9 +935,9 @@ PS_OUT PS_Alpha_Color2(PS_IN In)	// → 32
 	PS_OUT			Out = (PS_OUT)0;
 
 	if (g_int_0)
-	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV) * g_vec4_0;
+		Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV) * g_vec4_0;
 	else
-	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+		Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
 
 	return Out;
 }
