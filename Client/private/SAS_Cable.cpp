@@ -5,6 +5,7 @@
 #include "Animation.h"
 #include "ImguiUtils.h"
 #include "VFX_Manager.h"
+#include "Material.h"
 
 CSAS_Cable::CSAS_Cable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -198,6 +199,17 @@ void CSAS_Cable::UnEquipCable()
 		m_CableModels[i]->ActivatePhysX(false);
 	}
 	m_bActive = false;
+}
+
+void CSAS_Cable::CableTeleportDissolve(_float fRange)
+{
+	for (auto& iter : m_CableModels)
+	{
+		for (auto pMtrl : iter->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[2] = fRange;
+		}
+	}
 }
 
 _bool CSAS_Cable::GetIsActive()

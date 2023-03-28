@@ -99,6 +99,21 @@
             "Layer": "Layer_Kinetic",
             "JsonPath": "../Bin/Resources/Objects/KineticSpecial_DropObject_Single.json",
             "ProtoTag": "Prototype_GameObject_Special_DropObject_Single"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_TankLorry_Head.json",
+            "ProtoTag": "Prototype_GameObject_Special_TankLorry_Head"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_TankLorry_Trailer.json",
+            "ProtoTag": "Prototype_GameObject_Special_TankLorry_Trailer"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_TankLorry.json",
+            "ProtoTag": "Prototype_GameObject_Special_TankLorry"
         }
     ]
 }

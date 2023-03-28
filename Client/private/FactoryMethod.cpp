@@ -50,6 +50,10 @@
 #include "Special_HBeam_Single.h"
 #include "Special_DropObject_Bundle.h"
 #include "Special_DropObject_Single.h"
+#include "Special_TankLorry.h"
+#include "Special_TankLorry_Head.h"
+#include "Special_TankLorry_Tank.h"
+#include "Special_TankLorry_Trailer.h"
 
 // Player Setting
 #include "Player.h"
@@ -479,6 +483,34 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
 	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_DropObject_Single", pModel_DropObject_Single));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_DropObject_Single", CSpecial_DropObject_Single::Create(pDevice, pContext)));
+
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_TankLorry", CSpecial_TankLorry::Create(pDevice, pContext)));
+
+	auto pModel_TankLorry_Head = CModel::Create(pDevice, pContext, 
+		"../Bin/Resources/Model/StaticModel/Kinetic/TankLorry/TankLorry_Head.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_TankLorry_Head", pModel_TankLorry_Head));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_TankLorry_Head", CSpecial_TankLorry_Head::Create(pDevice, pContext)));
+
+	auto pModel_TankLorry_Trailer = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/TankLorry/TankLorry_Trailer.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_TankLorry_Trailer", pModel_TankLorry_Trailer));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_TankLorry_Trailer", CSpecial_TankLorry_Trailer::Create(pDevice, pContext)));
+
+
+	auto pModel_TankLorry_Tank_01 = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/TankLorry/TankLorry_Tank_01.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_TankLorry_Tank_0", pModel_TankLorry_Tank_01));
+	auto pModel_TankLorry_Tank_02 = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/TankLorry/TankLorry_Tank_02.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_TankLorry_Tank_1", pModel_TankLorry_Tank_02));
+	auto pModel_TankLorry_Tank_03 = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/TankLorry/TankLorry_Tank_03.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_TankLorry_Tank_2", pModel_TankLorry_Tank_03));
+	auto pModel_TankLorry_Tank_04 = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/TankLorry/TankLorry_Tank_04.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_TankLorry_Tank_3", pModel_TankLorry_Tank_04));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_TankLorry_Tank", CSpecial_TankLorry_Tank::Create(pDevice, pContext)));
 
 	return S_OK;
 }

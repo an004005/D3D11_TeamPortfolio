@@ -35,6 +35,7 @@ public:
 	void SetTargetInfo(CTransform* pTargetTransform, CModel* pTargetModel);
 	void EquipCable(ESASType eType);
 	void UnEquipCable();
+	void CableTeleportDissolve(_float fRange);
 	_bool GetIsActive();
 	_matrix GetTargetMatrix();
 

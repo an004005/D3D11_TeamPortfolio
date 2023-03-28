@@ -75,12 +75,8 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 
 	m_pTrail->SetActive(m_bTrailOn);
 	
-	//m_pTrail->Tick(TimeDelta);
-
-	if (m_bTrailOn)
-	{
-
-	}
+	_float4 vCurPos = { m_pCollider->GetPxWorldMatrix().Translation().x, m_pCollider->GetPxWorldMatrix().Translation().y, m_pCollider->GetPxWorldMatrix().Translation().z, 1.f };
+	m_vSlashVector = vCurPos - m_vBeforePos;
 
 	if (m_bBright)
 	{
@@ -103,6 +99,8 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 	}
 	
 	//Collision_Check();
+
+	m_vBeforePos = vCurPos;
 }
 
 void CWeapon_wp0190::Late_Tick(_double TimeDelta)

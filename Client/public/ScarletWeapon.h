@@ -48,9 +48,11 @@ protected:
 	WEAPON_DESC	m_Desc;
 	Vector4		m_BeforePos;
 	Matrix		m_BeforeMatrix;
+	_float4		m_vSlashVector = { 0.f, 0.f, 0.f ,1.f };
 
 public:
 	void		Set_Bright(ESASType eType, _bool bBright);
+	_float4		Get_SlashVector() { return m_vSlashVector; }
 
 protected:
 	ESASType	m_eSasType = ESASType::SAS_END;

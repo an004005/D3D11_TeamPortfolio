@@ -44,6 +44,7 @@
 #include "Special_HBeam_Bundle.h"
 #include "Special_HBeam_Single.h"
 #include "Special_DropObject_Bundle.h"
+#include "Special_TankLorry.h"
 
 #include "Enemy.h"
 #include "PostVFX_Penetrate.h"
@@ -149,6 +150,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_DropObjectStateMachine()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_TankLorryStateMachine()))
+		return E_FAIL;
+
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_PLAYEREFFECT);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
@@ -223,6 +227,8 @@ void CPlayer::BeginTick()
 
 void CPlayer::Tick(_double TimeDelta)
 {
+	m_fTimeDelta = TimeDelta;
+
 	__super::Tick(TimeDelta);
 	m_pModel->Tick(TimeDelta);
 	m_pTrail->Tick(TimeDelta);
@@ -314,6 +320,11 @@ void CPlayer::Tick(_double TimeDelta)
 			{
 				m_pDropObjectStateMachine->Tick(TimeDelta);
 			}
+
+			else if (SPECIAL_TANKLORRY == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
+			{
+				m_pTankLorryStateMachine->Tick(TimeDelta);
+			}
 		}
 	}
 	// ~특수기
@@ -341,6 +352,7 @@ void CPlayer::Tick(_double TimeDelta)
 		m_pHBeamStateMachine_Left->SetState("HBEAM_LEFT_NOUSE");
 		m_pDropObjectStateMachine->SetState("DROP_NOUSE");
 		m_pTeleportStateMachine->SetState("TELEPORTATTACK_NOUSE");
+		m_pTankLorryStateMachine->SetState("TANKLORRY_NOUSE");
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false);
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, false);
 		static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
@@ -953,32 +965,73 @@ void CPlayer::Visible_Check()
 		m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_155_AL_sas_dodge_B_start_Telepo" ||
 		m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_157_AL_sas_dodge_L_start_Telepo")
 	{
-		m_bVisible = false;
+		//m_bVisible = false;
+		m_bTeleport = false;
 
-		for (auto& iter : m_vecWeapon)
-			iter->SetVisible(false);
+		//for (auto& iter : m_vecWeapon)
+		//	iter->SetVisible(false);
 
-		m_pSAS_Cable->SetVisible(false);
+		//m_pSAS_Cable->SetVisible(false);
 
-		if (TeleportEffect.IsNotDo())
+		//if (TeleportEffect.IsNotDo())
+		//{
+		//	TeleportEndEffect.Reset();
+		//	//TeleportEffectMaker();
+		//}
+	}
+	else
+	{
+		//m_bVisible = true;
+		m_bTeleport = true;
+
+		//for (auto& iter : m_vecWeapon)
+		//	iter->SetVisible(true);
+
+		//m_pSAS_Cable->SetVisible(true);
+
+		//if (TeleportEndEffect.IsNotDo())
+		//{
+		//	TeleportEffect.Reset();
+		//	//TeleportEffectMaker();
+		//}
+	}
+
+	if (false == m_bTeleport)
+	{
+		if (1.f > m_fTeleportDissolve)
 		{
-			TeleportEndEffect.Reset();
-			TeleportEffectMaker();
+			m_fTeleportDissolve = min(m_fTeleportDissolve + ((_float)m_fTimeDelta * 10.f), 1.f);
+
+			for (auto pMtrl : m_pModel->GetMaterials())
+			{
+				pMtrl->GetParam().Floats[2] = m_fTeleportDissolve;
+			}
+
+			m_pSAS_Cable->CableTeleportDissolve(m_fTeleportDissolve);
+
+			if (1.f == m_fTeleportDissolve)
+			{
+				TeleportEffectMaker();
+			}
 		}
 	}
 	else
 	{
-		m_bVisible = true;
-
-		for (auto& iter : m_vecWeapon)
-			iter->SetVisible(true);
-
-		m_pSAS_Cable->SetVisible(true);
-
-		if (TeleportEndEffect.IsNotDo())
+		if (0.f < m_fTeleportDissolve)
 		{
-			TeleportEffect.Reset();
-			TeleportEffectMaker();
+			m_fTeleportDissolve = max(m_fTeleportDissolve - ((_float)m_fTimeDelta * 10.f), 0.f);
+
+			for (auto pMtrl : m_pModel->GetMaterials())
+			{
+				pMtrl->GetParam().Floats[2] = m_fTeleportDissolve;
+			}
+
+			m_pSAS_Cable->CableTeleportDissolve(m_fTeleportDissolve);
+
+			if (0.f == m_fTeleportDissolve)
+			{
+				TeleportEffectMaker();
+			}
 		}
 	}
 }
@@ -1007,6 +1060,28 @@ void CPlayer::SasStateCheck()
 	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_HARDBODY))
 	{
 		m_bSASSkillInput[2] = false;
+
+		if (0.f <= m_fHardbodyDissolve)
+		{
+			m_fHardbodyDissolve = max(m_fHardbodyDissolve - ((_float)m_fTimeDelta * 2.f), 0.f);
+
+			for (auto pMtrl : m_pModel->GetMaterials())
+			{
+				pMtrl->GetParam().Floats[1] = m_fHardbodyDissolve;
+			}
+		}
+	}
+	else
+	{
+		if (1.f >= m_fHardbodyDissolve)
+		{
+			m_fHardbodyDissolve = min(m_fHardbodyDissolve + ((_float)m_fTimeDelta * 2.f), 1.f);
+
+			for (auto pMtrl : m_pModel->GetMaterials())
+			{
+				pMtrl->GetParam().Floats[1] = m_fHardbodyDissolve;
+			}
+		}
 	}
 
 	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_SUPERSPEED))
@@ -1044,17 +1119,46 @@ void CPlayer::ElecSweep()
 			CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
 			if (auto pMonster = dynamic_cast<CEnemy*>(pCollidedObject))
 			{
-				DAMAGE_PARAM tParam;
-				ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
-				tParam.pCauser = this;
-				tParam.eAttackSAS = ESASType::SAS_ELETRIC;
-				tParam.eAttackType = EAttackType::ATK_LIGHT;
-				tParam.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
-				tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_END;
-				tParam.iDamage = 100;
+				// 스윕 충돌 후 레이캐스트 충돌로 슬래시벡터 넘김
+				_vector vRayPos = GetColliderPosition();
+				vRayPos = XMVectorSetW(vRayPos, 1.f);
+				_vector vRayDir = static_cast<CScarletCharacter*>(pMonster)->GetColliderPosition() - GetColliderPosition();
+				vRayDir = XMVectorSetW(vRayDir, 0.f);
 
-				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-				pMonster->TakeDamage(tParam);
+				physx::PxRaycastHit hitBuffer[1];
+				physx::PxRaycastBuffer rayOut(hitBuffer, 1);
+
+				RayCastParams param;
+				param.rayOut = &rayOut;
+				param.vOrigin = vRayPos;
+				param.vDir = vRayDir;
+				param.fDistance = 20.f;
+				param.iTargetType = CTB_MONSTER | CTB_MONSTER_PART | CTB_MONSTER_RANGE;
+				param.fVisibleTime = 5.f;
+				param.bSingle = true;
+				if (CGameInstance::GetInstance()->RayCast(param))
+				{
+					for (int i = 0; i < rayOut.getNbAnyHits(); ++i)
+					{
+						auto pHit = rayOut.getAnyHit(i);
+						CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+						if (auto pEnemy = dynamic_cast<CEnemy*>(pCollidedObject))
+						{
+							DAMAGE_PARAM tParam;
+							ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+							tParam.pCauser = this;
+							tParam.eAttackSAS = ESASType::SAS_ELETRIC;
+							tParam.eAttackType = EAttackType::ATK_LIGHT;
+							tParam.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+							tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_END;
+							tParam.iDamage = 100;
+							tParam.vHitFrom = GetColliderPosition();
+							tParam.vHitPosition = { pHit.position.x, pHit.position.y, pHit.position.z, 1.f };
+							tParam.vSlashVector = static_cast<CScarletWeapon*>(m_vecWeapon.front())->Get_SlashVector();
+							pMonster->TakeDamage(tParam);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -4817,6 +4921,161 @@ HRESULT CPlayer::SetUp_DropObjectStateMachine()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_TankLorryStateMachine()
+{
+	CAnimation*	pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_375_AL_Cap_start"));
+	m_TankLorry_Start.push_back(m_pModel->Find_Animation("AS_ch0100_375_AL_Cap_start"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_375_AL_Cap_loop"));
+	m_TankLorry_Start.push_back(m_pModel->Find_Animation("AS_ch0100_375_AL_Cap_loop"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_375_AL_Cap_cansel"));
+	m_TankLorry_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_375_AL_Cap_cansel"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_375_AL_Cap_end"));
+	m_TankLorry_Finish.push_back(m_pModel->Find_Animation("AS_ch0100_375_AL_Cap_end"));
+
+	m_pTankLorryStateMachine = 
+		CFSMComponentBuilder().InitState("TANKLORRY_NOUSE")
+
+		.AddState("TANKLORRY_NOUSE")
+		.OnStart([&]()
+		{
+			m_bKineticSpecial_Activate = false;
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
+			m_bKineticSpecial = false;
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_bKineticSpecial = false;
+		})
+		.OnExit([&]()
+		{
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+		})
+		.AddTransition("TANKLORRY_NOUSE to TANKLORRY_CHARGE", "TANKLORRY_CHARGE")
+		.Predicator([&]()->_bool
+		{
+			_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
+			return m_bKineticG && bResult;
+		})
+		.Priority(0)
+
+		.AddState("TANKLORRY_CHARGE")
+		.OnStart([&]()
+		{
+			m_bKineticSpecial = true;
+			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_TankLorry_Start);
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+
+			if (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+			{
+				static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+					->TankLorry_Activate();
+			}
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			if (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+			{
+				static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+					->TankLorry_Shake(15.f * m_fKineticCharge);
+
+				if (1.f <= m_fKineticCharge && TankLorry.IsNotDo())
+				{
+					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+						->TankLorry_Bounce(100.f);
+					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+						->TankLorry_Cheage_TankIndex(2);
+				}
+			}
+
+			m_fKineticCharge += (_float)fTimeDelta;
+		})
+		.OnExit([&]()
+		{
+			TankLorry.Reset();
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("TANKLORRY_CHARGE to TANKLORRY_FINISH", "TANKLORRY_FINISH")
+			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
+			.Priority(0)
+
+			.AddTransition("TANKLORRY_CHARGE to TANKLORRY_CANCEL", "TANKLORRY_CANCEL")
+			.Predicator([&]()->_bool { return !m_bKineticG; })
+			.Priority(0)
+
+		.AddState("TANKLORRY_CANCEL")
+		.OnStart([&]() 
+		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TankLorry_Cancel);
+		})
+		.OnExit([&]()
+		{
+			m_bKineticSpecial = false;
+		})
+			.AddTransition("TANKLORRY_CANCEL to TANKLORRY_NOUSE", "TANKLORRY_NOUSE")
+			.Predicator([&]()->_bool { return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket") || m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB || m_bKineticG);  })
+			.Priority(0)
+
+		.AddState("TANKLORRY_FINISH")
+		.OnStart([&]() 
+		{
+			m_bKineticSpecial_Activate = true;
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TankLorry_Finish);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			if (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+			{
+
+				if (!m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.38f))
+				{
+					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+						->TankLorry_Shake(30.f);
+				}
+
+				if (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.17f) && TankLorry.IsNotDo())
+				{
+					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+						->TankLorry_Bounce(100.f);
+					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+						->TankLorry_Cheage_TankIndex(3);
+				}
+
+				if (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.38f) && TankLorry_Exploision.IsNotDo())
+				{
+					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+						->TankLorry_Cheage_TankIndex(4);
+
+					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+						->TankLorry_Explosion();
+				}
+			}
+		})
+		.OnExit([&]()
+		{
+			TankLorry.Reset();
+			TankLorry_Exploision.Reset();
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("TANKLORRY_FINISH to TANKLORRY_NOUSE", "TANKLORRY_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket");
+			})
+			.Priority(0)
+
+		.Build();
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Setup_AnimSocket()
 {
 	CAnimation*	pAnimation = nullptr;
@@ -6677,5 +6936,7 @@ void CPlayer::Free()
 	Safe_Release(m_pSAS_Penetrate);
 	Safe_Release(m_pSuperSpeedPostVFX);
 	Safe_Release(m_pTeleportPostVFX);
+	Safe_Release(m_pTankLorryStateMachine);
+
 //	Safe_Release(m_pContectRigidBody);
 }
