@@ -249,7 +249,53 @@ void CCamSpot::Random_Shaking(_float fShakePower)
 
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
-	_vector vShakeDir = CGameUtils::GetRandVector3({ -fShakePower, -fShakePower, -fShakePower }, { fShakePower, fShakePower, fShakePower });
+	_vector vShakeDir = XMVectorSet(
+		CMathUtils::RandomFloat(-fShakePower, fShakePower),
+		CMathUtils::RandomFloat(-fShakePower, fShakePower),
+		CMathUtils::RandomFloat(-fShakePower, fShakePower),
+		0.f);
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos + vShakeDir);
+}
+
+void CCamSpot::Axis_Shaking(_float4 vAxis, _float fShakePower)
+{
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+	_float4 vInputAxis = XMVector3Normalize(vAxis);
+
+	_matrix matTargetWorld = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+	_vector vScale, vRot, vTrans;
+	XMMatrixDecompose(&vScale, &vRot, &vTrans, matTargetWorld);
+	_matrix matRot = XMMatrixRotationQuaternion(vRot);
+	vInputAxis = XMVector3TransformNormal(vInputAxis, matRot);
+
+	_vector vShakeDir = XMVectorSet(
+		CMathUtils::RandomFloat(-fShakePower, fShakePower) * vInputAxis.x,
+		CMathUtils::RandomFloat(-fShakePower, fShakePower) * vInputAxis.y,
+		CMathUtils::RandomFloat(-fShakePower, fShakePower) * vInputAxis.z,
+		0.f);
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos + vShakeDir);
+}
+
+void CCamSpot::Axis_Sliding(_float4 vAxis, _float fSlidePower)
+{
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+	_float4 vInputAxis = XMVector3Normalize(vAxis);
+
+	_matrix matTargetWorld = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+	_vector vScale, vRot, vTrans;
+	XMMatrixDecompose(&vScale, &vRot, &vTrans, matTargetWorld);
+	_matrix matRot = XMMatrixRotationQuaternion(vRot);
+	vInputAxis = XMVector3TransformNormal(vInputAxis, matRot);
+
+	_vector vShakeDir = XMVectorSet(
+		fSlidePower * vInputAxis.x,
+		fSlidePower * vInputAxis.y,
+		fSlidePower * vInputAxis.z,
+		0.f);
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos + vShakeDir);
 }
