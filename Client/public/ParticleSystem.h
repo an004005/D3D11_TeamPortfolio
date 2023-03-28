@@ -59,6 +59,7 @@ public:
 	CShader* GetShader() { return m_pShader; }
 	_float	GetDuration() { return m_fDuration; }
 	_int	GetLiveParticleCnt();
+	void	Remote_BurstCnt_Zero();
 public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
