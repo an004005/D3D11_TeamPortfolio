@@ -562,10 +562,8 @@ PS_OUT PS_MAIN_PLAYER_TEXT_PARTICLE(PS_IN In)
 
 	Out.vColor.a = saturate(MixColor.r * In.RamainLifeRatio);
 
-
-
-	// if (Out.vColor.a < 0.01f)
-	// 	discard;
+	if (Out.vColor.a < 0.01f)
+		discard;
 
 	return Out;
 }

@@ -259,13 +259,20 @@ void CParticleGroup::Set_Transform(_matrix socket)
 	}
 }
 
+void CParticleGroup::Delete_Particles()
+{
+	for (auto iter : m_mapParticleSystem)
+	{
+		if (iter.second.second != nullptr)
+			iter.second.second->Remote_BurstCnt_Zero();
+	}
+}
+
 void CParticleGroup::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
 	VisibleUpdate();
-
-
 
 	if(m_bUpdate == true && (nullptr != m_pOwner) && m_pOwner->IsDeleted() == false && (nullptr == m_pAttachWeapon))
 	{
@@ -312,7 +319,6 @@ void CParticleGroup::Tick(_double TimeDelta)
 			if (iter.second.second != nullptr)
 			{
 				iter.second.second->Tick(TimeDelta);
-				// iter.second.second->Start_Timeline();
 			}
 		}
 
@@ -488,6 +494,11 @@ void CParticleGroup::Load_ParticleSystem()
 	ImGui::Separator();
 
 	ImGui::Checkbox("Generate", &m_bGenerate);
+
+	if(ImGui::Button("SetDelete ParticleGroup"))
+	{
+		Delete_Particles();
+	}
 
 	ImGui::NewLine();
 	static _int iParticleSize = 0;

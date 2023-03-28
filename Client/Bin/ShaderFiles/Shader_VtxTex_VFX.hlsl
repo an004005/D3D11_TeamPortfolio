@@ -859,6 +859,23 @@ PS_OUT_Flag PS_USE_SAS_GEAR_TEX(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_SAS_DEAD_LIGHT(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+	Out.vColor.a = Mask * g_float_1;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
 PS_OUT_Flag PS_MASK_TEX_DISTORTION_CHARGE(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -1079,7 +1096,7 @@ technique11 DefaultTechnique
 	pass Mask_Semi_Distortion
 	{
 		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DS_Default, 0);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1520,5 +1537,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM1100_BULLET_DEAD();
+	}
+
+	//38
+	pass SASDEAD
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SAS_DEAD_LIGHT();
 	}
 }

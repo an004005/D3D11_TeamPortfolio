@@ -36,6 +36,11 @@ _int CParticleSystem::GetLiveParticleCnt()
 	}
 }
 
+void CParticleSystem::Remote_BurstCnt_Zero()
+{
+	m_iBurstCnt = 0;
+}
+
 HRESULT CParticleSystem::Initialize(void* pArg)
 {
 	CGameObject::Initialize(pArg);
