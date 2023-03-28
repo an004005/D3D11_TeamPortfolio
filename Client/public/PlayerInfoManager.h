@@ -41,6 +41,7 @@ typedef struct tagPlayerStatus
 	_uint iAttack = { 0 };
 	_uint iDefense = { 0 };
 	_uint iBP = { 0 };
+	_uint iCoin = { 0 };
 
 	_float m_fBaseAttackDamage;
 

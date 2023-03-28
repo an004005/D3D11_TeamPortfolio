@@ -79,149 +79,126 @@ void CCanvas_Acquisition::LoadFromJson(const Json & json)
 
 void CCanvas_Acquisition::Set_EnemyUI(const EEnemyName eEnemyName, const _uint iLevel)
 {
-	m_EEnemyName = eEnemyName;
-	m_iLevel = iLevel;
-	m_bEnemyClone[0] = true;
-	m_bEnemyClone[1] = false;
-	m_bEnemyClone[2] = false;
-	m_bEnemyClone[3] = false;
-	m_dEnemyClone_TimeAcc = 0.0;
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/AcquisitionUI.json");
+#pragma region EnemyName
+	_tchar* szEnemyName = L"";
+	switch (eEnemyName)
+	{
+	case EEnemyName::EM0110:
+		szEnemyName = L"오거 사바트";
+		break;
+	case EEnemyName::EM0200:
+		szEnemyName = L"바스 포즈";
+		break;
+	case EEnemyName::EM0210:
+		szEnemyName = L"소스 포즈";
+		break;
+	case EEnemyName::EM0220:
+		szEnemyName = L"베이스 포즈";
+		break;
+	case EEnemyName::EM0320:
+		szEnemyName = L"경건 페리";
+		break;
+	case EEnemyName::EM0400:
+		szEnemyName = L"버디 러미";
+		break;
+	case EEnemyName::EM0650:
+		szEnemyName = L"바일 풀";
+		break;
+	case EEnemyName::EM0700:
+		szEnemyName = L"방도 팡뒤";
+		break;
+	case EEnemyName::EM0750:
+		szEnemyName = L"스커미 팡뒤";
+		break;
+	case EEnemyName::EM0800:
+		szEnemyName = L"브론 욘";
+		break;
+	case EEnemyName::EM1100:
+		szEnemyName = L"와이너리 치너리";
+		break;
+	case EEnemyName::EM1200:
+		szEnemyName = L"나오미 랜들";
+		break;
+	case EEnemyName::EM8210:
+		szEnemyName = L"중대장";
+		break;
+	default:
+		szEnemyName = L"잘못된 이름";
+		break;
+	}
+#pragma endregion EnemyName
+
+	_tchar szText[MAX_PATH] = TEXT("");
+	wsprintf(szText, TEXT("%s를 쓰러뜨렸다."), szEnemyName);
+
+	json["Text"] = ws2s(szText);
+	CAcquisitionUI* pUI = dynamic_cast<CAcquisitionUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"AcquisitionUI", &json));
+	assert(pUI != nullptr && "Failed to Clone : CAcquisitionUI");
+
+	m_AcquisitionUIList.push_back(pUI);
+
+	_uint iExp = CMathUtils::RandomUInt(iLevel) + iLevel * 4;
+
+	// 추가적으로 플레이어에 정보도 Set 해주기
+	CPlayerInfoManager::GetInstance()->Get_PlayerStat().iExp += iExp;
+
+	wsprintf(szText, TEXT("%uEXP 입수"), iExp);
+
+	json["Text"] = ws2s(szText);
+	pUI = dynamic_cast<CAcquisitionUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"AcquisitionUI", &json));
+	assert(pUI != nullptr && "Failed to Clone : CAcquisitionUI");
+
+	m_AcquisitionUIList.emplace_back(pUI);
+
+	_uint iCoin = min(iLevel * 1, CMathUtils::RandomUInt(iLevel * 3));
+
+	// 추가적으로 플레이어에 정보도 Set 해주기
+	CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin += iCoin;
+
+	wsprintf(szText, TEXT("K %u입수"), iCoin);
+
+	json["Text"] = ws2s(szText);
+	pUI = dynamic_cast<CAcquisitionUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"AcquisitionUI", &json));
+	assert(pUI != nullptr && "Failed to Clone : CAcquisitionUI");
+
+	m_AcquisitionUIList.emplace_back(pUI);
 }
 
 void CCanvas_Acquisition::EnemyUIAdd_Tick(const _double & TimeDelta)
 {
-	if (false == m_bEnemyClone[0]) return;
+	if (0 == m_AcquisitionUIList.size()) return;
 
-	m_dEnemyClone_TimeAcc += TimeDelta;
-
-	if (0.0 < m_dEnemyClone_TimeAcc)
+	if (0.0 == m_dEnemyClone_TimeAcc)
 	{
-		// Name
-		if (m_bEnemyClone[1] == false)
+		for (auto iter = m_AcquisitionUIList.begin(); iter != m_AcquisitionUIList.end(); ++iter)
 		{
-			m_bEnemyClone[1] = true;
-
-			Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/AcquisitionUI.json");
-#pragma region EnemyName
-			_tchar* szEnemyName = L"";
-			switch (m_EEnemyName)
+			if ((*iter)->Get_Renning() == false)
 			{
-			case EEnemyName::EM0110:
-				szEnemyName = L"오거 사바트";
-				break;
-			case EEnemyName::EM0200:
-				szEnemyName = L"바스 포즈";
-				break;
-			case EEnemyName::EM0210:
-				szEnemyName = L"소스 포즈";
-				break;
-			case EEnemyName::EM0220:
-				szEnemyName = L"베이스 포즈";
-				break;
-			case EEnemyName::EM0320:
-				szEnemyName = L"경건 페리";
-				break;
-			case EEnemyName::EM0400:
-				szEnemyName = L"버디 러미";
-				break;
-			case EEnemyName::EM0650:
-				szEnemyName = L"바일 풀";
-				break;
-			case EEnemyName::EM0700:
-				szEnemyName = L"방도 팡뒤";
-				break;
-			case EEnemyName::EM0750:
-				szEnemyName = L"스커미 팡뒤";
-				break;
-			case EEnemyName::EM0800:
-				szEnemyName = L"브론 욘";
-				break;
-			case EEnemyName::EM1100:
-				szEnemyName = L"와이너리 치너리";
-				break;
-			case EEnemyName::EM1200:
-				szEnemyName = L"나오미 랜들";
-				break;
-			case EEnemyName::EM8210:
-				szEnemyName = L"중대장";
-				break;
-			default:
-				szEnemyName = L"잘못된 이름";
+				AllPositionChange();
+				(*iter)->Set_Renning();
 				break;
 			}
-#pragma endregion EnemyName
-			
-			_tchar szText[MAX_PATH] = TEXT("");
-			wsprintf(szText, TEXT("%s를 쓰러뜨렸다."), szEnemyName);
-
-			json["Text"] = ws2s(szText);
-			CAcquisitionUI* pUI = dynamic_cast<CAcquisitionUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"AcquisitionUI", &json));
-			assert(pUI != nullptr && "Failed to Clone : CAcquisitionUI");
-
-			m_AcquisitionUIList.push_back(pUI);
-			AllPositionChange();
 		}
 	}
 
+	m_dEnemyClone_TimeAcc += TimeDelta;
 	if (1.0 < m_dEnemyClone_TimeAcc)
 	{
-		// Exp
-		if (m_bEnemyClone[2] == false)
-		{
-			m_bEnemyClone[2] = true;
-
-			_uint iExp = CMathUtils::RandomUInt(m_iLevel) + m_iLevel * 4;
-
-			_tchar szText[MAX_PATH] = TEXT("");
-			wsprintf(szText, TEXT("%uEXP 입수"), iExp);
-
-			Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/AcquisitionUI.json");
-			json["Text"] = ws2s(szText);
-			CAcquisitionUI* pUI = dynamic_cast<CAcquisitionUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"AcquisitionUI", &json));
-			assert(pUI != nullptr && "Failed to Clone : CAcquisitionUI");
-
-			m_AcquisitionUIList.emplace_back(pUI);
-			AllPositionChange();
-		}
-	}
-	
-	if (2.0 < m_dEnemyClone_TimeAcc)
-	{
-		// Coin
-		if (m_bEnemyClone[3] == false)
-		{
-			m_bEnemyClone[3] = true;
-			m_bEnemyClone[0] = false;
-
-			_uint iCoin = min(m_iLevel * 1, CMathUtils::RandomUInt(m_iLevel * 3));
-
-			_tchar szText[MAX_PATH] = TEXT("");
-			wsprintf(szText, TEXT("K %u입수"), iCoin);
-
-			Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/AcquisitionUI.json");
-			json["Text"] = ws2s(szText);
-			CAcquisitionUI* pUI = dynamic_cast<CAcquisitionUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"AcquisitionUI", &json));
-			assert(pUI != nullptr && "Failed to Clone : CAcquisitionUI");
-
-			m_AcquisitionUIList.emplace_back(pUI);
-			AllPositionChange();
-		}
+		m_dEnemyClone_TimeAcc = 0.0;
 	}
 }
 
 void CCanvas_Acquisition::AllPositionChange()
 {
-	CAcquisitionUI* pUIBack = m_AcquisitionUIList.back();
-
 	for (auto iter : m_AcquisitionUIList)
 	{
-		if (iter == pUIBack)
+		if (false == iter->Get_Renning())
 			continue;
 
 		_float2 fTempPosition = iter->Get_Position();
 		fTempPosition.y += 22.0f;
 		iter->Set_Position(fTempPosition);
-
 	}
 }
 

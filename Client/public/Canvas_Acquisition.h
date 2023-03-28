@@ -34,11 +34,7 @@ private:
 private:
 	list<class CAcquisitionUI*> m_AcquisitionUIList;
 	
-	// Enemy
-	_bool	m_bEnemyClone[3] = { false };
 	_double	m_dEnemyClone_TimeAcc = { 0.0 };
-	EEnemyName	m_EEnemyName = { EEnemyName::ENEMY_NAME_END };
-	_uint	m_iLevel = { 0 };
 
 public:
 	static CCanvas_Acquisition* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
