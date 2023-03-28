@@ -27,19 +27,27 @@ HRESULT CAcquisitionUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	m_bVisible = false;
+
 	return S_OK;
 }
 
 void CAcquisitionUI::Tick(_double TimeDelta)
 {
+	if (m_bRunning == false) return;
+
 	__super::Tick(TimeDelta);
 
 	m_dDead_TimeAcc += TimeDelta;
-	if (2.0 > m_dDead_TimeAcc)
+	if (0.3 > m_dDead_TimeAcc)
 	{
 		std::random_device rd;
 		std::mt19937 g(rd());
 		std::shuffle(m_wsText.begin(), m_wsText.end(), g); // 문자열을 랜덤하게 섞음
+	}
+	else
+	{
+		m_wsText = m_wsStartText;
 	}
 
 	if (5.0 < m_dDead_TimeAcc)
@@ -79,6 +87,7 @@ void CAcquisitionUI::LoadFromJson(const Json & json)
 {
 	CUI::LoadFromJson(json);
 	m_wsText = s2ws(json["Text"]);
+	m_wsStartText = m_wsText;
 
 	//m_szText = new _tchar[wstr.size() + 1];
 	//lstrcpy(m_szText, wstr.c_str());
