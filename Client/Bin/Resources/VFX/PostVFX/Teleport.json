@@ -1,0 +1,39 @@
+{
+    "ObjectTag": "",
+    "Priority": 999,
+    "Prototype_GameObject": "ProtoPostVFX_Teleport\u0000",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [
+            0.0
+        ],
+        "Ints": [],
+        "Pass": 10,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_scl_noi_018.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_scl_noi_030.png\u0000"
+        ]
+    },
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

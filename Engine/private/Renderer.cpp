@@ -10,9 +10,12 @@
 #include "GameInstance.h"
 #include "PostProcess.h"
 #include "Graphic_Device.h"
+#include "ImguiUtils.h"
 #include "RenderTarget.h"
 #include "Light_Manager.h"
 #include "PhysX_Manager.h"
+#include "JsonStorage.h"
+#include "SSAOManager.h"
 
 
 CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -32,6 +35,13 @@ CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 		m_bVisibleTargets = true;
 	free(pValue2);
 #endif
+
+	m_tFogDesc.vFogColor = _float3(0.5f ,0.5f, 0.5f);
+	m_tFogDesc.fStartDepth = 37.f;
+	m_tFogDesc.vHighlightColor = _float3(0.8f, 0.7f, 0.4f);
+	m_tFogDesc.fGlobalDensity = 1.5f;
+	m_tFogDesc.fHeightFalloff = 0.2f;
+	m_bFog = false;
 }
 
 HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pGameObject)
@@ -64,6 +74,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 {
 	_float fGamma = CHDR::GetInstance()->GetGamma();
 	m_pShader->Set_RawValue("g_Gamma", &fGamma, sizeof(_float));
+	m_bShadow = CLight_Manager::GetInstance()->IsShadowCamOn();
 
 	m_pTarget_Manager->ClearTargets();
 
@@ -73,6 +84,14 @@ HRESULT CRenderer::Draw_RenderGroup()
 		return E_FAIL;
 	if (FAILED(Render_NonAlphaBlend()))
 		return E_FAIL;
+
+	if (CGameInstance::GetInstance()->GetMainCam())
+	{
+		CSSAOManager::GetInstance()->Compute(
+			m_pTarget_Manager->GetTarget(L"Target_Depth")->Get_SRV(),
+			m_pTarget_Manager->GetTarget(L"Target_Normal")->Get_SRV());
+	}
+
 	if (FAILED(Render_LightAcc()))
 		return E_FAIL;
 
@@ -83,6 +102,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (FAILED(Render_Priority()))
 		return E_FAIL;
 	if (FAILED(Render_Blend()))
+		return E_FAIL;
+	if (FAILED(Render_Decal()))
 		return E_FAIL;
 	if (FAILED(Render_NonLight()))
 		return E_FAIL;
@@ -141,6 +162,19 @@ void CRenderer::Clear()
 	}
 }
 
+void CRenderer::LoadFogJson(const string& strJsonPath)
+{
+	std::ifstream ifs(strJsonPath);
+	Json json = Json::parse(ifs);
+
+	m_bFog = json["bFog"];
+	m_tFogDesc.vFogColor = json["FogColor"];
+	m_tFogDesc.vHighlightColor = json["FogHighlightColor"];
+	m_tFogDesc.fStartDepth = json["StartDepth"];
+	m_tFogDesc.fGlobalDensity = json["Density"];
+	m_tFogDesc.fHeightFalloff = json["HeightFalloff"];
+}
+
 HRESULT CRenderer::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
@@ -180,15 +214,15 @@ HRESULT CRenderer::Initialize_Prototype()
 	FAILED_CHECK(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_OutlineFlag"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, &_float4(0.f, 0.f, 0.f, 0.f)));
 
 
-	/* For.Target_Diffuse_Copy */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Diffuse_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.0f, 0.0f, 0.f))))
-		return E_FAIL;
-	/* For.Target_Normal_Copy */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Normal_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(1.f, 1.f, 1.f, 1.f))))
-		return E_FAIL;
-	/* For.Target_Depth_Copy */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Depth_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(0.f, 1.f, 0.f, 1.f))))
-		return E_FAIL;	
+	///* For.Target_Diffuse_Copy */
+	//if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Diffuse_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.0f, 0.0f, 0.f))))
+	//	return E_FAIL;
+	///* For.Target_Normal_Copy */
+	//if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Normal_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(1.f, 1.f, 1.f, 1.f))))
+	//	return E_FAIL;
+	///* For.Target_Depth_Copy */
+	//if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Depth_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(0.f, 1.f, 0.f, 1.f))))
+	//	return E_FAIL;	
 
 	/* For.Target_Shade */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Shade"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, &_float4(0.0f, 0.0f, 0.0f, 1.f))))
@@ -383,6 +417,36 @@ void CRenderer::Imgui_RenderOtherWindow()
 	}
 	ImGui::Checkbox("Visible Targets", &m_bVisibleTargets);
 #endif
+
+	_int iSampleRadius = CSSAOManager::GetInstance()->GetSampleRadius();
+	_float fRadius = CSSAOManager::GetInstance()->GetRadius();
+	ImGui::InputInt("SSASSampleRadius(max64)", &iSampleRadius);
+	ImGui::InputFloat("Radius(max100)", &fRadius);
+	CSSAOManager::GetInstance()->SetParameters(iSampleRadius, fRadius);
+
+	ImGui::Checkbox("bFog", &m_bFog);
+	ImGui::ColorEdit4("FogColor", (float*)&m_tFogDesc.vFogColor, ImGuiColorEditFlags_PickerHueWheel);
+	ImGui::ColorEdit4("FogHighlightColor", (float*)&m_tFogDesc.vHighlightColor, ImGuiColorEditFlags_PickerHueWheel);
+	ImGui::InputFloat("StartDepth", &m_tFogDesc.fStartDepth);
+	ImGui::InputFloat("Density", &m_tFogDesc.fGlobalDensity);
+	ImGui::InputFloat("HeightFalloff", &m_tFogDesc.fHeightFalloff);
+
+	CImguiUtils::FileDialog_FileSelector("Save Fog Data", ".json", "../Bin/Resources/", [this](const string& filePath)
+	{
+		Json json;
+		json["bFog"] = m_bFog;
+		json["FogColor"] = m_tFogDesc.vFogColor;
+		json["FogHighlightColor"] = m_tFogDesc.vHighlightColor;
+		json["StartDepth"] = m_tFogDesc.fStartDepth;
+		json["Density"] = m_tFogDesc.fGlobalDensity;
+		json["HeightFalloff"] = m_tFogDesc.fHeightFalloff;
+		std::ofstream file(filePath);
+		file << json;
+	});
+	CImguiUtils::FileDialog_FileSelector("Load Fog Data", ".json", "../Bin/Resources/", [this](const string& filePath)
+	{
+		LoadFogJson(filePath);
+	});
 }
 
 HRESULT CRenderer::Render_Priority()
@@ -403,8 +467,12 @@ HRESULT CRenderer::Render_Priority()
 HRESULT CRenderer::Render_ShadowDepth()
 {
 #ifdef _DEBUG
+	static _bool bShadowRenderForce = true;
 	if (CGameInstance::GetInstance()->KeyDown(DIK_F8))
-		m_bShadow = !m_bShadow;
+		bShadowRenderForce = !bShadowRenderForce;
+
+	m_bShadow = bShadowRenderForce;
+#endif
 
 	if (m_bShadow == false)
 	{
@@ -413,8 +481,8 @@ HRESULT CRenderer::Render_ShadowDepth()
 			Safe_Release(pGameObject);
 		}
 		m_RenderObjects[RENDER_SHADOWDEPTH].clear();
+		return S_OK;
 	}
-#endif
 
 	m_pContext->ClearDepthStencilView(m_pShadowDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 	D3D11_VIEWPORT			ViewportDesc;
@@ -469,23 +537,6 @@ HRESULT CRenderer::Render_NonAlphaBlend()
 		}
 
 		m_RenderObjects[RENDER_NONALPHABLEND].clear();
-	}
-
-	{
-		// Decal Rendering 하기위해서 기존 diffuse, normal, depth를 복사해 SRV로 사용한다.
-		m_pTarget_Manager->CopyRenderTarget(m_pContext, L"Target_Diffuse_Copy", L"Target_Diffuse");
-		m_pTarget_Manager->CopyRenderTarget(m_pContext, L"Target_Normal_Copy", L"Target_Normal");
-		m_pTarget_Manager->CopyRenderTarget(m_pContext, L"Target_Depth_Copy", L"Target_Depth");
-
-		for (auto& pGameObject : m_RenderObjects[RENDER_DECAL])
-		{
-			if (nullptr != pGameObject)
-				pGameObject->Render();
-
-			Safe_Release(pGameObject);
-		}
-
-		m_RenderObjects[RENDER_DECAL].clear();
 	}
 
 	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext, TEXT("MRT_Deferred"))))
@@ -553,6 +604,9 @@ HRESULT CRenderer::Render_LightAcc()
 
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_CTLTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_CTL")))))
 		return E_FAIL;
+
+	if (FAILED(m_pShader->Set_ShaderResourceView("g_AOTexture", CSSAOManager::GetInstance()->GetSSAOSRV())))
+		return E_FAIL;
 	
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
 
@@ -616,6 +670,30 @@ HRESULT CRenderer::Render_Blend()
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_CTLTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_CTL")))))
 		return E_FAIL;
 
+	const int iFog = m_bFog ? 1 : 0;
+	if (FAILED(m_pShader->Set_RawValue("g_bFog", &iFog, sizeof(_int))))
+		return E_FAIL;
+	if (m_bFog)
+	{
+		const _float4 vDirToSun = -CLight_Manager::GetInstance()->GetDirectionalLightDir();
+		const _float3 v3DirToSun{vDirToSun.x, vDirToSun.y, vDirToSun.z};
+		if (FAILED(m_pShader->Set_RawValue("g_vFogColor", &m_tFogDesc.vFogColor, sizeof(_float3))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_vHighlightColor", &m_tFogDesc.vHighlightColor, sizeof(_float3))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_vDirToSun", &v3DirToSun, sizeof(_float3))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_fStartDepth", &m_tFogDesc.fStartDepth, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_fGlobalDensity", &m_tFogDesc.fGlobalDensity, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_fHeightFalloff", &m_tFogDesc.fHeightFalloff, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_vCamPosition", &pPipeLine->Get_CamPosition(), sizeof(_float4))))
+			return E_FAIL;
+	}
+
+
 	m_pEnv->Bind_ShaderResource(m_pShader, "g_IrradianceTexture");
 	m_pEnv2->Bind_ShaderResource(m_pShader, "g_RadianceTexture");
 
@@ -646,6 +724,32 @@ HRESULT CRenderer::Render_NonLight()
 
 HRESULT CRenderer::Render_AlphaBlend()
 {
+	// HDR
+	for (auto& pGameObject : m_RenderObjects[RENDER_ALPHABLEND_FIRST])
+	{
+		if (nullptr != pGameObject)
+			pGameObject->Compute_CamDistance();
+	}
+
+
+	m_RenderObjects[RENDER_ALPHABLEND_FIRST].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
+	{
+		return pSour->GetCamDistance() > pDest->GetCamDistance();
+	});
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_ALPHABLEND_FIRST])
+	{
+		if (nullptr != pGameObject)
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+
+	m_RenderObjects[RENDER_ALPHABLEND_FIRST].clear();
+
+
+
+	///////////////////////////////
 	// HDR
 	for (auto& pGameObject : m_RenderObjects[RENDER_ALPHABLEND])
 	{
@@ -709,6 +813,7 @@ HRESULT CRenderer::Render_PostProcess()
 	m_pContext->OMGetRenderTargets(1, &pBackBufferView, &pDepthStencilView);
 	m_pContext->GSSetShader(nullptr, nullptr, 0);
 
+	m_pShader_PostProcess->Tick(TIME_DELTA);
 
 	if (m_RenderObjects[POSTPROCESS_VFX].empty() == false)
 	{
@@ -731,8 +836,8 @@ HRESULT CRenderer::Render_PostProcess()
 			return E_FAIL;
 		if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_DepthTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Depth")))))
 			return E_FAIL;
-		if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_DepthMaintainTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Depth_Maintain")))))
-			return E_FAIL;
+		//if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_DepthMaintainTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Depth_Maintain")))))
+		//	return E_FAIL;
 		if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_PortraitTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Portrait")))))
 			return E_FAIL;
 		m_pShader_PostProcess->Set_RawValue("g_iWinCX", &ViewPortDesc.Width, sizeof(_float));
@@ -805,6 +910,27 @@ HRESULT CRenderer::Render_UI()
 
 	m_RenderObjects[RENDER_UI].clear();
 
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Decal()
+{
+	{
+		// Decal Rendering 하기위해서 기존 diffuse, normal, depth를 복사해 SRV로 사용한다.
+		// m_pTarget_Manager->CopyRenderTarget(m_pContext, L"Target_Diffuse_Copy", L"Target_Diffuse");
+		// m_pTarget_Manager->CopyRenderTarget(m_pContext, L"Target_Normal_Copy", L"Target_Normal");
+		// m_pTarget_Manager->CopyRenderTarget(m_pContext, L"Target_Depth_Copy", L"Target_Depth");
+
+		for (auto& pGameObject : m_RenderObjects[RENDER_DECAL])
+		{
+			if (nullptr != pGameObject)
+				pGameObject->Render();
+
+			Safe_Release(pGameObject);
+		}
+
+		m_RenderObjects[RENDER_DECAL].clear();
+	}
 	return S_OK;
 }
 

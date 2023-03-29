@@ -65,6 +65,11 @@ void CPxModel::Imgui_RenderProperty()
 		static GUIZMO_INFO tInfo;
 		CImguiUtils::Render_Guizmo(&test2, tInfo, true, true);
 	}
+
+	ImGui::InputFloat("Tolerance", &CPxBone::fTolerance);
+	ImGui::InputFloat("dencity", &CPxBone::fDensity);
+	ImGui::InputFloat("angle", &CPxBone::fAngle);
+	
 }
 
 void CPxModel::Update_Tick(_double TimeDelta, const _float4x4& WorldMatrix)

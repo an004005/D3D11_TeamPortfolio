@@ -262,7 +262,13 @@
     <ClInclude Include="..\public\EM0800.h" />
     <ClInclude Include="..\public\EM0800_AnimInstance.h" />
     <ClInclude Include="..\public\EM0800_Controller.h" />
-    <ClInclude Include="..\public\EnemyBullet.h" />
+    <ClInclude Include="..\public\EM1100.h" />
+    <ClInclude Include="..\public\EM1100_AnimInstance.h" />
+    <ClInclude Include="..\public\EM1100_Controller.h" />
+    <ClInclude Include="..\public\EM1200.h" />
+    <ClInclude Include="..\public\EM1200_AnimInstance.h" />
+    <ClInclude Include="..\public\EM1200_Controller.h" />
+    <ClInclude Include="..\public\RedBullet.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
     <ClInclude Include="..\public\FLInvisible_AnimInstance.h" />
@@ -276,6 +282,8 @@
     <ClInclude Include="..\public\GameManager.h" />
     <ClInclude Include="..\public\PlayerStartPosition.h" />
     <ClInclude Include="..\public\PointLight.h" />
+    <ClInclude Include="..\public\PostVFX_SuperSpeed.h" />
+    <ClInclude Include="..\public\PostVFX_Teleport.h" />
     <ClInclude Include="..\public\SAS_Cable.h" />
     <ClInclude Include="..\public\SpecialObject.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -369,11 +377,27 @@
     </ClInclude>
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
+    <ClInclude Include="..\public\Special_DropObject_Bundle.h" />
+    <ClInclude Include="..\public\Special_DropObject_Single.h" />
     <ClInclude Include="..\public\Special_HBeam_Bundle.h" />
     <ClInclude Include="..\public\Special_HBeam_Single.h" />
+    <ClInclude Include="..\public\Special_TankLorry.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_TankLorry_Head.h" />
+    <ClInclude Include="..\public\Special_TankLorry_Tank.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_TankLorry_Trailer.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\public\Special_TelephonePole.h" />
     <ClInclude Include="..\public\Special_Train.h" />
     <ClInclude Include="..\public\SpawnTrigger.h" />
+    <ClInclude Include="..\public\SuperSpeedTrail.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\TestCamera.h" />
     <ClInclude Include="..\public\TestTarget.h" />
@@ -395,7 +419,7 @@
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
-    <ClInclude Include="..\public\WaterBall.h" />
+    <ClInclude Include="..\public\OilBullet.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -485,7 +509,13 @@
     <ClCompile Include="..\private\EM0800.cpp" />
     <ClCompile Include="..\private\EM0800_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0800_Controller.cpp" />
-    <ClCompile Include="..\private\EnemyBullet.cpp" />
+    <ClCompile Include="..\private\EM1100.cpp" />
+    <ClCompile Include="..\private\EM1100_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM1100_Controller.cpp" />
+    <ClCompile Include="..\private\EM1200.cpp" />
+    <ClCompile Include="..\private\EM1200_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM1200_Controller.cpp" />
+    <ClCompile Include="..\private\RedBullet.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />
     <ClCompile Include="..\private\FLInvisible_AnimInstance.cpp" />
@@ -499,6 +529,8 @@
     <ClCompile Include="..\private\GameManager.cpp" />
     <ClCompile Include="..\private\PlayerStartPosition.cpp" />
     <ClCompile Include="..\private\PointLight.cpp" />
+    <ClCompile Include="..\private\PostVFX_SuperSpeed.cpp" />
+    <ClCompile Include="..\private\PostVFX_Teleport.cpp" />
     <ClCompile Include="..\private\SAS_Cable.cpp" />
     <ClCompile Include="..\private\SpecialObject.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -592,11 +624,27 @@
     </ClCompile>
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
+    <ClCompile Include="..\private\Special_DropObject_Bundle.cpp" />
+    <ClCompile Include="..\private\Special_DropObject_Single.cpp" />
     <ClCompile Include="..\private\Special_HBeam_Bundle.cpp" />
     <ClCompile Include="..\private\Special_HBeam_Single.cpp" />
+    <ClCompile Include="..\private\Special_TankLorry.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TankLorry_Head.cpp" />
+    <ClCompile Include="..\private\Special_TankLorry_Tank.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TankLorry_Trailer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\private\Special_TelephonePole.cpp" />
     <ClCompile Include="..\private\Special_Train.cpp" />
     <ClCompile Include="..\private\SpawnTrigger.cpp" />
+    <ClCompile Include="..\private\SuperSpeedTrail.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\TestCamera.cpp" />
     <ClCompile Include="..\private\TestTarget.cpp" />
@@ -618,7 +666,7 @@
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
-    <ClCompile Include="..\private\WaterBall.cpp" />
+    <ClCompile Include="..\private\OilBullet.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -667,6 +715,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_VFX_UI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonModel.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\SSAO.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

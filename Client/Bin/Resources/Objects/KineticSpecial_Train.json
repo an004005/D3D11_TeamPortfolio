@@ -1,1 +1,72 @@
-{"LocalMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0],"ModelTags":["Model_Train\u0000","Model_Train\u0000","Model_Train\u0000"],"ObjectTag":"","Prototype_GameObject":"Prototype_GameObject_Special_Train\u0000","RigidBody":{"ColliderType":4,"Density":10.0,"OriginTransform":[3.639851684056339e-06,0.0,-4.0,0.0,0.0,6.0,0.0,0.0,1.0,0.0,9.099629210140847e-07,0.0,0.25,1.5,0.5,1.0],"ShapeType":2,"bKinematic":true,"bTrigger":false},"Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,2.0545129776000977,1.4999988079071045,13.015807151794434,1.0]}}
+{
+    "LocalMatrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+    ],
+    "ModelTags": [
+        "Model_Train\u0000",
+        "Model_Train\u0000",
+        "Model_Train\u0000"
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "Prototype_GameObject_Special_Train\u0000",
+    "RigidBody": {
+        "ColliderType": 4,
+        "Density": 10.0,
+        "OriginTransform": [
+            3.639851684056339e-06,
+            0.0,
+            -4.0,
+            0.0,
+            0.0,
+            6.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            9.099629210140847e-07,
+            0.0,
+            0.25,
+            1.5,
+            0.5,
+            1.0
+        ],
+        "ShapeType": 2,
+        "bKinematic": true,
+        "bTrigger": false
+    },
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            2.0545129776000977,
+            1.4999988079071045,
+            13.015807151794434,
+            1.0
+        ]
+    }
+}

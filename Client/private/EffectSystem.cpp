@@ -45,7 +45,10 @@ void CEffectSystem::BeginTick()
 
 void CEffectSystem::Tick(_double TimeDelta)
 {
-	
+	if (LEVEL_NOW == LEVEL_EFFECT || LEVEL_NOW == LEVEL_UI)
+	{
+		m_pShaderCom->Tick(TimeDelta);
+	}
 }
 
 void CEffectSystem::Late_Tick(_double TimeDelta)
@@ -201,9 +204,7 @@ HRESULT CEffectSystem::SetParams()
 		const _matrix WorldMatrix = XMLoadFloat4x4(&m_ChildBuffers[0]) * m_pTransformCom->Get_WorldMatrix();
 		const _float4x4 WorldInv = XMMatrixInverse(nullptr, WorldMatrix);
 
-		FAILED_CHECK(m_pShaderCom->Set_ShaderResourceView("g_DepthTex", CGameInstance::GetInstance()->Get_SRV(L"Target_Depth_Copy")));
-		FAILED_CHECK(m_pShaderCom->Set_ShaderResourceView("g_NormalTex", CGameInstance::GetInstance()->Get_SRV(L"Target_Normal_Copy")));
-		FAILED_CHECK(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTex", CGameInstance::GetInstance()->Get_SRV(L"Target_Diffuse_Copy")));
+		FAILED_CHECK(m_pShaderCom->Set_ShaderResourceView("g_DepthTex", CGameInstance::GetInstance()->Get_SRV(L"Target_Depth")));
 		FAILED_CHECK(m_pShaderCom->Set_Matrix("g_ProjMatrixInv", &ProjInv));
 		FAILED_CHECK(m_pShaderCom->Set_Matrix("g_ViewMatrixInv", &ViewInv));
 		FAILED_CHECK(m_pShaderCom->Set_Matrix("g_WorldMatrixInv", &WorldInv));
@@ -211,7 +212,7 @@ HRESULT CEffectSystem::SetParams()
 	
 	if (m_bUseDepth)
 	{
-		FAILED_CHECK(m_pShaderCom->Set_ShaderResourceView("g_DepthTex", CGameInstance::GetInstance()->Get_SRV(L"Target_Depth_Copy")));
+		FAILED_CHECK(m_pShaderCom->Set_ShaderResourceView("g_DepthTex", CGameInstance::GetInstance()->Get_SRV(L"Target_Depth")));
 	}
 
 	return S_OK;

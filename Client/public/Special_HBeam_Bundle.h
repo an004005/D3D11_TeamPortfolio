@@ -39,6 +39,16 @@ public:
 	void	HBeam_Single_Finish();
 	void	HBeam_Single_SetKinetic(_bool bKinetic);
 
+	void	HBeam_Collision();
+	void	HBeam_Explosion();
+
+	void	HBeam_SetDeadTimer();
+
+private:
+	_bool  m_bDeadCheck = false;
+	_float m_fDeadTime = 0.f;
+	_float m_fCollisionTime = 0.f;
+
 public:
 	_bool	HBeam_isDecomposed() { return m_bRenderOption; }	// false면 디컴포즈된거임
 
@@ -53,7 +63,8 @@ private:
 	_bool	m_bThrow = false;
 	_bool	m_bRenderOption = true;	//	true면 번들 렌더, false면 싱글 렌더
 	CDoOnce tt;
-	_float	m_fThrowPower = 300.f;
+	_float	m_fThrowPower = 2000.f;
+	_float	m_fFloatPower = 11.5f;
 
 public:
 	static CSpecial_HBeam_Bundle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -8,6 +8,7 @@ Texture2D g_Weak01;
 Texture2D g_Vanish_Noise;
 Texture2D g_Weak_Noise;
 Texture2D g_WaveTile;
+Texture2D g_scl_noise_004;
 
 struct VS_IN
 {
@@ -428,6 +429,25 @@ PS_OUT PS_MAIN_KINETIC_7(PS_IN In)
 
 }
 
+PS_OUT_NONLIGHT PS_SuperSpeedTrail_8(PS_IN In)
+{
+	PS_OUT_NONLIGHT			Out = (PS_OUT_NONLIGHT)0;
+
+	float fNoise = g_scl_noise_004.Sample(LinearSampler, In.vTexUV * 2.f).r;
+	float fLifeRatio = saturate(g_float_0);
+	if (fLifeRatio <= 0.5f)
+	{
+		float fRemapRatio = Remap(fLifeRatio, float2(0.f, 0.5f), float2(0.f, 1.f));
+		if (fRemapRatio< fNoise)
+			discard;
+	}
+
+	Out.vColor.rgb = COL_PINK;
+	Out.vColor.a = 0.3f;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0
@@ -540,5 +560,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_KINETIC_7();
+	}
+
+	//8
+	pass SuperSpeedTrail
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SuperSpeedTrail_8();
 	}
 }

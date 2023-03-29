@@ -39,7 +39,7 @@ HRESULT CEM0320_Controller::Initialize(void* pArg)
 			.AddTransition("Outside to Far", "Far")
 				.Predicator([this]
 				{
-					return m_fToTargetDistance <= 25.f;
+					return m_fTtoM_Distance <= 25.f;
 				})
 
 
@@ -48,7 +48,7 @@ HRESULT CEM0320_Controller::Initialize(void* pArg)
 			.AddTransition("Near to Far", "Mid")
 				.Predicator([this]
 				{
-					return m_fToTargetDistance > 8.f;
+					return m_fTtoM_Distance > 8.f;
 				})
 
 		.AddState("Mid")
@@ -56,12 +56,12 @@ HRESULT CEM0320_Controller::Initialize(void* pArg)
 			.AddTransition("Mid to Near", "Near")
 				.Predicator([this]
 				{
-					return m_fToTargetDistance <= 8.f;
+					return m_fTtoM_Distance <= 8.f;
 				})
 			.AddTransition("Mid to Far", "Far")
 				.Predicator([this]
 				{
-					return m_fToTargetDistance > 14.f;
+					return m_fTtoM_Distance > 14.f;
 				})
 
 		.AddState("Far")
@@ -69,7 +69,7 @@ HRESULT CEM0320_Controller::Initialize(void* pArg)
 			.AddTransition("Far to Near", "Near")
 				.Predicator([this]
 				{
-					return m_fToTargetDistance <= 14.f;
+					return m_fTtoM_Distance <= 14.f;
 				})
 		.Build();
 
@@ -91,10 +91,6 @@ void CEM0320_Controller::AI_Tick(_double TimeDelta)
 {
 	if (m_pTarget == nullptr)
 		return;
-	// 내가 타겟을 바라보는 방향으로의 거리 
-	m_fToTargetDistance = XMVectorGetX(XMVector3LengthEst(
-		m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)
-		- m_pCastedOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)));
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{

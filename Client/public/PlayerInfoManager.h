@@ -2,6 +2,7 @@
 
 #include "Base.h"
 #include "Client_Defines.h"
+#include "Transform.h"
 
 //플레이어가 가지는 정보를 싱글톤으로 관리
 
@@ -34,6 +35,8 @@ typedef struct tagPlayerStatus
 	_uint m_iMaxKineticEnergy;
 	_uint m_iKineticEnergyLevel;   // 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
 	_uint m_iKineticEnergyType;    // 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
+
+	_float m_fBaseAttackDamage;
 
 	ESASType m_eAttack_SAS_Type;
 
@@ -86,9 +89,20 @@ public:	// Set
 	void			Set_SasType(ESASType eType);
 	void			Finish_SasType(ESASType eType);
 
+	void			Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasType, _float iChangeEnergy);
+
+	void			Set_PlayerWorldMatrix(_fmatrix worldmatrix);
+
 	HRESULT			Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
+
+
+public:
+	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
+	void			Camera_Random_Shake(_float fForce);
+	void			Camera_Axis_Shaking(_float4 vDir, _float fShakePower);
+	void			Camera_Axis_Sliding(_float4 vDir, _float fShakePower);
 
 
 private:	// 스탯 정보 관련
@@ -99,6 +113,15 @@ private:	// 상호작용 관련
 	CGameObject*	m_pKineticObject;
 	CGameObject*	m_pTargetedMonster;
 	CGameObject*	m_pSpecialObject;
+
+private:
+	CGameObject*	m_pCamSpot = nullptr;
+
+private:
+	_matrix			m_PlayerWorldMatrix = XMMatrixIdentity();
+
+private:
+	_float			m_fBaseAttackDamage;
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

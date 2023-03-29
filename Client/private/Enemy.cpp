@@ -55,6 +55,24 @@ vector<wstring>			CEnemy::s_vecElecHit{
 	L"Elec_Attack_OnHit_01"
 };
 
+vector<wstring>			CEnemy::s_vecDefaultDecal{
+	L"Default_Hit_Decal_A",
+	L"Default_Hit_Decal_B",
+	L"Default_Hit_Decal_C"
+};
+
+vector<wstring>			CEnemy::s_vecFireDecal{
+	L"Fire_Hit_Decal_A",
+	L"Fire_Hit_Decal_B",
+	L"Fire_Hit_Decal_C"
+};
+
+vector<wstring>			CEnemy::s_vecElecDecal{
+	L"Elec_Hit_Decal_A",
+	L"Elec_Hit_Decal_B",
+	L"Elec_Hit_Decal_C"
+};
+
 CEnemy::CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CScarletCharacter(pDevice, pContext)
 {
@@ -112,9 +130,9 @@ void CEnemy::Imgui_RenderProperty()
 		ImGui::InputInt("MaxHP", &m_iMaxHP);
 		ImGui::InputInt("MaxCrushGage", &m_iMaxCrushGage);
 		ImGui::Checkbox("HasCrushGage", &m_bHasCrushGage);
-		_int iLevel = iMonsterLevel;
+		_int iLevel = iEemeyLevel;
 		ImGui::InputInt("Level", &iLevel);
-		iMonsterLevel = iLevel;
+		iEemeyLevel = iLevel;
 		ImGui::InputInt("AtkDamage", &m_iAtkDamage);
 	}
 
@@ -236,7 +254,7 @@ void CEnemy::SetEnemyBatchDataStat(ENEMY_STAT tStat)
 	m_iCrushGage = m_iMaxCrushGage;
 	m_bHasCrushGage = tStat.bHasCrushGage;
 	m_iAtkDamage = tStat.iAtkDamage;
-	iMonsterLevel = tStat.iLevel;
+	iEemeyLevel = tStat.iLevel;
 }
 
 ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
@@ -246,7 +264,7 @@ ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
 	tStat.iMaxCrushGage = m_iMaxCrushGage;
 	tStat.bHasCrushGage = m_bHasCrushGage;
 	tStat.iAtkDamage = m_iAtkDamage;
-	tStat.iLevel = iMonsterLevel;
+	tStat.iLevel = iEemeyLevel;
 	return tStat;
 }
 
@@ -280,6 +298,16 @@ void CEnemy::FindTarget()
 		}, PLATERTEST_LAYER_PLAYER);
 		m_pTarget = dynamic_cast<CScarletCharacter*>(pPlayer);
 	}
+}
+
+void CEnemy::TurnEyesOut()
+{
+	CEffectGroup* pEffectGroup = nullptr;
+	pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", TEXT("Layer_UI"));
+	assert(pEffectGroup != nullptr);
+
+	//TimeLine 끝나고 삭제
+	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true);
 }
 
 _float4x4 CEnemy::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
@@ -334,12 +362,14 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 
 	wstring HitBloodName;
 	wstring HitEffectName;
+	wstring HitDecalName;
 
 	switch (tDamageParams.eAttackSAS)
 	{
 	case ESASType::SAS_FIRE:
 		HitBloodName = s_vecFireBlood[CMathUtils::RandomUInt(s_vecFireBlood.size() - 1)];
 		HitEffectName = s_vecFireHit[CMathUtils::RandomUInt(s_vecFireHit.size() - 1)];
+		HitDecalName = s_vecFireDecal[CMathUtils::RandomUInt(s_vecFireDecal.size() - 1)];
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Player_Fire_Sword_Particle")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 //		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Player_Sas_Fire_Sword_Particle"))->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 		break;
@@ -347,12 +377,14 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 	case ESASType::SAS_ELETRIC:
 		HitBloodName = s_vecElecBlood[CMathUtils::RandomUInt(s_vecElecBlood.size() - 1)];
 		HitEffectName = s_vecElecHit[CMathUtils::RandomUInt(s_vecElecHit.size() - 1)];
+		HitDecalName = s_vecElecDecal[CMathUtils::RandomUInt(s_vecElecDecal.size() - 1)];
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Player_Elec_Sword_Particle")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 		break;
 
 	case ESASType::SAS_NOT:
 		HitBloodName = s_vecDefaultBlood[CMathUtils::RandomUInt(s_vecDefaultBlood.size() - 1)];
 		HitEffectName = s_vecDefaultHit[CMathUtils::RandomUInt(s_vecDefaultHit.size() - 1)];
+		HitDecalName = s_vecDefaultDecal[CMathUtils::RandomUInt(s_vecDefaultDecal.size() - 1)];
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Default_Sword_Particle")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 		break;
 	}
@@ -362,6 +394,8 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 	if (HitEffectName.empty() == false)
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitEffectName)->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
+	if (HitDecalName.empty() == false)
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitDecalName)->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 
 	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Circle_Distortion_NonFlip_Short")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 

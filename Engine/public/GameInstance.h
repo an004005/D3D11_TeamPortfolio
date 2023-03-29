@@ -188,6 +188,9 @@ public:/*for GameTimeManager */
 	void ResetDefaultTimeRatio();
 	void ClearAllTimeRatio();
 
+public:
+	void LambdaRenderRequest(const _float4x4& WorldMatrix, const std::function<void()>& RenderFunction, CRenderer::RENDERGROUP eRenderGroup);
+
 public: // for CImgui_Manager
 	void Render_ImGui();
 	void Render_Update_ImGui();
@@ -227,6 +230,7 @@ private:
 	class CCurveManager*			m_pCurve_Manager = nullptr;
 	class CGameTime_Manager*		m_pGameTime_Manager = nullptr;
 	class CImgui_Manager*			m_pImgui_Manager = nullptr;
+	class CSSAOManager*				m_pSSAO_Manager = nullptr;
 
 public:
 	static void Release_Engine();
@@ -235,6 +239,9 @@ private:
 	HWND m_hWnd;
 	CRenderer* m_pRenderer = nullptr;
 	_uint m_iTotalLevel = 0;
+
+	list<class CLambdaRenderObject*> m_LambdaRenderQ;
+	list<class CLambdaRenderObject*> m_UsedLambdaRenderQ;
 
 public:
 	virtual void Free() override;

@@ -1,1 +1,31 @@
-{"LifeTime":10.0,"ObjectTag":"Player_Text_Particle_NoLoop","Particles":[{"ObjectTag":"Player_Text_Particle","ParticleDirectory":"../Bin/Resources/VFX/ParticleSystem/Player_Kinetic_Particle/Player_Text_Particle.json"}],"Prototype_GameObject":"ProtoVFX_ParticleGroup\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "LifeTime": 10.0,
+    "ObjectTag": "Player_Text_Particle_NoLoop",
+    "Particles": [
+        {
+            "ObjectTag": "Player_Text_Particle",
+            "ParticleDirectory": "../Bin/Resources/VFX/ParticleSystem/Player_Kinetic_Particle/Player_Text_Particle.json"
+        }
+    ],
+    "Prototype_GameObject": "ProtoVFX_ParticleGroup\u0000",
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

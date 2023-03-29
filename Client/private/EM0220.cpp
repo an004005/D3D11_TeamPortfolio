@@ -5,15 +5,14 @@
 #include "RigidBody.h"
 #include "EM0220_AnimInstance.h"
 #include "EM0220_Controller.h"
-#include "EnemyBullet.h"
 #include "PhysX_Manager.h"
 #include "EM0221.h"
 #include "ImguiUtils.h"
-
+#include "RedBullet.h"
 CEM0220::CEM0220(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
-	m_eMonsterName = EEnemyName::EM0220;
+	m_eEnemyName = EEnemyName::EM0220;
 }
 
 CEM0220::CEM0220(const CEM0220 & rhs)
@@ -35,12 +34,12 @@ HRESULT CEM0220::Initialize(void * pArg)
 		m_iHP = 1100; // ★
 
 		m_iAtkDamage = 50;
-		iMonsterLevel = 2;
+		iEemeyLevel = 2;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eMonsterName = EEnemyName::EM0220;
+	m_eEnemyName = EEnemyName::EM0220;
 	m_bHasCrushGage = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
@@ -89,9 +88,9 @@ void CEM0220::SetUpAnimationEvent()
 	//Attack_Shot 중일때 앞으로 뱉는 모션에서 계속 Bullet생성
 	m_pModelCom->Add_EventCaller("Shot", [this]
 	{
-		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("EnemyBullet"));
+		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_RedBullet"));
 
-		if (CEnemyBullet* pBullet = dynamic_cast<CEnemyBullet*>(pObj))
+		if (CRedBullet* pBullet = dynamic_cast<CRedBullet*>(pObj))
 		{
 			pBullet->Set_Owner(this);
 

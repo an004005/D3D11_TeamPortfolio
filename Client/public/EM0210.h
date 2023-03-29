@@ -86,8 +86,6 @@ private:
 	//Jump
 	_float3 m_vOnJumpMoveVelocity;
 
-	string		m_strBoneName;
-
 	CController::EHandleInput	m_eInput;
 public:
 	static CEM0210* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

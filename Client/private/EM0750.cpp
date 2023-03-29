@@ -5,12 +5,12 @@
 #include "RigidBody.h"
 #include "EM0750_AnimInstance.h"
 #include "EM0750_Controller.h"
-#include "EnemyBullet.h"
+
 
 CEM0750::CEM0750(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
-	m_eMonsterName = EEnemyName::EM0750;
+	m_eEnemyName = EEnemyName::EM0750;
 }
 
 CEM0750::CEM0750(const CEM0750 & rhs)
@@ -32,12 +32,12 @@ HRESULT CEM0750::Initialize(void * pArg)
 		m_iHP = 1000; // ¡Ú
 
 		m_iAtkDamage = 50;
-		iMonsterLevel = 1;
+		iEemeyLevel = 1;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eMonsterName = EEnemyName::EM0750;
+	m_eEnemyName = EEnemyName::EM0750;
 	m_bHasCrushGage = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_pTransformCom->SetSpeed(15.f);
