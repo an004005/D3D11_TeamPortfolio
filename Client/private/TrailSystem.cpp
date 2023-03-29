@@ -73,9 +73,9 @@ void CTrailSystem::Tick(_double TimeDelta)
 	if (FireCheck != TrailType.end())
 		m_vColor = _float4(1.f, 180.f / 255.f, 45.f / 255.f, 1.f);
 
-	//const auto ElecCheck = find(TrailType.begin(), TrailType.end(), ESASType::SAS_ELETRIC);
-	//if (ElecCheck != TrailType.end())
-	//	m_vColor = _float4(1.f, 180.f / 255.f, 45.f / 255.f, 1.f);
+	const auto ElecCheck = find(TrailType.begin(), TrailType.end(), ESASType::SAS_ELETRIC);
+	if (ElecCheck != TrailType.end())
+		m_vColor = _float4(247.f / 255.f, 255.f / 255.f, 19.f / 255.f, 1.f);
 	// ~SAS에 따른 트레일 색상값 변경
 
 	if (m_vPrePoses.size() > 3)

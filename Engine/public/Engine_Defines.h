@@ -19,7 +19,7 @@
 #include <DirectXTK/SpriteFont.h>
 
 #include <d3dcompiler.h>
-#include <TypeInfo.h>
+// #include <TypeInfo.h>
 #include <DirectXCollision.h>
 
 #define PX_PHYSX_CHARACTER_STATIC_LIB

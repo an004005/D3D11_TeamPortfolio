@@ -2,6 +2,8 @@
 #include "Shader_Defines.h"
 #include "Shader_Params.h"
 
+Texture2D g_KineticWave;
+
 struct VS_IN
 {
 	float3		vPosition : POSITION;
@@ -78,8 +80,8 @@ PS_OUT CommonProcess(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	if (Out.vDiffuse.a < 0.01f)
-		discard;
+	//if (Out.vDiffuse.a < 0.01f)
+	//	discard;
 
 	float3 vNormal;
 	if (g_tex_on_1)
@@ -140,6 +142,10 @@ PS_OUT PS_PSYCHIC_DEFAULT_4(PS_IN In)
 {
 	PS_OUT Out = CommonProcess(In);
 
+	// 알파값 없던 텍스쳐 알파 무시하는 부분
+	//if (Out.vDiffuse.a == 0.f)
+	// ~알파값 없던 텍스쳐 알파 무시하는 부분
+
 	if (g_tex_on_2)
 		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
 	else
@@ -156,8 +162,8 @@ PS_OUT PS_PSYCHIC_DEFAULT_4(PS_IN In)
 	{
 		if (fPsychic >= 1.f)
 		{
-			// todo: 웨이브로 추후 수정
-			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, 0.5f);
+			float fWave = g_KineticWave.Sample(LinearSampler, TilingAndOffset(In.vTexUV, 1.f, float2(g_Time * 0.25f, 0.f))).r;
+			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, fWave);
 		}
 		else
 		{
@@ -166,6 +172,7 @@ PS_OUT PS_PSYCHIC_DEFAULT_4(PS_IN In)
 		}
 	}
 
+	Out.vDiffuse.a = 1.f;
 
 	return Out;
 }

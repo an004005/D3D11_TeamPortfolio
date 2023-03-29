@@ -1,1 +1,120 @@
-{"BilboardType":1,"BufferType":0,"BurstCnt":5,"ConeDirDegree":30.0,"ConeOriginRadius":1.0,"Duration":0.5,"FromOrigin":true,"GravityPowerMinMax":[0.0,0.0],"IncreaseMaxSize":2.0,"Life":0.800000011920929,"LifeMinMax":[1.0,1.0],"LifeRand":true,"Loop":false,"MeshBufferProtoTag":"","MeshSize":[1.0,1.0,1.0],"ModelCurveProtoTag":"../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_10.static_model","ModelProtoTag":"../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_03.static_model","ObjectTag":"","Prototype_GameObject":"ProtoVFX_ParticleSystem\u0000","RandDirMax":[1.0,1.0,1.0],"RandDirMin":[0.0,0.0,0.0],"RotationToTimeMax":[0.0,0.0,0.0],"RotationToTimeMin":[0.0,0.0,0.0],"ScaleVariation":[1.0,1.0,1.0],"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[3.0],"Ints":[],"Pass":9,"Textures":["..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_fir_007.png\u0000","..\\Bin\\Resources\\Texture\\VFX\\T_ef_ev_anm_fir_001_MSK.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxPointInstance_Particle","Shape":0,"SpawnTickTime":0.029999999329447746,"Speed":0.009999999776482582,"SpeedMinMax":[0.10000000149011612,1.0],"SpeedRand":true,"SphereDetail":false,"SphereRadius":0.30000001192092896,"Transform":{"WorldMatrix":[5.0,0.0,0.0,0.0,0.0,5.0,0.0,0.0,0.0,0.0,5.0,0.0,0.0,0.0,0.0,1.0]},"UseMeshData":true,"VtxRangeTimelineCurve":"0.02Fix","VtxStartTimelineCurve":"Simple_Increase","XDirCurveName":"TestX","YDirCurveName":"TestY","ZDirCurveName":"TestZ","bCurveDir":true,"bGravity":false,"bLocal":false,"bMeshCurve":true,"bNonAlpha":false,"bPhysX":false,"bRotate":true,"bSizeDecreaseByLife":true,"bSizeIncreaseByLife":true,"pSize":[1.0,1.0]}
+{
+    "BilboardType": 1,
+    "BufferType": 0,
+    "BurstCnt": 5,
+    "ConeDirDegree": 30.0,
+    "ConeOriginRadius": 1.0,
+    "Duration": 0.5,
+    "FromOrigin": true,
+    "GravityPowerMinMax": [
+        0.0,
+        0.0
+    ],
+    "IncreaseMaxSize": 2.0,
+    "Life": 0.800000011920929,
+    "LifeMinMax": [
+        1.0,
+        1.0
+    ],
+    "LifeRand": true,
+    "Loop": false,
+    "MeshBufferProtoTag": "",
+    "MeshSize": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ModelCurveProtoTag": "../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_10.static_model",
+    "ModelProtoTag": "../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_03.static_model",
+    "ObjectTag": "",
+    "Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",
+    "RandDirMax": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "RandDirMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMax": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "ScaleVariation": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [
+            3.0
+        ],
+        "Ints": [],
+        "Pass": 9,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_fir_007.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_ev_anm_fir_001_MSK.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxPointInstance_Particle",
+    "Shape": 0,
+    "SpawnTickTime": 0.029999999329447746,
+    "Speed": 0.009999999776482582,
+    "SpeedMinMax": [
+        0.10000000149011612,
+        1.0
+    ],
+    "SpeedRand": true,
+    "SphereDetail": false,
+    "SphereRadius": 0.30000001192092896,
+    "Transform": {
+        "WorldMatrix": [
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    "UseMeshData": true,
+    "VtxRangeTimelineCurve": "0.02Fix",
+    "VtxStartTimelineCurve": "Simple_Increase",
+    "XDirCurveName": "TestX",
+    "YDirCurveName": "TestY",
+    "ZDirCurveName": "TestZ",
+    "bCurveDir": true,
+    "bGravity": false,
+    "bLocal": false,
+    "bMeshCurve": true,
+    "bNonAlpha": false,
+    "bPhysX": false,
+    "bRotate": true,
+    "bSizeDecreaseByLife": true,
+    "bSizeIncreaseByLife": true,
+    "pSize": [
+        1.0,
+        1.0
+    ]
+}

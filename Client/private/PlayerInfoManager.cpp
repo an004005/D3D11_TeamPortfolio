@@ -5,6 +5,7 @@
 #include "MapKinetic_Object.h"
 #include "Monster.h"
 #include "Enemy.h"
+#include "CamSpot.h"
 
 IMPLEMENT_SINGLETON(CPlayerInfoManager)
 
@@ -26,6 +27,8 @@ HRESULT CPlayerInfoManager::Initialize()
 
 	m_tPlayerStat.m_iKineticEnergyLevel = 0;
 	m_tPlayerStat.m_iKineticEnergyType = 2;
+
+	m_tPlayerStat.m_fBaseAttackDamage = 100.f;
 
 #pragma endregion 플레이어 기본 스탯 초기화
 
@@ -124,6 +127,16 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 	else if (true == m_pSpecialObject->IsDeleted()) m_pSpecialObject = nullptr;
 
 	SAS_Checker();
+
+	/*_uint iCnt = 0;
+	int Test[3] = { -1, -1, -1 };
+	for (auto& iter : m_PlayerSasTypeList)
+	{
+		Test[iCnt] = (int)iter;
+		iCnt++;
+	}*/
+
+	//IM_LOG("SAS : %d %d %d", Test[0], Test[1], Test[2]);
 }
 
 _bool CPlayerInfoManager::Get_isSasUsing(ESASType eType)
@@ -263,6 +276,22 @@ void CPlayerInfoManager::Finish_SasType(ESASType eType)
 	}
 }
 
+void CPlayerInfoManager::Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasType, _float iChangeEnergy)
+{
+	if (CHANGE_INCREASE == eChangeType)				m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy += iChangeEnergy;
+	else if (CHANGE_DECREASE == eChangeType)		m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy -= iChangeEnergy;
+
+	if (m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy > m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].MaxEnergy)
+		m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy = m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].MaxEnergy;
+	if (m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy < 0.f)
+		m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy = 0.f;
+}
+
+void CPlayerInfoManager::Set_PlayerWorldMatrix(_fmatrix worldmatrix)
+{
+	m_PlayerWorldMatrix = worldmatrix;
+}
+
 HRESULT CPlayerInfoManager::Set_KineticObject(CGameObject * pKineticObject)
 {
 	if (nullptr == pKineticObject) { m_pKineticObject = nullptr; return S_OK; }
@@ -295,6 +324,37 @@ HRESULT CPlayerInfoManager::Set_SpecialObject(CGameObject * pSpecialObject)
 
 	m_pSpecialObject = pSpecialObject;
 	return S_OK;
+}
+
+HRESULT CPlayerInfoManager::Set_CamSpot(CGameObject * pCamSpot)
+{
+	m_pCamSpot = pCamSpot;
+
+	return S_OK;
+}
+
+void CPlayerInfoManager::Camera_Random_Shake(_float fForce)
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCamSpot))
+	{
+		static_cast<CCamSpot*>(m_pCamSpot)->Random_Shaking(fForce);
+	}
+}
+
+void CPlayerInfoManager::Camera_Axis_Shaking(_float4 vDir, _float fShakePower)
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCamSpot))
+	{
+		static_cast<CCamSpot*>(m_pCamSpot)->Axis_Shaking(vDir, fShakePower);
+	}
+}
+
+void CPlayerInfoManager::Camera_Axis_Sliding(_float4 vDir, _float fShakePower)
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCamSpot))
+	{
+		static_cast<CCamSpot*>(m_pCamSpot)->Axis_Sliding(vDir, fShakePower);
+	}
 }
 
 void CPlayerInfoManager::SAS_Checker()
@@ -332,6 +392,7 @@ void CPlayerInfoManager::SAS_Checker()
 					{
 						SAS = m_PlayerSasTypeList.erase(SAS);
 						m_tPlayerStat.Sasese[i].bUsable = false;
+
 						break;
 					}
 					else
@@ -355,4 +416,8 @@ void CPlayerInfoManager::SAS_Checker()
 
 void CPlayerInfoManager::Free()
 {
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCamSpot))
+	{
+		Safe_Release(m_pCamSpot);
+	}
 }

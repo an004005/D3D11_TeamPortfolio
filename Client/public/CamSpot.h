@@ -36,7 +36,13 @@ private:
 
 public:
 	void	Switch_CamMod();	// CameraPos에 캠 붙이기
+	void	Reset_CamMod();
 	void	SetUp_BoneMatrix(CModel* pModel, _fmatrix Transform);
+
+public:
+	void	Random_Shaking(_float fShakePower);
+	void	Axis_Shaking(_float4 vAxis, _float fShakePower);
+	void	Axis_Sliding(_float4 vAxis, _float fSlidePower);
 
 private:
 	ECamMod	m_eCamMod = MOD_SYNC;

@@ -349,6 +349,12 @@
     <Filter Include="02.GameObjects\Enemy\EM0320">
       <UniqueIdentifier>{c47b4ee9-693a-4fcc-b215-a3fede0dd4ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_HBeam">
+      <UniqueIdentifier>{3d3141ae-cb50-4e98-be7f-6a2ccd5a7c65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_DropObject">
+      <UniqueIdentifier>{582dd83f-6fa4-40bd-a589-1e0ae3c72dd6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Enemy\EM0800">
       <UniqueIdentifier>{ea366a02-5446-4163-9037-e8e37c831263}</UniqueIdentifier>
     </Filter>
@@ -375,6 +381,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Enemy\EMBullet\ElectricBullet">
       <UniqueIdentifier>{53e11f2c-66d8-4166-948c-aeb499f89c39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_TankLorry">
+      <UniqueIdentifier>{b12936c4-bc60-410c-9473-2decf22ba875}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -841,9 +850,6 @@
     <ClInclude Include="..\public\BdLm_Controller.h">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\WaterBall.h">
-      <Filter>02.GameObjects\Monster\boss1\WaterBall</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\BrJ_Controller.h">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
     </ClInclude>
@@ -984,9 +990,6 @@
     <ClInclude Include="..\public\SimpleTrigger.h">
       <Filter>02.GameObjects\Map\Trigger</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\SpecialObject.h" />
-    <ClInclude Include="..\public\Special_TelephonePole.h" />
-    <ClInclude Include="..\public\Special_Train.h" />
     <ClInclude Include="..\public\EM0220.h">
       <Filter>02.GameObjects\Enemy\EM0220</Filter>
     </ClInclude>
@@ -1006,8 +1009,6 @@
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SAS_Cable.h" />
-    <ClInclude Include="..\public\Special_HBeam_Bundle.h" />
-    <ClInclude Include="..\public\Special_HBeam_Single.h" />
     <ClInclude Include="..\public\EM0320.h">
       <Filter>02.GameObjects\Enemy\EM0320</Filter>
     </ClInclude>
@@ -1050,6 +1051,27 @@
     <ClInclude Include="..\public\EM0750_AnimInstance.h">
       <Filter>02.GameObjects\Enemy\EM750</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Special_HBeam_Bundle.h">
+      <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_HBeam_Single.h">
+      <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_TelephonePole.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TelephonePole</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_Train.h">
+      <Filter>02.GameObjects\SpecialObject\Special_Train</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpecialObject.h">
+      <Filter>02.GameObjects\SpecialObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_DropObject_Bundle.h">
+      <Filter>02.GameObjects\SpecialObject\Special_DropObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_DropObject_Single.h">
+      <Filter>02.GameObjects\SpecialObject\Special_DropObject</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Level_KineticEditor.h">
       <Filter>01.Levels\17.KineticEditor</Filter>
     </ClInclude>
@@ -1085,6 +1107,25 @@
     </ClInclude>
     <ClInclude Include="..\public\PlayerStartPosition.h">
       <Filter>02.GameObjects\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_Teleport.h">
+      <Filter>VFX\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PostVFX_SuperSpeed.h">
+      <Filter>VFX\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SuperSpeedTrail.h" />
+    <ClInclude Include="..\public\Special_TankLorry.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_TankLorry_Head.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_TankLorry_Trailer.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_TankLorry_Tank.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1522,9 +1563,6 @@
     <ClCompile Include="..\private\BdLm_Controller.cpp">
       <Filter>02.GameObjects\Monster\BuddyLumi\BdLm_Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\WaterBall.cpp">
-      <Filter>02.GameObjects\Monster\boss1\WaterBall</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\BrJ_Controller.cpp">
       <Filter>02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller</Filter>
     </ClCompile>
@@ -1674,7 +1712,6 @@
     <ClCompile Include="..\private\SimpleTrigger.cpp">
       <Filter>02.GameObjects\Map\Trigger</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Special_TelephonePole.cpp" />
     <ClCompile Include="..\private\EM0220.cpp">
       <Filter>02.GameObjects\Enemy\EM0220</Filter>
     </ClCompile>
@@ -1694,8 +1731,6 @@
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SAS_Cable.cpp" />
-    <ClCompile Include="..\private\Special_HBeam_Bundle.cpp" />
-    <ClCompile Include="..\private\Special_HBeam_Single.cpp" />
     <ClCompile Include="..\private\EM0320.cpp">
       <Filter>02.GameObjects\Enemy\EM0320</Filter>
     </ClCompile>
@@ -1773,6 +1808,40 @@
     </ClCompile>
     <ClCompile Include="..\private\PlayerStartPosition.cpp">
       <Filter>02.GameObjects\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_HBeam_Bundle.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_HBeam_Single.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TelephonePole.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TelephonePole</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_DropObject_Bundle.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_DropObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_DropObject_Single.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_DropObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_Teleport.cpp">
+      <Filter>VFX\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PostVFX_SuperSpeed.cpp">
+      <Filter>VFX\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SuperSpeedTrail.cpp" />
+    <ClCompile Include="..\private\Special_TankLorry.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TankLorry_Head.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TankLorry_Trailer.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TankLorry_Tank.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1879,6 +1948,9 @@
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl">
       <Filter>97.ShaderFiles\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\SSAO.hlsl">
+      <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

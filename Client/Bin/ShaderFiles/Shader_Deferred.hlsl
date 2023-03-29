@@ -21,9 +21,9 @@ vector			g_vLightSpecular;
 vector			g_vCamPosition;
 
 vector			g_vMtrlAmbient = (vector)1.f;
-vector			g_vMtrlSpecular = (vector)0.5f;
+vector			g_vMtrlSpecular = (vector)1.f;
 
-texture2D		g_Texture; /* µπˆ±◊øÎ≈ÿΩ∫√≥*/
+texture2D		g_Texture; /* ÎîîÎ≤ÑÍ∑∏Ïö©ÌÖçÏä§Ï≤ò*/
 texture2D		g_NormalTexture; 
 texture2D		g_DepthTexture;
 texture2D		g_ShadowDepthTexture;
@@ -38,6 +38,16 @@ texture2D		g_OutlineFlagTexture;
 
 TextureCube     g_IrradianceTexture;
 TextureCube     g_RadianceTexture;
+
+Texture2D<float> g_AOTexture;
+
+float3			g_vFogColor;
+float3			g_vHighlightColor;
+float3			g_vDirToSun;
+float			g_fStartDepth;
+float			g_fGlobalDensity;
+float			g_fHeightFalloff;
+int				g_bFog;
 
 
 float g_Gamma = 2.2f;
@@ -168,7 +178,9 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 
 	    const float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz); // view vector
 
-		Out.vShade.rgb = LightSurface(V, vNormal.xyz, g_vLightDiffuse.xyz, g_vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
+		float fSSAO = g_AOTexture.Sample(LinearSampler, In.vTexUV);
+
+		Out.vShade.rgb = fSSAO * LightSurface(V, vNormal.xyz, g_vLightDiffuse.xyz, g_vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
 		Out.vShade.a = 1.f;
 
 		return Out;
@@ -184,11 +196,13 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 		fDiff = max(vCTL.r * 2.f , min(vCTL.g, fDiff));
 		fDiff *= vCTL.b;
 
+		// float fSSAO = g_AOTexture.Sample(LinearSampler, In.vTexUV);
+
 		Out.vShade = g_vLightDiffuse * saturate(fDiff);
 		Out.vShade.a = 1.f;
 		
 		// vector		vLook = vWorldPos - g_vCamPosition;
-		// float spec = GetSpecular(vNormal.xyz, vLook.xyz, g_vLightDir.xyz, 256.f);
+		// float spec = GetSpecular(vNormal.xyz, vLook.xyz, g_vLightDir.xyz, 4.f);
 		// spec = smoothstep(0.005f, 0.01f, spec);
 		// Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * spec;
 	}
@@ -235,6 +249,38 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	return Out;
 }
 
+
+float3 ApplyFog(float3 originalColor, float eyePosY, float3 eyeToPixel)
+{
+	float pixelDist = length( eyeToPixel );
+	float3 eyeToPixelNorm = eyeToPixel / pixelDist;
+
+	// Find the fog staring distance to pixel distance
+	float fogDist = max(pixelDist - g_fStartDepth, 0.0);
+
+	// Distance based fog intensity
+	float fogHeightDensityAtViewer = exp( -g_fHeightFalloff * eyePosY );
+	float fogDistInt = fogDist * fogHeightDensityAtViewer;
+
+	// Height based fog intensity
+	float eyeToPixelY = eyeToPixel.y * ( fogDist / pixelDist );
+	float t = g_fHeightFalloff * eyeToPixelY;
+	const float thresholdT = 0.01;
+	float fogHeightInt = abs( t ) > thresholdT ?
+		( 1.0 - exp( -t ) ) / t : 1.0;
+
+	// Combine both factors to get the final factor
+	float fogFinalFactor = exp( -g_fGlobalDensity * fogDistInt * fogHeightInt );
+
+	// Find the sun highlight and use it to blend the fog color
+	float sunHighlightFactor = saturate(dot(eyeToPixelNorm, normalize(g_vDirToSun)));
+	sunHighlightFactor = pow(sunHighlightFactor, 8.0);
+	float3 fogFinalColor = lerp(g_vFogColor, g_vHighlightColor, sunHighlightFactor);
+
+	return lerp(fogFinalColor, originalColor, fogFinalFactor);
+}
+
+
 PS_OUT PS_MAIN_BLEND(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
@@ -278,8 +324,9 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 		discard;
 	}
 
+	float3 eyeToPixel;
 
-	// ±◊∏≤¿⁄ ø¨ªÍ
+	// Í∑∏Î¶ºÏûê Ïó∞ÏÇ∞
 	float fViewZ = vDepth.y * g_Far;
 	
 	vector vPixelWorld;
@@ -292,18 +339,22 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	vPixelWorld = mul(vPixelWorld, g_ProjMatrixInv); // pixel view space
 	vPixelWorld = mul(vPixelWorld, g_ViewMatrixInv); // pixel world space
 
+	eyeToPixel = vPixelWorld - g_vCamPosition;
+
 	vector		vLightViewSpace = mul(vPixelWorld, g_LightViewMatrix);;
 	vector		vLightClipSpace = mul(vLightViewSpace, g_LightProjMatrix);
 	float2		vNewUV;
 	vNewUV.x = (vLightClipSpace.x / vLightClipSpace.w) * 0.5f + 0.5f;
 	vNewUV.y = (vLightClipSpace.y / vLightClipSpace.w) * -0.5f + 0.5f;
 	
-	float2 TexcelSize = float2( 1.0 / 8192.0,  1.0 / 8192.0);
+	const float2 TexcelSize = float2( 1.0 / 8192.0,  1.0 / 8192.0);
 
-	float fShadowRate = 0.;
+	float fShadowRate = 0.f;
 
+	[unroll]
 	for (int y = -1; y <= 1; ++y)
 	{
+		[unroll]
 		for (int x = -1; x <= 1; ++x)
 		{
 			float2 offset = float2(x, y) * TexcelSize;
@@ -318,6 +369,9 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	fShadowRate *= 0.5f;
 	
 	Out.vColor *= (1.f - fShadowRate);
+
+	if (g_bFog)
+		Out.vColor.rgb = ApplyFog(Out.vColor.rgb, g_vCamPosition.y, eyeToPixel);
 
 	return Out;
 }

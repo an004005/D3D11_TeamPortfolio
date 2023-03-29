@@ -3,6 +3,9 @@
 #include "GameInstance.h"
 #include "Camera_Player.h"
 #include "Controller.h"
+#include "PlayerInfoManager.h"
+#include "MathUtils.h"
+#include "GameUtils.h"
 
 CCamSpot::CCamSpot(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
@@ -59,6 +62,8 @@ void CCamSpot::BeginTick()
 	}
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+
+	CPlayerInfoManager::GetInstance()->Set_CamSpot(this);
 }
 
 void CCamSpot::Tick(_double TimeDelta)
@@ -224,9 +229,75 @@ void CCamSpot::Switch_CamMod()
 	}
 }
 
+void CCamSpot::Reset_CamMod()
+{
+	if (MOD_ATTACH == m_eCamMod)
+	{
+		m_eCamMod = MOD_SYNC;
+		m_fLerpTime = 0.f;
+	}
+}
+
 void CCamSpot::SetUp_BoneMatrix(CModel * pModel, _fmatrix Transform)
 {
 	m_AttachMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationZ(XMConvertToRadians(-90.f)) * pModel->GetBoneMatrix("CameraPos") * Transform;
+}
+
+void CCamSpot::Random_Shaking(_float fShakePower)
+{
+	// 함수가 실행되는 동안 계속 흔듦
+
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+	_vector vShakeDir = XMVectorSet(
+		CMathUtils::RandomFloat(-fShakePower, fShakePower),
+		CMathUtils::RandomFloat(-fShakePower, fShakePower),
+		CMathUtils::RandomFloat(-fShakePower, fShakePower),
+		0.f);
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos + vShakeDir);
+}
+
+void CCamSpot::Axis_Shaking(_float4 vAxis, _float fShakePower)
+{
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+	_float4 vInputAxis = XMVector3Normalize(vAxis);
+
+	_matrix matTargetWorld = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+	_vector vScale, vRot, vTrans;
+	XMMatrixDecompose(&vScale, &vRot, &vTrans, matTargetWorld);
+	_matrix matRot = XMMatrixRotationQuaternion(vRot);
+	vInputAxis = XMVector3TransformNormal(vInputAxis, matRot);
+
+	_vector vShakeDir = XMVectorSet(
+		CMathUtils::RandomFloat(-fShakePower, fShakePower) * vInputAxis.x,
+		CMathUtils::RandomFloat(-fShakePower, fShakePower) * vInputAxis.y,
+		CMathUtils::RandomFloat(-fShakePower, fShakePower) * vInputAxis.z,
+		0.f);
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos + vShakeDir);
+}
+
+void CCamSpot::Axis_Sliding(_float4 vAxis, _float fSlidePower)
+{
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+	_float4 vInputAxis = XMVector3Normalize(vAxis);
+
+	_matrix matTargetWorld = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+	_vector vScale, vRot, vTrans;
+	XMMatrixDecompose(&vScale, &vRot, &vTrans, matTargetWorld);
+	_matrix matRot = XMMatrixRotationQuaternion(vRot);
+	vInputAxis = XMVector3TransformNormal(vInputAxis, matRot);
+
+	_vector vShakeDir = XMVectorSet(
+		fSlidePower * vInputAxis.x,
+		fSlidePower * vInputAxis.y,
+		fSlidePower * vInputAxis.z,
+		0.f);
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos + vShakeDir);
 }
 
 HRESULT CCamSpot::Setup_Components(void)

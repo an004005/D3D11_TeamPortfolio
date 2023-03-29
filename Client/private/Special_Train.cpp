@@ -45,7 +45,7 @@ void CSpecial_Train::BeginTick()
 {
 	__super::BeginTick();
 
-	m_pModelComs.front()->SetPlayAnimation("AS_mg02_372_train_end_L");
+	m_pModelComs.front()->SetPlayAnimation("AS_mg02_372_train_cap_L");
 	m_pModelComs.front()->Play_Animation(0.f);
 
 	m_pCollider->UpdateChange();
@@ -53,6 +53,16 @@ void CSpecial_Train::BeginTick()
 
 void CSpecial_Train::Tick(_double TimeDelta)
 {
+	if (m_bDeadCheck)
+	{
+		m_fDeadTimer -= (_float)TimeDelta;
+
+		if (0.f >= m_fDeadTimer)
+		{
+			this->SetDelete();
+		}
+	}
+
 	__super::Tick(TimeDelta);
 
 	if ((m_pModelComs.front()->GetPlayAnimation()->GetName() == "AS_mg02_372_train_start_L") && (m_pModelComs.front()->GetPlayAnimation()->IsFinished()))
@@ -68,6 +78,16 @@ void CSpecial_Train::Tick(_double TimeDelta)
 
 	if (m_bActivate)
 		m_pModelComs.front()->Play_Animation(TimeDelta);
+
+	if ((m_pModelComs.front()->GetPlayAnimation()->GetName() == "AS_mg02_372_train_start_L") ||
+		(m_pModelComs.front()->GetPlayAnimation()->GetName() == "AS_mg02_372_train_end_L"))
+	{
+		Train_Collision_On();
+	}
+	else
+	{
+		Train_Collision_Off();
+	}
 
 	_matrix matWorld = m_pTransformCom->Get_WorldMatrix();
 	_float4 vLocal = m_pModelComs.front()->GetSpecialLocalMove(matWorld);
@@ -159,6 +179,33 @@ void CSpecial_Train::Imgui_RenderProperty()
 void CSpecial_Train::Train_Set_Animation(const string & szAnimName)
 {
 	m_pModelComs.front()->SetPlayAnimation(szAnimName);
+}
+
+void CSpecial_Train::Train_Collision_On()
+{
+	DAMAGE_PARAM tParam;
+	ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+	tParam.eAttackSAS = ESASType::SAS_END;
+	tParam.eAttackType = EAttackType::ATK_SPECIAL_END;
+	tParam.eDeBuff = EDeBuffType::DEBUFF_END;
+	tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
+	tParam.iDamage = 9999;
+
+	Collision_Check_Capsule(m_pCollider, tParam, true);
+}
+
+void CSpecial_Train::Train_Collision_Off()
+{
+	DAMAGE_PARAM tParam;
+	ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+
+	Collision_Check_Capsule(m_pCollider, tParam, false);
+}
+
+void CSpecial_Train::Train_SetDeadTimer()
+{
+	m_fDeadTimer = 3.f;
+	m_bDeadCheck = true;
 }
 
 _float4 CSpecial_Train::GetActionPoint()

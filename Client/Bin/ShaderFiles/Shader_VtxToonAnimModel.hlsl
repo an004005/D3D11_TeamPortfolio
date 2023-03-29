@@ -6,6 +6,8 @@
 matrix			g_BoneMatrices[512];
 
 Texture2D g_WaveTile;
+Texture2D g_scl_noise_030;
+Texture2D g_scl_noise_004;
 
 struct VS_IN
 {
@@ -83,9 +85,15 @@ struct PS_OUT
 	float4		vFlag : SV_TARGET6; // post process 플래그
 };
 
+struct PS_OUT_FORWARD
+{
+	float4		vColor : SV_TARGET0;
+};
+
 struct PS_OUT_NONLIGHT
 {
 	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1; // post process 플래그
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -118,11 +126,20 @@ float4 NormalPacking(PS_IN In)
 }
 
 // g_float_0 : 염력 림라이트 밝기
+// g_float_1 : 하드바디 디솔브
+// g_float_2 : 텔레포트 디솔브
 // g_int_0 : 상태이상 플래그
 // g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_TOON_DEFAULT(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
+
+	float fTeleportDissolve = g_float_2;
+	if (fTeleportDissolve > 0.f)
+	{
+		if (saturate(g_scl_noise_030.Sample(LinearSampler, In.vTexUV * 2.f).g + 0.2f) <= fTeleportDissolve)
+			discard;
+	}
 
 	float fEmissive = 0.f;
 	float flags = SHADER_TOON;
@@ -137,9 +154,21 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 	Out.vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
 	Out.vOutline = g_vec4_0;
 
+	float fHardBody = g_float_1;
+	if (fHardBody > 0.f && In.vTexUV.y < fHardBody)
+	{
+		float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
+		float4 vViewDir = g_vCamPosition - In.vWorldPos;
+		float fFresnel = FresnelEffect(vNormal.xyz, vViewDir.xyz, 2.f);
+		if (fFresnel > 0.5f)
+			Out.vDiffuse.rgb = lerp(COL_BLACK, (float3)1.f, 0.9f);
+		else
+			Out.vDiffuse.rgb = COL_BLACK;
+		Out.vAMB.rgb = 0.0f;
+	}
+
 	float fPhysicRimBright = g_float_0;
 	int iDebuffState = g_int_0;
-
 	if (iDebuffState == 1 || fPhysicRimBright > 0.f) // fire
 	{
 		float3 vColor = (float3)1.f;
@@ -177,16 +206,27 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 		fEmissive = (vWaveTile.a);
 	}
 
+
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
-	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, 0.f);
+	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, fTeleportDissolve);
 
 	return Out;
 }
 
+// g_float_0 : empty
+// g_float_1 : empty
+// g_float_2 : 텔레포트 디솔브
 // g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_WIRE_2(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
+
+	float fTeleportDissolve = g_float_2;
+	if (fTeleportDissolve > 0.f)
+	{
+		if (saturate(g_scl_noise_030.Sample(LinearSampler, In.vTexUV * 2.f).g + 0.2f) <= fTeleportDissolve)
+			discard;
+	}
 
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	if (Out.vDiffuse.a < 0.001f)
@@ -209,7 +249,7 @@ PS_OUT PS_WIRE_2(PS_IN In)
 	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir.xyz), 0.5f);
 	float4 vWhite = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vDiffuse = lerp(vWhite, Out.vDiffuse, fFresnel);
-	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, 0.f);
+	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, fTeleportDissolve);
 
 	return Out;
 }
@@ -224,7 +264,7 @@ PS_OUT PS_CH100_HAIR_1_3(PS_IN In)
 	float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
 	float4 vViewDir = g_vCamPosition - In.vWorldPos;
 	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir), 1.5f);
-	float4 vColor = float4(1.f, 26.f/255.f, 0.f, 1.f);
+	const float4 vColor = float4(1.f, 26.f/255.f, 0.f, 1.f);
 	Out.vDiffuse = lerp(Out.vDiffuse, vColor, fFresnel);
 
 	return Out;
@@ -250,12 +290,14 @@ PS_OUT PS_ch0100_body_0_4(PS_IN In)
 }
 
 // g_float_0 : 염력 림라이트 밝기
-// g_float_1 : 마스크 on, off
+// g_float_1 : 하드바디
+// g_float_2 : 
+// g_float_3 : 마스크 on, off
 // g_int_0 : 상태이상 플래그
 // g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 {
-	float fDissolve = g_float_1; // 0 : mask off/ 1 : mask on
+	float fDissolve = g_float_3; // 0 : mask off/ 1 : mask on
 	float4 vColor = (float4)0.f;
 	float fEmissive = 2.f;
 
@@ -299,8 +341,8 @@ PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 	PS_OUT Out = PS_TOON_DEFAULT(In);
 
 	Out.vDepth.z = fEmissive;
-	Out.vDepth.w = SHADER_NONE_SHADE;
-	// Out.vFlag = SHADER_NONE_SHADE;
+	if (g_float_1 <= 0.f) // 하드바디 없을 때
+		Out.vDepth.w = SHADER_NONE_SHADE;
 
 	if (fDissolve >= 1.f)
 		Out.vDiffuse *= vColor;
@@ -309,9 +351,9 @@ PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 	return Out;
 }
 
-PS_OUT_NONLIGHT PS_ToonDefault_Forward_6(PS_IN In)
+PS_OUT_FORWARD PS_ToonDefault_Forward_6(PS_IN In)
 {
-	PS_OUT_NONLIGHT Out = (PS_OUT_NONLIGHT)0;
+	PS_OUT_FORWARD Out = (PS_OUT_FORWARD)0;
 
 	float4 vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
 
@@ -338,9 +380,9 @@ PS_OUT_NONLIGHT PS_ToonDefault_Forward_6(PS_IN In)
 	return Out;
 }
 
-PS_OUT_NONLIGHT PS_WIRE_Forward_7(PS_IN In)
+PS_OUT_FORWARD PS_WIRE_Forward_7(PS_IN In)
 {
-	PS_OUT_NONLIGHT			Out = (PS_OUT_NONLIGHT)0;
+	PS_OUT_FORWARD			Out = (PS_OUT_FORWARD)0;
 
 	float4 vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	if (vDiffuse.a < 0.001f)
@@ -353,6 +395,78 @@ PS_OUT_NONLIGHT PS_WIRE_Forward_7(PS_IN In)
 	float fFresnel = FresnelEffect(vNormal.xyz, normalize(vViewDir.xyz), 0.5f);
 	Out.vColor.rgb = lerp(COL_WHITE, COL_FIRE, fFresnel);
 	Out.vColor.a = 1.f;
+	return Out;
+}
+
+PS_OUT_NONLIGHT PS_SuperSpeedTrail_8(PS_IN In)
+{
+	PS_OUT_NONLIGHT			Out = (PS_OUT_NONLIGHT)0;
+
+	float fNoise = g_scl_noise_004.Sample(LinearSampler, In.vTexUV * 2.f).r;
+	float fLifeRatio = saturate(g_float_0);
+	if (fLifeRatio <= 0.5f)
+	{
+		float fRemapRatio = Remap(fLifeRatio, float2(0.f, 0.5f), float2(0.f, 1.f));
+		if (fRemapRatio< fNoise)
+			discard;
+	}
+
+	Out.vColor.rgb = COL_PINK;
+	Out.vColor.a = 0.3f;
+
+	return Out;
+}
+
+// g_float_0 : 케이블 삭제 디솔브 (0 디폴트, 1 사라짐)
+// g_float_1 : sas 붉은 색 디솔브
+// g_float_2 : 텔레포트 디솔브
+// g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
+PS_OUT PS_SAS_CABLE_9(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float fTeleportDissolve = g_float_2;
+	if (fTeleportDissolve > 0.f)
+	{
+		if (saturate(g_scl_noise_030.Sample(LinearSampler, In.vTexUV * 2.f).g + 0.2f) <= fTeleportDissolve)
+			discard;
+	}
+
+	float fDissolve = g_float_0;
+	float fNoiseDissolve = g_tex_4.Sample(LinearSampler, In.vTexUV * 2.f).r;
+	if (fNoiseDissolve < fDissolve)
+		discard;
+
+
+	float fEmissive = 0.f;
+	float flags = SHADER_TOON;
+
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vNormal = NormalPacking(In);
+	Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	Out.vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
+	Out.vOutline = g_vec4_0;
+
+
+	float fRedDissolve = g_float_1;
+	// if (In.vTexUV.y <= fRedDissolve)
+	// 	fRedDissolve = 1.f;
+	// else
+	// 	fRedDissolve = 0.f;
+
+	if (Out.vCTL.a <= 0.001f)
+	{
+		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, float3(0.8f, 0.35f, 0.f), fRedDissolve);
+		fEmissive += 1.f;
+	}
+	else
+		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_CABLE_RED, fRedDissolve);
+
+
+
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
+	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, fTeleportDissolve);
+
 	return Out;
 }
 
@@ -468,6 +582,34 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_WIRE_Forward_7();
+	}
+
+	// 8
+	pass SuperSpeedTrail_8
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SuperSpeedTrail_8();
+	}
+
+	// 9
+	pass SAS_Cable_8
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SAS_CABLE_9();
 	}
 }
 

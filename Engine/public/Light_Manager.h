@@ -27,6 +27,8 @@ public:
 	const _float4x4* GetShadowLightProj() const { return &m_ShadowLightProj; }
 	void SetShadowCam(class CCamera* pShadowCam);
 	_float4 GetShadowCamLook();
+	_bool IsShadowCamOn() const { return m_pShadowCam != nullptr; }
+	_float4 GetDirectionalLightDir() { return m_vDirectionalLightDir; }
 
 	// void	CascadeUpdate(_float4x4 CamWorlMatrix, _float4* vFustumCorners);
 
@@ -40,6 +42,7 @@ private:
 	CCamera* m_pShadowCam = nullptr;
 	_float4x4 m_ShadowLightView;
 	_float4x4 m_ShadowLightProj;
+	_float4 m_vDirectionalLightDir;
 
 public:
 	virtual void Free() override;
