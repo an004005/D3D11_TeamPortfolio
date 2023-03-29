@@ -153,6 +153,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_TankLorryStateMachine()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_IronBarsStateMachine()))
+		return E_FAIL;
+
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_PLAYEREFFECT);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
@@ -299,6 +302,20 @@ void CPlayer::Tick(_double TimeDelta)
 	// 브레인 크러시?
 	m_pBrainCrashStateMachine->Tick(TimeDelta);
 
+	// 로컬 무브가 없는데 원점으로부터 벗어난 애니메이션을 잡기 위한 조치
+	// !! BaseAninInstance에서 보간이 끝나고 Normal업데이트가 돌 때 해당 코드를 실행시키도록 하자
+	if (0.f != XMVectorGetX(XMVector3Length(m_vSyncEffectLocal)))
+	{
+		_bool bTest = m_pASM->isSocketLerping();
+
+		if (m_pIronBarsStateMachine->GetCurStateName() == "IRONBARS_NOUSE" && !bTest)
+		{
+			m_pTransformCom->LocalMove(m_vSyncEffectLocal);
+			m_vSyncEffectLocal = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+		}
+	}
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 	// 특수기
 	if (false == m_bKineticSpecial)
 	{
@@ -331,7 +348,8 @@ void CPlayer::Tick(_double TimeDelta)
 
 			else if (SPECIAL_TANKLORRY == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
 			{
-				m_pTankLorryStateMachine->Tick(TimeDelta);
+				//m_pTankLorryStateMachine->Tick(TimeDelta);
+				m_pIronBarsStateMachine->Tick(TimeDelta);
 			}
 		}
 	}
@@ -5158,6 +5176,308 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_IronBarsStateMachine()
+{
+	CAnimation*	pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_start0"));
+	m_IronBars_Charge.push_back(m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_start0"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_loop0"));
+	m_IronBars_Charge.push_back(m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_loop0"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_end0"));
+	m_IronBars_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_end0"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_329_AL_throw_LR_start"));
+	m_IronBars_Start.push_back(m_pModel->Find_Animation("AS_ch0100_329_AL_throw_LR_start"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_329_AL_throw_LR_end"));
+	m_IronBars_End.push_back(m_pModel->Find_Animation("AS_ch0100_329_AL_throw_LR_end"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_348_AL_pull_start"));
+	m_IronBars_Charge_Ex.push_back(m_pModel->Find_Animation("AS_ch0100_348_AL_pull_start"));
+	
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_348_AL_pull_loop"));
+	m_IronBars_Wait_Ex.push_back(m_pModel->Find_Animation("AS_ch0100_348_AL_pull_loop"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_348_AL_pull_cansel"));
+	m_IronBars_Cancel_Ex.push_back(m_pModel->Find_Animation("AS_ch0100_348_AL_pull_cansel"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_348_AL_throw1_start"));
+	m_IronBars_Start_Ex.push_back(m_pModel->Find_Animation("AS_ch0100_348_AL_throw1_start"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_348_AL_throw2_start"));
+	m_IronBars_Start_Ex.push_back(m_pModel->Find_Animation("AS_ch0100_348_AL_throw2_start"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_348_AL_throw3_start"));
+	m_IronBars_Start_Ex.push_back(m_pModel->Find_Animation("AS_ch0100_348_AL_throw3_start"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_348_AL_throw4_start"));
+	m_IronBars_Start_Ex.push_back(m_pModel->Find_Animation("AS_ch0100_348_AL_throw4_start"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_348_AL_throw5_start"));
+	m_IronBars_Finish.push_back(m_pModel->Find_Animation("AS_ch0100_348_AL_throw5_start"));
+
+	m_pIronBarsStateMachine = 
+		CFSMComponentBuilder()
+		.InitState("IRONBARS_NOUSE")
+
+		.AddState("IRONBARS_NOUSE")
+		.OnStart([&]()
+		{
+			m_bKineticSpecial_Activate = false;
+			m_bKineticSpecial = false;
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_bKineticSpecial = false;
+		})
+		.OnExit([&]()
+		{
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+		})
+
+			.AddTransition("IRONBARS_NOUSE to IRONBARS_CHARGE", "IRONBARS_CHARGE")
+			.Predicator([&]()->_bool 
+			{
+				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
+				return m_bKineticG && bResult;
+			})
+			.Priority(0)
+
+		.AddState("IRONBARS_CHARGE")
+		.OnStart([&]() 
+		{
+			m_bKineticSpecial = true;
+			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Charge);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_fKineticCharge += (_float)fTimeDelta;
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("IRONBARS_CHARGE to IRONBARS_START", "IRONBARS_START")
+			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
+			.Priority(0)
+
+			.AddTransition("IRONBARS_CHARGE to IRONBARS_CANCEL", "IRONBARS_CANCEL")
+			.Predicator([&]()->_bool { return !m_bKineticG; })
+			.Priority(0)
+
+		.AddState("IRONBARS_CANCEL")
+		.OnStart([&]()
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Cancel);
+		})
+		.OnExit([&]()
+		{
+			m_bKineticSpecial = false;
+		})
+
+			.AddTransition("IRONBARS_CANCEL to IRONBARS_NOUSE", "IRONBARS_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket") || m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB || m_bKineticG); 
+			})
+			.Priority(0)
+
+		.AddState("IRONBARS_START")
+		.OnStart([&]() 
+		{
+			m_bKineticSpecial_Activate = true;
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Start);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+		
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+
+			.AddTransition("IRONBARS_START to IRONBARS_CHARGE_EX", "IRONBARS_CHARGE_EX")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"); 
+			})
+			.Priority(0)
+
+
+		.AddState("IRONBARS_CHARGE_EX")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Charge_Ex);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+		
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+
+			.AddTransition("IRONBARS_CHARGE_EX to IRONBARS_END", "IRONBARS_END")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"); 
+			})
+			.Priority(0)
+
+			.AddTransition("IRONBARS_CHARGE_EX to IRONBARS_RELOAD_EX", "IRONBARS_RELOAD_EX")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_bLeftClick; 
+			})
+			.Priority(0)
+
+
+		.AddState("IRONBARS_END")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_End);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+		
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+
+			.AddTransition("IRONBARS_END to IRONBARS_NOUSE", "IRONBARS_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket") || m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB || m_bKineticG); 
+			})
+			.Priority(0)
+
+		.AddState("IRONBARS_RELOAD_EX")
+		.OnStart([&]() 
+		{
+			
+		})
+		.Tick([&](double fTimeDelta)
+		{
+		
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+
+			.AddTransition("IRONBARS_RELOAD_EX to IRONBARS_WAIT_EX", "IRONBARS_WAIT_EX")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"); 
+			})
+			.Priority(0)
+
+
+		.AddState("IRONBARS_WAIT_EX")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Wait_Ex);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+		
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+
+			.AddTransition("IRONBARS_WAIT_EX to IRONBARS_CANCEL_EX", "IRONBARS_CANCEL_EX")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket");
+			})
+			.Priority(0)
+
+			.AddTransition("IRONBARS_WAIT_EX to IRONBARS_START_EX", "IRONBARS_START_EX")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_bLeftClick;
+			})
+			.Priority(0)
+
+
+		.AddState("IRONBARS_CANCEL_EX")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Cancel_Ex);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+		
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+
+			.AddTransition("IRONBARS_CANCEL_EX to IRONBARS_NOUSE", "IRONBARS_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket") || m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB || m_bKineticG); 
+			})
+			.Priority(0)
+
+
+		.AddState("IRONBARS_START_EX")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Start_Ex);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+		
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+
+			.AddTransition("IRONBARS_START_EX to IRONBARS_FINISH_EX", "IRONBARS_FINISH_EX")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"); 
+			})
+			.Priority(0)
+
+		.AddState("IRONBARS_FINISH_EX")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Finish);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+		
+		})
+		.OnExit([&]()
+		{
+			SyncEffectLocalMove("Kinetic_Special_AnimSocket");
+			m_fKineticCharge = 0.f;
+		})
+
+			.AddTransition("IRONBARS_FINISH_EX to IRONBARS_NOUSE", "IRONBARS_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket");
+			})
+			.Priority(0)
+
+	.Build();
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Setup_AnimSocket()
 {
 	CAnimation*	pAnimation = nullptr;
@@ -6134,6 +6454,51 @@ void CPlayer::SocketLocalMoveCheck()
 	}
 }
 
+void CPlayer::SyncEffectLocalMove(const string& szSocketName)
+{
+	if (szSocketName == "")
+	{
+		_vector vEffLocal = m_pModel->Sync_EffectLocalMove();
+
+		_vector vScale, vRotation, vTrans;
+		XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_pTransformCom->Get_WorldMatrix());
+		_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
+
+		XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_pModel->GetPivotMatrix());
+		_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
+		vEffLocal = XMVector3TransformNormal(vEffLocal, PivotRotation);
+
+		//_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
+		//vEffLocal = XMVector3TransformNormal(vEffLocal, ModifyRotation);
+
+		vEffLocal = XMVector3TransformNormal(vEffLocal, WorldRotation);
+
+		m_vSyncEffectLocal = vEffLocal;
+	}
+	else
+	{
+		if (nullptr != m_pASM->GetSocketAnimation(szSocketName))
+		{
+			_vector vEffLocal = m_pASM->GetSocketAnimation(szSocketName)->GetEffectLocalMove();
+
+			_vector vScale, vRotation, vTrans;
+			XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_pTransformCom->Get_WorldMatrix());
+			_matrix WorldRotation = XMMatrixRotationQuaternion(vRotation);
+
+			XMMatrixDecompose(&vScale, &vRotation, &vTrans, m_pModel->GetPivotMatrix());
+			_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
+			vEffLocal = XMVector3TransformNormal(vEffLocal, PivotRotation);
+
+			//_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
+			//vEffLocal = XMVector3TransformNormal(vEffLocal, ModifyRotation);
+
+			vEffLocal = XMVector3TransformNormal(vEffLocal, WorldRotation);
+
+			m_vSyncEffectLocal = vEffLocal;
+		}
+	}
+}
+
 void CPlayer::Update_NotiveNeon()
 {	
 	// 체력이 10% 이하일때 생성
@@ -7075,6 +7440,7 @@ void CPlayer::Free()
 	Safe_Release(m_pSuperSpeedPostVFX);
 	Safe_Release(m_pTeleportPostVFX);
 	Safe_Release(m_pTankLorryStateMachine);
+	Safe_Release(m_pIronBarsStateMachine);
 
 //	Safe_Release(m_pContectRigidBody);
 }

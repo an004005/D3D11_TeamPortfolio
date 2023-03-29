@@ -235,6 +235,9 @@ private:	// 특수연출용 FSM
 	HRESULT				SetUp_TankLorryStateMachine();
 	CFSMComponent*		m_pTankLorryStateMachine = nullptr;
 
+	HRESULT				SetUp_IronBarsStateMachine();
+	CFSMComponent*		m_pIronBarsStateMachine = nullptr;
+
 private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_Train_Charge_L;	// 좌측 기차 차지
 	list<CAnimation*>	m_Train_Cancel_L;	// 좌측 기차 취소
@@ -265,6 +268,16 @@ private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_TankLorry_Start;			// 탱크로리 차지
 	list<CAnimation*>	m_TankLorry_Cancel;			// 탱크로리 취소
 	list<CAnimation*>	m_TankLorry_Finish;			// 탱크로리 폭발
+
+	list<CAnimation*>	m_IronBars_Charge;			// 쇠창살 차지
+	list<CAnimation*>	m_IronBars_Cancel;			// 쇠창살 취소
+	list<CAnimation*>	m_IronBars_Start;			// 쇠창살 기본 타격
+	list<CAnimation*>	m_IronBars_End;				// 쇠창살 추가타 취소
+	list<CAnimation*>	m_IronBars_Charge_Ex;		// 쇠창살 추가타 차지
+	list<CAnimation*>	m_IronBars_Wait_Ex;			// 쇠창살 추가타 준비
+	list<CAnimation*>	m_IronBars_Cancel_Ex;		// 쇠창살 추가타 차지 취소
+	list<CAnimation*>	m_IronBars_Start_Ex;		// 쇠창살 추가타
+	list<CAnimation*>	m_IronBars_Finish;			// 쇠창살 마무리
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -519,6 +532,8 @@ private:
 	void		SeperateCheck();
 	void		HitCheck();
 	void		SocketLocalMoveCheck();
+	void		SyncEffectLocalMove(const string& szSocketName = "");
+	_vector		m_vSyncEffectLocal = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 
 private:
 	void		Update_NotiveNeon();

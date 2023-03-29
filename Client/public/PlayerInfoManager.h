@@ -75,7 +75,6 @@ public:	// Get
 	CGameObject*	Get_TargetedMonster();
 	CGameObject*	Get_SpecialObject();
 
-
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
 	void			Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP);
@@ -97,13 +96,11 @@ public:	// Set
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
-
 public:
 	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
 	void			Camera_Random_Shake(_float fForce);
 	void			Camera_Axis_Shaking(_float4 vDir, _float fShakePower);
 	void			Camera_Axis_Sliding(_float4 vDir, _float fShakePower);
-
 
 private:	// 스탯 정보 관련
 	PLAYER_STAT		m_tPlayerStat;

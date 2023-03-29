@@ -126,6 +126,10 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 			{
 				m_vSpecialLocalMove = pChannel->GetSpecialLocalMove();
 			}
+			if ("Eff01" == pChannel->GetChannelName())
+			{
+				m_vEffectLocalMove = pChannel->GetEffectLocalMove();
+			}
 		}
 		// 이벤트 실행
 		for (auto& iter : m_vecEvent)
@@ -151,6 +155,10 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 			if ("Train_Root" == pChannel->GetChannelName())
 			{
 				m_vSpecialLocalMove = pChannel->GetSpecialLocalMove();
+			}
+			if ("Eff01" == pChannel->GetChannelName())
+			{
+				m_vEffectLocalMove = pChannel->GetEffectLocalMove();
 			}
 		}
 		for (auto& iter : m_vecEvent)

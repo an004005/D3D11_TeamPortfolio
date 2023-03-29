@@ -21,6 +21,7 @@ public:
 	const string&	GetCurStateName() { return m_pASM_Base->GetCurState()->m_strName; } // 현재 상태 이름
 	const string&	GetCurSocketAnimName();
 	_bool			isLerping() { return m_pASM_Base->isLerping(); }
+	_bool			isSocketLerping() { return (m_fLerpTime < m_fLerpDuration) ? true : false; }
 	_bool			isSocketEmpty(const string& strSocName) { return m_mapAnimSocket[strSocName].empty(); }
 	_bool			isSocketAlmostFinish(const string& strSocName);
 	_bool			isSocketPassby(const string& strSocName, _float fPlayRatio = 1.f);
