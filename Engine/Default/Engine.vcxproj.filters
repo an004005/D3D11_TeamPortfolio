@@ -544,6 +544,9 @@
     <ClInclude Include="..\public\LambdaRenderObject.h">
       <Filter>81.Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\SSAOManager.h">
+      <Filter>01.Utility\09.RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -861,6 +864,9 @@
     </ClCompile>
     <ClCompile Include="..\private\LambdaRenderObject.cpp">
       <Filter>81.Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SSAOManager.cpp">
+      <Filter>01.Utility\09.RenderTarget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

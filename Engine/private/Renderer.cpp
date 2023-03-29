@@ -10,9 +10,12 @@
 #include "GameInstance.h"
 #include "PostProcess.h"
 #include "Graphic_Device.h"
+#include "ImguiUtils.h"
 #include "RenderTarget.h"
 #include "Light_Manager.h"
 #include "PhysX_Manager.h"
+#include "JsonStorage.h"
+#include "SSAOManager.h"
 
 
 CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -33,11 +36,12 @@ CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	free(pValue2);
 #endif
 
-	m_vFogColor = _float3(0.5f ,0.5f, 0.5f);
-	m_fStartDepth = 37.f;
-	m_vHighlightColor = _float3(0.8f, 0.7f, 0.4f);
-	m_fGlobalDensity = 1.5f;
-	m_fHeightFalloff = 0.2f;
+	m_tFogDesc.vFogColor = _float3(0.5f ,0.5f, 0.5f);
+	m_tFogDesc.fStartDepth = 37.f;
+	m_tFogDesc.vHighlightColor = _float3(0.8f, 0.7f, 0.4f);
+	m_tFogDesc.fGlobalDensity = 1.5f;
+	m_tFogDesc.fHeightFalloff = 0.2f;
+	m_bFog = false;
 }
 
 HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pGameObject)
@@ -80,6 +84,14 @@ HRESULT CRenderer::Draw_RenderGroup()
 		return E_FAIL;
 	if (FAILED(Render_NonAlphaBlend()))
 		return E_FAIL;
+
+	if (CGameInstance::GetInstance()->GetMainCam())
+	{
+		CSSAOManager::GetInstance()->Compute(
+			m_pTarget_Manager->GetTarget(L"Target_Depth")->Get_SRV(),
+			m_pTarget_Manager->GetTarget(L"Target_Normal")->Get_SRV());
+	}
+
 	if (FAILED(Render_LightAcc()))
 		return E_FAIL;
 
@@ -148,6 +160,19 @@ void CRenderer::Clear()
 
 		m_RenderObjects[i].clear();
 	}
+}
+
+void CRenderer::LoadFogJson(const string& strJsonPath)
+{
+	std::ifstream ifs(strJsonPath);
+	Json json = Json::parse(ifs);
+
+	m_bFog = json["bFog"];
+	m_tFogDesc.vFogColor = json["FogColor"];
+	m_tFogDesc.vHighlightColor = json["FogHighlightColor"];
+	m_tFogDesc.fStartDepth = json["StartDepth"];
+	m_tFogDesc.fGlobalDensity = json["Density"];
+	m_tFogDesc.fHeightFalloff = json["HeightFalloff"];
 }
 
 HRESULT CRenderer::Initialize_Prototype()
@@ -392,6 +417,36 @@ void CRenderer::Imgui_RenderOtherWindow()
 	}
 	ImGui::Checkbox("Visible Targets", &m_bVisibleTargets);
 #endif
+
+	_int iSampleRadius = CSSAOManager::GetInstance()->GetSampleRadius();
+	_float fRadius = CSSAOManager::GetInstance()->GetRadius();
+	ImGui::InputInt("SSASSampleRadius(max64)", &iSampleRadius);
+	ImGui::InputFloat("Radius(max100)", &fRadius);
+	CSSAOManager::GetInstance()->SetParameters(iSampleRadius, fRadius);
+
+	ImGui::Checkbox("bFog", &m_bFog);
+	ImGui::ColorEdit4("FogColor", (float*)&m_tFogDesc.vFogColor, ImGuiColorEditFlags_PickerHueWheel);
+	ImGui::ColorEdit4("FogHighlightColor", (float*)&m_tFogDesc.vHighlightColor, ImGuiColorEditFlags_PickerHueWheel);
+	ImGui::InputFloat("StartDepth", &m_tFogDesc.fStartDepth);
+	ImGui::InputFloat("Density", &m_tFogDesc.fGlobalDensity);
+	ImGui::InputFloat("HeightFalloff", &m_tFogDesc.fHeightFalloff);
+
+	CImguiUtils::FileDialog_FileSelector("Save Fog Data", ".json", "../Bin/Resources/", [this](const string& filePath)
+	{
+		Json json;
+		json["bFog"] = m_bFog;
+		json["FogColor"] = m_tFogDesc.vFogColor;
+		json["FogHighlightColor"] = m_tFogDesc.vHighlightColor;
+		json["StartDepth"] = m_tFogDesc.fStartDepth;
+		json["Density"] = m_tFogDesc.fGlobalDensity;
+		json["HeightFalloff"] = m_tFogDesc.fHeightFalloff;
+		std::ofstream file(filePath);
+		file << json;
+	});
+	CImguiUtils::FileDialog_FileSelector("Load Fog Data", ".json", "../Bin/Resources/", [this](const string& filePath)
+	{
+		LoadFogJson(filePath);
+	});
 }
 
 HRESULT CRenderer::Render_Priority()
@@ -549,6 +604,9 @@ HRESULT CRenderer::Render_LightAcc()
 
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_CTLTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_CTL")))))
 		return E_FAIL;
+
+	if (FAILED(m_pShader->Set_ShaderResourceView("g_AOTexture", CSSAOManager::GetInstance()->GetSSAOSRV())))
+		return E_FAIL;
 	
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
 
@@ -571,7 +629,6 @@ HRESULT CRenderer::Render_LightAcc()
 
 HRESULT CRenderer::Render_Blend()
 {
-	// _float3 vDirToSun = CLight_Manager::get
 	// HDR
 	if (FAILED(m_pShader->Set_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
@@ -612,6 +669,30 @@ HRESULT CRenderer::Render_Blend()
 		return E_FAIL;
 	if (FAILED(m_pShader->Set_ShaderResourceView("g_CTLTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_CTL")))))
 		return E_FAIL;
+
+	const int iFog = m_bFog ? 1 : 0;
+	if (FAILED(m_pShader->Set_RawValue("g_bFog", &iFog, sizeof(_int))))
+		return E_FAIL;
+	if (m_bFog)
+	{
+		const _float4 vDirToSun = -CLight_Manager::GetInstance()->GetDirectionalLightDir();
+		const _float3 v3DirToSun{vDirToSun.x, vDirToSun.y, vDirToSun.z};
+		if (FAILED(m_pShader->Set_RawValue("g_vFogColor", &m_tFogDesc.vFogColor, sizeof(_float3))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_vHighlightColor", &m_tFogDesc.vHighlightColor, sizeof(_float3))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_vDirToSun", &v3DirToSun, sizeof(_float3))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_fStartDepth", &m_tFogDesc.fStartDepth, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_fGlobalDensity", &m_tFogDesc.fGlobalDensity, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_fHeightFalloff", &m_tFogDesc.fHeightFalloff, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_vCamPosition", &pPipeLine->Get_CamPosition(), sizeof(_float4))))
+			return E_FAIL;
+	}
+
 
 	m_pEnv->Bind_ShaderResource(m_pShader, "g_IrradianceTexture");
 	m_pEnv2->Bind_ShaderResource(m_pShader, "g_RadianceTexture");

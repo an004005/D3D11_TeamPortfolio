@@ -7,6 +7,15 @@
 
 BEGIN(Engine)
 
+typedef struct tagFogDesc
+{
+	_float3 vFogColor;
+	_float fStartDepth;
+	_float3 vHighlightColor;
+	_float fGlobalDensity;
+	_float fHeightFalloff;
+}FOG_DESC;
+
 class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
@@ -45,6 +54,9 @@ public:
 
 	class CShader* GetShader() { return m_pShader; }
 
+	void LoadFogJson(const string& strJsonPath);
+	FOG_DESC& GetFogDesc() { return m_tFogDesc; }
+
 private:
 	list<class CGameObject*>			m_RenderObjects[RENDER_END];
 	typedef list<class CGameObject*>	RENDEROBJECTS;
@@ -69,11 +81,8 @@ private:
 	_bool m_bShadow = true;
 
 
-	_float3 m_vFogColor;
-	_float m_fStartDepth;
-	_float3 m_vHighlightColor;
-	_float m_fGlobalDensity;
-	_float m_fHeightFalloff;
+	_bool m_bFog;
+	FOG_DESC m_tFogDesc;
 
 private:
 	HRESULT Render_Priority();

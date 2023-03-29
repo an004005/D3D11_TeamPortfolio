@@ -41,6 +41,7 @@ protected:
 	virtual ~CSAS_Portrait() = default;
 
 public:
+	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
