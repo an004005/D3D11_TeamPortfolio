@@ -94,12 +94,12 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	/* 
-	¸ðµ¨ ÇÁ·ÎÅä Å¸ÀÔÀº ±»ÀÌ »ý¼º ¾ÈÇØµµ ÀÚµ¿À¸·Î µÊ.
-	¸®½ºÆ®¹Ú½º¿¡ ³ÖÀ¸·Á°í Åø¿¡¼­¸¸ »ý¼ºÇØÁÜ.
-	±×·¡¼­ ´Ù¸¥ ·¹º§¿¡¼­´Â ¾Æ·¡ ¸ðµ¨wd ÇÁ·ÎÅä Å¸ÀÔ »ý¼ºÀ» ³Ñ°Üµµ ±¦ÂúÀ½.
+	ëª¨ë¸ í”„ë¡œí†  íƒ€ìž…ì€ êµ³ì´ ìƒì„± ì•ˆí•´ë„ ìžë™ìœ¼ë¡œ ë¨.
+	ë¦¬ìŠ¤íŠ¸ë°•ìŠ¤ì— ë„£ìœ¼ë ¤ê³  íˆ´ì—ì„œë§Œ ìƒì„±í•´ì¤Œ.
+	ê·¸ëž˜ì„œ ë‹¤ë¥¸ ë ˆë²¨ì—ì„œëŠ” ì•„ëž˜ ëª¨ë¸wd í”„ë¡œí†  íƒ€ìž… ìƒì„±ì„ ë„˜ê²¨ë„ ê´œì°®ìŒ.
 	*/
 	
-	//ÀÏ¹Ý ¸ðµ¨µéÀÇ ÇÁ·ÎÅäÅ¸ÀÔ »ý¼º
+	//ì¼ë°˜ ëª¨ë¸ë“¤ì˜ í”„ë¡œí† íƒ€ìž… ìƒì„±
 	/*CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/",
 		[this](const string& fileName)
 	{
@@ -124,8 +124,8 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	//	}
 	//});
 
-	//ÀÎ½ºÅÏ½Ì ¸ðµ¨µéÀÇ ÇÁ·ÎÅäÅ¸ÀÔ »ý¼º						// TutorialMap	FinalBossStage	Subway_Hospital
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/Subway_Hospital/",
+	//ì¸ìŠ¤í„´ì‹± ëª¨ë¸ë“¤ì˜ í”„ë¡œí† íƒ€ìž… ìƒì„±						// TutorialMap	FinalBossStage	Subway_Hospital/Subway  Subway_Hospital/Hospital
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/Subway_Hospital/Subway/",
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
@@ -136,7 +136,7 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 			FAILED_CHECK(Create_Model_Instance(s2ws(fileName), fileName.c_str()));
 		}
 	});
-		// ¡Ú Frustum Culling
+		// â˜… Frustum Culling
 
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
@@ -175,9 +175,10 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 																
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Subway.json");			// Map_Subway
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Subway.json"); // Map_Hospital_1F
+		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Subway.json");			// Map_Subway
 		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_FinalBossStage.json");	// Map_FinalBossStage
-		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Test.json");	// Map_Test
+		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Test.json");				// Map_Test
 	
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
 
