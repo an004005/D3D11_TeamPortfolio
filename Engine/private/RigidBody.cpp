@@ -50,7 +50,7 @@ void CRigidBody::Imgui_RenderProperty()
 	ImGui::InputFloat("Density", &m_fDensity);
 
 	static array<const char*, CT_END> CollTypeNames {
-		"Player", "Monster", "PlayerAtk", "MonsterAtk", "PsychickObj", "Trigger4Player", "Trigger4Monster", "Static", "MonsterPart", "MonsterRange", "PlayerRange"
+		"Player", "Monster", "PlayerAtk", "MonsterAtk", "PsychickObj", "Trigger4Player", "Trigger4Monster", "Static", "MonsterPart", "MonsterRange", "PlayerRange", "Particle"
 	};
 	if (ImGui::BeginCombo("CollType", CollTypeNames[m_eColliderType]))
 	{

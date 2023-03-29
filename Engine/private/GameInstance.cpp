@@ -21,6 +21,7 @@
 #include "GameTime_Manager.h"
 #include "CurveFloatMapImpl.h"
 #include "LambdaRenderObject.h"
+#include "SSAOManager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -48,6 +49,7 @@ CGameInstance::CGameInstance()
 	, m_pCamera_Manager(CCamera_Manager::GetInstance())
 	, m_pCurve_Manager(CCurveManager::GetInstance())
 	, m_pGameTime_Manager(CGameTime_Manager::GetInstance())
+	, m_pSSAO_Manager(CSSAOManager::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -67,6 +69,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pCamera_Manager);
 	Safe_AddRef(m_pCurve_Manager);
 	Safe_AddRef(m_pGameTime_Manager);
+	Safe_AddRef(m_pSSAO_Manager);
 }
 
 /*************************
@@ -94,6 +97,8 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 
 	// HDR 초기화
 	if (FAILED(m_pHDR->Initialize(*ppDeviceOut, *ppContextOut)))
+		return E_FAIL;
+	if (FAILED(m_pSSAO_Manager->Initialize(GraphicDesc.iViewportSizeX, GraphicDesc.iViewportSizeY, *ppDeviceOut, *ppContextOut)))
 		return E_FAIL;
 
 	/* 입력 디바이스 초기화. */
@@ -314,6 +319,8 @@ HRESULT CGameInstance::Update_SwapChain(HWND hWnd, _uint iWinCX, _uint iWinCY, _
 			return E_FAIL;
 
 		if (FAILED(m_pHDR->Initialize(m_pGraphic_Device->GetDevice(), m_pGraphic_Device->GetContext())))
+			return E_FAIL;
+		if (FAILED(m_pSSAO_Manager->Initialize(iWinCX, iWinCY, m_pGraphic_Device->GetDevice(), m_pGraphic_Device->GetContext())))
 			return E_FAIL;
 	}
 
@@ -1007,6 +1014,7 @@ void CGameInstance::Release_Engine()
 	ref = CFrustum::GetInstance()->DestroyInstance();
 
 	ref = CHDR::GetInstance()->DestroyInstance();
+	ref = CSSAOManager::GetInstance()->DestroyInstance();
 
 	CGameTime_Manager::GetInstance()->DestroyInstance();
 
@@ -1037,6 +1045,7 @@ void CGameInstance::Free()
 
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pHDR);
+	Safe_Release(m_pSSAO_Manager);
 	Safe_Release(m_pImgui_Manager);
 	Safe_Release(m_pGameTime_Manager);
 

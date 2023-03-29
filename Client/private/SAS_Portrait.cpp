@@ -8,6 +8,8 @@
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
 
+#define USE_PORTRAIT
+
 /*********************
  *CPostVFX_SAS_Portrait
  *********************/
@@ -75,6 +77,73 @@ CSAS_Portrait::CSAS_Portrait(const CSAS_Portrait& rhs)
 {
 }
 
+HRESULT CSAS_Portrait::Initialize_Prototype()
+{
+	FAILED_CHECK(CGameObject::Initialize_Prototype());
+
+#ifdef USE_PORTRAIT
+	auto pGameInstance = CGameInstance::GetInstance();
+
+	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Model_Ch100_Portrait") == nullptr)
+	{
+		auto pModel_ch100 = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
+		pModel_ch100->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Portrait/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Model_Ch100_Portrait", pModel_ch100));
+	}
+
+	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Model_Ch300_Portrait") == nullptr)
+	{
+		auto pModel_ch300 = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/ch300.anim_model");
+		pModel_ch300->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch300/SAS_Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Model_Ch300_Portrait", pModel_ch300));
+	}
+
+	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Model_Ch400_Portrait") == nullptr)
+	{
+		auto pModel_ch400 = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch400/ch400.anim_model");
+		pModel_ch400->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch400/SAS_Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Model_Ch400_Portrait", pModel_ch400));
+	}
+
+	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Model_Ch500_Portrait") == nullptr)
+	{
+		auto pModel_ch500 = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/ch500.anim_model");
+		pModel_ch500->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch500/SAS_Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Model_Ch500_Portrait", pModel_ch500));
+	}
+
+	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Model_Ch600_Portrait") == nullptr)
+	{
+		auto pModel_ch600 = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch600/ch600.anim_model");
+		pModel_ch600->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch600/SAS_Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Model_Ch600_Portrait", pModel_ch600));
+	}
+
+	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Model_Ch800_Portrait") == nullptr)
+	{
+		auto pModel_ch800 = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch800/ch800.anim_model");
+		pModel_ch800->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch800/SAS_Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Model_Ch800_Portrait", pModel_ch800));
+	}
+
+	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Model_Ch800_Portrait") == nullptr)
+	{
+		auto pModel_ch1000 = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch1000/ch1000.anim_model");
+		pModel_ch1000->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch1000/SAS_Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Model_Ch1000_Portrait", pModel_ch1000));
+	}
+#endif
+
+	return S_OK;
+}
+
 HRESULT CSAS_Portrait::Initialize(void* pArg)
 {
 	FAILED_CHECK(CGameObject::Initialize(pArg));
@@ -82,6 +151,7 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
+#ifdef USE_PORTRAIT
 	{
 		CModel* pModel = nullptr;
 
@@ -133,6 +203,30 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 	{
 		CModel* pModel = nullptr;
 
+		FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Model_Ch400_Portrait", L"ch400",
+		   (CComponent**)&pModel));
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_HARDBODY)] = pModel;
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_HARDBODY)]->FindMaterial(L"MI_ch0400_HOOD_0")->SetActive(false);
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_HARDBODY)]->FindMaterial(L"MI_ch0400_MASK_0")->SetActive(false);
+
+		for (auto pMtrl : m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_HARDBODY)]->GetMaterials())
+		{
+			pMtrl->GetParam().iPass = 6;
+		}
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_HARDBODY)]->FindMaterial(L"MI_ch0400_WIRE_0")->GetParam().iPass = 7;
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_HARDBODY)]->FindMaterial(L"MI_ch0400_WIRE_1")->GetParam().iPass = 7;
+
+
+		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PortraitCams/ch400_cam.json");
+		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_HARDBODY)] = CGameInstance::GetInstance()->Add_Camera("ch400_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);
+		Safe_AddRef(m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_HARDBODY)]);
+	}
+
+	{
+		CModel* pModel = nullptr;
+
 		FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Model_Ch500_Portrait", L"ch500",
 		   (CComponent**)&pModel));
 
@@ -152,6 +246,80 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_PENETRATE)] = CGameInstance::GetInstance()->Add_Camera("ch500_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);
 		Safe_AddRef(m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_PENETRATE)]);
 	}
+
+	{
+		CModel* pModel = nullptr;
+
+		FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Model_Ch600_Portrait", L"ch600",
+		   (CComponent**)&pModel));
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_TELEPORT)] = pModel;
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_TELEPORT)]->FindMaterial(L"MI_ch0600_HOOD_0")->SetActive(false);
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_TELEPORT)]->FindMaterial(L"MI_ch0600_MASK_0")->SetActive(false);
+
+		for (auto pMtrl : m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_TELEPORT)]->GetMaterials())
+		{
+			pMtrl->GetParam().iPass = 6;
+		}
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_TELEPORT)]->FindMaterial(L"MI_ch0600_WIRE_0")->GetParam().iPass = 7;
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_TELEPORT)]->FindMaterial(L"MI_ch0600_WIRE_1")->GetParam().iPass = 7;
+
+
+		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PortraitCams/ch600_cam.json");
+		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_TELEPORT)] = CGameInstance::GetInstance()->Add_Camera("ch600_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);
+		Safe_AddRef(m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_TELEPORT)]);
+	}
+
+	{
+		CModel* pModel = nullptr;
+
+		FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Model_Ch800_Portrait", L"ch800",
+		   (CComponent**)&pModel));
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_ELETRIC)] = pModel;
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_ELETRIC)]->FindMaterial(L"MI_ch0800_HOOD_0")->SetActive(false);
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_ELETRIC)]->FindMaterial(L"MI_ch0800_MASK_0")->SetActive(false);
+
+		for (auto pMtrl : m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_ELETRIC)]->GetMaterials())
+		{
+			pMtrl->GetParam().iPass = 6;
+		}
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_ELETRIC)]->FindMaterial(L"MI_ch0800_WIRE_0")->GetParam().iPass = 7;
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_ELETRIC)]->FindMaterial(L"MI_ch0800_WIRE_1")->GetParam().iPass = 7;
+
+
+		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PortraitCams/ch800_cam.json");
+		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_ELETRIC)] = CGameInstance::GetInstance()->Add_Camera("ch800_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);
+		Safe_AddRef(m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_ELETRIC)]);
+	}
+
+	{
+		CModel* pModel = nullptr;
+
+		FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Model_Ch1000_Portrait", L"ch1000",
+		   (CComponent**)&pModel));
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_SUPERSPEED)] = pModel;
+
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_SUPERSPEED)]->FindMaterial(L"MI_ch1000_HOOD_0")->SetActive(false);
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_SUPERSPEED)]->FindMaterial(L"MI_ch1000_MASK_0")->SetActive(false);
+
+		for (auto pMtrl : m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_SUPERSPEED)]->GetMaterials())
+		{
+			pMtrl->GetParam().iPass = 6;
+		}
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_SUPERSPEED)]->FindMaterial(L"MI_ch1000_WIRE_0")->GetParam().iPass = 7;
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_SUPERSPEED)]->FindMaterial(L"MI_ch1000_WIRE_1")->GetParam().iPass = 7;
+
+
+		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PortraitCams/ch1000_cam.json");
+		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_SUPERSPEED)] = CGameInstance::GetInstance()->Add_Camera("ch1000_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);
+		Safe_AddRef(m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_SUPERSPEED)]);
+	}
+#endif
+
 
 	{
 		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Portrait.json");
@@ -182,12 +350,17 @@ void CSAS_Portrait::Tick(_double TimeDelta)
 	// }
 	// if (CGameInstance::GetInstance()->KeyDown(DIK_9))
 	// {
-	// 	Start_SAS(ESASType::SAS_PENETRATE);
+	// 	// Start_SAS(ESASType::SAS_HARDBODY);
+	// 	// Start_SAS(ESASType::SAS_TELEPORT);
+	// 	// Start_SAS(ESASType::SAS_ELETRIC);
+	// 	// Start_SAS(ESASType::SAS_FIRE);
+	// 	// Start_SAS(ESASType::SAS_PENETRATE);
+	// 	// Start_SAS(ESASType::SAS_SUPERSPEED);
 	// }
-	 //if (CGameInstance::GetInstance()->KeyDown(DIK_9))
-	 //{
-	 //	Start_SAS(ESASType::SAS_NOT);
-	 //}
+	 // if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	 // {
+	 // 	Start_SAS(ESASType::SAS_NOT);
+	 // }
 
 	if (m_eCurType != ESASType::SAS_END)
 	{
@@ -243,6 +416,9 @@ void CSAS_Portrait::Imgui_RenderProperty()
 
 void CSAS_Portrait::Start_SAS(ESASType eType)
 {
+#ifndef USE_PORTRAIT
+	return;
+#endif
 	m_eCurType = eType;
 	// m_pPostVFX->GetParam().Float4s[0] = _float4(1.f, 0.231f, 0.f, 1.f);
 	// m_pPostVFX->GetParam().Float4s[1] = _float4(0.957f, 0.459f, 0.048f, 1.f);
@@ -257,10 +433,18 @@ void CSAS_Portrait::Start_SAS(ESASType eType)
 	case ESASType::SAS_PENETRATE:
 		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_PENETRATE)]->SetPlayAnimation("AS_ch0500_SAS01");
 		 break;
-	case ESASType::SAS_HARDBODY: break;
-	case ESASType::SAS_TELEPORT: break;
-	case ESASType::SAS_ELETRIC: break;
-	case ESASType::SAS_SUPERSPEED: break;
+	case ESASType::SAS_HARDBODY: 
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_HARDBODY)]->SetPlayAnimation("AS_ch0400_SAS01");
+		break;
+	case ESASType::SAS_TELEPORT: 
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_TELEPORT)]->SetPlayAnimation("AS_ch0600_SAS01");
+		break;
+	case ESASType::SAS_ELETRIC: 
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_ELETRIC)]->SetPlayAnimation("AS_ch0800_SAS01");
+		break;
+	case ESASType::SAS_SUPERSPEED: 
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_SUPERSPEED)]->SetPlayAnimation("AS_ch1000_SAS01");
+		break;
 
 	case ESASType::SAS_COPY: break;
 	case ESASType::SAS_INVISIBLE: break;

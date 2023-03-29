@@ -967,6 +967,22 @@
             {
                 "EventName": "Elec_Attack_1_Shoot",
                 "EventTime": 15.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 15.0
+            },
+            {
+                "EventName": "Trail_On",
+                "EventTime": 9.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 9.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 15.0
             }
         ]
     },
@@ -1029,6 +1045,22 @@
             {
                 "EventName": "Elec_Attack_2_Shoot",
                 "EventTime": 15.0
+            },
+            {
+                "EventName": "Trail_On",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 17.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 20.0
             }
         ]
     },
@@ -1099,6 +1131,22 @@
             {
                 "EventName": "Elec_Attack_3_Shoot",
                 "EventTime": 40.0
+            },
+            {
+                "EventName": "Trail_On",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 25.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 45.0
             }
         ]
     },
@@ -1388,6 +1436,30 @@
             {
                 "EventName": "Collision_End",
                 "EventTime": 60.0
+            },
+            {
+                "EventName": "Elec_Attack_Justdodge_0",
+                "EventTime": 29.0
+            },
+            {
+                "EventName": "Elec_Attack_Justdodge_4",
+                "EventTime": 29.0
+            },
+            {
+                "EventName": "Elec_Attack_Justdodge_1",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Elec_Attack_Justdodge_3",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Elec_Attack_Justdodge_2",
+                "EventTime": 45.0
+            },
+            {
+                "EventName": "Elec_Attack_Justdodge_5",
+                "EventTime": 45.0
             }
         ]
     },
@@ -1628,6 +1700,10 @@
             {
                 "EventName": "Fire_Attack_Dash_End_Particle",
                 "EventTime": 10.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_End",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1736,15 +1812,15 @@
                 "EventTime": 15.0
             },
             {
-                "EventName": "Elec_Attack_Dash_Hold_3",
+                "EventName": "Elec_Attack_Dash_Hold_1",
                 "EventTime": 20.0
             },
             {
-                "EventName": "Elec_Attack_Dash_Hold_4",
+                "EventName": "Elec_Attack_Dash_Hold_2",
                 "EventTime": 25.0
             },
             {
-                "EventName": "Elec_Attack_Dash_Hold_4_Shoot",
+                "EventName": "Elec_Attack_Dash_Hold_2_Shoot",
                 "EventTime": 30.0
             }
         ]
@@ -2341,6 +2417,10 @@
             {
                 "EventName": "attack_nor_jumpattack_2",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_Dash_0",
+                "EventTime": 5.0
             }
         ]
     },
@@ -2934,6 +3014,30 @@
     "AS_ch0100_372_AL_mg_train_R": {
         "Duration": 306.0,
         "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_375_AL_Cap_cansel": {
+        "Duration": 49.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_375_AL_Cap_end": {
+        "Duration": 281.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_375_AL_Cap_loop": {
+        "Duration": 310.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_375_AL_Cap_start": {
+        "Duration": 45.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },

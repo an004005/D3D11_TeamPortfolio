@@ -41,7 +41,7 @@ private:
 
 	CCoolTimeHelper m_TrailGenerateTimer;
 	_float m_fTrailCoolTime = 0.15f;
-	_float m_fMinMoveDistance = 0.25f;
+	_float m_fMinMoveDistance = 0.5f;
 	_float m_fTrailLife = 1.f;
 	_float4 m_vPrePos;
 

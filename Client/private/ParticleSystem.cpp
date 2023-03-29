@@ -1278,7 +1278,7 @@ void CParticleSystem::AddMesh()
 			json["RigidBody"]["bKinematic"] = false;
 			json["RigidBody"]["bTrigger"] = false;
 			json["RigidBody"]["Density"] = 10;
-			json["RigidBody"]["ColliderType"] = CT_STATIC;
+			json["RigidBody"]["ColliderType"] = CT_PARTICLE;
 			json["RigidBody"]["OriginTransform"] = _float4x4::CreateScale(MeshData.vSize);
 			json["RigidBody"]["ShapeType"] = CRigidBody::TYPE_BOX;
 			auto pRigidBody = dynamic_cast<CRigidBody*>(CGameInstance::GetInstance()->Clone_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", &json));

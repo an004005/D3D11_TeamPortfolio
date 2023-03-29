@@ -230,6 +230,7 @@ private:
 	class CCurveManager*			m_pCurve_Manager = nullptr;
 	class CGameTime_Manager*		m_pGameTime_Manager = nullptr;
 	class CImgui_Manager*			m_pImgui_Manager = nullptr;
+	class CSSAOManager*				m_pSSAO_Manager = nullptr;
 
 public:
 	static void Release_Engine();

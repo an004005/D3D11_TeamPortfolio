@@ -51,8 +51,14 @@ void CLight_Manager::Render_Light(CVIBuffer_Rect * pVIBuffer, CShader * pShader)
 
 	for (auto& Light : m_Lights)
 	{
-		if (Light.second->GetType() == LIGHTDESC::TYPE_DIRECTIONAL && m_pShadowCam)
-			Light.second->SetDirection(m_pShadowCam->GetTransform()->Get_State(CTransform::STATE_LOOK));
+		if (Light.second->GetType() == LIGHTDESC::TYPE_DIRECTIONAL)
+		{
+			if (m_pShadowCam)
+				Light.second->SetDirection(m_pShadowCam->GetTransform()->Get_State(CTransform::STATE_LOOK));
+
+			m_vDirectionalLightDir = Light.second->Get_LightDesc()->vDirection;
+		}
+
 
 		Light.second->Render(pVIBuffer, pShader);
 	}

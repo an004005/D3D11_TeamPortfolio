@@ -35,21 +35,22 @@ public:
 	void SetTargetInfo(CTransform* pTargetTransform, CModel* pTargetModel);
 	void EquipCable(ESASType eType);
 	void UnEquipCable();
+	void CableTeleportDissolve(_float fRange);
 	_bool GetIsActive();
 	_matrix GetTargetMatrix();
 
-	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true);
-	virtual _float4x4 GetPivotMatrix();
+	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
+	virtual _float4x4 GetPivotMatrix() override;
 
 private:
 	_matrix CalcSocketMatrix(_int iIdx, _fmatrix TargetWorldMatrix);
-	_matrix CalcEffSocketMatrix(_int iIdx, _fmatrix TargetWorldMatrix);
-
 
 private:
 	array<CPxModel*, CABLE_CNT> m_CableModels{};
 	array<_float4x4, CABLE_CNT> m_CablePivots{};
-	array<_float4x4, CABLE_CNT> m_EffectPivots{};
+	array<class CParticleGroup*, CABLE_CNT> m_TrailParticles{};
+
+
 	CAnimation* m_pWatchAnim = nullptr;
 
 	CTransform* m_pTargetTransform = nullptr;
@@ -58,6 +59,11 @@ private:
 	CRenderer* m_pRendererCom = nullptr;
 
 	_bool m_bActive = false;
+	_float m_fTimeBeforePhysX = 0.5f;
+	_float m_fDisappearTime = 0.2f;
+	_float m_fMaxDisappearTime = 0.2f;
+	_float m_fRedDissolveTime = 50.f;
+	_float m_fMaxRedDissolveTime = 50.f;
 
 	string socket;
 

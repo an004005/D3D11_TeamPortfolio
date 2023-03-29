@@ -379,6 +379,9 @@
     <Filter Include="02.GameObjects\Enemy\EMBullet\ElectricBullet">
       <UniqueIdentifier>{53e11f2c-66d8-4166-948c-aeb499f89c39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_TankLorry">
+      <UniqueIdentifier>{b12936c4-bc60-410c-9473-2decf22ba875}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\UI\Short">
       <UniqueIdentifier>{13c84b28-6101-40b9-8629-d92de65f760f}</UniqueIdentifier>
     </Filter>
@@ -1171,6 +1174,18 @@
       <Filter>VFX\PostProcess</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SuperSpeedTrail.h" />
+    <ClInclude Include="..\public\Special_TankLorry.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_TankLorry_Head.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_TankLorry_Trailer.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_TankLorry_Tank.h">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\GameManager_Tutorial.h" />
     <ClInclude Include="..\public\MouseCousorUI.h">
       <Filter>02.GameObjects\UI</Filter>
@@ -1953,6 +1968,18 @@
       <Filter>VFX\PostProcess</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SuperSpeedTrail.cpp" />
+    <ClCompile Include="..\private\Special_TankLorry.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TankLorry_Head.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TankLorry_Trailer.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_TankLorry_Tank.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\GameManager_Tutorial.cpp" />
     <ClCompile Include="..\private\MouseCousorUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
@@ -2083,6 +2110,12 @@
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing_Shadow.hlsl">
       <Filter>97.ShaderFiles\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl">
+      <Filter>97.ShaderFiles\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\SSAO.hlsl">
+      <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 
 #include "Base.h"
 #include "Client_Defines.h"
+#include "Transform.h"
 
 //플레이어가 가지는 정보를 싱글톤으로 관리
 
@@ -132,6 +133,8 @@ public:	// Set
 
 	void			Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasType, _float iChangeEnergy);
 
+	void			Set_PlayerWorldMatrix(_fmatrix worldmatrix);
+
 	HRESULT			Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
@@ -141,6 +144,13 @@ public:	// Set
 	// SAS
 	void			Set_HanabiMemvber() { m_tHanabiStat.bMember = true; }
 	void			Set_TsugumiMemvber() { m_tTsugumiStat.bMember = true; }
+
+
+public:
+	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
+	void			Camera_Random_Shake(_float fForce);
+	void			Camera_Axis_Shaking(_float4 vDir, _float fShakePower);
+	void			Camera_Axis_Sliding(_float4 vDir, _float fShakePower);
 
 
 private:	// 스탯 정보 관련
@@ -154,6 +164,12 @@ private:	// 상호작용 관련
 	CGameObject*	m_pKineticObject;
 	CGameObject*	m_pTargetedMonster;
 	CGameObject*	m_pSpecialObject;
+
+private:
+	CGameObject*	m_pCamSpot = nullptr;
+
+private:
+	_matrix			m_PlayerWorldMatrix = XMMatrixIdentity();
 
 private:
 	_float			m_fBaseAttackDamage;

@@ -157,7 +157,7 @@ PS_OUT PS_MAIN_WHITE_OUT(PS_IN In)
 
 
 // https://www.shadertoy.com/view/XsfSDs
-// g_vec2_0 : ºí·¯ ¼¾ÅÍ UV°ª
+// g_vec2_0 : ë¸”ëŸ¬ ì„¼í„° UVê°’
 PS_OUT PS_MAIN_BLUR(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -199,15 +199,15 @@ PS_OUT PS_MAIN_XRAY_VISION(PS_IN In)
 	if (depthMaintain.y == 1.f)
 		return Out;
 
-	if (depth.y >= depthMaintain.y) // Maintainº¸´Ù ±íÀÌ°¡ Å©´Ù : MaintainÀÌ °¡·ÁÁöÁö ¾Ê¾Ò´Ù.
+	if (depth.y >= depthMaintain.y) // Maintainë³´ë‹¤ ê¹Šì´ê°€ í¬ë‹¤ : Maintainì´ ê°€ë ¤ì§€ì§€ ì•Šì•˜ë‹¤.
 		return Out;
 
-	// g_TeamXRayIdx Ã¼Å©
-	if (depth.w == 4.f) // ºñÃÄ º¸ÀÌ´Â ´ë»ó ¿ÀºêÁ§Æ®ÀÇ ID°¡ 4(¸Ê¿ÀºêÁ§Æ®)ÀÏ ¶§¸¸ ºñÃÄº¸ÀÎ´Ù.
+	// g_TeamXRayIdx ì²´í¬
+	if (depth.w == 4.f) // ë¹„ì³ ë³´ì´ëŠ” ëŒ€ìƒ ì˜¤ë¸Œì íŠ¸ì˜ IDê°€ 4(ë§µì˜¤ë¸Œì íŠ¸)ì¼ ë•Œë§Œ ë¹„ì³ë³´ì¸ë‹¤.
 	{
-		if (depthMaintain.w == 3.f) // Àû±º(»¡°­)
+		if (depthMaintain.w == 3.f) // ì êµ°(ë¹¨ê°•)
 			Out.vColor = float4(241.f / 255.f, 18.f / 255.f, 12.f / 255.f, 1.f);
-		else if (depthMaintain.w == 2.f) // ¾Æ±º(ÃÊ·Ï)
+		else if (depthMaintain.w == 2.f) // ì•„êµ°(ì´ˆë¡)
 			Out.vColor = float4(71.f / 255.f, 1.f, 189.f / 255.f, 1.f);
 	}
 
@@ -252,12 +252,12 @@ PS_OUT PS_MAIN_COLOR_GRADING_LUT_6(PS_IN In)
 
 	float blend = g_float_0;
 
-	float COLORS = 16.f; // LUT °¡·Î °³¼ö?
+	float COLORS = 16.f; // LUT ê°€ë¡œ ê°œìˆ˜?
 
 	float maxColor = COLORS - 1.0;
 	float4 col = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
-	float halfColX = 0.5f / 256.f; // LUTÅØ½ºÃÄ °¡·Î ÇÈ¼¿ »çÀÌÁî
-	float halfColY = 0.5f / 16.f; // LUTÅØ½ºÃÄ ¼¼·Î ÇÈ¼¿ »çÀÌÁî
+	float halfColX = 0.5f / 256.f; // LUTí…ìŠ¤ì³ ê°€ë¡œ í”½ì…€ ì‚¬ì´ì¦ˆ
+	float halfColY = 0.5f / 16.f; // LUTí…ìŠ¤ì³ ì„¸ë¡œ í”½ì…€ ì‚¬ì´ì¦ˆ
 	float threshold = maxColor / COLORS;
 
 	float xOffset = halfColX + col.r * threshold / COLORS;
@@ -320,37 +320,45 @@ PS_OUT PS_MAIN_Penetate_8(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	float4 vFlags = g_FlagTexture.Sample(PointSampler, In.vTexUV);
-	float4 LDR = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
-
-	if (vFlags.z == SHADER_TOON_GRAY_INGNORE)
+	float4 LDR = g_LDRTexture.Sample(LinearSampler_Clamp, In.vTexUV);
+	float fDissolve = g_float_0;
+	
+	// if (vFlags.z == SHADER_TOON_GRAY_INGNORE)
+	// {
+	// 	Out.vColor = LDR;
+	// 	Out.vColor.a = 1.f;
+	// }
+	// else 
+	if (vFlags.z == SHADER_MONSTER_WEAK)
 	{
-		Out.vColor = LDR;
+		float3 vWeak = dot(LDR.rgb, float3(0.299, 0.587, 0.114)) * float3(1.f, 1.f, 169.f / 255.f) * 1.5f;
+		Out.vColor.rgb = lerp(LDR.rgb, vWeak, fDissolve);
 		Out.vColor.a = 1.f;
 	}
-	else if (vFlags.z == SHADER_MONSTER_WEAK)
+	else if (vFlags.z == SHADER_MONSTER_INVISIBLE)
 	{
-		float fGray = dot(LDR.rgb, float3(0.299, 0.587, 0.114));
-		Out.vColor.rgb = float3(1.f, 1.f, 169.f / 255.f) * fGray * 1.5f;
+		float3 vInvisible = dot(LDR.rgb, float3(0.299, 0.587, 0.114)) * COL_GREEN;
+		Out.vColor.rgb = lerp(LDR.rgb, vInvisible, fDissolve);
 		Out.vColor.a = 1.f;
 	}
 	else
 	{
-		float fGray = dot(LDR.rgb, float3(0.299, 0.587, 0.114));
-		Out.vColor.rgb = (float3)fGray;
+		float3 vGray = dot(LDR.rgb, float3(0.299, 0.587, 0.114));
+		Out.vColor.rgb = lerp(LDR.rgb, vGray, fDissolve);
 		Out.vColor.a = 1.f;
 	}
 
 	float fRadius = length(In.vTexUV - float2(0.5f, 0.5f));
-	if (fRadius >= 0.45f)
+	if (fRadius >= 0.4f)
 	{
 		float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
-		float2 distortionUV = randomNormal * g_float_0 * 0.3f + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time * 0.2f));
+		float2 distortionUV = randomNormal * fDissolve * 0.001f + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time/* * 0.2f*/));
 		float4 DistortionTex = g_tex_0.Sample(LinearSampler, distortionUV);
-		float fWeight = DistortionTex.r * g_float_0 * g_float_1;
+		float fWeight = DistortionTex.r * fDissolve * g_float_1 * 0.2;
 
 		float4 OriginColor = g_LDRTexture.Sample(LinearSampler, (In.vTexUV + fWeight));
 
-		float fRatio = Remap(fRadius, float2(0.45f, 0.707f), float2(0.f, 1.f));
+		float fRatio = Remap(fRadius, float2(0.4f, 0.707f), float2(0.f, 1.f));
 
 		Out.vColor = lerp(Out.vColor, OriginColor, fRatio);
 	}
@@ -451,7 +459,7 @@ PS_OUT PS_MAIN_SuperSpeed_11(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	float4 vFlags = g_FlagTexture.Sample(PointSampler, In.vTexUV);
-	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vColor = g_LDRTexture.Sample(LinearSampler_Clamp, In.vTexUV);
 
 	if (vFlags.z != SHADER_TOON_GRAY_INGNORE)
 	{
@@ -459,25 +467,25 @@ PS_OUT PS_MAIN_SuperSpeed_11(PS_IN In)
 		if (fRadius >= 0.35f)
 		{
 			float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
-			float2 distortionUV = randomNormal * g_float_0 * 0.3f + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time * 0.4f));
+			float2 distortionUV = randomNormal * g_float_0 * 0.1f + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time * 0.4f));
 			float4 DistortionTex = g_tex_0.Sample(LinearSampler, distortionUV);
-			float fWeight = DistortionTex.r * g_float_0 * g_float_1;
+			float fWeight = DistortionTex.r * g_float_0 * g_float_1 * 0.5f;
 		
-			float4 OriginColor = g_LDRTexture.Sample(LinearSampler, (In.vTexUV + fWeight));
+			float4 OriginColor = g_LDRTexture.Sample(LinearSampler_Clamp, (In.vTexUV + fWeight));
 		
 			float fRatio = Remap(fRadius, float2(0.35f, 0.707f), float2(0.f, 1.f));
 		
 			Out.vColor = lerp(Out.vColor, OriginColor, fRatio);
 		}
 
-		float blend = g_float_0 * 0.5f; // 0.5¸¦ ÃÖ´ë °ªÀ¸·Î »ç¿ëÇÏ±â À§ÇÔ
+		float blend = g_float_0 * 0.5f; // 0.5ë¥¼ ìµœëŒ€ ê°’ìœ¼ë¡œ ì‚¬ìš©í•˜ê¸° ìœ„í•¨
 
-		float COLORS = 16.f; // LUT °¡·Î °³¼ö?
+		float COLORS = 16.f; // LUT ê°€ë¡œ ê°œìˆ˜?
 
 		float maxColor = COLORS - 1.0;
 		float4 col = Out.vColor;
-		float halfColX = 0.5f / 256.f; // LUTÅØ½ºÃÄ °¡·Î ÇÈ¼¿ »çÀÌÁî
-		float halfColY = 0.5f / 16.f; // LUTÅØ½ºÃÄ ¼¼·Î ÇÈ¼¿ »çÀÌÁî
+		float halfColX = 0.5f / 256.f; // LUTí…ìŠ¤ì³ ê°€ë¡œ í”½ì…€ ì‚¬ì´ì¦ˆ
+		float halfColY = 0.5f / 16.f; // LUTí…ìŠ¤ì³ ì„¸ë¡œ í”½ì…€ ì‚¬ì´ì¦ˆ
 		float threshold = maxColor / COLORS;
 
 		float xOffset = halfColX + col.r * threshold / COLORS;
