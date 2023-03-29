@@ -45,6 +45,7 @@
 #include "Special_HBeam_Single.h"
 #include "Special_DropObject_Bundle.h"
 #include "Special_TankLorry.h"
+#include "Special_IronBars.h"
 
 #include "Enemy.h"
 #include "PostVFX_Penetrate.h"
@@ -334,7 +335,11 @@ void CPlayer::Tick(_double TimeDelta)
 			else if (SPECIAL_TANKLORRY == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
 			{
 				m_pTankLorryStateMachine->Tick(TimeDelta);
-				//m_pIronBarsStateMachine->Tick(TimeDelta);
+			}
+
+			else if (SPECIAL_IRONBARS == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
+			{
+				m_pIronBarsStateMachine->Tick(TimeDelta);
 			}
 		}
 	}
@@ -5471,12 +5476,19 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		.AddState("IRONBARS_FINISH_EX")
 		.OnStart([&]() 
 		{
-			m_pKineticAnimModel->SetPlayAnimation("AS_no0000_245_AL_Pcon_cLeR_Lv1");
+			m_pKineticAnimModel->SetPlayAnimation("AS_ch0100_348_AL_obj_rod");
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Finish);
 		})
 		.Tick([&](double fTimeDelta)
 		{
-		
+			if (nullptr != m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket"))
+			{
+				m_pKineticAnimModel->GetPlayAnimation()->Update_Bones_SyncRatio(m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayTime());
+				m_pKineticAnimModel->Compute_CombindTransformationMatrix();
+
+				static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+					IronBars_AttachAnim(m_pKineticAnimModel, m_pTransformCom);
+			}
 		})
 		.OnExit([&]()
 		{

@@ -184,6 +184,8 @@ void CSpecial_IronBars::IronBars_SetKinetic(_bool bKinetic)
 
 void CSpecial_IronBars::IronBars_AttachAnim(CModel* pModel, CTransform* pTransform)
 {
+	m_bDecompose = true;
+
 	for (_uint i = 0; i < 8; ++i)
 	{
 		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Attach_BoneMatrix(pModel, pTransform, "Waist");
