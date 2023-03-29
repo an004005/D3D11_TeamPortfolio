@@ -4,7 +4,7 @@
     "BurstCnt": 15,
     "ConeDirDegree": 15.0,
     "ConeOriginRadius": 10.0,
-    "Duration": 1.0,
+    "Duration": 0.5,
     "FromOrigin": true,
     "GravityPowerMinMax": [
         2.0,
@@ -78,11 +78,11 @@
     },
     "ShaderProtoTag": "Prototype_Component_Shader_VtxMesh_Instance",
     "Shape": 1,
-    "SpawnTickTime": 0.699999988079071,
+    "SpawnTickTime": 0.5,
     "Speed": 1.0,
     "SpeedMinMax": [
-        8.0,
-        10.0
+        0.20000000298023224,
+        3.0
     ],
     "SpeedRand": true,
     "SphereDetail": false,
