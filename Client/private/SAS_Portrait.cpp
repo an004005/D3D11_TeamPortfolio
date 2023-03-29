@@ -8,7 +8,7 @@
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
 
-#define USE_PORTRAIT
+//#define USE_PORTRAIT
 
 /*********************
  *CPostVFX_SAS_Portrait

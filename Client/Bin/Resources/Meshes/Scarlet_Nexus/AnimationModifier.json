@@ -2987,6 +2987,66 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_348_AL_obj": {
+        "Duration": 130.0,
+        "TickPerSecond": 65.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_348_AL_pull_cansel": {
+        "Duration": 70.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_348_AL_pull_start": {
+        "Duration": 75.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_348_AL_throw1_cansel": {
+        "Duration": 75.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_348_AL_throw1_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_348_AL_throw1_start": {
+        "Duration": 28.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_348_AL_throw2_start": {
+        "Duration": 54.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_348_AL_throw3_start": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_348_AL_throw4_start": {
+        "Duration": 55.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_348_AL_throw5_start": {
+        "Duration": 190.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_372_AL_Cap_sLcLeL_end": {
         "Duration": 143.0,
         "TickPerSecond": 50.0,
