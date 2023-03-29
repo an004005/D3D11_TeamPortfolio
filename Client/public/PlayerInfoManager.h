@@ -82,8 +82,8 @@ public:	// Set
 	void			Set_PlayerKineticEnergy(_uint iEnergy) { m_tPlayerStat.m_iKineticEnergy = iEnergy; }
 	void			Change_PlayerKineticEnergy(CHANGETYPE eType, _uint ChangeEnergy);
 
-	void			Set_KineticEnergyLevel(_uint iType) { m_tPlayerStat.m_iKineticEnergyType = iType; }
-	void			Set_KineticEnetgyType(_uint iType) { m_tPlayerStat.m_iKineticEnergyLevel = iType; }
+	void			Set_KineticEnergyLevel(_uint iType) { m_tPlayerStat.m_iKineticEnergyLevel = iType; }
+	void			Set_KineticEnetgyType(_uint iType) { m_tPlayerStat.m_iKineticEnergyType = iType; }
 
 	void			Set_SasType(ESASType eType);
 	void			Finish_SasType(ESASType eType);

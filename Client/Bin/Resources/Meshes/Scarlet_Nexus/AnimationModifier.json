@@ -2987,6 +2987,12 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_348_AL_obj": {
+        "Duration": 130.0,
+        "TickPerSecond": 65.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_348_AL_pull_cansel": {
         "Duration": 70.0,
         "TickPerSecond": 50.0,
