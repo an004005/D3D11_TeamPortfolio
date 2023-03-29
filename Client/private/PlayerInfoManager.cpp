@@ -5,6 +5,7 @@
 #include "MapKinetic_Object.h"
 #include "Monster.h"
 #include "Enemy.h"
+#include "CamSpot.h"
 
 IMPLEMENT_SINGLETON(CPlayerInfoManager)
 
@@ -286,6 +287,11 @@ void CPlayerInfoManager::Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasT
 		m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy = 0.f;
 }
 
+void CPlayerInfoManager::Set_PlayerWorldMatrix(_fmatrix worldmatrix)
+{
+	m_PlayerWorldMatrix = worldmatrix;
+}
+
 HRESULT CPlayerInfoManager::Set_KineticObject(CGameObject * pKineticObject)
 {
 	if (nullptr == pKineticObject) { m_pKineticObject = nullptr; return S_OK; }
@@ -318,6 +324,37 @@ HRESULT CPlayerInfoManager::Set_SpecialObject(CGameObject * pSpecialObject)
 
 	m_pSpecialObject = pSpecialObject;
 	return S_OK;
+}
+
+HRESULT CPlayerInfoManager::Set_CamSpot(CGameObject * pCamSpot)
+{
+	m_pCamSpot = pCamSpot;
+
+	return S_OK;
+}
+
+void CPlayerInfoManager::Camera_Random_Shake(_float fForce)
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCamSpot))
+	{
+		static_cast<CCamSpot*>(m_pCamSpot)->Random_Shaking(fForce);
+	}
+}
+
+void CPlayerInfoManager::Camera_Axis_Shaking(_float4 vDir, _float fShakePower)
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCamSpot))
+	{
+		static_cast<CCamSpot*>(m_pCamSpot)->Axis_Shaking(vDir, fShakePower);
+	}
+}
+
+void CPlayerInfoManager::Camera_Axis_Sliding(_float4 vDir, _float fShakePower)
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCamSpot))
+	{
+		static_cast<CCamSpot*>(m_pCamSpot)->Axis_Sliding(vDir, fShakePower);
+	}
 }
 
 void CPlayerInfoManager::SAS_Checker()
@@ -379,4 +416,8 @@ void CPlayerInfoManager::SAS_Checker()
 
 void CPlayerInfoManager::Free()
 {
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCamSpot))
+	{
+		Safe_Release(m_pCamSpot);
+	}
 }

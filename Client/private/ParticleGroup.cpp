@@ -266,6 +266,7 @@ void CParticleGroup::Delete_Particles()
 		if (iter.second.second != nullptr)
 			iter.second.second->Remote_BurstCnt_Zero();
 	}
+
 	m_bUpdate = false;
 }
 

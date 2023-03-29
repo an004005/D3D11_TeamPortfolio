@@ -22,6 +22,7 @@
     <ProjectGuid>{166F062F-EDD8-4A0D-9B32-DA661D7F7BB2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Engine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -40,7 +41,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -257,6 +258,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\Sound.h" />
     <ClInclude Include="..\public\SoundStore.h" />
     <ClInclude Include="..\public\Sound_Manager.h" />
+    <ClInclude Include="..\public\SSAOManager.h" />
     <ClInclude Include="..\public\stdafx.h" />
     <ClInclude Include="..\public\Target_Manager.h" />
     <ClInclude Include="..\public\Texture.h" />
@@ -352,6 +354,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\Sound.cpp" />
     <ClCompile Include="..\private\SoundStore.cpp" />
     <ClCompile Include="..\private\Sound_Manager.cpp" />
+    <ClCompile Include="..\private\SSAOManager.cpp" />
     <ClCompile Include="..\private\Target_Manager.cpp" />
     <ClCompile Include="..\private\Texture.cpp" />
     <ClCompile Include="..\private\Timeline.cpp" />
