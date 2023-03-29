@@ -76,6 +76,11 @@ void CGameManager::ConsumePlayerDamageReport(PLAYER_DAMAGE_REPORT tReport)
 {
 }
 
+void CGameManager::FullItem(const wstring szItemName)
+{
+	pCanvas_Acquisition->Set_FullItem(szItemName);
+}
+
 CGameManager* CGameManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CGameManager* pInstance = new CGameManager(pDevice, pContext);

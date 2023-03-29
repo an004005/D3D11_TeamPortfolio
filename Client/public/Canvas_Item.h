@@ -2,6 +2,7 @@
 
 #include "Canvas.h"
 #include "Client_Defines.h"
+#include "Item_Manager.h"
 
 BEGIN(Client)
 
@@ -25,10 +26,12 @@ public:
 	void	Set_ItmeUse();
 
 private:
+	void	BattleItem_Tick();
 	void	CurrentItem();
 
 private:
-	_float2  Temp = { 0.0f, 0.0f };
+	vector<CItem_Manager::BATTLEITEM>	m_vecBattleItme;
+	size_t	m_iCurrentIndex = { 0 };
 
 public:
 	static CCanvas_Item* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

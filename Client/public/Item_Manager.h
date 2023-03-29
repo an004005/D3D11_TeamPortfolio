@@ -10,25 +10,25 @@ class CItem_Manager final : public CBase
 	DECLARE_SINGLETON(CItem_Manager)
 
 public:
-	enum MAINITEM { ALL, BATTLE, WEAPON, ETC, MAINITEM_END };
+	enum class MAINITEM { ALL, BATTLE, WEAPON, ETC, MAINITEM_END };
 
 	typedef struct tagItemInfo
 	{
-		MAINITEM	eType = { MAINITEM_END };
+		MAINITEM	eType = { MAINITEM::MAINITEM_END };
 		_bool		bNew = { false };
 		_bool		bPick = { false };
 		_uint		iCount = { 0 };
 		_uint		iMaxCount = { 0 };
-		_uint		iWeaponNum = { 0 };		// [0] Weapon ÀÌ ¾Æ´Ñ [1] ÇöÀç »ç¿ë ÁßÀÎ ¹«±â [2] º¯°æ ÇÏ°íÀÚ ÇÏ´Â ¹«±â [3] ±× ¿Ü ¹«±â
+		_uint		iWeaponNum = { 0 };		// [0] Weapon ì´ ì•„ë‹Œ [1] í˜„ì¬ ì‚¬ìš© ì¤‘ì¸ ë¬´ê¸° [2] ë³€ê²½ í•˜ê³ ì í•˜ëŠ” ë¬´ê¸° [3] ê·¸ ì™¸ ë¬´ê¸°
 		_uint		iWeaponAttack = { 0 };
 		_float2		vIconIndex = { 0.0f, 0.0f };
-		_tchar*		szItemEx[4] = {};
+		_tchar*	szItemEx[4] = {};
 
 	}ITEMINFO;
 
 	typedef struct tagBattleItem
 	{
-		wstring		wsName;
+		wstring	wsName = L"ì•„ì´í…œ ì´ˆê¸°í™”\n";
 		_uint		iCount = { 0 };
 		_float2		vIconIndex = { 0.0f, 0.0f };
 
@@ -42,7 +42,7 @@ public:
 	HRESULT	Initialize();
 	
 public:
-	vector<BATTLEITEM>	Get_BattleItem() {
+	vector<BATTLEITEM> 	Get_BattleItem() {
 		return m_vecBattleItem;
 	}
 
@@ -67,12 +67,16 @@ private:
 	void	ItemInfo_Intiialize();
 
 private:
-	MAINITEM	m_eMainItem = { MAINITEM_END };
+	MAINITEM	m_eMainItem = { MAINITEM::MAINITEM_END };
 
 	array<_float2, 17>	m_arrItemIndexPos;
 	array<_float2, 17>	m_arrIconIndexPos;
 	vector<pair<wstring, ITEMINFO>>	m_vecItem;
-	vector<BATTLEITEM> m_vecBattleItem;	// Front UI¿¡ ¶ç¿ï ¿ëµµ
+	vector<BATTLEITEM> m_vecBattleItem;	// Front UIì— ë„ìš¸ ìš©ë„
+
+	//list< BATTLEITEM>	m_BarrleIemList;		// Front UIì— ë„ìš¸ ìš©ë„
+	//array<BATTLEITEM, ITEMINDEX_END> m_arrBattleItem;	// Front UIì— ë„ìš¸ ìš©ë„
+	//enum ITEMINDEX { ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, ITEMINDEX_END };
 
 public:
 	virtual void Free() override;

@@ -50,7 +50,7 @@ void CItem_RightArrowUI::Tick(_double TimeDelta)
 		}
 	}
 	else
-	{
+	{ 
 		m_fX += _float(TimeDelta) * 100.0f;
 	}
 }

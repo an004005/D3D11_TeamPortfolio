@@ -3,8 +3,8 @@
 #include "GameInstance.h"
 #include "JsonLib.h"
 
-// ÃÊ·Ï»ö : 0.5f, 1.0f, 0.4f, ¾È¾¸
-// m_tParams.Floats[0] À» ÀÌ¿ëÇØ¼­ °ÔÀÌÁö¸¦ Á¶ÀıÇÑ´Ù.
+// ì´ˆë¡ìƒ‰ : 0.5f, 1.0f, 0.4f, ì•ˆì”€
+// m_tParams.Floats[0] ì„ ì´ìš©í•´ì„œ ê²Œì´ì§€ë¥¼ ì¡°ì ˆí•œë‹¤.
 
 CItem_GaugeUI::CItem_GaugeUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -52,7 +52,7 @@ void CItem_GaugeUI::Tick(_double TimeDelta)
 
 		if (1.0f < m_fRatio)
 		{
-			m_tParams.Floats[0] = 1.0f;
+			m_fRatio = 1.0f;
 			m_bCooldownTimeStart = false;
 		}
 	}

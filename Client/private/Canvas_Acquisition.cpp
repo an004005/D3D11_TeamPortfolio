@@ -85,52 +85,52 @@ void CCanvas_Acquisition::Set_EnemyUI(const EEnemyName eEnemyName, const _uint i
 	switch (eEnemyName)
 	{
 	case EEnemyName::EM0110:
-		szEnemyName = L"¿À°Å »ç¹ÙÆ®";
+		szEnemyName = L"ì˜¤ê±° ì‚¬ë°”íŠ¸\n";
 		break;
 	case EEnemyName::EM0200:
-		szEnemyName = L"¹Ù½º Æ÷Áî";
+		szEnemyName = L"ë°”ìŠ¤ í¬ì¦ˆ\n";
 		break;
 	case EEnemyName::EM0210:
-		szEnemyName = L"¼Ò½º Æ÷Áî";
+		szEnemyName = L"ì†ŒìŠ¤ í¬ì¦ˆ\n";
 		break;
 	case EEnemyName::EM0220:
-		szEnemyName = L"º£ÀÌ½º Æ÷Áî";
+		szEnemyName = L"ë² ì´ìŠ¤ í¬ì¦ˆ\n";
 		break;
 	case EEnemyName::EM0320:
-		szEnemyName = L"°æ°Ç Æä¸®";
+		szEnemyName = L"ê²½ê±´ í˜ë¦¬\n";
 		break;
 	case EEnemyName::EM0400:
-		szEnemyName = L"¹öµğ ·¯¹Ì";
+		szEnemyName = L"ë²„ë”” ëŸ¬ë¯¸\n";
 		break;
 	case EEnemyName::EM0650:
-		szEnemyName = L"¹ÙÀÏ Ç®";
+		szEnemyName = L"ë°”ì¼ í’€\n";
 		break;
 	case EEnemyName::EM0700:
-		szEnemyName = L"¹æµµ ÆÎµÚ";
+		szEnemyName = L"ë°©ë„ íŒ¡ë’¤\n";
 		break;
 	case EEnemyName::EM0750:
-		szEnemyName = L"½ºÄ¿¹Ì ÆÎµÚ";
+		szEnemyName = L"ìŠ¤ì»¤ë¯¸ íŒ¡ë’¤\n";
 		break;
 	case EEnemyName::EM0800:
-		szEnemyName = L"ºê·Ğ ¿æ";
+		szEnemyName = L"ë¸Œë¡  ìš˜\n";
 		break;
 	case EEnemyName::EM1100:
-		szEnemyName = L"¿ÍÀÌ³Ê¸® Ä¡³Ê¸®";
+		szEnemyName = L"ì™€ì´ë„ˆë¦¬ ì¹˜ë„ˆë¦¬\n";
 		break;
 	case EEnemyName::EM1200:
-		szEnemyName = L"³ª¿À¹Ì ·£µé";
+		szEnemyName = L"ë‚˜ì˜¤ë¯¸ ëœë“¤\n";
 		break;
 	case EEnemyName::EM8210:
-		szEnemyName = L"Áß´ëÀå";
+		szEnemyName = L"ì¤‘ëŒ€ì¥\n";
 		break;
 	default:
-		szEnemyName = L"Àß¸øµÈ ÀÌ¸§";
+		szEnemyName = L"ì˜ëª»ëœ ì´ë¦„\n";
 		break;
 	}
 #pragma endregion EnemyName
 
 	_tchar szText[MAX_PATH] = TEXT("");
-	wsprintf(szText, TEXT("%s¸¦ ¾²·¯¶ß·È´Ù."), szEnemyName);
+	wsprintf(szText, TEXT("%së¥¼ ì“°ëŸ¬ëœ¨ë ¸ë‹¤."), szEnemyName);
 
 	json["Text"] = ws2s(szText);
 	CAcquisitionUI* pUI = dynamic_cast<CAcquisitionUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"AcquisitionUI", &json));
@@ -140,10 +140,10 @@ void CCanvas_Acquisition::Set_EnemyUI(const EEnemyName eEnemyName, const _uint i
 
 	_uint iExp = CMathUtils::RandomUInt(iLevel) + iLevel * 4;
 
-	// Ãß°¡ÀûÀ¸·Î ÇÃ·¹ÀÌ¾î¿¡ Á¤º¸µµ Set ÇØÁÖ±â
+	// ì¶”ê°€ì ìœ¼ë¡œ í”Œë ˆì´ì–´ì— ì •ë³´ë„ Set í•´ì£¼ê¸°
 	CPlayerInfoManager::GetInstance()->Get_PlayerStat().iExp += iExp;
 
-	wsprintf(szText, TEXT("%uEXP ÀÔ¼ö"), iExp);
+	wsprintf(szText, TEXT("%uEXP ì…ìˆ˜"), iExp);
 
 	json["Text"] = ws2s(szText);
 	pUI = dynamic_cast<CAcquisitionUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"AcquisitionUI", &json));
@@ -153,13 +153,23 @@ void CCanvas_Acquisition::Set_EnemyUI(const EEnemyName eEnemyName, const _uint i
 
 	_uint iCoin = min(iLevel * 1, CMathUtils::RandomUInt(iLevel * 3));
 
-	// Ãß°¡ÀûÀ¸·Î ÇÃ·¹ÀÌ¾î¿¡ Á¤º¸µµ Set ÇØÁÖ±â
+	// ì¶”ê°€ì ìœ¼ë¡œ í”Œë ˆì´ì–´ì— ì •ë³´ë„ Set í•´ì£¼ê¸°
 	CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin += iCoin;
 
-	wsprintf(szText, TEXT("K %uÀÔ¼ö"), iCoin);
+	wsprintf(szText, TEXT("K %uì…ìˆ˜"), iCoin);
 
 	json["Text"] = ws2s(szText);
 	pUI = dynamic_cast<CAcquisitionUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"AcquisitionUI", &json));
+	assert(pUI != nullptr && "Failed to Clone : CAcquisitionUI");
+
+	m_AcquisitionUIList.emplace_back(pUI);
+}
+
+void CCanvas_Acquisition::Set_FullItem(const wstring szItemName)
+{
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/AcquisitionUI.json");
+	json["Text"] = szItemName + L"ì´ ê°€ë“ ì°¼ìŠµë‹ˆë‹¤.";
+	CAcquisitionUI* pUI = dynamic_cast<CAcquisitionUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"AcquisitionUI", &json));
 	assert(pUI != nullptr && "Failed to Clone : CAcquisitionUI");
 
 	m_AcquisitionUIList.emplace_back(pUI);

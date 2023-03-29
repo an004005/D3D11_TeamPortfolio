@@ -18,7 +18,7 @@ public:
 	
 public:
 	_bool	Get_ItemUseStatuse() {
-		if (1.0f == m_tParams.Floats[0])
+		if (m_fRatio - 1.0f <= 0.000001f)
 			return true;
 		else
 			return false;
@@ -32,7 +32,7 @@ public:
 private:
 	_bool	m_bCooldownTimeStart = { false };
 	_bool	m_fRatioDown = { false };
-	_float	m_fRatio = { 0.0f };
+	_float	m_fRatio = { 1.0f };
 
 public:
 	static CItem_GaugeUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

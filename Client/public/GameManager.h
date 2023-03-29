@@ -12,7 +12,7 @@ typedef struct tagEnemyDamageReport
 	ENEMY_STAT eStat;
 	_uint iTakeDamage = 0;
 	ESASType eAttackSAS = ESASType::SAS_END;
-	EDeBuffType eBeDeBuff = EDeBuffType::DEBUFF_END; // ∞…∏∞ ªÛ≈¬¿ÃªÛ
+	EDeBuffType eBeDeBuff = EDeBuffType::DEBUFF_END; // Í±∏Î¶∞ ÏÉÅÌÉúÏù¥ÏÉÅ
 	EAttackType eAttackType = EAttackType::ATK_END;
 	EKineticAttackType eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_END;
 	_bool bHitWeak = false;
@@ -24,7 +24,7 @@ typedef struct tagPlayerDamageReport
 	class CEnemy* pCauser = nullptr;
 	class CPlayer* pTaker = nullptr;
 	_uint iTakeDamage = 0;
-	EDeBuffType eBeDeBuff = EDeBuffType::DEBUFF_END; // ∞…∏∞ ªÛ≈¬¿ÃªÛ
+	EDeBuffType eBeDeBuff = EDeBuffType::DEBUFF_END; // Í±∏Î¶∞ ÏÉÅÌÉúÏù¥ÏÉÅ
 	EAttackType eAttackType = EAttackType::ATK_END;
 	_bool bDead = false;
 } PLAYER_DAMAGE_REPORT;
@@ -47,8 +47,11 @@ public:
 	virtual void ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport);
 	virtual void ConsumePlayerDamageReport(PLAYER_DAMAGE_REPORT tReport);
 
+public:
+	void		FullItem(const wstring szItemName);
+
 protected:
-	ID3D11Device*			m_pDevice = nullptr;
+	ID3D11Device*					m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pContext = nullptr;
 
 private:

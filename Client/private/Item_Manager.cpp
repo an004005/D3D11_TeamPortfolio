@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Item_Manager.h"
 #include "Canvas.h"
+#include "GameManager.h"
 
 IMPLEMENT_SINGLETON(CItem_Manager)
 
@@ -18,20 +19,43 @@ HRESULT CItem_Manager::Initialize()
 
 void CItem_Manager::Set_ItemCount(const wstring & wszName, const _uint iCount)
 {
+	// wszName ì´ë¦„ìœ¼ë¡œ ì°¾ì•„ë‚¸ ë°ì´í„°ì˜ ì•„ì´í…œ ê°œìˆ˜ë¥¼ iCount ë¡œ ì¶”ê°€ ë˜ëŠ” ê°ì†Œí•œë‹¤.
 	auto iter = find_if(m_vecItem.begin(), m_vecItem.end(), [&](pair<wstring, ITEMINFO> pair) {
 		return pair.first == wszName;
 	});
 
 	if (iter != m_vecItem.end())
 	{
+		// ì˜ˆì™¸ì²˜ë¦¬ ì•„ì´í…œì€ ê°ê° ìµœëŒ€ '10ê°œ' ê¹Œì§€ë§Œ ë³´ê´€í•  ìˆ˜ ìžˆë‹¤.
+		if ((*iter).second.iCount >= 10)
+		{
+			CGameManager::GetInstance()->FullItem((*iter).first);
+			return;
+		}
+
 		(*iter).second.iCount += iCount;
 
-		//º¤ÅÍ°¡ ¾Æ´Ñ ¹è¿­·Î ¼öÁ¤ÇØ¾ß ÇÒµí?
-		BATTLEITEM tBattleItem;
-		tBattleItem.wsName = (*iter).first;
-		tBattleItem.iCount = (*iter).second.iCount;
-		tBattleItem.vIconIndex = (*iter).second.vIconIndex;
-		m_vecBattleItem.emplace_back(tBattleItem);
+		// ë°°í‹€ ì•„ì´í…œ ì´ë¼ë©´ Front UIì— ë„ìš°ê¸° ìœ„í•´ ë‹¤ìŒì„ ì¶”ê°€í•œë‹¤.
+		if ((*iter).second.eType == MAINITEM::BATTLE)
+		{
+			BATTLEITEM tBattleItem;
+			tBattleItem.wsName = (*iter).first;
+			tBattleItem.iCount = (*iter).second.iCount;
+			tBattleItem.vIconIndex = (*iter).second.vIconIndex;
+
+			// ì´ë¯¸ ì´ì „ì— ë„£ì–´ë‘” ë°ì´í„° ë¼ë©´ ë°˜ë³µë¬¸ì—ì„œ ì°¾ì•„ì„œ ë°ì´í„°ë¥¼ ê°±ì‹ í•˜ê³ ,
+			for (auto it : m_vecBattleItem)
+			{
+				if (it.wsName == wszName)
+				{
+					it = tBattleItem;
+					return;
+				}
+			}
+
+			// ì´ì „ì— ì—†ë˜ ë°ì´í„°ë¼ë©´ ìƒˆë¡œ ì¶”ê°€í•œë‹¤.
+			m_vecBattleItem.emplace_back(tBattleItem);
+		}
 	}
 }
 
@@ -74,7 +98,7 @@ void CItem_Manager::ItemPosition_Intiialize()
 void CItem_Manager::ItemInfo_Intiialize()
 {
 	ITEMINFO	tItemInfo;
-	tItemInfo.eType = BATTLE;
+	tItemInfo.eType = MAINITEM::BATTLE;
 	tItemInfo.bNew = false;
 	tItemInfo.iCount = 0;
 	tItemInfo.iMaxCount = 10;
@@ -82,102 +106,103 @@ void CItem_Manager::ItemInfo_Intiialize()
 	tItemInfo.iWeaponAttack = 0;
 
 	tItemInfo.vIconIndex = { 1.0f, 0.0f };
-	tItemInfo.szItemEx[0] = L"Ã¼·ÂÀ» ÃÖ´ëÄ¡ 30%¸¸Å­ È¸º¹ÇÑ´Ù.";
-	tItemInfo.szItemEx[1] = L"¾à°£ ´ÞÄÞÇÑ ±Ö¸ÀÀÌ ³ª´Â À½·áÇü Á©¸®.";
+	tItemInfo.szItemEx[0] = L"ì²´ë ¥ì„ ìµœëŒ€ì¹˜ 30%ë§Œí¼ íšŒë³µí•œë‹¤.";
+	tItemInfo.szItemEx[1] = L"ì•½ê°„ ë‹¬ì½¤í•œ ê·¤ë§›ì´ ë‚˜ëŠ” ìŒë£Œí˜• ì ¤ë¦¬.";
 	tItemInfo.szItemEx[2] = L" ";
 	tItemInfo.szItemEx[3] = L" ";
-	m_vecItem.emplace_back(L"È¸º¹(¼Ò) Á©¸®", tItemInfo);
+	m_vecItem.emplace_back(L"íšŒë³µ(ì†Œ) ì ¤ë¦¬\n", tItemInfo);
 
 	tItemInfo.vIconIndex = { 0.0f, 5.0f };
-	tItemInfo.szItemEx[0] = L"Ã¼·ÂÀ» ÃÖ´ëÄ¡ 60%¸¸Å­ È¸º¹ÇÑ´Ù.";
-	tItemInfo.szItemEx[1] = L"Àû´çÈ÷ ´ÞÄÞÇÑ °¨¸ÀÀÌ ³ª´Â À½·áÇü Á©¸®.";
+	tItemInfo.szItemEx[0] = L"ì²´ë ¥ì„ ìµœëŒ€ì¹˜ 60%ë§Œí¼ íšŒë³µí•œë‹¤.";
+	tItemInfo.szItemEx[1] = L"ì ë‹¹ížˆ ë‹¬ì½¤í•œ ê°ë§›ì´ ë‚˜ëŠ” ìŒë£Œí˜• ì ¤ë¦¬.";
 	tItemInfo.szItemEx[2] = L" ";
 	tItemInfo.szItemEx[3] = L" ";
-	m_vecItem.emplace_back(L"È¸º¹(Áß) Á©¸®", tItemInfo);
+	m_vecItem.emplace_back(L"íšŒë³µ(ì¤‘) ì ¤ë¦¬\n", tItemInfo);
 
 	tItemInfo.vIconIndex = { 3.0f, 0.0f };
-	tItemInfo.szItemEx[0] = L"Ã¼·ÂÀ» ¿ÏÀüÈ÷ È¸º¹ÇÑ´Ù.";
-	tItemInfo.szItemEx[1] = L"¾öÃ» ´ÞÄÞÇÑ ¹è¸ÀÀÌ ³ª´Â À½·áÇü Á©¸®.";
+	tItemInfo.szItemEx[0] = L"ì²´ë ¥ì„ ì™„ì „ížˆ íšŒë³µí•œë‹¤.";
+	tItemInfo.szItemEx[1] = L"ì—„ì²­ ë‹¬ì½¤í•œ ë°°ë§›ì´ ë‚˜ëŠ” ìŒë£Œí˜• ì ¤ë¦¬.";
 	tItemInfo.szItemEx[2] = L" ";
 	tItemInfo.szItemEx[3] = L" ";
-	m_vecItem.emplace_back(L"È¸º¹(´ë) Á©¸®", tItemInfo);
+	m_vecItem.emplace_back(L"íšŒë³µ(ëŒ€) ì ¤ë¦¬\n", tItemInfo);
 
 	tItemInfo.vIconIndex = { 2.0f, 0.0f };
-	tItemInfo.szItemEx[0] = L"¾Æ±º ÀüÃ¼ÀÇ Ã¼·ÂÀ» ÃÖ´ëÄ¡ 30%¸¸Å­ È¸º¹ÇÑ´Ù.";
-	tItemInfo.szItemEx[1] = L"´Ù °°ÀÌ ³ª´² ¸Ô´Â ÆÐ¹Ð¸® ÆÑ..";
+	tItemInfo.szItemEx[0] = L"ì•„êµ° ì „ì²´ì˜ ì²´ë ¥ì„ ìµœëŒ€ì¹˜ 30%ë§Œí¼ íšŒë³µí•œë‹¤.";
+	tItemInfo.szItemEx[1] = L"ë‹¤ ê°™ì´ ë‚˜ëˆ  ë¨¹ëŠ” íŒ¨ë°€ë¦¬ íŒ©..";
 	tItemInfo.szItemEx[2] = L" ";
 	tItemInfo.szItemEx[3] = L" ";
-	m_vecItem.emplace_back(L"ÀüÃ¼: È¸º¹(¼Ò) Á©¸®", tItemInfo);
+	m_vecItem.emplace_back(L"ì „ì²´: íšŒë³µ(ì†Œ) ì ¤ë¦¬\n", tItemInfo);
 
 	tItemInfo.vIconIndex = { 4.0f, 0.0f };
-	tItemInfo.szItemEx[0] = L"¾Æ±º ÀüÃ¼ÀÇ Ã¼·ÂÀ» ÃÖ´ëÄ¡ 60%¸¸Å­ È¸º¹ÇÑ´Ù.";
-	tItemInfo.szItemEx[1] = L"´Ù °°ÀÌ ³ª´² ¸Ô´Â ÆÐ¹Ð¸® ÆÑ.";
+	tItemInfo.szItemEx[0] = L"ì•„êµ° ì „ì²´ì˜ ì²´ë ¥ì„ ìµœëŒ€ì¹˜ 60%ë§Œí¼ íšŒë³µí•œë‹¤.";
+	tItemInfo.szItemEx[1] = L"ë‹¤ ê°™ì´ ë‚˜ëˆ  ë¨¹ëŠ” íŒ¨ë°€ë¦¬ íŒ©.";
 	tItemInfo.szItemEx[2] = L" ";
 	tItemInfo.szItemEx[3] = L" ";
-	m_vecItem.emplace_back(L"ÀüÃ¼: È¸º¹(Áß) Á©¸®", tItemInfo);
+	m_vecItem.emplace_back(L"ì „ì²´: íšŒë³µ(ì¤‘) ì ¤ë¦¬\n", tItemInfo);
 
 	tItemInfo.vIconIndex = { 1.0f, 5.0f };
-	tItemInfo.szItemEx[0] = L"¾Æ±º ÀüÃ¼ÀÇ Ã¼·ÂÀ» ¿ÏÀüÈ÷ È¸º¹ÇÑ´Ù.";
-	tItemInfo.szItemEx[1] = L"´Ù °°ÀÌ ³ª´² ¸Ô´Â ÆÐ¹Ð¸® ÆÑ.";
+	tItemInfo.szItemEx[0] = L"ì•„êµ° ì „ì²´ì˜ ì²´ë ¥ì„ ì™„ì „ížˆ íšŒë³µí•œë‹¤.";
+	tItemInfo.szItemEx[1] = L"ë‹¤ ê°™ì´ ë‚˜ëˆ  ë¨¹ëŠ” íŒ¨ë°€ë¦¬ íŒ©.";
 	tItemInfo.szItemEx[2] = L" ";
 	tItemInfo.szItemEx[3] = L" ";
-	m_vecItem.emplace_back(L"ÀüÃ¼: È¸º¹(´ë) Á©¸®", tItemInfo);
+	m_vecItem.emplace_back(L"ì „ì²´: íšŒë³µ(ëŒ€) ì ¤ë¦¬\n", tItemInfo);
 
 	tItemInfo.vIconIndex = { 3.0f, 1.0f };
-	tItemInfo.szItemEx[0] = L"SAS °ÔÀÌÁö¸¦ ÃÖ´ë±îÁö È¸º¹ÇÑ´Ù.";
-	tItemInfo.szItemEx[1] = L"¸Ó¸®°¡ »óÄèÇØÁö´Â ½Ã¿öÇÑ À½·á.";
+	tItemInfo.szItemEx[0] = L"SAS ê²Œì´ì§€ë¥¼ ìµœëŒ€ê¹Œì§€ íšŒë³µí•œë‹¤.";
+	tItemInfo.szItemEx[1] = L"ë¨¸ë¦¬ê°€ ìƒì¾Œí•´ì§€ëŠ” ì‹œì›Œí•œ ìŒë£Œ.";
 	tItemInfo.szItemEx[2] = L" ";
 	tItemInfo.szItemEx[3] = L" ";
-	m_vecItem.emplace_back(L"SAS º¸±Þ¼ö", tItemInfo);
+	m_vecItem.emplace_back(L"SAS ë³´ê¸‰ìˆ˜\n", tItemInfo);
 
 	////////////////////////////////////////////////////////////////////////////////
-	tItemInfo.eType = WEAPON;
+	tItemInfo.eType = MAINITEM::WEAPON;
 	tItemInfo.iMaxCount = 1;
 	tItemInfo.iWeaponAttack = 27;
 	tItemInfo.vIconIndex = { 4.0f, 2.0f };
 
 	tItemInfo.iWeaponNum = 1;
-	tItemInfo.szItemEx[0] = L"À¯ÀÌÅä°¡ ÈÆ·Ã»ý ½ÃÀýºÎÅÍ ¾Ö¿ëÇÏ´Â °Ë.";
-	tItemInfo.szItemEx[1] = L"Ä®³¯ÀÌ ¾ã°í °¡º­¿ö, ÃÊ±Þ¿¡¼­ Áß±Þ Á¤µµÀÇ ÀüÅõ±â¼ú·Îµµ";
-	tItemInfo.szItemEx[2] = L"´Ù·ç±â ½±´Ù. °í´ë ¸í°ËÀÇ ÀÌ¸§ÀÌ ºÙ¾î ÀÖ´Ù.";
+	tItemInfo.szItemEx[0] = L"ìœ ì´í† ê°€ í›ˆë ¨ìƒ ì‹œì ˆë¶€í„° ì• ìš©í•˜ëŠ” ê²€.";
+	tItemInfo.szItemEx[1] = L"ì¹¼ë‚ ì´ ì–‡ê³  ê°€ë²¼ì›Œ, ì´ˆê¸‰ì—ì„œ ì¤‘ê¸‰ ì •ë„ì˜ ì „íˆ¬ê¸°ìˆ ë¡œë„";
+	tItemInfo.szItemEx[2] = L"ë‹¤ë£¨ê¸° ì‰½ë‹¤. ê³ ëŒ€ ëª…ê²€ì˜ ì´ë¦„ì´ ë¶™ì–´ ìžˆë‹¤.";
 	tItemInfo.szItemEx[3] = L" ";
-	m_vecItem.emplace_back(L"¹¦È£ ¹«¶ó¸¶»ç", tItemInfo);
+	m_vecItem.emplace_back(L"ë¬˜í˜¸ ë¬´ë¼ë§ˆì‚¬\n", tItemInfo);
 
 	tItemInfo.iWeaponNum = 2;
-	tItemInfo.szItemEx[0] = L"¹«±â Å×½ºÆ®.";
-	tItemInfo.szItemEx[1] = L"Ä®³¯ÀÌ ¾ã°í °¡º­¿ö, ÃÊ±Þ¿¡¼­ Áß±Þ Á¤µµÀÇ ÀüÅõ±â¼ú·Îµµ";
-	tItemInfo.szItemEx[2] = L"´Ù·ç±â ½±´Ù. °í´ë ¸í°ËÀÇ ÀÌ¸§ÀÌ ºÙ¾î ÀÖ´Ù.";
+	tItemInfo.szItemEx[0] = L"ë¬´ê¸° í…ŒìŠ¤íŠ¸.";
+	tItemInfo.szItemEx[1] = L"ì¹¼ë‚ ì´ ì–‡ê³  ê°€ë²¼ì›Œ, ì´ˆê¸‰ì—ì„œ ì¤‘ê¸‰ ì •ë„ì˜ ì „íˆ¬ê¸°ìˆ ë¡œë„";
+	tItemInfo.szItemEx[2] = L"ë‹¤ë£¨ê¸° ì‰½ë‹¤. ê³ ëŒ€ ëª…ê²€ì˜ ì´ë¦„ì´ ë¶™ì–´ ìžˆë‹¤.";
 	tItemInfo.szItemEx[3] = L" ";
-	m_vecItem.emplace_back(L"¹«±â Å×½ºÆ®", tItemInfo);
+	m_vecItem.emplace_back(L"ë¬´ê¸° í…ŒìŠ¤íŠ¸\n", tItemInfo);
 
 	tItemInfo.iWeaponNum = 3;
-	tItemInfo.szItemEx[0] = L"¹«±â Å×½ºÆ®2.";
-	tItemInfo.szItemEx[1] = L"Ä®³¯ÀÌ ¾ã°í °¡º­¿ö, ÃÊ±Þ¿¡¼­ Áß±Þ Á¤µµÀÇ ÀüÅõ±â¼ú·Îµµ";
-	tItemInfo.szItemEx[2] = L"´Ù·ç±â ½±´Ù. °í´ë ¸í°ËÀÇ ÀÌ¸§ÀÌ ºÙ¾î ÀÖ´Ù.";
+	tItemInfo.szItemEx[0] = L"ë¬´ê¸° í…ŒìŠ¤íŠ¸2.";
+	tItemInfo.szItemEx[1] = L"ì¹¼ë‚ ì´ ì–‡ê³  ê°€ë²¼ì›Œ, ì´ˆê¸‰ì—ì„œ ì¤‘ê¸‰ ì •ë„ì˜ ì „íˆ¬ê¸°ìˆ ë¡œë„";
+	tItemInfo.szItemEx[2] = L"ë‹¤ë£¨ê¸° ì‰½ë‹¤. ê³ ëŒ€ ëª…ê²€ì˜ ì´ë¦„ì´ ë¶™ì–´ ìžˆë‹¤.";
 	tItemInfo.szItemEx[3] = L" ";
-	m_vecItem.emplace_back(L"¹«±â Å×½ºÆ®2", tItemInfo);
+	m_vecItem.emplace_back(L"ë¬´ê¸° í…ŒìŠ¤íŠ¸2\n", tItemInfo);
 
 	////////////////////////////////////////////////////////////////////////////////
-	tItemInfo.eType = ETC;
+	tItemInfo.eType = MAINITEM::ETC;
 	tItemInfo.iMaxCount = 1;
 	tItemInfo.iWeaponAttack = 0;
 
 	tItemInfo.vIconIndex = { 1.0f, 2.0f };
-	tItemInfo.szItemEx[0] = L"±¸ Åä¹ú±ºº´¿ø¿¡¼­ ÁÖ¿î ÅØ½ºÆ® µ¥ÀÌÅÍ.";
-	tItemInfo.szItemEx[1] = L"´©±º°¡ÀÇ °³ÀÎÀûÀÎ ¸Þ¸ð °°´Ù. ±«ÀÌÀÇ ½À°ÝÀ¸·Î ÀÎÇØ";
-	tItemInfo.szItemEx[2] = L"º´¿øÀ» Æ÷±âÇÏ¸é¼­ È¸¼öµÇÁö ¾Ê°í ±×´ë·Î ¹ö·ÁÁø ¸ð¾ç.";
-	tItemInfo.szItemEx[3] = L" "; // ³»¿ë¹°Àº ºê·¹ÀÎ ¸Þ½ÃÁö È­¸é¿¡¼­ È®ÀÎÇÒ ¼ö ÀÖ´Ù.
-	m_vecItem.emplace_back(L"¼ö¼ö²²³¢ÀÇ ÅØ½ºÆ® µ¥ÀÌÅÍ", tItemInfo);
+	tItemInfo.szItemEx[0] = L"êµ¬ í† ë²Œêµ°ë³‘ì›ì—ì„œ ì£¼ìš´ í…ìŠ¤íŠ¸ ë°ì´í„°.";
+	tItemInfo.szItemEx[1] = L"ëˆ„êµ°ê°€ì˜ ê°œì¸ì ì¸ ë©”ëª¨ ê°™ë‹¤. ê´´ì´ì˜ ìŠµê²©ìœ¼ë¡œ ì¸í•´";
+	tItemInfo.szItemEx[2] = L"ë³‘ì›ì„ í¬ê¸°í•˜ë©´ì„œ íšŒìˆ˜ë˜ì§€ ì•Šê³  ê·¸ëŒ€ë¡œ ë²„ë ¤ì§„ ëª¨ì–‘.";
+	tItemInfo.szItemEx[3] = L" "; // ë‚´ìš©ë¬¼ì€ ë¸Œë ˆì¸ ë©”ì‹œì§€ í™”ë©´ì—ì„œ í™•ì¸í•  ìˆ˜ ìžˆë‹¤.
+	m_vecItem.emplace_back(L"ìˆ˜ìˆ˜ê»˜ë¼ì˜ í…ìŠ¤íŠ¸ ë°ì´í„°\n", tItemInfo);
 
-	tItemInfo.szItemEx[0] = L"±¸ Åä¹ú±ºº´¿ø¿¡¼­ ÁÖ¿î ÅØ½ºÆ® µ¥ÀÌÅÍ.";
-	tItemInfo.szItemEx[1] = L"´©±º°¡ÀÇ °³ÀÎÀûÀÎ ¸Þ¸ð °°´Ù. ±«ÀÌÀÇ ½À°ÝÀ¸·Î ÀÎÇØ";
-	tItemInfo.szItemEx[2] = L"º´¿øÀ» Æ÷±âÇÏ¸é¼­ È¸¼öµÇÁö ¾Ê°í ±×´ë·Î ¹ö·ÁÁø ¸ð¾ç.";
+	tItemInfo.szItemEx[0] = L"êµ¬ í† ë²Œêµ°ë³‘ì›ì—ì„œ ì£¼ìš´ í…ìŠ¤íŠ¸ ë°ì´í„°.";
+	tItemInfo.szItemEx[1] = L"ëˆ„êµ°ê°€ì˜ ê°œì¸ì ì¸ ë©”ëª¨ ê°™ë‹¤. ê´´ì´ì˜ ìŠµê²©ìœ¼ë¡œ ì¸í•´";
+	tItemInfo.szItemEx[2] = L"ë³‘ì›ì„ í¬ê¸°í•˜ë©´ì„œ íšŒìˆ˜ë˜ì§€ ì•Šê³  ê·¸ëŒ€ë¡œ ë²„ë ¤ì§„ ëª¨ì–‘.";
 	tItemInfo.szItemEx[3] = L" ";
-	m_vecItem.emplace_back(L"±âÅ¸ Å×½ºÆ®", tItemInfo);
+	m_vecItem.emplace_back(L"ê¸°íƒ€ í…ŒìŠ¤íŠ¸\n", tItemInfo);
 }
 
 void CItem_Manager::Free()
 {
 	m_vecItem.clear();
+	m_vecBattleItem.clear();
 
 }

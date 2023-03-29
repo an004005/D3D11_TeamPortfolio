@@ -72,19 +72,19 @@ void CCanvas_ItemMove::LoadFromJson(const Json & json)
 
 void CCanvas_ItemMove::Key_Input()
 {
-	// ¾ÆÀÌÅÛ Äğ Å¸ÀÓÀÌ ¾ÆÁ÷ µ¹Áö ¾Ê¾Ò´Ù¸é »ç¿ëÇÒ ¼ö ¾ø´Ù.
-	if (false == dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_ItemUseStatuse()) return;
+	// ì•„ì´í…œ ì¿¨ íƒ€ì„ì´ ì•„ì§ ëŒì§€ ì•Šì•˜ë‹¤ë©´ ì‚¬ìš©í•  ìˆ˜ ì—†ë‹¤.
+	//if (false == dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_ItemUseStatuse()) return;
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_DOWN))
 	{
-		// Icon »çÀÌÁî Ä¿Áö±â, Icon ¿¡ Light ±ô¹Ú±ô¹Ú
+		// Icon ì‚¬ì´ì¦ˆ ì»¤ì§€ê¸°, Icon ì— Light ê¹œë°•ê¹œë°•
 		dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_ItmeUse();
 
-		// È­»ìÇ¥ ÀÌµ¿ÇÏ±â
+		// í™”ì‚´í‘œ ì´ë™í•˜ê¸°
 		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrow"))->Set_Input();
 		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrowBack"))->Set_Input();
 
-		// °ÔÀÌÁö »ç¿ëÇÏ±â
+		// ê²Œì´ì§€ ì‚¬ìš©í•˜ê¸°
 		dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Set_CooldownTimeStart();
 		dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_GaugeBack"))->Set_CooldownTimeStart();
 
@@ -95,13 +95,11 @@ void CCanvas_ItemMove::Key_Input()
 	{
 		dynamic_cast<CItem_LeftArrowUI*>(Find_ChildUI(L"Item_LeftArrow"))->Set_Input();
 
-
 	}
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
 	{
 		dynamic_cast<CItem_RightArrowUI*>(Find_ChildUI(L"Item_RightArrow"))->Set_Input();
-
 
 	}
 }

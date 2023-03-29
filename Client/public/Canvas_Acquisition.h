@@ -24,8 +24,9 @@ public:
 
 public:
 	void	Set_EnemyUI(const EEnemyName eEnemyName, const _uint iLevel);
+	void	Set_FullItem(const wstring szItemName);
 
-	void	Set_Visible();	// UI_Mananger ¿¡¼­ ·»´õ¸¦ ´Ù ²ø ¶§ »ç¿ë
+	void	Set_Visible();	// UI_Mananger ì—ì„œ ë Œë”ë¥¼ ë‹¤ ëŒ ë•Œ ì‚¬ìš©
 
 private:
 	void	EnemyUIAdd_Tick(const _double & TimeDelta);

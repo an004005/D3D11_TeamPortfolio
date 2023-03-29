@@ -2,7 +2,6 @@
 #include "..\public\Canvas_Item.h"
 #include "GameInstance.h"
 #include "UI_Manager.h"
-#include "Item_Manager.h"
 
 #include "Item_IconUI.h"
 #include "Item_LightUI.h"
@@ -42,8 +41,9 @@ void CCanvas_Item::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
+	BattleItem_Tick();
 	CurrentItem();
-	m_bVisible = true;
+
 }
 
 HRESULT CCanvas_Item::Render()
@@ -51,46 +51,45 @@ HRESULT CCanvas_Item::Render()
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
 
-	//_float4 vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	_tchar szText[MAX_PATH] = TEXT("");
 	_float2 vFontSize = { 0.3f, 0.3f };
 	_float2	vPosition = Find_ChildUI(L"Item_Icon")->GetScreenSpaceLeftTop();
 
-	vector<CItem_Manager::BATTLEITEM> vecItemInfo = CItem_Manager::GetInstance()->Get_BattleItem();
 
-	if (0 != vecItemInfo[0].iCount)
-	{
-		if(10 <= vecItemInfo[0].iCount)
-			wsprintf(szText, TEXT("%d"), vecItemInfo[0].iCount);
-		else
-			wsprintf(szText, TEXT("0%d"), vecItemInfo[0].iCount);
 
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(25.0f, 25.0f), 0.f, vFontSize);
-	}
+	//if (0 != vecItemInfo[0].iCount)
+	//{
+	//	if(10 <= vecItemInfo[0].iCount)
+	//		wsprintf(szText, TEXT("%d"), vecItemInfo[0].iCount);
+	//	else
+	//		wsprintf(szText, TEXT("0%d"), vecItemInfo[0].iCount);
 
-	if (0 != vecItemInfo[1].iCount)
-	{
-		if (10 <= vecItemInfo[1].iCount)
-			wsprintf(szText, TEXT("%d"), vecItemInfo[0].iCount);
-		else
-			wsprintf(szText, TEXT("0%d"), vecItemInfo[0].iCount);
+	//	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(25.0f, 25.0f), 0.f, vFontSize);
+	//}
 
-		wsprintf(szText, TEXT("%d"), vecItemInfo[1].iCount);
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(89.0f, 20.0f), 0.f, vFontSize);
-	}
+	//if (0 != vecItemInfo[1].iCount)
+	//{
+	//	if (10 <= vecItemInfo[1].iCount)
+	//		wsprintf(szText, TEXT("%d"), vecItemInfo[0].iCount);
+	//	else
+	//		wsprintf(szText, TEXT("0%d"), vecItemInfo[0].iCount);
 
-	if (0 != vecItemInfo[vecItemInfo.size() - 1].iCount)
-	{
-		if (10 <= vecItemInfo[vecItemInfo.size() - 1].iCount)
-			wsprintf(szText, TEXT("%d"), vecItemInfo[0].iCount);
-		else
-			wsprintf(szText, TEXT("0%d"), vecItemInfo[0].iCount);
+	//	wsprintf(szText, TEXT("%d"), vecItemInfo[1].iCount);
+	//	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(89.0f, 20.0f), 0.f, vFontSize);
+	//}
 
-		wsprintf(szText, TEXT("%d"), vecItemInfo[vecItemInfo.size() - 1].iCount);
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(46.0f, 26.0f), 0.f, vFontSize);
-	}
+	//if (0 != vecItemInfo[vecItemInfo.size() - 1].iCount)
+	//{
+	//	if (10 <= vecItemInfo[vecItemInfo.size() - 1].iCount)
+	//		wsprintf(szText, TEXT("%d"), vecItemInfo[0].iCount);
+	//	else
+	//		wsprintf(szText, TEXT("0%d"), vecItemInfo[0].iCount);
+
+	//	wsprintf(szText, TEXT("%d"), vecItemInfo[vecItemInfo.size() - 1].iCount);
+	//	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(46.0f, 26.0f), 0.f, vFontSize);
+	//}
 
 	return S_OK;
 }
@@ -99,33 +98,21 @@ void CCanvas_Item::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	ImGui::DragFloat("X", &Temp.x);
-	ImGui::DragFloat("Y", &Temp.y);
-
 	if (ImGui::Button("Jelly5"))
 	{
-		CItem_Manager::GetInstance()->Set_ItemCount(L"È¸º¹(¼Ò) Á©¸®", 5);
+		CItem_Manager::GetInstance()->Set_ItemCount(L"íšŒë³µ(ì†Œ) ì ¤ë¦¬\n", 5);
 	}
 
 	if (ImGui::Button("Jelly-1"))
 	{
-		CItem_Manager::GetInstance()->Set_ItemCount(L"È¸º¹(¼Ò) Á©¸®", -1);
+		CItem_Manager::GetInstance()->Set_ItemCount(L"íšŒë³µ(ì†Œ) ì ¤ë¦¬\n", -1);
 	}
 
-	if (ImGui::Button("su3"))
+	if (ImGui::Button("test"))
 	{
-		CItem_Manager::GetInstance()->Set_ItemCount(L"SAS º¸±Ş¼ö", 3);
+		CItem_Manager::GetInstance()->Set_ItemCount(L"SAS ë³´ê¸‰ìˆ˜\n", 1);
 	}
-
-	if (ImGui::Button("rlrl"))
-	{
-		CItem_Manager::GetInstance()->Set_ItemCount(L"ºê·¹ÀÎ ÇÊµå ±â¾î", 1);
-	}
-
-	if (ImGui::Button("big"))
-	{
-		CItem_Manager::GetInstance()->Set_ItemCount(L"ÀüÃ¼: È¸º¹(´ë) Á©¸®", 5);
-	}
+	
 }
 
 void CCanvas_Item::SaveToJson(Json& json)
@@ -145,57 +132,72 @@ void CCanvas_Item::Set_ItmeUse()
 
 }
 
-void CCanvas_Item::CurrentItem()
+void CCanvas_Item::BattleItem_Tick()
 {
-	vector<CItem_Manager::BATTLEITEM> vecItemInfo = CItem_Manager::GetInstance()->Get_BattleItem();
+	m_vecBattleItme = CItem_Manager::GetInstance()->Get_BattleItem();
 
-	if (vecItemInfo.empty()) return;
-
-	// Áß°£
-	if (0 != vecItemInfo[0].iCount)
+	if (CGameInstance::GetInstance()->KeyDown(DIK_LEFT))
 	{
-#pragma region ItemName
-		_float fItemIndex = 0.0f;
-		if (vecItemInfo[0].wsName == L"È¸º¹(¼Ò) Á©¸®")
-			fItemIndex = 0.0f;
-		else if (vecItemInfo[0].wsName == L"È¸º¹(Áß) Á©¸®")
-			fItemIndex = 1.0f;
-		else if (vecItemInfo[0].wsName == L"È¸º¹(´ë) Á©¸®")
-			fItemIndex = 2.0f;
-		else if (vecItemInfo[0].wsName == L"ÀüÃ¼: È¸º¹(¼Ò) Á©¸®")
-			fItemIndex = 3.0f;
-		else if (vecItemInfo[0].wsName == L"ÀüÃ¼: È¸º¹(Áß) Á©¸®")
-			fItemIndex = 4.0f;
-		else if (vecItemInfo[0].wsName == L"ÀüÃ¼: È¸º¹(´ë) Á©¸®")
-			fItemIndex = 5.0f;
-		else if (vecItemInfo[0].wsName == L"Á¤»óÈ­ ÅÂºí¸´")
-			fItemIndex = 6.0f;
-		else if (vecItemInfo[0].wsName == L"ÀüÃ¼: Á¤»óÈ­ ÅÂºí¸´")
-			fItemIndex = 7.0f;
-		else if (vecItemInfo[0].wsName == L"ºê·¹ÀÎ ÇÊµå ±â¾î")
-			fItemIndex = 8.0f;
-		else if (vecItemInfo[0].wsName == L"SAS º¸±Ş¼ö")
-			fItemIndex = 9.0f;
-#pragma endregion ItemName
+		size_t iTtemSize = m_vecBattleItme.size();
+		if (iTtemSize == 1)
+		{
+			m_iCurrentIndex = 0;
+		}
+		else if (iTtemSize == 2)
+		{
+			++m_iCurrentIndex;
+		}
+		else if (iTtemSize >= 3)
+		{
+			if (m_iCurrentIndex == iTtemSize - 1)
+			{
 
-		dynamic_cast<CItem_NameUI*>(Find_ChildUI(L"Item_Name"))->Set_ItemName(fItemIndex);
-		dynamic_cast<CItem_IconUI*>(Find_ChildUI(L"Item_Icon"))->Set_IconIndex({ vecItemInfo[0].vIconIndex });
+			}
+			if (m_iCurrentIndex == 0)
+			{
+
+			}
+		}
 	}
+}
 
-	if (2 > vecItemInfo.size())
-		return;
+	void CCanvas_Item::CurrentItem()
+{
+//	// ì¤‘ê°„
+//#pragma region ItemName
+//	_float fItemIndex = 0.0f;
+//	//if (vecItemInfo[0].wsName == L"íšŒë³µ(ì†Œ) ì ¤ë¦¬\n")
+//	//	fItemIndex = 0.0f;
+//	//else if (vecItemInfo[0].wsName == L"íšŒë³µ(ì¤‘) ì ¤ë¦¬\n")
+//	//	fItemIndex = 1.0f;
+//	//else if (vecItemInfo[0].wsName == L"íšŒë³µ(ëŒ€) ì ¤ë¦¬\n")
+//	//	fItemIndex = 2.0f;
+//	//else if (vecItemInfo[0].wsName == L"ì „ì²´: íšŒë³µ(ì†Œ) ì ¤ë¦¬\n")
+//	//	fItemIndex = 3.0f;
+//	//else if (vecItemInfo[0].wsName == L"ì „ì²´: íšŒë³µ(ì¤‘) ì ¤ë¦¬\n")
+//	//	fItemIndex = 4.0f;
+//	//else if (vecItemInfo[0].wsName == L"ì „ì²´: íšŒë³µ(ëŒ€) ì ¤ë¦¬\n")
+//	//	fItemIndex = 5.0f;
+//	//else if (vecItemInfo[0].wsName == L"ì •ìƒí™” íƒœë¸”ë¦¿\n")
+//	//	fItemIndex = 6.0f;
+//	//else if (vecItemInfo[0].wsName == L"ì „ì²´: ì •ìƒí™” íƒœë¸”ë¦¿\n")
+//	//	fItemIndex = 7.0f;
+//	//else if (vecItemInfo[0].wsName == L"ë¸Œë ˆì¸ í•„ë“œ ê¸°ì–´\n")
+//	//	fItemIndex = 8.0f;
+//	//else if (vecItemInfo[0].wsName == L"SAS ë³´ê¸‰ìˆ˜\n")
+//	//	fItemIndex = 9.0f;
+//#pragma endregion ItemName
+//
+//	dynamic_cast<CItem_NameUI*>(Find_ChildUI(L"Item_Name"))->Set_ItemName(fItemIndex);
+//	dynamic_cast<CItem_IconUI*>(Find_ChildUI(L"Item_Icon"))->Set_IconIndex({ vecItemInfo[0].vIconIndex });
+//
+//	// ì™¼ìª½
+//	dynamic_cast<CItemIconUI*>(Find_ChildUI(L"Item_IconLeft"))->Set_IconIndex({ vecItemInfo[1].vIconIndex });
+//
+//
+//	// ì˜¤ë¥¸ìª½
+//	dynamic_cast<CItemIconUI*>(Find_ChildUI(L"Item_IconRight"))->Set_IconIndex({ vecItemInfo[vecItemInfo.size() - 1].vIconIndex });
 
-	// ¿ŞÂÊ
-	if (0 != vecItemInfo[1].iCount)
-	{
-		dynamic_cast<CItemIconUI*>(Find_ChildUI(L"Item_IconLeft"))->Set_IconIndex({ vecItemInfo[1].vIconIndex });
-	}
-
-	// ¿À¸¥ÂÊ
-	if (0 != vecItemInfo[vecItemInfo.size() - 1].iCount)
-	{
-		dynamic_cast<CItemIconUI*>(Find_ChildUI(L"Item_IconRight"))->Set_IconIndex({ vecItemInfo[vecItemInfo.size() - 1].vIconIndex });
-	}
 }
 
 CCanvas_Item * CCanvas_Item::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
