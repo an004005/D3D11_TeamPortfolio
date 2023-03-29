@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/LC13/props/TX_Metal_Tube_Chair_Dif.png",
+            "../Bin/Resources/Environments/Location/LC13/props/TX_Metal_Tube_Chair_Nor.png",
+            ""
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}
