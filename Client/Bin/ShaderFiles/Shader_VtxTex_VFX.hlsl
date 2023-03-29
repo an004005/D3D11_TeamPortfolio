@@ -448,7 +448,7 @@ PS_OUT_Flag PS_SPECIAL_G_HBIM_HIT(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
 
-	if (g_float_5 >= 0.1f)
+	if (g_float_5 >= 0.01f)
 	{
 		float4 Mask = g_tex_0.Sample(LinearSampler, In.vTexUV);
 		float4 Color = g_vec4_0;
@@ -473,7 +473,7 @@ PS_OUT_Flag PS_SPECIAL_G_HBIM_HIT(PS_IN In)
 	}
 	else
 	{
-		float2 TEXUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 4, 4);
+		float2 TEXUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.03, 4, 4);
 		float4 FlowTex = g_tex_2.Sample(LinearSampler, TEXUV);
 		float4 Color = g_vec4_2;
 		float4 Blend = FlowTex * Color * 2.0f;
@@ -481,7 +481,7 @@ PS_OUT_Flag PS_SPECIAL_G_HBIM_HIT(PS_IN In)
 		
 		Out.vColor = CalcHDRColor(Final, g_float_7);
 		Out.vColor.a = FlowTex.r * g_float_8;
-		Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+		Out.vFlag = float4(SHADER_DISTORTION_STATIC, 0.f, 0.f, FlowTex.r *g_float_6);
 	}
 
 	if (g_float_8 <= 0.f)
