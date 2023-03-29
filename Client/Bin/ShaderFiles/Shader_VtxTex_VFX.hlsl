@@ -419,6 +419,78 @@ PS_OUT_Flag PS_DISTORTION_DEFAULT(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_SPECIAL_G_LARGE_HIT(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float Mask= g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	Final.a = Mask * g_float_0;
+
+	float4 AddTex = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	AddTex = CalcHDRColor(AddTex, g_float_1);
+	float4 AddColor = saturate(Final + AddTex);
+	Out.vColor = CalcHDRColor(AddColor, g_float_2);
+	Out.vColor.a = saturate(Final.a * (AddTex.r * g_float_5)) * g_float_3;
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, AddTex.r * g_float_4);
+
+	if (g_float_3 <= 0.f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT_Flag PS_SPECIAL_G_HBIM_HIT(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	if (g_float_5 >= 0.01f)
+	{
+		float4 Mask = g_tex_0.Sample(LinearSampler, In.vTexUV);
+		float4 Color = g_vec4_0;
+		float4 Blend = Mask * Color * 2.0f;
+		float4 Final = saturate(Blend);
+		Final.a = Mask.r;
+
+		float4 AddTex = g_tex_1.Sample(LinearSampler, In.vTexUV);
+		float4 AddTexColor = g_vec4_1;
+		float4 AddBlend = AddTex * AddTexColor * 2.0f;
+		float4 AddFinal = saturate(AddBlend);
+		AddFinal.a = AddFinal.r;
+
+		AddFinal = CalcHDRColor(AddFinal, g_float_0);
+
+		float4 AddColor = saturate(Final * g_float_1 + AddFinal);
+
+		Out.vColor = CalcHDRColor(AddColor, g_float_2);
+		Out.vColor.a = saturate((Final.a * g_float_3) + (AddFinal.a * g_float_4)) * g_float_5;
+
+		Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, AddTex.r * g_float_6);
+	}
+	else
+	{
+		float2 TEXUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.03, 4, 4);
+		float4 FlowTex = g_tex_2.Sample(LinearSampler, TEXUV);
+		float4 Color = g_vec4_2;
+		float4 Blend = FlowTex * Color * 2.0f;
+		float4 Final = saturate(Blend);
+		
+		Out.vColor = CalcHDRColor(Final, g_float_7);
+		Out.vColor.a = FlowTex.r * g_float_8;
+		Out.vFlag = float4(SHADER_DISTORTION_STATIC, 0.f, 0.f, FlowTex.r *g_float_6);
+	}
+
+	if (g_float_8 <= 0.f)
+		discard;
+
+	return Out;
+}
+
+
 // g_tex_0 : Default White
 // g_vec4_0 : Origin Color
 
@@ -827,6 +899,29 @@ PS_OUT_Flag PS_MASK_TEX(PS_IN In)
 
 	float Pattern = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
 	Out.vColor.a = Pattern * Mask * g_float_1;
+
+	if (Mask < 0.f)
+		discard;
+
+	if (g_float_1 <= 0.f)
+		discard;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+PS_OUT_Flag PS_SPECIAL_G_HBEAM_BASEDARK(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float Mask = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y)).r;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+	Out.vColor.a = Mask * g_float_1;
 
 	if (Mask < 0.f)
 		discard;
@@ -1346,7 +1441,7 @@ technique11 DefaultTechnique
 	pass KineticDeadFlip
 	{
 		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DS_Default, 0);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1551,5 +1646,47 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SAS_DEAD_LIGHT();
+	}
+
+	//39
+	pass SpecialG_LargeHit
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SPECIAL_G_LARGE_HIT();
+	}
+
+	//40
+	pass SpecialG_HBim
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SPECIAL_G_HBIM_HIT();
+	}
+
+	//41
+	pass SpecialG_HBeam_Base
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SPECIAL_G_HBEAM_BASEDARK();
 	}
 }
