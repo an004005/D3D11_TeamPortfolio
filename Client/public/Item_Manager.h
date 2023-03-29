@@ -19,12 +19,20 @@ public:
 		_bool		bPick = { false };
 		_uint		iCount = { 0 };
 		_uint		iMaxCount = { 0 };
-		_uint		iWeaponNum = { 0 };		// [0] Weapont 이 아닌 [1] 현재 사용 중인 무기 [2] 변경 하고자 하는 무기 [3] 그 외 무기
+		_uint		iWeaponNum = { 0 };		// [0] Weapon 이 아닌 [1] 현재 사용 중인 무기 [2] 변경 하고자 하는 무기 [3] 그 외 무기
 		_uint		iWeaponAttack = { 0 };
 		_float2		vIconIndex = { 0.0f, 0.0f };
 		_tchar*		szItemEx[4] = {};
 
 	}ITEMINFO;
+
+	typedef struct tagBattleItem
+	{
+		wstring		wsName;
+		_uint		iCount = { 0 };
+		_float2		vIconIndex = { 0.0f, 0.0f };
+
+	}BATTLEITEM;
 
 public:
 	CItem_Manager();
@@ -34,6 +42,10 @@ public:
 	HRESULT	Initialize();
 	
 public:
+	vector<BATTLEITEM>	Get_BattleItem() {
+		return m_vecBattleItem;
+	}
+
 	vector<pair<wstring, ITEMINFO>>	Get_ItmeInfo() {
 		return m_vecItem;
 	}
@@ -51,7 +63,7 @@ public:
 	}
 
 private:
-	void	ItemIndex_Intiialize();
+	void	ItemPosition_Intiialize();
 	void	ItemInfo_Intiialize();
 
 private:
@@ -60,6 +72,7 @@ private:
 	array<_float2, 17>	m_arrItemIndexPos;
 	array<_float2, 17>	m_arrIconIndexPos;
 	vector<pair<wstring, ITEMINFO>>	m_vecItem;
+	vector<BATTLEITEM> m_vecBattleItem;	// Front UI에 띄울 용도
 
 public:
 	virtual void Free() override;

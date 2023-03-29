@@ -6,6 +6,8 @@
 
 #include "Canvas_Item.h"
 #include "Item_PushArrowUI.h"
+#include "Item_LeftArrowUI.h"
+#include "Item_RightArrowUI.h"
 #include "Item_GaugeUI.h"
 
 CCanvas_ItemMove::CCanvas_ItemMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -70,19 +72,37 @@ void CCanvas_ItemMove::LoadFromJson(const Json & json)
 
 void CCanvas_ItemMove::Key_Input()
 {
+	// 아이템 쿨 타임이 아직 돌지 않았다면 사용할 수 없다.
+	if (false == dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_ItemUseStatuse()) return;
+
 	if (CGameInstance::GetInstance()->KeyDown(DIK_DOWN))
 	{
+		// Icon 사이즈 커지기, Icon 에 Light 깜박깜박
+		dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_ItmeUse();
+
 		// 화살표 이동하기
 		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrow"))->Set_Input();
 		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrowBack"))->Set_Input();
 
-		// Icon 사이즈 커지기, Icon 에 Light 깜박깜박
-		dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_CanvasItme();
-
 		// 게이지 사용하기
 		dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Set_CooldownTimeStart();
 		dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_GaugeBack"))->Set_CooldownTimeStart();
-		
+
+
+	}
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_LEFT))
+	{
+		dynamic_cast<CItem_LeftArrowUI*>(Find_ChildUI(L"Item_LeftArrow"))->Set_Input();
+
+
+	}
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
+	{
+		dynamic_cast<CItem_RightArrowUI*>(Find_ChildUI(L"Item_RightArrow"))->Set_Input();
+
+
 	}
 }
 

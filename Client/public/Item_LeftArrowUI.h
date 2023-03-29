@@ -16,6 +16,11 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	Tick(_double TimeDelta) override;
 
+public:
+	void	Set_Input() {
+		m_bInput = true;
+	}
+
 private:
 	_bool	m_bInput = { false };
 	_float	m_fStartX = { 0.0f };

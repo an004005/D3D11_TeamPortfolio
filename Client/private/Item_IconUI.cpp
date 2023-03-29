@@ -89,6 +89,17 @@ void CItem_IconUI::LoadFromJson(const Json & json)
 
 void CItem_IconUI::Set_IconIndex(const _float2 & fIconIndex)
 {
+	// [0] 회복(소)젤리 -> { 0.0f, 1.0f }
+	// [1] 회복(중)젤리 -> { 5.0f, 0.0f }
+	// [2] 회복(대)젤리 -> { 0.0f, 3.0f }
+	// [3] 전체: 회복 (소) 젤리 -> { 0.0f, 2.0f }
+	// [4] 전체: 회복 (중) 젤리 -> { 5.0f, 1.0f }
+	// [5] 전체: 회복 (대) 젤리 -> { 0.0f, 4.0f }
+	// [6] 정상화 태블릿 -> { 1.0f, 0.0f }
+	// [7] 전체: 정상화 태블릿 -> { 1.0f, 1.0f }
+	// [8] 브레인 필드 기어 -> { 1.0f, 2.0f }
+	// [9] SAS 보급수 -> { 1.0f, 3.0f }
+
 	m_tParams.Float2s[0] = fIconIndex;
 }
 

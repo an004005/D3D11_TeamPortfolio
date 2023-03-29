@@ -58,14 +58,6 @@ void CItem_GaugeUI::Tick(_double TimeDelta)
 	}
 
 	m_tParams.Floats[0] = m_fRatio;
-
-	//m_tParams.Floats[0] = 1.0f - (_float(TimeDelta) / 10.0f);	// UITODO : 여기서 Item 의 쿨타임을 조절할 수 있습니다.
-
-	//if (0.0f > m_tParams.Floats[0])
-	//{
-	//	m_tParams.Floats[0] = 1.0f;
-	//	m_bCooldownTimeStart = false;
-	//}
 }
 
 CItem_GaugeUI * CItem_GaugeUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

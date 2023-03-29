@@ -33,13 +33,9 @@ HRESULT CItem_RightArrowUI::Initialize(void * pArg)
 
 void CItem_RightArrowUI::Tick(_double TimeDelta)
 {
+	if (false == m_bInput) return;
+
 	CUI::Tick(TimeDelta);
-
-	if (CGameInstance::GetInstance()->KeyDown(DIK_RIGHT))
-		m_bInput = true;
-
-	if (false == m_bInput)
-		return;
 
 	m_fMoveTimeAcc += TimeDelta;
 	if (0.15 < m_fMoveTimeAcc)

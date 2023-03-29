@@ -10,7 +10,7 @@ CItem_Manager::CItem_Manager()
 
 HRESULT CItem_Manager::Initialize()
 {
-	ItemIndex_Intiialize();
+	ItemPosition_Intiialize();
 	ItemInfo_Intiialize();
 
 	return S_OK;
@@ -23,10 +23,19 @@ void CItem_Manager::Set_ItemCount(const wstring & wszName, const _uint iCount)
 	});
 
 	if (iter != m_vecItem.end())
-		(*iter).second.iCount = iCount;
+	{
+		(*iter).second.iCount += iCount;
+
+		//벡터가 아닌 배열로 수정해야 할듯?
+		BATTLEITEM tBattleItem;
+		tBattleItem.wsName = (*iter).first;
+		tBattleItem.iCount = (*iter).second.iCount;
+		tBattleItem.vIconIndex = (*iter).second.vIconIndex;
+		m_vecBattleItem.emplace_back(tBattleItem);
+	}
 }
 
-void CItem_Manager::ItemIndex_Intiialize()
+void CItem_Manager::ItemPosition_Intiialize()
 {
 	m_arrItemIndexPos.fill(_float2(0.0f, 0.0f));
 	m_arrIconIndexPos.fill(_float2(0.0f, 0.0f));
