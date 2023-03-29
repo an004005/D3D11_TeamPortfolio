@@ -2,17 +2,9 @@
 #include "Enemy.h"
 #include "Controller.h"
 
-BEGIN(Engine)
-class CFSMComponent;
-class CGameInstance;
-class CAnimation;
-class CRigidBody;
-END
-
 BEGIN(Client)
 
-// flower_Hands :: ¼ÒÁî Æ÷Áî
-
+// flower_Hands :: ì†Œì¦ˆ í¬ì¦ˆ
 class CEM0210 : public CEnemy
 {
 private:
@@ -35,7 +27,7 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 public:
-	//Çàµ¿ °ü·Ã ÇÔ¼ö Á¤ÀÇ
+	//í–‰ë™ ê´€ë ¨ í•¨ìˆ˜ ì •ì˜
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_float GetTurnRemain() const { return m_fTurnRemain; }
@@ -46,26 +38,20 @@ private:
 	void Dodge_VelocityCalc();
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
-	void SweepCapsule(CRigidBody* pCol);
+
 
 private:
-	//Ãæµ¹ °ü·Ã ÇÔ¼ö Á¤ÀÇ
+	//ì¶©ëŒ ê´€ë ¨ í•¨ìˆ˜ ì •ì˜
+	void Swing_SweepSphere();
+	void Somersault_SweepSphere();
 
 private:
 	class CEM0210_Controller*		m_pController = nullptr;
 	class CEM0210_AnimInstance*		m_pASM = nullptr;
 
-	//Ãæµ¹
-	CRigidBody*					m_pTailCol = nullptr;
-	CRigidBody*					m_pWeaponCol = nullptr;
-	CRigidBody*					m_pRange = nullptr;
-
-	CEffectGroup*				m_pSwingEffect = nullptr;
-
-	// Swing Attack
-	list<CScarletCharacter*> m_CollisionList;
+//	CEffectGroup*				m_pSwingEffect = nullptr;
 private:
-	//¿ø½Ã µ¥ÀÌÅÍ
+	//ì›ì‹œ ë°ì´í„°
 	_float3 m_vMoveAxis;
 	_float m_fTurnRemain = 0.f;
 	_bool m_bHitAir = false;
@@ -86,7 +72,10 @@ private:
 	//Jump
 	_float3 m_vOnJumpMoveVelocity;
 
-	CController::EHandleInput	m_eInput;
+	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
+
+	 _float4x4 pivot;
+
 public:
 	static CEM0210* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

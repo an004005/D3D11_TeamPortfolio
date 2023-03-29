@@ -191,7 +191,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
 
 	Json PreviewData;
 	{
-		PreviewData["Model"] = "Prototype_Model_em1200";
+		PreviewData["Model"] = "Prototype_Model_em210";
 		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
 		auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag.c_str(), TEXT("ModelPreview"), &PreviewData);
 
@@ -225,7 +225,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
 #endif // !ADD_PLAYER
 
-	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em110"))
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em650"))
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(3.f, 3.f, 3.f, 1.f));
 
 	return S_OK;

@@ -199,11 +199,11 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_bDead)
 		return;
 
-	// ÀÌ»óÇÑ µ¥¹ÌÁö µé¾î¿À´Â°Å °¨Áö¿ë, ¹ö±× ´Ù Ã£À¸¸é Áö¿ì±â
+	// ì´ìƒí•œ ë°ë¯¸ì§€ ë“¤ì–´ì˜¤ëŠ”ê±° ê°ì§€ìš©, ë²„ê·¸ ë‹¤ ì°¾ìœ¼ë©´ ì§€ìš°ê¸°
 	Assert(tDamageParams.iDamage > 0);
 	Assert(tDamageParams.iDamage < 20000);
 
-	// ex) µ¥¹ÌÁö 100 => 90 ~ 110 ·£´ýÀ¸·Î º¯°æ
+	// ex) ë°ë¯¸ì§€ 100 => 90 ~ 110 ëžœë¤ìœ¼ë¡œ ë³€ê²½
 	const _int iDamageRandomRange = tDamageParams.iDamage / 5;
 	const _int iDamageRandomize = (_int)CMathUtils::RandomUInt((_uint)iDamageRandomRange);
 	tDamageParams.iDamage += iDamageRandomize - iDamageRandomRange / 2;
@@ -300,6 +300,8 @@ _bool CEnemy::IsTargetFront(_float fAngle)
 	return false;
 }
 
+
+
 _bool CEnemy::IsTargetRight(_float fAngle)
 {
 	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
@@ -338,7 +340,7 @@ void CEnemy::FindTarget()
 	}
 	else
 	{
-		// todo ÀÓ½Ã ÄÚµå, AIÃß°¡µÇ¸é ¹Ù²ã¾ßµÊ
+		// todo ìž„ì‹œ ì½”ë“œ, AIì¶”ê°€ë˜ë©´ ë°”ê¿”ì•¼ë¨
 		auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
 		{
 			return dynamic_cast<CPlayer*>(pObj) != nullptr;
@@ -353,7 +355,7 @@ void CEnemy::TurnEyesOut()
 	pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", TEXT("Layer_UI"));
 	assert(pEffectGroup != nullptr);
 
-	//TimeLine ³¡³ª°í »èÁ¦
+	//TimeLine ëë‚˜ê³  ì‚­ì œ
 	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true);
 }
 

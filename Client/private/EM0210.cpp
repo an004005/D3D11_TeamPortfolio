@@ -6,7 +6,8 @@
 #include "EM0210_AnimInstance.h"
 #include "EM0210_Controller.h"
 #include "PhysX_Manager.h"
-
+#include "GameInstance.h"
+#include "ImguiUtils.h"
 CEM0210::CEM0210(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -20,16 +21,14 @@ CEM0210::CEM0210(const CEM0210 & rhs)
 
 HRESULT CEM0210::Initialize(void * pArg)
 {
-	//Json em0200_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegTrigger.json");
-	//pArg = &em0200_json;
+	Json em0210_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0210/em0210Base.json");
+	pArg = &em0210_json;
 
-	/*m_strDeathSoundTag = "mon_5_fx_death";
-	m_strImpactVoiceTag = "mon_5_impact_voice";*/
 
-	// ¹èÄ¡Åø¿¡¼­ Á¶ÀýÇÒ ¼ö ÀÖ°Ô ÇÏ±â
+	// ë°°ì¹˜íˆ´ì—ì„œ ì¡°ì ˆí•  ìˆ˜ ìžˆê²Œ í•˜ê¸°
 	{
 		m_iMaxHP = 1100;
-		m_iHP = 1100; // ¡Ú
+		m_iHP = 1100; // â˜…
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
@@ -52,14 +51,12 @@ void CEM0210::SetUpComponents(void * pArg)
 		L"Prototype_Model_em210", L"Model",
 		(CComponent**)&m_pModelCom));
 
+	Json RangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0210/em0210Range.json");
+
 	//Create Collider
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("TailCol"),
-		(CComponent**)&m_pTailCol, pArg));
+	Add_RigidBody("Range", &RangeCol);
 
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("WeaponCol"),
-		(CComponent**)&m_pWeaponCol, pArg));
-
-	// ÄÁÆ®·Ñ·¯, prototype¾È ¸¸µé°í ¿©±â¼­ ÀÚÃ¼»ý¼ºÇÏ±â À§ÇÔ
+	// ì»¨íŠ¸ë¡¤ëŸ¬, prototypeì•ˆ ë§Œë“¤ê³  ì—¬ê¸°ì„œ ìžì²´ìƒì„±í•˜ê¸° ìœ„í•¨
 	m_pController = CEM0210_Controller::Create();
 	m_pController->Initialize(nullptr);
 	m_Components.emplace(L"Controller", m_pController);
@@ -83,15 +80,15 @@ void CEM0210::SetUpAnimationEvent()
 
 	m_pModelCom->Add_EventCaller("DodgeL_Start", [this]
 	{
-		Dodge_VelocityCalc();
+			Dodge_VelocityCalc();
 	});
 	m_pModelCom->Add_EventCaller("DodgeR_Start", [this]
 	{
-		Dodge_VelocityCalc();
+			Dodge_VelocityCalc();
 	});
 	m_pModelCom->Add_EventCaller("DodgeB_Start", [this]
 	{
-		Dodge_VelocityCalc();
+			Dodge_VelocityCalc();
 	});
 
 	//Spin start
@@ -99,7 +96,27 @@ void CEM0210::SetUpAnimationEvent()
 	{
 		ClearDamagedTarget();
 		m_bAttack = true;
+
+		_matrix SpinEffectPivotMatirx = CImguiUtils::CreateMatrixFromImGuizmoData(
+			{ 1.65f, -0.55f, 1.121f },
+			{ 180.f, 0.f, 0.f, },
+			{ 1.f, 1.f, 1.f });
+
+		 CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0210_Spin_Attack")
+		->Start_AttachPivot(this, SpinEffectPivotMatirx, "Target", true, true);
+
 	});
+
+	m_pModelCom->Add_EventCaller("Spin_Effect1", [this]
+		{
+			_matrix SpinEffectPivotMatirx = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ 1.65f, -0.55f, 1.121f },
+				{ 180.f, 0.f, 0.f, },
+				{ 1.f, 1.f, 1.f });
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0210_Spin_Attack")
+				->Start_AttachPivot(this, SpinEffectPivotMatirx, "Target", true, true);
+		});
 
 	//Spin end
 	m_pModelCom->Add_EventCaller("Spin_End", [this]
@@ -113,6 +130,15 @@ void CEM0210::SetUpAnimationEvent()
 	{
 		ClearDamagedTarget();
 		m_bAttack = true;
+
+		_matrix SpinEffectPivotMatirx = CImguiUtils::CreateMatrixFromImGuizmoData(
+			{ 0.f, 0.f, 0.f },
+			{ 180.f, 0.f, 0.f, },
+			{ 1.f, 1.f, 1.f });
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0210_Spin_Attack_A")
+			->Start_AttachPivot(this, SpinEffectPivotMatirx, "RightToeBase", true, true);
+		
 	});
 
 	//Somersault end
@@ -220,7 +246,7 @@ void CEM0210::SetUpFSM()
 			})
 			.Tick([this](_double)
 			{
-				// °øÁß Ãß°¡Å¸·Î »ìÂ¦ ¿Ã¶ó°¡´Â ¾Ö´Ô
+				// ê³µì¤‘ ì¶”ê°€íƒ€ë¡œ ì‚´ì§ ì˜¬ë¼ê°€ëŠ” ì• ë‹˜
 				m_bHitAir = true;
 				if (m_eCurAttackType != EAttackType::ATK_END)
 				{
@@ -252,8 +278,8 @@ void CEM0210::SetUpFSM()
 		.AddState("Dodge")
 			.OnStart([this]
 			{
-				// ¹Ù´Ú µµÂøº¸´Ù dodge start ¸ð¼ÇÀÌ ´õ ÀÏÂï ³¡³ª¼­ controller¿¡¼­ »õ·Î¿î ¸í·ÉÀÌ ¿Â´Ù.
-				// ÀÌ¸¦ ¹æÁöÇÏ±â À§ÇØ¼­ ÀÓ½ÃÀûÀ¸·Î ÄÁÆ®·Ñ·¯ ºñÈ°¼ºÈ­(¾ÈÇÏ¸é dodge stop ÇÏ¸é¼­ ¿òÁ÷ÀÓ)
+				// ë°”ë‹¥ ë„ì°©ë³´ë‹¤ dodge start ëª¨ì…˜ì´ ë” ì¼ì° ëë‚˜ì„œ controllerì—ì„œ ìƒˆë¡œìš´ ëª…ë ¹ì´ ì˜¨ë‹¤.
+				// ì´ë¥¼ ë°©ì§€í•˜ê¸° ìœ„í•´ì„œ ìž„ì‹œì ìœ¼ë¡œ ì»¨íŠ¸ë¡¤ëŸ¬ ë¹„í™œì„±í™”(ì•ˆí•˜ë©´ dodge stop í•˜ë©´ì„œ ì›€ì§ìž„)
 				m_pController->SetActive(false);
 				m_vDodgeDir = _float4::Zero;
 				if (m_eInput == CController::NUM_1) // left
@@ -323,7 +349,7 @@ void CEM0210::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 				if (m_bAttack)
-					SweepCapsule(m_pTailCol);
+					Swing_SweepSphere();
 			})
 			.AddTransition("Attack_Spin to Idle", "Idle")
 				.Predicator([this]
@@ -340,7 +366,7 @@ void CEM0210::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 				if (m_bAttack)
-					SweepCapsule(m_pTailCol);
+					Somersault_SweepSphere();
 			})
 			.AddTransition("Attack_Somersault to Idle", "Idle")
 				.Predicator([this]
@@ -383,7 +409,7 @@ void CEM0210::Tick(_double TimeDelta)
 	else
 		m_pController->Invalidate();
 
-	//º¯¼ö ¾÷µ¥ÀÌÆ®
+	//ë³€ìˆ˜ ì—…ë°ì´íŠ¸
 	m_bRun = m_pController->IsRun();
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
@@ -415,7 +441,14 @@ void CEM0210::Late_Tick(_double TimeDelta)
 void CEM0210::AfterPhysX()
 {
 	CEnemy::AfterPhysX();
+
+	GetRigidBody("Range")->Update_Tick(m_pTransformCom->Get_WorldMatrix());
 }
+
+
+
+
+
 
 HRESULT CEM0210::Render()
 {
@@ -432,6 +465,23 @@ void CEM0210::Imgui_RenderProperty()
 	}
 
 	m_pFSM->Imgui_RenderProperty();
+
+	static _bool tt = false;
+	ImGui::Checkbox("Modify Pivot", &tt);
+	
+	if (tt)
+	{
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+
+		if (ImGui::Button("Create_Effect"))
+		{
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0210_Spin_Attack")
+				->Start_AttachPivot(this, pivot, "Target", true, true);
+		}
+	}
+		
+
 }
 
 _bool CEM0210::IsPlayingSocket() const
@@ -485,32 +535,60 @@ void CEM0210::Play_MidHitAnim()
 	}
 }
 
-void CEM0210::SweepCapsule(CRigidBody * pCol)
+void CEM0210::Swing_SweepSphere()
 {
-	Matrix ColMatrix = pCol->GetPxWorldMatrix();
-	_float4 vTailPos = _float4(ColMatrix.Translation().x, ColMatrix.Translation().y, ColMatrix.Translation().z, 1.f);
+	physx::PxSweepHit hitBuffer[3];
+	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
 
-	physx::PxSweepHit hitBuffer[5];
-	physx::PxSweepBuffer SweepOut(hitBuffer, 5);
+	//Tail4ê°€ ê¼¬ë¦¬ ì¤‘ì•™ì— ìžˆìŒ
+	_float4x4 BoneMatrix = GetBoneMatrix("RightToeBase") * m_pTransformCom->Get_WorldMatrix();
+	_float4 vBonePos = _float4{ BoneMatrix.m[3][0], BoneMatrix.m[3][1], BoneMatrix.m[3][2], BoneMatrix.m[3][3] };
 
-	PxCapsuleSweepParams param;
-	param.sweepOut = &SweepOut;
-	param.CapsuleGeo = pCol->Get_CapsuleGeometry();
-	param.pxTransform = pCol->Get_PxTransform();
+	_vector	vDir = vBonePos - m_BeforePos;
 
-	_float4	vDir = vTailPos - m_BeforePos;
+	SphereSweepParams tParams;
+	tParams.fVisibleTime = 0.2f;
+	tParams.iTargetType = CTB_PLAYER;
+	tParams.fRadius = 2.f;
+	tParams.fDistance = 1.f;
+	tParams.vPos = vBonePos;
+	tParams.sweepOut = &sweepOut;
+	tParams.vUnitDir = vDir;
 
-	param.vUnitDir = _float3(vDir.x, vDir.y, vDir.z);
-	param.fDistance = param.vUnitDir.Length();
-	param.iTargetType = CTB_PLAYER;
-	param.fVisibleTime = 0.f;
-
-	if (CGameInstance::GetInstance()->PxSweepCapsule(param))
+	if (CGameInstance::GetInstance()->SweepSphere(tParams))
 	{
-		HitTargets(SweepOut, m_iAtkDamage * 1.5f, EAttackType::ATK_HEAVY);
+		HitTargets(sweepOut, static_cast<_int>(m_iAtkDamage * 1.2f), EAttackType::ATK_HEAVY);
 	}
 
-	m_BeforePos = vTailPos;
+	m_BeforePos = vBonePos;
+}
+
+void CEM0210::Somersault_SweepSphere()
+{
+	physx::PxSweepHit hitBuffer[3];
+	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
+
+	//Tail4ê°€ ê¼¬ë¦¬ ì¤‘ì•™ì— ìžˆìŒ
+	_float4x4 BoneMatrix = GetBoneMatrix("RightToeBase") * m_pTransformCom->Get_WorldMatrix();
+	_float4 vBonePos = _float4{ BoneMatrix.m[3][0], BoneMatrix.m[3][1], BoneMatrix.m[3][2], BoneMatrix.m[3][3] };
+
+	_vector	vDir = vBonePos - m_BeforePos;
+
+	SphereSweepParams tParams;
+	tParams.fVisibleTime = 0.2f;
+	tParams.iTargetType = CTB_PLAYER;
+	tParams.fRadius = 1.5f;
+	tParams.fDistance = 1.f;
+	tParams.vPos = vBonePos;
+	tParams.sweepOut = &sweepOut;
+	tParams.vUnitDir = vDir;
+
+	if (CGameInstance::GetInstance()->SweepSphere(tParams))
+	{
+		HitTargets(sweepOut, static_cast<_int>(m_iAtkDamage * 1.f), EAttackType::ATK_TO_AIR);
+	}
+
+	m_BeforePos = vBonePos;
 }
 
 
@@ -526,9 +604,9 @@ CEM0210 * CEM0210::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext
 	return pInstance;
 }
 
-CGameObject * CEM0210::Clone(void * pArg)
+CGameObject* CEM0210::Clone(void* pArg)
 {
-	CEM0210*		pInstance = new CEM0210(*this);
+	CEM0210* pInstance = new CEM0210(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -543,8 +621,5 @@ void CEM0210::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-	Safe_Release(m_pRange);
-	Safe_Release(m_pTailCol);
-	Safe_Release(m_pWeaponCol);
 
 }

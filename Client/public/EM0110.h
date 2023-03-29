@@ -2,17 +2,9 @@
 #include "Enemy.h"
 #include "Controller.h"
 
-BEGIN(Engine)
-class CFSMComponent;
-class CGameInstance;
-class CAnimation;
-class CRigidBody;
-class CCurveMananger;
-END
-
 BEGIN(Client)
 
-// flower_Hands :: ¼ÒÁî Æ÷Áî
+// ë“œë¦´ë§
 
 class CEM0110 : public CEnemy
 {
@@ -36,7 +28,7 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 public:
-	//Çàµ¿ °ü·Ã ÇÔ¼ö Á¤ÀÇ
+	//í–‰ë™ ê´€ë ¨ í•¨ìˆ˜ ì •ì˜
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_float GetTurnRemain() const { return m_fTurnRemain; }
@@ -49,7 +41,7 @@ private:
 	void Play_HeavbyHitAnim();
 
 private:
-	//Ãæµ¹ °ü·Ã ÇÔ¼ö Á¤ÀÇ
+	//ì¶©ëŒ ê´€ë ¨ í•¨ìˆ˜ ì •ì˜
 	void Rush_Overlap();
 	void Rush_SweepSphere();
 	void Kick_SweepSphere();
@@ -64,7 +56,7 @@ private:
 	// Swing Attack
 	list<CScarletCharacter*> m_CollisionList;
 private:
-	//¿ø½Ã µ¥ÀÌÅÍ
+	//ì›ì‹œ ë°ì´í„°
 	_float3 m_vMoveAxis;
 	_float m_fTurnRemain = 0.f;
 
@@ -78,7 +70,7 @@ private:
 	// Run
 	_bool m_bRun = false;
 
-	CController::EHandleInput	m_eInput;
+	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 
 public:
 	static CEM0110* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -3749,7 +3749,7 @@
     },
     "AS_em0210_211_AL_somersault": {
         "Duration": 160.0,
-        "TickPerSecond": 35.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -3764,13 +3764,18 @@
     },
     "AS_em0210_212_AL_spin": {
         "Duration": 180.0,
-        "TickPerSecond": 35.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
                 "EventName": "Spin_Start",
-                "EventTime": 60.0
+                "EventTime": 63.0
             },
+            {
+                "EventName": "Spin_Effect1",
+                "EventTime": 83.0
+            },
+
             {
                 "EventName": "Spin_End",
                 "EventTime": 120.0

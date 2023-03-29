@@ -1127,6 +1127,9 @@
     <ClInclude Include="..\public\Special_TankLorry_Tank.h">
       <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BulletBuilder.h">
+      <Filter>02.GameObjects\Enemy\EMBullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1842,6 +1845,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Special_TankLorry_Tank.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BulletBuilder.cpp">
+      <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
