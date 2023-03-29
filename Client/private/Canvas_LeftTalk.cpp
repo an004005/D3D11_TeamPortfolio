@@ -80,7 +80,7 @@ void CCanvas_LeftTalk::Add_Talk(const size_t iIndex)
 
 	switch (iIndex)
 	{
-	case 0 :
+	case 0:
 	{
 		tTalkInfo.fFace = { 1.0f, 0.0f };
 		tTalkInfo.wsTalk0 = { L"(이게 최종 시험...... 여기까지 온 이상," };
@@ -110,7 +110,7 @@ void CCanvas_LeftTalk::Add_Talk(const size_t iIndex)
 		tTalkInfo.wsTalk0 = { L"쥬신 게임 아카데미 131기" };
 		tTalkInfo.wsTalk1 = { L"......" };
 	}
-		break;
+	break;
 	}
 
 
@@ -118,9 +118,9 @@ void CCanvas_LeftTalk::Add_Talk(const size_t iIndex)
 	m_bRunning = true;
 }
 
-CCanvas_LeftTalk * CCanvas_LeftTalk::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CCanvas_LeftTalk* CCanvas_LeftTalk::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CCanvas_LeftTalk*      pInstance = new CCanvas_LeftTalk(pDevice, pContext);
+	CCanvas_LeftTalk* pInstance = new CCanvas_LeftTalk(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -130,9 +130,9 @@ CCanvas_LeftTalk * CCanvas_LeftTalk::Create(ID3D11Device * pDevice, ID3D11Device
 	return pInstance;
 }
 
-CCanvas * CCanvas_LeftTalk::Clone(void * pArg)
+CCanvas* CCanvas_LeftTalk::Clone(void* pArg)
 {
-	CCanvas_LeftTalk*      pInstance = new CCanvas_LeftTalk(*this);
+	CCanvas_LeftTalk* pInstance = new CCanvas_LeftTalk(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

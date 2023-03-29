@@ -24,6 +24,8 @@ HRESULT CCanvas_BrainMap::Initialize_Prototype()
 	if (FAILED(CCanvas::Initialize_Prototype()))
 		return E_FAIL;
 
+	m_iStartPriority = m_iPriority;
+
 	return S_OK;
 }
 
@@ -80,7 +82,7 @@ void CCanvas_BrainMap::Tick(_double TimeDelta)
 
 	if (false == m_bVisible) return;
 	OnIcon_Tick();
-	SkillAcquisition_Tick(TimeDelta);
+	SkillAcquisition_Tick();
 	OnLick_Tick();
 }
 
@@ -104,19 +106,22 @@ HRESULT CCanvas_BrainMap::Render()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	if (false == m_bSkillAcquisition)
+	{
+		m_iPriority = m_iStartPriority;
 		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	}
 	else
 	{
+		m_iPriority = 20;
 		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
 
 		vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"SkillAcquisition"))->GetScreenSpaceLeftTop();
 		wsprintf(szText, TEXT("<%s>"), m_CurrentBrainInfo.szBrainName);
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(130.0f, 150.0f), 0.f, vFontSmaillSize*1.5f, vColor);
-		pGameInstance->Render_Font(L"Pretendard32", m_szAlarmText, vPosition + _float2(130.0f, 200.0f), 0.f, vFontSmaillSize*1.5f, vColor);
-		
+		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(130.0f, 150.0f), 0.f, vFontSmaillSize * 1.5f, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", m_szAlarmText, vPosition + _float2(130.0f, 200.0f), 0.f, vFontSmaillSize * 1.5f, vColor);
+
 		vColor = { 0.488f, 0.427f, 0.384f, 1.0f };
 	}
-
 
 	vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"BrainExplanation_Face"))->GetScreenSpaceLeftTop();
 	wsprintf(szText, TEXT("%d"), CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP);
@@ -1524,27 +1529,31 @@ void CCanvas_BrainMap::Link_Initialize()
 
 void CCanvas_BrainMap::OnIcon_Tick()
 {
-	if (true == m_bSkillAcquisition)
-		return;
-
 	// 자식 UI를 돌면서 변해야 할 것 을 확인해야 한다.
 	for (size_t i = 0; i < m_vecIconUI.size(); ++i)
 	{
-		// 아이콘 위에 마우스가 올라갔을 때
-		if (true == m_vecIconUI[i]->Get_OnMouse())
+		if (m_bSkillAcquisition == false)
 		{
-			m_iCurrentIndex = i;
-			Find_ChildUI(L"Icon_Pick")->Set_Position(m_vecIconUI[i]->Get_Position());
-			m_CurrentBrainInfo = m_vecIconUI[i]->Get_BrainInfo();
+			// 아이콘 위에 마우스가 올라갔을 때
+			if (true == m_vecIconUI[i]->Get_OnMouse())
+			{
+				m_iCurrentIndex = i;
+				Find_ChildUI(L"Icon_Pick")->Set_Position(m_vecIconUI[i]->Get_Position());
+				m_CurrentBrainInfo = m_vecIconUI[i]->Get_BrainInfo();
+			}
 		}
 
-		// 아이콘을 클릭 했을 때
-		if (true == m_vecIconUI[i]->Get_OnButton())
+		if (false == m_vecIconUI[i]->Get_BrainInfo().bUse)
 		{
-			IconPick(i);
-			m_iCurrentIndex = i;
-			m_vecIconUI[i]->Set_OnButton();
-			dynamic_cast<CMain_BrainMapIconPickUI*>(Find_ChildUI(L"Icon_Pick"))->Set_Pick(true);
+			// 아이콘을 클릭 했을 때
+			if (true == m_vecIconUI[i]->Get_OnButton())
+			{
+				IconPick(i);
+				m_iCurrentIndex = i;
+				m_bSkillAcquisition = true;
+				m_vecIconUI[i]->Set_OnButton();
+				dynamic_cast<CMain_BrainMapIconPickUI*>(Find_ChildUI(L"Icon_Pick"))->Set_Pick();
+			}
 		}
 	}
 }
@@ -1554,21 +1563,19 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 	// 현재 구매할 수 있는 Level 이 되어야 살 수 있도록 한다.
 	if (m_vecBrain[iIndex].vOnIconIndex != m_vecIconUI[iIndex]->Get_CurrentIconIndex())
 	{
-		m_bSkillAcquisition = true;
 		m_szAlarmText = L"습득 조건을 충족하지 않습니다."; 
 		return;
 	}
 
-	// 현재 플레이어가 가지고 있는 BP를 확인해서 Icon 의 BP 보다 큰 경우 사용할 수 있도록 한다.
+	// 현재 플레이어가 가지고 있는 BP를 확인해서 Icon 의 BP 보다 큰 경우에만 구매할 수 있다.
 	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP >= m_vecIconUI[iIndex]->Get_BrainInfo().iBP)
 	{			
-		m_vecIconUI[iIndex]->Set_BrainUse();
-		_uint iResultBP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP - m_vecIconUI[iIndex]->Get_BrainInfo().iBP;
-		CPlayerInfoManager::GetInstance()->Set_BP(iResultBP);	// 플레이어 BP 감소하기
-		m_vecIconUI[iIndex]->Set_OnButton();
-		m_bSkillAcquisition = true;
 		m_szAlarmText = L"BP를 소모했습니다.";
+		m_vecIconUI[iIndex]->Set_BrainUse();
 
+		_uint iResultBP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP - m_vecIconUI[iIndex]->Get_BrainInfo().iBP;
+		CPlayerInfoManager::GetInstance()->Set_BP(iResultBP);	 // 플레이어 BP 감소하기
+		
 		// 레벨에 따른 아이콘 구매할 수 있는 정도
 		for (_int j = 0; j < 3; ++j)
 		{
@@ -1577,70 +1584,39 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 
 			m_vecIconUI[m_vecIconUI[iIndex]->Get_BrainInfo().arrNeighbor[j]]->Set_OnIcon();
 		}
+		return;
 	}
 	else
 	{
 		if (true == m_vecIconUI[iIndex]->Get_BrainInfo().bUse)
 			return;
 
-		m_bSkillAcquisition = true;
 		m_szAlarmText = L"BP가 부족합니다.";
 		return;
 	}
 }
 
-//void CCanvas_BrainMap::IconLevel(const size_t iIndex)
-//{
-//	// 현재 브레인 bUse 가 true 인 Icon만 확인한다.
-//	if (false == m_vecIconUI[iIndex]->Get_BrainInfo().bUse || 60 == iIndex)
-//		return;
-//
-//	// 현재 브레인의 타입
-//	BRAINTYPE eCurrentType = m_vecIconUI[iIndex]->Get_BrainInfo().eType;
-//	// 현재 브레인의 레벨
-//	_uint iBrainLevel = m_vecIconUI[iIndex]->Get_BrainInfo().iLevel;
-//	// 지금까지 보관한 타입마다 가장 큰 레벨을 담는다.
-//	if (m_arrCurrentHighLevel[eCurrentType] < iBrainLevel)
-//		m_arrCurrentHighLevel[eCurrentType] = iBrainLevel;
-//
-//	// 현재 사용 가능한 아이콘의 레벨을 비교해서 다음 레벨을 흰색으로 변경한다.
-//	if (eCurrentType == m_vecIconUI[iIndex]->Get_BrainInfo().eType)
-//	{
-//		if (m_arrCurrentHighLevel[eCurrentType] + 1 <= iBrainLevel)
-//			m_vecIconUI[iIndex]->Set_IconIndex(m_vecBrain[iIndex].vOnIconIndex);
-//	}
-//
-//	
-//	
-//
-//
-//
-//	/*
-//		if (m_arrCurrentHighLevel[eCurrentType] <= iBrainLevel)
-//		{
-//			m_vecIconUI[iIndex + 1]->Set_IconIndex(m_vecBrain[iIndex + 1].vOnIconIndex);
-//
-//
-//		}*/
-//}
-
-void CCanvas_BrainMap::SkillAcquisition_Tick(const _double & TimeDelta)
+void CCanvas_BrainMap::SkillAcquisition_Tick()
 {
 	Find_ChildUI(L"SkillAcquisition")->SetVisible(m_bSkillAcquisition);
 	Find_ChildUI(L"SkillAcquisitionBorderLine")->SetVisible(m_bSkillAcquisition);
 	Find_ChildUI(L"SkillAcquisitionBorderLine_B")->SetVisible(m_bSkillAcquisition);
-	Find_ChildUI(L"SkillAcquisition_B")->SetVisible(m_bSkillAcquisition);
+	Find_ChildUI(L"SkillAcquisition_BackGround")->SetVisible(m_bSkillAcquisition);
+	Find_ChildUI(L"SkillAcquisition_Button")->SetVisible(m_bSkillAcquisition);
+
+	_bool	bb = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"SkillAcquisition_Button"))->Get_OnButton();
+	IM_LOG("%d", static_cast<_int>(bb));
 
 	if (false == m_bSkillAcquisition)
 		return;
 
-	// 바로 Pick 이 되면서 true 에 걸리기 때문에 일정 시간 뒤에 버튼을 클릭할 수 있도록 했다.
-	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"SkillAcquisitionBorderLine_B"))->Get_OnButton() ||
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"SkillAcquisition_Button"))->Get_OnButton() ||
 		CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
 	{
 		m_bSkillAcquisition = false;
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"SkillAcquisitionBorderLine_B"))->Set_OnButton();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"SkillAcquisitionBorderLine_B"))->Set_OnAlpha();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"SkillAcquisition_Button"))->Set_OnButton();
+		//dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"SkillAcquisition_Button"))->Set_OnAlpha();
+		return;
 	}
 }
 
@@ -1659,14 +1635,14 @@ void CCanvas_BrainMap::OnLick_Tick()
 			_tchar szText[MAX_PATH] = TEXT("");
 			if (true == m_vecOnLinkInfo[i].bSLink)
 			{
-				wsprintf(szText, TEXT("Link__S_0%d"), m_vecOnLinkInfo[i].iLickIndex);
+				wsprintf(szText, TEXT("Link__S_0%d"), static_cast<_int>(m_vecOnLinkInfo[i].iLickIndex));
 			}
 			else
 			{
 				if (10 > m_vecOnLinkInfo[i].iLickIndex)
-					wsprintf(szText, TEXT("Link__0%d"), m_vecOnLinkInfo[i].iLickIndex);
+					wsprintf(szText, TEXT("Link__0%d"), static_cast<_int>(m_vecOnLinkInfo[i].iLickIndex));
 				else
-					wsprintf(szText, TEXT("Link__%d"), m_vecOnLinkInfo[i].iLickIndex);
+					wsprintf(szText, TEXT("Link__%d"), static_cast<_int>(m_vecOnLinkInfo[i].iLickIndex));
 			}
 			Find_ChildUI(szText)->SetVisible(true);
 		}

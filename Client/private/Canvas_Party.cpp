@@ -170,9 +170,6 @@ void CCanvas_Party::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	ImGui::DragFloat("X", &m_vPosition.x);
-	ImGui::DragFloat("Y", &m_vPosition.y);
-
 	if (ImGui::Button("Hanabi"))
 	{
 		CPlayerInfoManager::GetInstance()->Set_HanabiMemvber();

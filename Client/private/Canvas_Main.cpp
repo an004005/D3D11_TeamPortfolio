@@ -54,7 +54,7 @@ void CCanvas_Main::Tick(_double TimeDelta)
 	CCanvas::Tick(TimeDelta);
 
 	Menu_Tick();
-	m_arrCanvass[m_eMainCanvas]->Tick(TimeDelta);
+
 }
 
 void CCanvas_Main::Late_Tick(_double TimeDelta)
@@ -62,8 +62,6 @@ void CCanvas_Main::Late_Tick(_double TimeDelta)
 	if (false == m_bMainUI) return;
 
 	CCanvas::Late_Tick(TimeDelta);
-
-	m_arrCanvass[m_eMainCanvas]->Late_Tick(TimeDelta);
 
 }
 

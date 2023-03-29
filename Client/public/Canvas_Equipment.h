@@ -31,8 +31,8 @@ private:
 	_int	m_iItmeInfoPickCount = { 0 };
 
 	_bool	m_bItmeWindowPick = { false };
-	array<_float, 3> m_arrStartWeaponPos;
-	array<_float, 3> m_arrAddWeaponPos;
+	array<_float, 3> m_arrStartWeaponPos = { 0.0f, 0.0f, 0.0f };
+	array<_float, 3> m_arrAddWeaponPos = { 0.0f, 0.0f, 0.0f };
 
 	_uint	m_iCurrentWeaponCount = { 1 };
 	_uint	m_iCurrentWeaponBCount = { 1 };

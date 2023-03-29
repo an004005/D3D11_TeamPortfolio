@@ -50,8 +50,6 @@ private:
 	PICKINFO	m_tPickIngo = {};
 	SASMEMBER	m_eSASMember = { YUITO };
 
-	_float2	m_vPosition = { 0.0f, 0.0f };	// Test
-
 public:
 	static CCanvas_Party* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

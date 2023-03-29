@@ -164,8 +164,8 @@ CUI * CMain_OnMouseUI::Clone(void * pArg)
 
 void CMain_OnMouseUI::Free()
 {
-	Safe_Release(m_pMouseColorUI);
-
 	__super::Free();
+
+	Safe_Release(m_pMouseColorUI);
 
 }

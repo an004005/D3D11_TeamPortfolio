@@ -33,8 +33,8 @@ private:
 	void	Canvas_Visible();
 	
 private:
-	CCanvas*	m_arrCanvass[MAINCANVAS_END];
-	MAINCANVAS	m_eMainCanvas = { PARTY };
+	CCanvas* m_arrCanvass[MAINCANVAS_END] = { nullptr, nullptr, nullptr, nullptr };
+	MAINCANVAS	m_eMainCanvas = { MAINCANVAS:: PARTY };
 	
 	_tchar*		m_szManuText = { L"" };
 	_bool	m_bMainUI = { false };

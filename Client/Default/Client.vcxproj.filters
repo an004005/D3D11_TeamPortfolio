@@ -388,6 +388,9 @@
     <Filter Include="02.GameObjects\UI\Tutorial">
       <UniqueIdentifier>{abb2352e-02f6-4b3c-8379-d3a28a4803fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\Mouse">
+      <UniqueIdentifier>{f954c126-8785-41df-817d-93c9c8bf510b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1187,12 +1190,6 @@
       <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GameManager_Tutorial.h" />
-    <ClInclude Include="..\public\MouseCousorUI.h">
-      <Filter>02.GameObjects\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MouseCousorLightUI.h">
-      <Filter>02.GameObjects\UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Canvas_Acquisition.h">
       <Filter>02.GameObjects\UI\Short</Filter>
     </ClInclude>
@@ -1210,6 +1207,15 @@
     </ClInclude>
     <ClInclude Include="..\public\Item_LightUI.h">
       <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MouseCousorLightUI.h">
+      <Filter>02.GameObjects\UI\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MouseCousorUI.h">
+      <Filter>02.GameObjects\UI\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_MouseCousor.h">
+      <Filter>02.GameObjects\UI\Mouse</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1981,12 +1987,6 @@
       <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GameManager_Tutorial.cpp" />
-    <ClCompile Include="..\private\MouseCousorUI.cpp">
-      <Filter>02.GameObjects\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MouseCousorLightUI.cpp">
-      <Filter>02.GameObjects\UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
@@ -2007,6 +2007,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Item_LightUI.cpp">
       <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MouseCousorLightUI.cpp">
+      <Filter>02.GameObjects\UI\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MouseCousorUI.cpp">
+      <Filter>02.GameObjects\UI\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_MouseCousor.cpp">
+      <Filter>02.GameObjects\UI\Mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

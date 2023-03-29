@@ -6898,7 +6898,7 @@
             "PositionX": 0.0,
             "PositionY": 0.0,
             "Priority": 12,
-            "Prototype_GameObject": "Main_PickUI\u0000",
+            "Prototype_GameObject": "Default_UI\u0000",
             "ScaleX": 0.8500000238418579,
             "ScaleY": 0.8500000238418579,
             "ShaderParams": {
@@ -6943,8 +6943,8 @@
             }
         },
         {
-            "ChildTag": "SkillAcquisition_B\u0000",
-            "ObjectTag": "SkillAcquisition_B",
+            "ChildTag": "SkillAcquisition_BackGround\u0000",
+            "ObjectTag": "SkillAcquisition_BackGround",
             "Pivot": 0,
             "PositionX": 0.0,
             "PositionY": 0.0,
@@ -6988,6 +6988,52 @@
                     0.0,
                     0.0,
                     0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SkillAcquisition_Button\u0000",
+            "ObjectTag": "SkillAcquisition_Button",
+            "Pivot": 0,
+            "PositionX": 203.0,
+            "PositionY": -95.0,
+            "Priority": 13,
+            "Prototype_GameObject": "Main_PickUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 70.0,
+            "SizeY": 30.0,
+            "Transform": {
+                "WorldMatrix": [
+                    70.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    30.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    203.0,
+                    -95.0,
                     0.0,
                     1.0
                 ]

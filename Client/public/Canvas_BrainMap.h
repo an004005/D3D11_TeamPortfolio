@@ -13,13 +13,13 @@ public:
 
 	typedef struct tagBrainInfo
 	{
-		BRAINTYPE	eType = { BRAINTYPE_END };
-		BRAINCOLOR	eColor = { BRAINCOLOR_END };
+		BRAINTYPE	eType = { BRAINTYPE::BRAINTYPE_END };
+		BRAINCOLOR	eColor = { BRAINCOLOR::BRAINCOLOR_END };
 
 		_uint		iBP = { 0 };
 		_uint		iLevel = { 0 };
-		_tchar*		szBrainName = {};
-		_tchar*		szBrainEx[4] = {};
+		_tchar*	szBrainName = {};
+		_tchar*	szBrainEx[4] = {};
 		_bool		bUse = { false };
 		_float2		vOnIconIndex = { 0.0f, 0.0f };
 		_float2		vOffIconIndex = { 0.0f, 0.0f };
@@ -60,7 +60,7 @@ private:
 
 	void	OnIcon_Tick();
 	void	IconPick(const size_t iIndex);
-	void	SkillAcquisition_Tick(const _double & TimeDelta);	// 계속 알림창이 뜰 때를 계속 확인한다.
+	void	SkillAcquisition_Tick();	// 계속 알림창이 뜰 때를 계속 확인한다.
 	void	OnLick_Tick();
 
 private:
@@ -80,6 +80,8 @@ private:
 	array<_uint, BRAINTYPE_END>	m_arrCurrentHighLevel;
 
 	_tchar*	m_szAlarmText = L"";
+
+	_int	m_iStartPriority = { 0 };
 
 public:
 	static CCanvas_BrainMap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

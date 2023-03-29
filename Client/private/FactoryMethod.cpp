@@ -98,6 +98,7 @@
 #include "Canvas_ItemWindow.h"
 #include "Canvas_Acquisition.h"
 #include "Canvas_LeftTalk.h"
+#include "Canvas_MouseCousor.h"
 
 // Default
 #include "DefaultUI.h"
@@ -631,6 +632,14 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_LeftTalk"),
 			CCanvas_LeftTalk::Create(pDevice, pContext))))
 			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_MouseCousor*/
+		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_MouseCousor"),
+			CCanvas_MouseCousor::Create(pDevice, pContext))))
+			return E_FAIL;
+		
+
+
 
 
 

@@ -67,12 +67,12 @@ public:
 		m_ePivot = ePivot;
 	}
 
-	_uint Get_Priority() const {
-		return m_iPriority;
-	}
-	void Set_Priority(_uint iPriority) { 
-		m_iPriority = iPriority;
-	}
+	//_uint Get_Priority() const {
+	//	return m_iPriority;
+	//}
+	//void Set_Priority(_uint iPriority) { 
+	//	m_iPriority = iPriority;
+	//}
 
 	_float2 GetScale() const { 
 		return m_vScale;
@@ -124,7 +124,7 @@ protected:
 	ShaderParams		m_tParams;
 
 protected:
-	_uint				m_iPriority = 0;			// 낮을 수록 뒤에 그려진다.
+//	_uint				m_iPriority = 0;			// 낮을 수록 뒤에 그려진다.
 
 	_float				m_fX = 0.0f;
 	_float				m_fY = 0.0f;

@@ -78,6 +78,8 @@ public:
 	void SetVisible(_bool bVisible) { m_bVisible = bVisible; }
 	virtual void SetDelete() { m_bDelete = true; }
 
+	_uint Get_Priority() const { return m_iPriority; }
+
 protected:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pContext = nullptr;
@@ -95,6 +97,8 @@ protected:
 	// prototype으로 추가될 때 지정해준다.
 	wstring											m_strPrototypeTag;
 	string											m_strObjectTag;
+
+	_uint				m_iPriority = 0;			// 낮을 수록 뒤에 그려진다. (UI를 위하여)
 
 protected:
 	CGameObject*									m_pOwner = nullptr;

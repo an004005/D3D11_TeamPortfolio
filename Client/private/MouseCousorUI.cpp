@@ -31,6 +31,7 @@ HRESULT CMouseCousorUI::Initialize(void * pArg)
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/MouseCousorLightUI.json");
 	m_pMouseLight = dynamic_cast<CMouseCousorLightUI*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"MouseCousorLightUI", &json));
+	assert(m_pMouseLight != nullptr && "Failed to Clone : CMouseCousorLightUI");
 
 	return S_OK;
 }
