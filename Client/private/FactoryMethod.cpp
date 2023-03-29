@@ -418,10 +418,10 @@ HRESULT CFactoryMethod::MakeSAS_Portrait_Prototypes(ID3D11Device* pDevice, ID3D1
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 
-	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Prototype_SASPortrait"))
+	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Prototype_SASPortrait") == nullptr)
 	{
-		pGameInstance->Add_Prototype(L"Prototype_SASPortrait", CSAS_Portrait::Create(pDevice, pContext));
-		pGameInstance->Add_Prototype(L"ProtoPostVFX_SASPortrait", CPostVFX_SAS_Portrait::Create(pDevice, pContext));
+		pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_SASPortrait", CSAS_Portrait::Create(pDevice, pContext));
+		pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoPostVFX_SASPortrait", CPostVFX_SAS_Portrait::Create(pDevice, pContext));
 	}
 
 	return S_OK;
