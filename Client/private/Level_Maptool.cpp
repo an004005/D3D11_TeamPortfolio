@@ -125,7 +125,7 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	//});
 
 	//인스턴싱 모델들의 프로토타입 생성						// TutorialMap	FinalBossStage	Subway_Hospital/Subway  Subway_Hospital/Hospital
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/Subway_Hospital/Subway/",
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/Subway_Hospital/Hospital/",
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
@@ -168,14 +168,14 @@ HRESULT CLevel_Maptool::Ready_Layer_Camera(const wstring& pLayerTag)
 	// FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag.c_str(), TEXT("Prototype_GameObject_Camera_Dynamic")));
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
-	return S_OK;
+	return S_OK; 
 }
 
 HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 																
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Subway.json"); // Map_Hospital_1F
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Hospital_1F.json");
 		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Subway.json");			// Map_Subway
 		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_FinalBossStage.json");	// Map_FinalBossStage
 		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Test.json");				// Map_Test
