@@ -114,6 +114,26 @@
             "Layer": "Layer_Kinetic",
             "JsonPath": "../Bin/Resources/Objects/KineticSpecial_TankLorry.json",
             "ProtoTag": "Prototype_GameObject_Special_TankLorry"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_IronBars_Door.json",
+            "ProtoTag": "Prototype_GameObject_Special_IronBars_Door"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "",
+            "ProtoTag": "Prototype_GameObject_Special_IronBars_Bars"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_IronBars.json",
+            "ProtoTag": "Prototype_GameObject_Special_IronBars"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_IronBars_SingleBars.json",
+            "ProtoTag": "Prototype_GameObject_Special_IronBars_SingleBars"
         }
     ]
 }

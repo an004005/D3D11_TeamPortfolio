@@ -26,20 +26,20 @@ class CSAS_Portrait;
 
 typedef struct tagRemote
 {
-	// Çàµ¿ °ü·Ã
-	_bool bCanTurn = false;	// Ä«¸Ş¶ó º¸´Â ¹æÇâÀ¸·Î È¸Àü
-	_bool bCanMove = false;	// ¿ùµå ¹«ºê °¡´É ¿©ºÎ
-	_bool bCanRun = false;	// ´Ş¸®±â ¿©ºÎ
-	_bool bAttackTurn = false;	// °ø°İ Áß È¸Àü(Ä«¸Ş¶ó ¹æÇâ) ¿©ºÎ
+	// í–‰ë™ ê´€ë ¨
+	_bool bCanTurn = false;	// ì¹´ë©”ë¼ ë³´ëŠ” ë°©í–¥ìœ¼ë¡œ íšŒì „
+	_bool bCanMove = false;	// ì›”ë“œ ë¬´ë¸Œ ê°€ëŠ¥ ì—¬ë¶€
+	_bool bCanRun = false;	// ë‹¬ë¦¬ê¸° ì—¬ë¶€
+	_bool bAttackTurn = false;	// ê³µê²© ì¤‘ íšŒì „(ì¹´ë©”ë¼ ë°©í–¥) ì—¬ë¶€
 
-	// »óÅÂ °ü·Ã
-	_bool bOnAir = false;	// °øÁß »óÅÂ ¿©ºÎ
-	_bool bGravity = false;	// Áß·Â Àû¿ë ¿©ºÎ
+	// ìƒíƒœ ê´€ë ¨
+	_bool bOnAir = false;	// ê³µì¤‘ ìƒíƒœ ì—¬ë¶€
+	_bool bGravity = false;	// ì¤‘ë ¥ ì ìš© ì—¬ë¶€
 
-							// Á¦ÇÑ °ü·Ã
-	_bool bMoveLimitReset = false;	// È½¼ö Á¦ÇÑ ÀÌµ¿ ÃÊ±âÈ­
-	_bool bAttackLimitReset = false;	// È½¼ö Á¦ÇÑ °ø°İ ÃÊ±âÈ­
-	_bool bChargeReset = false;	// Â÷Áö »óÅÂ ÃÊ±âÈ­
+							// ì œí•œ ê´€ë ¨
+	_bool bMoveLimitReset = false;	// íšŸìˆ˜ ì œí•œ ì´ë™ ì´ˆê¸°í™”
+	_bool bAttackLimitReset = false;	// íšŸìˆ˜ ì œí•œ ê³µê²© ì´ˆê¸°í™”
+	_bool bChargeReset = false;	// ì°¨ì§€ ìƒíƒœ ì´ˆê¸°í™”
 
 	_bool bLocalRevise = false;
 
@@ -57,17 +57,17 @@ typedef struct tagRemote
 class CPlayer : public CScarletCharacter
 {
 private:
-	// °ø°İ È½¼ö Á¦ÇÑÀÌ ÀÖ´Â Stateµé¿¡ ´ëÇØ °ü¸®, ResetÇÔ¼ö µ¿ÀÛ ½Ã ÇØ´ç ±¸Á¶Ã¼ ³»ÀÇ ¸ğµç °ªÀÌ ÃÊ±âÈ­µÈ´Ù.
+	// ê³µê²© íšŸìˆ˜ ì œí•œì´ ìˆëŠ” Stateë“¤ì— ëŒ€í•´ ê´€ë¦¬, Resetí•¨ìˆ˜ ë™ì‘ ì‹œ í•´ë‹¹ êµ¬ì¡°ì²´ ë‚´ì˜ ëª¨ë“  ê°’ì´ ì´ˆê¸°í™”ëœë‹¤.
 	typedef struct tagAttackLimit
 	{
-		// ÇöÀç °ª
+		// í˜„ì¬ ê°’
 		_uint m_iNonChargeAttack_Floor = 2;
 		_uint m_iNonChargeAttack_Air = 2;
 		_uint m_iAttack_Air01 = 1;
 		_uint m_iAttack_Air02 = 1;
 		_uint m_iAttack_AirDodge = 1;
 
-		// »óÇÑÄ¡
+		// ìƒí•œì¹˜
 		_uint MAX_iNonChargeAttack_Floor = 2;
 		_uint MAX_iNonChargeAttack_Air = 2;
 		_uint MAX_iAttack_Air01 = 1;
@@ -78,11 +78,11 @@ private:
 
 	typedef struct tagMoveLimit
 	{	
-		// ÇöÀç °ª
+		// í˜„ì¬ ê°’
 		_uint m_iDoubleJump = 1;
 		_uint m_iAirDodge = 1;
 
-		// »óÇÑÄ¡
+		// ìƒí•œì¹˜
 		_uint MAX_iDoubleJump = 1;
 		_uint MAX_iAirDodge = 1;
 
@@ -140,11 +140,11 @@ public:
 
 	virtual void Imgui_RenderProperty() override;
 
-public:	// ÇöÀç Å¸°ÔÆÃ µÈ ¸ó½ºÅÍ Æ÷ÀÎÅÍ °¡Á®¿À´Â ÇÔ¼ö
+public:	// í˜„ì¬ íƒ€ê²ŒíŒ… ëœ ëª¬ìŠ¤í„° í¬ì¸í„° ê°€ì ¸ì˜¤ëŠ” í•¨ìˆ˜
 //	CGameObject*	Get_TargetedEnemy();
 
 private:
-	void CamBoneTest();	// ¾×¼ÇÄ· ¿¹½Ã
+	void CamBoneTest();	// ì•¡ì…˜ìº  ì˜ˆì‹œ
 
 private:
 	_double			m_fTimeDelta = 0.f;
@@ -164,8 +164,8 @@ private:
 
 private:
 	_bool			m_bAttackEnable = false;
-	_bool			m_bJustDodge_Activate = false;		// Àú½ºÆ®´åÁö °ø°İ ¹ßµ¿Áß
-	_bool			m_bKineticSpecial_Activate = false;	// Æ¯¼ö¿ÀºêÁ§Æ® °ø°İ ¹ßµ¿Áß
+	_bool			m_bJustDodge_Activate = false;		// ì €ìŠ¤íŠ¸ë‹·ì§€ ê³µê²© ë°œë™ì¤‘
+	_bool			m_bKineticSpecial_Activate = false;	// íŠ¹ìˆ˜ì˜¤ë¸Œì íŠ¸ ê³µê²© ë°œë™ì¤‘
 
 private:
 	HRESULT SetUp_Components(void* pArg);
@@ -200,13 +200,13 @@ private:
 	class CMonsterLockonUI*	m_pUI_LockOn = nullptr;
 	CGameObject*		m_pSettedTarget = nullptr;
 
-private:	// SAS Æ¯¼ö±â FSM
+private:	// SAS íŠ¹ìˆ˜ê¸° FSM
 	HRESULT				SetUp_TeleportStateMachine();
 	CFSMComponent*		m_pTeleportStateMachine = nullptr;
 	void				TeleportEffectMaker();
 
 private:
-	_float				m_fTeleportAttack_GC = 0.f;	// ´ÙÀ½ °ø°İÀ¸·Î ÀÌ¾î°¡°Ô ÇÏ±â À§ÇÔ
+	_float				m_fTeleportAttack_GC = 0.f;	// ë‹¤ìŒ ê³µê²©ìœ¼ë¡œ ì´ì–´ê°€ê²Œ í•˜ê¸° ìœ„í•¨
 	_float4				m_vTeleportPos = { 0.f, 0.f, 0.f, 1.f };
 	list<CAnimation*>	m_Teleport_FloorAttack_Start;
 	list<CAnimation*>	m_Teleport_FloorAttack_End;
@@ -216,7 +216,7 @@ private:
 	list<CAnimation*>	m_Teleport_AirAttack_Fall;
 	list<CAnimation*>	m_Teleport_AirAttack_Landing;
 
-private:	// Æ¯¼ö¿¬Ãâ¿ë FSM
+private:	// íŠ¹ìˆ˜ì—°ì¶œìš© FSM
 	HRESULT				SetUp_TrainStateMachine();
 	CFSMComponent*		m_pTrainStateMachine_Left = nullptr;
 
@@ -235,43 +235,63 @@ private:	// Æ¯¼ö¿¬Ãâ¿ë FSM
 	HRESULT				SetUp_TankLorryStateMachine();
 	CFSMComponent*		m_pTankLorryStateMachine = nullptr;
 
-private:	// Æ¯¼ö¿¬Ãâ¿ë ¼ÒÄÏ ¾Ö´Ï¸ŞÀÌ¼Ç
-	list<CAnimation*>	m_Train_Charge_L;	// ÁÂÃø ±âÂ÷ Â÷Áö
-	list<CAnimation*>	m_Train_Cancel_L;	// ÁÂÃø ±âÂ÷ Ãë¼Ò
-	list<CAnimation*>	m_Train_Throw_L;	// ÁÂÃø ±âÂ÷ ´øÁü
+	HRESULT				SetUp_IronBarsStateMachine();
+	CFSMComponent*		m_pIronBarsStateMachine = nullptr;
 
-	list<CAnimation*>	m_TelephonePole_Charge_L;	// ÁÂÃø Àüº¿´ë Â÷Áö
-	list<CAnimation*>	m_TelephonePole_Cancel_L;	// ÁÂÃø Àüº¿´ë Ãë¼Ò
-	list<CAnimation*>	m_TelephonePole_Start_L;	// ÁÂÃø Àüº¿´ë »ÌÀ½
-	list<CAnimation*>	m_TelephonePole_Throw_L;	// ÁÂÃø Àüº¿´ë ÈÖµÎ¸§
-	list<CAnimation*>	m_TelephonePole_Wait_L;		// Ãß°¡Å¸ ´ë±â
-	list<CAnimation*>	m_TelephonePole_End_L;		// Ãß°¡Å¸ ¹ß»ıÇÏÁö ¾Ê°í Á¾·áµÊ
-	list<CAnimation*>	m_TelephonePole_Swing_L;	// ÁÂÃø Àüº¿´ë Ãß°¡ ÈÖµÎ¸§
+private:
+	_uint m_iIronBars_ThrowCnt = 0;
+
+private:	// íŠ¹ìˆ˜ì—°ì¶œìš© ì†Œì¼“ ì• ë‹ˆë©”ì´ì…˜
+	list<CAnimation*>	m_Train_Charge_L;	// ì¢Œì¸¡ ê¸°ì°¨ ì°¨ì§€
+	list<CAnimation*>	m_Train_Cancel_L;	// ì¢Œì¸¡ ê¸°ì°¨ ì·¨ì†Œ
+	list<CAnimation*>	m_Train_Throw_L;	// ì¢Œì¸¡ ê¸°ì°¨ ë˜ì§
+
+	list<CAnimation*>	m_TelephonePole_Charge_L;	// ì¢Œì¸¡ ì „ë´‡ëŒ€ ì°¨ì§€
+	list<CAnimation*>	m_TelephonePole_Cancel_L;	// ì¢Œì¸¡ ì „ë´‡ëŒ€ ì·¨ì†Œ
+	list<CAnimation*>	m_TelephonePole_Start_L;	// ì¢Œì¸¡ ì „ë´‡ëŒ€ ë½‘ìŒ
+	list<CAnimation*>	m_TelephonePole_Throw_L;	// ì¢Œì¸¡ ì „ë´‡ëŒ€ íœ˜ë‘ë¦„
+	list<CAnimation*>	m_TelephonePole_Wait_L;		// ì¶”ê°€íƒ€ ëŒ€ê¸°
+	list<CAnimation*>	m_TelephonePole_End_L;		// ì¶”ê°€íƒ€ ë°œìƒí•˜ì§€ ì•Šê³  ì¢…ë£Œë¨
+	list<CAnimation*>	m_TelephonePole_Swing_L;	// ì¢Œì¸¡ ì „ë´‡ëŒ€ ì¶”ê°€ íœ˜ë‘ë¦„
 
 	list<CAnimation*>	m_BrainCrash_CutScene;
 	list<CAnimation*>	m_BrainCrash_Activate;
 
-	list<CAnimation*>	m_HBeam_Charge_L;			// ÁÂÃø Hºö Â÷Áö
-	list<CAnimation*>	m_HBeam_Cancel_L;			// ÁÂÃø Hºö Ãë¼Ò
-	list<CAnimation*>	m_HBeam_Throw_L;			// ÁÂÃø Hºö ´øÁü
-	list<CAnimation*>	m_HBeam_Rotation_L;			// ÁÂÃø Hºö Ãß°¡Å¸ ´ë±â ¹× ·çÇÁ
-	list<CAnimation*>	m_HBeam_End_L;				// Ãß°¡Å¸ Á¾·á
-	list<CAnimation*>	m_HBeam_Finish_L;			// ÁÂÃø Hºö ¸¶¹«¸®
+	list<CAnimation*>	m_HBeam_Charge_L;			// ì¢Œì¸¡ Hë¹” ì°¨ì§€
+	list<CAnimation*>	m_HBeam_Cancel_L;			// ì¢Œì¸¡ Hë¹” ì·¨ì†Œ
+	list<CAnimation*>	m_HBeam_Throw_L;			// ì¢Œì¸¡ Hë¹” ë˜ì§
+	list<CAnimation*>	m_HBeam_Rotation_L;			// ì¢Œì¸¡ Hë¹” ì¶”ê°€íƒ€ ëŒ€ê¸° ë° ë£¨í”„
+	list<CAnimation*>	m_HBeam_End_L;				// ì¶”ê°€íƒ€ ì¢…ë£Œ
+	list<CAnimation*>	m_HBeam_Finish_L;			// ì¢Œì¸¡ Hë¹” ë§ˆë¬´ë¦¬
 
-	list<CAnimation*>	m_DropObject_Charge;		// ³«ÇÏ¹°Ã¼ Â÷Áö
-	list<CAnimation*>	m_DropObject_Cancel;		// ³«ÇÏ Ãë¼Ò
-	list<CAnimation*>	m_DropObject_Drop;			// ¶³±¸±â
+	list<CAnimation*>	m_DropObject_Charge;		// ë‚™í•˜ë¬¼ì²´ ì°¨ì§€
+	list<CAnimation*>	m_DropObject_Cancel;		// ë‚™í•˜ ì·¨ì†Œ
+	list<CAnimation*>	m_DropObject_Drop;			// ë–¨êµ¬ê¸°
 
-	list<CAnimation*>	m_TankLorry_Start;			// ÅÊÅ©·Î¸® Â÷Áö
-	list<CAnimation*>	m_TankLorry_Cancel;			// ÅÊÅ©·Î¸® Ãë¼Ò
-	list<CAnimation*>	m_TankLorry_Finish;			// ÅÊÅ©·Î¸® Æø¹ß
+	list<CAnimation*>	m_TankLorry_Start;			// íƒ±í¬ë¡œë¦¬ ì°¨ì§€
+	list<CAnimation*>	m_TankLorry_Cancel;			// íƒ±í¬ë¡œë¦¬ ì·¨ì†Œ
+	list<CAnimation*>	m_TankLorry_Finish;			// íƒ±í¬ë¡œë¦¬ í­ë°œ
+
+	list<CAnimation*>	m_IronBars_Charge;			// ì‡ ì°½ì‚´ ì°¨ì§€
+	list<CAnimation*>	m_IronBars_Cancel;			// ì‡ ì°½ì‚´ ì·¨ì†Œ
+	list<CAnimation*>	m_IronBars_Start;			// ì‡ ì°½ì‚´ ê¸°ë³¸ íƒ€ê²©
+	list<CAnimation*>	m_IronBars_End;				// ì‡ ì°½ì‚´ ì¶”ê°€íƒ€ ì·¨ì†Œ
+	list<CAnimation*>	m_IronBars_Charge_Ex;		// ì‡ ì°½ì‚´ ì¶”ê°€íƒ€ ì°¨ì§€
+	list<CAnimation*>	m_IronBars_Wait_Ex;			// ì‡ ì°½ì‚´ ì¶”ê°€íƒ€ ì¤€ë¹„
+	list<CAnimation*>	m_IronBars_Cancel_Ex;		// ì‡ ì°½ì‚´ ì¶”ê°€íƒ€ ì°¨ì§€ ì·¨ì†Œ
+	list<CAnimation*>	m_IronBars_Start_Ex;		// ì‡ ì°½ì‚´ ì¶”ê°€íƒ€
+	list<CAnimation*>	m_IronBars_Throw_01;
+	list<CAnimation*>	m_IronBars_Throw_02;
+	list<CAnimation*>	m_IronBars_Throw_03;
+	list<CAnimation*>	m_IronBars_Throw_04;
+	list<CAnimation*>	m_IronBars_Finish;			// ì‡ ì°½ì‚´ ë§ˆë¬´ë¦¬
 
 private:
 	HRESULT				Setup_AnimSocket();
 	list<CAnimation*>	m_TestAnimSocket;
 	list<CAnimation*>	m_TransNeutralSocket;
 
-private:	// ¿°·Â ¼ÒÄÏ ¾Ö´Ï¸ŞÀÌ¼Ç
+private:	// ì—¼ë ¥ ì†Œì¼“ ì• ë‹ˆë©”ì´ì…˜
 	list<CAnimation*>	m_Kinetic_RB_Start;
 	list<CAnimation*>	m_Kinetic_RB_Loop;
 	list<CAnimation*>	m_Kinetic_RB_Cancel;
@@ -296,11 +316,11 @@ private:	// ¿°·Â ¼ÒÄÏ ¾Ö´Ï¸ŞÀÌ¼Ç
 	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Loop;
 	list<CAnimation*>	m_Kinetic_RB_Air_Throw02_Cancel;
 
-private:	// Å°³×Æ½ ¿¬°è±â ¼ÒÄÏ ¾Ö´Ï¸ŞÀÌ¼Ç
-	list<CAnimation*>	m_KineticCombo_Slash01;	// Å°³×Æ½ µ¹Áøº£±â
-	list<CAnimation*>	m_KineticCombo_Slash02;	// Å°³×Æ½ XÀÚ º£±â
-	list<CAnimation*>	m_KineticCombo_Slash03;	// Å°³×Æ½ µ¹·Áº£±â(3´Ü)
-	list<CAnimation*>	m_KineticCombo_Slash04;	// Å°³×Æ½ µ¹·Áº£±â(4´Ü)
+private:	// í‚¤ë„¤í‹± ì—°ê³„ê¸° ì†Œì¼“ ì• ë‹ˆë©”ì´ì…˜
+	list<CAnimation*>	m_KineticCombo_Slash01;	// í‚¤ë„¤í‹± ëŒì§„ë² ê¸°
+	list<CAnimation*>	m_KineticCombo_Slash02;	// í‚¤ë„¤í‹± Xì ë² ê¸°
+	list<CAnimation*>	m_KineticCombo_Slash03;	// í‚¤ë„¤í‹± ëŒë ¤ë² ê¸°(3ë‹¨)
+	list<CAnimation*>	m_KineticCombo_Slash04;	// í‚¤ë„¤í‹± ëŒë ¤ë² ê¸°(4ë‹¨)
 	
 	list<CAnimation*>	m_KineticCombo_sLcLeR_Start;
 	list<CAnimation*>	m_KineticCombo_sLcLeR_End;
@@ -343,7 +363,7 @@ private:	// Å°³×Æ½ ¿¬°è±â ¼ÒÄÏ ¾Ö´Ï¸ŞÀÌ¼Ç
 	list<CAnimation*>	m_KineticCombo_AirCap;
 	list<CAnimation*>	m_KineticCombo_Pcon;
 
-private:	// ÇÇ°İ ¼ÒÄÏ ¾Ö´Ï¸ŞÀÌ¼Ç
+private:	// í”¼ê²© ì†Œì¼“ ì• ë‹ˆë©”ì´ì…˜
 	list<CAnimation*>	m_Hit_FL_Level01;
 	list<CAnimation*>	m_Hit_F_Level01;
 	list<CAnimation*>	m_Hit_FR_Level01;
@@ -365,7 +385,7 @@ private:	// ÇÇ°İ ¼ÒÄÏ ¾Ö´Ï¸ŞÀÌ¼Ç
 	list<CAnimation*>	m_BreakFall_Back;
 	list<CAnimation*>	m_BreakFall_Landing;
 
-private:	// ÇÇ°İ °ü·Ã º¯¼ö
+private:	// í”¼ê²© ê´€ë ¨ ë³€ìˆ˜
 	_vector	m_vHitDir;
 
 private:
@@ -397,7 +417,7 @@ private:
 
 	_bool	m_bOptionalMove = false;
 
-	_bool	m_bAir = false;		// ÀÇµµÇÑ °øÁß »óÅÂÀÎÁö ÆÄ¾ÇÀ» À§ÇÔ
+	_bool	m_bAir = false;		// ì˜ë„í•œ ê³µì¤‘ ìƒíƒœì¸ì§€ íŒŒì•…ì„ ìœ„í•¨
 	_bool	m_PreAir = false;
 	_bool	m_bMove = false;
 	_bool	m_bWalk = false;
@@ -413,16 +433,16 @@ private:
 
 	_bool	m_bNonCharge = false;
 	_bool	m_bCharge = false;
-	_float  m_fBefCharge = 0.f;			// ½ÇÁ¦ Â÷Áö Àü
-	_float	m_fCharge[3] = { 0.f, };	// ½ÇÁ¦ Â÷Áö
+	_float  m_fBefCharge = 0.f;			// ì‹¤ì œ ì°¨ì§€ ì „
+	_float	m_fCharge[3] = { 0.f, };	// ì‹¤ì œ ì°¨ì§€
 
-	_float	m_fKineticCombo_Slash = 0.f;	// ÆòÅ¸ Å¸°İ ½Ã °»½Å
-	_float	m_fKineticCombo_Kinetic = 0.f;	// Å°³×Æ½ Å¸°İ ½Ã °»½Å
-	_float	m_fKineticCharge = 0.f;			// ¿°·Â Â÷Áö ½Ã°£, ±âº»ÀûÀ¸·Î 1ÃÊ
+	_float	m_fKineticCombo_Slash = 0.f;	// í‰íƒ€ íƒ€ê²© ì‹œ ê°±ì‹ 
+	_float	m_fKineticCombo_Kinetic = 0.f;	// í‚¤ë„¤í‹± íƒ€ê²© ì‹œ ê°±ì‹ 
+	_float	m_fKineticCharge = 0.f;			// ì—¼ë ¥ ì°¨ì§€ ì‹œê°„, ê¸°ë³¸ì ìœ¼ë¡œ 1ì´ˆ
 
-	_bool	m_bKineticCombo = false;	// ÇöÀç °ø°İ ÁøÇàÁßÀÎÁö?
-	_bool	m_bKineticSpecial = false;	// ¿°·Â Æ¯¼ö ¿¬ÃâÁßÀÎÁö?
-	_bool	m_bBrainCrash = false;		// ºê·¹ÀÎ Å©·¯½Ã »ç¿ëÁßÀÎÁö?
+	_bool	m_bKineticCombo = false;	// í˜„ì¬ ê³µê²© ì§„í–‰ì¤‘ì¸ì§€?
+	_bool	m_bKineticSpecial = false;	// ì—¼ë ¥ íŠ¹ìˆ˜ ì—°ì¶œì¤‘ì¸ì§€?
+	_bool	m_bBrainCrash = false;		// ë¸Œë ˆì¸ í¬ëŸ¬ì‹œ ì‚¬ìš©ì¤‘ì¸ì§€?
 	
 	_float	m_fJustDodgeAble = 0.f;
 
@@ -438,10 +458,10 @@ private:
 
 	_vector		m_vCamLook;
 
-public:	// ASM¿ë, »óÅÂ¸¶´Ù ¸®¸ğÄÁ °ªÀ» ½Ï ´Ù ÁöÁ¤ÇÏÁö ¾ÊÀ¸¸é Á¡ÇÁÇß´Âµ¥ °øÁßºÎ¾çÇÏ°í ±×·³
+public:	// ASMìš©, ìƒíƒœë§ˆë‹¤ ë¦¬ëª¨ì»¨ ê°’ì„ ì‹¹ ë‹¤ ì§€ì •í•˜ì§€ ì•Šìœ¼ë©´ ì í”„í–ˆëŠ”ë° ê³µì¤‘ë¶€ì–‘í•˜ê³  ê·¸ëŸ¼
 	CPlayer&	SetAbleState(REMOTE	tagRemote);
 
-public:	//EventCaller¿ë
+public:	//EventCallerìš©
 	void		Event_SetCanTurn(_bool is) { m_bCanTurn = is; }
 	void		Event_SetCanMove(_bool is) { m_bCanMove = is; }
 	void		Event_SetCanRun(_bool is) { m_bCanRun = is; }
@@ -476,7 +496,7 @@ private:
 	_bool		m_bCollisionAble = false;
 	
 public:
-	void		Set_KineticCombo_Kinetic() { m_fKineticCombo_Kinetic = 10.f; }	// Å°³×Æ½ ¿ÀºêÁ§Æ®¿¡¼­ ÁöÁ¤, Ãæµ¹ ¹ß»ı½Ã ÄŞº¸ °¡´ÉÇÏµµ·Ï ÇØÁØ´Ù.
+	void		Set_KineticCombo_Kinetic() { m_fKineticCombo_Kinetic = 10.f; }	// í‚¤ë„¤í‹± ì˜¤ë¸Œì íŠ¸ì—ì„œ ì§€ì •, ì¶©ëŒ ë°œìƒì‹œ ì½¤ë³´ ê°€ëŠ¥í•˜ë„ë¡ í•´ì¤€ë‹¤.
 
 private:
 	void		Reset_Charge();
@@ -487,16 +507,16 @@ private:
 	unordered_map<string, string>	m_mapDefaultEffect;
 	unordered_map<string, string>	m_mapFireEffect;
 
-private:	// ÇöÀç »óÅÂ¿¡ µû¶ó Á¦¾î, È¸ÀüÀÌ °¡´ÉÇÑÁö, ¿òÁ÷ÀÓÀÌ °¡´ÉÇÑÁö?
+private:	// í˜„ì¬ ìƒíƒœì— ë”°ë¼ ì œì–´, íšŒì „ì´ ê°€ëŠ¥í•œì§€, ì›€ì§ì„ì´ ê°€ëŠ¥í•œì§€?
 	_bool		m_bCanTurn = false;
 	_bool		m_bCanMove = false;
 	_bool		m_bCanRun = false;
 	_bool		m_bCanTurn_Attack = false;
-	_bool		m_bOnBattle = false;	// ÀüÅõ»óÅÂÀÎÁö?
+	_bool		m_bOnBattle = false;	// ì „íˆ¬ìƒíƒœì¸ì§€?
 
 public:
-	_bool		isPlayerAttack(void);	// °ø°İ ÁßÀÎ ¾Ö´Ï¸ŞÀÌ¼ÇÀÏ ¶§ true ¹İÈ¯
-	_bool		isPlayerNonAttack(void);	// ºñÀüÅõ Ã¼Å©
+	_bool		isPlayerAttack(void);	// ê³µê²© ì¤‘ì¸ ì• ë‹ˆë©”ì´ì…˜ì¼ ë•Œ true ë°˜í™˜
+	_bool		isPlayerNonAttack(void);	// ë¹„ì „íˆ¬ ì²´í¬
 
 public:
 	_bool		BeforeCharge(_float fBeforeCharge);
@@ -519,20 +539,22 @@ private:
 	void		SeperateCheck();
 	void		HitCheck();
 	void		SocketLocalMoveCheck();
+	void		SyncEffectLocalMove(const string& szSocketName = "");
+	_vector		m_vSyncEffectLocal = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 
 private:
 	void		Update_NotiveNeon();
 
 private:
 	_float		m_fNetualTimer = 0.f;
-	_float		m_fBattleParticleTime = 0.f; // ±ÛÀÚ »Ğ»Ğ
+	_float		m_fBattleParticleTime = 0.f; // ê¸€ì ë¿…ë¿…
 	void		NetualChecker(_double TimeDelta);
 
 public:
 	EMoveDir	GetMoveDir() const { return m_eMoveDir; }
 	Vector3		GetMoveVector() { return m_vMoveDir; }
 	void		LookAtDir(Vector3 Vector);
-	void		LookTarget();	// ¶ô¿Â
+	void		LookTarget();	// ë½ì˜¨
 
 public:
 	_bool		UseAttackCnt(_uint eType);
@@ -541,9 +563,9 @@ public:
 	void		AttackLimitReset(void);
 	void		MoveLimitReset(void);
 
-private:		// È½¼ö Á¦ÇÑ ¹× Æ¯Á¤ Á¶°ÇÀ¸·Î ½ºÅÃ ÃÊ±âÈ­ µÇ´Â °ÍµéÀÇ ½ºÅÃ ¸ğÀÓ ±¸Á¶Ã¼
-	ATTACKLIMIT	m_AttackLimit;		// °ø°İ °ü·Ã
-	MOVELIMIT	m_MoveLimit;		// ÀÌµ¿ °ü·Ã
+private:		// íšŸìˆ˜ ì œí•œ ë° íŠ¹ì • ì¡°ê±´ìœ¼ë¡œ ìŠ¤íƒ ì´ˆê¸°í™” ë˜ëŠ” ê²ƒë“¤ì˜ ìŠ¤íƒ ëª¨ì„ êµ¬ì¡°ì²´
+	ATTACKLIMIT	m_AttackLimit;		// ê³µê²© ê´€ë ¨
+	MOVELIMIT	m_MoveLimit;		// ì´ë™ ê´€ë ¨
 
 private:
 	HRESULT					Setup_Parts();
@@ -584,12 +606,12 @@ private:
 	void			Kinetic_ByTurn();
 
 private:
-	void			Kinetic_Combo_KineticAnimation();	// ¿°·Â ¹°Ã¼¸¦ ±Ëµµ¿¡ ÅÂ¿ì´Â ÇÔ¼ö
-	void			Kinetic_Combo_MoveToKineticPoint();	// ¿°·Â ¹°Ã¼ ¾Ö´Ï¸ŞÀÌ¼ÇÀ» µ¹¸®±â Àü¿¡ ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ À§Ä¡¸¦ Àâ¾ÆÁÖ´Â ÇÔ¼ö
-	void			Kinetic_Combo_AttachLerpObject();	// ¿°·Â ¹°Ã¼¸¦ ¾Ö´Ï¸ŞÀÌ¼Ç Æ÷ÀÎÆ®±îÁö ²ø°í¿À´Â ÇÔ¼ö
+	void			Kinetic_Combo_KineticAnimation();	// ì—¼ë ¥ ë¬¼ì²´ë¥¼ ê¶¤ë„ì— íƒœìš°ëŠ” í•¨ìˆ˜
+	void			Kinetic_Combo_MoveToKineticPoint();	// ì—¼ë ¥ ë¬¼ì²´ ì• ë‹ˆë©”ì´ì…˜ì„ ëŒë¦¬ê¸° ì „ì— ì• ë‹ˆë©”ì´ì…˜ì˜ ìœ„ì¹˜ë¥¼ ì¡ì•„ì£¼ëŠ” í•¨ìˆ˜
+	void			Kinetic_Combo_AttachLerpObject();	// ì—¼ë ¥ ë¬¼ì²´ë¥¼ ì• ë‹ˆë©”ì´ì…˜ í¬ì¸íŠ¸ê¹Œì§€ ëŒê³ ì˜¤ëŠ” í•¨ìˆ˜
 
 private:
-	_vector			m_vKineticComboRefPoint; // Å°³×Æ½ ÄŞº¸¸¦ ÇÒ ¶§ ÀÌµ¿ÇØ¾ß ÇÏ´Â Æ÷ÀÎÆ®
+	_vector			m_vKineticComboRefPoint; // í‚¤ë„¤í‹± ì½¤ë³´ë¥¼ í•  ë•Œ ì´ë™í•´ì•¼ í•˜ëŠ” í¬ì¸íŠ¸
 	_matrix			m_KineticObjectOrigionPos = XMMatrixIdentity();
 	
 	_matrix			m_SpecialObjectOriginPos =  XMMatrixIdentity();
@@ -601,8 +623,8 @@ private:
 	_float4 m_vSplinePoint_04;
 
 private:
-	_vector	m_vToKineticObj;	// µÚ·Î ºØ µ¹¸± ¶§ÀÇ º¸°£ ½ÃÀÛ ÁöÁ¡
-	_vector m_vKineticPoint;	// µÚ·Î ºØ µ¹¸± ¶§ÀÇ º¸°£ ¿Ï·á ÁöÁ¡
+	_vector	m_vToKineticObj;	// ë’¤ë¡œ ë¶• ëŒë¦´ ë•Œì˜ ë³´ê°„ ì‹œì‘ ì§€ì 
+	_vector m_vKineticPoint;	// ë’¤ë¡œ ë¶• ëŒë¦´ ë•Œì˜ ë³´ê°„ ì™„ë£Œ ì§€ì 
 	_vector m_vKineticOrbit;
 	_bool	m_bSwingKineticThrow = false;
 	_vector m_vThrow;
@@ -610,7 +632,7 @@ private:
 	_bool	m_bRight = false;
 	_vector m_vKineticInitLook;
 
-private:	// ÇÃ·¹ÀÌ¾î ¸²¶óÀÌÆ®, ¿Ü°û¼± °ü·Ã
+private:	// í”Œë ˆì´ì–´ ë¦¼ë¼ì´íŠ¸, ì™¸ê³½ì„  ê´€ë ¨
 	CCurveFloatImpl*	m_pCurve = nullptr;
 	void	Start_RimLight(const string& strCurveName);
 	void	Tick_RimLight(_float fRatio);

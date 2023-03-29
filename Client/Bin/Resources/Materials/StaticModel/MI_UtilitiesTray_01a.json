@@ -1,0 +1,19 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/LC14/props/TX_UtilitiesTray_01a_ALB.png",
+            "../Bin/Resources/Environments/Location/LC14/props/TX_UtilitiesTray_01a_NRM.png",
+            "../Bin/Resources/Environments/Location/LC14/props/TX_UtilitiesTray_01a_RMA.png",
+            "../Bin/Resources/00_Common/03_Texture/T_cm_Fil_Glay.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 3
+}

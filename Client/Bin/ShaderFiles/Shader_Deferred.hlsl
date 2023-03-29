@@ -23,7 +23,7 @@ vector			g_vCamPosition;
 vector			g_vMtrlAmbient = (vector)1.f;
 vector			g_vMtrlSpecular = (vector)1.f;
 
-texture2D		g_Texture; /* µπˆ±◊øÎ≈ÿΩ∫√≥*/
+texture2D		g_Texture; /* ÎîîÎ≤ÑÍ∑∏Ïö©ÌÖçÏä§Ï≤ò*/
 texture2D		g_NormalTexture; 
 texture2D		g_DepthTexture;
 texture2D		g_ShadowDepthTexture;
@@ -196,9 +196,9 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 		fDiff = max(vCTL.r * 2.f , min(vCTL.g, fDiff));
 		fDiff *= vCTL.b;
 
-		float fSSAO = g_AOTexture.Sample(LinearSampler, In.vTexUV);
+		// float fSSAO = g_AOTexture.Sample(LinearSampler, In.vTexUV);
 
-		Out.vShade = g_vLightDiffuse * saturate(fDiff) * fSSAO;
+		Out.vShade = g_vLightDiffuse * saturate(fDiff);
 		Out.vShade.a = 1.f;
 		
 		// vector		vLook = vWorldPos - g_vCamPosition;
@@ -326,7 +326,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 
 	float3 eyeToPixel;
 
-	// ±◊∏≤¿⁄ ø¨ªÍ
+	// Í∑∏Î¶ºÏûê Ïó∞ÏÇ∞
 	float fViewZ = vDepth.y * g_Far;
 	
 	vector vPixelWorld;

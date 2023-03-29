@@ -54,6 +54,10 @@
 #include "Special_TankLorry_Head.h"
 #include "Special_TankLorry_Tank.h"
 #include "Special_TankLorry_Trailer.h"
+#include "Special_IronBars_Door.h"
+#include "Special_IronBars_Bars.h"
+#include "Special_IronBars.h"
+#include "Special_IronBars_SingleBars.h"
 
 // Player Setting
 #include "Player.h"
@@ -418,10 +422,10 @@ HRESULT CFactoryMethod::MakeSAS_Portrait_Prototypes(ID3D11Device* pDevice, ID3D1
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 
-	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Prototype_SASPortrait"))
+	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Prototype_SASPortrait") == nullptr)
 	{
-		pGameInstance->Add_Prototype(L"Prototype_SASPortrait", CSAS_Portrait::Create(pDevice, pContext));
-		pGameInstance->Add_Prototype(L"ProtoPostVFX_SASPortrait", CPostVFX_SAS_Portrait::Create(pDevice, pContext));
+		pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_SASPortrait", CSAS_Portrait::Create(pDevice, pContext));
+		pGameInstance->Add_Prototype(LEVEL_STATIC, L"ProtoPostVFX_SASPortrait", CPostVFX_SAS_Portrait::Create(pDevice, pContext));
 	}
 
 	return S_OK;
@@ -491,6 +495,27 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 		"../Bin/Resources/Model/StaticModel/Kinetic/TankLorry/TankLorry_Tank_04.static_model");
 	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_TankLorry_Tank_3", pModel_TankLorry_Tank_04));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_TankLorry_Tank", CSpecial_TankLorry_Tank::Create(pDevice, pContext)));
+
+
+	auto pModel_IronBars_Door = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Kinetic/IronBars/IronBars_Door.anim_model");
+	pModel_IronBars_Door->LoadAnimations("../Bin/Resources/Model/AnimModel/Kinetic/IronBars/Animation/");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_IronBars_Door", pModel_IronBars_Door));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_IronBars_Door", CSpecial_IronBars_Door::Create(pDevice, pContext)));
+
+	auto pModel_IronBars_Bars = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/AnimModel/Kinetic/IronBars/IronBars_Bars.anim_model");
+	pModel_IronBars_Bars->LoadAnimations("../Bin/Resources/Model/AnimModel/Kinetic/IronBars/Animation/");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_IronBars_Bars", pModel_IronBars_Bars));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_IronBars_Bars", CSpecial_IronBars_Bars::Create(pDevice, pContext)));
+
+	auto pModel_IronBars_SingleBars = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/IronBars/IronBars_SingleBars.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_IronBars_SingleBars", pModel_IronBars_SingleBars));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_IronBars_SingleBars", CSpecial_IronBars_SingleBars::Create(pDevice, pContext)));
+
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_IronBars", CSpecial_IronBars::Create(pDevice, pContext)));
 
 	return S_OK;
 }

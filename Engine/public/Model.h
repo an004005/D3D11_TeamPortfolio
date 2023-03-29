@@ -65,6 +65,7 @@ public:
 	_bool	isLocalMove() { return !XMVector3Equal(m_vLocalMove, XMVectorSet(0.f, 0.f, 0.f, 0.f)); }
 	_float	GetLastLocalMoveSpeed() const { return m_fLastLocalMoveSpeed; }
 	void	Reset_LocalMove(_bool isSocket = false);
+	_vector	Sync_EffectLocalMove();	// Reference가 이동하지 않지만 원점으로부터 벗어난 애니메이션 수정
 
 	_matrix GetLocalRotationMatrix(_fmatrix WorldMatrix);
 	_matrix GetLocalEularMatrix(_fmatrix WorldMatrix);

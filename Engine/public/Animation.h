@@ -68,6 +68,7 @@ public:
 	_vector&						GetLocalRotation() { return m_vLocalRotation; }
 	Quaternion&						GetLocalQuaternion() { return m_vLocalQuaternion; }
 	pair<_vector, _float>&			GetLocalEular() { return m_vLocalEular; }
+	_vector&						GetEffectLocalMove() { return m_vEffectLocalMove; }
 
 public:
 	static CAnimation s_NullAnimation;
@@ -97,6 +98,7 @@ private:
 	_vector								m_vLocalRotation;
 	Quaternion							m_vLocalQuaternion;
 	pair<_vector, _float>				m_vLocalEular;
+	_vector								m_vEffectLocalMove;
 
 	/* 이 애니메이션을 재생하기위해 갱신해야하는 뼈들. */
 	vector<class CChannel*>				m_Channels;

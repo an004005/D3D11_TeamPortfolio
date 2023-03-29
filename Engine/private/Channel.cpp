@@ -112,6 +112,11 @@ void CChannel::Update_TransformMatrix(_double PlayTime)
 		}
 	}
 
+	if ("Eff01" == m_strName)
+	{
+		m_vEffectLocalMove = vPosition;
+	}
+
 	if ("Train_Root" == m_strName)
 	{
 		m_vSpecialLocalMove = vPosition;

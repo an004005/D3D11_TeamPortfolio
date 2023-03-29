@@ -17,15 +17,16 @@ public:
 public:
 	void			InputAnimSocket(const string& strSocName, list<CAnimation*> AnimList);
 	void			AttachAnimSocket(const string& strSocName, list<CAnimation*> AnimList);
-	const string&	GetCurAnimName() { return m_pASM_Base->GetCurState()->m_Animation->GetName(); } // ÇöÀç Àç»ıÁßÀÎ ¾Ö´Ï¸ŞÀÌ¼Ç ÀÌ¸§Àº ¸ğµ¨¿¡¼­ °¡Á®¿Ã °Í -> State MachineÀº TransitionÀÌ °ãÄ¡¸é Åë°úÇÔ
-	const string&	GetCurStateName() { return m_pASM_Base->GetCurState()->m_strName; } // ÇöÀç »óÅÂ ÀÌ¸§
+	const string&	GetCurAnimName() { return m_pASM_Base->GetCurState()->m_Animation->GetName(); } // í˜„ì¬ ì¬ìƒì¤‘ì¸ ì• ë‹ˆë©”ì´ì…˜ ì´ë¦„ì€ ëª¨ë¸ì—ì„œ ê°€ì ¸ì˜¬ ê²ƒ -> State Machineì€ Transitionì´ ê²¹ì¹˜ë©´ í†µê³¼í•¨
+	const string&	GetCurStateName() { return m_pASM_Base->GetCurState()->m_strName; } // í˜„ì¬ ìƒíƒœ ì´ë¦„
 	const string&	GetCurSocketAnimName();
 	_bool			isLerping() { return m_pASM_Base->isLerping(); }
+	_bool			isSocketLerping() { return m_bBaseTickCheck; }
 	_bool			isSocketEmpty(const string& strSocName) { return m_mapAnimSocket[strSocName].empty(); }
 	_bool			isSocketAlmostFinish(const string& strSocName);
 	_bool			isSocketPassby(const string& strSocName, _float fPlayRatio = 1.f);
 	_bool			CheckSocketAnim(const string& strSocName, const string& AnimName) { return (AnimName == m_mapAnimSocket[strSocName].front()->GetName()) ? true : false; }
-	_bool			isSocketExactlyEmpty();	// ¸ğµç ¼ÒÄÏÀÌ ºñ¾îÀÖ´ÂÁö?
+	_bool			isSocketExactlyEmpty();	// ëª¨ë“  ì†Œì¼“ì´ ë¹„ì–´ìˆëŠ”ì§€?
 	_uint			GetSocketSize(const string& strSocName) { return m_mapAnimSocket[strSocName].size(); }
 	void			ClearAnimSocket(const string& strSocName = "");
 
@@ -37,7 +38,7 @@ protected:
 protected:
 	_bool	CheckAnim(const string& szAnimName);
 
-protected:	// ´ë»óÀÇ »óÅÂ
+protected:	// ëŒ€ìƒì˜ ìƒíƒœ
 	_bool	m_bAir = false;
 	_bool	m_bPreAir = false;
 
@@ -66,9 +67,9 @@ protected:	// ´ë»óÀÇ »óÅÂ
 
 	_vector m_vLookPoint;
 
-	Vector3	m_vMoveDir;		// ½ÇÁ¦ ÀÌµ¿ÇÏ·Á ÇÏ´Â ¹æÇâ
+	Vector3	m_vMoveDir;		// ì‹¤ì œ ì´ë™í•˜ë ¤ í•˜ëŠ” ë°©í–¥
 
-	Vector3	m_vLocalMove;	// ·ÎÄÃ ÃàÀ¸·Î ÀÌµ¿ÇÏ°í ÀÖ´Â ¹æÇâ
+	Vector3	m_vLocalMove;	// ë¡œì»¬ ì¶•ìœ¼ë¡œ ì´ë™í•˜ê³  ìˆëŠ” ë°©í–¥
 	Matrix	m_matCamRot;
 
 	_uint	m_eMoveDir;
@@ -91,6 +92,7 @@ protected:
 	_bool	m_bLerp = false;
 	_bool	m_bAttach = false;
 	_bool	m_bSeperateSwitch = false;
+	_bool	m_bBaseTickCheck = false;
 
 public:
 	static CBaseAnimInstance* Create(CModel* pModel, CGameObject* pGameObject);

@@ -25,6 +25,7 @@ public:
 	_vector&		GetSpecialLocalMove() { return m_vSpecialLocalMove; }
 	_vector&		GetLocalRotation() { return m_vLocalRotation; }
 	Quaternion&		GetLocalQuaternion() { return m_vLocalQuaternion; }
+	_vector&		GetEffectLocalMove() { return m_vEffectLocalMove; }
 
 	pair<_vector, _float>& GetLocalEular() { return m_LocalEular; }
 
@@ -43,6 +44,7 @@ private:
 	_vector			m_vSpecialLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 	_vector			m_vLocalRotation = XMQuaternionIdentity();
 	Quaternion		m_vLocalQuaternion = m_vLocalQuaternion.Identity;
+	_vector			m_vEffectLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 
 	pair<_vector, _float>	m_LocalEular;
 

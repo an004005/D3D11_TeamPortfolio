@@ -8,6 +8,8 @@
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
 
+//#define USE_PORTRAIT
+
 /*********************
  *CPostVFX_SAS_Portrait
  *********************/
@@ -79,6 +81,7 @@ HRESULT CSAS_Portrait::Initialize_Prototype()
 {
 	FAILED_CHECK(CGameObject::Initialize_Prototype());
 
+#ifdef USE_PORTRAIT
 	auto pGameInstance = CGameInstance::GetInstance();
 
 	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Model_Ch100_Portrait") == nullptr)
@@ -136,7 +139,7 @@ HRESULT CSAS_Portrait::Initialize_Prototype()
 		pModel_ch1000->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch1000/SAS_Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Model_Ch1000_Portrait", pModel_ch1000));
 	}
-
+#endif
 
 	return S_OK;
 }
@@ -148,6 +151,7 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
+#ifdef USE_PORTRAIT
 	{
 		CModel* pModel = nullptr;
 
@@ -314,6 +318,8 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 		m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_SUPERSPEED)] = CGameInstance::GetInstance()->Add_Camera("ch1000_PortraitCam", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Dynamic", &json);
 		Safe_AddRef(m_SAS_PortraitCams[static_cast<_uint>(ESASType::SAS_SUPERSPEED)]);
 	}
+#endif
+
 
 	{
 		const Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Portrait.json");
@@ -410,6 +416,9 @@ void CSAS_Portrait::Imgui_RenderProperty()
 
 void CSAS_Portrait::Start_SAS(ESASType eType)
 {
+#ifndef USE_PORTRAIT
+	return;
+#endif
 	m_eCurType = eType;
 	// m_pPostVFX->GetParam().Float4s[0] = _float4(1.f, 0.231f, 0.f, 1.f);
 	// m_pPostVFX->GetParam().Float4s[1] = _float4(0.957f, 0.459f, 0.048f, 1.f);

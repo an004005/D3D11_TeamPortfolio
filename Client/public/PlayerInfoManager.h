@@ -75,7 +75,6 @@ public:	// Get
 	CGameObject*	Get_TargetedMonster();
 	CGameObject*	Get_SpecialObject();
 
-
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
 	void			Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP);
@@ -83,8 +82,8 @@ public:	// Set
 	void			Set_PlayerKineticEnergy(_uint iEnergy) { m_tPlayerStat.m_iKineticEnergy = iEnergy; }
 	void			Change_PlayerKineticEnergy(CHANGETYPE eType, _uint ChangeEnergy);
 
-	void			Set_KineticEnergyLevel(_uint iType) { m_tPlayerStat.m_iKineticEnergyType = iType; }
-	void			Set_KineticEnetgyType(_uint iType) { m_tPlayerStat.m_iKineticEnergyLevel = iType; }
+	void			Set_KineticEnergyLevel(_uint iType) { m_tPlayerStat.m_iKineticEnergyLevel = iType; }
+	void			Set_KineticEnetgyType(_uint iType) { m_tPlayerStat.m_iKineticEnergyType = iType; }
 
 	void			Set_SasType(ESASType eType);
 	void			Finish_SasType(ESASType eType);
@@ -97,13 +96,11 @@ public:	// Set
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
-
 public:
 	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
 	void			Camera_Random_Shake(_float fForce);
 	void			Camera_Axis_Shaking(_float4 vDir, _float fShakePower);
 	void			Camera_Axis_Sliding(_float4 vDir, _float fShakePower);
-
 
 private:	// 스탯 정보 관련
 	PLAYER_STAT		m_tPlayerStat;
