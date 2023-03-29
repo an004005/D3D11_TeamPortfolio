@@ -32,7 +32,7 @@ private:
 	size_t				m_iPickIndex = { 0 };
 	size_t				m_iPrePickIndex = { 0 };
 	vector<pair<wstring, CItem_Manager::ITEMINFO>> m_vecItemInfo;
-	CItem_Manager::MAINITEM m_eMainItem = { CItem_Manager::MAINITEM_END };
+	CItem_Manager::MAINITEM m_eMainItem = { CItem_Manager::MAINITEM::MAINITEM_END };
 
 	_bool				m_bBeSeen = { false };
 	_bool				m_bPickInitialize = { false };

@@ -2,7 +2,6 @@
 
 #include "Canvas.h"
 #include "Client_Defines.h"
-#include "Item_Manager.h"
 
 BEGIN(Client)
 
@@ -23,15 +22,20 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_ItmeUse();
+	void	Set_Input() {
+		m_bInput = true;
+	}
 
 private:
-	void	BattleItem_Tick();
-	void	CurrentItem();
+	void	ItmeUse();
+	void	BattleItem_Input();
+	_float	NameIndex(const size_t iIndex);
+
+	_int wrap(_int x, _int low, _int high);
 
 private:
-	vector<CItem_Manager::BATTLEITEM>	m_vecBattleItme;
 	size_t	m_iCurrentIndex = { 0 };
+	_bool	m_bInput = { false };
 
 public:
 	static CCanvas_Item* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

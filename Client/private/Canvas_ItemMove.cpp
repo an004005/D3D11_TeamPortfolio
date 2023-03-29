@@ -4,7 +4,6 @@
 #include "FSMComponent.h"
 #include "UI_Manager.h"
 
-#include "Canvas_Item.h"
 #include "Item_PushArrowUI.h"
 #include "Item_LeftArrowUI.h"
 #include "Item_RightArrowUI.h"
@@ -77,9 +76,6 @@ void CCanvas_ItemMove::Key_Input()
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_DOWN))
 	{
-		// Icon 사이즈 커지기, Icon 에 Light 깜박깜박
-		dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_ItmeUse();
-
 		// 화살표 이동하기
 		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrow"))->Set_Input();
 		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrowBack"))->Set_Input();
@@ -97,7 +93,7 @@ void CCanvas_ItemMove::Key_Input()
 
 	}
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_RIGHT))
 	{
 		dynamic_cast<CItem_RightArrowUI*>(Find_ChildUI(L"Item_RightArrow"))->Set_Input();
 
