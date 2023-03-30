@@ -32,10 +32,6 @@ HRESULT COilBullet::Initialize(void * pArg)
 {
 	FAILED_CHECK(CBullet::Initialize(pArg));
 
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
-		(CComponent**)&m_pRendererCom));
-
-	
 	m_fShootSpeed = 29.f;
 
 	m_pTransformCom->SetSpeed(m_fShootSpeed);

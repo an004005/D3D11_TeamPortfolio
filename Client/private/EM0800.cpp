@@ -531,7 +531,7 @@ void CEM0800::Laser_SweepSphere()
 	Sparam.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
 	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
-		HitTargets(sweepOut, (rand() % 150) + 25, EAttackType::ATK_DOWN);
+		HitTargets(sweepOut, (rand() % 150) + 25, EAttackType::ATK_HEAVY);
 }
 
 

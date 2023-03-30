@@ -3808,7 +3808,7 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
-	m_mapCollisionEvent.emplace("AS_ch0100_214_AL_sas_dash_start_Telepo", [this]()
+	m_mapCollisionEvent.emplace("AS_ch0100_214_AL_sas_dash_end_Telepo", [this]()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
@@ -6174,41 +6174,43 @@ void CPlayer::Update_TargetUI()
 	//if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster() != nullptr)
 	//	Enemy_Targeting(true);
 
-	if (m_pSettedTarget != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+	CEnemy* pTarget = dynamic_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
+
+	if (m_pSettedTarget != pTarget)
 	{
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 		//원래 타겟이 없다가 생긴 경우
-		if (m_pSettedTarget == nullptr && CPlayerInfoManager::GetInstance()->Get_TargetedMonster() != nullptr)
+		if (m_pSettedTarget == nullptr && pTarget != nullptr)
 		{
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
-			m_pUI_LockOn->Set_Owner(CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
+			m_pUI_LockOn->Set_Owner(pTarget);
 				
 		}
 
 		//원래 타겟이 있었는데 사라진 경우
-		else if (m_pSettedTarget != nullptr && CPlayerInfoManager::GetInstance()->Get_TargetedMonster() == nullptr)
+		else if (m_pSettedTarget != nullptr && pTarget == nullptr)
 		{
 			m_pUI_LockOn->SetDelete();
 		}
 
 		//다른 타겟으로 바뀐 경우
-		else if (m_pSettedTarget != nullptr && CPlayerInfoManager::GetInstance()->Get_TargetedMonster() != nullptr)
+		else if (m_pSettedTarget != nullptr && pTarget != nullptr)
 		{
 			m_pUI_LockOn->SetDelete();
 
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
-			m_pUI_LockOn->Set_Owner(CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
-			m_pUI_LockOn->Set_UIPivotMatrix(dynamic_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Get_UIPivotMatrix(ENEMY_FINDEYES));
+			m_pUI_LockOn->Set_Owner(pTarget);
+			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->Get_UIPivotMatrix(ENEMY_FINDEYES));
 		}
 
 		//info bar 설정
-		if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster() != nullptr)
-			Create_TargetInfoBar(CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
+		if (pTarget != nullptr)
+			Create_TargetInfoBar(pTarget);
 	
-		m_pSettedTarget = CPlayerInfoManager::GetInstance()->Get_TargetedMonster();
+		m_pSettedTarget = pTarget;
 	}
 
 }
@@ -6399,8 +6401,8 @@ void CPlayer::Enemy_Targeting(_bool bNear)
 		list<pair<CGameObject*, _float>>	DistanceList;
 		for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
 		{
-			//if ((!static_cast<CMonster*>(iter)->IsDead()) && (!static_cast<CMonster*>(iter)->GetInvisible()))
-			if ((!static_cast<CEnemy*>(iter)->IsDead()))
+			//if ((!static_cast<CEnemy*>(iter)->IsDead()))
+			if ((!static_cast<CEnemy*>(iter)->IsDead()) && (!static_cast<CEnemy*>(iter)->Exclude()))
 			{
 				_vector vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 				_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);

@@ -15,19 +15,21 @@ public:
 	~CBulletBuilder() = default;
 
 	CBulletBuilder& Set_Owner(CGameObject* pOwner);
-	CBulletBuilder& Set_InitBulletEffect(const wstring& EffectName);
+	CBulletBuilder& Set_InitBulletEffect(const vector<wstring>& EffectName);
 	CBulletBuilder& Set_InitBulletParticle(const wstring& ParticleName);
 
 	CBulletBuilder& Set_ShootSpped(_float fSpeedsec);
 	CBulletBuilder& Set_Life(_float fLife);
 	CBulletBuilder& Set_DamageParam(const DAMAGE_PARAM	&	eDamageParam);
 
-	CBulletBuilder& Set_DeadBulletEffect(const wstring& EffectName);
+	CBulletBuilder& Set_DeadBulletEffect(const vector<wstring>& EffectName);
 	CBulletBuilder& Set_DeadBulletParticle(const wstring& ParticleName);
 
 	CBulletBuilder& Set_Position(_fvector vPosition);
 	CBulletBuilder& Set_LookAt(_fvector vTargetPos);
+	CBulletBuilder& Set_TurnFixed(_float fRadian);
 	void Build();
+
 private:
 	vector<wstring>	m_InitBulletEffects;
 	wstring m_InitParticle = L"";
@@ -42,6 +44,8 @@ private:
 
 	_float4			m_Position;
 	_float4			m_TargetPos;
+
+	_float			m_fAngle = 0.f;
 public:
 	virtual void Free() override;
 };

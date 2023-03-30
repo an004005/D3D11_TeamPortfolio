@@ -40,6 +40,9 @@ HRESULT CEM0210::Initialize(void * pArg)
 	m_bHasCrushGage = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
+	//시작부터 투명상태 적용
+	m_IsInvisible = true;
+
 	return S_OK;
 }
 
@@ -173,6 +176,8 @@ void CEM0210::SetUpFSM()
 			})
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
+			.AddTransition("Idle to Down", "Down")
+				.Predicator([this]	{ return m_bDown; })
 
 			.AddTransition("Idle to Hit_ToAir", "Hit_ToAir")
 				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_TO_AIR; })
@@ -180,6 +185,7 @@ void CEM0210::SetUpFSM()
 				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_MIDDLE; })
 			.AddTransition("Idle to Hit_Light", "Hit_Light")
 				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_LIGHT; })
+
 
 			.AddTransition("Idle to Attack_Spin", "Attack_Spin")
 				.Predicator([this] { return m_eInput == CController::R; })
@@ -271,8 +277,21 @@ void CEM0210::SetUpFSM()
 				.AddTransition("OnFloorGetup to Idle", "Idle")
 				.Predicator([this]
 			{
-				return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketEmpty("FullBody");
+				return m_bDead || m_pASM->isSocketEmpty("FullBody");
 			})
+
+		.AddState("Down")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_425_AL_down_start");
+				m_bDown = false;
+			})
+			.AddTransition("Down to OnFloorGetup", "OnFloorGetup")
+				.Predicator([this]
+				{
+						return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+				})
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 		.AddState("Dodge")
@@ -319,7 +338,7 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Dodge to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eCurAttackType != EAttackType::ATK_END;
+					return m_bDead || m_bDown || m_eCurAttackType != EAttackType::ATK_END;
 				})
 			.AddState("DodgeStop")
 				.OnStart([this]
@@ -334,7 +353,7 @@ void CEM0210::SetUpFSM()
 				.AddTransition("DodgeStop to Idle", "Idle")
 					.Predicator([this]
 					{
-						return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.99f);
+						return m_bDead || m_bDown || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.99f);
 					})
 
 
@@ -354,7 +373,7 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Attack_Spin to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || m_bDown ||  m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Attack_Somersault")
@@ -371,7 +390,7 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Attack_Somersault to Idle", "Idle")
 				.Predicator([this]
 			{
-				return m_bDead || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
+				return m_bDead || m_bDown || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
 			})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -416,11 +435,21 @@ void CEM0210::Tick(_double TimeDelta)
 	m_vMoveAxis.Normalize();
 	m_eInput = m_pController->GetAIInput();
 
+	if (m_IsFirstHit == false 
+		&& CheckSASType(ESASType::SAS_PENETRATE) 
+		&& m_eCurAttackType != EAttackType::ATK_END)
+	{
+		m_IsInvisible = false;
+		m_bDown = true;
+		m_IsFirstHit = true;
+	}
+
 	//ASM, FSM tick
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
 
 	const _float fMoveSpeed = m_bRun ? 4.f : 2.f;
+
 
 	if (m_vMoveAxis.LengthSquared() > 0.f)
 	{
@@ -431,12 +460,24 @@ void CEM0210::Tick(_double TimeDelta)
 	}
 
 	ResetHitData();
+	
 }
 
 void CEM0210::Late_Tick(_double TimeDelta)
 {
 	CEnemy::Late_Tick(TimeDelta);
+
+	if (m_IsInvisible)
+	{
+		if (CheckSASType(ESASType::SAS_PENETRATE))
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		else
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
+	}
+	else
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
+
 
 void CEM0210::AfterPhysX()
 {
@@ -445,14 +486,18 @@ void CEM0210::AfterPhysX()
 	GetRigidBody("Range")->Update_Tick(m_pTransformCom->Get_WorldMatrix());
 }
 
-
-
-
-
-
 HRESULT CEM0210::Render()
 {
-	m_pModelCom->Render(m_pTransformCom);
+	if (m_IsInvisible)
+	{
+		if (CheckSASType(ESASType::SAS_PENETRATE))
+			m_pModelCom->Render(m_pTransformCom);
+		else
+			m_pModelCom->Render_Pass(m_pTransformCom, 5);
+	}
+	else
+		m_pModelCom->Render(m_pTransformCom);
+
 	return S_OK;
 }
 
@@ -466,7 +511,7 @@ void CEM0210::Imgui_RenderProperty()
 
 	m_pFSM->Imgui_RenderProperty();
 
-	static _bool tt = false;
+	/*static _bool tt = false;
 	ImGui::Checkbox("Modify Pivot", &tt);
 	
 	if (tt)
@@ -479,9 +524,14 @@ void CEM0210::Imgui_RenderProperty()
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0210_Spin_Attack")
 				->Start_AttachPivot(this, pivot, "Target", true, true);
 		}
-	}
+	}*/
 		
 
+}
+
+_bool CEM0210::Exclude()
+{
+	return m_IsInvisible && CheckSASType(ESASType::SAS_PENETRATE) == false;
 }
 
 _bool CEM0210::IsPlayingSocket() const

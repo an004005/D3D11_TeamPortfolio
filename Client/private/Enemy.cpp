@@ -108,6 +108,9 @@ void CEnemy::Tick(_double TimeDelta)
 	FindTarget();
 	Update_DeadDissolve(TimeDelta);
 	m_pModelCom->Tick(TimeDelta);
+
+	if (m_bDeadStart)
+		m_dDeadTime += TimeDelta;
 }
 
 void CEnemy::Late_Tick(_double TimeDelta)
@@ -321,8 +324,6 @@ void CEnemy::SetDead()
 {
 	if (m_bDead)
 		return;
-	if (m_iCrushGage <= 0)
-		return;
 
 	m_bDead = true;
 	m_DeathTimeline.PlayFromStart();
@@ -525,8 +526,10 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 	m_iHP -= iDamage;
 	if (m_iHP < 0)
 	{
-		if (m_iCrushGage > 0)
+		if (m_iCrushGage > 0 || m_dDeadTime > 3.f)
 			SetDead();
+
+		m_bDeadStart = true;
 		m_iHP = 0;
 	}
 }

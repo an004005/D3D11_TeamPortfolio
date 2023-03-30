@@ -22,8 +22,8 @@
 #include "Imgui_Batch.h"
 
 //#define ADD_PLAYER
-//#define ADD_PREVIEW
-//#define ADD_UI
+//#define ADD_PREVIEW "Prototype_Model_em220"
+#define ADD_ENEMY "Monster_em320"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -79,7 +79,7 @@ HRESULT CLevel_EnemiesTest::Initialize()
 	if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
 		return E_FAIL;
 
-#ifdef ADD_UI
+#ifdef ADD_PLAYER
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_FrontUI"))))
 		return E_FAIL;
 #endif // ADD_UI
@@ -159,10 +159,8 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
 #endif
 	//FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
-#ifdef ADD_UI
-	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
-#endif // ADD_UI
 
+	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
 	//FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
@@ -188,10 +186,10 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Env", TEXT("Prototype_GameObject_SkyBox")));
 
 #ifdef ADD_PREVIEW
-
+	
 	Json PreviewData;
 	{
-		PreviewData["Model"] = "Prototype_Model_em210";
+		PreviewData["Model"] = ADD_PREVIEW;
 		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
 		auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag.c_str(), TEXT("ModelPreview"), &PreviewData);
 
@@ -225,9 +223,13 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
 #endif // !ADD_PLAYER
 
-	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em650"))
+#ifdef ADD_ENEMY
+	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT(ADD_ENEMY))
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(3.f, 3.f, 3.f, 1.f));
 
+#endif // ADD_ENEMY
+
+	
 	return S_OK;
 }
 

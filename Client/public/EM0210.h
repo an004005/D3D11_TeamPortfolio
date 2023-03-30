@@ -26,6 +26,8 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
+	virtual _bool Exclude() override;
+
 public:
 	//행동 관련 함수 정의
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
@@ -72,9 +74,15 @@ private:
 	//Jump
 	_float3 m_vOnJumpMoveVelocity;
 
-	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
+	//투명
+	_bool		m_IsInvisible = false;
 
-	 _float4x4 pivot;
+	//투명 풀리고 나서 처음 맞았을 때.
+	_bool		m_IsFirstHit = false;
+	_bool m_bDown = false;
+	
+
+	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 
 public:
 	static CEM0210* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

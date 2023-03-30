@@ -59,10 +59,13 @@ public:
 	void	Set_HasName() { m_bHasName = true; }	
 	void	TurnEyesOut();
 	//
+
 public:
 	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
 	virtual _float4x4 GetPivotMatrix() override;
 
+	//몬스터마다 특정 조건을 만들고싶을때
+	virtual _bool		Exclude() { return false; }
 
 	//Target 방향 확인
 	_bool IsTargetFront(_float fAngle = 90.f);
@@ -133,6 +136,9 @@ protected:
 	_int m_iCrushGage = 100;
 	_int m_iMaxCrushGage = 100;
 	_bool m_bHasCrushGage = false;
+
+	_bool		m_bDeadStart = false;
+	_double	m_dDeadTime = 0.0;
 
 	_bool m_bDead = false;
 	set<CScarletCharacter*> m_DamagedTargetList;

@@ -12,9 +12,9 @@ CBulletBuilder& CBulletBuilder::Set_Owner(CGameObject* pOwner)
 	return *this;
 }
 
-CBulletBuilder& CBulletBuilder::Set_InitBulletEffect(const wstring& EffectName)
+CBulletBuilder& CBulletBuilder::Set_InitBulletEffect(const vector<wstring>& EffectName)
 {
-	m_InitBulletEffects.emplace_back(EffectName);
+	m_InitBulletEffects = EffectName;
 	return *this;
 }
 
@@ -42,9 +42,9 @@ CBulletBuilder& CBulletBuilder::Set_DamageParam(const DAMAGE_PARAM& eDamageParam
 	return *this;
 }
 
-CBulletBuilder& CBulletBuilder::Set_DeadBulletEffect(const wstring& EffectName)
+CBulletBuilder& CBulletBuilder::Set_DeadBulletEffect(const vector<wstring>& EffectName)
 {
-	m_DeadBulletEffects.emplace_back(EffectName);
+	m_DeadBulletEffects = EffectName;
 	return *this;
 }
 
@@ -66,6 +66,12 @@ CBulletBuilder& CBulletBuilder::Set_LookAt(_fvector vTargetPos)
 	return *this;
 }
 
+CBulletBuilder& CBulletBuilder::Set_TurnFixed(_float fAngle)
+{
+	m_fAngle = fAngle;
+	return *this;
+}
+
 void CBulletBuilder::Build()
 {
 	CBullet* pBullet = dynamic_cast<CBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_Bullet")));
@@ -80,6 +86,7 @@ void CBulletBuilder::Build()
 	pBullet->Set_DamageParam(m_eDamageParam);
 	pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&m_Position));
 	pBullet->GetTransform()->LookAt(XMLoadFloat4(&m_TargetPos));
+	pBullet->GetTransform()->Turn_Fixed(pBullet->GetTransform()->Get_State(CTransform::STATE_UP), XMConvertToRadians(m_fAngle));
 }
 
 void CBulletBuilder::Free()
