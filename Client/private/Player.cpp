@@ -4831,7 +4831,7 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			.AddTransition("HBEAM_LEFT_WAIT to HBEAM_LEFT_END", "HBEAM_LEFT_END")
 			.Predicator([&]()->_bool 
 			{ 
-				return (0.05f <= m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio());
+				return (0.1f <= m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio());
 			})
 			.Priority(0)
 
@@ -4842,10 +4842,10 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_End_L);
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_SetKinetic(true);
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Finish();
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Finish();
 		})
 		.OnExit([&]()
 		{
@@ -4888,13 +4888,14 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			if (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.2f))
+			if (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.2f) && HBeam.IsNotDo())
 				static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Finish();
 			else
 				static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Turn();
 		})
 		.OnExit([&]()
 		{
+				HBeam.Reset();
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 			m_fKineticCharge = 0.f;
 		})

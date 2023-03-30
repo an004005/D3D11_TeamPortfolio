@@ -664,6 +664,7 @@ private:
 	CDoOnce TankLorry;
 	CDoOnce	TankLorry_Exploision;
 	CDoOnce IronBars;
+	CDoOnce HBeam;
 
 private:
 	_bool	m_bEffectUpdate = false;

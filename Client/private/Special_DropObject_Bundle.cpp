@@ -44,6 +44,9 @@ HRESULT CSpecial_DropObject_Bundle::Initialize(void * pArg)
 	{
 		if (!m_bThrow)
 			return;
+		
+		if (m_bDecompose)
+			return;
 
 		if (auto pStatic = dynamic_cast<CMapObject*>(pGameObject))
 		{
@@ -69,7 +72,11 @@ HRESULT CSpecial_DropObject_Bundle::Initialize(void * pArg)
 			m_bDeadCheck = true;
 			m_fDeadTime = 3.f;
 
-			//CVFX_Manager::GetInstance()->GetEffect(EFFECT::)
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Special_G_Large_Hit")->
+				Start_AttachOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMVectorSet(0.f, 3.f, 0.f, 0.f), false);
+
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Large_Hit_Particle")->
+				Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMVectorSet(0.f, 3.f, 0.f, 0.f), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
 		}
 	});
 

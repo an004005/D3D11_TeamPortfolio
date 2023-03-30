@@ -270,7 +270,7 @@ PS_OUT PS_PARTICLE_EM0650(PS_IN In)
 			discard;
 	}
 
-	if (Out.vColor.a <= 0.f)
+	if (Out.vColor.a <= 0.1f)
 		discard; 
 
 	return Out;
@@ -768,7 +768,7 @@ technique11 DefaultTechnique
 	pass BulletTrailParticle
 	{
 		SetRasterizerState(RS_NonCulling);
-		SetDepthStencilState(DS_Default, 0);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
