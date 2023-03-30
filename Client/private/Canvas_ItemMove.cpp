@@ -4,6 +4,7 @@
 #include "FSMComponent.h"
 #include "UI_Manager.h"
 
+#include "Canvas_Item.h"
 #include "Item_PushArrowUI.h"
 #include "Item_LeftArrowUI.h"
 #include "Item_RightArrowUI.h"
@@ -90,13 +91,27 @@ void CCanvas_ItemMove::Key_Input()
 	if (CGameInstance::GetInstance()->KeyDown(DIK_LEFT))
 	{
 		dynamic_cast<CItem_LeftArrowUI*>(Find_ChildUI(L"Item_LeftArrow"))->Set_Input();
+		m_bInput = true;
 
 	}
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_RIGHT))
 	{
 		dynamic_cast<CItem_RightArrowUI*>(Find_ChildUI(L"Item_RightArrow"))->Set_Input();
+		m_bInput = true;
 
+	}
+
+	if (m_bInput == true)
+	{
+		m_bInput = false;
+
+		_float4 fColor = dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->ColorIndex(false);
+		dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Set_Color(fColor);
+		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrow"))->Set_Color(fColor);
+		fColor = dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->ColorIndex(true);
+		dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_GaugeBack"))->Set_Color(fColor);
+		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrowBack"))->Set_Color(fColor);
 	}
 }
 

@@ -28,6 +28,10 @@ public:
 		m_bInput = true;
 	}
 
+	void	Set_Color(const _float4 & fColor) {
+		m_tParams.Float4s[0] = fColor;
+	}
+
 private:
 	_bool	m_bInput = { false };
 	_float	m_fStartY = { 0.0f };

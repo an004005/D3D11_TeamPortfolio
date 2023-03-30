@@ -29,6 +29,12 @@ public:
 		m_dAlpha_TimeAcc = 0.0;
 	}
 
+	void	Set_LightColor(const _float3 fColor) {
+		m_tParams.Float4s[0].x = fColor.x;
+		m_tParams.Float4s[0].y = fColor.y;
+		m_tParams.Float4s[0].z = fColor.z;
+	}
+
 public:
 	_bool	m_bUse = { false };
 	_bool	m_fAlphaDown = { false };

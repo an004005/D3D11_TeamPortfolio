@@ -29,6 +29,10 @@ public:
 		m_bCooldownTimeStart = true;
 	}
 
+	void	Set_Color(const _float4& fColor) {
+		m_tParams.Float4s[0] = fColor;
+	}
+
 private:
 	_bool	m_bCooldownTimeStart = { false };
 	_bool	m_fRatioDown = { false };

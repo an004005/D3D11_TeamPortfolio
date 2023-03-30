@@ -1,4 +1,3 @@
-
 #include "stdafx.h"
 #include "..\public\GameManager.h"
 #include "JsonStorage.h"

@@ -24,6 +24,9 @@ public:
 private:
 	void	Key_Input();
 
+private:
+	_bool	m_bInput = { false };
+
 public:
 	static CCanvas_ItemMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

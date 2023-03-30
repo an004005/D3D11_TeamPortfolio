@@ -26,16 +26,20 @@ public:
 		m_bInput = true;
 	}
 
+	_float4	 ColorIndex(const _bool	 bBack);
+
 private:
 	void	ItmeUse();
 	void	BattleItem_Input();
 	_float	NameIndex(const size_t iIndex);
+	_float3	 LightColorIndex(const size_t iIndex);
 
 	_int wrap(_int x, _int low, _int high);
 
 private:
 	size_t	m_iCurrentIndex = { 0 };
 	_bool	m_bInput = { false };
+	_bool	m_bBattleItmeEmpty = { false };
 
 public:
 	static CCanvas_Item* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
