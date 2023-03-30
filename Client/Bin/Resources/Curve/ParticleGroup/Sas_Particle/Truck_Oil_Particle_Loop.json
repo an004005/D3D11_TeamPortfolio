@@ -1,0 +1,31 @@
+{
+    "LifeTime": 10.0,
+    "ObjectTag": "Truck_Oil_Particle",
+    "Particles": [
+        {
+            "ObjectTag": "Player_Text_Particle",
+            "ParticleDirectory": "../Bin/Resources/VFX/ParticleSystem/Player_Special_Object_Pariticle/Truck_Oil_Particle.json"
+        }
+    ],
+    "Prototype_GameObject": "ProtoVFX_ParticleGroup\u0000",
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}
