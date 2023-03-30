@@ -708,6 +708,32 @@ PS_OUT_Flag PS_KINETIC_DEAD_FLIPBOOK(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_SPECAIL_G_EXPLODE_LIGHT(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+	float2 TexUV;
+
+	if(g_int_0 >= 1)
+		TexUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 4, 4);
+	else
+		TexUV = Get_FlipBookUV(In.vTexUV, 0.f, 0, 4, 4);
+
+	float4 Default_White = g_tex_0.Sample(LinearSampler, In.vTexUV); // Not Use Plz Fix
+	float4 Color = g_vec4_0;
+	float4 Blend = Default_White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	//////
+	float  Mask = g_tex_1.Sample(LinearSampler, TexUV).r;
+
+
+	Out.vColor = CalcHDRColor(Final, g_float_0);
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	Out.vColor.a = Mask * g_float_1;
+
+	return Out;
+}
+
 PS_OUT_Flag PS_EM1100_BULLET_DEAD(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -899,6 +925,31 @@ PS_OUT_Flag PS_MASK_TEX(PS_IN In)
 
 	float Pattern = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
 	Out.vColor.a = Pattern * Mask * g_float_1;
+
+	if (Mask < 0.f)
+		discard;
+
+	if (g_float_1 <= 0.f)
+		discard;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+PS_OUT_Flag PS_SPECIAL_G_TRUCK_EXPLODEBASE(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float Mask = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y)).r;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+
+	float Pattern = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+	Out.vColor.a = Mask * g_float_1;
 
 	if (Mask < 0.f)
 		discard;
@@ -1688,5 +1739,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SPECIAL_G_HBEAM_BASEDARK();
+	}
+
+	//42
+	pass SpecialGExplodeBase
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SPECIAL_G_TRUCK_EXPLODEBASE();
+	}
+
+	//43
+	pass SpecialGExplodeLight
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SPECAIL_G_EXPLODE_LIGHT();
 	}
 }
