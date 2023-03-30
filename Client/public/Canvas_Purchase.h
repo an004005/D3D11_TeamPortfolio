@@ -5,14 +5,14 @@
 
 BEGIN(Client)
 
-class CCanvas_MainItem : public CCanvas
+class CCanvas_Purchase : public CCanvas
 {
 public:
-	enum MAINITEM { ALL, BATTLE, WEAPON, ETC, MAINITEM_END };
+	enum MAINITEM { ALL, BATTLE, WEAPON, MAINITEM_END };
 
 protected:
-	CCanvas_MainItem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CCanvas_MainItem(const CCanvas_MainItem& rhs);
+	CCanvas_Purchase(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCanvas_Purchase(const CCanvas_Purchase& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -21,8 +21,6 @@ public:
 	virtual HRESULT Render() override;
 
 	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
 
 private:
 	HRESULT	Add_MainCanvas();
@@ -31,11 +29,13 @@ private:
 	void	Canvas_Visible();
 
 private:
-	CCanvas*	m_arrCanvass[MAINITEM_END];
-	MAINITEM	m_eMainItem = { ALL };
+	CCanvas* m_arrCanvass[MAINITEM::MAINITEM_END] = { false, false, false };
+	MAINITEM	m_eMainItem = { MAINITEM::ALL };
+	
+	_float2		m_vPosssss = { 0.0f, 0.0f };
 
 public:
-	static CCanvas_MainItem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CCanvas_Purchase* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

@@ -105,6 +105,7 @@
 #include "Canvas_Acquisition.h"
 #include "Canvas_LeftTalk.h"
 #include "Canvas_MouseCousor.h"
+#include "Canvas_Shop.h"
 
 // Default
 #include "DefaultUI.h"
@@ -486,10 +487,10 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Bundle", CSpecial_HBeam_Bundle::Create(pDevice, pContext)));
 
 
-	//auto pModel_HBeam_Single = CModel::Create(pDevice, pContext,
-	//	"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
-	//FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_HBeam_Single", pModel_HBeam_Single));
-	//FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Single", CSpecial_HBeam_Single::Create(pDevice, pContext)));
+	auto pModel_HBeam_Single = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/HBeam/HBeam_Single.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_HBeam_Single", pModel_HBeam_Single));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_HBeam_Single", CSpecial_HBeam_Single::Create(pDevice, pContext)));
 
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_DropObject_Bundle", CSpecial_DropObject_Bundle::Create(pDevice, pContext)));
@@ -672,7 +673,10 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 			CCanvas_MouseCousor::Create(pDevice, pContext))))
 			return E_FAIL;
 		
-
+		/* For.Prototype_GameObject_Canvas_Shop*/
+		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_Shop"),
+			CCanvas_Shop::Create(pDevice, pContext))))
+			return E_FAIL;
 
 
 

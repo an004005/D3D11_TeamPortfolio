@@ -232,6 +232,8 @@
     <ClInclude Include="..\public\Canvas_SASInfoRightMove.h" />
     <ClInclude Include="..\public\Canvas_SASSkill.h" />
     <ClInclude Include="..\public\Canvas_SASSkillMove.h" />
+    <ClInclude Include="..\public\Canvas_Shop.h" />
+    <ClInclude Include="..\public\Canvas_Purchase.h" />
     <ClInclude Include="..\public\CapsuleLight.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
@@ -502,6 +504,8 @@
     <ClCompile Include="..\private\Canvas_MainItemKinds.cpp" />
     <ClCompile Include="..\private\Canvas_MouseCousor.cpp" />
     <ClCompile Include="..\private\Canvas_Party.cpp" />
+    <ClCompile Include="..\private\Canvas_Shop.cpp" />
+    <ClCompile Include="..\private\Canvas_Purchase.cpp" />
     <ClCompile Include="..\private\Canvas_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
     <ClCompile Include="..\private\Canvas_DriveMove.cpp" />
