@@ -240,4 +240,15 @@ namespace Engine
 		_float fVisibleTime = 1.f;
 		physx::PxQueryFlags queryFlags = physx::PxQueryFlag::eDYNAMIC | physx::PxQueryFlag::eSTATIC;
 	};
+
+
+	struct PxCapsuleOverlapParams
+	{
+		OUT physx::PxOverlapBuffer* overlapOut;
+		physx::PxCapsuleGeometry CapsuleGeo;
+		physx::PxTransform pxTransform;
+		_uint iTargetType;
+		_float fVisibleTime = 1.f;
+		physx::PxQueryFlags queryFlags = physx::PxQueryFlag::eDYNAMIC | physx::PxQueryFlag::eSTATIC;
+	};
 }

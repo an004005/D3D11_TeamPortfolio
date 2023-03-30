@@ -811,6 +811,11 @@ _bool CGameInstance::OverlapCapsule(const CapsuleOverlapParams& params)
 	return m_pPhysX_Manager->OverlapCapsule(params);
 }
 
+_bool CGameInstance::PxOverlapCapsule(const PxCapsuleOverlapParams& params)
+{
+	return m_pPhysX_Manager->PxOverlapCapsule(params);
+}
+
 _bool CGameInstance::SweepSphere(const SphereSweepParams& params)
 {
 	return m_pPhysX_Manager->SweepSphere(params);

@@ -163,6 +163,7 @@ public:/* for PhysX Manager*/
 	_bool RayCast(const RayCastParams& params);
 	_bool OverlapSphere(const SphereOverlapParams& params);
 	_bool OverlapCapsule(const CapsuleOverlapParams& params);
+	_bool PxOverlapCapsule(const PxCapsuleOverlapParams& params);
 	_bool SweepSphere(const SphereSweepParams& params);
 	_bool SweepCapsule(const CapsuleSweepParams& params);
 	_bool PxSweepCapsule(const PxCapsuleSweepParams& params);

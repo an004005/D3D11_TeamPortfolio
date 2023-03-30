@@ -25,6 +25,7 @@
 #include "Imgui_CameraManager.h"
 #include "Imgui_LightManager.h"
 #include "Imgui_CamAnimEditor.h"
+#include "GameManager.h"
 
 #define ADD_PLAYER
 
@@ -81,7 +82,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	Ready_Layer_SASPortrait(LAYER_SAS);
 
 	CGameInstance::GetInstance()->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
-
+	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 	// m_TestSound.CloneSound("Ambient_Bridge");
 	// m_TestSound.PlaySound("Ambient_Bridge");
 
