@@ -259,7 +259,7 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 			m_bCheckClose = false;
 
 			CGameInstance::GetInstance()->ResetDefaultTimeRatio();
-			SetDelete();
+			CGameObject::SetDelete();
 		}
 	}
 
@@ -473,7 +473,7 @@ void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag, const 
 
 			if (true == dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Get_End())
 			{
-				SetDelete();
+				m_bSuccess = true;
 			}
 		}
 	}
@@ -498,7 +498,7 @@ void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag, const 
 			nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 		{
 			dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
-			dynamic_cast<CGameManager_Tutorial*>(CGameManager::GetInstance())->Set_KineticAttackAndLockOnSuccess();
+			m_bSuccess = true;
 		}
 	}
 	if (TIPS3 == m_eTips)
@@ -510,7 +510,8 @@ void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag, const 
 
 			if (true == dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Get_End())
 			{
-				m_eTutorial = ADDPSYCHOKINESISATTACK;
+				Set_Tutorial(ADDPSYCHOKINESISATTACK);
+				m_eTips = TIPS_END;
 			}
 		}
 	}
@@ -522,7 +523,7 @@ void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag, const 
 
 			if (true == dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Get_End())
 			{
-				SetDelete();
+				m_bSuccess = true;
 			}
 		}
 	}
@@ -538,7 +539,7 @@ void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag, const 
 				m_eTips = TIPS_END;
 				m_iTipsOpen = false;
 				m_arrTips[eTIPS] = false;
-				SetDelete();
+				m_bSuccess = true;
 			}
 		}
 	}
@@ -546,7 +547,7 @@ void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag, const 
 
 void CCanvas_Tutorial::Success_Tick(const _double & TimeDelta)
 {
-	if (false == m_bSuccess)
+	if (false == m_bSuccess || m_eTutorial == ADDPSYCHOKINESISATTACK)
 		return;
 
 	Find_ChildUI(L"Tutorial_Success")->SetVisible(true);
@@ -557,6 +558,7 @@ void CCanvas_Tutorial::Success_Tick(const _double & TimeDelta)
 		m_bSuccess = false;
 		m_bSuccess_TimeAcc = 0.0;
 		Find_ChildUI(L"Tutorial_Success")->SetVisible(false);
+		SetDelete();
 	}
 }
 

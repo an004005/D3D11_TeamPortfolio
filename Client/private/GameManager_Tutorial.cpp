@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\public\GameManager_Tutorial.h"
 #include "GameInstance.h"
-#include "JsonStorage.h"
 
 CGameManager_Tutorial* CGameManager_Tutorial::s_GameManager = nullptr;
 
@@ -16,15 +15,12 @@ HRESULT CGameManager_Tutorial::Initialize()
 {
 	__super::Initialize();
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Tutorial.json");
-	m_pCanvas_Tutorial = dynamic_cast<CCanvas_Tutorial*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_FRONTUI, L"Canvas_Tutorial", &json));
-	Assert(m_pCanvas_Tutorial != nullptr, "Failed to Clone : m_pCanvas_Tutorial");
-
 	return S_OK;
 }
 
 void CGameManager_Tutorial::Tick(_double TimeDelta)
 {
+	__super::Tick(TimeDelta);
 
 }
 
@@ -36,7 +32,6 @@ void CGameManager_Tutorial::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport
 	{
 		if (tReport.eAttackType == EAttackType::ATK_HEAVY)
 		{
-			m_pCanvas_Tutorial->Set_Success();
 			m_bKineticAttackCheck = true;
 		}
 	}
@@ -52,21 +47,12 @@ void CGameManager_Tutorial::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport
 		}
 	}
 
-	if (m_bKineticAttackAndLockOn[2] == false)
-	{
-		if (m_bKineticAttackAndLockOn[2] == true)
-		{
-			m_pCanvas_Tutorial->Set_Success();
-		}
-	}
-
 	if (m_bFlatHit[1] == false)
 	{
 		if (m_bFlatHit[0] == true)
 		{
 			if (true == tReport.bDead)
 			{
-				m_pCanvas_Tutorial->Set_Success();
 				m_bFlatHit[1] = true;
 			}
 		}
@@ -76,7 +62,6 @@ void CGameManager_Tutorial::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport
 	{
 		if (tReport.eAttackType == EAttackType::ATK_TO_AIR)
 		{
- 			m_pCanvas_Tutorial->Set_Success();
 			m_bHitAir = true;
 		}
 	}

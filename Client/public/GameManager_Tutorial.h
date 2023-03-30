@@ -1,7 +1,6 @@
 #pragma once
 #include "Client_Defines.h"
 #include "GameManager.h"
-#include "Canvas_Tutorial.h"
 
 BEGIN(Client)
 
@@ -30,9 +29,6 @@ public:
 	void	Set_KineticAttackAndLockOn() {
 		m_bKineticAttackAndLockOn[0] = true;
 	}
-	void	Set_KineticAttackAndLockOnSuccess() {
-		m_bKineticAttackAndLockOn[2] = true;
-	}
 
 	_bool	Get_FlatHit() {
 		return m_bFlatHit[1];
@@ -46,10 +42,8 @@ public:
 	}
 
 private:
-	CCanvas_Tutorial*	m_pCanvas_Tutorial = { nullptr };
-
 	_bool m_bKineticAttackCheck = false;
-	_bool m_bKineticAttackAndLockOn[3] = { false, false, false };
+	_bool m_bKineticAttackAndLockOn[2] = { false, false };
 	_bool m_bFlatHit[2] = { false, false };
 	_bool m_bHitAir = { false };
 

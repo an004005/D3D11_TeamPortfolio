@@ -41,12 +41,12 @@ HRESULT CGameManager::Initialize()
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Acquisition.json");
-	pCanvas_Acquisition = dynamic_cast<CCanvas_Acquisition*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Acquisition", &json));
-	assert(pCanvas_Acquisition != nullptr && "Failed to Clone : Canvas_Acquisition");
+	m_pCanvas_Acquisition = dynamic_cast<CCanvas_Acquisition*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Acquisition", &json));
+	assert(m_pCanvas_Acquisition != nullptr && "Failed to Clone : Canvas_Acquisition");
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");
-	pCanvas_LeftTalk = dynamic_cast<CCanvas_LeftTalk*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_LeftTalk", &json));
-	assert(pCanvas_LeftTalk != nullptr && "Failed to Clone : Canvas_LeftTalk");
+	m_pCanvas_LeftTalk = dynamic_cast<CCanvas_LeftTalk*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_LeftTalk", &json));
+	assert(m_pCanvas_LeftTalk != nullptr && "Failed to Clone : Canvas_LeftTalk");
 
 	return S_OK;
 }
@@ -55,10 +55,10 @@ void CGameManager::Tick(_double TimeDelta)
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 	{
-		pCanvas_Acquisition->Set_EnemyUI(EEnemyName::EM0400, 5);
-		pCanvas_LeftTalk->Add_Talk(0);
-		pCanvas_LeftTalk->Add_Talk(1);
-		pCanvas_LeftTalk->Add_Talk(2);
+		m_pCanvas_Acquisition->Set_EnemyUI(EEnemyName::EM0400, 5);
+		m_pCanvas_LeftTalk->Add_Talk(0);
+		m_pCanvas_LeftTalk->Add_Talk(1);
+		m_pCanvas_LeftTalk->Add_Talk(2);
 	}
 }
 
@@ -66,7 +66,7 @@ void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
 {
 	if (tReport.bDead)
 	{
-		pCanvas_Acquisition->Set_EnemyUI(tReport.eName, tReport.eStat.iLevel);
+		m_pCanvas_Acquisition->Set_EnemyUI(tReport.eName, tReport.eStat.iLevel);
 	}
 
 }
@@ -77,7 +77,7 @@ void CGameManager::ConsumePlayerDamageReport(PLAYER_DAMAGE_REPORT tReport)
 
 void CGameManager::FullItem(const wstring szItemName)
 {
-	pCanvas_Acquisition->Set_FullItem(szItemName);
+	m_pCanvas_Acquisition->Set_FullItem(szItemName);
 }
 
 CGameManager* CGameManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
