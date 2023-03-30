@@ -73,7 +73,12 @@ void CCanvas_ItemMove::LoadFromJson(const Json & json)
 void CCanvas_ItemMove::Key_Input()
 {
 	// 아이템 쿨 타임이 아직 돌지 않았다면 사용할 수 없다.
-	//if (false == dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_ItemUseStatuse()) return;
+	_bool	bUse = dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_ItemUseStatuse();
+	if (false == bUse)
+	{
+		dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_IconLight(bUse);
+		return;
+	}
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_DOWN))
 	{
@@ -85,7 +90,7 @@ void CCanvas_ItemMove::Key_Input()
 		dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Set_CooldownTimeStart();
 		dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_GaugeBack"))->Set_CooldownTimeStart();
 
-
+		dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_ItmeUse();
 	}
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_LEFT))

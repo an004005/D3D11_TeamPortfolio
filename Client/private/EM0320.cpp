@@ -14,7 +14,6 @@
 #include "OilBullet.h" // Oil_Bullet
 #include "VFX_Manager.h"
 
-#include "Canvas_Alarm.h"
 #include "Canvas_BossHpMove.h"
 
 CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -404,7 +403,6 @@ void CEM0320::Tick(_double TimeDelta)
 		m_b2ndPhase = true;
 	}
 
-
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
 }
@@ -666,11 +664,8 @@ void CEM0320::Create_BossUI()
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
 	m_pUI_BossHP = dynamic_cast<CCanvas_BossHpMove*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHpMove", &json));
+	assert(m_pUI_BossHP != nullptr && "Failed to Clone : CCanvas_BossHpMove");
 	m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
-
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
-	m_pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_Alarm", &json));
-	m_pUI_Alarm->Set_Appeart();
 
 	PresentUI = true;
 }
@@ -729,10 +724,9 @@ void CEM0320::Free()
 	Safe_Release(m_pRightArm);
 	Safe_Release(m_pRange);
 
-	//for. BossUI
+	//for. BossUI 
+	// 안녕하세요. 옥수현 입니다. 여기 걸리셨다구요? 
+	// 보스를 다 잡고난 후에는 문제 없는 코드지만 보스를 잡기전 중간에 삭제 하실 경우에 객체 원본에서 Free() 가 돌고 난 후 여기 걸리신 것 입니다.
 	if (m_pUI_BossHP != nullptr)
 		m_pUI_BossHP->SetDelete();
-
-	if (m_pUI_Alarm != nullptr)
-		m_pUI_Alarm->SetDelete();
 }
