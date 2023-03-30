@@ -3,6 +3,8 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "ParticleGroup.h"
+#include "EffectGroup.h"
 
 BEGIN(Engine)
 class CRenderer;
@@ -12,7 +14,7 @@ END
 
 BEGIN(Client)
 
-class CBullet abstract : public CGameObject
+class CBullet  : public CGameObject
 {
 protected:
 	CBullet(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -27,6 +29,29 @@ public:
 
 	virtual void Imgui_RenderProperty() override;
 
+public:
+	void Create_InitEffects(vector<wstring>& InitEffects);
+	void Create_InitParticle(wstring& InitParticle);
+	void Create_DeadEffects();
+	void Create_DeadParticle();
+
+	void Set_DeadEffects(vector<wstring>& DeadEffects) {
+		m_pDeadEffects = DeadEffects;
+	}
+
+	void Set_DeadParticle(wstring& DeadParticle) {
+		m_pDeadParticle = DeadParticle;
+	}
+	void Set_ShootSpeed(_float fShootSpped) {
+		m_pTransformCom->SetSpeed(fShootSpped);
+	}
+	void Set_LifeTime(_float fLifeTime) {
+		m_fLife = fLifeTime;
+	}
+	void Set_DamageParam(DAMAGE_PARAM& eDamageParam) {
+		eDamageParam = eDamageParam;
+	}
+
 protected:
 	_bool CheckDamagedTarget(CGameObject* pTarget);
 
@@ -39,10 +64,9 @@ protected:
 	
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
-	CModel*					m_pModelCom = nullptr;
 	
 //	DAMAGE_PARAM			m_Damage_Params;
-	_float					m_fShootSpeed = 0.f;
+	//_float					m_fShootSpeed = 0.f;
 
 	_float4					m_BeforePos = _float4(0.f, 0.f, 0.f, -1.f);
 	_bool					m_bHitCheck = false;
@@ -51,10 +75,18 @@ protected:
 
 	CSimpleTimeline m_DeathTimeline; // 추후에 정립
 
-//protected:
-//	CScarletCharacter*		m_pCastOwner = nullptr;
+	//Builder
+	vector<CEffectGroup*> m_pInitEffects;
+	CParticleGroup* m_pInitParticle = nullptr;
 
+	 vector<wstring> m_pDeadEffects;
+	 wstring m_pDeadParticle = L"";
+
+	_float m_fLife = 0.f;
+	DAMAGE_PARAM eDamageParam;
 public:
+	static CBullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 

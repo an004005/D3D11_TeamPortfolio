@@ -2,17 +2,9 @@
 #include "Enemy.h"
 #include "Controller.h"
 
-BEGIN(Engine)
-class CFSMComponent;
-class CGameInstance;
-class CAnimation;
-class CRigidBody;
-class CCurveMananger;
-END
-
 BEGIN(Client)
 
-// flower_Hands :: ¼ÒÁî Æ÷Áî
+// ë“œë¦´ë§
 
 class CEM0110 : public CEnemy
 {
@@ -36,40 +28,35 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 public:
-	//Çàµ¿ °ü·Ã ÇÔ¼ö Á¤ÀÇ
+	//í–‰ë™ ê´€ë ¨ í•¨ìˆ˜ ì •ì˜
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_float GetTurnRemain() const { return m_fTurnRemain; }
 	_bool IsPlayingSocket() const;
 	_bool IsRun() const { return m_bRun; }
 	void AfterLocal180Turn();
-	void Define_TurningKickAnim();
 	void Adjust_MoveAxis(_double TimeDelta);
 
 private:
 	void Play_HeavbyHitAnim();
 
 private:
-	//Ãæµ¹ °ü·Ã ÇÔ¼ö Á¤ÀÇ
+	//ì¶©ëŒ ê´€ë ¨ í•¨ìˆ˜ ì •ì˜
 	void Rush_Overlap();
-	void Rush_SweepCapsule();
+	void Rush_SweepSphere();
 	void Kick_SweepSphere();
 
 private:
 	class CEM0110_Controller*		m_pController = nullptr;
 	class CEM0110_AnimInstance*		m_pASM = nullptr;
 
-	//Ãæµ¹
-	CRigidBody*					m_pRange = nullptr;
-	CRigidBody*					m_pBody = nullptr;
-	CRigidBody*					m_pHindLegs = nullptr;
-
-	CEffectGroup*				m_pSwingEffect = nullptr;
+	CParticleGroup*				m_pBugParticle = nullptr;
+	CEffectGroup*				m_pRushEffect = nullptr;
 
 	// Swing Attack
 	list<CScarletCharacter*> m_CollisionList;
 private:
-	//¿ø½Ã µ¥ÀÌÅÍ
+	//ì›ì‹œ ë°ì´í„°
 	_float3 m_vMoveAxis;
 	_float m_fTurnRemain = 0.f;
 
@@ -83,7 +70,8 @@ private:
 	// Run
 	_bool m_bRun = false;
 
-	CController::EHandleInput	m_eInput;
+	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
+
 public:
 	static CEM0110* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
