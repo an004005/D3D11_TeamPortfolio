@@ -6,6 +6,7 @@
 #include "Model.h"
 #include "Animation.h"
 #include "RigidBody.h"
+#include "VFX_Manager.h"
 
 CSpecial_Train::CSpecial_Train(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -68,6 +69,7 @@ void CSpecial_Train::Tick(_double TimeDelta)
 	if ((m_pModelComs.front()->GetPlayAnimation()->GetName() == "AS_mg02_372_train_start_L") && (m_pModelComs.front()->GetPlayAnimation()->IsFinished()))
 	{
 		m_pModelComs.front()->Reset_SpecialLocalMove();
+		m_Effect.Reset();
 		Train_Set_Animation("AS_mg02_372_train_end_L");
 	}
 	else if (m_pModelComs.front()->GetPlayAnimation()->IsFinished())
@@ -78,6 +80,22 @@ void CSpecial_Train::Tick(_double TimeDelta)
 
 	if (m_bActivate)
 		m_pModelComs.front()->Play_Animation(TimeDelta);
+
+	// 스파크 이펙트 생성
+	if ((m_pModelComs.front()->GetPlayAnimation()->GetName() == "AS_mg02_372_train_start_L") &&
+		(0.5f <= m_pModelComs.front()->GetPlayAnimation()->GetPlayRatio()) &&
+		m_Effect.IsNotDo())
+	{
+		Train_SparkEffect_Set();
+	}
+
+	if ((m_pModelComs.front()->GetPlayAnimation()->GetName() == "AS_mg02_372_train_end_L") &&
+		(0.2f <= m_pModelComs.front()->GetPlayAnimation()->GetPlayRatio()) &&
+		m_Effect.IsNotDo())
+	{
+		Train_SparkEffect_Release();
+	}
+	// ~스파크 이펙트 생성
 
 	if ((m_pModelComs.front()->GetPlayAnimation()->GetName() == "AS_mg02_372_train_start_L") ||
 		(m_pModelComs.front()->GetPlayAnimation()->GetName() == "AS_mg02_372_train_end_L"))
@@ -206,6 +224,31 @@ void CSpecial_Train::Train_SetDeadTimer()
 {
 	m_fDeadTimer = 3.f;
 	m_bDeadCheck = true;
+}
+
+void CSpecial_Train::Train_SparkEffect_Set()
+{
+	// 위치가 본에 잘 안 붙음 -> 확인 필
+
+	m_pSpark[0] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
+	m_pSpark[0]->Start_Attach(this, "M_BehindWheel_01", true);
+
+	m_pSpark[1] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
+	m_pSpark[1]->Start_Attach(this, "M_BehindWheel_02", true);
+}
+
+void CSpecial_Train::Train_SparkEffect_Release()
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpark[0]))
+	{
+		m_pSpark[0]->Delete_Particles();
+		m_pSpark[0] = nullptr;
+	}
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpark[1]))
+	{
+		m_pSpark[1]->Delete_Particles();
+		m_pSpark[1] = nullptr;
+	}
 }
 
 _float4 CSpecial_Train::GetActionPoint()

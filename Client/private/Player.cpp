@@ -4297,7 +4297,6 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			
 		})
 		.OnExit([&]()
 		{
@@ -5088,7 +5087,7 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject())
 			{
 				static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
-					->TankLorry_Shake(15.f * m_fKineticCharge);
+					->TankLorry_Shake(10.f * m_fKineticCharge);
 
 				if (1.f <= m_fKineticCharge && TankLorry.IsNotDo())
 				{
@@ -5096,6 +5095,8 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 						->TankLorry_Bounce(100.f);
 					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
 						->TankLorry_Cheage_TankIndex(2);
+					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+						->TankLorry_Create_OilParticle();
 				}
 			}
 
@@ -5142,7 +5143,7 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 				if (!m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.38f))
 				{
 					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
-						->TankLorry_Shake(30.f);
+						->TankLorry_Shake(20.f);
 				}
 
 				if (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.17f) && TankLorry.IsNotDo())
@@ -5151,6 +5152,8 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 						->TankLorry_Bounce(100.f);
 					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
 						->TankLorry_Cheage_TankIndex(3);
+					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+						->TankLorry_Release_OilParticle();
 				}
 
 				if (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.38f) && TankLorry_Exploision.IsNotDo())

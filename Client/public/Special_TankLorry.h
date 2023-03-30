@@ -8,6 +8,7 @@ class CModel;
 END
 
 BEGIN(Client)
+class CParticleGroup;
 
 class CSpecial_TankLorry : public CSpecialObject
 {
@@ -36,6 +37,8 @@ public:
 	void TankLorry_Bounce(_float fForce);
 	void TankLorry_Explosion();
 	void TankLorry_Cheage_TankIndex(_uint iIndex);
+	void TankLorry_Create_OilParticle();
+	void TankLorry_Release_OilParticle();
 
 private:
 	_bool  m_bDeadCheck = false;
@@ -49,6 +52,8 @@ private:
 	CGameObject*	m_pTankLorry_Head = nullptr;
 	CGameObject*	m_pTankLorry_Trailer = nullptr;
 	CGameObject*	m_pTankLorry_Tank = nullptr;
+
+	CParticleGroup* m_pChargeParticle = nullptr;
 
 private:
 	_float4x4		m_HeadMatrix;

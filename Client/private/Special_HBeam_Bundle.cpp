@@ -59,9 +59,15 @@ HRESULT CSpecial_HBeam_Bundle::Initialize(void * pArg)
 		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 		{
 			DAMAGE_PARAM tParam;
-			tParam.eAttackType = EAttackType::ATK_HEAVY;
-			tParam.iDamage = 200;
+			ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+			tParam.eAttackSAS = ESASType::SAS_END;
+			tParam.eAttackType = EAttackType::ATK_SPECIAL_END;
+			tParam.eDeBuff = EDeBuffType::DEBUFF_END;
+			tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
+			tParam.iDamage = 500;
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+			static_cast<CEnemy*>(pMonster)->TakeDamage(tParam);
 
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Special_G_HBeam")
 				->Start_AttachOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), false);

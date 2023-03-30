@@ -55,13 +55,13 @@ void CSpecialObject::BeginTick()
 {
 	__super::BeginTick();
 
-	for (auto& Model : m_pModelComs)
+	/*for (auto& Model : m_pModelComs)
 	{
 		for (auto& iter : Model->GetMaterials())
 		{
 			iter->GetParam().Floats[0] = 0.f;
 		}
-	}
+	}*/
 
 //	m_pCollider->UpdateChange();
 }
