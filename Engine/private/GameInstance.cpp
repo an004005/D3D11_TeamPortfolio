@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "..\public\GameInstance.h"
 #include "Graphic_Device.h"
 #include "Level_Manager.h"
@@ -22,6 +22,7 @@
 #include "CurveFloatMapImpl.h"
 #include "LambdaRenderObject.h"
 #include "SSAOManager.h"
+#include "AnimCam.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -154,6 +155,7 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 			return E_FAIL;
 
 		FAILED_CHECK(m_pObject_Manager->Add_Prototype(m_iStaticLevelIndex, L"LambdaRenderObject", CLambdaRenderObject::Create(*ppDeviceOut, *ppContextOut)));
+		FAILED_CHECK(m_pObject_Manager->Add_Prototype(m_iStaticLevelIndex, L"Prototype_AnimCam", CAnimCam::Create(*ppDeviceOut, *ppContextOut)));
 	}
 
 	// null animation 셋팅
@@ -179,6 +181,8 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 	{
 		m_LambdaRenderQ.push_back(dynamic_cast<CLambdaRenderObject*>(Clone_GameObject_NoLayerNoBegin(m_iStaticLevelIndex, L"LambdaRenderObject")));
 	}
+
+	m_pCamera_Manager->LoadCamAnims("../Bin/Resources/CamAnims/");
 
 	return S_OK;
 }

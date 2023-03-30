@@ -54,10 +54,10 @@ public:
 	void SaveModifiedData(Json& json);
 	void Imgui_RenderProperty();
 
-// ¿°·Â ¹°Ã¼ ¾Ö´Ï¸ŞÀÌ¼Ç °ü·Ã
+// ì—¼ë ¥ ë¬¼ì²´ ì• ë‹ˆë©”ì´ì…˜ ê´€ë ¨
 public:
 	void Update_Bones_SyncRatio(_double PlayTime);
-// ~¿°·Â ¹°Ã¼ ¾Ö´Ï¸ŞÀÌ¼Ç °ü·Ã
+// ~ì—¼ë ¥ ë¬¼ì²´ ì• ë‹ˆë©”ì´ì…˜ ê´€ë ¨
 
 public:
 	KEYFRAME*						GetCurKeyFrame();
@@ -75,39 +75,39 @@ public:
 
 private:
 	string								m_strName;
-	/* ¾Ö´Ï¸ŞÀÌ¼ÇÀ» Àç»ıÇÏ´Âµ¥ °Å¸®¸¥¤¤ ÀüÃ¼ ½Ã°£. */
+	/* ì• ë‹ˆë©”ì´ì…˜ì„ ì¬ìƒí•˜ëŠ”ë° ê±°ë¦¬ë¥¸ã„´ ì „ì²´ ì‹œê°„. */
 	_double								m_Duration = 0.0;
 
-	/* ÃÊ´ç Àç»ıÇØ¾ßÇÒ ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ ¼ÓµµÀÌ´Ù. */
+	/* ì´ˆë‹¹ ì¬ìƒí•´ì•¼í•  ì• ë‹ˆë©”ì´ì…˜ì˜ ì†ë„ì´ë‹¤. */
 	_double								m_TickPerSecond;
 
 	_double								m_PlayTime = 0.0;
 
 	_bool								m_bFinished = false;
-	// ¾Ö´Ï¸ŞÀÌ¼Ç ³¡³ª¸é Ã³À½ºÎÅÍ ´Ù½Ã ½ÃÀÛ
+	// ì• ë‹ˆë©”ì´ì…˜ ëë‚˜ë©´ ì²˜ìŒë¶€í„° ë‹¤ì‹œ ì‹œì‘
 	_bool								m_bLooping = false;
-	// ¾Ö´Ï¸ŞÀÌ¼Ç ³¡³ª¸é ¸¶ÁöÀÛ ÇÁ·¹ÀÓ À¯Áö
+	// ì• ë‹ˆë©”ì´ì…˜ ëë‚˜ë©´ ë§ˆì§€ì‘ í”„ë ˆì„ ìœ ì§€
 	_bool								m_bStay = false;
 
-	//Idle »óÅÂ·Î °¥ ¶§ º¸°£ ÇÒÁö ¸»Áö °áÁ¤
+	//Idle ìƒíƒœë¡œ ê°ˆ ë•Œ ë³´ê°„ í• ì§€ ë§ì§€ ê²°ì •
 	_bool								m_bInterpolation = true;
-	// ·ÎÄÃ ÁÂÇ¥ ÀÌµ¿
+	// ë¡œì»¬ ì¢Œí‘œ ì´ë™
 	_vector								m_vLocalMove;
 	_vector								m_vSpecialLocalMove;
 	_vector								m_vLocalRotation;
 	Quaternion							m_vLocalQuaternion;
 	pair<_vector, _float>				m_vLocalEular;
 
-	/* ÀÌ ¾Ö´Ï¸ŞÀÌ¼ÇÀ» Àç»ıÇÏ±âÀ§ÇØ °»½ÅÇØ¾ßÇÏ´Â »Àµé. */
+	/* ì´ ì• ë‹ˆë©”ì´ì…˜ì„ ì¬ìƒí•˜ê¸°ìœ„í•´ ê°±ì‹ í•´ì•¼í•˜ëŠ” ë¼ˆë“¤. */
 	vector<class CChannel*>				m_Channels;
 
-	/* ÀÌº¥Æ® ¸Ê */
+	/* ì´ë²¤íŠ¸ ë§µ */
 	unordered_map<double, string>		m_EventMap;
 	vector<ANIM_EVENT>					m_vecEvent;
 
 
 
-	// »óÈ£ÂüÁ¶·Î ·¹ÆÛ·±½º Ä«¿îÆ® Áõ°¡ÇÏÁö ¾Ê´Â´Ù.
+	// ìƒí˜¸ì°¸ì¡°ë¡œ ë ˆí¼ëŸ°ìŠ¤ ì¹´ìš´íŠ¸ ì¦ê°€í•˜ì§€ ì•ŠëŠ”ë‹¤.
 	class CModel*						m_pModel = nullptr;
 
 public:

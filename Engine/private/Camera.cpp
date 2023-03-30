@@ -5,6 +5,11 @@
 #include "Camera_Manager.h"
 #include "CurveManager.h"
 
+
+/**********************
+ * CCamera
+ *********************/
+
 CCamera::CCamera(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -27,12 +32,15 @@ HRESULT CCamera::Initialize(void * pArg)
 		m_pTransformCom->LookAt(XMLoadFloat4(&_float4(0.f, 0.f, 0.f, 1.f)));
 	}
 
+	if (FAILED(Add_Component(LEVEL_STATIC, CGameInstance::m_pPrototypeTransformTag, L"PivotTransform", (CComponent**)&m_pPivotTransform)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CCamera::Tick(_double TimeDelta)
 {
-	// Camera Manager·Î ±â´É ÀÌÀü
+	// Camera Managerë¡œ ê¸°ëŠ¥ ì´ì „
 	// if (IsMainCamera())
 	// {
  // 		m_pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransformCom->Get_WorldMatrix_Inverse());
@@ -101,7 +109,27 @@ _bool CCamera::IsMainCamera() const
 	return CCamera_Manager::GetInstance()->GetMainCam() == this;
 }
 
+_float4x4 CCamera::GetWorldMatrix()
+{
+	return GetXMWorldMatrix();
+}
+
+_matrix CCamera::GetXMWorldMatrix()
+{
+	return m_pPivotTransform->Get_WorldMatrix() * m_pTransformCom->Get_WorldMatrix();
+}
+
 _float4x4 CCamera::GetProjMatrix()
+{
+	return GetXMProjMatrix();
+}
+
+_float4x4 CCamera::GetViewMatrix()
+{
+	return GetXMViewMatrix();
+}
+
+_matrix CCamera::GetXMProjMatrix()
 {
 	if (m_bUseViewPortSize)
 	{
@@ -111,7 +139,13 @@ _float4x4 CCamera::GetProjMatrix()
 	return XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fFOV), m_fWidth / m_fHeight, m_fNear, m_fFar);
 }
 
+_matrix CCamera::GetXMViewMatrix()
+{
+	return XMMatrixInverse(nullptr, GetXMWorldMatrix());
+}
+
 void CCamera::Free()
 {
 	__super::Free();
+	Safe_Release(m_pPivotTransform);
 }

@@ -64,6 +64,8 @@ public:
 	virtual void DeBuff_Fire() override;
 	virtual void DeBuff_Oil() override;
 
+	_bool IsCanSpecial() const { return m_bCanSpecial; }
+
 protected:
 	virtual _bool IsWeak(CRigidBody* pHitPart) override;
 	virtual void CheckHP(DAMAGE_PARAM& tDamageParams) override;
@@ -102,6 +104,7 @@ private:
 	_float3 m_vOnJumpMoveVelocity;
 	_float m_fJumpMoveTime = 0.f;
 	_int m_iJitabaCnt = 0;
+	_bool m_bCanSpecial = false;
 	//
 
 	CController::EHandleInput m_eInput;
@@ -112,7 +115,9 @@ private:
 	vector<CMaterial*> m_BodyMtrls;
 	CMaterial* m_pWeakMtrl = nullptr;
 	CMaterial* m_pGlassMtrl = nullptr;
+	CMaterial* m_pWaterMtrl = nullptr;
 	_float m_fWeakHitFlash = 0.f;
+	_float m_fWaterRegenTime = 0.f;
 		
 	// Add PJW
 	_vector	m_LastSpotTargetPos;

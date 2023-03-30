@@ -89,7 +89,7 @@ HRESULT CAnimation::Initialize(const char* pAnimFilePath)
 
 void CAnimation::Update_Bones_SyncRatio(_double PlayTime)
 {
-	// ´Ù¸¥ ¾Ö´Ï¸ÞÀÌ¼ÇÀÇ ÇÃ·¹ÀÌÅ¸ÀÓ°ú µ¿±âÈ­ÇÏ¿© ¾Ö´Ï¸ÞÀÌ¼ÇÀ» ¹Þ¾Æ¿À±â À§ÇÔ
+	// ë‹¤ë¥¸ ì• ë‹ˆë©”ì´ì…˜ì˜ í”Œë ˆì´íƒ€ìž„ê³¼ ë™ê¸°í™”í•˜ì—¬ ì• ë‹ˆë©”ì´ì…˜ì„ ë°›ì•„ì˜¤ê¸° ìœ„í•¨
 	for (const auto pChannel : m_Channels)
 	{
 		pChannel->Update_TransformMatrix(PlayTime);
@@ -114,7 +114,7 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 		{
 			pChannel->Update_TransformMatrix(m_PlayTime);
 
-			// ·ÎÄÃ ÀÌµ¿ Ã¤³Î·ÎºÎÅÍ	¹Þ¾Æ¿È
+			// ë¡œì»¬ ì´ë™ ì±„ë„ë¡œë¶€í„°	ë°›ì•„ì˜´
 			if ("Reference" == pChannel->GetChannelName())
 			{
 				m_vLocalMove = pChannel->GetLocalMove();
@@ -127,7 +127,7 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 				m_vSpecialLocalMove = pChannel->GetSpecialLocalMove();
 			}
 		}
-		// ÀÌº¥Æ® ½ÇÇà
+		// ì´ë²¤íŠ¸ ì‹¤í–‰
 		for (auto& iter : m_vecEvent)
 		{
 			if (iter.EventTime >= PrePlayTime && iter.EventTime < m_PlayTime)
@@ -221,7 +221,7 @@ void CAnimation::Update_BonesAtTime(_double PlayTime, EAnimUpdateType eType, _fl
 
 void CAnimation::Link_Model(CModel* pModel)
 {
-	Assert(m_pModel == nullptr); // Áßº¹ ¸µÅ© ¹æÁö
+	Assert(m_pModel == nullptr); // ì¤‘ë³µ ë§í¬ ë°©ì§€
 	m_pModel = pModel;
 	for (auto channel : m_Channels)
 	{
@@ -296,10 +296,10 @@ void CAnimation::Imgui_RenderProperty()
 	static _float fSelectedEventTime = 0.f;
 	static string szSelectedItem = "";
 
-	// ¼±ÅÃµÈ ÀÌº¥Æ® ÀÌ¸§
+	// ì„ íƒëœ ì´ë²¤íŠ¸ ì´ë¦„
 	ImGui::Text(szSelectedItem.c_str());
 
-	// ÀÌº¥Æ® ºä¾î
+	// ì´ë²¤íŠ¸ ë·°ì–´
 	if (ImGui::BeginListBox("Event Frame"))
 	{
 		for (auto& Pair : m_vecEvent)
@@ -322,7 +322,7 @@ void CAnimation::Imgui_RenderProperty()
 		ImGui::EndListBox();
 	}
 
-	// ÀÌº¥Æ® Ãß°¡
+	// ì´ë²¤íŠ¸ ì¶”ê°€
 	if (ImGui::Button("Add Event"))
 	{
 		ANIM_EVENT AddEvent;
@@ -332,7 +332,7 @@ void CAnimation::Imgui_RenderProperty()
 		m_vecEvent.push_back(AddEvent);
 	}
 
-	// ÀÌº¥Æ® »èÁ¦
+	// ì´ë²¤íŠ¸ ì‚­ì œ
 	if (ImGui::Button("Delete Event"))
 	{
 		for (auto iter = m_vecEvent.begin(); iter != m_vecEvent.end();)

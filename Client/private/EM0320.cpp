@@ -66,11 +66,11 @@ void CEM0320::SetUpComponents(void* pArg)
 
 
 	Json BossHeadJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_Head.json");
-	Json BossLeftArmJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_LeftArm.json");
-	Json BossRightArmJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_RightArm.json");
+	// Json BossLeftArmJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_LeftArm.json");
+	// Json BossRightArmJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_RightArm.json");
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Com_Head"), (CComponent**)&m_pHead, &BossHeadJson));
-	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Com_LeftArm"), (CComponent**)&m_pLeftArm, &BossLeftArmJson));
-	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Com_RightArm"), (CComponent**)&m_pRightArm, &BossRightArmJson));
+	// FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Com_LeftArm"), (CComponent**)&m_pLeftArm, &BossLeftArmJson));
+	// FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Com_RightArm"), (CComponent**)&m_pRightArm, &BossRightArmJson));
 
 	m_pASM = CEM320_AnimInstance::Create(m_pModelCom, this);
 
@@ -303,6 +303,7 @@ void CEM0320::SetUpFSM()
 		.AddState("Jitabata")
 			.OnStart([this]
 			{
+				m_bCanSpecial = true;
 				m_pASM->InputAnimSocketMany("FullBody", 
 				{  "AS_em0300_205_AL_atk_a3_landing",
 					"AS_em0300_233_AL_atk_a3_jitabata_loop",
@@ -315,6 +316,10 @@ void CEM0320::SetUpFSM()
 			.Tick([this](_double)
 			{
 				Tick_AttackState();
+			})
+			.OnExit([this]
+			{
+				m_bCanSpecial = false;
 			})
 			.AddTransition("Jitabata to Idle", "Idle")
 				.Predicator([this]
@@ -329,11 +334,21 @@ void CEM0320::SetUpFSM()
 		.AddState("Down")
 			.OnStart([this]
 			{
+				m_fWaterRegenTime = 10.f;
+				m_pGlassMtrl->SetActive(false);
+				m_pWaterMtrl->SetActive(false);
+				m_pWaterMtrl->GetParam().Floats[1] = 0.f;
+				m_pController->SetActive(false);
+				m_eDeBuff = EDeBuffType::DEBUFF_OIL;
 				Reset();
 				m_pASM->AttachAnimSocketMany("FullBody", 
 				{ "AS_em0300_425_AL_down_start",
 					"AS_em0300_426_AL_down",
 					"AS_em0300_207_AL_atk_a3_end"  });
+			})
+			.OnExit([this]
+			{
+				m_pController->SetActive(true);
 			})
 			.AddTransition("Down to Idle", "Idle")
 				.Predicator([this]
@@ -361,10 +376,12 @@ void CEM0320::BeginTick()
 	m_pModelCom->FindMaterial(L"MI_em0320_GLASS_0")->SetActive(false);
 	m_pGlassMtrl = m_pModelCom->FindMaterial(L"MI_em0320_GLASS_1");
 	m_pWeakMtrl = m_pModelCom->FindMaterial(L"MI_em0320_WEAK_0");
+	m_pWaterMtrl = m_pModelCom->FindMaterial(L"MI_em0300_WATER_0");
 	for (auto pMtrl : m_pModelCom->GetMaterials())
 	{
 		if (lstrcmp(pMtrl->GetPrototypeTag(), L"MI_em0320_GLASS_0") == 0 
-			|| lstrcmp(pMtrl->GetPrototypeTag(), L"MI_em0320_GLASS_1") == 0)
+			|| lstrcmp(pMtrl->GetPrototypeTag(), L"MI_em0320_GLASS_1") == 0
+			|| lstrcmp(pMtrl->GetPrototypeTag(), L"MI_em0300_WATER_0") == 0)
 			continue;
 		m_BodyMtrls.push_back(pMtrl);
 	}
@@ -405,6 +422,21 @@ void CEM0320::Tick(_double TimeDelta)
 		m_b2ndPhase = true;
 	}
 
+	if (m_fWaterRegenTime > 0.f)
+	{
+		m_fWaterRegenTime -= (_float)TimeDelta;
+		if (m_fWaterRegenTime <= 1.f)
+		{
+			m_pGlassMtrl->SetActive(true);
+			m_pWaterMtrl->SetActive(true);
+			m_pWaterMtrl->GetParam().Floats[1] = 1.f - m_fWaterRegenTime;
+		}
+	}
+	else
+	{
+		m_pWaterMtrl->GetParam().Floats[1] = 1.f;
+	}
+
 
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
@@ -436,15 +468,15 @@ void CEM0320::AfterPhysX()
 	m_pRange->Update_Tick(WorldMatrix);
 	m_pWeak->Update_Tick(m_pModelCom->GetBoneMatrix("Water") * WorldMatrix);
 	m_pHead->Update_Tick(m_pModelCom->GetBoneMatrix("HoseC") * WorldMatrix);
-	m_pLeftArm->Update_Tick(m_pModelCom->GetBoneMatrix("LeftElbow") * WorldMatrix);
-	m_pRightArm->Update_Tick(m_pModelCom->GetBoneMatrix("RightElbow") * WorldMatrix);
+	// m_pLeftArm->Update_Tick(m_pModelCom->GetBoneMatrix("LeftElbow") * WorldMatrix);
+	// m_pRightArm->Update_Tick(m_pModelCom->GetBoneMatrix("RightElbow") * WorldMatrix);
 }
 
 void CEM0320::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	CEnemy::TakeDamage(tDamageParams);
 	if (m_bHitWeak) 
-		m_fWeakHitFlash = 0.5f;
+		m_fWeakHitFlash = 1.f;
 }
 
 _float4 CEM0320::GetKineticTargetPos()
