@@ -1,0 +1,73 @@
+{
+    "MapObjects": [
+        {
+            "InstanceInfo": {
+                "WorldMatrix": [
+                    [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        -0.058551788330078125,
+                        0.0,
+                        6.959873676300049,
+                        1.0
+                    ]
+                ]
+            },
+            "ModelTag": "../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/Subway_Hospital/Hospital/props_merges/SM_pr_mg_floor_room1A.static_model\u0000",
+            "ObjectTag": "",
+            "Prototype_GameObject": "Prototype_GameObject_MapInstance_Object\u0000",
+            "Transform": {
+                "WorldMatrix": [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "Prototype_GameObject_ScarletMap\u0000",
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

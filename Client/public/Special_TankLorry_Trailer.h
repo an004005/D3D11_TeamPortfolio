@@ -41,6 +41,8 @@ public:
 
 	void	Change_Tank(_uint iIdx);
 
+	void	Create_Oil_Particle();
+
 private:
 	HRESULT	SetUp_Components(void* pArg);
 

@@ -30,8 +30,6 @@ private:
 	_bool		m_bBrightness = { false };
 	_float		m_fStrength = { 0.5f };
 
-	_bool		m_bOnSkil = { false };
-
 public:
 	static CSASSkillLightUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;

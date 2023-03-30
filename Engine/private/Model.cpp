@@ -368,6 +368,11 @@ void CModel::Reset_LocalMove(_bool isSocket)
 	}
 }
 
+_vector CModel::Sync_EffectLocalMove()
+{
+	return m_mapAnimation[m_CurAnimName]->GetEffectLocalMove();;
+}
+
 _matrix CModel::GetLocalRotationMatrix(_fmatrix WorldMatrix)
 {
 	Quaternion vDiffQuat = XMQuaternionIdentity();

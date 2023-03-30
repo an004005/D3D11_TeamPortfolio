@@ -125,4 +125,5 @@ DestBlend[0] = SRC_ALPHA;
 BlendOp[0] = Add;
 };
 
+
 #endif // __DEPENDENCY_HLSL__

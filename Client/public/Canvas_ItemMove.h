@@ -2,6 +2,7 @@
 
 #include "Canvas.h"
 #include "Client_Defines.h"
+#include "Item_Manager.h"
 
 BEGIN(Client)
 
@@ -20,6 +21,18 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
+
+public:
+	void	Set_Input() {
+		m_bInput = true;
+	}
+
+private:
+	void	Key_Input();
+
+private:
+	vector<CItem_Manager::BATTLEITEM> m_vecBattleItme;
+	_bool	m_bInput = { false };
 
 public:
 	static CCanvas_ItemMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

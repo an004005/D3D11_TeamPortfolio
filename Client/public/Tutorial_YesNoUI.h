@@ -80,6 +80,10 @@ public:
 		m_bZero_Shader = true;
 	}
 
+	_bool	Get_NextPage() {
+		return m_bNextPage;
+	}
+
 private:
 	void	Object_Tick(const _double & TimeDelta);
 
@@ -92,6 +96,8 @@ private:
 	void	ObjectYes_Tick();
 	void	ObjectNo_Tick();
 	void	InvisibleBox();
+
+	void	NextPage();
 
 private:
 	_int	m_iObjectNumber = { 0 };
@@ -118,6 +124,9 @@ private:
 	_bool	m_bAlphaEnd = { false };
 	_bool	m_bOneTwo_Alpha = { false };
 	_float	m_fAlpha = { 1.0f };
+
+	// 페이지 전환
+	_bool	m_bNextPage = { false };
 
 public:
 	static CTutorial_YesNoUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -13,6 +13,26 @@ CUI::CUI(const CUI & rhs)
 {
 }
 
+void CUI::TempOff(const _bool bOff)
+{
+	if (true == bOff)	// -> true 라면 그리지 않는다.
+	{
+		if (false == m_bVisible) // 이전에 그려지지 않았던 애들 건너뛴다.
+			return;
+
+		m_bTempOff = true;		// m_bTempOff 가 true 가 된 애들을
+		m_bVisible = false;		// 그리지 않는다.
+	}
+	else				// -> false 라면 그려준다.
+	{
+		if (false == m_bTempOff)
+			return;
+
+		m_bTempOff = false;		// 다음을 위해 초기화를 하고,
+		m_bVisible = true;		// 그려준다.
+	}
+}
+
 _float2 CUI::GetScreenSpaceLeftTop()
 {
 	const _float fWindowHalfWidth = static_cast<_float>(WINCX) * 0.5f;
@@ -83,6 +103,9 @@ void CUI::Tick(_double TimeDelta)
 
 void CUI::Late_Tick(_double TimeDelta)
 {
+	if (true == m_bTempOff)
+		return;
+
 	__super::Late_Tick(TimeDelta);
 
 	m_pShaderCom->Tick(TimeDelta);

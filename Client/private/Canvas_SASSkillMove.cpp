@@ -90,6 +90,9 @@ void CCanvas_SASSkillMove::BeginTick()
 
 void CCanvas_SASSkillMove::Tick(_double TimeDelta)
 {
+	if (true == Find_ChildUI(L"SASSkill_Icon1")->Get_TempOff())
+		return;
+
 	CCanvas::Tick(TimeDelta);
 	m_pUIMoveFSM->Tick(TimeDelta);
 	CCanvas::UIHit(TimeDelta);

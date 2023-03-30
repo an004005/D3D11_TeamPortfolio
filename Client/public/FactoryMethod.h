@@ -19,7 +19,6 @@ public:
 	static HRESULT MakeTriggerPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 	//UI
-	static HRESULT MakeUITestPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	static HRESULT MakeUIPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 public:

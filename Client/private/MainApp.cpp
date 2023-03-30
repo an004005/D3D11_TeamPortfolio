@@ -45,7 +45,7 @@
 #include "PostVFX_Teleport.h"
 #include "PostVFX_SuperSpeed.h"
 #include "SuperSpeedTrail.h"
-
+#include "Item_Manager.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -59,7 +59,7 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 	srand((unsigned)time(NULL));
 
-	/* °ÔÀÓ¿£Áø ÃÊ±âÈ­ */
+	/* ê²Œìž„ì—”ì§„ ì´ˆê¸°í™” */
 	GRAPHIC_DESC			GraphicDesc;
 	ZeroMemory(&GraphicDesc, sizeof(GRAPHIC_DESC));
 
@@ -77,11 +77,13 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototype_GameObject()))
 		return E_FAIL;
 
-	// ±âº» °ÔÀÓ¸Å´ÏÀú ¼ÂÆÃ
-	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
-
 	if (FAILED(Start_Level(LEVEL_LOGO)))
 		return E_FAIL;
+
+	if (FAILED(CPlayerInfoManager::GetInstance()->Initialize()))
+		return E_FAIL;
+
+	FAILED_CHECK(CItem_Manager::GetInstance()->Initialize())
 
 // #ifndef _DEBUG
 	// CGameInstance::GetInstance()->Imgui_OnOff(false);
@@ -96,7 +98,7 @@ void CMainApp::Tick(_double TimeDelta)
 		return;
 
 	m_pGameInstance->Tick_Engine(TimeDelta);
-	CGameManager::GetInstance()->Tick(TimeDelta);
+	//CGameManager::GetInstance()->Tick(TimeDelta);
  }
 
 HRESULT CMainApp::Render()
@@ -237,6 +239,40 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Rock_D_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX_Ver2/SM_ef_Detail_Rock_03.static_model", PivotMatrix, 100))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Rock_E_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX_Ver2/SM_ef_Detail_Rock_04.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Obj_002_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_Obj_002.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Obj_004_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_Obj_004.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Obj_014_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_Obj_014.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Obj_017_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_Obj_017.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Obj_025_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_Obj_025.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Obj_026_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_Obj_026.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Obj_028_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_Obj_028.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Obj_029_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_Obj_029.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Obj_030_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_Obj_030.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Obj_038_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_Obj_038.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Obj_056_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_Obj_056.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_TelephonePole_001_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_TelephonePole_001.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_TelephonePole_002_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_TelephonePole_002.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_TelephonePole_004_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_TelephonePole_004.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_TelephonePole_005_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_TelephonePole_005.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_TelephonePole_006_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_TelephonePole_006.static_model", PivotMatrix, 100))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_TelephonePole_007_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_TelephonePole_007.static_model", PivotMatrix, 100))))
 		return E_FAIL;
 	////////////////////
 	///
@@ -484,7 +520,8 @@ void CMainApp::Free()
 	CVFX_Manager::GetInstance()->DestroyInstance();
 	CUI_Manager::GetInstance()->DestroyInstance();
 	CPlayerInfoManager::GetInstance()->DestroyInstance();
-	CGameManager::DestroyInstance();
+	//CGameManager::GetInstance()->DestroyInstance();
+	CItem_Manager::GetInstance()->DestroyInstance();
 
 	m_pGameInstance->Clear_ImguiObjects();
 	m_pGameInstance->Clear();

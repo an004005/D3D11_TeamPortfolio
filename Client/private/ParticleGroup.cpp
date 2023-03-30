@@ -270,6 +270,7 @@ void CParticleGroup::Delete_Particles()
 	m_bUpdate = false;
 }
 
+
 void CParticleGroup::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);

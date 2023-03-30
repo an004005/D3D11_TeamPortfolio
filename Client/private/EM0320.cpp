@@ -16,8 +16,7 @@
 #include "VFX_Manager.h"
 
 #include "Canvas_Alarm.h"
-#include "Canvas_BossHp.h"
-
+#include "Canvas_BossHpMove.h"
 
 CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -713,16 +712,15 @@ void CEM0320::Create_BossUI()
 {
 	static _bool PresentUI = false;
 
-	if(m_pUI_BossHP != nullptr)
+	if (m_pUI_BossHP != nullptr)
 		m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
 
 	if (PresentUI == true) return;
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	Json json;
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
-	m_pUI_BossHP = dynamic_cast<CCanvas_BossHp*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHp", &json));
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
+	m_pUI_BossHP = dynamic_cast<CCanvas_BossHpMove*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHpMove", &json));
 	m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
