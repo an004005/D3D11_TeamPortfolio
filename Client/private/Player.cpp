@@ -642,6 +642,10 @@ void CPlayer::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
+	ImGui::SliderFloat("ThrowPoint_X", &m_vIronBars_ThrowPoins.x, -5.f, 5.f);
+	ImGui::SliderFloat("ThrowPoint_Y", &m_vIronBars_ThrowPoins.y, -5.f, 5.f);
+	ImGui::SliderFloat("ThrowPoint_Z", &m_vIronBars_ThrowPoins.z, -5.f, 5.f);
+
 	ImGui::InputFloat("ThrowPower", &m_fThrowPower);
 	ImGui::InputFloat("ChargePower", &m_fChargePower);
 
@@ -5188,6 +5192,9 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_end0"));
 	m_IronBars_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_321_AL_cap_L_end0"));
 
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_325_AL_throw_LL_start"));
+	m_IronBars_Decompose.push_back(m_pModel->Find_Animation("AS_ch0100_325_AL_throw_LL_start"));
+
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_329_AL_throw_LR_start"));
 	m_IronBars_Start.push_back(m_pModel->Find_Animation("AS_ch0100_329_AL_throw_LR_start"));
 
@@ -5256,13 +5263,17 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
+			// 뜯겨나가는 애니메이션 동작
+			static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+				IronBars_AnimActive(true);
+
 			m_fKineticCharge += (_float)fTimeDelta;
 		})
 		.OnExit([&]()
 		{
 			m_fKineticCharge = 0.f;
 		})
-			.AddTransition("IRONBARS_CHARGE to IRONBARS_START", "IRONBARS_START")
+			.AddTransition("IRONBARS_CHARGE to IRONBARS_DECOMPOSE", "IRONBARS_DECOMPOSE")
 			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
 			.Priority(0)
 
@@ -5274,6 +5285,9 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		.OnStart([&]()
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Cancel);
+
+			static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+				IronBars_AnimActive(false);
 		})
 		.OnExit([&]()
 		{
@@ -5287,21 +5301,71 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			})
 			.Priority(0)
 
-		.AddState("IRONBARS_START")
+		.AddState("IRONBARS_DECOMPOSE")
 		.OnStart([&]() 
 		{
 			m_bKineticSpecial_Activate = true;
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Decompose);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			// 쇠창살 렌더 바꾸기
+		})
+		.OnExit([&]()
+		{
+			static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+				IronBars_Decompose(true);
+
+			m_fKineticCharge = 0.f;
+		})
+
+			.AddTransition("IRONBARS_DECOMPOSE to IRONBARS_START", "IRONBARS_START")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"); 
+			})
+			.Priority(0)
+
+		.AddState("IRONBARS_START")
+		.OnStart([&]() 
+		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Start);
 		})
 		.Tick([&](double fTimeDelta)
 		{
-		
+			_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio();
+			
+			if (0.5f >= fRatio)
+			{
+				if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+				{
+					_float4 vTargetPos = static_cast<CScarletCharacter*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetColliderPosition();
+					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+						IronBars_LookAtTarget(vTargetPos, fRatio * 2.f);
+				}
+				// 방향 보간
+			}
+			else
+			{
+				if (IronBars.IsNotDo())
+				{
+					if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+					{
+						_float4 vTargetPos = static_cast<CScarletCharacter*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetColliderPosition();
+						static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+							IronBars_Shooting_All(vTargetPos);
+					}
+				}
+				// 날아감
+			}
+
+			// 다이나믹으로 변경하고 날아가 부딪히기
 		})
 		.OnExit([&]()
 		{
-			m_fKineticCharge = 0.f;
+			IronBars.Reset();
 		})
-
+			
 			.AddTransition("IRONBARS_START to IRONBARS_CHARGE_EX", "IRONBARS_CHARGE_EX")
 			.Predicator([&]()->_bool 
 			{ 
@@ -5319,7 +5383,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-		
+			// 몬스터와 쇠창살 충돌 후 추가타 대기함 -> 여긴웨이팅임
 		})
 		.OnExit([&]()
 		{
@@ -5371,7 +5435,17 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-		
+			// 몬스터 방향으로, 플레이어 위치에서 8개 방향으로 쇠창살 보간 정렬
+			_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio();
+			
+			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+			{
+				_float4 vTargetPos = static_cast<CScarletCharacter*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetColliderPosition();
+				_float4 vDestPos = GetColliderPosition() + m_vIronBars_ThrowPoins;
+				static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+					IronBars_Reload(vDestPos, vTargetPos, fRatio);
+			}
+			
 		})
 		.OnExit([&]()
 		{
@@ -5393,7 +5467,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-		
+			// 추가타 입력 대기
 		})
 		.OnExit([&]()
 		{
@@ -5445,19 +5519,43 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
+			// 쇠창살 다이나믹으로 변경하고 몬스터 방향으로 발사, 충돌 0.5초 후 키네틱으로 변경하여 잡음
+			_float4 vTargetPos = { 0.f, 0.f, 0.f, 0.f };
+			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+			{
+				vTargetPos = static_cast<CScarletCharacter*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetColliderPosition();
+			}
+
 			if (m_bLeftClick && m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio() >= 0.2f)
 			{
 				if (m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetName() == "AS_ch0100_348_AL_throw1_loop")
 				{
 					m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Throw_02);
+
+					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+						IronBars_Shooting_Single(vTargetPos, 0);
+					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+						IronBars_Shooting_Single(vTargetPos, 1);
 				}
 				else if (m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetName() == "AS_ch0100_348_AL_throw2_start")
 				{
 					m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Throw_03);
+
+					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+						IronBars_Shooting_Single(vTargetPos, 2);
+					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+						IronBars_Shooting_Single(vTargetPos, 3);
 				}
 				else if (m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetName() == "AS_ch0100_348_AL_throw3_start")
 				{
 					m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Throw_04);
+
+					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+						IronBars_Shooting_Single(vTargetPos, 4);
+					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+						IronBars_Shooting_Single(vTargetPos, 5);
+					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+						IronBars_Shooting_Single(vTargetPos, 6);
 				}
 			}
 		})
@@ -5481,17 +5579,57 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
+			// 위쪽으로 올라가는 시간동안 보간하여 위치 잡고 메시 변경
+			// 애니메이션에 태워서 발사
+
 			if (nullptr != m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket"))
 			{
-				m_pKineticAnimModel->GetPlayAnimation()->Update_Bones_SyncRatio(m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayTime());
+				_float fPlayTime = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayTime();
+
+				m_pKineticAnimModel->GetPlayAnimation()->Update_Bones_SyncRatio_NonLocalLock(fPlayTime);
 				m_pKineticAnimModel->Compute_CombindTransformationMatrix();
 
-				static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
-					IronBars_AttachAnim(m_pKineticAnimModel, m_pTransformCom);
+				_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio();
+
+				if (0.2f > fRatio)
+				{
+					// 0.2로 보정
+					_float fDuration = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetCurDuration();
+					m_pKineticAnimModel->GetPlayAnimation()->Update_Bones_SyncRatio_NonLocalLock(fDuration * 0.2f);
+					m_pKineticAnimModel->Compute_CombindTransformationMatrix();
+				}
+
+
+				if (0.2f > fRatio)
+				{
+					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+						IronBars_LerpAnim(m_pKineticAnimModel, m_pTransformCom, m_vIronBars_ThrowPoins, fRatio / 0.2f);
+				}
+				else if (0.2f <= fRatio && 0.6 > fRatio)
+				{
+					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+						IronBars_AttachAnim(m_pKineticAnimModel, m_pTransformCom, m_vIronBars_ThrowPoins);
+				}
+				else if (0.6f <= fRatio && IronBars.IsNotDo())
+				{
+					if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+					{
+						_float4 vTargetPos = static_cast<CScarletCharacter*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetColliderPosition();
+						static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+							IronBars_Shooting_All(vTargetPos);
+					}
+					else
+					{
+						_float4 vTargetPos = {0.f, 0.f, 0.f, 0.f};
+						static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+							IronBars_Shooting_All(vTargetPos);
+					}
+				}
 			}
 		})
 		.OnExit([&]()
 		{
+			IronBars.Reset();
 			SyncEffectLocalMove("Kinetic_Special_AnimSocket");
 			m_fKineticCharge = 0.f;
 		})
@@ -6938,7 +7076,7 @@ void CPlayer::SpecialObject_Targeting()
 	}
 	else
 	{
-		_float fDistance = 20.f;
+		_float fDistance = 30.f;
 
 		for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, LAYER_KINETIC)->GetGameObjects())
 		{

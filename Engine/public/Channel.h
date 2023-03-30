@@ -16,6 +16,7 @@ public:
 	void Link_Model(class CModel* pModel);
 
 	void Update_TransformMatrix(_double PlayTime);
+	void Update_TransformMatrix_NonLocalLock(_double PlayTime);
 	void Blend_TransformMatrix(_double PlayTime, _float fBlendRatio);
 	void Blend_Additive(_double PlayTime, _float fAdditiveRatio);
 	_bool IsLinked() const { return m_pBone != nullptr; }

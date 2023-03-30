@@ -58,6 +58,7 @@
 #include "Special_IronBars_Bars.h"
 #include "Special_IronBars.h"
 #include "Special_IronBars_SingleBars.h"
+#include "Special_IronBars_MultiBars.h"
 
 // Player Setting
 #include "Player.h"
@@ -514,6 +515,10 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_IronBars_SingleBars", pModel_IronBars_SingleBars));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_IronBars_SingleBars", CSpecial_IronBars_SingleBars::Create(pDevice, pContext)));
 
+	auto pModel_IronBars_MultiBars = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/IronBars/IronBars_MultiBars.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_IronBars_MultiBars", pModel_IronBars_MultiBars));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_IronBars_MultiBars", CSpecial_IronBars_MultiBars::Create(pDevice, pContext)));
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_IronBars", CSpecial_IronBars::Create(pDevice, pContext)));
 

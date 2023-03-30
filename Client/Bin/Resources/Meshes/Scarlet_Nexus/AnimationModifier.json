@@ -2989,7 +2989,7 @@
     },
     "AS_ch0100_348_AL_obj": {
         "Duration": 130.0,
-        "TickPerSecond": 65.0,
+        "TickPerSecond": 43.33300018310547,
         "bLooping": false,
         "vecEvent": []
     },

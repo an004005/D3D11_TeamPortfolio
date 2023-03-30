@@ -1142,6 +1142,9 @@
     <ClInclude Include="..\public\Special_IronBars_SingleBars.h">
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Special_IronBars_MultiBars.h">
+      <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1868,6 +1871,9 @@
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Special_IronBars_SingleBars.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_IronBars_MultiBars.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
     </ClCompile>
   </ItemGroup>

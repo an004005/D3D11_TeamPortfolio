@@ -68,6 +68,8 @@ HRESULT CSpecial_DropObject_Bundle::Initialize(void * pArg)
 			m_bDecompose = true;
 			m_bDeadCheck = true;
 			m_fDeadTime = 3.f;
+
+			//CVFX_Manager::GetInstance()->GetEffect(EFFECT::)
 		}
 	});
 

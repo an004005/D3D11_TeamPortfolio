@@ -1,0 +1,104 @@
+{
+    "BatchObjs": [
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/KineticSpecial_DropObject_Bundle.json",
+                "Layer": "Layer_Kinetic",
+                "ProtoTag": "Prototype_GameObject_Special_DropObject_Bundle"
+            },
+            "WorldMatrix": [
+                0.7435693144798279,
+                -3.52644292433979e-07,
+                0.6686520576477051,
+                0.0,
+                0.0024649042170494795,
+                0.9999889731407166,
+                -0.002740550320595503,
+                0.0,
+                -0.6686469912528992,
+                0.0036859652027487755,
+                0.743563711643219,
+                0.0,
+                16.89431381225586,
+                63.0,
+                -28.90620994567871,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/KineticSpecial_DropObject_Bundle.json",
+                "Layer": "Layer_Kinetic",
+                "ProtoTag": "Prototype_GameObject_Special_DropObject_Bundle"
+            },
+            "WorldMatrix": [
+                -0.19179871678352356,
+                -3.490594338018127e-07,
+                -0.981431245803833,
+                0.0,
+                -3.378826818334346e-08,
+                0.9999958276748657,
+                -3.490590358978807e-07,
+                0.0,
+                0.9814292788505554,
+                -3.378823976163403e-08,
+                -0.19179832935333252,
+                0.0,
+                14.404131889343262,
+                63.0,
+                -62.096195220947266,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/KineticSpecial_DropObject_Bundle.json",
+                "Layer": "Layer_Kinetic",
+                "ProtoTag": "Prototype_GameObject_Special_DropObject_Bundle"
+            },
+            "WorldMatrix": [
+                0.41977959871292114,
+                0.0,
+                -0.9076200723648071,
+                0.0,
+                0.0,
+                0.9999958276748657,
+                0.0,
+                0.0,
+                0.9076196551322937,
+                0.0,
+                0.41977939009666443,
+                0.0,
+                -14.462159156799316,
+                63.0,
+                -31.50895118713379,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/KineticSpecial_DropObject_Bundle.json",
+                "Layer": "Layer_Kinetic",
+                "ProtoTag": "Prototype_GameObject_Special_DropObject_Bundle"
+            },
+            "WorldMatrix": [
+                0.794490396976471,
+                0.0,
+                -0.6072713136672974,
+                0.0,
+                0.0,
+                0.9999958276748657,
+                0.0,
+                0.0,
+                0.6072705388069153,
+                0.0,
+                0.7944894433021545,
+                0.0,
+                -11.17236328125,
+                63.0,
+                -58.35444259643555,
+                1.0
+            ]
+        }
+    ]
+}
