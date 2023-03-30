@@ -277,6 +277,52 @@
             }
         },
         {
+            "ChildTag": "Tutorial6\u0000",
+            "ObjectTag": "Tutorial6",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 50.0,
+            "Priority": 0,
+            "Prototype_GameObject": "TutorialUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Tutorial\\Tutorial6.png\u0000"
+                ]
+            },
+            "SizeX": 600.0,
+            "SizeY": 550.0,
+            "Transform": {
+                "WorldMatrix": [
+                    600.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    550.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    50.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
             "ChildTag": "Tutorial_Check0\u0000",
             "ObjectTag": "Tutorial_Check0",
             "Pivot": 0,

@@ -310,7 +310,7 @@
         },
         {
             "JsonData": {
-                "ObjectTag": "Tutorial4",
+                "ObjectTag": "Tutorial6",
                 "Prototype_GameObject": "Prototype_TipTrigger\u0000",
                 "RigidBody": {
                     "ColliderType": 5,
@@ -359,7 +359,7 @@
                     ]
                 },
                 "TutorialOrTips": false,
-                "TutorialType": 4
+                "TutorialType": 5
             },
             "Preset": {
                 "JsonPath": "",
