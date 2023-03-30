@@ -390,7 +390,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_026_AL_run"))
 			.StartEvent([&]() 
 			{ 
-				static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vMoveDir);	// ÀÌµ¿ÇÏ°í ÀÖ´Â ¹æÇâÀ» ºÁ¾ßµÊ
+				static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vMoveDir);	// ì´ë™í•˜ê³  ìˆëŠ” ë°©í–¥ì„ ë´ì•¼ë¨
 				static_cast<CPlayer*>(m_pTargetObject)
 					->SetAbleState({ true, true, false, false, false, true, true, true, true, false });
 			})
@@ -750,7 +750,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 #pragma endregion Attack_A
 
 #pragma region Dash And Run
-		// ´ë½Ã ½ºÅ¸Æ® ¸ğ¼Ç
+		// ëŒ€ì‹œ ìŠ¤íƒ€íŠ¸ ëª¨ì…˜
 		.AddState("DASH")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_051_AL_dodge_F_start"))
 			.StartEvent([&]() 
@@ -787,7 +787,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.AddTransition("DASH to DASH_END_FRONT", "DASH_END_FRONT")
 				.Duration(0.f).Priority(0)
 
-		// ¾ÕÂÊ ´ë½Ã °ü·Ã
+		// ì•ìª½ ëŒ€ì‹œ ê´€ë ¨
 		.AddState("DASH_START_FRONT")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_051_AL_dodge_F_start"))
 			.StartEvent([&]() 
@@ -852,7 +852,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f)
 				.Priority(100)
 
-		// ÁÂÃø ´ë½Ã °ü·Ã
+		// ì¢Œì¸¡ ëŒ€ì‹œ ê´€ë ¨
 		.AddState("DASH_START_LEFT")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_057_AL_dodge_L_start"))
 			.StartEvent([&]() 
@@ -901,7 +901,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f)
 				.Priority(100)
 
-		// ¿ìÃø ´ë½Ã °ü·Ã
+		// ìš°ì¸¡ ëŒ€ì‹œ ê´€ë ¨
 		.AddState("DASH_START_RIGHT")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_053_AL_dodge_R_start"))
 			.StartEvent([&]() 
@@ -954,7 +954,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f)
 				.Priority(100)
 
-		// ÈÄ¹æ ´ë½Ã °ü·Ã
+		// í›„ë°© ëŒ€ì‹œ ê´€ë ¨
 		.AddState("DASH_START_BACK")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_055_AL_dodge_B_start"))
 			.StartEvent([&]() 
@@ -1011,7 +1011,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f)
 				.Priority(100)
 
-		// ´Ş¸®±â
+		// ë‹¬ë¦¬ê¸°
 		.AddState("RUN_FRONT")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_036_AL_dash"))
 			.StartEvent([&]() 
@@ -1049,7 +1049,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.Duration(0.1f)
 				.Priority(100)
 
-		// ´Ş¸®±â Á¾·á
+		// ë‹¬ë¦¬ê¸° ì¢…ë£Œ
 		.AddState("RUN_END")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_038_AL_dash_stop"))
 			.StartEvent([&]() 
@@ -1407,7 +1407,7 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 				.AddTransition("CHARGE_ATTACK_03 to IDLE", "IDLE")
 				.Duration(0.1f).Priority(1)
 
-		// Â÷Áö Ãë¼Ò, Â÷Áö 1´Ü °ø°İ, Â÷Áö 2´Ü °ø°İ
+		// ì°¨ì§€ ì·¨ì†Œ, ì°¨ì§€ 1ë‹¨ ê³µê²©, ì°¨ì§€ 2ë‹¨ ê³µê²©
 
 
 #pragma endregion ChargeAttack
@@ -2330,7 +2330,7 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 
 	string szCurAnimName = "";
 
-	// ¼ÒÄÏÀÌ ºñ¾îÀÖ´ÂÁö Å½»ö
+	// ì†Œì¼“ì´ ë¹„ì–´ìˆëŠ”ì§€ íƒìƒ‰
 	list<CAnimation*> CurSocket;
 
 	for (auto& iter : m_mapAnimSocket)
@@ -2344,7 +2344,7 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 		}
 	}
 
-	// ¹ß°ßÇÑ ¼ÒÄÏÀÌ ÀÖÀ¸¸é ÇØ´ç ¼ÒÄÏÀ» ½ÇÇà
+	// ë°œê²¬í•œ ì†Œì¼“ì´ ìˆìœ¼ë©´ í•´ë‹¹ ì†Œì¼“ì„ ì‹¤í–‰
 	if (!CurSocket.empty())
 	{
 		auto Socket = CurSocket.front();
@@ -2363,7 +2363,7 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 		}
 		else if (m_bAttach)
 		{
-			m_fLerpTime = 0.f;	// ¾îÅÂÄ¡¸é ¹Ù·Î º¸°£
+			m_fLerpTime = 0.f;	// ì–´íƒœì¹˜ë©´ ë°”ë¡œ ë³´ê°„
 			m_bSeperateSwitch = false;
 			m_bAttach = false;
 
@@ -2376,7 +2376,7 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
 		}
 
-		//if (m_bSeperateAnim)	// ºĞ¸® ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ µ¹¾Æ°¡¸é ÇÏÃ¼´Â ¾÷µ¥ÀÌÆ®ÇÏÀÚ
+		//if (m_bSeperateAnim)	// ë¶„ë¦¬ ì• ë‹ˆë©”ì´ì…˜ì´ ëŒì•„ê°€ë©´ í•˜ì²´ëŠ” ì—…ë°ì´íŠ¸í•˜ì
 		//{
 		//	m_bSeperateSwitch = true;
 		//}
@@ -2399,6 +2399,8 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 		{
 			m_pModel->SetBoneMask(EBoneMask::ON_ALL);
 		}
+
+		m_bBaseTickCheck = false;
 	}
 	else if (bChange)
 	{
@@ -2413,12 +2415,16 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 		}
 
 		m_fLerpTime = 0.f;
+
+		m_bBaseTickCheck = false;
 	}
 	else if (!bChange && m_bSeperateSwitch)
 	{
 		bLocalMove = false;
 		m_bSeperateSwitch = false;
 		m_fLerpTime = 0.f;
+
+		m_bBaseTickCheck = false;
 	}
 	else if (m_fLerpTime < m_fLerpDuration)
 	{
@@ -2428,10 +2434,14 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 			m_pASM_Base->GetCurState()->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
 		
 		m_fLerpTime += (_float)TimeDelta;
+
+		m_bBaseTickCheck = false;
 	}
 	else
 	{
 		m_pASM_Base->Tick(TimeDelta);
+
+		m_bBaseTickCheck = true;
 	}
 
 	if (m_pASM_Base->GetCurState()->m_SpairAnimation != nullptr)
@@ -2441,7 +2451,7 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 
 	m_pModel->Compute_CombindTransformationMatrix();
 
-	// ·ÎÄÃ¹«ºê ¿¬»êÀº °è¼Ó ÇØÁÖµÇ, Àû¿ëÀº Àû¿ëÀ» ÇÒ Å¸ÀÌ¹Ö¿¡¸¸ »ç¿ë
+	// ë¡œì»¬ë¬´ë¸Œ ì—°ì‚°ì€ ê³„ì† í•´ì£¼ë˜, ì ìš©ì€ ì ìš©ì„ í•  íƒ€ì´ë°ì—ë§Œ ì‚¬ìš©
 	_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
 	_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix);
 	if (0.f != XMVectorGetX(XMVector3Length(vLocalMove)))
@@ -2485,18 +2495,18 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 
 //	if (m_bOptionalMove)
 //	{
-		// Åø ÀÛ¾÷ ½Ã¿¡´Â ÀÌ°Å ²ô°í ÇÏ±â!! ¿É¼Å³Î ¹«ºê
+		// íˆ´ ì‘ì—… ì‹œì—ëŠ” ì´ê±° ë„ê³  í•˜ê¸°!! ì˜µì…”ë„ ë¬´ë¸Œ
 		_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTargetObject->GetTransform()->Get_WorldMatrix());
 		m_pTargetObject->GetTransform()->LocalMove(vOpTest);
 //	}
 
-	// Ä«¸Ş¶ó
+	// ì¹´ë©”ë¼
 	CGameInstance::GetInstance()->ActionCamTickByPlayTime(m_pModel->GetPlayAnimation()->GetPlayRatio());
 }
 
 void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
 {
-	// ÇØ´ç ¾Ö´Ï¸ŞÀÌ¼Ç ½ºÅ×ÀÌÆ® ¸Ó½ÅÀ» ÀÛµ¿½ÃÅ°´Â °´Ã¼ÀÇ »óÅÂ¸¦ °»½Å¹Ş´Â ÇÔ¼ö
+	// í•´ë‹¹ ì• ë‹ˆë©”ì´ì…˜ ìŠ¤í…Œì´íŠ¸ ë¨¸ì‹ ì„ ì‘ë™ì‹œí‚¤ëŠ” ê°ì²´ì˜ ìƒíƒœë¥¼ ê°±ì‹ ë°›ëŠ” í•¨ìˆ˜
 
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
@@ -2535,7 +2545,7 @@ void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
 
 	m_bLerp = m_pASM_Base->isLerping();
 
-	// ¾Ö´Ï¸ŞÀÌ¼Ç º¯°æ È®ÀÎÇÏ´Â ºÎºĞ
+	// ì• ë‹ˆë©”ì´ì…˜ ë³€ê²½ í™•ì¸í•˜ëŠ” ë¶€ë¶„
 	_bool bBefOnBattle = m_bOnBattle;
 	m_bOnBattle = pPlayer->isBattle();
 
@@ -2556,7 +2566,7 @@ void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
 	{
 		SpairAnimationManager();
 	}
-	// ~¾Ö´Ï¸ŞÀÌ¼Ç º¯°æ È®ÀÎÇÏ´Â ºÎºĞ
+	// ~ì• ë‹ˆë©”ì´ì…˜ ë³€ê²½ í™•ì¸í•˜ëŠ” ë¶€ë¶„
 }
 
 void CBaseAnimInstance::Imgui_RenderState()
@@ -2565,7 +2575,7 @@ void CBaseAnimInstance::Imgui_RenderState()
 
 void CBaseAnimInstance::InputAnimSocket(const string& strSocName, list<CAnimation*> AnimList)
 {
-	// ±âÁ¸ ¼ÒÄÏÀ» ½Ï Áö¿ì°í ÀÌ°É·Î µ¤¾î¹ö¸²
+	// ê¸°ì¡´ ì†Œì¼“ì„ ì‹¹ ì§€ìš°ê³  ì´ê±¸ë¡œ ë®ì–´ë²„ë¦¼
 	if (!m_bSeperateAnim)
 		m_pModel->Reset_LocalMove(true);
 
@@ -2588,7 +2598,7 @@ void CBaseAnimInstance::InputAnimSocket(const string& strSocName, list<CAnimatio
 
 void CBaseAnimInstance::AttachAnimSocket(const string & strSocName, list<CAnimation*> AnimList)
 {
-	// ¼ÒÄÏÀÇ ¾Ö´Ï¸ŞÀÌ¼ÇÀ» ±³È¯ÇÏ°í º¸°£ÇÔ, ¾Æ´Ò °æ¿ì ±×³É µ¤¾î¹ö¸²
+	// ì†Œì¼“ì˜ ì• ë‹ˆë©”ì´ì…˜ì„ êµí™˜í•˜ê³  ë³´ê°„í•¨, ì•„ë‹ ê²½ìš° ê·¸ëƒ¥ ë®ì–´ë²„ë¦¼
 
 	//if (!m_bSeperateAnim)
 	//	m_pModel->Reset_LocalMove(true);
@@ -2702,19 +2712,19 @@ void CBaseAnimInstance::ClearAnimSocket(const string & strSocName)
 
 void CBaseAnimInstance::SpairAnimationManager()
 {
-	// ÀüÅõ, ºñÀüÅõ »óÅÂ Ã¼Å© ¹× SAS»óÅÂ Ã¼Å©ÇÏ¿© º¯°æÀÌ ÀÏ¾î³µÀ¸¸é ¾Ö´Ï¸ŞÀÌ¼ÇÀ» °¥¾Æ³¢¿öÁÖ´Â ¿ªÇÒÀ» ÁøÇà
+	// ì „íˆ¬, ë¹„ì „íˆ¬ ìƒíƒœ ì²´í¬ ë° SASìƒíƒœ ì²´í¬í•˜ì—¬ ë³€ê²½ì´ ì¼ì–´ë‚¬ìœ¼ë©´ ì• ë‹ˆë©”ì´ì…˜ì„ ê°ˆì•„ë¼ì›Œì£¼ëŠ” ì—­í• ì„ ì§„í–‰
 	_bool bIsBattle = m_bOnBattle;
 	_bool bIsTeleport = CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_TELEPORT);
 	_bool bIsEletric = CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_ELETRIC);
 
-	// º¯°æÀ» È®ÀÎÇßÀ¸¹Ç·Î SpairAnimÀ» ½Ï ºñ¿ò
-	// Spair°¡ ²¨Áú ¶§ ÇöÀç Àç»ıÁßÀÎ ¾Ö´Ï¸ŞÀÌ¼ÇÀº ²¨Áö¸é ¾ÈµÊ -> ÀÌ°Å º¯°æÇÒ °Í
+	// ë³€ê²½ì„ í™•ì¸í–ˆìœ¼ë¯€ë¡œ SpairAnimì„ ì‹¹ ë¹„ì›€
+	// Spairê°€ êº¼ì§ˆ ë•Œ í˜„ì¬ ì¬ìƒì¤‘ì¸ ì• ë‹ˆë©”ì´ì…˜ì€ êº¼ì§€ë©´ ì•ˆë¨ -> ì´ê±° ë³€ê²½í•  ê²ƒ
 	for (auto& iter : m_pASM_Base->Get_MapStates())
 	{
 		if (m_pASM_Base->GetCurState() == iter.second && (m_bOnBattle))
 		{
 			iter.second->m_ReserveAnimation = iter.second->m_Animation;
-			//iter.second->m_ReserveAnimation->Reset(); -> ÇÊ¿ä¾ø³ªº¾´Ï´Ù
+			//iter.second->m_ReserveAnimation->Reset(); -> í•„ìš”ì—†ë‚˜ë´…ë‹ˆë‹¤
 		}
 		else
 		{
@@ -2723,16 +2733,16 @@ void CBaseAnimInstance::SpairAnimationManager()
 	}
 
 	/*
-	ºĞ±â Á¾·ù
-	1. ÀÏ¹İ ÀüÅõ »óÅÂÀÏ ¶§
-	2. Teleport »ç¿ëÁßÀÎ »óÅÂÀÏ ¶§
-	3. Eletric »ç¿ëÁßÀÎ »óÅÂÀÏ ¶§
-	4. Teleport¿Í Eletric ÀüºÎ »ç¿ëÁßÀÎ »óÅÂÀÏ ¶§
+	ë¶„ê¸° ì¢…ë¥˜
+	1. ì¼ë°˜ ì „íˆ¬ ìƒíƒœì¼ ë•Œ
+	2. Teleport ì‚¬ìš©ì¤‘ì¸ ìƒíƒœì¼ ë•Œ
+	3. Eletric ì‚¬ìš©ì¤‘ì¸ ìƒíƒœì¼ ë•Œ
+	4. Teleportì™€ Eletric ì „ë¶€ ì‚¬ìš©ì¤‘ì¸ ìƒíƒœì¼ ë•Œ
 	*/
 
 	if (true == bIsBattle && false == bIsTeleport && false == bIsEletric)
 	{
-		// 1. ÀÏ¹İ ÀüÅõ »óÅÂÀÏ ¶§
+		// 1. ì¼ë°˜ ì „íˆ¬ ìƒíƒœì¼ ë•Œ
 		m_pASM_Base->SetSpairAnim("IDLE", m_pModel->Find_Animation("AS_ch0100_101_AL_wait01"));
 		m_pASM_Base->SetSpairAnim("WALK", m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"));
 		m_pASM_Base->SetSpairAnim("WALK_START_FRONT", m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"));
@@ -2776,7 +2786,7 @@ void CBaseAnimInstance::SpairAnimationManager()
 	}
 	else if (true == bIsBattle && true == bIsTeleport && false == bIsEletric)
 	{
-		// 2. Teleport »ç¿ëÁßÀÎ »óÅÂÀÏ ¶§
+		// 2. Teleport ì‚¬ìš©ì¤‘ì¸ ìƒíƒœì¼ ë•Œ
 		m_pASM_Base->SetSpairAnim("IDLE", m_pModel->Find_Animation("AS_ch0100_101_AL_wait01"));
 		m_pASM_Base->SetSpairAnim("WALK", m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"));
 		m_pASM_Base->SetSpairAnim("WALK_START_FRONT", m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"));
@@ -2822,7 +2832,7 @@ void CBaseAnimInstance::SpairAnimationManager()
 	}
 	else if (true == bIsBattle && false == bIsTeleport && true == bIsEletric)
 	{
-		// 3. Eletric »ç¿ëÁßÀÎ »óÅÂÀÏ ¶§
+		// 3. Eletric ì‚¬ìš©ì¤‘ì¸ ìƒíƒœì¼ ë•Œ
 		m_pASM_Base->SetSpairAnim("ATK_A1", m_pModel->Find_Animation("AS_ch0100_201_AL_atk_a1_Electric"));
 		m_pASM_Base->SetSpairAnim("ATK_A2", m_pModel->Find_Animation("AS_ch0100_202_AL_atk_a2_Electric"));
 		m_pASM_Base->SetSpairAnim("ATK_A3", m_pModel->Find_Animation("AS_ch0100_203_AL_atk_a3_Electric"));
@@ -2870,7 +2880,7 @@ void CBaseAnimInstance::SpairAnimationManager()
 	}
 	else if (true == bIsBattle && true == bIsTeleport && true == bIsEletric)
 	{
-		// 4. Teleport¿Í Eletric ÀüºÎ »ç¿ëÁßÀÎ »óÅÂÀÏ ¶§
+		// 4. Teleportì™€ Eletric ì „ë¶€ ì‚¬ìš©ì¤‘ì¸ ìƒíƒœì¼ ë•Œ
 		m_pASM_Base->SetSpairAnim("ATK_A1", m_pModel->Find_Animation("AS_ch0100_201_AL_atk_a1_Electric"));
 		m_pASM_Base->SetSpairAnim("ATK_A2", m_pModel->Find_Animation("AS_ch0100_202_AL_atk_a2_Electric"));
 		m_pASM_Base->SetSpairAnim("ATK_A3", m_pModel->Find_Animation("AS_ch0100_203_AL_atk_a3_Electric"));
@@ -2923,7 +2933,7 @@ void CBaseAnimInstance::SpairAnimationManager()
 
 _bool CBaseAnimInstance::CheckAnim(const string & szAnimName)
 {
-	// º¸°£Áß¿¡´Â ±×³É false ¹İÈ¯ÇØ¼­ º¸°£Áß¿¡ State°¡ º¯ÇÏ´Â Âü»ç¸¦ ¸·À½
+	// ë³´ê°„ì¤‘ì—ëŠ” ê·¸ëƒ¥ false ë°˜í™˜í•´ì„œ ë³´ê°„ì¤‘ì— Stateê°€ ë³€í•˜ëŠ” ì°¸ì‚¬ë¥¼ ë§‰ìŒ
 	if (m_pASM_Base->isLerping()) return false;
 
 	return  (szAnimName == m_pModel->GetPlayAnimation()->GetName()) ? true : false;

@@ -1,1 +1,1597 @@
-{"ChildrenUI":[{"ChildTag":"SASSKill_ColleagueName1\u0000","ObjectTag":"SASSKill_ColleagueName1","Pivot":5,"PositionX":-139.0,"PositionY":147.0,"Priority":3,"Prototype_GameObject":"SASSkillName_UI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[[0.0,0.0],[2.0,11.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[0],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_ColleagueName.dds\u0000"]},"SizeX":128.0,"SizeY":32.0,"Transform":{"WorldMatrix":[89.48802185058594,-4.478133678436279,0.0,0.0,1.1195334196090698,22.372005462646484,0.0,0.0,0.0,0.0,1.0,0.0,500.99951171875,-212.99951171875,0.0,1.0]}},{"ChildTag":"SASSKill_ColleagueName2\u0000","ObjectTag":"SASSKill_ColleagueName2","Pivot":5,"PositionX":-178.0,"PositionY":111.0,"Priority":3,"Prototype_GameObject":"SASSkillName_UI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[[1.0,6.0],[2.0,11.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[0],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_ColleagueName.dds\u0000"]},"SizeX":128.0,"SizeY":32.0,"Transform":{"WorldMatrix":[89.48802185058594,-4.478133678436279,0.0,0.0,1.1195334196090698,22.372005462646484,0.0,0.0,0.0,0.0,1.0,0.0,461.99951171875,-248.99951171875,0.0,1.0]}},{"ChildTag":"SASSKill_ColleagueName3\u0000","ObjectTag":"SASSKill_ColleagueName3","Pivot":5,"PositionX":-95.0,"PositionY":107.0,"Priority":3,"Prototype_GameObject":"SASSkillName_UI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[[0.0,2.0],[2.0,11.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[0],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_ColleagueName.dds\u0000"]},"SizeX":128.0,"SizeY":32.0,"Transform":{"WorldMatrix":[89.48802185058594,-4.478133678436279,0.0,0.0,1.1195334196090698,22.372005462646484,0.0,0.0,0.0,0.0,1.0,0.0,544.99951171875,-252.99951171875,0.0,1.0]}},{"ChildTag":"SASSKill_ColleagueName4\u0000","ObjectTag":"SASSKill_ColleagueName4","Pivot":5,"PositionX":-135.0,"PositionY":65.0,"Priority":3,"Prototype_GameObject":"SASSkillName_UI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[[0.0,2.0],[2.0,11.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[0],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_ColleagueName.dds\u0000"]},"SizeX":128.0,"SizeY":32.0,"Transform":{"WorldMatrix":[89.48802185058594,-4.478133678436279,0.0,0.0,1.1195334196090698,22.372005462646484,0.0,0.0,0.0,0.0,1.0,0.0,504.99951171875,-294.99951171875,0.0,1.0]}},{"ChildTag":"SASSKill_SuperPower1\u0000","ObjectTag":"SASSKill_SuperPower1","Pivot":5,"PositionX":-139.0,"PositionY":147.0,"Priority":3,"Prototype_GameObject":"SASSkillName_UI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[[0.0,0.0],[2.0,11.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[0],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_SuperPower.dds\u0000"]},"SizeX":128.0,"SizeY":32.0,"Transform":{"WorldMatrix":[89.48802185058594,-4.478133678436279,0.0,0.0,1.1195334196090698,22.372005462646484,0.0,0.0,0.0,0.0,1.0,0.0,500.99951171875,-212.99951171875,0.0,1.0]}},{"ChildTag":"SASSKill_SuperPower2\u0000","ObjectTag":"SASSKill_SuperPower2","Pivot":5,"PositionX":-178.0,"PositionY":111.0,"Priority":4,"Prototype_GameObject":"SASSkillName_UI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[[1.0,6.0],[2.0,11.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[0],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_SuperPower.dds\u0000"]},"SizeX":128.0,"SizeY":32.0,"Transform":{"WorldMatrix":[89.48802185058594,-4.478133678436279,0.0,0.0,1.1195334196090698,22.372005462646484,0.0,0.0,0.0,0.0,1.0,0.0,461.99951171875,-248.99951171875,0.0,1.0]}},{"ChildTag":"SASSKill_SuperPower3\u0000","ObjectTag":"SASSKill_SuperPower3","Pivot":5,"PositionX":-95.0,"PositionY":107.0,"Priority":3,"Prototype_GameObject":"SASSkillName_UI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[[0.0,6.0],[2.0,11.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[0],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_SuperPower.dds\u0000"]},"SizeX":128.0,"SizeY":32.0,"Transform":{"WorldMatrix":[89.48802185058594,-4.478133678436279,0.0,0.0,1.1195334196090698,22.372005462646484,0.0,0.0,0.0,0.0,1.0,0.0,544.99951171875,-252.99951171875,0.0,1.0]}},{"ChildTag":"SASSKill_SuperPower4\u0000","ObjectTag":"SASSKill_SuperPower4","Pivot":5,"PositionX":-135.0,"PositionY":65.0,"Priority":3,"Prototype_GameObject":"SASSkillName_UI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[[0.0,2.0],[2.0,11.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[0],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_SuperPower.dds\u0000"]},"SizeX":128.0,"SizeY":32.0,"Transform":{"WorldMatrix":[89.48802185058594,-4.478133678436279,0.0,0.0,1.1195334196090698,22.372005462646484,0.0,0.0,0.0,0.0,1.0,0.0,504.99951171875,-294.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Gauge1\u0000","ObjectTag":"SASSkill_Gauge1","Pivot":5,"PositionX":-139.0,"PositionY":157.0,"Priority":3,"Prototype_GameObject":"SASSkillGauge_UI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]],"Float4x4s":[],"Floats":[0.0,1.0],"Ints":[],"Pass":15,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000","..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge1.dds\u0000"]},"SizeX":128.0,"SizeY":128.0,"Transform":{"WorldMatrix":[-108.79986572265625,0.17327873408794403,0.0,0.0,-0.17327873408794403,-108.79986572265625,0.0,0.0,0.0,0.0,1.0,0.0,500.99951171875,-202.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Gauge1Back\u0000","ObjectTag":"SASSkill_Gauge1Back","Pivot":5,"PositionX":-139.0,"PositionY":157.0,"Priority":2,"Prototype_GameObject":"SASSkillGauge_UI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.0,0.0,0.0,0.0]],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":19,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge0.dds\u0000"]},"SizeX":128.0,"SizeY":128.0,"Transform":{"WorldMatrix":[-108.79986572265625,0.17327874898910522,0.0,0.0,-0.17327874898910522,-108.79986572265625,0.0,0.0,0.0,0.0,1.0,0.0,500.99951171875,-202.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Gauge2\u0000","ObjectTag":"SASSkill_Gauge2","Pivot":5,"PositionX":-179.0,"PositionY":117.0,"Priority":3,"Prototype_GameObject":"SASSkillGauge_UI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.2800000011920929,0.7540000081062317,0.6570000052452087,1.0]],"Float4x4s":[],"Floats":[0.0,1.0],"Ints":[],"Pass":15,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000","..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge1.dds\u0000"]},"SizeX":128.0,"SizeY":128.0,"Transform":{"WorldMatrix":[-108.79986572265625,0.17327873408794403,0.0,0.0,-0.17327873408794403,-108.79986572265625,0.0,0.0,0.0,0.0,1.0,0.0,460.99951171875,-242.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Gauge2Back\u0000","ObjectTag":"SASSkill_Gauge2Back","Pivot":5,"PositionX":-179.0,"PositionY":117.0,"Priority":2,"Prototype_GameObject":"SASSkillGauge_UI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,1.0,1.0,1.0]],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":19,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge0.dds\u0000"]},"SizeX":128.0,"SizeY":128.0,"Transform":{"WorldMatrix":[-108.79986572265625,0.17327873408794403,0.0,0.0,-0.17327873408794403,-108.79986572265625,0.0,0.0,0.0,0.0,1.0,0.0,460.99951171875,-242.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Gauge3\u0000","ObjectTag":"SASSkill_Gauge3","Pivot":5,"PositionX":-95.0,"PositionY":114.5,"Priority":3,"Prototype_GameObject":"SASSkillGauge_UI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8199999928474426,"ShaderParams":{"Float2s":[],"Float4s":[[0.0,0.0,0.0,0.0]],"Float4x4s":[],"Floats":[0.0,3.0],"Ints":[],"Pass":15,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000","..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge1.dds\u0000"]},"SizeX":128.0,"SizeY":128.0,"Transform":{"WorldMatrix":[-108.79986572265625,0.17327873408794403,0.0,0.0,-0.16716299951076508,-104.9598617553711,0.0,0.0,0.0,0.0,1.0,0.0,544.99951171875,-245.49951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Gauge3Back\u0000","ObjectTag":"SASSkill_Gauge3Back","Pivot":5,"PositionX":-95.0,"PositionY":114.5,"Priority":2,"Prototype_GameObject":"SASSkillGauge_UI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.0,0.0,0.0,0.0]],"Float4x4s":[],"Floats":[0.0],"Ints":[],"Pass":19,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge0.dds\u0000"]},"SizeX":128.0,"SizeY":128.0,"Transform":{"WorldMatrix":[-108.79986572265625,0.17327873408794403,0.0,0.0,-0.17327873408794403,-108.79986572265625,0.0,0.0,0.0,0.0,1.0,0.0,544.99951171875,-245.49951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Gauge4\u0000","ObjectTag":"SASSkill_Gauge4","Pivot":5,"PositionX":-135.0,"PositionY":76.0,"Priority":3,"Prototype_GameObject":"SASSkillGauge_UI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.8569999933242798,0.8410000205039978,1.0]],"Float4x4s":[],"Floats":[60.0,0.0],"Ints":[],"Pass":15,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000","..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge1.dds\u0000"]},"SizeX":128.0,"SizeY":128.0,"Transform":{"WorldMatrix":[-108.79986572265625,0.17327873408794403,0.0,0.0,-0.17327873408794403,-108.79986572265625,0.0,0.0,0.0,0.0,1.0,0.0,504.99951171875,-283.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Gauge4Back\u0000","ObjectTag":"SASSkill_Gauge4Back","Pivot":5,"PositionX":-135.0,"PositionY":76.0,"Priority":2,"Prototype_GameObject":"SASSkillGauge_UI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.9919999837875366,0.4490000009536743,0.3869999945163727,1.0]],"Float4x4s":[],"Floats":[60.0],"Ints":[],"Pass":19,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge0.dds\u0000"]},"SizeX":128.0,"SizeY":128.0,"Transform":{"WorldMatrix":[-108.79986572265625,0.17327873408794403,0.0,0.0,-0.17327873408794403,-108.79986572265625,0.0,0.0,0.0,0.0,1.0,0.0,504.99951171875,-283.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Icon1\u0000","ObjectTag":"SASSkill_Icon1","Pivot":5,"PositionX":-143.0,"PositionY":153.0,"Priority":2,"Prototype_GameObject":"SASSkillIcon_UI\u0000","ScaleX":0.5,"ScaleY":0.5,"ShaderParams":{"Float2s":[[10.0,0.0],[11.0,2.0]],"Float4s":[[0.0,0.0,0.0,1.0]],"Float4x4s":[],"Floats":[],"Ints":[1],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\814.148.74.74.11.2.png\u0000"]},"SizeX":74.0,"SizeY":74.0,"Transform":{"WorldMatrix":[37.0,0.0,0.0,0.0,0.0,37.0,0.0,0.0,0.0,0.0,1.0,0.0,496.99951171875,-206.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Icon2\u0000","ObjectTag":"SASSkill_Icon2","Pivot":5,"PositionX":-182.0,"PositionY":113.0,"Priority":2,"Prototype_GameObject":"SASSkillIcon_UI\u0000","ScaleX":0.5,"ScaleY":0.5,"ShaderParams":{"Float2s":[[6.0,0.0],[11.0,2.0]],"Float4s":[[0.0,0.0,0.0,1.0]],"Float4x4s":[],"Floats":[],"Ints":[1],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\814.148.74.74.11.2.png\u0000"]},"SizeX":74.0,"SizeY":74.0,"Transform":{"WorldMatrix":[37.0,0.0,0.0,0.0,0.0,37.0,0.0,0.0,0.0,0.0,1.0,0.0,457.99951171875,-246.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Icon3\u0000","ObjectTag":"SASSkill_Icon3","Pivot":5,"PositionX":-98.0,"PositionY":110.0,"Priority":2,"Prototype_GameObject":"SASSkillIcon_UI\u0000","ScaleX":0.5,"ScaleY":0.5,"ShaderParams":{"Float2s":[[10.0,0.0],[11.0,2.0]],"Float4s":[[0.0,0.0,0.0,1.0]],"Float4x4s":[],"Floats":[],"Ints":[1],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\814.148.74.74.11.2.png\u0000"]},"SizeX":74.0,"SizeY":74.0,"Transform":{"WorldMatrix":[37.0,0.0,0.0,0.0,0.0,37.0,0.0,0.0,0.0,0.0,1.0,0.0,541.99951171875,-249.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Icon4\u0000","ObjectTag":"SASSkill_Icon4","Pivot":5,"PositionX":-138.0,"PositionY":71.0,"Priority":2,"Prototype_GameObject":"SASSkillIcon_UI\u0000","ScaleX":0.5,"ScaleY":0.5,"ShaderParams":{"Float2s":[[2.0,1.0],[11.0,2.0]],"Float4s":[[0.0,0.0,0.0,1.0]],"Float4x4s":[],"Floats":[],"Ints":[0],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\814.148.74.74.11.2.png\u0000"]},"SizeX":74.0,"SizeY":74.0,"Transform":{"WorldMatrix":[37.0,0.0,0.0,0.0,0.0,37.0,0.0,0.0,0.0,0.0,1.0,0.0,501.99951171875,-288.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_IconNumber1\u0000","ObjectTag":"SASSkill_IconNumber1","Pivot":5,"PositionX":-140.0,"PositionY":166.0,"Priority":3,"Prototype_GameObject":"Default_UI\u0000","ScaleX":0.6000000238418579,"ScaleY":0.6000000238418579,"ShaderParams":{"Float2s":[[0.0,0.0],[4.0,1.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_IconNumber.dds\u0000"]},"SizeX":32.0,"SizeY":32.0,"Transform":{"WorldMatrix":[19.200000762939453,0.0,0.0,0.0,0.0,19.200000762939453,0.0,0.0,0.0,0.0,1.0,0.0,499.99951171875,-193.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_IconNumber2\u0000","ObjectTag":"SASSkill_IconNumber2","Pivot":5,"PositionX":-179.0,"PositionY":128.0,"Priority":3,"Prototype_GameObject":"Default_UI\u0000","ScaleX":0.6000000238418579,"ScaleY":0.6000000238418579,"ShaderParams":{"Float2s":[[1.0,0.0],[4.0,1.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_IconNumber.dds\u0000"]},"SizeX":32.0,"SizeY":32.0,"Transform":{"WorldMatrix":[19.200000762939453,0.0,0.0,0.0,0.0,19.200000762939453,0.0,0.0,0.0,0.0,1.0,0.0,460.99951171875,-231.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_IconNumber3\u0000","ObjectTag":"SASSkill_IconNumber3","Pivot":5,"PositionX":-95.0,"PositionY":124.0,"Priority":3,"Prototype_GameObject":"Default_UI\u0000","ScaleX":0.6000000238418579,"ScaleY":0.6000000238418579,"ShaderParams":{"Float2s":[[2.0,0.0],[4.0,1.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_IconNumber.dds\u0000"]},"SizeX":32.0,"SizeY":32.0,"Transform":{"WorldMatrix":[19.200000762939453,0.0,0.0,0.0,0.0,19.200000762939453,0.0,0.0,0.0,0.0,1.0,0.0,544.99951171875,-235.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_IconNumber4\u0000","ObjectTag":"SASSkill_IconNumber4","Pivot":5,"PositionX":-136.0,"PositionY":82.0,"Priority":3,"Prototype_GameObject":"Default_UI\u0000","ScaleX":0.6499999761581421,"ScaleY":0.6499999761581421,"ShaderParams":{"Float2s":[[3.0,0.0],[4.0,1.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":13,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_IconNumber.dds\u0000"]},"SizeX":32.0,"SizeY":32.0,"Transform":{"WorldMatrix":[20.799999237060547,0.0,0.0,0.0,0.0,20.799999237060547,0.0,0.0,0.0,0.0,1.0,0.0,503.99951171875,-277.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Light1\u0000","ObjectTag":"SASSkill_Light1","Pivot":5,"PositionX":-139.0,"PositionY":155.0,"Priority":1,"Prototype_GameObject":"SASSkillLight_UI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[[0.0,0.0,0.0,0.0]],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":17,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_Light.dds\u0000","..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000"]},"SizeX":100.0,"SizeY":100.0,"Transform":{"WorldMatrix":[100.0,0.0,0.0,0.0,0.0,100.0,0.0,0.0,0.0,0.0,1.0,0.0,500.99951171875,-204.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Light2\u0000","ObjectTag":"SASSkill_Light2","Pivot":5,"PositionX":-178.5,"PositionY":115.0,"Priority":1,"Prototype_GameObject":"SASSkillLight_UI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[[0.0,0.0,0.0,0.0]],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":17,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_Light.dds\u0000","..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000"]},"SizeX":100.0,"SizeY":100.0,"Transform":{"WorldMatrix":[100.0,0.0,0.0,0.0,0.0,100.0,0.0,0.0,0.0,0.0,1.0,0.0,461.49951171875,-244.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Light3\u0000","ObjectTag":"SASSkill_Light3","Pivot":5,"PositionX":-95.0,"PositionY":111.0,"Priority":1,"Prototype_GameObject":"SASSkillLight_UI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[[0.0,0.0,0.0,0.0]],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":17,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_Light.dds\u0000","..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000"]},"SizeX":100.0,"SizeY":100.0,"Transform":{"WorldMatrix":[100.0,0.0,0.0,0.0,0.0,100.0,0.0,0.0,0.0,0.0,1.0,0.0,544.99951171875,-248.99951171875,0.0,1.0]}},{"ChildTag":"SASSkill_Light4\u0000","ObjectTag":"SASSkill_Light4","Pivot":5,"PositionX":-133.0,"PositionY":71.0,"Priority":1,"Prototype_GameObject":"SASSkillLight_UI\u0000","ScaleX":1.0,"ScaleY":1.0,"ShaderParams":{"Float2s":[],"Float4s":[[0.0,0.0,0.0,0.0]],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":17,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_Light.dds\u0000","..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000"]},"SizeX":100.0,"SizeY":100.0,"Transform":{"WorldMatrix":[100.0,0.0,0.0,0.0,0.0,100.0,0.0,0.0,0.0,0.0,1.0,0.0,506.99951171875,-288.99951171875,0.0,1.0]}}],"ObjectTag":"PlayerInfo","Pivot":0,"PositionX":-0.0004808008670806885,"PositionY":0.0004808008670806885,"Priority":0,"Prototype_GameObject":"Canvas_SASSkillMove\u0000","ScaleX":0.0,"ScaleY":0.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":[]},"SizeX":1280.0,"SizeY":720.0,"Transform":{"WorldMatrix":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "SASSKill_ColleagueName1\u0000",
+            "ObjectTag": "SASSKill_ColleagueName1",
+            "Pivot": 5,
+            "PositionX": -153.0,
+            "PositionY": 182.0,
+            "Priority": 3,
+            "Prototype_GameObject": "SASSkillName_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        2.0,
+                        11.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    0
+                ],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_ColleagueName.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    108.75104522705078,
+                    -3.2635107040405273,
+                    0.0,
+                    0.0,
+                    0.8158776760101318,
+                    27.187761306762695,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    646.99951171875,
+                    -267.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSKill_ColleagueName2\u0000",
+            "ObjectTag": "SASSKill_ColleagueName2",
+            "Pivot": 5,
+            "PositionX": -201.0,
+            "PositionY": 136.0,
+            "Priority": 3,
+            "Prototype_GameObject": "SASSkillName_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        1.0,
+                        6.0
+                    ],
+                    [
+                        2.0,
+                        11.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    0
+                ],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_ColleagueName.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    108.66403198242188,
+                    -5.437734127044678,
+                    0.0,
+                    0.0,
+                    1.3594335317611694,
+                    27.16600799560547,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    598.99951171875,
+                    -313.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSKill_ColleagueName3\u0000",
+            "ObjectTag": "SASSKill_ColleagueName3",
+            "Pivot": 5,
+            "PositionX": -99.0,
+            "PositionY": 131.0,
+            "Priority": 3,
+            "Prototype_GameObject": "SASSkillName_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        2.0
+                    ],
+                    [
+                        2.0,
+                        11.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    0
+                ],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_ColleagueName.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    108.66403198242188,
+                    -5.437734127044678,
+                    0.0,
+                    0.0,
+                    1.3594335317611694,
+                    27.16600799560547,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    700.99951171875,
+                    -318.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSKill_ColleagueName4\u0000",
+            "ObjectTag": "SASSKill_ColleagueName4",
+            "Pivot": 5,
+            "PositionX": -149.0,
+            "PositionY": 81.0,
+            "Priority": 3,
+            "Prototype_GameObject": "SASSkillName_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        2.0
+                    ],
+                    [
+                        2.0,
+                        11.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    0
+                ],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_ColleagueName.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    108.66403198242188,
+                    -5.437734127044678,
+                    0.0,
+                    0.0,
+                    1.3594335317611694,
+                    27.16600799560547,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    650.99951171875,
+                    -368.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSKill_SuperPower1\u0000",
+            "ObjectTag": "SASSKill_SuperPower1",
+            "Pivot": 5,
+            "PositionX": -153.0,
+            "PositionY": 182.0,
+            "Priority": 3,
+            "Prototype_GameObject": "SASSkillName_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        2.0,
+                        11.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    0
+                ],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_SuperPower.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    108.66403198242188,
+                    -5.437734127044678,
+                    0.0,
+                    0.0,
+                    1.3594335317611694,
+                    27.16600799560547,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    646.99951171875,
+                    -267.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSKill_SuperPower2\u0000",
+            "ObjectTag": "SASSKill_SuperPower2",
+            "Pivot": 5,
+            "PositionX": -201.0,
+            "PositionY": 136.0,
+            "Priority": 4,
+            "Prototype_GameObject": "SASSkillName_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        1.0,
+                        6.0
+                    ],
+                    [
+                        2.0,
+                        11.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    0
+                ],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_SuperPower.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    108.66403198242188,
+                    -5.437734127044678,
+                    0.0,
+                    0.0,
+                    1.3594335317611694,
+                    27.16600799560547,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    598.99951171875,
+                    -313.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSKill_SuperPower3\u0000",
+            "ObjectTag": "SASSKill_SuperPower3",
+            "Pivot": 5,
+            "PositionX": -99.0,
+            "PositionY": 131.0,
+            "Priority": 3,
+            "Prototype_GameObject": "SASSkillName_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        6.0
+                    ],
+                    [
+                        2.0,
+                        11.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    0
+                ],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_SuperPower.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    108.66403198242188,
+                    -5.437734127044678,
+                    0.0,
+                    0.0,
+                    1.3594335317611694,
+                    27.16600799560547,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    700.99951171875,
+                    -318.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSKill_SuperPower4\u0000",
+            "ObjectTag": "SASSKill_SuperPower4",
+            "Pivot": 5,
+            "PositionX": -149.0,
+            "PositionY": 81.0,
+            "Priority": 3,
+            "Prototype_GameObject": "SASSkillName_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        2.0
+                    ],
+                    [
+                        2.0,
+                        11.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    0
+                ],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_SuperPower.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    108.66403198242188,
+                    -5.437734127044678,
+                    0.0,
+                    0.0,
+                    1.3594335317611694,
+                    27.16600799560547,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    650.99951171875,
+                    -368.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Gauge1\u0000",
+            "ObjectTag": "SASSkill_Gauge1",
+            "Pivot": 5,
+            "PositionX": -154.0,
+            "PositionY": 192.6999969482422,
+            "Priority": 3,
+            "Prototype_GameObject": "SASSkillGauge_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0,
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 15,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge1.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 128.0,
+            "Transform": {
+                "WorldMatrix": [
+                    -127.99983978271484,
+                    0.20385734736919403,
+                    0.0,
+                    0.0,
+                    -0.20385737717151642,
+                    -127.99983978271484,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    645.99951171875,
+                    -257.29949951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Gauge1Back\u0000",
+            "ObjectTag": "SASSkill_Gauge1Back",
+            "Pivot": 5,
+            "PositionX": -154.0,
+            "PositionY": 192.6999969482422,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillGauge_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        9.999999747378752e-05,
+                        9.998999303206801e-05,
+                        9.998999303206801e-05,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 19,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge0.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 128.0,
+            "Transform": {
+                "WorldMatrix": [
+                    -127.99983978271484,
+                    0.20385737717151642,
+                    0.0,
+                    0.0,
+                    -0.20385737717151642,
+                    -127.99983978271484,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    645.99951171875,
+                    -257.29949951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Gauge2\u0000",
+            "ObjectTag": "SASSkill_Gauge2",
+            "Pivot": 5,
+            "PositionX": -202.5,
+            "PositionY": 144.0,
+            "Priority": 3,
+            "Prototype_GameObject": "SASSkillGauge_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.2800000011920929,
+                        0.7540000081062317,
+                        0.6570000052452087,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0,
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 15,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge1.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 128.0,
+            "Transform": {
+                "WorldMatrix": [
+                    -127.99983978271484,
+                    0.20385734736919403,
+                    0.0,
+                    0.0,
+                    -0.20385734736919403,
+                    -127.99983978271484,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    597.49951171875,
+                    -305.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Gauge2Back\u0000",
+            "ObjectTag": "SASSkill_Gauge2Back",
+            "Pivot": 5,
+            "PositionX": -202.5,
+            "PositionY": 145.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillGauge_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        9.999999747378752e-05,
+                        9.998999303206801e-05,
+                        9.998999303206801e-05,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 19,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge0.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 128.0,
+            "Transform": {
+                "WorldMatrix": [
+                    -127.99983978271484,
+                    0.20385737717151642,
+                    0.0,
+                    0.0,
+                    -0.20385734736919403,
+                    -127.99983978271484,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    597.49951171875,
+                    -304.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Gauge3\u0000",
+            "ObjectTag": "SASSkill_Gauge3",
+            "Pivot": 5,
+            "PositionX": -100.0,
+            "PositionY": 139.5,
+            "Priority": 3,
+            "Prototype_GameObject": "SASSkillGauge_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0,
+                    3.0
+                ],
+                "Ints": [],
+                "Pass": 15,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge1.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 128.0,
+            "Transform": {
+                "WorldMatrix": [
+                    -127.99983978271484,
+                    0.20385734736919403,
+                    0.0,
+                    0.0,
+                    -0.20385734736919403,
+                    -127.99983978271484,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    699.99951171875,
+                    -310.49951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Gauge3Back\u0000",
+            "ObjectTag": "SASSkill_Gauge3Back",
+            "Pivot": 5,
+            "PositionX": -100.0,
+            "PositionY": 139.5,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillGauge_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        9.999999747378752e-05,
+                        9.998999303206801e-05,
+                        9.998999303206801e-05,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 19,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge0.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 128.0,
+            "Transform": {
+                "WorldMatrix": [
+                    -127.99983978271484,
+                    0.20385734736919403,
+                    0.0,
+                    0.0,
+                    -0.20385734736919403,
+                    -127.99983978271484,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    699.99951171875,
+                    -310.49951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Gauge4\u0000",
+            "ObjectTag": "SASSkill_Gauge4",
+            "Pivot": 5,
+            "PositionX": -148.0,
+            "PositionY": 92.0,
+            "Priority": 3,
+            "Prototype_GameObject": "SASSkillGauge_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.8569999933242798,
+                        0.8410000205039978,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    60.0,
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 15,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge1.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 128.0,
+            "Transform": {
+                "WorldMatrix": [
+                    -127.99983978271484,
+                    0.20385734736919403,
+                    0.0,
+                    0.0,
+                    -0.20385734736919403,
+                    -127.99983978271484,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    651.99951171875,
+                    -357.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Gauge4Back\u0000",
+            "ObjectTag": "SASSkill_Gauge4Back",
+            "Pivot": 5,
+            "PositionX": -149.0,
+            "PositionY": 93.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillGauge_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.9919999837875366,
+                        0.4490000009536743,
+                        0.3869999945163727,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    60.0
+                ],
+                "Ints": [],
+                "Pass": 19,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\64.64_SASSkill_Gauge0.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 128.0,
+            "Transform": {
+                "WorldMatrix": [
+                    -127.99983978271484,
+                    0.20385734736919403,
+                    0.0,
+                    0.0,
+                    -0.20385734736919403,
+                    -127.99983978271484,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    650.99951171875,
+                    -356.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Icon1\u0000",
+            "ObjectTag": "SASSkill_Icon1",
+            "Pivot": 5,
+            "PositionX": -158.0,
+            "PositionY": 188.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillIcon_UI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        10.0,
+                        0.0
+                    ],
+                    [
+                        11.0,
+                        2.0
+                    ]
+                ],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 33,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\814.148.74.74.11.2.png\u0000"
+                ]
+            },
+            "SizeX": 74.0,
+            "SizeY": 74.0,
+            "Transform": {
+                "WorldMatrix": [
+                    51.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    51.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    641.99951171875,
+                    -261.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Icon2\u0000",
+            "ObjectTag": "SASSkill_Icon2",
+            "Pivot": 5,
+            "PositionX": -206.0,
+            "PositionY": 139.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillIcon_UI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        6.0,
+                        0.0
+                    ],
+                    [
+                        11.0,
+                        2.0
+                    ]
+                ],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 33,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\814.148.74.74.11.2.png\u0000"
+                ]
+            },
+            "SizeX": 74.0,
+            "SizeY": 74.0,
+            "Transform": {
+                "WorldMatrix": [
+                    51.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    51.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    593.99951171875,
+                    -310.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Icon3\u0000",
+            "ObjectTag": "SASSkill_Icon3",
+            "Pivot": 5,
+            "PositionX": -104.0,
+            "PositionY": 133.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillIcon_UI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        10.0,
+                        0.0
+                    ],
+                    [
+                        11.0,
+                        2.0
+                    ]
+                ],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 33,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\814.148.74.74.11.2.png\u0000"
+                ]
+            },
+            "SizeX": 74.0,
+            "SizeY": 74.0,
+            "Transform": {
+                "WorldMatrix": [
+                    51.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    51.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    695.99951171875,
+                    -316.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Icon4\u0000",
+            "ObjectTag": "SASSkill_Icon4",
+            "Pivot": 5,
+            "PositionX": -152.0,
+            "PositionY": 89.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillIcon_UI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        2.0,
+                        1.0
+                    ],
+                    [
+                        11.0,
+                        2.0
+                    ]
+                ],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    0
+                ],
+                "Pass": 33,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\814.148.74.74.11.2.png\u0000"
+                ]
+            },
+            "SizeX": 74.0,
+            "SizeY": 74.0,
+            "Transform": {
+                "WorldMatrix": [
+                    51.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    51.79999923706055,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    647.99951171875,
+                    -360.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_IconNumber1\u0000",
+            "ObjectTag": "SASSkill_IconNumber1",
+            "Pivot": 5,
+            "PositionX": -155.0,
+            "PositionY": 205.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.6000000238418579,
+            "ScaleY": 0.6000000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        4.0,
+                        1.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_IconNumber.dds\u0000"
+                ]
+            },
+            "SizeX": 32.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    19.200000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    19.200000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    644.99951171875,
+                    -244.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_IconNumber2\u0000",
+            "ObjectTag": "SASSkill_IconNumber2",
+            "Pivot": 5,
+            "PositionX": -203.0,
+            "PositionY": 157.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.6000000238418579,
+            "ScaleY": 0.6000000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        1.0,
+                        0.0
+                    ],
+                    [
+                        4.0,
+                        1.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_IconNumber.dds\u0000"
+                ]
+            },
+            "SizeX": 32.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    19.200000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    19.200000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    596.99951171875,
+                    -292.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_IconNumber3\u0000",
+            "ObjectTag": "SASSkill_IconNumber3",
+            "Pivot": 5,
+            "PositionX": -98.0,
+            "PositionY": 152.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.6000000238418579,
+            "ScaleY": 0.6000000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        2.0,
+                        0.0
+                    ],
+                    [
+                        4.0,
+                        1.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_IconNumber.dds\u0000"
+                ]
+            },
+            "SizeX": 32.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    19.200000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    19.200000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    701.99951171875,
+                    -297.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_IconNumber4\u0000",
+            "ObjectTag": "SASSkill_IconNumber4",
+            "Pivot": 5,
+            "PositionX": -148.0,
+            "PositionY": 103.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.6499999761581421,
+            "ScaleY": 0.6499999761581421,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        3.0,
+                        0.0
+                    ],
+                    [
+                        4.0,
+                        1.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_IconNumber.dds\u0000"
+                ]
+            },
+            "SizeX": 32.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    20.799999237060547,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    20.799999237060547,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    651.99951171875,
+                    -346.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Light1\u0000",
+            "ObjectTag": "SASSkill_Light1",
+            "Pivot": 5,
+            "PositionX": -153.0,
+            "PositionY": 189.0,
+            "Priority": 1,
+            "Prototype_GameObject": "SASSkillLight_UI\u0000",
+            "ScaleX": 1.2000000476837158,
+            "ScaleY": 1.2000000476837158,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        9.999999747378752e-05,
+                        9.998999303206801e-05,
+                        9.998999303206801e-05,
+                        0.8295314908027649
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 17,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_Light.dds\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    120.00000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    120.00000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    646.99951171875,
+                    -260.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Light2\u0000",
+            "ObjectTag": "SASSkill_Light2",
+            "Pivot": 5,
+            "PositionX": -202.0,
+            "PositionY": 143.0,
+            "Priority": 1,
+            "Prototype_GameObject": "SASSkillLight_UI\u0000",
+            "ScaleX": 1.2000000476837158,
+            "ScaleY": 1.2000000476837158,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.5997511744499207
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 17,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_Light.dds\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    120.00000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    120.00000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    597.99951171875,
+                    -306.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Light3\u0000",
+            "ObjectTag": "SASSkill_Light3",
+            "Pivot": 5,
+            "PositionX": -99.0,
+            "PositionY": 138.0,
+            "Priority": 1,
+            "Prototype_GameObject": "SASSkillLight_UI\u0000",
+            "ScaleX": 1.2000000476837158,
+            "ScaleY": 1.2000000476837158,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.6418355703353882
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 17,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_Light.dds\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    120.00000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    120.00000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    700.99951171875,
+                    -311.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "SASSkill_Light4\u0000",
+            "ObjectTag": "SASSkill_Light4",
+            "Pivot": 5,
+            "PositionX": -148.0,
+            "PositionY": 89.0,
+            "Priority": 1,
+            "Prototype_GameObject": "SASSkillLight_UI\u0000",
+            "ScaleX": 1.2000000476837158,
+            "ScaleY": 1.2000000476837158,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.3710556626319885
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 17,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_Light.dds\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_LightEmissive.dds\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    120.00000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    120.00000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    651.99951171875,
+                    -360.99951171875,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "PlayerInfo",
+    "Pivot": 0,
+    "PositionX": -0.0004808008670806885,
+    "PositionY": 0.0004808008670806885,
+    "Priority": 0,
+    "Prototype_GameObject": "Canvas_SASSkillMove\u0000",
+    "ScaleX": 0.0,
+    "ScaleY": 0.0,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

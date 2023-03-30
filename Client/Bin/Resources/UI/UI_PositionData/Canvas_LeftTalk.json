@@ -1,0 +1,200 @@
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "Talk_BackGround\u0000",
+            "ObjectTag": "Talk_BackGround",
+            "Pivot": 8,
+            "PositionX": 300.0,
+            "PositionY": -100.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Talk_BackGroundUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Short_UI\\Talk_BackGound.png\u0000"
+                ]
+            },
+            "SizeX": 634.0,
+            "SizeY": 270.0,
+            "Transform": {
+                "WorldMatrix": [
+                    538.9000244140625,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    229.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -500.0,
+                    -100.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Talk_Face\u0000",
+            "ObjectTag": "Talk_Face",
+            "Pivot": 8,
+            "PositionX": 125.0,
+            "PositionY": -48.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Talk_FaceUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        3.0,
+                        0.0
+                    ],
+                    [
+                        3.0,
+                        20.0
+                    ]
+                ],
+                "Float4s": [
+                    [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 33,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Short_UI\\Talk_Face.png\u0000"
+                ]
+            },
+            "SizeX": 129.0,
+            "SizeY": 129.0,
+            "Transform": {
+                "WorldMatrix": [
+                    109.6500015258789,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    109.6500015258789,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -675.0,
+                    -48.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Talk_Icon\u0000",
+            "ObjectTag": "Talk_Icon",
+            "Pivot": 8,
+            "PositionX": 61.0,
+            "PositionY": -109.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.15000000596046448
+                ],
+                "Ints": [
+                    4,
+                    1
+                ],
+                "Pass": 9,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Short_UI\\Talk_Icon.png\u0000"
+                ]
+            },
+            "SizeX": 32.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    32.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    32.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -739.0,
+                    -109.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "Canvas_Acquisition",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 0,
+    "Prototype_GameObject": "Canvas_LeftTalk\u0000",
+    "ScaleX": 0.5,
+    "ScaleY": 0.5,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

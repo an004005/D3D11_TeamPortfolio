@@ -30,7 +30,7 @@
 #include "PostVFX_HitDecal.h"
 #include "VFX_Manager.h"
 #include "Imgui_CurveManager.h"
-// ~ ¿Á¼öÇöÀÇ ÈçÀû
+// ~ ì˜¥ìˆ˜í˜„ì˜ í”ì 
 #include "Boss1.h"
 #include "Boss1_AIController.h"
 #include "FactoryMethod.h"
@@ -41,7 +41,7 @@
 #include "GravikenisisGUI.h"
 #include "GravikenisisMouseUI.h"
 #include "Imgui_Batch.h"
-// ~ ¿Á¼öÇöÀÇ ÈçÀû
+// ~ ì˜¥ìˆ˜í˜„ì˜ í”ì 
 
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -161,7 +161,7 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleGroup", CParticleGroup::Create(m_pDevice, m_pContext)));
 
 
-	//// ±è±â¹üÀÇ ÈçÀû
+	//// ê¹€ê¸°ë²”ì˜ í”ì 
 	//pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
 	//pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
 
@@ -180,7 +180,7 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	//auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
 	//	"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
 	//FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
-	//// ~ ±è±â¹üÀÇ ÈçÀû
+	//// ~ ê¹€ê¸°ë²”ì˜ í”ì 
 
 
 
@@ -203,10 +203,10 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 		CPostVFX_ColorGrading::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	// ¸ðµ¨ Ãß°¡ÇÏ´Â ¹æ¹ý
+	// ëª¨ë¸ ì¶”ê°€í•˜ëŠ” ë°©ë²•
 	// auto pModel_VFX = CModel::Create(m_pDevice, m_pContext,
 	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/Default_Attack_1.static_model");
-	// // ÇÁ·ÎÅäÅ¸ÀÔ Ãß°¡ ¹æ¹ý
+	// // í”„ë¡œí† íƒ€ìž… ì¶”ê°€ ë°©ë²•
 	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_01", pModel_VFX));
 	//
 	// pModel_VFX = CModel::Create(m_pDevice, m_pContext,
@@ -221,7 +221,7 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/Default_Attack_4.static_model");
 	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_04", pModel_VFX));
 
-	// ~ ¿Á¼öÇöÀÇ ÈçÀû
+	// ~ ì˜¥ìˆ˜í˜„ì˜ í”ì 
 	//{
 	//	auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
 	//		"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
@@ -251,7 +251,7 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("GravikenisisGUI"),
 		CGravikenisisGUI::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-	// ~ ¿Á¼öÇöÀÇ ÈçÀû
+	// ~ ì˜¥ìˆ˜í˜„ì˜ í”ì 
 
 	return S_OK;
 }
@@ -366,13 +366,13 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	// º¸½º
+	// ë³´ìŠ¤
 	//auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
 	//_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 	//pos.y += 1.f;
 	//pObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, pos);
 
-	// ´«
+	// ëˆˆ
 	//Json josn = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/Lockon_Find.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(TEXT("Layer_Lockon"), TEXT("ProtoVFX_EffectGroup"), &josn));
 

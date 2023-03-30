@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Canvas_Alarm.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
 
 #include "NextMapNameUI.h"
 #include "Boss_AppearUI.h"
@@ -29,6 +30,8 @@ HRESULT CCanvas_Alarm::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
+
+	CUI_Manager::GetInstance()->Add_Canvas(L"Canvas_Alarm", this);
 
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);

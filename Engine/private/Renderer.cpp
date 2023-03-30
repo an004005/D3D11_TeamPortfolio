@@ -900,6 +900,11 @@ HRESULT CRenderer::Render_PostProcess()
 
 HRESULT CRenderer::Render_UI()
 {
+	m_RenderObjects[RENDER_UI].sort([](CGameObject* pSour, CGameObject* pDest)-> _bool
+		{
+			return pSour->Get_Priority() < pDest->Get_Priority();
+		});
+
 	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
 	{
 		if (nullptr != pGameObject)

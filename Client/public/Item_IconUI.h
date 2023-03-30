@@ -24,6 +24,17 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
+	void	Set_ItemIconUse() {
+		m_bUse = true;
+	}
+	void	Set_IconIndex(const _float2 & fIconIndex);
+
+private:
+	_bool	m_bUse = { false };
+	_float2	m_fStartSize = { 0.0f, 0.0f };
+	_double	m_dSizeChange_TimeAcc = { 0.0 };
+
+public:
 	static CItem_IconUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;

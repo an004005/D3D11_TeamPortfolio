@@ -24,6 +24,9 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
+	void	Set_ItemName(const _float & fIndex);
+
+public:
 	static CItem_NameUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;

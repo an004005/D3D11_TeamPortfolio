@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/hospital/WheelchairAndGurney/Textures/Bed/HospitalBed_new_gloss.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/hospital/WheelchairAndGurney/Textures/Bed/HospitalBed_new_normal.png",
+            ""
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}

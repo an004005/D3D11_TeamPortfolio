@@ -1,0 +1,1261 @@
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "Equipment_BasicInfo\u0000",
+            "ObjectTag": "Equipment_BasicInfo",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": -179.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\PlayerInfo.png\u0000"
+                ]
+            },
+            "SizeX": 600.0,
+            "SizeY": 335.0,
+            "Transform": {
+                "WorldMatrix": [
+                    510.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    284.75,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    -179.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_BasicInfo_B\u0000",
+            "ObjectTag": "Equipment_BasicInfo_B",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": -179.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.07000000029802322
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\PlayerInfo_B.png\u0000"
+                ]
+            },
+            "SizeX": 600.0,
+            "SizeY": 335.0,
+            "Transform": {
+                "WorldMatrix": [
+                    510.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    284.75,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    -179.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_BasicInfo_Face\u0000",
+            "ObjectTag": "Equipment_BasicInfo_Face",
+            "Pivot": 0,
+            "PositionX": -164.0,
+            "PositionY": -187.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Main_FaceUI\u0000",
+            "ScaleX": 0.75,
+            "ScaleY": 0.800000011920929,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        1.0,
+                        0.0
+                    ],
+                    [
+                        1.0,
+                        11.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Face_100.94.png\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 94.0,
+            "Transform": {
+                "WorldMatrix": [
+                    75.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    75.20000457763672,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -164.0,
+                    -187.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_BasicInfo_HpBar\u0000",
+            "ObjectTag": "Equipment_BasicInfo_HpBar",
+            "Pivot": 0,
+            "PositionX": -12.0,
+            "PositionY": -160.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Main_BarUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 32,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\HpBar.png\u0000"
+                ]
+            },
+            "SizeX": 206.0,
+            "SizeY": 7.0,
+            "Transform": {
+                "WorldMatrix": [
+                    175.10000610351563,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    5.950000286102295,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -12.0,
+                    -160.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_BasicInfo_HpBar_B\u0000",
+            "ObjectTag": "Equipment_BasicInfo_HpBar_B",
+            "Pivot": 0,
+            "PositionX": -12.0,
+            "PositionY": -160.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8349999785423279,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\HpBar_B.png\u0000"
+                ]
+            },
+            "SizeX": 206.0,
+            "SizeY": 7.0,
+            "Transform": {
+                "WorldMatrix": [
+                    172.00999450683594,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    5.950000286102295,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -12.0,
+                    -160.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_BasicInfo_Icon\u0000",
+            "ObjectTag": "Equipment_BasicInfo_Icon",
+            "Pivot": 0,
+            "PositionX": 144.0,
+            "PositionY": -153.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Main_SkillIconUI\u0000",
+            "ScaleX": 0.800000011920929,
+            "ScaleY": 0.800000011920929,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        1.0,
+                        0.0
+                    ],
+                    [
+                        10.0,
+                        1.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\960.96_96.96_Icon.png\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 96.0,
+            "Transform": {
+                "WorldMatrix": [
+                    80.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    76.80000305175781,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    144.0,
+                    -153.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_BasicInfo_LevelBer\u0000",
+            "ObjectTag": "Equipment_BasicInfo_LevelBer",
+            "Pivot": 0,
+            "PositionX": -99.0,
+            "PositionY": -126.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Main_BarUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 32,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\LevelBar.png\u0000"
+                ]
+            },
+            "SizeX": 216.0,
+            "SizeY": 6.0,
+            "Transform": {
+                "WorldMatrix": [
+                    216.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    6.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -99.0,
+                    -126.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_BasicInfo_LevelBer_B\u0000",
+            "ObjectTag": "Equipment_BasicInfo_LevelBer_B",
+            "Pivot": 0,
+            "PositionX": -99.0,
+            "PositionY": -126.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 3.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\LevelBar_B.png\u0000"
+                ]
+            },
+            "SizeX": 216.0,
+            "SizeY": 6.0,
+            "Transform": {
+                "WorldMatrix": [
+                    216.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    18.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -99.0,
+                    -126.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_BasicInfo_Operation\u0000",
+            "ObjectTag": "Equipment_BasicInfo_Operation",
+            "Pivot": 0,
+            "PositionX": -3.0,
+            "PositionY": -274.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.5,
+                        0.5,
+                        0.5,
+                        0.10000000149011612
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\Operation_B.png\u0000"
+                ]
+            },
+            "SizeX": 474.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    402.8949890136719,
+                    2.014491558074951,
+                    0.0,
+                    0.0,
+                    -0.1359994262456894,
+                    27.199661254882813,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -3.0,
+                    -274.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_BasicInfo_SkillName\u0000",
+            "ObjectTag": "Equipment_BasicInfo_SkillName",
+            "Pivot": 0,
+            "PositionX": 144.0,
+            "PositionY": -214.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Main_SkillNameUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 0.8999999761581421,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        4.0
+                    ],
+                    [
+                        2.0,
+                        11.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSKill_SuperPower.dds\u0000"
+                ]
+            },
+            "SizeX": 128.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    128.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    28.799999237060547,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    144.0,
+                    -214.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_CurrentWeapon\u0000",
+            "ObjectTag": "Equipment_CurrentWeapon",
+            "Pivot": 8,
+            "PositionX": 287.0,
+            "PositionY": 106.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\weapon windowAndLine.png\u0000"
+                ]
+            },
+            "SizeX": 551.0,
+            "SizeY": 98.0,
+            "Transform": {
+                "WorldMatrix": [
+                    468.3500061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    83.30000305175781,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -513.0,
+                    106.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_CurrentWeapon1\u0000",
+            "ObjectTag": "Equipment_CurrentWeapon1",
+            "Pivot": 8,
+            "PositionX": 287.0,
+            "PositionY": -11.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\weapon window1.png\u0000"
+                ]
+            },
+            "SizeX": 551.0,
+            "SizeY": 98.0,
+            "Transform": {
+                "WorldMatrix": [
+                    468.3500061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    83.30000305175781,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -513.0,
+                    -11.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_CurrentWeapon2\u0000",
+            "ObjectTag": "Equipment_CurrentWeapon2",
+            "Pivot": 8,
+            "PositionX": 287.0,
+            "PositionY": -95.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\weapon window2.png\u0000"
+                ]
+            },
+            "SizeX": 551.0,
+            "SizeY": 87.0,
+            "Transform": {
+                "WorldMatrix": [
+                    468.3500061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    73.95000457763672,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -513.0,
+                    -95.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_CurrentWeapon3\u0000",
+            "ObjectTag": "Equipment_CurrentWeapon3",
+            "Pivot": 8,
+            "PositionX": 287.0,
+            "PositionY": -175.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\weapon window3.png\u0000"
+                ]
+            },
+            "SizeX": 551.0,
+            "SizeY": 87.0,
+            "Transform": {
+                "WorldMatrix": [
+                    468.3500061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    73.95000457763672,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -513.0,
+                    -175.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_CurrentWeaponIcon\u0000",
+            "ObjectTag": "Equipment_CurrentWeaponIcon",
+            "Pivot": 8,
+            "PositionX": 135.0,
+            "PositionY": 102.0,
+            "Priority": 3,
+            "Prototype_GameObject": "ItemIconUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        4.0,
+                        2.0
+                    ],
+                    [
+                        5.0,
+                        7.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\160.224.32.32.5.7.png\u0000"
+                ]
+            },
+            "SizeX": 32.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    27.200000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    27.200000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -665.0,
+                    102.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_CurrentWeapon_B\u0000",
+            "ObjectTag": "Equipment_CurrentWeapon_B",
+            "Pivot": 8,
+            "PositionX": 287.0,
+            "PositionY": 102.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Main_OnePickUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.07000000029802322
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\weapon window_B.png\u0000"
+                ]
+            },
+            "SizeX": 551.0,
+            "SizeY": 87.0,
+            "Transform": {
+                "WorldMatrix": [
+                    468.3500061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    73.95000457763672,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -513.0,
+                    102.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_CurrentWeapon_B1\u0000",
+            "ObjectTag": "Equipment_CurrentWeapon_B1",
+            "Pivot": 8,
+            "PositionX": 287.0,
+            "PositionY": -15.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Main_OnePickUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.07000000029802322
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\weapon window1_B.png\u0000"
+                ]
+            },
+            "SizeX": 551.0,
+            "SizeY": 87.0,
+            "Transform": {
+                "WorldMatrix": [
+                    468.3500061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    73.95000457763672,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -513.0,
+                    -15.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_CurrentWeapon_B2\u0000",
+            "ObjectTag": "Equipment_CurrentWeapon_B2",
+            "Pivot": 8,
+            "PositionX": 287.0,
+            "PositionY": -95.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Main_OnePickUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.07000000029802322
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\weapon window_B.png\u0000"
+                ]
+            },
+            "SizeX": 551.0,
+            "SizeY": 87.0,
+            "Transform": {
+                "WorldMatrix": [
+                    468.3500061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    73.95000457763672,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -513.0,
+                    -95.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_CurrentWeapon_B3\u0000",
+            "ObjectTag": "Equipment_CurrentWeapon_B3",
+            "Pivot": 8,
+            "PositionX": 287.0,
+            "PositionY": -175.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Main_OnePickUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.07000000029802322
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\weapon window_B.png\u0000"
+                ]
+            },
+            "SizeX": 551.0,
+            "SizeY": 87.0,
+            "Transform": {
+                "WorldMatrix": [
+                    468.3500061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    73.95000457763672,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -513.0,
+                    -175.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_ItemInfo\u0000",
+            "ObjectTag": "Equipment_ItemInfo",
+            "Pivot": 4,
+            "PositionX": -297.0,
+            "PositionY": 170.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.800000011920929,
+            "ScaleY": 0.800000011920929,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\weapon Info.png\u0000"
+                ]
+            },
+            "SizeX": 670.0,
+            "SizeY": 319.0,
+            "Transform": {
+                "WorldMatrix": [
+                    536.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    255.1999969482422,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    503.0,
+                    170.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_ItemInfoIcon\u0000",
+            "ObjectTag": "Equipment_ItemInfoIcon",
+            "Pivot": 4,
+            "PositionX": -500.0,
+            "PositionY": 240.0,
+            "Priority": 3,
+            "Prototype_GameObject": "ItemIconUI\u0000",
+            "ScaleX": 1.5,
+            "ScaleY": 1.5,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        4.0,
+                        2.0
+                    ],
+                    [
+                        5.0,
+                        7.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\160.224.32.32.5.7.png\u0000"
+                ]
+            },
+            "SizeX": 32.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    48.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    48.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    300.0,
+                    240.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_ItemInfoMove\u0000",
+            "ObjectTag": "Equipment_ItemInfoMove",
+            "Pivot": 4,
+            "PositionX": -297.0,
+            "PositionY": -170.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.800000011920929,
+            "ScaleY": 0.800000011920929,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\weapon Info Bottom.png\u0000"
+                ]
+            },
+            "SizeX": 670.0,
+            "SizeY": 319.0,
+            "Transform": {
+                "WorldMatrix": [
+                    536.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    255.1999969482422,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    503.0,
+                    -170.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_ItemInfoMoveIcon\u0000",
+            "ObjectTag": "Equipment_ItemInfoMoveIcon",
+            "Pivot": 4,
+            "PositionX": -500.0,
+            "PositionY": -102.0,
+            "Priority": 3,
+            "Prototype_GameObject": "ItemIconUI\u0000",
+            "ScaleX": 1.5,
+            "ScaleY": 1.5,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        4.0,
+                        2.0
+                    ],
+                    [
+                        5.0,
+                        7.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\160.224.32.32.5.7.png\u0000"
+                ]
+            },
+            "SizeX": 32.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    48.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    48.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    300.0,
+                    -102.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_ItemInfo_B\u0000",
+            "ObjectTag": "Equipment_ItemInfo_B",
+            "Pivot": 4,
+            "PositionX": -297.0,
+            "PositionY": 170.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Main_OnePickUI\u0000",
+            "ScaleX": 0.800000011920929,
+            "ScaleY": 0.800000011920929,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.07000000029802322
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\weapon Info_B.png\u0000"
+                ]
+            },
+            "SizeX": 670.0,
+            "SizeY": 319.0,
+            "Transform": {
+                "WorldMatrix": [
+                    536.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    255.1999969482422,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    503.0,
+                    170.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Equipment_ItemInfo_BMove\u0000",
+            "ObjectTag": "Equipment_ItemInfo_BMove",
+            "Pivot": 4,
+            "PositionX": -297.0,
+            "PositionY": -170.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Main_OnePickUI\u0000",
+            "ScaleX": 0.800000011920929,
+            "ScaleY": 0.800000011920929,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.07000000029802322
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\weapon Info Bottom_B.png\u0000"
+                ]
+            },
+            "SizeX": 670.0,
+            "SizeY": 319.0,
+            "Transform": {
+                "WorldMatrix": [
+                    536.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    255.1999969482422,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    503.0,
+                    -170.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "Canvas_Equipment",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 0,
+    "Prototype_GameObject": "Canvas_Equipment\u0000",
+    "ScaleX": 0.5,
+    "ScaleY": 0.5,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}
