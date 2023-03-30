@@ -23,7 +23,7 @@
 
 //#define ADD_PLAYER
 //#define ADD_PREVIEW "Prototype_Model_em220"
-#define ADD_ENEMY "Monster_em320"
+#define ADD_ENEMY "Monster_em400"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)

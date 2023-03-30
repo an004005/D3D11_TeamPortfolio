@@ -35,7 +35,7 @@ HRESULT CEM0400::Initialize(void * pArg)
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
-		m_strBoneName = "RightShoulder";
+	
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
@@ -54,9 +54,8 @@ void CEM0400::SetUpComponents(void * pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em400", L"Model", (CComponent**)&m_pModelCom));
 
 	//Create Collider
-	Json BuddyLumiWeapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiWeapon.json");
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Weapon"),
-		(CComponent**)&m_pWeaponCollider, &BuddyLumiWeapon));
+	//Json Weapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiWeapon.json");
+	//Add_RigidBody("Weapon", &Weapon);
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM0400_Controller::Create();
@@ -86,7 +85,7 @@ void CEM0400::SetUpAnimationEvent()
 			//			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack")->Start_Attach(this, m_strBoneName, false);
 
 			m_pSwingEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack");
-			m_pSwingEffect->Start_Attach(this, m_strBoneName, true);
+			m_pSwingEffect->Start_Attach(this, "RightShoulder", true);
 			Safe_AddRef(m_pSwingEffect);
 		}
 	});
@@ -313,7 +312,7 @@ void CEM0400::SetUpFSM()
 			.Tick([this](_double) 
 			{
 				if (m_bAtkSwitch)
-					Swing_SweepCapsule(m_bOneHit);
+					Swing_SweepSphere();
 			})
 			.AddTransition("Attack_a1 to Idle", "Idle")
 				.Predicator([this]
@@ -336,6 +335,29 @@ void CEM0400::SetUpFSM()
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 		.Build();
+}
+
+void CEM0400::SetUpUI()
+{
+	//HP UI
+	_float4x4 UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.41f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[ENEMY_INFOBAR] = UI_PivotMatrix;
+
+	//FindEye
+	UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		-0.324f, 1.014f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[ENEMY_FINDEYES] = UI_PivotMatrix;
 }
 
 void CEM0400::BeginTick()
@@ -389,7 +411,7 @@ void CEM0400::Late_Tick(_double TimeDelta)
 void CEM0400::AfterPhysX()
 {
 	CEnemy::AfterPhysX();
-	m_pWeaponCollider->Update_Tick(m_pModelCom->GetBoneMatrix("RightWeapon") * m_pTransformCom->Get_WorldMatrix());
+	//GetRigidBody("Weapon")->Update_Tick(m_pModelCom->GetBoneMatrix("RightWeapon") * m_pTransformCom->Get_WorldMatrix());
 }
 
 HRESULT CEM0400::Render()
@@ -456,32 +478,32 @@ void CEM0400::Play_MidHitAnim()
 	}
 }
 
-void CEM0400::Swing_SweepCapsule(_bool bCol)
+void CEM0400::Swing_SweepSphere()
 {
-	Matrix mWeaponMatrix = m_pWeaponCollider->GetPxWorldMatrix();
-	_float4 vTailPos = _float4(mWeaponMatrix.Translation().x, mWeaponMatrix.Translation().y, mWeaponMatrix.Translation().z, 1.f);
+	physx::PxSweepHit hitBuffer[3];
+	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
 
-	physx::PxSweepHit hitBuffer[5];
-	physx::PxSweepBuffer SweepOut(hitBuffer, 5);
+	//Tail4가 꼬리 중앙에 있음
+	_float4x4 BoneMatrix = GetBoneMatrix("RightWeapon") * m_pTransformCom->Get_WorldMatrix();
+	_float4 vBonePos = _float4{ BoneMatrix.m[3][0], BoneMatrix.m[3][1], BoneMatrix.m[3][2], BoneMatrix.m[3][3] };
 
-	PxCapsuleSweepParams param;
-	param.sweepOut = &SweepOut;
-	param.CapsuleGeo = m_pWeaponCollider->Get_CapsuleGeometry();
-	param.pxTransform = m_pWeaponCollider->Get_PxTransform();
+	_vector	vDir = vBonePos - m_BeforePos;
 
-	_float4	vWeaponDir = vTailPos - m_BeforePos;
+	SphereSweepParams tParams;
+	tParams.fVisibleTime = 0.2f;
+	tParams.iTargetType = CTB_PLAYER;
+	tParams.fRadius = 3.f;
+	tParams.fDistance = 1.f;
+	tParams.vPos = vBonePos;
+	tParams.sweepOut = &sweepOut;
+	tParams.vUnitDir = vDir;
 
-	param.vUnitDir = _float3(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z);
-	param.fDistance = param.vUnitDir.Length();
-	param.iTargetType = CTB_PLAYER;
-	param.fVisibleTime = 0.f;
-
-	if (CGameInstance::GetInstance()->PxSweepCapsule(param))
+	if (CGameInstance::GetInstance()->SweepSphere(tParams))
 	{
-		HitTargets(SweepOut, m_iAtkDamage, EAttackType::ATK_LIGHT);
+		HitTargets(sweepOut, static_cast<_int>(m_iAtkDamage * 1.2f), EAttackType::ATK_LIGHT);
 	}
 
-	m_BeforePos = vTailPos;
+	m_BeforePos = vBonePos;
 }
 
 
@@ -515,5 +537,14 @@ void CEM0400::Free()
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pRange);
-	Safe_Release(m_pWeaponCollider);
+
+	if (m_bCloned)
+	{
+		if (m_pSwingEffect != nullptr)
+		{
+			m_pSwingEffect->SetDelete();
+			Safe_Release(m_pSwingEffect);
+			m_pSwingEffect = nullptr;
+		}
+	}
 }

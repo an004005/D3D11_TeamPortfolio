@@ -128,7 +128,7 @@ void CBullet::Create_DeadParticle()
 {
 	if (m_pDeadParticle == L"") return;
 
-	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, m_pDeadParticle)->Start_NoAttach(this, true);
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, m_pDeadParticle)->Start_NoAttach(this, false);
 }
 
 _bool CBullet::CheckDamagedTarget(CGameObject * pTarget)

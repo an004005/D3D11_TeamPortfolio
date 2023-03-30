@@ -639,6 +639,31 @@ void CEM0200::Imgui_RenderProperty()
 	}
 }
 
+void CEM0200::SetUpUI()
+{
+	//HP UI
+	_float4x4 UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.241f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[ENEMY_INFOBAR] = UI_PivotMatrix;
+
+	//FindEye
+	UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		-0.481f, 0.945f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[ENEMY_FINDEYES] = UI_PivotMatrix;
+
+
+}
+
 void CEM0200::AfterPhysX()
 {
 	CEnemy::AfterPhysX();

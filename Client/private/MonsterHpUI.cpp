@@ -42,15 +42,17 @@ HRESULT CMonsterHpUI::Initialize(void * pArg)
 
 void CMonsterHpUI::BeginTick()
 {
-	if (m_iMonsterName == 0 || m_iMonsterName == 5)
+	if (m_eMonsterName == EEnemyName::EM0320 || m_eMonsterName == EEnemyName::EM0800 || 
+		m_eMonsterName == EEnemyName::EM1100 || m_eMonsterName == EEnemyName::EM1200 ||
+		m_eMonsterName == EEnemyName::EM8210)
 	{
-		m_pGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"BossHp", TEXT("Layer_MonsterUI"));
-		m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"BossName", TEXT("Layer_MonsterUI"));
+		m_pGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"BossHp", PLAYERTEST_LAYER_FRONTUI);
+		m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"BossName", PLAYERTEST_LAYER_FRONTUI);
 	}
 	else
 	{
-		m_pGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterHp", TEXT("Layer_MonsterUI"));
-		m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterName", TEXT("Layer_MonsterUI"));
+		m_pGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterHp", PLAYERTEST_LAYER_FRONTUI);
+		m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterName", PLAYERTEST_LAYER_FRONTUI);
 	}
 
 	Safe_AddRef(m_pGroup);
@@ -63,43 +65,33 @@ void CMonsterHpUI::BeginTick()
 	m_pGroup->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
 	m_pMonsterName->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
 
-	// y : [0] 브론욘 [1] 스커미 팡뒤 [2] 바일 풀 [3] 버디 러미 [4] 바스 포즈 [5] 경건 페리
-	m_pMonsterName->GetSecondEffect()->GetParams().Float2s[0] = { _float(m_iMonsterLevel - 1), _float(m_iMonsterName) };
+	m_pMonsterName->GetSecondEffect()->GetParams().Float2s[0] = { _float(m_iMonsterLevel - 1), _float(m_eMonsterName) };
 }
 
 void CMonsterHpUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 	
-	if (m_pGroup == nullptr || m_pOwner == nullptr) return;
-	
-	if (dynamic_cast<CEnemy*>(m_pOwner)->IsDead())
-	{
-		m_bDelete = true;
-		return;
-	}
-
-	m_fRatio = dynamic_cast<CEnemy*>(m_pOwner)->GetHpRatio();
-	m_fHpBack = m_fRatio;
-	m_pGroup->GetThirdEffect()->GetParams().Floats[0] = m_fRatio;
-
+	if (m_pGroup == nullptr) return;
 	HpBack_Tick(TimeDelta);
-
 }
 
 void CMonsterHpUI::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
-	ImGui::DragFloat("Ratio", &m_fRatio);
-	
+	//ImGui::DragFloat("Ratio", &m_fRatio);
 }
 
-void CMonsterHpUI::Set_MonsterInfo(const _int iLevel, const _int iName)
+void CMonsterHpUI::Set_MonsterInfo(const _int iLevel, const EEnemyName eName)
 {
 	m_iMonsterLevel = iLevel;
-	m_iMonsterName = iName;
+	m_eMonsterName = eName;
+}
 
+void CMonsterHpUI::Set_HpRatio(_float fHpRatio)
+{
+	m_pGroup->GetThirdEffect()->GetParams().Floats[0] = fHpRatio;
 }
 
 void CMonsterHpUI::HpBack_Tick(const _double & TimeDelta)

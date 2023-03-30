@@ -18,6 +18,7 @@ public:
 	virtual void SetUpSound() override;
 	virtual void SetUpAnimationEvent() override;
 	virtual void SetUpFSM() override;
+	virtual void SetUpUI() override;
 
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
@@ -25,7 +26,6 @@ public:
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
-
 	virtual _bool Exclude() override;
 
 public:
@@ -80,7 +80,8 @@ private:
 	//투명 풀리고 나서 처음 맞았을 때.
 	_bool		m_IsFirstHit = false;
 	_bool m_bDown = false;
-	
+	_bool	m_eSASType = false;
+	_double		m_dRenderChangeDelay = 0.0;
 
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 

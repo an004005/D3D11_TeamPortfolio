@@ -358,9 +358,6 @@
     <Filter Include="02.GameObjects\Enemy\EM1200">
       <UniqueIdentifier>{61165ce0-fb67-4415-a32c-0df79482337c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Enemy\EM750">
-      <UniqueIdentifier>{30894673-a85c-4561-a24d-c88173551c33}</UniqueIdentifier>
-    </Filter>
     <Filter Include="30. GameManager">
       <UniqueIdentifier>{cb57ec25-6234-4298-9582-1b732464e268}</UniqueIdentifier>
     </Filter>
@@ -372,9 +369,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Enemy\EMBullet\OilBullet">
       <UniqueIdentifier>{7d98e4ff-3ec3-41c0-b7b6-9a67b3d0b012}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Enemy\EMBullet\ElectricBullet">
-      <UniqueIdentifier>{53e11f2c-66d8-4166-948c-aeb499f89c39}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\SpecialObject\Special_TankLorry">
       <UniqueIdentifier>{b12936c4-bc60-410c-9473-2decf22ba875}</UniqueIdentifier>
@@ -393,6 +387,9 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Mouse">
       <UniqueIdentifier>{f954c126-8785-41df-817d-93c9c8bf510b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0750">
+      <UniqueIdentifier>{30894673-a85c-4561-a24d-c88173551c33}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1077,13 +1074,13 @@
       <Filter>02.GameObjects\Enemy\EM1100</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0750_Controller.h">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0750.h">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0750_AnimInstance.h">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Special_HBeam_Bundle.h">
       <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>
@@ -1898,13 +1895,13 @@
       <Filter>02.GameObjects\Enemy\EM1100</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0750.cpp">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0750_AnimInstance.cpp">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0750_Controller.cpp">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_KineticEditor.cpp">
       <Filter>01.Levels\17.KineticEditor</Filter>

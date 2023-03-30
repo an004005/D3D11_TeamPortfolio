@@ -26,6 +26,7 @@ public:
 	virtual void SetUpSound() override;
 	virtual void SetUpAnimationEvent() override;
 	virtual void SetUpFSM() override;
+	virtual void SetUpUI() override;
 
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
@@ -46,7 +47,7 @@ private:
 	void Dodge_VelocityCalc();
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
-	void Swing_SweepCapsule(_bool bCol);
+	void Swing_SweepSphere();
 private:
 	//충돌 관련 함수 정의
 
@@ -55,7 +56,6 @@ private:
 	class CEM0400_AnimInstance*		m_pASM = nullptr;
 
 	//충돌
-	CRigidBody*					m_pWeaponCollider = nullptr;
 	CRigidBody*					m_pRange = nullptr;
 
 	CEffectGroup*				m_pSwingEffect = nullptr;
@@ -82,9 +82,7 @@ private:
 	_float3 m_vDodgeVelocity;
 	_bool m_bDodge = false;
 
-	string		m_strBoneName;
-
-	CController::EHandleInput	m_eInput;
+	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 public:
 	static CEM0400* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

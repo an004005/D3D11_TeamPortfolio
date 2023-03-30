@@ -13,6 +13,8 @@
 #include "TestTarget.h"
 #include "PlayerInfoManager.h"
 #include "GameManager.h"
+#include "MonsterHpUI.h"
+#include "MonsterShildUI.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
 	L"Default_Blood_00",
@@ -98,6 +100,7 @@ HRESULT CEnemy::Initialize(void* pArg)
 	SetUpSound();
 	SetUpAnimationEvent();
 	SetUpFSM();
+	SetUpUI();
 
 	return S_OK;
 }
@@ -107,6 +110,8 @@ void CEnemy::Tick(_double TimeDelta)
 	CScarletCharacter::Tick(TimeDelta);
 	FindTarget();
 	Update_DeadDissolve(TimeDelta);
+	Update_UIInfo();
+
 	m_pModelCom->Tick(TimeDelta);
 
 	if (m_bDeadStart)
@@ -290,6 +295,14 @@ CRigidBody * CEnemy::GetRigidBody(const string & KeyName)
 	return (*pRigidBody).second;
 }
 
+void CEnemy::Update_UIInfo()
+{
+	if (m_pShieldUI != nullptr)
+		m_pShieldUI->SetShild(m_iHP / (_float)m_iMaxHP, (_float)m_iCrushGage);
+	else if (m_pHPUI != nullptr)
+		m_pHPUI->Set_HpRatio(m_iHP / (_float)m_iMaxHP);
+}
+
 _bool CEnemy::IsTargetFront(_float fAngle)
 {
 	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
@@ -359,6 +372,32 @@ void CEnemy::TurnEyesOut()
 
 	//TimeLine 끝나고 삭제
 	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true);
+}
+
+void CEnemy::Create_InfoUI()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	if (m_pShieldUI != nullptr || m_pHPUI != nullptr) return;
+
+	if (m_bHasCrushGage)
+	{
+		m_pShieldUI = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterShield")));
+		assert(m_pShieldUI != nullptr);
+
+		m_pShieldUI->Set_Owner(this);
+		m_pShieldUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
+		m_pShieldUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
+	}
+	else
+	{
+		m_pHPUI = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterHP")));
+		assert(m_pHPUI != nullptr);
+
+		m_pHPUI->Set_Owner(this);
+		m_pHPUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
+		m_pHPUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
+	}
 }
 
 _float4x4 CEnemy::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)

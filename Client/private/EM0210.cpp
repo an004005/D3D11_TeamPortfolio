@@ -411,6 +411,10 @@ void CEM0210::SetUpFSM()
 		.Build();
 }
 
+void CEM0210::SetUpUI()
+{
+}
+
 void CEM0210::BeginTick()
 {
 	CEnemy::BeginTick();
@@ -434,15 +438,22 @@ void CEM0210::Tick(_double TimeDelta)
 	m_vMoveAxis = m_pController->GetMoveAxis();
 	m_vMoveAxis.Normalize();
 	m_eInput = m_pController->GetAIInput();
+	m_eSASType = CheckSASType(ESASType::SAS_PENETRATE);
+
+	if (m_eSASType == true)
+		m_dRenderChangeDelay += TimeDelta;
+	else
+		m_dRenderChangeDelay = 0.0;
 
 	if (m_IsFirstHit == false 
-		&& CheckSASType(ESASType::SAS_PENETRATE) 
+		&& m_eSASType
 		&& m_eCurAttackType != EAttackType::ATK_END)
 	{
 		m_IsInvisible = false;
 		m_bDown = true;
 		m_IsFirstHit = true;
 	}
+
 
 	//ASM, FSM tick
 	m_pFSM->Tick(TimeDelta);
@@ -469,7 +480,7 @@ void CEM0210::Late_Tick(_double TimeDelta)
 
 	if (m_IsInvisible)
 	{
-		if (CheckSASType(ESASType::SAS_PENETRATE))
+		if (m_dRenderChangeDelay >=0.5)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		else
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
@@ -490,7 +501,7 @@ HRESULT CEM0210::Render()
 {
 	if (m_IsInvisible)
 	{
-		if (CheckSASType(ESASType::SAS_PENETRATE))
+		if (m_dRenderChangeDelay >= 0.7)
 			m_pModelCom->Render(m_pTransformCom);
 		else
 			m_pModelCom->Render_Pass(m_pTransformCom, 5);
