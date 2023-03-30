@@ -8,12 +8,12 @@ END
 
 BEGIN(Client)
 
-class CSpecial_IronBars_SingleBars : public CSpecialObject
+class CSpecial_IronBars_MultiBars : public CSpecialObject
 {
 private:
-	CSpecial_IronBars_SingleBars(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSpecial_IronBars_SingleBars(const CSpecial_IronBars_SingleBars& rhs);
-	virtual ~CSpecial_IronBars_SingleBars() = default;
+	CSpecial_IronBars_MultiBars(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSpecial_IronBars_MultiBars(const CSpecial_IronBars_MultiBars& rhs);
+	virtual ~CSpecial_IronBars_MultiBars() = default;
 
 public:
 	HRESULT Initialize_Prototype() override;
@@ -50,7 +50,7 @@ private:
 	_float4x4	m_SyncMatrix = XMMatrixIdentity();
 
 public:
-	static CSpecial_IronBars_SingleBars* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSpecial_IronBars_MultiBars* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr)override;
 	void Free() override;
 

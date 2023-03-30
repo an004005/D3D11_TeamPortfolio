@@ -48,6 +48,9 @@ HRESULT CSpecial_HBeam_Bundle::Initialize(void * pArg)
 		if (!m_bThrow)
 			return;
 
+		if (!m_bRenderOption)
+			return;
+
 		if (auto pStatic = dynamic_cast<CMapObject*>(pGameObject))
 		{
 			HBeam_Decompose();
@@ -59,6 +62,11 @@ HRESULT CSpecial_HBeam_Bundle::Initialize(void * pArg)
 			tParam.eAttackType = EAttackType::ATK_HEAVY;
 			tParam.iDamage = 200;
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Special_G_HBeam")
+				->Start_AttachOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), false);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_HBeam_Particles")->
+				Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
 
 			HBeam_Decompose();
 		}
@@ -88,6 +96,13 @@ void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 			this->SetDelete();
 		}
 	}
+
+	//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Special_G_HBeam")
+	//	->Start_AttachOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), false);
+	//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_HBeam_Particles")->
+	//	Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+//	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_HBeam_Particles")->
+//		Start_AttachPosition_Scaling(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), _float4(10.f, 10.f, 10.f, 0.f), false);
 
 	if (m_bRenderOption)
 	{

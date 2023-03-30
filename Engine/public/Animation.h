@@ -57,6 +57,7 @@ public:
 // 염력 물체 애니메이션 관련
 public:
 	void Update_Bones_SyncRatio(_double PlayTime);
+	void Update_Bones_SyncRatio_NonLocalLock(_double PlayTime);
 // ~염력 물체 애니메이션 관련
 
 public:

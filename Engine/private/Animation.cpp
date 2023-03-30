@@ -96,6 +96,15 @@ void CAnimation::Update_Bones_SyncRatio(_double PlayTime)
 	}
 }
 
+void CAnimation::Update_Bones_SyncRatio_NonLocalLock(_double PlayTime)
+{
+	// 위와 동일하지만 Reference의 로컬 이동을 잠그지 않음
+	for (const auto pChannel : m_Channels)
+	{
+		pChannel->Update_TransformMatrix_NonLocalLock(PlayTime);
+	}
+}
+
 void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float fRatio)
 {
 	if (m_bFinished && !m_bLooping)

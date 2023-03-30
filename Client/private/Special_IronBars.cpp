@@ -86,11 +86,17 @@ void CSpecial_IronBars::Tick(_double TimeDelta)
 void CSpecial_IronBars::Late_Tick(_double TimeDelta)
 {
 	m_pDoor->Late_Tick(TimeDelta);
-	m_pBars->Late_Tick(TimeDelta);
 
-	for (_uint i = 0; i < 8; ++i)
+	if (!m_bDecompose)
 	{
-		m_pSingleBar[i]->Late_Tick(TimeDelta);
+		m_pBars->Late_Tick(TimeDelta);
+	}
+	else
+	{
+		for (_uint i = 0; i < 8; ++i)
+		{
+			m_pSingleBar[i]->Late_Tick(TimeDelta);
+		}
 	}
 }
 
@@ -171,7 +177,7 @@ void CSpecial_IronBars::IronBars_Decompose(_bool bDecompose)
 {
 	m_bDecompose = bDecompose;
 
-	IronBars_SetKinetic(!bDecompose);
+	//IronBars_SetKinetic(!bDecompose);
 }
 
 void CSpecial_IronBars::IronBars_SetKinetic(_bool bKinetic)
@@ -182,11 +188,52 @@ void CSpecial_IronBars::IronBars_SetKinetic(_bool bKinetic)
 	}
 }
 
-void CSpecial_IronBars::IronBars_AttachAnim(CModel* pModel, CTransform* pTransform)
+void CSpecial_IronBars::IronBars_AttachAnim(CModel* pModel, CTransform* pTransform, _float4 vPoint)
 {
 	for (_uint i = 0; i < 8; ++i)
 	{
-		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Attach_BoneMatrix(pModel, pTransform, "Waist");
+		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Attack_BoneMatrix_SetPoint(pModel, pTransform, "Waist", vPoint);
+	}
+}
+
+void CSpecial_IronBars::IronBars_LookAtTarget(_float4 vTargetPos, _float fRatio)
+{
+	for (_uint i = 0; i < 8; ++i)
+	{
+		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Calculate_TargetDir(vTargetPos, fRatio);
+	}
+}
+
+void CSpecial_IronBars::IronBars_Shooting_All(_float4 vTargetPos)
+{
+	for (_uint i = 0; i < 8; ++i)
+	{
+		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Shooting(vTargetPos);
+	}
+}
+
+void CSpecial_IronBars::IronBars_Shooting_Single(_float4 vTargetPos, _uint iIndex)
+{
+	static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[iIndex])->Shooting(vTargetPos);
+}
+
+void CSpecial_IronBars::IronBars_Reload(_float4 vDestPos, _float4 vTargetPos, _float fRatio)
+{
+	static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[0])->Reloading(vDestPos + _float4(0.f, -2.f, 3.f, 0.f), vTargetPos, fRatio);
+	static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[1])->Reloading(vDestPos + _float4(0.f, -2.f, 1.f, 0.f), vTargetPos, fRatio);
+	static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[2])->Reloading(vDestPos + _float4(0.f, -1.5f, 3.5f, 0.f), vTargetPos, fRatio);
+	static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[3])->Reloading(vDestPos + _float4(0.f, -1.5f, 0.5f, 0.f), vTargetPos, fRatio);
+	static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[4])->Reloading(vDestPos + _float4(0.f, -1.f, 3.5f, 0.f), vTargetPos, fRatio);
+	static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[5])->Reloading(vDestPos + _float4(0.f, -1.f, 0.5f, 0.f), vTargetPos, fRatio);
+	static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[6])->Reloading(vDestPos + _float4(0.f, -0.5f, 1.f, 0.f), vTargetPos, fRatio);
+	static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[7])->Reloading(vDestPos + _float4(0.f, -0.5f, 3.f, 0.f), vTargetPos, fRatio);
+}
+
+void CSpecial_IronBars::IronBars_LerpAnim(CModel* pModel, CTransform* pTransform, _float4 vPoint, _float fRatio)
+{
+	for (_uint i = 0; i < 8; ++i)
+	{
+		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Lerp_BoneMatrix(pModel, pTransform, "Waist", vPoint, fRatio);
 	}
 }
 

@@ -207,6 +207,13 @@ void CSpecial_TankLorry_Trailer::Change_Tank(_uint iIdx)
 	m_iTankIdx = iIdx;
 }
 
+void CSpecial_TankLorry_Trailer::Create_Oil_Particle()
+{
+	//Truck_Oil_Particle_Loop
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Truck_Oil_Particle_Loop")->
+		Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+}
+
 HRESULT CSpecial_TankLorry_Trailer::SetUp_Components(void * pArg)
 {
 	CModel* pModel = nullptr;
