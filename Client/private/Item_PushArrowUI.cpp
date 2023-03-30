@@ -41,8 +41,7 @@ void CItem_PushArrowUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	if (false == m_bInput)
-		return;
+	if (false == m_bInput)	return;
 
 	m_fMoveTimeAcc += TimeDelta;
 	if (0.15 < m_fMoveTimeAcc)

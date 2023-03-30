@@ -33,9 +33,9 @@ HRESULT CItem_LightUI::Initialize(void * pArg)
 
 void CItem_LightUI::Tick(_double TimeDelta)
 {
-	if (m_bUse == false) return;
-
 	__super::Tick(TimeDelta);
+
+	if (m_bUse == false) return;
 
 	m_dAlpha_TimeAcc += TimeDelta;
 	if (1.0 < m_dAlpha_TimeAcc)
