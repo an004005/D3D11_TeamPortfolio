@@ -55,6 +55,8 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+
+
 PS_OUT PS_BRON_BITE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -287,6 +289,24 @@ PS_OUT_Flag PS_MAIN_Flag(PS_IN In)
 	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	// Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vFlag = float4(1.0f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+PS_OUT_Flag EXPLODE_DEFAULT_RECT(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+	float2 TEXUV;
+
+	if(g_int_0 > 0)
+		TEXUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 8, 8);
+	else
+		TEXUV = Get_FlipBookUV(In.vTexUV, 0, 0.05, 8, 8);
+
+	float4 Default = g_tex_0.Sample(LinearSampler, TEXUV);
+	Out.vColor = CalcHDRColor(Default, g_float_0);
+	Out.vFlag = float4(SHADER_DISTORTION_STATIC, 0.f, 0.f, Default.a * g_float_1);
+	Out.vColor.a *= g_float_2;
 
 	return Out;
 }
@@ -1200,7 +1220,7 @@ technique11 DefaultTechnique
 	pass MaskTexDistortion
 	{
 		SetRasterizerState(RS_NonCulling);
-		SetDepthStencilState(DS_Default, 0);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1605,7 +1625,7 @@ technique11 DefaultTechnique
 	pass DistortionFlipBook_ColorDistortion
 	{
 		SetRasterizerState(RS_NonCulling);
-		SetDepthStencilState(DS_Default, 0);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1759,7 +1779,7 @@ technique11 DefaultTechnique
 	pass SpecialGExplodeLight
 	{
 		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetDepthStencilState(DS_Default, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1767,5 +1787,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SPECAIL_G_EXPLODE_LIGHT();
+	}
+
+	//44
+	pass Explode_RECT
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 EXPLODE_DEFAULT_RECT();
 	}
 }
