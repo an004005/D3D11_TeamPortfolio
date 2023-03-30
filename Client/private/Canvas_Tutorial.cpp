@@ -470,10 +470,11 @@ void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag, const 
 		if (true == dynamic_cast<CGameManager_Tutorial*>(CGameManager::GetInstance())->Get_KineticAttackCheck())
 		{
 			dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
+			m_bSuccess = true;
 
 			if (true == dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Get_End())
 			{
-				m_bSuccess = true;
+				//m_bSuccess = true;
 			}
 		}
 	}
@@ -520,10 +521,11 @@ void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag, const 
 		if (true == dynamic_cast<CGameManager_Tutorial*>(CGameManager::GetInstance())->Get_HitAir())
 		{
 			dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Set_OffTutorial();
+			m_bSuccess = true;
 
 			if (true == dynamic_cast<CTutorial_TipsUI*>(Find_ChildUI(pChildTag))->Get_End())
 			{
-				m_bSuccess = true;
+				//m_bSuccess = true;
 			}
 		}
 	}
