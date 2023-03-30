@@ -112,6 +112,11 @@ void CChannel::Update_TransformMatrix(_double PlayTime)
 		}
 	}
 
+	if ("Eff01" == m_strName)
+	{
+		m_vEffectLocalMove = vPosition;
+	}
+
 	if ("Train_Root" == m_strName)
 	{
 		m_vSpecialLocalMove = vPosition;
@@ -120,6 +125,65 @@ void CChannel::Update_TransformMatrix(_double PlayTime)
 
 	TransformMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 	m_pBone->Set_TransformMatrix(TransformMatrix);	
+}
+
+void CChannel::Update_TransformMatrix_NonLocalLock(_double PlayTime)
+{
+	// 오브젝트 애니메이션 중 Reference본을 이용하는 애니메이션이 있어서 생성한 함수
+	// 일반적인 채널 업데이트에는 사용X
+
+	if (m_pBone == nullptr)
+	{
+		// IM_WARN("Channel %s is not linked", m_strName.c_str());
+		return;
+	}
+
+	if (m_pBone->IsDisableAnim())
+		return;
+
+	_vector			vScale;
+	_vector			vRotation;
+	_vector			vPosition;
+
+	_matrix			TransformMatrix;
+
+	/* 현재 재생된 시간이 마지막 키프레임시간보다 커지며.ㄴ */
+	if (PlayTime >= m_KeyFrames.back().Time)
+	{
+		vScale = XMLoadFloat3(&m_KeyFrames.back().vScale);
+		vRotation = XMLoadFloat4(&m_KeyFrames.back().vRotation);
+		vPosition = XMLoadFloat3(&m_KeyFrames.back().vPosition);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+	}
+	else if (PlayTime <= m_KeyFrames.front().Time)
+	{
+		vScale = XMLoadFloat3(&m_KeyFrames.front().vScale);
+		vRotation = XMLoadFloat4(&m_KeyFrames.front().vRotation);
+		vPosition = XMLoadFloat3(&m_KeyFrames.front().vPosition);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+	}
+	else
+	{
+		_uint iFrameIdx = 0;
+		while (PlayTime >= m_KeyFrames[iFrameIdx + 1].Time)
+		{
+			++iFrameIdx;
+		}
+		m_iCurFrameIdx = iFrameIdx;
+
+		_float			fRatio = (_float)(PlayTime - m_KeyFrames[iFrameIdx].Time) /
+			(m_KeyFrames[iFrameIdx + 1].Time - m_KeyFrames[iFrameIdx].Time);
+
+
+		vScale = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[iFrameIdx].vScale), XMLoadFloat3(&m_KeyFrames[iFrameIdx + 1].vScale), fRatio);
+		vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[iFrameIdx].vRotation), XMLoadFloat4(&m_KeyFrames[iFrameIdx + 1].vRotation), fRatio);
+		vPosition = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[iFrameIdx].vPosition), XMLoadFloat3(&m_KeyFrames[iFrameIdx + 1].vPosition), fRatio);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+
+	}
+
+	TransformMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
+	m_pBone->Set_TransformMatrix(TransformMatrix);
 }
 
 void CChannel::Blend_TransformMatrix(_double PlayTime, _float fBlendRatio)

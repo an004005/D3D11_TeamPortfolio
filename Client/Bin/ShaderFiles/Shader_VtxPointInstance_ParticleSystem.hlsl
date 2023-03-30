@@ -3,13 +3,13 @@
 #include "Shader_Params.h"
 
 /*
- * pos.xyz = ·ÎÄÃ ¶Ç´Â ¿ùµå À§Ä¡
- * pos.w = ÇöÀç life(½Ã°£)
- * up.w = ÃÑ life
- * up.xy = p»çÀÌÁî xy
+ * pos.xyz = ë¡œì»¬ ë˜ëŠ” ì›”ë“œ ìœ„ì¹˜
+ * pos.w = í˜„ì¬ life(ì‹œê°„)
+ * up.w = ì´ life
+ * up.xy = pì‚¬ì´ì¦ˆ xy
  *
- * look.xyz : ÀÌµ¿ ¹æÇâ
- * look.w : ÀÌµ¿ ¼Ó·Â
+ * look.xyz : ì´ë™ ë°©í–¥
+ * look.w : ì´ë™ ì†ë ¥
  */
 int g_bRotate = 0;
 int g_bLocal = 0;
@@ -270,8 +270,42 @@ PS_OUT PS_PARTICLE_EM0650(PS_IN In)
 			discard;
 	}
 
-	if (Out.vColor.a <= 0.f)
+	if (Out.vColor.a <= 0.1f)
 		discard; 
+
+	return Out;
+}
+
+PS_OUT PS_TRAIN_HDR(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float2 TEXUV = Get_FlipBookUV(In.vTexUV, In.CurLife, 0.1, 4, 2);
+	float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	// float GradientTex = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+	float4 Choose = g_vec4_0;
+	float4 BlendColor = DefaultTex * Choose * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0 * In.RamainLifeRatio); // color * emissive
+
+	if (g_tex_on_1)
+	{
+		float Mask = g_tex_1.Sample(LinearSampler, TEXUV).r;
+		Out.vColor.a = Mask;
+		if (Mask <= 0.f)
+			discard;
+	}
+	else
+	{
+		// Out.vColor.a = GradientTex;
+		Out.vColor = DefaultTex;
+
+		if (Out.vColor.a < 0.01f)
+			discard;
+	}
+
+	if (Out.vColor.a <= 0.f)
+		discard;
 
 	return Out;
 }
@@ -323,6 +357,23 @@ PS_OUT PS_FLIPBOOK_SMOKE(PS_IN In)
 
 	Out.vColor = FinalColor;
 	Out.vColor.a = flipBook.a * In.RamainLifeRatio;
+
+	return Out;
+}
+
+PS_OUT PS_FLIPBOOK_SMOKE_8x8(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 8, 8));
+	float4 vColor = g_vec4_0;
+
+	float4 BlendColor = flipBook * vColor * 2.0f;
+
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = FinalColor;
+	Out.vColor.a = flipBook.a * In.RamainLifeRatio * g_float_0;
 
 	return Out;
 }
@@ -581,8 +632,8 @@ PS_OUT PS_PHOENIX_FIREBALL(PS_IN In)
 	return Out;
 }
 
-// g_tex_0 : ±×¶óµğ¾ğÆ®¿Í µ¿½Ã¿¡ µğÇ»Áî
-// g_tex_1 : ¹®ÀÚÇü»óÀ» °¡Áø ÅØ½ºÃÄ
+// g_tex_0 : ê·¸ë¼ë””ì–¸íŠ¸ì™€ ë™ì‹œì— ë””í“¨ì¦ˆ
+// g_tex_1 : ë¬¸ìí˜•ìƒì„ ê°€ì§„ í…ìŠ¤ì³
 // g_float_0 : Emissive
 // g_float_1 : Alpha
 
@@ -717,7 +768,7 @@ technique11 DefaultTechnique
 	pass BulletTrailParticle
 	{
 		SetRasterizerState(RS_NonCulling);
-		SetDepthStencilState(DS_Default, 0);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -922,4 +973,33 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_KINETIC_TRUCK_OIL();
 	}
+
+	//21
+	pass FlipSmoke8x8
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_FLIPBOOK_SMOKE_8x8();
+	}
+
+	//22
+	pass TrainHdr
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_TRAIN_HDR();
+	}
+
 }

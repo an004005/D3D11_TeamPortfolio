@@ -349,9 +349,6 @@
     <Filter Include="02.GameObjects\SpecialObject\Special_HBeam">
       <UniqueIdentifier>{3d3141ae-cb50-4e98-be7f-6a2ccd5a7c65}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\SpecialObject\Special_DropObject">
-      <UniqueIdentifier>{582dd83f-6fa4-40bd-a589-1e0ae3c72dd6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Enemy\EM0800">
       <UniqueIdentifier>{ea366a02-5446-4163-9037-e8e37c831263}</UniqueIdentifier>
     </Filter>
@@ -381,6 +378,12 @@
     </Filter>
     <Filter Include="02.GameObjects\SpecialObject\Special_TankLorry">
       <UniqueIdentifier>{b12936c4-bc60-410c-9473-2decf22ba875}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_DropObject">
+      <UniqueIdentifier>{582dd83f-6fa4-40bd-a589-1e0ae3c72dd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_IronBars">
+      <UniqueIdentifier>{95eb373d-d073-4426-aeef-0aacbb328a3e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\Short">
       <UniqueIdentifier>{13c84b28-6101-40b9-8629-d92de65f760f}</UniqueIdentifier>
@@ -1189,6 +1192,21 @@
     <ClInclude Include="..\public\Special_TankLorry_Tank.h">
       <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Special_IronBars_Door.h">
+      <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_IronBars_Bars.h">
+      <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_IronBars.h">
+      <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_IronBars_SingleBars.h">
+      <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_IronBars_MultiBars.h">
+      <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\GameManager_Tutorial.h" />
     <ClInclude Include="..\public\Canvas_Acquisition.h">
       <Filter>02.GameObjects\UI\Short</Filter>
@@ -1985,6 +2003,21 @@
     </ClCompile>
     <ClCompile Include="..\private\Special_TankLorry_Tank.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_TankLorry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_IronBars_Door.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_IronBars_Bars.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_IronBars.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_IronBars_SingleBars.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_IronBars_MultiBars.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GameManager_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp">

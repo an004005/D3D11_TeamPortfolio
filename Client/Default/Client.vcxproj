@@ -410,6 +410,11 @@
     <ClInclude Include="..\public\Special_DropObject_Single.h" />
     <ClInclude Include="..\public\Special_HBeam_Bundle.h" />
     <ClInclude Include="..\public\Special_HBeam_Single.h" />
+    <ClInclude Include="..\public\Special_IronBars.h" />
+    <ClInclude Include="..\public\Special_IronBars_Bars.h" />
+    <ClInclude Include="..\public\Special_IronBars_Door.h" />
+    <ClInclude Include="..\public\Special_IronBars_MultiBars.h" />
+    <ClInclude Include="..\public\Special_IronBars_SingleBars.h" />
     <ClInclude Include="..\public\Special_TankLorry.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -687,6 +692,11 @@
     <ClCompile Include="..\private\Special_DropObject_Single.cpp" />
     <ClCompile Include="..\private\Special_HBeam_Bundle.cpp" />
     <ClCompile Include="..\private\Special_HBeam_Single.cpp" />
+    <ClCompile Include="..\private\Special_IronBars.cpp" />
+    <ClCompile Include="..\private\Special_IronBars_Bars.cpp" />
+    <ClCompile Include="..\private\Special_IronBars_Door.cpp" />
+    <ClCompile Include="..\private\Special_IronBars_MultiBars.cpp" />
+    <ClCompile Include="..\private\Special_IronBars_SingleBars.cpp" />
     <ClCompile Include="..\private\Special_TankLorry.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

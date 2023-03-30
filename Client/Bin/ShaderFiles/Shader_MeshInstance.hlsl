@@ -2,13 +2,13 @@
 #include "Shader_Defines.h"
 #include "Shader_Params.h"
 /*
-* pos.xyz = ∑Œƒ√ ∂«¥¬ ø˘µÂ ¿ßƒ°
-* pos.w = «ˆ¿Á life(Ω√∞£)
-* up.w = √— life
-* up.xy = pªÁ¿Ã¡Ó xy
+* pos.xyz = Î°úÏª¨ ÎòêÎäî ÏõîÎìú ÏúÑÏπò
+* pos.w = ÌòÑÏû¨ life(ÏãúÍ∞Ñ)
+* up.w = Ï¥ù life
+* up.xy = pÏÇ¨Ïù¥Ï¶à xy
 *
-* look.xyz : ¿Ãµø πÊ«‚
-* look.w : ¿Ãµø º”∑¬
+* look.xyz : Ïù¥Îèô Î∞©Ìñ•
+* look.w : Ïù¥Îèô ÏÜçÎ†•
 */
 int g_bLocal = 0;
 int g_bSizeDecreaseByLife = 0;
@@ -155,7 +155,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	
-	// ºˆ∏Ì ¥¯¡ˆ±‚
+	// ÏàòÎ™Ö ÎçòÏßÄÍ∏∞
 	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0 * In.RamainLifeRatio);
 
 	Out.vColor.a = g_vec4_0.a;
@@ -183,6 +183,39 @@ PS_OUT_NORM PS_PLAYER_KINETIC_PARTICLE(PS_IN_NORM In)
 
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0 * In.RamainLifeRatio, flags);
+
+	// Out.vColor.a = g_vec4_0.a;
+
+	Out.vColor.a = 1.f;
+
+	if (g_tex_on_2)
+		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	else
+		Out.vRMA = float4(g_float_1, g_float_2, g_float_3, 0.f);
+
+	return Out;
+}
+
+PS_OUT_NORM PS_BREAK_MESH(PS_IN_NORM In)
+{
+	PS_OUT_NORM		Out = (PS_OUT_NORM)0;
+	float flags = SHADER_NONE_SHADE;
+
+	float3 vNormal = In.vNormal.xyz;
+
+	float4 BaseTex = g_tex_0.Sample(LinearSampler, In.vTexUV) * 0.1f;
+	float4 Color = g_vec4_0;
+	float4 BlendColor = BaseTex * Color * 2.0f;
+	float4 Final = saturate(BlendColor);
+	Out.vColor = Final;
+
+	vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f) * g_float_4;
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
 
 	// Out.vColor.a = g_vec4_0.a;
 
@@ -289,6 +322,19 @@ technique11 DefaultTechnique
 	}
 
 	pass Player_KineticParticle //4
+	{
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(DS_Default, 0);
+		SetRasterizerState(RS_Default);
+
+		VertexShader = compile vs_5_0 VS_MAIN_NORM();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_PLAYER_KINETIC_PARTICLE();
+	}
+
+	pass BreakMesh // 5
 	{
 		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(DS_Default, 0);

@@ -220,6 +220,34 @@ Decal 그룹 작업 후 호스맨 마저 작업
 
 
 
+키네틱 오브젝트 죽을 때 추가할 이펙트들 작업중 kinetic_Object_Effect 확인
+
+
+../Bin/Resources/Meshes/VFX/Effect_Circle/VFX_Mesh_Circle_18.static_model
+
+../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_01.static_model
+
+../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_02.static_model
+
+../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_04.static_model
+
+../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_05.static_model
+
+../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_07.static_model
+
+../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_08.static_model
+
+TelePhonePole
+
+
+
+
+
+
+
+
+
+
 
 
 
