@@ -217,7 +217,6 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_bAirToDown = true;
 	}
 
-
 	CheckDeBuff(tDamageParams.eDeBuff);
 	HitEffect(tDamageParams);
 	CheckCrushGage(tDamageParams);
@@ -226,6 +225,8 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	ENEMY_DAMAGE_REPORT tReport;
 	tReport.pCauser = tDamageParams.pCauser;
 	tReport.pTaker = this;
+	tReport.eName = m_eEnemyName;
+	tReport.eStat = GetEnemyBatchDataStat();
 	tReport.iTakeDamage = tDamageParams.iDamage;
 	tReport.eAttackSAS = tDamageParams.eAttackSAS;
 	if (m_ePreDeBuff != m_eDeBuff)

@@ -128,7 +128,8 @@ private:
 
 	//UI
 	class CCanvas_Alarm*		m_pUI_Alarm = nullptr;
-	class CCanvas_BossHp*		m_pUI_BossHP = nullptr;
+	class CCanvas_BossHpMove*	m_pUI_BossHP = nullptr;
+
 public:
 	static CBoss1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

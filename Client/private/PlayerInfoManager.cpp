@@ -30,7 +30,45 @@ HRESULT CPlayerInfoManager::Initialize()
 
 	m_tPlayerStat.m_fBaseAttackDamage = 100.f;
 
+	m_tPlayerStat.iExp = 50;
+	m_tPlayerStat.iMaxExp = 100;
+	m_tPlayerStat.iLevel = 1;
+	m_tPlayerStat.iSprbrPower = 110;
+	m_tPlayerStat.iAttack = 30;
+	m_tPlayerStat.iDefense = 15;
+	m_tPlayerStat.iBP = 5000;
+	m_tPlayerStat.iCoin = 0;
+		
 #pragma endregion 플레이어 기본 스탯 초기화
+
+	ZeroMemory(&m_tHanabiStat, sizeof(HANABI_STAT));
+	ZeroMemory(&m_tTsugumiStat, sizeof(TSUGUMI_STAT));
+
+#pragma region	멤버 기본 스탯 초기화
+
+	m_tHanabiStat.bMember = false;
+	m_tHanabiStat.iHP = 1700;
+	m_tHanabiStat.iMaxHP = 1700;
+	m_tHanabiStat.iExp = 50;
+	m_tHanabiStat.iMaxExp = 100;
+	m_tHanabiStat.iLevel = 1;
+	m_tHanabiStat.iBondLevel = 1;
+	m_tHanabiStat.iSprbrPower = 276;
+	m_tHanabiStat.iAttack = 50;
+	m_tHanabiStat.iDefense = 20;
+
+	m_tTsugumiStat.bMember = false;
+	m_tTsugumiStat.iHP = 1300;
+	m_tTsugumiStat.iMaxHP = 1300;
+	m_tTsugumiStat.iExp = 0;
+	m_tTsugumiStat.iMaxExp = 100;
+	m_tTsugumiStat.iLevel = 1;
+	m_tTsugumiStat.iBondLevel = 1;
+	m_tTsugumiStat.iSprbrPower = 325;
+	m_tTsugumiStat.iAttack = 60;
+	m_tTsugumiStat.iDefense = 10;
+
+#pragma endregion	멤버 기본 스탯 초기화
 
 #pragma region SAS정보 초기화
 

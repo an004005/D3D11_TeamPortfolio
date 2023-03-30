@@ -24,6 +24,20 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
+	void	Set_Input() {
+		m_bInput = true;
+	}
+
+	void	Set_Color(const _float4 & fColor) {
+		m_tParams.Float4s[0] = fColor;
+	}
+
+private:
+	_bool	m_bInput = { false };
+	_float	m_fStartY = { 0.0f };
+	_double m_fMoveTimeAcc = { 0.0f };
+
+public:
 	static CItem_PushArrowUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;

@@ -240,6 +240,7 @@ private:	// 특수연출용 FSM
 
 private:
 	_uint m_iIronBars_ThrowCnt = 0;
+	_float4 m_vIronBars_ThrowPoins = { 0.f, 2.f, -2.f, 1.f };	// 쇠창살 모이는 포인트
 
 private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_Train_Charge_L;	// 좌측 기차 차지
@@ -274,6 +275,7 @@ private:	// 특수연출용 소켓 애니메이션
 
 	list<CAnimation*>	m_IronBars_Charge;			// 쇠창살 차지
 	list<CAnimation*>	m_IronBars_Cancel;			// 쇠창살 취소
+	list<CAnimation*>	m_IronBars_Decompose;		// 쇠창살 뜯어내기
 	list<CAnimation*>	m_IronBars_Start;			// 쇠창살 기본 타격
 	list<CAnimation*>	m_IronBars_End;				// 쇠창살 추가타 취소
 	list<CAnimation*>	m_IronBars_Charge_Ex;		// 쇠창살 추가타 차지
@@ -661,6 +663,8 @@ private:
 	CDoOnce DropObject;
 	CDoOnce TankLorry;
 	CDoOnce	TankLorry_Exploision;
+	CDoOnce IronBars;
+	CDoOnce HBeam;
 
 private:
 	_bool	m_bEffectUpdate = false;

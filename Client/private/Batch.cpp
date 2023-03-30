@@ -255,7 +255,7 @@ void CBatch::Imgui_RenderProperty()
 	ImGui::Separator();
 
 	static array<const char*, CCanvas_Tutorial::TUTORIAL::TUTORIAL_END> arrPivotName{
-		"LOCKON", "FIGHTINGSTYLE", "SPECIALATTACK", "ADDRUSHATTACK", "ADDPSYCHOKINESISATTACK", "STRENGTHENATTACK"
+		"LOCKON", "FIGHTINGSTYLE", "SPECIALATTACK", "ADDRUSHATTACK", "ADDPSYCHOKINESISATTACK"
 	};
 
 	if (ImGui::BeginCombo("Pivot", arrPivotName[static_cast<_uint>(m_eTutorial)]))

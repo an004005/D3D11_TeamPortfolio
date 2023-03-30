@@ -13,6 +13,10 @@
 
 #include "Imgui_CurveManager.h"
 #include "Imgui_PhysX.h"
+#include "FactoryMethod.h"
+#include "VFX_Manager.h"
+#include "Monster.h"
+#include "GameManager.h"
 
 // Canvas
 #include "Canvas.h"
@@ -30,7 +34,11 @@
 #include "Canvas_ItemMove.h"
 #include "Canvas_Tutorial.h"
 #include "Canvas_BossHp.h"
+#include "Canvas_BossHpMove.h"
 #include "Canvas_Alarm.h"
+#include "Canvas_Main.h"
+#include "Canvas_ItemWindow.h"
+#include "Canvas_Acquisition.h"
 
 // Default
 #include "DefaultUI.h"
@@ -41,7 +49,7 @@
 #include "SASSkillLightUI.h"
 #include "SASSkillNameUI.h"
 #include "SASSkillFullCircleUI.h"
-// Direve
+// Drive
 #include "Drive_RightDotUI.h"
 #include "Drive_GaugeUI.h"
 // Item
@@ -70,23 +78,37 @@
 #include "Tutorial_CheckUI.h"
 #include "Tutorial_YesNoUI.h"
 #include "Tutorial_TipsUI.h"
-#include "Tutorial_SuccessUI.h"
 
 //Boss
 #include "Boss_HpUI.h"
 #include "Boss_HpBackUI.h"
 #include "Boss_ShildUI.h"
-
 // Alarm
 #include "NextMapNameUI.h"
 #include "Boss_AppearUI.h"
 #include "Boss_AppearBackUI.h"
 #include "LevelUpUI.h"
+// Main
+#include "FullUI.h"
+#include "Main_FaceUI.h"
+#include "Main_BarUI.h"
+#include "Main_PickUI.h"
+#include "Main_SkillIconUI.h"
+#include "Main_SkillNameUI.h"
+#include "ItemIconUI.h"
+#include "Main_OnMouseUI.h"
+#include "Main_OnMouseColorUI.h"
+#include "Main_BrainMapIconPickUI.h"
+#include "Main_BrainGaugeUI.h"
+#include "Main_BrainUI.h"
+#include "Main_OnePickUI.h"
 
-#include "FactoryMethod.h"
-#include "Monster.h"
+// Mouse
+#include "MouseCousorUI.h"
+#include "MouseCousorLightUI.h"
 
-#include "VFX_Manager.h"
+// Acquisition
+#include "AcquisitionUI.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -102,32 +124,34 @@ HRESULT CLevel_UI::Initialize()
 	CGameInstance::GetInstance()->Clear_ImguiObjects();
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PropertyEditor::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
-	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
-	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
+	//CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PostProcess::Create(m_pDevice, m_pContext));
+	//CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PhysX::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
-	CVFX_Manager::GetInstance()->Initialize(LEVEL_UI);
 
+	CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext);
+	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
-	if (FAILED(Ready_Prototypes()))
-		return E_FAIL;
+	//if (FAILED(Ready_Prototypes()))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_UI(L"Layer_UI")))
+	if (FAILED(Ready_Layer_UI(PLAYERTEST_LAYER_FRONTUI)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
-		return E_FAIL;
+	//if (FAILED(Ready_Effect(TEXT("Layer_PostVFX"))))
+	//	return E_FAIL;
 
 	/*if (FAILED(Ready_Layer_Player(L"Layer_Player")))
 		return E_FAIL;*/
 
-	if (FAILED(Ready_Layer_Monster(L"Layer_Monster")))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Monster(L"Layer_Monster")))
+	//	return E_FAIL;
+
 
 	return S_OK;
 }
@@ -135,6 +159,9 @@ HRESULT CLevel_UI::Initialize()
 void CLevel_UI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+	CGameManager::GetInstance()->Tick(TimeDelta);
+
 }
 
 void CLevel_UI::Late_Tick(_double TimeDelta)
@@ -228,11 +255,30 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_BossHp"),
 			CCanvas_BossHp::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_BossHpMove*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_BossHpMove"),
+			CCanvas_BossHpMove::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_Alarm*/
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Alarm"),
 			CCanvas_Alarm::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+
+		/* For.Prototype_GameObject_Canvas_Main*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Main"),
+			CCanvas_Main::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_ItemWindow */
+		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_ItemWindow"),
+			CCanvas_ItemWindow::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		///* For.Prototype_GameObject_Canvas_Acquisition */
+		//if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_Acquisition"),
+		//	CCanvas_Acquisition::Create(m_pDevice, m_pContext))))
+		//	return E_FAIL;
+
 
 	}
 
@@ -242,11 +288,16 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Default_UI"),
 			CDefaultUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-
 		/* For.Prototype_GameObject_Button_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Button_UI"),
 			CButtonUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+		/* For.Prototype_GameObject_Main_ItemIconUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("ItemIconUI"),
+			CItemIconUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+
 
 		// Frount_UI -> SAS Skill
 		/* For.Prototype_GameObject_SASSkillIcon_UI */
@@ -377,11 +428,7 @@ HRESULT CLevel_UI::Ready_Prototypes()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_TipsUI"),
 			CTutorial_TipsUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-		/* For.Prototype_GameObject_Tutorial_SuccessUI */
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Tutorial_SuccessUI"),
-			CTutorial_SuccessUI::Create(m_pDevice, m_pContext))))
-			return E_FAIL;
-		
+
 		// Boss
 		/* For.Prototype_GameObject_Boss_HpUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Boss_HpUI"),
@@ -414,11 +461,78 @@ HRESULT CLevel_UI::Ready_Prototypes()
 			CLevelUpUI::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
+		// Main
+		/* For.Prototype_GameObject_MainUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("FullUI"),
+			CFullUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_FaceUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_FaceUI"),
+			CMain_FaceUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_BarUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_BarUI"),
+			CMain_BarUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_PickUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_PickUI"),
+			CMain_PickUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_SkillIconUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_SkillIconUI"),
+			CMain_SkillIconUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_SkillNameUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_SkillNameUI"),
+			CMain_SkillNameUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_OnMouseUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_OnMouseUI"),
+			CMain_OnMouseUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_BrainMapIconPickUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_BrainMapIconPickUI"),
+			CMain_BrainMapIconPickUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_OnMouseColorUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_OnMouseColorUI"),
+			CMain_OnMouseColorUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_BrainGaugeUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_BrainGaugeUI"),
+			CMain_BrainGaugeUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_BrainUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_BrainUI"),
+			CMain_BrainUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Main_OnePickUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Main_OnePickUI"),
+			CMain_OnePickUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		
+		// Mouse
+		/* For.Prototype_GameObject_MouseCousorUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("MouseCousorUI"),
+			CMouseCousorUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_MouseCousorUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("MouseCousorLightUI"),
+			CMouseCousorLightUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		
+		// Acquisition
+		/* For.Prototype_GameObject_AcquisitionUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("AcquisitionUI"),
+			CAcquisitionUI::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+
 	}
 
-	FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
-	FAILED_CHECK(CFactoryMethod::MakeUITestPrototypes(m_pDevice, m_pContext));
-	FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
+	//FAILED_CHECK(CFactoryMethod::MakeEnermyPrototypes(m_pDevice, m_pContext));
+	//FAILED_CHECK(CFactoryMethod::MakeUITestPrototypes(m_pDevice, m_pContext));
+	//FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -508,11 +622,24 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Tutorial.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Tutorial", &json));
 
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_BossHp", &json));
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_BossHp", &json));
 
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Alarm", &json));
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_BossHpMove", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Alarm", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Main.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Main", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MouseCousor.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_MouseCousor", &json));
+
+	// Ãß°¡
+	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_LeftTalk", &json));
 	
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
@@ -520,8 +647,6 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	//	wstring protoTag = s2ws(json["Prototype_GameObject"]);
 	//	pGameInstance->Clone_GameObject(pLayerTag, protoTag.c_str(), &json);
 	//});
-
-
 
 	return S_OK;
 }
@@ -567,5 +692,7 @@ CLevel_UI * CLevel_UI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pCon
 void CLevel_UI::Free()
 {
 	__super::Free();
+	CGameManager::GetInstance()->DestroyInstance();
+
 }
 

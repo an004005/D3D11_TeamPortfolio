@@ -1,1 +1,348 @@
-{"ChildrenUI":[{"ChildTag":"Item_Gauge\u0000","ObjectTag":"","Pivot":7,"PositionX":179.5,"PositionY":134.0,"Priority":2,"Prototype_GameObject":"Item_GaugeUI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[],"Float4s":[[0.5912964940071106,0.9128788113594055,0.598605215549469,0.0]],"Float4x4s":[],"Floats":[1.0],"Ints":[],"Pass":20,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\Item_Gauge1.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\Itme_GeugeMask.png\u0000"]},"SizeX":76.0,"SizeY":74.0,"Transform":{"WorldMatrix":[53.20000076293945,0.0,0.0,0.0,0.0,51.79999923706055,0.0,0.0,0.0,0.0,1.0,0.0,-460.5,-226.0,0.0,1.0]}},{"ChildTag":"Item_GaugeBack\u0000","ObjectTag":"Item_GaugeBack","Pivot":7,"PositionX":179.5,"PositionY":134.0,"Priority":1,"Prototype_GameObject":"Item_GaugeUI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[],"Float4s":[[0.511880099773407,1.0,0.3863636255264282,0.0]],"Float4x4s":[],"Floats":[1.0],"Ints":[],"Pass":20,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\Item_Gauge0.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\Itme_GeugeMask.png\u0000"]},"SizeX":76.0,"SizeY":74.0,"Transform":{"WorldMatrix":[53.20000076293945,0.0,0.0,0.0,0.0,51.79999923706055,0.0,0.0,0.0,0.0,1.0,0.0,-460.5,-226.0,0.0,1.0]}},{"ChildTag":"Item_LeftArrow\u0000","ObjectTag":"Item_LeftArrow","Pivot":7,"PositionX":144.0,"PositionY":134.0,"Priority":1,"Prototype_GameObject":"Item_LeftArrowUI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Item_LeftArrow.dds\u0000"]},"SizeX":64.0,"SizeY":64.0,"Transform":{"WorldMatrix":[44.79999923706055,0.0,0.0,0.0,0.0,44.79999923706055,0.0,0.0,0.0,0.0,1.0,0.0,-496.0,-226.0,0.0,1.0]}},{"ChildTag":"Item_PushArrow\u0000","ObjectTag":"Item_PushArrow","Pivot":7,"PositionX":178.0,"PositionY":77.5999984741211,"Priority":1,"Prototype_GameObject":"Item_PushArrowUI\u0000","ScaleX":0.800000011920929,"ScaleY":0.800000011920929,"ShaderParams":{"Float2s":[],"Float4s":[[0.814393937587738,1.0,0.8481404781341553,1.0]],"Float4x4s":[],"Floats":[1.0],"Ints":[1],"Pass":14,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Item_PushArrow.dds\u0000"]},"SizeX":64.0,"SizeY":64.0,"Transform":{"WorldMatrix":[51.20000076293945,0.0,0.0,0.0,0.0,51.20000076293945,0.0,0.0,0.0,0.0,1.0,0.0,-462.0,-282.3999938964844,0.0,1.0]}},{"ChildTag":"Item_PushArrowBack\u0000","ObjectTag":"Item_PushArrowBack","Pivot":7,"PositionX":178.0,"PositionY":77.0,"Priority":0,"Prototype_GameObject":"Default_UI\u0000","ScaleX":0.800000011920929,"ScaleY":0.800000011920929,"ShaderParams":{"Float2s":[],"Float4s":[[0.39136460423469543,0.7992424368858337,0.3390725553035736,0.0]],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":21,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\Item_PushArrow_Mask.dds\u0000"]},"SizeX":64.0,"SizeY":64.0,"Transform":{"WorldMatrix":[51.20000076293945,0.0,0.0,0.0,0.0,51.20000076293945,0.0,0.0,0.0,0.0,1.0,0.0,-462.0,-283.0,0.0,1.0]}},{"ChildTag":"Item_RightArrow\u0000","ObjectTag":"Item_RightArrow","Pivot":7,"PositionX":215.0,"PositionY":137.0,"Priority":1,"Prototype_GameObject":"Item_RightArrowUI\u0000","ScaleX":0.699999988079071,"ScaleY":0.699999988079071,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\Item_RightArrow.dds\u0000"]},"SizeX":64.0,"SizeY":64.0,"Transform":{"WorldMatrix":[44.79999923706055,0.0,0.0,0.0,0.0,44.79999923706055,0.0,0.0,0.0,0.0,1.0,0.0,-425.0,-223.0,0.0,1.0]}}],"ObjectTag":"Canvas_ItemMove","Pivot":0,"PositionX":0.0,"PositionY":0.0,"Priority":0,"Prototype_GameObject":"Canvas_ItemMove\u0000","ScaleX":0.5,"ScaleY":0.5,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":[]},"SizeX":1280.0,"SizeY":720.0,"Transform":{"WorldMatrix":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "Item_Gauge\u0000",
+            "ObjectTag": "Item_Gauge",
+            "Pivot": 7,
+            "PositionX": 179.5,
+            "PositionY": 134.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Item_GaugeUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.5912964940071106,
+                        0.9128788113594055,
+                        0.598605215549469,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 20,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Item_Gauge1.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Itme_GeugeMask.png\u0000"
+                ]
+            },
+            "SizeX": 76.0,
+            "SizeY": 74.0,
+            "Transform": {
+                "WorldMatrix": [
+                    64.5999984741211,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    62.900001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -620.5,
+                    -316.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Item_GaugeBack\u0000",
+            "ObjectTag": "Item_GaugeBack",
+            "Pivot": 7,
+            "PositionX": 179.5,
+            "PositionY": 134.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Item_GaugeUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.511880099773407,
+                        1.0,
+                        0.3863636255264282,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 20,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Item_Gauge0.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Itme_GeugeMask.png\u0000"
+                ]
+            },
+            "SizeX": 76.0,
+            "SizeY": 74.0,
+            "Transform": {
+                "WorldMatrix": [
+                    64.5999984741211,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    62.900001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -620.5,
+                    -316.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Item_LeftArrow\u0000",
+            "ObjectTag": "Item_LeftArrow",
+            "Pivot": 7,
+            "PositionX": 133.0,
+            "PositionY": 134.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Item_LeftArrowUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Item_LeftArrow.dds\u0000"
+                ]
+            },
+            "SizeX": 64.0,
+            "SizeY": 64.0,
+            "Transform": {
+                "WorldMatrix": [
+                    54.400001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    54.400001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -667.0,
+                    -316.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Item_PushArrow\u0000",
+            "ObjectTag": "Item_PushArrow",
+            "Pivot": 7,
+            "PositionX": 180.0,
+            "PositionY": 66.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Item_PushArrowUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.814393937587738,
+                        1.0,
+                        0.8481404781341553,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [
+                    1
+                ],
+                "Pass": 14,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Item_PushArrow.dds\u0000"
+                ]
+            },
+            "SizeX": 64.0,
+            "SizeY": 64.0,
+            "Transform": {
+                "WorldMatrix": [
+                    54.400001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    54.400001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -620.0,
+                    -384.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Item_PushArrowBack\u0000",
+            "ObjectTag": "Item_PushArrowBack",
+            "Pivot": 7,
+            "PositionX": 180.0,
+            "PositionY": 66.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Item_PushArrowUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.39136460423469543,
+                        0.7992424368858337,
+                        0.3390725553035736,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 21,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Item_PushArrow_Mask.dds\u0000"
+                ]
+            },
+            "SizeX": 64.0,
+            "SizeY": 64.0,
+            "Transform": {
+                "WorldMatrix": [
+                    54.400001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    54.400001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -620.0,
+                    -384.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Item_RightArrow\u0000",
+            "ObjectTag": "Item_RightArrow",
+            "Pivot": 7,
+            "PositionX": 226.0,
+            "PositionY": 136.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Item_RightArrowUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\Item_RightArrow.dds\u0000"
+                ]
+            },
+            "SizeX": 64.0,
+            "SizeY": 64.0,
+            "Transform": {
+                "WorldMatrix": [
+                    54.400001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    54.400001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -574.0,
+                    -314.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "Canvas_ItemMove",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 0,
+    "Prototype_GameObject": "Canvas_ItemMove\u0000",
+    "ScaleX": 0.5,
+    "ScaleY": 0.5,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

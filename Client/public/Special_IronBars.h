@@ -34,7 +34,15 @@ public:
 	void	IronBars_Decompose(_bool bDecompose);
 	void	IronBars_SetKinetic(_bool bKinetic);
 
-	void	IronBars_AttachAnim(CModel* pModel, CTransform* pTransform);
+	void	IronBars_AttachAnim(CModel* pModel, CTransform* pTransform, _float4 vPoint);
+
+	void	IronBars_LookAtTarget(_float4 vTargetPos, _float fRatio);
+	void	IronBars_Shooting_All(_float4 vTargetPos);
+	void	IronBars_Shooting_Single(_float4 vTargetPos, _uint iIndex);
+
+	void	IronBars_Reload(_float4 vDestPos, _float4 vTargetPos, _float fRatio);
+
+	void	IronBars_LerpAnim(CModel* pModel, CTransform* pTransform, _float4 vPoint, _float fRatio);
 
 private:
 	HRESULT	SetUp_Components(void* pArg);
