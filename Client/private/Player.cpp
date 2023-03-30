@@ -225,10 +225,10 @@ void CPlayer::BeginTick()
 			m_pSasPortrait = pSasPortrait;
 		}
 	}
-	// 테스트
+	// ?�스??
 	//m_pKineticAnimModel->SetPlayAnimation("AS_no0000_271_AL_Pcon_cReL_Lv4");
 
-	// 위치 지정은 여기에서
+	// ?�치 지?��? ?�기?�서
 }
 
 void CPlayer::Tick(_double TimeDelta)
@@ -254,15 +254,15 @@ void CPlayer::Tick(_double TimeDelta)
 	SpecialObject_OutLineCheck();
 	Update_TargetUI();
 
-	// 콤보 연계 시간
+	// 콤보 ?�계 ?�간
 	m_fKineticCombo_Slash -= TimeDelta;
 	m_fKineticCombo_Kinetic -= TimeDelta;
 	m_fJustDodgeAble -= TimeDelta;
 
-	NetualChecker(TimeDelta);	// 전투상태 아닐 때 체크
+	NetualChecker(TimeDelta);	// ?�투?�태 ?�닐 ??체크
 	SasMgr();
 
-	// 타게팅
+	// ?�게팅
 	if (CGameInstance::GetInstance()->KeyDown(DIK_Q))
 	{
 		Enemy_Targeting(false);
@@ -292,19 +292,19 @@ void CPlayer::Tick(_double TimeDelta)
 	MoveStateCheck(TimeDelta);
 	BehaviorCheck(TimeDelta);
 
-	// SAS특수
+	// SAS?�수
 	if (CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_TELEPORT)) 
 		m_pTeleportStateMachine->Tick(TimeDelta);
-	// ~SAS특수
+	// ~SAS?�수
 
 	m_pHitStateMachine->Tick(TimeDelta);
 
 	HitCheck();
 
-	// 브레인 크러시?
+	// 브레???�러??
 	m_pBrainCrashStateMachine->Tick(TimeDelta);
 
-	// 특수기
+	// ?�수�?
 	if (false == m_bKineticSpecial)
 	{
 		SpecialObject_Targeting();
@@ -345,16 +345,16 @@ void CPlayer::Tick(_double TimeDelta)
 			}
 		}
 	}
-	// ~특수기
+	// ~?�수�?
 
 	if(!m_bHit)
 		m_pJustDodgeStateMachine->Tick(TimeDelta);
 
-	if (!m_bHit && (false == m_bKineticCombo) && (false == m_bKineticSpecial)) // 콤보 타이밍이 아닐 때에는 일반 염력
+	if (!m_bHit && (false == m_bKineticCombo) && (false == m_bKineticSpecial)) // 콤보 ?�?�밍???�닐 ?�에???�반 ?�력
 	{
 		m_pKineticStataMachine->Tick(TimeDelta);
 	}
-	if (!m_bHit && (false == m_bKineticSpecial)) // 콤보 타이밍에는 콤보 염력
+	if (!m_bHit && (false == m_bKineticSpecial)) // 콤보 ?�?�밍?�는 콤보 ?�력
 	{
 		m_pKineticComboStateMachine->Tick(TimeDelta);
 		//m_pKineticStataMachine->SetState("NO_USE_KINETIC");
@@ -390,8 +390,8 @@ void CPlayer::Tick(_double TimeDelta)
 
 	m_pASM->Tick(TimeDelta);
 
-	// 로컬 무브가 없는데 원점으로부터 벗어난 애니메이션을 잡기 위한 조치
-	// !! BaseAninInstance에서 보간이 끝나고 Normal업데이트가 돌 때 해당 코드를 실행시키도록 하자
+	// 로컬 무브가 ?�는???�점?�로부??벗어???�니메이?�을 ?�기 ?�한 조치
+	// !! BaseAninInstance?�서 보간???�나�?Normal?�데?�트가 ?????�당 코드�??�행?�키?�록 ?�자
 	if (0.f != XMVectorGetX(XMVector3Length(m_vSyncEffectLocal)))
 	{
 		_bool bTest = m_pASM->isSocketLerping();
@@ -401,7 +401,7 @@ void CPlayer::Tick(_double TimeDelta)
 			m_pTransformCom->LocalMove(m_vSyncEffectLocal);
 			m_vSyncEffectLocal = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		}
-	}// 항상 ASM의 틱 이후에 발생하도록 한다
+	}// ??�� ASM?????�후??발생?�도�??�다
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	if (m_bCanMove)
@@ -605,7 +605,7 @@ HRESULT CPlayer::Render_ShadowDepth()
 
 void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
-	// 현재 애니메이션 상태에 따라 저스트닷지 여부 판단
+	// ?�재 ?�니메이???�태???�라 ?�?�트?��? ?��? ?�단
 	if (m_pModel->GetPlayAnimation()->GetName().find("dodge") != string::npos &&
 		m_pASM->isSocketExactlyEmpty())
 	{
@@ -613,7 +613,7 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 	}
 	else if (CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_HARDBODY))
 	{
-		// 경질화는 피격 시 데미지를 무시하고 게이지를 10 깎는다
+		// 경질?�는 ?�격 ???��?지�?무시?�고 게이지�?10 깎는??
 		IM_LOG("No Damage");
 		CPlayerInfoManager::GetInstance()->Change_SasEnergy(CHANGETYPE::CHANGE_DECREASE, ESASType::SAS_HARDBODY, 10.f);
 	}
@@ -630,7 +630,7 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
 		m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 
-		// 체력 깎이는 부분
+		// 체력 깎이??부�?
 		CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
 
 		if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
@@ -726,7 +726,7 @@ void CPlayer::Imgui_RenderProperty()
 		ImGui::InputFloat4("v04", &m_vSplinePoint_04.x);
 	}
 
-	// 이펙트 장착 툴
+	// ?�펙???�착 ??
 	if (ImGui::CollapsingHeader("Effect_Attach"))
 	{
 		static string szAnimName = "";
@@ -761,7 +761,7 @@ void CPlayer::Imgui_RenderProperty()
 			ImGui::EndListBox();
 		}
 
-		// 실질적인 이펙트 붙이기
+		// ?�질?�인 ?�펙??붙이�?
 		static char cEffectName[MAX_PATH]{};
 		static string szEffectName = "";
 		ImGui::InputText("Effect Search", cEffectName, MAX_PATH);
@@ -853,14 +853,14 @@ void CPlayer::SasMgr()
 
 	if (InputSas != ESASType::SAS_END)
 	{
-		// 해당 SAS를 사용중인지 아닌지 판단
+		// ?�당 SAS�??�용중인지 ?�닌지 ?�단
 		_bool bSasIsUsing = false;
 		for (auto& SAS : CPlayerInfoManager::GetInstance()->Get_PlayerSasList())
 		{
 			if (InputSas == SAS) { bSasIsUsing = true; break; }
 		}
 
-		// 입력받은 SAS가 최소 사용 요건에 만족하지 못하며 사용중이 아닐 경우 사용 불가능 메시지 발생
+		// ?�력받�? SAS가 최소 ?�용 ?�건??만족?��? 못하�??�용중이 ?�닐 경우 ?�용 불�???메시지 발생
 		if (false == CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[static_cast<_uint>(InputSas)].bUsable &&
 			false == bSasIsUsing)
 		{
@@ -868,7 +868,7 @@ void CPlayer::SasMgr()
 		}
 		else
 		{
-			// 입력받은 SAS가 사용 중일 경우
+			// ?�력받�? SAS가 ?�용 중일 경우
 			if (bSasIsUsing)
 			{
 				CPlayerInfoManager::GetInstance()->Finish_SasType(InputSas);
@@ -886,11 +886,11 @@ void CPlayer::SasMgr()
 				{
 				}
 			}
-			else // 사용중이지 않을 경우
+			else // ?�용중이지 ?�을 경우
 			{
 				SasOn.Reset();
 
-				SasGearEffect();	// 기어 이펙트 생성
+				SasGearEffect();	// 기어 ?�펙???�성
 
 				if (ESASType::SAS_FIRE == InputSas)
 				{
@@ -980,9 +980,9 @@ void CPlayer::SasMgr()
 
 			//for (auto pMtrl : m_pModel->GetMaterials())
 			//{
-			//	//pMtrl->GetParam().Floats[1] += TimeDelta; // 1까지, 
-			//	// 1 -> 경질화
-			//	// 2 -> 텔레포트, 촉수에도 해야됨
+			//	//pMtrl->GetParam().Floats[1] += TimeDelta; // 1까�?, 
+			//	// 1 -> 경질??
+			//	// 2 -> ?�레?�트, 촉수?�도 ?�야??
 			//}
 
 			//m_pASM->SetCurState("IDLE");
@@ -1062,13 +1062,13 @@ void CPlayer::Visible_Check()
 
 void CPlayer::SasStateCheck()
 {
-	// SAS 특수효과의 종료 담당
+	// SAS ?�수?�과??종료 ?�당
 
 	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_FIRE))
 	{
 		if (m_bBeforeSAS_Using[(_uint)ESASType::SAS_FIRE])
 		{
-			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
+			// ?�에???�용중이?�고 ?�재 ?�에?�는 ?�용중이지 ?��? 경우
 			SasGearReleaseEffect();
 			_matrix MatEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatEffect, "Sheath", true);
@@ -1089,7 +1089,7 @@ void CPlayer::SasStateCheck()
 	{
 		if (m_bBeforeSAS_Using[(_uint)ESASType::SAS_PENETRATE])
 		{
-			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
+			// ?�에???�용중이?�고 ?�재 ?�에?�는 ?�용중이지 ?��? 경우
 			SasGearReleaseEffect();
 			_matrix MatEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatEffect, "Sheath", true);
@@ -1106,7 +1106,7 @@ void CPlayer::SasStateCheck()
 	{
 		if (m_bBeforeSAS_Using[(_uint)ESASType::SAS_TELEPORT])
 		{
-			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
+			// ?�에???�용중이?�고 ?�재 ?�에?�는 ?�용중이지 ?��? 경우
 			SasGearReleaseEffect();
 			_matrix MatEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatEffect, "Sheath", true);
@@ -1123,7 +1123,7 @@ void CPlayer::SasStateCheck()
 	{
 		if (m_bBeforeSAS_Using[(_uint)ESASType::SAS_HARDBODY])
 		{
-			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
+			// ?�에???�용중이?�고 ?�재 ?�에?�는 ?�용중이지 ?��? 경우
 			SasGearReleaseEffect();
 			_matrix MatEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatEffect, "Sheath", true);
@@ -1161,7 +1161,7 @@ void CPlayer::SasStateCheck()
 	{
 		if (m_bBeforeSAS_Using[(_uint)ESASType::SAS_SUPERSPEED])
 		{
-			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
+			// ?�에???�용중이?�고 ?�재 ?�에?�는 ?�용중이지 ?��? 경우
 			SasGearReleaseEffect();
 			_matrix MatEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatEffect, "Sheath", true);
@@ -1179,7 +1179,7 @@ void CPlayer::SasStateCheck()
 	{
 		if (m_bBeforeSAS_Using[(_uint)ESASType::SAS_ELETRIC])
 		{
-			// 전에는 사용중이었고 현재 틱에서는 사용중이지 않은 경우
+			// ?�에???�용중이?�고 ?�재 ?�에?�는 ?�용중이지 ?��? 경우
 			SasGearReleaseEffect();
 			_matrix MatEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatEffect, "Sheath", true);
@@ -1222,7 +1222,7 @@ void CPlayer::ElecSweep()
 			CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
 			if (auto pMonster = dynamic_cast<CEnemy*>(pCollidedObject))
 			{
-				// 스윕 충돌 후 레이캐스트 충돌로 슬래시벡터 넘김
+				// ?�윕 충돌 ???�이캐스??충돌�??�래?�벡???��?
 				_vector vRayPos = GetColliderPosition();
 				vRayPos = XMVectorSetW(vRayPos, 1.f);
 				_vector vRayDir = static_cast<CScarletCharacter*>(pMonster)->GetColliderPosition() - GetColliderPosition();
@@ -1282,7 +1282,7 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 			FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_ModelName.c_str(), m_ModelName.c_str(),
 				(CComponent**)&m_pModel));
 
-			// 애니메이션만 돌릴 모델
+			// ?�니메이?�만 ?�릴 모델
 			FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_ModelName.c_str(), L"Test2",
 				(CComponent**)&m_pKineticAnimModel));
 		}
@@ -1818,7 +1818,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 
 HRESULT CPlayer::Setup_KineticStateMachine()
 {
-	// 염력에 사용할 애니메이션 추가
+	// ?�력???�용???�니메이??추�?
 
 	CAnimation*	pAnimation = nullptr;
 
@@ -1860,7 +1860,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 	m_Kinetic_RB_Air_Throw01_Loop.push_back(m_pModel->Find_Animation("AS_ch0100_312_AL_AirCap_throw1_loop"));
 	m_Kinetic_RB_Air_Throw01_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_312_AL_AirCap_throw1_cancel"));
 
-	// ~염력에 사용할 애니메이션 추가
+	// ~?�력???�용???�니메이??추�?
 
 	m_pKineticStataMachine = CFSMComponentBuilder().InitState("NO_USE_KINETIC")
 
@@ -1958,8 +1958,8 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 
 #pragma region KineticRB_Throw
 
-		// 일반 던지기
-		.AddState("KINETIC_RB_THROW_01_START")	// 루프 / 앤드
+		// ?�반 ?��?�?
+		.AddState("KINETIC_RB_THROW_01_START")	// 루프 / ?�드
 			.OnStart([&]() 
 			{
 				m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Throw01_Start);
@@ -2541,7 +2541,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			else
 				m_pASM->SetCurState("JUMP_FALL");
 
-			// 림라이트 종료
+			// 림라?�트 종료
 			m_pCurve = nullptr;
 
 			for (auto& iter : m_pModel->GetMaterials())
@@ -2589,7 +2589,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Predicator([&]()->_bool { return !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
-#pragma region 슬래시 콤보 1
+#pragma region ?�래??콤보 1
 
 		.AddState("KINETIC_COMBO_SLASH01")
 		.OnStart([&]() 
@@ -2645,9 +2645,9 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.2f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
-#pragma endregion 슬래시 콤보 1
+#pragma endregion ?�래??콤보 1
 
-#pragma region 키네틱 콤보 1
+#pragma region ?�네??콤보 1
 
 		.AddState("KINETIC_COMBO_KINETIC01_CHARGE")
 		.OnStart([&]() 
@@ -2679,7 +2679,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			m_pKineticAnimModel->SetPlayAnimation("AS_no0000_245_AL_Pcon_cLeR_Lv1");
 			Kinetic_Combo_MoveToKineticPoint();
 
-			// 임시로 뒤로 빠지게 하는 코드
+			// ?�시�??�로 빠�?�??�는 코드
 			m_vKineticComboRefPoint = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (m_pTransformCom->Get_State(CTransform::STATE_LOOK) * -5.f);
 		})
 		.Tick([&](double fTimeDelta)
@@ -2737,7 +2737,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 		.AddState("KINETIC_COMBO_KINETIC01_THROW")
 		.OnStart([&]()
 		{
-			// 림라이트 커브 생성
+			// 림라?�트 커브 ?�성
 			Start_RimLight("Kinetic_Combo_01_RimLight");
 
 			m_fKineticCharge = 0.f;
@@ -2748,7 +2748,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			// 림라이트 커브 동작 (애니메이션 재생 속도에 맞춰서)
+			// 림라?�트 커브 ?�작 (?�니메이???�생 ?�도??맞춰??
 			_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Combo_AnimSocket")->GetPlayRatio();
 			Tick_RimLight(fRatio);
 
@@ -2766,7 +2766,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 		{
 			m_pCurve = nullptr;
 
-			// 림라이트 종료
+			// 림라?�트 종료
 			End_RimLight();
 
 		})
@@ -2783,9 +2783,9 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Predicator([&]()->_bool {return m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.5f) && m_bLeftClick; })
 			.Priority(0)
 
-#pragma endregion 키네틱 콤보 1
+#pragma endregion ?�네??콤보 1
 
-#pragma region 슬래시 콤보 2
+#pragma region ?�래??콤보 2
 
 		.AddState("KINETIC_COMBO_SLASH02")
 		.OnStart([&]() 
@@ -2836,9 +2836,9 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 
-#pragma endregion 슬래시 콤보 2
+#pragma endregion ?�래??콤보 2
 
-#pragma region 키네틱 콤보 2
+#pragma region ?�네??콤보 2
 
 		.AddState("KINETIC_COMBO_KINETIC02_CHARGE")
 		.OnStart([&]() 
@@ -2961,9 +2961,9 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Predicator([&]()->_bool {return m_bLeftClick; })
 			.Priority(0)
 
-#pragma endregion 키네틱 콤보 2
+#pragma endregion ?�네??콤보 2
 
-#pragma region 슬래시 콤보 3
+#pragma region ?�래??콤보 3
 
 		.AddState("KINETIC_COMBO_SLASH03")
 		.OnStart([&]() 
@@ -3013,9 +3013,9 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.25f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
-#pragma endregion 슬래시 콤보 3
+#pragma endregion ?�래??콤보 3
 
-#pragma region 키네틱 콤보 3
+#pragma region ?�네??콤보 3
 
 		.AddState("KINETIC_COMBO_KINETIC03_CHARGE")
 		.OnStart([&]() 
@@ -3139,9 +3139,9 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 
-#pragma endregion 키네틱 콤보 3
+#pragma endregion ?�네??콤보 3
 
-#pragma region 슬래시 콤보 4
+#pragma region ?�래??콤보 4
 
 		.AddState("KINETIC_COMBO_SLASH04")
 		.OnStart([&]() 
@@ -3191,9 +3191,9 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.5f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
-#pragma endregion 슬래시 콤보 4
+#pragma endregion ?�래??콤보 4
 
-#pragma region 키네틱 콤보 4
+#pragma region ?�네??콤보 4
 
 		.AddState("KINETIC_COMBO_KINETIC04_CHARGE")
 		.OnStart([&]() 
@@ -3311,9 +3311,9 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 
-#pragma endregion 키네틱 콤보 4
+#pragma endregion ?�네??콤보 4
 
-#pragma region 공중 콤보 키네틱
+#pragma region 공중 콤보 ?�네??
 
 			.AddState("KINETIC_COMBO_AIR_CAP")
 			.OnStart([&]() 
@@ -3350,7 +3350,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 				m_pKineticAnimModel->SetPlayAnimation("AS_no0000_279_AL_AirPcon");
 				Kinetic_Combo_MoveToKineticPoint();
 
-				// 임시로 뒤로 빠지게 하는 코드
+				// ?�시�??�로 빠�?�??�는 코드
 				m_vKineticComboRefPoint = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (m_pTransformCom->Get_State(CTransform::STATE_LOOK) * -5.f);
 			})
 			.Tick([&](double fTimeDelta)
@@ -3385,7 +3385,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.AddState("KINETIC_COMBO_AIR_PCON")
 			.OnStart([&]()
 			{
-				// 림라이트 커브 생성
+				// 림라?�트 커브 ?�성
 				Start_RimLight("Kinetic_Combo_01_RimLight");
 
 				m_fKineticCharge = 0.f;
@@ -3396,7 +3396,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			})
 			.Tick([&](double fTimeDelta)
 			{
-				// 림라이트 커브 동작 (애니메이션 재생 속도에 맞춰서)
+				// 림라?�트 커브 ?�작 (?�니메이???�생 ?�도??맞춰??
 				_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Combo_AnimSocket")->GetPlayRatio();
 				Tick_RimLight(fRatio);
 
@@ -3414,7 +3414,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			{
 				m_pCurve = nullptr;
 
-				// 림라이트 종료
+				// 림라?�트 종료
 				End_RimLight();
 
 				m_bActiveGravity = true;
@@ -3428,7 +3428,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Predicator([&]()->_bool { return m_pASM->isSocketAlmostFinish("Kinetic_Combo_AnimSocket"); })
 			.Priority(0)
 
-#pragma endregion 공중 콤보 키네틱
+#pragma endregion 공중 콤보 ?�네??
 
 		.Build();
 
@@ -3461,14 +3461,14 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 		.AddState("JUSTDODGE_USABLE")
 			.OnStart([&]()
 			{
-				CGameInstance::GetInstance()->SetTimeRatioCurve("JustDodge_Income");	// 슬로우
+				CGameInstance::GetInstance()->SetTimeRatioCurve("JustDodge_Income");	// ?�로??
 //				CGameInstance::GetInstance()->SetCameraFovCurve("Charge01_ActionCam");
 			})
 			.Tick([&](double fTimeDelta)
 			{
 				//IM_LOG("%f", m_fJustDodgeAble);
 				//IM_LOG("JUSTDODGE!!");
-				// 저스트닷지 조건 발생 시 돌릴 Tick함수
+				// ?�?�트?��? 조건 발생 ???�릴 Tick?�수
 			})
 			.OnExit([&]()
 			{
@@ -3507,7 +3507,7 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 			})
 			.Tick([&](double fTimeDelta)
 			{
-				// 저스트닷지 피니시 발생 시 돌릴 Tick함수
+				// ?�?�트?��? ?�니??발생 ???�릴 Tick?�수
 			})
 			.OnExit([&]()
 			{
@@ -3914,7 +3914,7 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 		})
 		.Priority(0)
 
-		// 지상 /////////////////////////////
+		// 지??/////////////////////////////
 		.AddState("TELEPORTATTACK_FLOOR_START")
 		.OnStart([&]() 
 		{
@@ -3930,7 +3930,7 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 
 			m_pSAS_Cable->SetVisible(false);
 
-			// 순간이동 위치 잡기
+			// ?�간?�동 ?�치 ?�기
 			m_vTeleportPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 			{
@@ -4039,7 +4039,7 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 
 			m_pSAS_Cable->SetVisible(false);
 
-			// 순간이동 위치 잡기
+			// ?�간?�동 ?�치 ?�기
 			m_vTeleportPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 			{
@@ -4189,7 +4189,7 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 {
 	CAnimation*	pAnimation = nullptr;
 
-	// 좌측 차지
+	// 좌측 차�?
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_372_AL_Cap_sLcLeL_start"));
 	m_Train_Charge_L.push_back(pAnimation);
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_372_AL_Cap_sLcLeL_loop"));
@@ -4197,7 +4197,7 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 	// 좌측 캔슬
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_372_AL_Cap_sLcLeL_end"));
 	m_Train_Cancel_L.push_back(pAnimation);
-	// 좌측 던지기
+	// 좌측 ?��?�?
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_372_AL_mg_train_L"));
 	m_Train_Throw_L.push_back(pAnimation);
 
@@ -4319,7 +4319,7 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 
 		.Build();
 
-	// 차지 / 캔슬 / 동작 3개로 스테이트 분할
+	// 차�? / 캔슬 / ?�작 3개로 ?�테?�트 분할
 
 	return S_OK;
 }
@@ -5266,7 +5266,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			// 뜯겨나가는 애니메이션 동작
+			// ??��?��????�니메이???�작
 			static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
 				IronBars_AnimActive(true);
 
@@ -5312,7 +5312,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			// 쇠창살 렌더 바꾸기
+			// ?�창???�더 바꾸�?
 		})
 		.OnExit([&]()
 		{
@@ -5359,10 +5359,10 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 							IronBars_Shooting_All(vTargetPos);
 					}
 				}
-				// 날아감
+				// ?�아�?
 			}
 
-			// 다이나믹으로 변경하고 날아가 부딪히기
+			// ?�이?��??�로 변경하�??�아가 부?�히�?
 		})
 		.OnExit([&]()
 		{
@@ -5386,7 +5386,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			// 몬스터와 쇠창살 충돌 후 추가타 대기함 -> 여긴웨이팅임
+			// 몬스?��? ?�창??충돌 ??추�??� ?�기함 -> ?�긴?�이?�임
 		})
 		.OnExit([&]()
 		{
@@ -5438,7 +5438,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			// 몬스터 방향으로, 플레이어 위치에서 8개 방향으로 쇠창살 보간 정렬
+			// 몬스??방향?�로, ?�레?�어 ?�치?�서 8�?방향?�로 ?�창??보간 ?�렬
 			_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio();
 			
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
@@ -5470,7 +5470,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			// 추가타 입력 대기
+			// 추�??� ?�력 ?��?
 		})
 		.OnExit([&]()
 		{
@@ -5522,7 +5522,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			// 쇠창살 다이나믹으로 변경하고 몬스터 방향으로 발사, 충돌 0.5초 후 키네틱으로 변경하여 잡음
+			// ?�창???�이?��??�로 변경하�?몬스??방향?�로 발사, 충돌 0.5�????�네?�으�?변경하???�음
 			_float4 vTargetPos = { 0.f, 0.f, 0.f, 0.f };
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 			{
@@ -5582,8 +5582,8 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			// 위쪽으로 올라가는 시간동안 보간하여 위치 잡고 메시 변경
-			// 애니메이션에 태워서 발사
+			// ?�쪽?�로 ?�라가???�간?�안 보간?�여 ?�치 ?�고 메시 변�?
+			// ?�니메이?�에 ?�워??발사
 
 			if (nullptr != m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket"))
 			{
@@ -5596,7 +5596,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 
 				if (0.2f > fRatio)
 				{
-					// 0.2로 보정
+					// 0.2�?보정
 					_float fDuration = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetCurDuration();
 					m_pKineticAnimModel->GetPlayAnimation()->Update_Bones_SyncRatio_NonLocalLock(fDuration * 0.2f);
 					m_pKineticAnimModel->Compute_CombindTransformationMatrix();
@@ -6537,7 +6537,7 @@ void CPlayer::MoveStateCheck(_double TimeDelta)
 			if (m_bCanTurn)
 				m_pTransformCom->LookAt_Smooth(vPlayerPos + m_vMoveDir, TimeDelta);
 
-			if (m_bAir || m_bHit)	// 공중 상태에선 회전이 먹지 않음
+			if (m_bAir || m_bHit)	// 공중 ?�태?�선 ?�전??먹�? ?�음
 				m_vMoveDir = vPlayerLook;
 		}
 	}
@@ -6558,7 +6558,7 @@ void CPlayer::SeperateCheck()
 
 void CPlayer::HitCheck()
 {
-	if (m_bHit)		// 맞으면 아무것도 못하게 해야한다
+	if (m_bHit)		// 맞으�??�무것도 못하�??�야?�다
 	{
 		m_bMove = false;
 		m_bWalk = false;
@@ -6598,7 +6598,7 @@ void CPlayer::SocketLocalMoveCheck()
 		m_pTransformCom->LocalMove(vLocal);
 	}
 
-	// ??되나이거
+	// ???�나?�거
 	if (!m_pASM->isSocketEmpty("Kinetic_Special_AnimSocket"))
 	{
 		string szCurAnimName = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetName();
@@ -6672,7 +6672,7 @@ void CPlayer::SyncEffectLocalMove(const string& szSocketName)
 
 void CPlayer::Update_NotiveNeon()
 {	
-	// 체력이 10% 이하일때 생성
+	// 체력??10% ?�하?�때 ?�성
 	static _bool bCreate = false;
 	if (false == bCreate && 0.1f > _float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP) / CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxHP)
 	{
@@ -6684,7 +6684,7 @@ void CPlayer::Update_NotiveNeon()
 		//m_pNeonUI->SetOwner(this);
 	}
 
-	// 삭제
+	// ??��
 	if (nullptr != m_pNeonUI)
 	{
 		if (true == m_pNeonUI->doKill())
@@ -6706,9 +6706,6 @@ void CPlayer::Update_NotiveNeon()
 
 void CPlayer::Update_TargetUI()
 {
-	//타겟이 사라졌을때, 쓰레기값이 들어가있어서 한번 검사를 시켜줌
-	//if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster() != nullptr)
-	//	Enemy_Targeting(true);
 
 	CEnemy* pTarget = dynamic_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
 
@@ -6716,7 +6713,8 @@ void CPlayer::Update_TargetUI()
 	{
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-		//원래 타겟이 없다가 생긴 경우
+
+		//���� Ÿ���� ���ٰ� ���� ���
 		if (m_pSettedTarget == nullptr && pTarget != nullptr)
 		{
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
@@ -6725,13 +6723,14 @@ void CPlayer::Update_TargetUI()
 				
 		}
 
-		//원래 타겟이 있었는데 사라진 경우
+
+		//���� Ÿ���� �־��µ� ����� ���
 		else if (m_pSettedTarget != nullptr && pTarget == nullptr)
 		{
 			m_pUI_LockOn->SetDelete();
 		}
 
-		//다른 타겟으로 바뀐 경우
+
 		else if (m_pSettedTarget != nullptr && pTarget != nullptr)
 		{
 			m_pUI_LockOn->SetDelete();
@@ -6742,10 +6741,10 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->Get_UIPivotMatrix(ENEMY_FINDEYES));
 		}
 
-		//info bar 설정
+		//info bar ����
 		if (pTarget != nullptr)
 			Create_TargetInfoBar(pTarget);
-	
+
 		m_pSettedTarget = pTarget;
 	}
 
@@ -6758,7 +6757,7 @@ void CPlayer::Create_TargetInfoBar(CGameObject* pTarget)
 	CEnemy* pEnemy = dynamic_cast<CEnemy*>(pTarget);
 	if (pEnemy == nullptr) return;
 	
-	//몬스터 info바가 없으면 생성
+	//몬스??info바�? ?�으�??�성
 	if (pEnemy->GetHasName() == true)
 		return;
 
@@ -6789,7 +6788,7 @@ void CPlayer::NetualChecker(_double TimeDelta)
 		m_fNetualTimer = 0.f;
 	}
 
-	if (m_bOnBattle)	// 전투 중 파티클 생성
+	if (m_bOnBattle)	// ?�투 �??�티???�성
 	{
 		m_fBattleParticleTime += (_float)TimeDelta;
 
@@ -6916,8 +6915,8 @@ void CPlayer::Search_Usable_KineticObject()
 
 void CPlayer::Enemy_Targeting(_bool bNear)
 {
-	// true이면 무조건 가까이 있는 타겟
-	// false이면 다음 타겟 지정
+	// true?�면 무조�?가까이 ?�는 ?��?
+	// false?�면 ?�음 ?��?지??
 
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
@@ -7170,7 +7169,7 @@ void CPlayer::Kinetic_Test(_float fRatio)
 
 	//m_fSwingLerpTimer += g_fTimeDelta * 0.5f;
 
-	//if (1.f > m_fSwingLerpTimer)	// 빙 돌면서 나한테까지 끌어오는 과정, 1초 안에 이뤄짐
+	//if (1.f > m_fSwingLerpTimer)	// �??�면???�한?�까지 ?�어?�는 과정, 1�??�에 ?�뤄�?
 	//{
 	//	static _vector vBeforePos;
 
@@ -7185,14 +7184,14 @@ void CPlayer::Kinetic_Test(_float fRatio)
 	//	_vector vMyright = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 	//	if (0.f > XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyright), XMVector3Normalize(m_vToKineticObj))))
 	//	{
-	//		// 왼쪽
+	//		// ?�쪽
 	//		vVector = XMVector3Normalize(m_vToKineticObj) * (fScalar + 3.f);
 	//		vVector = XMVector3TransformNormal(vVector, XMMatrixRotationY(-(fAngle * m_fSwingLerpTimer)));
 	//		m_pKineticObject->GetTransform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -(g_fTimeDelta * 0.5f));
 	//	}
 	//	else
 	//	{
-	//		// 오른쪽
+	//		// ?�른�?
 	//		vVector = XMVector3Normalize(m_vToKineticObj) * (fScalar + 3.f);
 	//		vVector = XMVector3TransformNormal(vVector, XMMatrixRotationY(fAngle * m_fSwingLerpTimer));
 	//		m_pKineticObject->GetTransform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), g_fTimeDelta * 0.5f);
@@ -7215,7 +7214,7 @@ void CPlayer::Kinetic_Test(_float fRatio)
 
 	//	vBeforePos = vMyPos + vVector;
 	//}
-	//else // 나한테까지 오고 나서 부터의 빙빙 회전과 적으로 날아감
+	//else // ?�한?�까지 ?�고 ?�서 부?�의 빙빙 ?�전�??�으�??�아�?
 	//{
 	//	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
@@ -7243,7 +7242,7 @@ void CPlayer::Kinetic_Test(_float fRatio)
 	//		}
 	//		else
 	//		{
-	//			// 바라보며 우측으로 이동
+	//			// 바라보며 ?�측?�로 ?�동
 	//			//m_pKineticObject->GetTransform()->Move(g_fTimeDelta * fOrbitSpeed, vKineticRight);
 	//			m_pKineticObject->GetTransform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), g_fTimeDelta * 0.5f);
 	//			m_pKineticObject->GetTransform()->Move(g_fTimeDelta * fOrbitSpeed, -vMove);
@@ -7260,7 +7259,7 @@ void CPlayer::Kinetic_Test(_float fRatio)
 	//		}
 	//		else
 	//		{
-	//			// 바라보며 좌측으로 이동
+	//			// 바라보며 좌측?�로 ?�동
 	//			//m_pKineticObject->GetTransform()->Move(g_fTimeDelta * fOrbitSpeed, -vKineticRight);
 	//			m_pKineticObject->GetTransform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -(g_fTimeDelta * 0.5f));
 	//			m_pKineticObject->GetTransform()->Move(g_fTimeDelta * fOrbitSpeed, vMove);
@@ -7291,15 +7290,15 @@ void CPlayer::Kinetic_ByTurn()
 	//	_vector vMyright = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 	//	if (0.f > XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyright), XMVector3Normalize(m_vToKineticObj))))
 	//	{
-	//		// 왼쪽
+	//		// ?�쪽
 	//		vVector = XMVector3Normalize(m_vToKineticObj) * (fScalar + 3.f);
 	//		vVector = XMVector3TransformNormal(vVector, XMMatrixRotationY(-(fAngle * m_fSwingLerpTimer)));
 	//		m_pKineticObject->GetTransform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -(g_fTimeDelta * 0.5f));
-	//		m_bRight = true;	// 플레이어 바라보는 축 기준 오른쪽 축으로 도는가?
+	//		m_bRight = true;	// ?�레?�어 바라보는 �?기�? ?�른�?축으�??�는가?
 	//	}
 	//	else
 	//	{
-	//		// 오른쪽
+	//		// ?�른�?
 	//		vVector = XMVector3Normalize(m_vToKineticObj) * (fScalar + 3.f);
 	//		vVector = XMVector3TransformNormal(vVector, XMMatrixRotationY(fAngle * m_fSwingLerpTimer));
 	//		m_pKineticObject->GetTransform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), g_fTimeDelta * 0.5f);
@@ -7310,7 +7309,7 @@ void CPlayer::Kinetic_ByTurn()
 	//	m_pKineticObject->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vMyPos + vVector);
 
 	//}
-	//else // 나한테까지 오고 나서 부터의 빙빙 회전과 적으로 날아감
+	//else // ?�한?�까지 ?�고 ?�서 부?�의 빙빙 ?�전�??�으�??�아�?
 	//{
 	//	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
@@ -7377,7 +7376,7 @@ void CPlayer::Kinetic_Combo_KineticAnimation()
 
 void CPlayer::Kinetic_Combo_MoveToKineticPoint()
 {
-	// 몬스터를 바라보는 작업은 여기에서 일어나며, 실제 이동해야 하는 위치의 위치벡터를 생성한다.
+	// 몬스?��? 바라보는 ?�업?� ?�기?�서 ?�어?�며, ?�제 ?�동?�야 ?�는 ?�치???�치벡터�??�성?�다.
 
 	if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster() && 
 		nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
@@ -7387,19 +7386,19 @@ void CPlayer::Kinetic_Combo_MoveToKineticPoint()
 
 		_matrix	SocketMatrix = m_pKineticAnimModel->GetBoneMatrix("Waist") * m_pTransformCom->Get_WorldMatrix();
 
-		_vector vDiff = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - SocketMatrix.r[3];	// 회전하기 전 물체 본과 실제 물체 사이의 방향벡터
-		_vector vRePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + vDiff; // 물체 사이의 거리만큼 이동한 위치
-		_vector vTmpLookAtMonster = CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - vRePos; // 예비 이동 위치에서 몬스터를 바라본 방향벡터
+		_vector vDiff = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - SocketMatrix.r[3];	// ?�전?�기 ??물체 본과 ?�제 물체 ?�이??방향벡터
+		_vector vRePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + vDiff; // 물체 ?�이??거리만큼 ?�동???�치
+		_vector vTmpLookAtMonster = CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - vRePos; // ?�비 ?�동 ?�치?�서 몬스?��? 바라�?방향벡터
 
 		_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		_vector vLookPoint = vMyPos + vTmpLookAtMonster;
 		vLookPoint = XMVector3Normalize(vLookPoint);
 		vLookPoint = XMVectorSetW(vLookPoint, 1.f);
-//		m_pTransformCom->LookAt_NonY(vLookPoint);	// 예비 Look벡터로 바라보는 방향을 바꿈
+//		m_pTransformCom->LookAt_NonY(vLookPoint);	// ?�비 Look벡터�?바라보는 방향??바꿈
 
 		_matrix ModifiedMatrix = m_pKineticAnimModel->GetBoneMatrix("Waist") * m_pTransformCom->Get_WorldMatrix();
 		_vector vRenewalDiff = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - ModifiedMatrix.r[3];
-		_vector vRenewalRePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + vRenewalDiff;	// 이동해야 하는 최종 위치
+		_vector vRenewalRePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + vRenewalDiff;	// ?�동?�야 ?�는 최종 ?�치
 
 		m_vKineticComboRefPoint = vRenewalRePos;
 	}

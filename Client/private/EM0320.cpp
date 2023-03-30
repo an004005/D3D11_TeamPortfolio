@@ -371,7 +371,7 @@ void CEM0320::BeginTick()
 
 	// m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
 
-	Create_BossUI();
+	//Create_BossUI();
 	m_b2ndPhase = true;
 }
 
