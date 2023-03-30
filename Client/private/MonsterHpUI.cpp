@@ -63,7 +63,7 @@ void CMonsterHpUI::BeginTick()
 	m_pGroup->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
 	m_pMonsterName->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
 
-	// y : [0] 브론욘 [1] 스커미 팡뒤 [2] 바일 풀 [3] 버디 러미 [4] 바스 포즈 [5] 경건 페리
+	// y : [0] 브론욘 [1] 스커미 팡뒤 [2] 바일 풀 [3] 버디 러미 [4] 바스 포즈 [5] 경건 페리 [6]
 	m_pMonsterName->GetSecondEffect()->GetParams().Float2s[0] = { _float(m_iMonsterLevel - 1), _float(m_iMonsterName) };
 }
 
