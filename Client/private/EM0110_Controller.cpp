@@ -85,12 +85,12 @@ void CEM0110_Controller::Tick_Mid(_double TimeDelta)
 	switch (m_iMidOrder)
 	{
 	case 0:
-		AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Look", 1.5f, &CEM0110_Controller::RunOrTurn, EMoveAxis::NORTH, 1.f);
 		AddCommand("Attack_b2", 0.f, &CAIController::Input, C);
 		AddCommand("Walk", 2.5f, &CAIController::Move, EMoveAxis::NORTH);
 		break;
 	case 1:
-		AddCommand("Run", 1.5f, &CEM0110_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		AddCommand("Wait", 2.f, &CAIController::Wait);
 		break;
 	}
 
@@ -123,6 +123,14 @@ void CEM0110_Controller::Tick_Outside(_double TimeDelta)
 }
 
 
+void CEM0110_Controller::RunOrTurn(EMoveAxis eAxis, _float fSpeedRatio)
+{
+	if(m_pCastedOwner->IsTargetFront(45.f))
+		TurnToTargetStop(fSpeedRatio);	
+	else
+		Run_TurnToTarget(eAxis, fSpeedRatio);
+}
+
 void CEM0110_Controller::Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
 {
 	m_bRun = true;
@@ -136,7 +144,7 @@ void CEM0110_Controller::DefineState(_double TimeDelta)
 
 	if (m_fTtoM_Distance <= 5.f)
 		Tick_Near(TimeDelta);
-	else if (m_fTtoM_Distance <= 13.f)
+	else if (m_fTtoM_Distance <= 15.f)
 		Tick_Mid(TimeDelta);
 	else if (m_fTtoM_Distance <= 25.f)
 		Tick_Far(TimeDelta);

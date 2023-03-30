@@ -56,10 +56,7 @@ private:
 	class CEM0800_Controller*		m_pController = nullptr;
 	class CEM0800_AnimInstance*		m_pASM = nullptr;
 
-	unordered_map<string, CRigidBody*> m_pRigidBodies;
-
 	CEffectGroup*				m_pWaterPool = nullptr;
-
 private:
 	_float3						m_vMoveAxis;
 	EBaseTurn					m_eTurn = EBaseTurn::TURN_END;

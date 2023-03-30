@@ -418,6 +418,24 @@ PS_OUT PS_SAS_FIRE_PARTICLE(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_SPECIAL_TRUCK_EXPLODE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.02, 8, 8));
+	Out.vColor = CalcHDRColor(flipBook, g_float_0);
+	// Out.vColor.a *= In.RamainLifeRatio;
+	// float4 flipAlpha = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.03, 8, 8));
+
+	// Out.vColor.a = flipAlpha.r * In.RamainLifeRatio;
+
+	// if (Out.vColor.a <= 0.01f)
+	// 	discard;
+
+	return Out;
+}
+
+
 PS_OUT PS_EM1100_Dust(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -1002,4 +1020,18 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_TRAIN_HDR();
 	}
 
+
+	//23
+	pass SpecialTruckExplode
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SPECIAL_TRUCK_EXPLODE();
+	}
 }

@@ -8,6 +8,7 @@
 #include "PhysX_Manager.h"
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
+#include "ImguiUtils.h"
 
 CEM0110::CEM0110(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -22,16 +23,15 @@ CEM0110::CEM0110(const CEM0110 & rhs)
 
 HRESULT CEM0110::Initialize(void * pArg)
 {
-	//Json em0200_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegTrigger.json");
-	//pArg = &em0200_json;
+	Json em0110_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0110/em0110Base.json");
+	pArg = &em0110_json;
 
-	/*m_strDeathSoundTag = "mon_5_fx_death";
-	m_strImpactVoiceTag = "mon_5_impact_voice";*/
+	
 
-	// ¹èÄ¡Åø¿¡¼­ Á¶ÀýÇÒ ¼ö ÀÖ°Ô ÇÏ±â
+	// ë°°ì¹˜íˆ´ì—ì„œ ì¡°ì ˆí•  ìˆ˜ ìžˆê²Œ í•˜ê¸°
 	{
 		m_iMaxHP = 1100;
-		m_iHP = 1100; // ¡Ú
+		m_iHP = 1100; // â˜…
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
@@ -41,7 +41,13 @@ HRESULT CEM0110::Initialize(void * pArg)
 
 	m_eEnemyName = EEnemyName::EM0110;
 	m_bHasCrushGage = true;
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(120.f));
+
+	//Create BugParticle
+	m_pBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0110_Bug_Particle");
+	m_pBugParticle->Start_Attach(this, "Jaw", true);
+	Safe_AddRef(m_pBugParticle);
+
 	return S_OK;
 }
 
@@ -49,18 +55,15 @@ void CEM0110::SetUpComponents(void * pArg)
 {
 	CEnemy::SetUpComponents(pArg);
 
-	FAILED_CHECK(__super::Add_Component(LEVEL_NOW,
-		L"Prototype_Model_em110", L"Model",
-		(CComponent**)&m_pModelCom));
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em110", L"Model", (CComponent**)&m_pModelCom));
 
-	//Create Collider
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("BodyCol"),
-		(CComponent**)&m_pBody, pArg));
+	Json RangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0110/em0110Range.json");
+	Json WeakCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0110/em0110Weak.json");
 
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("HindLegsCol"),
-		(CComponent**)&m_pHindLegs, pArg));
+	Add_RigidBody("Range", &RangeCol);
+	Add_RigidBody("Weak", &WeakCol);
 
-	// ÄÁÆ®·Ñ·¯, prototype¾È ¸¸µé°í ¿©±â¼­ ÀÚÃ¼»ý¼ºÇÏ±â À§ÇÔ
+	// ì»¨íŠ¸ë¡¤ëŸ¬, prototypeì•ˆ ë§Œë“¤ê³  ì—¬ê¸°ì„œ ìžì²´ìƒì„±í•˜ê¸° ìœ„í•¨
 	m_pController = CEM0110_Controller::Create();
 	m_pController->Initialize(nullptr);
 	m_Components.emplace(L"Controller", m_pController);
@@ -82,17 +85,68 @@ void CEM0110::SetUpAnimationEvent()
 
 	// Event Caller
 	
-	m_pModelCom->Add_EventCaller("Turn_R_Start", [this] { m_bAttack = true;	});
-	m_pModelCom->Add_EventCaller("Turn_R_End", [this] { m_bAttack = false;	});
+	m_pModelCom->Add_EventCaller("Turn_R_Start", [this]
+	{ 
+		ClearDamagedTarget();
+		m_bAttack = true;
+	});
 
-	m_pModelCom->Add_EventCaller("Turn_L_Start", [this] { m_bAttack = true;	});
-	m_pModelCom->Add_EventCaller("Turn_L_End", [this] { m_bAttack = false;	});
+	m_pModelCom->Add_EventCaller("Turn_R_End", [this] 
+	{ 
+		m_bAttack = false;	
+	});
 
-	m_pModelCom->Add_EventCaller("AOE_Start", [this] { m_bAttack = true;	});
-	m_pModelCom->Add_EventCaller("AOE_End", [this] { m_bAttack = false;	});
+	m_pModelCom->Add_EventCaller("Turn_L_Start", [this]
+	{ 
+		ClearDamagedTarget();
+		m_bAttack = true;
+	});
 
-	m_pModelCom->Add_EventCaller("Rush_Start", [this] { m_bAttack = true;	});
-	m_pModelCom->Add_EventCaller("Rush_End", [this] { m_bAttack = false;	});
+	m_pModelCom->Add_EventCaller("Turn_L_End", [this] 
+	{ 
+		m_bAttack = false;	
+	});
+
+	//ìž¥íŒê³µê²© ì‹œìž‘(Area of Effect)
+	m_pModelCom->Add_EventCaller("AOE_Start", [this] 
+	{ 
+		m_bAttack = true;
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Large_Bubbles")->Start_NoAttach(this);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Little_Bubbles_A")->Start_NoAttach(this);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Pop_Bubbles")->Start_NoAttach(this);
+
+	});
+
+	m_pModelCom->Add_EventCaller("AOE_End", [this] 
+	{ 
+		m_bAttack = false;
+	});
+
+	m_pModelCom->Add_EventCaller("Rush_Start", [this] 
+	{
+		ClearDamagedTarget();
+		m_bAttack = true;
+
+		//ìœ„ì¹˜ ì•žìœ¼ë¡œ ì˜®ê¸°ë ¤ë©´ xëž‘ yì— ë˜‘ê°™ì€ê°’ì„ ë”í•´ì£¼ë©´ ë¨
+		_matrix RushEffectPivotMatirx = CImguiUtils::CreateMatrixFromImGuizmoData(
+		{ 1.5f, 1.5f, 0.f },
+		{ -90.f, 0.f, -40.f, }, 
+		{ 1.f, 1.f, 1.f });
+
+		m_pRushEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Dash_Attack");
+		m_pRushEffect->Start_AttachPivot(this, RushEffectPivotMatirx, "Jaw", true, true);
+		Safe_AddRef(m_pRushEffect);
+	});
+
+	m_pModelCom->Add_EventCaller("Rush_End", [this] 
+	{ 
+		m_bAttack = false;
+
+		m_pRushEffect->SetDelete();
+		Safe_Release(m_pRushEffect);
+		m_pRushEffect = nullptr;
+	});
 
 }
 
@@ -101,9 +155,9 @@ void CEM0110::SetUpFSM()
 	CEnemy::SetUpFSM();
 
 	/*
-	R : Attack_turn (¹ßÂ÷±â)
-	G : Attack_c1 (ÀåÆÇ)
-	C : Attack_b2 (µ¹Áø)
+	R : Attack_turn (ë°œì°¨ê¸°)
+	G : Attack_c1 (ìž¥íŒ)
+	C : Attack_b2 (ëŒì§„)
 	*/
 
 	m_pFSM = CFSMComponentBuilder()
@@ -178,12 +232,15 @@ void CEM0110::SetUpFSM()
 			})
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-		//¹ßÂ÷±â
+		//ë°œì°¨ê¸°
 		.AddState("Attack_turn")
 			.OnStart([this]
 			{
-				Define_TurningKickAnim();
-				ClearDamagedTarget();
+				if (IsTargetFront())
+					m_pASM->AttachAnimSocketOne("FullBody", "AS_em0100_230_AL_atk_g1_turn_L");
+				else
+					m_pASM->AttachAnimSocketOne("FullBody", "AS_em0100_241_AL_atk_h1_turn_R");
+		
 			})
 			.Tick([this](_double) 
 			{
@@ -194,7 +251,7 @@ void CEM0110::SetUpFSM()
 			})
 			.OnExit([this]
 			{
-				//µ¹·ÁÂ÷±â¸¦ ÇßÀ¸¸é È¸ÀüÇÑ ¹æÇâÀ¸·Î ÃÄ´Ùº¸°Ô ÇÔ
+				//ëŒë ¤ì°¨ê¸°ë¥¼ í–ˆìœ¼ë©´ íšŒì „í•œ ë°©í–¥ìœ¼ë¡œ ì³ë‹¤ë³´ê²Œ í•¨
 				if (m_pASM->GetCurSocketAnimName() == "AS_em0100_230_AL_atk_g1_turn_L")
 					AfterLocal180Turn();		
 			
@@ -205,7 +262,7 @@ void CEM0110::SetUpFSM()
 				{
 					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
-		//ÀåÆÇ
+		//ìž¥íŒ
 		.AddState("Attack_c1")
 			.OnStart([this]
 			{
@@ -213,21 +270,20 @@ void CEM0110::SetUpFSM()
 			})
 			.Tick([this](_double) 
 			{
-					//ÀÌ¶© µ¥¹ÌÁö ¾î¶»°Ô?
+					//ì´ë• ë°ë¯¸ì§€ ì–´ë–»ê²Œ?
 			})
 			.AddTransition("Attack_c1 to Idle", "Idle")
 				.Predicator([this]
 				{
 					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
-		//µ¹Áø
+		//ëŒì§„
 		.AddState("Attack_b2_Start")
 			.OnStart([this]
 			{
 				//m_vRushDirection = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				m_bRush = true;
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0110_206_AL_atk_b2_start");
-				ClearDamagedTarget();
 			})
 			.Tick([this](_double) 
 			{
@@ -236,7 +292,7 @@ void CEM0110::SetUpFSM()
 				if (m_bAttack)
 				{
 					Rush_Overlap();
-					Rush_SweepCapsule();
+					Rush_SweepSphere();
 				}
 			})
 			.OnExit([this]
@@ -259,7 +315,7 @@ void CEM0110::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 				Rush_Overlap();
-				Rush_SweepCapsule();
+				Rush_SweepSphere();
 			})
 			.OnExit([this]
 			{
@@ -312,7 +368,7 @@ void CEM0110::Tick(_double TimeDelta)
 	else
 		m_pController->Invalidate();
 
-	//º¯¼ö ¾÷µ¥ÀÌÆ®
+	//ë³€ìˆ˜ ì—…ë°ì´íŠ¸
 	m_bRun = m_pController->IsRun();
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_vMoveAxis = m_pController->GetMoveAxis();
@@ -335,6 +391,11 @@ void CEM0110::Late_Tick(_double TimeDelta)
 void CEM0110::AfterPhysX()
 {
 	CEnemy::AfterPhysX();
+	
+	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+
+	GetRigidBody("Range")->Update_Tick(WorldMatrix);
+	GetRigidBody("Weak")->Update_Tick(m_pModelCom->GetBoneMatrix("LeftFlower1") * WorldMatrix);
 }
 
 HRESULT CEM0110::Render()
@@ -350,8 +411,27 @@ void CEM0110::Imgui_RenderProperty()
 	{
 		m_pASM->Imgui_RenderState();
 	}
-
+	
 	m_pFSM->Imgui_RenderProperty();
+
+	/*static GUIZMO_INFO tInfo;
+	CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+
+	if (ImGui::Button("Create_RushEffect"))
+	{
+		m_pRushEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Dash_Attack");
+		m_pRushEffect->Start_AttachPivot(this, pivot, "Jaw", true, true);
+	}
+
+	if (ImGui::Button("Delete_RushEffect"))
+	{
+		if (m_pRushEffect != nullptr)
+		{
+			m_pRushEffect->SetDelete();
+			m_pRushEffect = nullptr;
+		}
+
+	}*/
 }
 
 _bool CEM0110::IsPlayingSocket() const
@@ -367,21 +447,6 @@ void CEM0110::AfterLocal180Turn()
 	m_pTransformCom->LookAt(vPos);
 }
 
-void CEM0110::Define_TurningKickAnim()
-{
-	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	
-	_float fAngle = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyLook), XMVector3Normalize(vTargetPos - vMyPos)));
-
-	//0~ 90µµ »çÀÌ(Á¤¸é)
-	if(fAngle > 0)
-		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0100_230_AL_atk_g1_turn_L");
-	else
-		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0100_241_AL_atk_h1_turn_R");
-
-}
 
 void CEM0110::Adjust_MoveAxis(_double TimeDelta)
 {
@@ -421,7 +486,7 @@ void CEM0110::Play_HeavbyHitAnim()
 void CEM0110::Rush_Overlap()
 {
 
-	//Length·Î BoneÀÇ À§Ä¡¿¡¼­ºÎÅÍ ¹Ù¶óº¸´Â ¹æÇâÀ¸·Î ¿øÇÏ´Â ÁöÁ¡±îÁöÀÇ °Å¸®¸¦ ÁöÁ¤
+	//Lengthë¡œ Boneì˜ ìœ„ì¹˜ì—ì„œë¶€í„° ë°”ë¼ë³´ëŠ” ë°©í–¥ìœ¼ë¡œ ì›í•˜ëŠ” ì§€ì ê¹Œì§€ì˜ ê±°ë¦¬ë¥¼ ì§€ì •
 	_float fLength = 7.f;
 
 	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
@@ -452,31 +517,32 @@ void CEM0110::Rush_Overlap()
 
 }
 
-void CEM0110::Rush_SweepCapsule()
+void CEM0110::Rush_SweepSphere()
 {
-	_float4x4 BodyMatrix = m_pBody->GetPxWorldMatrix();
-	_float4 vBodyPos = _float4{ BodyMatrix.m[3][0], BodyMatrix.m[3][1], BodyMatrix.m[3][2], BodyMatrix.m[3][3] };
-
 	physx::PxSweepHit hitBuffer[3];
 	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
 
-	PxCapsuleSweepParams tParams;
-	tParams.sweepOut = &sweepOut;
-	tParams.CapsuleGeo = m_pBody->Get_CapsuleGeometry();
-	tParams.pxTransform = m_pBody->Get_PxTransform();
+	//Tail4ê°€ ê¼¬ë¦¬ ì¤‘ì•™ì— ìžˆìŒ
+	_float4x4 BoneMatrix = GetBoneMatrix("LeftFlower1") * m_pTransformCom->Get_WorldMatrix();
+	_float4 vBonePos = _float4{ BoneMatrix.m[3][0], BoneMatrix.m[3][1], BoneMatrix.m[3][2], BoneMatrix.m[3][3] };
 
-	_float4	vDir = vBodyPos - m_BeforePos;
-	tParams.vUnitDir = _float3(vDir.x, vDir.y, vDir.z);
-	tParams.fDistance = tParams.vUnitDir.Length();
-	tParams.iTargetType = CTB_PLAYER;
+	_vector	vDir = vBonePos - m_BeforePos;
+
+	SphereSweepParams tParams;
 	tParams.fVisibleTime = 0.2f;
+	tParams.iTargetType = CTB_PLAYER;
+	tParams.fRadius = 3.f;
+	tParams.fDistance = 1.f;
+	tParams.vPos = vBonePos;
+	tParams.sweepOut = &sweepOut;
+	tParams.vUnitDir = vDir;
 
-	if (CGameInstance::GetInstance()->PxSweepCapsule(tParams))
+	if (CGameInstance::GetInstance()->SweepSphere(tParams))
 	{
-		HitTargets(sweepOut, m_iAtkDamage * 1.5f, EAttackType::ATK_TO_AIR);
+		HitTargets(sweepOut, static_cast<_int>(m_iAtkDamage * 1.2f), EAttackType::ATK_HEAVY);
 	}
 
-	m_BeforePos = vBodyPos;
+	m_BeforePos = vBonePos;
 }
 
 void CEM0110::Kick_SweepSphere()
@@ -529,7 +595,15 @@ void CEM0110::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-	Safe_Release(m_pRange);
-	Safe_Release(m_pBody);
-	Safe_Release(m_pHindLegs);
+	Safe_Release(m_pRushEffect);
+
+	if (m_bCloned == true)
+	{
+		if (m_pBugParticle != nullptr)
+		{
+			m_pBugParticle->SetDelete();
+			Safe_Release(m_pBugParticle);
+			m_pBugParticle = nullptr;
+		}
+	}
 }

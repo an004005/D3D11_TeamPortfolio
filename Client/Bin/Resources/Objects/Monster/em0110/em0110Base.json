@@ -1,0 +1,60 @@
+{
+    "ControlledRigidBody": {
+        "ColliderType": 1,
+        "contactOffset": 0.10000000149011612,
+        "density": 100.0,
+        "height": 0.10000000149011612,
+        "maxJumpHeight": 3.0,
+        "pushPower": 300.0,
+        "radius": 2.0,
+        "slopeLimitDegree": 45.0,
+        "stepOffset": 0.10000000149011612
+    },
+    "ObjectTag": "",
+    "Prototype_GameObject": "Monster_em110\u0000",
+    "RigidBody": {
+        "ColliderType": 8,
+        "Density": 10.0,
+        "OriginTransform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 1,
+        "bKinematic": true,
+        "bTrigger": false
+    },
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            2.6278586387634277,
+            0.24776580929756165,
+            -0.17415180802345276,
+            1.0
+        ]
+    }
+}
