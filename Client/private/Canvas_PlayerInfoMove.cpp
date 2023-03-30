@@ -108,26 +108,26 @@ void CCanvas_PlayerInfoMove::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	//// UITEST
-	//static _float fHp;
-	//ImGui::InputFloat("Hp", &fHp);
-	//static _float fMaxHp;
-	//ImGui::InputFloat("MaxHp", &fMaxHp);
+	// UITEST
+	static _float fHp;
+	ImGui::InputFloat("Hp", &fHp);
+	static _float fMaxHp;
+	ImGui::InputFloat("MaxHp", &fMaxHp);
 
-	//if (ImGui::Button("Save Hp"))
-	//{
-	//	Set_PlayerHp(fHp, fMaxHp);
-	//}
+	if (ImGui::Button("Save Hp"))
+	{
+		Set_PlayerHp(fHp, fMaxHp);
+	}
 
-	//static _float fGauge;
-	//ImGui::InputFloat("Gauge", &fGauge);
-	//static _float fMaxGauge;
-	//ImGui::InputFloat("MaxGauge", &fMaxGauge);
+	static _float fGauge;
+	ImGui::InputFloat("Gauge", &fGauge);
+	static _float fMaxGauge;
+	ImGui::InputFloat("MaxGauge", &fMaxGauge);
 
-	//if (ImGui::Button("Set Gauge"))
-	//{
-	//	Set_PsychokinesisGauge(LEVEL_ONE, DRIVE_TYPE, fGauge, fMaxGauge);
-	//}
+	if (ImGui::Button("Set Gauge"))
+	{
+		Set_PsychokinesisGauge(LEVEL_ONE, DRIVE_TYPE, fGauge, fMaxGauge);
+	}
 }
 
 void CCanvas_PlayerInfoMove::SaveToJson(Json& json)

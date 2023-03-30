@@ -8,7 +8,7 @@ BEGIN(Client)
 class CCanvas_Tutorial : public CCanvas
 {
 public:
-	enum TUTORIAL { LOCKON, FIGHTINGSTYLE, SPECIALATTACK, ADDRUSHATTACK, ADDPSYCHOKINESISATTACK, STRENGTHENATTACK, TUTORIAL_END };
+	enum TUTORIAL { LOCKON, FIGHTINGSTYLE, SPECIALATTACK, ADDRUSHATTACK, ADDPSYCHOKINESISATTACK, TUTORIAL_END };
 	enum TIPS { TIPS0, TIPS1, TIPS2, TIPS3, TIPS4, TIPS5, TIPS6, TIPS7, TIPS8, TIPS9, TIPS10, TIPS_END };
 
 protected:
@@ -51,11 +51,12 @@ private:
 	void	KeyInput_No();
 
 private:
-	void	Tips_Tick();
-	void	Tips(const TIPS & eTIPS, const _tchar * pChildTag);
+	void	Tips_Tick(const _double & TimeDelta);
+	void	Tips(const TIPS & eTIPS, const _tchar * pChildTag, const _double & TimeDelta);
 
 private:
-	void	Success_Tick();
+	void	Success_Tick(const _double & TimeDelta);
+	void	DeleteSuccess_Tick(const _double & TimeDelta);
 
 private:	// Tutorial
 	TUTORIAL	m_eTutorial = { TUTORIAL_END };
@@ -71,14 +72,20 @@ private:	// Tutorial
 	_bool		m_bCheckOpen = { false };
 	_bool		m_bCheckClose = { false };
 
-private:	// Tios
+	_int		m_iFightingStyle = { 0 };
+	_bool		m_bEnter = { false };
+
+private:	// Tips
 	TIPS		m_eTips = { TIPS_END };
 	_bool		m_arrTips[TIPS_END] = {};
 
 	_bool		m_iTipsOpen = { false };
 
+	_double		m_dTips_TimeAcc = { 0.0 };
+
 private:	// Success
 	_bool		m_bSuccess = { false };
+	_double		m_bSuccess_TimeAcc = { 0.0 };
 
 public:
 	static CCanvas_Tutorial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

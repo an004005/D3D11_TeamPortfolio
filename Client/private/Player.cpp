@@ -193,6 +193,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_vecRandomLandingDustName.push_back(L"Player_Foot_Smoke_04");
 	m_vecRandomLandingDustName.push_back(L"Player_Foot_Smoke_05");
 
+	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
+
 	return S_OK;
 }
 

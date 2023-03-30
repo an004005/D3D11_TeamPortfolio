@@ -54,6 +54,9 @@ protected:
 	CUI(const CUI& rhs);
 
 public:
+	_bool	Get_TempOff() { return m_bTempOff; }
+	void	TempOff(const _bool bOff);
+
 	_float2	GetScreenSpaceLeftTop();
 	void SetCanvasSize(CanvasRect CanvasSize) { m_CanvasSize = CanvasSize; }
 	
@@ -64,12 +67,12 @@ public:
 		m_ePivot = ePivot;
 	}
 
-	_uint Get_Priority() const {
-		return m_iPriority;
-	}
-	void Set_Priority(_uint iPriority) { 
-		m_iPriority = iPriority;
-	}
+	//_uint Get_Priority() const {
+	//	return m_iPriority;
+	//}
+	//void Set_Priority(_uint iPriority) { 
+	//	m_iPriority = iPriority;
+	//}
 
 	_float2 GetScale() const { 
 		return m_vScale;
@@ -121,8 +124,7 @@ protected:
 	ShaderParams		m_tParams;
 
 protected:
-
-	_uint				m_iPriority = 0;			// 낮을 수록 뒤에 그려진다.
+//	_uint				m_iPriority = 0;			// 낮을 수록 뒤에 그려진다.
 
 	_float				m_fX = 0.0f;
 	_float				m_fY = 0.0f;
@@ -136,9 +138,10 @@ protected:
 	// 현재 위치 기준 자전 각도
 	_float m_fRadianRotation = 0.f;
 
-
 	CanvasRect			m_CanvasSize;
 	UI_PIVOT			m_ePivot = UI_PIVOT::CENTER;
+	
+	_bool				m_bTempOff = { false };
 
 public:
 	virtual CGameObject* Clone(void* pArg = nullptr) override = 0;
