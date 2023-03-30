@@ -42,8 +42,16 @@ HRESULT CMonsterHpUI::Initialize(void * pArg)
 
 void CMonsterHpUI::BeginTick()
 {
-	m_pGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterHp", TEXT("Layer_MonsterUI"));
-	m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterName", TEXT("Layer_MonsterUI"));
+	if (m_iMonsterName == 0 || m_iMonsterName == 5)
+	{
+		m_pGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"BossHp", TEXT("Layer_MonsterUI"));
+		m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"BossName", TEXT("Layer_MonsterUI"));
+	}
+	else
+	{
+		m_pGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterHp", TEXT("Layer_MonsterUI"));
+		m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterName", TEXT("Layer_MonsterUI"));
+	}
 
 	Safe_AddRef(m_pGroup);
 	Safe_AddRef(m_pMonsterName);
@@ -98,7 +106,7 @@ void CMonsterHpUI::HpBack_Tick(const _double & TimeDelta)
 {
 	if (m_fCurrentHpBack > m_fHpBack)
 	{
-		m_fCurrentHpBack -= _float(TimeDelta) * 0.3f;
+		m_fCurrentHpBack -= _float(TimeDelta) * 0.1f;
 	}
 	else
 	{

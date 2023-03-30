@@ -350,15 +350,14 @@ VS_OUT VS_UVCut(VS_IN In)	// → 13
 }
 
 // g_int_0 : [0] 이미지 색상 사용, [1] 내가 지정한 색상 사용
-// g_vec4_0 : 변경할 색상과 알파값
 PS_OUT PS_Alpha_Color(PS_IN In)	// → 13
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	if (g_int_0)
+	/*if (g_int_0)
 		Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV) * g_vec4_0;
 	else
-		Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+		*/Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
 
 	return Out;
 }
@@ -890,6 +889,97 @@ PS_OUT PS_GreenEmissive(PS_IN In)
 	return Out;
 }
 
+/*******************
+* MixinColors → 30 : Main UI 에서
+
+/********************/
+PS_OUT PS_RedAndGreen(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Emissive = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	float Mask = Emissive.g;
+
+	float4 DefaultColor = float4(Emissive.g, Emissive.g, Emissive.g, 0.f);
+
+	float4 BlendColor = DefaultColor  * float4(0.506f, 0.451f, 0.345f, 1.0f)* 2.0f;
+
+	float4 FinalColor = saturate(BlendColor);
+
+	float4 HDRColor = saturate(FinalColor * 1.0f);
+
+	Out.vColor = CalcHDRColor(HDRColor, 0.5f);
+
+	Out.vColor.a = Mask;
+
+	return Out;
+}
+
+PS_OUT PS_AlphaColor_M(PS_IN In)	// → 31
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	float4 MixTexture = saturate(g_vec4_0 * Texture * 2.0f);
+	Out.vColor = MixTexture;
+
+	return Out;
+}
+
+// g_int_0 : [0] 이미지 색상 사용, [1] 내가 지정한 색상 사용
+// g_vec4_0 : 변경할 색상과 알파값
+PS_OUT PS_Alpha_Color2(PS_IN In)	// → 32
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	if (g_int_0)
+		Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV) * g_vec4_0;
+	else
+		Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	return Out;
+}
+
+PS_OUT PS_BRAIN(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Emissive = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_0, g_int_0, g_int_1));
+
+	float Mask = Emissive.g;
+
+	float4 DefaultColor = float4(Emissive.g, Emissive.g, Emissive.g, 0.f);
+
+	float4 BlendColor = DefaultColor  * float4(0.506f, 0.451f, 0.345f, 1.0f) * 2.0f;
+
+	float4 FinalColor = saturate(BlendColor);
+
+	float4 HDRColor = saturate(FinalColor * 1.0f);
+
+	Out.vColor = CalcHDRColor(HDRColor, g_float_1);
+
+	Out.vColor.a = Mask;
+
+	return Out;
+}
+
+/*******************
+* → 35 : 2장의 텍스처 중 원하는 텍스처를 출력한다.
+g_int_0 : [0] 0번 텍스처 [1] 1번 텍스처 사용
+/********************/
+PS_OUT PS_TEXTURECAHNGE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	if (0 == g_int_0)
+		Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	else if (1 == g_int_0)
+		Out.vColor = g_tex_1.Sample(LinearSampler, In.vTexUV);
+
+	return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -1088,10 +1178,10 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_Alpha_Color();	// 색상 조정
+		PixelShader = compile ps_5_0 PS_Alpha_Color();	// 색상 조정 안 하는 것으로 바꿈
 	}
 
-	//14
+	//14 : 색상만 조정
 	pass ColorChange
 	{
 		SetRasterizerState(RS_Default);
@@ -1102,7 +1192,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_Alpha_Color();	// 색상 조정
+		PixelShader = compile ps_5_0 PS_Alpha_Color2();	// 색상 조정
 	}
 
 	//15: Texture 3장을 섞고, 외곽선을 뚜렸하게하고, UV 를 시계방향으로 조절 가능하다.
@@ -1315,5 +1405,90 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_GreenEmissive();
 	}
 
+
+
+	// Main UI
+	//30 : 빨간색 초록색
+	pass MixinColors
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff); // BS_BlackCut
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_RedAndGreen();
+	}
+
+	//31 : Main UI 뒷 배경
+	pass Alpha_Color
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff); // BS_BlackCut
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_AlphaColor_M();
+	}
 	
+	//32 : 이미지 그대로 사용하는 체력바
+	pass TextureBar
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_UI_ProgressBar();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_UI_Tex_Alpha();
+	}
+
+	//33 : 13번이랑 똑같이 텍스처를 바꾸는데 색상 조정을 한다.
+	pass UVCutAndColor
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_UVCut();		// 텍스처의 원하는 부분만 출력
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_Alpha_Color2();	// 색상 조정
+	}
+	
+	// 34 : 브레인 맵에서 브레인 띄우기
+	pass BRAIN
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();		// 텍스처의 원하는 부분만 출력
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRAIN();	// 색상 조정
+	}
+
+	// 35 : 2장의 텍스처 번갈아 가면서 사용하기
+	pass TEXTURECAHNGE
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();	
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_TEXTURECAHNGE();
+	}
 }

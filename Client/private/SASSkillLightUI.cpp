@@ -27,6 +27,8 @@ HRESULT CSASSkillLightUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	m_bVisible = false;
+
 	return S_OK;
 }
 
@@ -37,7 +39,7 @@ void CSASSkillLightUI::BeginTick()
 
 void CSASSkillLightUI::Tick(_double TimeDelta)
 {
-	if (false == m_bOnSkil)
+	if (false == m_bVisible)
 		return; 
 	
 	CUI::Tick(TimeDelta);
@@ -88,7 +90,7 @@ void CSASSkillLightUI::LoadFromJson(const Json & json)
 
 void CSASSkillLightUI::Set_LightType(const ESASType & eESASType, const _bool bUsable)
 {
-	m_bOnSkil = bUsable;
+	m_bVisible = bUsable;
 
 	if (false == bUsable)
 	{

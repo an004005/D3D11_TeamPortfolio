@@ -22,6 +22,11 @@ public:
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
 
+public:
+	void	Set_Input() {
+		m_bInput = true;
+	}
+
 private:
 	_bool	m_bInput = { false };
 	_float	m_fStartX = { 0.0f };

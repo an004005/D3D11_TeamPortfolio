@@ -25,10 +25,7 @@ public:
 		return m_vSASLeftHp;
 	}
 
-	void	Set_SASLeftHp(const _float & fHp, const _float & fMaxHp) {	// UITODO : BeginTick() 에서 호출
-		m_fHp = fHp / fMaxHp;
-		m_vSASLeftHp = { fHp ,fMaxHp };
-	}
+	void	Set_SASLeftHp(const _float & fHp, const _float & fMaxHp);
 
 private:
 	void	ChildHp_Tick();

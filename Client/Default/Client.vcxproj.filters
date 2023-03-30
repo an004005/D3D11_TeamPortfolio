@@ -253,9 +253,6 @@
     <Filter Include="02.GameObjects\UI\Boss">
       <UniqueIdentifier>{dc1701f8-365a-4180-94c6-d3de20833679}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Tutorial">
-      <UniqueIdentifier>{abb2352e-02f6-4b3c-8379-d3a28a4803fd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Alarm">
       <UniqueIdentifier>{773b5079-4278-4e4c-bf66-8db98ddbbf29}</UniqueIdentifier>
     </Filter>
@@ -292,11 +289,11 @@
     <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM">
       <UniqueIdentifier>{889711dc-b345-4bdf-9c49-c3181c53954d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Invantory">
-      <UniqueIdentifier>{776d7a33-79da-4f1d-aeee-85ee99adcbc0}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\UI\Main_UI">
+      <UniqueIdentifier>{d267f306-d688-42b8-9978-a34ae516a2f5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Player\PlayerInfoManager">
-      <UniqueIdentifier>{4689ecf3-9a9c-4a26-8dea-8de02afafce7}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\UI\Main_UI\Canvas">
+      <UniqueIdentifier>{a84ad824-2ee4-49a4-8b5f-2249e5b4eaa9}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Enemy">
       <UniqueIdentifier>{613f3e82-7d40-451d-bc3d-3f67636096c3}</UniqueIdentifier>
@@ -387,6 +384,15 @@
     </Filter>
     <Filter Include="02.GameObjects\SpecialObject\Special_IronBars">
       <UniqueIdentifier>{95eb373d-d073-4426-aeef-0aacbb328a3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short">
+      <UniqueIdentifier>{13c84b28-6101-40b9-8629-d92de65f760f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Tutorial">
+      <UniqueIdentifier>{abb2352e-02f6-4b3c-8379-d3a28a4803fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Mouse">
+      <UniqueIdentifier>{f954c126-8785-41df-817d-93c9c8bf510b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -794,9 +800,6 @@
     <ClInclude Include="..\public\Tutorial_TipsUI.h">
       <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Tutorial_SuccessUI.h">
-      <Filter>02.GameObjects\UI\Tutorial</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\MonsterHpUI.h">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
@@ -878,9 +881,6 @@
     <ClInclude Include="..\public\Boss_AppearBackUI.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_BossAppear.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\LevelUpUI.h">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
@@ -905,8 +905,39 @@
     <ClInclude Include="..\public\NoticeNeonUI.h">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PlayerInfoManager.h">
-      <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
+    <ClInclude Include="..\public\Canvas_BossHpMove.h">
+      <Filter>02.GameObjects\UI\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerInfoManager.h" />
+    <ClInclude Include="..\public\Canvas_Main.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Party.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_MainItem.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_BrainMap.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Equipment.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_PickUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_FaceUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_SkillIconUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_SkillNameUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FullUI.h">
+      <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0200.h">
       <Filter>02.GameObjects\Enemy\EM0200</Filter>
@@ -1108,9 +1139,40 @@
     <ClInclude Include="..\public\OilBullet.h">
       <Filter>02.GameObjects\Enemy\EMBullet\OilBullet</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PlayerStartPosition.h">
-      <Filter>02.GameObjects\Utils</Filter>
+    <ClInclude Include="..\public\Main_BarUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Item_Manager.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_ItemWindow.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ItemIconUI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_MainItemKinds.h">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_OnMouseUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_BrainMapIconPickUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_OnMouseColorUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_BrainGaugeUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_BrainUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Main_OnePickUI.h">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerStartPosition.h" />
     <ClInclude Include="..\public\PostVFX_Teleport.h">
       <Filter>VFX\PostProcess</Filter>
     </ClInclude>
@@ -1144,6 +1206,34 @@
     </ClInclude>
     <ClInclude Include="..\public\Special_IronBars_MultiBars.h">
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GameManager_Tutorial.h" />
+    <ClInclude Include="..\public\Canvas_Acquisition.h">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AcquisitionUI.h">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_LeftTalk.h">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Talk_BackGroundUI.h">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Talk_FaceUI.h">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_LightUI.h">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MouseCousorLightUI.h">
+      <Filter>02.GameObjects\UI\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MouseCousorUI.h">
+      <Filter>02.GameObjects\UI\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_MouseCousor.h">
+      <Filter>02.GameObjects\UI\Mouse</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1523,9 +1613,6 @@
     <ClCompile Include="..\private\Tutorial_TipsUI.cpp">
       <Filter>02.GameObjects\UI\Tutorial</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Tutorial_SuccessUI.cpp">
-      <Filter>02.GameObjects\UI\Tutorial</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\MonsterHpUI.cpp">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
@@ -1546,9 +1633,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Boss_ShildUI.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_Alarm.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Monster.cpp">
       <Filter>02.GameObjects\Monster</Filter>
@@ -1606,9 +1690,6 @@
     <ClCompile Include="..\private\Boss_AppearBackUI.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_BossAppear.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\LevelUpUI.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
@@ -1636,8 +1717,39 @@
     <ClCompile Include="..\private\NoticeNeonUI.cpp">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PlayerInfoManager.cpp">
-      <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
+    <ClCompile Include="..\private\Canvas_BossHpMove.cpp">
+      <Filter>02.GameObjects\UI\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerInfoManager.cpp" />
+    <ClCompile Include="..\private\Canvas_Main.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Party.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Equipment.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_BrainMap.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_MainItem.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_PickUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_FaceUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_SkillIconUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_SkillNameUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FullUI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0200.cpp">
       <Filter>02.GameObjects\Enemy\EM0200</Filter>
@@ -1824,9 +1936,40 @@
     <ClCompile Include="..\private\OilBullet.cpp">
       <Filter>02.GameObjects\Enemy\EMBullet\OilBullet</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PlayerStartPosition.cpp">
-      <Filter>02.GameObjects\Utils</Filter>
+    <ClCompile Include="..\private\Main_BarUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Item_Manager.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_ItemWindow.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ItemIconUI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_MainItemKinds.cpp">
+      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_OnMouseUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_BrainMapIconPickUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_OnMouseColorUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_BrainGaugeUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_BrainUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Main_OnePickUI.cpp">
+      <Filter>02.GameObjects\UI\Main_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerStartPosition.cpp" />
     <ClCompile Include="..\private\Special_HBeam_Bundle.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>
     </ClCompile>
@@ -1875,6 +2018,37 @@
     </ClCompile>
     <ClCompile Include="..\private\Special_IronBars_MultiBars.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameManager_Tutorial.cpp" />
+    <ClCompile Include="..\private\Canvas_Alarm.cpp">
+      <Filter>02.GameObjects\UI\Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Acquisition.cpp">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AcquisitionUI.cpp">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_LeftTalk.cpp">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Talk_BackGroundUI.cpp">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Talk_FaceUI.cpp">
+      <Filter>02.GameObjects\UI\Short</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_LightUI.cpp">
+      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MouseCousorLightUI.cpp">
+      <Filter>02.GameObjects\UI\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MouseCousorUI.cpp">
+      <Filter>02.GameObjects\UI\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_MouseCousor.cpp">
+      <Filter>02.GameObjects\UI\Mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1985,5 +2159,6 @@
     <FxCompile Include="..\Bin\ShaderFiles\SSAO.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl" />
   </ItemGroup>
 </Project>

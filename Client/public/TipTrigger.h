@@ -22,6 +22,8 @@ public:
 	virtual _bool CheckTriggeredObject(CGameObject* pObject) override;
 
 private:
+	_bool	m_bTutorialOrTips = { false }; // false->Tutorual / true->Tips
+	CCanvas_Tutorial::TIPS m_eTips = CCanvas_Tutorial::TIPS_END;
 	CCanvas_Tutorial::TUTORIAL m_eTutorialType = CCanvas_Tutorial::TUTORIAL_END;
 
 public:

@@ -179,6 +179,7 @@
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Params.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_PBRCommon.h" />
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Utils.h" />
+    <ClInclude Include="..\public\AcquisitionUI.h" />
     <ClInclude Include="..\public\AIController.h" />
     <ClInclude Include="..\public\AttackNumUI.h" />
     <ClInclude Include="..\public\BackGround.h" />
@@ -205,13 +206,23 @@
     <ClInclude Include="..\public\Camera_Player.h" />
     <ClInclude Include="..\public\CamSpot.h" />
     <ClInclude Include="..\public\Canvas.h" />
+    <ClInclude Include="..\public\Canvas_Acquisition.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h" />
-    <ClInclude Include="..\public\Canvas_BossAppear.h" />
+    <ClInclude Include="..\public\Canvas_BrainMap.h" />
+    <ClInclude Include="..\public\Canvas_Equipment.h" />
+    <ClInclude Include="..\public\Canvas_ItemWindow.h" />
+    <ClInclude Include="..\public\Canvas_LeftTalk.h" />
+    <ClInclude Include="..\public\Canvas_Main.h" />
     <ClInclude Include="..\public\Canvas_BossHp.h" />
+    <ClInclude Include="..\public\Canvas_BossHpMove.h" />
     <ClInclude Include="..\public\Canvas_Drive.h" />
     <ClInclude Include="..\public\Canvas_DriveMove.h" />
     <ClInclude Include="..\public\Canvas_Item.h" />
     <ClInclude Include="..\public\Canvas_ItemMove.h" />
+    <ClInclude Include="..\public\Canvas_MainItem.h" />
+    <ClInclude Include="..\public\Canvas_MainItemKinds.h" />
+    <ClInclude Include="..\public\Canvas_MouseCousor.h" />
+    <ClInclude Include="..\public\Canvas_Party.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
     <ClInclude Include="..\public\Canvas_SASInfoLeft.h" />
@@ -268,6 +279,9 @@
     <ClInclude Include="..\public\EM1200.h" />
     <ClInclude Include="..\public\EM1200_AnimInstance.h" />
     <ClInclude Include="..\public\EM1200_Controller.h" />
+    <ClInclude Include="..\public\Item_LightUI.h" />
+    <ClInclude Include="..\public\MouseCousorLightUI.h" />
+    <ClInclude Include="..\public\MouseCousorUI.h" />
     <ClInclude Include="..\public\RedBullet.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
@@ -280,21 +294,35 @@
     <ClInclude Include="..\public\FL_Controller.h" />
     <ClInclude Include="..\public\FPSCamera.h" />
     <ClInclude Include="..\public\GameManager.h" />
+    <ClInclude Include="..\public\GameManager_Tutorial.h" />
     <ClInclude Include="..\public\PlayerStartPosition.h" />
     <ClInclude Include="..\public\PointLight.h" />
     <ClInclude Include="..\public\PostVFX_SuperSpeed.h" />
     <ClInclude Include="..\public\PostVFX_Teleport.h" />
+    <ClInclude Include="..\public\Main_BrainGaugeUI.h" />
+    <ClInclude Include="..\public\Main_BrainUI.h" />
+    <ClInclude Include="..\public\Main_OnePickUI.h" />
     <ClInclude Include="..\public\SAS_Cable.h" />
     <ClInclude Include="..\public\SpecialObject.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\public\Imgui_Batch.h" />
+    <ClInclude Include="..\public\ItemIconUI.h" />
+    <ClInclude Include="..\public\Item_Manager.h" />
     <ClInclude Include="..\public\LevelUpUI.h" />
     <ClInclude Include="..\public\Level_KineticEditor.h" />
     <ClInclude Include="..\public\GravikenisisMouseUI.h" />
     <ClInclude Include="..\public\GravikenisisGUI.h" />
     <ClInclude Include="..\public\Enemy.h" />
+    <ClInclude Include="..\public\FullUI.h" />
+    <ClInclude Include="..\public\Main_BrainMapIconPickUI.h" />
+    <ClInclude Include="..\public\Main_FaceUI.h" />
+    <ClInclude Include="..\public\Main_BarUI.h" />
+    <ClInclude Include="..\public\Main_OnMouseColorUI.h" />
+    <ClInclude Include="..\public\Main_OnMouseUI.h" />
+    <ClInclude Include="..\public\Main_SkillIconUI.h" />
+    <ClInclude Include="..\public\Main_SkillNameUI.h" />
     <ClInclude Include="..\public\NextMapNameUI.h" />
     <ClInclude Include="..\public\NoticeNeonUI.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
@@ -303,6 +331,7 @@
     <ClInclude Include="..\public\MonsterHpUI.h" />
     <ClInclude Include="..\public\MonsterLockonUI.h" />
     <ClInclude Include="..\public\MonsterShildUI.h" />
+    <ClInclude Include="..\public\Main_PickUI.h" />
     <ClInclude Include="..\public\PlayerInfoManager.h" />
     <ClInclude Include="..\public\PostVFX_ColorGrading.h" />
     <ClInclude Include="..\public\PostVFX_HitDecal.h" />
@@ -403,6 +432,8 @@
     <ClInclude Include="..\public\Special_Train.h" />
     <ClInclude Include="..\public\SpawnTrigger.h" />
     <ClInclude Include="..\public\SuperSpeedTrail.h" />
+    <ClInclude Include="..\public\Talk_BackGroundUI.h" />
+    <ClInclude Include="..\public\Talk_FaceUI.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\TestCamera.h" />
     <ClInclude Include="..\public\TestTarget.h" />
@@ -411,7 +442,6 @@
     <ClInclude Include="..\public\TriggerEx.h" />
     <ClInclude Include="..\public\TutorialUI.h" />
     <ClInclude Include="..\public\Tutorial_CheckUI.h" />
-    <ClInclude Include="..\public\Tutorial_SuccessUI.h" />
     <ClInclude Include="..\public\Tutorial_TipsUI.h" />
     <ClInclude Include="..\public\Tutorial_YesNoUI.h" />
     <ClInclude Include="..\public\UI.h" />
@@ -432,6 +462,7 @@
     <ClInclude Include="Weapon_wp0190.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\AcquisitionUI.cpp" />
     <ClCompile Include="..\private\AIController.cpp" />
     <ClCompile Include="..\private\AttackNumUI.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
@@ -456,9 +487,19 @@
     <ClCompile Include="..\private\BuddyLumi.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\private\Canvas.cpp" />
+    <ClCompile Include="..\private\Canvas_Acquisition.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp" />
-    <ClCompile Include="..\private\Canvas_BossAppear.cpp" />
+    <ClCompile Include="..\private\Canvas_BrainMap.cpp" />
+    <ClCompile Include="..\private\Canvas_Equipment.cpp" />
+    <ClCompile Include="..\private\Canvas_ItemWindow.cpp" />
+    <ClCompile Include="..\private\Canvas_LeftTalk.cpp" />
+    <ClCompile Include="..\private\Canvas_Main.cpp" />
     <ClCompile Include="..\private\Canvas_BossHp.cpp" />
+    <ClCompile Include="..\private\Canvas_BossHpMove.cpp" />
+    <ClCompile Include="..\private\Canvas_MainItem.cpp" />
+    <ClCompile Include="..\private\Canvas_MainItemKinds.cpp" />
+    <ClCompile Include="..\private\Canvas_MouseCousor.cpp" />
+    <ClCompile Include="..\private\Canvas_Party.cpp" />
     <ClCompile Include="..\private\Canvas_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
     <ClCompile Include="..\private\Canvas_DriveMove.cpp" />
@@ -520,6 +561,9 @@
     <ClCompile Include="..\private\EM1200.cpp" />
     <ClCompile Include="..\private\EM1200_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM1200_Controller.cpp" />
+    <ClCompile Include="..\private\Item_LightUI.cpp" />
+    <ClCompile Include="..\private\MouseCousorLightUI.cpp" />
+    <ClCompile Include="..\private\MouseCousorUI.cpp" />
     <ClCompile Include="..\private\RedBullet.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />
@@ -532,21 +576,35 @@
     <ClCompile Include="..\private\FL_Controller.cpp" />
     <ClCompile Include="..\private\FPSCamera.cpp" />
     <ClCompile Include="..\private\GameManager.cpp" />
+    <ClCompile Include="..\private\GameManager_Tutorial.cpp" />
     <ClCompile Include="..\private\PlayerStartPosition.cpp" />
     <ClCompile Include="..\private\PointLight.cpp" />
     <ClCompile Include="..\private\PostVFX_SuperSpeed.cpp" />
     <ClCompile Include="..\private\PostVFX_Teleport.cpp" />
+    <ClCompile Include="..\private\Main_BrainGaugeUI.cpp" />
+    <ClCompile Include="..\private\Main_BrainUI.cpp" />
+    <ClCompile Include="..\private\Main_OnePickUI.cpp" />
     <ClCompile Include="..\private\SAS_Cable.cpp" />
     <ClCompile Include="..\private\SpecialObject.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\private\Imgui_Batch.cpp" />
+    <ClCompile Include="..\private\ItemIconUI.cpp" />
+    <ClCompile Include="..\private\Item_Manager.cpp" />
     <ClCompile Include="..\private\LevelUpUI.cpp" />
     <ClCompile Include="..\private\Level_KineticEditor.cpp" />
     <ClCompile Include="..\private\GravikenisisMouseUI.cpp" />
     <ClCompile Include="..\private\GravikenisisGUI.cpp" />
     <ClCompile Include="..\private\Enemy.cpp" />
+    <ClCompile Include="..\private\FullUI.cpp" />
+    <ClCompile Include="..\private\Main_BrainMapIconPickUI.cpp" />
+    <ClCompile Include="..\private\Main_FaceUI.cpp" />
+    <ClCompile Include="..\private\Main_BarUI.cpp" />
+    <ClCompile Include="..\private\Main_OnMouseColorUI.cpp" />
+    <ClCompile Include="..\private\Main_OnMouseUI.cpp" />
+    <ClCompile Include="..\private\Main_SkillIconUI.cpp" />
+    <ClCompile Include="..\private\Main_SkillNameUI.cpp" />
     <ClCompile Include="..\private\NextMapNameUI.cpp" />
     <ClCompile Include="..\private\NoticeNeonUI.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />
@@ -555,6 +613,7 @@
     <ClCompile Include="..\private\MonsterHpUI.cpp" />
     <ClCompile Include="..\private\MonsterLockonUI.cpp" />
     <ClCompile Include="..\private\MonsterShildUI.cpp" />
+    <ClCompile Include="..\private\Main_PickUI.cpp" />
     <ClCompile Include="..\private\PlayerInfoManager.cpp" />
     <ClCompile Include="..\private\PostVFX_ColorGrading.cpp" />
     <ClCompile Include="..\private\PostVFX_HitDecal.cpp" />
@@ -655,6 +714,8 @@
     <ClCompile Include="..\private\Special_Train.cpp" />
     <ClCompile Include="..\private\SpawnTrigger.cpp" />
     <ClCompile Include="..\private\SuperSpeedTrail.cpp" />
+    <ClCompile Include="..\private\Talk_BackGroundUI.cpp" />
+    <ClCompile Include="..\private\Talk_FaceUI.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\TestCamera.cpp" />
     <ClCompile Include="..\private\TestTarget.cpp" />
@@ -663,7 +724,6 @@
     <ClCompile Include="..\private\TriggerEx.cpp" />
     <ClCompile Include="..\private\TutorialUI.cpp" />
     <ClCompile Include="..\private\Tutorial_CheckUI.cpp" />
-    <ClCompile Include="..\private\Tutorial_SuccessUI.cpp" />
     <ClCompile Include="..\private\Tutorial_TipsUI.cpp" />
     <ClCompile Include="..\private\Tutorial_YesNoUI.cpp" />
     <ClCompile Include="..\private\UI.cpp" />
