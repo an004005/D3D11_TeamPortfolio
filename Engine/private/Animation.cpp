@@ -89,7 +89,7 @@ HRESULT CAnimation::Initialize(const char* pAnimFilePath)
 
 void CAnimation::Update_Bones_SyncRatio(_double PlayTime)
 {
-	// 다른 애니메이션의 플레이타임과 동기화하여 애니메이션을 받아오기 위함
+	// ?�른 ?�니메이?�의 ?�레?��??�과 ?�기?�하???�니메이?�을 받아?�기 ?�함
 	for (const auto pChannel : m_Channels)
 	{
 		pChannel->Update_TransformMatrix(PlayTime);
@@ -123,7 +123,7 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 		{
 			pChannel->Update_TransformMatrix(m_PlayTime);
 
-			// 로컬 이동 채널로부터	받아옴
+			// 로컬 ?�동 채널로�???받아??
 			if ("Reference" == pChannel->GetChannelName())
 			{
 				m_vLocalMove = pChannel->GetLocalMove();
@@ -140,7 +140,7 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 				m_vEffectLocalMove = pChannel->GetEffectLocalMove();
 			}
 		}
-		// 이벤트 실행
+		// ?�벤???�행
 		for (auto& iter : m_vecEvent)
 		{
 			if (iter.EventTime >= PrePlayTime && iter.EventTime < m_PlayTime)
@@ -238,7 +238,7 @@ void CAnimation::Update_BonesAtTime(_double PlayTime, EAnimUpdateType eType, _fl
 
 void CAnimation::Link_Model(CModel* pModel)
 {
-	Assert(m_pModel == nullptr); // 중복 링크 방지
+	Assert(m_pModel == nullptr); // 중복 링크 방�?
 	m_pModel = pModel;
 	for (auto channel : m_Channels)
 	{
@@ -313,10 +313,10 @@ void CAnimation::Imgui_RenderProperty()
 	static _float fSelectedEventTime = 0.f;
 	static string szSelectedItem = "";
 
-	// 선택된 이벤트 이름
+	// ?�택???�벤???�름
 	ImGui::Text(szSelectedItem.c_str());
 
-	// 이벤트 뷰어
+	// ?�벤??뷰어
 	if (ImGui::BeginListBox("Event Frame"))
 	{
 		for (auto& Pair : m_vecEvent)
@@ -339,7 +339,7 @@ void CAnimation::Imgui_RenderProperty()
 		ImGui::EndListBox();
 	}
 
-	// 이벤트 추가
+	// ?�벤??추�?
 	if (ImGui::Button("Add Event"))
 	{
 		ANIM_EVENT AddEvent;
@@ -349,7 +349,7 @@ void CAnimation::Imgui_RenderProperty()
 		m_vecEvent.push_back(AddEvent);
 	}
 
-	// 이벤트 삭제
+	// ?�벤????��
 	if (ImGui::Button("Delete Event"))
 	{
 		for (auto iter = m_vecEvent.begin(); iter != m_vecEvent.end();)

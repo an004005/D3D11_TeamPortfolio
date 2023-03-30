@@ -48,7 +48,6 @@ public:
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 	virtual _float4	GetKineticTargetPos() override;
 
-	_matrix AttachCollider(CRigidBody* pRigidBody);
 
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }

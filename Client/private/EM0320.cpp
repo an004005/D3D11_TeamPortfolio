@@ -482,7 +482,7 @@ _float4 CEM0320::GetKineticTargetPos()
 {
 	_float3 vTemp = m_pWeak->GetPxWorldMatrix().Translation();
 
-	return _float4(vTemp.x, vTemp.y, vTemp.z, 1.f);
+	return _float4(vTemp.x, vTemp.y + 2.f, vTemp.z, 1.f);
 }
 
 _bool CEM0320::IsPlayingSocket() const
@@ -633,7 +633,7 @@ void CEM0320::DeBuff_Fire()
 
 void CEM0320::DeBuff_Oil()
 {
-	m_fDeBuffTime = 10.f;
+	m_fDeBuffTime = 15.f;
 	for (auto pMtrl : m_BodyMtrls)
 	{
 		pMtrl->GetParam().Ints[0] = 2;
@@ -695,14 +695,14 @@ void CEM0320::Create_BossUI()
 	if (PresentUI == true) return;
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	//
+	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
+	// m_pUI_BossHP = dynamic_cast<CCanvas_BossHpMove*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHpMove", &json));
+	// m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
-	m_pUI_BossHP = dynamic_cast<CCanvas_BossHpMove*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHpMove", &json));
-	m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
-
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
-	m_pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_Alarm", &json));
-	m_pUI_Alarm->Set_Appeart();
+	// json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+	// m_pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_Alarm", &json));
+	// m_pUI_Alarm->Set_Appeart();
 
 	PresentUI = true;
 }

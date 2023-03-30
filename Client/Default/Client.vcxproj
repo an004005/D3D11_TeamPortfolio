@@ -326,7 +326,7 @@
     <ClInclude Include="..\public\NextMapNameUI.h" />
     <ClInclude Include="..\public\NoticeNeonUI.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
-    <ClInclude Include="..\public\Level_Stage1.h" />
+    <ClInclude Include="..\public\Level_ConstructionSite3F.h" />
     <ClInclude Include="..\public\Boss_HpUI.h" />
     <ClInclude Include="..\public\MonsterHpUI.h" />
     <ClInclude Include="..\public\MonsterLockonUI.h" />
@@ -608,7 +608,7 @@
     <ClCompile Include="..\private\NextMapNameUI.cpp" />
     <ClCompile Include="..\private\NoticeNeonUI.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />
-    <ClCompile Include="..\private\Level_Stage1.cpp" />
+    <ClCompile Include="..\private\Level_ConstructionSite3F.cpp" />
     <ClCompile Include="..\private\Boss_HpUI.cpp" />
     <ClCompile Include="..\private\MonsterHpUI.cpp" />
     <ClCompile Include="..\private\MonsterLockonUI.cpp" />

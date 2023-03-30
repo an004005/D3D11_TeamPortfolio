@@ -34,10 +34,10 @@ HRESULT CItem_GaugeUI::Initialize(void * pArg)
 
 void CItem_GaugeUI::Tick(_double TimeDelta)
 {
+	CUI::Tick(TimeDelta);
+
 	if (false == m_bCooldownTimeStart)
 		return;
-
-	CUI::Tick(TimeDelta);
 
 	if (true == m_fRatioDown)
 	{
