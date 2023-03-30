@@ -5,7 +5,7 @@
 #include "RigidBody.h"
 #include "EM0650_AnimInstance.h"
 #include "EM0650_Controller.h"
-#include "RedBullet.h"
+#include "BulletBuilder.h"
 CEM0650::CEM0650(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -84,18 +84,20 @@ void CEM0650::SetUpAnimationEvent()
 	});
 	m_pModelCom->Add_EventCaller("Shoot", [this]
 	{
-		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_RedBullet"));
+			Create_Bullet();
 
-		if (CRedBullet* pBullet = dynamic_cast<CRedBullet*>(pObj))
-		{
-			pBullet->Set_Owner(this);
+		//auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_RedBullet"));
+
+		//if (CRedBullet* pBullet = dynamic_cast<CRedBullet*>(pObj))
+		//{
+		//	pBullet->Set_Owner(this);
 	
-			_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
-			_vector vPrePos = BoneMtx.r[3];
+		//	_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
+		//	_vector vPrePos = BoneMtx.r[3];
 
-			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
-			pBullet->GetTransform()->LookAt(m_LastSpotTargetPos); // vPrePos + vLook);
-		}
+		//	pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
+		//	pBullet->GetTransform()->LookAt(m_LastSpotTargetPos); // vPrePos + vLook);
+		//}
 	});
 	m_pModelCom->Add_EventCaller("Upper", [this]
 	{
@@ -350,6 +352,31 @@ void CEM0650::Play_MidHitAnim()
 	default:
 		NODEFAULT;
 	}
+}
+
+void CEM0650::Create_Bullet()
+{
+	DAMAGE_PARAM eDamageParam;
+	eDamageParam.eAttackType = EAttackType::ATK_MIDDLE;
+	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_END;
+	eDamageParam.iDamage = 50;
+
+	_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
+	_vector vPrePos = BoneMtx.r[3];
+
+	CBulletBuilder()
+		.CreateBullet()
+			.Set_Owner(this)
+			.Set_InitBulletEffect({ L"Em0650_Bullet_Loop" })
+			.Set_InitBulletParticle(L"em0650_Bullet_Loop")
+			.Set_ShootSpped(18.f)
+			.Set_Life(2.f)
+			.Set_DamageParam(eDamageParam)
+			.Set_DeadBulletEffect({ L"em0650_Bullet_Dead" })
+			.Set_DeadBulletParticle(L"em0650_Bullet_Dead_Particle")
+			.Set_Position(vPrePos)
+			.Set_LookAt(m_LastSpotTargetPos)
+		.Build();
 }
 
 

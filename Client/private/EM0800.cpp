@@ -57,33 +57,10 @@ void CEM0800::SetUpComponents(void * pArg)
 	Json BronJonArm_R = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRightArm.json");
 	Json BronJonRange = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRange.json");
 
-	CRigidBody* pRigidBody = nullptr;
-
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeColl"),
-		(CComponent**)&pRigidBody, &BronJonRange));
-
-	m_pRigidBodies.emplace("Range", pRigidBody);
-	pRigidBody = nullptr;
-
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("TrunkColl"),
-		(CComponent**)&pRigidBody, &BronJonJaw));
-
-	m_pRigidBodies.emplace("Trunk", pRigidBody);
-	pRigidBody = nullptr;
-
-	// m_pLeftArm : LeftArm HitBox
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("LeftArm"),
-		(CComponent**)&pRigidBody, &BronJonArm_L));
-
-	m_pRigidBodies.emplace("Weak_LeftArm", pRigidBody);
-	pRigidBody = nullptr;
-
-	// m_pRightArm : RightArm HitBox
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RightArm"),
-		(CComponent**)&pRigidBody, &BronJonArm_R));
-
-	m_pRigidBodies.emplace("Weak_RightArm", pRigidBody);
-	pRigidBody = nullptr;
+	Add_RigidBody("Range", &BronJonRange);
+	Add_RigidBody("Trunk", &BronJonJaw);
+	Add_RigidBody("Weak_LeftArm", &BronJonArm_L);
+	Add_RigidBody("Weak_RightArm", &BronJonArm_R);
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM0800_Controller::Create();
@@ -391,10 +368,10 @@ void CEM0800::AfterPhysX()
 	CEnemy::AfterPhysX();
 
 	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
-	m_pRigidBodies["Range"]->Update_Tick(WorldMatrix);
-	m_pRigidBodies["Trunk"]->Update_Tick(m_pModelCom->GetBoneMatrix("Eff02") * WorldMatrix);
-	m_pRigidBodies["Weak_LeftArm"]->Update_Tick(m_pModelCom->GetBoneMatrix("LeftForeArm") * WorldMatrix);
-	m_pRigidBodies["Weak_RightArm"]->Update_Tick(m_pModelCom->GetBoneMatrix("RightForeArm") * WorldMatrix);
+	GetRigidBody("Range")->Update_Tick(WorldMatrix);
+	GetRigidBody("Trunk")->Update_Tick(m_pModelCom->GetBoneMatrix("Eff02") * WorldMatrix);
+	GetRigidBody("Weak_LeftArm")->Update_Tick(m_pModelCom->GetBoneMatrix("LeftForeArm") * WorldMatrix);
+	GetRigidBody("Weak_RightArm")->Update_Tick(m_pModelCom->GetBoneMatrix("RightForeArm") * WorldMatrix);
 }
 
 HRESULT CEM0800::Render()
@@ -554,7 +531,7 @@ void CEM0800::Laser_SweepSphere()
 	Sparam.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
 	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
-		HitTargets(sweepOut, (rand() % 150) + 25, EAttackType::ATK_DOWN);
+		HitTargets(sweepOut, (rand() % 150) + 25, EAttackType::ATK_HEAVY);
 }
 
 
@@ -587,10 +564,4 @@ void CEM0800::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-	
-	for (auto it : m_pRigidBodies)
-		Safe_Release(it.second);
-
-	m_pRigidBodies.clear();
-
 }

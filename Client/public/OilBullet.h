@@ -32,7 +32,7 @@ private:
 	CEffectGroup*	m_pBulletEffect = nullptr;
 	_int m_iDamage = 0;
 	_float m_fLife = 5.f;
-
+	_float m_fShootSpeed = 0.f;
 public:
 	static COilBullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

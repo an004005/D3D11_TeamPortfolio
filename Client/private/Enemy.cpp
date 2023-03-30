@@ -108,6 +108,9 @@ void CEnemy::Tick(_double TimeDelta)
 	FindTarget();
 	Update_DeadDissolve(TimeDelta);
 	m_pModelCom->Tick(TimeDelta);
+
+	if (m_bDeadStart)
+		m_dDeadTime += TimeDelta;
 }
 
 void CEnemy::Late_Tick(_double TimeDelta)
@@ -199,11 +202,11 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_bDead)
 		return;
 
-	// ÀÌ»óÇÑ µ¥¹ÌÁö µé¾î¿À´Â°Å °¨Áö¿ë, ¹ö±× ´Ù Ã£À¸¸é Áö¿ì±â
+	// ì´ìƒí•œ ë°ë¯¸ì§€ ë“¤ì–´ì˜¤ëŠ”ê±° ê°ì§€ìš©, ë²„ê·¸ ë‹¤ ì°¾ìœ¼ë©´ ì§€ìš°ê¸°
 	Assert(tDamageParams.iDamage > 0);
 	Assert(tDamageParams.iDamage < 20000);
 
-	// ex) µ¥¹ÌÁö 100 => 90 ~ 110 ·£´ýÀ¸·Î º¯°æ
+	// ex) ë°ë¯¸ì§€ 100 => 90 ~ 110 ëžœë¤ìœ¼ë¡œ ë³€ê²½
 	const _int iDamageRandomRange = tDamageParams.iDamage / 5;
 	const _int iDamageRandomize = (_int)CMathUtils::RandomUInt((_uint)iDamageRandomRange);
 	tDamageParams.iDamage += iDamageRandomize - iDamageRandomRange / 2;
@@ -269,11 +272,58 @@ ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
 	return tStat;
 }
 
+void CEnemy::Add_RigidBody(const string & KeyName, void * pArg)
+{
+	CRigidBody* pRigidBody = nullptr;
+
+	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), s2ws(KeyName).c_str(),
+		(CComponent**)&pRigidBody, pArg));
+
+	m_pRigidBodies.emplace(KeyName, pRigidBody);
+}
+
+CRigidBody * CEnemy::GetRigidBody(const string & KeyName)
+{
+	auto pRigidBody = m_pRigidBodies.find(KeyName);
+	assert(pRigidBody != m_pRigidBodies.end() && "Wrong RigidBody KeyName!");
+
+	return (*pRigidBody).second;
+}
+
+_bool CEnemy::IsTargetFront(_float fAngle)
+{
+	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
+	_float fLookRadian = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyLook), XMVector3Normalize(vTargetPos - vMyPos)));
+	
+	if (fLookRadian > cosf(XMConvertToRadians(fAngle)))
+		return true;
+
+	return false;
+}
+
+
+
+_bool CEnemy::IsTargetRight(_float fAngle)
+{
+	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+
+	_float fRightRadian = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyRight), XMVector3Normalize(vTargetPos - vMyPos)));
+
+	if (fRightRadian > cosf(XMConvertToRadians(fAngle)))
+		return true;
+
+	return false;
+}
+
+
 void CEnemy::SetDead()
 {
 	if (m_bDead)
-		return;
-	if (m_iCrushGage <= 0)
 		return;
 
 	m_bDead = true;
@@ -292,7 +342,7 @@ void CEnemy::FindTarget()
 	}
 	else
 	{
-		// todo ÀÓ½Ã ÄÚµå, AIÃß°¡µÇ¸é ¹Ù²ã¾ßµÊ
+		// todo ìž„ì‹œ ì½”ë“œ, AIì¶”ê°€ë˜ë©´ ë°”ê¿”ì•¼ë¨
 		auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
 		{
 			return dynamic_cast<CPlayer*>(pObj) != nullptr;
@@ -307,7 +357,7 @@ void CEnemy::TurnEyesOut()
 	pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", TEXT("Layer_UI"));
 	assert(pEffectGroup != nullptr);
 
-	//TimeLine ³¡³ª°í »èÁ¦
+	//TimeLine ëë‚˜ê³  ì‚­ì œ
 	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true);
 }
 
@@ -477,8 +527,10 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 	m_iHP -= iDamage;
 	if (m_iHP < 0)
 	{
-		if (m_iCrushGage > 0)
+		if (m_iCrushGage > 0 || m_dDeadTime > 3.f)
 			SetDead();
+
+		m_bDeadStart = true;
 		m_iHP = 0;
 	}
 }
@@ -644,4 +696,9 @@ void CEnemy::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
+
+	for (auto it : m_pRigidBodies)
+		Safe_Release(it.second);
+
+	m_pRigidBodies.clear();
 }

@@ -45,6 +45,7 @@ private:
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
 
+	void Create_Bullet();
 private:
 	//충돌 관련 함수 정의
 
