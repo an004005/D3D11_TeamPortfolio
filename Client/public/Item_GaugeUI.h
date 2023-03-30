@@ -18,10 +18,11 @@ public:
 	
 public:
 	_bool	Get_ItemUseStatuse() {
-		if (m_fRatio - 1.0f <= 0.000001f)
-			return true;
+		//if (m_fRatio - 1.0f <= 0.000001f)	
+		if(m_fRatio == 1.0f)
+			return true;		// 사용 가능
 		else
-			return false;
+			return false;	// 사용 불 가능
 	}
 
 	void	Set_CooldownTimeStart() {
