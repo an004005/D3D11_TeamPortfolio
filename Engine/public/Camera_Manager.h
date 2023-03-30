@@ -61,7 +61,7 @@ private:
 	string m_strCamAnimDir;
 	unordered_map<string, class CCamAnimation*> m_CamAnims;
 
-private:	// ì•¡ì…˜ìº  ê´€ë ¨ ë³€ìˆ˜
+private:	// ¾×¼ÇÄ· °ü·Ã º¯¼ö
 	_float4			m_vOrigin = _float4(0.f, 0.f, 0.f, 1.f);
 	list<_float4>	m_CamKeyFrameList;
 	string			m_szActionAnimName = "";

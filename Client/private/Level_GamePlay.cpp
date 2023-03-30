@@ -24,6 +24,7 @@
 #include "SAS_Cable.h"
 #include "Imgui_CameraManager.h"
 #include "Imgui_LightManager.h"
+#include "Imgui_CamAnimEditor.h"
 
 #define ADD_PLAYER
 
@@ -49,6 +50,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LightManager::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CamAnimEditor::Create(m_pDevice, m_pContext));
+
 
 
 

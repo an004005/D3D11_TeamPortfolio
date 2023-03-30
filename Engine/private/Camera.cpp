@@ -32,15 +32,12 @@ HRESULT CCamera::Initialize(void * pArg)
 		m_pTransformCom->LookAt(XMLoadFloat4(&_float4(0.f, 0.f, 0.f, 1.f)));
 	}
 
-	if (FAILED(Add_Component(LEVEL_STATIC, CGameInstance::m_pPrototypeTransformTag, L"PivotTransform", (CComponent**)&m_pPivotTransform)))
-		return E_FAIL;
-
 	return S_OK;
 }
 
 void CCamera::Tick(_double TimeDelta)
 {
-	// Camera Managerë¡œ ê¸°ëŠ¥ ì´ì „
+	// Camera Manager·Î ±â´É ÀÌÀü
 	// if (IsMainCamera())
 	// {
  // 		m_pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransformCom->Get_WorldMatrix_Inverse());
@@ -116,7 +113,7 @@ _float4x4 CCamera::GetWorldMatrix()
 
 _matrix CCamera::GetXMWorldMatrix()
 {
-	return m_pPivotTransform->Get_WorldMatrix() * m_pTransformCom->Get_WorldMatrix();
+	return m_PivotMatrix * m_pTransformCom->Get_WorldMatrix();
 }
 
 _float4x4 CCamera::GetProjMatrix()
@@ -147,5 +144,4 @@ _matrix CCamera::GetXMViewMatrix()
 void CCamera::Free()
 {
 	__super::Free();
-	Safe_Release(m_pPivotTransform);
 }

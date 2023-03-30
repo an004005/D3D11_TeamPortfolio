@@ -45,7 +45,7 @@ public:
 	_matrix GetXMViewMatrix();
 
 protected:
-	CTransform* m_pPivotTransform = nullptr;
+	_float4x4					m_PivotMatrix;
 
 	_float m_fFOV = 60.f;
 	_float m_fWidth = 1280.f;

@@ -18,6 +18,7 @@ private:
 	class CAnimCam* m_pAnimCam = nullptr;
 	class CCamAnimation* m_pCurAnim = nullptr;
 
+public:
 	static CImgui_CamAnimEditor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg = nullptr);
 	virtual void Free() override;
 };

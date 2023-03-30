@@ -14,7 +14,7 @@ HRESULT CImgui_CamAnimEditor::Initialize(void* pArg)
 	m_szWindowName = "Cam Anim Editor Window";
 	m_szTabname = "Cam Anim Editor Tab";
 
-	m_pAnimCam = dynamic_cast<CAnimCam*>(CCamera_Manager::GetInstance()->Add_Camera("EditorCam", LEVEL_NOW, L"Prototype_AnimCam", L"Layer_CamAnimEditor", nullptr));
+	m_pAnimCam = dynamic_cast<CAnimCam*>(CCamera_Manager::GetInstance()->Add_Camera("EditorCam", LEVEL_NOW, L"Layer_CamAnimEditor", L"Prototype_AnimCam", nullptr));
 	Assert(m_pAnimCam != nullptr);
 
 	return S_OK;
@@ -35,6 +35,7 @@ void CImgui_CamAnimEditor::Imgui_RenderWindow()
 		}
 
 		m_pCurAnim->Imgui_Render();
+		m_pCurAnim->Imgui_RenderFrameData();
 	}
 }
 
