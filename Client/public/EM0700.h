@@ -2,13 +2,6 @@
 #include "Enemy.h"
 #include "Controller.h"
 
-BEGIN(Engine)
-class CFSMComponent;
-class CGameInstance;
-class CAnimation;
-class CRigidBody;
-END
-
 BEGIN(Client)
 
 // 초(고속)파리 :: 방도 팡뒤(Bangdo Fandu)
@@ -41,43 +34,43 @@ public:
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_bool IsPlayingSocket() const;
 
+private:
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
 
 	void SelectRandomMoveAnim();
-	void Rush_Start();
-	void Rush(_double TimeDelta);
-	void Shot();
+	void Create_Bullet();
+	void Check_Height();
+	void Move_YAxis(_double);
+	void	AfterLocal180Turn();
 private:
 	//충돌 관련 함수 정의
 	void SelectEscapeAnim_Overlap();
-	void Rush_Overlap();
-	void Rush_SweepCapsule();
+	void Rush_StaticCheckSweep();
+	void Rush_SweepSphere();
 private:
 	class CEM0700_Controller*		m_pController = nullptr;
 	class CEM0700_AnimInstance*		m_pASM = nullptr;
+	class CSuperSpeedTrail*		m_pTrail = nullptr;
 
-	//충돌
-	CRigidBody*				m_pRange = nullptr;
-	CRigidBody*				m_pBody = nullptr;
-
+	class CEffectGroup* m_pRushEffect = nullptr;
 private:
 	_float3						 m_vMoveAxis;
 	_bool						m_bHitAir = false;
-	
-	//Rush
-	_bool						m_bRush = false;
-	_bool						m_bChangeDir = false;
-	_float4						m_vStartDir;
-	_float4						m_vEndDir;
 
+	_float						m_fHeight = 0.f;
+	_float						m_fMaxHeight = 1.f;
+
+	//Rush
+	_float						m_fRushTime = 1.f;
 
 	CController::EHandleInput	m_eInput;
 
 	//Heavy coll
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
+
 public:
 	static CEM0700* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

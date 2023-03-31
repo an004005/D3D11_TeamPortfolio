@@ -5,7 +5,7 @@
 #include "RigidBody.h"
 #include "EM0750_AnimInstance.h"
 #include "EM0750_Controller.h"
-
+#include "ImguiUtils.h"
 
 CEM0750::CEM0750(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -71,6 +71,12 @@ void CEM0750::SetUpSound()
 void CEM0750::SetUpAnimationEvent()
 {
 	CEnemy::SetUpAnimationEvent();
+
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0750DeadFlower")
+				->Start_NoAttach(this, false);
+		});
 }
 
 void CEM0750::SetUpFSM()
@@ -176,8 +182,6 @@ void CEM0750::SetUpFSM()
 					m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_474_AL_dead_down02");
 				})
 
-
-
 		.AddState("Hit_ToAir")
 			.OnStart([this]
 			{
@@ -251,10 +255,6 @@ void CEM0750::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-			})
 			.AddTransition("Rush_Start to Rush_Loop", "Rush_Loop")
 				.Predicator([this]
 			{
@@ -269,32 +269,31 @@ void CEM0750::SetUpFSM()
 		.AddState("Rush_Loop")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_202_AL_atk_a1_loop");
-				m_pModelCom->GetPlayAnimation()->SetLooping(true);	
-				m_bRush = true;
-				m_BeforePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-				m_fRushTime = 1.f;
+					m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_202_AL_atk_a1_loop");
+					m_pModelCom->Find_Animation("AS_em0700_202_AL_atk_a1_loop")->SetLooping(true);
+					m_BeforePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					m_fRushTime = 1.f;
+
+					_matrix RushEffectPivotMatrix = CImguiUtils::CreateMatrixFromImGuizmoData(
+						{ 0.08f, -0.112f, -1.617f },
+						{ 180.f, 0.f, 180.f, },
+						{ 15.f, 15.f, 15.f });
+
+					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0750_Dash_Attack")
+						->Start_AttachPivot(this, RushEffectPivotMatrix, "Target", true, true);
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				// Rush(TimeDelta);
-				if (m_fRushTime > 0.f)
-				{
-					m_pTransformCom->Go_Straight(TimeDelta);
-					m_fRushTime -= (_float)TimeDelta;
-				}
-				else 
-					m_bRush = false;
+				m_pTransformCom->Go_Straight(TimeDelta);
+				m_fRushTime -= (_float)TimeDelta;
+
 				Rush_StaticCheckSweep();
 				Rush_SweepSphere();
-			})
-			.OnExit([this] {
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
 			.AddTransition("Rush_Loop to Rush_End", "Rush_End")
 				.Predicator([this]
 				{
-					return m_bDead || !m_bRush;
+					return m_bDead || m_fRushTime <= 0.f;
 				})
 
 		.AddState("Rush_End")
@@ -308,6 +307,7 @@ void CEM0750::SetUpFSM()
 			})
 			.OnExit([this]
 			{
+				AfterLocal180Turn();
 				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
 			.AddTransition("Rush_End to Idle", "Idle")
@@ -476,7 +476,7 @@ void CEM0750::Rush_StaticCheckSweep()
 
 	if (CGameInstance::GetInstance()->SweepSphere(tParam))
 	{
-		m_bRush = false;
+		m_fRushTime = -1.f;
 	}
 }
 
@@ -547,6 +547,14 @@ void CEM0750::Move_YAxis(_double TimeDelta)
 	}
 }
 
+void CEM0750::AfterLocal180Turn()
+{
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	vPos -= XMVector3Normalize(vLook) * 10.f;
+	m_pTransformCom->LookAt(vPos);
+}
+
 
 CEM0750 * CEM0750::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
@@ -577,4 +585,5 @@ void CEM0750::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
+
 }

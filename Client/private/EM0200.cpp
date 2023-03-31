@@ -237,6 +237,13 @@ void CEM0200::SetUpAnimationEvent()
 		m_fGravity = 20.f;
 		m_fYSpeed = 0.f;
 	});
+
+
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200DeadFlower")
+				->Start_NoAttach(this, false);
+		});
 }
 
 void CEM0200::SetUpFSM()

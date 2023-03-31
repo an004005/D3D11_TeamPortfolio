@@ -143,10 +143,20 @@ void CEM0110::SetUpAnimationEvent()
 	{ 
 		m_bAttack = false;
 
-		m_pRushEffect->SetDelete();
-		Safe_Release(m_pRushEffect);
-		m_pRushEffect = nullptr;
+		if (m_pRushEffect != nullptr)
+		{
+			m_pRushEffect->SetDelete();
+			Safe_Release(m_pRushEffect);
+			m_pRushEffect = nullptr;
+		}
+	
 	});
+
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0110DeadFlower")
+				->Start_NoAttach(this, false);
+		});
 
 }
 

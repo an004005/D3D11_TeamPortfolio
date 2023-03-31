@@ -121,6 +121,11 @@ void CEM1100::SetUpAnimationEvent()
 		m_bTailSwing = false;;
 	});
 
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1100DeadFlower")
+				->Start_NoAttach(this, false);
+		});
 }
 
 void CEM1100::SetUpFSM()

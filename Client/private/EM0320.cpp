@@ -180,6 +180,12 @@ void CEM0320::SetUpAnimationEvent()
 	{
 		FireWaterBall();
 	});
+
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320DeadFlower")
+				->Start_NoAttach(this, false);
+		});
 }
 
 void CEM0320::SetUpFSM()

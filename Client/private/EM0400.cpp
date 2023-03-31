@@ -94,7 +94,7 @@ void CEM0400::SetUpAnimationEvent()
 			{ 1.f, 1.f, 1.f });
 
 		m_pSwingEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack");
-		m_pSwingEffect->Start_AttachPivot(this, SwingEffectPivotMatirx, "Target", true);
+		m_pSwingEffect->Start_AttachPivot(this, SwingEffectPivotMatirx, "Target", true, true);
 		Safe_AddRef(m_pSwingEffect);
 
 	});
@@ -144,6 +144,12 @@ void CEM0400::SetUpAnimationEvent()
 		Dodge_VelocityCalc();
 	});
 	
+
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0400DeadFlower")
+				->Start_NoAttach(this, false);
+		});
 }
 
 void CEM0400::SetUpFSM()

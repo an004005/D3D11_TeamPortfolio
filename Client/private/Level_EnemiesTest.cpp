@@ -24,7 +24,7 @@
 
 //#define ADD_PLAYER
 //#define ADD_PREVIEW "Prototype_Model_em220"
-#define ADD_ENEMY "Monster_em650"
+//#define ADD_ENEMY "Monster_em650"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -59,9 +59,6 @@ CGameInstance::GetInstance()->Clear_ImguiObjects();
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Batch(TEXT("Layer_Batch"))))
-		return E_FAIL;
-
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
@@ -70,9 +67,6 @@ CGameInstance::GetInstance()->Clear_ImguiObjects();
 
 	if (FAILED(Ready_Layer_Bullet(TEXT("Layer_Bullet"))))
 		return E_FAIL;
-
-	/*if (FAILED(Ready_Layer_Kinetic(TEXT("Layer_Kinetic"))))
-		return E_FAIL;*/
 
 	if (FAILED(Ready_Layer_Map(TEXT("Layer_Map"))))
 		return E_FAIL;
@@ -166,16 +160,7 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
-	//FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 	
-	//Batch
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
-
-	//Trigger
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_GameObject_Trigger"),
-		CTrigger::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
 	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
 	return S_OK;
@@ -232,7 +217,6 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 #endif // ADD_ENEMY
 
-	
 	return S_OK;
 }
 
@@ -242,15 +226,6 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Bullet(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_EnemiesTest::Ready_Layer_Batch(const _tchar * pLayerTag)
-{
-	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
-	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_ConstructionSite3F.json");
-	//
-	// FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));
-	return S_OK;
-}
 
 HRESULT CLevel_EnemiesTest::Ready_Layer_Player(const _tchar * pLayerTag)
 {
@@ -269,11 +244,6 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Player(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_EnemiesTest::Ready_Layer_Kinetic(const _tchar * pLayerTag)
-{
-	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-	return S_OK;
-}
 
 HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
 {

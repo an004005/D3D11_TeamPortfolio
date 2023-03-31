@@ -38,8 +38,6 @@ public:
 	virtual void SetUpUI() {}
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
-	virtual void SetBrainCrush();
-
 	virtual void SetEnemyBatchDataStat(ENEMY_STAT tStat);
 	virtual ENEMY_STAT GetEnemyBatchDataStat();
 	
@@ -60,6 +58,8 @@ public:
 	void	TurnEyesOut();
 	void Create_InfoUI();
 	//
+
+	_bool Decide_PlayBrainCrush();
 
 public:
 	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
@@ -143,6 +143,9 @@ protected:
 	_int m_iCrushGage = 100;
 	_int m_iMaxCrushGage = 100;
 	_bool m_bHasCrushGage = false;
+
+	//플레이어가 set해줌
+	_bool	m_bBrainCrush = false;
 
 	_bool		m_bDeadStart = false;
 	_double	m_dDeadTime = 0.0;

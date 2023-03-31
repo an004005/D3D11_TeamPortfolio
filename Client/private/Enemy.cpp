@@ -116,6 +116,11 @@ void CEnemy::Tick(_double TimeDelta)
 
 	if (m_bDeadStart)
 		m_dDeadTime += TimeDelta;
+
+
+	if (GetKeyState('K') & 0x8000)
+		SetDead(); 
+	
 }
 
 void CEnemy::Late_Tick(_double TimeDelta)
@@ -176,14 +181,13 @@ void CEnemy::Imgui_RenderProperty()
 		}
 
 		if ("" != szMonsterAnimName)
-		  m_pModelCom->Get_AnimList()[szMonsterAnimName]->Imgui_RenderProperty();
+		{
+			CAnimation* pAnim = m_pModelCom->Get_AnimList()[szMonsterAnimName];
+			if(pAnim != nullptr)
+				pAnim->Imgui_RenderProperty();
+		}
+		 
 	}
-
-	if (ImGui::Button("Kill"))
-	{
-		SetDead();
-	}
-
 }
 
 HRESULT CEnemy::Render_ShadowDepth()
@@ -253,13 +257,6 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	CGameManager::GetInstance()->ConsumeEnemyDamageReport(tReport);
 }
 
-void CEnemy::SetBrainCrush()
-{
-	if (m_iCrushGage <= 0)
-	{
-		m_DeathTimeline.PlayFromStart();
-	}
-}
 
 void CEnemy::SetEnemyBatchDataStat(ENEMY_STAT tStat)
 {
@@ -416,6 +413,17 @@ void CEnemy::Create_InfoUI()
 	}
 }
 
+_bool CEnemy::Decide_PlayBrainCrush()
+{
+	if (m_iCrushGage <= 0)
+	{
+		m_bBrainCrush = true;
+		return true;
+	}
+
+	return false;
+}
+
 _float4x4 CEnemy::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
 {
 	if (m_pModelCom->Get_BonePtr(strBoneName) == nullptr)
@@ -558,7 +566,7 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 		case EAttackType::ATK_HEAVY:
 			FALLTHROUGH;
 		case EAttackType::ATK_SPECIAL_END:
-			iDamage *= 2;
+			iDamage *= 1.3;
 			break;
 		case EAttackType::ATK_TO_AIR: break;
 		case EAttackType::ATK_DOWN: break;
@@ -567,20 +575,28 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 			NODEFAULT;
 		}
 
-		m_iCrushGage -= iDamage / 10;
+		m_iCrushGage -= iDamage*1.2;
 		if (m_iCrushGage < 0)
+		{
 			m_iCrushGage = 0;
+			//UI 띄우기
+		}
+			
 	}	
 }
 
 void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 {
+	//true가 됐다는건 플레이어가 G키를 눌러 브레인 크러쉬를 실행했다는거.
+	//브레인 크러쉬 애니메이션에 맞춰서 SetDead 함수를 실행시켜 줌
+	if (m_bBrainCrush == true) return;
+
 	_int iDamage = tDamageParams.iDamage;
 	// if (m_bHitWeak)
 	// 	iDamage *= 2;
 
 	m_iHP -= iDamage;
-	if (m_iHP < 0)
+	if (m_iHP <= 0)
 	{
 		if (m_iCrushGage > 0 || m_dDeadTime > 3.f)
 			SetDead();

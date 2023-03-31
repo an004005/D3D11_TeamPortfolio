@@ -1312,6 +1312,7 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	m_pTrail->SetOwnerModel(m_pModel);
 	//m_pTrail->SetActive(true);
 
+
 	return S_OK;
 }
 

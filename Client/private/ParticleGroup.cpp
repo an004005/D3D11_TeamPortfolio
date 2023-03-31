@@ -255,7 +255,7 @@ void CParticleGroup::Set_Transform(_matrix socket)
 	for(auto iter : m_mapParticleSystem)
 	{
 		if (iter.second.second != nullptr)
-			iter.second.second->GetTransform()->Set_WorldMatrix(socket);
+ 			iter.second.second->GetTransform()->Set_WorldMatrix(socket);
 	}
 }
 

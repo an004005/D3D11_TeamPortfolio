@@ -5,7 +5,10 @@
 #include "RigidBody.h"
 #include "EM0700_AnimInstance.h"
 #include "EM0700_Controller.h"
-#include "RedBullet.h"
+#include "BulletBuilder.h"
+#include "SuperSpeedTrail.h"
+#include "ImguiUtils.h"
+
 CEM0700::CEM0700(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -19,8 +22,8 @@ CEM0700::CEM0700(const CEM0700 & rhs)
 
 HRESULT CEM0700::Initialize(void * pArg)
 {
-	//Json em0200_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegTrigger.json");
-	//pArg = &em0200_json;
+	Json em0700_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0700/em0700Base.json");
+	pArg = &em0700_json;
 
 	/*m_strDeathSoundTag = "mon_5_fx_death";
 	m_strImpactVoiceTag = "mon_5_impact_voice";*/
@@ -50,16 +53,12 @@ void CEM0700::SetUpComponents(void * pArg)
 	CEnemy::SetUpComponents(pArg);
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em700", L"Model", (CComponent**)&m_pModelCom));
 
-	// 범위 충돌체(플레이어가 몬스터 위로 못 올라가게한다.)
-	/*Json FlowerLegRangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegRange.json");
-*/
+	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_SuperSpeedTrail", L"SuperSpeedTrail", (CComponent**)&m_pTrail));
+	m_pTrail->SetOwnerModel(m_pModelCom);
 
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeColl"),
-		(CComponent**)&m_pRange, pArg));
-
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("BodyColl"),
-		(CComponent**)&m_pBody))
-		
+	//Trail 초기설정
+	m_pTrail->SetTrailCoolTime(0.05f);
+	m_pTrail->SetTrailLife(0.3f);
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM0700_Controller::Create();
@@ -80,6 +79,12 @@ void CEM0700::SetUpSound()
 void CEM0700::SetUpAnimationEvent()
 {
 	CEnemy::SetUpAnimationEvent();
+
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0700DeadFlower")
+				->Start_NoAttach(this, false);
+		});
 }
 
 void CEM0700::SetUpFSM()
@@ -98,6 +103,15 @@ void CEM0700::SetUpFSM()
 	m_pFSM = CFSMComponentBuilder()
 		.InitState("Idle")
 		.AddState("Idle")
+		.OnStart([this]
+			{
+				m_fGravity = 0.f;
+			})
+		.Tick([this](_double TimeDelta)
+			{
+				Check_Height();
+				Move_YAxis(TimeDelta);
+			})
 			.AddTransition("Idle to Death" , "Death")
 				.Predicator([this] { return m_bDead; })
 
@@ -186,14 +200,13 @@ void CEM0700::SetUpFSM()
 					m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_474_AL_dead_down02");
 				})
 
-
-
 		.AddState("Hit_ToAir")
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_432_AL_blow_start_F");
+				Check_Height();
 				m_fGravity = 20.f;
-				m_fYSpeed = 12.f;
+				m_fYSpeed = sqrtf((2.5f - m_fHeight) * m_fGravity * 2.f);
 			})
 			.Tick([this](_double)
 			{
@@ -236,8 +249,14 @@ void CEM0700::SetUpFSM()
 			{
 				SelectEscapeAnim_Overlap();
 			})
-			.Tick([this](_double) {	
+			.Tick([this](_double)
+			{	
 				SocketLocalMove(m_pASM);
+				m_pTrail->SetActive(true);
+			})
+			.OnExit([this]
+			{
+					m_pTrail->SetActive(false);
 			})
 			.AddTransition("Escape to Idle", "Idle")
 				.Predicator([this]
@@ -265,16 +284,11 @@ void CEM0700::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_201_AL_atk_a1_start");
-				Rush_Start();
 				ClearDamagedTarget();
 			})
 			.Tick([this](_double TimeDelta)
 			{
 				SocketLocalMove(m_pASM);
-			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
 			.AddTransition("Rush_Start to Rush_Loop", "Rush_Loop")
 				.Predicator([this]
@@ -290,29 +304,51 @@ void CEM0700::SetUpFSM()
 		.AddState("Rush_Loop")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_202_AL_atk_a1_loop");
-				m_pModelCom->GetPlayAnimation()->SetLooping(true);	
-				m_bRush = true;
+					m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_202_AL_atk_a1_loop");
+					m_pModelCom->Find_Animation("AS_em0700_202_AL_atk_a1_loop")->SetLooping(true);
+					m_BeforePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					m_fRushTime = 1.5f;
+					m_pTransformCom->SetSpeed(20.f);
+
+					_matrix RushEffectPivotMatrix = CImguiUtils::CreateMatrixFromImGuizmoData(
+						{ 0.08f, -0.112f, -1.617f },
+						{ 180.f, 0.f, 180.f, },
+						{ 15.f, 15.f, 15.f });
+
+					m_pRushEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0750_Dash_Attack");
+					m_pRushEffect->Start_AttachPivot(this, RushEffectPivotMatrix, "Target", true, true);
+					Safe_AddRef(m_pRushEffect);
+
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				Rush(TimeDelta);
-				Rush_Overlap();
-				Rush_SweepCapsule();
+				
+					m_pTransformCom->Go_Straight(TimeDelta);
+					m_fRushTime -= (_float)TimeDelta;
+
+					Rush_StaticCheckSweep();
+					Rush_SweepSphere();
+			
 			})
-			.OnExit([this] {
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-			})
+
 			.AddTransition("Rush_Loop to Rush_End", "Rush_End")
 				.Predicator([this]
 				{
-					return m_bDead || !m_bRush;
+						return m_bDead || m_fRushTime <= 0.f;
 				})
 
 		.AddState("Rush_End")
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_203_AL_atk_a1_end");
+
+				//이펙트 삭제
+				if (m_pRushEffect != nullptr)
+				{
+					m_pRushEffect->SetDelete();
+					Safe_Release(m_pRushEffect);
+					m_pRushEffect = nullptr;
+				}
 			})
 			.Tick([this](_double)
 			{
@@ -320,6 +356,7 @@ void CEM0700::SetUpFSM()
 			})
 			.OnExit([this]
 			{
+				AfterLocal180Turn();
 				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
 			.AddTransition("Rush_End to Idle", "Idle")
@@ -337,7 +374,7 @@ void CEM0700::SetUpFSM()
 			})
 			.OnExit([this] 
 			{
-				Shot();
+					Create_Bullet();
 			})
 				.AddTransition("AS_em0710_207_AL_atk_a3 to Idle", "Idle")
 				.Predicator([this]
@@ -410,6 +447,9 @@ void CEM0700::Tick(_double TimeDelta)
 		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
 	}
 
+	if (m_pTrail != nullptr)
+		m_pTrail->Tick(TimeDelta);
+
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
 }
@@ -438,6 +478,28 @@ void CEM0700::Imgui_RenderProperty()
 		m_pASM->Imgui_RenderState();
 	}
 	m_pFSM->Imgui_RenderProperty();
+
+	//ImGui::DragFloat("TrailCool", &trailcoll);
+	//ImGui::DragFloat("TrailLife", &traillife);
+
+	//m_pTrail->SetTrailCoolTime(trailcoll);
+	//m_pTrail->SetTrailLife(traillife);
+
+	//	static _bool tt = false;
+	//ImGui::Checkbox("Modify Pivot", &tt);
+
+	//if (tt)
+	//{
+	//	static GUIZMO_INFO tInfo;
+	//	CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+
+	//	if (ImGui::Button("Create_Effect"))
+	//	{
+	//		 CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0750_Dash_Attack")
+	//		->Start_AttachPivot(this, pivot, "Target", true, true);
+	//
+	//	}
+	//}
 }
 
 _bool CEM0700::IsPlayingSocket() const
@@ -504,73 +566,124 @@ void CEM0700::SelectRandomMoveAnim()
 		m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_121_AL_randommove_L");
 }
 
-void CEM0700::Rush_Start()
+void CEM0700::Rush_StaticCheckSweep()
 {
-	//한틱만 실행시켜줘야함
-	_matrix MyBone = XMLoadFloat4x4(&GetBoneMatrix("Target"));
-	_vector vMyBonePos = (MyBone * m_pTransformCom->Get_WorldMatrix()).r[3];
+	physx::PxSweepHit hitBuffer[1];
+	physx::PxSweepBuffer sweepOut(hitBuffer, 1);
+	SphereSweepParams tParam;
 
-	_matrix TargetBone = XMLoadFloat4x4(&m_pTarget->GetBoneMatrix("Waist"));
-	_vector TargetBonePos = (TargetBone * m_pTarget->GetTransform()->Get_WorldMatrix()).r[3];
+	tParam.sweepOut = &sweepOut;
+	tParam.fRadius = 1.f;
+	tParam.fVisibleTime = .1f;
+	tParam.iTargetType = CTB_STATIC;
+	tParam.vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION); // 공중에 떠있으니 transform써도 될 듯
+	tParam.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	tParam.fDistance = 4.f;
 
-	//공격하는 벡터
-	_vector vStartDir = TargetBonePos - vMyBonePos;
-	XMStoreFloat4(&m_vStartDir, vStartDir);
-
-	_vector vInterval = XMVectorSetY(TargetBonePos, XMVectorGetY(vMyBonePos) - XMVectorGetY(TargetBonePos)) * 2.f;
-
-	//공격 끝나고 올라가는 벡터
-	_vector vEndDir = vStartDir + vInterval;
-	XMStoreFloat4(&m_vEndDir, vEndDir);
-	//
+	if (CGameInstance::GetInstance()->SweepSphere(tParam))
+	{
+		m_fRushTime = -1.f;
+	}
 }
 
-void CEM0700::Rush(_double TimeDelta)
+void CEM0700::Rush_SweepSphere()
 {
-	_matrix MyBone = XMLoadFloat4x4(&GetBoneMatrix("Target"));
-	_vector vMyBonePos = (MyBone * m_pTransformCom->Get_WorldMatrix()).r[3];
+	_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
-	if (m_bChangeDir == false)
+	SphereSweepParams tParams;
+
+	physx::PxSweepHit hitBuffer[3];
+	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
+	tParams.sweepOut = &sweepOut;
+	tParams.fRadius = 1.5;
+	tParams.fVisibleTime = .1f;
+	tParams.iTargetType = CTB_PLAYER;
+	tParams.vPos = m_BeforePos;
+	tParams.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	tParams.fDistance = XMVectorGetX(XMVector3LengthEst(vPos - m_BeforePos));
+
+	if (CGameInstance::GetInstance()->SweepSphere(tParams))
 	{
-		_matrix TargetBone = XMLoadFloat4x4(&m_pTarget->GetBoneMatrix("Waist"));
-		_vector TargetBonePos = (TargetBone * m_pTarget->GetTransform()->Get_WorldMatrix()).r[3];
-
-		_float fDist = XMVectorGetX(XMVector4Length(TargetBonePos- vMyBonePos));
-
-		if (fDist <= 0.2f)
-			m_bChangeDir = true;
-	}
-	else
-	{
-		_float fDist = XMVectorGetX(XMVector4Length(vMyBonePos - XMLoadFloat4(&m_vEndDir)));
-
-		if (fDist <= 0.2f)
-			m_bRush = false;
+		HitTargets(sweepOut, m_iAtkDamage * 2.f, EAttackType::ATK_HEAVY);
 	}
 
-	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	vMyPos += XMVector3Normalize(m_vStartDir) * 5.f * TimeDelta;
-
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vMyPos);
-
+	m_BeforePos = vPos;
 }
 
-void CEM0700::Shot()
+void CEM0700::Create_Bullet()
 {
-	auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_RedBullet"));
+	DAMAGE_PARAM eDamageParam;
+	eDamageParam.eAttackType = EAttackType::ATK_LIGHT;
+	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_END;
+	eDamageParam.iDamage = 20;
 
-	if (CRedBullet* pBullet = dynamic_cast<CRedBullet*>(pObj))
+	_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Tail7") * m_pTransformCom->Get_WorldMatrix();
+	_vector BonePos = BoneMtx.r[3];
+
+	CBulletBuilder()
+		.CreateBullet()
+			.Set_Owner(this)
+			.Set_InitBulletEffect({ L"em0650_Bullet_Birth" , L"Em0650_Bullet_Loop" })
+			.Set_InitBulletParticle(L"em0650_Bullet_Loop")
+			.Set_ShootSpped(8.f)
+			.Set_Life(4.f)
+			.Set_DamageParam(eDamageParam)
+			.Set_DeadBulletEffect({ L"em0650_Bullet_Dead" })
+			.Set_DeadBulletParticle(L"em0650_Bullet_Dead_Particle")
+			.Set_Position(BonePos)
+			.Set_LookAt(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION))
+		.Build();
+}
+
+void CEM0700::Check_Height()
+{
+	_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+	physx::PxRaycastHit hitBuffer[1];
+	physx::PxRaycastBuffer t(hitBuffer, 1);
+
+	RayCastParams params;
+	params.rayOut = &t;
+	params.vOrigin = vPos;
+	params.vOrigin.y += 2.f;// 발 보다 살짝 위에서 레이 케스트(바닥보다 무조건 높은 위치에서 쏘기 위해서 더해준다.
+	params.vDir = -_float4::UnitY;
+	params.fDistance = 1000.f;
+	params.iTargetType = CTB_STATIC;
+	params.bSingle = true;
+
+	if (CGameInstance::GetInstance()->RayCast(params))
 	{
-		pBullet->Set_Owner(this);
-
-		_vector vBonePos = (m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix()).r[3];
-		_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-
-		//입에 달려있는 뼈가 없어서 몬스터 입 뒤쪽에있는 Target뼈에서 앞쪽으로 당겨준다.
-		vBonePos += XMVector3Normalize(vLook) * 3.f;
-		pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vBonePos);
-		pBullet->GetTransform()->LookAt(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+		for (int i = 0; i < t.getNbAnyHits(); ++i)
+		{
+			auto p = t.getAnyHit(i);
+			const _float4 vFloorPos{ p.position.x, p.position.y, p.position.z, 1.f };
+			m_fHeight = XMVectorGetX(XMVector3LengthEst(vPos - vFloorPos));
+		}
 	}
+}
+
+void CEM0700::Move_YAxis(_double TimeDelta)
+{
+	if (m_fHeight < m_fMaxHeight)
+	{
+		_float3 vVelocity;
+		vVelocity.y = 4.f;
+		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+	}
+	else if (m_fHeight > m_fMaxHeight + 0.5f)
+	{
+		_float3 vVelocity;
+		vVelocity.y = -4.f;
+		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+	}
+}
+
+void CEM0700::AfterLocal180Turn()
+{
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	vPos -= XMVector3Normalize(vLook) * 10.f;
+	m_pTransformCom->LookAt(vPos);
 }
 
 
@@ -607,64 +720,6 @@ void CEM0700::SelectEscapeAnim_Overlap()
 		SelectRandomMoveAnim();
 }
 
-void CEM0700::Rush_Overlap()
-{
-	//Length로 Bone의 위치에서부터 바라보는 방향으로 원하는 지점까지의 거리를 지정
-	_float fLength = 7.f;
-
-	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
-
-	_vector vBoneVector = BoneMatrix.r[3];
-	_float3 fBone = vBoneVector;
-
-	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	vMyLook = XMVectorSetY(vMyLook, 0.f);
-	_float3 fDest = vMyLook;
-
-	_float3 fFinish = { (fBone.x + fLength * fDest.x), fBone.y, (fBone.z + fLength * fDest.z) };
-
-	physx::PxOverlapHit hitBuffer[3];
-	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
-
-	SphereOverlapParams param;
-	param.fVisibleTime = 0.1f;
-	param.iTargetType = CTB_STATIC;
-	param.fRadius = 3.f;
-	param.vPos = XMVectorSetW(fFinish, 1.f);
-	param.overlapOut = &overlapOut;
-
-	if (CGameInstance::GetInstance()->OverlapSphere(param))
-	{
-		m_bRush = false;
-	}
-}
-
-void CEM0700::Rush_SweepCapsule()
-{
-	_float4x4 BodyMatrix = m_pBody->GetPxWorldMatrix();
-	_float4 vBodyPos = _float4{ BodyMatrix.m[3][0], BodyMatrix.m[3][1], BodyMatrix.m[3][2], BodyMatrix.m[3][3] };
-
-	physx::PxSweepHit hitBuffer[3];
-	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
-
-	PxCapsuleSweepParams tParams;
-	tParams.sweepOut = &sweepOut;
-	tParams.CapsuleGeo = m_pBody->Get_CapsuleGeometry();
-	tParams.pxTransform = m_pBody->Get_PxTransform();
-
-	_float4	vDir = vBodyPos - m_BeforePos;
-	tParams.vUnitDir = _float3(vDir.x, vDir.y, vDir.z);
-	tParams.fDistance = tParams.vUnitDir.Length();
-	tParams.iTargetType = CTB_PLAYER;
-	tParams.fVisibleTime = 0.2f;
-
-	if (CGameInstance::GetInstance()->PxSweepCapsule(tParams))
-	{
-		HitTargets(sweepOut, m_iAtkDamage * 1.5f, EAttackType::ATK_TO_AIR);
-	}
-
-	m_BeforePos = vBodyPos;
-}
 
 
 CEM0700 * CEM0700::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -696,6 +751,15 @@ void CEM0700::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-	Safe_Release(m_pRange);
-	Safe_Release(m_pBody);
+	Safe_Release(m_pTrail);
+
+	if (m_bCloned)
+	{
+		if (m_pRushEffect != nullptr)
+		{
+			m_pRushEffect->SetDelete();
+			Safe_Release(m_pRushEffect);
+			m_pRushEffect = nullptr;
+		}
+	}
 }

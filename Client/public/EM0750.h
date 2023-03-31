@@ -2,13 +2,6 @@
 #include "Enemy.h"
 #include "Controller.h"
 
-BEGIN(Engine)
-class CFSMComponent;
-class CGameInstance;
-class CAnimation;
-class CRigidBody;
-END
-
 BEGIN(Client)
 
 // 파리 :: 스커미 팡뒤(SkummyPandou)
@@ -51,6 +44,7 @@ private:
 	void Rush_SweepSphere();
 	void Check_Height();
 	void Move_YAxis(_double TimeDelta);
+	void	AfterLocal180Turn();
 private:
 	class CEM0750_Controller*		m_pController = nullptr;
 	class CEM0750_AnimInstance*		m_pASM = nullptr;
@@ -60,15 +54,10 @@ private:
 	_bool						m_bHitAir = false;
 
 	_float						m_fHeight = 0.f;
-	_float						m_fMaxHeight = 1.3f;
+	_float						m_fMaxHeight = 1.f;
 
 	//Rush
-	_bool						m_bRush = false;
 	_float						m_fRushTime = 1.f;
-	_bool						m_bChangeDir = false;
-	_float4						m_vStartDir;
-	_float4						m_vEndDir;
-
 
 	CController::EHandleInput	m_eInput;
 

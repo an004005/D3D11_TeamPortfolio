@@ -26,19 +26,20 @@ void CSuperSpeedTrail::BeginTick()
 
 void CSuperSpeedTrail::Tick(_double TimeDelta)
 {
-	if (m_bActive == false)
-	{
-		for (auto& pTrail : m_pGhostTrails)
-			Safe_Release(pTrail.pPoseModel);
-		m_pGhostTrails.clear();
-		return;
-	}
+	//if (m_bActive == false)
+	//{
+	//	for (auto& pTrail : m_pGhostTrails)
+	//		Safe_Release(pTrail.pPoseModel);
+	//	m_pGhostTrails.clear();
+	//	return;
+	//}
 
 
 	if (m_pOwnerModel == nullptr)
 		return;
 
-	m_TrailGenerateTimer.Tick(TimeDelta);
+	if (m_bActive)
+		m_TrailGenerateTimer.Tick(TimeDelta);
 
 	m_pGhostTrails.remove_if([this](const GHOST_TRAIL_INFO& tInfo)
 	{
@@ -137,4 +138,5 @@ void CSuperSpeedTrail::Free()
 	{
 		Safe_Release(pTrail.pPoseModel);
 	}
+	m_pGhostTrails.clear();
 }

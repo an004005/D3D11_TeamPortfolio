@@ -150,7 +150,11 @@ void CEM0210::SetUpAnimationEvent()
 		m_bAttack = false;
 	});
 
-
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0220DeadFlower")
+				->Start_NoAttach(this, false);
+		});
 }
 
 void CEM0210::SetUpFSM()

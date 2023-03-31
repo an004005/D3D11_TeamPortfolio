@@ -47,7 +47,7 @@ void CEM0700_Controller::AI_Tick(_double TimeDelta)
 
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
-	{
+	{		
 		DefineState(TimeDelta);
 	}
 }

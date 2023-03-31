@@ -6,6 +6,7 @@
 #include "EM0650_AnimInstance.h"
 #include "EM0650_Controller.h"
 #include "BulletBuilder.h"
+
 CEM0650::CEM0650(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -119,10 +120,8 @@ void CEM0650::SetUpAnimationEvent()
 
 	m_pModelCom->Add_EventCaller("DeadFlower", [this]
 	{
-			auto tt = this;
-
-			CEffectGroup* ttt = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0650DeadFlower");
-			ttt->Start_NoAttach(this, false);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650DeadFlower")
+				->Start_NoAttach(this , false);
 	});
 
 	//m_pModelCom->Add_EventCaller("mon_2_attack_ready", [this] {m_SoundStore.PlaySound("mon_2_attack_ready", m_pTransformCom); });
@@ -375,6 +374,12 @@ void CEM0650::Imgui_RenderProperty()
 	}
 
 	m_pFSM->Imgui_RenderProperty();
+
+	if (ImGui::Button("Create_Effect"))
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650DeadFlower")
+			->Start_Attach(this, "Target",false);
+	}
 }
 
 _bool CEM0650::IsPlayingSocket() const
