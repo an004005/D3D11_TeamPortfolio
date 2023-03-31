@@ -114,10 +114,13 @@ void CEnemy::Tick(_double TimeDelta)
 
 	m_pModelCom->Tick(TimeDelta);
 
+	// 브레인 크러쉬 안할때 3초 안에 죽이기
 	if (m_bDeadStart)
 		m_dDeadTime += TimeDelta;
 
-
+	if (m_dDeadTime >= 3.f)
+		SetDead();
+	//
 	if (GetKeyState('K') & 0x8000)
 		SetDead(); 
 	
@@ -141,8 +144,8 @@ void CEnemy::Imgui_RenderProperty()
 	if (ImGui::CollapsingHeader("Edit Stat"))
 	{
 		ImGui::InputInt("MaxHP", &m_iMaxHP);
-		ImGui::InputInt("MaxCrushGage", &m_iMaxCrushGage);
-		ImGui::Checkbox("HasCrushGage", &m_bHasCrushGage);
+		ImGui::InputInt("MaxCrushGage", &m_iMaxCrushGauge);
+		ImGui::Checkbox("HasCrushGage", &m_bHasCrushGauge);
 		_int iLevel = iEemeyLevel;
 		ImGui::InputInt("Level", &iLevel);
 		iEemeyLevel = iLevel;
@@ -262,9 +265,9 @@ void CEnemy::SetEnemyBatchDataStat(ENEMY_STAT tStat)
 {
 	m_iMaxHP = tStat.iMaxHP;
 	m_iHP = m_iMaxHP;
-	m_iMaxCrushGage = tStat.iMaxCrushGage;
-	m_iCrushGage = m_iMaxCrushGage;
-	m_bHasCrushGage = tStat.bHasCrushGage;
+	m_iMaxCrushGauge = tStat.iMaxCrushGage;
+	m_iCrushGauge = m_iMaxCrushGauge;
+	m_bHasCrushGauge = tStat.bHasCrushGage;
 	m_iAtkDamage = tStat.iAtkDamage;
 	iEemeyLevel = tStat.iLevel;
 }
@@ -273,8 +276,8 @@ ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
 {
 	ENEMY_STAT tStat;
 	tStat.iMaxHP = m_iMaxHP;
-	tStat.iMaxCrushGage = m_iMaxCrushGage;
-	tStat.bHasCrushGage = m_bHasCrushGage;
+	tStat.iMaxCrushGage = m_iMaxCrushGauge;
+	tStat.bHasCrushGage = m_bHasCrushGauge;
 	tStat.iAtkDamage = m_iAtkDamage;
 	tStat.iLevel = iEemeyLevel;
 	return tStat;
@@ -303,7 +306,7 @@ void CEnemy::Update_UIInfo()
 	if (m_bDead == true) return;
 
 	if (m_pShieldUI != nullptr)
-		m_pShieldUI->SetShild(m_iHP / (_float)m_iMaxHP, (_float)m_iCrushGage);
+		m_pShieldUI->SetShild(m_iHP / (_float)m_iMaxHP, m_iCrushGauge / (_float)m_iMaxCrushGauge);
 	else if (m_pHPUI != nullptr)
 		m_pHPUI->Set_HpRatio(m_iHP / (_float)m_iMaxHP);
 }
@@ -393,7 +396,7 @@ void CEnemy::Create_InfoUI()
 
 	if (m_pShieldUI != nullptr || m_pHPUI != nullptr) return;
 
-	if (m_bHasCrushGage)
+	if (m_bHasCrushGauge)
 	{
 		m_pShieldUI = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterShield")));
 		assert(m_pShieldUI != nullptr);
@@ -415,7 +418,7 @@ void CEnemy::Create_InfoUI()
 
 _bool CEnemy::Decide_PlayBrainCrush()
 {
-	if (m_iCrushGage <= 0)
+	if (m_iCrushGauge <= 0)
 	{
 		m_bBrainCrush = true;
 		return true;
@@ -548,7 +551,7 @@ void CEnemy::CheckDeBuff(EDeBuffType eDeBuff)
 
 void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 {
-	if (m_bHasCrushGage)
+	if (m_bHasCrushGauge)
 	{
 		_int iDamage = tDamageParams.iDamage;
 		// if (m_bHitWeak)
@@ -575,10 +578,12 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 			NODEFAULT;
 		}
 
-		m_iCrushGage -= iDamage*1.2;
-		if (m_iCrushGage < 0)
+		m_iCrushGauge -= iDamage*1.2;
+		if (m_iCrushGauge < 0)
 		{
-			m_iCrushGage = 0;
+			m_iCrushGauge = 0;
+			m_bDeadStart = true;
+
 			//UI 띄우기
 		}
 			
@@ -596,9 +601,9 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 	// 	iDamage *= 2;
 
 	m_iHP -= iDamage;
-	if (m_iHP <= 0)
+	if (m_iHP < 0)
 	{
-		if (m_iCrushGage > 0 || m_dDeadTime > 3.f)
+		if (m_iCrushGauge > 0)
 			SetDead();
 
 		m_bDeadStart = true;

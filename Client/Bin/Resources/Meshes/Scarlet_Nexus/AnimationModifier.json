@@ -3891,6 +3891,24 @@
             }
         ]
     },
+    "AS_em0200_485_AL_BCchance_start": {
+        "Duration": 72.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0200_486_AL_BCchance_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0200_487_AL_BCchance_end": {
+        "Duration": 64.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0210_211_AL_somersault": {
         "Duration": 160.0,
         "TickPerSecond": 50.0,

@@ -44,12 +44,12 @@ public:
 public:
 	//0 ~ 1 사이값
 	_float GetHpRatio() const { return (_float)m_iHP / (_float)m_iMaxHP; }
-	_float GetCrushGageRatio() const { return (_float)m_iCrushGage / (_float)m_iMaxCrushGage; }
+	_float GetCrushGageRatio() const { return (_float)m_iCrushGauge / (_float)m_iMaxCrushGauge; }
 	_bool IsDead() const { return m_bDead; }
 	virtual _float4	GetKineticTargetPos() { return GetColliderPosition(); }
 
 	void HealFullHp() { m_iHP = m_iMaxHP; }
-	_bool	HasCrushGauge() { m_bHasCrushGage; }
+	_bool	HasCrushGauge() { m_bHasCrushGauge; }
 
 	//ui
 	_float4x4	Get_UIPivotMatrix(ENEMY_UIPIVOT ePivot) {
@@ -140,9 +140,9 @@ protected:
 	_int m_iHP = 100;
 	_int m_iMaxHP = 100;
 
-	_int m_iCrushGage = 100;
-	_int m_iMaxCrushGage = 100;
-	_bool m_bHasCrushGage = false;
+	_int m_iCrushGauge = 100;
+	_int m_iMaxCrushGauge = 100;
+	_bool m_bHasCrushGauge = false;
 
 	//플레이어가 set해줌
 	_bool	m_bBrainCrush = false;
