@@ -135,7 +135,7 @@ void CCamSpot::AfterPhysX()
 {
 	__super::AfterPhysX();
 
-	_vector vTargetPos = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+	_vector vTargetPos = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 1.2f, 0.f, 0.f);
 	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
@@ -258,6 +258,38 @@ void CCamSpot::Reset_CamMod()
 void CCamSpot::SetUp_BoneMatrix(CModel * pModel, _fmatrix Transform)
 {
 	m_AttachMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationZ(XMConvertToRadians(-90.f)) * pModel->GetBoneMatrix("CameraPos") * Transform;
+}
+
+_bool CCamSpot::Cam_Closer(_double TimeDelta, _float fRatio, _float fLimit)
+{
+	_float fMag = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_Magnification() - (TimeDelta / fRatio);
+	fMag = max(fMag, fLimit);
+
+	static_cast<CCamera_Player*>(m_pPlayerCamera)->Set_Magnification(fMag);
+
+	if (fLimit == fMag)
+	{
+		// 상한치까지 다가갔으면 true 반환
+		return true;
+	}
+
+	return false;
+}
+
+_bool CCamSpot::Cam_Away(_double TimeDelta, _float fRatio, _float fLimit)
+{
+	_float fMag = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_Magnification() + (TimeDelta / fRatio);
+	fMag = min(fMag, fLimit);
+
+	static_cast<CCamera_Player*>(m_pPlayerCamera)->Set_Magnification(fMag);
+
+	if (fLimit == fMag)
+	{
+		// 상한치까지 다가갔으면 true 반환
+		return true;
+	}
+
+	return false;
 }
 
 void CCamSpot::Random_Shaking(_float fShakePower)

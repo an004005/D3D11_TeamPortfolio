@@ -1240,6 +1240,11 @@
     <ClInclude Include="..\public\Canvas_MouseCousor.h">
       <Filter>02.GameObjects\UI\Mouse</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BulletBuilder.h" />
+    <ClInclude Include="..\public\PlayerInfoManager.h" />
+    <ClInclude Include="..\public\Special_Container.h">
+      <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2053,6 +2058,11 @@
     </ClCompile>
     <ClCompile Include="..\private\Canvas_MouseCousor.cpp">
       <Filter>02.GameObjects\UI\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BulletBuilder.cpp" />
+    <ClCompile Include="..\private\PlayerInfoManager.cpp" />
+    <ClCompile Include="..\private\Special_Container.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

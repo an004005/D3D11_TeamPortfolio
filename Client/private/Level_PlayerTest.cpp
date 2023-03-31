@@ -55,6 +55,7 @@
 #include "Imgui_Batch.h"
 #include "SAS_Cable.h"
 #include "GameManager.h"
+#include "Imgui_CamAnimEditor.h"
 
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -73,6 +74,7 @@ HRESULT CLevel_PlayerTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_EffectBrowser::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CamAnimEditor::Create(m_pDevice, m_pContext));
 
 //	CVFX_Manager::GetInstance()->Initialize(LEVEL_PLAYERTEST);
 

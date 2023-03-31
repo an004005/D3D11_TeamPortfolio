@@ -9,7 +9,20 @@
         "Duration": 170.0,
         "TickPerSecond": 70.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Hood_Active_On",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Mask_Dissolve_On",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "Hair_Active_Off",
+                "EventTime": 95.0
+            }
+        ]
     },
     "AS_ch0100_021_AL_run_start_F": {
         "Duration": 30.0,

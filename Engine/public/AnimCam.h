@@ -94,7 +94,7 @@ public:
 
 	_bool IsFinished() const { return m_bStart == false; }
 	_bool IsAnimFinished() const { return m_pCamAnimation && m_pCamAnimation->IsFinished(); }
-	void StartCamAnim_Return(CCamAnimation* pCamAnim, CCamera* pPreCam, _float4x4 WorldMatrix, _float fStartLerpTime = 0.f, _float fEndLerpTime = 0.f);
+	void StartCamAnim_Return(CCamAnimation* pCamAnim, CCamera* pPreCam, _float4x4 WorldMatrix, _float fStartLerpTime = 0.f, _float fEndLerpTime = 0.f, _bool bRotLerp = false);
 	void StartCamAnim(CCamAnimation* pCamAnim, _float4x4 PreCamWorldMatrix, _float4x4 WorldMatrix, _float fStartLerpTime = 0.f, _float fEndLerpTime = 0.f);
 	void AddEvent(const string& strEventName, const function<void()>& Callback);
 	list<string>& GetRequestedEvents() { return m_RequestedEvents; }
