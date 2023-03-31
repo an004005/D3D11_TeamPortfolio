@@ -4,6 +4,7 @@
 #include "JsonStorage.h"
 #include "UI_Manager.h"
 
+#include "Canvas_Shop.h"
 #include "Canvas_Party.h"
 #include "Canvas_MainItem.h"
 #include "Canvas_Equipment.h"
@@ -34,12 +35,16 @@ HRESULT CCanvas_Main::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	CUI_Manager::GetInstance()->Add_Canvas(L"CCanvas_Main", this);
+
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
 
 	fill_n(m_arrCanvass, _int(MAINCANVAS_END), nullptr);
 	Add_MainCanvas();
 	m_bVisible = true;
+	
+	m_szManuText = L"파티 멤버를 변경합니다.";
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_InitializeAlpha();	// 처음에 해당 버튼에 불이 들어올 수 있도록
 
 	return S_OK;
@@ -170,6 +175,7 @@ void CCanvas_Main::KeyInput()
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
 	{
+		dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_Canvas(L"CCanvas_Shop"))->ShopUIClose();
 		m_bMainUI = !m_bMainUI;
 
 		// m_bMainUI 와 반대로 동작한다.

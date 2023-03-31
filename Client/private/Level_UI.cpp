@@ -160,7 +160,6 @@ void CLevel_UI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	CGameManager::GetInstance()->Tick(TimeDelta);
 
 }
 
@@ -695,7 +694,6 @@ CLevel_UI * CLevel_UI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pCon
 void CLevel_UI::Free()
 {
 	__super::Free();
-	CGameManager::GetInstance()->DestroyInstance();
 
 }
 

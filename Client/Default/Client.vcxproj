@@ -226,6 +226,9 @@
     <ClInclude Include="..\public\Canvas_Party.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
+    <ClInclude Include="..\public\Canvas_PurchaseKinds.h" />
+    <ClInclude Include="..\public\Canvas_PurchaseBattle.h" />
+    <ClInclude Include="..\public\Canvas_PurchaseWeapon.h" />
     <ClInclude Include="..\public\Canvas_SASInfoLeft.h" />
     <ClInclude Include="..\public\Canvas_SASInfoLeftMove.h" />
     <ClInclude Include="..\public\Canvas_SASInfoRight.h" />
@@ -234,6 +237,7 @@
     <ClInclude Include="..\public\Canvas_SASSkillMove.h" />
     <ClInclude Include="..\public\Canvas_Shop.h" />
     <ClInclude Include="..\public\Canvas_Purchase.h" />
+    <ClInclude Include="..\public\Canvas_ShopListBar.h" />
     <ClInclude Include="..\public\CapsuleLight.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
@@ -504,8 +508,12 @@
     <ClCompile Include="..\private\Canvas_MainItemKinds.cpp" />
     <ClCompile Include="..\private\Canvas_MouseCousor.cpp" />
     <ClCompile Include="..\private\Canvas_Party.cpp" />
+    <ClCompile Include="..\private\Canvas_PurchaseKinds.cpp" />
+    <ClCompile Include="..\private\Canvas_PurchaseBattle.cpp" />
+    <ClCompile Include="..\private\Canvas_PurchaseWeapon.cpp" />
     <ClCompile Include="..\private\Canvas_Shop.cpp" />
     <ClCompile Include="..\private\Canvas_Purchase.cpp" />
+    <ClCompile Include="..\private\Canvas_ShopListBar.cpp" />
     <ClCompile Include="..\private\Canvas_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp" />
     <ClCompile Include="..\private\Canvas_DriveMove.cpp" />

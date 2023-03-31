@@ -8,7 +8,7 @@ BEGIN(Client)
 class CCanvas_Purchase : public CCanvas
 {
 public:
-	enum MAINITEM { ALL, BATTLE, WEAPON, MAINITEM_END };
+	enum SHOPMENU { ALL, BATTLE, WEAPON, MAINITEM_END };
 
 protected:
 	CCanvas_Purchase(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -23,16 +23,15 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 
 private:
-	HRESULT	Add_MainCanvas();
+	HRESULT	Add_ShopCanvas();
 
 	void	Menu_Tick();
 	void	Canvas_Visible();
 
 private:
-	CCanvas* m_arrCanvass[MAINITEM::MAINITEM_END] = { false, false, false };
-	MAINITEM	m_eMainItem = { MAINITEM::ALL };
+	class CCanvas_PurchaseKinds* m_arrCanvass[SHOPMENU::MAINITEM_END] = { nullptr, nullptr, nullptr };
+	SHOPMENU	m_eShopMunu = { SHOPMENU::ALL };
 	
-	_float2		m_vPosssss = { 0.0f, 0.0f };
 
 public:
 	static CCanvas_Purchase* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

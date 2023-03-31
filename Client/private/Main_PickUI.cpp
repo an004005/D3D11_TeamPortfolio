@@ -42,6 +42,12 @@ void CMain_PickUI::Tick(_double TimeDelta)
 		m_bOnAlpha = true;
 	}
 
+	if (2 == m_iColorType)	// 무색 (Pass 4번 사용!)
+	{
+		m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		return;
+	}
+
 	CurrentPick(TimeDelta);
 }
 
@@ -51,10 +57,10 @@ void CMain_PickUI::CurrentPick(const _double & TimeDelta)
 	{
 		m_fAlpha = 0.1f;
 
-		//if (0 == m_iColorType)
-		//	m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, m_fAlpha };
-		//else if (1 == m_iColorType)
-		//	m_tParams.Float4s[0] = { 0.27f, 0.25f, 0.2f, m_fAlpha };
+		if (0 == m_iColorType)
+			m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, m_fAlpha };
+		else if (1 == m_iColorType)
+			m_tParams.Float4s[0] = { 0.27f, 0.25f, 0.2f, m_fAlpha };
 
 		return;
 	}
@@ -78,10 +84,10 @@ void CMain_PickUI::CurrentPick(const _double & TimeDelta)
 		}
 	}
 
-	//if (0 == m_iColorType)
-	//	m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, m_fAlpha };
-	//else if (1 == m_iColorType)
-	//	m_tParams.Float4s[0] = { 0.27f, 0.25f, 0.2f, m_fAlpha };
+	if (0 == m_iColorType)
+		m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, m_fAlpha };
+	else if (1 == m_iColorType)
+		m_tParams.Float4s[0] = { 0.27f, 0.25f, 0.2f, m_fAlpha };
 }
 
 CMain_PickUI * CMain_PickUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

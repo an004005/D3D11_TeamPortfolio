@@ -28,8 +28,6 @@ HRESULT CCanvas_MainItemKinds::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	//FAILED_CHECK(Initialize_ItemCanvas());
-
 	m_bVisible = false;
 	m_iPickIndex = 99;
 	m_iPrePickIndex = 99;
@@ -200,8 +198,6 @@ void CCanvas_MainItemKinds::Item_Tick()
 			if (CItem_Manager::MAINITEM::ALL == m_eMainItem || m_eMainItem == m_vecItemInfo[i].second.eType)
 				Add_ItemCanvas(i);
 		}
-
-		
 
 		if (0 == m_vecItemInfo[i].second.iCount)
 		{

@@ -214,18 +214,6 @@
     <Filter Include="02.GameObjects\UI">
       <UniqueIdentifier>{cd40877e-1d57-40a8-aa94-2c831bd55b5f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\Drive">
-      <UniqueIdentifier>{2a9015c3-ac89-4688-ba20-5af55c1b4601}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\Item">
-      <UniqueIdentifier>{46619585-dc48-4000-9f31-5617ce206aab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\PlayerInfo">
-      <UniqueIdentifier>{1288607c-59a4-4427-b040-1ed8b21a4858}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
-      <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Monster\BuddyLumi\BdLm_Controller">
       <UniqueIdentifier>{7e82e54f-b5b7-4330-be57-352521a4f639}</UniqueIdentifier>
     </Filter>
@@ -396,6 +384,9 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Main\Canvas">
       <UniqueIdentifier>{a84ad824-2ee4-49a4-8b5f-2249e5b4eaa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\________DefaultCanvas">
+      <UniqueIdentifier>{bad044ba-a491-4bf1-9026-b9d169097cf4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1247,6 +1238,18 @@
     <ClInclude Include="..\public\Canvas_Shop.h">
       <Filter>02.GameObjects\UI\Shop</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_PurchaseKinds.h">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PurchaseBattle.h">
+      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PurchaseWeapon.h">
+      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_ShopListBar.h">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2069,6 +2072,18 @@
       <Filter>02.GameObjects\UI\Shop</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_Purchase.cpp">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PurchaseKinds.cpp">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PurchaseBattle.cpp">
+      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PurchaseWeapon.cpp">
+      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_ShopListBar.cpp">
       <Filter>02.GameObjects\UI\Shop</Filter>
     </ClCompile>
   </ItemGroup>

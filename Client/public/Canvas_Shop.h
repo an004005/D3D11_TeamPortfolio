@@ -23,6 +23,9 @@ public:
 
 	virtual void	Imgui_RenderProperty() override;
 
+public:
+	void	ShopUIClose() { m_bShopUI = false; }
+
 private:
 	HRESULT	Add_MainCanvas();
 

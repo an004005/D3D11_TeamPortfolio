@@ -25,6 +25,9 @@ public:
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
 
+public:
+	void	MainUIClose() { m_bMainUI = false; }
+
 private:
 	HRESULT	Add_MainCanvas();
 

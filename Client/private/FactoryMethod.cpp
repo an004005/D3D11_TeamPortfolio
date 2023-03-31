@@ -106,6 +106,7 @@
 #include "Canvas_LeftTalk.h"
 #include "Canvas_MouseCousor.h"
 #include "Canvas_Shop.h"
+#include "Canvas_ShopListBar.h"
 
 // Default
 #include "DefaultUI.h"
@@ -654,33 +655,36 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 			CCanvas_Main::Create(pDevice, pContext))))
 			return E_FAIL;
 		/* For.Prototype_GameObject_Canvas_ItemWindow */
-		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_ItemWindow"),
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_ItemWindow"),
 			CCanvas_ItemWindow::Create(pDevice, pContext))))
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_Acquisition */
-		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_Acquisition"),
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Acquisition"),
 			CCanvas_Acquisition::Create(pDevice, pContext))))
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_LeftTalk */
-		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_LeftTalk"),
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_LeftTalk"),
 			CCanvas_LeftTalk::Create(pDevice, pContext))))
 			return E_FAIL;
 
 		/* For.Prototype_GameObject_Canvas_MouseCousor*/
-		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_MouseCousor"),
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_MouseCousor"),
 			CCanvas_MouseCousor::Create(pDevice, pContext))))
 			return E_FAIL;
 		
 		/* For.Prototype_GameObject_Canvas_Shop*/
-		if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_Shop"),
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Shop"),
 			CCanvas_Shop::Create(pDevice, pContext))))
 			return E_FAIL;
 
+		/* For.Prototype_GameObject_Canvas_ShopListBar*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_ShopListBar"),
+			CCanvas_ShopListBar::Create(pDevice, pContext))))
+			return E_FAIL;
 
-
-
+		
 	}
 
 	{

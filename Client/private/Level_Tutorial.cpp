@@ -80,7 +80,6 @@ void CLevel_Tutorial::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	CGameManager_Tutorial::GetInstance()->Tick(TimeDelta);
 
 }
 
@@ -272,5 +271,4 @@ void CLevel_Tutorial::Free()
 {
 	__super::Free();
 
-	CGameManager_Tutorial::GetInstance()->DestroyInstance();
 }

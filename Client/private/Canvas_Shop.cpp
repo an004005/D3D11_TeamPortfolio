@@ -4,6 +4,7 @@
 #include "JsonStorage.h"
 #include "UI_Manager.h"
 
+#include "Canvas_Main.h"
 #include "Canvas_Purchase.h"
 #include "Main_PickUI.h"
 #include "DefaultUI.h"
@@ -31,32 +32,36 @@ HRESULT CCanvas_Shop::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	CUI_Manager::GetInstance()->Add_Canvas(L"CCanvas_Shop", this);
+
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-		iter->second->SetVisible(true);
+		iter->second->SetVisible(false);
 
 	fill_n(m_arrCanvass, _int(SHOPCANVAS_END), nullptr);
 	Add_MainCanvas();
 	m_bVisible = true;
-	//dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_InitializeAlpha();	// 처음에 해당 버튼에 불이 들어올 수 있도록
+
+	m_szShopText = L"구입할 상품을 선택해주세요.";
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Set_InitializeAlpha();	// 처음에 해당 버튼에 불이 들어올 수 있도록
 
 	return S_OK;
 }
 
 void CCanvas_Shop::Tick(_double TimeDelta)
 {
-	//KeyInput();
+	KeyInput();
 
-	//if (false == m_bShopUI) return;
+	if (false == m_bShopUI) return;
 
 	CCanvas::Tick(TimeDelta);
 
-	//Menu_Tick();
-
+	Menu_Tick();
+	
 }
 
 void CCanvas_Shop::Late_Tick(_double TimeDelta)
 {
-	//if (false == m_bShopUI) return;
+	if (false == m_bShopUI) return;
 
 	CCanvas::Late_Tick(TimeDelta);
 
@@ -66,6 +71,21 @@ HRESULT CCanvas_Shop::Render()
 {
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
+
+	_float2 vFontSize = { 0.5f, 0.5f };
+	_float4 vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	// 상단
+	_float2 vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->GetScreenSpaceLeftTop();
+	pGameInstance->Render_Font(L"Pretendard32", L"구입", vPosition + _float2(80.0f, 19.0f), 0.f, vFontSize, vColor);
+
+	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Sale"))->GetScreenSpaceLeftTop();
+	pGameInstance->Render_Font(L"Pretendard32", L"매각", vPosition + _float2(85.0f, 20.0f), 0.f, vFontSize, vColor);
+
+	// 하단
+	vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Shop_BasicInfo"))->GetScreenSpaceLeftTop();
+	pGameInstance->Render_Font(L"Pretendard32", m_szShopText, vPosition + _float2(170.0f, 38.0f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }
@@ -89,40 +109,14 @@ HRESULT CCanvas_Shop::Add_MainCanvas()
 	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_ShopPurchase", L"Canvas_Purchase", &json);
 	m_arrCanvass[PURCHASE] = dynamic_cast<CCanvas_Purchase*>(pCanvas);
 
-	///* For.Prototype_GameObject_Canvas_MainItem*/
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_MainItem"),
-	//	CCanvas_ShopItem::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainItem.json");
-	//pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_MainItem", &json);
-	//m_arrCanvass[ITEM] = dynamic_cast<CCanvas_ShopItem*>(pCanvas);
-
-	///* For.Prototype_GameObject_Canvas_Equipment */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Equipment"),
-	//	CCanvas_Equipment::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Equipment.json");
-	//pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_Equipment", &json);
-	//m_arrCanvass[EQUIPMENT] = dynamic_cast<CCanvas_Equipment*>(pCanvas);
-
-	///* For.Prototype_GameObject_Canvas_BrainMap */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_BrainMap"),
-	//	CCanvas_BrainMap::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BrainMap.json");
-	//pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_BrainMap", &json);
-	//m_arrCanvass[BRAINMAP] = dynamic_cast<CCanvas_BrainMap*>(pCanvas);
-
 	return S_OK;
 }
 
 void CCanvas_Shop::KeyInput()
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_Z))
 	{
+		dynamic_cast<CCanvas_Main*>(CUI_Manager::GetInstance()->Find_Canvas(L"CCanvas_Main"))->MainUIClose();
 		m_bShopUI = !m_bShopUI;
 
 		// m_bShopUI 와 반대로 동작한다.
@@ -130,40 +124,35 @@ void CCanvas_Shop::KeyInput()
 			iter->second->SetVisible(m_bShopUI);
 		CUI_Manager::GetInstance()->Set_TempOff(m_bShopUI);
 
-		// MainUI 들을 끄고 켜기를 한다.
 		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bShopUI);
 	}
 }
 
 void CCanvas_Shop::Menu_Tick()
 {
-	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Get_OnButton())
-	{
-		m_eMainCanvas = PURCHASE;
-		m_szShopText = L"구입할 상품을 선택해주세요.";
+	//if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Get_OnButton())
+	//{
+	//	m_eMainCanvas = PURCHASE;
+	//	m_szShopText = L"구입할 상품을 선택해주세요.";
 
-		Canvas_Visible();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_OnButton();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Set_OnAlpha();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnAlpha();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Set_OnAlpha();
-		Find_ChildUI(L"Main_MenuPick")->Set_Position(Find_ChildUI(L"MainButton_Party")->Get_Position());
+	//	Canvas_Visible();
+	//	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Set_OnButton();
+	//	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Sale"))->Set_OnAlpha();
+	//	Find_ChildUI(L"Shop_MenuPick")->Set_Position(Find_ChildUI(L"ShopButton_Purchase")->Get_Position());
 
-	}
+	//}
 
-	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Get_OnButton())
-	{
-		m_eMainCanvas = SALE;
-		m_szShopText = L"매각할 상품을 선택해주세요";
+	//if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Sale"))->Get_OnButton())
+	//{
+	//	m_eMainCanvas = SALE;
+	//	m_szShopText = L"매각할 상품을 선택해주세요";
 
-		Canvas_Visible();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Itme"))->Set_OnButton();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_OnAlpha();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Equipment"))->Set_OnAlpha();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_BrainMap"))->Set_OnAlpha();
-		Find_ChildUI(L"Main_MenuPick")->Set_Position(Find_ChildUI(L"MainButton_Itme")->Get_Position());
+	//	Canvas_Visible();
+	//	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Sale"))->Set_OnButton();
+	//	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Set_OnAlpha();
+	//	Find_ChildUI(L"Shop_MenuPick")->Set_Position(Find_ChildUI(L"ShopButton_Sale")->Get_Position());
 
-	}
+	//}
 }
 
 void CCanvas_Shop::Canvas_Visible()
