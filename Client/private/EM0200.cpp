@@ -237,6 +237,13 @@ void CEM0200::SetUpAnimationEvent()
 		m_fGravity = 20.f;
 		m_fYSpeed = 0.f;
 	});
+
+
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0200DeadFlower")
+				->Start_NoAttach(this, false);
+		});
 }
 
 void CEM0200::SetUpFSM()
@@ -637,6 +644,31 @@ void CEM0200::Imgui_RenderProperty()
 	{
 		m_pASM->Imgui_RenderState();
 	}
+}
+
+void CEM0200::SetUpUI()
+{
+	//HP UI
+	_float4x4 UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.241f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[ENEMY_INFOBAR] = UI_PivotMatrix;
+
+	//FindEye
+	UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		-0.481f, 0.945f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[ENEMY_FINDEYES] = UI_PivotMatrix;
+
+
 }
 
 void CEM0200::AfterPhysX()

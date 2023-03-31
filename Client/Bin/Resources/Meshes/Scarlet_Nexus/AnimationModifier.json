@@ -3395,6 +3395,17 @@
             }
         ]
     },
+    "AS_em0100_474_AL_dead_down02": {
+        "Duration": 138.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
+            }
+        ]
+    },
     "AS_em0110_206_AL_atk_b2_start": {
         "Duration": 117.0,
         "TickPerSecond": 35.0,
@@ -3767,6 +3778,10 @@
             {
                 "EventName": "Death_Effect_Create",
                 "EventTime": 25.0
+            },
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
             }
         ]
     },
@@ -4007,7 +4022,12 @@
         "Duration": 70.0,
         "TickPerSecond": 37.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 37.0
+            }
+        ]
     },
     "AS_em0300_415_AL_damage_m_F": {
         "Duration": 240.0,
@@ -4170,20 +4190,8 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "Swing_Start",
-                "EventTime": 149.0
-            },
-            {
                 "EventName": "Swing_End",
                 "EventTime": 184.0
-            },
-            {
-                "EventName": "SwingEff_Start",
-                "EventTime": 153.0
-            },
-            {
-                "EventName": "SwingEff_End",
-                "EventTime": 190.0
             },
             {
                 "EventName": "mon_1_attack_voice",
@@ -4192,6 +4200,10 @@
             {
                 "EventName": "mon_1_attack_whoosh",
                 "EventTime": 163.0
+            },
+            {
+                "EventName": "Swing_Start",
+                "EventTime": 165.0
             }
         ]
     },
@@ -4290,6 +4302,10 @@
             {
                 "EventName": "mon_1_fx_death",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
             }
         ]
     },
@@ -4513,8 +4529,8 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "mon_2_fx_death",
-                "EventTime": 0.0
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
             }
         ]
     },
@@ -4588,19 +4604,19 @@
     },
     "AS_em0700_120_AL_escape": {
         "Duration": 75.0,
-        "TickPerSecond": 35.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_121_AL_randommove_L": {
         "Duration": 120.0,
-        "TickPerSecond": 30.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_122_AL_randommove_R": {
         "Duration": 120.0,
-        "TickPerSecond": 30.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -4712,7 +4728,12 @@
         "Duration": 160.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em0700_425_AL_down_start": {
         "Duration": 125.0,
@@ -4760,6 +4781,17 @@
             {
                 "EventName": "AirDamageReset",
                 "EventTime": 50.0
+            }
+        ]
+    },
+    "AS_em0700_474_AL_dead_down02": {
+        "Duration": 177.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
             }
         ]
     },
@@ -5058,7 +5090,12 @@
         "Duration": 130.0,
         "TickPerSecond": 52.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em0800_425_AL_down_start": {
         "Duration": 97.0,
@@ -5194,6 +5231,17 @@
         "TickPerSecond": 32.0,
         "bLooping": false,
         "vecEvent": []
+    },
+    "AS_em1100_424_AL_dead_down": {
+        "Duration": 166.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em1120_211_AL_atk_a4_sliding_end": {
         "Duration": 180.0,

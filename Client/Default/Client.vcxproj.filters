@@ -19,20 +19,8 @@
     <Filter Include="01.Levels\02.GamePlay">
       <UniqueIdentifier>{22df0cdb-5b80-4341-b095-9cf9d96f954c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects">
-      <UniqueIdentifier>{e41e8875-419b-4b63-9229-2273345ad05a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\BackGround">
-      <UniqueIdentifier>{4802a01c-abcc-4482-81b4-37cfe572eb1d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.ShaderFiles">
       <UniqueIdentifier>{9a0f34b9-2838-4e5d-87a4-eb8bf6420099}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Terrain">
-      <UniqueIdentifier>{f3c0df30-d83d-4caf-8604-41033dbb6dda}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Camera">
-      <UniqueIdentifier>{b9ad9fc5-4efa-4624-ba10-b57dc2aed216}</UniqueIdentifier>
     </Filter>
     <Filter Include="60.Imgui_Tool">
       <UniqueIdentifier>{85ff1459-425a-481b-94c7-219365c9560b}</UniqueIdentifier>
@@ -43,26 +31,14 @@
     <Filter Include="01.Levels\11.MapTool">
       <UniqueIdentifier>{84081658-bca1-4e23-b241-c3da9eb7f47e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Player">
-      <UniqueIdentifier>{e087c335-2441-4c1d-a430-11f6b36cb587}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\12.ModelConverter">
       <UniqueIdentifier>{d4f8c3f8-ee01-487f-97ab-2e7eeca793f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Terrain\Floor">
-      <UniqueIdentifier>{457b7114-12fd-419a-9caf-a4d1e41fe231}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.Component">
       <UniqueIdentifier>{56db190c-ebe8-448a-903c-253661590352}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.Component\01.Controller">
       <UniqueIdentifier>{4baa4870-6b25-4339-bab6-c90b2f38585d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Utils">
-      <UniqueIdentifier>{e43a5553-63b8-4a96-b4ce-5200866e65c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Map">
-      <UniqueIdentifier>{077f01dd-6710-47b5-8696-d247d8c97324}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\13.AnimationModifier">
       <UniqueIdentifier>{e61324b3-b73d-4519-8aa0-641457bc1944}</UniqueIdentifier>
@@ -106,59 +82,14 @@
     <Filter Include="01.Levels\15. UITool">
       <UniqueIdentifier>{5357e7ff-329d-4daf-8dae-a5f0aa71bc95}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Camera\CamSpot">
-      <UniqueIdentifier>{b280be19-5c98-4da2-b901-ddc4e17635f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster">
-      <UniqueIdentifier>{2dcdfb98-a83e-4081-837c-3a6545dabb97}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\50.MonsterTest">
       <UniqueIdentifier>{56794968-d655-499b-a8e5-20af1ee1495e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\FlowerLeg">
-      <UniqueIdentifier>{3386faa1-76ca-4e3d-88fc-b10d3335d21c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\BuddyLumi">
-      <UniqueIdentifier>{e601f17e-3211-4b5c-9124-ad399b6dceac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\BuddyLumi\BdLm_AnimInstance">
-      <UniqueIdentifier>{d8041f1a-6290-470e-af61-3a587d8fc4c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_AnimInstance">
-      <UniqueIdentifier>{af66fe60-49a3-4fbb-ad06-68cc0dec429b}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\02.GamePlay\01.Tutorial">
       <UniqueIdentifier>{0ce87f0a-cfa9-4fa6-8ec1-62c4bf61ba72}</UniqueIdentifier>
     </Filter>
     <Filter Include="96.Test">
       <UniqueIdentifier>{057aa277-d73a-4379-bf1d-ed33bde7fe89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Weapon">
-      <UniqueIdentifier>{5c27df65-18ab-49b1-bd63-62f0d992e42f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Weapon\wp0190">
-      <UniqueIdentifier>{556fd684-ed88-4908-bb68-cfefb092763f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\Drive">
-      <UniqueIdentifier>{2a9015c3-ac89-4688-ba20-5af55c1b4601}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\Item">
-      <UniqueIdentifier>{46619585-dc48-4000-9f31-5617ce206aab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\PlayerInfo">
-      <UniqueIdentifier>{1288607c-59a4-4427-b040-1ed8b21a4858}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
-      <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\SkummyPandou">
-      <UniqueIdentifier>{77a8119b-8713-49c4-b0ae-773fc0c8cd4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance">
-      <UniqueIdentifier>{8ab2e832-9040-4d96-a44d-460f9f302254}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\TestMonster%28Fix%29">
-      <UniqueIdentifier>{745e34b2-083b-4b07-a6e4-087ec47d99ea}</UniqueIdentifier>
     </Filter>
     <Filter Include="VFX\Particle">
       <UniqueIdentifier>{a079757b-66b7-47bb-8ebb-83898358c7aa}</UniqueIdentifier>
@@ -178,15 +109,6 @@
     <Filter Include="97.ShaderFiles\PBR">
       <UniqueIdentifier>{0c8fe263-8aae-429a-84d4-56b5c393fd83}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29">
-      <UniqueIdentifier>{f32c4093-e8d8-4c15-b7d1-2e0c14e0a683}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance">
-      <UniqueIdentifier>{640f0a16-08b5-491a-9462-b102e9dcaac2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Map\MapObject">
-      <UniqueIdentifier>{13c3e0df-d901-4b13-a7e5-d6ac024d79f5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.ShaderFiles\PostProcess\Distortion">
       <UniqueIdentifier>{a2654f95-9aaa-4a83-a0f1-4cf87b41901b}</UniqueIdentifier>
     </Filter>
@@ -202,8 +124,131 @@
     <Filter Include="01.Levels\16.BatchTool">
       <UniqueIdentifier>{ead14635-4788-4854-851a-2a087c3173ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Batch">
-      <UniqueIdentifier>{ed211422-fc89-49fa-908b-ea3041994ccf}</UniqueIdentifier>
+    <Filter Include="97.ShaderFiles\PostProcess\HitDecal">
+      <UniqueIdentifier>{eb2d8b39-fe98-4867-923b-0ed4f62afc11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\Drive">
+      <UniqueIdentifier>{2a9015c3-ac89-4688-ba20-5af55c1b4601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\Item">
+      <UniqueIdentifier>{46619585-dc48-4000-9f31-5617ce206aab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\PlayerInfo">
+      <UniqueIdentifier>{1288607c-59a4-4427-b040-1ed8b21a4858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
+      <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FactoryMethod">
+      <UniqueIdentifier>{c339909b-d428-41f4-9c52-dbbf78dbea31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Trigger">
+      <UniqueIdentifier>{de696a83-1b14-4455-81e6-aee65fc00158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\02. Stage1">
+      <UniqueIdentifier>{1e272184-8887-431f-937d-de39fd6eeb16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\17.KineticEditor">
+      <UniqueIdentifier>{cf49c083-b25e-424b-aca3-6c741d536048}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\Particle\ParticleGroup">
+      <UniqueIdentifier>{f465b88f-dbb3-4679-a8d4-76b67ddacdbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="30. GameManager">
+      <UniqueIdentifier>{cb57ec25-6234-4298-9582-1b732464e268}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.Component\01.Controller\AIController">
+      <UniqueIdentifier>{04a4534d-be99-4559-897f-94efed7b0e98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects">
+      <UniqueIdentifier>{e41e8875-419b-4b63-9229-2273345ad05a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\BackGround">
+      <UniqueIdentifier>{4802a01c-abcc-4482-81b4-37cfe572eb1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Terrain">
+      <UniqueIdentifier>{f3c0df30-d83d-4caf-8604-41033dbb6dda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Terrain\Floor">
+      <UniqueIdentifier>{457b7114-12fd-419a-9caf-a4d1e41fe231}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera">
+      <UniqueIdentifier>{b9ad9fc5-4efa-4624-ba10-b57dc2aed216}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\CamSpot">
+      <UniqueIdentifier>{b280be19-5c98-4da2-b901-ddc4e17635f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Player">
+      <UniqueIdentifier>{e087c335-2441-4c1d-a430-11f6b36cb587}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Player\BaseAnimInstance">
+      <UniqueIdentifier>{f7c4a316-58ff-44eb-bc6b-94195c17f0cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Utils">
+      <UniqueIdentifier>{e43a5553-63b8-4a96-b4ce-5200866e65c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map">
+      <UniqueIdentifier>{077f01dd-6710-47b5-8696-d247d8c97324}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map\MapObject">
+      <UniqueIdentifier>{13c3e0df-d901-4b13-a7e5-d6ac024d79f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map\Batch">
+      <UniqueIdentifier>{d938f9c6-37d2-4792-8bf7-eb19360e9644}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map\Trigger">
+      <UniqueIdentifier>{249a436b-b980-4085-8ad1-f1abe2dc7c87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster">
+      <UniqueIdentifier>{2dcdfb98-a83e-4081-837c-3a6545dabb97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg">
+      <UniqueIdentifier>{3386faa1-76ca-4e3d-88fc-b10d3335d21c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_AnimInstance">
+      <UniqueIdentifier>{af66fe60-49a3-4fbb-ad06-68cc0dec429b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Controller">
+      <UniqueIdentifier>{4bc20954-31cf-4cfc-b16b-78107c6eb677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29">
+      <UniqueIdentifier>{6fe012a7-b825-4a73-bf5c-a86e9368c9a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\Controller">
+      <UniqueIdentifier>{a9b5e39b-f1ab-4eea-8514-1ba7a5fc21fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM">
+      <UniqueIdentifier>{889711dc-b345-4bdf-9c49-c3181c53954d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BuddyLumi">
+      <UniqueIdentifier>{e601f17e-3211-4b5c-9124-ad399b6dceac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BuddyLumi\BdLm_AnimInstance">
+      <UniqueIdentifier>{d8041f1a-6290-470e-af61-3a587d8fc4c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BuddyLumi\BdLm_Controller">
+      <UniqueIdentifier>{7e82e54f-b5b7-4330-be57-352521a4f639}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPandou">
+      <UniqueIdentifier>{77a8119b-8713-49c4-b0ae-773fc0c8cd4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPandou\SkPd_AnimInstance">
+      <UniqueIdentifier>{8ab2e832-9040-4d96-a44d-460f9f302254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\SkummyPandou\SkPd_Controller">
+      <UniqueIdentifier>{b3a20596-311c-4cc2-9a39-7c8e58f2e12f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\TestMonster%28Fix%29">
+      <UniqueIdentifier>{745e34b2-083b-4b07-a6e4-087ec47d99ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29">
+      <UniqueIdentifier>{f32c4093-e8d8-4c15-b7d1-2e0c14e0a683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_AnimInstance">
+      <UniqueIdentifier>{640f0a16-08b5-491a-9462-b102e9dcaac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller">
+      <UniqueIdentifier>{9f08bacd-e670-43c4-8819-f5112c46f927}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Monster\boss1">
       <UniqueIdentifier>{44a3e289-3391-45e6-b735-a5ae92424cd7}</UniqueIdentifier>
@@ -211,17 +256,20 @@
     <Filter Include="02.GameObjects\Monster\boss1\Boss1_Animinstance">
       <UniqueIdentifier>{107db123-e61b-466e-8716-8300f9f27d16}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Player\BaseAnimInstance">
-      <UniqueIdentifier>{f7c4a316-58ff-44eb-bc6b-94195c17f0cd}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\Monster\boss1\Boss1_Controller">
+      <UniqueIdentifier>{b2e59d02-3ca6-4756-83c6-6ac671cdf04c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.ShaderFiles\PostProcess\HitDecal">
-      <UniqueIdentifier>{eb2d8b39-fe98-4867-923b-0ed4f62afc11}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\Monster\SkummyPool">
+      <UniqueIdentifier>{9efaf15f-1d25-4b75-a3ce-86c59c3420bd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Controller">
-      <UniqueIdentifier>{4bc20954-31cf-4cfc-b16b-78107c6eb677}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\Weapon">
+      <UniqueIdentifier>{5c27df65-18ab-49b1-bd63-62f0d992e42f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster\SkummyPandou\SkPd_Controller">
-      <UniqueIdentifier>{b3a20596-311c-4cc2-9a39-7c8e58f2e12f}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\Weapon\wp0190">
+      <UniqueIdentifier>{556fd684-ed88-4908-bb68-cfefb092763f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Batch">
+      <UniqueIdentifier>{ed211422-fc89-49fa-908b-ea3041994ccf}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI">
       <UniqueIdentifier>{cd40877e-1d57-40a8-aa94-2c831bd55b5f}</UniqueIdentifier>
@@ -240,9 +288,6 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
       <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\BuddyLumi\BdLm_Controller">
-      <UniqueIdentifier>{7e82e54f-b5b7-4330-be57-352521a4f639}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\Front_UI\SASInfoLeft">
       <UniqueIdentifier>{ea0a820a-4dc8-4972-9330-a21a848385ce}</UniqueIdentifier>
@@ -292,6 +337,15 @@
     <Filter Include="02.GameObjects\UI\Main_UI\Canvas">
       <UniqueIdentifier>{a84ad824-2ee4-49a4-8b5f-2249e5b4eaa9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\Short">
+      <UniqueIdentifier>{13c84b28-6101-40b9-8629-d92de65f760f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Tutorial">
+      <UniqueIdentifier>{abb2352e-02f6-4b3c-8379-d3a28a4803fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Mouse">
+      <UniqueIdentifier>{f954c126-8785-41df-817d-93c9c8bf510b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Enemy">
       <UniqueIdentifier>{613f3e82-7d40-451d-bc3d-3f67636096c3}</UniqueIdentifier>
     </Filter>
@@ -304,11 +358,14 @@
     <Filter Include="02.GameObjects\Enemy\EM0650">
       <UniqueIdentifier>{773075e2-bc28-4393-8e82-36474691f893}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster\SkummyPool">
-      <UniqueIdentifier>{9efaf15f-1d25-4b75-a3ce-86c59c3420bd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Enemy\EMBullet">
       <UniqueIdentifier>{a944af05-3a1b-4f20-a2a8-a850121955b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMBullet\RedBullet">
+      <UniqueIdentifier>{2a57c407-e349-4fd8-99f2-8e508b157e3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMBullet\OilBullet">
+      <UniqueIdentifier>{7d98e4ff-3ec3-41c0-b7b6-9a67b3d0b012}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Enemy\EM0400">
       <UniqueIdentifier>{aedd1f3b-1e80-44dc-abe1-9bce70899337}</UniqueIdentifier>
@@ -319,32 +376,14 @@
     <Filter Include="02.GameObjects\Enemy\EM0220">
       <UniqueIdentifier>{43cb5a1e-088b-403e-b14e-1305bb87c088}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Enemy\EM0110">
-      <UniqueIdentifier>{b40f83b7-220e-428f-929f-0ff0c446fd92}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\SpecialObject">
-      <UniqueIdentifier>{c1e6af62-d5ed-4e86-bb32-69cdbc587c23}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\SpecialObject\Special_Train">
-      <UniqueIdentifier>{e5298caa-d4e0-4fcc-95d9-9424cdefe837}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Map\Batch">
-      <UniqueIdentifier>{d938f9c6-37d2-4792-8bf7-eb19360e9644}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Map\Trigger">
-      <UniqueIdentifier>{249a436b-b980-4085-8ad1-f1abe2dc7c87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\SpecialObject\Special_TelephonePole">
-      <UniqueIdentifier>{934d218b-129b-4ba9-95b6-835e98c0e6c2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Enemy\EM0220\EM0221">
       <UniqueIdentifier>{54a5507c-ab97-49a1-9ecd-483f0f313dde}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0110">
+      <UniqueIdentifier>{b40f83b7-220e-428f-929f-0ff0c446fd92}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Enemy\EM0320">
       <UniqueIdentifier>{c47b4ee9-693a-4fcc-b215-a3fede0dd4ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\SpecialObject\Special_HBeam">
-      <UniqueIdentifier>{3d3141ae-cb50-4e98-be7f-6a2ccd5a7c65}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Enemy\EM0800">
       <UniqueIdentifier>{ea366a02-5446-4163-9037-e8e37c831263}</UniqueIdentifier>
@@ -355,23 +394,20 @@
     <Filter Include="02.GameObjects\Enemy\EM1200">
       <UniqueIdentifier>{61165ce0-fb67-4415-a32c-0df79482337c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Enemy\EM750">
+    <Filter Include="02.GameObjects\Enemy\EM0750">
       <UniqueIdentifier>{30894673-a85c-4561-a24d-c88173551c33}</UniqueIdentifier>
     </Filter>
-    <Filter Include="30. GameManager">
-      <UniqueIdentifier>{cb57ec25-6234-4298-9582-1b732464e268}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\SpecialObject">
+      <UniqueIdentifier>{c1e6af62-d5ed-4e86-bb32-69cdbc587c23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.Component\01.Controller\AIController">
-      <UniqueIdentifier>{04a4534d-be99-4559-897f-94efed7b0e98}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\SpecialObject\Special_Train">
+      <UniqueIdentifier>{e5298caa-d4e0-4fcc-95d9-9424cdefe837}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Enemy\EMBullet\RedBullet">
-      <UniqueIdentifier>{2a57c407-e349-4fd8-99f2-8e508b157e3d}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\SpecialObject\Special_TelephonePole">
+      <UniqueIdentifier>{934d218b-129b-4ba9-95b6-835e98c0e6c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Enemy\EMBullet\OilBullet">
-      <UniqueIdentifier>{7d98e4ff-3ec3-41c0-b7b6-9a67b3d0b012}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Enemy\EMBullet\ElectricBullet">
-      <UniqueIdentifier>{53e11f2c-66d8-4166-948c-aeb499f89c39}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\SpecialObject\Special_HBeam">
+      <UniqueIdentifier>{3d3141ae-cb50-4e98-be7f-6a2ccd5a7c65}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\SpecialObject\Special_TankLorry">
       <UniqueIdentifier>{b12936c4-bc60-410c-9473-2decf22ba875}</UniqueIdentifier>
@@ -1077,13 +1113,13 @@
       <Filter>02.GameObjects\Enemy\EM1100</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0750_Controller.h">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0750.h">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0750_AnimInstance.h">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Special_HBeam_Bundle.h">
       <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>
@@ -1898,13 +1934,13 @@
       <Filter>02.GameObjects\Enemy\EM1100</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0750.cpp">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0750_AnimInstance.cpp">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0750_Controller.cpp">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_KineticEditor.cpp">
       <Filter>01.Levels\17.KineticEditor</Filter>

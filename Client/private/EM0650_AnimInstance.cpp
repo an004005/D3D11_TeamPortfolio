@@ -2,6 +2,7 @@
 #include "EM0650_AnimInstance.h"
 #include "Model.h"
 #include "EM0650.h"
+#include "VFX_Manager.h"
 
 HRESULT CEM0650_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject)
 {
@@ -76,6 +77,11 @@ void CEM0650_AnimInstance::UpdateTargetState(_double TimeDelta)
 	CEM0650* pEM0650 = static_cast<CEM0650*>(m_pTargetObject);
 
 	m_bMove = pEM0650->IsMove();
+
+	//if (m_bMove == true)
+	//{
+	//	CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, L"em0650_Move_Decal", PLAYERTEST_LAYER_MONSTER)->Start_NoAttach(pEM0650, true);
+	//}
 
 	m_vMoveAxis = pEM0650->GetMoveAxis();
 	m_eMoveAxis = CClientUtils::MoveAxisToBaseEnum(m_vMoveAxis);
