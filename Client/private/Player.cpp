@@ -28,8 +28,11 @@
 #include "Material.h"
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
+
 #include "MonsterLockonUI.h"
 #include "MonsterHpUI.h"
+#include "MonsterShildUI.h"
+
 #include "NoticeNeonUI.h"
 #include "JsonLib.h"
 #include "ImguiUtils.h"
@@ -1441,6 +1444,7 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_SuperSpeedTrail", L"SuperSpeedTrail", (CComponent**)&m_pTrail));
 	m_pTrail->SetOwnerModel(m_pModel);
 	//m_pTrail->SetActive(true);
+
 
 	return S_OK;
 }
@@ -7216,14 +7220,14 @@ void CPlayer::Update_TargetUI()
 	{
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-
 		//¿ø·¡ Å¸°ÙÀÌ ¾ø´Ù°¡ »ý±ä °æ¿ì
 		if (m_pSettedTarget == nullptr && pTarget != nullptr)
 		{
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(pTarget);
-				
+			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->Get_UIPivotMatrix(ENEMY_FINDEYES));
+
 		}
 
 
@@ -7232,7 +7236,6 @@ void CPlayer::Update_TargetUI()
 		{
 			m_pUI_LockOn->SetDelete();
 		}
-
 
 		else if (m_pSettedTarget != nullptr && pTarget != nullptr)
 		{
@@ -7246,39 +7249,58 @@ void CPlayer::Update_TargetUI()
 
 		//info bar ¼³Á¤
 		if (pTarget != nullptr)
-			Create_TargetInfoBar(pTarget);
+			pTarget->Create_InfoUI();
+
+		//Create_TargetInfoBar(pTarget);
 
 		m_pSettedTarget = pTarget;
 	}
 
 }
 
-void CPlayer::Create_TargetInfoBar(CGameObject* pTarget)
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
-	CEnemy* pEnemy = dynamic_cast<CEnemy*>(pTarget);
-	if (pEnemy == nullptr) return;
-	
-	//ëª¬ìŠ¤??infoë°”ê? ?†ìœ¼ë©??ì„±
-	if (pEnemy->GetHasName() == true)
-		return;
-
-	CMonsterHpUI* pUI_HP = nullptr;
-	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
-
-	assert(pUI_HP != nullptr);
-	pUI_HP->Set_Owner(pTarget);
-
-	_float4x4 PivotMatrix = pEnemy->Get_UIPivotMatrix(ENEMY_INFOBAR);
-	pUI_HP->SetPivotMatrix(PivotMatrix);
-
-	_int iLevel = pEnemy->Get_EnemyLevel();
-	_int iName = pEnemy->Get_EnemyName();
-	pUI_HP->Set_MonsterInfo(iLevel, iName);
-
-	pEnemy->Set_HasName();
-}
+//void CPlayer::Create_TargetInfoBar(CGameObject* pTarget)
+//{
+//	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+//
+//	CEnemy* pEnemy = dynamic_cast<CEnemy*>(pTarget);
+//	if (pEnemy == nullptr) return;
+//	
+//	if (pEnemy->GetHasName() == true)
+//		return;
+//
+//	if (pEnemy->HasCrushGauge() == true)
+//	{
+//		CMonsterShildUI* pUI_Shild = nullptr;
+//		pUI_Shild = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterShield")));
+//
+//		assert(pUI_Shild != nullptr);
+//		pUI_Shild->Set_Owner(pTarget);
+//
+//		_float4x4 PivotMatrix = pEnemy->Get_UIPivotMatrix(ENEMY_INFOBAR);
+//		pUI_Shild->SetPivotMatrix(PivotMatrix);
+//
+//		_int iLevel = pEnemy->Get_EnemyLevel();
+//		_int iName = pEnemy->Get_EnemyName();
+//		pUI_Shild->Set_MonsterInfo(iLevel, iName);
+//	}
+//	else
+//	{
+//		CMonsterHpUI* pUI_HP = nullptr;
+//		pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
+//
+//		assert(pUI_HP != nullptr);
+//		pUI_HP->Set_Owner(pTarget);
+//
+//		_float4x4 PivotMatrix = pEnemy->Get_UIPivotMatrix(ENEMY_INFOBAR);
+//		pUI_HP->SetPivotMatrix(PivotMatrix);
+//
+//		_int iLevel = pEnemy->Get_EnemyLevel();
+//		_int iName = pEnemy->Get_EnemyName();
+//		pUI_HP->Set_MonsterInfo(iLevel, iName);
+//	}
+//	
+//	pEnemy->Set_HasName();
+//}
 
 void CPlayer::NetualChecker(_double TimeDelta)
 {

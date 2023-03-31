@@ -265,7 +265,7 @@ void CEffectGroup::Start_NoAttachPivot(CGameObject* pOwner, _float4x4 PivotMatri
 		Set_Transform(SocketMatrix);
 	}
 
-
+	 
 	m_Timeline.PlayFromStart();
 }
 

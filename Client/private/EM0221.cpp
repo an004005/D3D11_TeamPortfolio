@@ -93,7 +93,7 @@ void CEM0221::Set_Fall()
 
 	//¶³¾îÁö´Â ÀÌÆåÆ® »ý¼º
 	m_pFallEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0220_Boom_Explode");
-	m_pFallEffect->Start_NoAttach(this, false);
+	m_pFallEffect->Start_NoAttach(this, true);
 	Safe_AddRef(m_pFallEffect);
 }
 

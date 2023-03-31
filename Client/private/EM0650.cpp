@@ -6,6 +6,7 @@
 #include "EM0650_AnimInstance.h"
 #include "EM0650_Controller.h"
 #include "BulletBuilder.h"
+
 CEM0650::CEM0650(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -37,7 +38,7 @@ HRESULT CEM0650::Initialize(void * pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0650;
-	m_bHasCrushGage = true;
+	m_bHasCrushGage = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_pTransformCom->SetSpeed(2.f);
 
@@ -117,6 +118,12 @@ void CEM0650::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 
 
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+	{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650DeadFlower")
+				->Start_NoAttach(this , false);
+	});
+
 	//m_pModelCom->Add_EventCaller("mon_2_attack_ready", [this] {m_SoundStore.PlaySound("mon_2_attack_ready", m_pTransformCom); });
 	//m_pModelCom->Add_EventCaller("mon_2_attack_shoot", [this] {m_SoundStore.PlaySound("mon_2_attack_shoot", m_pTransformCom); });
 	//m_pModelCom->Add_EventCaller("mon_2_fx_death", [this] {m_SoundStore.PlaySound("mon_2_fx_death", m_pTransformCom); });
@@ -142,9 +149,14 @@ void CEM0650::SetUpFSM()
 			.AddTransition("Idle to Hit_ToAir", "Hit_ToAir")
 				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_TO_AIR; })
 			.AddTransition("Idle to Hit_Mid_Heavy", "Hit_Mid_Heavy")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_MIDDLE; })
+				.Predicator([this] { return
+					m_eCurAttackType == EAttackType::ATK_HEAVY
+					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
 			.AddTransition("Idle to Hit_Light", "Hit_Light")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_LIGHT; })
+				.Predicator([this] { return
+					m_eCurAttackType == EAttackType::ATK_LIGHT
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP; })
 
 			.AddTransition("Idle to Attack_Shot", "Attack_Shot")
 				.Predicator([this] { return m_eInput == CController::MOUSE_LB; })
@@ -159,7 +171,8 @@ void CEM0650::SetUpFSM()
 			})
 			.Tick([this](_double)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_LIGHT)
+				if (m_eCurAttackType == EAttackType::ATK_LIGHT
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP)
 				{
 					Play_LightHitAnim();
 				}
@@ -167,8 +180,11 @@ void CEM0650::SetUpFSM()
 			.AddTransition("Hit_Light to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f)
-						|| (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
+					return m_bDead
+					|| m_pASM->isSocketPassby("FullBody", 0.95f)
+					|| (m_eCurAttackType != EAttackType::ATK_LIGHT
+						&& m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
+						&& m_eCurAttackType != EAttackType::ATK_END);
 				})
 
 
@@ -176,19 +192,33 @@ void CEM0650::SetUpFSM()
 			.OnStart([this]
 			{
 				Play_MidHitAnim();
+				HeavyAttackPushStart();
 			})
-			.Tick([this](_double)
+			.Tick([this](_double TimeDelta)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_MIDDLE)
-				{
-					Play_MidHitAnim();
-				}
+					if (m_eCurAttackType == EAttackType::ATK_HEAVY
+						|| m_eCurAttackType == EAttackType::ATK_MIDDLE
+						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
+					{
+						HeavyAttackPushStart();
+						Play_MidHitAnim();
+					}
+
+					_float fPower;
+					if (m_HeavyAttackPushTimeline.Tick(TimeDelta, fPower))
+					{
+						_float3 vVelocity = { m_vPushVelocity.x, m_vPushVelocity.y, m_vPushVelocity.z };
+						m_pTransformCom->MoveVelocity(TimeDelta, vVelocity * fPower);
+						//m_pTransformCom->MoveVelocity(TimeDelta, m_vPushVelocity * fPower);
+					} 
 			})
 			.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f)
-						|| m_eCurAttackType == EAttackType::ATK_TO_AIR;
+						return m_bDead
+							|| m_pASM->isSocketPassby("FullBody", 0.95f)
+							|| m_eCurAttackType == EAttackType::ATK_TO_AIR
+							|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
 				})
 	
 		.AddState("Hit_ToAir")
@@ -202,7 +232,11 @@ void CEM0650::SetUpFSM()
 			{
 			// 공중 추가타로 살짝 올라가는 애님
 				m_bHitAir = true;
-				if (m_eCurAttackType != EAttackType::ATK_END)
+				if (m_bAirToDown)
+				{
+					m_fYSpeed = -20.f;
+				}
+				else if (m_eCurAttackType != EAttackType::ATK_END)
 				{
 					m_pASM->InputAnimSocketOne("FullBody", "AS_em0600_455_AL_rise_start");
 				}
@@ -248,6 +282,30 @@ void CEM0650::SetUpFSM()
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 		.Build();
+}
+
+void CEM0650::SetUpUI()
+{
+	//HP UI
+
+	_float4x4 UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.241f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[ENEMY_INFOBAR] = UI_PivotMatrix;
+
+	//FindEye
+	UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.724f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[ENEMY_FINDEYES] = UI_PivotMatrix;
 }
 
 void CEM0650::BeginTick()
@@ -316,6 +374,12 @@ void CEM0650::Imgui_RenderProperty()
 	}
 
 	m_pFSM->Imgui_RenderProperty();
+
+	if (ImGui::Button("Create_Effect"))
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650DeadFlower")
+			->Start_Attach(this, "Target",false);
+	}
 }
 
 _bool CEM0650::IsPlayingSocket() const
@@ -379,6 +443,19 @@ void CEM0650::Create_Bullet()
 		.Build();
 }
 
+void CEM0650::HeavyAttackPushStart()
+{
+	if (m_eCurAttackType == EAttackType::ATK_MIDDLE || m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
+	{
+		m_HeavyAttackPushTimeline.PlayFromStart();
+		m_vPushVelocity = CClientUtils::GetDirFromAxis(m_eHitFrom);
+		m_vPushVelocity *= -4.f; // 공격 온 방향의 반대로 이동
+
+		const _float fYaw = m_pTransformCom->GetYaw_Radian();
+		m_vPushVelocity = XMVector3TransformNormal(m_vPushVelocity, XMMatrixRotationY(fYaw));
+	}
+}
+
 
 CEM0650 * CEM0650::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
@@ -409,5 +486,5 @@ void CEM0650::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-	Safe_Release(m_pRange);
+
 }

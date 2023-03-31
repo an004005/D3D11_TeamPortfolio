@@ -150,7 +150,11 @@ void CEM0210::SetUpAnimationEvent()
 		m_bAttack = false;
 	});
 
-
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0220DeadFlower")
+				->Start_NoAttach(this, false);
+		});
 }
 
 void CEM0210::SetUpFSM()
@@ -182,9 +186,14 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Idle to Hit_ToAir", "Hit_ToAir")
 				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_TO_AIR; })
 			.AddTransition("Idle to Hit_Mid_Heavy", "Hit_Mid_Heavy")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_MIDDLE; })
+				.Predicator([this] { return
+					m_eCurAttackType == EAttackType::ATK_HEAVY
+					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
 			.AddTransition("Idle to Hit_Light", "Hit_Light")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_LIGHT; })
+				.Predicator([this] { return
+					m_eCurAttackType == EAttackType::ATK_LIGHT
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP; })
 
 
 			.AddTransition("Idle to Attack_Spin", "Attack_Spin")
@@ -206,7 +215,8 @@ void CEM0210::SetUpFSM()
 			})
 			.Tick([this](_double)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_LIGHT)
+				if (m_eCurAttackType == EAttackType::ATK_LIGHT
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP)
 				{
 					Play_LightHitAnim();
 				}
@@ -214,27 +224,44 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Hit_Light to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f)
-						|| (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
+						return m_bDead
+							|| m_pASM->isSocketPassby("FullBody", 0.95f)
+							|| (m_eCurAttackType != EAttackType::ATK_LIGHT
+								&& m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
+								&& m_eCurAttackType != EAttackType::ATK_END);
 				})
 
 		.AddState("Hit_Mid_Heavy")
 			.OnStart([this]
 			{
 				Play_MidHitAnim();
+				HeavyAttackPushStart();
 			})
-			.Tick([this](_double)
+			.Tick([this](_double TimeDelta)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_MIDDLE)
-				{
-					Play_MidHitAnim();
-				}
+					if (m_eCurAttackType == EAttackType::ATK_HEAVY
+						|| m_eCurAttackType == EAttackType::ATK_MIDDLE
+						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
+					{
+						HeavyAttackPushStart();
+						Play_MidHitAnim();
+					}
+
+					_float fPower;
+					if (m_HeavyAttackPushTimeline.Tick(TimeDelta, fPower))
+					{
+						_float3 vVelocity = { m_vPushVelocity.x, m_vPushVelocity.y, m_vPushVelocity.z };
+						m_pTransformCom->MoveVelocity(TimeDelta, vVelocity * fPower);
+						//m_pTransformCom->MoveVelocity(TimeDelta, m_vPushVelocity * fPower);
+					}
 			})
 			.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f)
-						|| m_eCurAttackType == EAttackType::ATK_TO_AIR;
+						return m_bDead
+							|| m_pASM->isSocketPassby("FullBody", 0.95f)
+							|| m_eCurAttackType == EAttackType::ATK_TO_AIR
+							|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
 				})
 
 		.AddState("Death")
@@ -253,11 +280,15 @@ void CEM0210::SetUpFSM()
 			.Tick([this](_double)
 			{
 				// 공중 추가타로 살짝 올라가는 애님
-				m_bHitAir = true;
-				if (m_eCurAttackType != EAttackType::ATK_END)
-				{
-					m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_455_AL_rise_start");
-				}
+					m_bHitAir = true;
+					if (m_bAirToDown)
+					{
+						m_fYSpeed = -20.f;
+					}
+					else if (m_eCurAttackType != EAttackType::ATK_END)
+					{
+						m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_455_AL_rise_start");
+					}
 			})
 			.OnExit([this]
 			{
@@ -411,6 +442,10 @@ void CEM0210::SetUpFSM()
 		.Build();
 }
 
+void CEM0210::SetUpUI()
+{
+}
+
 void CEM0210::BeginTick()
 {
 	CEnemy::BeginTick();
@@ -434,15 +469,22 @@ void CEM0210::Tick(_double TimeDelta)
 	m_vMoveAxis = m_pController->GetMoveAxis();
 	m_vMoveAxis.Normalize();
 	m_eInput = m_pController->GetAIInput();
+	m_eSASType = CheckSASType(ESASType::SAS_PENETRATE);
+
+	if (m_eSASType == true)
+		m_dRenderChangeDelay += TimeDelta;
+	else
+		m_dRenderChangeDelay = 0.0;
 
 	if (m_IsFirstHit == false 
-		&& CheckSASType(ESASType::SAS_PENETRATE) 
+		&& m_eSASType
 		&& m_eCurAttackType != EAttackType::ATK_END)
 	{
 		m_IsInvisible = false;
 		m_bDown = true;
 		m_IsFirstHit = true;
 	}
+
 
 	//ASM, FSM tick
 	m_pFSM->Tick(TimeDelta);
@@ -469,7 +511,7 @@ void CEM0210::Late_Tick(_double TimeDelta)
 
 	if (m_IsInvisible)
 	{
-		if (CheckSASType(ESASType::SAS_PENETRATE))
+		if (m_dRenderChangeDelay >=0.5)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		else
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
@@ -490,7 +532,7 @@ HRESULT CEM0210::Render()
 {
 	if (m_IsInvisible)
 	{
-		if (CheckSASType(ESASType::SAS_PENETRATE))
+		if (m_dRenderChangeDelay >= 0.7)
 			m_pModelCom->Render(m_pTransformCom);
 		else
 			m_pModelCom->Render_Pass(m_pTransformCom, 5);
@@ -639,6 +681,19 @@ void CEM0210::Somersault_SweepSphere()
 	}
 
 	m_BeforePos = vBonePos;
+}
+
+void CEM0210::HeavyAttackPushStart()
+{
+	if (m_eCurAttackType == EAttackType::ATK_MIDDLE || m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
+	{
+		m_HeavyAttackPushTimeline.PlayFromStart();
+		m_vPushVelocity = CClientUtils::GetDirFromAxis(m_eHitFrom);
+		m_vPushVelocity *= -4.f; // 공격 온 방향의 반대로 이동
+
+		const _float fYaw = m_pTransformCom->GetYaw_Radian();
+		m_vPushVelocity = XMVector3TransformNormal(m_vPushVelocity, XMMatrixRotationY(fYaw));
+	}
 }
 
 
