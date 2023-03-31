@@ -31,9 +31,9 @@ HRESULT CEM0200::Initialize(void* pArg)
 	{
 		m_iMaxHP = 3000;
 		m_iHP = 3000; // ¡Ú
-		m_iCrushGage = 400;
-		m_iMaxCrushGage = 400;
-		m_bHasCrushGage = false;
+		m_iCrushGauge = 400;
+		m_iMaxCrushGauge = 400;
+		m_bHasCrushGauge = false;
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
@@ -42,7 +42,7 @@ HRESULT CEM0200::Initialize(void* pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0200;
-	m_bHasCrushGage = false;
+	m_bHasCrushGauge = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 
 	return S_OK;

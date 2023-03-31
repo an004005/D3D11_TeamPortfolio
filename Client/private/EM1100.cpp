@@ -37,7 +37,7 @@ HRESULT CEM1100::Initialize(void * pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM1100;
-	m_bHasCrushGage = true;
+	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(120.f));
 
 	m_fGravity = 20.f;

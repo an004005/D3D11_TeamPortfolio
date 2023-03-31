@@ -22,8 +22,8 @@
 #include "Imgui_Batch.h"
 #include "GameManager.h"
 
-//#define ADD_PLAYER
-//#define ADD_PREVIEW "Prototype_Model_em220"
+#define ADD_PLAYER
+//#define ADD_PREVIEW "Prototype_Model_em210"
 //#define ADD_ENEMY "Monster_em650"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

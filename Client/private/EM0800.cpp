@@ -38,18 +38,9 @@ HRESULT CEM0800::Initialize(void * pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0800;
-	m_bHasCrushGage = true;
+	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(120.f));
 	m_fGravity = 20.f;
-
-
-
-
-	_matrix			PivotMatrix = XMMatrixIdentity();
-	PivotMatrix = XMMatrixTranslation(0.f, 0.1f, 0.f) * XMMatrixScaling(10.f, 1.f, 10.f);
-	m_pWaterPool = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water");
-	m_pWaterPool->Start_AttachPivot(this, PivotMatrix, "Eff01", true, true, false);
-	Safe_AddRef(m_pWaterPool);
 
 	return S_OK;
 }
@@ -265,7 +256,7 @@ void CEM0800::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_209_AL_atk_a4_laser_loop");
-				m_pModelCom->GetPlayAnimation()->SetLooping(true);
+				m_pModelCom->Find_Animation("AS_em0800_209_AL_atk_a4_laser_loop")->SetLooping(true);
 				m_fLaserTime = 0.f;
 			})
 			.Tick([this](_double TimeDetla)
@@ -337,7 +328,7 @@ void CEM0800::Tick(_double TimeDelta)
 	if (m_pWaterPool == nullptr && GetHpRatio() <= 0.5f)
 	{
 		_matrix			PivotMatrix = XMMatrixIdentity();
-		
+		PivotMatrix = XMMatrixTranslation(0.f, 0.1f, 0.f) * XMMatrixScaling(10.f, 1.f, 10.f);
 		m_pWaterPool = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water");
 		m_pWaterPool->Start_AttachPivot(this, PivotMatrix, "Eff01", true, true, false);
 		Safe_AddRef(m_pWaterPool);
@@ -405,21 +396,21 @@ void CEM0800::Imgui_RenderProperty()
 	}
 	m_pFSM->Imgui_RenderProperty();
 
-	static _bool tt = false;
-	ImGui::Checkbox("Modify Pivot", &tt);
+	//static _bool tt = false;
+	//ImGui::Checkbox("Modify Pivot", &tt);
 
-	if (tt)
-	{
-		static GUIZMO_INFO tInfo;
-		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+	//if (tt)
+	//{
+	//	static GUIZMO_INFO tInfo;
+	//	CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
 
-		if (ImGui::Button("Create_Effect"))
-		{
-			m_pWaterPool = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water");
-			m_pWaterPool->Start_NoAttachPivot(this, pivot, true);
-			Safe_AddRef(m_pWaterPool);
-		}
-	}
+	//	if (ImGui::Button("Create_Effect"))
+	//	{
+	//		m_pWaterPool = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water");
+	//		m_pWaterPool->Start_NoAttachPivot(this, pivot, true, false);
+	//		Safe_AddRef(m_pWaterPool);
+	//	}
+	//}
 }
 
 _bool CEM0800::IsPlayingSocket() const
