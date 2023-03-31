@@ -547,9 +547,15 @@
     <ClInclude Include="..\public\SSAOManager.h">
       <Filter>01.Utility\09.RenderTarget</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\AnimCam.h" />
-    <ClInclude Include="..\public\Imgui_CamAnimEditor.h" />
-    <ClInclude Include="..\public\CamAnimSequencer.h" />
+    <ClInclude Include="..\public\AnimCam.h">
+      <Filter>81.Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CamAnimSequencer.h">
+      <Filter>81.Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_CamAnimEditor.h">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -871,9 +877,15 @@
     <ClCompile Include="..\private\SSAOManager.cpp">
       <Filter>01.Utility\09.RenderTarget</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\AnimCam.cpp" />
-    <ClCompile Include="..\private\Imgui_CamAnimEditor.cpp" />
-    <ClCompile Include="..\private\CamAnimSequencer.cpp" />
+    <ClCompile Include="..\private\AnimCam.cpp">
+      <Filter>81.Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CamAnimSequencer.cpp">
+      <Filter>81.Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_CamAnimEditor.cpp">
+      <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
