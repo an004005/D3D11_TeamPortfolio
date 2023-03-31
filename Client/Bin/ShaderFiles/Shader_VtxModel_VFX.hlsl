@@ -413,6 +413,27 @@ PS_OUT PS_FLOWERLEG(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_EM1200_SLASH(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float Mask = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x + g_float_0, In.vTexUV.y));
+
+	float4 Default = g_tex_1.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor = CalcHDRColor(Default , g_float_3);
+	Out.vColor.a = Mask* (1 - Default.a)* g_float_1;
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, (1 - Default.a )* g_float_2);
+
+	if (g_float_1 <= 0.f)
+		discard;
+
+	// if (Out.vColor.a <= 0.001f)
+	// 	discard;
+
+
+	return Out;
+}
+
 PS_OUT PS_EM0200_SPIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -1212,5 +1233,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM1100_WATER();
+	}
+
+	//26
+	pass Em1200Slash
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1200_SLASH();
 	}
 }
