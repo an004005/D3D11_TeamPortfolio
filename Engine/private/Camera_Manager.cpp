@@ -263,6 +263,13 @@ void CCamera_Manager::ActionCamTickByPlayTime(_float fRatio)
 		if (0.f == m_pFovCurve->GetValue(fRatio))
 			int iA = 0;
 
+		if (30.f > fRatio || 90.f < fRatio)
+		{
+			ReleaseCameraFovCurve();
+			pMainCam->SetFOV(60.f);
+			return;
+		}
+
 		pMainCam->SetFOV(m_pFovCurve->GetValue(fRatio));
 	}
 }
@@ -274,6 +281,17 @@ void CCamera_Manager::ReleaseCameraFovCurve()
 	
 	CCamera* pMainCam = GetMainCam();
 	pMainCam->SetFOV(60.f);
+}
+
+void CCamera_Manager::SetCameraFov(_float fFov)
+{
+	CCamera* pMainCam = GetMainCam();
+	Assert(pMainCam != nullptr);
+
+	if (30.f > fFov || 90.f < fFov)
+		fFov = 60.f;
+
+	pMainCam->SetFOV(max(fFov, 1.f));
 }
 
 CCamera* CCamera_Manager::FindCamera(const string& strCamTag)

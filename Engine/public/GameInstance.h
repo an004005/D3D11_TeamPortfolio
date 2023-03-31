@@ -180,6 +180,7 @@ public: /* for CameraManager*/
 	void SetCameraFovCurve(const string& strCurveTag);
 	void ActionCamTickByPlayTime(_float fRatio);
 	void ReleaseCameraFovCurve();
+	void SetCameraFov(_float fFov);
 	class CCamAnimation* GetCamAnim(const string& strName);
 
 public:/*for GameTimeManager */

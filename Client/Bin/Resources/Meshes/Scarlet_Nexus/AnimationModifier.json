@@ -9,7 +9,28 @@
         "Duration": 170.0,
         "TickPerSecond": 70.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Hood_Active_On",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Mask_Dissolve_On",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "Hair_Active_Off",
+                "EventTime": 95.0
+            },
+            {
+                "EventName": "DriveMode_Effect",
+                "EventTime": 115.0
+            },
+            {
+                "EventName": "DriveMode_Particle",
+                "EventTime": 125.0
+            }
+        ]
     },
     "AS_ch0100_021_AL_run_start_F": {
         "Duration": 30.0,
@@ -2610,6 +2631,12 @@
             }
         ]
     },
+    "AS_ch0100_299_AL_enpc_drive_mode": {
+        "Duration": 160.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_301_AL_capture_wait_loop": {
         "Duration": 120.0,
         "TickPerSecond": 100.0,
@@ -2933,6 +2960,12 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_330_AL_fall_start": {
+        "Duration": 80.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_331_AL_swing_L": {
         "Duration": 140.0,
         "TickPerSecond": 50.0,
@@ -2989,6 +3022,30 @@
     },
     "AS_ch0100_334_AL_fall_start": {
         "Duration": 15.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_337_AL_press_cancel": {
+        "Duration": 70.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_337_AL_press_end": {
+        "Duration": 190.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_337_AL_press_loop": {
+        "Duration": 225.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_337_AL_press_start": {
+        "Duration": 95.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []

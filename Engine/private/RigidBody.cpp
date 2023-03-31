@@ -217,6 +217,16 @@ void CRigidBody::Set_Kinetic(_bool bKinematic)
 	CreateActor();
 }
 
+void CRigidBody::Set_Trigger(_bool bTrigger)
+{
+	if (m_bTrigger != bTrigger)
+	{
+		m_bTrigger = bTrigger;
+		CreateActor();
+		UpdateChange();
+	}
+}
+
 void CRigidBody::SetOriginTransform(const _float4x4& OriginMatrix)
 {
 	m_OriginTransformMatrix = OriginMatrix;

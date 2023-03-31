@@ -46,8 +46,8 @@
             1.0
         ],
         "ShapeType": 2,
-        "bKinematic": true,
-        "bTrigger": false
+        "bKinematic": false,
+        "bTrigger": true
     },
     "Transform": {
         "WorldMatrix": [

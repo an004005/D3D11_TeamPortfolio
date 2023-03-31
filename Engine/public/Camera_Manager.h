@@ -45,6 +45,7 @@ public:
 	void	SetCameraFovCurve(const string& strCurveTag);
 	void	ActionCamTickByPlayTime(_float fRatio);
 	void	ReleaseCameraFovCurve();
+	void	SetCameraFov(_float fFov);
 
 private:
 	CCurveFloatImpl* m_pFovCurve = nullptr;

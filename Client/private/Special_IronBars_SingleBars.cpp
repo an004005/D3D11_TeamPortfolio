@@ -44,8 +44,21 @@ HRESULT CSpecial_IronBars_SingleBars::Initialize(void * pArg)
 
 			if (auto pTarget = dynamic_cast<CEnemy*>(pGameObject))
 			{
+				if (m_bHit) return;
+
 				m_bHit = true;
 				m_fChangeKineticTimer = 0.f;
+
+				DAMAGE_PARAM tParam;
+				ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+				tParam.eAttackSAS = ESASType::SAS_END;
+				tParam.eAttackType = EAttackType::ATK_SPECIAL_LOOP;
+				tParam.eDeBuff = EDeBuffType::DEBUFF_END;
+				tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
+				tParam.iDamage = 200;
+				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+				static_cast<CEnemy*>(pTarget)->TakeDamage(tParam);
 			}
 		});
 
@@ -56,7 +69,7 @@ void CSpecial_IronBars_SingleBars::BeginTick()
 {
 	__super::BeginTick();
 
-	m_pCollider->Set_Kinetic(true);
+	m_pCollider->Set_Trigger(true);
 	m_pCollider->UpdateChange();
 }
 
@@ -70,7 +83,7 @@ void CSpecial_IronBars_SingleBars::Tick(_double TimeDelta)
 
 		if (0.5f <= m_fChangeKineticTimer)
 		{
-			Set_Kinetic(true);
+			Set_Trigger(true);
 		}
 	}
 
@@ -141,7 +154,7 @@ void CSpecial_IronBars_SingleBars::Attach_BoneMatrix(CModel* pModel, CTransform*
 
 void CSpecial_IronBars_SingleBars::Attack_BoneMatrix_SetPoint(CModel* pModel, CTransform* pTransform, const string& strBoneName, _float4 vPoint)
 {
-	if (!m_pCollider->IsKinematic()) Set_Kinetic(true);
+	if (!m_pCollider->IsTrigger()) Set_Trigger(true);
 
 	_matrix	SocketMatrix = XMMatrixInverse(nullptr, m_LocalMatrix) 
 		* XMMatrixRotationX(XMConvertToRadians(-90.f)) 
@@ -158,7 +171,7 @@ void CSpecial_IronBars_SingleBars::Attack_BoneMatrix_SetPoint(CModel* pModel, CT
 
 void CSpecial_IronBars_SingleBars::Lerp_BoneMatrix(CModel* pModel, CTransform* pTransform, const string& strBoneName, _float4 vPoint, _float fRatio)
 {
-	if (!m_pCollider->IsKinematic()) Set_Kinetic(true);
+	if (!m_pCollider->IsTrigger()) Set_Trigger(true);
 
 	_matrix	SocketMatrix = XMMatrixInverse(nullptr, m_LocalMatrix)
 		//* XMMatrixRotationX(XMConvertToRadians(-90.f))
@@ -199,10 +212,9 @@ void CSpecial_IronBars_SingleBars::Lerp_BoneMatrix(CModel* pModel, CTransform* p
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
 }
 
-void CSpecial_IronBars_SingleBars::Set_Kinetic(_bool bKinetic)
+void CSpecial_IronBars_SingleBars::Set_Trigger(_bool bTrigger)
 {
-	m_pCollider->Set_Kinetic(bKinetic);
-	m_pCollider->UpdateChange();
+	m_pCollider->Set_Trigger(bTrigger);
 }
 
 void CSpecial_IronBars_SingleBars::Calculate_TargetDir(_float4 vTargetPos, _float fRatio)
@@ -231,7 +243,7 @@ void CSpecial_IronBars_SingleBars::Calculate_TargetDir(_float4 vTargetPos, _floa
 
 void CSpecial_IronBars_SingleBars::Shooting(_float4 vTargetPos)
 {
-	if (m_pCollider->IsKinematic()) Set_Kinetic(false);
+	if (m_pCollider->IsTrigger()) Set_Trigger(false);
 	if (m_bHit)	m_bHit = false;
 
 	_float4 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -253,7 +265,7 @@ void CSpecial_IronBars_SingleBars::Shooting(_float4 vTargetPos)
 
 void CSpecial_IronBars_SingleBars::Reloading(_float4 vDestPos, _float4 vTargetPos, _float fRatio)
 {
-	if (!m_pCollider->IsKinematic()) Set_Kinetic(true);
+	if (!m_pCollider->IsTrigger()) Set_Trigger(true);
 
 	_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
@@ -263,6 +275,12 @@ void CSpecial_IronBars_SingleBars::Reloading(_float4 vDestPos, _float4 vTargetPo
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
 
 	Calculate_TargetDir(vTargetPos, fRatio);
+}
+
+void CSpecial_IronBars_SingleBars::Activate(_bool bActivate)
+{
+	m_pCollider->Activate(bActivate);
+	m_pCollider->UpdateChange();
 }
 
 HRESULT CSpecial_IronBars_SingleBars::SetUp_Components(void * pArg)
