@@ -26,6 +26,10 @@ public:
 	void	Set_BossHp(const _float & fHp); // 0~1 사이로 계산된 값을 던지기! currenthp/maxhp
 	void	Set_BossShild(const _float & fShild);
 
+private:
+	class CCanvas_BossHp* m_pCanvas_BossHp = { nullptr };
+	class CCanvas_Alarm* m_pUI_Alarm = { nullptr };
+
 public:
 	static CCanvas_BossHpMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

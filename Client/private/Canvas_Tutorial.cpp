@@ -117,6 +117,9 @@ void CCanvas_Tutorial::Tutorial_Tick()
 	case Client::CCanvas_Tutorial::ADDPSYCHOKINESISATTACK:
 		wsprintf(szTag, TEXT("Tutorial5"));
 		break;
+	case Client::CCanvas_Tutorial::ADDRUSHADDPSYCHOKINESIS:
+		wsprintf(szTag, TEXT("Tutorial6"));
+		break;
 	default:
 		m_eTutorial = TUTORIAL_END;
 		break;
@@ -307,7 +310,7 @@ void CCanvas_Tutorial::Check_Tick()
 		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_OneTwoAlpha();
 	}
 
-	if (true == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Get_AlphaEnd())
+		if (true == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Get_AlphaEnd())
 	{
 		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon1"))->Set_OneReset();
 		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_TwoReset();

@@ -12,9 +12,9 @@
 #include "FSMComponent.h"
 
 #include "OilBullet.h" // Oil_Bullet
+#include "BulletBuilder.h"
 #include "VFX_Manager.h"
 
-#include "Canvas_Alarm.h"
 #include "Canvas_BossHpMove.h"
 
 CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -404,7 +404,6 @@ void CEM0320::Tick(_double TimeDelta)
 		m_b2ndPhase = true;
 	}
 
-
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
 }
@@ -622,35 +621,89 @@ void CEM0320::CheckHP(DAMAGE_PARAM& tDamageParams)
 
 void CEM0320::FireWaterBall()
 {
-	auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_OilBullet"));		
-	if (COilBullet* pBullet = dynamic_cast<COilBullet*>(pObj))
+	//auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_OilBullet"));		
+	//if (COilBullet* pBullet = dynamic_cast<COilBullet*>(pObj))
+	//{
+	//	pBullet->Set_Owner(this);
+
+	//	_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Water") * m_pTransformCom->Get_WorldMatrix();
+	//	_vector vSpawnPos = BoneMtx.r[3];
+
+	//	pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vSpawnPos);
+	//	pBullet->GetTransform()->LookAt(m_LastSpotTargetPos);
+	//	pBullet->SetDamage(m_iAtkDamage);
+
+	//	if (m_b2ndPhase)
+	//	{
+	//		auto pBulletLeft = dynamic_cast<COilBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_OilBullet")));
+	//		pBulletLeft->Set_Owner(this);
+	//		pBulletLeft->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vSpawnPos);
+	//		pBulletLeft->GetTransform()->LookAt(m_LastSpotTargetPos);
+	//		pBulletLeft->GetTransform()->Turn_Fixed(pBulletLeft->GetTransform()->Get_State(CTransform::STATE_UP), -XMConvertToRadians(fangle));
+	//		pBulletLeft->SetDamage(m_iAtkDamage);
+
+	//		auto pBulletRight = dynamic_cast<COilBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_OilBullet")));
+	//		pBulletRight->Set_Owner(this);
+	//		pBulletRight->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vSpawnPos);
+	//		pBulletRight->GetTransform()->LookAt(m_LastSpotTargetPos);
+	//		pBulletRight->GetTransform()->Turn_Fixed(pBulletRight->GetTransform()->Get_State(CTransform::STATE_UP), XMConvertToRadians(fangle));
+	//		pBulletRight->SetDamage(m_iAtkDamage);
+	//	}			
+	//}	
+
+
+	DAMAGE_PARAM eDamageParam;
+	eDamageParam.eAttackType = EAttackType::ATK_HEAVY;
+	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_OIL;
+	eDamageParam.iDamage = m_iAtkDamage;
+
+	_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Water") * m_pTransformCom->Get_WorldMatrix();
+	_vector vSpawnPos = BoneMtx.r[3];
+
+	CBulletBuilder()
+		.CreateBullet()
+			.Set_Owner(this)
+			.Set_InitBulletEffect({ L"em0320_Bullet" })
+			.Set_InitBulletParticle(L"em0320_Bullet_Trail_Particle")
+			.Set_ShootSpped(29.f)
+			.Set_Life(5.f)
+			.Set_DamageParam(eDamageParam)
+			.Set_DeadBulletEffect({ L"em0320_Bullet_Dead_1", L"em0320_Bullet_Dead_2", L"em0320_Bullet_Dead_3" })
+			.Set_Position(vSpawnPos)
+			.Set_LookAt(m_LastSpotTargetPos)
+		.Build();
+
+
+	if (m_b2ndPhase)
 	{
-		pBullet->Set_Owner(this);
+		CBulletBuilder()
+			.CreateBullet()
+				.Set_Owner(this)
+				.Set_InitBulletEffect({ L"em0320_Bullet" })
+				.Set_InitBulletParticle(L"em0320_Bullet_Trail_Particle")
+				.Set_ShootSpped(29.f)
+				.Set_Life(5.f)
+				.Set_DamageParam(eDamageParam)
+				.Set_DeadBulletEffect({ L"em0320_Bullet_Dead_1", L"em0320_Bullet_Dead_2", L"em0320_Bullet_Dead_3" })
+				.Set_Position(vSpawnPos)
+				.Set_LookAt(m_LastSpotTargetPos)
+				.Set_TurnFixed(XMConvertToRadians(fangle))
+			.Build();
 
-		_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Water") * m_pTransformCom->Get_WorldMatrix();
-		_vector vSpawnPos = BoneMtx.r[3];
-
-		pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vSpawnPos);
-		pBullet->GetTransform()->LookAt(m_LastSpotTargetPos);
-		pBullet->SetDamage(m_iAtkDamage);
-
-		if (m_b2ndPhase)
-		{
-			auto pBulletLeft = dynamic_cast<COilBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_OilBullet")));
-			pBulletLeft->Set_Owner(this);
-			pBulletLeft->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vSpawnPos);
-			pBulletLeft->GetTransform()->LookAt(m_LastSpotTargetPos);
-			pBulletLeft->GetTransform()->Turn_Fixed(pBulletLeft->GetTransform()->Get_State(CTransform::STATE_UP), -XMConvertToRadians(fangle));
-			pBulletLeft->SetDamage(m_iAtkDamage);
-
-			auto pBulletRight = dynamic_cast<COilBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_OilBullet")));
-			pBulletRight->Set_Owner(this);
-			pBulletRight->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vSpawnPos);
-			pBulletRight->GetTransform()->LookAt(m_LastSpotTargetPos);
-			pBulletRight->GetTransform()->Turn_Fixed(pBulletRight->GetTransform()->Get_State(CTransform::STATE_UP), XMConvertToRadians(fangle));
-			pBulletRight->SetDamage(m_iAtkDamage);
-		}			
-	}	
+		CBulletBuilder()
+			.CreateBullet()
+				.Set_Owner(this)
+				.Set_InitBulletEffect({ L"em0320_Bullet" })
+				.Set_InitBulletParticle(L"em0320_Bullet_Trail_Particle")
+				.Set_ShootSpped(29.f)
+				.Set_Life(5.f)
+				.Set_DamageParam(eDamageParam)
+				.Set_DeadBulletEffect({ L"em0320_Bullet_Dead_1", L"em0320_Bullet_Dead_2", L"em0320_Bullet_Dead_3" })
+				.Set_Position(vSpawnPos)
+				.Set_LookAt(m_LastSpotTargetPos)
+				.Set_TurnFixed(XMConvertToRadians(fangle))
+			.Build();
+	}
 }
 
 void CEM0320::Create_BossUI()
@@ -666,11 +719,8 @@ void CEM0320::Create_BossUI()
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
 	m_pUI_BossHP = dynamic_cast<CCanvas_BossHpMove*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHpMove", &json));
+	assert(m_pUI_BossHP != nullptr && "Failed to Clone : CCanvas_BossHpMove");
 	m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
-
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
-	m_pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_Alarm", &json));
-	m_pUI_Alarm->Set_Appeart();
 
 	PresentUI = true;
 }
@@ -729,10 +779,9 @@ void CEM0320::Free()
 	Safe_Release(m_pRightArm);
 	Safe_Release(m_pRange);
 
-	//for. BossUI
+	//for. BossUI 
+	// 안녕하세요. 옥수현 입니다. 여기 걸리셨다구요? 
+	// 보스를 다 잡고난 후에는 문제 없는 코드지만 보스를 잡기전 중간에 삭제 하실 경우에 객체 원본에서 Free() 가 돌고 난 후 여기 걸리신 것 입니다.
 	if (m_pUI_BossHP != nullptr)
 		m_pUI_BossHP->SetDelete();
-
-	if (m_pUI_Alarm != nullptr)
-		m_pUI_Alarm->SetDelete();
 }

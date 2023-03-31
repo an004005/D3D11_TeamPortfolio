@@ -2,12 +2,6 @@
 #include "Enemy.h"
 #include "Controller.h"
 
-BEGIN(Engine)
-class CFSMComponent;
-class CGameInstance;
-class CAnimation;
-class CRigidBody;
-END
 
 BEGIN(Client)
 
@@ -48,6 +42,8 @@ private:
 	void Play_HeavbyHitAnim();
 	void Update_LanternMatrix();
 	void CounterAttack(_double TimeDelta);
+	void Create_Bullet();
+
 private:
 	//충돌 관련 함수 정의
 
@@ -56,12 +52,8 @@ private:
 	class CEM0220_AnimInstance*		m_pASM = nullptr;
 
 	//충돌
-	CRigidBody*					m_pRange = nullptr;
-
 	CEffectGroup*				m_pSwingEffect = nullptr;
 
-	// Swing Attack
-	list<CScarletCharacter*> m_CollisionList;
 	vector<class CEM0221*>	m_pLanterns;
 private:
 	//원시 데이터
@@ -77,7 +69,7 @@ private:
 
 
 	//무적상태
-	_bool		m_IsBeat = false;
+	_bool		m_Unbeatable = false;
 
 	//플레이어  순간이동 상태 확인
 	//_bool		m_bTeleport = false;

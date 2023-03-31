@@ -3764,6 +3764,12 @@
             }
         ]
     },
+    "AS_em0200_425_AL_down_start": {
+        "Duration": 105.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0200_427_AL_getup": {
         "Duration": 96.0,
         "TickPerSecond": 46.0,
@@ -3809,7 +3815,7 @@
     },
     "AS_em0210_211_AL_somersault": {
         "Duration": 160.0,
-        "TickPerSecond": 35.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -3824,12 +3830,16 @@
     },
     "AS_em0210_212_AL_spin": {
         "Duration": 180.0,
-        "TickPerSecond": 35.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
                 "EventName": "Spin_Start",
-                "EventTime": 60.0
+                "EventTime": 63.0
+            },
+            {
+                "EventName": "Spin_Effect1",
+                "EventTime": 83.0
             },
             {
                 "EventName": "Spin_End",
@@ -3837,10 +3847,28 @@
             }
         ]
     },
+    "AS_em0220_111_AL_to_guard": {
+        "Duration": 40.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0220_112_AL_guard": {
+        "Duration": 80.0,
+        "TickPerSecond": 24.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0220_113_AL_to_wait03": {
+        "Duration": 40.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0220_215_AL_Shot2": {
         "Duration": 49.0,
         "TickPerSecond": 24.0,
-        "bLooping": false,
+        "bLooping": true,
         "vecEvent": [
             {
                 "EventName": "Shot",
@@ -5063,7 +5091,7 @@
     },
     "AS_em0810_201_AL_atk_a1_bite": {
         "Duration": 130.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 70.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -5183,6 +5211,103 @@
                 "EventTime": 19.0
             }
         ]
+    },
+    "AS_em1200_155_AL_turn_L_loop2": {
+        "Duration": 76.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_184_AL_run02_loop": {
+        "Duration": 65.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_200_AL_atk_a1_fall": {
+        "Duration": 242.0,
+        "TickPerSecond": 70.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Fall",
+                "EventTime": 175.0
+            }
+        ]
+    },
+    "AS_em1200_210_AL_atk_a3_tackle2_start": {
+        "Duration": 110.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Rush_Start",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Rush_End",
+                "EventTime": 80.0
+            }
+        ]
+    },
+    "AS_em1200_212_AL_atk_a3_tackle2_end": {
+        "Duration": 45.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_222_AL_atk_a6_Cleave_L": {
+        "Duration": 300.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Swing_L_Start",
+                "EventTime": 100.0
+            },
+            {
+                "EventName": "Swing_L_End",
+                "EventTime": 128.0
+            }
+        ]
+    },
+    "AS_em1200_223_AL_atk_a6_Cleave": {
+        "Duration": 300.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Swing_R_End",
+                "EventTime": 128.0
+            },
+            {
+                "EventName": "Swing_R_Start",
+                "EventTime": 100.0
+            }
+        ]
+    },
+    "AS_em1200_225_AL_atk_a8_shout2_loop": {
+        "Duration": 30.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_232_AL_atk9_punch_hit": {
+        "Duration": 90.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Stamp",
+                "EventTime": 48.0
+            }
+        ]
+    },
+    "AS_em1200_234_AL_atk9_punch_end": {
+        "Duration": 195.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_mg02_372_train_cancel_L": {
         "Duration": 57.0,

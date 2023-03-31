@@ -19,14 +19,14 @@ HRESULT CEM0210_Controller::Initialize(void * pArg)
 	m_iMidOrder = CMathUtils::RandomUInt(3);
 	m_iFarOrder = CMathUtils::RandomUInt(3);
 	
-	//¸Ö¸® ÀÖÀ»¶© ´Þ·Á¼­ °¡±îÀÌ ¿È
-	//Áß°£ Á¤µµ¿¡¼± °È°Å³ª À©µå¹Ð ÇÏ¸é¼­ °¡±îÀÌ ¿È
-	//°¡±îÀÌ ÀÖÀ»¶§´Â À©µå¹Ð, ¿Ã·ÁÂ÷±â
+	//ë©€ë¦¬ ìžˆì„ë• ë‹¬ë ¤ì„œ ê°€ê¹Œì´ ì˜´
+	//ì¤‘ê°„ ì •ë„ì—ì„  ê±·ê±°ë‚˜ ìœˆë“œë°€ í•˜ë©´ì„œ ê°€ê¹Œì´ ì˜´
+	//ê°€ê¹Œì´ ìžˆì„ë•ŒëŠ” ìœˆë“œë°€, ì˜¬ë ¤ì°¨ê¸°
 
-	//½ºÅ³¾²°í³ª¼­µµ °¡±îÀÌ ÀÖÀ¸¸é ÇÑ¹ø µÚ·Î Á¡ÇÁ,
-	//µÚ·Î Á¡ÇÁÇÏ¸é Áß°£°Å¸®·Î ¹Ù·Î µÇ´Ï °É¾î¿À°Å³ª À©µå¹Ð
+	//ìŠ¤í‚¬ì“°ê³ ë‚˜ì„œë„ ê°€ê¹Œì´ ìžˆìœ¼ë©´ í•œë²ˆ ë’¤ë¡œ ì í”„,
+	//ë’¤ë¡œ ì í”„í•˜ë©´ ì¤‘ê°„ê±°ë¦¬ë¡œ ë°”ë¡œ ë˜ë‹ˆ ê±¸ì–´ì˜¤ê±°ë‚˜ ìœˆë“œë°€
 
-	//À§¿¡ ÆÐÅÏ ¹Ýº¹
+	//ìœ„ì— íŒ¨í„´ ë°˜ë³µ
 	return S_OK;
 }
 
@@ -56,6 +56,7 @@ void CEM0210_Controller::AI_Tick(_double TimeDelta)
 void CEM0210_Controller::Tick_Near(_double TimeDelta)
 {
 	m_eDistance = DIS_NEAR;
+
 
 	switch (m_iNearOrder)
 	{

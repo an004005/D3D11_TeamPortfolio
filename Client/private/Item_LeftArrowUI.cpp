@@ -32,10 +32,9 @@ HRESULT CItem_LeftArrowUI::Initialize(void * pArg)
 
 void CItem_LeftArrowUI::Tick(_double TimeDelta)
 {
-	if (false == m_bInput)
-		return;
-
 	CUI::Tick(TimeDelta);
+
+	if (false == m_bInput)	return;
 
 	m_fMoveTimeAcc += TimeDelta;
 	if (0.15 < m_fMoveTimeAcc)

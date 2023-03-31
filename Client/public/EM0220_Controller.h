@@ -26,7 +26,7 @@ public:
 
 public:
 	//두번째 인자에 true를 넣으면 더 큰값일때 true 반환
-	_bool	Check_TargetDist(_float fDist, _bool IsGreater = false);
+	_bool	Check_TargetDist(_bool IsGreater = false);
 
 private:
 	void DefineState(_double TimeDelta);
@@ -34,6 +34,8 @@ private:
 private:
 	class CEM0220* m_pCastedOwner = nullptr;
 	
+	_bool				m_bGuard = false;
+	_float				m_fGuardDist = 0.f;
 public:
 	static CEM0220_Controller* Create();
 	virtual CComponent* Clone(void* pArg) override;
