@@ -37,11 +37,15 @@ public:
 	_vector	Get_SyncLook(_fvector TargetPos, _fvector TargetLook, _float CamHeight, _double TimeDelta);	// 원래 룩
 	
 	void	Lerp_ActionPos(_fvector vPos, _fvector vLook);	// 보간된 위치로 캠 위치 설정
+	
+	_float	Get_Magnification() { return m_fDistanceMagnification; }
+	void	Set_Magnification(_float fMag) { m_fDistanceMagnification = fMag; }
 
 private:
 	HRESULT SetUp_Components();
 
 private:
+	_float	m_fDistanceMagnification = 1.f;
 	_float	m_fBeforeCamDistance = -1.f;
 
 public:

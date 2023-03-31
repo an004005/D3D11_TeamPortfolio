@@ -56,7 +56,7 @@ void CSpecial_TelephonePole::BeginTick()
 	m_PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixTranslation(0.f, 2.f, 0.f);
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(CMathUtils::RandomFloat(-20.f, 20.f)));
 
-	m_pCollider->Set_Kinetic(true);
+	m_pCollider->Set_Trigger(true);
 	m_pCollider->UpdateChange();
 }
 

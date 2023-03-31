@@ -34,6 +34,15 @@
     <Filter Include="01.Levels\12.ModelConverter">
       <UniqueIdentifier>{d4f8c3f8-ee01-487f-97ab-2e7eeca793f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Terrain\Floor">
+      <UniqueIdentifier>{457b7114-12fd-419a-9caf-a4d1e41fe231}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Utils">
+      <UniqueIdentifier>{e43a5553-63b8-4a96-b4ce-5200866e65c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map">
+      <UniqueIdentifier>{077f01dd-6710-47b5-8696-d247d8c97324}</UniqueIdentifier>
+    </Filter>
     <Filter Include="50.Component">
       <UniqueIdentifier>{56db190c-ebe8-448a-903c-253661590352}</UniqueIdentifier>
     </Filter>
@@ -400,6 +409,8 @@
     <Filter Include="02.GameObjects\SpecialObject">
       <UniqueIdentifier>{c1e6af62-d5ed-4e86-bb32-69cdbc587c23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMBullet\RedBullet">
+      <UniqueIdentifier>{2a57c407-e349-4fd8-99f2-8e508b157e3d}</UniqueIdentifier>
     <Filter Include="02.GameObjects\SpecialObject\Special_Train">
       <UniqueIdentifier>{e5298caa-d4e0-4fcc-95d9-9424cdefe837}</UniqueIdentifier>
     </Filter>
@@ -426,6 +437,21 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Mouse">
       <UniqueIdentifier>{f954c126-8785-41df-817d-93c9c8bf510b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_Container">
+      <UniqueIdentifier>{75feeb1d-456d-48bd-b139-ce5b5a3a934a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Player\PlayerInfoManager">
+      <UniqueIdentifier>{ac76b2ab-4bdc-4f46-a028-b473c3e9ad99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="60.Imgui_Tool\50.Component">
+      <UniqueIdentifier>{56db190c-ebe8-448a-903c-253661590352}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="60.Imgui_Tool\50.Component\01.Controller">
+      <UniqueIdentifier>{4baa4870-6b25-4339-bab6-c90b2f38585d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="60.Imgui_Tool\50.Component\01.Controller\AIController">
+      <UniqueIdentifier>{04a4534d-be99-4559-897f-94efed7b0e98}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\02.GamePlay\02. ConstructionSite">
       <UniqueIdentifier>{1e272184-8887-431f-937d-de39fd6eeb16}</UniqueIdentifier>
@@ -490,7 +516,7 @@
       <Filter>02.GameObjects\Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Controller.h">
-      <Filter>50.Component\01.Controller</Filter>
+      <Filter>60.Imgui_Tool\50.Component\01.Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ClientUtils.h">
       <Filter>99.Defines</Filter>
@@ -944,7 +970,6 @@
     <ClInclude Include="..\public\Canvas_BossHpMove.h">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PlayerInfoManager.h" />
     <ClInclude Include="..\public\Canvas_Main.h">
       <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
     </ClInclude>
@@ -1152,7 +1177,7 @@
       <Filter>30. GameManager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\AIController.h">
-      <Filter>50.Component\01.Controller\AIController</Filter>
+      <Filter>60.Imgui_Tool\50.Component\01.Controller\AIController</Filter>
     </ClInclude>
     <ClInclude Include="..\public\TestTarget.h">
       <Filter>Trigger</Filter>
@@ -1271,8 +1296,10 @@
     <ClInclude Include="..\public\Canvas_MouseCousor.h">
       <Filter>02.GameObjects\UI\Mouse</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\BulletBuilder.h">
-      <Filter>02.GameObjects\Enemy\EMBullet</Filter>
+    <ClInclude Include="..\public\BulletBuilder.h" />
+    <ClInclude Include="..\public\PlayerInfoManager.h" />
+    <ClInclude Include="..\public\Special_Container.h">
+      <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1322,7 +1349,7 @@
       <Filter>02.GameObjects\Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Controller.cpp">
-      <Filter>50.Component\01.Controller</Filter>
+      <Filter>60.Imgui_Tool\50.Component\01.Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ClientUtils.cpp">
       <Filter>99.Defines</Filter>
@@ -1759,7 +1786,6 @@
     <ClCompile Include="..\private\Canvas_BossHpMove.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PlayerInfoManager.cpp" />
     <ClCompile Include="..\private\Canvas_Main.cpp">
       <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
     </ClCompile>
@@ -1952,7 +1978,7 @@
       <Filter>30. GameManager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AIController.cpp">
-      <Filter>50.Component\01.Controller\AIController</Filter>
+      <Filter>60.Imgui_Tool\50.Component\01.Controller\AIController</Filter>
     </ClCompile>
     <ClCompile Include="..\private\TestTarget.cpp">
       <Filter>Trigger</Filter>
@@ -2089,8 +2115,10 @@
     <ClCompile Include="..\private\Canvas_MouseCousor.cpp">
       <Filter>02.GameObjects\UI\Mouse</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BulletBuilder.cpp">
-      <Filter>02.GameObjects\Enemy\EMBullet</Filter>
+    <ClCompile Include="..\private\BulletBuilder.cpp" />
+    <ClCompile Include="..\private\PlayerInfoManager.cpp" />
+    <ClCompile Include="..\private\Special_Container.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

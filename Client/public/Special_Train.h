@@ -1,8 +1,10 @@
 #pragma once
 #include "SpecialObject.h"
 #include "Client_Defines.h"
+#include "HelperClasses.h"
 
 BEGIN(Client)
+class CParticleGroup;
 
 class CSpecial_Train : public CSpecialObject
 {
@@ -33,6 +35,10 @@ public:
 	void	Train_Collision_Off();
 
 	void	Train_SetDeadTimer();
+
+	void	Train_SparkEffect_Set();
+	void	Train_SparkEffect_Release();
+
 	_float4	GetActionPoint();
 
 private:
@@ -43,6 +49,10 @@ private:
 	_bool	m_bActivate = false;
 	_float	m_fDeadTimer = 0.f;
 	_bool	m_bDeadCheck = false;
+	CDoOnce	m_Effect;
+
+private:
+	CParticleGroup* m_pSpark[2] = { nullptr, };
 
 public:
 	static CSpecial_Train* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

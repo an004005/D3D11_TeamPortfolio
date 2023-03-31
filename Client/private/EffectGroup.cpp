@@ -470,6 +470,37 @@ void CEffectGroup::Start_AttachPivotMove(CGameObject * pOwner, _float4x4 PivotMa
 	m_Timeline.PlayFromStart();
 }
 
+void CEffectGroup::Start_AttachPosition_Scale(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _float4 vScale, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+
+	if (trueisUpdate == false)
+	{
+		_matrix ScaleMatrix = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
+		_matrix	SocketMatrix = XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z);
+
+		_vector		vUp = XMVector3Normalize(vDirection);
+		_vector		vRight = XMVector3Normalize(XMVector3Cross(vUp, XMVectorSet(0.f, 0.f, 1.f, 0.f)));
+		_vector		vLook = XMVector3Normalize(XMVector3Cross(vRight, vUp));
+
+		SocketMatrix.r[0] = vRight;
+		SocketMatrix.r[1] = vUp;
+		SocketMatrix.r[2] = vLook;
+
+		Set_Transform(ScaleMatrix * SocketMatrix);
+	}
+
+	m_Timeline.PlayFromStart();
+
+}
+
 void CEffectGroup::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);

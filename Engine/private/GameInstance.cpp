@@ -889,6 +889,11 @@ void CGameInstance::ReleaseCameraFovCurve()
 	return m_pCamera_Manager->ReleaseCameraFovCurve();
 }
 
+void CGameInstance::SetCameraFov(_float fFov)
+{
+	return m_pCamera_Manager->SetCameraFov(fFov);
+}
+
 CCamAnimation* CGameInstance::GetCamAnim(const string& strName)
 {
 	return m_pCamera_Manager->GetCamAnim(strName);
