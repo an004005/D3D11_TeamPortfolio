@@ -39,6 +39,8 @@ public:
 	void	Shooting(_float4 vTargetPos);
 	void	Reloading(_float4 vDestPos, _float4 vTargetPos, _float fRatio);
 
+	void	Activate(_bool bActivate);
+
 private:
 	HRESULT	SetUp_Components(void* pArg);
 	_bool	m_bActive = false;

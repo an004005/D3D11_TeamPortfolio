@@ -5589,7 +5589,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 
 				_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio();
 
-				if (0.2f > fRatio)
+				if (0.3f > fRatio)
 				{
 					// 0.2로 보정
 					_float fDuration = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetCurDuration();
@@ -5598,15 +5598,18 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 				}
 
 
-				if (0.2f > fRatio)
+				if (0.3f > fRatio)
 				{
 					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
 						IronBars_LerpAnim(m_pKineticAnimModel, m_pTransformCom, m_vIronBars_ThrowPoins, fRatio / 0.2f);
 				}
-				else if (0.2f <= fRatio && 0.6 > fRatio)
+				else if (0.3f <= fRatio && 0.6 > fRatio)
 				{
 					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
-						IronBars_AttachAnim(m_pKineticAnimModel, m_pTransformCom, m_vIronBars_ThrowPoins);
+						IronBars_ChangeToBundle();
+
+					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+						IronBars_AttachAnim_MulitBars(m_pKineticAnimModel, m_pTransformCom, m_vIronBars_ThrowPoins);
 				}
 				else if (0.6f <= fRatio && IronBars.IsNotDo())
 				{
@@ -5614,13 +5617,13 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 					{
 						_float4 vTargetPos = static_cast<CScarletCharacter*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetColliderPosition();
 						static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
-							IronBars_Shooting_All(vTargetPos);
+							IronBars_Shooting_Finish(vTargetPos);
 					}
 					else
 					{
 						_float4 vTargetPos = {0.f, 0.f, 0.f, 0.f};
 						static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
-							IronBars_Shooting_All(vTargetPos);
+							IronBars_Shooting_Finish(vTargetPos);
 					}
 				}
 			}
@@ -5631,7 +5634,6 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			SyncEffectLocalMove("Kinetic_Special_AnimSocket");
 			m_fKineticCharge = 0.f;
 		})
-
 			.AddTransition("IRONBARS_FINISH_EX to IRONBARS_NOUSE", "IRONBARS_NOUSE")
 			.Predicator([&]()->_bool 
 			{ 

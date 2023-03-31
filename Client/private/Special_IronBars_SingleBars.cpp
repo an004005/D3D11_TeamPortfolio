@@ -277,6 +277,12 @@ void CSpecial_IronBars_SingleBars::Reloading(_float4 vDestPos, _float4 vTargetPo
 	Calculate_TargetDir(vTargetPos, fRatio);
 }
 
+void CSpecial_IronBars_SingleBars::Activate(_bool bActivate)
+{
+	m_pCollider->Activate(bActivate);
+	m_pCollider->UpdateChange();
+}
+
 HRESULT CSpecial_IronBars_SingleBars::SetUp_Components(void * pArg)
 {
 	CModel* pModel = nullptr;
