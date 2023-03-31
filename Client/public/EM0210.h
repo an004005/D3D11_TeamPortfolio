@@ -46,6 +46,7 @@ private:
 	//충돌 관련 함수 정의
 	void Swing_SweepSphere();
 	void Somersault_SweepSphere();
+	void	HeavyAttackPushStart();
 
 private:
 	class CEM0210_Controller*		m_pController = nullptr;
@@ -85,6 +86,8 @@ private:
 
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 
+	CSimpleTimeline m_HeavyAttackPushTimeline;
+	_float4 m_vPushVelocity;
 public:
 	static CEM0210* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

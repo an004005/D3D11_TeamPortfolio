@@ -42,6 +42,7 @@ private:
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
 	void Swing_SweepSphere();
+	void	HeavyAttackPushStart();
 private:
 	//충돌 관련 함수 정의
 
@@ -73,6 +74,9 @@ private:
 	_bool m_bDodge = false;
 
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
+
+	CSimpleTimeline m_HeavyAttackPushTimeline;
+	_float4 m_vPushVelocity;
 
 	//_float4x4 pivot;
 public:

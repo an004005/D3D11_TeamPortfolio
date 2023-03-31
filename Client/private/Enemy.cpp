@@ -178,6 +178,12 @@ void CEnemy::Imgui_RenderProperty()
 		if ("" != szMonsterAnimName)
 		  m_pModelCom->Get_AnimList()[szMonsterAnimName]->Imgui_RenderProperty();
 	}
+
+	if (ImGui::Button("Kill"))
+	{
+		SetDead();
+	}
+
 }
 
 HRESULT CEnemy::Render_ShadowDepth()
