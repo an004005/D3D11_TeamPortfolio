@@ -33,7 +33,6 @@ const array<const char*, PARAM_TEXTURE_ON_CNT> CShader::s_ParamTextureOnName {
 CShader::CShader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
 {
-
 }
 
 CShader::CShader(const CShader & rhs)

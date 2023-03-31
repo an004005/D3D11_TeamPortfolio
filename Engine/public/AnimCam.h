@@ -52,7 +52,9 @@ public:
 	void AddEvent(_double Time, const string& strEventName);
 
 	void Imgui_Render();
-	void Imgui_RenderFrameData();
+
+	vector<CAM_KEYFRAME>& GetKeyFrames() { return m_KeyFrames; }
+	vector<CAM_ANIM_EVENT>& GetEvents() { return m_vecEvent; }
 
 private:
 	string								m_strName;
@@ -95,6 +97,7 @@ public:
 	void StartCamAnim_Return(CCamAnimation* pCamAnim, CCamera* pPreCam, _float4x4 WorldMatrix, _float fStartLerpTime = 0.f, _float fEndLerpTime = 0.f);
 	void StartCamAnim(CCamAnimation* pCamAnim, _float4x4 PreCamWorldMatrix, _float4x4 WorldMatrix, _float fStartLerpTime = 0.f, _float fEndLerpTime = 0.f);
 	void AddEvent(const string& strEventName, const function<void()>& Callback);
+	list<string>& GetRequestedEvents() { return m_RequestedEvents; }
 
 private:
 	_float		m_fMouseSpeed = 0.03f;
@@ -114,6 +117,7 @@ private:
 	CCamera* m_pPreCam = nullptr;
 
 	unordered_map<string, function<void()>> m_Events;
+	list<string> m_RequestedEvents;
 
 
 public:

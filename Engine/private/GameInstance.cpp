@@ -889,6 +889,11 @@ void CGameInstance::ReleaseCameraFovCurve()
 	return m_pCamera_Manager->ReleaseCameraFovCurve();
 }
 
+CCamAnimation* CGameInstance::GetCamAnim(const string& strName)
+{
+	return m_pCamera_Manager->GetCamAnim(strName);
+}
+
 void CGameInstance::ResetTimeRatio()
 {
 	m_pGameTime_Manager->ResetTimeRatio();
@@ -1068,6 +1073,5 @@ void CGameInstance::Free()
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pCurve_Manager);
 	Safe_Release(m_pPhysX_Manager);
-
 }
 

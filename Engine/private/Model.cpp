@@ -675,6 +675,10 @@ void CModel::Imgui_RenderProperty()
 				}
 				ImGui::EndListBox();
 			}
+			if (ImGui::Button("Play Anim"))
+			{
+				SetPlayAnimation(m_CurAnimName);
+			}
 		}
 	}
 

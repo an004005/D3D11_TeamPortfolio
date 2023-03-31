@@ -549,6 +549,7 @@
     </ClInclude>
     <ClInclude Include="..\public\AnimCam.h" />
     <ClInclude Include="..\public\Imgui_CamAnimEditor.h" />
+    <ClInclude Include="..\public\CamAnimSequencer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -872,6 +873,7 @@
     </ClCompile>
     <ClCompile Include="..\private\AnimCam.cpp" />
     <ClCompile Include="..\private\Imgui_CamAnimEditor.cpp" />
+    <ClCompile Include="..\private\CamAnimSequencer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">

@@ -170,6 +170,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\AnimCam.h" />
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\public\Bone.h" />
+    <ClInclude Include="..\public\CamAnimSequencer.h" />
     <ClInclude Include="..\public\Camera.h" />
     <ClInclude Include="..\public\Camera_Manager.h" />
     <ClInclude Include="..\public\Cell.h" />
@@ -291,6 +292,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\AnimCam.cpp" />
     <ClCompile Include="..\private\Base.cpp" />
     <ClCompile Include="..\private\Bone.cpp" />
+    <ClCompile Include="..\private\CamAnimSequencer.cpp" />
     <ClCompile Include="..\private\Camera.cpp" />
     <ClCompile Include="..\private\Camera_Manager.cpp" />
     <ClCompile Include="..\private\Cell.cpp" />
