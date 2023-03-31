@@ -21,6 +21,6 @@
             "../Bin/Resources/00_Common/03_Texture/T_cm_Fil_Glay.png",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch400/Texture/T_ch0400_Hood_CTL.png"
         ],
-        "Pass" : 1
+        "Pass" : 10
     }
 }

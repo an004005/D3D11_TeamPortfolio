@@ -60,6 +60,9 @@ public:
 	_bool IsOnPhysX();
 	void SetActive(_bool bActive);
 
+	void GetShapeInfo(physx::PxCapsuleGeometry& CapsuleGeo, physx::PxTransform& pxTransform);
+	_float GetRadius() const { return m_tDesc.radius; }
+
 protected:
 	void CreateController();
 	void ReleaseController();

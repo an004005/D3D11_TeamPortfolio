@@ -8,7 +8,7 @@
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
 
-//#define USE_PORTRAIT
+// #define USE_PORTRAIT
 
 /*********************
  *CPostVFX_SAS_Portrait
@@ -417,6 +417,7 @@ void CSAS_Portrait::Imgui_RenderProperty()
 void CSAS_Portrait::Start_SAS(ESASType eType)
 {
 #ifndef USE_PORTRAIT
+	m_bFinish = true;
 	return;
 #endif
 	m_eCurType = eType;

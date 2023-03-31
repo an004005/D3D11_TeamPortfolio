@@ -304,6 +304,33 @@
     <Filter Include="02.GameObjects\UI\3DUI">
       <UniqueIdentifier>{1b202ea8-4c32-4399-b17b-b9c184a5027f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FactoryMethod">
+      <UniqueIdentifier>{c339909b-d428-41f4-9c52-dbbf78dbea31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Trigger">
+      <UniqueIdentifier>{de696a83-1b14-4455-81e6-aee65fc00158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\17.KineticEditor">
+      <UniqueIdentifier>{cf49c083-b25e-424b-aca3-6c741d536048}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\BronJon%28Tutorial_Boss%29\BrJ_Controller">
+      <UniqueIdentifier>{9f08bacd-e670-43c4-8819-f5112c46f927}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\boss1\Boss1_Controller">
+      <UniqueIdentifier>{b2e59d02-3ca6-4756-83c6-6ac671cdf04c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX\Particle\ParticleGroup">
+      <UniqueIdentifier>{f465b88f-dbb3-4679-a8d4-76b67ddacdbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29">
+      <UniqueIdentifier>{6fe012a7-b825-4a73-bf5c-a86e9368c9a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\Controller">
+      <UniqueIdentifier>{a9b5e39b-f1ab-4eea-8514-1ba7a5fc21fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM">
+      <UniqueIdentifier>{889711dc-b345-4bdf-9c49-c3181c53954d}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\UI\Main_UI">
       <UniqueIdentifier>{d267f306-d688-42b8-9978-a34ae516a2f5}</UniqueIdentifier>
     </Filter>
@@ -390,6 +417,18 @@
     </Filter>
     <Filter Include="02.GameObjects\SpecialObject\Special_IronBars">
       <UniqueIdentifier>{95eb373d-d073-4426-aeef-0aacbb328a3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short">
+      <UniqueIdentifier>{13c84b28-6101-40b9-8629-d92de65f760f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Tutorial">
+      <UniqueIdentifier>{abb2352e-02f6-4b3c-8379-d3a28a4803fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Mouse">
+      <UniqueIdentifier>{f954c126-8785-41df-817d-93c9c8bf510b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\02. ConstructionSite">
+      <UniqueIdentifier>{1e272184-8887-431f-937d-de39fd6eeb16}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1106,8 +1145,8 @@
     <ClInclude Include="..\public\Level_KineticEditor.h">
       <Filter>01.Levels\17.KineticEditor</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Level_Stage1.h">
-      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    <ClInclude Include="..\public\Level_ConstructionSite3F.h">
+      <Filter>01.Levels\02.GamePlay\02. ConstructionSite</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GameManager.h">
       <Filter>30. GameManager</Filter>
@@ -1906,8 +1945,8 @@
     <ClCompile Include="..\private\Level_KineticEditor.cpp">
       <Filter>01.Levels\17.KineticEditor</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Level_Stage1.cpp">
-      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    <ClCompile Include="..\private\Level_ConstructionSite3F.cpp">
+      <Filter>01.Levels\02.GamePlay\02. ConstructionSite</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GameManager.cpp">
       <Filter>30. GameManager</Filter>

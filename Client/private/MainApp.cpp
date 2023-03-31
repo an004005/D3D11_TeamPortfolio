@@ -98,7 +98,7 @@ void CMainApp::Tick(_double TimeDelta)
 		return;
 
 	m_pGameInstance->Tick_Engine(TimeDelta);
-	if (CGameManager::GetInstance() != nullptr)
+	if (CGameManager::GetInstance())
 		CGameManager::GetInstance()->Tick(TimeDelta);
  }
 

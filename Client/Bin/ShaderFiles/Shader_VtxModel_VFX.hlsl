@@ -563,6 +563,32 @@ PS_OUT PS_DEFAULT_MODEL_FLOWUV(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_EM1100_WATER(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float2 randomNormal = g_tex_0.Sample(LinearSampler, In.vTexUV).xy;
+	float2 FlowUV = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(-g_Time * g_float_3, -g_Time * g_float_3));
+
+	float4 OriginTex = g_tex_1.Sample(LinearSampler, FlowUV);
+	float Mask = g_tex_2.Sample(LinearSampler, float2(FlowUV.x, FlowUV.y * 4.f)).r;
+	float Gradient = g_tex_3.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y * (g_float_4))).r;
+	float4 ChooseColor = g_vec4_0;
+	float4 BlendColor = OriginTex * ChooseColor * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = CalcHDRColor(FinalColor, g_float_1);
+	Out.vColor.a = Mask * Gradient * g_float_2;
+
+	Out.vFlag = float4(SHADER_DISTORTION_STATIC, 0.f, 0.f, Out.vColor.a);
+
+	if (Out.vColor.a <= 0.01f)
+		discard;
+
+	if (g_float_2 <= 0.f)
+		discard;
+
+	return Out;
+}
+
 // Mesh Trail (Gara)
 PS_OUT PS_BRONJON_LASER(PS_IN In)
 {
@@ -1172,5 +1198,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EXPLODE_CROSS_EF();
+	}
+
+	//25
+	pass Em1100Water
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_WATER();
 	}
 }

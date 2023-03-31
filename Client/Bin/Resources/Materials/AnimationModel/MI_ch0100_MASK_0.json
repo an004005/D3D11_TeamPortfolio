@@ -10,7 +10,12 @@
             ]
         ],
         "Float4x4s": [],
-        "Floats": [0.0, 0.0, 0.0, 0.0],
+        "Floats": [
+            0.0,
+            0.0,
+            0.0,
+            0.003000000026077032
+        ],
         "Ints": [
             0
         ],
@@ -20,8 +25,7 @@
             "",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Mask_AMB.dds\u0000",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Mask_CTL.dds\u0000",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ef_scl_noi_013.png\u0000",
-            "..\\Bin\\Resources\\Meshes\\Scarlet_Nexus\\AnimModels\\Player\\Texture\\T_PatternMap.png\u0000"
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ef_scl_noi_013.png\u0000"
         ]
     },
     "ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"

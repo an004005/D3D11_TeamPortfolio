@@ -56,6 +56,7 @@
 #include "SuperSpeedTrail.h"
 #include "PostVFX_SuperSpeed.h"
 #include "PostVFX_Teleport.h"
+#include "AnimCam.h"
 
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -173,6 +174,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pPlayerCam = m_pGameInstance->Add_Camera("PlayerCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Player");
 	Safe_AddRef(m_pPlayerCam);
+
+	m_pPlayer_AnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->Add_Camera("PlayerAnimCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_AnimCam"));
+	Safe_AddRef(m_pPlayer_AnimCam);
 
 	Json Penetrate = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Penetrate.json");
 	m_pSAS_Penetrate = dynamic_cast<CPostVFX_Penetrate*>(m_pGameInstance->Clone_GameObject_Get(LAYER_PLAYEREFFECT, L"ProtoPostVFX_Penetrate", &Penetrate));
@@ -588,6 +592,15 @@ void CPlayer::AfterPhysX()
 	m_pCamSpot->SetUp_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
 	m_pRange->Update_Tick(m_pTransformCom);
 
+	// if (CGameInstance::GetInstance()->KeyDown(DIK_0))
+	// {
+	// 	list<CAnimation*> TestAnim;
+	// 	TestAnim.push_back(m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100"));
+	// 	m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
+	//
+	// 	auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("DriveModeCam");
+	// 	m_pPlayer_AnimCam->StartCamAnim_Return(pCamAnim, m_pPlayerCam, m_pTransformCom->Get_WorldMatrix_f4x4());
+	// }
 }
 
 HRESULT CPlayer::Render()
@@ -7615,6 +7628,7 @@ void CPlayer::Free()
 	Safe_Release(m_pModel);
 	Safe_Release(m_pController);
 	Safe_Release(m_pPlayerCam);
+	Safe_Release(m_pPlayer_AnimCam);
 
 	Safe_Release(m_pKineticAnimModel);
 
