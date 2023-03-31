@@ -589,7 +589,7 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 {
 	//true가 됐다는건 플레이어가 G키를 눌러 브레인 크러쉬를 실행했다는거.
 	//브레인 크러쉬 애니메이션에 맞춰서 SetDead 함수를 실행시켜 줌
-	if (m_bBrainCrush == true) return;
+	//if (m_bBrainCrush == true) return;
 
 	_int iDamage = tDamageParams.iDamage;
 	// if (m_bHitWeak)

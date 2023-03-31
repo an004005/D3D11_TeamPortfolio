@@ -323,7 +323,6 @@ void CPlayer::Tick(_double TimeDelta)
 
 	HitCheck();
 
-	// ë¸Œë ˆ???¬ëŸ¬??
 	m_pBrainCrashStateMachine->Tick(TimeDelta);
 
 	// ?¹ìˆ˜ê¸?
@@ -332,7 +331,7 @@ void CPlayer::Tick(_double TimeDelta)
 		SpecialObject_Targeting();
 	}
 
-	if (!m_bHit)
+	if (!m_bHit && !m_bBrainCrash)
 	{
 		if (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject())
 		{
@@ -381,14 +380,14 @@ void CPlayer::Tick(_double TimeDelta)
 	}
 	// ~?¹ìˆ˜ê¸?
 
-	if(!m_bHit)
+	if(!m_bHit && !m_bBrainCrash)
 		m_pJustDodgeStateMachine->Tick(TimeDelta);
 
-	if (!m_bHit && (false == m_bKineticCombo) && (false == m_bKineticSpecial)) // ì½¤ë³´ ?€?´ë°???„ë‹ ?Œì—???¼ë°˜ ?¼ë ¥
+	if (!m_bHit && (false == m_bKineticCombo) && (false == m_bKineticSpecial) && !m_bBrainCrash) // ì½¤ë³´ ?€?´ë°???„ë‹ ?Œì—???¼ë°˜ ?¼ë ¥
 	{
 		m_pKineticStataMachine->Tick(TimeDelta);
 	}
-	if (!m_bHit && (false == m_bKineticSpecial)) // ì½¤ë³´ ?€?´ë°?ëŠ” ì½¤ë³´ ?¼ë ¥
+	if (!m_bHit && (false == m_bKineticSpecial) && !m_bBrainCrash) // ì½¤ë³´ ?€?´ë°?ëŠ” ì½¤ë³´ ?¼ë ¥
 	{
 		m_pKineticComboStateMachine->Tick(TimeDelta);
 		//m_pKineticStataMachine->SetState("NO_USE_KINETIC");
@@ -627,7 +626,7 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 		IM_LOG("No Damage");
 		CPlayerInfoManager::GetInstance()->Change_SasEnergy(CHANGETYPE::CHANGE_DECREASE, ESASType::SAS_HARDBODY, 10.f);
 	}
-	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate || m_bDriveMode_Activate)
+	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate || m_bDriveMode_Activate || m_bBrainCrash)
 	{
 		IM_LOG("JustDodge Activate")
 	}
@@ -4832,10 +4831,15 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		})
 		.OnExit([&]()
 		{
-
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 		})
 			.AddTransition("BRAINCRASH_NOUSE to BRAINCRASH_CUTSCENE", "BRAINCRASH_CUTSCENE")
-			.Predicator([&]()->_bool { return CGameInstance::GetInstance()->KeyDown(DIK_H); })
+			.Predicator([&]()->_bool 
+			{ 
+				if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return false;
+				return m_bKineticG && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Decide_PlayBrainCrush();
+			})
 			.Priority(0)
 
 		.AddState("BRAINCRASH_CUTSCENE")
