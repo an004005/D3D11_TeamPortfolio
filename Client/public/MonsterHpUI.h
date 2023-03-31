@@ -25,7 +25,6 @@ public:
 
 	void Set_MonsterInfo(const _int iLevel, const EEnemyName eName);
 
-	//Owner must update every tick
 	void Set_HpRatio(_float fHpRatio);
 private:
 	void HpBack_Tick(const _double & TimeDelta);

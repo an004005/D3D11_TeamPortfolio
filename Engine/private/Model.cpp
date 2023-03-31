@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "..\public\Model.h"
 #include "Mesh.h"
 #include "Texture.h"
@@ -57,24 +57,24 @@ CModel::CModel(const CModel & rhs)
 {
 	if (m_eType == TYPE_ANIM)
 	{
-		// bone »ı¼º
+		// bone ìƒì„±
 		const Json jRootBone = Json::parse(rhs.m_BoneObjectDump);
 		Ready_Bones(jRootBone, nullptr);
 		SetBoneChildren(jRootBone);
 	}
 
-	// ¸Ş½¬ Å¬·Ğ
+	// ë©”ì‰¬ í´ë¡ 
 	m_Meshes.reserve(rhs.m_Meshes.size());
 	for (auto& pMesh : rhs.m_Meshes)
 		m_Meshes.push_back(dynamic_cast<CMesh*>(pMesh->Clone()));
 
 	if (m_eType == TYPE_ANIM)
 	{
-		// ¸Ş½¬ º» ¿¬°á
+		// ë©”ì‰¬ ë³¸ ì—°ê²°
 		for (const auto pMesh : m_Meshes)
 			pMesh->SetUp_MeshBones(this);
 
-		// ¾Ö´Ï¸ŞÀÌ¼Ç º¹»ç ¹× ¸µÅ©
+		// ì• ë‹ˆë©”ì´ì…˜ ë³µì‚¬ ë° ë§í¬
 		for (const auto& pAnimPair : rhs.m_mapAnimation)
 		{
 			m_mapAnimation.emplace(pAnimPair.first, pAnimPair.second->Clone());
@@ -88,7 +88,7 @@ CModel::CModel(const CModel & rhs)
 
 	// for (auto& pMtrl : m_Materials)
 	// 	Safe_AddRef(pMtrl);
-	//  ¸ÓÅÍ¸®¾ó º¹»ç
+	//  ë¨¸í„°ë¦¬ì–¼ ë³µì‚¬
 	m_Materials.reserve(rhs.m_Materials.size());
 	for (auto pMtrl : rhs.m_Materials)
 		m_Materials.push_back((CMaterial*)pMtrl->Clone(nullptr));
@@ -215,8 +215,8 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix)
 	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
 	vMovePos = XMVector3TransformNormal(vMovePos, PivotRotation);
 
-	// PivotÀ» Àû¿ë½ÃÄÑµµ YÃà°ú ZÃà ÀÌµ¿ÀÌ µÚÆ²¸®´Â Çö»óÀ¸·Î ÀÎÇØ
-	// ÇöÀç XÃà¿¡ ´ëÇØ È¸ÀüÀ» ÇØµĞ »óÅÂ, ¿øÀÎ ÆÄ¾Ç ½Ã ´Ù½Ã ¿ø»óº¹±¸ ÇÒ °Í
+	// Pivotì„ ì ìš©ì‹œì¼œë„ Yì¶•ê³¼ Zì¶• ì´ë™ì´ ë’¤í‹€ë¦¬ëŠ” í˜„ìƒìœ¼ë¡œ ì¸í•´
+	// í˜„ì¬ Xì¶•ì— ëŒ€í•´ íšŒì „ì„ í•´ë‘” ìƒíƒœ, ì›ì¸ íŒŒì•… ì‹œ ë‹¤ì‹œ ì›ìƒë³µêµ¬ í•  ê²ƒ
 	/*********************************************************************/
 	_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
 	vMovePos = XMVector3TransformNormal(vMovePos, ModifyRotation);
@@ -285,8 +285,8 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
 	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
 	vMovePos = XMVector3TransformNormal(vMovePos, PivotRotation);
 
-	// PivotÀ» Àû¿ë½ÃÄÑµµ YÃà°ú ZÃà ÀÌµ¿ÀÌ µÚÆ²¸®´Â Çö»óÀ¸·Î ÀÎÇØ
-	// ÇöÀç XÃà¿¡ ´ëÇØ È¸ÀüÀ» ÇØµĞ »óÅÂ, ¿øÀÎ ÆÄ¾Ç ½Ã ´Ù½Ã ¿ø»óº¹±¸ ÇÒ °Í
+	// Pivotì„ ì ìš©ì‹œì¼œë„ Yì¶•ê³¼ Zì¶• ì´ë™ì´ ë’¤í‹€ë¦¬ëŠ” í˜„ìƒìœ¼ë¡œ ì¸í•´
+	// í˜„ì¬ Xì¶•ì— ëŒ€í•´ íšŒì „ì„ í•´ë‘” ìƒíƒœ, ì›ì¸ íŒŒì•… ì‹œ ë‹¤ì‹œ ì›ìƒë³µêµ¬ í•  ê²ƒ
 	/*********************************************************************/
 	_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
 	vMovePos = XMVector3TransformNormal(vMovePos, ModifyRotation);
@@ -338,8 +338,8 @@ _float CModel::GetLocalScalar(_fmatrix WorldMatrix)
 	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
 	vMovePos = XMVector3TransformNormal(vMovePos, PivotRotation);
 
-	// PivotÀ» Àû¿ë½ÃÄÑµµ YÃà°ú ZÃà ÀÌµ¿ÀÌ µÚÆ²¸®´Â Çö»óÀ¸·Î ÀÎÇØ
-	// ÇöÀç XÃà¿¡ ´ëÇØ È¸ÀüÀ» ÇØµĞ »óÅÂ, ¿øÀÎ ÆÄ¾Ç ½Ã ´Ù½Ã ¿ø»óº¹±¸ ÇÒ °Í
+	// Pivotì„ ì ìš©ì‹œì¼œë„ Yì¶•ê³¼ Zì¶• ì´ë™ì´ ë’¤í‹€ë¦¬ëŠ” í˜„ìƒìœ¼ë¡œ ì¸í•´
+	// í˜„ì¬ Xì¶•ì— ëŒ€í•´ íšŒì „ì„ í•´ë‘” ìƒíƒœ, ì›ì¸ íŒŒì•… ì‹œ ë‹¤ì‹œ ì›ìƒë³µêµ¬ í•  ê²ƒ
 	/*********************************************************************/
 	_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
 	vMovePos = XMVector3TransformNormal(vMovePos, ModifyRotation);
@@ -1348,7 +1348,7 @@ void CModel::Ready_Bones(const Json& jBone, CBone* pParent)
 		Safe_AddRef(m_pRootBone);
 	}
 
-	// ¿øº» °¡Á®±â ÀÖ´Â°÷, »èÁ¦¸¦ À§ÇØ addrefÇÏÁö ¾Ê´Â´Ù.
+	// ì›ë³¸ ê°€ì ¸ê¸° ìˆëŠ”ê³³, ì‚­ì œë¥¼ ìœ„í•´ addrefí•˜ì§€ ì•ŠëŠ”ë‹¤.
 	m_mapBones.emplace(jBone["Name"].get<string>(), pBone);
 
 	if (jBone.contains("Children"))
@@ -1450,7 +1450,7 @@ _vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix)
 
 	for (auto& iter : m_mapOptionalRootMotion)
 	{
-		if (m_CurAnimName == iter.first)	// ÀÌº¥Æ® Äİ·¯¿Í °°Àº °³³ä
+		if (m_CurAnimName == iter.first)	// ì´ë²¤íŠ¸ ì½œëŸ¬ì™€ ê°™ì€ ê°œë…
 		{
 			_float fPlayTime = static_cast<_float>(m_mapAnimation[m_CurAnimName]->GetPlayTime());
 
@@ -1495,7 +1495,7 @@ _vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix)
 
 					if (0.f > XMVectorGetX(XMVector3Dot(vResultDir, vMovePos)))
 					{
-						// È¤½Ã ¹æÇâº¤ÅÍ Æ¢¸é ¾ê·Î Àâ¾ÆÁÜ
+						// í˜¹ì‹œ ë°©í–¥ë²¡í„° íŠ€ë©´ ì–˜ë¡œ ì¡ì•„ì¤Œ
 						vInitTrans = vTrans;
 						GetOptionalMoveVector(WorldMatrix);
 					}
@@ -1524,7 +1524,7 @@ _vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix, const string & srtAn
 
 	for (auto& iter : m_mapOptionalRootMotion)
 	{
-		if (srtAnimName == iter.first)	// ÀÌº¥Æ® Äİ·¯¿Í °°Àº °³³ä
+		if (srtAnimName == iter.first)	// ì´ë²¤íŠ¸ ì½œëŸ¬ì™€ ê°™ì€ ê°œë…
 		{
 			_float fPlayTime = static_cast<_float>(m_mapAnimation[srtAnimName]->GetPlayTime());
 
@@ -1563,7 +1563,7 @@ _vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix, const string & srtAn
 
 					if (0.f > XMVectorGetX(XMVector3Dot(vResultDir, vMovePos)))
 					{
-						// È¤½Ã ¹æÇâº¤ÅÍ Æ¢¸é ¾ê·Î Àâ¾ÆÁÜ
+						// í˜¹ì‹œ ë°©í–¥ë²¡í„° íŠ€ë©´ ì–˜ë¡œ ì¡ì•„ì¤Œ
 						vInitTrans = vTrans;
 						GetOptionalMoveVector(WorldMatrix);
 					}

@@ -2,12 +2,6 @@
 #include "Enemy.h"
 #include "Controller.h"
 
-BEGIN(Engine)
-class CFSMComponent;
-class CGameInstance;
-class CAnimation;
-class CRigidBody;
-END
 
 BEGIN(Client)
 
@@ -56,12 +50,8 @@ private:
 	class CEM0400_AnimInstance*		m_pASM = nullptr;
 
 	//충돌
-	CRigidBody*					m_pRange = nullptr;
-
 	CEffectGroup*				m_pSwingEffect = nullptr;
 
-	// Swing Attack
-	list<CScarletCharacter*> m_CollisionList;
 private:
 	//원시 데이터
 	_float3 m_vMoveAxis;
@@ -83,6 +73,8 @@ private:
 	_bool m_bDodge = false;
 
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
+
+	//_float4x4 pivot;
 public:
 	static CEM0400* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

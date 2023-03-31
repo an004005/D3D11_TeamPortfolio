@@ -92,6 +92,7 @@ void CMonsterHpUI::Set_MonsterInfo(const _int iLevel, const EEnemyName eName)
 void CMonsterHpUI::Set_HpRatio(_float fHpRatio)
 {
 	m_pGroup->GetThirdEffect()->GetParams().Floats[0] = fHpRatio;
+	m_fHpBack = fHpRatio;
 }
 
 void CMonsterHpUI::HpBack_Tick(const _double & TimeDelta)
@@ -136,17 +137,20 @@ void CMonsterHpUI::Free()
 {
 	__super::Free();
 
-	if (m_pGroup != nullptr)
+	if (m_bCloned)
 	{
-		m_pGroup->SetDelete();
-		Safe_Release(m_pGroup);
-	}
-	
+		if (m_pGroup != nullptr)
+		{
+			m_pGroup->SetDelete();
+			Safe_Release(m_pGroup);
+		}
 
-	if (m_pMonsterName != nullptr)
-	{
-		m_pMonsterName->SetDelete();
-		Safe_Release(m_pMonsterName);
+
+		if (m_pMonsterName != nullptr)
+		{
+			m_pMonsterName->SetDelete();
+			Safe_Release(m_pMonsterName);
+		}
 	}
 	
 }

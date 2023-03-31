@@ -89,6 +89,8 @@ void CMonsterShildUI::SetShild(const _float & fHP, const _float & fShild)
 	//m_fHpBack = fHP;
 	m_pGroup->GetThirdEffect()->GetParams().Floats[0] = fHP;
 	m_pGroup->GetFourthEffect()->GetParams().Floats[0] = fShild;
+
+	m_fHpBack = fHP;
 }
 
 void CMonsterShildUI::HpBack_Tick(const _double & TimeDelta)
@@ -132,8 +134,20 @@ CGameObject * CMonsterShildUI::Clone(void * pArg)
 void CMonsterShildUI::Free()
 {
 	__super::Free();
-	if (m_pGroup != nullptr && m_pGroup->IsDeleted() == false)
-		m_pGroup->SetDelete();
 
-	Safe_Release(m_pGroup);
+	if (m_bCloned)
+	{
+		if (m_pGroup != nullptr)
+		{
+			m_pGroup->SetDelete();
+			Safe_Release(m_pGroup);
+		}
+
+
+		if (m_pMonsterName != nullptr)
+		{
+			m_pMonsterName->SetDelete();
+			Safe_Release(m_pMonsterName);
+		}
+	}
 }

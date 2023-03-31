@@ -297,6 +297,8 @@ CRigidBody * CEnemy::GetRigidBody(const string & KeyName)
 
 void CEnemy::Update_UIInfo()
 {
+	if (m_bDead == true) return;
+
 	if (m_pShieldUI != nullptr)
 		m_pShieldUI->SetShild(m_iHP / (_float)m_iMaxHP, (_float)m_iCrushGage);
 	else if (m_pHPUI != nullptr)
@@ -341,6 +343,14 @@ void CEnemy::SetDead()
 
 	m_bDead = true;
 	m_DeathTimeline.PlayFromStart();
+	
+	//UI 삭제
+	if (m_pShieldUI != nullptr)
+		m_pShieldUI->SetDelete();
+
+	if (m_pHPUI != nullptr)
+		m_pHPUI->SetDelete();
+	//
 }
 
 void CEnemy::FindTarget()
@@ -371,7 +381,7 @@ void CEnemy::TurnEyesOut()
 	assert(pEffectGroup != nullptr);
 
 	//TimeLine 끝나고 삭제
-	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true);
+	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true, true);
 }
 
 void CEnemy::Create_InfoUI()
@@ -740,4 +750,8 @@ void CEnemy::Free()
 		Safe_Release(it.second);
 
 	m_pRigidBodies.clear();
+
+	Safe_Release(m_pHPUI);
+	Safe_Release(m_pShieldUI);
+		
 }

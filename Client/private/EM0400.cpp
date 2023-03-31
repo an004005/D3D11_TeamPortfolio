@@ -8,6 +8,7 @@
 #include "PhysX_Manager.h"
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
+#include "ImguiUtils.h"
 
 CEM0400::CEM0400(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -78,39 +79,35 @@ void CEM0400::SetUpAnimationEvent()
 	CEnemy::SetUpAnimationEvent();
 
 	// Event Caller
-	m_pModelCom->Add_EventCaller("SwingEff_Start", [this]
-	{
-		if (!m_bDead)
-		{
-			//			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack")->Start_Attach(this, m_strBoneName, false);
-
-			m_pSwingEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack");
-			m_pSwingEffect->Start_Attach(this, "RightShoulder", true);
-			Safe_AddRef(m_pSwingEffect);
-		}
-	});
-
 	m_pModelCom->Add_EventCaller("Swing_Start", [this]
 	{
 		m_bAtkSwitch = true;
 		m_bHitMove = true;
+
+		/*m_pSwingEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack");
+		m_pSwingEffect->Start_Attach(this, "RightShoulder", true);
+		Safe_AddRef(m_pSwingEffect);*/
+
+		_matrix SwingEffectPivotMatirx = CImguiUtils::CreateMatrixFromImGuizmoData(
+			{ 0.08f, 0.f, -1.295f },
+			{ 40.f, -80.f, -110.f, },
+			{ 1.f, 1.f, 1.f });
+
+		m_pSwingEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack");
+		m_pSwingEffect->Start_AttachPivot(this, SwingEffectPivotMatirx, "Target", true);
+		Safe_AddRef(m_pSwingEffect);
+
 	});
 	m_pModelCom->Add_EventCaller("Swing_End", [this]
 	{
 		m_bHitMove = false;
 		m_bAtkSwitch = false;
-	});
 
-	m_pModelCom->Add_EventCaller("SwingEff_End", [this]
-	{
-		if (m_bCloned == true)
+		if (m_pSwingEffect != nullptr)
 		{
-			if (m_pSwingEffect != nullptr)
-			{
-				m_pSwingEffect->SetDelete();
-				Safe_Release(m_pSwingEffect);
-				m_pSwingEffect = nullptr;
-			}
+			m_pSwingEffect->SetDelete();
+			Safe_Release(m_pSwingEffect);
+			m_pSwingEffect = nullptr;
 		}
 	});
 
@@ -363,6 +360,7 @@ void CEM0400::SetUpUI()
 void CEM0400::BeginTick()
 {
 	CEnemy::BeginTick();
+	
 }
 
 void CEM0400::Tick(_double TimeDelta)
@@ -391,13 +389,18 @@ void CEM0400::Tick(_double TimeDelta)
 
 	if (m_vMoveAxis.LengthSquared() > 0.f)
 	{
-		const _float fMoveSpeed = CCurveManager::GetInstance()->GetCurve("em0400_Walk")
-			->GetValue(m_pModelCom->GetPlayAnimation()->GetPlayRatio());
+		if (m_pModelCom->GetPlayAnimation() != nullptr)
+		{
+			auto pp = CCurveManager::GetInstance();
+			const _float fMoveSpeed = CCurveManager::GetInstance()->GetCurve("em0400_Walk")
+				->GetValue(m_pModelCom->GetPlayAnimation()->GetPlayRatio());
 
-		const _float fYaw = m_pTransformCom->GetYaw_Radian();
-		_float3 vVelocity;
-		XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
-		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+			const _float fYaw = m_pTransformCom->GetYaw_Radian();
+			_float3 vVelocity;
+			XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
+			m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+		}
+		
 	}
 
 	ResetHitData();
@@ -429,6 +432,23 @@ void CEM0400::Imgui_RenderProperty()
 	}
 
 	m_pFSM->Imgui_RenderProperty();
+
+
+	/*static _bool tt = false;
+	ImGui::Checkbox("Modify Pivot", &tt);
+
+	if (tt)
+	{
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+
+		if (ImGui::Button("Create_Effect"))
+		{
+			m_pSwingEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack");
+			m_pSwingEffect->Start_AttachPivot(this, pivot, "Target", true);
+			Safe_AddRef(m_pSwingEffect);
+		}
+	}*/
 }
 
 _bool CEM0400::IsPlayingSocket() const
@@ -536,7 +556,6 @@ void CEM0400::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-	Safe_Release(m_pRange);
 
 	if (m_bCloned)
 	{

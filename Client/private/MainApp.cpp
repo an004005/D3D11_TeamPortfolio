@@ -98,7 +98,8 @@ void CMainApp::Tick(_double TimeDelta)
 		return;
 
 	m_pGameInstance->Tick_Engine(TimeDelta);
-	//CGameManager::GetInstance()->Tick(TimeDelta);
+	if (CGameManager::GetInstance() != nullptr)
+		CGameManager::GetInstance()->Tick(TimeDelta);
  }
 
 HRESULT CMainApp::Render()
@@ -520,7 +521,7 @@ void CMainApp::Free()
 	CVFX_Manager::GetInstance()->DestroyInstance();
 	CUI_Manager::GetInstance()->DestroyInstance();
 	CPlayerInfoManager::GetInstance()->DestroyInstance();
-	//CGameManager::GetInstance()->DestroyInstance();
+	CGameManager::GetInstance()->DestroyInstance();
 	CItem_Manager::GetInstance()->DestroyInstance();
 
 	m_pGameInstance->Clear_ImguiObjects();
