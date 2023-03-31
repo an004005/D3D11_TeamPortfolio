@@ -31,13 +31,16 @@ HRESULT CEM0210::Initialize(void * pArg)
 		m_iHP = 1100; // ★
 
 		m_iAtkDamage = 50;
+
+		m_iCrushGauge = 1100;
+		m_iMaxCrushGauge = 1100;
 		iEemeyLevel = 2;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0210;
-	m_bHasCrushGage = true;
+	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	//시작부터 투명상태 적용
@@ -179,7 +182,7 @@ void CEM0210::SetUpFSM()
 				m_fGravity = 20.f;
 			})
 			.AddTransition("Idle to BrainCrushStart", "BrainCrushStart")
-				.Predicator([this] { return m_iCrushGage <= 0; })
+				.Predicator([this] { return m_iCrushGauge <= 0; })
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
 			.AddTransition("Idle to Down", "Down")
@@ -610,7 +613,8 @@ void CEM0210::Imgui_RenderProperty()
 		}
 	}*/
 		
-
+	ImGui::InputInt("HP", &m_iHP);
+	ImGui::InputInt("Crush", &m_iCrushGauge);
 }
 
 _bool CEM0210::Exclude()

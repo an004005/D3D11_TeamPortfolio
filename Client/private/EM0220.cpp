@@ -33,6 +33,10 @@ HRESULT CEM0220::Initialize(void * pArg)
 	{
 		m_iMaxHP = 1100;
 		m_iHP = 1100; // ¡Ú
+
+		m_iCrushGauge = 1100;
+		m_iMaxCrushGauge = 1100;
+
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
 	}
@@ -40,7 +44,7 @@ HRESULT CEM0220::Initialize(void * pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0220;
-	m_bHasCrushGage = true;
+	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	SetUp_Lantern();
@@ -110,7 +114,7 @@ void CEM0220::SetUpFSM()
 				m_fGravity = 20.f;
 			})
 			.AddTransition("Idle to BrainCrushStart", "BrainCrushStart")
-				.Predicator([this] { return m_bBrainCrush; })
+				.Predicator([this] { return m_iCrushGauge <= 0; })
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
 
@@ -402,7 +406,7 @@ void CEM0220::CheckHP(DAMAGE_PARAM & tDamageParams)
 
 	if (m_iHP < 0)
 	{
-		if (m_iCrushGage > 0 || m_dDeadTime > 3.f)
+		if (m_iCrushGauge > 0 || m_dDeadTime > 3.f)
 			SetDead();
 
 		m_bDeadStart = true;

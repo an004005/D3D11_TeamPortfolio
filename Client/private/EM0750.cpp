@@ -38,7 +38,7 @@ HRESULT CEM0750::Initialize(void * pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0750;
-	m_bHasCrushGage = true;
+	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_pTransformCom->SetSpeed(15.f);
 
