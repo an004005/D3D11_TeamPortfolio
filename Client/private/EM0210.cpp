@@ -178,6 +178,8 @@ void CEM0210::SetUpFSM()
 			{
 				m_fGravity = 20.f;
 			})
+			.AddTransition("Idle to BrainCrushStart", "BrainCrushStart")
+				.Predicator([this] { return m_iCrushGage <= 0; })
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
 			.AddTransition("Idle to Down", "Down")
@@ -323,6 +325,46 @@ void CEM0210::SetUpFSM()
 						return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
+///////////////////////////////////////////////////////////////////////////////////////////
+
+		.AddState("BrainCrushStart")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody",  "AS_em0200_485_AL_BCchance_start");
+			})
+			.AddTransition("BrainCrushStart to BrainCrushLoop", "BrainCrushLoop")
+				.Predicator([this]
+				{
+					return m_bDead ||m_bBrainCrush || m_pASM->isSocketPassby("FullBody", 0.95f);
+				})
+
+		.AddState("BrainCrushLoop")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_486_AL_BCchance_loop");
+				m_pModelCom->Find_Animation("AS_em0200_486_AL_BCchance_loop")->SetLooping(true);
+			})
+			.AddTransition("BrainCrushLoop to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_bDead;
+				})
+			.AddTransition("BrainCrushLoop to BrainCrushEnd", "BrainCrushEnd")
+				.Predicator([this]
+				{
+					return m_bBrainCrush;
+				})
+
+		.AddState("BrainCrushEnd")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_487_AL_BCchance_end");
+			})
+			.Tick([this](_double)
+			{
+					if (m_pASM->isSocketPassby("FullBody", 0.95f))
+						SetDead();
+			})
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 		.AddState("Dodge")

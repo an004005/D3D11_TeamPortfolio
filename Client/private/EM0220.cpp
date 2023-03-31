@@ -109,6 +109,8 @@ void CEM0220::SetUpFSM()
 			{
 				m_fGravity = 20.f;
 			})
+			.AddTransition("Idle to BrainCrushStart", "BrainCrushStart")
+				.Predicator([this] { return m_bBrainCrush; })
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
 
@@ -158,16 +160,51 @@ void CEM0220::SetUpFSM()
 				m_pASM->InputAnimSocketMany("FullBody", { "AS_em0200_426_AL_down", "AS_em0200_427_AL_getup" });
 				m_fGravity = 20.f;
 			})
-			.OnExit([this]
-				{
-					bool dasf = 1;
-				})
 			.AddTransition("OnFloorGetup to Idle", "Idle")
 				.Predicator([this]
 			{
 				return m_bDead || m_pASM->isSocketEmpty("FullBody");
 			})
 
+
+		.AddState("BrainCrushStart")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_485_AL_BCchance_start");
+			})
+			.AddTransition("BrainCrushStart to BrainCrushLoop", "BrainCrushLoop")
+				.Predicator([this]
+				{
+					return m_bDead || m_bBrainCrush || m_pASM->isSocketPassby("FullBody", 0.95f);
+				})
+
+		.AddState("BrainCrushLoop")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_486_AL_BCchance_loop");
+				m_pModelCom->Find_Animation("AS_em0200_486_AL_BCchance_loop")->SetLooping(true);
+			})
+			.AddTransition("BrainCrushLoop to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_bDead;
+				})
+			.AddTransition("BrainCrushLoop to BrainCrushEnd", "BrainCrushEnd")
+				.Predicator([this]
+				{
+					return m_bBrainCrush;
+				})
+
+		.AddState("BrainCrushEnd")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_487_AL_BCchance_end");
+			})
+			.Tick([this](_double)
+			{
+				if (m_pASM->isSocketPassby("FullBody", 0.95f))
+					SetDead();
+			})
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 		//Guard loop 중일때 어택이 되면 Guard_End 모션이 끝나고 공격을 하기때문에
