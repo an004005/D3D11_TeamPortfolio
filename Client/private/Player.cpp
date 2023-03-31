@@ -353,6 +353,13 @@ void CPlayer::Tick(_double TimeDelta)
 				m_pContainerStateMachine->Tick(TimeDelta);
 			}
 		}
+
+		if (static_cast<CCamSpot*>(m_pCamSpot)->GetCamMod() == CCamSpot::MOD_ATTACH &&
+			nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+		{
+			m_pTransformCom->LookAt_NonY(CPlayerInfoManager::GetInstance()->Get_TargetedMonster()
+				->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+		}
 	}
 	// ~특수기
 
@@ -2640,7 +2647,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			if (CPlayerInfoManager::GetInstance()->Get_KineticObject())
 			{
 				m_KineticObjectOrigionPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
-				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Kinetic(true);
+				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Trigger(true);
 			}
 
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
@@ -2827,7 +2834,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
 			{
 				m_KineticObjectOrigionPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
-				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Kinetic(true);
+				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Trigger(true);
 			}
 
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
@@ -3004,7 +3011,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
 			{
 				m_KineticObjectOrigionPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
-				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Kinetic(true);
+				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Trigger(true);
 			}
 
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
@@ -3182,7 +3189,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
 			{
 				m_KineticObjectOrigionPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
-				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Kinetic(true);
+				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Trigger(true);
 			}
 
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
@@ -3311,7 +3318,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 				if (CPlayerInfoManager::GetInstance()->Get_KineticObject())
 				{
 					m_KineticObjectOrigionPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
-					static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Kinetic(true);
+					static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Trigger(true);
 				}
 
 				if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
@@ -4818,7 +4825,7 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		{
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_End_L);
-			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_SetKinetic(true);
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_SetTrigger(true);
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Finish();
 		})
 		.Tick([&](double fTimeDelta)
@@ -4975,7 +4982,7 @@ HRESULT CPlayer::SetUp_DropObjectStateMachine()
 			m_bKineticSpecial_Activate = true;
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_DropObject_Drop);
 
-			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Set_Kinetic(false);
+			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Set_Trigger(false);
 			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->DropObject_Floating();
 		})
 		.Tick([&](double fTimeDelta)
@@ -5827,9 +5834,9 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 
 			if (m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetName() == "AS_ch0100_337_AL_press_start")
 			{
-				if (0.7f >= fRatio)
+				if (0.9f >= fRatio)
 				{
-					static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_Reposition(m_pTransformCom, fRatio / 0.7f, (1.f - (fRatio / 0.7f)));
+					static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_Reposition(m_pTransformCom, fRatio / 0.9f, (1.f - (fRatio / 0.9f)));
 				}
 				else
 				{

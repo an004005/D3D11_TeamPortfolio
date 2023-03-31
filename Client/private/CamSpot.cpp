@@ -151,11 +151,21 @@ void CCamSpot::AfterPhysX()
 
 		if (MOD_SYNC == m_eCamMod)
 		{
+			if (m_bCheckActionEnd != MOD_SYNC)
+			{
+				m_CheckMatrix = m_AttachMatrix;
+			}
+
 			_vector vSyncPos = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncPos(vMyPos, vMyLook, m_fCamHeight, g_fTimeDelta);
-			_vector vLerpPos = XMVectorLerp(m_AttachMatrix.r[3], vSyncPos, m_fLerpTime);
+			_vector vLerpPos = XMVectorLerp(m_CheckMatrix.r[3], vSyncPos, m_fLerpTime);
 
 			_vector vSyncLook = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncLook(vMyPos, vMyLook, m_fCamHeight, g_fTimeDelta);
-			_vector vLerpLook = XMVectorLerp(m_AttachMatrix.r[2], vSyncLook, m_fLerpTime);
+			_vector vLerpLook = XMVectorLerp(m_CheckMatrix.r[2], vSyncLook, m_fLerpTime);
+
+			if (m_fLerpTime < 1.f)
+				CGameInstance::GetInstance()->SetCameraFov(40.f + (20.f * m_fLerpTime));
+			else
+				CGameInstance::GetInstance()->SetCameraFov(60.f);
 
 			static_cast<CCamera_Player*>(m_pPlayerCamera)->Lerp_ActionPos(vLerpPos, vLerpLook);
 		}
@@ -166,6 +176,11 @@ void CCamSpot::AfterPhysX()
 
 			_vector vSyncLook = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncLook(vMyPos, vMyLook, m_fCamHeight, g_fTimeDelta);
 			_vector vLerpLook = XMVectorLerp(vSyncLook, m_AttachMatrix.r[2], m_fLerpTime);
+
+			if (m_fLerpTime < 1.f)
+				CGameInstance::GetInstance()->SetCameraFov(60.f - (20.f * m_fLerpTime));
+			else
+				CGameInstance::GetInstance()->SetCameraFov(40.f);
 
 			static_cast<CCamera_Player*>(m_pPlayerCamera)->Lerp_ActionPos(vLerpPos, vLerpLook);
 		}
@@ -181,6 +196,8 @@ void CCamSpot::AfterPhysX()
 			static_cast<CCamera_Player*>(m_pPlayerCamera)->Attach_Target(m_AttachMatrix);
 		}
 	}
+
+	m_bCheckActionEnd = m_eCamMod;
 }
 
 void CCamSpot::Imgui_RenderProperty()

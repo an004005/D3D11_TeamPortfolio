@@ -33,7 +33,7 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 public:
-	void	Set_Kinetic(_bool bKinetic);
+	void	Set_Trigger(_bool bTrigger);
 	void	DropObject_Floating();
 	void	DropObject_Drop();
 

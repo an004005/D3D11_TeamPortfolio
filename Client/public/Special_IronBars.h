@@ -32,7 +32,7 @@ public:
 public:
 	void	IronBars_AnimActive(_bool bActive);
 	void	IronBars_Decompose(_bool bDecompose);
-	void	IronBars_SetKinetic(_bool bKinetic);
+	void	IronBars_SetTrigger(_bool bTrigger);
 
 	void	IronBars_AttachAnim(CModel* pModel, CTransform* pTransform, _float4 vPoint);
 

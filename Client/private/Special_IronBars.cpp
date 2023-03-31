@@ -180,11 +180,11 @@ void CSpecial_IronBars::IronBars_Decompose(_bool bDecompose)
 	//IronBars_SetKinetic(!bDecompose);
 }
 
-void CSpecial_IronBars::IronBars_SetKinetic(_bool bKinetic)
+void CSpecial_IronBars::IronBars_SetTrigger(_bool bTrigger)
 {
 	for (_uint i = 0; i < 8; ++i)
 	{
-		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Set_Kinetic(bKinetic);
+		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Set_Trigger(bTrigger);
 	}
 }
 

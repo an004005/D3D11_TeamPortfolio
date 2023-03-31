@@ -880,6 +880,11 @@ void CGameInstance::ReleaseCameraFovCurve()
 	return m_pCamera_Manager->ReleaseCameraFovCurve();
 }
 
+void CGameInstance::SetCameraFov(_float fFov)
+{
+	return m_pCamera_Manager->SetCameraFov(fFov);
+}
+
 void CGameInstance::ResetTimeRatio()
 {
 	m_pGameTime_Manager->ResetTimeRatio();

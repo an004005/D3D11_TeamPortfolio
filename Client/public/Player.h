@@ -652,7 +652,7 @@ private:	// 플레이어 림라이트, 외곽선 관련
 
 private:
 	_float	m_fThrowPower = 2000.f;
-	_float	m_fChargePower = 50.f;
+	_float	m_fChargePower = 12.f;
 
 	_float	m_fRotX = 0.f;
 	_float  m_fRotY = 0.f;

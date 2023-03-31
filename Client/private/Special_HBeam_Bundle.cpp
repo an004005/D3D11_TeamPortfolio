@@ -202,6 +202,12 @@ void CSpecial_HBeam_Bundle::Imgui_RenderProperty()
 
 	ImGui::InputFloat("ThrowPower", &m_fThrowPower);
 	ImGui::InputFloat("FloatPower", &m_fFloatPower);
+
+	if (ImGui::CollapsingHeader("Local"))
+	{
+		static GUIZMO_INFO Local;
+		CImguiUtils::Render_Guizmo(&m_LocalMatrix, Local, true, true);
+	}
 }
 
 void CSpecial_HBeam_Bundle::HBeam_Drift()
@@ -239,7 +245,7 @@ void CSpecial_HBeam_Bundle::HBeam_Decompose()
 void CSpecial_HBeam_Bundle::HBeam_Single_Catch()
 {
 	for (auto& iter : m_pHBeam_Single)
-		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Kinetic(true);
+		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Trigger(true);
 }
 
 void CSpecial_HBeam_Bundle::HBeam_Single_Turn()
@@ -257,10 +263,10 @@ void CSpecial_HBeam_Bundle::HBeam_Single_Finish()
 	HBeam_SetDeadTimer();
 }
 
-void CSpecial_HBeam_Bundle::HBeam_Single_SetKinetic(_bool bKinetic)
+void CSpecial_HBeam_Bundle::HBeam_Single_SetTrigger(_bool bKinetic)
 {
 	for (auto& iter : m_pHBeam_Single)
-		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Kinetic(bKinetic);
+		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Trigger(bKinetic);
 }
 
 void CSpecial_HBeam_Bundle::HBeam_Collision()
