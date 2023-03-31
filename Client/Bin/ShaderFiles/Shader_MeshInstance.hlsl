@@ -245,6 +245,24 @@ PS_OUT PS_ENEMY_DEAD_ROSE(PS_IN In)
 
 	float4 OriginColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	Out.vColor = CalcHDRColor(OriginColor, g_float_0);
+	Out.vColor.a = Out.vColor.a * g_float_1 * In.RamainLifeRatio;
+
+	// Out.vColor.a = 1.f;
+	// if (Out.vColor.a < 0.001f)
+	// 	discard;
+
+	return Out;
+}
+
+PS_OUT PS_ENEMY_DEAD_ROSE_DARK(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	// float4 OriginColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor = g_vec4_0;
+	Out.vColor.a *=  In.RamainLifeRatio;
+
+
 	// Out.vColor.a = 1.f;
 	// if (Out.vColor.a < 0.001f)
 	// 	discard;
@@ -372,5 +390,18 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_ENEMY_DEAD_ROSE();
+	}
+
+	pass EnemyDeadRoseDark //7
+	{
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(DS_Default, 0);
+		SetRasterizerState(RS_NonCulling);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ENEMY_DEAD_ROSE_DARK();
 	}
 }

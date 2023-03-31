@@ -36,8 +36,7 @@ void CItem_GaugeUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	if (false == m_bCooldownTimeStart)
-		return;
+	if (false == m_bCooldownTimeStart) return;
 
 	if (true == m_fRatioDown)
 	{

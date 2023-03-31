@@ -508,6 +508,23 @@ PS_OUT PS_EM1100_STAMP(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_EXPLODE_CROSS_EF(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float2 FlipUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.03, 8, 8);
+	float4 OriginTex = g_tex_0.Sample(LinearSampler, FlipUV);
+
+	Out.vColor = CalcHDRColor(OriginTex, g_float_0);
+	// Out.vColor.a = OriginTex.r * g_float_0;
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (g_float_0 <= 0.f)
+		discard;
+
+	return Out;
+}
+
+
 PS_OUT PS_ATTACK_SLASH_LINE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -1141,5 +1158,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SAS_MASK_PARTICLE();
+	}
+
+	//24
+	pass Explode_CrossEF
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EXPLODE_CROSS_EF();
 	}
 }

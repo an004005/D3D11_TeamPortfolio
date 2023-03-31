@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Canvas_BossHp.h"
 #include "GameInstance.h"
-#include "UI_Manager.h"
 
 CCanvas_BossHp::CCanvas_BossHp(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -25,8 +24,6 @@ HRESULT CCanvas_BossHp::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
-
-	CUI_Manager::GetInstance()->Add_Canvas(L"Canvas_BossHp", this);
 
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
