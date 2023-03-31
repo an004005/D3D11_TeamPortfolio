@@ -347,14 +347,10 @@ void CEM0210::SetUpFSM()
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_486_AL_BCchance_loop");
 				m_pModelCom->Find_Animation("AS_em0200_486_AL_BCchance_loop")->SetLooping(true);
 			})
-			.AddTransition("BrainCrushLoop to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead;
-				})
 			.AddTransition("BrainCrushLoop to BrainCrushEnd", "BrainCrushEnd")
 				.Predicator([this]
 				{
+					//브레인 크러쉬를 하지 않았을때는 부모쪽에서 3초 안에 죽임
 					return m_bBrainCrush;
 				})
 

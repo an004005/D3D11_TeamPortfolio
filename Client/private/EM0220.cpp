@@ -170,7 +170,6 @@ void CEM0220::SetUpFSM()
 				return m_bDead || m_pASM->isSocketEmpty("FullBody");
 			})
 
-
 		.AddState("BrainCrushStart")
 			.OnStart([this]
 			{
@@ -188,11 +187,6 @@ void CEM0220::SetUpFSM()
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_486_AL_BCchance_loop");
 				m_pModelCom->Find_Animation("AS_em0200_486_AL_BCchance_loop")->SetLooping(true);
 			})
-			.AddTransition("BrainCrushLoop to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead;
-				})
 			.AddTransition("BrainCrushLoop to BrainCrushEnd", "BrainCrushEnd")
 				.Predicator([this]
 				{

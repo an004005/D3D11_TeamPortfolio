@@ -114,10 +114,13 @@ void CEnemy::Tick(_double TimeDelta)
 
 	m_pModelCom->Tick(TimeDelta);
 
+	// 브레인 크러쉬 안할때 3초 안에 죽이기
 	if (m_bDeadStart)
 		m_dDeadTime += TimeDelta;
 
-
+	if (m_dDeadTime >= 3.f)
+		SetDead();
+	//
 	if (GetKeyState('K') & 0x8000)
 		SetDead(); 
 	
@@ -579,6 +582,8 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 		if (m_iCrushGauge < 0)
 		{
 			m_iCrushGauge = 0;
+			m_bDeadStart = true;
+
 			//UI 띄우기
 		}
 			
@@ -596,9 +601,9 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 	// 	iDamage *= 2;
 
 	m_iHP -= iDamage;
-	if (m_iHP <= 0)
+	if (m_iHP < 0)
 	{
-		if (m_iCrushGauge > 0 || m_dDeadTime > 3.f)
+		if (m_iCrushGauge > 0)
 			SetDead();
 
 		m_bDeadStart = true;
