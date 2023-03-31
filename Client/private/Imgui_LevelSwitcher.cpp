@@ -13,6 +13,7 @@
 #include "Level_EnemiesTest.h"
 #include "Level_Batch.h"
 #include "Level_KineticEditor.h"
+#include "Level_ConstructionSite3F.h"
 
 CImgui_LevelSwitcher::CImgui_LevelSwitcher(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImguiObject(pDevice, pContext)
@@ -33,12 +34,6 @@ void CImgui_LevelSwitcher::Imgui_RenderMenu()
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_GAMEPLAY, 
 				CLevel_Loading_Simple::Create<CLevel_GamePlay>(m_pDevice, m_pContext));
-		}
-		if (ImGui::MenuItem("Level_Tutorial"))
-		{
-			CGameInstance::GetInstance()->Open_Loading(
-				LEVEL_TUTORIAL,
-				CLevel_Loading_Simple::Create<CLevel_Tutorial>(m_pDevice, m_pContext));
 		}
 		if (ImGui::MenuItem("Level_MapTool"))
 		{
@@ -93,6 +88,18 @@ void CImgui_LevelSwitcher::Imgui_RenderMenu()
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_KINETIC_EDITOR	,
 				CLevel_Loading_Simple::Create<CLevel_KineticEditor>(m_pDevice, m_pContext));
+		}
+		if (ImGui::MenuItem("Level_Tutorial"))
+		{
+			CGameInstance::GetInstance()->Open_Loading(
+				LEVEL_TUTORIAL,
+				CLevel_Loading_Simple::Create<CLevel_Tutorial>(m_pDevice, m_pContext));
+		}
+		if (ImGui::MenuItem("Level_ConstructionSite3F"))
+		{
+			CGameInstance::GetInstance()->Open_Loading(
+				LEVEL_CONSTRUCTIONSITE_3F,
+				CLevel_Loading_Simple::Create<CLevel_ConstructionSite3F>(m_pDevice, m_pContext));
 		}
 		ImGui::EndMenu();
 	}

@@ -279,6 +279,25 @@ _bool CPhysX_Manager::OverlapCapsule(const CapsuleOverlapParams& params)
 	return m_Scene->overlap(capsule, transform, *params.overlapOut, queryFilterData);
 }
 
+_bool CPhysX_Manager::PxOverlapCapsule(const PxCapsuleOverlapParams& params)
+{
+#ifdef _DEBUG
+	if (params.fVisibleTime > 0.f && m_bRenderDebug)
+	{
+		PxShape* pShape = m_Physics->createShape(params.CapsuleGeo, *FindMaterial("Default"));
+		AddDebugShape(pShape, params.pxTransform, params.fVisibleTime);
+	}
+#endif
+
+	PxFilterData filterData;
+	filterData.word0 = params.iTargetType;
+	PxQueryFilterData queryFilterData;
+	queryFilterData.data = filterData;
+	queryFilterData.flags = params.queryFlags;
+
+	return m_Scene->overlap(params.CapsuleGeo, params.pxTransform, *params.overlapOut, queryFilterData);
+}
+
 _bool CPhysX_Manager::SweepSphere(const SphereSweepParams& params)
 {
 	const PxSphereGeometry sphere(params.fRadius);

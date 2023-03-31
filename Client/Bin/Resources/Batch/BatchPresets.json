@@ -16,6 +16,11 @@
             "ProtoTag": "Monster_em750"
         },
         {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
+            "ProtoTag": "Monster_em210"
+        },
+        {
             "Layer": "Layer_MapKineticObject",
             "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Bench.json",
             "ProtoTag": "Prototype_GameObject_MapKinetic_Object"

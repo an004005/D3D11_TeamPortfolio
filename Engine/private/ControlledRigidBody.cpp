@@ -183,6 +183,17 @@ void CControlledRigidBody::SetActive(_bool bActive)
 	}
 }
 
+void CControlledRigidBody::GetShapeInfo(physx::PxCapsuleGeometry& CapsuleGeo, physx::PxTransform& pxTransform)
+{
+	if (m_pController)
+	{
+		PxShape* shape;
+		m_pController->getActor()->getShapes(&shape, 1);
+		CapsuleGeo = shape->getGeometry().capsule();
+		pxTransform = physx::PxShapeExt::getGlobalPose(*shape, *m_pController->getActor());
+	}
+}
+
 void CControlledRigidBody::CreateController()
 {
 	ReleaseController();
