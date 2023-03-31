@@ -16,7 +16,7 @@ struct VS_IN
 	float2		vTexUV : TEXCOORD0;
 	float3		vTangent : TANGENT;
 
-	/* ÇöÀç Á¤Á¡¿¡°Ô °öÇØÁ®¾ßÇÒ »Àµé(ÃÖ´ë 4°³)ÀÇ Çà·ÄÀ» ¸¸µç´Ù. */
+	/* í˜„ì¬ ì •ì ì—ê²Œ ê³±í•´ì ¸ì•¼í•  ë¼ˆë“¤(ìµœëŒ€ 4ê°œ)ì˜ í–‰ë ¬ì„ ë§Œë“ ë‹¤. */
 	uint4		vBlendIndex : BLENDINDEX;
 	float4		vBlendWeight : BLENDWEIGHT;
 };
@@ -82,7 +82,7 @@ struct PS_OUT
 	float4		vAMB : SV_TARGET3;
 	float4		vCTL : SV_TARGET4;
 	float4		vOutline : SV_TARGET5;
-	float4		vFlag : SV_TARGET6; // post process ÇÃ·¡±×
+	float4		vFlag : SV_TARGET6; // post process í”Œë˜ê·¸
 };
 
 struct PS_OUT_FORWARD
@@ -93,7 +93,7 @@ struct PS_OUT_FORWARD
 struct PS_OUT_NONLIGHT
 {
 	float4		vColor : SV_TARGET0;
-	float4		vFlag : SV_TARGET1; // post process ÇÃ·¡±×
+	float4		vFlag : SV_TARGET1; // post process í”Œë˜ê·¸
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -125,11 +125,11 @@ float4 NormalPacking(PS_IN In)
 	return vector(vNormal * 0.5f + 0.5f, 0.f);
 }
 
-// g_float_0 : ¿°·Â ¸²¶óÀÌÆ® ¹à±â
-// g_float_1 : ÇÏµå¹Ùµğ µğ¼Öºê
-// g_float_2 : ÅÚ·¹Æ÷Æ® µğ¼Öºê
-// g_int_0 : »óÅÂÀÌ»ó ÇÃ·¡±×
-// g_vec4_0 : ¾Æ¿ô¶óÀÎ »ö(rbg) ¹× µÎ²²(a)
+// g_float_0 : ì—¼ë ¥ ë¦¼ë¼ì´íŠ¸ ë°ê¸°
+// g_float_1 : í•˜ë“œë°”ë”” ë””ì†”ë¸Œ
+// g_float_2 : í…”ë ˆí¬íŠ¸ ë””ì†”ë¸Œ
+// g_int_0 : ìƒíƒœì´ìƒ í”Œë˜ê·¸
+// g_vec4_0 : ì•„ì›ƒë¼ì¸ ìƒ‰(rbg) ë° ë‘ê»˜(a)
 PS_OUT PS_TOON_DEFAULT(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -179,7 +179,7 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 		}
 		else
 		{
-			vColor = COL_PURPLE; // º¸¶ó
+			vColor = COL_PURPLE; // ë³´ë¼
 			fEmissive = fPhysicRimBright;
 		}
 
@@ -215,8 +215,8 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 
 // g_float_0 : empty
 // g_float_1 : empty
-// g_float_2 : ÅÚ·¹Æ÷Æ® µğ¼Öºê
-// g_vec4_0 : ¾Æ¿ô¶óÀÎ »ö(rbg) ¹× µÎ²²(a)
+// g_float_2 : í…”ë ˆí¬íŠ¸ ë””ì†”ë¸Œ
+// g_vec4_0 : ì•„ì›ƒë¼ì¸ ìƒ‰(rbg) ë° ë‘ê»˜(a)
 PS_OUT PS_WIRE_2(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -254,9 +254,9 @@ PS_OUT PS_WIRE_2(PS_IN In)
 	return Out;
 }
 
-// g_float_0 : ¿°·Â ¸²¶óÀÌÆ® ¹à±â
-// g_int_0 : »óÅÂÀÌ»ó ÇÃ·¡±×
-// g_vec4_0 : ¾Æ¿ô¶óÀÎ »ö(rbg) ¹× µÎ²²(a)
+// g_float_0 : ì—¼ë ¥ ë¦¼ë¼ì´íŠ¸ ë°ê¸°
+// g_int_0 : ìƒíƒœì´ìƒ í”Œë˜ê·¸
+// g_vec4_0 : ì•„ì›ƒë¼ì¸ ìƒ‰(rbg) ë° ë‘ê»˜(a)
 PS_OUT PS_CH100_HAIR_1_3(PS_IN In)
 {
 	PS_OUT			Out = PS_TOON_DEFAULT(In);
@@ -270,10 +270,10 @@ PS_OUT PS_CH100_HAIR_1_3(PS_IN In)
 	return Out;
 }
 
-// g_float_0 : ¿°·Â ¸²¶óÀÌÆ® ¹à±â
-// g_int_0 : »óÅÂÀÌ»ó ÇÃ·¡±×
-// g_int_1 : µå¶óÀÌºê ¸ğµå ÇÃ·¡±×(ÈÄµå Áö¿ì±â)
-// g_vec4_0 : ¾Æ¿ô¶óÀÎ »ö(rbg) ¹× µÎ²²(a)
+// g_float_0 : ì—¼ë ¥ ë¦¼ë¼ì´íŠ¸ ë°ê¸°
+// g_int_0 : ìƒíƒœì´ìƒ í”Œë˜ê·¸
+// g_int_1 : ë“œë¼ì´ë¸Œ ëª¨ë“œ í”Œë˜ê·¸(í›„ë“œ ì§€ìš°ê¸°)
+// g_vec4_0 : ì•„ì›ƒë¼ì¸ ìƒ‰(rbg) ë° ë‘ê»˜(a)
 PS_OUT PS_ch0100_body_0_4(PS_IN In)
 {
 	int bDriveMode = g_int_1;
@@ -288,18 +288,25 @@ PS_OUT PS_ch0100_body_0_4(PS_IN In)
 
 	return Out;
 }
-
-// g_float_0 : ¿°·Â ¸²¶óÀÌÆ® ¹à±â
-// g_float_1 : ÇÏµå¹Ùµğ
+/*
+ * ë“œë¼ì´ë¸Œëª¨ë“œ ì ˆì°¨
+ * 1. hood ë Œë” on
+ * 2. mask g_float_3ì„ 0~1ë¡œ ì¦ê°€, 0.9ì¯¤, hairë Œë” off
+ * 3. 1ë˜ë©´ bodyì˜ g_int_1 = 1 ëŒ€ì…
+ *
+ * ë“œë¼ì´ë¸Œ ëë‚˜ë©´ hood ë Œë” off, mask g_float_3 = 0, bodyì˜ g_int_1 = 0 ëŒ€ì…, hair ë Œë” on
+ */
+// g_float_0 : ì—¼ë ¥ ë¦¼ë¼ì´íŠ¸ ë°ê¸°
+// g_float_1 : í•˜ë“œë°”ë””
 // g_float_2 : 
-// g_float_3 : ¸¶½ºÅ© on, off
-// g_int_0 : »óÅÂÀÌ»ó ÇÃ·¡±×
-// g_vec4_0 : ¾Æ¿ô¶óÀÎ »ö(rbg) ¹× µÎ²²(a)
+// g_float_3 : ë§ˆìŠ¤í¬ on, off
+// g_int_0 : ìƒíƒœì´ìƒ í”Œë˜ê·¸
+// g_vec4_0 : ì•„ì›ƒë¼ì¸ ìƒ‰(rbg) ë° ë‘ê»˜(a)
 PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 {
 	float fDissolve = g_float_3; // 0 : mask off/ 1 : mask on
 	float4 vColor = (float4)0.f;
-	float fEmissive = 2.f;
+	float fEmissive = 0.f;
 
 	if (fDissolve > 0.f && fDissolve < 1.f)
 	{
@@ -308,6 +315,9 @@ PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 		float4 vSclNoi = g_tex_4.Sample(LinearSampler, In.vTexUV);
 		float fShape = vSclNoi.r;
 
+		if (fDissolve < 0.015)
+			discard;
+
 		if (fInvDissolve < fShape)
 		{
 			vColor = float4(0.f, 0.f, 0.f, 1.f);
@@ -315,14 +325,12 @@ PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 		}
 		else
 		{
-			if (abs(fInvDissolve - fShape) < 0.2)
+			float fDiff = abs(fInvDissolve - fShape);
+			if (fDiff < 0.2f)
 			{
-				float vPattenMap_noise = g_tex_5.Sample(LinearSampler, In.vTexUV).g;
-				float2 distortionUV = vPattenMap_noise * 0.3f + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(0.f, g_Time));
-				float fNoise = g_tex_4.Sample(LinearSampler, distortionUV).g;
-
-				vColor = float4(73.f/ 255.f, 183.f/255.f, 173.f/255.f, 1.f) * fNoise;
-				fEmissive = fNoise * 2.f;
+				float fNoise = g_tex_4.Sample(LinearSampler, In.vTexUV).g;
+				vColor = float4(62.f / 255.f, 164.f / 255.f, 147.f / 255.f, 1.f);
+				fEmissive = fNoise * 12.f;
 			}
 			else
 				discard;
@@ -331,6 +339,7 @@ PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 	else if (fDissolve >= 1.f)
 	{
 		vColor = float4(1.f, 20.f/ 255.f, 0.f, 1.f);
+		fEmissive = 7.f;
 	}
 	else
 	{
@@ -341,13 +350,14 @@ PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 	PS_OUT Out = PS_TOON_DEFAULT(In);
 
 	Out.vDepth.z = fEmissive;
-	if (g_float_1 <= 0.f) // ÇÏµå¹Ùµğ ¾øÀ» ¶§
+	if (g_float_1 <= 0.f) // í•˜ë“œë°”ë”” ì—†ì„ ë•Œ
 		Out.vDepth.w = SHADER_NONE_SHADE;
 
 	if (fDissolve >= 1.f)
 		Out.vDiffuse *= vColor;
 	else
 		Out.vDiffuse = vColor;
+
 	return Out;
 }
 
@@ -417,10 +427,10 @@ PS_OUT_NONLIGHT PS_SuperSpeedTrail_8(PS_IN In)
 	return Out;
 }
 
-// g_float_0 : ÄÉÀÌºí »èÁ¦ µğ¼Öºê (0 µğÆúÆ®, 1 »ç¶óÁü)
-// g_float_1 : sas ºÓÀº »ö µğ¼Öºê
-// g_float_2 : ÅÚ·¹Æ÷Æ® µğ¼Öºê
-// g_vec4_0 : ¾Æ¿ô¶óÀÎ »ö(rbg) ¹× µÎ²²(a)
+// g_float_0 : ì¼€ì´ë¸” ì‚­ì œ ë””ì†”ë¸Œ (0 ë””í´íŠ¸, 1 ì‚¬ë¼ì§)
+// g_float_1 : sas ë¶‰ì€ ìƒ‰ ë””ì†”ë¸Œ
+// g_float_2 : í…”ë ˆí¬íŠ¸ ë””ì†”ë¸Œ
+// g_vec4_0 : ì•„ì›ƒë¼ì¸ ìƒ‰(rbg) ë° ë‘ê»˜(a)
 PS_OUT PS_SAS_CABLE_9(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -610,6 +620,20 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SAS_CABLE_9();
+	}
+
+	// 10
+	pass DefaultNonCurl
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_TOON_DEFAULT();
 	}
 }
 

@@ -4,11 +4,11 @@
 
 BEGIN(Client)
 
-class CLevel_Stage1 : public CLevel
+class CLevel_ConstructionSite3F : public CLevel
 {
 private:
-	CLevel_Stage1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CLevel_Stage1() = default;
+	CLevel_ConstructionSite3F(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CLevel_ConstructionSite3F() = default;
 
 public:
 	HRESULT Initialize() override;
@@ -19,15 +19,15 @@ public:
 private:
 	HRESULT Ready_Prototypes();
 	HRESULT Ready_Lights();
-	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_UI(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Map(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Effect(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_SASPortrait();
 
 public:
-	static CLevel_Stage1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLevel_ConstructionSite3F* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	void Free() override;
 };
 

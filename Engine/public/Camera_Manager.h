@@ -17,6 +17,11 @@ public:
 	void Tick();
 
 public:
+	void LoadCamAnims(const string& strDir);
+	void SaveCamAnims();
+	class CCamAnimation* GetCamAnim(const string& strName);
+	void AddCamAnim(class CCamAnimation* pCamAnim);
+
 	CCamera* Add_Camera(const string& strCamTag, _uint iLevelIdx, const wstring& pLayerTag, const wstring& pPrototypeTag, const Json* camJson);
 
 	void SetMainCamera(const string& strCamTag);
@@ -53,10 +58,16 @@ private:
 
 	_float		m_fFar = 6.f;
 
+	string m_strCamAnimDir;
+	unordered_map<string, class CCamAnimation*> m_CamAnims;
+
 private:	// 액션캠 관련 변수
 	_float4			m_vOrigin = _float4(0.f, 0.f, 0.f, 1.f);
 	list<_float4>	m_CamKeyFrameList;
 	string			m_szActionAnimName = "";
+
+private:
+	// unordered_map<string, >
 
 public:
 	virtual void Free() override;

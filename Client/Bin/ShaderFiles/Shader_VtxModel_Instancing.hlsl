@@ -133,7 +133,6 @@ PS_OUT PS_DETAIL_N(PS_IN In)
 		discard;
 
 	float3 vNormal;
-	float3 vDetialNormal;
 
 	if (g_tex_on_1 && g_tex_on_3)
 	{
@@ -141,17 +140,18 @@ PS_OUT PS_DETAIL_N(PS_IN In)
 		vNormal = vNormalDesc.xyz * 2.f - 1.f;
 
 		vector		vDetailNormalDesc = g_tex_3.Sample(LinearSampler, In.vTexUV);
-		vDetialNormal = vDetailNormalDesc.xyz * 2.f - 1.f;
+		float3 vDetialNormal = vDetailNormalDesc.xyz * 2.f - 1.f;
 
 		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
 		vNormal = normalize(mul(vNormal, WorldMatrix));
 		vDetialNormal = normalize(mul(vDetialNormal, WorldMatrix));
+
+		vNormal += vDetialNormal * g_float_0;
 	}
 	else if (g_tex_on_1)
 	{
 		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
 		vNormal = vNormalDesc.xyz * 2.f - 1.f;
-
 		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
 		vNormal = normalize(mul(vNormal, WorldMatrix));
 	}
@@ -161,15 +161,7 @@ PS_OUT PS_DETAIL_N(PS_IN In)
 
 	float flags = SHADER_DEFAULT;
 
-	if (g_tex_on_3)
-	{
-		vNormal += vDetialNormal * g_float_0;
-	}
-	else
-	{
-		Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
-	}
-	
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
 
 	if (g_tex_on_2)
