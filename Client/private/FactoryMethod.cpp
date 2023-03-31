@@ -59,6 +59,7 @@
 #include "Special_IronBars.h"
 #include "Special_IronBars_SingleBars.h"
 #include "Special_IronBars_MultiBars.h"
+#include "Special_Container.h"
 
 // Player Setting
 #include "Player.h"
@@ -548,6 +549,28 @@ HRESULT CFactoryMethod::MakeKineticPrototypes(ID3D11Device * pDevice, ID3D11Devi
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_IronBars_MultiBars", CSpecial_IronBars_MultiBars::Create(pDevice, pContext)));
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_IronBars", CSpecial_IronBars::Create(pDevice, pContext)));
+
+
+	auto pModel_Container_01 = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/Container/Container_01.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_Container_01", pModel_Container_01));
+	auto pModel_Container_02 = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/Container/Container_02.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_Container_02", pModel_Container_02));
+	auto pModel_Container_03 = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/Container/Container_03.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_Container_03", pModel_Container_03));
+	auto pModel_Container_04 = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/Container/Container_04.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_Container_04", pModel_Container_04));
+	auto pModel_Container_05 = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/Container/Container_05.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_Container_05", pModel_Container_05));
+	auto pModel_Container_06 = CModel::Create(pDevice, pContext,
+		"../Bin/Resources/Model/StaticModel/Kinetic/Container/Container_06.static_model");
+	FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(L"Model_Container_06", pModel_Container_06));
+
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Special_Container", CSpecial_Container::Create(pDevice, pContext)));
 
 	return S_OK;
 }

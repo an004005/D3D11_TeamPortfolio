@@ -2927,6 +2927,12 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_330_AL_fall_start": {
+        "Duration": 80.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_331_AL_swing_L": {
         "Duration": 140.0,
         "TickPerSecond": 50.0,
@@ -2983,6 +2989,30 @@
     },
     "AS_ch0100_334_AL_fall_start": {
         "Duration": 15.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_337_AL_press_cancel": {
+        "Duration": 70.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_337_AL_press_end": {
+        "Duration": 190.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_337_AL_press_loop": {
+        "Duration": 225.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_337_AL_press_start": {
+        "Duration": 95.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []

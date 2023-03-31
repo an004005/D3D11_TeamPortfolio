@@ -197,7 +197,7 @@ HRESULT CTrigger::SetUp_Components(void * pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_RigidBody"), TEXT("Com_Ridgid"),
 		(CComponent**)&m_pRigidBodyCom, pArg));
 
-	m_pRigidBodyCom->Set_Trigger();
+	m_pRigidBodyCom->Set_Trigger(true);
 	m_pRigidBodyCom->Set_ColliderType(CT_TRIGGER_FOR_PLAYER);
 	m_pRigidBodyCom->UpdateChange();
 	return S_OK;

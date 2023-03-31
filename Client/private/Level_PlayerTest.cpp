@@ -54,6 +54,7 @@
 #include "Special_Train.h"
 #include "Imgui_Batch.h"
 #include "SAS_Cable.h"
+#include "GameManager.h"
 
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -118,6 +119,8 @@ HRESULT CLevel_PlayerTest::Initialize()
 	m_BGM.CloneSound("Attention Please"); 
 	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
 	m_BGM.CloneSound("The OSF -Advance"); // 기본 bgm
+
+	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -618,4 +621,6 @@ CLevel_PlayerTest* CLevel_PlayerTest::Create(ID3D11Device* pDevice, ID3D11Device
 void CLevel_PlayerTest::Free()
 {
 	CLevel::Free();
+
+	CGameManager::GetInstance()->DestroyInstance();
 }

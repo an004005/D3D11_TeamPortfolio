@@ -345,7 +345,7 @@ void CAnimation::Imgui_RenderProperty()
 		ANIM_EVENT AddEvent;
 		ZeroMemory(&AddEvent, sizeof(ANIM_EVENT));
 		AddEvent.EventTime = fEventTime;
-		AddEvent.strEventName = szEventName;
+		AddEvent.strEventName = string(szEventName);
 		m_vecEvent.push_back(AddEvent);
 	}
 

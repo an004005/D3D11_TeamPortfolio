@@ -238,6 +238,9 @@ private:	// 특수연출용 FSM
 	HRESULT				SetUp_IronBarsStateMachine();
 	CFSMComponent*		m_pIronBarsStateMachine = nullptr;
 
+	HRESULT				SetUp_ContainerStateMachine();
+	CFSMComponent*		m_pContainerStateMachine = nullptr;
+
 private:
 	_uint m_iIronBars_ThrowCnt = 0;
 	_float4 m_vIronBars_ThrowPoins = { 0.f, 2.f, -2.f, 1.f };	// 쇠창살 모이는 포인트
@@ -287,6 +290,13 @@ private:	// 특수연출용 소켓 애니메이션
 	list<CAnimation*>	m_IronBars_Throw_03;
 	list<CAnimation*>	m_IronBars_Throw_04;
 	list<CAnimation*>	m_IronBars_Finish;			// 쇠창살 마무리
+
+	list<CAnimation*>	m_Container_Charge;
+	list<CAnimation*>	m_Container_Cancel;
+	list<CAnimation*>	m_Container_Start;
+	list<CAnimation*>	m_Container_Press;
+	list<CAnimation*>	m_Container_End;
+	list<CAnimation*>	m_Container_Finish;
 
 private:
 	HRESULT				Setup_AnimSocket();
@@ -663,6 +673,7 @@ private:
 	CDoOnce DropObject;
 	CDoOnce TankLorry;
 	CDoOnce	TankLorry_Exploision;
+	CDoOnce TankLorry_Effect;
 	CDoOnce IronBars;
 	CDoOnce HBeam;
 

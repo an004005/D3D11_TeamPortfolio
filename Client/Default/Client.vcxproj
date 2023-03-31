@@ -406,6 +406,7 @@
     </ClInclude>
     <ClInclude Include="..\public\SkyBox.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
+    <ClInclude Include="..\public\Special_Container.h" />
     <ClInclude Include="..\public\Special_DropObject_Bundle.h" />
     <ClInclude Include="..\public\Special_DropObject_Single.h" />
     <ClInclude Include="..\public\Special_HBeam_Bundle.h" />
@@ -688,6 +689,7 @@
     </ClCompile>
     <ClCompile Include="..\private\SkyBox.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
+    <ClCompile Include="..\private\Special_Container.cpp" />
     <ClCompile Include="..\private\Special_DropObject_Bundle.cpp" />
     <ClCompile Include="..\private\Special_DropObject_Single.cpp" />
     <ClCompile Include="..\private\Special_HBeam_Bundle.cpp" />

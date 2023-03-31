@@ -139,6 +139,11 @@
             "Layer": "Layer_Kinetic",
             "JsonPath": "",
             "ProtoTag": "Prototype_GameObject_Special_IronBars_MultiBars"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_Container.json",
+            "ProtoTag": "Prototype_GameObject_Special_Container"
         }
     ]
 }

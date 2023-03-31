@@ -237,6 +237,18 @@ void CSpecial_TankLorry::TankLorry_Release_OilParticle()
 	static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->Release_Oil_Particle();
 }
 
+void CSpecial_TankLorry::TankLorry_Explosion_Effect()
+{
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Special_G_Truck_Explode_Base")->
+		Start_AttachPosition_Scale(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 2.f, 0.f, 0.f), XMVectorSet(0.f, 1.f, 0.f, 0.f), _float4(2.f, 2.f, 2.f, 0.f), false);
+}
+
+void CSpecial_TankLorry::TankLorry_Explosion_Particle()
+{
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Truck_Explode")->
+		Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+}
+
 HRESULT CSpecial_TankLorry::SetUp_Components(void * pArg)
 {
 	return S_OK;
