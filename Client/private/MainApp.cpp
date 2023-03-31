@@ -98,7 +98,8 @@ void CMainApp::Tick(_double TimeDelta)
 		return;
 
 	m_pGameInstance->Tick_Engine(TimeDelta);
-	//CGameManager::GetInstance()->Tick(TimeDelta);
+	if (CGameManager::GetInstance())
+		CGameManager::GetInstance()->Tick(TimeDelta);
  }
 
 HRESULT CMainApp::Render()
@@ -214,7 +215,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_VIBuffer_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Player_Default_Attack/Air_Attack_1.static_model", PivotMatrix, 100))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Sakura_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX_Ver2/SM_ef_Sakura_001.static_model", PivotMatrix, 100))))
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Sakura_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX_Ver2/SM_ef_Sakura_001.static_model", PivotMatrix, 1000))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_LongLeaf_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_Plane/VFX_Mesh_Plane_0.static_model", PivotMatrix, 100))))
@@ -520,7 +521,7 @@ void CMainApp::Free()
 	CVFX_Manager::GetInstance()->DestroyInstance();
 	CUI_Manager::GetInstance()->DestroyInstance();
 	CPlayerInfoManager::GetInstance()->DestroyInstance();
-	//CGameManager::GetInstance()->DestroyInstance();
+	CGameManager::GetInstance()->DestroyInstance();
 	CItem_Manager::GetInstance()->DestroyInstance();
 
 	m_pGameInstance->Clear_ImguiObjects();

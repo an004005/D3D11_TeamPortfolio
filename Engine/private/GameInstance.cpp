@@ -1,4 +1,4 @@
-ï»¿#include "stdafx.h"
+#include "stdafx.h"
 #include "..\public\GameInstance.h"
 #include "Graphic_Device.h"
 #include "Level_Manager.h"
@@ -22,6 +22,7 @@
 #include "CurveFloatMapImpl.h"
 #include "LambdaRenderObject.h"
 #include "SSAOManager.h"
+#include "AnimCam.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -86,26 +87,26 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 	m_hWnd = GraphicDesc.hWnd;
 	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_ORTHO, XMMatrixOrthographicLH((_float)GraphicDesc.iViewportSizeX, (_float)GraphicDesc.iViewportSizeY, 0.f, 1.f));
 
-	/* ê·¸ëž˜í”½ ë””ë°”ì´ìŠ¤ ì´ˆê¸°í™”. */
+	/* ±×·¡ÇÈ µð¹ÙÀÌ½º ÃÊ±âÈ­. */
 	if (FAILED(m_pGraphic_Device->Ready_Graphic_Device(GraphicDesc.hWnd, GraphicDesc.eWindowMode, GraphicDesc.iViewportSizeX, GraphicDesc.iViewportSizeY, ppDeviceOut, ppContextOut)))
 		return E_FAIL;
 
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
-	/* imgui ì´ˆê¸°í™” */
+	/* imgui ÃÊ±âÈ­ */
 	m_pImgui_Manager->Ready_Imgui(GraphicDesc.hWnd, *ppDeviceOut, *ppContextOut);
 
-	// HDR ì´ˆê¸°í™”
+	// HDR ÃÊ±âÈ­
 	if (FAILED(m_pHDR->Initialize(*ppDeviceOut, *ppContextOut)))
 		return E_FAIL;
 	if (FAILED(m_pSSAO_Manager->Initialize(GraphicDesc.iViewportSizeX, GraphicDesc.iViewportSizeY, *ppDeviceOut, *ppContextOut)))
 		return E_FAIL;
 
-	/* ìž…ë ¥ ë””ë°”ì´ìŠ¤ ì´ˆê¸°í™”. */
+	/* ÀÔ·Â µð¹ÙÀÌ½º ÃÊ±âÈ­. */
 	if (FAILED(m_pInput_Device->Ready_Input_Device(hInst, GraphicDesc.hWnd)))
 		return E_FAIL;
 	
-	m_iTotalLevel = iNumLevels + 2; // static, loading í¬í•¨
+	m_iTotalLevel = iNumLevels + 2; // static, loading Æ÷ÇÔ
 
 	if (FAILED(m_pObject_Manager->Reserve_Manager(m_iTotalLevel)))
 		return E_FAIL;
@@ -113,16 +114,16 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 	if (FAILED(m_pComponent_Manager->Reserve_Manager(m_iTotalLevel)))
 		return E_FAIL;
 
-	/* ì—”ì§„ì—ì„œ ì œê³µí•˜ëŠ” ìŠ¤íƒœí‹±ë ˆë²¨ì˜ ì¸ë±ìŠ¤ë¥¼ ì €ìž¥í•´ì¤€ë‹¤. */
-	/* í´ë¼ì´ì–¸íŠ¸ ê°œë°œìžê°€ ìŠ¤íƒœí‹± ë ˆë²¨ì— ì»´í¬ë„ŒíŠ¸ ì›í˜•ì„ ì¶”ê°€í•˜ê³ ì‹¶ì€ ê²½ìš°ì— ìŠ¤íƒœí‹±ë ˆë²¨ì¸ë±ìŠ¤ë¥¼ 
-	í´ëž‘ë¦¬ì–¸íŠ¸ì— ë³´ì—¬ì£¼ê¸° ìœ„í•´ì„œ. */
+	/* ¿£Áø¿¡¼­ Á¦°øÇÏ´Â ½ºÅÂÆ½·¹º§ÀÇ ÀÎµ¦½º¸¦ ÀúÀåÇØÁØ´Ù. */
+	/* Å¬¶óÀÌ¾ðÆ® °³¹ßÀÚ°¡ ½ºÅÂÆ½ ·¹º§¿¡ ÄÄÆ÷³ÍÆ® ¿øÇüÀ» Ãß°¡ÇÏ°í½ÍÀº °æ¿ì¿¡ ½ºÅÂÆ½·¹º§ÀÎµ¦½º¸¦ 
+	Å¬¶û¸®¾ðÆ®¿¡ º¸¿©ÁÖ±â À§ÇØ¼­. */
 	m_iStaticLevelIndex = m_iTotalLevel - 1;
 	m_iLoadingLevelIndex = m_iTotalLevel - 2;
 
 	{
-		/* ì—”ì§„ì—ì„œ ì œê³µí•˜ëŠ” CGameObjectë¥¼ ìƒì†ë°›ëŠ” ê°ì²´ë“¤ì´ ê¸°ë³¸ì ìœ¼ë¡œ CTransformì»´í¬ë„ŒíŠ¸ë¥¼ ê¸°ë³¸ìœ¼ë¡œ ê°€ì§€ê³  ìžˆê²Œ ë§Œë“¤ì–´ì£¼ê¸°ìœ„í•´ 
-		ë³µì œí•  ìˆ˜ ìžˆëŠ” CTransformì˜ ì›í˜•ê°ì²´ë¥¼ ìƒì„±í•œë‹¤. */
-		/* ì‹¤ì œ ì´ ì›í˜•ì„ ë³µì œí•˜ëŠ” ë£¨í‹´ CGameObjectì˜ Initializeí•¨ìˆ˜ì—ì„œ ë³µì œë¥¼ ë‹´ë‹¹í•œë‹¤. */
+		/* ¿£Áø¿¡¼­ Á¦°øÇÏ´Â CGameObject¸¦ »ó¼Ó¹Þ´Â °´Ã¼µéÀÌ ±âº»ÀûÀ¸·Î CTransformÄÄÆ÷³ÍÆ®¸¦ ±âº»À¸·Î °¡Áö°í ÀÖ°Ô ¸¸µé¾îÁÖ±âÀ§ÇØ 
+		º¹Á¦ÇÒ ¼ö ÀÖ´Â CTransformÀÇ ¿øÇü°´Ã¼¸¦ »ý¼ºÇÑ´Ù. */
+		/* ½ÇÁ¦ ÀÌ ¿øÇüÀ» º¹Á¦ÇÏ´Â ·çÆ¾ CGameObjectÀÇ InitializeÇÔ¼ö¿¡¼­ º¹Á¦¸¦ ´ã´çÇÑ´Ù. */
 		if (FAILED(m_pComponent_Manager->Add_Prototype(
 			m_iStaticLevelIndex, m_pPrototypeTransformTag, 
 			CTransform::Create(*ppDeviceOut, *ppContextOut))))
@@ -154,13 +155,14 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 			return E_FAIL;
 
 		FAILED_CHECK(m_pObject_Manager->Add_Prototype(m_iStaticLevelIndex, L"LambdaRenderObject", CLambdaRenderObject::Create(*ppDeviceOut, *ppContextOut)));
+		FAILED_CHECK(m_pObject_Manager->Add_Prototype(m_iStaticLevelIndex, L"Prototype_AnimCam", CAnimCam::Create(*ppDeviceOut, *ppContextOut)));
 	}
 
-	// null animation ì…‹íŒ…
+	// null animation ¼ÂÆÃ
 	CAnimation::s_NullAnimation.SetFinish();
 	CAnimation::s_NullAnimation.SetLooping(false);
 
-	// coll mgr ì´ˆê¸°í™”
+	// coll mgr ÃÊ±âÈ­
 	// m_pCollision_Manager->Initialize({ -50.f, 130.f }, {95.f, -32.f});
 
 	if (FAILED(m_pTarget_Manager->Initialize(*ppDeviceOut, *ppContextOut)))
@@ -179,6 +181,8 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 	{
 		m_LambdaRenderQ.push_back(dynamic_cast<CLambdaRenderObject*>(Clone_GameObject_NoLayerNoBegin(m_iStaticLevelIndex, L"LambdaRenderObject")));
 	}
+
+	m_pCamera_Manager->LoadCamAnims("../Bin/Resources/CamAnims/");
 
 	return S_OK;
 }
@@ -203,7 +207,7 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 	m_TimeDelta = TimeDelta;
 	const _double TimeDeltaModified = TimeDelta * m_pGameTime_Manager->GetTimeRatio();
 
-	/* ìž…ë ¥ìž¥ì¹˜ì˜ ìƒíƒœë¥¼ ê°±ì‹ ë°›ì•„ì˜¨ë‹¤. */
+	/* ÀÔ·ÂÀåÄ¡ÀÇ »óÅÂ¸¦ °»½Å¹Þ¾Æ¿Â´Ù. */
 	m_pInput_Device->Invalidate_Input_Device();
 	m_pObject_Manager->SetUpdatedLevel(m_pLevel_Manager->GetUpdatedLevel());
 
@@ -807,6 +811,11 @@ _bool CGameInstance::OverlapCapsule(const CapsuleOverlapParams& params)
 	return m_pPhysX_Manager->OverlapCapsule(params);
 }
 
+_bool CGameInstance::PxOverlapCapsule(const PxCapsuleOverlapParams& params)
+{
+	return m_pPhysX_Manager->PxOverlapCapsule(params);
+}
+
 _bool CGameInstance::SweepSphere(const SphereSweepParams& params)
 {
 	return m_pPhysX_Manager->SweepSphere(params);
@@ -883,6 +892,11 @@ void CGameInstance::ReleaseCameraFovCurve()
 void CGameInstance::SetCameraFov(_float fFov)
 {
 	return m_pCamera_Manager->SetCameraFov(fFov);
+}
+
+CCamAnimation* CGameInstance::GetCamAnim(const string& strName)
+{
+	return m_pCamera_Manager->GetCamAnim(strName);
 }
 
 void CGameInstance::ResetTimeRatio()
@@ -1025,7 +1039,7 @@ void CGameInstance::Release_Engine()
 
 	CSound_Manager::GetInstance()->DestroyInstance();
 
-	// jsonì€ ë™ë–¨ì–´ì§„ ê¸°ëŠ¥ì´ë¼ì„œ gameinstaceì—ì„œ í¬í•¨í•˜ì§€ ì•Šê³  íŒŒê´´ë§Œ ë‹´ë‹¹
+	// jsonÀº µ¿¶³¾îÁø ±â´ÉÀÌ¶ó¼­ gameinstace¿¡¼­ Æ÷ÇÔÇÏÁö ¾Ê°í ÆÄ±«¸¸ ´ã´ç
 	ref = CJsonStorage::GetInstance()->DestroyInstance();
 
 	CCurveManager::GetInstance()->DestroyInstance();
@@ -1064,6 +1078,5 @@ void CGameInstance::Free()
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pCurve_Manager);
 	Safe_Release(m_pPhysX_Manager);
-
 }
 

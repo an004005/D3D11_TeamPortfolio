@@ -167,8 +167,10 @@ call Copy.bat $(Configuration)</Command>
   <ItemGroup>
     <ClInclude Include="..\public\Animation.h" />
     <ClInclude Include="..\public\AnimationInstance.h" />
+    <ClInclude Include="..\public\AnimCam.h" />
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\public\Bone.h" />
+    <ClInclude Include="..\public\CamAnimSequencer.h" />
     <ClInclude Include="..\public\Camera.h" />
     <ClInclude Include="..\public\Camera_Manager.h" />
     <ClInclude Include="..\public\Cell.h" />
@@ -219,6 +221,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\Imgui\ImZoomSlider.h" />
     <ClInclude Include="..\public\Imgui_AnimModifier.h" />
     <ClInclude Include="..\public\Imgui_AppLog.h" />
+    <ClInclude Include="..\public\Imgui_CamAnimEditor.h" />
     <ClInclude Include="..\public\Imgui_CameraManager.h" />
     <ClInclude Include="..\public\Imgui_CurveManager.h" />
     <ClInclude Include="..\public\Imgui_LightManager.h" />
@@ -286,8 +289,10 @@ call Copy.bat $(Configuration)</Command>
   <ItemGroup>
     <ClCompile Include="..\private\Animation.cpp" />
     <ClCompile Include="..\private\AnimationInstance.cpp" />
+    <ClCompile Include="..\private\AnimCam.cpp" />
     <ClCompile Include="..\private\Base.cpp" />
     <ClCompile Include="..\private\Bone.cpp" />
+    <ClCompile Include="..\private\CamAnimSequencer.cpp" />
     <ClCompile Include="..\private\Camera.cpp" />
     <ClCompile Include="..\private\Camera_Manager.cpp" />
     <ClCompile Include="..\private\Cell.cpp" />
@@ -315,6 +320,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\ImguiUtils.cpp" />
     <ClCompile Include="..\private\Imgui_AnimModifier.cpp" />
     <ClCompile Include="..\private\Imgui_AppLog.cpp" />
+    <ClCompile Include="..\private\Imgui_CamAnimEditor.cpp" />
     <ClCompile Include="..\private\Imgui_CameraManager.cpp" />
     <ClCompile Include="..\private\Imgui_CurveManager.cpp" />
     <ClCompile Include="..\private\Imgui_LightManager.cpp" />

@@ -85,7 +85,8 @@ void CEnemy_AnimInstance::Tick(_double TimeDelta)
 	else
 	{
 		m_pASM_Base->Tick(TimeDelta);
-		m_pModel->SetCurAnimName(m_pASM_Base->GetCurState()->m_Animation->GetName());
+		const string& tst = m_pASM_Base->GetCurState()->m_Animation->GetName();
+		m_pModel->SetCurAnimName(tst);
 	}
 
 	m_pModel->Compute_CombindTransformationMatrix();

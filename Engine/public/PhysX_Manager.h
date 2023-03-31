@@ -37,6 +37,7 @@ public:
 	 */
 	_bool OverlapSphere(const SphereOverlapParams& params);
 	_bool OverlapCapsule(const CapsuleOverlapParams& params);
+	_bool PxOverlapCapsule(const PxCapsuleOverlapParams& params);
 
 	// sweep 도 overlap과 마찬가지
 	_bool SweepSphere(const SphereSweepParams& params);

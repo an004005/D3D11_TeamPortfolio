@@ -2,8 +2,10 @@
 #include "..\public\Canvas_BossHpMove.h"
 #include "GameInstance.h"
 #include "FSMComponent.h"
+#include "JsonStorage.h"
 #include "UI_Manager.h"
 
+#include "Canvas_Alarm.h"
 #include "Canvas_BossHp.h"
 #include "Boss_HpUI.h"
 #include "Boss_HpBackUI.h"
@@ -39,6 +41,17 @@ HRESULT CCanvas_BossHpMove::Initialize(void* pArg)
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
 
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
+	m_pCanvas_BossHp =  dynamic_cast<CCanvas_BossHp*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, L"Canvas_BossHp", &json));
+	assert(m_pCanvas_BossHp != nullptr && "Failed to Clone : CCanvas_BossHp");
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+	m_pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, L"Canvas_Alarm", &json));
+	assert(m_pUI_Alarm != nullptr && "Failed to Clone : CCanvas_Alarm");
+	m_pUI_Alarm->Set_Appeart();
+
 	return S_OK;
 }
 
@@ -49,12 +62,16 @@ void CCanvas_BossHpMove::Tick(_double TimeDelta)
 	m_pUIMoveFSM->Tick(TimeDelta);	// UI 의 움직임
 	CCanvas::UIHit(TimeDelta);
 
+	m_pCanvas_BossHp->Tick(TimeDelta);
+	m_pUI_Alarm->Tick(TimeDelta);
 }
 
 void CCanvas_BossHpMove::Late_Tick(_double TimeDelta)
 {
 	CCanvas::Late_Tick(TimeDelta);
 
+	m_pCanvas_BossHp->Late_Tick(TimeDelta);
+	m_pUI_Alarm->Late_Tick(TimeDelta);
 }
 
 HRESULT CCanvas_BossHpMove::Render()
@@ -90,7 +107,8 @@ void CCanvas_BossHpMove::LoadFromJson(const Json & json)
 
 void CCanvas_BossHpMove::Set_BossHp(const _float & fHp)
 {
-	dynamic_cast<CCanvas_BossHp*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_BossHp"))->Set_BossHp();
+	//dynamic_cast<CCanvas_BossHp*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_BossHp"))->Set_BossHp();
+	m_pCanvas_BossHp->Set_BossHp();
 
 	Find_ChildUI(L"Boss_Hp")->SetVisible(true);
 	Find_ChildUI(L"Boss_HPBack")->SetVisible(true);
@@ -131,4 +149,8 @@ CCanvas * CCanvas_BossHpMove::Clone(void * pArg)
 void CCanvas_BossHpMove::Free()
 {
 	CCanvas::Free();
+
+	Safe_Release(m_pCanvas_BossHp);
+	Safe_Release(m_pUI_Alarm);
+
 }

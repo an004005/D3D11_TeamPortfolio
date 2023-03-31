@@ -89,7 +89,7 @@ HRESULT CAnimation::Initialize(const char* pAnimFilePath)
 
 void CAnimation::Update_Bones_SyncRatio(_double PlayTime)
 {
-	// ´Ù¸¥ ¾Ö´Ï¸ÞÀÌ¼ÇÀÇ ÇÃ·¹ÀÌÅ¸ÀÓ°ú µ¿±âÈ­ÇÏ¿© ¾Ö´Ï¸ÞÀÌ¼ÇÀ» ¹Þ¾Æ¿À±â À§ÇÔ
+	// ?¤ë¥¸ ? ë‹ˆë©”ì´?˜ì˜ ?Œë ˆ?´í??„ê³¼ ?™ê¸°?”í•˜??? ë‹ˆë©”ì´?˜ì„ ë°›ì•„?¤ê¸° ?„í•¨
 	for (const auto pChannel : m_Channels)
 	{
 		pChannel->Update_TransformMatrix(PlayTime);
@@ -123,7 +123,7 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 		{
 			pChannel->Update_TransformMatrix(m_PlayTime);
 
-			// ·ÎÄÃ ÀÌµ¿ Ã¤³Î·ÎºÎÅÍ	¹Þ¾Æ¿È
+			// ë¡œì»¬ ?´ë™ ì±„ë„ë¡œë???ë°›ì•„??
 			if ("Reference" == pChannel->GetChannelName())
 			{
 				m_vLocalMove = pChannel->GetLocalMove();
@@ -140,7 +140,7 @@ void CAnimation::Update_Bones(_double TimeDelta, EAnimUpdateType eType, _float f
 				m_vEffectLocalMove = pChannel->GetEffectLocalMove();
 			}
 		}
-		// ÀÌº¥Æ® ½ÇÇà
+		// ?´ë²¤???¤í–‰
 		for (auto& iter : m_vecEvent)
 		{
 			if (iter.EventTime >= PrePlayTime && iter.EventTime < m_PlayTime)
@@ -238,7 +238,7 @@ void CAnimation::Update_BonesAtTime(_double PlayTime, EAnimUpdateType eType, _fl
 
 void CAnimation::Link_Model(CModel* pModel)
 {
-	Assert(m_pModel == nullptr); // Áßº¹ ¸µÅ© ¹æÁö
+	Assert(m_pModel == nullptr); // ì¤‘ë³µ ë§í¬ ë°©ì?
 	m_pModel = pModel;
 	for (auto channel : m_Channels)
 	{
@@ -313,10 +313,10 @@ void CAnimation::Imgui_RenderProperty()
 	static _float fSelectedEventTime = 0.f;
 	static string szSelectedItem = "";
 
-	// ¼±ÅÃµÈ ÀÌº¥Æ® ÀÌ¸§
+	// ? íƒ???´ë²¤???´ë¦„
 	ImGui::Text(szSelectedItem.c_str());
 
-	// ÀÌº¥Æ® ºä¾î
+	// ?´ë²¤??ë·°ì–´
 	if (ImGui::BeginListBox("Event Frame"))
 	{
 		for (auto& Pair : m_vecEvent)
@@ -339,7 +339,7 @@ void CAnimation::Imgui_RenderProperty()
 		ImGui::EndListBox();
 	}
 
-	// ÀÌº¥Æ® Ãß°¡
+	// ?´ë²¤??ì¶”ê?
 	if (ImGui::Button("Add Event"))
 	{
 		ANIM_EVENT AddEvent;
@@ -349,7 +349,7 @@ void CAnimation::Imgui_RenderProperty()
 		m_vecEvent.push_back(AddEvent);
 	}
 
-	// ÀÌº¥Æ® »èÁ¦
+	// ?´ë²¤???? œ
 	if (ImGui::Button("Delete Event"))
 	{
 		for (auto iter = m_vecEvent.begin(); iter != m_vecEvent.end();)

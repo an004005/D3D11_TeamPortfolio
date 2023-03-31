@@ -259,9 +259,6 @@
     <Filter Include="Trigger">
       <UniqueIdentifier>{de696a83-1b14-4455-81e6-aee65fc00158}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.GamePlay\02. Stage1">
-      <UniqueIdentifier>{1e272184-8887-431f-937d-de39fd6eeb16}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\17.KineticEditor">
       <UniqueIdentifier>{cf49c083-b25e-424b-aca3-6c741d536048}</UniqueIdentifier>
     </Filter>
@@ -399,6 +396,9 @@
     </Filter>
     <Filter Include="60.Imgui_Tool\50.Component\01.Controller\AIController">
       <UniqueIdentifier>{04a4534d-be99-4559-897f-94efed7b0e98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\02. ConstructionSite">
+      <UniqueIdentifier>{1e272184-8887-431f-937d-de39fd6eeb16}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1114,8 +1114,8 @@
     <ClInclude Include="..\public\Level_KineticEditor.h">
       <Filter>01.Levels\17.KineticEditor</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Level_Stage1.h">
-      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    <ClInclude Include="..\public\Level_ConstructionSite3F.h">
+      <Filter>01.Levels\02.GamePlay\02. ConstructionSite</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GameManager.h">
       <Filter>30. GameManager</Filter>
@@ -1239,12 +1239,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Canvas_MouseCousor.h">
       <Filter>02.GameObjects\UI\Mouse</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Special_Container.h">
-      <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\PlayerInfoManager.h">
-      <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1916,8 +1910,8 @@
     <ClCompile Include="..\private\Level_KineticEditor.cpp">
       <Filter>01.Levels\17.KineticEditor</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Level_Stage1.cpp">
-      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    <ClCompile Include="..\private\Level_ConstructionSite3F.cpp">
+      <Filter>01.Levels\02.GamePlay\02. ConstructionSite</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GameManager.cpp">
       <Filter>30. GameManager</Filter>
@@ -2059,12 +2053,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Canvas_MouseCousor.cpp">
       <Filter>02.GameObjects\UI\Mouse</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Special_Container.cpp">
-      <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\PlayerInfoManager.cpp">
-      <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

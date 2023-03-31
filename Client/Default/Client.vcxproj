@@ -199,6 +199,7 @@
     <ClInclude Include="..\public\Boss1.h" />
     <ClInclude Include="..\public\Boss1_AnimationInstance.h" />
     <ClInclude Include="..\public\Bullet.h" />
+    <ClInclude Include="..\public\BulletBuilder.h" />
     <ClInclude Include="..\public\ButtonUI.h" />
     <ClInclude Include="..\public\BdLm_AnimInstance.h" />
     <ClInclude Include="..\public\BuddyLumi.h" />
@@ -326,7 +327,7 @@
     <ClInclude Include="..\public\NextMapNameUI.h" />
     <ClInclude Include="..\public\NoticeNeonUI.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
-    <ClInclude Include="..\public\Level_Stage1.h" />
+    <ClInclude Include="..\public\Level_ConstructionSite3F.h" />
     <ClInclude Include="..\public\Boss_HpUI.h" />
     <ClInclude Include="..\public\MonsterHpUI.h" />
     <ClInclude Include="..\public\MonsterLockonUI.h" />
@@ -483,6 +484,7 @@
     <ClCompile Include="..\private\Boss1.cpp" />
     <ClCompile Include="..\private\Boss1_AnimationInstance.cpp" />
     <ClCompile Include="..\private\Bullet.cpp" />
+    <ClCompile Include="..\private\BulletBuilder.cpp" />
     <ClCompile Include="..\private\ButtonUI.cpp" />
     <ClCompile Include="..\private\BdLm_AnimInstance.cpp" />
     <ClCompile Include="..\private\BuddyLumi.cpp" />
@@ -609,7 +611,7 @@
     <ClCompile Include="..\private\NextMapNameUI.cpp" />
     <ClCompile Include="..\private\NoticeNeonUI.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />
-    <ClCompile Include="..\private\Level_Stage1.cpp" />
+    <ClCompile Include="..\private\Level_ConstructionSite3F.cpp" />
     <ClCompile Include="..\private\Boss_HpUI.cpp" />
     <ClCompile Include="..\private\MonsterHpUI.cpp" />
     <ClCompile Include="..\private\MonsterLockonUI.cpp" />

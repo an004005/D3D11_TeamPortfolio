@@ -170,7 +170,8 @@ void CAIController::Imgui_RenderProperty()
 	
 	static EHandleInput eInput = SPACE;
 	static array<const char*, HANDLE_END> arrInputName {
-		"SPACE", "CTRL", "SHIFT", "MOUSE_LB", "MOUSE_RB", "NUM_1", "NUM_2", "NUM_3", "NUM_4", "C", "Q", "E", "R", "X", "G"
+		"SPACE", "CTRL", "SHIFT", "MOUSE_LB", "MOUSE_RB", "NUM_1", "NUM_2", "NUM_3", "NUM_4", "C", "Q", "E", "R", "X", "G",
+		"B", "T", "W", "S", "L", "F"
 	};
 	if (ImGui::BeginCombo("Inputs", arrInputName[eInput]))
 	{

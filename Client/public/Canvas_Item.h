@@ -2,6 +2,7 @@
 
 #include "Canvas.h"
 #include "Client_Defines.h"
+#include "Item_Manager.h"
 
 BEGIN(Client)
 
@@ -14,6 +15,7 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void	BeginTick() override;
 	virtual void	Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
@@ -26,10 +28,12 @@ public:
 		m_bInput = true;
 	}
 
+	void	Set_ItmeUse();
+	void	Set_IconLight(const _bool	bVisble);
+
 	_float4	 ColorIndex(const _bool	 bBack);
 
 private:
-	void	ItmeUse();
 	void	BattleItem_Input();
 	_float	NameIndex(const size_t iIndex);
 	_float3	 LightColorIndex(const size_t iIndex);
@@ -37,6 +41,8 @@ private:
 	_int wrap(_int x, _int low, _int high);
 
 private:
+	vector<CItem_Manager::BATTLEITEM> m_vecBattleItme;
+
 	size_t	m_iCurrentIndex = { 0 };
 	_bool	m_bInput = { false };
 	_bool	m_bBattleItmeEmpty = { false };

@@ -5,6 +5,11 @@
 #include "Camera_Manager.h"
 #include "CurveManager.h"
 
+
+/**********************
+ * CCamera
+ *********************/
+
 CCamera::CCamera(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -101,7 +106,27 @@ _bool CCamera::IsMainCamera() const
 	return CCamera_Manager::GetInstance()->GetMainCam() == this;
 }
 
+_float4x4 CCamera::GetWorldMatrix()
+{
+	return GetXMWorldMatrix();
+}
+
+_matrix CCamera::GetXMWorldMatrix()
+{
+	return m_PivotMatrix * m_pTransformCom->Get_WorldMatrix();
+}
+
 _float4x4 CCamera::GetProjMatrix()
+{
+	return GetXMProjMatrix();
+}
+
+_float4x4 CCamera::GetViewMatrix()
+{
+	return GetXMViewMatrix();
+}
+
+_matrix CCamera::GetXMProjMatrix()
 {
 	if (m_bUseViewPortSize)
 	{
@@ -109,6 +134,11 @@ _float4x4 CCamera::GetProjMatrix()
 		m_fHeight = WINCY;
 	}
 	return XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fFOV), m_fWidth / m_fHeight, m_fNear, m_fFar);
+}
+
+_matrix CCamera::GetXMViewMatrix()
+{
+	return XMMatrixInverse(nullptr, GetXMWorldMatrix());
 }
 
 void CCamera::Free()

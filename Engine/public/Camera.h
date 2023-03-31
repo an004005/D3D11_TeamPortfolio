@@ -6,6 +6,7 @@
 
 BEGIN(Engine)
 
+
 class ENGINE_DLL CCamera abstract : public CGameObject
 {
 protected:
@@ -36,11 +37,15 @@ public:
 	void SetNear(_float fNear) { m_fNear = fNear; }
 	void SetFar(_float fFar) { m_fFar = fFar; }
 
+	_float4x4 GetWorldMatrix();
+	_matrix GetXMWorldMatrix();
 	_float4x4 GetProjMatrix();
-	_float4x4 GetViewMatrix() const { return m_pTransformCom->Get_WorldMatrix_Inverse(); }
+	_float4x4 GetViewMatrix();
+	_matrix GetXMProjMatrix();
+	_matrix GetXMViewMatrix();
 
-private:
-	_float4x4					m_ProjMatrix;
+protected:
+	_float4x4					m_PivotMatrix;
 
 	_float m_fFOV = 60.f;
 	_float m_fWidth = 1280.f;
