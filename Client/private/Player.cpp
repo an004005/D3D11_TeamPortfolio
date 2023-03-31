@@ -114,6 +114,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_ProductionEvent()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_DriveModeProductionStateMachine()))
+		return E_FAIL;
+
 	if (FAILED(Setup_KineticStateMachine()))
 		return E_FAIL;
 
@@ -304,6 +307,9 @@ void CPlayer::Tick(_double TimeDelta)
 
 	MoveStateCheck(TimeDelta);
 	BehaviorCheck(TimeDelta);
+
+	// 드라이브모드 연출, 최우선적
+	m_pDriveModeProductionStateMachine->Tick(TimeDelta);
 
 	// SAS?뱀닔
 	if (CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_TELEPORT)) 
@@ -618,7 +624,7 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 		IM_LOG("No Damage");
 		CPlayerInfoManager::GetInstance()->Change_SasEnergy(CHANGETYPE::CHANGE_DECREASE, ESASType::SAS_HARDBODY, 10.f);
 	}
-	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate)
+	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate || m_bDriveMode_Activate)
 	{
 		IM_LOG("JustDodge Activate")
 	}
@@ -1314,35 +1320,47 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.AddState("DRIVEMODE_NOUSE")
 		.OnStart([&]()
 		{
-			// 드라이브모드 아직 사용하지 않음
+			m_bZoomIsFinish = false;
 		})
 		.Tick([&](double fTimeDelta)
 		{
-
+			m_bDriveMode_Activate = false;
 		})
 		.OnExit([&]()
 		{
 
 		})
+			.AddTransition("DRIVEMODE_NOUSE to DRIVEMODE_CAM_CLOSER", "DRIVEMODE_CAM_CLOSER")
+			.Predicator([&]()->_bool {return CGameInstance::GetInstance()->KeyDown(DIK_M); })
+			.Priority(0)
 
 		.AddState("DRIVEMODE_CAM_CLOSER")
 		.OnStart([&]()
 		{
-
+			m_bDriveMode_Activate = true;
+			m_bZoomIsFinish = false;
 		})
 		.Tick([&](double fTimeDelta)
 		{
-
+			m_bZoomIsFinish = static_cast<CCamSpot*>(m_pCamSpot)->Cam_Closer(fTimeDelta, 0.3f);
 		})
 		.OnExit([&]()
 		{
 
 		})
+			.AddTransition("DRIVEMODE_CAM_CLOSER to DRIVEMODE_ANIMCAM_START", "DRIVEMODE_ANIMCAM_START")
+			.Predicator([&]()->_bool {return m_bZoomIsFinish; })
+			.Priority(0)
 
 		.AddState("DRIVEMODE_ANIMCAM_START")
 		.OnStart([&]()
 		{
+			list<CAnimation*> TestAnim;
+			TestAnim.push_back(m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100"));
+			m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
 
+			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("DriveModeCam");
+			m_pPlayer_AnimCam->StartCamAnim_Return(pCamAnim, m_pPlayerCam, m_pTransformCom->Get_WorldMatrix_f4x4(), m_fCameraLerpTime_In, m_fCameraLerpTime_Out);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -1352,20 +1370,30 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		{
 
 		})
+			.AddTransition("DRIVEMODE_ANIMCAM_START to DRIVEMODE_CAM_AWAY", "DRIVEMODE_CAM_AWAY")
+			.Predicator([&]()->_bool {return m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100")->IsFinished(); })
+			.Priority(0)
 
 		.AddState("DRIVEMODE_CAM_AWAY")
 		.OnStart([&]()
 		{
+			list<CAnimation*> TestAnim;
+			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_299_AL_enpc_drive_mode"));
+			m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
 
+			m_bZoomIsFinish = false;
 		})
 		.Tick([&](double fTimeDelta)
 		{
-
+			m_bZoomIsFinish = static_cast<CCamSpot*>(m_pCamSpot)->Cam_Away(fTimeDelta, 0.f);
 		})
 		.OnExit([&]()
 		{
 
 		})
+			.AddTransition("DRIVEMODE_CAM_AWAY to DRIVEMODE_NOUSE", "DRIVEMODE_NOUSE")
+			.Predicator([&]()->_bool {return m_bZoomIsFinish; })
+			.Priority(0)
 
 
 		.Build();
@@ -3770,6 +3798,16 @@ HRESULT CPlayer::SetUp_ProductionEvent()
 		m_pModel->FindMaterial(L"MI_ch0100_HAIR_1")->SetActive(false);
 	});
 
+	m_pModel->Add_EventCaller("DriveMode_Effect", [this]
+	{
+		_matrix matEffect = XMMatrixScaling(0.4f, 0.4f, 0.4f) * XMMatrixTranslation(0.f, 0.01f, -0.04f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Sas_DriveMode_Effect")->Start_AttachPivot(this, matEffect, "Mask", true);
+	});
+	m_pModel->Add_EventCaller("DriveMode_Particle", [this]
+	{
+		_matrix matParticle = XMMatrixScaling(1.5f, 1.f, 2.f) * XMMatrixRotationX(XMConvertToRadians(-5.f)) * XMMatrixTranslation(0.f, -0.275f, 1.f);
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Sas_DriveMode_Particle")->Start_AttachPivot(this, matParticle, "Mask", true, false, true);
+	});
 
 	return S_OK;
 }
@@ -3778,7 +3816,7 @@ void CPlayer::Production_Tick(_double TimeDelta)
 {
 	DriveMaskDissolve(TimeDelta);
 
-	CamZoom(TimeDelta);
+	//CamZoom(TimeDelta);
 }
 
 void CPlayer::DriveMaskDissolve(_double TimeDelta)

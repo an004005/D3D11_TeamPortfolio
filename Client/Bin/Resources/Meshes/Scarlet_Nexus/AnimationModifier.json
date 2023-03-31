@@ -21,6 +21,14 @@
             {
                 "EventName": "Hair_Active_Off",
                 "EventTime": 95.0
+            },
+            {
+                "EventName": "DriveMode_Effect",
+                "EventTime": 115.0
+            },
+            {
+                "EventName": "DriveMode_Particle",
+                "EventTime": 125.0
             }
         ]
     },
@@ -2622,6 +2630,12 @@
                 "EventTime": 37.0
             }
         ]
+    },
+    "AS_ch0100_299_AL_enpc_drive_mode": {
+        "Duration": 160.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_ch0100_301_AL_capture_wait_loop": {
         "Duration": 120.0,
