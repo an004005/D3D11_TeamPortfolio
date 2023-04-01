@@ -25,6 +25,7 @@ public:
 		RENDER_SHADOWDEPTH,
 		RENDER_NONALPHABLEND,
 		RENDER_NONALPHABLEND_TOON,
+		RENDER_MESH_ALPHABLEND,
 		RENDER_NONLIGHT,
 		RENDER_ALPHABLEND_FIRST,
 		RENDER_ALPHABLEND,
@@ -76,8 +77,8 @@ private:
 	ID3D11DepthStencilView* m_pShadowDepthStencilView = nullptr;
 	_bool m_bVisibleTargets = false;
 
-	class CTexture* m_pEnv = nullptr;
-	class CTexture* m_pEnv2 = nullptr;
+	class CTexture* m_pDiffuseIrradianceTexture = nullptr;
+	class CTexture* m_pSpecularRadianceTexture = nullptr;
 	_bool m_bShadow = true;
 
 
@@ -90,6 +91,7 @@ private:
 	HRESULT Render_NonAlphaBlend();
 	HRESULT Render_LightAcc();
 	HRESULT Render_Blend();
+	HRESULT Render_MeshAlphaBlend();
 	HRESULT Render_NonLight();
 	HRESULT Render_AlphaBlend();
 	HRESULT Render_HDR();

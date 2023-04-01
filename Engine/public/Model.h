@@ -99,6 +99,7 @@ public:
 	HRESULT Render_NoUpdateBone(const _float4x4& WorldMatrix);
 	// HRESULT RenderMesh_Shader(class CTransform* pTransform, class CShader* pShader, _uint iPass);
 
+	HRESULT Render_MeshAlphBlend(_float4x4 WorldMatrix, _uint iMeshIdx);
 
 	HRESULT Render_ShadowDepth(class CTransform* pTransform);
 	HRESULT Render_ShadowDepth(const _float4x4& WorldMatrix);

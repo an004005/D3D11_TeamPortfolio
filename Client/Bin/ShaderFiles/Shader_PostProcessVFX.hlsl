@@ -69,6 +69,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	float4 vFlags = g_FlagTexture.Sample(PointSampler, In.vTexUV);
+	float4 vFlagsNonAlpha = g_FlagTextureNonAlpha.Sample(PointSampler, In.vTexUV);
 	float4 LDR = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
 
 	if(vFlags.x == SHADER_DISTORTION)
@@ -86,7 +87,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 		// return Out;
 	}
-	else if (vFlags.x == SHADER_DISTORTION_STATIC)
+	else if (vFlags.x == SHADER_DISTORTION_STATIC || vFlagsNonAlpha.x == SHADER_DISTORTION_STATIC)
 	{
 		float2 randomNormal = g_tex_1.Sample(LinearSampler, In.vTexUV).xy;
 		float2 distortionUV = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(5.f, 5.f), float2(0.f, 0.f));
@@ -390,8 +391,10 @@ PS_OUT PS_MAIN_Portrait_9(PS_IN In)
 	{
 		if (!bUseDissolve)
 		{
+			[unroll]
 			for (int i = 0; i < 3; i++)
 			{
+				[unroll]
 				for (int j = 0; j < 3; j++)
 				{
 					float fWidthBorderRatio = 4.f / g_iWinCX;

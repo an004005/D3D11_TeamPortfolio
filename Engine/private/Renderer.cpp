@@ -85,6 +85,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (FAILED(Render_NonAlphaBlend()))
 		return E_FAIL;
 
+
 	if (CGameInstance::GetInstance()->GetMainCam())
 	{
 		CSSAOManager::GetInstance()->Compute(
@@ -102,6 +103,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (FAILED(Render_Priority()))
 		return E_FAIL;
 	if (FAILED(Render_Blend()))
+		return E_FAIL;
+	if (FAILED(Render_MeshAlphaBlend()))
 		return E_FAIL;
 	if (FAILED(Render_Decal()))
 		return E_FAIL;
@@ -237,6 +240,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	/* For.Target_HDR */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_HDR"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, &_float4(0.8f, 0.8f, 0.8f, 0.f))))
 		return E_FAIL;
+	// if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_HDR_Copy"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, &_float4(0.8f, 0.8f, 0.8f, 0.f))))
+	// 	return E_FAIL;
 
 	/* For.Target_Portrait */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Portrait"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, &_float4(0.f, 0.0f, 0.0f, 0.f))))
@@ -284,8 +289,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular"))))
 		return E_FAIL;
 
-	m_pEnv = dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(L"../Bin/Resources/Textures/DiffuseEnv.dds"));
-	m_pEnv2 = dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(L"../Bin/Resources/Textures/BlueSkyIradiance.dds"));
+	m_pDiffuseIrradianceTexture = dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(L"../Bin/Resources/Textures/DiffuseEnv.dds"));
+	m_pSpecularRadianceTexture = dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(L"../Bin/Resources/Textures/BlueSkyIradiance.dds"));
 
 
 	// HDR 텍스쳐 렌더링용
@@ -302,7 +307,6 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Portrait"), TEXT("Target_Portrait"))))
 		return E_FAIL;
-
 
 	Ready_ShadowDepthResources(8192, 8192);
 	// Ready_ShadowDepthResources(128, 128);
@@ -696,13 +700,29 @@ HRESULT CRenderer::Render_Blend()
 	}
 
 
-	m_pEnv->Bind_ShaderResource(m_pShader, "g_IrradianceTexture");
-	m_pEnv2->Bind_ShaderResource(m_pShader, "g_RadianceTexture");
+	m_pDiffuseIrradianceTexture->Bind_ShaderResource(m_pShader, "g_IrradianceTexture");
+	m_pSpecularRadianceTexture->Bind_ShaderResource(m_pShader, "g_RadianceTexture");
 
 
 	m_pShader->Begin(3);
 	m_pVIBuffer->Render();
 
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_MeshAlphaBlend()
+{
+	{
+		for (auto& pGameObject : m_RenderObjects[RENDER_MESH_ALPHABLEND])
+		{
+			if (nullptr != pGameObject)
+				pGameObject->Render();
+
+			Safe_Release(pGameObject);
+		}
+
+		m_RenderObjects[RENDER_MESH_ALPHABLEND].clear();
+	}
 	return S_OK;
 }
 
@@ -1071,6 +1091,6 @@ void CRenderer::Free()
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pShadowDepthStencilView);
-	Safe_Release(m_pEnv);
-	Safe_Release(m_pEnv2);
+	Safe_Release(m_pDiffuseIrradianceTexture);
+	Safe_Release(m_pSpecularRadianceTexture);
 }

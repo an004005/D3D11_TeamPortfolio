@@ -34,6 +34,9 @@ public:
 
 	void SetActive(_bool bActive) { m_bActive = bActive; }
 	_bool IsActive() const { return m_bActive; }
+	void SetAlphaBlend(_bool bGlass) { m_bAlphaBlend = bGlass; }
+	_bool IsAlphaBlend() const { return m_bAlphaBlend; }
+
 
 public:
 	static void LoadMaterialFilePathes(const string& MaterialJsonDir);
@@ -49,6 +52,7 @@ protected:
 	// 임시로 이 머터리얼을 사용하는 메쉬를 렌더하거나 렌더하지 않는데 사용
 	_bool m_bActive = true;
 	_uint m_iInstancingPass = 0;
+	_bool m_bAlphaBlend = false;
 
 #ifdef _DEBUG
 	string m_strFilePath;
