@@ -402,6 +402,26 @@ PS_OUT PS_BRON_LASER_MOUTH(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_EM1200_STAMP_IMPACT(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Default = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Mask = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x * 2.f,In.vTexUV.y * 2.f));
+	// float4 Mask = g_tex_1.Sample(LinearSampler, In.vTexUV * 4);
+
+	float4 Color = g_vec4_0;
+	float4 BlendColor = Default * Color * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = CalcHDRColor(BlendColor, g_float_0);
+	Out.vColor.a = Mask.r * g_float_1;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
 PS_OUT PS_FLOWERLEG(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -1247,5 +1267,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM1200_SLASH();
+	}
+
+	//27
+	pass Em1200StampImp
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1200_STAMP_IMPACT();
 	}
 }
