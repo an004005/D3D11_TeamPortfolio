@@ -26,7 +26,12 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	MainUIClose() { m_bMainUI = false; }
+	void	Set_MainUIClose() { 
+		m_bMainUI = false;
+		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bMainUI);
+		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+			iter->second->SetVisible(m_bMainUI);
+	}
 
 private:
 	HRESULT	Add_MainCanvas();
@@ -41,6 +46,8 @@ private:
 	
 	_tchar*	m_szManuText = { L"" };
 	_bool		m_bMainUI = { false };
+
+	_float2 mm = { 0.0f, 0.0f };
 
 public:
 	static CCanvas_Main* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

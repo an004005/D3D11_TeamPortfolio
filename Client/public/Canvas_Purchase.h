@@ -32,7 +32,6 @@ private:
 	class CCanvas_PurchaseKinds* m_arrCanvass[SHOPMENU::MAINITEM_END] = { nullptr, nullptr, nullptr };
 	SHOPMENU	m_eShopMunu = { SHOPMENU::ALL };
 	
-
 public:
 	static CCanvas_Purchase* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

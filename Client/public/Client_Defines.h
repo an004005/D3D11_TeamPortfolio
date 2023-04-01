@@ -29,6 +29,7 @@ extern bool			g_bNeedResizeSwapChain;
 extern unsigned int	g_iWinSizeX;
 extern unsigned int	g_iWinSizeY;
 extern _float g_fTimeDelta;
+extern _float g_fTimeDelta_Add;
 
 using namespace Client;
 

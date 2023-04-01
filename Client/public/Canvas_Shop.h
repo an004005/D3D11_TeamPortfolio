@@ -24,7 +24,12 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 
 public:
-	void	ShopUIClose() { m_bShopUI = false; }
+	void	Set_ShopUIClose() { 
+		m_bShopUI = false;
+		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bShopUI);
+		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+			iter->second->SetVisible(m_bShopUI);
+	}
 
 private:
 	HRESULT	Add_MainCanvas();

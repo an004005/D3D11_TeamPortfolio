@@ -29,6 +29,8 @@ private:
 	void		CurrentList();
 	void		Key_Input();
 
+	void		CurrentVisible(const _bool bVisible);
+
 private:
 	vector<pair<wstring, class CCanvas_ShopListBar*>>	m_vecShopCanvass;
 

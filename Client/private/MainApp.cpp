@@ -94,6 +94,8 @@ HRESULT CMainApp::Initialize()
 
 void CMainApp::Tick(_double TimeDelta)
 {
+	g_fTimeDelta_Add += TimeDelta;
+
 	if (nullptr == m_pGameInstance)
 		return;
 

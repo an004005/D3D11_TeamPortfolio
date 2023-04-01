@@ -126,7 +126,8 @@ void CCanvas_Shop::KeyInput()
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_Z))
 	{
-		dynamic_cast<CCanvas_Main*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Main"))->MainUIClose();
+		dynamic_cast<CCanvas_Main*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Main"))->Set_MainUIClose();
+
 		m_bShopUI = !m_bShopUI;
 
 		// m_bShopUI 와 반대로 동작한다.

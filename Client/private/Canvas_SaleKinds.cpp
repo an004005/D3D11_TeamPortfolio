@@ -63,12 +63,7 @@ HRESULT CCanvas_SaleKinds::Initialize(void* pArg)
 	else
 	{
 		// 비어있는 경우 보여주지 않는다.
-		Find_ChildUI(L"Shop_CurrentCountButton")->SetVisible(false);
-		Find_ChildUI(L"Shop_ItemIcon")->SetVisible(false);
-		Find_ChildUI(L"Shop_CurrentCount")->SetVisible(false);
-		Find_ChildUI(L"Shop_CurrentWondowB")->SetVisible(false);
-		Find_ChildUI(L"Shop_LeftArrow")->SetVisible(false);
-		Find_ChildUI(L"Shop_RightArrow")->SetVisible(false);
+		CurrentVisible(false);
 	}
 
 	return S_OK;
@@ -270,12 +265,7 @@ void CCanvas_SaleKinds::CurrentList()
 
 	if (m_vecShopCanvass.empty())
 	{
-		Find_ChildUI(L"Shop_CurrentCountButton")->SetVisible(false);
-		Find_ChildUI(L"Shop_ItemIcon")->SetVisible(false);
-		Find_ChildUI(L"Shop_CurrentCount")->SetVisible(false);
-		Find_ChildUI(L"Shop_CurrentWondowB")->SetVisible(false);
-		Find_ChildUI(L"Shop_LeftArrow")->SetVisible(false);
-		Find_ChildUI(L"Shop_RightArrow")->SetVisible(false);
+		CurrentVisible(false);
 		return;
 	}
 
@@ -300,12 +290,7 @@ void CCanvas_SaleKinds::CurrentList()
 			Find_ChildUI(L"Shop_RightArrow")->Set_Position({ Find_ChildUI(L"Shop_RightArrow")->Get_Position().x, m_vecShopCanvass[i].second->Get_ListPosititon().y });
 			Find_ChildUI(L"Shop_CurrentCountButton")->Set_Position({ Find_ChildUI(L"Shop_CurrentCountButton")->Get_Position().x, m_vecShopCanvass[i].second->Get_ListPosititon().y });
 
-			Find_ChildUI(L"Shop_CurrentCountButton")->SetVisible(true);
-			Find_ChildUI(L"Shop_ItemIcon")->SetVisible(true);
-			Find_ChildUI(L"Shop_CurrentCount")->SetVisible(true);
-			Find_ChildUI(L"Shop_CurrentWondowB")->SetVisible(true);
-			Find_ChildUI(L"Shop_LeftArrow")->SetVisible(true);
-			Find_ChildUI(L"Shop_RightArrow")->SetVisible(true);
+			CurrentVisible(true);
 		}
 		else
 		{
@@ -319,6 +304,8 @@ void CCanvas_SaleKinds::CurrentList()
 			m_vecShopCanvass[i].second->SetDelete();	// 0개가 되어버린 목록을 삭제하고
 			m_vecShopCanvass.clear();								// 정렬을 위해서 모두 삭제하고
 			Add_ShopListCanvas();									// 다시 추가한다.
+
+			CurrentVisible(false);
 		}
 	}
 }
@@ -378,6 +365,16 @@ void CCanvas_SaleKinds::Key_Input()
 		m_vecShopCanvass[m_iCanvasIndex].second->Set_NmberPurchases(m_iItemCount);
 		dynamic_cast<CItem_RightArrowUI*>(Find_ChildUI(L"Shop_RightArrow"))->Set_Input();
 	}
+}
+
+void CCanvas_SaleKinds::CurrentVisible(const _bool bVisible)
+{
+	Find_ChildUI(L"Shop_CurrentCountButton")->SetVisible(bVisible);
+	Find_ChildUI(L"Shop_ItemIcon")->SetVisible(bVisible);
+	Find_ChildUI(L"Shop_CurrentCount")->SetVisible(bVisible);
+	Find_ChildUI(L"Shop_CurrentWondowB")->SetVisible(bVisible);
+	Find_ChildUI(L"Shop_LeftArrow")->SetVisible(bVisible);
+	Find_ChildUI(L"Shop_RightArrow")->SetVisible(bVisible);
 }
 
 CCanvas_SaleKinds * CCanvas_SaleKinds::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
