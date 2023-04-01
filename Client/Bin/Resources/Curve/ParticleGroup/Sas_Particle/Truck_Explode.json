@@ -1,0 +1,31 @@
+{
+    "LifeTime": 10.0,
+    "ObjectTag": "Truck_Explode",
+    "Particles": [
+        {
+            "ObjectTag": "Truck_Explode",
+            "ParticleDirectory": "../Bin/Resources/VFX/ParticleSystem/Player_Special_Object_Pariticle/Truck_Explode_Final.json"
+        }
+    ],
+    "Prototype_GameObject": "ProtoVFX_ParticleGroup\u0000",
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

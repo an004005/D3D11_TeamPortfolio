@@ -11,7 +11,7 @@ END
 
 BEGIN(Client)
 
-// FlowerLeg (º»¸í: ¹Ù½ºÆ÷Áî)
+// FlowerLeg (ë³¸ëª…: ë°”ìŠ¤í¬ì¦ˆ)
 // MadeBy Captain
 class CEM0200 : public CEnemy
 {
@@ -34,7 +34,7 @@ public:
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
-
+	virtual void SetUpUI() override;
 public:
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
@@ -43,7 +43,7 @@ public:
 	_bool IsRun() const { return m_bRun; }
 
 protected:
-	void	Strew_Overlap(); // FlowerShower °ø°İ
+	void	Strew_Overlap(); // FlowerShower ê³µê²©
 	void	Spin_SweepCapsule();
 	void	Kick_SweepSphere();
 	void	Dodge_VelocityCalc();
@@ -79,7 +79,7 @@ private:
 	// spin atk
 	_bool m_bSpinAtk = false;
 
-	// Run »óÅÂ¸¦ À§ÇÑ _bool
+	// Run ìƒíƒœë¥¼ ìœ„í•œ _bool
 	_bool m_bRun = false;
 
 	CController::EHandleInput m_eInput;

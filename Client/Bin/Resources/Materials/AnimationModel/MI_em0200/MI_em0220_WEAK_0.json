@@ -1,17 +1,1 @@
-{
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxAnimModel",
-    "ShaderParams" : {
-        "Ints" : [0],
-        "Floats" : [0.0],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Model/AnimModel/Monster/em0200/Texture/T_em0220_Body_ALB.png", 
-            "../Bin/Resources/Model/AnimModel/Monster/em0200/Texture/T_em0220_Body_NML.png",
-            "../Bin/Resources/Model/AnimModel/Monster/em0200/Texture/T_em0220_Body_RMA.png",
-            "../Bin/Resources/Model/AnimModel/Monster/em0200/Texture/T_em0220_Weak_MTC.png"
-        ],
-        "Pass" : 1
-    }
-}
+{"ShaderParams":{"Float2s":[[1.0,1.0]],"Float4s":[[1.0,1.0,0.0,1.0]],"Float4x4s":[],"Floats":[0.0,0.0],"Ints":[0],"Pass":11,"Textures":["../Bin/Resources/Model/AnimModel/Monster/em0200/Texture/T_em0220_Body_ALB.png\u0000","../Bin/Resources/Model/AnimModel/Monster/em0200/Texture/T_em0220_Body_NML.png\u0000","../Bin/Resources/Model/AnimModel/Monster/em0200/Texture/T_em0220_Body_RMA.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxAnimModel"}

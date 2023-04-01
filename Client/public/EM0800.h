@@ -2,13 +2,6 @@
 #include "Enemy.h"
 #include "Controller.h"
 
-BEGIN(Engine)
-class CFSMComponent;
-class CGameInstance;
-class CAnimation;
-class CRigidBody;
-END
-
 BEGIN(Client)
 
 // ºê·ÐÁ¸
@@ -56,13 +49,10 @@ private:
 	class CEM0800_Controller*		m_pController = nullptr;
 	class CEM0800_AnimInstance*		m_pASM = nullptr;
 
-	unordered_map<string, CRigidBody*> m_pRigidBodies;
-
 	CEffectGroup*				m_pWaterPool = nullptr;
-
 private:
 	_float3						m_vMoveAxis;
-	EBaseTurn					m_eTurn = EBaseTurn::TURN_END;
+	EBaseTurn				m_eTurn = EBaseTurn::TURN_END;
 	_bool						m_bTurn = false;
 
 
@@ -71,15 +61,13 @@ private:
 	_float	m_fLaserTime = 0.f;
 	_bool m_bComeUp = false;
 	
-	//WaterPool
-	_bool		m_bHasWaterPool = false;
-
-
 	CController::EHandleInput	m_eInput;
 
 	//Heavy coll
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
+
+	_float4x4	pivot;
 public:
 	static CEM0800* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

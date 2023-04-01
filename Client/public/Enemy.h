@@ -12,6 +12,7 @@ class CFSMComponent;
 END
 
 BEGIN(Client)
+using RigidBodies = unordered_map<string, CRigidBody*>;
 
 enum ENEMY_UIPIVOT { ENEMY_INFOBAR, ENEMY_FINDEYES, ENEMY_UIPIVOT_END };
 class CEnemy abstract : public CScarletCharacter
@@ -34,33 +35,42 @@ public:
 	virtual void SetUpSound();
 	virtual void SetUpAnimationEvent(){}
 	virtual void SetUpFSM() {}
+	virtual void SetUpUI() {}
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
-	virtual void SetBrainCrush();
-
 	virtual void SetEnemyBatchDataStat(ENEMY_STAT tStat);
 	virtual ENEMY_STAT GetEnemyBatchDataStat();
 	
 public:
 	//0 ~ 1 사이값
 	_float GetHpRatio() const { return (_float)m_iHP / (_float)m_iMaxHP; }
-	_float GetCrushGageRatio() const { return (_float)m_iCrushGage / (_float)m_iMaxCrushGage; }
+	_float GetCrushGageRatio() const { return (_float)m_iCrushGauge / (_float)m_iMaxCrushGauge; }
 	_bool IsDead() const { return m_bDead; }
 	virtual _float4	GetKineticTargetPos() { return GetColliderPosition(); }
 
+	void HealFullHp() { m_iHP = m_iMaxHP; }
+	_bool	HasCrushGauge() { m_bHasCrushGauge; }
+
 	//ui
-	_float4x4	Get_UIPivotMatrix(ENEMY_UIPIVOT eUIPivot) {
-		return m_UI_PivotMatrixes[eUIPivot]; }
-	_bool	GetHasName() { return m_bHasName; }
-	_int	Get_EnemyName() { return _int(m_eEnemyName); }
-	_int	Get_EnemyLevel() { return iEemeyLevel; }
-	void	Set_HasName() { m_bHasName = true; }	
+	_float4x4	Get_UIPivotMatrix(ENEMY_UIPIVOT ePivot) {
+		return m_UI_PivotMatrixes[ePivot];
+	}
 	void	TurnEyesOut();
+	void Create_InfoUI();
 	//
+
+	_bool Decide_PlayBrainCrush();
+
 public:
 	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
 	virtual _float4x4 GetPivotMatrix() override;
 
+	//몬스터마다 특정 조건을 만들고싶을때
+	virtual _bool		Exclude() { return false; }
+
+	//Target 방향 확인
+	_bool IsTargetFront(_float fAngle = 90.f);
+	_bool IsTargetRight(_float fAngle = 90.f);
 protected:
 	// take damage 관련 함수
 	virtual void HitEffect(DAMAGE_PARAM& tDamageParams);
@@ -90,7 +100,16 @@ protected:
 	void HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
 	void HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
 
+	//로컬움직임 적용. 다른 애니메이션을 넣어주기 전에 ClearSocketAnim 꼭 해줘야함!!
 	void SocketLocalMove(class CEnemy_AnimInstance* pASM);
+
+	//RigidBoyd 관리
+	void	Add_RigidBody(const string& KeyName, void* pArg = nullptr);
+	CRigidBody* GetRigidBody(const string& KeyName);
+
+private:
+	void Update_UIInfo();
+	
 protected:
 	static vector<wstring>			s_vecDefaultBlood;
 	static vector<wstring>			s_vecFireBlood;
@@ -109,16 +128,27 @@ protected:
 	CModel*					m_pModelCom = nullptr;
 	CScarletCharacter*		m_pTarget = nullptr;
 	CFSMComponent*			m_pFSM = nullptr;
-	
+	RigidBodies				m_pRigidBodies;
+
+	class CMonsterShildUI* m_pShieldUI = nullptr;
+	class CMonsterHpUI* m_pHPUI = nullptr;
+	//
+
 	_bool m_bFindTestTarget = false;
 
 	_int m_iAtkDamage = 50;
 	_int m_iHP = 100;
 	_int m_iMaxHP = 100;
 
-	_int m_iCrushGage = 100;
-	_int m_iMaxCrushGage = 100;
-	_bool m_bHasCrushGage = false;
+	_int m_iCrushGauge = 100;
+	_int m_iMaxCrushGauge = 100;
+	_bool m_bHasCrushGauge = false;
+
+	//플레이어가 set해줌
+	_bool	m_bBrainCrush = false;
+
+	_bool		m_bDeadStart = false;
+	_double	m_dDeadTime = 0.0;
 
 	_bool m_bDead = false;
 	set<CScarletCharacter*> m_DamagedTargetList;
@@ -145,7 +175,6 @@ protected:
 
 
 	//ui
-	_bool m_bHasName = false;
 	array<_float4x4, ENEMY_UIPIVOT_END> m_UI_PivotMatrixes;
 	//
 

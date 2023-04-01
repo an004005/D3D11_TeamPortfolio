@@ -15,23 +15,29 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	Tick(_double TimeDelta) override;
-	virtual void	Late_Tick(_double TimeDelta) override;
-	virtual HRESULT Render() override;
-
-	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
 	
 public:
+	_bool	Get_ItemUseStatuse() {
+		//if (m_fRatio - 1.0f <= 0.000001f)	
+		if(m_fRatio == 1.0f)
+			return true;		// 사용 가능
+		else
+			return false;	// 사용 불 가능
+	}
+
 	void	Set_CooldownTimeStart() {
+		m_fRatioDown = true;
 		m_bCooldownTimeStart = true;
 	}
 
-private:
-	void	Gauge_Tick(const _double & dTimeDelta);
+	void	Set_Color(const _float4& fColor) {
+		m_tParams.Float4s[0] = fColor;
+	}
 
 private:
 	_bool	m_bCooldownTimeStart = { false };
+	_bool	m_fRatioDown = { false };
+	_float	m_fRatio = { 1.0f };
 
 public:
 	static CItem_GaugeUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

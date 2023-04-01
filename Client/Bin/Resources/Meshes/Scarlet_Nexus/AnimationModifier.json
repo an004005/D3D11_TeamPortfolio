@@ -5,6 +5,33 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_DriveModeOpen_ch0100_ch0100": {
+        "Duration": 170.0,
+        "TickPerSecond": 70.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Hood_Active_On",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Mask_Dissolve_On",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "Hair_Active_Off",
+                "EventTime": 95.0
+            },
+            {
+                "EventName": "DriveMode_Effect",
+                "EventTime": 115.0
+            },
+            {
+                "EventName": "DriveMode_Particle",
+                "EventTime": 125.0
+            }
+        ]
+    },
     "AS_ch0100_021_AL_run_start_F": {
         "Duration": 30.0,
         "TickPerSecond": 50.0,
@@ -2604,6 +2631,12 @@
             }
         ]
     },
+    "AS_ch0100_299_AL_enpc_drive_mode": {
+        "Duration": 160.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_301_AL_capture_wait_loop": {
         "Duration": 120.0,
         "TickPerSecond": 100.0,
@@ -2927,6 +2960,12 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_330_AL_fall_start": {
+        "Duration": 80.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_331_AL_swing_L": {
         "Duration": 140.0,
         "TickPerSecond": 50.0,
@@ -2987,9 +3026,33 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_337_AL_press_cancel": {
+        "Duration": 70.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_337_AL_press_end": {
+        "Duration": 190.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_337_AL_press_loop": {
+        "Duration": 225.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_337_AL_press_start": {
+        "Duration": 95.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_348_AL_obj": {
         "Duration": 130.0,
-        "TickPerSecond": 65.0,
+        "TickPerSecond": 43.33300018310547,
         "bLooping": false,
         "vecEvent": []
     },
@@ -3389,6 +3452,17 @@
             }
         ]
     },
+    "AS_em0100_474_AL_dead_down02": {
+        "Duration": 138.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
+            }
+        ]
+    },
     "AS_em0110_206_AL_atk_b2_start": {
         "Duration": 117.0,
         "TickPerSecond": 35.0,
@@ -3761,8 +3835,18 @@
             {
                 "EventName": "Death_Effect_Create",
                 "EventTime": 25.0
+            },
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
             }
         ]
+    },
+    "AS_em0200_425_AL_down_start": {
+        "Duration": 105.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_em0200_427_AL_getup": {
         "Duration": 96.0,
@@ -3807,9 +3891,27 @@
             }
         ]
     },
+    "AS_em0200_485_AL_BCchance_start": {
+        "Duration": 72.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0200_486_AL_BCchance_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0200_487_AL_BCchance_end": {
+        "Duration": 64.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0210_211_AL_somersault": {
         "Duration": 160.0,
-        "TickPerSecond": 35.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -3824,12 +3926,16 @@
     },
     "AS_em0210_212_AL_spin": {
         "Duration": 180.0,
-        "TickPerSecond": 35.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
                 "EventName": "Spin_Start",
-                "EventTime": 60.0
+                "EventTime": 63.0
+            },
+            {
+                "EventName": "Spin_Effect1",
+                "EventTime": 83.0
             },
             {
                 "EventName": "Spin_End",
@@ -3837,10 +3943,28 @@
             }
         ]
     },
+    "AS_em0220_111_AL_to_guard": {
+        "Duration": 40.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0220_112_AL_guard": {
+        "Duration": 80.0,
+        "TickPerSecond": 24.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_em0220_113_AL_to_wait03": {
+        "Duration": 40.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0220_215_AL_Shot2": {
         "Duration": 49.0,
         "TickPerSecond": 24.0,
-        "bLooping": false,
+        "bLooping": true,
         "vecEvent": [
             {
                 "EventName": "Shot",
@@ -3973,7 +4097,12 @@
         "Duration": 70.0,
         "TickPerSecond": 37.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 37.0
+            }
+        ]
     },
     "AS_em0300_415_AL_damage_m_F": {
         "Duration": 240.0,
@@ -4136,20 +4265,8 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "Swing_Start",
-                "EventTime": 149.0
-            },
-            {
                 "EventName": "Swing_End",
                 "EventTime": 184.0
-            },
-            {
-                "EventName": "SwingEff_Start",
-                "EventTime": 153.0
-            },
-            {
-                "EventName": "SwingEff_End",
-                "EventTime": 190.0
             },
             {
                 "EventName": "mon_1_attack_voice",
@@ -4158,6 +4275,10 @@
             {
                 "EventName": "mon_1_attack_whoosh",
                 "EventTime": 163.0
+            },
+            {
+                "EventName": "Swing_Start",
+                "EventTime": 165.0
             }
         ]
     },
@@ -4256,6 +4377,10 @@
             {
                 "EventName": "mon_1_fx_death",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
             }
         ]
     },
@@ -4479,8 +4604,8 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "mon_2_fx_death",
-                "EventTime": 0.0
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
             }
         ]
     },
@@ -4554,19 +4679,19 @@
     },
     "AS_em0700_120_AL_escape": {
         "Duration": 75.0,
-        "TickPerSecond": 35.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_121_AL_randommove_L": {
         "Duration": 120.0,
-        "TickPerSecond": 30.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em0700_122_AL_randommove_R": {
         "Duration": 120.0,
-        "TickPerSecond": 30.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -4678,7 +4803,12 @@
         "Duration": 160.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em0700_425_AL_down_start": {
         "Duration": 125.0,
@@ -4726,6 +4856,17 @@
             {
                 "EventName": "AirDamageReset",
                 "EventTime": 50.0
+            }
+        ]
+    },
+    "AS_em0700_474_AL_dead_down02": {
+        "Duration": 177.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
             }
         ]
     },
@@ -5024,7 +5165,12 @@
         "Duration": 130.0,
         "TickPerSecond": 52.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em0800_425_AL_down_start": {
         "Duration": 97.0,
@@ -5063,7 +5209,7 @@
     },
     "AS_em0810_201_AL_atk_a1_bite": {
         "Duration": 130.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 70.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -5161,6 +5307,17 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_em1100_424_AL_dead_down": {
+        "Duration": 166.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "DeadFlower",
+                "EventTime": 30.0
+            }
+        ]
+    },
     "AS_em1120_211_AL_atk_a4_sliding_end": {
         "Duration": 180.0,
         "TickPerSecond": 40.0,
@@ -5183,6 +5340,103 @@
                 "EventTime": 19.0
             }
         ]
+    },
+    "AS_em1200_155_AL_turn_L_loop2": {
+        "Duration": 76.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_184_AL_run02_loop": {
+        "Duration": 65.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_200_AL_atk_a1_fall": {
+        "Duration": 242.0,
+        "TickPerSecond": 70.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Fall",
+                "EventTime": 175.0
+            }
+        ]
+    },
+    "AS_em1200_210_AL_atk_a3_tackle2_start": {
+        "Duration": 110.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Rush_Start",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Rush_End",
+                "EventTime": 80.0
+            }
+        ]
+    },
+    "AS_em1200_212_AL_atk_a3_tackle2_end": {
+        "Duration": 45.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_222_AL_atk_a6_Cleave_L": {
+        "Duration": 300.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Swing_L_Start",
+                "EventTime": 100.0
+            },
+            {
+                "EventName": "Swing_L_End",
+                "EventTime": 128.0
+            }
+        ]
+    },
+    "AS_em1200_223_AL_atk_a6_Cleave": {
+        "Duration": 300.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Swing_R_End",
+                "EventTime": 128.0
+            },
+            {
+                "EventName": "Swing_R_Start",
+                "EventTime": 100.0
+            }
+        ]
+    },
+    "AS_em1200_225_AL_atk_a8_shout2_loop": {
+        "Duration": 30.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_232_AL_atk9_punch_hit": {
+        "Duration": 90.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Stamp",
+                "EventTime": 48.0
+            }
+        ]
+    },
+    "AS_em1200_234_AL_atk9_punch_end": {
+        "Duration": 195.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_mg02_372_train_cancel_L": {
         "Duration": 57.0,

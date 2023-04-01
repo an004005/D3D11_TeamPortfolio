@@ -2,13 +2,6 @@
 #include "Enemy.h"
 #include "Controller.h"
 
-BEGIN(Engine)
-class CFSMComponent;
-class CGameInstance;
-class CAnimation;
-class CRigidBody;
-END
-
 BEGIN(Client)
 
 // 스커미 풀
@@ -26,6 +19,7 @@ public:
 	virtual void SetUpSound() override;
 	virtual void SetUpAnimationEvent() override;
 	virtual void SetUpFSM() override;
+	virtual void SetUpUI() override;
 
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
@@ -45,15 +39,13 @@ private:
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
 
+	void Create_Bullet();
 private:
 	//충돌 관련 함수 정의
-
+	void	HeavyAttackPushStart();
 private:
 	class CEM0650_Controller*		m_pController = nullptr;
 	class CEM0650_AnimInstance*		m_pASM = nullptr;
-
-	//충돌
-	CRigidBody*					m_pRange = nullptr;
 
 private:
 	//원시 데이터
@@ -64,7 +56,10 @@ private:
 	_vector	m_LastSpotTargetPos;
 	_bool		m_bHitMove = false;
 
-	CController::EHandleInput	m_eInput;
+	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
+
+	CSimpleTimeline m_HeavyAttackPushTimeline;
+	_float4 m_vPushVelocity;
 public:
 	static CEM0650* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

@@ -43,7 +43,9 @@ void CEM0400_Controller::AI_Tick(_double TimeDelta)
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
-		DefineState(TimeDelta);
+		AddCommand("Attack_Swing", 0.f, &CAIController::Input, MOUSE_LB);
+
+		//DefineState(TimeDelta);
 	}
 }
 

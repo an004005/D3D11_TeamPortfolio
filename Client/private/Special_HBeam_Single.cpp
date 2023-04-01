@@ -100,11 +100,22 @@ void CSpecial_HBeam_Single::SaveToJson(Json & json)
 void CSpecial_HBeam_Single::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	if (ImGui::CollapsingHeader("Local"))
+	{
+		static GUIZMO_INFO Local;
+		CImguiUtils::Render_Guizmo(&m_LocalMatrix, Local, true, true);
+	}
 }
 
 void CSpecial_HBeam_Single::Sync_position(CTransform * pTransform)
 {
 	m_pTransformCom->Set_WorldMatrix(pTransform->Get_WorldMatrix());
+}
+
+void CSpecial_HBeam_Single::Set_Trigger(_bool bTrigger)
+{
+	m_pCollider->Set_Trigger(bTrigger);
 }
 
 void CSpecial_HBeam_Single::Set_Kinetic(_bool bKinetic)
@@ -124,7 +135,7 @@ void CSpecial_HBeam_Single::HBeam_Finish()
 
 	m_bFinish = true;
 
-	m_pCollider->Set_Kinetic(false);
+	m_pCollider->Set_Trigger(false);
 	m_pCollider->UpdateChange();
 
 	m_pCollider->AddVelocity({ 0.f, 1000.f * g_fTimeDelta, 0.f });

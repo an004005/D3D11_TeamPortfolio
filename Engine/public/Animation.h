@@ -54,10 +54,9 @@ public:
 	void SaveModifiedData(Json& json);
 	void Imgui_RenderProperty();
 
-// 염력 물체 애니메이션 관련
 public:
 	void Update_Bones_SyncRatio(_double PlayTime);
-// ~염력 물체 애니메이션 관련
+	void Update_Bones_SyncRatio_NonLocalLock(_double PlayTime);
 
 public:
 	KEYFRAME*						GetCurKeyFrame();
@@ -76,23 +75,17 @@ public:
 
 private:
 	string								m_strName;
-	/* 애니메이션을 재생하는데 거리른ㄴ 전체 시간. */
 	_double								m_Duration = 0.0;
 
-	/* 초당 재생해야할 애니메이션의 속도이다. */
 	_double								m_TickPerSecond;
 
 	_double								m_PlayTime = 0.0;
 
 	_bool								m_bFinished = false;
-	// 애니메이션 끝나면 처음부터 다시 시작
 	_bool								m_bLooping = false;
-	// 애니메이션 끝나면 마지작 프레임 유지
 	_bool								m_bStay = false;
 
-	//Idle 상태로 갈 때 보간 할지 말지 결정
 	_bool								m_bInterpolation = true;
-	// 로컬 좌표 이동
 	_vector								m_vLocalMove;
 	_vector								m_vSpecialLocalMove;
 	_vector								m_vLocalRotation;
@@ -100,16 +93,14 @@ private:
 	pair<_vector, _float>				m_vLocalEular;
 	_vector								m_vEffectLocalMove;
 
-	/* 이 애니메이션을 재생하기위해 갱신해야하는 뼈들. */
 	vector<class CChannel*>				m_Channels;
 
-	/* 이벤트 맵 */
+	/* ?대깽??留?*/
 	unordered_map<double, string>		m_EventMap;
 	vector<ANIM_EVENT>					m_vecEvent;
 
 
 
-	// 상호참조로 레퍼런스 카운트 증가하지 않는다.
 	class CModel*						m_pModel = nullptr;
 
 public:

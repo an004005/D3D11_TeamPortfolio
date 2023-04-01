@@ -28,7 +28,6 @@ public:
 	void		Set_Transform(_matrix sokect);
 
 	void		Delete_Particles();
-
 public:
 	void		Start_ParticleWork();
 
@@ -40,6 +39,7 @@ public:
 	void		Start_AttachPosition(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate = false);
 	void		Start_AttachPosition_Scaling(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _float4 vScale, _bool trueisUpdate = false);
 	void		Start_AttachSword(CGameObject* pWeapon, _bool trueisUpdate = false);
+	void		Start_AttachSpecificPos(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate = false);
 
 private:
 	// [ObjectTag : Key] [Value : <Directory, Ptr>]
@@ -55,6 +55,10 @@ private:
 
 private:
 	CGameObject* m_pAttachWeapon = nullptr;
+
+private:
+	_float4	m_AttachPos = { 0.f, 0.f, 0.f, 1.f };
+	_float4 m_AttachDir = { 0.f, 0.f, 0.f, 0.f };
 
 public:
 	virtual void Late_Tick(_double TimeDelta) override;

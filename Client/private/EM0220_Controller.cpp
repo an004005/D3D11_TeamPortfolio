@@ -57,22 +57,27 @@ void CEM0220_Controller::Tick_Outside(_double TimeDelta)
 	AddCommand("Wait", 3.f, &CAIController::Wait);
 }
 
-_bool CEM0220_Controller::Check_TargetDist(_float fDist, _bool IsGreater)
+_bool CEM0220_Controller::Check_TargetDist(_bool IsGreater)
 {
 	if (IsGreater == true)
-		return m_fTtoM_Distance >= fDist;
+		return m_fTtoM_Distance >= m_fGuardDist;
 	else
-		return m_fTtoM_Distance <= fDist;
+		return m_fTtoM_Distance <= m_fGuardDist;
 }
 
 void CEM0220_Controller::DefineState(_double TimeDelta)
 {
 	if (m_pCastedOwner->IsPlayingSocket() == true) return;
 
-	if (m_fTtoM_Distance <= 10.f)
+	if (m_fTtoM_Distance <= m_fGuardDist)
+	{
 		Tick_Near(TimeDelta);
+	}
 	else
+	{
 		Tick_Far(TimeDelta);
+		m_bGuard = false;
+	}
 }
 
 

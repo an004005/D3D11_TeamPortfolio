@@ -1,0 +1,697 @@
+{
+    "BatchObjs": [
+        {
+            "JsonData": {
+                "ObjectTag": "TIPS0",
+                "Prototype_GameObject": "Prototype_TipTrigger\u0000",
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        50.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "TipsType": 0,
+                "Transform": {
+                    "WorldMatrix": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        -49.670982360839844,
+                        6.450286865234375,
+                        -85.96239471435547,
+                        1.0
+                    ]
+                },
+                "TutorialOrTips": true,
+                "TutorialType": 6
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_TipTrigger"
+            },
+            "WorldMatrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -49.670982360839844,
+                6.450286865234375,
+                -85.96239471435547,
+                1.0
+            ]
+        },
+        {
+            "JsonData": {
+                "ObjectTag": "Tutorial0",
+                "Prototype_GameObject": "Prototype_TipTrigger\u0000",
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "TipsType": 11,
+                "Transform": {
+                    "WorldMatrix": [
+                        0.9733554124832153,
+                        0.0,
+                        -0.2292967140674591,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.2292967140674591,
+                        0.0,
+                        0.9733554124832153,
+                        0.0,
+                        -46.5788688659668,
+                        13.288166999816895,
+                        -63.42958068847656,
+                        1.0
+                    ]
+                },
+                "TutorialOrTips": false,
+                "TutorialType": 0
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_TipTrigger"
+            },
+            "WorldMatrix": [
+                0.9733554124832153,
+                0.0,
+                -0.2292967140674591,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.2292967140674591,
+                0.0,
+                0.9733554124832153,
+                0.0,
+                -46.5788688659668,
+                13.288166999816895,
+                -63.42958068847656,
+                1.0
+            ]
+        },
+        {
+            "JsonData": {
+                "ObjectTag": "Tutorial1",
+                "Prototype_GameObject": "Prototype_TipTrigger\u0000",
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "TipsType": 11,
+                "Transform": {
+                    "WorldMatrix": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        -40.331565856933594,
+                        5.204524993896484,
+                        -31.231470108032227,
+                        1.0
+                    ]
+                },
+                "TutorialOrTips": false,
+                "TutorialType": 1
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_TipTrigger"
+            },
+            "WorldMatrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -40.331565856933594,
+                5.204524993896484,
+                -31.231470108032227,
+                1.0
+            ]
+        },
+        {
+            "JsonData": {
+                "ObjectTag": "Tutorial3",
+                "Prototype_GameObject": "Prototype_TipTrigger\u0000",
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "TipsType": 11,
+                "Transform": {
+                    "WorldMatrix": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        -42.715694427490234,
+                        2.6143875122070313,
+                        -19.305675506591797,
+                        1.0
+                    ]
+                },
+                "TutorialOrTips": false,
+                "TutorialType": 2
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_TipTrigger"
+            },
+            "WorldMatrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -42.715694427490234,
+                2.6143875122070313,
+                -19.305675506591797,
+                1.0
+            ]
+        },
+        {
+            "JsonData": {
+                "ObjectTag": "Tutorial6",
+                "Prototype_GameObject": "Prototype_TipTrigger\u0000",
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "TipsType": 11,
+                "Transform": {
+                    "WorldMatrix": [
+                        0.028936155140399933,
+                        9.035122161549225e-07,
+                        0.9995784163475037,
+                        0.0,
+                        -3.3673131838440895e-08,
+                        1.0,
+                        -9.029184298015025e-07,
+                        0.0,
+                        -0.9995784163475037,
+                        -7.534232793204865e-09,
+                        0.028936155140399933,
+                        0.0,
+                        -73.6452407836914,
+                        1.0210514068603516,
+                        0.6293669939041138,
+                        1.0
+                    ]
+                },
+                "TutorialOrTips": false,
+                "TutorialType": 5
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_TipTrigger"
+            },
+            "WorldMatrix": [
+                0.028936155140399933,
+                9.035122161549225e-07,
+                0.9995784163475037,
+                0.0,
+                -3.3673131838440895e-08,
+                1.0,
+                -9.029184298015025e-07,
+                0.0,
+                -0.9995784163475037,
+                -7.534232793204865e-09,
+                0.028936155140399933,
+                0.0,
+                -73.6452407836914,
+                1.0210514068603516,
+                0.6293669939041138,
+                1.0
+            ]
+        },
+        {
+            "JsonData": {
+                "ObjectTag": "TIPS1",
+                "Prototype_GameObject": "Prototype_TipTrigger\u0000",
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "TipsType": 1,
+                "Transform": {
+                    "WorldMatrix": [
+                        0.970490574836731,
+                        0.0,
+                        -0.24113494157791138,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.24113494157791138,
+                        0.0,
+                        0.970490574836731,
+                        0.0,
+                        -46.016780853271484,
+                        9.118908882141113,
+                        -60.246971130371094,
+                        1.0
+                    ]
+                },
+                "TutorialOrTips": true,
+                "TutorialType": 6
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_TipTrigger"
+            },
+            "WorldMatrix": [
+                0.970490574836731,
+                0.0,
+                -0.24113494157791138,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.24113494157791138,
+                0.0,
+                0.970490574836731,
+                0.0,
+                -46.016780853271484,
+                9.118908882141113,
+                -60.246971130371094,
+                1.0
+            ]
+        },
+        {
+            "JsonData": {
+                "ObjectTag": "TIPS3",
+                "Prototype_GameObject": "Prototype_TipTrigger\u0000",
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "TipsType": 3,
+                "Transform": {
+                    "WorldMatrix": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        -43.71095275878906,
+                        1.3475041389465332,
+                        -15.890811920166016,
+                        1.0
+                    ]
+                },
+                "TutorialOrTips": true,
+                "TutorialType": 6
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_TipTrigger"
+            },
+            "WorldMatrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -43.71095275878906,
+                1.3475041389465332,
+                -15.890811920166016,
+                1.0
+            ]
+        },
+        {
+            "JsonData": {
+                "ObjectTag": "TIPS4",
+                "Prototype_GameObject": "Prototype_TipTrigger\u0000",
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        15.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "TipsType": 4,
+                "Transform": {
+                    "WorldMatrix": [
+                        0.6045664548873901,
+                        0.0,
+                        0.7965523600578308,
+                        0.0,
+                        0.0,
+                        0.9999939799308777,
+                        0.0,
+                        0.0,
+                        -0.7965511679649353,
+                        0.0,
+                        0.6045655608177185,
+                        0.0,
+                        40.089759826660156,
+                        -25.87895393371582,
+                        -228.91212463378906,
+                        1.0
+                    ]
+                },
+                "TutorialOrTips": true,
+                "TutorialType": 6
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_TipTrigger"
+            },
+            "WorldMatrix": [
+                0.6045664548873901,
+                0.0,
+                0.7965523600578308,
+                0.0,
+                0.0,
+                0.9999939799308777,
+                0.0,
+                0.0,
+                -0.7965511679649353,
+                0.0,
+                0.6045655608177185,
+                0.0,
+                40.089759826660156,
+                -25.87895393371582,
+                -228.91212463378906,
+                1.0
+            ]
+        },
+        {
+            "JsonData": {
+                "ObjectTag": "TIPS7",
+                "Prototype_GameObject": "Prototype_TipTrigger\u0000",
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        30.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "TipsType": 7,
+                "Transform": {
+                    "WorldMatrix": [
+                        9.099552471525385e-07,
+                        1.6560499716336552e-12,
+                        -0.9999915957450867,
+                        0.0,
+                        -1.2505501191875656e-12,
+                        0.9999959468841553,
+                        1.6560560431658211e-12,
+                        0.0,
+                        0.9999915957450867,
+                        1.2505446981767032e-12,
+                        9.099552471525385e-07,
+                        0.0,
+                        -59.568115234375,
+                        3.927539348602295,
+                        -0.5210986137390137,
+                        1.0
+                    ]
+                },
+                "TutorialOrTips": true,
+                "TutorialType": 6
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_TipTrigger"
+            },
+            "WorldMatrix": [
+                9.099552471525385e-07,
+                1.6560499716336552e-12,
+                -0.9999915957450867,
+                0.0,
+                -1.2505501191875656e-12,
+                0.9999959468841553,
+                1.6560560431658211e-12,
+                0.0,
+                0.9999915957450867,
+                1.2505446981767032e-12,
+                9.099552471525385e-07,
+                0.0,
+                -59.568115234375,
+                3.927539348602295,
+                -0.5210986137390137,
+                1.0
+            ]
+        }
+    ]
+}

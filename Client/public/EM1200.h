@@ -35,50 +35,47 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 public:
-	void	Set_RunStart(_bool bRunStart) { m_bRun_Start = bRunStart; }
-	_bool	Get_RunStart() { return m_bRun_Start; }
-
+	_bool	IsChangePhase() const { return m_bChangePhase; }
 public:
 	//행동 관련 함수 정의
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_bool IsRun() const { return m_bRun; }
+	EBaseTurn GetBaseTurn() const { return m_eTurn; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_bool IsPlayingSocket() const;
-	void Dodge_VelocityCalc();
-	void AfterLocal180Turn();
 
-//	void Play_LightHitAnim();
+public:
+	void Play_LightHitAnim();
 	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
 
-	_bool IsTargetFront();
+	ESimpleAxis TargetSimpleAxis();
+	EBaseTurn TargetBaseTurn();
 
-private:
-	//충돌 관련 함수 정의
-	void Rush_SweepCapsule();
-	void TailSwing_SweepSphere();
+public:
+	//충돌
+	void Fall_Overlap();
+	void Shout1_Overlap();
+	void Shout2_Overlap();
 	void Stamp_Overlap();
+	void Swing_SweepSphere(const string& BoneName);
+	void Rush_SweepSphere();
 
 private:
 	class CEM1200_Controller*		m_pController = nullptr;
 	class CEM1200_AnimInstance*		m_pASM = nullptr;
 
-	//충돌
-	CRigidBody*				m_pRange = nullptr;
-	CRigidBody*				m_pHead = nullptr;
-
 private:
-	_float3						 m_vMoveAxis;
-	_bool						m_bHitAir = false;
-
+	_float3						m_vMoveAxis;
+	EBaseTurn					m_eTurn = EBaseTurn::TURN_END;
 	_bool						m_bRun = false;
-	//달리기 전 준비모션이 있어서 진짜 움직여야하는 타이밍
-	_bool						m_bRun_Start = false;
+	_bool						m_bChangePhase = false;
 
 	//Attack
-	_bool						m_bRush = false;
-	_bool						m_bTailSwing = false;
-	_float4						vTailPos;
+	_double						m_dLoopTime = 0.0;
+	_double						m_dLoopTick = 0.0;
+	_bool						m_bAttack = false;
+	_uint						m_iAttackCount = 0;
 	//Dodge
 	_bool						m_bDodge = false;
 	_float3						m_vOnJumpMoveVelocity;

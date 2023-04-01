@@ -26,6 +26,8 @@ HRESULT CItem_PushArrowUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	m_fStartY = m_fY;
+
 	return S_OK;
 }
 
@@ -39,15 +41,24 @@ void CItem_PushArrowUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	//const _float2 canvaspos = m_pCanvas->Get_Position();
+	if (false == m_bInput)	return;
 
-	//_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	m_fMoveTimeAcc += TimeDelta;
+	if (0.15 < m_fMoveTimeAcc)
+	{
+		m_fY += _float(TimeDelta) * 100.0f;
 
-	//vPosition += XMLoadFloat2(&canvaspos);
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(vPosition, 1.f));
-
-
-	
+		if (m_fY > m_fStartY)
+		{
+			m_fY = m_fStartY;
+			m_fMoveTimeAcc = 0.0;
+			m_bInput = false;
+		}
+	}
+	else
+	{
+		m_fY -= _float(TimeDelta) * 100.0f;
+	}
 }
 
 void CItem_PushArrowUI::Late_Tick(_double TimeDelta)

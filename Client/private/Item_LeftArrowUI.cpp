@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Item_LeftArrowUI.h"
 #include "GameInstance.h"
-#include "JsonLib.h"
 
 CItem_LeftArrowUI::CItem_LeftArrowUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -35,11 +34,7 @@ void CItem_LeftArrowUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_LEFT))
-		m_bInput = true;
-
-	if (false == m_bInput)
-		return;
+	if (false == m_bInput)	return;
 
 	m_fMoveTimeAcc += TimeDelta;
 	if (0.15 < m_fMoveTimeAcc)
@@ -57,37 +52,6 @@ void CItem_LeftArrowUI::Tick(_double TimeDelta)
 	{
 		m_fX -= _float(TimeDelta) * 100.0f;
 	}
-}
-
-void CItem_LeftArrowUI::Late_Tick(_double TimeDelta)
-{
-	CUI::Late_Tick(TimeDelta);
-}
-
-HRESULT CItem_LeftArrowUI::Render()
-{
-	if (FAILED(CUI::Render()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-void CItem_LeftArrowUI::Imgui_RenderProperty()
-{
-	CUI::Imgui_RenderProperty();
-
-}
-
-void CItem_LeftArrowUI::SaveToJson(Json & json)
-{
-	CUI::SaveToJson(json);
-
-}
-
-void CItem_LeftArrowUI::LoadFromJson(const Json & json)
-{
-	CUI::LoadFromJson(json);
-
 }
 
 CItem_LeftArrowUI * CItem_LeftArrowUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

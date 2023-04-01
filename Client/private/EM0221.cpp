@@ -2,6 +2,9 @@
 #include "..\public\EM0221.h"
 #include "GameInstance.h"
 #include "ImguiUtils.h"
+#include "GameUtils.h"
+#include "VFX_Manager.h"
+
 CEM0221::CEM0221(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice,pContext)
 {
@@ -19,7 +22,9 @@ HRESULT CEM0221::Initialize(void * pArg)
 	SetUpComponents(pArg);
 
 	m_AddPivotMatrix = CImguiUtils::CreateMatrixFromImGuizmoData({ 0.f, 0.f, 0.f }, { 0.f, 0.f, -90.f, }, { 1.f, 1.f, 1.f });
-
+	m_pNormalEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0220_Boom_Normal");
+	m_pNormalEffect->Start_NoAttach(this, true);
+	Safe_AddRef(m_pNormalEffect);
 	return S_OK;
 }
 
@@ -75,23 +80,100 @@ void CEM0221::SetUpMatrix(CModel* pModle, const _fmatrix TransformMatrix)
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
 	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
+	 
+}
+
+void CEM0221::Set_Fall()
+{
+	m_bFall = true;
+	m_dFallMaxTime = 0.0;
+
+	//Ray½î´Â À§Ä¡
+	XMStoreFloat4(&m_FallStartPosition, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+
+	//¶³¾îÁö´Â ÀÌÆåÆ® »ý¼º
+	m_pFallEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0220_Boom_Explode");
+	m_pFallEffect->Start_NoAttach(this, true);
+	Safe_AddRef(m_pFallEffect);
 }
 
 void CEM0221::Falling(_double TimeDelta)
 {
 	if (m_bFall == false) return;
 
-	if (m_bTime > 0.3)
-		m_bFall = false;
-
-	m_bTime += TimeDelta;
-
+	m_dFallMaxTime += TimeDelta;
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_vector vDown = XMVectorSet(0.f, -1.f, 0.f, 0.f);
 
 	m_fFallSpeed += 9.8f * TimeDelta;
 	vPos += XMVector3Normalize(vDown) * m_fFallSpeed * TimeDelta;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos);
+
+	Explosion_Ray();
+}
+
+void CEM0221::Explosion()
+{
+	//ÅÍÁö´Â ÀÌÆåÆ® »ý¼º
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0220_Explode_8x8")->Start_NoAttach(this, false);
+
+	//¶³¾îÁö´Â ÀÌÆåÆ® »èÁ¦
+	if (m_bCloned)
+	{
+		if (m_pFallEffect != nullptr)
+		{
+			m_pFallEffect->SetDelete();
+			Safe_Release(m_pFallEffect);
+			m_pFallEffect = nullptr;
+		}
+	}
+}
+
+void CEM0221::Explosion_Ray()
+{
+
+	if (m_dFallMaxTime >= 1.0)
+	{
+		m_bFall = false;
+		Explosion();
+		return;
+	}
+	_float4 vOrigin;
+	_float4 vDir;
+	
+	vOrigin = m_FallStartPosition;
+	vDir = { 0.f, -1.f, 0.f, 0.f };
+
+	physx::PxRaycastHit hitBuffer[1];
+	physx::PxRaycastBuffer t(hitBuffer, 1);
+
+	RayCastParams params;
+	params.rayOut = &t;
+	params.vOrigin = vOrigin;
+	params.vDir = vDir;
+	params.fDistance = 10.f;
+	params.iTargetType = CTB_STATIC;
+	params.bSingle = true;
+
+	if (CGameInstance::GetInstance()->RayCast(params))
+	{
+		for (int i = 0; i < t.getNbAnyHits(); ++i)
+		{
+			auto p = t.getAnyHit(i);
+
+			_float4 vPos{ p.position.x, p.position.y , p.position.z, 1.f };
+
+			_float fDist = XMVectorGetX(XMVector4Length(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&vPos)));
+
+			if (fDist <= 0.6f)
+			{
+				Explosion();
+				m_bFall = false;
+				break;
+			}
+		}
+
+	}
 }
 
 
@@ -122,4 +204,22 @@ CGameObject * CEM0221::Clone(void * pArg)
 void CEM0221::Free()
 {
 	__super::Free();
+
+	if (m_bCloned)
+	{
+		if (m_pFallEffect != nullptr)
+		{
+			m_pFallEffect->SetDelete();
+			Safe_Release(m_pFallEffect);
+			m_pFallEffect = nullptr;
+		}
+
+		if (m_pNormalEffect != nullptr)
+		{
+			m_pNormalEffect->SetDelete();
+			Safe_Release(m_pNormalEffect);
+			m_pNormalEffect = nullptr;
+		}
+	}
+	
 }

@@ -8,6 +8,7 @@
 #include "PhysX_Manager.h"
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
+#include "ImguiUtils.h"
 
 CEM0400::CEM0400(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -35,13 +36,13 @@ HRESULT CEM0400::Initialize(void * pArg)
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
-		m_strBoneName = "RightShoulder";
+	
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0400;
-	m_bHasCrushGage = true;
+	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	return S_OK;
@@ -54,9 +55,8 @@ void CEM0400::SetUpComponents(void * pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em400", L"Model", (CComponent**)&m_pModelCom));
 
 	//Create Collider
-	Json BuddyLumiWeapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiWeapon.json");
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("Weapon"),
-		(CComponent**)&m_pWeaponCollider, &BuddyLumiWeapon));
+	//Json Weapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiWeapon.json");
+	//Add_RigidBody("Weapon", &Weapon);
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM0400_Controller::Create();
@@ -79,39 +79,35 @@ void CEM0400::SetUpAnimationEvent()
 	CEnemy::SetUpAnimationEvent();
 
 	// Event Caller
-	m_pModelCom->Add_EventCaller("SwingEff_Start", [this]
-	{
-		if (!m_bDead)
-		{
-			//			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack")->Start_Attach(this, m_strBoneName, false);
-
-			m_pSwingEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack");
-			m_pSwingEffect->Start_Attach(this, m_strBoneName, true);
-			Safe_AddRef(m_pSwingEffect);
-		}
-	});
-
 	m_pModelCom->Add_EventCaller("Swing_Start", [this]
 	{
 		m_bAtkSwitch = true;
 		m_bHitMove = true;
+
+		/*m_pSwingEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack");
+		m_pSwingEffect->Start_Attach(this, "RightShoulder", true);
+		Safe_AddRef(m_pSwingEffect);*/
+
+		_matrix SwingEffectPivotMatirx = CImguiUtils::CreateMatrixFromImGuizmoData(
+			{ 0.08f, 0.f, -1.295f },
+			{ 40.f, -80.f, -110.f, },
+			{ 1.f, 1.f, 1.f });
+
+		m_pSwingEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack");
+		m_pSwingEffect->Start_AttachPivot(this, SwingEffectPivotMatirx, "Target", true, true);
+		Safe_AddRef(m_pSwingEffect);
+
 	});
 	m_pModelCom->Add_EventCaller("Swing_End", [this]
 	{
 		m_bHitMove = false;
 		m_bAtkSwitch = false;
-	});
 
-	m_pModelCom->Add_EventCaller("SwingEff_End", [this]
-	{
-		if (m_bCloned == true)
+		if (m_pSwingEffect != nullptr)
 		{
-			if (m_pSwingEffect != nullptr)
-			{
-				m_pSwingEffect->SetDelete();
-				Safe_Release(m_pSwingEffect);
-				m_pSwingEffect = nullptr;
-			}
+			m_pSwingEffect->SetDelete();
+			Safe_Release(m_pSwingEffect);
+			m_pSwingEffect = nullptr;
 		}
 	});
 
@@ -148,6 +144,12 @@ void CEM0400::SetUpAnimationEvent()
 		Dodge_VelocityCalc();
 	});
 	
+
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0400DeadFlower")
+				->Start_NoAttach(this, false);
+		});
 }
 
 void CEM0400::SetUpFSM()
@@ -171,9 +173,14 @@ void CEM0400::SetUpFSM()
 			.AddTransition("Idle to Hit_ToAir", "Hit_ToAir")
 				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_TO_AIR; })
 			.AddTransition("Idle to Hit_Mid_Heavy", "Hit_Mid_Heavy")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_MIDDLE; })
+				.Predicator([this] { return
+					m_eCurAttackType == EAttackType::ATK_HEAVY
+					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
 			.AddTransition("Idle to Hit_Light", "Hit_Light")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_LIGHT; })
+				.Predicator([this] { return
+					m_eCurAttackType == EAttackType::ATK_LIGHT
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP; })
 
 			.AddTransition("Idle to Attack_a1", "Attack_a1")
 				.Predicator([this] { return m_eInput == CController::MOUSE_LB; })
@@ -191,7 +198,8 @@ void CEM0400::SetUpFSM()
 			})
 			.Tick([this](_double)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_LIGHT)
+				if (m_eCurAttackType == EAttackType::ATK_LIGHT
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP)
 				{
 					Play_LightHitAnim();
 				}
@@ -200,26 +208,42 @@ void CEM0400::SetUpFSM()
 				.Predicator([this]
 				{
 					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f)
-						|| (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
+						|| (m_eCurAttackType != EAttackType::ATK_LIGHT 
+							&& m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
+							&& m_eCurAttackType != EAttackType::ATK_END);
 				})
 
 		.AddState("Hit_Mid_Heavy")
 			.OnStart([this]
 			{
 				Play_MidHitAnim();
+				HeavyAttackPushStart();
 			})
-			.Tick([this](_double)
+			.Tick([this](_double TimeDelta)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_MIDDLE)
+				if (m_eCurAttackType == EAttackType::ATK_HEAVY 
+					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
 				{
+					HeavyAttackPushStart();
 					Play_MidHitAnim();
+				}
+
+				_float fPower;
+				if (m_HeavyAttackPushTimeline.Tick(TimeDelta, fPower))
+				{
+					_float3 vVelocity = { m_vPushVelocity.x, m_vPushVelocity.y, m_vPushVelocity.z };
+					m_pTransformCom->MoveVelocity(TimeDelta, vVelocity * fPower);
+					//m_pTransformCom->MoveVelocity(TimeDelta, m_vPushVelocity * fPower);
 				}
 			})
 			.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f)
-						|| m_eCurAttackType == EAttackType::ATK_TO_AIR;
+					return m_bDead
+						|| m_pASM->isSocketPassby("FullBody", 0.95f)
+						|| m_eCurAttackType == EAttackType::ATK_TO_AIR
+						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
 				})
 
 		.AddState("Death")
@@ -238,11 +262,15 @@ void CEM0400::SetUpFSM()
 			.Tick([this](_double)
 			{
 				// 공중 추가타로 살짝 올라가는 애님
-				m_bHitAir = true;
-				if (m_eCurAttackType != EAttackType::ATK_END)
-				{
+					m_bHitAir = true;
+					if (m_bAirToDown)
+					{
+						m_fYSpeed = -20.f;
+					}
+					else if (m_eCurAttackType != EAttackType::ATK_END)
+					{
 					m_pASM->InputAnimSocketOne("FullBody", "AS_em0400_455_AL_rise_start");
-				}
+					}
 			})
 			.OnExit([this]
 			{
@@ -313,7 +341,7 @@ void CEM0400::SetUpFSM()
 			.Tick([this](_double) 
 			{
 				if (m_bAtkSwitch)
-					Swing_SweepCapsule(m_bOneHit);
+					Swing_SweepSphere();
 			})
 			.AddTransition("Attack_a1 to Idle", "Idle")
 				.Predicator([this]
@@ -338,9 +366,33 @@ void CEM0400::SetUpFSM()
 		.Build();
 }
 
+void CEM0400::SetUpUI()
+{
+	//HP UI
+	_float4x4 UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.41f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[ENEMY_INFOBAR] = UI_PivotMatrix;
+
+	//FindEye
+	UI_PivotMatrix = Matrix(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		-0.324f, 1.014f, 0.0f, 1.0f
+	);
+
+	m_UI_PivotMatrixes[ENEMY_FINDEYES] = UI_PivotMatrix;
+}
+
 void CEM0400::BeginTick()
 {
 	CEnemy::BeginTick();
+	
 }
 
 void CEM0400::Tick(_double TimeDelta)
@@ -369,13 +421,18 @@ void CEM0400::Tick(_double TimeDelta)
 
 	if (m_vMoveAxis.LengthSquared() > 0.f)
 	{
-		const _float fMoveSpeed = CCurveManager::GetInstance()->GetCurve("em0400_Walk")
-			->GetValue(m_pModelCom->GetPlayAnimation()->GetPlayRatio());
+		if (m_pModelCom->GetPlayAnimation() != nullptr)
+		{
+			auto pp = CCurveManager::GetInstance();
+			const _float fMoveSpeed = CCurveManager::GetInstance()->GetCurve("em0400_Walk")
+				->GetValue(m_pModelCom->GetPlayAnimation()->GetPlayRatio());
 
-		const _float fYaw = m_pTransformCom->GetYaw_Radian();
-		_float3 vVelocity;
-		XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
-		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+			const _float fYaw = m_pTransformCom->GetYaw_Radian();
+			_float3 vVelocity;
+			XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
+			m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+		}
+		
 	}
 
 	ResetHitData();
@@ -389,7 +446,7 @@ void CEM0400::Late_Tick(_double TimeDelta)
 void CEM0400::AfterPhysX()
 {
 	CEnemy::AfterPhysX();
-	m_pWeaponCollider->Update_Tick(m_pModelCom->GetBoneMatrix("RightWeapon") * m_pTransformCom->Get_WorldMatrix());
+	//GetRigidBody("Weapon")->Update_Tick(m_pModelCom->GetBoneMatrix("RightWeapon") * m_pTransformCom->Get_WorldMatrix());
 }
 
 HRESULT CEM0400::Render()
@@ -407,6 +464,23 @@ void CEM0400::Imgui_RenderProperty()
 	}
 
 	m_pFSM->Imgui_RenderProperty();
+
+
+	/*static _bool tt = false;
+	ImGui::Checkbox("Modify Pivot", &tt);
+
+	if (tt)
+	{
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+
+		if (ImGui::Button("Create_Effect"))
+		{
+			m_pSwingEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0400_Attack");
+			m_pSwingEffect->Start_AttachPivot(this, pivot, "Target", true);
+			Safe_AddRef(m_pSwingEffect);
+		}
+	}*/
 }
 
 _bool CEM0400::IsPlayingSocket() const
@@ -456,32 +530,45 @@ void CEM0400::Play_MidHitAnim()
 	}
 }
 
-void CEM0400::Swing_SweepCapsule(_bool bCol)
+void CEM0400::Swing_SweepSphere()
 {
-	Matrix mWeaponMatrix = m_pWeaponCollider->GetPxWorldMatrix();
-	_float4 vTailPos = _float4(mWeaponMatrix.Translation().x, mWeaponMatrix.Translation().y, mWeaponMatrix.Translation().z, 1.f);
+	physx::PxSweepHit hitBuffer[3];
+	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
 
-	physx::PxSweepHit hitBuffer[5];
-	physx::PxSweepBuffer SweepOut(hitBuffer, 5);
+	//Tail4가 꼬리 중앙에 있음
+	_float4x4 BoneMatrix = GetBoneMatrix("RightWeapon") * m_pTransformCom->Get_WorldMatrix();
+	_float4 vBonePos = _float4{ BoneMatrix.m[3][0], BoneMatrix.m[3][1], BoneMatrix.m[3][2], BoneMatrix.m[3][3] };
 
-	PxCapsuleSweepParams param;
-	param.sweepOut = &SweepOut;
-	param.CapsuleGeo = m_pWeaponCollider->Get_CapsuleGeometry();
-	param.pxTransform = m_pWeaponCollider->Get_PxTransform();
+	_vector	vDir = vBonePos - m_BeforePos;
 
-	_float4	vWeaponDir = vTailPos - m_BeforePos;
+	SphereSweepParams tParams;
+	tParams.fVisibleTime = 0.2f;
+	tParams.iTargetType = CTB_PLAYER;
+	tParams.fRadius = 3.f;
+	tParams.fDistance = 1.f;
+	tParams.vPos = vBonePos;
+	tParams.sweepOut = &sweepOut;
+	tParams.vUnitDir = vDir;
 
-	param.vUnitDir = _float3(vWeaponDir.x, vWeaponDir.y, vWeaponDir.z);
-	param.fDistance = param.vUnitDir.Length();
-	param.iTargetType = CTB_PLAYER;
-	param.fVisibleTime = 0.f;
-
-	if (CGameInstance::GetInstance()->PxSweepCapsule(param))
+	if (CGameInstance::GetInstance()->SweepSphere(tParams))
 	{
-		HitTargets(SweepOut, m_iAtkDamage, EAttackType::ATK_LIGHT);
+		HitTargets(sweepOut, static_cast<_int>(m_iAtkDamage * 1.2f), EAttackType::ATK_LIGHT);
 	}
 
-	m_BeforePos = vTailPos;
+	m_BeforePos = vBonePos;
+}
+
+void CEM0400::HeavyAttackPushStart()
+{
+	if (m_eCurAttackType == EAttackType::ATK_MIDDLE || m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
+	{
+		m_HeavyAttackPushTimeline.PlayFromStart();
+		m_vPushVelocity = CClientUtils::GetDirFromAxis(m_eHitFrom);
+		m_vPushVelocity *= -4.f; // 공격 온 방향의 반대로 이동
+
+		const _float fYaw = m_pTransformCom->GetYaw_Radian();
+		m_vPushVelocity = XMVector3TransformNormal(m_vPushVelocity, XMMatrixRotationY(fYaw));
+	}
 }
 
 
@@ -514,6 +601,14 @@ void CEM0400::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-	Safe_Release(m_pRange);
-	Safe_Release(m_pWeaponCollider);
+
+	if (m_bCloned)
+	{
+		if (m_pSwingEffect != nullptr)
+		{
+			m_pSwingEffect->SetDelete();
+			Safe_Release(m_pSwingEffect);
+			m_pSwingEffect = nullptr;
+		}
+	}
 }

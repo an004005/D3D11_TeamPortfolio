@@ -35,11 +35,7 @@ void CItem_RightArrowUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_RIGHT))
-		m_bInput = true;
-
-	if (false == m_bInput)
-		return;
+	if (false == m_bInput) return;
 
 	m_fMoveTimeAcc += TimeDelta;
 	if (0.15 < m_fMoveTimeAcc)
@@ -54,7 +50,7 @@ void CItem_RightArrowUI::Tick(_double TimeDelta)
 		}
 	}
 	else
-	{
+	{ 
 		m_fX += _float(TimeDelta) * 100.0f;
 	}
 }

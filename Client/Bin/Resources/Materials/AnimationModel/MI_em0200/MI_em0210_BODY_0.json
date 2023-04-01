@@ -2,7 +2,7 @@
     "ShaderProtoTag" : "Prototype_Component_Shader_VtxAnimModel",
     "ShaderParams" : {
         "Ints" : [0],
-        "Floats" : [0.0],
+        "Floats" : [0.0, 0.0],
         "Float2s" : [],
         "Float4s" : [],
         "Float4x4s" : [],
@@ -11,6 +11,6 @@
             "../Bin/Resources/Model/AnimModel/Monster/em0200/Texture/T_em0210_Body_NML.png",
             "../Bin/Resources/Model/AnimModel/Monster/em0200/Texture/T_em0210_Body_RMA.png"
         ],
-        "Pass" : 1
+        "Pass" : 9
     }
 }

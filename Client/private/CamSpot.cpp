@@ -135,7 +135,7 @@ void CCamSpot::AfterPhysX()
 {
 	__super::AfterPhysX();
 
-	_vector vTargetPos = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+	_vector vTargetPos = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 1.2f, 0.f, 0.f);
 	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
@@ -151,11 +151,21 @@ void CCamSpot::AfterPhysX()
 
 		if (MOD_SYNC == m_eCamMod)
 		{
+			if (m_bCheckActionEnd != MOD_SYNC)
+			{
+				m_CheckMatrix = m_AttachMatrix;
+			}
+
 			_vector vSyncPos = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncPos(vMyPos, vMyLook, m_fCamHeight, g_fTimeDelta);
-			_vector vLerpPos = XMVectorLerp(m_AttachMatrix.r[3], vSyncPos, m_fLerpTime);
+			_vector vLerpPos = XMVectorLerp(m_CheckMatrix.r[3], vSyncPos, m_fLerpTime);
 
 			_vector vSyncLook = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncLook(vMyPos, vMyLook, m_fCamHeight, g_fTimeDelta);
-			_vector vLerpLook = XMVectorLerp(m_AttachMatrix.r[2], vSyncLook, m_fLerpTime);
+			_vector vLerpLook = XMVectorLerp(m_CheckMatrix.r[2], vSyncLook, m_fLerpTime);
+
+			if (m_fLerpTime < 1.f)
+				CGameInstance::GetInstance()->SetCameraFov(40.f + (20.f * m_fLerpTime));
+			else
+				CGameInstance::GetInstance()->SetCameraFov(60.f);
 
 			static_cast<CCamera_Player*>(m_pPlayerCamera)->Lerp_ActionPos(vLerpPos, vLerpLook);
 		}
@@ -166,6 +176,11 @@ void CCamSpot::AfterPhysX()
 
 			_vector vSyncLook = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_SyncLook(vMyPos, vMyLook, m_fCamHeight, g_fTimeDelta);
 			_vector vLerpLook = XMVectorLerp(vSyncLook, m_AttachMatrix.r[2], m_fLerpTime);
+
+			if (m_fLerpTime < 1.f)
+				CGameInstance::GetInstance()->SetCameraFov(60.f - (20.f * m_fLerpTime));
+			else
+				CGameInstance::GetInstance()->SetCameraFov(40.f);
 
 			static_cast<CCamera_Player*>(m_pPlayerCamera)->Lerp_ActionPos(vLerpPos, vLerpLook);
 		}
@@ -181,6 +196,8 @@ void CCamSpot::AfterPhysX()
 			static_cast<CCamera_Player*>(m_pPlayerCamera)->Attach_Target(m_AttachMatrix);
 		}
 	}
+
+	m_bCheckActionEnd = m_eCamMod;
 }
 
 void CCamSpot::Imgui_RenderProperty()
@@ -241,6 +258,38 @@ void CCamSpot::Reset_CamMod()
 void CCamSpot::SetUp_BoneMatrix(CModel * pModel, _fmatrix Transform)
 {
 	m_AttachMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationZ(XMConvertToRadians(-90.f)) * pModel->GetBoneMatrix("CameraPos") * Transform;
+}
+
+_bool CCamSpot::Cam_Closer(_double TimeDelta, _float fRatio, _float fLimit)
+{
+	_float fMag = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_Magnification() - (TimeDelta / fRatio);
+	fMag = max(fMag, fLimit);
+
+	static_cast<CCamera_Player*>(m_pPlayerCamera)->Set_Magnification(fMag);
+
+	if (fLimit == fMag)
+	{
+		// 상한치까지 다가갔으면 true 반환
+		return true;
+	}
+
+	return false;
+}
+
+_bool CCamSpot::Cam_Away(_double TimeDelta, _float fRatio, _float fLimit)
+{
+	_float fMag = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_Magnification() + (TimeDelta / fRatio);
+	fMag = min(fMag, fLimit);
+
+	static_cast<CCamera_Player*>(m_pPlayerCamera)->Set_Magnification(fMag);
+
+	if (fLimit == fMag)
+	{
+		// 상한치까지 다가갔으면 true 반환
+		return true;
+	}
+
+	return false;
 }
 
 void CCamSpot::Random_Shaking(_float fShakePower)

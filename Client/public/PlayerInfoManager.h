@@ -29,12 +29,20 @@ typedef struct tagSasGage
 
 typedef struct tagPlayerStatus
 {
-	_uint m_iHP;
-	_uint m_iMaxHP;
-	_uint m_iKineticEnergy;
-	_uint m_iMaxKineticEnergy;
-	_uint m_iKineticEnergyLevel;   // 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
-	_uint m_iKineticEnergyType;    // 평소, 공격, 드라이브 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
+	_uint m_iHP = { 0 };
+	_uint m_iMaxHP = { 0 };
+	_uint m_iKineticEnergy = { 0 };
+	_uint m_iMaxKineticEnergy = { 0 };
+	_uint m_iKineticEnergyLevel = { 0 };   // 염력 게이지를 다 채울 수 있는 게이지가 3단계가 존재합니다. (0~2)
+	_uint m_iKineticEnergyType = { 0 };    // 평소(2), 공격(0), 드라이브(1) 상태에 따라 염력 게이지의 이미지가 변경 됩니다. (0~2)
+	_uint iExp = { 0 };
+	_uint iMaxExp = { 0 };
+	_uint iLevel = { 0 };
+	_uint iSprbrPower = { 0 };
+	_uint iAttack = { 0 };
+	_uint iDefense = { 0 };
+	_uint iBP = { 0 };
+	_uint iCoin = { 0 };
 
 	_float m_fBaseAttackDamage;
 
@@ -43,6 +51,38 @@ typedef struct tagPlayerStatus
 	array<SAS_GAGE, SAS_CNT> Sasese{};
 
 }	PLAYER_STAT;
+
+typedef struct tagHanabiStatus
+{
+	_bool bMember = { false };
+
+	_uint iHP = { 0 };
+	_uint iMaxHP = { 0 };
+	_uint iExp = { 0 };
+	_uint iMaxExp = { 0 };
+	_uint iLevel = { 0 };
+	_uint iBondLevel = { 0 };
+	_uint iSprbrPower = { 0 };
+	_uint iAttack = { 0 };
+	_uint iDefense = { 0 };
+
+}	HANABI_STAT;
+
+typedef struct tagTsugumiStatus
+{
+	_bool bMember = { false };
+
+	_uint iHP = { 0 };
+	_uint iMaxHP = { 0 };
+	_uint iExp = { 0 };
+	_uint iMaxExp = { 0 };
+	_uint iLevel = { 0 };
+	_uint iBondLevel = { 0 };
+	_uint iSprbrPower = { 0 };
+	_uint iAttack = { 0 };
+	_uint iDefense = { 0 };
+
+}	TSUGUMI_STAT;
 
 typedef struct tagDamageDesc
 {
@@ -68,12 +108,15 @@ public:
 	void	Tick(_double TimeDelta);	// 실시간으로 타겟 정보를 갱신하기 위함
 
 public:	// Get
-	PLAYER_STAT		Get_PlayerStat() const { return m_tPlayerStat; }
+	PLAYER_STAT&	Get_PlayerStat() { return m_tPlayerStat; }
 	list<ESASType>	Get_PlayerSasList() const { return m_PlayerSasTypeList; }
 	_bool			Get_isSasUsing(ESASType eType);
 	CGameObject*	Get_KineticObject();
 	CGameObject*	Get_TargetedMonster();
 	CGameObject*	Get_SpecialObject();
+
+	HANABI_STAT		Get_HanabiStat() const { return m_tHanabiStat; }
+	TSUGUMI_STAT	Get_TsugumiStat() const { return m_tTsugumiStat; }
 
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
@@ -96,6 +139,13 @@ public:	// Set
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
+	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
+	
+	// SAS
+	void			Set_HanabiMemvber() { m_tHanabiStat.bMember = true; }
+	void			Set_TsugumiMemvber() { m_tTsugumiStat.bMember = true; }
+
+
 public:
 	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
 	void			Camera_Random_Shake(_float fForce);
@@ -105,6 +155,9 @@ public:
 private:	// 스탯 정보 관련
 	PLAYER_STAT		m_tPlayerStat;
 	list<ESASType>	m_PlayerSasTypeList;
+
+	HANABI_STAT		m_tHanabiStat;
+	TSUGUMI_STAT	m_tTsugumiStat;
 
 private:	// 상호작용 관련
 	CGameObject*	m_pKineticObject;

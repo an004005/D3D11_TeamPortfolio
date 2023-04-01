@@ -2,10 +2,6 @@
 #include "..\public\Canvas_BossHp.h"
 #include "GameInstance.h"
 
-#include "Boss_HpUI.h"
-#include "Boss_HpBackUI.h"
-#include "Boss_ShildUI.h"
-
 CCanvas_BossHp::CCanvas_BossHp(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
@@ -59,13 +55,6 @@ void CCanvas_BossHp::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	static _float fHp;
-	ImGui::DragFloat("Hp", &fHp);
-	Set_BossHp(fHp);
-
-	static _float fShild;
-	ImGui::DragFloat("Shild", &fShild);
-	Set_BossShild(fShild);
 }
 
 void CCanvas_BossHp::SaveToJson(Json& json)
@@ -78,27 +67,10 @@ void CCanvas_BossHp::LoadFromJson(const Json & json)
 	CCanvas::LoadFromJson(json);
 }
 
-void CCanvas_BossHp::Set_BossUIRender()
+void CCanvas_BossHp::Set_BossHp()
 {
-	Find_ChildUI(L"Boss_Hp")->SetVisible(false);
-	Find_ChildUI(L"Boss_HPBack")->SetVisible(false);
-	Find_ChildUI(L"Boss_Shild")->SetVisible(false);
-	Find_ChildUI(L"Boss_HpBackGround")->SetVisible(false);
-}
-
-void CCanvas_BossHp::Set_BossHp(const _float & fHp)
-{
-	Find_ChildUI(L"Boss_Hp")->SetVisible(true);
-	Find_ChildUI(L"Boss_HPBack")->SetVisible(true);
 	Find_ChildUI(L"Boss_HpBackGround")->SetVisible(true);
-	dynamic_cast<CBoss_HpUI*>(Find_ChildUI(L"Boss_Hp"))->Set_BossHp(fHp);
-	dynamic_cast<CBoss_HpBackUI*>(Find_ChildUI(L"Boss_HPBack"))->Set_BossHp(fHp);
-}
-
-void CCanvas_BossHp::Set_BossShild(const _float & fShild)
-{
-	Find_ChildUI(L"Boss_Shild")->SetVisible(true);
-	dynamic_cast<CBoss_ShildUI*>(Find_ChildUI(L"Boss_Shild"))->Set_Shild(fShild);
+	Find_ChildUI(L"Boss_Name")->SetVisible(true);
 }
 
 CCanvas_BossHp * CCanvas_BossHp::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

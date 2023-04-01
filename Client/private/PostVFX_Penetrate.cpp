@@ -25,7 +25,6 @@ HRESULT CPostVFX_Penetrate::Initialize(void* pArg)
 void CPostVFX_Penetrate::Tick(_double TimeDelta)
 {
 	CPostProcess::Tick(TimeDelta);
-
 	if (m_bActive)
 	{
 		if (m_tParam.Floats[0] < 1.f)

@@ -55,6 +55,14 @@ void CSpecialObject::BeginTick()
 {
 	__super::BeginTick();
 
+	/*for (auto& Model : m_pModelComs)
+	{
+		for (auto& iter : Model->GetMaterials())
+		{
+			iter->GetParam().Floats[0] = 0.f;
+		}
+	}*/
+
 //	m_pCollider->UpdateChange();
 }
 
@@ -75,6 +83,9 @@ void CSpecialObject::Late_Tick(_double TimeDelta)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+
+		for (auto pModel : m_pModelComs)
+			pModel->Tick(TimeDelta);
 	}
 }
 

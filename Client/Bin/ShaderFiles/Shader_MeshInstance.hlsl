@@ -2,13 +2,13 @@
 #include "Shader_Defines.h"
 #include "Shader_Params.h"
 /*
-* pos.xyz = ·ÎÄÃ ¶Ç´Â ¿ùµå À§Ä¡
-* pos.w = ÇöÀç life(½Ã°£)
-* up.w = ÃÑ life
-* up.xy = p»çÀÌÁî xy
+* pos.xyz = ë¡œì»¬ ë˜ëŠ” ì›”ë“œ ìœ„ì¹˜
+* pos.w = í˜„ì¬ life(ì‹œê°„)
+* up.w = ì´ life
+* up.xy = pì‚¬ì´ì¦ˆ xy
 *
-* look.xyz : ÀÌµ¿ ¹æÇâ
-* look.w : ÀÌµ¿ ¼Ó·Â
+* look.xyz : ì´ë™ ë°©í–¥
+* look.w : ì´ë™ ì†ë ¥
 */
 int g_bLocal = 0;
 int g_bSizeDecreaseByLife = 0;
@@ -155,7 +155,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	
-	// ¼ö¸í ´øÁö±â
+	// ìˆ˜ëª… ë˜ì§€ê¸°
 	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0 * In.RamainLifeRatio);
 
 	Out.vColor.a = g_vec4_0.a;
@@ -187,6 +187,39 @@ PS_OUT_NORM PS_PLAYER_KINETIC_PARTICLE(PS_IN_NORM In)
 	// Out.vColor.a = g_vec4_0.a;
 
 	Out.vColor.a = 1.f;
+
+	if (g_tex_on_2)
+		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	else
+		Out.vRMA = float4(g_float_1, g_float_2, g_float_3, 0.f);
+
+	return Out;
+}
+
+PS_OUT_NORM PS_BREAK_MESH(PS_IN_NORM In)
+{
+	PS_OUT_NORM		Out = (PS_OUT_NORM)0;
+	float flags = SHADER_NONE_SHADE;
+
+	float3 vNormal = In.vNormal.xyz;
+
+	float4 BaseTex = g_tex_0.Sample(LinearSampler, In.vTexUV) * 0.1f;
+	float4 Color = g_vec4_0;
+	float4 BlendColor = BaseTex * Color * 2.0f;
+	float4 Final = saturate(BlendColor);
+	Out.vColor = Final;
+
+	vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f) * g_float_4;
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+
+	// Out.vColor.a = g_vec4_0.a;
+
+	Out.vColor.a = 1.f;
 	Out.vRMA = float4(g_float_1, g_float_2, g_float_3, 0.f);
 
 	return Out;
@@ -205,6 +238,38 @@ PS_OUT PS_MAIN_TEX(PS_IN In)
 
 	return Out;
 }
+
+PS_OUT PS_ENEMY_DEAD_ROSE(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	float4 OriginColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor = CalcHDRColor(OriginColor, g_float_0);
+	Out.vColor.a = Out.vColor.a * g_float_1 * In.RamainLifeRatio;
+
+	// Out.vColor.a = 1.f;
+	// if (Out.vColor.a < 0.001f)
+	// 	discard;
+
+	return Out;
+}
+
+PS_OUT PS_ENEMY_DEAD_ROSE_DARK(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	// float4 OriginColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor = g_vec4_0;
+	Out.vColor.a *=  In.RamainLifeRatio;
+
+
+	// Out.vColor.a = 1.f;
+	// if (Out.vColor.a < 0.001f)
+	// 	discard;
+
+	return Out;
+}
+
 PS_OUT PS_BLEND_TEX(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
@@ -299,5 +364,44 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_PLAYER_KINETIC_PARTICLE();
+	}
+
+	pass BreakMesh // 5
+	{
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(DS_Default, 0);
+		SetRasterizerState(RS_Default);
+
+		VertexShader = compile vs_5_0 VS_MAIN_NORM();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BREAK_MESH();
+	}
+
+	pass EnemyDeadRose //6
+	{
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(DS_Default, 0);
+		SetRasterizerState(RS_NonCulling);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ENEMY_DEAD_ROSE();
+	}
+
+	pass EnemyDeadRoseDark //7
+	{
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(DS_Default, 0);
+		SetRasterizerState(RS_NonCulling);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ENEMY_DEAD_ROSE_DARK();
 	}
 }

@@ -7,6 +7,7 @@ class CModel;
 END
 
 BEGIN(Client)
+class CParticleGroup;
 
 class CSpecial_TankLorry_Trailer : public CSpecialObject
 {
@@ -41,6 +42,9 @@ public:
 
 	void	Change_Tank(_uint iIdx);
 
+	void	Create_Oil_Particle();
+	void	Release_Oil_Particle();
+
 private:
 	HRESULT	SetUp_Components(void* pArg);
 
@@ -48,6 +52,8 @@ private:
 	_uint		m_iTankIdx = 1;
 	_float4x4	m_SyncMatrix = XMMatrixIdentity();
 	_float4x4	m_TankMatrix;
+
+	CParticleGroup* m_pOil[5] = { nullptr, };
 
 public:
 	static CSpecial_TankLorry_Trailer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

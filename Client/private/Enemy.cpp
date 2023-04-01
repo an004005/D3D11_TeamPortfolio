@@ -13,6 +13,8 @@
 #include "TestTarget.h"
 #include "PlayerInfoManager.h"
 #include "GameManager.h"
+#include "MonsterHpUI.h"
+#include "MonsterShildUI.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
 	L"Default_Blood_00",
@@ -98,6 +100,7 @@ HRESULT CEnemy::Initialize(void* pArg)
 	SetUpSound();
 	SetUpAnimationEvent();
 	SetUpFSM();
+	SetUpUI();
 
 	return S_OK;
 }
@@ -107,7 +110,20 @@ void CEnemy::Tick(_double TimeDelta)
 	CScarletCharacter::Tick(TimeDelta);
 	FindTarget();
 	Update_DeadDissolve(TimeDelta);
+	Update_UIInfo();
+
 	m_pModelCom->Tick(TimeDelta);
+
+	// ë¸Œë ˆì¸ í¬ëŸ¬ì‰¬ ì•ˆí• ë•Œ 3ì´ˆ ì•ˆì— ì£½ì´ê¸°
+	if (m_bDeadStart)
+		m_dDeadTime += TimeDelta;
+
+	if (m_dDeadTime >= 3.f)
+		SetDead();
+	//
+	if (GetKeyState('K') & 0x8000)
+		SetDead(); 
+	
 }
 
 void CEnemy::Late_Tick(_double TimeDelta)
@@ -128,8 +144,8 @@ void CEnemy::Imgui_RenderProperty()
 	if (ImGui::CollapsingHeader("Edit Stat"))
 	{
 		ImGui::InputInt("MaxHP", &m_iMaxHP);
-		ImGui::InputInt("MaxCrushGage", &m_iMaxCrushGage);
-		ImGui::Checkbox("HasCrushGage", &m_bHasCrushGage);
+		ImGui::InputInt("MaxCrushGage", &m_iMaxCrushGauge);
+		ImGui::Checkbox("HasCrushGage", &m_bHasCrushGauge);
 		_int iLevel = iEemeyLevel;
 		ImGui::InputInt("Level", &iLevel);
 		iEemeyLevel = iLevel;
@@ -168,7 +184,12 @@ void CEnemy::Imgui_RenderProperty()
 		}
 
 		if ("" != szMonsterAnimName)
-		  m_pModelCom->Get_AnimList()[szMonsterAnimName]->Imgui_RenderProperty();
+		{
+			CAnimation* pAnim = m_pModelCom->Get_AnimList()[szMonsterAnimName];
+			if(pAnim != nullptr)
+				pAnim->Imgui_RenderProperty();
+		}
+		 
 	}
 }
 
@@ -199,11 +220,11 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_bDead)
 		return;
 
-	// ÀÌ»óÇÑ µ¥¹ÌÁö µé¾î¿À´Â°Å °¨Áö¿ë, ¹ö±× ´Ù Ã£À¸¸é Áö¿ì±â
+	// ì´ìƒí•œ ë°ë¯¸ì§€ ë“¤ì–´ì˜¤ëŠ”ê±° ê°ì§€ìš©, ë²„ê·¸ ë‹¤ ì°¾ìœ¼ë©´ ì§€ìš°ê¸°
 	Assert(tDamageParams.iDamage > 0);
 	Assert(tDamageParams.iDamage < 20000);
 
-	// ex) µ¥¹ÌÁö 100 => 90 ~ 110 ·£´ýÀ¸·Î º¯°æ
+	// ex) ë°ë¯¸ì§€ 100 => 90 ~ 110 ëžœë¤ìœ¼ë¡œ ë³€ê²½
 	const _int iDamageRandomRange = tDamageParams.iDamage / 5;
 	const _int iDamageRandomize = (_int)CMathUtils::RandomUInt((_uint)iDamageRandomRange);
 	tDamageParams.iDamage += iDamageRandomize - iDamageRandomRange / 2;
@@ -217,7 +238,6 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_bAirToDown = true;
 	}
 
-
 	CheckDeBuff(tDamageParams.eDeBuff);
 	HitEffect(tDamageParams);
 	CheckCrushGage(tDamageParams);
@@ -226,6 +246,8 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	ENEMY_DAMAGE_REPORT tReport;
 	tReport.pCauser = tDamageParams.pCauser;
 	tReport.pTaker = this;
+	tReport.eName = m_eEnemyName;
+	tReport.eStat = GetEnemyBatchDataStat();
 	tReport.iTakeDamage = tDamageParams.iDamage;
 	tReport.eAttackSAS = tDamageParams.eAttackSAS;
 	if (m_ePreDeBuff != m_eDeBuff)
@@ -238,21 +260,14 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	CGameManager::GetInstance()->ConsumeEnemyDamageReport(tReport);
 }
 
-void CEnemy::SetBrainCrush()
-{
-	if (m_iCrushGage <= 0)
-	{
-		m_DeathTimeline.PlayFromStart();
-	}
-}
 
 void CEnemy::SetEnemyBatchDataStat(ENEMY_STAT tStat)
 {
 	m_iMaxHP = tStat.iMaxHP;
 	m_iHP = m_iMaxHP;
-	m_iMaxCrushGage = tStat.iMaxCrushGage;
-	m_iCrushGage = m_iMaxCrushGage;
-	m_bHasCrushGage = tStat.bHasCrushGage;
+	m_iMaxCrushGauge = tStat.iMaxCrushGage;
+	m_iCrushGauge = m_iMaxCrushGauge;
+	m_bHasCrushGauge = tStat.bHasCrushGage;
 	m_iAtkDamage = tStat.iAtkDamage;
 	iEemeyLevel = tStat.iLevel;
 }
@@ -261,22 +276,87 @@ ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
 {
 	ENEMY_STAT tStat;
 	tStat.iMaxHP = m_iMaxHP;
-	tStat.iMaxCrushGage = m_iMaxCrushGage;
-	tStat.bHasCrushGage = m_bHasCrushGage;
+	tStat.iMaxCrushGage = m_iMaxCrushGauge;
+	tStat.bHasCrushGage = m_bHasCrushGauge;
 	tStat.iAtkDamage = m_iAtkDamage;
 	tStat.iLevel = iEemeyLevel;
 	return tStat;
 }
 
+void CEnemy::Add_RigidBody(const string & KeyName, void * pArg)
+{
+	CRigidBody* pRigidBody = nullptr;
+
+	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), s2ws(KeyName).c_str(),
+		(CComponent**)&pRigidBody, pArg));
+
+	m_pRigidBodies.emplace(KeyName, pRigidBody);
+}
+
+CRigidBody * CEnemy::GetRigidBody(const string & KeyName)
+{
+	auto pRigidBody = m_pRigidBodies.find(KeyName);
+	assert(pRigidBody != m_pRigidBodies.end() && "Wrong RigidBody KeyName!");
+
+	return (*pRigidBody).second;
+}
+
+void CEnemy::Update_UIInfo()
+{
+	if (m_bDead == true) return;
+
+	if (m_pShieldUI != nullptr)
+		m_pShieldUI->SetShild(m_iHP / (_float)m_iMaxHP, m_iCrushGauge / (_float)m_iMaxCrushGauge);
+	else if (m_pHPUI != nullptr)
+		m_pHPUI->Set_HpRatio(m_iHP / (_float)m_iMaxHP);
+}
+
+_bool CEnemy::IsTargetFront(_float fAngle)
+{
+	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
+	_float fLookRadian = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyLook), XMVector3Normalize(vTargetPos - vMyPos)));
+	
+	if (fLookRadian > cosf(XMConvertToRadians(fAngle)))
+		return true;
+
+	return false;
+}
+
+
+
+_bool CEnemy::IsTargetRight(_float fAngle)
+{
+	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+
+	_float fRightRadian = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyRight), XMVector3Normalize(vTargetPos - vMyPos)));
+
+	if (fRightRadian > cosf(XMConvertToRadians(fAngle)))
+		return true;
+
+	return false;
+}
+
+
 void CEnemy::SetDead()
 {
 	if (m_bDead)
 		return;
-	if (m_iCrushGage <= 0)
-		return;
 
 	m_bDead = true;
 	m_DeathTimeline.PlayFromStart();
+	
+	//UI ì‚­ì œ
+	if (m_pShieldUI != nullptr)
+		m_pShieldUI->SetDelete();
+
+	if (m_pHPUI != nullptr)
+		m_pHPUI->SetDelete();
+	//
 }
 
 void CEnemy::FindTarget()
@@ -291,7 +371,7 @@ void CEnemy::FindTarget()
 	}
 	else
 	{
-		// todo ÀÓ½Ã ÄÚµå, AIÃß°¡µÇ¸é ¹Ù²ã¾ßµÊ
+		// todo ìž„ì‹œ ì½”ë“œ, AIì¶”ê°€ë˜ë©´ ë°”ê¿”ì•¼ë¨
 		auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
 		{
 			return dynamic_cast<CPlayer*>(pObj) != nullptr;
@@ -306,8 +386,45 @@ void CEnemy::TurnEyesOut()
 	pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", TEXT("Layer_UI"));
 	assert(pEffectGroup != nullptr);
 
-	//TimeLine ³¡³ª°í »èÁ¦
-	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true);
+	//TimeLine ëë‚˜ê³  ì‚­ì œ
+	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true, true);
+}
+
+void CEnemy::Create_InfoUI()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	if (m_pShieldUI != nullptr || m_pHPUI != nullptr) return;
+
+	if (m_bHasCrushGauge)
+	{
+		m_pShieldUI = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterShield")));
+		assert(m_pShieldUI != nullptr);
+
+		m_pShieldUI->Set_Owner(this);
+		m_pShieldUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
+		m_pShieldUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
+	}
+	else
+	{
+		m_pHPUI = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterHP")));
+		assert(m_pHPUI != nullptr);
+
+		m_pHPUI->Set_Owner(this);
+		m_pHPUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
+		m_pHPUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
+	}
+}
+
+_bool CEnemy::Decide_PlayBrainCrush()
+{
+	if (m_iCrushGauge <= 0)
+	{
+		m_bBrainCrush = true;
+		return true;
+	}
+
+	return false;
 }
 
 _float4x4 CEnemy::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
@@ -434,7 +551,7 @@ void CEnemy::CheckDeBuff(EDeBuffType eDeBuff)
 
 void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 {
-	if (m_bHasCrushGage)
+	if (m_bHasCrushGauge)
 	{
 		_int iDamage = tDamageParams.iDamage;
 		// if (m_bHitWeak)
@@ -452,7 +569,7 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 		case EAttackType::ATK_HEAVY:
 			FALLTHROUGH;
 		case EAttackType::ATK_SPECIAL_END:
-			iDamage *= 2;
+			iDamage *= 1.3;
 			break;
 		case EAttackType::ATK_TO_AIR: break;
 		case EAttackType::ATK_DOWN: break;
@@ -461,14 +578,24 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 			NODEFAULT;
 		}
 
-		m_iCrushGage -= iDamage / 10;
-		if (m_iCrushGage < 0)
-			m_iCrushGage = 0;
+		m_iCrushGauge -= iDamage*1.2;
+		if (m_iCrushGauge < 0)
+		{
+			m_iCrushGauge = 0;
+			m_bDeadStart = true;
+
+			//UI ë„ìš°ê¸°
+		}
+			
 	}	
 }
 
 void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 {
+	//trueê°€ ëë‹¤ëŠ”ê±´ í”Œë ˆì´ì–´ê°€ Gí‚¤ë¥¼ ëˆŒëŸ¬ ë¸Œë ˆì¸ í¬ëŸ¬ì‰¬ë¥¼ ì‹¤í–‰í–ˆë‹¤ëŠ”ê±°.
+	//ë¸Œë ˆì¸ í¬ëŸ¬ì‰¬ ì• ë‹ˆë©”ì´ì…˜ì— ë§žì¶°ì„œ SetDead í•¨ìˆ˜ë¥¼ ì‹¤í–‰ì‹œì¼œ ì¤Œ
+	//if (m_bBrainCrush == true) return;
+
 	_int iDamage = tDamageParams.iDamage;
 	// if (m_bHitWeak)
 	// 	iDamage *= 2;
@@ -476,8 +603,10 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 	m_iHP -= iDamage;
 	if (m_iHP < 0)
 	{
-		if (m_iCrushGage > 0)
+		if (m_iCrushGauge > 0)
 			SetDead();
+
+		m_bDeadStart = true;
 		m_iHP = 0;
 	}
 }
@@ -643,4 +772,13 @@ void CEnemy::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pFSM);
+
+	for (auto it : m_pRigidBodies)
+		Safe_Release(it.second);
+
+	m_pRigidBodies.clear();
+
+	Safe_Release(m_pHPUI);
+	Safe_Release(m_pShieldUI);
+		
 }

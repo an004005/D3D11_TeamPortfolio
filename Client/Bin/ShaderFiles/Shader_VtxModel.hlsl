@@ -3,6 +3,7 @@
 #include "Shader_Params.h"
 
 Texture2D g_KineticWave;
+Texture2D g_scl_noise_004;
 
 struct VS_IN
 {
@@ -63,6 +64,12 @@ struct PS_OUT
 	float4		vFlag : SV_TARGET5;
 };
 
+struct PS_OUT_ALPHABLEND
+{
+	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1;
+};
+
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -79,7 +86,7 @@ PS_OUT PS_MAIN(PS_IN In)
 PS_OUT CommonProcess(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
-	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vDiffuse.rgb = g_tex_0.Sample(LinearSampler, In.vTexUV).rgb;
 	//if (Out.vDiffuse.a < 0.01f)
 	//	discard;
 
@@ -98,7 +105,7 @@ PS_OUT CommonProcess(PS_IN In)
 
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	Out.vFlag = 0.f;
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
 	return Out;
 }
 
@@ -140,6 +147,14 @@ PS_OUT PS_WIRE_FRAME(PS_IN In)
 
 PS_OUT PS_PSYCHIC_DEFAULT_4(PS_IN In)
 {
+	float fDissolveDisappear = g_float_1; // 0 ~ 1 로 사라지기
+	if (fDissolveDisappear > 0.f)
+	{
+		float fNoise = g_scl_noise_004.Sample(LinearSampler, In.vTexUV * 2.f).r;
+		if (fDissolveDisappear >= fNoise)
+			discard;
+	}
+
 	PS_OUT Out = CommonProcess(In);
 
 	// 알파값 없던 텍스쳐 알파 무시하는 부분
@@ -173,6 +188,16 @@ PS_OUT PS_PSYCHIC_DEFAULT_4(PS_IN In)
 	}
 
 	Out.vDiffuse.a = 1.f;
+
+	return Out;
+}
+
+PS_OUT_ALPHABLEND PS_GLASS_5(PS_IN In)
+{
+	PS_OUT_ALPHABLEND			Out = (PS_OUT_ALPHABLEND)0;
+
+	Out.vColor.rgb = COL_WHITE;
+	Out.vColor.a = 0.1f;
 
 	return Out;
 }
@@ -249,4 +274,17 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_PSYCHIC_DEFAULT_4();
 	}
 
+	// 5
+	pass DefaultGlass
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_GLASS_5();
+	}
 }

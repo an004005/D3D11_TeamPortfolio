@@ -26,13 +26,16 @@ HRESULT CTutorial_YesNoUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	// 0: 테두리 마름모 /1: 작은 마름로 /2: 화살표 /3: 보이지 않는다./ 4: No (-52) /5:Yes (-19)/ 
-	static _int iObjectCount;
+	// 0: 테두리 마름모 /1: 작은 마름로 /2: 화살표 /3: 닫기(보이지 않음)/ 4: No (-52) /5:Yes (-19)/ 6: 페이지 전환(보이지 않음) [Tutorial_ZNextPage]
+	static _int iObjectCount = 0;
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
 
 	if(2 == m_iObjectNumber)
 		m_tParams.Float4s[0].w = 0.0f;
+
+	if (7 == iObjectCount)
+		iObjectCount = 0;
 
 	return S_OK;
 }
@@ -104,6 +107,10 @@ void CTutorial_YesNoUI::Object_Tick(const _double & TimeDelta)
 
 	case 5:
 		ObjectYes_Tick();
+		break;
+
+	case 6:
+		NextPage();
 		break;
 
 	default:
@@ -246,8 +253,17 @@ void CTutorial_YesNoUI::InvisibleBox()
 		m_bInvisible = true;
 	}
 }
-		
 
+void CTutorial_YesNoUI::NextPage()
+{
+	_bool	bCursor = CUI::IsCursorOn(CGameUtils::GetClientCursor());
+	_bool	bKeyDown = CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB);
+	if (true == bCursor && true == bKeyDown)
+	{
+		m_bNextPage = !m_bNextPage;
+	}
+}
+		
 CTutorial_YesNoUI * CTutorial_YesNoUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
  	CTutorial_YesNoUI*		pInstance = new CTutorial_YesNoUI(pDevice, pContext);

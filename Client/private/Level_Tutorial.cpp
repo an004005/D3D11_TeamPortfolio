@@ -15,6 +15,7 @@
 #include "Imgui_CurveManager.h"
 #include "Imgui_PhysX.h"
 #include "SkyBox.h"
+#include "GameManager_Tutorial.h"
 
 #define ADD_PLAYER
 
@@ -66,6 +67,11 @@ HRESULT CLevel_Tutorial::Initialize()
 	Ready_Layer_SASPortrait();
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Tutorial/TutorialBatch_Enemy.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Tutorial/Tutorial_UI.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Tutorial/MapKineticObject_Test.json");
+
+	// 기본 게임매니저 셋팅
+	CGameManager_Tutorial::SetGameManager(CGameManager_Tutorial::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -199,14 +205,15 @@ HRESULT CLevel_Tutorial::Ready_Layer_UI(const _tchar * pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASSkillMove.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkillMove", &json));	// 움직이는 UI
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Tutorial.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Tutorial", &json));
-
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_BossHp", &json));
-
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Alarm", &json));
+	
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Main.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Main", &json));
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MouseCousor.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_MouseCousor", &json));
+
 	return S_OK;
 }
 

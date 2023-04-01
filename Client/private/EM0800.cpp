@@ -5,6 +5,7 @@
 #include "RigidBody.h"
 #include "EM0800_AnimInstance.h"
 #include "EM0800_Controller.h"
+#include "ImguiUtils.h"
 
 CEM0800::CEM0800(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -37,7 +38,7 @@ HRESULT CEM0800::Initialize(void * pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0800;
-	m_bHasCrushGage = true;
+	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(120.f));
 	m_fGravity = 20.f;
 
@@ -57,33 +58,10 @@ void CEM0800::SetUpComponents(void * pArg)
 	Json BronJonArm_R = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRightArm.json");
 	Json BronJonRange = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BronJon/BronJonRange.json");
 
-	CRigidBody* pRigidBody = nullptr;
-
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeColl"),
-		(CComponent**)&pRigidBody, &BronJonRange));
-
-	m_pRigidBodies.emplace("Range", pRigidBody);
-	pRigidBody = nullptr;
-
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("TrunkColl"),
-		(CComponent**)&pRigidBody, &BronJonJaw));
-
-	m_pRigidBodies.emplace("Trunk", pRigidBody);
-	pRigidBody = nullptr;
-
-	// m_pLeftArm : LeftArm HitBox
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("LeftArm"),
-		(CComponent**)&pRigidBody, &BronJonArm_L));
-
-	m_pRigidBodies.emplace("Weak_LeftArm", pRigidBody);
-	pRigidBody = nullptr;
-
-	// m_pRightArm : RightArm HitBox
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RightArm"),
-		(CComponent**)&pRigidBody, &BronJonArm_R));
-
-	m_pRigidBodies.emplace("Weak_RightArm", pRigidBody);
-	pRigidBody = nullptr;
+	Add_RigidBody("Range", &BronJonRange);
+	Add_RigidBody("Trunk", &BronJonJaw);
+	Add_RigidBody("Weak_LeftArm", &BronJonArm_L);
+	Add_RigidBody("Weak_RightArm", &BronJonArm_R);
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM0800_Controller::Create();
@@ -136,6 +114,12 @@ void CEM0800::SetUpAnimationEvent()
 		m_bComeUp = true;
 	});
 
+
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0800DeadFlower")
+				->Start_NoAttach(this, false);
+		});
 }
 
 void CEM0800::SetUpFSM()
@@ -272,7 +256,7 @@ void CEM0800::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_209_AL_atk_a4_laser_loop");
-				m_pModelCom->GetPlayAnimation()->SetLooping(true);
+				m_pModelCom->Find_Animation("AS_em0800_209_AL_atk_a4_laser_loop")->SetLooping(true);
 				m_fLaserTime = 0.f;
 			})
 			.Tick([this](_double TimeDetla)
@@ -341,13 +325,13 @@ void CEM0800::Tick(_double TimeDelta)
 {
 	CEnemy::Tick(TimeDelta);
 
-	if (m_bHasWaterPool == false && GetHpRatio() <= 0.5f)
+	if (m_pWaterPool == nullptr && GetHpRatio() <= 0.5f)
 	{
 		_matrix			PivotMatrix = XMMatrixIdentity();
 		PivotMatrix = XMMatrixTranslation(0.f, 0.1f, 0.f) * XMMatrixScaling(10.f, 1.f, 10.f);
 		m_pWaterPool = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water");
 		m_pWaterPool->Start_AttachPivot(this, PivotMatrix, "Eff01", true, true, false);
-		m_bHasWaterPool = true;
+		Safe_AddRef(m_pWaterPool);
 	}
 	//AIInstance tick
 	m_pController->SetTarget(m_pTarget);
@@ -391,10 +375,10 @@ void CEM0800::AfterPhysX()
 	CEnemy::AfterPhysX();
 
 	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
-	m_pRigidBodies["Range"]->Update_Tick(WorldMatrix);
-	m_pRigidBodies["Trunk"]->Update_Tick(m_pModelCom->GetBoneMatrix("Eff02") * WorldMatrix);
-	m_pRigidBodies["Weak_LeftArm"]->Update_Tick(m_pModelCom->GetBoneMatrix("LeftForeArm") * WorldMatrix);
-	m_pRigidBodies["Weak_RightArm"]->Update_Tick(m_pModelCom->GetBoneMatrix("RightForeArm") * WorldMatrix);
+	GetRigidBody("Range")->Update_Tick(WorldMatrix);
+	GetRigidBody("Trunk")->Update_Tick(m_pModelCom->GetBoneMatrix("Eff02") * WorldMatrix);
+	GetRigidBody("Weak_LeftArm")->Update_Tick(m_pModelCom->GetBoneMatrix("LeftForeArm") * WorldMatrix);
+	GetRigidBody("Weak_RightArm")->Update_Tick(m_pModelCom->GetBoneMatrix("RightForeArm") * WorldMatrix);
 }
 
 HRESULT CEM0800::Render()
@@ -411,6 +395,22 @@ void CEM0800::Imgui_RenderProperty()
 		m_pASM->Imgui_RenderState();
 	}
 	m_pFSM->Imgui_RenderProperty();
+
+	//static _bool tt = false;
+	//ImGui::Checkbox("Modify Pivot", &tt);
+
+	//if (tt)
+	//{
+	//	static GUIZMO_INFO tInfo;
+	//	CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+
+	//	if (ImGui::Button("Create_Effect"))
+	//	{
+	//		m_pWaterPool = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water");
+	//		m_pWaterPool->Start_NoAttachPivot(this, pivot, true, false);
+	//		Safe_AddRef(m_pWaterPool);
+	//	}
+	//}
 }
 
 _bool CEM0800::IsPlayingSocket() const
@@ -554,7 +554,7 @@ void CEM0800::Laser_SweepSphere()
 	Sparam.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
 	if (CGameInstance::GetInstance()->SweepSphere(Sparam))
-		HitTargets(sweepOut, (rand() % 150) + 25, EAttackType::ATK_DOWN);
+		HitTargets(sweepOut, (rand() % 150) + 25, EAttackType::ATK_HEAVY);
 }
 
 
@@ -587,10 +587,14 @@ void CEM0800::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-	
-	for (auto it : m_pRigidBodies)
-		Safe_Release(it.second);
 
-	m_pRigidBodies.clear();
-
+	if (m_bCloned)
+	{
+		if (m_pWaterPool != nullptr)
+		{
+			m_pWaterPool->SetDelete();
+			Safe_Release(m_pWaterPool);
+			m_pWaterPool = nullptr;
+		}
+	}
 }

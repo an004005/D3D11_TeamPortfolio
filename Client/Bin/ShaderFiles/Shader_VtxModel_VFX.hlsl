@@ -305,6 +305,34 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
 
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+PS_OUT PS_SAS_MASK_PARTICLE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float2 randomNormal = g_tex_0.Sample(LinearSampler, In.vTexUV).xy;
+	float2 distortionUV = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(g_Time * 0.f, g_Time * 0.f));
+
+	float4 Default = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4 Mask = g_tex_2.Sample(LinearSampler, distortionUV);
+	float fDissolve = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+
+	float4 Color = g_vec4_0;
+	float4 Blend = Default * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	Final.a = Mask.r;
+
+	Out.vColor = CalcHDRColor(Final, g_float_1);
+	Out.vColor *= g_float_2;
+
+	if (g_float_3 >= fDissolve)
+		discard;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
 	return Out;
 }
 
@@ -480,6 +508,23 @@ PS_OUT PS_EM1100_STAMP(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_EXPLODE_CROSS_EF(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float2 FlipUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.03, 8, 8);
+	float4 OriginTex = g_tex_0.Sample(LinearSampler, FlipUV);
+
+	Out.vColor = CalcHDRColor(OriginTex, g_float_0);
+	// Out.vColor.a = OriginTex.r * g_float_0;
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (g_float_0 <= 0.f)
+		discard;
+
+	return Out;
+}
+
+
 PS_OUT PS_ATTACK_SLASH_LINE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -514,6 +559,32 @@ PS_OUT PS_DEFAULT_MODEL_FLOWUV(PS_IN In)
 	if (Out.vColor.a <= 0.01f)
 		discard;
 
+
+	return Out;
+}
+
+PS_OUT PS_EM1100_WATER(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float2 randomNormal = g_tex_0.Sample(LinearSampler, In.vTexUV).xy;
+	float2 FlowUV = randomNormal * g_float_0 + TilingAndOffset(In.vTexUV, float2(1.f, 1.f), float2(-g_Time * g_float_3, -g_Time * g_float_3));
+
+	float4 OriginTex = g_tex_1.Sample(LinearSampler, FlowUV);
+	float Mask = g_tex_2.Sample(LinearSampler, float2(FlowUV.x, FlowUV.y * 4.f)).r;
+	float Gradient = g_tex_3.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y * (g_float_4))).r;
+	float4 ChooseColor = g_vec4_0;
+	float4 BlendColor = OriginTex * ChooseColor * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+	Out.vColor = CalcHDRColor(FinalColor, g_float_1);
+	Out.vColor.a = Mask * Gradient * g_float_2;
+
+	Out.vFlag = float4(SHADER_DISTORTION_STATIC, 0.f, 0.f, Out.vColor.a);
+
+	if (Out.vColor.a <= 0.01f)
+		discard;
+
+	if (g_float_2 <= 0.f)
+		discard;
 
 	return Out;
 }
@@ -561,16 +632,16 @@ PS_OUT PS_BRONJON_LASER(PS_IN In)
 	return Out;
 }
 
-// g_float_0 : ¸ðµ¨ ÅØ½ºÃÄ UV.y °ª
-// g_float_1 : UV.y °ª ¿¬µ¿µÈ
+// g_float_0 : ëª¨ë¸ í…ìŠ¤ì³ UV.y ê°’
+// g_float_1 : UV.y ê°’ ì—°ë™ëœ
 // g_float_2 : Emissive
-// g_float_3 : Dissolve Ä¿Áú¼ö·Ï »ç¶óÁü
+// g_float_3 : Dissolve ì»¤ì§ˆìˆ˜ë¡ ì‚¬ë¼ì§
 
-// g_vec4_0 : ¼¯´Â »ö»ó
+// g_vec4_0 : ì„žëŠ” ìƒ‰ìƒ
 
-// g_tex_0 : ¹ÝÀý¸¸ ³ª¿À´Â ÅØ½ºÃÄ
-// g_tex_1 : Èò»ö ²ËÂù ÅØ½ºÃÄ
-// g_tex_2 : µðÁ¹ºê ÅØ½ºÃÄ 
+// g_tex_0 : ë°˜ì ˆë§Œ ë‚˜ì˜¤ëŠ” í…ìŠ¤ì³
+// g_tex_1 : í°ìƒ‰ ê½‰ì°¬ í…ìŠ¤ì³
+// g_tex_2 : ë””ì¡¸ë¸Œ í…ìŠ¤ì³ 
 
 PS_OUT PS_MAIN_DEFAULT_ATTACK(PS_IN In)
 {
@@ -634,20 +705,20 @@ PS_OUT PS_MAIN_CHARGING_TWIST(PS_IN In)
 	return Out;
 }
 
-// g_float_0 : ÇÑ¹ø¿¡ ¶ç¿ìÁö ¾Ê°Ô »ì»ì ¹Ý¸¸ ±×¸®´Â ÅØ½ºÃÄ UV.y °ª
-// g_float_1 : ¹Ý¸¸ ±×¸®´Â ÅØ½ºÃÄ¶û ÀüºÎ±×¸®´Â ÅØ½ºÃÄ¶û ¹Ù²ãÄ¡±â À§ÇÑ float°ª
+// g_float_0 : í•œë²ˆì— ë„ìš°ì§€ ì•Šê²Œ ì‚´ì‚´ ë°˜ë§Œ ê·¸ë¦¬ëŠ” í…ìŠ¤ì³ UV.y ê°’
+// g_float_1 : ë°˜ë§Œ ê·¸ë¦¬ëŠ” í…ìŠ¤ì³ëž‘ ì „ë¶€ê·¸ë¦¬ëŠ” í…ìŠ¤ì³ëž‘ ë°”ê¿”ì¹˜ê¸° ìœ„í•œ floatê°’
 // g_float_2 : Emissive
-// g_float_3 : Dissolve Ä¿Áú¼ö·Ï »ç¶óÁü
-// g_float_4 : PostProcess µð½ºÅä¼Ç ¼¼±â
+// g_float_3 : Dissolve ì»¤ì§ˆìˆ˜ë¡ ì‚¬ë¼ì§
+// g_float_4 : PostProcess ë””ìŠ¤í† ì…˜ ì„¸ê¸°
 
-// g_vec4_0 : Ã³À½ »ö»ó
-// g_vec4_1 : ÃÖÁ¾ »ö»ó
+// g_vec4_0 : ì²˜ìŒ ìƒ‰ìƒ
+// g_vec4_1 : ìµœì¢… ìƒ‰ìƒ
 
-// g_tex_0 : ¹ÝÀý¸¸ ³ª¿À´Â ÅØ½ºÃÄ
-// g_tex_1 : ¹ø°³¸ð¾ç ÀÏ¹ÝÀûÀÎ ÅØ½ºÃÄ
-// g_tex_2 : µðÁ¹ºê ÅØ½ºÃÄ¿Í ¼¯À» ³ëÀÌÁî ÅØ½ºÃÄ
-// g_tex_3 : ¹ø°³¸ð¾ç µðÁ¹ºê ÅØ½ºÃÄ
-// g_tex_4 : ÁöÁ÷ÇÏ´Â µðÁ¹ºê¸¦ ·£´ýÇÏ°Ô ÁÖ±â À§ÇÑ ³ëÀÌÁî ÅØ½ºÃÄ
+// g_tex_0 : ë°˜ì ˆë§Œ ë‚˜ì˜¤ëŠ” í…ìŠ¤ì³
+// g_tex_1 : ë²ˆê°œëª¨ì–‘ ì¼ë°˜ì ì¸ í…ìŠ¤ì³
+// g_tex_2 : ë””ì¡¸ë¸Œ í…ìŠ¤ì³ì™€ ì„žì„ ë…¸ì´ì¦ˆ í…ìŠ¤ì³
+// g_tex_3 : ë²ˆê°œëª¨ì–‘ ë””ì¡¸ë¸Œ í…ìŠ¤ì³
+// g_tex_4 : ì§€ì§í•˜ëŠ” ë””ì¡¸ë¸Œë¥¼ ëžœë¤í•˜ê²Œ ì£¼ê¸° ìœ„í•œ ë…¸ì´ì¦ˆ í…ìŠ¤ì³
 
 PS_OUT PS_MAIN_ELEC_ATTACK(PS_IN In)
 {
@@ -692,20 +763,20 @@ PS_OUT PS_MAIN_ELEC_ATTACK(PS_IN In)
 
 
 
-// g_float_0 : ¸ðµ¨ ÅØ½ºÃÄ UV.y °ª
-// g_float_1 : ¹Ù²ð ÅØ½ºÃÄÀÇ UV.y °ª
+// g_float_0 : ëª¨ë¸ í…ìŠ¤ì³ UV.y ê°’
+// g_float_1 : ë°”ë€” í…ìŠ¤ì³ì˜ UV.y ê°’
 // g_float_2 : Emissive
-// g_float_3 : Dissolve Ä¿Áú¼ö·Ï »ç¶óÁü
-// g_float_4 : Distortion °­µµ
+// g_float_3 : Dissolve ì»¤ì§ˆìˆ˜ë¡ ì‚¬ë¼ì§
+// g_float_4 : Distortion ê°•ë„
 
-// g_vec4_0 : ÃÊ±â »ö»ó
-// g_vec4_1 : ¹Ù²ð »ö»ó
+// g_vec4_0 : ì´ˆê¸° ìƒ‰ìƒ
+// g_vec4_1 : ë°”ë€” ìƒ‰ìƒ
 
-// g_tex_0 : ¹ÝÀý¸¸ ³ª¿À´Â ÅØ½ºÃÄ
-// g_tex_1 : Èò»ö ²ËÂù ÅØ½ºÃÄ
-// g_tex_2 : µðÁ¹ºê ¹æÇâ ÅØ½ºÃÄ
-// g_tex_3 : µðÁ¹ºê¿¡ ¼¯À» ³ëÀÌÁî ÅØ½ºÃÄ
-// g_tex_4 : µð½ºÅä¼Ç ÇÃ·Î¿ì¸Ê
+// g_tex_0 : ë°˜ì ˆë§Œ ë‚˜ì˜¤ëŠ” í…ìŠ¤ì³
+// g_tex_1 : í°ìƒ‰ ê½‰ì°¬ í…ìŠ¤ì³
+// g_tex_2 : ë””ì¡¸ë¸Œ ë°©í–¥ í…ìŠ¤ì³
+// g_tex_3 : ë””ì¡¸ë¸Œì— ì„žì„ ë…¸ì´ì¦ˆ í…ìŠ¤ì³
+// g_tex_4 : ë””ìŠ¤í† ì…˜ í”Œë¡œìš°ë§µ
 
 PS_OUT PS_MAIN_FIRE_ATTACK(PS_IN In)
 {
@@ -1099,5 +1170,47 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SAS_DEAD_EF();
+	}
+
+	//23
+	pass KineticMeshEffectLikeParticle
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SAS_MASK_PARTICLE();
+	}
+
+	//24
+	pass Explode_CrossEF
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EXPLODE_CROSS_EF();
+	}
+
+	//25
+	pass Em1100Water
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_WATER();
 	}
 }

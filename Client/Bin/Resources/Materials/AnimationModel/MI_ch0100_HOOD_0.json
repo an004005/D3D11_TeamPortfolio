@@ -1,6 +1,5 @@
-    {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxToonAnimModel",
-    "ShaderParams" : {
+{
+    "ShaderParams": {
         "Float2s": [],
         "Float4s": [
             [
@@ -11,16 +10,22 @@
             ]
         ],
         "Float4x4s": [],
-        "Floats": [0.0, 0.0, 0.0, 0.0],
+        "Floats": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
         "Ints": [
             0
         ],
-        "Textures" : [
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hood_COL.dds",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hood_NML.png",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hood_AMB.dds",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hood_CTL.dds"
-        ],
-        "Pass" : 1
-    }
+        "Pass": 10,
+        "Textures": [
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hood_COL.dds\u0000",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hood_NML.png\u0000",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hood_AMB.dds\u0000",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Hood_CTL.dds\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"
 }

@@ -8,7 +8,8 @@
 #include "PhysX_Manager.h"
 #include "EM0221.h"
 #include "ImguiUtils.h"
-#include "RedBullet.h"
+#include "BulletBuilder.h"
+
 CEM0220::CEM0220(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -33,6 +34,9 @@ HRESULT CEM0220::Initialize(void * pArg)
 		m_iMaxHP = 1100;
 		m_iHP = 1100; // ★
 
+		m_iCrushGauge = 1100;
+		m_iMaxCrushGauge = 1100;
+
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
 	}
@@ -40,7 +44,7 @@ HRESULT CEM0220::Initialize(void * pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0220;
-	m_bHasCrushGage = true;
+	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	SetUp_Lantern();
@@ -88,23 +92,8 @@ void CEM0220::SetUpAnimationEvent()
 	//Attack_Shot 중일때 앞으로 뱉는 모션에서 계속 Bullet생성
 	m_pModelCom->Add_EventCaller("Shot", [this]
 	{
-		auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_RedBullet"));
-
-		if (CRedBullet* pBullet = dynamic_cast<CRedBullet*>(pObj))
-		{
-			pBullet->Set_Owner(this);
-
-			_vector vBonePos = (m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix()).r[3];
-			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-
-			//입에 달려있는 뼈가 없어서 몬스터 입 뒤쪽에있는 Target뼈에서 앞쪽으로 당겨준다.
-			vBonePos += XMVector3Normalize(vLook) * 3.f;
-			pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vBonePos);
-			pBullet->GetTransform()->LookAt(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)); 
-		}
+		Create_Bullet();
 	});
-
-
 }
 
 void CEM0220::SetUpFSM()
@@ -124,13 +113,15 @@ void CEM0220::SetUpFSM()
 			{
 				m_fGravity = 20.f;
 			})
+			.AddTransition("Idle to BrainCrushStart", "BrainCrushStart")
+				.Predicator([this] { return m_iCrushGauge <= 0; })
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
 
-			.AddTransition("Idle to Hit", "Hit")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_LIGHT || m_eCurAttackType == EAttackType::ATK_MIDDLE; })
+		/*	.AddTransition("Idle to Hit", "Hit")
+				.Predicator([this] { return !m_Unbeatable || m_eCurAttackType == EAttackType::ATK_LIGHT || m_eCurAttackType == EAttackType::ATK_MIDDLE; })*/
 			.AddTransition("Idle to Down", "Down")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_HEAVY; })
+				.Predicator([this] { return !m_Unbeatable && m_eCurAttackType != EAttackType::ATK_END; })
 			
 			.AddTransition("Idle to Attack_Shot", "Attack_Shot")
 				.Predicator([this] { return m_eInput == CController::C; })
@@ -170,7 +161,7 @@ void CEM0220::SetUpFSM()
 		.AddState("OnFloorGetup")
 			.OnStart([this]
 			{
-				m_pASM->InputAnimSocketMany("FullBody", { "AS_em0200_426_AL_down" "AS_em0200_427_AL_getup" });
+				m_pASM->InputAnimSocketMany("FullBody", { "AS_em0200_426_AL_down", "AS_em0200_427_AL_getup" });
 				m_fGravity = 20.f;
 			})
 			.AddTransition("OnFloorGetup to Idle", "Idle")
@@ -179,6 +170,39 @@ void CEM0220::SetUpFSM()
 				return m_bDead || m_pASM->isSocketEmpty("FullBody");
 			})
 
+		.AddState("BrainCrushStart")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_485_AL_BCchance_start");
+			})
+			.AddTransition("BrainCrushStart to BrainCrushLoop", "BrainCrushLoop")
+				.Predicator([this]
+				{
+					return m_bDead || m_bBrainCrush || m_pASM->isSocketPassby("FullBody", 0.95f);
+				})
+
+		.AddState("BrainCrushLoop")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_486_AL_BCchance_loop");
+				m_pModelCom->Find_Animation("AS_em0200_486_AL_BCchance_loop")->SetLooping(true);
+			})
+			.AddTransition("BrainCrushLoop to BrainCrushEnd", "BrainCrushEnd")
+				.Predicator([this]
+				{
+					return m_bBrainCrush;
+				})
+
+		.AddState("BrainCrushEnd")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_487_AL_BCchance_end");
+			})
+			.Tick([this](_double)
+			{
+				if (m_pASM->isSocketPassby("FullBody", 0.95f))
+					SetDead();
+			})
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 		//Guard loop 중일때 어택이 되면 Guard_End 모션이 끝나고 공격을 하기때문에
@@ -198,20 +222,13 @@ void CEM0220::SetUpFSM()
 			{
 				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
-			//공격중 가까이오면 Guard상태로 감
-			.AddTransition("Attack_Shot to Guard_Start", "Guard_Start")
+			.AddTransition("Attack_Shot to Idle", "Idle")
 				.Predicator([this]
 				{
 				//루프 모션일때는 컨트롤러가 작동하지 않기때문에 여기서 위치를 계산해줘야함
-					return m_pController->Check_TargetDist(10.f);
+					return m_bDead || m_pController->Check_TargetDist();
 				})
-			//순간이동이나, 키네틱으로 맞았을때는 Idle상태로 보내서 hit모션 뜨게 함
-			.AddTransition("Attack_Shot to Idle", "Idle" )
-				.Predicator([this]
-				{
-					return m_bDead || m_eCurAttackType != EAttackType::ATK_END;
-				})
-
+		
 ///////////////////////////////////////////////////////////////////////////////////////////
 		
 		// FIXME : count 실행조건이 기본 공격이랑 키네틱 둘다 실행되는데 아니면 나중에 수정!
@@ -223,15 +240,29 @@ void CEM0220::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0220_111_AL_to_guard");
+				m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->SetTickPerSec(10.f);
+				m_Unbeatable = false;
+				
 			})
-			.Tick([this](_double)
+			.Tick([this](_double TimeDelta)
 			{
-			
+					if (!m_Unbeatable && m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->GetPlayTime() >= 3.f)
+					{
+						m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->SetTickPerSec(60.f);
+						m_Unbeatable = true;
+					}
 			})
+
 			.AddTransition("Guard_Start to Guard_Loop", "Guard_Loop")
 				.Predicator([this]
 				{
-					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || (m_Unbeatable &&m_pASM->isSocketPassby("FullBody", 0.95f));
+				})
+
+			.AddTransition("Guard_Start to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_bDead || (!m_Unbeatable && m_eCurAttackType != EAttackType::ATK_END);
 				})
 
 		// near 에서 멀어지면 일어서는건데 무조건 공격으로 변하기 때문에 이 조건이면 될것같음
@@ -240,17 +271,12 @@ void CEM0220::SetUpFSM()
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0220_112_AL_guard");
 				m_pModelCom->Find_Animation("AS_em0220_112_AL_guard")->SetLooping(true);
-				m_IsBeat = true;
-			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-				m_IsBeat = false;
+				
 			})
 			.AddTransition("Guard_Loop to Guard_End", "Guard_End")
 				.Predicator([this]
 				{		
-					return m_bDead || m_pController->Check_TargetDist(10.f, true); 
+					return m_bDead || m_pController->Check_TargetDist(true); 
 				})
 			.AddTransition("Guard_Loop to Counter", "Counter")
 				.Predicator([this]
@@ -272,18 +298,22 @@ void CEM0220::SetUpFSM()
 			.AddTransition("Counter to Guard_End", "Guard_End")
 				.Predicator([this]
 			{
-				return m_bDead || (m_pController->Check_TargetDist(10.f, true) && m_pASM->isSocketPassby("FullBody", 0.95f));
+				return m_bDead || (m_pController->Check_TargetDist(true) && m_pASM->isSocketPassby("FullBody", 0.95f));
 			})
 			.AddTransition("Counter to Guard_Loop", "Guard_Loop")
 				.Predicator([this]
 			{
-				return m_bDead || (m_pController->Check_TargetDist(10.f) && m_pASM->isSocketPassby("FullBody", 0.95f));
+				return m_bDead || (m_pController->Check_TargetDist() && m_pASM->isSocketPassby("FullBody", 0.95f));
 			})
 
 		.AddState("Guard_End")
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0220_113_AL_to_wait03");
+			})
+			.OnExit([this]
+			{
+				m_Unbeatable = false;
 			})
 			.AddTransition("Guard_End to Idle", "Idle")
 				.Predicator([this]
@@ -316,6 +346,7 @@ void CEM0220::Tick(_double TimeDelta)
 	//변수 업데이트
 	m_fTurnRemain = m_pController->GetTurnRemain();
 	m_eInput = m_pController->GetAIInput();
+
 	//m_bTeleport = CheckSASType(ESASType::SAS_TELEPORT);
 
 	//ASM, FSM tick
@@ -364,13 +395,15 @@ void CEM0220::CheckHP(DAMAGE_PARAM & tDamageParams)
 {
 	_int iDamage = tDamageParams.iDamage;
 	
-	if(m_IsBeat == false)
+	if(m_Unbeatable == false)
 		m_iHP -= iDamage;
 
 	if (m_iHP < 0)
 	{
-		if (m_iCrushGage > 0)
+		if (m_iCrushGauge > 0 || m_dDeadTime > 3.f)
 			SetDead();
+
+		m_bDeadStart = true;
 		m_iHP = 0;
 	}
 }
@@ -433,6 +466,34 @@ void CEM0220::CounterAttack(_double TimeDelta)
 	m_dFallCount += TimeDelta;
 }
 
+void CEM0220::Create_Bullet()
+{
+	DAMAGE_PARAM eDamageParam;
+	eDamageParam.eAttackType = EAttackType::ATK_MIDDLE;
+	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_END;
+	eDamageParam.iDamage = 50;
+
+	_vector vBonePos = (m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix()).r[3];
+	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	vBonePos += XMVector3Normalize(vLook) * 3.f;
+
+	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vUp = m_pTarget->GetTransform()->Get_State(CTransform::STATE_UP);
+	vTargetPos += XMVector3Normalize(vUp) * 0.5f;
+
+	CBulletBuilder()
+		.CreateBullet()
+			.Set_Owner(this)
+			.Set_InitBulletEffect({ L"em0650_Bullet_Birth", L"em0220_Bullet" })
+			.Set_ShootSpped(22.f)
+			.Set_Life(2.f)
+			.Set_DamageParam(eDamageParam)
+			.Set_DeadBulletEffect({ L"em0320_Bullet_Dead_1", L"em0320_Bullet_Dead_2", L"em0320_Bullet_Dead_3" })
+			.Set_Position(vBonePos)
+			.Set_LookAt(vTargetPos)
+		.Build();
+}
+
 
 
 
@@ -465,7 +526,6 @@ void CEM0220::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-	Safe_Release(m_pRange);
 
 	for (auto it : m_pLanterns)
 		Safe_Release(it);
