@@ -202,7 +202,7 @@ HRESULT CModel_Instancing::Render_ShadowDepth(CTransform* pTransform)
 	for (size_t i = 0; i < m_Meshes.size(); ++i)
 	{
 		const _uint iMtrlIdx = m_Meshes[i]->Get_MaterialIndex();
-		if (m_Materials[iMtrlIdx]->IsActive() == false)
+		if (m_Materials[iMtrlIdx]->IsActive() == false || m_Materials[iMtrlIdx]->IsAlphaBlend())
 			continue;
 
 		FAILED_CHECK(pTransform->Bind_ShaderResource(m_pShadowShader, "g_WorldMatrix"));
