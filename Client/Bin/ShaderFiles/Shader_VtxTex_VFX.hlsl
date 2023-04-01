@@ -56,6 +56,30 @@ PS_OUT PS_MAIN(PS_IN In)
 }
 
 
+PS_OUT PS_DRIVEMOD_GLOW(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float4 Default = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+	float4 Color = g_vec4_0;
+	float4 Blend = Default * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	float Mask1 = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+	float Mask2 = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+	float Mask3 = g_tex_4.Sample(LinearSampler, In.vTexUV).r;
+	float Mask4 = g_tex_5.Sample(LinearSampler, In.vTexUV).r;
+	float Mask5 = g_tex_6.Sample(LinearSampler, In.vTexUV).r;
+	float Mask6 = g_tex_7.Sample(LinearSampler, In.vTexUV).r;
+	Mask5 = Mask5 * Mask6;
+	Final.a = (Mask * g_float_0) + (Mask1 * g_float_1) + (Mask2 * g_float_2) + (Mask3 * g_float_3) + (Mask4 * g_float_4) + (Mask5 * g_float_5);
+
+
+	Out.vColor = CalcHDRColor(Final, g_float_6);
+
+	Out.vColor.a *= g_float_7;
+
+	return Out;
+}
 
 PS_OUT PS_BRON_BITE(PS_IN In)
 {
@@ -361,6 +385,24 @@ PS_OUT_Flag PS_DISTORTION_PLAYER(PS_IN In)
 
 	Out.vColor = 0;
 	Out.vColor.a *= g_float_0;
+
+	return Out;
+}
+
+PS_OUT_Flag PS_EM1200_FEAR(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	Out.vFlag = float4(SHADER_DISTORTION_STATIC, 0.f, 0.f, Out.vColor.r * g_float_0);
+
+	Out.vColor = 0;
+	Out.vColor.a *= g_float_0;
+
+	if (g_float_0 <= 0.f)
+		discard;
 
 	return Out;
 }
@@ -1801,5 +1843,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 EXPLODE_DEFAULT_RECT();
+	}
+
+	//45
+	pass Em1200Fear
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1200_FEAR();
+	}
+
+	//46
+	pass DriveMode_Glow
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DRIVEMOD_GLOW();
 	}
 }

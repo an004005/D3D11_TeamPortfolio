@@ -2,12 +2,6 @@
 #include "Enemy.h"
 #include "Controller.h"
 
-BEGIN(Engine)
-class CFSMComponent;
-class CGameInstance;
-class CAnimation;
-class CRigidBody;
-END
 
 BEGIN(Client)
 
@@ -26,6 +20,7 @@ public:
 	virtual void SetUpSound() override;
 	virtual void SetUpAnimationEvent() override;
 	virtual void SetUpFSM() override;
+	virtual void SetUpUI() override;
 
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
@@ -46,7 +41,8 @@ private:
 	void Dodge_VelocityCalc();
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
-	void Swing_SweepCapsule(_bool bCol);
+	void Swing_SweepSphere();
+	void	HeavyAttackPushStart();
 private:
 	//충돌 관련 함수 정의
 
@@ -55,13 +51,8 @@ private:
 	class CEM0400_AnimInstance*		m_pASM = nullptr;
 
 	//충돌
-	CRigidBody*					m_pWeaponCollider = nullptr;
-	CRigidBody*					m_pRange = nullptr;
-
 	CEffectGroup*				m_pSwingEffect = nullptr;
 
-	// Swing Attack
-	list<CScarletCharacter*> m_CollisionList;
 private:
 	//원시 데이터
 	_float3 m_vMoveAxis;
@@ -82,9 +73,12 @@ private:
 	_float3 m_vDodgeVelocity;
 	_bool m_bDodge = false;
 
-	string		m_strBoneName;
+	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 
-	CController::EHandleInput	m_eInput;
+	CSimpleTimeline m_HeavyAttackPushTimeline;
+	_float4 m_vPushVelocity;
+
+	//_float4x4 pivot;
 public:
 	static CEM0400* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

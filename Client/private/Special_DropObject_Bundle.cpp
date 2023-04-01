@@ -89,7 +89,7 @@ void CSpecial_DropObject_Bundle::BeginTick()
 {
 	__super::BeginTick();
 
-	m_pCollider->Set_Kinetic(true);
+	m_pCollider->Set_Trigger(true);
 	m_pCollider->UpdateChange();
 }
 
@@ -128,7 +128,7 @@ void CSpecial_DropObject_Bundle::Tick(_double TimeDelta)
 
 			for (auto& iter : m_pObject_Single)
 			{
-				static_cast<CSpecial_DropObject_Single*>(iter)->Set_Kinetic(false);
+				static_cast<CSpecial_DropObject_Single*>(iter)->Set_Trigger(false);
 				static_cast<CSpecial_DropObject_Single*>(iter)->Activate(true);
 			}
 		}
@@ -233,10 +233,9 @@ void CSpecial_DropObject_Bundle::Imgui_RenderProperty()
 	}
 }
 
-void CSpecial_DropObject_Bundle::Set_Kinetic(_bool bKinetic)
+void CSpecial_DropObject_Bundle::Set_Trigger(_bool bTrigger)
 {
-	m_pCollider->Set_Kinetic(bKinetic);
-	m_pCollider->UpdateChange();
+	m_pCollider->Set_Trigger(bTrigger);
 }
 
 void CSpecial_DropObject_Bundle::DropObject_Floating()

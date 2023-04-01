@@ -139,18 +139,6 @@
     <Filter Include="02.GameObjects\Weapon\wp0190">
       <UniqueIdentifier>{556fd684-ed88-4908-bb68-cfefb092763f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\Drive">
-      <UniqueIdentifier>{2a9015c3-ac89-4688-ba20-5af55c1b4601}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\Item">
-      <UniqueIdentifier>{46619585-dc48-4000-9f31-5617ce206aab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\PlayerInfo">
-      <UniqueIdentifier>{1288607c-59a4-4427-b040-1ed8b21a4858}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
-      <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Monster\SkummyPandou">
       <UniqueIdentifier>{77a8119b-8713-49c4-b0ae-773fc0c8cd4b}</UniqueIdentifier>
     </Filter>
@@ -226,29 +214,8 @@
     <Filter Include="02.GameObjects\UI">
       <UniqueIdentifier>{cd40877e-1d57-40a8-aa94-2c831bd55b5f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI">
-      <UniqueIdentifier>{dbe3d603-c8a0-4590-96fa-f2a387abb7b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\Drive">
-      <UniqueIdentifier>{2a9015c3-ac89-4688-ba20-5af55c1b4601}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\Item">
-      <UniqueIdentifier>{46619585-dc48-4000-9f31-5617ce206aab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\PlayerInfo">
-      <UniqueIdentifier>{1288607c-59a4-4427-b040-1ed8b21a4858}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\SASSkill">
-      <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Monster\BuddyLumi\BdLm_Controller">
       <UniqueIdentifier>{7e82e54f-b5b7-4330-be57-352521a4f639}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\SASInfoLeft">
-      <UniqueIdentifier>{ea0a820a-4dc8-4972-9330-a21a848385ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Front_UI\SASSkillRight">
-      <UniqueIdentifier>{ef81e424-8ab1-4dfd-ae18-2316c41c86a0}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\Boss">
       <UniqueIdentifier>{dc1701f8-365a-4180-94c6-d3de20833679}</UniqueIdentifier>
@@ -264,6 +231,9 @@
     </Filter>
     <Filter Include="Trigger">
       <UniqueIdentifier>{de696a83-1b14-4455-81e6-aee65fc00158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\02. Stage1">
+      <UniqueIdentifier>{1e272184-8887-431f-937d-de39fd6eeb16}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\17.KineticEditor">
       <UniqueIdentifier>{cf49c083-b25e-424b-aca3-6c741d536048}</UniqueIdentifier>
@@ -285,12 +255,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Monster\FlowerLeg\FL_Invisible%28Test%29\ASM">
       <UniqueIdentifier>{889711dc-b345-4bdf-9c49-c3181c53954d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Main_UI">
-      <UniqueIdentifier>{d267f306-d688-42b8-9978-a34ae516a2f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Main_UI\Canvas">
-      <UniqueIdentifier>{a84ad824-2ee4-49a4-8b5f-2249e5b4eaa9}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Enemy">
       <UniqueIdentifier>{613f3e82-7d40-451d-bc3d-3f67636096c3}</UniqueIdentifier>
@@ -391,8 +355,38 @@
     <Filter Include="02.GameObjects\UI\Mouse">
       <UniqueIdentifier>{f954c126-8785-41df-817d-93c9c8bf510b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.GamePlay\02. ConstructionSite">
-      <UniqueIdentifier>{1e272184-8887-431f-937d-de39fd6eeb16}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\UI\Shop">
+      <UniqueIdentifier>{9730c136-31f7-4276-83ce-da1fc4d4fa5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front">
+      <UniqueIdentifier>{dbe3d603-c8a0-4590-96fa-f2a387abb7b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front\Drive">
+      <UniqueIdentifier>{2a9015c3-ac89-4688-ba20-5af55c1b4601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front\Item">
+      <UniqueIdentifier>{46619585-dc48-4000-9f31-5617ce206aab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front\PlayerInfo">
+      <UniqueIdentifier>{1288607c-59a4-4427-b040-1ed8b21a4858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front\SASSkill">
+      <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front\SASInfoLeft">
+      <UniqueIdentifier>{ea0a820a-4dc8-4972-9330-a21a848385ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front\SASSkillRight">
+      <UniqueIdentifier>{ef81e424-8ab1-4dfd-ae18-2316c41c86a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Main">
+      <UniqueIdentifier>{d267f306-d688-42b8-9978-a34ae516a2f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Main\Canvas">
+      <UniqueIdentifier>{a84ad824-2ee4-49a4-8b5f-2249e5b4eaa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\________DefaultCanvas">
+      <UniqueIdentifier>{bad044ba-a491-4bf1-9026-b9d169097cf4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -550,28 +544,28 @@
     <ClInclude Include="..\public\ScarletMap.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\Canvas_Drive.h">
-      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+      <Filter>02.GameObjects\UI\Front\Drive</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_Item.h">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_PlayerInfo.h">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_SASSkill.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillIconUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillGaugeUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillLightUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillFullCircleUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Camera_Player.h">
       <Filter>02.GameObjects\Camera</Filter>
@@ -657,46 +651,46 @@
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\Psychokinesis.h" />
     <ClInclude Include="..\public\Canvas_SASSkillMove.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_PlayerInfoMove.h">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_DriveMove.h">
-      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+      <Filter>02.GameObjects\UI\Front\Drive</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UI_Manager.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Drive_RightDotUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+      <Filter>02.GameObjects\UI\Front\Drive</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Drive_GaugeUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+      <Filter>02.GameObjects\UI\Front\Drive</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Item_NameUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Item_IconUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Item_GaugeUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_ItemMove.h">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Item_LeftArrowUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Item_PushArrowUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Item_RightArrowUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerInfo_HpUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapObject.h">
       <Filter>02.GameObjects\Map</Filter>
@@ -741,49 +735,49 @@
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerInfo_HpBackUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerInfo_HpBothEndsUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_SASInfoRight.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkillRight</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_SASInfoRightMove.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkillRight</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_SASInfoLeft.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+      <Filter>02.GameObjects\UI\Front\SASInfoLeft</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_SASInfoLeftMove.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+      <Filter>02.GameObjects\UI\Front\SASInfoLeft</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASInfoRightHpUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkillRight</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASInfoLeftHpUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+      <Filter>02.GameObjects\UI\Front\SASInfoLeft</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASInfoRightHpBackUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkillRight</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASInfoLeftHpBothEndsUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+      <Filter>02.GameObjects\UI\Front\SASInfoLeft</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASInfoRightHpBothEndsUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkillRight</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASInfoLeftHpBackUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+      <Filter>02.GameObjects\UI\Front\SASInfoLeft</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerInfo_PsychokinesisBackUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerInfo_PsychokinesisUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerInfo_GaugeBackGround.h">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_Tutorial.h">
       <Filter>02.GameObjects\UI\Tutorial</Filter>
@@ -832,7 +826,7 @@
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillNameUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GravikenisisMouseUI.h">
       <Filter>02.GameObjects\UI\3DUI</Filter>
@@ -910,31 +904,31 @@
     </ClInclude>
     <ClInclude Include="..\public\PlayerInfoManager.h" />
     <ClInclude Include="..\public\Canvas_Main.h">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_Party.h">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_MainItem.h">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_BrainMap.h">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_Equipment.h">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Main_PickUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Main_FaceUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Main_SkillIconUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Main_SkillNameUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClInclude>
     <ClInclude Include="..\public\FullUI.h">
       <Filter>02.GameObjects\UI</Filter>
@@ -1109,8 +1103,8 @@
     <ClInclude Include="..\public\Level_KineticEditor.h">
       <Filter>01.Levels\17.KineticEditor</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Level_ConstructionSite3F.h">
-      <Filter>01.Levels\02.GamePlay\02. ConstructionSite</Filter>
+    <ClInclude Include="..\public\Level_Stage1.h">
+      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GameManager.h">
       <Filter>30. GameManager</Filter>
@@ -1140,37 +1134,37 @@
       <Filter>02.GameObjects\Enemy\EMBullet\OilBullet</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Main_BarUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Item_Manager.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_ItemWindow.h">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ItemIconUI.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_MainItemKinds.h">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Main_OnMouseUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Main_BrainMapIconPickUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Main_OnMouseColorUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Main_BrainGaugeUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Main_BrainUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Main_OnePickUI.h">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerStartPosition.h" />
     <ClInclude Include="..\public\PostVFX_Teleport.h">
@@ -1224,7 +1218,7 @@
       <Filter>02.GameObjects\UI\Short</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Item_LightUI.h">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MouseCousorLightUI.h">
       <Filter>02.GameObjects\UI\Mouse</Filter>
@@ -1237,6 +1231,24 @@
     </ClInclude>
     <ClInclude Include="..\public\BulletBuilder.h">
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Purchase.h">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Shop.h">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PurchaseKinds.h">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PurchaseBattle.h">
+      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PurchaseWeapon.h">
+      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_ShopListBar.h">
+      <Filter>02.GameObjects\UI\Shop</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1372,28 +1384,28 @@
     <ClCompile Include="..\private\ScarletMap.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\Canvas_Drive.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+      <Filter>02.GameObjects\UI\Front\Drive</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_Item.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_PlayerInfo.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_SASSkill.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillIconUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillGaugeUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillLightUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillFullCircleUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Camera_Player.cpp">
       <Filter>02.GameObjects\Camera</Filter>
@@ -1473,46 +1485,46 @@
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\Psychokinesis.cpp" />
     <ClCompile Include="..\private\Canvas_SASSkillMove.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_PlayerInfoMove.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_DriveMove.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+      <Filter>02.GameObjects\UI\Front\Drive</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UI_Manager.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Drive_RightDotUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+      <Filter>02.GameObjects\UI\Front\Drive</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Drive_GaugeUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\Drive</Filter>
+      <Filter>02.GameObjects\UI\Front\Drive</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_NameUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_IconUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_GaugeUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_ItemMove.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_LeftArrowUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_PushArrowUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_RightArrowUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerInfo_HpUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapObject.cpp">
       <Filter>02.GameObjects\Map</Filter>
@@ -1557,49 +1569,49 @@
       <Filter>02.GameObjects\Monster\SkummyPandou\SkPd_Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerInfo_HpBackUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerInfo_HpBothEndsUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_SASInfoLeft.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+      <Filter>02.GameObjects\UI\Front\SASInfoLeft</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_SASInfoRight.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkillRight</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_SASInfoRightMove.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkillRight</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_SASInfoLeftMove.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+      <Filter>02.GameObjects\UI\Front\SASInfoLeft</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASInfoRightHpUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkillRight</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASInfoLeftHpUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+      <Filter>02.GameObjects\UI\Front\SASInfoLeft</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASInfoLeftHpBackUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+      <Filter>02.GameObjects\UI\Front\SASInfoLeft</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASInfoRightHpBackUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkillRight</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASInfoRightHpBothEndsUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkillRight</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkillRight</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASInfoLeftHpBothEndsUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASInfoLeft</Filter>
+      <Filter>02.GameObjects\UI\Front\SASInfoLeft</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerInfo_PsychokinesisUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerInfo_GaugeBackGround.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerInfo_PsychokinesisBackUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\PlayerInfo</Filter>
+      <Filter>02.GameObjects\UI\Front\PlayerInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_Tutorial.cpp">
       <Filter>02.GameObjects\UI\Tutorial</Filter>
@@ -1644,7 +1656,7 @@
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillNameUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\SASSkill</Filter>
+      <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GravikenisisMouseUI.cpp">
       <Filter>02.GameObjects\UI\3DUI</Filter>
@@ -1725,31 +1737,31 @@
     </ClCompile>
     <ClCompile Include="..\private\PlayerInfoManager.cpp" />
     <ClCompile Include="..\private\Canvas_Main.cpp">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_Party.cpp">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_Equipment.cpp">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_BrainMap.cpp">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_MainItem.cpp">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Main_PickUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Main_FaceUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Main_SkillIconUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Main_SkillNameUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\private\FullUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
@@ -1909,8 +1921,8 @@
     <ClCompile Include="..\private\Level_KineticEditor.cpp">
       <Filter>01.Levels\17.KineticEditor</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Level_ConstructionSite3F.cpp">
-      <Filter>01.Levels\02.GamePlay\02. ConstructionSite</Filter>
+    <ClCompile Include="..\private\Level_Stage1.cpp">
+      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GameManager.cpp">
       <Filter>30. GameManager</Filter>
@@ -1940,37 +1952,37 @@
       <Filter>02.GameObjects\Enemy\EMBullet\OilBullet</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Main_BarUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_Manager.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_ItemWindow.cpp">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ItemIconUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_MainItemKinds.cpp">
-      <Filter>02.GameObjects\UI\Main_UI\Canvas</Filter>
+      <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Main_OnMouseUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Main_BrainMapIconPickUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Main_OnMouseColorUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Main_BrainGaugeUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Main_BrainUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Main_OnePickUI.cpp">
-      <Filter>02.GameObjects\UI\Main_UI</Filter>
+      <Filter>02.GameObjects\UI\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerStartPosition.cpp" />
     <ClCompile Include="..\private\Special_HBeam_Bundle.cpp">
@@ -2042,7 +2054,7 @@
       <Filter>02.GameObjects\UI\Short</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_LightUI.cpp">
-      <Filter>02.GameObjects\UI\Front_UI\Item</Filter>
+      <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MouseCousorLightUI.cpp">
       <Filter>02.GameObjects\UI\Mouse</Filter>
@@ -2055,6 +2067,24 @@
     </ClCompile>
     <ClCompile Include="..\private\BulletBuilder.cpp">
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Shop.cpp">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Purchase.cpp">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PurchaseKinds.cpp">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PurchaseBattle.cpp">
+      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PurchaseWeapon.cpp">
+      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_ShopListBar.cpp">
+      <Filter>02.GameObjects\UI\Shop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

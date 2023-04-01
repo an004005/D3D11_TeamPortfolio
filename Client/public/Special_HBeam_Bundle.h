@@ -37,7 +37,7 @@ public:
 	void	HBeam_Single_Catch();
 	void	HBeam_Single_Turn();
 	void	HBeam_Single_Finish();
-	void	HBeam_Single_SetKinetic(_bool bKinetic);
+	void	HBeam_Single_SetTrigger(_bool bKinetic);
 
 	void	HBeam_Collision();
 	void	HBeam_Explosion();
@@ -63,7 +63,7 @@ private:
 	_bool	m_bThrow = false;
 	_bool	m_bRenderOption = true;	//	true¸é ¹øµé ·»´õ, false¸é ½Ì±Û ·»´õ
 	CDoOnce tt;
-	_float	m_fThrowPower = 2000.f;
+	_float	m_fThrowPower = 3000.f;
 	_float	m_fFloatPower = 11.5f;
 
 public:

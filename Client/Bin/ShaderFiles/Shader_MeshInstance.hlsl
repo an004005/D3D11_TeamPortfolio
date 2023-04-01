@@ -376,7 +376,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_PLAYER_KINETIC_PARTICLE();
+		PixelShader = compile ps_5_0 PS_BREAK_MESH();
 	}
 
 	pass EnemyDeadRose //6

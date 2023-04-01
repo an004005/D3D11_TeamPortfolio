@@ -13,6 +13,7 @@
 #include "Enemy.h"
 
 #include "MathUtils.h"
+#include "ParticleGroup.h"
 
 CSpecial_TankLorry_Trailer::CSpecial_TankLorry_Trailer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -210,8 +211,27 @@ void CSpecial_TankLorry_Trailer::Change_Tank(_uint iIdx)
 void CSpecial_TankLorry_Trailer::Create_Oil_Particle()
 {
 	//Truck_Oil_Particle_Loop
-	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Truck_Oil_Particle_Loop")->
-		Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+	for (_uint i = 0; i < 5; ++i)
+	{
+		if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pOil[i]))
+		{
+			m_pOil[i] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Truck_Oil_Particle_Loop");
+			m_pOil[i]->Start_AttachPosition_Scaling(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 
+				XMVectorSet(CMathUtils::RandomFloat(-1.f, 1.f),  1.f, CMathUtils::RandomFloat(-1.f, 1.f), 0.f), _float4(1.f, 1.f, 1.f, 0.f), false);
+		}
+	}
+}
+
+void CSpecial_TankLorry_Trailer::Release_Oil_Particle()
+{
+	for (_uint i = 0; i < 5; ++i)
+	{
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pOil[i]))
+		{
+			m_pOil[i]->Delete_Particles();
+			m_pOil[i] = nullptr;
+		}
+	}
 }
 
 HRESULT CSpecial_TankLorry_Trailer::SetUp_Components(void * pArg)

@@ -33,7 +33,7 @@ public:
 public:
 	void	Set_ChildMatrix(_float4x4 matrix);
 	void	Sync_position(CTransform* pTransform);
-	void	Set_Kinetic(_bool bKinetic);
+	void	Set_Trigger(_bool bTrigger);
 	void	Activate(_bool bActivate);
 
 private:

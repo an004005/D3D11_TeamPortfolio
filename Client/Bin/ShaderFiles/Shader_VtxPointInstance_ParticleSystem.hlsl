@@ -70,6 +70,12 @@ struct PS_OUT
 	float4		vColor : SV_TARGET0;
 };
 
+struct PS_OUT_FLAG
+{
+	float4		vColor : SV_TARGET0;
+	float4		vFlag  : SV_TARGET1;
+};
+
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
@@ -184,6 +190,32 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+PS_OUT_FLAG PS_DRIVEMODE_ONPARTICLE(PS_IN In)
+{
+	PS_OUT_FLAG			Out = (PS_OUT_FLAG)0;
+	float4 Default = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float fDissolve = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+
+	float4 Color = g_vec4_0;
+	float4 Blend = Default * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	Final.a = Mask.r * (fDissolve * In.RamainLifeRatio);
+	Out.vColor = CalcHDRColor(Final, g_float_0 * In.RamainLifeRatio);
+	Out.vColor.a *= In.RamainLifeRatio;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, Out.vColor.a);
+
+
+	// if (g_float_1 <= fDissolve)
+		// discard;
+
+	if (Out.vColor.a < 0.001f)
+		discard;
+
+	return Out;
+}
+
 PS_OUT PS_FLIPBOOK_EM320BULLET_TRAIL(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -210,6 +242,57 @@ PS_OUT PS_FLIPBOOK_EM320BULLET_TRAIL(PS_IN In)
 	Out.vColor.a = Default.r * g_float_1;
 
 	if (Out.vColor.a < 0.01f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT PS_EM1100_WATER_PARTICLE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float2 TEXUV = Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05f, 8, 8);
+	float4 Default = g_tex_0.Sample(LinearSampler, TEXUV);
+
+	float4 Color = g_vec4_0;
+
+	float4 BlendColor = Default * Color * 2.0;
+
+	float4 FinalColor = saturate(BlendColor );
+	FinalColor.a = Default.r;
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0); // color * emissive
+
+	Out.vColor.a = Default.r* g_float_1;
+
+	if (Out.vColor.a < 0.001f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT PS_EM1100_WATER_Dead(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float2 TEXUV = Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05f, 4, 4);
+	float4 Default = g_tex_0.Sample(LinearSampler, TEXUV);
+
+	float4 Color = g_vec4_0;
+
+	float4 BlendColor = Default * Color * 2.0;
+
+
+	float4 NormalTex = g_tex_1.Sample(LinearSampler, TEXUV);
+	NormalTex.xyz = NormalTex.xyz * 2.f - 1.f;
+
+	float4 vViewDir = g_vCamPosition - In.vPosition;
+	float fFresnel = FresnelEffect(NormalTex.xyz, vViewDir.xyz, 0.1f);
+
+	float4 FinalColor = saturate(BlendColor * fFresnel);
+	FinalColor.a = Default.r;
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0); // color * emissive
+
+	Out.vColor.a = Out.vColor.a *  In.RamainLifeRatio ;
+
+	if (Out.vColor.a < 0.001f)
 		discard;
 
 	return Out;
@@ -273,6 +356,31 @@ PS_OUT PS_PARTICLE_EM0650(PS_IN In)
 	if (Out.vColor.a <= 0.1f)
 		discard; 
 
+	return Out;
+}
+
+PS_OUT PS_EM1100_RAIN(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	// float GradientTex = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+	float4 Choose = g_vec4_0;
+	float4 BlendColor = DefaultTex * Choose * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0 * In.RamainLifeRatio); // color * emissive
+
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+
+	Out.vColor.a = Mask * In.RamainLifeRatio;
+
+	if (Mask <= 0.f)
+		discard;
+
+	if (Out.vColor.a <= 0.1f)
+		discard;
+	
 	return Out;
 }
 
@@ -366,6 +474,23 @@ PS_OUT PS_FLIPBOOK_SMOKE_8x8(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 8, 8));
+	float4 vColor = g_vec4_0;
+
+	float4 BlendColor = flipBook * vColor * 2.0f;
+
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = FinalColor;
+	Out.vColor.a = flipBook.a * In.RamainLifeRatio * g_float_0;
+
+	return Out;
+}
+
+PS_OUT PS_FLIPBOOK_SMOKE_4x4(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 flipBook = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 4, 4));
 	float4 vColor = g_vec4_0;
 
 	float4 BlendColor = flipBook * vColor * 2.0f;
@@ -592,7 +717,7 @@ PS_OUT PS_USE_MESHCURVE(PS_IN In)
 	Out.vColor = CalcHDRColor(Final, g_float_0);
 	Out.vColor.a = Mask * g_float_1 * In.RamainLifeRatio;
 
-	if (g_float_1 <= 0.f || Out.vColor.a <= 0.1f)
+	if (g_float_1 <= 0.f || Out.vColor.a <= 0.2f)
 	{
 		discard;
 	}
@@ -1033,5 +1158,75 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SPECIAL_TRUCK_EXPLODE();
+	}
+
+	//24
+	pass EM1100WaterParticle
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_WATER_PARTICLE();
+	}
+
+	//25
+	pass Em1100Water_RainParticle
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_RAIN();
+	}
+
+	//26
+	pass EM1100WaterDead
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1100_WATER_Dead();
+	}
+
+	//27
+	pass FlipSmoke4x4
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_FLIPBOOK_SMOKE_4x4();
+	}
+
+	//28
+	pass Sas_DriveMode_OnParticle
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DRIVEMODE_ONPARTICLE();
 	}
 }

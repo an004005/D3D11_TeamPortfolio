@@ -2,8 +2,8 @@
 #include "..\public\MonsterShildUI.h"
 #include "GameInstance.h"
 #include "JsonStorage.h"
-#include "EffectGroup.h"
 #include "EffectSystem.h"
+#include "VFX_Manager.h"
 
 CMonsterShildUI::CMonsterShildUI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -28,19 +28,36 @@ HRESULT CMonsterShildUI::Initialize(void * pArg)
 	if (FAILED(CGameObject::Initialize(pArg)))
 		return E_FAIL;
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterShild.json");
-	m_pGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_MonsterShild", L"ProtoVFX_EffectGroup", &json));
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/MonsterShild.json");
+	//m_pGroup = dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_MonsterShild", L"ProtoVFX_EffectGroup", &json));
 
-	Safe_AddRef(m_pGroup);
-	Assert(m_pGroup != nullptr);
+	//Safe_AddRef(m_pGroup);
+	//Assert(m_pGroup != nullptr);
 
 	return S_OK;
+}
+
+void CMonsterShildUI::BeginTick()
+{
+	m_pGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"MonsterShild", PLAYERTEST_LAYER_FRONTUI);
+	m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"BossName", PLAYERTEST_LAYER_FRONTUI);
+
+	Safe_AddRef(m_pGroup);
+	Safe_AddRef(m_pMonsterName);
+
+	Assert(m_pGroup != nullptr);
+	Assert(m_pMonsterName != nullptr);
+
+	m_pGroup->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
+	m_pMonsterName->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
+
+	m_pMonsterName->GetSecondEffect()->GetParams().Float2s[0] = { _float(m_iMonsterLevel - 1), _float(m_eMonsterName) };
 }
 
 void CMonsterShildUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-	m_pGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
+	//m_pGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
 
 	HpBack_Tick(TimeDelta);
 }
@@ -59,13 +76,21 @@ void CMonsterShildUI::Imgui_RenderProperty()
 	}
 }
 
+void CMonsterShildUI::Set_MonsterInfo(const _int iLevel, const EEnemyName eName)
+{
+	m_iMonsterLevel = iLevel;
+	m_eMonsterName = eName;
+}
+
 void CMonsterShildUI::SetShild(const _float & fHP, const _float & fShild)
 {
 	// 2: Hp, 3: HpBack, 4: Shild
 	//m_pGroup->GetSecondEffect()->GetParams().Floats[0] = fHP;
-	m_fHpBack = fHP;
+	//m_fHpBack = fHP;
 	m_pGroup->GetThirdEffect()->GetParams().Floats[0] = fHP;
 	m_pGroup->GetFourthEffect()->GetParams().Floats[0] = fShild;
+
+	m_fHpBack = fHP;
 }
 
 void CMonsterShildUI::HpBack_Tick(const _double & TimeDelta)
@@ -109,8 +134,20 @@ CGameObject * CMonsterShildUI::Clone(void * pArg)
 void CMonsterShildUI::Free()
 {
 	__super::Free();
-	if (m_pGroup != nullptr && m_pGroup->IsDeleted() == false)
-		m_pGroup->SetDelete();
 
-	Safe_Release(m_pGroup);
+	if (m_bCloned)
+	{
+		if (m_pGroup != nullptr)
+		{
+			m_pGroup->SetDelete();
+			Safe_Release(m_pGroup);
+		}
+
+
+		if (m_pMonsterName != nullptr)
+		{
+			m_pMonsterName->SetDelete();
+			Safe_Release(m_pMonsterName);
+		}
+	}
 }
