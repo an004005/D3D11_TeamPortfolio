@@ -249,13 +249,45 @@ void CParticleGroup::Start_AttachSword(CGameObject* pWeapon, _bool trueisUpdate)
 	m_bGenerate = true;
 }
 
+void CParticleGroup::Start_AttachSpecificPos(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate)
+{
+	// 트랜스폼으로부터 받은 위치로부터 vPosition 위치와 vDirection 방향으로 파티클 생성
+
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_AttachPos = vPosition;
+	m_AttachDir = vDirection;
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z);
+
+		_vector		vUp = XMVector3Normalize(vDirection);
+		_vector		vRight = XMVector3Normalize(XMVector3Cross(vUp, XMVectorSet(0.f, 0.f, 1.f, 0.f)));
+		_vector		vLook = XMVector3Normalize(XMVector3Cross(vRight, vUp));
+
+		SocketMatrix.r[0] = vRight;
+		SocketMatrix.r[1] = vUp;
+		SocketMatrix.r[2] = vLook;
+
+		Set_Transform(SocketMatrix);
+	}
+
+	m_bGenerate = true;
+}
 
 void CParticleGroup::Set_Transform(_matrix socket)
 {
 	for(auto iter : m_mapParticleSystem)
 	{
 		if (iter.second.second != nullptr)
-			iter.second.second->GetTransform()->Set_WorldMatrix(socket);
+ 			iter.second.second->GetTransform()->Set_WorldMatrix(socket);
 	}
 }
 

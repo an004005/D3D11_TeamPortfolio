@@ -105,7 +105,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDiffuse = (float4)1.f;
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, 0.f);
+	Out.vFlag = float4(0.f, SHADER_POST_TOON, SHADER_TOON_GRAY_INGNORE, 0.f);
 	return Out;
 }
 
@@ -208,7 +208,7 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 
 
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
-	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, fTeleportDissolve);
+	Out.vFlag = float4(0.f, SHADER_POST_TOON, SHADER_TOON_GRAY_INGNORE, fTeleportDissolve);
 
 	return Out;
 }
@@ -249,7 +249,7 @@ PS_OUT PS_WIRE_2(PS_IN In)
 	float fFresnel = FresnelEffect(vNormal, normalize(vViewDir.xyz), 0.5f);
 	float4 vWhite = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vDiffuse = lerp(vWhite, Out.vDiffuse, fFresnel);
-	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, fTeleportDissolve);
+	Out.vFlag = float4(0.f, SHADER_POST_TOON, SHADER_TOON_GRAY_INGNORE, fTeleportDissolve);
 
 	return Out;
 }
@@ -475,7 +475,7 @@ PS_OUT PS_SAS_CABLE_9(PS_IN In)
 
 
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
-	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, fTeleportDissolve);
+	Out.vFlag = float4(0.f, SHADER_POST_TOON, SHADER_TOON_GRAY_INGNORE, fTeleportDissolve);
 
 	return Out;
 }

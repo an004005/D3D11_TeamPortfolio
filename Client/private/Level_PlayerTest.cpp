@@ -54,6 +54,8 @@
 #include "Special_Train.h"
 #include "Imgui_Batch.h"
 #include "SAS_Cable.h"
+#include "GameManager.h"
+#include "Imgui_CamAnimEditor.h"
 
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -72,6 +74,7 @@ HRESULT CLevel_PlayerTest::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_EffectBrowser::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CamAnimEditor::Create(m_pDevice, m_pContext));
 
 //	CVFX_Manager::GetInstance()->Initialize(LEVEL_PLAYERTEST);
 
@@ -118,6 +121,8 @@ HRESULT CLevel_PlayerTest::Initialize()
 	m_BGM.CloneSound("Attention Please"); 
 	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
 	m_BGM.CloneSound("The OSF -Advance"); // 기본 bgm
+
+	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -438,7 +443,7 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Batch(const _tchar * pLayerTag)
 	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_Tutorial.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));
 
-	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Boss_HBeams.json");
+	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Boss_HBeams.json");
 
 	return S_OK;
 }
@@ -450,8 +455,8 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/KineticTestMap.json");
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json"); // Map_ConstructionSite3F
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Subway.json");
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Hospital_1F.json");
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Hospital_1F.json");
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
 	//"../Bin/Resources/Objects/Map/Map_Hospital_1F.json"
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
@@ -461,8 +466,7 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 HRESULT CLevel_PlayerTest::Ready_Layer_Kinetic(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
-	pGameInstance->Add_EmptyLayer(LEVEL_NOW, pLayerTag);
+	
 
 	//Json Test;
 	//Test["ModelTags"] = "../Bin/Resources/Model/AnimModel/Kinetic/Train/Train.anim_model";
@@ -618,4 +622,6 @@ CLevel_PlayerTest* CLevel_PlayerTest::Create(ID3D11Device* pDevice, ID3D11Device
 void CLevel_PlayerTest::Free()
 {
 	CLevel::Free();
+
+	CGameManager::GetInstance()->DestroyInstance();
 }

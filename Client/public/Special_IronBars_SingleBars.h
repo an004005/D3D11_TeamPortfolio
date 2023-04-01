@@ -34,10 +34,12 @@ public:
 	void	Attack_BoneMatrix_SetPoint(CModel* pModel, CTransform* pTransform, const string& strBoneName, _float4 vPoint);
 	void	Lerp_BoneMatrix(CModel* pModel, CTransform* pTransform, const string& strBoneName, _float4 vPoint, _float fRatio);
 
-	void	Set_Kinetic(_bool bKinetic);
+	void	Set_Trigger(_bool bTrigger);
 	void	Calculate_TargetDir(_float4 vTargetPos, _float fRatio);	// 위치값과 보간값 넣어주면 방향 계산하여 보간함
 	void	Shooting(_float4 vTargetPos);
 	void	Reloading(_float4 vDestPos, _float4 vTargetPos, _float fRatio);
+
+	void	Activate(_bool bActivate);
 
 private:
 	HRESULT	SetUp_Components(void* pArg);

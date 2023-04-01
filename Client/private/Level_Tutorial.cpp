@@ -79,9 +79,6 @@ HRESULT CLevel_Tutorial::Initialize()
 void CLevel_Tutorial::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-
-	CGameManager_Tutorial::GetInstance()->Tick(TimeDelta);
-
 }
 
 void CLevel_Tutorial::Late_Tick(_double TimeDelta)
@@ -271,6 +268,4 @@ CLevel_Tutorial * CLevel_Tutorial::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 void CLevel_Tutorial::Free()
 {
 	__super::Free();
-
-	CGameManager_Tutorial::GetInstance()->DestroyInstance();
 }

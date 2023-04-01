@@ -176,6 +176,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 																
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Hospital_1F.json");
+		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Hospital_1F.json");		// Map_Hospital_1F
 		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Subway.json");			// Map_Subway
 		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_FinalBossStage.json");	// Map_FinalBossStage
 		//= CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Test.json");				// Map_Test

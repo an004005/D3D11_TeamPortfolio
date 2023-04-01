@@ -248,18 +248,6 @@ void CMapKinetic_Object::Imgui_RenderProperty()
 		CImguiUtils::Render_Guizmo(&m_LocalMatrix, tInfo, true, true);
 	}
 
-
-	if (ImGui::Button("Kinetic Object Reset"))
-	{
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, -30.f, 0.f, 1.f));
-		m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(180.f) });
-
-		m_pCollider->Activate(true);
-		m_pCollider->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
-		m_pCollider->Set_Kinetic(true);
-		m_pCollider->UpdateChange();
-	}
-
 	if (ImGui::BeginListBox("ModelTagList"))
 	{
 		_uint i = 0;
@@ -295,8 +283,9 @@ const wstring & CMapKinetic_Object::Get_ModelTag()
 
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 {
- 	m_pCollider->Set_Kinetic(false);
-	m_pCollider->UpdateChange();
+ 	//m_pCollider->Set_Kinetic(false);
+	m_pCollider->Set_Trigger(false);
+	//m_pCollider->UpdateChange();
 
 	m_pCollider->AddVelocity(vForce);
 	m_pCollider->AddTorque(vTorque);
@@ -306,6 +295,11 @@ void CMapKinetic_Object::Set_Kinetic(_bool bKinetic)
 {
 	m_pCollider->Set_Kinetic(bKinetic);
 	m_pCollider->UpdateChange();
+}
+
+void CMapKinetic_Object::Set_Trigger(_bool bTrigger)
+{
+	m_pCollider->Set_Trigger(bTrigger);
 }
 
 void CMapKinetic_Object::Reset_Transform()

@@ -31,6 +31,7 @@ public:
 
 public:
 	void	Sync_position(CTransform* pTransform);
+	void	Set_Trigger(_bool bTrigger);
 	void	Set_Kinetic(_bool bKinetic);
 	void	HBeam_Turn();
 	void	HBeam_Finish();

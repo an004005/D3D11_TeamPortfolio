@@ -28,8 +28,11 @@
 #include "Material.h"
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
+
 #include "MonsterLockonUI.h"
 #include "MonsterHpUI.h"
+#include "MonsterShildUI.h"
+
 #include "NoticeNeonUI.h"
 #include "JsonLib.h"
 #include "ImguiUtils.h"
@@ -46,6 +49,7 @@
 #include "Special_DropObject_Bundle.h"
 #include "Special_TankLorry.h"
 #include "Special_IronBars.h"
+#include "Special_Container.h"
 
 #include "Enemy.h"
 #include "PostVFX_Penetrate.h"
@@ -110,6 +114,12 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_EffectEvent()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_ProductionEvent()))
+		return E_FAIL;
+
+	if (FAILED(SetUp_DriveModeProductionStateMachine()))
+		return E_FAIL;
+
 	if (FAILED(Setup_KineticStateMachine()))
 		return E_FAIL;
 
@@ -156,6 +166,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 		return E_FAIL;
 
 	if (FAILED(SetUp_IronBarsStateMachine()))
+		return E_FAIL;
+
+	if (FAILED(SetUp_ContainerStateMachine()))
 		return E_FAIL;
 
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
@@ -243,6 +256,8 @@ void CPlayer::Tick(_double TimeDelta)
 	m_pModel->Tick(TimeDelta);
 	m_pTrail->Tick(TimeDelta);
 
+	Production_Tick(TimeDelta);
+
 	if (m_bOnBattle)
 	{
 		CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(0);
@@ -296,6 +311,9 @@ void CPlayer::Tick(_double TimeDelta)
 	MoveStateCheck(TimeDelta);
 	BehaviorCheck(TimeDelta);
 
+	// µå¶óÀÌºê¸ðµå ¿¬Ãâ, ÃÖ¿ì¼±Àû
+	m_pDriveModeProductionStateMachine->Tick(TimeDelta);
+
 	// SAS?¹ìˆ˜
 	if (CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_TELEPORT)) 
 		m_pTeleportStateMachine->Tick(TimeDelta);
@@ -305,7 +323,6 @@ void CPlayer::Tick(_double TimeDelta)
 
 	HitCheck();
 
-	// ë¸Œë ˆ???¬ëŸ¬??
 	m_pBrainCrashStateMachine->Tick(TimeDelta);
 
 	// ?¹ìˆ˜ê¸?
@@ -314,7 +331,7 @@ void CPlayer::Tick(_double TimeDelta)
 		SpecialObject_Targeting();
 	}
 
-	if (!m_bHit)
+	if (!m_bHit && !m_bBrainCrash)
 	{
 		if (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject())
 		{
@@ -347,18 +364,30 @@ void CPlayer::Tick(_double TimeDelta)
 			{
 				m_pIronBarsStateMachine->Tick(TimeDelta);
 			}
+
+			else if (SPECAIL_CONTAINER == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
+			{
+				m_pContainerStateMachine->Tick(TimeDelta);
+			}
+		}
+
+		if (static_cast<CCamSpot*>(m_pCamSpot)->GetCamMod() == CCamSpot::MOD_ATTACH &&
+			nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+		{
+			m_pTransformCom->LookAt_NonY(CPlayerInfoManager::GetInstance()->Get_TargetedMonster()
+				->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 		}
 	}
 	// ~?¹ìˆ˜ê¸?
 
-	if(!m_bHit)
+	if(!m_bHit && !m_bBrainCrash)
 		m_pJustDodgeStateMachine->Tick(TimeDelta);
 
-	if (!m_bHit && (false == m_bKineticCombo) && (false == m_bKineticSpecial)) // ì½¤ë³´ ?€?´ë°???„ë‹ ?Œì—???¼ë°˜ ?¼ë ¥
+	if (!m_bHit && (false == m_bKineticCombo) && (false == m_bKineticSpecial) && !m_bBrainCrash) // ì½¤ë³´ ?€?´ë°???„ë‹ ?Œì—???¼ë°˜ ?¼ë ¥
 	{
 		m_pKineticStataMachine->Tick(TimeDelta);
 	}
-	if (!m_bHit && (false == m_bKineticSpecial)) // ì½¤ë³´ ?€?´ë°?ëŠ” ì½¤ë³´ ?¼ë ¥
+	if (!m_bHit && (false == m_bKineticSpecial) && !m_bBrainCrash) // ì½¤ë³´ ?€?´ë°?ëŠ” ì½¤ë³´ ?¼ë ¥
 	{
 		m_pKineticComboStateMachine->Tick(TimeDelta);
 		//m_pKineticStataMachine->SetState("NO_USE_KINETIC");
@@ -375,6 +404,8 @@ void CPlayer::Tick(_double TimeDelta)
 		m_pDropObjectStateMachine->SetState("DROP_NOUSE");
 		m_pTeleportStateMachine->SetState("TELEPORTATTACK_NOUSE");
 		m_pTankLorryStateMachine->SetState("TANKLORRY_NOUSE");
+		m_pIronBarsStateMachine->SetState("IRONBARS_NOUSE");
+		m_pContainerStateMachine->SetState("CONTAINER_NOUSE");
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false);
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, false);
 		static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
@@ -451,46 +482,11 @@ void CPlayer::Tick(_double TimeDelta)
 
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	/*if (pGameInstance->KeyDown(DIK_NUMPAD1))
-	{
-		list<CAnimation*> TestAnim;
-		TestAnim.push_back(m_pModel->Find_Animation("AS_BC_em_common_ch0100_end"));
-		m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
-	}
-	if (pGameInstance->KeyPressing(DIK_NUMPAD2))
-	{
-		static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
-	}
-	*/
 	SocketLocalMoveCheck();
 
 	if (pGameInstance->KeyDown(DIK_F1))
 	{
-		m_bHit = true;
-		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
-		m_DamageDesc.m_iDamageType = EAttackType::ATK_LIGHT;
-	}
-	if (pGameInstance->KeyDown(DIK_F2))
-	{
-		m_bHit = true;
-		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
-		m_DamageDesc.m_iDamageType = EAttackType::ATK_MIDDLE;
-	}
-	if (pGameInstance->KeyDown(DIK_F3))
-	{
-		m_bHit = true;
-		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
-		m_DamageDesc.m_iDamageType = EAttackType::ATK_HEAVY;
-	}
-	if (pGameInstance->KeyDown(DIK_F4))
-	{
-		m_bHit = true;
-		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
-		m_DamageDesc.m_iDamageType = EAttackType::ATK_TO_AIR;
+		static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
 	}
 
 	CPlayerInfoManager::GetInstance()->Set_PlayerWorldMatrix(m_pTransformCom->Get_WorldMatrix());
@@ -589,15 +585,15 @@ void CPlayer::AfterPhysX()
 	m_pCamSpot->SetUp_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
 	m_pRange->Update_Tick(m_pTransformCom);
 
-	// if (CGameInstance::GetInstance()->KeyDown(DIK_0))
-	// {
-	// 	list<CAnimation*> TestAnim;
-	// 	TestAnim.push_back(m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100"));
-	// 	m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
-	//
-	// 	auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("DriveModeCam");
-	// 	m_pPlayer_AnimCam->StartCamAnim_Return(pCamAnim, m_pPlayerCam, m_pTransformCom->Get_WorldMatrix_f4x4());
-	// }
+	 //if (CGameInstance::GetInstance()->KeyDown(DIK_0))
+	 //{
+	 //	list<CAnimation*> TestAnim;
+	 //	TestAnim.push_back(m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100"));
+	 //	m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
+		//
+	 //	auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("DriveModeCam");
+	 //	m_pPlayer_AnimCam->StartCamAnim_Return(pCamAnim, m_pPlayerCam, m_pTransformCom->Get_WorldMatrix_f4x4(), m_fCameraLerpTime_In, m_fCameraLerpTime_Out);
+	 //}
 }
 
 HRESULT CPlayer::Render()
@@ -630,7 +626,7 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 		IM_LOG("No Damage");
 		CPlayerInfoManager::GetInstance()->Change_SasEnergy(CHANGETYPE::CHANGE_DECREASE, ESASType::SAS_HARDBODY, 10.f);
 	}
-	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate)
+	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate || m_bDriveMode_Activate || m_bBrainCrash)
 	{
 		IM_LOG("JustDodge Activate")
 	}
@@ -656,6 +652,33 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 void CPlayer::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	if (ImGui::CollapsingHeader("ProductionTool"))
+	{
+		if (ImGui::Button("DriveMode_Start"))
+		{
+			list<CAnimation*> TestAnim;
+			TestAnim.push_back(m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100"));
+			m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
+
+			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("DriveModeCam");
+			m_pPlayer_AnimCam->StartCamAnim_Return(pCamAnim, m_pPlayerCam, m_pTransformCom->Get_WorldMatrix_f4x4(), m_fCameraLerpTime_In, m_fCameraLerpTime_Out);
+		}
+
+		ImGui::Checkbox("ZoomMode", &m_bCamZoom);
+
+		ImGui::SliderFloat("CamLerp_In", &m_fCameraLerpTime_In, 0.f, 5.f);
+		ImGui::SliderFloat("CamLerp_Out", &m_fCameraLerpTime_Out, 0.f, 5.f);
+	}
+
+	if (ImGui::Button("Production_Clear"))
+	{
+		m_pModel->FindMaterial(L"MI_ch0100_HOOD_0")->SetActive(false);
+		m_pModel->FindMaterial(L"MI_ch0100_BODY_0")->GetParam().Ints[1] = 0;
+		m_pModel->FindMaterial(L"MI_ch0100_HAIR_0")->SetActive(true);
+		m_pModel->FindMaterial(L"MI_ch0100_HAIR_1")->SetActive(true);
+		m_bDriveMask = false;
+	}
 
 	ImGui::SliderFloat("ThrowPoint_X", &m_vIronBars_ThrowPoins.x, -5.f, 5.f);
 	ImGui::SliderFloat("ThrowPoint_Y", &m_vIronBars_ThrowPoins.y, -5.f, 5.f);
@@ -1280,6 +1303,105 @@ void CPlayer::ElecSweep()
 	}
 }
 
+void CPlayer::CamZoom(_double TimeDelta)
+{
+	if (m_bCamZoom)
+	{
+		m_bZoomIsFinish = static_cast<CCamSpot*>(m_pCamSpot)->Cam_Closer(TimeDelta, m_fCameraLerpTime_In);
+	}
+	else
+	{
+		m_bZoomIsFinish = static_cast<CCamSpot*>(m_pCamSpot)->Cam_Away(TimeDelta, m_fCameraLerpTime_Out);
+	}
+}
+
+HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
+{
+	m_pDriveModeProductionStateMachine = 
+		CFSMComponentBuilder().InitState("DRIVEMODE_NOUSE")
+		.AddState("DRIVEMODE_NOUSE")
+		.OnStart([&]()
+		{
+			m_bZoomIsFinish = false;
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_bDriveMode_Activate = false;
+		})
+		.OnExit([&]()
+		{
+
+		})
+			.AddTransition("DRIVEMODE_NOUSE to DRIVEMODE_CAM_CLOSER", "DRIVEMODE_CAM_CLOSER")
+			.Predicator([&]()->_bool {return CGameInstance::GetInstance()->KeyDown(DIK_M); })
+			.Priority(0)
+
+		.AddState("DRIVEMODE_CAM_CLOSER")
+		.OnStart([&]()
+		{
+			m_bDriveMode_Activate = true;
+			m_bZoomIsFinish = false;
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_bZoomIsFinish = static_cast<CCamSpot*>(m_pCamSpot)->Cam_Closer(fTimeDelta, 0.3f);
+		})
+		.OnExit([&]()
+		{
+
+		})
+			.AddTransition("DRIVEMODE_CAM_CLOSER to DRIVEMODE_ANIMCAM_START", "DRIVEMODE_ANIMCAM_START")
+			.Predicator([&]()->_bool {return m_bZoomIsFinish; })
+			.Priority(0)
+
+		.AddState("DRIVEMODE_ANIMCAM_START")
+		.OnStart([&]()
+		{
+			list<CAnimation*> TestAnim;
+			TestAnim.push_back(m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100"));
+			m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
+
+			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("DriveModeCam");
+			m_pPlayer_AnimCam->StartCamAnim_Return(pCamAnim, m_pPlayerCam, m_pTransformCom->Get_WorldMatrix_f4x4(), m_fCameraLerpTime_In, m_fCameraLerpTime_Out);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+
+		})
+		.OnExit([&]()
+		{
+
+		})
+			.AddTransition("DRIVEMODE_ANIMCAM_START to DRIVEMODE_CAM_AWAY", "DRIVEMODE_CAM_AWAY")
+			.Predicator([&]()->_bool {return m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100")->IsFinished(); })
+			.Priority(0)
+
+		.AddState("DRIVEMODE_CAM_AWAY")
+		.OnStart([&]()
+		{
+			list<CAnimation*> TestAnim;
+			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_299_AL_enpc_drive_mode"));
+			m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
+
+			m_bZoomIsFinish = false;
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_bZoomIsFinish = static_cast<CCamSpot*>(m_pCamSpot)->Cam_Away(fTimeDelta, 0.f);
+		})
+		.OnExit([&]()
+		{
+
+		})
+			.AddTransition("DRIVEMODE_CAM_AWAY to DRIVEMODE_NOUSE", "DRIVEMODE_NOUSE")
+			.Predicator([&]()->_bool {return m_bZoomIsFinish; })
+			.Priority(0)
+
+
+		.Build();
+	return S_OK;
+}
+
 HRESULT CPlayer::SetUp_Components(void * pArg)
 {
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
@@ -1321,6 +1443,7 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_SuperSpeedTrail", L"SuperSpeedTrail", (CComponent**)&m_pTrail));
 	m_pTrail->SetOwnerModel(m_pModel);
 	//m_pTrail->SetActive(true);
+
 
 	return S_OK;
 }
@@ -2677,7 +2800,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			if (CPlayerInfoManager::GetInstance()->Get_KineticObject())
 			{
 				m_KineticObjectOrigionPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
-				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Kinetic(true);
+				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Trigger(true);
 			}
 
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
@@ -2864,7 +2987,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
 			{
 				m_KineticObjectOrigionPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
-				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Kinetic(true);
+				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Trigger(true);
 			}
 
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
@@ -3041,7 +3164,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
 			{
 				m_KineticObjectOrigionPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
-				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Kinetic(true);
+				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Trigger(true);
 			}
 
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
@@ -3219,7 +3342,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
 			{
 				m_KineticObjectOrigionPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
-				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Kinetic(true);
+				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Trigger(true);
 			}
 
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
@@ -3348,7 +3471,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 				if (CPlayerInfoManager::GetInstance()->Get_KineticObject())
 				{
 					m_KineticObjectOrigionPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
-					static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Kinetic(true);
+					static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Trigger(true);
 				}
 
 				if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
@@ -3640,6 +3763,83 @@ HRESULT CPlayer::SetUp_Sound()
 	m_pModel->Add_EventCaller("fx_kinetic_backdash", [this] {m_SoundStore.PlaySound("fx_kinetic_backdash", m_pTransformCom); });
 
 	return S_OK;
+}
+
+HRESULT CPlayer::SetUp_ProductionEvent()
+{
+	m_pModel->Add_EventCaller("Hood_Active_On", [this]
+	{
+		m_pModel->FindMaterial(L"MI_ch0100_HOOD_0")->SetActive(true);
+		m_pModel->FindMaterial(L"MI_ch0100_BODY_0")->GetParam().Ints[1] = 1;
+	});
+
+	m_pModel->Add_EventCaller("Hood_Active_Off", [this]
+	{
+		m_pModel->FindMaterial(L"MI_ch0100_HOOD_0")->SetActive(false);
+		m_pModel->FindMaterial(L"MI_ch0100_BODY_0")->GetParam().Ints[1] = 0;
+	});
+
+	m_pModel->Add_EventCaller("Mask_Dissolve_On", [this]
+	{
+		m_bDriveMask = true;
+	});
+
+	m_pModel->Add_EventCaller("Mask_Dissolve_Off", [this]
+	{
+		m_bDriveMask = false;
+	});
+
+	m_pModel->Add_EventCaller("Hair_Active_On", [this]
+	{
+		m_pModel->FindMaterial(L"MI_ch0100_HAIR_0")->SetActive(true);
+		m_pModel->FindMaterial(L"MI_ch0100_HAIR_1")->SetActive(true);
+	});
+
+	m_pModel->Add_EventCaller("Hair_Active_Off", [this]
+	{
+		m_pModel->FindMaterial(L"MI_ch0100_HAIR_0")->SetActive(false);
+		m_pModel->FindMaterial(L"MI_ch0100_HAIR_1")->SetActive(false);
+	});
+
+	m_pModel->Add_EventCaller("DriveMode_Effect", [this]
+	{
+		_matrix matEffect = XMMatrixScaling(0.4f, 0.4f, 0.4f) * XMMatrixTranslation(0.f, 0.01f, -0.04f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Sas_DriveMode_Effect")->Start_AttachPivot(this, matEffect, "Mask", true);
+	});
+	m_pModel->Add_EventCaller("DriveMode_Particle", [this]
+	{
+		_matrix matParticle = XMMatrixScaling(1.5f, 1.f, 2.f) * XMMatrixRotationX(XMConvertToRadians(-5.f)) * XMMatrixTranslation(0.f, -0.275f, 1.f);
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Sas_DriveMode_Particle")->Start_AttachPivot(this, matParticle, "Mask", true, false, true);
+	});
+
+	return S_OK;
+}
+
+void CPlayer::Production_Tick(_double TimeDelta)
+{
+	DriveMaskDissolve(TimeDelta);
+
+	//CamZoom(TimeDelta);
+}
+
+void CPlayer::DriveMaskDissolve(_double TimeDelta)
+{
+	if (m_bDriveMask)
+	{
+		if (1.f >= m_fMaskDissolve)
+		{
+			m_fMaskDissolve = min(m_fMaskDissolve + (TimeDelta / 0.8f), 1.f);
+			m_pModel->FindMaterial(L"MI_ch0100_MASK_0")->GetParam().Floats[3] = m_fMaskDissolve;
+		}
+	}
+	else
+	{
+		if (0.f < m_fMaskDissolve)
+		{
+			m_fMaskDissolve = max(m_fMaskDissolve - (TimeDelta / 0.8f), 0.f);
+			m_pModel->FindMaterial(L"MI_ch0100_MASK_0")->GetParam().Floats[3] = m_fMaskDissolve;
+		}
+	}
 }
 
 HRESULT CPlayer::SetUp_AttackDesc()
@@ -4312,7 +4512,6 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			
 		})
 		.OnExit([&]()
 		{
@@ -4632,10 +4831,15 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		})
 		.OnExit([&]()
 		{
-
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 		})
 			.AddTransition("BRAINCRASH_NOUSE to BRAINCRASH_CUTSCENE", "BRAINCRASH_CUTSCENE")
-			.Predicator([&]()->_bool { return CGameInstance::GetInstance()->KeyDown(DIK_H); })
+			.Predicator([&]()->_bool 
+			{ 
+				if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return false;
+				return m_bKineticG && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Decide_PlayBrainCrush();
+			})
 			.Priority(0)
 
 		.AddState("BRAINCRASH_CUTSCENE")
@@ -4856,7 +5060,7 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		{
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_End_L);
-			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_SetKinetic(true);
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_SetTrigger(true);
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Finish();
 		})
 		.Tick([&](double fTimeDelta)
@@ -5013,7 +5217,7 @@ HRESULT CPlayer::SetUp_DropObjectStateMachine()
 			m_bKineticSpecial_Activate = true;
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_DropObject_Drop);
 
-			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Set_Kinetic(false);
+			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Set_Trigger(false);
 			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->DropObject_Floating();
 		})
 		.Tick([&](double fTimeDelta)
@@ -5103,7 +5307,7 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject())
 			{
 				static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
-					->TankLorry_Shake(15.f * m_fKineticCharge);
+					->TankLorry_Shake(10.f * m_fKineticCharge);
 
 				if (1.f <= m_fKineticCharge && TankLorry.IsNotDo())
 				{
@@ -5111,6 +5315,8 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 						->TankLorry_Bounce(100.f);
 					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
 						->TankLorry_Cheage_TankIndex(2);
+					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+						->TankLorry_Create_OilParticle();
 				}
 			}
 
@@ -5157,7 +5363,7 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 				if (!m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.38f))
 				{
 					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
-						->TankLorry_Shake(30.f);
+						->TankLorry_Shake(20.f);
 				}
 
 				if (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.17f) && TankLorry.IsNotDo())
@@ -5166,6 +5372,16 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 						->TankLorry_Bounce(100.f);
 					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
 						->TankLorry_Cheage_TankIndex(3);
+					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+						->TankLorry_Release_OilParticle();
+					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+						->TankLorry_Explosion_Effect();
+				}
+
+				if (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.35f) && TankLorry_Effect.IsNotDo())
+				{
+					static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+						->TankLorry_Explosion_Particle();
 				}
 
 				if (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.38f) && TankLorry_Exploision.IsNotDo())
@@ -5182,6 +5398,7 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 		{
 			TankLorry.Reset();
 			TankLorry_Exploision.Reset();
+			TankLorry_Effect.Reset();
 			m_fKineticCharge = 0.f;
 		})
 			.AddTransition("TANKLORRY_FINISH to TANKLORRY_NOUSE", "TANKLORRY_NOUSE")
@@ -5595,9 +5812,6 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			// ?„ìª½?¼ë¡œ ?¬ë¼ê°€???œê°„?™ì•ˆ ë³´ê°„?˜ì—¬ ?„ì¹˜ ?¡ê³  ë©”ì‹œ ë³€ê²?
-			// ? ë‹ˆë©”ì´?˜ì— ?œì›Œ??ë°œì‚¬
-
 			if (nullptr != m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket"))
 			{
 				_float fPlayTime = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayTime();
@@ -5607,24 +5821,26 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 
 				_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio();
 
-				if (0.2f > fRatio)
+				if (0.3f > fRatio)
 				{
-					// 0.2ë¡?ë³´ì •
 					_float fDuration = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetCurDuration();
 					m_pKineticAnimModel->GetPlayAnimation()->Update_Bones_SyncRatio_NonLocalLock(fDuration * 0.2f);
 					m_pKineticAnimModel->Compute_CombindTransformationMatrix();
 				}
 
 
-				if (0.2f > fRatio)
+				if (0.3f > fRatio)
 				{
 					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
 						IronBars_LerpAnim(m_pKineticAnimModel, m_pTransformCom, m_vIronBars_ThrowPoins, fRatio / 0.2f);
 				}
-				else if (0.2f <= fRatio && 0.6 > fRatio)
+				else if (0.3f <= fRatio && 0.6 > fRatio)
 				{
 					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
-						IronBars_AttachAnim(m_pKineticAnimModel, m_pTransformCom, m_vIronBars_ThrowPoins);
+						IronBars_ChangeToBundle();
+
+					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+						IronBars_AttachAnim_MulitBars(m_pKineticAnimModel, m_pTransformCom, m_vIronBars_ThrowPoins);
 				}
 				else if (0.6f <= fRatio && IronBars.IsNotDo())
 				{
@@ -5632,13 +5848,13 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 					{
 						_float4 vTargetPos = static_cast<CScarletCharacter*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->GetColliderPosition();
 						static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
-							IronBars_Shooting_All(vTargetPos);
+							IronBars_Shooting_Finish(vTargetPos);
 					}
 					else
 					{
 						_float4 vTargetPos = {0.f, 0.f, 0.f, 0.f};
 						static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
-							IronBars_Shooting_All(vTargetPos);
+							IronBars_Shooting_Finish(vTargetPos);
 					}
 				}
 			}
@@ -5649,7 +5865,6 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			SyncEffectLocalMove("Kinetic_Special_AnimSocket");
 			m_fKineticCharge = 0.f;
 		})
-
 			.AddTransition("IRONBARS_FINISH_EX to IRONBARS_NOUSE", "IRONBARS_NOUSE")
 			.Predicator([&]()->_bool 
 			{ 
@@ -5658,6 +5873,289 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			.Priority(0)
 
 	.Build();
+
+	return S_OK;
+}
+
+HRESULT CPlayer::SetUp_ContainerStateMachine()
+{
+	CAnimation* pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_start0"));
+	m_Container_Charge.push_back(m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_start0"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_loop0"));
+	m_Container_Charge.push_back(m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_loop0"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_end0"));
+	m_Container_Cancel.push_back(m_pModel->Find_Animation("AS_ch0100_322_AL_cap_R_end0"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_330_AL_fall_start"));
+	m_Container_Start.push_back(m_pModel->Find_Animation("AS_ch0100_330_AL_fall_start"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_337_AL_press_start"));
+	m_Container_Press.push_back(m_pModel->Find_Animation("AS_ch0100_337_AL_press_start"));
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_337_AL_press_loop"));
+	m_Container_Press.push_back(m_pModel->Find_Animation("AS_ch0100_337_AL_press_loop"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_337_AL_press_cancel"));
+	m_Container_End.push_back(m_pModel->Find_Animation("AS_ch0100_337_AL_press_cancel"));
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_337_AL_press_end"));
+	m_Container_Finish.push_back(m_pModel->Find_Animation("AS_ch0100_337_AL_press_end"));
+
+
+	m_pContainerStateMachine =
+		CFSMComponentBuilder()
+		.InitState("CONTAINER_NOUSE")
+
+		.AddState("CONTAINER_NOUSE")
+		.OnStart([&]()
+		{
+			m_bKineticSpecial_Activate = false;
+
+			m_bKineticSpecial = false;
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_bKineticSpecial = false;
+		})
+		.OnExit([&]()
+		{
+			m_pASM->SetCurState("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+		})
+			.AddTransition("CONTAINER_NOUSE to CONTAINER_CHARGE", "CONTAINER_CHARGE")
+			.Predicator([&]()->_bool 
+			{
+				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
+				return m_bKineticG && bResult;
+			})
+			.Priority(0)
+
+		.AddState("CONTAINER_CHARGE")
+		.OnStart([&]() 
+		{
+			m_bKineticSpecial = true;
+			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_Container_Charge);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_fKineticCharge += (_float)fTimeDelta;
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("CONTAINER_CHARGE to CONTAINER_START", "CONTAINER_START")
+			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
+			.Priority(0)
+
+			.AddTransition("CONTAINER_CHARGE to CONTAINER_CANCEL", "CONTAINER_CANCEL")
+			.Predicator([&]()->_bool { return !m_bKineticG; })
+			.Priority(0)
+
+		.AddState("CONTAINER_CANCEL")
+		.OnStart([&]()
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_Cancel);
+		})
+		.OnExit([&]()
+		{
+			m_bKineticSpecial = false;
+		})
+
+			.AddTransition("CONTAINER_CANCEL to CONTAINER_NOUSE", "CONTAINER_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket") || m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB || m_bKineticG); 
+			})
+			.Priority(0)
+
+		.AddState("CONTAINER_START")
+		.OnStart([&]() 
+		{
+			m_bKineticSpecial_Activate = true;
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_Start);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			if (m_pASM->isSocketEmpty("Kinetic_Special_AnimSocket")) return;
+
+			_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio();
+
+			if (0.5f >= fRatio)
+			{
+				if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster() && nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+				{
+					_float4 vTargetPos = static_cast<CScarletCharacter*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+						->GetColliderPosition();
+
+					static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+						Lerp_to_TargetPoint(vTargetPos, (m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio() / 0.5f));
+				}
+			}
+			else
+			{
+				static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+					Container_Press();
+			}
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("CONTAINER_START to CONTAINER_WAIT", "CONTAINER_WAIT")
+			.Predicator([&]()->_bool 
+			{ 
+				//return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
+				return static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_isCollision();
+			})
+			.Priority(0)
+
+			.AddTransition("CONTAINER_START to CONTAINER_END", "CONTAINER_END")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
+			})
+			.Priority(0)
+
+		.AddState("CONTAINER_WAIT")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_Press);
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			CGameInstance::GetInstance()->SetTimeRatioCurve("TelephonePoleSlow");
+		})
+		.Tick([&](double fTimeDelta)
+		{
+
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+			CGameInstance::GetInstance()->ResetTimeRatio();
+		})
+			.AddTransition("CONTAINER_WAIT to CONTAINER_PRESS", "CONTAINER_PRESS")
+			.Predicator([&]()->_bool
+				{
+					return m_bLeftClick;
+				})
+			.Priority(0)
+
+			.AddTransition("CONTAINER_WAIT to CONTAINER_END", "CONTAINER_END")
+			.Predicator([&]()->_bool
+				{
+					return (m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio() >= 0.05f);
+				})
+			.Priority(0)
+
+
+		.AddState("CONTAINER_PRESS")
+		.OnStart([&]() 
+		{
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			if (nullptr == m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")) return;
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return;
+
+			_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio();
+
+			if (m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetName() == "AS_ch0100_337_AL_press_start")
+			{
+				if (0.9f >= fRatio)
+				{
+					static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_Reposition(m_pTransformCom, fRatio / 0.9f, (1.f - (fRatio / 0.9f)));
+				}
+				else
+				{
+					_float4 vTargetPos = static_cast<CScarletCharacter*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+						->GetColliderPosition();
+
+					static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_Press_Maintain(vTargetPos, fTimeDelta);
+				}
+			}
+			else
+			{
+				_float4 vTargetPos = static_cast<CScarletCharacter*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+					->GetColliderPosition();
+
+				static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_Press_Maintain(vTargetPos, fTimeDelta);
+
+				if (0.f < fRatio && 0.3f >= fRatio)		static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_ChangeIndex(2);
+				if (0.3f < fRatio && 0.6f >= fRatio)	static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_ChangeIndex(3);
+				if (0.6f < fRatio && 0.9f >= fRatio)	static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_ChangeIndex(4);
+			}
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("CONTAINER_PRESS to CONTAINER_FINISH", "CONTAINER_FINISH")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket")); 
+			})
+			.Priority(0)
+
+		.AddState("CONTAINER_END")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_End);
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
+		})
+		.Tick([&](double fTimeDelta)
+		{
+
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("CONTAINER_END to CONTAINER_NOUSE", "CONTAINER_NOUSE")
+			.Predicator([&]()->_bool
+				{
+					return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
+				})
+			.Priority(0)
+
+		.AddState("CONTAINER_FINISH")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_Finish);
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			if (nullptr == m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")) return;
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return;
+
+			_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio();
+
+			if (0.15f >= fRatio)
+			{
+				static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_Reposition(m_pTransformCom, fRatio / 0.15f, (1.f - (fRatio / 0.15f)));
+			}
+			else
+			{
+				static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_Press_Finish();
+			}
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+		})
+			.AddTransition("CONTAINER_FINISH to CONTAINER_NOUSE", "CONTAINER_NOUSE")
+			.Predicator([&]()->_bool
+				{
+					return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
+				})
+			.Priority(0)
+
+		.Build();
 
 	return S_OK;
 }
@@ -6726,14 +7224,14 @@ void CPlayer::Update_TargetUI()
 	{
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-
 		//¿ø·¡ Å¸°ÙÀÌ ¾ø´Ù°¡ »ý±ä °æ¿ì
 		if (m_pSettedTarget == nullptr && pTarget != nullptr)
 		{
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(pTarget);
-				
+			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->Get_UIPivotMatrix(ENEMY_FINDEYES));
+
 		}
 
 
@@ -6742,7 +7240,6 @@ void CPlayer::Update_TargetUI()
 		{
 			m_pUI_LockOn->SetDelete();
 		}
-
 
 		else if (m_pSettedTarget != nullptr && pTarget != nullptr)
 		{
@@ -6756,39 +7253,58 @@ void CPlayer::Update_TargetUI()
 
 		//info bar ¼³Á¤
 		if (pTarget != nullptr)
-			Create_TargetInfoBar(pTarget);
+			pTarget->Create_InfoUI();
+
+		//Create_TargetInfoBar(pTarget);
 
 		m_pSettedTarget = pTarget;
 	}
 
 }
 
-void CPlayer::Create_TargetInfoBar(CGameObject* pTarget)
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
-	CEnemy* pEnemy = dynamic_cast<CEnemy*>(pTarget);
-	if (pEnemy == nullptr) return;
-	
-	//ëª¬ìŠ¤??infoë°”ê? ?†ìœ¼ë©??ì„±
-	if (pEnemy->GetHasName() == true)
-		return;
-
-	CMonsterHpUI* pUI_HP = nullptr;
-	pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
-
-	assert(pUI_HP != nullptr);
-	pUI_HP->Set_Owner(pTarget);
-
-	_float4x4 PivotMatrix = pEnemy->Get_UIPivotMatrix(ENEMY_INFOBAR);
-	pUI_HP->SetPivotMatrix(PivotMatrix);
-
-	_int iLevel = pEnemy->Get_EnemyLevel();
-	_int iName = pEnemy->Get_EnemyName();
-	pUI_HP->Set_MonsterInfo(iLevel, iName);
-
-	pEnemy->Set_HasName();
-}
+//void CPlayer::Create_TargetInfoBar(CGameObject* pTarget)
+//{
+//	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+//
+//	CEnemy* pEnemy = dynamic_cast<CEnemy*>(pTarget);
+//	if (pEnemy == nullptr) return;
+//	
+//	if (pEnemy->GetHasName() == true)
+//		return;
+//
+//	if (pEnemy->HasCrushGauge() == true)
+//	{
+//		CMonsterShildUI* pUI_Shild = nullptr;
+//		pUI_Shild = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterShield")));
+//
+//		assert(pUI_Shild != nullptr);
+//		pUI_Shild->Set_Owner(pTarget);
+//
+//		_float4x4 PivotMatrix = pEnemy->Get_UIPivotMatrix(ENEMY_INFOBAR);
+//		pUI_Shild->SetPivotMatrix(PivotMatrix);
+//
+//		_int iLevel = pEnemy->Get_EnemyLevel();
+//		_int iName = pEnemy->Get_EnemyName();
+//		pUI_Shild->Set_MonsterInfo(iLevel, iName);
+//	}
+//	else
+//	{
+//		CMonsterHpUI* pUI_HP = nullptr;
+//		pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
+//
+//		assert(pUI_HP != nullptr);
+//		pUI_HP->Set_Owner(pTarget);
+//
+//		_float4x4 PivotMatrix = pEnemy->Get_UIPivotMatrix(ENEMY_INFOBAR);
+//		pUI_HP->SetPivotMatrix(PivotMatrix);
+//
+//		_int iLevel = pEnemy->Get_EnemyLevel();
+//		_int iName = pEnemy->Get_EnemyName();
+//		pUI_HP->Set_MonsterInfo(iLevel, iName);
+//	}
+//	
+//	pEnemy->Set_HasName();
+//}
 
 void CPlayer::NetualChecker(_double TimeDelta)
 {
@@ -7627,6 +8143,9 @@ void CPlayer::Free()
 	Safe_Release(m_pTeleportPostVFX);
 	Safe_Release(m_pTankLorryStateMachine);
 	Safe_Release(m_pIronBarsStateMachine);
+	Safe_Release(m_pContainerStateMachine);
+
+	Safe_Release(m_pDriveModeProductionStateMachine);
 
 //	Safe_Release(m_pContectRigidBody);
 }

@@ -10,7 +10,7 @@
             ]
         ],
         "Float4x4s": [],
-        "Floats": [0.0],
+        "Floats": [0.0, 0.0],
         "Ints": [
             0, 0
         ],
@@ -18,7 +18,8 @@
         "Textures": [
             "../Bin/Resources/Model/AnimModel/Kinetic/Train/Texture/T_pr_Train01_ALB.png\u0000",
             "../Bin/Resources/Model/AnimModel/Kinetic/Train/Texture/T_pr_Train01_NML.png\u0000",
-            "../Bin/Resources/Model/AnimModel/Kinetic/Train/Texture/T_pr_Train01_RMA.png\u0000"
+            "../Bin/Resources/Model/AnimModel/Kinetic/Train/Texture/T_pr_Train01_RMA.png\u0000",
+            "../Bin/Resources/Texture/VFX/T_ef_scl_noi_054.png"
         ]
     },
     "ShaderProtoTag": "Prototype_Component_Shader_VtxAnimModel"
