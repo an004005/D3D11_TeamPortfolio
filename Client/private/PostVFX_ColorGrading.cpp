@@ -18,6 +18,7 @@ HRESULT CPostVFX_ColorGrading::Initialize(void* pArg)
 	m_tParam.Floats.push_back(1.f);
 
 	m_tParam.iPass = 6;
+	m_iPriority = 0;
 
 	return S_OK;
 }

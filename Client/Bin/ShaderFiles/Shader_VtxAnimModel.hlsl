@@ -362,6 +362,9 @@ PS_OUT_NONLIGHT PS_MAIN_Invisible_5(PS_IN In)
 	return Out;
 }
 
+// g_float_0  : 사망 디졸브
+// g_float_1 : 약점 맞아서 빛나는 디솔브
+// g_int_0 : 상태이상 플래그
 PS_OUT em800_Weak_6(PS_IN In)
 {
 	PS_OUT			Out = PS_MAIN_DEFAULT(In);
@@ -444,6 +447,129 @@ PS_OUT_NONLIGHT PS_SuperSpeedTrail_8(PS_IN In)
 
 	Out.vColor.rgb = COL_PINK;
 	Out.vColor.a = 0.3f;
+
+	return Out;
+}
+
+// g_float_0  : 사망 디졸브
+// g_float_1 : 투명화 풀리는 디졸브(0~1)
+// g_int_0 : 상태이상 플래그
+PS_OUT PS_em0210_Invisible_9(PS_IN In)
+{
+	PS_OUT			Out = PS_MAIN_DEFAULT(In);
+
+	float fInvisibleOutDissolve = g_float_1;
+	if (fInvisibleOutDissolve > 0.f && fInvisibleOutDissolve < 1.f)
+	{
+		float fInvisibleOutDissolveSin = sin(fInvisibleOutDissolve * PI);
+		float4 vWeak = g_Weak01.Sample(LinearSampler, In.vTexUV * 3.f);
+		if (vWeak.a > 0.f)
+		{
+			Out.vDepth.z += fInvisibleOutDissolveSin * 3.f;
+			Out.vDiffuse += vWeak * fInvisibleOutDissolveSin * 1.5f;
+			Out.vDiffuse.a = 1.f;
+		}
+	}
+
+	if (fInvisibleOutDissolve >= 1.f)
+		Out.vFlag = float4(0.f, 0.f, SHADER_DEFAULT, 0.f);
+	else
+		Out.vFlag = float4(0.f, 0.f, SHADER_MONSTER_INVISIBLE, 0.f);
+	
+	return Out;
+}
+
+// g_float_0  : 사망 디졸브
+// g_float_1 : 아머 반짝이는 디솔브
+// g_int_0 : 상태이상 플래그
+PS_OUT PS_EnemyArmor_10(PS_IN In)
+{
+	PS_OUT			Out = PS_MAIN_DEFAULT(In);
+
+	float fArmorDissolve = g_float_1;
+	if (fArmorDissolve > 0.f)
+	{
+		float4 vViewDir = g_vCamPosition - In.vWorldPos;
+		float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
+		float fFresnel = FresnelEffect(vNormal, normalize(vViewDir.xyz), 1.f);
+		Out.vDepth.z = fFresnel * 6.5f * fArmorDissolve;
+	}
+
+	return Out;
+}
+
+// g_float_0  : 사망 디졸브
+// g_float_1 : 약점 맞아서 빛나는 디솔브
+// g_int_0 : 상태이상 플래그
+
+// g_vec4_0 : 약점색
+// g_vec2_0 : x: 약점 최소 밝기, y 약점 히트 밝기 더하기 값
+PS_OUT PS_em220_Weak_11(PS_IN In)
+{
+	PS_OUT			Out = PS_MAIN_DEFAULT(In);
+
+	float time = abs(sin(g_Time * 1.5f));
+
+	Out.vDiffuse.xyz *= g_vec4_0.rgb;
+	Out.vDepth.z = time + g_vec2_0.x;
+
+	float fHit = g_float_1;
+	if (fHit > 0.f)
+	{
+		Out.vDepth.z += g_vec2_0.y * fHit;
+	}
+	Out.vDepth.w = SHADER_NONE_SHADE;
+	Out.vFlag = float4(0.f, 0.f, SHADER_MONSTER_WEAK, 0.f);
+
+	return Out;
+}
+
+// g_float_0  : 사망 디졸브
+// g_float_1 : 약점 맞아서 빛나는 디솔브
+// g_int_0 : 상태이상 플래그
+PS_OUT PS_em1100_Weak_12(PS_IN In)
+{
+	PS_OUT			Out = PS_MAIN_DEFAULT(In);
+
+	float3 mask = g_tex_3.Sample(LinearSampler, In.vTexUV).rgb;
+	if (mask.r == 1.f && mask.g == 1.f && mask.b == 1.f)
+	{
+		float time = abs(sin(g_Time * 1.5f));
+	
+		float4 vWeak = g_Weak01.Sample(LinearSampler, In.vTexUV * 20.f);
+		Out.vDiffuse.xyz += vWeak.rgb;
+		Out.vDepth.z = time + vWeak.a * 3.f;
+	
+		float fHit = g_float_1;
+		if (fHit > 0.f)
+		{
+			Out.vDepth.z += g_vec2_0.y * fHit;
+		}
+		Out.vDepth.w = SHADER_NONE_SHADE;
+		Out.vFlag = float4(0.f, 0.f, SHADER_MONSTER_WEAK, 0.f);	
+	}
+
+	return Out;
+}
+
+// g_float_0  : 사망 디졸브
+// g_float_1 : 약점 맞아서 빛나는 디솔브
+// g_int_0 : 상태이상 플래그
+PS_OUT PS_em1200_Weak_13(PS_IN In)
+{
+	PS_OUT			Out = PS_MAIN_DEFAULT(In);
+
+	float time = abs(sin(g_Time * 1.5f));
+
+	Out.vDepth.z = time * 2.f;
+
+	float fHit = g_float_1;
+	if (fHit > 0.f)
+	{
+		Out.vDepth.z += g_vec2_0.y * fHit;
+	}
+	Out.vDepth.w = SHADER_NONE_SHADE;
+	Out.vFlag = float4(0.f, 0.f, SHADER_MONSTER_WEAK, 0.f);	
 
 	return Out;
 }
@@ -574,5 +700,74 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SuperSpeedTrail_8();
+	}
+
+	//9
+	pass em0210_Invisible_9
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_em0210_Invisible_9();
+	}
+
+	//10
+	pass EnemyArmor_10
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EnemyArmor_10();
+	}
+	//11
+	pass em220_Weak_11
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_em220_Weak_11();
+	}
+
+	//12
+	pass em1100_Weak_12
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_em1100_Weak_12();
+	}
+
+	//13
+	pass em1200_Weak_13
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_em1200_Weak_13();
 	}
 }

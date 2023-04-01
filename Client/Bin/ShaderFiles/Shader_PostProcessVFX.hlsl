@@ -7,6 +7,8 @@ texture2D		g_FlagTexture;
 
 // ~For Effect
 
+texture2D		g_FlagTextureNonAlpha;
+
 texture2D		g_LDRTexture;
 texture2D		g_NormalTexture; 
 texture2D		g_DepthTexture;
@@ -319,16 +321,16 @@ PS_OUT PS_MAIN_Penetate_8(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4 vFlags = g_FlagTexture.Sample(PointSampler, In.vTexUV);
+	float4 vFlags = g_FlagTextureNonAlpha.Sample(PointSampler, In.vTexUV);
 	float4 LDR = g_LDRTexture.Sample(LinearSampler_Clamp, In.vTexUV);
 	float fDissolve = g_float_0;
 	
-	// if (vFlags.z == SHADER_TOON_GRAY_INGNORE)
-	// {
-	// 	Out.vColor = LDR;
-	// 	Out.vColor.a = 1.f;
-	// }
-	// else 
+	if (vFlags.z == SHADER_TOON_GRAY_INGNORE)
+	{
+		Out.vColor = LDR;
+		Out.vColor.a = 1.f;
+	}
+	else 
 	if (vFlags.z == SHADER_MONSTER_WEAK)
 	{
 		float3 vWeak = dot(LDR.rgb, float3(0.299, 0.587, 0.114)) * float3(1.f, 1.f, 169.f / 255.f) * 1.5f;
@@ -439,7 +441,7 @@ PS_OUT PS_MAIN_Teleport_10(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4 vFlags = g_FlagTexture.Sample(PointSampler, In.vTexUV);
+	float4 vFlags = g_FlagTextureNonAlpha.Sample(PointSampler, In.vTexUV);
 	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
 	Out.vColor.a = 1.f;
 
@@ -458,7 +460,7 @@ PS_OUT PS_MAIN_SuperSpeed_11(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float4 vFlags = g_FlagTexture.Sample(PointSampler, In.vTexUV);
+	float4 vFlags = g_FlagTextureNonAlpha.Sample(PointSampler, In.vTexUV);
 	Out.vColor = g_LDRTexture.Sample(LinearSampler_Clamp, In.vTexUV);
 
 	if (vFlags.z != SHADER_TOON_GRAY_INGNORE)
@@ -503,13 +505,22 @@ PS_OUT PS_MAIN_SuperSpeed_11(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_DEFAULT_12(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+	
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default_Test
 	{
-		SetRasterizerState(RS_NonCulling);
+		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
-		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
@@ -668,5 +679,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_SuperSpeed_11();
+	}
+
+	//12
+	pass DefaultFullQuad_12
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_DEFAULT_12();
 	}
 }

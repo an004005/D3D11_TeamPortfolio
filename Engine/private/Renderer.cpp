@@ -194,6 +194,8 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Flag"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(0.f, 0.0f, 0.0f, 0.f))))
 		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Flag_NonAlpha"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(0.f, 0.0f, 0.0f, 0.f))))
+		return E_FAIL;
 	/* For.Target_Normal */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Normal"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
@@ -257,7 +259,7 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Deferred"), TEXT("Target_OutlineFlag"))))
 		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Deferred"), TEXT("Target_Flag"))))
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Deferred"), TEXT("Target_Flag_NonAlpha"))))
 		return E_FAIL;
 
 	/* for.MRT_ToonDeferred*/
@@ -273,7 +275,7 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_ToonDeferred"), TEXT("Target_OutlineFlag"))))
 		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_ToonDeferred"), TEXT("Target_Flag"))))
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_ToonDeferred"), TEXT("Target_Flag_NonAlpha"))))
 		return E_FAIL;
 
 	/* For.MRT_LightAcc */ /* ºû ¿¬»êÀÇ °á°ú¸¦ ÀúÀåÇÒ ·»´õÅ¸°Ùµé.  */
@@ -847,6 +849,9 @@ HRESULT CRenderer::Render_PostProcess()
 		if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_FlagTexture", m_pTarget_Manager->Get_SRV(TEXT("Target_Flag")))))
 			return E_FAIL;
 		// ~For Effect
+		if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_FlagTextureNonAlpha", m_pTarget_Manager->Get_SRV(TEXT("Target_Flag_NonAlpha")))))
+			return E_FAIL;
+		
 
 		m_RenderObjects[POSTPROCESS_VFX].sort([](CGameObject* pLeft, CGameObject* pRight)
 		{
@@ -892,7 +897,7 @@ HRESULT CRenderer::Render_PostProcess()
 	if (FAILED(m_pShader_PostProcess->Set_ShaderResourceView("g_LDRTexture", pLDRSour->Get_SRV())))
 		return E_FAIL;
 
-	m_pShader_PostProcess->Begin(0);
+	m_pShader_PostProcess->Begin(12);
 	m_pVIBuffer->Render();
 
 	return S_OK;

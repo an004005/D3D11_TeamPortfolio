@@ -780,7 +780,8 @@ void CModel::Imgui_RenderProperty()
 					iSelected = i;
 			}
 			ImGui::EndListBox();
-
+			if (iSelected >= m_Materials.size())
+				iSelected = 0;
 			m_Materials[iSelected]->Imgui_RenderProperty();
 		}
 	}
