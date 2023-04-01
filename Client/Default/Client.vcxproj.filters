@@ -388,6 +388,18 @@
     <Filter Include="02.GameObjects\UI\________DefaultCanvas">
       <UniqueIdentifier>{bad044ba-a491-4bf1-9026-b9d169097cf4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Player\PlayerInfoManager">
+      <UniqueIdentifier>{14b74379-1a38-4c37-bb9f-263e2fa98580}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\AI">
+      <UniqueIdentifier>{cbd67085-0e5b-472b-bf03-713c5028cc2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\AI\CH0300">
+      <UniqueIdentifier>{c66affae-50e5-4118-b270-c130a544c807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\AI\CH0300\BaseAnimInstance">
+      <UniqueIdentifier>{c57cbe66-9589-4475-bd9b-271126c43ecf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -902,7 +914,6 @@
     <ClInclude Include="..\public\Canvas_BossHpMove.h">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PlayerInfoManager.h" />
     <ClInclude Include="..\public\Canvas_Main.h">
       <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClInclude>
@@ -1103,9 +1114,6 @@
     <ClInclude Include="..\public\Level_KineticEditor.h">
       <Filter>01.Levels\17.KineticEditor</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Level_Stage1.h">
-      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\GameManager.h">
       <Filter>30. GameManager</Filter>
     </ClInclude>
@@ -1232,23 +1240,16 @@
     <ClInclude Include="..\public\BulletBuilder.h">
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_Purchase.h">
-      <Filter>02.GameObjects\UI\Shop</Filter>
+    <ClInclude Include="..\public\Level_ConstructionSite3F.h" />
+    <ClInclude Include="..\public\Special_Container.h" />
+    <ClInclude Include="..\public\PlayerInfoManager.h">
+      <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_Shop.h">
-      <Filter>02.GameObjects\UI\Shop</Filter>
+    <ClInclude Include="..\public\AI_CH0300.h">
+      <Filter>02.GameObjects\AI\CH0300</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_PurchaseKinds.h">
-      <Filter>02.GameObjects\UI\Shop</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Canvas_PurchaseBattle.h">
-      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Canvas_PurchaseWeapon.h">
-      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Canvas_ShopListBar.h">
-      <Filter>02.GameObjects\UI\Shop</Filter>
+    <ClInclude Include="..\public\AI_CH0300_AnimInstance.h">
+      <Filter>02.GameObjects\AI\CH0300\BaseAnimInstance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1735,7 +1736,6 @@
     <ClCompile Include="..\private\Canvas_BossHpMove.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\PlayerInfoManager.cpp" />
     <ClCompile Include="..\private\Canvas_Main.cpp">
       <Filter>02.GameObjects\UI\Main\Canvas</Filter>
     </ClCompile>
@@ -1921,9 +1921,6 @@
     <ClCompile Include="..\private\Level_KineticEditor.cpp">
       <Filter>01.Levels\17.KineticEditor</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Level_Stage1.cpp">
-      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\GameManager.cpp">
       <Filter>30. GameManager</Filter>
     </ClCompile>
@@ -2068,23 +2065,16 @@
     <ClCompile Include="..\private\BulletBuilder.cpp">
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_Shop.cpp">
-      <Filter>02.GameObjects\UI\Shop</Filter>
+    <ClCompile Include="..\private\Level_ConstructionSite3F.cpp" />
+    <ClCompile Include="..\private\Special_Container.cpp" />
+    <ClCompile Include="..\private\PlayerInfoManager.cpp">
+      <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_Purchase.cpp">
-      <Filter>02.GameObjects\UI\Shop</Filter>
+    <ClCompile Include="..\private\AI_CH0300.cpp">
+      <Filter>02.GameObjects\AI\CH0300</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_PurchaseKinds.cpp">
-      <Filter>02.GameObjects\UI\Shop</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_PurchaseBattle.cpp">
-      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_PurchaseWeapon.cpp">
-      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_ShopListBar.cpp">
-      <Filter>02.GameObjects\UI\Shop</Filter>
+    <ClCompile Include="..\private\AI_CH0300_AnimInstance.cpp">
+      <Filter>02.GameObjects\AI\CH0300\BaseAnimInstance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

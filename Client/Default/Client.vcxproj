@@ -181,6 +181,8 @@
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Utils.h" />
     <ClInclude Include="..\public\AcquisitionUI.h" />
     <ClInclude Include="..\public\AIController.h" />
+    <ClInclude Include="..\public\AI_CH0300.h" />
+    <ClInclude Include="..\public\AI_CH0300_AnimInstance.h" />
     <ClInclude Include="..\public\AttackNumUI.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\BaseAnimInstance.h">
@@ -466,6 +468,8 @@
   <ItemGroup>
     <ClCompile Include="..\private\AcquisitionUI.cpp" />
     <ClCompile Include="..\private\AIController.cpp" />
+    <ClCompile Include="..\private\AI_CH0300.cpp" />
+    <ClCompile Include="..\private\AI_CH0300_AnimInstance.cpp" />
     <ClCompile Include="..\private\AttackNumUI.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
