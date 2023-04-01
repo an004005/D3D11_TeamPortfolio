@@ -25,7 +25,9 @@ CMaterial::CMaterial(const CMaterial& rhs)
 #ifdef _DEBUG
 	, m_strFilePath(rhs.m_strFilePath)
 #endif
+	, m_bActive(rhs.m_bActive)
 	, m_iInstancingPass(rhs.m_iInstancingPass)
+	, m_bAlphaBlend(rhs.m_bAlphaBlend)
 {
 	Safe_AddRef(m_pShader);
 	Safe_AddRef(m_pShaderInstancing);
@@ -52,6 +54,10 @@ HRESULT CMaterial::Initialize_Prototype(const char* pMtrlFilePath)
 		string shaderInstancingProtoTag = json["ShaderInstancingProtoTag"];
 		m_pShaderInstancing = dynamic_cast<CShader*>(CGameInstance::GetInstance()->Clone_Component(s2ws(shaderInstancingProtoTag).c_str()));
 	}
+	if (json.contains("Active"))
+		m_bActive = json["Active"];
+	if (json.contains("AlphaBlend"))
+		m_bAlphaBlend = json["AlphaBlend"];
 
 #ifdef _DEBUG
 	m_strFilePath = pMtrlFilePath;
@@ -77,6 +83,8 @@ void CMaterial::SaveToJson(Json& json)
 		json["ShaderInstancingProtoTag"] = szProtoTag;
 		json["InstancingPass"] = m_iInstancingPass;
 	}
+	json["Active"] = m_bActive;
+	json["AlphaBlend"] = m_bAlphaBlend;
 }
 
 void CMaterial::Imgui_RenderProperty()
@@ -85,6 +93,7 @@ void CMaterial::Imgui_RenderProperty()
 	CGameUtils::wc2c(m_pPrototypeTag, protoTag);
 	ImGui::Text("Material ProtoTag : %s", protoTag);
 	ImGui::Checkbox("Active", &m_bActive);
+	ImGui::Checkbox("AlphaBlend", &m_bAlphaBlend);
 
 	ImGui::Separator();
 
