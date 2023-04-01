@@ -31,6 +31,7 @@ HRESULT CDefaultUI::Initialize(void * pArg)
 void CDefaultUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
 }
 
 void CDefaultUI::Late_Tick(_double TimeDelta)

@@ -2,6 +2,7 @@
 #include "..\public\Item_RightArrowUI.h"
 #include "GameInstance.h"
 #include "JsonLib.h"
+#include "GameUtils.h"
 
 CItem_RightArrowUI::CItem_RightArrowUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -33,6 +34,14 @@ HRESULT CItem_RightArrowUI::Initialize(void * pArg)
 
 void CItem_RightArrowUI::Tick(_double TimeDelta)
 {
+	if (m_bMouse == true)
+	{
+		if (true == IsCursorOn(CGameUtils::GetClientCursor()) && CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
+		{
+			m_bCursorKeyDown = true;
+		}
+	}
+
 	CUI::Tick(TimeDelta);
 
 	if (false == m_bInput) return;

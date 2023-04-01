@@ -35,7 +35,7 @@ HRESULT CCanvas_Main::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	CUI_Manager::GetInstance()->Add_Canvas(L"CCanvas_Main", this);
+	CUI_Manager::GetInstance()->Add_WindowCanvas(L"CCanvas_Main", this);
 
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
@@ -175,7 +175,7 @@ void CCanvas_Main::KeyInput()
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
 	{
-		dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_Canvas(L"CCanvas_Shop"))->ShopUIClose();
+		dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->ShopUIClose();
 		m_bMainUI = !m_bMainUI;
 
 		// m_bMainUI 와 반대로 동작한다.

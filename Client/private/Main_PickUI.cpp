@@ -35,18 +35,14 @@ void CMain_PickUI::Tick(_double TimeDelta)
 
 	__super::Tick(TimeDelta);
 
-	if (true == IsCursorOn(CGameUtils::GetClientCursor()) &&
-		CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
+	if (true == IsCursorOn(CGameUtils::GetClientCursor()) && CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
 		m_bOnButton = true;
 		m_bOnAlpha = true;
 	}
 
 	if (2 == m_iColorType)	// 무색 (Pass 4번 사용!)
-	{
-		m_tParams.Float4s[0] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		return;
-	}
 
 	CurrentPick(TimeDelta);
 }

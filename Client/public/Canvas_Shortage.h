@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CCanvas_PurchaseBattle : public CCanvas
+class CCanvas_Shortage : public CCanvas
 {
 protected:
-	CCanvas_PurchaseBattle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CCanvas_PurchaseBattle(const CCanvas_PurchaseBattle& rhs);
+	CCanvas_Shortage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCanvas_Shortage(const CCanvas_Shortage& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -23,7 +23,15 @@ public:
 	virtual void   LoadFromJson(const Json& json) override;
 
 public:
-	static CCanvas_PurchaseBattle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	_bool	Get_Visible() {
+		return m_bVisible;
+	}
+
+private:
+	_double	m_bVisible_TimeAcc = { 0.0 };
+
+public:
+	static CCanvas_Shortage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

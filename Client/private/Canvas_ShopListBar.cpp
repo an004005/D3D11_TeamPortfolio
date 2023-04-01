@@ -33,18 +33,19 @@ HRESULT CCanvas_ShopListBar::Initialize(void* pArg)
 		iter->second->SetVisible(false);
 
 	m_bVisible = false;
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_WondowB"))->Set_ColorType(2);
 
 	return S_OK;
 }
 
 void CCanvas_ShopListBar::Tick(_double TimeDelta)
 {
+	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+		iter->second->SetVisible(m_bVisible);
+
 	if (false == m_bVisible) return;
 
 	CCanvas::Tick(TimeDelta);
-
-	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-		iter->second->SetVisible(m_bVisible);
 }
 
 void CCanvas_ShopListBar::Late_Tick(_double TimeDelta)
@@ -63,15 +64,15 @@ HRESULT CCanvas_ShopListBar::Render()
 	_float2 vFontSize = { 0.45f, 0.45f };
 	_float4 vColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	pair<wstring, CItem_Manager::ITEMINFO> ItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo()[m_iItemInfoIndex];
+	pair<wstring, CItem_Manager::ITEMINFO> tItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo()[m_iItemInfoIndex];
 
 	// 아이템 이름
 	_float2 vPosition = Find_ChildUI(L"Shop_WondowB")->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", ItemInfo.first.c_str(), vPosition + _float2(50.0f, 13.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", tItemInfo.first.c_str(), vPosition + _float2(50.0f, 13.0f), 0.f, vFontSize, vColor);
 
 	// 소지수 (if 빨간색, else 일반색)
 	_float	fMinusPosition;
-	if (ItemInfo.second.iCount == ItemInfo.second.iMaxCount)
+	if (tItemInfo.second.iCount == tItemInfo.second.iMaxCount)
 	{
 		fMinusPosition = 5.0f;
 		vColor = { 1.0f, 0.458f, 0.38f, 1.0f };
@@ -83,17 +84,19 @@ HRESULT CCanvas_ShopListBar::Render()
 	}
 
 	_tchar szText[MAX_PATH] = TEXT("");
-	wsprintf(szText, TEXT("%d"), ItemInfo.second.iCount);
-	if (CItem_Manager::MAINITEM::BATTLE == ItemInfo.second.eType)
+	wsprintf(szText, TEXT("%d"), tItemInfo.second.iCount);
+	if (CItem_Manager::MAINITEM::BATTLE == tItemInfo.second.eType)
 		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(510.0f - fMinusPosition, 13.0f), 0.f, vFontSize, vColor);
 	else
 		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(510.0f, 13.0f), 0.f, vFontSize, vColor);
-
-	// 금액
-	pGameInstance->Render_Font(L"Pretendard32", m_szAmount, vPosition + _float2(580.0f, 13.0f), 0.f, vFontSize, vColor);
+	
+	vColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+	// 금액 m_iPrice
+	wsprintf(szText, TEXT("%u"), tItemInfo.second.iPrice);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(580.0f, 13.0f), 0.f, vFontSize, vColor);
 	
 	// 개수
-	wsprintf(szText, TEXT("%d"), m_iNmberPurchases);
+	wsprintf(szText, TEXT("%u"), m_iNmberPurchases);
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(692.0f, 13.0f), 0.f, vFontSize, vColor);
 
 	return S_OK;
@@ -114,6 +117,11 @@ void CCanvas_ShopListBar::SaveToJson(Json& json)
 void CCanvas_ShopListBar::LoadFromJson(const Json & json)
 {
 	CCanvas::LoadFromJson(json);
+}
+
+_float2 CCanvas_ShopListBar::Get_ListPosititon()
+{
+	return Find_ChildUI(L"Shop_WondowB")->Get_Position();
 }
 
 _bool CCanvas_ShopListBar::Get_OnButton()
@@ -142,27 +150,6 @@ void CCanvas_ShopListBar::Set_ShopListBar(const _float2& fItemPos, const _float2
 	dynamic_cast<CItemIconUI*>(Find_ChildUI(L"Shop_WindowIcon"))->Set_IconIndex(vIconIndex);
 
 	wstring wsItemName = CItem_Manager::GetInstance()->Get_ItmeInfo()[m_iItemInfoIndex].first;
-
-	if (L"회복(소) 젤리" == wsItemName)
-		m_szAmount = L"100";
-	else if (L"회복(중) 젤리" == wsItemName)
-		m_szAmount = L"300";
-	else if (L"회복(대) 젤리" == wsItemName)
-		m_szAmount = L"1000";
-	else if (L"전체: 회복(소) 젤리" == wsItemName)
-		m_szAmount = L"250";
-	else if (L"전체: 회복(중) 젤리" == wsItemName)
-		m_szAmount = L"900";
-	else if (L"전체: 회복(대) 젤리" == wsItemName)
-		m_szAmount = L"3000";
-	else if (L"SAS 보급수" == wsItemName)
-		m_szAmount = L"5000";
-	else if (L"묘호 무라마사" == wsItemName)
-		m_szAmount = L"200";
-	else if (L"무기 테스트" == wsItemName)
-		m_szAmount = L"600";
-	else if (L"무기 테스트2" == wsItemName)
-		m_szAmount = L"1200";
 }
 
 CCanvas_ShopListBar * CCanvas_ShopListBar::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

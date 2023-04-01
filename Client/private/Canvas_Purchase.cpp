@@ -39,6 +39,10 @@ HRESULT CCanvas_Purchase::Initialize(void* pArg)
 	m_bVisible = false;
 	Add_ShopCanvas();
 
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuAll"))->Set_ColorType(1);
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuBattle"))->Set_ColorType(1);
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuEtc"))->Set_ColorType(1);
+
 	return S_OK;
 }
 
@@ -49,12 +53,11 @@ void CCanvas_Purchase::Tick(_double TimeDelta)
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(m_bVisible);
 
-	if (false == m_bVisible)
-		m_arrCanvass[m_eShopMunu]->SetVisible(m_bVisible);
-
 	if (false == m_bVisible) return;
 
-	Menu_Tick();
+	m_arrCanvass[m_eShopMunu]->SetVisible(m_bVisible);
+
+	MenuPcik_Tick();
 }
 
 HRESULT CCanvas_Purchase::Render()
@@ -75,7 +78,6 @@ HRESULT CCanvas_Purchase::Render()
 	pGameInstance->Render_Font(L"Pretendard32", L"¹«±â", vPosition + _float2(77.0f, 8.0f), 0.f, vFontSize, vColor);
 	
 
-
 	return S_OK;
 }
 
@@ -95,24 +97,24 @@ HRESULT CCanvas_Purchase::Add_ShopCanvas()
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_PurchaseKinds.json");
 	json["ITemType"] = CItem_Manager::MAINITEM::ALL;
-	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_ShopList", L"Canvas_PurchaseKinds", &json);
+	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_ShopUI", L"Canvas_PurchaseKinds", &json);
 	assert(pCanvas != nullptr && "Failed to Cloned : Canvas_PurchaseKinds0");
 	m_arrCanvass[ALL] = dynamic_cast<CCanvas_PurchaseKinds*>(pCanvas);
 
 	json["ITemType"] = CItem_Manager::MAINITEM::BATTLE;
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_ShopList", L"Canvas_PurchaseKinds", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_ShopUI", L"Canvas_PurchaseKinds", &json);
 	assert(pCanvas != nullptr && "Failed to Cloned : Canvas_PurchaseKinds1");
 	m_arrCanvass[BATTLE] = dynamic_cast<CCanvas_PurchaseKinds*>(pCanvas);
 
 	json["ITemType"] = CItem_Manager::MAINITEM::WEAPON;
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_ShopList", L"Canvas_PurchaseKinds", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_ShopUI", L"Canvas_PurchaseKinds", &json);
 	assert(pCanvas != nullptr && "Failed to Cloned : Canvas_PurchaseKinds2");
 	m_arrCanvass[WEAPON] = dynamic_cast<CCanvas_PurchaseKinds*>(pCanvas);
 
 	return S_OK;
 }
 
-void CCanvas_Purchase::Menu_Tick()
+void CCanvas_Purchase::MenuPcik_Tick()
 {
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuAll"))->Get_OnButton())
 	{
@@ -131,7 +133,7 @@ void CCanvas_Purchase::Menu_Tick()
 
 		Canvas_Visible();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuBattle"))->Set_OnButton();
-	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuAll"))->Set_OnAlpha();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuAll"))->Set_OnAlpha();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuEtc"))->Set_OnAlpha();
 
 	}

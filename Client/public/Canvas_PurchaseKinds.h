@@ -26,11 +26,24 @@ private:
 	void		Add_ShopListCanvas();
 	void		Clone_ShopListCanvas(const size_t iIndex);
 
+	void		CurrentList();
+	void		Key_Input();
+
 private:
 	vector<pair<wstring, class CCanvas_ShopListBar*>>	m_vecShopCanvass;
 
-	vector<pair<wstring, CItem_Manager::ITEMINFO>> m_vecItemInfo;
+	vector<pair<wstring, CItem_Manager::ITEMINFO>> m_vecItemInfo;	// 아이템 매니저의 데이터를 멤버 변수로 보관
 	CItem_Manager::MAINITEM m_eMainItem = { CItem_Manager::MAINITEM::MAINITEM_END };
+
+	class		CCanvas_ListCheck* m_pCanvas_ListCheck = { nullptr };
+	class    CCanvas_Shortage* m_pCanvas_Shortage = { nullptr };
+
+	size_t	m_iCanvasIndex = { 0 };
+	size_t	m_iItemIndex = { 0 };	
+	_uint	m_iItemCount = { 0 };
+
+	_bool	m_bLastCheck = { false };
+	_bool	m_bShortage = { false };
 
 public:
 	static CCanvas_PurchaseKinds* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

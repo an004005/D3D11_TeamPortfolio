@@ -23,20 +23,28 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	_bool	Get_OnButton();
-	void	Set_OnButton();
-	void	Set_OnAlpha();
-
-	void	Set_ShopListBar(const _float2 & fItemPos, const _float2 & fIconPos, const size_t iIndex);
+	_uint Get_NmberPurchases() {
+		return m_iNmberPurchases;
+	}
 	void	Set_NmberPurchases(const _uint iNmberPurchases) {
 		m_iNmberPurchases = iNmberPurchases;
 	}
 
+	size_t	Get_ItemInfoIndex() {
+		return m_iItemInfoIndex;
+	}
+	
+	_float2	Get_ListPosititon();
+	_bool	Get_OnButton();
+
+	void		Set_OnButton();
+	void		Set_OnAlpha();
+
+	void	Set_ShopListBar(const _float2& fItemPos, const _float2& fIconPos, const size_t iIndex);
+
 private:
 	size_t		m_iItemInfoIndex = { 0 };
 	_uint		m_iNmberPurchases = { 0 };
-	_tchar*	m_szAmount = { L"" };
-
 
 public:
 	static CCanvas_ShopListBar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -227,8 +227,8 @@
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
     <ClInclude Include="..\public\Canvas_PurchaseKinds.h" />
-    <ClInclude Include="..\public\Canvas_PurchaseBattle.h" />
-    <ClInclude Include="..\public\Canvas_PurchaseWeapon.h" />
+    <ClInclude Include="..\public\Canvas_Shortage.h" />
+    <ClInclude Include="..\public\Canvas_ListCheck.h" />
     <ClInclude Include="..\public\Canvas_SASInfoLeft.h" />
     <ClInclude Include="..\public\Canvas_SASInfoLeftMove.h" />
     <ClInclude Include="..\public\Canvas_SASInfoRight.h" />
@@ -310,6 +310,7 @@
     <ClInclude Include="..\public\Main_BrainUI.h" />
     <ClInclude Include="..\public\Main_OnePickUI.h" />
     <ClInclude Include="..\public\SAS_Cable.h" />
+    <ClInclude Include="..\public\ShaderUI.h" />
     <ClInclude Include="..\public\SpecialObject.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -509,8 +510,8 @@
     <ClCompile Include="..\private\Canvas_MouseCousor.cpp" />
     <ClCompile Include="..\private\Canvas_Party.cpp" />
     <ClCompile Include="..\private\Canvas_PurchaseKinds.cpp" />
-    <ClCompile Include="..\private\Canvas_PurchaseBattle.cpp" />
-    <ClCompile Include="..\private\Canvas_PurchaseWeapon.cpp" />
+    <ClCompile Include="..\private\Canvas_Shortage.cpp" />
+    <ClCompile Include="..\private\Canvas_ListCheck.cpp" />
     <ClCompile Include="..\private\Canvas_Shop.cpp" />
     <ClCompile Include="..\private\Canvas_Purchase.cpp" />
     <ClCompile Include="..\private\Canvas_ShopListBar.cpp" />
@@ -599,6 +600,7 @@
     <ClCompile Include="..\private\Main_BrainUI.cpp" />
     <ClCompile Include="..\private\Main_OnePickUI.cpp" />
     <ClCompile Include="..\private\SAS_Cable.cpp" />
+    <ClCompile Include="..\private\ShaderUI.cpp" />
     <ClCompile Include="..\private\SpecialObject.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

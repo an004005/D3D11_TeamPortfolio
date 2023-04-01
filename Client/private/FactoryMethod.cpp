@@ -107,10 +107,13 @@
 #include "Canvas_MouseCousor.h"
 #include "Canvas_Shop.h"
 #include "Canvas_ShopListBar.h"
+#include "Canvas_ListCheck.h"
+#include "Canvas_Shortage.h"
 
 // Default
 #include "DefaultUI.h"
 #include "ButtonUI.h"
+#include "ShaderUI.h"
 // SAS SKill
 #include "SASSkillIconUI.h"
 #include "SASSkillGaugeUI.h"
@@ -678,11 +681,21 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Shop"),
 			CCanvas_Shop::Create(pDevice, pContext))))
 			return E_FAIL;
-
 		/* For.Prototype_GameObject_Canvas_ShopListBar*/
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_ShopListBar"),
 			CCanvas_ShopListBar::Create(pDevice, pContext))))
 			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_ListCheck*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_ListCheck"),
+			CCanvas_ListCheck::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_Shortage*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Shortage"),
+			CCanvas_Shortage::Create(pDevice, pContext))))
+			return E_FAIL;
+
+
+
 
 		
 	}
@@ -696,6 +709,10 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 		/* For.Prototype_GameObject_Button_UI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Button_UI"),
 			CButtonUI::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Shader_UI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Shader_UI"),
+			CShaderUI::Create(pDevice, pContext))))
 			return E_FAIL;
 		/* For.Prototype_GameObject_Main_ItemIconUI */
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("ItemIconUI"),

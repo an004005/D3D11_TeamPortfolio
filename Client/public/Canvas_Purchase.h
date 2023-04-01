@@ -25,7 +25,7 @@ public:
 private:
 	HRESULT	Add_ShopCanvas();
 
-	void	Menu_Tick();
+	void	MenuPcik_Tick();
 	void	Canvas_Visible();
 
 private:

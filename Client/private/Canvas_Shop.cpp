@@ -32,7 +32,7 @@ HRESULT CCanvas_Shop::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	CUI_Manager::GetInstance()->Add_Canvas(L"CCanvas_Shop", this);
+	CUI_Manager::GetInstance()->Add_WindowCanvas(L"CCanvas_Shop", this);
 
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
@@ -109,6 +109,10 @@ HRESULT CCanvas_Shop::Add_MainCanvas()
 	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_ShopPurchase", L"Canvas_Purchase", &json);
 	m_arrCanvass[PURCHASE] = dynamic_cast<CCanvas_Purchase*>(pCanvas);
 
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Purchase.json");
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_ShopPurchase", L"Canvas_Purchase", &json);
+	m_arrCanvass[SALE] = dynamic_cast<CCanvas_Purchase*>(pCanvas);
+
 	return S_OK;
 }
 
@@ -116,7 +120,7 @@ void CCanvas_Shop::KeyInput()
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_Z))
 	{
-		dynamic_cast<CCanvas_Main*>(CUI_Manager::GetInstance()->Find_Canvas(L"CCanvas_Main"))->MainUIClose();
+		dynamic_cast<CCanvas_Main*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Main"))->MainUIClose();
 		m_bShopUI = !m_bShopUI;
 
 		// m_bShopUI 와 반대로 동작한다.
@@ -130,29 +134,29 @@ void CCanvas_Shop::KeyInput()
 
 void CCanvas_Shop::Menu_Tick()
 {
-	//if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Get_OnButton())
-	//{
-	//	m_eMainCanvas = PURCHASE;
-	//	m_szShopText = L"구입할 상품을 선택해주세요.";
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Get_OnButton())
+	{
+		m_eMainCanvas = PURCHASE;
+		m_szShopText = L"구입할 상품을 선택해주세요.";
 
-	//	Canvas_Visible();
-	//	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Set_OnButton();
-	//	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Sale"))->Set_OnAlpha();
-	//	Find_ChildUI(L"Shop_MenuPick")->Set_Position(Find_ChildUI(L"ShopButton_Purchase")->Get_Position());
+		Canvas_Visible();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Sale"))->Set_OnAlpha();
+		Find_ChildUI(L"Shop_MenuPick")->Set_Position(Find_ChildUI(L"ShopButton_Purchase")->Get_Position());
 
-	//}
+	}
 
-	//if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Sale"))->Get_OnButton())
-	//{
-	//	m_eMainCanvas = SALE;
-	//	m_szShopText = L"매각할 상품을 선택해주세요";
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Sale"))->Get_OnButton())
+	{
+		m_eMainCanvas = SALE;
+		m_szShopText = L"매각할 상품을 선택해주세요";
 
-	//	Canvas_Visible();
-	//	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Sale"))->Set_OnButton();
-	//	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Set_OnAlpha();
-	//	Find_ChildUI(L"Shop_MenuPick")->Set_Position(Find_ChildUI(L"ShopButton_Sale")->Get_Position());
+		Canvas_Visible();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Sale"))->Set_OnButton();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Set_OnAlpha();
+		Find_ChildUI(L"Shop_MenuPick")->Set_Position(Find_ChildUI(L"ShopButton_Sale")->Get_Position());
 
-	//}
+	}
 }
 
 void CCanvas_Shop::Canvas_Visible()

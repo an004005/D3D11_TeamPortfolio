@@ -385,9 +385,6 @@
     <Filter Include="02.GameObjects\UI\Main\Canvas">
       <UniqueIdentifier>{a84ad824-2ee4-49a4-8b5f-2249e5b4eaa9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\________DefaultCanvas">
-      <UniqueIdentifier>{bad044ba-a491-4bf1-9026-b9d169097cf4}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1241,13 +1238,16 @@
     <ClInclude Include="..\public\Canvas_PurchaseKinds.h">
       <Filter>02.GameObjects\UI\Shop</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_PurchaseBattle.h">
-      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Canvas_PurchaseWeapon.h">
-      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Canvas_ShopListBar.h">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_ListCheck.h">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ShaderUI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Shortage.h">
       <Filter>02.GameObjects\UI\Shop</Filter>
     </ClInclude>
   </ItemGroup>
@@ -2077,13 +2077,16 @@
     <ClCompile Include="..\private\Canvas_PurchaseKinds.cpp">
       <Filter>02.GameObjects\UI\Shop</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_PurchaseBattle.cpp">
-      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_PurchaseWeapon.cpp">
-      <Filter>02.GameObjects\UI\________DefaultCanvas</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Canvas_ShopListBar.cpp">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_ListCheck.cpp">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ShaderUI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Shortage.cpp">
       <Filter>02.GameObjects\UI\Shop</Filter>
     </ClCompile>
   </ItemGroup>
