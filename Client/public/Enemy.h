@@ -147,7 +147,7 @@ protected:
 	//플레이어가 set해줌
 	_bool	m_bBrainCrush = false;
 
-	_bool		m_bDeadStart = false;
+	_bool		m_bCrushStart = false;
 	_double	m_dDeadTime = 0.0;
 
 	_bool m_bDead = false;

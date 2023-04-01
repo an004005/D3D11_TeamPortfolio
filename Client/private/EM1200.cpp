@@ -1,10 +1,13 @@
 #include "stdafx.h"
 #include "..\public\EM1200.h"
 #include <FSMComponent.h>
-#include "JsonStorage.h"
 #include "RigidBody.h"
+#include "JsonStorage.h"
 #include "EM1200_AnimInstance.h"
 #include "EM1200_Controller.h"
+#include "ImguiUtils.h"
+#include "MathUtils.h"
+
 CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -25,6 +28,10 @@ HRESULT CEM1200::Initialize(void * pArg)
 	{
 		m_iMaxHP = 3000;
 		m_iHP = 3000; // ¡Ú
+
+
+		m_iCrushGauge = 8000;
+		m_iMaxCrushGauge = 8000;
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
@@ -310,6 +317,13 @@ void CEM1200::SetUpFSM()
 
 					m_dLoopTime = 0.0;
 					m_dLoopTick = 0.8;
+
+					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1200_Fear")
+						->Start_NoAttach(this, false, true);
+
+					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1200_Fear_Particle")
+						->Start_NoAttach(this, false, true);
+
 				})
 				.Tick([this](_double TimeDelta)
 				{
@@ -675,7 +689,7 @@ void CEM1200::Tick(_double TimeDelta)
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
 
-	const _float MoveSpeed = m_bRun ? 7.f : 1.2f;
+	const _float MoveSpeed = m_bRun ? 7.f : 0.7f;
 	if (m_vMoveAxis.LengthSquared() > 0.f)
 	{
 		_float3 vVelocity;
@@ -718,7 +732,49 @@ void CEM1200::Imgui_RenderProperty()
 		m_pASM->Imgui_RenderState();
 	}
 	m_pFSM->Imgui_RenderProperty();
-	ImGui::Text("hp %d", m_iHP);
+
+	static _bool tt = false;
+	ImGui::Checkbox("Modify Pivot", &tt);
+
+	if (tt)
+	{
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+
+		if (ImGui::Button("Create_TestSwingLeft"))
+		{
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1200_Slash")
+				->Start_AttachPivot(this, pivot, "Target", true, false);
+
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Smoke_Ivory_0" + to_wstring(CMathUtils::RandomUInt(4)))
+				->Start_AttachPivot(this, pivot, "Target", true, false);
+
+		}
+
+		if (ImGui::Button("Create_TestSwingRight"))
+		{
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1200_Slash")
+				->Start_AttachPivot(this, pivot, "Target", true, false);
+
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Smoke_Ivory_0" + to_wstring(CMathUtils::RandomUInt(4)))
+				->Start_AttachPivot(this, pivot, "Target", true, false);
+
+		}
+
+
+		if (ImGui::Button("Create_TestStamp"))
+		{
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1200_Stamp_Impact")
+				->Start_AttachPivot(this, pivot, "Target", true, false, true);
+
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1200_Stamp_Particles")
+				->Start_NoAttachPivot(this, pivot, false, true);
+
+		}
+	}
 }
 
 _bool CEM1200::IsPlayingSocket() const

@@ -34,8 +34,8 @@ HRESULT CEM0220::Initialize(void * pArg)
 		m_iMaxHP = 1100;
 		m_iHP = 1100; // ¡Ú
 
-		m_iCrushGauge = 1100;
-		m_iMaxCrushGauge = 1100;
+		m_iCrushGauge = 500;
+		m_iMaxCrushGauge = m_iCrushGauge;
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
@@ -400,10 +400,7 @@ void CEM0220::CheckHP(DAMAGE_PARAM & tDamageParams)
 
 	if (m_iHP < 0)
 	{
-		if (m_iCrushGauge > 0 || m_dDeadTime > 3.f)
-			SetDead();
-
-		m_bDeadStart = true;
+		SetDead();
 		m_iHP = 0;
 	}
 }
@@ -485,7 +482,7 @@ void CEM0220::Create_Bullet()
 		.CreateBullet()
 			.Set_Owner(this)
 			.Set_InitBulletEffect({ L"em0650_Bullet_Birth", L"em0220_Bullet" })
-			.Set_ShootSpped(22.f)
+			.Set_ShootSpeed(22.f)
 			.Set_Life(2.f)
 			.Set_DamageParam(eDamageParam)
 			.Set_DeadBulletEffect({ L"em0320_Bullet_Dead_1", L"em0320_Bullet_Dead_2", L"em0320_Bullet_Dead_3" })

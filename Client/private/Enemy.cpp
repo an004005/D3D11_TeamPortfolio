@@ -115,7 +115,7 @@ void CEnemy::Tick(_double TimeDelta)
 	m_pModelCom->Tick(TimeDelta);
 
 	// 브레인 크러쉬 안할때 3초 안에 죽이기
-	if (m_bDeadStart)
+	if (m_bCrushStart)
 		m_dDeadTime += TimeDelta;
 
 	if (m_dDeadTime >= 3.f)
@@ -582,7 +582,7 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 		if (m_iCrushGauge < 0)
 		{
 			m_iCrushGauge = 0;
-			m_bDeadStart = true;
+			m_bCrushStart = true;
 
 			//UI 띄우기
 		}
@@ -594,7 +594,7 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 {
 	//true가 됐다는건 플레이어가 G키를 눌러 브레인 크러쉬를 실행했다는거.
 	//브레인 크러쉬 애니메이션에 맞춰서 SetDead 함수를 실행시켜 줌
-	//if (m_bBrainCrush == true) return;
+	if (m_bCrushStart == true) return;
 
 	_int iDamage = tDamageParams.iDamage;
 	// if (m_bHitWeak)
@@ -603,10 +603,8 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 	m_iHP -= iDamage;
 	if (m_iHP < 0)
 	{
-		if (m_iCrushGauge > 0)
-			SetDead();
-
-		m_bDeadStart = true;
+		//if (m_iCrushGauge > 0)
+		SetDead();
 		m_iHP = 0;
 	}
 }

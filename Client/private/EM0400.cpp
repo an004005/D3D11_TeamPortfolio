@@ -42,7 +42,7 @@ HRESULT CEM0400::Initialize(void * pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0400;
-	m_bHasCrushGauge = true;
+	m_bHasCrushGauge = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	return S_OK;

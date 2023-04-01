@@ -50,6 +50,8 @@ private:
 	class CEM0800_AnimInstance*		m_pASM = nullptr;
 
 	CEffectGroup*				m_pWaterPool = nullptr;
+	CParticleGroup*			m_pLeftArmBugParticle = nullptr;
+	CParticleGroup*			 m_pRightArmBugParticle = nullptr;
 private:
 	_float3						m_vMoveAxis;
 	EBaseTurn				m_eTurn = EBaseTurn::TURN_END;

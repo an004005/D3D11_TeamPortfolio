@@ -33,6 +33,10 @@ HRESULT CEM0700::Initialize(void * pArg)
 		m_iMaxHP = 3000;
 		m_iHP = 3000; // ¡Ú
 
+
+		m_iCrushGauge = 2500;
+		m_iMaxCrushGauge = m_iCrushGauge;
+
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
 	}
@@ -625,7 +629,7 @@ void CEM0700::Create_Bullet()
 			.Set_Owner(this)
 			.Set_InitBulletEffect({ L"em0650_Bullet_Birth" , L"Em0650_Bullet_Loop" })
 			.Set_InitBulletParticle(L"em0650_Bullet_Loop")
-			.Set_ShootSpped(8.f)
+			.Set_ShootSpeed(8.f)
 			.Set_Life(4.f)
 			.Set_DamageParam(eDamageParam)
 			.Set_DeadBulletEffect({ L"em0650_Bullet_Dead" })

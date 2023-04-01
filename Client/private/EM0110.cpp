@@ -33,6 +33,9 @@ HRESULT CEM0110::Initialize(void * pArg)
 		m_iMaxHP = 1100;
 		m_iHP = 1100; // ★
 
+		m_iCrushGauge = 3000;
+		m_iMaxCrushGauge = m_iCrushGauge;
+
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
 	}

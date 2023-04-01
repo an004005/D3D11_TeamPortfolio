@@ -5246,6 +5246,12 @@
             }
         ]
     },
+    "AS_em1100_202_AL_atk_a1_bringdown_end": {
+        "Duration": 57.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em1100_202_AL_atk_a1_bringdown_start": {
         "Duration": 33.0,
         "TickPerSecond": 40.0,
@@ -5259,16 +5265,20 @@
     },
     "AS_em1100_204_AL_atk_a2_tailall": {
         "Duration": 176.0,
-        "TickPerSecond": 40.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "TailSwing_End",
-                "EventTime": 100.0
+                "EventName": "TailSwing_First",
+                "EventTime": 60.0
             },
             {
-                "EventName": "TailSwing_Start",
-                "EventTime": 70.0
+                "EventName": "TailSwing_Second",
+                "EventTime": 75.0
+            },
+            {
+                "EventName": "TailSwing_End",
+                "EventTime": 105.0
             }
         ]
     },
@@ -5278,14 +5288,25 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_em1100_208_AL_atk_a3_guidanceshot_omen": {
+        "Duration": 160.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "ElectricBall_Ready",
+                "EventTime": 90.0
+            }
+        ]
+    },
     "AS_em1100_208_AL_atk_a3_guidanceshot_start": {
         "Duration": 60.0,
-        "TickPerSecond": 35.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
                 "EventName": "Shot",
-                "EventTime": 26.0
+                "EventTime": 40.0
             }
         ]
     },
@@ -5297,13 +5318,13 @@
     },
     "AS_em1100_215_AL_atk_a5_drainage_omen": {
         "Duration": 143.0,
-        "TickPerSecond": 40.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em1100_215_AL_atk_a5_drainage_start": {
         "Duration": 77.0,
-        "TickPerSecond": 32.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },

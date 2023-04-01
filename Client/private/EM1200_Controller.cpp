@@ -66,7 +66,9 @@ void CEM1200_Controller::AI_Tick(_double TimeDelta)
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
-		DefineState(TimeDelta);
+		AddCommand("Shout1", 0.f, &CAIController::Input, NUM_1);
+		AddCommand("Wait", 1.f, &CAIController::Wait);
+		//DefineState(TimeDelta);
 	}
 }
 
@@ -160,8 +162,16 @@ void CEM1200_Controller::Tick_Far(_double TimeDelta)
 void CEM1200_Controller::Tick_Outside(_double TimeDelta)
 {
 	m_eDistance = DIS_OUTSIDE;
-	AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 2.f);
-	AddCommand("Run", 3.f, &CEM1200_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 2.f);
+
+	if (m_bChangePhase == false)
+	{
+		AddCommand("Wait", 2.f, &CAIController::Wait);
+	}
+	else
+	{
+		AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 2.f);
+		AddCommand("Run", 3.f, &CEM1200_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 2.f);
+	}
 }
 
 void CEM1200_Controller::Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
@@ -185,8 +195,10 @@ void CEM1200_Controller::DefineState(_double TimeDelta)
 	{
 		if (m_fTtoM_Distance <= 7.f)
 			Tick_Near_1Phase(TimeDelta);
-		else
+		else if(m_fTtoM_Distance <= 15.f)
 			Tick_Mid(TimeDelta);
+		else
+			Tick_Outside(TimeDelta);
 	}
 
 	else
