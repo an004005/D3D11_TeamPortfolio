@@ -92,7 +92,10 @@ HRESULT CCanvas_ShopListBar::Render()
 	
 	vColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	// 금액 m_iPrice
-	wsprintf(szText, TEXT("%u"), tItemInfo.second.iPrice);
+	if(false == m_bSale)
+		wsprintf(szText, TEXT("%u"), tItemInfo.second.iPrice);
+	else
+		wsprintf(szText, TEXT("%u"), tItemInfo.second.iSellingPrice);
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(580.0f, 13.0f), 0.f, vFontSize, vColor);
 	
 	// 개수
@@ -102,21 +105,9 @@ HRESULT CCanvas_ShopListBar::Render()
 	return S_OK;
 }
 
-void CCanvas_ShopListBar::Imgui_RenderProperty()
+_uint CCanvas_ShopListBar::Get_ItemCount()
 {
-	CCanvas::Imgui_RenderProperty();
-
-
-}
-
-void CCanvas_ShopListBar::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-}
-
-void CCanvas_ShopListBar::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
+	return CItem_Manager::GetInstance()->Get_ItmeInfo()[m_iItemInfoIndex].second.iCount;
 }
 
 _float2 CCanvas_ShopListBar::Get_ListPosititon()

@@ -2,6 +2,8 @@
 #include "..\public\Canvas_Shortage.h"
 #include "GameInstance.h"
 
+#include "ButtonUI.h"
+
 CCanvas_Shortage::CCanvas_Shortage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
@@ -40,11 +42,10 @@ void CCanvas_Shortage::Tick(_double TimeDelta)
 
 	if (m_bVisible == false) return;
 
-	m_bVisible_TimeAcc += TimeDelta;
-	if (1.0 < m_bVisible_TimeAcc)
+	if (true == dynamic_cast<CButtonUI*>(Find_ChildUI(L"Shop_ShortageB"))->Get_Input())
 	{
-		m_bVisible_TimeAcc = 0.0;
 		m_bVisible = false;
+		dynamic_cast<CButtonUI*>(Find_ChildUI(L"Shop_ShortageB"))->Set_Input();
 	}
 }
 
@@ -64,7 +65,7 @@ HRESULT CCanvas_Shortage::Render()
 	_float2 vFontSize = { 0.5f, 0.5f };
 	_float4 vColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	_float2 vPosition = Find_ChildUI(L"Shop_ShortageB")->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", L"소지금이 부족합니다.", vPosition + _float2(140.0f, 40.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"소지금이 부족하여  구입할 수 없습니다.", vPosition + _float2(55.0f, 55.0f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }

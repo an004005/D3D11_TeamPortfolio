@@ -109,6 +109,7 @@
 #include "Canvas_ShopListBar.h"
 #include "Canvas_ListCheck.h"
 #include "Canvas_Shortage.h"
+#include "Canvas_SaleListCheck.h"
 
 // Default
 #include "DefaultUI.h"
@@ -693,7 +694,10 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_Shortage"),
 			CCanvas_Shortage::Create(pDevice, pContext))))
 			return E_FAIL;
-
+		/* For.Prototype_GameObject_Canvas_SaleListCheck*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SaleListCheck"),
+			CCanvas_SaleListCheck::Create(pDevice, pContext))))
+			return E_FAIL;
 
 
 

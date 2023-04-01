@@ -45,6 +45,50 @@
             }
         },
         {
+            "ChildTag": "Shop_CurrentCountButton\u0000",
+            "ObjectTag": "Shop_CurrentCountButton",
+            "Pivot": 0,
+            "PositionX": -25.0,
+            "PositionY": 260.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Button_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 4,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 45.0,
+            "SizeY": 30.0,
+            "Transform": {
+                "WorldMatrix": [
+                    45.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    30.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -25.0,
+                    260.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
             "ChildTag": "Shop_CurrentWondowB\u0000",
             "ObjectTag": "Shop_CurrentWondowB",
             "Pivot": 8,
@@ -61,7 +105,7 @@
                         1.0,
                         1.0,
                         1.0,
-                        0.07488926500082016
+                        0.07750923186540604
                     ]
                 ],
                 "Float4x4s": [],
@@ -108,7 +152,7 @@
             "ShaderParams": {
                 "Float2s": [
                     [
-                        1.0,
+                        0.0,
                         0.0
                     ],
                     [

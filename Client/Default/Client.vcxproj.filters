@@ -385,6 +385,12 @@
     <Filter Include="02.GameObjects\UI\Main\Canvas">
       <UniqueIdentifier>{a84ad824-2ee4-49a4-8b5f-2249e5b4eaa9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\Shop\Purchase">
+      <UniqueIdentifier>{4c6e7847-6561-4d9e-b96c-fa4c9fb2e368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Shop\Sale">
+      <UniqueIdentifier>{9f9b1c99-5068-4203-9ebf-cf20b31fb821}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1229,26 +1235,35 @@
     <ClInclude Include="..\public\BulletBuilder.h">
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_Purchase.h">
-      <Filter>02.GameObjects\UI\Shop</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Canvas_Shop.h">
-      <Filter>02.GameObjects\UI\Shop</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Canvas_PurchaseKinds.h">
       <Filter>02.GameObjects\UI\Shop</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_ShopListBar.h">
       <Filter>02.GameObjects\UI\Shop</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_ListCheck.h">
-      <Filter>02.GameObjects\UI\Shop</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\ShaderUI.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_Purchase.h">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PurchaseKinds.h">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Sale.h">
+      <Filter>02.GameObjects\UI\Shop\Sale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SaleKinds.h">
+      <Filter>02.GameObjects\UI\Shop\Sale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_ListCheck.h">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Canvas_Shortage.h">
-      <Filter>02.GameObjects\UI\Shop</Filter>
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SaleListCheck.h">
+      <Filter>02.GameObjects\UI\Shop\Sale</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2071,23 +2086,32 @@
     <ClCompile Include="..\private\Canvas_Shop.cpp">
       <Filter>02.GameObjects\UI\Shop</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_Purchase.cpp">
-      <Filter>02.GameObjects\UI\Shop</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_PurchaseKinds.cpp">
-      <Filter>02.GameObjects\UI\Shop</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Canvas_ShopListBar.cpp">
-      <Filter>02.GameObjects\UI\Shop</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_ListCheck.cpp">
       <Filter>02.GameObjects\UI\Shop</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ShaderUI.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Canvas_Purchase.cpp">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PurchaseKinds.cpp">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Sale.cpp">
+      <Filter>02.GameObjects\UI\Shop\Sale</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SaleKinds.cpp">
+      <Filter>02.GameObjects\UI\Shop\Sale</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_ListCheck.cpp">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Canvas_Shortage.cpp">
-      <Filter>02.GameObjects\UI\Shop</Filter>
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SaleListCheck.cpp">
+      <Filter>02.GameObjects\UI\Shop\Sale</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

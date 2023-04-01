@@ -27,9 +27,6 @@ public:
 		return m_bVisible;
 	}
 
-private:
-	_double	m_bVisible_TimeAcc = { 0.0 };
-
 public:
 	static CCanvas_Shortage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

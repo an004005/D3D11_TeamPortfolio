@@ -13,6 +13,7 @@
 #include "ItemIconUI.h"
 #include "Item_LeftArrowUI.h"
 #include "Item_RightArrowUI.h"
+#include "ButtonUI.h"
 
 CCanvas_PurchaseKinds::CCanvas_PurchaseKinds(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -42,11 +43,11 @@ HRESULT CCanvas_PurchaseKinds::Initialize(void* pArg)
 		iter->second->SetVisible(m_bVisible);
 
 	Add_ShopListCanvas();
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_ListCheck.json"); // Lyaer_ShopUI
-	m_pCanvas_ListCheck = dynamic_cast<CCanvas_ListCheck*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"sssssssssssssssss", L"Canvas_ListCheck", &json));
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_ListCheck.json");
+	m_pCanvas_ListCheck = dynamic_cast<CCanvas_ListCheck*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_ListCheck", &json));
 	assert(m_pCanvas_ListCheck != nullptr && "Failed to Cloned : CCanvas_ListCheck");
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Shortage.json"); // Lyaer_ShopUI
-	m_pCanvas_Shortage = dynamic_cast<CCanvas_Shortage*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"sssssssssssssssss", L"Canvas_Shortage", &json));
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Shortage.json");
+	m_pCanvas_Shortage = dynamic_cast<CCanvas_Shortage*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_Shortage", &json));
 	assert(m_pCanvas_Shortage != nullptr && "Failed to Cloned : CCanvas_Shortage");
 
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_CurrentWondowB"))->Set_InitializeAlpha();
@@ -72,6 +73,8 @@ void CCanvas_PurchaseKinds::Tick(_double TimeDelta)
 
 	for (vector<pair<wstring, CCanvas_ShopListBar*>>::iterator iter = m_vecShopCanvass.begin(); iter != m_vecShopCanvass.end(); ++iter)
 		iter->second->SetVisible(m_bVisible);
+
+	if (m_bVisible == false) return;
 
 	CCanvas::Tick(TimeDelta);
 
@@ -147,7 +150,6 @@ HRESULT CCanvas_PurchaseKinds::Render()
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(350.0f, 82.0f), 0.f, vFontSmaillSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"구입 금액", vPosition + _float2(20.0f, 80.0f), 0.f, vFontSmaillSize, vColor);
 
-
 	return S_OK;
 }
 
@@ -205,7 +207,7 @@ void CCanvas_PurchaseKinds::Add_ShopListCanvas()
 void CCanvas_PurchaseKinds::Clone_ShopListCanvas(const size_t iIndex)
 {
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_ShopListBar.json");
-	CCanvas_ShopListBar* pCanvas = dynamic_cast<CCanvas_ShopListBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Lyaer_ShopUI", L"Canvas_ShopListBar", &json));
+	CCanvas_ShopListBar* pCanvas = dynamic_cast<CCanvas_ShopListBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_ShopListBar", &json));
 	assert(pCanvas != nullptr && "Failed to Cloned : CCanvas_ShopListBar");
 
 	size_t iVecSize = m_vecShopCanvass.size();
@@ -234,6 +236,7 @@ void CCanvas_PurchaseKinds::CurrentList()
 			Find_ChildUI(L"Shop_CurrentWondowB")->Set_Position(m_vecShopCanvass[i].second->Get_ListPosititon());
 			Find_ChildUI(L"Shop_LeftArrow")->Set_Position({ Find_ChildUI(L"Shop_LeftArrow")->Get_Position().x, m_vecShopCanvass[i].second->Get_ListPosititon().y });
 			Find_ChildUI(L"Shop_RightArrow")->Set_Position({ Find_ChildUI(L"Shop_RightArrow")->Get_Position().x, m_vecShopCanvass[i].second->Get_ListPosititon().y });
+			Find_ChildUI(L"Shop_CurrentCountButton")->Set_Position({ Find_ChildUI(L"Shop_CurrentCountButton")->Get_Position().x, m_vecShopCanvass[i].second->Get_ListPosititon().y });
 		}
 		else
 		{
@@ -244,8 +247,13 @@ void CCanvas_PurchaseKinds::CurrentList()
 
 void CCanvas_PurchaseKinds::Key_Input()
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_RETURN) ||
+		dynamic_cast<CButtonUI*>(Find_ChildUI(L"Shop_CurrentCountButton"))->Get_Input())
 	{
+		dynamic_cast<CButtonUI*>(Find_ChildUI(L"Shop_CurrentCountButton"))->Set_Input();
+		m_iItemCount = m_vecShopCanvass[m_iCanvasIndex].second->Get_NmberPurchases();
+		if (0 == m_iItemCount) return;
+
 		// 플레이어의 소지금이 부족하면 아이템을 구매할 수 없다.
 		_int iResult = static_cast<_int>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin) - (m_vecItemInfo[m_iItemIndex].second.iPrice * m_iItemCount);
 		if (0 >= iResult)
@@ -274,8 +282,10 @@ void CCanvas_PurchaseKinds::Key_Input()
 	if (CGameInstance::GetInstance()->KeyDown(DIK_LEFT) ||
 		dynamic_cast<CItem_LeftArrowUI*>(Find_ChildUI(L"Shop_LeftArrow"))->Get_KeyDown())
 	{
-		m_iItemCount = m_vecShopCanvass[m_iCanvasIndex].second->Get_NmberPurchases();
 		dynamic_cast<CItem_LeftArrowUI*>(Find_ChildUI(L"Shop_LeftArrow"))->Set_KeyDown();
+		
+		// 예외처리 : 왼쪽 버튼을 누를 때 구매하고자 하는 아이템 개수가 0개 이하라면 왼쪽 버튼을 누를 수 없다.
+		m_iItemCount = m_vecShopCanvass[m_iCanvasIndex].second->Get_NmberPurchases();
 		if (0 == m_iItemCount) return;
 
 		--m_iItemCount;
@@ -286,11 +296,32 @@ void CCanvas_PurchaseKinds::Key_Input()
 	if (CGameInstance::GetInstance()->KeyDown(DIK_RIGHT) ||
 		dynamic_cast<CItem_RightArrowUI*>(Find_ChildUI(L"Shop_RightArrow"))->Get_KeyDown())
 	{
+		dynamic_cast<CItem_RightArrowUI*>(Find_ChildUI(L"Shop_RightArrow"))->Set_KeyDown();
+
+		// 예외처리 : 배틀 아이템은 최대 10개, 무기 아이템은 최대 1개 이상 구매할 수 없다.
+		if (m_vecItemInfo[m_iItemIndex].second.eType == CItem_Manager::MAINITEM::BATTLE)
+		{
+			if (10 <= m_iItemCount + m_vecItemInfo[m_iItemIndex].second.iCount)
+			{
+				m_iItemCount = 0; 
+				m_vecShopCanvass[m_iCanvasIndex].second->Set_NmberPurchases(m_iItemCount);
+				return;
+			}
+		}
+		else 	if (m_vecItemInfo[m_iItemIndex].second.eType == CItem_Manager::MAINITEM::WEAPON)
+		{
+			if (1 <= m_iItemCount + m_vecItemInfo[m_iItemIndex].second.iCount)
+			{
+				m_iItemCount = 0;
+				m_vecShopCanvass[m_iCanvasIndex].second->Set_NmberPurchases(m_iItemCount);
+				return;
+			}
+		}
+
 		m_iItemCount = m_vecShopCanvass[m_iCanvasIndex].second->Get_NmberPurchases();
 		++m_iItemCount;
 		m_vecShopCanvass[m_iCanvasIndex].second->Set_NmberPurchases(m_iItemCount);
 		dynamic_cast<CItem_RightArrowUI*>(Find_ChildUI(L"Shop_RightArrow"))->Set_Input();
-		dynamic_cast<CItem_RightArrowUI*>(Find_ChildUI(L"Shop_RightArrow"))->Set_KeyDown();
 	}
 }
 
@@ -321,4 +352,7 @@ CCanvas * CCanvas_PurchaseKinds::Clone(void * pArg)
 void CCanvas_PurchaseKinds::Free()
 {
 	CCanvas::Free();
+
+	m_vecShopCanvass.clear();
+	m_vecItemInfo.clear();
 }

@@ -74,16 +74,16 @@
                     "..\\Bin\\Resources\\UI\\Shop\\Shortage.png\u0000"
                 ]
             },
-            "SizeX": 461.0,
-            "SizeY": 101.0,
+            "SizeX": 450.0,
+            "SizeY": 143.0,
             "Transform": {
                 "WorldMatrix": [
-                    461.0,
+                    450.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    101.0,
+                    143.0,
                     0.0,
                     0.0,
                     0.0,
@@ -104,17 +104,17 @@
             "PositionX": 0.0,
             "PositionY": 0.0,
             "Priority": 12,
-            "Prototype_GameObject": "Default_UI\u0000",
+            "Prototype_GameObject": "Button_UI\u0000",
             "ScaleX": 1.0,
             "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [
                     [
-                        1.0,
-                        1.0,
-                        1.0,
-                        0.10000000149011612
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.20000000298023224
                     ]
                 ],
                 "Float4x4s": [],
@@ -125,16 +125,60 @@
                     "..\\Bin\\Resources\\UI\\Shop\\ShortageB.png\u0000"
                 ]
             },
-            "SizeX": 461.0,
-            "SizeY": 101.0,
+            "SizeX": 450.0,
+            "SizeY": 143.0,
             "Transform": {
                 "WorldMatrix": [
-                    461.0,
+                    450.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    101.0,
+                    143.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Shop_ShortageColor\u0000",
+            "ObjectTag": "",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 0.0,
+            "Priority": 13,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Shop\\ShortageColor.png\u0000"
+                ]
+            },
+            "SizeX": 450.0,
+            "SizeY": 143.0,
+            "Transform": {
+                "WorldMatrix": [
+                    450.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    143.0,
                     0.0,
                     0.0,
                     0.0,
@@ -153,7 +197,7 @@
     "Pivot": 0,
     "PositionX": 0.0,
     "PositionY": 0.0,
-    "Priority": 10,
+    "Priority": 15,
     "Prototype_GameObject": "Canvas_Shortage\u0000",
     "ScaleX": 0.5,
     "ScaleY": 0.5,

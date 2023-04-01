@@ -28,12 +28,12 @@ HRESULT CCanvas_MainItemKinds::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	for (vector<pair<wstring, class CCanvas_ItemWindow*>>::iterator iter = m_vecItemCanvass.begin(); iter != m_vecItemCanvass.end(); ++iter)
+		iter->second->SetVisible(m_bVisible);
+
 	m_bVisible = false;
 	m_iPickIndex = 99;
 	m_iPrePickIndex = 99;
-
-	for (vector<pair<wstring, class CCanvas_ItemWindow*>>::iterator iter = m_vecItemCanvass.begin(); iter != m_vecItemCanvass.end(); ++iter)
-		iter->second->SetVisible(m_bVisible);
 
 	return S_OK;
 }
@@ -301,4 +301,5 @@ void CCanvas_MainItemKinds::Free()
 	CCanvas::Free();
 
 	m_vecItemCanvass.clear();
+	m_vecItemInfo.clear();
 }

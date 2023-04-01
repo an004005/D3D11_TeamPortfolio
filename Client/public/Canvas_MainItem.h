@@ -31,7 +31,7 @@ private:
 	void	Canvas_Visible();
 
 private:
-	CCanvas*	m_arrCanvass[MAINITEM_END];
+	CCanvas*		m_arrCanvass[MAINITEM_END];
 	MAINITEM	m_eMainItem = { ALL };
 
 public:

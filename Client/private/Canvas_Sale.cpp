@@ -1,25 +1,25 @@
 #include "stdafx.h"
-#include "..\public\Canvas_Purchase.h"
+#include "..\public\Canvas_Sale.h"
 #include "GameInstance.h"
 #include "JsonStorage.h"
 #include "Item_Manager.h"
 
-#include "Canvas_PurchaseKinds.h"
+#include "Canvas_SaleKinds.h"
 #include "DefaultUI.h"
 #include "Main_PickUI.h"
 #include "ItemIconUI.h"
 
-CCanvas_Purchase::CCanvas_Purchase(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCanvas_Sale::CCanvas_Sale(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
 }
 
-CCanvas_Purchase::CCanvas_Purchase(const CCanvas_Purchase& rhs)
+CCanvas_Sale::CCanvas_Sale(const CCanvas_Sale& rhs)
 	: CCanvas(rhs)
 {
 }
 
-HRESULT CCanvas_Purchase::Initialize_Prototype()
+HRESULT CCanvas_Sale::Initialize_Prototype()
 {
 	if (FAILED(CCanvas::Initialize_Prototype()))
 		return E_FAIL;
@@ -27,7 +27,7 @@ HRESULT CCanvas_Purchase::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CCanvas_Purchase::Initialize(void* pArg)
+HRESULT CCanvas_Sale::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
@@ -46,7 +46,7 @@ HRESULT CCanvas_Purchase::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CCanvas_Purchase::Tick(_double TimeDelta)
+void CCanvas_Sale::Tick(_double TimeDelta)
 {
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(m_bVisible);
@@ -61,7 +61,7 @@ void CCanvas_Purchase::Tick(_double TimeDelta)
 	MenuPcik_Tick();
 }
 
-HRESULT CCanvas_Purchase::Render()
+HRESULT CCanvas_Sale::Render()
 {
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
@@ -82,40 +82,40 @@ HRESULT CCanvas_Purchase::Render()
 	return S_OK;
 }
 
-void CCanvas_Purchase::Imgui_RenderProperty()
+void CCanvas_Sale::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
 }
 
-HRESULT CCanvas_Purchase::Add_ShopCanvas()
+HRESULT CCanvas_Sale::Add_ShopCanvas()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 	
-	/* For.Prototype_GameObject_Canvas_PurchaseKinds*/
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_PurchaseKinds"), CCanvas_PurchaseKinds::Create(m_pDevice, m_pContext))))
+	/* For.Prototype_GameObject_Canvas_SaleKinds*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SaleKinds"), CCanvas_SaleKinds::Create(m_pDevice, m_pContext))))
 	return E_FAIL;
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_PurchaseKinds.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SaleKinds.json");
 	json["ITemType"] = CItem_Manager::MAINITEM::ALL;
-	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_PurchaseKinds", &json);
+	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_SaleKinds", &json);
 	assert(pCanvas != nullptr && "Failed to Cloned : Canvas_PurchaseKinds0");
-	m_arrCanvass[ALL] = dynamic_cast<CCanvas_PurchaseKinds*>(pCanvas);
+	m_arrCanvass[ALL] = dynamic_cast<CCanvas_SaleKinds*>(pCanvas);
 
 	json["ITemType"] = CItem_Manager::MAINITEM::BATTLE;
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_PurchaseKinds", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_SaleKinds", &json);
 	assert(pCanvas != nullptr && "Failed to Cloned : Canvas_PurchaseKinds1");
-	m_arrCanvass[BATTLE] = dynamic_cast<CCanvas_PurchaseKinds*>(pCanvas);
+	m_arrCanvass[BATTLE] = dynamic_cast<CCanvas_SaleKinds*>(pCanvas);
 
 	json["ITemType"] = CItem_Manager::MAINITEM::WEAPON;
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_PurchaseKinds", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_SaleKinds", &json);
 	assert(pCanvas != nullptr && "Failed to Cloned : Canvas_PurchaseKinds2");
-	m_arrCanvass[WEAPON] = dynamic_cast<CCanvas_PurchaseKinds*>(pCanvas);
+	m_arrCanvass[WEAPON] = dynamic_cast<CCanvas_SaleKinds*>(pCanvas);
 
 	return S_OK;
 }
 
-void CCanvas_Purchase::MenuPcik_Tick()
+void CCanvas_Sale::MenuPcik_Tick()
 {
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuAll"))->Get_OnButton())
 	{
@@ -151,7 +151,7 @@ void CCanvas_Purchase::MenuPcik_Tick()
 	}
 }
 
-void CCanvas_Purchase::Canvas_Visible()
+void CCanvas_Sale::Canvas_Visible()
 {
 	for (_int i = 0; i < MAINITEM_END; ++i)
 	{
@@ -165,31 +165,31 @@ void CCanvas_Purchase::Canvas_Visible()
 	}
 }
 
-CCanvas_Purchase * CCanvas_Purchase::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CCanvas_Sale * CCanvas_Sale::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CCanvas_Purchase*		pInstance = new CCanvas_Purchase(pDevice, pContext);
+	CCanvas_Sale*		pInstance = new CCanvas_Sale(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CCanvas_Purchase");
+		MSG_BOX("Failed to Created : CCanvas_Sale");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CCanvas * CCanvas_Purchase::Clone(void * pArg)
+CCanvas * CCanvas_Sale::Clone(void * pArg)
 {
-	CCanvas_Purchase*		pInstance = new CCanvas_Purchase(*this);
+	CCanvas_Sale*		pInstance = new CCanvas_Sale(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CCanvas_Purchase");
+		MSG_BOX("Failed to Cloned : CCanvas_Sale");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CCanvas_Purchase::Free()
+void CCanvas_Sale::Free()
 {
 	CCanvas::Free();
 }

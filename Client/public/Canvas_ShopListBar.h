@@ -18,11 +18,9 @@ public:
 	virtual void	Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
-	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
-
 public:
+	_uint Get_ItemCount();
+
 	_uint Get_NmberPurchases() {
 		return m_iNmberPurchases;
 	}
@@ -42,9 +40,15 @@ public:
 
 	void	Set_ShopListBar(const _float2& fItemPos, const _float2& fIconPos, const size_t iIndex);
 
+	void	Set_Sale() {
+		m_bSale = true;
+	}
+
 private:
 	size_t		m_iItemInfoIndex = { 0 };
 	_uint		m_iNmberPurchases = { 0 };
+
+	_bool		m_bSale = { false };
 
 public:
 	static CCanvas_ShopListBar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\public\Canvas_ListCheck.h"
+#include "..\public\Canvas_SaleListCheck.h"
 #include "GameInstance.h"
 #include "PlayerInfoManager.h"
 #include "Item_Manager.h"
@@ -7,17 +7,17 @@
 #include "Tutorial_YesNoUI.h"
 #include "ShaderUI.h"
 
-CCanvas_ListCheck::CCanvas_ListCheck(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCanvas_SaleListCheck::CCanvas_SaleListCheck(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
 }
 
-CCanvas_ListCheck::CCanvas_ListCheck(const CCanvas_ListCheck& rhs)
+CCanvas_SaleListCheck::CCanvas_SaleListCheck(const CCanvas_SaleListCheck& rhs)
 	: CCanvas(rhs)
 {
 }
 
-HRESULT CCanvas_ListCheck::Initialize_Prototype()
+HRESULT CCanvas_SaleListCheck::Initialize_Prototype()
 {
 	if (FAILED(CCanvas::Initialize_Prototype()))
 		return E_FAIL;
@@ -25,7 +25,7 @@ HRESULT CCanvas_ListCheck::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CCanvas_ListCheck::Initialize(void* pArg)
+HRESULT CCanvas_SaleListCheck::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
@@ -36,7 +36,7 @@ HRESULT CCanvas_ListCheck::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CCanvas_ListCheck::Tick(_double TimeDelta)
+void CCanvas_SaleListCheck::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
@@ -64,13 +64,13 @@ void CCanvas_ListCheck::Tick(_double TimeDelta)
 	TransferringBar_Tick(TimeDelta);
 }
 
-void CCanvas_ListCheck::Late_Tick(_double TimeDelta)
+void CCanvas_SaleListCheck::Late_Tick(_double TimeDelta)
 {
 	CCanvas::Late_Tick(TimeDelta);
 
 }
 
-HRESULT CCanvas_ListCheck::Render()
+HRESULT CCanvas_SaleListCheck::Render()
 {
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
@@ -83,12 +83,12 @@ HRESULT CCanvas_ListCheck::Render()
 	vector<pair<wstring, CItem_Manager::ITEMINFO>> vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
 
 	_float2 vPosition = Find_ChildUI(L"Purchase_Window")->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", L"구입하시겠습니까?", vPosition + _float2(145.0f, 27.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"매각하시겠습니까?", vPosition + _float2(145.0f, 27.0f), 0.f, vFontBigSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"예", vPosition + _float2(212.0f, 95.0f), 0.f, vFontBigSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"아니오", vPosition + _float2(195.0f, 133.0f), 0.f, vFontBigSize, vColor);
 
 	if (m_bTransferring == true) {
-		if (1.0f > m_fTransferringBar)
+		if (0.0f > m_fTransferringBar)
 			pGameInstance->Render_Font(L"Pretendard32", L"전송 완료", vPosition + _float2(195.0f, 245.0f), 0.f, vFontSmaillSize, vColor);
 		else
 			pGameInstance->Render_Font(L"Pretendard32", L"전송 중", vPosition + _float2(205.0f, 245.0f), 0.f, vFontSmaillSize, vColor);
@@ -96,12 +96,11 @@ HRESULT CCanvas_ListCheck::Render()
 	}
 
 	pGameInstance->Render_Font(L"Pretendard32", L"소지금", vPosition + _float2(55.0f, 193.0f), 0.f, vFontSmaillSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"구입 후 소지금", vPosition + _float2(55.0f, 219.0f), 0.f, vFontSmaillSize, vColor);
-
 	wsprintf(szText, TEXT("%u"), CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin);
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(340.0f, 193.0f), 0.f, vFontSmaillSize, vColor);
 
-	_int iResult = static_cast<_int>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin) - (vecItemInfo[m_iItemIndex].second.iPrice * m_iItemCount);
+	pGameInstance->Render_Font(L"Pretendard32", L"매각 후 소지금", vPosition + _float2(55.0f, 219.0f), 0.f, vFontSmaillSize, vColor);
+	_int iResult = static_cast<_int>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin) + (vecItemInfo[m_iItemIndex].second.iSellingPrice * m_iItemCount);
 	if (0 >= iResult)
 		vColor = { 1.0f, 0.458f, 0.38f, 1.0f };
 	else
@@ -110,31 +109,31 @@ HRESULT CCanvas_ListCheck::Render()
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(340.0f, 219.0f), 0.f, vFontSmaillSize, vColor);
 
 	vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-	_uint iItemValueResult = vecItemInfo[m_iItemIndex].second.iPrice * m_iItemCount;
+	pGameInstance->Render_Font(L"Pretendard32", L"구입 금액", vPosition + _float2(55.0f, 249.0f), 0.f, vFontSmaillSize, vColor);
+	_uint iItemValueResult = vecItemInfo[m_iItemIndex].second.iSellingPrice * m_iItemCount;
 	wsprintf(szText, TEXT("%d"), iItemValueResult);
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(340.0f, 249.0f), 0.f, vFontSmaillSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"구입 금액", vPosition + _float2(55.0f, 249.0f), 0.f, vFontSmaillSize, vColor);
 
 	return S_OK;
 }
 
-void CCanvas_ListCheck::Imgui_RenderProperty()
+void CCanvas_SaleListCheck::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
 }
 
-void CCanvas_ListCheck::SaveToJson(Json& json)
+void CCanvas_SaleListCheck::SaveToJson(Json& json)
 {
 	CCanvas::SaveToJson(json);
 }
 
-void CCanvas_ListCheck::LoadFromJson(const Json & json)
+void CCanvas_SaleListCheck::LoadFromJson(const Json & json)
 {
 	CCanvas::LoadFromJson(json);
 }
 
-void CCanvas_ListCheck::Set_ItemInfo(const size_t iItemIndex, const _uint iItemCount)
+void CCanvas_SaleListCheck::Set_ItemInfo(const size_t iItemIndex, const _uint iItemCount)
 {
 	m_bTransferring = false;
 	m_iItemIndex = iItemIndex;
@@ -147,7 +146,7 @@ void CCanvas_ListCheck::Set_ItemInfo(const size_t iItemIndex, const _uint iItemC
 	Find_ChildUI(L"Tutorial_Icon2")->Set_Position(_float2(-47.0f, 51.0f));
 }
 
-void CCanvas_ListCheck::CheckIcon_Tick()
+void CCanvas_SaleListCheck::CheckIcon_Tick()
 {
 	if (1 == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon1"))->Get_OneRenderCount())
 		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_TwoRneder();
@@ -165,7 +164,7 @@ void CCanvas_ListCheck::CheckIcon_Tick()
 	}
 }
 
-void CCanvas_ListCheck::KeyInput_Yes()
+void CCanvas_SaleListCheck::KeyInput_Yes()
 {
 	if (true == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_YesBox"))->Get_InputYes())
 	{
@@ -188,7 +187,7 @@ void CCanvas_ListCheck::KeyInput_Yes()
 	}
 }
 
-void CCanvas_ListCheck::KeyInput_No()
+void CCanvas_SaleListCheck::KeyInput_No()
 {
 	if (true == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_NoBox"))->Get_InputNo())
 	{
@@ -211,7 +210,7 @@ void CCanvas_ListCheck::KeyInput_No()
 	}
 }
 
-void CCanvas_ListCheck::Purchase()
+void CCanvas_SaleListCheck::Purchase()
 {
 	m_bTransferring = true;
 	Find_ChildUI(L"Purchase_Window_Color")->SetVisible(false);
@@ -221,57 +220,57 @@ void CCanvas_ListCheck::Purchase()
 	Find_ChildUI(L"ListCheck_Bar")->SetVisible(true);
 }
 
-void CCanvas_ListCheck::TransferringBar_Tick(const _double& TimeDelta)
+void CCanvas_SaleListCheck::TransferringBar_Tick(const _double& TimeDelta)
 {
 	if (m_bTransferring == false) return;
 
-	if (0.0 == m_fTransferringBar)
+	if (1.0 == m_fTransferringBar)
 	{
-		// 플레이어의 소지금 감소, 아이템 구매
+		// 플레이어의 소지금 증가, 아이템 감소
 		vector<pair<wstring, CItem_Manager::ITEMINFO>> vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
-		_uint iItemValueResult = vecItemInfo[m_iItemIndex].second.iPrice * m_iItemCount;
-		CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin -= iItemValueResult;
+		_uint iItemValueResult = vecItemInfo[m_iItemIndex].second.iSellingPrice * m_iItemCount;
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin += iItemValueResult;
 
-		CItem_Manager::GetInstance()->Set_ItemCount(vecItemInfo[m_iItemIndex].first, +m_iItemCount);
+		CItem_Manager::GetInstance()->Set_ItemCount(vecItemInfo[m_iItemIndex].first, -_int(m_iItemCount));
 	}
 
-	m_fTransferringBar += _float(TimeDelta) * 0.5f;
+	m_fTransferringBar -= _float(TimeDelta) * 0.5f;
 
-	if(1.0f > m_fTransferringBar)
+	if(0.0f < m_fTransferringBar)
 		dynamic_cast<CShaderUI*>(Find_ChildUI(L"ListCheck_Bar"))->Set_Floats0(m_fTransferringBar);
 
-	if (1.3f < m_fTransferringBar)
+	if (-0.3f > m_fTransferringBar)
 	{
-		m_fTransferringBar = 0.0f;
+		m_fTransferringBar = 1.0f;
 		m_bVisible = false;
 	}
 }
 
-CCanvas_ListCheck * CCanvas_ListCheck::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CCanvas_SaleListCheck * CCanvas_SaleListCheck::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CCanvas_ListCheck*      pInstance = new CCanvas_ListCheck(pDevice, pContext);
+	CCanvas_SaleListCheck*      pInstance = new CCanvas_SaleListCheck(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CCanvas_ListCheck");
+		MSG_BOX("Failed to Created : CCanvas_SaleListCheck");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CCanvas * CCanvas_ListCheck::Clone(void * pArg)
+CCanvas * CCanvas_SaleListCheck::Clone(void * pArg)
 {
-	CCanvas_ListCheck*      pInstance = new CCanvas_ListCheck(*this);
+	CCanvas_SaleListCheck*      pInstance = new CCanvas_SaleListCheck(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CCanvas_ListCheck");
+		MSG_BOX("Failed to Cloned : CCanvas_SaleListCheck");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CCanvas_ListCheck::Free()
+void CCanvas_SaleListCheck::Free()
 {
 	CCanvas::Free();
 }
