@@ -292,6 +292,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		/* For.Prototype_Component_Shader_VtxModel*/
 		auto pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements);
 		pShader->SetCommonTexture("g_KineticWave", "../Bin/Resources/Texture/VFX/T_ef_scl_noi_054.png");
+		pShader->SetCommonTexture("g_scl_noise_004", "../Bin/Resources/Texture/VFX/T_ef_ev_scl_noi_004.png");
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"), pShader)))
 			return E_FAIL;
 	}

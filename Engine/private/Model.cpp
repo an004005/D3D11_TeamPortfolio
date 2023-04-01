@@ -780,7 +780,8 @@ void CModel::Imgui_RenderProperty()
 					iSelected = i;
 			}
 			ImGui::EndListBox();
-
+			if (iSelected >= m_Materials.size())
+				iSelected = 0;
 			m_Materials[iSelected]->Imgui_RenderProperty();
 		}
 	}
@@ -1038,11 +1039,18 @@ HRESULT CModel::Render(CTransform* pTransform)
 
 HRESULT CModel::Render(const _float4x4& WorldMatrix)
 {
+	_uint iMeshIdx = 0;
 	for (const auto& mesh : m_Meshes)
 	{
 		const _uint iMtrlIdx = mesh->Get_MaterialIndex();
 		if (m_Materials[iMtrlIdx]->IsActive() == false)
 			continue;
+		if (m_Materials[iMtrlIdx]->IsAlphaBlend())
+		{
+			Render_MeshAlphBlend(WorldMatrix, iMeshIdx);
+			continue;
+		}
+
 
 		if (m_eType == TYPE_ANIM)
 		{
@@ -1054,6 +1062,7 @@ HRESULT CModel::Render(const _float4x4& WorldMatrix)
 		m_Materials[iMtrlIdx]->BindMatrices(WorldMatrix);
 		m_Materials[iMtrlIdx]->Begin();
 		mesh->Render();
+		++iMeshIdx;
 	}
 
 	return S_OK;
@@ -1064,6 +1073,12 @@ HRESULT CModel::RenderMesh(CTransform* pTransform, _uint iMeshIdx)
 	const _uint iMtrlIdx = m_Meshes[iMeshIdx]->Get_MaterialIndex();
 	if (m_Materials[iMtrlIdx]->IsActive() == false)
 		return S_OK;
+
+	if (m_Materials[iMtrlIdx]->IsAlphaBlend())
+	{
+		Render_MeshAlphBlend(pTransform->Get_WorldMatrix_f4x4(), iMeshIdx);
+		return S_OK;
+	}
 
 	if (m_eType == TYPE_ANIM)
 	{
@@ -1146,12 +1161,34 @@ HRESULT CModel::Render_NoUpdateBone(const _float4x4& WorldMatrix)
 	return S_OK;
 }
 
+HRESULT CModel::Render_MeshAlphBlend(_float4x4 WorldMatrix, _uint iMeshIdx)
+{
+	CGameInstance::GetInstance()->LambdaRenderRequest(WorldMatrix, [this, WorldMatrix, iMeshIdx]
+	{
+		const _uint iMtrlIdx = m_Meshes[iMeshIdx]->Get_MaterialIndex();
+
+		if (m_eType == TYPE_ANIM)
+		{
+			_float4x4 BoneMatrices[512];
+			m_Meshes[iMeshIdx]->SetUp_BoneMatrices(BoneMatrices, XMLoadFloat4x4(&m_PivotMatrix));
+			m_Materials[iMtrlIdx]->GetShader()->Set_MatrixArray("g_BoneMatrices", BoneMatrices, 512);
+		}
+		
+		m_Materials[iMtrlIdx]->BindMatrices(WorldMatrix);
+		m_Materials[iMtrlIdx]->Begin();
+		m_Meshes[iMeshIdx]->Render();
+
+	}, CRenderer::RENDER_MESH_ALPHABLEND);
+
+	return S_OK;
+}
+
 HRESULT CModel::Render_ShadowDepth(CTransform* pTransform)
 {
 	for (size_t i = 0; i < m_Meshes.size(); ++i)
 	{
 		const _uint iMtrlIdx = m_Meshes[i]->Get_MaterialIndex();
-		if (m_Materials[iMtrlIdx]->IsActive() == false)
+		if (m_Materials[iMtrlIdx]->IsActive() == false || m_Materials[iMtrlIdx]->IsAlphaBlend())
 			continue;
 
 		if (m_eType == TYPE_ANIM)
@@ -1178,7 +1215,7 @@ HRESULT CModel::Render_ShadowDepth(const _float4x4& WorldMatrix)
 	for (size_t i = 0; i < m_Meshes.size(); ++i)
 	{
 		const _uint iMtrlIdx = m_Meshes[i]->Get_MaterialIndex();
-		if (m_Materials[iMtrlIdx]->IsActive() == false)
+		if (m_Materials[iMtrlIdx]->IsActive() == false || m_Materials[iMtrlIdx]->IsAlphaBlend())
 			continue;
 
 		if (m_eType == TYPE_ANIM)

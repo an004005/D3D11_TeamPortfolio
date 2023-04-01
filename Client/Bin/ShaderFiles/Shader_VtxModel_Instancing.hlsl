@@ -74,7 +74,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDiffuse = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	Out.vFlag = 0.f;
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
 
 	return Out;
 }
@@ -83,8 +83,8 @@ PS_OUT CommonProcess(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	if (Out.vDiffuse.a < 0.01f)
-		discard;
+	/*if (Out.vDiffuse.a < 0.01f)
+		discard;*/
 
 	float3 vNormal;
 	if (g_tex_on_1)
@@ -101,7 +101,7 @@ PS_OUT CommonProcess(PS_IN In)
 
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	Out.vFlag = 0.f;
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
 	return Out;
 }
 
@@ -169,7 +169,7 @@ PS_OUT PS_DETAIL_N(PS_IN In)
 	else
 		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
 
-	Out.vFlag = 0.f;
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
 	return Out;
 }
 
@@ -219,7 +219,7 @@ PS_OUT PS_ALPHA(PS_IN In)
 	else
 		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
 
-	Out.vFlag = 0.f;
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
 	return Out;
 }
 

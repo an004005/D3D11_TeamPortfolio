@@ -8,6 +8,8 @@
 #include "PhysX_Manager.h"
 #include "GameInstance.h"
 #include "ImguiUtils.h"
+#include "Material.h"
+
 CEM0210::CEM0210(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -526,6 +528,16 @@ void CEM0210::Tick(_double TimeDelta)
 		m_IsFirstHit = true;
 	}
 
+	// 투명 풀리기 디솔브
+	if (m_IsInvisible == false)
+	{
+		for (auto pMtrl : m_pModelCom->GetMaterials())
+		{
+			if (pMtrl->GetParam().Floats[1] >= 1.f)
+				break;
+			pMtrl->GetParam().Floats[1] += (_float)TimeDelta * 0.3f;
+		}
+	}
 
 	//ASM, FSM tick
 	m_pFSM->Tick(TimeDelta);

@@ -17,7 +17,7 @@ HRESULT CPostVFX_HitDecal::Initialize(void* pArg)
 {
 	FAILED_CHECK(CPostProcess::Initialize(pArg));
 
-	m_iPriority = 9999;
+	m_iPriority = 11;
 
 	m_tParam.Floats.push_back(0.f);
 
