@@ -40,6 +40,8 @@ public:
 
 	void Container_Reposition(CTransform* pTransform, _float fRatio, _float fForce);
 
+	void Container_SetDead();
+
 private:
 	void Container_Input_Damage(DAMAGE_PARAM tParam);
 

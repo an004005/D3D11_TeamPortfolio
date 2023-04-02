@@ -20,7 +20,7 @@ vector<wstring>			CEnemy::s_vecDefaultBlood{
 	L"Default_Blood_00",
 	L"Default_Blood_01",
 	L"Default_Blood_02",
-	L"Default_Blood_03",
+	L"Default_Blood_03",	
 	L"Default_Blood_04",
 	L"Default_Blood_05",
 	L"Default_Blood_06"
@@ -73,6 +73,13 @@ vector<wstring>			CEnemy::s_vecElecDecal{
 	L"Elec_Hit_Decal_A",
 	L"Elec_Hit_Decal_B",
 	L"Elec_Hit_Decal_C"
+};
+
+vector<wstring>			CEnemy::s_vecSpecialHit{
+	L"Special_G_Kinetic_Hit_Effect",
+	L"Special_G_Kinetic_Hit_Effect_A",
+	L"Special_G_Kinetic_Hit_Effect_B",
+	L"Special_G_Kinetic_Hit_Effect_C"
 };
 
 CEnemy::CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -515,6 +522,21 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitDecalName)->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 
 	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Circle_Distortion_NonFlip_Short")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
+
+	if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY ||
+		tDamageParams.eAttackType == EAttackType::ATK_SPECIAL_LOOP ||
+		tDamageParams.eAttackType == EAttackType::ATK_SPECIAL_END)
+	{
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, L"Default_Kinetic_Dead_Effect_00")->Start_AttachPosition(this, GetColliderPosition(), {0.f, 0.1f, 0.f, 0.f});
+	}
+
+	if(tDamageParams.eAttackType == EAttackType::ATK_SPECIAL_LOOP ||
+		tDamageParams.eAttackType == EAttackType::ATK_SPECIAL_END)
+	{
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, s_vecSpecialHit[CMathUtils::RandomUInt(s_vecSpecialHit.size() - 1)])->Start_AttachPosition(this, GetColliderPosition() + _float4(0.f, 0.5f, 0.f, 0.f) , { 0.f, 1.f, 0.f, 0.f });
+	}
+	//Default_Kinetic_Dead_Effect_00
+
 
 	if (m_strImpactTag.empty() == false)
 		m_SoundStore.PlaySound(m_strImpactTag, &tDamageParams.vHitPosition);

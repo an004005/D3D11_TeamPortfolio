@@ -44,6 +44,8 @@ typedef struct tagPlayerStatus
 	_uint iBP = { 0 };
 	_uint iCoin = { 0 };
 
+	_bool bBattle = false;
+
 	_float m_fBaseAttackDamage;
 
 	ESASType m_eAttack_SAS_Type;
@@ -132,6 +134,8 @@ public:	// Set
 	void			Finish_SasType(ESASType eType);
 
 	void			Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasType, _float iChangeEnergy);
+
+	void			Set_BattleState(_bool bBattle) { m_tPlayerStat.bBattle = bBattle; }
 
 	void			Set_PlayerWorldMatrix(_fmatrix worldmatrix);
 

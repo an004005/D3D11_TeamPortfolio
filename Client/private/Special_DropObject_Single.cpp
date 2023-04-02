@@ -132,6 +132,11 @@ void CSpecial_DropObject_Single::Activate(_bool bActivate)
 	m_pCollider->Activate(bActivate);
 }
 
+void CSpecial_DropObject_Single::Set_Outline(_bool bOutline)
+{
+	m_bOutline = bOutline;
+}
+
 HRESULT CSpecial_DropObject_Single::SetUp_Components(void * pArg)
 {
 	CModel* pModel = nullptr;
