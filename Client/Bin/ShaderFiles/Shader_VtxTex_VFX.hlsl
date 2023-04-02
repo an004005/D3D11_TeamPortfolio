@@ -1066,7 +1066,7 @@ PS_OUT_Flag PS_BRAINCRUSH_YELLOW_TEX(PS_IN In)
 
 	Out.vColor = CalcHDRColor(saturate(FinalColor + (LineFinal * g_float_4)), g_float_5);
 	// Out.vColor.a = 
-
+	
 
 	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);

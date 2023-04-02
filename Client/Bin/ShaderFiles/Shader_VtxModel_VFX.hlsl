@@ -223,6 +223,25 @@ PS_OUT_NORM PS_650_NORM(PS_IN_NORM In)
 	return Out;
 }
 
+PS_OUT_NORM PS_EM1200_RIBBON(PS_IN_NORM In)
+{
+	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
+	float flags = SHADER_DEFAULT;
+
+	float3 vNormal = In.vNormal.xyz;
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	vector	vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far,0.f, flags);
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vColor.a = 1.f;
+
+	return Out;
+}
+
 PS_OUT_NORM PS_MAIN_NORM (PS_IN_NORM In)
 {
 	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
@@ -258,6 +277,48 @@ PS_OUT_NORM PS_MAIN_NORM (PS_IN_NORM In)
 	}
 
 	if(g_float_4 <= 0.f)
+	{
+		discard;
+	}
+
+	return Out;
+}
+
+PS_OUT_NORM PS_EM0800_DIVE(PS_IN_NORM In)
+{
+	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
+
+
+	float3 vNormal = In.vNormal.xyz;
+	float2 FlipUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.f, 1, 1);
+
+	float4 DefaultTex = g_tex_0.Sample(LinearSampler, FlipUV);
+	float4 OriginColor = g_vec4_0;
+
+	float4 BlendColor = DefaultTex * OriginColor * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+	float Mask = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vColor.a *= g_float_5;
+
+	if (Mask >= 0.f)
+	{
+		if (g_tex_on_3)
+			Out.vRMA = g_tex_3.Sample(LinearSampler, In.vTexUV);
+		else
+			Out.vRMA = float4(g_float_1, g_float_2, g_float_3, 0.f);
+
+		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, SHADER_DEFAULT);
+	}
+
+	if (g_float_4 <= 0.f)
 	{
 		discard;
 	}
@@ -1306,5 +1367,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_BRAINCRUSH_DISTORTION();
+	}
+
+	//29
+	pass em1200Ribbon
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_NORM();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1200_RIBBON();
+	}
+
+	//30
+	pass em0800DiveIn
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_NORM();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM0800_DIVE();
 	}
 }
