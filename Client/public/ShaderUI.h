@@ -24,6 +24,10 @@ public:
 		m_tParams.Floats[0] = fFloat;
 	}
 
+	void	Set_Float2s(const _float2& fFloat2) {
+		m_tParams.Float2s[0] = fFloat2;
+	}
+
 public:
 	static CShaderUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;

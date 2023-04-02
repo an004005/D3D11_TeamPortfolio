@@ -1,26 +1,30 @@
 #include "stdafx.h"
-#include "..\public\Canvas_SAGragting_S.h"
+#include "..\public\Canvas_SAGragting_Go.h"
 #include "GameInstance.h"
 
 #include "ShaderUI.h"
 #include "SA_AxisUI.h"
 
-// S: 키 입력을 받으면 커진다.
+// S: 키 입력을 받을 때 작아졌다가 다시 커지고를 반복한다.
 // Arrow_Light : 화살표를 계속 따라다닌다.
 // S_Light : 알파값 조절하기
-// Arrow : 객체 내 에서 이루어짐. Set_Move() 을 통해 움직임을 멈출 수 있다.
+// Arrow : 객체 내 에서 이루어짐. Set_Move() 을 통해 움직임을 멈출 수 있다. 키 입력을 받을 때 작아졌다 다시 커지고를 반복한다.
+// Gauge : 키 입력을 받을 때 마다 Float2 의 x값을 변경하여 한칸씩 차도록 한다. (0~10)
+// Start : 아무것도 하지 않는다.
+// End : 플레이어의 키 입력이 10번이 되면 표시되어야 한다.
+// -> 전체적으로 좌우로 움직인다.
 
-CCanvas_SAGragting_S::CCanvas_SAGragting_S(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCanvas_SAGragting_Go::CCanvas_SAGragting_Go(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
 }
 
-CCanvas_SAGragting_S::CCanvas_SAGragting_S(const CCanvas_SAGragting_S& rhs)
+CCanvas_SAGragting_Go::CCanvas_SAGragting_Go(const CCanvas_SAGragting_Go& rhs)
 	: CCanvas(rhs)
 {
 }
 
-HRESULT CCanvas_SAGragting_S::Initialize_Prototype()
+HRESULT CCanvas_SAGragting_Go::Initialize_Prototype()
 {
 	if (FAILED(CCanvas::Initialize_Prototype()))
 		return E_FAIL;
@@ -28,11 +32,12 @@ HRESULT CCanvas_SAGragting_S::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CCanvas_SAGragting_S::Initialize(void* pArg)
+HRESULT CCanvas_SAGragting_Go::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
-
+	
+	Find_ChildUI(L"Arrive")->SetVisible(false);
 	Find_ChildUI(L"Circle")->SetVisible(false);
 	Find_ChildUI(L"CircleLine2")->SetVisible(false);
 	dynamic_cast<CSA_AxisUI*>(Find_ChildUI(L"Arrow"))->Set_AxisInitialize(AXIS::UP);
@@ -40,7 +45,7 @@ HRESULT CCanvas_SAGragting_S::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CCanvas_SAGragting_S::Tick(_double TimeDelta)
+void CCanvas_SAGragting_Go::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
@@ -51,15 +56,22 @@ void CCanvas_SAGragting_S::Tick(_double TimeDelta)
 	Find_ChildUI(L"Arrow_Light")->Set_Position(Find_ChildUI(L"Arrow")->Get_Position());	// 계속 그냥 따라다니도록
 }
 
-void CCanvas_SAGragting_S::KeyInput()
+void CCanvas_SAGragting_Go::KeyInput()
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_X))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_X) && 10 != m_iInputCount)
 	{
-		m_bInput = true;
+		++m_iInputCount;
+		dynamic_cast<CShaderUI*>(Find_ChildUI(L"Gauge"))->Set_Float2s({ _float(m_iInputCount), 0.0f });
+
+		if (10 == m_iInputCount)
+		{
+			Find_ChildUI(L"Arrive")->SetVisible(true);
+			m_bInput = true;
+		}
 	}
 }
 
-void CCanvas_SAGragting_S::MouseLight_Tick(const _double& TimeDelta)
+void CCanvas_SAGragting_Go::MouseLight_Tick(const _double& TimeDelta)
 {
 	_float fSpeed = 1.0f;
 	if (true == m_fAlphaDown)
@@ -78,7 +90,7 @@ void CCanvas_SAGragting_S::MouseLight_Tick(const _double& TimeDelta)
 	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Base_Light"))->Set_Floats0(m_fMouseLightAlpha);
 }
 
-void CCanvas_SAGragting_S::Action_Tick(const _double& TimeDelta)
+void CCanvas_SAGragting_Go::Action_Tick(const _double& TimeDelta)
 {
 	if (m_bInput == false)
 	{
@@ -87,11 +99,24 @@ void CCanvas_SAGragting_S::Action_Tick(const _double& TimeDelta)
 		if (1.0 < m_dMuseMove_TimeAcc)
 		{
 			m_dMuseMove_TimeAcc = 0.0;
-			Find_ChildUI(L"Base")->Set_Position({ Find_ChildUI(L"Base")->Get_Position().x, -95.0f });
+			m_fX = -7.0f;
 		}
 		else
 		{
-			Find_ChildUI(L"Base")->Set_Position({ Find_ChildUI(L"Base")->Get_Position().x,  -100.0f });
+			m_fX = -12.0f;
+		}
+
+		// 동그라미선 3개
+		_float fSizeSpeed = 150.0f;
+		_float2 fBase_Size = Find_ChildUI(L"CircleLine3")->Get_Size();
+		if (150.0f > fBase_Size.x)
+		{
+			fBase_Size += {_float(TimeDelta)* fSizeSpeed, _float(TimeDelta)* fSizeSpeed};
+			Find_ChildUI(L"CircleLine3")->Set_Size(fBase_Size);
+		}
+		else
+		{
+			Find_ChildUI(L"CircleLine3")->Set_Size({ 10.0f, 10.0f });
 		}
 
 		return;
@@ -123,7 +148,7 @@ void CCanvas_SAGragting_S::Action_Tick(const _double& TimeDelta)
 		Find_ChildUI(L"Circle")->SetVisible(true);
 
 		// 크기
-		fCircle_Size += {_float(TimeDelta) * fSizeSpeed, _float(TimeDelta) * fSizeSpeed};
+		fCircle_Size += {_float(TimeDelta)* fSizeSpeed, _float(TimeDelta)* fSizeSpeed};
 		Find_ChildUI(L"Circle")->Set_Size(fCircle_Size);
 
 		// 알파값
@@ -144,7 +169,7 @@ void CCanvas_SAGragting_S::Action_Tick(const _double& TimeDelta)
 		Find_ChildUI(L"CircleLine2")->SetVisible(true);
 
 		// 크기
-		fCircle2_Size += {_float(TimeDelta) * fSizeSpeed, _float(TimeDelta) * fSizeSpeed};
+		fCircle2_Size += {_float(TimeDelta)* fSizeSpeed, _float(TimeDelta)* fSizeSpeed};
 		Find_ChildUI(L"CircleLine2")->Set_Size(fCircle2_Size);
 	}
 	else
@@ -153,36 +178,36 @@ void CCanvas_SAGragting_S::Action_Tick(const _double& TimeDelta)
 		_float fAlpha = dynamic_cast<CShaderUI*>(Find_ChildUI(L"CircleLine2"))->Get_Floats0();
 		fAlpha -= _float(TimeDelta) * 2.0f;
 		dynamic_cast<CShaderUI*>(Find_ChildUI(L"CircleLine2"))->Set_Floats0(fAlpha);
-		if(0.0f > fAlpha)
+		if (0.0f > fAlpha)
 			CGameObject::SetDelete();
 	}
 }
 
-CCanvas_SAGragting_S* CCanvas_SAGragting_S::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCanvas_SAGragting_Go* CCanvas_SAGragting_Go::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CCanvas_SAGragting_S* pInstance = new CCanvas_SAGragting_S(pDevice, pContext);
+	CCanvas_SAGragting_Go* pInstance = new CCanvas_SAGragting_Go(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CCanvas_SAGragting_S");
+		MSG_BOX("Failed to Created : CCanvas_SAGragting_Go");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CCanvas* CCanvas_SAGragting_S::Clone(void* pArg)
+CCanvas* CCanvas_SAGragting_Go::Clone(void* pArg)
 {
-	CCanvas_SAGragting_S* pInstance = new CCanvas_SAGragting_S(*this);
+	CCanvas_SAGragting_Go* pInstance = new CCanvas_SAGragting_Go(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CCanvas_SAGragting_S");
+		MSG_BOX("Failed to Cloned : CCanvas_SAGragting_Go");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CCanvas_SAGragting_S::Free()
+void CCanvas_SAGragting_Go::Free()
 {
 	CCanvas::Free();
 

@@ -112,6 +112,7 @@
 #include "Canvas_SaleListCheck.h"
 #include "Canvas_SAMouseLeft.h"
 #include "Canvas_SAGragting_S.h"
+#include "Canvas_SAGragting_Go.h"
 
 // Default
 #include "DefaultUI.h"
@@ -711,7 +712,10 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SAGragting_S"),
 			CCanvas_SAGragting_S::Create(pDevice, pContext))))
 			return E_FAIL;
-
+		/* For.Prototype_GameObject_Canvas_SAGragting_Go*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SAGragting_Go"),
+			CCanvas_SAGragting_Go::Create(pDevice, pContext))))
+			return E_FAIL;
 
 
 		

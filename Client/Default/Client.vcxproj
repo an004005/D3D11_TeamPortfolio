@@ -227,6 +227,7 @@
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
     <ClInclude Include="..\public\Canvas_PurchaseKinds.h" />
+    <ClInclude Include="..\public\Canvas_SAGragting_Go.h" />
     <ClInclude Include="..\public\Canvas_SAGragting_S.h" />
     <ClInclude Include="..\public\Canvas_Sale.h" />
     <ClInclude Include="..\public\Canvas_SaleKinds.h" />
@@ -516,6 +517,7 @@
     <ClCompile Include="..\private\Canvas_MouseCousor.cpp" />
     <ClCompile Include="..\private\Canvas_Party.cpp" />
     <ClCompile Include="..\private\Canvas_PurchaseKinds.cpp" />
+    <ClCompile Include="..\private\Canvas_SAGragting_Go.cpp" />
     <ClCompile Include="..\private\Canvas_SAGragting_S.cpp" />
     <ClCompile Include="..\private\Canvas_Sale.cpp" />
     <ClCompile Include="..\private\Canvas_SaleKinds.cpp" />

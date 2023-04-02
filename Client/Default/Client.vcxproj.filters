@@ -1283,6 +1283,9 @@
     <ClInclude Include="..\public\Canvas_SAGragting_S.h">
       <Filter>02.GameObjects\UI\SpecialAttack\Grating</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_SAGragting_Go.h">
+      <Filter>02.GameObjects\UI\SpecialAttack\Grating</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2138,6 +2141,9 @@
       <Filter>02.GameObjects\UI\SpecialAttack</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_SAGragting_S.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack\Grating</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SAGragting_Go.cpp">
       <Filter>02.GameObjects\UI\SpecialAttack\Grating</Filter>
     </ClCompile>
   </ItemGroup>
