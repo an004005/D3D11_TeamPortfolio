@@ -201,6 +201,9 @@ void CSpecial_TankLorry_Trailer::Exploision()
 			}
 		}
 	}
+
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Truck_Explode_Rect")
+		->Start_AttachPosition_Scale(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 2.f, 0.f, 0.f), XMVectorSet(0.f, 1.f, 0.f, 0.f), { 3.f ,3.f ,3.f, 0.f });
 }
 
 void CSpecial_TankLorry_Trailer::Change_Tank(_uint iIdx)

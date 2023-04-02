@@ -215,6 +215,8 @@ void CSpecial_TankLorry::TankLorry_Explosion()
 	static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->Exploision();
 	static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->Exploision();
 
+	//Truck_Explode_Rect
+
 	CGameInstance::GetInstance()->SetTimeRatioCurve("TankLorry_Slow");
 //	CGameInstance::GetInstance()->AddLifePointLight(3.f, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 10.f, { 1.f, 0.f, 0.f, 1.f });
 

@@ -97,6 +97,9 @@ void CSpecial_DropObject_Bundle::Tick(_double TimeDelta)
 {
 	if (m_bDeadCheck)
 	{
+		for (auto& iter : m_pObject_Single)
+			static_cast<CSpecial_DropObject_Single*>(iter)->SetOutline(false);
+
 		m_fDeadTime -= (_float)TimeDelta;
 
 		if (0.f >= m_fDeadTime)
@@ -107,6 +110,20 @@ void CSpecial_DropObject_Bundle::Tick(_double TimeDelta)
 			this->SetDelete();
 		}
 	}
+	else
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_SpecialObject() == this)
+		{
+			for (auto& iter : m_pObject_Single)
+				static_cast<CSpecial_DropObject_Single*>(iter)->SetOutline(true);
+		}
+		else
+		{
+			for (auto& iter : m_pObject_Single)
+				static_cast<CSpecial_DropObject_Single*>(iter)->SetOutline(false);
+		}
+	}
+
 
 	if (!m_bDecompose)
 	{
@@ -137,17 +154,6 @@ void CSpecial_DropObject_Bundle::Tick(_double TimeDelta)
 
 		for (auto& iter : m_pObject_Single)
 			iter->Tick(TimeDelta);
-	}
-
-	if (CPlayerInfoManager::GetInstance()->Get_SpecialObject() == this)
-	{
-		for (auto& iter : m_pObject_Single)
-			static_cast<CSpecial_DropObject_Single*>(iter)->SetOutline(true);
-	}
-	else
-	{
-		for (auto& iter : m_pObject_Single)
-			static_cast<CSpecial_DropObject_Single*>(iter)->SetOutline(false);
 	}
 }
 

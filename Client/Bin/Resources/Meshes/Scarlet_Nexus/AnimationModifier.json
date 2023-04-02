@@ -1888,6 +1888,10 @@
             {
                 "EventName": "Fire_Attack_Dash_01_Particle",
                 "EventTime": 25.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_1",
+                "EventTime": 15.0
             }
         ]
     },
@@ -1957,6 +1961,14 @@
             {
                 "EventName": "Fire_Attack_Dash_02_002_Particle",
                 "EventTime": 33.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_2_001",
+                "EventTime": 9.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_2_002",
+                "EventTime": 19.0
             }
         ]
     },
@@ -2010,6 +2022,10 @@
             {
                 "EventName": "Fire_Attack_Dash_03_Particle",
                 "EventTime": 35.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_3",
+                "EventTime": 25.0
             }
         ]
     },
@@ -2067,6 +2083,10 @@
             {
                 "EventName": "Fire_Attack_Dash_03_Particle",
                 "EventTime": 60.0
+            },
+            {
+                "EventName": "Elec_Attack_Dash_3",
+                "EventTime": 55.0
             }
         ]
     },
@@ -2407,11 +2427,11 @@
                 "EventTime": 14.0
             },
             {
-                "EventName": "Elec_Attack_Dash_Hold_3",
+                "EventName": "Elec_Attack_Dash_Hold_1",
                 "EventTime": 18.0
             },
             {
-                "EventName": "Elec_Attack_Dash_Hold_4",
+                "EventName": "Elec_Attack_Dash_Hold_2",
                 "EventTime": 22.0
             }
         ]

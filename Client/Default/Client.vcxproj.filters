@@ -403,6 +403,9 @@
     <Filter Include="02.GameObjects\Weapon\wp0300">
       <UniqueIdentifier>{e149a287-2e6f-450f-ae36-5a1fd3583ca4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\SpecialObject\Special_Container">
+      <UniqueIdentifier>{3d213a40-478e-436f-9f3d-35fdf8c8c447}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1244,7 +1247,6 @@
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_ConstructionSite3F.h" />
-    <ClInclude Include="..\public\Special_Container.h" />
     <ClInclude Include="..\public\PlayerInfoManager.h">
       <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
     </ClInclude>
@@ -1256,6 +1258,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Weapon_wp0300.h">
       <Filter>02.GameObjects\Weapon\wp0300</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_Container.h">
+      <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2072,7 +2077,6 @@
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_ConstructionSite3F.cpp" />
-    <ClCompile Include="..\private\Special_Container.cpp" />
     <ClCompile Include="..\private\PlayerInfoManager.cpp">
       <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
     </ClCompile>
@@ -2084,6 +2088,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Weapon_wp0300.cpp">
       <Filter>02.GameObjects\Weapon\wp0300</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_Container.cpp">
+      <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

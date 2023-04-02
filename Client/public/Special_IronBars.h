@@ -50,6 +50,8 @@ public:
 	void	IronBars_AttachAnim_MulitBars(CModel* pModel, CTransform* pTransform, _float4 vPoint);
 	void	IronBars_Shooting_Finish(_float4 vTargetPos);
 
+	void	IronBars_SetDead();
+
 private:
 	HRESULT	SetUp_Components(void* pArg);
 
@@ -64,6 +66,10 @@ private:
 	_float4x4		m_DoorSyncMatrix = XMMatrixIdentity();
 	_float4x4		m_BarsSyncMatrix = XMMatrixIdentity();
 	vector<string>	m_vecSingleBarBoneName;
+
+private:
+	_bool			m_bDeadCheck = false;
+	_float			m_fDeadTime = 0.f;
 
 private:
 	_bool			m_bDecompose = false;
