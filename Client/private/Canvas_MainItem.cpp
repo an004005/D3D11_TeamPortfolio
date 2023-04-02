@@ -167,19 +167,19 @@ HRESULT CCanvas_MainItem::Add_MainCanvas()
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainItemKinds.json");
 	json["ITemType"] = CItem_Manager::MAINITEM::ALL;
-	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_MainItemKinds", &json);
+	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_MainItemKinds", &json);
 	m_arrCanvass[ALL] = dynamic_cast<CCanvas_MainItemKinds*>(pCanvas);
 
 	json["ITemType"] = CItem_Manager::MAINITEM::BATTLE;
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_MainItemKinds", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_MainItemKinds", &json);
 	m_arrCanvass[BATTLE] = dynamic_cast<CCanvas_MainItemKinds*>(pCanvas);
 
 	json["ITemType"] = CItem_Manager::MAINITEM::WEAPON;
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_MainItemKinds", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_MainItemKinds", &json);
 	m_arrCanvass[WEAPON] = dynamic_cast<CCanvas_MainItemKinds*>(pCanvas);
 
 	json["ITemType"] = CItem_Manager::MAINITEM::ETC;
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_MainItemKinds", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_MainItemKinds", &json);
 	m_arrCanvass[ETC] = dynamic_cast<CCanvas_MainItemKinds*>(pCanvas);
 
 	return S_OK;

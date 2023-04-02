@@ -118,12 +118,21 @@ HRESULT CCanvas_Main::Render()
 	_int iMinutes = static_cast<int>((g_fTimeDelta_Add - iHours * 3600) / 60); // Ка
 	_int iSeconds = static_cast<int>(g_fTimeDelta_Add - iHours * 3600 - iMinutes * 60); // УЪ
 
-	wsprintf(szText, TEXT("%d :"), iHours);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1540.0f, 39.0f), 0.f, vFontSize, vColor);
-	wsprintf(szText, TEXT("%d :"), iMinutes);
+	if(10 > iHours)
+		wsprintf(szText, TEXT("0%d :"), iHours);
+	else
+		wsprintf(szText, TEXT("%d :"), iHours);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1525.0f, 39.0f), 0.f, vFontSize, vColor);
+	if (10 > iMinutes)
+		wsprintf(szText, TEXT("0%d :"), iMinutes);
+	else
+		wsprintf(szText, TEXT("%d :"), iMinutes);
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1570.0f, 39.5f), 0.f, vFontSize, vColor);
-	wsprintf(szText, TEXT("%d"), iSeconds);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1610.0f, 40.0f), 0.f, vFontSize, vColor);
+	if (10 > iSeconds)
+		wsprintf(szText, TEXT("0%d"), iSeconds);
+	else
+		wsprintf(szText, TEXT("%d"), iSeconds);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1610.0f, 40.5f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }
@@ -157,7 +166,7 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 		return E_FAIL;
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Party.json");
-	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_Party", &json);
+	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_Party", &json);
 	m_arrCanvass[PARTY] = dynamic_cast<CCanvas_Party*>(pCanvas);
 
 	/* For.Prototype_GameObject_Canvas_MainItem*/
@@ -166,7 +175,7 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 		return E_FAIL;
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainItem.json");
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_MainItem", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_MainItem", &json);
 	m_arrCanvass[ITEM] = dynamic_cast<CCanvas_MainItem*>(pCanvas);
 
 	/* For.Prototype_GameObject_Canvas_Equipment */
@@ -175,7 +184,7 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 		return E_FAIL;
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Equipment.json");
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_Equipment", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_Equipment", &json);
 	m_arrCanvass[EQUIPMENT] = dynamic_cast<CCanvas_Equipment*>(pCanvas);
 
 	/* For.Prototype_GameObject_Canvas_BrainMap */
@@ -184,7 +193,7 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 		return E_FAIL;
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BrainMap.json");
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_BrainMap", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_BrainMap", &json);
 	m_arrCanvass[BRAINMAP] = dynamic_cast<CCanvas_BrainMap*>(pCanvas);
 
 	return S_OK;

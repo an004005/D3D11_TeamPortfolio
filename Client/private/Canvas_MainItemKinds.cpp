@@ -176,7 +176,7 @@ void CCanvas_MainItemKinds::Add_ItemCanvas(const size_t & iIndex)
 	}
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_ItemWindow.json");
-	CCanvas_ItemWindow* pCanvas = dynamic_cast<CCanvas_ItemWindow*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Lyaer_ItemWindowUI", L"Canvas_ItemWindow", &json));
+	CCanvas_ItemWindow* pCanvas = dynamic_cast<CCanvas_ItemWindow*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_ItemWindow", &json));
 	assert(pCanvas != nullptr && "Failed to Cloned ItemWindow");
 
 	size_t iVecSize = m_vecItemCanvass.size();

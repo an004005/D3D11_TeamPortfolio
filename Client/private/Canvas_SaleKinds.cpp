@@ -42,8 +42,8 @@ HRESULT CCanvas_SaleKinds::Initialize(void* pArg)
 		iter->second->SetVisible(m_bVisible);
 
 	Add_ShopListCanvas();
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SaleListCheck.json"); // Layer_ShopUI
-	m_pCanvas_SaleListCheck = dynamic_cast<CCanvas_SaleListCheck*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"sssssssssssssssss", L"Canvas_SaleListCheck", &json));
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SaleListCheck.json");
+	m_pCanvas_SaleListCheck = dynamic_cast<CCanvas_SaleListCheck*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_SaleListCheck", &json));
 	assert(m_pCanvas_SaleListCheck != nullptr && "Failed to Cloned : CCanvas_SaleListCheck");
 
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_CurrentWondowB"))->Set_InitializeAlpha();
