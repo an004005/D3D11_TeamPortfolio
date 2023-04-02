@@ -391,6 +391,12 @@
     <Filter Include="02.GameObjects\UI\Shop\Sale">
       <UniqueIdentifier>{9f9b1c99-5068-4203-9ebf-cf20b31fb821}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\SpecialAttack">
+      <UniqueIdentifier>{7b632564-486d-4d31-87b7-bdffcbe04dfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpecialAttack\MouseLeft">
+      <UniqueIdentifier>{dd9cf8e7-03bd-438e-b767-d45731e20ed6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1265,6 +1271,12 @@
     <ClInclude Include="..\public\Canvas_SaleListCheck.h">
       <Filter>02.GameObjects\UI\Shop\Sale</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_SAMouseLeft.h">
+      <Filter>02.GameObjects\UI\SpecialAttack\MouseLeft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SA_AxisUI.h">
+      <Filter>02.GameObjects\UI\SpecialAttack\MouseLeft</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2112,6 +2124,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Canvas_SaleListCheck.cpp">
       <Filter>02.GameObjects\UI\Shop\Sale</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SAMouseLeft.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack\MouseLeft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SA_AxisUI.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack\MouseLeft</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,322 @@
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "Arrow\u0000",
+            "ObjectTag": "Arrow",
+            "Pivot": 0,
+            "PositionX": -25.0,
+            "PositionY": -100.0,
+            "Priority": 0,
+            "Prototype_GameObject": "SA_AxisUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 1,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Short_UI\\M_Arrow.png\u0000"
+                ]
+            },
+            "SizeX": 54.0,
+            "SizeY": 64.0,
+            "Transform": {
+                "WorldMatrix": [
+                    45.900001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    54.400001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -25.0,
+                    -100.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Arrow_Light\u0000",
+            "ObjectTag": "Arrow_Light",
+            "Pivot": 0,
+            "PositionX": -25.0,
+            "PositionY": -100.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Shader_UI\u0000",
+            "ScaleX": 0.5,
+            "ScaleY": 0.5,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.28473758697509766,
+                        0.0,
+                        0.5
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 14,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Short_UI\\Light.png\u0000"
+                ]
+            },
+            "SizeX": 255.0,
+            "SizeY": 255.0,
+            "Transform": {
+                "WorldMatrix": [
+                    127.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    127.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -25.0,
+                    -100.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Circle\u0000",
+            "ObjectTag": "Circle",
+            "Pivot": 0,
+            "PositionX": 25.0,
+            "PositionY": -100.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Shader_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.5
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Short_UI\\Circle.png\u0000"
+                ]
+            },
+            "SizeX": 50.0,
+            "SizeY": 50.0,
+            "Transform": {
+                "WorldMatrix": [
+                    50.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    50.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    25.0,
+                    -100.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "CircleLine2\u0000",
+            "ObjectTag": "CircleLine2",
+            "Pivot": 0,
+            "PositionX": 25.0,
+            "PositionY": -100.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Shader_UI\u0000",
+            "ScaleX": 0.5,
+            "ScaleY": 0.5,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Short_UI\\CircleLine2.png\u0000"
+                ]
+            },
+            "SizeX": 10.0,
+            "SizeY": 10.0,
+            "Transform": {
+                "WorldMatrix": [
+                    5.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    5.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    25.0,
+                    -100.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Mouse\u0000",
+            "ObjectTag": "Mouse",
+            "Pivot": 0,
+            "PositionX": 25.0,
+            "PositionY": -100.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Short_UI\\M_Mouse.png\u0000"
+                ]
+            },
+            "SizeX": 56.0,
+            "SizeY": 81.0,
+            "Transform": {
+                "WorldMatrix": [
+                    47.60000228881836,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    68.8499984741211,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    25.0,
+                    -100.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Mouse_Light\u0000",
+            "ObjectTag": "Mouse_Light",
+            "Pivot": 0,
+            "PositionX": 25.0,
+            "PositionY": -100.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Shader_UI\u0000",
+            "ScaleX": 2.0,
+            "ScaleY": 2.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.5
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Short_UI\\Light.png\u0000"
+                ]
+            },
+            "SizeX": 255.0,
+            "SizeY": 255.0,
+            "Transform": {
+                "WorldMatrix": [
+                    510.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    510.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    25.0,
+                    -100.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "Canvas_SAMouseLeft",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 0,
+    "Prototype_GameObject": "Canvas_SAMouseLeft\u0000",
+    "ScaleX": 0.5,
+    "ScaleY": 0.5,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

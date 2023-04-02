@@ -638,6 +638,9 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Shop.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Shop", &json));
+
+	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAMouseLeft.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SAMouseLeft", &json));
 	
 	// Ãß°¡
 	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");

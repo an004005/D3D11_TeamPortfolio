@@ -17,6 +17,9 @@ public:
 	virtual void	Tick(_double TimeDelta) override;
 
 public:
+	_float	Get_Floats0() {
+		return m_tParams.Floats[0];
+	}
 	void	Set_Floats0(const _float & fFloat) {
 		m_tParams.Floats[0] = fFloat;
 	}

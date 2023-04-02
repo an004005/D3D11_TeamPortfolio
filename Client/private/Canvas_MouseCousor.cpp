@@ -2,6 +2,8 @@
 #include "..\public\Canvas_MouseCousor.h"
 #include "GameInstance.h"
 
+#include "JsonStorage.h"
+
 CCanvas_MouseCousor::CCanvas_MouseCousor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
@@ -24,13 +26,21 @@ HRESULT CCanvas_MouseCousor::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
-
 	return S_OK;
 }
 
 void CCanvas_MouseCousor::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
+	{
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAMouseLeft.json");
+		CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAMouseLeft", &json);
+
+		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAMouseLeft.json");
+		//CGameInstance::GetInstance()->Clone_GameObject("Layer_Test", L"Canvas_SAMouseLeft", &json);
+	}
 }
 
 CCanvas_MouseCousor* CCanvas_MouseCousor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -110,6 +110,7 @@
 #include "Canvas_ListCheck.h"
 #include "Canvas_Shortage.h"
 #include "Canvas_SaleListCheck.h"
+#include "Canvas_SAMouseLeft.h"
 
 // Default
 #include "DefaultUI.h"
@@ -182,6 +183,8 @@
 // Left Talk
 #include "Talk_FaceUI.h"
 #include "Talk_BackGroundUI.h"
+// SpecialAttack
+#include "SA_AxisUI.h"
 
 // 3D UI
 #include "EM0320.h"
@@ -699,7 +702,10 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 			CCanvas_SaleListCheck::Create(pDevice, pContext))))
 			return E_FAIL;
 
-
+		/* For.Prototype_GameObject_Canvas_SAMouseLeft*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SAMouseLeft"),
+			CCanvas_SAMouseLeft::Create(pDevice, pContext))))
+			return E_FAIL;
 
 		
 	}
@@ -966,6 +972,15 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Talk_BackGroundUI"),
 			CTalk_BackGroundUI::Create(pDevice, pContext))))
 			return E_FAIL;
+
+		// SpecialAttack
+		/* For.Prototype_GameObject_SA_AxisUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SA_AxisUI"),
+			CSA_AxisUI::Create(pDevice, pContext))))
+			return E_FAIL;
+
+
+
 
 	}
 
