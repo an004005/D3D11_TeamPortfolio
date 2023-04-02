@@ -27,7 +27,7 @@
 #include "Imgui_CamAnimEditor.h"
 #include "GameManager.h"
 
-#define ADD_PLAYER
+// #define ADD_PLAYER
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -171,6 +171,8 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
+
+
 	return S_OK;
 }
 
@@ -192,6 +194,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	// 	PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND;
 	// 	auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 	// }
+
+	pGameInstance->Clone_GameObject(pLayerTag, L"Prototype_RedString");
 
 	return S_OK;
 }
