@@ -123,6 +123,8 @@ protected:
 	static vector<wstring>			s_vecFireDecal;
 	static vector<wstring>			s_vecElecDecal;
 
+	static vector<wstring>			s_vecSpecialHit;
+
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;

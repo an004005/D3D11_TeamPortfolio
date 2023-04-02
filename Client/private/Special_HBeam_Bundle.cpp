@@ -74,6 +74,9 @@ HRESULT CSpecial_HBeam_Bundle::Initialize(void * pArg)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_HBeam_Particles")->
 				Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
 
+			//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, m_vecRandomHitEffect[CMathUtils::RandomUInt(m_vecRandomHitEffect.size() - 1)])
+			//	->Start_AttachOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), false);
+
 			HBeam_Decompose();
 		}
 	});

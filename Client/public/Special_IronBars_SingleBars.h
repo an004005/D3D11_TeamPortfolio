@@ -39,7 +39,11 @@ public:
 	void	Shooting(_float4 vTargetPos);
 	void	Reloading(_float4 vDestPos, _float4 vTargetPos, _float fRatio);
 
+	void	DecomposeEffect();
+
 	void	Activate(_bool bActivate);
+
+	void	ParticleMaker(_double TimeDelta);
 
 private:
 	HRESULT	SetUp_Components(void* pArg);
@@ -47,6 +51,7 @@ private:
 
 	_bool	m_bHit = false;
 	_float	m_fChangeKineticTimer = 0.f;
+	_double	m_fParticleTimer = 0.f;
 
 private:
 	_float4x4	m_SyncMatrix = XMMatrixIdentity();
