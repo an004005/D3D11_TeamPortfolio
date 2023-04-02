@@ -487,6 +487,7 @@ void CEM0210::SetUpFSM()
 
 void CEM0210::SetUpUI()
 {
+	__super::SetUpUI();
 }
 
 void CEM0210::BeginTick()

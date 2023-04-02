@@ -30,8 +30,7 @@
 #include "CurveFloatMapImpl.h"
 
 #include "MonsterLockonUI.h"
-#include "MonsterHpUI.h"
-#include "MonsterShildUI.h"
+#include "EMUI.h"
 
 #include "NoticeNeonUI.h"
 #include "JsonLib.h"
@@ -7230,7 +7229,7 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(pTarget);
-			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->Get_UIPivotMatrix(ENEMY_FINDEYES));
+			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix("Target"));
 
 		}
 
@@ -7248,12 +7247,12 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(pTarget);
-			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->Get_UIPivotMatrix(ENEMY_FINDEYES));
+			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix("Target"));
 		}
 
 		//info bar ¼³Á¤
 		if (pTarget != nullptr)
-			pTarget->Create_InfoUI();
+			pTarget->GetEnemyUI()->Create_UIInfo();
 
 		//Create_TargetInfoBar(pTarget);
 

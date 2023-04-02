@@ -286,26 +286,25 @@ void CEM0650::SetUpFSM()
 
 void CEM0650::SetUpUI()
 {
-	//HP UI
+	__super::SetUpUI();
 
-	_float4x4 UI_PivotMatrix = Matrix(
+	//HP UI
+	_float4x4 UI_InfoPivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.241f, 0.0f, 1.0f
 	);
 
-	m_UI_PivotMatrixes[ENEMY_INFOBAR] = UI_PivotMatrix;
-
 	//FindEye
-	UI_PivotMatrix = Matrix(
+	_float4x4 UI_EyesPivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.724f, 0.0f, 1.0f
 	);
 
-	m_UI_PivotMatrixes[ENEMY_FINDEYES] = UI_PivotMatrix;
+	m_pEMUI->SetUpPivots(UI_InfoPivotMatrix, UI_EyesPivotMatrix);
 }
 
 void CEM0650::BeginTick()

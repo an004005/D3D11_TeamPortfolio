@@ -13,8 +13,7 @@
 #include "TestTarget.h"
 #include "PlayerInfoManager.h"
 #include "GameManager.h"
-#include "MonsterHpUI.h"
-#include "MonsterShildUI.h"
+#include "EMUI.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
 	L"Default_Blood_00",
@@ -110,7 +109,9 @@ void CEnemy::Tick(_double TimeDelta)
 	CScarletCharacter::Tick(TimeDelta);
 	FindTarget();
 	Update_DeadDissolve(TimeDelta);
-	Update_UIInfo();
+
+	if(m_pEMUI != nullptr)
+		m_pEMUI->Update_UIInfo();
 
 	m_pModelCom->Tick(TimeDelta);
 
@@ -215,6 +216,12 @@ void CEnemy::SetUpSound()
 		m_SoundStore.CloneSound(m_strImpactVoiceTag);
 }
 
+void CEnemy::SetUpUI()
+{
+	m_pEMUI = CEMUI::Create(this);
+	assert(m_pEMUI != nullptr);
+}
+
 void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	if (m_bDead)
@@ -301,16 +308,6 @@ CRigidBody * CEnemy::GetRigidBody(const string & KeyName)
 	return (*pRigidBody).second;
 }
 
-void CEnemy::Update_UIInfo()
-{
-	if (m_bDead == true) return;
-
-	if (m_pShieldUI != nullptr)
-		m_pShieldUI->SetShild(m_iHP / (_float)m_iMaxHP, m_iCrushGauge / (_float)m_iMaxCrushGauge);
-	else if (m_pHPUI != nullptr)
-		m_pHPUI->Set_HpRatio(m_iHP / (_float)m_iMaxHP);
-}
-
 _bool CEnemy::IsTargetFront(_float fAngle)
 {
 	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
@@ -351,12 +348,7 @@ void CEnemy::SetDead()
 	m_DeathTimeline.PlayFromStart();
 	
 	//UI 삭제
-	if (m_pShieldUI != nullptr)
-		m_pShieldUI->SetDelete();
-
-	if (m_pHPUI != nullptr)
-		m_pHPUI->SetDelete();
-	//
+	Safe_Release(m_pEMUI);
 }
 
 void CEnemy::FindTarget()
@@ -380,48 +372,48 @@ void CEnemy::FindTarget()
 	}
 }
 
-void CEnemy::TurnEyesOut()
-{
-	CEffectGroup* pEffectGroup = nullptr;
-	pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", TEXT("Layer_UI"));
-	assert(pEffectGroup != nullptr);
+//void CEnemy::TurnEyesOut()
+//{
+//	CEffectGroup* pEffectGroup = nullptr;
+//	pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", PLAYERTEST_LAYER_FRONTUI);
+//	assert(pEffectGroup != nullptr);
+//
+//	//TimeLine 끝나고 삭제
+//	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true, true);
+//}
 
-	//TimeLine 끝나고 삭제
-	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true, true);
-}
-
-void CEnemy::Create_InfoUI()
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
-	if (m_pShieldUI != nullptr || m_pHPUI != nullptr) return;
-
-	if (m_bHasCrushGauge)
-	{
-		m_pShieldUI = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterShield")));
-		assert(m_pShieldUI != nullptr);
-
-		m_pShieldUI->Set_Owner(this);
-		m_pShieldUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
-		m_pShieldUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
-	}
-	else
-	{
-		m_pHPUI = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterHP")));
-		assert(m_pHPUI != nullptr);
-
-		m_pHPUI->Set_Owner(this);
-		m_pHPUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
-		m_pHPUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
-	}
-}
+//void CEnemy::Create_InfoUI()
+//{
+//	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+//
+//	if (m_pShieldUI != nullptr || m_pHPUI != nullptr) return;
+//
+//	if (m_bHasCrushGauge)
+//	{
+//		m_pShieldUI = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterShield")));
+//		assert(m_pShieldUI != nullptr);
+//
+//		m_pShieldUI->Set_Owner(this);
+//		m_pShieldUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
+//		m_pShieldUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
+//	}
+//	else
+//	{
+//		m_pHPUI = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterHP")));
+//		assert(m_pHPUI != nullptr);
+//
+//		m_pHPUI->Set_Owner(this);
+//		m_pHPUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
+//		m_pHPUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
+//	}
+//}
 
 _bool CEnemy::Decide_PlayBrainCrush()
 {
 	if (m_iCrushGauge <= 0)
 	{
 		m_bBrainCrush = true;
-		return true;
+		return true; 
 	}
 
 	return false;
@@ -776,7 +768,5 @@ void CEnemy::Free()
 
 	m_pRigidBodies.clear();
 
-	Safe_Release(m_pHPUI);
-	Safe_Release(m_pShieldUI);
-		
+	Safe_Release(m_pEMUI);	
 }

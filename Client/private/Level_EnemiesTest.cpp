@@ -23,7 +23,7 @@
 #include "GameManager.h"
 
 #define ADD_PLAYER
-//#define ADD_PREVIEW "Prototype_Model_em1100"
+//#define ADD_PREVIEW "Prototype_Model_em1200"
 //#define ADD_ENEMY "Monster_em650"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

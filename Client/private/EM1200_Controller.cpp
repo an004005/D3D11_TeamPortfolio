@@ -65,10 +65,8 @@ void CEM1200_Controller::AI_Tick(_double TimeDelta)
 	_bool ttty = m_pCastedOwner->IsPlayingSocket() == false;
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
-	{
-		AddCommand("Shout1", 0.f, &CAIController::Input, NUM_1);
-		AddCommand("Wait", 1.f, &CAIController::Wait);
-		//DefineState(TimeDelta);
+	{	
+		DefineState(TimeDelta);
 	}
 }
 
@@ -104,21 +102,21 @@ void CEM1200_Controller::Tick_Near_2Phase(_double TimeDelta)
 
 		if (m_dShoutCoolTime[CURTIME] >= m_dShoutCoolTime[MAXTIME])
 		{
-			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 2.f);
+			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 1.f);
 			AddCommand("Shout2", 0.f, &CAIController::Input, NUM_2);
 			AddCommand("Wait", 1.f, &CAIController::Wait);
 			m_dShoutCoolTime[CURTIME] = 0.0;
 		}
 		else if (m_dStampCoolTime[CURTIME] >= m_dStampCoolTime[MAXTIME])
 		{
-			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 2.f);
+			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 1.f);
 			AddCommand("Stamp", 0.f, &CAIController::Input, S);
 			AddCommand("Wait", 1.f, &CAIController::Wait);
 			m_dStampCoolTime[CURTIME] = 0.0;
 		}
 		else
 		{
-			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 2.f);
+			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 1.f);
 			AddCommand("Rush", 0.f, &CAIController::Input, R);
 			AddCommand("Wait", 1.f, &CAIController::Wait);
 		}

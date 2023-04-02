@@ -81,7 +81,7 @@ private:
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
 
-	_float4x4		pivot;
+//	_float4x4		pivot;
 public:
 	static CEM1200* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

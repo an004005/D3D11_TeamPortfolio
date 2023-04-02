@@ -3,7 +3,7 @@
 #include "Client_Defines.h"
 #include "Timeline.h"
 #include "MathUtils.h"
-
+#include "EMUI.h"
 
 BEGIN(Engine)
 class CRenderer;
@@ -14,10 +14,8 @@ END
 BEGIN(Client)
 using RigidBodies = unordered_map<string, CRigidBody*>;
 
-enum ENEMY_UIPIVOT { ENEMY_INFOBAR, ENEMY_FINDEYES, ENEMY_UIPIVOT_END };
 class CEnemy abstract : public CScarletCharacter
 {
-public:
 
 protected:
 	CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -35,7 +33,7 @@ public:
 	virtual void SetUpSound();
 	virtual void SetUpAnimationEvent(){}
 	virtual void SetUpFSM() {}
-	virtual void SetUpUI() {}
+	virtual void SetUpUI();
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 	virtual void SetEnemyBatchDataStat(ENEMY_STAT tStat);
@@ -45,20 +43,16 @@ public:
 	//0 ~ 1 사이값
 	_float GetHpRatio() const { return (_float)m_iHP / (_float)m_iMaxHP; }
 	_float GetCrushGageRatio() const { return (_float)m_iCrushGauge / (_float)m_iMaxCrushGauge; }
+	CEMUI* GetEnemyUI() const { return m_pEMUI; }
+	const _int	GetEnemyLevel() const { return iEemeyLevel; }
+	const EEnemyName	GetEnemyName() const { return m_eEnemyName; }
+
+
 	_bool IsDead() const { return m_bDead; }
 	virtual _float4	GetKineticTargetPos() { return GetColliderPosition(); }
 
 	void HealFullHp() { m_iHP = m_iMaxHP; }
-	_bool	HasCrushGauge() { m_bHasCrushGauge; }
-
-	//ui
-	_float4x4	Get_UIPivotMatrix(ENEMY_UIPIVOT ePivot) {
-		return m_UI_PivotMatrixes[ePivot];
-	}
-	void	TurnEyesOut();
-	void Create_InfoUI();
-	//
-
+	_bool	HasCrushGauge() { return m_bHasCrushGauge; }
 	_bool Decide_PlayBrainCrush();
 
 public:
@@ -106,9 +100,6 @@ protected:
 	//RigidBoyd 관리
 	void	Add_RigidBody(const string& KeyName, void* pArg = nullptr);
 	CRigidBody* GetRigidBody(const string& KeyName);
-
-private:
-	void Update_UIInfo();
 	
 protected:
 	static vector<wstring>			s_vecDefaultBlood;
@@ -129,9 +120,8 @@ protected:
 	CScarletCharacter*		m_pTarget = nullptr;
 	CFSMComponent*			m_pFSM = nullptr;
 	RigidBodies				m_pRigidBodies;
+	CEMUI* m_pEMUI = nullptr;
 
-	class CMonsterShildUI* m_pShieldUI = nullptr;
-	class CMonsterHpUI* m_pHPUI = nullptr;
 	//
 
 	_bool m_bFindTestTarget = false;
@@ -174,9 +164,6 @@ protected:
 	string m_strImpactVoiceTag;
 
 
-	//ui
-	array<_float4x4, ENEMY_UIPIVOT_END> m_UI_PivotMatrixes;
-	//
 
 public:
 	virtual void Free() override;
