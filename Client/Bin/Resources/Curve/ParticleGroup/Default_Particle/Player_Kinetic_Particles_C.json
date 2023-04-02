@@ -1,1 +1,31 @@
-{"LifeTime":10.0,"ObjectTag":"Player_Kinetic_Particles_C","Particles":[{"ObjectTag":"Player_Kinetic_Hit_Particles_A","ParticleDirectory":"../Bin/Resources/VFX/ParticleSystem/Player_Kinetic_Particle/Player_Kinetic_Hit_Particles_A.json"}],"Prototype_GameObject":"ProtoVFX_ParticleGroup\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "LifeTime": 10.0,
+    "ObjectTag": "Player_Kinetic_Particles_C",
+    "Particles": [
+        {
+            "ObjectTag": "Player_Kinetic_Hit_Particles_A",
+            "ParticleDirectory": "../Bin/Resources/VFX/ParticleSystem/Player_Kinetic_Particle/Player_Kinetic_Hit_Particles_C.json"
+        }
+    ],
+    "Prototype_GameObject": "ProtoVFX_ParticleGroup\u0000",
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

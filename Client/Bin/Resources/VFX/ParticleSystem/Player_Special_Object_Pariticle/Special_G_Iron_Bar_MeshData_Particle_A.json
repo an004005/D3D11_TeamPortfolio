@@ -1,7 +1,7 @@
 {
     "BilboardType": 1,
     "BufferType": 0,
-    "BurstCnt": 100,
+    "BurstCnt": 50,
     "ConeDirDegree": 30.0,
     "ConeOriginRadius": 1.0,
     "Curves": [
@@ -9,11 +9,11 @@
             "Frames": [
                 [
                     0.0,
-                    3.799999952316284
+                    4.733333587646484
                 ],
                 [
                     0.5,
-                    14.199999809265137
+                    10.0
                 ],
                 [
                     -10000.0,
@@ -331,7 +331,7 @@
             "Name": "ObjectScale_All",
             "RangeMax": [
                 0.5,
-                15.0
+                10.0
             ],
             "RangeMin": [
                 0.0,
@@ -361,8 +361,8 @@
         1.0,
         1.0
     ],
-    "ModelCurveProtoTag": "../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_05.static_model",
-    "ModelProtoTag": "../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_05.static_model",
+    "ModelCurveProtoTag": "../Bin/Resources/Meshes/VFX/Effect_Circle/VFX_Mesh_Circle_18.static_model",
+    "ModelProtoTag": "../Bin/Resources/Meshes/VFX/Effect_Circle/VFX_Mesh_Circle_18.static_model",
     "ObjectTag": "",
     "Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",
     "RandDirMax": [
@@ -414,7 +414,7 @@
     },
     "ShaderProtoTag": "Prototype_Component_Shader_VtxPointInstance_Particle",
     "Shape": 0,
-    "SpawnTickTime": 0.050000000149011612,
+    "SpawnTickTime": 0.10000000149011612,
     "Speed": 1.0,
     "SpeedMinMax": [
         0.10000000149011612,
@@ -425,17 +425,17 @@
     "SphereRadius": 4.0,
     "Transform": {
         "WorldMatrix": [
-            -21.15886116027832,
-            16.2088623046875,
-            9.804563522338867,
+            3.301666021347046,
+            0.0011870043817907572,
+            -3.7547874450683594,
             0.0,
-            14.4799165725708,
-            4.361069679260254,
-            24.038881301879883,
+            -0.0016266999300569296,
+            4.999936580657959,
+            0.00015023196465335786,
             0.0,
-            12.214191436767578,
-            22.908748626708984,
-            -11.513285636901855,
+            3.754728317260742,
+            0.0011223842157050967,
+            3.301612138748169,
             0.0,
             0.0,
             0.0,
@@ -447,7 +447,7 @@
     "TurnAxis": [
         0.0,
         1.0,
-        1.0
+        0.0
     ],
     "UseMeshData": true,
     "VtxRangeRatioValue": 1.0,
@@ -469,7 +469,7 @@
     "bTurn": true,
     "bUseMainCurve": true,
     "pSize": [
-        0.20000000298023224,
+        0.05000000074505806,
         0.05000000074505806
     ]
 }
