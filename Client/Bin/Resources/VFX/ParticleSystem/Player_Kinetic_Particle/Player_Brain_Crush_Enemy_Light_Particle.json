@@ -19,7 +19,7 @@
         1.0
     ],
     "LifeRand": true,
-    "Loop": false,
+    "Loop": true,
     "MeshBufferProtoTag": "",
     "MeshSize": [
         1.0,

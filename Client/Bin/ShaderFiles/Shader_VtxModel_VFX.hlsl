@@ -433,6 +433,17 @@ PS_OUT PS_FLOWERLEG(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_BRAINCRUSH_DISTORTION(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor.a = 0.f;
+	
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, g_float_0);
+
+	return Out;
+}
+
+
 PS_OUT PS_EM1200_SLASH(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -1281,5 +1292,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM1200_STAMP_IMPACT();
+	}
+
+	//28
+	pass BrainCrushDistortion
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRAINCRUSH_DISTORTION();
 	}
 }
