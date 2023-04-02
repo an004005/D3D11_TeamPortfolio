@@ -521,6 +521,40 @@ PS_OUT_Flag PS_SPECIAL_G_LARGE_HIT(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_EM0110_SPINATTACK_HIT_EF(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	Final.a = Mask * g_float_0;
+
+	float4 AddTex = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	AddTex = CalcHDRColor(AddTex, g_float_1);
+
+	float4 YellowBase = g_tex_3.Sample(LinearSampler, In.vTexUV);
+	float4 BaseColor = g_vec4_1;
+	float4 BaseBlend = YellowBase * BaseColor * 2.0f;
+	float4 BaseFinal = saturate(BaseBlend);
+
+	float4 AddColor = saturate(Final + AddTex + (BaseFinal * g_float_6));
+
+	float4 WhiteLight = g_tex_4.Sample(LinearSampler, In.vTexUV);
+	BaseFinal += WhiteLight.r;
+	Out.vColor = CalcHDRColor(AddColor, g_float_2);
+	Out.vColor.a = saturate(Final.a * (AddTex.r * g_float_5) + BaseFinal.r) * g_float_3;
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, AddTex.r * g_float_4);
+
+	if (g_float_3 <= 0.f)
+		discard;
+
+	return Out;
+}
+
 PS_OUT_Flag PS_SPECIAL_G_HBIM_HIT(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -634,6 +668,28 @@ PS_OUT_Flag PS_DISTORTION_FLIPBOOK(PS_IN In)
 	Out.vColor.a = 0.f;
 
 	if (g_float_0 <= 0.f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT_Flag PS_WEAK_HIT_EF(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float2 TexUV = Get_FlipBookUV(In.vTexUV, g_Time, g_float_0, g_int_0, g_int_1);
+	float4 Default_White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = Default_White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	float  Mask = g_tex_1.Sample(LinearSampler, TexUV).r;
+	float Mask1 = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+	Out.vColor = CalcHDRColor(Final, g_float_1);
+	Out.vColor.a = Mask * Mask1* g_float_2;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (g_float_1 <= 0.f)
 		discard;
 
 	return Out;
@@ -984,6 +1040,36 @@ PS_OUT_Flag PS_MASK_TEX_DISTORTION(PS_IN In)
 	
 	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
 	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+PS_OUT_Flag PS_BRAINCRUSH_YELLOW_TEX(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float Mask = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y)).r;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	BlendColor.a = Mask * g_float_0;
+	float4 FinalColor = saturate(BlendColor);
+	FinalColor = CalcHDRColor(FinalColor, g_float_1);
+
+	float4 LineTex = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_1;
+	float4 LineBlend = LineTex * Color * 2.0f;
+	float4 LineFinal = saturate(LineBlend);
+	LineFinal = CalcHDRColor(LineFinal, g_float_2);
+	float LineMask = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+	LineFinal.a = LineTex.r * LineMask * g_float_3;
+
+	Out.vColor = CalcHDRColor(saturate(FinalColor + (LineFinal * g_float_4)), g_float_5);
+	// Out.vColor.a = 
+	
+
+	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 
 	return Out;
 }
@@ -1617,7 +1703,7 @@ technique11 DefaultTechnique
 	pass KineticDeadFlip
 	{
 		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetDepthStencilState(DS_Default, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1962,5 +2048,47 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM1200_STAMP_IMPACK_LARGE();
+	}
+
+	//49
+	pass Em0110SpinAttackEF
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM0110_SPINATTACK_HIT_EF();
+	}
+
+	//50
+	pass EnemyWeakHitEF
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_WEAK_HIT_EF();
+	}
+
+	//51
+	pass BrainCrush_Yellow
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRAINCRUSH_YELLOW_TEX();
 	}
 }
