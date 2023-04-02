@@ -46,6 +46,7 @@ HRESULT CSpecial_TelephonePole::Initialize(void * pArg)
 		}
 	});
 
+
 	return S_OK;
 }
 

@@ -195,6 +195,14 @@ void CSpecial_IronBars::IronBars_SetTrigger(_bool bTrigger)
 	}
 }
 
+void CSpecial_IronBars::IronBars_DecomposeEffect()
+{
+	for (_uint i = 0; i < 8; ++i)
+	{
+		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->DecomposeEffect();
+	}
+}
+
 void CSpecial_IronBars::IronBars_AttachAnim(CModel* pModel, CTransform* pTransform, _float4 vPoint)
 {
 	for (_uint i = 0; i < 8; ++i)

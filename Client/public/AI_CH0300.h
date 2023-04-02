@@ -9,6 +9,15 @@ class CAI_CH0300_AnimInstance;
 
 class CAI_CH0300 : public CScarletCharacter
 {
+public:
+	typedef struct tagDamageDesc
+	{
+		_int		m_iDamage;
+		_vector		m_vHitDir;
+		EAttackType	m_iDamageType;
+		EBaseAxis	m_eHitDir;
+	}DAMAGE_DESC;
+
 private:
 	CAI_CH0300(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CAI_CH0300(const CAI_CH0300& rhs);
@@ -57,17 +66,52 @@ private:
 
 private:
 	void		BehaviorCheck();
+	void		DistanceCheck();	// 플레이어와의 거리 탐지
+	void		MovePerSecondCheck();
+	void		TeleportCheck();
 
 private:
-	void		DistanceCheck();	// 플레이어와의 거리 탐지
+	void		TeleportToPlayerBack();
+	
+private:
+	HRESULT		Setup_Parts();
+	vector<CGameObject*>	m_vecWeapon;
 
+// 구조체 상태 반환
+private:
+	DAMAGE_DESC		m_DamageDesc;
+
+public:
+	DAMAGE_DESC Get_DamageDesc() const { return m_DamageDesc; }
+	void		Reset_DamageDesc() { ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC)); }
+
+// 실수값 상태 반환
 private:
 	_float		m_fDistance_toPlayer = 0.f;
 	_float		m_fDistance_toEnemy = -1.f;
+	_float		m_fMovePerSecond = 1.f;
 
 public:
 	_float		Get_Distance_Player() const { return m_fDistance_toPlayer; }
 	_float		Get_Distance_Enemy() const { return m_fDistance_toEnemy; }
+	void		Set_Jump(_float fSpeed) { m_fYSpeed = fSpeed; }
+
+// bool값 상태 반환
+private:
+	_bool		m_bHit = false;
+	_bool		m_bJump = true;
+
+public:
+	_bool		Get_Hit() const { return m_bHit; }
+	void		Reset_Hit() { m_bHit = false; }
+	_bool		Get_OnFloor() const { return m_bOnFloor; }
+	_bool		Get_Jump() const { return m_bJump; }
+	void		Reset_Jump() { m_bJump = false; }
+
+// 장애물 탐지
+private:
+	_float		m_fObstacleDetectTimer = 0.f;
+	_float4		m_vBefPos = { 0.f, 0.f, 0.f, 1.f };
 
 public:
 	static CAI_CH0300* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

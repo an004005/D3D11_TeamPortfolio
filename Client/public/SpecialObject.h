@@ -88,6 +88,14 @@ protected:
 protected:
 	wstring					m_strModelTag;
 
+protected:
+	vector<wstring>			m_vecRandomHitEffect{
+		L"Special_G_Kinetic_Hit_Effect",
+		L"Special_G_Kinetic_Hit_Effect_A",
+		L"Special_G_Kinetic_Hit_Effect_B",
+		L"Special_G_Kinetic_Hit_Effect_C",
+	};
+
 public:
 	CGameObject* Clone(void* pArg = nullptr)override { return nullptr; }
 	void Free() override;

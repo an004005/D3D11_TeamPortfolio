@@ -96,6 +96,17 @@ private:
 
 	_bool				m_bCameRange = { false };
 
+private:
+	vector<wstring>		m_vecRandomParticle{
+		L"Player_Kinetic_Particles_A",
+		L"Player_Kinetic_Particles_B",
+		L"Player_Kinetic_Particles_C",
+		L"Player_Kinetic_Particles_D",
+		L"Player_Kinetic_Particles_E",
+		L"Player_Kinetic_Particles_F",
+		L"Player_Kinetic_Particles_G"
+	};
+
 public:
 	static CMapKinetic_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr) override;

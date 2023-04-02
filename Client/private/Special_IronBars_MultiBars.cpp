@@ -57,6 +57,12 @@ HRESULT CSpecial_IronBars_MultiBars::Initialize(void * pArg)
 				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 				static_cast<CEnemy*>(pTarget)->TakeDamage(tParam);
+
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Special_Iron_Bar_Final_Hit_Effect")
+					->Start_AttachOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), false);
+
+				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Iron_Bar_Hit_Particle")
+					->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), { 0.f, 1.f, 0.f, 0.f });
 			}
 		});
 

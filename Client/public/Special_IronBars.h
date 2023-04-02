@@ -34,6 +34,8 @@ public:
 	void	IronBars_Decompose(_bool bDecompose);
 	void	IronBars_SetTrigger(_bool bTrigger);
 
+	void	IronBars_DecomposeEffect();
+
 	void	IronBars_AttachAnim(CModel* pModel, CTransform* pTransform, _float4 vPoint);
 
 	void	IronBars_LookAtTarget(_float4 vTargetPos, _float fRatio);

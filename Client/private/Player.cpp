@@ -2294,7 +2294,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			.Predicator([&]()->_bool 
 			{
 				_float fDot = XMVectorGetX(XMVector3Dot(m_pTransformCom->Get_State(CTransform::STATE_LOOK), m_DamageDesc.m_vHitDir));
-				return (fDot > 0.f) ? true : false; 
+				return (fDot < 0.f) ? true : false; 
 			})
 			.Priority(0)
 
@@ -2302,7 +2302,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			.Predicator([&]()->_bool
 			{
 				_float fDot = XMVectorGetX(XMVector3Dot(m_pTransformCom->Get_State(CTransform::STATE_LOOK), m_DamageDesc.m_vHitDir));
-				return (fDot < 0.f) ? true : false;
+				return (fDot > 0.f) ? true : false;
 			})
 			.Priority(0)
 
@@ -5540,10 +5540,16 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			// ? ì°½???Œë” ë°”ê¾¸ê¸?
+			if (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.2f) && IronBarsDecomposeEffect.IsNotDo())
+			{
+				static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+					IronBars_DecomposeEffect();
+			}
 		})
 		.OnExit([&]()
 		{
+			IronBarsDecomposeEffect.Reset();
+
 			static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
 				IronBars_Decompose(true);
 

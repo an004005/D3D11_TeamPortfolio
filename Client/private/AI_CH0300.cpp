@@ -45,6 +45,9 @@ HRESULT CAI_CH0300::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
+	if (FAILED(Setup_Parts()))
+		return E_FAIL;
+
 	if (FAILED(SetUp_Event()))
 		return E_FAIL;
 
@@ -56,6 +59,8 @@ HRESULT CAI_CH0300::Initialize(void* pArg)
 
 	if (FAILED(SetUp_Sound()))
 		return E_FAIL;
+
+	ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 
 	m_pTransformCom->SetTransformDesc({ 5.f, XMConvertToRadians(180.f) });
 
@@ -94,11 +99,22 @@ void CAI_CH0300::Tick(_double TimeDelta)
 
 	m_pASM->Tick(TimeDelta);
 	BehaviorCheck();
+
+	for (auto& iter : m_vecWeapon)
+	{
+		iter->Tick(TimeDelta);
+		{
+			//_bool bCol = Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART));
+		}
+	}
 }
 
 void CAI_CH0300::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
+
+	for (auto& iter : m_vecWeapon)
+		iter->Late_Tick(TimeDelta);
 
 	if (m_bVisible && (nullptr != m_pRenderer))
 	{
@@ -110,6 +126,13 @@ void CAI_CH0300::Late_Tick(_double TimeDelta)
 void CAI_CH0300::AfterPhysX()
 {
 	__super::AfterPhysX();
+
+	for (auto& iter : m_vecWeapon)
+	{
+		static_cast<CScarletWeapon*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
+	}
+
+	MovePerSecondCheck();
 }
 
 HRESULT CAI_CH0300::Render()
@@ -130,6 +153,19 @@ HRESULT CAI_CH0300::Render_ShadowDepth()
 
 void CAI_CH0300::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
+	m_bHit = true;
+
+	m_DamageDesc.m_iDamage = tDamageParams.iDamage;
+	m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
+	m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
+	m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
+
+	//CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
+
+	if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
+	{
+		m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+	}
 }
 
 void CAI_CH0300::Imgui_RenderProperty()
@@ -137,6 +173,29 @@ void CAI_CH0300::Imgui_RenderProperty()
 	__super::Imgui_RenderProperty();
 
 	m_pASM->Imgui_RenderState();
+
+	if (ImGui::Button("Hit_Light"))
+	{
+		m_bHit = true;
+		m_DamageDesc.m_iDamageType = EAttackType::ATK_LIGHT;
+		m_DamageDesc.m_vHitDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+	}
+	if (ImGui::Button("Hit_Middle"))
+	{
+		m_bHit = true;
+		m_DamageDesc.m_iDamageType = EAttackType::ATK_MIDDLE;
+		m_DamageDesc.m_eHitDir = EBaseAxis::NORTH;
+	}
+	if (ImGui::Button("Hit_Knuckback"))
+	{
+		m_bHit = true;
+		m_DamageDesc.m_iDamageType = EAttackType::ATK_HEAVY;
+	}
+	if (ImGui::Button("Hit_Airborne"))
+	{
+		m_bHit = true;
+		m_DamageDesc.m_iDamageType = EAttackType::ATK_TO_AIR;
+	}
 
 	if (ImGui::CollapsingHeader("Effect_Attach"))
 	{
@@ -196,6 +255,17 @@ void CAI_CH0300::Imgui_RenderProperty()
 
 		if ("" != szAnimName)
 			m_pModel->Get_AnimList()[szAnimName]->Imgui_RenderProperty();
+	}
+
+	if (ImGui::CollapsingHeader("Weapons"))
+	{
+		ImGui::Indent(20.f);
+		if (m_vecWeapon.empty() == false)
+		{
+			m_vecWeapon.front()->Imgui_RenderProperty();
+			m_vecWeapon.front()->Imgui_RenderComponentProperties();
+		}
+		ImGui::Unindent(20.f);
 	}
 }
 
@@ -276,6 +346,18 @@ void CAI_CH0300::BehaviorCheck()
 			m_pTransformCom->LookAt_Smooth(vPlayerPos, m_fTimeDelta);
 			m_pTransformCom->Go_Straight(m_fTimeDelta * 2.f);
 		}
+
+		if ("JUMP_RISE" == strCurState)
+		{
+			m_pTransformCom->LookAt_Smooth(vPlayerPos, m_fTimeDelta);
+			m_pTransformCom->Go_Straight(m_fTimeDelta);
+		}
+
+		if ("JUMP_FALL" == strCurState)
+		{
+			m_pTransformCom->LookAt_Smooth(vPlayerPos, m_fTimeDelta);
+			m_pTransformCom->Go_Straight(m_fTimeDelta);
+		}
 	}
 	else
 	{
@@ -293,9 +375,16 @@ void CAI_CH0300::BehaviorCheck()
 			m_pTransformCom->Go_Straight(m_fTimeDelta * 2.f);
 		}
 
-		if ("ATK_A1" == strCurState)
+		if ("JUMP_RISE" == strCurState)
 		{
 			m_pTransformCom->LookAt_Smooth(vEnemyPos, m_fTimeDelta);
+			m_pTransformCom->Go_Straight(m_fTimeDelta);
+		}
+
+		if ("JUMP_FALL" == strCurState)
+		{
+			m_pTransformCom->LookAt_Smooth(vEnemyPos, m_fTimeDelta);
+			m_pTransformCom->Go_Straight(m_fTimeDelta);
 		}
 	}
 }
@@ -319,6 +408,109 @@ void CAI_CH0300::DistanceCheck()
 	{
 		m_fDistance_toEnemy = -1.f;
 	}
+
+	TeleportCheck();
+
+}
+
+void CAI_CH0300::MovePerSecondCheck()
+{
+	if (m_pASM->GetCurStateName() == "WALK" || m_pASM->GetCurStateName() == "RUN")
+	{
+		if (1.f > m_fObstacleDetectTimer)
+		{
+			m_fObstacleDetectTimer += (_float)m_fTimeDelta;
+
+			_float fMoveDistance = XMVectorGetX(XMVector3Length(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&m_vBefPos)));
+			m_fMovePerSecond += fMoveDistance;
+		}
+		else
+		{
+			if (3.f > m_fMovePerSecond)
+			{
+				m_bJump = true;
+			}
+			
+			m_fMovePerSecond = 0.f;
+			m_fObstacleDetectTimer = 0.f;
+		}
+	}
+	else
+	{
+		m_fMovePerSecond = 0.f;
+		m_fObstacleDetectTimer = 0.f;
+	}
+
+	m_vBefPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+}
+
+void CAI_CH0300::TeleportCheck()
+{
+	if (15.f <= m_fDistance_toPlayer)
+	{
+		TeleportToPlayerBack();
+	}
+}
+
+void CAI_CH0300::TeleportToPlayerBack()
+{
+	_float4 vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	_float4 vCamPos = CGameInstance::GetInstance()->Get_CamPosition();
+	_float4 vCamBack = CGameInstance::GetInstance()->Get_CamLook() * -5.f;
+	vCamPos += vCamBack;
+	vCamPos.w = 1.f;
+	_float4 vResetPos = { vCamPos.x, vPlayerPos.y, vCamPos.z, 1.f };
+
+	physx::PxRaycastHit hitBuffer[1];
+	physx::PxRaycastBuffer rayOut(hitBuffer, 1);
+
+	_float fDistanceMag = 1.f;
+
+	RayCastParams param;
+	param.rayOut = &rayOut;
+	param.vOrigin = vPlayerPos;
+	param.vDir = vResetPos - vPlayerPos;
+	param.fDistance = param.vDir.Length();
+	param.iTargetType = CTB_STATIC | CTB_PSYCHICK_OBJ;
+	param.bSingle = true;
+	param.fVisibleTime = 1.f;
+
+	if (CGameInstance::GetInstance()->RayCast(param))
+	{
+		for (int i = 0; i < rayOut.getNbAnyHits(); ++i)
+		{
+			auto pHit = rayOut.getAnyHit(i);
+			fDistanceMag = pHit.distance / param.fDistance;
+
+			fDistanceMag *= 0.8f;
+		}
+	}
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vResetPos);
+	m_pTransformCom->LookAt_NonY(vPlayerPos);
+	m_pCollider->SetFootPosition(vResetPos);
+}
+
+HRESULT CAI_CH0300::Setup_Parts()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	Json Weapon;// = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/wp0300.json");
+	Weapon["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/wp_300/wp0300.anim_model";
+
+	CGameObject* pGameObject = nullptr;
+
+	WEAPON_DESC		Desc;
+	ZeroMemory(&Desc, sizeof(WEAPON_DESC));
+	Desc.m_PivotMatrix = m_pModel->GetPivotMatrix();
+	Desc.m_pJson = &Weapon;
+
+	//	pGameInstance->Clone_GameObject(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
+
+	pGameObject = pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("HanabiWeapon"), &Desc);
+	m_vecWeapon.push_back(pGameObject);
+
+	return S_OK;
 }
 
 CAI_CH0300* CAI_CH0300::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -352,6 +544,10 @@ CGameObject* CAI_CH0300::Clone(void* pArg)
 void CAI_CH0300::Free()
 {
 	__super::Free();
+
+	for (auto& iter : m_vecWeapon)
+		Safe_Release(iter);
+	m_vecWeapon.clear();
 
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pModel);

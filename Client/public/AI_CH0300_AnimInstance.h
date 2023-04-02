@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "AnimationInstance.h"
+#include "AI_CH0300.h"
 
 BEGIN(Client)
 
@@ -16,6 +17,7 @@ public:
 
 public:
 	string GetCurStateName() const { return m_pASM_Base->GetCurState()->m_strName; }
+	void   SetCurState(const string& strStateName) { m_pASM_Base->SetCurState(strStateName); }
 
 private:
 	void SpairAnimationManager(_bool bBattle);
@@ -27,6 +29,7 @@ private:
 
 private:
 	_float	DistanceCheck();
+	void	Reset_HitCheck();
 
 private:
 	CAnimationStateMachine* m_pASM_Base = nullptr;
@@ -39,11 +42,16 @@ private:
 	_bool	m_bAttach = false;
 
 private:
+	CAI_CH0300::DAMAGE_DESC m_tDamageDesc;
+
+private:
 	_bool	m_bAir = false;
 	_bool	m_bWalk = false;
 	_bool	m_bOnBattle = false;
 	_bool	m_bOnFloor = false;
 	_bool	m_bBattle = false;
+	_bool	m_bHit = false;
+	_bool	m_bJump = false;
 
 private:
 	_float	m_fDistance_toPlayer = -1.f;

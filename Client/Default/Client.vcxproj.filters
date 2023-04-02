@@ -400,6 +400,9 @@
     <Filter Include="02.GameObjects\AI\CH0300\BaseAnimInstance">
       <UniqueIdentifier>{c57cbe66-9589-4475-bd9b-271126c43ecf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Weapon\wp0300">
+      <UniqueIdentifier>{e149a287-2e6f-450f-ae36-5a1fd3583ca4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1251,6 +1254,9 @@
     <ClInclude Include="..\public\AI_CH0300_AnimInstance.h">
       <Filter>02.GameObjects\AI\CH0300\BaseAnimInstance</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Weapon_wp0300.h">
+      <Filter>02.GameObjects\Weapon\wp0300</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2075,6 +2081,9 @@
     </ClCompile>
     <ClCompile Include="..\private\AI_CH0300_AnimInstance.cpp">
       <Filter>02.GameObjects\AI\CH0300\BaseAnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Weapon_wp0300.cpp">
+      <Filter>02.GameObjects\Weapon\wp0300</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
