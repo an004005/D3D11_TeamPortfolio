@@ -28,15 +28,9 @@ HRESULT CSA_AxisUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	if (0.0 == m_fMoveTime)  // 초기화 하지 않은 경우 임의로 채운다. (Default) 값을 주고 싶어서..
-	{
-		m_fMoveTime = 0.15;
-		m_fSpeed = 100.0f;
-	}
-
 	m_bMove = true;
 	m_fStartX = m_fX;
-	m_fStartY = m_fX;
+	m_fStartY = m_fY;
 
 	return S_OK;
 }

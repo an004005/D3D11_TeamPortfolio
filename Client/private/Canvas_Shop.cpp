@@ -109,6 +109,7 @@ HRESULT CCanvas_Shop::Add_MainCanvas()
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Purchase.json");
 	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_Purchase", &json);
 	m_arrCanvass[PURCHASE] = dynamic_cast<CCanvas_Purchase*>(pCanvas);
+	assert(pCanvas != nullptr && "Failed to Cloned : CCanvas_Purchase");
 
 	/* For.Prototype_GameObject_Canvas_Sale*/
 	if (FAILED(CGameInstance::GetInstance()->Add_Prototype(TEXT("Canvas_Sale"),
@@ -118,6 +119,7 @@ HRESULT CCanvas_Shop::Add_MainCanvas()
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Sale.json");
 	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_Sale", &json);
 	m_arrCanvass[SALE] = dynamic_cast<CCanvas_Sale*>(pCanvas);
+	assert(pCanvas != nullptr && "Failed to Cloned : CCanvas_Sale");
 
 	return S_OK;
 }

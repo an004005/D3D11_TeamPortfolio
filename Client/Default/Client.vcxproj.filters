@@ -397,6 +397,9 @@
     <Filter Include="02.GameObjects\UI\SpecialAttack\MouseLeft">
       <UniqueIdentifier>{dd9cf8e7-03bd-438e-b767-d45731e20ed6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\SpecialAttack\Grating">
+      <UniqueIdentifier>{1bd75a3c-891b-4333-bb3d-8ded58961a87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1275,7 +1278,10 @@
       <Filter>02.GameObjects\UI\SpecialAttack\MouseLeft</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SA_AxisUI.h">
-      <Filter>02.GameObjects\UI\SpecialAttack\MouseLeft</Filter>
+      <Filter>02.GameObjects\UI\SpecialAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SAGragting_S.h">
+      <Filter>02.GameObjects\UI\SpecialAttack\Grating</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2129,7 +2135,10 @@
       <Filter>02.GameObjects\UI\SpecialAttack\MouseLeft</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SA_AxisUI.cpp">
-      <Filter>02.GameObjects\UI\SpecialAttack\MouseLeft</Filter>
+      <Filter>02.GameObjects\UI\SpecialAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SAGragting_S.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack\Grating</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

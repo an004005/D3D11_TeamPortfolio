@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CCanvas_SAMouseLeft : public CCanvas
+class CCanvas_SAGragting_S : public CCanvas
 {
 protected:
-	CCanvas_SAMouseLeft(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CCanvas_SAMouseLeft(const CCanvas_SAMouseLeft& rhs);
+	CCanvas_SAGragting_S(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCanvas_SAGragting_S(const CCanvas_SAGragting_S& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -27,12 +27,10 @@ private:
 	_bool m_fAlphaDown = { false };
 	_float m_fMouseLightAlpha = { 0.0f };
 
-	_double	m_dMuseMove_TimeAcc = { 0.0 };
-
-	_float m_fMoveDistance = { 0.0f };
+	_double m_dMuseMove_TimeAcc = { 0.0 };
 
 public:
-	static CCanvas_SAMouseLeft* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CCanvas_SAGragting_S* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

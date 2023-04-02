@@ -1,26 +1,26 @@
 #include "stdafx.h"
-#include "..\public\Canvas_SAMouseLeft.h"
+#include "..\public\Canvas_SAGragting_S.h"
 #include "GameInstance.h"
 
 #include "ShaderUI.h"
 #include "SA_AxisUI.h"
 
-// Mouse : 아무것도 하지 않아도 된다.
+// S: 아무것도 하지 않아도 된다.
 // Arrow_Light : 아무것도 하지 않아도 된다.
-// Mouse_Light : 사이 로 알파값 조절하기
+// S_Light : 알파값 조절하기
 // Arrow : 객체 내 에서 이루어짐. Set_Move() 을 통해 움직임을 멈출 수 있다.
 
-CCanvas_SAMouseLeft::CCanvas_SAMouseLeft(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCanvas_SAGragting_S::CCanvas_SAGragting_S(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
 }
 
-CCanvas_SAMouseLeft::CCanvas_SAMouseLeft(const CCanvas_SAMouseLeft& rhs)
+CCanvas_SAGragting_S::CCanvas_SAGragting_S(const CCanvas_SAGragting_S& rhs)
 	: CCanvas(rhs)
 {
 }
 
-HRESULT CCanvas_SAMouseLeft::Initialize_Prototype()
+HRESULT CCanvas_SAGragting_S::Initialize_Prototype()
 {
 	if (FAILED(CCanvas::Initialize_Prototype()))
 		return E_FAIL;
@@ -28,19 +28,19 @@ HRESULT CCanvas_SAMouseLeft::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CCanvas_SAMouseLeft::Initialize(void* pArg)
+HRESULT CCanvas_SAGragting_S::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
 	Find_ChildUI(L"Circle")->SetVisible(false);
 	Find_ChildUI(L"CircleLine2")->SetVisible(false);
-	dynamic_cast<CSA_AxisUI*>(Find_ChildUI(L"Arrow"))->Set_AxisInitialize(AXIS::LEFT);
+	dynamic_cast<CSA_AxisUI*>(Find_ChildUI(L"Arrow"))->Set_AxisInitialize(AXIS::UP);
 
 	return S_OK;
 }
 
-void CCanvas_SAMouseLeft::Tick(_double TimeDelta)
+void CCanvas_SAGragting_S::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
@@ -51,7 +51,7 @@ void CCanvas_SAMouseLeft::Tick(_double TimeDelta)
 	Find_ChildUI(L"Arrow_Light")->Set_Position(Find_ChildUI(L"Arrow")->Get_Position());	// 계속 그냥 따라다니도록
 }
 
-void CCanvas_SAMouseLeft::KeyInput()
+void CCanvas_SAGragting_S::KeyInput()
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_X))
 	{
@@ -59,7 +59,7 @@ void CCanvas_SAMouseLeft::KeyInput()
 	}
 }
 
-void CCanvas_SAMouseLeft::MouseLight_Tick(const _double& TimeDelta)
+void CCanvas_SAGragting_S::MouseLight_Tick(const _double& TimeDelta)
 {
 	_float fSpeed = 1.0f;
 	if (true == m_fAlphaDown)
@@ -75,10 +75,10 @@ void CCanvas_SAMouseLeft::MouseLight_Tick(const _double& TimeDelta)
 	}
 	m_fMouseLightAlpha -= _float(TimeDelta) * fSpeed;
 
-	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Mouse_Light"))->Set_Floats0(m_fMouseLightAlpha);
+	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Base_Light"))->Set_Floats0(m_fMouseLightAlpha);
 }
 
-void CCanvas_SAMouseLeft::Action_Tick(const _double& TimeDelta)
+void CCanvas_SAGragting_S::Action_Tick(const _double& TimeDelta)
 {
 	if (m_bInput == false)
 	{
@@ -87,11 +87,11 @@ void CCanvas_SAMouseLeft::Action_Tick(const _double& TimeDelta)
 		if (1.0 < m_dMuseMove_TimeAcc)
 		{
 			m_dMuseMove_TimeAcc = 0.0;
-			Find_ChildUI(L"Mouse")->Set_Position({20.0f, Find_ChildUI(L"Mouse")->Get_Position().y});
+			Find_ChildUI(L"Base")->Set_Position({ Find_ChildUI(L"Base")->Get_Position().x, -95.0f });
 		}
 		else
 		{
-			Find_ChildUI(L"Mouse")->Set_Position({ 25.0f, Find_ChildUI(L"Mouse")->Get_Position().y });
+			Find_ChildUI(L"Base")->Set_Position({ Find_ChildUI(L"Base")->Get_Position().x,  -100.0f });
 		}
 
 		return;
@@ -99,13 +99,22 @@ void CCanvas_SAMouseLeft::Action_Tick(const _double& TimeDelta)
 
 	dynamic_cast<CSA_AxisUI*>(Find_ChildUI(L"Arrow"))->Set_Move();	// 화살표 움직임 멈춰!
 
-	if (0.5f > m_fMoveDistance) 
+	_float fSizeSpeed = 100.0f;
+
+	// S 와 화살표 크기 조절
+	_float2 fBase_Size = Find_ChildUI(L"Base")->Get_Size();
+	if (100.0f > fBase_Size.x)
 	{
-		m_fMoveDistance += _float(TimeDelta);
-		m_fX -= m_fMoveDistance * 20.0f;
+		fBase_Size += {_float(TimeDelta)* fSizeSpeed, _float(TimeDelta)* fSizeSpeed};
+		Find_ChildUI(L"Base")->Set_Size(fBase_Size);
 	}
 
-	_float fSizeSpeed = 100.0f;
+	fBase_Size = Find_ChildUI(L"Arrow")->Get_Size();
+	if (65.0f > fBase_Size.y)
+	{
+		fBase_Size += {_float(TimeDelta)* fSizeSpeed, _float(TimeDelta)* fSizeSpeed};
+		Find_ChildUI(L"Arrow")->Set_Size(fBase_Size);
+	}
 
 	// 그냥 동그라미
 	_float2 fCircle_Size = Find_ChildUI(L"Circle")->Get_Size();
@@ -149,31 +158,31 @@ void CCanvas_SAMouseLeft::Action_Tick(const _double& TimeDelta)
 	}
 }
 
-CCanvas_SAMouseLeft* CCanvas_SAMouseLeft::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCanvas_SAGragting_S* CCanvas_SAGragting_S::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CCanvas_SAMouseLeft* pInstance = new CCanvas_SAMouseLeft(pDevice, pContext);
+	CCanvas_SAGragting_S* pInstance = new CCanvas_SAGragting_S(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CCanvas_SAMouseLeft");
+		MSG_BOX("Failed to Created : CCanvas_SAGragting_S");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CCanvas* CCanvas_SAMouseLeft::Clone(void* pArg)
+CCanvas* CCanvas_SAGragting_S::Clone(void* pArg)
 {
-	CCanvas_SAMouseLeft* pInstance = new CCanvas_SAMouseLeft(*this);
+	CCanvas_SAGragting_S* pInstance = new CCanvas_SAGragting_S(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CCanvas_SAMouseLeft");
+		MSG_BOX("Failed to Cloned : CCanvas_SAGragting_S");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CCanvas_SAMouseLeft::Free()
+void CCanvas_SAGragting_S::Free()
 {
 	CCanvas::Free();
 
