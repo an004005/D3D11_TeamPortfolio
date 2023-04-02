@@ -389,6 +389,21 @@ PS_OUT_Flag PS_DISTORTION_PLAYER(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_EM1200_STAMP_DISTORTION(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+
+	float4 Mask = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask.r * g_float_0);
+
+	Out.vColor = g_vec4_0;
+	Out.vColor.a *= Mask.r * g_float_1;
+
+	return Out;
+}
+
 PS_OUT_Flag PS_EM1200_FEAR(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -544,6 +559,54 @@ PS_OUT_Flag PS_SPECIAL_G_HBIM_HIT(PS_IN In)
 		Out.vColor = CalcHDRColor(Final, g_float_7);
 		Out.vColor.a = FlowTex.r * g_float_8;
 		Out.vFlag = float4(SHADER_DISTORTION_STATIC, 0.f, 0.f, FlowTex.r *g_float_6);
+	}
+
+	if (g_float_8 <= 0.f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT_Flag PS_EM1200_STAMP_IMPACK_LARGE(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	if (g_float_5 >= 0.01f)
+	{
+		float4 Mask = g_tex_0.Sample(LinearSampler, In.vTexUV);
+		float4 Color = g_vec4_0;
+		float4 Blend = Mask * Color * 2.0f;
+		float4 Final = saturate(Blend);
+		Final.a = Mask.r;
+
+		float4 AddTex = g_tex_1.Sample(LinearSampler, In.vTexUV);
+		float4 AddTexColor = g_vec4_1;
+		float4 AddBlend = AddTex * AddTexColor * 2.0f;
+		float4 AddFinal = saturate(AddBlend);
+		AddFinal.a = AddFinal.r;
+
+		AddFinal = CalcHDRColor(AddFinal, g_float_0);
+
+		float4 AddColor = saturate(Final + g_float_1  * AddFinal);
+
+		Out.vColor = CalcHDRColor(AddColor, g_float_2);
+		Out.vColor.a = saturate((Final.a * g_float_3) + (AddFinal.a * g_float_4)) * g_float_5;
+
+		float fAlpha = saturate((AddTex.r * g_float_6) + (Final.a * g_float_6));
+
+		Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, fAlpha);
+	}
+	else
+	{
+		float2 TEXUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.03, 4, 4);
+		float4 FlowTex = g_tex_2.Sample(LinearSampler, TEXUV);
+		float4 Color = g_vec4_2;
+		float4 Blend = FlowTex * Color * 2.0f;
+		float4 Final = saturate(Blend);
+
+		Out.vColor = CalcHDRColor(Final, g_float_7);
+		Out.vColor.a = FlowTex.r * g_float_8;
+		Out.vFlag = float4(SHADER_DISTORTION_STATIC, 0.f, 0.f, FlowTex.r * g_float_6);
 	}
 
 	if (g_float_8 <= 0.f)
@@ -1871,5 +1934,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_DRIVEMOD_GLOW();
+	}
+
+	//47
+	pass Em1200Stamp
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1200_STAMP_DISTORTION();
+	}
+
+	//48
+	pass em1200_StampImpact
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1200_STAMP_IMPACK_LARGE();
 	}
 }
