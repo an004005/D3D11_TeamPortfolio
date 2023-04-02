@@ -108,7 +108,7 @@ void GS_MAIN(line GS_IN In[2], inout TriangleStream<GS_OUT> Vertices)
 		Out[iEndIdx].vPosition = float4(cos(theta) * fRadius, -sin(theta) * fRadius, 0.f, 1.f);
 		Out[iEndIdx].vPosition.xyz = mul(Out[iEndIdx].vPosition.xyz, EndRotation);
 		Out[iEndIdx].vNormal = float4(Out[iEndIdx].vPosition.xyz, 0.f);
-		Out[iEndIdx].vPosition.z += 1.01f;
+		Out[iEndIdx].vPosition.z += 1.f;
 
 		Out[iEndIdx].vWorldPos = mul(Out[iEndIdx].vPosition, PivotWorld);
 		Out[iEndIdx].vNormal = normalize(mul(Out[iEndIdx].vNormal, PivotWorld));
@@ -161,7 +161,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	float fFresnel = FresnelEffect(In.vNormal.xyz, vViewDir.xyz, 0.1f);
 
 	float4 vColor = lerp(float4(1.f, 0.f, 0.f, 0.6f), (float4)1.f, saturate(1.f - fFresnel));
-	Out.vColor = CalcHDRColor(vColor, fFresnel * 2.f);
+	Out.vColor = CalcHDRColor(vColor, fFresnel * 2.5f);
 	return Out;
 }
 

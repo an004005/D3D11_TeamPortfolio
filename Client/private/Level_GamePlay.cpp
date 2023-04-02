@@ -195,8 +195,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	// 	auto pBoss = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData);
 	// }
 
-	pGameInstance->Clone_GameObject(pLayerTag, L"Prototype_RedString");
-
 	return S_OK;
 }
 

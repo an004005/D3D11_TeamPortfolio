@@ -27,14 +27,16 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 
+	virtual void LoadFromJson(const Json& json) override;
+	virtual void SaveToJson(Json& json) override;
+
 public:
 	void CreateString();
 
 private:
 	void DeletePoint(_uint idx);
 	_bool PickPoint();
-	void AddPoint(_float4 vPos);
-
+	void AddPoint_ForTool(_float4 vPos);
 
 private:
 	CShader*							m_pShaderCom = nullptr;
@@ -45,10 +47,14 @@ private:
 	_int m_iPointIdx = 0;
 
 	_float m_fRadius = 0.1f;
-	_float m_fCurveSmooth = 85.f; // 낮을 수록 부드럽게되고, 포인트 개수가 많아짐
+	_float m_fCurveSmooth = 50.f; // 낮을 수록 부드럽게되고, 포인트 개수가 많아짐
 	_float m_fIndicatorSize = 0.2f;
 
-	vector<VTXLINE_POS_INSTANCE> m_InstanceData;
+	_bool m_bOnTool = false;
+	_float m_fCreateCoolTime = 0.5f;
+	_float m_fMaxCreateCoolTime = 0.5f;
+
+
 
 public:
 	static CRedString*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

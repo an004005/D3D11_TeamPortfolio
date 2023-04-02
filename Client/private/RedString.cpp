@@ -39,6 +39,28 @@ HRESULT CRedString::Initialize(void* pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom));
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxLineInstancing"), TEXT("Shader"), (CComponent**)&m_pShaderCom));
 
+#ifdef _DEBUG
+	const _matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	for (auto& Point : m_Points)
+	{
+		Json json;
+		json["RigidBody"]["bKinematic"] = true;
+		json["RigidBody"]["bTrigger"] = false;
+		json["RigidBody"]["Density"] = 10;
+		json["RigidBody"]["ColliderType"] = CT_TRIGGER_FOR_MONSTER;
+		json["RigidBody"]["OriginTransform"] = _float4x4::CreateScale(m_fIndicatorSize);
+		json["RigidBody"]["ShapeType"] = CRigidBody::TYPE_SPHERE;
+		auto pRigidBody = dynamic_cast<CRigidBody*>(CGameInstance::GetInstance()->Clone_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", &json));
+
+		const _float4 vPos = XMVector3TransformCoord(Point.first, WorldMatrix);
+		pRigidBody->SetPxWorldMatrix(_float4x4::CreateTranslation(vPos.x, vPos.y, vPos.z));
+		pRigidBody->BeginTick();
+
+		Point.second = pRigidBody;
+	}
+#endif
+
+	CreateString();
 
 	return S_OK;
 }
@@ -57,6 +79,14 @@ void CRedString::Tick(_double TimeDelta)
 		RigidBodyWorldMatrix.r[3] = vPos;
 		point.second->Update_Tick(RigidBodyWorldMatrix);
 	}
+	if (m_bOnTool && m_fCreateCoolTime < 0.f)
+	{
+		CreateString();
+		m_bOnTool = false;
+		m_fCreateCoolTime = m_fMaxCreateCoolTime;
+	}
+	else if (m_fCreateCoolTime >= 0.f)
+		m_fCreateCoolTime -= (_float)TimeDelta;
 #endif
 }
 
@@ -85,12 +115,14 @@ void CRedString::Imgui_RenderProperty()
 {
 	CGameObject::Imgui_RenderProperty();
 
+	ImGui::Text("First Point is created on Root");
+
 	if (ImGui::Button("Add Point to front of camera"))
 	{
 		_matrix CamWorld = CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW);
 		CamWorld = XMMatrixInverse(nullptr, CamWorld);
 		_vector vPos = CamWorld.r[3] + XMVector3Normalize(CamWorld.r[2]) * 3.5f;
-		AddPoint(vPos);
+		AddPoint_ForTool(vPos);
 	}
 
 	if (ImGui::Button("Add Point To Next"))
@@ -110,7 +142,7 @@ void CRedString::Imgui_RenderProperty()
 			vPos = vBack + XMVector3Normalize(vBack - vPreBack);
 			XMVectorSetW(vPos, 1.f);
 		}
-		AddPoint(vPos);
+		AddPoint_ForTool(vPos);
 	}
 
 	ImGui::InputFloat("Curve Smooth", &m_fCurveSmooth);
@@ -118,6 +150,8 @@ void CRedString::Imgui_RenderProperty()
 	ImGui::InputInt("Point Idx", &m_iPointIdx);
 	if (ImGui::CollapsingHeader("Show Point Guizmo") && m_iPointIdx >= 0 && m_iPointIdx < (int)m_Points.size())
 	{
+		m_bOnTool = true;
+
 		_float4 vPoint = m_Points[m_iPointIdx].first;
 
 		_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -149,6 +183,34 @@ void CRedString::Imgui_RenderProperty()
 
 	if (ImGui::Button("Create String"))
 		CreateString();
+
+	ImGui::InputFloat("ReCreate CoolTime", &m_fMaxCreateCoolTime);
+}
+
+void CRedString::LoadFromJson(const Json& json)
+{
+	CGameObject::LoadFromJson(json);
+	for (auto& Point : json["Points"])
+	{
+		_float4 vPos = Point;
+		m_Points.push_back({vPos, nullptr});
+	}
+
+	m_fRadius = json["Radius"];
+	m_fCurveSmooth = json["CurveSmooth"];
+
+}
+
+void CRedString::SaveToJson(Json& json)
+{
+	CGameObject::SaveToJson(json);
+	json["Points"] = Json::array();
+	for (auto& Point : m_Points)
+	{
+		json["Points"].push_back(Point.first);
+	}
+	json["Radius"] = m_fRadius;
+	json["CurveSmooth"] = m_fCurveSmooth;
 }
 
 void CRedString::CreateString()
@@ -157,10 +219,10 @@ void CRedString::CreateString()
 		return;
 
 	Safe_Release(m_pBuffer);
-	m_InstanceData.clear();
 
 	vector<_float4> SplinePoints;
 	SplinePoints.reserve(m_Points.size() * 3);
+
 	for (size_t i = 1; i < m_Points.size() - 2; ++i)
 	{
 		_float fDelta = 0.1f;
@@ -189,6 +251,9 @@ void CRedString::CreateString()
 		}
 	}
 
+	vector<VTXLINE_POS_INSTANCE> InstanceData;
+	InstanceData.reserve(SplinePoints.size());
+
 	for (size_t i = 1; i < SplinePoints.size() - 2; ++i)
 	{
 		VTXLINE_POS_INSTANCE tInstance;
@@ -216,10 +281,10 @@ void CRedString::CreateString()
 		tInstance.vStartTangent = XMVector3TransformNormal(vEnd - vPrev, WorldInv);
 		tInstance.vEndTangent = XMVector3TransformNormal(vNext - vStart, WorldInv);
 	
-		m_InstanceData.push_back(tInstance);
+		InstanceData.push_back(tInstance);
 	}
 
-	m_pBuffer = CVIBuffer_Line_Instancing::Create(m_pDevice, m_pContext, m_InstanceData);
+	m_pBuffer = CVIBuffer_Line_Instancing::Create(m_pDevice, m_pContext, InstanceData);
 }
 
 void CRedString::DeletePoint(_uint idx)
@@ -270,8 +335,11 @@ _bool CRedString::PickPoint()
 	return false;
 }
 
-void CRedString::AddPoint(_float4 vPos)
+void CRedString::AddPoint_ForTool(_float4 vPos)
 {
+	if (m_Points.empty())
+		vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
 	Json json;
 	json["RigidBody"]["bKinematic"] = true;
 	json["RigidBody"]["bTrigger"] = false;
@@ -328,5 +396,4 @@ void CRedString::Free()
 	for (auto Point : m_Points)
 		Safe_Release(Point.second);
 	m_Points.clear();
-	m_InstanceData.clear();
 }
