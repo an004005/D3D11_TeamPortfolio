@@ -104,7 +104,7 @@ void CAI_CH0300::Tick(_double TimeDelta)
 	{
 		iter->Tick(TimeDelta);
 		{
-			//_bool bCol = Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART));
+			_bool bCol = Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART));
 		}
 	}
 }
@@ -166,6 +166,8 @@ void CAI_CH0300::TakeDamage(DAMAGE_PARAM tDamageParams)
 	{
 		m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 	}
+
+	Collision_End();
 }
 
 void CAI_CH0300::Imgui_RenderProperty()
@@ -309,6 +311,10 @@ HRESULT CAI_CH0300::SetUp_Components(void* pArg)
 
 HRESULT CAI_CH0300::SetUp_Event()
 {
+	m_pModel->Add_EventCaller("Collision_Start", [&]() {Collision_Start(); });
+	m_pModel->Add_EventCaller("Collision_End", [&]() {Collision_End(); });
+	m_pModel->Add_EventCaller("Collision_Twist", [&]() {Collision_Twist(); });
+
 	return S_OK;
 }
 
@@ -324,6 +330,43 @@ HRESULT CAI_CH0300::SetUp_Sound()
 
 HRESULT CAI_CH0300::SetUp_AttackDesc()
 {
+	m_mapCollisionEvent.emplace("ATK_A1", [this]()
+	{
+		m_AttackDesc.eAttackSAS = ESASType::SAS_FIRE;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f);
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATK_A2_START", [this]()
+	{
+		m_AttackDesc.eAttackSAS = ESASType::SAS_FIRE;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f);
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATK_A2", [this]()
+	{
+		m_AttackDesc.eAttackSAS = ESASType::SAS_FIRE;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f);
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+	m_mapCollisionEvent.emplace("ATK_A3", [this]()
+	{
+		m_AttackDesc.eAttackSAS = ESASType::SAS_FIRE;
+		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f);
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
+
 	return S_OK;
 }
 
@@ -358,6 +401,8 @@ void CAI_CH0300::BehaviorCheck()
 			m_pTransformCom->LookAt_Smooth(vPlayerPos, m_fTimeDelta);
 			m_pTransformCom->Go_Straight(m_fTimeDelta);
 		}
+		
+		Collision_End();
 	}
 	else
 	{
@@ -491,11 +536,34 @@ void CAI_CH0300::TeleportToPlayerBack()
 	m_pCollider->SetFootPosition(vResetPos);
 }
 
+void CAI_CH0300::Collision_Start()
+{
+	m_bAttackEnable = true;
+
+	//static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, true);
+
+	string szCurAttackState = m_pASM->GetCurStateName();
+	const auto iter = m_mapCollisionEvent.find(szCurAttackState);
+	if (iter == m_mapCollisionEvent.end())
+		return;
+	iter->second();
+}
+
+void CAI_CH0300::Collision_End()
+{
+	m_bAttackEnable = false;
+}
+
+void CAI_CH0300::Collision_Twist()
+{
+	// 아래에서 위로 구체 스윕
+}
+
 HRESULT CAI_CH0300::Setup_Parts()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	Json Weapon;// = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/wp0300.json");
+	Json Weapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/wp0300.json");
 	Weapon["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/wp_300/wp0300.anim_model";
 
 	CGameObject* pGameObject = nullptr;
@@ -505,10 +573,10 @@ HRESULT CAI_CH0300::Setup_Parts()
 	Desc.m_PivotMatrix = m_pModel->GetPivotMatrix();
 	Desc.m_pJson = &Weapon;
 
-	//	pGameInstance->Clone_GameObject(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
+	pGameInstance->Clone_GameObject(LAYER_AI, TEXT("HanabiWeapon"), &Desc);
 
-	pGameObject = pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("HanabiWeapon"), &Desc);
-	m_vecWeapon.push_back(pGameObject);
+	//pGameObject = pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("HanabiWeapon"), &Desc);
+	//m_vecWeapon.push_back(pGameObject);
 
 	return S_OK;
 }

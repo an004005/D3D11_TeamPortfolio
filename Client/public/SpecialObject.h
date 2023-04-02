@@ -96,6 +96,17 @@ protected:
 		L"Special_G_Kinetic_Hit_Effect_C",
 	};
 
+protected:
+	vector<wstring>			m_vecRandomParticle{
+		L"Player_Kinetic_Particles_A",
+		L"Player_Kinetic_Particles_B",
+		L"Player_Kinetic_Particles_C",
+		L"Player_Kinetic_Particles_D",
+		L"Player_Kinetic_Particles_E",
+		L"Player_Kinetic_Particles_F",
+		L"Player_Kinetic_Particles_G"
+	};
+
 public:
 	CGameObject* Clone(void* pArg = nullptr)override { return nullptr; }
 	void Free() override;

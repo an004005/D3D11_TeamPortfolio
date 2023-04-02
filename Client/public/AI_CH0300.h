@@ -72,6 +72,11 @@ private:
 
 private:
 	void		TeleportToPlayerBack();
+
+private:
+	void		Collision_Start();
+	void		Collision_End();
+	void		Collision_Twist();
 	
 private:
 	HRESULT		Setup_Parts();
@@ -80,6 +85,7 @@ private:
 // 구조체 상태 반환
 private:
 	DAMAGE_DESC		m_DamageDesc;
+	DAMAGE_PARAM	m_AttackDesc;
 
 public:
 	DAMAGE_DESC Get_DamageDesc() const { return m_DamageDesc; }
@@ -112,6 +118,10 @@ public:
 private:
 	_float		m_fObstacleDetectTimer = 0.f;
 	_float4		m_vBefPos = { 0.f, 0.f, 0.f, 1.f };
+
+// 피타격 관련
+private:
+	_bool		m_bAttackEnable = false;
 
 public:
 	static CAI_CH0300* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

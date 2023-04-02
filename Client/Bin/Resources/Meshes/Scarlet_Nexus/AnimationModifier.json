@@ -3578,13 +3578,39 @@
         "Duration": 90.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 50.0
+            }
+        ]
     },
     "AS_ch0300_202_AL_atk_a2_loop": {
         "Duration": 125.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 120.0
+            }
+        ]
     },
     "AS_ch0300_202_AL_atk_a2_start": {
         "Duration": 50.0,
@@ -3596,7 +3622,16 @@
         "Duration": 125.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 50.0
+            }
+        ]
     },
     "AS_ch0300_401_AL_damage_l_F": {
         "Duration": 70.0,

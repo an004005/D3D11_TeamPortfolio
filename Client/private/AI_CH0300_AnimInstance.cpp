@@ -53,6 +53,11 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Duration(0.2f)
 				.Priority(5)
 
+				.AddTransition("IDLE to DODGE_START", "DODGE_START")
+				.Predicator([&]()->_bool {return (-1.f != m_fDistance_toEnemy); })
+				.Duration(0.2f)
+				.Priority(6)
+
 
 
 #pragma endregion IDLE
@@ -191,12 +196,12 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Duration(0.f)
 				.Priority(0)
 
-				.AddTransition("ATK_A2_START to DODGE_START", "DODGE_START")
+				.AddTransition("ATK_A2_START to ATK_A2", "ATK_A2")
+				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_202_AL_atk_a2_start") && -1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
 				.Duration(0.f)
 				.Priority(1)
 
-				.AddTransition("ATK_A2_START to ATK_A2", "ATK_A2")
-				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_202_AL_atk_a2_start") && -1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
+				.AddTransition("ATK_A2_START to DODGE_START", "DODGE_START")
 				.Duration(0.f)
 				.Priority(2)
 

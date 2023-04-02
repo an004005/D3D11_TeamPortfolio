@@ -43,12 +43,15 @@ public:
 
 	void	Activate(_bool bActivate);
 
+	void	ParticleMaker(_double TimeDelta);
+
 private:
 	HRESULT	SetUp_Components(void* pArg);
 	_bool	m_bActive = false;
 
 	_bool	m_bHit = false;
 	_float	m_fChangeKineticTimer = 0.f;
+	_double	m_fParticleTimer = 0.f;
 
 private:
 	_float4x4	m_SyncMatrix = XMMatrixIdentity();
