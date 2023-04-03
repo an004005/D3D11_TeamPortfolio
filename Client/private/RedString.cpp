@@ -23,10 +23,14 @@ HRESULT CRedString::Initialize_Prototype()
 {
 	FAILED_CHECK(CGameObject::Initialize_Prototype());
 
-	if (nullptr == CGameInstance::GetInstance()->Find_Prototype(LEVEL_STATIC, L"Prototype_Component_Shader_VtxLineInstancing"))
+	if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_STATIC, L"Prototype_Component_Shader_VtxLineInstancing"))
 	{
 		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxLineInstancing"),
 			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxLineInstancing.hlsl"), VTXLINE_POS_INSTANCE_DECLARATION::Elements, VTXLINE_POS_INSTANCE_DECLARATION::iNumElements)));
+
+		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_STATIC,
+			L"Prototype_VIBuffer_LineInstancing", 
+			CVIBuffer_Line_Instancing::Create(m_pDevice, m_pContext)));
 	}
 
 	return S_OK;
@@ -218,7 +222,6 @@ void CRedString::CreateString()
 	if (m_Points.size() < 4)
 		return;
 
-	Safe_Release(m_pBuffer);
 
 	vector<_float4> SplinePoints;
 	SplinePoints.reserve(m_Points.size() * 3);
@@ -284,7 +287,12 @@ void CRedString::CreateString()
 		InstanceData.push_back(tInstance);
 	}
 
-	m_pBuffer = CVIBuffer_Line_Instancing::Create(m_pDevice, m_pContext, InstanceData);
+	Safe_Release(m_pBuffer);
+	m_pBuffer = dynamic_cast<CVIBuffer_Line_Instancing*>(CGameInstance::GetInstance()->Clone_Component(LEVEL_STATIC, L"Prototype_VIBuffer_LineInstancing"));
+	Assert(m_pBuffer != nullptr);
+
+	CONTEXT_LOCK;
+	m_pBuffer->CreateInstanceBuffer(InstanceData);
 }
 
 void CRedString::DeletePoint(_uint idx)

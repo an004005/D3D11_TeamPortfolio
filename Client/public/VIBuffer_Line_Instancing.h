@@ -12,15 +12,17 @@ public:
 	virtual ~CVIBuffer_Line_Instancing() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype(const vector<VTXLINE_POS_INSTANCE>& InstanceData);
+	virtual HRESULT Initialize_Prototype() override;
 	virtual void Tick(_double TimeDelta) override {}
 	virtual HRESULT Render() override;
+
+	void CreateInstanceBuffer(const vector<VTXLINE_POS_INSTANCE>& InstanceData);
 
 	// void ReCreate(_uint iNumInstance);
 
 public:
 	virtual void Free() override;
-   static CVIBuffer_Line_Instancing* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const vector<VTXLINE_POS_INSTANCE>& InstanceData);
+   static CVIBuffer_Line_Instancing* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
    virtual CComponent* Clone(void* pArg = nullptr);
 
 };

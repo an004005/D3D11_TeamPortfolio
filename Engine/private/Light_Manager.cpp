@@ -56,7 +56,8 @@ void CLight_Manager::Render_Light(CVIBuffer_Rect * pVIBuffer, CShader * pShader)
 			if (m_pShadowCam)
 				Light.second->SetDirection(m_pShadowCam->GetTransform()->Get_State(CTransform::STATE_LOOK));
 
-			m_vDirectionalLightDir = Light.second->Get_LightDesc()->vDirection;
+			m_vDirectionalLightDir = XMVector3Normalize(Light.second->Get_LightDesc()->vDirection);
+			m_vDirectionalLightColor = Light.second->Get_LightDesc()->vDiffuse;
 		}
 
 

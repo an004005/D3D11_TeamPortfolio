@@ -2173,5 +2173,8 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\SSLR.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -16,14 +16,11 @@ CVIBuffer_Line_Instancing::CVIBuffer_Line_Instancing(const CVIBuffer_Line_Instan
 {
 }
 
-HRESULT CVIBuffer_Line_Instancing::Initialize_Prototype(const vector<VTXLINE_POS_INSTANCE>& InstanceData)
+HRESULT CVIBuffer_Line_Instancing::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
 
-	_uint iNumInstance = (_uint)InstanceData.size();
-
-	m_iNumInstance = iNumInstance;
 	m_iIndexCountPerInstance = 1;
 	m_iNumVertexBuffers = 2;
 	m_iStride = sizeof(VTXLINE_POS);
@@ -91,40 +88,7 @@ HRESULT CVIBuffer_Line_Instancing::Initialize_Prototype(const vector<VTXLINE_POS
 	Safe_Delete_Array(pIndices);
 #pragma endregion
 
-#pragma region INSTANCE_BUFFER
-	m_iInstanceStride = sizeof(VTXLINE_POS_INSTANCE);
 
-	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);	
-
-	m_BufferDesc.ByteWidth = m_iInstanceStride * iNumInstance;
-	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	m_BufferDesc.StructureByteStride = m_iInstanceStride;
-	// m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	m_BufferDesc.CPUAccessFlags = 0;
-	m_BufferDesc.MiscFlags = 0;
-
-	// VTXLINE_POS_INSTANCE*			pInstanceVertices = new VTXLINE_POS_INSTANCE[iNumInstance];
-	// ZeroMemory(pInstanceVertices, sizeof(VTXLINE_POS_INSTANCE) * iNumInstance);
-	//
-	// for (_uint i = 0; i < iNumInstance; ++i)
-	// {
-	// 	pInstanceVertices[i].vRight = _float4(1.0f, 0.f, 0.f, 0.f);
-	// 	pInstanceVertices[i].vUp = _float4(0.0f, 1.f, 0.f, 0.f);
-	// 	pInstanceVertices[i].vLook = _float4(0.0f, 0.f, 1.f, 0.f);
-	// 	pInstanceVertices[i].vPosition = _float4(0.f, 0.f, 0.f, 1.f);
-	// 	pInstanceVertices[i].vStartTangent = _float3::Zero;
-	// 	pInstanceVertices[i].vEndTangent = _float3::Zero;
-	//
-	// }
-	
-	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
-	m_SubResourceData.pSysMem = InstanceData.data();
-
-	m_pDevice->CreateBuffer(&m_BufferDesc, &m_SubResourceData, &m_pInstanceBuffer);
-
-	// Safe_Delete_Array(pInstanceVertices);
-#pragma endregion
 
 	return S_OK;
 }
@@ -160,16 +124,56 @@ HRESULT CVIBuffer_Line_Instancing::Render()
 	return S_OK;
 }
 
+void CVIBuffer_Line_Instancing::CreateInstanceBuffer(const vector<VTXLINE_POS_INSTANCE>& InstanceData)
+{
+	m_iNumInstance = (_uint)InstanceData.size();;
+
+#pragma region INSTANCE_BUFFER
+	m_iInstanceStride = sizeof(VTXLINE_POS_INSTANCE);
+
+	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);	
+
+	m_BufferDesc.ByteWidth = m_iInstanceStride * m_iNumInstance;
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	m_BufferDesc.StructureByteStride = m_iInstanceStride;
+	// m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	m_BufferDesc.CPUAccessFlags = 0;
+	m_BufferDesc.MiscFlags = 0;
+
+	// VTXLINE_POS_INSTANCE*			pInstanceVertices = new VTXLINE_POS_INSTANCE[iNumInstance];
+	// ZeroMemory(pInstanceVertices, sizeof(VTXLINE_POS_INSTANCE) * iNumInstance);
+	//
+	// for (_uint i = 0; i < iNumInstance; ++i)
+	// {
+	// 	pInstanceVertices[i].vRight = _float4(1.0f, 0.f, 0.f, 0.f);
+	// 	pInstanceVertices[i].vUp = _float4(0.0f, 1.f, 0.f, 0.f);
+	// 	pInstanceVertices[i].vLook = _float4(0.0f, 0.f, 1.f, 0.f);
+	// 	pInstanceVertices[i].vPosition = _float4(0.f, 0.f, 0.f, 1.f);
+	// 	pInstanceVertices[i].vStartTangent = _float3::Zero;
+	// 	pInstanceVertices[i].vEndTangent = _float3::Zero;
+	//
+	// }
+	
+	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	m_SubResourceData.pSysMem = InstanceData.data();
+
+	m_pDevice->CreateBuffer(&m_BufferDesc, &m_SubResourceData, &m_pInstanceBuffer);
+
+	// Safe_Delete_Array(pInstanceVertices);
+#pragma endregion
+}
+
 void CVIBuffer_Line_Instancing::Free()
 {
 	CVIBuffer_Instancing::Free();
 }
 
-CVIBuffer_Line_Instancing* CVIBuffer_Line_Instancing::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const vector<VTXLINE_POS_INSTANCE>& InstanceData)
+CVIBuffer_Line_Instancing* CVIBuffer_Line_Instancing::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CVIBuffer_Line_Instancing*		pInstance = new CVIBuffer_Line_Instancing(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(InstanceData)))
+	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CVIBuffer_Line_Instancing");
 		Safe_Release(pInstance);
