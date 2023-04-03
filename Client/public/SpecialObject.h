@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Client_Defines.h"
+#include "HelperClasses.h"
 
 BEGIN(Engine)
 class CRigidBody;
@@ -56,6 +57,10 @@ public:
 public:
 	ESpecialType Get_SpecialType() const { return m_eSpecialObejctType; }
 
+public:
+	void CreateKineticParticle(_float4 vPos = { 0.f, 0.f, 0.f, 0.f }, _float4 vScale = {1.f, 1.f, 1.f ,0.f});
+	void CreateKineticParticle_Mini(_float4 vPos = { 0.f, 0.f, 0.f, 0.f }, _float4 vScale = { 1.f, 1.f, 1.f ,0.f });
+
 protected:
 	_bool						Collision_Check_Capsule(CRigidBody* AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollisionCheck = false);
 	list<CScarletCharacter*>	m_DamagedObjectList;
@@ -70,6 +75,9 @@ protected:
 	void	OutlineMaker();
 	_bool	m_bOutline = false;
 	_bool	m_bBeforeOutline = false;
+
+	CDoOnce	m_ParticleMakeable;
+	_double	m_fParticleCoolTime = 0.f;
 
 public:
 	void	SetOutline(_bool bOutLine) { m_bOutline = bOutLine; }
@@ -87,6 +95,35 @@ protected:
 
 protected:
 	wstring					m_strModelTag;
+
+protected:
+	vector<wstring>			m_vecRandomHitEffect{
+		L"Special_G_Kinetic_Hit_Effect",
+		L"Special_G_Kinetic_Hit_Effect_A",
+		L"Special_G_Kinetic_Hit_Effect_B"
+	};
+
+protected:
+	vector<wstring>			m_vecRandomParticle{
+		L"Player_Kinetic_Particles_A",
+		L"Player_Kinetic_Particles_B",
+		L"Player_Kinetic_Particles_C",
+		L"Player_Kinetic_Particles_D",
+		L"Player_Kinetic_Particles_E",
+		L"Player_Kinetic_Particles_F",
+		L"Player_Kinetic_Particles_G"
+	};
+
+protected:
+	vector<wstring>			m_vecRandomParticle_Small{
+		L"Special_G_Iron_Bar_MeshData_Particle_A",
+		L"Special_G_Iron_Bar_MeshData_Particle_B",
+		L"Special_G_Iron_Bar_MeshData_Particle_C",
+		L"Special_G_Iron_Bar_MeshData_Particle_D",
+		L"Special_G_Iron_Bar_MeshData_Particle_E",
+		L"Special_G_Iron_Bar_MeshData_Particle_F",
+		L"Special_G_Iron_Bar_MeshData_Particle_G"
+	};
 
 public:
 	CGameObject* Clone(void* pArg = nullptr)override { return nullptr; }

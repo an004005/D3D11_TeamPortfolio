@@ -50,14 +50,16 @@ HRESULT CCanvas_MainItem::Initialize(void* pArg)
 
 void CCanvas_MainItem::Tick(_double TimeDelta)
 {
-	CCanvas::Tick(TimeDelta);
-
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(m_bVisible);
 
 	if (false == m_bVisible)
+	{
 		m_arrCanvass[m_eMainItem]->SetVisible(m_bVisible);
+		return;
+	}
 
+	CCanvas::Tick(TimeDelta);
 	Menu_Tick();
 }
 
@@ -142,8 +144,6 @@ void CCanvas_MainItem::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	ImGui::DragFloat("X", &m_vPosssss.x);
-	ImGui::DragFloat("Y", &m_vPosssss.y);
 }
 
 void CCanvas_MainItem::SaveToJson(Json& json)
@@ -167,19 +167,19 @@ HRESULT CCanvas_MainItem::Add_MainCanvas()
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainItemKinds.json");
 	json["ITemType"] = CItem_Manager::MAINITEM::ALL;
-	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_MainItemUI", L"Canvas_MainItemKinds", &json);
+	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_MainItemKinds", &json);
 	m_arrCanvass[ALL] = dynamic_cast<CCanvas_MainItemKinds*>(pCanvas);
 
 	json["ITemType"] = CItem_Manager::MAINITEM::BATTLE;
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_MainItemUI", L"Canvas_MainItemKinds", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_MainItemKinds", &json);
 	m_arrCanvass[BATTLE] = dynamic_cast<CCanvas_MainItemKinds*>(pCanvas);
 
 	json["ITemType"] = CItem_Manager::MAINITEM::WEAPON;
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_MainItemUI", L"Canvas_MainItemKinds", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_MainItemKinds", &json);
 	m_arrCanvass[WEAPON] = dynamic_cast<CCanvas_MainItemKinds*>(pCanvas);
 
 	json["ITemType"] = CItem_Manager::MAINITEM::ETC;
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Lyaer_MainItemUI", L"Canvas_MainItemKinds", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_MainItemKinds", &json);
 	m_arrCanvass[ETC] = dynamic_cast<CCanvas_MainItemKinds*>(pCanvas);
 
 	return S_OK;
@@ -277,4 +277,6 @@ CCanvas * CCanvas_MainItem::Clone(void * pArg)
 void CCanvas_MainItem::Free()
 {
 	CCanvas::Free();
+
+
 }

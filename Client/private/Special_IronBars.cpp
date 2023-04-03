@@ -14,6 +14,8 @@
 #include "Special_IronBars_SingleBars.h"
 #include "Special_IronBars_MultiBars.h"
 
+#include "PlayerInfoManager.h"
+
 CSpecial_IronBars::CSpecial_IronBars(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
 {
@@ -64,6 +66,64 @@ void CSpecial_IronBars::BeginTick()
 
 void CSpecial_IronBars::Tick(_double TimeDelta)
 {
+	if (m_bDeadCheck)
+	{
+		static_cast<CSpecial_IronBars_Door*>(m_pDoor)->SetOutline(false);
+		static_cast<CSpecial_IronBars_Bars*>(m_pBars)->SetOutline(false);
+
+		for (_uint i = 0; i < 8; ++i)
+		{
+			static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->SetOutline(false);
+		}
+
+		static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->SetOutline(false);
+
+
+		m_fDeadTime -= (_float)TimeDelta;
+
+		if (0.f >= m_fDeadTime)
+		{
+			m_pDoor->SetDelete();
+			m_pBars->SetDelete();
+
+			for (_uint i = 0; i < 8; ++i)
+			{
+				m_pSingleBar[i]->SetDelete();
+			}
+
+			m_pMultiBars->SetDelete();
+
+			this->SetDelete();
+		}
+	}
+	else
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_SpecialObject() == this)
+		{
+			static_cast<CSpecial_IronBars_Door*>(m_pDoor)->SetOutline(true);
+			static_cast<CSpecial_IronBars_Bars*>(m_pBars)->SetOutline(true);
+
+			for (_uint i = 0; i < 8; ++i)
+			{
+				static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->SetOutline(true);
+			}
+
+			static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->SetOutline(true);
+		}
+		else
+		{
+			static_cast<CSpecial_IronBars_Door*>(m_pDoor)->SetOutline(false);
+			static_cast<CSpecial_IronBars_Bars*>(m_pBars)->SetOutline(false);
+
+			for (_uint i = 0; i < 8; ++i)
+			{
+				static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->SetOutline(false);
+			}
+
+			static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->SetOutline(false);
+		}
+	}
+
 	__super::Tick(TimeDelta);
 
 	m_pDoor->Tick(TimeDelta);
@@ -195,6 +255,14 @@ void CSpecial_IronBars::IronBars_SetTrigger(_bool bTrigger)
 	}
 }
 
+void CSpecial_IronBars::IronBars_DecomposeEffect()
+{
+	for (_uint i = 0; i < 8; ++i)
+	{
+		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->DecomposeEffect();
+	}
+}
+
 void CSpecial_IronBars::IronBars_AttachAnim(CModel* pModel, CTransform* pTransform, _float4 vPoint)
 {
 	for (_uint i = 0; i < 8; ++i)
@@ -264,6 +332,23 @@ void CSpecial_IronBars::IronBars_AttachAnim_MulitBars(CModel* pModel, CTransform
 void CSpecial_IronBars::IronBars_Shooting_Finish(_float4 vTargetPos)
 {
 	static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->Shooting(vTargetPos);
+
+	m_bDeadCheck = true;
+	m_fDeadTime = 10.f;
+}
+
+void CSpecial_IronBars::IronBars_SetDead()
+{
+	m_bDeadCheck = true;
+	m_fDeadTime = 10.f;
+}
+
+void CSpecial_IronBars::IronBars_SingleBars_Particle()
+{
+	for (_uint i = 0; i < 8; ++i)
+	{
+		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->CreateKineticParticle_Mini({ 0.f, 0.f, 0.f, 0.f }, {0.1f, 0.1f, 0.1f, 0.f});
+	}
 }
 
 HRESULT CSpecial_IronBars::SetUp_Components(void * pArg)

@@ -94,9 +94,13 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 			pMonster->TakeDamage(tParam);
 			m_bHit = true;
 
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, TEXT("Default_Kinetic_Dead_Effect_00"))
-				->Start_AttachOnlyPos(tParam.vHitFrom);
+			//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, TEXT("Default_Kinetic_Dead_Effect_00"))
+			//	->Start_AttachOnlyPos(tParam.vHitFrom);
+
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
+				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
+
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, m_vecRandomParticle[CMathUtils::RandomUInt(m_vecRandomParticle.size() - 1)])
 				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
 
 			// 충돌이 발생하면 플레이어의 키네틱 콤보 상태를 1로 올려준다.

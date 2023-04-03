@@ -114,6 +114,9 @@ HRESULT CLevel_PlayerTest::Initialize()
 	if (FAILED(Ready_Layer_UI(PLAYERTEST_LAYER_FRONTUI)))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;
+
 	Ready_Layer_SASPortrait();
 
 	m_BGM.CloneSound("Ambient_Bridge");
@@ -375,6 +378,7 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeAIPrototypes(m_pDevice, m_pContext));
 
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
@@ -455,10 +459,10 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/KineticTestMap.json");
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json"); 
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Subway.json");
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Hospital_1F.json");
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Hospital_1F.json");
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_NaomiRoom.json"); 
-	//"../Bin/Resources/Objects/Map/Map_Hospital_1F.json"
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_TestPlace.json");
+
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
 	return S_OK;
@@ -557,6 +561,23 @@ HRESULT CLevel_PlayerTest::Ready_Layer_UI(const _tchar* pLayerTag)
 	//});
 
 
+
+	return S_OK;
+}
+
+HRESULT CLevel_PlayerTest::Ready_Layer_AI(const _tchar* pLayerTag)
+{
+	Json PreviewData;
+	PreviewData["Model"] = "Model_AI_CH0300";
+
+	CGameObject* pAI_CH0300 = nullptr;
+	NULL_CHECK(pAI_CH0300 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0300"), &PreviewData));
+
+	Json Tsugumi;
+	Tsugumi["Model"] = "Model_AI_CH0500";
+
+	CGameObject* pAI_CH0500 = nullptr;
+	NULL_CHECK(pAI_CH0500 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0500"), &Tsugumi));
 
 	return S_OK;
 }

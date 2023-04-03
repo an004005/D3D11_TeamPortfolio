@@ -58,6 +58,15 @@ HRESULT CSpecial_Container::Initialize(void * pArg)
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 			Container_Input_Damage(tParam);
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Special_G_HBeam")
+				->Start_AttachOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), false);
+
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Large_Hit_Particle")->
+				Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMVectorSet(0.f, 2.f, 0.f, 0.f), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, m_vecRandomParticle[CMathUtils::RandomUInt(m_vecRandomParticle.size() - 1)])
+				->Start_AttachOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 3.f, 0.f, 0.f), false);
 		}
 	});
 
@@ -159,6 +168,8 @@ void CSpecial_Container::Container_ChangeIndex(_uint iIndex)
 	tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 	Container_Input_Damage(tParam);
+
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, L"Default_Kinetic_Dead_Effect_00")->Start_AttachPosition(this, tParam.vHitFrom, { 0.f, 1.f, 0.f, 0.f });
 }
 
 void CSpecial_Container::Lerp_to_TargetPoint(_float4 vTargetPos, _float fRatio)
@@ -289,6 +300,12 @@ void CSpecial_Container::Container_Reposition(CTransform* pTransform, _float fRa
 	_matrix matResult = XMMatrixAffineTransformation(vSourScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vLerpRotation, vSourTrans + XMVectorSet(0.f, fForce * 0.1f, 0.f, 0.f));
 
 	m_pTransformCom->Set_WorldMatrix(matResult);
+}
+
+void CSpecial_Container::Container_SetDead()
+{
+	m_bDeadCheck = true;
+	m_fDeadTime = 5.f;
 }
 
 void CSpecial_Container::Container_Input_Damage(DAMAGE_PARAM tParam)

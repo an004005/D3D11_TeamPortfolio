@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\public\ButtonUI.h"
 #include "GameInstance.h"
-#include "JsonLib.h"
 #include "GameUtils.h"
 
 CButtonUI::CButtonUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -39,7 +38,7 @@ void CButtonUI::Tick(_double TimeDelta)
 	if (true == IsCursorOn(CGameUtils::GetClientCursor()) &&
 		CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
-		IM_LOG("Button %i", 125563);
+		m_bInput = true;
 	}
 }
 

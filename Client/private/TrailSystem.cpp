@@ -37,14 +37,16 @@ HRESULT CTrailSystem::Initialize(void* pArg)
 		m_vColor = json["Color"];
 		if (json.contains("Pass"))
 			m_iPass = json["Pass"];
+		if (json.contains("Adapt"))
+			m_vAdapt = json["Adapt"];
 
 		wstring texProtoTag = CGameUtils::s2ws(json["Texture"]);
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, texProtoTag.c_str(), TEXT("Texture"),(CComponent**)&m_pTex));
-		//FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("../Bin/Resources/Texture/VFX/T_ef_one_lin_043.png"), TEXT("Texture"), (CComponent**)&m_pTex));
+		//FAILED_CHECK(__sLooker::Add_Component(LEVEL_STATIC, TEXT("../Bin/Resources/Texture/VFX/T_ef_one_lin_043.png"), TEXT("Texture"), (CComponent**)&m_pTex));
 	}
 	else
 	{
-		// FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("../Bin/Resources/Texture/VFX/AlphaGradient/ring_glow.dds"), TEXT("Texture"),(CComponent**)&m_pTex));
+		// FAILED_CHECK(__sLooker::Add_Component(LEVEL_STATIC, TEXT("../Bin/Resources/Texture/VFX/AlphaGradient/ring_glow.dds"), TEXT("Texture"),(CComponent**)&m_pTex));
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("../Bin/Resources/Texture/VFX/T_ef_one_lin_043.png"), TEXT("Texture"), (CComponent**)&m_pTex));
 
 		
@@ -80,24 +82,24 @@ void CTrailSystem::Tick(_double TimeDelta)
 
 	if (m_vPrePoses.size() > 3)
 	{
-		_vector vLerpPos = m_vPrePoses[m_vPrePoses.size() - 3];
+		_vector vLerpPos = m_vPrePoses[m_vPrePoses.size() - 2];
 		_vector vSourPos = m_vPrePoses.back();
-		_vector vDestPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		_vector vDestPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMLoadFloat4(&m_vAdapt);
 
-		_vector vSourRight = m_vPreRight.back();
-		_vector vDestRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+		_vector vSourLook = m_vPreLook.back();
+		_vector vDestLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 
 		for (_uint i = 0; i < 5; i++)
 		{
 			_vector vBefPos = XMVectorCatmullRom(vLerpPos, vSourPos, vDestPos, vDestPos, _float(i * 0.2f));
 			_vector vAfterPos = XMVectorCatmullRom(vLerpPos, vSourPos, vDestPos, vDestPos, _float((i + 1) * 0.2f));
-			_vector vBefRight = XMVectorLerp(vSourRight, vDestRight, _float(i * 0.2f));
-			_vector vAfterRight = XMVectorLerp(vSourRight, vDestRight, _float((i + 1) * 0.2f));
+			_vector vBefLook = XMVectorLerp(vSourLook, vDestLook, _float(i * 0.2f));
+			_vector vAfterLook = XMVectorLerp(vSourLook, vDestLook, _float((i + 1) * 0.2f));
 
-			_vector v0 = vBefPos + (vBefRight * m_fWidth);
-			_vector v1 = vAfterPos + (vAfterRight * m_fWidth);
-			_vector v2 = vAfterPos - (vAfterRight * m_fWidth);
-			_vector v3 = vBefPos - (vBefRight * m_fWidth);
+			_vector v0 = vBefPos + (vBefLook * m_fWidth);
+			_vector v1 = vAfterPos + (vAfterLook * m_fWidth);
+			_vector v2 = vAfterPos - (vAfterLook * m_fWidth);
+			_vector v3 = vBefPos - (vBefLook * m_fWidth);
 
 			m_TrailPointList.push_back(v0);
 			m_TrailPointList.push_back(v1);
@@ -107,32 +109,32 @@ void CTrailSystem::Tick(_double TimeDelta)
 			m_pBuffer->AddData(m_pTransformCom->Get_WorldMatrix());
 		}
 
-		_vector v0 = vSourPos + (vSourRight * m_fWidth);
-		_vector v1 = vDestPos + (vDestRight * m_fWidth);
-		_vector v2 = vDestPos - (vDestRight * m_fWidth);
-		_vector v3 = vSourPos - (vSourRight * m_fWidth);
+		//_vector v0 = vSourPos + (vSourLook * m_fWidth);
+		//_vector v1 = vDestPos + (vDestLook * m_fWidth);
+		//_vector v2 = vDestPos - (vDestLook * m_fWidth);
+		//_vector v3 = vSourPos - (vSourLook * m_fWidth);
 
-		m_TrailPointList.push_back(v0);
-		m_TrailPointList.push_back(v1);
-		m_TrailPointList.push_back(v2);
-		m_TrailPointList.push_back(v3);
+		//m_TrailPointList.push_back(v0);
+		//m_TrailPointList.push_back(v1);
+		//m_TrailPointList.push_back(v2);
+		//m_TrailPointList.push_back(v3);
 
-		m_pBuffer->AddData(m_pTransformCom->Get_WorldMatrix());
+		//m_pBuffer->AddData(m_pTransformCom->Get_WorldMatrix());
 	}
 
-	// 이전 위치와 이전 Right 벡터를 저장해두어 CatMull-Rom 연산에 사용
-	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	// 이전 위치와 이전 Look 벡터를 저장해두어 CatMull-Rom 연산에 사용
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMLoadFloat4(&m_vAdapt);
 	m_vPrePoses.push_back(vPos);
 	
-	_vector vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
-	m_vPreRight.push_back(vRight);
+	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	m_vPreLook.push_back(vLook);
 
 	if (m_vPrePoses.size() >= 5)
 	{
 		while (m_vPrePoses.size() > 5)
 		{
 			m_vPrePoses.erase(m_vPrePoses.begin());
-			m_vPreRight.erase(m_vPreRight.begin());
+			m_vPreLook.erase(m_vPreLook.begin());
 		}
 	}
 
@@ -181,12 +183,12 @@ void CTrailSystem::Tick(_double TimeDelta)
 //			_float fWeight = (_float)(i + 1) / (_float)iSegmentCnt;
 //			_vector vSplinePos = XMVectorCatmullRom(p0, p1, p2, p3, fWeight);
 //
-//			_vector vRight = XMVectorLerp(m_vPreRight, m_pTransformCom->Get_State(CTransform::STATE_RIGHT), fWeight);
-//			_vector vLook = XMVector3Cross(vRight, XMVectorSet(0.f, 1.f, 0.f, 0.f));
-//			_vector vUp = XMVector3Cross(vLook, vRight);
+//			_vector vLook = XMVectorLerp(m_vPreLook, m_pTransformCom->Get_State(CTransform::STATE_Look), fWeight);
+//			_vector vLook = XMVector3Cross(vLook, XMVectorSet(0.f, 1.f, 0.f, 0.f));
+//			_vector vLook = XMVector3Cross(vLook, vLook);
 //			vSplinePos = XMVectorSetW(vSplinePos, CMathUtils::Lerp(fPreLife, m_fLife, fWeight));//life
 //
-//			_matrix TrailMatrix(vRight, vUp, vLook, vSplinePos);
+//			_matrix TrailMatrix(vLook, vLook, vLook, vSplinePos);
 //			m_pBuffer->AddData(TrailMatrix);
 //
 //			vPrePos = vSplinePos;
@@ -194,7 +196,7 @@ void CTrailSystem::Tick(_double TimeDelta)
 //	}
 //	
 //	m_iSegmentCnt = m_iSegmentCnt;
-//	m_vPreRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+//	m_vPreLook = m_pTransformCom->Get_State(CTransform::STATE_Look);
 //}
 
 // 소드트레일 적용 전 Tick
@@ -234,18 +236,18 @@ void CTrailSystem::Tick(_double TimeDelta)
 //			_float fWeight = (_float)(i + 1) / (_float)iSegmentCnt;
 //			_vector vSplinePos = XMVectorCatmullRom(p0, p1, p2, p3, fWeight);
 //
-//			_vector vRight = XMVector3Normalize(vSplinePos - vPrePos);
+//			_vector vLook = XMVector3Normalize(vSplinePos - vPrePos);
 //			_vector vLookAtCam = XMVector3Normalize(vCamPos - vSplinePos);
 //
-//			float fRadian = XMConvertToDegrees(fabs(acosf(XMVectorGetX(XMVector3Dot(vLookAtCam, vRight)))));
+//			float fRadian = XMConvertToDegrees(fabs(acosf(XMVectorGetX(XMVector3Dot(vLookAtCam, vLook)))));
 //			if (fRadian < 5.f)
 //				continue;
 //
-//			_vector vUp = XMVector3Cross(vRight, vLookAtCam);
-//			_vector vLook = XMVector3Cross(vRight, vUp);
+//			_vector vLook = XMVector3Cross(vLook, vLookAtCam);
+//			_vector vLook = XMVector3Cross(vLook, vLook);
 //			vSplinePos = XMVectorSetW(vSplinePos, CMathUtils::Lerp(fPreLife, m_fLife, fWeight));//life
 //
-//			_matrix TrailMatrix(vRight, vUp, vLook, vSplinePos);
+//			_matrix TrailMatrix(vLook, vLook, vLook, vSplinePos);
 //			m_pBuffer->AddData(TrailMatrix);
 //
 //			vPrePos = vSplinePos;
