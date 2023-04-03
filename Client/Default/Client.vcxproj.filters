@@ -412,6 +412,9 @@
     <Filter Include="02.GameObjects\AI\CH0500\BaseAnimInstance">
       <UniqueIdentifier>{daa7542c-26ae-42f1-be77-0d8716873045}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Weapon\wp0500">
+      <UniqueIdentifier>{c10400ca-64a5-4606-a04e-1ae7a70a2d80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1274,6 +1277,9 @@
     <ClInclude Include="..\public\AI_CH0500_AnimInstance.h">
       <Filter>02.GameObjects\AI\CH0500\BaseAnimInstance</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Weapon_wp0500.h">
+      <Filter>02.GameObjects\Weapon\wp0500</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2109,6 +2115,9 @@
     </ClCompile>
     <ClCompile Include="..\private\AI_CH0500_AnimInstance.cpp">
       <Filter>02.GameObjects\AI\CH0500\BaseAnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Weapon_wp0500.cpp">
+      <Filter>02.GameObjects\Weapon\wp0500</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

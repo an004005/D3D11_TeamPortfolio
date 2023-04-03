@@ -316,6 +316,9 @@ HRESULT CAI_CH0300::SetUp_Event()
 	m_pModel->Add_EventCaller("Collision_Start", [&]() {Collision_Start(); });
 	m_pModel->Add_EventCaller("Collision_End", [&]() {Collision_End(); });
 	m_pModel->Add_EventCaller("Collision_Twist", [&]() {Collision_Twist(); });
+	m_pModel->Add_EventCaller("Jump", [&]() {m_fYSpeed = 10.f ; });
+	m_pModel->Add_EventCaller("HitDown", [&]() {m_fYSpeed = -30.f; });
+	m_pModel->Add_EventCaller("Twist_Particle", [&]() {Twist_Particle(); });
 
 	return S_OK;
 }
@@ -402,6 +405,11 @@ void CAI_CH0300::BehaviorCheck()
 			m_pTransformCom->LookAt_Smooth(m_vPlayerPos, m_fTimeDelta);
 			m_pTransformCom->Go_Straight(m_fTimeDelta);
 		}
+
+		if ("HIT_KNUCKBACK_START" == strCurState)
+		{
+			m_pTransformCom->Go_Backward(m_fTimeDelta * 2.f * (1.f - m_pModel->GetPlayAnimation()->GetPlayRatio()));
+		}
 		
 		Collision_End();
 	}
@@ -431,6 +439,16 @@ void CAI_CH0300::BehaviorCheck()
 		{
 			m_pTransformCom->LookAt_Smooth(vEnemyPos, m_fTimeDelta);
 			m_pTransformCom->Go_Straight(m_fTimeDelta);
+		}
+
+		if ("HIT_KNUCKBACK_START" == strCurState)
+		{
+			m_pTransformCom->Go_Backward(m_fTimeDelta * 2.f * (1.f - m_pModel->GetPlayAnimation()->GetPlayRatio()));
+		}
+
+		if ("ATK_B1_START" == strCurState && (0.15f < m_pModel->GetPlayAnimation()->GetPlayRatio()))
+		{
+			m_pTransformCom->Go_Straight(m_fTimeDelta * 0.2f);
 		}
 	}
 }
@@ -575,16 +593,63 @@ void CAI_CH0300::Collision_Start()
 	if (iter == m_mapCollisionEvent.end())
 		return;
 	iter->second();
+
+	static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(true);
 }
 
 void CAI_CH0300::Collision_End()
 {
 	m_bAttackEnable = false;
+
+	static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(false);
 }
 
 void CAI_CH0300::Collision_Twist()
 {
-	// 아래에서 위로 구체 스윕
+	physx::PxSweepHit hitBuffer[4];
+	physx::PxSweepBuffer overlapOut(hitBuffer, 4);
+	SphereSweepParams params2;
+	params2.sweepOut = &overlapOut;
+	params2.fRadius = 2.f;
+	params2.vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (m_pTransformCom->Get_State(CTransform::STATE_LOOK) * 2.f) + XMVectorSet(0.f, 2.f, 0.f, 0.f);
+	params2.vUnitDir = XMVectorSet(0.f, -1.f, 0.f, 0.f);
+	params2.fDistance = 2.f;
+	params2.iTargetType = CTB_MONSTER | CTB_MONSTER_PART;
+	params2.fVisibleTime = 1.f;
+
+	if (CGameInstance::GetInstance()->SweepSphere(params2))
+	{
+		for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+		{
+			auto pHit = overlapOut.getAnyHit(i);
+			CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+			if (auto pMonster = dynamic_cast<CEnemy*>(pCollidedObject))
+			{
+				DAMAGE_PARAM tParam;
+				ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+				tParam.eAttackSAS = ESASType::SAS_FIRE;
+				tParam.eAttackType = EAttackType::ATK_HEAVY;
+				tParam.eDeBuff = EDeBuffType::DEBUFF_END;
+				tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_END;
+				tParam.iDamage = 100;
+
+				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				pMonster->TakeDamage(tParam);
+			}
+		}
+	}
+
+	_float4x4 EffectPivotMatrix =
+		XMMatrixTranslation(0.f, 0.f, -3.f);
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_3_Double_twist")->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+}
+
+void CAI_CH0300::Twist_Particle()
+{
+	_float4x4 ParticlePivotMatrix =
+		XMMatrixScaling(10.f, 10.f, 10.f) *
+		XMMatrixTranslation(0.f, 0.f, -3.f);
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Fire_Attack_3_Twist_Particle")->Start_AttachPivot(this, ParticlePivotMatrix, "Eff01", false);
 }
 
 HRESULT CAI_CH0300::Setup_Parts()

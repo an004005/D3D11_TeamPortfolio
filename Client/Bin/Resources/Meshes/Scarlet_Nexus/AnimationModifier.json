@@ -3788,7 +3788,47 @@
             },
             {
                 "EventName": "Collision_End",
-                "EventTime": 120.0
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 80.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 90.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 100.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 110.0
             }
         ]
     },
@@ -3810,6 +3850,36 @@
             {
                 "EventName": "Collision_End",
                 "EventTime": 50.0
+            }
+        ]
+    },
+    "AS_ch0300_211_AL_atk_b1_landing": {
+        "Duration": 108.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Collision_Twist",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Twist_Particle",
+                "EventTime": 10.0
+            }
+        ]
+    },
+    "AS_ch0300_211_AL_atk_b1_start": {
+        "Duration": 67.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Jump",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "HitDown",
+                "EventTime": 45.0
             }
         ]
     },
@@ -3875,7 +3945,7 @@
     },
     "AS_ch0300_434_AL_down_F": {
         "Duration": 194.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 194.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -4029,6 +4099,18 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0500_130_AL_dodge_F_start": {
+        "Duration": 22.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0500_131_AL_dodge_F_stop": {
+        "Duration": 63.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0500_135_AL_dodge_B_start": {
         "Duration": 22.0,
         "TickPerSecond": 50.0,
@@ -4043,6 +4125,121 @@
     },
     "AS_ch0500_201_AL_atk_a1": {
         "Duration": 110.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Shoot",
+                "EventTime": 50.0
+            }
+        ]
+    },
+    "AS_ch0500_211_AL_atk_b1_B": {
+        "Duration": 165.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Shoot",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Shoot",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "Shoot",
+                "EventTime": 100.0
+            }
+        ]
+    },
+    "AS_ch0500_211_AL_atk_b1_L": {
+        "Duration": 150.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Shoot",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "Shoot",
+                "EventTime": 90.0
+            },
+            {
+                "EventName": "Shoot",
+                "EventTime": 110.0
+            }
+        ]
+    },
+    "AS_ch0500_211_AL_atk_b1_R": {
+        "Duration": 150.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Shoot",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Shoot",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "Shoot",
+                "EventTime": 100.0
+            }
+        ]
+    },
+    "AS_ch0500_231_AL_atk_d1_L": {
+        "Duration": 124.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Shoot",
+                "EventTime": 20.0
+            }
+        ]
+    },
+    "AS_ch0500_231_AL_atk_d1_R": {
+        "Duration": 124.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Shoot",
+                "EventTime": 20.0
+            }
+        ]
+    },
+    "AS_ch0500_252_AL_atk_f1_drive_hit_loop": {
+        "Duration": 60.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0500_252_AL_atk_f1_drive_hit_start": {
+        "Duration": 115.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Shoot",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "Shoot",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "Shoot",
+                "EventTime": 60.0
+            }
+        ]
+    },
+    "AS_ch0500_253_AL_atk_f1_drive_end": {
+        "Duration": 80.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
@@ -4097,7 +4294,7 @@
     },
     "AS_ch0500_434_AL_down_F": {
         "Duration": 200.0,
-        "TickPerSecond": 100.0,
+        "TickPerSecond": 200.0,
         "bLooping": false,
         "vecEvent": []
     },

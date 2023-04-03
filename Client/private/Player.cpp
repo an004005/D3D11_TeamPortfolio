@@ -1007,7 +1007,7 @@ void CPlayer::SasMgr()
 					LAYER_KINETIC,
 					LAYER_MAPKINETICOBJECT
 				};
-				CGameInstance::GetInstance()->SetTimeRatio(0.01f, &except);
+				CGameInstance::GetInstance()->SetTimeRatio(0.3f, &except);
 
 				m_pTrail->SetActive(true);
 				m_pSuperSpeedPostVFX->Active(true);

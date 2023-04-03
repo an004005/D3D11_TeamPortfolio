@@ -49,14 +49,14 @@ HRESULT CAI_CH0500_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Priority(4)
 
 				.AddTransition("IDLE to ATK_A1", "ATK_A1")
-				.Predicator([&]()->_bool {return (-1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
+				.Predicator([&]()->_bool {return (-1.f != m_fDistance_toEnemy && 5.f >= m_fDistance_toEnemy); })
 				.Duration(0.2f)
-				.Priority(5)
+				.Priority(6)
 
 				.AddTransition("IDLE to APPROACH_START", "APPROACH_START")
 				.Predicator([&]()->_bool {return (-1.f != m_fDistance_toEnemy); })
 				.Duration(0.2f)
-				.Priority(6)
+				.Priority(7)
 
 
 
@@ -74,20 +74,25 @@ HRESULT CAI_CH0500_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Duration(0.f)
 				.Priority(0)
 
+				.AddTransition("WALK to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return (-1.f != m_fDistance_toEnemy && 5.f >= m_fDistance_toEnemy); })
+				.Duration(0.2f)
+				.Priority(2)
+
 				.AddTransition("WALK to RUN", "RUN")
 				.Predicator([&]()->_bool { return (10.f <= DistanceCheck()); })
 				.Duration(0.2f)
-				.Priority(1)
+				.Priority(3)
 
 				.AddTransition("WALK to JUMP_START", "JUMP_START")
 				.Predicator([&]()->_bool { return m_bJump; })
 				.Duration(0.2f)
-				.Priority(2)
+				.Priority(4)
 
 				.AddTransition("WALK to IDLE", "IDLE")
 				.Predicator([&]()->_bool { return (2.f > DistanceCheck()); })
 				.Duration(0.2f)
-				.Priority(3)
+				.Priority(5)
 
 		.AddState("RUN")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0500_007_AL_dash"))
@@ -103,12 +108,12 @@ HRESULT CAI_CH0500_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.AddTransition("WALK to JUMP_START", "JUMP_START")
 				.Predicator([&]()->_bool { return m_bJump; })
 				.Duration(0.2f)
-				.Priority(1)
+				.Priority(2)
 
 				.AddTransition("RUN to RUN_STOP", "RUN_STOP")
 				.Predicator([&]()->_bool { return (3.f > DistanceCheck()); })
 				.Duration(0.2f)
-				.Priority(2)
+				.Priority(3)
 
 		.AddState("RUN_STOP")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0500_012_AL_brake_dash"))
@@ -163,7 +168,7 @@ HRESULT CAI_CH0500_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 
 #pragma region ATTACK
 
-		.AddState("ATK_A1")
+		.AddState("ATK_A1")	// 일반 사격
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0500_201_AL_atk_a1"))
 			.StartEvent([&]() 
 			{ 
@@ -175,72 +180,78 @@ HRESULT CAI_CH0500_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Duration(0.f)
 				.Priority(0)
 
-				.AddTransition("ATK_A1 to ATK_A2_START", "ATK_A2_START")
-				.Predicator([&]()->_bool {return (isAnimFinish("AS_CH0500_201_AL_atk_a1") && -1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
-				.Duration(0.2f)
-				.Priority(1)
-
 				.AddTransition("ATK_A1 to DODGE_START", "DODGE_START")
+				.Predicator([&]()->_bool {return (-1.f != m_fDistance_toEnemy && 2.f >= m_fDistance_toEnemy); })
 				.Duration(0.2f)
-				.Priority(2)
-
-		/*.AddState("ATK_A2_START")
-			.SetAnimation(*m_pModel->Find_Animation("AS_CH0500_202_AL_atk_a2_start"))
-			.StartEvent([&]() 
-			{ 
-				_vector vTargetPos = CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-				m_pTargetObject->GetTransform()->LookAt_NonY(vTargetPos);
-			})
-				.AddTransition("ATK_A2_START to HIT", "HIT")
-				.Predicator([&]()->_bool {return m_bHit; })
-				.Duration(0.f)
-				.Priority(0)
-
-				.AddTransition("ATK_A2_START to ATK_A2", "ATK_A2")
-				.Predicator([&]()->_bool {return (isAnimFinish("AS_CH0500_202_AL_atk_a2_start") && -1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
-				.Duration(0.f)
 				.Priority(1)
 
-				.AddTransition("ATK_A2_START to DODGE_START", "DODGE_START")
-				.Duration(0.f)
+				.AddTransition("ATK_A1 to ATK_WALK", "ATK_WALK")
+				.Predicator([&]()->_bool {return isAnimFinish("AS_ch0500_201_AL_atk_a1") && (-1.f != m_fDistance_toEnemy); })
+				.Duration(0.2f)
 				.Priority(2)
 
-		.AddState("ATK_A2")
-			.SetAnimation(*m_pModel->Find_Animation("AS_CH0500_202_AL_atk_a2_loop"))
+				.AddTransition("ATK_A1 to IDLE", "IDLE")
+				.Duration(0.2f)
+				.Priority(3)
+
+		.AddState("ATK_WALK") // 이동 사격
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0500_211_AL_atk_b1_L"))
+			.StartEvent([&]() 
+			{
+				_vector vTargetPos = CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				m_pTargetObject->GetTransform()->LookAt_NonY(vTargetPos);
+			})
+				.AddTransition("ATK_WALK to HIT", "HIT")
+				.Predicator([&]()->_bool {return m_bHit; })
+				.Duration(0.f)
+				.Priority(0)
+
+				.AddTransition("ATK_WALK to DODGE_START", "DODGE_START")
+				.Predicator([&]()->_bool {return (-1.f != m_fDistance_toEnemy && 2.f >= m_fDistance_toEnemy); })
+				.Duration(0.2f)
+				.Priority(2)
+
+				.AddTransition("ATK_WALK to APPROACH_START", "APPROACH_START")
+				.Duration(0.2f)
+				.Priority(2)
+
+		.AddState("ATK_DRIVE_START") // 조준 사격 시작
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0500_252_AL_atk_f1_drive_hit_start"))
 			.StartEvent([&]() 
 			{ 
 				_vector vTargetPos = CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 				m_pTargetObject->GetTransform()->LookAt_NonY(vTargetPos);
 			})
-				.AddTransition("ATK_A2 to HIT", "HIT")
+				.AddTransition("ATK_DRIVE_START to HIT", "HIT")
 				.Predicator([&]()->_bool {return m_bHit; })
 				.Duration(0.f)
 				.Priority(0)
 
-				.AddTransition("ATK_A2 to ATK_A3", "ATK_A3")
-				.Predicator([&]()->_bool {return (isAnimFinish("AS_CH0500_202_AL_atk_a2_loop") && -1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
-				.Duration(0.f)
+				.AddTransition("ATK_DRIVE_START to ATK_DRIVE_WAIT", "ATK_DRIVE_WAIT")
+				.Duration(0.2f)
 				.Priority(1)
 
-				.AddTransition("ATK_A2 to DODGE_START", "DODGE_START")
-				.Duration(0.2f)
-				.Priority(2)
-
-		.AddState("ATK_A3")
-			.SetAnimation(*m_pModel->Find_Animation("AS_CH0500_203_AL_atk_a3"))
-			.StartEvent([&]() 
-			{ 
-				_vector vTargetPos = CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-				m_pTargetObject->GetTransform()->LookAt_NonY(vTargetPos);
-			})
-				.AddTransition("ATK_A3 to HIT", "HIT")
+		.AddState("ATK_DRIVE_WAIT")	// 조준 사격 후 대기
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0500_252_AL_atk_f1_drive_hit_loop"))
+				.AddTransition("ATK_DRIVE_WAIT to HIT", "HIT")
 				.Predicator([&]()->_bool {return m_bHit; })
 				.Duration(0.f)
 				.Priority(0)
 
-				.AddTransition("ATK_A3 to IDLE", "IDLE")
+				.AddTransition("ATK_DRIVE_WAIT to ATK_DRIVE_END", "ATK_DRIVE_END")
 				.Duration(0.2f)
-				.Priority(1)*/
+				.Priority(1)
+
+		.AddState("ATK_DRIVE_END")	// 조준 사격 종료
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0500_253_AL_atk_f1_drive_end"))
+				.AddTransition("ATK_DRIVE_END to HIT", "HIT")
+				.Predicator([&]()->_bool {return m_bHit; })
+				.Duration(0.f)
+				.Priority(0)
+
+				.AddTransition("ATK_DRIVE_END to IDLE", "IDLE")
+				.Duration(0.2f)
+				.Priority(1)
 
 #pragma endregion ATTACK
 
@@ -520,6 +531,12 @@ HRESULT CAI_CH0500_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 
 		.AddState("APPROACH_START")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0500_030_AL_dodge_F_start"))
+			.StartEvent([&]()
+				{
+					if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return;
+					_vector vTargetPos = CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					m_pTargetObject->GetTransform()->LookAt_NonY(vTargetPos);
+				})
 				.AddTransition("APPROACH_START to APPROACH_END", "APPROACH_END")
 				.Duration(0.f)
 				.Priority(0)
@@ -532,9 +549,14 @@ HRESULT CAI_CH0500_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Duration(0.f)
 				.Priority(0)
 
+				.AddTransition("APPROACH_END to ATK_DRIVE_START", "ATK_DRIVE_START")
+				.Predicator([&]()->_bool {return isAnimFinish("AS_ch0500_031_AL_dodge_F_stop") && (-1.f != m_fDistance_toEnemy); })
+				.Duration(0.2f)
+				.Priority(1)
+
 				.AddTransition("APPROACH_END to IDLE", "IDLE")
 				.Duration(0.f)
-				.Priority(0)
+				.Priority(2)
 
 #pragma endregion DODGE
 
