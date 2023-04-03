@@ -16,6 +16,7 @@ CEM0750::CEM0750(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CEM0750::CEM0750(const CEM0750 & rhs)
 	: CEnemy(rhs)
 {
+	m_SpawnEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData({0.f, 2.3f, 0.f}, {0.f, 0.f, 0.f}, {0.65f,0.65f,0.65f});
 }
 
 HRESULT CEM0750::Initialize(void * pArg)

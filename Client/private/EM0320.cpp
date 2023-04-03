@@ -25,6 +25,7 @@ CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CEM0320::CEM0320(const CEM0320& rhs)
 	: CEnemy(rhs)
 {
+	m_bSpawnEffect = false;
 }
 
 HRESULT CEM0320::Initialize(void* pArg)

@@ -7,6 +7,7 @@
 #include "RigidBody.h"
 #include "EM0200_AnimInstance.h"
 #include "EM0200_Controller.h"
+#include "ImguiUtils.h"
 
 CEM0200::CEM0200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -17,6 +18,7 @@ CEM0200::CEM0200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CEM0200::CEM0200(const CEM0200& rhs)
 	: CEnemy(rhs)
 {
+	m_SpawnEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData({0.f, 1.2f, 0.f}, {0.f, 0.f, 0.f}, {0.7f,0.7f,0.7f});
 }
 
 HRESULT CEM0200::Initialize(void* pArg)

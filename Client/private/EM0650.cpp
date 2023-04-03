@@ -6,6 +6,7 @@
 #include "EM0650_AnimInstance.h"
 #include "EM0650_Controller.h"
 #include "BulletBuilder.h"
+#include "ImguiUtils.h"
 
 CEM0650::CEM0650(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -16,6 +17,7 @@ CEM0650::CEM0650(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CEM0650::CEM0650(const CEM0650 & rhs)
 	: CEnemy(rhs)
 {
+	m_SpawnEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData({0.f, 1.f, 0.f}, {0.f, 0.f, 0.f}, {0.6f,0.6f,0.6f});
 }
 
 HRESULT CEM0650::Initialize(void * pArg)

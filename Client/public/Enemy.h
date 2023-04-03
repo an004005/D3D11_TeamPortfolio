@@ -26,6 +26,7 @@ protected:
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual void Imgui_RenderProperty() override;
@@ -179,6 +180,9 @@ protected:
 	//ui
 	array<_float4x4, ENEMY_UIPIVOT_END> m_UI_PivotMatrixes;
 	//
+
+	_bool m_bSpawnEffect = true;
+	_float4x4 m_SpawnEffectPivot;
 
 public:
 	virtual void Free() override;

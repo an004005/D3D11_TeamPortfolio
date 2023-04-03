@@ -1215,7 +1215,6 @@
     <ClInclude Include="..\public\Special_IronBars_MultiBars.h">
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\GameManager_Tutorial.h" />
     <ClInclude Include="..\public\Canvas_Acquisition.h">
       <Filter>02.GameObjects\UI\Short</Filter>
     </ClInclude>
@@ -1261,6 +1260,11 @@
     </ClInclude>
     <ClInclude Include="..\public\Special_Container.h">
       <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\RedString.h" />
+    <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
+    <ClInclude Include="..\public\GameManager_Tutorial.h">
+      <Filter>30. GameManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2042,7 +2046,6 @@
     <ClCompile Include="..\private\Special_IronBars_MultiBars.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\GameManager_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
     </ClCompile>
@@ -2091,6 +2094,11 @@
     </ClCompile>
     <ClCompile Include="..\private\Special_Container.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\RedString.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
+    <ClCompile Include="..\private\GameManager_Tutorial.cpp">
+      <Filter>30. GameManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2188,15 +2196,11 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonModel.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_VFX_UI.hlsl">
       <Filter>97.ShaderFiles\UI</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing_Shadow.hlsl">
       <Filter>97.ShaderFiles\Shadow</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl">
-      <Filter>97.ShaderFiles\UI</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\SSAO.hlsl">
       <Filter>97.ShaderFiles</Filter>
@@ -2206,6 +2210,12 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\SSLR.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
