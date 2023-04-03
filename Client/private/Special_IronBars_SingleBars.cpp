@@ -295,17 +295,6 @@ void CSpecial_IronBars_SingleBars::Activate(_bool bActivate)
 	m_pCollider->UpdateChange();
 }
 
-void CSpecial_IronBars_SingleBars::ParticleMaker(_double TimeDelta)
-{
-	m_fParticleTimer += TimeDelta;
-
-	if (1.f <= m_fParticleTimer)
-	{
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, m_vecRandomParticle[CMathUtils::RandomUInt(m_vecRandomParticle.size() - 1)])
-			->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
-	}
-}
-
 HRESULT CSpecial_IronBars_SingleBars::SetUp_Components(void * pArg)
 {
 	CModel* pModel = nullptr;

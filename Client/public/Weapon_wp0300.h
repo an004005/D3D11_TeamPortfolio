@@ -32,6 +32,7 @@ private:
 	CParticleGroup* m_pParticle = nullptr;
 
 private:
+	_double		m_fTimeDelta = 0.f;
 	_float4		m_vBeforePos;
 
 private:

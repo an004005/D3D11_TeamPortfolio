@@ -469,7 +469,7 @@ void CEM0220::CounterAttack(_double TimeDelta)
 void CEM0220::Create_Bullet()
 {
 	DAMAGE_PARAM eDamageParam;
-	eDamageParam.eAttackType = EAttackType::ATK_MIDDLE;
+	eDamageParam.eAttackType = EAttackType::ATK_END;
 	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_END;
 	eDamageParam.iDamage = 50;
 

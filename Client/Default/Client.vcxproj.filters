@@ -403,6 +403,12 @@
     <Filter Include="02.GameObjects\SpecialObject\Special_Container">
       <UniqueIdentifier>{3d213a40-478e-436f-9f3d-35fdf8c8c447}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\AI\CH0500">
+      <UniqueIdentifier>{dd71465e-b7d1-4311-8f64-e5e090343e82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\AI\CH0500\BaseAnimInstance">
+      <UniqueIdentifier>{daa7542c-26ae-42f1-be77-0d8716873045}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\UI\Shop">
       <UniqueIdentifier>{9730c136-31f7-4276-83ce-da1fc4d4fa5b}</UniqueIdentifier>
     </Filter>
@@ -1345,6 +1351,12 @@
     <ClInclude Include="..\public\Special_Container.h">
       <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\AI_CH0500.h">
+      <Filter>02.GameObjects\AI\CH0500</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AI_CH0500_AnimInstance.h">
+      <Filter>02.GameObjects\AI\CH0500\BaseAnimInstance</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\GameManager_Tutorial.h">
       <Filter>30. GameManager</Filter>
     </ClInclude>
@@ -2227,6 +2239,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Special_Container.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AI_CH0500.cpp">
+      <Filter>02.GameObjects\AI\CH0500</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AI_CH0500_AnimInstance.cpp">
+      <Filter>02.GameObjects\AI\CH0500\BaseAnimInstance</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GameManager_Tutorial.cpp">
       <Filter>30. GameManager</Filter>
