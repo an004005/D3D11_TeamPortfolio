@@ -385,9 +385,6 @@
     <Filter Include="02.GameObjects\UI\Main\Canvas">
       <UniqueIdentifier>{a84ad824-2ee4-49a4-8b5f-2249e5b4eaa9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\________DefaultCanvas">
-      <UniqueIdentifier>{bad044ba-a491-4bf1-9026-b9d169097cf4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Player\PlayerInfoManager">
       <UniqueIdentifier>{14b74379-1a38-4c37-bb9f-263e2fa98580}</UniqueIdentifier>
     </Filter>
@@ -447,6 +444,15 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\SpecialAttack\Canvas">
       <UniqueIdentifier>{fe7f32c0-551e-4151-8e98-1a4c998bfce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\Acquisition">
+      <UniqueIdentifier>{09fcbae0-5f39-4335-b246-c9eb48c977b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\LeftTalk">
+      <UniqueIdentifier>{60b3433d-1cd8-4b64-9f5e-b7c2c578a625}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\MainTalk">
+      <UniqueIdentifier>{3d3c494d-c477-4d25-ac7c-b90362d34b26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1257,22 +1263,6 @@
     <ClInclude Include="..\public\Special_IronBars_MultiBars.h">
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\GameManager_Tutorial.h" />
-    <ClInclude Include="..\public\Canvas_Acquisition.h">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\AcquisitionUI.h">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Canvas_LeftTalk.h">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Talk_BackGroundUI.h">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Talk_FaceUI.h">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Item_LightUI.h">
       <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClInclude>
@@ -1354,6 +1344,24 @@
     </ClInclude>
     <ClInclude Include="..\public\Special_Container.h">
       <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GameManager_Tutorial.h">
+      <Filter>30. GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AcquisitionUI.h">
+      <Filter>02.GameObjects\UI\Short\Acquisition</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Acquisition.h">
+      <Filter>02.GameObjects\UI\Short\Acquisition</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_LeftTalk.h">
+      <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Talk_BackGroundUI.h">
+      <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Talk_FaceUI.h">
+      <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2135,24 +2143,8 @@
     <ClCompile Include="..\private\Special_IronBars_MultiBars.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\GameManager_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_Acquisition.cpp">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\AcquisitionUI.cpp">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_LeftTalk.cpp">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Talk_BackGroundUI.cpp">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Talk_FaceUI.cpp">
-      <Filter>02.GameObjects\UI\Short</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_LightUI.cpp">
       <Filter>02.GameObjects\UI\Front\Item</Filter>
@@ -2235,6 +2227,24 @@
     </ClCompile>
     <ClCompile Include="..\private\Special_Container.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameManager_Tutorial.cpp">
+      <Filter>30. GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AcquisitionUI.cpp">
+      <Filter>02.GameObjects\UI\Short\Acquisition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Acquisition.cpp">
+      <Filter>02.GameObjects\UI\Short\Acquisition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_LeftTalk.cpp">
+      <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Talk_BackGroundUI.cpp">
+      <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Talk_FaceUI.cpp">
+      <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2339,12 +2349,12 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing_Shadow.hlsl">
       <Filter>97.ShaderFiles\Shadow</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl">
-      <Filter>97.ShaderFiles\UI</Filter>
-    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\SSAO.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl">
+      <Filter>97.ShaderFiles\UI</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
