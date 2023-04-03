@@ -131,6 +131,26 @@ void CEM0320::SetUpAnimationEvent()
 	{
 		JitabataSmokeEffect();
 	});
+
+	m_pModelCom->Add_EventCaller("Landing", [this]
+		{
+			_float4x4 Pivot = XMMatrixTranslation(3.f, 0.f, 2.f);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")
+				->Start_NoAttachPivot(this, Pivot, false, true);
+
+			Pivot = XMMatrixTranslation(-2.f, 0.f, 3.f);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")
+				->Start_NoAttachPivot(this, Pivot, false, true);
+
+			Pivot = XMMatrixTranslation(2.f, 0.f, -3.f);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")
+				->Start_NoAttachPivot(this, Pivot, false, true);
+
+			Pivot = XMMatrixTranslation(-3.f, 0.f, -2.f);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")
+				->Start_NoAttachPivot(this, Pivot, false, true);
+	});
+
 	m_pModelCom->Add_EventCaller("Smash", [this] // TODO : 확인해볼것
 	{
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Rock_Particle")->Start_Attach(this, "Reference", false);
@@ -770,7 +790,7 @@ void CEM0320::SmokeEffectCreate()
 
 void CEM0320::JitabataSmokeEffect()
 {
-	string Smoke_Decided;
+	/*string Smoke_Decided;
 	static vector<string> vecSmokePosition
 	{
 		"LeftCenterHandRing", "LeftHandRing", "RightBackHandThumb3", "RightHandMiddle1", "LeftBackHandRing", "WeakA7"
@@ -778,7 +798,14 @@ void CEM0320::JitabataSmokeEffect()
 
 	Smoke_Decided = vecSmokePosition[CMathUtils::RandomUInt(vecSmokePosition.size() - 1)];
 
-	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, Smoke_Decided, false, true);
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, Smoke_Decided, false, true);*/
+
+	_int RandomX = CMathUtils::RandomInt(-4, 4);
+	_int RandomZ = CMathUtils::RandomInt(-4, 4);
+
+	_float4x4 Pivot = XMMatrixTranslation(RandomX, 0.f, RandomZ);
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")
+		->Start_NoAttachPivot(this, Pivot, false, true);
 }
 
 CEM0320* CEM0320::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

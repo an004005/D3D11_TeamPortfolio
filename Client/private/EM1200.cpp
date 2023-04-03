@@ -161,6 +161,9 @@ void CEM1200::SetUpAnimationEvent()
 	{
 		ClearDamagedTarget();
 		m_bAttack = false;
+
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Smoke_Ivory_0" + to_wstring(CMathUtils::RandomUInt(4)))
+			->Start_Attach(this, "Target", false, true);
 	});
 
 	m_pModelCom->Add_EventCaller("Rush_End", [this]
@@ -168,9 +171,6 @@ void CEM1200::SetUpAnimationEvent()
 		m_bAttack = false;
 
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1200_Stamp_Distortion")
-			->Start_Attach(this, "Target", false, true);
-
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Smoke_Ivory_0" + to_wstring(CMathUtils::RandomUInt(4)))
 			->Start_Attach(this, "Target", false, true);
 
 	});
@@ -181,7 +181,7 @@ void CEM1200::SetUpAnimationEvent()
 				->Start_Attach(this, "Head", false, true);
 
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1200_Fear_Particle")
-				->Start_Attach(this, "Head", false, true);
+				->Start_NoAttach(this, false, true);
 	});
 
 

@@ -229,8 +229,8 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 	// 이상한 데미지 들어오는거 감지용, 버그 다 찾으면 지우기
 	Assert(tDamageParams.iDamage > 0);
-	Assert(tDamageParams.iDamage < 20000);
 
+	Assert(tDamageParams.iDamage < 20000);
 	// ex) 데미지 100 => 90 ~ 110 랜덤으로 변경
 	const _int iDamageRandomRange = tDamageParams.iDamage / 5;
 	const _int iDamageRandomize = (_int)CMathUtils::RandomUInt((_uint)iDamageRandomRange);
@@ -245,6 +245,7 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_bAirToDown = true;
 	}
 
+	CheckHitPositoin(tDamageParams);
 	CheckDeBuff(tDamageParams.eDeBuff);
 	HitEffect(tDamageParams);
 	CheckCrushGage(tDamageParams);
@@ -435,7 +436,7 @@ _float4x4 CEnemy::GetPivotMatrix()
 	return m_pModelCom->GetPivotMatrix();
 }
 
-void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
+void CEnemy::CheckHitPositoin(DAMAGE_PARAM& tDamageParams)
 {
 	if (tDamageParams.vHitPosition == _float4(0.f, 0.f, 0.f, 1.f) && tDamageParams.pCauser != nullptr)
 	{
@@ -469,6 +470,10 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 		}
 	}
 
+}
+
+void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
+{
 	wstring HitBloodName;
 	wstring HitEffectName;
 	wstring HitDecalName;
@@ -497,8 +502,9 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Default_Sword_Particle")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 		break;
 	}
-	
 
+	if(m_bHitWeak)
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0220_Weak_Hit_EF")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 	if (HitBloodName.empty() == false)
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 	if (HitEffectName.empty() == false)

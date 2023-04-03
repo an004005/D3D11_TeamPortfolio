@@ -67,6 +67,7 @@ public:
 	_bool IsTargetRight(_float fAngle = 90.f);
 protected:
 	// take damage 관련 함수
+	void CheckHitPositoin(DAMAGE_PARAM& tDamageParams);
 	virtual void HitEffect(DAMAGE_PARAM& tDamageParams);
 	virtual void CheckDeBuff(EDeBuffType eDeBuff);
 	virtual _bool IsWeak(CRigidBody* pHitPart) { return false; }
