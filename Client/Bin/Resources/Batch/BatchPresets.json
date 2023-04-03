@@ -189,6 +189,11 @@
             "Layer": "Layer_Kinetic",
             "JsonPath": "../Bin/Resources/Objects/KineticSpecial_Container.json",
             "ProtoTag": "Prototype_GameObject_Special_Container"
+        },
+        {
+            "Layer": "Layer_MapDecorate",
+            "JsonPath": "",
+            "ProtoTag": "Prototype_RedString"
         }
     ]
 }

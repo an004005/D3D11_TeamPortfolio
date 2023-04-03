@@ -33,6 +33,7 @@
 #include "SAS_Portrait.h"
 #include "EffectSystem.h"
 #include "TrailSystem.h"
+#include "RedString.h"
 
 #include "PlayerInfoManager.h"
 #include "SpawnTrigger.h"
@@ -427,6 +428,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_VIBuffer_Cube", CVIBuffer_Cube::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+
 	// /* For.Prototype_Component_Shader_ParticleSystem */
 	// if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_ParticleSystem"),
 	// 	CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPointInstance_ParticleSystem.hlsl"), VTXPOINT_DECLARATION::Elements, VTXPOINT_DECLARATION::iNumElements))))
@@ -447,6 +449,8 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_CapsuleLight"), CCapsuleLight::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_PlayerStartPosition"), CPlayerStartPosition::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_RedString"), CRedString::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
 	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Regular32"), TEXT("../Bin/Resources/Fonts/kim_regular32.spritefont"))))

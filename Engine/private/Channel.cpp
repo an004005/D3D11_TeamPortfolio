@@ -11,7 +11,9 @@ CChannel::CChannel()
 
 CChannel::CChannel(const CChannel& rhs)
 	: m_strName(rhs.m_strName)
-	, m_KeyFrames(rhs.m_KeyFrames)
+	, m_pKeyFrames(rhs.m_pKeyFrames)
+	, m_iNumKeyFrame(rhs.m_iNumKeyFrame)
+	, m_bClone(true)
 {
 
 }
@@ -25,13 +27,13 @@ HRESULT CChannel::Initialize(HANDLE hFile)
 
 	_uint iNumKeyFrames = 0;
 	ReadFile(hFile, &iNumKeyFrames, sizeof(_uint), &dwByte, nullptr); /* Read */
-	m_KeyFrames.reserve(iNumKeyFrames);
+	m_iNumKeyFrame = iNumKeyFrames;
+	m_pKeyFrames = new KEYFRAME[m_iNumKeyFrame];
 
 	for (_uint i = 0; i < iNumKeyFrames; ++i)
 	{
-		KEYFRAME buffer;
-		ReadFile(hFile, &buffer, sizeof(KEYFRAME), &dwByte, nullptr); /* Read */
-		m_KeyFrames.push_back(buffer);
+		// KEYFRAME buffer;
+		ReadFile(hFile, &m_pKeyFrames[i], sizeof(KEYFRAME), &dwByte, nullptr); /* Read */
 	}
 
 	m_vLocalMove = XMVectorSet(0.f, 0.f, 0.f, 0.f);
@@ -62,36 +64,36 @@ void CChannel::Update_TransformMatrix(_double PlayTime)
 	_matrix			TransformMatrix;
 
 	/* 현재 재생된 시간이 마지막 키프레임시간보다 커지며.ㄴ */
-	if (PlayTime >= m_KeyFrames.back().Time)
+	if (PlayTime >= m_pKeyFrames[m_iNumKeyFrame - 1].Time)
 	{
-		vScale = XMLoadFloat3(&m_KeyFrames.back().vScale);
-		vRotation = XMLoadFloat4(&m_KeyFrames.back().vRotation);
-		vPosition = XMLoadFloat3(&m_KeyFrames.back().vPosition);
+		vScale = XMLoadFloat3(&m_pKeyFrames[m_iNumKeyFrame - 1].vScale);
+		vRotation = XMLoadFloat4(&m_pKeyFrames[m_iNumKeyFrame - 1].vRotation);
+		vPosition = XMLoadFloat3(&m_pKeyFrames[m_iNumKeyFrame - 1].vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 	}
-	else if (PlayTime <= m_KeyFrames.front().Time)
+	else if (PlayTime <= m_pKeyFrames[0].Time)
 	{
-		vScale = XMLoadFloat3(&m_KeyFrames.front().vScale);
-		vRotation = XMLoadFloat4(&m_KeyFrames.front().vRotation);
-		vPosition = XMLoadFloat3(&m_KeyFrames.front().vPosition);
+		vScale = XMLoadFloat3(&m_pKeyFrames[0].vScale);
+		vRotation = XMLoadFloat4(&m_pKeyFrames[0].vRotation);
+		vPosition = XMLoadFloat3(&m_pKeyFrames[0].vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 	}
 	else
 	{
 		_uint iFrameIdx = 0;
-		while (PlayTime >= m_KeyFrames[iFrameIdx + 1].Time)
+		while (PlayTime >= m_pKeyFrames[iFrameIdx + 1].Time)
 		{
 			++iFrameIdx;
 		}
 		m_iCurFrameIdx = iFrameIdx;
 
-		_float			fRatio = (_float)(PlayTime - m_KeyFrames[iFrameIdx].Time) /
-			(m_KeyFrames[iFrameIdx + 1].Time - m_KeyFrames[iFrameIdx].Time);
+		_float			fRatio = (_float)(PlayTime - m_pKeyFrames[iFrameIdx].Time) /
+			(m_pKeyFrames[iFrameIdx + 1].Time - m_pKeyFrames[iFrameIdx].Time);
 
 
-		vScale = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[iFrameIdx].vScale), XMLoadFloat3(&m_KeyFrames[iFrameIdx + 1].vScale), fRatio);
-		vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[iFrameIdx].vRotation), XMLoadFloat4(&m_KeyFrames[iFrameIdx + 1].vRotation), fRatio);
-		vPosition = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[iFrameIdx].vPosition), XMLoadFloat3(&m_KeyFrames[iFrameIdx + 1].vPosition), fRatio);
+		vScale = XMVectorLerp(XMLoadFloat3(&m_pKeyFrames[iFrameIdx].vScale), XMLoadFloat3(&m_pKeyFrames[iFrameIdx + 1].vScale), fRatio);
+		vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_pKeyFrames[iFrameIdx].vRotation), XMLoadFloat4(&m_pKeyFrames[iFrameIdx + 1].vRotation), fRatio);
+		vPosition = XMVectorLerp(XMLoadFloat3(&m_pKeyFrames[iFrameIdx].vPosition), XMLoadFloat3(&m_pKeyFrames[iFrameIdx + 1].vPosition), fRatio);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 
 	}
@@ -148,36 +150,36 @@ void CChannel::Update_TransformMatrix_NonLocalLock(_double PlayTime)
 	_matrix			TransformMatrix;
 
 	/* 현재 재생된 시간이 마지막 키프레임시간보다 커지며.ㄴ */
-	if (PlayTime >= m_KeyFrames.back().Time)
+	if (PlayTime >= m_pKeyFrames[m_iNumKeyFrame - 1].Time)
 	{
-		vScale = XMLoadFloat3(&m_KeyFrames.back().vScale);
-		vRotation = XMLoadFloat4(&m_KeyFrames.back().vRotation);
-		vPosition = XMLoadFloat3(&m_KeyFrames.back().vPosition);
+		vScale = XMLoadFloat3(&m_pKeyFrames[m_iNumKeyFrame - 1].vScale);
+		vRotation = XMLoadFloat4(&m_pKeyFrames[m_iNumKeyFrame - 1].vRotation);
+		vPosition = XMLoadFloat3(&m_pKeyFrames[m_iNumKeyFrame - 1].vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 	}
-	else if (PlayTime <= m_KeyFrames.front().Time)
+	else if (PlayTime <= m_pKeyFrames[0].Time)
 	{
-		vScale = XMLoadFloat3(&m_KeyFrames.front().vScale);
-		vRotation = XMLoadFloat4(&m_KeyFrames.front().vRotation);
-		vPosition = XMLoadFloat3(&m_KeyFrames.front().vPosition);
+		vScale = XMLoadFloat3(&m_pKeyFrames[0].vScale);
+		vRotation = XMLoadFloat4(&m_pKeyFrames[0].vRotation);
+		vPosition = XMLoadFloat3(&m_pKeyFrames[0].vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 	}
 	else
 	{
 		_uint iFrameIdx = 0;
-		while (PlayTime >= m_KeyFrames[iFrameIdx + 1].Time)
+		while (PlayTime >= m_pKeyFrames[iFrameIdx + 1].Time)
 		{
 			++iFrameIdx;
 		}
 		m_iCurFrameIdx = iFrameIdx;
 
-		_float			fRatio = (_float)(PlayTime - m_KeyFrames[iFrameIdx].Time) /
-			(m_KeyFrames[iFrameIdx + 1].Time - m_KeyFrames[iFrameIdx].Time);
+		_float			fRatio = (_float)(PlayTime - m_pKeyFrames[iFrameIdx].Time) /
+			(m_pKeyFrames[iFrameIdx + 1].Time - m_pKeyFrames[iFrameIdx].Time);
 
 
-		vScale = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[iFrameIdx].vScale), XMLoadFloat3(&m_KeyFrames[iFrameIdx + 1].vScale), fRatio);
-		vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[iFrameIdx].vRotation), XMLoadFloat4(&m_KeyFrames[iFrameIdx + 1].vRotation), fRatio);
-		vPosition = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[iFrameIdx].vPosition), XMLoadFloat3(&m_KeyFrames[iFrameIdx + 1].vPosition), fRatio);
+		vScale = XMVectorLerp(XMLoadFloat3(&m_pKeyFrames[iFrameIdx].vScale), XMLoadFloat3(&m_pKeyFrames[iFrameIdx + 1].vScale), fRatio);
+		vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_pKeyFrames[iFrameIdx].vRotation), XMLoadFloat4(&m_pKeyFrames[iFrameIdx + 1].vRotation), fRatio);
+		vPosition = XMVectorLerp(XMLoadFloat3(&m_pKeyFrames[iFrameIdx].vPosition), XMLoadFloat3(&m_pKeyFrames[iFrameIdx + 1].vPosition), fRatio);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 
 	}
@@ -212,21 +214,21 @@ void CChannel::Blend_TransformMatrix(_double PlayTime, _float fBlendRatio)
 	_matrix			TransformMatrix;
 
 	/* 현재 재생된 시간이 마지막 키프레임시간보다 커지며.ㄴ */
-	if (PlayTime >= m_KeyFrames.back().Time)
+	if (PlayTime >= m_pKeyFrames[m_iNumKeyFrame - 1].Time)
 	{
-		vScale = XMLoadFloat3(&m_KeyFrames.back().vScale);
-		vRotation = XMLoadFloat4(&m_KeyFrames.back().vRotation);
-		vPosition = XMLoadFloat3(&m_KeyFrames.back().vPosition);
+		vScale = XMLoadFloat3(&m_pKeyFrames[m_iNumKeyFrame - 1].vScale);
+		vRotation = XMLoadFloat4(&m_pKeyFrames[m_iNumKeyFrame - 1].vRotation);
+		vPosition = XMLoadFloat3(&m_pKeyFrames[m_iNumKeyFrame - 1].vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 
 		vBefPosition = vPosition;
 		vBefRotation = vRotation;
 	}
-	else if (PlayTime <= m_KeyFrames.front().Time)
+	else if (PlayTime <= m_pKeyFrames[0].Time)
 	{
-		vScale = XMLoadFloat3(&m_KeyFrames.front().vScale);
-		vRotation = XMLoadFloat4(&m_KeyFrames.front().vRotation);
-		vPosition = XMLoadFloat3(&m_KeyFrames.front().vPosition);
+		vScale = XMLoadFloat3(&m_pKeyFrames[0].vScale);
+		vRotation = XMLoadFloat4(&m_pKeyFrames[0].vRotation);
+		vPosition = XMLoadFloat3(&m_pKeyFrames[0].vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 
 		vBefPosition = vPosition;
@@ -235,17 +237,17 @@ void CChannel::Blend_TransformMatrix(_double PlayTime, _float fBlendRatio)
 	else
 	{
 		_uint iFrameIdx = 0;
-		while (PlayTime >= m_KeyFrames[iFrameIdx + 1].Time)
+		while (PlayTime >= m_pKeyFrames[iFrameIdx + 1].Time)
 		{
 			++iFrameIdx;
 		}
 
-		_float			fRatio = (_float)(PlayTime - m_KeyFrames[iFrameIdx].Time) / 
-			(m_KeyFrames[iFrameIdx + 1].Time - m_KeyFrames[iFrameIdx].Time);
+		_float			fRatio = (_float)(PlayTime - m_pKeyFrames[iFrameIdx].Time) / 
+			(m_pKeyFrames[iFrameIdx + 1].Time - m_pKeyFrames[iFrameIdx].Time);
 
-		vScale = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[iFrameIdx].vScale), XMLoadFloat3(&m_KeyFrames[iFrameIdx + 1].vScale), fRatio);
-		vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[iFrameIdx].vRotation), XMLoadFloat4(&m_KeyFrames[iFrameIdx + 1].vRotation), fRatio);
-		vPosition = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[iFrameIdx].vPosition), XMLoadFloat3(&m_KeyFrames[iFrameIdx + 1].vPosition), fRatio);
+		vScale = XMVectorLerp(XMLoadFloat3(&m_pKeyFrames[iFrameIdx].vScale), XMLoadFloat3(&m_pKeyFrames[iFrameIdx + 1].vScale), fRatio);
+		vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_pKeyFrames[iFrameIdx].vRotation), XMLoadFloat4(&m_pKeyFrames[iFrameIdx + 1].vRotation), fRatio);
+		vPosition = XMVectorLerp(XMLoadFloat3(&m_pKeyFrames[iFrameIdx].vPosition), XMLoadFloat3(&m_pKeyFrames[iFrameIdx + 1].vPosition), fRatio);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 
 		vBefPosition = vPosition;
@@ -288,26 +290,26 @@ void CChannel::Blend_Additive(_double PlayTime, _float fAdditiveRatio)
 	_vector			vRotation;
 
 	/* 현재 재생된 시간이 마지막 키프레임시간보다 커지며.ㄴ */
-	if (PlayTime >= m_KeyFrames.back().Time)
+	if (PlayTime >= m_pKeyFrames[m_iNumKeyFrame - 1].Time)
 	{
-		vRotation = XMLoadFloat4(&m_KeyFrames.back().vRotation);
+		vRotation = XMLoadFloat4(&m_pKeyFrames[m_iNumKeyFrame - 1].vRotation);
 	}
-	else if (PlayTime <= m_KeyFrames.front().Time)
+	else if (PlayTime <= m_pKeyFrames[0].Time)
 	{
-		vRotation = XMLoadFloat4(&m_KeyFrames.front().vRotation);
+		vRotation = XMLoadFloat4(&m_pKeyFrames[0].vRotation);
 	}
 	else
 	{
 		_uint iFrameIdx = 0;
-		while (PlayTime >= m_KeyFrames[iFrameIdx + 1].Time)
+		while (PlayTime >= m_pKeyFrames[iFrameIdx + 1].Time)
 		{
 			++iFrameIdx;
 		}
 
-		_float fRatio = (_float)(PlayTime - m_KeyFrames[iFrameIdx].Time) / 
-			(m_KeyFrames[iFrameIdx + 1].Time - m_KeyFrames[iFrameIdx].Time);
+		_float fRatio = (_float)(PlayTime - m_pKeyFrames[iFrameIdx].Time) / 
+			(m_pKeyFrames[iFrameIdx + 1].Time - m_pKeyFrames[iFrameIdx].Time);
 
-		vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[iFrameIdx].vRotation), XMLoadFloat4(&m_KeyFrames[iFrameIdx + 1].vRotation), fRatio);
+		vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_pKeyFrames[iFrameIdx].vRotation), XMLoadFloat4(&m_pKeyFrames[iFrameIdx + 1].vRotation), fRatio);
 	}
 
 	vRotation = XMQuaternionSlerp(XMQuaternionIdentity(), vRotation, fAdditiveRatio);
@@ -336,5 +338,8 @@ CChannel* CChannel::Clone()
 
 void CChannel::Free()
 {
-	m_KeyFrames.clear();
+	// m_KeyFrames.clear();
+	if (m_bClone == false)
+		Safe_Delete_Array(m_pKeyFrames);
+	m_pKeyFrames = nullptr;
 }

@@ -21,7 +21,7 @@ public:
 	void Blend_Additive(_double PlayTime, _float fAdditiveRatio);
 	_bool IsLinked() const { return m_pBone != nullptr; }
 
-	KEYFRAME*		GetCurKeyFrame() { return &m_KeyFrames[m_iCurFrameIdx]; }
+	KEYFRAME*		GetCurKeyFrame() { return &m_pKeyFrames[m_iCurFrameIdx]; }
 	_vector&		GetLocalMove() { return m_vLocalMove; }
 	_vector&		GetSpecialLocalMove() { return m_vSpecialLocalMove; }
 	_vector&		GetLocalRotation() { return m_vLocalRotation; }
@@ -37,7 +37,10 @@ public:
 private:
 	string			m_strName;
 
-	vector<KEYFRAME>	m_KeyFrames;
+	// vector<KEYFRAME>	m_KeyFrames;
+	KEYFRAME*			m_pKeyFrames;
+	_uint				m_iNumKeyFrame = 0;
+	_bool				m_bClone = false;
 
 	class CBone*		m_pBone = nullptr;
 

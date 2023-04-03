@@ -9,6 +9,7 @@
 #include "EM0221.h"
 #include "ImguiUtils.h"
 #include "BulletBuilder.h"
+#include "Material.h"
 
 CEM0220::CEM0220(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -19,6 +20,8 @@ CEM0220::CEM0220(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CEM0220::CEM0220(const CEM0220 & rhs)
 	: CEnemy(rhs)
 {
+	m_SpawnEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData({0.f, 1.5f, 0.f}, {0.f, 0.f, 0.f}, {1.f, 1.f, 1.f});
+	m_fSpawnDistortionDistancePivot = 1.f;
 }
 
 HRESULT CEM0220::Initialize(void * pArg)
@@ -34,8 +37,8 @@ HRESULT CEM0220::Initialize(void * pArg)
 		m_iMaxHP = 1100;
 		m_iHP = 1100; // ★
 
-		m_iCrushGauge = 1100;
-		m_iMaxCrushGauge = 1100;
+		m_iCrushGauge = 700;
+		m_iMaxCrushGauge = m_iCrushGauge;
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
@@ -60,12 +63,7 @@ void CEM0220::SetUpComponents(void * pArg)
 		L"Prototype_Model_em220", L"Model",
 		(CComponent**)&m_pModelCom));
 
-	//Create Collider
-	//FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("TailCol"),
-	//	(CComponent**)&m_pTailCol, pArg));
-
-	//FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("WeaponCol"),
-	//	(CComponent**)&m_pWeaponCol, pArg));
+	m_pWeak = m_pModelCom->FindMaterial(L"MI_em0220_WEAK_0");
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM0220_Controller::Create();
@@ -92,7 +90,7 @@ void CEM0220::SetUpAnimationEvent()
 	//Attack_Shot 중일때 앞으로 뱉는 모션에서 계속 Bullet생성
 	m_pModelCom->Add_EventCaller("Shot", [this]
 	{
-		Create_Bullet();
+		//Create_Bullet();
 	});
 }
 
@@ -114,12 +112,15 @@ void CEM0220::SetUpFSM()
 				m_fGravity = 20.f;
 			})
 			.AddTransition("Idle to BrainCrushStart", "BrainCrushStart")
-				.Predicator([this] { return m_iCrushGauge <= 0; })
+				.Predicator([this] { return m_bCrushStart; })
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
 
+		//얘는 때리면 그냥 넘어져야함
 		/*	.AddTransition("Idle to Hit", "Hit")
-				.Predicator([this] { return !m_Unbeatable || m_eCurAttackType == EAttackType::ATK_LIGHT || m_eCurAttackType == EAttackType::ATK_MIDDLE; })*/
+				.Predicator([this] { return !m_Unbeatable &&
+					m_eCurAttackType != EAttackType::ATK_END; })*/
+
 			.AddTransition("Idle to Down", "Down")
 				.Predicator([this] { return !m_Unbeatable && m_eCurAttackType != EAttackType::ATK_END; })
 			
@@ -178,7 +179,7 @@ void CEM0220::SetUpFSM()
 			.AddTransition("BrainCrushStart to BrainCrushLoop", "BrainCrushLoop")
 				.Predicator([this]
 				{
-					return m_bDead || m_bBrainCrush || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bBrainCrush || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("BrainCrushLoop")
@@ -357,7 +358,7 @@ void CEM0220::Tick(_double TimeDelta)
 		it->Tick(TimeDelta);
 
 	Update_LanternMatrix();
-
+	HitWeakProcess(TimeDelta);
 	ResetHitData();
 }
 
@@ -391,6 +392,18 @@ void CEM0220::Imgui_RenderProperty()
 	m_pFSM->Imgui_RenderProperty();
 }
 
+_bool CEM0220::IsWeak(CRigidBody* pHitPart)
+{
+	return true;
+}
+
+void CEM0220::HitEffect(DAMAGE_PARAM& tDamageParams)
+{
+	if (m_Unbeatable == true) return;
+	
+	__super::HitEffect(tDamageParams);
+}
+
 void CEM0220::CheckHP(DAMAGE_PARAM & tDamageParams)
 {
 	_int iDamage = tDamageParams.iDamage;
@@ -400,10 +413,7 @@ void CEM0220::CheckHP(DAMAGE_PARAM & tDamageParams)
 
 	if (m_iHP < 0)
 	{
-		if (m_iCrushGauge > 0 || m_dDeadTime > 3.f)
-			SetDead();
-
-		m_bDeadStart = true;
+		SetDead();
 		m_iHP = 0;
 	}
 }
@@ -469,7 +479,15 @@ void CEM0220::CounterAttack(_double TimeDelta)
 void CEM0220::Create_Bullet()
 {
 	DAMAGE_PARAM eDamageParam;
-	eDamageParam.eAttackType = EAttackType::ATK_END;
+
+	if(m_iShotCount++ < 2)
+		eDamageParam.eAttackType = EAttackType::ATK_END;
+	else
+	{
+		eDamageParam.eAttackType = EAttackType::ATK_LIGHT;
+		m_iShotCount = 0;
+	}
+
 	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_END;
 	eDamageParam.iDamage = 50;
 
@@ -485,13 +503,33 @@ void CEM0220::Create_Bullet()
 		.CreateBullet()
 			.Set_Owner(this)
 			.Set_InitBulletEffect({ L"em0650_Bullet_Birth", L"em0220_Bullet" })
-			.Set_ShootSpped(22.f)
+			.Set_ShootSpeed(22.f)
 			.Set_Life(2.f)
 			.Set_DamageParam(eDamageParam)
 			.Set_DeadBulletEffect({ L"em0320_Bullet_Dead_1", L"em0320_Bullet_Dead_2", L"em0320_Bullet_Dead_3" })
 			.Set_Position(vBonePos)
 			.Set_LookAt(vTargetPos)
 		.Build();
+}
+
+void CEM0220::HitWeakProcess(_double TimeDelta)
+{
+	if (m_bHitWeak)
+	{
+		m_bWeakProcess = true;
+		m_pWeak->GetParam().Floats[1] = 1.f;
+	}
+
+	//1번째가 약점 맞았을때 반짝거리는거
+	//2번째가 아머 삭제될때 디졸브
+	if (m_bWeakProcess)
+	{
+		m_pWeak->GetParam().Floats[1] = max(0, static_cast<_int>(m_pWeak->GetParam().Floats[1] - TimeDelta));
+
+		if (m_pWeak->GetParam().Floats[1] <= 0.f)
+			m_bWeakProcess = false;
+	}
+
 }
 
 

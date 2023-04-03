@@ -25,6 +25,7 @@ CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CEM0320::CEM0320(const CEM0320& rhs)
 	: CEnemy(rhs)
 {
+	m_bSpawnEffect = false;
 }
 
 HRESULT CEM0320::Initialize(void* pArg)
@@ -131,6 +132,26 @@ void CEM0320::SetUpAnimationEvent()
 	{
 		JitabataSmokeEffect();
 	});
+
+	m_pModelCom->Add_EventCaller("Landing", [this]
+		{
+			_float4x4 Pivot = XMMatrixTranslation(3.f, 0.f, 2.f);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")
+				->Start_NoAttachPivot(this, Pivot, false, true);
+
+			Pivot = XMMatrixTranslation(-2.f, 0.f, 3.f);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")
+				->Start_NoAttachPivot(this, Pivot, false, true);
+
+			Pivot = XMMatrixTranslation(2.f, 0.f, -3.f);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")
+				->Start_NoAttachPivot(this, Pivot, false, true);
+
+			Pivot = XMMatrixTranslation(-3.f, 0.f, -2.f);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")
+				->Start_NoAttachPivot(this, Pivot, false, true);
+	});
+
 	m_pModelCom->Add_EventCaller("Smash", [this] // TODO : 확인해볼것
 	{
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Rock_Particle")->Start_Attach(this, "Reference", false);
@@ -174,7 +195,8 @@ void CEM0320::SetUpAnimationEvent()
 
 	m_pModelCom->Add_EventCaller("LastSpot", [this] 
 	{ 
-		m_LastSpotTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION); 
+		m_LastSpotTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		m_LastSpotTargetPos = XMVectorSetY(m_LastSpotTargetPos, XMVectorGetY(m_LastSpotTargetPos) + 1.f);
 	});
 	m_pModelCom->Add_EventCaller("WaterBall", [this] 
 	{
@@ -487,7 +509,7 @@ _float4 CEM0320::GetKineticTargetPos()
 {
 	_float3 vTemp = m_pWeak->GetPxWorldMatrix().Translation();
 
-	return _float4(vTemp.x, vTemp.y + 2.f, vTemp.z, 1.f);
+	return _float4(vTemp.x, vTemp.y + 0.5f, vTemp.z, 1.f);
 }
 
 _bool CEM0320::IsPlayingSocket() const
@@ -703,7 +725,7 @@ void CEM0320::FireWaterBall()
 			.Set_Owner(this)
 			.Set_InitBulletEffect({ L"em0320_Bullet" })
 			.Set_InitBulletParticle(L"em0320_Bullet_Trail_Particle")
-			.Set_ShootSpped(29.f)
+			.Set_ShootSpeed(29.f)
 			.Set_Life(5.f)
 			.Set_DamageParam(eDamageParam)
 			.Set_DeadBulletEffect({ L"em0320_Bullet_Dead_1", L"em0320_Bullet_Dead_2", L"em0320_Bullet_Dead_3" })
@@ -719,7 +741,7 @@ void CEM0320::FireWaterBall()
 				.Set_Owner(this)
 				.Set_InitBulletEffect({ L"em0320_Bullet" })
 				.Set_InitBulletParticle(L"em0320_Bullet_Trail_Particle")
-				.Set_ShootSpped(29.f)
+				.Set_ShootSpeed(29.f)
 				.Set_Life(5.f)
 				.Set_DamageParam(eDamageParam)
 				.Set_DeadBulletEffect({ L"em0320_Bullet_Dead_1", L"em0320_Bullet_Dead_2", L"em0320_Bullet_Dead_3" })
@@ -733,7 +755,7 @@ void CEM0320::FireWaterBall()
 				.Set_Owner(this)
 				.Set_InitBulletEffect({ L"em0320_Bullet" })
 				.Set_InitBulletParticle(L"em0320_Bullet_Trail_Particle")
-				.Set_ShootSpped(29.f)
+				.Set_ShootSpeed(29.f)
 				.Set_Life(5.f)
 				.Set_DamageParam(eDamageParam)
 				.Set_DeadBulletEffect({ L"em0320_Bullet_Dead_1", L"em0320_Bullet_Dead_2", L"em0320_Bullet_Dead_3" })
@@ -770,7 +792,7 @@ void CEM0320::SmokeEffectCreate()
 
 void CEM0320::JitabataSmokeEffect()
 {
-	string Smoke_Decided;
+	/*string Smoke_Decided;
 	static vector<string> vecSmokePosition
 	{
 		"LeftCenterHandRing", "LeftHandRing", "RightBackHandThumb3", "RightHandMiddle1", "LeftBackHandRing", "WeakA7"
@@ -778,7 +800,14 @@ void CEM0320::JitabataSmokeEffect()
 
 	Smoke_Decided = vecSmokePosition[CMathUtils::RandomUInt(vecSmokePosition.size() - 1)];
 
-	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, Smoke_Decided, false, true);
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")->Start_Attach(this, Smoke_Decided, false, true);*/
+
+	_int RandomX = CMathUtils::RandomInt(-4, 4);
+	_int RandomZ = CMathUtils::RandomInt(-4, 4);
+
+	_float4x4 Pivot = XMMatrixTranslation(RandomX, 0.f, RandomZ);
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")
+		->Start_NoAttachPivot(this, Pivot, false, true);
 }
 
 CEM0320* CEM0320::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

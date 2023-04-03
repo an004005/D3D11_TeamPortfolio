@@ -235,3 +235,8 @@ _uint CMathUtils::RandomUInt(_uint iMax)
 	return (_uint)RandomFloat(0.f, (_float)iMax);
 }
 
+_int CMathUtils::RandomInt(_int iMin,_int iMax)
+{
+	return (_uint)RandomFloat((_float)iMin, (_float)iMax);
+}
+

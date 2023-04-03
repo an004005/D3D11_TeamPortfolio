@@ -2,9 +2,10 @@
 #include "..\public\EM1100.h"
 #include <FSMComponent.h>
 #include "JsonStorage.h"
-#include "RigidBody.h"
 #include "EM1100_AnimInstance.h"
 #include "EM1100_Controller.h"
+#include "ImguiUtils.h"
+#include "BulletBuilder.h"
 
 CEM1100::CEM1100(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -15,6 +16,7 @@ CEM1100::CEM1100(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CEM1100::CEM1100(const CEM1100 & rhs)
 	: CEnemy(rhs)
 {
+	m_bSpawnEffect = false;
 }
 
 HRESULT CEM1100::Initialize(void * pArg)
@@ -30,6 +32,9 @@ HRESULT CEM1100::Initialize(void * pArg)
 		m_iMaxHP = 3000;
 		m_iHP = 3000; // ★
 
+		m_iCrushGauge = 8000;
+		m_iMaxCrushGauge = 8000;
+
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
 	}
@@ -38,7 +43,7 @@ HRESULT CEM1100::Initialize(void * pArg)
 
 	m_eEnemyName = EEnemyName::EM1100;
 	m_bHasCrushGauge = true;
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(120.f));
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 
 	m_fGravity = 20.f;
 	return S_OK;
@@ -49,15 +54,6 @@ void CEM1100::SetUpComponents(void * pArg)
 	CEnemy::SetUpComponents(pArg);
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em1100", L"Model", (CComponent**)&m_pModelCom));
 
-	// 범위 충돌체(플레이어가 몬스터 위로 못 올라가게한다.)
-	/*Json FlowerLegRangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegRange.json");*/
-
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeColl"),
-		(CComponent**)&m_pRange, pArg));
-
-	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("HeadColl"),
-		(CComponent**)&m_pHead))
-		
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM1100_Controller::Create();
@@ -96,11 +92,21 @@ void CEM1100::SetUpAnimationEvent()
 	{
 		m_bRush = true;
 		ClearDamagedTarget();
+
+		_float4x4 RushEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+			{ 0.f, 0.f, -3.513f },
+			{ -180.f,  0.f, -180.f },
+			{ 1.f, 1.f, 1.f }
+		);
+ 
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Dash_Attack")
+			->Start_AttachPivot(this, RushEffectPivot, "Target", true, true);
+
 	});
 
 	m_pModelCom->Add_EventCaller("Shot", [this]
 	{
-		//전기볼 생성
+			Create_Bullet();
 	});
 
 	//주먹으로 땅 찍을때 한번만 실행
@@ -108,17 +114,61 @@ void CEM1100::SetUpAnimationEvent()
 	{
 		ClearDamagedTarget();
 		Stamp_Overlap();
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Stamp_Effect")
+			->Start_Attach(this, "RightHand", false);
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Stamp_Smoke_OtherHand")
+			->Start_Attach(this, "RightHand", false);
+
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1100_Stamp_Rock_Particle")
+			->Start_Attach(this, "RightHand", false);
+
 	});
 
-	m_pModelCom->Add_EventCaller("TailSwing_Start", [this]
+	_float4x4 TailSwingEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+		{ 0.f, 0.f, -1.f },
+		{ -180.f,  0.f, 180.f },
+		{ 1.f, 1.f, 1.f }
+	);
+
+	m_pModelCom->Add_EventCaller("TailSwing_First", [this]
 	{
 		ClearDamagedTarget();
 		m_bTailSwing = true;
+
+		_float4x4 TailSwingEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+			{ 0.f, 0.f, -1.f },
+			{ -180.f,  0.f, 180.f },
+			{ 1.f, 1.f, 1.f }
+		);
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Spin_Attack")
+			->Start_AttachPivot(this, TailSwingEffectPivot, "Target", true);
+	});
+
+	m_pModelCom->Add_EventCaller("TailSwing_Second", [this]
+	{
+
+			_float4x4 TailSwingEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ 0.f, 0.f, -1.f },
+				{ -180.f,  0.f, 180.f },
+				{ 1.f, 1.f, 1.f }
+			);
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Spin_Attack")
+				->Start_AttachPivot(this, TailSwingEffectPivot, "Target", true);
 	});
 
 	m_pModelCom->Add_EventCaller("TailSwing_End", [this]
 	{
-		m_bTailSwing = false;;
+		m_bTailSwing = false;
+	});
+
+	m_pModelCom->Add_EventCaller("ElectricBall_Ready", [this]
+	{
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Elec_Bullet_Start")
+			->Start_Attach(this, "Shell1", true);
 	});
 
 	m_pModelCom->Add_EventCaller("DeadFlower", [this]
@@ -153,11 +203,10 @@ void CEM1100::SetUpFSM()
 			.AddTransition("Idle to Death" , "Death")
 				.Predicator([this] { return m_bDead; })
 
-			.AddTransition("Idle to Hit_Mid_Heavy", "Hit_Mid_Heavy")
+			/*.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
 				.Predicator([this] { return
 					m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })*/
 	
 			.AddTransition("Idle to Dodge_Start", "Dodge_Start")
 				.Predicator([this] { return m_eInput == CController::SHIFT; })
@@ -179,19 +228,18 @@ void CEM1100::SetUpFSM()
 			
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-			.AddState("Hit_Mid_Heavy")
+			.AddState("Hit_Heavy")
 				.OnStart([this]
 			{
-				Play_MidHitAnim();
+				//Play_MidHitAnim();
+				Play_LightHitAnim();
 				HeavyAttackPushStart();
 			})
 			.Tick([this](_double TimeDelta)
 			{
 				if (m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
 					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
 				{
-					HeavyAttackPushStart();
 					Play_MidHitAnim();
 				}
 
@@ -203,25 +251,24 @@ void CEM1100::SetUpFSM()
 					//m_pTransformCom->MoveVelocity(TimeDelta, m_vPushVelocity * fPower);
 				}
 			})
-			.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
+			.AddTransition("Hit_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
 					return m_bDead
 						|| m_pASM->isSocketPassby("FullBody", 0.95f)
-						|| m_eCurAttackType == EAttackType::ATK_TO_AIR
 						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
 				})
 		.AddState("Death")
 				.OnStart([this]
 				{
-					m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_474_AL_dead_down02");
+					m_pASM->InputAnimSocketOne("FullBody", "AS_em1100_424_AL_dead_down");
 				})
 
 
 		.AddState("OnFloorGetup")
 			.OnStart([this]
 			{
-				m_pASM->InputAnimSocketMany("FullBody", { "AS_em0700_433_AL_blow_landing_F", "AS_em0700_427_AL_getup" });
+				m_pASM->InputAnimSocketMany("FullBody", { "AS_em1100_426_AL_down", "AS_em1100_427_AL_getup" });
 				m_fGravity = 20.f;
 			})
 			.AddTransition("OnFloorGetup to Idle", "Idle")
@@ -279,32 +326,45 @@ void CEM1100::SetUpFSM()
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_215_AL_atk_a5_drainage_omen");
 			})
-			.Tick([this](_double)
+			.Tick([this](_double TimeDelta)
 			{
 				SocketLocalMove(m_pASM);
-			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
+				m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
 			})
 			.AddTransition("WaterAttack_Omen to WaterAttack_Start", "WaterAttack_Start")
 				.Predicator([this]
 				{
 					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-				})
+					})
 
-		.AddState("WaterAttack_Start")
-				.OnStart([this]
-				{
-					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_215_AL_atk_a5_drainage_start");
-				})
+				.AddState("WaterAttack_Start")
+					.OnStart([this]
+					{
+							m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_215_AL_atk_a5_drainage_start");
+
+							_matrix HydroPumpEffect = CImguiUtils::CreateMatrixFromImGuizmoData(
+								{ 0.f, 2.f, 0.f },
+								{ -180.f, -90.f, 80.f},
+								{ 1.f, 1.f, 1.f }
+							);
+	
+							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Water_Effect")
+								->Start_AttachPivot(this, HydroPumpEffect, "Shell1", true, true);
+
+							_matrix HydroPumpParticle = CImguiUtils::CreateMatrixFromImGuizmoData(
+								{ 0.f, 0.f, 0.f },
+								{ -180.f, -90.f, 15.f },
+								{ 1.f, 1.f, 1.f }
+							);
+
+							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1100_Water_Particle_Cylinder")
+								->Start_AttachPivot(this, HydroPumpParticle, "Shell1", true, true);
+
+					
+					})
 				.Tick([this](_double)
 				{
 					SocketLocalMove(m_pASM);
-				})
-				.OnExit([this]
-				{
-					m_pASM->ClearSocketAnim("FullBody", 0.f);
 				})
 				.AddTransition("WaterAttack_Start to WaterAttack_End", "WaterAttack_End")
 					.Predicator([this]
@@ -316,14 +376,13 @@ void CEM1100::SetUpFSM()
 				.OnStart([this]
 				{
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_215_AL_atk_a5_drainage_end");
+						
+					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1100_Rain_Attack_Particle")
+							->Start_Attach(this, "Eff02", false);
 				})
 				.Tick([this](_double)
 				{
 					SocketLocalMove(m_pASM);
-				})
-				.OnExit([this]
-				{
-					m_pASM->ClearSocketAnim("FullBody", 0.f);
 				})
 				.AddTransition("WaterAttack_End to Idle", "Idle")
 					.Predicator([this]
@@ -341,10 +400,6 @@ void CEM1100::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-			})
 			.AddTransition("ElectricBall_Omen to ElectricBall_Start", "ElectricBall_Start")
 				.Predicator([this]
 			{
@@ -360,10 +415,6 @@ void CEM1100::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-			})
 			.AddTransition("ElectricBall_Start to ElectricBall_End", "ElectricBall_End")
 				.Predicator([this]
 				{
@@ -378,10 +429,6 @@ void CEM1100::SetUpFSM()
 			.Tick([this](_double)
 			{
 				SocketLocalMove(m_pASM);
-			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
 			.AddTransition("ElectricBall_End to Idle", "Idle")
 				.Predicator([this]
@@ -400,10 +447,7 @@ void CEM1100::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-			})
+	
 			.AddTransition("Stamp_Omen to Stamp_Start", "Stamp_Start")
 				.Predicator([this]
 			{
@@ -419,10 +463,7 @@ void CEM1100::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-			})
+
 			.AddTransition("Stamp_Start to Stamp_End", "Stamp_End")
 				.Predicator([this]
 				{
@@ -438,10 +479,7 @@ void CEM1100::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-			})
+	
 			.AddTransition("Stamp_End to Idle", "Idle")
 				.Predicator([this]
 				{
@@ -477,12 +515,11 @@ void CEM1100::SetUpFSM()
 
 				if (m_bRush)
 				{
-					Rush_SweepCapsule();
+					Rush_SweepSphere();
 				}
 			})
 			.OnExit([this]
 			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
 				m_bRush = false;
 			})
 			.AddTransition("Rush_Start to Rush_End", "Rush_End")
@@ -500,10 +537,7 @@ void CEM1100::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-			})
+	
 			.AddTransition("Rush_End to Idle", "Idle")
 				.Predicator([this]
 				{
@@ -547,7 +581,7 @@ void CEM1100::SetUpFSM()
 				.Predicator([this]
 				{
 					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-			})
+				})
 
 
 				///////////////////////////////////////////////////////////////////////////////////////////
@@ -631,6 +665,22 @@ void CEM1100::Imgui_RenderProperty()
 		m_pASM->Imgui_RenderState();
 	}
 	m_pFSM->Imgui_RenderProperty();
+
+	/*static _bool tt = false;
+	ImGui::Checkbox("Modify Pivot", &tt);
+
+	if (tt)
+	{
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+
+		if (ImGui::Button("Create_Effect"))
+		{
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Elec_Bullet_Start")
+				->Start_AttachPivot(this, pivot, "Shell1", true, true);
+		}
+	}*/
 }
 
 _bool CEM1100::IsPlayingSocket() const
@@ -638,13 +688,13 @@ _bool CEM1100::IsPlayingSocket() const
 	return m_pASM->isSocketEmpty("FullBody") == false;
 }
 
-//void CEM1100::Play_LightHitAnim()
-//{
-//	if (m_eSimpleHitFrom == ESimpleAxis::NORTH)
-//		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_401_AL_damage_l_F");
-//	else
-//		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_402_AL_damage_l_B");
-//}
+void CEM1100::Play_LightHitAnim()
+{
+	if (m_eSimpleHitFrom == ESimpleAxis::NORTH)
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_401_AL_damage_l_F");
+	else
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_402_AL_damage_l_B");
+}
 
 void CEM1100::Play_MidHitAnim()
 {
@@ -682,47 +732,62 @@ void CEM1100::HeavyAttackPushStart()
 	}
 }
 
-_bool CEM1100::IsTargetFront()
+void CEM1100::Create_Bullet()
 {
-	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	DAMAGE_PARAM eDamageParam;
 
-	_float fAngle = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyLook), XMVector3Normalize(vTargetPos - vMyPos)));
+	//TODO : 상태이상 정리되면 감전상태로 변경
 
-	//0~ 90도 사이(정면)
-	if (fAngle > 0)
-		return true;
-	else
-		return false;
+	eDamageParam.eAttackType = EAttackType::ATK_MIDDLE;
+	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+	eDamageParam.iDamage = 100;
+
+	_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Shell1") * m_pTransformCom->Get_WorldMatrix();
+	_vector vPrePos = BoneMtx.r[3];
+
+	CBulletBuilder()
+		.CreateBullet()
+			.Set_Owner(this)
+			.Set_Target(m_pTarget)
+			.Set_InitBulletEffect({ L"em1100_Elec_Bullet_Loop" })
+			.Set_InitBulletParticle(L"em1100_Elec_Bullet_Particle")
+			.Set_ShootSpeed(8.f)
+			.Set_Life(7.f)
+			.Set_DamageParam(eDamageParam)
+			.Set_DeadBulletEffect({ L"em1100_Elec_Bullet_Dead" })
+			.Set_DeadBulletParticle(L"em1100_Elec_Bullet_Dead_Particle")
+			.Set_Position(vPrePos)
+		.Build();
+
 
 }
 
-void CEM1100::Rush_SweepCapsule()
+void CEM1100::Rush_SweepSphere()
 {
-	_float4x4 HeadMatrix = m_pHead->GetPxWorldMatrix();
-	_float4 vHeadPos = _float4{ HeadMatrix.m[3][0], HeadMatrix.m[3][1], HeadMatrix.m[3][2], HeadMatrix.m[3][3] };
-
 	physx::PxSweepHit hitBuffer[3];
 	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
 
-	PxCapsuleSweepParams tParams;
-	tParams.sweepOut = &sweepOut;
-	tParams.CapsuleGeo = m_pHead->Get_CapsuleGeometry();
-	tParams.pxTransform = m_pHead->Get_PxTransform();
+	//Tail4가 꼬리 중앙에 있음
+	_float4x4 BoneMatrix = GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
+	_float4 vBonePos = _float4{ BoneMatrix.m[3][0], BoneMatrix.m[3][1], BoneMatrix.m[3][2], 1.f };
 
-	_float4	vDir = vHeadPos - m_BeforePos;
-	tParams.vUnitDir = _float3(vDir.x, vDir.y, vDir.z);
-	tParams.fDistance = tParams.vUnitDir.Length();
-	tParams.iTargetType = CTB_PLAYER;
+	_vector	vDir = vBonePos - m_BeforePos;
+
+	SphereSweepParams tParams;
 	tParams.fVisibleTime = 0.2f;
+	tParams.iTargetType = CTB_PLAYER;
+	tParams.fRadius = 3.f;
+	tParams.fDistance = XMVectorGetX(XMVector4LengthEst(vDir));
+	tParams.vPos = vBonePos;
+	tParams.sweepOut = &sweepOut;
+	tParams.vUnitDir = vDir;
 
-	if (CGameInstance::GetInstance()->PxSweepCapsule(tParams))
+	if (CGameInstance::GetInstance()->SweepSphere(tParams))
 	{
 		HitTargets(sweepOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_TO_AIR);
 	}
 
-	m_BeforePos = vHeadPos;
+	m_BeforePos = vBonePos;
 }
 
 void CEM1100::TailSwing_SweepSphere()
@@ -779,16 +844,14 @@ void CEM1100::Stamp_Overlap()
 void CEM1100::Dodge_VelocityCalc()
 {
 	m_bDodge = true;
-	m_fGravity = 100.f;
+	m_fGravity = 80.f;
 	m_fYSpeed = 10.f;
 
 	const _float fJumpMoveTime = (2 * m_fYSpeed) / m_fGravity;
 
 	const _float fDistance = 8.f;
-	const _vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-
-	const _float fYaw = m_pTransformCom->GetYaw_Radian();
-	m_vOnJumpMoveVelocity = XMVector3TransformNormal(XMVector3Normalize(vDirection) * (fDistance / fJumpMoveTime), XMMatrixRotationY(fYaw));
+	const _vector vDirection =  m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 2.f;
+	m_vOnJumpMoveVelocity = XMVector3Normalize(vDirection) * (fDistance / fJumpMoveTime);
 }
 
 void CEM1100::AfterLocal180Turn()
@@ -829,6 +892,4 @@ void CEM1100::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-	Safe_Release(m_pRange);
-	Safe_Release(m_pHead);
 }

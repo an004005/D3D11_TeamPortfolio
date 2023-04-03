@@ -39,7 +39,13 @@ void CBullet::Tick(_double TimeDelta)
 
 	m_BeforePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
-	m_pTransformCom->Go_Straight(TimeDelta);
+	if (m_pTarget != nullptr) //ÃßÀû
+	{
+		_matrix TargetWorldMatrix = m_pTarget->GetBoneMatrix("Waist") * m_pTarget->GetTransform()->Get_WorldMatrix();
+		m_pTransformCom->Chase(TargetWorldMatrix.r[3], TimeDelta);
+	}
+	else
+		m_pTransformCom->Go_Straight(TimeDelta);
 
 	DAMAGE_PARAM	dParams;
 	dParams.eAttackType = m_eDamageParam.eAttackType;

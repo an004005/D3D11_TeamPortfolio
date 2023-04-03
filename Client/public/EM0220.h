@@ -2,6 +2,10 @@
 #include "Enemy.h"
 #include "Controller.h"
 
+BEGIN(Engine)
+class CRigidBody;
+class CMaterial;
+END
 
 BEGIN(Client)
 
@@ -27,7 +31,9 @@ public:
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
+	virtual _bool IsWeak(CRigidBody* pHitPart);
 
+	virtual void HitEffect(DAMAGE_PARAM& tDamageParams);
 	virtual void CheckHP(DAMAGE_PARAM& tDamageParams);
 	void	SetUp_Lantern();
 public:
@@ -43,14 +49,14 @@ private:
 	void Update_LanternMatrix();
 	void CounterAttack(_double TimeDelta);
 	void Create_Bullet();
-
+	void HitWeakProcess(_double TimeDelta);
 private:
 	//충돌 관련 함수 정의
 
 private:
 	class CEM0220_Controller*		m_pController = nullptr;
 	class CEM0220_AnimInstance*		m_pASM = nullptr;
-
+	CMaterial* m_pWeak = nullptr;
 	//충돌
 	CEffectGroup*				m_pSwingEffect = nullptr;
 
@@ -66,15 +72,17 @@ private:
 	_bool		m_bAttack = false;
 	_double		m_dFallCount = 0.0;
 	_uint		m_iFallIndex = 0;
+	_bool	m_bWeakProcess = false;
 
-
+	//총알 3번쏠때마다 한번씩 LIGHT로 처리
+	_uint			m_iShotCount = 0;
 	//무적상태
 	_bool		m_Unbeatable = false;
 
 	//플레이어  순간이동 상태 확인
 	//_bool		m_bTeleport = false;
 
-	CController::EHandleInput	m_eInput;
+	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 	
 public:
 	static CEM0220* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

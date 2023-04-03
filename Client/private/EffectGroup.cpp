@@ -12,6 +12,7 @@
 #include "ScarletWeapon.h"
 #include "PhysX_Manager.h"
 #include "Enemy.h"
+#include "TrailSystem.h"
 
 CEffectGroup::CEffectGroup(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -234,6 +235,8 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 		m_Timeline.SetTimelineLength(3.0);
 		m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
 	}
+
+	Call_Event();
 
 	return S_OK;
 }
@@ -501,9 +504,21 @@ void CEffectGroup::Start_AttachPosition_Scale(CGameObject* pOwner, _float4 vPosi
 
 }
 
+void CEffectGroup::Call_Event()
+{
+	m_Timeline.SetEventFunction([this](const string& eventName)
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PS_MONSTER, s2ws(eventName))->Start_NoOwnerOnlyPos(m_vEFGroupPos);
+		});
+}
+
 void CEffectGroup::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
+
+	if(m_pFirst_EffectSystem != nullptr && m_pFirst_EffectSystem->GetTransform() != nullptr)
+		m_vEFGroupPos = m_pFirst_EffectSystem->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+
 	if (m_pFirst_EffectSystem)
 		m_pFirst_EffectSystem->GetShader()->Tick(TimeDelta);
 	if (m_pSecond_EffectSystem)
@@ -1040,6 +1055,8 @@ void CEffectGroup::SaveToJson(Json& json)
 	else
 		json["Fifth_Directory"] = "";
 
+	m_Timeline.SaveToJson(json["TimelineEvent"]);
+
 	if(m_iSelectFinishFunc >= FUNC_PLAYFROMSTART && m_iSelectFinishFunc < FUNC_END )
 		json["Finish_Function"] = m_iSelectFinishFunc;
 	else
@@ -1109,6 +1126,9 @@ void CEffectGroup::LoadFromJson(const Json& json)
 			SetDelete();
 		});
 	}
+
+	if (json.contains("TimelineEvent"))
+		m_Timeline.LoadFromJson(json["TimelineEvent"]);
 }
 
 inline void CEffectGroup::LoadAndSetCurve_First(Json* json)

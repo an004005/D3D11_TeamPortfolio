@@ -65,6 +65,8 @@ public:
 	void		Start_AttachPivotMove(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _float4 vDirection, _bool usepivot = false, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
 	void		Start_AttachPosition_Scale(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _float4 vScale, _bool trueisUpdate = false);
 
+	void		Call_Event();
+
 public:
 	// For Graph
 	// void Tick_Scale_All( _float fValue);
@@ -101,6 +103,7 @@ protected:
 	void AddEmptyCurve_ForFifth(string strCurveName);
 
 	void Add_TargetCurve(_uint iSelectEffect, string strTargetCurveName);
+
 protected:
 	CRenderer* m_pRendererCom = nullptr;
 
@@ -115,6 +118,9 @@ protected:
 
 	cmap<cmap<CCurveFloatImpl*>> m_mapEffectCurves; // 파일경로와 이펙트 커브를 보관한다. 
 
+
+private:
+	_float4 m_vEFGroupPos = { 0.f,0.f,0.f,0.f };
 
 private:
 	string		m_First_EffectDirectory = "";
