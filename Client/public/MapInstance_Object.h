@@ -48,6 +48,7 @@ private:
 	_float4x4				m_WorldMatrix;
 
 	_uint					m_iComNum = 0;
+
 public:
 	static CMapInstance_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr) override;

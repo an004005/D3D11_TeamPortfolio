@@ -1,32 +1,6 @@
 {
     "MapObjects": [
         {
-            "ModelTag": "../Bin/Resources/Model/StaticModel/MapStaicModels/Default/ceilingMeshTest.static_model\u0000",
-            "ObjectTag": "",
-            "PhysX_Check": true,
-            "Prototype_GameObject": "Prototype_GameObject_MapNonAnim_Object\u0000",
-            "Transform": {
-                "WorldMatrix": [
-                    5000.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    5000.0,
-                    0.0,
-                    2500.0,
-                    -50.0,
-                    -2500.0,
-                    1.0
-                ]
-            }
-        },
-        {
             "InstanceInfo": {
                 "WorldMatrix": [
                     [

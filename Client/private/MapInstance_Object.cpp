@@ -183,7 +183,7 @@ void CMapInstance_Object::Imgui_RenderProperty()
 	ImGui::EndChild();
 
 	if(m_iIndex >= 0)
-		m_pModel_InstancingCom->Modify_Matrix(m_iIndex, m_WorldMatrix);
+		m_pModel_InstancingCom->Modify_Matrix(m_iIndex, m_WorldMatrix);	
 }
 
 const CPhysXStaticModel * CMapInstance_Object::Find_PhysXStaticModel(CPhysXStaticModel * pPhsXSM)

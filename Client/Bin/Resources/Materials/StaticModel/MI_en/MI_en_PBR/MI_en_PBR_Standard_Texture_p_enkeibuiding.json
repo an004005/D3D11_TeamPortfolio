@@ -9,7 +9,8 @@
         "Float4x4s" : [],
         "Textures" : [
             "../Bin/Resources/Environments/Prop/03_Texture/T_lo051_en001_projecbuil.png",
-            "../Bin/Resources/Environments/Prop/03_Texture/T_lo051_en001_projecbuil_NML.png"
+            "../Bin/Resources/Environments/Prop/03_Texture/T_lo051_en001_projecbuil_NML.png",
+            ""
         ],
         "Pass" : 1
     },

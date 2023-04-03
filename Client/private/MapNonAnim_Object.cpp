@@ -27,7 +27,8 @@ HRESULT CMapNonAnim_Object::Initialize(void * pArg)
 
 	FAILED_CHECK(SetUp_Components());
 
-	m_pPxModel->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
+	if(m_pPxModel != nullptr)
+		m_pPxModel->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
 
 	if (pArg)
 	{
@@ -77,20 +78,30 @@ void CMapNonAnim_Object::LoadFromJson(const Json & json)
 {
 	__super::LoadFromJson(json);
 	m_strModelTag = s2ws(json["ModelTag"]);
+		// json에 ("")값이 있을때만 불러온다.
+	if(json.contains("PhysX_Check"))
+		m_bApplyPhsX = json["PhysX_Check"];
 }
 
 void CMapNonAnim_Object::SaveToJson(Json & json)
 {
 	__super::SaveToJson(json);
 	json["ModelTag"] = ws2s(m_strModelTag);
+
+	json["PhysX_Check"] = m_bApplyPhsX;
 }
 
 
 void CMapNonAnim_Object::Imgui_RenderProperty()
 {
-
+	__super::Imgui_RenderProperty();
 	// imgui를 켰을 때만 위치 수정가능
-	m_pPxModel->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
+
+	if(m_pPxModel != nullptr)
+		m_pPxModel->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix());
+
+	ImGui::Checkbox("PhysX On/Off(Default : On)", &m_bApplyPhsX); // 기본 false이므로 누르면 true가 되서 PhysX 해제
+	
 }
 
 wstring CMapNonAnim_Object::MakePxModelProtoTag()
@@ -115,19 +126,22 @@ HRESULT CMapNonAnim_Object::SetUp_Components()
 {
 	/* For.Com_Model */
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_strModelTag.c_str(), TEXT("Com_Model"),
-		(CComponent**)&m_pModelCom));
+		(CComponent**)&m_pModelCom));			
 
-	const wstring PxModelTag = MakePxModelProtoTag();
-	if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_NOW, PxModelTag.c_str()))
-	{
-		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_NOW,
-			PxModelTag.c_str(), CPhysXStaticModel::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str())));
-	}
+	//if (!m_bApplyPhsX)
+	//{
+	//	const wstring PxModelTag = MakePxModelProtoTag();
 
-	// todo : 임시로 모든 CMapNonAnim_Object 에 PxModel을 가지도록 설정 추후 수정 바람
-	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, PxModelTag.c_str(), TEXT("Com_PxModel"),
-		(CComponent**)&m_pPxModel));
-
+	//	if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_NOW, PxModelTag.c_str()))
+	//	{
+	//		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_NOW,
+	//			PxModelTag.c_str(), CPhysXStaticModel::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str())));
+	//	}
+	//	// todo : 임시로 모든 CMapNonAnim_Object 에 PxModel을 가지도록 설정 추후 수정 바람
+	//	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, PxModelTag.c_str(), TEXT("Com_PxModel"),
+	//		(CComponent**)&m_pPxModel));
+	//}	
+	
 	return S_OK;
 }
 

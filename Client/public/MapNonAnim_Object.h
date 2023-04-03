@@ -35,6 +35,9 @@ private:
 	CPhysXStaticModel* m_pPxModel = nullptr;
 	CModel*					m_pModelCom = nullptr;
 
+private:
+	_bool				m_bApplyPhsX = false;
+
 public:
 	static CMapNonAnim_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr) override;

@@ -8,9 +8,9 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Environments/Location/LC56/props/T_pr_Town_F_buil_win1_ALB.png",
-            "../Bin/Resources/Environments/Location/LC56/props/T_pr_Town_F_buil_win1_NML.png",
-            "../Bin/Resources/Environments/Location/LC56/props/T_pr_Town_F_buil_win1_RMA.png"
+            "",
+            "",
+            ""
         ],
         "Pass" : 1
     },
