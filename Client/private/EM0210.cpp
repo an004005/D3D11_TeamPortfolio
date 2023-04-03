@@ -20,6 +20,7 @@ CEM0210::CEM0210(const CEM0210 & rhs)
 	: CEnemy(rhs)
 {
 	m_SpawnEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData({0.f, 1.143f, 1.3f}, {0.f, 0.f, 0.f}, {0.7f,0.8f,0.7f});
+	m_fSpawnDistortionDistancePivot = 0.5f;
 }
 
 HRESULT CEM0210::Initialize(void * pArg)

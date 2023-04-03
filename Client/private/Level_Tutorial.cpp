@@ -16,6 +16,7 @@
 #include "Imgui_PhysX.h"
 #include "SkyBox.h"
 #include "GameManager_Tutorial.h"
+#include "UI_Manager.h"
 
 #define ADD_PLAYER
 
@@ -39,6 +40,7 @@ HRESULT CLevel_Tutorial::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
 
+	CUI_Manager::GetInstance()->Clear();
 	CGameInstance::GetInstance()->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
 
 	if (FAILED(Ready_Prototypes()))

@@ -17,6 +17,7 @@ CEM0750::CEM0750(const CEM0750 & rhs)
 	: CEnemy(rhs)
 {
 	m_SpawnEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData({0.f, 2.3f, 0.f}, {0.f, 0.f, 0.f}, {0.65f,0.65f,0.65f});
+	m_fSpawnDistortionDistancePivot = 0.5f;
 }
 
 HRESULT CEM0750::Initialize(void * pArg)

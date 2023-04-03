@@ -110,6 +110,7 @@ protected:
 
 private:
 	void Update_UIInfo();
+	void CreateSpawnEffect();
 	
 protected:
 	static vector<wstring>			s_vecDefaultBlood;
@@ -183,6 +184,7 @@ protected:
 
 	_bool m_bSpawnEffect = true;
 	_float4x4 m_SpawnEffectPivot;
+	_float m_fSpawnDistortionDistancePivot = 0.f;
 
 public:
 	virtual void Free() override;

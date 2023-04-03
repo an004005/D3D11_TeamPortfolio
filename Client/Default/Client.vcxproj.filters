@@ -1245,7 +1245,6 @@
     <ClInclude Include="..\public\BulletBuilder.h">
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Level_ConstructionSite3F.h" />
     <ClInclude Include="..\public\PlayerInfoManager.h">
       <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
     </ClInclude>
@@ -1265,6 +1264,12 @@
     <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
     <ClInclude Include="..\public\GameManager_Tutorial.h">
       <Filter>30. GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_ConstructionSite3F.h">
+      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_StageDefault.h">
+      <Filter>01.Levels\02.GamePlay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2079,7 +2084,6 @@
     <ClCompile Include="..\private\BulletBuilder.cpp">
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Level_ConstructionSite3F.cpp" />
     <ClCompile Include="..\private\PlayerInfoManager.cpp">
       <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
     </ClCompile>
@@ -2099,6 +2103,12 @@
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
     <ClCompile Include="..\private\GameManager_Tutorial.cpp">
       <Filter>30. GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_ConstructionSite3F.cpp">
+      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_StageDefault.cpp">
+      <Filter>01.Levels\02.GamePlay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

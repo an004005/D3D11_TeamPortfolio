@@ -116,14 +116,8 @@ HRESULT CEnemy::Initialize(void* pArg)
 void CEnemy::BeginTick()
 {
 	CScarletCharacter::BeginTick();
-
 	if (m_bSpawnEffect)
-	{
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Enemy_Spawn_A")
-			->Start_NoAttachPivot(this, m_SpawnEffectPivot, false, false);
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Enemy_Spawn_B")
-			->Start_NoAttachPivot(this, m_SpawnEffectPivot, false, false);
-	}
+		CreateSpawnEffect();
 }
 
 void CEnemy::Tick(_double TimeDelta)
@@ -164,17 +158,13 @@ void CEnemy::Imgui_RenderProperty()
 	{
 		if (ImGui::Button("SpawnEffect"))
 		{
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Enemy_Spawn_A")
-				->Start_NoAttachPivot(this, m_SpawnEffectPivot, false, false);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Enemy_Spawn_B")
-				->Start_NoAttachPivot(this, m_SpawnEffectPivot, false, false);
+			CreateSpawnEffect();
 		}
 
+		ImGui::InputFloat("SpawnDistance", &m_fSpawnDistortionDistancePivot);
 		static GUIZMO_INFO tInfo;
 		CImguiUtils::Render_Guizmo(&m_SpawnEffectPivot, tInfo, true, true);
 	}
-
-
 
 	ImGui::Checkbox("Use TestTarget", &m_bFindTestTarget);
 
@@ -346,6 +336,23 @@ void CEnemy::Update_UIInfo()
 		m_pShieldUI->SetShild(m_iHP / (_float)m_iMaxHP, m_iCrushGauge / (_float)m_iMaxCrushGauge);
 	else if (m_pHPUI != nullptr)
 		m_pHPUI->Set_HpRatio(m_iHP / (_float)m_iMaxHP);
+}
+
+void CEnemy::CreateSpawnEffect()
+{
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Enemy_Spawn_A")
+		->Start_NoAttachPivot(this, m_SpawnEffectPivot, false, false);
+
+	_matrix	SocketMatrix = m_SpawnEffectPivot * m_pTransformCom->Get_WorldMatrix();
+	_vector vCamPos = CGameInstance::GetInstance()->Get_CamPosition();
+	_vector vToCam = XMVector3NormalizeEst(vCamPos - SocketMatrix.r[3]) * m_fSpawnDistortionDistancePivot;
+	vToCam = XMVectorSetW(vToCam, 0.f);
+	SocketMatrix.r[3] += vToCam;
+
+	_matrix DistortionPivotMatrix = SocketMatrix * m_pTransformCom->Get_WorldMatrix_Inverse();
+
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Enemy_Spawn_B")
+		->Start_NoAttachPivot(this, DistortionPivotMatrix, false, false);
 }
 
 _bool CEnemy::IsTargetFront(_float fAngle)

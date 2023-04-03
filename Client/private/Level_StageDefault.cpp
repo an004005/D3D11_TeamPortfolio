@@ -1,31 +1,28 @@
 #include "stdafx.h"
-#include "..\public\Level_ConstructionSite3F.h"
+#include "Level_StageDefault.h"
+#include <Imgui_AnimModifier.h>
+#include <Imgui_CameraManager.h>
+#include <Imgui_PostProcess.h>
 #include "GameInstance.h"
 #include "JsonStorage.h"
 #include "Imgui_PropertyEditor.h"
 #include "Imgui_LevelSwitcher.h"
 #include "FactoryMethod.h"
-#include <Imgui_AnimModifier.h>
-#include <Imgui_CameraManager.h>
-#include <Imgui_PostProcess.h>
 #include "Imgui_Batch.h"
 #include "Imgui_CurveManager.h"
 #include "Imgui_PhysX.h"
 #include "SkyBox.h"
-#include "GameManager_Tutorial.h"
 #include "UI_Manager.h"
+#include "GameManager.h"
 
-#define ADD_PLAYER
-
-CLevel_ConstructionSite3F::CLevel_ConstructionSite3F(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLevel_StageDefault::CLevel_StageDefault(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CLevel(pDevice, pContext)
 {
 }
 
-HRESULT CLevel_ConstructionSite3F::Initialize()
+HRESULT CLevel_StageDefault::Initialize()
 {
-	if (FAILED(__super::Initialize()))
-		return E_FAIL;
+	FAILED_CHECK(CLevel::Initialize());
 
 	CGameInstance::GetInstance()->Clear_ImguiObjects();
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LevelSwitcher::Create(m_pDevice, m_pContext));
@@ -49,10 +46,8 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 	if (FAILED(Ready_Layer_Camera(PLAYERTEST_LAYER_CAMERA)))
 		return E_FAIL;
 
-#ifdef ADD_PLAYER
 	if (FAILED(Ready_Layer_Player(PLATERTEST_LAYER_PLAYER)))
 		return E_FAIL;
-#endif
 
 	if (FAILED(Ready_Layer_UI(PLAYERTEST_LAYER_FRONTUI)))
 		return E_FAIL;
@@ -63,53 +58,45 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 	if (FAILED(Ready_Layer_Effect(PLAYERTEST_LAYER_POSTVFX)))
 		return E_FAIL;
 
-	Ready_Layer_SASPortrait();
+	if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;
 
-	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Boss_HBeams.json");
-	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Monster_PlayerStart.json");
+	if (FAILED(Ready_Layer_SASPortrait(LAYER_SAS)))
+		return E_FAIL;
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
+
+	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam.json";
+	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Tutorial.json";
 
 	return S_OK;
 }
 
-void CLevel_ConstructionSite3F::Tick(_double TimeDelta)
+HRESULT CLevel_StageDefault::Render()
 {
-	CLevel::Tick(TimeDelta);
+	const wstring strLevel = L"Level : " + m_strLevelName;
+	SetWindowText(g_hWnd, strLevel.c_str());
+	return S_OK;
 }
 
-void CLevel_ConstructionSite3F::Late_Tick(_double TimeDelta)
+HRESULT CLevel_StageDefault::Ready_Prototypes()
 {
-	CLevel::Late_Tick(TimeDelta);
-}
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-HRESULT CLevel_ConstructionSite3F::Render()
-{
-	SetWindowText(g_hWnd, TEXT("Level : Stage1"));
-
-	return CLevel::Render();
-}
-
-HRESULT CLevel_ConstructionSite3F::Ready_Prototypes()
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-#ifdef ADD_PLAYER
 	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
-#endif
-
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeTriggerPrototypes(m_pDevice, m_pContext));
 
-	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
-
+	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Prototype_GameObject_SkyBox") == nullptr)
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
 	return S_OK;
 }
 
-HRESULT CLevel_ConstructionSite3F::Ready_Lights()
+HRESULT CLevel_StageDefault::Ready_Lights()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
@@ -125,24 +112,23 @@ HRESULT CLevel_ConstructionSite3F::Ready_Lights()
 
 	NULL_CHECK(pGameInstance->Add_Light("DirectionalLight", m_pDevice, m_pContext, LightDesc));
 
-
 	return S_OK;
 }
 
-HRESULT CLevel_ConstructionSite3F::Ready_Layer_Camera(const _tchar* pLayerTag)
+HRESULT CLevel_StageDefault::Ready_Layer_Camera(const _tchar* pLayerTag)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/ShadowCam/ConstructionSite3F_ShadowCam.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(m_strShadowCamJsonPath);
 	CGameInstance::GetInstance()->Add_Camera("ShadowCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic", &json);
 	CGameInstance::GetInstance()->SetShadowCam(CGameInstance::GetInstance()->FindCamera("ShadowCamera"));
 
 	return S_OK;
 }
 
-HRESULT CLevel_ConstructionSite3F::Ready_Layer_Player(const _tchar* pLayerTag)
+HRESULT CLevel_StageDefault::Ready_Layer_Player(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
@@ -152,13 +138,12 @@ HRESULT CLevel_ConstructionSite3F::Ready_Layer_Player(const _tchar* pLayerTag)
 
 	CGameObject* pPlayer = nullptr;
 	NULL_CHECK(pPlayer = pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Player"), &PreviewData));
-
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("CamSpot"), pPlayer));
 
 	return S_OK;
 }
 
-HRESULT CLevel_ConstructionSite3F::Ready_Layer_UI(const _tchar* pLayerTag)
+HRESULT CLevel_StageDefault::Ready_Layer_UI(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
@@ -201,7 +186,7 @@ HRESULT CLevel_ConstructionSite3F::Ready_Layer_UI(const _tchar* pLayerTag)
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Alarm", &json));
-
+	
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Main.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Main", &json));
 
@@ -211,22 +196,21 @@ HRESULT CLevel_ConstructionSite3F::Ready_Layer_UI(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_ConstructionSite3F::Ready_Layer_Map(const _tchar* pLayerTag)
+HRESULT CLevel_StageDefault::Ready_Layer_Map(const _tchar* pLayerTag)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
-
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
-
+	
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(m_strMapJsonPath);
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
 	return S_OK;
 }
 
-HRESULT CLevel_ConstructionSite3F::Ready_Layer_Effect(const _tchar* pLayerTag)
+HRESULT CLevel_StageDefault::Ready_Layer_Effect(const _tchar* pLayerTag)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	Json ColorGrading = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/ColorGrading.json");
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"Prototype_PostVFX_ColorGrading", &ColorGrading);
@@ -240,27 +224,15 @@ HRESULT CLevel_ConstructionSite3F::Ready_Layer_Effect(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_ConstructionSite3F::Ready_Layer_SASPortrait()
+HRESULT CLevel_StageDefault::Ready_Layer_SASPortrait(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	pGameInstance->Clone_GameObject(LAYER_SAS, L"Prototype_SASPortrait");
+	pGameInstance->Clone_GameObject(pLayerTag, L"Prototype_SASPortrait");
 
 	return S_OK;
 }
 
-CLevel_ConstructionSite3F* CLevel_ConstructionSite3F::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+HRESULT CLevel_StageDefault::Ready_Layer_AI(const _tchar* pLayerTag)
 {
-	CLevel_ConstructionSite3F*		pInstance = new CLevel_ConstructionSite3F(pDevice, pContext);
-
-	if (FAILED(pInstance->Initialize()))
-	{
-		MSG_BOX("Failed to Created : CLevel_ConstructionSite3F");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-void CLevel_ConstructionSite3F::Free()
-{
-	CLevel::Free();
+	return S_OK;
 }
