@@ -44,6 +44,8 @@ typedef struct tagPlayerStatus
 	_uint iBP = { 0 };
 	_uint iCoin = { 0 };
 
+	_bool bBattle = false;
+
 	_float m_fBaseAttackDamage;
 
 	ESASType m_eAttack_SAS_Type;
@@ -108,7 +110,9 @@ public:
 	void	Tick(_double TimeDelta);	// 실시간으로 타겟 정보를 갱신하기 위함
 
 public:	// Get
-	PLAYER_STAT&	Get_PlayerStat() { return m_tPlayerStat; }
+	PLAYER_STAT&	Get_PlayerStat() { 
+		return m_tPlayerStat;
+	}
 	list<ESASType>	Get_PlayerSasList() const { return m_PlayerSasTypeList; }
 	_bool			Get_isSasUsing(ESASType eType);
 	CGameObject*	Get_KineticObject();
@@ -132,6 +136,8 @@ public:	// Set
 	void			Finish_SasType(ESASType eType);
 
 	void			Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasType, _float iChangeEnergy);
+
+	void			Set_BattleState(_bool bBattle) { m_tPlayerStat.bBattle = bBattle; }
 
 	void			Set_PlayerWorldMatrix(_fmatrix worldmatrix);
 

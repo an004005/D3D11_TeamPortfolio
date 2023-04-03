@@ -21,7 +21,7 @@ CParticleSystem::CParticleSystem(const CParticleSystem& rhs)
 	: CGameObject(rhs)
 {
 	m_ModelProtoTag = "";
-	m_iInstanceNum = 1000;
+	m_iInstanceNum = 30000;
 }
 
 _int CParticleSystem::GetLiveParticleCnt()

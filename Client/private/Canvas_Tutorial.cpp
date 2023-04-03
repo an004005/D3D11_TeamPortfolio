@@ -88,7 +88,7 @@ void CCanvas_Tutorial::SaveToJson(Json& json)
 	CCanvas::SaveToJson(json);
 }
 
-void CCanvas_Tutorial::LoadFromJson(const Json & json)
+void CCanvas_Tutorial::LoadFromJson(const Json& json)
 {
 	CCanvas::LoadFromJson(json);
 }
@@ -128,7 +128,7 @@ void CCanvas_Tutorial::Tutorial_Tick()
 	Tutorial(m_eTutorial, szTag);
 }
 
-void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChildTag)
+void CCanvas_Tutorial::Tutorial(const TUTORIAL& eTUTORIAL, const _tchar* pChildTag)
 {
 	// 외부에서 m_arrTutorial[튜토리얼 타입] 을 true 로 변경하면 실행된다.
 	if (false == m_arrTutorial[eTUTORIAL])
@@ -147,13 +147,13 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 		m_bTutorialOpen = true;
 		dynamic_cast<CTutorialUI*>(Find_ChildUI(pChildTag))->Set_OnTutorial();
 
-		if(FIGHTINGSTYLE == eTUTORIAL)
+		if (FIGHTINGSTYLE == eTUTORIAL)
 			dynamic_cast<CTutorialUI*>(Find_ChildUI(L"Tutorial2"))->Set_OnTutorial();
 
 		return;
 	}
 
-	vector<wstring> except { PLAYERTEST_LAYER_FRONTUI };
+	vector<wstring> except{ PLAYERTEST_LAYER_FRONTUI };
 	CGameInstance::GetInstance()->SetTimeRatio(0.0f, &except);
 
 	if (FIGHTINGSTYLE == eTUTORIAL)
@@ -174,7 +174,7 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 
 			_bool	bInvisblePush = dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_InvisibleBox"))->Get_Invisible();
 
-			if(CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
+			if (CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
 				m_bEnter = !m_bEnter;
 
 			if (true == bInvisblePush || true == m_bEnter)
@@ -232,7 +232,7 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL & eTUTORIAL, const _tchar * pChil
 			Find_ChildUI(L"Tutorial_NoBox")->SetVisible(false);
 			Find_ChildUI(L"Tutorial_Icon0")->SetVisible(false);
 			Find_ChildUI(L"Tutorial_Icon1")->SetVisible(false);
-			Find_ChildUI(L"Tutorial_Icon2")->SetVisible(false); 
+			Find_ChildUI(L"Tutorial_Icon2")->SetVisible(false);
 		}
 
 		if (true == dynamic_cast<CTutorial_CheckUI*>(Find_ChildUI(L"Tutorial_Check0"))->Get_End())
@@ -310,7 +310,7 @@ void CCanvas_Tutorial::Check_Tick()
 		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_OneTwoAlpha();
 	}
 
-		if (true == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Get_AlphaEnd())
+	if (true == dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Get_AlphaEnd())
 	{
 		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon1"))->Set_OneReset();
 		dynamic_cast<CTutorial_YesNoUI*>(Find_ChildUI(L"Tutorial_Icon2"))->Set_TwoReset();
@@ -340,7 +340,7 @@ void CCanvas_Tutorial::KeyInput_Yes()
 	{
 		m_iNoCount = 0;
 		m_bYesPush = true;
-		
+
 		++m_iYesCount;
 		if (2 == m_iYesCount)
 		{
@@ -395,7 +395,7 @@ void CCanvas_Tutorial::KeyInput_No()
 	}
 }
 
-void CCanvas_Tutorial::Tips_Tick(const _double & TimeDelta)
+void CCanvas_Tutorial::Tips_Tick(const _double& TimeDelta)
 {
 	if (TIPS_END == m_eTips)
 		return;
@@ -445,7 +445,7 @@ void CCanvas_Tutorial::Tips_Tick(const _double & TimeDelta)
 	Tips(m_eTips, szTag, TimeDelta);
 }
 
-void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag, const _double & TimeDelta)
+void CCanvas_Tutorial::Tips(const TIPS& eTIPS, const _tchar* pChildTag, const _double& TimeDelta)
 {
 	if (nullptr == Find_ChildUI(pChildTag))
 		return;
@@ -550,7 +550,7 @@ void CCanvas_Tutorial::Tips(const TIPS & eTIPS, const _tchar * pChildTag, const 
 	}
 }
 
-void CCanvas_Tutorial::Success_Tick(const _double & TimeDelta)
+void CCanvas_Tutorial::Success_Tick(const _double& TimeDelta)
 {
 	if (false == m_bSuccess || m_eTutorial == ADDPSYCHOKINESISATTACK)
 		return;
@@ -567,9 +567,9 @@ void CCanvas_Tutorial::Success_Tick(const _double & TimeDelta)
 	}
 }
 
-CCanvas_Tutorial * CCanvas_Tutorial::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CCanvas_Tutorial* CCanvas_Tutorial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CCanvas_Tutorial*		pInstance = new CCanvas_Tutorial(pDevice, pContext);
+	CCanvas_Tutorial* pInstance = new CCanvas_Tutorial(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -579,9 +579,9 @@ CCanvas_Tutorial * CCanvas_Tutorial::Create(ID3D11Device * pDevice, ID3D11Device
 	return pInstance;
 }
 
-CCanvas * CCanvas_Tutorial::Clone(void * pArg)
+CCanvas* CCanvas_Tutorial::Clone(void* pArg)
 {
-	CCanvas_Tutorial*		pInstance = new CCanvas_Tutorial(*this);
+	CCanvas_Tutorial* pInstance = new CCanvas_Tutorial(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

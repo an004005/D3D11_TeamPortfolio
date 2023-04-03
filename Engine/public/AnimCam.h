@@ -99,6 +99,9 @@ public:
 	void AddEvent(const string& strEventName, const function<void()>& Callback);
 	list<string>& GetRequestedEvents() { return m_RequestedEvents; }
 
+	void StartCamAnim_Return_Update(CCamAnimation* pCamAnim, CCamera* pPreCam, CTransform* pTransform, _float fStartLerpTime = 0.f, _float fEndLerpTime = 0.f, _bool bRotLerp = false);
+	void StartCamAnim_Update(CCamAnimation* pCamAnim, _float4x4 PreCamWorldMatrix, CTransform* pTransform, _float fStartLerpTime = 0.f, _float fEndLerpTime = 0.f);
+
 private:
 	_float		m_fMouseSpeed = 0.03f;
 	_float		m_fSpeedPerSec = 10.f;
@@ -115,6 +118,7 @@ private:
 
 	CCamAnimation* m_pCamAnimation = nullptr;
 	CCamera* m_pPreCam = nullptr;
+	CTransform* m_pTargetTransform = nullptr;
 
 	unordered_map<string, function<void()>> m_Events;
 	list<string> m_RequestedEvents;

@@ -296,8 +296,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_UI(const _tchar * pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Main.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Main", &json));
 
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("m../Bin/Resources/UI/UI_PositionData/MouseCousorUI.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MouseCousorUI", &json));
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MouseCousor.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_MouseCousor", &json));
 
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{

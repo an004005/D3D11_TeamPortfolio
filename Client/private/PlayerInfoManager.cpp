@@ -36,8 +36,8 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.iSprbrPower = 110;
 	m_tPlayerStat.iAttack = 30;
 	m_tPlayerStat.iDefense = 15;
-	m_tPlayerStat.iBP = 5000;
-	m_tPlayerStat.iCoin = 0;
+	m_tPlayerStat.iBP = 50;
+	m_tPlayerStat.iCoin = 5000;
 		
 #pragma endregion 플레이어 기본 스탯 초기화
 
@@ -454,8 +454,4 @@ void CPlayerInfoManager::SAS_Checker()
 
 void CPlayerInfoManager::Free()
 {
-	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCamSpot))
-	{
-		Safe_Release(m_pCamSpot);
-	}
 }

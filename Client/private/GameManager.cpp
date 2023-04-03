@@ -40,10 +40,12 @@ HRESULT CGameManager::Initialize()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
+	// 오른쪽에 몬스터 처치 및 아이템 획득시에 뜨는 UI
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Acquisition.json");
 	m_pCanvas_Acquisition = dynamic_cast<CCanvas_Acquisition*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Acquisition", &json));
 	assert(m_pCanvas_Acquisition != nullptr && "Failed to Clone : Canvas_Acquisition");
 
+	// 왼쪽에 조잘조잘때 뜨는 UI
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");
 	m_pCanvas_LeftTalk = dynamic_cast<CCanvas_LeftTalk*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_LeftTalk", &json));
 	assert(m_pCanvas_LeftTalk != nullptr && "Failed to Clone : Canvas_LeftTalk");

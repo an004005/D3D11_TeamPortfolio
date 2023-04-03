@@ -3,7 +3,9 @@
 #include "GameInstance.h"
 #include "JsonStorage.h"
 #include "UI_Manager.h"
+#include "PlayerInfoManager.h"
 
+#include "Canvas_Shop.h"
 #include "Canvas_Party.h"
 #include "Canvas_MainItem.h"
 #include "Canvas_Equipment.h"
@@ -34,12 +36,16 @@ HRESULT CCanvas_Main::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	CUI_Manager::GetInstance()->Add_WindowCanvas(L"CCanvas_Main", this);
+
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
 
 	fill_n(m_arrCanvass, _int(MAINCANVAS_END), nullptr);
 	Add_MainCanvas();
 	m_bVisible = true;
+	
+	m_szManuText = L"파티 멤버를 변경합니다.";
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_InitializeAlpha();	// 처음에 해당 버튼에 불이 들어올 수 있도록
 
 	return S_OK;
@@ -97,11 +103,36 @@ HRESULT CCanvas_Main::Render()
 	vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Main_BasicInfo"))->GetScreenSpaceLeftTop();
 	pGameInstance->Render_Font(L"Pretendard32", m_szManuText, vPosition + _float2(170.0f, 38.0f), 0.f, vFontSize, vColor);
 
-	pGameInstance->Render_Font(L"Pretendard32", L"BP", vPosition + _float2(1214.0f, 34.0f), 0.f, vFontSize, vColor);
+	_tchar szText[MAX_PATH] = TEXT("");
+	PLAYER_STAT tPlayerStat = CPlayerInfoManager::GetInstance()->Get_PlayerStat();
+	wsprintf(szText, TEXT("%d"), tPlayerStat.iBP);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1270.0f, 34.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"BP", vPosition + _float2(1215.0f, 34.0f), 0.f, vFontSize, vColor);
 
+	wsprintf(szText, TEXT("%d"), tPlayerStat.iCoin);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1420.0f, 36.0f), 0.f, vFontSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"K", vPosition + _float2(1350.0f, 36.0f), 0.f, vFontSize, vColor);
 
-	pGameInstance->Render_Font(L"Pretendard32", L"시계", vPosition + _float2(1531.0f, 39.0f), 0.f, vFontSize, vColor);
+	wsprintf(szText, TEXT("%f"), g_fTimeDelta_Add);
+	_int iHours = static_cast<int>(g_fTimeDelta_Add / 3600); // 시
+	_int iMinutes = static_cast<int>((g_fTimeDelta_Add - iHours * 3600) / 60); // 분
+	_int iSeconds = static_cast<int>(g_fTimeDelta_Add - iHours * 3600 - iMinutes * 60); // 초
+
+	if(10 > iHours)
+		wsprintf(szText, TEXT("0%d :"), iHours);
+	else
+		wsprintf(szText, TEXT("%d :"), iHours);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1525.0f, 39.0f), 0.f, vFontSize, vColor);
+	if (10 > iMinutes)
+		wsprintf(szText, TEXT("0%d :"), iMinutes);
+	else
+		wsprintf(szText, TEXT("%d :"), iMinutes);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1570.0f, 39.5f), 0.f, vFontSize, vColor);
+	if (10 > iSeconds)
+		wsprintf(szText, TEXT("0%d"), iSeconds);
+	else
+		wsprintf(szText, TEXT("%d"), iSeconds);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1610.0f, 40.5f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }
@@ -110,6 +141,8 @@ void CCanvas_Main::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
+	ImGui::DragFloat("X", &mm.x);
+	ImGui::DragFloat("Y", &mm.y);
 
 }
 
@@ -133,7 +166,7 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 		return E_FAIL;
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Party.json");
-	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_Party", &json);
+	CGameObject* pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_Party", &json);
 	m_arrCanvass[PARTY] = dynamic_cast<CCanvas_Party*>(pCanvas);
 
 	/* For.Prototype_GameObject_Canvas_MainItem*/
@@ -142,7 +175,7 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 		return E_FAIL;
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainItem.json");
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_MainItem", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_MainItem", &json);
 	m_arrCanvass[ITEM] = dynamic_cast<CCanvas_MainItem*>(pCanvas);
 
 	/* For.Prototype_GameObject_Canvas_Equipment */
@@ -151,7 +184,7 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 		return E_FAIL;
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Equipment.json");
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_Equipment", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_Equipment", &json);
 	m_arrCanvass[EQUIPMENT] = dynamic_cast<CCanvas_Equipment*>(pCanvas);
 
 	/* For.Prototype_GameObject_Canvas_BrainMap */
@@ -160,7 +193,7 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 		return E_FAIL;
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BrainMap.json");
-	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainItemUI", L"Canvas_BrainMap", &json);
+	pCanvas = pGameInstance->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_BrainMap", &json);
 	m_arrCanvass[BRAINMAP] = dynamic_cast<CCanvas_BrainMap*>(pCanvas);
 
 	return S_OK;
@@ -170,6 +203,8 @@ void CCanvas_Main::KeyInput()
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
 	{
+		dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUIClose();
+
 		m_bMainUI = !m_bMainUI;
 
 		// m_bMainUI 와 반대로 동작한다.

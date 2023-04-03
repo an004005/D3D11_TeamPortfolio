@@ -7,6 +7,7 @@ class CModel;
 END
 
 BEGIN(Client)
+class CParticleGroup;
 
 class CSpecial_TelephonePole : public CSpecialObject
 {
@@ -51,6 +52,10 @@ public:
 
 private:
 	HRESULT	SetUp_Components(void* pArg);
+
+private:
+	CParticleGroup* m_pBrakeParticle = nullptr;
+	CParticleGroup* m_pBrakeSmoke = nullptr;
 
 private:
 	_matrix		m_CatchMatrix = XMMatrixIdentity();

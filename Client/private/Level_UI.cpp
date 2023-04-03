@@ -160,7 +160,6 @@ void CLevel_UI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	CGameManager::GetInstance()->Tick(TimeDelta);
 
 }
 
@@ -637,9 +636,16 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MouseCousor.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_MouseCousor", &json));
 
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Shop.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Shop", &json));
+	
 	// Ãß°¡
 	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_LeftTalk", &json));
+	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAMouseLeft.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SAMouseLeft", &json));
+	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SAGragting_S", &json));
 	
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
@@ -692,7 +698,6 @@ CLevel_UI * CLevel_UI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pCon
 void CLevel_UI::Free()
 {
 	__super::Free();
-	CGameManager::GetInstance()->DestroyInstance();
 
 }
 

@@ -31,10 +31,8 @@ private:
 	void	Canvas_Visible();
 
 private:
-	CCanvas*	m_arrCanvass[MAINITEM_END];
+	CCanvas*		m_arrCanvass[MAINITEM_END];
 	MAINITEM	m_eMainItem = { ALL };
-	
-	_float2		m_vPosssss = { 0.0f, 0.0f };
 
 public:
 	static CCanvas_MainItem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -59,6 +59,12 @@ HRESULT CSpecial_IronBars_SingleBars::Initialize(void * pArg)
 				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 				static_cast<CEnemy*>(pTarget)->TakeDamage(tParam);
+
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Special_G_Iron_Bar_Hit_Effect")
+				->Start_AttachOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), false);
+
+				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Iron_Bar_Hit_Particle")
+					->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), { 0.f, 1.f, 0.f, 0.f });
 			}
 		});
 
@@ -275,6 +281,12 @@ void CSpecial_IronBars_SingleBars::Reloading(_float4 vDestPos, _float4 vTargetPo
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
 
 	Calculate_TargetDir(vTargetPos, fRatio);
+}
+
+void CSpecial_IronBars_SingleBars::DecomposeEffect()
+{
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Iron_Bar_Particles")
+		->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), { 0.f, 1.f, 0.f, 0.f });
 }
 
 void CSpecial_IronBars_SingleBars::Activate(_bool bActivate)
