@@ -460,6 +460,9 @@
     <Filter Include="02.GameObjects\UI\Short\MainTalk">
       <UniqueIdentifier>{3d3c494d-c477-4d25-ac7c-b90362d34b26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMUI">
+      <UniqueIdentifier>{106811ed-76ea-474b-8b9a-f3137f339996}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1375,6 +1378,9 @@
     <ClInclude Include="..\public\Talk_FaceUI.h">
       <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EMUI.h">
+      <Filter>02.GameObjects\Enemy\EMUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2263,6 +2269,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Talk_FaceUI.cpp">
       <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EMUI.cpp">
+      <Filter>02.GameObjects\Enemy\EMUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
