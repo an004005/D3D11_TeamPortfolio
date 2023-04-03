@@ -44,6 +44,23 @@ void CUI_Manager::Add_Canvas(const wstring & pCanvasTag, CCanvas * pCanvas)
 	m_mapCanvass.emplace(pCanvasTag, pCanvas);
 }
 
+CCanvas* CUI_Manager::Find_WindowCanvas(const wstring& pCanvasTag)
+{
+	auto	iter = find_if(m_mapWindowCanvass.begin(), m_mapWindowCanvass.end(), [&](pair<wstring, CCanvas*> pCantag) {
+		return pCantag.first == pCanvasTag;
+		});
+
+	if (iter == m_mapWindowCanvass.end())
+		return nullptr;
+
+	return iter->second;
+}
+
+void CUI_Manager::Add_WindowCanvas(const wstring& pCanvasTag, CCanvas* pCanvas)
+{
+	m_mapWindowCanvass.emplace(pCanvasTag, pCanvas);
+}
+
 void CUI_Manager::Set_TempOff(const _bool bOff)
 {
 	for (map<wstring, CCanvas*>::iterator iter = m_mapMoveCanvass.begin(); iter != m_mapMoveCanvass.end(); ++iter)
@@ -65,5 +82,8 @@ void CUI_Manager::Free()
 	for (auto& Pair : m_mapCanvass)
 		Safe_Release(Pair.second);
 	m_mapCanvass.clear();
-
+	
+	for (auto& Pair : m_mapWindowCanvass)
+		Safe_Release(Pair.second);
+	m_mapWindowCanvass.clear();
 }

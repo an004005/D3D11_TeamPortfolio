@@ -43,8 +43,6 @@ public:
 
 	void	Activate(_bool bActivate);
 
-	void	ParticleMaker(_double TimeDelta);
-
 private:
 	HRESULT	SetUp_Components(void* pArg);
 	_bool	m_bActive = false;

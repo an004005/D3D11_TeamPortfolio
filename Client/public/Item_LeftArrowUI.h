@@ -21,10 +21,23 @@ public:
 		m_bInput = true;
 	}
 
+	void	Set_MouseInput() {
+		m_bMouse = true;
+	}
+
+	_bool Get_KeyDown() {
+		return m_bCursorKeyDown;
+	}
+	void	Set_KeyDown() {
+		m_bCursorKeyDown = false;
+	}
+
 private:
-	_bool	m_bInput = { false };
-	_float	m_fStartX = { 0.0f };
-	_double m_fMoveTimeAcc = { 0.0f };
+	_bool		m_bInput = { false };
+	_float		m_fStartX = { 0.0f };
+	_double	m_fMoveTimeAcc = { 0.0f };
+	_bool		m_bMouse = { false };
+	_bool		m_bCursorKeyDown = { false };
 
 public:
 	static CItem_LeftArrowUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
