@@ -116,6 +116,28 @@ PS_OUT_NORM PS_DEFAULT_NORM(PS_IN_NORM In)
 	return Out;
 }
 
+PS_OUT_NORM PS_EM8200_ICE_NEEDLE(PS_IN_NORM In)
+{
+	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
+	float flags = SHADER_DEFAULT;
+
+	float3 vNormal = In.vNormal.xyz;
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0, flags);
+	// Out.vFlag = flags;
+	// Out.vColor.a = Out.vColor.r;
+	return Out;
+}
+
 PS_OUT_NORM PS_EM220_NORM(PS_IN_NORM In)
 {
 	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
@@ -490,6 +512,44 @@ PS_OUT PS_FLOWERLEG(PS_IN In)
 	Out.vColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x * g_float_0, In.vTexUV.y));
 	Out.vColor.a *= g_float_1;
 	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Out.vColor.a);
+
+	return Out;
+}
+
+PS_OUT_NORM PS_EM8200_ICE_BASE(PS_IN_NORM In)
+{
+	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Noise = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4 MixTex = defaultColor * Noise;
+
+	float4 OriginColor = g_vec4_0;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	float4 Final = saturate(BlendColor);
+
+	float Mask = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+
+
+	Out.vColor = CalcHDRColor(Final, g_float_0);
+
+	Out.vColor.a = Mask * Noise.r * g_float_1;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	float3 vNormal;
+
+	float flags = SHADER_DEFAULT;
+
+	vector		vNormalDesc = g_tex_3.Sample(LinearSampler, In.vTexUV);
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vRMA = g_tex_4.Sample(LinearSampler, In.vTexUV);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
 
 	return Out;
 }
@@ -1395,5 +1455,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM0800_DIVE();
+	}
+
+	//31
+	pass em8200IceNeedle
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_NORM();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM8200_ICE_NEEDLE();
+	}
+
+	//32
+	pass em8200IceBase
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_NORM();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM8200_ICE_BASE();
 	}
 }

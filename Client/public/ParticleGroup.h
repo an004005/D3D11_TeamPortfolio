@@ -40,7 +40,7 @@ public:
 	void		Start_AttachPosition_Scaling(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _float4 vScale, _bool trueisUpdate = false);
 	void		Start_AttachSword(CGameObject* pWeapon, _bool trueisUpdate = false);
 	void		Start_AttachSpecificPos(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate = false);
-
+	void		Start_NoOwnerOnlyPos(_float4 vPositon);
 private:
 	// [ObjectTag : Key] [Value : <Directory, Ptr>]
 	unordered_map<string, pair<string, CParticleSystem*>> m_mapParticleSystem;
