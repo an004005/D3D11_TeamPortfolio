@@ -1,0 +1,73 @@
+{
+    "MapObjects": [
+        {
+            "InstanceInfo": {
+                "WorldMatrix": [
+                    [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                ]
+            },
+            "ModelTag": "../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/Subway_Hospital/Subway/SM_pr_SubwayNaomiRoom/SM_pr_SubwayNaomiRoom_Floor.static_model\u0000",
+            "ObjectTag": "",
+            "Prototype_GameObject": "Prototype_GameObject_MapInstance_Object\u0000",
+            "Transform": {
+                "WorldMatrix": [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "Prototype_GameObject_ScarletMap\u0000",
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}
