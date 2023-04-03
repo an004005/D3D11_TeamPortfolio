@@ -59,6 +59,7 @@ public:
 
 public:
 	void CreateKineticParticle(_float4 vPos = { 0.f, 0.f, 0.f, 0.f }, _float4 vScale = {1.f, 1.f, 1.f ,0.f});
+	void CreateKineticParticle_Mini(_float4 vPos = { 0.f, 0.f, 0.f, 0.f }, _float4 vScale = { 1.f, 1.f, 1.f ,0.f });
 
 protected:
 	_bool						Collision_Check_Capsule(CRigidBody* AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollisionCheck = false);
@@ -111,6 +112,17 @@ protected:
 		L"Player_Kinetic_Particles_E",
 		L"Player_Kinetic_Particles_F",
 		L"Player_Kinetic_Particles_G"
+	};
+
+protected:
+	vector<wstring>			m_vecRandomParticle_Small{
+		L"Special_G_Iron_Bar_MeshData_Particle_A",
+		L"Special_G_Iron_Bar_MeshData_Particle_B",
+		L"Special_G_Iron_Bar_MeshData_Particle_C",
+		L"Special_G_Iron_Bar_MeshData_Particle_D",
+		L"Special_G_Iron_Bar_MeshData_Particle_E",
+		L"Special_G_Iron_Bar_MeshData_Particle_F",
+		L"Special_G_Iron_Bar_MeshData_Particle_G"
 	};
 
 public:

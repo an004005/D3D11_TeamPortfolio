@@ -347,7 +347,7 @@ void CSpecial_IronBars::IronBars_SingleBars_Particle()
 {
 	for (_uint i = 0; i < 8; ++i)
 	{
-		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->CreateKineticParticle({ 0.f, 0.f, 0.f, 0.f }, {0.1f, 0.1f, 0.1f, 0.f});
+		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->CreateKineticParticle_Mini({ 0.f, 0.f, 0.f, 0.f }, {0.1f, 0.1f, 0.1f, 0.f});
 	}
 }
 

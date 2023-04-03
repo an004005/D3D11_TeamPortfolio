@@ -195,6 +195,15 @@ void CSpecialObject::CreateKineticParticle(_float4 vPos, _float4 vScale)
 	}
 }
 
+void CSpecialObject::CreateKineticParticle_Mini(_float4 vPos, _float4 vScale)
+{
+	if (m_ParticleMakeable.IsNotDo())
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, m_vecRandomParticle_Small[CMathUtils::RandomUInt(m_vecRandomParticle_Small.size() - 1)])
+			->Start_AttachPosition_Scaling(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMLoadFloat4(&vPos), _float4(0.f, 1.f, 0.f, 0.f), vScale);
+	}
+}
+
 _bool CSpecialObject::Collision_Check_Capsule(CRigidBody * AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollisionCheck)
 {
 	if (!bCollisionCheck)

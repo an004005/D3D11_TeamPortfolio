@@ -375,32 +375,31 @@ HRESULT CAI_CH0300::SetUp_AttackDesc()
 void CAI_CH0300::BehaviorCheck()
 {
 	string strCurState = m_pASM->GetCurStateName();
-	_float4 vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 
 	if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 	{
 		// 타게팅 된 적이 없으면 플레이어 추적
 		if ("WALK" == strCurState)
 		{
-			m_pTransformCom->LookAt_Smooth(vPlayerPos, m_fTimeDelta);
+			m_pTransformCom->LookAt_Smooth(m_vPlayerPos, m_fTimeDelta);
 			m_pTransformCom->Go_Straight(m_fTimeDelta);
 		}
 
 		if ("RUN" == strCurState)
 		{
-			m_pTransformCom->LookAt_Smooth(vPlayerPos, m_fTimeDelta);
+			m_pTransformCom->LookAt_Smooth(m_vPlayerPos, m_fTimeDelta);
 			m_pTransformCom->Go_Straight(m_fTimeDelta * 2.f);
 		}
 
 		if ("JUMP_RISE" == strCurState)
 		{
-			m_pTransformCom->LookAt_Smooth(vPlayerPos, m_fTimeDelta);
+			m_pTransformCom->LookAt_Smooth(m_vPlayerPos, m_fTimeDelta);
 			m_pTransformCom->Go_Straight(m_fTimeDelta);
 		}
 
 		if ("JUMP_FALL" == strCurState)
 		{
-			m_pTransformCom->LookAt_Smooth(vPlayerPos, m_fTimeDelta);
+			m_pTransformCom->LookAt_Smooth(m_vPlayerPos, m_fTimeDelta);
 			m_pTransformCom->Go_Straight(m_fTimeDelta);
 		}
 		
@@ -438,7 +437,12 @@ void CAI_CH0300::BehaviorCheck()
 
 void CAI_CH0300::DistanceCheck()
 {
-	_float4 vPlayerDistance = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)
+	_float4 vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	_float4 vPlayerLeft = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_RIGHT) * -1.f;
+	_float4 vPosDir = XMVector3Normalize(vPlayerLeft);
+	m_vPlayerPos = vPlayerPos + vPosDir;
+
+	_float4 vPlayerDistance = XMLoadFloat4(&m_vPlayerPos)
 		- m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 	m_fDistance_toPlayer = vPlayerDistance.Length();

@@ -635,7 +635,8 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 	}
 	else
 	{
-		m_bHit = true;
+		if (tDamageParams.eAttackType != EAttackType::ATK_END)
+			m_bHit = true;
 
 		m_DamageDesc.m_iDamage = tDamageParams.iDamage;
 		m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
@@ -1931,6 +1932,48 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Elec_Attack_Upper_0", [&]() {Event_ElecEffect("Elec_Attack_Upper_0"); });
 	m_pModel->Add_EventCaller("Elec_Attack_Upper_1", [&]() {Event_ElecEffect("Elec_Attack_Upper_1"); });
 
+	m_pModel->Add_EventCaller("Elec_Attack_1_Particle", [&]() {Event_ElecParticle ("Elec_Attack_1_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_2_Particle", [&]() {Event_ElecParticle("Elec_Attack_2_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_3_Particle", [&]() {Event_ElecParticle("Elec_Attack_3_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_3_001_Particle", [&]() {Event_ElecParticle("Elec_Attack_3_001_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_001_Particle", [&]() {Event_ElecParticle("Elec_Attack_4_001_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_002_Particle", [&]() {Event_ElecParticle("Elec_Attack_4_002_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_003_Particle", [&]() {Event_ElecParticle("Elec_Attack_4_003_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_004_Particle", [&]() {Event_ElecParticle("Elec_Attack_4_004_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_4_005_Particle", [&]() {Event_ElecParticle("Elec_Attack_4_005_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_5_Particle", [&]() {Event_ElecParticle("Elec_Attack_5_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_1_Particle", [&]() {Event_ElecParticle("Elec_Attack_Air_1_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_2_Particle", [&]() {Event_ElecParticle("Elec_Attack_Air_2_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Chase_Particle", [&]() {Event_ElecParticle("Elec_Attack_Air_Chase_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Dash_0_Particle", [&]() {Event_ElecParticle("Elec_Attack_Air_Dash_0_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Dash_1_Particle", [&]() {Event_ElecParticle("Elec_Attack_Air_Dash_1_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Dash_1_001_Particle", [&]() {Event_ElecParticle("Elec_Attack_Air_Dash_1_001_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_00_Particle", [&]() {Event_ElecParticle("Elec_Attack_Air_Hold_00_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_01_Particle", [&]() {Event_ElecParticle("Elec_Attack_Air_Hold_01_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_02_Particle", [&]() {Event_ElecParticle("Elec_Attack_Air_Hold_02_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_03_Particle", [&]() {Event_ElecParticle("Elec_Attack_Air_Hold_03_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_04_Particle", [&]() {Event_ElecParticle("Elec_Attack_Air_Hold_04_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_05_Particle", [&]() {Event_ElecParticle("Elec_Attack_Air_Hold_05_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Air_Hold_Landing_Particle", [&]() {Event_ElecParticle("Elec_Attack_Air_Hold_Landing_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Charge_01_Particle", [&]() {Event_ElecParticle("Elec_Attack_Charge_01_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Charge_02_Particle", [&]() {Event_ElecParticle("Elec_Attack_Charge_02_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Charge_03_Particle", [&]() {Event_ElecParticle("Elec_Attack_Charge_03_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_1_Particle", [&]() {Event_ElecParticle("Elec_Attack_Dash_1_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_2_001_Particle", [&]() {Event_ElecParticle("Elec_Attack_Dash_2_001_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_2_002_Particle", [&]() {Event_ElecParticle("Elec_Attack_Dash_2_002_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_3_Particle", [&]() {Event_ElecParticle("Elec_Attack_Dash_3_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_End_Particle", [&]() {Event_ElecParticle("Elec_Attack_Dash_End_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_0_Particle", [&]() {Event_ElecParticle("Elec_Attack_Dash_Hold_0_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_1_Particle", [&]() {Event_ElecParticle("Elec_Attack_Dash_Hold_1_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Dash_Hold_2_Particle", [&]() {Event_ElecParticle("Elec_Attack_Dash_Hold_2_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_0_Particle", [&]() {Event_ElecParticle("Elec_Attack_Justdodge_0_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_1_Particle", [&]() {Event_ElecParticle("Elec_Attack_Justdodge_1_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_2_Particle", [&]() {Event_ElecParticle("Elec_Attack_Justdodge_2_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_3_Particle", [&]() {Event_ElecParticle("Elec_Attack_Justdodge_3_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_4_Particle", [&]() {Event_ElecParticle("Elec_Attack_Justdodge_4_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Justdodge_5_Particle", [&]() {Event_ElecParticle("Elec_Attack_Justdodge_5_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Upper_0_Particle", [&]() {Event_ElecParticle("Elec_Attack_Upper_0_Particle"); });
+	m_pModel->Add_EventCaller("Elec_Attack_Upper_1_Particle", [&]() {Event_ElecParticle("Elec_Attack_Upper_1_Particle"); });
 
 	m_pModel->Add_EventCaller("Trail_On", [&]() 
 	{ 
@@ -6239,31 +6282,31 @@ _bool CPlayer::isPlayerAttack(void)
 		return true;
 	}
 
-	if (szCurAnim.find("AS_ch0100_3") != string::npos)
+	else if (szCurAnim.find("AS_ch0100_3") != string::npos)
 	{
 		m_bOnBattle = true;
 		return true;
 	}
 
-	if (szCurAnim.find("AS_ch0100_4") != string::npos)
+	else if (szCurAnim.find("AS_ch0100_4") != string::npos)
 	{
 		m_bOnBattle = true;
 		return true;
 	}
 
-	if (szCurAnim.find("AS_ch0100_5") != string::npos)
+	else if (szCurAnim.find("AS_ch0100_5") != string::npos)
 	{
 		m_bOnBattle = true;
 		return true;
 	}
 
-	if (!CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty())
+	else if (!CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty())
 	{
 		m_bOnBattle = true;
 		return true;
 	}
 
-	if (m_bHit)
+	else if (m_bHit)
 	{
 		m_bOnBattle = true;
 		return true;
@@ -6452,10 +6495,8 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(1.f, 0.f, 1.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		_matrix matParticle = XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(1.f, 0.f, 1.5f);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matParticle, "Eff01", true, false, true);
 	}
-	if (szEffectName == "Elec_Attack_1_Shoot")
+	else if (szEffectName == "Elec_Attack_1_Shoot")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(1.f, 0.f, 1.5f);
 		_float4 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
@@ -6463,7 +6504,7 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 
 		ElecSweep();
 	}
-	if (szEffectName == "Elec_Attack_2")
+	else if (szEffectName == "Elec_Attack_2")
 	{
 		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f) * 
 			XMMatrixRotationX(XMConvertToRadians(70.f)) *
@@ -6471,14 +6512,8 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 			XMMatrixRotationZ(XMConvertToRadians(90.f)) *
 			XMMatrixTranslation(0.f, 0.5f, -2.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-
-		_matrix matParticle = XMMatrixRotationX(XMConvertToRadians(70.f)) *
-			XMMatrixRotationY(XMConvertToRadians(-90.f)) *
-			XMMatrixRotationZ(XMConvertToRadians(90.f)) *
-			XMMatrixTranslation(0.f, 0.5f, -2.5f);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_4", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matParticle, "Eff01", true, false, true);
 	}
-	if (szEffectName == "Elec_Attack_2_Shoot")
+	else if (szEffectName == "Elec_Attack_2_Shoot")
 	{
 		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f) *
 			XMMatrixRotationX(XMConvertToRadians(70.f)) *
@@ -6490,14 +6525,13 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 
 		ElecSweep();
 	}
-	if (szEffectName == "Elec_Attack_3")
+	else if (szEffectName == "Elec_Attack_3")
 	{
 		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f) *
 			XMMatrixTranslation(0.f, 0.f, 1.f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_3_Shoot")
+	else if (szEffectName == "Elec_Attack_3_Shoot")
 	{
 		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f) *
 			XMMatrixTranslation(0.f, 0.f, 1.f);
@@ -6506,12 +6540,12 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 
 		ElecSweep();
 	}
-	if (szEffectName == "Elec_Attack_4_002")
+	else if (szEffectName == "Elec_Attack_4_002")
 	{
 		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
 	}
-	if (szEffectName == "Elec_Attack_4_002_Shoot")
+	else if (szEffectName == "Elec_Attack_4_002_Shoot")
 	{
 		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f);
 		_float4 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
@@ -6519,11 +6553,10 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 
 		ElecSweep();
 	}
-	if (szEffectName == "Elec_Attack_4_003")
+	else if (szEffectName == "Elec_Attack_4_003")
 	{
 		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
 	if (szEffectName == "Elec_Attack_4_003_Shoot")
 	{
@@ -6533,13 +6566,12 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 
 		ElecSweep();
 	}
-	if (szEffectName == "Elec_Attack_4_004")
+	else if (szEffectName == "Elec_Attack_4_004")
 	{
 		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_4_004_Shoot")
+	else if (szEffectName == "Elec_Attack_4_004_Shoot")
 	{
 		_matrix matEffect = XMMatrixScaling(0.6f, 0.6f, 0.6f);
 		_float4 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
@@ -6547,14 +6579,12 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 
 		ElecSweep();
 	}
-	if (szEffectName == "Elec_Attack_5")
+	else if (szEffectName == "Elec_Attack_5")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.f, 0.f, -1.f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		_matrix matParticle = XMMatrixTranslation(0.f, 0.f, -1.f);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matParticle, "Eff01", true, false, true);
 	}
-	if (szEffectName == "Elec_Attack_5_Shoot")
+	else if (szEffectName == "Elec_Attack_5_Shoot")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.f, 0.f, -1.f);
 		_float4 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
@@ -6562,13 +6592,12 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 
 		ElecSweep();
 	}
-	if (szEffectName == "Elec_Attack_Air_1")
+	else if (szEffectName == "Elec_Attack_Air_1")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Air_1_Shoot")
+	else if (szEffectName == "Elec_Attack_Air_1_Shoot")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		_float4 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
@@ -6576,13 +6605,12 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 
 		ElecSweep();
 	}
-	if (szEffectName == "Elec_Attack_Air_2")
+	else if (szEffectName == "Elec_Attack_Air_2")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Air_2_Shoot")
+	else if (szEffectName == "Elec_Attack_Air_2_Shoot")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		_float4 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
@@ -6590,128 +6618,109 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 
 		ElecSweep();
 	}
-	if (szEffectName == "Elec_Attack_Air_Hold_00")
+	else if (szEffectName == "Elec_Attack_Air_Hold_00")
 	{	
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Air_Hold_01")
+	else if (szEffectName == "Elec_Attack_Air_Hold_01")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Air_Hold_02")
+	else if (szEffectName == "Elec_Attack_Air_Hold_02")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Air_Hold_03")
+	else if (szEffectName == "Elec_Attack_Air_Hold_03")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Air_Hold_04")
+	else if (szEffectName == "Elec_Attack_Air_Hold_04")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Air_Hold_05")
+	else if (szEffectName == "Elec_Attack_Air_Hold_05")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Air_Hold_Landing")
+	else if (szEffectName == "Elec_Attack_Air_Hold_Landing")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Charge_01")
+	else if (szEffectName == "Elec_Attack_Charge_01")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Charge_02")
+	else if (szEffectName == "Elec_Attack_Charge_02")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Charge_03")
+	else if (szEffectName == "Elec_Attack_Charge_03")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Dash_1")
+	else if (szEffectName == "Elec_Attack_Dash_1")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Dash_2_001")
+	else if (szEffectName == "Elec_Attack_Dash_2_001")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Dash_2_002")
+	else if (szEffectName == "Elec_Attack_Dash_2_002")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Dash_3")
+	else if (szEffectName == "Elec_Attack_Dash_3")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Dash_Hold_0")
+	else if (szEffectName == "Elec_Attack_Dash_Hold_0")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Dash_Hold_1")
+	else if (szEffectName == "Elec_Attack_Dash_Hold_1")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Dash_Hold_2")
+	else if (szEffectName == "Elec_Attack_Dash_Hold_2")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Dash_Hold_2_Shoot")
+	else if (szEffectName == "Elec_Attack_Dash_Hold_2_Shoot")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		_float4 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, L"Elec_Attack_Dash_Hold_2", LAYER_PLAYEREFFECT)->Start_AttachPivotMove(this, matEffect, "Eff01", vLook, true);
 		ElecSweep();
 	}
-	if (szEffectName == "Elec_Attack_Upper_0")
+	else if (szEffectName == "Elec_Attack_Upper_0")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Upper_1")
+	else if (szEffectName == "Elec_Attack_Upper_1")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_1_001")
+	else if (szEffectName == "Elec_Attack_1_001")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) 
 			* XMMatrixRotationY(XMConvertToRadians(90.f))
@@ -6719,55 +6728,200 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
 	}
 
-	if (szEffectName == "Elec_Attack_Justdodge_0")
+	else if (szEffectName == "Elec_Attack_Justdodge_0")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Justdodge_1")
+	else if (szEffectName == "Elec_Attack_Justdodge_1")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Justdodge_2")
+	else if (szEffectName == "Elec_Attack_Justdodge_2")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Justdodge_3")
+	else if (szEffectName == "Elec_Attack_Justdodge_3")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Justdodge_4")
+	else if (szEffectName == "Elec_Attack_Justdodge_4")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
-	if (szEffectName == "Elec_Attack_Justdodge_5")
+	else if (szEffectName == "Elec_Attack_Justdodge_5")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
 
-	if (szEffectName == "Elec_Attack_Dash_End")
+	else if (szEffectName == "Elec_Attack_Dash_End")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.f, -1.f, -1.f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, L"Elec_Attack_Air_Dash_0", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		_matrix matParticle = XMMatrixTranslation(0.f, -1.f, -1.f);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_Dash_0", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matParticle, "Eff01", true, false, true);
 	}
-	if (szEffectName == "Elec_Attack_Air_Dash_0")
+	else if (szEffectName == "Elec_Attack_Air_Dash_0")
 	{
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+}
+
+void CPlayer::Event_ElecParticle(string szEffectName)
+{
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type != ESASType::SAS_ELETRIC)
+		return;
+
+	if (szEffectName == "Elec_Attack_1_Particle")
+	{
+		_matrix matParticle = XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(1.f, 0.f, 1.5f);
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_1", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matParticle, "Eff01", true, false, true);
+	}
+	else if (szEffectName == "Elec_Attack_2_Particle")
+	{
+		_matrix matParticle = XMMatrixRotationX(XMConvertToRadians(70.f)) *
+			XMMatrixRotationY(XMConvertToRadians(-90.f)) *
+			XMMatrixRotationZ(XMConvertToRadians(90.f)) *
+			XMMatrixTranslation(0.f, 0.5f, -2.5f);
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_4", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matParticle, "Eff01", true, false, true);
+	}
+	else if (szEffectName == "Elec_Attack_3_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_3", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_4_003_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_4_003", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_4_004_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_4_004", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_5_Particle")
+	{
+		_matrix matParticle = XMMatrixTranslation(0.f, 0.f, -1.f);
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_5", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matParticle, "Eff01", true, false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Air_1_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_1", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Air_2_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_2", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Air_Hold_00_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_Hold_00", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Air_Hold_01_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_Hold_01", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Air_Hold_02_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_Hold_02", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Air_Hold_03_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_Hold_03", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Air_Hold_04_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_Hold_04", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Air_Hold_05_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_Hold_05", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Air_Hold_Landing_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_Hold_Landing", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Charge_01_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Charge_01", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Charge_02_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Charge_02", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Charge_03_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Charge_03", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Dash_1_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Dash_1", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Dash_2_001_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Dash_2_001", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Dash_2_002_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Dash_2_002", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Dash_3_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Dash_3", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Dash_Hold_0_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Dash_Hold_0", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Dash_Hold_1_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Dash_Hold_1", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Dash_Hold_2_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Dash_Hold_2", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Upper_0_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Upper_0", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Upper_1_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Upper_1", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Justdodge_0_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Justdodge_0", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Justdodge_1_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Justdodge_1", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Justdodge_2_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Justdodge_2", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Justdodge_3_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Justdodge_3", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Justdodge_4_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Justdodge_4", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Justdodge_5_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Justdodge_5", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Dash_End_Particle")
+	{
+		_matrix matParticle = XMMatrixTranslation(0.f, -1.f, -1.f);
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_Dash_0", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matParticle, "Eff01", true, false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Air_Dash_0_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_Dash_0", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
 }
 

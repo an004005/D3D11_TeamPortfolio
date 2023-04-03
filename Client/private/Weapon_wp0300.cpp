@@ -50,7 +50,7 @@ HRESULT CWeapon_wp0300::Initialize(void* pArg)
 	//Clone_GameObject_Get
 	//m_pTrail = static_cast<CTrailSystem*>(pGameInstance->Clone_GameObject_Get(LAYER_AI, TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
 
-	m_bTrailOn = true;
+	m_bTrailOn = false;
 
 	return S_OK;
 }

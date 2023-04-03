@@ -60,6 +60,7 @@ private:
 
 private:
 	CGameObject* m_pPlayer = nullptr;
+	_float4		m_vPlayerPos = { 0.f, 0.f, 0.f, 1.f };
 
 private:
 	wstring		m_ModelName;
