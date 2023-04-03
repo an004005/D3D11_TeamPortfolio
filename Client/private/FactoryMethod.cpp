@@ -113,6 +113,8 @@
 #include "Canvas_SAMouseLeft.h"
 #include "Canvas_SAGragting_S.h"
 #include "Canvas_SAGragting_Go.h"
+#include "Canvas_SARebar.h"
+#include "Canvas_SAContainer_Down.h"
 
 // Default
 #include "DefaultUI.h"
@@ -187,6 +189,7 @@
 #include "Talk_BackGroundUI.h"
 // SpecialAttack
 #include "SA_AxisUI.h"
+#include "SA_RotationUI.h"
 
 // 3D UI
 #include "EM0320.h"
@@ -716,7 +719,14 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SAGragting_Go"),
 			CCanvas_SAGragting_Go::Create(pDevice, pContext))))
 			return E_FAIL;
-
+		/* For.Prototype_GameObject_Canvas_SARebar*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SARebar"),
+			CCanvas_SARebar::Create(pDevice, pContext))))
+			return E_FAIL;
+		/* For.Prototype_GameObject_Canvas_SAContainer_Down*/
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Canvas_SAContainer_Down"),
+			CCanvas_SAContainer_Down::Create(pDevice, pContext))))
+			return E_FAIL;
 
 		
 	}
@@ -989,10 +999,13 @@ HRESULT CFactoryMethod::MakeUIPrototypes(ID3D11Device * pDevice, ID3D11DeviceCon
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("SA_AxisUI"),
 			CSA_AxisUI::Create(pDevice, pContext))))
 			return E_FAIL;
+		/* For.Prototype_GameObject_SA_RotationUI */
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("SA_RotationUI"),
+			CSA_RotationUI::Create(pDevice, pContext))))
+			return E_FAIL;
 
 
-
-
+		
 	}
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_MonsterHP", CMonsterHpUI::Create(pDevice, pContext)));

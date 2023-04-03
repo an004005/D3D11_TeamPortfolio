@@ -394,11 +394,8 @@
     <Filter Include="02.GameObjects\UI\SpecialAttack">
       <UniqueIdentifier>{7b632564-486d-4d31-87b7-bdffcbe04dfc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\SpecialAttack\MouseLeft">
-      <UniqueIdentifier>{dd9cf8e7-03bd-438e-b767-d45731e20ed6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\SpecialAttack\Grating">
-      <UniqueIdentifier>{1bd75a3c-891b-4333-bb3d-8ded58961a87}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\UI\SpecialAttack\Canvas">
+      <UniqueIdentifier>{fe7f32c0-551e-4151-8e98-1a4c998bfce7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1274,17 +1271,26 @@
     <ClInclude Include="..\public\Canvas_SaleListCheck.h">
       <Filter>02.GameObjects\UI\Shop\Sale</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Canvas_SAMouseLeft.h">
-      <Filter>02.GameObjects\UI\SpecialAttack\MouseLeft</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\SA_AxisUI.h">
       <Filter>02.GameObjects\UI\SpecialAttack</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\SA_RotationUI.h">
+      <Filter>02.GameObjects\UI\SpecialAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SARebar.h">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Canvas_SAGragting_S.h">
-      <Filter>02.GameObjects\UI\SpecialAttack\Grating</Filter>
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SAMouseLeft.h">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_SAGragting_Go.h">
-      <Filter>02.GameObjects\UI\SpecialAttack\Grating</Filter>
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SAContainer_Down.h">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2134,17 +2140,26 @@
     <ClCompile Include="..\private\Canvas_SaleListCheck.cpp">
       <Filter>02.GameObjects\UI\Shop\Sale</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Canvas_SAMouseLeft.cpp">
-      <Filter>02.GameObjects\UI\SpecialAttack\MouseLeft</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\SA_AxisUI.cpp">
       <Filter>02.GameObjects\UI\SpecialAttack</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\SA_RotationUI.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SAContainer_Down.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SARebar.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Canvas_SAGragting_S.cpp">
-      <Filter>02.GameObjects\UI\SpecialAttack\Grating</Filter>
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SAMouseLeft.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_SAGragting_Go.cpp">
-      <Filter>02.GameObjects\UI\SpecialAttack\Grating</Filter>
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

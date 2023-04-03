@@ -61,6 +61,12 @@ void CSA_AxisUI::Type_Tick(const _double& TimeDelta)
 	case Client::AXIS::DOWN:
 		Down_Tick(TimeDelta);
 		break;
+	case Client::AXIS::RIGHT_ROTATION:
+		Right_Rotation_Tick(TimeDelta);
+		break;
+	case Client::AXIS::LEFT_ROTATION:
+		Left_Rotation_Tick(TimeDelta);
+		break;
 	default:
 		//assert(!"No Axis Type"); 
 		break;
@@ -141,6 +147,20 @@ void CSA_AxisUI::Down_Tick(const _double& TimeDelta)
 	{
 		m_fY -= _float(TimeDelta) * m_fSpeed;
 	}
+}
+
+void CSA_AxisUI::Right_Rotation_Tick(const _double& TimeDelta)
+{
+	// Z 축을 기준으로 회전
+	m_fRadianRotation -= _float(TimeDelta) * m_fSpeed;
+	m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, m_fRadianRotation);
+}
+
+void CSA_AxisUI::Left_Rotation_Tick(const _double& TimeDelta)
+{
+	// Z 축을 기준으로 회전
+	m_fRadianRotation += _float(TimeDelta) * m_fSpeed;
+	m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, m_fRadianRotation);
 }
 
 CSA_AxisUI * CSA_AxisUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

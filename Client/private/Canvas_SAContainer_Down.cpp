@@ -1,21 +1,21 @@
 #include "stdafx.h"
-#include "..\public\Canvas_SAGragting_Go.h"
+#include "..\public\Canvas_SAContainer_Down.h"
 #include "GameInstance.h"
 
 #include "ShaderUI.h"
 #include "SA_AxisUI.h"
 
-CCanvas_SAGragting_Go::CCanvas_SAGragting_Go(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCanvas_SAContainer_Down::CCanvas_SAContainer_Down(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
 }
 
-CCanvas_SAGragting_Go::CCanvas_SAGragting_Go(const CCanvas_SAGragting_Go& rhs)
+CCanvas_SAContainer_Down::CCanvas_SAContainer_Down(const CCanvas_SAContainer_Down& rhs)
 	: CCanvas(rhs)
 {
 }
 
-HRESULT CCanvas_SAGragting_Go::Initialize_Prototype()
+HRESULT CCanvas_SAContainer_Down::Initialize_Prototype()
 {
 	if (FAILED(CCanvas::Initialize_Prototype()))
 		return E_FAIL;
@@ -23,19 +23,20 @@ HRESULT CCanvas_SAGragting_Go::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CCanvas_SAGragting_Go::Initialize(void* pArg)
+HRESULT CCanvas_SAContainer_Down::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 	
+	Find_ChildUI(L"Arrive")->SetVisible(false);
 	Find_ChildUI(L"Circle")->SetVisible(false);
 	Find_ChildUI(L"CircleLine2")->SetVisible(false);
-	dynamic_cast<CSA_AxisUI*>(Find_ChildUI(L"Arrow"))->Set_AxisInitialize(AXIS::UP);
+	dynamic_cast<CSA_AxisUI*>(Find_ChildUI(L"Arrow"))->Set_AxisInitialize(AXIS::DOWN);
 
 	return S_OK;
 }
 
-void CCanvas_SAGragting_Go::Tick(_double TimeDelta)
+void CCanvas_SAContainer_Down::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
@@ -46,22 +47,32 @@ void CCanvas_SAGragting_Go::Tick(_double TimeDelta)
 	Find_ChildUI(L"Arrow_Light")->Set_Position(Find_ChildUI(L"Arrow")->Get_Position());	// 계속 그냥 따라다니도록
 }
 
-void CCanvas_SAGragting_Go::KeyInput()
+void CCanvas_SAContainer_Down::KeyInput()
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_X) && 6 != m_iInputCount)
+	if (CGameInstance::GetInstance()->KeyDown(DIK_X) && 3 >= m_iAllCount)
 	{
+		m_bKeyDown = true;
 		++m_iInputCount;
 		dynamic_cast<CShaderUI*>(Find_ChildUI(L"Gauge"))->Set_Float2s({ _float(m_iInputCount), 0.0f });
 
-		if (6 == m_iInputCount)
+		if (10 == m_iInputCount)
 		{
+			++m_iAllCount;
+
+			if(3 != m_iAllCount)
+				m_iInputCount = 0;
+		}
+
+		if (3 == m_iAllCount)
+		{
+			Find_ChildUI(L"Arrive")->SetVisible(true);
 			Find_ChildUI(L"CircleLine3")->SetVisible(false);
 			m_bInput = true;
 		}
 	}
 }
 
-void CCanvas_SAGragting_Go::MouseLight_Tick(const _double& TimeDelta)
+void CCanvas_SAContainer_Down::MouseLight_Tick(const _double& TimeDelta)
 {
 	_float fSpeed = 1.0f;
 	if (true == m_fAlphaDown)
@@ -80,8 +91,25 @@ void CCanvas_SAGragting_Go::MouseLight_Tick(const _double& TimeDelta)
 	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Base_Light"))->Set_Floats0(m_fMouseLightAlpha);
 }
 
-void CCanvas_SAGragting_Go::Action_Tick(const _double& TimeDelta)
+void CCanvas_SAContainer_Down::Action_Tick(const _double& TimeDelta)
 {
+	if (m_bKeyDown == true && m_bInput == false)
+	{
+		// 키 입력을 할 때마다 사이즈가 줄어들었다가 늘어났다가를 반복한다.
+		_float fSizeSpeed = 150.0f;
+		_float2 fBase_Size = Find_ChildUI(L"Base")->Get_Size();
+		if (50.0f < fBase_Size.x)
+		{
+			fBase_Size -= {_float(TimeDelta)* fSizeSpeed, _float(TimeDelta)* fSizeSpeed};
+			Find_ChildUI(L"Base")->Set_Size(fBase_Size);
+		}
+		else
+		{
+			m_bKeyDown = false;
+			Find_ChildUI(L"Base")->Set_Size({ 73.0f, 75.0f });
+		}
+	}
+
 	if (m_bInput == false)
 	{
 		// 삐쭉삐쭉 움직이기
@@ -89,11 +117,11 @@ void CCanvas_SAGragting_Go::Action_Tick(const _double& TimeDelta)
 		if (1.0 < m_dMuseMove_TimeAcc)
 		{
 			m_dMuseMove_TimeAcc = 0.0;
-			m_fY = -7.0f;
+			m_fX = -7.0f;
 		}
 		else
 		{
-			m_fY = -12.0f;
+			m_fX = -12.0f;
 		}
 
 		// 동그라미선 3개
@@ -173,31 +201,31 @@ void CCanvas_SAGragting_Go::Action_Tick(const _double& TimeDelta)
 	}
 }
 
-CCanvas_SAGragting_Go* CCanvas_SAGragting_Go::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCanvas_SAContainer_Down* CCanvas_SAContainer_Down::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CCanvas_SAGragting_Go* pInstance = new CCanvas_SAGragting_Go(pDevice, pContext);
+	CCanvas_SAContainer_Down* pInstance = new CCanvas_SAContainer_Down(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CCanvas_SAGragting_Go");
+		MSG_BOX("Failed to Created : CCanvas_SAContainer_Down");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CCanvas* CCanvas_SAGragting_Go::Clone(void* pArg)
+CCanvas* CCanvas_SAContainer_Down::Clone(void* pArg)
 {
-	CCanvas_SAGragting_Go* pInstance = new CCanvas_SAGragting_Go(*this);
+	CCanvas_SAContainer_Down* pInstance = new CCanvas_SAContainer_Down(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CCanvas_SAGragting_Go");
+		MSG_BOX("Failed to Cloned : CCanvas_SAContainer_Down");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CCanvas_SAGragting_Go::Free()
+void CCanvas_SAContainer_Down::Free()
 {
 	CCanvas::Free();
 

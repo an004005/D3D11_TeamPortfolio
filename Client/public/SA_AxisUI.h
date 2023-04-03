@@ -5,7 +5,7 @@
 
 BEGIN(Client)
 
-enum class AXIS { LEFT, RIGHT, UP, DOWN, AXIS_END };
+enum class AXIS { LEFT, RIGHT, UP, DOWN, RIGHT_ROTATION, LEFT_ROTATION, AXIS_END };
 
 class CSA_AxisUI final : public CUI
 {
@@ -25,6 +25,9 @@ private:
 	void			Right_Tick(const _double& TimeDelta);
 	void			Up_Tick(const _double& TimeDelta);
 	void			Down_Tick(const _double& TimeDelta);
+
+	void			Right_Rotation_Tick(const _double& TimeDelta);
+	void			Left_Rotation_Tick(const _double& TimeDelta);
 
 public:
 	const void	Set_AxisInitialize(const AXIS eAxis, const _float fSpeed = 100.0f, const _double dMoveTime = 0.15) {

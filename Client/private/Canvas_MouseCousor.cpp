@@ -35,16 +35,27 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 	{
+		//assert(pCanvas != nullptr && "Failed to Cloned : Canvas_SAMouseLeft"); // 체크 하기!
+		 
+		// 전봇대 : 마우스 왼쪽 키 UI
 		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAMouseLeft.json");
 		//CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAMouseLeft", &json);
-		//assert(pCanvas != nullptr && "Failed to Cloned : Canvas_SAMouseLeft");
 
+		// 철근 회전 : 마우스 돌리는 UI
+		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SARebar.json");
+		//CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SARebar", &json);
+
+		// 쇠창살 : 처음에 Canvas_SAGragting_S 사용 나중에 Canvas_SAGragting_Go 사용
 		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
 		//CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_S", &json);
-
-		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_Go.json");
-		CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_Go", &json);
-		
+		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_Go.json");
+		//CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_Go", &json);
+	
+		// 컨테이너 : 처음에 Canvas_SAGragting_S 사용 나중에 Canvas_SAGragting_Down 사용
+		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
+		//CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_S", &json);
+		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAContainer_Down.json");
+		//CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAContainer_Down", &json);
 	}
 }
 

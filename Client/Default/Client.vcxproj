@@ -227,12 +227,14 @@
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
     <ClInclude Include="..\public\Canvas_PurchaseKinds.h" />
+    <ClInclude Include="..\public\Canvas_SAContainer_Down.h" />
     <ClInclude Include="..\public\Canvas_SAGragting_Go.h" />
     <ClInclude Include="..\public\Canvas_SAGragting_S.h" />
     <ClInclude Include="..\public\Canvas_Sale.h" />
     <ClInclude Include="..\public\Canvas_SaleKinds.h" />
     <ClInclude Include="..\public\Canvas_SaleListCheck.h" />
     <ClInclude Include="..\public\Canvas_SAMouseLeft.h" />
+    <ClInclude Include="..\public\Canvas_SARebar.h" />
     <ClInclude Include="..\public\Canvas_Shortage.h" />
     <ClInclude Include="..\public\Canvas_ListCheck.h" />
     <ClInclude Include="..\public\Canvas_SASInfoLeft.h" />
@@ -317,6 +319,7 @@
     <ClInclude Include="..\public\Main_OnePickUI.h" />
     <ClInclude Include="..\public\SAS_Cable.h" />
     <ClInclude Include="..\public\SA_AxisUI.h" />
+    <ClInclude Include="..\public\SA_RotationUI.h" />
     <ClInclude Include="..\public\ShaderUI.h" />
     <ClInclude Include="..\public\SpecialObject.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -506,6 +509,7 @@
     <ClCompile Include="..\private\Canvas_Acquisition.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp" />
     <ClCompile Include="..\private\Canvas_BrainMap.cpp" />
+    <ClCompile Include="..\private\Canvas_SAContainer_Down.cpp" />
     <ClCompile Include="..\private\Canvas_Equipment.cpp" />
     <ClCompile Include="..\private\Canvas_ItemWindow.cpp" />
     <ClCompile Include="..\private\Canvas_LeftTalk.cpp" />
@@ -523,6 +527,7 @@
     <ClCompile Include="..\private\Canvas_SaleKinds.cpp" />
     <ClCompile Include="..\private\Canvas_SaleListCheck.cpp" />
     <ClCompile Include="..\private\Canvas_SAMouseLeft.cpp" />
+    <ClCompile Include="..\private\Canvas_SARebar.cpp" />
     <ClCompile Include="..\private\Canvas_Shortage.cpp" />
     <ClCompile Include="..\private\Canvas_ListCheck.cpp" />
     <ClCompile Include="..\private\Canvas_Shop.cpp" />
@@ -614,6 +619,7 @@
     <ClCompile Include="..\private\Main_OnePickUI.cpp" />
     <ClCompile Include="..\private\SAS_Cable.cpp" />
     <ClCompile Include="..\private\SA_AxisUI.cpp" />
+    <ClCompile Include="..\private\SA_RotationUI.cpp" />
     <ClCompile Include="..\private\ShaderUI.cpp" />
     <ClCompile Include="..\private\SpecialObject.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
