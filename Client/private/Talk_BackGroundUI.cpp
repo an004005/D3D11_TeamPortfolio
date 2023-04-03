@@ -26,7 +26,6 @@ HRESULT CTalk_BackGroundUI::Initialize(void * pArg)
 
 	m_Timeline.SetCurve("UI_LeftTalk");
 
-
 	return S_OK;
 }
 

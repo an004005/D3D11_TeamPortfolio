@@ -91,12 +91,12 @@ void CCanvas_Alarm::SaveToJson(Json& json)
 	CCanvas::SaveToJson(json);
 }
 
-void CCanvas_Alarm::LoadFromJson(const Json & json)
+void CCanvas_Alarm::LoadFromJson(const Json& json)
 {
 	CCanvas::LoadFromJson(json);
 }
 
-void CCanvas_Alarm::Set_OpenNextRoomName(const _tchar * pNextRoomName)
+void CCanvas_Alarm::Set_OpenNextRoomName(const _tchar* pNextRoomName)
 {
 	dynamic_cast<CNextMapNameUI*>(Find_ChildUI(L"NextMapName"))->Set_NextRoolName(pNextRoomName);
 
@@ -125,7 +125,7 @@ void CCanvas_Alarm::Set_ChildAppeart()
 {
 	if (false == m_bCheck_Appeart)
 		return;
-	
+
 	_int iAppearTextureNum = dynamic_cast<CBoss_AppearUI*>(Find_ChildUI(L"Boss_Appear"))->Get_TextureNum();
 
 	if (29 == iAppearTextureNum)
@@ -135,9 +135,9 @@ void CCanvas_Alarm::Set_ChildAppeart()
 	}
 }
 
-CCanvas_Alarm * CCanvas_Alarm::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CCanvas_Alarm* CCanvas_Alarm::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CCanvas_Alarm*      pInstance = new CCanvas_Alarm(pDevice, pContext);
+	CCanvas_Alarm* pInstance = new CCanvas_Alarm(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -147,9 +147,9 @@ CCanvas_Alarm * CCanvas_Alarm::Create(ID3D11Device * pDevice, ID3D11DeviceContex
 	return pInstance;
 }
 
-CCanvas * CCanvas_Alarm::Clone(void * pArg)
+CCanvas* CCanvas_Alarm::Clone(void* pArg)
 {
-	CCanvas_Alarm*      pInstance = new CCanvas_Alarm(*this);
+	CCanvas_Alarm* pInstance = new CCanvas_Alarm(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

@@ -1,0 +1,235 @@
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "Shop_FullBackGround\u0000",
+            "ObjectTag": "Shop_FullBackGround",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 0.0,
+            "Priority": 10,
+            "Prototype_GameObject": "FullUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.699999988079071
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 14,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 1600.0,
+            "SizeY": 900.0,
+            "Transform": {
+                "WorldMatrix": [
+                    1600.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    900.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Shop_Shortage\u0000",
+            "ObjectTag": "Shop_Shortage",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 0.0,
+            "Priority": 11,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Shop\\Shortage.png\u0000"
+                ]
+            },
+            "SizeX": 450.0,
+            "SizeY": 143.0,
+            "Transform": {
+                "WorldMatrix": [
+                    450.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    143.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Shop_ShortageB\u0000",
+            "ObjectTag": "Shop_ShortageB",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 0.0,
+            "Priority": 12,
+            "Prototype_GameObject": "Button_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.20000000298023224
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Shop\\ShortageB.png\u0000"
+                ]
+            },
+            "SizeX": 450.0,
+            "SizeY": 143.0,
+            "Transform": {
+                "WorldMatrix": [
+                    450.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    143.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Shop_ShortageColor\u0000",
+            "ObjectTag": "",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 0.0,
+            "Priority": 13,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Shop\\ShortageColor.png\u0000"
+                ]
+            },
+            "SizeX": 450.0,
+            "SizeY": 143.0,
+            "Transform": {
+                "WorldMatrix": [
+                    450.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    143.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "Canvas_Shortage",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 15,
+    "Prototype_GameObject": "Canvas_Shortage\u0000",
+    "ScaleX": 0.5,
+    "ScaleY": 0.5,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

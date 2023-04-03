@@ -24,8 +24,8 @@ public:
 
 public:
 	_bool	Get_OnButton();
-	void	Set_OnButton();
-	void	Set_OnAlpha();
+	void		Set_OnButton();
+	void		Set_OnAlpha();
 
 	void	Set_ItemWindow(const _float2 & fItemPos, const _float2 & fIconPos, const size_t iIndex);
 

@@ -385,9 +385,6 @@
     <Filter Include="02.GameObjects\UI\Main\Canvas">
       <UniqueIdentifier>{a84ad824-2ee4-49a4-8b5f-2249e5b4eaa9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\________DefaultCanvas">
-      <UniqueIdentifier>{bad044ba-a491-4bf1-9026-b9d169097cf4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Player\PlayerInfoManager">
       <UniqueIdentifier>{14b74379-1a38-4c37-bb9f-263e2fa98580}</UniqueIdentifier>
     </Filter>
@@ -411,6 +408,57 @@
     </Filter>
     <Filter Include="02.GameObjects\AI\CH0500\BaseAnimInstance">
       <UniqueIdentifier>{daa7542c-26ae-42f1-be77-0d8716873045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Shop">
+      <UniqueIdentifier>{9730c136-31f7-4276-83ce-da1fc4d4fa5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front">
+      <UniqueIdentifier>{dbe3d603-c8a0-4590-96fa-f2a387abb7b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front\Drive">
+      <UniqueIdentifier>{2a9015c3-ac89-4688-ba20-5af55c1b4601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front\Item">
+      <UniqueIdentifier>{46619585-dc48-4000-9f31-5617ce206aab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front\PlayerInfo">
+      <UniqueIdentifier>{1288607c-59a4-4427-b040-1ed8b21a4858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front\SASSkill">
+      <UniqueIdentifier>{c433f14c-0edc-4775-926f-8a988efc503e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front\SASInfoLeft">
+      <UniqueIdentifier>{ea0a820a-4dc8-4972-9330-a21a848385ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front\SASSkillRight">
+      <UniqueIdentifier>{ef81e424-8ab1-4dfd-ae18-2316c41c86a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Main">
+      <UniqueIdentifier>{d267f306-d688-42b8-9978-a34ae516a2f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Main\Canvas">
+      <UniqueIdentifier>{a84ad824-2ee4-49a4-8b5f-2249e5b4eaa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Shop\Purchase">
+      <UniqueIdentifier>{4c6e7847-6561-4d9e-b96c-fa4c9fb2e368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Shop\Sale">
+      <UniqueIdentifier>{9f9b1c99-5068-4203-9ebf-cf20b31fb821}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpecialAttack">
+      <UniqueIdentifier>{7b632564-486d-4d31-87b7-bdffcbe04dfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpecialAttack\Canvas">
+      <UniqueIdentifier>{fe7f32c0-551e-4151-8e98-1a4c998bfce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\Acquisition">
+      <UniqueIdentifier>{09fcbae0-5f39-4335-b246-c9eb48c977b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\LeftTalk">
+      <UniqueIdentifier>{60b3433d-1cd8-4b64-9f5e-b7c2c578a625}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\MainTalk">
+      <UniqueIdentifier>{3d3c494d-c477-4d25-ac7c-b90362d34b26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1221,22 +1269,6 @@
     <ClInclude Include="..\public\Special_IronBars_MultiBars.h">
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\GameManager_Tutorial.h" />
-    <ClInclude Include="..\public\Canvas_Acquisition.h">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\AcquisitionUI.h">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Canvas_LeftTalk.h">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Talk_BackGroundUI.h">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Talk_FaceUI.h">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Item_LightUI.h">
       <Filter>02.GameObjects\UI\Front\Item</Filter>
     </ClInclude>
@@ -1251,6 +1283,57 @@
     </ClInclude>
     <ClInclude Include="..\public\BulletBuilder.h">
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Shop.h">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_ShopListBar.h">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ShaderUI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Purchase.h">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_PurchaseKinds.h">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Sale.h">
+      <Filter>02.GameObjects\UI\Shop\Sale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SaleKinds.h">
+      <Filter>02.GameObjects\UI\Shop\Sale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_ListCheck.h">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Shortage.h">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SaleListCheck.h">
+      <Filter>02.GameObjects\UI\Shop\Sale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SA_AxisUI.h">
+      <Filter>02.GameObjects\UI\SpecialAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SA_RotationUI.h">
+      <Filter>02.GameObjects\UI\SpecialAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SARebar.h">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SAGragting_S.h">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SAMouseLeft.h">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SAGragting_Go.h">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_SAContainer_Down.h">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_ConstructionSite3F.h" />
     <ClInclude Include="..\public\PlayerInfoManager.h">
@@ -1273,6 +1356,24 @@
     </ClInclude>
     <ClInclude Include="..\public\AI_CH0500_AnimInstance.h">
       <Filter>02.GameObjects\AI\CH0500\BaseAnimInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GameManager_Tutorial.h">
+      <Filter>30. GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AcquisitionUI.h">
+      <Filter>02.GameObjects\UI\Short\Acquisition</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Acquisition.h">
+      <Filter>02.GameObjects\UI\Short\Acquisition</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_LeftTalk.h">
+      <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Talk_BackGroundUI.h">
+      <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Talk_FaceUI.h">
+      <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2054,24 +2155,8 @@
     <ClCompile Include="..\private\Special_IronBars_MultiBars.cpp">
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\GameManager_Tutorial.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
       <Filter>02.GameObjects\UI\Alarm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_Acquisition.cpp">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\AcquisitionUI.cpp">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Canvas_LeftTalk.cpp">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Talk_BackGroundUI.cpp">
-      <Filter>02.GameObjects\UI\Short</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Talk_FaceUI.cpp">
-      <Filter>02.GameObjects\UI\Short</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_LightUI.cpp">
       <Filter>02.GameObjects\UI\Front\Item</Filter>
@@ -2087,6 +2172,57 @@
     </ClCompile>
     <ClCompile Include="..\private\BulletBuilder.cpp">
       <Filter>02.GameObjects\Enemy\EMBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Shop.cpp">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_ShopListBar.cpp">
+      <Filter>02.GameObjects\UI\Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ShaderUI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Purchase.cpp">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_PurchaseKinds.cpp">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Sale.cpp">
+      <Filter>02.GameObjects\UI\Shop\Sale</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SaleKinds.cpp">
+      <Filter>02.GameObjects\UI\Shop\Sale</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_ListCheck.cpp">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Shortage.cpp">
+      <Filter>02.GameObjects\UI\Shop\Purchase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SaleListCheck.cpp">
+      <Filter>02.GameObjects\UI\Shop\Sale</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SA_AxisUI.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SA_RotationUI.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SAContainer_Down.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SARebar.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SAGragting_S.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SAMouseLeft.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_SAGragting_Go.cpp">
+      <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_ConstructionSite3F.cpp" />
     <ClCompile Include="..\private\PlayerInfoManager.cpp">
@@ -2109,6 +2245,24 @@
     </ClCompile>
     <ClCompile Include="..\private\AI_CH0500_AnimInstance.cpp">
       <Filter>02.GameObjects\AI\CH0500\BaseAnimInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameManager_Tutorial.cpp">
+      <Filter>30. GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AcquisitionUI.cpp">
+      <Filter>02.GameObjects\UI\Short\Acquisition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Acquisition.cpp">
+      <Filter>02.GameObjects\UI\Short\Acquisition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_LeftTalk.cpp">
+      <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Talk_BackGroundUI.cpp">
+      <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Talk_FaceUI.cpp">
+      <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2213,12 +2367,12 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing_Shadow.hlsl">
       <Filter>97.ShaderFiles\Shadow</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl">
-      <Filter>97.ShaderFiles\UI</Filter>
-    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\SSAO.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl">
+      <Filter>97.ShaderFiles\UI</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
