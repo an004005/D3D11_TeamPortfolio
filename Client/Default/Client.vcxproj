@@ -298,6 +298,7 @@
     <ClInclude Include="..\public\EM1200.h" />
     <ClInclude Include="..\public\EM1200_AnimInstance.h" />
     <ClInclude Include="..\public\EM1200_Controller.h" />
+    <ClInclude Include="..\public\InvisibleWall.h" />
     <ClInclude Include="..\public\Item_LightUI.h" />
     <ClInclude Include="..\public\MouseCousorLightUI.h" />
     <ClInclude Include="..\public\MouseCousorUI.h" />
@@ -604,6 +605,7 @@
     <ClCompile Include="..\private\EM1200.cpp" />
     <ClCompile Include="..\private\EM1200_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM1200_Controller.cpp" />
+    <ClCompile Include="..\private\InvisibleWall.cpp" />
     <ClCompile Include="..\private\Item_LightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorLightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorUI.cpp" />
