@@ -34,7 +34,8 @@ public:
 	static _float3 RandomUnitVectorInCone_AxisY(_float fConDegree);
 	static _float4 RandomPosVectorInCircle_FromZero(_float fRadius);
 	static _uint RandomUInt(_uint iMax);
-
+	static _int RandomInt(_int iMin, _int iMax);
+	
 };
 
 template <typename T>

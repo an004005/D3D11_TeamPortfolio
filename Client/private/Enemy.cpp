@@ -13,8 +13,7 @@
 #include "TestTarget.h"
 #include "PlayerInfoManager.h"
 #include "GameManager.h"
-#include "MonsterHpUI.h"
-#include "MonsterShildUI.h"
+#include "EMUI.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
 	L"Default_Blood_00",
@@ -110,12 +109,14 @@ void CEnemy::Tick(_double TimeDelta)
 	CScarletCharacter::Tick(TimeDelta);
 	FindTarget();
 	Update_DeadDissolve(TimeDelta);
-	Update_UIInfo();
+
+	if(m_pEMUI != nullptr)
+		m_pEMUI->Update_UIInfo();
 
 	m_pModelCom->Tick(TimeDelta);
 
 	// 브레인 크러쉬 안할때 3초 안에 죽이기
-	if (m_bDeadStart)
+	if (m_bCrushStart)
 		m_dDeadTime += TimeDelta;
 
 	if (m_dDeadTime >= 3.f)
@@ -215,6 +216,12 @@ void CEnemy::SetUpSound()
 		m_SoundStore.CloneSound(m_strImpactVoiceTag);
 }
 
+void CEnemy::SetUpUI()
+{
+	m_pEMUI = CEMUI::Create(this);
+	assert(m_pEMUI != nullptr);
+}
+
 void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	if (m_bDead)
@@ -222,8 +229,8 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 	// 이상한 데미지 들어오는거 감지용, 버그 다 찾으면 지우기
 	Assert(tDamageParams.iDamage > 0);
-	Assert(tDamageParams.iDamage < 20000);
 
+	Assert(tDamageParams.iDamage < 20000);
 	// ex) 데미지 100 => 90 ~ 110 랜덤으로 변경
 	const _int iDamageRandomRange = tDamageParams.iDamage / 5;
 	const _int iDamageRandomize = (_int)CMathUtils::RandomUInt((_uint)iDamageRandomRange);
@@ -238,6 +245,7 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_bAirToDown = true;
 	}
 
+	CheckHitPositoin(tDamageParams);
 	CheckDeBuff(tDamageParams.eDeBuff);
 	HitEffect(tDamageParams);
 	CheckCrushGage(tDamageParams);
@@ -301,16 +309,6 @@ CRigidBody * CEnemy::GetRigidBody(const string & KeyName)
 	return (*pRigidBody).second;
 }
 
-void CEnemy::Update_UIInfo()
-{
-	if (m_bDead == true) return;
-
-	if (m_pShieldUI != nullptr)
-		m_pShieldUI->SetShild(m_iHP / (_float)m_iMaxHP, m_iCrushGauge / (_float)m_iMaxCrushGauge);
-	else if (m_pHPUI != nullptr)
-		m_pHPUI->Set_HpRatio(m_iHP / (_float)m_iMaxHP);
-}
-
 _bool CEnemy::IsTargetFront(_float fAngle)
 {
 	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
@@ -351,12 +349,7 @@ void CEnemy::SetDead()
 	m_DeathTimeline.PlayFromStart();
 	
 	//UI 삭제
-	if (m_pShieldUI != nullptr)
-		m_pShieldUI->SetDelete();
-
-	if (m_pHPUI != nullptr)
-		m_pHPUI->SetDelete();
-	//
+	Safe_Release(m_pEMUI);
 }
 
 void CEnemy::FindTarget()
@@ -380,48 +373,48 @@ void CEnemy::FindTarget()
 	}
 }
 
-void CEnemy::TurnEyesOut()
-{
-	CEffectGroup* pEffectGroup = nullptr;
-	pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", TEXT("Layer_UI"));
-	assert(pEffectGroup != nullptr);
+//void CEnemy::TurnEyesOut()
+//{
+//	CEffectGroup* pEffectGroup = nullptr;
+//	pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", PLAYERTEST_LAYER_FRONTUI);
+//	assert(pEffectGroup != nullptr);
+//
+//	//TimeLine 끝나고 삭제
+//	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true, true);
+//}
 
-	//TimeLine 끝나고 삭제
-	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true, true);
-}
-
-void CEnemy::Create_InfoUI()
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
-	if (m_pShieldUI != nullptr || m_pHPUI != nullptr) return;
-
-	if (m_bHasCrushGauge)
-	{
-		m_pShieldUI = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterShield")));
-		assert(m_pShieldUI != nullptr);
-
-		m_pShieldUI->Set_Owner(this);
-		m_pShieldUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
-		m_pShieldUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
-	}
-	else
-	{
-		m_pHPUI = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterHP")));
-		assert(m_pHPUI != nullptr);
-
-		m_pHPUI->Set_Owner(this);
-		m_pHPUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
-		m_pHPUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
-	}
-}
+//void CEnemy::Create_InfoUI()
+//{
+//	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+//
+//	if (m_pShieldUI != nullptr || m_pHPUI != nullptr) return;
+//
+//	if (m_bHasCrushGauge)
+//	{
+//		m_pShieldUI = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterShield")));
+//		assert(m_pShieldUI != nullptr);
+//
+//		m_pShieldUI->Set_Owner(this);
+//		m_pShieldUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
+//		m_pShieldUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
+//	}
+//	else
+//	{
+//		m_pHPUI = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterHP")));
+//		assert(m_pHPUI != nullptr);
+//
+//		m_pHPUI->Set_Owner(this);
+//		m_pHPUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
+//		m_pHPUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
+//	}
+//}
 
 _bool CEnemy::Decide_PlayBrainCrush()
 {
 	if (m_iCrushGauge <= 0)
 	{
 		m_bBrainCrush = true;
-		return true;
+		return true; 
 	}
 
 	return false;
@@ -443,7 +436,7 @@ _float4x4 CEnemy::GetPivotMatrix()
 	return m_pModelCom->GetPivotMatrix();
 }
 
-void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
+void CEnemy::CheckHitPositoin(DAMAGE_PARAM& tDamageParams)
 {
 	if (tDamageParams.vHitPosition == _float4(0.f, 0.f, 0.f, 1.f) && tDamageParams.pCauser != nullptr)
 	{
@@ -477,6 +470,10 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 		}
 	}
 
+}
+
+void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
+{
 	wstring HitBloodName;
 	wstring HitEffectName;
 	wstring HitDecalName;
@@ -505,8 +502,9 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, L"Player_Default_Sword_Particle")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 		break;
 	}
-	
 
+	if(m_bHitWeak)
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0220_Weak_Hit_EF")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 	if (HitBloodName.empty() == false)
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
 	if (HitEffectName.empty() == false)
@@ -589,7 +587,7 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 		if (m_iCrushGauge < 0)
 		{
 			m_iCrushGauge = 0;
-			m_bDeadStart = true;
+			m_bCrushStart = true;
 
 			//UI 띄우기
 		}
@@ -601,7 +599,7 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 {
 	//true가 됐다는건 플레이어가 G키를 눌러 브레인 크러쉬를 실행했다는거.
 	//브레인 크러쉬 애니메이션에 맞춰서 SetDead 함수를 실행시켜 줌
-	//if (m_bBrainCrush == true) return;
+	if (m_bCrushStart == true) return;
 
 	_int iDamage = tDamageParams.iDamage;
 	// if (m_bHitWeak)
@@ -610,10 +608,8 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 	m_iHP -= iDamage;
 	if (m_iHP < 0)
 	{
-		if (m_iCrushGauge > 0)
-			SetDead();
-
-		m_bDeadStart = true;
+		//if (m_iCrushGauge > 0)
+		SetDead();
 		m_iHP = 0;
 	}
 }
@@ -785,7 +781,5 @@ void CEnemy::Free()
 
 	m_pRigidBodies.clear();
 
-	Safe_Release(m_pHPUI);
-	Safe_Release(m_pShieldUI);
-		
+	Safe_Release(m_pEMUI);	
 }

@@ -184,7 +184,7 @@ void CEM0210::SetUpFSM()
 				m_fGravity = 20.f;
 			})
 			.AddTransition("Idle to BrainCrushStart", "BrainCrushStart")
-				.Predicator([this] { return m_iCrushGauge <= 0; })
+				.Predicator([this] { return m_bCrushStart; })
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
 			.AddTransition("Idle to Down", "Down")
@@ -231,7 +231,7 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Hit_Light to Idle", "Idle")
 				.Predicator([this]
 				{
-						return m_bDead
+						return m_bCrushStart || m_bDead
 							|| m_pASM->isSocketPassby("FullBody", 0.95f)
 							|| (m_eCurAttackType != EAttackType::ATK_LIGHT
 								&& m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
@@ -265,7 +265,7 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
-						return m_bDead
+						return m_bCrushStart || m_bDead
 							|| m_pASM->isSocketPassby("FullBody", 0.95f)
 							|| m_eCurAttackType == EAttackType::ATK_TO_AIR
 							|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
@@ -315,7 +315,7 @@ void CEM0210::SetUpFSM()
 				.AddTransition("OnFloorGetup to Idle", "Idle")
 				.Predicator([this]
 			{
-				return m_bDead || m_pASM->isSocketEmpty("FullBody");
+				return m_bCrushStart || m_bDead || m_pASM->isSocketEmpty("FullBody");
 			})
 
 		.AddState("Down")
@@ -327,7 +327,7 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Down to OnFloorGetup", "OnFloorGetup")
 				.Predicator([this]
 				{
-						return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return m_bCrushStart || m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -340,7 +340,7 @@ void CEM0210::SetUpFSM()
 			.AddTransition("BrainCrushStart to BrainCrushLoop", "BrainCrushLoop")
 				.Predicator([this]
 				{
-					return m_bDead ||m_bBrainCrush || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bBrainCrush || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("BrainCrushLoop")
@@ -407,12 +407,12 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Dodge to DodgeStop", "DodgeStop")
 				.Predicator([this]
 				{
-					return m_bDead || (m_bDodge && m_bOnFloor);
+					return m_bCrushStart || m_bDead || (m_bDodge && m_bOnFloor);
 				})
 			.AddTransition("Dodge to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_bDown || m_eCurAttackType != EAttackType::ATK_END;
+					return m_bCrushStart || m_bDead || m_bDown || m_eCurAttackType != EAttackType::ATK_END;
 				})
 			.AddState("DodgeStop")
 				.OnStart([this]
@@ -427,7 +427,7 @@ void CEM0210::SetUpFSM()
 				.AddTransition("DodgeStop to Idle", "Idle")
 					.Predicator([this]
 					{
-						return m_bDead || m_bDown || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.99f);
+						return m_bCrushStart || m_bDead || m_bDown || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.99f);
 					})
 
 
@@ -447,7 +447,7 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Attack_Spin to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_bDown ||  m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bCrushStart || m_bDead || m_bDown ||  m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Attack_Somersault")
@@ -464,7 +464,7 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Attack_Somersault to Idle", "Idle")
 				.Predicator([this]
 			{
-				return m_bDead || m_bDown || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
+				return m_bCrushStart || m_bDead || m_bDown || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
 			})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -477,7 +477,7 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Threat to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bCrushStart || m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -487,6 +487,7 @@ void CEM0210::SetUpFSM()
 
 void CEM0210::SetUpUI()
 {
+	__super::SetUpUI();
 }
 
 void CEM0210::BeginTick()
