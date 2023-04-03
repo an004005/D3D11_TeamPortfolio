@@ -23,3 +23,6 @@ VFX_Mesh_Plane_9
 
 VFX_Mesh_ShorLeaf_10
 ../Bin/Resources/Meshes/VFX/Effect_Plane/VFX_Mesh_ShorLeaf_10.static_model
+
+VFX_Mesh_All_Plane
+../Bin/Resources/Meshes/VFX/Effect_Plane/VFX_Mesh_All_Plane.static_model
