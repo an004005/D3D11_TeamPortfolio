@@ -58,6 +58,8 @@
 #include "PostVFX_Teleport.h"
 #include "AnimCam.h"
 
+#include "Canvas_SAMouseLeft.h"
+
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -2111,7 +2113,13 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			.Priority(0)
 
 		.AddState("KINETIC_RB_LOOP")
-			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Loop); })
+			.OnStart([&]() 
+			{ 
+				m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Loop);
+
+				if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
+					static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->CreateLargeParticle();
+			})
 			.Tick([&](double TimeDelta) 
 			{
 				m_bKineticMove = true;
@@ -4777,6 +4785,8 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_Swing_L);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+
+			CreateSpecialUI(SPECIAL_TELEPHONEPOLE);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -4902,7 +4912,7 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 			.Predicator([&]()->_bool 
 			{ 
 				if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return false;
-				return m_pController->KeyDown(CController::F) && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Decide_PlayBrainCrush();
+				return m_bBrainCrashInput && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Decide_PlayBrainCrush();
 			})
 			.Priority(0)
 
@@ -5096,6 +5106,8 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Rotation_L);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+
+			CreateSpecialUI(SPECIAL_HBEAM_BUNDLE);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -5694,6 +5706,8 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			CGameInstance::GetInstance()->SetTimeRatioCurve("IronBars_Slow");
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Charge_Ex);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+
+			CreateSpecialUI(SPECIAL_IRONBARS);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -5784,6 +5798,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		.OnStart([&]() 
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Wait_Ex);
+			CreateSpecialUI(SPECIAL_IRONBARS, true);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -6124,6 +6139,8 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_Press);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 			CGameInstance::GetInstance()->SetTimeRatioCurve("TelephonePoleSlow");
+
+			CreateSpecialUI(SPECAIL_CONTAINER);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -6152,6 +6169,7 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 		.AddState("CONTAINER_PRESS")
 		.OnStart([&]() 
 		{
+			CreateSpecialUI(SPECAIL_CONTAINER, true);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -7183,6 +7201,8 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 		m_bKineticRB = false;
 		m_bKineticG = false;
 		m_bUpper = false;
+
+		m_bBrainCrashInput = false;
 	}
 	else
 	{
@@ -7196,6 +7216,13 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 
 		m_bJump = m_pController->KeyDown(CController::SPACE);
 		m_bUpper = m_pController->KeyPress(CController::SPACE);
+
+		m_bBrainCrashInput = m_pController->KeyDown(CController::R);
+
+		if (m_bBrainCrashInput)
+		{
+			int iA = 0;
+		}
 
 		//if (m_bCanTurn_Attack)
 		//{
@@ -8250,6 +8277,61 @@ void CPlayer::End_RimLight()
 	{
 		iter->GetParam().Floats[0] = 0.f;
 		//iter->GetParam().Float4s[0] = { 0.f, 0.f, 0.f, 0.f };
+	}
+}
+
+void CPlayer::CreateSpecialUI(ESpecialType eType, _bool bAdditional)
+{
+	Json json;
+
+	switch (eType)
+	{
+	case SPECIAL_TELEPHONEPOLE:
+
+		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAMouseLeft.json");
+		CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAMouseLeft", &json);
+
+		break;
+
+	case SPECIAL_HBEAM_BUNDLE:
+
+		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SARebar.json");
+		CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SARebar", &json);
+
+		break;
+
+	case SPECIAL_IRONBARS:
+
+		if (bAdditional)
+		{
+			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_Go.json");
+			CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_Go", &json);
+		}
+		else
+		{
+			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
+			CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_S", &json);
+		}
+
+		break;
+
+	case SPECAIL_CONTAINER:
+
+		if (bAdditional)
+		{
+			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAContainer_Down.json");
+			CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAContainer_Down", &json);
+		}
+		else
+		{
+			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
+			CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_S", &json);
+		}
+
+		break;
+
+	default:
+		break;
 	}
 }
 

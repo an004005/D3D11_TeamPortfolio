@@ -49,7 +49,7 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Priority(4)
 
 				.AddTransition("IDLE to ATK_A1", "ATK_A1")
-				.Predicator([&]()->_bool {return (-1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
+				.Predicator([&]()->_bool {return (-1.f != m_fDistance_toEnemy && 2.f >= m_fDistance_toEnemy); })
 				.Duration(0.2f)
 				.Priority(5)
 
@@ -176,7 +176,7 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Priority(0)
 
 				.AddTransition("ATK_A1 to ATK_A2_START", "ATK_A2_START")
-				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_201_AL_atk_a1") && -1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
+				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_201_AL_atk_a1") && -1.f != m_fDistance_toEnemy && 2.f >= m_fDistance_toEnemy); })
 				.Duration(0.2f)
 				.Priority(1)
 
@@ -197,7 +197,7 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Priority(0)
 
 				.AddTransition("ATK_A2_START to ATK_A2", "ATK_A2")
-				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_202_AL_atk_a2_start") && -1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
+				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_202_AL_atk_a2_start") && -1.f != m_fDistance_toEnemy && 2.f >= m_fDistance_toEnemy); })
 				.Duration(0.f)
 				.Priority(1)
 
@@ -218,7 +218,7 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Priority(0)
 
 				.AddTransition("ATK_A2 to ATK_A3", "ATK_A3")
-				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_202_AL_atk_a2_loop") && -1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
+				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_202_AL_atk_a2_loop") && -1.f != m_fDistance_toEnemy && 2.f >= m_fDistance_toEnemy); })
 				.Duration(0.f)
 				.Priority(1)
 
@@ -239,7 +239,7 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Priority(0)
 
 				.AddTransition("ATK_A3 to ATK_B1_START", "ATK_B1_START")
-				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_203_AL_atk_a3") && -1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
+				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_203_AL_atk_a3") && -1.f != m_fDistance_toEnemy && 2.f >= m_fDistance_toEnemy); })
 				.Duration(0.2f)
 				.Priority(1)
 
