@@ -100,8 +100,7 @@ void CMainApp::Tick(_double TimeDelta)
 		return;
 
 	m_pGameInstance->Tick_Engine(TimeDelta);
-
-	if(CGameManager::GetInstance() != nullptr)
+	if (CGameManager::GetInstance())
 		CGameManager::GetInstance()->Tick(TimeDelta);
  }
 
@@ -218,7 +217,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_VIBuffer_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Player_Default_Attack/Air_Attack_1.static_model", PivotMatrix, 100))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Sakura_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX_Ver2/SM_ef_Sakura_001.static_model", PivotMatrix, 100))))
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Sakura_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX_Ver2/SM_ef_Sakura_001.static_model", PivotMatrix, 1000))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_LongLeaf_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_Plane/VFX_Mesh_Plane_0.static_model", PivotMatrix, 100))))
@@ -295,6 +294,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		/* For.Prototype_Component_Shader_VtxModel*/
 		auto pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements);
 		pShader->SetCommonTexture("g_KineticWave", "../Bin/Resources/Texture/VFX/T_ef_scl_noi_054.png");
+		pShader->SetCommonTexture("g_scl_noise_004", "../Bin/Resources/Texture/VFX/T_ef_ev_scl_noi_004.png");
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"), pShader)))
 			return E_FAIL;
 	}

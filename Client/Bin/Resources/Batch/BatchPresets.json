@@ -3,7 +3,22 @@
         {
             "Layer": "Layer_Monster",
             "JsonPath": "",
+            "ProtoTag": "Monster_em110"
+        },
+        {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
             "ProtoTag": "Monster_em200"
+        },
+        {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
+            "ProtoTag": "Monster_em210"
+        },
+        {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
+            "ProtoTag": "Monster_em220"
         },
         {
             "Layer": "Layer_Monster",
@@ -13,7 +28,37 @@
         {
             "Layer": "Layer_Monster",
             "JsonPath": "",
+            "ProtoTag": "Monster_em400"
+        },
+        {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
+            "ProtoTag": "Monster_em650"
+        },
+        {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
+            "ProtoTag": "Monster_em700"
+        },
+        {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
             "ProtoTag": "Monster_em750"
+        },
+        {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
+            "ProtoTag": "Monster_em800"
+        },
+        {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
+            "ProtoTag": "Monster_em1100"
+        },
+        {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
+            "ProtoTag": "Monster_em1200"
         },
         {
             "Layer": "Layer_MapKineticObject",
@@ -137,8 +182,13 @@
         },
         {
             "Layer": "Layer_Kinetic",
-            "JsonPath": "",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_IronBars_MultiBars.json",
             "ProtoTag": "Prototype_GameObject_Special_IronBars_MultiBars"
+        },
+        {
+            "Layer": "Layer_Kinetic",
+            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_Container.json",
+            "ProtoTag": "Prototype_GameObject_Special_Container"
         }
     ]
 }

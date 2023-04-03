@@ -74,7 +74,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDiffuse = float4(1.f, 1.f, 1.f, 1.f);
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	Out.vFlag = 0.f;
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
 
 	return Out;
 }
@@ -83,8 +83,8 @@ PS_OUT CommonProcess(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	if (Out.vDiffuse.a < 0.01f)
-		discard;
+	/*if (Out.vDiffuse.a < 0.01f)
+		discard;*/
 
 	float3 vNormal;
 	if (g_tex_on_1)
@@ -101,7 +101,7 @@ PS_OUT CommonProcess(PS_IN In)
 
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	Out.vFlag = 0.f;
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
 	return Out;
 }
 
@@ -133,7 +133,6 @@ PS_OUT PS_DETAIL_N(PS_IN In)
 		discard;
 
 	float3 vNormal;
-	float3 vDetialNormal;
 
 	if (g_tex_on_1 && g_tex_on_3)
 	{
@@ -141,17 +140,18 @@ PS_OUT PS_DETAIL_N(PS_IN In)
 		vNormal = vNormalDesc.xyz * 2.f - 1.f;
 
 		vector		vDetailNormalDesc = g_tex_3.Sample(LinearSampler, In.vTexUV);
-		vDetialNormal = vDetailNormalDesc.xyz * 2.f - 1.f;
+		float3 vDetialNormal = vDetailNormalDesc.xyz * 2.f - 1.f;
 
 		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
 		vNormal = normalize(mul(vNormal, WorldMatrix));
 		vDetialNormal = normalize(mul(vDetialNormal, WorldMatrix));
+
+		vNormal += vDetialNormal * g_float_0;
 	}
 	else if (g_tex_on_1)
 	{
 		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
 		vNormal = vNormalDesc.xyz * 2.f - 1.f;
-
 		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
 		vNormal = normalize(mul(vNormal, WorldMatrix));
 	}
@@ -161,15 +161,7 @@ PS_OUT PS_DETAIL_N(PS_IN In)
 
 	float flags = SHADER_DEFAULT;
 
-	if (g_tex_on_3)
-	{
-		vNormal += vDetialNormal * g_float_0;
-	}
-	else
-	{
-		Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
-	}
-	
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
 
 	if (g_tex_on_2)
@@ -177,7 +169,7 @@ PS_OUT PS_DETAIL_N(PS_IN In)
 	else
 		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
 
-	Out.vFlag = 0.f;
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
 	return Out;
 }
 
@@ -227,7 +219,7 @@ PS_OUT PS_ALPHA(PS_IN In)
 	else
 		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
 
-	Out.vFlag = 0.f;
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
 	return Out;
 }
 

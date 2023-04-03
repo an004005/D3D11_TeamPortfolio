@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "..\public\Model.h"
 #include "Mesh.h"
 #include "Texture.h"
@@ -57,24 +57,24 @@ CModel::CModel(const CModel & rhs)
 {
 	if (m_eType == TYPE_ANIM)
 	{
-		// bone »ı¼º
+		// bone ìƒì„±
 		const Json jRootBone = Json::parse(rhs.m_BoneObjectDump);
 		Ready_Bones(jRootBone, nullptr);
 		SetBoneChildren(jRootBone);
 	}
 
-	// ¸Ş½¬ Å¬·Ğ
+	// ë©”ì‰¬ í´ë¡ 
 	m_Meshes.reserve(rhs.m_Meshes.size());
 	for (auto& pMesh : rhs.m_Meshes)
 		m_Meshes.push_back(dynamic_cast<CMesh*>(pMesh->Clone()));
 
 	if (m_eType == TYPE_ANIM)
 	{
-		// ¸Ş½¬ º» ¿¬°á
+		// ë©”ì‰¬ ë³¸ ì—°ê²°
 		for (const auto pMesh : m_Meshes)
 			pMesh->SetUp_MeshBones(this);
 
-		// ¾Ö´Ï¸ŞÀÌ¼Ç º¹»ç ¹× ¸µÅ©
+		// ì• ë‹ˆë©”ì´ì…˜ ë³µì‚¬ ë° ë§í¬
 		for (const auto& pAnimPair : rhs.m_mapAnimation)
 		{
 			m_mapAnimation.emplace(pAnimPair.first, pAnimPair.second->Clone());
@@ -88,7 +88,7 @@ CModel::CModel(const CModel & rhs)
 
 	// for (auto& pMtrl : m_Materials)
 	// 	Safe_AddRef(pMtrl);
-	//  ¸ÓÅÍ¸®¾ó º¹»ç
+	//  ë¨¸í„°ë¦¬ì–¼ ë³µì‚¬
 	m_Materials.reserve(rhs.m_Materials.size());
 	for (auto pMtrl : rhs.m_Materials)
 		m_Materials.push_back((CMaterial*)pMtrl->Clone(nullptr));
@@ -215,8 +215,8 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix)
 	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
 	vMovePos = XMVector3TransformNormal(vMovePos, PivotRotation);
 
-	// PivotÀ» Àû¿ë½ÃÄÑµµ YÃà°ú ZÃà ÀÌµ¿ÀÌ µÚÆ²¸®´Â Çö»óÀ¸·Î ÀÎÇØ
-	// ÇöÀç XÃà¿¡ ´ëÇØ È¸ÀüÀ» ÇØµĞ »óÅÂ, ¿øÀÎ ÆÄ¾Ç ½Ã ´Ù½Ã ¿ø»óº¹±¸ ÇÒ °Í
+	// Pivotì„ ì ìš©ì‹œì¼œë„ Yì¶•ê³¼ Zì¶• ì´ë™ì´ ë’¤í‹€ë¦¬ëŠ” í˜„ìƒìœ¼ë¡œ ì¸í•´
+	// í˜„ì¬ Xì¶•ì— ëŒ€í•´ íšŒì „ì„ í•´ë‘” ìƒíƒœ, ì›ì¸ íŒŒì•… ì‹œ ë‹¤ì‹œ ì›ìƒë³µêµ¬ í•  ê²ƒ
 	/*********************************************************************/
 	_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
 	vMovePos = XMVector3TransformNormal(vMovePos, ModifyRotation);
@@ -285,8 +285,8 @@ _vector CModel::GetLocalMove(_fmatrix WorldMatrix, const string & srtAnimName)
 	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
 	vMovePos = XMVector3TransformNormal(vMovePos, PivotRotation);
 
-	// PivotÀ» Àû¿ë½ÃÄÑµµ YÃà°ú ZÃà ÀÌµ¿ÀÌ µÚÆ²¸®´Â Çö»óÀ¸·Î ÀÎÇØ
-	// ÇöÀç XÃà¿¡ ´ëÇØ È¸ÀüÀ» ÇØµĞ »óÅÂ, ¿øÀÎ ÆÄ¾Ç ½Ã ´Ù½Ã ¿ø»óº¹±¸ ÇÒ °Í
+	// Pivotì„ ì ìš©ì‹œì¼œë„ Yì¶•ê³¼ Zì¶• ì´ë™ì´ ë’¤í‹€ë¦¬ëŠ” í˜„ìƒìœ¼ë¡œ ì¸í•´
+	// í˜„ì¬ Xì¶•ì— ëŒ€í•´ íšŒì „ì„ í•´ë‘” ìƒíƒœ, ì›ì¸ íŒŒì•… ì‹œ ë‹¤ì‹œ ì›ìƒë³µêµ¬ í•  ê²ƒ
 	/*********************************************************************/
 	_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
 	vMovePos = XMVector3TransformNormal(vMovePos, ModifyRotation);
@@ -338,8 +338,8 @@ _float CModel::GetLocalScalar(_fmatrix WorldMatrix)
 	_matrix PivotRotation = XMMatrixRotationQuaternion(vRotation);
 	vMovePos = XMVector3TransformNormal(vMovePos, PivotRotation);
 
-	// PivotÀ» Àû¿ë½ÃÄÑµµ YÃà°ú ZÃà ÀÌµ¿ÀÌ µÚÆ²¸®´Â Çö»óÀ¸·Î ÀÎÇØ
-	// ÇöÀç XÃà¿¡ ´ëÇØ È¸ÀüÀ» ÇØµĞ »óÅÂ, ¿øÀÎ ÆÄ¾Ç ½Ã ´Ù½Ã ¿ø»óº¹±¸ ÇÒ °Í
+	// Pivotì„ ì ìš©ì‹œì¼œë„ Yì¶•ê³¼ Zì¶• ì´ë™ì´ ë’¤í‹€ë¦¬ëŠ” í˜„ìƒìœ¼ë¡œ ì¸í•´
+	// í˜„ì¬ Xì¶•ì— ëŒ€í•´ íšŒì „ì„ í•´ë‘” ìƒíƒœ, ì›ì¸ íŒŒì•… ì‹œ ë‹¤ì‹œ ì›ìƒë³µêµ¬ í•  ê²ƒ
 	/*********************************************************************/
 	_matrix ModifyRotation = XMMatrixRotationX(XMConvertToRadians(-90.f));
 	vMovePos = XMVector3TransformNormal(vMovePos, ModifyRotation);
@@ -675,6 +675,10 @@ void CModel::Imgui_RenderProperty()
 				}
 				ImGui::EndListBox();
 			}
+			if (ImGui::Button("Play Anim"))
+			{
+				SetPlayAnimation(m_CurAnimName);
+			}
 		}
 	}
 
@@ -776,7 +780,8 @@ void CModel::Imgui_RenderProperty()
 					iSelected = i;
 			}
 			ImGui::EndListBox();
-
+			if (iSelected >= m_Materials.size())
+				iSelected = 0;
 			m_Materials[iSelected]->Imgui_RenderProperty();
 		}
 	}
@@ -1034,11 +1039,18 @@ HRESULT CModel::Render(CTransform* pTransform)
 
 HRESULT CModel::Render(const _float4x4& WorldMatrix)
 {
+	_uint iMeshIdx = 0;
 	for (const auto& mesh : m_Meshes)
 	{
 		const _uint iMtrlIdx = mesh->Get_MaterialIndex();
 		if (m_Materials[iMtrlIdx]->IsActive() == false)
 			continue;
+		if (m_Materials[iMtrlIdx]->IsAlphaBlend())
+		{
+			Render_MeshAlphBlend(WorldMatrix, iMeshIdx);
+			continue;
+		}
+
 
 		if (m_eType == TYPE_ANIM)
 		{
@@ -1050,6 +1062,7 @@ HRESULT CModel::Render(const _float4x4& WorldMatrix)
 		m_Materials[iMtrlIdx]->BindMatrices(WorldMatrix);
 		m_Materials[iMtrlIdx]->Begin();
 		mesh->Render();
+		++iMeshIdx;
 	}
 
 	return S_OK;
@@ -1060,6 +1073,12 @@ HRESULT CModel::RenderMesh(CTransform* pTransform, _uint iMeshIdx)
 	const _uint iMtrlIdx = m_Meshes[iMeshIdx]->Get_MaterialIndex();
 	if (m_Materials[iMtrlIdx]->IsActive() == false)
 		return S_OK;
+
+	if (m_Materials[iMtrlIdx]->IsAlphaBlend())
+	{
+		Render_MeshAlphBlend(pTransform->Get_WorldMatrix_f4x4(), iMeshIdx);
+		return S_OK;
+	}
 
 	if (m_eType == TYPE_ANIM)
 	{
@@ -1142,12 +1161,34 @@ HRESULT CModel::Render_NoUpdateBone(const _float4x4& WorldMatrix)
 	return S_OK;
 }
 
+HRESULT CModel::Render_MeshAlphBlend(_float4x4 WorldMatrix, _uint iMeshIdx)
+{
+	CGameInstance::GetInstance()->LambdaRenderRequest(WorldMatrix, [this, WorldMatrix, iMeshIdx]
+	{
+		const _uint iMtrlIdx = m_Meshes[iMeshIdx]->Get_MaterialIndex();
+
+		if (m_eType == TYPE_ANIM)
+		{
+			_float4x4 BoneMatrices[512];
+			m_Meshes[iMeshIdx]->SetUp_BoneMatrices(BoneMatrices, XMLoadFloat4x4(&m_PivotMatrix));
+			m_Materials[iMtrlIdx]->GetShader()->Set_MatrixArray("g_BoneMatrices", BoneMatrices, 512);
+		}
+		
+		m_Materials[iMtrlIdx]->BindMatrices(WorldMatrix);
+		m_Materials[iMtrlIdx]->Begin();
+		m_Meshes[iMeshIdx]->Render();
+
+	}, CRenderer::RENDER_MESH_ALPHABLEND);
+
+	return S_OK;
+}
+
 HRESULT CModel::Render_ShadowDepth(CTransform* pTransform)
 {
 	for (size_t i = 0; i < m_Meshes.size(); ++i)
 	{
 		const _uint iMtrlIdx = m_Meshes[i]->Get_MaterialIndex();
-		if (m_Materials[iMtrlIdx]->IsActive() == false)
+		if (m_Materials[iMtrlIdx]->IsActive() == false || m_Materials[iMtrlIdx]->IsAlphaBlend())
 			continue;
 
 		if (m_eType == TYPE_ANIM)
@@ -1174,7 +1215,7 @@ HRESULT CModel::Render_ShadowDepth(const _float4x4& WorldMatrix)
 	for (size_t i = 0; i < m_Meshes.size(); ++i)
 	{
 		const _uint iMtrlIdx = m_Meshes[i]->Get_MaterialIndex();
-		if (m_Materials[iMtrlIdx]->IsActive() == false)
+		if (m_Materials[iMtrlIdx]->IsActive() == false || m_Materials[iMtrlIdx]->IsAlphaBlend())
 			continue;
 
 		if (m_eType == TYPE_ANIM)
@@ -1348,7 +1389,7 @@ void CModel::Ready_Bones(const Json& jBone, CBone* pParent)
 		Safe_AddRef(m_pRootBone);
 	}
 
-	// ¿øº» °¡Á®±â ÀÖ´Â°÷, »èÁ¦¸¦ À§ÇØ addrefÇÏÁö ¾Ê´Â´Ù.
+	// ì›ë³¸ ê°€ì ¸ê¸° ìˆëŠ”ê³³, ì‚­ì œë¥¼ ìœ„í•´ addrefí•˜ì§€ ì•ŠëŠ”ë‹¤.
 	m_mapBones.emplace(jBone["Name"].get<string>(), pBone);
 
 	if (jBone.contains("Children"))
@@ -1450,7 +1491,7 @@ _vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix)
 
 	for (auto& iter : m_mapOptionalRootMotion)
 	{
-		if (m_CurAnimName == iter.first)	// ÀÌº¥Æ® Äİ·¯¿Í °°Àº °³³ä
+		if (m_CurAnimName == iter.first)	// ì´ë²¤íŠ¸ ì½œëŸ¬ì™€ ê°™ì€ ê°œë…
 		{
 			_float fPlayTime = static_cast<_float>(m_mapAnimation[m_CurAnimName]->GetPlayTime());
 
@@ -1495,7 +1536,7 @@ _vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix)
 
 					if (0.f > XMVectorGetX(XMVector3Dot(vResultDir, vMovePos)))
 					{
-						// È¤½Ã ¹æÇâº¤ÅÍ Æ¢¸é ¾ê·Î Àâ¾ÆÁÜ
+						// í˜¹ì‹œ ë°©í–¥ë²¡í„° íŠ€ë©´ ì–˜ë¡œ ì¡ì•„ì¤Œ
 						vInitTrans = vTrans;
 						GetOptionalMoveVector(WorldMatrix);
 					}
@@ -1524,7 +1565,7 @@ _vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix, const string & srtAn
 
 	for (auto& iter : m_mapOptionalRootMotion)
 	{
-		if (srtAnimName == iter.first)	// ÀÌº¥Æ® Äİ·¯¿Í °°Àº °³³ä
+		if (srtAnimName == iter.first)	// ì´ë²¤íŠ¸ ì½œëŸ¬ì™€ ê°™ì€ ê°œë…
 		{
 			_float fPlayTime = static_cast<_float>(m_mapAnimation[srtAnimName]->GetPlayTime());
 
@@ -1563,7 +1604,7 @@ _vector CModel::GetOptionalMoveVector(_fmatrix WorldMatrix, const string & srtAn
 
 					if (0.f > XMVectorGetX(XMVector3Dot(vResultDir, vMovePos)))
 					{
-						// È¤½Ã ¹æÇâº¤ÅÍ Æ¢¸é ¾ê·Î Àâ¾ÆÁÜ
+						// í˜¹ì‹œ ë°©í–¥ë²¡í„° íŠ€ë©´ ì–˜ë¡œ ì¡ì•„ì¤Œ
 						vInitTrans = vTrans;
 						GetOptionalMoveVector(WorldMatrix);
 					}

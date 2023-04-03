@@ -38,6 +38,11 @@ public:
 	void	Switch_CamMod();	// CameraPos¿¡ Ä· ºÙÀÌ±â
 	void	Reset_CamMod();
 	void	SetUp_BoneMatrix(CModel* pModel, _fmatrix Transform);
+	ECamMod	GetCamMod() { return m_eCamMod; }
+
+public:
+	_bool	Cam_Closer(_double TimeDelta, _float fRatio, _float fLimit = 0.25f);
+	_bool	Cam_Away(_double TimeDelta, _float fRatio, _float fLimit = 1.f);
 
 public:
 	void	Random_Shaking(_float fShakePower);
@@ -48,6 +53,8 @@ private:
 	ECamMod	m_eCamMod = MOD_SYNC;
 	_matrix	m_AttachMatrix = XMMatrixIdentity();
 	_float	m_fLerpTime = 1.f;
+	ECamMod	m_bCheckActionEnd = MOD_SYNC;
+	_matrix m_CheckMatrix = XMMatrixIdentity();
 
 public:
 	CTransform*	GetTransform() { return this->m_pTransformCom; }

@@ -15,6 +15,8 @@
 #include "Special_TankLorry_Head.h"
 #include "Special_TankLorry_Trailer.h"
 
+#include "ParticleGroup.h"
+
 CSpecial_TankLorry::CSpecial_TankLorry(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
 {
@@ -184,6 +186,10 @@ void CSpecial_TankLorry::TankLorry_Activate()
 {
 	static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->Set_Kinetic(false);
 	static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->Set_Kinetic(false);
+
+	m_pChargeParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Truck_Kinetic_Particles");
+	m_pChargeParticle->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+	//Special_G_Truck_Kinetic_Particles
 }
 
 void CSpecial_TankLorry::TankLorry_Shake(_float fRange)
@@ -196,12 +202,20 @@ void CSpecial_TankLorry::TankLorry_Bounce(_float fForce)
 {
 	static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->Bounce(fForce);
 	static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->Bounce(fForce);
+
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pChargeParticle))
+	{
+		m_pChargeParticle->Delete_Particles();
+		m_pChargeParticle = nullptr;
+	}
 }
 
 void CSpecial_TankLorry::TankLorry_Explosion()
 {
 	static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->Exploision();
 	static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->Exploision();
+
+	//Truck_Explode_Rect
 
 	CGameInstance::GetInstance()->SetTimeRatioCurve("TankLorry_Slow");
 //	CGameInstance::GetInstance()->AddLifePointLight(3.f, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 10.f, { 1.f, 0.f, 0.f, 1.f });
@@ -213,6 +227,28 @@ void CSpecial_TankLorry::TankLorry_Explosion()
 void CSpecial_TankLorry::TankLorry_Cheage_TankIndex(_uint iIndex)
 {
 	static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->Change_Tank(iIndex);
+}
+
+void CSpecial_TankLorry::TankLorry_Create_OilParticle()
+{
+	static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->Create_Oil_Particle();
+}
+
+void CSpecial_TankLorry::TankLorry_Release_OilParticle()
+{
+	static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->Release_Oil_Particle();
+}
+
+void CSpecial_TankLorry::TankLorry_Explosion_Effect()
+{
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Special_G_Truck_Explode_Base")->
+		Start_AttachPosition_Scale(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 2.f, 0.f, 0.f), XMVectorSet(0.f, 1.f, 0.f, 0.f), _float4(2.f, 2.f, 2.f, 0.f), false);
+}
+
+void CSpecial_TankLorry::TankLorry_Explosion_Particle()
+{
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Truck_Explode_Particle")->
+		Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
 }
 
 HRESULT CSpecial_TankLorry::SetUp_Components(void * pArg)

@@ -15,6 +15,7 @@ public:
 	static HRESULT MakeEffectPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	static HRESULT MakeSAS_Portrait_Prototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);// ºÒ³à
 	static HRESULT MakeKineticPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static HRESULT MakeAIPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 	static HRESULT MakeTriggerPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 

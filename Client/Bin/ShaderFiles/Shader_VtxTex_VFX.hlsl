@@ -55,6 +55,32 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+
+PS_OUT PS_DRIVEMOD_GLOW(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float4 Default = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+	float4 Color = g_vec4_0;
+	float4 Blend = Default * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	float Mask1 = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+	float Mask2 = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+	float Mask3 = g_tex_4.Sample(LinearSampler, In.vTexUV).r;
+	float Mask4 = g_tex_5.Sample(LinearSampler, In.vTexUV).r;
+	float Mask5 = g_tex_6.Sample(LinearSampler, In.vTexUV).r;
+	float Mask6 = g_tex_7.Sample(LinearSampler, In.vTexUV).r;
+	Mask5 = Mask5 * Mask6;
+	Final.a = (Mask * g_float_0) + (Mask1 * g_float_1) + (Mask2 * g_float_2) + (Mask3 * g_float_3) + (Mask4 * g_float_4) + (Mask5 * g_float_5);
+
+
+	Out.vColor = CalcHDRColor(Final, g_float_6);
+
+	Out.vColor.a *= g_float_7;
+
+	return Out;
+}
+
 PS_OUT PS_BRON_BITE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -291,6 +317,24 @@ PS_OUT_Flag PS_MAIN_Flag(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag EXPLODE_DEFAULT_RECT(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+	float2 TEXUV;
+
+	if(g_int_0 > 0)
+		TEXUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 8, 8);
+	else
+		TEXUV = Get_FlipBookUV(In.vTexUV, 0, 0.05, 8, 8);
+
+	float4 Default = g_tex_0.Sample(LinearSampler, TEXUV);
+	Out.vColor = CalcHDRColor(Default, g_float_0);
+	Out.vFlag = float4(SHADER_DISTORTION_STATIC, 0.f, 0.f, Default.a * g_float_1);
+	Out.vColor.a *= g_float_2;
+
+	return Out;
+}
+
 PS_OUT_Flag PS_MASK_HIT(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -341,6 +385,39 @@ PS_OUT_Flag PS_DISTORTION_PLAYER(PS_IN In)
 
 	Out.vColor = 0;
 	Out.vColor.a *= g_float_0;
+
+	return Out;
+}
+
+PS_OUT_Flag PS_EM1200_STAMP_DISTORTION(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+
+	float4 Mask = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask.r * g_float_0);
+
+	Out.vColor = g_vec4_0;
+	Out.vColor.a *= Mask.r * g_float_1;
+
+	return Out;
+}
+
+PS_OUT_Flag PS_EM1200_FEAR(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	Out.vFlag = float4(SHADER_DISTORTION_STATIC, 0.f, 0.f, Out.vColor.r * g_float_0);
+
+	Out.vColor = 0;
+	Out.vColor.a *= g_float_0;
+
+	if (g_float_0 <= 0.f)
+		discard;
 
 	return Out;
 }
@@ -444,6 +521,40 @@ PS_OUT_Flag PS_SPECIAL_G_LARGE_HIT(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_EM0110_SPINATTACK_HIT_EF(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	Final.a = Mask * g_float_0;
+
+	float4 AddTex = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	AddTex = CalcHDRColor(AddTex, g_float_1);
+
+	float4 YellowBase = g_tex_3.Sample(LinearSampler, In.vTexUV);
+	float4 BaseColor = g_vec4_1;
+	float4 BaseBlend = YellowBase * BaseColor * 2.0f;
+	float4 BaseFinal = saturate(BaseBlend);
+
+	float4 AddColor = saturate(Final + AddTex + (BaseFinal * g_float_6));
+
+	float4 WhiteLight = g_tex_4.Sample(LinearSampler, In.vTexUV);
+	BaseFinal += WhiteLight.r;
+	Out.vColor = CalcHDRColor(AddColor, g_float_2);
+	Out.vColor.a = saturate(Final.a * (AddTex.r * g_float_5) + BaseFinal.r) * g_float_3;
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, AddTex.r * g_float_4);
+
+	if (g_float_3 <= 0.f)
+		discard;
+
+	return Out;
+}
+
 PS_OUT_Flag PS_SPECIAL_G_HBIM_HIT(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -490,6 +601,54 @@ PS_OUT_Flag PS_SPECIAL_G_HBIM_HIT(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_EM1200_STAMP_IMPACK_LARGE(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	if (g_float_5 >= 0.01f)
+	{
+		float4 Mask = g_tex_0.Sample(LinearSampler, In.vTexUV);
+		float4 Color = g_vec4_0;
+		float4 Blend = Mask * Color * 2.0f;
+		float4 Final = saturate(Blend);
+		Final.a = Mask.r;
+
+		float4 AddTex = g_tex_1.Sample(LinearSampler, In.vTexUV);
+		float4 AddTexColor = g_vec4_1;
+		float4 AddBlend = AddTex * AddTexColor * 2.0f;
+		float4 AddFinal = saturate(AddBlend);
+		AddFinal.a = AddFinal.r;
+
+		AddFinal = CalcHDRColor(AddFinal, g_float_0);
+
+		float4 AddColor = saturate(Final + g_float_1  * AddFinal);
+
+		Out.vColor = CalcHDRColor(AddColor, g_float_2);
+		Out.vColor.a = saturate((Final.a * g_float_3) + (AddFinal.a * g_float_4)) * g_float_5;
+
+		float fAlpha = saturate((AddTex.r * g_float_6) + (Final.a * g_float_6));
+
+		Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, fAlpha);
+	}
+	else
+	{
+		float2 TEXUV = Get_FlipBookUV(In.vTexUV, g_Time, 0.03, 4, 4);
+		float4 FlowTex = g_tex_2.Sample(LinearSampler, TEXUV);
+		float4 Color = g_vec4_2;
+		float4 Blend = FlowTex * Color * 2.0f;
+		float4 Final = saturate(Blend);
+
+		Out.vColor = CalcHDRColor(Final, g_float_7);
+		Out.vColor.a = FlowTex.r * g_float_8;
+		Out.vFlag = float4(SHADER_DISTORTION_STATIC, 0.f, 0.f, FlowTex.r * g_float_6);
+	}
+
+	if (g_float_8 <= 0.f)
+		discard;
+
+	return Out;
+}
+
 
 // g_tex_0 : Default White
 // g_vec4_0 : Origin Color
@@ -509,6 +668,28 @@ PS_OUT_Flag PS_DISTORTION_FLIPBOOK(PS_IN In)
 	Out.vColor.a = 0.f;
 
 	if (g_float_0 <= 0.f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT_Flag PS_WEAK_HIT_EF(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float2 TexUV = Get_FlipBookUV(In.vTexUV, g_Time, g_float_0, g_int_0, g_int_1);
+	float4 Default_White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = Default_White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	float  Mask = g_tex_1.Sample(LinearSampler, TexUV).r;
+	float Mask1 = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+	Out.vColor = CalcHDRColor(Final, g_float_1);
+	Out.vColor.a = Mask * Mask1* g_float_2;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (g_float_1 <= 0.f)
 		discard;
 
 	return Out;
@@ -817,6 +998,9 @@ PS_OUT_Flag PS_SAS_TELEPORT_EF(PS_IN In)
 
 	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, 0.f);
 
+	if (Out.vColor.a <= 0.1f)
+		discard;
+
 	return Out;
 }
 
@@ -859,6 +1043,36 @@ PS_OUT_Flag PS_MASK_TEX_DISTORTION(PS_IN In)
 	
 	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
 	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+PS_OUT_Flag PS_BRAINCRUSH_YELLOW_TEX(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float Mask = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y)).r;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	BlendColor.a = Mask * g_float_0;
+	float4 FinalColor = saturate(BlendColor);
+	FinalColor = CalcHDRColor(FinalColor, g_float_1);
+
+	float4 LineTex = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_1;
+	float4 LineBlend = LineTex * Color * 2.0f;
+	float4 LineFinal = saturate(LineBlend);
+	LineFinal = CalcHDRColor(LineFinal, g_float_2);
+	float LineMask = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+	LineFinal.a = LineTex.r * LineMask * g_float_3;
+
+	Out.vColor = CalcHDRColor(saturate(FinalColor + (LineFinal * g_float_4)), g_float_5);
+	// Out.vColor.a = 
+	
+
+	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 
 	return Out;
 }
@@ -1200,7 +1414,7 @@ technique11 DefaultTechnique
 	pass MaskTexDistortion
 	{
 		SetRasterizerState(RS_NonCulling);
-		SetDepthStencilState(DS_Default, 0);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1492,7 +1706,7 @@ technique11 DefaultTechnique
 	pass KineticDeadFlip
 	{
 		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetDepthStencilState(DS_Default, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1605,7 +1819,7 @@ technique11 DefaultTechnique
 	pass DistortionFlipBook_ColorDistortion
 	{
 		SetRasterizerState(RS_NonCulling);
-		SetDepthStencilState(DS_Default, 0);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1759,7 +1973,7 @@ technique11 DefaultTechnique
 	pass SpecialGExplodeLight
 	{
 		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetDepthStencilState(DS_Default, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1767,5 +1981,117 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SPECAIL_G_EXPLODE_LIGHT();
+	}
+
+	//44
+	pass Explode_RECT
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 EXPLODE_DEFAULT_RECT();
+	}
+
+	//45
+	pass Em1200Fear
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1200_FEAR();
+	}
+
+	//46
+	pass DriveMode_Glow
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DRIVEMOD_GLOW();
+	}
+
+	//47
+	pass Em1200Stamp
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1200_STAMP_DISTORTION();
+	}
+
+	//48
+	pass em1200_StampImpact
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM1200_STAMP_IMPACK_LARGE();
+	}
+
+	//49
+	pass Em0110SpinAttackEF
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM0110_SPINATTACK_HIT_EF();
+	}
+
+	//50
+	pass EnemyWeakHitEF
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_WEAK_HIT_EF();
+	}
+
+	//51
+	pass BrainCrush_Yellow
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRAINCRUSH_YELLOW_TEX();
 	}
 }

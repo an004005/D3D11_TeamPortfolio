@@ -32,7 +32,9 @@ public:
 public:
 	void	IronBars_AnimActive(_bool bActive);
 	void	IronBars_Decompose(_bool bDecompose);
-	void	IronBars_SetKinetic(_bool bKinetic);
+	void	IronBars_SetTrigger(_bool bTrigger);
+
+	void	IronBars_DecomposeEffect();
 
 	void	IronBars_AttachAnim(CModel* pModel, CTransform* pTransform, _float4 vPoint);
 
@@ -44,6 +46,12 @@ public:
 
 	void	IronBars_LerpAnim(CModel* pModel, CTransform* pTransform, _float4 vPoint, _float fRatio);
 
+	void	IronBars_ChangeToBundle();
+	void	IronBars_AttachAnim_MulitBars(CModel* pModel, CTransform* pTransform, _float4 vPoint);
+	void	IronBars_Shooting_Finish(_float4 vTargetPos);
+
+	void	IronBars_SetDead();
+
 private:
 	HRESULT	SetUp_Components(void* pArg);
 
@@ -52,6 +60,7 @@ private:
 	CGameObject* m_pDoor = nullptr;
 	CGameObject* m_pBars = nullptr;
 	CGameObject* m_pSingleBar[8] = { nullptr, };
+	CGameObject* m_pMultiBars = nullptr;
 
 private:
 	_float4x4		m_DoorSyncMatrix = XMMatrixIdentity();
@@ -59,7 +68,12 @@ private:
 	vector<string>	m_vecSingleBarBoneName;
 
 private:
+	_bool			m_bDeadCheck = false;
+	_float			m_fDeadTime = 0.f;
+
+private:
 	_bool			m_bDecompose = false;
+	_bool			m_bBundleCompose = false;
 
 public:
 	static CSpecial_IronBars* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

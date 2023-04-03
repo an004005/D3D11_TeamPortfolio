@@ -94,9 +94,13 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 			pMonster->TakeDamage(tParam);
 			m_bHit = true;
 
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, TEXT("Default_Kinetic_Dead_Effect_00"))
-				->Start_AttachOnlyPos(tParam.vHitFrom);
+			//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, TEXT("Default_Kinetic_Dead_Effect_00"))
+			//	->Start_AttachOnlyPos(tParam.vHitFrom);
+
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
+				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
+
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, m_vecRandomParticle[CMathUtils::RandomUInt(m_vecRandomParticle.size() - 1)])
 				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
 
 			// 충돌이 발생하면 플레이어의 키네틱 콤보 상태를 1로 올려준다.
@@ -248,18 +252,6 @@ void CMapKinetic_Object::Imgui_RenderProperty()
 		CImguiUtils::Render_Guizmo(&m_LocalMatrix, tInfo, true, true);
 	}
 
-
-	if (ImGui::Button("Kinetic Object Reset"))
-	{
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, -30.f, 0.f, 1.f));
-		m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(180.f) });
-
-		m_pCollider->Activate(true);
-		m_pCollider->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
-		m_pCollider->Set_Kinetic(true);
-		m_pCollider->UpdateChange();
-	}
-
 	if (ImGui::BeginListBox("ModelTagList"))
 	{
 		_uint i = 0;
@@ -295,8 +287,9 @@ const wstring & CMapKinetic_Object::Get_ModelTag()
 
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 {
- 	m_pCollider->Set_Kinetic(false);
-	m_pCollider->UpdateChange();
+ 	//m_pCollider->Set_Kinetic(false);
+	m_pCollider->Set_Trigger(false);
+	//m_pCollider->UpdateChange();
 
 	m_pCollider->AddVelocity(vForce);
 	m_pCollider->AddTorque(vTorque);
@@ -306,6 +299,11 @@ void CMapKinetic_Object::Set_Kinetic(_bool bKinetic)
 {
 	m_pCollider->Set_Kinetic(bKinetic);
 	m_pCollider->UpdateChange();
+}
+
+void CMapKinetic_Object::Set_Trigger(_bool bTrigger)
+{
+	m_pCollider->Set_Trigger(bTrigger);
 }
 
 void CMapKinetic_Object::Reset_Transform()

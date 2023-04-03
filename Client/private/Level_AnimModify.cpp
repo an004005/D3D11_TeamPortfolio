@@ -16,6 +16,7 @@
 #include "Controller.h"
 
 #include "Player.h"
+#include "FactoryMethod.h"
 
 CLevel_AnimModify::CLevel_AnimModify(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -181,6 +182,8 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
 	}
 
+	FAILED_CHECK(CFactoryMethod::MakeAIPrototypes(m_pDevice, m_pContext));
+
 	// PJW Monster Model Anim Control Purpose
 
 	//// Goat
@@ -227,17 +230,17 @@ HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 						// Model_Player	 
 // MonsterBuddyLumi	MonsterSkummyPool MonsterFlowerLeg MonsterSkummyPandou MonsterBronJon MonsterBoss1
 	Json PreviewData; 
-	PreviewData["Model"] = "Model_Player";
+	PreviewData["Model"] = "Model_AI_CH0300";
 
 	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
 		return E_FAIL;
 	
-	auto pPlayer = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
+	//auto pPlayer = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
 
-	PreviewData["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
-	auto pwp = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
+	//PreviewData["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
+	//auto pwp = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
 
-	static_cast<CModelPreviwer*>(pwp)->SetAttachTo("RightWeapon", static_cast<CModelPreviwer*>(pPlayer));
+	//static_cast<CModelPreviwer*>(pwp)->SetAttachTo("RightWeapon", static_cast<CModelPreviwer*>(pPlayer));
 
 	return S_OK;
 }

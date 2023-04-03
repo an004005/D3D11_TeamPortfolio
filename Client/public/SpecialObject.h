@@ -28,6 +28,7 @@ enum ESpecialType {
 	SPECIAL_IRONBARS_BARS,
 	SPECIAL_IRONBARS_SINGLEBARS,
 	SPECIAL_IRONBARS_MULTIBARS,
+	SPECAIL_CONTAINER,
 	SPECAIL_END };
 
 class CSpecialObject :
@@ -86,6 +87,25 @@ protected:
 
 protected:
 	wstring					m_strModelTag;
+
+protected:
+	vector<wstring>			m_vecRandomHitEffect{
+		L"Special_G_Kinetic_Hit_Effect",
+		L"Special_G_Kinetic_Hit_Effect_A",
+		L"Special_G_Kinetic_Hit_Effect_B",
+		L"Special_G_Kinetic_Hit_Effect_C",
+	};
+
+protected:
+	vector<wstring>			m_vecRandomParticle{
+		L"Player_Kinetic_Particles_A",
+		L"Player_Kinetic_Particles_B",
+		L"Player_Kinetic_Particles_C",
+		L"Player_Kinetic_Particles_D",
+		L"Player_Kinetic_Particles_E",
+		L"Player_Kinetic_Particles_F",
+		L"Player_Kinetic_Particles_G"
+	};
 
 public:
 	CGameObject* Clone(void* pArg = nullptr)override { return nullptr; }

@@ -23,8 +23,9 @@ public:
 		m_PivotMatrix = pivotMatrix;
 	}
 
-	void Set_MonsterInfo(const _int iLevel, const _int iName);
+	void Set_MonsterInfo(const _int iLevel, const EEnemyName eName);
 
+	void Set_HpRatio(_float fHpRatio);
 private:
 	void HpBack_Tick(const _double & TimeDelta);
 
@@ -34,12 +35,11 @@ private:
 
 	_float		m_fHpBack = { 1.0f };
 	_float		m_fCurrentHpBack = { 1.0f };
-	_float		m_fRatio = 0.f;
 
 	_float4x4	m_PivotMatrix;
 
 	_int		m_iMonsterLevel = { 0 };
-	_int		m_iMonsterName = { 0 };
+	EEnemyName		m_eMonsterName = EEnemyName::ENEMY_NAME_END;
 
 public:
 	static CMonsterHpUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

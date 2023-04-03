@@ -74,6 +74,8 @@ protected:
 
 	CSoundStore m_SoundStore;
 
+	_bool m_bAwayFromBelowObject = true;
+
 // 재충돌 여부, Out이 아니면 재충돌로 판단
 public:
 	_bool	Get_CollisionDuplicate() { return m_bCollisionDuplicate; }

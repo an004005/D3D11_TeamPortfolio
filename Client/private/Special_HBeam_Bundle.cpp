@@ -59,14 +59,23 @@ HRESULT CSpecial_HBeam_Bundle::Initialize(void * pArg)
 		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 		{
 			DAMAGE_PARAM tParam;
-			tParam.eAttackType = EAttackType::ATK_HEAVY;
-			tParam.iDamage = 200;
+			ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+			tParam.eAttackSAS = ESASType::SAS_END;
+			tParam.eAttackType = EAttackType::ATK_SPECIAL_END;
+			tParam.eDeBuff = EDeBuffType::DEBUFF_END;
+			tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
+			tParam.iDamage = 500;
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+			static_cast<CEnemy*>(pMonster)->TakeDamage(tParam);
 
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Special_G_HBeam")
 				->Start_AttachOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), false);
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_HBeam_Particles")->
 				Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+
+			//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, m_vecRandomHitEffect[CMathUtils::RandomUInt(m_vecRandomHitEffect.size() - 1)])
+			//	->Start_AttachOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), false);
 
 			HBeam_Decompose();
 		}
@@ -196,6 +205,12 @@ void CSpecial_HBeam_Bundle::Imgui_RenderProperty()
 
 	ImGui::InputFloat("ThrowPower", &m_fThrowPower);
 	ImGui::InputFloat("FloatPower", &m_fFloatPower);
+
+	if (ImGui::CollapsingHeader("Local"))
+	{
+		static GUIZMO_INFO Local;
+		CImguiUtils::Render_Guizmo(&m_LocalMatrix, Local, true, true);
+	}
 }
 
 void CSpecial_HBeam_Bundle::HBeam_Drift()
@@ -233,7 +248,7 @@ void CSpecial_HBeam_Bundle::HBeam_Decompose()
 void CSpecial_HBeam_Bundle::HBeam_Single_Catch()
 {
 	for (auto& iter : m_pHBeam_Single)
-		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Kinetic(true);
+		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Trigger(true);
 }
 
 void CSpecial_HBeam_Bundle::HBeam_Single_Turn()
@@ -251,10 +266,10 @@ void CSpecial_HBeam_Bundle::HBeam_Single_Finish()
 	HBeam_SetDeadTimer();
 }
 
-void CSpecial_HBeam_Bundle::HBeam_Single_SetKinetic(_bool bKinetic)
+void CSpecial_HBeam_Bundle::HBeam_Single_SetTrigger(_bool bKinetic)
 {
 	for (auto& iter : m_pHBeam_Single)
-		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Kinetic(bKinetic);
+		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Trigger(bKinetic);
 }
 
 void CSpecial_HBeam_Bundle::HBeam_Collision()

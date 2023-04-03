@@ -1219,6 +1219,11 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 					_matrix EffectPivot = XMMatrixScaling(2.f, 2.f, 2.f) * XMMatrixRotationX(XMConvertToRadians(-90.f));
 					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, TEXT("Fire_Attack_Charge_Twist"), LAYER_PLAYEREFFECT)->Start_AttachPivot(m_pTargetObject, EffectPivot, "RightWeapon", true, true);
 				}
+				else if (ESASType::SAS_ELETRIC == CurSas)
+				{
+					_matrix EffectPivot = XMMatrixScaling(2.f, 2.f, 2.f) * XMMatrixRotationX(XMConvertToRadians(-90.f));
+					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, TEXT("Elec_Attack_Charge_Twist"), LAYER_PLAYEREFFECT)->Start_AttachPivot(m_pTargetObject, EffectPivot, "RightWeapon", true, true);
+				}
 			})
 
 				 .AddTransition("ATTACK_CHARGE_LOOP to JUMP_FALL", "JUMP_FALL")

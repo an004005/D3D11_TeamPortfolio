@@ -12,6 +12,9 @@
 #include "Special_IronBars_Door.h"
 #include "Special_IronBars_Bars.h"
 #include "Special_IronBars_SingleBars.h"
+#include "Special_IronBars_MultiBars.h"
+
+#include "PlayerInfoManager.h"
 
 CSpecial_IronBars::CSpecial_IronBars(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -63,6 +66,64 @@ void CSpecial_IronBars::BeginTick()
 
 void CSpecial_IronBars::Tick(_double TimeDelta)
 {
+	if (m_bDeadCheck)
+	{
+		static_cast<CSpecial_IronBars_Door*>(m_pDoor)->SetOutline(false);
+		static_cast<CSpecial_IronBars_Bars*>(m_pBars)->SetOutline(false);
+
+		for (_uint i = 0; i < 8; ++i)
+		{
+			static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->SetOutline(false);
+		}
+
+		static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->SetOutline(false);
+
+
+		m_fDeadTime -= (_float)TimeDelta;
+
+		if (0.f >= m_fDeadTime)
+		{
+			m_pDoor->SetDelete();
+			m_pBars->SetDelete();
+
+			for (_uint i = 0; i < 8; ++i)
+			{
+				m_pSingleBar[i]->SetDelete();
+			}
+
+			m_pMultiBars->SetDelete();
+
+			this->SetDelete();
+		}
+	}
+	else
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_SpecialObject() == this)
+		{
+			static_cast<CSpecial_IronBars_Door*>(m_pDoor)->SetOutline(true);
+			static_cast<CSpecial_IronBars_Bars*>(m_pBars)->SetOutline(true);
+
+			for (_uint i = 0; i < 8; ++i)
+			{
+				static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->SetOutline(true);
+			}
+
+			static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->SetOutline(true);
+		}
+		else
+		{
+			static_cast<CSpecial_IronBars_Door*>(m_pDoor)->SetOutline(false);
+			static_cast<CSpecial_IronBars_Bars*>(m_pBars)->SetOutline(false);
+
+			for (_uint i = 0; i < 8; ++i)
+			{
+				static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->SetOutline(false);
+			}
+
+			static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->SetOutline(false);
+		}
+	}
+
 	__super::Tick(TimeDelta);
 
 	m_pDoor->Tick(TimeDelta);
@@ -81,6 +142,8 @@ void CSpecial_IronBars::Tick(_double TimeDelta)
 		
 		m_pSingleBar[i]->Tick(TimeDelta);
 	}
+
+	m_pMultiBars->Tick(TimeDelta);
 }
 
 void CSpecial_IronBars::Late_Tick(_double TimeDelta)
@@ -91,12 +154,16 @@ void CSpecial_IronBars::Late_Tick(_double TimeDelta)
 	{
 		m_pBars->Late_Tick(TimeDelta);
 	}
-	else
+	else if (m_bDecompose && !m_bBundleCompose)
 	{
 		for (_uint i = 0; i < 8; ++i)
 		{
 			m_pSingleBar[i]->Late_Tick(TimeDelta);
 		}
+	}
+	else
+	{
+		m_pMultiBars->Late_Tick(TimeDelta);
 	}
 }
 
@@ -111,6 +178,8 @@ void CSpecial_IronBars::AfterPhysX()
 	{
 		m_pSingleBar[i]->AfterPhysX();
 	}
+
+	m_pMultiBars->AfterPhysX();
 }
 
 HRESULT CSpecial_IronBars::Render()
@@ -176,15 +245,21 @@ void CSpecial_IronBars::IronBars_AnimActive(_bool bActive)
 void CSpecial_IronBars::IronBars_Decompose(_bool bDecompose)
 {
 	m_bDecompose = bDecompose;
-
-	//IronBars_SetKinetic(!bDecompose);
 }
 
-void CSpecial_IronBars::IronBars_SetKinetic(_bool bKinetic)
+void CSpecial_IronBars::IronBars_SetTrigger(_bool bTrigger)
 {
 	for (_uint i = 0; i < 8; ++i)
 	{
-		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Set_Kinetic(bKinetic);
+		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Set_Trigger(bTrigger);
+	}
+}
+
+void CSpecial_IronBars::IronBars_DecomposeEffect()
+{
+	for (_uint i = 0; i < 8; ++i)
+	{
+		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->DecomposeEffect();
 	}
 }
 
@@ -235,6 +310,37 @@ void CSpecial_IronBars::IronBars_LerpAnim(CModel* pModel, CTransform* pTransform
 	{
 		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Lerp_BoneMatrix(pModel, pTransform, "Waist", vPoint, fRatio);
 	}
+}
+
+void CSpecial_IronBars::IronBars_ChangeToBundle()
+{
+	if (m_bBundleCompose) return;
+
+	m_bBundleCompose = true;
+
+	for (_uint i = 0; i < 8; ++i)
+	{
+		static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Activate(false);
+	}
+}
+
+void CSpecial_IronBars::IronBars_AttachAnim_MulitBars(CModel* pModel, CTransform* pTransform, _float4 vPoint)
+{
+	static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->Attack_BoneMatrix_SetPoint(pModel, pTransform, "Waist", vPoint);
+}
+
+void CSpecial_IronBars::IronBars_Shooting_Finish(_float4 vTargetPos)
+{
+	static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->Shooting(vTargetPos);
+
+	m_bDeadCheck = true;
+	m_fDeadTime = 10.f;
+}
+
+void CSpecial_IronBars::IronBars_SetDead()
+{
+	m_bDeadCheck = true;
+	m_fDeadTime = 10.f;
 }
 
 HRESULT CSpecial_IronBars::SetUp_Components(void * pArg)
@@ -368,6 +474,44 @@ HRESULT CSpecial_IronBars::Create_Child()
 	}
 	// ~SingleBars
 
+	// MultiBars
+	{
+		wstring wstrLayer = L"Layer_Kinetic";
+		string strJsonPath = "../Bin/Resources/Objects/KineticSpecial_IronBars_MultiBars.json";
+		wstring wstrProtoTag = L"Prototype_GameObject_Special_IronBars_MultiBars";
+
+		auto pProtoType = CGameInstance::GetInstance()->Find_Prototype(LEVEL_NOW, wstrProtoTag.c_str());
+		if (pProtoType == nullptr)
+			pProtoType = CGameInstance::GetInstance()->Find_Prototype(LEVEL_STATIC, wstrProtoTag.c_str());
+
+		if (pProtoType == nullptr)
+		{
+			MSG_BOX("ProtoType is not exist");
+		}
+		else if (wstrLayer.empty())
+		{
+			MSG_BOX("Layer is empty");
+		}
+		else if (strJsonPath.empty() == false && CGameUtils::FileExist(s2ws(strJsonPath).c_str()) == false)
+		{
+			MSG_BOX("Json file is not exist");
+		}
+		else
+		{
+			if (strJsonPath.empty() == false)
+			{
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson(strJsonPath);
+				m_pMultiBars = CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, wstrProtoTag.c_str(), &json);
+			}
+			else
+			{
+				m_pMultiBars = CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, wstrProtoTag.c_str());
+				//m_pBars = CGameInstance::GetInstance()->Clone_GameObject_Get(wstrLayer.c_str(), wstrProtoTag.c_str());
+			}
+		}
+	}
+	// ~MultiBars
+
 	return S_OK;
 }
 
@@ -414,4 +558,7 @@ void CSpecial_IronBars::Free()
 		if (CGameInstance::GetInstance()->Check_ObjectAlive(iter))
 			Safe_Release(iter);
 	}
+
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pMultiBars))
+		Safe_Release(m_pMultiBars);
 }

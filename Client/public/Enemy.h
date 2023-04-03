@@ -35,30 +35,31 @@ public:
 	virtual void SetUpSound();
 	virtual void SetUpAnimationEvent(){}
 	virtual void SetUpFSM() {}
+	virtual void SetUpUI() {}
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
-	virtual void SetBrainCrush();
-
 	virtual void SetEnemyBatchDataStat(ENEMY_STAT tStat);
 	virtual ENEMY_STAT GetEnemyBatchDataStat();
 	
 public:
 	//0 ~ 1 사이값
 	_float GetHpRatio() const { return (_float)m_iHP / (_float)m_iMaxHP; }
-	_float GetCrushGageRatio() const { return (_float)m_iCrushGage / (_float)m_iMaxCrushGage; }
+	_float GetCrushGageRatio() const { return (_float)m_iCrushGauge / (_float)m_iMaxCrushGauge; }
 	_bool IsDead() const { return m_bDead; }
 	virtual _float4	GetKineticTargetPos() { return GetColliderPosition(); }
 
 	void HealFullHp() { m_iHP = m_iMaxHP; }
+	_bool	HasCrushGauge() { m_bHasCrushGauge; }
+
 	//ui
-	_float4x4	Get_UIPivotMatrix(ENEMY_UIPIVOT eUIPivot) {
-		return m_UI_PivotMatrixes[eUIPivot]; }
-	_bool	GetHasName() { return m_bHasName; }
-	_int	Get_EnemyName() { return _int(m_eEnemyName); }
-	_int	Get_EnemyLevel() { return iEemeyLevel; }
-	void	Set_HasName() { m_bHasName = true; }	
+	_float4x4	Get_UIPivotMatrix(ENEMY_UIPIVOT ePivot) {
+		return m_UI_PivotMatrixes[ePivot];
+	}
 	void	TurnEyesOut();
+	void Create_InfoUI();
 	//
+
+	_bool Decide_PlayBrainCrush();
 
 public:
 	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;
@@ -106,6 +107,8 @@ protected:
 	void	Add_RigidBody(const string& KeyName, void* pArg = nullptr);
 	CRigidBody* GetRigidBody(const string& KeyName);
 
+private:
+	void Update_UIInfo();
 	
 protected:
 	static vector<wstring>			s_vecDefaultBlood;
@@ -120,6 +123,8 @@ protected:
 	static vector<wstring>			s_vecFireDecal;
 	static vector<wstring>			s_vecElecDecal;
 
+	static vector<wstring>			s_vecSpecialHit;
+
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
 	CModel*					m_pModelCom = nullptr;
@@ -127,15 +132,22 @@ protected:
 	CFSMComponent*			m_pFSM = nullptr;
 	RigidBodies				m_pRigidBodies;
 
+	class CMonsterShildUI* m_pShieldUI = nullptr;
+	class CMonsterHpUI* m_pHPUI = nullptr;
+	//
+
 	_bool m_bFindTestTarget = false;
 
 	_int m_iAtkDamage = 50;
 	_int m_iHP = 100;
 	_int m_iMaxHP = 100;
 
-	_int m_iCrushGage = 100;
-	_int m_iMaxCrushGage = 100;
-	_bool m_bHasCrushGage = false;
+	_int m_iCrushGauge = 100;
+	_int m_iMaxCrushGauge = 100;
+	_bool m_bHasCrushGauge = false;
+
+	//플레이어가 set해줌
+	_bool	m_bBrainCrush = false;
 
 	_bool		m_bDeadStart = false;
 	_double	m_dDeadTime = 0.0;
@@ -165,7 +177,6 @@ protected:
 
 
 	//ui
-	_bool m_bHasName = false;
 	array<_float4x4, ENEMY_UIPIVOT_END> m_UI_PivotMatrixes;
 	//
 

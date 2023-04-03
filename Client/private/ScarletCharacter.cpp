@@ -54,8 +54,45 @@ void CScarletCharacter::Late_Tick(_double TimeDelta)
 	if (m_pCollider->IsOnPhysX())
 	{
 		const _vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		_vector vPushBackOffset = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+
+		if (m_bAwayFromBelowObject)
+		{
+			physx::PxCapsuleGeometry CapsuleGeo;
+			physx::PxTransform pxTransform;
+			m_pCollider->GetShapeInfo(CapsuleGeo, pxTransform);
+
+			physx::PxOverlapHit hitBuffer[3];
+			physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
+
+			SphereOverlapParams tParams;
+			tParams.overlapOut = &overlapOut;
+			tParams.fRadius = CapsuleGeo.radius * 1.5f;
+			tParams.vPos = vPos;
+			tParams.vPos.y -= CapsuleGeo.radius;
+			tParams.fVisibleTime = 0.01f;
+			tParams.iTargetType = CTB_PLAYER | CTB_MONSTER | CTB_MONSTER_PART;
+			tParams.queryFlags = physx::PxQueryFlag::eDYNAMIC;
+
+			if (CGameInstance::GetInstance()->OverlapSphere(tParams))
+			{
+				for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+				{
+					if (auto pTarget = dynamic_cast<CScarletCharacter*>(CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor)))
+					{
+						if (pTarget == this)
+							continue;
+						const _vector vBelowObjectPos = pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+						const _vector vPushBackVector = XMVector3NormalizeEst(XMVectorSetY(vPos - vBelowObjectPos, 0.f));
+						vPushBackOffset += vPushBackVector * TimeDelta * 15.f;
+					}
+				}
+			}
+		}
+
+
 		const _vector vPrePos = m_vPrePos;
-		const _vector vMoveDelta = vPos - vPrePos;
+		const _vector vMoveDelta = vPos - vPrePos + vPushBackOffset;
 
 		// transform 변동사항 적용
 		physx::PxControllerCollisionFlags flags = m_pCollider->MoveDisp(vMoveDelta, (_float)TimeDelta);

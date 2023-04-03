@@ -8,7 +8,7 @@
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
 
-//#define USE_PORTRAIT
+#define USE_PORTRAIT
 
 /*********************
  *CPostVFX_SAS_Portrait
@@ -25,10 +25,11 @@ CPostVFX_SAS_Portrait::CPostVFX_SAS_Portrait(const CPostVFX_SAS_Portrait& rhs)
 
 HRESULT CPostVFX_SAS_Portrait::Initialize(void* pArg)
 {
+	FAILED_CHECK(CPostProcess::Initialize(pArg));
 	m_tParam.Floats.push_back(1.f);
 	m_tParam.iPass = 9;
 	m_iPriority = 1100;
-	return CPostProcess::Initialize(pArg);
+	return S_OK;
 }
 
 void CPostVFX_SAS_Portrait::Tick(_double TimeDelta)
@@ -417,6 +418,7 @@ void CSAS_Portrait::Imgui_RenderProperty()
 void CSAS_Portrait::Start_SAS(ESASType eType)
 {
 #ifndef USE_PORTRAIT
+	m_bFinish = true;
 	return;
 #endif
 	m_eCurType = eType;

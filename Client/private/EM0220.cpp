@@ -33,6 +33,10 @@ HRESULT CEM0220::Initialize(void * pArg)
 	{
 		m_iMaxHP = 1100;
 		m_iHP = 1100; // ★
+
+		m_iCrushGauge = 1100;
+		m_iMaxCrushGauge = 1100;
+
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
 	}
@@ -40,7 +44,7 @@ HRESULT CEM0220::Initialize(void * pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0220;
-	m_bHasCrushGage = true;
+	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	SetUp_Lantern();
@@ -109,6 +113,8 @@ void CEM0220::SetUpFSM()
 			{
 				m_fGravity = 20.f;
 			})
+			.AddTransition("Idle to BrainCrushStart", "BrainCrushStart")
+				.Predicator([this] { return m_iCrushGauge <= 0; })
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
 
@@ -158,16 +164,45 @@ void CEM0220::SetUpFSM()
 				m_pASM->InputAnimSocketMany("FullBody", { "AS_em0200_426_AL_down", "AS_em0200_427_AL_getup" });
 				m_fGravity = 20.f;
 			})
-			.OnExit([this]
-				{
-					bool dasf = 1;
-				})
 			.AddTransition("OnFloorGetup to Idle", "Idle")
 				.Predicator([this]
 			{
 				return m_bDead || m_pASM->isSocketEmpty("FullBody");
 			})
 
+		.AddState("BrainCrushStart")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_485_AL_BCchance_start");
+			})
+			.AddTransition("BrainCrushStart to BrainCrushLoop", "BrainCrushLoop")
+				.Predicator([this]
+				{
+					return m_bDead || m_bBrainCrush || m_pASM->isSocketPassby("FullBody", 0.95f);
+				})
+
+		.AddState("BrainCrushLoop")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_486_AL_BCchance_loop");
+				m_pModelCom->Find_Animation("AS_em0200_486_AL_BCchance_loop")->SetLooping(true);
+			})
+			.AddTransition("BrainCrushLoop to BrainCrushEnd", "BrainCrushEnd")
+				.Predicator([this]
+				{
+					return m_bBrainCrush;
+				})
+
+		.AddState("BrainCrushEnd")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_487_AL_BCchance_end");
+			})
+			.Tick([this](_double)
+			{
+				if (m_pASM->isSocketPassby("FullBody", 0.95f))
+					SetDead();
+			})
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 		//Guard loop 중일때 어택이 되면 Guard_End 모션이 끝나고 공격을 하기때문에
@@ -365,7 +400,7 @@ void CEM0220::CheckHP(DAMAGE_PARAM & tDamageParams)
 
 	if (m_iHP < 0)
 	{
-		if (m_iCrushGage > 0 || m_dDeadTime > 3.f)
+		if (m_iCrushGauge > 0 || m_dDeadTime > 3.f)
 			SetDead();
 
 		m_bDeadStart = true;

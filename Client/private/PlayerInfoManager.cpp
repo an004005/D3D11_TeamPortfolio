@@ -454,8 +454,4 @@ void CPlayerInfoManager::SAS_Checker()
 
 void CPlayerInfoManager::Free()
 {
-	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCamSpot))
-	{
-		Safe_Release(m_pCamSpot);
-	}
 }

@@ -47,6 +47,7 @@ public:
 public:
 	void	Add_Physical(_float3 vForce = { 0.f, 0.f, 0.f }, _float3 vTorque = { 0.f, 0.f, 0.f });
 	void	Set_Kinetic(_bool bKinetic);
+	void	Set_Trigger(_bool bTrigger);
 	void	Reset_Transform();
 	EKineticType GetType() const { return m_eType; }
 
@@ -94,6 +95,17 @@ private:
 	_float				m_fDeadTimer = 0.f;
 
 	_bool				m_bCameRange = { false };
+
+private:
+	vector<wstring>		m_vecRandomParticle{
+		L"Player_Kinetic_Particles_A",
+		L"Player_Kinetic_Particles_B",
+		L"Player_Kinetic_Particles_C",
+		L"Player_Kinetic_Particles_D",
+		L"Player_Kinetic_Particles_E",
+		L"Player_Kinetic_Particles_F",
+		L"Player_Kinetic_Particles_G"
+	};
 
 public:
 	static CMapKinetic_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

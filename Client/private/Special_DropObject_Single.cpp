@@ -43,7 +43,7 @@ void CSpecial_DropObject_Single::BeginTick()
 {
 	__super::BeginTick();
 
-	m_pCollider->Set_Kinetic(true);
+	m_pCollider->Set_Trigger(true);
 	m_pCollider->UpdateChange();
 
 	m_pCollider->Activate(false);
@@ -122,15 +122,19 @@ void CSpecial_DropObject_Single::Sync_position(CTransform * pTransform)
 	m_pTransformCom->Set_WorldMatrix(m_AssemblyPosition * pTransform->Get_WorldMatrix());
 }
 
-void CSpecial_DropObject_Single::Set_Kinetic(_bool bKinetic)
+void CSpecial_DropObject_Single::Set_Trigger(_bool bTrigger)
 {
-	m_pCollider->Set_Kinetic(bKinetic);
-	m_pCollider->UpdateChange();
+	m_pCollider->Set_Trigger(bTrigger);
 }
 
 void CSpecial_DropObject_Single::Activate(_bool bActivate)
 {
 	m_pCollider->Activate(bActivate);
+}
+
+void CSpecial_DropObject_Single::Set_Outline(_bool bOutline)
+{
+	m_bOutline = bOutline;
 }
 
 HRESULT CSpecial_DropObject_Single::SetUp_Components(void * pArg)

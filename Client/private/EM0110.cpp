@@ -40,7 +40,7 @@ HRESULT CEM0110::Initialize(void * pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0110;
-	m_bHasCrushGage = true;
+	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(120.f));
 
 	//Create BugParticle
@@ -143,10 +143,20 @@ void CEM0110::SetUpAnimationEvent()
 	{ 
 		m_bAttack = false;
 
-		m_pRushEffect->SetDelete();
-		Safe_Release(m_pRushEffect);
-		m_pRushEffect = nullptr;
+		if (m_pRushEffect != nullptr)
+		{
+			m_pRushEffect->SetDelete();
+			Safe_Release(m_pRushEffect);
+			m_pRushEffect = nullptr;
+		}
+	
 	});
+
+	m_pModelCom->Add_EventCaller("DeadFlower", [this]
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0110DeadFlower")
+				->Start_NoAttach(this, false);
+		});
 
 }
 
@@ -173,7 +183,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
 				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_HEAVY; })
 			.AddTransition("Idle to Down", "Down")
-				.Predicator([this] { return  m_iCrushGage <= 0; })
+				.Predicator([this] { return  m_iCrushGauge <= 0; })
 
 			.AddTransition("Idle to Attack_turn", "Attack_turn")
 				.Predicator([this] { return m_eInput == CController::R; })

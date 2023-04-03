@@ -249,13 +249,45 @@ void CParticleGroup::Start_AttachSword(CGameObject* pWeapon, _bool trueisUpdate)
 	m_bGenerate = true;
 }
 
+void CParticleGroup::Start_AttachSpecificPos(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate)
+{
+	// 트랜스폼으로부터 받은 위치로부터 vPosition 위치와 vDirection 방향으로 파티클 생성
+
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_AttachPos = vPosition;
+	m_AttachDir = vDirection;
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z);
+
+		_vector		vUp = XMVector3Normalize(vDirection);
+		_vector		vRight = XMVector3Normalize(XMVector3Cross(vUp, XMVectorSet(0.f, 0.f, 1.f, 0.f)));
+		_vector		vLook = XMVector3Normalize(XMVector3Cross(vRight, vUp));
+
+		SocketMatrix.r[0] = vRight;
+		SocketMatrix.r[1] = vUp;
+		SocketMatrix.r[2] = vLook;
+
+		Set_Transform(SocketMatrix);
+	}
+
+	m_bGenerate = true;
+}
 
 void CParticleGroup::Set_Transform(_matrix socket)
 {
 	for(auto iter : m_mapParticleSystem)
 	{
 		if (iter.second.second != nullptr)
-			iter.second.second->GetTransform()->Set_WorldMatrix(socket);
+ 			iter.second.second->GetTransform()->Set_WorldMatrix(socket);
 	}
 }
 
@@ -723,6 +755,111 @@ void CParticleGroup::Load_ParticleSystem()
 				m_mapParticleSystem.emplace(FileName, pair<string, CParticleSystem*>(ParticleProtoTag, pParticle));
 			}
 			
+		}
+	}
+
+	if (iParticleSize >= 7)
+	{
+		static char ParticleProtoTag[MAX_PATH]{};
+		ImGui::InputText("7_Particle", ParticleProtoTag, MAX_PATH);
+		if (ImGui::Button("Load 7_Particle"))
+		{
+			if (m_mapParticleSystem.find("7")->second.second != nullptr)
+				Safe_Release(m_mapParticleSystem.find("6")->second.second);
+
+			if (m_mapParticleSystem.find("7")->second.first == "")
+			{
+				MSG_BOX("PLEASE WRITE THE DIRECTORY");
+				return;
+			}
+
+			m_mapParticleSystem.erase("7");
+
+			Json Particle_Json = CJsonStorage::GetInstance()->LoadJson_ForWork(ParticleProtoTag);
+
+			if (Particle_Json.empty())
+				MSG_BOX("Failed to Add New ParticleGroup");
+			else
+			{
+				const string& FileName = CGameUtils::GetFileName(ParticleProtoTag);
+
+				CParticleSystem* pParticle = nullptr;
+				pParticle = dynamic_cast<CParticleSystem*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("ProtoVFX_ParticleSystem"), &Particle_Json));
+
+				// ObjectTag							FilePath				ParticlePtr
+				m_mapParticleSystem.emplace(FileName, pair<string, CParticleSystem*>(ParticleProtoTag, pParticle));
+			}
+
+		}
+	}
+
+	if (iParticleSize >= 8)
+	{
+		static char ParticleProtoTag[MAX_PATH]{};
+		ImGui::InputText("8_Particle", ParticleProtoTag, MAX_PATH);
+		if (ImGui::Button("Load 8_Particle"))
+		{
+			if (m_mapParticleSystem.find("8")->second.second != nullptr)
+				Safe_Release(m_mapParticleSystem.find("8")->second.second);
+
+			if (m_mapParticleSystem.find("8")->second.first == "")
+			{
+				MSG_BOX("PLEASE WRITE THE DIRECTORY");
+				return;
+			}
+
+			m_mapParticleSystem.erase("8");
+
+			Json Particle_Json = CJsonStorage::GetInstance()->LoadJson_ForWork(ParticleProtoTag);
+
+			if (Particle_Json.empty())
+				MSG_BOX("Failed to Add New ParticleGroup");
+			else
+			{
+				const string& FileName = CGameUtils::GetFileName(ParticleProtoTag);
+
+				CParticleSystem* pParticle = nullptr;
+				pParticle = dynamic_cast<CParticleSystem*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("ProtoVFX_ParticleSystem"), &Particle_Json));
+
+				// ObjectTag							FilePath				ParticlePtr
+				m_mapParticleSystem.emplace(FileName, pair<string, CParticleSystem*>(ParticleProtoTag, pParticle));
+			}
+
+		}
+	}
+
+	if (iParticleSize >= 9)
+	{
+		static char ParticleProtoTag[MAX_PATH]{};
+		ImGui::InputText("9_Particle", ParticleProtoTag, MAX_PATH);
+		if (ImGui::Button("Load 9_Particle"))
+		{
+			if (m_mapParticleSystem.find("9")->second.second != nullptr)
+				Safe_Release(m_mapParticleSystem.find("9")->second.second);
+
+			if (m_mapParticleSystem.find("9")->second.first == "")
+			{
+				MSG_BOX("PLEASE WRITE THE DIRECTORY");
+				return;
+			}
+
+			m_mapParticleSystem.erase("9");
+
+			Json Particle_Json = CJsonStorage::GetInstance()->LoadJson_ForWork(ParticleProtoTag);
+
+			if (Particle_Json.empty())
+				MSG_BOX("Failed to Add New ParticleGroup");
+			else
+			{
+				const string& FileName = CGameUtils::GetFileName(ParticleProtoTag);
+
+				CParticleSystem* pParticle = nullptr;
+				pParticle = dynamic_cast<CParticleSystem*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("ProtoVFX_ParticleSystem"), &Particle_Json));
+
+				// ObjectTag							FilePath				ParticlePtr
+				m_mapParticleSystem.emplace(FileName, pair<string, CParticleSystem*>(ParticleProtoTag, pParticle));
+			}
+
 		}
 	}
 }

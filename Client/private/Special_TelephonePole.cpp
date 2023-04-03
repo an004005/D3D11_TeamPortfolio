@@ -46,6 +46,7 @@ HRESULT CSpecial_TelephonePole::Initialize(void * pArg)
 		}
 	});
 
+
 	return S_OK;
 }
 
@@ -56,7 +57,7 @@ void CSpecial_TelephonePole::BeginTick()
 	m_PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixTranslation(0.f, 2.f, 0.f);
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(CMathUtils::RandomFloat(-20.f, 20.f)));
 
-	m_pCollider->Set_Kinetic(true);
+	m_pCollider->Set_Trigger(true);
 	m_pCollider->UpdateChange();
 }
 
@@ -64,6 +65,8 @@ void CSpecial_TelephonePole::Tick(_double TimeDelta)
 {
 	if (m_bDeadCheck)
 	{
+		m_bOutline = false;
+
 		m_fDeadTime -= (_float)TimeDelta;
 
 		if (0.f >= m_fDeadTime)
@@ -161,10 +164,30 @@ void CSpecial_TelephonePole::TelephonePole_PullOut(_float4 vPlayerPos, _float fF
 	m_pTransformCom->Turn_Fixed(vAxis, XMConvertToRadians(pow(fForce, 7.f) * 7.f));
 
 	m_pTransformCom->Move(pow(fForce, 10.f), _float3(0.f, 1.f, 0.f));
+
+	if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrakeParticle))
+	{
+		m_pBrakeParticle = CVFX_Manager::GetInstance()->GetParticle(PS_SAS, L"Special_G_TelephonePole_Particles");
+		m_pBrakeParticle->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 2.f, 0.f, 0.f), { 0.f, 1.f, 0.f, 0.f }, false);
+
+		m_pBrakeSmoke = CVFX_Manager::GetInstance()->GetParticle(PS_SAS, L"Special_G_TelephonePole_Dark_Smoke");
+		m_pBrakeSmoke->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 2.f, 0.f, 0.f), { 0.f, -1.f, 0.f, 0.f }, false);
+	}
+	else
+	{
+		m_pBrakeSmoke->Delete_Particles();
+		m_pBrakeParticle->Delete_Particles();
+	}
 }
 
 void CSpecial_TelephonePole::TelephonePole_AttachLerp(CModel * pModel, CTransform* pTransform, _float fRatio)
 {
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrakeSmoke))
+	{
+		m_pBrakeSmoke->Delete_Particles();
+		m_pBrakeSmoke = nullptr;
+	}
+
 	pModel->GetPlayAnimation()->Update_Bones_SyncRatio(0.f);
 	pModel->Compute_CombindTransformationMatrix();
 
@@ -198,6 +221,12 @@ void CSpecial_TelephonePole::TelephonePole_AttachLerp(CModel * pModel, CTransfor
 
 void CSpecial_TelephonePole::TelephonePole_Swing(CModel * pModel, CTransform* pTransform, _float fPlayTime)
 {
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrakeParticle))
+	{
+		m_pBrakeParticle->Delete_Particles();
+		m_pBrakeParticle = nullptr;
+	}
+
 	pModel->GetPlayAnimation()->Update_Bones_SyncRatio(fPlayTime);
 	pModel->Compute_CombindTransformationMatrix();
 
@@ -220,7 +249,22 @@ void CSpecial_TelephonePole::TelephonePole_Collision_On()
 	tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
 	tParam.iDamage = 500;
 
-	Collision_Check_Capsule(m_pCollider, tParam, true);
+	_bool bCol = Collision_Check_Capsule(m_pCollider, tParam, true);
+
+	if (bCol)
+	{
+		_float4 vColPos = m_pCollider->GetPxWorldMatrix().Translation();
+		vColPos.w = 1.f;
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Special_G_HBeam")
+			->Start_AttachOnlyPos(vColPos, false);
+
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_HBeam_Particles")->
+			Start_AttachPosition(this, vColPos, XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_TelephonePole_BreakMeshes")->
+			Start_AttachPosition(this, vColPos, XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+	}
 }
 
 void CSpecial_TelephonePole::TelephonePole_Collision_Off()

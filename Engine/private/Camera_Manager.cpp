@@ -1,11 +1,14 @@
 #include "stdafx.h"
 #include "..\public\Camera_Manager.h"
+
+#include "AnimCam.h"
 #include "GameInstance.h"
 #include "Object_Manager.h"
 #include "PipeLine.h"
 #include "Light_Manager.h"
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
+#include "GameUtils.h"
 #include "JsonLib.h"
 
 IMPLEMENT_SINGLETON(CCamera_Manager);
@@ -29,11 +32,8 @@ void CCamera_Manager::Tick()
 
 		CPipeLine* pPipeLine = CPipeLine::GetInstance();
 
-		const _matrix ViewMatrix = pMainCam->GetViewMatrix();
-		pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, ViewMatrix);
-	
-		const _matrix ProjMatrix = pMainCam->GetProjMatrix();
-		pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, ProjMatrix);
+		pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, pMainCam->GetXMViewMatrix());
+		pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, pMainCam->GetXMProjMatrix());
 
 		//_float4 vCamPos = pPipeLine->Get_CamPosition();
 		//IM_LOG("Result : %f %f %f", vCamPos.x, vCamPos.y, vCamPos.z);
@@ -64,6 +64,46 @@ void CCamera_Manager::Tick()
 	// {
 	// 	m_vecCamera.clear();
 	// }
+}
+
+void CCamera_Manager::LoadCamAnims(const string& strDir)
+{
+	m_strCamAnimDir = strDir;
+	CGameUtils::ListFiles(strDir, [this](const string& filePath)
+		{
+			std::ifstream ifs(filePath);
+			Json curveJson = Json::parse(ifs);
+			auto pCamAnim = CCamAnimation::Create(filePath.c_str());
+			m_CamAnims.emplace(pCamAnim->GetName(), pCamAnim);
+		});
+}
+
+void CCamera_Manager::SaveCamAnims()
+{
+	for (auto camAnim : m_CamAnims)
+	{
+		if (auto pCamAnim = camAnim.second)
+		{
+			Json curveJson;
+			pCamAnim->SaveToJson(curveJson);
+			string curveFilePath = m_strCamAnimDir + pCamAnim->GetName() + ".json";
+			std::ofstream file(curveFilePath);
+			file << curveJson;
+		}
+	}
+}
+
+CCamAnimation* CCamera_Manager::GetCamAnim(const string& strName)
+{
+	const auto itr = m_CamAnims.find(strName);
+	if (itr != m_CamAnims.end())
+		return itr->second;
+	return nullptr;
+}
+
+void CCamera_Manager::AddCamAnim(CCamAnimation* pCamAnim)
+{
+	m_CamAnims.emplace(pCamAnim->GetName(), pCamAnim);
 }
 
 CCamera* CCamera_Manager::Add_Camera(const string& strCamTag, _uint iLevelIdx, const wstring& pLayerTag, const wstring& pPrototypeTag, const Json* camJson)
@@ -168,6 +208,34 @@ void CCamera_Manager::Imgui_Render()
 			pCam->Imgui_RenderComponentProperties();
 		}
 	}
+
+	static string strSelectCurve;
+	if (ImGui::BeginListBox("CamAnim list"))
+	{
+		static char szSeachCurve[MAX_PATH] = "";
+		ImGui::InputText("CamAnim Search", szSeachCurve, MAX_PATH);
+
+		const string strSearch = szSeachCurve;
+		const _bool bSearch = strSearch.empty() == false;
+
+		for (auto& Pair : m_CamAnims)
+		{
+			if (bSearch)
+			{
+				if (Pair.first.find(strSearch) == string::npos)
+					continue;
+			}
+
+			const bool bSelected = strSelectCurve == Pair.first;
+			if (bSelected)
+				ImGui::SetItemDefaultFocus();
+
+			if (ImGui::Selectable(Pair.first.c_str(), bSelected))
+				strSelectCurve = Pair.first;
+		}
+
+		ImGui::EndListBox();
+	}
 }
 
 void CCamera_Manager::SetCameraFovCurve(const string & strCurveTag)
@@ -195,6 +263,13 @@ void CCamera_Manager::ActionCamTickByPlayTime(_float fRatio)
 		if (0.f == m_pFovCurve->GetValue(fRatio))
 			int iA = 0;
 
+		if (30.f > fRatio || 90.f < fRatio)
+		{
+			ReleaseCameraFovCurve();
+			pMainCam->SetFOV(60.f);
+			return;
+		}
+
 		pMainCam->SetFOV(m_pFovCurve->GetValue(fRatio));
 	}
 }
@@ -208,6 +283,17 @@ void CCamera_Manager::ReleaseCameraFovCurve()
 	pMainCam->SetFOV(60.f);
 }
 
+void CCamera_Manager::SetCameraFov(_float fFov)
+{
+	CCamera* pMainCam = GetMainCam();
+	Assert(pMainCam != nullptr);
+
+	if (30.f > fFov || 90.f < fFov)
+		fFov = 60.f;
+
+	pMainCam->SetFOV(max(fFov, 1.f));
+}
+
 CCamera* CCamera_Manager::FindCamera(const string& strCamTag)
 {
 	auto itr = m_Cameras.find(strCamTag);
@@ -218,37 +304,37 @@ CCamera* CCamera_Manager::FindCamera(const string& strCamTag)
 }
 
 // void CCamera_Manager::Set_Cascade()
-// {// ½ºÅÂÆ½Ä«¸Ş¶ó
+// {// ìŠ¤íƒœí‹±ì¹´ë©”ë¼
 // 	CCamera* pCamera = m_vecCamera[m_iIndex];
 // 	if (nullptr == pCamera)
 // 		return;
 //
 // 	CTransform* pTransformCom = dynamic_cast<CTransform*>(pCamera->Get_Component(L"Com_Transform"));
-// 	// Ä«¸Ş¶óÀÇ ¿ªÇà·Ä°ú ½Ã¾ß°¢,È­¸éºñ, °¡±î¿î Æò¸é Z,¸Õ Æò¸é Z
+// 	// ì¹´ë©”ë¼ì˜ ì—­í–‰ë ¬ê³¼ ì‹œì•¼ê°,í™”ë©´ë¹„, ê°€ê¹Œìš´ í‰ë©´ Z,ë¨¼ í‰ë©´ Z
 // 	CCamera::CAMERADESC tCamDesc = pCamera->Get_CamDesc();
 //
-// 	//½Ã¾ß°¢À» ÀÌ¿ëÇÏ¿© ¼öÁ÷ ½Ã¾ß°¢À» ±¸ÇÔ
+// 	//ì‹œì•¼ê°ì„ ì´ìš©í•˜ì—¬ ìˆ˜ì§ ì‹œì•¼ê°ì„ êµ¬í•¨
 // 	float fTanHalfVFov = tanf(tCamDesc.fFovy * 0.5f);
-// 	// ¼öÁ÷ ½Ã¾ß°¢À» ÀÌ¿ëÇÏ¿© ¼öÆò ½Ã¾ß°¢À» ±¸ÇÔ
+// 	// ìˆ˜ì§ ì‹œì•¼ê°ì„ ì´ìš©í•˜ì—¬ ìˆ˜í‰ ì‹œì•¼ê°ì„ êµ¬í•¨
 // 	float fTanHalfHFov = fTanHalfVFov * tCamDesc.fAspect;
 //
-// 	//Ä³½ºÄÉÀÌµå´Â ¿©·¯°³ ÀÏ´Ü ÇÑ°³¸¸
+// 	//ìºìŠ¤ì¼€ì´ë“œëŠ” ì—¬ëŸ¬ê°œ ì¼ë‹¨ í•œê°œë§Œ
 // 	_float fCascadeEnd[2];
 //
 // 	fCascadeEnd[0] = tCamDesc.fNear;
 // 	fCascadeEnd[1] = m_fFar;
 // 	//fCascadeEnd[1] = tCamDesc.fFar;
 //
-// 	// ¿©·¯°³ÀÇ ÀıµÎÃ¼·Î ³ª´«´Ù¸é ¿©±â¼­ ¹İº¹¹®À» ½ÇÇà!
+// 	// ì—¬ëŸ¬ê°œì˜ ì ˆë‘ì²´ë¡œ ë‚˜ëˆˆë‹¤ë©´ ì—¬ê¸°ì„œ ë°˜ë³µë¬¸ì„ ì‹¤í–‰!
 //
-// 	//+X,+Y ÁÂÇ¥¿¡ ¼öÆò,¼öÁ÷ ½Ã¾ß°¢À» ÀÌ¿ëÇÏ¿© ±¸ÇÔ. °¢ ºÎºĞ ÀıµÎÃ¼ÀÇ °¡±î¿î, ¸Õ Æò¸éÀÇ °ªÀ» °öÇÏ¿© 4°³ÀÇ Á¡À» ±¸ÇÔ
+// 	//+X,+Y ì¢Œí‘œì— ìˆ˜í‰,ìˆ˜ì§ ì‹œì•¼ê°ì„ ì´ìš©í•˜ì—¬ êµ¬í•¨. ê° ë¶€ë¶„ ì ˆë‘ì²´ì˜ ê°€ê¹Œìš´, ë¨¼ í‰ë©´ì˜ ê°’ì„ ê³±í•˜ì—¬ 4ê°œì˜ ì ì„ êµ¬í•¨
 // 	float fXN = fCascadeEnd[0] * fTanHalfHFov;
 // 	float fXF = fCascadeEnd[1] * fTanHalfHFov;
 // 	float fYN = fCascadeEnd[0] * fTanHalfVFov;
 // 	float fYF = fCascadeEnd[1] * fTanHalfVFov;
 //
-// 	//+ÁÂÇ¥°ªÀ» ±¸ÇÏ¸é -ÁÂÇ¥°ªÀ» ±¸ÇÏ¿© °¢°¢ÀÇ ÀıµÎÃ¼ Æò¸éÀ» ±¸ÇÒ¼öÀÖÀ½.
-// 	//°¢ ÀıµÎÃ¼ÀÇ Z°ªÀ» ÀúÀåÇÏ¿© i °¡ ³·Àº ¼ø¼­·Î °¡±î¿î Æò¸é, ¸ÕÆò¸éÀ» ±¸¼ºÇÔ
+// 	//+ì¢Œí‘œê°’ì„ êµ¬í•˜ë©´ -ì¢Œí‘œê°’ì„ êµ¬í•˜ì—¬ ê°ê°ì˜ ì ˆë‘ì²´ í‰ë©´ì„ êµ¬í• ìˆ˜ìˆìŒ.
+// 	//ê° ì ˆë‘ì²´ì˜ Zê°’ì„ ì €ì¥í•˜ì—¬ i ê°€ ë‚®ì€ ìˆœì„œë¡œ ê°€ê¹Œìš´ í‰ë©´, ë¨¼í‰ë©´ì„ êµ¬ì„±í•¨
 // 	_float4 vFrustumCorners[8];
 // 	//near Face
 // 	vFrustumCorners[0] = _float4(fXN, fYN, fCascadeEnd[0], 1.f);
@@ -267,4 +353,8 @@ CCamera* CCamera_Manager::FindCamera(const string& strCamTag)
 void CCamera_Manager::Free()
 {
 	Clear();
+	for (auto camAnim : m_CamAnims)
+	{
+		Safe_Release(camAnim.second);
+	}
 }
