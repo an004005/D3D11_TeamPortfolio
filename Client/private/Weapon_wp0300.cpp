@@ -45,29 +45,27 @@ HRESULT CWeapon_wp0300::Initialize(void* pArg)
 
 	m_pCollider->UpdateChange();
 
-	//Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Trail/PlayerSwordTrail.json");
-	//m_pTrail = static_cast<CTrailSystem*>(pGameInstance->Clone_GameObject_Get(L"Layer_Player", TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
+	Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Trail/PlayerSwordTrail.json");
+	m_pTrail = static_cast<CTrailSystem*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
+	//Clone_GameObject_Get
+	//m_pTrail = static_cast<CTrailSystem*>(pGameInstance->Clone_GameObject_Get(LAYER_AI, TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
+
+	m_bTrailOn = true;
 
 	return S_OK;
 }
 
 void CWeapon_wp0300::BeginTick()
 {
-	m_pModel->SetPlayAnimation("AS_wp0300_000_02_long_loop");
-	m_pModel->Play_Animation(0.f);
+	m_fAdaptLength = -1.4f;
 }
 
 void CWeapon_wp0300::Tick(_double TimeDelta)
 {
+	m_fTimeDelta = TimeDelta;
+
 	__super::Tick(TimeDelta);
 	m_pCollider->Update_Tick(m_pTransformCom);
-
-	m_pModel->Play_Animation(TimeDelta);
-
-	//m_pTrail->GetTransform()
-	//	->Set_WorldMatrix(m_pCollider->GetPxWorldMatrix());
-
-	//m_pTrail->SetActive(/*m_bTrailOn*/true);
 
 	_float4 vCurPos = { m_pCollider->GetPxWorldMatrix().Translation().x, m_pCollider->GetPxWorldMatrix().Translation().y, m_pCollider->GetPxWorldMatrix().Translation().z, 1.f };
 	m_vSlashVector = vCurPos - m_vBeforePos;
@@ -103,8 +101,6 @@ void CWeapon_wp0300::Tick(_double TimeDelta)
 void CWeapon_wp0300::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
-
-	//m_pTrail->Late_Tick(TimeDelta);
 }
 
 void CWeapon_wp0300::AfterPhysX()
@@ -132,8 +128,7 @@ void CWeapon_wp0300::ReleaseFire()
 
 HRESULT CWeapon_wp0300::SetUp_Components()
 {
-FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
-		(CComponent**)&m_pRenderer));
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRenderer));
 
 	if (m_Desc.m_pJson)
 	{

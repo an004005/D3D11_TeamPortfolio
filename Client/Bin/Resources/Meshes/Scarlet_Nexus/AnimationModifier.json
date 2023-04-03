@@ -3496,6 +3496,18 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0300_030_AL_dodge_F_start": {
+        "Duration": 22.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0300_031_AL_dodge_F_stop": {
+        "Duration": 63.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0300_035_AL_dodge_B_start": {
         "Duration": 22.0,
         "TickPerSecond": 50.0,
@@ -3558,6 +3570,18 @@
     },
     "AS_ch0300_124_AL_jump_rise": {
         "Duration": 20.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0300_130_AL_dodge_F_start": {
+        "Duration": 22.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0300_131_AL_dodge_F_stop": {
+        "Duration": 63.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []

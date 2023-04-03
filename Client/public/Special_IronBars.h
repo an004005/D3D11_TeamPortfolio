@@ -52,6 +52,8 @@ public:
 
 	void	IronBars_SetDead();
 
+	void	IronBars_SingleBars_Particle();
+
 private:
 	HRESULT	SetUp_Components(void* pArg);
 

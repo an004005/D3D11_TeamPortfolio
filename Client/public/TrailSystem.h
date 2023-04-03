@@ -30,6 +30,7 @@ public:
 public:
 	void			SetActive(_bool bActive) { m_bActive = bActive; }
 	_bool			IsActive() const { return m_bActive; }
+	void			SetAdapt(_float4 vAdapt) { m_vAdapt = vAdapt; }
 
 	void			ClearBuffer();
 
@@ -44,9 +45,10 @@ private:
 	_float								m_fLife;
 	_float								m_fWidth;
 	_float								m_fSegmentSize;
+	_float4								m_vAdapt;	// 무기 트레일 위치 조정 벡터
 	_float4								m_vColor;
 	vector<_float4>						m_vPrePoses;
-	vector<_float4>						m_vPreRight;
+	vector<_float4>						m_vPreLook;
 	list<_vector>						m_TrailPointList;
 //	_vector m_vPreRight;
 	_uint								m_iPass = 0;

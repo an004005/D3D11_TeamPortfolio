@@ -47,7 +47,8 @@ HRESULT CWeapon_wp0190::Initialize(void * pArg)
 	m_pCollider->UpdateChange();
 
 	Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Trail/PlayerSwordTrail.json");
-	m_pTrail = static_cast<CTrailSystem*>(pGameInstance->Clone_GameObject_Get(L"Layer_Player", TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
+	m_pTrail = static_cast<CTrailSystem*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
+	//m_pTrail = static_cast<CTrailSystem*>(pGameInstance->Clone_GameObject_Get(LAYER_AI, TEXT("Player_TrailSystem"), &AttackMesh));
 
 	return S_OK;
 }
@@ -63,17 +64,14 @@ void CWeapon_wp0190::BeginTick()
 	//		m_pCamSpot = iter;
 	//	}
 	//}
+
+	m_fAdaptLength = -0.7f;
 }
 
 void CWeapon_wp0190::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 	m_pCollider->Update_Tick(m_pTransformCom);
-
-	m_pTrail->GetTransform()
-		->Set_WorldMatrix(m_pCollider->GetPxWorldMatrix());
-
-	m_pTrail->SetActive(m_bTrailOn);
 	
 	_float4 vCurPos = { m_pCollider->GetPxWorldMatrix().Translation().x, m_pCollider->GetPxWorldMatrix().Translation().y, m_pCollider->GetPxWorldMatrix().Translation().z, 1.f };
 	m_vSlashVector = vCurPos - m_vBeforePos;
@@ -100,8 +98,6 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 	{
 		m_pModel->FindMaterial(L"MI_wp0190_SWORD")->GetParam().Ints[0] = 0;
 	}
-	
-	//Collision_Check();
 
 	m_vBeforePos = vCurPos;
 }
@@ -109,8 +105,6 @@ void CWeapon_wp0190::Tick(_double TimeDelta)
 void CWeapon_wp0190::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
-
-	m_pTrail->Late_Tick(TimeDelta);
 }
 
 void CWeapon_wp0190::AfterPhysX()

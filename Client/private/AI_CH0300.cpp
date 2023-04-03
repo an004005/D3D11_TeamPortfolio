@@ -16,6 +16,7 @@
 #include "Material.h"
 #include "AI_CH0300_AnimInstance.h"
 #include "PlayerInfoManager.h"
+#include "Weapon_wp0300.h"
 
 #include "Enemy.h"
 
@@ -130,6 +131,7 @@ void CAI_CH0300::AfterPhysX()
 	for (auto& iter : m_vecWeapon)
 	{
 		static_cast<CScarletWeapon*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
+		static_cast<CScarletWeapon*>(iter)->Trail_Tick(m_fTimeDelta);
 	}
 
 	MovePerSecondCheck();
@@ -444,10 +446,32 @@ void CAI_CH0300::DistanceCheck()
 	CGameObject* pEnemy = nullptr;
 	if (nullptr != (pEnemy = CPlayerInfoManager::GetInstance()->Get_TargetedMonster()))
 	{
-		_float4 vPlayerDistance = pEnemy->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)
-			- m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		// 몬스터와의 거리는 레이캐스트로 탐지한다.
+		physx::PxRaycastHit hitBuffer[1];
+		physx::PxRaycastBuffer rayOut(hitBuffer, 1);
 
-		m_fDistance_toEnemy = vPlayerDistance.Length();
+		RayCastParams param;
+		param.rayOut = &rayOut;
+		param.vOrigin = GetColliderPosition();
+		param.vDir = static_cast<CScarletCharacter*>(pEnemy)->GetColliderPosition() - GetColliderPosition();
+		param.fDistance = param.vDir.Length() * 2.f;
+		param.iTargetType = CTB_MONSTER | CTB_MONSTER_PART;
+		param.bSingle = true;
+		param.fVisibleTime = 1.f;
+
+		if (CGameInstance::GetInstance()->RayCast(param))
+		{
+			for (int i = 0; i < rayOut.getNbAnyHits(); ++i)
+			{
+				auto pHit = rayOut.getAnyHit(i);
+				m_fDistance_toEnemy = pHit.distance;
+			}
+		}
+		else
+		{
+			m_fDistance_toEnemy = -1.f;
+		}
+
 	}
 	else
 	{
@@ -564,7 +588,7 @@ HRESULT CAI_CH0300::Setup_Parts()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	Json Weapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/wp0300.json");
-	Weapon["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/wp_300/wp0300.anim_model";
+	Weapon["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_300/wp0300.static_model";
 
 	CGameObject* pGameObject = nullptr;
 
@@ -573,10 +597,10 @@ HRESULT CAI_CH0300::Setup_Parts()
 	Desc.m_PivotMatrix = m_pModel->GetPivotMatrix();
 	Desc.m_pJson = &Weapon;
 
-	pGameInstance->Clone_GameObject(LAYER_AI, TEXT("HanabiWeapon"), &Desc);
+	//pGameInstance->Clone_GameObject(LAYER_AI, TEXT("HanabiWeapon"), &Desc);
 
-	//pGameObject = pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("HanabiWeapon"), &Desc);
-	//m_vecWeapon.push_back(pGameObject);
+	pGameObject = pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("HanabiWeapon"), &Desc);
+	m_vecWeapon.push_back(pGameObject);
 
 	return S_OK;
 }
