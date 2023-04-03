@@ -35,6 +35,7 @@ public:
 	void	Sync_position(CTransform* pTransform);
 	void	Set_Trigger(_bool bTrigger);
 	void	Activate(_bool bActivate);
+	void	Set_Outline(_bool bOutline);
 
 private:
 	HRESULT	SetUp_Components(void* pArg);
