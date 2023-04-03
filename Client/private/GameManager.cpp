@@ -57,10 +57,10 @@ void CGameManager::Tick(_double TimeDelta)
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 	{
-		m_pCanvas_Acquisition->Set_EnemyUI(EEnemyName::EM0400, 5);
+		m_pCanvas_Acquisition->Set_EnemyUI(EEnemyName::EM0400, 5); 
 		m_pCanvas_LeftTalk->Add_Talk(0);
-		m_pCanvas_LeftTalk->Add_Talk(1);
-		m_pCanvas_LeftTalk->Add_Talk(2);
+		//m_pCanvas_LeftTalk->Add_Talk(1);
+		//m_pCanvas_LeftTalk->Add_Talk(2);
 	}
 }
 

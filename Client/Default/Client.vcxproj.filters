@@ -1375,6 +1375,9 @@
     <ClInclude Include="..\public\Talk_FaceUI.h">
       <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_MainTalk.h">
+      <Filter>02.GameObjects\UI\Short\MainTalk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2263,6 +2266,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Talk_FaceUI.cpp">
       <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_MainTalk.cpp">
+      <Filter>02.GameObjects\UI\Short\MainTalk</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

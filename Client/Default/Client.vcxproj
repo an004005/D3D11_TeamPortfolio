@@ -226,6 +226,7 @@
     <ClInclude Include="..\public\Canvas_ItemMove.h" />
     <ClInclude Include="..\public\Canvas_MainItem.h" />
     <ClInclude Include="..\public\Canvas_MainItemKinds.h" />
+    <ClInclude Include="..\public\Canvas_MainTalk.h" />
     <ClInclude Include="..\public\Canvas_MouseCousor.h" />
     <ClInclude Include="..\public\Canvas_Party.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
@@ -519,6 +520,7 @@
     <ClCompile Include="..\private\Canvas_Acquisition.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp" />
     <ClCompile Include="..\private\Canvas_BrainMap.cpp" />
+    <ClCompile Include="..\private\Canvas_MainTalk.cpp" />
     <ClCompile Include="..\private\Canvas_SAContainer_Down.cpp" />
     <ClCompile Include="..\private\Canvas_Equipment.cpp" />
     <ClCompile Include="..\private\Canvas_ItemWindow.cpp" />
