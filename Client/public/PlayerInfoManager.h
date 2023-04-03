@@ -110,7 +110,9 @@ public:
 	void	Tick(_double TimeDelta);	// 실시간으로 타겟 정보를 갱신하기 위함
 
 public:	// Get
-	PLAYER_STAT&	Get_PlayerStat() { return m_tPlayerStat; }
+	PLAYER_STAT&	Get_PlayerStat() { 
+		return m_tPlayerStat;
+	}
 	list<ESASType>	Get_PlayerSasList() const { return m_PlayerSasTypeList; }
 	_bool			Get_isSasUsing(ESASType eType);
 	CGameObject*	Get_KineticObject();

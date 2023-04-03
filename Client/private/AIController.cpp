@@ -2,6 +2,7 @@
 #include "..\public\AIController.h"
 #include "ScarletCharacter.h"
 #include "Enemy.h"
+
 AICommand::AICommand(const AICommand& other): m_Callback(other.m_Callback),
                                               m_fDuration(other.m_fDuration),
                                               m_strName(other.m_strName)
@@ -90,7 +91,7 @@ void CAIController::Tick(_double TimeDelta)
 		 m_eDistance == DIS_MIDDLE || 
 		 m_eDistance == DIS_FAR))
 	{
-		dynamic_cast<CEnemy*>(pOwner)->TurnEyesOut();
+		dynamic_cast<CEnemy*>(pOwner)->GetEnemyUI()->TurnEyesOut();
 		m_bDetectTarget = true;
 	}
 }

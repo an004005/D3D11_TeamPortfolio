@@ -36,6 +36,7 @@ public:
 
 public:
 	void	Trail_Setting(_bool TrailOn) { m_bTrailOn = TrailOn; }
+	void	Trail_Tick(_double TimeDelta);
 
 protected:
 	_bool	m_bTrailOn = false;
@@ -49,6 +50,7 @@ protected:
 	Vector4		m_BeforePos;
 	Matrix		m_BeforeMatrix;
 	_float4		m_vSlashVector = { 0.f, 0.f, 0.f ,1.f };
+	_float		m_fAdaptLength = 0.f;
 
 public:
 	void		Set_Bright(ESASType eType, _bool bBright);

@@ -1603,9 +1603,7 @@ void CCanvas_BrainMap::SkillAcquisition_Tick()
 	Find_ChildUI(L"SkillAcquisitionBorderLine_B")->SetVisible(m_bSkillAcquisition);
 	Find_ChildUI(L"SkillAcquisition_BackGround")->SetVisible(m_bSkillAcquisition);
 	Find_ChildUI(L"SkillAcquisition_Button")->SetVisible(m_bSkillAcquisition);
-
-	_bool	bb = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"SkillAcquisition_Button"))->Get_OnButton();
-	IM_LOG("%d", static_cast<_int>(bb));
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"SkillAcquisition_Button"))->Set_ColorType(2);
 
 	if (false == m_bSkillAcquisition)
 		return;
@@ -1615,7 +1613,6 @@ void CCanvas_BrainMap::SkillAcquisition_Tick()
 	{
 		m_bSkillAcquisition = false;
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"SkillAcquisition_Button"))->Set_OnButton();
-		//dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"SkillAcquisition_Button"))->Set_OnAlpha();
 		return;
 	}
 }

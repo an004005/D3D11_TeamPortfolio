@@ -40,7 +40,7 @@ HRESULT CEM0750::Initialize(void * pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0750;
-	m_bHasCrushGauge = true;
+	m_bHasCrushGauge = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_pTransformCom->SetSpeed(15.f);
 
@@ -326,25 +326,25 @@ void CEM0750::SetUpFSM()
 
 void CEM0750::SetUpUI()
 {
+	__super::SetUpUI();
+
 	//HP UI
-	_float4x4 UI_PivotMatrix = Matrix(
+	_float4x4 UI_InfoPivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.413f, 0.0f, 1.0f
 	);
-
-	m_UI_PivotMatrixes[ENEMY_INFOBAR] = UI_PivotMatrix;
 
 	//FindEye
-	UI_PivotMatrix = Matrix(
+	_float4x4 UI_EyesPivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.413f, 0.0f, 1.0f
 	);
 
-	m_UI_PivotMatrixes[ENEMY_FINDEYES] = UI_PivotMatrix;
+	m_pEMUI->SetUpPivots(UI_InfoPivotMatrix, UI_EyesPivotMatrix);
 }
 
 void CEM0750::BeginTick()

@@ -49,9 +49,12 @@ public:
 		m_fLife = fLifeTime;
 	}
 	void Set_DamageParam(DAMAGE_PARAM& eDamageParam) {
-		eDamageParam = eDamageParam;
+		m_eDamageParam = eDamageParam;
 	}
 
+	void Set_Target(class CScarletCharacter* pTarget) {
+		m_pTarget = pTarget;
+	}
 protected:
 	_bool CheckDamagedTarget(CGameObject* pTarget);
 
@@ -64,7 +67,7 @@ protected:
 	
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
-	
+	class CScarletCharacter* m_pTarget = nullptr;
 //	DAMAGE_PARAM			m_Damage_Params;
 	//_float					m_fShootSpeed = 0.f;
 
@@ -83,7 +86,7 @@ protected:
 	 wstring m_pDeadParticle = L"";
 
 	_float m_fLife = 0.f;
-	DAMAGE_PARAM eDamageParam;
+	DAMAGE_PARAM m_eDamageParam;
 public:
 	static CBullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

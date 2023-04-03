@@ -58,6 +58,20 @@ void CScarletWeapon::Setup_BoneMatrix(CModel* pModel, _fmatrix Transform)
 	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
 }
 
+void CScarletWeapon::Trail_Tick(_double TimeDelta)
+{
+	m_pTrail->GetTransform()
+		->Set_WorldMatrix(m_pTransformCom->Get_WorldMatrix());
+
+	m_pTrail->SetAdapt(m_pTransformCom->Get_State(CTransform::STATE_LOOK) * m_fAdaptLength);
+
+	m_pTrail->Tick(TimeDelta);
+
+	m_pTrail->SetActive(m_bTrailOn);
+
+	m_pTrail->Late_Tick(TimeDelta);
+}
+
 _float4 CScarletWeapon::Get_Edge()
 {
 	_vector vWeaponCenter = m_pCollider->GetPxWorldMatrix().Translation();

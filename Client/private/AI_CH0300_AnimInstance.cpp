@@ -53,7 +53,7 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Duration(0.2f)
 				.Priority(5)
 
-				.AddTransition("IDLE to DODGE_START", "DODGE_START")
+				.AddTransition("IDLE to APPROACH_START", "APPROACH_START")
 				.Predicator([&]()->_bool {return (-1.f != m_fDistance_toEnemy); })
 				.Duration(0.2f)
 				.Priority(6)
@@ -518,6 +518,24 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Duration(0.f)
 				.Priority(0)
 
+		.AddState("APPROACH_START")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0300_030_AL_dodge_F_start"))
+				.AddTransition("APPROACH_START to APPROACH_END", "APPROACH_END")
+				.Duration(0.f)
+				.Priority(0)
+
+		.AddState("APPROACH_END")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0300_031_AL_dodge_F_stop"))
+
+				.AddTransition("APPROACH_END to HIT", "HIT")
+				.Predicator([&]()->_bool {return m_bHit; })
+				.Duration(0.f)
+				.Priority(0)
+
+				.AddTransition("APPROACH_END to IDLE", "IDLE")
+				.Duration(0.f)
+				.Priority(0)
+
 #pragma endregion DODGE
 
 #pragma region JUMP
@@ -651,6 +669,8 @@ void CAI_CH0300_AnimInstance::SpairAnimationManager(_bool bBattle)
 		m_pASM_Base->SetSpairAnim("JUMP_LANGIND", m_pModel->Find_Animation("AS_ch0300_122_AL_jump_landing"));
 		m_pASM_Base->SetSpairAnim("DODGE_START", m_pModel->Find_Animation("AS_ch0300_135_AL_dodge_B_start"));
 		m_pASM_Base->SetSpairAnim("DODGE_END", m_pModel->Find_Animation("AS_ch0300_136_AL_dodge_B_stop"));
+		m_pASM_Base->SetSpairAnim("APPROACH_START", m_pModel->Find_Animation("AS_ch0300_130_AL_dodge_F_start"));
+		m_pASM_Base->SetSpairAnim("APPROACH_STOP", m_pModel->Find_Animation("AS_ch0300_131_AL_dodge_F_stop"));
 	}
 	else
 	{

@@ -18,6 +18,7 @@ bool			g_bNeedResizeSwapChain = false;
 unsigned int	g_iWinSizeX = 1600;
 unsigned int	g_iWinSizeY = 900;
 _float g_fTimeDelta;
+_float g_fTimeDelta_Add;
 
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 ATOM                MyRegisterClass(HINSTANCE hInstance);

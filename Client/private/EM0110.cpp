@@ -9,6 +9,7 @@
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
 #include "ImguiUtils.h"
+#include "Material.h"
 
 CEM0110::CEM0110(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -28,12 +29,14 @@ HRESULT CEM0110::Initialize(void * pArg)
 	Json em0110_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0110/em0110Base.json");
 	pArg = &em0110_json;
 
-	
-
 	// 배치툴에서 조절할 수 있게 하기
 	{
 		m_iMaxHP = 1100;
-		m_iHP = 1100; // ★
+		m_iHP = m_iMaxHP; // ★
+		m_iArmorHp = m_iMaxHP * 0.3;
+
+		m_iCrushGauge = 3000;
+		m_iMaxCrushGauge = m_iCrushGauge;
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
@@ -50,9 +53,10 @@ HRESULT CEM0110::Initialize(void * pArg)
 	m_pBugParticle->Start_Attach(this, "Jaw", true);
 	Safe_AddRef(m_pBugParticle);
 
+
 	return S_OK;
 }
-
+ 
 void CEM0110::SetUpComponents(void * pArg)
 {
 	CEnemy::SetUpComponents(pArg);
@@ -74,6 +78,9 @@ void CEM0110::SetUpComponents(void * pArg)
 
 	// ASM
 	m_pASM = CEM0110_AnimInstance::Create(m_pModelCom, this);
+
+	m_pArmor = m_pModelCom->FindMaterial(L"MI_em0110_armor_0");
+	m_pWeak = m_pModelCom->FindMaterial(L"MI_em0110_weak_0");
 }
 
 void CEM0110::SetUpSound()
@@ -114,9 +121,44 @@ void CEM0110::SetUpAnimationEvent()
 	{ 
 		m_bAttack = true;
 
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Large_Bubbles")->Start_NoAttach(this);
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Little_Bubbles_A")->Start_NoAttach(this);
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Pop_Bubbles")->Start_NoAttach(this);
+		_matrix 	AOEPivotMatirx = CImguiUtils::CreateMatrixFromImGuizmoData(
+			{ -0.4f, -2.2f, -1.f },
+			{ 0.f, 0.f, 0.f, },
+			{ 1.f, 1.f, 1.f }
+		);
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Bubble_Decal")
+				->Start_NoAttachPivot(this, AOEPivotMatirx, false);
+		
+
+		AOEPivotMatirx = CImguiUtils::CreateMatrixFromImGuizmoData(
+			{ -0.4f, 0.f, -1.f },
+			{ 0.f, 0.f,  0.f, },
+			{ 0.3f, 0.3f, 0.3f }
+		);
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Large_Bubbles")
+			->Start_NoAttachPivot(this, AOEPivotMatirx, false);
+
+
+		AOEPivotMatirx = CImguiUtils::CreateMatrixFromImGuizmoData(
+			{ -0.473f, 0.f, -0.3f },
+			{ 0.f, 0.f,  0.f, },
+			{ 0.2f, 0.2f, 0.2f }
+		);
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Little_Bubbles_A")
+			->Start_NoAttachPivot(this, AOEPivotMatirx, false);
+
+
+		AOEPivotMatirx = CImguiUtils::CreateMatrixFromImGuizmoData(
+			{ -1.236f, 0.f, 1.572f },
+			{ 0.f, 0.f, 0.f },
+			{ 1.f, 1.f, 1.f }
+		);
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Pop_Bubbles")
+			->Start_NoAttachPivot(this , AOEPivotMatirx, false);
 
 	});
 
@@ -125,21 +167,22 @@ void CEM0110::SetUpAnimationEvent()
 		m_bAttack = false;
 	});
 
-	m_pModelCom->Add_EventCaller("Rush_Start", [this] 
-	{
-		ClearDamagedTarget();
-		m_bAttack = true;
+	m_pModelCom->Add_EventCaller("Rush_Start", [this]
+		{
+			ClearDamagedTarget();
+			m_bAttack = true;
 
-		//위치 앞으로 옮기려면 x랑 y에 똑같은값을 더해주면 됨
-		_matrix RushEffectPivotMatirx = CImguiUtils::CreateMatrixFromImGuizmoData(
-		{ 1.5f, 1.5f, 0.f },
-		{ -90.f, 0.f, -40.f, }, 
-		{ 1.f, 1.f, 1.f });
+			//위치 앞으로 옮기려면 x랑 y에 똑같은값을 더해주면 됨
+			_matrix RushEffectPivotMatirx = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ 0.f, 0.f, -3.5f },
+				{ -180.f, 0.f, -180.f, },
+				{ 1.f, 1.f, 1.f }
+			);
 
-		m_pRushEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Dash_Attack");
-		m_pRushEffect->Start_AttachPivot(this, RushEffectPivotMatirx, "Jaw", true, true);
-		Safe_AddRef(m_pRushEffect);
-	});
+			m_pRushEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Dash_Attack");
+			m_pRushEffect->Start_AttachPivot(this, RushEffectPivotMatirx, "Target", true, true, false);
+			Safe_AddRef(m_pRushEffect);
+		});
 
 	m_pModelCom->Add_EventCaller("Rush_End", [this] 
 	{ 
@@ -182,11 +225,6 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
 
-			.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_HEAVY; })
-			.AddTransition("Idle to Down", "Down")
-				.Predicator([this] { return  m_iCrushGauge <= 0; })
-
 			.AddTransition("Idle to Attack_turn", "Attack_turn")
 				.Predicator([this] { return m_eInput == CController::R; })
 			.AddTransition("Idle to Attack_c1", "Attack_c1")
@@ -196,52 +234,12 @@ void CEM0110::SetUpFSM()
 		
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-		.AddState("Hit_Heavy")
-			.OnStart([this]
-			{
-				Play_HeavbyHitAnim();
-			})
-			.Tick([this](_double)
-			{
-				if (m_eCurAttackType == EAttackType::ATK_HEAVY)
-				{
-					Play_HeavbyHitAnim();
-				}
-			})
-			.AddTransition("Hit_Heavy to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-				})
-
 		.AddState("Death")
 			.OnStart([this]
 			{
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_474_AL_dead_down02");
 			})
 
-		.AddState("Down")
-			.OnStart([this]
-			{
-				m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_475_AL_down_start02");
-			})
-			.AddTransition("Down to OnFloorGetup", "OnFloorGetup")
-				.Predicator([this]
-			{
-				return m_pASM->isSocketPassby("FullBody", 0.95f);
-			})
-
-		.AddState("OnFloorGetup")
-			.OnStart([this]
-			{
-				m_pASM->InputAnimSocketMany("FullBody", { "AS_em0100_480_AL_down_shock" "AS_em0100_477_AL_getup02" });
-				m_fGravity = 20.f;
-			})
-				.AddTransition("OnFloorGetup to Idle", "Idle")
-				.Predicator([this]
-			{
-				return  m_bDead || m_pASM->isSocketEmpty("FullBody");
-			})
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 		//발차기
@@ -392,6 +390,7 @@ void CEM0110::Tick(_double TimeDelta)
 	m_pASM->Tick(TimeDelta);
 
 	Adjust_MoveAxis(TimeDelta);
+	HitWeakProcess(TimeDelta);
 	ResetHitData();
 }
 
@@ -423,27 +422,50 @@ void CEM0110::Imgui_RenderProperty()
 	{
 		m_pASM->Imgui_RenderState();
 	}
-	
+
 	m_pFSM->Imgui_RenderProperty();
 
-	/*static GUIZMO_INFO tInfo;
-	CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+	static _bool tt = false;
+	ImGui::Checkbox("Modify Pivot", &tt);
 
-	if (ImGui::Button("Create_RushEffect"))
+	if (tt)
 	{
-		m_pRushEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Dash_Attack");
-		m_pRushEffect->Start_AttachPivot(this, pivot, "Jaw", true, true);
-	}
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
 
-	if (ImGui::Button("Delete_RushEffect"))
-	{
-		if (m_pRushEffect != nullptr)
+		if (ImGui::Button("TestEffect"))
 		{
-			m_pRushEffect->SetDelete();
-			m_pRushEffect = nullptr;
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Bubble_Decal")
+				->Start_NoAttachPivot(this, pivot, false);
 		}
+	}
+}
 
-	}*/
+_bool CEM0110::IsWeak(CRigidBody* pHitPart)
+{
+	return pHitPart == GetRigidBody("Weak");
+}
+
+void CEM0110::HitEffect(DAMAGE_PARAM& tDamageParams)
+{
+	if (m_bHitWeak && m_iArmorHp > 0)
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Dash_Attack_Hit_EF")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
+	else
+		__super::HitEffect(tDamageParams);
+}
+
+void CEM0110::CheckHP(DAMAGE_PARAM& tDamageParams)
+{
+	if (m_bHitWeak && m_iArmorHp > 0)
+	{
+		m_iArmorHp -= tDamageParams.iDamage;
+
+		//hp가 0보다 작아지면 아머 삭제. 
+		if (m_iArmorHp <= 0)
+			m_bDestroyArmor = true;
+	}
+	else
+		__super::CheckHP(tDamageParams);
 }
 
 _bool CEM0110::IsPlayingSocket() const
@@ -492,6 +514,52 @@ void CEM0110::Play_HeavbyHitAnim()
 		m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_451_AL_damage_l_F02");
 	else
 		m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_452_AL_damage_l_B02");
+}
+
+void CEM0110::HitWeakProcess(_double TimeDelta)
+{
+	if (m_bHitWeak)
+	{
+		if (m_iArmorHp > 0)
+		{
+			m_bArmorProcess = true;
+			m_pArmor->GetParam().Floats[1] = 1.f;
+		}
+		else
+		{
+			m_bWeakProcess = true;
+			m_pWeak->GetParam().Floats[1] = 1.f;
+		}
+	}
+
+	//1번째가 약점 맞았을때 반짝거리는거
+	//2번째가 아머 삭제될때 디졸브
+
+	if (m_bArmorProcess)
+	{	
+		m_pArmor->GetParam().Floats[1] = max(0, static_cast<_int>(m_pArmor->GetParam().Floats[1] - TimeDelta));
+
+		if (m_pArmor->GetParam().Floats[1] <= 0.f)
+			m_bArmorProcess = false;
+	}
+
+	else if (m_bWeakProcess)
+	{
+		m_pWeak->GetParam().Floats[1] = max(0, static_cast<_int>(m_pWeak->GetParam().Floats[1] - TimeDelta));
+		
+		if (m_pWeak->GetParam().Floats[1] <= 0.f)
+			m_bWeakProcess = false;
+	}
+
+	//아머가 파괴될때 한번 실행
+	if (m_bDestroyArmor == true)
+	{
+		m_pArmor->GetParam().Floats[2] = min(1, static_cast<_int>(m_pArmor->GetParam().Floats[2] + TimeDelta));
+
+		if (m_pArmor->GetParam().Floats[2] >= 1.f)
+			m_bDestroyArmor = false;
+	}
+	
 }
 
 
@@ -562,19 +630,51 @@ void CEM0110::Kick_SweepSphere()
 	physx::PxSweepHit hitBuffer[3];
 	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
 
+	//Tail4가 꼬리 중앙에 있음
+	_float4x4 BoneMatrix = GetBoneMatrix("RightToeBaseHelp") * m_pTransformCom->Get_WorldMatrix();
+	_float4 vBonePos = _float4{ BoneMatrix.m[3][0], BoneMatrix.m[3][1], BoneMatrix.m[3][2], BoneMatrix.m[3][3] };
+
+	_vector	vDir = vBonePos - m_BeforePos;
+
 	SphereSweepParams tParams;
 	tParams.fVisibleTime = 0.2f;
 	tParams.iTargetType = CTB_PLAYER;
-	tParams.fRadius = 1.f;
-	tParams.fDistance = 1.f;
-	tParams.vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	tParams.fRadius = 2.f;
+	tParams.fDistance = XMVectorGetX(XMVector4LengthEst(vDir));
+	tParams.vPos = vBonePos;
 	tParams.sweepOut = &sweepOut;
-	tParams.vUnitDir = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	tParams.vUnitDir = vDir;
 
 	if (CGameInstance::GetInstance()->SweepSphere(tParams))
 	{
-		HitTargets(sweepOut, m_iAtkDamage * 1.3f, EAttackType::ATK_TO_AIR);
+		//HitTargets(sweepOut, m_iAtkDamage * 1.3f, EAttackType::ATK_TO_AIR);
+
+		for (int i = 0; i < sweepOut.getNbAnyHits(); ++i)
+		{
+			auto pTarget = dynamic_cast<CScarletCharacter*>(CPhysXUtils::GetOnwer(sweepOut.getAnyHit(i).actor));
+			if (pTarget == nullptr)
+				continue;
+
+			if (CheckDamagedTarget(pTarget))
+			{
+				DAMAGE_PARAM tDamageParams;
+				tDamageParams.iDamage = m_iAtkDamage * 1.3f;
+				tDamageParams.eAttackType = EAttackType::ATK_TO_AIR;
+				tDamageParams.eDeBuff = EDeBuffType::DEBUFF_END;
+				tDamageParams.pCauser = this;
+				tDamageParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				memcpy(&tDamageParams.vHitPosition, &sweepOut.getAnyHit(i).position, sizeof(_float3));
+				memcpy(&tDamageParams.vHitNormal, &sweepOut.getAnyHit(i).normal, sizeof(_float3));
+				pTarget->TakeDamage(tDamageParams);
+
+				//발차기에 맞았을때 추가 이펙트
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Spin_Attack_Hit_EF")
+					->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
+			}
+		}
 	}
+
+	m_BeforePos = vBonePos;
 }
 
 

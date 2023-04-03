@@ -1004,6 +1004,29 @@ PS_OUT_Flag PS_SAS_TELEPORT_EF(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_EM8200_ICE_DECAL(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Noise = g_tex_1.Sample(LinearSampler, In.vTexUV );
+	float4 MixTex = defaultColor * Noise;
+
+	float4 OriginColor = g_vec4_0;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	float4 Final = saturate(BlendColor);
+
+	float Mask = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+	
+
+	Out.vColor = CalcHDRColor(Final, g_float_0);
+
+	Out.vColor.a = Mask * Noise.r* g_float_1;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
 
 
 // g_tex_0 : Default White
@@ -2095,7 +2118,21 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_BRAINCRUSH_YELLOW_TEX();
 	}
 
-	//52
+	// 52
+		pass Em8200IceDecal
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM8200_ICE_DECAL();
+	}
+
+	//53
 	pass MonsterSpawnDistortion
 	{
 		SetRasterizerState(RS_NonCulling);

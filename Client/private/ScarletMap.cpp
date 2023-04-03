@@ -475,7 +475,7 @@ void CScarletMap::RayPicking()
 					}
 					else
 					{
-						return true;
+						return false;
 					}
 				
 				});

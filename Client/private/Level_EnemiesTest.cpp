@@ -22,8 +22,8 @@
 #include "Imgui_Batch.h"
 #include "GameManager.h"
 
-#define ADD_PLAYER
-//#define ADD_PREVIEW "Prototype_Model_em210"
+//#define ADD_PLAYER
+//#define ADD_PREVIEW "Prototype_Model_em1200"
 //#define ADD_ENEMY "Monster_em650"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -296,8 +296,8 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_UI(const _tchar * pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Main.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Main", &json));
 
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("m../Bin/Resources/UI/UI_PositionData/MouseCousorUI.json");
-	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MouseCousorUI", &json));
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MouseCousor.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_MouseCousor", &json));
 
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{
