@@ -73,14 +73,14 @@ void CUI_Manager::Set_TempOff(const _bool bOff)
 	dynamic_cast<CCanvas_Acquisition*>(Find_Canvas(L"Canvas_Acquisition"))->Set_Visible();
 }
 
-void CUI_Manager::Free()
+void CUI_Manager::Clear()
 {
-	for (auto& Pair : m_mapMoveCanvass)
-		Safe_Release(Pair.second);
+	// for (auto& Pair : m_mapMoveCanvass)
+		// Safe_Release(Pair.second);
 	m_mapMoveCanvass.clear();
 
-	for (auto& Pair : m_mapCanvass)
-		Safe_Release(Pair.second);
+	// for (auto& Pair : m_mapCanvass)
+		// Safe_Release(Pair.second);
 	m_mapCanvass.clear();
 	
 	for (auto& Pair : m_mapWindowCanvass)

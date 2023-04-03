@@ -16,6 +16,7 @@ CEM1100::CEM1100(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CEM1100::CEM1100(const CEM1100 & rhs)
 	: CEnemy(rhs)
 {
+	m_bSpawnEffect = false;
 }
 
 HRESULT CEM1100::Initialize(void * pArg)

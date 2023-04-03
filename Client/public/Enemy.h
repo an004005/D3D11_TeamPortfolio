@@ -24,6 +24,7 @@ protected:
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual void Imgui_RenderProperty() override;
@@ -101,6 +102,9 @@ protected:
 	//RigidBoyd °ü¸®
 	void	Add_RigidBody(const string& KeyName, void* pArg = nullptr);
 	CRigidBody* GetRigidBody(const string& KeyName);
+
+private:
+	void CreateSpawnEffect();
 	
 protected:
 	static vector<wstring>			s_vecDefaultBlood;
@@ -165,6 +169,10 @@ protected:
 	string m_strImpactVoiceTag;
 
 
+
+	_bool m_bSpawnEffect = true;
+	_float4x4 m_SpawnEffectPivot;
+	_float m_fSpawnDistortionDistancePivot = 0.f;
 
 public:
 	virtual void Free() override;

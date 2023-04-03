@@ -318,7 +318,10 @@ void CParticleGroup::Tick(_double TimeDelta)
 
 	VisibleUpdate();
 
-	if(m_bUpdate == true && (nullptr != m_pOwner) && m_pOwner->IsDeleted() == false && (nullptr == m_pAttachWeapon))
+	if(m_bUpdate == true 
+		&& CGameInstance::GetInstance()->Check_ObjectAlive(m_pOwner)
+		&& m_pOwner->IsDeleted() == false 
+		&& (nullptr == m_pAttachWeapon))
 	{
 		if (m_BoneName != "")
 		{

@@ -220,8 +220,11 @@ CUI * CCanvas::Find_ChildUI(const _tchar * pChildTag)
 CUI * CCanvas::Add_ChildUI(_uint iLevelIndex, const _tchar * pPrototypeTag, const _tchar * pChildTag, void * pArg)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	
+	CGameObject * pGameObject = pGameInstance->Find_Prototype(LEVEL_STATIC, pPrototypeTag);
+	if (pGameObject == nullptr)
+		pGameObject = pGameInstance->Find_Prototype(LEVEL_NOW, pPrototypeTag);
 
-	CGameObject * pGameObject = pGameInstance->Find_Prototype(LEVEL_NOW, pPrototypeTag);
 	if (nullptr == pGameObject)
 	{
 		MSG_BOX("Not Found");

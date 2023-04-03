@@ -109,6 +109,32 @@ PS_OUT CommonProcess(PS_IN In)
 	return Out;
 }
 
+PS_OUT CommonProcess_AlphaTest(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vDiffuse.rgb = g_tex_0.Sample(LinearSampler, In.vTexUV).rgb;
+	if (Out.vDiffuse.a < 0.01f)
+		discard;
+
+	float3 vNormal;
+	if (g_tex_on_1)
+	{
+		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+		vNormal = vNormalDesc.xyz * 2.f - 1.f;
+		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+		vNormal = normalize(mul(vNormal, WorldMatrix));
+	}
+	else
+		vNormal = In.vNormal.xyz;
+
+	float flags = SHADER_DEFAULT;
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+	return Out;
+}
+
 // g_tex_0 : diffuse
 // g_tex_1 : normal
 // g_tex_2 : RMA
@@ -117,7 +143,7 @@ PS_OUT CommonProcess(PS_IN In)
 // g_float_0 : ¿°·Â Ä³Ä¡
 PS_OUT PS_DEFAULT(PS_IN In)
 {
-	PS_OUT Out = CommonProcess(In);
+	PS_OUT Out = CommonProcess_AlphaTest(In);
 
 	if (g_tex_on_2)
 		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
@@ -132,7 +158,7 @@ PS_OUT PS_DEFAULT(PS_IN In)
 // g_tex_2 : roughness
 PS_OUT PS_DEFAULT_ROUGHNESS(PS_IN In)
 {
-	PS_OUT			Out = CommonProcess(In);
+	PS_OUT			Out = CommonProcess_AlphaTest(In);
 	return Out;
 }
 

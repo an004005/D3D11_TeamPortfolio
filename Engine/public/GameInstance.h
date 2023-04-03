@@ -234,6 +234,7 @@ private:
 	class CGameTime_Manager*		m_pGameTime_Manager = nullptr;
 	class CImgui_Manager*			m_pImgui_Manager = nullptr;
 	class CSSAOManager*				m_pSSAO_Manager = nullptr;
+	class CSSLRManager*				m_pSSLR_Manager = nullptr;
 
 public:
 	static void Release_Engine();
