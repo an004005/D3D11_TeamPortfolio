@@ -83,7 +83,12 @@ void CUI_Manager::Clear()
 		// Safe_Release(Pair.second);
 	m_mapCanvass.clear();
 	
-	for (auto& Pair : m_mapWindowCanvass)
-		Safe_Release(Pair.second);
+	// for (auto& Pair : m_mapWindowCanvass)
+		// Safe_Release(Pair.second);
 	m_mapWindowCanvass.clear();
+}
+
+void CUI_Manager::Free()
+{
+	Clear();
 }
