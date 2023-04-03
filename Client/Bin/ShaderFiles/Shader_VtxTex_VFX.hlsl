@@ -998,6 +998,9 @@ PS_OUT_Flag PS_SAS_TELEPORT_EF(PS_IN In)
 
 	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, 0.f);
 
+	if (Out.vColor.a <= 0.1f)
+		discard;
+
 	return Out;
 }
 
