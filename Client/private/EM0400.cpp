@@ -19,6 +19,8 @@ CEM0400::CEM0400(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CEM0400::CEM0400(const CEM0400 & rhs)
 	: CEnemy(rhs)
 {
+	m_SpawnEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData({0.f, 1.2f, 0.f}, {0.f, 0.f, 0.f}, {0.7f,0.7f,0.7f});
+	m_fSpawnDistortionDistancePivot = 0.5f;
 }
 
 HRESULT CEM0400::Initialize(void * pArg)
@@ -42,7 +44,7 @@ HRESULT CEM0400::Initialize(void * pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM0400;
-	m_bHasCrushGauge = true;
+	m_bHasCrushGauge = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	return S_OK;
@@ -368,25 +370,26 @@ void CEM0400::SetUpFSM()
 
 void CEM0400::SetUpUI()
 {
+	__super::SetUpUI();
+
 	//HP UI
-	_float4x4 UI_PivotMatrix = Matrix(
+	_float4x4 UI_InfoPivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.41f, 0.0f, 1.0f
 	);
 
-	m_UI_PivotMatrixes[ENEMY_INFOBAR] = UI_PivotMatrix;
-
 	//FindEye
-	UI_PivotMatrix = Matrix(
+	_float4x4 UI_EyesPivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		-0.324f, 1.014f, 0.0f, 1.0f
 	);
 
-	m_UI_PivotMatrixes[ENEMY_FINDEYES] = UI_PivotMatrix;
+	m_pEMUI->SetUpPivots(UI_InfoPivotMatrix, UI_EyesPivotMatrix);
+
 }
 
 void CEM0400::BeginTick()

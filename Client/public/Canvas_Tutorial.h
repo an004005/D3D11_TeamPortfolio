@@ -56,7 +56,6 @@ private:
 
 private:
 	void	Success_Tick(const _double & TimeDelta);
-	void	DeleteSuccess_Tick(const _double & TimeDelta);
 
 private:	// Tutorial
 	TUTORIAL	m_eTutorial = { TUTORIAL_END };

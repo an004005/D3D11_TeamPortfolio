@@ -4971,6 +4971,10 @@
             {
                 "EventName": "Smash",
                 "EventTime": 4.0
+            },
+            {
+                "EventName": "Landing",
+                "EventTime": 0.0
             }
         ]
     },
@@ -6146,6 +6150,12 @@
             }
         ]
     },
+    "AS_em1100_202_AL_atk_a1_bringdown_end": {
+        "Duration": 57.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em1100_202_AL_atk_a1_bringdown_start": {
         "Duration": 33.0,
         "TickPerSecond": 40.0,
@@ -6159,16 +6169,20 @@
     },
     "AS_em1100_204_AL_atk_a2_tailall": {
         "Duration": 176.0,
-        "TickPerSecond": 40.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "TailSwing_End",
-                "EventTime": 100.0
+                "EventName": "TailSwing_First",
+                "EventTime": 60.0
             },
             {
-                "EventName": "TailSwing_Start",
-                "EventTime": 70.0
+                "EventName": "TailSwing_Second",
+                "EventTime": 75.0
+            },
+            {
+                "EventName": "TailSwing_End",
+                "EventTime": 105.0
             }
         ]
     },
@@ -6178,14 +6192,25 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_em1100_208_AL_atk_a3_guidanceshot_omen": {
+        "Duration": 160.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "ElectricBall_Ready",
+                "EventTime": 90.0
+            }
+        ]
+    },
     "AS_em1100_208_AL_atk_a3_guidanceshot_start": {
         "Duration": 60.0,
-        "TickPerSecond": 35.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
                 "EventName": "Shot",
-                "EventTime": 26.0
+                "EventTime": 40.0
             }
         ]
     },
@@ -6197,13 +6222,13 @@
     },
     "AS_em1100_215_AL_atk_a5_drainage_omen": {
         "Duration": 143.0,
-        "TickPerSecond": 40.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em1100_215_AL_atk_a5_drainage_start": {
         "Duration": 77.0,
-        "TickPerSecond": 32.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -6255,7 +6280,7 @@
     },
     "AS_em1200_200_AL_atk_a1_fall": {
         "Duration": 242.0,
-        "TickPerSecond": 70.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -6263,6 +6288,24 @@
                 "EventTime": 175.0
             }
         ]
+    },
+    "AS_em1200_205_AL_atk_a2_shout1_start": {
+        "Duration": 140.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_206_AL_atk_a2_shout1_loop": {
+        "Duration": 60.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_207_AL_atk_a2_shout1_end": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_em1200_210_AL_atk_a3_tackle2_start": {
         "Duration": 110.0,
@@ -6291,12 +6334,12 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "Swing_L_Start",
-                "EventTime": 100.0
-            },
-            {
                 "EventName": "Swing_L_End",
                 "EventTime": 128.0
+            },
+            {
+                "EventName": "Swing_L_Start",
+                "EventTime": 105.0
             }
         ]
     },
@@ -6311,12 +6354,41 @@
             },
             {
                 "EventName": "Swing_R_Start",
-                "EventTime": 100.0
+                "EventTime": 105.0
+            }
+        ]
+    },
+    "AS_em1200_224_AL_atk_a8_shout2_start": {
+        "Duration": 270.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Shout2_Start",
+                "EventTime": 240.0
             }
         ]
     },
     "AS_em1200_225_AL_atk_a8_shout2_loop": {
         "Duration": 30.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_226_AL_atk_a8_shout2_end": {
+        "Duration": 180.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_230_AL_atk9_punch_start": {
+        "Duration": 145.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_231_AL_atk9_punch_startloop": {
+        "Duration": 55.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
@@ -6328,7 +6400,7 @@
         "vecEvent": [
             {
                 "EventName": "Stamp",
-                "EventTime": 48.0
+                "EventTime": 54.0
             }
         ]
     },

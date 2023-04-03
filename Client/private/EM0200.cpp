@@ -7,6 +7,7 @@
 #include "RigidBody.h"
 #include "EM0200_AnimInstance.h"
 #include "EM0200_Controller.h"
+#include "ImguiUtils.h"
 
 CEM0200::CEM0200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -17,6 +18,8 @@ CEM0200::CEM0200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CEM0200::CEM0200(const CEM0200& rhs)
 	: CEnemy(rhs)
 {
+	m_SpawnEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData({0.f, 1.2f, 0.f}, {0.f, 0.f, 0.f}, {0.7f,0.7f,0.7f});
+	m_fSpawnDistortionDistancePivot = 0.5f;
 }
 
 HRESULT CEM0200::Initialize(void* pArg)
@@ -648,26 +651,25 @@ void CEM0200::Imgui_RenderProperty()
 
 void CEM0200::SetUpUI()
 {
+	__super::SetUpUI();
+
 	//HP UI
-	_float4x4 UI_PivotMatrix = Matrix(
+	_float4x4 UI_InfoPivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.241f, 0.0f, 1.0f
 	);
 
-	m_UI_PivotMatrixes[ENEMY_INFOBAR] = UI_PivotMatrix;
-
 	//FindEye
-	UI_PivotMatrix = Matrix(
+	_float4x4 UI_EyesPivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		-0.481f, 0.945f, 0.0f, 1.0f
 	);
 
-	m_UI_PivotMatrixes[ENEMY_FINDEYES] = UI_PivotMatrix;
-
+	m_pEMUI->SetUpPivots(UI_InfoPivotMatrix, UI_EyesPivotMatrix);
 
 }
 

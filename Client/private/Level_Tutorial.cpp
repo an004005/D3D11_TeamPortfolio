@@ -16,6 +16,7 @@
 #include "Imgui_PhysX.h"
 #include "SkyBox.h"
 #include "GameManager_Tutorial.h"
+#include "UI_Manager.h"
 
 #define ADD_PLAYER
 
@@ -39,6 +40,7 @@ HRESULT CLevel_Tutorial::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
 
+	CUI_Manager::GetInstance()->Clear();
 	CGameInstance::GetInstance()->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
 
 	if (FAILED(Ready_Prototypes()))
@@ -79,6 +81,8 @@ HRESULT CLevel_Tutorial::Initialize()
 void CLevel_Tutorial::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+
 }
 
 void CLevel_Tutorial::Late_Tick(_double TimeDelta)
@@ -214,6 +218,9 @@ HRESULT CLevel_Tutorial::Ready_Layer_UI(const _tchar * pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MouseCousor.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_MouseCousor", &json));
 
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Shop.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Shop", &json));
+
 	return S_OK;
 }
 
@@ -268,4 +275,5 @@ CLevel_Tutorial * CLevel_Tutorial::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 void CLevel_Tutorial::Free()
 {
 	__super::Free();
+
 }

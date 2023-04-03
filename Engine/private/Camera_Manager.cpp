@@ -25,11 +25,10 @@ void CCamera_Manager::Tick()
 
 	// CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	if (m_strMainCamTag.empty() == false)
+	if (m_strMainCamTag.empty() == false && GetMainCam() != nullptr)
 	{
 		CCamera* pMainCam = GetMainCam();
-		Assert(pMainCam != nullptr);
-
+		
 		CPipeLine* pPipeLine = CPipeLine::GetInstance();
 
 		pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, pMainCam->GetXMViewMatrix());

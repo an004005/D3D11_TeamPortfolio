@@ -19,23 +19,27 @@ public:
 	virtual void	Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
-	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
+private:
+	void	Weaponkind_Tick(const _double & TimeDelta);
+	void	WeaponkindPick_Tick();
+	void	RihgtInfoMove_Tick(const _double& TimeDelta);
 
 private:
-	void	ChildUIPick();
-	void	CurrentWeapon(const _double & TimeDelta);
-
-private:
-	_int	m_iItmeInfoPickCount = { 0 };
-
-	_bool	m_bItmeWindowPick = { false };
-	array<_float, 3> m_arrStartWeaponPos = { 0.0f, 0.0f, 0.0f };
+	// 왼쪽 무기 정보 저장
+	array<_bool, 3> m_arrItmeWindowPick = { false, false, false };
+	array<_float, 3> m_arrOriginalPos = { 0.0f, 0.0f, 0.0f };
 	array<_float, 3> m_arrAddWeaponPos = { 0.0f, 0.0f, 0.0f };
 
+	// 반복문을 돌면서 해당 객체의 Render는 이 클래스의 m_bVisible 에 영향을 받지 않도록 한다.
 	_uint	m_iCurrentWeaponCount = { 1 };
 	_uint	m_iCurrentWeaponBCount = { 1 };
+
+	// 오른쪽에 무기 정보를 띄우기 위해 필요한 변수
+	_float	m_fOriginalPos = { 0.0f };
+	_float	m_fAddWeaponPos = { 0.0f };
+	size_t m_iPickIndex = { 0 };
+	_bool m_bWeaponPick = { false }; // 왼쪽에서 무기를 선택하면 true, 무기를 닫으면 false
+
 
 public:
 	static CCanvas_Equipment* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

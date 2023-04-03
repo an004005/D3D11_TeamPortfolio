@@ -556,6 +556,7 @@
     <ClInclude Include="..\public\Imgui_CamAnimEditor.h">
       <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\SSLRManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -886,6 +887,7 @@
     <ClCompile Include="..\private\Imgui_CamAnimEditor.cpp">
       <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\SSLRManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">

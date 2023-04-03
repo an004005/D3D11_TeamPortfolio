@@ -2,16 +2,9 @@
 #include "Enemy.h"
 #include "Controller.h"
 
-BEGIN(Engine)
-class CFSMComponent;
-class CGameInstance;
-class CAnimation;
-class CRigidBody;
-END
-
 BEGIN(Client)
 
-// 초(고속)파리 :: 방도 팡뒤(Bangdo Fandu)
+// 물보스
 
 class CEM1100 : public CEnemy
 {
@@ -47,26 +40,21 @@ public:
 	void Dodge_VelocityCalc();
 	void AfterLocal180Turn();
 
-//	void Play_LightHitAnim();
+	void Play_LightHitAnim();
 	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
-
-	_bool IsTargetFront();
-
+	void Create_Bullet();
 private:
 	//충돌 관련 함수 정의
-	void Rush_SweepCapsule();
+	void Rush_SweepSphere();
 	void TailSwing_SweepSphere();
 	void Stamp_Overlap();
 
 private:
 	class CEM1100_Controller*		m_pController = nullptr;
 	class CEM1100_AnimInstance*		m_pASM = nullptr;
-
-	//충돌
-	CRigidBody*				m_pRange = nullptr;
-	CRigidBody*				m_pHead = nullptr;
-
+	
+	class CEffectGroup* m_pRushEffect = nullptr;
 private:
 	_float3						 m_vMoveAxis;
 	_bool						m_bHitAir = false;
@@ -89,6 +77,8 @@ private:
 	//Heavy coll
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
+
+	_float4x4	pivot;
 public:
 	static CEM1100* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

@@ -15,6 +15,7 @@ CEM0220_Controller::CEM0220_Controller(const CEM0220_Controller & rhs)
 
 HRESULT CEM0220_Controller::Initialize(void * pArg)
 {
+	m_fGuardDist = 7.f;
 	return S_OK;
 }
 

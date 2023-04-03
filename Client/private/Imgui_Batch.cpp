@@ -88,6 +88,15 @@ void CImgui_Batch::Imgui_RenderTab()
 		else
 			ImGui::Text("Preset Json Path : %s", m_BatchPresets[iSelectedPresetIdx].strJsonPath.c_str());
 	}
+	// else
+	// {
+	// 	static char szProtoTag[MAX_PATH]{};
+	// 	static char szLayerTag[MAX_PATH]{};
+	// 	static char szJsonPath[MAX_PATH]{};
+	// 	ImGui::InputText("Custom ProtoTag", szProtoTag, MAX_PATH);
+	// 	ImGui::InputText("Custom LayerTag", szLayerTag, MAX_PATH);
+	// 	ImGui::InputText("Custom JsonPath", szJsonPath, MAX_PATH);
+	// }
 
 	ImGui::Checkbox("Click Clone Once", &bClickClone);
 	ImGui::Checkbox("Click Select Obj(only this batch)", &bClockSelect);

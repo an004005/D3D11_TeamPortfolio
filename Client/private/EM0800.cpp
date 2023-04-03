@@ -16,6 +16,8 @@ CEM0800::CEM0800(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CEM0800::CEM0800(const CEM0800 & rhs)
 	: CEnemy(rhs)
 {
+	m_SpawnEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData({0.f, 1.5f, 1.5f}, {0.f, 0.f, 0.f}, {1.3f,1.3f,1.3f});
+	m_fSpawnDistortionDistancePivot = 3.f;
 }
 
 HRESULT CEM0800::Initialize(void * pArg)
@@ -31,6 +33,9 @@ HRESULT CEM0800::Initialize(void * pArg)
 		m_iMaxHP = 5000;
 		m_iHP = m_iMaxHP;
 
+		m_iCrushGauge = 8000;
+		m_iMaxCrushGauge = 8000;
+
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
 	}
@@ -41,6 +46,16 @@ HRESULT CEM0800::Initialize(void * pArg)
 	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(120.f));
 	m_fGravity = 20.f;
+
+
+
+	m_pLeftArmBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0800_Bug_Particle");
+	m_pLeftArmBugParticle->Start_Attach(this, "LeftForeArm", true, true);
+	Safe_AddRef(m_pLeftArmBugParticle);
+
+	m_pRightArmBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0800_Bug_Particle");
+	m_pRightArmBugParticle->Start_Attach(this, "RightForeArm", true, true);
+	Safe_AddRef(m_pRightArmBugParticle);
 
 	return S_OK;
 }
@@ -406,9 +421,9 @@ void CEM0800::Imgui_RenderProperty()
 
 	//	if (ImGui::Button("Create_Effect"))
 	//	{
-	//		m_pWaterPool = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water");
-	//		m_pWaterPool->Start_NoAttachPivot(this, pivot, true, false);
-	//		Safe_AddRef(m_pWaterPool);
+	//		m_pBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0800_Bug_Particle");
+	//		m_pBugParticle->Start_AttachPivot(this, pivot, "Head", true, true);
+	//		Safe_AddRef(m_pBugParticle);
 	//	}
 	//}
 }
@@ -595,6 +610,20 @@ void CEM0800::Free()
 			m_pWaterPool->SetDelete();
 			Safe_Release(m_pWaterPool);
 			m_pWaterPool = nullptr;
+		}
+
+		if (m_pLeftArmBugParticle != nullptr)
+		{
+			m_pLeftArmBugParticle->SetDelete();
+			Safe_Release(m_pLeftArmBugParticle);
+			m_pLeftArmBugParticle = nullptr;
+		}
+
+		if (m_pRightArmBugParticle != nullptr)
+		{
+			m_pRightArmBugParticle->SetDelete();
+			Safe_Release(m_pRightArmBugParticle);
+			m_pRightArmBugParticle = nullptr;
 		}
 	}
 }

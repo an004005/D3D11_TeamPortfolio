@@ -15,10 +15,11 @@ public:
 	~CBulletBuilder() = default;
 
 	CBulletBuilder& Set_Owner(CGameObject* pOwner);
+	CBulletBuilder& Set_Target(class CScarletCharacter* pOwner);
 	CBulletBuilder& Set_InitBulletEffect(const vector<wstring>& EffectName);
 	CBulletBuilder& Set_InitBulletParticle(const wstring& ParticleName);
 
-	CBulletBuilder& Set_ShootSpped(_float fSpeedsec);
+	CBulletBuilder& Set_ShootSpeed(_float fSpeedsec);
 	CBulletBuilder& Set_Life(_float fLife);
 	CBulletBuilder& Set_DamageParam(const DAMAGE_PARAM	&	eDamageParam);
 
@@ -28,9 +29,14 @@ public:
 	CBulletBuilder& Set_Position(_fvector vPosition);
 	CBulletBuilder& Set_LookAt(_fvector vTargetPos);
 	CBulletBuilder& Set_TurnFixed(_float fRadian);
+
+	
+
 	void Build();
 
 private:
+	class CScarletCharacter* m_pTarget = nullptr;
+
 	vector<wstring>	m_InitBulletEffects;
 	wstring m_InitParticle = L"";
 	

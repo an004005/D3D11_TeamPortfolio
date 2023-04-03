@@ -28,14 +28,12 @@ HRESULT CCanvas_MainItemKinds::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	//FAILED_CHECK(Initialize_ItemCanvas());
+	for (vector<pair<wstring, class CCanvas_ItemWindow*>>::iterator iter = m_vecItemCanvass.begin(); iter != m_vecItemCanvass.end(); ++iter)
+		iter->second->SetVisible(m_bVisible);
 
 	m_bVisible = false;
 	m_iPickIndex = 99;
 	m_iPrePickIndex = 99;
-
-	for (vector<pair<wstring, class CCanvas_ItemWindow*>>::iterator iter = m_vecItemCanvass.begin(); iter != m_vecItemCanvass.end(); ++iter)
-		iter->second->SetVisible(m_bVisible);
 
 	return S_OK;
 }
@@ -178,7 +176,7 @@ void CCanvas_MainItemKinds::Add_ItemCanvas(const size_t & iIndex)
 	}
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_ItemWindow.json");
-	CCanvas_ItemWindow* pCanvas = dynamic_cast<CCanvas_ItemWindow*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Lyaer_ItemWindowUI", L"Canvas_ItemWindow", &json));
+	CCanvas_ItemWindow* pCanvas = dynamic_cast<CCanvas_ItemWindow*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_MainUI", L"Canvas_ItemWindow", &json));
 	assert(pCanvas != nullptr && "Failed to Cloned ItemWindow");
 
 	size_t iVecSize = m_vecItemCanvass.size();
@@ -200,8 +198,6 @@ void CCanvas_MainItemKinds::Item_Tick()
 			if (CItem_Manager::MAINITEM::ALL == m_eMainItem || m_eMainItem == m_vecItemInfo[i].second.eType)
 				Add_ItemCanvas(i);
 		}
-
-		
 
 		if (0 == m_vecItemInfo[i].second.iCount)
 		{
@@ -305,4 +301,5 @@ void CCanvas_MainItemKinds::Free()
 	CCanvas::Free();
 
 	m_vecItemCanvass.clear();
+	m_vecItemInfo.clear();
 }

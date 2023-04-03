@@ -16,6 +16,7 @@
 #include "PhysX_Manager.h"
 #include "JsonStorage.h"
 #include "SSAOManager.h"
+#include "SSLRManager.h"
 
 
 CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -96,7 +97,6 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (FAILED(Render_LightAcc()))
 		return E_FAIL;
 
-	// m_pTarget_Manager->GetTarget(TEXT("Target_Flag"))->SetIgnoreClearOnce();
 	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_HDR"))))
 		return E_FAIL;
 
@@ -104,6 +104,23 @@ HRESULT CRenderer::Draw_RenderGroup()
 		return E_FAIL;
 	if (FAILED(Render_Blend()))
 		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext, TEXT("MRT_HDR"))))
+		return E_FAIL;
+	
+	if (m_bLightRays)
+	{
+		CSSLRManager::GetInstance()->Render(
+			m_pTarget_Manager->Get_RTV(L"Target_HDR"), 
+			CSSAOManager::GetInstance()->GetMiniDepthSRV(),
+			CLight_Manager::GetInstance()->GetDirectionalLightDir(),
+			CLight_Manager::GetInstance()->GetDirectionalLightColor() * m_fSSLRIntensity);
+	}
+	
+	
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_HDR"))))
+		return E_FAIL;
+
 	if (FAILED(Render_MeshAlphaBlend()))
 		return E_FAIL;
 	if (FAILED(Render_Decal()))
@@ -350,7 +367,9 @@ HRESULT CRenderer::Initialize_Prototype()
 
 
 	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_OutlineFlag"), 500.0f, 300.f, 200.f, 200.f));
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_HDR"), 500.0f, 500.f, 200.f, 200.f));
 
+	
 
 #endif
 
@@ -424,11 +443,19 @@ void CRenderer::Imgui_RenderOtherWindow()
 	ImGui::Checkbox("Visible Targets", &m_bVisibleTargets);
 #endif
 
+	ImGui::Separator();
 	_int iSampleRadius = CSSAOManager::GetInstance()->GetSampleRadius();
 	_float fRadius = CSSAOManager::GetInstance()->GetRadius();
 	ImGui::InputInt("SSASSampleRadius(max64)", &iSampleRadius);
 	ImGui::InputFloat("Radius(max100)", &fRadius);
 	CSSAOManager::GetInstance()->SetParameters(iSampleRadius, fRadius);
+	ImGui::Separator();
+
+	ImGui::Checkbox("LightRay", &m_bLightRays);
+	ImGui::InputFloat("SSLRIntendity", &m_fSSLRIntensity);
+	CSSLRManager::GetInstance()->Imgui_Render();
+
+	ImGui::Separator();
 
 	ImGui::Checkbox("bFog", &m_bFog);
 	ImGui::ColorEdit4("FogColor", (float*)&m_tFogDesc.vFogColor, ImGuiColorEditFlags_PickerHueWheel);

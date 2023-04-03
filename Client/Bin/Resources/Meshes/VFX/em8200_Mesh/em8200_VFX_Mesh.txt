@@ -1,0 +1,11 @@
+Prototype_Component_Shader_VtxModel_VFX
+
+
+VFX_Mesh_em8200_Ice_A
+../Bin/Resources/Meshes/VFX/em8200_Mesh/VFX_Mesh_em8200_Ice_A.static_model
+
+VFX_Mesh_em8200_Ice_B
+../Bin/Resources/Meshes/VFX/em8200_Mesh/VFX_Mesh_em8200_Ice_B.static_model
+
+VFX_Mesh_em8200_Ice_C
+../Bin/Resources/Meshes/VFX/em8200_Mesh/VFX_Mesh_em8200_Ice_C.static_model
