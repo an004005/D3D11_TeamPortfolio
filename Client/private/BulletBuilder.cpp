@@ -3,11 +3,20 @@
 #include "VFX_Manager.h"
 #include "Bullet.h"
 #include "GameInstance.h"
+//#include "ScarletCharacter.h"
 
 CBulletBuilder& CBulletBuilder::Set_Owner(CGameObject* pOwner)
 {
 	assert(pOwner != nullptr);
 	m_pOwner = pOwner;
+
+	return *this;
+}
+
+CBulletBuilder& CBulletBuilder::Set_Target(CScarletCharacter* pTarget)
+{
+	assert(pTarget != nullptr);
+	m_pTarget = pTarget;
 
 	return *this;
 }
@@ -24,7 +33,7 @@ CBulletBuilder& CBulletBuilder::Set_InitBulletParticle(const wstring& ParticleNa
 	return *this;
 }
 
-CBulletBuilder& CBulletBuilder::Set_ShootSpped(_float fSpeedsec)
+CBulletBuilder& CBulletBuilder::Set_ShootSpeed(_float fSpeedsec)
 {
 	m_fBulletSpeed = fSpeedsec;
 	return *this;
@@ -72,18 +81,29 @@ CBulletBuilder& CBulletBuilder::Set_TurnFixed(_float fAngle)
 	return *this;
 }
 
+CBulletBuilder& CBulletBuilder::Set_BulletEffPivot(_float4x4 pivot)
+{
+	m_BulletEffPivot = pivot;
+	return *this;
+}
+
 void CBulletBuilder::Build()
 {
 	CBullet* pBullet = dynamic_cast<CBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_Bullet")));
 	assert(pBullet != nullptr && "BulletBuilder CreatFail");
-	pBullet->Create_InitEffects(m_InitBulletEffects);
+	pBullet->Create_InitEffects(m_InitBulletEffects, m_BulletEffPivot);
 	pBullet->Create_InitParticle(m_InitParticle);
+
 	pBullet->Set_DeadEffects(m_DeadBulletEffects);
 	pBullet->Set_DeadParticle(m_DeadParticle);
+
 	pBullet->Set_Owner(m_pOwner);
+	pBullet->Set_Target(m_pTarget);
+
 	pBullet->Set_ShootSpeed(m_fBulletSpeed);
 	pBullet->Set_LifeTime(m_fLife);
 	pBullet->Set_DamageParam(m_eDamageParam);
+
 	pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&m_Position));
 	pBullet->GetTransform()->LookAt(XMLoadFloat4(&m_TargetPos));
 	pBullet->GetTransform()->Turn_Fixed(pBullet->GetTransform()->Get_State(CTransform::STATE_UP), XMConvertToRadians(m_fAngle));

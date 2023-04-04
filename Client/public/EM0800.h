@@ -2,6 +2,11 @@
 #include "Enemy.h"
 #include "Controller.h"
 
+BEGIN(Engine)
+class CRigidBody;
+class CMaterial;
+END
+
 BEGIN(Client)
 
 // 브론존
@@ -25,6 +30,7 @@ public:
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
+	virtual _bool IsWeak(CRigidBody* pHitPart);
 
 public:
 	//행동 관련 함수 정의
@@ -39,6 +45,8 @@ public:
 	void HeavyAttackPushStart();
 
 	EBaseTurn FindTargetDirection();
+	void HitWeakProcess(_double TimeDelta);
+
 private:
 	//충돌 관련 함수 정의
 	void Bite_Overlap();
@@ -49,7 +57,10 @@ private:
 	class CEM0800_Controller*		m_pController = nullptr;
 	class CEM0800_AnimInstance*		m_pASM = nullptr;
 
+	CMaterial* m_pWeak = nullptr;
 	CEffectGroup*				m_pWaterPool = nullptr;
+	CParticleGroup*			m_pLeftArmBugParticle = nullptr;
+	CParticleGroup*			 m_pRightArmBugParticle = nullptr;
 private:
 	_float3						m_vMoveAxis;
 	EBaseTurn				m_eTurn = EBaseTurn::TURN_END;
@@ -67,6 +78,7 @@ private:
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
 
+	_bool	m_bWeakProcess = false;
 	_float4x4	pivot;
 public:
 	static CEM0800* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

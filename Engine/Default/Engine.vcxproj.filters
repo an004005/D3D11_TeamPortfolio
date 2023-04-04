@@ -556,6 +556,10 @@
     <ClInclude Include="..\public\Imgui_CamAnimEditor.h">
       <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\SSLRManager.h" />
+    <ClInclude Include="..\public\VIBuffer_Invisible.h">
+      <Filter>01.Utility\03.Components\02.VIBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -885,6 +889,10 @@
     </ClCompile>
     <ClCompile Include="..\private\Imgui_CamAnimEditor.cpp">
       <Filter>81.Utils\80. Imgui\01.ImguiObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SSLRManager.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Invisible.cpp">
+      <Filter>01.Utility\03.Components\02.VIBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -377,7 +377,7 @@ PS_OUT em800_Weak_6(PS_IN In)
 	float fHit = g_float_1;
 	if (fHit > 0.f)
 	{
-		Out.vDepth.z = fHit + 2.f;
+		Out.vDepth.z = fHit + 3.f;
 	}
 	Out.vDepth.w = SHADER_NONE_SHADE;
 	Out.vFlag = float4(0.f, SHADER_POST_ENEMY, SHADER_MONSTER_WEAK, 0.f);
@@ -491,6 +491,7 @@ PS_OUT PS_em0210_Invisible_9(PS_IN In)
 
 // g_float_0  : 사망 디졸브
 // g_float_1 : 아머 반짝이는 디솔브
+// g_float_2 : 아머 부서지는
 // g_int_0 : 상태이상 플래그
 PS_OUT PS_EnemyArmor_10(PS_IN In)
 {
@@ -503,6 +504,13 @@ PS_OUT PS_EnemyArmor_10(PS_IN In)
 		float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
 		float fFresnel = FresnelEffect(vNormal, normalize(vViewDir.xyz), 1.f);
 		Out.vDepth.z = fFresnel * 6.5f * fArmorDissolve;
+	}
+	float fBreakDissolve = g_float_2;
+	if (fBreakDissolve > 0.f)
+	{
+		float fNoise = g_scl_noise_004.Sample(LinearSampler, In.vTexUV * 2.f).r;
+		if (fBreakDissolve >= fNoise)
+			discard;
 	}
 
 	return Out;
@@ -553,7 +561,7 @@ PS_OUT PS_em1100_Weak_12(PS_IN In)
 		float fHit = g_float_1;
 		if (fHit > 0.f)
 		{
-			Out.vDepth.z += g_vec2_0.y * fHit;
+			Out.vDepth.z += g_vec2_0.y * fHit + 1.f;
 		}
 		Out.vDepth.w = SHADER_NONE_SHADE;
 		Out.vFlag = float4(0.f, SHADER_POST_ENEMY, SHADER_MONSTER_WEAK, 0.f);	
@@ -576,7 +584,7 @@ PS_OUT PS_em1200_Weak_13(PS_IN In)
 	float fHit = g_float_1;
 	if (fHit > 0.f)
 	{
-		Out.vDepth.z += g_vec2_0.y * fHit;
+		Out.vDepth.z += g_vec2_0.y * fHit + 1.f;
 	}
 	Out.vDepth.w = SHADER_NONE_SHADE;
 	Out.vFlag = float4(0.f, SHADER_POST_ENEMY, SHADER_MONSTER_WEAK, 0.f);	

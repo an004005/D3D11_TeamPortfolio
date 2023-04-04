@@ -59,6 +59,17 @@ void CCamera_Dynamic::Tick(_double TimeDelta)
 		m_pTransformCom->Go_Backward(TimeDelta);
 	}
 
+	if (pGameInstance->KeyPressing(DIK_SPACE))
+	{
+		_float3 vVelocity = m_pTransformCom->Get_State(CTransform::STATE_UP) * m_fSpeedPerSec;
+		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+	}
+	if (pGameInstance->KeyPressing(DIK_LCONTROL))
+	{
+		_float3 vVelocity = -m_pTransformCom->Get_State(CTransform::STATE_UP) * m_fSpeedPerSec;
+		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+	}
+
 
 	if (pGameInstance->KeyPressing(DIK_A))
 	{

@@ -2157,8 +2157,21 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_EM8200_ICE_DECAL();
 	}
 
-	//53
-	pass EM8200_ElecBillboard
+		//53
+		pass EM8200_ElecBillboard
+		{
+			SetRasterizerState(RS_NonCulling);
+			SetDepthStencilState(DS_Default, 0);
+			SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+			VertexShader = compile vs_5_0 VS_MAIN();
+			GeometryShader = NULL;
+			HullShader = NULL;
+			DomainShader = NULL;
+			PixelShader = compile ps_5_0 PS_EM8200_ELEC_BILLBOARD();
+		}
+	//54
+	pass MonsterSpawnDistortion
 	{
 		SetRasterizerState(RS_NonCulling);
 		SetDepthStencilState(DS_Default, 0);
@@ -2168,6 +2181,8 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_EM8200_ELEC_BILLBOARD();
+		PixelShader = compile ps_5_0 PS_DISTORTION_PLAYER_B();
 	}
+
+	
 }

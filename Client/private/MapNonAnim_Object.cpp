@@ -128,19 +128,19 @@ HRESULT CMapNonAnim_Object::SetUp_Components()
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_strModelTag.c_str(), TEXT("Com_Model"),
 		(CComponent**)&m_pModelCom));			
 
-	//if (!m_bApplyPhsX)
-	//{
-	//	const wstring PxModelTag = MakePxModelProtoTag();
+	if (!m_bApplyPhsX)
+	{
+		const wstring PxModelTag = MakePxModelProtoTag();
 
-	//	if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_NOW, PxModelTag.c_str()))
-	//	{
-	//		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_NOW,
-	//			PxModelTag.c_str(), CPhysXStaticModel::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str())));
-	//	}
-	//	// todo : 임시로 모든 CMapNonAnim_Object 에 PxModel을 가지도록 설정 추후 수정 바람
-	//	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, PxModelTag.c_str(), TEXT("Com_PxModel"),
-	//		(CComponent**)&m_pPxModel));
-	//}	
+		if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_NOW, PxModelTag.c_str()))
+		{
+			FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_NOW,
+				PxModelTag.c_str(), CPhysXStaticModel::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str())));
+		}
+		// todo : 임시로 모든 CMapNonAnim_Object 에 PxModel을 가지도록 설정 추후 수정 바람
+		FAILED_CHECK(__super::Add_Component(LEVEL_NOW, PxModelTag.c_str(), TEXT("Com_PxModel"),
+			(CComponent**)&m_pPxModel));
+	}	
 	
 	return S_OK;
 }

@@ -262,6 +262,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\SoundStore.h" />
     <ClInclude Include="..\public\Sound_Manager.h" />
     <ClInclude Include="..\public\SSAOManager.h" />
+    <ClInclude Include="..\public\SSLRManager.h" />
     <ClInclude Include="..\public\stdafx.h" />
     <ClInclude Include="..\public\Target_Manager.h" />
     <ClInclude Include="..\public\Texture.h" />
@@ -275,6 +276,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\VIBuffer_Cell.h" />
     <ClInclude Include="..\public\VIBuffer_Cube.h" />
     <ClInclude Include="..\public\VIBuffer_Instancing.h" />
+    <ClInclude Include="..\public\VIBuffer_Invisible.h" />
     <ClInclude Include="..\public\VIBuffer_Line.h" />
     <ClInclude Include="..\public\VIBuffer_Mesh_Instance.h" />
     <ClInclude Include="..\public\VIBuffer_ModelInstancing.h" />
@@ -361,6 +363,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\SoundStore.cpp" />
     <ClCompile Include="..\private\Sound_Manager.cpp" />
     <ClCompile Include="..\private\SSAOManager.cpp" />
+    <ClCompile Include="..\private\SSLRManager.cpp" />
     <ClCompile Include="..\private\Target_Manager.cpp" />
     <ClCompile Include="..\private\Texture.cpp" />
     <ClCompile Include="..\private\Timeline.cpp" />
@@ -373,6 +376,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\private\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\private\VIBuffer_Instancing.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Invisible.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line.cpp" />
     <ClCompile Include="..\private\VIBuffer_Mesh_Instance.cpp" />
     <ClCompile Include="..\private\VIBuffer_ModelInstancing.cpp" />

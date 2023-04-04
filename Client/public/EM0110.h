@@ -2,6 +2,11 @@
 #include "Enemy.h"
 #include "Controller.h"
 
+BEGIN(Engine)
+class CRigidBody;
+class CMaterial;
+END
+
 BEGIN(Client)
 
 // 드릴말
@@ -26,6 +31,9 @@ public:
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
+	virtual _bool IsWeak(CRigidBody* pHitPart);
+	virtual void HitEffect(DAMAGE_PARAM& tDamageParams);
+	virtual void CheckHP(DAMAGE_PARAM& tDamageParams);
 
 public:
 	//행동 관련 함수 정의
@@ -39,6 +47,7 @@ public:
 
 private:
 	void Play_HeavbyHitAnim();
+	void HitWeakProcess(_double TimeDelta);
 
 private:
 	//충돌 관련 함수 정의
@@ -67,11 +76,23 @@ private:
 	// Attack
 	_bool		m_bAttack = false;
 	
+	//Weak
+	_int			m_iArmorHp = 0;
+	_bool		m_bDestroyArmor = false;
+	_bool		m_bArmorProcess = false;
+	_bool		m_bWeakProcess = false;
+
 	// Run
 	_bool m_bRun = false;
 
+	CMaterial* m_pArmor = nullptr;
+	CMaterial* m_pWeak = nullptr;
+
+
+
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 
+	_float4x4 pivot;
 public:
 	static CEM0110* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

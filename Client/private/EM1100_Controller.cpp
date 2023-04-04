@@ -15,7 +15,7 @@ CEM1100_Controller::CEM1100_Controller(const CEM1100_Controller & rhs)
 
 HRESULT CEM1100_Controller::Initialize(void * pArg)
 {
-	m_iMidOrder = CMathUtils::RandomUInt(1);
+	m_iNearOrder = CMathUtils::RandomUInt(1);
 	m_iFarOrder = CMathUtils::RandomUInt(2);
 	//Move함수 시 플레이어와 거리가 어느정도까지 가까워졌을때 멈출지를 정해줌
 	m_fNearestTargetDist = 5.f;
@@ -61,22 +61,15 @@ void CEM1100_Controller::Tick_Near(_double TimeDelta)
 	m_eDistance = DIS_NEAR;
 	
 	//정면
-	if (m_pCastedOwner->IsTargetFront())
+	if (m_pCastedOwner->IsTargetFront() && m_bAttack == true)
 	{
-		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
+		AddCommand("Turn", 0.5f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Dodge", 0.f, &CAIController::Input, SHIFT);	
+		m_bAttack = false;
+		return;
 	}
-	else
-	{
-		AddCommand("TailSwing", 0.f, &CAIController::Input, T);
-	}
-}
 
-void CEM1100_Controller::Tick_Mid(_double TimeDelta)
-{ 
-	m_eDistance = DIS_MIDDLE;
-
-	switch (m_iMidOrder)
+	switch (m_iNearOrder)
 	{
 	case 0:
 		if (m_pCastedOwner->IsTargetFront())
@@ -84,25 +77,30 @@ void CEM1100_Controller::Tick_Mid(_double TimeDelta)
 			AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
 			AddCommand("WaterAttack", 0.f, &CAIController::Input, W);
 			AddCommand("Wait", 1.f, &CAIController::Wait);
+			m_bAttack = true;
 		}
 		else
 			AddCommand("TailSwing", 0.f, &CAIController::Input, T);
 		break;
+
 	case 1:
 		if (m_pCastedOwner->IsTargetFront())
 		{
 			AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
 			AddCommand("Stamp", 0.f, &CAIController::Input, S);
 			AddCommand("Wait", 1.f, &CAIController::Wait);
+			m_bAttack = true;
 		}
 		else
 			AddCommand("TailSwing", 0.f, &CAIController::Input, T);
 		break;
-	
+
 	}
 
-	m_iMidOrder = (m_iMidOrder + 1) % 2;
+	m_iNearOrder = (m_iNearOrder + 1) % 2;
+	
 }
+
 
 void CEM1100_Controller::Tick_Far(_double TimeDelta)
 {
@@ -172,15 +170,13 @@ void CEM1100_Controller::DefineState(_double TimeDelta)
 {
 	if (m_pCastedOwner->IsPlayingSocket() == true) return;
 
-	if (m_fTtoM_Distance <= 5.f)
+	if (m_fTtoM_Distance <= 7.f)
 		Tick_Near(TimeDelta);
-	else if (m_fTtoM_Distance <= 10.f)
-		Tick_Mid(TimeDelta);
 	else if (m_fTtoM_Distance <= 30.f)
 		Tick_Far(TimeDelta);
 	else
 		Tick_Outside(TimeDelta);
-	
+
 }
 
 

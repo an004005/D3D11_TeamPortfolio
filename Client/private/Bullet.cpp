@@ -39,7 +39,16 @@ void CBullet::Tick(_double TimeDelta)
 
 	m_BeforePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
-	m_pTransformCom->Go_Straight(TimeDelta);
+	if (m_pTarget != nullptr) //추적
+	{
+		//_matrix TargetWorldMatrix = m_pTarget->GetBoneMatrix("Mask") * m_pTarget->GetTransform()->Get_WorldMatrix();
+		//TargetWorldMatrix.r[3] += XMVectorSet(0.f, 1.f, 0.f, 0.f) * 1.f;
+		_matrix TargetWorldMatrix = m_pTarget->GetTransform()->Get_WorldMatrix();
+		TargetWorldMatrix.r[3] += XMVectorSet(0.f, 1.f, 0.f, 0.f) * 2.5f;
+		m_pTransformCom->Chase(TargetWorldMatrix.r[3], TimeDelta, 0.01f);
+	}
+	else
+		m_pTransformCom->Go_Straight(TimeDelta);
 
 	DAMAGE_PARAM	dParams;
 	dParams.eAttackType = m_eDamageParam.eAttackType;
@@ -56,7 +65,7 @@ void CBullet::Tick(_double TimeDelta)
 
 	_uint iColType = ECOLLIDER_TYPE_BIT::CTB_PLAYER | ECOLLIDER_TYPE_BIT::CTB_STATIC | ECOLLIDER_TYPE_BIT::CTB_PSYCHICK_OBJ;
 
-	CollisionCheck_Bullet(m_pTransformCom, dParams, 0.5f, iColType);
+	CollisionCheck_Bullet(m_pTransformCom, dParams, 1.f, iColType);
 
 
 	if (m_bHitCheck == true || m_bDelete == true) // hit 체크 및 life 다 떨어진거 체크
@@ -87,7 +96,7 @@ void CBullet::Imgui_RenderProperty()
 	__super::Imgui_RenderProperty();
 }
 
-void CBullet::Create_InitEffects(vector<wstring>& InitEffects)
+void CBullet::Create_InitEffects(vector<wstring>& InitEffects, _float4x4 pivot)
 {
 	if (InitEffects.empty()) return;
 
@@ -95,7 +104,7 @@ void CBullet::Create_InitEffects(vector<wstring>& InitEffects)
 	{
 		CEffectGroup* pEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, it);
 		assert(pEffect != nullptr);
-		pEffect->Start_NoAttach(this, true);
+		pEffect->Start_NoAttachPivot(this, pivot, true);
 		Safe_AddRef(pEffect);
 
 		m_pInitEffects.emplace_back(pEffect);

@@ -2,10 +2,10 @@
 #include "EM0650.h"
 #include <FSMComponent.h>
 #include "JsonStorage.h"
-#include "RigidBody.h"
 #include "EM0650_AnimInstance.h"
 #include "EM0650_Controller.h"
 #include "BulletBuilder.h"
+#include "ImguiUtils.h"
 
 CEM0650::CEM0650(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -16,6 +16,8 @@ CEM0650::CEM0650(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CEM0650::CEM0650(const CEM0650 & rhs)
 	: CEnemy(rhs)
 {
+	m_SpawnEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData({0.f, 1.f, 0.f}, {0.f, 0.f, 0.f}, {0.6f,0.6f,0.6f});
+	m_fSpawnDistortionDistancePivot = 0.5f;
 }
 
 HRESULT CEM0650::Initialize(void * pArg)
@@ -286,26 +288,25 @@ void CEM0650::SetUpFSM()
 
 void CEM0650::SetUpUI()
 {
-	//HP UI
+	__super::SetUpUI();
 
-	_float4x4 UI_PivotMatrix = Matrix(
+	//HP UI
+	_float4x4 UI_InfoPivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.241f, 0.0f, 1.0f
 	);
 
-	m_UI_PivotMatrixes[ENEMY_INFOBAR] = UI_PivotMatrix;
-
 	//FindEye
-	UI_PivotMatrix = Matrix(
+	_float4x4 UI_EyesPivotMatrix = Matrix(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.724f, 0.0f, 1.0f
 	);
 
-	m_UI_PivotMatrixes[ENEMY_FINDEYES] = UI_PivotMatrix;
+	m_pEMUI->SetUpPivots(UI_InfoPivotMatrix, UI_EyesPivotMatrix);
 }
 
 void CEM0650::BeginTick()
@@ -346,6 +347,7 @@ void CEM0650::Tick(_double TimeDelta)
 		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
 	}
 
+	Make_Decal(TimeDelta);
 	ResetHitData();
 }
 
@@ -375,11 +377,6 @@ void CEM0650::Imgui_RenderProperty()
 
 	m_pFSM->Imgui_RenderProperty();
 
-	if (ImGui::Button("Create_Effect"))
-	{
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650DeadFlower")
-			->Start_Attach(this, "Target",false);
-	}
 }
 
 _bool CEM0650::IsPlayingSocket() const
@@ -433,7 +430,7 @@ void CEM0650::Create_Bullet()
 			.Set_Owner(this)
 			.Set_InitBulletEffect({ L"Em0650_Bullet_Loop" })
 			.Set_InitBulletParticle(L"em0650_Bullet_Loop")
-			.Set_ShootSpped(18.f)
+			.Set_ShootSpeed(18.f)
 			.Set_Life(2.f)
 			.Set_DamageParam(eDamageParam)
 			.Set_DeadBulletEffect({ L"em0650_Bullet_Dead" })
@@ -441,6 +438,26 @@ void CEM0650::Create_Bullet()
 			.Set_Position(vPrePos)
 			.Set_LookAt(m_LastSpotTargetPos)
 		.Build();
+}
+
+void CEM0650::Make_Decal(_double TimeDelta)
+{
+	m_dDecalTime += TimeDelta;
+
+	if (m_dDecalTime >= 1.0)
+	{
+		_float4x4 DecalEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+			{ 0.f, 0.f, 0.f },
+			{ 0.f,  0.f, 0.f },
+			{ 1.3f, 1.f, 1.3f }
+		);
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0650_Move_Decal")
+			->Start_AttachPivot(this, DecalEffectPivot, "Reference", false, false);
+
+		m_dDecalTime = 0.0;
+	}
+
 }
 
 void CEM0650::HeavyAttackPushStart()
@@ -486,5 +503,4 @@ void CEM0650::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-
 }

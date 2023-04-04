@@ -375,6 +375,9 @@ void CObject_Manager::Imgui_ObjectViewer(_uint iLevel, CGameObject*& pSelectedOb
 		ImGui::TreePop();
 	}
 
+	if (Check_ObjectAlive(pSelectedObject) == false)
+		pSelectedObject = nullptr;
+
 	// if (bFound == false)
 		// pSelectedObject = nullptr;
 }

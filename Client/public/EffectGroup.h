@@ -54,12 +54,15 @@ public:
 	void		Start_AttachOnlyPos(_float4 vPos, _bool trueisUpdate = false);
 	void		Start_NoAttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
 	void		Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
+
 	void		Start_Attach(CGameObject* pOwner, string BoneName, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
 	void		Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName,_bool usepivot = false, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
 	// void		Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate = false);
 	// void		Start_Attach(CGameObject* pOwner, string BoneName = "", _bool trueisUpdate = false);
 	// void		Start_AttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName,_bool usepivot = false, _bool trueisUpdate = false);
 	void		Start_AttachPosition(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate = false);
+	void		Start_AttachPositionMove(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate = false);
+
 	void		Start_AttachSword(CGameObject* pWeapon, _bool trueisUpdate = false);
 	void		Start_AttachMove(CGameObject* pOwner, string BoneName, _float4 vDirection, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
 	void		Start_AttachPivotMove(CGameObject* pOwner, _float4x4 PivotMatrix, string BoneName, _float4 vDirection, _bool usepivot = false, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
