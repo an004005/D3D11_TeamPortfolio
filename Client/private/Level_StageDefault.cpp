@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Level_StageDefault.h"
+
+#include <Camera.h>
 #include <Imgui_AnimModifier.h>
 #include <Imgui_CameraManager.h>
 #include <Imgui_PostProcess.h>
@@ -18,6 +20,8 @@
 CLevel_StageDefault::CLevel_StageDefault(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CLevel(pDevice, pContext)
 {
+	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam.json";
+	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Tutorial.json";
 }
 
 HRESULT CLevel_StageDefault::Initialize()
@@ -45,9 +49,11 @@ HRESULT CLevel_StageDefault::Initialize()
 
 	if (FAILED(Ready_Layer_Camera(PLAYERTEST_LAYER_CAMERA)))
 		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Player(PLATERTEST_LAYER_PLAYER)))
-		return E_FAIL;
+	if (m_bPlayerSpawn)
+	{
+		if (FAILED(Ready_Layer_Player(PLATERTEST_LAYER_PLAYER)))
+			return E_FAIL;
+	}
 
 	if (FAILED(Ready_Layer_UI(PLAYERTEST_LAYER_FRONTUI)))
 		return E_FAIL;
@@ -66,8 +72,7 @@ HRESULT CLevel_StageDefault::Initialize()
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
-	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam.json";
-	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Tutorial.json";
+	CGameInstance::GetInstance()->FindCamera("PlayerCamera")->SetMainCamera();
 
 	return S_OK;
 }
@@ -82,8 +87,10 @@ HRESULT CLevel_StageDefault::Render()
 HRESULT CLevel_StageDefault::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
-	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
+	if (m_bPlayerSpawn)
+	{
+		FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
+	}
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
@@ -121,9 +128,12 @@ HRESULT CLevel_StageDefault::Ready_Layer_Camera(const _tchar* pLayerTag)
 
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(m_strShadowCamJsonPath);
-	CGameInstance::GetInstance()->Add_Camera("ShadowCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic", &json);
-	CGameInstance::GetInstance()->SetShadowCam(CGameInstance::GetInstance()->FindCamera("ShadowCamera"));
+	if (m_strShadowCamJsonPath.empty() == false)
+	{
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson(m_strShadowCamJsonPath);
+		CGameInstance::GetInstance()->Add_Camera("ShadowCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic", &json);
+		CGameInstance::GetInstance()->SetShadowCam(CGameInstance::GetInstance()->FindCamera("ShadowCamera"));
+	}
 
 	return S_OK;
 }

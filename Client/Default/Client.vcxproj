@@ -300,7 +300,10 @@
     <ClInclude Include="..\public\EM1200_Controller.h" />
     <ClInclude Include="..\public\EMUI.h" />
     <ClInclude Include="..\public\Item_LightUI.h" />
+    <ClInclude Include="..\public\Level_Hospital_1F.h" />
+    <ClInclude Include="..\public\Level_NaomiRoom.h" />
     <ClInclude Include="..\public\Level_StageDefault.h" />
+    <ClInclude Include="..\public\Level_Subway.h" />
     <ClInclude Include="..\public\MouseCousorLightUI.h" />
     <ClInclude Include="..\public\MouseCousorUI.h" />
     <ClInclude Include="..\public\RedBullet.h" />
@@ -610,7 +613,10 @@
     <ClCompile Include="..\private\EM1200_Controller.cpp" />
     <ClCompile Include="..\private\EMUI.cpp" />
     <ClCompile Include="..\private\Item_LightUI.cpp" />
+    <ClCompile Include="..\private\Level_Hoispital_1F.cpp" />
+    <ClCompile Include="..\private\Level_NaomiRoom.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
+    <ClCompile Include="..\private\Level_Subway.cpp" />
     <ClCompile Include="..\private\MouseCousorLightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorUI.cpp" />
     <ClCompile Include="..\private\RedBullet.cpp" />
