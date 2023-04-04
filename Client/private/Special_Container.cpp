@@ -65,8 +65,8 @@ HRESULT CSpecial_Container::Initialize(void * pArg)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Large_Hit_Particle")->
 				Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMVectorSet(0.f, 2.f, 0.f, 0.f), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
 
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, m_vecRandomParticle[CMathUtils::RandomUInt(m_vecRandomParticle.size() - 1)])
-				->Start_AttachOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 3.f, 0.f, 0.f), false);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, m_vecRandomParticle[CMathUtils::RandomUInt(m_vecRandomParticle.size() - 1)])
+				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 3.f, 0.f, 0.f), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
 		}
 	});
 

@@ -100,9 +100,6 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
 				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
 
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, m_vecRandomParticle[CMathUtils::RandomUInt(m_vecRandomParticle.size() - 1)])
-				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
-
 			// 충돌이 발생하면 플레이어의 키네틱 콤보 상태를 1로 올려준다.
 			if (CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player") != nullptr)
 			{
@@ -377,6 +374,12 @@ void CMapKinetic_Object::ReleaseParticle()
 		m_pParticle->Delete_Particles();
 }
 
+void CMapKinetic_Object::CreateLargeParticle()
+{
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, m_vecRandomParticle[CMathUtils::RandomUInt(m_vecRandomParticle.size() - 1)])
+		->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
+}
+
 HRESULT CMapKinetic_Object::SetUp_Components(void* pArg)
 {
 	for (_int i = 0; i < m_pModelTags.size(); ++i)
@@ -424,6 +427,8 @@ CGameObject * CMapKinetic_Object::Clone(void * pArg)
 void CMapKinetic_Object::Free()
 {
 	__super::Free();
+
+	ReleaseParticle();
 
 	for(auto Model : m_pModelComs)
 		Safe_Release(Model);
