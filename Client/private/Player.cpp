@@ -658,6 +658,16 @@ void CPlayer::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
+	if (ImGui::CollapsingHeader("StateCheck"))
+	{
+		ImGui::Checkbox("CanTurn", &m_bCanTurn);
+		ImGui::Checkbox("CanMove", &m_bCanMove);
+		ImGui::Checkbox("CanRun", &m_bCanRun);
+		ImGui::Checkbox("CanAttackTurn", &m_bCanTurn_Attack);
+		ImGui::Checkbox("OnAir", &m_bAir);
+		ImGui::Checkbox("OnGravity", &m_bActiveGravity);
+	}
+
 	if (ImGui::CollapsingHeader("ProductionTool"))
 	{
 		if (ImGui::Button("DriveMode_Start"))
@@ -869,27 +879,35 @@ void CPlayer::SasMgr()
 		InputSas = ESASType::SAS_TELEPORT;
 		m_bSASSkillInput[0] = true;
 	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_2))
+	else if (CGameInstance::GetInstance()->KeyDown(DIK_2))
 	{
 		InputSas = ESASType::SAS_PENETRATE;
 		m_bSASSkillInput[1] = true;
 	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_3))
+	else if (CGameInstance::GetInstance()->KeyDown(DIK_3))
 	{
 		InputSas = ESASType::SAS_HARDBODY;
 		m_bSASSkillInput[2] = true;
 
 	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_4))
+	else if (CGameInstance::GetInstance()->KeyDown(DIK_4))
 	{
 		InputSas = ESASType::SAS_FIRE;
 		m_bSASSkillInput[3] = true;
 
 	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_5))	InputSas = ESASType::SAS_SUPERSPEED;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_6))	InputSas = ESASType::SAS_COPY;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_7))	InputSas = ESASType::SAS_INVISIBLE;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_8))	InputSas = ESASType::SAS_ELETRIC;
+	else if (CGameInstance::GetInstance()->KeyDown(DIK_5)) 
+	{
+		InputSas = ESASType::SAS_SUPERSPEED;
+		m_bSASSkillInput[4] = true;
+	}
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_6))	InputSas = ESASType::SAS_COPY;
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_7))	InputSas = ESASType::SAS_INVISIBLE;
+	else if (CGameInstance::GetInstance()->KeyDown(DIK_8))
+	{
+		InputSas = ESASType::SAS_ELETRIC;
+		m_bSASSkillInput[7] = true;
+	}
 
 	if (InputSas != ESASType::SAS_END)
 	{
@@ -1228,6 +1246,8 @@ void CPlayer::SasStateCheck()
 			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Dead_Particles"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
 		}
+
+		m_bSASSkillInput[4] = false;
 
 		CGameInstance::GetInstance()->ResetDefaultTimeRatio();
 		m_pSuperSpeedPostVFX->Active(false);
@@ -2139,7 +2159,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			.OnExit([&]() {m_fKineticCharge = 0.f; })
 
 			.AddTransition("KINETIC_RB_LOOP to KINETIC_RB_THROW_01_START", "KINETIC_RB_THROW_01_START")
-			.Predicator([&]()->_bool{return m_fKineticCharge >= 1.f;})
+			.Predicator([&]()->_bool{return m_fKineticCharge >= 0.5f;})
 			.Priority(0)
 
 			.AddTransition("KINETIC_RB_LOOP to KINETIC_RB_CANCEL", "KINETIC_RB_CANCEL")
@@ -2183,7 +2203,15 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			})
 
 			.AddTransition("KINETIC_RB_THROW_01_START to NO_USE_KINETIC", "NO_USE_KINETIC")
-			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket") || m_bLeftClick || m_bDash || m_bJump; })
+			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket"); })
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_THROW_01_START to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool {return m_bLeftClick || m_bDash || m_bJump; })
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_THROW_01_START to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool {return m_pASM->isSocketPassby("Kinetic_AnimSocket", 0.2f) && m_bKineticRB; })
 			.Priority(0)
 
 #pragma endregion KineticRB_Throw
@@ -2341,7 +2369,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			.Tick([&](double TimeDelta) 
 			{
 				m_bWalk = false;
-				m_bAir = false;
+				//m_bAir = false;
 			})
 				.AddTransition("FALLDOWN to NON_HIT", "NON_HIT")
 				.Predicator([&]()->_bool {return m_pASM->isSocketEmpty("Hit_AnimSocket"); })

@@ -17,6 +17,7 @@
 #include "AI_CH0300_AnimInstance.h"
 #include "PlayerInfoManager.h"
 #include "Weapon_wp0300.h"
+#include "PlayerStartPosition.h"
 
 #include "Enemy.h"
 
@@ -75,6 +76,12 @@ void CAI_CH0300::BeginTick()
 	__super::BeginTick();
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	if (auto pStartPos = pGameInstance->Find_OneObjectByType<CHanabiStartPosition>(LEVEL_NOW, LAYER_TRIGGER))
+	{
+		m_pTransformCom->CopyWorld(pStartPos->GetTransform());
+		pStartPos->SetDelete();
+	}
 
 	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, PLATERTEST_LAYER_PLAYER)->GetGameObjects())
 	{
