@@ -53,7 +53,7 @@ void CCanvas_SAGragting_S::Tick(_double TimeDelta)
 
 void CCanvas_SAGragting_S::KeyInput()
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_X))
+	if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
 		m_bInput = true;
 	}

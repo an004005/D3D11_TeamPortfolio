@@ -2,6 +2,11 @@
 #include "Enemy.h"
 #include "Controller.h"
 
+BEGIN(Engine)
+class CRigidBody;
+class CMaterial;
+END
+
 BEGIN(Client)
 
 // 물보스
@@ -26,6 +31,7 @@ public:
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
+	virtual _bool IsWeak(CRigidBody* pHitPart);
 
 public:
 	void	Set_RunStart(_bool bRunStart) { m_bRun_Start = bRunStart; }
@@ -44,6 +50,7 @@ public:
 	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
 	void Create_Bullet();
+	void HitWeakProcess(_double TimeDelta);
 private:
 	//충돌 관련 함수 정의
 	void Rush_SweepSphere();
@@ -53,7 +60,7 @@ private:
 private:
 	class CEM1100_Controller*		m_pController = nullptr;
 	class CEM1100_AnimInstance*		m_pASM = nullptr;
-	
+	CMaterial* m_pWeak = nullptr;
 	class CEffectGroup* m_pRushEffect = nullptr;
 private:
 	_float3						 m_vMoveAxis;
@@ -71,7 +78,8 @@ private:
 	_bool						m_bDodge = false;
 	_float3						m_vOnJumpMoveVelocity;
 
-	
+	_bool						m_bWeakProcess = false;
+
 	CController::EHandleInput	m_eInput;
 
 	//Heavy coll

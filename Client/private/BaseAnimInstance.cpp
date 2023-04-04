@@ -2308,6 +2308,8 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 
 	m_pASM_Base->SetCurState("IDLE");
 
+
+
 	list<CAnimation*> SocketList;
 	m_mapAnimSocket.emplace("Netual_Saperate_Animation", SocketList);
 	m_mapAnimSocket.emplace("Upper_Saperate_Animation", SocketList);

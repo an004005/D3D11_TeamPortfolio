@@ -87,8 +87,8 @@ PS_OUT CommonProcess(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 	Out.vDiffuse.rgb = g_tex_0.Sample(LinearSampler, In.vTexUV).rgb;
-	//if (Out.vDiffuse.a < 0.01f)
-	//	discard;
+	if (Out.vDiffuse.a < 0.01f)
+		discard;
 
 	float3 vNormal;
 	if (g_tex_on_1)
@@ -109,12 +109,12 @@ PS_OUT CommonProcess(PS_IN In)
 	return Out;
 }
 
-PS_OUT CommonProcess_AlphaTest(PS_IN In)
+PS_OUT CommonProcess_NoneAlphaTest(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 	Out.vDiffuse.rgb = g_tex_0.Sample(LinearSampler, In.vTexUV).rgb;
-	if (Out.vDiffuse.a < 0.01f)
-		discard;
+	// if (Out.vDiffuse.a < 0.01f)
+		// discard;
 
 	float3 vNormal;
 	if (g_tex_on_1)
@@ -143,7 +143,7 @@ PS_OUT CommonProcess_AlphaTest(PS_IN In)
 // g_float_0 : 염력 캐치
 PS_OUT PS_DEFAULT(PS_IN In)
 {
-	PS_OUT Out = CommonProcess_AlphaTest(In);
+	PS_OUT Out = CommonProcess(In);
 
 	if (g_tex_on_2)
 		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
@@ -158,7 +158,7 @@ PS_OUT PS_DEFAULT(PS_IN In)
 // g_tex_2 : roughness
 PS_OUT PS_DEFAULT_ROUGHNESS(PS_IN In)
 {
-	PS_OUT			Out = CommonProcess_AlphaTest(In);
+	PS_OUT			Out = CommonProcess(In);
 	return Out;
 }
 
@@ -181,7 +181,7 @@ PS_OUT PS_PSYCHIC_DEFAULT_4(PS_IN In)
 			discard;
 	}
 
-	PS_OUT Out = CommonProcess(In);
+	PS_OUT Out = CommonProcess_NoneAlphaTest(In);
 
 	// 알파값 없던 텍스쳐 알파 무시하는 부분
 	//if (Out.vDiffuse.a == 0.f)
@@ -313,4 +313,6 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_GLASS_5();
 	}
+
+
 }

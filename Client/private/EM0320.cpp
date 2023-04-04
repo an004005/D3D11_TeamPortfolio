@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "..\public\EM0320.h"
+
+#include <GameUtils.h>
+
 #include "Model.h"
 #include "JsonStorage.h"
 #include "GameInstance.h"
@@ -11,11 +14,11 @@
 #include "EM0320_Controller.h"
 #include "FSMComponent.h"
 
-#include "OilBullet.h" // Oil_Bullet
 #include "BulletBuilder.h"
 #include "VFX_Manager.h"
 
 #include "Canvas_BossHpMove.h"
+#include "ImguiUtils.h"
 
 CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -166,11 +169,24 @@ void CEM0320::SetUpAnimationEvent()
 	});
 	m_pModelCom->Add_EventCaller("SwingL_Eff", [this]
 	{
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")->Start_Attach(this, "Eff02", true, false);
+			_float4x4 SwingL_EffPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ 0.f, -1.265f, 2.344f },
+				{ -180.f, 0.f, -180.f, },
+				{ 1.f, 1.f, 1.f });
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")
+			->Start_AttachPivot(this, SwingL_EffPivot, "Target", true, true, true);
+
 	});
 	m_pModelCom->Add_EventCaller("SwingR_Eff", [this]
 	{
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")->Start_Attach(this, "Eff02", true, false);
+			_float4x4 SwingR_EffPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ 0.f, -1.265f, 2.344f },
+				{ -180.f, 0.f, -180.f, },
+				{ 1.f, 1.f, 1.f });
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")
+			->Start_AttachPivot(this, SwingR_EffPivot, "Target", true, true, true);
 	});
 	m_pModelCom->Add_EventCaller("Start_Spin", [this]
 	{
@@ -367,11 +383,28 @@ void CEM0320::SetUpFSM()
 				m_pWaterMtrl->GetParam().Floats[1] = 0.f;
 				m_pController->SetActive(false);
 				m_eDeBuff = EDeBuffType::DEBUFF_OIL;
+
 				Reset();
 				m_pASM->AttachAnimSocketMany("FullBody", 
 				{ "AS_em0300_425_AL_down_start",
 					"AS_em0300_426_AL_down",
 					"AS_em0300_207_AL_atk_a3_end"  });
+
+				m_fWeakExplosionCnt = 8;
+				m_fWeakExplosionTickTime = 0.3f;
+			})
+			.Tick([this](_double TimeDelta)
+			{
+				if (m_fWeakExplosionCnt == 0)
+					return;
+
+				m_fWeakExplosionTickTime -= (_float)TimeDelta;
+				if (m_fWeakExplosionTickTime < 0.f)
+				{
+					--m_fWeakExplosionCnt;
+					m_fWeakExplosionTickTime = 0.3f;
+					CreateWeakExplosionEffect();
+				}
 			})
 			.OnExit([this]
 			{
@@ -483,6 +516,28 @@ void CEM0320::Imgui_RenderProperty()
 {
 	CEnemy::Imgui_RenderProperty();
 	ImGui::InputFloat("angle", &fangle);
+
+	static _bool tt = false;
+	ImGui::Checkbox("Modify Pivot", &tt);
+
+	if (tt)
+	{
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+
+		if (ImGui::Button("TestEffect"))
+		{
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")
+				->Start_AttachPivot(this, pivot, "Target", true, true, true);
+		}
+
+		if (ImGui::Button("TestEffect2"))
+		{
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")
+				->Start_AttachPivot(this, pivot, "Target", true, true, true);
+		}
+	}
+
 }
 
 void CEM0320::AfterPhysX()
@@ -808,6 +863,23 @@ void CEM0320::JitabataSmokeEffect()
 	_float4x4 Pivot = XMMatrixTranslation(RandomX, 0.f, RandomZ);
 	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")
 		->Start_NoAttachPivot(this, Pivot, false, true);
+}
+
+void CEM0320::CreateWeakExplosionEffect()
+{
+	_float3 vWeakOrigin = m_pWeak->GetPxWorldMatrix().Translation();
+	vWeakOrigin.y -= 0.5f;
+	for (int i = 0; i < 15; ++i)
+	{
+		const _float3 vPos = CGameUtils::GetRandVector3Sphere(vWeakOrigin, 2.5f);
+		const _float3 vDir = CGameUtils::GetRandVector3Sphere(_float3::Zero, 1.f);
+		
+		const wstring& HitBloodName = s_vecDefaultBlood[CMathUtils::RandomUInt(s_vecDefaultBlood.size() - 1)];
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)
+			->Start_AttachPosition(this, 
+				_float4{vPos.x, vPos.y, vPos.z, 1.f}, 
+				_float4{vDir.x, vDir.y, vDir.z, 0.f});
+	}
 }
 
 CEM0320* CEM0320::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

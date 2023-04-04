@@ -16,6 +16,7 @@
 #include "Material.h"
 #include "AI_CH0500_AnimInstance.h"
 #include "PlayerInfoManager.h"
+#include "PlayerStartPosition.h"
 
 #include "Enemy.h"
 
@@ -45,8 +46,8 @@ HRESULT CAI_CH0500::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
-	//if (FAILED(Setup_Parts()))
-	//	return E_FAIL;
+	if (FAILED(Setup_Parts()))
+		return E_FAIL;
 
 	if (FAILED(SetUp_Event()))
 		return E_FAIL;
@@ -75,6 +76,12 @@ void CAI_CH0500::BeginTick()
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
+	if (auto pStartPos = pGameInstance->Find_OneObjectByType<CTsugumiStartPosition>(LEVEL_NOW, LAYER_TRIGGER))
+	{
+		m_pTransformCom->CopyWorld(pStartPos->GetTransform());
+		pStartPos->SetDelete();
+	}
+
 	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, PLATERTEST_LAYER_PLAYER)->GetGameObjects())
 	{
 		if (L"Player" == iter->GetPrototypeTag())
@@ -100,21 +107,21 @@ void CAI_CH0500::Tick(_double TimeDelta)
 	m_pASM->Tick(TimeDelta);
 	BehaviorCheck();
 
-	//for (auto& iter : m_vecWeapon)
-	//{
-	//	iter->Tick(TimeDelta);
-	//	{
-	//		_bool bCol = Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART));
-	//	}
-	//}
+	for (auto& iter : m_vecWeapon)
+	{
+		iter->Tick(TimeDelta);
+		/*{
+			_bool bCol = Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART));
+		}*/
+	}
 }
 
 void CAI_CH0500::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
-	//for (auto& iter : m_vecWeapon)
-	//	iter->Late_Tick(TimeDelta);
+	for (auto& iter : m_vecWeapon)
+		iter->Late_Tick(TimeDelta);
 
 	if (m_bVisible && (nullptr != m_pRenderer))
 	{
@@ -127,11 +134,11 @@ void CAI_CH0500::AfterPhysX()
 {
 	__super::AfterPhysX();
 
-	//for (auto& iter : m_vecWeapon)
-	//{
-	//	static_cast<CScarletWeapon*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
-	//	static_cast<CScarletWeapon*>(iter)->Trail_Tick(m_fTimeDelta);
-	//}
+	for (auto& iter : m_vecWeapon)
+	{
+		static_cast<CScarletWeapon*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
+		//static_cast<CScarletWeapon*>(iter)->Trail_Tick(m_fTimeDelta);
+	}
 
 	MovePerSecondCheck();
 }
@@ -234,7 +241,6 @@ void CAI_CH0500::Imgui_RenderProperty()
 			ImGui::EndListBox();
 		}
 
-		// ?¤ì§ˆ?ì¸ ?´íŽ™??ë¶™ì´ê¸?
 		static char cEffectName[MAX_PATH]{};
 		static string szEffectName = "";
 		ImGui::InputText("Effect Search", cEffectName, MAX_PATH);
@@ -315,6 +321,8 @@ HRESULT CAI_CH0500::SetUp_Event()
 	m_pModel->Add_EventCaller("Collision_Start", [&]() {Collision_Start(); });
 	m_pModel->Add_EventCaller("Collision_End", [&]() {Collision_End(); });
 	m_pModel->Add_EventCaller("Collision_Twist", [&]() {Collision_Twist(); });
+
+	m_pModel->Add_EventCaller("Shoot", [&]() {Shoot(); });
 
 	return S_OK;
 }
@@ -401,6 +409,11 @@ void CAI_CH0500::BehaviorCheck()
 			m_pTransformCom->LookAt_Smooth(m_vPlayerPos, m_fTimeDelta);
 			m_pTransformCom->Go_Straight(m_fTimeDelta);
 		}
+
+		if ("HIT_KNUCKBACK_START" == strCurState)
+		{
+			m_pTransformCom->Go_Backward(m_fTimeDelta * 2.f * (1.f - m_pModel->GetPlayAnimation()->GetPlayRatio()));
+		}
 		
 		Collision_End();
 	}
@@ -414,22 +427,39 @@ void CAI_CH0500::BehaviorCheck()
 			m_pTransformCom->Go_Straight(m_fTimeDelta);
 		}
 
-		if ("RUN" == strCurState)
+		else if ("RUN" == strCurState)
 		{
 			m_pTransformCom->LookAt_Smooth(vEnemyPos, m_fTimeDelta);
 			m_pTransformCom->Go_Straight(m_fTimeDelta * 2.f);
 		}
 
-		if ("JUMP_RISE" == strCurState)
+		else if ("JUMP_RISE" == strCurState)
 		{
 			m_pTransformCom->LookAt_Smooth(vEnemyPos, m_fTimeDelta);
 			m_pTransformCom->Go_Straight(m_fTimeDelta);
 		}
 
-		if ("JUMP_FALL" == strCurState)
+		else if ("JUMP_FALL" == strCurState)
 		{
 			m_pTransformCom->LookAt_Smooth(vEnemyPos, m_fTimeDelta);
 			m_pTransformCom->Go_Straight(m_fTimeDelta);
+		}
+
+		else if ("ATK_WALK" == strCurState && (0.2f <= m_pModel->GetPlayAnimation()->GetPlayRatio()) && (0.9f >= m_pModel->GetPlayAnimation()->GetPlayRatio()))
+		{
+			m_pTransformCom->LookAt_Smooth(vEnemyPos, m_fTimeDelta);
+			m_pTransformCom->Go_Left(m_fTimeDelta * 0.25f);
+		}
+
+		else if ("ATK_WALK" == strCurState && (0.9f < m_pModel->GetPlayAnimation()->GetPlayRatio()))
+		{
+			m_pTransformCom->LookAt_Smooth(vEnemyPos, m_fTimeDelta);
+			m_pTransformCom->Go_Left(m_fTimeDelta * 0.5f);
+		}
+
+		if ("HIT_KNUCKBACK_START" == strCurState)
+		{
+			m_pTransformCom->Go_Backward(m_fTimeDelta * 2.f * (1.f - m_pModel->GetPlayAnimation()->GetPlayRatio()));
 		}
 	}
 }
@@ -586,12 +616,55 @@ void CAI_CH0500::Collision_Twist()
 	// ¾Æ·¡¿¡¼­ À§·Î ±¸Ã¼ ½ºÀ¬
 }
 
+void CAI_CH0500::Shoot()
+{
+	CGameObject* pTarget = CPlayerInfoManager::GetInstance()->Get_TargetedMonster();
+
+	if (nullptr == pTarget) return;
+
+	physx::PxRaycastHit hitBuffer[1];
+	physx::PxRaycastBuffer rayOut(hitBuffer, 1);
+
+	RayCastParams param;
+	param.rayOut = &rayOut;
+	param.vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	param.vDir = static_cast<CEnemy*>(pTarget)->GetKineticTargetPos() - param.vOrigin;
+	param.fDistance = param.vDir.Length() * 2.f;
+	param.iTargetType = CTB_MONSTER | CTB_MONSTER_PART;
+	param.bSingle = true;
+	param.fVisibleTime = 1.f;
+
+	if (CGameInstance::GetInstance()->RayCast(param))
+	{
+		for (int i = 0; i < rayOut.getNbAnyHits(); ++i)
+		{
+			auto pHit = rayOut.getAnyHit(i);
+			CGameObject* pCollidedObject = CPhysXUtils::GetOnwer(pHit.actor);
+			if (auto pEnemy = dynamic_cast<CEnemy*>(pCollidedObject))
+			{
+				DAMAGE_PARAM tParam;
+				ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
+				tParam.pCauser = this;
+				tParam.eAttackSAS = ESASType::SAS_NOT;
+				tParam.eAttackType = EAttackType::ATK_HEAVY;
+				tParam.eDeBuff = EDeBuffType::DEBUFF_END;
+				tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_END;
+				tParam.iDamage = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iAttack * 0.5f;
+				tParam.vHitFrom = GetColliderPosition();
+				tParam.vHitPosition = { pHit.position.x, pHit.position.y, pHit.position.z, 1.f };
+				tParam.vSlashVector = static_cast<CScarletWeapon*>(m_vecWeapon.front())->Get_SlashVector();
+				pEnemy->TakeDamage(tParam);
+			}
+		}
+	}
+}
+
 HRESULT CAI_CH0500::Setup_Parts()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	Json Weapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/wp0300.json");
-	Weapon["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_300/wp0300.static_model";
+	Json Weapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/wp0500.json");
+	Weapon["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_500/wp0500.static_model";
 
 	CGameObject* pGameObject = nullptr;
 
@@ -602,7 +675,7 @@ HRESULT CAI_CH0500::Setup_Parts()
 
 	//pGameInstance->Clone_GameObject(LAYER_AI, TEXT("HanabiWeapon"), &Desc);
 
-	pGameObject = pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("HanabiWeapon"), &Desc);
+	pGameObject = pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("TsugumiWeapon"), &Desc);
 	m_vecWeapon.push_back(pGameObject);
 
 	return S_OK;

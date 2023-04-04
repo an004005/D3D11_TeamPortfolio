@@ -298,10 +298,15 @@
     <ClInclude Include="..\public\EM1200.h" />
     <ClInclude Include="..\public\EM1200_AnimInstance.h" />
     <ClInclude Include="..\public\EM1200_Controller.h" />
+    <ClInclude Include="..\public\EMCable.h" />
     <ClInclude Include="..\public\EMUI.h" />
+    <ClInclude Include="..\public\Imgui_Cheat.h" />
     <ClInclude Include="..\public\InvisibleWall.h" />
     <ClInclude Include="..\public\Item_LightUI.h" />
+    <ClInclude Include="..\public\Level_Hospital_1F.h" />
+    <ClInclude Include="..\public\Level_NaomiRoom.h" />
     <ClInclude Include="..\public\Level_StageDefault.h" />
+    <ClInclude Include="..\public\Level_Subway.h" />
     <ClInclude Include="..\public\MouseCousorLightUI.h" />
     <ClInclude Include="..\public\MouseCousorUI.h" />
     <ClInclude Include="..\public\RedBullet.h" />
@@ -484,6 +489,7 @@
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
     <ClInclude Include="..\public\OilBullet.h" />
     <ClInclude Include="..\public\Weapon_wp0300.h" />
+    <ClInclude Include="..\public\Weapon_wp0500.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -609,10 +615,15 @@
     <ClCompile Include="..\private\EM1200.cpp" />
     <ClCompile Include="..\private\EM1200_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM1200_Controller.cpp" />
+    <ClCompile Include="..\private\EMCable.cpp" />
     <ClCompile Include="..\private\EMUI.cpp" />
+    <ClCompile Include="..\private\Imgui_Cheat.cpp" />
     <ClCompile Include="..\private\InvisibleWall.cpp" />
     <ClCompile Include="..\private\Item_LightUI.cpp" />
+    <ClCompile Include="..\private\Level_Hospital_1F.cpp" />
+    <ClCompile Include="..\private\Level_NaomiRoom.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
+    <ClCompile Include="..\private\Level_Subway.cpp" />
     <ClCompile Include="..\private\MouseCousorLightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorUI.cpp" />
     <ClCompile Include="..\private\RedBullet.cpp" />
@@ -795,6 +806,7 @@
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
     <ClCompile Include="..\private\OilBullet.cpp" />
     <ClCompile Include="..\private\Weapon_wp0300.cpp" />
+    <ClCompile Include="..\private\Weapon_wp0500.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
