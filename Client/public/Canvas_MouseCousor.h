@@ -16,6 +16,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void   Tick(_double TimeDelta) override;
 
+private:
+	class CCanvas_MainTalk* m_pCanvas_MainTalk = { nullptr };
+
 public:
 	static CCanvas_MouseCousor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

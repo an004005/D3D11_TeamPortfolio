@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 
 #include "JsonStorage.h"
+#include "Canvas_MainTalk.h"
 
 CCanvas_MouseCousor::CCanvas_MouseCousor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -54,8 +55,22 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 		// 컨테이너 : 처음에 Canvas_SAGragting_S 사용 나중에 Canvas_SAGragting_Down 사용
 		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
 		//CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_S", &json);
-		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAContainer_Down.json");
-		CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAContainer_Down", &json);
+		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAContainer_Down.json");
+		//CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAContainer_Down", &json);
+
+		/////////////////////////////////////////////////////
+		
+
+	}
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	{
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
+		m_pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_MainTalk", &json));
+		m_pCanvas_MainTalk->Add_Talk(0);
+		m_pCanvas_MainTalk->Add_Talk(1);
+		m_pCanvas_MainTalk->Add_Talk(2);
+
 	}
 }
 
