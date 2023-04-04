@@ -236,8 +236,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar* pLayerTag)
 #endif
 
 
-
-
 	return S_OK;
 }
 

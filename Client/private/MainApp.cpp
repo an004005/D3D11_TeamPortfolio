@@ -48,6 +48,10 @@
 #include "SuperSpeedTrail.h"
 #include "Item_Manager.h"
 
+//////////
+#include "InvisibleWall.h"
+
+
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
@@ -409,6 +413,14 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex_VFX.hlsl"), VTXNORTEX_DECLARATION::Elements, VTXNORTEX_DECLARATION::iNumElements))))
 		return E_FAIL;
 
+	////////////////////////////
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxInvisible"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxInvisibleWall.hlsl"), VTXPOS_DECLARATION::Elements, VTXPOS_DECLARATION::iNumElements))))
+		return E_FAIL;
+
+	////////////////////////////
+
 	/* For.Prototype_Component_VIBuffer_CircleRect */	
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_VIBuffer_CircleRect", CVIBuffer_CircleRect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -452,7 +464,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_RedString"), CRedString::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-	
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_InvisibleWall"), CInvisibleWall::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+		
 	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Regular32"), TEXT("../Bin/Resources/Fonts/kim_regular32.spritefont"))))
 	//	return E_FAIL;
 	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Bold32"), TEXT("../Bin/Resources/Fonts/kim_bold32.spritefont"))))

@@ -1387,6 +1387,9 @@
     <ClInclude Include="..\public\EMUI.h">
       <Filter>02.GameObjects\Enemy\EMUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_StageDefault.h" />
+    <ClInclude Include="..\public\RedString.h" />
+    <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2282,6 +2285,9 @@
     <ClCompile Include="..\private\InvisibleWall.cpp">
       <Filter>02.GameObjects\Map\InvisibleWall</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Level_StageDefault.cpp" />
+    <ClCompile Include="..\private\RedString.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -2390,6 +2396,12 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl">
       <Filter>97.ShaderFiles\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\SSLR.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInvisibleWall.hlsl">
+      <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -822,6 +822,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel_Shadow.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCube_SSDecal.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInvisibleWall.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing.hlsl" />
