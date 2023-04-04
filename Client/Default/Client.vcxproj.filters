@@ -481,6 +481,9 @@
     <Filter Include="01.Levels\02.GamePlay\03.ConstructionSite2F">
       <UniqueIdentifier>{3d3d0005-42a5-4f29-afef-5338e27783d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Map\InvisibleWall">
+      <UniqueIdentifier>{c1cc4e2a-3b3d-4636-a1e3-c0c83c966796}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1394,6 +1397,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Talk_FaceUI.h">
       <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\InvisibleWall.h">
+      <Filter>02.GameObjects\Map\InvisibleWall</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EMUI.h">
       <Filter>02.GameObjects\Enemy\EMUI</Filter>
@@ -2341,6 +2347,12 @@
     <ClCompile Include="..\private\Imgui_Cheat.cpp">
       <Filter>60.Imgui_Tool</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\InvisibleWall.cpp">
+      <Filter>02.GameObjects\Map\InvisibleWall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_StageDefault.cpp" />
+    <ClCompile Include="..\private\RedString.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -2457,6 +2469,12 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\SSLR.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInvisibleWall.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
