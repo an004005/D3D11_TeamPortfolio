@@ -182,7 +182,7 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 				});
 			}
 		}
-		else if (LEVEL_NOW == LEVEL_PLAYERTEST)
+		else if (LEVEL_NOW == LEVEL_PLAYERTEST || LEVEL_NOW == LEVEL_TUTORIAL)
 		{
 			if (m_iSelectFinishFunc == 0)
 			{

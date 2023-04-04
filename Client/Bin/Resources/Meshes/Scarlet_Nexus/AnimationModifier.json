@@ -3573,15 +3573,21 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_601_AL_BF_swing_a1": {
+        "Duration": 170.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_602_AL_BF_swing_a2": {
         "Duration": 195.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_ch0100_603_AL_BF_swing_a3": {
         "Duration": 200.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -3594,6 +3600,12 @@
     "AS_ch0100_621_AL_BF_swing_air_landing": {
         "Duration": 76.0,
         "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_621_AL_BF_swing_air_loop": {
+        "Duration": 1.0,
+        "TickPerSecond": 1.0,
         "bLooping": false,
         "vecEvent": []
     },

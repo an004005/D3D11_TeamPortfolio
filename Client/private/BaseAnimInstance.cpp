@@ -8,6 +8,7 @@
 #include "PlayerInfoManager.h"
 
 HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject)
+
 {
 	FAILED_CHECK(__super::Initialize(pModel, pGameObject));
 
@@ -2511,6 +2512,1493 @@ void CBaseAnimInstance::Tick(_double TimeDelta)
 	CGameInstance::GetInstance()->ActionCamTickByPlayTime(m_pModel->GetPlayAnimation()->GetPlayRatio());
 }
 
+HRESULT CBaseAnimInstance::Initialize_BrainField()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	m_pASM_BrainField = CASMBuilder()
+		.InitState("IDLE")
+
+#pragma region IDLE
+
+			.AddState("IDLE")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_101_AL_wait01"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false })
+					.Event_Trail(false);
+			})
+
+				.AddTransition("IDLE to JUMP_FALL", "JUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f)
+				.Priority(0)
+
+				.AddTransition("IDLE to WALK", "WALK")
+				.Predicator([&]()->_bool { return m_bWalk; })
+				.Duration(0.1f)
+				.Priority(0)
+
+				.AddTransition("IDLE to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f)
+				.Priority(1)
+
+				.AddTransition("IDLE to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash; })
+				.Duration(0.1f)
+				.Priority(1)
+
+				.AddTransition("IDLE to JUMP_START", "JUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f)
+				.Priority(1)
+
+#pragma endregion IDLE
+
+#pragma region WALK
+
+		.AddState("WALK")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->Event_Trail(false);
+			})
+
+				.AddTransition("WALK to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f)
+				.Priority(0)
+
+				.AddTransition("WALK to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f)
+				.Priority(1)
+
+				.AddTransition("WALK to WALK_START_FRONT", "WALK_START_FRONT")
+				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_F; })
+				.Duration(0.1f)
+				.Priority(0)
+
+				.AddTransition("WALK to WALK_START_LEFT", "WALK_START_LEFT")
+				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_L; })
+				.Duration(0.1f)
+				.Priority(1)
+
+				.AddTransition("WALK to WALK_START_RIGHT", "WALK_START_RIGHT")
+				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_R; })
+				.Duration(0.1f)
+				.Priority(2)
+
+				.AddTransition("WALK to WALK_START_BACK_LEFT", "WALK_START_BACK_LEFT")
+				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_B; })
+				.Duration(0.1f)
+				.Priority(3)
+
+				.AddTransition("WALK to WALK_START_BACK_RIGHT", "WALK_START_BACK_RIGHT")
+				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_B; })
+				.Duration(0.1f)
+				.Priority(4)
+
+				.AddTransition("WALK to IDLE", "IDLE")
+				.Predicator([&]()->_bool { return !m_bWalk; })
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("WALK_START_FRONT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_121_AL_run_start_F"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ true, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("WALK_START_FRONT to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f)
+				.Priority(0)
+
+				.AddTransition("WALK to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f)
+				.Priority(1)
+
+				.AddTransition("WALK_START_FRONT to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash; })
+				.Duration(0.1f)
+				.Priority(1)
+
+				.AddTransition("WALK_START_FRONT to RUNJUMP_START", "RUNJUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_FRONT to WALK_LOOP", "WALK_LOOP")
+				.Priority(0)
+				.Duration(0.1f)
+
+				.AddTransition("WALK_START_FRONT to WALK_END", "WALK_END")
+				.Predicator([&]()->_bool { return !m_bWalk && (m_eMoveDir != CPlayer::DIR_F); })
+				.Priority(1)
+				.Duration(0.1f)
+
+		.AddState("WALK_START_LEFT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_122_AL_run_start_L"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ true, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("WALK_START_LEFT to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("WALK_START_LEFT to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_LEFT to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_LEFT to RUNJUMP_START", "RUNJUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_LEFT to WALK_LOOP", "WALK_LOOP")
+				.Priority(0).Duration(0.1f)
+
+				.AddTransition("WALK_START_LEFT to WALK_END", "WALK_END")
+				.Predicator([&]()->_bool { return !m_bWalk/* && (0.4255f <= m_fPlayRatio)*/ && (m_eMoveDir != CPlayer::DIR_L); })
+				.Priority(1)
+				.Duration(0.1f)
+
+		.AddState("WALK_START_RIGHT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_123_AL_run_start_R"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ true, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("WALK_START_RIGHT to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("WALK_START_RIGHT to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_RIGHT to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_RIGHT to RUNJUMP_START", "RUNJUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_RIGHT to WALK_LOOP", "WALK_LOOP")
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("WALK_START_RIGHT to WALK_END", "WALK_END")
+				.Predicator([&]()->_bool { return !m_bWalk/* && (0.4255f <= m_fPlayRatio)*/ && (m_eMoveDir != CPlayer::DIR_R); })
+				.Priority(1)
+				.Duration(0.1f)
+
+		.AddState("WALK_START_BACK_LEFT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_124_AL_run_start_BL"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ true, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("WALK_START_BACK_LEFT to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("WALK_START_BACK_LEFT to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_BACK_LEFT to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_BACK_LEFT to RUNJUMP_START", "RUNJUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_BACK_LEFT to WALK_LOOP", "WALK_LOOP")
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("WALK_START_BACK_LEFT to WALK_END", "WALK_END")
+				.Predicator([&]()->_bool { return !m_bWalk/* && (0.4255f <= m_fPlayRatio)*/ && (m_eMoveDir != CPlayer::DIR_B); })
+				.Priority(1)
+				.Duration(0.1f)
+
+		.AddState("WALK_START_BACK_RIGHT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_125_AL_run_start_BR"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+				->SetAbleState({ true, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("WALK_START_BACK_RIGHT to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("WALK_START_BACK_RIGHT to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_BACK_RIGHT to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_START_BACK_RIGHT to RUNJUMP_START", "RUNJUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+			
+				.AddTransition("WALK_START_BACK_RIGHT to WALK_LOOP", "WALK_LOOP")
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("WALK_START_BACK_RIGHT to WALK_END", "WALK_END")
+				.Predicator([&]()->_bool { return !m_bWalk/* && (0.4255f <= m_fPlayRatio)*/ && (m_eMoveDir != CPlayer::DIR_B); })
+				.Priority(1)
+				.Duration(0.1f)
+
+		.AddState("WALK_LOOP")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_126_AL_run"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)->LookAtDir(m_vMoveDir);	// 이동하고 있는 방향을 봐야됨
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ true, true, false, false, false, true, true, true, true, false });
+			})
+		
+				.AddTransition("WALK_LOOP to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("WALK_LOOP to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_LOOP to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_LOOP to RUNJUMP_START", "RUNJUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_LOOP to WALK_END", "WALK_END")
+				.Predicator([&]()->_bool { return !m_bWalk; })
+				.Duration(0.1f).Priority(0)
+
+		.AddState("WALK_END")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_128_AL_run_end"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("WALK_END to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("WALK_END to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_END to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_END to JUMP_START", "JUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("WALK_END to IDLE", "IDLE")
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("WALK_END to WALK", "WALK")
+				.Predicator([&]()->_bool { return m_bWalk; })
+				.Duration(0.1f).Priority(0)
+
+#pragma endregion WALK
+
+#pragma region ATTACK
+
+		.AddState("ATK_A1")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_601_AL_BF_swing_a1"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false })
+					.LookTarget();
+			})
+
+				.AddTransition("ATK_A1 to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("ATK_A1 to ATK_A2", "ATK_A2")
+				.Predicator([&]()->_bool {return m_bLeftClick && (0.4f <= m_fPlayRatio) && CheckAnim("AS_ch0100_601_AL_BF_swing_a1") && (!m_bLerp); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("ATK_A1 to JUMP_START", "JUMP_START")
+				.Predicator([&]()->_bool {return m_bJump && (0.4f <= m_fPlayRatio) && CheckAnim("AS_ch0100_601_AL_BF_swing_a1") && (!m_bLerp); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("ATK_A1 to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash && (0.4f <= m_fPlayRatio) && CheckAnim("AS_ch0100_601_AL_BF_swing_a1"); })
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("ATK_A1 to WALK", "WALK")
+				.Predicator([&]()->_bool {return m_bWalk && (0.4f <= m_fPlayRatio) && CheckAnim("AS_ch0100_601_AL_BF_swing_a1") && (!m_bLerp); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("ATK_A1 to IDLE", "IDLE")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("ATK_A2")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_602_AL_BF_swing_a2"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false })
+					.LookTarget();
+			})
+
+				.AddTransition("ATK_A2 to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("ATK_A2 to ATK_A3", "ATK_A3")
+				.Predicator([&]()->_bool {return m_bLeftClick && (0.4f <= m_fPlayRatio) && CheckAnim("AS_ch0100_602_AL_BF_swing_a2") && (!m_bLerp); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("ATK_A2 to JUMP_START", "JUMP_START")
+				.Predicator([&]()->_bool {return m_bJump && (0.4f <= m_fPlayRatio) && CheckAnim("AS_ch0100_602_AL_BF_swing_a2") && (!m_bLerp); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("ATK_A2 to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash && (0.4f <= m_fPlayRatio) && CheckAnim("AS_ch0100_602_AL_BF_swing_a2"); })
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("ATK_A2 to WALK", "WALK")
+				.Predicator([&]()->_bool {return m_bWalk && (0.4f <= m_fPlayRatio) && CheckAnim("AS_ch0100_602_AL_BF_swing_a2") && (!m_bLerp); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("ATK_A2 to IDLE", "IDLE")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("ATK_A3")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_603_AL_BF_swing_a3"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, true, false, true, true, false, true, false })
+					.LookTarget();
+			})
+
+				.AddTransition("ATK_A3 to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("ATK_A3 to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick && (0.65f <= m_fPlayRatio) && CheckAnim("AS_ch0100_603_AL_BF_swing_a3") && (!m_bLerp); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("ATK_A3 to JUMP_START", "JUMP_START")
+				.Predicator([&]()->_bool {return m_bJump && (0.45f <= m_fPlayRatio) && CheckAnim("AS_ch0100_603_AL_BF_swing_a3") && (!m_bLerp); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("ATK_A3 to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash && (0.45f <= m_fPlayRatio) && CheckAnim("AS_ch0100_603_AL_BF_swing_a3"); })
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("ATK_A3 to WALK", "WALK")
+				.Predicator([&]()->_bool {return m_bWalk && (0.45f <= m_fPlayRatio) && CheckAnim("AS_ch0100_603_AL_BF_swing_a3") && (!m_bLerp); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("ATK_A3 to IDLE", "IDLE")
+				.Duration(0.1f)
+				.Priority(100)
+
+#pragma endregion ATTACK
+
+#pragma region Dash And Run
+
+		.AddState("DASH")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_151_AL_dodge_F_start"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false })
+					.Event_Trail(false);
+			})
+
+				.AddTransition("DASH to DASHJUMP_FALL", "DASHJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("DASH to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH to DASH_START_FRONT", "DASH_START_FRONT")
+				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_F; })
+				.Duration(0.f).Priority(0)
+
+				.AddTransition("DASH to DASH_START_LEFT", "DASH_START_LEFT")
+				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_L; })
+				.Duration(0.f).Priority(0)
+
+				.AddTransition("DASH to DASH_START_RIGHT", "DASH_START_RIGHT")
+				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_R; })
+				.Duration(0.f).Priority(0)
+
+				.AddTransition("DASH to DASH_START_BACK", "DASH_START_BACK")
+				.Predicator([&]()->_bool { return m_eMoveDir == CPlayer::DIR_B; })
+				.Duration(0.f).Priority(0)
+
+				.AddTransition("DASH to DASH_END_FRONT", "DASH_END_FRONT")
+				.Duration(0.f).Priority(0)
+
+		.AddState("DASH_START_FRONT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_151_AL_dodge_F_start"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+				->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("DASH_START_FRONT to DASHJUMP_FALL", "DASHJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("DASH_START_FRONT to DASHJUMP_START", "DASHJUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_START_FRONT to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_START_FRONT to RUN_FRONT", "RUN_FRONT")
+				.Predicator([&]()->_bool 
+				{
+					return m_bWalk && (0.8f <= m_fPlayRatio) && 
+						(CheckAnim("AS_ch0100_051_AL_dodge_F_start") || 
+							CheckAnim("AS_ch0100_151_AL_dodge_F_start") ||
+							CheckAnim("AS_ch0100_051_AL_sas_dodge_F_start_Telepo") ||
+							CheckAnim("AS_ch0100_151_AL_sas_dodge_F_start_Telepo"));
+				})
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("DASH_START_FRONT to DASH_END_FRONT", "DASH_END_FRONT")
+				.Duration(0.f)
+				.Priority(100)
+
+		.AddState("DASH_END_FRONT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_151_AL_dodge_F_stop"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+		
+				.AddTransition("DASH_END_FRONT to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("DASH_END_FRONT to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_END_FRONT to RUN_FRONT", "RUN_FRONT")
+				.Predicator([&]()->_bool 
+				{
+					return m_bWalk && (0.1f <= m_fPlayRatio) && 
+						(CheckAnim("AS_ch0100_051_AL_dodge_F_stop") ||
+							CheckAnim("AS_ch0100_151_AL_dodge_F_stop") ||
+							CheckAnim("AS_ch0100_051_AL_sas_dodge_F_stop_Telepo") || 
+							CheckAnim("AS_ch0100_151_AL_sas_dodge_F_stop_Telepo"));
+				})
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("DASH_END_FRONT to IDLE", "IDLE")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("DASH_START_LEFT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_157_AL_dodge_L_start"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("DASH_START_LEFT to DASHJUMP_FALL", "DASHJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("DASH_START_LEFT to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_START_LEFT to RUN_FRONT", "RUN_FRONT")
+				.Predicator([&]()->_bool 
+				{
+					return m_bWalk && (0.8f <= m_fPlayRatio) && 
+						(CheckAnim("AS_ch0100_057_AL_dodge_L_start") ||
+							CheckAnim("AS_ch0100_157_AL_dodge_L_start") ||
+							CheckAnim("AS_ch0100_057_AL_sas_dodge_L_start_Telepo") || 
+							CheckAnim("AS_ch0100_157_AL_sas_dodge_L_start_Telepo"));
+				})
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("DASH_START_LEFT to DASHJUMP_START", "DASHJUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_START_LEFT to DASH_END_LEFT", "DASH_END_LEFT")
+				.Duration(0.f)
+				.Priority(100)
+
+		.AddState("DASH_END_LEFT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_157_AL_dodge_L_stop"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+		
+				.AddTransition("DASH_END_LEFT to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("DASH_END_LEFT to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_END_LEFT to IDLE", "IDLE")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("DASH_START_RIGHT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_153_AL_dodge_R_start"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("DASH_START_RIGHT to DASHJUMP_FALL", "DASHJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("DASH_START_RIGHT to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_START_RIGHT to RUN_FRONT", "RUN_FRONT")
+				.Predicator([&]()->_bool 
+				{
+					return m_bWalk && (0.8f <= m_fPlayRatio) && 
+						(CheckAnim("AS_ch0100_053_AL_dodge_R_start") ||
+							CheckAnim("AS_ch0100_153_AL_dodge_R_start") ||
+							CheckAnim("AS_ch0100_053_AL_sas_dodge_R_start_Telepo") || 
+							CheckAnim("AS_ch0100_153_AL_sas_dodge_R_start_Telepo"));
+				})
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("DASH_START_RIGHT to DASHJUMP_START", "DASHJUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_START_RIGHT to DASH_END_RIGHT", "DASH_END_RIGHT")
+				.Duration(0.f)
+				.Priority(100)
+
+		.AddState("DASH_END_RIGHT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_153_AL_dodge_R_stop"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+		
+				.AddTransition("DASH_END_RIGHT to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("DASH_END_RIGHT to RUNJUMP_START", "RUNJUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_END_RIGHT to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_END_RIGHT to IDLE", "IDLE")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("DASH_START_BACK")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_155_AL_dodge_B_start"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("DASH_START_BACK to DASHJUMP_FALL", "DASHJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("DASH_START_BACK to RUNJUMP_START", "RUNJUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_START_BACK to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_START_BACK to DASH_END_BACK", "DASH_END_BACK")
+				.Duration(0.f)
+				.Priority(100)
+
+				.AddTransition("DASH_START_BACK to DASHJUMP_START", "DASHJUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+		.AddState("DASH_END_BACK")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_155_AL_dodge_B_stop"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("DASH_END_BACK to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("DASH_END_BACK to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_END_BACK to RUN_FRONT", "RUN_FRONT")
+				.Predicator([&]()->_bool 
+			{
+				return m_bWalk && (0.5f <= m_fPlayRatio) && 
+					(CheckAnim("AS_ch0100_055_AL_dodge_B_stop") ||
+						CheckAnim("AS_ch0100_155_AL_dodge_B_stop") ||
+						CheckAnim("AS_ch0100_055_AL_sas_dodge_B_stop_Telepo") || 
+						CheckAnim("AS_ch0100_155_AL_sas_dodge_B_stop_Telepo"));
+			})
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("DASH_START_BACK to JUMP_START", "JUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("DASH_END_BACK to IDLE", "IDLE")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("RUN_FRONT")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_136_AL_dash"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ true, true, true, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("RUN_FRONT to DASHJUMP_FALL", "DASHJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("RUN_FRONT to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash && (CheckAnim("AS_ch0100_036_AL_dash") || CheckAnim("AS_ch0100_136_AL_dash")); })
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("RUN_FRONT to DASHJUMP_START", "DASHJUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("RUN_FRONT to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("RUN_FRONT to RUN_END", "RUN_END")
+				.Predicator([&]()->_bool {return !m_bWalk; })
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("RUN_END")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_138_AL_dash_stop"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("RUN_END to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Predicator([&]()->_bool{return FloorCheck();})
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("RUN_END to WALK", "WALK")
+				.Predicator([&]()->_bool {return m_bWalk; })
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("RUN_END to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash; })
+				.Duration(0.1f).Priority(0)
+
+				.AddTransition("RUN_END to JUMP_START", "JUMP_START")
+				.Predicator([&]()->_bool {return m_bJump; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("RUN_END to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("RUN_END to IDLE", "IDLE")
+				.Duration(0.1f)
+				.Priority(100)
+
+#pragma endregion Dash And Run
+
+#pragma region Jump
+
+		.AddState("JUMP_START")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_141_AL_jump_start"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+			.FinishEvent([&]() 
+			{
+				static_cast<CPlayer*>(m_pTargetObject)->Jump(); 
+			})
+
+				.AddTransition("JUMP_START to JUMP_RISE", "JUMP_RISE")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("JUMP_RISE")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_141_AL_jump_rise"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+				->SetAbleState({ false, true, false, false, true, true, false, false, false, false });
+			})
+
+				.AddTransition("JUMP_RISE to JUMP_LANDING", "JUMP_LANDING")
+				.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_041_AL_jump_rise") || CheckAnim("AS_ch0100_141_AL_jump_rise")); })
+				.Duration(0.f)
+				.Priority(100)
+
+				.AddTransition("JUMP_RISE to AIR_DODGE", "AIR_DODGE")
+				.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("JUMP_RISE to ATK_AIR_START", "ATK_AIR_START")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("JUMP_RISE to JUMP_FALL", "JUMP_FALL")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("JUMP_FALL")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_141_AL_jump_fall"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+				->SetAbleState({ false, true, false, false, true, true, false, false, false, false });
+			})
+
+				.AddTransition("JUMP_FALL to DOUBLE_JUMP_RISE", "DOUBLE_JUMP_RISE")
+				.Predicator([&]()->_bool {return m_bJump && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_DOUBLEJUMP); })
+				.Duration(0.0f)
+				.Priority(100)
+
+				.AddTransition("JUMP_FALL to AIR_DODGE", "AIR_DODGE")
+				.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("JUMP_FALL to ATK_AIR_START", "ATK_AIR_START")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("JUMP_FALL to JUMP_LANDING", "JUMP_LANDING")
+				.Predicator([&]()->_bool {return m_bOnFloor; })
+				.Duration(0.f)
+				.Priority(100)
+
+		.AddState("JUMP_LANDING")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_141_AL_jump_landing"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("JUMP_LANDING to WALK_LOOP", "WALK_LOOP")
+				.Predicator([&]()->_bool {return m_bWalk && (CheckAnim("AS_ch0100_041_AL_jump_landing") || CheckAnim("AS_ch0100_141_AL_jump_landing")) && (0.1f <= m_fPlayRatio); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("JUMP_LANDING to JUMP_START", "JUMP_START")
+				.Predicator([&]()->_bool {return m_bJump && (CheckAnim("AS_ch0100_041_AL_jump_landing") || CheckAnim("AS_ch0100_141_AL_jump_landing")) && (0.1f <= m_fPlayRatio); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("JUMP_LANDING to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick && (CheckAnim("AS_ch0100_041_AL_jump_landing") || CheckAnim("AS_ch0100_141_AL_jump_landing")) && (0.1f <= m_fPlayRatio); })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("JUMP_LANDING to IDLE", "IDLE")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("DOUBLE_JUMP_RISE")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, true, false, false, true, true, false, true, true, false })
+					.Jump();
+			})
+
+				.AddTransition("DOUBLE_JUMP_RISE to JUMP_LANDING", "JUMP_LANDING")
+				.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_043_AL_doublejump_rise") || CheckAnim("AS_ch0100_043_AL_doublejump_rise")); })
+				.Duration(0.f)
+				.Priority(100)
+
+				.AddTransition("DOUBLE_JUMP_RISE to AIR_DODGE", "AIR_DODGE")
+				.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("DOUBLE_JUMP_RISE to ATK_AIR_START", "ATK_AIR_START")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("DOUBLE_JUMP_RISE to JUMP_FALL", "JUMP_FALL")
+				.Duration(0.1f)
+				.Priority(100)
+
+#pragma endregion Jump
+
+#pragma region RunJump
+
+		.AddState("RUNJUMP_START")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_start"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false })
+					.LookAtDir(m_vMoveDir);
+			})
+			.FinishEvent([&]() 
+			{
+				static_cast<CPlayer*>(m_pTargetObject)->Jump(); 
+			})
+
+				.AddTransition("RUNJUMP_START to RUNJUMP_RISE", "RUNJUMP_RISE")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("RUNJUMP_RISE")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_rise"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, true, false, false, true, true, false, false, false, false });
+			})
+
+				.AddTransition("RUNJUMP_RISE to RUNJUMP_LANDING", "RUNJUMP_LANDING")
+				.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_044_AL_runjump_rise") || CheckAnim("AS_ch0100_144_AL_runjump_rise")); })
+				.Duration(0.f)
+				.Priority(100)
+
+				.AddTransition("RUNJUMP_RISE to AIR_DODGE", "AIR_DODGE")
+				.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("RUNJUMP_RISE to ATK_AIR_START", "ATK_AIR_START")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("RUNJUMP_RISE to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("RUNJUMP_FALL")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_fall"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, true, false, false, true, true, false, false, false, false });
+			})
+
+				.AddTransition("RUNJUMP_FALL to DOUBLE_RUNJUMP_RISE", "DOUBLE_RUNJUMP_RISE")
+				.Predicator([&]()->_bool {return m_bJump && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_DOUBLEJUMP); })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("RUNJUMP_FALL to AIR_DODGE", "AIR_DODGE")
+				.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("RUNJUMP_FALL to ATK_AIR_START", "ATK_AIR_START")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("RUNJUMP_FALL to RUNJUMP_LANDING", "RUNJUMP_LANDING")
+				.Predicator([&]()->_bool {return m_bOnFloor; })
+				.Duration(0.f)
+				.Priority(100)
+
+		.AddState("RUNJUMP_LANDING")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_144_AL_runjump_landing"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("RUNJUMP_LANDING to WALK_LOOP", "WALK_LOOP")
+				.Predicator([&]()->_bool {return m_bWalk && (CheckAnim("AS_ch0100_044_AL_runjump_landing") || CheckAnim("AS_ch0100_144_AL_runjump_landing")) && (0.1f <= m_fPlayRatio); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("RUNJUMP_LANDING to JUMP_START", "JUMP_START")
+				.Predicator([&]()->_bool {return m_bJump && (CheckAnim("AS_ch0100_044_AL_runjump_landing") || CheckAnim("AS_ch0100_144_AL_runjump_landing")) && (0.1f <= m_fPlayRatio); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("RUNJUMP_LANDING to ATK_AIR_START", "ATK_AIR_START")
+				.Predicator([&]()->_bool {return m_bLeftClick && (CheckAnim("AS_ch0100_044_AL_runjump_landing") || CheckAnim("AS_ch0100_144_AL_runjump_landing")) && (0.1f <= m_fPlayRatio); })
+				.Duration(0.1f).Priority(1)
+
+				.AddTransition("RUNJUMP_LANDING to IDLE", "IDLE")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("DOUBLE_RUNJUMP_RISE")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"))
+			.StartEvent([&]()
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, true, false, false, true, true, false, true, true, false })
+					.Jump();
+			})
+
+				.AddTransition("DOUBLE_RUNJUMP_RISE to RUNJUMP_LANDING", "RUNJUMP_LANDING")
+				.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_043_AL_doublejump_rise") || CheckAnim("AS_ch0100_143_AL_doublejump_rise")); })
+				.Duration(0.f)
+				.Priority(100)
+
+				.AddTransition("DOUBLE_RUNJUMP_RISE to AIR_DODGE", "AIR_DODGE")
+				.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("DOUBLE_RUNJUMP_RISE to ATK_AIR_START", "ATK_AIR_START")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("DOUBLE_RUNJUMP_RISE to RUNJUMP_FALL", "RUNJUMP_FALL")
+				.Duration(0.1f)
+				.Priority(100)
+
+#pragma endregion RunJump
+
+#pragma region DashJump
+
+		.AddState("DASHJUMP_START")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_start"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false })
+					.LookAtDir(m_vMoveDir);
+			})
+			.FinishEvent([&]() 
+			{
+				static_cast<CPlayer*>(m_pTargetObject)->Jump(); 
+			})
+
+				.AddTransition("DASHJUMP_START to DASHJUMP_RISE", "DASHJUMP_RISE")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("DASHJUMP_RISE")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_rise"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, true, true, false, true, true, false, false, false, false });
+			})
+
+				.AddTransition("DASHJUMP_RISE to DASHJUMP_LANDING", "DASHJUMP_LANDING")
+				.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_042_AL_dashjump_rise") || CheckAnim("AS_ch0100_142_AL_dashjump_rise")); })
+				.Duration(0.f)
+				.Priority(100)
+
+				.AddTransition("DASHJUMP_RISE to AIR_DODGE", "AIR_DODGE")
+				.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("RUNJUMP_RISE to ATK_AIR_START", "ATK_AIR_START")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("DASHJUMP_RISE to DASHJUMP_FALL", "DASHJUMP_FALL")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("DASHJUMP_FALL")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_fall"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, true, true, false, true, true, false, false, false, false });
+			})
+
+				.AddTransition("DASHJUMP_FALL to DOUBLE_DASHJUMP_RISE", "DOUBLE_DASHJUMP_RISE")
+				.Predicator([&]()->_bool {return m_bJump && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_DOUBLEJUMP); })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("DASHJUMP_FALL to AIR_DODGE", "AIR_DODGE")
+				.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("RUNJUMP_RISE to ATK_AIR_START", "ATK_AIR_START")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("DASHJUMP_FALL to DASHJUMP_LANDING", "DASHJUMP_LANDING")
+				.Predicator([&]()->_bool {return m_bOnFloor; })
+				.Duration(0.f)
+				.Priority(100)
+
+		.AddState("DASHJUMP_LANDING")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_142_AL_dashjump_landing"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+
+				.AddTransition("DASHJUMP_LANDING to RUN_FRONT", "RUN_FRONT")
+				.Predicator([&]()->_bool {return m_bWalk && (CheckAnim("AS_ch0100_042_AL_dashjump_landing") || CheckAnim("AS_ch0100_142_AL_dashjump_landing")) && (0.1f <= m_fPlayRatio); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("DASHJUMP_LANDING to JUMP_START", "JUMP_START")
+				.Predicator([&]()->_bool {return m_bJump && (CheckAnim("AS_ch0100_042_AL_dashjump_landing") || CheckAnim("AS_ch0100_142_AL_dashjump_landing")) && (0.1f <= m_fPlayRatio); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("RUNJUMP_RISE to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("DASHJUMP_LANDING to IDLE", "IDLE")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("DOUBLE_DASHJUMP_RISE")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_143_AL_doublejump_rise"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, true, true, false, true, true, false, true, true, false })
+					.Jump();
+			})
+
+				.AddTransition("DOUBLE_DASHJUMP_RISE to DASHJUMP_LANDING", "DASHJUMP_LANDING")
+				.Predicator([&]()->_bool {return m_bOnFloor && (CheckAnim("AS_ch0100_043_AL_doublejump_rise") || CheckAnim("AS_ch0100_143_AL_doublejump_rise")); })
+				.Duration(0.f)
+				.Priority(100)
+
+				.AddTransition("DOUBLE_DASHJUMP_RISE to AIR_DODGE", "AIR_DODGE")
+				.Predicator([&]()->_bool {return m_bDash && static_cast<CPlayer*>(m_pTargetObject)->UseMoveCnt(CPlayer::LIMIT_AIRDODGE); })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("RUNJUMP_RISE to ATK_AIR_START", "ATK_AIR_START")
+				.Predicator([&]()->_bool {return m_bLeftClick; })
+				.Duration(0.05f)
+				.Priority(100)
+
+				.AddTransition("DOUBLE_DASHJUMP_RISE to DASHJUMP_FALL", "DASHJUMP_FALL")
+				.Duration(0.1f)
+				.Priority(100)
+
+#pragma endregion DashJump 
+
+#pragma region JumpAction
+
+		.AddState("ATK_AIR_START")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_621_AL_BF_swing_air_start"))
+			.StartEvent([&]() 
+			{ 
+					static_cast<CPlayer*>(m_pTargetObject)
+						->SetAbleState({ false, false, false, false, true, false, false, false, true, false })
+						.LookTarget();
+			})
+
+				.AddTransition("ATK_AIR_START to ATK_AIR_LOOP", "ATK_AIR_LOOP")
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("ATK_AIR_LOOP")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_621_AL_BF_swing_air_loop"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, true, true, false, false, true, false });
+
+				static_cast<CPlayer*>(m_pTargetObject)->SetGravity_Optional(-30.f);
+			})
+
+				.AddTransition("ATK_AIR_LOOP to ATK_AIR_LANDING", "ATK_AIR_LANDING")
+				.Predicator([&]()->_bool {return m_bOnFloor; })
+				.Duration(0.1f)
+				.Priority(100)
+
+		.AddState("ATK_AIR_LANDING")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_621_AL_BF_swing_air_landing"))
+			.StartEvent([&]() 
+			{ 
+				static_cast<CPlayer*>(m_pTargetObject)
+					->SetAbleState({ false, false, false, false, true, false, false, false, true, false });
+			})
+
+				.AddTransition("ATK_AIR_LANDING to ATK_A1", "ATK_A1")
+				.Predicator([&]()->_bool {return m_bLeftClick && (CheckAnim("AS_ch0100_621_AL_BF_swing_air_landing")) && (0.5f <= m_fPlayRatio); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("ATK_AIR_LANDING to DASH", "DASH")
+				.Predicator([&]()->_bool {return m_bDash && (CheckAnim("AS_ch0100_621_AL_BF_swing_air_landing")) && (0.5f <= m_fPlayRatio); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("ATK_AIR_LANDING to JUMP", "JUMP")
+				.Predicator([&]()->_bool {return m_bJump && (CheckAnim("AS_ch0100_621_AL_BF_swing_air_landing")) && (0.5f <= m_fPlayRatio); })
+				.Duration(0.1f)
+				.Priority(100)
+
+				.AddTransition("ATK_AIR_LANDING to IDLE", "IDLE")
+				.Duration(0.1f)
+				.Priority(100)
+
+#pragma endregion JumpAction
+
+#pragma region AirDodge
+
+			.AddState("AIR_DODGE")
+				.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_161_AL_air_dodge_F"))
+				.StartEvent([&]() 
+				{
+					static_cast<CPlayer*>(m_pTargetObject)
+						->SetAbleState({ false, false, false, false, true, false, false, true, true, false }); 
+				})
+
+					.AddTransition("AIR_DODGE to AIR_DODGE_FRONT", "AIR_DODGE_FRONT")
+					.Predicator([&]()->_bool {return m_eMoveDir == CPlayer::DIR_F || true; })
+					.Duration(0.1f)
+					.Priority(100)
+				
+					.AddTransition("AIR_DODGE to AIR_DODGE_BACK", "AIR_DODGE_BACK")
+					.Predicator([&]()->_bool {return m_eMoveDir == CPlayer::DIR_B; })
+					.Duration(0.1f)
+					.Priority(0)
+
+					.AddTransition("AIR_DODGE to AIR_DODGE_LEFT", "AIR_DODGE_LEFT")
+					.Predicator([&]()->_bool {return m_eMoveDir == CPlayer::DIR_L; })
+					.Duration(0.1f)
+					.Priority(1)
+
+					.AddTransition("AIR_DODGE to AIR_DODGE_RIGHT", "AIR_DODGE_RIGHT")
+					.Predicator([&]()->_bool {return m_eMoveDir == CPlayer::DIR_R; })
+					.Duration(0.1f)
+					.Priority(2)
+
+			.AddState("AIR_DODGE_FRONT")
+				.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_161_AL_air_dodge_F"))
+				.StartEvent([&]() 
+				{
+					static_cast<CPlayer*>(m_pTargetObject)
+						->SetAbleState({ false, false, false, false, true, false, false, true, true, false }); 
+				})
+			
+					.AddTransition("AIR_DODGE_FRONT to ATK_AIR_DODGE_START", "ATK_AIR_DODGE_START")
+					.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRDODGEATK); })
+					.Duration(0.1f)
+					.Priority(100)
+
+					.AddTransition("AIR_DODGE_FRONT to JUMP_FALL", "JUMP_FALL")
+					.Duration(0.1f)
+					.Priority(100)
+
+			.AddState("AIR_DODGE_BACK")
+				.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_165_AL_air_dodge_B"))
+				.StartEvent([&]() 
+				{
+					static_cast<CPlayer*>(m_pTargetObject)
+						->SetAbleState({ false, false, false, false, true, false, false, true, true, false }); 
+				})
+
+					.AddTransition("AIR_DODGE_BACK to ATK_AIR_DODGE_START", "ATK_AIR_DODGE_START")
+					.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRDODGEATK); })
+					.Duration(0.1f)
+					.Priority(100)
+
+					.AddTransition("AIR_DODGE_BACK to JUMP_FALL", "JUMP_FALL")
+					.Duration(0.1f)
+					.Priority(100)
+
+			.AddState("AIR_DODGE_LEFT")
+				.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_167_AL_air_dodge_L"))
+				.StartEvent([&]() 
+				{
+					static_cast<CPlayer*>(m_pTargetObject)
+						->SetAbleState({ false, false, false, false, true, false, false, true, true, false }); 
+				})
+
+					.AddTransition("AIR_DODGE_LEFT to ATK_AIR_DODGE_START", "ATK_AIR_DODGE_START")
+					.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRDODGEATK); })
+					.Duration(0.1f)
+					.Priority(100)
+	
+					.AddTransition("AIR_DODGE_LEFT to JUMP_FALL", "JUMP_FALL")
+					.Duration(0.1f)
+					.Priority(100)
+
+			.AddState("AIR_DODGE_RIGHT")
+				.SetAnimation(*m_pModel->Find_Animation("AS_ch0100_163_AL_air_dodge_R"))
+				.StartEvent([&]() 
+				{
+					static_cast<CPlayer*>(m_pTargetObject)
+						->SetAbleState({ false, false, false, false, true, false, false, true, true, false }); 
+				})
+
+					.AddTransition("AIR_DODGE_RIGHT to ATK_AIR_DODGE_START", "ATK_AIR_DODGE_START")
+					.Predicator([&]()->_bool {return m_bLeftClick && static_cast<CPlayer*>(m_pTargetObject)->UseAttackCnt(CPlayer::LIMIT_AIRDODGEATK); })
+					.Duration(0.1f)
+					.Priority(100)
+
+					.AddTransition("AIR_DODGE_RIGHT to JUMP_FALL", "JUMP_FALL")
+					.Duration(0.1f)
+					.Priority(100)
+
+#pragma endregion AirDodge
+
+		.Build();
+
+	m_pASM_BrainField->SetCurState("IDLE");
+
+	list<CAnimation*> SocketList;
+	m_mapAnimSocket.emplace("BrainField_AnimSocket", SocketList);
+
+	return S_OK;
+}
+
+void CBaseAnimInstance::Tick_BrainField(_double TimeDelta)
+{
+	UpdateTargetState(TimeDelta);
+
+	_bool bChange = CheckFinishedAnimSocket();
+	_bool bLocalMove = true;
+	_bool vAirEnd = bChange && m_bAir;
+
+	string szCurAnimName = "";
+
+	list<CAnimation*> CurSocket;
+
+	for (auto& iter : m_mapAnimSocket)
+	{
+		if (iter.second.empty())
+			continue;
+		else
+		{
+			CurSocket = iter.second;
+			break;
+		}
+	}
+
+	if (!CurSocket.empty())
+	{
+		auto Socket = CurSocket.front();
+		if (bChange)
+		{
+			Socket = CurSocket.front();
+			m_pModel->SetPlayAnimation(Socket->GetName());
+			m_pModel->Reset_LocalMove(true);
+			m_fLerpTime = 0.f;
+		}
+
+		if (1.f > m_fLerpTime / m_fLerpDuration)
+		{
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+			m_fLerpTime += (_float)TimeDelta;
+		}
+		else if (m_bAttach)
+		{
+			m_fLerpTime = 0.f;
+			m_bSeperateSwitch = false;
+			m_bAttach = false;
+
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+			m_fLerpTime += (_float)TimeDelta;
+		}
+		else
+		{
+			szCurAnimName = Socket->GetName();
+			Socket->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+		}
+
+		if (m_bSeperateAnim)
+		{
+			m_pModel->SetBoneMask(EBoneMask::OFF_CHILD_EQ, "Spine1");
+
+			m_pASM_BrainField->Tick(TimeDelta);
+
+			m_pModel->SetBoneMask(EBoneMask::ON_ALL);
+
+			m_fSeperateLerpTime = 0.f;
+		}
+		else
+		{
+			m_pModel->SetBoneMask(EBoneMask::ON_ALL);
+		}
+
+		m_bBaseTickCheck = false;
+	}
+	else if (bChange)
+	{
+		bLocalMove = false;
+
+		/*if (m_bAir)
+			m_pASM_BrainField->SetCurState("JUMP_FALL");
+		else
+		{*/
+			m_pASM_BrainField->SetCurState("IDLE");
+		//}
+
+		m_fLerpTime = 0.f;
+
+		m_bBaseTickCheck = false;
+	}
+	else if (!bChange && m_bSeperateSwitch)
+	{
+		bLocalMove = false;
+		m_bSeperateSwitch = false;
+		m_fLerpTime = 0.f;
+
+		m_bBaseTickCheck = false;
+	}
+	else if (m_fLerpTime < m_fLerpDuration)
+	{
+		if (m_pASM_BrainField->GetCurState()->m_SpairAnimation != nullptr)
+			m_pASM_BrainField->GetCurState()->m_SpairAnimation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+		else
+			m_pASM_BrainField->GetCurState()->m_Animation->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fLerpDuration);
+
+		m_fLerpTime += (_float)TimeDelta;
+
+		m_bBaseTickCheck = false;
+	}
+	else
+	{
+		m_pASM_BrainField->Tick(TimeDelta);
+
+		m_bBaseTickCheck = true;
+	}
+
+	if (m_pASM_BrainField->GetCurState()->m_SpairAnimation != nullptr)
+		m_pModel->SetCurAnimName(m_pASM_BrainField->GetCurState()->m_SpairAnimation->GetName());
+	else
+		m_pModel->SetCurAnimName(m_pASM_BrainField->GetCurState()->m_Animation->GetName());
+
+	m_pModel->Compute_CombindTransformationMatrix();
+
+	_matrix WorldMatrix = m_pTargetObject->GetTransform()->Get_WorldMatrix();
+	_vector vLocalMove = m_pModel->GetLocalMove(WorldMatrix);
+	if (0.f != XMVectorGetX(XMVector3Length(vLocalMove)))
+		m_vLocalMove = vLocalMove;
+
+	if (bLocalMove)
+	{
+		if (m_pASM_BrainField->GetCurState()->m_strName.find("WALK_START") != string::npos)
+		{
+			_float fLength = XMVectorGetX(XMVector3Length(vLocalMove));
+			_vector vLook = XMVector3Normalize(m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_LOOK));
+
+			m_pTargetObject->GetTransform()->LocalMove(vLook * fLength);
+
+		}
+		else
+		{
+			m_pTargetObject->GetTransform()->LocalMove(vLocalMove);
+		}
+	}
+
+	_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTargetObject->GetTransform()->Get_WorldMatrix());
+	m_pTargetObject->GetTransform()->LocalMove(vOpTest);
+
+	CGameInstance::GetInstance()->ActionCamTickByPlayTime(m_pModel->GetPlayAnimation()->GetPlayRatio());
+}
+
 void CBaseAnimInstance::UpdateTargetState(_double TimeDelta)
 {
 	// 해당 애니메이션 스테이트 머신을 작동시키는 객체의 상태를 갱신받는 함수
@@ -2968,6 +4456,13 @@ CBaseAnimInstance * CBaseAnimInstance::Create(CModel * pModel, CGameObject * pGa
 		MSG_BOX("Failed to Created : CBaseAnimInstance");
 		Safe_Release(pInstance);
 	}
+
+	if (FAILED(pInstance->Initialize_BrainField()))
+	{
+		MSG_BOX("Failed to Created : CBaseAnimInstance_BrainField");
+		Safe_Release(pInstance);
+	}
+
 	return pInstance;
 }
 
@@ -2975,4 +4470,5 @@ void CBaseAnimInstance::Free()
 {
 	__super::Free();
 	Safe_Release(m_pASM_Base);
+	Safe_Release(m_pASM_BrainField);
 }

@@ -359,6 +359,8 @@ void CMapKinetic_Object::OutlineMaker()
 
 void CMapKinetic_Object::SetParticle()
 {
+	if (nullptr != m_pParticle) return;
+
 	_float4 vScale = _float4(
 		m_pCollider->GetPxWorldMatrix().Right().Length(),
 		m_pCollider->GetPxWorldMatrix().Up().Length(),

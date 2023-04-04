@@ -172,6 +172,12 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_ContainerStateMachine()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_BrainFieldKineticStateMachine()))
+		return E_FAIL;
+
+	if (FAILED(SetUp_BrainFieldKineticComboStateMachine()))
+		return E_FAIL;
+
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_PLAYEREFFECT);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
@@ -388,12 +394,13 @@ void CPlayer::Tick(_double TimeDelta)
 
 	if (!m_bHit && (false == m_bKineticCombo) && (false == m_bKineticSpecial) && !m_bBrainCrash) // ì½¤ë³´ ?€?´ë°???„ë‹ ?Œì—???¼ë°˜ ?¼ë ¥
 	{
+		//m_pBrainFieldKineticStateMachine->Tick(TimeDelta);
 		m_pKineticStataMachine->Tick(TimeDelta);
 	}
 	if (!m_bHit && (false == m_bKineticSpecial) && !m_bBrainCrash) // ì½¤ë³´ ?€?´ë°?ëŠ” ì½¤ë³´ ?¼ë ¥
 	{
+		//m_pBrainFieldKineticComboStateMachine->Tick(TimeDelta);
 		m_pKineticComboStateMachine->Tick(TimeDelta);
-		//m_pKineticStataMachine->SetState("NO_USE_KINETIC");
 	}
 
 	if (m_bHit)
@@ -426,7 +433,10 @@ void CPlayer::Tick(_double TimeDelta)
 
 	SeperateCheck();
 
+	// ÀÏ¹Ý »óÅÂÀÏ °æ¿ì
 	m_pASM->Tick(TimeDelta);
+	// ºê·¹ÀÎ ÇÊµå ÀÛµ¿ÁßÀÎ °æ¿ì
+	//m_pASM->Tick_BrainField(TimeDelta);
 
 	// ë¡œì»¬ ë¬´ë¸Œê°€ ?†ëŠ”???ì ?¼ë¡œë¶€??ë²—ì–´??? ë‹ˆë©”ì´?˜ì„ ?¡ê¸° ?„í•œ ì¡°ì¹˜
 	// !! BaseAninInstance?ì„œ ë³´ê°„???ë‚˜ê³?Normal?…ë°?´íŠ¸ê°€ ?????´ë‹¹ ì½”ë“œë¥??¤í–‰?œí‚¤?„ë¡ ?˜ìž
@@ -3763,6 +3773,240 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_BrainFieldKineticStateMachine()
+{
+	CAnimation* pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_646_AL_BF_throw1_move"));
+	m_BF_KineticThrow_A.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_647_AL_BF_throw2_move"));
+	m_BF_KineticThrow_B.push_back(pAnimation);
+
+
+	m_pBrainFieldKineticStateMachine =
+		CFSMComponentBuilder().InitState("BF_NO_USE_KINETIC")
+
+		.AddState("BF_NO_USE_KINETIC")
+		.OnStart([&]()
+		{
+			m_pASM->ClearAnimSocket("Kinetic_AnimSocket");
+			m_pASM->SetCurState_BrainField(m_pASM->GetCurStateName());
+			m_bKineticMove = false;
+		})
+		.Tick([&](double TimeDelta)
+		{
+			BF_Throw.Reset();
+			m_bKineticMove = false;
+			KineticObject_Targeting();
+		})
+
+			.AddTransition("BF_NO_USE_KINETIC to BF_KINETIC_THROW_A", "BF_KINETIC_THROW_A")
+			.Predicator([&]()->_bool 
+			{
+				return m_bKineticRB && 
+					!m_bAir && 
+					(nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && 
+					!m_bHit; 
+			})
+			.Priority(0)
+
+
+		.AddState("BF_KINETIC_THROW_A")
+		.OnStart([&]() 
+		{
+			Enemy_Targeting(true);
+			m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_BF_KineticThrow_A);
+			static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->SetParticle();
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_bKineticMove = true;
+
+			if (m_pASM->isSocketPassby("Kinetic_AnimSocket", 0.25f) && BF_Throw.IsNotDo())
+				Event_Kinetic_Throw();
+
+			if(m_pASM->isSocketPassby("Kinetic_AnimSocket", 0.3f))
+				KineticObject_Targeting();
+		})
+		.OnExit([&]()
+		{
+			BF_Throw.Reset();
+		})
+			.AddTransition("BF_KINETIC_THROW_A to BF_NO_USE_KINETIC", "BF_NO_USE_KINETIC")
+			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket"); })
+			.Priority(0)
+			
+			.AddTransition("BF_KINETIC_THROW_A to BF_KINETIC_THROW_B", "BF_KINETIC_THROW_B")
+			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_AnimSocket", 0.4f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Priority(0)
+
+		.AddState("BF_KINETIC_THROW_B")
+		.OnStart([&]() 
+		{
+			Enemy_Targeting(true);
+			m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_BF_KineticThrow_B);
+			static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->SetParticle();
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			m_bKineticMove = true;
+
+			if (m_pASM->isSocketPassby("Kinetic_AnimSocket", 0.25f) && BF_Throw.IsNotDo())
+				Event_Kinetic_Throw();
+
+			if (m_pASM->isSocketPassby("Kinetic_AnimSocket", 0.3f))
+				KineticObject_Targeting();
+		})
+		.OnExit([&]()
+		{
+			BF_Throw.Reset();
+		})
+			.AddTransition("BF_KINETIC_THROW_A to BF_NO_USE_KINETIC", "BF_NO_USE_KINETIC")
+			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket"); })
+			.Priority(0)
+
+			.AddTransition("BF_KINETIC_THROW_B to BF_KINETIC_THROW_A", "BF_KINETIC_THROW_A")
+			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_AnimSocket", 0.4f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Priority(0)
+
+		.Build();
+
+	return S_OK;
+}
+
+HRESULT CPlayer::SetUp_BrainFieldKineticComboStateMachine()
+{
+	CAnimation* pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_611_AL_BF_swing_dash"));
+	m_BF_KineticCombo_Slash.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_631_AL_BF_throw_b1"));
+	m_BF_KineticCombo_Kinetic.push_back(pAnimation);
+
+	m_pBrainFieldKineticComboStateMachine = 
+		CFSMComponentBuilder().InitState("BF_NO_USE_KINETIC_COMBO")
+
+		.AddState("BF_NO_USE_KINETIC_COMBO")
+		.OnStart([&]()
+		{
+			m_bKineticCombo = false;
+			m_pASM->ClearAnimSocket("BrainField_AnimSocket");
+			m_pASM->SetCurState_BrainField("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			m_bKineticMove = false;
+		})
+		.Tick([&](double TimeDelta)
+		{
+			KineticObject_Targeting();
+		})
+		.OnExit([&]() 
+		{
+			m_bKineticMove = false;
+			m_bSeperateAnim = false;
+
+			m_pASM->SetCurState_BrainField("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
+			m_pBrainFieldKineticStateMachine->SetState("BF_NO_USE_KINETIC");
+			m_pASM->ClearAnimSocket("Kinetic_AnimSocket");
+		})
+
+			.AddTransition("BF_NO_USE_KINETIC_COMBO to BF_KINETIC_COMBO_SLASH", "BF_KINETIC_COMBO_SLASH")
+			.Predicator([&]()->_bool 
+			{
+				return m_bLeftClick &&
+					!m_bAir && 
+					(nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && 
+					!m_bHit &&
+					!m_pASM->isSocketEmpty("Kinetic_AnimSocket");
+			})
+			.Priority(0)
+
+			.AddTransition("BF_NO_USE_KINETIC_COMBO to BF_KINETIC_COMBO_KINETIC", "BF_KINETIC_COMBO_KINETIC")
+			.Predicator([&]()->_bool 
+			{
+				return m_bKineticRB &&
+					!m_bAir && 
+					(nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && 
+					!m_bHit &&
+					   (m_pASM->GetCurStateName_BrainField() == "ATK_A1" ||
+						m_pASM->GetCurStateName_BrainField() == "ATK_A2" ||
+						m_pASM->GetCurStateName_BrainField() == "ATK_A3" ||
+						m_pASM->GetCurStateName_BrainField() == "ATK_AIR_LANDING");
+			})
+			.Priority(0)
+
+		.AddState("BF_KINETIC_COMBO_SLASH")
+			.OnStart([&]()
+			{
+				m_bKineticCombo = true;
+				m_pASM->AttachAnimSocket("BrainField_AnimSocket", m_BF_KineticCombo_Slash);
+			})
+			.Tick([&](double TimeDelta)
+			{
+				
+			})
+			.OnExit([&]() 
+			{
+				m_pASM->SetCurState_BrainField("IDLE");
+				SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+				.AddTransition("BF_KINETIC_COMBO_SLASH to BF_NO_USE_KINETIC_COMBO", "BF_NO_USE_KINETIC_COMBO")
+				.Predicator([&]()->_bool { return m_pASM->isSocketAlmostFinish("BrainField_AnimSocket"); })
+				.Priority(0)
+
+				.AddTransition("BF_KINETIC_COMBO_SLASH to BF_NO_USE_KINETIC_COMBO", "BF_NO_USE_KINETIC_COMBO")
+				.Predicator([&]()->_bool { return m_pASM->isSocketPassby("BrainField_AnimSocket", 0.5f) && (m_bLeftClick || m_bWalk || m_bDash || m_bJump); })
+				.Priority(0)
+
+				.AddTransition("BF_KINETIC_COMBO_SLASH to BF_KINETIC_COMBO_KINETIC", "BF_KINETIC_COMBO_KINETIC")
+				.Predicator([&]()->_bool
+				{
+					return m_bKineticRB &&
+						(nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) &&
+						m_pASM->isSocketPassby("BrainField_AnimSocket", 0.5f);
+				})
+				.Priority(0)
+
+		.AddState("BF_KINETIC_COMBO_KINETIC")
+			.OnStart([&]()
+			{
+				m_bKineticCombo = true;
+				m_pASM->AttachAnimSocket("BrainField_AnimSocket", m_BF_KineticCombo_Kinetic);
+			})
+			.Tick([&](double TimeDelta)
+			{
+				
+			})
+			.OnExit([&]() 
+			{
+				m_pASM->SetCurState_BrainField("IDLE");
+				SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+			})
+				.AddTransition("BF_KINETIC_COMBO_SLASH to BF_NO_USE_KINETIC_COMBO", "BF_NO_USE_KINETIC_COMBO")
+				.Predicator([&]()->_bool { return m_pASM->isSocketAlmostFinish("BrainField_AnimSocket"); })
+				.Priority(0)
+
+				.AddTransition("BF_KINETIC_COMBO_SLASH to BF_NO_USE_KINETIC_COMBO", "BF_NO_USE_KINETIC_COMBO")
+				.Predicator([&]()->_bool { return m_pASM->isSocketPassby("BrainField_AnimSocket", 0.5f) && (m_bKineticRB || m_bWalk || m_bDash || m_bJump); })
+				.Priority(0)
+
+				.AddTransition("BF_KINETIC_COMBO_KINETIC to BF_KINETIC_COMBO_SLASH", "BF_KINETIC_COMBO_SLASH")
+				.Predicator([&]()->_bool
+				{
+					return m_bLeftClick &&
+						(nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) &&
+						m_pASM->isSocketPassby("BrainField_AnimSocket", 0.5f);
+				})
+				.Priority(0)
+
+		.Build();
+
+	return S_OK;
+}
+
 HRESULT CPlayer::SetUp_Sound()
 {
 	m_SoundStore.CloneSound("attack_nor_1");
@@ -4676,6 +4920,11 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 			m_bKineticSpecial = false;
 			m_pASM->SetCurState("IDLE");
 			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
+			{
+				m_pSpecialUI->SetDelete();
+			}
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -4845,6 +5094,11 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 		{
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_End_L);
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
+			{
+				m_pSpecialUI->SetDelete();
+			}
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -5026,6 +5280,11 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			m_bKineticSpecial = false;
 			m_pASM->SetCurState("IDLE");
 			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
+			{
+				m_pSpecialUI->SetDelete();
+			}
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -5168,6 +5427,11 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_End_L);
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_SetTrigger(true);
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Finish();
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
+			{
+				m_pSpecialUI->SetDelete();
+			}
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -5210,6 +5474,11 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Finish_L);
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Turn();
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
+			{
+				m_pSpecialUI->SetDelete();
+			}
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -5575,6 +5844,11 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			m_pASM->SetCurState("IDLE");
 			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
+			{
+				m_pSpecialUI->SetDelete();
+			}
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -5769,6 +6043,11 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		{
 			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_End);
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
+			{
+				m_pSpecialUI->SetDelete();
+			}
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -5858,6 +6137,11 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		{
 			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Cancel_Ex);
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
+			{
+				m_pSpecialUI->SetDelete();
+			}
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -6053,6 +6337,11 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 
 			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
+			{
+				m_pSpecialUI->SetDelete();
+			}
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -6250,6 +6539,11 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_End);
 			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
+			{
+				m_pSpecialUI->SetDelete();
+			}
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -7418,7 +7712,7 @@ void CPlayer::SocketLocalMoveCheck()
 	}
 
 	// ???˜ë‚˜?´ê±°
-	if (!m_pASM->isSocketEmpty("Kinetic_Special_AnimSocket"))
+	else if (!m_pASM->isSocketEmpty("Kinetic_Special_AnimSocket"))
 	{
 		string szCurAnimName = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetName();
 		_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
@@ -7426,14 +7720,14 @@ void CPlayer::SocketLocalMoveCheck()
 		m_pTransformCom->LocalMove(vLocal);
 	}
 
-	if (!m_pASM->isSocketEmpty("BrainCrash_AnimSocket"))
+	else if (!m_pASM->isSocketEmpty("BrainCrash_AnimSocket"))
 	{
 		string szCurAnimName = m_pASM->GetSocketAnimation("BrainCrash_AnimSocket")->GetName();
 		_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
 		m_pTransformCom->LocalMove(vLocal);
 	}
 
-	if (!m_pASM->isSocketEmpty("SAS_Special_AnimSocket"))
+	else if (!m_pASM->isSocketEmpty("SAS_Special_AnimSocket"))
 	{
 		string szCurAnimName = m_pASM->GetSocketAnimation("SAS_Special_AnimSocket")->GetName();
 		_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
@@ -7442,6 +7736,15 @@ void CPlayer::SocketLocalMoveCheck()
 		_vector vOpTest = m_pModel->GetOptionalMoveVector(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
 		m_pTransformCom->LocalMove(vOpTest);
 	}
+
+	else if (!m_pASM->isSocketEmpty("BrainField_AnimSocket"))
+	{
+		string szCurAnimName = m_pASM->GetSocketAnimation("BrainField_AnimSocket")->GetName();
+		_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
+		m_pTransformCom->LocalMove(vLocal);
+	}
+
+	//Kinetic_AnimSocket
 }
 
 void CPlayer::SyncEffectLocalMove(const string& szSocketName)
@@ -8317,14 +8620,14 @@ void CPlayer::CreateSpecialUI(ESpecialType eType, _bool bAdditional)
 	case SPECIAL_TELEPHONEPOLE:
 
 		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAMouseLeft.json");
-		CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAMouseLeft", &json);
+		m_pSpecialUI = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAMouseLeft", &json);
 
 		break;
 
 	case SPECIAL_HBEAM_BUNDLE:
 
 		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SARebar.json");
-		CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SARebar", &json);
+		m_pSpecialUI = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SARebar", &json);
 
 		break;
 
@@ -8333,12 +8636,12 @@ void CPlayer::CreateSpecialUI(ESpecialType eType, _bool bAdditional)
 		if (bAdditional)
 		{
 			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_Go.json");
-			CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_Go", &json);
+			m_pSpecialUI = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAGragting_Go", &json);
 		}
 		else
 		{
 			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
-			CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_S", &json);
+			m_pSpecialUI = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAGragting_S", &json);
 		}
 
 		break;
@@ -8348,12 +8651,12 @@ void CPlayer::CreateSpecialUI(ESpecialType eType, _bool bAdditional)
 		if (bAdditional)
 		{
 			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAContainer_Down.json");
-			CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAContainer_Down", &json);
+			m_pSpecialUI = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAContainer_Down", &json);
 		}
 		else
 		{
 			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
-			CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_S", &json);
+			m_pSpecialUI = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAGragting_S", &json);
 		}
 
 		break;
@@ -8511,6 +8814,10 @@ void CPlayer::Free()
 	Safe_Release(m_pContainerStateMachine);
 
 	Safe_Release(m_pDriveModeProductionStateMachine);
+
+	Safe_Release(m_pBrainFieldKineticStateMachine);
+
+	Safe_Release(m_pBrainFieldKineticComboStateMachine);
 
 //	Safe_Release(m_pContectRigidBody);
 }
