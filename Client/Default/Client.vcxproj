@@ -302,6 +302,7 @@
     <ClInclude Include="..\public\Item_LightUI.h" />
     <ClInclude Include="..\public\MouseCousorLightUI.h" />
     <ClInclude Include="..\public\MouseCousorUI.h" />
+    <ClInclude Include="..\public\MapNameUI.h" />
     <ClInclude Include="..\public\RedBullet.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
@@ -609,6 +610,7 @@
     <ClCompile Include="..\private\Item_LightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorLightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorUI.cpp" />
+    <ClCompile Include="..\private\MapNameUI.cpp" />
     <ClCompile Include="..\private\RedBullet.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />

@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CBoss_AppearBackUI final : public CUI
+class CMapNameUI final : public CUI
 {
 private:
-	CBoss_AppearBackUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CBoss_AppearBackUI(const CBoss_AppearBackUI& rhs);
+	CMapNameUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMapNameUI(const CMapNameUI& rhs);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -32,11 +32,6 @@ public:
 		m_bAppearEnd = true;
 	}
 
-	//void	Set_Value(const _float fSpeed, const _float fAlpha) {
-	//	m_fSpeed = fSpeed;
-	//	m_fAlpha = fAlpha;
-	//}
-
 private:
 	_bool	m_bAppearEnd = { false };
 	_bool	m_bAppearBackGround = { false };
@@ -45,7 +40,7 @@ private:
 	_float	m_fAlpha = { 0.0f };
 
 public:
-	static CBoss_AppearBackUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMapNameUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CUI* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

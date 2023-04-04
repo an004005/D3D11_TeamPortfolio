@@ -18,6 +18,7 @@ public:
 
 private:
 	class CCanvas_MainTalk* m_pCanvas_MainTalk = { nullptr };
+	class CCanvas_Alarm* m_pCanvas_Alarm = { nullptr };
 
 public:
 	static CCanvas_MouseCousor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

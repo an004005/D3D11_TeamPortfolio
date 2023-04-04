@@ -264,7 +264,6 @@ void CCanvas_Party::CurrentPick_Tick()
 			Find_ChildUI(L"Party_InfoPick")->Set_Position(Find_ChildUI(L"Party_03_Member_B")->Get_Position());
 
 		}
-
 	}
 	else
 	{

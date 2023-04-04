@@ -33,11 +33,21 @@ public:
 	// 레벨 업 할 때
 	void	Set_LevelUp(const _uint iLevel);
 
+	// 다음 맵으로 넘어가서 맵 이름 띄우기 (일정시간이 지나면 삭제.)
+	void	Set_MapName() { 
+		m_bMapName = true;
+		m_bMapName_TimeAcc = 0.0;
+	}
+
 private:
-	void	Set_ChildAppeart();
+	void	Appeart_Tick();
+	void	MapName_Tick(const _double & dTimeDelta);
 
 private:
 	_bool	m_bCheck_Appeart = { false };
+
+	_bool	m_bMapName = { false };
+	_double	m_bMapName_TimeAcc = { 0.0 };
 
 public:
 	static CCanvas_Alarm* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

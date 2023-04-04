@@ -4,6 +4,7 @@
 
 #include "JsonStorage.h"
 #include "Canvas_MainTalk.h"
+#include "Canvas_Alarm.h"
 
 CCanvas_MouseCousor::CCanvas_MouseCousor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -65,11 +66,15 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
 	{
-		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
-		m_pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_MainTalk", &json));
-		m_pCanvas_MainTalk->Add_Talk(0);
-		m_pCanvas_MainTalk->Add_Talk(1);
-		m_pCanvas_MainTalk->Add_Talk(2);
+		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
+		//m_pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_MainTalk", &json));
+		//m_pCanvas_MainTalk->Add_Talk(0);
+		//m_pCanvas_MainTalk->Add_Talk(1);
+		//m_pCanvas_MainTalk->Add_Talk(2);
+
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+		m_pCanvas_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_Alarm", &json));
+		m_pCanvas_Alarm->Set_MapName();
 
 	}
 }
