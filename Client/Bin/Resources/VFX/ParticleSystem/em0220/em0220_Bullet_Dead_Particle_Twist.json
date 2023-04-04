@@ -1,6 +1,6 @@
 {
-    "BilboardType": 1,
-    "BufferType": 0,
+    "BilboardType": 2,
+    "BufferType": 1,
     "BurstCnt": 15,
     "ConeDirDegree": 30.0,
     "ConeOriginRadius": 0.10000000149011612,
@@ -9,18 +9,18 @@
     "FinishFunc": 1,
     "FromOrigin": true,
     "GravityPowerMinMax": [
-        -0.10000000149011612,
-        1.0
+        1.0,
+        4.0
     ],
     "IncreaseMaxSize": 1.0,
     "Life": 1.0,
     "LifeMinMax": [
-        0.5,
-        1.2999999523162842
+        0.699999988079071,
+        1.0
     ],
     "LifeRand": true,
     "Loop": false,
-    "MeshBufferProtoTag": "",
+    "MeshBufferProtoTag": "Prototype_Component_Em0650BulletDeadParticle_Mesh_Instance",
     "MeshSize": [
         1.0,
         1.0,
@@ -41,14 +41,14 @@
         0.0
     ],
     "RotationToTimeMax": [
-        0.0,
-        0.0,
-        0.0
+        70.0,
+        70.0,
+        70.0
     ],
     "RotationToTimeMin": [
-        0.0,
-        0.0,
-        0.0
+        10.0,
+        10.0,
+        10.0
     ],
     "ScaleVariation": [
         1.0,
@@ -59,34 +59,34 @@
         "Float2s": [],
         "Float4s": [
             [
-                0.9704767465591431,
-                0.06827158480882645,
-                0.06827158480882645,
-                0.0
+                0.004154771100729704,
+                0.1241919994354248,
+                0.0,
+                1.0
             ]
         ],
         "Float4x4s": [],
         "Floats": [
-            7.0
+            5.0
         ],
         "Ints": [],
-        "Pass": 6,
+        "Pass": 3,
         "Textures": [
-            "..\\Bin\\Resources\\Texture\\VFX\\T_White_01.png\u0000",
-            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_one_lig_005.png\u0000"
+            "..\\Bin\\Resources\\Texture\\VFX\\T_en_Cloud2_.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_one_lin_034.png\u0000"
         ]
     },
-    "ShaderProtoTag": "Prototype_Component_Shader_VtxPointInstance_Particle",
-    "Shape": 0,
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxMesh_Instance",
+    "Shape": 1,
     "SpawnTickTime": 1.0,
     "Speed": 1.0,
     "SpeedMinMax": [
-        0.30000001192092896,
+        0.5,
         1.0
     ],
     "SpeedRand": true,
     "SphereDetail": false,
-    "SphereRadius": 4.0,
+    "SphereRadius": 10.0,
     "Transform": {
         "WorldMatrix": [
             1.0,
@@ -102,8 +102,8 @@
             1.0,
             0.0,
             0.0,
+            -0.10806232690811157,
             0.0,
-            0.1681675761938095,
             1.0
         ]
     },
@@ -123,11 +123,11 @@
     "ZDirCurveName": "",
     "bCurveDir": false,
     "bGravity": true,
-    "bLocal": true,
+    "bLocal": false,
     "bMeshCurve": false,
     "bNonAlpha": false,
     "bPhysX": false,
-    "bRotate": false,
+    "bRotate": true,
     "bSizeDecreaseByLife": true,
     "bSizeIncreaseByLife": false,
     "bTurn": false,

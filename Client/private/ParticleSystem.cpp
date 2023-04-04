@@ -61,7 +61,8 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Point_Instance_Particle"), TEXT("Com_PointInstance"),
 			(CComponent**)&m_pPointInstanceBuffer)))
 			return E_FAIL;
-		//m_pPointInstanceBuffer = CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, m_iInstanceNum);
+
+		// m_pPointInstanceBuffer = CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, m_iInstanceNum);
 		m_eBufferType = EBufferType::POINT;;
 	}
 	else
