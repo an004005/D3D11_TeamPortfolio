@@ -298,6 +298,7 @@
     <ClInclude Include="..\public\EM1200.h" />
     <ClInclude Include="..\public\EM1200_AnimInstance.h" />
     <ClInclude Include="..\public\EM1200_Controller.h" />
+    <ClInclude Include="..\public\EMCable.h" />
     <ClInclude Include="..\public\EMUI.h" />
     <ClInclude Include="..\public\Item_LightUI.h" />
     <ClInclude Include="..\public\Level_StageDefault.h" />
@@ -609,6 +610,7 @@
     <ClCompile Include="..\private\EM1200.cpp" />
     <ClCompile Include="..\private\EM1200_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM1200_Controller.cpp" />
+    <ClCompile Include="..\private\EMCable.cpp" />
     <ClCompile Include="..\private\EMUI.cpp" />
     <ClCompile Include="..\private\Item_LightUI.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp" />

@@ -94,7 +94,8 @@ void CEM0320_Controller::AI_Tick(_double TimeDelta)
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
-		AddCommand("Jump", 0.f, &CAIController::Input, E);
+		AddCommand("Turn", 3.f, &CEM0320_Controller::TurnToTargetStop, 1.f);
+		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB);//attack
 		//m_pFSM->Tick(TimeDelta);
 	}
 }
