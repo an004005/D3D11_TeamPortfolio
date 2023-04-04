@@ -41,8 +41,6 @@ HRESULT CCanvas_MouseCousor::Initialize(void* pArg)
 	//assert(m_pCanvas_BossHpMove != nullptr && "Failed to Clone : CCanvas_BossHpMove");
 
 
-
-
 	return S_OK;
 }
 

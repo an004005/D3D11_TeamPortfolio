@@ -151,6 +151,7 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
 	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
 
 	// ~ForSky
 
@@ -220,20 +221,6 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	// pModel_VFX = CModel::Create(m_pDevice, m_pContext,
 	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/Default_Attack_4.static_model");
 	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_04", pModel_VFX));
-
-	// ~ 옥수현의 흔적
-	//{
-	//	auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
-	//		"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
-	//	pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
-	//	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
-
-	//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext))))
-	//		return E_FAIL;
-
-	//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create())))
-	//		return E_FAIL;
-	//}
 
 	/* For.Prototype_GameObject_MonsterLockonUI */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),
