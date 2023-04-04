@@ -56,7 +56,6 @@ void CAttackNumUI::Set_AttackNum(const _uint iFour, const _uint iThree, const _u
 	m_pGroup->GetSecondEffect()->GetParams().Float2s[_float(iThree), 0.0f];
 	m_pGroup->GetThirdEffect()->GetParams().Float2s[_float(iTwo), 0.0f];
 	m_pGroup->GetFourthEffect()->GetParams().Float2s[_float(iOne), 0.0f];
-
 }
 
 CAttackNumUI * CAttackNumUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

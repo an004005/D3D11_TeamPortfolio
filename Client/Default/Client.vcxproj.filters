@@ -220,9 +220,6 @@
     <Filter Include="02.GameObjects\UI\Boss">
       <UniqueIdentifier>{dc1701f8-365a-4180-94c6-d3de20833679}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Alarm">
-      <UniqueIdentifier>{773b5079-4278-4e4c-bf66-8db98ddbbf29}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\3DUI">
       <UniqueIdentifier>{1b202ea8-4c32-4399-b17b-b9c184a5027f}</UniqueIdentifier>
     </Filter>
@@ -480,6 +477,12 @@
     </Filter>
     <Filter Include="01.Levels\02.GamePlay\03.ConstructionSite2F">
       <UniqueIdentifier>{3d3d0005-42a5-4f29-afef-5338e27783d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\Alarm">
+      <UniqueIdentifier>{773b5079-4278-4e4c-bf66-8db98ddbbf29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\Quest">
+      <UniqueIdentifier>{9e45a27c-dc49-4013-a547-8e9319d9c178}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -910,13 +913,13 @@
     </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Monster.h">
       <Filter>02.GameObjects\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\public\NextMapNameUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillNameUI.h">
       <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
@@ -963,13 +966,13 @@
     </ClInclude>
     <ClInclude Include="..\public\PostVFX_Penetrate.h" />
     <ClInclude Include="..\public\Boss_AppearUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Boss_AppearBackUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\LevelUpUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\VFX_Manager.h">
       <Filter>VFX</Filter>
@@ -1428,7 +1431,13 @@
       <Filter>02.GameObjects\UI\Short\MainTalk</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapNameUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Quest.h">
+      <Filter>02.GameObjects\UI\Short\Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\QuestBackGroundUI.h">
+      <Filter>02.GameObjects\UI\Short\Quest</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1833,7 +1842,7 @@
       <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\private\NextMapNameUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillNameUI.cpp">
       <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
@@ -1880,13 +1889,13 @@
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
     <ClCompile Include="..\private\Boss_AppearUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Boss_AppearBackUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\LevelUpUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\VFX_Manager.cpp">
       <Filter>VFX</Filter>
@@ -2211,7 +2220,7 @@
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_LightUI.cpp">
       <Filter>02.GameObjects\UI\Front\Item</Filter>
@@ -2351,7 +2360,13 @@
       <Filter>02.GameObjects\UI\Short\MainTalk</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapNameUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Quest.cpp">
+      <Filter>02.GameObjects\UI\Short\Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\QuestBackGroundUI.cpp">
+      <Filter>02.GameObjects\UI\Short\Quest</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

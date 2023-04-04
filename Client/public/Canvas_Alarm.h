@@ -33,10 +33,11 @@ public:
 	// 레벨 업 할 때
 	void	Set_LevelUp(const _uint iLevel);
 
-	// 다음 맵으로 넘어가서 맵 이름 띄우기 (일정시간이 지나면 삭제.)
-	void	Set_MapName() { 
+	// 다음 맵으로 넘어가서 맵 이름 띄우기 (일정시간이 지나면 삭제.) => [0] 도시 [1] 지하철 [3] 병원
+	void	Set_MapName(const _float & fMapNameIndex) { 
 		m_bMapName = true;
 		m_bMapName_TimeAcc = 0.0;
+		m_fMapNameIndex = fMapNameIndex;
 	}
 
 private:
@@ -48,6 +49,7 @@ private:
 
 	_bool	m_bMapName = { false };
 	_double	m_bMapName_TimeAcc = { 0.0 };
+	_float	m_fMapNameIndex = { 0.0f };
 
 public:
 	static CCanvas_Alarm* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -87,7 +87,7 @@ void CCanvas_Alarm::Imgui_RenderProperty()
 
 	if (ImGui::Button("Map Name"))
 	{
-		Set_MapName();
+		Set_MapName(1.0f);
 	}
 }
 
@@ -144,8 +144,12 @@ void CCanvas_Alarm::MapName_Tick(const _double& dTimeDelta)
 {
 	if (m_bMapName == false) return;
 
-	Find_ChildUI(L"MapName")->SetVisible(true);
-	dynamic_cast<CMapNameUI*>(Find_ChildUI(L"MapName_BackGround"))->Set_AppearBackGround();
+	if (0.0 == m_bMapName_TimeAcc)
+	{
+		Find_ChildUI(L"MapName")->SetVisible(true);
+		dynamic_cast<CMapNameUI*>(Find_ChildUI(L"MapName_BackGround"))->Set_AppearBackGround();
+		dynamic_cast<CShaderUI*>(Find_ChildUI(L"MapName"))->Set_Float2s(_float2(m_fMapNameIndex, 0.0f));
+	}
 
 	m_bMapName_TimeAcc += dTimeDelta;
 	if (5.0 < m_bMapName_TimeAcc)

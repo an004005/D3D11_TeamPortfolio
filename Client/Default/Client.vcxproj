@@ -232,6 +232,7 @@
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
     <ClInclude Include="..\public\Canvas_PurchaseKinds.h" />
+    <ClInclude Include="..\public\Canvas_Quest.h" />
     <ClInclude Include="..\public\Canvas_SAContainer_Down.h" />
     <ClInclude Include="..\public\Canvas_SAGragting_Go.h" />
     <ClInclude Include="..\public\Canvas_SAGragting_S.h" />
@@ -310,6 +311,7 @@
     <ClInclude Include="..\public\MouseCousorLightUI.h" />
     <ClInclude Include="..\public\MouseCousorUI.h" />
     <ClInclude Include="..\public\MapNameUI.h" />
+    <ClInclude Include="..\public\QuestBackGroundUI.h" />
     <ClInclude Include="..\public\RedBullet.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
@@ -532,6 +534,7 @@
     <ClCompile Include="..\private\Canvas_Alarm.cpp" />
     <ClCompile Include="..\private\Canvas_BrainMap.cpp" />
     <ClCompile Include="..\private\Canvas_MainTalk.cpp" />
+    <ClCompile Include="..\private\Canvas_Quest.cpp" />
     <ClCompile Include="..\private\Canvas_SAContainer_Down.cpp" />
     <ClCompile Include="..\private\Canvas_Equipment.cpp" />
     <ClCompile Include="..\private\Canvas_ItemWindow.cpp" />
@@ -628,6 +631,7 @@
     <ClCompile Include="..\private\MouseCousorLightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorUI.cpp" />
     <ClCompile Include="..\private\MapNameUI.cpp" />
+    <ClCompile Include="..\private\QuestBackGroundUI.cpp" />
     <ClCompile Include="..\private\RedBullet.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />
