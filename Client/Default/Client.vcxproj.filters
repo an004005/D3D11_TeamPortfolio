@@ -463,6 +463,9 @@
     <Filter Include="02.GameObjects\Enemy\EMUI">
       <UniqueIdentifier>{106811ed-76ea-474b-8b9a-f3137f339996}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Weapon\wp0500">
+      <UniqueIdentifier>{c10400ca-64a5-4606-a04e-1ae7a70a2d80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1381,6 +1384,9 @@
     <ClInclude Include="..\public\EMUI.h">
       <Filter>02.GameObjects\Enemy\EMUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Weapon_wp0500.h">
+      <Filter>02.GameObjects\Weapon\wp0500</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2272,6 +2278,9 @@
     </ClCompile>
     <ClCompile Include="..\private\EMUI.cpp">
       <Filter>02.GameObjects\Enemy\EMUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Weapon_wp0500.cpp">
+      <Filter>02.GameObjects\Weapon\wp0500</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

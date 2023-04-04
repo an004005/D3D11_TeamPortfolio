@@ -450,6 +450,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_PlayerStartPosition"), CPlayerStartPosition::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_HanabiStartPosition"), CHanabiStartPosition::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_TsugumiStartPosition"), CTsugumiStartPosition::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_RedString"), CRedString::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
