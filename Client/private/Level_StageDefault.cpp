@@ -16,6 +16,7 @@
 #include "SkyBox.h"
 #include "UI_Manager.h"
 #include "GameManager.h"
+#include "Imgui_Cheat.h"
 
 CLevel_StageDefault::CLevel_StageDefault(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CLevel(pDevice, pContext)
@@ -37,6 +38,7 @@ HRESULT CLevel_StageDefault::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Cheat::Create(m_pDevice, m_pContext));
 
 	CUI_Manager::GetInstance()->Clear();
 	CGameInstance::GetInstance()->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
@@ -64,15 +66,13 @@ HRESULT CLevel_StageDefault::Initialize()
 	if (FAILED(Ready_Layer_Effect(PLAYERTEST_LAYER_POSTVFX)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;
-
 	if (FAILED(Ready_Layer_SASPortrait(LAYER_SAS)))
 		return E_FAIL;
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
-	CGameInstance::GetInstance()->FindCamera("PlayerCamera")->SetMainCamera();
+	if (m_bPlayerSpawn)
+		CGameInstance::GetInstance()->FindCamera("PlayerCamera")->SetMainCamera();
 
 	return S_OK;
 }
@@ -96,6 +96,7 @@ HRESULT CLevel_StageDefault::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeTriggerPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeAIPrototypes(m_pDevice, m_pContext));
 
 	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Prototype_GameObject_SkyBox") == nullptr)
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
@@ -244,5 +245,21 @@ HRESULT CLevel_StageDefault::Ready_Layer_SASPortrait(const _tchar* pLayerTag)
 
 HRESULT CLevel_StageDefault::Ready_Layer_AI(const _tchar* pLayerTag)
 {
+	if (m_bPlayerSpawn == false)
+		return S_OK;
+
+	Json PreviewData;
+	PreviewData["Model"] = "Model_AI_CH0300";
+
+	CGameObject* pAI_CH0300 = nullptr;
+	NULL_CHECK(pAI_CH0300 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0300"), &PreviewData));
+
+	Json Tsugumi;
+	Tsugumi["Model"] = "Model_AI_CH0500";
+
+	CGameObject* pAI_CH0500 = nullptr;
+	NULL_CHECK(pAI_CH0500 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0500"), &Tsugumi));
+
+
 	return S_OK;
 }

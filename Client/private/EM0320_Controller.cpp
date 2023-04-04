@@ -94,8 +94,8 @@ void CEM0320_Controller::AI_Tick(_double TimeDelta)
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
-		AddCommand("Jump", 0.f, &CAIController::Input, E);
-		//m_pFSM->Tick(TimeDelta);
+		// AddCommand("Jump", 0.f, &CAIController::Input, E);
+		m_pFSM->Tick(TimeDelta);
 	}
 }
 

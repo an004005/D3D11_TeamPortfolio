@@ -232,9 +232,6 @@
     <Filter Include="Trigger">
       <UniqueIdentifier>{de696a83-1b14-4455-81e6-aee65fc00158}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.GamePlay\02. Stage1">
-      <UniqueIdentifier>{1e272184-8887-431f-937d-de39fd6eeb16}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\17.KineticEditor">
       <UniqueIdentifier>{cf49c083-b25e-424b-aca3-6c741d536048}</UniqueIdentifier>
     </Filter>
@@ -474,6 +471,12 @@
     </Filter>
     <Filter Include="01.Levels\02.GamePlay\05.NaomiRoom">
       <UniqueIdentifier>{469a1007-8eed-49be-8ad1-13d542d45d82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\02. ConstructionSite3F">
+      <UniqueIdentifier>{1e272184-8887-431f-937d-de39fd6eeb16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\03.ConstructionSite2F">
+      <UniqueIdentifier>{3d3d0005-42a5-4f29-afef-5338e27783d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1401,7 +1404,7 @@
       <Filter>01.Levels\02.GamePlay</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_ConstructionSite3F.h">
-      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+      <Filter>01.Levels\02.GamePlay\02. ConstructionSite3F</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_Subway.h">
       <Filter>01.Levels\02.GamePlay\04.Subway</Filter>
@@ -1411,6 +1414,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Level_NaomiRoom.h">
       <Filter>01.Levels\02.GamePlay\05.NaomiRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_Cheat.h">
+      <Filter>60.Imgui_Tool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2312,16 +2318,19 @@
       <Filter>01.Levels\02.GamePlay</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_ConstructionSite3F.cpp">
-      <Filter>01.Levels\02.GamePlay\02. Stage1</Filter>
+      <Filter>01.Levels\02.GamePlay\02. ConstructionSite3F</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Subway.cpp">
       <Filter>01.Levels\02.GamePlay\04.Subway</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Level_Hoispital_1F.cpp">
+    <ClCompile Include="..\private\Level_Hospital_1F.cpp">
       <Filter>01.Levels\02.GamePlay\06.Hospital</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_NaomiRoom.cpp">
       <Filter>01.Levels\02.GamePlay\05.NaomiRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_Cheat.cpp">
+      <Filter>60.Imgui_Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

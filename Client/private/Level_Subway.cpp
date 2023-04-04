@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Level_Subway.h"
 #include "GameInstance.h"
-#include "GameManager_Tutorial.h"
 #include "Imgui_Batch.h"
-
 
 CLevel_Subway::CLevel_Subway(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
@@ -12,12 +10,23 @@ CLevel_Subway::CLevel_Subway(ID3D11Device * pDevice, ID3D11DeviceContext * pCont
 
 HRESULT CLevel_Subway::Initialize()
 {
+	// m_bPlayerSpawn = false;
+
 	m_strLevelName = L"Subway";
 	m_strShadowCamJsonPath.clear();
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Subway.json";
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
+	if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;
+
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/Kinetics_Test.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/MonsterBatches.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/Player_AI_StartPos.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/SpecialKientics_Train.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/SpecialKinetics.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/MonsterBatches_2.json");
 
 	return S_OK;
 }

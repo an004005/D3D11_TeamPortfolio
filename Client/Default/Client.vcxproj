@@ -299,6 +299,7 @@
     <ClInclude Include="..\public\EM1200_AnimInstance.h" />
     <ClInclude Include="..\public\EM1200_Controller.h" />
     <ClInclude Include="..\public\EMUI.h" />
+    <ClInclude Include="..\public\Imgui_Cheat.h" />
     <ClInclude Include="..\public\Item_LightUI.h" />
     <ClInclude Include="..\public\Level_Hospital_1F.h" />
     <ClInclude Include="..\public\Level_NaomiRoom.h" />
@@ -613,8 +614,9 @@
     <ClCompile Include="..\private\EM1200_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM1200_Controller.cpp" />
     <ClCompile Include="..\private\EMUI.cpp" />
+    <ClCompile Include="..\private\Imgui_Cheat.cpp" />
     <ClCompile Include="..\private\Item_LightUI.cpp" />
-    <ClCompile Include="..\private\Level_Hoispital_1F.cpp" />
+    <ClCompile Include="..\private\Level_Hospital_1F.cpp" />
     <ClCompile Include="..\private\Level_NaomiRoom.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\Level_Subway.cpp" />

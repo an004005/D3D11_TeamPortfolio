@@ -12,12 +12,21 @@ CLevel_Hospital_1F::CLevel_Hospital_1F(ID3D11Device * pDevice, ID3D11DeviceConte
 
 HRESULT CLevel_Hospital_1F::Initialize()
 {
-	m_strLevelName = L"Subway";
+	// m_bPlayerSpawn = false;
+
+	m_strLevelName = L"Hospital1F";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/Hospital_1F_ShadowCam.json";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Hospital_1F.json";
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
+	if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;
+
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/BossBatch.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/MonsterBatch_Test.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Player_AI_Pos.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/SpecialKinetic_Test.json");
 
 	return S_OK;
 }
