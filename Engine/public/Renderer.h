@@ -85,6 +85,9 @@ private:
 	_bool m_bFog;
 	FOG_DESC m_tFogDesc;
 
+	_bool m_bLightRays = false;
+	_float m_fSSLRIntensity = 0.25f;
+
 private:
 	HRESULT Render_Priority();
 	HRESULT Render_ShadowDepth();

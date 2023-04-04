@@ -14,6 +14,9 @@
 #include "PlayerInfoManager.h"
 #include "GameManager.h"
 #include "EMUI.h"
+#include "MonsterHpUI.h"
+#include "MonsterShildUI.h"
+#include "ImguiUtils.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
 	L"Default_Blood_00",
@@ -104,6 +107,13 @@ HRESULT CEnemy::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CEnemy::BeginTick()
+{
+	CScarletCharacter::BeginTick();
+	if (m_bSpawnEffect)
+		CreateSpawnEffect();
+}
+
 void CEnemy::Tick(_double TimeDelta)
 {
 	CScarletCharacter::Tick(TimeDelta);
@@ -140,6 +150,18 @@ void CEnemy::Late_Tick(_double TimeDelta)
 void CEnemy::Imgui_RenderProperty()
 {
 	CScarletCharacter::Imgui_RenderProperty();
+	if (ImGui::CollapsingHeader("SpawnEffectEdit"))
+	{
+		if (ImGui::Button("SpawnEffect"))
+		{
+			CreateSpawnEffect();
+		}
+
+		ImGui::InputFloat("SpawnDistance", &m_fSpawnDistortionDistancePivot);
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&m_SpawnEffectPivot, tInfo, true, true);
+	}
+
 	ImGui::Checkbox("Use TestTarget", &m_bFindTestTarget);
 
 	if (ImGui::CollapsingHeader("Edit Stat"))
@@ -307,6 +329,23 @@ CRigidBody * CEnemy::GetRigidBody(const string & KeyName)
 	assert(pRigidBody != m_pRigidBodies.end() && "Wrong RigidBody KeyName!");
 
 	return (*pRigidBody).second;
+}
+
+void CEnemy::CreateSpawnEffect()
+{
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Enemy_Spawn_A")
+		->Start_NoAttachPivot(this, m_SpawnEffectPivot, false, false);
+
+	_matrix	SocketMatrix = m_SpawnEffectPivot * m_pTransformCom->Get_WorldMatrix();
+	_vector vCamPos = CGameInstance::GetInstance()->Get_CamPosition();
+	_vector vToCam = XMVector3NormalizeEst(vCamPos - SocketMatrix.r[3]) * m_fSpawnDistortionDistancePivot;
+	vToCam = XMVectorSetW(vToCam, 0.f);
+	SocketMatrix.r[3] += vToCam;
+
+	_matrix DistortionPivotMatrix = SocketMatrix * m_pTransformCom->Get_WorldMatrix_Inverse();
+
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Enemy_Spawn_B")
+		->Start_NoAttachPivot(this, DistortionPivotMatrix, false, false);
 }
 
 _bool CEnemy::IsTargetFront(_float fAngle)

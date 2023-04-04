@@ -301,6 +301,7 @@
     <ClInclude Include="..\public\EMCable.h" />
     <ClInclude Include="..\public\EMUI.h" />
     <ClInclude Include="..\public\Item_LightUI.h" />
+    <ClInclude Include="..\public\Level_StageDefault.h" />
     <ClInclude Include="..\public\MouseCousorLightUI.h" />
     <ClInclude Include="..\public\MouseCousorUI.h" />
     <ClInclude Include="..\public\RedBullet.h" />
@@ -323,6 +324,7 @@
     <ClInclude Include="..\public\Main_BrainGaugeUI.h" />
     <ClInclude Include="..\public\Main_BrainUI.h" />
     <ClInclude Include="..\public\Main_OnePickUI.h" />
+    <ClInclude Include="..\public\RedString.h" />
     <ClInclude Include="..\public\SAS_Cable.h" />
     <ClInclude Include="..\public\SA_AxisUI.h" />
     <ClInclude Include="..\public\SA_RotationUI.h" />
@@ -478,9 +480,11 @@
     <ClInclude Include="..\public\VFX_Manager.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
+    <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
     <ClInclude Include="..\public\OilBullet.h" />
     <ClInclude Include="..\public\Weapon_wp0300.h" />
+    <ClInclude Include="..\public\Weapon_wp0500.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -609,6 +613,7 @@
     <ClCompile Include="..\private\EMCable.cpp" />
     <ClCompile Include="..\private\EMUI.cpp" />
     <ClCompile Include="..\private\Item_LightUI.cpp" />
+    <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\MouseCousorLightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorUI.cpp" />
     <ClCompile Include="..\private\RedBullet.cpp" />
@@ -631,6 +636,7 @@
     <ClCompile Include="..\private\Main_BrainGaugeUI.cpp" />
     <ClCompile Include="..\private\Main_BrainUI.cpp" />
     <ClCompile Include="..\private\Main_OnePickUI.cpp" />
+    <ClCompile Include="..\private\RedString.cpp" />
     <ClCompile Include="..\private\SAS_Cable.cpp" />
     <ClCompile Include="..\private\SA_AxisUI.cpp" />
     <ClCompile Include="..\private\SA_RotationUI.cpp" />
@@ -786,9 +792,11 @@
     <ClCompile Include="..\private\VFX_Manager.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
     <ClCompile Include="..\private\OilBullet.cpp" />
     <ClCompile Include="..\private\Weapon_wp0300.cpp" />
+    <ClCompile Include="..\private\Weapon_wp0500.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -817,6 +825,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel_Shadow.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCube_SSDecal.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing_Shadow.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Shadow.hlsl" />
@@ -838,6 +847,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonAnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxToonModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\SSAO.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\SSLR.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

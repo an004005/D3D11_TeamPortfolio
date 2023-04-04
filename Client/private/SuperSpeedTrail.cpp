@@ -70,16 +70,25 @@ void CSuperSpeedTrail::Tick(_double TimeDelta)
 	Assert(pOwner != nullptr);
 
 	_vector vOwnerPos = pOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	_float fDistance = XMVectorGetX(XMVector3LengthEst(vOwnerPos - XMLoadFloat4(&m_vPrePos)));
-	if (fDistance < m_fMinMoveDistance)
-		return;
+	// _float fDistance = XMVectorGetX(XMVector3LengthEst(vOwnerPos - XMLoadFloat4(&m_vPrePos)));
+	// if (fDistance < m_fMinMoveDistance)
+	// 	return;
 
 	m_vPrePos = vOwnerPos;
 
 	if (m_TrailGenerateTimer.Use())
 	{
 		GHOST_TRAIL_INFO tInfo;
-		tInfo.WorldMatrix = pOwner->GetTransform()->Get_WorldMatrix_f4x4();
+		_matrix WorldMatrix = pOwner->GetTransform()->Get_WorldMatrix();
+
+		_float3 vScale{XMVectorGetX(XMVector3LengthEst(WorldMatrix.r[0])),
+			XMVectorGetX(XMVector3LengthEst(WorldMatrix.r[1])),
+			XMVectorGetX(XMVector3LengthEst(WorldMatrix.r[2]))};
+		WorldMatrix.r[0] = XMVector3Normalize(WorldMatrix.r[0]) * vScale.x * 0.97f;
+		WorldMatrix.r[1] = XMVector3Normalize(WorldMatrix.r[1]) * vScale.y * 0.97f;
+		WorldMatrix.r[2] = XMVector3Normalize(WorldMatrix.r[2]) * vScale.z * 0.97f;
+
+		tInfo.WorldMatrix = WorldMatrix;
 		tInfo.fLife = m_fTrailLife;
 		tInfo.pPoseModel = m_pOwnerModel->CloneModelPose();
 

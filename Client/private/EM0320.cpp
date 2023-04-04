@@ -25,6 +25,7 @@ CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CEM0320::CEM0320(const CEM0320& rhs)
 	: CEnemy(rhs)
 {
+	m_bSpawnEffect = false;
 }
 
 HRESULT CEM0320::Initialize(void* pArg)
@@ -207,7 +208,8 @@ void CEM0320::SetUpAnimationEvent()
 
 	m_pModelCom->Add_EventCaller("LastSpot", [this] 
 	{ 
-		m_LastSpotTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION); 
+		m_LastSpotTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		m_LastSpotTargetPos = XMVectorSetY(m_LastSpotTargetPos, XMVectorGetY(m_LastSpotTargetPos) + 1.f);
 	});
 	m_pModelCom->Add_EventCaller("WaterBall", [this] 
 	{
@@ -542,7 +544,7 @@ _float4 CEM0320::GetKineticTargetPos()
 {
 	_float3 vTemp = m_pWeak->GetPxWorldMatrix().Translation();
 
-	return _float4(vTemp.x, vTemp.y + 2.f, vTemp.z, 1.f);
+	return _float4(vTemp.x, vTemp.y + 0.5f, vTemp.z, 1.f);
 }
 
 _bool CEM0320::IsPlayingSocket() const

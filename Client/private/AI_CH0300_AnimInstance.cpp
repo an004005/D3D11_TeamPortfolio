@@ -49,7 +49,7 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Priority(4)
 
 				.AddTransition("IDLE to ATK_A1", "ATK_A1")
-				.Predicator([&]()->_bool {return (-1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
+				.Predicator([&]()->_bool {return (-1.f != m_fDistance_toEnemy && 2.f >= m_fDistance_toEnemy); })
 				.Duration(0.2f)
 				.Priority(5)
 
@@ -176,7 +176,7 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Priority(0)
 
 				.AddTransition("ATK_A1 to ATK_A2_START", "ATK_A2_START")
-				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_201_AL_atk_a1") && -1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
+				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_201_AL_atk_a1") && -1.f != m_fDistance_toEnemy && 2.f >= m_fDistance_toEnemy); })
 				.Duration(0.2f)
 				.Priority(1)
 
@@ -197,7 +197,7 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Priority(0)
 
 				.AddTransition("ATK_A2_START to ATK_A2", "ATK_A2")
-				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_202_AL_atk_a2_start") && -1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
+				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_202_AL_atk_a2_start") && -1.f != m_fDistance_toEnemy && 2.f >= m_fDistance_toEnemy); })
 				.Duration(0.f)
 				.Priority(1)
 
@@ -218,7 +218,7 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Priority(0)
 
 				.AddTransition("ATK_A2 to ATK_A3", "ATK_A3")
-				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_202_AL_atk_a2_loop") && -1.f != m_fDistance_toEnemy && 3.f >= m_fDistance_toEnemy); })
+				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_202_AL_atk_a2_loop") && -1.f != m_fDistance_toEnemy && 2.f >= m_fDistance_toEnemy); })
 				.Duration(0.f)
 				.Priority(1)
 
@@ -238,7 +238,40 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 				.Duration(0.f)
 				.Priority(0)
 
-				.AddTransition("ATK_A3 to IDLE", "IDLE")
+				.AddTransition("ATK_A3 to ATK_B1_START", "ATK_B1_START")
+				.Predicator([&]()->_bool {return (isAnimFinish("AS_ch0300_203_AL_atk_a3") && -1.f != m_fDistance_toEnemy && 2.f >= m_fDistance_toEnemy); })
+				.Duration(0.2f)
+				.Priority(1)
+
+				.AddTransition("ATK_A3 to DODGE_START", "DODGE_START")
+				.Duration(0.2f)
+				.Priority(2)
+
+		.AddState("ATK_B1_START")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0300_211_AL_atk_b1_start"))
+			.StartEvent([&]() 
+			{ 
+				_vector vTargetPos = CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				m_pTargetObject->GetTransform()->LookAt_NonY(vTargetPos);
+			})
+				.AddTransition("ATK_A3 to HIT", "HIT")
+				.Predicator([&]()->_bool {return m_bHit; })
+				.Duration(0.f)
+				.Priority(0)
+
+				.AddTransition("ATK_B1_START to ATK_B1_LANDING", "ATK_B1_LANDING")
+				.Predicator([&]()->_bool {return (0.2f <= m_pModel->Find_Animation("AS_ch0300_211_AL_atk_b1_start")->GetPlayRatio()) && static_cast<CAI_CH0300*>(m_pTargetObject)->Get_OnFloor(); })
+				.Duration(0.f)
+				.Priority(1)
+
+		.AddState("ATK_B1_LANDING")
+			.SetAnimation(*m_pModel->Find_Animation("AS_ch0300_211_AL_atk_b1_landing"))
+				.AddTransition("ATK_A3 to HIT", "HIT")
+				.Predicator([&]()->_bool {return m_bHit; })
+				.Duration(0.f)
+				.Priority(0)
+
+				.AddTransition("ATK_B1_LANDING to IDLE", "IDLE")
 				.Duration(0.2f)
 				.Priority(1)
 
@@ -520,6 +553,12 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 
 		.AddState("APPROACH_START")
 			.SetAnimation(*m_pModel->Find_Animation("AS_ch0300_030_AL_dodge_F_start"))
+			.StartEvent([&]()
+				{
+					if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return;
+					_vector vTargetPos = CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					m_pTargetObject->GetTransform()->LookAt_NonY(vTargetPos);
+				})
 				.AddTransition("APPROACH_START to APPROACH_END", "APPROACH_END")
 				.Duration(0.f)
 				.Priority(0)

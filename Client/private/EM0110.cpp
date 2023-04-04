@@ -20,6 +20,8 @@ CEM0110::CEM0110(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CEM0110::CEM0110(const CEM0110 & rhs)
 	: CEnemy(rhs)
 {
+	m_SpawnEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData({0.f, 1.68f, 1.3f}, {0.f, 0.f, 0.f}, {1.2f,1.2f,1.2f});
+	m_fSpawnDistortionDistancePivot = 1.7f;
 }
 
 HRESULT CEM0110::Initialize(void * pArg)

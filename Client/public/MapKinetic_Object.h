@@ -63,6 +63,8 @@ public:
 	void	SetParticle();
 	void	ReleaseParticle();
 
+	void	CreateLargeParticle();
+
 private:
 	CParticleGroup*	m_pParticle = nullptr;
 

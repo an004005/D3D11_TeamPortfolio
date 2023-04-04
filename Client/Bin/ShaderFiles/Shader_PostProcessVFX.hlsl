@@ -268,7 +268,32 @@ PS_OUT PS_MAIN_COLOR_GRADING_LUT_6(PS_IN In)
 	float cell = floor(col.b * maxColor);
 
 	float2 lutPos = float2(cell / COLORS + xOffset, yOffset);
+
 	float4 gradedCol = g_tex_0.Sample(LinearSampler, lutPos);
+
+	// float4 gradedCol = 0.f;
+	//float4 vFlagsNonAlpha = g_FlagTextureNonAlpha.Sample(PointSampler, In.vTexUV);
+	// if (vFlagsNonAlpha.y == SHADER_POST_TOON)
+	// {
+	// 	gradedCol = g_tex_0.Sample(LinearSampler, lutPos);
+	// 	blend = g_float_0;
+	// }
+	// else if (vFlagsNonAlpha.y == SHADER_POST_ENEMY)
+	// {
+	// 	gradedCol = g_tex_1.Sample(LinearSampler, lutPos);
+	// 	blend = g_float_1;
+	// }
+	// else if (vFlagsNonAlpha.y == SHADER_POST_OBJECTS)
+	// {
+	// 	gradedCol = g_tex_2.Sample(LinearSampler, lutPos);
+	// 	blend = g_float_2;	
+	// }
+	// else
+	// {
+	// 	gradedCol = g_tex_3.Sample(LinearSampler, lutPos);
+	// 	blend = g_float_3;	
+	// }
+
 	 
 	Out.vColor = lerp(col, gradedCol, blend);
 

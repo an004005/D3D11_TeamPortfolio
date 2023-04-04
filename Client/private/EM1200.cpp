@@ -19,6 +19,7 @@ CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CEM1200::CEM1200(const CEM1200 & rhs)
 	: CEnemy(rhs)
 {
+	m_bSpawnEffect = false;
 }
 
 HRESULT CEM1200::Initialize(void * pArg)
