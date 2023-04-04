@@ -6,6 +6,7 @@
 #include "EM0800_AnimInstance.h"
 #include "EM0800_Controller.h"
 #include "ImguiUtils.h"
+#include "Material.h"
 
 CEM0800::CEM0800(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -63,6 +64,8 @@ void CEM0800::SetUpComponents(void * pArg)
 	CEnemy::SetUpComponents(pArg);
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em800", L"Model", (CComponent**)&m_pModelCom));
 
+	m_pWeak = m_pModelCom->FindMaterial(L"MI_em0800_weak_0");
+	assert(m_pWeak != nullptr);
 	// 범위 충돌체(플레이어가 몬스터 위로 못 올라가게한다.)
 	/*Json FlowerLegRangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/FlowerLeg/FlowerLegRange.json");
 */
@@ -121,10 +124,51 @@ void CEM0800::SetUpAnimationEvent()
 		//m_SoundStore.PlaySound("mon_4_attack_bite", m_pTransformCom);
 	});
 
+	m_pModelCom->Add_EventCaller("Rolling1", [this]
+		{
+			_float4x4 WaterEffPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ 0.f, -0.8f, 0.f },
+				{ 0.f, 0.f, 0.f },
+				{ 0.5f, 0.2f, 0.5f });
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water_Dive_In")
+				->Start_AttachPivot(this, WaterEffPivot, "Eff03", true, false, false);
+		});
+
+	m_pModelCom->Add_EventCaller("Rolling2", [this]
+		{
+			_float4x4 WaterEffPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ 0.f, -0.8f, 0.f },
+				{ 0.f, 0.f, 0.f },
+				{ 0.5f, 0.2f, 0.5f });
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water_Dive_In")
+				->Start_AttachPivot(this, WaterEffPivot, "Eff03", true, false, false);
+		});
+
+	m_pModelCom->Add_EventCaller("Landing", [this]
+		{
+			_float4x4 WaterEffPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ 0.f, -0.5f, 0.f },
+				{ 0.f, 0.f, 0.f },
+				{ 1.f, 0.2f, 1.f });
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water_Dive_In")
+				->Start_AttachPivot(this, WaterEffPivot, "Eff03", true, false, false);
+		});
+
 	//Submergence에서 물위로 뛰어오르는 타이밍
-	m_pModelCom->Add_EventCaller("m_bComeUp", [this]
+	m_pModelCom->Add_EventCaller("ComeUp", [this]
 	{
 		m_bComeUp = true;
+
+		_float4x4 WaterEffPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+			{ 0.f, 0.f, 0.f },
+			{ 0.f, 0.f, 0.f },
+			{ 0.5f, 0.5f, 0.5f });
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water_Dive_In")
+			->Start_AttachPivot(this, WaterEffPivot, "Eff03", true, false, true);
 	});
 
 
@@ -152,10 +196,9 @@ void CEM0800::SetUpFSM()
 			.AddTransition("Idle to Death" , "Death")
 				.Predicator([this] { return m_bDead; })
 
-			.AddTransition("Idle to Hit_Mid_Heavy", "Hit_Mid_Heavy")
+			.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
 				.Predicator([this] { return
 					m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
 					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
 		
 			.AddTransition("Idle to Bite", "Bite")
@@ -169,7 +212,7 @@ void CEM0800::SetUpFSM()
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-		.AddState("Hit_Mid_Heavy")
+		.AddState("Hit_Heavy")
 				.OnStart([this]
 			{
 				Play_MidHitAnim();
@@ -179,7 +222,6 @@ void CEM0800::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 				if (m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
 					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
 				{
 					HeavyAttackPushStart();
@@ -198,12 +240,11 @@ void CEM0800::SetUpFSM()
 			{
 				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
-			.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
+			.AddTransition("Hit_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
 					return m_bDead
 						|| m_pASM->isSocketPassby("FullBody", 0.95f)
-						|| m_eCurAttackType == EAttackType::ATK_TO_AIR
 						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
 				})
 		.AddState("Death")
@@ -274,7 +315,7 @@ void CEM0800::SetUpFSM()
 			})
 			.Tick([this](_double TimeDetla)
 			{
-				m_fLaserTime += TimeDetla;
+				m_fLaserTime += static_cast<_float>(TimeDetla);
 				Laser_SweepSphere();
 			})
 			.OnExit([this]
@@ -341,7 +382,7 @@ void CEM0800::Tick(_double TimeDelta)
 	if (m_pWaterPool == nullptr && GetHpRatio() <= 0.5f)
 	{
 		_matrix			PivotMatrix = XMMatrixIdentity();
-		PivotMatrix = XMMatrixTranslation(0.f, 0.1f, 0.f) * XMMatrixScaling(10.f, 1.f, 10.f);
+		PivotMatrix = XMMatrixTranslation(0.f, 0.2f, 0.f) * XMMatrixScaling(10.f, 1.f, 10.f);
 		m_pWaterPool = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water");
 		m_pWaterPool->Start_AttachPivot(this, PivotMatrix, "Eff01", true, true, false);
 		Safe_AddRef(m_pWaterPool);
@@ -409,21 +450,31 @@ void CEM0800::Imgui_RenderProperty()
 	}
 	m_pFSM->Imgui_RenderProperty();
 
-	//static _bool tt = false;
-	//ImGui::Checkbox("Modify Pivot", &tt);
+	static _bool tt = false;
+	ImGui::Checkbox("Modify Pivot", &tt);
 
-	//if (tt)
-	//{
-	//	static GUIZMO_INFO tInfo;
-	//	CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+	if (tt)
+	{
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
 
-	//	if (ImGui::Button("Create_Effect"))
-	//	{
-	//		m_pBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0800_Bug_Particle");
-	//		m_pBugParticle->Start_AttachPivot(this, pivot, "Head", true, true);
-	//		Safe_AddRef(m_pBugParticle);
-	//	}
-	//}
+		if (ImGui::Button("Test0800Effect"))
+		{
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0800_Water_Dive_In")
+				->Start_AttachPivot(this, pivot, "Eff03", true, false, false);
+		}
+
+		if (ImGui::Button("Test0800Effect2"))
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0800_Water_Attack_Particle")
+				->Start_AttachPivot(this, pivot, "Eff03", true, false, false);
+		}
+	}
+}
+
+_bool CEM0800::IsWeak(CRigidBody* pHitPart)
+{
+	return 	pHitPart == GetRigidBody("Weak_LeftArm") || pHitPart == GetRigidBody("Weak_RightArm");
 }
 
 _bool CEM0800::IsPlayingSocket() const
@@ -496,6 +547,26 @@ EBaseTurn CEM0800::FindTargetDirection()
 	}
 
 	return EBaseTurn::TURN_END;
+}
+
+void CEM0800::HitWeakProcess(_double TimeDelta)
+{
+	if (m_bHitWeak)
+	{
+		m_bWeakProcess = true;
+		m_pWeak->GetParam().Floats[1] = 1.f;
+	}
+
+	if (m_bWeakProcess)
+	{
+		m_pWeak->GetParam().Floats[1] -= static_cast<_float>(TimeDelta);
+
+		if (m_pWeak->GetParam().Floats[1] <= 0.f)
+		{
+			m_pWeak->GetParam().Floats[1] = 0.f;
+			m_bWeakProcess = false;
+		}
+	}
 }
 
 void CEM0800::Bite_Overlap()

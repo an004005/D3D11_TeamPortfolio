@@ -52,7 +52,8 @@ void CEM1100_Controller::AI_Tick(_double TimeDelta)
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
-		DefineState(TimeDelta);
+		AddCommand("ElectricBall", 0.f, &CAIController::Input, E);
+		//DefineState(TimeDelta);
 	}
 }
 

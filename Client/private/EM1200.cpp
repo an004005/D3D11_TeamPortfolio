@@ -7,6 +7,8 @@
 #include "EM1200_Controller.h"
 #include "ImguiUtils.h"
 #include "MathUtils.h"
+#include "Material.h"
+#include "EMCable.h"
 
 CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -52,6 +54,8 @@ void CEM1200::SetUpComponents(void * pArg)
 	CEnemy::SetUpComponents(pArg);
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em1200", L"Model", (CComponent**)&m_pModelCom));
 
+	m_pWeak = m_pModelCom->FindMaterial(L"MI_em1200_WEAK_0");
+	assert(m_pWeak != nullptr);
 	// 범위 충돌체(플레이어가 몬스터 위로 못 올라가게한다.)
 	//Json RangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Trunk.json");
 	Json WeakCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Weak.json");
@@ -87,22 +91,29 @@ void CEM1200::SetUpAnimationEvent()
 		ClearDamagedTarget();
 		Fall_Overlap();
 
-		_float4x4 DustEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
-			{ 0.f, 0.f, 0.f },
-			{ 0.f, 0.f, 0.f },
-			{ 2.5f, 2.5f, 2.5f }
-		);
+		_int iNum = 5;
 
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Smoke_Ivory_0" + to_wstring(CMathUtils::RandomUInt(4)))
-			->Start_AttachPivot(this, DustEffectPivot, "Target", false, true);
+		while (iNum--)
+		{
+			_float RandomX = CMathUtils::RandomFloat(-4.f, 4.f);
+			_float RandomZ = CMathUtils::RandomFloat(-4.f, 4.f);
+
+			_float4x4 DustEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ RandomX, 0.f, RandomZ },
+				{ 0.f, 0.f, 0.f },
+				{ 3.f, 2.f, 3.f }
+			);
+
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Smoke_Ivory_0" + to_wstring(CMathUtils::RandomUInt(4)))
+				->Start_NoAttachPivot(this, DustEffectPivot);
+		}
+	
 	});
 
 	m_pModelCom->Add_EventCaller("Stamp", [this]
 	{
 		ClearDamagedTarget();
 		Stamp_Overlap();
-
-		
 
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1200_Stamp_Impact")
 			->Start_Attach(this,  "RightHand", false, true);
@@ -162,17 +173,45 @@ void CEM1200::SetUpAnimationEvent()
 		ClearDamagedTarget();
 		m_bAttack = false;
 
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Smoke_Ivory_0" + to_wstring(CMathUtils::RandomUInt(4)))
-			->Start_Attach(this, "Target", false, true);
+		_int iNum = 5;
+		while (iNum--)
+		{
+			_float RandomX = CMathUtils::RandomFloat(-4.f, 4.f);
+			_float RandomZ = CMathUtils::RandomFloat(-4.f, 4.f);
+
+			_float4x4 DustEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ RandomX, 0.f, RandomZ },
+				{ 0.f, 0.f, 0.f },
+				{ 3.f, 2.f, 3.f }
+			);
+
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Smoke_Ivory_0" + to_wstring(CMathUtils::RandomUInt(4)))
+				->Start_AttachPivot(this, DustEffectPivot, "Eff03", true);
+		}
 	});
 
 	m_pModelCom->Add_EventCaller("Rush_End", [this]
 	{
-		m_bAttack = false;
+			m_bAttack = false;
 
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1200_Stamp_Distortion")
-			->Start_Attach(this, "Target", false, true);
+			_int iNum = 4;
+			while (iNum--)
+			{
+				_float RandomX = CMathUtils::RandomFloat(-4.f, 4.f);
+				_float RandomZ = CMathUtils::RandomFloat(-4.f, 4.f);
 
+				_float4x4 DustEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+					{ RandomX, 0.f, RandomZ },
+					{ 0.f, 0.f, 0.f },
+					{ 5.f, 2.f, 5.f }
+				);
+
+				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Smoke_Ivory_0" + to_wstring(CMathUtils::RandomUInt(4)))
+					->Start_AttachPivot(this, DustEffectPivot, "Eff03", true);
+			}
+
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1200_Stamp_Distortion")
+				->Start_Attach(this, "Target", false, true);
 	});
 
 	m_pModelCom->Add_EventCaller("Shout2_Start", [this]
@@ -180,8 +219,14 @@ void CEM1200::SetUpAnimationEvent()
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1200_Fear")
 				->Start_Attach(this, "Head", false, true);
 
+			_float4x4 FearPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ 0.f, 0.5f, 0.f },
+				{ 0.f, 0.f, 0.f },
+				{ 10.f, 1.f, 10.f }
+			);
+
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1200_Fear_Particle")
-				->Start_NoAttach(this, false, true);
+				->Start_NoAttachPivot(this, FearPivot);
 	});
 
 
@@ -378,8 +423,14 @@ void CEM1200::SetUpFSM()
 					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1200_Fear")
 						->Start_Attach(this, "Target", false, true);
 
+					_float4x4 FearPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+						{ 0.f, 0.5f, 0.f },
+						{ 0.f, 0.f, 0.f },
+						{ 7.f, 1.f, 7.f }
+					);
+
 					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1200_Fear_Particle")
-						->Start_Attach(this,"Target", false, true);
+						->Start_NoAttachPivot(this, FearPivot);
 
 				})
 				.Tick([this](_double TimeDelta)
@@ -680,22 +731,38 @@ void CEM1200::SetUpFSM()
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_218_AL_atk_a5_motif2_loop");
 					m_pModelCom->Find_Animation("AS_em1200_218_AL_atk_a5_motif2_loop")->SetLooping(true);
 					m_iAttackCount = 0;
+					m_iPreAttackCount = -1;
 					m_dLoopTime = 0.0;
 				})
 				.Tick([this](_double TimeDelta)
 				{
 					m_dLoopTime += TimeDelta;
 
+					//공격할 위치 미리 저장
+					if (m_dLoopTime >= 0.5 && m_iPreAttackCount != m_iAttackCount)
+					{
+						m_SaveTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+						m_iPreAttackCount = m_iAttackCount;
+					}
+
 					if (m_dLoopTime >= 1.0)
 					{
+						CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1200_Ribbon_Particle")
+							->Start_AttachPosition(this, m_SaveTargetPos, _float4(0.f, 1.f, 0.f, 0.f), false);
+
+						//올라올때 빨라서 미세조정
+						m_SaveTargetPos += XMVectorSet(0.f, -1.f, 0.f, 0.f) * 2.f;
+						CGameObject* pCable = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Cable"), TEXT("Prototype_EMCable"));
+						dynamic_cast<CEMCable*>(pCable)->Set_Dest(m_SaveTargetPos);
+		
 						m_dLoopTime = 0.0;
-						//케이블 공격
 						++m_iAttackCount;
+
 					}
 				})
 				.OnExit([this]
 				{
-					//m_pASM->ClearSocketAnim("FullBody", 0.f);
+					m_pASM->ClearSocketAnim("FullBody", 0.f);
 				})
 				.AddTransition("Cable_Loop to Cable_End", "Cable_End")
 					.Predicator([this]
@@ -794,24 +861,21 @@ void CEM1200::Imgui_RenderProperty()
 	}
 	m_pFSM->Imgui_RenderProperty();
 
-	//static _bool tt = false;
-	//ImGui::Checkbox("Modify Pivot", &tt);
+	static _bool tt = false;
+	ImGui::Checkbox("Modify Pivot", &tt);
 
-	//if (tt)
-	//{
-	//	static GUIZMO_INFO tInfo;
-	//	CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+	if (tt)
+	{
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
 
-	//	if (ImGui::Button("Shout2"))
-	//	{
+		if (ImGui::Button("RushDustTest"))
+		{
 
-	//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1200_Fear")
-	//			->Start_AttachPivot(this, pivot, "Head", true, false);
-
-	//		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1200_Fear_Particle")
-	//			->Start_AttachPivot(this, pivot, "Head", true, false);
-	//	}
-
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Smoke_Ivory_0" + to_wstring(CMathUtils::RandomUInt(4)))
+				->Start_NoAttachPivot(this, pivot);
+		}
+	}
 	//	if (ImGui::Button("Rush"))
 	//	{
 
@@ -823,6 +887,11 @@ void CEM1200::Imgui_RenderProperty()
 	//	}
 
 	//}
+}
+
+_bool CEM1200::IsWeak(CRigidBody* pHitPart)
+{
+	return 	pHitPart == GetRigidBody("Weak");
 }
 
 _bool CEM1200::IsPlayingSocket() const
@@ -914,6 +983,26 @@ EBaseTurn CEM1200::TargetBaseTurn()
 		return EBaseTurn::TURN_RIGHT;
 	else
 		return EBaseTurn::TURN_LEFT;
+}
+
+void CEM1200::HitWeakProcess(_double TimeDelta)
+{
+	if (m_bHitWeak)
+	{
+		m_bWeakProcess = true;
+		m_pWeak->GetParam().Floats[1] = 1.f;
+	}
+
+	if (m_bWeakProcess)
+	{
+		m_pWeak->GetParam().Floats[1] -= static_cast<_float>(TimeDelta);
+
+		if (m_pWeak->GetParam().Floats[1] <= 0.f)
+		{
+			m_pWeak->GetParam().Floats[1] = 0.f;
+			m_bWeakProcess = false;
+		}
+	}
 }
 
 void CEM1200::Fall_Overlap()

@@ -5772,6 +5772,18 @@
             {
                 "EventName": "ComeUp",
                 "EventTime": 120.0
+            },
+            {
+                "EventName": "Landing",
+                "EventTime": 168.0
+            },
+            {
+                "EventName": "Rolling1",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Rolling2",
+                "EventTime": 80.0
             }
         ]
     },
@@ -6128,6 +6140,24 @@
     "AS_em1200_212_AL_atk_a3_tackle2_end": {
         "Duration": 45.0,
         "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_217_AL_atk_a5_motif2_start": {
+        "Duration": 178.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_218_AL_atk_a5_motif2_loop": {
+        "Duration": 75.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_219_AL_atk_a5_motif2_end": {
+        "Duration": 145.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },

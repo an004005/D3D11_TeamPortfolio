@@ -31,7 +31,6 @@ HRESULT CEM0110::Initialize(void * pArg)
 	{
 		m_iMaxHP = 1100;
 		m_iHP = m_iMaxHP; // ★
-		m_iArmorHp = m_iMaxHP * 0.3;
 
 		m_iCrushGauge = 3000;
 		m_iMaxCrushGauge = m_iCrushGauge;
@@ -362,6 +361,8 @@ void CEM0110::SetUpFSM()
 void CEM0110::BeginTick()
 {
 	CEnemy::BeginTick();
+	m_iArmorHp = m_iMaxHP * 0.2;
+
 }
 
 void CEM0110::Tick(_double TimeDelta)
@@ -433,8 +434,8 @@ void CEM0110::Imgui_RenderProperty()
 
 		if (ImGui::Button("TestEffect"))
 		{
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Bubble_Decal")
-				->Start_NoAttachPivot(this, pivot, false);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Spin_Attack_Hit_EF")
+				->Start_NoAttachPivot(this, pivot, false, true);
 		}
 	}
 }
@@ -447,7 +448,10 @@ _bool CEM0110::IsWeak(CRigidBody* pHitPart)
 void CEM0110::HitEffect(DAMAGE_PARAM& tDamageParams)
 {
 	if (m_bHitWeak && m_iArmorHp > 0)
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Dash_Attack_Hit_EF")->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
+	{
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Dash_Attack_Hit_EF")
+			->Start_Attach(this, "Jaw", false, true);
+	}
 	else
 		__super::HitEffect(tDamageParams);
 }
@@ -535,27 +539,37 @@ void CEM0110::HitWeakProcess(_double TimeDelta)
 
 	if (m_bArmorProcess)
 	{	
-		m_pArmor->GetParam().Floats[1] = max(0, static_cast<_int>(m_pArmor->GetParam().Floats[1] - TimeDelta));
+		m_pArmor->GetParam().Floats[1] -= static_cast<_float>(TimeDelta);
 
 		if (m_pArmor->GetParam().Floats[1] <= 0.f)
+		{
+			m_pArmor->GetParam().Floats[1] = 0.f;
 			m_bArmorProcess = false;
+		}
+			
 	}
 
 	else if (m_bWeakProcess)
 	{
-		m_pWeak->GetParam().Floats[1] = max(0, static_cast<_int>(m_pWeak->GetParam().Floats[1] - TimeDelta));
-		
+		m_pWeak->GetParam().Floats[1] -= static_cast<_float>(TimeDelta);
+
 		if (m_pWeak->GetParam().Floats[1] <= 0.f)
+		{
+			m_pWeak->GetParam().Floats[1] = 0.f;
 			m_bWeakProcess = false;
+		}
 	}
 
 	//아머가 파괴될때 한번 실행
 	if (m_bDestroyArmor == true)
 	{
-		m_pArmor->GetParam().Floats[2] = min(1, static_cast<_int>(m_pArmor->GetParam().Floats[2] + TimeDelta));
+		m_pArmor->GetParam().Floats[2] += static_cast<_float>(TimeDelta);
 
 		if (m_pArmor->GetParam().Floats[2] >= 1.f)
+		{
+			m_pArmor->GetParam().Floats[2] = 1.f;
 			m_bDestroyArmor = false;
+		}
 	}
 	
 }
@@ -663,11 +677,10 @@ void CEM0110::Kick_SweepSphere()
 				tDamageParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				memcpy(&tDamageParams.vHitPosition, &sweepOut.getAnyHit(i).position, sizeof(_float3));
 				memcpy(&tDamageParams.vHitNormal, &sweepOut.getAnyHit(i).normal, sizeof(_float3));
-				pTarget->TakeDamage(tDamageParams);
-
+			
 				//발차기에 맞았을때 추가 이펙트
 				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Spin_Attack_Hit_EF")
-					->Start_AttachPosition(this, tDamageParams.vHitPosition, tDamageParams.vSlashVector);
+					->Start_Attach(this, "RightToeBaseHelp", false, true);
 			}
 		}
 	}

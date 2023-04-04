@@ -122,8 +122,8 @@ void CEnemy::Tick(_double TimeDelta)
 	if (m_dDeadTime >= 3.f)
 		SetDead();
 	//
-	if (GetKeyState('K') & 0x8000)
-		SetDead(); 
+	//if (GetKeyState('K') & 0x8000)
+	//	SetDead(); 
 	
 }
 

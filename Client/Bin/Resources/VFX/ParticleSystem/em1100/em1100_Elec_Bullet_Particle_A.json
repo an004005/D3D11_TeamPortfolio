@@ -1,1 +1,138 @@
-{"BilboardType":1,"BufferType":0,"BurstCnt":30,"ConeDirDegree":30.0,"ConeOriginRadius":1.0,"Duration":1.0,"EndTime":0.0,"FinishFunc":1,"FromOrigin":true,"GravityPowerMinMax":[0.0,0.0],"IncreaseMaxSize":1.0,"Life":1.0,"LifeMinMax":[0.6000000238418579,1.0],"LifeRand":true,"Loop":true,"MeshBufferProtoTag":"","MeshSize":[1.0,1.0,1.0],"ModelCurveProtoTag":"../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_11_Smooth.static_model","ModelProtoTag":"../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_11_Smooth.static_model","ObjectTag":"","Prototype_GameObject":"ProtoVFX_ParticleSystem\u0000","RandDirMax":[1.0,1.0,1.0],"RandDirMin":[0.0,0.0,0.0],"RotationToTimeMax":[0.0,0.0,0.0],"RotationToTimeMin":[0.0,0.0,0.0],"ScaleVariation":[1.0,1.0,1.0],"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.8994518518447876,0.06119495630264282,1.0]],"Float4x4s":[],"Floats":[4.0,1.0],"Ints":[],"Pass":15,"Textures":["..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_thn_007.png\u0000","..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_thn_007.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxPointInstance_Particle","Shape":0,"SpawnTickTime":0.009999999776482582,"Speed":1.0,"SpeedMinMax":[0.10000000149011612,0.10000000149011612],"SpeedRand":true,"SphereDetail":false,"SphereRadius":4.0,"Transform":{"WorldMatrix":[1.1015803813934326,3.254656121498556e-06,2.7904562950134277,0.0,-2.1960090634820517e-06,3.0,-2.632154973980505e-06,0.0,-2.7904562950134277,-1.0761275461845798e-06,1.1015803813934326,0.0,0.0,0.0,0.0,1.0]},"TurnAngle":45.0,"TurnAxis":[0.0,1.0,0.0],"UseMeshData":true,"VtxRangeTimelineCurve":"Simple_Increase","VtxStartTimelineCurve":"Simple_Decrease","XDirCurveName":"TestX","YDirCurveName":"Em1100_Bullet_Hdr_Y","ZDirCurveName":"TestZ","bCurveDir":true,"bGravity":false,"bLocal":false,"bMeshCurve":true,"bNonAlpha":false,"bPhysX":false,"bRotate":true,"bSizeDecreaseByLife":false,"bSizeIncreaseByLife":false,"bTurn":true,"bUseMainCurve":false,"pSize":[0.10000000149011612,0.10000000149011612]}
+{
+    "BilboardType": 1,
+    "BufferType": 0,
+    "BurstCnt": 100,
+    "ConeDirDegree": 30.0,
+    "ConeOriginRadius": 1.0,
+    "Duration": 1.0,
+    "EndTime": 0.0,
+    "FinishFunc": 1,
+    "FromOrigin": true,
+    "GravityPowerMinMax": [
+        0.0,
+        0.0
+    ],
+    "IncreaseMaxSize": 1.0,
+    "Life": 1.0,
+    "LifeMinMax": [
+        0.6000000238418579,
+        1.0
+    ],
+    "LifeRand": true,
+    "Loop": true,
+    "MeshBufferProtoTag": "",
+    "MeshSize": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ModelCurveProtoTag": "../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_11_Smooth.static_model",
+    "ModelProtoTag": "../Bin/Resources/Meshes/VFX/Effect_Twist/VFX_Mesh_Twist_11_Smooth.static_model",
+    "ObjectTag": "",
+    "Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",
+    "RandDirMax": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "RandDirMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMax": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "ScaleVariation": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                1.0,
+                0.8994518518447876,
+                0.06119495630264282,
+                1.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [
+            4.0,
+            1.0
+        ],
+        "Ints": [],
+        "Pass": 15,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_thn_007.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_thn_007.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxPointInstance_Particle",
+    "Shape": 0,
+    "SpawnTickTime": 0.009999999776482582,
+    "Speed": 1.0,
+    "SpeedMinMax": [
+        0.10000000149011612,
+        0.10000000149011612
+    ],
+    "SpeedRand": true,
+    "SphereDetail": false,
+    "SphereRadius": 4.0,
+    "Transform": {
+        "WorldMatrix": [
+            1.1015803813934326,
+            3.254656121498556e-06,
+            2.7904562950134277,
+            0.0,
+            -2.1960090634820517e-06,
+            3.0,
+            -2.632154973980505e-06,
+            0.0,
+            -2.7904562950134277,
+            -1.0761275461845798e-06,
+            1.1015803813934326,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    "TurnAngle": 45.0,
+    "TurnAxis": [
+        0.0,
+        1.0,
+        0.0
+    ],
+    "UseMeshData": true,
+    "VtxRangeTimelineCurve": "Simple_Increase",
+    "VtxStartTimelineCurve": "Simple_Decrease",
+    "XDirCurveName": "TestX",
+    "YDirCurveName": "Em1100_Bullet_Hdr_Y",
+    "ZDirCurveName": "TestZ",
+    "bCurveDir": true,
+    "bGravity": false,
+    "bLocal": false,
+    "bMeshCurve": true,
+    "bNonAlpha": false,
+    "bPhysX": false,
+    "bRotate": true,
+    "bSizeDecreaseByLife": false,
+    "bSizeIncreaseByLife": false,
+    "bTurn": true,
+    "bUseMainCurve": false,
+    "pSize": [
+        0.10000000149011612,
+        0.10000000149011612
+    ]
+}

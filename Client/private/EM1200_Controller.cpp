@@ -66,7 +66,8 @@ void CEM1200_Controller::AI_Tick(_double TimeDelta)
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{	
-		DefineState(TimeDelta);
+		AddCommand("Cable", 0.f, &CAIController::Input, C);
+		//DefineState(TimeDelta);
 	}
 }
 
