@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Level_StageDefault.h"
+
+#include <Camera.h>
 #include <Imgui_AnimModifier.h>
 #include <Imgui_CameraManager.h>
 #include <Imgui_PostProcess.h>
@@ -14,10 +16,13 @@
 #include "SkyBox.h"
 #include "UI_Manager.h"
 #include "GameManager.h"
+#include "Imgui_Cheat.h"
 
 CLevel_StageDefault::CLevel_StageDefault(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CLevel(pDevice, pContext)
 {
+	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam.json";
+	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Tutorial.json";
 }
 
 HRESULT CLevel_StageDefault::Initialize()
@@ -33,6 +38,7 @@ HRESULT CLevel_StageDefault::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Cheat::Create(m_pDevice, m_pContext));
 
 	CUI_Manager::GetInstance()->Clear();
 	CGameInstance::GetInstance()->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
@@ -45,9 +51,11 @@ HRESULT CLevel_StageDefault::Initialize()
 
 	if (FAILED(Ready_Layer_Camera(PLAYERTEST_LAYER_CAMERA)))
 		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Player(PLATERTEST_LAYER_PLAYER)))
-		return E_FAIL;
+	if (m_bPlayerSpawn)
+	{
+		if (FAILED(Ready_Layer_Player(PLATERTEST_LAYER_PLAYER)))
+			return E_FAIL;
+	}
 
 	if (FAILED(Ready_Layer_UI(PLAYERTEST_LAYER_FRONTUI)))
 		return E_FAIL;
@@ -58,16 +66,13 @@ HRESULT CLevel_StageDefault::Initialize()
 	if (FAILED(Ready_Layer_Effect(PLAYERTEST_LAYER_POSTVFX)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;
-
 	if (FAILED(Ready_Layer_SASPortrait(LAYER_SAS)))
 		return E_FAIL;
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
-	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam.json";
-	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Tutorial.json";
+	if (m_bPlayerSpawn)
+		CGameInstance::GetInstance()->FindCamera("PlayerCamera")->SetMainCamera();
 
 	return S_OK;
 }
@@ -82,13 +87,16 @@ HRESULT CLevel_StageDefault::Render()
 HRESULT CLevel_StageDefault::Ready_Prototypes()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
-	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
+	if (m_bPlayerSpawn)
+	{
+		FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
+	}
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeTriggerPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeAIPrototypes(m_pDevice, m_pContext));
 
 	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Prototype_GameObject_SkyBox") == nullptr)
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
@@ -121,9 +129,12 @@ HRESULT CLevel_StageDefault::Ready_Layer_Camera(const _tchar* pLayerTag)
 
 	CGameInstance::GetInstance()->Add_Camera("DynamicCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic");
 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(m_strShadowCamJsonPath);
-	CGameInstance::GetInstance()->Add_Camera("ShadowCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic", &json);
-	CGameInstance::GetInstance()->SetShadowCam(CGameInstance::GetInstance()->FindCamera("ShadowCamera"));
+	if (m_strShadowCamJsonPath.empty() == false)
+	{
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson(m_strShadowCamJsonPath);
+		CGameInstance::GetInstance()->Add_Camera("ShadowCamera", LEVEL_NOW, pLayerTag, L"Prototype_GameObject_Camera_Dynamic", &json);
+		CGameInstance::GetInstance()->SetShadowCam(CGameInstance::GetInstance()->FindCamera("ShadowCamera"));
+	}
 
 	return S_OK;
 }
@@ -234,5 +245,21 @@ HRESULT CLevel_StageDefault::Ready_Layer_SASPortrait(const _tchar* pLayerTag)
 
 HRESULT CLevel_StageDefault::Ready_Layer_AI(const _tchar* pLayerTag)
 {
+	if (m_bPlayerSpawn == false)
+		return S_OK;
+
+	Json PreviewData;
+	PreviewData["Model"] = "Model_AI_CH0300";
+
+	CGameObject* pAI_CH0300 = nullptr;
+	NULL_CHECK(pAI_CH0300 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0300"), &PreviewData));
+
+	Json Tsugumi;
+	Tsugumi["Model"] = "Model_AI_CH0500";
+
+	CGameObject* pAI_CH0500 = nullptr;
+	NULL_CHECK(pAI_CH0500 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0500"), &Tsugumi));
+
+
 	return S_OK;
 }

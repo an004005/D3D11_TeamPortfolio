@@ -587,7 +587,7 @@ void CPlayer::AfterPhysX()
 		static_cast<CScarletWeapon*>(iter)->Trail_Tick(m_fTimeDelta);
 	}
 	m_pCamSpot->SetUp_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
-	m_pRange->Update_Tick(m_pTransformCom);
+	// m_pRange->Update_Tick(m_pTransformCom);
 
 	 //if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 	 //{
@@ -1477,8 +1477,8 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	NULL_CHECK(m_pASM = CBaseAnimInstance::Create(m_pModel, this));
 
 	Json PlayerCollider = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Player/PlayerRange.json");
-	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody",
-		L"PlayerRangeCollider", (CComponent**)&m_pRange, &PlayerCollider));
+	// FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody",
+	// 	L"PlayerRangeCollider", (CComponent**)&m_pRange, &PlayerCollider));
 
 	m_pSAS_Cable = dynamic_cast<CSAS_Cable*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Prototype_GameObject_SASCable"));
 	Assert(m_pSAS_Cable != nullptr);

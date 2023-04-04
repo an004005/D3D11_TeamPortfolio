@@ -182,7 +182,12 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 				});
 			}
 		}
-		else if (LEVEL_NOW == LEVEL_PLAYERTEST)
+		else if (LEVEL_NOW == LEVEL_PLAYERTEST 
+			|| LEVEL_NOW == LEVEL_TUTORIAL
+			|| LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F
+			|| LEVEL_NOW == LEVEL_SUBWAY
+			|| LEVEL_NOW == LEVEL_NAOMIROOM
+			|| LEVEL_NOW == LEVEL_HOSPITAL_1F)
 		{
 			if (m_iSelectFinishFunc == 0)
 			{

@@ -117,18 +117,18 @@ EBaseTurn CClientUtils::TurnDeltaToEnum(_float fTurnDelta)
 string CClientUtils::GetEnemyProtoTag(EEnemyName eName)
 {
 	static array<string, ENEMY_CNT> s_EnemyNames{
-	   "NotUsing", // 말
+	   "Monster_em110", // 말
 		"Monster_em200", // 플라워레그
-	   "NotUsing", // 투명
-	   "NotUsing", // 베이스포스
+	   "Monster_em210", // 투명
+	   "Monster_em220", // 베이스포스
 	   "Monster_em320", // 보스1
 	   "Monster_em400",  // 버디러미
 	   "Monster_em650", // 스쿠미풀
-	   "NotUsing", // 초파리
+	   "Monster_em700", // 초파리
 	   "Monster_em750", // 파리
 	   "Monster_em800", // 브론존
-	   "NotUsing", // 물
-	   "NotUsing", // 나오미
+	   "Monster_em1100", // 물
+	   "Monster_em1200", // 나오미
 	   "NotUsing", // 중대장
 	};
 

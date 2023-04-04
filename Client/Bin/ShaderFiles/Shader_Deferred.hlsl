@@ -180,7 +180,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 
 		float fSSAO = g_AOTexture.Sample(LinearSampler, In.vTexUV);
 
-		Out.vShade.rgb = fSSAO * LightSurface(V, vNormal.xyz, g_vLightDiffuse.xyz, g_vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
+		Out.vShade.rgb = fSSAO * LightSurface(V, normalize(vNormal.xyz), g_vLightDiffuse.xyz, g_vLightDir.xyz, albedo.rgb, roughness, metalness, AO);
 		Out.vShade.a = 1.f;
 
 		return Out;

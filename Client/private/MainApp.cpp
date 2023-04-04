@@ -48,6 +48,8 @@
 #include "SuperSpeedTrail.h"
 #include "Item_Manager.h"
 
+#include "VIBuffer_Point_Instancing.h"
+
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
@@ -278,6 +280,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_TelephonePole_007_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_TelephonePole_007.static_model", PivotMatrix, 100))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Point_Instance_Particle", CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, 30000))))
+		return E_FAIL;
+
+
+
 	////////////////////
 	///
 	/* For.Prototype_Component_Shader_VtxMesh_Instance */

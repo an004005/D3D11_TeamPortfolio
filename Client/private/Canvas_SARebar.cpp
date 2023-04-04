@@ -49,7 +49,7 @@ void CCanvas_SARebar::Tick(_double TimeDelta)
 
 void CCanvas_SARebar::KeyInput()
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_X))
+	if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
 		m_bInput = true;
 	}
