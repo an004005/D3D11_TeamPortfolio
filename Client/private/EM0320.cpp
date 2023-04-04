@@ -14,11 +14,11 @@
 #include "EM0320_Controller.h"
 #include "FSMComponent.h"
 
-#include "OilBullet.h" // Oil_Bullet
 #include "BulletBuilder.h"
 #include "VFX_Manager.h"
 
 #include "Canvas_BossHpMove.h"
+#include "ImguiUtils.h"
 
 CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -169,11 +169,24 @@ void CEM0320::SetUpAnimationEvent()
 	});
 	m_pModelCom->Add_EventCaller("SwingL_Eff", [this]
 	{
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")->Start_Attach(this, "Eff02", true, false);
+			_float4x4 SwingL_EffPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ 0.f, -1.265f, 2.344f },
+				{ -180.f, 0.f, -180.f, },
+				{ 1.f, 1.f, 1.f });
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")
+			->Start_AttachPivot(this, SwingL_EffPivot, "Target", true, true, true);
+
 	});
 	m_pModelCom->Add_EventCaller("SwingR_Eff", [this]
 	{
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")->Start_Attach(this, "Eff02", true, false);
+			_float4x4 SwingR_EffPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ 0.f, -1.265f, 2.344f },
+				{ -180.f, 0.f, -180.f, },
+				{ 1.f, 1.f, 1.f });
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")
+			->Start_AttachPivot(this, SwingR_EffPivot, "Target", true, true, true);
 	});
 	m_pModelCom->Add_EventCaller("Start_Spin", [this]
 	{
@@ -503,6 +516,28 @@ void CEM0320::Imgui_RenderProperty()
 {
 	CEnemy::Imgui_RenderProperty();
 	ImGui::InputFloat("angle", &fangle);
+
+	static _bool tt = false;
+	ImGui::Checkbox("Modify Pivot", &tt);
+
+	if (tt)
+	{
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+
+		if (ImGui::Button("TestEffect"))
+		{
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")
+				->Start_AttachPivot(this, pivot, "Target", true, true, true);
+		}
+
+		if (ImGui::Button("TestEffect2"))
+		{
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")
+				->Start_AttachPivot(this, pivot, "Target", true, true, true);
+		}
+	}
+
 }
 
 void CEM0320::AfterPhysX()

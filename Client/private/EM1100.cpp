@@ -6,6 +6,8 @@
 #include "EM1100_Controller.h"
 #include "ImguiUtils.h"
 #include "BulletBuilder.h"
+#include "Material.h"
+#include "RigidBody.h"
 
 CEM1100::CEM1100(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -54,6 +56,14 @@ void CEM1100::SetUpComponents(void * pArg)
 	CEnemy::SetUpComponents(pArg);
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em1100", L"Model", (CComponent**)&m_pModelCom));
 
+	m_pWeak = m_pModelCom->FindMaterial(L"MI_em1100_WEAK_0");
+	assert(m_pWeak != nullptr);
+
+	Json WeakCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1100/em1100Weak.json");
+	Json BodyCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0110/em1100Body.json");
+
+	Add_RigidBody("Weak", &WeakCol);
+	Add_RigidBody("Body", &BodyCol);
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM1100_Controller::Create();
@@ -637,6 +647,7 @@ void CEM1100::Tick(_double TimeDelta)
 		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
 	}
 
+	HitWeakProcess(TimeDelta);
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
 }
@@ -649,6 +660,10 @@ void CEM1100::Late_Tick(_double TimeDelta)
 void CEM1100::AfterPhysX()
 {
 	CEnemy::AfterPhysX();
+
+	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	GetRigidBody("Weak")->Update_Tick(m_pModelCom->GetBoneMatrix("Shell3") * WorldMatrix);
+	GetRigidBody("Body")->Update_Tick(m_pModelCom->GetBoneMatrix("Target") * WorldMatrix);
 }
 
 HRESULT CEM1100::Render()
@@ -666,21 +681,26 @@ void CEM1100::Imgui_RenderProperty()
 	}
 	m_pFSM->Imgui_RenderProperty();
 
-	/*static _bool tt = false;
-	ImGui::Checkbox("Modify Pivot", &tt);
+	//static _bool tt = false;
+	//ImGui::Checkbox("Modify Pivot", &tt);
 
-	if (tt)
-	{
-		static GUIZMO_INFO tInfo;
-		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+	//if (tt)
+	//{
+	//	static GUIZMO_INFO tInfo;
+	//	CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
 
-		if (ImGui::Button("Create_Effect"))
-		{
+	//	if (ImGui::Button("TetsEffect"))
+	//	{
 
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Elec_Bullet_Start")
-				->Start_AttachPivot(this, pivot, "Shell1", true, true);
-		}
-	}*/
+	//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Elec_Bullet_Loop")
+	//		->Start_NoAttachPivot(this, pivot, true, true);
+	//	}
+	//}
+}
+
+_bool CEM1100::IsWeak(CRigidBody* pHitPart)
+{
+	return 	pHitPart == GetRigidBody("Weak");
 }
 
 _bool CEM1100::IsPlayingSocket() const
@@ -750,6 +770,7 @@ void CEM1100::Create_Bullet()
 			.Set_Owner(this)
 			.Set_Target(m_pTarget)
 			.Set_InitBulletEffect({ L"em1100_Elec_Bullet_Loop" })
+			.Set_BulletEffPivot(pivot)
 			.Set_InitBulletParticle(L"em1100_Elec_Bullet_Particle")
 			.Set_ShootSpeed(8.f)
 			.Set_Life(7.f)
@@ -760,6 +781,26 @@ void CEM1100::Create_Bullet()
 		.Build();
 
 
+}
+
+void CEM1100::HitWeakProcess(_double TimeDelta)
+{
+	if (m_bHitWeak)
+	{
+		m_bWeakProcess = true;
+		m_pWeak->GetParam().Floats[1] = 1.f;
+	}
+
+	if (m_bWeakProcess)
+	{
+		m_pWeak->GetParam().Floats[1] -= static_cast<_float>(TimeDelta);
+
+		if (m_pWeak->GetParam().Floats[1] <= 0.f)
+		{
+			m_pWeak->GetParam().Floats[1] = 0.f;
+			m_bWeakProcess = false;
+		}
+	}
 }
 
 void CEM1100::Rush_SweepSphere()

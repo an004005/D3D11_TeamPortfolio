@@ -131,6 +131,7 @@ private:
 	_float m_fWeakExplosionTickTime = 0.3f;
 	_uint m_fWeakExplosionCnt = 0;
 
+	_float4x4 pivot;
 public:
 	static CEM0320* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
