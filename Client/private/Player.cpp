@@ -30,8 +30,7 @@
 #include "CurveFloatMapImpl.h"
 
 #include "MonsterLockonUI.h"
-#include "MonsterHpUI.h"
-#include "MonsterShildUI.h"
+#include "EMUI.h"
 
 #include "NoticeNeonUI.h"
 #include "JsonLib.h"
@@ -58,6 +57,8 @@
 #include "PostVFX_SuperSpeed.h"
 #include "PostVFX_Teleport.h"
 #include "AnimCam.h"
+
+#include "Canvas_SAMouseLeft.h"
 
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -657,6 +658,16 @@ void CPlayer::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
+	if (ImGui::CollapsingHeader("StateCheck"))
+	{
+		ImGui::Checkbox("CanTurn", &m_bCanTurn);
+		ImGui::Checkbox("CanMove", &m_bCanMove);
+		ImGui::Checkbox("CanRun", &m_bCanRun);
+		ImGui::Checkbox("CanAttackTurn", &m_bCanTurn_Attack);
+		ImGui::Checkbox("OnAir", &m_bAir);
+		ImGui::Checkbox("OnGravity", &m_bActiveGravity);
+	}
+
 	if (ImGui::CollapsingHeader("ProductionTool"))
 	{
 		if (ImGui::Button("DriveMode_Start"))
@@ -868,27 +879,35 @@ void CPlayer::SasMgr()
 		InputSas = ESASType::SAS_TELEPORT;
 		m_bSASSkillInput[0] = true;
 	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_2))
+	else if (CGameInstance::GetInstance()->KeyDown(DIK_2))
 	{
 		InputSas = ESASType::SAS_PENETRATE;
 		m_bSASSkillInput[1] = true;
 	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_3))
+	else if (CGameInstance::GetInstance()->KeyDown(DIK_3))
 	{
 		InputSas = ESASType::SAS_HARDBODY;
 		m_bSASSkillInput[2] = true;
 
 	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_4))
+	else if (CGameInstance::GetInstance()->KeyDown(DIK_4))
 	{
 		InputSas = ESASType::SAS_FIRE;
 		m_bSASSkillInput[3] = true;
 
 	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_5))	InputSas = ESASType::SAS_SUPERSPEED;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_6))	InputSas = ESASType::SAS_COPY;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_7))	InputSas = ESASType::SAS_INVISIBLE;
-	if (CGameInstance::GetInstance()->KeyDown(DIK_8))	InputSas = ESASType::SAS_ELETRIC;
+	else if (CGameInstance::GetInstance()->KeyDown(DIK_5)) 
+	{
+		InputSas = ESASType::SAS_SUPERSPEED;
+		m_bSASSkillInput[4] = true;
+	}
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_6))	InputSas = ESASType::SAS_COPY;
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_7))	InputSas = ESASType::SAS_INVISIBLE;
+	else if (CGameInstance::GetInstance()->KeyDown(DIK_8))
+	{
+		InputSas = ESASType::SAS_ELETRIC;
+		m_bSASSkillInput[7] = true;
+	}
 
 	if (InputSas != ESASType::SAS_END)
 	{
@@ -1007,7 +1026,7 @@ void CPlayer::SasMgr()
 					LAYER_KINETIC,
 					LAYER_MAPKINETICOBJECT
 				};
-				CGameInstance::GetInstance()->SetTimeRatio(0.01f, &except);
+				CGameInstance::GetInstance()->SetTimeRatio(0.3f, &except);
 
 				m_pTrail->SetActive(true);
 				m_pSuperSpeedPostVFX->Active(true);
@@ -1227,6 +1246,8 @@ void CPlayer::SasStateCheck()
 			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Dead_Particles"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
 		}
+
+		m_bSASSkillInput[4] = false;
 
 		CGameInstance::GetInstance()->ResetDefaultTimeRatio();
 		m_pSuperSpeedPostVFX->Active(false);
@@ -2112,7 +2133,13 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			.Priority(0)
 
 		.AddState("KINETIC_RB_LOOP")
-			.OnStart([&]() { m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Loop); })
+			.OnStart([&]() 
+			{ 
+				m_pASM->AttachAnimSocket("Kinetic_AnimSocket", m_Kinetic_RB_Loop);
+
+				if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
+					static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->CreateLargeParticle();
+			})
 			.Tick([&](double TimeDelta) 
 			{
 				m_bKineticMove = true;
@@ -2132,7 +2159,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			.OnExit([&]() {m_fKineticCharge = 0.f; })
 
 			.AddTransition("KINETIC_RB_LOOP to KINETIC_RB_THROW_01_START", "KINETIC_RB_THROW_01_START")
-			.Predicator([&]()->_bool{return m_fKineticCharge >= 1.f;})
+			.Predicator([&]()->_bool{return m_fKineticCharge >= 0.5f;})
 			.Priority(0)
 
 			.AddTransition("KINETIC_RB_LOOP to KINETIC_RB_CANCEL", "KINETIC_RB_CANCEL")
@@ -2176,7 +2203,15 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			})
 
 			.AddTransition("KINETIC_RB_THROW_01_START to NO_USE_KINETIC", "NO_USE_KINETIC")
-			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket") || m_bLeftClick || m_bDash || m_bJump; })
+			.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Kinetic_AnimSocket"); })
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_THROW_01_START to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool {return m_bLeftClick || m_bDash || m_bJump; })
+			.Priority(0)
+
+			.AddTransition("KINETIC_RB_THROW_01_START to NO_USE_KINETIC", "NO_USE_KINETIC")
+			.Predicator([&]()->_bool {return m_pASM->isSocketPassby("Kinetic_AnimSocket", 0.2f) && m_bKineticRB; })
 			.Priority(0)
 
 #pragma endregion KineticRB_Throw
@@ -2334,7 +2369,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			.Tick([&](double TimeDelta) 
 			{
 				m_bWalk = false;
-				m_bAir = false;
+				//m_bAir = false;
 			})
 				.AddTransition("FALLDOWN to NON_HIT", "NON_HIT")
 				.Predicator([&]()->_bool {return m_pASM->isSocketEmpty("Hit_AnimSocket"); })
@@ -4778,6 +4813,8 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_Swing_L);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+
+			CreateSpecialUI(SPECIAL_TELEPHONEPOLE);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -4903,7 +4940,7 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 			.Predicator([&]()->_bool 
 			{ 
 				if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return false;
-				return m_pController->KeyDown(CController::F) && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Decide_PlayBrainCrush();
+				return m_bBrainCrashInput && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Decide_PlayBrainCrush();
 			})
 			.Priority(0)
 
@@ -5097,6 +5134,8 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Rotation_L);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+
+			CreateSpecialUI(SPECIAL_HBEAM_BUNDLE);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -5695,6 +5734,8 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			CGameInstance::GetInstance()->SetTimeRatioCurve("IronBars_Slow");
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Charge_Ex);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+
+			CreateSpecialUI(SPECIAL_IRONBARS);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -5785,6 +5826,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		.OnStart([&]() 
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Wait_Ex);
+			CreateSpecialUI(SPECIAL_IRONBARS, true);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -6125,6 +6167,8 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_Press);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 			CGameInstance::GetInstance()->SetTimeRatioCurve("TelephonePoleSlow");
+
+			CreateSpecialUI(SPECAIL_CONTAINER);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -6153,6 +6197,7 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 		.AddState("CONTAINER_PRESS")
 		.OnStart([&]() 
 		{
+			CreateSpecialUI(SPECAIL_CONTAINER, true);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -7184,6 +7229,8 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 		m_bKineticRB = false;
 		m_bKineticG = false;
 		m_bUpper = false;
+
+		m_bBrainCrashInput = false;
 	}
 	else
 	{
@@ -7197,6 +7244,13 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 
 		m_bJump = m_pController->KeyDown(CController::SPACE);
 		m_bUpper = m_pController->KeyPress(CController::SPACE);
+
+		m_bBrainCrashInput = m_pController->KeyDown(CController::R);
+
+		if (m_bBrainCrashInput)
+		{
+			int iA = 0;
+		}
 
 		//if (m_bCanTurn_Attack)
 		//{
@@ -7484,7 +7538,7 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(pTarget);
-			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->Get_UIPivotMatrix(ENEMY_FINDEYES));
+			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix("Target"));
 
 		}
 
@@ -7502,12 +7556,12 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(pTarget);
-			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->Get_UIPivotMatrix(ENEMY_FINDEYES));
+			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix("Target"));
 		}
 
 		//info bar ¼³Á¤
 		if (pTarget != nullptr)
-			pTarget->Create_InfoUI();
+			pTarget->GetEnemyUI()->Create_UIInfo();
 
 		//Create_TargetInfoBar(pTarget);
 
@@ -8251,6 +8305,61 @@ void CPlayer::End_RimLight()
 	{
 		iter->GetParam().Floats[0] = 0.f;
 		//iter->GetParam().Float4s[0] = { 0.f, 0.f, 0.f, 0.f };
+	}
+}
+
+void CPlayer::CreateSpecialUI(ESpecialType eType, _bool bAdditional)
+{
+	Json json;
+
+	switch (eType)
+	{
+	case SPECIAL_TELEPHONEPOLE:
+
+		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAMouseLeft.json");
+		CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAMouseLeft", &json);
+
+		break;
+
+	case SPECIAL_HBEAM_BUNDLE:
+
+		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SARebar.json");
+		CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SARebar", &json);
+
+		break;
+
+	case SPECIAL_IRONBARS:
+
+		if (bAdditional)
+		{
+			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_Go.json");
+			CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_Go", &json);
+		}
+		else
+		{
+			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
+			CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_S", &json);
+		}
+
+		break;
+
+	case SPECAIL_CONTAINER:
+
+		if (bAdditional)
+		{
+			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAContainer_Down.json");
+			CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAContainer_Down", &json);
+		}
+		else
+		{
+			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
+			CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_S", &json);
+		}
+
+		break;
+
+	default:
+		break;
 	}
 }
 

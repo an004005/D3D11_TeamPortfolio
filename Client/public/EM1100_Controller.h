@@ -22,7 +22,6 @@ public:
 
 
 	void Tick_Near(_double TimeDelta);
-	void Tick_Mid(_double TimeDelta);
 	void Tick_Far(_double TimeDelta);
 	void Tick_Outside(_double TimeDelta);
 
@@ -39,8 +38,8 @@ private:
 
 private:	
 	_bool	m_bRun = false;
-
-	_uint m_iMidOrder = 0;
+	_bool	m_bAttack = false;
+	_uint m_iNearOrder = 0;
 	_uint m_iFarOrder = 0;
 
 	_double m_dRushCoolTime[COOL_END] = { 0.0, 40.0 };

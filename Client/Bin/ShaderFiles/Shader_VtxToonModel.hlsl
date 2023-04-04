@@ -143,7 +143,7 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
 	Out.vOutline = g_vec4_0;
-	// Out.vFlag = flags;
+	Out.vFlag = float4(0.f, SHADER_POST_TOON, SHADER_TOON_GRAY_INGNORE, 0.f);
 
 	return Out;
 }

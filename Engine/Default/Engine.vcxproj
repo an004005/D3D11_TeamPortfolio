@@ -262,6 +262,7 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\SoundStore.h" />
     <ClInclude Include="..\public\Sound_Manager.h" />
     <ClInclude Include="..\public\SSAOManager.h" />
+    <ClInclude Include="..\public\SSLRManager.h" />
     <ClInclude Include="..\public\stdafx.h" />
     <ClInclude Include="..\public\Target_Manager.h" />
     <ClInclude Include="..\public\Texture.h" />
@@ -361,6 +362,7 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\SoundStore.cpp" />
     <ClCompile Include="..\private\Sound_Manager.cpp" />
     <ClCompile Include="..\private\SSAOManager.cpp" />
+    <ClCompile Include="..\private\SSLRManager.cpp" />
     <ClCompile Include="..\private\Target_Manager.cpp" />
     <ClCompile Include="..\private\Texture.cpp" />
     <ClCompile Include="..\private\Timeline.cpp" />

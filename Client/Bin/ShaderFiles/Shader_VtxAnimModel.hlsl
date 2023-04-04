@@ -491,6 +491,7 @@ PS_OUT PS_em0210_Invisible_9(PS_IN In)
 
 // g_float_0  : 사망 디졸브
 // g_float_1 : 아머 반짝이는 디솔브
+// g_float_2 : 아머 부서지는
 // g_int_0 : 상태이상 플래그
 PS_OUT PS_EnemyArmor_10(PS_IN In)
 {
@@ -503,6 +504,13 @@ PS_OUT PS_EnemyArmor_10(PS_IN In)
 		float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
 		float fFresnel = FresnelEffect(vNormal, normalize(vViewDir.xyz), 1.f);
 		Out.vDepth.z = fFresnel * 6.5f * fArmorDissolve;
+	}
+	float fBreakDissolve = g_float_2;
+	if (fBreakDissolve > 0.f)
+	{
+		float fNoise = g_scl_noise_004.Sample(LinearSampler, In.vTexUV * 2.f).r;
+		if (fBreakDissolve >= fNoise)
+			discard;
 	}
 
 	return Out;

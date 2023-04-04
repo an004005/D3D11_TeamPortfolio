@@ -319,9 +319,6 @@
     <Filter Include="02.GameObjects\Enemy\EM1200">
       <UniqueIdentifier>{61165ce0-fb67-4415-a32c-0df79482337c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Enemy\EM750">
-      <UniqueIdentifier>{30894673-a85c-4561-a24d-c88173551c33}</UniqueIdentifier>
-    </Filter>
     <Filter Include="30. GameManager">
       <UniqueIdentifier>{cb57ec25-6234-4298-9582-1b732464e268}</UniqueIdentifier>
     </Filter>
@@ -459,6 +456,18 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Short\MainTalk">
       <UniqueIdentifier>{3d3c494d-c477-4d25-ac7c-b90362d34b26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMUI">
+      <UniqueIdentifier>{106811ed-76ea-474b-8b9a-f3137f339996}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0750">
+      <UniqueIdentifier>{30894673-a85c-4561-a24d-c88173551c33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMCable">
+      <UniqueIdentifier>{9d04415c-c928-492a-9cd6-32a8c8ed964e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Weapon\wp0500">
+      <UniqueIdentifier>{c10400ca-64a5-4606-a04e-1ae7a70a2d80}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1142,13 +1151,13 @@
       <Filter>02.GameObjects\Enemy\EM1100</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0750_Controller.h">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0750.h">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EM0750_AnimInstance.h">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Special_HBeam_Bundle.h">
       <Filter>02.GameObjects\SpecialObject\Special_HBeam</Filter>
@@ -1374,6 +1383,15 @@
     </ClInclude>
     <ClInclude Include="..\public\Talk_FaceUI.h">
       <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EMUI.h">
+      <Filter>02.GameObjects\Enemy\EMUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EMCable.h">
+      <Filter>02.GameObjects\Enemy\EMCable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Weapon_wp0500.h">
+      <Filter>02.GameObjects\Weapon\wp0500</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_MainTalk.h">
       <Filter>02.GameObjects\UI\Short\MainTalk</Filter>
@@ -2040,13 +2058,13 @@
       <Filter>02.GameObjects\Enemy\EM1100</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0750.cpp">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0750_AnimInstance.cpp">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM0750_Controller.cpp">
-      <Filter>02.GameObjects\Enemy\EM750</Filter>
+      <Filter>02.GameObjects\Enemy\EM0750</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_KineticEditor.cpp">
       <Filter>01.Levels\17.KineticEditor</Filter>
@@ -2269,6 +2287,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Talk_FaceUI.cpp">
       <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EMUI.cpp">
+      <Filter>02.GameObjects\Enemy\EMUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EMCable.cpp">
+      <Filter>02.GameObjects\Enemy\EMCable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Weapon_wp0500.cpp">
+      <Filter>02.GameObjects\Weapon\wp0500</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_MainTalk.cpp">
       <Filter>02.GameObjects\UI\Short\MainTalk</Filter>

@@ -282,6 +282,15 @@ void CParticleGroup::Start_AttachSpecificPos(CGameObject* pOwner, _float4 vPosit
 	m_bGenerate = true;
 }
 
+void CParticleGroup::Start_NoOwnerOnlyPos(_float4 vPositon)
+{
+	_matrix SocketMatrix = XMMatrixTranslation(vPositon.x, vPositon.y, vPositon.z);
+
+	Set_Transform(SocketMatrix);
+
+	m_bGenerate = true;
+}
+
 void CParticleGroup::Set_Transform(_matrix socket)
 {
 	for(auto iter : m_mapParticleSystem)
@@ -309,7 +318,10 @@ void CParticleGroup::Tick(_double TimeDelta)
 
 	VisibleUpdate();
 
-	if(m_bUpdate == true && (nullptr != m_pOwner) && m_pOwner->IsDeleted() == false && (nullptr == m_pAttachWeapon))
+	if(m_bUpdate == true 
+		&& CGameInstance::GetInstance()->Check_ObjectAlive(m_pOwner)
+		&& m_pOwner->IsDeleted() == false 
+		&& (nullptr == m_pAttachWeapon))
 	{
 		if (m_BoneName != "")
 		{

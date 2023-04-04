@@ -65,7 +65,7 @@ void CEM1200_Controller::AI_Tick(_double TimeDelta)
 	_bool ttty = m_pCastedOwner->IsPlayingSocket() == false;
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
-	{
+	{	
 		DefineState(TimeDelta);
 	}
 }
@@ -102,21 +102,21 @@ void CEM1200_Controller::Tick_Near_2Phase(_double TimeDelta)
 
 		if (m_dShoutCoolTime[CURTIME] >= m_dShoutCoolTime[MAXTIME])
 		{
-			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 2.f);
+			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 1.f);
 			AddCommand("Shout2", 0.f, &CAIController::Input, NUM_2);
 			AddCommand("Wait", 1.f, &CAIController::Wait);
 			m_dShoutCoolTime[CURTIME] = 0.0;
 		}
 		else if (m_dStampCoolTime[CURTIME] >= m_dStampCoolTime[MAXTIME])
 		{
-			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 2.f);
+			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 1.f);
 			AddCommand("Stamp", 0.f, &CAIController::Input, S);
 			AddCommand("Wait", 1.f, &CAIController::Wait);
 			m_dStampCoolTime[CURTIME] = 0.0;
 		}
 		else
 		{
-			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 2.f);
+			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 1.f);
 			AddCommand("Rush", 0.f, &CAIController::Input, R);
 			AddCommand("Wait", 1.f, &CAIController::Wait);
 		}
@@ -160,8 +160,16 @@ void CEM1200_Controller::Tick_Far(_double TimeDelta)
 void CEM1200_Controller::Tick_Outside(_double TimeDelta)
 {
 	m_eDistance = DIS_OUTSIDE;
-	AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 2.f);
-	AddCommand("Run", 3.f, &CEM1200_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 2.f);
+
+	if (m_bChangePhase == false)
+	{
+		AddCommand("Wait", 2.f, &CAIController::Wait);
+	}
+	else
+	{
+		AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 2.f);
+		AddCommand("Run", 3.f, &CEM1200_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 2.f);
+	}
 }
 
 void CEM1200_Controller::Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
@@ -185,8 +193,10 @@ void CEM1200_Controller::DefineState(_double TimeDelta)
 	{
 		if (m_fTtoM_Distance <= 7.f)
 			Tick_Near_1Phase(TimeDelta);
-		else
+		else if(m_fTtoM_Distance <= 15.f)
 			Tick_Mid(TimeDelta);
+		else
+			Tick_Outside(TimeDelta);
 	}
 
 	else

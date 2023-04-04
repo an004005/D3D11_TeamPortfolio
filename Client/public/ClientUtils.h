@@ -13,6 +13,8 @@
 #define LAYER_PLAYEREFFECT			TEXT("Layer_PlayerEffect")
 #define LAYER_MAPKINETICOBJECT		TEXT("Layer_MapKineticObject")
 #define LAYER_AI					TEXT("Layer_AI")
+#define LAYER_MAP_DECO				TEXT("Layer_MapDecorate")
+
 
 
 #define LAYER_TRIGGER				TEXT("Layer_Trigger")

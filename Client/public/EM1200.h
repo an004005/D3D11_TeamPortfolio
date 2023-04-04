@@ -3,15 +3,13 @@
 #include "Controller.h"
 
 BEGIN(Engine)
-class CFSMComponent;
-class CGameInstance;
-class CAnimation;
 class CRigidBody;
+class CMaterial;
 END
 
 BEGIN(Client)
 
-// 초(고속)파리 :: 방도 팡뒤(Bangdo Fandu)
+// 나오미 랜드
 
 class CEM1200 : public CEnemy
 {
@@ -33,6 +31,7 @@ public:
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
+	virtual _bool IsWeak(CRigidBody* pHitPart);
 
 public:
 	_bool	IsChangePhase() const { return m_bChangePhase; }
@@ -51,6 +50,7 @@ public:
 
 	ESimpleAxis TargetSimpleAxis();
 	EBaseTurn TargetBaseTurn();
+	void HitWeakProcess(_double TimeDelta);
 
 public:
 	//충돌
@@ -64,6 +64,7 @@ public:
 private:
 	class CEM1200_Controller*		m_pController = nullptr;
 	class CEM1200_AnimInstance*		m_pASM = nullptr;
+	CMaterial* m_pWeak = nullptr;
 
 private:
 	_float3						m_vMoveAxis;
@@ -76,16 +77,22 @@ private:
 	_double						m_dLoopTick = 0.0;
 	_bool						m_bAttack = false;
 	_uint						m_iAttackCount = 0;
+	_int						m_iPreAttackCount = -1;
+
+	_float4					m_SaveTargetPos;
 	//Dodge
 	_bool						m_bDodge = false;
 	_float3						m_vOnJumpMoveVelocity;
 
-	
+	_bool						m_bWeakProcess = false;
+
 	CController::EHandleInput	m_eInput;
 
 	//Heavy coll
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
+
+	_float4x4		pivot;
 public:
 	static CEM1200* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

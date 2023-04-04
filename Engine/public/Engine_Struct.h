@@ -98,6 +98,7 @@ namespace Engine
 		static D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];			
 	}VTXLINE_DECLARATION;
 
+
 	typedef struct tagVertexPosition
 	{
 		XMFLOAT3		vPosition;
@@ -331,4 +332,32 @@ namespace Engine
 		physx::PxTriangleMeshGeometry tMeshGeom;
 		physx::PxShape* pShape = nullptr;
 	};
+
+
+	typedef struct tagVertexLine
+	{
+		_float3		vPosition;
+	}VTXLINE_POS;
+
+	typedef struct ENGINE_DLL tagVertexLine_Declaration
+	{
+		static const unsigned int		iNumElements = 1;
+		static D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];			
+	}VTXLINE_POS_DECLARATION;
+
+	typedef struct tagVertexLinePosInstance
+	{
+		_float4			vRight;
+		_float4			vUp;
+		_float4			vLook;
+		_float4			vPosition;
+		_float3			vStartTangent;
+		_float3			vEndTangent;
+	}VTXLINE_POS_INSTANCE;
+
+	typedef struct ENGINE_DLL tagVertexLinePosInstance_Declaration
+	{
+		static const unsigned int		iNumElements = 7;
+		static D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXLINE_POS_INSTANCE_DECLARATION;
 }

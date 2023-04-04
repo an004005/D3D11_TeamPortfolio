@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Location/LC08/props/pr_SubwayBrokenBuilding/T_pr_Town_crack_tile_1_Subway_ALB.png",
+            "../Bin/Resources/Environments/Location/LC08/props/pr_SubwayBrokenBuilding/T_pr_Town_crack_tile_1_Subway_NML.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Basement/pr_BasementTown/pr_S_town_future/F_building/T_pr_Town_crack_tile_1RMA.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}

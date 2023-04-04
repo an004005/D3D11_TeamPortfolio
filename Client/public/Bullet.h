@@ -30,7 +30,7 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 public:
-	void Create_InitEffects(vector<wstring>& InitEffects);
+	void Create_InitEffects(vector<wstring>& InitEffects, _float4x4 pivot = XMMatrixIdentity());
 	void Create_InitParticle(wstring& InitParticle);
 	void Create_DeadEffects();
 	void Create_DeadParticle();
@@ -52,6 +52,9 @@ public:
 		m_eDamageParam = eDamageParam;
 	}
 
+	void Set_Target(class CScarletCharacter* pTarget) {
+		m_pTarget = pTarget;
+	}
 protected:
 	_bool CheckDamagedTarget(CGameObject* pTarget);
 
@@ -64,7 +67,7 @@ protected:
 	
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
-	
+	class CScarletCharacter* m_pTarget = nullptr;
 //	DAMAGE_PARAM			m_Damage_Params;
 	//_float					m_fShootSpeed = 0.f;
 

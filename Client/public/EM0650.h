@@ -40,9 +40,11 @@ private:
 	void Play_MidHitAnim();
 
 	void Create_Bullet();
+	void Make_Decal(_double TimeDelta);
 private:
 	//충돌 관련 함수 정의
 	void	HeavyAttackPushStart();
+
 private:
 	class CEM0650_Controller*		m_pController = nullptr;
 	class CEM0650_AnimInstance*		m_pASM = nullptr;
@@ -55,6 +57,9 @@ private:
 
 	_vector	m_LastSpotTargetPos;
 	_bool		m_bHitMove = false;
+
+	//데칼
+	_double		m_dDecalTime = 0.0;
 
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 

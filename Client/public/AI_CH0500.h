@@ -78,6 +78,8 @@ private:
 	void		Collision_Start();
 	void		Collision_End();
 	void		Collision_Twist();
+
+	void		Shoot(); 
 	
 private:
 	HRESULT		Setup_Parts();
