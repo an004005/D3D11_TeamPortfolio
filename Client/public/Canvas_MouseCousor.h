@@ -16,9 +16,13 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void   Tick(_double TimeDelta) override;
 
+	virtual void	Imgui_RenderProperty() override;
+
 private:
 	class CCanvas_MainTalk* m_pCanvas_MainTalk = { nullptr };
 	class CCanvas_Alarm* m_pCanvas_Alarm = { nullptr };
+	class CCanvas_SAGragting_Go* m_pCanvas_SAGragting_Go = { nullptr };
+	class CCanvas_SAContainer_Down* m_pCanvas_SAContainer_Down = { nullptr };
 
 public:
 	static CCanvas_MouseCousor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
