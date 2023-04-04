@@ -25,6 +25,9 @@ HRESULT CBoss_HpBackUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	m_fHp = 1.0f;
+	m_fCurrentHp = 1.0f;
+
 	return S_OK;
 }
 
@@ -32,15 +35,13 @@ void CBoss_HpBackUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 	
-	if (m_fCurrentHp > m_fHp)
+	if (m_tParams.Floats[0] > m_fHp)
 	{
-		m_fCurrentHp -= _float(TimeDelta) * 0.1f;
-		m_tParams.Floats[0] = m_fCurrentHp;
+		m_tParams.Floats[0] -= _float(TIME_DELTA) * 0.1f;
+		return;
 	}
-	else
-	{
-		m_fCurrentHp = m_fHp;
-	}
+
+	m_fCurrentHp = m_fHp;
 }
 
 void CBoss_HpBackUI::Late_Tick(_double TimeDelta)

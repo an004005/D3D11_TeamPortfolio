@@ -10,6 +10,7 @@
 #include "Canvas_SAContainer_Down.h"
 #include "Canvas_MainTalk.h"
 #include "Canvas_Alarm.h"
+#include "Canvas_BossHpMove.h"
 
 CCanvas_MouseCousor::CCanvas_MouseCousor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -33,6 +34,15 @@ HRESULT CCanvas_MouseCousor::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
+
+	// 보스 몬스터 체력바
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
+	//m_pCanvas_BossHpMove = dynamic_cast<CCanvas_BossHpMove*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Test"), L"Canvas_BossHpMove", &json));
+	//assert(m_pCanvas_BossHpMove != nullptr && "Failed to Clone : CCanvas_BossHpMove");
+
+
+
+
 	return S_OK;
 }
 
@@ -59,14 +69,14 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
 		//CCanvas_SAGragting_S* pCanvas_SAGragting_S = dynamic_cast<CCanvas_SAGragting_S*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAGragting_S", &json));
 		//pCanvas_SAGragting_S->Set_Intput();
-		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_Go.json");
-		m_pCanvas_SAGragting_Go = dynamic_cast<CCanvas_SAGragting_Go*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAGragting_Go", &json));
+		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_Go.json");
+		//m_pCanvas_SAGragting_Go = dynamic_cast<CCanvas_SAGragting_Go*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAGragting_Go", &json));
 	
 		// 컨테이너 : 처음에 Canvas_SAGragting_S 사용 나중에 Canvas_SAGragting_Down 사용
 		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
 		//CGameInstance::GetInstance()->Clone_GameObject(L"Layer_Test", L"Canvas_SAGragting_S", &json);
-		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAContainer_Down.json");
-		m_pCanvas_SAContainer_Down = dynamic_cast<CCanvas_SAContainer_Down*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAContainer_Down", &json));
+		//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAContainer_Down.json");
+		//m_pCanvas_SAContainer_Down = dynamic_cast<CCanvas_SAContainer_Down*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAContainer_Down", &json));
 
 		/////////////////////////////////////////////////////
 		
@@ -74,6 +84,9 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
 		//m_pCanvas_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_Alarm", &json));
 		//m_pCanvas_Alarm->Set_MapName();
+
+
+		
 	}
 
 	// 생성후 재사용 하는 애들
@@ -86,13 +99,22 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 		//m_pCanvas_MainTalk->Add_Talk(1);
 		//m_pCanvas_MainTalk->Add_Talk(2);
 
-		m_pCanvas_SAGragting_Go->Set_Input();
-		m_pCanvas_SAContainer_Down->Set_Input();
+		//m_pCanvas_SAGragting_Go->Set_Input();
+		//m_pCanvas_SAContainer_Down->Set_Input();
 	}
+
+	Imgui_RenderProperty();
 }
 
 void CCanvas_MouseCousor::Imgui_RenderProperty()
 {
+	//static _float iHp = 0;
+	//static _float iMaxHp = 0;
+	//ImGui::SliderFloat("Hp", &iHp, 0.0f, 1.0f);
+	//ImGui::SliderFloat("MaxHp", &iMaxHp, 0.0f, 1.0f);
+	//m_pCanvas_BossHpMove->Set_BossHp((_float)iHp / (_float)iMaxHp);
+
+
 }
 
 CCanvas_MouseCousor* CCanvas_MouseCousor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
