@@ -181,6 +181,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_BrainFieldAttackStateMachine()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_BrainFieldFallStateMachine()))
+		return E_FAIL;
+
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_PLAYEREFFECT);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
@@ -391,16 +394,18 @@ void CPlayer::Tick(_double TimeDelta)
 	if(!m_bHit && !m_bBrainCrash)
 		m_pJustDodgeStateMachine->Tick(TimeDelta);
 
-	if (!m_bHit && (false == m_bKineticCombo) && (false == m_bKineticSpecial) && !m_bBrainCrash) // ì½¤ë³´ ?€?´ë°???„ë‹ ?Œì—???¼ë°˜ ?¼ë ¥
+	if (!m_bHit && (false == m_bKineticCombo) && (false == m_bKineticSpecial) && !m_bBrainCrash)
 	{
 		m_pBrainFieldKineticStateMachine->Tick(TimeDelta);
 		//m_pKineticStataMachine->Tick(TimeDelta);
 	}
-	if (!m_bHit && (false == m_bKineticSpecial) && !m_bBrainCrash) // ì½¤ë³´ ?€?´ë°?ëŠ” ì½¤ë³´ ?¼ë ¥
+	if (!m_bHit && (false == m_bKineticSpecial) && !m_bBrainCrash)
 	{
 		m_pBrainFieldKineticComboStateMachine->Tick(TimeDelta);
 		//m_pKineticComboStateMachine->Tick(TimeDelta);
 	}
+
+	m_pBrainFieldFallStateMachine->Tick(TimeDelta);
 
 	if (m_bHit)
 	{
@@ -670,6 +675,7 @@ void CPlayer::Imgui_RenderProperty()
 
 	ImGui::InputFloat("BrainfieldRange", &m_fBF_Range);
 	ImGui::InputFloat("BrainfieldHeight", &m_fBF_Height);
+	ImGui::InputFloat("BrainfieldGatherPower", &m_fGatherPower);
 
 	if (ImGui::CollapsingHeader("StateCheck"))
 	{
@@ -3801,7 +3807,14 @@ HRESULT CPlayer::SetUp_BrainFieldKineticStateMachine()
 		{
 			BF_Throw.Reset();
 			m_bKineticMove = false;
-			KineticObject_Targeting();
+
+			if (m_pBrainFieldAttackStateMachine->GetCurStateName() == "NO_USE_BRAINFIELD" &&
+				m_pBrainFieldKineticStateMachine->GetCurStateName() == "BF_NO_USE_KINETIC" &&
+				m_pBrainFieldKineticComboStateMachine->GetCurStateName() == "BF_NO_USE_KINETIC_COMBO" &&
+				m_pBrainFieldFallStateMachine->GetCurStateName() == "BF_NO_USE_KINETIC_FALL")
+			{
+				KineticObject_Targeting();
+			}
 		})
 
 			.AddTransition("BF_NO_USE_KINETIC to BF_KINETIC_THROW_A", "BF_KINETIC_THROW_A")
@@ -3902,7 +3915,13 @@ HRESULT CPlayer::SetUp_BrainFieldKineticComboStateMachine()
 		})
 		.Tick([&](double TimeDelta)
 		{
-			KineticObject_Targeting();
+			if (m_pBrainFieldAttackStateMachine->GetCurStateName() == "NO_USE_BRAINFIELD" &&
+				m_pBrainFieldKineticStateMachine->GetCurStateName() == "BF_NO_USE_KINETIC" &&
+				m_pBrainFieldKineticComboStateMachine->GetCurStateName() == "BF_NO_USE_KINETIC_COMBO" &&
+				m_pBrainFieldFallStateMachine->GetCurStateName() == "BF_NO_USE_KINETIC_FALL")
+			{
+				KineticObject_Targeting();
+			}
 		})
 		.OnExit([&]() 
 		{
@@ -4035,7 +4054,13 @@ HRESULT CPlayer::SetUp_BrainFieldAttackStateMachine()
 		})
 		.Tick([&](double TimeDelta)
 		{
-			KineticObject_Targeting();
+			if (m_pBrainFieldAttackStateMachine->GetCurStateName() == "NO_USE_BRAINFIELD" &&
+				m_pBrainFieldKineticStateMachine->GetCurStateName() == "BF_NO_USE_KINETIC" &&
+				m_pBrainFieldKineticComboStateMachine->GetCurStateName() == "BF_NO_USE_KINETIC_COMBO" &&
+				m_pBrainFieldFallStateMachine->GetCurStateName() == "BF_NO_USE_KINETIC_FALL")
+			{
+				KineticObject_Targeting();
+			}
 		})
 		.OnExit([&]() 
 		{
@@ -4127,6 +4152,301 @@ HRESULT CPlayer::SetUp_BrainFieldAttackStateMachine()
 			.Predicator([&]()->_bool {return (m_pASM->GetCurStateName_BrainField() != "ATK_AIR_START") &&
 											 (m_pASM->GetCurStateName_BrainField() != "ATK_AIR_LOOP") &&
 											 (m_pASM->GetCurStateName_BrainField() != "ATK_AIR_LANDING"); })
+			.Priority(0)
+
+		.Build();
+
+	return S_OK;
+}
+
+HRESULT CPlayer::SetUp_BrainFieldFallStateMachine()
+{
+	CAnimation* pAnimation = nullptr;
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_671_AL_BF_fall_start"));
+	m_BF_Fall_Charge.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_672_AL_BF_fall_loop"));
+	m_BF_Fall_Charge.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_674_AL_BF_fall_cancel"));
+	m_BF_Fall_Cancel.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_673_AL_BF_fall_end"));
+	m_BF_Fall_Finish.push_back(pAnimation);
+	
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_666_AL_BF_fall_fin_start"));
+	m_BF_Fall_Fin_Charge.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_667_AL_BF_fall_fin_loop"));
+	m_BF_Fall_Fin_Charge.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_669_AL_BF_fall_fin_cancel"));
+	m_BF_Fall_Fin_Cancel.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_668_AL_BF_fall_fin_end"));
+	m_BF_Fall_Fin_Finish.push_back(pAnimation);
+
+	m_pBrainFieldFallStateMachine =
+		CFSMComponentBuilder().InitState("BF_NO_USE_KINETIC_FALL")
+
+		.AddState("BF_NO_USE_KINETIC_FALL")
+		.OnStart([&]()
+		{
+			m_pASM->ClearAnimSocket("BrainField_AnimSocket");
+			m_pASM->SetCurState_BrainField("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
+			m_bKineticSpecial_Activate = false;
+			m_bKineticSpecial = false;
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
+		})
+		.Tick([&](double TimeDelta)
+		{
+			if (m_pBrainFieldAttackStateMachine->GetCurStateName() == "NO_USE_BRAINFIELD" &&
+				m_pBrainFieldKineticStateMachine->GetCurStateName() == "BF_NO_USE_KINETIC" &&
+				m_pBrainFieldKineticComboStateMachine->GetCurStateName() == "BF_NO_USE_KINETIC_COMBO" &&
+				m_pBrainFieldFallStateMachine->GetCurStateName() == "BF_NO_USE_KINETIC_FALL")
+			{
+				KineticObject_Targeting();
+			}
+		})
+		.OnExit([&]() 
+		{
+			m_bKineticMove = false;
+			m_bSeperateAnim = false;
+
+			m_pASM->SetCurState_BrainField("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
+			m_pBrainFieldKineticStateMachine->SetState("BF_NO_USE_KINETIC");
+			m_pASM->ClearAnimSocket("Kinetic_AnimSocket");
+		})
+			
+			.AddTransition("BF_NO_USE_KINETIC_FALL to BF_FALL_CHARGE", "BF_FALL_CHARGE")
+			.Predicator([&]()->_bool 
+			{
+				return m_bKineticG &&
+					!m_bAir && 
+					(nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && 
+					!m_bHit;
+			})
+			.Priority(1)
+
+			.AddTransition("BF_NO_USE_KINETIC_FALL to BF_FALL_FIN_CHARGE", "BF_FALL_FIN_CHARGE")
+			.Predicator([&]()->_bool 
+			{
+				return m_pASM->GetCurStateName_BrainField() == "ATK_A3" &&
+					m_bKineticG &&
+					!m_bAir && 
+					(nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && 
+					!m_bHit;
+			})
+			.Priority(0)
+			
+
+		.AddState("BF_FALL_CHARGE")
+		.OnStart([&]() 
+		{
+			m_bKineticSpecial = true;
+			m_pASM->AttachAnimSocket("BrainField_AnimSocket", m_BF_Fall_Charge);
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+
+			BrainField_FindGatherObjectList();
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			BrainField_ObjectGather(m_fBF_Range, m_fBF_Height);
+		})
+		.OnExit([&]()
+		{
+			m_fGatherLerp = 0.f;
+		})
+			.AddTransition("BF_FALL_CHARGE to BF_FALL_FINISH", "BF_FALL_FINISH")
+			.Predicator([&]()->_bool { return m_pASM->isSocketAlmostFinish("BrainField_AnimSocket"); })
+			.Priority(0)
+
+			.AddTransition("BF_FALL_CHARGE to BF_FALL_CANCEL", "BF_FALL_CANCEL")
+			.Predicator([&]()->_bool { return !m_bKineticG; })
+			.Priority(0)
+
+		.AddState("BF_FALL_CANCEL")
+		.OnStart([&]() 
+		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
+			m_pASM->AttachAnimSocket("BrainField_AnimSocket", m_BF_Fall_Cancel);
+			m_GatherObjectList.clear();
+		})
+		.OnExit([&]()
+		{
+			m_bKineticSpecial = false;
+		})
+			.AddTransition("BF_FALL_CANCEL to BF_NO_USE_KINETIC_FALL", "BF_NO_USE_KINETIC_FALL")
+			.Predicator([&]()->_bool { return (m_pASM->isSocketAlmostFinish("BrainField_AnimSocket") || m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB || m_bKineticG);  })
+			.Priority(0)
+
+		.AddState("BF_FALL_FINISH")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("BrainField_AnimSocket", m_BF_Fall_Finish);
+
+			for (auto& iter : m_GatherObjectList)
+			{
+				static_cast<CMapKinetic_Object*>(iter)->Set_Trigger(true);
+
+				_float4 vIterPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				_float4 vTargetPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+
+				_float4 vDir = vTargetPos - vIterPos;
+				m_vecGatherOverlap.push_back(vDir);
+			}
+
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			if (nullptr == m_pASM->GetSocketAnimation("BrainField_AnimSocket")) return;
+
+			_float fRatio = m_pASM->GetSocketAnimation("BrainField_AnimSocket")->GetPlayRatio();
+
+			if (0.4f <= fRatio)
+			{
+				BrainField_ObjectGather_Throw();
+			}
+			if ((0.4f <= fRatio) && BF_Fall_Throw.IsNotDo())
+			{
+				Event_Kinetic_Throw();
+			}
+		})
+		.OnExit([&]()
+		{
+			BF_Fall_Throw.Reset();
+			m_pCenterObject = nullptr;
+
+			for (auto& iter : m_GatherObjectList)
+			{
+				if (false == CGameInstance::GetInstance()->Check_ObjectAlive(iter))
+					continue;
+
+				if (auto KineticCheck = dynamic_cast<CMapKinetic_Object*>(iter))
+				{
+					KineticCheck->SetThrow();
+					KineticCheck->Set_Dynamic();
+					KineticCheck->Set_Hit();
+				}
+			}
+
+			m_GatherObjectList.clear();
+			m_vecGatherOverlap.clear();
+		})
+			.AddTransition("BF_FALL_FINISH to BF_NO_USE_KINETIC_FALL", "BF_NO_USE_KINETIC_FALL")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_pASM->isSocketAlmostFinish("BrainField_AnimSocket");
+			})
+			.Priority(0)
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+		.AddState("BF_FALL_FIN_CHARGE")
+		.OnStart([&]() 
+		{
+			m_bKineticSpecial = true;
+			m_pASM->AttachAnimSocket("BrainField_AnimSocket", m_BF_Fall_Charge);
+			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+
+			BrainField_FindGatherObjectList();
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			BrainField_ObjectGather(m_fBF_Range, m_fBF_Height);
+		})
+		.OnExit([&]()
+		{
+			m_fGatherLerp = 0.f;
+		})
+			.AddTransition("BF_FALL_FIN_CHARGE to BF_FALL_FIN_FINISH", "BF_FALL_FIN_FINISH")
+			.Predicator([&]()->_bool { return m_pASM->isSocketAlmostFinish("BrainField_AnimSocket"); })
+			.Priority(0)
+
+			.AddTransition("BF_FALL_FIN_CHARGE to BF_FALL_FIN_CANCEL", "BF_FALL_FIN_CANCEL")
+			.Predicator([&]()->_bool { return !m_bKineticG; })
+			.Priority(0)
+
+		.AddState("BF_FALL_FIN_CANCEL")
+		.OnStart([&]() 
+		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
+			m_pASM->AttachAnimSocket("BrainField_AnimSocket", m_BF_Fall_Fin_Cancel);
+			m_GatherObjectList.clear();
+		})
+		.OnExit([&]()
+		{
+			m_bKineticSpecial = false;
+		})
+			.AddTransition("BF_FALL_FIN_CANCEL to BF_NO_USE_KINETIC_FALL", "BF_NO_USE_KINETIC_FALL")
+			.Predicator([&]()->_bool { return (m_pASM->isSocketAlmostFinish("BrainField_AnimSocket") || m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB || m_bKineticG);  })
+			.Priority(0)
+
+		.AddState("BF_FALL_FIN_FINISH")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("BrainField_AnimSocket", m_BF_Fall_Fin_Finish);
+			m_pKineticAnimModel->SetPlayAnimation("AS_ch0100_668_AL_BF_fall_fin_end_obj");
+
+			for (auto& iter : m_GatherObjectList)
+			{
+				static_cast<CMapKinetic_Object*>(iter)->Set_Trigger(true);
+
+				_float4 vIterPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				_float4 vTargetPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+
+				_float4 vDir = vTargetPos - vIterPos;
+				m_vecGatherOverlap.push_back(vDir);
+			}
+		})
+		.Tick([&](double fTimeDelta)
+		{
+			if (nullptr == m_pASM->GetSocketAnimation("BrainField_AnimSocket")) return;
+
+			_float fRatio = m_pASM->GetSocketAnimation("BrainField_AnimSocket")->GetPlayRatio();
+
+
+			if (0.45 <= fRatio && BF_Fall_Throw.IsNotDo())
+			{
+				BrainField_ObjectGather_Throw();
+				Event_Kinetic_Throw();
+			}
+			else if (0.45 <= fRatio)
+			{
+				BrainField_ObjectGather_Throw();
+			}
+			else
+			{
+				BrainField_ObjectAnimation_Socket("BrainField_AnimSocket", 0.f, 0.f);
+				BrainField_ObjectGather_Throw();
+			}
+		})
+		.OnExit([&]()
+		{
+			BF_Fall_Throw.Reset();
+
+			m_pCenterObject = nullptr;
+
+			for (auto& iter : m_GatherObjectList)
+			{
+				if (false == CGameInstance::GetInstance()->Check_ObjectAlive(iter))
+					continue;
+
+				if (auto KineticCheck = dynamic_cast<CMapKinetic_Object*>(iter))
+				{
+					KineticCheck->SetThrow();
+					KineticCheck->Set_Dynamic();
+					KineticCheck->Set_Hit();
+				}
+			}
+
+			m_GatherObjectList.clear();
+			m_vecGatherOverlap.clear();
+		})
+			.AddTransition("BF_FALL_FIN_FINISH to BF_NO_USE_KINETIC_FALL", "BF_NO_USE_KINETIC_FALL")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_pASM->isSocketAlmostFinish("BrainField_AnimSocket");
+			})
 			.Priority(0)
 
 		.Build();
@@ -5349,6 +5669,7 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush01");
 			m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
 			m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrainCrash_Activate);
+
 		})
 		.Tick([&](double fTimeDelta) 
 		{
@@ -8859,6 +9180,204 @@ void CPlayer::BrainField_ObjectAnimation_Socket(const string& strSocket, _float 
 	}
 }
 
+void CPlayer::BrainField_ObjectGather(_float fLook, _float fUp)
+{
+	if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
+	{
+		_matrix matPlayer = m_pTransformCom->Get_WorldMatrix();
+		_matrix matKinetic = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
+
+		_vector vLook = XMVector3NormalizeEst(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * fLook;
+		_vector vUp = XMVector3NormalizeEst(m_pTransformCom->Get_State(CTransform::STATE_UP)) * fUp;
+
+		matPlayer.r[3] += (vUp + vLook);
+
+		_float fScale_Right = XMVectorGetX(XMVector3Length(matKinetic.r[0]));
+		_float fScale_Up = XMVectorGetX(XMVector3Length(matKinetic.r[1]));
+		_float fScale_Look = XMVectorGetX(XMVector3Length(matKinetic.r[2]));
+
+		m_fGatherLerp = min(m_fGatherLerp + (m_fTimeDelta * 0.25f), 1.f);
+
+		_vector vLerpLook = XMVectorLerp(matKinetic.r[2], matPlayer.r[2], m_fGatherLerp);
+		_vector vLerpRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLerpLook);
+		_vector vLerpUp = XMVector3Cross(vLerpLook, vLerpRight);
+		_vector vLerpPos = XMVectorLerp(matKinetic.r[3], matPlayer.r[3], m_fGatherLerp);
+
+		vLerpRight = XMVector3Normalize(vLerpRight) * fScale_Right;
+		vLerpUp = XMVector3Normalize(vLerpUp) * fScale_Up;
+		vLerpLook = XMVector3Normalize(vLerpLook) * fScale_Look;
+
+		_matrix LerpMatrix = { vLerpRight, vLerpUp, vLerpLook, vLerpPos };
+
+		CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Set_WorldMatrix(LerpMatrix);
+
+		// ÁÖº¯ ¿ÀºêÁ§Æ® ¸®½ºÆ® Å½»öÇÏ¿© Å°³×Æ½ ¿ÀºêÁ§Æ®¿Í °¡±î¿î ¿ÀºêÁ§Æ®µéÀ» ²ø¾îµéÀÓ
+
+		if (m_GatherObjectList.empty()) return;
+
+		for (auto& iter : m_GatherObjectList)
+		{
+			_float4 vChildPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+			_float4 vParentPos = matKinetic.r[3];
+			_float4 vDir = vParentPos - vChildPos;
+			vDir.Normalize();
+			vDir = vDir * m_fGatherPower;
+			vDir.w = 0.f;
+
+			static_cast<CMapKinetic_Object*>(iter)->Add_Physical({ vDir.x, vDir.y, vDir.z });
+		}
+	}
+}
+
+void CPlayer::BrainField_FindGatherObjectList()
+{
+	if (CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject") == nullptr
+		|| CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects().empty())
+	{
+		return;
+	}
+	else
+	{
+		_float fDistance = 10.f;
+
+		for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects())
+		{
+			if (iter == CPlayerInfoManager::GetInstance()->Get_KineticObject()) continue;
+
+			static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Kinetic(true);
+
+			if (false == static_cast<CMapKinetic_Object*>(iter)->GetThrow() && true == static_cast<CMapKinetic_Object*>(iter)->Usable())
+			{
+				_vector vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				_vector vMyPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+
+				_float fCurDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
+
+				if (fDistance > fCurDistance)
+				{
+					m_GatherObjectList.push_back(iter);
+				}
+			}
+		}
+	}
+}
+
+void CPlayer::BrainField_ObjectGather_Throw()
+{
+	if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject() && (nullptr == m_pCenterObject))
+	{
+		m_pCenterObject = CPlayerInfoManager::GetInstance()->Get_KineticObject();
+	}
+
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCenterObject))
+	{
+		_uint iIndex = 0;
+		_bool bHit = false;
+
+		for (auto& iter : m_GatherObjectList)
+		{
+			if (false == CGameInstance::GetInstance()->Check_ObjectAlive(iter))
+				continue;
+
+			if (auto KineticCheck = dynamic_cast<CMapKinetic_Object*>(iter))
+			{
+				KineticCheck->SetThrow();
+
+				if (KineticCheck->Get_Hit())
+					bHit = true;
+
+				if (bHit)
+				{
+					KineticCheck->Set_Dynamic();
+					KineticCheck->Set_Hit();
+				}
+				else
+				{
+					_float4 vTargetPos = m_pCenterObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+
+					_float4 vChildPos = vTargetPos + m_vecGatherOverlap[iIndex];
+
+					KineticCheck->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vChildPos);
+				}
+			}
+
+			iIndex++;
+		}
+	}
+	else
+	{
+		for (auto& iter : m_GatherObjectList)
+		{
+			if (false == CGameInstance::GetInstance()->Check_ObjectAlive(iter))
+				continue;
+
+			if (auto KineticCheck = dynamic_cast<CMapKinetic_Object*>(iter))
+			{
+				KineticCheck->SetThrow();
+				KineticCheck->Set_Dynamic();
+				KineticCheck->Set_Hit();
+			}
+		}
+	}
+}
+
+void CPlayer::BrainField_ObjectGather_Animation()
+{
+
+	if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject() && (nullptr == m_pCenterObject))
+	{
+		m_pCenterObject = CPlayerInfoManager::GetInstance()->Get_KineticObject();
+	}
+
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCenterObject))
+	{
+		_uint iIndex = 0;
+		_bool bHit = false;
+
+		for (auto& iter : m_GatherObjectList)
+		{
+			if (false == CGameInstance::GetInstance()->Check_ObjectAlive(iter))
+				continue;
+
+			static_cast<CMapKinetic_Object*>(iter)->SetThrow();
+
+			if (static_cast<CMapKinetic_Object*>(iter)->Get_Hit())
+				bHit = true;
+
+			if (bHit)
+			{
+				static_cast<CMapKinetic_Object*>(iter)->Set_Dynamic();
+				static_cast<CMapKinetic_Object*>(iter)->Set_Hit();
+			}
+			else
+			{
+				_float4 vTargetPos = m_pCenterObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+
+				_float4 vChildPos = vTargetPos + m_vecGatherOverlap[iIndex];
+
+				iter->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vChildPos);
+			}
+			iIndex++;
+		}
+	}
+	else
+	{
+		for (auto& iter : m_GatherObjectList)
+		{
+			if (false == CGameInstance::GetInstance()->Check_ObjectAlive(iter))
+				continue;
+
+			if (auto KineticCheck = dynamic_cast<CMapKinetic_Object*>(iter))
+			{
+				KineticCheck->SetThrow();
+				KineticCheck->Set_Dynamic();
+				KineticCheck->Set_Hit();
+			}
+		}
+	}
+
+}
+
 void CPlayer::Start_RimLight(const string & strCurveName)
 {
 	m_pCurve = CGameInstance::GetInstance()->GetCurve(strCurveName);
@@ -9092,11 +9611,10 @@ void CPlayer::Free()
 
 	Safe_Release(m_pDriveModeProductionStateMachine);
 
-	Safe_Release(m_pBrainFieldKineticStateMachine);
-
-	Safe_Release(m_pBrainFieldKineticComboStateMachine);
-
 	Safe_Release(m_pBrainFieldAttackStateMachine);
+	Safe_Release(m_pBrainFieldKineticStateMachine);
+	Safe_Release(m_pBrainFieldKineticComboStateMachine);
+	Safe_Release(m_pBrainFieldFallStateMachine);
 
 //	Safe_Release(m_pContectRigidBody);
 }

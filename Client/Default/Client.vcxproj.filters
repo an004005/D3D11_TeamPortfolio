@@ -466,6 +466,9 @@
     <Filter Include="02.GameObjects\Weapon\wp0500">
       <UniqueIdentifier>{c10400ca-64a5-4606-a04e-1ae7a70a2d80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Player\PlayerHotFixer">
+      <UniqueIdentifier>{cad6aa9c-d087-4fa9-885d-62ec510ba601}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1387,6 +1390,12 @@
     <ClInclude Include="..\public\Weapon_wp0500.h">
       <Filter>02.GameObjects\Weapon\wp0500</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_StageDefault.h" />
+    <ClInclude Include="..\public\RedString.h" />
+    <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
+    <ClInclude Include="..\public\PlayerHotFixer.h">
+      <Filter>02.GameObjects\Player\PlayerHotFixer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2282,6 +2291,12 @@
     <ClCompile Include="..\private\Weapon_wp0500.cpp">
       <Filter>02.GameObjects\Weapon\wp0500</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Level_StageDefault.cpp" />
+    <ClCompile Include="..\private\RedString.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
+    <ClCompile Include="..\private\PlayerHotFixer.cpp">
+      <Filter>02.GameObjects\Player\PlayerHotFixer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -2391,5 +2406,8 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl">
       <Filter>97.ShaderFiles\UI</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\SSLR.hlsl" />
   </ItemGroup>
 </Project>

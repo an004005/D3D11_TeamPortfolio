@@ -14,6 +14,7 @@
 #include "VFX_Manager.h"
 #include "ParticleGroup.h"
 #include "Enemy.h"
+#include "MapInstance_Object.h"
 
 CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
@@ -74,7 +75,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 		if (m_bHit)
 			return;
 
-		if (auto pStatic = dynamic_cast<CMapObject*>(pGameObject))
+		if (auto pStatic = dynamic_cast<CMapInstance_Object*>(pGameObject))
 		{
 			m_bHit = true;
 
@@ -284,7 +285,7 @@ const wstring & CMapKinetic_Object::Get_ModelTag()
 
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 {
- 	//m_pCollider->Set_Kinetic(false);
+ 	m_pCollider->Set_Kinetic(false);
 	m_pCollider->Set_Trigger(false);
 	//m_pCollider->UpdateChange();
 
@@ -301,6 +302,13 @@ void CMapKinetic_Object::Set_Kinetic(_bool bKinetic)
 void CMapKinetic_Object::Set_Trigger(_bool bTrigger)
 {
 	m_pCollider->Set_Trigger(bTrigger);
+}
+
+void CMapKinetic_Object::Set_Dynamic()
+{
+	m_pCollider->Set_Kinetic(false);
+	m_pCollider->Set_Trigger(false);
+	m_pCollider->UpdateChange();
 }
 
 void CMapKinetic_Object::Reset_Transform()

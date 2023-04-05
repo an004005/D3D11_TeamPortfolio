@@ -3697,7 +3697,20 @@
         "Duration": 289.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Jump",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Gravity_Disable",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Gravity_Enable",
+                "EventTime": 160.0
+            }
+        ]
     },
     "AS_ch0100_669_AL_BF_fall_fin_cancel": {
         "Duration": 70.0,

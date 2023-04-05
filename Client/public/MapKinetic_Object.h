@@ -48,8 +48,12 @@ public:
 	void	Add_Physical(_float3 vForce = { 0.f, 0.f, 0.f }, _float3 vTorque = { 0.f, 0.f, 0.f });
 	void	Set_Kinetic(_bool bKinetic);
 	void	Set_Trigger(_bool bTrigger);
+	void	Set_Dynamic();
 	void	Reset_Transform();
 	EKineticType GetType() const { return m_eType; }
+
+	void	Set_Hit() { m_bHit = true; }
+	_bool	Get_Hit() { return m_bHit; }
 
 public:
 	void	SetOutline(_bool bOutLine) { m_bOutline = bOutLine; }
