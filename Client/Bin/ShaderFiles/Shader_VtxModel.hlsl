@@ -87,8 +87,8 @@ PS_OUT CommonProcess(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 	Out.vDiffuse.rgb = g_tex_0.Sample(LinearSampler, In.vTexUV).rgb;
-	if (Out.vDiffuse.a < 0.01f)
-		discard;
+	//if (Out.vDiffuse.a < 0.01f)
+	//	discard;
 
 	float3 vNormal;
 	if (g_tex_on_1)
@@ -145,7 +145,6 @@ PS_OUT PS_DEFAULT(PS_IN In)
 {
 	PS_OUT Out = CommonProcess(In);
 
-	PS_OUT Out = CommonProcess(In);
 	if (g_tex_on_2)
 		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
 	else

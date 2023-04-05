@@ -18,12 +18,14 @@ private:
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void BeginTick() override;
-	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
 	HRESULT	Render() override;
 	virtual void Imgui_RenderProperty() override;
 	virtual HRESULT Render_ShadowDepth() override;
+
+public:
+	void BeginBC();
+	void EndBC();
 
 private:
 	HRESULT	SetUpComponents();
@@ -31,6 +33,22 @@ private:
 private:
 	CModel* m_pModelCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
+
+	//처음부터 생성
+	class CParticleGroup* m_pDefaultParticle = nullptr;
+
+	//브레인 크러쉬 시작할때 생성.
+	class CEffectGroup* m_DistortionEffect = nullptr;
+	class CParticleGroup* m_pStartParticle = nullptr;
+
+	//브레인 크러쉬 시작할때 생성, 전구 깨질때 삭제
+	class CEffectGroup* m_pLoopEffect = nullptr;
+
+	//브레인 크러쉬 전구 깨질때 생성
+	class CParticleGroup* m_pDestroyParticle = nullptr;
+	class CEffectGroup* m_pDestroyEffect = nullptr;
+private:
+
 
 public:
 	static CEMBrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

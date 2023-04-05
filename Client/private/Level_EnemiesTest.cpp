@@ -22,7 +22,7 @@
 #include "Imgui_Batch.h"
 #include "GameManager.h"
 
-//#define ADD_PLAYER
+#define ADD_PLAYER
 //#define ADD_PREVIEW "Prototype_Model_em1200"
 //#define ADD_ENEMY "Monster_em650"
 
@@ -187,8 +187,6 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
 	
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/tests.json");
-
-	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Enemy", TEXT("Prototype_EMBrain")));
 
 	return S_OK;
 }

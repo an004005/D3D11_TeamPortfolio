@@ -54,7 +54,10 @@ public:
 
 	void HealFullHp() { m_iHP = m_iMaxHP; }
 	_bool	HasCrushGauge() { return m_bHasCrushGauge; }
-	_bool Decide_PlayBrainCrush();
+	_bool CanBC() { return m_bCrushStart; }
+
+	//몬스터마다 브레인 크러쉬 시작할때 위치를 잡아주고, 언제 끝날껀지 결정해야 함
+	 virtual void	PlayBC() { m_bBrainCrush = true; }
 
 public:
 	virtual _float4x4 GetBoneMatrix(const string& strBoneName, _bool bPivotapply = true) override;

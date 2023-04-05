@@ -125,15 +125,8 @@ void CEnemy::Tick(_double TimeDelta)
 
 	m_pModelCom->Tick(TimeDelta);
 
-	// 브레인 크러쉬 안할때 3초 안에 죽이기
-	if (m_bCrushStart)
-		m_dDeadTime += TimeDelta;
-
-	if (m_dDeadTime >= 3.f)
-		SetDead();
-	//
-	if (GetKeyState('K') & 0x8000)
-		SetDead(); 
+	//if (GetKeyState('K') & 0x8000)
+	//	SetDead(); 
 	
 }
 
@@ -415,53 +408,6 @@ void CEnemy::FindTarget()
 		}, PLATERTEST_LAYER_PLAYER);
 		m_pTarget = dynamic_cast<CScarletCharacter*>(pPlayer);
 	}
-}
-
-//void CEnemy::TurnEyesOut()
-//{
-//	CEffectGroup* pEffectGroup = nullptr;
-//	pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Find", PLAYERTEST_LAYER_FRONTUI);
-//	assert(pEffectGroup != nullptr);
-//
-//	//TimeLine 끝나고 삭제
-//	pEffectGroup->Start_AttachPivot(this, m_UI_PivotMatrixes[ENEMY_FINDEYES], "Target", true, true, true);
-//}
-
-//void CEnemy::Create_InfoUI()
-//{
-//	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-//
-//	if (m_pShieldUI != nullptr || m_pHPUI != nullptr) return;
-//
-//	if (m_bHasCrushGauge)
-//	{
-//		m_pShieldUI = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterShield")));
-//		assert(m_pShieldUI != nullptr);
-//
-//		m_pShieldUI->Set_Owner(this);
-//		m_pShieldUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
-//		m_pShieldUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
-//	}
-//	else
-//	{
-//		m_pHPUI = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterHP")));
-//		assert(m_pHPUI != nullptr);
-//
-//		m_pHPUI->Set_Owner(this);
-//		m_pHPUI->SetPivotMatrix(m_UI_PivotMatrixes[ENEMY_INFOBAR]);
-//		m_pHPUI->Set_MonsterInfo(iEemeyLevel, m_eEnemyName);
-//	}
-//}
-
-_bool CEnemy::Decide_PlayBrainCrush()
-{
-	if (m_iCrushGauge <= 0)
-	{
-		m_bBrainCrush = true;
-		return true; 
-	}
-
-	return false;
 }
 
 _float4x4 CEnemy::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
