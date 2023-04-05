@@ -101,11 +101,13 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 		//m_pCanvas_SAContainer_Down->Set_Input();
 	}
 
-	Imgui_RenderProperty();
+	// Imgui_RenderProperty();
 }
 
 void CCanvas_MouseCousor::Imgui_RenderProperty()
 {
+	__super::Imgui_RenderProperty();
+
 	//static _float iHp = 0;
 	//static _float iMaxHp = 0;
 	//ImGui::SliderFloat("Hp", &iHp, 0.0f, 1.0f);

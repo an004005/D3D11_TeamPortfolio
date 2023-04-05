@@ -5,6 +5,7 @@
 
 #include "Canvas_Acquisition.h"
 #include "Canvas_LeftTalk.h"
+#include "Canvas_Quest.h"
 
 CGameManager* CGameManager::s_GameManager = nullptr;
 
@@ -61,7 +62,16 @@ void CGameManager::Tick(_double TimeDelta)
 		m_pCanvas_LeftTalk->Add_Talk(0);
 		//m_pCanvas_LeftTalk->Add_Talk(1);
 		//m_pCanvas_LeftTalk->Add_Talk(2);
+		m_bQuest = true;
 	}
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	{
+		m_bSuccessQuest = true;
+
+	}
+
+	Quest_Tick();
 }
 
 void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
@@ -80,6 +90,28 @@ void CGameManager::ConsumePlayerDamageReport(PLAYER_DAMAGE_REPORT tReport)
 void CGameManager::FullItem(const wstring szItemName)
 {
 	m_pCanvas_Acquisition->Set_FullItem(szItemName);
+}
+
+void CGameManager::Quest_Tick()
+{
+	// Test 용 각 레벨에서 할 예정
+	if (true == m_bQuest)
+	{
+		m_bQuest = false;
+
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Quest.json");
+		m_pCanvas_Quest = dynamic_cast<CCanvas_Quest*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Quest", &json));
+		assert(m_pCanvas_Quest != nullptr && "Failed to Clone : CCanvas_Quest");
+		m_pCanvas_Quest->Set_Quest(0);
+	}
+
+	if (true == m_bSuccessQuest)
+	{
+		m_bSuccessQuest = false;
+		m_pCanvas_Quest->Set_SuccessQuest();
+	}
+
+
 }
 
 CGameManager* CGameManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

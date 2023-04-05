@@ -35,45 +35,25 @@ HRESULT CCanvas_Quest::Initialize(void* pArg)
 
 	m_bVisible = true;
 	m_fBackGround_StartPos = Find_ChildUI(L"BackGround")->Get_Position();
-	Find_ChildUI(L"BackGround")->Set_Position(_float2(-300.0f, m_fBackGround_StartPos.y));
+	Find_ChildUI(L"BackGround")->Set_Position(_float2(-500.0f, m_fBackGround_StartPos.y));
 
 	return S_OK;
 }
 
 void CCanvas_Quest::Tick(_double TimeDelta)
 {
+	if (CGameInstance::GetInstance()->KeyDown(DIK_Q))
+	{
+		m_fQuestMove = !m_fQuestMove;
+		m_bVisible = true;
+	}
+
+	if (!m_bVisible) return;
+
 	CCanvas::Tick(TimeDelta);
 
-	_float2 vPosition = Find_ChildUI(L"BackGround")->Get_Position();
-	Find_ChildUI(L"ChakeBase")->Set_Position(_float2(vPosition.x - 100.0f, vPosition.y));
+	Move_Tick(TimeDelta);
 
-	if (true == m_fQuestMove)
-	{
-		if (m_fBackGround_StartPos.x > vPosition.x)
-		{
-			vPosition.x += _float(TimeDelta);
-			Find_ChildUI(L"BackGround")->Set_Position(_float2(vPosition.x, m_fBackGround_StartPos.y));
-		}
-	}
-	else
-	{
-		if (-300.0f <= vPosition.x)
-		{
-			vPosition.x -= _float(TimeDelta);
-			Find_ChildUI(L"BackGround")->Set_Position(_float2(vPosition.x, m_fBackGround_StartPos.y));
-		}
-	}
-
-	if (true == m_fSuccessfulQuest)
-	{
-		_float fRatio = dynamic_cast<CShaderUI*>(Find_ChildUI(L"Chake"))->Get_Floats0();
-		fRatio += _float(TimeDelta);
-		dynamic_cast<CShaderUI*>(Find_ChildUI(L"Chake"))->Set_Floats0(fRatio);
-	}
-	else
-	{
-		dynamic_cast<CShaderUI*>(Find_ChildUI(L"Chake"))->Set_Floats0(0.0f);
-	}
 }
 
 HRESULT CCanvas_Quest::Render()
@@ -96,16 +76,15 @@ void CCanvas_Quest::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
-	if (ImGui::Button("Quest Move"))
+	if (ImGui::Button("Set_Quest"))
 	{
-		m_fQuestMove = !m_fQuestMove;
+		Set_Quest(0);
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Successful Quest"))
+	if (ImGui::Button("Set_Quest"))
 	{
-		m_fSuccessfulQuest = !m_fQuestMove;
+		Set_SuccessQuest();
 	}
-
 }
 
 void CCanvas_Quest::Quest_Initialize()
@@ -116,6 +95,72 @@ void CCanvas_Quest::Quest_Initialize()
 	tQuestInfo.wsQuest1 = L"어쩌고를 하세요.";
 	m_vecQuestInfo.push_back(tQuestInfo);
 
+}
+
+void CCanvas_Quest::Move_Tick(const _double& TimeDelta)
+{
+	_float2 vPosition = Find_ChildUI(L"BackGround")->Get_Position();
+	Find_ChildUI(L"ChakeBase")->Set_Position(_float2(vPosition.x - 100.0f, vPosition.y));
+	Find_ChildUI(L"Chake")->Set_Position(_float2(vPosition.x + 130.0f, vPosition.y));
+
+	_float fSpeed = 500.0f;
+	if (true == m_fQuestMove)
+	{
+		if (m_fBackGround_StartPos.x > vPosition.x)
+		{
+			vPosition.x += _float(TimeDelta) * fSpeed;
+			Find_ChildUI(L"BackGround")->Set_Position(_float2(vPosition.x, m_fBackGround_StartPos.y));
+		}
+		else
+		{
+			Find_ChildUI(L"BackGround")->Set_Position(m_fBackGround_StartPos);
+
+			m_dMove_TimeAcc += TimeDelta;
+			if (m_fSuccessQuest)
+			{
+				Success(TimeDelta);
+
+				if (3.5 < m_dMove_TimeAcc)
+				{
+					m_dMove_TimeAcc = 0.0;
+					m_fQuestMove = false;
+				}
+			}
+			else
+			{
+				if (3.0 < m_dMove_TimeAcc)
+				{
+					m_dMove_TimeAcc = 0.0;
+					m_fQuestMove = false;
+				}
+			}
+		}
+	}
+	else
+	{
+		if (-500.0f <= vPosition.x)
+		{
+			vPosition.x -= _float(TimeDelta) * fSpeed;
+			Find_ChildUI(L"BackGround")->Set_Position(_float2(vPosition.x, m_fBackGround_StartPos.y));
+		}
+		else
+		{
+			m_bVisible = false;
+			Find_ChildUI(L"BackGround")->Set_Position(_float2(-500.0f, m_fBackGround_StartPos.y));
+
+			if (m_fSuccessQuest)
+				CGameObject::SetDelete();
+		}
+	}
+}
+
+void CCanvas_Quest::Success(const _double& TimeDelta)
+{
+	_float fRatio = dynamic_cast<CShaderUI*>(Find_ChildUI(L"Chake"))->Get_Floats0();
+	fRatio += _float(TimeDelta) * 0.5f;
+	if (1.0f < fRatio)	// UITODO : 나중에 글씨에 따라서 길이를 조절하고 싶은 경우 1.0f 를 변수로 받아서 수정하면 된다.
+		fRatio = 1.0f;
+	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Chake"))->Set_Floats0(fRatio);
 }
 
 CCanvas_Quest* CCanvas_Quest::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
