@@ -269,7 +269,6 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_pEMUI != nullptr)
 		m_pEMUI->Create_DamageFont(tDamageParams);
 
-
 	ENEMY_DAMAGE_REPORT tReport;
 	tReport.pCauser = tDamageParams.pCauser;
 	tReport.pTaker = this;
