@@ -96,6 +96,7 @@ typedef struct tagDamageDesc
 }	DAMAGE_DESC;
 
 enum CHANGETYPE { CHANGE_INCREASE, CHANGE_DECREASE, CHANGE_END };
+enum SASMEET { KYOTO, LUCA, SEEDEN, ARASHI, SASMEMBER_END };
 
 class CPlayerInfoManager final : public CBase
 {
@@ -121,6 +122,7 @@ public:	// Get
 
 	HANABI_STAT		Get_HanabiStat() const { return m_tHanabiStat; }
 	TSUGUMI_STAT	Get_TsugumiStat() const { return m_tTsugumiStat; }
+	_bool			Get_SASMember(const SASMEET eSAS) { return m_bSASMember[eSAS]; }
 
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
@@ -148,9 +150,9 @@ public:	// Set
 	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
 	
 	// SAS
-	void			Set_HanabiMemvber() { m_tHanabiStat.bMember = true; }
-	void			Set_TsugumiMemvber() { m_tTsugumiStat.bMember = true; }
-
+	void			Set_HanabiMember() { m_tHanabiStat.bMember = true; }
+	void			Set_TsugumiMember() { m_tTsugumiStat.bMember = true; }
+	void			Set_SASMember(const SASMEET eSAS) { m_bSASMember[eSAS] = true; }
 
 public:
 	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
@@ -160,7 +162,7 @@ public:
 
 private:	// 스탯 정보 관련
 	PLAYER_STAT		m_tPlayerStat;
-	list<ESASType>	m_PlayerSasTypeList;
+	list<ESASType>		m_PlayerSasTypeList;
 
 	HANABI_STAT		m_tHanabiStat;
 	TSUGUMI_STAT	m_tTsugumiStat;
@@ -178,6 +180,9 @@ private:
 
 private:
 	_float			m_fBaseAttackDamage;
+
+private:
+	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false };
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();
