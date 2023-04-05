@@ -69,6 +69,26 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 	// 다이나믹 리지드 바디가 몬스터와 충돌했는지?
 	m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
+		if (m_bSwing)
+		{
+			if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
+			{
+				DAMAGE_PARAM tParam;
+				tParam.eAttackType = EAttackType::ATK_HEAVY;
+				tParam.iDamage = 200;
+				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+				pMonster->TakeDamage(tParam);
+
+				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
+					->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
+
+				ReleaseParticle();
+			}
+
+			return;
+		}
+
 		if (!m_bThrow)
 			return;
 
@@ -302,10 +322,12 @@ void CMapKinetic_Object::Set_Kinetic(_bool bKinetic)
 void CMapKinetic_Object::Set_Trigger(_bool bTrigger)
 {
 	m_pCollider->Set_Trigger(bTrigger);
+	m_pCollider->UpdateChange();
 }
 
 void CMapKinetic_Object::Set_Dynamic()
 {
+	m_bSwing = false;
 	m_pCollider->Set_Kinetic(false);
 	m_pCollider->Set_Trigger(false);
 	m_pCollider->UpdateChange();

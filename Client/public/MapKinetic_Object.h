@@ -55,6 +55,8 @@ public:
 	void	Set_Hit() { m_bHit = true; }
 	_bool	Get_Hit() { return m_bHit; }
 
+	void	Set_Swing(_bool bSwing) { m_bSwing = bSwing; }
+
 public:
 	void	SetOutline(_bool bOutLine) { m_bOutline = bOutLine; }
 
@@ -98,6 +100,7 @@ private:
 	_bool				m_bThrow = false;
 	_bool				m_bUsable = true;
 	_bool				m_bHit = false;
+	_bool				m_bSwing = false;
 	_float				m_fDeadTimer = 0.f;
 
 	_bool				m_bCameRange = { false };
