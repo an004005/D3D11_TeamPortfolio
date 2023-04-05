@@ -103,7 +103,14 @@ void CMaterial::Imgui_RenderProperty()
 	}
 	ImGui::Separator();
 	if (m_pShaderInstancing && ImGui::CollapsingHeader("Instancing Shader"))
+	{
 		m_pShaderInstancing->Imgui_RenderProperty();
+		_int iInstancingPass = m_iInstancingPass;
+		ImGui::InputInt("InstancingPass", &iInstancingPass);
+		if (iInstancingPass < 0)
+			iInstancingPass = 0;
+		m_iInstancingPass = (_uint)iInstancingPass;
+	}
 	ImGui::Separator();
 
 	CShader::Imgui_RenderShaderParams(m_tParams);
