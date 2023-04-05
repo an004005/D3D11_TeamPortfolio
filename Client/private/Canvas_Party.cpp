@@ -39,7 +39,7 @@ HRESULT CCanvas_Party::Initialize(void* pArg)
 		iter->second->SetVisible(false);
 
 	m_bVisible = false;
-	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_01_Leader_B"))->Set_InitializeAlpha();
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_01_Leader_B"))->Set_PickInitialize();
 
 	m_eSASMember = CCanvas_Party::SASMEMBER::YUITO;
 	PickInfo();

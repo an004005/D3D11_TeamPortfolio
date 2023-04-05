@@ -39,6 +39,7 @@ HRESULT CCanvas_Sale::Initialize(void* pArg)
 	m_bVisible = false;
 	Add_ShopCanvas();
 
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuAll"))->Set_PickInitialize();
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuAll"))->Set_ColorType(1);
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuBattle"))->Set_ColorType(1);
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuEtc"))->Set_ColorType(1);

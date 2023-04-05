@@ -39,11 +39,11 @@ HRESULT CCanvas_MainItem::Initialize(void* pArg)
 	m_bVisible = false;
 	Add_MainCanvas();
 
-	//dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Set_InitializeAlpha();
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Set_ColorType(1);
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuBattle"))->Set_ColorType(1);
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->Set_ColorType(1);
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuEtc"))->Set_ColorType(1);
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Set_PickInitialize();
 
 	return S_OK;
 }

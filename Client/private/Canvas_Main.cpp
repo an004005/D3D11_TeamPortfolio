@@ -46,7 +46,7 @@ HRESULT CCanvas_Main::Initialize(void* pArg)
 	m_bVisible = true;
 	
 	m_szManuText = L"파티 멤버를 변경합니다.";
-	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_InitializeAlpha();	// 처음에 해당 버튼에 불이 들어올 수 있도록
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_PickInitialize();	// 처음에 해당 버튼에 불이 들어올 수 있도록
 
 	return S_OK;
 }

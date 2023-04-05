@@ -43,7 +43,7 @@ HRESULT CCanvas_Shop::Initialize(void* pArg)
 	m_bVisible = true;
 
 	m_szShopText = L"구입할 상품을 선택해주세요.";
-	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Set_InitializeAlpha();	// 처음에 해당 버튼에 불이 들어올 수 있도록
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Set_PickInitialize();	// 처음에 해당 버튼에 불이 들어올 수 있도록
 
 	return S_OK;
 }
