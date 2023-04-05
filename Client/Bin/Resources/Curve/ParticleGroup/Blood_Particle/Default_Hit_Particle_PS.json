@@ -1,0 +1,1 @@
+{"LifeTime":10.0,"ObjectTag":"Default_Hit_Particle_PS","Particles":[{"ObjectTag":"Default_Hit_Particle_PS","ParticleDirectory":"../Bin/Resources/VFX/ParticleSystem/Default_Hit_Particle_PS.json"}],"Prototype_GameObject":"ProtoVFX_ParticleGroup\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
