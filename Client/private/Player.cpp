@@ -4940,7 +4940,7 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 			.Predicator([&]()->_bool 
 			{ 
 				if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return false;
-				return m_bBrainCrashInput && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Decide_PlayBrainCrush();
+				return m_bBrainCrashInput && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->CanBC();
 			})
 			.Priority(0)
 
@@ -4956,9 +4956,9 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		})
 		.OnExit([&]()
 		{
-
+				static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
 		})
-			.AddTransition("BRAINCRASH_CUTSCENE to BRAINCRASH_ACTIVATE", "BRAINCRASH_ACTIVATE")
+		.AddTransition("BRAINCRASH_CUTSCENE to BRAINCRASH_ACTIVATE", "BRAINCRASH_ACTIVATE")
 			.Predicator([&]()->_bool { return m_pSasPortrait->isFinish(); })
 			.Priority(0)
 

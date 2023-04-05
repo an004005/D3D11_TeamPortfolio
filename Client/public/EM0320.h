@@ -72,9 +72,6 @@ protected:
 
 //	virtual void SetActive() override;
 private:
-
-	void Create_BossUI();
-
 	void SmokeEffectCreate();
 	void JitabataSmokeEffect();
 	void CreateWeakExplosionEffect();
@@ -125,7 +122,7 @@ private:
 	_int	m_iPreHP;
 
 	//UI
-	class CCanvas_BossHpMove*		m_pUI_BossHP = nullptr;
+//	class CCanvas_BossHpMove*		m_pUI_BossHP = nullptr;
 
 
 	_float m_fWeakExplosionTickTime = 0.3f;

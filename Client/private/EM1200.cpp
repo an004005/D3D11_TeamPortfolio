@@ -45,8 +45,8 @@ HRESULT CEM1200::Initialize(void * pArg)
 	m_eEnemyName = EEnemyName::EM1200;
 	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
-
 	m_fGravity = 20.f;
+
 	return S_OK;
 }
 
@@ -231,7 +231,7 @@ void CEM1200::SetUpAnimationEvent()
 	});
 
 
-	//Cable 공격은 loop때 처리
+	
 }
 
 void CEM1200::SetUpFSM()
@@ -793,6 +793,7 @@ void CEM1200::SetUpFSM()
 void CEM1200::BeginTick()
 {
 	CEnemy::BeginTick();
+	m_pEMUI->Create_BossUI();
 }
 
 void CEM1200::Tick(_double TimeDelta)
