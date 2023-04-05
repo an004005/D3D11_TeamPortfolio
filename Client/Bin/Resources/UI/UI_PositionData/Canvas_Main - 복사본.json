@@ -65,9 +65,9 @@
                 "Float2s": [],
                 "Float4s": [
                     [
-                        0.0,
-                        0.0,
-                        0.0,
+                        9.999999747378752e-05,
+                        9.998999303206801e-05,
+                        9.998999303206801e-05,
                         0.10000000149011612
                     ]
                 ],
@@ -167,10 +167,10 @@
                 "Float2s": [],
                 "Float4s": [
                     [
-                        1.0,
-                        1.0,
-                        1.0,
-                        0.05583684518933296
+                        9.999999747378752e-05,
+                        9.998999303206801e-05,
+                        9.998999303206801e-05,
+                        0.10000000149011612
                     ]
                 ],
                 "Float4x4s": [],
@@ -344,52 +344,6 @@
             }
         },
         {
-            "ChildTag": "Main_Entrance\u0000",
-            "ObjectTag": "Main_Entrance",
-            "Pivot": 0,
-            "PositionX": 0.0,
-            "PositionY": 0.0,
-            "Priority": 10,
-            "Prototype_GameObject": "FullUI\u0000",
-            "ScaleX": 1.0,
-            "ScaleY": 1.0,
-            "ShaderParams": {
-                "Float2s": [],
-                "Float4s": [],
-                "Float4x4s": [],
-                "Floats": [
-                    0.0
-                ],
-                "Ints": [],
-                "Pass": 25,
-                "Textures": [
-                    "..\\Bin\\Resources\\UI\\Main_UI\\Main_BackGround.png\u0000"
-                ]
-            },
-            "SizeX": 1600.0,
-            "SizeY": 900.0,
-            "Transform": {
-                "WorldMatrix": [
-                    1600.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    900.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ]
-            }
-        },
-        {
             "ChildTag": "Main_Menu\u0000",
             "ObjectTag": "Main_Menu",
             "Pivot": 2,
@@ -470,8 +424,8 @@
                     0.0,
                     1.0,
                     0.0,
-                    -601.0,
-                    378.0,
+                    -85.0,
+                    375.0,
                     0.0,
                     1.0
                 ]

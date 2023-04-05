@@ -55,7 +55,11 @@ void CCanvas_Main::Tick(_double TimeDelta)
 {
 	KeyInput();
 
-	if (false == m_bMainUI) return;
+	if (false == m_bMainUI)
+	{
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_PickInitialize();
+		return;
+	}
 
 	CCanvas::Tick(TimeDelta);
 
