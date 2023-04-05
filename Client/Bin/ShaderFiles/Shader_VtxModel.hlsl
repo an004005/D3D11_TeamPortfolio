@@ -143,8 +143,9 @@ PS_OUT CommonProcess_AlphaTest(PS_IN In)
 // g_float_0 : ¿°·Â Ä³Ä¡
 PS_OUT PS_DEFAULT(PS_IN In)
 {
-	PS_OUT Out = CommonProcess_AlphaTest(In);
+	//PS_OUT Out = CommonProcess_AlphaTest(In);
 
+	PS_OUT Out = CommonProcess(In);
 	if (g_tex_on_2)
 		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
 	else

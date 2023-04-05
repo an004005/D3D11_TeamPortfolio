@@ -132,8 +132,8 @@ void CEnemy::Tick(_double TimeDelta)
 	if (m_dDeadTime >= 3.f)
 		SetDead();
 	//
-	//if (GetKeyState('K') & 0x8000)
-	//	SetDead(); 
+	if (GetKeyState('K') & 0x8000)
+		SetDead(); 
 	
 }
 
@@ -272,6 +272,10 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	HitEffect(tDamageParams);
 	CheckCrushGage(tDamageParams);
 	CheckHP(tDamageParams);
+	
+	if (m_pEMUI != nullptr)
+		m_pEMUI->Create_DamageFont(tDamageParams);
+
 
 	ENEMY_DAMAGE_REPORT tReport;
 	tReport.pCauser = tDamageParams.pCauser;
@@ -347,6 +351,7 @@ void CEnemy::CreateSpawnEffect()
 	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Enemy_Spawn_B")
 		->Start_NoAttachPivot(this, DistortionPivotMatrix, false, false);
 }
+
 
 _bool CEnemy::IsTargetFront(_float fAngle)
 {

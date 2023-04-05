@@ -480,14 +480,8 @@ void CEM0220::Create_Bullet()
 {
 	DAMAGE_PARAM eDamageParam;
 
-	if(m_iShotCount++ < 2)
-		eDamageParam.eAttackType = EAttackType::ATK_END;
-	else
-	{
-		eDamageParam.eAttackType = EAttackType::ATK_LIGHT;
-		m_iShotCount = 0;
-	}
 
+	eDamageParam.eAttackType = EAttackType::ATK_END;
 	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_END;
 	eDamageParam.iDamage = 50;
 

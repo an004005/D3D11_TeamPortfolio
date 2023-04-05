@@ -105,7 +105,7 @@ protected:
 
 private:
 	void CreateSpawnEffect();
-	
+
 protected:
 	static vector<wstring>			s_vecDefaultBlood;
 	static vector<wstring>			s_vecFireBlood;

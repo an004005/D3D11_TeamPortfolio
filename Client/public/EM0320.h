@@ -72,9 +72,6 @@ protected:
 
 //	virtual void SetActive() override;
 private:
-
-	void Create_BossUI();
-
 	void SmokeEffectCreate();
 	void JitabataSmokeEffect();
 
@@ -124,7 +121,7 @@ private:
 	_int	m_iPreHP;
 
 	//UI
-	class CCanvas_BossHpMove*		m_pUI_BossHP = nullptr;
+//	class CCanvas_BossHpMove*		m_pUI_BossHP = nullptr;
 
 	_float4x4 pivot;
 public:

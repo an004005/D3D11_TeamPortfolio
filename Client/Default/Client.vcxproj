@@ -185,7 +185,6 @@
     <ClInclude Include="..\public\AI_CH0300_AnimInstance.h" />
     <ClInclude Include="..\public\AI_CH0500.h" />
     <ClInclude Include="..\public\AI_CH0500_AnimInstance.h" />
-    <ClInclude Include="..\public\AttackNumUI.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -298,6 +297,7 @@
     <ClInclude Include="..\public\EM1200.h" />
     <ClInclude Include="..\public\EM1200_AnimInstance.h" />
     <ClInclude Include="..\public\EM1200_Controller.h" />
+    <ClInclude Include="..\public\EMBrain.h" />
     <ClInclude Include="..\public\EMCable.h" />
     <ClInclude Include="..\public\EMUI.h" />
     <ClInclude Include="..\public\Item_LightUI.h" />
@@ -498,7 +498,6 @@
     <ClCompile Include="..\private\AI_CH0300_AnimInstance.cpp" />
     <ClCompile Include="..\private\AI_CH0500.cpp" />
     <ClCompile Include="..\private\AI_CH0500_AnimInstance.cpp" />
-    <ClCompile Include="..\private\AttackNumUI.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -610,6 +609,7 @@
     <ClCompile Include="..\private\EM1200.cpp" />
     <ClCompile Include="..\private\EM1200_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM1200_Controller.cpp" />
+    <ClCompile Include="..\private\EMBrain.cpp" />
     <ClCompile Include="..\private\EMCable.cpp" />
     <ClCompile Include="..\private\EMUI.cpp" />
     <ClCompile Include="..\private\Item_LightUI.cpp" />

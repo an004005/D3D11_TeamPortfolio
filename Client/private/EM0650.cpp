@@ -122,8 +122,8 @@ void CEM0650::SetUpAnimationEvent()
 
 	m_pModelCom->Add_EventCaller("DeadFlower", [this]
 	{
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650DeadFlower")
-				->Start_NoAttach(this , false);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0700DeadFlower")
+				->Start_NoOwnerOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 	});
 
 	//m_pModelCom->Add_EventCaller("mon_2_attack_ready", [this] {m_SoundStore.PlaySound("mon_2_attack_ready", m_pTransformCom); });
