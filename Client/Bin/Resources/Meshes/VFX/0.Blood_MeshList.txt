@@ -1,5 +1,21 @@
 Prototype_Component_Shader_VtxModel_VFX
 
+NoticeNeon_DriveMax
+../Bin/Resources/Meshes/VFX/NoticeNeon_DriveMax.static_model
+NoticeNeon_fire
+../Bin/Resources/Meshes/VFX/NoticeNeon_fire.static_model
+NoticeNeon_HP
+../Bin/Resources/Meshes/VFX/NoticeNeon_HP.static_model
+NoticeNeon_oil
+../Bin/Resources/Meshes/VFX/NoticeNeon_oil.static_model
+NoticeNeon_thunder
+../Bin/Resources/Meshes/VFX/NoticeNeon_thunder.static_model
+NoticeNeon_water
+../Bin/Resources/Meshes/VFX/NoticeNeon_water.static_model
+
+VFX_Mesh_WaterFall_Left
+../Bin/Resources/Meshes/VFX/VFX_Mesh_WaterFall_Left.static_model
+
 Blood_00
 ../Bin/Resources/Meshes/VFX/Fluid/Blood_00.static_model
 
