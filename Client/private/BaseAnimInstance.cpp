@@ -3732,7 +3732,7 @@ HRESULT CBaseAnimInstance::Initialize_BrainField()
 				.Duration(0.1f)
 				.Priority(100)
 
-				.AddTransition("ATK_AIR_LANDING to JUMP", "JUMP")
+				.AddTransition("ATK_AIR_LANDING to JUMP_START", "JUMP_START")
 				.Predicator([&]()->_bool {return m_bJump && (CheckAnim("AS_ch0100_621_AL_BF_swing_air_landing")) && (0.5f <= m_fPlayRatio); })
 				.Duration(0.1f)
 				.Priority(100)

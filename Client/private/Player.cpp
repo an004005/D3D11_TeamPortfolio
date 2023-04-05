@@ -178,6 +178,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_BrainFieldKineticComboStateMachine()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_BrainFieldAttackStateMachine()))
+		return E_FAIL;
+
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_PLAYEREFFECT);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
@@ -282,15 +285,13 @@ void CPlayer::Tick(_double TimeDelta)
 	SpecialObject_OutLineCheck();
 	Update_TargetUI();
 
-	// ì½¤ë³´ ?°ê³„ ?œê°„
 	m_fKineticCombo_Slash -= TimeDelta;
 	m_fKineticCombo_Kinetic -= TimeDelta;
 	m_fJustDodgeAble -= TimeDelta;
 
-	NetualChecker(TimeDelta);	// ?„íˆ¬?íƒœ ?„ë‹ ??ì²´í¬
+	NetualChecker(TimeDelta);
 	SasMgr();
 
-	// ?€ê²ŒíŒ…
 	if (CGameInstance::GetInstance()->KeyDown(DIK_Q))
 	{
 		Enemy_Targeting(false);
@@ -323,10 +324,8 @@ void CPlayer::Tick(_double TimeDelta)
 	// µå¶óÀÌºê¸ðµå ¿¬Ãâ, ÃÖ¿ì¼±Àû
 	m_pDriveModeProductionStateMachine->Tick(TimeDelta);
 
-	// SAS?¹ìˆ˜
 	if (CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_TELEPORT)) 
 		m_pTeleportStateMachine->Tick(TimeDelta);
-	// ~SAS?¹ìˆ˜
 
 	m_pHitStateMachine->Tick(TimeDelta);
 
@@ -394,13 +393,13 @@ void CPlayer::Tick(_double TimeDelta)
 
 	if (!m_bHit && (false == m_bKineticCombo) && (false == m_bKineticSpecial) && !m_bBrainCrash) // ì½¤ë³´ ?€?´ë°???„ë‹ ?Œì—???¼ë°˜ ?¼ë ¥
 	{
-		//m_pBrainFieldKineticStateMachine->Tick(TimeDelta);
-		m_pKineticStataMachine->Tick(TimeDelta);
+		m_pBrainFieldKineticStateMachine->Tick(TimeDelta);
+		//m_pKineticStataMachine->Tick(TimeDelta);
 	}
 	if (!m_bHit && (false == m_bKineticSpecial) && !m_bBrainCrash) // ì½¤ë³´ ?€?´ë°?ëŠ” ì½¤ë³´ ?¼ë ¥
 	{
-		//m_pBrainFieldKineticComboStateMachine->Tick(TimeDelta);
-		m_pKineticComboStateMachine->Tick(TimeDelta);
+		m_pBrainFieldKineticComboStateMachine->Tick(TimeDelta);
+		//m_pKineticComboStateMachine->Tick(TimeDelta);
 	}
 
 	if (m_bHit)
@@ -434,9 +433,10 @@ void CPlayer::Tick(_double TimeDelta)
 	SeperateCheck();
 
 	// ÀÏ¹Ý »óÅÂÀÏ °æ¿ì
-	m_pASM->Tick(TimeDelta);
+	//m_pASM->Tick(TimeDelta);
 	// ºê·¹ÀÎ ÇÊµå ÀÛµ¿ÁßÀÎ °æ¿ì
-	//m_pASM->Tick_BrainField(TimeDelta);
+	m_pASM->Tick_BrainField(TimeDelta);
+	m_pBrainFieldAttackStateMachine->Tick(TimeDelta);
 
 	// ë¡œì»¬ ë¬´ë¸Œê°€ ?†ëŠ”???ì ?¼ë¡œë¶€??ë²—ì–´??? ë‹ˆë©”ì´?˜ì„ ?¡ê¸° ?„í•œ ì¡°ì¹˜
 	// !! BaseAninInstance?ì„œ ë³´ê°„???ë‚˜ê³?Normal?…ë°?´íŠ¸ê°€ ?????´ë‹¹ ì½”ë“œë¥??¤í–‰?œí‚¤?„ë¡ ?˜ìž
@@ -667,6 +667,9 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 void CPlayer::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	ImGui::InputFloat("BrainfieldRange", &m_fBF_Range);
+	ImGui::InputFloat("BrainfieldHeight", &m_fBF_Height);
 
 	if (ImGui::CollapsingHeader("StateCheck"))
 	{
@@ -3943,10 +3946,11 @@ HRESULT CPlayer::SetUp_BrainFieldKineticComboStateMachine()
 			{
 				m_bKineticCombo = true;
 				m_pASM->AttachAnimSocket("BrainField_AnimSocket", m_BF_KineticCombo_Slash);
+				m_pKineticAnimModel->SetPlayAnimation("AS_ch0100_611_AL_BF_swing_dash_obj");
 			})
 			.Tick([&](double TimeDelta)
 			{
-				
+				BrainField_ObjectAnimation_Socket("BrainField_AnimSocket", 5.f, 1.f);
 			})
 			.OnExit([&]() 
 			{
@@ -3975,13 +3979,22 @@ HRESULT CPlayer::SetUp_BrainFieldKineticComboStateMachine()
 			{
 				m_bKineticCombo = true;
 				m_pASM->AttachAnimSocket("BrainField_AnimSocket", m_BF_KineticCombo_Kinetic);
+				m_pKineticAnimModel->SetPlayAnimation("AS_ch0100_631_AL_BF_throw_b1_obj");
 			})
 			.Tick([&](double TimeDelta)
 			{
-				
+				if (m_pASM->isSocketPassby("BrainField_AnimSocket", 0.35f) && BF_Combo_Throw.IsNotDo())
+				{
+					Event_Kinetic_Throw();
+				}
+				else
+				{
+					BrainField_ObjectAnimation_Socket("BrainField_AnimSocket", 0.f, 1.f);
+				}
 			})
 			.OnExit([&]() 
 			{
+				BF_Combo_Throw.Reset();
 				m_pASM->SetCurState_BrainField("IDLE");
 				SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 			})
@@ -4001,6 +4014,120 @@ HRESULT CPlayer::SetUp_BrainFieldKineticComboStateMachine()
 						m_pASM->isSocketPassby("BrainField_AnimSocket", 0.5f);
 				})
 				.Priority(0)
+
+		.Build();
+
+	return S_OK;
+}
+
+HRESULT CPlayer::SetUp_BrainFieldAttackStateMachine()
+{
+	// ºê·¹ÀÎÇÊµå °ø°ÝÀº ¿°·ÂÃ¼¿¡ ¾Ö´Ï¸ÞÀÌ¼ÇÀ» ÅÂ¿ì´Â ¹æ½Ä
+	// ÇöÀç ASMÀ» ¹Þ¾Æ¼­ ¿°·ÂÃ¼¿¡ ¾Ö´Ï¸ÞÀÌ¼ÇÀ» Àü´ÞÇÏ´Â FSM
+
+	m_pBrainFieldAttackStateMachine =
+		CFSMComponentBuilder().InitState("NO_USE_BRAINFIELD")
+
+		.AddState("NO_USE_BRAINFIELD")
+		.OnStart([&]()
+		{
+			m_pKineticAnimModel->GetPlayAnimation()->Reset();
+		})
+		.Tick([&](double TimeDelta)
+		{
+			KineticObject_Targeting();
+		})
+		.OnExit([&]() 
+		{
+
+		})
+			.AddTransition("NO_USE_BRAINFIELD to BRAINFIELD_ATK_A1", "BRAINFIELD_ATK_A1")
+			.Predicator([&]()->_bool {return (m_pASM->GetCurStateName_BrainField() == "ATK_A1"); })
+			.Priority(0)
+
+			.AddTransition("NO_USE_BRAINFIELD to BRAINFIELD_ATK_A2", "BRAINFIELD_ATK_A2")
+			.Predicator([&]()->_bool {return (m_pASM->GetCurStateName_BrainField() == "ATK_A2"); })
+			.Priority(0)
+
+			.AddTransition("NO_USE_BRAINFIELD to BRAINFIELD_ATK_A3", "BRAINFIELD_ATK_A3")
+			.Predicator([&]()->_bool {return (m_pASM->GetCurStateName_BrainField() == "ATK_A3"); })
+			.Priority(0)
+
+			.AddTransition("NO_USE_BRAINFIELD to BRAINFIELD_ATK_AIR_START", "BRAINFIELD_ATK_AIR_START")
+			.Predicator([&]()->_bool {return (m_pASM->GetCurStateName_BrainField() == "ATK_AIR_START"); })
+			.Priority(0)
+
+		.AddState("BRAINFIELD_ATK_A1")
+		.OnStart([&]()	
+		{
+			m_pKineticAnimModel->SetPlayAnimation("AS_ch0100_601_AL_BF_swing_a1_obj");
+		})
+		.Tick([&](double TimeDelta)
+		{
+			// ºü¸£°Ô Å°³×Æ½ Æ÷ÀÎÆ®·Î À§Ä¡ º¸°£ÇØÁÖ°í ¿¬µ¿
+			BrainField_ObjectAnimation(5.f, 1.f);
+
+		})
+		.OnExit([&]() 
+		{
+
+		})
+			.AddTransition("BRAINFIELD_ATK_A1 to NO_USE_BRAINFIELD", "NO_USE_BRAINFIELD")
+			.Predicator([&]()->_bool {return (m_pASM->GetCurStateName_BrainField() != "ATK_A1"); })
+			.Priority(0)
+
+		.AddState("BRAINFIELD_ATK_A2")
+		.OnStart([&]()	
+		{
+			m_pKineticAnimModel->SetPlayAnimation("AS_ch0100_602_AL_BF_swing_a2_obj");
+		})
+		.Tick([&](double TimeDelta)
+		{
+			BrainField_ObjectAnimation(5.f, 1.f);
+		})
+		.OnExit([&]() 
+		{
+
+		})
+			.AddTransition("BRAINFIELD_ATK_A2 to NO_USE_BRAINFIELD", "NO_USE_BRAINFIELD")
+			.Predicator([&]()->_bool {return (m_pASM->GetCurStateName_BrainField() != "ATK_A2"); })
+			.Priority(0)
+
+		.AddState("BRAINFIELD_ATK_A3")
+		.OnStart([&]()	
+		{
+			m_pKineticAnimModel->SetPlayAnimation("AS_ch0100_603_AL_BF_swing_a3_obj");
+		})
+		.Tick([&](double TimeDelta)
+		{
+			BrainField_ObjectAnimation(5.f, 1.f);
+		})
+		.OnExit([&]() 
+		{
+
+		})
+			.AddTransition("BRAINFIELD_ATK_A3 to NO_USE_BRAINFIELD", "NO_USE_BRAINFIELD")
+			.Predicator([&]()->_bool {return (m_pASM->GetCurStateName_BrainField() != "ATK_A3"); })
+			.Priority(0)
+
+		.AddState("BRAINFIELD_ATK_AIR_START")
+		.OnStart([&]()	
+		{
+			m_pKineticAnimModel->SetPlayAnimation("AS_ch0100_621_AL_BF_swing_air_start_obj");
+		})
+		.Tick([&](double TimeDelta)
+		{
+			BrainField_ObjectAirSwing(5.f, 1.f);
+		})
+		.OnExit([&]() 
+		{
+
+		})
+			.AddTransition("BRAINFIELD_ATK_AIR_START to NO_USE_BRAINFIELD", "NO_USE_BRAINFIELD")
+			.Predicator([&]()->_bool {return (m_pASM->GetCurStateName_BrainField() != "ATK_AIR_START") &&
+											 (m_pASM->GetCurStateName_BrainField() != "ATK_AIR_LOOP") &&
+											 (m_pASM->GetCurStateName_BrainField() != "ATK_AIR_LANDING"); })
+			.Priority(0)
 
 		.Build();
 
@@ -7533,7 +7660,7 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 
 		m_bNonCharge = m_pController->KeyUp(CController::C);
 		m_bCharge = m_pController->KeyPress(CController::C);
-
+		
 		if (!m_bCharge) m_fBefCharge = 0.f;
 
 		m_bJump = m_pController->KeyDown(CController::SPACE);
@@ -8582,6 +8709,156 @@ void CPlayer::Kinetic_Combo_AttachLerpObject()
 	}
 }
 
+void CPlayer::BrainField_ObjectAnimation(_float fLook, _float fUp)
+{
+	if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
+	{
+		_float fPlayTime = m_pModel->GetPlayAnimation()->GetPlayTime();
+
+		m_pKineticAnimModel->GetPlayAnimation()->Update_Bones_SyncRatio(fPlayTime);
+		m_pKineticAnimModel->Compute_CombindTransformationMatrix();
+
+		_matrix WaistMatrix = m_pKineticAnimModel->GetBoneMatrix("Waist");
+		_vector vLook = XMVector3NormalizeEst(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * fLook;
+		_vector vUp = XMVector3NormalizeEst(m_pTransformCom->Get_State(CTransform::STATE_UP)) * fUp;
+
+		_matrix	SocketMatrix = WaistMatrix * m_pTransformCom->Get_WorldMatrix();
+		SocketMatrix.r[3] += vLook + vUp;
+
+		_matrix KineticObjectPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
+
+		_float fScale_Right = XMVectorGetX(XMVector3Length(KineticObjectPos.r[0]));
+		_float fScale_Up = XMVectorGetX(XMVector3Length(KineticObjectPos.r[1]));
+		_float fScale_Look = XMVectorGetX(XMVector3Length(KineticObjectPos.r[2]));
+
+		_float fRatio = m_pModel->GetPlayAnimation()->GetPlayRatio() * 10.f;
+
+		if (1.f < fRatio)
+		{
+			fRatio = 1.f;
+		}
+
+		_vector vLerpLook = XMVectorLerp(KineticObjectPos.r[2], SocketMatrix.r[2], fRatio);
+		_vector vLerpRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLerpLook);
+		_vector vLerpUp = XMVector3Cross(vLerpLook, vLerpRight);
+		_vector vLerpPos = XMVectorLerp(KineticObjectPos.r[3], SocketMatrix.r[3], fRatio);
+
+		vLerpRight = XMVector3Normalize(vLerpRight) * fScale_Right;
+		vLerpUp = XMVector3Normalize(vLerpUp) * fScale_Up;
+		vLerpLook = XMVector3Normalize(vLerpLook) * fScale_Look;
+
+		_matrix LerpMatrix = { vLerpRight, vLerpUp, vLerpLook, vLerpPos };
+
+		CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Set_WorldMatrix(LerpMatrix);
+	}
+}
+
+void CPlayer::BrainField_ObjectAirSwing(_float fLook, _float fUp)
+{
+	if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
+	{
+		_float fPlayTime = m_pModel->GetPlayAnimation()->GetPlayTime();
+
+		if (m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_621_AL_BF_swing_air_start")
+		{
+			fPlayTime = fPlayTime;// / fDurationSum;
+		}
+		else if (m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_621_AL_BF_swing_air_loop")
+		{
+			fPlayTime = (fPlayTime + (m_pModel->Find_Animation("AS_ch0100_621_AL_BF_swing_air_start")->GetCurDuration()));// / fDurationSum;
+		}
+		else if (m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_621_AL_BF_swing_air_landing")
+		{
+			fPlayTime = (fPlayTime
+				+ (m_pModel->Find_Animation("AS_ch0100_621_AL_BF_swing_air_start")->GetCurDuration())
+				+ m_pModel->Find_Animation("AS_ch0100_621_AL_BF_swing_air_loop")->GetCurDuration());// / fDurationSum;
+		}
+
+		m_pKineticAnimModel->GetPlayAnimation()->Update_Bones_SyncRatio(fPlayTime);
+		m_pKineticAnimModel->Compute_CombindTransformationMatrix();
+
+		_matrix WaistMatrix = m_pKineticAnimModel->GetBoneMatrix("Waist");
+		_vector vLook = XMVector3NormalizeEst(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * fLook;
+		_vector vUp = XMVector3NormalizeEst(m_pTransformCom->Get_State(CTransform::STATE_UP)) * fUp;
+
+		_matrix	SocketMatrix = WaistMatrix * m_pTransformCom->Get_WorldMatrix();
+		SocketMatrix.r[3] += vLook + vUp;
+
+		_matrix KineticObjectPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
+
+		_float fScale_Right = XMVectorGetX(XMVector3Length(KineticObjectPos.r[0]));
+		_float fScale_Up = XMVectorGetX(XMVector3Length(KineticObjectPos.r[1]));
+		_float fScale_Look = XMVectorGetX(XMVector3Length(KineticObjectPos.r[2]));
+
+		_float fRatio = m_pModel->GetPlayAnimation()->GetPlayRatio() * 10.f;
+
+		if (1.f < fRatio)
+		{
+			fRatio = 1.f;
+		}
+
+		_vector vLerpLook = XMVectorLerp(KineticObjectPos.r[2], SocketMatrix.r[2], fRatio);
+		_vector vLerpRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLerpLook);
+		_vector vLerpUp = XMVector3Cross(vLerpLook, vLerpRight);
+		_vector vLerpPos = XMVectorLerp(KineticObjectPos.r[3], SocketMatrix.r[3], fRatio);
+
+		vLerpRight = XMVector3Normalize(vLerpRight) * fScale_Right;
+		vLerpUp = XMVector3Normalize(vLerpUp) * fScale_Up;
+		vLerpLook = XMVector3Normalize(vLerpLook) * fScale_Look;
+
+		_matrix LerpMatrix = { vLerpRight, vLerpUp, vLerpLook, vLerpPos };
+
+		CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Set_WorldMatrix(LerpMatrix);
+	}
+}
+
+void CPlayer::BrainField_ObjectAnimation_Socket(const string& strSocket, _float fLook, _float fUp)
+{
+	if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
+	{
+		if (nullptr == m_pASM->GetSocketAnimation(strSocket))
+			return;
+
+		_float fPlayTime = m_pASM->GetSocketAnimation(strSocket)->GetPlayTime();
+
+		m_pKineticAnimModel->GetPlayAnimation()->Update_Bones_SyncRatio(fPlayTime);
+		m_pKineticAnimModel->Compute_CombindTransformationMatrix();
+
+		_matrix WaistMatrix = m_pKineticAnimModel->GetBoneMatrix("Waist");
+		_vector vLook = XMVector3NormalizeEst(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * fLook;
+		_vector vUp = XMVector3NormalizeEst(m_pTransformCom->Get_State(CTransform::STATE_UP)) * fUp;
+
+		_matrix	SocketMatrix = WaistMatrix * m_pTransformCom->Get_WorldMatrix();
+		SocketMatrix.r[3] += vLook + vUp;
+
+		_matrix KineticObjectPos = CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Get_WorldMatrix();
+
+		_float fScale_Right = XMVectorGetX(XMVector3Length(KineticObjectPos.r[0]));
+		_float fScale_Up = XMVectorGetX(XMVector3Length(KineticObjectPos.r[1]));
+		_float fScale_Look = XMVectorGetX(XMVector3Length(KineticObjectPos.r[2]));
+
+		_float fRatio = m_pASM->GetSocketAnimation(strSocket)->GetPlayRatio() * 10.f;
+
+		if (1.f < fRatio)
+		{
+			fRatio = 1.f;
+		}
+
+		_vector vLerpLook = XMVectorLerp(KineticObjectPos.r[2], SocketMatrix.r[2], fRatio);
+		_vector vLerpRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLerpLook);
+		_vector vLerpUp = XMVector3Cross(vLerpLook, vLerpRight);
+		_vector vLerpPos = XMVectorLerp(KineticObjectPos.r[3], SocketMatrix.r[3], fRatio);
+
+		vLerpRight = XMVector3Normalize(vLerpRight) * fScale_Right;
+		vLerpUp = XMVector3Normalize(vLerpUp) * fScale_Up;
+		vLerpLook = XMVector3Normalize(vLerpLook) * fScale_Look;
+
+		_matrix LerpMatrix = { vLerpRight, vLerpUp, vLerpLook, vLerpPos };
+
+		CPlayerInfoManager::GetInstance()->Get_KineticObject()->GetTransform()->Set_WorldMatrix(LerpMatrix);
+	}
+}
+
 void CPlayer::Start_RimLight(const string & strCurveName)
 {
 	m_pCurve = CGameInstance::GetInstance()->GetCurve(strCurveName);
@@ -8818,6 +9095,8 @@ void CPlayer::Free()
 	Safe_Release(m_pBrainFieldKineticStateMachine);
 
 	Safe_Release(m_pBrainFieldKineticComboStateMachine);
+
+	Safe_Release(m_pBrainFieldAttackStateMachine);
 
 //	Safe_Release(m_pContectRigidBody);
 }
