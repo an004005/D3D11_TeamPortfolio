@@ -47,12 +47,6 @@ HRESULT CEM0110::Initialize(void * pArg)
 	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(120.f));
 
-	//Create BugParticle
-	m_pBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0110_Bug_Particle");
-	m_pBugParticle->Start_Attach(this, "Jaw", true);
-	Safe_AddRef(m_pBugParticle);
-
-
 	return S_OK;
 }
  
@@ -365,6 +359,10 @@ void CEM0110::BeginTick()
 	CEnemy::BeginTick();
 	m_iArmorHp = m_iMaxHP * 0.2;
 
+	//Create BugParticle
+	m_pBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0110_Bug_Particle");
+	m_pBugParticle->Start_Attach(this, "Jaw", true);
+	Safe_AddRef(m_pBugParticle);
 }
 
 void CEM0110::Tick(_double TimeDelta)

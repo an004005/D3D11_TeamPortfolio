@@ -89,7 +89,7 @@ void CEM0700::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("DeadFlower", [this]
 		{
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0700DeadFlower")
-				->Start_NoAttach(this, false);
+				->Start_NoOwnerOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 		});
 }
 

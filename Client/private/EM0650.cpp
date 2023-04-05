@@ -122,8 +122,8 @@ void CEM0650::SetUpAnimationEvent()
 
 	m_pModelCom->Add_EventCaller("DeadFlower", [this]
 	{
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0650DeadFlower")
-				->Start_NoAttach(this , false);
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0700DeadFlower")
+				->Start_NoOwnerOnlyPos(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 	});
 
 	//m_pModelCom->Add_EventCaller("mon_2_attack_ready", [this] {m_SoundStore.PlaySound("mon_2_attack_ready", m_pTransformCom); });
@@ -428,7 +428,7 @@ void CEM0650::Create_Bullet()
 	CBulletBuilder()
 		.CreateBullet()
 			.Set_Owner(this)
-			.Set_InitBulletEffect({ L"Em0650_Bullet_Loop" })
+			.Set_InitBulletEffect({ L"em0650_Bullet_Birth", L"Em0650_Bullet_Loop" })
 			.Set_InitBulletParticle(L"em0650_Bullet_Loop")
 			.Set_ShootSpeed(18.f)
 			.Set_Life(2.f)

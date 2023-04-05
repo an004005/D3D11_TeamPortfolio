@@ -48,16 +48,6 @@ HRESULT CEM0800::Initialize(void * pArg)
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(120.f));
 	m_fGravity = 20.f;
 
-
-
-	m_pLeftArmBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0800_Bug_Particle");
-	m_pLeftArmBugParticle->Start_Attach(this, "LeftForeArm", true, true);
-	Safe_AddRef(m_pLeftArmBugParticle);
-
-	m_pRightArmBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0800_Bug_Particle");
-	m_pRightArmBugParticle->Start_Attach(this, "RightForeArm", true, true);
-	Safe_AddRef(m_pRightArmBugParticle);
-
 	return S_OK;
 }
 
@@ -375,6 +365,14 @@ void CEM0800::SetUpFSM()
 void CEM0800::BeginTick()
 {
 	CEnemy::BeginTick();
+
+	m_pLeftArmBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0800_Bug_Particle");
+	m_pLeftArmBugParticle->Start_Attach(this, "LeftForeArm", true, true);
+	Safe_AddRef(m_pLeftArmBugParticle);
+
+	m_pRightArmBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0800_Bug_Particle");
+	m_pRightArmBugParticle->Start_Attach(this, "RightForeArm", true, true);
+	Safe_AddRef(m_pRightArmBugParticle);
 }
 
 void CEM0800::Tick(_double TimeDelta)

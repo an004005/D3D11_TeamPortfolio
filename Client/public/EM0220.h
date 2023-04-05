@@ -74,8 +74,6 @@ private:
 	_uint		m_iFallIndex = 0;
 	_bool	m_bWeakProcess = false;
 
-	//총알 3번쏠때마다 한번씩 LIGHT로 처리
-	_uint			m_iShotCount = 0;
 	//무적상태
 	_bool		m_Unbeatable = false;
 

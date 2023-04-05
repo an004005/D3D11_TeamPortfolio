@@ -156,13 +156,16 @@ void CEM0200::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("Spin_Atk", [this] 
 	{
 		ClearDamagedTarget();
+
 		if (!m_bDead)
 		{
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0200_Spin_Attack")
 					->Start_Attach(this, "Target", false);
 		}
+
 		m_bSpinAtk = true;
 	});
+
 	m_pModelCom->Add_EventCaller("LightOn", [this]
 	{
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0200_Tail_Bell")
