@@ -313,5 +313,7 @@ void CMapInstance_Object::Free()
 	for(auto pxModel : m_pPxModels)
 		Safe_Release(pxModel);
 
+	m_pPxModels.clear();
+
 	Safe_Release(m_pModel_InstancingCom);
 }
