@@ -484,6 +484,9 @@
     <Filter Include="02.GameObjects\UI\Short\Quest">
       <UniqueIdentifier>{9e45a27c-dc49-4013-a547-8e9319d9c178}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\Short\Distance">
+      <UniqueIdentifier>{acb15e4a-9898-43bc-b1a4-3c6073be1b44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1439,6 +1442,9 @@
     <ClInclude Include="..\public\QuestBackGroundUI.h">
       <Filter>02.GameObjects\UI\Short\Quest</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\DistanceUI.h">
+      <Filter>02.GameObjects\UI\Short\Distance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2367,6 +2373,9 @@
     </ClCompile>
     <ClCompile Include="..\private\QuestBackGroundUI.cpp">
       <Filter>02.GameObjects\UI\Short\Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\DistanceUI.cpp">
+      <Filter>02.GameObjects\UI\Short\Distance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,18 +1,18 @@
 #include "stdafx.h"
-#include "..\public\ShaderUI.h"
+#include "..\public\DistanceUI.h"
 #include "GameInstance.h"
 
-CShaderUI::CShaderUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CDistanceUI::CDistanceUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
 }
 
-CShaderUI::CShaderUI(const CShaderUI& rhs)
+CDistanceUI::CDistanceUI(const CDistanceUI& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CShaderUI::Initialize_Prototype()
+HRESULT CDistanceUI::Initialize_Prototype()
 {
 	if (FAILED(CUI::Initialize_Prototype()))
 		return E_FAIL;
@@ -20,7 +20,7 @@ HRESULT CShaderUI::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CShaderUI::Initialize(void * pArg)
+HRESULT CDistanceUI::Initialize(void * pArg)
 {
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
@@ -28,36 +28,36 @@ HRESULT CShaderUI::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CShaderUI::Tick(_double TimeDelta)
+void CDistanceUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 }
 
-CShaderUI * CShaderUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CDistanceUI * CDistanceUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
- 	CShaderUI*		pInstance = new CShaderUI(pDevice, pContext);
+ 	CDistanceUI*		pInstance = new CDistanceUI(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CShaderUI");
+		MSG_BOX("Failed to Created : CDistanceUI");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CUI * CShaderUI::Clone(void * pArg)
+CUI * CDistanceUI::Clone(void * pArg)
 {
-	CShaderUI*		pInstance = new CShaderUI(*this);
+	CDistanceUI*		pInstance = new CDistanceUI(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CShaderUI");
+		MSG_BOX("Failed to Cloned : CDistanceUI");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CShaderUI::Free()
+void CDistanceUI::Free()
 {
 	__super::Free();
 
