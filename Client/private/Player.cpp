@@ -602,7 +602,7 @@ void CPlayer::AfterPhysX()
 		static_cast<CScarletWeapon*>(iter)->Trail_Tick(m_fTimeDelta);
 	}
 	m_pCamSpot->SetUp_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
-	m_pRange->Update_Tick(m_pTransformCom);
+	// m_pRange->Update_Tick(m_pTransformCom);
 
 	 //if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 	 //{
@@ -1496,8 +1496,8 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	NULL_CHECK(m_pASM = CBaseAnimInstance::Create(m_pModel, this));
 
 	Json PlayerCollider = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Player/PlayerRange.json");
-	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody",
-		L"PlayerRangeCollider", (CComponent**)&m_pRange, &PlayerCollider));
+	// FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody",
+	// 	L"PlayerRangeCollider", (CComponent**)&m_pRange, &PlayerCollider));
 
 	m_pSAS_Cable = dynamic_cast<CSAS_Cable*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Prototype_GameObject_SASCable"));
 	Assert(m_pSAS_Cable != nullptr);
@@ -5641,7 +5641,7 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 			.Predicator([&]()->_bool 
 			{ 
 				if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return false;
-				return m_bBrainCrashInput && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->Decide_PlayBrainCrush();
+				return m_bBrainCrashInput && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->CanBC();
 			})
 			.Priority(0)
 
@@ -5657,9 +5657,9 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		})
 		.OnExit([&]()
 		{
-
+				static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
 		})
-			.AddTransition("BRAINCRASH_CUTSCENE to BRAINCRASH_ACTIVATE", "BRAINCRASH_ACTIVATE")
+		.AddTransition("BRAINCRASH_CUTSCENE to BRAINCRASH_ACTIVATE", "BRAINCRASH_ACTIVATE")
 			.Predicator([&]()->_bool { return m_pSasPortrait->isFinish(); })
 			.Priority(0)
 

@@ -29,8 +29,7 @@ public:
 	CBulletBuilder& Set_Position(_fvector vPosition);
 	CBulletBuilder& Set_LookAt(_fvector vTargetPos);
 	CBulletBuilder& Set_TurnFixed(_float fRadian);
-
-	
+	CBulletBuilder& Set_BulletEffPivot(_float4x4 pivot);
 
 	void Build();
 
@@ -52,6 +51,9 @@ private:
 	_float4			m_TargetPos;
 
 	_float			m_fAngle = 0.f;
+
+	_float4x4		m_BulletEffPivot;
+
 public:
 	virtual void Free() override;
 };

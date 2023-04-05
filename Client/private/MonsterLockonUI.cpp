@@ -56,6 +56,18 @@ void CMonsterLockonUI::BeginTick()
 void CMonsterLockonUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+	// if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pOwner)
+	// 	&& CGameInstance::GetInstance()->Check_ObjectAlive(m_pTargetGroup))
+	// {
+	// 	_matrix	SocketMatrix = m_pOwner->GetBoneMatrix("Target") * m_pOwner->GetTransform()->Get_WorldMatrix();
+	//
+	// 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+	// 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+	// 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+	//
+	// 	m_pTargetGroup->Set_Transform(SocketMatrix);
+	// }
 }
 
 void CMonsterLockonUI::Imgui_RenderProperty()

@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "..\public\EM0320.h"
+
+#include <GameUtils.h>
+
 #include "Model.h"
 #include "JsonStorage.h"
 #include "GameInstance.h"
@@ -11,11 +14,11 @@
 #include "EM0320_Controller.h"
 #include "FSMComponent.h"
 
-#include "OilBullet.h" // Oil_Bullet
 #include "BulletBuilder.h"
 #include "VFX_Manager.h"
 
 #include "Canvas_BossHpMove.h"
+#include "ImguiUtils.h"
 
 CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -35,8 +38,8 @@ HRESULT CEM0320::Initialize(void* pArg)
 
 	// 배치에서 지정하지 않을 때의 기본 스텟
 	{
-		m_iMaxHP = 10000;
-		m_iHP = 10000; // ★
+		m_iMaxHP = 5000;
+		m_iHP = m_iMaxHP; // ★
 		m_iCrushGauge = 400;
 		m_iMaxCrushGauge = 400;
 		m_bHasCrushGauge = false;
@@ -166,11 +169,24 @@ void CEM0320::SetUpAnimationEvent()
 	});
 	m_pModelCom->Add_EventCaller("SwingL_Eff", [this]
 	{
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")->Start_Attach(this, "Eff02", true, false);
+			_float4x4 SwingL_EffPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ 0.f, -1.265f, 2.344f },
+				{ -180.f, 0.f, -180.f, },
+				{ 1.f, 1.f, 1.f });
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")
+			->Start_AttachPivot(this, SwingL_EffPivot, "Target", true, true, true);
+
 	});
 	m_pModelCom->Add_EventCaller("SwingR_Eff", [this]
 	{
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")->Start_Attach(this, "Eff02", true, false);
+			_float4x4 SwingR_EffPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
+				{ 0.f, -1.265f, 2.344f },
+				{ -180.f, 0.f, -180.f, },
+				{ 1.f, 1.f, 1.f });
+
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")
+			->Start_AttachPivot(this, SwingR_EffPivot, "Target", true, true, true);
 	});
 	m_pModelCom->Add_EventCaller("Start_Spin", [this]
 	{
@@ -367,11 +383,28 @@ void CEM0320::SetUpFSM()
 				m_pWaterMtrl->GetParam().Floats[1] = 0.f;
 				m_pController->SetActive(false);
 				m_eDeBuff = EDeBuffType::DEBUFF_OIL;
+
 				Reset();
 				m_pASM->AttachAnimSocketMany("FullBody", 
 				{ "AS_em0300_425_AL_down_start",
 					"AS_em0300_426_AL_down",
 					"AS_em0300_207_AL_atk_a3_end"  });
+
+				m_fWeakExplosionCnt = 8;
+				m_fWeakExplosionTickTime = 0.3f;
+			})
+			.Tick([this](_double TimeDelta)
+			{
+				if (m_fWeakExplosionCnt == 0)
+					return;
+
+				m_fWeakExplosionTickTime -= (_float)TimeDelta;
+				if (m_fWeakExplosionTickTime < 0.f)
+				{
+					--m_fWeakExplosionCnt;
+					m_fWeakExplosionTickTime = 0.3f;
+					CreateWeakExplosionEffect();
+				}
 			})
 			.OnExit([this]
 			{
@@ -415,7 +448,7 @@ void CEM0320::BeginTick()
 
 	// m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
 
-	Create_BossUI();
+	m_pEMUI->Create_BossUI();
 	m_b2ndPhase = true;
 }
 
@@ -483,6 +516,28 @@ void CEM0320::Imgui_RenderProperty()
 {
 	CEnemy::Imgui_RenderProperty();
 	ImGui::InputFloat("angle", &fangle);
+
+	static _bool tt = false;
+	ImGui::Checkbox("Modify Pivot", &tt);
+
+	if (tt)
+	{
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+
+		if (ImGui::Button("TestEffect"))
+		{
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_LeftHand_Slash")
+				->Start_AttachPivot(this, pivot, "Target", true, true, true);
+		}
+
+		if (ImGui::Button("TestEffect2"))
+		{
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_RightHand_Slash")
+				->Start_AttachPivot(this, pivot, "Target", true, true, true);
+		}
+	}
+
 }
 
 void CEM0320::AfterPhysX()
@@ -766,24 +821,6 @@ void CEM0320::FireWaterBall()
 	}
 }
 
-void CEM0320::Create_BossUI()
-{
-	static _bool PresentUI = false;
-
-	if (m_pUI_BossHP != nullptr)
-		m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
-
-	if (PresentUI == true) return;
-
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
-	m_pUI_BossHP = dynamic_cast<CCanvas_BossHpMove*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHpMove", &json));
-	assert(m_pUI_BossHP != nullptr && "Failed to Clone : CCanvas_BossHpMove");
-	m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
-
-	PresentUI = true;
-}
 
 void CEM0320::SmokeEffectCreate()
 {
@@ -808,6 +845,23 @@ void CEM0320::JitabataSmokeEffect()
 	_float4x4 Pivot = XMMatrixTranslation(RandomX, 0.f, RandomZ);
 	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320_Smoke_Particle")
 		->Start_NoAttachPivot(this, Pivot, false, true);
+}
+
+void CEM0320::CreateWeakExplosionEffect()
+{
+	_float3 vWeakOrigin = m_pWeak->GetPxWorldMatrix().Translation();
+	vWeakOrigin.y -= 0.5f;
+	for (int i = 0; i < 15; ++i)
+	{
+		const _float3 vPos = CGameUtils::GetRandVector3Sphere(vWeakOrigin, 2.5f);
+		const _float3 vDir = CGameUtils::GetRandVector3Sphere(_float3::Zero, 1.f);
+		
+		const wstring& HitBloodName = s_vecDefaultBlood[CMathUtils::RandomUInt(s_vecDefaultBlood.size() - 1)];
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, HitBloodName)
+			->Start_AttachPosition(this, 
+				_float4{vPos.x, vPos.y, vPos.z, 1.f}, 
+				_float4{vDir.x, vDir.y, vDir.z, 0.f});
+	}
 }
 
 CEM0320* CEM0320::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -849,6 +903,6 @@ void CEM0320::Free()
 	//for. BossUI 
 	// 안녕하세요. 옥수현 입니다. 여기 걸리셨다구요? 
 	// 보스를 다 잡고난 후에는 문제 없는 코드지만 보스를 잡기전 중간에 삭제 하실 경우에 객체 원본에서 Free() 가 돌고 난 후 여기 걸리신 것 입니다.
-	if (m_pUI_BossHP != nullptr)
-		m_pUI_BossHP->SetDelete();
+	//if (m_pUI_BossHP != nullptr)
+	//	m_pUI_BossHP->SetDelete();
 }

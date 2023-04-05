@@ -58,7 +58,11 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 			(CComponent**)&m_pShader)))
 			return E_FAIL;
 
-		m_pPointInstanceBuffer = CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, m_iInstanceNum);
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Point_Instance_Particle"), TEXT("Com_PointInstance"),
+			(CComponent**)&m_pPointInstanceBuffer)))
+			return E_FAIL;
+
+		// m_pPointInstanceBuffer = CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, m_iInstanceNum);
 		m_eBufferType = EBufferType::POINT;;
 	}
 	else
@@ -1251,15 +1255,15 @@ void CParticleSystem::AddMesh()
 
 			_float3 v3Pos = pNonAnimBuffer[iRandomVtx].vPosition;
 			vPos = _float4{ v3Pos.x, v3Pos.y, v3Pos.z, 1.f };
-
+			// Fix_Dead Flower 
 			if (m_bLocal)
+			{
+				vPos = XMVector3TransformNormal(vPos, m_pTransformCom->Get_WorldMatrix());
+			}
+			else
 			{
 				vPos = XMVector3TransformCoord(vPos, m_pTransformCom->Get_WorldMatrix());
 			}
-			// else
-			// {
-			// 	vPos = XMVector3TransformCoord(vPos, m_pTransformCom->Get_WorldMatrix());
-			// }
 		}
 
 		MeshData.vPosition = vPos;

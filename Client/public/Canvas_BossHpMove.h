@@ -30,6 +30,9 @@ private:
 	class CCanvas_BossHp* m_pCanvas_BossHp = { nullptr };
 	class CCanvas_Alarm* m_pUI_Alarm = { nullptr };
 
+private:
+	_float m_fCurrentHp = { 0.0f };
+
 public:
 	static CCanvas_BossHpMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

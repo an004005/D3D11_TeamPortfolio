@@ -122,7 +122,7 @@ SM_ef_Mabuta
 SM_ef_Many_Plane_00
 ../Bin/Resources/Meshes/VFX_Ver2/SM_ef_Many_Plane_00.static_model
 
-SM_ef_Plane_01
+SM_ef_Plane_01 (3갈래)
 ../Bin/Resources/Meshes/VFX_Ver2/SM_ef_Plane_01.static_model
 
 SM_ef_Plane_02

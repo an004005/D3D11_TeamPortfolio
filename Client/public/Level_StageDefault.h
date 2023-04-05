@@ -29,6 +29,8 @@ protected:
 	wstring m_strLevelName;
 	string m_strShadowCamJsonPath;
 	string m_strMapJsonPath;
+
+	_bool m_bPlayerSpawn = true;
 };
 
 END

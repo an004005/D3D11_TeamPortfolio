@@ -98,4 +98,10 @@ void CGameManager::Free()
 {
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCanvas_Acquisition))
+		m_pCanvas_Acquisition->SetDelete();
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCanvas_LeftTalk))
+		m_pCanvas_LeftTalk->SetDelete();
+
 }

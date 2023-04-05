@@ -72,11 +72,9 @@ protected:
 
 //	virtual void SetActive() override;
 private:
-
-	void Create_BossUI();
-
 	void SmokeEffectCreate();
 	void JitabataSmokeEffect();
+	void CreateWeakExplosionEffect();
 
 private:
 	class CEM320_AnimInstance* m_pASM = nullptr;
@@ -124,8 +122,13 @@ private:
 	_int	m_iPreHP;
 
 	//UI
-	class CCanvas_BossHpMove*		m_pUI_BossHP = nullptr;
+//	class CCanvas_BossHpMove*		m_pUI_BossHP = nullptr;
 
+
+	_float m_fWeakExplosionTickTime = 0.3f;
+	_uint m_fWeakExplosionCnt = 0;
+
+	_float4x4 pivot;
 public:
 	static CEM0320* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

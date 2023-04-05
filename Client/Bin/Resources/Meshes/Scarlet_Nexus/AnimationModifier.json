@@ -1,4 +1,10 @@
 {
+    "AS_BC_em0200m_em0200": {
+        "Duration": 350.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_BC_em_common_ch0100_end": {
         "Duration": 207.0,
         "TickPerSecond": 69.0,
@@ -4529,7 +4535,7 @@
     },
     "AS_em0100_474_AL_dead_down02": {
         "Duration": 138.0,
-        "TickPerSecond": 24.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -5174,7 +5180,7 @@
     },
     "AS_em0300_411_AL_WT_break": {
         "Duration": 70.0,
-        "TickPerSecond": 37.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -5940,7 +5946,7 @@
     },
     "AS_em0700_474_AL_dead_down02": {
         "Duration": 177.0,
-        "TickPerSecond": 24.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -6144,6 +6150,18 @@
             {
                 "EventName": "ComeUp",
                 "EventTime": 120.0
+            },
+            {
+                "EventName": "Landing",
+                "EventTime": 168.0
+            },
+            {
+                "EventName": "Rolling1",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Rolling2",
+                "EventTime": 80.0
             }
         ]
     },
@@ -6409,7 +6427,7 @@
     },
     "AS_em1100_424_AL_dead_down": {
         "Duration": 166.0,
-        "TickPerSecond": 24.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -6441,9 +6459,27 @@
             }
         ]
     },
+    "AS_em1200_151_AL_turn_L_loop1": {
+        "Duration": 40.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_153_AL_turn_R_loop1": {
+        "Duration": 37.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em1200_155_AL_turn_L_loop2": {
         "Duration": 76.0,
         "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_157_AL_turn_R_loop2": {
+        "Duration": 76.0,
+        "TickPerSecond": 40.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -6500,6 +6536,24 @@
     "AS_em1200_212_AL_atk_a3_tackle2_end": {
         "Duration": 45.0,
         "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_217_AL_atk_a5_motif2_start": {
+        "Duration": 178.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_218_AL_atk_a5_motif2_loop": {
+        "Duration": 75.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1200_219_AL_atk_a5_motif2_end": {
+        "Duration": 145.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },

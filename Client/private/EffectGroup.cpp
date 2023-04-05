@@ -182,7 +182,12 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 				});
 			}
 		}
-		else if (LEVEL_NOW == LEVEL_PLAYERTEST || LEVEL_NOW == LEVEL_TUTORIAL)
+		else if (LEVEL_NOW == LEVEL_PLAYERTEST 
+			|| LEVEL_NOW == LEVEL_TUTORIAL
+			|| LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F
+			|| LEVEL_NOW == LEVEL_SUBWAY
+			|| LEVEL_NOW == LEVEL_NAOMIROOM
+			|| LEVEL_NOW == LEVEL_HOSPITAL_1F)
 		{
 			if (m_iSelectFinishFunc == 0)
 			{
@@ -301,6 +306,7 @@ void CEffectGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate, _bool
 	m_Timeline.PlayFromStart();
 }
 
+
 void CEffectGroup::Start_Attach(CGameObject* pOwner, string BoneName, _bool trueisUpdate, _bool trueisRemoveScale)
 {
 	if (pOwner == nullptr)
@@ -386,6 +392,37 @@ void CEffectGroup::Start_AttachPosition(CGameObject * pOwner, _float4 vPosition,
 		SocketMatrix.r[1] = vUp;
 		SocketMatrix.r[2] = vLook;
 
+		Set_Transform(SocketMatrix);
+	}
+
+	m_Timeline.PlayFromStart();
+}
+
+void CEffectGroup::Start_AttachPositionMove(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_vMoveDir = vDirection;
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z);
+
+		_vector		vUp = XMVector3Normalize(vDirection);
+		_vector		vRight = XMVector3Normalize(XMVector3Cross(vUp, XMVectorSet(0.f, 0.f, 1.f, 0.f)));
+		_vector		vLook = XMVector3Normalize(XMVector3Cross(vRight, vUp));
+
+		SocketMatrix.r[0] = vRight;
+		SocketMatrix.r[1] = vUp;
+		SocketMatrix.r[2] = vLook;
+
+		m_OriginMoveMatrix = SocketMatrix;
 		Set_Transform(SocketMatrix);
 	}
 
@@ -508,7 +545,25 @@ void CEffectGroup::Call_Event()
 {
 	m_Timeline.SetEventFunction([this](const string& eventName)
 		{
-			CVFX_Manager::GetInstance()->GetParticle(PS_MONSTER, s2ws(eventName))->Start_NoOwnerOnlyPos(m_vEFGroupPos);
+			if(eventName.find("Detail") != string::npos )
+			{
+				CVFX_Manager::GetInstance()->GetParticle(PS_MONSTER, s2ws(eventName))->Start_NoAttach(m_pFirst_EffectSystem, false, true);
+			}
+			else if (eventName.find("Hit") != string::npos)
+			{
+				CVFX_Manager::GetInstance()->GetParticle(PS_HIT, s2ws(eventName))->Start_NoOwnerOnlyPos(m_vEFGroupPos);
+
+			}
+			else if (eventName.find("Neon") != string::npos)
+			{
+				_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f));
+				CVFX_Manager::GetInstance()->GetParticle(PS_HIT, s2ws(eventName))->Start_NoAttachPivot(m_pFirst_EffectSystem,MatParticle, true, true);
+			}
+			else
+			{
+				CVFX_Manager::GetInstance()->GetParticle(PS_MONSTER, s2ws(eventName))->Start_NoOwnerOnlyPos(m_vEFGroupPos);
+			}
+
 		});
 }
 
@@ -1729,7 +1784,7 @@ void CEffectGroup::Imgui_RenderEffectSource(_int iSelectEffect)
 	{
 		ImGui::Begin("Second_Effect");
 		m_pSecond_EffectSystem->Imgui_RenderProperty();
-		m_pSecond_EffectSystem->GetShader()->Imgui_RenderProperty();
+		m_pSecond_EffectSystem->Imgui_RenderComponentProperties();
 
 		ImGui::End();
 	}
@@ -1737,7 +1792,7 @@ void CEffectGroup::Imgui_RenderEffectSource(_int iSelectEffect)
 	{
 		ImGui::Begin("Third_Effect");
 		m_pThird_EffectSystem->Imgui_RenderProperty();
-		m_pThird_EffectSystem->GetShader()->Imgui_RenderProperty();
+		m_pThird_EffectSystem->Imgui_RenderComponentProperties();
 
 		ImGui::End();
 	}
@@ -1745,7 +1800,7 @@ void CEffectGroup::Imgui_RenderEffectSource(_int iSelectEffect)
 	{
 		ImGui::Begin("Fourth_Effect");
 		m_pFourth_EffectSystem->Imgui_RenderProperty();
-		m_pFourth_EffectSystem->GetShader()->Imgui_RenderProperty();
+		m_pFourth_EffectSystem->Imgui_RenderComponentProperties();
 
 		ImGui::End();
 	}
@@ -1753,7 +1808,7 @@ void CEffectGroup::Imgui_RenderEffectSource(_int iSelectEffect)
 	{
 		ImGui::Begin("Fifth_Effect");
 		m_pFifth_EffectSystem->Imgui_RenderProperty();
-		m_pFifth_EffectSystem->GetShader()->Imgui_RenderProperty();
+		m_pFifth_EffectSystem->Imgui_RenderComponentProperties();
 
 		ImGui::End();
 	}

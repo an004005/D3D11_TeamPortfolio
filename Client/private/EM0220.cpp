@@ -90,7 +90,7 @@ void CEM0220::SetUpAnimationEvent()
 	//Attack_Shot 중일때 앞으로 뱉는 모션에서 계속 Bullet생성
 	m_pModelCom->Add_EventCaller("Shot", [this]
 	{
-		//Create_Bullet();
+		Create_Bullet();
 	});
 }
 
@@ -480,14 +480,8 @@ void CEM0220::Create_Bullet()
 {
 	DAMAGE_PARAM eDamageParam;
 
-	if(m_iShotCount++ < 2)
-		eDamageParam.eAttackType = EAttackType::ATK_END;
-	else
-	{
-		eDamageParam.eAttackType = EAttackType::ATK_LIGHT;
-		m_iShotCount = 0;
-	}
 
+	eDamageParam.eAttackType = EAttackType::ATK_END;
 	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_END;
 	eDamageParam.iDamage = 50;
 
@@ -524,10 +518,13 @@ void CEM0220::HitWeakProcess(_double TimeDelta)
 	//2번째가 아머 삭제될때 디졸브
 	if (m_bWeakProcess)
 	{
-		m_pWeak->GetParam().Floats[1] = max(0, static_cast<_int>(m_pWeak->GetParam().Floats[1] - TimeDelta));
+		m_pWeak->GetParam().Floats[1] -= TimeDelta;
 
 		if (m_pWeak->GetParam().Floats[1] <= 0.f)
+		{
+			m_pWeak->GetParam().Floats[1] = 0.f;
 			m_bWeakProcess = false;
+		}
 	}
 
 }
