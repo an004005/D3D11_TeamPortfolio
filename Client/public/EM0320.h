@@ -74,6 +74,7 @@ protected:
 private:
 	void SmokeEffectCreate();
 	void JitabataSmokeEffect();
+	void CreateWeakExplosionEffect();
 
 private:
 	class CEM320_AnimInstance* m_pASM = nullptr;
@@ -122,6 +123,10 @@ private:
 
 	//UI
 //	class CCanvas_BossHpMove*		m_pUI_BossHP = nullptr;
+
+
+	_float m_fWeakExplosionTickTime = 0.3f;
+	_uint m_fWeakExplosionCnt = 0;
 
 	_float4x4 pivot;
 public:

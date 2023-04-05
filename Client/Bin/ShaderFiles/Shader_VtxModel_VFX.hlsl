@@ -245,6 +245,52 @@ PS_OUT_NORM PS_650_NORM(PS_IN_NORM In)
 	return Out;
 }
 
+PS_OUT_NORM PS_0220_NORM(PS_IN_NORM In)
+{
+	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
+	float flags = SHADER_DEFAULT;
+
+	float3 vNormal = In.vNormal.xyz;
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	vector	vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+
+	float fDissolvePower = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+
+	if (Out.vRMA.b == 0.f)
+	{
+		Out.vRMA.b += g_float_0;
+		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, Out.vColor.a * g_float_1, flags);
+	}
+	else
+	{
+		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, Out.vColor.a * g_float_2, flags);
+	}
+
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+
+
+	// Out.vColor.a = 1.f;
+
+	if (g_float_3 >= fDissolvePower)
+	{
+		discard;
+	}
+
+	// if (Out.vColor.a <= 0.1f)
+	// {
+	// 	Out.vColor = g_vec4_0;
+	// }
+
+	return Out;
+}
+
 PS_OUT_NORM PS_EM1200_RIBBON(PS_IN_NORM In)
 {
 	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
@@ -482,6 +528,100 @@ PS_OUT PS_BRON_LASER_MOUTH(PS_IN In)
 	Out.vColor.a = Mask.r * g_float_1;
 
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	return Out;
+}
+
+PS_OUT PS_KAREN_TURN_KICK(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Default = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Mask = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 BlendColor = Default * Color * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = CalcHDRColor(BlendColor, g_float_0);
+	Out.vColor.a = Mask.r * g_float_1;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	return Out;
+}
+
+
+PS_OUT PS_EM8200_ELEC_CON(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float2 TEX_UV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 4, 1);
+	float4 Default = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float Mask = g_tex_1.Sample(LinearSampler, float2(TEX_UV.x, TEX_UV.y)).r;
+	
+	float4 BlendColor = Default * Color * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = CalcHDRColor(BlendColor, g_float_0);
+	Out.vColor.a = Mask.r * g_float_1;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if(Out.vColor.a <= 0.00001f)
+	{
+		discard;
+	}
+
+	return Out;
+}
+
+PS_OUT PS_EM8200_ELEC_DETAIL_EF(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	// float2 TEX_UV = Get_FlipBookUV(In.vTexUV, g_Time, 0.05, 4, 1);
+	float4 Default = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Mask = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4 Mask1 = g_tex_2.Sample(LinearSampler, In.vTexUV);
+
+	float4 BlendColor = Default * Color * 2.0f;
+	float4 FinalColor = saturate(BlendColor * Mask);
+
+	Out.vColor = CalcHDRColor(BlendColor, g_float_0);
+	Out.vColor.a = Mask1.r * g_float_1;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (Out.vColor.a <= 0.01f)
+	{
+		discard;
+	}
+
+	return Out;
+}
+
+PS_OUT PS_EM8200_ATTACK_KNEEKICK(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	float4 Default = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Mask = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y + g_float_2));
+
+	float4 BlendColor = Default * Color * 2.0f;
+	float4 FinalColor = saturate(BlendColor * Mask);
+	float fDissolve = g_tex_2.Sample(LinearSampler, In.vTexUV).r;
+	float Gradient = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+	Out.vColor = CalcHDRColor(BlendColor, g_float_0);
+	Out.vColor.a = Mask.r * g_float_1 * Gradient;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (Out.vColor.a <= 0.01f)
+	{
+		discard;
+	}
+
+	if (g_float_3 >= fDissolve)
+		discard;
+
 	return Out;
 }
 
@@ -1483,5 +1623,75 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM8200_ICE_BASE();
+	}
+
+	//33
+	pass Em8200ElecCon
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM8200_ELEC_CON();
+	}
+
+	//34
+	pass Em8200ElecDetail
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM8200_ELEC_DETAIL_EF();
+	}
+
+	//35
+	pass Em8200AttackKneekick
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM8200_ATTACK_KNEEKICK();
+	}
+
+	//36
+	pass EM0220Bullet
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_NORM();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_0220_NORM();
+	}
+
+	//37
+	pass KarenTurnKick
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_KAREN_TURN_KICK();
 	}
 }

@@ -232,9 +232,6 @@
     <Filter Include="Trigger">
       <UniqueIdentifier>{de696a83-1b14-4455-81e6-aee65fc00158}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.GamePlay\02. Stage1">
-      <UniqueIdentifier>{1e272184-8887-431f-937d-de39fd6eeb16}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\17.KineticEditor">
       <UniqueIdentifier>{cf49c083-b25e-424b-aca3-6c741d536048}</UniqueIdentifier>
     </Filter>
@@ -468,6 +465,24 @@
     </Filter>
     <Filter Include="02.GameObjects\Weapon\wp0500">
       <UniqueIdentifier>{c10400ca-64a5-4606-a04e-1ae7a70a2d80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\04.Subway">
+      <UniqueIdentifier>{63453ecb-c94a-4186-b0ad-11bb2fb6c623}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\06.Hospital">
+      <UniqueIdentifier>{09b4fcbe-043c-4402-991b-69373b95e903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\05.NaomiRoom">
+      <UniqueIdentifier>{469a1007-8eed-49be-8ad1-13d542d45d82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\02. ConstructionSite3F">
+      <UniqueIdentifier>{1e272184-8887-431f-937d-de39fd6eeb16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\03.ConstructionSite2F">
+      <UniqueIdentifier>{3d3d0005-42a5-4f29-afef-5338e27783d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map\InvisibleWall">
+      <UniqueIdentifier>{c1cc4e2a-3b3d-4636-a1e3-c0c83c966796}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Enemy\EMBrain">
       <UniqueIdentifier>{8749a0cf-82cc-49b0-acc4-6fef9877a2eb}</UniqueIdentifier>
@@ -1344,7 +1359,6 @@
     <ClInclude Include="..\public\Canvas_SAContainer_Down.h">
       <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Level_ConstructionSite3F.h" />
     <ClInclude Include="..\public\PlayerInfoManager.h">
       <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
     </ClInclude>
@@ -1384,6 +1398,9 @@
     <ClInclude Include="..\public\Talk_FaceUI.h">
       <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\InvisibleWall.h">
+      <Filter>02.GameObjects\Map\InvisibleWall</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\EMUI.h">
       <Filter>02.GameObjects\Enemy\EMUI</Filter>
     </ClInclude>
@@ -1398,6 +1415,26 @@
     <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
     <ClInclude Include="..\public\EMBrain.h">
       <Filter>02.GameObjects\Enemy\EMBrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\RedString.h" />
+    <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
+    <ClInclude Include="..\public\Level_StageDefault.h">
+      <Filter>01.Levels\02.GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_ConstructionSite3F.h">
+      <Filter>01.Levels\02.GamePlay\02. ConstructionSite3F</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Subway.h">
+      <Filter>01.Levels\02.GamePlay\04.Subway</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Hospital_1F.h">
+      <Filter>01.Levels\02.GamePlay\06.Hospital</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_NaomiRoom.h">
+      <Filter>01.Levels\02.GamePlay\05.NaomiRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_Cheat.h">
+      <Filter>60.Imgui_Tool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2245,7 +2282,6 @@
     <ClCompile Include="..\private\Canvas_SAGragting_Go.cpp">
       <Filter>02.GameObjects\UI\SpecialAttack\Canvas</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Level_ConstructionSite3F.cpp" />
     <ClCompile Include="..\private\PlayerInfoManager.cpp">
       <Filter>02.GameObjects\Player\PlayerInfoManager</Filter>
     </ClCompile>
@@ -2300,6 +2336,32 @@
     <ClCompile Include="..\private\EMBrain.cpp">
       <Filter>02.GameObjects\Enemy\EMBrain</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\RedString.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
+    <ClCompile Include="..\private\Level_StageDefault.cpp">
+      <Filter>01.Levels\02.GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_ConstructionSite3F.cpp">
+      <Filter>01.Levels\02.GamePlay\02. ConstructionSite3F</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Subway.cpp">
+      <Filter>01.Levels\02.GamePlay\04.Subway</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Hospital_1F.cpp">
+      <Filter>01.Levels\02.GamePlay\06.Hospital</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_NaomiRoom.cpp">
+      <Filter>01.Levels\02.GamePlay\05.NaomiRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_Cheat.cpp">
+      <Filter>60.Imgui_Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\InvisibleWall.cpp">
+      <Filter>02.GameObjects\Map\InvisibleWall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_StageDefault.cpp" />
+    <ClCompile Include="..\private\RedString.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -2409,8 +2471,20 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_VFX_UI.hlsl">
       <Filter>97.ShaderFiles\UI</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\SSLR.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\SSLR.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInvisibleWall.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

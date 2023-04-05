@@ -182,7 +182,12 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 				});
 			}
 		}
-		else if (LEVEL_NOW == LEVEL_PLAYERTEST)
+		else if (LEVEL_NOW == LEVEL_PLAYERTEST 
+			|| LEVEL_NOW == LEVEL_TUTORIAL
+			|| LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F
+			|| LEVEL_NOW == LEVEL_SUBWAY
+			|| LEVEL_NOW == LEVEL_NAOMIROOM
+			|| LEVEL_NOW == LEVEL_HOSPITAL_1F)
 		{
 			if (m_iSelectFinishFunc == 0)
 			{
@@ -540,7 +545,15 @@ void CEffectGroup::Call_Event()
 {
 	m_Timeline.SetEventFunction([this](const string& eventName)
 		{
-			CVFX_Manager::GetInstance()->GetParticle(PS_MONSTER, s2ws(eventName))->Start_NoOwnerOnlyPos(m_vEFGroupPos);
+			if(eventName.find("Detail") != string::npos )
+			{
+				CVFX_Manager::GetInstance()->GetParticle(PS_MONSTER, s2ws(eventName))->Start_NoAttach(m_pFirst_EffectSystem, false, true);
+			}
+			else
+			{
+				CVFX_Manager::GetInstance()->GetParticle(PS_MONSTER, s2ws(eventName))->Start_NoOwnerOnlyPos(m_vEFGroupPos);
+			}
+
 		});
 }
 
@@ -1761,7 +1774,7 @@ void CEffectGroup::Imgui_RenderEffectSource(_int iSelectEffect)
 	{
 		ImGui::Begin("Second_Effect");
 		m_pSecond_EffectSystem->Imgui_RenderProperty();
-		m_pSecond_EffectSystem->GetShader()->Imgui_RenderProperty();
+		m_pSecond_EffectSystem->Imgui_RenderComponentProperties();
 
 		ImGui::End();
 	}
@@ -1769,7 +1782,7 @@ void CEffectGroup::Imgui_RenderEffectSource(_int iSelectEffect)
 	{
 		ImGui::Begin("Third_Effect");
 		m_pThird_EffectSystem->Imgui_RenderProperty();
-		m_pThird_EffectSystem->GetShader()->Imgui_RenderProperty();
+		m_pThird_EffectSystem->Imgui_RenderComponentProperties();
 
 		ImGui::End();
 	}
@@ -1777,7 +1790,7 @@ void CEffectGroup::Imgui_RenderEffectSource(_int iSelectEffect)
 	{
 		ImGui::Begin("Fourth_Effect");
 		m_pFourth_EffectSystem->Imgui_RenderProperty();
-		m_pFourth_EffectSystem->GetShader()->Imgui_RenderProperty();
+		m_pFourth_EffectSystem->Imgui_RenderComponentProperties();
 
 		ImGui::End();
 	}
@@ -1785,7 +1798,7 @@ void CEffectGroup::Imgui_RenderEffectSource(_int iSelectEffect)
 	{
 		ImGui::Begin("Fifth_Effect");
 		m_pFifth_EffectSystem->Imgui_RenderProperty();
-		m_pFifth_EffectSystem->GetShader()->Imgui_RenderProperty();
+		m_pFifth_EffectSystem->Imgui_RenderComponentProperties();
 
 		ImGui::End();
 	}

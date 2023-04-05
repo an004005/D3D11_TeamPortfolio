@@ -7,8 +7,6 @@ CGameManager_Tutorial* CGameManager_Tutorial::s_GameManager = nullptr;
 CGameManager_Tutorial::CGameManager_Tutorial(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameManager(pDevice, pContext)
 {
-	Safe_AddRef(m_pDevice);
-	Safe_AddRef(m_pContext);
 }
 
 HRESULT CGameManager_Tutorial::Initialize()
@@ -86,6 +84,5 @@ CGameManager_Tutorial* CGameManager_Tutorial::Create(ID3D11Device* pDevice, ID3D
 
 void CGameManager_Tutorial::Free()
 {
-	Safe_Release(m_pDevice);
-	Safe_Release(m_pContext);
+	__super::Free();
 }
