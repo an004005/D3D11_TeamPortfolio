@@ -1255,15 +1255,15 @@ void CParticleSystem::AddMesh()
 
 			_float3 v3Pos = pNonAnimBuffer[iRandomVtx].vPosition;
 			vPos = _float4{ v3Pos.x, v3Pos.y, v3Pos.z, 1.f };
-
+			// Fix_Dead Flower 
 			if (m_bLocal)
+			{
+				vPos = XMVector3TransformNormal(vPos, m_pTransformCom->Get_WorldMatrix());
+			}
+			else
 			{
 				vPos = XMVector3TransformCoord(vPos, m_pTransformCom->Get_WorldMatrix());
 			}
-			// else
-			// {
-			// 	vPos = XMVector3TransformCoord(vPos, m_pTransformCom->Get_WorldMatrix());
-			// }
 		}
 
 		MeshData.vPosition = vPos;

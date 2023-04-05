@@ -549,6 +549,16 @@ void CEffectGroup::Call_Event()
 			{
 				CVFX_Manager::GetInstance()->GetParticle(PS_MONSTER, s2ws(eventName))->Start_NoAttach(m_pFirst_EffectSystem, false, true);
 			}
+			else if (eventName.find("Hit") != string::npos)
+			{
+				CVFX_Manager::GetInstance()->GetParticle(PS_HIT, s2ws(eventName))->Start_NoOwnerOnlyPos(m_vEFGroupPos);
+
+			}
+			else if (eventName.find("Neon") != string::npos)
+			{
+				_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f));
+				CVFX_Manager::GetInstance()->GetParticle(PS_HIT, s2ws(eventName))->Start_NoAttachPivot(m_pFirst_EffectSystem,MatParticle, true, true);
+			}
 			else
 			{
 				CVFX_Manager::GetInstance()->GetParticle(PS_MONSTER, s2ws(eventName))->Start_NoOwnerOnlyPos(m_vEFGroupPos);
