@@ -195,8 +195,6 @@
     <ClInclude Include="..\public\Boss1_AIController.h" />
     <ClInclude Include="..\public\Boss_AppearBackUI.h" />
     <ClInclude Include="..\public\Boss_AppearUI.h" />
-    <ClInclude Include="..\public\Boss_HpBackUI.h" />
-    <ClInclude Include="..\public\Boss_ShildUI.h" />
     <ClInclude Include="..\public\BrJ_AnimInstance.h" />
     <ClInclude Include="..\public\BrJ_Controller.h" />
     <ClInclude Include="..\public\BronJon.h" />
@@ -362,7 +360,6 @@
     <ClInclude Include="..\public\NoticeNeonUI.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
     <ClInclude Include="..\public\Level_ConstructionSite3F.h" />
-    <ClInclude Include="..\public\Boss_HpUI.h" />
     <ClInclude Include="..\public\MonsterHpUI.h" />
     <ClInclude Include="..\public\MonsterLockonUI.h" />
     <ClInclude Include="..\public\MonsterShildUI.h" />
@@ -517,8 +514,6 @@
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
     <ClCompile Include="..\private\Boss_AppearBackUI.cpp" />
     <ClCompile Include="..\private\Boss_AppearUI.cpp" />
-    <ClCompile Include="..\private\Boss_HpBackUI.cpp" />
-    <ClCompile Include="..\private\Boss_ShildUI.cpp" />
     <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
     <ClCompile Include="..\private\BrJ_Controller.cpp" />
     <ClCompile Include="..\private\BronJon.cpp" />
@@ -683,7 +678,6 @@
     <ClCompile Include="..\private\NoticeNeonUI.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />
     <ClCompile Include="..\private\Level_ConstructionSite3F.cpp" />
-    <ClCompile Include="..\private\Boss_HpUI.cpp" />
     <ClCompile Include="..\private\MonsterHpUI.cpp" />
     <ClCompile Include="..\private\MonsterLockonUI.cpp" />
     <ClCompile Include="..\private\MonsterShildUI.cpp" />

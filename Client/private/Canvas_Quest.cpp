@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Canvas_Quest.h"
 #include "GameInstance.h"
+#include "JsonStorage.h"
 #include "UI_Manager.h"
 
 #include "DefaultUI.h"
@@ -33,9 +34,11 @@ HRESULT CCanvas_Quest::Initialize(void* pArg)
 	
 	Quest_Initialize();
 
-	m_bVisible = true;
 	m_fBackGround_StartPos = Find_ChildUI(L"BackGround")->Get_Position();
 	Find_ChildUI(L"BackGround")->Set_Position(_float2(-500.0f, m_fBackGround_StartPos.y));
+
+	m_fQuestMove = true;
+	m_bVisible = true;
 
 	return S_OK;
 }
@@ -76,15 +79,22 @@ void CCanvas_Quest::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
-	if (ImGui::Button("Set_Quest"))
-	{
-		Set_Quest(0);
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Set_Quest"))
-	{
-		Set_SuccessQuest();
-	}
+	//if (ImGui::Button("Set_Quest"))
+	//{
+	//	Set_Quest(0);
+	//}
+	//ImGui::SameLine();
+	//if (ImGui::Button("Set_Quest"))
+	//{
+	//	Set_SuccessQuest();
+	//}
+}
+
+void CCanvas_Quest::LoadFromJson(const Json& json)
+{
+	__super::LoadFromJson(json);
+
+	m_iQuestIndex = json["QuestIndex"];
 }
 
 void CCanvas_Quest::Quest_Initialize()

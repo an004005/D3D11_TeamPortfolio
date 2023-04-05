@@ -113,7 +113,7 @@ void CCanvas_BossHpMove::Set_BossHp(const _float & fHp)
 
 	_float fRatio = dynamic_cast<CShaderUI*>(Find_ChildUI(L"Boss_HPBack"))->Get_Floats0();
 	if (fRatio > fHp)
-		fRatio -= _float(TIME_DELTA) * 0.005f;
+		fRatio -= _float(TIME_DELTA) * 0.01f;
 	else
 		fRatio = fHp;
 	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Boss_HPBack"))->Set_Floats0(fRatio);

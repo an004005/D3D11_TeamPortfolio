@@ -28,13 +28,12 @@ public:
 	virtual HRESULT Render() override;
 
 	virtual void	Imgui_RenderProperty() override;
+	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_Quest(const size_t iIndex) {
-		m_iQuestIndex = iIndex;
-		m_fQuestMove = true;
-		m_bVisible = true;
-	}
+	//void	Set_Quest(const size_t iIndex) {
+	//	m_iQuestIndex = iIndex;
+	//}
 
 	void	Set_SuccessQuest() {
 		m_bVisible = true;

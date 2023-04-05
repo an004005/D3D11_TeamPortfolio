@@ -905,15 +905,6 @@
     <ClInclude Include="..\public\Canvas_BossHp.h">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Boss_HpUI.h">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Boss_HpBackUI.h">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Boss_ShildUI.h">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h">
       <Filter>02.GameObjects\UI\Short\Alarm</Filter>
@@ -1833,15 +1824,6 @@
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_BossHp.cpp">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Boss_HpUI.cpp">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Boss_HpBackUI.cpp">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Boss_ShildUI.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Monster.cpp">

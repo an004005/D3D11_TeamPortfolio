@@ -6,6 +6,7 @@
 #include "Canvas_Acquisition.h"
 #include "Canvas_LeftTalk.h"
 #include "Canvas_Quest.h"
+#include "DistanceUI.h"
 
 CGameManager* CGameManager::s_GameManager = nullptr;
 
@@ -100,9 +101,18 @@ void CGameManager::Quest_Tick()
 		m_bQuest = false;
 
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Quest.json");
+		json["QuestIndex"] = 0;
 		m_pCanvas_Quest = dynamic_cast<CCanvas_Quest*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Quest", &json));
 		assert(m_pCanvas_Quest != nullptr && "Failed to Clone : CCanvas_Quest");
-		m_pCanvas_Quest->Set_Quest(0);
+		//m_pCanvas_Quest->Set_Quest(0);
+
+		if (LEVEL_UI == LEVEL_NOW) return;
+
+		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/DistanceUI.json");
+		json["ArrivalPoint"] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		m_pDistanceUI = dynamic_cast<CDistanceUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"DistanceUI", &json));
+		assert(m_pDistanceUI != nullptr && "Failed to Clone : DistanceUI");
+		
 	}
 
 	if (true == m_bSuccessQuest)
