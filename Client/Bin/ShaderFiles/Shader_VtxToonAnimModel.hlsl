@@ -128,6 +128,7 @@ float4 NormalPacking(PS_IN In)
 // g_float_0 : 염력 림라이트 밝기
 // g_float_1 : 하드바디 디솔브
 // g_float_2 : 텔레포트 디솔브
+// g_float_3 : AMB 비율
 // g_int_0 : 상태이상 플래그
 // g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_TOON_DEFAULT(PS_IN In)
@@ -151,6 +152,8 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 	Out.vNormal = NormalPacking(In);
 	if (g_tex_on_2)
 		Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	else
+		Out.vAMB = Out.vDiffuse * g_float_3;
 	Out.vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
 	Out.vOutline = g_vec4_0;
 
@@ -373,6 +376,8 @@ PS_OUT_FORWARD PS_ToonDefault_Forward_6(PS_IN In)
 	float4 vAMB = 0.f;
 	if (g_tex_on_2)
 		vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	else
+		vAMB = vDiffuse * g_float_3;
 	float4 vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
 
 	float3 vLightDir = float3(1.f, -1.f, 1.f);
