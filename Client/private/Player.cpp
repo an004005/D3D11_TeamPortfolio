@@ -59,7 +59,7 @@
 #include "AnimCam.h"
 
 #include "Canvas_SAMouseLeft.h"
-
+#include "PlayerHotFixer.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -747,6 +747,8 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 void CPlayer::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
+
+	m_pHotFixer->Tick();
 
 	ImGui::InputFloat("BrainfieldRange", &m_fBF_Range);
 	ImGui::InputFloat("BrainfieldHeight", &m_fBF_Height);
@@ -1657,6 +1659,7 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	m_pTrail->SetOwnerModel(m_pModel);
 	//m_pTrail->SetActive(true);
 
+	NULL_CHECK(m_pHotFixer = CPlayerHotFixer::Create(this));
 
 	return S_OK;
 }
@@ -5883,8 +5886,8 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em0200m_ch0100"));
 	m_BrandCrash_em0200.push_back(pAnimation);
-	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em0200m_ch0100_end"));
-	m_BrandCrash_em0200.push_back(pAnimation);
+	//NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em0200m_ch0100_end"));
+	//m_BrandCrash_em0200.push_back(pAnimation);
 
 	m_pBrainCrashStateMachine = CFSMComponentBuilder()
 		.InitState("BRAINCRASH_NOUSE")
@@ -5945,6 +5948,15 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 				}*/
 
 				m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrandCrash_em0200);
+
+				if (nullptr != pTarget)
+				{
+					_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
+					pTarget->GetTransform()->LookAt_NonY(BC_Pos);
+					pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
+
+					static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
+				}
 			}
 			else
 			{
@@ -5955,7 +5967,22 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		})
 		.Tick([&](double fTimeDelta) 
 		{
+			string szCurAnimName = m_pASM->GetSocketAnimation("BrainCrash_AnimSocket")->GetName();
+			_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
 
+
+			// 해당 부분도 타겟 종류에 따라 로컬무브를 다르게 적용시킨다.
+			CAnimation* pAnimation = m_pModel->Find_Animation("AS_BC_em0200m_ch0100");
+			_float fRatio = pAnimation->GetPlayRatio();
+
+			if (fRatio >= 0.285f && fRatio <= 0.3714f)
+			{
+				m_pTransformCom->LocalMove(vLocal, 2.f);
+			}
+			else
+			{
+				m_pTransformCom->LocalMove(vLocal);
+			}
 		})
 		.OnExit([&]()
 		{
@@ -8456,13 +8483,6 @@ void CPlayer::SocketLocalMoveCheck()
 		m_pTransformCom->LocalMove(vLocal);
 	}
 
-	else if (!m_pASM->isSocketEmpty("BrainCrash_AnimSocket"))
-	{
-		string szCurAnimName = m_pASM->GetSocketAnimation("BrainCrash_AnimSocket")->GetName();
-		_vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
-		m_pTransformCom->LocalMove(vLocal);
-	}
-
 	else if (!m_pASM->isSocketEmpty("SAS_Special_AnimSocket"))
 	{
 		string szCurAnimName = m_pASM->GetSocketAnimation("SAS_Special_AnimSocket")->GetName();
@@ -9905,6 +9925,8 @@ void CPlayer::Free()
 	Safe_Release(m_pBrainFieldKineticStateMachine);
 	Safe_Release(m_pBrainFieldKineticComboStateMachine);
 	Safe_Release(m_pBrainFieldFallStateMachine);
+
+	Safe_Release(m_pHotFixer);
 
 //	Safe_Release(m_pContectRigidBody);
 }

@@ -1,11 +1,30 @@
 #pragma once
 #include "Base.h"
+#include "Client_Defines.h"
+
+BEGIN(Client)
+
+class CPlayer;
 
 class CPlayerHotFixer : public CBase
 {
-	CPlayerHotFixer() = default;
+	CPlayerHotFixer();
 	CPlayerHotFixer(const CPlayerHotFixer& rhs) = default;
 	virtual ~CPlayerHotFixer() = default;
 
+public:
+	virtual HRESULT Initialize(CPlayer* pPlayer);
+	void			Tick();
 
+private:
+	void	BrainCrashStateMachine_ReCompoile();
+
+private:
+	CPlayer* m_pPlayer = nullptr;
+
+public:
+	static CPlayerHotFixer* Create(CPlayer* pPlayer);
+	virtual void Free();
 };
+
+END
