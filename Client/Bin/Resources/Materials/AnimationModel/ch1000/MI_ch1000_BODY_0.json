@@ -1,4 +1,6 @@
 {
+    "Active": true,
+    "AlphaBlend": false,
     "ShaderParams": {
         "Float2s": [],
         "Float4s": [
@@ -10,15 +12,21 @@
             ]
         ],
         "Float4x4s": [],
-        "Floats": [0.0, 0.0, 0.0, 0.0],
-        "Ints": [
-            0, 0
+        "Floats": [
+            0.0,
+            0.0,
+            0.0,
+            0.5
         ],
-        "Pass": 4,
+        "Ints": [
+            0,
+            0
+        ],
+        "Pass": 6,
         "Textures": [
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch1000/Texture/T_ch1000_Body_COL.png\u0000",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch1000/Texture/T_ch1000_Body_NML.png\u0000",
-            "../Bin/Resources/00_Common/03_Texture/T_cm_Fil_Glay.png",
+            "",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch1000/Texture/T_ch1000_Body_CTL.png\u0000"
         ]
     },

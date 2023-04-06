@@ -7,6 +7,7 @@ BEGIN(Engine)
 class CModel;
 class CPxModel;
 class CAnimation;
+class CFSMComponent;
 END
 
 BEGIN(Client)
@@ -36,6 +37,7 @@ private:
 		BACK_5, // 등 오른쪽 아래
 		CABLE_END
 	};
+
 private:
 	CBrainFieldCables(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBrainFieldCables(const CBrainFieldCables& rhs);
@@ -51,22 +53,23 @@ public:
 
 public:
 	void Activate(_bool bActive); // 장착 후 바로 루프
-	void ActivatePhysX(_bool bActive);
-	void SetLoopAnimTickPerSecRatio(_float fRatio);
 
 public:
 	void SetTargetInfo(CTransform* pTargetTransform, CModel* pTargetModel);
 
+private:
+	void SetUpFSM();
 
 private:
 	array<CPxModel*, CABLE_END> m_CableModels{};
 	array<_float4x4, CABLE_END> m_CablePivots{};
 	array<string, CABLE_END> m_CableBones{};
-	CAnimation* m_pWatchAnim = nullptr;
+
+	CFSMComponent* m_pFSM = nullptr;
 
 	_bool m_bActive = false;
 
-	_float m_fDefaultCableLookTicPerSec = 0.f;
+	EBrainFieldCable m_eRenderEndLine = CABLE_END;
 
 	CTransform* m_pTargetTransform = nullptr;
 	CModel*		m_pTargetModel = nullptr;

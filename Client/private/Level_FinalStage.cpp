@@ -16,7 +16,7 @@ CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext
 
 HRESULT CLevel_FinalStage::Initialize()
 {
-	m_bPlayerSpawn = false;
+	//m_bPlayerSpawn = false;
 
 	m_strLevelName = L"FinalStage";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/FinalStage_ShadowCam.json";
@@ -24,8 +24,8 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	// if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		// return E_FAIL;
+	if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;
 
 
 
