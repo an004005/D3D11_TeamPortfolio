@@ -87,30 +87,31 @@ void CTrailSystem_EX::Tick(_double TimeDelta)
 		if (m_pBuffer->GetDatas()->empty() == false)
 			fPreLife = m_pBuffer->GetDatas()->back().vPosition.w;
 
-		_vector vPrePos = p1;
+			_vector vPrePos = p1;
 
-		for (_uint i = 0; i < iSegmentCnt; ++i)
-		{
-			_float fWeight = (_float)(i + 1) / (_float)iSegmentCnt;
-			_vector vSplinePos = XMVectorCatmullRom(p0, p1, p2, p3, fWeight);
+			for (_uint i = 0; i < iSegmentCnt; ++i)
+			{
+				_float fWeight = (_float)(i + 1) / (_float)iSegmentCnt;
+				_vector vSplinePos = XMVectorCatmullRom(p0, p1, p2, p3, fWeight);
 
-			_vector vRight = XMVector3Normalize(vSplinePos - vPrePos);
-			_vector vLookAtCam = XMVector3Normalize(vCamPos - vSplinePos);
+				_vector vRight = XMVector3Normalize(vSplinePos - vPrePos);
+				_vector vLookAtCam = XMVector3Normalize(vCamPos - vSplinePos);
 
-			float fRadian = XMConvertToDegrees(fabs(acosf(XMVectorGetX(XMVector3Dot(vLookAtCam, vRight)))));
-			if (fRadian < 5.f)
-				continue;
+				float fRadian = XMConvertToDegrees(fabs(acosf(XMVectorGetX(XMVector3Dot(vLookAtCam, vRight)))));
+				if (fRadian < 5.f)
+					continue;
 
-			_vector vUp = XMVector3Cross(vRight, vLookAtCam);
-			_vector vLook = XMVector3Cross(vRight, vUp);
-			vSplinePos = XMVectorSetW(vSplinePos, CMathUtils::Lerp(fPreLife, m_fLife, fWeight));//life
+				_vector vUp = XMVector3Cross(vRight, vLookAtCam);
+				_vector vLook = XMVector3Cross(vRight, vUp);
+				vSplinePos = XMVectorSetW(vSplinePos, CMathUtils::Lerp(fPreLife, m_fLife, fWeight));//life
 
-			_matrix TrailMatrix(vRight, vUp, vLook, vSplinePos);
-			m_pBuffer->AddData(TrailMatrix);
+				_matrix TrailMatrix(vRight, vUp, vLook, vSplinePos);
+				m_pBuffer->AddData(TrailMatrix);
 
-			vPrePos = vSplinePos;
+				vPrePos = vSplinePos;
+			}
 		}
-	}
+	
 }
 
 void CTrailSystem_EX::Late_Tick(_double TimeDelta)
@@ -121,6 +122,8 @@ void CTrailSystem_EX::Late_Tick(_double TimeDelta)
 
 HRESULT CTrailSystem_EX::Render()
 {
+	// FAILED_CHECK(SetUp_ShaderResources());
+
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_Matrix("g_ViewMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))

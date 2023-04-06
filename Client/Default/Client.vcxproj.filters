@@ -1445,11 +1445,11 @@
     <ClInclude Include="..\public\EM8200_AnimInstance.h">
       <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClInclude>
-    <ClInclude Include="EM8200_Controller.h">
-      <Filter>02.GameObjects\Enemy\EM8200</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\TrailSystem_EX.h">
       <Filter>VFX\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM8200_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
