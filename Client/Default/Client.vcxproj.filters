@@ -594,9 +594,6 @@
     <ClInclude Include="..\public\Effect.h">
       <Filter>VFX\Effect\Parent</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\ScarletMap.h">
-      <Filter>02.GameObjects\Map</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
@@ -1430,6 +1427,9 @@
     <ClInclude Include="..\public\Imgui_Cheat.h">
       <Filter>60.Imgui_Tool</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ScarletMap.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1518,9 +1518,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Effect.cpp">
       <Filter>VFX\Effect\Parent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\ScarletMap.cpp">
-      <Filter>02.GameObjects\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
@@ -2353,6 +2350,9 @@
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\RedString.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
+    <ClCompile Include="..\private\ScarletMap.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
