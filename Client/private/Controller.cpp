@@ -101,6 +101,8 @@ void CController::Tick(_double TimeDelta)
 	UpdateInputState(DIK_Q, Q);
 	UpdateInputState(DIK_E, E);
 	UpdateInputState(DIK_X, X);
+	UpdateInputState(DIK_F, F);
+	UpdateInputState(DIK_B, B);
 
 	UpdateInputState(DIK_R, R);
 	UpdateInputState(DIK_G, G);

@@ -314,6 +314,7 @@
     <ClInclude Include="..\public\Level_Subway.h" />
     <ClInclude Include="..\public\MouseCousorLightUI.h" />
     <ClInclude Include="..\public\MouseCousorUI.h" />
+    <ClInclude Include="..\public\PlayerHotFixer.h" />
     <ClInclude Include="..\public\RedBullet.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
@@ -637,6 +638,7 @@
     <ClCompile Include="..\private\Level_Subway.cpp" />
     <ClCompile Include="..\private\MouseCousorLightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorUI.cpp" />
+    <ClCompile Include="..\private\PlayerHotFixer.cpp" />
     <ClCompile Include="..\private\RedBullet.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />
