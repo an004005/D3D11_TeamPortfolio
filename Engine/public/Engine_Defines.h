@@ -4,7 +4,7 @@
 #pragma warning (disable : 4251)
 #pragma warning (disable : 4503) // json warn
 
-
+// #define DISABLE_LOG
 
 #include <d3d11.h>
 #include <Effects11/d3dx11effect.h>

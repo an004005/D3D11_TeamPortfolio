@@ -481,6 +481,9 @@
     <Filter Include="01.Levels\02.GamePlay\03.ConstructionSite2F">
       <UniqueIdentifier>{3d3d0005-42a5-4f29-afef-5338e27783d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.GamePlay\07.FinalStage">
+      <UniqueIdentifier>{08a335be-2a18-4fe9-aa1d-bfeade7ef2cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1424,6 +1427,10 @@
     <ClInclude Include="..\public\Imgui_Cheat.h">
       <Filter>60.Imgui_Tool</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_FinalStage.h">
+      <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrainField.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2341,6 +2348,10 @@
     <ClCompile Include="..\private\Imgui_Cheat.cpp">
       <Filter>60.Imgui_Tool</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Level_FinalStage.cpp">
+      <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrainField.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
