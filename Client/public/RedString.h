@@ -100,7 +100,7 @@ private:
 
 	_float m_fRadius = 0.1f;
 
-
+	_uint m_iPass = 0;
 
 public:
 	static CCombinedRedString*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
