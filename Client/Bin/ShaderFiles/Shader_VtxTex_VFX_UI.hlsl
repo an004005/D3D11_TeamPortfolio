@@ -100,7 +100,7 @@ PS_OUT PS_UI_Tex_Alpha(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	if (0 == g_int_0)
+	if (0 == g_int_0)	// 색상 변경해서
 	{
 		float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
 
@@ -109,9 +109,27 @@ PS_OUT PS_UI_Tex_Alpha(PS_IN In)
 		float4 HDRColor = saturate(FinalColor + Texture * g_float_0);
 		Out.vColor = CalcHDRColor(HDRColor, g_float_1);
 	}
-	else if (1 == g_int_0)
+	else if (1 == g_int_0) // 안 보이도록
 	{
 		return Out;
+	}
+	else if (2 == g_int_0)	// 원본 텍스처 사용
+	{
+		float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+		float4 HDRColor = saturate(Texture * g_float_0);
+		Out.vColor = CalcHDRColor(HDRColor, g_float_1);
+	}
+	if (3 == g_int_0)	// 색상 에서 a 값은 g_float_0 로 조절
+	{
+		float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+		float3 BlendColor = Texture.rgb * g_vec4_0.rgb * 2.0f;
+		float3 FinalColor = saturate(BlendColor);
+		float4 HDRColor;
+		HDRColor.rgb = saturate(FinalColor + Texture * g_float_0);
+		HDRColor.a = g_float_0;
+		Out.vColor = CalcHDRColor(HDRColor, g_float_1);
 	}
 
 	return Out;
