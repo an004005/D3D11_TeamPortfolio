@@ -105,21 +105,21 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (FAILED(Render_Blend()))
 		return E_FAIL;
 
-	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext, TEXT("MRT_HDR"))))
-		return E_FAIL;
-	
-	if (m_bLightRays)
-	{
-		CSSLRManager::GetInstance()->Render(
-			m_pTarget_Manager->Get_RTV(L"Target_HDR"), 
-			CSSAOManager::GetInstance()->GetMiniDepthSRV(),
-			CLight_Manager::GetInstance()->GetDirectionalLightDir(),
-			CLight_Manager::GetInstance()->GetDirectionalLightColor() * m_fSSLRIntensity);
-	}
-	
-	
-	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_HDR"))))
-		return E_FAIL;
+	//if (FAILED(m_pTarget_Manager->End_MRT(m_pContext, TEXT("MRT_HDR"))))
+	//	return E_FAIL;
+	//
+	//if (m_bLightRays)
+	//{
+	//	CSSLRManager::GetInstance()->Render(
+	//		m_pTarget_Manager->Get_RTV(L"Target_HDR"), 
+	//		CSSAOManager::GetInstance()->GetMiniDepthSRV(),
+	//		CLight_Manager::GetInstance()->GetDirectionalLightDir(),
+	//		CLight_Manager::GetInstance()->GetDirectionalLightColor() * m_fSSLRIntensity);
+	//}
+	//
+	//
+	//if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_HDR"))))
+	//	return E_FAIL;
 
 	if (FAILED(Render_MeshAlphaBlend()))
 		return E_FAIL;
