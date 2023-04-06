@@ -487,6 +487,9 @@
     <Filter Include="02.GameObjects\Enemy\EMBrain">
       <UniqueIdentifier>{8749a0cf-82cc-49b0-acc4-6fef9877a2eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.GamePlay\07.FinalStage">
+      <UniqueIdentifier>{08a335be-2a18-4fe9-aa1d-bfeade7ef2cc}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Enemy\EM8200">
       <UniqueIdentifier>{1c7907e5-dd73-4995-9ab7-9c01d02fee15}</UniqueIdentifier>
     </Filter>
@@ -1451,6 +1454,10 @@
     <ClInclude Include="..\public\EM8200_Controller.h">
       <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_FinalStage.h">
+      <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrainField.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2389,6 +2396,10 @@
     <ClCompile Include="..\private\TrailSystem_EX.cpp">
       <Filter>VFX\Trail</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Level_FinalStage.cpp">
+      <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrainField.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

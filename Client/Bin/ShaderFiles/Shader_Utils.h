@@ -384,6 +384,29 @@ float Rand(float2 co)
 	return 0.5 + (frac(sin(dot(co.xy, float2(12.9898, 78.233))) * 43758.5453)) * 0.5;
 }
 
+float2 rotateUV_Degree(float2 uv, float degrees)
+{
+    const float Deg2Rad = (PI * 2.0) / 360.0;
+    float rotationRadians = degrees * Deg2Rad;
+    float s = sin(rotationRadians);
+    float c = cos(rotationRadians);
+    float2x2 rotationMatrix = float2x2(c, -s, s, c);
+    uv -= 0.5;
+    uv = mul(rotationMatrix, uv);
+    uv += 0.5;
+    return uv;
+}
+
+float2 rotateUV_Radian(float2 uv, float radians)
+{
+    float s = sin(radians);
+    float c = cos(radians);
+    float2x2 rotationMatrix = float2x2(c, -s, s, c);
+    uv -= 0.5;
+    uv = mul(rotationMatrix, uv);
+    uv += 0.5;
+    return uv;
+}
 
 
 // float r1 = Rand(float2(x, accTime));

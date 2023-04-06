@@ -104,7 +104,7 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	*/
 	
 	//일반 모델들의 프로토타입 생성
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/",
+	/*CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/",
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
@@ -114,11 +114,11 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 		{
 			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), NON_INSTANCE));
 		}
-	});
+	});*/
 
 			
 	//인스턴싱 모델들의 프로토타입 생성						// TutorialMap	FinalBossStage	Subway_Hospital/Subway  Subway_Hospital/Hospital	Common
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/Common/",
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/BrainField/",
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
@@ -131,15 +131,18 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	});
 		// ★ Frustum Culling
 
-	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
-	FAILED_CHECK(CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext));
-
 	//SkyBox
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_NOW, TEXT("Prototype_Component_Model_SkySphere"),
 		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Model/StaticModel/Sky/SkySphere.static_model"))))
 		return E_FAIL;
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
+
+	CGameUtils::ListFiles("../Bin/Resources/Restrings/BranFieldStrings/", [](const string& filePath)
+	{
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);
+		CGameInstance::GetInstance()->Clone_GameObject(LAYER_MAP_DECO, L"Prototype_CombinedRedString", &json);
+	});
 
 	return S_OK;
 }
@@ -178,6 +181,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");	// Map_ConstructionSite3F	
 	
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
+	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_BrainField.json");				// Map_NaomiRoom
 	
 	json["Model_ProtoTypes"] = Json::array();
 	

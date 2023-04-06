@@ -160,7 +160,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	float4 vViewDir = g_vCamPosition - In.vWorldPos;
 	float fFresnel = FresnelEffect(In.vNormal.xyz, vViewDir.xyz, 0.1f);
 
-	float4 vColor = lerp(float4(1.f, 0.f, 0.f, 0.6f), (float4)1.f, saturate(1.f - fFresnel));
+	float4 vColor = lerp(float4(1.f, 0.f, 0.f, 0.6f), (float4)1.f, saturate(1.f - fFresnel) * 0.5f);
 	Out.vColor = CalcHDRColor(vColor, fFresnel * 2.5f);
 	return Out;
 }
