@@ -487,6 +487,9 @@
     <Filter Include="02.GameObjects\Enemy\EMBrain">
       <UniqueIdentifier>{8749a0cf-82cc-49b0-acc4-6fef9877a2eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.GamePlay\07.FinalStage">
+      <UniqueIdentifier>{08a335be-2a18-4fe9-aa1d-bfeade7ef2cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1436,6 +1439,10 @@
     <ClInclude Include="..\public\Imgui_Cheat.h">
       <Filter>60.Imgui_Tool</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_FinalStage.h">
+      <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrainField.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2362,6 +2369,10 @@
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\RedString.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
+    <ClCompile Include="..\private\Level_FinalStage.cpp">
+      <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrainField.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

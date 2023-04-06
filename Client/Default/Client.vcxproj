@@ -196,6 +196,7 @@
     <ClInclude Include="..\public\Boss_AppearUI.h" />
     <ClInclude Include="..\public\Boss_HpBackUI.h" />
     <ClInclude Include="..\public\Boss_ShildUI.h" />
+    <ClInclude Include="..\public\BrainField.h" />
     <ClInclude Include="..\public\BrJ_AnimInstance.h" />
     <ClInclude Include="..\public\BrJ_Controller.h" />
     <ClInclude Include="..\public\BronJon.h" />
@@ -303,6 +304,7 @@
     <ClInclude Include="..\public\Imgui_Cheat.h" />
     <ClInclude Include="..\public\InvisibleWall.h" />
     <ClInclude Include="..\public\Item_LightUI.h" />
+    <ClInclude Include="..\public\Level_FinalStage.h" />
     <ClInclude Include="..\public\Level_Hospital_1F.h" />
     <ClInclude Include="..\public\Level_NaomiRoom.h" />
     <ClInclude Include="..\public\Level_StageDefault.h" />
@@ -514,6 +516,7 @@
     <ClCompile Include="..\private\Boss_AppearUI.cpp" />
     <ClCompile Include="..\private\Boss_HpBackUI.cpp" />
     <ClCompile Include="..\private\Boss_ShildUI.cpp" />
+    <ClCompile Include="..\private\BrainField.cpp" />
     <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
     <ClCompile Include="..\private\BrJ_Controller.cpp" />
     <ClCompile Include="..\private\BronJon.cpp" />
@@ -620,6 +623,7 @@
     <ClCompile Include="..\private\Imgui_Cheat.cpp" />
     <ClCompile Include="..\private\InvisibleWall.cpp" />
     <ClCompile Include="..\private\Item_LightUI.cpp" />
+    <ClCompile Include="..\private\Level_FinalStage.cpp" />
     <ClCompile Include="..\private\Level_Hospital_1F.cpp" />
     <ClCompile Include="..\private\Level_NaomiRoom.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp" />

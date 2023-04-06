@@ -32,11 +32,15 @@ public:
 
 public:
 	void CreateString();
+	void CreateInstanceData(vector<VTXLINE_POS_INSTANCE>& InstanceData);
+	void CreateInstanceData_WorldInclude(vector<VTXLINE_POS_INSTANCE>& InstanceData);
+
 
 private:
 	void DeletePoint(_uint idx);
 	_bool PickPoint();
 	void AddPoint_ForTool(_float4 vPos);
+	void Copy();
 
 private:
 	CShader*							m_pShaderCom = nullptr;
@@ -58,6 +62,48 @@ private:
 
 public:
 	static CRedString*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject*				Clone(void* pArg) override;
+	virtual void						Free() override;
+};
+
+
+class CCombinedRedString : public CGameObject
+{
+public:
+	CCombinedRedString(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCombinedRedString(const CCombinedRedString& rhs);
+	virtual ~CCombinedRedString() = default;
+
+public:
+	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize(void* pArg) override;
+	virtual void Tick(_double TimeDelta) override;
+	virtual void Late_Tick(_double TimeDelta) override;
+	virtual HRESULT Render() override;
+	virtual void Imgui_RenderProperty() override;
+
+	virtual void LoadFromJson(const Json& json) override;
+	virtual void SaveToJson(Json& json) override;
+
+public:
+	void CombineStrings(list<CRedString*> RedStrings);
+
+private:
+	CShader*							m_pShaderCom = nullptr;
+	CRenderer*							m_pRendererCom = nullptr;
+	class CVIBuffer_Line_Instancing*		m_pBuffer = nullptr;
+
+	vector<string> m_RedStringJsonPathes;
+
+	vector<pair<_float4x4, _float>> m_Copies;
+	_bool m_bUseTransform = false;
+
+	_float m_fRadius = 0.1f;
+
+
+
+public:
+	static CCombinedRedString*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*				Clone(void* pArg) override;
 	virtual void						Free() override;
 };
