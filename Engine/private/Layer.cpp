@@ -42,7 +42,7 @@ void CLayer::Late_Tick(_double TimeDelta)
 	TimeDelta *= (_float)m_fLayerTimeRatio;
 
 	for (const auto pGameObject : m_GameObjects)
-		pGameObject->Late_Tick(TimeDelta);
+ 		pGameObject->Late_Tick(TimeDelta);
 }
 
 void CLayer::AfterPhysX()

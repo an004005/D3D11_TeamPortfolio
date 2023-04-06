@@ -34,6 +34,8 @@ HRESULT CCanvas_BossHpMove::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	m_fCurrentHp = 1.0f;
+
 	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_BossHpMove", this);
 	m_vMaxDestination = { 0.0f, -5.0f };
 	CCanvas::UIMove_FSM();
@@ -109,11 +111,14 @@ void CCanvas_BossHpMove::Set_BossHp(const _float & fHp)
 {
 	//dynamic_cast<CCanvas_BossHp*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_BossHp"))->Set_BossHp();
 	m_pCanvas_BossHp->Set_BossHp();
-
+	
 	Find_ChildUI(L"Boss_Hp")->SetVisible(true);
 	Find_ChildUI(L"Boss_HPBack")->SetVisible(true);
 	dynamic_cast<CBoss_HpUI*>(Find_ChildUI(L"Boss_Hp"))->Set_BossHp(fHp);
-	dynamic_cast<CBoss_HpBackUI*>(Find_ChildUI(L"Boss_HPBack"))->Set_BossHp(fHp);
+	
+	if(m_fCurrentHp > fHp)
+		m_fCurrentHp -= _float(TIME_DELTA);
+	dynamic_cast<CBoss_HpBackUI*>(Find_ChildUI(L"Boss_HPBack"))->Set_BossHp(m_fCurrentHp);
 }
 
 void CCanvas_BossHpMove::Set_BossShild(const _float & fShild)

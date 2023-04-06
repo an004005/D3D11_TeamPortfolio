@@ -481,6 +481,12 @@
     <Filter Include="01.Levels\02.GamePlay\03.ConstructionSite2F">
       <UniqueIdentifier>{3d3d0005-42a5-4f29-afef-5338e27783d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Map\InvisibleWall">
+      <UniqueIdentifier>{c1cc4e2a-3b3d-4636-a1e3-c0c83c966796}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMBrain">
+      <UniqueIdentifier>{8749a0cf-82cc-49b0-acc4-6fef9877a2eb}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01.Levels\02.GamePlay\07.FinalStage">
       <UniqueIdentifier>{08a335be-2a18-4fe9-aa1d-bfeade7ef2cc}</UniqueIdentifier>
     </Filter>
@@ -928,9 +934,6 @@
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GravikenisisGUI.h">
-      <Filter>02.GameObjects\UI\3DUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\AttackNumUI.h">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\FactoryMethod.h">
@@ -1398,6 +1401,9 @@
     <ClInclude Include="..\public\Talk_FaceUI.h">
       <Filter>02.GameObjects\UI\Short\LeftTalk</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\InvisibleWall.h">
+      <Filter>02.GameObjects\Map\InvisibleWall</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\EMUI.h">
       <Filter>02.GameObjects\Enemy\EMUI</Filter>
     </ClInclude>
@@ -1406,6 +1412,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Weapon_wp0500.h">
       <Filter>02.GameObjects\Weapon\wp0500</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_StageDefault.h" />
+    <ClInclude Include="..\public\RedString.h" />
+    <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
+    <ClInclude Include="..\public\EMBrain.h">
+      <Filter>02.GameObjects\Enemy\EMBrain</Filter>
     </ClInclude>
     <ClInclude Include="..\public\RedString.h" />
     <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
@@ -1843,9 +1855,6 @@
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GravikenisisGUI.cpp">
-      <Filter>02.GameObjects\UI\3DUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\AttackNumUI.cpp">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\FactoryMethod.cpp">
@@ -2328,6 +2337,12 @@
     <ClCompile Include="..\private\Weapon_wp0500.cpp">
       <Filter>02.GameObjects\Weapon\wp0500</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Level_StageDefault.cpp" />
+    <ClCompile Include="..\private\RedString.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
+    <ClCompile Include="..\private\EMBrain.cpp">
+      <Filter>02.GameObjects\Enemy\EMBrain</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\RedString.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp">
@@ -2348,6 +2363,12 @@
     <ClCompile Include="..\private\Imgui_Cheat.cpp">
       <Filter>60.Imgui_Tool</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\InvisibleWall.cpp">
+      <Filter>02.GameObjects\Map\InvisibleWall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_StageDefault.cpp" />
+    <ClCompile Include="..\private\RedString.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
     <ClCompile Include="..\private\Level_FinalStage.cpp">
       <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
     </ClCompile>
@@ -2468,6 +2489,12 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\SSLR.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInvisibleWall.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

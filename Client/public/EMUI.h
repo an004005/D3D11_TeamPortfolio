@@ -35,11 +35,14 @@ public:
 	void TurnEyesOut();
 	void Create_UIInfo();
 	void Update_UIInfo();
+	void Create_BossUI();
+	void Create_DamageFont(DAMAGE_PARAM& tDamageParams);
 
 private:
 	class CEnemy* m_pOwner = nullptr;
 	class CMonsterShildUI* m_pShieldUI = nullptr;
 	class CMonsterHpUI* m_pHPUI = nullptr;
+	class CCanvas_BossHpMove* m_BossHp = nullptr;
 
 private:
 	_float4x4	m_EnemyInfoBarPivot;

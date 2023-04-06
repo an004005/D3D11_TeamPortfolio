@@ -38,8 +38,8 @@ HRESULT CEM0320::Initialize(void* pArg)
 
 	// 배치에서 지정하지 않을 때의 기본 스텟
 	{
-		m_iMaxHP = 10000;
-		m_iHP = 10000; // ★
+		m_iMaxHP = 5000;
+		m_iHP = m_iMaxHP; // ★
 		m_iCrushGauge = 400;
 		m_iMaxCrushGauge = 400;
 		m_bHasCrushGauge = false;
@@ -448,7 +448,7 @@ void CEM0320::BeginTick()
 
 	// m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
 
-	Create_BossUI();
+	m_pEMUI->Create_BossUI();
 	m_b2ndPhase = true;
 }
 
@@ -821,24 +821,6 @@ void CEM0320::FireWaterBall()
 	}
 }
 
-void CEM0320::Create_BossUI()
-{
-	static _bool PresentUI = false;
-
-	if (m_pUI_BossHP != nullptr)
-		m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
-
-	if (PresentUI == true) return;
-
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
-	m_pUI_BossHP = dynamic_cast<CCanvas_BossHpMove*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHpMove", &json));
-	assert(m_pUI_BossHP != nullptr && "Failed to Clone : CCanvas_BossHpMove");
-	m_pUI_BossHP->Set_BossHp(m_iHP / (_float)m_iMaxHP);
-
-	PresentUI = true;
-}
 
 void CEM0320::SmokeEffectCreate()
 {
@@ -921,6 +903,6 @@ void CEM0320::Free()
 	//for. BossUI 
 	// 안녕하세요. 옥수현 입니다. 여기 걸리셨다구요? 
 	// 보스를 다 잡고난 후에는 문제 없는 코드지만 보스를 잡기전 중간에 삭제 하실 경우에 객체 원본에서 Free() 가 돌고 난 후 여기 걸리신 것 입니다.
-	if (m_pUI_BossHP != nullptr)
-		m_pUI_BossHP->SetDelete();
+	//if (m_pUI_BossHP != nullptr)
+	//	m_pUI_BossHP->SetDelete();
 }

@@ -7,6 +7,11 @@ HRESULT CEM1200_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObj
 {
 	FAILED_CHECK(__super::Initialize(pModel, pGameObject));
 
+	m_pModel->Find_Animation("AS_em1200_153_AL_turn_R_loop1")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_em1200_151_AL_turn_L_loop1")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_em1200_157_AL_turn_R_loop2")->SetLocalRotation(true);
+	m_pModel->Find_Animation("AS_em1200_155_AL_turn_L_loop2")->SetLocalRotation(true);
+
 	m_pASM_Base = CASMBuilder()
 		.InitState("Idle")
 		.AddState("Idle")

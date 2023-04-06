@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "..\public\MainApp.h"
+
+#include <VIBuffer_Point_Instancing.h>
+
 #include "GameInstance.h"
 #include "Camera_Dynamic.h"
 #include "ClientUtils.h"
@@ -49,6 +52,10 @@
 #include "Item_Manager.h"
 
 #include "VIBuffer_Point_Instancing.h"
+
+//////////
+#include "InvisibleWall.h"
+
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -280,11 +287,9 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_TelephonePole_007_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_TelephonePole_007.static_model", PivotMatrix, 100))))
 		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Point_Instance_Particle", CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, 30000))))
 		return E_FAIL;
-
-
-
 	////////////////////
 	///
 	/* For.Prototype_Component_Shader_VtxMesh_Instance */
@@ -416,6 +421,14 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex_VFX.hlsl"), VTXNORTEX_DECLARATION::Elements, VTXNORTEX_DECLARATION::iNumElements))))
 		return E_FAIL;
 
+	////////////////////////////
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxInvisible"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxInvisibleWall.hlsl"), VTXPOS_DECLARATION::Elements, VTXPOS_DECLARATION::iNumElements))))
+		return E_FAIL;
+
+	////////////////////////////
+
 	/* For.Prototype_Component_VIBuffer_CircleRect */	
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_VIBuffer_CircleRect", CVIBuffer_CircleRect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -463,6 +476,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_RedString"), CRedString::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_InvisibleWall"), CInvisibleWall::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+		
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_CombinedRedString"), CCombinedRedString::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
