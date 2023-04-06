@@ -114,15 +114,15 @@ public:	// Get
 	PLAYER_STAT&	Get_PlayerStat() { 
 		return m_tPlayerStat;
 	}
-	list<ESASType>	Get_PlayerSasList() const { return m_PlayerSasTypeList; }
-	_bool			Get_isSasUsing(ESASType eType);
+	list<ESASType>		Get_PlayerSasList() const { return m_PlayerSasTypeList; }
+	_bool					Get_isSasUsing(ESASType eType);
 	CGameObject*	Get_KineticObject();
 	CGameObject*	Get_TargetedMonster();
 	CGameObject*	Get_SpecialObject();
 
 	HANABI_STAT		Get_HanabiStat() const { return m_tHanabiStat; }
 	TSUGUMI_STAT	Get_TsugumiStat() const { return m_tTsugumiStat; }
-	_bool			Get_SASMember(const SASMEET eSAS) { return m_bSASMember[eSAS]; }
+	_bool					Get_SASMember(const SASMEET eSAS) { return m_bSASMember[eSAS]; }
 
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
@@ -143,9 +143,9 @@ public:	// Set
 
 	void			Set_PlayerWorldMatrix(_fmatrix worldmatrix);
 
-	HRESULT			Set_KineticObject(CGameObject* pKineticObject);
-	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
-	HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
+	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
+	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
+	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
 
 	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
 	
@@ -155,7 +155,7 @@ public:	// Set
 	void			Set_SASMember(const SASMEET eSAS) { m_bSASMember[eSAS] = true; }
 
 public:
-	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
+	HRESULT	Set_CamSpot(CGameObject* pCamSpot);
 	void			Camera_Random_Shake(_float fForce);
 	void			Camera_Axis_Shaking(_float4 vDir, _float fShakePower);
 	void			Camera_Axis_Sliding(_float4 vDir, _float fShakePower);

@@ -10,7 +10,6 @@
 #include "GameUtils.h"
 #include "Model.h"
 #include "Material.h"
-#include "GravikenisisMouseUI.h"
 #include "VFX_Manager.h"
 #include "ParticleGroup.h"
 #include "Enemy.h"
@@ -127,10 +126,10 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
    //if (pLayer != nullptr)
    //{
 	  // CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
-	  // pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
+	  // pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
 
 	  // assert(pGravikenisisMouse != nullptr);
-	  // pGravikenisisMouse->Set_Owner(this);
+	  //// pGravikenisisMouse->Set_Owner(this);
    //}
 
 	return S_OK;

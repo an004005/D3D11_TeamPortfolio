@@ -192,7 +192,6 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/DistanceUI.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"DistanceUI", &json));
 
-
 	// Ãß°¡
 	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_LeftTalk", &json));
@@ -203,6 +202,11 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Quest.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Quest", &json));
 	
+	// 3D UI
+	CGameInstance::GetInstance()->Clone_GameObject(PLAYERTEST_LAYER_FRONTUI, TEXT("Prototype_GameObject_GravikenisisMouseUI"));
+
+
+
 
 	//CGameUtils::ListFilesRecursive("../Bin/Resources/Objects/UI/", [&](const string& filePath)
 	//{

@@ -238,6 +238,8 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("GravikenisisGUI"),
 		CGravikenisisGUI::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext);
+
 	// ~ 옥수현의 흔적
 
 	return S_OK;
@@ -352,6 +354,8 @@ HRESULT CLevel_Effect::Ready_Layer_Map(const _tchar * pLayerTag)
 HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+
+	CGameInstance::GetInstance()->Clone_GameObject(PLAYERTEST_LAYER_FRONTUI, TEXT("Prototype_GameObject_GravikenisisMouseUI"));
 
 	// 보스
 	//auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");

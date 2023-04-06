@@ -139,7 +139,6 @@ HRESULT CPlayerInfoManager::Initialize()
 
 #pragma endregion SAS정보 초기화
 
-
 	return S_OK;
 }
 
@@ -334,9 +333,9 @@ HRESULT CPlayerInfoManager::Set_KineticObject(CGameObject * pKineticObject)
 {
 	if (nullptr == pKineticObject) { m_pKineticObject = nullptr; return S_OK; }
 	else if (false == CGameInstance::GetInstance()->Check_ObjectAlive(pKineticObject)) return E_FAIL;	// 유효하지 않은 주소이면
-	else if (true == pKineticObject->IsDeleted()) return E_FAIL;										// 지워졌으면
-	else if (false == static_cast<CMapKinetic_Object*>(pKineticObject)->Usable()) return E_FAIL;		// 이미 사용한 객체이면
-	else if (true == static_cast<CMapKinetic_Object*>(pKineticObject)->GetThrow()) return E_FAIL;		// 던져진 객체이면
+	else if (true == pKineticObject->IsDeleted()) return E_FAIL;																	// 지워졌으면
+	else if (false == static_cast<CMapKinetic_Object*>(pKineticObject)->Usable()) return E_FAIL;				// 이미 사용한 객체이면
+	else if (true == static_cast<CMapKinetic_Object*>(pKineticObject)->GetThrow()) return E_FAIL;			// 던져진 객체이면
 	
 	m_pKineticObject = pKineticObject;
 	return S_OK;
