@@ -9,6 +9,7 @@
 #include "AnimCam.h"
 #include "Camera_Player.h"
 #include "EM0210.h"
+#include "CamSpot.h"
 
 CPlayerHotFixer::CPlayerHotFixer()
 {
@@ -29,7 +30,12 @@ void CPlayerHotFixer::Tick()
 		{
 			BrainCrashStateMachine_ReCompoile();
 		}
+		if (ImGui::Button("BrainField_Recompile"))
+		{
+			BrainFieldStateMachine_ReCompile();
+		}
 	}
+	ImGui::CollapsingHeader("~HotFixer");
 }
 
 void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
@@ -138,6 +144,83 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 		})
 			.AddTransition("BRAINCRASH_ACTIVATE to BRAINCRASH_NOUSE", "BRAINCRASH_NOUSE")
 			.Predicator([&]()->_bool { return m_pPlayer->m_pASM->isSocketAlmostFinish("BrainCrash_AnimSocket"); })
+			.Priority(0)
+
+		.Build();
+
+	Safe_Release(pOriginFSM);
+}
+
+void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
+{
+	CFSMComponent* pOriginFSM = m_pPlayer->m_pBrainFieldProductStateMachine;
+
+	m_pPlayer->m_pBrainFieldProductStateMachine =
+		CFSMComponentBuilder().InitState("BRAINFIELD")
+
+		.AddState("BRAINFIELD")
+		.OnStart([&]() { m_pPlayer->m_bZoomIsFinish = false; })
+		.Tick([&](double fTimeDelta) {})
+		.OnExit([&]() {})
+			.AddTransition("BRAINFIELD to BRAINFIELD_START", "BRAINFIELD_START")
+			.Predicator([&]()->_bool { return (!m_pPlayer->m_bBrainField) && (m_pPlayer->m_pController->KeyDown(CController::B)); })
+			.Priority(0)
+
+		.AddState("BRAINFIELD_START")
+		.OnStart([&]() 
+		{
+			list<CAnimation*> TestAnim;
+			TestAnim.push_back(m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_start"));
+			m_pPlayer->m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+
+			for (_uint i = 0; i < SAS_CNT; ++i)
+			{
+				CPlayerInfoManager::GetInstance()->Finish_SasType((ESASType)i);
+			}
+			m_pPlayer->SasStateCheck();
+			m_pPlayer->Visible_Check();
+		})
+		.Tick([&](double fTimeDelta) {})
+		.OnExit([&]() {})
+			.AddTransition("BRAINFIELD_START to BRAINFIELD_CAM_CLOSER", "BRAINFIELD_CAM_CLOSER")
+			.Predicator([&]()->_bool { return (0.9f <= m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_start")->GetPlayRatio()); })
+			.Priority(0)
+
+		.AddState("BRAINFIELD_CAM_CLOSER")
+		.OnStart([&]() {})
+		.Tick([&](double fTimeDelta) { m_pPlayer->m_bZoomIsFinish = static_cast<CCamSpot*>(m_pPlayer->m_pCamSpot)->Cam_Closer(fTimeDelta, 0.3f); })
+		.OnExit([&]() {})
+			.AddTransition("BRAINFIELD_CAM_CLOSER to BRAINFIELD_ACTIONCAM_01", "BRAINFIELD_ACTIONCAM_01")
+			.Predicator([&]()->_bool { return m_pPlayer->m_bZoomIsFinish; })
+			.Priority(0)
+
+		.AddState("BRAINFIELD_ACTIONCAM_01")
+		.OnStart([&]() 
+		{
+			list<CAnimation*> TestAnim;
+			TestAnim.push_back(m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100"));
+			m_pPlayer->m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+		})
+		.Tick([&](double fTimeDelta) {static_cast<CCamSpot*>(m_pPlayer->m_pCamSpot)->Cam_Away(fTimeDelta, 0.3f); })
+		.OnExit([&]() {})
+			.AddTransition("BRAINFIELD_ACTIONCAM_01 to BRAINFIELD_ACTIONCAM_02", "BRAINFIELD_ACTIONCAM_02")
+			.Predicator([&]()->_bool { return m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100")->IsFinished(); })
+			.Priority(0)
+
+		.AddState("BRAINFIELD_ACTIONCAM_02")
+		.OnStart([&]() 
+		{
+			list<CAnimation*> TestAnim;
+			TestAnim.push_back(m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100"));
+			m_pPlayer->m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+
+			for (auto& iter : m_pPlayer->m_vecWeapon)
+				iter->SetVisible(false);
+		})
+		.Tick([&](double fTimeDelta) {})
+		.OnExit([&]() { m_pPlayer->m_bBrainField = true; })
+			.AddTransition("BRAINFIELD_ACTIONCAM_02 to BRAINFIELD", "BRAINFIELD")
+			.Predicator([&]()->_bool { return m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100")->IsFinished(); })
 			.Priority(0)
 
 		.Build();

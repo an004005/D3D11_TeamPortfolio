@@ -18,6 +18,7 @@ public:
 
 private:
 	void	BrainCrashStateMachine_ReCompoile();
+	void	BrainFieldStateMachine_ReCompile();
 
 private:
 	CPlayer* m_pPlayer = nullptr;
