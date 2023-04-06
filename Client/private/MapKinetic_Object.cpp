@@ -14,6 +14,7 @@
 #include "VFX_Manager.h"
 #include "ParticleGroup.h"
 #include "Enemy.h"
+#include "MapInstance_Object.h"
 
 CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
@@ -68,13 +69,33 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 	// 다이나믹 리지드 바디가 몬스터와 충돌했는지?
 	m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
+		if (m_bSwing)
+		{
+			if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
+			{
+				DAMAGE_PARAM tParam;
+				tParam.eAttackType = EAttackType::ATK_HEAVY;
+				tParam.iDamage = 200;
+				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+				pMonster->TakeDamage(tParam);
+
+				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
+					->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
+
+				ReleaseParticle();
+			}
+
+			return;
+		}
+
 		if (!m_bThrow)
 			return;
 
 		if (m_bHit)
 			return;
 
-		if (auto pStatic = dynamic_cast<CMapObject*>(pGameObject))
+		if (auto pStatic = dynamic_cast<CMapInstance_Object*>(pGameObject))
 		{
 			m_bHit = true;
 
@@ -284,7 +305,7 @@ const wstring & CMapKinetic_Object::Get_ModelTag()
 
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 {
- 	//m_pCollider->Set_Kinetic(false);
+ 	m_pCollider->Set_Kinetic(false);
 	m_pCollider->Set_Trigger(false);
 	//m_pCollider->UpdateChange();
 
@@ -301,6 +322,15 @@ void CMapKinetic_Object::Set_Kinetic(_bool bKinetic)
 void CMapKinetic_Object::Set_Trigger(_bool bTrigger)
 {
 	m_pCollider->Set_Trigger(bTrigger);
+	m_pCollider->UpdateChange();
+}
+
+void CMapKinetic_Object::Set_Dynamic()
+{
+	m_bSwing = false;
+	m_pCollider->Set_Kinetic(false);
+	m_pCollider->Set_Trigger(false);
+	m_pCollider->UpdateChange();
 }
 
 void CMapKinetic_Object::Reset_Transform()
@@ -359,6 +389,8 @@ void CMapKinetic_Object::OutlineMaker()
 
 void CMapKinetic_Object::SetParticle()
 {
+	if (nullptr != m_pParticle) return;
+
 	_float4 vScale = _float4(
 		m_pCollider->GetPxWorldMatrix().Right().Length(),
 		m_pCollider->GetPxWorldMatrix().Up().Length(),

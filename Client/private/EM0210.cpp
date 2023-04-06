@@ -11,6 +11,9 @@
 #include "Material.h"
 #include "EMBrain.h"
 
+#include "ControlledRigidBody.h"
+#include "RigidBody.h"
+
 CEM0210::CEM0210(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -680,6 +683,13 @@ void CEM0210::PlayBC()
 {
 	__super::PlayBC();
 
+	// 브레인 크러시 동작 중에는 모든 콜라이더를 사용하지 않도록 함
+	m_pCollider->SetActive(false);
+	for (auto& iter : m_pRigidBodies)
+	{
+		iter.second->Activate(false);
+	}
+
 	const _float fMinDist = 5.f; //플레이어에서 벽까지의 거리, 
 	const _float fMaxDist = 7.f; //플레이어에서 몬스터까지의 거리
 
@@ -702,8 +712,8 @@ void CEM0210::PlayBC()
 	}
 
 	//몬스터가 이동할 위치
-	vMyPos = vTargetPos + XMVector3Normalize(vTargetLook) * 4.f;
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vMyPos);
+//	vMyPos = vTargetPos + XMVector3Normalize(vTargetLook) * 4.f;
+//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vMyPos);
 }
 
 _bool CEM0210::IsPlayingSocket() const
