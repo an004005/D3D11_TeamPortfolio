@@ -18,6 +18,7 @@ private:
 	CSkyBox(const CSkyBox& rhs);
 	virtual ~CSkyBox() = default;
 
+public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Late_Tick(_double TimeDelta) override;
@@ -26,6 +27,7 @@ private:
 	virtual void SaveToJson(Json& json) override;
 	virtual void LoadFromJson(const Json& json) override;
 
+public:
 	ShaderParams& GetParams() { return m_tParams; }
 
 
