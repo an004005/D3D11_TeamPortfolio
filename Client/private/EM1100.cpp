@@ -602,6 +602,7 @@ void CEM1100::SetUpFSM()
 void CEM1100::BeginTick()
 {
 	CEnemy::BeginTick();
+	m_pEMUI->Create_BossUI();
 }
 
 void CEM1100::Tick(_double TimeDelta)

@@ -7,7 +7,7 @@ CEMCable::CEMCable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 }
 
-CEMCable::CEMCable(const CGameObject& rhs)
+CEMCable::CEMCable(const CEMCable& rhs)
 	: CGameObject(rhs)
 {
 }

@@ -18,7 +18,7 @@ HRESULT CEM1100_Controller::Initialize(void * pArg)
 	m_iNearOrder = CMathUtils::RandomUInt(1);
 	m_iFarOrder = CMathUtils::RandomUInt(2);
 	//Move함수 시 플레이어와 거리가 어느정도까지 가까워졌을때 멈출지를 정해줌
-	m_fNearestTargetDist = 5.f;
+	m_fNearestTargetDist = 6.f;
 
 	//near :  닷지 , 꼬리치기(꼬리치기후 회전하면서 도망감, 플레이어가 뒤에 있을때만)
 	//mid : 물대포 ,주먹, 

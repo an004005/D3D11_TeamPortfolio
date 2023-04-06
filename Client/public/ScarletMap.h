@@ -25,6 +25,8 @@ public:
 	virtual void LoadFromJson(const Json& json) override;
 
 	static _bool s_bMapEditor;
+
+	void SetVisible_MapObjects(_bool bVisible);
 	
 private:
 	HRESULT SetUp_Components();   

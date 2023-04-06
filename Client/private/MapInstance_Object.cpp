@@ -4,6 +4,7 @@
 #include "PhysXStaticModel.h"
 #include "JsonStorage.h"
 #include "ImguiUtils.h"
+#include "MathUtils.h"
 
 CMapInstance_Object::CMapInstance_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
@@ -40,6 +41,23 @@ HRESULT CMapInstance_Object::Initialize(void * pArg)
 			_float4x4 WorldMat = WorldMatrix;
 			m_pModel_InstancingCom->Add_Instance(WorldMat);
 
+			// 스케일 변경한 경우, 피직스를 생성하지 않게 하는 코드
+			_matrix mat = WorldMat;
+			_float3 vScale = {
+				XMVectorGetX(XMVector3Length(mat.r[0])),
+				XMVectorGetX(XMVector3Length(mat.r[1])),
+				XMVectorGetX(XMVector3Length(mat.r[2]))
+			};
+			
+			if(CMathUtils::FloatCmp(vScale.x, 1.f) == false
+				|| CMathUtils::FloatCmp(vScale.y, 1.f) == false
+				|| CMathUtils::FloatCmp(vScale.z, 1.f) == false)
+			{
+				m_pPxModels.emplace_back(nullptr);
+				continue;
+			}
+
+
 			CPhysXStaticModel* pPxModel = nullptr;
 
 			//todo: 임시로 모든 CMapNonAnim_Object 에 PxModel을 가지도록 설정 추후 수정 바람
@@ -70,10 +88,14 @@ void CMapInstance_Object::BeginTick()
 void CMapInstance_Object::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-
+	m_pModel_InstancingCom->Tick(TimeDelta);
+	
 #ifdef _DEBUG
 	if (m_iIndex > -1)
-		m_pPxModels[m_iIndex]->SetPxWorldMatrix(m_WorldMatrix);
+	{
+		if (m_pPxModels[m_iIndex] != nullptr)
+			m_pPxModels[m_iIndex]->SetPxWorldMatrix(m_WorldMatrix);
+	}
 #endif
 }
 

@@ -61,6 +61,7 @@ void CParticleGroup::Start_NoAttachPivot(CGameObject* pOwner, _float4x4 PivotMat
 	m_pOwner = pOwner;
 	m_bUpdate = trueisUpdate;
 	m_PivotMatrix = PivotMatrix;
+	m_bUsePivot = true;
 	m_bRemoveScale = trueisRemoveScale;
 
 	if (m_bUpdate == false)
@@ -344,7 +345,17 @@ void CParticleGroup::Tick(_double TimeDelta)
 		else
 		{
 			// 뼈에 안붙이는 경우
-			Set_Transform(m_pOwner->GetTransform()->Get_WorldMatrix());
+			if(m_bUsePivot)
+			{
+				// 피봇행렬을 쓰는 경우
+				_matrix Socket = m_PivotMatrix * m_pOwner->GetTransform()->Get_WorldMatrix();
+				Set_Transform(Socket);
+			}
+			else
+			{
+				// 피봇행렬을 안쓰는 경우
+				Set_Transform(m_pOwner->GetTransform()->Get_WorldMatrix());
+			}
 		}
 	}
 	else if (nullptr != m_pAttachWeapon)

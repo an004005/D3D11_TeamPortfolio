@@ -213,8 +213,12 @@ void CRigidBody::AddVelocity(_float3 vVelocity)
 
 void CRigidBody::Set_Kinetic(_bool bKinematic)
 {
-	m_bKinematic = bKinematic;
-	CreateActor();
+	if (m_bKinematic != bKinematic)
+	{
+		m_bKinematic = bKinematic;
+		CreateActor();
+		UpdateChange();
+	}
 }
 
 void CRigidBody::Set_Trigger(_bool bTrigger)

@@ -484,6 +484,18 @@
     <Filter Include="02.GameObjects\Map\InvisibleWall">
       <UniqueIdentifier>{c1cc4e2a-3b3d-4636-a1e3-c0c83c966796}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMBrain">
+      <UniqueIdentifier>{8749a0cf-82cc-49b0-acc4-6fef9877a2eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\07.FinalStage">
+      <UniqueIdentifier>{08a335be-2a18-4fe9-aa1d-bfeade7ef2cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM8200">
+      <UniqueIdentifier>{1c7907e5-dd73-4995-9ab7-9c01d02fee15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Player\PlayerHotFixer">
+      <UniqueIdentifier>{cad6aa9c-d087-4fa9-885d-62ec510ba601}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -925,9 +937,6 @@
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GravikenisisGUI.h">
-      <Filter>02.GameObjects\UI\3DUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\AttackNumUI.h">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\FactoryMethod.h">
@@ -1407,6 +1416,12 @@
     <ClInclude Include="..\public\Weapon_wp0500.h">
       <Filter>02.GameObjects\Weapon\wp0500</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_StageDefault.h" />
+    <ClInclude Include="..\public\RedString.h" />
+    <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
+    <ClInclude Include="..\public\EMBrain.h">
+      <Filter>02.GameObjects\Enemy\EMBrain</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\RedString.h" />
     <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
     <ClInclude Include="..\public\Level_StageDefault.h">
@@ -1426,6 +1441,28 @@
     </ClInclude>
     <ClInclude Include="..\public\Imgui_Cheat.h">
       <Filter>60.Imgui_Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM8200.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM8200_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TrailSystem_EX.h">
+      <Filter>VFX\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM8200_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_FinalStage.h">
+      <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrainField.h" />
+    <ClInclude Include="..\public\Level_StageDefault.h" />
+    <ClInclude Include="..\public\RedString.h" />
+    <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
+    <ClInclude Include="..\public\PlayerHotFixer.h">
+      <Filter>02.GameObjects\Player\PlayerHotFixer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ScarletMap.h">
       <Filter>02.GameObjects\Map</Filter>
@@ -1839,9 +1876,6 @@
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GravikenisisGUI.cpp">
-      <Filter>02.GameObjects\UI\3DUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\AttackNumUI.cpp">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\FactoryMethod.cpp">
@@ -2324,6 +2358,12 @@
     <ClCompile Include="..\private\Weapon_wp0500.cpp">
       <Filter>02.GameObjects\Weapon\wp0500</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Level_StageDefault.cpp" />
+    <ClCompile Include="..\private\RedString.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
+    <ClCompile Include="..\private\EMBrain.cpp">
+      <Filter>02.GameObjects\Enemy\EMBrain</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\RedString.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp">
@@ -2350,6 +2390,28 @@
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\RedString.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
+    <ClCompile Include="..\private\EM8200.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM8200_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM8200_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TrailSystem_EX.cpp">
+      <Filter>VFX\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_FinalStage.cpp">
+      <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrainField.cpp" />
+    <ClCompile Include="..\private\Level_StageDefault.cpp" />
+    <ClCompile Include="..\private\RedString.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
+    <ClCompile Include="..\private\PlayerHotFixer.cpp">
+      <Filter>02.GameObjects\Player\PlayerHotFixer</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\ScarletMap.cpp">
       <Filter>02.GameObjects\Map</Filter>
     </ClCompile>
@@ -2477,5 +2539,8 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInvisibleWall.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\SSLR.hlsl" />
   </ItemGroup>
 </Project>

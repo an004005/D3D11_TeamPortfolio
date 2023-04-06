@@ -15,6 +15,7 @@ private:
 public:
 	_float4x4 GetPivotMatrix() const { return m_PivotMatrix; }
 	void SetPivot(_float4x4 Pivot) { m_PivotMatrix = Pivot; }
+	void Tick(_double TimeDelta);
 
 	//Mesh Functions
 	void	Add_Instance(_float4x4 WorldMatirxf4x4);
@@ -34,6 +35,7 @@ public:
 	HRESULT Render(const _float4x4& WorldMatrix);
 	HRESULT RenderMesh(class CTransform* pTransform, _uint iMeshIdx);
 	HRESULT RenderMeshOnly(_uint iMeshIdx) const;
+	HRESULT Render_MeshAlphBlend(_float4x4 WorldMatrix, _uint iMeshIdx);
 
 	HRESULT Render_ShadowDepth(class CTransform* pTransform);
 

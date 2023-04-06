@@ -10,16 +10,16 @@
             ]
         ],
         "Float4x4s": [],
-        "Floats": [0.0],
+        "Floats": [0.0, 0.0, 0.0, 0.0],
         "Ints": [
             0, 0
         ],
-        "Pass": 4,
+        "Pass": 1,
         "Textures": [
-            "../Bin/Resources/Meshes/Model/AnimModel/Monster/em1200/Texture/T_em8200_Skin_COL.png\u0000",
-            "../Bin/Resources/Meshes/Model/AnimModel/Monster/em1200/Texture/T_em8200_Skin_NML.png\u0000",
-            "../Bin/Resources/Meshes/Model/AnimModel/Monster/em1200/Texture/T_em8200_Skin_AMB.png",
-            "../Bin/Resources/Meshes/Model/AnimModel/Monster/em1200/Texture/T_em8200_Skin_CTL.png\u0000"
+            "../Bin/Resources/Model/AnimModel/Monster/em8200/Texture/T_em8200_Skin_COL.png\u0000",
+            "../Bin/Resources/Model/AnimModel/Monster/em8200/Texture/T_em8200_Skin_NML.png\u0000",
+            "../Bin/Resources/Model/AnimModel/Monster/em8200/Texture/T_em8200_Skin_AMB.png",
+            "../Bin/Resources/Model/AnimModel/Monster/em8200/Texture/T_em8200_Skin_CTL.png\u0000"
         ]
     },
     "ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"

@@ -42,6 +42,12 @@ CModel_Instancing::CModel_Instancing(const CModel_Instancing & rhs)
 	Safe_AddRef(m_pShadowShader);
 }
 
+void CModel_Instancing::Tick(_double TimeDelta)
+{
+	for (auto pMtrl : m_Materials)
+		pMtrl->Tick(TimeDelta);
+}
+
 void CModel_Instancing::Add_Instance(_float4x4 WorldMatirxf4x4)
 {
 	for_each(m_Meshes.begin(), m_Meshes.end(), [&](CVIBuffer_ModelInstancing* pMesh) {
@@ -167,15 +173,20 @@ HRESULT CModel_Instancing::Render(CTransform* pTransform)
 
 HRESULT CModel_Instancing::Render(const _float4x4& WorldMatrix)
 {
-	for (const auto& mesh : m_Meshes)
+	for (size_t i = 0; i < m_Meshes.size(); ++i)
 	{
-		const _uint iMtrlIdx = mesh->Get_MaterialIndex();
+		const _uint iMtrlIdx = m_Meshes[i]->Get_MaterialIndex();
 		if (m_Materials[iMtrlIdx]->IsActive() == false)
 			continue;
+		if (m_Materials[iMtrlIdx]->IsAlphaBlend())
+		{
+			Render_MeshAlphBlend(WorldMatrix, (_uint)i);
+			continue;
+		}
 
 		m_Materials[iMtrlIdx]->BindMatrices_Instancing(WorldMatrix);
 		m_Materials[iMtrlIdx]->Begin_Instancing();
-		mesh->Render();
+		m_Meshes[i]->Render();
 	}
 
 	return S_OK;
@@ -186,6 +197,11 @@ HRESULT CModel_Instancing::RenderMesh(CTransform* pTransform, _uint iMeshIdx)
 	const _uint iMtrlIdx = m_Meshes[iMeshIdx]->Get_MaterialIndex();
 	if (m_Materials[iMtrlIdx]->IsActive() == false)
 		return S_OK;
+	if (m_Materials[iMtrlIdx]->IsAlphaBlend())
+	{
+		Render_MeshAlphBlend(pTransform->Get_WorldMatrix_f4x4(), iMeshIdx);
+		return S_OK;
+	}
 
 	m_Materials[iMtrlIdx]->BindMatrices_Instancing(pTransform);
 	m_Materials[iMtrlIdx]->Begin_Instancing();
@@ -197,12 +213,29 @@ HRESULT CModel_Instancing::RenderMeshOnly(_uint iMeshIdx) const
 	return m_Meshes[iMeshIdx]->Render();
 }
 
+HRESULT CModel_Instancing::Render_MeshAlphBlend(_float4x4 WorldMatrix, _uint iMeshIdx)
+{
+	CGameInstance::GetInstance()->LambdaRenderRequest(WorldMatrix, [this, WorldMatrix, iMeshIdx]
+	{
+		const _uint iMtrlIdx = m_Meshes[iMeshIdx]->Get_MaterialIndex();
+
+		m_Materials[iMtrlIdx]->BindMatrices_Instancing(WorldMatrix);
+		m_Materials[iMtrlIdx]->Begin_Instancing();
+		m_Meshes[iMeshIdx]->Render();
+
+	}, CRenderer::RENDER_MESH_ALPHABLEND);
+
+	return S_OK;
+}
+
 HRESULT CModel_Instancing::Render_ShadowDepth(CTransform* pTransform)
 {
 	for (size_t i = 0; i < m_Meshes.size(); ++i)
 	{
 		const _uint iMtrlIdx = m_Meshes[i]->Get_MaterialIndex();
 		if (m_Materials[iMtrlIdx]->IsActive() == false || m_Materials[iMtrlIdx]->IsAlphaBlend())
+			continue;
+		if (m_Materials[iMtrlIdx]->IsAlphaBlend())
 			continue;
 
 		FAILED_CHECK(pTransform->Bind_ShaderResource(m_pShadowShader, "g_WorldMatrix"));
