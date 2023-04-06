@@ -170,7 +170,7 @@
                         1.0,
                         1.0,
                         1.0,
-                        0.05583684518933296
+                        0.057838574051856995
                     ]
                 ],
                 "Float4x4s": [],
@@ -355,15 +355,20 @@
             "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
-                "Float4s": [],
-                "Float4x4s": [],
-                "Floats": [
-                    0.0
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 ],
+                "Float4x4s": [],
+                "Floats": [],
                 "Ints": [],
-                "Pass": 25,
+                "Pass": 31,
                 "Textures": [
-                    "..\\Bin\\Resources\\UI\\Main_UI\\Main_BackGround.png\u0000"
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
                 ]
             },
             "SizeX": 1600.0,

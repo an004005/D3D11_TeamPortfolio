@@ -9,6 +9,7 @@
 #include "Canvas_Sale.h"
 #include "Main_PickUI.h"
 #include "DefaultUI.h"
+#include "FullUI.h"
 
 CCanvas_Shop::CCanvas_Shop(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -128,7 +129,7 @@ void CCanvas_Shop::KeyInput()
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_Z))
 	{
-		dynamic_cast<CCanvas_Main*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Main"))->Set_MainUIClose();
+		//dynamic_cast<CFullUI*>(Find_ChildUI(L"Shop_Entrance"))->Set_Alpha();
 
 		m_bShopUI = !m_bShopUI;
 
@@ -138,6 +139,8 @@ void CCanvas_Shop::KeyInput()
 		CUI_Manager::GetInstance()->Set_TempOff(m_bShopUI);
 
 		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bShopUI);
+
+		dynamic_cast<CCanvas_Main*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Main"))->Set_MainUIClose();
 	}
 }
 

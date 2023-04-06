@@ -23,12 +23,12 @@ struct PS_IN
 struct PS_OUT
 {
 	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
-
 
 	matrix		matWV, matWVP;
 
@@ -82,6 +82,41 @@ PS_OUT PS_GreenEmissive(PS_IN In)
 	return Out;
 }
 
+// [2] 빛나는
+PS_OUT PS_Diamond(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor = CalcHDRColor(Texture, g_float_0);
+	//Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	//Out.vColor.a = Out.vColor.a * g_float_1;
+
+	return Out;
+}
+
+// [3] 2 에서 추가적으로 색상과 알파값 까지 조절
+PS_OUT PS_UI_Tex_Alpha(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	if (0 == g_int_0)
+	{
+		float4 Texture = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+		float4 BlendColor = Texture * g_vec4_0 * 2.0f;
+		float4 FinalColor = saturate(BlendColor);
+		float4 HDRColor = saturate(FinalColor + Texture * g_float_0);
+		Out.vColor = CalcHDRColor(HDRColor, g_float_1);
+	}
+	else if (1 == g_int_0)
+	{
+		return Out;
+	}
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0
@@ -102,7 +137,7 @@ technique11 DefaultTechnique
 	pass GreenEmissive
 	{
 		SetRasterizerState(RS_NonCulling);
-		SetDepthStencilState(DS_Default, 0);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -112,5 +147,32 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_GreenEmissive();
 	}
 	
+	// 2
+	pass Diamond
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_Diamond();
+	}
+
+	// 3
+	pass UI_Tex_Alpha
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_UI_Tex_Alpha();
+	}
 	
 }

@@ -523,29 +523,42 @@ PS_OUT PS_Emissive(PS_IN1 In)
 // g_int_1 : 플립북 세로 개수
 // g_vec2_0 : [x] UV.y 에 더할 값 / [y] 텍스처 나눌 값
 /********************/
-
-VS_OUT VS_FlipBookCut(VS_IN In)	// ->18
-{
-	VS_OUT		Out = (VS_OUT)0;
-	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
-
-	Out.vPosition = mul(float4(In.vPosition, 1.f), matWP);
-
-	In.vTexUV.y = In.vTexUV.y + g_vec2_0.x;
-
-	In.vTexUV.y = In.vTexUV.y / g_vec2_0.y;
-
-	Out.vTexUV = In.vTexUV;
-	return Out;
-}
-
-PS_OUT PS_FlipBookCut(PS_IN In)	// ->18
+PS_OUT PS_FlipBookCut(PS_IN In)	// ->9
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	Out.vColor = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_0, g_int_0, g_int_1));
+	float fProgress = g_float_0;
+	float ProgressMask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+	if (1.f - ProgressMask >= fProgress)
+		discard;
+
+	Out.vColor = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_1, g_int_0, g_int_1));
+
 	return Out;
 }
+
+//VS_OUT VS_FlipBookCut(VS_IN In)	// ->18
+//{
+//	VS_OUT		Out = (VS_OUT)0;
+//	matrix matWP = mul(g_WorldMatrix, g_ProjMatrix);
+//
+//	Out.vPosition = mul(float4(In.vPosition, 1.f), matWP);
+//
+//	In.vTexUV.y = In.vTexUV.y + g_vec2_0.x;
+//
+//	In.vTexUV.y = In.vTexUV.y / g_vec2_0.y;
+//
+//	Out.vTexUV = In.vTexUV;
+//	return Out;
+//}
+//
+//PS_OUT PS_FlipBookCut(PS_IN In)	// ->18
+//{
+//	PS_OUT			Out = (PS_OUT)0;
+//
+//	Out.vColor = g_tex_0.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, g_float_0, g_int_0, g_int_1));
+//	return Out;
+//}
 
 /*******************
 * UVCut → 19 : 텍스처 2장을 섞고, UV 를 조정한다. 
@@ -1261,7 +1274,7 @@ technique11 DefaultTechnique
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
-		VertexShader = compile vs_5_0 VS_FlipBookCut();
+		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;

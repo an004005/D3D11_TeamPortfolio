@@ -22,15 +22,13 @@ public:
 	virtual HRESULT Render() override;
 
 	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
 
 public:
 	void	Set_MainUIClose() { 
 		m_bMainUI = false;
-		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bMainUI);
+		m_arrCanvass[m_eMainCanvas]->SetVisible(false);
 		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-			iter->second->SetVisible(m_bMainUI);
+			iter->second->SetVisible(false);
 	}
 
 private:
@@ -47,7 +45,9 @@ private:
 	_tchar*	m_szManuText = { L"" };
 	_bool		m_bMainUI = { false };
 
-	_float2 mm = { 0.0f, 0.0f };
+	_bool		m_bOpen = { false };
+	_bool		m_bAlpha = { false };
+	_bool		m_bReverse = { false };
 
 public:
 	static CCanvas_Main* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

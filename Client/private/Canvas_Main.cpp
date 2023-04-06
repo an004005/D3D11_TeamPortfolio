@@ -12,6 +12,7 @@
 #include "Canvas_BrainMap.h"
 #include "DefaultUI.h"
 #include "Main_PickUI.h"
+#include  "FullUI.h"
 
 CCanvas_Main::CCanvas_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -145,19 +146,6 @@ void CCanvas_Main::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	ImGui::DragFloat("X", &mm.x);
-	ImGui::DragFloat("Y", &mm.y);
-
-}
-
-void CCanvas_Main::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-}
-
-void CCanvas_Main::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
 }
 
 HRESULT CCanvas_Main::Add_MainCanvas()
@@ -207,17 +195,56 @@ void CCanvas_Main::KeyInput()
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
 	{
-		dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUIClose();
+		//dynamic_cast<CFullUI*>(Find_ChildUI(L"Main_Entrance"))->Set_Alpha();
 
+		m_bAlpha = true;
+		Find_ChildUI(L"Main_Entrance")->SetVisible(true);
+	}
+
+	if (false == m_bAlpha)
+		return;
+
+	_float fAlpha = dynamic_cast<CFullUI*>(Find_ChildUI(L"Main_Entrance"))->Get_Float4sW();
+
+	if (m_bReverse == false && fAlpha >= 0.5f)
+	{
+		m_bReverse = true;
+		m_bOpen = true;
+	}
+	else if (m_bReverse == true && fAlpha <= 0.0f)
+	{
+		m_bReverse = false;
+		m_bAlpha = false;
+		Find_ChildUI(L"Main_Entrance")->SetVisible(false);
+	}
+
+	_float fSpeed = 0.7f;
+	if (m_bReverse == false)
+		fAlpha += _float(TIME_DELTA) * fSpeed;
+	else
+		fAlpha -= _float(TIME_DELTA) * fSpeed;
+
+	dynamic_cast<CFullUI*>(Find_ChildUI(L"Main_Entrance"))->Set_Float4sW(fAlpha);
+
+	if (true == m_bOpen)
+	{
+		m_bOpen = false;
 		m_bMainUI = !m_bMainUI;
 
 		// m_bMainUI 와 반대로 동작한다.
 		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+		{
+			if (L"Main_Entrance" == iter->first)
+				continue;
+
 			iter->second->SetVisible(m_bMainUI);
+		}
 		CUI_Manager::GetInstance()->Set_TempOff(m_bMainUI);
 
 		// MainUI 들을 끄고 켜기를 한다.
 		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bMainUI);
+
+		dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUIClose();
 	}
 }
 

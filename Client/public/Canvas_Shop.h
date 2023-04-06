@@ -26,9 +26,9 @@ public:
 public:
 	void	Set_ShopUIClose() { 
 		m_bShopUI = false;
-		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bShopUI);
+		m_arrCanvass[m_eMainCanvas]->SetVisible(false);
 		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-			iter->second->SetVisible(m_bShopUI);
+			iter->second->SetVisible(false);
 	}
 
 private:
