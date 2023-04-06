@@ -51,6 +51,7 @@ private:
 	class CEM8200_Controller* m_pController = nullptr;
 	class CEM8200_AnimInstance* m_pASM = nullptr;
 
+	class CEffectSystem* m_pKarenMaskEf = nullptr;
 	// CParticleGroup* m_pFallRoseParticle = nullptr;
 	// CParticleGroup* m_pShootFlwParticle = nullptr;
 
@@ -77,6 +78,8 @@ private:
 
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
+
+	_float4x4 pivot1 = XMMatrixIdentity();
 
 public:
 	static CEM8200*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

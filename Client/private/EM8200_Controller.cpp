@@ -20,81 +20,79 @@ HRESULT CEM8200_Controller::Initialize(void* pArg)
 	m_pFSM = CFSMComponentBuilder()
 		.InitState("Operate")
 		.AddState("Operate")
-		.AddTransition("Operate to Outside", "Outside")
+		.AddTransition("Operate to Far", "Far")
 		.Predicator([this]
 			{
 				return m_pCastedOwner->IsPlayingSocket() == false;
 			})
 
-		/*.AddTransition("Operate to Near", "Near")
+		.AddState("Far")
+		.Tick(this, &CEM8200_Controller::Tick_Far)
+			.AddTransition("Far to Mid", "Mid")
 			.Predicator([this]
-			{
-				return m_pCastedOwner->IsPlayingSocket() == false;
-			})*/
+				{
+					return m_fTtoM_Distance <= 12.f;
+				})
+		.AddTransition("Mid to Near", "Near")
+			.Predicator([this]
+				{
+					return m_fTtoM_Distance <= 4.f;
+				})
 
-		.AddState("Outside")
-		.Tick(this, &CEM8200_Controller::Tick_Outside)
-		.OnExit([this]
-			{
-				//m_pCastedOwner->TurnEyesOut();
-			})
-		.AddTransition("Outside to Far", "Far")
-				.Predicator([this]
-					{
-						return m_fTtoM_Distance <= 20.f;
-					})
+
+		.AddState("Mid")
+		.Tick(this, &CEM8200_Controller::Tick_Mid)
+		.AddTransition("Mid to Near", "Near")
+		.Predicator([this]
+		{
+			return m_fTtoM_Distance <= 4.f;
+		})
+
+		.AddTransition("Mid to Far", "Far")
+		.Predicator([this]
+		{
+			return m_fTtoM_Distance > 12.f;
+		})
+
 
 		.AddState("Near")
-				.Tick(this, &CEM8200_Controller::Tick_Near)
+		.Tick(this, &CEM8200_Controller::Tick_Near)
 
 		.AddTransition("Near to Mid", "Mid")
 		.Predicator([this]
-			{
-				return m_fTtoM_Distance > 4.f && m_fTtoM_Distance <= 12.f;
-			})
+		{
+			return m_fTtoM_Distance > 4.f && m_fTtoM_Distance <= 12.f;
+		})
 
 		.AddTransition("Near to Far", "Far")
-				.Predicator([this]
-					{
-						return m_fTtoM_Distance > 12.f;
-					})
+		.Predicator([this]
+		{
+			return m_fTtoM_Distance > 12.f;
+		})
 
-		.AddState("Mid")
-				.Tick(this, &CEM8200_Controller::Tick_Mid)
-				.AddTransition("Mid to Near", "Near")
-				.Predicator([this]
-					{
-						return m_fTtoM_Distance <= 4.f;
-					})
+		
+		// .AddState("Far")
+				// .Tick(this, &CEM8200_Controller::Tick_Far)
+				// .AddTransition("Far to Near", "Near")
+				// .Predicator([this]
+					// {
+						// return m_fTtoM_Distance <= 4.f;
+					// })
 
-		.AddTransition("Mid to Far", "Far")
-				.Predicator([this]
-					{
-						return m_fTtoM_Distance > 12.f;
-					})
-
-		.AddState("Far")
-				.Tick(this, &CEM8200_Controller::Tick_Far)
-				.AddTransition("Far to Near", "Near")
-				.Predicator([this]
-					{
-						return m_fTtoM_Distance <= 4.f;
-					})
-
-		.AddTransition("Far to Mid", "Mid")
-				.Predicator([this]
-					{
-						return m_fTtoM_Distance > 4.f && m_fTtoM_Distance <= 12.f;
-					})
+		// .AddTransition("Far to Mid", "Mid")
+				// .Predicator([this]
+					// {
+						// return m_fTtoM_Distance > 4.f && m_fTtoM_Distance <= 12.f;
+					// })
 
 		.Build();
 
 		m_fTurnSlowTime = 0.9f;
 		m_fTurnSlowRatio = 0.4f;
 
-		m_iNearOrder = CMathUtils::RandomUInt(6);
-		m_iMidOrder = CMathUtils::RandomUInt(3);
-		m_iFarOrder = CMathUtils::RandomUInt(1);
+		// m_iNearOrder = CMathUtils::RandomUInt(6);
+		// m_iMidOrder = CMathUtils::RandomUInt(3);
+		// m_iFarOrder = CMathUtils::RandomUInt(1);
 
 		return S_OK;
 }
@@ -122,33 +120,36 @@ void CEM8200_Controller::AI_Tick(_double TimeDelta)
 void CEM8200_Controller::Tick_Near(_double TimeDelta)
 {
 	m_eDistance = DIS_NEAR;
-	// 1. È¸Àü °ø°Ý 2. Èð»Ñ¸®±â °ø°Ý 3. È¸ÇÇ(ÁÂ, ¿ì, µÚ) 4. Walk
+
 	switch (m_iNearOrder)
 	{
 	case 0:
-		// AddCommand("Attack_Spin", 0.f, &CAIController::Input, R);
+		 AddCommand("Idle", 2.f, &CAIController::Wait);
 		break;
-	case 1:
-		// AddCommand("WalkTurn", 1.2f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
-		break;
-	case 2:
-		// AddCommand("Dodge_L", 0.f, &CAIController::Input, NUM_1);
-		break;
-	case 3:
-		// AddCommand("Attack_Screw", 0.f, &CAIController::Input, G);
-		break;
-	case 4:
-		// AddCommand("Dodge_B", 0.f, &CAIController::Input, NUM_2);
-		break;
-	case 5:
-		// AddCommand("WalkTurn", 1.2f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
-		break;
-	case 6:
-		// AddCommand("Dodge_R", 0.f, &CAIController::Input, NUM_3);
-		break;
+	// case 1:
+		// AddCommand("Run", 2.f, &CEM8200_Controller::Run_TurnToTarget, EMoveAxis::SOUTH, 1.f);
+		// break;
+	// case 1:
+	// 	// AddCommand("WalkTurn", 1.2f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+	// 	break;
+	// case 2:
+	// 	// AddCommand("Dodge_L", 0.f, &CAIController::Input, NUM_1);
+	// 	break;
+	// case 3:
+	// 	// AddCommand("Attack_Screw", 0.f, &CAIController::Input, G);
+	// 	break;
+	// case 4:
+	// 	// AddCommand("Dodge_B", 0.f, &CAIController::Input, NUM_2);
+	// 	break;
+	// case 5:
+	// 	// AddCommand("WalkTurn", 1.2f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+	// 	break;
+	// case 6:
+	// 	// AddCommand("Dodge_R", 0.f, &CAIController::Input, NUM_3);
+	// 	break;
 	}
 
-	m_iNearOrder = (m_iNearOrder + 1) % 7;
+	// m_iNearOrder = (m_iNearOrder + 1) % 1;
 }
 
 void CEM8200_Controller::Tick_Mid(_double TimeDelta)
@@ -158,20 +159,20 @@ void CEM8200_Controller::Tick_Mid(_double TimeDelta)
 	switch (m_iMidOrder)
 	{
 	case 0:
-		// AddCommand("WalkTurn", 1.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
-	case 1:
-		// AddCommand("Run", 2.f, &CEM0200_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
-		break;
-	case 2:
-		// AddCommand("Turn", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
-		// AddCommand("Jump", 0.f, &CAIController::Input, MOUSE_RB);
-		break;
-	case 3:
-		// AddCommand("Threat", 0.f, &CAIController::Input, C);
-		break;
+	// case 1:
+	// 	// AddCommand("Run", 2.f, &CEM0200_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
+	// 	break;
+	// case 2:
+	// 	// AddCommand("Turn", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+	// 	// AddCommand("Jump", 0.f, &CAIController::Input, MOUSE_RB);
+	// 	break;
+	// case 3:
+	// 	// AddCommand("Threat", 0.f, &CAIController::Input, C);
+	// 	break;
 	}
-	m_iMidOrder = (m_iMidOrder + 1) % 4;
+	// m_iMidOrder = (m_iMidOrder + 1) % 4;
 }
 
 void CEM8200_Controller::Tick_Far(_double TimeDelta)
@@ -181,15 +182,14 @@ void CEM8200_Controller::Tick_Far(_double TimeDelta)
 	switch (m_iFarOrder)
 	{
 	case 0:
-		// AddCommand("Turn", 2.5f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
-		// AddCommand("Jump", 0.f, &CAIController::Input, MOUSE_RB);
+		AddCommand("Run", 2.f, &CEM8200_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
 		break;
-	case 1:
+	// case 1:
 		// AddCommand("Threat", 0.f, &CAIController::Input, C);
-		break;
+		// break;
 	}
 
-	m_iFarOrder = (m_iFarOrder + 1) % 2;
+	// m_iFarOrder = (m_iFarOrder + 1) % 2;
 }
 
 void CEM8200_Controller::Tick_Outside(_double TimeDelta)

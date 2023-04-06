@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "../public/EM8200.h"
+
+#include "EffectSystem.h"
 #include "FSMComponent.h"
 #include "RigidBody.h"
 #include "JsonStorage.h"
@@ -40,6 +42,11 @@ HRESULT CEM8200::Initialize(void* pArg)
 	m_bHasCrushGauge = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 
+	Json KarenMask = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/EffectSystem/Monster_Effect/Karen_Mask.json");
+	m_pKarenMaskEf = (CEffectSystem*) m_pGameInstance->Clone_GameObject_Get(L"Layer_KarenMask", L"ProtoVFX_EffectSystem", &KarenMask);
+	Safe_AddRef(m_pKarenMaskEf);
+
+
 	return S_OK;
 }
 
@@ -57,6 +64,7 @@ void CEM8200::SetUpComponents(void* pArg)
 
 	// ASM
 	m_pASM = CEM8200_AnimInstance::Create(m_pModelCom, this);
+
 
 	m_HeavyAttackPushTimeline.SetCurve("Simple_Decrease");
 }
@@ -93,6 +101,8 @@ void CEM8200::Tick(_double TimeDelta)
 {
 	CEnemy::Tick(TimeDelta);
 
+	
+
 	m_pController->SetTarget(m_pTarget);
 	if (m_bDead == false)
 		m_pController->Tick(TimeDelta);
@@ -124,6 +134,8 @@ void CEM8200::Tick(_double TimeDelta)
 
 void CEM8200::Late_Tick(_double TimeDelta)
 {
+	CScarletCharacter::Late_Tick(TimeDelta);
+
 	if (m_bVisible)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
@@ -134,6 +146,8 @@ void CEM8200::Late_Tick(_double TimeDelta)
 void CEM8200::AfterPhysX()
 {
 	CEnemy::AfterPhysX();
+	_matrix	SocketMatrix = GetBoneMatrix("FacialRoot") * m_pTransformCom->Get_WorldMatrix();
+	m_pKarenMaskEf->GetTransform()->Set_WorldMatrix(SocketMatrix);
 }
 
 HRESULT CEM8200::Render()
@@ -148,6 +162,11 @@ void CEM8200::Imgui_RenderProperty()
 	if (ImGui::CollapsingHeader("ASM"))
 	{
 		m_pASM->Imgui_RenderState();
+	}
+	if (ImGui::CollapsingHeader("KarenPivot"))
+	{
+		static GUIZMO_INFO tp1;
+		CImguiUtils::Render_Guizmo(&pivot1, tp1, true, true);
 	}
 }
 
@@ -198,4 +217,5 @@ void CEM8200::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
+	Safe_Release(m_pKarenMaskEf);
 }

@@ -201,6 +201,13 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 
 void CCanvas_Main::KeyInput()
 {
+	// Not Use in Final Stage
+
+	if (LEVEL_NOW == LEVEL_FINAL_STAGE)
+		return;
+
+	// ~Not Use in Final Stage
+
 	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
 	{
 		dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUIClose();

@@ -33,7 +33,7 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_0) && LEVEL_NOW != LEVEL_FINAL_STAGE)
 	{
 		//assert(pCanvas != nullptr && "Failed to Cloned : Canvas_SAMouseLeft"); // 체크 하기!
 		 

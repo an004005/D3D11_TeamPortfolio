@@ -10,33 +10,33 @@ HRESULT CEM8200_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameObjec
 	m_pASM_Base = CASMBuilder()
 		 .InitState("Idle")
 		 .AddState("Idle")
-		 .SetAnimation(*m_pModel->Find_Animation("AS_em8200_001_AL_wait01"))
-		//
-		// .AddTransition("Idle to Walk", "Walk")
-		// .Predicator([this] { return m_bMove; })
-		// .Duration(0.2f)
-		//
-		// .AddState("Walk")
-		// .SetAnimation(*m_pModel->Find_Animation("AS_em0200_106_AL_walk02"))
-		//
-		// .AddTransition("Walk to Idle", "Idle")
-		// .Predicator([this] { return !m_bMove && !m_bRun; })
-		// .Duration(0.2f)
-		//
-		// .AddTransition("Walk to Run", "Run")
-		// .Predicator([this] {return m_bRun; })
-		// .Duration(0.2f)
-		//
-		// .AddState("Run")
-		// .SetAnimation(*m_pModel->Find_Animation("AS_em0200_107_AL_run"))
-		//
-		// .AddTransition("Run to Idle", "Idle")
-		// .Predicator([this] { return !m_bMove && !m_bRun; })
-		// .Duration(0.2f)
-		//
-		// .AddTransition("Run to Walk", "Walk")
-		// .Predicator([this] {return !m_bRun && m_bMove; })
-		// .Duration(0.2f)
+		 .SetAnimation(*m_pModel->Find_Animation("AS_em8200_101_AL_wait01"))
+		
+		.AddTransition("Idle to Walk", "Walk")
+		.Predicator([this] { return m_bMove; })
+		.Duration(0.2f)
+		
+		.AddState("Walk")
+		.SetAnimation(*m_pModel->Find_Animation("AS_em8200_105_AL_walk"))
+		
+		.AddTransition("Walk to Idle", "Idle")
+		.Predicator([this] { return !m_bMove && !m_bRun; })
+		.Duration(0.2f)
+		
+		.AddTransition("Walk to Run", "Run")
+		.Predicator([this] {return m_bRun; })
+		.Duration(0.2f)
+		
+		.AddState("Run")
+		.SetAnimation(*m_pModel->Find_Animation("AS_em8200_106_AL_run"))
+		
+		.AddTransition("Run to Idle", "Idle")
+		.Predicator([this] { return !m_bMove && !m_bRun; })
+		.Duration(0.2f)
+		
+		.AddTransition("Run to Walk", "Walk")
+		.Predicator([this] {return !m_bRun && m_bMove; })
+		.Duration(0.2f)
 
 		.Build();
 
@@ -46,18 +46,18 @@ HRESULT CEM8200_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameObjec
 
 void CEM8200_AnimInstance::UpdateTargetState(_double TimeDelta)
 {
-	CEM8200* pEM0200 = static_cast<CEM8200*>(m_pTargetObject);
+	CEM8200* pEM8200 = static_cast<CEM8200*>(m_pTargetObject);
 
 	// 필요한것만 만들것
 	m_ePreMoveAxis = m_eMoveAxis;
 
-	m_bMove = pEM0200->IsMove();
-	m_bRun = pEM0200->IsRun();
+	m_bMove = pEM8200->IsMove();
+	m_bRun = pEM8200->IsRun();
 
-	m_vMoveAxis = pEM0200->GetMoveAxis();
+	m_vMoveAxis = pEM8200->GetMoveAxis();
 	m_eMoveAxis = CClientUtils::MoveAxisToBaseEnum(m_vMoveAxis);
 
-	m_fTurnRemain = pEM0200->GetTurnRemain();
+	m_fTurnRemain = pEM8200->GetTurnRemain();
 	m_eTurn = CClientUtils::TurnDeltaToEnum(m_fTurnRemain);
 }
 

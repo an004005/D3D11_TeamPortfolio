@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "..\public\Level_FinalStage.h"
+
+#include <Imgui_AnimModifier.h>
+
 #include "GameInstance.h"
 #include "GameManager_Tutorial.h"
 #include "Imgui_Batch.h"
@@ -16,7 +19,7 @@ CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext
 
 HRESULT CLevel_FinalStage::Initialize()
 {
-	//m_bPlayerSpawn = false;
+	m_bPlayerSpawn = false;
 
 	m_strLevelName = L"FinalStage";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/FinalStage_ShadowCam.json";
@@ -24,10 +27,20 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;
+	// if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		// return E_FAIL;
 
+	CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("TestTarget"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
 
+	CGameInstance::GetInstance()->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
+
+	Json PreviewData;
+	{
+		PreviewData["Model"] = "Prototype_Model_em8200";
+		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
+		auto pBoss = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("ModelPreview"), &PreviewData);
+	}
 
 	//CGameUtils::ListFiles("../Bin/Resources/Restrings/BranFieldStrings/", [](const string& filePath)
 	//{
@@ -35,8 +48,27 @@ HRESULT CLevel_FinalStage::Initialize()
 	//	CGameInstance::GetInstance()->Clone_GameObject(LAYER_MAP_DECO, L"Prototype_CombinedRedString", &json);
 	//});
 
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_BrainField.json");
-	//FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(PLAYERTEST_LAYER_MAP, TEXT("Prototype_GameObject_ScarletMap"), &json));
+	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_BrainField.json");
+	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(PLAYERTEST_LAYER_MAP, TEXT("Prototype_GameObject_ScarletMap"), &json));
+
+	return S_OK;
+}
+
+HRESULT CLevel_FinalStage::Ready_Lights()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	LIGHTDESC			LightDesc;
+	ZeroMemory(&LightDesc, sizeof LightDesc);
+
+	LightDesc.eType = LIGHTDESC::TYPE_DIRECTIONAL;
+	LightDesc.isEnable = true;
+	LightDesc.vDirection = _float4(-cosf(XMConvertToRadians(60.f)), -sinf(XMConvertToRadians(60.f)), 0.0f, 0.f);
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	NULL_CHECK(pGameInstance->Add_Light("DirectionalLight", m_pDevice, m_pContext, LightDesc));
 
 	return S_OK;
 }
