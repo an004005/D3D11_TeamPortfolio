@@ -8,9 +8,9 @@ HRESULT CEM8200_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameObjec
 	FAILED_CHECK(__super::Initialize(pModel, pGameObject));
 
 	m_pASM_Base = CASMBuilder()
-		// .InitState("Idle")
-		// .AddState("Idle")
-		// .SetAnimation(*m_pModel->Find_Animation("AS_em0200_102_AL_wait02"))
+		 .InitState("Idle")
+		 .AddState("Idle")
+		 .SetAnimation(*m_pModel->Find_Animation("AS_em8200_001_AL_wait01"))
 		//
 		// .AddTransition("Idle to Walk", "Walk")
 		// .Predicator([this] { return m_bMove; })
