@@ -45,9 +45,11 @@ private:
 	_tchar*	m_szManuText = { L"" };
 	_bool		m_bMainUI = { false };
 
+	class CShaderUI* m_pShaderUI = { nullptr };
 	_bool		m_bOpen = { false };
 	_bool		m_bAlpha = { false };
 	_bool		m_bReverse = { false };
+	_float		m_fAlpha = { 0.0f };
 
 public:
 	static CCanvas_Main* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -12,7 +12,7 @@
 #include "Canvas_BrainMap.h"
 #include "DefaultUI.h"
 #include "Main_PickUI.h"
-#include  "FullUI.h"
+#include "ShaderUI.h"
 
 CCanvas_Main::CCanvas_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -49,18 +49,20 @@ HRESULT CCanvas_Main::Initialize(void* pArg)
 	m_szManuText = L"파티 멤버를 변경합니다.";
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_PickInitialize();	// 처음에 해당 버튼에 불이 들어올 수 있도록
 
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/ShaderUI.json");
+	m_pShaderUI = dynamic_cast<CShaderUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Shader_UI", &json));
+	assert(m_pShaderUI != nullptr && "Failed to Clone : CFullUI");
+
 	return S_OK;
 }
 
 void CCanvas_Main::Tick(_double TimeDelta)
 {
 	KeyInput();
+	m_pShaderUI->Tick(TimeDelta);
 
 	if (false == m_bMainUI)
-	{
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_PickInitialize();
 		return;
-	}
 
 	CCanvas::Tick(TimeDelta);
 
@@ -70,6 +72,7 @@ void CCanvas_Main::Tick(_double TimeDelta)
 
 void CCanvas_Main::Late_Tick(_double TimeDelta)
 {
+	m_pShaderUI->Late_Tick(TimeDelta);
 	if (false == m_bMainUI) return;
 
 	CCanvas::Late_Tick(TimeDelta);
@@ -195,17 +198,15 @@ void CCanvas_Main::KeyInput()
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
 	{
-		//dynamic_cast<CFullUI*>(Find_ChildUI(L"Main_Entrance"))->Set_Alpha();
-
 		m_bAlpha = true;
-		Find_ChildUI(L"Main_Entrance")->SetVisible(true);
+		m_pShaderUI->SetVisible(true);
 	}
 
 	if (false == m_bAlpha)
 		return;
 
-	_float fAlpha = dynamic_cast<CFullUI*>(Find_ChildUI(L"Main_Entrance"))->Get_Float4sW();
-
+	m_pShaderUI->Set_Size(_float2(g_iWinSizeX, g_iWinSizeY));
+	_float fAlpha = m_pShaderUI->Get_Float4s_W();
 	if (m_bReverse == false && fAlpha >= 0.5f)
 	{
 		m_bReverse = true;
@@ -215,7 +216,7 @@ void CCanvas_Main::KeyInput()
 	{
 		m_bReverse = false;
 		m_bAlpha = false;
-		Find_ChildUI(L"Main_Entrance")->SetVisible(false);
+		m_pShaderUI->SetVisible(false);
 	}
 
 	_float fSpeed = 0.7f;
@@ -223,8 +224,7 @@ void CCanvas_Main::KeyInput()
 		fAlpha += _float(TIME_DELTA) * fSpeed;
 	else
 		fAlpha -= _float(TIME_DELTA) * fSpeed;
-
-	dynamic_cast<CFullUI*>(Find_ChildUI(L"Main_Entrance"))->Set_Float4sW(fAlpha);
+	m_pShaderUI->Set_Float4s_W(fAlpha);
 
 	if (true == m_bOpen)
 	{
@@ -234,9 +234,7 @@ void CCanvas_Main::KeyInput()
 		// m_bMainUI 와 반대로 동작한다.
 		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		{
-			if (L"Main_Entrance" == iter->first)
-				continue;
-
+			if (L"Main_Entrance" == iter->first) continue;
 			iter->second->SetVisible(m_bMainUI);
 		}
 		CUI_Manager::GetInstance()->Set_TempOff(m_bMainUI);
@@ -348,4 +346,6 @@ CCanvas * CCanvas_Main::Clone(void * pArg)
 void CCanvas_Main::Free()
 {
 	CCanvas::Free();
+
+	Safe_Release(m_pShaderUI);
 }

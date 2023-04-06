@@ -34,25 +34,6 @@ void CFullUI::Tick(_double TimeDelta)
 
 	m_fSizeX = _float(g_iWinSizeX);
 	m_fSizeY = _float(g_iWinSizeY);
-
-	if (m_bAlpha == false) 
-		return;
-
-	if (m_bReverse == false && m_fAlpha >= 0.5f)
-		m_bReverse = true;
-	else if (m_bReverse == true && m_fAlpha <= 0.f)
-	{
-		m_bReverse = false;
-		m_bAlpha = false;
-	}
-
-	_float fSpeed = 0.7f;
-	if (m_bReverse == false)
-		m_fAlpha += _float(TimeDelta) * fSpeed;
-	else
-		m_fAlpha -= _float(TimeDelta) * fSpeed;
-
-	m_tParams.Float4s[0].w = m_fAlpha;
 }
 
 CFullUI * CFullUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

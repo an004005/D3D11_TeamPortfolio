@@ -203,7 +203,7 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Quest", &json));
 	
 	// 3D UI
-	CGameInstance::GetInstance()->Clone_GameObject(PLAYERTEST_LAYER_FRONTUI, TEXT("Prototype_GameObject_GravikenisisMouseUI"));
+	//CGameInstance::GetInstance()->Clone_GameObject(PLAYERTEST_LAYER_FRONTUI, TEXT("Prototype_GameObject_GravikenisisMouseUI"));
 
 
 
