@@ -75,7 +75,13 @@ void CEM8200::SetUpFSM()
 {
 	CEnemy::SetUpFSM();
 
-	// 스테이트 짜기 
+	// 스테이트 짜기
+
+	m_pFSM = CFSMComponentBuilder()
+		.InitState("Idle")
+		.AddState("Idle")
+		.Build();
+
 }
 
 void CEM8200::BeginTick()
@@ -118,7 +124,11 @@ void CEM8200::Tick(_double TimeDelta)
 
 void CEM8200::Late_Tick(_double TimeDelta)
 {
-	CEnemy::Late_Tick(TimeDelta);
+	if (m_bVisible)
+	{
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
+	}
 }
 
 void CEM8200::AfterPhysX()
