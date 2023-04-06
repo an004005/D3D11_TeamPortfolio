@@ -5889,6 +5889,12 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 	//NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em0200m_ch0100_end"));
 	//m_BrandCrash_em0200.push_back(pAnimation);
 
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em0700m_ch0100"));
+	m_BrainCrash_em0700.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em0800m_ch0100"));
+	m_BrainCrash_em0800.push_back(pAnimation);
+
 	m_pBrainCrashStateMachine = CFSMComponentBuilder()
 		.InitState("BRAINCRASH_NOUSE")
 

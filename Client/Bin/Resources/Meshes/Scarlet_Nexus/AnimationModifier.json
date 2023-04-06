@@ -17,7 +17,52 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_BC_em0700m_ch0100": {
+        "Duration": 414.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_BC_em0700m_em0700": {
+        "Duration": 414.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_BC_em0800m_ch0100": {
+        "Duration": 397.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Gravity_Disable",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Gravity_Enable",
+                "EventTime": 380.0
+            }
+        ]
+    },
+    "AS_BC_em0800m_em0800": {
+        "Duration": 397.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_BC_em_common_ch0100_end": {
+        "Duration": 207.0,
+        "TickPerSecond": 69.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_BC_em_common_em0200": {
+        "Duration": 207.0,
+        "TickPerSecond": 69.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_BC_em_common_em0700": {
         "Duration": 207.0,
         "TickPerSecond": 69.0,
         "bLooping": false,
@@ -6371,6 +6416,24 @@
     "AS_em0800_480_AL_down_shock": {
         "Duration": 70.0,
         "TickPerSecond": 28.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_485_AL_BCchance_start": {
+        "Duration": 100.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_486_AL_BCchance_loop": {
+        "Duration": 150.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0800_487_AL_BCchance_end": {
+        "Duration": 150.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
