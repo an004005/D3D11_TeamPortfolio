@@ -298,6 +298,9 @@
     <ClInclude Include="..\public\EM1200.h" />
     <ClInclude Include="..\public\EM1200_AnimInstance.h" />
     <ClInclude Include="..\public\EM1200_Controller.h" />
+    <ClInclude Include="..\public\EM8200.h" />
+    <ClInclude Include="..\public\EM8200_AnimInstance.h" />
+    <ClInclude Include="..\public\EM8200_Controller.h" />
     <ClInclude Include="..\public\EMBrain.h" />
     <ClInclude Include="..\public\EMCable.h" />
     <ClInclude Include="..\public\EMUI.h" />
@@ -472,6 +475,7 @@
     <ClInclude Include="..\public\TestCamera.h" />
     <ClInclude Include="..\public\TestTarget.h" />
     <ClInclude Include="..\public\TipTrigger.h" />
+    <ClInclude Include="..\public\TrailSystem_EX.h" />
     <ClInclude Include="..\public\Trigger.h" />
     <ClInclude Include="..\public\TriggerEx.h" />
     <ClInclude Include="..\public\TutorialUI.h" />
@@ -617,6 +621,9 @@
     <ClCompile Include="..\private\EM1200.cpp" />
     <ClCompile Include="..\private\EM1200_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM1200_Controller.cpp" />
+    <ClCompile Include="..\private\EM8200.cpp" />
+    <ClCompile Include="..\private\EM8200_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM8200_Controller.cpp" />
     <ClCompile Include="..\private\EMBrain.cpp" />
     <ClCompile Include="..\private\EMCable.cpp" />
     <ClCompile Include="..\private\EMUI.cpp" />
@@ -791,6 +798,7 @@
     <ClCompile Include="..\private\TestCamera.cpp" />
     <ClCompile Include="..\private\TestTarget.cpp" />
     <ClCompile Include="..\private\TipTrigger.cpp" />
+    <ClCompile Include="..\private\TrailSystem_EX.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
     <ClCompile Include="..\private\TriggerEx.cpp" />
     <ClCompile Include="..\private\TutorialUI.cpp" />

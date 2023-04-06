@@ -720,6 +720,27 @@ PS_OUT_Flag PS_EM8200_ELEC_BILLBOARD(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_AI_CH0500_BULLET_EF(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float2 TexUV = Get_FlipBookUV(In.vTexUV, g_Time, g_float_0, g_int_0, g_int_1);
+	float4 Default_White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = saturate(Default_White * Color * 2.0f);
+	float4 Final = saturate(Blend);
+	float  Mask = g_tex_1.Sample(LinearSampler, TexUV).r;
+	Out.vColor = CalcHDRColor(Final, g_float_1);
+	Out.vColor.a = Mask * g_float_2;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (Out.vColor.a <= 0.1f)
+		discard;
+
+	return Out;
+}
+
 PS_OUT_Flag PS_DEFAULT_CHARGING_1_DISTORTION(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -2189,19 +2210,19 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_EM8200_ICE_DECAL();
 	}
 
-		//53
-		pass EM8200_ElecBillboard
-		{
-			SetRasterizerState(RS_NonCulling);
-			SetDepthStencilState(DS_Default, 0);
-			SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+	//53
+	pass EM8200_ElecBillboard
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
-			VertexShader = compile vs_5_0 VS_MAIN();
-			GeometryShader = NULL;
-			HullShader = NULL;
-			DomainShader = NULL;
-			PixelShader = compile ps_5_0 PS_EM8200_ELEC_BILLBOARD();
-		}
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM8200_ELEC_BILLBOARD();
+	}
 	//54
 	pass MonsterSpawnDistortion
 	{
@@ -2228,5 +2249,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_DEFAULT_HIT_EF();
+	}
+
+	//56
+	pass CH0500_BulletEf
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_AI_CH0500_BULLET_EF();
 	}
 }

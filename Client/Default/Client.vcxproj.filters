@@ -490,6 +490,9 @@
     <Filter Include="01.Levels\02.GamePlay\07.FinalStage">
       <UniqueIdentifier>{08a335be-2a18-4fe9-aa1d-bfeade7ef2cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM8200">
+      <UniqueIdentifier>{1c7907e5-dd73-4995-9ab7-9c01d02fee15}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1439,6 +1442,18 @@
     <ClInclude Include="..\public\Imgui_Cheat.h">
       <Filter>60.Imgui_Tool</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EM8200.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM8200_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TrailSystem_EX.h">
+      <Filter>VFX\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM8200_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Level_FinalStage.h">
       <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
     </ClInclude>
@@ -2369,6 +2384,18 @@
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\RedString.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
+    <ClCompile Include="..\private\EM8200.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM8200_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM8200_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TrailSystem_EX.cpp">
+      <Filter>VFX\Trail</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Level_FinalStage.cpp">
       <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
     </ClCompile>
