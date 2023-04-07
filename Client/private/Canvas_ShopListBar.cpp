@@ -117,6 +117,8 @@ _float2 CCanvas_ShopListBar::Get_ListPosititon()
 
 _bool CCanvas_ShopListBar::Get_OnButton()
 {
+	if (true == m_bNoButton) return false;
+
 	return 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_WondowB"))->Get_OnButton();
 }
 

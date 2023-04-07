@@ -59,7 +59,7 @@ HRESULT CCanvas_Drive::Render()
 		return E_FAIL;
 
 	_float2 vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Drive_BackGround"))->GetScreenSpaceLeftTop();
-	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"DRIVE", vPosition + _float2(40.0f, 99.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"DRIVE", vPosition + _float2(40.0f, 97.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 
 	_float2 fPlayerHp = dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Get_PlayerHp();
 	_tchar szChildTag[MAX_PATH] = TEXT("");
@@ -67,16 +67,16 @@ HRESULT CCanvas_Drive::Render()
 	if (1000.0f <= fPlayerHp.x)
 	{
 		wsprintf(szChildTag, TEXT("%d"), _int(fPlayerHp.x));
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-100.0f, 61.0f), 0.f, { 0.55f, 0.55f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-75.0f, 65.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 		wsprintf(szChildTag, TEXT("/%d"), _int(fPlayerHp.y));
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-40.0f, 65.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-25.0f, 68.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 	}
 	else
 	{
 		wsprintf(szChildTag, TEXT("%d"), _int(fPlayerHp.x));
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-79.0f, 61.0f), 0.f, { 0.55f, 0.55f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"690", vPosition + _float2(-60.0f, 65.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 		wsprintf(szChildTag, TEXT("/%d"), _int(fPlayerHp.y));
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-30.0f, 65.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"/ 690", vPosition + _float2(-17.0f, 68.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 	}
 
 	return S_OK;
