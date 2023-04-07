@@ -10,7 +10,6 @@
 #include "GameUtils.h"
 #include "Model.h"
 #include "Material.h"
-#include "GravikenisisMouseUI.h"
 #include "VFX_Manager.h"
 #include "ParticleGroup.h"
 #include "Enemy.h"
@@ -29,7 +28,7 @@ CMapKinetic_Object::CMapKinetic_Object(const CMapKinetic_Object & rhs)
 HRESULT CMapKinetic_Object::Initialize_Prototype()
 {
 	FAILED_CHECK(__super::Initialize_Prototype());
-
+	
 	return S_OK;
 }
 
@@ -148,10 +147,10 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
    //if (pLayer != nullptr)
    //{
 	  // CGravikenisisMouseUI* pGravikenisisMouse = nullptr;
-	  // pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
+	  // pGravikenisisMouse = dynamic_cast<CGravikenisisMouseUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_GravikenisisMouseUI")));
 
 	  // assert(pGravikenisisMouse != nullptr);
-	  // pGravikenisisMouse->Set_Owner(this);
+	  //// pGravikenisisMouse->Set_Owner(this);
    //}
 
 	return S_OK;
@@ -342,6 +341,13 @@ void CMapKinetic_Object::Reset_Transform()
 	m_pCollider->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
 	m_pCollider->Set_Kinetic(true);
 	m_pCollider->UpdateChange();
+}
+
+_float4 CMapKinetic_Object::GetPxPostion()
+{
+	auto pxPos =  m_pCollider->Get_PxTransform().p;
+
+	return _float4{ pxPos.x, pxPos.y, pxPos.z, 1.f };
 }
 
 void CMapKinetic_Object::OutlineMaker()

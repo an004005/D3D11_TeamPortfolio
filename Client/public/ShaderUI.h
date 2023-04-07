@@ -27,6 +27,9 @@ public:
 	void	Set_Float2s(const _float2& fFloat2) {
 		m_tParams.Float2s[0] = fFloat2;
 	}
+	void	Set_Float2sX(const _float& fFloat) {
+		m_tParams.Float2s[0].x = fFloat;
+	}
 
 	_float	Get_Float4s_W() {
 		return m_tParams.Float4s[0].w;

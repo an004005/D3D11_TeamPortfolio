@@ -13,9 +13,9 @@ protected:
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
-	virtual HRESULT Initialize(void* pArg) override;
-	virtual void    BeginTick() override;
-	virtual void    Tick(_double TimeDelta) override;
+	virtual HRESULT	Initialize(void* pArg) override;
+	virtual void			BeginTick() override;
+	virtual void		    Tick(_double TimeDelta) override;
 
 	virtual void   Imgui_RenderProperty() override;
 
@@ -25,8 +25,7 @@ public:
 private:
 	class CEffectGroup* m_pKenisis = { nullptr };
 	class CEffectGroup* m_pBanKenisis = { nullptr };
-	class CEffectGroup* m_pAppealCircle_0 = { nullptr };
-	class CEffectGroup* m_pAppealCircle_1 = { nullptr };
+	class CEffectGroup* m_pAppealCircle = { nullptr };
 
 	class CPlayer* m_pPlayer = { nullptr };
 

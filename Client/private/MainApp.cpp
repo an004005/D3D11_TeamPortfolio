@@ -104,7 +104,7 @@ HRESULT CMainApp::Initialize()
 
 void CMainApp::Tick(_double TimeDelta)
 {
-	g_fTimeDelta_Add += TimeDelta;
+	g_fTimeDelta_Add += _float(TimeDelta);
 
 	if (nullptr == m_pGameInstance)
 		return;
@@ -488,6 +488,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Bold32"), TEXT("../Bin/Resources/Fonts/kim_bold32.spritefont"))))
 	//	return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Pretendard32"), TEXT("../Bin/Resources/Fonts/Pretendard.spritefont"))))
+		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Pretendard_Light32"), TEXT("../Bin/Resources/Fonts/Pretendard_Light.spritefont"))))
+	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("NeoPro"), TEXT("../Bin/Resources/Fonts/NeoPro.spritefont"))))
 		return E_FAIL;
 
 	CMaterial::LoadMaterialFilePathes("../Bin/Resources/Materials/");

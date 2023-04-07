@@ -46,7 +46,7 @@ HRESULT CCanvas_SaleKinds::Initialize(void* pArg)
 	m_pCanvas_SaleListCheck = dynamic_cast<CCanvas_SaleListCheck*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_SaleListCheck", &json));
 	assert(m_pCanvas_SaleListCheck != nullptr && "Failed to Cloned : CCanvas_SaleListCheck");
 
-	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_CurrentWondowB"))->Set_InitializeAlpha();
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_CurrentWondowB"))->Set_PickInitialize();
 	dynamic_cast<CItemIconUI*>(Find_ChildUI(L"Shop_ItemIcon"))->Set_IconIndex(m_vecItemInfo[m_iItemIndex].second.vIconIndex);
 
 	if (!m_vecShopCanvass.empty())	// 벡터가 비어있지 않은 경우에만 Current 를 배치한다.
@@ -301,8 +301,10 @@ void CCanvas_SaleKinds::CurrentList()
 		// 3 : 현재 소지중인 아이템 중 모두 판매를 해서 개수가 0개가 되어버리면 목록에서 지워준다.
 		if (0 == m_vecShopCanvass[i].second->Get_ItemCount())
 		{
-			m_vecShopCanvass[i].second->SetDelete();	// 0개가 되어버린 목록을 삭제하고
-			m_vecShopCanvass.clear();								// 정렬을 위해서 모두 삭제하고
+			for (size_t j = 0; j < m_vecShopCanvass.size(); j++)
+				m_vecShopCanvass[j].second->SetDelete();	// 정렬을 위해서 벡터에 있던 객체들을 모두 삭제하고
+			
+			m_vecShopCanvass.clear();								// 벡터에 있는 데이터도 비우고
 			Add_ShopListCanvas();									// 다시 추가한다.
 
 			CurrentVisible(false);

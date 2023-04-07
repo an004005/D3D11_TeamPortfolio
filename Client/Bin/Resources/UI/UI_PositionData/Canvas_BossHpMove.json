@@ -7,7 +7,7 @@
             "PositionX": 0.0,
             "PositionY": -85.0,
             "Priority": 1,
-            "Prototype_GameObject": "Boss_HPBackUI\u0000",
+            "Prototype_GameObject": "Shader_UI\u0000",
             "ScaleX": 1.0,
             "ScaleY": 1.0,
             "ShaderParams": {
@@ -15,14 +15,14 @@
                 "Float4s": [
                     [
                         1.0,
-                        0.12941177189350128,
-                        0.10980392247438431,
+                        0.0,
+                        0.0,
                         0.5
                     ]
                 ],
                 "Float4x4s": [],
                 "Floats": [
-                    0.0,
+                    1.0,
                     0.0
                 ],
                 "Ints": [
@@ -65,7 +65,7 @@
             "PositionX": 0.0,
             "PositionY": -85.0,
             "Priority": 2,
-            "Prototype_GameObject": "Boss_HpUI\u0000",
+            "Prototype_GameObject": "Shader_UI\u0000",
             "ScaleX": 1.0,
             "ScaleY": 1.0,
             "ShaderParams": {
@@ -80,7 +80,7 @@
                 ],
                 "Float4x4s": [],
                 "Floats": [
-                    0.0,
+                    1.0,
                     0.0,
                     0.5
                 ],
@@ -130,7 +130,7 @@
             "PositionX": 0.0,
             "PositionY": -106.0,
             "Priority": 0,
-            "Prototype_GameObject": "Boss_ShildUI\u0000",
+            "Prototype_GameObject": "Shader_UI\u0000",
             "ScaleX": 1.0,
             "ScaleY": 1.0,
             "ShaderParams": {
@@ -145,7 +145,7 @@
                 ],
                 "Float4x4s": [],
                 "Floats": [
-                    0.0,
+                    1.0,
                     0.0
                 ],
                 "Ints": [

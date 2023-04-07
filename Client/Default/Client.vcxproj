@@ -194,9 +194,6 @@
     <ClInclude Include="..\public\Boss1_AIController.h" />
     <ClInclude Include="..\public\Boss_AppearBackUI.h" />
     <ClInclude Include="..\public\Boss_AppearUI.h" />
-    <ClInclude Include="..\public\Boss_HpBackUI.h" />
-    <ClInclude Include="..\public\Boss_ShildUI.h" />
-    <ClInclude Include="..\public\BrainField.h" />
     <ClInclude Include="..\public\BrJ_AnimInstance.h" />
     <ClInclude Include="..\public\BrJ_Controller.h" />
     <ClInclude Include="..\public\BronJon.h" />
@@ -226,11 +223,13 @@
     <ClInclude Include="..\public\Canvas_ItemMove.h" />
     <ClInclude Include="..\public\Canvas_MainItem.h" />
     <ClInclude Include="..\public\Canvas_MainItemKinds.h" />
+    <ClInclude Include="..\public\Canvas_MainTalk.h" />
     <ClInclude Include="..\public\Canvas_MouseCousor.h" />
     <ClInclude Include="..\public\Canvas_Party.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfoMove.h" />
     <ClInclude Include="..\public\Canvas_PurchaseKinds.h" />
+    <ClInclude Include="..\public\Canvas_Quest.h" />
     <ClInclude Include="..\public\Canvas_SAContainer_Down.h" />
     <ClInclude Include="..\public\Canvas_SAGragting_Go.h" />
     <ClInclude Include="..\public\Canvas_SAGragting_S.h" />
@@ -255,6 +254,7 @@
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Controller.h" />
     <ClInclude Include="..\public\Canvas_Tutorial.h" />
+    <ClInclude Include="..\public\DistanceUI.h" />
     <ClInclude Include="..\public\Drive_GaugeUI.h" />
     <ClInclude Include="..\public\Drive_RightDotUI.h" />
     <ClInclude Include="..\public\Effect.h" />
@@ -319,6 +319,8 @@
     <ClInclude Include="..\public\MouseCousorLightUI.h" />
     <ClInclude Include="..\public\MouseCousorUI.h" />
     <ClInclude Include="..\public\PlayerHotFixer.h" />
+    <ClInclude Include="..\public\MapNameUI.h" />
+    <ClInclude Include="..\public\QuestBackGroundUI.h" />
     <ClInclude Include="..\public\RedBullet.h" />
     <ClInclude Include="..\public\Enemy_AnimInstance.h" />
     <ClInclude Include="..\public\FactoryMethod.h" />
@@ -368,7 +370,6 @@
     <ClInclude Include="..\public\NoticeNeonUI.h" />
     <ClInclude Include="..\public\ParticleGroup.h" />
     <ClInclude Include="..\public\Level_ConstructionSite3F.h" />
-    <ClInclude Include="..\public\Boss_HpUI.h" />
     <ClInclude Include="..\public\MonsterHpUI.h" />
     <ClInclude Include="..\public\MonsterLockonUI.h" />
     <ClInclude Include="..\public\MonsterShildUI.h" />
@@ -523,9 +524,6 @@
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
     <ClCompile Include="..\private\Boss_AppearBackUI.cpp" />
     <ClCompile Include="..\private\Boss_AppearUI.cpp" />
-    <ClCompile Include="..\private\Boss_HpBackUI.cpp" />
-    <ClCompile Include="..\private\Boss_ShildUI.cpp" />
-    <ClCompile Include="..\private\BrainField.cpp" />
     <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
     <ClCompile Include="..\private\BrJ_Controller.cpp" />
     <ClCompile Include="..\private\BronJon.cpp" />
@@ -541,6 +539,8 @@
     <ClCompile Include="..\private\Canvas_Acquisition.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp" />
     <ClCompile Include="..\private\Canvas_BrainMap.cpp" />
+    <ClCompile Include="..\private\Canvas_MainTalk.cpp" />
+    <ClCompile Include="..\private\Canvas_Quest.cpp" />
     <ClCompile Include="..\private\Canvas_SAContainer_Down.cpp" />
     <ClCompile Include="..\private\Canvas_Equipment.cpp" />
     <ClCompile Include="..\private\Canvas_ItemWindow.cpp" />
@@ -583,6 +583,7 @@
     <ClCompile Include="..\private\CapsuleLight.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
+    <ClCompile Include="..\private\DistanceUI.cpp" />
     <ClCompile Include="..\private\Drive_GaugeUI.cpp" />
     <ClCompile Include="..\private\Drive_RightDotUI.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
@@ -647,6 +648,8 @@
     <ClCompile Include="..\private\MouseCousorLightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorUI.cpp" />
     <ClCompile Include="..\private\PlayerHotFixer.cpp" />
+    <ClCompile Include="..\private\MapNameUI.cpp" />
+    <ClCompile Include="..\private\QuestBackGroundUI.cpp" />
     <ClCompile Include="..\private\RedBullet.cpp" />
     <ClCompile Include="..\private\Enemy_AnimInstance.cpp" />
     <ClCompile Include="..\private\FactoryMethod.cpp" />
@@ -696,7 +699,6 @@
     <ClCompile Include="..\private\NoticeNeonUI.cpp" />
     <ClCompile Include="..\private\ParticleGroup.cpp" />
     <ClCompile Include="..\private\Level_ConstructionSite3F.cpp" />
-    <ClCompile Include="..\private\Boss_HpUI.cpp" />
     <ClCompile Include="..\private\MonsterHpUI.cpp" />
     <ClCompile Include="..\private\MonsterLockonUI.cpp" />
     <ClCompile Include="..\private\MonsterShildUI.cpp" />

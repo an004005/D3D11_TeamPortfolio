@@ -90,10 +90,10 @@ enum class ESASType
 {
 	SAS_FIRE, // 불
 	SAS_PENETRATE, // 투시
-	SAS_HARDBODY, // 경질화
-	SAS_TELEPORT, // 텔레포트
-	SAS_ELETRIC, // 전기
-	SAS_SUPERSPEED, // 초고속
+	SAS_HARDBODY, // 경질화 
+	SAS_TELEPORT, // 텔레포트 
+	SAS_ELETRIC, // 전기 
+	SAS_SUPERSPEED, // 초고속 
 	SAS_COPY, // 복제
 	SAS_INVISIBLE, // 투명화
 	SAS_GRAVIKENISIS, // 염력 

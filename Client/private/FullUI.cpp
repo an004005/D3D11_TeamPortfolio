@@ -36,37 +36,6 @@ void CFullUI::Tick(_double TimeDelta)
 	m_fSizeY = _float(g_iWinSizeY);
 }
 
-void CFullUI::Late_Tick(_double TimeDelta)
-{
-	__super::Late_Tick(TimeDelta);
-}
-
-HRESULT CFullUI::Render()
-{
-	if (FAILED(__super::Render()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-void CFullUI::Imgui_RenderProperty()
-{
-	CUI::Imgui_RenderProperty();
-
-}
-
-void CFullUI::SaveToJson(Json & json)
-{
-	CUI::SaveToJson(json);
-
-}
-
-void CFullUI::LoadFromJson(const Json & json)
-{
-	CUI::LoadFromJson(json);
-
-}
-
 CFullUI * CFullUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
  	CFullUI*		pInstance = new CFullUI(pDevice, pContext);
