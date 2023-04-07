@@ -10,10 +10,14 @@ HRESULT CEM0900_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObj
 	m_pASM_Base = CASMBuilder()
 		.InitState("Idle")
 		.AddState("Idle")
-			.SetAnimation(*m_pModel->Find_Animation("AS_em1100_101_AL_wait01"))
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0900_101_AL_wait01"))
 
 			.AddTransition("Idle to Walk_F", "Walk_F")
 				.Predicator([this] { return m_bMove && m_eMoveAxis == EBaseAxis::NORTH; })
+				.Duration(0.1f)
+
+			.AddTransition("Idle to Walk_B", "Walk_B")
+				.Predicator([this] { return m_bMove && m_eMoveAxis == EBaseAxis::SOUTH; })
 				.Duration(0.1f)
 
 			.AddTransition("Idle to Walk_L", "Walk_L")
@@ -24,41 +28,29 @@ HRESULT CEM0900_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObj
 				.Predicator([this] { return m_bMove  && m_eMoveAxis == EBaseAxis::EAST; })
 				.Duration(0.1f)
 
-			.AddTransition("Idle to Run_Start", "Run_Start")
-				.Predicator([this] { return m_bRun; })
-				.Duration(0.1f)
-
 		.AddState("Walk_F")
-			.SetAnimation(*m_pModel->Find_Animation("AS_em1100_106_AL_walk_loop"))
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0900_106_AL_walk_F_loop"))
 			.AddTransition("Walk_F to Idle", "Idle")
 				.Predicator([this] { return !m_bMove; })
 				.Duration(0.1f)
 
+		.AddState("Walk_B")
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0900_108_AL_walk_B_loop"))
+			.AddTransition("Walk_B to Idle", "Idle")
+				.Predicator([this] { return !m_bMove; })
+				.Duration(0.1f)
+
+
 		.AddState("Walk_L")
-			.SetAnimation(*m_pModel->Find_Animation("AS_em1100_113_AL_walk_L_loop"))
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0900_110_AL_walk_L_loop"))
 			.AddTransition("Walk_L to Idle", "Idle")
 				.Predicator([this] { return !m_bMove; })
 				.Duration(0.1f)
 
 		.AddState("Walk_R")
-			.SetAnimation(*m_pModel->Find_Animation("AS_em1100_116_AL_walk_R_loop"))
+			.SetAnimation(*m_pModel->Find_Animation("AS_em0900_112_AL_walk_R_loop"))
 			.AddTransition("Walk_R to Idle", "Idle")
 				.Predicator([this] { return !m_bMove; })
-				.Duration(0.1f)
-
-		.AddState("Run_Start")
-			.SetAnimation(*m_pModel->Find_Animation("AS_em1100_107_AL_run_start"))
-			.AddTransition("Run_Start to Run_Loop", "Run_Loop")
-				.Predicator([this] 
-				{ 
-					return !m_bRun || static_cast<CEM0900*>(m_pTargetObject)->Get_RunStart();
-				})
-				.Duration(0.1f)
-
-		.AddState("Run_Loop")
-			.SetAnimation(*m_pModel->Find_Animation("AS_em1100_108_AL_run_loop"))
-			.AddTransition("Run_Loop to Idle", "Idle")
-				.Predicator([this] { return !m_bRun; })
 				.Duration(0.1f)
 
 		.Build();
@@ -70,11 +62,10 @@ HRESULT CEM0900_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObj
 
 void CEM0900_AnimInstance::UpdateTargetState(_double TimeDelta)
 {
-	CEM0900* pEM1100 = static_cast<CEM0900*>(m_pTargetObject);
+	CEM0900* pEM0900 = static_cast<CEM0900*>(m_pTargetObject);
 
-	m_bMove = pEM1100->IsMove();
-	m_bRun = pEM1100->IsRun();
-	m_vMoveAxis = pEM1100->GetMoveAxis();
+	m_bMove = pEM0900->IsMove();
+	m_vMoveAxis = pEM0900->GetMoveAxis();
 	m_eMoveAxis = CClientUtils::MoveAxisToBaseEnum(m_vMoveAxis);
 }
 

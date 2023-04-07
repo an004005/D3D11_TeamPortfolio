@@ -454,9 +454,6 @@
     <Filter Include="02.GameObjects\Enemy\EM0750">
       <UniqueIdentifier>{30894673-a85c-4561-a24d-c88173551c33}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Enemy\EMCable">
-      <UniqueIdentifier>{9d04415c-c928-492a-9cd6-32a8c8ed964e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Weapon\wp0500">
       <UniqueIdentifier>{c10400ca-64a5-4606-a04e-1ae7a70a2d80}</UniqueIdentifier>
     </Filter>
@@ -510,6 +507,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Enemy\EM0900">
       <UniqueIdentifier>{a3ff095e-e4e6-428f-808a-d3a7df149380}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM1200\EMCable">
+      <UniqueIdentifier>{9d04415c-c928-492a-9cd6-32a8c8ed964e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0900\EMGift">
+      <UniqueIdentifier>{a21a81fb-1cf0-4ef9-9a4b-32b745811546}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1414,7 +1417,7 @@
       <Filter>02.GameObjects\Enemy\EMUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EMCable.h">
-      <Filter>02.GameObjects\Enemy\EMCable</Filter>
+      <Filter>02.GameObjects\Enemy\EM1200\EMCable</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_wp0500.h">
       <Filter>02.GameObjects\Weapon\wp0500</Filter>
@@ -1460,7 +1463,6 @@
     <ClInclude Include="..\public\Level_FinalStage.h">
       <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\BrainField.h" />
     <ClInclude Include="..\public\Level_StageDefault.h" />
     <ClInclude Include="..\public\RedString.h" />
     <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
@@ -1499,6 +1501,9 @@
     </ClInclude>
     <ClInclude Include="..\public\EM0900.h">
       <Filter>02.GameObjects\Enemy\EM0900</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EMGift.h">
+      <Filter>02.GameObjects\Enemy\EM0900\EMGift</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2374,7 +2379,7 @@
       <Filter>02.GameObjects\Enemy\EMUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EMCable.cpp">
-      <Filter>02.GameObjects\Enemy\EMCable</Filter>
+      <Filter>02.GameObjects\Enemy\EM1200\EMCable</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_wp0500.cpp">
       <Filter>02.GameObjects\Weapon\wp0500</Filter>
@@ -2426,7 +2431,6 @@
     <ClCompile Include="..\private\Level_FinalStage.cpp">
       <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BrainField.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\RedString.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
@@ -2465,6 +2469,9 @@
     </ClCompile>
     <ClCompile Include="..\private\EM0900_AnimInstance.cpp">
       <Filter>02.GameObjects\Enemy\EM0900</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EMGift.cpp">
+      <Filter>02.GameObjects\Enemy\EM0900\EMGift</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

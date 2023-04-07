@@ -91,7 +91,7 @@ protected:
 
 	_float m_fLife = 0.f;
 	DAMAGE_PARAM m_eDamageParam;
-	_float	m_fRadius = 0.5f;
+	_float	m_fRadius = 0.3f;
 public:
 	static CBullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

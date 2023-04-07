@@ -35,20 +35,12 @@ public:
 	virtual void PlayBC() override;
 
 public:
-	void	Set_RunStart(_bool bRunStart) { m_bRun_Start = bRunStart; }
-	_bool	Get_RunStart() { return m_bRun_Start; }
-
-public:
 	//행동 관련 함수 정의
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }
-	_bool IsRun() const { return m_bRun; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_bool IsPlayingSocket() const;
-	void Dodge_VelocityCalc();
-	void AfterLocal180Turn();
 
 	void Play_LightHitAnim();
-	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
 	void Create_Bullet();
 	void HitWeakProcess(_double TimeDelta);
@@ -63,26 +55,25 @@ private:
 private:
 	class CEM0900_Controller*		m_pController = nullptr;
 	class CEM0900_AnimInstance*		m_pASM = nullptr;
-	class CEMBrain*					m_pBrain = nullptr;
+
+	CMaterial* m_pArmor = nullptr;
 	CMaterial* m_pWeak = nullptr;
-	class CEffectGroup* m_pRushEffect = nullptr;
+
+	class CEMBrain* m_pBrain = nullptr;
 private:
 	_float3						 m_vMoveAxis;
-	_bool						m_bHitAir = false;
+	
+	
+	// Attack
+	_bool		m_bAttack = false;
+	_double	m_dLoopTick = 0.0;
 
-	_bool						m_bRun = false;
-	//달리기 전 준비모션이 있어서 진짜 움직여야하는 타이밍
-	_bool						m_bRun_Start = false;
 
-	//Attack
-	_bool						m_bRush = false;
-	_bool						m_bTailSwing = false;
-	_float4						vTailPos;
-	//Dodge
-	_bool						m_bDodge = false;
-	_float3						m_vOnJumpMoveVelocity;
-
-	_bool						m_bWeakProcess = false;
+	//Weak
+	_int			m_iArmorHp = 0;
+	_bool		m_bDestroyArmor = false;
+	_bool		m_bArmorProcess = false;
+	_bool		m_bWeakProcess = false;
 
 	CController::EHandleInput	m_eInput;
 

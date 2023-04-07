@@ -53,6 +53,11 @@
         {
             "Layer": "Layer_Monster",
             "JsonPath": "",
+            "ProtoTag": "Monster_em900"
+        },
+        {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
             "ProtoTag": "Monster_em1100"
         },
         {

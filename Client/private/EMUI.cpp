@@ -112,6 +112,13 @@ void CEMUI::Create_DamageFont(DAMAGE_PARAM& tDamageParams)
 	pFont->GetFourthEffect()->GetParams().Float2s[0] = { _float(SaveNum[0]), 0.0f };
 }
 
+void CEMUI::Create_CGUI()
+{
+	CEffectGroup* m_pCGEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"AttackNum");
+	m_pCGEffect->Start_Attach(m_pOwner, "Weak01", false, true);
+	Safe_AddRef(m_pCGEffect);
+}
+
 CEMUI* CEMUI::Create(CEnemy* pEnemy)
 {
 	CEMUI* pInstance = new CEMUI;
@@ -134,4 +141,11 @@ void CEMUI::Free()
 
 	if(m_BossHp != nullptr)
 		m_BossHp->SetDelete();
+
+	if (m_pCGEffect != nullptr)
+	{
+		m_pCGEffect->SetDelete();
+		Safe_Release(m_pCGEffect);
+		m_pCGEffect = nullptr;
+	}
 }

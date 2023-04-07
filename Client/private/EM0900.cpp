@@ -45,7 +45,7 @@ HRESULT CEM0900::Initialize(void * pArg)
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eEnemyName = EEnemyName::EM1100;
+	m_eEnemyName = EEnemyName::EM0900;
 	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 
@@ -56,10 +56,13 @@ HRESULT CEM0900::Initialize(void * pArg)
 void CEM0900::SetUpComponents(void * pArg)
 {
 	CEnemy::SetUpComponents(pArg);
-	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em1100", L"Model", (CComponent**)&m_pModelCom));
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em900", L"Model", (CComponent**)&m_pModelCom));
 
 	m_pWeak = m_pModelCom->FindMaterial(L"MI_em0900_weak_0");
+	m_pArmor = m_pModelCom->FindMaterial(L"MI_em0900_armor_0");
+
 	assert(m_pWeak != nullptr);
+	assert(m_pArmor != nullptr);
 
 	//Json WeakCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1100/em1100Weak.json");
 	//Json BodyCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0110/em1100Body.json");
@@ -87,101 +90,6 @@ void CEM0900::SetUpAnimationEvent()
 {
 	CEnemy::SetUpAnimationEvent();
 	
-	//진짜 Run해야하는 타이밍
-	m_pModelCom->Add_EventCaller("Run_Start", [this]
-	{
-		m_bRun_Start = true;
-	});
-
-
-	m_pModelCom->Add_EventCaller("Dodge_Start", [this]
-	{
-		Dodge_VelocityCalc();
-	});
-
-
-	m_pModelCom->Add_EventCaller("Rush_Start", [this]
-	{
-		m_bRush = true;
-		ClearDamagedTarget();
-
-		_float4x4 RushEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
-			{ 0.f, 0.f, -3.513f },
-			{ -180.f,  0.f, -180.f },
-			{ 1.f, 1.f, 1.f }
-		);
- 
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Dash_Attack")
-			->Start_AttachPivot(this, RushEffectPivot, "Target", true, true);
-
-	});
-
-	m_pModelCom->Add_EventCaller("Shot", [this]
-	{
-			Create_Bullet();
-	});
-
-	//주먹으로 땅 찍을때 한번만 실행
-	m_pModelCom->Add_EventCaller("Stamp", [this]
-	{
-		ClearDamagedTarget();
-		Stamp_Overlap();
-
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Stamp_Effect")
-			->Start_Attach(this, "RightHand", false);
-
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Stamp_Smoke_OtherHand")
-			->Start_Attach(this, "RightHand", false);
-
-		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1100_Stamp_Rock_Particle")
-			->Start_Attach(this, "RightHand", false);
-
-	});
-
-	_float4x4 TailSwingEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
-		{ 0.f, 0.f, -1.f },
-		{ -180.f,  0.f, 180.f },
-		{ 1.f, 1.f, 1.f }
-	);
-
-	m_pModelCom->Add_EventCaller("TailSwing_First", [this]
-	{
-		ClearDamagedTarget();
-		m_bTailSwing = true;
-
-		_float4x4 TailSwingEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
-			{ 0.f, 0.f, -1.f },
-			{ -180.f,  0.f, 180.f },
-			{ 1.f, 1.f, 1.f }
-		);
-
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Spin_Attack")
-			->Start_AttachPivot(this, TailSwingEffectPivot, "Target", true);
-	});
-
-	m_pModelCom->Add_EventCaller("TailSwing_Second", [this]
-	{
-
-			_float4x4 TailSwingEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData(
-				{ 0.f, 0.f, -1.f },
-				{ -180.f,  0.f, 180.f },
-				{ 1.f, 1.f, 1.f }
-			);
-
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Spin_Attack")
-				->Start_AttachPivot(this, TailSwingEffectPivot, "Target", true);
-	});
-
-	m_pModelCom->Add_EventCaller("TailSwing_End", [this]
-	{
-		m_bTailSwing = false;
-	});
-
-	m_pModelCom->Add_EventCaller("ElectricBall_Ready", [this]
-	{
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Elec_Bullet_Start")
-			->Start_Attach(this, "Shell1", true);
-	});
 
 	m_pModelCom->Add_EventCaller("DeadFlower", [this]
 		{
@@ -194,17 +102,6 @@ void CEM0900::SetUpFSM()
 {
 	CEnemy::SetUpFSM();
 
-	/*
-	W : waterattack
-	E : Electricball
-	S : Stamp
-	R : Rush
-	T : TailSwing
-
-	SHIFT : Dodge
-	SPACE : DodgeTurn
-	*/
-
 	m_pFSM = CFSMComponentBuilder()
 		.InitState("Idle")
 		.AddState("Idle")
@@ -212,49 +109,43 @@ void CEM0900::SetUpFSM()
 			{
 				m_fGravity = 20.f;
 			})
+			/*.AddTransition("Idle to BrainCrushStart", "BrainCrushStart")
+				.Predicator([this] { return m_bCrushStart; })*/
 			.AddTransition("Idle to Death" , "Death")
 				.Predicator([this] { return m_bDead; })
+			.AddTransition("Idle to Down", "Down")
+				.Predicator([this] { return m_bDestroyArmor; })
 
-			/*.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
-				.Predicator([this] { return
-					m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })*/
-			.AddTransition("Idle to BrainCrushStart", "BrainCrushStart")
-				.Predicator([this] { return m_bCrushStart; })
-	
-			.AddTransition("Idle to Dodge_Start", "Dodge_Start")
-				.Predicator([this] { return m_eInput == CController::SHIFT; })
+			.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
+				.Predicator([this]
+					{ 
+						return m_eCurAttackType == EAttackType::ATK_HEAVY;
+					})
 
-			.AddTransition("Idle to WaterAttack_Omen", "WaterAttack_Omen")
-				.Predicator([this] { return m_eInput == CController::W; })
 
-			.AddTransition("Idle to ElectricBall_Omen", "ElectricBall_Omen")
-				.Predicator([this] { return m_eInput == CController::E; })
 
-			.AddTransition("Idle to Stamp_Omen", "Stamp_Omen")
+			.AddTransition("Idle to 4Attack", "4Attack")
+				.Predicator([this] { return m_eInput == CController::F; })
+
+			.AddTransition("Idle to Spin", "Spin")
 				.Predicator([this] { return m_eInput == CController::S; })
 
-			.AddTransition("Idle to Rush_Omen", "Rush_Omen")
-				.Predicator([this] { return m_eInput == CController::R; })
-
-			.AddTransition("Idle to TailSwing", "TailSwing")
+			.AddTransition("Idle to Throw_OmenStart", "Throw_OmenStart")
 				.Predicator([this] { return m_eInput == CController::T; })
 			
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-			.AddState("Hit_Heavy")
-				.OnStart([this]
+		.AddState("Hit_Heavy")
+			.OnStart([this]
 			{
-				//Play_MidHitAnim();
 				Play_LightHitAnim();
 				HeavyAttackPushStart();
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
+				if (m_eCurAttackType == EAttackType::ATK_HEAVY)
 				{
-					Play_MidHitAnim();
+					Play_LightHitAnim();
 				}
 
 				_float fPower;
@@ -268,69 +159,57 @@ void CEM0900::SetUpFSM()
 			.AddTransition("Hit_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead
-						|| m_pASM->isSocketPassby("FullBody", 0.95f)
-						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 		.AddState("Death")
-				.OnStart([this]
-				{
-					m_pASM->InputAnimSocketOne("FullBody", "AS_em1100_424_AL_dead_down");
-				})
-
-
-		.AddState("OnFloorGetup")
 			.OnStart([this]
 			{
-				m_pASM->InputAnimSocketMany("FullBody", { "AS_em1100_426_AL_down", "AS_em1100_427_AL_getup" });
-				m_fGravity = 20.f;
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0900_424_AL_dead_down");
 			})
-			.AddTransition("OnFloorGetup to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketEmpty("FullBody");
-				})
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-		//로컬없음, start에서 이벤트로 점프시작 알려줌
-		.AddState("Dodge_Start")
+		.AddState("Down")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_135_AL_dodge_B_start");
-				m_pController->SetActive(false);
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0900_425_AL_down_start");
+			})
+			.AddTransition("Down to Down_Loop", "Down_Loop")
+				.Predicator([this]
+				{
+						return m_pASM->isSocketPassby("FullBody", 0.95f);
+				})
+
+		.AddState("Down_Loop")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0900_426_AL_down");
+				m_dLoopTick = 0.0;
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				if (m_bDodge)
+				m_dLoopTick += TimeDelta;
+				if (m_eCurAttackType != EAttackType::ATK_END)
 				{
-					m_pTransformCom->MoveVelocity(TimeDelta, m_vOnJumpMoveVelocity);
+					m_pASM->InputAnimSocketOne("FullBody", "AS_em0900_429_AL_damage_down_add");
 				}
 			})
-			.OnExit([this] 
-			{
-				m_pController->SetActive(true);
-				m_bDodge = false;
-				m_fGravity = 20.f;
-			})
-			.AddTransition("Dodge_Start to Dodge_Stop", "Dodge_Stop")
+			.AddTransition("Down_Loop to GetUp", "GetUp")
 				.Predicator([this]
 				{
-					return  m_bDead || (m_bDodge && m_bOnFloor);
+					return m_dLoopTick >= 5.0;
 				})
-
-				//착지. 움직임x
-		.AddState("Dodge_Stop")
-				.OnStart([this]
+		.AddState("GetUp")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0900_427_AL_getup");
+			})
+			.AddTransition("Down to Down_Loop", "Idle")
+				.Predicator([this]
 				{
-					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_136_AL_dodge_B_stop");
+					return m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
-	
-				.AddTransition("Dodge_Stop to Idle", "Idle")
-					.Predicator([this]
-					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-					})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -412,272 +291,137 @@ void CEM0900::SetUpFSM()
 			})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-
-		//셋다 로컬, 이벤트 없이 start에서 데미지 처리 해주면됨
-		.AddState("WaterAttack_Omen")
+		
+		//때릴때마다 이벤트로 공격
+		.AddState("4Attack")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_215_AL_atk_a5_drainage_omen");
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0900_205_AL_atk_a5_4attack");
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				SocketLocalMove(m_pASM);
 				m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
 			})
-			.AddTransition("WaterAttack_Omen to WaterAttack_Start", "WaterAttack_Start")
+			.AddTransition("4Attack to Idle", "Idle")
 				.Predicator([this]
 				{
 					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-					})
+				})
 
-				.AddState("WaterAttack_Start")
-					.OnStart([this]
-					{
-							m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_215_AL_atk_a5_drainage_start");
-
-							_matrix HydroPumpEffect = CImguiUtils::CreateMatrixFromImGuizmoData(
-								{ 0.f, 2.f, 0.f },
-								{ -180.f, -90.f, 80.f},
-								{ 1.f, 1.f, 1.f }
-							);
-	
-							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Water_Effect")
-								->Start_AttachPivot(this, HydroPumpEffect, "Shell1", true, true);
-
-							_matrix HydroPumpParticle = CImguiUtils::CreateMatrixFromImGuizmoData(
-								{ 0.f, 0.f, 0.f },
-								{ -180.f, -90.f, 15.f },
-								{ 1.f, 1.f, 1.f }
-							);
-
-							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1100_Water_Particle_Cylinder")
-								->Start_AttachPivot(this, HydroPumpParticle, "Shell1", true, true);
-
+		.AddState("Spin")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0900_207_AL_atk_a7");
 					
-					})
-				.Tick([this](_double)
-				{
-					SocketLocalMove(m_pASM);
-				})
-				.AddTransition("WaterAttack_Start to WaterAttack_End", "WaterAttack_End")
-					.Predicator([this]
-					{
-						return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-					})
-
-			.AddState("WaterAttack_End")
-				.OnStart([this]
-				{
-					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_215_AL_atk_a5_drainage_end");
-						
-					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1100_Rain_Attack_Particle")
-							->Start_Attach(this, "Eff02", false);
-				})
-				.Tick([this](_double)
-				{
-					SocketLocalMove(m_pASM);
-				})
-				.AddTransition("WaterAttack_End to Idle", "Idle")
-					.Predicator([this]
-					{
-						return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-					})
-
-		//셋다 로컬있음 , 전기볼이 플레이어를 쫓아가야함, 이벤트로 전기볼 생성
-		.AddState("ElectricBall_Omen")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_208_AL_atk_a3_guidanceshot_omen");
 			})
 			.Tick([this](_double)
 			{
 				SocketLocalMove(m_pASM);
+				if (m_bAttack)
+					//공격
+					;
 			})
-			.AddTransition("ElectricBall_Omen to ElectricBall_Start", "ElectricBall_Start")
-				.Predicator([this]
-			{
-				return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-			})
-
-		.AddState("ElectricBall_Start")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_208_AL_atk_a3_guidanceshot_start");
-			})
-			.Tick([this](_double)
-			{
-				SocketLocalMove(m_pASM);
-			})
-			.AddTransition("ElectricBall_Start to ElectricBall_End", "ElectricBall_End")
+			.AddTransition("Spin to Idle", "Idle")
 				.Predicator([this]
 				{
 					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
-		.AddState("ElectricBall_End")
+		.AddState("Throw_OmenStart")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_208_AL_atk_a3_guidanceshot_end");
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0900_218_AL_atk_a1_omenstart");
 			})
 			.Tick([this](_double)
 			{
 				SocketLocalMove(m_pASM);
 			})
-			.AddTransition("ElectricBall_End to Idle", "Idle")
+			.AddTransition("Throw_OmenStart to Throw_OmenLoop", "Throw_OmenLoop")
 				.Predicator([this]
 				{
 					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
-
-		//셋다 로컬이 조금씩 있음, Start에 이벤트로 데미지 한번만 주게 설정
-		.AddState("Stamp_Omen")
+		.AddState("Throw_OmenLoop")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_202_AL_atk_a1_bringdown_omen");
-			})
-			.Tick([this](_double)
-			{
-				SocketLocalMove(m_pASM);
-			})
-	
-			.AddTransition("Stamp_Omen to Stamp_Start", "Stamp_Start")
-				.Predicator([this]
-			{
-				return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-			})
-
-		.AddState("Stamp_Start")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_202_AL_atk_a1_bringdown_start");
-			})
-			.Tick([this](_double)
-			{
-				SocketLocalMove(m_pASM);
-			})
-
-			.AddTransition("Stamp_Start to Stamp_End", "Stamp_End")
-				.Predicator([this]
-				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-				})
-
-		.AddState("Stamp_End")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_202_AL_atk_a1_bringdown_end");
-			})
-			.Tick([this](_double)
-			{
-				SocketLocalMove(m_pASM);
-			})
-	
-			.AddTransition("Stamp_End to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-				})
-
-
-		//start와 end에 로컬있음, start에서 돌진할때 이벤트 알려줌
-		.AddState("Rush_Omen")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1120_211_AL_atk_a4_sliding_omen");
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0900_219_AL_atk_a1_omensloop");
+				m_dLoopTick = 0.0;
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
-			})
-
-			.AddTransition("Rush_Omen to Rush_Start", "Rush_Start")
-				.Predicator([this]
-				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-				})
-
-		.AddState("Rush_Start")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1120_211_AL_atk_a4_sliding_start");
-			})
-			.Tick([this](_double)
-			{
 				SocketLocalMove(m_pASM);
-
-				if (m_bRush)
-				{
-					Rush_SweepSphere();
-				}
+				m_dLoopTick += TimeDelta;
 			})
-			.OnExit([this]
-			{
-				m_bRush = false;
-			})
-			.AddTransition("Rush_Start to Rush_End", "Rush_End")
+			.AddTransition("Throw_OmenLoop to Feint", "Feint")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || (m_dLoopTick>= 0.5 && m_pController->GetGapDistance() < 7.f);
+				})
+			.AddTransition("Throw_OmenLoop to Throw_Start", "Throw_Start")
+				.Predicator([this]
+				{
+					return m_bDead || (m_dLoopTick >= 0.5 && m_pController->GetGapDistance() >= 7.f);
 				})
 
-		.AddState("Rush_End")
+		.AddState("Feint")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1120_211_AL_atk_a4_sliding_end");
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0900_202_AL_atk_a2_feint");
 			})
 			.Tick([this](_double)
 			{
 				SocketLocalMove(m_pASM);
 			})
+			.AddTransition("Feint to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+				})
+
+		.AddState("Throw_Start")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0900_220_AL_atk_a1_start");
+			})
+			.Tick([this](_double)
+			{
+				SocketLocalMove(m_pASM);
+			})
+			.AddTransition("Throw_Start to Throw_Loop", "Throw_Loop")
+				.Predicator([this]
+				{
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+				})
+
+		.AddState("Throw_Loop")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0900_221_AL_atk_a1_loop");
+			})
+			.Tick([this](_double TimeDelta)
+			{
+					m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
+			})
+			.AddTransition("Throw_Loop to Throw_End", "Throw_End")
+				.Predicator([this]
+				{
+					return m_bDead || abs(m_pController->GetTurnRemain()) < 0.1f;
+				})
+
+		//이벤트에서 플레이어쪽으로 던짐
+		.AddState("Throw_End")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0900_222_AL_atk_a1_end");
+			})
+			.AddTransition("Throw_End to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+				})
 	
-			.AddTransition("Rush_End to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-				})
-
-		//꼬리치기 후 도는모션까지 로컬 있음 ㅎㅎ, 시작과 끝 이벤트로 데미지 처리
-		.AddState("TailSwing")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_204_AL_atk_a2_tailall");
-			})
-			.Tick([this](_double)
-			{
-				SocketLocalMove(m_pASM);
-
-				if (m_bTailSwing)
-				{
-					TailSwing_SweepSphere();
-				}
-			})
-			.OnExit([this]
-			{
-				AfterLocal180Turn();
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-			})
-			.AddTransition("TailSwing to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-				})
-
 ///////////////////////////////////////////////////////////////////////////////////////////
-
-		.AddState("Threat")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_160_AL_threat");
-			})
-			.AddTransition("Threat to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-				})
-
-
-				///////////////////////////////////////////////////////////////////////////////////////////
 
 		.Build();
 }
@@ -704,11 +448,6 @@ void CEM0900::Tick(_double TimeDelta)
 	m_vMoveAxis = m_pController->GetMoveAxis();
 	m_vMoveAxis.Normalize();
 	m_eInput = m_pController->GetAIInput();
-	m_bRun = m_pController->IsRun();
-
-	//Run이 끝날때  RunStart를 초기화 해줄 방법이 없어서 Run이 아니면 false로 만듦
-	if (m_bRun == false)
-		m_bRun_Start = false;
 
 	//ASM, FSM tick
 	m_pFSM->Tick(TimeDelta);
@@ -718,15 +457,7 @@ void CEM0900::Tick(_double TimeDelta)
 	if (m_vMoveAxis.LengthSquared() > 0.f)
 	{
 		_float3 vVelocity;
-
-		//뛸때는 방향을 보면서 뛰어야하고 걸을때는 안보고 걸어야 함
-		if (m_bRun)
-		{
-			const _float fYaw = m_pTransformCom->GetYaw_Radian();
-			XMStoreFloat3(&vVelocity, 8.f /*MoveSpeed*/ * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
-		}
-		else
-			XMStoreFloat3(&vVelocity, 2.f /*MoveSpeed*/ * XMVector3Normalize(m_vMoveAxis));
+		XMStoreFloat3(&vVelocity, 2.f /*MoveSpeed*/ * XMVector3Normalize(m_vMoveAxis));
 
 		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
 	}
@@ -833,32 +564,9 @@ _bool CEM0900::IsPlayingSocket() const
 void CEM0900::Play_LightHitAnim()
 {
 	if (m_eSimpleHitFrom == ESimpleAxis::NORTH)
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_401_AL_damage_l_F");
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0900_401_AL_damage_l_F");
 	else
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_402_AL_damage_l_B");
-}
-
-void CEM0900::Play_MidHitAnim()
-{
-	switch (m_eHitFrom)
-	{
-	case EBaseAxis::NORTH:
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em1100_411_AL_damage_m_F");
-		break;
-	case EBaseAxis::EAST:
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em1100_414_AL_damage_m_R");
-		break;
-	case EBaseAxis::SOUTH:
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em1100_412_AL_damage_m_B");
-		break;
-	case EBaseAxis::WEST:
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em1100_413_AL_damage_m_L");
-		break;
-	case EBaseAxis::AXIS_END:
-		FALLTHROUGH;
-	default:
-		NODEFAULT;
-	}
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0900_402_AL_damage_l_B");
 }
 
 void CEM0900::HeavyAttackPushStart()
@@ -910,11 +618,34 @@ void CEM0900::HitWeakProcess(_double TimeDelta)
 {
 	if (m_bHitWeak)
 	{
-		m_bWeakProcess = true;
-		m_pWeak->GetParam().Floats[1] = 1.f;
+		if (m_iArmorHp > 0)
+		{
+			m_bArmorProcess = true;
+			m_pArmor->GetParam().Floats[1] = 1.f;
+		}
+		else
+		{
+			m_bWeakProcess = true;
+			m_pWeak->GetParam().Floats[1] = 1.f;
+		}
 	}
 
-	if (m_bWeakProcess)
+	//1번째가 약점 맞았을때 반짝거리는거
+	//2번째가 아머 삭제될때 디졸브
+
+	if (m_bArmorProcess)
+	{
+		m_pArmor->GetParam().Floats[1] -= static_cast<_float>(TimeDelta);
+
+		if (m_pArmor->GetParam().Floats[1] <= 0.f)
+		{
+			m_pArmor->GetParam().Floats[1] = 0.f;
+			m_bArmorProcess = false;
+		}
+
+	}
+
+	else if (m_bWeakProcess)
 	{
 		m_pWeak->GetParam().Floats[1] -= static_cast<_float>(TimeDelta);
 
@@ -922,6 +653,18 @@ void CEM0900::HitWeakProcess(_double TimeDelta)
 		{
 			m_pWeak->GetParam().Floats[1] = 0.f;
 			m_bWeakProcess = false;
+		}
+	}
+
+	//아머가 파괴될때 한번 실행
+	if (m_bDestroyArmor == true)
+	{
+		m_pArmor->GetParam().Floats[2] += static_cast<_float>(TimeDelta);
+
+		if (m_pArmor->GetParam().Floats[2] >= 1.f)
+		{
+			m_pArmor->GetParam().Floats[2] = 1.f;
+			m_bDestroyArmor = false;
 		}
 	}
 }
@@ -1038,26 +781,6 @@ void CEM0900::Stamp_Overlap()
 	}
 }
 
-void CEM0900::Dodge_VelocityCalc()
-{
-	m_bDodge = true;
-	m_fGravity = 80.f;
-	m_fYSpeed = 10.f;
-
-	const _float fJumpMoveTime = (2 * m_fYSpeed) / m_fGravity;
-
-	const _float fDistance = 8.f;
-	const _vector vDirection =  m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 2.f;
-	m_vOnJumpMoveVelocity = XMVector3Normalize(vDirection) * (fDistance / fJumpMoveTime);
-}
-
-void CEM0900::AfterLocal180Turn()
-{
-	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	vPos -= XMVector3Normalize(vLook) * 20.f;
-	m_pTransformCom->LookAt(vPos);
-}
 
 
 CEM0900 * CEM0900::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

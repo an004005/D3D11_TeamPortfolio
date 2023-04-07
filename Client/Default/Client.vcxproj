@@ -306,6 +306,7 @@
     <ClInclude Include="..\public\EM8200_Controller.h" />
     <ClInclude Include="..\public\EMBrain.h" />
     <ClInclude Include="..\public\EMCable.h" />
+    <ClInclude Include="..\public\EMGift.h" />
     <ClInclude Include="..\public\EMUI.h" />
     <ClInclude Include="..\public\FSM_Recompiler.h" />
     <ClInclude Include="..\public\Imgui_Cheat.h" />
@@ -635,6 +636,7 @@
     <ClCompile Include="..\private\EM8200_Controller.cpp" />
     <ClCompile Include="..\private\EMBrain.cpp" />
     <ClCompile Include="..\private\EMCable.cpp" />
+    <ClCompile Include="..\private\EMGift.cpp" />
     <ClCompile Include="..\private\EMUI.cpp" />
     <ClCompile Include="..\private\FSM_Recompiler.cpp" />
     <ClCompile Include="..\private\Imgui_Cheat.cpp" />

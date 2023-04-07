@@ -53,7 +53,7 @@ HRESULT CEM0210::Initialize(void * pArg)
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	//시작부터 투명상태 적용
-	m_IsInvisible = false;
+	m_IsInvisible = true;
 
 	return S_OK;
 }

@@ -64,8 +64,6 @@ private:
 	CParticleGroup*				m_pBugParticle = nullptr;
 	CEffectGroup*				m_pRushEffect = nullptr;
 
-	// Swing Attack
-	list<CScarletCharacter*> m_CollisionList;
 private:
 	//원시 데이터
 	_float3 m_vMoveAxis;

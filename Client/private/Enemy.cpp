@@ -422,6 +422,14 @@ void CEnemy::FindTarget()
 	}
 }
 
+void CEnemy::PlayBC()
+{
+	m_bBrainCrush = true;
+
+	//떠있는 모든 유아이 삭제
+	Safe_Release(m_pEMUI);
+}
+
 _float4x4 CEnemy::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
 {
 	if (m_pModelCom->Get_BonePtr(strBoneName) == nullptr)
@@ -588,10 +596,11 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 		m_iCrushGauge -= iDamage*1.2;
 		if (m_iCrushGauge < 0)
 		{
+			if (m_bCrushStart == false)
+				m_pEMUI->Create_CGUI();
+		
 			m_iCrushGauge = 0;
 			m_bCrushStart = true;
-
-			//UI 띄우기
 		}
 			
 	}	

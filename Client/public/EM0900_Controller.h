@@ -20,15 +20,9 @@ public:
 	virtual void BeginTick() override;
 	virtual void AI_Tick(_double TimeDelta) override;
 
-
 	void Tick_Near(_double TimeDelta);
 	void Tick_Far(_double TimeDelta);
 	void Tick_Outside(_double TimeDelta);
-
-	void Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio = 1.f);
-
-public:
-	_bool IsRun() { return m_bRun; }
 
 private:
 	void DefineState(_double TimeDelta);
@@ -37,13 +31,7 @@ private:
 	class CEM0900* m_pCastedOwner = nullptr;
 
 private:	
-	_bool	m_bRun = false;
-	_bool	m_bAttack = false;
 	_uint m_iNearOrder = 0;
-	_uint m_iFarOrder = 0;
-
-	_double m_dRushCoolTime[COOL_END] = { 0.0, 40.0 };
-
 
 public:
 	static CEM0900_Controller* Create();
