@@ -52,38 +52,74 @@ void CGravikenisisMouseUI::BeginTick()
 	m_pBanKenisis->Start_NoAttach(this, true, true);
 	m_pBanKenisis->Set_GroupVisible(false);
 
-	// 어필 원_1
+	// 어필 원
 	m_pAppealCircle = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Psychokinesis_Circle", PLAYERTEST_LAYER_FRONTUI);
 	Safe_AddRef(m_pAppealCircle);
 	Assert(m_pAppealCircle != nullptr);
 	m_pAppealCircle->Start_NoAttach(this, true, true);
 	m_pAppealCircle->Set_GroupVisible(true);
 
-	//// Player
-	//list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
+	// Player
+	list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
 
-	//for (auto iter : plsGameObject)
-	//{
-	//	if (iter->GetPrototypeTag() == L"Player")
-	//	{
-	//		m_pPlayer = dynamic_cast<CPlayer*>(iter);
-	//		break;
-	//	}
-	//}
+	for (auto iter : plsGameObject)
+	{
+		if (iter->GetPrototypeTag() == L"Player")
+		{
+			m_pPlayer = dynamic_cast<CPlayer*>(iter);
+			break;
+		}
+	}
 }
 
 void CGravikenisisMouseUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+	
+ 	CGameObject* pKineticObject = CPlayerInfoManager::GetInstance()->Get_KineticObject();
+	if (pKineticObject == nullptr)
+	{
+		m_pBanKenisis->Set_GroupVisible(false);
+		m_pAppealCircle->Set_GroupVisible(false);
+		m_pKenisis->Set_GroupVisible(false);
+		return;
+	}
 
- //	CGameObject* pKineticObject = CPlayerInfoManager::GetInstance()->Get_KineticObject();
-	//if (pKineticObject == nullptr)
-	//	return;
+	// 객체 따라 다니기
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, dynamic_cast<CMapKinetic_Object*>(pKineticObject)->GetPxPostion());
 
-	////CTransform* vKineticTransform =;
-	//_vector vKineticPosition = pKineticObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetY(vKineticPosition, 2.0f));
-	//m_pKenisis->Set_GroupVisible(true);
+	// 염력 게이지에 채우기
+	SetfRatio(m_pPlayer->Get_KineticCharge());
+	
+	// 염력이 가득 찼을 때의 처리
+	_float fMaxKineticCharge = CPlayerInfoManager::GetInstance()->Get_MaxKineticCharge();
+	if (fMaxKineticCharge < m_pPlayer->Get_KineticCharge())	// 염력 게이지가 다 찼을 때
+	{
+		m_pKenisis->GetFourthEffect()->GetParams().Ints[0] = 0;
+	}
+	else
+	{
+		m_pKenisis->GetFourthEffect()->GetParams().Ints[0] = 1;
+	}
+	
+	// 염력이 부족할 때 금지 표시
+	_uint iKineticEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergy;
+	if (20 > iKineticEnergy)	// 염력 부족할 때
+	{
+		m_pBanKenisis->Set_GroupVisible(true);
+		m_pKenisis->Set_GroupVisible(false);
+	}
+	else
+	{
+		// 염력 게이지가 차는 중에는 어필원이 뜨지 않는다.
+		if (0.01f < m_pPlayer->Get_KineticCharge())
+			m_pAppealCircle->Set_GroupVisible(false);
+		else
+			m_pAppealCircle->Set_GroupVisible(true);
+
+		m_pBanKenisis->Set_GroupVisible(false);
+		m_pKenisis->Set_GroupVisible(true);
+	}
 
 	//// 나 염력 사용하라고 어필 하는 원
 

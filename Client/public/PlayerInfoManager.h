@@ -120,9 +120,15 @@ public:	// Get
 	CGameObject*	Get_TargetedMonster();
 	CGameObject*	Get_SpecialObject();
 
+	// SAS
 	HANABI_STAT		Get_HanabiStat() const { return m_tHanabiStat; }
 	TSUGUMI_STAT	Get_TsugumiStat() const { return m_tTsugumiStat; }
 	_bool					Get_SASMember(const SASMEET eSAS) { return m_bSASMember[eSAS]; }
+
+	// ¿°·Â
+	_float	Get_MaxKineticCharge() {
+		return m_fMaxKineticCharge;
+	}
 
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
@@ -180,6 +186,7 @@ private:
 
 private:
 	_float			m_fBaseAttackDamage;
+	_float			m_fMaxKineticCharge = { 0.0f };
 
 private:
 	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false };

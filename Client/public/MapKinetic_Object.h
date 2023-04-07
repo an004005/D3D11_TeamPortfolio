@@ -51,6 +51,8 @@ public:
 	void	Reset_Transform();
 	EKineticType GetType() const { return m_eType; }
 
+	_float4 GetPxPostion();
+
 public:
 	void	SetOutline(_bool bOutLine) { m_bOutline = bOutLine; }
 

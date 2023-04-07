@@ -27,7 +27,7 @@ CMapKinetic_Object::CMapKinetic_Object(const CMapKinetic_Object & rhs)
 HRESULT CMapKinetic_Object::Initialize_Prototype()
 {
 	FAILED_CHECK(__super::Initialize_Prototype());
-
+	
 	return S_OK;
 }
 
@@ -311,6 +311,13 @@ void CMapKinetic_Object::Reset_Transform()
 	m_pCollider->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
 	m_pCollider->Set_Kinetic(true);
 	m_pCollider->UpdateChange();
+}
+
+_float4 CMapKinetic_Object::GetPxPostion()
+{
+	auto pxPos =  m_pCollider->Get_PxTransform().p;
+
+	return _float4{ pxPos.x, pxPos.y, pxPos.z, 1.f };
 }
 
 void CMapKinetic_Object::OutlineMaker()
