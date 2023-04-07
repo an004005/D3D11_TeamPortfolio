@@ -195,8 +195,10 @@ HRESULT CLevel_StageDefault::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MouseCousor.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_MouseCousor", &json));
 
-	CGameInstance::GetInstance()->Clone_GameObject(PLAYERTEST_LAYER_FRONTUI, TEXT("Prototype_GameObject_GravikenisisMouseUI"));
+	CGameInstance::GetInstance()->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_GravikenisisMouseUI"));
+	CGameInstance::GetInstance()->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_GravikenisisGUI"));
 
+	
 	return S_OK;
 }
 

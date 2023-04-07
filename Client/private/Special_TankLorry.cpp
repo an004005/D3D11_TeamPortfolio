@@ -251,6 +251,11 @@ void CSpecial_TankLorry::TankLorry_Explosion_Particle()
 		Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
 }
 
+_float4 CSpecial_TankLorry::GetPxPostion()
+{
+	return dynamic_cast<CSpecialObject*>(m_pTankLorry_Trailer)->GetPxPostion();
+}
+
 HRESULT CSpecial_TankLorry::SetUp_Components(void * pArg)
 {
 	return S_OK;

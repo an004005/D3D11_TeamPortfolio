@@ -186,6 +186,13 @@ void CSpecialObject::Imgui_RenderProperty()
 	//}
 }
 
+_float4 CSpecialObject::GetPxPostion()
+{
+	auto pxPos = m_pCollider->Get_PxTransform().p;
+
+	return _float4{ pxPos.x, pxPos.y, pxPos.z, 1.f };
+}
+
 void CSpecialObject::CreateKineticParticle(_float4 vPos, _float4 vScale)
 {
 	if (m_ParticleMakeable.IsNotDo())

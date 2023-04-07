@@ -354,10 +354,7 @@ HRESULT CLevel_Effect::Ready_Layer_Map(const _tchar * pLayerTag)
 HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
-	CGameInstance::GetInstance()->Clone_GameObject(PLAYERTEST_LAYER_FRONTUI, TEXT("Prototype_GameObject_GravikenisisMouseUI"));
-	CGameInstance::GetInstance()->Clone_GameObject(PLAYERTEST_LAYER_FRONTUI, TEXT("Prototype_GameObject_MonsterHP"));
-
+	
 	// 보스
 	//auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
 	//_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
