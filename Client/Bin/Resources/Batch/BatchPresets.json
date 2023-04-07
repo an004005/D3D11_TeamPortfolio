@@ -121,11 +121,6 @@
             "ProtoTag": "Prototype_GameObject_Special_HBeam_Bundle"
         },
         {
-            "Layer": "Layer_Kinetic",
-            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_HBeam_Single.json",
-            "ProtoTag": "Prototype_GameObject_Special_HBeam_Single"
-        },
-        {
             "Layer": "Layer_Map",
             "JsonPath": "",
             "ProtoTag": "Prototype_PointLight"
@@ -157,48 +152,13 @@
         },
         {
             "Layer": "Layer_Kinetic",
-            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_DropObject_Single.json",
-            "ProtoTag": "Prototype_GameObject_Special_DropObject_Single"
-        },
-        {
-            "Layer": "Layer_Kinetic",
-            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_TankLorry_Head.json",
-            "ProtoTag": "Prototype_GameObject_Special_TankLorry_Head"
-        },
-        {
-            "Layer": "Layer_Kinetic",
-            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_TankLorry_Trailer.json",
-            "ProtoTag": "Prototype_GameObject_Special_TankLorry_Trailer"
-        },
-        {
-            "Layer": "Layer_Kinetic",
             "JsonPath": "../Bin/Resources/Objects/KineticSpecial_TankLorry.json",
             "ProtoTag": "Prototype_GameObject_Special_TankLorry"
         },
         {
             "Layer": "Layer_Kinetic",
-            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_IronBars_Door.json",
-            "ProtoTag": "Prototype_GameObject_Special_IronBars_Door"
-        },
-        {
-            "Layer": "Layer_Kinetic",
-            "JsonPath": "",
-            "ProtoTag": "Prototype_GameObject_Special_IronBars_Bars"
-        },
-        {
-            "Layer": "Layer_Kinetic",
             "JsonPath": "../Bin/Resources/Objects/KineticSpecial_IronBars.json",
             "ProtoTag": "Prototype_GameObject_Special_IronBars"
-        },
-        {
-            "Layer": "Layer_Kinetic",
-            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_IronBars_SingleBars.json",
-            "ProtoTag": "Prototype_GameObject_Special_IronBars_SingleBars"
-        },
-        {
-            "Layer": "Layer_Kinetic",
-            "JsonPath": "../Bin/Resources/Objects/KineticSpecial_IronBars_MultiBars.json",
-            "ProtoTag": "Prototype_GameObject_Special_IronBars_MultiBars"
         },
         {
             "Layer": "Layer_Kinetic",

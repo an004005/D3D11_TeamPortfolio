@@ -23,6 +23,7 @@ public:
 	void SetModel(const string & strModelTag);
 	void SetRenderGroup(CRenderer::RENDERGROUP eGroup) { m_eRenderGroup = eGroup; }
 	void SetPlayAnimation(const string& strAnim);
+	void PlayAnimation(_float fRatio);
 
 private:
 	class CRenderer* m_pRendererCom = nullptr;

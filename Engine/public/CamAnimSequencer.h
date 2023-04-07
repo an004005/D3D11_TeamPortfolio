@@ -10,6 +10,7 @@ public:
 	{
 		m_vecPartName.push_back("__EVENT__");
 		m_vecPartName.push_back("__Frame__");
+		m_vecPartName.push_back("__LOOKAT_");
 	}
 
 public:

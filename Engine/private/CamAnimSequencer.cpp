@@ -58,7 +58,7 @@ void CCamAnimSequencer::CustomDrawCompact(int index, ImDrawList* draw_list, cons
 		}
 		draw_list->PopClipRect();
 	}
-	else
+	else if (strPartName == "__Frame__")
 	{
 		m_HoveringKeyFrameTime = 0.f;
 
@@ -83,6 +83,48 @@ void CCamAnimSequencer::CustomDrawCompact(int index, ImDrawList* draw_list, cons
 				if (ImGui::IsMouseClicked(1) && MessageBox(NULL, L"Delete This Frame?", L"System Message", MB_YESNO) == IDYES)
 				{
 					itr = KeyFrames.erase(itr);
+					continue;
+				}
+
+				if (ImGui::IsMouseDown(0))
+				{
+					float revserseR = (ImGui::GetMousePos().x - rc.Min.x) / (rc.Max.x - rc.Min.x);
+					_float fReversedTime = revserseR * _float(m_iFrameMax - m_iFrameMin) + _float(m_iFrameMin);
+					itr->Time = Frame2Sec(fReversedTime);
+				}
+				m_HoveringKeyFrameTime = itr->Time;
+			}
+			else
+				draw_list->AddRectFilled(pta, ptb, 0xAAA00000);
+
+			++itr;
+		}
+		draw_list->PopClipRect();
+	}
+	else if (strPartName == "__LOOKAT_")
+	{
+		auto& LookAt = m_pAnim->GetCamLookAt();
+
+		draw_list->PushClipRect(rc.Min, rc.Max, true);
+
+		for (auto itr = LookAt.begin(); itr != LookAt.end();)
+		{
+			float fCurFrameCnt = (_float)Sec2Frame(itr->Time);
+			float r = (fCurFrameCnt - m_iFrameMin) / float(m_iFrameMax - m_iFrameMin);
+			float x = ImLerp(rc.Min.x, rc.Max.x, r);
+			ImVec2 pta(x - 3.f, rc.Min.y + 11.5f - 6);
+			ImVec2 ptb(x + 3.f, rc.Min.y + 11.5f + 6);
+			ImRect rect = ImRect(pta, ptb);
+
+			draw_list->AddRectFilled(pta, ptb, 0xAAA00000);
+
+			if (rect.Contains(ImGui::GetMousePos()))
+			{
+				draw_list->AddRectFilled(pta, ptb, 0xAA0AAA00);
+
+				if (ImGui::IsMouseClicked(1) && MessageBox(NULL, L"Delete This Frame?", L"System Message", MB_YESNO) == IDYES)
+				{
+					itr = LookAt.erase(itr);
 					continue;
 				}
 
