@@ -32,7 +32,7 @@ HRESULT CModelTester::Initialize(void* pArg)
 void CModelTester::Late_Tick(_double TimeDelta)
 {
 	CGameObject::Late_Tick(TimeDelta);
-	m_pModel->Play_Animation(TimeDelta);
+
 	if (m_bVisible)
 		m_pRendererCom->Add_RenderGroup(m_eRenderGroup, this);
 }
@@ -64,6 +64,11 @@ void CModelTester::SetModel(const string& strModelTag)
 void CModelTester::SetPlayAnimation(const string& strAnim)
 {
 	m_pModel->SetPlayAnimation(strAnim);
+}
+
+void CModelTester::PlayAnimation(_float fRatio)
+{
+	m_pModel->Play_Animation_Sync(fRatio);
 }
 
 CModelTester* CModelTester::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -221,6 +226,9 @@ void CImgui_CamAnimEditor::Imgui_RenderTab()
 	{
 		m_Models.find(strSelectModel)->second->Imgui_RenderProperty();
 		m_Models.find(strSelectModel)->second->Imgui_RenderComponentProperties();
+
+		if (nullptr != m_pAnimCam)
+			m_Models.find(strSelectModel)->second->PlayAnimation(m_pCurAnim->GetPlayRatio());
 	}
 
 	static char szAnimName[MAX_PATH]{};

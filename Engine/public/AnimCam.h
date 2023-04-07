@@ -17,6 +17,12 @@ typedef struct tagCamKeyframe
 	_float		fFOV;
 }CAM_KEYFRAME;
 
+typedef struct tagCamLookAt
+{
+	double		Time;
+	_float3	vPosition;
+}CAM_LOOKAT;
+
 class ENGINE_DLL CCamAnimation : public CBase
 {
 public:
@@ -41,6 +47,7 @@ public:
 	void Reset();
 
 	_matrix Update_Animation(_double TimeDelta, _float& fFOV, list<string>& EventNames);
+	_vector Update_LookAtPos(_double TimeDelta);
 
 	CAM_KEYFRAME GetFirstFrame() const;
 	CAM_KEYFRAME GetLastFrame() const;
@@ -50,22 +57,28 @@ public:
 	void AddFrame(_matrix WorldMatrix, _float fFOV);
 	void PopFrame() { if (m_KeyFrames.empty() == false) m_KeyFrames.pop_back(); }
 	void AddEvent(_double Time, const string& strEventName);
+	void AddLookAt(_double Time, _fvector vPosition);
 
 	void Imgui_Render();
+	_float GetPlayTime()		{ return m_PlayTime; }
+	_float GetDuration()		{ return m_Duration; }
+	_float GetTickPerSecond()	{ return m_TickPerSecond; }
 
 	vector<CAM_KEYFRAME>& GetKeyFrames() { return m_KeyFrames; }
 	vector<CAM_ANIM_EVENT>& GetEvents() { return m_vecEvent; }
+	vector<CAM_LOOKAT>& GetCamLookAt() { return m_vecCamLookAt; }
 
 private:
-	string								m_strName;
-	_double								m_Duration = 0.0;
-	_double								m_TickPerSecond = 1.0;
-	_double								m_PlayTime = 0.0;
-	_bool								m_bFinished = false;
-	_float								m_fNear = 0.1f;
+	string					m_strName;
+	_double					m_Duration = 0.0;
+	_double					m_TickPerSecond = 1.0;
+	_double					m_PlayTime = 0.0;
+	_bool					m_bFinished = false;
+	_float					m_fNear = 0.1f;
 
 	vector<CAM_KEYFRAME>	m_KeyFrames;
-	vector<CAM_ANIM_EVENT> m_vecEvent;
+	vector<CAM_ANIM_EVENT>  m_vecEvent;
+	vector<CAM_LOOKAT>		m_vecCamLookAt;
 
 public:
 	static CCamAnimation* Create(const char* pAnimFilePath);
@@ -123,6 +136,9 @@ private:
 	unordered_map<string, function<void()>> m_Events;
 	list<string> m_RequestedEvents;
 
+private:
+	_int	m_iLookAtPos_Index = 0;
+	_float4x4	m_LookAtPivot = XMMatrixIdentity();
 
 public:
 	static CAnimCam* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
