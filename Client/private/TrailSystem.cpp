@@ -16,7 +16,7 @@ CTrailSystem::CTrailSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CTrailSystem::CTrailSystem(const CTrailSystem& rhs)
 	: CGameObject(rhs)
 {
-}
+} 
 
 HRESULT CTrailSystem::Initialize(void* pArg)
 {

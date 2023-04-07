@@ -61,6 +61,11 @@
             "ProtoTag": "Monster_em1200"
         },
         {
+            "Layer": "Layer_Monster",
+            "JsonPath": "",
+            "ProtoTag": "Monster_em8200"
+        },
+        {
             "Layer": "Layer_MapKineticObject",
             "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Bench.json",
             "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
@@ -204,6 +209,11 @@
             "Layer": "Layer_MapDecorate",
             "JsonPath": "",
             "ProtoTag": "Prototype_RedString"
+        },
+        {
+            "Layer": "Layer_MapDecorate",
+            "JsonPath": "",
+            "ProtoTag": "Prototype_InvisibleWall"
         }
     ]
 }

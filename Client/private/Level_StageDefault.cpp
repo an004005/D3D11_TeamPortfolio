@@ -206,8 +206,9 @@ HRESULT CLevel_StageDefault::Ready_Layer_Map(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
-	
+	auto pSkyBox = dynamic_cast<CSkyBox*>(pGameInstance->Clone_GameObject_Get(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
+	pSkyBox->GetParams().iPass = 0;
+
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(m_strMapJsonPath);
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 

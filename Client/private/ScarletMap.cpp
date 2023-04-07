@@ -69,6 +69,8 @@ void CScarletMap::Imgui_RenderProperty()
 	__super::Imgui_RenderProperty();
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
+	SetVisible_MapObjects(m_bVisible);
+
 	ImGui::Separator();
 
 	const char* ProtoInfos[] = { "NON_INSTANCE", "INSTANCE", "KINETIC" };
@@ -381,6 +383,13 @@ void CScarletMap::LoadFromJson(const Json & json)
 	
 }
 
+void CScarletMap::SetVisible_MapObjects(_bool bVisible)
+{
+	for (auto pMapObj : m_pMapObjects)
+		pMapObj->SetVisible(bVisible);
+}
+
+
 HRESULT CScarletMap::SetUp_Components()
 {
 	return S_OK;
@@ -471,7 +480,14 @@ void CScarletMap::RayPicking()
 					if (pMapObject->Get_MapObjType() == INSTANCE)
 					{
 						auto com = dynamic_cast<CMapInstance_Object*>(pMapObject)->Find_PhysXStaticModel(dynamic_cast<CPhysXStaticModel*>(pComponent));
-						return com == nullptr ? false : true;
+						
+						if (com == nullptr)
+							return false;
+						else
+						{
+							m_bPick = false;
+							return true;
+						}
 					}
 					else
 					{

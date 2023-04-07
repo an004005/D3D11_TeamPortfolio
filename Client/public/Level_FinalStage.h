@@ -1,0 +1,22 @@
+#pragma once
+#include "Level_StageDefault.h"
+#include "Client_Defines.h"
+
+BEGIN(Client)
+
+class CLevel_FinalStage : public CLevel_StageDefault
+{
+private:
+	CLevel_FinalStage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CLevel_FinalStage() = default;
+
+public:
+	virtual HRESULT Initialize() override;
+
+public:
+	static CLevel_FinalStage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	void Free() override;
+	
+};
+
+END

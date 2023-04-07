@@ -9,6 +9,10 @@
 #include "GameInstance.h"
 #include "ImguiUtils.h"
 #include "Material.h"
+#include "EMBrain.h"
+
+#include "ControlledRigidBody.h"
+#include "RigidBody.h"
 
 CEM0210::CEM0210(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -31,13 +35,14 @@ HRESULT CEM0210::Initialize(void * pArg)
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
-		m_iMaxHP = 1100;
-		m_iHP = 1100; // ★
+		m_iMaxHP = 500;
+		m_iHP = m_iMaxHP; // ★
 
 		m_iAtkDamage = 50;
 
-		m_iCrushGauge = 1100;
-		m_iMaxCrushGauge = 1100;
+		m_iMaxCrushGauge = m_iMaxHP * 0.9f;
+		m_iCrushGauge = m_iMaxCrushGauge;
+	
 		iEemeyLevel = 2;
 	}
 
@@ -350,23 +355,77 @@ void CEM0210::SetUpFSM()
 			{
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_486_AL_BCchance_loop");
 				m_pModelCom->Find_Animation("AS_em0200_486_AL_BCchance_loop")->SetLooping(true);
+
+				//브레인 생성
+				m_pBrain = dynamic_cast<CEMBrain*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_EnemyBrain"), TEXT("Prototype_EMBrain")));
+
+				m_BCLoopTime = 0.0;
 			})
-			.AddTransition("BrainCrushLoop to BrainCrushEnd", "BrainCrushEnd")
+			.Tick([this](_double TimeDelta)
+			{
+					_matrix WeakBoneMatrix = GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
+					m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
+					m_BCLoopTime += TimeDelta;
+			})
+
+			.AddTransition("BrainCrushLoop to BrainCrushLoopDead", "BrainCrushLoopDead")
 				.Predicator([this]
 				{
 					//브레인 크러쉬를 하지 않았을때는 부모쪽에서 3초 안에 죽임
-					return m_bBrainCrush;
+					return m_BCLoopTime >= 3.0;
 				})
-
-		.AddState("BrainCrushEnd")
+			.AddTransition("BrainCrushLoop to BrainCrushEnd", "BrainCrushEnd")
+				.Predicator([this]
+					{
+						return	m_bBrainCrush;
+					})
+		.AddState("BrainCrushLoopDead")
 			.OnStart([this]
 			{
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_487_AL_BCchance_end");
+				m_pBrain->SetDelete();
+				SetDead();
+			})
+		
+		.AddState("BrainCrushEnd")
+			.OnStart([this]
+			{
+				_float4 vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				_float4 vDistance = XMLoadFloat4(&vTargetPos) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				_float fDistance = vDistance.Length();
+
+				if (5.f >= fDistance)
+				{
+					m_pASM->InputAnimSocketOne("FullBody", "AS_BC_em0200m_em0200");
+				}
+				else
+				{
+					m_pASM->InputAnimSocketOne("FullBody", "AS_BC_em_common_em0200");
+				}
+
+				m_pBrain->BeginBC();
 			})
 			.Tick([this](_double)
 			{
-					if (m_pASM->isSocketPassby("FullBody", 0.95f))
-						SetDead();
+					SocketLocalMove(m_pASM);
+
+					if (m_pBrain != nullptr)
+					{
+						_matrix WeakBoneMatrix = GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
+						m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
+
+						//const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.2f;
+						const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.55f;
+
+						if (m_pASM->isSocketPassby("FullBody", fPlayRatio))
+						{
+							m_pBrain->EndBC();
+							m_pBrain->SetDelete();
+							m_pBrain = nullptr;
+							SetDead();
+						}
+					}
+				
 			})
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -633,6 +692,43 @@ _bool CEM0210::Exclude()
 	return m_IsInvisible && CheckSASType(ESASType::SAS_PENETRATE) == false;
 }
 
+void CEM0210::PlayBC()
+{
+	__super::PlayBC();
+
+	// 브레인 크러시 동작 중에는 모든 콜라이더를 사용하지 않도록 함
+	m_pCollider->SetActive(false);
+	for (auto& iter : m_pRigidBodies)
+	{
+		iter.second->Activate(false);
+	}
+
+	const _float fMinDist = 5.f; //플레이어에서 벽까지의 거리, 
+	const _float fMaxDist = 7.f; //플레이어에서 몬스터까지의 거리
+
+	m_CanFullBC = CanMove4BC(fMinDist);
+
+	//가까우면 들어서 올림
+	if (m_CanFullBC == false) return; 
+
+	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vTargetLook = m_pTarget->GetTransform()->Get_State(CTransform::STATE_LOOK);
+
+	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_float fDist = XMVectorGetX(XMVector4Length(vMyPos - vTargetPos));
+	
+	//너무 멀면 이동 안시킴
+	if (fDist > fMaxDist)
+	{
+		m_CanFullBC = false;
+		return;
+	}
+
+	//몬스터가 이동할 위치
+//	vMyPos = vTargetPos + XMVector3Normalize(vTargetLook) * 4.f;
+//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vMyPos);
+}
+
 _bool CEM0210::IsPlayingSocket() const
 {
 	return m_pASM->isSocketEmpty("FullBody") == false;
@@ -682,6 +778,40 @@ void CEM0210::Play_MidHitAnim()
 	default:
 		NODEFAULT;
 	}
+}
+
+_bool CEM0210::CanMove4BC(_float fMinDist)
+{
+	_vector vTargetPos = m_pTarget->GetColliderPosition();
+	physx::PxRaycastHit hitBuffer[1];
+	physx::PxRaycastBuffer t(hitBuffer, 1);
+
+	RayCastParams params;
+	params.rayOut = &t;
+	params.vOrigin = vTargetPos;
+	params.vDir = m_pTarget->GetTransform()->Get_State(CTransform::STATE_LOOK);
+	params.fDistance = 10.f;
+	params.iTargetType = CTB_STATIC;
+	params.bSingle = true;
+
+	if (CGameInstance::GetInstance()->RayCast(params))
+	{
+		for (int i = 0; i < t.getNbAnyHits(); ++i)
+		{
+			auto p = t.getAnyHit(i);
+
+			_float4 vPos{ p.position.x, p.position.y , p.position.z, 1.f };
+
+			_float fDist = XMVectorGetX(XMVector4Length(vTargetPos - XMLoadFloat4(&vPos)));
+
+			//최소거리보다 멀면 이동시켜서 브레인 크러쉬 연출
+			return fDist > fMinDist ? true : false;
+		}
+	}
+	
+	//장애물이 없으니 무조건 가능
+	return true;
+
 }
 
 void CEM0210::Swing_SweepSphere()
@@ -783,5 +913,4 @@ void CEM0210::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
-
 }

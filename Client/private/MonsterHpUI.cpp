@@ -44,7 +44,7 @@ void CMonsterHpUI::BeginTick()
 {
 	if (m_eMonsterName == EEnemyName::EM0320 || m_eMonsterName == EEnemyName::EM0800 || 
 		m_eMonsterName == EEnemyName::EM1100 || m_eMonsterName == EEnemyName::EM1200 ||
-		m_eMonsterName == EEnemyName::EM8210)
+		m_eMonsterName == EEnemyName::EM8200)
 	{
 		m_pGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"BossHp", PLAYERTEST_LAYER_FRONTUI);
 		m_pMonsterName = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"BossName", PLAYERTEST_LAYER_FRONTUI);

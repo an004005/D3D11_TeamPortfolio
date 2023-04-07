@@ -10,7 +10,7 @@ class CEMCable : public CGameObject
 {
 private:
 	CEMCable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CEMCable(const CGameObject& rhs);
+	CEMCable(const CEMCable& rhs);
 	virtual ~CEMCable() = default;
 
 public:

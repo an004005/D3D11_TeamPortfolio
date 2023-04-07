@@ -32,6 +32,8 @@ HRESULT CCanvas_BossHpMove::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
+	m_fCurrentHp = 1.0f;
+
 	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_BossHpMove", this);
 	m_vMaxDestination = { 0.0f, -5.0f };
 	CCanvas::UIMove_FSM();
@@ -106,7 +108,7 @@ void CCanvas_BossHpMove::LoadFromJson(const Json & json)
 void CCanvas_BossHpMove::Set_BossHp(const _float & fHp)
 {
 	m_pCanvas_BossHp->Set_BossHp();
-
+	
 	Find_ChildUI(L"Boss_Hp")->SetVisible(true);
 	Find_ChildUI(L"Boss_HPBack")->SetVisible(true);
 	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Boss_Hp"))->Set_Floats0(fHp);

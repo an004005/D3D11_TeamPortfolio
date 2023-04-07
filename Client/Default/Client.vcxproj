@@ -185,7 +185,6 @@
     <ClInclude Include="..\public\AI_CH0300_AnimInstance.h" />
     <ClInclude Include="..\public\AI_CH0500.h" />
     <ClInclude Include="..\public\AI_CH0500_AnimInstance.h" />
-    <ClInclude Include="..\public\AttackNumUI.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -299,16 +298,24 @@
     <ClInclude Include="..\public\EM1200.h" />
     <ClInclude Include="..\public\EM1200_AnimInstance.h" />
     <ClInclude Include="..\public\EM1200_Controller.h" />
+    <ClInclude Include="..\public\EM8200.h" />
+    <ClInclude Include="..\public\EM8200_AnimInstance.h" />
+    <ClInclude Include="..\public\EM8200_Controller.h" />
+    <ClInclude Include="..\public\EMBrain.h" />
     <ClInclude Include="..\public\EMCable.h" />
     <ClInclude Include="..\public\EMUI.h" />
+    <ClInclude Include="..\public\FSM_Recompiler.h" />
     <ClInclude Include="..\public\Imgui_Cheat.h" />
+    <ClInclude Include="..\public\InvisibleWall.h" />
     <ClInclude Include="..\public\Item_LightUI.h" />
+    <ClInclude Include="..\public\Level_FinalStage.h" />
     <ClInclude Include="..\public\Level_Hospital_1F.h" />
     <ClInclude Include="..\public\Level_NaomiRoom.h" />
     <ClInclude Include="..\public\Level_StageDefault.h" />
     <ClInclude Include="..\public\Level_Subway.h" />
     <ClInclude Include="..\public\MouseCousorLightUI.h" />
     <ClInclude Include="..\public\MouseCousorUI.h" />
+    <ClInclude Include="..\public\PlayerHotFixer.h" />
     <ClInclude Include="..\public\MapNameUI.h" />
     <ClInclude Include="..\public\QuestBackGroundUI.h" />
     <ClInclude Include="..\public\RedBullet.h" />
@@ -471,6 +478,7 @@
     <ClInclude Include="..\public\TestCamera.h" />
     <ClInclude Include="..\public\TestTarget.h" />
     <ClInclude Include="..\public\TipTrigger.h" />
+    <ClInclude Include="..\public\TrailSystem_EX.h" />
     <ClInclude Include="..\public\Trigger.h" />
     <ClInclude Include="..\public\TriggerEx.h" />
     <ClInclude Include="..\public\TutorialUI.h" />
@@ -504,7 +512,6 @@
     <ClCompile Include="..\private\AI_CH0300_AnimInstance.cpp" />
     <ClCompile Include="..\private\AI_CH0500.cpp" />
     <ClCompile Include="..\private\AI_CH0500_AnimInstance.cpp" />
-    <ClCompile Include="..\private\AttackNumUI.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -617,16 +624,24 @@
     <ClCompile Include="..\private\EM1200.cpp" />
     <ClCompile Include="..\private\EM1200_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM1200_Controller.cpp" />
+    <ClCompile Include="..\private\EM8200.cpp" />
+    <ClCompile Include="..\private\EM8200_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM8200_Controller.cpp" />
+    <ClCompile Include="..\private\EMBrain.cpp" />
     <ClCompile Include="..\private\EMCable.cpp" />
     <ClCompile Include="..\private\EMUI.cpp" />
+    <ClCompile Include="..\private\FSM_Recompiler.cpp" />
     <ClCompile Include="..\private\Imgui_Cheat.cpp" />
+    <ClCompile Include="..\private\InvisibleWall.cpp" />
     <ClCompile Include="..\private\Item_LightUI.cpp" />
+    <ClCompile Include="..\private\Level_FinalStage.cpp" />
     <ClCompile Include="..\private\Level_Hospital_1F.cpp" />
     <ClCompile Include="..\private\Level_NaomiRoom.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\Level_Subway.cpp" />
     <ClCompile Include="..\private\MouseCousorLightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorUI.cpp" />
+    <ClCompile Include="..\private\PlayerHotFixer.cpp" />
     <ClCompile Include="..\private\MapNameUI.cpp" />
     <ClCompile Include="..\private\QuestBackGroundUI.cpp" />
     <ClCompile Include="..\private\RedBullet.cpp" />
@@ -789,6 +804,7 @@
     <ClCompile Include="..\private\TestCamera.cpp" />
     <ClCompile Include="..\private\TestTarget.cpp" />
     <ClCompile Include="..\private\TipTrigger.cpp" />
+    <ClCompile Include="..\private\TrailSystem_EX.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
     <ClCompile Include="..\private\TriggerEx.cpp" />
     <ClCompile Include="..\private\TutorialUI.cpp" />
@@ -836,6 +852,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel_Shadow.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCube_SSDecal.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInvisibleWall.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel_Instancing.hlsl" />

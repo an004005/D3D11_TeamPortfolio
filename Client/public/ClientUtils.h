@@ -136,7 +136,7 @@ enum class EEnemyName
 	EM0800, // 브론존
 	EM1100, //  물
 	EM1200, //  나오미
-	EM8210, // 중대장
+	EM8200, // 중대장
 	ENEMY_NAME_END
 };
 

@@ -10,7 +10,7 @@
             ]
         ],
         "Float4x4s": [],
-        "Floats": [0.0, 0.0, 0.0, 0.0],
+        "Floats": [0.0, 0.0, 0.0, 0.5],
         "Ints": [
             0, 0
         ],
@@ -18,7 +18,7 @@
         "Textures": [
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch600/Texture/T_ch0600_Body_COL.png\u0000",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch600/Texture/T_ch0600_Body_NML.png\u0000",
-            "../Bin/Resources/00_Common/03_Texture/T_cm_Fil_Glay.png",
+            "",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch600/Texture/T_ch0600_Body_CTL.png\u0000"
         ]
     },
