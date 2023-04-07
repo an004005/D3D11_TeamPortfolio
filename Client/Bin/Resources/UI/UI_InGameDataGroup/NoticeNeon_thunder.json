@@ -673,7 +673,7 @@
     ],
     "First_Directory": "../Bin/Resources/UI/UI_InGameData/NoticeNeon_frame.json",
     "Fourth_Directory": "",
-    "ObjectTag": "NoticeNeon_oil",
+    "ObjectTag": "NoticeNeon_thunder",
     "Prototype_GameObject": "ProtoVFX_EffectGroup\u0000",
     "SecondEffect_Curves": [
         {
@@ -1343,13 +1343,13 @@
             ]
         }
     ],
-    "Second_Directory": "../Bin/Resources/UI/UI_InGameData/NoticeNeon_oil.json",
+    "Second_Directory": "../Bin/Resources/UI/UI_InGameData/NoticeNeon_thunder.json",
     "Third_Directory": "",
     "TimelineEvent": {
         "Timeline": {
             "Events": [
                 {
-                    "EventName": "Notice_Neon_Oil_Particle",
+                    "EventName": "Notice_Neon_Thunder_Particle",
                     "EventTime": 0.0
                 }
             ]

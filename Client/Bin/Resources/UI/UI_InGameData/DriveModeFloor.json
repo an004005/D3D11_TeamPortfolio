@@ -3,19 +3,19 @@
     "BufferProtoTag": "Prototype_Component_VIBuffer_Rect",
     "Children": [
         [
-            0.15000000596046448,
+            0.999839723110199,
             0.0,
             0.0,
             0.0,
             0.0,
-            0.15000000596046448,
+            -4.371132078517803e-08,
+            0.9999984502792358,
             0.0,
             0.0,
+            -0.9999984502792358,
+            -4.371132078517803e-08,
             0.0,
             0.0,
-            1.0,
-            0.0,
-            -0.4000000059604645,
             0.0,
             0.0,
             1.0
@@ -24,29 +24,20 @@
     "ModelFolderDir": "",
     "ModelProtoTag": "",
     "ShaderParams": {
-        "Float2s": [
-            [
-                1.0,
-                1.0
-            ],
-            [
-                11.0,
-                1.0
-            ]
-        ],
+        "Float2s": [],
         "Float4s": [],
         "Float4x4s": [],
-        "Floats": [
-            1.0
-        ],
+        "Floats": [],
         "Ints": [],
-        "Pass": 14,
+        "Pass": 4,
         "Textures": [
-            "..\\Bin\\Resources\\UI\\InGame\\HillNum.png\u0000"
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_ev_redStrings_line_003.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_ev_redStrings_line_005.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_ev_redStrings_line_006.png\u0000"
         ]
     },
-    "ShaderProtoTag": "Prototype_Component_Shader_VtxTex_VFX",
-    "bBillBoard": true,
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxTex_VFX_UI",
+    "bBillBoard": false,
     "bDecal": false,
     "bModelSprite": false,
     "bNormal": false,
