@@ -38,6 +38,7 @@ public:
 	void Create_BossUI();
 	void Create_DamageFont(DAMAGE_PARAM& tDamageParams);
 	void Create_CGUI();
+	void Update_NoticeNeon();
 
 private:
 	class CEnemy* m_pOwner = nullptr;
@@ -45,6 +46,7 @@ private:
 	class CMonsterHpUI* m_pHPUI = nullptr;
 	class CCanvas_BossHpMove* m_BossHp = nullptr;
 	class CEffectGroup* m_pCGEffect = nullptr;
+	class CEffectGroup* m_pNoticNeon = nullptr;
 
 private:
 	_float4x4	m_EnemyInfoBarPivot;

@@ -114,9 +114,53 @@ void CEMUI::Create_DamageFont(DAMAGE_PARAM& tDamageParams)
 
 void CEMUI::Create_CGUI()
 {
-	CEffectGroup* m_pCGEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"AttackNum");
-	m_pCGEffect->Start_Attach(m_pOwner, "Weak01", false, true);
+//	_float4x4	pivot = XMMatrixIdentity();
+	m_pCGEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"G_Monster");
+	m_pCGEffect->Start_Attach(m_pOwner,  "Weak01", true, true);
 	Safe_AddRef(m_pCGEffect);
+}
+
+void CEMUI::Update_NoticeNeon()
+{
+	_float4x4	NoticeNeonPivot = XMMatrixTranslation(0.f, 3.f, 0.f);
+
+	if (m_pNoticNeon != nullptr)
+	{
+		m_pNoticNeon->SetDelete();
+		Safe_Release(m_pNoticNeon);
+		m_pNoticNeon = nullptr;
+	}
+
+	switch (m_pOwner->GetDeBuffType())
+	{
+	case Client::EDeBuffType::DEBUFF_FIRE:
+		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_OIL:
+		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_THUNDER:
+		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_WATER:
+		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_END:
+		break;
+	default:
+		break;
+	}
+
+	if (m_pNoticNeon != nullptr)
+	{
+		m_pNoticNeon->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Target", true, true);
+		Safe_AddRef(NoticeNeonPivot);
+	}
+
 }
 
 CEMUI* CEMUI::Create(CEnemy* pEnemy)
@@ -147,5 +191,12 @@ void CEMUI::Free()
 		m_pCGEffect->SetDelete();
 		Safe_Release(m_pCGEffect);
 		m_pCGEffect = nullptr;
+	}
+
+	if (m_pNoticNeon != nullptr)
+	{
+		m_pNoticNeon->SetDelete();
+		Safe_Release(m_pNoticNeon);
+		m_pNoticNeon = nullptr;
 	}
 }

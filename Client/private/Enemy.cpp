@@ -539,18 +539,19 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 
 void CEnemy::CheckDeBuff(EDeBuffType eDeBuff)
 {
+
 	switch (eDeBuff)
 	{
 	case EDeBuffType::DEBUFF_FIRE:
-		if (m_eDeBuff == EDeBuffType::DEBUFF_OIL 
+		if (m_eDeBuff == EDeBuffType::DEBUFF_OIL
 			|| CGameUtils::GetRandFloat() >= m_fFireResist)
 			m_eDeBuff = EDeBuffType::DEBUFF_FIRE;
 		break;
-	case EDeBuffType::DEBUFF_OIL: 
+	case EDeBuffType::DEBUFF_OIL:
 		m_eDeBuff = EDeBuffType::DEBUFF_OIL;
 		break;
 	case EDeBuffType::DEBUFF_THUNDER:
-		if (m_eDeBuff == EDeBuffType::DEBUFF_WATER 
+		if (m_eDeBuff == EDeBuffType::DEBUFF_WATER
 			|| CGameUtils::GetRandFloat() >= m_fThunderResist)
 			m_eDeBuff = EDeBuffType::DEBUFF_THUNDER;
 		break;
@@ -559,9 +560,10 @@ void CEnemy::CheckDeBuff(EDeBuffType eDeBuff)
 		break;
 	case EDeBuffType::DEBUFF_END:
 		break;
-	default: 
+	default:
 		NODEFAULT;
 	}
+
 }
 
 void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
@@ -661,15 +663,20 @@ void CEnemy::Update_DeadDissolve(_double TimeDelta)
 
 void CEnemy::DeBuff_End()
 {
+	m_pEMUI->Update_NoticeNeon();
+
 	for (auto pMtrl : m_pModelCom->GetMaterials())
 	{
 		pMtrl->GetParam().Ints[0] = 0;
 	}
+
 }
 
 void CEnemy::DeBuff_Fire()
 {
 	m_fDeBuffTime = 8.f;
+	m_pEMUI->Update_NoticeNeon();
+
 	for (auto pMtrl : m_pModelCom->GetMaterials())
 	{
 		pMtrl->GetParam().Ints[0] = 1;
@@ -679,10 +686,24 @@ void CEnemy::DeBuff_Fire()
 void CEnemy::DeBuff_Oil()
 {
 	m_fDeBuffTime = 10.f;
+	m_pEMUI->Update_NoticeNeon();
+
 	for (auto pMtrl : m_pModelCom->GetMaterials())
 	{
 		pMtrl->GetParam().Ints[0] = 2;
 	}
+}
+
+void CEnemy::DeBuff_Thunder()
+{
+	m_fDeBuffTime = 8.f;
+	m_pEMUI->Update_NoticeNeon();
+}
+
+void CEnemy::DeBuff_Water()
+{
+	m_fDeBuffTime = 10.f;
+	m_pEMUI->Update_NoticeNeon();
 }
 
 void CEnemy::Update_DeBuff(_double TimeDelta)

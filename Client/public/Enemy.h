@@ -100,6 +100,9 @@ protected:
 	virtual void DeBuff_End() override;
 	virtual void DeBuff_Fire() override;
 	virtual void DeBuff_Oil() override;
+	virtual void DeBuff_Thunder() override;
+	virtual void DeBuff_Water() override;
+	
 	virtual void MoveJsonData(Json& jsonDest, void* pArg);
 
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
