@@ -131,7 +131,7 @@ HRESULT CCanvas_Party::Render()
 	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(207.0f, 46.0f), 0.f, vFontBigSize, vColor);
 	wsprintf(szText, TEXT("%d / %d"), tPlayerStat.m_iHP, tPlayerStat.m_iMaxHP);
 	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(283.0f, 71.0f), 0.f, vFontSmaillSize, vColor);
-	dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_01_Leader_HpBar"))->Set_Ber(_float(tPlayerStat.m_iHP / tPlayerStat.m_iMaxHP));
+	dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_01_Leader_HpBar"))->Set_Ber(_float(tPlayerStat.m_iHP) / tPlayerStat.m_iMaxHP);
 
 	pGameInstance->Render_Font(L"Pretendard32", L"유이토 스메라기", vPosition + _float2(178.0f, 21.0f), 0.f, vFontBigSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"레벨", vPosition + _float2(180.0f, 48.0f), 0.f, vFontSmaillSize, vColor);
@@ -150,7 +150,7 @@ HRESULT CCanvas_Party::Render()
 		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(207.0f, 46.0f), 0.f, vFontBigSize, vColor);
 		wsprintf(szText, TEXT("%d / %d"), tHanabiStat.iHP, tHanabiStat.iMaxHP);
 		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(283.0f, 71.0f), 0.f, vFontSmaillSize, vColor);
-		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_02_Member_HpBar"))->Set_Ber(_float(tHanabiStat.iHP / tHanabiStat.iMaxHP));
+		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_02_Member_HpBar"))->Set_Ber(_float(tHanabiStat.iHP) / tHanabiStat.iMaxHP);
 
 		pGameInstance->Render_Font(L"Pretendard32", L"하나비 이치조", vPosition + _float2(178.0f, 21.0f), 0.f, vFontBigSize, vColor);
 		pGameInstance->Render_Font(L"Pretendard32", L"레벨", vPosition + _float2(180.0f, 48.0f), 0.f, vFontSmaillSize, vColor);
@@ -170,7 +170,7 @@ HRESULT CCanvas_Party::Render()
 		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(207.0f, 46.0f), 0.f, vFontBigSize, vColor);
 		wsprintf(szText, TEXT("%d / %d"), tTsugumiStat.iHP, tTsugumiStat.iMaxHP);
 		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(283.0f, 71.0f), 0.f, vFontSmaillSize, vColor);
-		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_03_Member_HpBar"))->Set_Ber(_float(tTsugumiStat.iHP / tTsugumiStat.iMaxHP));
+		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_03_Member_HpBar"))->Set_Ber(_float(tTsugumiStat.iHP) / tTsugumiStat.iMaxHP);
 
 		pGameInstance->Render_Font(L"Pretendard32", L"츠구미 나자르", vPosition + _float2(178.0f, 21.0f), 0.f, vFontBigSize, vColor);
 		pGameInstance->Render_Font(L"Pretendard32", L"레벨", vPosition + _float2(180.0f, 48.0f), 0.f, vFontSmaillSize, vColor);
@@ -202,7 +202,7 @@ HRESULT CCanvas_Party::Render()
 				CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(207.0f, 46.0f), 0.f, vFontBigSize, vColor);
 				wsprintf(szText, TEXT("%d / %d"), m_arrReserve[i].iHP, m_arrReserve[i].iMaxHP);
 				CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(283.0f, 70.0f), 0.f, vFontSmaillSize, vColor);
-				dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_03_Member_HpBar"))->Set_Ber(_float(tTsugumiStat.iHP / tTsugumiStat.iMaxHP));
+				dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_03_Member_HpBar"))->Set_Ber(_float(tTsugumiStat.iHP) / tTsugumiStat.iMaxHP);
 
 				pGameInstance->Render_Font(L"Pretendard32", m_arrReserve[i].szName, vPosition + _float2(178.0f, 22.0f), 0.f, vFontBigSize, vColor);
 				pGameInstance->Render_Font(L"Pretendard32", L"레벨", vPosition + _float2(180.0f, 48.0f), 0.f, vFontSmaillSize, vColor);
@@ -233,7 +233,7 @@ HRESULT CCanvas_Party::Render()
 				CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(207.0f, 46.0f), 0.f, vFontBigSize, vColor);
 				wsprintf(szText, TEXT("%d / %d"), m_arrReserve[i].iHP, m_arrReserve[i].iMaxHP);
 				CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(283.0f, 70.0f), 0.f, vFontSmaillSize, vColor);
-				dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_03_Member_HpBar"))->Set_Ber(_float(tTsugumiStat.iHP / tTsugumiStat.iMaxHP));
+				dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_03_Member_HpBar"))->Set_Ber(_float(tTsugumiStat.iHP) / tTsugumiStat.iMaxHP);
 
 				pGameInstance->Render_Font(L"Pretendard32", m_arrReserve[i].szName, vPosition + _float2(178.0f, 22.0f), 0.f, vFontBigSize, vColor);
 				pGameInstance->Render_Font(L"Pretendard32", L"레벨", vPosition + _float2(180.0f, 48.0f), 0.f, vFontSmaillSize, vColor);
@@ -502,8 +502,8 @@ void CCanvas_Party::PickInfo()
 		dynamic_cast<CMain_FaceUI*>(Find_ChildUI(L"Party_BasicInfo_Face"))->Set_Face(0.0f);
 		dynamic_cast<CMain_SkillIconUI*>(Find_ChildUI(L"Party_BasicInfo_Icon"))->Set_Icon(0.0f);
 		dynamic_cast<CMain_SkillNameUI*>(Find_ChildUI(L"Party_BasicInfo_SkillName"))->Set_Name(0.0f);
-		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_HpBar"))->Set_Ber(_float(tStat.m_iHP / tStat.m_iMaxHP));
-		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_LevelBer"))->Set_Ber(_float(tStat.iExp / tStat.iMaxExp));
+		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_HpBar"))->Set_Ber(_float(tStat.m_iHP) / tStat.m_iMaxHP);
+		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_LevelBer"))->Set_Ber(_float(tStat.iExp) / tStat.iMaxExp);
 	}
 		break;
 	case Client::CCanvas_Party::SASMEMBER::HANABI:
@@ -524,8 +524,8 @@ void CCanvas_Party::PickInfo()
 		dynamic_cast<CMain_FaceUI*>(Find_ChildUI(L"Party_BasicInfo_Face"))->Set_Face(2.0f);
 		dynamic_cast<CMain_SkillIconUI*>(Find_ChildUI(L"Party_BasicInfo_Icon"))->Set_Icon(2.0f);
 		dynamic_cast<CMain_SkillNameUI*>(Find_ChildUI(L"Party_BasicInfo_SkillName"))->Set_Name(2.0f);
-		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_HpBar"))->Set_Ber(_float(tStat.iHP / tStat.iMaxHP));
-		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_LevelBer"))->Set_Ber(_float(tStat.iExp / tStat.iMaxExp));
+		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_HpBar"))->Set_Ber(_float(tStat.iHP) / tStat.iMaxHP);
+		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_LevelBer"))->Set_Ber(_float(tStat.iExp) / tStat.iMaxExp);
 	}
 		break;
 	case Client::CCanvas_Party::SASMEMBER::TSUGUMI:
@@ -546,8 +546,8 @@ void CCanvas_Party::PickInfo()
 		dynamic_cast<CMain_FaceUI*>(Find_ChildUI(L"Party_BasicInfo_Face"))->Set_Face(4.0f);
 		dynamic_cast<CMain_SkillIconUI*>(Find_ChildUI(L"Party_BasicInfo_Icon"))->Set_Icon(4.0f);
 		dynamic_cast<CMain_SkillNameUI*>(Find_ChildUI(L"Party_BasicInfo_SkillName"))->Set_Name(4.0f);
-		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_HpBar"))->Set_Ber(_float(tStat.iHP / tStat.iMaxHP));
-		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_LevelBer"))->Set_Ber(_float(tStat.iExp / tStat.iMaxExp));
+		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_HpBar"))->Set_Ber(_float(tStat.iHP) / tStat.iMaxHP);
+		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_LevelBer"))->Set_Ber(_float(tStat.iExp) / tStat.iMaxExp);
 	}
 		break;
 	case Client::CCanvas_Party::SASMEMBER::KYOTO:
