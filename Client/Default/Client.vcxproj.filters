@@ -499,6 +499,9 @@
     <Filter Include="01.Levels\20.PlayerTester">
       <UniqueIdentifier>{c5cff968-b07f-4b9d-86c2-f5fbff38b7af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0900">
+      <UniqueIdentifier>{a3ff095e-e4e6-428f-808a-d3a7df149380}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1473,6 +1476,15 @@
     <ClInclude Include="..\public\FSM_Recompiler.h">
       <Filter>02.GameObjects\Player\FSM_Recompiler</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EM0900_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM0900</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0900_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM0900</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0900.h">
+      <Filter>02.GameObjects\Enemy\EM0900</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2423,6 +2435,15 @@
     </ClCompile>
     <ClCompile Include="..\private\FSM_Recompiler.cpp">
       <Filter>02.GameObjects\Player\FSM_Recompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0900_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM0900</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0900.cpp">
+      <Filter>02.GameObjects\Enemy\EM0900</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0900_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM0900</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

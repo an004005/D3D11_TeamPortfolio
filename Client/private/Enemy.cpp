@@ -143,6 +143,10 @@ void CEnemy::Late_Tick(_double TimeDelta)
 void CEnemy::Imgui_RenderProperty()
 {
 	CScarletCharacter::Imgui_RenderProperty();
+
+	if (ImGui::Button("KBRecompiler"))
+		SetUpFSM();
+
 	if (ImGui::CollapsingHeader("SpawnEffectEdit"))
 	{
 		if (ImGui::Button("SpawnEffect"))
@@ -229,6 +233,15 @@ void CEnemy::SetUpSound()
 		m_SoundStore.CloneSound(m_strImpactTag);
 	if (m_strImpactVoiceTag.empty() == false)
 		m_SoundStore.CloneSound(m_strImpactVoiceTag);
+}
+
+void CEnemy::SetUpFSM()
+{
+	Safe_Release(m_pFSM);
+
+	if (KBSound++ > 0)
+		MSG_BOX("It's an honor!!");
+
 }
 
 void CEnemy::SetUpUI()

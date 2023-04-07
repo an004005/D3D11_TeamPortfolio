@@ -281,6 +281,36 @@ void CEM0110::SetUpFSM()
 			})
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+		.AddState("Hit_Heavy")
+			.OnStart([this]
+			{
+				Play_HeavyHitAnim();
+				HeavyAttackPushStart();
+			})
+			.Tick([this](_double TimeDelta)
+			{
+				if (m_eCurAttackType == EAttackType::ATK_HEAVY)
+				{
+					HeavyAttackPushStart();
+					Play_HeavyHitAnim();
+				}
+
+				_float fPower;
+				if (m_HeavyAttackPushTimeline.Tick(TimeDelta, fPower))
+				{
+					_float3 vVelocity = { m_vPushVelocity.x, m_vPushVelocity.y, m_vPushVelocity.z };
+					m_pTransformCom->MoveVelocity(TimeDelta, vVelocity * fPower);
+					//m_pTransformCom->MoveVelocity(TimeDelta, m_vPushVelocity * fPower);
+				}
+			})
+			.AddTransition("Hit_Heavy to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+				})
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
 		//발차기
 		.AddState("Attack_turn")
 			.OnStart([this]
@@ -568,12 +598,25 @@ void CEM0110::Adjust_MoveAxis(_double TimeDelta)
 }
 
 
-void CEM0110::Play_HeavbyHitAnim()
+void CEM0110::Play_HeavyHitAnim()
 {
 	if (m_eSimpleHitFrom == ESimpleAxis::NORTH)
 		m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_451_AL_damage_l_F02");
 	else
 		m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_452_AL_damage_l_B02");
+}
+
+void CEM0110::HeavyAttackPushStart()
+{
+	if (m_eCurAttackType == EAttackType::ATK_MIDDLE || m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
+	{
+		m_HeavyAttackPushTimeline.PlayFromStart();
+		m_vPushVelocity = CClientUtils::GetDirFromAxis(m_eHitFrom);
+		m_vPushVelocity *= -4.f; // 공격 온 방향의 반대로 이동
+
+		const _float fYaw = m_pTransformCom->GetYaw_Radian();
+		m_vPushVelocity = XMVector3TransformNormal(m_vPushVelocity, XMMatrixRotationY(fYaw));
+	}
 }
 
 void CEM0110::HitWeakProcess(_double TimeDelta)

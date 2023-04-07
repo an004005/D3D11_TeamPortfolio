@@ -59,12 +59,10 @@ void CEM1200::SetUpComponents(void * pArg)
 	assert(m_pWeak != nullptr);
 
 	// 범위 충돌체(플레이어가 몬스터 위로 못 올라가게한다.)
-	Json RangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Range.json");
 	Json WeakCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Weak.json");
 	Json TrunkCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Trunk.json");
 	Json LegsCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Legs.json");
 
-	Add_RigidBody("Range", &RangeCol);
 	Add_RigidBody("Trunk", &TrunkCol);
 	Add_RigidBody("Weak", &WeakCol);
 	Add_RigidBody("Legs", &LegsCol);
@@ -174,7 +172,7 @@ void CEM1200::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("Rush_Start", [this]
 	{
 		ClearDamagedTarget();
-		m_bAttack = false;
+		m_bAttack = true;
 
 		_int iNum = 5;
 		while (iNum--)
@@ -565,6 +563,10 @@ void CEM1200::SetUpFSM()
 				{
 					SocketLocalMove(m_pASM);
 				})
+				.OnExit([this] 
+				{
+						m_pASM->ClearSocketAnim("FullBody", 0.f);
+				})
 				.AddTransition("Stamp_StartLoop to Stamp_Hit", "Stamp_Hit")
 					.Predicator([this]
 					{
@@ -745,22 +747,22 @@ void CEM1200::SetUpFSM()
 					if (m_dLoopTime >= 0.5 && m_iPreAttackCount != m_iAttackCount)
 					{
 						m_SaveTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+						m_SaveTargetPos.y = XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, -1.f, 0.f, 0.f) * 2.f);
 						m_iPreAttackCount = m_iAttackCount;
 					}
 
 					if (m_dLoopTime >= 1.0)
 					{
+						ClearDamagedTarget();
 						CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1200_Ribbon_Particle")
 							->Start_AttachPosition(this, m_SaveTargetPos, _float4(0.f, 1.f, 0.f, 0.f), false);
 
-						//올라올때 빨라서 미세조정
-						m_SaveTargetPos += XMVectorSet(0.f, -1.f, 0.f, 0.f) * 2.f;
 						CGameObject* pCable = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Cable"), TEXT("Prototype_EMCable"));
 						dynamic_cast<CEMCable*>(pCable)->Set_Dest(m_SaveTargetPos);
-		
+						pCable->Set_Owner(this);
+
 						m_dLoopTime = 0.0;
 						++m_iAttackCount;
-
 					}
 				})
 				.OnExit([this]
@@ -843,9 +845,8 @@ void CEM1200::Late_Tick(_double TimeDelta)
 void CEM1200::AfterPhysX()
 {
 	CEnemy::AfterPhysX();
-
+	 
 	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
-	GetRigidBody("Range")->Update_Tick(m_pModelCom->GetBoneMatrix("Target") * WorldMatrix);
 	GetRigidBody("Trunk")->Update_Tick(m_pModelCom->GetBoneMatrix("Head") * WorldMatrix);
 	GetRigidBody("Weak")->Update_Tick(m_pModelCom->GetBoneMatrix("Flower") * WorldMatrix);
 	GetRigidBody("Legs")->Update_Tick(m_pModelCom->GetBoneMatrix("Hips") * WorldMatrix);
@@ -1021,15 +1022,15 @@ void CEM1200::Fall_Overlap()
 	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
 
 	SphereOverlapParams param;
-	param.fVisibleTime = 0.1f;
+	param.fVisibleTime = 1.f;
 	param.iTargetType = CTB_PLAYER;
-	param.fRadius = 5.f;
+	param.fRadius = 6.f;
 	param.vPos = XMVectorSetW(fBone, 1.f);
 	param.overlapOut = &overlapOut;
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
-		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_DOWN);
+		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_HEAVY);
 	}
 }
 
@@ -1061,15 +1062,15 @@ void CEM1200::Shout2_Overlap()
 	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
 
 	_vector vBoneVector = BoneMatrix.r[3];
-	_float3 fBone = vBoneVector;
+	_float3 fBone = vBoneVector + XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 6.f;
 
 	physx::PxOverlapHit hitBuffer[3];
 	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
 
 	SphereOverlapParams param;
-	param.fVisibleTime = 0.1f;
+	param.fVisibleTime = 1.f;
 	param.iTargetType = CTB_PLAYER;
-	param.fRadius = 5.f;
+	param.fRadius = 7.f;
 	param.vPos = XMVectorSetW(fBone, 1.f);
 	param.overlapOut = &overlapOut;
 
@@ -1090,9 +1091,9 @@ void CEM1200::Stamp_Overlap()
 	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
 
 	SphereOverlapParams param;
-	param.fVisibleTime = 0.1f;
+	param.fVisibleTime = 1.f;
 	param.iTargetType = CTB_PLAYER;
-	param.fRadius = 2.f;
+	param.fRadius = 4.f;
 	param.vPos = XMVectorSetW(fBone, 1.f);
 	param.overlapOut = &overlapOut;
 
@@ -1114,10 +1115,10 @@ void CEM1200::Swing_SweepSphere(const string & BoneName)
 	_vector	vDir = vBonePos - m_BeforePos;
 
 	SphereSweepParams tParams;
-	tParams.fVisibleTime = 0.2f;
+	tParams.fVisibleTime = 1.f;
 	tParams.iTargetType = CTB_PLAYER;
-	tParams.fRadius = 2.f;
-	tParams.fDistance = 1.f;
+	tParams.fRadius = 3.f;
+	tParams.fDistance = XMVectorGetX(XMVector4Length(vDir));
 	tParams.vPos = vBonePos;
 	tParams.sweepOut = &sweepOut;
 	tParams.vUnitDir = vDir;
@@ -1135,17 +1136,16 @@ void CEM1200::Rush_SweepSphere()
 	physx::PxSweepHit hitBuffer[3];
 	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
 
-	//Tail4가 꼬리 중앙에 있음
-	_float4x4 BoneMatrix = GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
+	_float4x4 BoneMatrix = GetBoneMatrix("Head") * m_pTransformCom->Get_WorldMatrix();
 	_float4 vBonePos = _float4{ BoneMatrix.m[3][0], BoneMatrix.m[3][1], BoneMatrix.m[3][2], BoneMatrix.m[3][3] };
 
 	_vector	vDir = vBonePos - m_BeforePos;
 
 	SphereSweepParams tParams;
-	tParams.fVisibleTime = 0.2f;
+	tParams.fVisibleTime = 1.f;
 	tParams.iTargetType = CTB_PLAYER;
-	tParams.fRadius = 3.f;
-	tParams.fDistance = 1.f;
+	tParams.fRadius = 5.f;
+	tParams.fDistance = XMVectorGetX(XMVector4Length(vDir));
 	tParams.vPos = vBonePos;
 	tParams.sweepOut = &sweepOut;
 	tParams.vUnitDir = vDir;

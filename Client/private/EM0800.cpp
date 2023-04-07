@@ -495,7 +495,7 @@ void CEM0800::Tick(_double TimeDelta)
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
 
-	const _float fMoveSpeed = 1.f;
+	const _float fMoveSpeed = 1.2f;
 
 	if (m_vMoveAxis.LengthSquared() > 0.f)
 	{

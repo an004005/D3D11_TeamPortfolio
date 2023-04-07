@@ -46,7 +46,8 @@ public:
 	void Adjust_MoveAxis(_double TimeDelta);
 
 private:
-	void Play_HeavbyHitAnim();
+	void Play_HeavyHitAnim();
+	void	HeavyAttackPushStart();
 	void HitWeakProcess(_double TimeDelta);
 
 private:
@@ -90,10 +91,10 @@ private:
 	CMaterial* m_pArmor = nullptr;
 	CMaterial* m_pWeak = nullptr;
 
-
-
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 
+	CSimpleTimeline m_HeavyAttackPushTimeline;
+	_float4 m_vPushVelocity;
 	//_float4x4 pivot;
 public:
 	static CEM0110* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

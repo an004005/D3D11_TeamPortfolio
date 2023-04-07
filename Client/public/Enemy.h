@@ -33,7 +33,7 @@ public:
 	virtual void SetUpComponents(void* pArg);
 	virtual void SetUpSound();
 	virtual void SetUpAnimationEvent(){}
-	virtual void SetUpFSM() {}
+	virtual void SetUpFSM();
 	virtual void SetUpUI();
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
@@ -47,7 +47,7 @@ public:
 	CEMUI* GetEnemyUI() const { return m_pEMUI; }
 	const _int	GetEnemyLevel() const { return iEemeyLevel; }
 	const EEnemyName	GetEnemyName() const { return m_eEnemyName; }
-
+	const _int AtkDamage() const { return m_iAtkDamage; }
 
 	_bool IsDead() const { return m_bDead; }
 	virtual _float4	GetKineticTargetPos() { return GetColliderPosition(); }
@@ -69,6 +69,10 @@ public:
 	//Target 방향 확인
 	_bool IsTargetFront(_float fAngle = 90.f);
 	_bool IsTargetRight(_float fAngle = 90.f);
+
+public:
+	void HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
+	void HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
 
 //public:
 //	void Set_Gravity(_bool bGravity) { m_bActiveGravity = bGravity; }
@@ -100,8 +104,6 @@ protected:
 
 	_bool CheckDamagedTarget(CScarletCharacter* pTarget);
 	void ClearDamagedTarget();
-	void HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
-	void HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
 
 	//로컬움직임 적용. 다른 애니메이션을 넣어주기 전에 ClearSocketAnim 꼭 해줘야함!!
 	void SocketLocalMove(class CEnemy_AnimInstance* pASM);
@@ -181,6 +183,8 @@ protected:
 	_float4x4 m_SpawnEffectPivot;
 	_float m_fSpawnDistortionDistancePivot = 0.f;
 
+	private:
+		_int KBSound = 0;
 public:
 	virtual void Free() override;
 };

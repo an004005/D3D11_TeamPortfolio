@@ -65,10 +65,10 @@ void CEM1200_Controller::AI_Tick(_double TimeDelta)
 	_bool ttty = m_pCastedOwner->IsPlayingSocket() == false;
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
-	{	
+	{
+		AddCommand("Cable", 0.f, &CAIController::Input, C);
 
-		//AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 1.f);
-		DefineState(TimeDelta);
+		//DefineState(TimeDelta);
 	}
 }
 
