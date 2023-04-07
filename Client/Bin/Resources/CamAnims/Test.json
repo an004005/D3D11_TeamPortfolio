@@ -1,1 +1,1 @@
-{"Duration":0.0,"Events":[],"KeyFrames":[{"FOV":60.0,"Position":[0.0,0.0,0.0],"Rotation":[-0.0,0.0,-0.0,1.0],"Time":0.0}],"Name":"Test","Near":0.10000000149011612,"TickPerSec":1.0}
+{"Duration":0.0,"Events":[],"KeyFrames":[{"FOV":60.0,"Position":[0.0,0.0,0.0],"Rotation":[-0.0,0.0,-0.0,1.0],"Time":0.0}],"LookAt":[],"Name":"Test","Near":0.10000000149011612,"TickPerSec":1.0}

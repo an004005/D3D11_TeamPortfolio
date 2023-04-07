@@ -140,6 +140,9 @@ private:
 	_int	m_iLookAtPos_Index = 0;
 	_float4x4	m_LookAtPivot = XMMatrixIdentity();
 
+	_int	m_iKeyFrame_Index = 0;
+	_float4x4	m_KeyFramePivot = XMMatrixIdentity();
+
 public:
 	static CAnimCam* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
