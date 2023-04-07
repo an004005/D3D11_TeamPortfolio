@@ -1,1 +1,76 @@
-{"MapObjects":[{"ModelTag":"../Bin/Resources/Model/StaticModel/MapStaicModels/Default/Roads/HWBase_B02.static_model\u0000","ObjectTag":"","Prototype_GameObject":"Prototype_GameObject_MapNonAnim_Object\u0000","Transform":{"WorldMatrix":[0.037158023566007614,-0.00449675926938653,-0.9992992877960205,0.0,6.094574928283691e-06,0.9999898672103882,-0.004499639850109816,0.0,0.9993094205856323,0.00016110390424728394,0.03715767338871956,0.0,0.16074657440185547,0.03023076057434082,-3.939537286758423,1.0]}},{"ModelTag":"../Bin/Resources/Model/StaticModel/MapStaicModels/Default/Roads/HWEndZ_tes02.static_model\u0000","ObjectTag":"","Prototype_GameObject":"Prototype_GameObject_MapNonAnim_Object\u0000","Transform":{"WorldMatrix":[0.17362214624881744,0.003030584892258048,-0.9848071932792664,0.0,-0.017452208325266838,0.9998366832733154,0.0,0.0,0.9846569895744324,0.017187245190143585,0.17364856600761414,0.0,14.0,0.0,14.0,1.0]}}],"ObjectTag":"","Prototype_GameObject":"Prototype_GameObject_ScarletMap\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "MapObjects": [
+        {
+            "ModelTag": "../Bin/Resources/Model/StaticModel/MapStaicModels/Default/Roads/HWBase_B02.static_model\u0000",
+            "ObjectTag": "",
+            "Prototype_GameObject": "Prototype_GameObject_MapNonAnim_Object\u0000",
+            "Transform": {
+                "WorldMatrix": [
+                    0.037158023566007614,
+                    -0.00449675926938653,
+                    -0.9992992877960205,
+                    0.0,
+                    6.094574928283691e-06,
+                    0.9999898672103882,
+                    -0.004499639850109816,
+                    0.0,
+                    0.9993094205856323,
+                    0.00016110390424728394,
+                    0.03715767338871956,
+                    0.0,
+                    0.16074657440185547,
+                    0.03023076057434082,
+                    -3.939537286758423,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ModelTag": "../Bin/Resources/Model/StaticModel/MapStaicModels/Default/Roads/HWEndZ_tes02.static_model\u0000",
+            "ObjectTag": "",
+            "Prototype_GameObject": "Prototype_GameObject_MapNonAnim_Object\u0000",
+            "Transform": {
+                "WorldMatrix": [
+                    0.17362214624881744,
+                    0.003030584892258048,
+                    -0.9848071932792664,
+                    0.0,
+                    -0.017452208325266838,
+                    0.9998366832733154,
+                    0.0,
+                    0.0,
+                    0.9846569895744324,
+                    0.017187245190143585,
+                    0.17364856600761414,
+                    0.0,
+                    14.0,
+                    0.0,
+                    14.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "Prototype_GameObject_ScarletMap\u0000",
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}
