@@ -92,10 +92,14 @@ void CMonsterShildUI::SetShild(const _float & fHP, const _float & fShild)
 	m_pGroup->GetFourthEffect()->GetParams().Floats[0] = fShild;
 	
 	m_fHpBack = fHP;
+	m_fShild = fShild;
 }
 
 void CMonsterShildUI::Broken_Tick(const _double & TimeDelta)
 {
+	if (0.0f > m_fShild)
+		m_bBroken = true;
+
 	if (false == m_bBroken) return;
 
 	if (0 == m_dBroken_TimeAcc)

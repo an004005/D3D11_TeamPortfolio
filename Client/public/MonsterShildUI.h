@@ -40,6 +40,7 @@ private:
 	_int						m_iMonsterLevel = { 0 };
 	EEnemyName		m_eMonsterName = EEnemyName::ENEMY_NAME_END;
 
+	_float					m_fShild = { 0.0f };
 	_bool					m_bBroken = { false };
 	_double				m_dBroken_TimeAcc = { 0.0 };
 
