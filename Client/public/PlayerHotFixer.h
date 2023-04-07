@@ -21,6 +21,9 @@ private:
 	void	BrainFieldStateMachine_ReCompile();
 
 private:
+	void	Player_Something_Update();
+
+private:
 	CPlayer* m_pPlayer = nullptr;
 
 public:

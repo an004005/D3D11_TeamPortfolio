@@ -9,7 +9,14 @@
 #include "AnimCam.h"
 #include "Camera_Player.h"
 #include "EM0210.h"
+#include "EM0700.h"
+#include "EM0800.h"
+#include "Channel.h"
+#include "Bone.h"
 #include "CamSpot.h"
+#include "ScarletWeapon.h"
+#include "Material.h"
+#include "MapKinetic_Object.h"
 
 CPlayerHotFixer::CPlayerHotFixer()
 {
@@ -33,6 +40,10 @@ void CPlayerHotFixer::Tick()
 		if (ImGui::Button("BrainField_Recompile"))
 		{
 			BrainFieldStateMachine_ReCompile();
+		}
+		if (ImGui::Button("Something_Recompile"))
+		{
+			Player_Something_Update();
 		}
 	}
 	ImGui::CollapsingHeader("~HotFixer");
@@ -95,18 +106,66 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 			{
 				// 타겟 종류에 따라 애니메이션과 연출 캠을 재생시키도록 한다
 
-				/*if (pTarget->GetPrototypeTag() == L"Monster_em210")
+				_float4 vTargetPos = pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				_float4 vDistance = XMLoadFloat4(&vTargetPos) - m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				_float fDistance = vDistance.Length();
+
+				if (pTarget->GetPrototypeTag() == L"Monster_em210")
 				{
-
-				}*/
-
-				m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrandCrash_em0200);
-
-				if (nullptr != pTarget)
-				{
+					m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrandCrash_em0200);
 					static_cast<CEM0210*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
 
-					_vector BC_Pos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
+					if (5.f >= fDistance)
+					{
+						_vector BC_Pos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
+						_vector vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+						pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
+						pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
+					}
+					else
+					{
+						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush01");
+						m_pPlayer->m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayer->m_pPlayerCam, m_pPlayer->m_pTransformCom, 0.f, 0.f);
+						m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrainCrash_Activate);
+					}
+				}
+				else if (pTarget->GetPrototypeTag() == L"Monster_em700")
+				{
+					m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrainCrash_em0700);
+					static_cast<CEM0700*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
+
+					if (5.f >= fDistance)
+					{
+						_vector BC_Pos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
+						_vector vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+						pTarget->GetTransform()->LookAt_NonY(BC_Pos);
+						pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
+					}
+					else
+					{
+						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush01");
+						m_pPlayer->m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayer->m_pPlayerCam, m_pPlayer->m_pTransformCom, 0.f, 0.f);
+						m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrainCrash_Activate);
+					}
+				}
+				else if (pTarget->GetPrototypeTag() == L"Monster_em800")
+				{
+					m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrainCrash_em0800);
+					static_cast<CEM0800*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
+
+					_vector BC_Pos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 8.5f);
+					_vector vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
+					pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
+				}
+
+				else if (pTarget->GetPrototypeTag() == L"Monster_em1100")
+				{
+					m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrainCrash_em1100);
+					static_cast<CEM0800*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
+
+					_vector BC_Pos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 8.f);
+					BC_Pos += (XMVector3Normalize(m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_RIGHT)) * 3.f);
 					_vector vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
 					pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
@@ -114,20 +173,30 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 			}
 			else
 			{
-				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush01");
+				//static_cast<CEM0210*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
+
+				/*auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush01");
 				m_pPlayer->m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayer->m_pPlayerCam, m_pPlayer->m_pTransformCom, 0.f, 0.f);
-				m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrainCrash_Activate);
+				m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrainCrash_Activate);*/
+
+				m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrainCrash_em1100);
 			}
 		})
-		.Tick([&](double fTimeDelta) 
+		.Tick([&](double fTimeDelta)
 		{
 			string szCurAnimName = m_pPlayer->m_pASM->GetSocketAnimation("BrainCrash_AnimSocket")->GetName();
-			_vector vLocal = m_pPlayer->m_pModel->GetLocalMove(m_pPlayer->m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
-
+			_float4 vLocal = m_pPlayer->m_pModel->GetLocalMove(m_pPlayer->m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
 
 			// 해당 부분도 타겟 종류에 따라 로컬무브를 다르게 적용시킨다.
 			CAnimation* pAnimation = m_pPlayer->m_pModel->Find_Animation("AS_BC_em0200m_ch0100");
 			_float fRatio = pAnimation->GetPlayRatio();
+
+			m_pPlayer->m_pTransformCom->LocalMove({ vLocal.x, vLocal.y, vLocal.z });
+
+			//if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetPrototypeTag() == L"Monster_em800")
+			//{
+			
+			//}
 
 			/*if (fRatio >= 0.285f && fRatio <= 0.3714f)
 			{
@@ -137,13 +206,21 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 			{*/
 				//m_pPlayer->m_pTransformCom->LocalMove(vLocal);
 			//}
+
+			// em0110 전용
+			/*_float4 vMinusCheck = m_pPlayer->m_pModel->Find_Animation("AS_BC_em0100m_ch0100")->GetLocalMove();
+
+			if (vMinusCheck.z > 0.f) 
+				vLocal.y *= -1.f;
+
+			m_pPlayer->m_pTransformCom->LocalMove({vLocal.x, vLocal.y, vLocal.z});*/
 		})
 		.OnExit([&]()
 		{
 
 		})
 			.AddTransition("BRAINCRASH_ACTIVATE to BRAINCRASH_NOUSE", "BRAINCRASH_NOUSE")
-			.Predicator([&]()->_bool { return m_pPlayer->m_pASM->isSocketAlmostFinish("BrainCrash_AnimSocket"); })
+			.Predicator([&]()->_bool { return m_pPlayer->m_pASM->isSocketEmpty("BrainCrash_AnimSocket"); })
 			.Priority(0)
 
 		.Build();
@@ -226,6 +303,12 @@ void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
 		.Build();
 
 	Safe_Release(pOriginFSM);
+}
+
+void CPlayerHotFixer::Player_Something_Update()
+{
+	// 플레이어에 추가할 내용이나 변경할 내용 있으면 해당 부분에서 추가 컴파일 가능
+	
 }
 
 CPlayerHotFixer* CPlayerHotFixer::Create(CPlayer* pPlayer)

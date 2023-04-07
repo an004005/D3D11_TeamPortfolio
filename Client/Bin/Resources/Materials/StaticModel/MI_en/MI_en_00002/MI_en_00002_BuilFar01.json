@@ -8,8 +8,8 @@
         "Float4s" : [],
         "Float4x4s" : [],
         "Textures" : [
-            "../Bin/Resources/Environments/Prop/03_Texture/T_lo054_en001_crane.png",
-            "",
+            "../Bin/Resources/Environments/Location/lc001/03_Texture/T_lc001_BuilFar01_ALB.png",
+            "../Bin/Resources/Environments/Location/lc001/03_Texture/T_lc001_BuilFar01_ALB_NML.png",
             ""
         ],
         "Pass" : 1
