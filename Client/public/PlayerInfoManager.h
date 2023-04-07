@@ -121,8 +121,12 @@ public:	// Get
 	CGameObject*	Get_SpecialObject();
 
 	// SAS
-	HANABI_STAT		Get_HanabiStat() const { return m_tHanabiStat; }
-	TSUGUMI_STAT	Get_TsugumiStat() const { return m_tTsugumiStat; }
+	HANABI_STAT&		Get_HanabiStat() { 
+		return m_tHanabiStat;
+	}
+	TSUGUMI_STAT&	Get_TsugumiStat() { 
+		return m_tTsugumiStat;
+	}
 	_bool					Get_SASMember(const SASMEET eSAS) { return m_bSASMember[eSAS]; }
 
 	// ¿°·Â
