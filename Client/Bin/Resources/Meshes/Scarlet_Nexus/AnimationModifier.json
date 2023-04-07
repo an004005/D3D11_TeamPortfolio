@@ -6905,6 +6905,18 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_np0100_002_AL_wait02": {
+        "Duration": 300.0,
+        "TickPerSecond": 40.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_np0100_863_AL_wait_security04": {
+        "Duration": 778.0,
+        "TickPerSecond": 76.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
     "ch0100": {
         "mapRootMotion": {
             "AS_ch0100_201_AL_atk_a1": [

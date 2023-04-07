@@ -38,7 +38,7 @@ void CItem_LightUI::Tick(_double TimeDelta)
 	if (m_bUse == false) return;
 
 	m_dAlpha_TimeAcc += TimeDelta;
-	if (1.0 < m_dAlpha_TimeAcc)
+	if (3.0 < m_dAlpha_TimeAcc)
 	{
 		m_fAlpha = 0.25f;
 		m_tParams.Float4s[0].w = m_fAlpha;

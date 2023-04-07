@@ -86,6 +86,7 @@ void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
 
 void CGameManager::ConsumePlayerDamageReport(PLAYER_DAMAGE_REPORT tReport)
 {
+
 }
 
 void CGameManager::FullItem(const wstring szItemName)
