@@ -57,6 +57,8 @@ public:
 public:
 	ESpecialType Get_SpecialType() const { return m_eSpecialObejctType; }
 
+	virtual _float4 GetPxPostion();
+
 public:
 	void CreateKineticParticle(_float4 vPos = { 0.f, 0.f, 0.f, 0.f }, _float4 vScale = {1.f, 1.f, 1.f ,0.f});
 	void CreateKineticParticle_Mini(_float4 vPos = { 0.f, 0.f, 0.f, 0.f }, _float4 vScale = { 1.f, 1.f, 1.f ,0.f });

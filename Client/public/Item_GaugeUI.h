@@ -25,6 +25,10 @@ public:
 			return false;	// 사용 불 가능
 	}
 
+	_float	Get_Ratio() {
+		return m_fRatio;
+	}
+
 	void	Set_CooldownTimeStart() {
 		m_fRatioDown = true;
 		m_bCooldownTimeStart = true;

@@ -32,9 +32,17 @@ public:
 		m_bAppearEnd = true;
 	}
 
+	//void	Set_Value(const _float fSpeed, const _float fAlpha) {
+	//	m_fSpeed = fSpeed;
+	//	m_fAlpha = fAlpha;
+	//}
+
 private:
 	_bool	m_bAppearEnd = { false };
 	_bool	m_bAppearBackGround = { false };
+
+	_float	m_fSpeed = { 0.0f };
+	_float	m_fAlpha = { 0.0f };
 
 public:
 	static CBoss_AppearBackUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

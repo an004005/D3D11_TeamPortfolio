@@ -1,10 +1,7 @@
 #include "Shader_Defines.h"
+#include "Shader_Params.h"
+#include "Shader_Utils.h"
 
-// matrix g_WorldMatrix;
-matrix g_ViewMatrix;
-matrix g_ProjMatrix;
-
-texture2D		g_Diffuse;
 // texture2D		g_Flow;
 // float			g_Time;
 
@@ -51,11 +48,16 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	// float2 flow = g_Flow.Sample(LinearSampler, In.vTexUV).xy;
-    // flow = (flow - 0.5) * 2;
-
-	Out.vColor = g_Diffuse.Sample(LinearSampler, In.vTexUV);
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	return Out;
+}
+
+PS_OUT PS_BRAIN_FIELD_1(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	Out.vColor = g_tex_1.Sample(LinearSampler, TilingAndOffset(In.vTexUV, float2(8.f, 5.f), 0.f)) * 5.f;
+	return Out;	
 }
 
 technique11 DefaultTechnique
@@ -71,5 +73,18 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	pass BrainField
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);		
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);	
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRAIN_FIELD_1();
 	}
 }

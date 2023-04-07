@@ -25,7 +25,7 @@ HRESULT CSA_RotationUI::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_fRadius = 30.0f;
-	m_fSpeed = 500.0f;
+	m_fSpeed = 700.0f;
 
 	return S_OK;
 }

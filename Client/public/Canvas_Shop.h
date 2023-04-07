@@ -26,9 +26,9 @@ public:
 public:
 	void	Set_ShopUIClose() { 
 		m_bShopUI = false;
-		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bShopUI);
+		m_arrCanvass[m_eMainCanvas]->SetVisible(false);
 		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-			iter->second->SetVisible(m_bShopUI);
+			iter->second->SetVisible(false);
 	}
 
 private:
@@ -44,6 +44,12 @@ private:
 	
 	_tchar*	m_szShopText = { L"" };
 	_bool		m_bShopUI = { false };
+	
+	class CShaderUI* m_pShaderUI = { nullptr };
+	_bool		m_bOpen = { false };
+	_bool		m_bAlpha = { false };
+	_bool		m_bReverse = { false };
+	_float		m_fAlpha = { 0.0f };
 
 public:
 	static CCanvas_Shop* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -27,6 +27,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 	virtual _bool Exclude() override;
+	virtual void PlayBC() override;
 
 public:
 	//행동 관련 함수 정의
@@ -40,7 +41,7 @@ private:
 	void Dodge_VelocityCalc();
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
-
+	_bool	CanMove4BC(_float fMinDist);
 
 private:
 	//충돌 관련 함수 정의
@@ -51,7 +52,7 @@ private:
 private:
 	class CEM0210_Controller*		m_pController = nullptr;
 	class CEM0210_AnimInstance*		m_pASM = nullptr;
-
+	class CEMBrain* m_pBrain = nullptr;
 //	CEffectGroup*				m_pSwingEffect = nullptr;
 private:
 	//원시 데이터
@@ -88,6 +89,10 @@ private:
 
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
+
+	//BrainCrush
+	_double		m_BCLoopTime = 0.0;
+	_bool			m_CanFullBC = false;
 public:
 	static CEM0210* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

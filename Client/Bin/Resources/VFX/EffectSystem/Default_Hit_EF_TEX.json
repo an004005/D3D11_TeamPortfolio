@@ -1,0 +1,59 @@
+{
+    "BillBoardType": 0,
+    "BufferProtoTag": "Prototype_Component_VIBuffer_Rect",
+    "Children": [
+        [
+            2.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    ],
+    "ModelFolderDir": "",
+    "ModelProtoTag": "",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.3103511929512024,
+                0.15250428020954132,
+                0.049032062292099,
+                1.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [
+            0.0,
+            1.0,
+            3.0,
+            0.0
+        ],
+        "Ints": [
+            0
+        ],
+        "Pass": 55,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_White_01.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\Cir_014.dds\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_hit_003.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxTex_VFX",
+    "bBillBoard": true,
+    "bDecal": false,
+    "bModelSprite": false,
+    "bNormal": false,
+    "bUseDepth": false
+}

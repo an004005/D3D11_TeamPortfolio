@@ -39,7 +39,6 @@ VS_OUT VS_MAIN(VS_IN In)
 	matWVP = mul(matWV, g_ProjMatrix);
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-
 	Out.vTexUV = In.vTexUV;
 
 	return Out;
@@ -50,8 +49,8 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
-
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
 	return Out;
 }
 

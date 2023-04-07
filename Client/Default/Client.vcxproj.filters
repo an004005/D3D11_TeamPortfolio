@@ -220,9 +220,6 @@
     <Filter Include="02.GameObjects\UI\Boss">
       <UniqueIdentifier>{dc1701f8-365a-4180-94c6-d3de20833679}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Alarm">
-      <UniqueIdentifier>{773b5079-4278-4e4c-bf66-8db98ddbbf29}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\3DUI">
       <UniqueIdentifier>{1b202ea8-4c32-4399-b17b-b9c184a5027f}</UniqueIdentifier>
     </Filter>
@@ -484,6 +481,33 @@
     <Filter Include="02.GameObjects\Map\InvisibleWall">
       <UniqueIdentifier>{c1cc4e2a-3b3d-4636-a1e3-c0c83c966796}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Enemy\EMBrain">
+      <UniqueIdentifier>{8749a0cf-82cc-49b0-acc4-6fef9877a2eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay\07.FinalStage">
+      <UniqueIdentifier>{08a335be-2a18-4fe9-aa1d-bfeade7ef2cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM8200">
+      <UniqueIdentifier>{1c7907e5-dd73-4995-9ab7-9c01d02fee15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Player\PlayerHotFixer">
+      <UniqueIdentifier>{cad6aa9c-d087-4fa9-885d-62ec510ba601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Player\FSM_Recompiler">
+      <UniqueIdentifier>{32ea2ae1-e2a0-437b-a204-206e2e6b9d1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\Alarm">
+      <UniqueIdentifier>{773b5079-4278-4e4c-bf66-8db98ddbbf29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\Quest">
+      <UniqueIdentifier>{9e45a27c-dc49-4013-a547-8e9319d9c178}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\Distance">
+      <UniqueIdentifier>{acb15e4a-9898-43bc-b1a4-3c6073be1b44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\------------------------">
+      <UniqueIdentifier>{fc8942bc-2a2d-4c46-9702-82583d584ef5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\NPC">
       <UniqueIdentifier>{d36f6922-8342-4949-be75-09e22a64981f}</UniqueIdentifier>
     </Filter>
@@ -602,9 +626,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Effect.h">
       <Filter>VFX\Effect\Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\ScarletMap.h">
-      <Filter>02.GameObjects\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
@@ -767,9 +788,6 @@
     <ClInclude Include="..\public\UI_Manager.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Drive_RightDotUI.h">
-      <Filter>02.GameObjects\UI\Front\Drive</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Drive_GaugeUI.h">
       <Filter>02.GameObjects\UI\Front\Drive</Filter>
     </ClInclude>
@@ -911,24 +929,15 @@
     <ClInclude Include="..\public\Canvas_BossHp.h">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Boss_HpUI.h">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Boss_HpBackUI.h">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Boss_ShildUI.h">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Monster.h">
       <Filter>02.GameObjects\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\public\NextMapNameUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillNameUI.h">
       <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
@@ -937,9 +946,6 @@
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GravikenisisGUI.h">
-      <Filter>02.GameObjects\UI\3DUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\AttackNumUI.h">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\FactoryMethod.h">
@@ -975,13 +981,13 @@
     </ClInclude>
     <ClInclude Include="..\public\PostVFX_Penetrate.h" />
     <ClInclude Include="..\public\Boss_AppearUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Boss_AppearBackUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\LevelUpUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\VFX_Manager.h">
       <Filter>VFX</Filter>
@@ -1419,6 +1425,12 @@
     <ClInclude Include="..\public\Weapon_wp0500.h">
       <Filter>02.GameObjects\Weapon\wp0500</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_StageDefault.h" />
+    <ClInclude Include="..\public\RedString.h" />
+    <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
+    <ClInclude Include="..\public\EMBrain.h">
+      <Filter>02.GameObjects\Enemy\EMBrain</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\RedString.h" />
     <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
     <ClInclude Include="..\public\Level_StageDefault.h">
@@ -1438,6 +1450,52 @@
     </ClInclude>
     <ClInclude Include="..\public\Imgui_Cheat.h">
       <Filter>60.Imgui_Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM8200.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM8200_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\TrailSystem_EX.h">
+      <Filter>VFX\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM8200_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_FinalStage.h">
+      <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BrainField.h" />
+    <ClInclude Include="..\public\Level_StageDefault.h" />
+    <ClInclude Include="..\public\RedString.h" />
+    <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
+    <ClInclude Include="..\public\PlayerHotFixer.h">
+      <Filter>02.GameObjects\Player\PlayerHotFixer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ScarletMap.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FSM_Recompiler.h">
+      <Filter>02.GameObjects\Player\FSM_Recompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_MainTalk.h">
+      <Filter>02.GameObjects\UI\Short\MainTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNameUI.h">
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Quest.h">
+      <Filter>02.GameObjects\UI\Short\Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\QuestBackGroundUI.h">
+      <Filter>02.GameObjects\UI\Short\Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\DistanceUI.h">
+      <Filter>02.GameObjects\UI\Short\Distance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Drive_RightDotUI.h">
+      <Filter>02.GameObjects\UI\------------------------</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Shop_NPC.h">
       <Filter>02.GameObjects\NPC\SM_2300</Filter>
@@ -1533,9 +1591,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Effect.cpp">
       <Filter>VFX\Effect\Parent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\ScarletMap.cpp">
-      <Filter>02.GameObjects\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
@@ -1691,9 +1746,6 @@
     <ClCompile Include="..\private\UI_Manager.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Drive_RightDotUI.cpp">
-      <Filter>02.GameObjects\UI\Front\Drive</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Drive_GaugeUI.cpp">
       <Filter>02.GameObjects\UI\Front\Drive</Filter>
     </ClCompile>
@@ -1835,20 +1887,11 @@
     <ClCompile Include="..\private\Canvas_BossHp.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Boss_HpUI.cpp">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Boss_HpBackUI.cpp">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Boss_ShildUI.cpp">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Monster.cpp">
       <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\private\NextMapNameUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillNameUI.cpp">
       <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
@@ -1857,9 +1900,6 @@
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GravikenisisGUI.cpp">
-      <Filter>02.GameObjects\UI\3DUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\AttackNumUI.cpp">
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\FactoryMethod.cpp">
@@ -1895,13 +1935,13 @@
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
     <ClCompile Include="..\private\Boss_AppearUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Boss_AppearBackUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\LevelUpUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\VFX_Manager.cpp">
       <Filter>VFX</Filter>
@@ -2226,7 +2266,7 @@
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_LightUI.cpp">
       <Filter>02.GameObjects\UI\Front\Item</Filter>
@@ -2342,6 +2382,12 @@
     <ClCompile Include="..\private\Weapon_wp0500.cpp">
       <Filter>02.GameObjects\Weapon\wp0500</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Level_StageDefault.cpp" />
+    <ClCompile Include="..\private\RedString.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
+    <ClCompile Include="..\private\EMBrain.cpp">
+      <Filter>02.GameObjects\Enemy\EMBrain</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\RedString.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp">
@@ -2368,6 +2414,52 @@
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\RedString.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
+    <ClCompile Include="..\private\EM8200.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM8200_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM8200_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TrailSystem_EX.cpp">
+      <Filter>VFX\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_FinalStage.cpp">
+      <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BrainField.cpp" />
+    <ClCompile Include="..\private\Level_StageDefault.cpp" />
+    <ClCompile Include="..\private\RedString.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
+    <ClCompile Include="..\private\PlayerHotFixer.cpp">
+      <Filter>02.GameObjects\Player\PlayerHotFixer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ScarletMap.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FSM_Recompiler.cpp">
+      <Filter>02.GameObjects\Player\FSM_Recompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_MainTalk.cpp">
+      <Filter>02.GameObjects\UI\Short\MainTalk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNameUI.cpp">
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Quest.cpp">
+      <Filter>02.GameObjects\UI\Short\Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\QuestBackGroundUI.cpp">
+      <Filter>02.GameObjects\UI\Short\Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\DistanceUI.cpp">
+      <Filter>02.GameObjects\UI\Short\Distance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Drive_RightDotUI.cpp">
+      <Filter>02.GameObjects\UI\------------------------</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Shop_NPC.cpp">
       <Filter>02.GameObjects\NPC\SM_2300</Filter>
     </ClCompile>
@@ -2496,6 +2588,12 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\SSLR.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInvisibleWall.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\SSLR.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

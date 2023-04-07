@@ -17,6 +17,7 @@
 #include "Level_Subway.h"
 #include "Level_NaomiRoom.h"
 #include "Level_Hospital_1F.h"
+#include "Level_FinalStage.h"
 
 CImgui_LevelSwitcher::CImgui_LevelSwitcher(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImguiObject(pDevice, pContext)
@@ -121,6 +122,12 @@ void CImgui_LevelSwitcher::Imgui_RenderMenu()
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_HOSPITAL_1F,
 				CLevel_Loading_Simple::Create<CLevel_Hospital_1F>(m_pDevice, m_pContext));
+		}
+		if (ImGui::MenuItem("Level_FinalStage"))
+		{
+			CGameInstance::GetInstance()->Open_Loading(
+				LEVEL_FINAL_STAGE,
+				CLevel_Loading_Simple::Create<CLevel_FinalStage>(m_pDevice, m_pContext));
 		}
 		ImGui::EndMenu();
 	}

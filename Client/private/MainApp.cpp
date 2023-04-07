@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "..\public\MainApp.h"
+
+#include <VIBuffer_Point_Instancing.h>
+
 #include "GameInstance.h"
 #include "Camera_Dynamic.h"
 #include "ClientUtils.h"
@@ -101,7 +104,7 @@ HRESULT CMainApp::Initialize()
 
 void CMainApp::Tick(_double TimeDelta)
 {
-	g_fTimeDelta_Add += TimeDelta;
+	g_fTimeDelta_Add += _float(TimeDelta);
 
 	if (nullptr == m_pGameInstance)
 		return;
@@ -284,11 +287,9 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_TelephonePole_007_Mesh_Instance", CVIBuffer_Mesh_Instancing::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/VFX/Effect_BreakMesh/VFX_Mesh_TelephonePole_007.static_model", PivotMatrix, 100))))
 		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_Point_Instance_Particle", CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, 30000))))
 		return E_FAIL;
-
-
-
 	////////////////////
 	///
 	/* For.Prototype_Component_Shader_VtxMesh_Instance */
@@ -479,11 +480,18 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_InvisibleWall"), CInvisibleWall::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 		
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_CombinedRedString"), CCombinedRedString::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
 	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Regular32"), TEXT("../Bin/Resources/Fonts/kim_regular32.spritefont"))))
 	//	return E_FAIL;
 	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Bold32"), TEXT("../Bin/Resources/Fonts/kim_bold32.spritefont"))))
 	//	return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Pretendard32"), TEXT("../Bin/Resources/Fonts/Pretendard.spritefont"))))
+		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Pretendard_Light32"), TEXT("../Bin/Resources/Fonts/Pretendard_Light.spritefont"))))
+	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("NeoPro"), TEXT("../Bin/Resources/Fonts/NeoPro.spritefont"))))
 		return E_FAIL;
 
 	CMaterial::LoadMaterialFilePathes("../Bin/Resources/Materials/");

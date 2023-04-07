@@ -118,22 +118,6 @@ HRESULT CCanvas_ListCheck::Render()
 	return S_OK;
 }
 
-void CCanvas_ListCheck::Imgui_RenderProperty()
-{
-	CCanvas::Imgui_RenderProperty();
-
-}
-
-void CCanvas_ListCheck::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-}
-
-void CCanvas_ListCheck::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
-}
-
 void CCanvas_ListCheck::Set_ItemInfo(const size_t iItemIndex, const _uint iItemCount)
 {
 	m_bTransferring = false;

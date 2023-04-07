@@ -92,6 +92,7 @@ public:
 	class CEffectSystem* GetSecondEffect() { return m_pSecond_EffectSystem; }
 	class CEffectSystem* GetThirdEffect() { return m_pThird_EffectSystem; }
 	class CEffectSystem* GetFourthEffect() { return m_pFourth_EffectSystem; }
+	class CEffectSystem* GetFifthEffect() { return m_pFifth_EffectSystem; }
 
 	void Set_GroupVisible(const _bool bVisible) { m_bGroupVisible = bVisible; }
 

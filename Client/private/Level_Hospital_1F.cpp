@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "GameManager_Tutorial.h"
 #include "Imgui_Batch.h"
-
+#include "GameManager.h"
 
 CLevel_Hospital_1F::CLevel_Hospital_1F(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
@@ -40,6 +40,8 @@ HRESULT CLevel_Hospital_1F::Initialize()
 	// Teleport_Wall
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Teleport_Wall_BatchTest.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Teleport_Wall_Batch.json");
+
+	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }

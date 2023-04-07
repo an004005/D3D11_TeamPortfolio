@@ -90,10 +90,10 @@ enum class ESASType
 {
 	SAS_FIRE, // 불
 	SAS_PENETRATE, // 투시
-	SAS_HARDBODY, // 경질화
-	SAS_TELEPORT, // 텔레포트
-	SAS_ELETRIC, // 전기
-	SAS_SUPERSPEED, // 초고속
+	SAS_HARDBODY, // 경질화 
+	SAS_TELEPORT, // 텔레포트 
+	SAS_ELETRIC, // 전기 
+	SAS_SUPERSPEED, // 초고속 
 	SAS_COPY, // 복제
 	SAS_INVISIBLE, // 투명화
 	SAS_GRAVIKENISIS, // 염력 
@@ -136,7 +136,7 @@ enum class EEnemyName
 	EM0800, // 브론존
 	EM1100, //  물
 	EM1200, //  나오미
-	EM8210, // 중대장
+	EM8200, // 중대장
 	ENEMY_NAME_END
 };
 

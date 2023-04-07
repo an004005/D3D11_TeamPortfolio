@@ -69,7 +69,7 @@ HRESULT CTalk_FaceUI::Render()
 	return S_OK;
 }
 
-void CTalk_FaceUI::Set_Face(const _float2 & fFace, const wstring szTalk0, const wstring szTalk1)
+void CTalk_FaceUI::Set_Face(const _float2 & fFace, const wstring & szTalk0, const wstring & szTalk1)
 {
 	// x : [0] 가만히 [1] 공격중 [2] 웃음
 	// y : [0] 유이토 [1] 카사네 [2] 하나비 [3] 겜마 [4] 츠구미 [5] 루카 [6] 카케로 [7] 시덴 [8] 쿄카 [9] 아라시 [10] 스칼렛 스트링스 [13] 중대장 [18] 츠구미

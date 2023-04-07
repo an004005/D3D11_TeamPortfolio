@@ -48,8 +48,9 @@ void CCanvas_SAGragting_Go::Tick(_double TimeDelta)
 
 void CCanvas_SAGragting_Go::KeyInput()
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_X) && 6 != m_iInputCount)
+	if (true == m_bKeyInput && 6 != m_iInputCount)
 	{
+		m_bKeyInput = false;
 		++m_iInputCount;
 		dynamic_cast<CShaderUI*>(Find_ChildUI(L"Gauge"))->Set_Float2s({ _float(m_iInputCount), 0.0f });
 

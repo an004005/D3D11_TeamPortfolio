@@ -50,7 +50,7 @@ HRESULT CCanvas_PurchaseKinds::Initialize(void* pArg)
 	m_pCanvas_Shortage = dynamic_cast<CCanvas_Shortage*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_ShopUI", L"Canvas_Shortage", &json));
 	assert(m_pCanvas_Shortage != nullptr && "Failed to Cloned : CCanvas_Shortage");
 
-	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_CurrentWondowB"))->Set_InitializeAlpha();
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_CurrentWondowB"))->Set_PickInitialize();
 
 	dynamic_cast<CItemIconUI*>(Find_ChildUI(L"Shop_ItemIcon"))->Set_IconIndex(m_vecItemInfo[m_iItemIndex].second.vIconIndex);
 	Find_ChildUI(L"Shop_CurrentCount")->Set_Position(m_vecShopCanvass[0].second->Get_ListPosititon());

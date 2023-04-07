@@ -15,6 +15,7 @@
 #include "ParticleSystem.h"
 #include "SkyBox.h"
 #include "TrailSystem.h"
+#include "TrailSystem_EX.h"
 #include "CamSpot.h"
 #include "Weapon_wp0190.h"
 #include "Model.h"
@@ -151,12 +152,15 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
 	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
 
 	// ~ForSky
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectSystem", CEffectSystem::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_EffectGroup", CEffectGroup::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem", CTrailSystem::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_TrailSystem_EX", CTrailSystem_EX::Create(m_pDevice, m_pContext)));
+
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleSystem", CParticleSystem::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"ProtoVFX_ParticleGroup", CParticleGroup::Create(m_pDevice, m_pContext)));
 
@@ -221,20 +225,6 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	// 	"../Bin/Resources/Meshes/Scarlet_Nexus/VFX/Player_Default_Attack/Default_Attack_4.static_model");
 	// FAILED_CHECK(pGameInstance->Add_Prototype(L"VFX_Model_Default_Attack_04", pModel_VFX));
 
-	// ~ 옥수현의 흔적
-	//{
-	//	auto pBoss1 = CModel::Create(m_pDevice, m_pContext,
-	//		"../Bin/Resources/Model/AnimModel/Monster/boss1_em320/boss_1.anim_model");
-	//	pBoss1->LoadAnimations("../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Anim/");
-	//	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
-
-	//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1"), CBoss1::Create(m_pDevice, m_pContext))))
-	//		return E_FAIL;
-
-	//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_MonsterBoss1_Controller"), CBoss1_AIController::Create())))
-	//		return E_FAIL;
-	//}
-
 	/* For.Prototype_GameObject_MonsterLockonUI */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("MonsterLockonUI"),
 		CMonsterLockonUI::Create(m_pDevice, m_pContext))))
@@ -251,6 +241,8 @@ HRESULT CLevel_Effect::Ready_Prototypes()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("GravikenisisGUI"),
 		CGravikenisisGUI::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext);
+
 	// ~ 옥수현의 흔적
 
 	return S_OK;
@@ -304,14 +296,14 @@ HRESULT CLevel_Effect::Ready_Layer(const _tchar* pLayerTag)
 
 
 
-	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_EffectGroup")));
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_EffectSys", TEXT("ProtoVFX_TrailSystem_EX")));
 
 
 	// Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Curve/Color_Scale_Test.json");
 	// pGameInstance->Clone_GameObject(L"Layer_EffectSys", L"ProtoVFX_EffectGroup", &AttackMesh);
 
 	// Json AttackMesh = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/Trail/PlayerSwordTrail.json");
-	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_TrailSystem"), &AttackMesh));
+	// FAILED_CHECK(pGameInstance->Clone_GameObject(L"Layer_EffectSys", TEXT("ProtoVFX_TrailSystem_EX"), &AttackMesh));
 	//
 	//
 	// Json Particle = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/ParticleSystem/Default_Particle.json");
@@ -365,7 +357,7 @@ HRESULT CLevel_Effect::Ready_Layer_Map(const _tchar * pLayerTag)
 HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-
+	
 	// 보스
 	//auto pObj = pGameInstance->Clone_GameObject_Get(pLayerTag, L"Prototype_MonsterBoss1");
 	//_float4 pos = pObj->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
@@ -415,8 +407,6 @@ HRESULT CLevel_Effect::Ready_Layer_UI(const _tchar * pLayerTag)
 	// NoticeNeon
 	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_InGameDataGroup/NoticeNeon_fire.json");
 	// dynamic_cast<CEffectGroup*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_NoticeNeon_fire"), TEXT("ProtoVFX_EffectGroup"), &json))->Start_EffectWork();
-
-
 
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterHpUI"));
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"MonsterLockonUI"));
