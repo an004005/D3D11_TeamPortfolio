@@ -3,6 +3,10 @@
 #include "Enemy.h"
 #include "Controller.h"
 
+BEGIN(Engine)
+class CFSMComponentBuilder;
+END
+
 BEGIN(Client)
 class CEM8200 :   public CEnemy
 {
@@ -36,6 +40,19 @@ public:
 	_bool				IsRun() const { return m_bRun; }
 
 protected:
+	void				AddState_Idle(CFSMComponentBuilder& Builder);
+	void				AddState_Teleport(CFSMComponentBuilder& Builder);
+	void				AddState_Attack_Kick(CFSMComponentBuilder& Builder);
+	void				AddState_Attack_IceNeedle(CFSMComponentBuilder& Builder);
+	void				AddState_Attack_ChaseElec(CFSMComponentBuilder& Builder);
+	void				AddState_Attack_AirElec(CFSMComponentBuilder& Builder);
+	void				AddState_Attack_Rush(CFSMComponentBuilder& Builder);
+	void				AddState_Seethrough(CFSMComponentBuilder& Builder);
+
+
+
+	void				AddState_Damaged(CFSMComponentBuilder& Builder);
+	
 	// void	Strew_Overlap(); // FlowerShower АјАн
 	// void	Spin_SweepCapsule();
 	// void	Kick_SweepSphere();
@@ -44,8 +61,8 @@ protected:
 
 
 private:
-	void Play_LightHitAnim();
 	void Play_MidHitAnim();
+	void Play_HeavyHitAnim();
 
 private:
 	class CEM8200_Controller* m_pController = nullptr;
@@ -79,7 +96,12 @@ private:
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
 
+
+private:
 	_float4x4 pivot1 = XMMatrixIdentity();
+	_float	  m_fAnimProgress = 1.f;
+	_float	  m_fLerpTime = 0.f;
+	_float	  m_fDefault_LerpTime = 0.1f;
 
 public:
 	static CEM8200*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
