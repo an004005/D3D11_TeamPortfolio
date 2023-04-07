@@ -47,9 +47,9 @@
         {
             "ChildTag": "Talk_BackGround\u0000",
             "ObjectTag": "Talk_BackGround",
-            "Pivot": 0,
+            "Pivot": 6,
             "PositionX": 0.0,
-            "PositionY": 0.0,
+            "PositionY": 150.0,
             "Priority": 0,
             "Prototype_GameObject": "Default_UI\u0000",
             "ScaleX": 1.0,
@@ -65,8 +65,8 @@
                     "..\\Bin\\Resources\\UI\\Short_UI\\MainTalk_BackGround2.png\u0000"
                 ]
             },
-            "SizeX": 1600.0,
-            "SizeY": 900.0,
+            "SizeX": 1356.0,
+            "SizeY": 257.0,
             "Transform": {
                 "WorldMatrix": [
                     1600.0,

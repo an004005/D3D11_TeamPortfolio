@@ -28,6 +28,8 @@ HRESULT CCanvas_MainTalk::Initialize(void* pArg)
 
 	m_dTalk_TimeAcc = 5.0;
 
+	Find_ChildUI(L"Talk_BackGround")->SetVisible(false);
+
 	return S_OK;
 }
 
@@ -112,9 +114,9 @@ void CCanvas_MainTalk::Add_Talk(const size_t iIndex)
 	{
 	case 0:
 	{
-		tTalkInfo.wsName = { L"하나비"};
-		tTalkInfo.wsTalk0 = { L"거리가 위에 있다가 아래에 있다가......" };
-		tTalkInfo.wsTalk1 = { L"어렸을 때 갔던 놀이곤원의 VR 같아" };
+		tTalkInfo.wsName = { L"상점인 사토리"};
+		tTalkInfo.wsTalk0 = { L"내 영혼의 비극과 새로운 의지를 모아 판매한다." };
+		tTalkInfo.wsTalk1 = { L"계속해서, 난 공기니까......" };
 	}
 	break;
 
