@@ -38,7 +38,9 @@ private:
 
 	_int wrap(_int x, _int low, _int high);
 
-	void	PlayerHpSet(_uint iHp);
+	void	PlayerFontHp(_uint iHp);
+	void	PlayerHpSet(const _uint iRandomMinHp, const _uint iRandomMaxHp);
+	void	MemberHpSet(const _uint iRandomMinHp, const _uint iRandomMaxHp);
 
 private:
 	vector<CItem_Manager::BATTLEITEM> m_vecBattleItme;
