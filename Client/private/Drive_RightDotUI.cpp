@@ -42,7 +42,7 @@ void CDrive_RightDotUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	DriveCount_Tick();
+	//DriveCount_Tick();
 }
 
 void CDrive_RightDotUI::Late_Tick(_double TimeDelta)

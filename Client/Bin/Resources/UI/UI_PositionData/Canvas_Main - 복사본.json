@@ -1,0 +1,525 @@
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "MainButton_BrainMap\u0000",
+            "ObjectTag": "MainButton_BrainMap",
+            "Pivot": 2,
+            "PositionX": -85.0,
+            "PositionY": -75.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Main_PickUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Main_MenuBrain.png\u0000"
+                ]
+            },
+            "SizeX": 210.0,
+            "SizeY": 70.0,
+            "Transform": {
+                "WorldMatrix": [
+                    178.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    59.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -85.0,
+                    375.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "MainButton_Equipment\u0000",
+            "ObjectTag": "MainButton_Equipment",
+            "Pivot": 2,
+            "PositionX": -258.0,
+            "PositionY": -75.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Main_PickUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        9.999999747378752e-05,
+                        9.998999303206801e-05,
+                        9.998999303206801e-05,
+                        0.10000000149011612
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Main_MenuEquipment.png\u0000"
+                ]
+            },
+            "SizeX": 210.0,
+            "SizeY": 70.0,
+            "Transform": {
+                "WorldMatrix": [
+                    178.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    59.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -258.0,
+                    375.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "MainButton_Itme\u0000",
+            "ObjectTag": "MainButton_Itme",
+            "Pivot": 2,
+            "PositionX": -430.0,
+            "PositionY": -74.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Main_PickUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Main_MenuItem.png\u0000"
+                ]
+            },
+            "SizeX": 210.0,
+            "SizeY": 70.0,
+            "Transform": {
+                "WorldMatrix": [
+                    178.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    59.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -430.0,
+                    376.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "MainButton_Party\u0000",
+            "ObjectTag": "MainButton_Party",
+            "Pivot": 2,
+            "PositionX": -601.0,
+            "PositionY": -72.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Main_PickUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        9.999999747378752e-05,
+                        9.998999303206801e-05,
+                        9.998999303206801e-05,
+                        0.10000000149011612
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Main_MenuParty.png\u0000"
+                ]
+            },
+            "SizeX": 210.0,
+            "SizeY": 70.0,
+            "Transform": {
+                "WorldMatrix": [
+                    178.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    59.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -601.0,
+                    378.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Main_BackGround\u0000",
+            "ObjectTag": "Main_BackGround",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 0.0,
+            "Priority": 0,
+            "Prototype_GameObject": "FullUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Main_BackGround.png\u0000"
+                ]
+            },
+            "SizeX": 1600.0,
+            "SizeY": 900.0,
+            "Transform": {
+                "WorldMatrix": [
+                    1600.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    900.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Main_BasicInfo\u0000",
+            "ObjectTag": "Main_BasicInfo",
+            "Pivot": 6,
+            "PositionX": 0.0,
+            "PositionY": 100.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Basic Information.png\u0000"
+                ]
+            },
+            "SizeX": 1800.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    1530.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    85.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    -350.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Main_BasicInfo_B\u0000",
+            "ObjectTag": "Main_BasicInfo_B",
+            "Pivot": 6,
+            "PositionX": 0.0,
+            "PositionY": 100.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Basic Information_B.png\u0000"
+                ]
+            },
+            "SizeX": 1800.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    1530.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    85.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    -350.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Main_Menu\u0000",
+            "ObjectTag": "Main_Menu",
+            "Pivot": 2,
+            "PositionX": 0.0,
+            "PositionY": -80.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8999999761581421,
+            "ScaleY": 0.8999999761581421,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Main_Menu.png\u0000"
+                ]
+            },
+            "SizeX": 1800.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    1620.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    90.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    370.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Main_MenuPick\u0000",
+            "ObjectTag": "Main_MenuPick",
+            "Pivot": 2,
+            "PositionX": -601.0,
+            "PositionY": -72.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Main_MenuPick.png\u0000"
+                ]
+            },
+            "SizeX": 210.0,
+            "SizeY": 70.0,
+            "Transform": {
+                "WorldMatrix": [
+                    178.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    59.5,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -85.0,
+                    375.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Main_Menu_B\u0000",
+            "ObjectTag": "Main_Menu_B",
+            "Pivot": 2,
+            "PositionX": 345.0,
+            "PositionY": -73.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Main_Menu_B.png\u0000"
+                ]
+            },
+            "SizeX": 845.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    718.25,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    85.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    345.0,
+                    377.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "Canvas_Main",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 0,
+    "Prototype_GameObject": "Canvas_Main\u0000",
+    "ScaleX": 0.5,
+    "ScaleY": 0.5,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

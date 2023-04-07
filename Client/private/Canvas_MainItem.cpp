@@ -39,11 +39,11 @@ HRESULT CCanvas_MainItem::Initialize(void* pArg)
 	m_bVisible = false;
 	Add_MainCanvas();
 
-	//dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Set_InitializeAlpha();
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Set_ColorType(1);
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuBattle"))->Set_ColorType(1);
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->Set_ColorType(1);
 	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuEtc"))->Set_ColorType(1);
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Set_PickInitialize();
 
 	return S_OK;
 }
@@ -56,6 +56,7 @@ void CCanvas_MainItem::Tick(_double TimeDelta)
 	if (false == m_bVisible)
 	{
 		m_arrCanvass[m_eMainItem]->SetVisible(m_bVisible);
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Set_PickInitialize();
 		return;
 	}
 
@@ -196,7 +197,7 @@ void CCanvas_MainItem::Menu_Tick()
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuBattle"))->Set_OnAlpha();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->Set_OnAlpha();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuEtc"))->Set_OnAlpha();
-
+		dynamic_cast<CItemIconUI*>(Find_ChildUI(L"Item_Icon"))->Set_IconIndex(static_cast<_float2>(0.0f, 0.0f));
 	}
 
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuBattle"))->Get_OnButton())
@@ -208,7 +209,7 @@ void CCanvas_MainItem::Menu_Tick()
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Set_OnAlpha();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->Set_OnAlpha();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuEtc"))->Set_OnAlpha();
-
+		dynamic_cast<CItemIconUI*>(Find_ChildUI(L"Item_Icon"))->Set_IconIndex(static_cast<_float2>(0.0f, 0.0f));
 	}
 
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->Get_OnButton())
@@ -220,7 +221,7 @@ void CCanvas_MainItem::Menu_Tick()
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Set_OnAlpha();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuBattle"))->Set_OnAlpha();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuEtc"))->Set_OnAlpha();
-
+		dynamic_cast<CItemIconUI*>(Find_ChildUI(L"Item_Icon"))->Set_IconIndex(static_cast<_float2>(0.0f, 0.0f));
 	}
 
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuEtc"))->Get_OnButton())
@@ -232,7 +233,7 @@ void CCanvas_MainItem::Menu_Tick()
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Set_OnAlpha();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuBattle"))->Set_OnAlpha();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->Set_OnAlpha();
-
+		dynamic_cast<CItemIconUI*>(Find_ChildUI(L"Item_Icon"))->Set_IconIndex(static_cast<_float2>(0.0f, 0.0f));
 	}
 }
 

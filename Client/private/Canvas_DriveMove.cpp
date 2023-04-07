@@ -5,7 +5,7 @@
 #include "UI_Manager.h"
 
 #include "Drive_GaugeUI.h"
-#include "Drive_RightDotUI.h"
+#include "ShaderUI.h"
 #include "Canvas_Drive.h"
 
 CCanvas_DriveMove::CCanvas_DriveMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -173,8 +173,9 @@ void CCanvas_DriveMove::Drive_Tick()
 		m_bOnDrive = false;	// 아래로 내려가면서 객체를들 모두다 끈다.
 		m_bDriveGauge = 0.0f;
 		m_fRightDotCount = 1.0f;
+		m_fShaderRightDot = 0.0f;
 		Find_ChildUI(L"Drive_LeftDot")->SetVisible(m_bOnDrive);
-		dynamic_cast<CDrive_RightDotUI*>(Find_ChildUI(L"Dirve_RightDot"))->Reset_DriveRightDot();
+		//dynamic_cast<CDrive_RightDotUI*>(Find_ChildUI(L"Dirve_RightDot"))->Reset_DriveRightDot();
 
 		dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(false);
 		dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(false);
@@ -192,7 +193,9 @@ void CCanvas_DriveMove::Drive_Tick()
 	{
 		// 드라이브 0.5f 가 될 때 까지 늘어난다.
 		m_fRightDotCount -= 0.05f;
-		dynamic_cast<CDrive_RightDotUI*>(Find_ChildUI(L"Dirve_RightDot"))->Set_DriveCount();
+		dynamic_cast<CShaderUI*>(Find_ChildUI(L"Dirve_RightDot"))->Set_Floats0(m_fShaderRightDot);
+		m_fShaderRightDot += 0.1f;
+		//dynamic_cast<CDrive_RightDotUI*>(Find_ChildUI(L"Dirve_RightDot"))->Set_DriveCount();
 	}
 }
 

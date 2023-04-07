@@ -25,6 +25,8 @@ public:
 	void SetPivotMatrix(_float4x4 pivotMatrix) {
 		m_PivotMatrix = pivotMatrix;
 	}
+	void	Broken_Tick(const _double & TimeDelta);		// UITODO : 크러시 게이지가 다 깍이면 호출해 주기!!
+
 private:
 	void HpBack_Tick(const _double & TimeDelta);
 
@@ -35,8 +37,12 @@ private:
 	_float m_fCurrentHpBack = { 1.0f };
 	_float4x4	m_PivotMatrix = XMMatrixIdentity();
 
-	_int		m_iMonsterLevel = { 0 };
+	_int						m_iMonsterLevel = { 0 };
 	EEnemyName		m_eMonsterName = EEnemyName::ENEMY_NAME_END;
+
+	_float					m_fShild = { 0.0f };
+	_bool					m_bBroken = { false };
+	_double				m_dBroken_TimeAcc = { 0.0 };
 
 public:
 	static CMonsterShildUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

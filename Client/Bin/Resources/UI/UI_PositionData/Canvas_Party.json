@@ -61,7 +61,7 @@
                         1.0,
                         1.0,
                         1.0,
-                        0.09049001336097717
+                        0.08423174172639847
                     ]
                 ],
                 "Float4x4s": [],
@@ -122,12 +122,12 @@
             "SizeY": 7.0,
             "Transform": {
                 "WorldMatrix": [
-                    172.00302124023438,
-                    -1.548068881034851,
+                    172.00303649902344,
+                    -1.5480690002441406,
                     0.0,
                     0.0,
-                    0.053549278527498245,
-                    5.949759483337402,
+                    0.05354927480220795,
+                    5.949759006500244,
                     0.0,
                     0.0,
                     0.0,
@@ -289,10 +289,10 @@
                 "Float2s": [],
                 "Float4s": [
                     [
-                        1.0,
-                        1.0,
-                        1.0,
-                        0.0788547471165657
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.10000000149011612
                     ]
                 ],
                 "Float4x4s": [],
@@ -425,16 +425,25 @@
             "PositionX": 255.0,
             "PositionY": 205.0,
             "Priority": 3,
-            "Prototype_GameObject": "Default_UI\u0000",
+            "Prototype_GameObject": "Shader_UI\u0000",
             "ScaleX": 0.8500000238418579,
             "ScaleY": 0.8500000238418579,
             "ShaderParams": {
-                "Float2s": [],
+                "Float2s": [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        2.0,
+                        1.0
+                    ]
+                ],
                 "Float4s": [],
                 "Float4x4s": [],
                 "Floats": [],
                 "Ints": [],
-                "Pass": 0,
+                "Pass": 13,
                 "Textures": [
                     "..\\Bin\\Resources\\UI\\Main_UI\\Party\\02_Member_Info.png\u0000"
                 ]
@@ -520,10 +529,10 @@
                 "Float2s": [],
                 "Float4s": [
                     [
-                        1.0,
-                        1.0,
-                        1.0,
-                        0.09146464616060257
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.10000000149011612
                     ]
                 ],
                 "Float4x4s": [],
@@ -656,16 +665,25 @@
             "PositionX": 255.0,
             "PositionY": 111.0,
             "Priority": 3,
-            "Prototype_GameObject": "Default_UI\u0000",
+            "Prototype_GameObject": "Shader_UI\u0000",
             "ScaleX": 0.8500000238418579,
             "ScaleY": 0.8500000238418579,
             "ShaderParams": {
-                "Float2s": [],
+                "Float2s": [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        2.0,
+                        1.0
+                    ]
+                ],
                 "Float4s": [],
                 "Float4x4s": [],
                 "Floats": [],
                 "Ints": [],
-                "Pass": 0,
+                "Pass": 13,
                 "Textures": [
                     "..\\Bin\\Resources\\UI\\Main_UI\\Party\\03_Member_Info.png\u0000"
                 ]
@@ -937,8 +955,8 @@
             "ChildTag": "Party_BasicInfo_Icon\u0000",
             "ObjectTag": "Party_BasicInfo_Icon",
             "Pivot": 4,
-            "PositionX": -207.0,
-            "PositionY": -154.0,
+            "PositionX": -206.0,
+            "PositionY": -152.0,
             "Priority": 3,
             "Prototype_GameObject": "Main_SkillIconUI\u0000",
             "ScaleX": 0.800000011920929,
@@ -1476,8 +1494,8 @@
             "ObjectTag": "Party_XX0_Reserve",
             "Pivot": 8,
             "PositionX": 255.0,
-            "PositionY": -148.0,
-            "Priority": 0,
+            "PositionY": -100.0,
+            "Priority": 1,
             "Prototype_GameObject": "Default_UI\u0000",
             "ScaleX": 0.8500000238418579,
             "ScaleY": 0.8500000238418579,
@@ -1489,19 +1507,19 @@
                 "Ints": [],
                 "Pass": 30,
                 "Textures": [
-                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\XX0_Reserve.png\u0000"
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\XX_Reserve.png\u0000"
                 ]
             },
-            "SizeX": 500.0,
-            "SizeY": 400.0,
+            "SizeX": 484.0,
+            "SizeY": 111.0,
             "Transform": {
                 "WorldMatrix": [
-                    425.0,
+                    411.4000244140625,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    340.0,
+                    94.35000610351563,
                     0.0,
                     0.0,
                     0.0,
@@ -1509,7 +1527,457 @@
                     1.0,
                     0.0,
                     -545.0,
-                    -148.0,
+                    -100.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Party_XX0_ReserveB\u0000",
+            "ObjectTag": "Party_XX0_ReserveB",
+            "Pivot": 8,
+            "PositionX": 255.0,
+            "PositionY": -100.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Main_PickUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\XX_Reserve_B.png\u0000"
+                ]
+            },
+            "SizeX": 484.0,
+            "SizeY": 111.0,
+            "Transform": {
+                "WorldMatrix": [
+                    411.4000244140625,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    94.35000610351563,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -545.0,
+                    -100.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Party_XX0_Reserve_Info\u0000",
+            "ObjectTag": "Party_XX0_Reserve_Info",
+            "Pivot": 8,
+            "PositionX": 255.0,
+            "PositionY": -100.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Shader_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        5.0,
+                        1.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\XX_Reserve4.png\u0000"
+                ]
+            },
+            "SizeX": 484.0,
+            "SizeY": 111.0,
+            "Transform": {
+                "WorldMatrix": [
+                    411.4000244140625,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    94.35000610351563,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -545.0,
+                    -100.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Party_XX1_Reserve\u0000",
+            "ObjectTag": "Party_XX1_Reserve",
+            "Pivot": 8,
+            "PositionX": 255.0,
+            "PositionY": -200.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\XX_Reserve.png\u0000"
+                ]
+            },
+            "SizeX": 484.0,
+            "SizeY": 111.0,
+            "Transform": {
+                "WorldMatrix": [
+                    411.4000244140625,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    94.35000610351563,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -545.0,
+                    -200.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Party_XX1_ReserveB\u0000",
+            "ObjectTag": "Party_XX1_ReserveB",
+            "Pivot": 8,
+            "PositionX": 255.0,
+            "PositionY": -200.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Main_PickUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\XX_Reserve_B.png\u0000"
+                ]
+            },
+            "SizeX": 484.0,
+            "SizeY": 111.0,
+            "Transform": {
+                "WorldMatrix": [
+                    411.4000244140625,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    94.35000610351563,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -545.0,
+                    -200.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Party_XX1_Reserve_Info\u0000",
+            "ObjectTag": "Party_XX1_Reserve_Info",
+            "Pivot": 8,
+            "PositionX": 255.0,
+            "PositionY": -200.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Shader_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        5.0,
+                        1.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\XX_Reserve4.png\u0000"
+                ]
+            },
+            "SizeX": 484.0,
+            "SizeY": 111.0,
+            "Transform": {
+                "WorldMatrix": [
+                    411.4000244140625,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    94.35000610351563,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -545.0,
+                    -200.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Party_XXDwonArrow\u0000",
+            "ObjectTag": "Party_XXDwonArrow",
+            "Pivot": 8,
+            "PositionX": 250.0,
+            "PositionY": -275.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Shader_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0,
+                    0.15000000596046448
+                ],
+                "Ints": [
+                    4,
+                    1
+                ],
+                "Pass": 36,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\XX_Arrow[55,55].png\u0000"
+                ]
+            },
+            "SizeX": 55.0,
+            "SizeY": 55.0,
+            "Transform": {
+                "WorldMatrix": [
+                    46.75,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    46.75,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -550.0,
+                    -275.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Party_XXDwonArrowB\u0000",
+            "ObjectTag": "Party_XXDwonArrowB",
+            "Pivot": 8,
+            "PositionX": 250.0,
+            "PositionY": -275.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Button_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.15000000596046448
+                ],
+                "Ints": [
+                    4,
+                    1
+                ],
+                "Pass": 9,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\XX_ArrowBase[55,55].png\u0000"
+                ]
+            },
+            "SizeX": 55.0,
+            "SizeY": 55.0,
+            "Transform": {
+                "WorldMatrix": [
+                    46.75,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    46.75,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -550.0,
+                    -275.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Party_XXUpArrow\u0000",
+            "ObjectTag": "Party_XXUpArrow",
+            "Pivot": 8,
+            "PositionX": 250.0,
+            "PositionY": -22.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Shader_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0,
+                    0.15000000596046448
+                ],
+                "Ints": [
+                    4,
+                    1
+                ],
+                "Pass": 36,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\XX_Arrow[55,55].png\u0000"
+                ]
+            },
+            "SizeX": 55.0,
+            "SizeY": 55.0,
+            "Transform": {
+                "WorldMatrix": [
+                    -46.749996185302734,
+                    -0.019037485122680664,
+                    0.0,
+                    0.0,
+                    0.019037485122680664,
+                    -46.749996185302734,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -550.0,
+                    -22.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Party_XXUpArrowB\u0000",
+            "ObjectTag": "Party_XXUpArrowB",
+            "Pivot": 8,
+            "PositionX": 250.0,
+            "PositionY": -22.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Button_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.15000000596046448
+                ],
+                "Ints": [
+                    4,
+                    1
+                ],
+                "Pass": 9,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\Party\\XX_ArrowBase[55,55].png\u0000"
+                ]
+            },
+            "SizeX": 55.0,
+            "SizeY": 55.0,
+            "Transform": {
+                "WorldMatrix": [
+                    -46.749996185302734,
+                    -0.019037485122680664,
+                    0.0,
+                    0.0,
+                    0.019037485122680664,
+                    -46.749996185302734,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -550.0,
+                    -22.0,
                     0.0,
                     1.0
                 ]
