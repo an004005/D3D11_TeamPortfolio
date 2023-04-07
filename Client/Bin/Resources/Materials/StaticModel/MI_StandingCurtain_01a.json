@@ -1,0 +1,19 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [0],
+        "Floats" : [0.0, 0.0],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/00_Common/99_Marketplace/Hospital_VOL5/Textures/Unique/TX_StandingCurtain_01a_ALB.png",
+            "../Bin/Resources/Environments/00_Common/99_Marketplace/Hospital_VOL5/Textures/Unique/TX_StandingCurtain_01a_NRM.png",
+            "../Bin/Resources/Environments/00_Common/99_Marketplace/Hospital_VOL5/Textures/Unique/TX_StandingCurtain_01a_RMA.png",
+            "../Bin/Resources/00_Common/03_Texture/T_cm_Fil_Glay.png"
+        ],
+        "Pass" : 4
+    },
+    "InstancingPass": 3
+}

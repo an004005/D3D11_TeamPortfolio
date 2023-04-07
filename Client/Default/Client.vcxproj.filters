@@ -508,6 +508,15 @@
     <Filter Include="02.GameObjects\UI\------------------------">
       <UniqueIdentifier>{fc8942bc-2a2d-4c46-9702-82583d584ef5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\NPC">
+      <UniqueIdentifier>{d36f6922-8342-4949-be75-09e22a64981f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\SM_2300">
+      <UniqueIdentifier>{d9f6f8cd-4dea-4938-864c-d69cc749dd34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map\InvisibleWall\HS_TeleportableWall">
+      <UniqueIdentifier>{49f57d4d-0b53-4e20-9538-333679350df2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1488,6 +1497,12 @@
     <ClInclude Include="..\public\Drive_RightDotUI.h">
       <Filter>02.GameObjects\UI\------------------------</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Shop_NPC.h">
+      <Filter>02.GameObjects\NPC\SM_2300</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\HS_TeleportableWall.h">
+      <Filter>02.GameObjects\Map\InvisibleWall\HS_TeleportableWall</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2444,6 +2459,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Drive_RightDotUI.cpp">
       <Filter>02.GameObjects\UI\------------------------</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Shop_NPC.cpp">
+      <Filter>02.GameObjects\NPC\SM_2300</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\HS_TeleportableWall.cpp">
+      <Filter>02.GameObjects\Map\InvisibleWall\HS_TeleportableWall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

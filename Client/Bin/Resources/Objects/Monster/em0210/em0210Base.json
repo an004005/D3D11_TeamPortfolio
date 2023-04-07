@@ -1,1 +1,60 @@
-{"ControlledRigidBody":{"ColliderType":1,"contactOffset":0.10000000149011612,"density":100.0,"height":2.0,"maxJumpHeight":3.0,"pushPower":150.0,"radius":0.800000011920929,"slopeLimitDegree":45.0,"stepOffset":0.10000000149011612},"ObjectTag":"","Prototype_GameObject":"Monster_em210\u0000","RigidBody":{"ColliderType":9,"Density":10.0,"OriginTransform":[-4.371138828673793e-08,1.0,0.0,0.0,-6.0,-2.6226831550957286e-07,0.0,0.0,0.0,0.0,0.9997795224189758,0.0,0.0,6.901188850402832,0.0,1.0],"ShapeType":2,"bKinematic":true,"bTrigger":false},"Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,2.660848617553711,-7.823095415915304e-08,1.3483630418777466,1.0]}}
+{
+    "ControlledRigidBody": {
+        "ColliderType": 1,
+        "contactOffset": 0.10000000149011612,
+        "density": 100.0,
+        "height": 2.0,
+        "maxJumpHeight": 3.0,
+        "pushPower": 150.0,
+        "radius": 0.800000011920929,
+        "slopeLimitDegree": 45.0,
+        "stepOffset": 0.10000000149011612
+    },
+    "ObjectTag": "",
+    "Prototype_GameObject": "Monster_em210\u0000",
+    "RigidBody": {
+        "ColliderType": 9,
+        "Density": 10.0,
+        "OriginTransform": [
+            -4.371138828673793e-08,
+            1.0,
+            0.0,
+            0.0,
+            -6.0,
+            -2.6226831550957286e-07,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.9997795224189758,
+            0.0,
+            0.0,
+            6.901188850402832,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 2,
+        "bKinematic": true,
+        "bTrigger": false
+    },
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            2.660848617553711,
+            -7.823095415915304e-08,
+            1.3483630418777466,
+            1.0
+        ]
+    }
+}
