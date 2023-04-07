@@ -380,6 +380,8 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeAIPrototypes(m_pDevice, m_pContext));
 
+	FAILED_CHECK(CFactoryMethod::MakeNPCPrototypes(m_pDevice, m_pContext));
+
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
 
@@ -459,10 +461,10 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/KineticTestMap.json");
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json"); 
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Subway.json");
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Hospital_1F.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Hospital_1F.json");
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_TestPlace.json");
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_FinalBossStage.json");
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_FinalBossStage.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
@@ -473,7 +475,6 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Kinetic(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 	
-
 	//Json Test;
 	//Test["ModelTags"] = "../Bin/Resources/Model/AnimModel/Kinetic/Train/Train.anim_model";
 	//CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_GameObject_Special_Train"), &Test)

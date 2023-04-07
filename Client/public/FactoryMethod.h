@@ -22,6 +22,12 @@ public:
 	//UI
 	static HRESULT MakeUIPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
+	// NPC
+	static HRESULT MakeNPCPrototypes(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+
+	// TeleportableWall
+	static HRESULT MakeTWallPrototype(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+
 public:
 	virtual void Free() override;
 };

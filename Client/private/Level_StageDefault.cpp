@@ -97,6 +97,8 @@ HRESULT CLevel_StageDefault::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeTriggerPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeAIPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeNPCPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeTWallPrototype(m_pDevice, m_pContext));
 
 	if (pGameInstance->Find_Prototype(LEVEL_STATIC, L"Prototype_GameObject_SkyBox") == nullptr)
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));

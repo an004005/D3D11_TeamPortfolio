@@ -1,5 +1,5 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
     "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
     "ShaderParams" : {
         "Ints" : [],
@@ -12,7 +12,7 @@
             "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_Plaza/T_pr_PlazaWall_C_NML.png",
             "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_Plaza/T_pr_PlazaWall_C_RMA.png"
         ],
-        "Pass" : 1
+        "Pass" : 4
     },
     "InstancingPass": 1
 }
