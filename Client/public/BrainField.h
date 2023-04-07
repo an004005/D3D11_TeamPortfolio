@@ -53,7 +53,7 @@ public:
 
 public:
 	void Activate(_bool bActive); // 장착 후 바로 루프
-
+	void BrainFieldOpen_CH0100();
 public:
 	void SetTargetInfo(CTransform* pTargetTransform, CModel* pTargetModel);
 
@@ -65,11 +65,15 @@ private:
 	array<_float4x4, CABLE_END> m_CablePivots{};
 	array<string, CABLE_END> m_CableBones{};
 
+	array<_float4x4, 3> m_InitialOpenFieldC1_Pivot;
+	array<_float4x4, CABLE_END> m_InitialOpenFieldC2_Pivot;
+	array<_float4x4, CABLE_END> m_CableOpenPivot;
+
 	CFSMComponent* m_pFSM = nullptr;
 
 	_bool m_bActive = false;
+	_bool m_bPhysXOn = false;
 
-	EBrainFieldCable m_eRenderEndLine = CABLE_END;
 
 	CTransform* m_pTargetTransform = nullptr;
 	CModel*		m_pTargetModel = nullptr;
@@ -77,6 +81,8 @@ private:
 
 public:
 	virtual void Free() override;
+	static CBrainFieldCables* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CGameObject* Clone(void* pArg = nullptr) override;
 };
 
 END

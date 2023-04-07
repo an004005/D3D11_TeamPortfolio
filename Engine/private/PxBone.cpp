@@ -29,7 +29,7 @@ void CPxBone::CreateJointsRecur(physx::PxRigidDynamic* pParentActor, const _floa
 	m_pActor = pPhysics->createRigidDynamic(physx::PxTransform{ CPhysXUtils::ToFloat4x4(_float4x4::Identity) });
 	m_pActor->setGlobalPose(physx::PxTransform{ CPhysXUtils::ToFloat4x4(NoScaleBoneMatrix) });
 	if (m_Children.empty())
-		physx::PxRigidBodyExt::updateMassAndInertia(*m_pActor, fDensity * 5.f);
+		physx::PxRigidBodyExt::updateMassAndInertia(*m_pActor, fDensity * 20.f);
 	else
 		physx::PxRigidBodyExt::updateMassAndInertia(*m_pActor, fDensity);
 
@@ -56,7 +56,8 @@ void CPxBone::CreateJointsRecur(physx::PxRigidDynamic* pParentActor, const _floa
 		auto LocalFrame1 = physx::PxTransform{ m_pActor->getGlobalPose().transformInv(physx::PxVec3{ vCenter.x, vCenter.y, vCenter.z }) };
 
 
-		if (m_strName == "cable_02_a" || m_strName == "cable_02_b" || m_strName == "cable_02_c")
+		if (m_strName == "cable_02_a" || m_strName == "cable_02_b" || m_strName == "cable_02_c"
+			|| m_strName == "cable_01_a" || m_strName == "cable_01_b")
 		{
 			auto joint = physx::PxFixedJointCreate(*pPhysics, pParentActor, LocalFrame0, m_pActor, LocalFrame1);
 			joint->setConstraintFlag(physx::PxConstraintFlag::ePROJECTION, true);
