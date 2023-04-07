@@ -3850,6 +3850,11 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 				_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Combo_AnimSocket")->GetPlayRatio();
 				Tick_RimLight(fRatio);
 
+				/*if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+				{
+					static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+						->Set_Gravity(false);
+				}*/
 
 				if (!m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"))
 				{
@@ -3868,6 +3873,12 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 				End_RimLight();
 
 				m_bActiveGravity = true;
+
+			/*	if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+				{
+					static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+						->Set_Gravity(true);
+				}*/
 			})
 
 			.AddTransition("KINETIC_COMBO_AIR_PCON to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
@@ -5984,6 +5995,9 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em0800m_ch0100"));
 	m_BrainCrash_em0800.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em1100m_ch0100"));
+	m_BrainCrash_em1100.push_back(pAnimation);
 
 	m_pBrainCrashStateMachine = CFSMComponentBuilder()
 		.InitState("BRAINCRASH_NOUSE")

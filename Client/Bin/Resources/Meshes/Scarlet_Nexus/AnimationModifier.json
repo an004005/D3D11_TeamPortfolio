@@ -65,6 +65,27 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_BC_em1100m_ch0100": {
+        "Duration": 480.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Gravity_Disable",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Gravity_Enable",
+                "EventTime": 300.0
+            }
+        ]
+    },
+    "AS_BC_em1100m_em1100": {
+        "Duration": 480.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_BC_em_common_ch0100_end": {
         "Duration": 207.0,
         "TickPerSecond": 69.0,
@@ -6638,6 +6659,24 @@
                 "EventTime": 30.0
             }
         ]
+    },
+    "AS_em1100_485_AL_BCchance_start": {
+        "Duration": 69.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1100_486_AL_BCchance_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em1100_487_AL_BCchance_end": {
+        "Duration": 104.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_em1120_211_AL_atk_a4_sliding_end": {
         "Duration": 180.0,
