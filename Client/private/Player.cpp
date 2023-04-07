@@ -929,7 +929,7 @@ void CPlayer::Imgui_RenderProperty()
 			(fPrePlayTime <= fEffectPlayTime) &&
 			(fCurPlayTime > fEffectPlayTime))
 		{
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, s2ws(szEffectName), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, pivot1, szBoneName, true, m_bEffectUpdate);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, s2ws(szEffectName), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, pivot1, szBoneName, true, m_bEffectUpdate);
 		}
 
 		fPrePlayTime = fCurPlayTime;
@@ -1100,7 +1100,8 @@ void CPlayer::SasMgr()
 
 				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_FIRE"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
 				m_pSwordParticle_Fire = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Weapon_Particle"), LAYER_PLAYEREFFECT);
-				m_pSwordParticle_Fire->Start_Attach(this, "RightWeapon", true);
+				_matrix matPivot = XMMatrixRotationY(XMConvertToRadians(180.f));
+				m_pSwordParticle_Fire->Start_AttachPivot(this, matPivot, "RightWeapon", true, true);
 			}
 
 			if (ESASType::SAS_PENETRATE== CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
@@ -1967,8 +1968,25 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	});
 
 
-	m_pModel->Add_EventCaller("Fire_AttacK_Air_dash_0_001", [&]() {Event_Effect("Fire_AttacK_Air_dash_0_001"); });
+	m_pModel->Add_EventCaller("Fire_AttacK_Air_dash_0_001", [&]() 
+	{
+		_float4x4 EffectPivotMatrix = XMMatrixRotationY(XMConvertToRadians(45.f)) * XMMatrixTranslation(0.f, -0.5f, 0.f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_AttacK_Air_dash_0_001", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+	});
+	//m_pModel->Add_EventCaller("Fire_AttacK_Air_dash_0_001_Particle", [&]() 
+	//{	
+	//	_float4x4 ParticlePivotMatrix = XMMatrixRotationY(XMConvertToRadians(45.f)) * XMMatrixTranslation(0.f, -0.5f, 0.f);
+	//	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_AttacK_Air_dash_0_001_Particle"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, ParticlePivotMatrix, "Eff01", true);
+	//});
+
+
 	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1", [&]() {Event_Effect("Fire_Attack_Air_dash_1"); });
+	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1_Particle", [&]() {
+		
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, TEXT("Fire_Attack_Air_dash_1_Particle"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01");
+	});
+
 	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1_001", [&]() {Event_Effect("Fire_Attack_Air_dash_1_001"); });
 	m_pModel->Add_EventCaller("Fire_Attack_Air_dash_1_002", [&]() {Event_Effect("Fire_Attack_Air_dash_1_002"); });
 
@@ -2949,6 +2967,11 @@ HRESULT CPlayer::SetUp_KineticComboStateMachine()
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_279_AL_AirPcon"));
 	m_KineticCombo_Pcon.push_back(pAnimation);
 
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_228_AL_atk_air_dash1_start"));
+	m_KineticCombo_AirSlash.push_back(pAnimation);
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_228_AL_atk_air_dash1_end"));
+	m_KineticCombo_AirSlash.push_back(pAnimation);
+
 m_pKineticComboStateMachine = CFSMComponentBuilder()
 
 		.InitState("KINETIC_COMBO_NOUSE")
@@ -3827,6 +3850,11 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 				_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Combo_AnimSocket")->GetPlayRatio();
 				Tick_RimLight(fRatio);
 
+				/*if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+				{
+					static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+						->Set_Gravity(false);
+				}*/
 
 				if (!m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"))
 				{
@@ -3845,6 +3873,12 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 				End_RimLight();
 
 				m_bActiveGravity = true;
+
+			/*	if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+				{
+					static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+						->Set_Gravity(true);
+				}*/
 			})
 
 			.AddTransition("KINETIC_COMBO_AIR_PCON to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
@@ -3854,6 +3888,60 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.AddTransition("KINETIC_COMBO_AIR_PCON to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
 			.Predicator([&]()->_bool { return m_pASM->isSocketAlmostFinish("Kinetic_Combo_AnimSocket"); })
 			.Priority(0)
+
+			.AddTransition("KINETIC_COMBO_AIR_PCON to KINETIC_COMBO_AIRSLASH", "KINETIC_COMBO_AIRSLASH")
+			.Predicator([&]()->_bool { return m_bLeftClick && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.5625f); })
+			.Priority(0)
+
+			.AddState("KINETIC_COMBO_AIRSLASH")
+			.OnStart([&]()
+			{
+				m_bActiveGravity = false;
+
+				if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+				{
+					m_pTransformCom->LookAt_NonY(CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+				}
+
+				m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_AirSlash);
+
+			})
+			.Tick([&](double fTimeDelta)
+			{
+				KineticObject_Targeting();
+
+				if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+				{
+					_float4 EnemyPos = CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_float4 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+					EnemyPos.y = vMyPos.y;
+
+					_vector vDirEnemy = XMLoadFloat4(&EnemyPos) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+					_float fDistance = XMVectorGetX(XMVector3Length(vDirEnemy));
+
+					if (2 == m_pASM->GetSocketSize("Kinetic_Combo_AnimSocket"))
+						m_pTransformCom->Chase(EnemyPos, fDistance * 0.02f, 2.f);
+				}
+			})
+			.OnExit([&]()
+			{
+				m_bActiveGravity = true;
+			})
+
+				.AddTransition("KINETIC_COMBO_AIRSLASH to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
+				.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
+				.Priority(0)
+
+				.AddTransition("KINETIC_COMBO_AIRSLASH to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
+				.Predicator([&]()->_bool { return m_pASM->isSocketAlmostFinish("Kinetic_Combo_AnimSocket"); })
+				.Priority(0)
+
+				.AddTransition("KINETIC_COMBO_AIRSLASH to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
+				.Predicator([&]()->_bool { return m_bLeftClick && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.7273f); })
+				.Priority(0)
+
 
 #pragma endregion 공중 콤보 ?�네??
 
@@ -5119,7 +5207,15 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
-
+	m_mapCollisionEvent.emplace("AS_ch0100_228_AL_atk_air_dash1_end", [this]()
+	{
+		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
+		m_AttackDesc.eAttackType = EAttackType::ATK_TO_AIR;
+		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
+		m_AttackDesc.pCauser = this;
+		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	});
 	return S_OK;
 }
 
@@ -5884,10 +5980,24 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_BrainCrash_Cutin"));
 	m_BrainCrash_CutScene.push_back(pAnimation);
 
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em0100m_ch0100"));
+	m_BrainCrash_em0100.push_back(pAnimation);
+
+
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em0200m_ch0100"));
 	m_BrandCrash_em0200.push_back(pAnimation);
 	//NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em0200m_ch0100_end"));
 	//m_BrandCrash_em0200.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em0700m_ch0100"));
+	m_BrainCrash_em0700.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em0800m_ch0100"));
+	m_BrainCrash_em0800.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em1100m_ch0100"));
+	m_BrainCrash_em1100.push_back(pAnimation);
 
 	m_pBrainCrashStateMachine = CFSMComponentBuilder()
 		.InitState("BRAINCRASH_NOUSE")
@@ -7871,6 +7981,12 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
 	}
+	else if (szEffectName == "Elec_Attack_Air_Dash_1")
+	{
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
+	}
+
 }
 
 void CPlayer::Event_ElecParticle(string szEffectName)
@@ -8024,6 +8140,10 @@ void CPlayer::Event_ElecParticle(string szEffectName)
 	else if (szEffectName == "Elec_Attack_Air_Dash_0_Particle")
 	{
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_Dash_0", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
+	}
+	else if (szEffectName == "Elec_Attack_Air_Dash_1_Particle")
+	{
+		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_ELEC_ATTACK, L"Elec_Attack_Air_Dash_1", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", false, true);
 	}
 }
 

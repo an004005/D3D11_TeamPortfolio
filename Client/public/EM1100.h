@@ -32,6 +32,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 	virtual _bool IsWeak(CRigidBody* pHitPart);
+	virtual void PlayBC() override;
 
 public:
 	void	Set_RunStart(_bool bRunStart) { m_bRun_Start = bRunStart; }
@@ -51,6 +52,8 @@ public:
 	void HeavyAttackPushStart();
 	void Create_Bullet();
 	void HitWeakProcess(_double TimeDelta);
+	_bool CanMove4BC(_float fMinDist);
+
 private:
 	//충돌 관련 함수 정의
 	void Rush_SweepSphere();
@@ -60,6 +63,7 @@ private:
 private:
 	class CEM1100_Controller*		m_pController = nullptr;
 	class CEM1100_AnimInstance*		m_pASM = nullptr;
+	class CEMBrain*					m_pBrain = nullptr;
 	CMaterial* m_pWeak = nullptr;
 	class CEffectGroup* m_pRushEffect = nullptr;
 private:
@@ -87,6 +91,11 @@ private:
 	_float4 m_vPushVelocity;
 
 	_float4x4	pivot;
+
+	//Brain Crush
+	_double		m_BCLoopTime = 0.0;
+	_bool		m_CanFullBC = false;
+
 public:
 	static CEM1100* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

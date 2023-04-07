@@ -31,6 +31,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 	virtual _bool IsWeak(CRigidBody* pHitPart);
+	virtual void PlayBC() override;
 
 public:
 	//행동 관련 함수 정의
@@ -43,6 +44,7 @@ public:
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
+	_bool CanMove4BC(_float fMinDist);
 
 	EBaseTurn FindTargetDirection();
 	void HitWeakProcess(_double TimeDelta);
@@ -56,6 +58,7 @@ private:
 private:
 	class CEM0800_Controller*		m_pController = nullptr;
 	class CEM0800_AnimInstance*		m_pASM = nullptr;
+	class CEMBrain*					m_pBrain = nullptr;
 
 	CMaterial* m_pWeak = nullptr;
 	CEffectGroup*				m_pWaterPool = nullptr;
@@ -80,6 +83,11 @@ private:
 
 	_bool	m_bWeakProcess = false;
 	_float4x4	pivot;
+
+	//Brain Crush
+	_double		m_BCLoopTime = 0.0;
+	_bool		m_CanFullBC = false;
+
 public:
 	static CEM0800* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

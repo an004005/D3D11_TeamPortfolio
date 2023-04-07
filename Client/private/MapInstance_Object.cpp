@@ -49,9 +49,9 @@ HRESULT CMapInstance_Object::Initialize(void * pArg)
 				XMVectorGetX(XMVector3Length(mat.r[2]))
 			};
 			
-			if(CMathUtils::FloatCmp(vScale.x, 1.f) == false
-				|| CMathUtils::FloatCmp(vScale.y, 1.f) == false
-				|| CMathUtils::FloatCmp(vScale.z, 1.f) == false)
+			if(CMathUtils::FloatCmp(vScale.x, 1.f, 0.001f) == false
+				|| CMathUtils::FloatCmp(vScale.y, 1.f, 0.001f) == false
+				|| CMathUtils::FloatCmp(vScale.z, 1.f, 0.001f) == false)
 			{
 				m_pPxModels.emplace_back(nullptr);
 				continue;

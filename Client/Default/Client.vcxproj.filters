@@ -496,6 +496,9 @@
     <Filter Include="02.GameObjects\Player\PlayerHotFixer">
       <UniqueIdentifier>{cad6aa9c-d087-4fa9-885d-62ec510ba601}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Player\FSM_Recompiler">
+      <UniqueIdentifier>{32ea2ae1-e2a0-437b-a204-206e2e6b9d1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1467,6 +1470,9 @@
     <ClInclude Include="..\public\ScarletMap.h">
       <Filter>02.GameObjects\Map</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\FSM_Recompiler.h">
+      <Filter>02.GameObjects\Player\FSM_Recompiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2414,6 +2420,9 @@
     </ClCompile>
     <ClCompile Include="..\private\ScarletMap.cpp">
       <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FSM_Recompiler.cpp">
+      <Filter>02.GameObjects\Player\FSM_Recompiler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
