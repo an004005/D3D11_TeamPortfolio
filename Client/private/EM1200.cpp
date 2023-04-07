@@ -57,12 +57,14 @@ void CEM1200::SetUpComponents(void * pArg)
 
 	m_pWeak = m_pModelCom->FindMaterial(L"MI_em1200_WEAK_0");
 	assert(m_pWeak != nullptr);
+
 	// 범위 충돌체(플레이어가 몬스터 위로 못 올라가게한다.)
-	//Json RangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Trunk.json");
+	Json RangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Range.json");
 	Json WeakCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Weak.json");
 	Json TrunkCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Trunk.json");
 	Json LegsCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Legs.json");
 
+	Add_RigidBody("Range", &RangeCol);
 	Add_RigidBody("Trunk", &TrunkCol);
 	Add_RigidBody("Weak", &WeakCol);
 	Add_RigidBody("Legs", &LegsCol);
@@ -843,6 +845,7 @@ void CEM1200::AfterPhysX()
 	CEnemy::AfterPhysX();
 
 	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	GetRigidBody("Range")->Update_Tick(m_pModelCom->GetBoneMatrix("Target") * WorldMatrix);
 	GetRigidBody("Trunk")->Update_Tick(m_pModelCom->GetBoneMatrix("Head") * WorldMatrix);
 	GetRigidBody("Weak")->Update_Tick(m_pModelCom->GetBoneMatrix("Flower") * WorldMatrix);
 	GetRigidBody("Legs")->Update_Tick(m_pModelCom->GetBoneMatrix("Hips") * WorldMatrix);

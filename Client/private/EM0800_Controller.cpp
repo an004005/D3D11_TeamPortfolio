@@ -108,7 +108,7 @@ void CEM0800_Controller::DefineState(_double TimeDelta)
 
 	if (m_fTtoM_Distance <= 7.f)
 		Tick_Near(TimeDelta);
-	else if (m_fTtoM_Distance <= 20.f)
+	else if (m_fTtoM_Distance <= 25.f)
 		Tick_Mid(TimeDelta);
 	else
 		Tick_Far(TimeDelta);

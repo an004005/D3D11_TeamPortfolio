@@ -518,7 +518,7 @@ void CEM0220::HitWeakProcess(_double TimeDelta)
 	//2번째가 아머 삭제될때 디졸브
 	if (m_bWeakProcess)
 	{
-		m_pWeak->GetParam().Floats[1] -= TimeDelta;
+		m_pWeak->GetParam().Floats[1] -= static_cast<_float>(TimeDelta);
 
 		if (m_pWeak->GetParam().Floats[1] <= 0.f)
 		{

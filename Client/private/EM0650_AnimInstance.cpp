@@ -78,11 +78,6 @@ void CEM0650_AnimInstance::UpdateTargetState(_double TimeDelta)
 
 	m_bMove = pEM0650->IsMove();
 
-	//if (m_bMove == true)
-	//{
-	//	CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, L"em0650_Move_Decal", PLAYERTEST_LAYER_MONSTER)->Start_NoAttach(pEM0650, true);
-	//}
-
 	m_vMoveAxis = pEM0650->GetMoveAxis();
 	m_eMoveAxis = CClientUtils::MoveAxisToBaseEnum(m_vMoveAxis);
 }

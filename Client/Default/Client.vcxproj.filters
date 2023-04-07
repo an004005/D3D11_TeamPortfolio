@@ -94,9 +94,6 @@
     <Filter Include="97.ShaderFiles\Shadow">
       <UniqueIdentifier>{de99238f-264e-4f79-877c-728ea5e89b86}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\20.PlayerTester">
-      <UniqueIdentifier>{c5cff968-b07f-4b9d-86c2-f5fbff38b7af}</UniqueIdentifier>
-    </Filter>
     <Filter Include="VFX\Effect\Buffer">
       <UniqueIdentifier>{0bbf6939-4dc5-4c48-b628-d37bd98dc4e5}</UniqueIdentifier>
     </Filter>
@@ -495,6 +492,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Player\PlayerHotFixer">
       <UniqueIdentifier>{cad6aa9c-d087-4fa9-885d-62ec510ba601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\20.PlayerTester">
+      <UniqueIdentifier>{c5cff968-b07f-4b9d-86c2-f5fbff38b7af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

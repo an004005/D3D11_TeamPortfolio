@@ -35,7 +35,7 @@ HRESULT CEM0210::Initialize(void * pArg)
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
-		m_iMaxHP = 500;
+		m_iMaxHP = 1100;
 		m_iHP = m_iMaxHP; // ★
 
 		m_iAtkDamage = 50;
@@ -161,6 +161,19 @@ void CEM0210::SetUpAnimationEvent()
 	{
 		m_bAttack = false;
 	});
+
+	// 공중에서 추가타 맞을 때
+	m_pModelCom->Add_EventCaller("Successive", [this]
+		{
+			m_fGravity = 3.f;
+			m_fYSpeed = 1.5f;
+		});
+	// 공중에서 추가타 맞고 다시 떨어지는 순간
+	m_pModelCom->Add_EventCaller("AirDamageReset", [this]
+		{
+			m_fGravity = 20.f;
+			m_fYSpeed = 0.f;
+		});
 
 	m_pModelCom->Add_EventCaller("DeadFlower", [this]
 		{
@@ -306,7 +319,7 @@ void CEM0210::SetUpFSM()
 			})
 			.OnExit([this]
 			{
-				m_bHitAir = false;
+					m_bHitAir = false;
 			})
 			.AddTransition("Hit_ToAir to OnFloorGetup", "OnFloorGetup")
 				.Predicator([this]

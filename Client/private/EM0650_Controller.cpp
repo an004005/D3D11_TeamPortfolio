@@ -47,7 +47,7 @@ void CEM0650_Controller::AI_Tick(_double TimeDelta)
 void CEM0650_Controller::Tick_Near(_double TimeDelta)
 {
 	m_eDistance = DIS_NEAR;
-	AddCommand("BackMove", 2.5f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
+	AddCommand("BackMove", 1.f, &CAIController::Move_TurnToTarget, EMoveAxis::SOUTH, 1.f);
 }
 
 void CEM0650_Controller::Tick_Mid(_double TimeDelta)
@@ -60,14 +60,14 @@ void CEM0650_Controller::Tick_Mid(_double TimeDelta)
 		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
 		break;
 	case 1:
-		AddCommand("RightMove", 3.5f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
+		AddCommand("RightMove", 1.5f, &CAIController::Move_TurnToTarget, EMoveAxis::EAST, 1.f);
 		break;
 	case 2:
 		AddCommand("Turn", 3.f, &CAIController::TurnToTargetStop, 1.f);
 		AddCommand("Attack", 0.f, &CAIController::Input, MOUSE_LB); // Shoot
 		break;
 	case 3:
-		AddCommand("LeftMove", 3.5f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
+		AddCommand("LeftMove", 1.5f, &CAIController::Move_TurnToTarget, EMoveAxis::WEST, 1.f);
 		break;
 	}
 
@@ -77,7 +77,7 @@ void CEM0650_Controller::Tick_Mid(_double TimeDelta)
 void CEM0650_Controller::Tick_Far(_double TimeDelta)
 {
 	m_eDistance = DIS_FAR;
-	AddCommand("ForwardMove", 2.5f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+	AddCommand("ForwardMove", 1.5f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
 }
 
 void CEM0650_Controller::Tick_Outside(_double TimeDelta)

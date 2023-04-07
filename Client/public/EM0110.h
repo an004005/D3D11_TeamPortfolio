@@ -54,6 +54,7 @@ private:
 	void Rush_Overlap();
 	void Rush_SweepSphere();
 	void Kick_SweepSphere();
+	void AOE_Overlap();
 
 private:
 	class CEM0110_Controller*		m_pController = nullptr;
@@ -75,7 +76,8 @@ private:
 
 	// Attack
 	_bool		m_bAttack = false;
-	
+	_double	m_dLoopTick = 0.0;
+
 	//Weak
 	_int			m_iArmorHp = 0;
 	_bool		m_bDestroyArmor = false;
@@ -92,7 +94,7 @@ private:
 
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 
-	_float4x4 pivot;
+	//_float4x4 pivot;
 public:
 	static CEM0110* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

@@ -33,8 +33,8 @@ HRESULT CEM0400::Initialize(void * pArg)
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
-		m_iMaxHP = 600;
-		m_iHP = 600; // ★
+		m_iMaxHP = 10000;
+		m_iHP = m_iMaxHP; // ★
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
@@ -120,7 +120,7 @@ void CEM0400::SetUpAnimationEvent()
 	});
 	m_pModelCom->Add_EventCaller("Successive", [this]
 	{
-		m_fGravity = 3.f;
+  		m_fGravity = 3.f;
 		m_fYSpeed = 1.5f;
 	});
 	m_pModelCom->Add_EventCaller("AirDamageReset", [this]
@@ -146,6 +146,19 @@ void CEM0400::SetUpAnimationEvent()
 		Dodge_VelocityCalc();
 	});
 	
+	// 공중에서 추가타 맞을 때
+	m_pModelCom->Add_EventCaller("Successive", [this]
+		{
+			m_fGravity = 3.f;
+			m_fYSpeed = 1.5f;
+		});
+	// 공중에서 추가타 맞고 다시 떨어지는 순간
+	m_pModelCom->Add_EventCaller("AirDamageReset", [this]
+		{
+			m_fGravity = 20.f;
+			m_fYSpeed = 0.f;
+		});
+
 
 	m_pModelCom->Add_EventCaller("DeadFlower", [this]
 		{
@@ -197,6 +210,7 @@ void CEM0400::SetUpFSM()
 			.OnStart([this]
 			{
 				Play_LightHitAnim();
+				m_vMoveAxis = _float3::Zero;
 			})
 			.Tick([this](_double)
 			{
@@ -220,6 +234,8 @@ void CEM0400::SetUpFSM()
 			{
 				Play_MidHitAnim();
 				HeavyAttackPushStart();
+
+				m_vMoveAxis = _float3::Zero;
 			})
 			.Tick([this](_double TimeDelta)
 			{
@@ -259,7 +275,9 @@ void CEM0400::SetUpFSM()
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0400_432_AL_blow_start_F");
 				m_fGravity = 20.f;
-				m_fYSpeed = 12.f;
+				m_fYSpeed = 10.f;
+
+				m_pController->SetActive(false);
 			})
 			.Tick([this](_double)
 			{
@@ -269,14 +287,15 @@ void CEM0400::SetUpFSM()
 					{
 						m_fYSpeed = -20.f;
 					}
-					else if (m_eCurAttackType != EAttackType::ATK_END)
+					if (m_eCurAttackType != EAttackType::ATK_END)
 					{
-					m_pASM->InputAnimSocketOne("FullBody", "AS_em0400_455_AL_rise_start");
+  						m_pASM->InputAnimSocketOne("FullBody", "AS_em0400_455_AL_rise_start");
 					}
 			})
 			.OnExit([this]
 			{
-				m_bHitAir = false;
+					m_bHitAir = false;
+				m_pController->SetActive(true);
 			})
 			.AddTransition("Hit_ToAir to OnFloorGetup", "OnFloorGetup")
 				.Predicator([this]
@@ -288,11 +307,17 @@ void CEM0400::SetUpFSM()
 			{
 				m_pASM->InputAnimSocketMany("FullBody", { "AS_em0400_433_AL_blow_landing_F", "AS_em0400_427_AL_getup_01" });
 				m_fGravity = 20.f;
+
+				m_pController->SetActive(false);
+			})
+			.OnExit([this]
+			{
+					m_pController->SetActive(true);
 			})
 				.AddTransition("OnFloorGetup to Idle", "Idle")
 				.Predicator([this]
 			{
-				return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketEmpty("FullBody");
+				return m_bDead ||  m_pASM->isSocketEmpty("FullBody");
 			})
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -468,7 +493,7 @@ void CEM0400::Imgui_RenderProperty()
 
 	m_pFSM->Imgui_RenderProperty();
 
-
+	ImGui::InputFloat("UpRatio", &fRatio);
 	/*static _bool tt = false;
 	ImGui::Checkbox("Modify Pivot", &tt);
 
