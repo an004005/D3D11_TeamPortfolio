@@ -28,6 +28,8 @@ HRESULT CBoss_AppearBackUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	m_fSpeed = 0.5f;
+	m_fAlpha = 1.0f;
 
 	return S_OK;
 }
@@ -44,7 +46,7 @@ void CBoss_AppearBackUI::Tick(_double TimeDelta)
 	if (true == m_bAppearEnd)
 	{
 		m_tParams.Ints[0] = 0;
-		m_tParams.Floats[0] -= _float(TimeDelta) * 0.5f;
+		m_tParams.Floats[0] -= _float(TimeDelta) * m_fSpeed;
 
 		if (0.0f > m_tParams.Floats[0])
 		{
@@ -61,12 +63,12 @@ void CBoss_AppearBackUI::Tick(_double TimeDelta)
 	if (1.0f < m_tParams.Floats[0])
 	{
 		m_tParams.Ints[0] = 1;
-		m_tParams.Floats[0] = 1.0f;
+		m_tParams.Floats[0] = m_fAlpha;
 	}
 
 	// [1] 가장 처음에 걸리는 if 문으로 알파값이 증가하면서 보여진다.
 	if (0 == m_tParams.Ints[0])
-		m_tParams.Floats[0] += _float(TimeDelta) * 0.5f;
+		m_tParams.Floats[0] += _float(TimeDelta) * m_fSpeed;
 }
 
 void CBoss_AppearBackUI::Late_Tick(_double TimeDelta)

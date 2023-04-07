@@ -57,6 +57,8 @@ public:
 
 	void	Set_Swing(_bool bSwing) { m_bSwing = bSwing; }
 
+	_float4 GetPxPostion();
+
 public:
 	void	SetOutline(_bool bOutLine) { m_bOutline = bOutLine; }
 

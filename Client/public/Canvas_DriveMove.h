@@ -46,6 +46,7 @@ private:
 	_bool	m_bOnDriveStart_OneCheck = { false };	
 
 	_float	m_fRightDotCount = { 1.0f };
+	_float m_fShaderRightDot = { 0.0f };
 
 public:
 	static CCanvas_DriveMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

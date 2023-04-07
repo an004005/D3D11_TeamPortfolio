@@ -53,7 +53,7 @@ HRESULT CEM0210::Initialize(void * pArg)
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	//시작부터 투명상태 적용
-	m_IsInvisible = true;
+	m_IsInvisible = false;
 
 	return S_OK;
 }
@@ -629,7 +629,7 @@ void CEM0210::Late_Tick(_double TimeDelta)
 		if (m_dRenderChangeDelay >=0.5)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		else
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_MESH_ALPHABLEND, this);
 	}
 	else
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);

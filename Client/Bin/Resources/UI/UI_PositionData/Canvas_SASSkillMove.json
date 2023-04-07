@@ -894,8 +894,8 @@
             "PositionY": 188.0,
             "Priority": 2,
             "Prototype_GameObject": "SASSkillIcon_UI\u0000",
-            "ScaleX": 0.699999988079071,
-            "ScaleY": 0.699999988079071,
+            "ScaleX": 0.6,
+            "ScaleY": 0.6,
             "ShaderParams": {
                 "Float2s": [
                     [
@@ -956,8 +956,8 @@
             "PositionY": 139.0,
             "Priority": 2,
             "Prototype_GameObject": "SASSkillIcon_UI\u0000",
-            "ScaleX": 0.699999988079071,
-            "ScaleY": 0.699999988079071,
+            "ScaleX": 0.6,
+            "ScaleY": 0.6,
             "ShaderParams": {
                 "Float2s": [
                     [
@@ -1018,8 +1018,8 @@
             "PositionY": 133.0,
             "Priority": 2,
             "Prototype_GameObject": "SASSkillIcon_UI\u0000",
-            "ScaleX": 0.699999988079071,
-            "ScaleY": 0.699999988079071,
+            "ScaleX": 0.6,
+            "ScaleY": 0.6,
             "ShaderParams": {
                 "Float2s": [
                     [
@@ -1080,8 +1080,8 @@
             "PositionY": 89.0,
             "Priority": 2,
             "Prototype_GameObject": "SASSkillIcon_UI\u0000",
-            "ScaleX": 0.699999988079071,
-            "ScaleY": 0.699999988079071,
+            "ScaleX": 0.6,
+            "ScaleY": 0.6,
             "ShaderParams": {
                 "Float2s": [
                     [

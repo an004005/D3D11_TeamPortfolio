@@ -16,6 +16,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void   Tick(_double TimeDelta) override;
 
+public:
+	void	Set_Intput() { m_bInput = true; }
+
 private:
 	void	KeyInput();
 	void	MouseLight_Tick(const _double& TimeDelta);

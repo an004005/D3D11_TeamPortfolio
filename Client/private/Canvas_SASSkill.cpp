@@ -76,7 +76,7 @@ void CCanvas_SASSkill::LoadFromJson(const Json & json)
 
 void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 {
-	if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_X))
 	{
 		m_bChangeX = !m_bChangeX;
 		m_bChangeXButton = true;

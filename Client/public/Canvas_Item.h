@@ -20,8 +20,6 @@ public:
 	virtual HRESULT Render() override;
 
 	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
 
 public:
 	void	Set_Input() {
@@ -34,7 +32,7 @@ public:
 	_float4	 ColorIndex(const _bool	 bBack);
 
 private:
-	void	BattleItem_Input();
+	void	BattleItem_Choice();
 	_float	NameIndex(const size_t iIndex);
 	_float3	 LightColorIndex(const size_t iIndex);
 

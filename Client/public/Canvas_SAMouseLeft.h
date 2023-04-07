@@ -17,7 +17,7 @@ public:
 	virtual void   Tick(_double TimeDelta) override;
 
 public:
-//	void	Release() { m_bInput = true; }
+	void	Set_Intput() { m_bInput = true; }
 
 private:
 	void	KeyInput();

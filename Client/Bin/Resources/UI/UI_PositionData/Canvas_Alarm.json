@@ -291,6 +291,126 @@
             }
         },
         {
+            "ChildTag": "MapName\u0000",
+            "ObjectTag": "MapName",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 100.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Shader_UI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        3.0,
+                        1.0
+                    ]
+                ],
+                "Float4s": [
+                    [
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [
+                    1
+                ],
+                "Pass": 33,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\InGame\\MapNam.png\u0000"
+                ]
+            },
+            "SizeX": 1024.0,
+            "SizeY": 256.0,
+            "Transform": {
+                "WorldMatrix": [
+                    716.7999877929688,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    179.1999969482422,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    100.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "MapName_BackGround\u0000",
+            "ObjectTag": "MapName_BackGround",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 100.0,
+            "Priority": 0,
+            "Prototype_GameObject": "MapNameUI\u0000",
+            "ScaleX": 0.699999988079071,
+            "ScaleY": 0.699999988079071,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.9919999837875366,
+                        0.7749999761581421,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [
+                    0
+                ],
+                "Pass": 28,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000",
+                    "..\\Bin\\Resources\\UI\\InGame\\TownName3.png\u0000",
+                    "..\\Bin\\Resources\\UI\\InGame\\TownName1.dds\u0000",
+                    "..\\Bin\\Resources\\UI\\InGame\\TownName4.png\u0000"
+                ]
+            },
+            "SizeX": 1024.0,
+            "SizeY": 256.0,
+            "Transform": {
+                "WorldMatrix": [
+                    819.2000122070313,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    204.8000030517578,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    50.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
             "ChildTag": "NextMapName\u0000",
             "ObjectTag": "NextMapName",
             "Pivot": 0,

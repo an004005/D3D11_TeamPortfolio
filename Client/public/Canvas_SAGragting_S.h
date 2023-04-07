@@ -21,6 +21,9 @@ private:
 	void	MouseLight_Tick(const _double & TimeDelta);
 	void	Action_Tick(const _double& TimeDelta);
 
+public:
+	void	Set_Intput() { m_bInput = true; }
+
 private:
 	_bool	m_bInput = { false };
 

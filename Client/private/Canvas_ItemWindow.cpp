@@ -64,7 +64,7 @@ HRESULT CCanvas_ItemWindow::Render()
 	pair<wstring, CItem_Manager::ITEMINFO> ItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo()[m_iItemInfoIndex];
 
 	// 아이템 이름
-	_float2 vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Itme_B"))->GetScreenSpaceLeftTop();
+	_float2 vPosition = Find_ChildUI(L"Itme_B")->GetScreenSpaceLeftTop();
 	pGameInstance->Render_Font(L"Pretendard32", ItemInfo.first.c_str(), vPosition + _float2(100.0f, 17.0f), 0.f, vFontSize, vColor);
 
 	// 아이템 개수

@@ -96,6 +96,7 @@ typedef struct tagDamageDesc
 }	DAMAGE_DESC;
 
 enum CHANGETYPE { CHANGE_INCREASE, CHANGE_DECREASE, CHANGE_END };
+enum SASMEET { KYOTO, LUCA, SEEDEN, ARASHI, SASMEMBER_END };
 
 class CPlayerInfoManager final : public CBase
 {
@@ -113,14 +114,25 @@ public:	// Get
 	PLAYER_STAT&	Get_PlayerStat() { 
 		return m_tPlayerStat;
 	}
-	list<ESASType>	Get_PlayerSasList() const { return m_PlayerSasTypeList; }
-	_bool			Get_isSasUsing(ESASType eType);
+	list<ESASType>		Get_PlayerSasList() const { return m_PlayerSasTypeList; }
+	_bool					Get_isSasUsing(ESASType eType);
 	CGameObject*	Get_KineticObject();
 	CGameObject*	Get_TargetedMonster();
 	CGameObject*	Get_SpecialObject();
 
-	HANABI_STAT		Get_HanabiStat() const { return m_tHanabiStat; }
-	TSUGUMI_STAT	Get_TsugumiStat() const { return m_tTsugumiStat; }
+	// SAS
+	HANABI_STAT&		Get_HanabiStat() { 
+		return m_tHanabiStat;
+	}
+	TSUGUMI_STAT&	Get_TsugumiStat() { 
+		return m_tTsugumiStat;
+	}
+	_bool					Get_SASMember(const SASMEET eSAS) { return m_bSASMember[eSAS]; }
+
+	// 염력
+	_float	Get_MaxKineticCharge() {
+		return m_fMaxKineticCharge;
+	}
 
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
@@ -141,26 +153,26 @@ public:	// Set
 
 	void			Set_PlayerWorldMatrix(_fmatrix worldmatrix);
 
-	HRESULT			Set_KineticObject(CGameObject* pKineticObject);
-	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
-	HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
+	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
+	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
+	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
 
 	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
 	
 	// SAS
-	void			Set_HanabiMemvber() { m_tHanabiStat.bMember = true; }
-	void			Set_TsugumiMemvber() { m_tTsugumiStat.bMember = true; }
-
+	void			Set_HanabiMember() { m_tHanabiStat.bMember = true; }
+	void			Set_TsugumiMember() { m_tTsugumiStat.bMember = true; }
+	void			Set_SASMember(const SASMEET eSAS) { m_bSASMember[eSAS] = true; }
 
 public:
-	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
+	HRESULT	Set_CamSpot(CGameObject* pCamSpot);
 	void			Camera_Random_Shake(_float fForce);
 	void			Camera_Axis_Shaking(_float4 vDir, _float fShakePower);
 	void			Camera_Axis_Sliding(_float4 vDir, _float fShakePower);
 
 private:	// 스탯 정보 관련
 	PLAYER_STAT		m_tPlayerStat;
-	list<ESASType>	m_PlayerSasTypeList;
+	list<ESASType>		m_PlayerSasTypeList;
 
 	HANABI_STAT		m_tHanabiStat;
 	TSUGUMI_STAT	m_tTsugumiStat;
@@ -178,6 +190,10 @@ private:
 
 private:
 	_float			m_fBaseAttackDamage;
+	_float			m_fMaxKineticCharge = { 0.0f };
+
+private:
+	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false };
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

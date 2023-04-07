@@ -42,6 +42,8 @@ public:
 	void TankLorry_Explosion_Effect();
 	void TankLorry_Explosion_Particle();
 
+	virtual _float4 GetPxPostion() override;
+
 private:
 	_bool  m_bDeadCheck = false;
 	_float m_fDeadTime = 0.f;
