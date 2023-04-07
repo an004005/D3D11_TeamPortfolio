@@ -1,0 +1,52 @@
+{
+    "KineticType": 0,
+    "LocalMatrix": [
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.2999999523162842,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.2999999523162842,
+        0.0,
+        1.6867516040802002,
+        -1.147071123123169,
+        0.182216614484787,
+        1.0
+    ],
+    "ModelTags": [
+        "../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/StandingCurtain/SM_StandingCurtain_01e.static_model\u0000"
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "Prototype_GameObject_MapKinetic_Object\u0000",
+    "RigidBody": {
+        "ColliderType": 4,
+        "Density": 10.0,
+        "OriginTransform": [
+            3.1832666397094727,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2.3250508308410645,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.8373450636863708,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 0,
+        "bKinematic": false,
+        "bTrigger": false
+    }
+   
+}

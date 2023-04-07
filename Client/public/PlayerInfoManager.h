@@ -147,6 +147,7 @@ public:	// Set
 	void			Set_BattleState(_bool bBattle) { m_tPlayerStat.bBattle = bBattle; }
 
 	void			Set_PlayerWorldMatrix(_fmatrix worldmatrix);
+	_matrix			Get_PlayerWorldMatrix();
 
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);

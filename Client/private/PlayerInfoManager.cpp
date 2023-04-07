@@ -329,6 +329,11 @@ void CPlayerInfoManager::Set_PlayerWorldMatrix(_fmatrix worldmatrix)
 	m_PlayerWorldMatrix = worldmatrix;
 }
 
+_matrix CPlayerInfoManager::Get_PlayerWorldMatrix()
+{
+	return m_PlayerWorldMatrix;
+}
+
 HRESULT CPlayerInfoManager::Set_KineticObject(CGameObject * pKineticObject)
 {
 	if (nullptr == pKineticObject) { m_pKineticObject = nullptr; return S_OK; }
