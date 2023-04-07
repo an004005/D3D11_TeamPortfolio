@@ -129,11 +129,6 @@ public:	// Get
 	}
 	_bool					Get_SASMember(const SASMEET eSAS) { return m_bSASMember[eSAS]; }
 
-	// ¿°·Â
-	_float	Get_MaxKineticCharge() {
-		return m_fMaxKineticCharge;
-	}
-
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
 	void			Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP);
@@ -190,7 +185,6 @@ private:
 
 private:
 	_float			m_fBaseAttackDamage;
-	_float			m_fMaxKineticCharge = { 0.0f };
 
 private:
 	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false };
