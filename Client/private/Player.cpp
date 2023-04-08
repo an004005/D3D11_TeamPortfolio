@@ -5915,7 +5915,7 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 		})
 		.OnExit([&]()
 		{
-			CGameInstance::GetInstance()->SetTimeRatioCurve("TelephonePoleSlow");
+			CGameInstance::GetInstance()->SetTimeRatioCurve("KineticSpecialWaiting");
 			m_fKineticCharge = 0.f;
 			static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->TelephonePole_Collision_Off();
 		})
@@ -5937,12 +5937,13 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			
+			m_fSpecialWaiting += g_fTimeDelta;
 		})
 		.OnExit([&]()
 		{
 			CGameInstance::GetInstance()->ResetTimeRatio();
 			m_fKineticCharge = 0.f;
+			m_fSpecialWaiting = 0.f;
 		})
 			.AddTransition("TELEPHONEPOLE_LEFT_WAIT to TELEPHONEPOLE_LEFT_SWING", "TELEPHONEPOLE_LEFT_SWING")
 			.Predicator([&]()->_bool 
@@ -5954,7 +5955,7 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 			.AddTransition("TELEPHONEPOLE_LEFT_WAIT to TELEPHONEPOLE_LEFT_END", "TELEPHONEPOLE_LEFT_END")
 			.Predicator([&]()->_bool 
 			{ 
-				return (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.05f));
+				return 5.f <= m_fSpecialWaiting;
 			})
 			.Priority(0)
 
@@ -6311,7 +6312,7 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		})
 		.OnExit([&]()
 		{
-			CGameInstance::GetInstance()->SetTimeRatioCurve("TelephonePoleSlow");
+			CGameInstance::GetInstance()->SetTimeRatioCurve("KineticSpecialWaiting");
 			m_fKineticCharge = 0.f;
 		})
 			.AddTransition("HBEAM_LEFT_THROW to HBEAM_LEFT_WAIT", "HBEAM_LEFT_WAIT")
@@ -6331,12 +6332,13 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			
+			m_fSpecialWaiting += g_fTimeDelta;
 		})
 		.OnExit([&]()
 		{
 			CGameInstance::GetInstance()->ResetTimeRatio();
 			m_fKineticCharge = 0.f;
+			m_fSpecialWaiting = 0.f;
 		})
 			.AddTransition("HBEAM_LEFT_WAIT to HBEAM_LEFT_ROTATION", "HBEAM_LEFT_ROTATION")
 			.Predicator([&]()->_bool 
@@ -6348,7 +6350,7 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			.AddTransition("HBEAM_LEFT_WAIT to HBEAM_LEFT_END", "HBEAM_LEFT_END")
 			.Predicator([&]()->_bool 
 			{ 
-				return (0.1f <= m_pModel->Find_Animation("AS_ch0100_333_AL_rotation_start")->GetPlayRatio());
+				return (5.f <= m_fSpecialWaiting);
 			})
 			.Priority(0)
 
@@ -6950,7 +6952,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		.AddState("IRONBARS_CHARGE_EX")
 		.OnStart([&]() 
 		{
-			CGameInstance::GetInstance()->SetTimeRatioCurve("IronBars_Slow");
+			CGameInstance::GetInstance()->SetTimeRatioCurve("KineticSpecialWaiting");
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Charge_Ex);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 
@@ -6961,17 +6963,20 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			// Î™¨Ïä§?∞Ï? ?†Ï∞Ω??Ï∂©Îèå ??Ï∂îÍ??Ä ?ÄÍ∏∞Ìï® -> ?¨Í∏¥?®Ïù¥?ÖÏûÑ
 			static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
 				IronBars_SingleBars_Particle();
+
+			m_fSpecialWaiting += g_fTimeDelta;
 		})
 		.OnExit([&]()
 		{
 			CGameInstance::GetInstance()->ResetTimeRatio();
 			m_fKineticCharge = 0.f;
+			m_fSpecialWaiting = 0.f;
 		})
 
 			.AddTransition("IRONBARS_CHARGE_EX to IRONBARS_END", "IRONBARS_END")
 			.Predicator([&]()->_bool 
 			{ 
-				return m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"); 
+				return 5.f <= m_fSpecialWaiting;
 			})
 			.Priority(0)
 
@@ -7405,17 +7410,19 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_Press);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
-			CGameInstance::GetInstance()->SetTimeRatioCurve("TelephonePoleSlow");
+			CGameInstance::GetInstance()->SetTimeRatioCurve("KineticSpecialWaiting");
 
 			CreateSpecialUI(SPECAIL_CONTAINER);
 		})
 		.Tick([&](double fTimeDelta)
 		{
 			static_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->CreateKineticParticle();
+			m_fSpecialWaiting += g_fTimeDelta;
 		})
 		.OnExit([&]()
 		{
 			m_fKineticCharge = 0.f;
+			m_fSpecialWaiting = 0.f;
 			CGameInstance::GetInstance()->ResetTimeRatio();
 		})
 			.AddTransition("CONTAINER_WAIT to CONTAINER_PRESS", "CONTAINER_PRESS")
@@ -7428,7 +7435,7 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 			.AddTransition("CONTAINER_WAIT to CONTAINER_END", "CONTAINER_END")
 			.Predicator([&]()->_bool
 				{
-					return 0.1f <= m_pModel->Find_Animation("AS_ch0100_337_AL_press_start")->GetPlayRatio();
+					return 5.f <= m_fSpecialWaiting;
 				})
 			.Priority(0)
 
