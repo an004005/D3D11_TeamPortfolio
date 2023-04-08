@@ -44,6 +44,8 @@ typedef struct tagPlayerStatus
 	_uint iBP = { 0 };
 	_uint iCoin = { 0 };
 
+	_float fKineticCharge = { 0.f };	// ¿°·ÂÃ¼ Â÷Áö ¹éºÐÀ² (0~1)
+
 	_bool bBattle = false;
 
 	_float m_fBaseAttackDamage;
@@ -129,11 +131,6 @@ public:	// Get
 	}
 	_bool					Get_SASMember(const SASMEET eSAS) { return m_bSASMember[eSAS]; }
 
-	// ¿°·Â
-	_float	Get_MaxKineticCharge() {
-		return m_fMaxKineticCharge;
-	}
-
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
 	void			Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP);
@@ -153,6 +150,9 @@ public:	// Set
 
 	void			Set_PlayerWorldMatrix(_fmatrix worldmatrix);
 	_matrix			Get_PlayerWorldMatrix();
+
+	void			Set_KineticCharge(_float fCharge) { m_tPlayerStat.fKineticCharge = fCharge; }
+	_float			Get_KineticCharge() { return m_tPlayerStat.fKineticCharge; }
 
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
@@ -191,7 +191,6 @@ private:
 
 private:
 	_float			m_fBaseAttackDamage;
-	_float			m_fMaxKineticCharge = { 0.0f };
 
 private:
 	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false };

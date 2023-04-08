@@ -8,6 +8,7 @@
 #include "MathUtils.h"
 #include "Animation.h"
 #include "ImguiUtils.h"
+#include "Material.h"
 
 CSpecial_HBeam_Single::CSpecial_HBeam_Single(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -111,6 +112,7 @@ void CSpecial_HBeam_Single::Imgui_RenderProperty()
 void CSpecial_HBeam_Single::Sync_position(CTransform * pTransform)
 {
 	m_pTransformCom->Set_WorldMatrix(pTransform->Get_WorldMatrix());
+	m_pCollider->SetPxWorldMatrix(pTransform->Get_WorldMatrix());
 }
 
 void CSpecial_HBeam_Single::Set_Trigger(_bool bTrigger)

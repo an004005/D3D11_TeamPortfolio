@@ -68,6 +68,18 @@ private:
 	_bool	m_bBeforeOutline = false;
 
 public:
+	void	KineticRimLightFix(_bool bFix) { m_bRimFix = bFix; }
+
+private:
+	void	BrightChecker();
+	_float	m_fBright = 0.f;
+	_float	m_fDissolve = 0.f;
+	_bool	m_bRimFix = false;	// 림라이트 값 고정
+
+private:
+	_float	m_fTimeDelta = 0.f;
+
+public:
 	void	SetParticle();
 	void	ReleaseParticle();
 

@@ -7,6 +7,7 @@
 #include "RedString.h"
 #include "GameUtils.h"
 #include "JsonStorage.h"
+#include "Imgui_AnimModifier.h"
 #include "PhysX_Manager.h"
 #include "Map_KineticBatchPreset.h"
 
@@ -17,7 +18,7 @@ CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext
 
 HRESULT CLevel_FinalStage::Initialize()
 {
-	//m_bPlayerSpawn = false;
+	// m_bPlayerSpawn = false;
 
 	m_strLevelName = L"FinalStage";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/FinalStage_ShadowCam.json";
@@ -25,11 +26,17 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;
+	// if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		// return E_FAIL;
 
 	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/FinalStage/Kinetic_Normal.json");
 
+	CGameInstance::GetInstance()->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
+	Json PreviewData;
+	{
+		PreviewData["Model"] = "Model_Player";
+		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
+		CGameInstance::GetInstance()->Clone_GameObject(L"Preview", TEXT("ModelPreview"), &PreviewData);
 	Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/FinalStage/Kinetic_Normal.json");
 	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
 		
@@ -39,8 +46,7 @@ HRESULT CLevel_FinalStage::Initialize()
 	//	CGameInstance::GetInstance()->Clone_GameObject(LAYER_MAP_DECO, L"Prototype_CombinedRedString", &json);
 	//});
 
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_BrainField.json");
-	//FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(PLAYERTEST_LAYER_MAP, TEXT("Prototype_GameObject_ScarletMap"), &json));
+	}
 
 	return S_OK;
 }

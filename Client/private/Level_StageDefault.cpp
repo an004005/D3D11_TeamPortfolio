@@ -17,6 +17,7 @@
 #include "UI_Manager.h"
 #include "GameManager.h"
 #include "Imgui_Cheat.h"
+#include "Imgui_LightManager.h"
 
 CLevel_StageDefault::CLevel_StageDefault(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CLevel(pDevice, pContext)
@@ -39,6 +40,7 @@ HRESULT CLevel_StageDefault::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Cheat::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LightManager::Create(m_pDevice, m_pContext));
 
 	CUI_Manager::GetInstance()->Clear();
 	CGameInstance::GetInstance()->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");

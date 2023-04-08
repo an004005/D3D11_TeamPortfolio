@@ -69,6 +69,7 @@ protected:
 
 protected:
 	_float4 m_BeforePos = _float4(0.f, 0.f, 0.f, 1.f);
+	_float	m_fTimeDelta = 0.f;
 
 protected:
 	ESpecialType m_eSpecialObejctType = SPECAIL_END;
@@ -80,6 +81,24 @@ protected:
 
 	CDoOnce	m_ParticleMakeable;
 	_double	m_fParticleCoolTime = 0.f;
+
+public:
+	void	SpecialRimLightFix(_bool bFix) { m_bRimFix = bFix; }
+	void	Set_Bright(_float fBright) 
+	{ 
+		m_fBright = fBright; 
+		m_bBrightChange = true;
+	}
+	void	Set_Dissolve(_bool bDissolve) { m_bDissolve = bDissolve; }
+
+protected:
+	void	BrightChecker();
+	void	DissolveChecker();
+	_float	m_fBright = 0.f;
+	_float	m_fDissolve = 0.f;
+	_bool	m_bRimFix = false;	// 림라이트 값 고정
+	_bool	m_bBrightChange = false;
+	_bool	m_bDissolve = false;
 
 public:
 	void	SetOutline(_bool bOutLine) { m_bOutline = bOutLine; }

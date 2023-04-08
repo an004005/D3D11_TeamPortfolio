@@ -65,7 +65,7 @@ void CBullet::Tick(_double TimeDelta)
 
 	_uint iColType = ECOLLIDER_TYPE_BIT::CTB_PLAYER | ECOLLIDER_TYPE_BIT::CTB_STATIC | ECOLLIDER_TYPE_BIT::CTB_PSYCHICK_OBJ;
 
-	CollisionCheck_Bullet(m_pTransformCom, dParams, 1.f, iColType);
+	CollisionCheck_Bullet(m_pTransformCom, dParams, 0.3f, iColType);
 
 
 	if (m_bHitCheck == true || m_bDelete == true) // hit 체크 및 life 다 떨어진거 체크

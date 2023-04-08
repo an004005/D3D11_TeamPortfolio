@@ -36,6 +36,9 @@ HRESULT CPxModel::Initialize(void* pArg)
 	FAILED_CHECK(CModel::Initialize(pArg));
 
 	m_pStartBone = dynamic_cast<CPxBone*>(Get_BonePtr("cable_02_a"));
+	if (m_pStartBone == nullptr)
+		m_pStartBone = dynamic_cast<CPxBone*>(Get_BonePtr("cable_01_a"));
+		
 
 	return S_OK;
 }

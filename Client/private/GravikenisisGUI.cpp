@@ -90,7 +90,6 @@ void CGravikenisisGUI::Tick(_double TimeDelta)
 	SetfRatio(m_pPlayer->Get_KineticCharge());
 
 	// ¿°·ÂÀÌ °¡µæ Ã¡À» ¶§ÀÇ Ã³¸®
-	_float fMaxKineticCharge = CPlayerInfoManager::GetInstance()->Get_MaxKineticCharge();
 	if (1.0f < m_pPlayer->Get_KineticCharge())	// ¿°·Â °ÔÀÌÁö°¡ ´Ù Ã¡À» ¶§
 	{
 		m_pKenisis->GetFourthEffect()->GetParams().Ints[0] = 0;
