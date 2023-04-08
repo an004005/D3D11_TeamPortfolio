@@ -39,6 +39,9 @@ HRESULT CCanvas_SASInfoRightMove::Initialize(void* pArg)
 	m_vMaxDestination = { 3.0f, -7.0f };
 	CCanvas::UIMove_FSM();
 
+	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+		iter->second->SetVisible(false);
+
 	return S_OK;
 }
 
@@ -50,6 +53,17 @@ void CCanvas_SASInfoRightMove::BeginTick()
 
 void CCanvas_SASInfoRightMove::Tick(_double TimeDelta)
 {
+	// 아직 멤버가 아니라면 Tick 을 돌지 않는다.
+	if (false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::HANABI)) return;
+
+	if (false == m_bMember)
+	{
+		m_bMember = true;
+
+		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+			iter->second->SetVisible(true);
+	}
+
 	CCanvas::Tick(TimeDelta);
 
 	m_pUIMoveFSM->Tick(TimeDelta);

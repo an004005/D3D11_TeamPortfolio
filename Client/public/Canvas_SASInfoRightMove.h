@@ -35,6 +35,8 @@ private:
 	_bool	m_bHpHill = { false };
 	_double	m_dMaxHillChake_TimeAcc = { 0.0 };
 
+	_bool	m_bMember = { false };
+
 public:
 	static CCanvas_SASInfoRightMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

@@ -40,8 +40,9 @@ HRESULT CSASInfoLeftHpBackUI::Initialize(void * pArg)
 
 void CSASInfoLeftHpBackUI::BeginTick()
 {
-
-
+	m_fHp = 1.0f;
+	m_fCurrentHp = 1.0f;
+	m_tParams.Floats[0] = 1.0f;
 }
 
 void CSASInfoLeftHpBackUI::Tick(_double TimeDelta)

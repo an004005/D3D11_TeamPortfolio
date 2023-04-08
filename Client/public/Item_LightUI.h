@@ -23,10 +23,13 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 public:
+	void	Set_LightOFF(){
+		m_tParams.Float4s[0].w = 0.0f;
+	}
+
 	void	Set_ItemLightUse() {
 		m_bUse = true;
 		m_fAlphaDown = false;
-		m_dAlpha_TimeAcc = 0.0;
 	}
 
 	void	Set_LightColor(const _float3 fColor) {
@@ -39,7 +42,8 @@ public:
 	_bool	m_bUse = { false };
 	_bool	m_fAlphaDown = { false };
 	_float	m_fAlpha = { 0.0f };
-	_double	m_dAlpha_TimeAcc = { 0.0 };
+
+	_bool	m_fLightVisible = { false };
 
 public:
 	static CItem_LightUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

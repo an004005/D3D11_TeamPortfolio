@@ -37,27 +37,30 @@ void CItem_LightUI::Tick(_double TimeDelta)
 
 	if (m_bUse == false) return;
 
-	m_dAlpha_TimeAcc += TimeDelta;
-	if (3.0 < m_dAlpha_TimeAcc)
-	{
-		m_fAlpha = 0.25f;
-		m_tParams.Float4s[0].w = m_fAlpha;
-		m_bUse = false;
-		return;
-	}
+	//if (false == m_fLightVisible)
+	//{
+	//	m_fAlpha = 0.4f;
+	//	m_tParams.Float4s[0].w = m_fAlpha;
+	//	m_bUse = false;
+	//	return;
+	//}
+	//else
+	//{
+	//	m_tParams.Float4s[0].w = 0.0f;
+	//}
 
 	if (true == m_fAlphaDown)
 	{
 		m_fAlpha -= _float(TimeDelta) * 3.0f;
 
-		if (0.25f > m_fAlpha)
+		if (0.4f > m_fAlpha)
 			m_fAlphaDown = false;
 	}
 	else
 	{
 		m_fAlpha += _float(TimeDelta) * 3.0f;
 
-		if (0.7f < m_fAlpha)
+		if (0.8f < m_fAlpha)
 			m_fAlphaDown = true;
 	}
 
