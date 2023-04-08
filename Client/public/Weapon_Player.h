@@ -28,6 +28,7 @@ public:
 
 public:
 	void	Change_Weapon(WEAPONTYPE eType);
+	_uint	Get_WeaponType() { return static_cast<_uint>(m_eType); }
 
 private:
 	WEAPONTYPE	m_eType = WP_END;

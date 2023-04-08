@@ -32,6 +32,9 @@ private:
 	HRESULT SetUp_Sound();
 
 private:
+	void	Update_Animation(_double TimeDelta);
+
+private:
 	_double	m_fTimeDelta = 0.f;
 
 private:
@@ -48,6 +51,10 @@ private:
 
 	_bool		m_bLoop = false;
 	_float		m_fTimeAcc = 0.f;
+
+private:
+	_float		m_fLerpTime = 0.f;
+	_float		m_fDuration = 0.2f;
 
 private:
 	_bool		DistanceCheck();

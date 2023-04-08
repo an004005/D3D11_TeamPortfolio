@@ -18,6 +18,7 @@
 #include "Material.h"
 #include "MapKinetic_Object.h"
 #include "BrainField.h"
+#include "Weapon_Player.h"
 
 CPlayerHotFixer::CPlayerHotFixer()
 {
@@ -45,6 +46,15 @@ void CPlayerHotFixer::Tick()
 		if (ImGui::Button("Something_Recompile"))
 		{
 			Player_Something_Update();
+		}
+
+		if (ImGui::Button("wp0106"))
+		{
+			static_cast<CWeapon_Player*>(m_pPlayer->m_vecWeapon.front())->Change_Weapon(WP_0106);
+		}
+		if (ImGui::Button("wp0190"))
+		{
+			static_cast<CWeapon_Player*>(m_pPlayer->m_vecWeapon.front())->Change_Weapon(WP_0190);
 		}
 	}
 	ImGui::CollapsingHeader("~HotFixer");

@@ -8,6 +8,7 @@
 #include "PhysX_Manager.h"
 #include "Material.h"
 #include "Enemy.h"
+#include "PlayerInfoManager.h"
 
 CWeapon_Player::CWeapon_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CScarletWeapon(pDevice, pContext)
@@ -55,11 +56,13 @@ HRESULT CWeapon_Player::Initialize(void* pArg)
 
 void CWeapon_Player::BeginTick()
 {
-	m_fAdaptLength = -0.7f;
+	//m_fAdaptLength = -0.f;
 }
 
 void CWeapon_Player::Tick(_double TimeDelta)
 {
+	m_fAdaptLength = -0.7f;
+
 	__super::Tick(TimeDelta);
 	m_pCollider->Update_Tick(m_pTransformCom);
 
@@ -136,6 +139,7 @@ void CWeapon_Player::Change_Weapon(WEAPONTYPE eType)
 	if (m_eType == eType) return;
 
 	m_eType = eType;
+	CPlayerInfoManager::GetInstance()->Set_PlayerWeapon(static_cast<_uint>(m_eType));
 
 	m_pModel = m_pModelComs[eType];
 }
