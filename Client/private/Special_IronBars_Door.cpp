@@ -8,6 +8,7 @@
 #include "MathUtils.h"
 #include "Animation.h"
 #include "ImguiUtils.h"
+#include "Material.h"
 
 CSpecial_IronBars_Door::CSpecial_IronBars_Door(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)

@@ -499,6 +499,9 @@
     <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
     <ClInclude Include="..\public\OilBullet.h" />
+    <ClInclude Include="..\public\Weapon_Player.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\public\Weapon_wp0300.h" />
     <ClInclude Include="..\public\Weapon_wp0500.h" />
     <ClInclude Include="Client.h" />
@@ -827,6 +830,9 @@
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
     <ClCompile Include="..\private\OilBullet.cpp" />
+    <ClCompile Include="..\private\Weapon_Player.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\private\Weapon_wp0300.cpp" />
     <ClCompile Include="..\private\Weapon_wp0500.cpp" />
     <ClCompile Include="Client.cpp" />

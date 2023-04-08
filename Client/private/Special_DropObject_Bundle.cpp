@@ -104,9 +104,18 @@ void CSpecial_DropObject_Bundle::Tick(_double TimeDelta)
 	if (m_bDeadCheck)
 	{
 		for (auto& iter : m_pObject_Single)
+		{
 			static_cast<CSpecial_DropObject_Single*>(iter)->SetOutline(false);
+			static_cast<CSpecial_DropObject_Single*>(iter)->SpecialRimLightFix(false);
+		}
 
 		m_fDeadTime -= (_float)TimeDelta;
+
+		if (1.f >= m_fDeadTime)
+		{
+			for (auto& iter : m_pObject_Single)
+				static_cast<CSpecialObject*>(iter)->Set_Dissolve(true);
+		}
 
 		if (0.f >= m_fDeadTime)
 		{
@@ -121,12 +130,20 @@ void CSpecial_DropObject_Bundle::Tick(_double TimeDelta)
 		if (CPlayerInfoManager::GetInstance()->Get_SpecialObject() == this)
 		{
 			for (auto& iter : m_pObject_Single)
-				static_cast<CSpecial_DropObject_Single*>(iter)->SetOutline(true);
+			{
+				static_cast<CSpecial_DropObject_Single*>(iter)->SetOutline(m_bOutline);
+				static_cast<CSpecial_DropObject_Single*>(iter)->Set_Bright(m_fBright);
+				static_cast<CSpecial_DropObject_Single*>(iter)->SpecialRimLightFix(m_bRimFix);
+			}
 		}
 		else
 		{
 			for (auto& iter : m_pObject_Single)
-				static_cast<CSpecial_DropObject_Single*>(iter)->SetOutline(false);
+			{
+				static_cast<CSpecial_DropObject_Single*>(iter)->SetOutline(m_bOutline);
+				static_cast<CSpecial_DropObject_Single*>(iter)->Set_Bright(m_fBright);
+				static_cast<CSpecial_DropObject_Single*>(iter)->SpecialRimLightFix(m_bRimFix);
+			}
 		}
 	}
 

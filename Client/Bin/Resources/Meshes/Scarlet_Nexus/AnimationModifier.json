@@ -17,7 +17,7 @@
     "AS_BC_em0200m_ch0100": {
         "Duration": 350.0,
         "TickPerSecond": 50.0,
-        "bLooping": true,
+        "bLooping": false,
         "vecEvent": []
     },
     "AS_BC_em0200m_ch0100_end": {

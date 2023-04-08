@@ -117,6 +117,9 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 
 					if (5.f >= fDistance)
 					{
+						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em0210_brainCrash");
+						m_pPlayer->m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayer->m_pPlayerCam, m_pPlayer->m_pTransformCom, 0.f, 0.f);
+
 						_vector BC_Pos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
 						_vector vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 						pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
@@ -308,7 +311,10 @@ void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
 void CPlayerHotFixer::Player_Something_Update()
 {
 	// 플레이어에 추가할 내용이나 변경할 내용 있으면 해당 부분에서 추가 컴파일 가능
-	
+
+	m_pPlayer->m_BrandCrash_em0200.clear();
+	m_pPlayer->m_BrandCrash_em0200.push_back(m_pPlayer->m_pModel->Find_Animation("AS_BC_em0200m_ch0100"));
+
 }
 
 CPlayerHotFixer* CPlayerHotFixer::Create(CPlayer* pPlayer)
