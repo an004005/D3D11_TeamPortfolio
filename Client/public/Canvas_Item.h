@@ -40,7 +40,8 @@ private:
 
 	void	PlayerFontHp(_uint iHp);
 	void	PlayerHpSet(const _uint iRandomMinHp, const _uint iRandomMaxHp);
-	void	MemberHpSet(const _uint iRandomMinHp, const _uint iRandomMaxHp);
+	void	HanabiHpSet(const _uint iRandomMinHp, const _uint iRandomMaxHp);
+	void	TsugumiSet(const _uint iRandomMinHp, const _uint iRandomMaxHp);
 
 private:
 	vector<CItem_Manager::BATTLEITEM> m_vecBattleItme;

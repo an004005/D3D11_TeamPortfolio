@@ -38,6 +38,8 @@ HRESULT CPlayerInfo_HpBackUI::Initialize(void * pArg)
 
 void CPlayerInfo_HpBackUI::BeginTick()
 {
+	m_fHp = 1.0f;
+	m_fCurrentHp = 1.0f;
 	m_tParams.Floats[0] = 1.0f;
 }
 

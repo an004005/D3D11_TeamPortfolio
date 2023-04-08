@@ -46,7 +46,7 @@ private:
 	_int	m_iObjectNumber = { 0 };		// 2개 객체를 구별하기 위한 변수
 	
 	_float	m_fHp = { 0.0f };
-	_float	m_fCurrentHp = { 1.0f };
+	_float	m_fCurrentHp = { 0.0f };
 
 public:
 	static CPlayerInfo_HpBothEndsUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

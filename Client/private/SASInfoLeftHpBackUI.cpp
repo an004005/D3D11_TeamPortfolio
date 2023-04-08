@@ -48,10 +48,20 @@ void CSASInfoLeftHpBackUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	if (m_fCurrentHp < m_fHp)
-		m_fCurrentHp += _float(TimeDelta) * 0.1f;
+	if (false == m_bSpeed)
+	{
+		if (m_fCurrentHp < m_fHp)
+			m_fCurrentHp += _float(TimeDelta) * 0.1f;
+		else
+			m_fCurrentHp -= _float(TimeDelta) * 0.1f;
+	}
 	else
-		m_fCurrentHp -= _float(TimeDelta) * 0.1f;
+	{
+		if (m_fCurrentHp < m_fHp)
+			m_fCurrentHp += _float(TimeDelta);
+		else
+			m_fCurrentHp -= _float(TimeDelta);
+	}
 
 	Object_Tick(TimeDelta);
 }

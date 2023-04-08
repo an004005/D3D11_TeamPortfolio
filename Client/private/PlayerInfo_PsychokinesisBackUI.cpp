@@ -30,6 +30,8 @@ HRESULT CPlayerInfo_PsychokinesisBackUI::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_bVisible = false;
+	m_fCurrentPsychokinesisGauge = 0.5f;
+	m_fMaxLevelGauge = 0.5f;
 
 	return S_OK;
 }

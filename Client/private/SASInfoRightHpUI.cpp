@@ -43,12 +43,17 @@ void CSASInfoRightHpUI::Tick(_double TimeDelta)
 	CUI::Tick(TimeDelta);
 
 	if (m_fCurrentHp < m_fHp)
+	{
 		m_fCurrentHp += _float(TimeDelta) * 0.1f;
+		m_bMaxHp = false;
+	}
 	else
+	{
 		m_fCurrentHp = m_fHp;
+		m_bMaxHp = true;
+	}
 
 	Object_Tick(TimeDelta);
-	
 }
 
 void CSASInfoRightHpUI::Late_Tick(_double TimeDelta)

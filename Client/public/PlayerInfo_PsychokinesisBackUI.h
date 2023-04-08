@@ -27,7 +27,7 @@ public:
 
 private:
 	_float m_fPsychokinesisGauge = { 0.0f };	// 0~1
-	_float m_fCurrentPsychokinesisGauge = { 1.0f };
+	_float m_fCurrentPsychokinesisGauge = { 0.0f };
 	_float m_fMaxLevelGauge = { 0.0f };
 
 	_bool	m_bMinus = { false };

@@ -32,12 +32,13 @@ HRESULT CPlayerInfo_HpBothEndsUI::Initialize(void * pArg)
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
 
-
 	return S_OK;
 }
 
 void CPlayerInfo_HpBothEndsUI::BeginTick()
 {
+	m_fHp = 1.0f;
+	m_fCurrentHp = 1.0f;
 	m_tParams.Floats[0] = 1.0f;
 }
 

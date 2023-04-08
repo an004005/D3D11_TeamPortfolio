@@ -45,14 +45,15 @@ HRESULT CCanvas_PlayerInfoMove::Initialize(void* pArg)
 	Find_ChildUI(L"PlauerInfo_GaugeArrow")->SetVisible(false);
 	Find_ChildUI(L"HillBar")->SetVisible(false);
 	
-	PlayerHp_Tick();
-
 	return S_OK;
 }
 
 void CCanvas_PlayerInfoMove::BeginTick()
 {
 	CCanvas::BeginTick();
+
+	PlayerHp_Tick();
+
 }
 
 void CCanvas_PlayerInfoMove::Tick(_double TimeDelta)
@@ -256,13 +257,12 @@ void CCanvas_PlayerInfoMove::Arrow_Move()
 
 void CCanvas_PlayerInfoMove::HillBar_Tick(const _double& TimeDelta)
 {
-	if (false == m_bHill)
-		return;
+	if (false == m_bHill)	return;
 
 	Find_ChildUI(L"HillBar")->SetVisible(true);
 
-	_float iHp = _float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP);
-	_float iMaxHp = _float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxHP);
+	_float fHp = _float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP);
+	_float fMaxHp = _float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxHP);
 	_float fCurrentHill = dynamic_cast<CShaderUI*>(Find_ChildUI(L"HillBar"))->Get_Floats0();
 
 	if (0.2f < fCurrentHill)
@@ -275,7 +275,7 @@ void CCanvas_PlayerInfoMove::HillBar_Tick(const _double& TimeDelta)
 		dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack5"))->Set_Speed(false);
 	}
 
-	if (fCurrentHill < (iHp / iMaxHp))
+	if (fCurrentHill < (fHp / fMaxHp))
 	{
 		fCurrentHill += _float(TimeDelta) * 0.3f;
 		dynamic_cast<CShaderUI*>(Find_ChildUI(L"HillBar"))->Set_Floats0(fCurrentHill);

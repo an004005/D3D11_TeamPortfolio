@@ -30,6 +30,8 @@ HRESULT CPlayerInfo_PsychokinesisUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	m_fMaxLevelGauge = 1.0f;
+
 	return S_OK;
 }
 

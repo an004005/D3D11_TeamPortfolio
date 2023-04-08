@@ -33,13 +33,14 @@ HRESULT CPlayerInfo_HpUI::Initialize(void * pArg)
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
 
-	
 	return S_OK;
 }
 
 void CPlayerInfo_HpUI::BeginTick()
 {
-
+	m_fHp = 1.0f;
+	m_fCurrentHp = 1.0f;
+	m_tParams.Floats[0] = 1.0f;
 }
 
 void CPlayerInfo_HpUI::Tick(_double TimeDelta)

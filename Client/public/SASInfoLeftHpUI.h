@@ -25,6 +25,9 @@ public:
 public:
 	void	RendomHpImage(const _int & iImageNumber);
 
+	_bool	Get_MaxHp() {
+		return m_bMaxHp;
+	}
 	void	Set_PlayerHp(const _float & fHp) {
 		m_fHp = fHp;
 	}
@@ -44,6 +47,8 @@ private:
 
 	_float	m_fHp = { 0.0f };
 	_float	m_fCurrentHp = { 0.0f };
+	
+	_bool	m_bMaxHp = { false };
 
 public:
 	static CSASInfoLeftHpUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

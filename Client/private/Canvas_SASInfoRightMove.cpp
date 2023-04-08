@@ -4,11 +4,13 @@
 #include "FSMComponent.h"
 #include "UI_Manager.h"
 #include "MathUtils.h"
+#include "PlayerInfoManager.h"
 
 #include "Canvas_SASInfoRight.h"
 #include "SASInfoRightHpUI.h"
 #include "SASInfoRightHpBackUI.h"
 #include "SASInfoRightHpBothEndsUI.h"
+#include "ShaderUI.h"
 
 CCanvas_SASInfoRightMove::CCanvas_SASInfoRightMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -40,18 +42,22 @@ HRESULT CCanvas_SASInfoRightMove::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CCanvas_SASInfoRightMove::BeginTick()
+{
+	CCanvas::BeginTick();
+
+}
+
 void CCanvas_SASInfoRightMove::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
-	if (0.0f == m_vSASRightHp.x)
-		return;
-
 	m_pUIMoveFSM->Tick(TimeDelta);
 	CCanvas::UIHit(TimeDelta);
 
-	ChildHp_Tick();
-	RendomTexture(TimeDelta);
+	SASRightHp_Tick();
+	RendomTexture_Tick(TimeDelta);
+	HillBar_Tick(TimeDelta);
 }
 
 void CCanvas_SASInfoRightMove::Imgui_RenderProperty()
@@ -66,45 +72,46 @@ void CCanvas_SASInfoRightMove::Imgui_RenderProperty()
 
 	if (ImGui::Button("Save Hp"))
 	{
-		Set_SASRightHp(fHp, fMaxHp);
+		CPlayerInfoManager::GetInstance()->Get_HanabiStat().iHP = fHp;
+		CPlayerInfoManager::GetInstance()->Get_HanabiStat().iMaxHP = fMaxHp;
 	}
 }
 
-void CCanvas_SASInfoRightMove::SaveToJson(Json& json)
+void CCanvas_SASInfoRightMove::Set_HillBar()
 {
-	CCanvas::SaveToJson(json);
+	m_bHill = true;
+	m_bHpHill = true;
+
+	dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack0"))->Set_Speed(true);
+	dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack1"))->Set_Speed(true);
+	dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack2"))->Set_Speed(true);
 }
 
-void CCanvas_SASInfoRightMove::LoadFromJson(const Json & json)
+void CCanvas_SASInfoRightMove::SASRightHp_Tick()
 {
-	CCanvas::LoadFromJson(json);
-}
+	if (true == m_bHpHill) return;
 
-void CCanvas_SASInfoRightMove::Set_SASRightHp(const _float & fHp, const _float & fMaxHp)
-{
-	m_fHp = fHp / fMaxHp;
-	m_vSASRightHp = { fHp, fMaxHp };
+	_float fHp = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_HanabiStat().iHP);
+	_float fMaxHP = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_HanabiStat().iMaxHP);
+	m_fHPRatio = fHp / fMaxHP;
 
 	dynamic_cast<CCanvas_SASInfoRight*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_SASInfoRight"))->Set_Render();
+
+	dynamic_cast<CSASInfoRightHpUI*>(Find_ChildUI(L"SASInfoRight_Hp0"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoRightHpUI*>(Find_ChildUI(L"SASInfoRight_Hp1"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoRightHpUI*>(Find_ChildUI(L"SASInfoRight_Hp2"))->Set_PlayerHp(m_fHPRatio);
+
+	dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack0"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack1"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack2"))->Set_PlayerHp(m_fHPRatio);
+
+	dynamic_cast<CSASInfoRightHpBothEndsUI*>(Find_ChildUI(L"SASInfoRight_EndHp"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoRightHpBothEndsUI*>(Find_ChildUI(L"SASInfoRight_EndHpBack"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoRightHpBothEndsUI*>(Find_ChildUI(L"SASInfoRight_StartHp"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoRightHpBothEndsUI*>(Find_ChildUI(L"SASInfoRight_StartHpBack"))->Set_PlayerHp(m_fHPRatio);
 }
 
-void CCanvas_SASInfoRightMove::ChildHp_Tick()
-{
-	dynamic_cast<CSASInfoRightHpUI*>(Find_ChildUI(L"SASInfoRight_Hp0"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoRightHpUI*>(Find_ChildUI(L"SASInfoRight_Hp1"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoRightHpUI*>(Find_ChildUI(L"SASInfoRight_Hp2"))->Set_PlayerHp(m_fHp);
-
-	dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack0"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack1"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack2"))->Set_PlayerHp(m_fHp);
-
-	dynamic_cast<CSASInfoRightHpBothEndsUI*>(Find_ChildUI(L"SASInfoRight_EndHp"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoRightHpBothEndsUI*>(Find_ChildUI(L"SASInfoRight_EndHpBack"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoRightHpBothEndsUI*>(Find_ChildUI(L"SASInfoRight_StartHp"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoRightHpBothEndsUI*>(Find_ChildUI(L"SASInfoRight_StartHpBack"))->Set_PlayerHp(m_fHp);
-}
-
-void CCanvas_SASInfoRightMove::RendomTexture(const _double & dTimeDelta)
+void CCanvas_SASInfoRightMove::RendomTexture_Tick(const _double & dTimeDelta)
 {
 	m_dRendomTexture_TimeAcc += dTimeDelta;
 	if (3.0 < m_dRendomTexture_TimeAcc)
@@ -113,19 +120,19 @@ void CCanvas_SASInfoRightMove::RendomTexture(const _double & dTimeDelta)
 	if (0.0 != m_dRendomTexture_TimeAcc)
 		return;
 
-	// 체력에 따라서 랜덤으로 이미지를 출력하는 개수가 달라진다. (m_fHp 기준)
+	// 체력에 따라서 랜덤으로 이미지를 출력하는 개수가 달라진다. (m_fHPRatio 기준)
 	// 0.05~0.95 : 2 / 0.05~0.65 : 1
 
 	_int iCount;
 	_int iRendomCount;			// 움직이는 Hp 를 그리는 개수 
 	_float fObjectMaxNumber;	// 3개중 움직이는 Hp를 그리는 객체
-	if (0.95f < m_fHp)
+	if (0.95f < m_fHPRatio)
 	{
 		iCount = 2;
 		fObjectMaxNumber = 3.0f;
 		iRendomCount = _int(CMathUtils::RandomFloat(0.0f, 3.0f));
 	}
-	else if (0.65f < m_fHp)
+	else if (0.65f < m_fHPRatio)
 	{
 		iCount = 1;
 		fObjectMaxNumber = 2.0f;
@@ -170,6 +177,48 @@ void CCanvas_SASInfoRightMove::RendomTexture(const _double & dTimeDelta)
 
 			wsprintf(szChildTag, TEXT("SASInfoRight_HpBack%d"), i);
 			dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(szChildTag))->RendomHpImage(iRandomTexture);
+		}
+	}
+}
+
+void CCanvas_SASInfoRightMove::HillBar_Tick(const _double& TimeDelta)
+{
+	if (false == m_bHill)	return;
+
+	Find_ChildUI(L"HillBar")->SetVisible(true);
+
+	_float fHp = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_HanabiStat().iHP);
+	_float fMaxHp = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_HanabiStat().iMaxHP);
+	_float fCurrentHill = dynamic_cast<CShaderUI*>(Find_ChildUI(L"HillBar"))->Get_Floats0();
+
+	if (0.2f < fCurrentHill)
+	{
+		dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack0"))->Set_Speed(false);
+		dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack1"))->Set_Speed(false);
+		dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack2"))->Set_Speed(false);
+	}
+
+	if (fCurrentHill < (fHp / fMaxHp))
+	{
+		fCurrentHill += _float(TimeDelta) * 0.3f;
+		dynamic_cast<CShaderUI*>(Find_ChildUI(L"HillBar"))->Set_Floats0(fCurrentHill);
+	}
+	else
+	{
+		m_bHpHill = false;
+
+		m_dMaxHillChake_TimeAcc += TimeDelta;
+		if (1.0 < m_dMaxHillChake_TimeAcc)
+		{
+			if (true == dynamic_cast<CSASInfoRightHpUI*>(Find_ChildUI(L"SASInfoRight_Hp0"))->Get_MaxHp() &&
+				true == dynamic_cast<CSASInfoRightHpUI*>(Find_ChildUI(L"SASInfoRight_Hp1"))->Get_MaxHp() &&
+				true == dynamic_cast<CSASInfoRightHpUI*>(Find_ChildUI(L"SASInfoRight_Hp2"))->Get_MaxHp())
+			{
+				m_dMaxHillChake_TimeAcc = 0.0;
+				m_bHill = false;
+				Find_ChildUI(L"HillBar")->SetVisible(false);
+				dynamic_cast<CShaderUI*>(Find_ChildUI(L"HillBar"))->Set_Floats0(0.0f);
+			}
 		}
 	}
 }
