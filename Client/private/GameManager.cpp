@@ -82,6 +82,7 @@ void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
 		m_pCanvas_Acquisition->Set_EnemyUI(tReport.eName, tReport.eStat.iLevel);
 	}
 
+	m_EneymyReports.push_back(tReport);
 }
 
 void CGameManager::ConsumePlayerDamageReport(PLAYER_DAMAGE_REPORT tReport)

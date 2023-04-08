@@ -3960,6 +3960,18 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_BrainField_close_BF": {
+        "Duration": 64.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_BrainField_close_NF": {
+        "Duration": 155.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_BrainField_start": {
         "Duration": 150.0,
         "TickPerSecond": 24.0,
