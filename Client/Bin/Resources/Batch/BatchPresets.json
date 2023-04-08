@@ -201,6 +201,86 @@
             "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
         },
         {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_SubwayBench01.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_pr_SubwayRubble01.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_pr_Rubble_Concrete_Chunk_05.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_pr_SubwayRubble01S.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Crate_Misc_A_3x1.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Crate_Misc_C_1x1_tall.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Crate_Storage_A_1x2x1_Closed.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Crate_Storage_A_1x2x1_Open.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Crate_Storage_A_2x2x1_Open.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Crate_Storage_B_3x6.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_dumpster_01.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_shoppingcart_01.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_trashbin_01.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_trashbin_02.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
+            "Layer": "Layer_MapKineticObject",
+            "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/coilWire.json",
+            "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+        },
+        {
             "Layer": "Layer_Kinetic",
             "JsonPath": "../Bin/Resources/Objects/KineticSpecial_Train.json",
             "ProtoTag": "Prototype_GameObject_Special_Train"

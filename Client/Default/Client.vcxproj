@@ -194,6 +194,7 @@
     <ClInclude Include="..\public\Boss1_AIController.h" />
     <ClInclude Include="..\public\Boss_AppearBackUI.h" />
     <ClInclude Include="..\public\Boss_AppearUI.h" />
+    <ClInclude Include="..\public\BrainField.h" />
     <ClInclude Include="..\public\BrJ_AnimInstance.h" />
     <ClInclude Include="..\public\BrJ_Controller.h" />
     <ClInclude Include="..\public\BronJon.h" />
@@ -318,6 +319,7 @@
     <ClInclude Include="..\public\Level_NaomiRoom.h" />
     <ClInclude Include="..\public\Level_StageDefault.h" />
     <ClInclude Include="..\public\Level_Subway.h" />
+    <ClInclude Include="..\public\Map_KineticBatchPreset.h" />
     <ClInclude Include="..\public\MouseCousorLightUI.h" />
     <ClInclude Include="..\public\MouseCousorUI.h" />
     <ClInclude Include="..\public\PlayerHotFixer.h" />
@@ -503,6 +505,9 @@
     <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
     <ClInclude Include="..\public\OilBullet.h" />
+    <ClInclude Include="..\public\Weapon_Player.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\public\Weapon_wp0300.h" />
     <ClInclude Include="..\public\Weapon_wp0500.h" />
     <ClInclude Include="Client.h" />
@@ -527,6 +532,7 @@
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
     <ClCompile Include="..\private\Boss_AppearBackUI.cpp" />
     <ClCompile Include="..\private\Boss_AppearUI.cpp" />
+    <ClCompile Include="..\private\BrainField.cpp" />
     <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
     <ClCompile Include="..\private\BrJ_Controller.cpp" />
     <ClCompile Include="..\private\BronJon.cpp" />
@@ -650,6 +656,7 @@
     <ClCompile Include="..\private\Level_NaomiRoom.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\Level_Subway.cpp" />
+    <ClCompile Include="..\private\Map_KineticBatchPreset.cpp" />
     <ClCompile Include="..\private\MouseCousorLightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorUI.cpp" />
     <ClCompile Include="..\private\PlayerHotFixer.cpp" />
@@ -835,6 +842,9 @@
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
     <ClCompile Include="..\private\OilBullet.cpp" />
+    <ClCompile Include="..\private\Weapon_Player.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\private\Weapon_wp0300.cpp" />
     <ClCompile Include="..\private\Weapon_wp0500.cpp" />
     <ClCompile Include="Client.cpp" />

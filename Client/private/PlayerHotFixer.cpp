@@ -17,6 +17,8 @@
 #include "ScarletWeapon.h"
 #include "Material.h"
 #include "MapKinetic_Object.h"
+#include "BrainField.h"
+#include "Weapon_Player.h"
 
 CPlayerHotFixer::CPlayerHotFixer()
 {
@@ -44,6 +46,40 @@ void CPlayerHotFixer::Tick()
 		if (ImGui::Button("Something_Recompile"))
 		{
 			Player_Something_Update();
+		}
+
+		if (ImGui::Button("wp0106"))
+		{
+			static_cast<CWeapon_Player*>(m_pPlayer->m_vecWeapon.front())->Change_Weapon(WP_0106);
+		}
+		if (ImGui::Button("wp0190"))
+		{
+			static_cast<CWeapon_Player*>(m_pPlayer->m_vecWeapon.front())->Change_Weapon(WP_0190);
+		}
+
+		if (ImGui::Button("DMG_Light"))
+		{
+			m_pPlayer->m_bHit = true;
+			m_pPlayer->m_DamageDesc.m_iDamage = 1;
+			m_pPlayer->m_DamageDesc.m_iDamageType = EAttackType::ATK_LIGHT;
+			m_pPlayer->m_DamageDesc.m_vHitDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+			m_pPlayer->m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pPlayer->m_pTransformCom, XMVectorSet(0.f, 0.f, 1.f, 0.f));
+		}
+		if (ImGui::Button("DMG_Middle"))
+		{
+			m_pPlayer->m_bHit = true;
+			m_pPlayer->m_DamageDesc.m_iDamage = 1;
+			m_pPlayer->m_DamageDesc.m_iDamageType = EAttackType::ATK_MIDDLE;
+			m_pPlayer->m_DamageDesc.m_vHitDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+			m_pPlayer->m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pPlayer->m_pTransformCom, XMVectorSet(0.f, 0.f, 1.f, 0.f));
+		}
+		if (ImGui::Button("DMG_Heavy"))
+		{
+			m_pPlayer->m_bHit = true;
+			m_pPlayer->m_DamageDesc.m_iDamage = 1;
+			m_pPlayer->m_DamageDesc.m_iDamageType = EAttackType::ATK_HEAVY;
+			m_pPlayer->m_DamageDesc.m_vHitDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+			m_pPlayer->m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pPlayer->m_pTransformCom, XMVectorSet(0.f, 0.f, 1.f, 0.f));
 		}
 	}
 	ImGui::CollapsingHeader("~HotFixer");
@@ -117,6 +153,9 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 
 					if (5.f >= fDistance)
 					{
+						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em0210_brainCrash");
+						m_pPlayer->m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayer->m_pPlayerCam, m_pPlayer->m_pTransformCom, 0.f, 0.f);
+
 						_vector BC_Pos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
 						_vector vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 						pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
@@ -243,6 +282,10 @@ void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
 			.Predicator([&]()->_bool { return (!m_pPlayer->m_bBrainField) && (m_pPlayer->m_pController->KeyDown(CController::B)); })
 			.Priority(0)
 
+			.AddTransition("BRAINFIELD to BRAINFIELD_FINISH_BF", "BRAINFIELD_FINISH_BF")
+			.Predicator([&]()->_bool { return (m_pPlayer->m_bBrainField) && (m_pPlayer->m_pController->KeyDown(CController::B)); })
+			.Priority(0)
+
 		.AddState("BRAINFIELD_START")
 		.OnStart([&]() 
 		{
@@ -277,6 +320,14 @@ void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100"));
 			m_pPlayer->m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+
+			for (auto& iter : m_pPlayer->m_vecWeapon)
+				iter->SetVisible(false);
+
+			// 이거 키는거
+			m_pPlayer->m_pBrainField->OpenBrainField(); //(여기서 실행하면 됨)
+
+			// m_pBrainField->CloseBrainField();  끄는거
 		})
 		.Tick([&](double fTimeDelta) {static_cast<CCamSpot*>(m_pPlayer->m_pCamSpot)->Cam_Away(fTimeDelta, 0.3f); })
 		.OnExit([&]() {})
@@ -290,14 +341,42 @@ void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100"));
 			m_pPlayer->m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
-
-			for (auto& iter : m_pPlayer->m_vecWeapon)
-				iter->SetVisible(false);
 		})
 		.Tick([&](double fTimeDelta) {})
 		.OnExit([&]() { m_pPlayer->m_bBrainField = true; })
 			.AddTransition("BRAINFIELD_ACTIONCAM_02 to BRAINFIELD", "BRAINFIELD")
 			.Predicator([&]()->_bool { return m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100")->IsFinished(); })
+			.Priority(0)
+
+		.AddState("BRAINFIELD_FINISH_BF")
+		.OnStart([&]() 
+		{
+			list<CAnimation*> TestAnim;
+			TestAnim.push_back(m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF"));
+			m_pPlayer->m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+		})
+		.Tick([&](double fTimeDelta) {})
+		.OnExit([&]() {m_pPlayer->m_bBrainField = false; })
+			.AddTransition("BRAINFIELD_FINISH_BF to BRAINFIELD_FINISH_NF", "BRAINFIELD_FINISH_NF")
+			.Predicator([&]()->_bool { return m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF")->IsFinished(); })
+			.Priority(0)
+
+		.AddState("BRAINFIELD_FINISH_NF")
+		.OnStart([&]() 
+		{
+			list<CAnimation*> TestAnim;
+			TestAnim.push_back(m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_close_NF"));
+			m_pPlayer->m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+
+			m_pPlayer->m_pBrainField->CloseBrainField();
+
+			for (auto& iter : m_pPlayer->m_vecWeapon)
+				iter->SetVisible(true);
+		})
+		.Tick([&](double fTimeDelta) {})
+		.OnExit([&]() {})
+			.AddTransition("BRAINFIELD_FINISH_NF to BRAINFIELD", "BRAINFIELD")
+			.Predicator([&]()->_bool { return m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_close_NF")->IsFinished(); })
 			.Priority(0)
 
 		.Build();
@@ -308,7 +387,10 @@ void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
 void CPlayerHotFixer::Player_Something_Update()
 {
 	// 플레이어에 추가할 내용이나 변경할 내용 있으면 해당 부분에서 추가 컴파일 가능
-	
+
+	m_pPlayer->m_BrandCrash_em0200.clear();
+	m_pPlayer->m_BrandCrash_em0200.push_back(m_pPlayer->m_pModel->Find_Animation("AS_BC_em0200m_ch0100"));
+
 }
 
 CPlayerHotFixer* CPlayerHotFixer::Create(CPlayer* pPlayer)

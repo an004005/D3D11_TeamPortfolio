@@ -428,7 +428,7 @@ void CEM0210::SetUpFSM()
 						m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
 
 						//const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.2f;
-						const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.55f;
+						const _float fPlayRatio = m_CanFullBC ? 0.7f : 0.55f;
 
 						if (m_pASM->isSocketPassby("FullBody", fPlayRatio))
 						{

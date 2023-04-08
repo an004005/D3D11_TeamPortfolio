@@ -65,7 +65,7 @@ void CEffectSystem::Late_Tick(_double TimeDelta)
 		}
 		else
 		{
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+			m_pRendererCom->Add_RenderGroup(m_eRenderGroup, this);
 		}
 	}
 }

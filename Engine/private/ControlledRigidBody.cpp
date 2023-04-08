@@ -216,7 +216,10 @@ void CControlledRigidBody::CreateController()
 	else 
 	{
 		m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC | CTB_MONSTER_PART | CTB_MONSTER_RANGE;
+		// 텔레포트 오브젝트 추가
+		// 해당 부분을 Set해주는 함수 필요, 텔레포트시 다른 타입으로 적용될 수 있도록 한다.
 	}
+	
 
 	if (auto pOwner = TryGetOwner())
 	{

@@ -15,6 +15,8 @@
 #include "MathUtils.h"
 #include "ParticleGroup.h"
 
+#include "Material.h"
+
 CSpecial_TankLorry_Trailer::CSpecial_TankLorry_Trailer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
 {
