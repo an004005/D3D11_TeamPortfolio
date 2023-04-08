@@ -66,11 +66,11 @@ void CGameManager::Tick(_double TimeDelta)
 		m_bQuest = true;
 	}
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_9) && LEVEL_NOW == LEVEL_UI)
-	{
-		m_bSuccessQuest = true; // 0번 먼저 누르고 9번 누르기
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_9) && LEVEL_NOW == LEVEL_UI)
+	//{
+	//	m_bSuccessQuest = true; // 0번 먼저 누르고 9번 누르기
 
-	}
+	//}
 
 	Quest_Tick();
 }

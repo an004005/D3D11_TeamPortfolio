@@ -34,14 +34,14 @@ HRESULT CCanvas_MainTalk::Initialize(void* pArg)
 void CCanvas_MainTalk::Tick(_double TimeDelta)
 {
 	if (m_bRunning == false) return;
-
 	CCanvas::Tick(TimeDelta);
+
 	CUI_Manager::GetInstance()->Set_TempOff(true);
 
 	// 0 : 시간 되면 넘기기
 	m_dTalk_TimeAcc += TimeDelta;
 	if (m_dTalk_TimeAcc >= 5.0 && m_bNextTalk == false)
-		//Show_Talk();
+		Show_Talk();
 
 	// 1 ; 키 입력으로 넘기기
 	if (CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
@@ -59,12 +59,12 @@ HRESULT CCanvas_MainTalk::Render()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	_float2 vPosition = Find_ChildUI(L"TalkName")->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsName.c_str(), vPosition + _float2(42.0f, -12.0f), 0.f, vFontSize, vColorB);
-	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsName.c_str(), vPosition + _float2(40.0f, -15.0f), 0.f, vFontSize, vColor);
-	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk0.c_str(), vPosition + _float2(42.0f, 37.0f), 0.f, vFontSize, vColorB);
-	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk0.c_str(), vPosition + _float2(40.0f, 35.0f), 0.f, vFontSize, vColor);
-	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk1.c_str(), vPosition + _float2(42.0f, 77.0f), 0.f, vFontSize, vColorB);
-	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk1.c_str(), vPosition + _float2(40.0f, 75.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsName.c_str(), vPosition + _float2(27.0f, -20.0f), 0.f, vFontSize, vColorB);
+	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsName.c_str(), vPosition + _float2(25.0f, -22.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk0.c_str(), vPosition + _float2(27.0f, 37.0f), 0.f, vFontSize, vColorB);
+	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk0.c_str(), vPosition + _float2(25.0f, 35.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk1.c_str(), vPosition + _float2(27.0f, 77.0f), 0.f, vFontSize, vColorB);
+	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk1.c_str(), vPosition + _float2(25.0f, 75.0f), 0.f, vFontSize, vColor);
 	//pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsName.c_str(), vPosition + _float2(82.0f, 12.0f), 0.f, vFontSize, vColorB);
 	//pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsName.c_str(), vPosition + _float2(80.0f, 10.0f), 0.f, vFontSize, vColor);
 	//pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk0.c_str(), vPosition + _float2(82.0f, 47.0f), 0.f, vFontSize, vColorB);

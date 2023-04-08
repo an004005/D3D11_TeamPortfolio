@@ -91,9 +91,9 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
 	{
 		// ´ëÈ­Ã¢
-		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
-		//m_pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_MainTalk", &json));
-		//m_pCanvas_MainTalk->Add_Talk(0);
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
+		m_pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_MainTalk", &json));
+		m_pCanvas_MainTalk->Add_Talk(0);
 		//m_pCanvas_MainTalk->Add_Talk(1);
 		//m_pCanvas_MainTalk->Add_Talk(2);
 

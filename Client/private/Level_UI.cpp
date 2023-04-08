@@ -189,8 +189,8 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Alarm", &json));
 
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_MainTalk", &json));
+	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_MainTalk", &json));
 
 
 	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/DistanceUI.json");

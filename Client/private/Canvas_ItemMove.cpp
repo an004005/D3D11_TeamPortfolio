@@ -72,17 +72,15 @@ void CCanvas_ItemMove::LoadFromJson(const Json & json)
 
 void CCanvas_ItemMove::Key_Input()
 {
-	_bool	bItmeUse = dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_ItemUseStatuse();
-
 	// 아이템 Light 조절
-	_float fRatio = dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_Ratio();
-	if (0.5f < fRatio)
-		dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_IconLight(true);
-	else
-		dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_IconLight(false);
+	dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))
+		->	Set_IconLight(dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_Light());
 
 	// 아이템 쿨 타임이 아직 돌지 않았다면 사용할 수 없다.
-	if (false == bItmeUse) return;
+	if (false == dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_ItemUseStatuse()) return;
+
+	// 조명 Reset 하기
+	dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_LightReset();
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_DOWN))
 	{

@@ -28,6 +28,7 @@ public:
 
 	void	Set_ItmeUse();
 	void	Set_IconLight(const _bool	bVisble);
+	void	Set_LightReset();
 
 	_float4	 ColorIndex(const _bool	 bBack);
 
