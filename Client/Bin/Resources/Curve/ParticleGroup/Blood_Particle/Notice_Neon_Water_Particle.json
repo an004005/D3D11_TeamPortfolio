@@ -1,1 +1,31 @@
-{"LifeTime":10.0,"ObjectTag":"Notice_Neon_Water_Particle","Particles":[{"ObjectTag":"Player_Notice_Neon_Water_Particle","ParticleDirectory":"../Bin/Resources/VFX/ParticleSystem/Player_Notice_Neon_Water_Particle.json"}],"Prototype_GameObject":"ProtoVFX_ParticleGroup\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "LifeTime": 10.0,
+    "ObjectTag": "Notice_Neon_Water_Particle",
+    "Particles": [
+        {
+            "ObjectTag": "Player_Notice_Neon_Water_Particle",
+            "ParticleDirectory": "../Bin/Resources/VFX/ParticleSystem/Player_Notice_Neon_Water_Particle.json"
+        }
+    ],
+    "Prototype_GameObject": "ProtoVFX_ParticleGroup\u0000",
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

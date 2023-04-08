@@ -135,6 +135,26 @@ PS_OUT PS_UI_Tex_Alpha(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_BRAINFIELD_FLOOR(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	//float2 vRotateUV = rotateUV_Degree(In.vTexUV, 90.f)
+
+	//float4 vLineColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	////vLineColor += g_tex_0.Sample(LinearSampler, vRotateUV);
+
+	//if (vLineColor.r < 0.001f)
+	//	discard;
+
+	//Out.vColor = lerp(float4(1.f, 0.f, 0.f, 0.f), 1.f, vLineColor.r * 0.01f);
+	//Out.vColor.rgb = Out.vColor.rgb * 4.f;
+	//Out.vColor.a = vLineColor.r;
+
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0
@@ -191,6 +211,20 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_UI_Tex_Alpha();
+	}
+
+	// 4
+	pass BrainFieldFloor
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRAINFIELD_FLOOR();
 	}
 	
 }
