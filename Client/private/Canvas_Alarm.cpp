@@ -87,7 +87,7 @@ void CCanvas_Alarm::Imgui_RenderProperty()
 
 	if (ImGui::Button("Map Name"))
 	{
-		Set_MapName(1.0f);
+		Set_MapName(3.0f);
 	}
 }
 

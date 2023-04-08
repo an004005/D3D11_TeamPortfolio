@@ -57,7 +57,7 @@ HRESULT CGameManager::Initialize()
 
 void CGameManager::Tick(_double TimeDelta)
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_0) && LEVEL_NOW == LEVEL_UI)
 	{
 		m_pCanvas_Acquisition->Set_EnemyUI(EEnemyName::EM0400, 5); 
 		m_pCanvas_LeftTalk->Add_Talk(0);
@@ -66,9 +66,9 @@ void CGameManager::Tick(_double TimeDelta)
 		m_bQuest = true;
 	}
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_9) && LEVEL_NOW == LEVEL_UI)
 	{
-		m_bSuccessQuest = true;
+		m_bSuccessQuest = true; // 0번 먼저 누르고 9번 누르기
 
 	}
 
@@ -121,8 +121,6 @@ void CGameManager::Quest_Tick()
 		m_bSuccessQuest = false;
 		m_pCanvas_Quest->Set_SuccessQuest();
 	}
-
-
 }
 
 CGameManager* CGameManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

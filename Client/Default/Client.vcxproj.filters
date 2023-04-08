@@ -936,9 +936,6 @@
     <ClInclude Include="..\public\Monster.h">
       <Filter>02.GameObjects\Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\NextMapNameUI.h">
-      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\SASSkillNameUI.h">
       <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
     </ClInclude>
@@ -1466,7 +1463,6 @@
     <ClInclude Include="..\public\Level_FinalStage.h">
       <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\BrainField.h" />
     <ClInclude Include="..\public\Level_StageDefault.h" />
     <ClInclude Include="..\public\RedString.h" />
     <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
@@ -1502,6 +1498,9 @@
     </ClInclude>
     <ClInclude Include="..\public\HS_TeleportableWall.h">
       <Filter>02.GameObjects\Map\InvisibleWall\HS_TeleportableWall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\NextMapNameUI.h">
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1889,9 +1888,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Monster.cpp">
       <Filter>02.GameObjects\Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\NextMapNameUI.cpp">
-      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillNameUI.cpp">
       <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
@@ -2429,7 +2425,6 @@
     <ClCompile Include="..\private\Level_FinalStage.cpp">
       <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BrainField.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\RedString.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
@@ -2465,6 +2460,9 @@
     </ClCompile>
     <ClCompile Include="..\private\HS_TeleportableWall.cpp">
       <Filter>02.GameObjects\Map\InvisibleWall\HS_TeleportableWall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NextMapNameUI.cpp">
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

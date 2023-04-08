@@ -28,8 +28,6 @@ HRESULT CCanvas_MainTalk::Initialize(void* pArg)
 
 	m_dTalk_TimeAcc = 5.0;
 
-	Find_ChildUI(L"Talk_BackGround")->SetVisible(false);
-
 	return S_OK;
 }
 
@@ -43,7 +41,7 @@ void CCanvas_MainTalk::Tick(_double TimeDelta)
 	// 0 : 시간 되면 넘기기
 	m_dTalk_TimeAcc += TimeDelta;
 	if (m_dTalk_TimeAcc >= 5.0 && m_bNextTalk == false)
-		Show_Talk();
+		//Show_Talk();
 
 	// 1 ; 키 입력으로 넘기기
 	if (CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
