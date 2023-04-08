@@ -33,14 +33,12 @@ HRESULT CPlayerInfo_HpUI::Initialize(void * pArg)
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
 
-	m_tParams.Floats[0] = 1.0f;
 	
 	return S_OK;
 }
 
 void CPlayerInfo_HpUI::BeginTick()
 {
-
 
 }
 

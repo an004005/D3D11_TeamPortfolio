@@ -5,7 +5,6 @@
 #include "UI_Manager.h"
 
 #include "Canvas_Item.h"
-#include "Canvas_PlayerInfoMove.h"
 #include "Item_PushArrowUI.h"
 #include "Item_LeftArrowUI.h"
 #include "Item_RightArrowUI.h"
@@ -94,9 +93,6 @@ void CCanvas_ItemMove::Key_Input()
 		dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_GaugeBack"))->Set_CooldownTimeStart();
 
 		dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_ItmeUse();
-
-		// Front Hp Bar 에게 전달
-		dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Set_HillBar();
 	}
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_LEFT))

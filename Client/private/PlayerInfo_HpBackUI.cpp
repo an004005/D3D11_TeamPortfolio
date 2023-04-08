@@ -32,15 +32,13 @@ HRESULT CPlayerInfo_HpBackUI::Initialize(void * pArg)
 	static _int iObjectCount;
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
-
-	m_tParams.Floats[0] = 0.0f;
 	
 	return S_OK;
 }
 
 void CPlayerInfo_HpBackUI::BeginTick()
 {
-
+	m_tParams.Floats[0] = 1.0f;
 }
 
 void CPlayerInfo_HpBackUI::Tick(_double TimeDelta)
