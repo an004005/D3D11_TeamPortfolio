@@ -10,7 +10,7 @@ HRESULT CEM8200_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameObjec
 	m_pASM_Base = CASMBuilder()
 		 .InitState("Idle")
 		 .AddState("Idle")
-		 .SetAnimation(*m_pModel->Find_Animation("AS_em8200_101_AL_wait01"))
+		 .SetAnimation(*m_pModel->Find_Animation("AS_em8200_102_AL_wait02"))
 		
 		.AddTransition("Idle to Walk", "Walk")
 		.Predicator([this] { return m_bMove; })
@@ -21,21 +21,6 @@ HRESULT CEM8200_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameObjec
 		
 		.AddTransition("Walk to Idle", "Idle")
 		.Predicator([this] { return !m_bMove && !m_bRun; })
-		.Duration(0.2f)
-		
-		.AddTransition("Walk to Run", "Run")
-		.Predicator([this] {return m_bRun; })
-		.Duration(0.2f)
-		
-		.AddState("Run")
-		.SetAnimation(*m_pModel->Find_Animation("AS_em8200_106_AL_run"))
-		
-		.AddTransition("Run to Idle", "Idle")
-		.Predicator([this] { return !m_bMove && !m_bRun; })
-		.Duration(0.2f)
-		
-		.AddTransition("Run to Walk", "Walk")
-		.Predicator([this] {return !m_bRun && m_bMove; })
 		.Duration(0.2f)
 
 		.Build();

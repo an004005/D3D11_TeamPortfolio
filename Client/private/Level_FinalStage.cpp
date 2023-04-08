@@ -20,7 +20,7 @@ CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext
 HRESULT CLevel_FinalStage::Initialize()
 {
 	m_bPlayerSpawn = false;
-
+	
 	m_strLevelName = L"FinalStage";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/FinalStage_ShadowCam.json";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_FinalBossStage.json";

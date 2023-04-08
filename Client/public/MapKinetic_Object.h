@@ -87,6 +87,10 @@ private:
 public:
 	void				SetThrow() { m_bThrow = true; }
 	_bool				GetThrow() { return m_bThrow; }
+
+	_bool				IsUseBoss() { return m_bBossUse; }
+	void				SetUseBoss() { m_bBossUse = true; }
+
 	_bool				Usable() { return m_bUsable; }
 
 	_bool				Get_CameRange() {
@@ -104,6 +108,8 @@ private:
 	_float				m_fDeadTimer = 0.f;
 
 	_bool				m_bCameRange = { false };
+
+	_bool				m_bBossUse = false; 
 
 private:
 	vector<wstring>		m_vecRandomParticle{

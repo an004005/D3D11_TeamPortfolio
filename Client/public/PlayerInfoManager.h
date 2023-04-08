@@ -44,6 +44,9 @@ typedef struct tagPlayerStatus
 	_uint iBP = { 0 };
 	_uint iCoin = { 0 };
 
+
+	_bool bAttackEnable = false;
+
 	_bool bBattle = false;
 
 	_float m_fBaseAttackDamage;
@@ -140,6 +143,9 @@ public:	// Set
 	void			Set_BattleState(_bool bBattle) { m_tPlayerStat.bBattle = bBattle; }
 
 	void			Set_PlayerWorldMatrix(_fmatrix worldmatrix);
+
+	void			Set_PlayerAttackEnable(_bool bEnable) { m_tPlayerStat.bAttackEnable = bEnable; }
+	_bool			Get_PlayerAttackEnable() { return m_tPlayerStat.bAttackEnable; }
 
 	HRESULT			Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);

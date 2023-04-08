@@ -545,6 +545,7 @@ void CPlayer::Tick(_double TimeDelta)
 		iter->Tick(TimeDelta);
 		{
 			_bool bCol = Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART));
+			CPlayerInfoManager::GetInstance()->Set_PlayerAttackEnable(m_bAttackEnable);
 
 			if (bCol)
 			{

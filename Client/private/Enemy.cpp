@@ -758,6 +758,13 @@ void CEnemy::SocketLocalMove(CEnemy_AnimInstance * pASM)
 	m_pTransformCom->LocalMove(vLocalMove);
 }
 
+void CEnemy::SocketLocalMove_Range(CEnemy_AnimInstance* pASM, _float fRange)
+{
+	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	_vector vLocalMove = m_pModelCom->GetLocalMove(WorldMatrix, pASM->GetCurSocketAnimName());
+	m_pTransformCom->LocalMove(vLocalMove, fRange);
+}
+
 void CEnemy::Free()
 {
 	CScarletCharacter::Free();
