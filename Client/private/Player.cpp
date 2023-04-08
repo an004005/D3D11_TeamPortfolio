@@ -8948,18 +8948,28 @@ HRESULT CPlayer::Setup_Parts()
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json Weapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/wp0190.json");
-	Weapon["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
+//	Json Weapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/wp0190.json");
+//	Weapon["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
+//
+//	CGameObject*	pGameObject = nullptr;
+//
+//	WEAPON_DESC		Desc;
+//	ZeroMemory(&Desc, sizeof(WEAPON_DESC));
+//	Desc.m_pJson = &Weapon;
+//
+////	pGameInstance->Clone_GameObject(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
+//
+//	pGameObject = pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("PlayerWeapon"), &Desc);
+//	m_vecWeapon.push_back(pGameObject);
 
-	CGameObject*	pGameObject = nullptr;
+	Json Weapon = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/wp0190.json");
 
 	WEAPON_DESC		Desc;
 	ZeroMemory(&Desc, sizeof(WEAPON_DESC));
 	Desc.m_pJson = &Weapon;
 
-//	pGameInstance->Clone_GameObject(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
-
-	pGameObject = pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("PlayerWeapon"), &Desc);
+	CGameObject* pGameObject = nullptr;
+	pGameObject = pGameInstance->Clone_GameObject_Get(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
 	m_vecWeapon.push_back(pGameObject);
 
 	return S_OK;

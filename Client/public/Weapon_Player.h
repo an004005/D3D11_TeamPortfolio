@@ -26,6 +26,9 @@ public:
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render();
 
+public:
+	void	Change_Weapon(WEAPONTYPE eType);
+
 private:
 	WEAPONTYPE	m_eType = WP_END;
 
@@ -34,7 +37,8 @@ private:
 
 private:
 	HRESULT				SetUp_Components();
-	vector<CModel*>		m_pModels;
+	vector<CModel*>		m_pModelComs;
+	vector<wstring>		m_pModelTags;
 
 public:
 	static CWeapon_Player* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
