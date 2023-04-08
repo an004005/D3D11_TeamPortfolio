@@ -44,6 +44,8 @@ typedef struct tagPlayerStatus
 	_uint iBP = { 0 };
 	_uint iCoin = { 0 };
 
+	_float fKineticCharge = { 0.f };	// 염력체 차지 백분율 (0~1)
+
 	_bool bBattle = false;
 
 	_float m_fBaseAttackDamage;
@@ -148,6 +150,9 @@ public:	// Set
 
 	void			Set_PlayerWorldMatrix(_fmatrix worldmatrix);
 	_matrix			Get_PlayerWorldMatrix();
+
+	void			Set_KineticCharge(_float fCharge) { m_tPlayerStat.fKineticCharge = fCharge; }
+	_float			Get_KineticCharge() { return m_tPlayerStat.fKineticCharge; }
 
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);

@@ -1,1 +1,51 @@
-{"LocalMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,-0.10000000149011612,0.0,1.0],"ModelTags":["Model_HBeam_Single\u0000","Model_HBeam_Single\u0000"],"ObjectTag":"","Prototype_GameObject":"Prototype_GameObject_Special_HBeam_Single\u0000","RigidBody":{"ColliderType":4,"Density":10.0,"OriginTransform":[3.5,0.0,0.0,0.0,0.0,0.30000001192092896,0.0,0.0,0.0,0.0,0.30000001192092896,0.0,0.0,0.125,0.0,1.0],"ShapeType":0,"bKinematic":false,"bTrigger":false},"Transform":{"WorldMatrix":[0.9999996423721313,3.6907134926877916e-05,-0.0008328116964548826,0.0,-3.626584657467902e-05,0.9999997019767761,0.0007700308924540877,0.0,0.0008328398689627647,-0.0007700003916397691,0.9999993443489075,0.0,-111.08030700683594,0.30013495683670044,-17.37313461303711,1.0]}}
+{
+    "LocalMatrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -0.10000000149011612,
+        0.0,
+        1.0
+    ],
+    "ModelTags": [
+        "Model_HBeam_Single\u0000",
+        "Model_HBeam_Single\u0000"
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "Prototype_GameObject_Special_HBeam_Single\u0000",
+    "RigidBody": {
+        "ColliderType": 4,
+        "Density": 10.0,
+        "OriginTransform": [
+            3.5,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.30000001192092896,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.30000001192092896,
+            0.0,
+            0.0,
+            0.125,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 0,
+        "bKinematic": false,
+        "bTrigger": false
+    }
+}

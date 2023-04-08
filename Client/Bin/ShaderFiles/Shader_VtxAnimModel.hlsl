@@ -391,7 +391,7 @@ PS_OUT PS_MAIN_KINETIC_7(PS_IN In)
 	if (fDissolveDisappear > 0.f)
 	{
 		float fNoise = g_scl_noise_004.Sample(LinearSampler, In.vTexUV * 2.f).r;
-		if (fDissolveDisappear < fNoise)
+		if (fDissolveDisappear >= fNoise)
 			discard;
 	}
 
