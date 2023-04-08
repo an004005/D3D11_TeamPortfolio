@@ -22,8 +22,11 @@ public:
 
 	virtual void	Imgui_RenderProperty() override;
 
+public:
+	void	Set_SkillAll(const _bool bXKey);
+
 private:
-	void	Set_SkillInfo(const SKILLINDEX eSKILLINDEX, const ESASType eESASType);
+	//void	Set_SkillInfo(const SKILLINDEX eSKILLINDEX, const ESASType eESASType);
 	void	Set_IconType(const _uint iIndex, const ESASType & eESASType);
 
 	void	InputIcon_Tick();
@@ -39,6 +42,9 @@ private:
 
 	_bool			m_bMember0 = { false };
 	_bool			m_bMember1 = { false };
+
+	_uint			m_iSASType = { 0 };
+	_bool			m_bXKey = { false };
 
 public:
 	static CCanvas_SASSkillMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

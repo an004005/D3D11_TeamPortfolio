@@ -39,7 +39,8 @@ private:
 	_bool			m_bChangeXButton = { false };		// 타이머 사용하기 위해서
 	_double		m_dChangeX_TimcAcc = { 0.0 };		// X로 변경하면서, 잠깐 X 키에 불이 들어오는 용도
 
-	_bool			m_bMember = { false };
+	_bool			m_bMember0 = { false };
+	_bool			m_bMember1 = { false };
 
 	//_bool			m_bCtrl = { false };
 	//_bool			m_bAlt = { false };

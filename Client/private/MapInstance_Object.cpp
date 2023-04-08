@@ -285,7 +285,7 @@ HRESULT CMapInstance_Object::SetUp_Components()
 
 	if (nullptr == pGameInstance->Find_Prototype_Component(LEVEL_NOW, m_strModelTag.c_str()))
 	{
-		_uint iNumInstance = 500;
+		_uint iNumInstance = 600;
 		FAILED_CHECK(pGameInstance->Add_Prototype(m_strModelTag.c_str(), CModel_Instancing::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str(), iNumInstance)));
 	}
 

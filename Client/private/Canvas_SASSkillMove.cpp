@@ -41,35 +41,14 @@ HRESULT CCanvas_SASSkillMove::Initialize(void* pArg)
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
 
-	//// 처음에 보이지 않을 UI 들
-	//Find_ChildUI(L"SASSkill_IconNumber1")->SetVisible(false);
-	//Find_ChildUI(L"SASSkill_IconNumber2")->SetVisible(false);
-	//Find_ChildUI(L"SASSkill_IconNumber3")->SetVisible(false);
-	//Find_ChildUI(L"SASSkill_IconNumber4")->SetVisible(false);
-
-	//Find_ChildUI(L"SASSKill_ColleagueName1")->SetVisible(false);
-	//Find_ChildUI(L"SASSKill_ColleagueName2")->SetVisible(false);
-	//Find_ChildUI(L"SASSKill_ColleagueName3")->SetVisible(false);
-	//Find_ChildUI(L"SASSKill_ColleagueName4")->SetVisible(false);
-
-	//Find_ChildUI(L"SASSKill_SuperPower1")->SetVisible(false);
-	//Find_ChildUI(L"SASSKill_SuperPower2")->SetVisible(false);
-	//Find_ChildUI(L"SASSKill_SuperPower3")->SetVisible(false);
-	//Find_ChildUI(L"SASSKill_SuperPower4")->SetVisible(false);
-
-	m_eSASType[ONE0] = ESASType::SAS_FIRE;
+	m_eSASType[ONE0] = ESASType::SAS_NOT;
 	m_eSASType[TWO0] = ESASType::SAS_PENETRATE;
 	m_eSASType[THREE0] = ESASType::SAS_HARDBODY;
-	m_eSASType[FOUR0] = ESASType::SAS_NOT;
+	m_eSASType[FOUR0] = ESASType::SAS_FIRE;
 	m_eSASType[ONE1] = ESASType::SAS_NOT;
 	m_eSASType[TWO1] = ESASType::SAS_NOT;
 	m_eSASType[THREE1] = ESASType::SAS_NOT;
 	m_eSASType[FOUR1] = ESASType::SAS_NOT;
-
-	Set_IconType(1, m_eSASType[ONE0]);
-	Set_IconType(2, m_eSASType[TWO0]);
-	Set_IconType(3, m_eSASType[THREE0]);
-	Set_IconType(4, m_eSASType[FOUR0]);
 
 	return S_OK;
 }
@@ -82,16 +61,20 @@ void CCanvas_SASSkillMove::BeginTick()
 
 void CCanvas_SASSkillMove::Tick(_double TimeDelta)
 {
-#pragma region 동료를 만나고 나서부터 Tick 을 돈다. (첫번 쨰 만남)
+#pragma region 동료를 만나고 나서부터 Tick 을 돈다. (첫번 째 만남)
 	// 처음에 하나비를 만난 기준으로 부터 SAS SKilll 창이 보인다.
 	if (false == m_bMember0)
 	{
-		if (false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::HANABI) && 
-			false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI)&&
+		if (false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::HANABI) || 
+			false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI) ||
 			false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::KYOTO))
 			return;
 
 		m_bMember0 = true;
+
+		Set_IconType(2, m_eSASType[TWO0]);
+		Set_IconType(3, m_eSASType[THREE0]);
+		Set_IconType(4, m_eSASType[FOUR0]);
 
 		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		{
@@ -115,18 +98,24 @@ void CCanvas_SASSkillMove::Tick(_double TimeDelta)
 #pragma endregion
 
 #pragma region (2번째 만남)
-	if (true == m_bMember0 && m_bMember1 == false)
+	if (true == m_bMember0 && false == m_bMember1)
 	{
-		if (false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::LUCA) &&
-			false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::SEEDEN) &&
-			false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::ARASHI))
-			return;
+		if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::LUCA))
+		{
+			m_eSASType[ONE0] = ESASType::SAS_TELEPORT;
+			Set_IconType(1, m_eSASType[FOUR0]);
+		}
 
-		m_bMember1 = true;
+		if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::LUCA) &&
+			true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::SEEDEN) &&
+			true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::ARASHI))
+		{
+			m_bMember1 = true;
 
-		m_eSASType[FOUR0] = ESASType::SAS_TELEPORT;
-		m_eSASType[ONE1] = ESASType::SAS_ELETRIC;
-		m_eSASType[TWO1] = ESASType::SAS_SUPERSPEED;
+			m_eSASType[ONE1] = ESASType::SAS_SUPERSPEED;
+			m_eSASType[TWO1] = ESASType::SAS_ELETRIC;
+
+		}
 	}
 #pragma endregion
 
@@ -177,26 +166,66 @@ void CCanvas_SASSkillMove::Imgui_RenderProperty()
 	}
 }
 
-void CCanvas_SASSkillMove::Set_SkillInfo(const SKILLINDEX eSKILLINDEX, const ESASType eESASType)
+void CCanvas_SASSkillMove::Set_SkillAll(const _bool bXKey)
 {
-	if (ESASType::SAS_END == m_eSASType[eSKILLINDEX])
+	_tchar szText[MAX_PATH] = TEXT("");
+
+	m_bXKey = bXKey; // false 이면 ONE0~ / true이면 ONE1~
+	if (false == m_bXKey)
 	{
-		m_eSASType[eSKILLINDEX] = eESASType;
-		return;
+		m_iSASType = 0;
+	}
+	else
+	{
+		m_iSASType = 4;
 	}
 
-	for (_uint i = 0; i < SKILLINDEX_END; ++i)
+	for (_uint i = 1; i < 5; i++)
 	{
-		if (m_eSASType[i] == eESASType)
-		{
-			m_eSASType[i] = m_eSASType[eSKILLINDEX];
-			m_eSASType[eSKILLINDEX] = eESASType;
-			return;
-		}
-	}
+		ESASType eSasType = m_eSASType[static_cast<SKILLINDEX>(m_iSASType)];
 
-	m_eSASType[eSKILLINDEX] = eESASType;
+		wsprintf(szText, TEXT("SASSkill_Icon%u"), i);
+		dynamic_cast<CSASSkillIconUI*>(Find_ChildUI(szText))->Set_IconType(eSasType, true);
+		wsprintf(szText, TEXT("SASSKill_SuperPower%u"), i);
+		dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(szText))->Set_SuperPower(eSasType, true);
+		wsprintf(szText, TEXT("SASSKill_ColleagueName%u"), i);
+		dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(szText))->Set_ColleagueName(eSasType, true);
+		wsprintf(szText, TEXT("SASSkill_Light%u"), i);
+		dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(szText))->Set_LightType(eSasType, false);
+
+		_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSasType)].Energy;
+		_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSasType)].MaxEnergy;
+		_float fRatio = fCurrentEnergy / fMaxEnergy;
+		if (ESASType::SAS_NOT == eSasType) fRatio = 0.0f;
+		wsprintf(szText, TEXT("SASSkill_Gauge%u"), i);
+		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(szText))->Set_GaugeType(eSasType, fRatio);
+		wsprintf(szText, TEXT("SASSkill_Gauge%uBack"), i);
+		dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(szText))->Set_GaugeBackType(eSasType, fRatio);
+
+		++m_iSASType;
+	}
 }
+
+//void CCanvas_SASSkillMove::Set_SkillInfo(const SKILLINDEX eSKILLINDEX, const ESASType eESASType)
+//{
+//	if (ESASType::SAS_END == m_eSASType[eSKILLINDEX])
+//	{
+//		m_eSASType[eSKILLINDEX] = eESASType;
+//		return;
+//	}
+//
+//	for (_uint i = 0; i < SKILLINDEX_END; ++i)
+//	{
+//		if (m_eSASType[i] == eESASType)
+//		{
+//			m_eSASType[i] = m_eSASType[eSKILLINDEX];
+//			m_eSASType[eSKILLINDEX] = eESASType;
+//			return;
+//		}
+//	}
+//
+//	m_eSASType[eSKILLINDEX] = eESASType;
+//}
 
 void CCanvas_SASSkillMove::Set_IconType(const _uint iIndex, const ESASType & eESASType)
 {
@@ -209,42 +238,23 @@ void CCanvas_SASSkillMove::Set_IconType(const _uint iIndex, const ESASType & eES
 	else
 		bUsable = false;
 
-	//_tchar szText[MAX_PATH] = TEXT("");
-	//
-	//for (_uint i = 1; i < 5; i++)
-	//{
-	//	wsprintf(szText, TEXT("SASSkill_Icon%u"), i);
-	//	dynamic_cast<CSASSkillIconUI*>(Find_ChildUI(szText))->Set_IconType(eESASType, bUsable);
-	//	wsprintf(szText, TEXT("SASSKill_SuperPower%u"), i);
-	//	dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(szText))->Set_SuperPower(eESASType, bUsable);
-	//	wsprintf(szText, TEXT("SASSKill_ColleagueName%u"), i);
-	//	dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(szText))->Set_ColleagueName(eESASType, bUsable);
-	//}
+	_tchar szText[MAX_PATH] = TEXT("");
+	wsprintf(szText, TEXT("SASSkill_Icon%u"), iIndex);
+	dynamic_cast<CSASSkillIconUI*>(Find_ChildUI(szText))->Set_IconType(eESASType, bUsable);
+	wsprintf(szText, TEXT("SASSKill_SuperPower%u"), iIndex);
+	dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(szText))->Set_SuperPower(eESASType, bUsable);
+	wsprintf(szText, TEXT("SASSKill_ColleagueName%u"), iIndex);
+	dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(szText))->Set_ColleagueName(eESASType, bUsable);
+	wsprintf(szText, TEXT("SASSkill_Light%u"), iIndex);
+	dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(szText))->Set_LightType(eESASType, false);
 
-	if (1 == iIndex)
-	{
-		dynamic_cast<CSASSkillIconUI*>(Find_ChildUI(L"SASSkill_Icon1"))->Set_IconType(eESASType, bUsable);
-		dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(L"SASSKill_SuperPower1"))->Set_SuperPower(eESASType, bUsable);
-		dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(L"SASSKill_ColleagueName1"))->Set_ColleagueName(eESASType, bUsable);
-	}
-	else if (2 == iIndex)
-	{
-		dynamic_cast<CSASSkillIconUI*>(Find_ChildUI(L"SASSkill_Icon2"))->Set_IconType(eESASType, bUsable);
-		dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(L"SASSKill_SuperPower2"))->Set_SuperPower(eESASType, bUsable);
-		dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(L"SASSKill_ColleagueName2"))->Set_ColleagueName(eESASType, bUsable);
-	}
-	else if (3 == iIndex)
-	{
-		dynamic_cast<CSASSkillIconUI*>(Find_ChildUI(L"SASSkill_Icon3"))->Set_IconType(eESASType, bUsable);
-		dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(L"SASSKill_SuperPower3"))->Set_SuperPower(eESASType, bUsable);
-		dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(L"SASSKill_ColleagueName3"))->Set_ColleagueName(eESASType, bUsable);
-	}
-	else if (4 == iIndex)
-	{
-		dynamic_cast<CSASSkillIconUI*>(Find_ChildUI(L"SASSkill_Icon4"))->Set_IconType(eESASType, bUsable);
-		dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(L"SASSKill_SuperPower4"))->Set_SuperPower(eESASType, bUsable);
-		dynamic_cast<CSASSkillNameUI*>(Find_ChildUI(L"SASSKill_ColleagueName4"))->Set_ColleagueName(eESASType, bUsable);
-	}
+	_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eESASType)].MaxEnergy;
+	_float fRatio = fCurrentEnergy / fMaxEnergy;
+	if (ESASType::SAS_NOT == eESASType) fRatio = 0.0f;
+	wsprintf(szText, TEXT("SASSkill_Gauge%u"), iIndex);
+	dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(szText))->Set_GaugeType(eESASType, fRatio);
+	wsprintf(szText, TEXT("SASSkill_Gauge%uBack"), iIndex);
+	dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(szText))->Set_GaugeBackType(eESASType, fRatio);
 }
 
 void CCanvas_SASSkillMove::InputIcon_Tick()
@@ -319,17 +329,24 @@ void CCanvas_SASSkillMove::InputAlt_Tick()
 
 void CCanvas_SASSkillMove::UseSkill_Tick()
 {
+	if (nullptr == m_pPlayer) return;
+
 	// 1
 	if (true == m_pPlayer->Get_SASSkillInput(0))
 	{
 		ESASType eSASType = m_eSASType[ONE0];
+		if(m_bXKey) eSASType = m_eSASType[ONE1];
 
-		_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-		_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
-		_float fRatio = fCurrentEnergy / fMaxEnergy;
-
-		if (ESASType::SAS_NOT != eSASType)
+		if (ESASType::SAS_NOT == eSASType)
 		{
+			Set_IconType(1, ESASType::SAS_NOT);
+		}
+		else
+		{
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+			_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+			_float fRatio = fCurrentEnergy / fMaxEnergy;
+
 			dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light1"))->Set_LightType(eSASType, true);
 			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge1"))->Set_GaugeType(eSASType, fRatio);
 			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge1Back"))->Set_GaugeBackType(eSASType, fRatio);
@@ -338,8 +355,13 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	else
 	{
 		ESASType eSASType = m_eSASType[ONE0];
+		if (m_bXKey) eSASType = m_eSASType[ONE1];
 
-		if (ESASType::SAS_NOT != eSASType)
+		if (ESASType::SAS_NOT == eSASType)
+		{
+			Set_IconType(1, ESASType::SAS_NOT);
+		}
+		else
 		{
 			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
 			_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
@@ -355,13 +377,18 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	if (true == m_pPlayer->Get_SASSkillInput(1))
 	{
 		ESASType eSASType = m_eSASType[TWO0];
+		if (m_bXKey) eSASType = m_eSASType[TWO1];
 
-		_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-		_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
-		_float fRatio = fCurrentEnergy / fMaxEnergy;
-
-		if (ESASType::SAS_NOT != eSASType)
+		if (ESASType::SAS_NOT == eSASType)
 		{
+			Set_IconType(2, ESASType::SAS_NOT);
+		}
+		else
+		{
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+			_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+			_float fRatio = fCurrentEnergy / fMaxEnergy;
+
 			dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light2"))->Set_LightType(eSASType, true);
 			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge2"))->Set_GaugeType(eSASType, fRatio);
 			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge2Back"))->Set_GaugeBackType(eSASType, fRatio);
@@ -370,8 +397,13 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	else
 	{
 		ESASType eSASType = m_eSASType[TWO0];
+		if (m_bXKey) eSASType = m_eSASType[TWO1];
 
-		if (ESASType::SAS_NOT != eSASType)
+		if (ESASType::SAS_NOT == eSASType)
+		{
+			Set_IconType(2, ESASType::SAS_NOT);
+		}
+		else
 		{
 			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
 			_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
@@ -387,13 +419,18 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	if (true == m_pPlayer->Get_SASSkillInput(2))
 	{
 		ESASType eSASType = m_eSASType[THREE0];
+		if (m_bXKey) eSASType = m_eSASType[THREE1];
 
-		_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-		_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
-		_float fRatio = fCurrentEnergy / fMaxEnergy;
-
-		if (ESASType::SAS_NOT != eSASType)
+		if (ESASType::SAS_NOT == eSASType)
 		{
+			Set_IconType(3, ESASType::SAS_NOT);
+		}
+		else
+		{
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+			_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+			_float fRatio = fCurrentEnergy / fMaxEnergy;
+
 			dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light3"))->Set_LightType(eSASType, true);
 			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge3"))->Set_GaugeType(eSASType, fRatio);
 			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge3Back"))->Set_GaugeBackType(eSASType, fRatio);
@@ -402,8 +439,13 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	else
 	{
 		ESASType eSASType = m_eSASType[THREE0];
+		if (m_bXKey) eSASType = m_eSASType[THREE1];
 
-		if (ESASType::SAS_NOT != eSASType)
+		if (ESASType::SAS_NOT == eSASType)
+		{
+			Set_IconType(3, ESASType::SAS_NOT);
+		}
+		else
 		{
 			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
 			_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
@@ -419,13 +461,18 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	if (true == m_pPlayer->Get_SASSkillInput(3))
 	{
 		ESASType eSASType = m_eSASType[FOUR0];
+		if (m_bXKey) eSASType = m_eSASType[FOUR1];
 
-		_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
-		_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
-		_float fRatio = fCurrentEnergy / fMaxEnergy;
-
-		if (ESASType::SAS_NOT != eSASType)
+		if (ESASType::SAS_NOT == eSASType)
 		{
+			Set_IconType(4, ESASType::SAS_NOT);
+		}
+		else
+		{
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
+			_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;
+			_float fRatio = fCurrentEnergy / fMaxEnergy;
+
 			dynamic_cast<CSASSkillLightUI*>(Find_ChildUI(L"SASSkill_Light4"))->Set_LightType(eSASType, true);
 			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge4"))->Set_GaugeType(eSASType, fRatio);
 			dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(L"SASSkill_Gauge4Back"))->Set_GaugeBackType(eSASType, fRatio);
@@ -434,8 +481,13 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 	else
 	{
 		ESASType eSASType = m_eSASType[FOUR0];
+		if (m_bXKey) eSASType = m_eSASType[FOUR1];
 
-		if (ESASType::SAS_NOT != eSASType)
+		if (ESASType::SAS_NOT == eSASType)
+		{
+			Set_IconType(4, ESASType::SAS_NOT);
+		}
+		else
 		{
 			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].Energy;
 			_float fMaxEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eSASType)].MaxEnergy;

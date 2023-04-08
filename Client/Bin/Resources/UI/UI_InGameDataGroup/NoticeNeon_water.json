@@ -1349,8 +1349,6 @@
         "Timeline": {
             "Events": [
                 {
-                    "EventName": "Notice_Neon_Water_Particle",
-                    "EventTime": 0.0
                 }
             ]
         }

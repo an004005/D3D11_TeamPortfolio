@@ -123,7 +123,9 @@ public:	// Get
 	TSUGUMI_STAT&	Get_TsugumiStat() { 
 		return m_tTsugumiStat;
 	}
-	_bool					Get_SASMember(const SASMEET eSAS) { return m_bSASMember[eSAS]; }
+	_bool					Get_SASMember(const SASMEET eSAS) { 
+		return m_bSASMember[eSAS];
+	}
 
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
@@ -152,7 +154,9 @@ public:	// Set
 	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
 	
 	// SAS
-	void			Set_SASMember(const SASMEET eSAS) { m_bSASMember[eSAS] = true; }
+	void			Set_SASMember(const SASMEET eSAS) { 
+		m_bSASMember[eSAS] = true; 
+	}
 
 public:
 	HRESULT	Set_CamSpot(CGameObject* pCamSpot);
