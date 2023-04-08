@@ -66,11 +66,11 @@ void CGameManager::Tick(_double TimeDelta)
 		m_bQuest = true;
 	}
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
-	{
-		m_bSuccessQuest = true;
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	//{
+	//	m_bSuccessQuest = true;
 
-	}
+	//}
 
 	Quest_Tick();
 }

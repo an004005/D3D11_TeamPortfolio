@@ -4751,6 +4751,12 @@
             }
         ]
     },
+    "AS_em0100_429_AL_damage_down_add": {
+        "Duration": 80.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0100_474_AL_dead_down02": {
         "Duration": 138.0,
         "TickPerSecond": 50.0,
@@ -4762,9 +4768,21 @@
             }
         ]
     },
+    "AS_em0100_475_AL_down_start02": {
+        "Duration": 80.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0100_477_AL_getup02": {
+        "Duration": 171.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0110_206_AL_atk_b2_start": {
         "Duration": 117.0,
-        "TickPerSecond": 35.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -4775,13 +4793,13 @@
     },
     "AS_em0110_207_AL_atk_b2_loop": {
         "Duration": 41.0,
-        "TickPerSecond": 35.0,
-        "bLooping": false,
+        "TickPerSecond": 50.0,
+        "bLooping": true,
         "vecEvent": []
     },
     "AS_em0110_208_AL_atk_b2_stop": {
         "Duration": 99.0,
-        "TickPerSecond": 35.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -5244,7 +5262,7 @@
     },
     "AS_em0220_111_AL_to_guard": {
         "Duration": 40.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 80.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -5256,7 +5274,7 @@
     },
     "AS_em0220_113_AL_to_wait03": {
         "Duration": 40.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 80.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -5285,7 +5303,7 @@
     },
     "AS_em0220_217_AL_Counter": {
         "Duration": 110.0,
-        "TickPerSecond": 80.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -5946,7 +5964,7 @@
             },
             {
                 "EventName": "AirDamageReset",
-                "EventTime": 48.0
+                "EventTime": 35.0
             }
         ]
     },
@@ -6550,6 +6568,130 @@
                 "EventTime": 57.0
             }
         ]
+    },
+    "AS_em0900_106_AL_walk_F_loop": {
+        "Duration": 100.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0900_112_AL_walk_R_loop": {
+        "Duration": 100.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0900_202_AL_atk_a2_feint": {
+        "Duration": 145.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Feint_1Atk_Start",
+                "EventTime": 35.0
+            },
+            {
+                "EventName": "Feint_1Atk_End",
+                "EventTime": 55.0
+            },
+            {
+                "EventName": "Feint_2Atk_Start",
+                "EventTime": 70.0
+            },
+            {
+                "EventName": "Feint_2Atk_End",
+                "EventTime": 90.0
+            }
+        ]
+    },
+    "AS_em0900_205_AL_atk_a5_4attack": {
+        "Duration": 390.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "1Attack",
+                "EventTime": 117.0
+            },
+            {
+                "EventName": "2Attack",
+                "EventTime": 170.0
+            },
+            {
+                "EventName": "3Attack",
+                "EventTime": 210.0
+            },
+            {
+                "EventName": "4Attack",
+                "EventTime": 275.0
+            }
+        ]
+    },
+    "AS_em0900_207_AL_atk_a7": {
+        "Duration": 315.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Swing_Start",
+                "EventTime": 54.0
+            },
+            {
+                "EventName": "Swing_End",
+                "EventTime": 234.0
+            }
+        ]
+    },
+    "AS_em0900_220_AL_atk_a1_start": {
+        "Duration": 75.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Take_gift_out",
+                "EventTime": 22.5
+            }
+        ]
+    },
+    "AS_em0900_222_AL_atk_a1_end": {
+        "Duration": 70.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Throw_gift",
+                "EventTime": 37.0
+            }
+        ]
+    },
+    "AS_em0900_414_AL_damage_m_R": {
+        "Duration": 240.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0900_424_AL_dead_down": {
+        "Duration": 151.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Dead_Flower",
+                "EventTime": 30.0
+            }
+        ]
+    },
+    "AS_em0900_427_AL_getup": {
+        "Duration": 204.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0900_429_AL_damage_down_add": {
+        "Duration": 60.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
     },
     "AS_em1100_107_AL_run_start": {
         "Duration": 54.0,

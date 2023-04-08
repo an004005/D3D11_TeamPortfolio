@@ -293,6 +293,9 @@
     <ClInclude Include="..\public\EM0800.h" />
     <ClInclude Include="..\public\EM0800_AnimInstance.h" />
     <ClInclude Include="..\public\EM0800_Controller.h" />
+    <ClInclude Include="..\public\EM0900.h" />
+    <ClInclude Include="..\public\EM0900_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0900_Controller.h" />
     <ClInclude Include="..\public\EM1100.h" />
     <ClInclude Include="..\public\EM1100_AnimInstance.h" />
     <ClInclude Include="..\public\EM1100_Controller.h" />
@@ -304,6 +307,7 @@
     <ClInclude Include="..\public\EM8200_Controller.h" />
     <ClInclude Include="..\public\EMBrain.h" />
     <ClInclude Include="..\public\EMCable.h" />
+    <ClInclude Include="..\public\EMGift.h" />
     <ClInclude Include="..\public\EMUI.h" />
     <ClInclude Include="..\public\FSM_Recompiler.h" />
     <ClInclude Include="..\public\HS_TeleportableWall.h" />
@@ -629,6 +633,9 @@
     <ClCompile Include="..\private\EM0800.cpp" />
     <ClCompile Include="..\private\EM0800_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0800_Controller.cpp" />
+    <ClCompile Include="..\private\EM0900.cpp" />
+    <ClCompile Include="..\private\EM0900_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0900_Controller.cpp" />
     <ClCompile Include="..\private\EM1100.cpp" />
     <ClCompile Include="..\private\EM1100_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM1100_Controller.cpp" />
@@ -640,6 +647,7 @@
     <ClCompile Include="..\private\EM8200_Controller.cpp" />
     <ClCompile Include="..\private\EMBrain.cpp" />
     <ClCompile Include="..\private\EMCable.cpp" />
+    <ClCompile Include="..\private\EMGift.cpp" />
     <ClCompile Include="..\private\EMUI.cpp" />
     <ClCompile Include="..\private\FSM_Recompiler.cpp" />
     <ClCompile Include="..\private\HS_TeleportableWall.cpp" />

@@ -62,6 +62,7 @@ public:
 	void SetTarget(class CScarletCharacter* pTarget);
 
 	_float GetTurnRemain() const { return m_fTurnRemain; }
+	_float GetGapDistance() const { return m_fTtoM_Distance; }
 
 	// duration = 0 이면 한번만 실행함
 	// OnStart, OnExit 필요하면 만들기
