@@ -1466,7 +1466,6 @@
     <ClInclude Include="..\public\Level_FinalStage.h">
       <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\BrainField.h" />
     <ClInclude Include="..\public\Level_StageDefault.h" />
     <ClInclude Include="..\public\RedString.h" />
     <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
@@ -1503,6 +1502,7 @@
     <ClInclude Include="..\public\HS_TeleportableWall.h">
       <Filter>02.GameObjects\Map\InvisibleWall\HS_TeleportableWall</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BrainField.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2429,7 +2429,6 @@
     <ClCompile Include="..\private\Level_FinalStage.cpp">
       <Filter>01.Levels\02.GamePlay\07.FinalStage</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BrainField.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\RedString.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
@@ -2466,6 +2465,7 @@
     <ClCompile Include="..\private\HS_TeleportableWall.cpp">
       <Filter>02.GameObjects\Map\InvisibleWall\HS_TeleportableWall</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\BrainField.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

@@ -1605,6 +1605,11 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100"));
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+
+			// 이거 키는거
+			// m_pBrainField->OpenBrainField();(여기서 실행하면 됨)
+
+			// m_pBrainField->CloseBrainField();  끄는거
 		})
 		.Tick([&](double fTimeDelta) {static_cast<CCamSpot*>(m_pCamSpot)->Cam_Away(fTimeDelta, 0.3f); })
 		.OnExit([&]() {})
@@ -1674,7 +1679,7 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 
 	m_pBrainField = dynamic_cast<CBrainField*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Prototype_GameObject_BrainField"));
 	Assert(m_pBrainField != nullptr);
-	m_pBrainField->SetTargetInfo(m_pTransformCom, m_pModel);
+	m_pBrainField->SetTargetInfo(this, m_pTransformCom, m_pModel);
 
 	return S_OK;
 }

@@ -7,6 +7,7 @@
 #include "FSMComponent.h"
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
+#include "EffectSystem.h"
 #include "Material.h"
 #include "Layer.h"
 #include "SkyBox.h"
@@ -14,6 +15,7 @@
 #include "JsonStorage.h"
 #include "GameUtils.h"
 #include "RedString.h"
+#include "VFX_Manager.h"
 
 /**********************
  * CBrainField
@@ -62,7 +64,6 @@ HRESULT CBrainField::Initialize(void* pArg)
 
 	m_pMaskEmissive_c2 = CCurveManager::GetInstance()->GetCurve("BrainField_c2_MaskEmissive");
 	m_pMapAppear_c2 = CCurveManager::GetInstance()->GetCurve("BrainField_c2_MapAppear");
-	
 
 	{
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_BrainField.json");
@@ -73,6 +74,7 @@ HRESULT CBrainField::Initialize(void* pArg)
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Restrings/BranFieldStrings/FloorCombined.json");
 		m_pBrainFieldRedString = dynamic_cast<CCombinedRedString*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LAYER_MAP_DECO, L"Prototype_CombinedRedString", &json));
 		m_pBrainFieldRedString->SetVisible(false);
+		m_pBrainFieldRedString->SetPass(1);
 	}
 
 	m_CloseTimeline.SetCurve("Simple_Increase");
@@ -102,6 +104,8 @@ void CBrainField::BeginTick()
 				m_pDefaultMap = pScarletMap;
 		}
 	}
+
+
 }
 
 void CBrainField::Tick(_double TimeDelta)
@@ -146,6 +150,20 @@ void CBrainField::Tick(_double TimeDelta)
 			m_pMask->GetParam().Floats[4] = m_pMaskEmissive_c2->GetValue(fPlayRatio);
 			m_pMapPostProcess->GetParam().Floats[0] = m_pMapAppear_c2->GetValue(fPlayRatio);
 		}
+		else if (strcmp(m_pBrainFieldCables->GetStateName(), "OnPhysX") == 0 && m_FloorEffectOnce.IsNotDo())
+		{
+			m_pBrainFieldFloor = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"BrainFieldFloorGroup");
+			m_pBrainFieldFloor->Start_AttachOnlyPos(_float4(0.f, -0.15f, 0.f, 1.f), false);
+			Safe_AddRef(m_pBrainFieldFloor);
+			m_pBrainFieldFloor->GetFirstEffect()->SetRenderGroup(CRenderer::RENDER_MESH_ALPHABLEND);
+		}
+
+		if (m_pBrainFieldFloor)
+		{
+			const _vector vPos = m_pTargetTransform->Get_State(CTransform::STATE_TRANSLATION);
+			m_pBrainFieldFloor->GetFirstEffect()->GetParams().Float4s[0] = vPos;
+			m_pBrainFieldRedString->SetPos(vPos);
+		}
 	}
 	else
 	{
@@ -188,8 +206,9 @@ void CBrainField::Imgui_RenderProperty()
 	ImGui::Unindent(20.f);
 }
 
-void CBrainField::SetTargetInfo(CTransform* pTargetTransform, CModel* pTargetModel)
+void CBrainField::SetTargetInfo(CGameObject* pOwner, CTransform* pTargetTransform, CModel* pTargetModel)
 {
+	m_pTarget = pOwner;
 	m_pBrainFieldCables->SetTargetInfo(pTargetTransform, pTargetModel);
 	m_pTargetModel = pTargetModel;
 	m_pTargetTransform = pTargetTransform;
@@ -199,6 +218,7 @@ void CBrainField::SetTargetInfo(CTransform* pTargetTransform, CModel* pTargetMod
 void CBrainField::OpenBrainField()
 {
 	m_MapPostProcessFloat0Reset.Reset();
+	m_FloorEffectOnce.Reset();
 	m_pBrainFieldCables->Activate(true);
 	m_bOpen = true;
 	m_pSkyBox->GetParams().iPass = 2;
@@ -217,6 +237,13 @@ void CBrainField::CloseBrainField()
 	m_pDefaultMap->SetVisible_MapObjects(true);
 	m_pBrainFieldMap->SetVisible_MapObjects(false);
 	m_pBrainFieldRedString->SetVisible(false);
+
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainFieldFloor))
+	{
+		m_pBrainFieldFloor->SetDelete();
+		Safe_Release(m_pBrainFieldFloor);
+		m_pBrainFieldFloor = nullptr;
+	}
 }
 
 void CBrainField::Free()

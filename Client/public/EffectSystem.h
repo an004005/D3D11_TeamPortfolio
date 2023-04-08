@@ -1,4 +1,6 @@
 #pragma once
+#include <Renderer.h>
+
 #include "Client_Defines.h"
 #include "GameObject.h"
 #include "Shader.h"
@@ -75,6 +77,8 @@ public:
 	// For Int 
 	void Tick_Ints_0(_float fValue);
 
+	void SetRenderGroup(CRenderer::RENDERGROUP eRenderGroup) { m_eRenderGroup = eRenderGroup; }
+
 public:
 	void		Check_ModelSprite();
 private:
@@ -98,6 +102,8 @@ private:
 	_bool m_bUseDepth = false;
 
 	_uint m_iShadowPass = 0;
+
+	CRenderer::RENDERGROUP m_eRenderGroup = CRenderer::RENDER_ALPHABLEND;
 
 private:
 	// For Mesh Sprite

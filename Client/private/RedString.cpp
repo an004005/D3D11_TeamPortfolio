@@ -603,7 +603,6 @@ HRESULT CCombinedRedString::Initialize(void* pArg)
 void CCombinedRedString::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
-	m_iPass = 0;
 }
 
 void CCombinedRedString::Late_Tick(_double TimeDelta)
@@ -625,6 +624,7 @@ HRESULT CCombinedRedString::Render()
 		FAILED_CHECK(m_pShaderCom->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 		FAILED_CHECK(m_pShaderCom->Set_RawValue("g_vCamPosition", &CGameInstance::GetInstance()->Get_CamPosition(), sizeof(_float4)));
 
+		m_pShaderCom->Set_RawValue("g_vPlayerPos", &m_vPos, sizeof(_float4));
 		m_pShaderCom->Set_RawValue("g_Radius", &m_fRadius, sizeof(_float));
 
 		m_pShaderCom->Begin(m_iPass);
@@ -639,6 +639,7 @@ HRESULT CCombinedRedString::Render()
 			FAILED_CHECK(m_pShaderCom->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 			FAILED_CHECK(m_pShaderCom->Set_RawValue("g_vCamPosition", &CGameInstance::GetInstance()->Get_CamPosition(), sizeof(_float4)));
 			m_pShaderCom->Set_RawValue("g_Radius", &Copy.second, sizeof(_float));
+			m_pShaderCom->Set_RawValue("g_vPlayerPos", &m_vPos, sizeof(_float4));
 
 			m_pShaderCom->Begin(m_iPass);
 			m_pBuffer->Render();	

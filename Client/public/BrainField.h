@@ -43,7 +43,7 @@ public:
 	virtual void Imgui_RenderProperty() override;
 
 public:
-	void SetTargetInfo(CTransform* pTargetTransform, CModel* pTargetModel);
+	void SetTargetInfo(CGameObject* pTarget, CTransform* pTargetTransform, CModel* pTargetModel);
 	void OpenBrainField();
 	void CloseBrainField();
 
@@ -52,8 +52,12 @@ public:
 	CPostVFX_ChromaticAberration* m_pChromaticAberration = nullptr;
 	CPostVFX_MapPostProcess* m_pMapPostProcess = nullptr;
 
+	CGameObject* m_pTarget = nullptr;
 	CModel* m_pTargetModel = nullptr;
 	CTransform* m_pTargetTransform = nullptr;
+
+	class CEffectGroup* m_pBrainFieldFloor = nullptr;
+	CDoOnce m_FloorEffectOnce;
 
 	_bool m_bOpen = false;
 

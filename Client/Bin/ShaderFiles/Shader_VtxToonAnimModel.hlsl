@@ -502,7 +502,7 @@ PS_OUT PS_SAS_CABLE_9(PS_IN In)
 	else if (g_int_0 == 2)
 	{
 		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, float3(1.f, 1.f, 0.f), 0.6f);
-		fEmissive = 3.f;
+		fEmissive = 2.f;
 	}
 
 
