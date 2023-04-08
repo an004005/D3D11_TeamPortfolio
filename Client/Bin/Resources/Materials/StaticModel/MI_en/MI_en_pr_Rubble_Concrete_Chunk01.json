@@ -1,9 +1,9 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
     "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
     "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
+        "Ints" : [0],
+        "Floats" : [0.0, 0.0],
         "Float2s" : [],
         "Float4s" : [],
         "Float4x4s" : [],
@@ -12,7 +12,7 @@
             "../Bin/Resources/Environments/Prop/10_Props/Rubble/pr_Industrial_Decor_Pack/T_pr_Rubble_Concrete_Chunk01_NML.png",
             "../Bin/Resources/Environments/Prop/10_Props/Rubble/pr_Industrial_Decor_Pack/T_pr_Rubble_Concrete_Chunk01_RMA.png"
         ],
-        "Pass" : 1
+        "Pass" : 4
     },
     "InstancingPass": 1
 }

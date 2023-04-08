@@ -315,6 +315,7 @@
     <ClInclude Include="..\public\Level_NaomiRoom.h" />
     <ClInclude Include="..\public\Level_StageDefault.h" />
     <ClInclude Include="..\public\Level_Subway.h" />
+    <ClInclude Include="..\public\Map_KineticBatchPreset.h" />
     <ClInclude Include="..\public\MouseCousorLightUI.h" />
     <ClInclude Include="..\public\MouseCousorUI.h" />
     <ClInclude Include="..\public\PlayerHotFixer.h" />
@@ -647,6 +648,7 @@
     <ClCompile Include="..\private\Level_NaomiRoom.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\Level_Subway.cpp" />
+    <ClCompile Include="..\private\Map_KineticBatchPreset.cpp" />
     <ClCompile Include="..\private\MouseCousorLightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorUI.cpp" />
     <ClCompile Include="..\private\PlayerHotFixer.cpp" />

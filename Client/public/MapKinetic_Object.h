@@ -110,6 +110,9 @@ public:
 		m_bCameRange = bCameRange;
 	}
 
+	_matrix				Get_PreMatrix();
+	void				Set_PreMatrix(_matrix preMatrix);
+
 private:
 	_bool				m_bThrow = false;
 	_bool				m_bUsable = true;
@@ -118,6 +121,8 @@ private:
 	_float				m_fDeadTimer = 0.f;
 
 	_bool				m_bCameRange = { false };
+
+	_matrix				m_PreMatrix;
 
 private:
 	vector<wstring>		m_vecRandomParticle{
