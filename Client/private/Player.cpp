@@ -748,6 +748,8 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
 		m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 
+		m_eDeBuff = tDamageParams.eDeBuff;
+
 		// 체력 깎이??부�?
 		CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
 
@@ -957,6 +959,23 @@ void CPlayer::Imgui_RenderProperty()
 
 		if("" != szAnimName)
 			m_pModel->Get_AnimList()[szAnimName]->Imgui_RenderProperty();
+	}
+}
+
+void CPlayer::Update_DeBuff(_double TimeDelta)
+{
+	CScarletCharacter::Update_DeBuff(TimeDelta);
+
+	if (m_eDeBuff == EDeBuffType::DEBUFF_FIRE)
+	{
+		/*m_FireTick.Tick(TimeDelta);
+		if (m_FireTick.Use())
+		{
+			DAMAGE_PARAM tParam;
+			tParam.iDamage = _uint((_float)m_iMaxHP / 100.f * (1.f - m_fFireResist));
+			tParam.pCauser = this;
+			TakeDamage(tParam);
+		}*/
 	}
 }
 
@@ -4990,6 +5009,60 @@ HRESULT CPlayer::SetUp_Sound()
 	m_pModel->Add_EventCaller("fx_kinetic_backdash", [this] {m_SoundStore.PlaySound("fx_kinetic_backdash", m_pTransformCom); });
 
 	return S_OK;
+}
+
+void CPlayer::Update_NoticeNeon()
+{
+	_float4x4	NoticeNeonPivot = XMMatrixTranslation(0.f, 2.f, 0.f);
+
+	if (m_pNoticeNeon.first != nullptr && m_pNoticeNeon.second != nullptr)
+	{
+		m_pNoticeNeon.first->SetDelete();
+		m_pNoticeNeon.second->Delete_Particles();
+
+		Safe_Release(m_pNoticeNeon.first);
+		Safe_Release(m_pNoticeNeon.second);
+
+		m_pNoticeNeon.first = nullptr;
+		m_pNoticeNeon.second = nullptr;
+	}
+
+	switch (this->GetDeBuffType())
+	{
+	case Client::EDeBuffType::DEBUFF_FIRE:
+		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
+		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"NoticeNeon_Fire_Particle");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_OIL:
+		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
+		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Oil_Particle");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_THUNDER:
+		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
+		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Thunder_Particle");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_WATER:
+		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
+		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Water_Particle");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_END:
+		break;
+
+	default:
+		break;
+	}
+
+	if (m_pNoticNeon.first != nullptr && m_pNoticNeon.second != nullptr)
+	{
+		m_pNoticeNeon.first->Start_AttachPivot(this, NoticeNeonPivot, "Reference", true, true);
+		m_pNoticeNeon.second->Start_AttachPivot(this, NoticeNeonPivot, "Reference", true, true);
+		Safe_AddRef(m_pNoticeNeon.first);
+		Safe_AddRef(m_pNoticeNeon.second);
+	}
 }
 
 void CPlayer::EnemyReportCheck()
@@ -10322,4 +10395,16 @@ void CPlayer::Free()
 	Safe_Release(m_pHotFixer);
 
 //	Safe_Release(m_pContectRigidBody);
+
+	if (m_pNoticeNeon.first != nullptr && m_pNoticeNeon.second != nullptr)
+	{
+		m_pNoticeNeon.first->SetDelete();
+		m_pNoticeNeon.second->Delete_Particles();
+
+		Safe_Release(m_pNoticeNeon.first);
+		Safe_Release(m_pNoticeNeon.second);
+
+		m_pNoticeNeon.first = nullptr;
+		m_pNoticeNeon.second = nullptr;
+	}
 }
