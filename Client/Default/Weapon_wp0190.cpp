@@ -154,18 +154,6 @@ HRESULT CWeapon_wp0190::SetUp_Components()
 		}
 
 		Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"Trigger", (CComponent**)&m_pCollider, (void*)m_Desc.m_pJson);
-
-		//m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
-		//{
-		//	if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
-		//	{
-		//		DAMAGE_PARAM tParam;
-		//		tParam.iDamage = 1;
-		//		tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-		//		pMonster->TakeDamage(tParam);
-		//	}
-		//});
 	}
 
 	return S_OK;

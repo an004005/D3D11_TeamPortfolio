@@ -33,7 +33,8 @@ private:
 	_float4		m_vBeforePos;
 
 private:
-	HRESULT		SetUp_Components();
+	HRESULT				SetUp_Components();
+	vector<CModel*>		m_pModels;
 
 public:
 	static CWeapon_Player* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
