@@ -7,6 +7,7 @@
 #include "RedString.h"
 #include "GameUtils.h"
 #include "JsonStorage.h"
+#include "Imgui_AnimModifier.h"
 
 
 CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -28,15 +29,14 @@ HRESULT CLevel_FinalStage::Initialize()
 		// return E_FAIL;
 
 
+	CGameInstance::GetInstance()->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
+	Json PreviewData;
+	{
+		PreviewData["Model"] = "Model_Player";
+		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
+		CGameInstance::GetInstance()->Clone_GameObject(L"Preview", TEXT("ModelPreview"), &PreviewData);
 
-	//CGameUtils::ListFiles("../Bin/Resources/Restrings/BranFieldStrings/", [](const string& filePath)
-	//{
-	//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);
-	//	CGameInstance::GetInstance()->Clone_GameObject(LAYER_MAP_DECO, L"Prototype_CombinedRedString", &json);
-	//});
-
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_BrainField.json");
-	//FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(PLAYERTEST_LAYER_MAP, TEXT("Prototype_GameObject_ScarletMap"), &json));
+	}
 
 	return S_OK;
 }

@@ -26,6 +26,8 @@ static const float EPSILON = 1e-6f;
 #define SHADER_POST_ENEMY 13.f
 #define SHADER_POST_OBJECTS 14.f
 
+#define SHADER_CABLE_STRIPE 15.f
+
 
 #define COL_WHITE float3(1.f, 1.f, 1.f)
 #define COL_BLACK float3(0.f, 0.f, 0.f)

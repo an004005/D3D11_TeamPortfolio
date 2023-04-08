@@ -3,6 +3,7 @@
 #include "Shader_Params.h"
 
 float g_Radius;
+float4 g_vPlayerPos;
 
 struct VS_IN
 {
@@ -133,11 +134,11 @@ void GS_MAIN(line GS_IN In[2], inout TriangleStream<GS_OUT> Vertices)
 	}
 
 	[unroll]
-	for (uint i = 0; i < iRectCnt; ++i)
+	for (uint j = 0; j < iRectCnt; ++j)
 	{
-		uint iLeftTop = i * 2;
+		uint iLeftTop = j * 2;
 		uint iLeftBot = iLeftTop + 1;
-		uint iRightTop = (i + 1) * 2;
+		uint iRightTop = (j + 1) * 2;
 		uint iRightBot = iRightTop + 1;
 
 		Vertices.Append(Out[iLeftTop]);
@@ -162,6 +163,8 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	float4 vColor = lerp(float4(1.f, 0.f, 0.f, 0.6f), (float4)1.f, saturate(1.f - fFresnel) * 0.5f);
 	Out.vColor = CalcHDRColor(vColor, fFresnel * 2.5f);
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+
 	return Out;
 }
 

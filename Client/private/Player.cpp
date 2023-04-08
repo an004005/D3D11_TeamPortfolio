@@ -60,6 +60,7 @@
 
 #include "Canvas_SAMouseLeft.h"
 #include "PlayerHotFixer.h"
+#include "BrainField.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -665,6 +666,8 @@ void CPlayer::Late_Tick(_double TimeDelta)
 
 	m_pSAS_Cable->Tick(TimeDelta);
 	m_pSAS_Cable->Late_Tick(TimeDelta);
+	m_pBrainField->Tick(TimeDelta);
+	m_pBrainField->Late_Tick(TimeDelta);
 }
 
 void CPlayer::AfterPhysX()
@@ -825,6 +828,13 @@ void CPlayer::Imgui_RenderProperty()
 		ImGui::Indent(20.f);
 		m_pSAS_Cable->Imgui_RenderProperty();
 		m_pSAS_Cable->Imgui_RenderComponentProperties();
+		ImGui::Unindent(20.f);
+	}
+	if (ImGui::CollapsingHeader("BrainFieldCable"))
+	{
+		ImGui::Indent(20.f);
+		m_pBrainField->Imgui_RenderProperty();
+		m_pBrainField->Imgui_RenderComponentProperties();
 		ImGui::Unindent(20.f);
 	}
 
@@ -1660,6 +1670,10 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	//m_pTrail->SetActive(true);
 
 	NULL_CHECK(m_pHotFixer = CPlayerHotFixer::Create(this));
+
+	m_pBrainField = dynamic_cast<CBrainField*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Prototype_GameObject_BrainField"));
+	Assert(m_pBrainField != nullptr);
+	m_pBrainField->SetTargetInfo(m_pTransformCom, m_pModel);
 
 	return S_OK;
 }
@@ -9908,6 +9922,7 @@ void CPlayer::Free()
 	Safe_Release(m_pHBeamStateMachine_Left);
 	Safe_Release(m_pTeleportStateMachine);
 	Safe_Release(m_pSAS_Cable);
+	Safe_Release(m_pBrainField);
 	Safe_Release(m_pTrail);
 
 	Safe_Release(m_pDropObjectStateMachine);

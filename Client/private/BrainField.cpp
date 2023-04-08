@@ -5,7 +5,386 @@
 #include "ImguiUtils.h"
 #include "PxModel.h"
 #include "FSMComponent.h"
+#include "CurveManager.h"
+#include "CurveFloatMapImpl.h"
+#include "Material.h"
+#include "Layer.h"
+#include "SkyBox.h"
+#include "ScarletMap.h"
+#include "JsonStorage.h"
+#include "GameUtils.h"
+#include "RedString.h"
 
+/**********************
+ * CBrainField
+ **********************/
+CBrainField::CBrainField(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CGameObject(pDevice, pContext)
+{
+}
+
+CBrainField::CBrainField(const CBrainField& rhs)
+	: CGameObject(rhs)
+{
+}
+
+HRESULT CBrainField::Initialize_Prototype()
+{
+	FAILED_CHECK(CGameObject::Initialize_Prototype());
+
+	static _bool bOnce = true;
+	if (bOnce)
+	{
+		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_STATIC, L"Prototype_GameObject_BrainFieldCable", CBrainFieldCables::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_STATIC, L"Prototype_PostVFX_ChromaticAberration", CPostVFX_ChromaticAberration::Create(m_pDevice, m_pContext)));
+		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_STATIC, L"Prototype_PostVFX_MapPostProcess", CPostVFX_MapPostProcess::Create(m_pDevice, m_pContext)));
+		bOnce = false;
+	}
+
+	return S_OK;
+}
+
+
+HRESULT CBrainField::Initialize(void* pArg)
+{
+	FAILED_CHECK(CGameObject::Initialize(pArg));
+
+	m_pBrainFieldCables = dynamic_cast<CBrainFieldCables*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayerNoBegin(LEVEL_STATIC, L"Prototype_GameObject_BrainFieldCable"));
+	m_pChromaticAberration = dynamic_cast<CPostVFX_ChromaticAberration*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayerNoBegin(LEVEL_STATIC, L"Prototype_PostVFX_ChromaticAberration"));
+	m_pMapPostProcess = dynamic_cast<CPostVFX_MapPostProcess*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayerNoBegin(LEVEL_STATIC, L"Prototype_PostVFX_MapPostProcess"));
+	
+	m_pCableNoise_c1 = CCurveManager::GetInstance()->GetCurve("BrainField_c1_CableNoise");
+	m_pCableYellow_c1 = CCurveManager::GetInstance()->GetCurve("BrainField_c1_CableYellow");
+	m_pChromaticAberration_c1 = CCurveManager::GetInstance()->GetCurve("BrainField_c1_ChromaticAberration");
+	m_pMaskEmissive_c1 = CCurveManager::GetInstance()->GetCurve("BrainField_c1_MaskEmissive");
+	m_pMaskNoise_c1 = CCurveManager::GetInstance()->GetCurve("BrainField_c1_MaskNoise");
+	m_pMapDisappear_c1 = CCurveManager::GetInstance()->GetCurve("BrainField_c1_MapDisappear");
+
+	m_pMaskEmissive_c2 = CCurveManager::GetInstance()->GetCurve("BrainField_c2_MaskEmissive");
+	m_pMapAppear_c2 = CCurveManager::GetInstance()->GetCurve("BrainField_c2_MapAppear");
+	
+
+	{
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_BrainField.json");
+		m_pBrainFieldMap = dynamic_cast<CScarletMap*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_MAP, TEXT("Prototype_GameObject_ScarletMap"), &json));
+		m_pBrainFieldMap->SetVisible_MapObjects(false);
+	}
+	{
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Restrings/BranFieldStrings/FloorCombined.json");
+		m_pBrainFieldRedString = dynamic_cast<CCombinedRedString*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LAYER_MAP_DECO, L"Prototype_CombinedRedString", &json));
+		m_pBrainFieldRedString->SetVisible(false);
+	}
+
+	m_CloseTimeline.SetCurve("Simple_Increase");
+	m_CloseTimeline.SetFinishFunction([this]
+	{
+		m_pMapPostProcess->SetVisible(false);
+	});
+
+	return S_OK;
+}
+
+void CBrainField::BeginTick()
+{
+	CGameObject::BeginTick();
+	m_pBrainFieldCables->BeginTick();
+	m_pChromaticAberration->BeginTick();
+	m_pMapPostProcess->BeginTick();
+
+
+	for (auto pObj : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, PLAYERTEST_LAYER_MAP)->GetGameObjects())
+	{
+		if (auto pSkyBox = dynamic_cast<CSkyBox*>(pObj))
+			m_pSkyBox = pSkyBox;
+		else if (auto pScarletMap = dynamic_cast<CScarletMap*>(pObj))
+		{
+			if (pScarletMap != m_pBrainFieldMap)
+				m_pDefaultMap = pScarletMap;
+		}
+	}
+}
+
+void CBrainField::Tick(_double TimeDelta)
+{
+	CGameObject::Tick(TimeDelta);
+	m_pBrainFieldCables->Tick(TimeDelta);
+	m_pChromaticAberration->Tick(TimeDelta);
+	m_pMapPostProcess->Tick(TimeDelta);
+
+	if (m_bOpen)
+	{
+		if (strcmp(m_pBrainFieldCables->GetStateName(), "BrainFieldOpen_c01") == 0)
+		{
+			m_pMapPostProcess->GetParam().Ints[0] = 0;
+			_float fPlayRatio = m_pBrainFieldCables->GetPlayRatio();
+
+			m_pBrainFieldCables->SetCableNoise(m_pCableNoise_c1->GetValue(fPlayRatio));
+			m_pBrainFieldCables->SetCableYellow(m_pCableYellow_c1->GetValue(fPlayRatio));
+
+			m_pMask->GetParam().Floats[4] = m_pMaskEmissive_c1->GetValue(fPlayRatio);
+			m_pMask->GetParam().Ints[1] = (_int)m_pMaskNoise_c1->GetValue(fPlayRatio);
+			m_pChromaticAberration->GetParam().Floats[0] = m_pChromaticAberration_c1->GetValue(fPlayRatio);
+
+			m_pMapPostProcess->GetParam().Floats[0] = m_pMapDisappear_c1->GetValue(fPlayRatio);
+
+		}
+		else if (strcmp(m_pBrainFieldCables->GetStateName(), "BrainFieldOpen_c02") == 0)
+		{
+			if (m_MapPostProcessFloat0Reset.IsNotDo())
+			{
+				m_pMapPostProcess->GetParam().Floats[0] = 0.f;
+			}
+
+			m_pMapPostProcess->GetParam().Ints[0] = 1;
+
+			m_pDefaultMap->SetVisible_MapObjects(false);
+			m_pBrainFieldMap->SetVisible_MapObjects(true);
+			m_pBrainFieldRedString->SetVisible(true);
+			m_pSkyBox->GetParams().iPass = 1;
+
+			_float fPlayRatio = m_pBrainFieldCables->GetPlayRatio();
+			m_pMask->GetParam().Floats[4] = m_pMaskEmissive_c2->GetValue(fPlayRatio);
+			m_pMapPostProcess->GetParam().Floats[0] = m_pMapAppear_c2->GetValue(fPlayRatio);
+		}
+	}
+	else
+	{
+		m_CloseTimeline.Tick(TimeDelta, m_pMapPostProcess->GetParam().Floats[0]);
+	}
+}
+
+void CBrainField::Late_Tick(_double TimeDelta)
+{
+	CGameObject::Late_Tick(TimeDelta);
+	m_pBrainFieldCables->Late_Tick(TimeDelta);
+	m_pChromaticAberration->Late_Tick(TimeDelta);
+	m_pMapPostProcess->Late_Tick(TimeDelta);
+}
+
+HRESULT CBrainField::Render()
+{
+	return S_OK;
+}
+
+void CBrainField::Imgui_RenderProperty()
+{
+	CGameObject::Imgui_RenderProperty();
+	ImGui::Indent(20.f);
+	if (ImGui::CollapsingHeader("BP Cables"))
+	{
+		m_pBrainFieldCables->Imgui_RenderProperty();
+		m_pBrainFieldCables->Imgui_RenderComponentProperties();
+	}
+	if (ImGui::CollapsingHeader("BP ChromaticAberration"))
+	{
+		m_pChromaticAberration->Imgui_RenderProperty();
+		m_pChromaticAberration->Imgui_RenderComponentProperties();
+	}
+	if (ImGui::CollapsingHeader("BP MapPost"))
+	{
+		m_pMapPostProcess->Imgui_RenderProperty();
+		m_pMapPostProcess->Imgui_RenderComponentProperties();
+	}
+	ImGui::Unindent(20.f);
+}
+
+void CBrainField::SetTargetInfo(CTransform* pTargetTransform, CModel* pTargetModel)
+{
+	m_pBrainFieldCables->SetTargetInfo(pTargetTransform, pTargetModel);
+	m_pTargetModel = pTargetModel;
+	m_pTargetTransform = pTargetTransform;
+	m_pMask = m_pTargetModel->FindMaterial(L"MI_ch0100_MASK_0");
+}
+
+void CBrainField::OpenBrainField()
+{
+	m_MapPostProcessFloat0Reset.Reset();
+	m_pBrainFieldCables->Activate(true);
+	m_bOpen = true;
+	m_pSkyBox->GetParams().iPass = 2;
+	m_pMapPostProcess->SetVisible(true);
+}
+
+void CBrainField::CloseBrainField()
+{
+	m_pBrainFieldCables->Activate(false);
+	m_bOpen = false;
+
+	// юс╫ц
+	m_CloseTimeline.PlayFromStart();
+
+	m_pSkyBox->GetParams().iPass = 0;
+	m_pDefaultMap->SetVisible_MapObjects(true);
+	m_pBrainFieldMap->SetVisible_MapObjects(false);
+	m_pBrainFieldRedString->SetVisible(false);
+}
+
+void CBrainField::Free()
+{
+	CGameObject::Free();
+	Safe_Release(m_pBrainFieldCables);
+	Safe_Release(m_pChromaticAberration);
+	Safe_Release(m_pMapPostProcess);
+}
+
+CBrainField* CBrainField::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CBrainField* pInstance = new CBrainField(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CBrainField");
+		Safe_Release(pInstance);
+		return nullptr;
+	}
+
+	return pInstance;
+}
+
+CGameObject* CBrainField::Clone(void* pArg)
+{
+	CBrainField* pInstance = new CBrainField(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CBrainField");
+		Safe_Release(pInstance);
+		return nullptr;
+	}
+
+	return pInstance;
+}
+
+
+/***********************************
+ *CPostVFX_ChromaticAberration
+ ***********************************/
+CPostVFX_ChromaticAberration::CPostVFX_ChromaticAberration(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CPostProcess(pDevice, pContext)
+{
+}
+
+CPostVFX_ChromaticAberration::CPostVFX_ChromaticAberration(const CPostVFX_ChromaticAberration& rhs)
+	: CPostProcess(rhs)
+{
+}
+
+HRESULT CPostVFX_ChromaticAberration::Initialize(void* pArg)
+{
+	FAILED_CHECK(CPostProcess::Initialize(pArg));
+
+	m_iPriority = 1;
+	m_tParam.iPass = 13;
+	if (m_tParam.Floats.empty())
+		m_tParam.Floats.push_back(0.f);
+
+	m_tParam.Floats[0] = 0.f;
+	m_tParam.Float4s.push_back(_float4::Zero);
+
+	return S_OK;
+}
+
+void CPostVFX_ChromaticAberration::Tick(_double TimeDelta)
+{
+	CPostProcess::Tick(TimeDelta);
+	if (m_tParam.Floats[0] <= 0.f)
+		m_bVisible = false;
+	else
+		m_bVisible = true;
+}
+
+CPostVFX_ChromaticAberration* CPostVFX_ChromaticAberration::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CPostVFX_ChromaticAberration* pInstance = new CPostVFX_ChromaticAberration(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CPostVFX_ChromaticAberration");
+		Safe_Release(pInstance);
+		return nullptr;
+	}
+
+	return pInstance;
+}
+
+CGameObject* CPostVFX_ChromaticAberration::Clone(void* pArg)
+{
+	CPostVFX_ChromaticAberration* pInstance = new CPostVFX_ChromaticAberration(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CPostVFX_ChromaticAberration");
+		Safe_Release(pInstance);
+		return nullptr;
+	}
+
+	return pInstance;
+}
+
+/***********************************
+ *CPostVFX_MapPostProcess
+ ***********************************/
+CPostVFX_MapPostProcess::CPostVFX_MapPostProcess(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CPostProcess(pDevice, pContext)
+{
+}
+
+CPostVFX_MapPostProcess::CPostVFX_MapPostProcess(const CPostVFX_MapPostProcess& rhs)
+	: CPostProcess(rhs)
+{
+}
+
+HRESULT CPostVFX_MapPostProcess::Initialize(void* pArg)
+{
+	FAILED_CHECK(CPostProcess::Initialize(pArg));
+	m_iPriority = 0;
+	m_tParam.iPass = 14;
+	m_tParam.Floats.push_back(0.f);
+	m_tParam.Floats.push_back(0.f);
+	m_tParam.Ints.push_back(0);
+
+	m_tParam.Floats[1] = 30.f;
+
+	m_bVisible = false;
+	return S_OK;
+}
+
+void CPostVFX_MapPostProcess::Tick(_double TimeDelta)
+{
+	CPostProcess::Tick(TimeDelta);
+	// if (m_tParam.Floats[0] <= 0.f)
+	// 	m_bVisible = false;
+	// else
+	// 	m_bVisible = true;
+}
+
+CPostVFX_MapPostProcess* CPostVFX_MapPostProcess::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CPostVFX_MapPostProcess* pInstance = new CPostVFX_MapPostProcess(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CPostVFX_MapPostProcess");
+		Safe_Release(pInstance);
+		return nullptr;
+	}
+
+	return pInstance;
+}
+
+CGameObject* CPostVFX_MapPostProcess::Clone(void* pArg)
+{
+	CPostVFX_MapPostProcess* pInstance = new CPostVFX_MapPostProcess(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CPostVFX_MapPostProcess");
+		Safe_Release(pInstance);
+		return nullptr;
+	}
+
+	return pInstance;
+}
 
 /**********************
  * CBrainFieldCables
@@ -206,11 +585,6 @@ void CBrainFieldCables::Activate(_bool bActive)
 	m_bActive = bActive;
 }
 
-void CBrainFieldCables::BrainFieldOpen_CH0100()
-{
-	m_bActive = true;
-}
-
 void CBrainFieldCables::SetTargetInfo(CTransform* pTargetTransform, CModel* pTargetModel)
 {
 	Safe_Release(m_pTargetModel);
@@ -219,6 +593,38 @@ void CBrainFieldCables::SetTargetInfo(CTransform* pTargetTransform, CModel* pTar
 	m_pTargetTransform = pTargetTransform;
 	Safe_AddRef(m_pTargetModel);
 	Safe_AddRef(m_pTargetTransform);
+}
+
+_float CBrainFieldCables::GetPlayRatio()
+{
+	return m_CableModels[HEAD_1]->GetPlayAnimation()->GetPlayRatio();
+}
+
+const char* CBrainFieldCables::GetStateName()
+{
+	return m_pFSM->GetCurStateName();
+}
+
+void CBrainFieldCables::SetCableNoise(_float fValue)
+{
+	for (int i = 0; i < CABLE_END; ++i)
+	{
+		for (auto pMtrl : m_CableModels[i]->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[3] = fValue;
+		}
+	}
+}
+
+void CBrainFieldCables::SetCableYellow(_float fValue)
+{
+	for (int i = 0; i < CABLE_END; ++i)
+	{
+		for (auto pMtrl : m_CableModels[i]->GetMaterials())
+		{
+			pMtrl->GetParam().Ints[0] = (_int)fValue;
+		}
+	}
 }
 
 void CBrainFieldCables::SetUpFSM()

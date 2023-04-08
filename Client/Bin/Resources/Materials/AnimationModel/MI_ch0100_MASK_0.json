@@ -1,4 +1,6 @@
 {
+    "Active": true,
+    "AlphaBlend": false,
     "ShaderParams": {
         "Float2s": [],
         "Float4s": [
@@ -14,9 +16,11 @@
             0.0,
             0.0,
             0.0,
-            0.003000000026077032
+            0.0,
+            1.0
         ],
         "Ints": [
+            0,
             0
         ],
         "Pass": 5,
@@ -25,7 +29,8 @@
             "",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Mask_AMB.dds\u0000",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Mask_CTL.dds\u0000",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ef_scl_noi_013.png\u0000"
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ef_scl_noi_013.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_ptn_sym_006.png\u0000"
         ]
     },
     "ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"

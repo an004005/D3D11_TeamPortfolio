@@ -603,6 +603,7 @@ HRESULT CCombinedRedString::Initialize(void* pArg)
 void CCombinedRedString::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
+	m_iPass = 0;
 }
 
 void CCombinedRedString::Late_Tick(_double TimeDelta)
