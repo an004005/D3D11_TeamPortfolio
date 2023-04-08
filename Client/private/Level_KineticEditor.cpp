@@ -87,7 +87,7 @@ HRESULT CLevel_KineticEditor::Ready_Layer_BackGround(const _tchar* pLayerTag)
 	vector<string> modeltags;
 										// Model/StaticModel/MapStaicModels/Kinetic/GarbageCan/garbageCan.static_model
 						// \Bin\Resources\Model\StaticModel\MapStaicModels\Kinetic\WheelChair
-	modeltags.push_back("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/HBeam/HBeamTest.static_model");
+	modeltags.push_back("../Bin/Resources/Model/StaticModel/MapStaicModels/Kinetic/Switchboard/SM_pr_SubwaySwitchboard01.static_model");
 					
 	_uint iA = 0;
 	Test["ModelTags"] = modeltags;

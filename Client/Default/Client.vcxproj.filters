@@ -520,6 +520,9 @@
     <Filter Include="02.GameObjects\Weapon\Weapon_Player">
       <UniqueIdentifier>{3c2a0d6f-27a3-4a7c-9c86-7fd190a49285}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Map\Map_KineticBatchPreset">
+      <UniqueIdentifier>{d23c5904-79df-4174-9dc0-b8f8a20339ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1509,6 +1512,9 @@
       <Filter>02.GameObjects\Weapon\Weapon_Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BrainField.h" />
+    <ClInclude Include="..\public\Map_KineticBatchPreset.h">
+      <Filter>02.GameObjects\Map\Map_KineticBatchPreset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2475,6 +2481,9 @@
       <Filter>02.GameObjects\Weapon\Weapon_Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BrainField.cpp" />
+    <ClCompile Include="..\private\Map_KineticBatchPreset.cpp">
+      <Filter>02.GameObjects\Map\Map_KineticBatchPreset</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

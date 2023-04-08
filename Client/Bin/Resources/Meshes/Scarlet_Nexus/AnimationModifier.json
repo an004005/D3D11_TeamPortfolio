@@ -6918,8 +6918,14 @@
         "vecEvent": []
     },
     "AS_np0100_002_AL_wait02": {
-        "Duration": 300.0,
-        "TickPerSecond": 40.0,
+        "Duration": 216.9499969482422,
+        "TickPerSecond": 44.20000076293945,
+        "bLooping": true,
+        "vecEvent": []
+    },
+    "AS_np0100_817_AL_talk02": {
+        "Duration": 350.0,
+        "TickPerSecond": 65.0,
         "bLooping": true,
         "vecEvent": []
     },
