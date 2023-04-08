@@ -1586,6 +1586,10 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 			.Predicator([&]()->_bool { return (!m_bBrainField) && (m_pController->KeyDown(CController::B)); })
 			.Priority(0)
 
+			.AddTransition("BRAINFIELD to BRAINFIELD_FINISH_BF", "BRAINFIELD_FINISH_BF")
+			.Predicator([&]()->_bool { return (m_bBrainField) && (m_pController->KeyDown(CController::B)); })
+			.Priority(0)
+
 		.AddState("BRAINFIELD_START")
 		.OnStart([&]() 
 		{
@@ -1621,8 +1625,10 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 			TestAnim.push_back(m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100"));
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
 
-			// 이거 키는거
-			// m_pBrainField->OpenBrainField();(여기서 실행하면 됨)
+			for (auto& iter : m_vecWeapon)
+				iter->SetVisible(false);
+
+			m_pBrainField->OpenBrainField();
 
 			// m_pBrainField->CloseBrainField();  끄는거
 		})
@@ -1638,14 +1644,42 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100"));
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
-
-			for (auto& iter : m_vecWeapon)
-				iter->SetVisible(false);
 		})
 		.Tick([&](double fTimeDelta) {})
 		.OnExit([&]() { m_bBrainField = true; })
 			.AddTransition("BRAINFIELD_ACTIONCAM_02 to BRAINFIELD", "BRAINFIELD")
 			.Predicator([&]()->_bool { return m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100")->IsFinished(); })
+			.Priority(0)
+
+		.AddState("BRAINFIELD_FINISH_BF")
+		.OnStart([&]() 
+		{
+			list<CAnimation*> TestAnim;
+			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF"));
+			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+		})
+		.Tick([&](double fTimeDelta) {})
+		.OnExit([&]() { m_bBrainField = false; })
+			.AddTransition("BRAINFIELD_FINISH_BF to BRAINFIELD_FINISH_NF", "BRAINFIELD_FINISH_NF")
+			.Predicator([&]()->_bool { return m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF")->IsFinished(); })
+			.Priority(0)
+
+		.AddState("BRAINFIELD_FINISH_NF")
+		.OnStart([&]() 
+		{
+			list<CAnimation*> TestAnim;
+			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_BrainField_close_NF"));
+			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+
+			m_pBrainField->CloseBrainField();
+
+			for (auto& iter : m_vecWeapon)
+				iter->SetVisible(true);
+		})
+		.Tick([&](double fTimeDelta) {})
+		.OnExit([&]() {})
+			.AddTransition("BRAINFIELD_FINISH_NF to BRAINFIELD", "BRAINFIELD")
+			.Predicator([&]()->_bool { return m_pModel->Find_Animation("AS_ch0100_BrainField_close_NF")->IsFinished(); })
 			.Priority(0)
 
 		.Build();
