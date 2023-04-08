@@ -250,7 +250,7 @@ void CEM0220::SetUpFSM()
 			{
 					if (!m_Unbeatable && m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->GetPlayTime() >= 3.f)
 					{
-						m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->SetTickPerSec(60.f);
+						m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->SetTickPerSec(80.f);
 						m_Unbeatable = true;
 					}
 			})
