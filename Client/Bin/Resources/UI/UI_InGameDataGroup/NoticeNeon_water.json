@@ -1345,16 +1345,6 @@
     ],
     "Second_Directory": "../Bin/Resources/UI/UI_InGameData/NoticeNeon_water.json",
     "Third_Directory": "",
-    "TimelineEvent": {
-        "Timeline": {
-            "Events": [
-                {
-                    "EventName": "Notice_Neon_Water_Particle",
-                    "EventTime": 0.0
-                }
-            ]
-        }
-    },
     "Transform": {
         "WorldMatrix": [
             1.0,

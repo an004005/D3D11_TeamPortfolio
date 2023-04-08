@@ -46,8 +46,9 @@ private:
 	class CMonsterHpUI* m_pHPUI = nullptr;
 	class CCanvas_BossHpMove* m_BossHp = nullptr;
 	class CEffectGroup* m_pCGEffect = nullptr;
-	class CEffectGroup* m_pNoticNeon = nullptr;
 
+	pair<class CEffectGroup*, class CParticleGroup*> m_pNoticNeon = { nullptr ,nullptr };
+	
 private:
 	_float4x4	m_EnemyInfoBarPivot;
 	_float4x4	m_EnemyFindEyesPivot;

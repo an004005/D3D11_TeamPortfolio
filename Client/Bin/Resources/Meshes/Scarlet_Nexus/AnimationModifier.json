@@ -5262,7 +5262,7 @@
     },
     "AS_em0220_111_AL_to_guard": {
         "Duration": 40.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 80.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -5274,7 +5274,7 @@
     },
     "AS_em0220_113_AL_to_wait03": {
         "Duration": 40.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 80.0,
         "bLooping": false,
         "vecEvent": []
     },

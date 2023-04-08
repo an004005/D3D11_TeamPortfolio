@@ -133,29 +133,38 @@ void CEMUI::Update_NoticeNeon()
 {
 	_float4x4	NoticeNeonPivot = XMMatrixTranslation(0.f, 2.f, 0.f);
 
-	if (m_pNoticNeon != nullptr)
+	if (m_pNoticNeon.first != nullptr && m_pNoticNeon.second != nullptr)
 	{
-		m_pNoticNeon->SetDelete();
-		Safe_Release(m_pNoticNeon);
-		m_pNoticNeon = nullptr;
+		m_pNoticNeon.first->SetDelete();
+		m_pNoticNeon.second->Delete_Particles();
+
+		Safe_Release(m_pNoticNeon.first);
+		Safe_Release(m_pNoticNeon.second);
+
+		m_pNoticNeon.first = nullptr;
+		m_pNoticNeon.second = nullptr;
 	}
 
 	switch (m_pOwner->GetDeBuffType())
 	{
 	case Client::EDeBuffType::DEBUFF_FIRE:
-		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
+		m_pNoticNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
+		m_pNoticNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"NoticeNeon_Fire_Particle");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_OIL:
-		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
+		m_pNoticNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
+		m_pNoticNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Oil_Particle");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_THUNDER:
-		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
+		m_pNoticNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
+		m_pNoticNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Thunder_Particle");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_WATER:
-		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
+		m_pNoticNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
+		m_pNoticNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Water_Particle");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_END:
@@ -164,10 +173,12 @@ void CEMUI::Update_NoticeNeon()
 		break;
 	}
 
-	if (m_pNoticNeon != nullptr)
+	if (m_pNoticNeon.first != nullptr && m_pNoticNeon.second != nullptr)
 	{
-		m_pNoticNeon->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Target", true, true);
-		Safe_AddRef(m_pNoticNeon);
+		m_pNoticNeon.first->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Target", true, true);
+		m_pNoticNeon.second->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Target", true, true);
+		Safe_AddRef(m_pNoticNeon.first);
+		Safe_AddRef(m_pNoticNeon.second);
 	}
 
 }
@@ -202,10 +213,15 @@ void CEMUI::Free()
 		m_pCGEffect = nullptr;
 	}
 
-	if (m_pNoticNeon != nullptr)
+	if (m_pNoticNeon.first != nullptr && m_pNoticNeon.second != nullptr)
 	{
-		m_pNoticNeon->SetDelete();
-		Safe_Release(m_pNoticNeon);
-		m_pNoticNeon = nullptr;
+		m_pNoticNeon.first->SetDelete();
+		m_pNoticNeon.second->Delete_Particles();
+
+		Safe_Release(m_pNoticNeon.first);
+		Safe_Release(m_pNoticNeon.second);
+
+		m_pNoticNeon.first = nullptr;
+		m_pNoticNeon.second = nullptr;
 	}
 }
