@@ -55,13 +55,7 @@ private:
 	_float      m_fDuration = 0.2f;
 
 private:
-	_float		m_fLerpTime = 0.f;
-	_float		m_fDuration = 0.2f;
-
-private:
 	_bool		DistanceCheck();
-
-	void		Update_Animation(_double TimeDelta);
 
 public:
 	static CShop_NPC* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

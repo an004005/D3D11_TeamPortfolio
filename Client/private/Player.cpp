@@ -2546,9 +2546,6 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			.OnStart([&]() 
 			{ 
 				//SetAbleState({ false, false, false, false, false, true, true, true, true, false });
-
-				m_bHit = false;
-
 				m_pModel->Reset_LocalMove(true);
 
 				if (!m_pASM->isSocketEmpty("Hit_AnimSocket"))
@@ -2584,6 +2581,8 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			.OnStart([&]() 
 			{ 
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Knuckback);
+				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
+				m_bHit = false;
 			})
 			.Tick([&](double TimeDelta) 
 			{ 
@@ -2600,7 +2599,13 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				.Priority(0)
 
 		.AddState("AIRBORNE")
-			.OnStart([&]() { m_pASM->InputAnimSocket("Hit_AnimSocket", m_Airborne); Jump(); })
+			.OnStart([&]() 
+			{
+				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Airborne); 
+				Jump();
+				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
+				m_bHit = false;
+			})
 			.Tick([&](double TimeDelta) 
 			{ 
 				m_bWalk = false;
@@ -2693,6 +2698,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			{ 
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Hit_F_Level01); 
 				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
+				m_bHit = false;
 			})
 			.Tick([&](double fTimeDelta)
 			{
@@ -2705,12 +2711,8 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				.Predicator([&]()->_bool {return m_pASM->isSocketEmpty("Hit_AnimSocket"); })
 				.Priority(0)
 
-				.AddTransition("HIT_LIGHT_FRONT to HIT_LIGHT", "HIT_LIGHT")
-				.Predicator([&]()->_bool {return m_bHit && !m_bAir && (m_DamageDesc.m_iDamageType == EAttackType::ATK_LIGHT) && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
-				.Priority(1)
-
-				.AddTransition("HIT_LIGHT_FRONT to HIT_MIDIUM", "HIT_MIDIUM")
-				.Predicator([&]()->_bool {return m_bHit && !m_bAir && (m_DamageDesc.m_iDamageType == EAttackType::ATK_MIDDLE) && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
+				.AddTransition("HIT_LIGHT_FRONT to NON_HIT", "NON_HIT")
+				.Predicator([&]()->_bool {return m_bHit && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
 				.Priority(1)
 
 		.AddState("HIT_LIGHT_BACK")
@@ -2718,6 +2720,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			{
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Hit_B_Level01);
 				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
+				m_bHit = false;
 			})
 			.Tick([&](double fTimeDelta)
 			{
@@ -2730,12 +2733,8 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				.Predicator([&]()->_bool {return m_pASM->isSocketEmpty("Hit_AnimSocket"); })
 				.Priority(0)
 
-				.AddTransition("HIT_LIGHT_BACK to HIT_LIGHT", "HIT_LIGHT")
-				.Predicator([&]()->_bool {return m_bHit && !m_bAir && (m_DamageDesc.m_iDamageType == EAttackType::ATK_LIGHT) && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
-				.Priority(1)
-
-				.AddTransition("HIT_LIGHT_BACK to HIT_MIDIUM", "HIT_MIDIUM")
-				.Predicator([&]()->_bool {return m_bHit && !m_bAir && (m_DamageDesc.m_iDamageType == EAttackType::ATK_MIDDLE) && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
+				.AddTransition("HIT_LIGHT_BACK to NON_HIT", "NON_HIT")
+				.Predicator([&]()->_bool {return m_bHit && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
 				.Priority(1)
 
 		.AddState("HIT_MIDIUM")
@@ -2776,6 +2775,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			{ 
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Hit_F_Level02);
 				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
+				m_bHit = false;
 			})
 			.Tick([&](double fTimeDelta)
 			{
@@ -2788,12 +2788,8 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				.Predicator([&]()->_bool {return m_pASM->isSocketEmpty("Hit_AnimSocket"); })
 				.Priority(0)
 
-				.AddTransition("HIT_MIDIUM_FRONT to HIT_LIGHT", "HIT_LIGHT")
-				.Predicator([&]()->_bool {return m_bHit && !m_bAir && (m_DamageDesc.m_iDamageType == EAttackType::ATK_LIGHT) && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
-				.Priority(1)
-
-				.AddTransition("HIT_MIDIUM_FRONT to HIT_MIDIUM", "HIT_MIDIUM")
-				.Predicator([&]()->_bool {return m_bHit && !m_bAir && (m_DamageDesc.m_iDamageType == EAttackType::ATK_MIDDLE) && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
+				.AddTransition("HIT_MIDIUM_FRONT to NON_HIT", "NON_HIT")
+				.Predicator([&]()->_bool {return m_bHit && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
 				.Priority(1)
 
 		.AddState("HIT_MIDIUM_BACK")
@@ -2801,6 +2797,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			{ 
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Hit_B_Level02);
 				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
+				m_bHit = false;
 			})
 			.Tick([&](double fTimeDelta)
 			{
@@ -2813,12 +2810,8 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				.Predicator([&]()->_bool {return m_pASM->isSocketEmpty("Hit_AnimSocket"); })
 				.Priority(0)
 
-				.AddTransition("HIT_MIDIUM_BACK to HIT_LIGHT", "HIT_LIGHT")
-				.Predicator([&]()->_bool {return m_bHit && !m_bAir && (m_DamageDesc.m_iDamageType == EAttackType::ATK_LIGHT) && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
-				.Priority(1)
-
-				.AddTransition("HIT_MIDIUM_BACK to HIT_MIDIUM", "HIT_MIDIUM")
-				.Predicator([&]()->_bool {return m_bHit && !m_bAir && (m_DamageDesc.m_iDamageType == EAttackType::ATK_MIDDLE) && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
+				.AddTransition("HIT_MIDIUM_BACK to NON_HIT", "NON_HIT")
+				.Predicator([&]()->_bool {return m_bHit && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
 				.Priority(1)
 
 		.AddState("HIT_MIDIUM_LEFT")
@@ -2826,6 +2819,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			{ 
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Hit_L_Level02);
 				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
+				m_bHit = false;
 			})
 			.Tick([&](double fTimeDelta)
 			{
@@ -2838,12 +2832,8 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				.Predicator([&]()->_bool {return m_pASM->isSocketEmpty("Hit_AnimSocket"); })
 				.Priority(0)
 
-				.AddTransition("HIT_MIDIUM_LEFT to HIT_LIGHT", "HIT_LIGHT")
-				.Predicator([&]()->_bool {return m_bHit && !m_bAir && (m_DamageDesc.m_iDamageType == EAttackType::ATK_LIGHT) && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
-				.Priority(1)
-
-				.AddTransition("HIT_MIDIUM_LEFT to HIT_MIDIUM", "HIT_MIDIUM")
-				.Predicator([&]()->_bool {return m_bHit && !m_bAir && (m_DamageDesc.m_iDamageType == EAttackType::ATK_MIDDLE) && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
+				.AddTransition("HIT_MIDIUM_LEFT to NON_HIT", "NON_HIT")
+				.Predicator([&]()->_bool {return m_bHit && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
 				.Priority(1)
 
 		.AddState("HIT_MIDIUM_RIGHT")
@@ -2851,6 +2841,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			{ 
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Hit_R_Level02);
 				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
+				m_bHit = false;
 			})
 			.Tick([&](double fTimeDelta)
 			{
@@ -2863,12 +2854,8 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				.Predicator([&]()->_bool {return m_pASM->isSocketEmpty("Hit_AnimSocket"); })
 				.Priority(0)
 
-				.AddTransition("HIT_MIDIUM_RIGHT to HIT_LIGHT", "HIT_LIGHT")
-				.Predicator([&]()->_bool {return m_bHit && !m_bAir && (m_DamageDesc.m_iDamageType == EAttackType::ATK_LIGHT) && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
-				.Priority(1)
-
-				.AddTransition("HIT_MIDIUM_RIGHT to HIT_MIDIUM", "HIT_MIDIUM")
-				.Predicator([&]()->_bool {return m_bHit && !m_bAir && (m_DamageDesc.m_iDamageType == EAttackType::ATK_MIDDLE) && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
+				.AddTransition("HIT_MIDIUM_RIGHT to NON_HIT", "NON_HIT")
+				.Predicator([&]()->_bool {return m_bHit && m_pASM->isSocketPassby("Hit_AnimSocket", 0.1f); })
 				.Priority(1)
 
 		.AddState("BREAKFALL")
@@ -2876,6 +2863,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			{
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_BreakFall_Front);
 				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
+				m_bHit = false;
 				Jump();
 			})
 				.AddTransition("BREAKFALL to BREAKFALL_LANDING", "BREAKFALL_LANDING")

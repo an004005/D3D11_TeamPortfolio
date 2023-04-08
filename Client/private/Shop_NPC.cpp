@@ -224,31 +224,6 @@ _bool CShop_NPC::DistanceCheck()
       
 }
 
-void CShop_NPC::Update_Animation(_double TimeDelta)
-{
-    if (m_pModel->GetPlayAnimation()->IsFinished())
-    {
-        m_pModel->GetPlayAnimation()->Reset();
-        m_fLerpTime = 0.f;
-    }
-
-    if (m_fLerpTime < m_fDuration)
-    {
-        m_pModel->GetPlayAnimation()->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fDuration);
-        m_fLerpTime += (_float)TimeDelta;
-    }
-    else
-    {
-        m_pModel->GetPlayAnimation()->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
-    }
-
-    m_pModel->Compute_CombindTransformationMatrix();
-
-    _vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix());
-    m_pTransformCom->LocalMove(vLocal);
-
-}
-
 CShop_NPC* CShop_NPC::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
     CShop_NPC* pInstance = new CShop_NPC(pDevice, pContext);

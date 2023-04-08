@@ -56,6 +56,31 @@ void CPlayerHotFixer::Tick()
 		{
 			static_cast<CWeapon_Player*>(m_pPlayer->m_vecWeapon.front())->Change_Weapon(WP_0190);
 		}
+
+		if (ImGui::Button("DMG_Light"))
+		{
+			m_pPlayer->m_bHit = true;
+			m_pPlayer->m_DamageDesc.m_iDamage = 1;
+			m_pPlayer->m_DamageDesc.m_iDamageType = EAttackType::ATK_LIGHT;
+			m_pPlayer->m_DamageDesc.m_vHitDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+			m_pPlayer->m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pPlayer->m_pTransformCom, XMVectorSet(0.f, 0.f, 1.f, 0.f));
+		}
+		if (ImGui::Button("DMG_Middle"))
+		{
+			m_pPlayer->m_bHit = true;
+			m_pPlayer->m_DamageDesc.m_iDamage = 1;
+			m_pPlayer->m_DamageDesc.m_iDamageType = EAttackType::ATK_MIDDLE;
+			m_pPlayer->m_DamageDesc.m_vHitDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+			m_pPlayer->m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pPlayer->m_pTransformCom, XMVectorSet(0.f, 0.f, 1.f, 0.f));
+		}
+		if (ImGui::Button("DMG_Heavy"))
+		{
+			m_pPlayer->m_bHit = true;
+			m_pPlayer->m_DamageDesc.m_iDamage = 1;
+			m_pPlayer->m_DamageDesc.m_iDamageType = EAttackType::ATK_HEAVY;
+			m_pPlayer->m_DamageDesc.m_vHitDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+			m_pPlayer->m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pPlayer->m_pTransformCom, XMVectorSet(0.f, 0.f, 1.f, 0.f));
+		}
 	}
 	ImGui::CollapsingHeader("~HotFixer");
 }
