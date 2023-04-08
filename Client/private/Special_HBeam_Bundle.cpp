@@ -12,6 +12,7 @@
 #include "MapObject.h"
 #include "Enemy.h"
 #include "PhysX_Manager.h"
+#include "Material.h"
 
 CSpecial_HBeam_Bundle::CSpecial_HBeam_Bundle(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -100,6 +101,15 @@ void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 	{
 		m_fDeadTime -= (_float)TimeDelta;
 
+		for (auto& iter : m_pHBeam_Single)
+			static_cast<CSpecialObject*>(iter)->SpecialRimLightFix(false);
+
+		if (1.f >= m_fDeadTime)
+		{
+			for (auto& iter : m_pHBeam_Single)
+				static_cast<CSpecialObject*>(iter)->Set_Dissolve(true);
+		}
+
 		if (0.f >= m_fDeadTime)
 		{
 			for (auto& iter : m_pHBeam_Single)
@@ -124,6 +134,8 @@ void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 		for (auto& iter : m_pHBeam_Single)
 		{
 			static_cast<CSpecial_HBeam_Single*>(iter)->Sync_position(m_pTransformCom);
+			static_cast<CSpecial_HBeam_Single*>(iter)->Set_Bright(m_fBright);
+			static_cast<CSpecial_HBeam_Single*>(iter)->SpecialRimLightFix(m_bRimFix);
 		}
 	}
 	else
@@ -135,7 +147,8 @@ void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 			for (auto& iter : m_pHBeam_Single)
 			{
 				static_cast<CSpecial_HBeam_Single*>(iter)->Activate(true);
-				static_cast<CSpecial_HBeam_Single*>(iter)->Set_Kinetic(false);
+				static_cast<CSpecial_HBeam_Single*>(iter)->Set_Bright(m_fBright);
+				static_cast<CSpecial_HBeam_Single*>(iter)->SpecialRimLightFix(m_bRimFix);
 			}
 		}
 

@@ -9,6 +9,7 @@
 #include "Animation.h"
 #include "ImguiUtils.h"
 #include "Enemy.h"
+#include "Material.h"
 
 CSpecial_IronBars_SingleBars::CSpecial_IronBars_SingleBars(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)

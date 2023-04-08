@@ -14,6 +14,7 @@
 #include "ParticleGroup.h"
 #include "Enemy.h"
 #include "MapInstance_Object.h"
+#include "PlayerInfoManager.h"
 
 CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
@@ -97,6 +98,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 		if (auto pStatic = dynamic_cast<CMapInstance_Object*>(pGameObject))
 		{
 			m_bHit = true;
+			m_fDeadTimer = 0.f;
 
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
 				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
@@ -113,6 +115,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 			pMonster->TakeDamage(tParam);
 			m_bHit = true;
+			m_fDeadTimer = 0.f;
 
 			//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, TEXT("Default_Kinetic_Dead_Effect_00"))
 			//	->Start_AttachOnlyPos(tParam.vHitFrom);
@@ -153,6 +156,19 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 	  //// pGravikenisisMouse->Set_Owner(this);
    //}
 
+	for (auto& pMtrl : m_pModelComs.front()->GetMaterials())
+	{
+		if (pMtrl->GetParam().Floats.empty())
+		{
+			pMtrl->GetParam().Floats.push_back(0.f);
+		}
+
+		if (1 == pMtrl->GetParam().Floats.size())
+		{
+			pMtrl->GetParam().Floats.push_back(0.f);
+		}
+	}
+
 	return S_OK;
 }
 
@@ -165,6 +181,8 @@ void CMapKinetic_Object::BeginTick()
 
 void CMapKinetic_Object::Tick(_double TimeDelta)
 {
+	m_fTimeDelta = (_float)TimeDelta;
+
 	__super::Tick(TimeDelta);
 	if(m_eCurModelTag != Tag_End)
 		m_pModelComs[m_eCurModelTag]->Tick(TimeDelta);
@@ -178,13 +196,34 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 	{
 		m_fDeadTimer += (_float)TimeDelta;
 
-		if (m_bHit && m_fDeadTimer >= 1.f)
-			this->SetDelete();
-		else if (m_fDeadTimer >= 5.f)
-			this->SetDelete();
+		if (m_bHit)
+		{
+			m_bRimFix = false;
+			m_fBright = 0.f;
+
+			m_fDissolve = m_fDeadTimer;
+
+			if (m_fDeadTimer >= 1.f)
+				this->SetDelete();
+		}
+		else
+		{
+			if (m_fDeadTimer >= 4.f)
+				m_fDissolve += (_float)TimeDelta;
+
+			if (m_fDeadTimer >= 5.f)
+				this->SetDelete();
+		}
 	}
 
 	m_pCollider->Update_Tick(m_pTransformCom);
+
+	BrightChecker();
+	for (auto pMtrl : m_pModelComs.front()->GetMaterials())
+	{
+		pMtrl->GetParam().Floats[0] = m_fBright;
+		pMtrl->GetParam().Floats[1] = m_fDissolve;
+	}
 }
 
 void CMapKinetic_Object::Late_Tick(_double TimeDelta)
@@ -391,6 +430,34 @@ void CMapKinetic_Object::OutlineMaker()
 	}
 
 	m_bBeforeOutline = m_bOutline;
+}
+
+void CMapKinetic_Object::BrightChecker()
+{
+	if (m_bRimFix)
+	{
+		m_fBright = 1.f;
+	}
+	else if (CPlayerInfoManager::GetInstance()->Get_KineticObject() == this)
+	{
+		_float fCharge = CPlayerInfoManager::GetInstance()->Get_KineticCharge();
+
+		if (m_fBright <= fCharge)
+		{
+			m_fBright = fCharge;
+		}
+		else
+		{
+			m_fBright = max(m_fBright - m_fTimeDelta, 0.f);
+		}
+	}
+	else
+	{
+		if (false == m_bRimFix && 0.f < m_fBright)
+		{
+			m_fBright = max(m_fBright - m_fTimeDelta, 0.f);
+		}
+	}
 }
 
 void CMapKinetic_Object::SetParticle()

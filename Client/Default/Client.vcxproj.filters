@@ -517,6 +517,9 @@
     <Filter Include="02.GameObjects\Map\InvisibleWall\HS_TeleportableWall">
       <UniqueIdentifier>{49f57d4d-0b53-4e20-9538-333679350df2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Weapon\Weapon_Player">
+      <UniqueIdentifier>{3c2a0d6f-27a3-4a7c-9c86-7fd190a49285}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1502,6 +1505,9 @@
     <ClInclude Include="..\public\HS_TeleportableWall.h">
       <Filter>02.GameObjects\Map\InvisibleWall\HS_TeleportableWall</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Weapon_Player.h">
+      <Filter>02.GameObjects\Weapon\Weapon_Player</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\BrainField.h" />
   </ItemGroup>
   <ItemGroup>
@@ -2464,6 +2470,9 @@
     </ClCompile>
     <ClCompile Include="..\private\HS_TeleportableWall.cpp">
       <Filter>02.GameObjects\Map\InvisibleWall\HS_TeleportableWall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Weapon_Player.cpp">
+      <Filter>02.GameObjects\Weapon\Weapon_Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BrainField.cpp" />
   </ItemGroup>

@@ -38,8 +38,8 @@ HRESULT CEM0800::Initialize(void * pArg)
 		m_iMaxHP = 5000;
 		m_iHP = m_iMaxHP;
 
-		m_iCrushGauge = 1000;
-		m_iMaxCrushGauge = 1000;
+		m_iCrushGauge = 8000;
+		m_iMaxCrushGauge = 8000;
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;

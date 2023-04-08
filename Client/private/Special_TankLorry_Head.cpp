@@ -8,6 +8,7 @@
 #include "MathUtils.h"
 #include "Animation.h"
 #include "ImguiUtils.h"
+#include "Material.h"
 
 CSpecial_TankLorry_Head::CSpecial_TankLorry_Head(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -52,6 +53,11 @@ void CSpecial_TankLorry_Head::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 
 	m_pCollider->Update_Tick(m_pTransformCom);
+
+	if (0.5f < m_fBright)
+	{
+		int iA = 0;
+	}
 }
 
 void CSpecial_TankLorry_Head::Late_Tick(_double TimeDelta)

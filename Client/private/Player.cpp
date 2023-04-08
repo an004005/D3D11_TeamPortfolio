@@ -299,7 +299,7 @@ void CPlayer::Tick(_double TimeDelta)
 	CPlayerInfoManager::GetInstance()->Tick(TimeDelta);
 
 	KineticObject_OutLineCheck();
-	SpecialObject_OutLineCheck();
+	//SpecialObject_OutLineCheck();
 	Update_TargetUI();
 
 	m_fKineticCombo_Slash -= TimeDelta;
@@ -361,6 +361,21 @@ void CPlayer::Tick(_double TimeDelta)
 	{
 		if (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject())
 		{
+			if (m_pTrainStateMachine_Left->GetCurStateName() == "TRAIN_LEFT_NOUSE" &&
+				m_pTelephonePoleStateMachine_Left->GetCurStateName() == "TELEPHONEPOLE_LEFT_NOUSE" &&
+				m_pHBeamStateMachine_Left->GetCurStateName() == "HBEAM_LEFT_NOUSE" &&
+				m_pDropObjectStateMachine->GetCurStateName() == "DROP_NOUSE" &&
+				m_pTankLorryStateMachine->GetCurStateName() == "TANKLORRY_NOUSE" &&
+				m_pIronBarsStateMachine->GetCurStateName() == "IRONBARS_NOUSE" &&
+				m_pContainerStateMachine->GetCurStateName() == "CONTAINER_NOUSE")
+			{
+				static_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->SetOutline(true);
+			}
+			else
+			{
+				static_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->SetOutline(false);
+			}
+
 			if (SPECIAL_TRAIN == dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType())
 			{
 				m_pTrainStateMachine_Left->Tick(TimeDelta);
@@ -2382,11 +2397,18 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 					_float3 vTorque = _float3(dist0(rng), dist1(rng), dist2(rng));
 					static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Add_Physical(vForce, vTorque);
 				}
+
+				CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
 			})
-			.OnExit([&]() {m_fKineticCharge = 0.f; })
+			.OnExit([&]() 
+			{
+				IM_LOG("CHARGE : %f", CPlayerInfoManager::GetInstance()->Get_KineticCharge());
+				m_fKineticCharge = 0.f;
+				CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
+			})
 
 			.AddTransition("KINETIC_RB_LOOP to KINETIC_RB_THROW_01_START", "KINETIC_RB_THROW_01_START")
-			.Predicator([&]()->_bool{return m_fKineticCharge >= 0.5f;})
+			.Predicator([&]()->_bool{return m_fKineticCharge >= 1.f;})
 			.Priority(0)
 
 			.AddTransition("KINETIC_RB_LOOP to KINETIC_RB_CANCEL", "KINETIC_RB_CANCEL")
@@ -2406,7 +2428,11 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			.Priority(0)
 
 			.AddTransition("KINETIC_RB_CANCEL to NO_USE_KINETIC", "NO_USE_KINETIC")
-			.Predicator([&]()->_bool{return m_bKineticRB && (m_pASM->GetSocketAnimation("Kinetic_AnimSocket")->GetPlayRatio() >= 0.2f);})
+			.Predicator([&]()->_bool
+			{
+				if (nullptr == m_pASM->GetSocketAnimation("Kinetic_AnimSocket")) return false;
+				return m_bKineticRB && (m_pASM->GetSocketAnimation("Kinetic_AnimSocket")->GetPlayRatio() >= 0.2f);
+			})
 			.Priority(0)
 			
 #pragma endregion KineticRB
@@ -2421,6 +2447,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 
 				if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
 				{
+					static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->KineticRimLightFix(true);
 					Event_Kinetic_Throw();
 				}
 			})
@@ -3169,6 +3196,12 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			}
 
 			m_fKineticCharge += (_float)fTimeDelta;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
 		})
 
 			.AddTransition("KINETIC_COMBO_KINETIC01_CHARGE to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
@@ -3356,8 +3389,13 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			}
 
 			m_fKineticCharge += (_float)fTimeDelta;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
 		})
-
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
+		})
 			.AddTransition("KINETIC_COMBO_KINETIC02_CHARGE to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
 			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("Kinetic_Combo_AnimSocket"); })
 			.Priority(0)
@@ -3533,6 +3571,12 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			}
 
 			m_fKineticCharge += (_float)fTimeDelta;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
 		})
 
 			.AddTransition("KINETIC_COMBO_KINETIC03_CHARGE to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
@@ -3711,6 +3755,12 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			}
 
 			m_fKineticCharge += (_float)fTimeDelta;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
+		})
+		.OnExit([&]()
+		{
+			m_fKineticCharge = 0.f;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
 		})
 
 			.AddTransition("KINETIC_COMBO_KINETIC04_CHARGE to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
@@ -3841,6 +3891,13 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 					m_fKineticCharge = m_pASM->GetSocketAnimation("Kinetic_Combo_AnimSocket")->GetPlayRatio();
 				else
 					m_fKineticCharge = 0.f;
+
+				CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
+			})
+			.OnExit([&]()
+			{
+				m_fKineticCharge = 0.f;
+				CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
 			})
 
 				.AddTransition("KINETIC_COMBO_AIR_CAP to KINETIC_COMBO_NOUSE", "KINETIC_COMBO_NOUSE")
@@ -5631,12 +5688,13 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		.Tick([&](double fTimeDelta)
 		{
 			m_fKineticCharge += (_float)fTimeDelta;
-
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge * 0.5f);
 
 		})
 		.OnExit([&]()
 		{
 			m_fKineticCharge = 0.f;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
 		})
 
 			.AddTransition("TRAIN_LEFT_CHARGE to TRAIN_LEFT_THROW", "TRAIN_LEFT_THROW")
@@ -5676,6 +5734,7 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 
 			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Train_Set_Animation("AS_mg02_372_train_start_L");
 			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Activate_Animation(true);
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->SpecialRimLightFix(true);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 
 
@@ -5688,7 +5747,7 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		{
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 			m_fKineticCharge = 0.f;
-			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->SetDelete();
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Train_SetDeadTimer();
 		})
 
 			.AddTransition("TRAIN_LEFT_THROW to TRAIN_LEFT_NOUSE", "TRAIN_LEFT_NOUSE")
@@ -5786,10 +5845,12 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 			}
 
 			m_fKineticCharge += (_float)fTimeDelta;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge * 0.5f);
 		})
 		.OnExit([&]()
 		{
 			m_fKineticCharge = 0.f;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
 		})
 			.AddTransition("TELEPHONEPOLE_LEFT_CHARGE to TELEPHONEPOLE_LEFT_START", "TELEPHONEPOLE_LEFT_START")
 			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
@@ -5823,6 +5884,7 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 		{
 			m_bKineticSpecial_Activate = true;
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_Start_L);
+			static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->SpecialRimLightFix(true);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -5872,7 +5934,7 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 		})
 		.OnExit([&]()
 		{
-			CGameInstance::GetInstance()->SetTimeRatioCurve("TelephonePoleSlow");
+			CGameInstance::GetInstance()->SetTimeRatioCurve("KineticSpecialWaiting");
 			m_fKineticCharge = 0.f;
 			static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->TelephonePole_Collision_Off();
 		})
@@ -5894,12 +5956,13 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			
+			m_fSpecialWaiting += g_fTimeDelta;
 		})
 		.OnExit([&]()
 		{
 			CGameInstance::GetInstance()->ResetTimeRatio();
 			m_fKineticCharge = 0.f;
+			m_fSpecialWaiting = 0.f;
 		})
 			.AddTransition("TELEPHONEPOLE_LEFT_WAIT to TELEPHONEPOLE_LEFT_SWING", "TELEPHONEPOLE_LEFT_SWING")
 			.Predicator([&]()->_bool 
@@ -5911,7 +5974,7 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 			.AddTransition("TELEPHONEPOLE_LEFT_WAIT to TELEPHONEPOLE_LEFT_END", "TELEPHONEPOLE_LEFT_END")
 			.Predicator([&]()->_bool 
 			{ 
-				return (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.05f));
+				return 5.f <= m_fSpecialWaiting;
 			})
 			.Priority(0)
 
@@ -6201,10 +6264,12 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Drift();
 
 			m_fKineticCharge += (_float)fTimeDelta;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge * 0.5f);
 		})
 		.OnExit([&]()
 		{
 			m_fKineticCharge = 0.f;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
 		})
 			.AddTransition("HBEAM_LEFT_CHARGE to HBEAM_LEFT_THROW", "HBEAM_LEFT_THROW")
 			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
@@ -6238,6 +6303,8 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		{
 			m_bKineticSpecial_Activate = true;
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Throw_L);
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->SpecialRimLightFix(true);
+
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -6264,7 +6331,7 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		})
 		.OnExit([&]()
 		{
-			CGameInstance::GetInstance()->SetTimeRatioCurve("TelephonePoleSlow");
+			CGameInstance::GetInstance()->SetTimeRatioCurve("KineticSpecialWaiting");
 			m_fKineticCharge = 0.f;
 		})
 			.AddTransition("HBEAM_LEFT_THROW to HBEAM_LEFT_WAIT", "HBEAM_LEFT_WAIT")
@@ -6284,12 +6351,13 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			
+			m_fSpecialWaiting += g_fTimeDelta;
 		})
 		.OnExit([&]()
 		{
 			CGameInstance::GetInstance()->ResetTimeRatio();
 			m_fKineticCharge = 0.f;
+			m_fSpecialWaiting = 0.f;
 		})
 			.AddTransition("HBEAM_LEFT_WAIT to HBEAM_LEFT_ROTATION", "HBEAM_LEFT_ROTATION")
 			.Predicator([&]()->_bool 
@@ -6301,7 +6369,7 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			.AddTransition("HBEAM_LEFT_WAIT to HBEAM_LEFT_END", "HBEAM_LEFT_END")
 			.Predicator([&]()->_bool 
 			{ 
-				return (0.1f <= m_pModel->Find_Animation("AS_ch0100_333_AL_rotation_start")->GetPlayRatio());
+				return (5.f <= m_fSpecialWaiting);
 			})
 			.Priority(0)
 
@@ -6445,10 +6513,12 @@ HRESULT CPlayer::SetUp_DropObjectStateMachine()
 		.Tick([&](double fTimeDelta)
 		{
 			m_fKineticCharge += (_float)fTimeDelta;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge * 0.5f);
 		})
 		.OnExit([&]()
 		{
 			m_fKineticCharge = 0.f;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
 		})
 			.AddTransition("DROP_CHARGE to DROP_THROW", "DROP_THROW")
 			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
@@ -6478,6 +6548,7 @@ HRESULT CPlayer::SetUp_DropObjectStateMachine()
 			m_bKineticSpecial_Activate = true;
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_DropObject_Drop);
 
+			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->SpecialRimLightFix(true);
 			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Set_Trigger(false);
 			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->DropObject_Floating();
 		})
@@ -6582,11 +6653,13 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 			}
 
 			m_fKineticCharge += (_float)fTimeDelta;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge * 0.5f);
 		})
 		.OnExit([&]()
 		{
 			TankLorry.Reset();
 			m_fKineticCharge = 0.f;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
 		})
 			.AddTransition("TANKLORRY_CHARGE to TANKLORRY_FINISH", "TANKLORRY_FINISH")
 			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
@@ -6615,6 +6688,8 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 		{
 			m_bKineticSpecial_Activate = true;
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TankLorry_Finish);
+			static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+				->SpecialRimLightFix(true);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -6770,10 +6845,12 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 				IronBars_SingleBars_Particle();
 
 			m_fKineticCharge += (_float)fTimeDelta;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge * 0.5f);
 		})
 		.OnExit([&]()
 		{
 			m_fKineticCharge = 0.f;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
 		})
 			.AddTransition("IRONBARS_CHARGE to IRONBARS_DECOMPOSE", "IRONBARS_DECOMPOSE")
 			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
@@ -6808,6 +6885,9 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		{
 			m_bKineticSpecial_Activate = true;
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Decompose);
+
+			static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+				SpecialRimLightFix(true);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -6891,7 +6971,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		.AddState("IRONBARS_CHARGE_EX")
 		.OnStart([&]() 
 		{
-			CGameInstance::GetInstance()->SetTimeRatioCurve("IronBars_Slow");
+			CGameInstance::GetInstance()->SetTimeRatioCurve("KineticSpecialWaiting");
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Charge_Ex);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 
@@ -6902,17 +6982,20 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			// Î™¨Ïä§?∞Ï? ?†Ï∞Ω??Ï∂©Îèå ??Ï∂îÍ??Ä ?ÄÍ∏∞Ìï® -> ?¨Í∏¥?®Ïù¥?ÖÏûÑ
 			static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
 				IronBars_SingleBars_Particle();
+
+			m_fSpecialWaiting += g_fTimeDelta;
 		})
 		.OnExit([&]()
 		{
 			CGameInstance::GetInstance()->ResetTimeRatio();
 			m_fKineticCharge = 0.f;
+			m_fSpecialWaiting = 0.f;
 		})
 
 			.AddTransition("IRONBARS_CHARGE_EX to IRONBARS_END", "IRONBARS_END")
 			.Predicator([&]()->_bool 
 			{ 
-				return m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"); 
+				return 5.f <= m_fSpecialWaiting;
 			})
 			.Priority(0)
 
@@ -7256,10 +7339,12 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 		{
 			static_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->CreateKineticParticle();
 			m_fKineticCharge += (_float)fTimeDelta;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge * 0.5f);
 		})
 		.OnExit([&]()
 		{
 			m_fKineticCharge = 0.f;
+			CPlayerInfoManager::GetInstance()->Set_KineticCharge(m_fKineticCharge);
 		})
 			.AddTransition("CONTAINER_CHARGE to CONTAINER_START", "CONTAINER_START")
 			.Predicator([&]()->_bool { return m_fKineticCharge >= 2.f; })
@@ -7291,6 +7376,9 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 		{
 			m_bKineticSpecial_Activate = true;
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_Start);
+
+			static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+				SpecialRimLightFix(true);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -7341,17 +7429,19 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_Press);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
-			CGameInstance::GetInstance()->SetTimeRatioCurve("TelephonePoleSlow");
+			CGameInstance::GetInstance()->SetTimeRatioCurve("KineticSpecialWaiting");
 
 			CreateSpecialUI(SPECAIL_CONTAINER);
 		})
 		.Tick([&](double fTimeDelta)
 		{
 			static_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->CreateKineticParticle();
+			m_fSpecialWaiting += g_fTimeDelta;
 		})
 		.OnExit([&]()
 		{
 			m_fKineticCharge = 0.f;
+			m_fSpecialWaiting = 0.f;
 			CGameInstance::GetInstance()->ResetTimeRatio();
 		})
 			.AddTransition("CONTAINER_WAIT to CONTAINER_PRESS", "CONTAINER_PRESS")
@@ -7364,7 +7454,7 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 			.AddTransition("CONTAINER_WAIT to CONTAINER_END", "CONTAINER_END")
 			.Predicator([&]()->_bool
 				{
-					return 0.1f <= m_pModel->Find_Animation("AS_ch0100_337_AL_press_start")->GetPlayRatio();
+					return 5.f <= m_fSpecialWaiting;
 				})
 			.Priority(0)
 
@@ -7430,6 +7520,9 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 			{
 				m_pSpecialUI->SetDelete();
 			}
+
+			static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+				SpecialRimLightFix(false);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -7451,6 +7544,9 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 		.OnStart([&]() 
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_Finish);
+
+			static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+				SpecialRimLightFix(false);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -8878,9 +8974,6 @@ HRESULT CPlayer::Setup_Parts()
 
 	WEAPON_DESC		Desc;
 	ZeroMemory(&Desc, sizeof(WEAPON_DESC));
-	Desc.m_PivotMatrix = m_pModel->GetPivotMatrix();
-	//Desc.m_pSocket = m_pModel->Get_BonePtr("RightWeapon");
-	//Desc.m_pTransform = m_pTransformCom;
 	Desc.m_pJson = &Weapon;
 
 //	pGameInstance->Clone_GameObject(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
