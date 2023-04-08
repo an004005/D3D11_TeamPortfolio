@@ -21,6 +21,9 @@ public:
 	void Set_Dest(_float4 vDest) {
 		m_Dest = vDest;
 	}
+
+private:
+	void Overlap();
 private:
 	CEffectGroup* m_pCableEff = nullptr;
 

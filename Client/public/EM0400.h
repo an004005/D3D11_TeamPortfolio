@@ -57,7 +57,7 @@ private:
 	//원시 데이터
 	_float3 m_vMoveAxis;
 	_float m_fTurnRemain = 0.f;
-	_bool m_bHitAir = false;
+	_bool	m_bHitAir = false;
 
 	_bool		m_bHitMove = false;
 
@@ -79,6 +79,7 @@ private:
 	_float4 m_vPushVelocity;
 
 	//_float4x4 pivot;
+	_float fRatio = 0.2;
 public:
 	static CEM0400* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

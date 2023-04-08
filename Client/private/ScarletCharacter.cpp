@@ -162,8 +162,10 @@ void CScarletCharacter::Update_DeBuff(_double TimeDelta)
 			DeBuff_Oil();
 			break;
 		case EDeBuffType::DEBUFF_THUNDER: 
+			DeBuff_Thunder();
 			break;
 		case EDeBuffType::DEBUFF_WATER:
+			DeBuff_Water();
 			break;
 		case EDeBuffType::DEBUFF_END:
 			DeBuff_End();

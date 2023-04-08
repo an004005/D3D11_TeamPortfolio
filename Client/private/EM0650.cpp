@@ -120,6 +120,20 @@ void CEM0650::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("Damage_End", [this] { m_bHitMove = false; });
 
 
+	// 공중에서 추가타 맞을 때
+	m_pModelCom->Add_EventCaller("Successive", [this]
+		{
+			m_fGravity = 3.f;
+			m_fYSpeed = 1.5f;
+		});
+	// 공중에서 추가타 맞고 다시 떨어지는 순간
+	m_pModelCom->Add_EventCaller("AirDamageReset", [this]
+		{
+			m_fGravity = 20.f;
+			m_fYSpeed = 0.f;
+		});
+
+
 	m_pModelCom->Add_EventCaller("DeadFlower", [this]
 	{
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0700DeadFlower")
@@ -170,6 +184,7 @@ void CEM0650::SetUpFSM()
 			.OnStart([this]
 			{
 				Play_LightHitAnim();
+				m_vMoveAxis = _float3::Zero;
 			})
 			.Tick([this](_double)
 			{
@@ -195,6 +210,8 @@ void CEM0650::SetUpFSM()
 			{
 				Play_MidHitAnim();
 				HeavyAttackPushStart();
+
+				m_vMoveAxis = _float3::Zero;
 			})
 			.Tick([this](_double TimeDelta)
 			{
@@ -228,7 +245,9 @@ void CEM0650::SetUpFSM()
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0600_432_AL_blow_start_F");
 				m_fGravity = 20.f;
-				m_fYSpeed = 12.f;
+				m_fYSpeed = 10.f;
+
+				m_vMoveAxis = _float3::Zero;
 			})
 			.Tick([this](_double)
 			{
@@ -261,7 +280,7 @@ void CEM0650::SetUpFSM()
 			.AddTransition("OnFloorGetup to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketEmpty("FullBody");
+					return m_bDead || m_pASM->isSocketEmpty("FullBody");
 				})
 		.AddState("Death")
 			.OnStart([this]
@@ -312,7 +331,6 @@ void CEM0650::SetUpUI()
 void CEM0650::BeginTick()
 {
 	CEnemy::BeginTick();
-	//m_pASM->AttachAnimSocket("Pool", { m_pModelCom->Find_Animation("AS_em0600_160_AL_threat") });
 }
 
 void CEM0650::Tick(_double TimeDelta)
@@ -418,9 +436,9 @@ void CEM0650::Play_MidHitAnim()
 void CEM0650::Create_Bullet()
 {
 	DAMAGE_PARAM eDamageParam;
-	eDamageParam.eAttackType = EAttackType::ATK_MIDDLE;
+	eDamageParam.eAttackType = EAttackType::ATK_END;
 	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_END;
-	eDamageParam.iDamage = 50;
+	eDamageParam.iDamage = 20;
 
 	_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
 	_vector vPrePos = BoneMtx.r[3];
@@ -466,7 +484,7 @@ void CEM0650::HeavyAttackPushStart()
 	{
 		m_HeavyAttackPushTimeline.PlayFromStart();
 		m_vPushVelocity = CClientUtils::GetDirFromAxis(m_eHitFrom);
-		m_vPushVelocity *= -4.f; // 공격 온 방향의 반대로 이동
+		m_vPushVelocity *= -2.5f; // 공격 온 방향의 반대로 이동
 
 		const _float fYaw = m_pTransformCom->GetYaw_Radian();
 		m_vPushVelocity = XMVector3TransformNormal(m_vPushVelocity, XMMatrixRotationY(fYaw));

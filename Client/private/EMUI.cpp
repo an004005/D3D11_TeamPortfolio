@@ -85,31 +85,91 @@ void CEMUI::Create_BossUI()
 void CEMUI::Create_DamageFont(DAMAGE_PARAM& tDamageParams)
 {
 	_int iDamage = tDamageParams.iDamage;
-	array<_int, 4> SaveNum;
-
-	//10을 넣어주면 숫자가 안뜬다고 함
-	SaveNum.fill(10);
-
-	_int iCount = 0;
-	while (iDamage != 0)
-	{
-		SaveNum[iCount++] = iDamage % 10;
-		iDamage = iDamage / 10;
-	}
-
 	_float4 vHitPosition = tDamageParams.vHitPosition;
-	
+
 	vHitPosition.x += CMathUtils::RandomFloat(-1.f, 1.f);
 	vHitPosition.y += CMathUtils::RandomFloat(-0.5f, 1.f);
 	vHitPosition.z += CMathUtils::RandomFloat(-1.f, 1.f);
 
-	CEffectGroup* pFont = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"AttackNum");
-	pFont->Start_AttachOnlyPos(vHitPosition);
+	if (iDamage == 0)
+	{
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoDamage")
+		->Start_AttachOnlyPos(vHitPosition);
+	}
+	else
+	{
+		array<_int, 4> SaveNum;
+
+		//10을 넣어주면 숫자가 안뜬다고 함
+		SaveNum.fill(10);
+
+		_int iCount = 0;
+		while (iDamage != 0)
+		{
+			SaveNum[iCount++] = iDamage % 10;
+			iDamage = iDamage / 10;
+		}
+
+		CEffectGroup* pFont = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"AttackNum");
+		pFont->Start_AttachOnlyPos(vHitPosition);
+
+		pFont->GetFirstEffect()->GetParams().Float2s[0] = { _float(SaveNum[3]), 0.0f };
+		pFont->GetSecondEffect()->GetParams().Float2s[0] = { _float(SaveNum[2]), 0.0f };
+		pFont->GetThirdEffect()->GetParams().Float2s[0] = { _float(SaveNum[1]), 0.0f };
+		pFont->GetFourthEffect()->GetParams().Float2s[0] = { _float(SaveNum[0]), 0.0f };
+	}
 	
-	pFont->GetFirstEffect()->GetParams().Float2s[0] = { _float(SaveNum[3]), 0.0f };
-	pFont->GetSecondEffect()->GetParams().Float2s[0] = { _float(SaveNum[2]), 0.0f };
-	pFont->GetThirdEffect()->GetParams().Float2s[0] = { _float(SaveNum[1]), 0.0f };
-	pFont->GetFourthEffect()->GetParams().Float2s[0] = { _float(SaveNum[0]), 0.0f };
+}
+
+void CEMUI::Create_CGUI()
+{
+//	_float4x4	pivot = XMMatrixIdentity();
+	m_pCGEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"G_Monster");
+	m_pCGEffect->Start_Attach(m_pOwner,  "Weak01", true, true);
+	Safe_AddRef(m_pCGEffect);
+}
+
+void CEMUI::Update_NoticeNeon()
+{
+	_float4x4	NoticeNeonPivot = XMMatrixTranslation(0.f, 2.f, 0.f);
+
+	if (m_pNoticNeon != nullptr)
+	{
+		m_pNoticNeon->SetDelete();
+		Safe_Release(m_pNoticNeon);
+		m_pNoticNeon = nullptr;
+	}
+
+	switch (m_pOwner->GetDeBuffType())
+	{
+	case Client::EDeBuffType::DEBUFF_FIRE:
+		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_OIL:
+		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_THUNDER:
+		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_WATER:
+		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_END:
+		break;
+	default:
+		break;
+	}
+
+	if (m_pNoticNeon != nullptr)
+	{
+		m_pNoticNeon->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Target", true, true);
+		Safe_AddRef(m_pNoticNeon);
+	}
+
 }
 
 CEMUI* CEMUI::Create(CEnemy* pEnemy)
@@ -134,4 +194,18 @@ void CEMUI::Free()
 
 	if(m_BossHp != nullptr)
 		m_BossHp->SetDelete();
+
+	if (m_pCGEffect != nullptr)
+	{
+		m_pCGEffect->SetDelete();
+		Safe_Release(m_pCGEffect);
+		m_pCGEffect = nullptr;
+	}
+
+	if (m_pNoticNeon != nullptr)
+	{
+		m_pNoticNeon->SetDelete();
+		Safe_Release(m_pNoticNeon);
+		m_pNoticNeon = nullptr;
+	}
 }
