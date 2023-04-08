@@ -19,12 +19,7 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 
 public:
-	_bool Get_ChangeX() {
-		return m_bChangeX;
-	}
-	void Set_ChangeX(_bool bChange) {
-		m_bChangeX = bChange;
-	}
+	void	Set_Grow(const _uint iNumber, const _bool bVisible);
 
 public:
 	void	InputAlt();

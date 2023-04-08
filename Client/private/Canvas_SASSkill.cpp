@@ -5,6 +5,7 @@
 #include "PlayerInfoManager.h"
 
 #include "Canvas_SASSkillMove.h"
+#include "SASSkillFullCircleUI.h"
 
 CCanvas_SASSkill::CCanvas_SASSkill(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -58,9 +59,7 @@ void CCanvas_SASSkill::Tick(_double TimeDelta)
 				(*iter).first == L"SASSkill_AltTexture1" ||
 				(*iter).first == L"SASSkill_XLeft" ||
 				(*iter).first == L"SASSkill_XRight" ||
-				(*iter).first == L"SASSkill_XInput" ||
-				(*iter).first == L"SASSkill_FullCircle1" ||
-				(*iter).first == L"SASSkill_FullCircle2")
+				(*iter).first == L"SASSkill_XInput")
 				continue;
 
 			iter->second->SetVisible(true);
@@ -79,7 +78,6 @@ void CCanvas_SASSkill::Tick(_double TimeDelta)
 
 			Find_ChildUI(L"SASSkill_XLeft")->SetVisible(true);
 			Find_ChildUI(L"SASSkill_XRight")->SetVisible(true);
-			Find_ChildUI(L"SASSkill_XInput")->SetVisible(true);
 		}
 	}
 #pragma endregion
@@ -97,6 +95,14 @@ void CCanvas_SASSkill::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
+}
+
+void CCanvas_SASSkill::Set_Grow(const _uint iNumber, const _bool bVisible)
+{
+	_tchar szText[MAX_PATH] = TEXT("");
+	wsprintf(szText, TEXT("FullCircle%i"), iNumber);
+	dynamic_cast<CSASSkillFullCircleUI*>(Find_ChildUI(szText))->Set_Grow();
+	Find_ChildUI(szText)->SetVisible(bVisible);
 }
 
 void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
