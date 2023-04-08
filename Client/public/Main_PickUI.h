@@ -27,13 +27,14 @@ public:
 	_bool	Get_OnAlpha() {
 		return m_bOnAlpha;
 	}
-	void	Set_InitializeAlpha() {
-		m_bOnAlpha = true;
-	}
 	void	Set_OnAlpha() {
 		m_bOnAlpha = false;
 	}
 
+	void	Set_PickInitialize() {
+		m_bOnAlpha = true;
+		m_bOnButton = true;
+	}
 	void	Set_ColorType(const _uint & iType = 0) {
 		m_iColorType = iType;
 	}

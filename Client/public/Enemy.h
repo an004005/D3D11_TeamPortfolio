@@ -69,6 +69,10 @@ public:
 	//Target 방향 확인
 	_bool IsTargetFront(_float fAngle = 90.f);
 	_bool IsTargetRight(_float fAngle = 90.f);
+
+//public:
+//	void Set_Gravity(_bool bGravity) { m_bActiveGravity = bGravity; }
+
 protected:
 	// take damage 관련 함수
 	void CheckHitPositoin(DAMAGE_PARAM& tDamageParams);

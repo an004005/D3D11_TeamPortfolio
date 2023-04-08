@@ -102,10 +102,10 @@
                 "Float2s": [],
                 "Float4s": [
                     [
-                        9.999999747378752e-05,
-                        9.998999303206801e-05,
-                        9.998999303206801e-05,
-                        0.10000000149011612
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0755414366722107
                     ]
                 ],
                 "Float4x4s": [],
@@ -330,6 +330,57 @@
             }
         },
         {
+            "ChildTag": "Shop_Entrance\u0000",
+            "ObjectTag": "Shop_Entrance",
+            "Pivot": 0,
+            "PositionX": 0.0,
+            "PositionY": 0.0,
+            "Priority": 10,
+            "Prototype_GameObject": "FullUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 1600.0,
+            "SizeY": 900.0,
+            "Transform": {
+                "WorldMatrix": [
+                    1600.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    900.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
             "ChildTag": "Shop_Menu\u0000",
             "ObjectTag": "Shop_Menu",
             "Pivot": 2,
@@ -421,8 +472,8 @@
             "ChildTag": "Shop_MenuPick\u0000",
             "ObjectTag": "Shop_MenuPick",
             "Pivot": 2,
-            "PositionX": -601.0,
-            "PositionY": -60.0,
+            "PositionX": -600.0,
+            "PositionY": -62.0,
             "Priority": 3,
             "Prototype_GameObject": "Default_UI\u0000",
             "ScaleX": 0.8500000238418579,
@@ -454,8 +505,8 @@
                     0.0,
                     1.0,
                     0.0,
-                    -601.0,
-                    390.0,
+                    -600.0,
+                    388.0,
                     0.0,
                     1.0
                 ]

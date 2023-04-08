@@ -1,0 +1,179 @@
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "BackGround\u0000",
+            "ObjectTag": "BackGround",
+            "Pivot": 8,
+            "PositionX": 150.0,
+            "PositionY": 250.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.8999999761581421
+                ],
+                "Ints": [],
+                "Pass": 25,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Short_UI\\QuestBackGround.png\u0000"
+                ]
+            },
+            "SizeX": 1001.0,
+            "SizeY": 70.0,
+            "Transform": {
+                "WorldMatrix": [
+                    1000.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    70.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -650.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Chake\u0000",
+            "ObjectTag": "Chake",
+            "Pivot": 8,
+            "PositionX": 281.0,
+            "PositionY": 250.0,
+            "Priority": 4,
+            "Prototype_GameObject": "Shader_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    0.0
+                ],
+                "Ints": [],
+                "Pass": 7,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Short_UI\\QuestChake.png\u0000"
+                ]
+            },
+            "SizeX": 500.0,
+            "SizeY": 39.0,
+            "Transform": {
+                "WorldMatrix": [
+                    500.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    39.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -519.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "ChakeBase\u0000",
+            "ObjectTag": "ChakeBase",
+            "Pivot": 8,
+            "PositionX": 50.0,
+            "PositionY": 250.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Shader_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Short_UI\\QuestChakeBace.png\u0000"
+                ]
+            },
+            "SizeX": 39.0,
+            "SizeY": 39.0,
+            "Transform": {
+                "WorldMatrix": [
+                    39.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    39.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -750.0,
+                    250.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "Canvas_Quest",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 3,
+    "Prototype_GameObject": "Canvas_Quest\u0000",
+    "ScaleX": 0.5,
+    "ScaleY": 0.5,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

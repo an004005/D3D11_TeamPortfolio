@@ -76,6 +76,20 @@ void CMonsterHpUI::Tick(_double TimeDelta)
 	HpBack_Tick(TimeDelta);
 }
 
+void CMonsterHpUI::Late_Tick(_double TimeDelta)
+{
+	__super::Late_Tick(TimeDelta);
+
+}
+
+HRESULT CMonsterHpUI::Render()
+{
+	if (FAILED(__super::Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 void CMonsterHpUI::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();

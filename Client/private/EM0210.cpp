@@ -53,7 +53,7 @@ HRESULT CEM0210::Initialize(void * pArg)
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	//시작부터 투명상태 적용
-	m_IsInvisible = true;
+	m_IsInvisible = false;
 
 	return S_OK;
 }
@@ -390,7 +390,19 @@ void CEM0210::SetUpFSM()
 		.AddState("BrainCrushEnd")
 			.OnStart([this]
 			{
-				m_pASM->InputAnimSocketOne("FullBody", "AS_BC_em0200m_em0200");
+				_float4 vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				_float4 vDistance = XMLoadFloat4(&vTargetPos) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				_float fDistance = vDistance.Length();
+
+				if (5.f >= fDistance)
+				{
+					m_pASM->InputAnimSocketOne("FullBody", "AS_BC_em0200m_em0200");
+				}
+				else
+				{
+					m_pASM->InputAnimSocketOne("FullBody", "AS_BC_em_common_em0200");
+				}
+
 				m_pBrain->BeginBC();
 			})
 			.Tick([this](_double)
@@ -402,7 +414,8 @@ void CEM0210::SetUpFSM()
 						_matrix WeakBoneMatrix = GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
 						m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
 
-						const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.2f;
+						//const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.2f;
+						const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.55f;
 
 						if (m_pASM->isSocketPassby("FullBody", fPlayRatio))
 						{
@@ -616,7 +629,7 @@ void CEM0210::Late_Tick(_double TimeDelta)
 		if (m_dRenderChangeDelay >=0.5)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		else
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_MESH_ALPHABLEND, this);
 	}
 	else
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);

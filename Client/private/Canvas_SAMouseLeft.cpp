@@ -44,7 +44,7 @@ void CCanvas_SAMouseLeft::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
-	KeyInput();
+	//KeyInput();
 	MouseLight_Tick(TimeDelta);
 	Action_Tick(TimeDelta);
 

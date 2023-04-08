@@ -88,7 +88,7 @@ HRESULT CCanvas_ListCheck::Render()
 	pGameInstance->Render_Font(L"Pretendard32", L"아니오", vPosition + _float2(195.0f, 133.0f), 0.f, vFontBigSize, vColor);
 
 	if (m_bTransferring == true) {
-		if (1.0f > m_fTransferringBar)
+		if (1.0f < m_fTransferringBar)
 			pGameInstance->Render_Font(L"Pretendard32", L"전송 완료", vPosition + _float2(195.0f, 245.0f), 0.f, vFontSmaillSize, vColor);
 		else
 			pGameInstance->Render_Font(L"Pretendard32", L"전송 중", vPosition + _float2(205.0f, 245.0f), 0.f, vFontSmaillSize, vColor);
@@ -116,22 +116,6 @@ HRESULT CCanvas_ListCheck::Render()
 	pGameInstance->Render_Font(L"Pretendard32", L"구입 금액", vPosition + _float2(55.0f, 249.0f), 0.f, vFontSmaillSize, vColor);
 
 	return S_OK;
-}
-
-void CCanvas_ListCheck::Imgui_RenderProperty()
-{
-	CCanvas::Imgui_RenderProperty();
-
-}
-
-void CCanvas_ListCheck::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-}
-
-void CCanvas_ListCheck::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
 }
 
 void CCanvas_ListCheck::Set_ItemInfo(const size_t iItemIndex, const _uint iItemCount)

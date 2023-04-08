@@ -7,9 +7,7 @@
 
 #include "Canvas_Alarm.h"
 #include "Canvas_BossHp.h"
-#include "Boss_HpUI.h"
-#include "Boss_HpBackUI.h"
-#include "Boss_ShildUI.h"
+#include "ShaderUI.h"
 
 CCanvas_BossHpMove::CCanvas_BossHpMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -109,22 +107,24 @@ void CCanvas_BossHpMove::LoadFromJson(const Json & json)
 
 void CCanvas_BossHpMove::Set_BossHp(const _float & fHp)
 {
-	//dynamic_cast<CCanvas_BossHp*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_BossHp"))->Set_BossHp();
 	m_pCanvas_BossHp->Set_BossHp();
 	
 	Find_ChildUI(L"Boss_Hp")->SetVisible(true);
 	Find_ChildUI(L"Boss_HPBack")->SetVisible(true);
-	dynamic_cast<CBoss_HpUI*>(Find_ChildUI(L"Boss_Hp"))->Set_BossHp(fHp);
-	
-	if(m_fCurrentHp > fHp)
-		m_fCurrentHp -= _float(TIME_DELTA);
-	dynamic_cast<CBoss_HpBackUI*>(Find_ChildUI(L"Boss_HPBack"))->Set_BossHp(m_fCurrentHp);
+	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Boss_Hp"))->Set_Floats0(fHp);
+
+	_float fRatio = dynamic_cast<CShaderUI*>(Find_ChildUI(L"Boss_HPBack"))->Get_Floats0();
+	if (fRatio > fHp)
+		fRatio -= _float(TIME_DELTA) * 0.01f;
+	else
+		fRatio = fHp;
+	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Boss_HPBack"))->Set_Floats0(fRatio);
 }
 
 void CCanvas_BossHpMove::Set_BossShild(const _float & fShild)
 {
 	Find_ChildUI(L"Boss_Shild")->SetVisible(true);
-	dynamic_cast<CBoss_ShildUI*>(Find_ChildUI(L"Boss_Shild"))->Set_Shild(fShild);
+	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Boss_Shild"))->Set_Floats0(fShild);
 }
 
 CCanvas_BossHpMove * CCanvas_BossHpMove::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

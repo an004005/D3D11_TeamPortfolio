@@ -49,8 +49,9 @@ void CCanvas_SAContainer_Down::Tick(_double TimeDelta)
 
 void CCanvas_SAContainer_Down::KeyInput()
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_X) && 3 >= m_iAllCount)
+	if (true == m_bKeyInput && 3 >= m_iAllCount)
 	{
+		m_bKeyInput = false;
 		m_bKeyDown = true;
 		++m_iInputCount;
 		dynamic_cast<CShaderUI*>(Find_ChildUI(L"Gauge"))->Set_Float2s({ _float(m_iInputCount), 0.0f });

@@ -22,7 +22,7 @@
 #include "Imgui_Batch.h"
 #include "GameManager.h"
 
-// #define ADD_PLAYER
+#define ADD_PLAYER
 //#define ADD_PREVIEW "Prototype_Model_em1200"
 //#define ADD_ENEMY "Monster_em650"
 

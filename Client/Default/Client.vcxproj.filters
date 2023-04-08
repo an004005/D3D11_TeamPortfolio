@@ -220,9 +220,6 @@
     <Filter Include="02.GameObjects\UI\Boss">
       <UniqueIdentifier>{dc1701f8-365a-4180-94c6-d3de20833679}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Alarm">
-      <UniqueIdentifier>{773b5079-4278-4e4c-bf66-8db98ddbbf29}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\3DUI">
       <UniqueIdentifier>{1b202ea8-4c32-4399-b17b-b9c184a5027f}</UniqueIdentifier>
     </Filter>
@@ -496,6 +493,30 @@
     <Filter Include="02.GameObjects\Player\PlayerHotFixer">
       <UniqueIdentifier>{cad6aa9c-d087-4fa9-885d-62ec510ba601}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Player\FSM_Recompiler">
+      <UniqueIdentifier>{32ea2ae1-e2a0-437b-a204-206e2e6b9d1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\Alarm">
+      <UniqueIdentifier>{773b5079-4278-4e4c-bf66-8db98ddbbf29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\Quest">
+      <UniqueIdentifier>{9e45a27c-dc49-4013-a547-8e9319d9c178}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\Distance">
+      <UniqueIdentifier>{acb15e4a-9898-43bc-b1a4-3c6073be1b44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\------------------------">
+      <UniqueIdentifier>{fc8942bc-2a2d-4c46-9702-82583d584ef5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC">
+      <UniqueIdentifier>{d36f6922-8342-4949-be75-09e22a64981f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\SM_2300">
+      <UniqueIdentifier>{d9f6f8cd-4dea-4938-864c-d69cc749dd34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map\InvisibleWall\HS_TeleportableWall">
+      <UniqueIdentifier>{49f57d4d-0b53-4e20-9538-333679350df2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -605,9 +626,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Effect.h">
       <Filter>VFX\Effect\Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\ScarletMap.h">
-      <Filter>02.GameObjects\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
@@ -770,9 +788,6 @@
     <ClInclude Include="..\public\UI_Manager.h">
       <Filter>02.GameObjects\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Drive_RightDotUI.h">
-      <Filter>02.GameObjects\UI\Front\Drive</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Drive_GaugeUI.h">
       <Filter>02.GameObjects\UI\Front\Drive</Filter>
     </ClInclude>
@@ -914,24 +929,15 @@
     <ClInclude Include="..\public\Canvas_BossHp.h">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Boss_HpUI.h">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Boss_HpBackUI.h">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Boss_ShildUI.h">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Monster.h">
       <Filter>02.GameObjects\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\public\NextMapNameUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\SASSkillNameUI.h">
       <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
@@ -975,13 +981,13 @@
     </ClInclude>
     <ClInclude Include="..\public\PostVFX_Penetrate.h" />
     <ClInclude Include="..\public\Boss_AppearUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Boss_AppearBackUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\LevelUpUI.h">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClInclude>
     <ClInclude Include="..\public\VFX_Manager.h">
       <Filter>VFX</Filter>
@@ -1467,6 +1473,36 @@
     <ClInclude Include="..\public\PlayerHotFixer.h">
       <Filter>02.GameObjects\Player\PlayerHotFixer</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ScarletMap.h">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FSM_Recompiler.h">
+      <Filter>02.GameObjects\Player\FSM_Recompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_MainTalk.h">
+      <Filter>02.GameObjects\UI\Short\MainTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapNameUI.h">
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_Quest.h">
+      <Filter>02.GameObjects\UI\Short\Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\QuestBackGroundUI.h">
+      <Filter>02.GameObjects\UI\Short\Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\DistanceUI.h">
+      <Filter>02.GameObjects\UI\Short\Distance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Drive_RightDotUI.h">
+      <Filter>02.GameObjects\UI\------------------------</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Shop_NPC.h">
+      <Filter>02.GameObjects\NPC\SM_2300</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\HS_TeleportableWall.h">
+      <Filter>02.GameObjects\Map\InvisibleWall\HS_TeleportableWall</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1555,9 +1591,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Effect.cpp">
       <Filter>VFX\Effect\Parent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\ScarletMap.cpp">
-      <Filter>02.GameObjects\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
@@ -1713,9 +1746,6 @@
     <ClCompile Include="..\private\UI_Manager.cpp">
       <Filter>02.GameObjects\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Drive_RightDotUI.cpp">
-      <Filter>02.GameObjects\UI\Front\Drive</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Drive_GaugeUI.cpp">
       <Filter>02.GameObjects\UI\Front\Drive</Filter>
     </ClCompile>
@@ -1857,20 +1887,11 @@
     <ClCompile Include="..\private\Canvas_BossHp.cpp">
       <Filter>02.GameObjects\UI\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Boss_HpUI.cpp">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Boss_HpBackUI.cpp">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Boss_ShildUI.cpp">
-      <Filter>02.GameObjects\UI\Boss</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Monster.cpp">
       <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\private\NextMapNameUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\SASSkillNameUI.cpp">
       <Filter>02.GameObjects\UI\Front\SASSkill</Filter>
@@ -1914,13 +1935,13 @@
     </ClCompile>
     <ClCompile Include="..\private\PostVFX_Penetrate.cpp" />
     <ClCompile Include="..\private\Boss_AppearUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Boss_AppearBackUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\LevelUpUI.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\VFX_Manager.cpp">
       <Filter>VFX</Filter>
@@ -2245,7 +2266,7 @@
       <Filter>02.GameObjects\SpecialObject\Special_IronBars</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_Alarm.cpp">
-      <Filter>02.GameObjects\UI\Alarm</Filter>
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_LightUI.cpp">
       <Filter>02.GameObjects\UI\Front\Item</Filter>
@@ -2415,6 +2436,36 @@
     <ClCompile Include="..\private\PlayerHotFixer.cpp">
       <Filter>02.GameObjects\Player\PlayerHotFixer</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\ScarletMap.cpp">
+      <Filter>02.GameObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FSM_Recompiler.cpp">
+      <Filter>02.GameObjects\Player\FSM_Recompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_MainTalk.cpp">
+      <Filter>02.GameObjects\UI\Short\MainTalk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapNameUI.cpp">
+      <Filter>02.GameObjects\UI\Short\Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_Quest.cpp">
+      <Filter>02.GameObjects\UI\Short\Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\QuestBackGroundUI.cpp">
+      <Filter>02.GameObjects\UI\Short\Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\DistanceUI.cpp">
+      <Filter>02.GameObjects\UI\Short\Distance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Drive_RightDotUI.cpp">
+      <Filter>02.GameObjects\UI\------------------------</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Shop_NPC.cpp">
+      <Filter>02.GameObjects\NPC\SM_2300</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\HS_TeleportableWall.cpp">
+      <Filter>02.GameObjects\Map\InvisibleWall\HS_TeleportableWall</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -2542,5 +2593,8 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLineInstancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\SSLR.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxLine.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
