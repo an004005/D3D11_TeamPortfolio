@@ -12,7 +12,7 @@
             "../Bin/Resources/Environments/Prop/10_Props/Exterior/pr_TrashSet/TX_dumpster_01_NRM.png",
             "../Bin/Resources/Environments/Prop/10_Props/Exterior/pr_TrashSet/TX_dumpster_01_RMA.png"
         ],
-        "Pass" : 1
+        "Pass" : 4
     },
     "InstancingPass" : 1
 }

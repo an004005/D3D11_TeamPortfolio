@@ -7,7 +7,8 @@
 #include "RedString.h"
 #include "GameUtils.h"
 #include "JsonStorage.h"
-
+#include "PhysX_Manager.h"
+#include "Map_KineticBatchPreset.h"
 
 CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
@@ -27,8 +28,11 @@ HRESULT CLevel_FinalStage::Initialize()
 	if (FAILED(Ready_Layer_AI(LAYER_AI)))
 		return E_FAIL;
 
+	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/FinalStage/Kinetic_Normal.json");
 
-
+	Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/FinalStage/Kinetic_Normal.json");
+	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
+		
 	//CGameUtils::ListFiles("../Bin/Resources/Restrings/BranFieldStrings/", [](const string& filePath)
 	//{
 	//	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);
@@ -40,6 +44,11 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	return S_OK;
 }
+
+void CLevel_FinalStage::Tick(_double TimeDelta)
+{
+	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
+}	
 
 CLevel_FinalStage * CLevel_FinalStage::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
@@ -55,6 +64,5 @@ CLevel_FinalStage * CLevel_FinalStage::Create(ID3D11Device * pDevice, ID3D11Devi
 
 void CLevel_FinalStage::Free()
 {
-	__super::Free();
-
+	__super::Free();	
 }

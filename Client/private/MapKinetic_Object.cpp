@@ -159,7 +159,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 void CMapKinetic_Object::BeginTick()
 {
 	__super::BeginTick();
-
+	//m_PreMatrix = m_pTransformCom->Get_WorldMatrix();
 	m_pCollider->UpdateChange();
 }
 
@@ -434,6 +434,16 @@ HRESULT CMapKinetic_Object::SetUp_Components(void* pArg)
 
 	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"Collider", (CComponent**)&m_pCollider, pArg));
 	return S_OK;
+}
+
+_matrix CMapKinetic_Object::Get_PreMatrix()
+{
+	return m_PreMatrix;
+}
+
+void CMapKinetic_Object::Set_PreMatrix(_matrix preMatrix)
+{
+	m_PreMatrix = preMatrix;
 }
 
 CMapKinetic_Object * CMapKinetic_Object::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

@@ -353,6 +353,8 @@ void CSpecial_IronBars::IronBars_SingleBars_Particle()
 
 HRESULT CSpecial_IronBars::SetUp_Components(void * pArg)
 {
+	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"Collider", (CComponent**)&m_pCollider, pArg));
+
 	return S_OK;
 }
 
