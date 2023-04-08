@@ -8859,9 +8859,6 @@ HRESULT CPlayer::Setup_Parts()
 
 	WEAPON_DESC		Desc;
 	ZeroMemory(&Desc, sizeof(WEAPON_DESC));
-	Desc.m_PivotMatrix = m_pModel->GetPivotMatrix();
-	//Desc.m_pSocket = m_pModel->Get_BonePtr("RightWeapon");
-	//Desc.m_pTransform = m_pTransformCom;
 	Desc.m_pJson = &Weapon;
 
 //	pGameInstance->Clone_GameObject(TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);

@@ -311,7 +311,10 @@ void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
 void CPlayerHotFixer::Player_Something_Update()
 {
 	// 플레이어에 추가할 내용이나 변경할 내용 있으면 해당 부분에서 추가 컴파일 가능
-	
+
+	m_pPlayer->m_BrandCrash_em0200.clear();
+	m_pPlayer->m_BrandCrash_em0200.push_back(m_pPlayer->m_pModel->Find_Animation("AS_BC_em0200m_ch0100"));
+
 }
 
 CPlayerHotFixer* CPlayerHotFixer::Create(CPlayer* pPlayer)
