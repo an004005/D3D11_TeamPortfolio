@@ -23,7 +23,7 @@
 #include "GameManager.h"
 
 #define ADD_PLAYER
-//#define ADD_PREVIEW "Prototype_Model_em700"
+//#define ADD_PREVIEW "Prototype_Model_em900"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -183,9 +183,10 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
 	}
 #endif // ADD_PREVIEW
 
-	
-
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/tests.json");
+
+
+	//FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Gift", TEXT("Prototype_EMGift")));
 
 	return S_OK;
 }

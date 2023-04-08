@@ -696,7 +696,7 @@ void CEnemy::DeBuff_Oil()
 
 void CEnemy::DeBuff_Thunder()
 {
-	m_fDeBuffTime = 8.f;
+	m_fDeBuffTime = 10.f;
 	m_pEMUI->Update_NoticeNeon();
 }
 

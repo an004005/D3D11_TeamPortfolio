@@ -73,7 +73,6 @@ public:
 public:
 	void HitTargets(physx::PxSweepBuffer& sweepOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
 	void HitTargets(physx::PxOverlapBuffer& overlapOut, _int iDamage, EAttackType eAtkType, EDeBuffType eDeBuff = EDeBuffType::DEBUFF_END);
-
 //public:
 //	void Set_Gravity(_bool bGravity) { m_bActiveGravity = bGravity; }
 

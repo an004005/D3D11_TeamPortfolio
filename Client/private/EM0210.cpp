@@ -681,23 +681,18 @@ void CEM0210::Imgui_RenderProperty()
 
 	m_pFSM->Imgui_RenderProperty();
 
-	/*static _bool tt = false;
-	ImGui::Checkbox("Modify Pivot", &tt);
-	
-	if (tt)
-	{
-		static GUIZMO_INFO tInfo;
-		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+	if (ImGui::Button("Fire"))
+		m_eDeBuff = EDeBuffType::DEBUFF_FIRE;
 
-		if (ImGui::Button("Create_Effect"))
-		{
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0210_Spin_Attack")
-				->Start_AttachPivot(this, pivot, "Target", true, true);
-		}
-	}*/
-		
-	ImGui::InputInt("HP", &m_iHP);
-	ImGui::InputInt("Crush", &m_iCrushGauge);
+	if (ImGui::Button("Water"))
+		m_eDeBuff = EDeBuffType::DEBUFF_WATER;
+
+	if (ImGui::Button("Oil"))
+		m_eDeBuff = EDeBuffType::DEBUFF_OIL;
+
+	if (ImGui::Button("Thunder"))
+		m_eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+
 }
 
 _bool CEM0210::Exclude()

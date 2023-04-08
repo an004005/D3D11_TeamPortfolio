@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "EM0220.h"
 #include <FSMComponent.h>
+#include <random>
 #include "JsonStorage.h"
 #include "RigidBody.h"
 #include "EM0220_AnimInstance.h"
@@ -288,13 +289,26 @@ void CEM0220::SetUpFSM()
 		.AddState("Counter")
 			.OnStart([this]
 			{
+				ClearDamagedTarget();
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0220_217_AL_Counter");
 				m_dFallCount = 0.0;
+				m_iFallIndex = 0;
+				m_bAttack = true;
+
+				std::random_device rd;
+				std::mt19937 g(rd());
+				std::shuffle(m_pLanterns.begin(), m_pLanterns.end(), g);
 			})
 			.Tick([this](_double TimeDelta)
 			{
 				//폭탄 떨구기
-				CounterAttack(TimeDelta);
+				if(m_bAttack)
+					CounterAttack(TimeDelta);
+			})
+			.OnExit([this]
+			{
+					//CounterAttack에서 다 떨어지면 false해주는데 혹시 안될수있으니 끝날때 해줌
+					m_bAttack = false;
 			})
 			.AddTransition("Counter to Guard_End", "Guard_End")
 				.Predicator([this]
@@ -404,12 +418,19 @@ void CEM0220::HitEffect(DAMAGE_PARAM& tDamageParams)
 	__super::HitEffect(tDamageParams);
 }
 
+void CEM0220::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
+{
+	if (m_Unbeatable == true) return;
+	__super::CheckCrushGage(tDamageParams);
+}
+
 void CEM0220::CheckHP(DAMAGE_PARAM & tDamageParams)
 {
-	_int iDamage = tDamageParams.iDamage;
-	
-	if(m_Unbeatable == false)
-		m_iHP -= iDamage;
+
+	if (m_Unbeatable == true)
+		tDamageParams.iDamage = 0;
+	else
+		m_iHP -= tDamageParams.iDamage;
 
 	if (m_iHP < 0)
 	{
@@ -433,11 +454,10 @@ void CEM0220::SetUp_Lantern()
 			boneName = "lantern" + to_string(i);
 
 		CEM0221* pLantern = dynamic_cast<CEM0221*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("Monster_em221")));
-		//CEM0221* pLantern = dynamic_cast<CEM0221*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_Lantern"), TEXT("Monster_em221")));
-
 		assert(pLantern != nullptr);
 
 		pLantern->Set_TargetBoneName(boneName);
+		pLantern->Set_Owner(this);
 		m_pLanterns.emplace_back(pLantern);
 	}
 
@@ -465,11 +485,16 @@ void CEM0220::Update_LanternMatrix()
 
 void CEM0220::CounterAttack(_double TimeDelta)
 {
-	if (m_dFallCount >= 0.1)
+	if (m_dFallCount >= 0.06)
 	{
-		m_iFallIndex = (m_iFallIndex + 7) % m_pLanterns.size();
-		m_pLanterns[m_iFallIndex]->Set_Fall();
-		m_dFallCount = 0.0;
+		if (m_iFallIndex >= 13)
+			m_bAttack = false;
+		else
+		{
+			m_pLanterns[m_iFallIndex++]->Set_Fall();
+			m_dFallCount = 0.0;
+		}
+	
 		return;
 	}
 	
@@ -528,7 +553,6 @@ void CEM0220::HitWeakProcess(_double TimeDelta)
 	}
 
 }
-
 
 
 

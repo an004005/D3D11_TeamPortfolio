@@ -21,6 +21,7 @@ struct VS_OUT
 	float4		vProjPos : TEXCOORD1;
 	float4		vTangent : TANGENT;
 	float3		vBinormal : BINORMAL;
+	float4		vWorldPos : TEXCOORD2;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -39,6 +40,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vProjPos = Out.vPosition;
 	Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
 	Out.vBinormal = normalize(cross(Out.vNormal.xyz, Out.vTangent.xyz));
+	Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
 
 	return Out;
 }
@@ -51,6 +53,7 @@ struct PS_IN
 	float4		vProjPos : TEXCOORD1;
 	float4		vTangent : TANGENT;
 	float3		vBinormal : BINORMAL;
+	float4		vWorldPos : TEXCOORD2;
 };
 
 struct PS_OUT
@@ -62,6 +65,7 @@ struct PS_OUT
 	float4		vRMA : SV_TARGET3;
 	float4		vOutline : SV_TARGET4;
 	float4		vFlag : SV_TARGET5;
+
 };
 
 struct PS_OUT_ALPHABLEND
@@ -228,6 +232,69 @@ PS_OUT_ALPHABLEND PS_GLASS_5(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_RIMLIGHT_6(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+	Out.vDiffuse.rgb = g_tex_0.Sample(LinearSampler, In.vTexUV).rgb;
+	// if (Out.vDiffuse.a < 0.01f)
+	// 	discard;
+
+	float3 vNormal;
+	if (g_tex_on_1)
+	{
+		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+		vNormal = vNormalDesc.xyz * 2.f - 1.f;
+		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+		vNormal = normalize(mul(vNormal, WorldMatrix));
+	}
+	else
+		vNormal = In.vNormal.xyz;
+
+	if (g_tex_on_2)
+		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	else
+		Out.vRMA = float4(1.f, 0.f, 1.f, 0.f);
+
+
+	float3 vColor = (float3)1.f;
+	float fEmissive = 0.f;
+
+	if (g_int_0 == 0)
+	{
+		vColor = COL_FIRE;
+		fEmissive = 2.f;
+	}
+	else if (g_int_0 == 1)
+	{
+		vColor = COL_OIL;
+		fEmissive = 1.2f;
+	}
+	else if (g_int_0 == 2)
+	{
+		vColor = COL_ELEC;
+		fEmissive = 3.f;
+	}
+	else
+	{
+		vColor = COL_WATER;
+		fEmissive = 1.8f;
+	}
+
+
+	float4 vViewDir = g_vCamPosition - In.vWorldPos;
+	float fFresnel = FresnelEffect(vNormal.xyz, vViewDir.xyz, 1.f);
+	Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, vColor, fFresnel);
+
+	fEmissive *= fFresnel;
+
+	float flags = SHADER_DEFAULT;
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+	
+	return Out;
+}
 technique11 DefaultTechnique
 {
 	// 0
@@ -314,5 +381,18 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_GLASS_5();
 	}
 
+	//6
+	pass RimLight
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_RIMLIGHT_6();
+	}
 
 }

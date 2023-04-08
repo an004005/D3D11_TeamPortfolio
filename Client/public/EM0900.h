@@ -9,7 +9,7 @@ END
 
 BEGIN(Client)
 
-// 물보스
+// 문어
 
 class CEM0900 : public CEnemy
 {
@@ -32,7 +32,9 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 	virtual _bool IsWeak(CRigidBody* pHitPart);
+	virtual void CheckHP(DAMAGE_PARAM& tDamageParams);
 	virtual void PlayBC() override;
+
 
 public:
 	//행동 관련 함수 정의
@@ -41,17 +43,20 @@ public:
 	_bool IsPlayingSocket() const;
 
 	void Play_LightHitAnim();
+	void Play_HeavyHitAnim();
 	void HeavyAttackPushStart();
 	void Create_Bullet();
 	void HitWeakProcess(_double TimeDelta);
 	_bool CanMove4BC(_float fMinDist);
-
+	_bool WholeCondition();
 private:
 	//충돌 관련 함수 정의
-	void Rush_SweepSphere();
-	void TailSwing_SweepSphere();
-	void Stamp_Overlap();
+	void FourAttack_Overlap(_bool Final = false);
+	void Feint_SweepSphere();
+	void Spin_SweepSphere();
 
+private:
+	void Select_Gift();
 private:
 	class CEM0900_Controller*		m_pController = nullptr;
 	class CEM0900_AnimInstance*		m_pASM = nullptr;
@@ -60,6 +65,7 @@ private:
 	CMaterial* m_pWeak = nullptr;
 
 	class CEMBrain* m_pBrain = nullptr;
+	class CEMGift* m_pGift = nullptr;
 private:
 	_float3						 m_vMoveAxis;
 	
@@ -67,7 +73,7 @@ private:
 	// Attack
 	_bool		m_bAttack = false;
 	_double	m_dLoopTick = 0.0;
-
+	EDeBuffType m_ePreGiftType = EDeBuffType::DEBUFF_OIL;
 
 	//Weak
 	_int			m_iArmorHp = 0;

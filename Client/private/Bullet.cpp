@@ -72,11 +72,6 @@ void CBullet::Tick(_double TimeDelta)
 	{
 		Create_DeadEffects();
 		Create_DeadParticle();
-
-		//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_1")->Start_NoAttach(this, false);
-		//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_2")->Start_NoAttach(this, false);
-		//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_3")->Start_NoAttach(this, false);
-
 		m_bDelete = true;
 	}
 }

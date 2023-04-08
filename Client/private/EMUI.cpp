@@ -85,31 +85,40 @@ void CEMUI::Create_BossUI()
 void CEMUI::Create_DamageFont(DAMAGE_PARAM& tDamageParams)
 {
 	_int iDamage = tDamageParams.iDamage;
-	array<_int, 4> SaveNum;
-
-	//10을 넣어주면 숫자가 안뜬다고 함
-	SaveNum.fill(10);
-
-	_int iCount = 0;
-	while (iDamage != 0)
-	{
-		SaveNum[iCount++] = iDamage % 10;
-		iDamage = iDamage / 10;
-	}
-
 	_float4 vHitPosition = tDamageParams.vHitPosition;
-	
+
 	vHitPosition.x += CMathUtils::RandomFloat(-1.f, 1.f);
 	vHitPosition.y += CMathUtils::RandomFloat(-0.5f, 1.f);
 	vHitPosition.z += CMathUtils::RandomFloat(-1.f, 1.f);
 
-	CEffectGroup* pFont = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"AttackNum");
-	pFont->Start_AttachOnlyPos(vHitPosition);
+	if (iDamage == 0)
+	{
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoDamage")
+		->Start_AttachOnlyPos(vHitPosition);
+	}
+	else
+	{
+		array<_int, 4> SaveNum;
+
+		//10을 넣어주면 숫자가 안뜬다고 함
+		SaveNum.fill(10);
+
+		_int iCount = 0;
+		while (iDamage != 0)
+		{
+			SaveNum[iCount++] = iDamage % 10;
+			iDamage = iDamage / 10;
+		}
+
+		CEffectGroup* pFont = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"AttackNum");
+		pFont->Start_AttachOnlyPos(vHitPosition);
+
+		pFont->GetFirstEffect()->GetParams().Float2s[0] = { _float(SaveNum[3]), 0.0f };
+		pFont->GetSecondEffect()->GetParams().Float2s[0] = { _float(SaveNum[2]), 0.0f };
+		pFont->GetThirdEffect()->GetParams().Float2s[0] = { _float(SaveNum[1]), 0.0f };
+		pFont->GetFourthEffect()->GetParams().Float2s[0] = { _float(SaveNum[0]), 0.0f };
+	}
 	
-	pFont->GetFirstEffect()->GetParams().Float2s[0] = { _float(SaveNum[3]), 0.0f };
-	pFont->GetSecondEffect()->GetParams().Float2s[0] = { _float(SaveNum[2]), 0.0f };
-	pFont->GetThirdEffect()->GetParams().Float2s[0] = { _float(SaveNum[1]), 0.0f };
-	pFont->GetFourthEffect()->GetParams().Float2s[0] = { _float(SaveNum[0]), 0.0f };
 }
 
 void CEMUI::Create_CGUI()
@@ -122,7 +131,7 @@ void CEMUI::Create_CGUI()
 
 void CEMUI::Update_NoticeNeon()
 {
-	_float4x4	NoticeNeonPivot = XMMatrixTranslation(0.f, 3.f, 0.f);
+	_float4x4	NoticeNeonPivot = XMMatrixTranslation(0.f, 2.f, 0.f);
 
 	if (m_pNoticNeon != nullptr)
 	{
@@ -142,11 +151,11 @@ void CEMUI::Update_NoticeNeon()
 		break;
 
 	case Client::EDeBuffType::DEBUFF_THUNDER:
-		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
+		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_WATER:
-		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
+		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_END:
@@ -158,7 +167,7 @@ void CEMUI::Update_NoticeNeon()
 	if (m_pNoticNeon != nullptr)
 	{
 		m_pNoticNeon->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Target", true, true);
-		Safe_AddRef(NoticeNeonPivot);
+		Safe_AddRef(m_pNoticNeon);
 	}
 
 }
