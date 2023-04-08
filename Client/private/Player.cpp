@@ -2364,7 +2364,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			.AddTransition("NO_USE_KINETIC to KINETIC_RB_START", "KINETIC_RB_START")
 			.Predicator([&]()->_bool
 			{
-				return m_bKineticRB && !m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && !m_bHit;
+				return CanKinetic(15) && m_bKineticRB && !m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && !m_bHit;
 			})
 			.Priority(0)
 
@@ -3085,11 +3085,11 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_KINETIC01_CHARGE", "KINETIC_COMBO_KINETIC01_CHARGE")
-			.Predicator([&]()->_bool { return !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && !m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool { return CanKinetic(15) && !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && !m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_AIR_CAP", "KINETIC_COMBO_AIR_CAP")
-			.Predicator([&]()->_bool { return !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool { return CanKinetic(15) && !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
 #pragma region ?�래??콤보 1
@@ -3145,7 +3145,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_SLASH01 to KINETIC_COMBO_KINETIC01_CHARGE", "KINETIC_COMBO_KINETIC01_CHARGE")
-			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.2f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool {return CanKinetic(15) && m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.2f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
 #pragma endregion ?�래??콤보 1
@@ -3341,7 +3341,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_SLASH02 to KINETIC_COMBO_KINETIC02_CHARGE", "KINETIC_COMBO_KINETIC02_CHARGE")
-			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.2f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool {return CanKinetic(15) && m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.2f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
 
@@ -3524,7 +3524,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_SLASH03 to KINETIC_COMBO_KINETIC03_CHARGE", "KINETIC_COMBO_KINETIC03_CHARGE")
-			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.25f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool {return CanKinetic(15) && m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.25f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
 #pragma endregion ?�래??콤보 3
@@ -3708,7 +3708,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_SLASH04 to KINETIC_COMBO_KINETIC04_CHARGE", "KINETIC_COMBO_KINETIC04_CHARGE")
-			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.5f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool {return CanKinetic(15) && m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.5f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
 #pragma endregion ?�래??콤보 4
@@ -5063,6 +5063,21 @@ void CPlayer::KineticGuage_Recover()
 	CPlayerInfoManager::GetInstance()->Change_PlayerKineticEnergy(CHANGE_INCREASE, iRecovery);
 }
 
+_bool CPlayer::CanKinetic(_uint iUseGuage)
+{
+	_uint	iCurKineticEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergy;
+	_uint	iMinKineticEnergy = 20;
+	_uint	iUseKineticEnergy = iUseGuage;
+
+	if (iCurKineticEnergy < iMinKineticEnergy)
+		return false;
+
+	if (iCurKineticEnergy < iUseKineticEnergy)
+		return false;
+
+	return true;
+}
+
 HRESULT CPlayer::SetUp_ProductionEvent()
 {
 	m_pModel->Add_EventCaller("Hood_Active_On", [this]
@@ -6372,7 +6387,7 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			.Predicator([&]()->_bool 
 			{
 				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
-				return m_bKineticG && bResult;
+				return CanKinetic(50) && m_bKineticG && bResult;
 			})
 			.Priority(0)
 
@@ -6623,7 +6638,7 @@ HRESULT CPlayer::SetUp_DropObjectStateMachine()
 			.Predicator([&]()->_bool 
 			{
 				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
-				return m_bKineticG && bResult;
+				return CanKinetic(50) && m_bKineticG && bResult;
 			})
 			.Priority(0)
 
@@ -6949,7 +6964,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			.Predicator([&]()->_bool 
 			{
 				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
-				return m_bKineticG && bResult;
+				return CanKinetic(50) && m_bKineticG && bResult;
 			})
 			.Priority(0)
 
@@ -7449,7 +7464,7 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 			.Predicator([&]()->_bool 
 			{
 				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
-				return m_bKineticG && bResult;
+				return CanKinetic(50) && m_bKineticG && bResult;
 			})
 			.Priority(0)
 
