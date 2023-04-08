@@ -12,12 +12,14 @@ struct VS_OUT
 {
 	float4		vPosition : SV_POSITION;
 	float2		vTexUV : TEXCOORD0;
+	float4		vWorldPos : TEXCOORD1;
 };
 
 struct PS_IN
 {
 	float4		vPosition : SV_POSITION;
 	float2		vTexUV : TEXCOORD0;
+	float4		vWorldPos : TEXCOORD1;
 };
 
 struct PS_OUT
@@ -37,6 +39,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
 	Out.vTexUV = In.vTexUV;
+	Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
 
 	return Out;
 }
@@ -139,19 +142,25 @@ PS_OUT PS_BRAINFIELD_FLOOR(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	//float2 vRotateUV = rotateUV_Degree(In.vTexUV, 90.f)
+	float4 vPlayerPos = g_vec4_0;
+	float fDistance = length(vPlayerPos.xyz - In.vWorldPos.xyz);
+	if (fDistance > 5.f)
+		discard;
 
-	//float4 vLineColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
-	////vLineColor += g_tex_0.Sample(LinearSampler, vRotateUV);
+	float fLineColor = g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, float2(200.f, 20.f), 0.f)).r * 0.5f;
+	fLineColor += g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, float2(200.f, 10.f), float2(0.5f, 0.5f))).r * 0.5f;
+	//
+	float2 vRotateUV = rotateUV_Degree(In.vTexUV, 90.f);
+	fLineColor += g_tex_1.Sample(LinearSampler, TilingAndOffset(vRotateUV, float2(200.f, 100.f), 0.f)).r * 0.2f;
+	fLineColor += g_tex_2.Sample(LinearSampler,  TilingAndOffset(vRotateUV, float2(200.f, 50.f), 0.f)).r * 0.2f;
+	fLineColor = saturate(fLineColor);
 
-	//if (vLineColor.r < 0.001f)
-	//	discard;
+   if (fLineColor < 0.001f)
+      discard;
 
-	//Out.vColor = lerp(float4(1.f, 0.f, 0.f, 0.f), 1.f, vLineColor.r * 0.01f);
-	//Out.vColor.rgb = Out.vColor.rgb * 4.f;
-	//Out.vColor.a = vLineColor.r;
-
-
+   Out.vColor = lerp(float4(1.f, 0.f, 0.f, 0.f), 1.f, fLineColor * 0.01f);
+   Out.vColor.rgb = Out.vColor.rgb * (1.f - fDistance * 0.2f) * 5.f;
+   Out.vColor.a = fLineColor * (1.f - fDistance * 0.2f);
 	return Out;
 }
 

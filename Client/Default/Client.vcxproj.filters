@@ -1508,6 +1508,7 @@
     <ClInclude Include="..\public\Weapon_Player.h">
       <Filter>02.GameObjects\Weapon\Weapon_Player</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BrainField.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2473,6 +2474,7 @@
     <ClCompile Include="..\private\Weapon_Player.cpp">
       <Filter>02.GameObjects\Weapon\Weapon_Player</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\BrainField.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

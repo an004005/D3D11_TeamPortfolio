@@ -194,6 +194,7 @@
     <ClInclude Include="..\public\Boss1_AIController.h" />
     <ClInclude Include="..\public\Boss_AppearBackUI.h" />
     <ClInclude Include="..\public\Boss_AppearUI.h" />
+    <ClInclude Include="..\public\BrainField.h" />
     <ClInclude Include="..\public\BrJ_AnimInstance.h" />
     <ClInclude Include="..\public\BrJ_Controller.h" />
     <ClInclude Include="..\public\BronJon.h" />
@@ -526,6 +527,7 @@
     <ClCompile Include="..\private\Boss1_AIController.cpp" />
     <ClCompile Include="..\private\Boss_AppearBackUI.cpp" />
     <ClCompile Include="..\private\Boss_AppearUI.cpp" />
+    <ClCompile Include="..\private\BrainField.cpp" />
     <ClCompile Include="..\private\BrJ_AnimInstance.cpp" />
     <ClCompile Include="..\private\BrJ_Controller.cpp" />
     <ClCompile Include="..\private\BronJon.cpp" />
