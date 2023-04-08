@@ -60,6 +60,13 @@ PS_OUT PS_BRAIN_FIELD_1(PS_IN In)
 	return Out;	
 }
 
+PS_OUT PS_BLACK_2(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor.a = 1.f;
+	return Out;	
+}
+
 technique11 DefaultTechnique
 {
 	pass Default
@@ -86,5 +93,18 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_BRAIN_FIELD_1();
+	}
+
+	pass Black
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);		
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);	
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BLACK_2();
 	}
 }

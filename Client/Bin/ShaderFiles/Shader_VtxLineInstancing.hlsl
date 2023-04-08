@@ -3,6 +3,7 @@
 #include "Shader_Params.h"
 
 float g_Radius;
+float4 g_vPlayerPos;
 
 struct VS_IN
 {
@@ -133,11 +134,11 @@ void GS_MAIN(line GS_IN In[2], inout TriangleStream<GS_OUT> Vertices)
 	}
 
 	[unroll]
-	for (uint i = 0; i < iRectCnt; ++i)
+	for (uint j = 0; j < iRectCnt; ++j)
 	{
-		uint iLeftTop = i * 2;
+		uint iLeftTop = j * 2;
 		uint iLeftBot = iLeftTop + 1;
-		uint iRightTop = (i + 1) * 2;
+		uint iRightTop = (j + 1) * 2;
 		uint iRightBot = iRightTop + 1;
 
 		Vertices.Append(Out[iLeftTop]);
@@ -162,6 +163,27 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	float4 vColor = lerp(float4(1.f, 0.f, 0.f, 0.6f), (float4)1.f, saturate(1.f - fFresnel) * 0.5f);
 	Out.vColor = CalcHDRColor(vColor, fFresnel * 2.5f);
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+
+	return Out;
+}
+
+PS_OUT PS_BRAIN_FIELD_FLOOR(PS_IN In)
+{
+	PS_OUT			Out = PS_MAIN(In);
+	// g_vPlayerPos
+
+	float fLength = length(g_vPlayerPos.xz - In.vWorldPos.xz);
+	if (fLength <= 7.f)
+	{
+		discard;
+	}
+	else if (fLength <= 15.f)
+	{
+		Out.vColor.a *= Remap(fLength, float2(7.f, 15.f), float2(0.f, 1.f));
+	}
+	
+
 	return Out;
 }
 
@@ -179,5 +201,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	//1
+	pass BrainFieldFloor
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRAIN_FIELD_FLOOR();
 	}
 }
