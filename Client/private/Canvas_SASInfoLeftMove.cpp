@@ -48,10 +48,11 @@ HRESULT CCanvas_SASInfoLeftMove::Initialize(void* pArg)
 void CCanvas_SASInfoLeftMove::Tick(_double TimeDelta)
 {
 	// 아직 멤버가 아니라면 Tick 을 돌지 않는다.
-	if (false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI)) return;
-
 	if (false == m_bMember)
 	{
+		if (false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI)) 
+			return;
+		
 		m_bMember = true;
 
 		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
