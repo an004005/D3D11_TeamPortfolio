@@ -628,7 +628,8 @@ void CEM1200::SetUpFSM()
 				})
 				.Tick([this](_double TimeDelta)
 				{
-					m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
+					//m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
+					m_pTransformCom->LookAt_Lerp_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
 					SocketLocalMove(m_pASM);
 
 					if (m_bAttack)
@@ -648,7 +649,8 @@ void CEM1200::SetUpFSM()
 				})
 				.Tick([this](_double TimeDelta)
 				{
-					m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
+					//m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
+					m_pTransformCom->LookAt_Lerp_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
 					SocketLocalMove(m_pASM);
 
 					if (m_bAttack)

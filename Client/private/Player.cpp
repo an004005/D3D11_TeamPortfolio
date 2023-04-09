@@ -240,6 +240,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
 
 	m_NoticeTick.Initialize(1.0, false);
+	m_DetectTimer.Initialize(1.0, false);
 
 	return S_OK;
 }
@@ -280,6 +281,7 @@ void CPlayer::BeginTick()
 void CPlayer::Tick(_double TimeDelta)
 {
 	m_fTimeDelta = (_float)TimeDelta;
+	m_DetectTimer.Tick(TimeDelta);
 
 	__super::Tick(TimeDelta);
 	m_pModel->Tick(TimeDelta);
@@ -659,6 +661,8 @@ void CPlayer::Tick(_double TimeDelta)
 	{
 		static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Dynamic();
 	}
+
+	m_pBattleChecker->Update_Tick(m_pTransformCom);
 }
 
 void CPlayer::Late_Tick(_double TimeDelta)
@@ -689,6 +693,8 @@ void CPlayer::Late_Tick(_double TimeDelta)
 void CPlayer::AfterPhysX()
 {
 	__super::AfterPhysX();
+
+	m_pBattleChecker->Update_AfterPhysX(m_pTransformCom);
 
 	for (auto& iter : m_vecWeapon)
 	{
@@ -1658,8 +1664,8 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 			.Predicator([&]()->_bool {return m_bZoomIsFinish; })
 			.Priority(0)
 
-
 		.Build();
+
 	return S_OK;
 }
 
@@ -1837,17 +1843,54 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 
 HRESULT CPlayer::SetUp_RigidBody()
 {
-	//m_pCollider->SetContactCallback([this](CGameObject* pGameObject, ECOLLIDER_TYPE eType)
-	//{
-	//	if (auto pMonster = dynamic_cast<CMonster*>(pGameObject))
-	//	{
-	//		m_bOptionalMove = false;
-	//	}
-	//	else
-	//	{
-	//		m_bOptionalMove = true;
-	//	}
-	//});
+	m_TransBattleSocket.push_back(m_pModel->Find_Animation("AS_ch0100_004_Up_trans_battle"));
+
+	Json jsonTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PlayerBattleChecker.json");
+	Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"BattleChecker", (CComponent**)&m_pBattleChecker, &jsonTrigger);
+	NULL_CHECK(m_pBattleChecker);
+
+	m_pBattleChecker->SetOnTriggerIn([this](CGameObject* pGameObject)
+	{
+		if (auto pEnemy = dynamic_cast<CEnemy*>(pGameObject))
+		{
+			Detector(true);
+
+			if (m_DetectList.empty())
+			{
+				m_DetectList.push_back(pEnemy);
+
+				if (false == m_bOnBattle)
+				{
+					m_pASM->InputAnimSocket("Netual_Saperate_Animation", m_TransBattleSocket);
+					m_bOnBattle = true;
+				}
+			}
+			else
+			{
+				for (auto& iter : m_DetectList)
+				{
+					if (false == CGameInstance::GetInstance()->Check_ObjectAlive(iter))
+						continue;
+
+					if (pEnemy == iter)
+						break;
+
+					if (iter == m_DetectList.back())
+					{
+						m_DetectList.push_back(pEnemy);
+
+						if (false == m_bOnBattle)
+						{
+							m_pASM->InputAnimSocket("Netual_Saperate_Animation", m_TransBattleSocket);
+							m_bOnBattle = true;
+						}
+					}
+				}
+			}
+		}
+	});
+
+	m_pBattleChecker->UpdateChange();
 
 	return S_OK;
 }
@@ -8075,13 +8118,19 @@ _bool CPlayer::isPlayerAttack(void)
 	if (nullptr != m_pModel->GetPlayAnimation())
 		szCurAnim = m_pModel->GetPlayAnimation()->GetName();
 
-	if (m_bBrainField)
+	if (Detector())
 	{
 		m_bOnBattle = true;
 		return true;
 	}
 
-	if (szCurAnim.find("AS_ch0100_2") != string::npos)
+	else if (m_bBrainField)
+	{
+		m_bOnBattle = true;
+		return true;
+	}
+
+	else if (szCurAnim.find("AS_ch0100_2") != string::npos)
 	{
 		m_bOnBattle = true;
 		return true;
@@ -9414,6 +9463,52 @@ void CPlayer::NetualChecker(_double TimeDelta)
 		m_bOnBattle = false;
 		m_pASM->InputAnimSocket("Netual_Saperate_Animation", m_TransNeutralSocket);
 	}
+}
+
+_bool CPlayer::Detector(_bool bComplusion)
+{
+	// 탐지기 내부에 한번 들어온 몬스터가 계속 존재하는지 판단
+	// bComplusion이 true이면 내부 쿨 도중에도 동작하게 함
+
+	if (false == m_DetectTimer.Use() && false == bComplusion) return false;
+
+	_float4 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+	for (auto& iter = m_DetectList.begin(); iter != m_DetectList.end();)
+	{
+		if (false == CGameInstance::GetInstance()->Check_ObjectAlive(*iter))
+		{
+			iter = m_DetectList.erase(iter);
+			continue;
+		}
+
+		if ((*iter)->IsDead())
+		{
+			iter = m_DetectList.erase(iter);
+			continue;
+		}
+
+		if ((*iter)->IsDeleted())
+		{
+			iter = m_DetectList.erase(iter);
+			continue;
+		}
+
+		_float4 vEnemyPos = (*iter)->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		_float fDistance = (vEnemyPos - vMyPos).Length();
+
+		if (25.f < fDistance)
+		{
+			iter = m_DetectList.erase(iter);
+			continue;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void CPlayer::LookAtDir(Vector3 Vector)
