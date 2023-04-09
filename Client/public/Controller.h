@@ -79,6 +79,7 @@ public:
 		S,
 		L,
 		F,
+		M,
 		HANDLE_END
 	};
 protected:

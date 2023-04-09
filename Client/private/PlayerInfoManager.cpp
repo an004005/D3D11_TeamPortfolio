@@ -33,6 +33,9 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.fDriveEnergy = 0.f;
 	m_tPlayerStat.fMaxDriveEnergy = 100.f;
 
+	m_tPlayerStat.fBrainFieldMaintain = 0.f;
+	m_tPlayerStat.fMaxBrainFieldMaintain = 60.f;
+
 	m_tPlayerStat.iExp = 50;
 	m_tPlayerStat.iMaxExp = 100;
 	m_tPlayerStat.iLevel = 1;
@@ -210,8 +213,17 @@ CGameObject * CPlayerInfoManager::Get_SpecialObject()
 
 void CPlayerInfoManager::Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP)
 {
-	if		(CHANGE_INCREASE == eType)		m_tPlayerStat.m_iHP += ChangeHP;
-	else if (CHANGE_DECREASE == eType)		m_tPlayerStat.m_iHP -= ChangeHP;
+	if (CHANGE_INCREASE == eType)
+	{
+		m_tPlayerStat.m_iHP += ChangeHP;
+	}
+	else if (CHANGE_DECREASE == eType)
+	{
+		if (m_tPlayerStat.m_iHP < ChangeHP)
+			ChangeHP = m_tPlayerStat.m_iHP;
+
+		m_tPlayerStat.m_iHP -= ChangeHP;
+	}
 
 	if (m_tPlayerStat.m_iHP > m_tPlayerStat.m_iMaxHP)	m_tPlayerStat.m_iHP = m_tPlayerStat.m_iMaxHP;
 	if (m_tPlayerStat.m_iHP < 0)						m_tPlayerStat.m_iHP = 0;
@@ -219,8 +231,17 @@ void CPlayerInfoManager::Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP)
 
 void CPlayerInfoManager::Change_PlayerKineticEnergy(CHANGETYPE eType, _uint ChangeEnergy)
 {
-	if		(CHANGE_INCREASE == eType)		m_tPlayerStat.m_iKineticEnergy += ChangeEnergy;
-	else if (CHANGE_DECREASE == eType)		m_tPlayerStat.m_iKineticEnergy -= ChangeEnergy;
+	if (CHANGE_INCREASE == eType) 
+	{
+		m_tPlayerStat.m_iKineticEnergy += ChangeEnergy;
+	}
+	else if (CHANGE_DECREASE == eType) 
+	{
+		if (m_tPlayerStat.m_iKineticEnergy < ChangeEnergy)
+			ChangeEnergy = m_tPlayerStat.m_iKineticEnergy;
+
+		m_tPlayerStat.m_iKineticEnergy -= ChangeEnergy;
+	}	
 
 	if (m_tPlayerStat.m_iKineticEnergy > m_tPlayerStat.m_iMaxKineticEnergy)	m_tPlayerStat.m_iKineticEnergy = m_tPlayerStat.m_iMaxKineticEnergy;
 	if (m_tPlayerStat.m_iKineticEnergy < 0)									m_tPlayerStat.m_iKineticEnergy = 0;
@@ -228,11 +249,40 @@ void CPlayerInfoManager::Change_PlayerKineticEnergy(CHANGETYPE eType, _uint Chan
 
 void CPlayerInfoManager::Change_DriveEnergy(CHANGETYPE eType, _float ChangeDrive)
 {
-	if (CHANGE_INCREASE == eType)			m_tPlayerStat.fDriveEnergy += ChangeDrive;
-	else if (CHANGE_DECREASE == eType)		m_tPlayerStat.fDriveEnergy -= ChangeDrive;
+	if (CHANGE_INCREASE == eType)
+	{
+		m_tPlayerStat.fDriveEnergy += ChangeDrive;
+	}
+	else if (CHANGE_DECREASE == eType)
+	{
+		if (m_tPlayerStat.fDriveEnergy < ChangeDrive)
+			ChangeDrive = m_tPlayerStat.fDriveEnergy;
+
+		m_tPlayerStat.fDriveEnergy -= ChangeDrive;
+	}
 
 	if (m_tPlayerStat.fDriveEnergy > m_tPlayerStat.fMaxDriveEnergy)	m_tPlayerStat.fDriveEnergy = m_tPlayerStat.m_iMaxKineticEnergy;
 	if (m_tPlayerStat.fDriveEnergy < 0)								m_tPlayerStat.fDriveEnergy = 0;
+}
+
+void CPlayerInfoManager::Change_BrainFieldMaintain(CHANGETYPE eType, _float ChangeBrain)
+{
+	if (CHANGE_INCREASE == eType)
+	{
+		m_tPlayerStat.fBrainFieldMaintain += ChangeBrain;
+	}
+	else if (CHANGE_DECREASE == eType)
+	{
+		if (m_tPlayerStat.fBrainFieldMaintain < ChangeBrain)
+			ChangeBrain = m_tPlayerStat.fBrainFieldMaintain;
+
+		m_tPlayerStat.fBrainFieldMaintain -= ChangeBrain;
+	}
+
+	if (m_tPlayerStat.fBrainFieldMaintain > m_tPlayerStat.fMaxBrainFieldMaintain)	
+		m_tPlayerStat.fBrainFieldMaintain = m_tPlayerStat.fMaxBrainFieldMaintain;
+	if (m_tPlayerStat.fBrainFieldMaintain < 0)
+		m_tPlayerStat.fBrainFieldMaintain = 0;
 }
 
 void CPlayerInfoManager::Set_SasType(ESASType eType)
