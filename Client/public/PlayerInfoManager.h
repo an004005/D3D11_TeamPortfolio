@@ -179,6 +179,8 @@ public:	// Set
 	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
 
 	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
+
+	void			Set_Exp(const _uint iExp);
 	
 	// SAS
 	void			Set_SASMember(const SASMEET eSAS) { 

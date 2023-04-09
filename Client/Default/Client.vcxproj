@@ -310,6 +310,7 @@
     <ClInclude Include="..\public\EMGift.h" />
     <ClInclude Include="..\public\EMUI.h" />
     <ClInclude Include="..\public\FSM_Recompiler.h" />
+    <ClInclude Include="..\public\HPlossUI.h" />
     <ClInclude Include="..\public\HS_TeleportableWall.h" />
     <ClInclude Include="..\public\Imgui_Cheat.h" />
     <ClInclude Include="..\public\InvisibleWall.h" />
@@ -650,6 +651,7 @@
     <ClCompile Include="..\private\EMGift.cpp" />
     <ClCompile Include="..\private\EMUI.cpp" />
     <ClCompile Include="..\private\FSM_Recompiler.cpp" />
+    <ClCompile Include="..\private\HPlossUI.cpp" />
     <ClCompile Include="..\private\HS_TeleportableWall.cpp" />
     <ClCompile Include="..\private\Imgui_Cheat.cpp" />
     <ClCompile Include="..\private\InvisibleWall.cpp" />

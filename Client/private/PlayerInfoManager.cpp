@@ -425,6 +425,63 @@ HRESULT CPlayerInfoManager::Set_SpecialObject(CGameObject * pSpecialObject)
 	return S_OK;
 }
 
+void CPlayerInfoManager::Set_Exp(const _uint iExp)
+{
+	_uint iAllExp = m_tPlayerStat.iExp + iExp;
+	if (m_tPlayerStat.iMaxExp > iAllExp)
+		m_tPlayerStat.iExp += iExp;
+	else
+	{
+		_uint iOverExp = iAllExp - (m_tPlayerStat.iMaxExp - m_tPlayerStat.iExp);
+
+		++m_tPlayerStat.iLevel;
+		m_tPlayerStat.iMaxExp += 100;
+		m_tPlayerStat.iExp = 0;
+		m_tPlayerStat.m_iMaxHP += 50;
+		m_tPlayerStat.m_iHP = m_tPlayerStat.m_iMaxHP;
+		m_tPlayerStat.iAttack += m_tPlayerStat.iLevel;
+		m_tPlayerStat.iBP = m_tPlayerStat.iLevel * 2;
+
+		m_tPlayerStat.iExp = iOverExp;
+	}
+
+	if (false == m_bSASMember[HANABI]) return;
+
+	iAllExp = m_tHanabiStat.iExp + iExp;
+	if (m_tHanabiStat.iMaxExp > iAllExp)
+		m_tHanabiStat.iExp += iExp;
+	else
+	{
+		_uint iOverExp = iAllExp - (m_tHanabiStat.iMaxExp - m_tHanabiStat.iExp);
+
+		++m_tHanabiStat.iLevel;
+		m_tHanabiStat.iMaxExp += 100;
+		m_tHanabiStat.iExp = 0;
+		m_tHanabiStat.iMaxHP += 50;
+		m_tHanabiStat.iHP = m_tHanabiStat.iMaxHP;
+		m_tHanabiStat.iAttack += m_tHanabiStat.iLevel;
+
+		m_tHanabiStat.iExp = iOverExp;
+	}
+
+	iAllExp = m_tTsugumiStat.iExp + iExp;
+	if (m_tTsugumiStat.iMaxExp > iAllExp)
+		m_tTsugumiStat.iExp += iExp;
+	else
+	{
+		_uint iOverExp = iAllExp - (m_tTsugumiStat.iMaxExp - m_tTsugumiStat.iExp);
+
+		++m_tTsugumiStat.iLevel;
+		m_tTsugumiStat.iMaxExp += 100;
+		m_tTsugumiStat.iExp = 0;
+		m_tTsugumiStat.iMaxHP += 50;
+		m_tTsugumiStat.iHP = m_tTsugumiStat.iMaxHP;
+		m_tTsugumiStat.iAttack += m_tTsugumiStat.iLevel;
+
+		m_tTsugumiStat.iExp = iOverExp;
+	}
+}
+
 HRESULT CPlayerInfoManager::Set_CamSpot(CGameObject * pCamSpot)
 {
 	m_pCamSpot = pCamSpot;
