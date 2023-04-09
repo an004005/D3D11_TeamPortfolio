@@ -5,7 +5,6 @@
 
 BEGIN(Client)
 
-enum class PSYCHOKINESISLEVEL { LEVEL_ONE, LEVEL_TWO, LEVEL_THREE };
 enum class PSYCHOKINESISTYPE { ATTACK_TYPE, DRIVE_TYPE, IDLE_TYPE };
 
 class CCanvas_PlayerInfoMove : public CCanvas
@@ -26,6 +25,7 @@ public:
 
 public:
 	void	Set_HillBar();
+	void	Set_PsychokinesisType();
 
 private:
 	void	PlayerHp_Tick();

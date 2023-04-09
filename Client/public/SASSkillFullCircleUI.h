@@ -25,6 +25,10 @@ public:
 		m_bChangeX = bX;
 	}
 
+	void	Set_TelepotiCircle() {
+		m_bTelepotiCircle = true;
+	}
+
 private:
 	void	Grow_Tick(const _double & TimeDelta);
 	void	Object_Tick();
@@ -38,6 +42,8 @@ private:
 	_uint	m_iObjectNum = { 0 };
 	_bool m_bChangeX = { false };
 	_bool	m_bOneGrow = { false };
+
+	_bool m_bTelepotiCircle = { false };
 
 public:
 	static CSASSkillFullCircleUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

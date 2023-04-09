@@ -16,12 +16,8 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	BeginTick() override;
 	virtual void	Tick(_double TimeDelta) override;
-	virtual void	Late_Tick(_double TimeDelta) override;
-	virtual HRESULT Render() override;
 
 	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
 
 public:
 	void	Set_OnDrive(const _float & fDriveFullTime);	// 드라이브가 진행될 전체 시간을 넣어주세요. 드라이브 사용이 시작 됩니다. (단' 게이지가 다 찼을 때)
@@ -35,6 +31,8 @@ public:
 	}
 
 private:
+	void	DriveGauge_Tikc();
+
 	void	DriveGaugeFull_Tick();
 	void	Drive_Tick();	// 드라이브를 사용하게 되면 계속 실행
 

@@ -2,7 +2,9 @@
 #include "..\public\Canvas_BrainMap.h"
 #include "GameInstance.h"
 #include "PlayerInfoManager.h"
+#include "UI_Manager.h"
 
+#include "Canvas_PlayerInfoMove.h"
 #include "DefaultUI.h"
 #include "Main_PickUI.h"
 #include "Main_OnMouseUI.h"
@@ -1575,6 +1577,12 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 
 		_uint iResultBP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP - m_vecIconUI[iIndex]->Get_BrainInfo().iBP;
 		CPlayerInfoManager::GetInstance()->Set_BP(iResultBP);	 // 플레이어 BP 감소하기
+
+		if (iIndex == 12 || iIndex == 18) 	// 플레이어 염력 레벨 증가
+		{
+			CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyLevel += 1;
+			dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Set_PsychokinesisType();
+		}
 		
 		// 레벨에 따른 아이콘 구매할 수 있는 정도
 		for (_int j = 0; j < 3; ++j)

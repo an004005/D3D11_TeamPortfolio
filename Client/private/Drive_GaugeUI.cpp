@@ -44,32 +44,6 @@ void CDrive_GaugeUI::Tick(_double TimeDelta)
 	DirveRightDot_Tick(TimeDelta);
 }
 
-HRESULT CDrive_GaugeUI::Render()
-{
-	if (FAILED(CUI::Render()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-void CDrive_GaugeUI::Imgui_RenderProperty()
-{
-	CUI::Imgui_RenderProperty();
-
-}
-
-void CDrive_GaugeUI::SaveToJson(Json & json)
-{
-	CUI::SaveToJson(json);
-
-}
-
-void CDrive_GaugeUI::LoadFromJson(const Json & json)
-{
-	CUI::LoadFromJson(json);
-
-}
-
 void CDrive_GaugeUI::DrivaGaugePlus_Tick(const _double & dTimeDelta)
 {
 	if (0.0f == m_fDriveGauge)	// 외부에서 게이지가 증가하기 시작하면 아래서 계산을 시작한다.

@@ -77,30 +77,7 @@ HRESULT CCanvas_PlayerInfo::Render()
 	return S_OK;
 }
 
-void CCanvas_PlayerInfo::Imgui_RenderProperty()
-{
-	CCanvas::Imgui_RenderProperty();
-
-	static _float fPosition[2];
-	ImGui::DragFloat2("Font Position", fPosition);
-	m_vFontPos = { fPosition[0], fPosition[1] };
-
-
-}
-
-void CCanvas_PlayerInfo::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-
-}
-
-void CCanvas_PlayerInfo::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
-
-}
-
-void CCanvas_PlayerInfo::Set_GaugeBackGround(const _uint iLevel)
+void CCanvas_PlayerInfo::Set_Type(const _uint iLevel)
 {
 	dynamic_cast<CPlayerInfo_GaugeBackGround*>(Find_ChildUI(L"PlayerInfo_GaugeBack"))->Set_PsychokinesisGauge(iLevel);
 }

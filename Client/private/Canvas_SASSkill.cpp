@@ -60,7 +60,10 @@ void CCanvas_SASSkill::Tick(_double TimeDelta)
 				(*iter).first == L"SASSkill_AltTexture1" ||
 				(*iter).first == L"SASSkill_XLeft" ||
 				(*iter).first == L"SASSkill_XRight" ||
-				(*iter).first == L"SASSkill_XInput")
+				(*iter).first == L"SASSkill_XInput" ||
+				(*iter).first == L"FullCircle1" ||
+				(*iter).first == L"FullCircle5" ||
+				(*iter).first == L"FullCircle6")
 				continue;
 
 			iter->second->SetVisible(true);
@@ -79,6 +82,9 @@ void CCanvas_SASSkill::Tick(_double TimeDelta)
 
 			Find_ChildUI(L"SASSkill_XLeft")->SetVisible(true);
 			Find_ChildUI(L"SASSkill_XRight")->SetVisible(true);
+
+			Find_ChildUI(L"FullCircle1")->SetVisible(true);
+			dynamic_cast<CSASSkillFullCircleUI*>(Find_ChildUI(L"FullCircle1"))->Set_TelepotiCircle();
 		}
 	}
 #pragma endregion

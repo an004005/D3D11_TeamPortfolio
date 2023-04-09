@@ -31,12 +31,14 @@ HRESULT CCanvas_Drive::Initialize(void* pArg)
 
 	CUI_Manager::GetInstance()->Add_Canvas(L"Canvas_Drive", this);
 
-	// 처음에 보이지 않을 UI 들
-	Find_ChildUI(L"Drive_B")->SetVisible(false);
-	Find_ChildUI(L"Drive_Circle0")->SetVisible(false);
-	Find_ChildUI(L"Drive_Circle1")->SetVisible(false);
+	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+		iter->second->SetVisible(false);
+	m_bVisible = false;
 
-	m_bVisible = true;
+	//// 처음에 보이지 않을 UI 들
+	//Find_ChildUI(L"Drive_B")->SetVisible(false);
+	//Find_ChildUI(L"Drive_Circle0")->SetVisible(false);
+	//Find_ChildUI(L"Drive_Circle1")->SetVisible(false);
 
 	return S_OK;
 }
@@ -81,26 +83,6 @@ HRESULT CCanvas_Drive::Render()
 	}
 
 	return S_OK;
-}
-
-void CCanvas_Drive::Imgui_RenderProperty()
-{
-	CCanvas::Imgui_RenderProperty();
-
-	static _float fPosition[2];
-	ImGui::DragFloat2("Font Position", fPosition);
-	m_vFontPos = { fPosition[0], fPosition[1] };
-
-}
-
-void CCanvas_Drive::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-}
-
-void CCanvas_Drive::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
 }
 
 void CCanvas_Drive::Set_Drive(const _bool Drive)

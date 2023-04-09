@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "FSMComponent.h"
 #include "UI_Manager.h"
+#include "PlayerInfoManager.h"
 
 #include "Drive_GaugeUI.h"
 #include "ShaderUI.h"
@@ -37,9 +38,7 @@ HRESULT CCanvas_DriveMove::Initialize(void* pArg)
 
 	// Drive UI 의 경우 처음부터 모든 UI 를 보이지 않고 시작한다.	
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-	{
 		iter->second->SetVisible(false);
-	}
 
 	return S_OK;
 }
@@ -75,22 +74,9 @@ void CCanvas_DriveMove::Tick(_double TimeDelta)
 		dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_Drive(true);
 	}
 
+	DriveGauge_Tikc();
 	DriveGaugeFull_Tick();
 	Drive_Tick();
-}
-
-void CCanvas_DriveMove::Late_Tick(_double TimeDelta)
-{
-	CCanvas::Late_Tick(TimeDelta);
-
-}
-
-HRESULT CCanvas_DriveMove::Render()
-{
-	if (FAILED(CCanvas::Render()))
-		return E_FAIL;
-
-	return S_OK;
 }
 
 void CCanvas_DriveMove::Imgui_RenderProperty()
@@ -99,7 +85,6 @@ void CCanvas_DriveMove::Imgui_RenderProperty()
 
 	static _float fGauge[2];
 	ImGui::InputFloat2("Drive Gauge", fGauge);
-
 	static _float fDriveFullTime;
 	ImGui::InputFloat("Drive Full Time", &fDriveFullTime);
 
@@ -113,18 +98,6 @@ void CCanvas_DriveMove::Imgui_RenderProperty()
 	}
 
 	ImGui::Checkbox("bOnCircle", &m_bOnCircle);		// 드라이브 원 사용
-}
-
-void CCanvas_DriveMove::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-
-}
-
-void CCanvas_DriveMove::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
-
 }
 
 void CCanvas_DriveMove::Set_OnDrive(const _float & fDriveFullTime) 
@@ -142,18 +115,18 @@ void CCanvas_DriveMove::Set_OnDrive(const _float & fDriveFullTime)
 	dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_GaugeBack"))->Set_DriveGauge_Use(fDriveFullTime);
 }
 
+void CCanvas_DriveMove::DriveGauge_Tikc()
+{
+	_float fDrive = CPlayerInfoManager::GetInstance()->Get_PlayerStat().fDriveEnergy;
+	_float fMaxDrive = CPlayerInfoManager::GetInstance()->Get_PlayerStat().fMaxDriveEnergy;
+	m_bDriveGauge = fDrive / fMaxDrive;
+}
+
 void CCanvas_DriveMove::DriveGaugeFull_Tick()
 {
 	// 드라이브 게이지가 가득 찼을 때 오른쪽 점 전체가 채워지고 일정시간 뒤 다시 원래대로 돌아간다.
 	_bool GaugeFull = dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_Gauge"))->Get_GaugeFull();
-	if (true == GaugeFull)
-	{
-		Find_ChildUI(L"Dirve_RightDotFull")->SetVisible(true);
-	}
-	else
-	{
-		Find_ChildUI(L"Dirve_RightDotFull")->SetVisible(false);
-	}
+	Find_ChildUI(L"Dirve_RightDotFull")->SetVisible(GaugeFull);
 }
 
 void CCanvas_DriveMove::Drive_Tick()

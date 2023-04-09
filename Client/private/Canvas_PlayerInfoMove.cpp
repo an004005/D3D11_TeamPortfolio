@@ -44,6 +44,8 @@ HRESULT CCanvas_PlayerInfoMove::Initialize(void* pArg)
 
 	Find_ChildUI(L"PlauerInfo_GaugeArrow")->SetVisible(false);
 	Find_ChildUI(L"HillBar")->SetVisible(false);
+
+	Set_PsychokinesisType();
 	
 	return S_OK;
 }
@@ -129,6 +131,15 @@ void CCanvas_PlayerInfoMove::Set_HillBar()
 	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack3"))->Set_Speed(true);
 	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack4"))->Set_Speed(true);
 	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack5"))->Set_Speed(true);
+}
+
+void CCanvas_PlayerInfoMove::Set_PsychokinesisType()
+{
+	_uint iLevel = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyLevel;
+
+	dynamic_cast<CPlayerInfo_PsychokinesisUI*>(Find_ChildUI(L"PlayerInfo_Psychokinesis"))->Set_Type(iLevel);
+	dynamic_cast<CPlayerInfo_PsychokinesisBackUI*>(Find_ChildUI(L"PlayerInfo_PsychokinesisBack"))->Set_Type(iLevel);
+	dynamic_cast<CCanvas_PlayerInfo*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_PlayerInfo"))->Set_Type(iLevel);
 }
 
 void CCanvas_PlayerInfoMove::PlayerHp_Tick()
@@ -308,12 +319,10 @@ void CCanvas_PlayerInfoMove::PsychokinesisGauge_Tick()
 	_float fRatio = _float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergy / _float(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxKineticEnergy));
 	m_fPsychokinesisGauge = (1.0f < fRatio) ? 1.0f : fRatio;
 
-	PSYCHOKINESISLEVEL eLevel = PSYCHOKINESISLEVEL(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyLevel);
 	PSYCHOKINESISTYPE eType = PSYCHOKINESISTYPE(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyType);
 
-	dynamic_cast<CPlayerInfo_PsychokinesisUI*>(Find_ChildUI(L"PlayerInfo_Psychokinesis"))->Set_PsychokinesisGauge(_uint(eLevel), _uint(eType), m_fPsychokinesisGauge);
-	dynamic_cast<CPlayerInfo_PsychokinesisBackUI*>(Find_ChildUI(L"PlayerInfo_PsychokinesisBack"))->Set_PsychokinesisGauge(_uint(eLevel), _uint(eType), m_fPsychokinesisGauge);
-	dynamic_cast<CCanvas_PlayerInfo*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_PlayerInfo"))->Set_GaugeBackGround(_uint(eLevel));
+	dynamic_cast<CPlayerInfo_PsychokinesisUI*>(Find_ChildUI(L"PlayerInfo_Psychokinesis"))->Set_Gauge(_uint(eType), fRatio);
+	dynamic_cast<CPlayerInfo_PsychokinesisBackUI*>(Find_ChildUI(L"PlayerInfo_PsychokinesisBack"))->Set_Gauge(_uint(eType), fRatio);
 }
 
 CCanvas_PlayerInfoMove * CCanvas_PlayerInfoMove::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

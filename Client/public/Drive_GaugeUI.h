@@ -15,11 +15,6 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	Tick(_double TimeDelta) override;
-	virtual HRESULT Render() override;
-
-	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
 
 public:
 	_bool	Get_GaugeFull() {	// Full UI 를 띄우기 위해서 제공하는 함수

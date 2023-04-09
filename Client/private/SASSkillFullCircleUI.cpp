@@ -74,6 +74,8 @@ void CSASSkillFullCircleUI::Object_Tick()
 	{
 		if (1 == m_iObjectNum)
 		{
+			if (false == m_bTelepotiCircle) return;
+
 			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_TELEPORT)].Energy;
 			_float fMinEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_TELEPORT)].MinEnergy;
 
