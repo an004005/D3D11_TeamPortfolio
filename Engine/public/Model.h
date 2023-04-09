@@ -133,6 +133,9 @@ public:		// 이벤트 실행
 	void Add_OptionalRootMotion(OPTIONAL_ROOTMOTION RootMotion);
 	void Delete_OptionalRootMotion();
 
+public:
+	void	Clear_mapEventFunc();
+
 private:	// 이벤트
 	unordered_map<string, std::function<void(void)>>	m_EventFunc;
 	unordered_map<string, vector<OPTIONAL_ROOTMOTION>>	m_mapOptionalRootMotion;

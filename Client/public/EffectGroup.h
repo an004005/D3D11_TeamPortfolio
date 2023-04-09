@@ -51,6 +51,7 @@ public:
 public:
 	void		Start_EffectWork();
 
+	void		Start_OnlyPos_Pivot(_float4 vPos, _float4x4 Pivot, _bool trueisUpdate = false);
 	void		Start_AttachOnlyPos(_float4 vPos, _bool trueisUpdate = false);
 	void		Start_NoAttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
 	void		Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate = false, _bool trueisRemoveScale = false);

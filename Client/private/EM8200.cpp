@@ -93,6 +93,10 @@ void CEM8200::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("KneeKick_A1_Start", [this]
 		{
 			m_bMeleeCollStart = true;
+			_matrix Pivot;
+			Pivot = XMMatrixRotationX(XMConvertToRadians(-40.f)) * XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(-0.5f, -0.5f, 0.f);
+			CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_KneeKickAndFrontKick"))->Start_AttachPivot(this, Pivot, "LeftLeg", true, false, true);
+
 		});
 
 	m_pModelCom->Add_EventCaller("KneeKick_A1_End", [this]
@@ -102,6 +106,11 @@ void CEM8200::SetUpAnimationEvent()
 
 	m_pModelCom->Add_EventCaller("FrontKick_A2_Start", [this]
 		{
+			_matrix Pivot;
+			Pivot = XMMatrixRotationX(XMConvertToRadians(125.f)) * XMMatrixRotationY(XMConvertToRadians(45.f)) * XMMatrixRotationZ(XMConvertToRadians(-30.f)) * XMMatrixTranslation(0.5f, 0.5f, 0.5f);
+
+			CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_FrontKick"))->Start_AttachPivot(this, Pivot, "RightToeBase", true, false, true);
+
 			m_bMeleeCollStart = true;
 		});
 
@@ -112,6 +121,10 @@ void CEM8200::SetUpAnimationEvent()
 
 	m_pModelCom->Add_EventCaller("TurnKick_A3_Start", [this]
 		{
+			_matrix Pivot;
+			Pivot = XMMatrixRotationX(XMConvertToRadians(50.f)) * XMMatrixRotationY(XMConvertToRadians(-10.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixTranslation(-0.7f, -2.5f, -3.5f);
+
+			CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_TurnKick"))->Start_AttachPivot(this, Pivotmat, "RightToeBase", true, false, true);
 			m_bMeleeCollStart = true;
 		});
 	m_pModelCom->Add_EventCaller("TurnKick_A3_End", [this]
@@ -122,14 +135,65 @@ void CEM8200::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("Air_Elec_Atk_Fire_Start", [this]
 		{
 			m_bRangeCollStart = true;
-			_matrix Pivot = XMMatrixTranslation(1.f, -1.f, 0.f) * XMMatrixRotationX(XMConvertToRadians(40.f)) * XMMatrixRotationY(XMConvertToRadians(90.f));
-			CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Elec_Laser"))->Start_AttachPivot(this, Pivotmat, "LeftWeapon",true);
+			_matrix Pivot;
+
+			Pivot = XMMatrixScaling(1.f, 0.8f, 1.f) *  XMMatrixRotationX(XMConvertToRadians(40.f)) * XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(0.5f, -0.5f, 0.f);
+			CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Elec_Laser"))->Start_AttachPivot(this, Pivot, "LeftWeapon",true, false);
+			Pivot = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+			CVFX_Manager::GetInstance()->GetParticle(PS_MONSTER, TEXT("em8200_Elec_Floor_Particle"))->Start_OnlyPosUsePivot(m_vRangeOverlapPos, Pivot);
 		});
 
 	m_pModelCom->Add_EventCaller("Air_Elec_Atk_Fire_End", [this]
 		{
 			m_bRangeCollStart = false;
 		});
+
+	m_pModelCom->Add_EventCaller("Rush_Start", [this]
+		{
+			m_bMeleeCollStart = true;
+			m_bRushStart = true;
+
+			_matrix Pivot;
+
+			Pivot =XMMatrixTranslation(0.f, 1.f, -1.f);
+			m_pDashEF = CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Dash_Attack"));
+			m_pDashEF->Start_AttachPivot(this, Pivot, "Reference", true, true);
+
+			
+			//먼지 달기 
+			// Pivot = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+			// CVFX_Manager::GetInstance()->GetParticle(PS_MONSTER, TEXT("em8200_Elec_Floor_Particle"))->Start_OnlyPosUsePivot(m_vRangeOverlapPos, Pivot);
+		});
+
+	m_pModelCom->Add_EventCaller("Rush_End", [this]
+		{
+			m_bRushStart = false;
+			m_bMeleeCollStart = false;
+		});
+
+
+	m_pModelCom->Add_EventCaller("Ice_Needle_Start", [this]
+		{
+			m_bRangeCollStart = true;
+
+		});
+
+	m_pModelCom->Add_EventCaller("Ice_Needle_End", [this]
+		{
+			m_bRangeCollStart = false;
+		});
+
+	m_pModelCom->Add_EventCaller("Chase_Elec_Start", [this]
+		{
+
+			//총알 생성
+			// m_bRangeCollStart = true;
+
+			// CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Ice_Needle_Attack"))->Start_AttachOnlyPos(m_vRangeOverlapPos);
+		});
+
+
+
 }
 
 void CEM8200::SetUpFSM()
@@ -161,7 +225,6 @@ void CEM8200::Tick(_double TimeDelta)
 	CEnemy::Tick(TimeDelta);
 
 	m_pFSM->Tick(TimeDelta);
-
 
 	m_pController->SetTarget(m_pTarget);
 	if (m_bDead == false)
@@ -242,6 +305,10 @@ void CEM8200::Imgui_RenderProperty()
 		CFSMComponent* pComponent = m_pFSM;
 
 		SetUpFSM();
+
+		m_pModelCom->Clear_mapEventFunc();
+
+		SetUpAnimationEvent();
 
 		Safe_Release(pComponent);
 	}
@@ -496,12 +563,12 @@ void CEM8200::AddState_Attack_Kick(CFSMComponentBuilder& Builder)
 				if (CMathUtils::FloatCmp(m_pASM->GetSocketAnimation("FullBody")->GetPlayRatio(), 0.9f, 0.1f) && m_SetTPOnce.IsNotDo())
 				{
 					m_vTeleportPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
+				
 					if (nullptr != m_pTarget)
 					{
 						physx::PxRaycastHit hitBuffer[1];
 						physx::PxRaycastBuffer rayOut(hitBuffer, 1);
-
+				
 						RayCastParams param;
 						param.rayOut = &rayOut;
 						param.vOrigin = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -510,15 +577,15 @@ void CEM8200::AddState_Attack_Kick(CFSMComponentBuilder& Builder)
 						param.iTargetType = CTB_PLAYER;
 						param.bSingle = true;
 						param.fVisibleTime = 1.f;
-
+				
 						if (CGameInstance::GetInstance()->RayCast(param))
 						{
 							for (int i = 0; i < rayOut.getNbAnyHits(); ++i)
 							{
 								auto pHit = rayOut.getAnyHit(i);
-
+				
 								_float4 vTargetOriginPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-
+				
 								m_vTeleportPos = _float4(pHit.position.x, m_vTeleportPos.y, pHit.position.z, 1.f);
 								m_pTransformCom->LookAt_NonY(m_vTeleportPos);
 							}
@@ -532,7 +599,7 @@ void CEM8200::AddState_Attack_Kick(CFSMComponentBuilder& Builder)
 					{
 						m_vTeleportPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (m_pTransformCom->Get_State(CTransform::STATE_LOOK) * 5.f);
 					}
-
+				
 					m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, m_vTeleportPos);
 				}
 			})
@@ -563,7 +630,8 @@ void CEM8200::AddState_Attack_Kick(CFSMComponentBuilder& Builder)
 	.AddTransition("KneeKick_A1 to FrontKick_A2", "FrontKick_A2")
 		.Predicator([this]
 		{
-				return m_pASM->isSocketPassby("FullBody", 0.6f) && !m_DamagedTargetList.empty();
+				// && !m_DamagedTargetList.empty()
+				return m_pASM->isSocketPassby("FullBody", 0.6f);
 		})
 
 	.AddTransition("KneeKick_A1 to Idle", "Idle")
@@ -596,7 +664,8 @@ void CEM8200::AddState_Attack_Kick(CFSMComponentBuilder& Builder)
 	.AddTransition("FrontKick_A2 to TurnKick_A3", "TurnKick_A3")
 		.Predicator([this]
 			{
-				return m_pASM->isSocketPassby("FullBody", 0.65f) && !m_DamagedTargetList.empty();
+				// && !m_DamagedTargetList.empty()
+				return m_pASM->isSocketPassby("FullBody", 0.65f) ;
 			})
 
 	.AddTransition("FrontKick_A2 to Idle", "Idle")
@@ -645,6 +714,7 @@ void CEM8200::AddState_Attack_IceNeedle(CFSMComponentBuilder& Builder)
 		.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_231_AL_atk_fire_chg_start");
+				m_pTransformCom->Set_State(CTransform::STATE_LOOK, m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 			})
 
 	.AddTransition("Ice_Needle_Atk_Start to Ice_Needle_Atk_Loop", "Ice_Needle_Atk_Loop")
@@ -659,6 +729,8 @@ void CEM8200::AddState_Attack_IceNeedle(CFSMComponentBuilder& Builder)
 		.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_232_AL_atk_fire_chg_loop");
+				// _matrix scale = XMMatrixScaling(0.5f, 1.f, 0.5f);
+				CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Ice_Needle_Attack_S"))->Start_AttachOnlyPos(m_vRangeOverlapPos);
 			})
 
 	.AddTransition("Ice_Needle_Atk_Loop to Ice_Needle_Atk_Fire_Start", "Ice_Needle_Atk_Fire_Start")
@@ -680,6 +752,11 @@ void CEM8200::AddState_Attack_IceNeedle(CFSMComponentBuilder& Builder)
 			{
 				return m_pASM->isSocketEmpty("FullBody");
 			})
+
+	.Tick([this](_double TimeDelta)
+	{
+			Range_Overlap(m_vRangeOverlapPos, 50.f, 15.f, EAttackType::ATK_TO_AIR);
+	})
 	// ~Ice Needle Fire Start
 
 	// Ice Needle Fire Loop
@@ -688,7 +765,10 @@ void CEM8200::AddState_Attack_IceNeedle(CFSMComponentBuilder& Builder)
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_234_AL_atk_fire_loop");
 			})
-
+		.Tick([this](_double TimeDelta)
+		{
+			Range_Overlap(m_vRangeOverlapPos, 50.f, 15.f, EAttackType::ATK_TO_AIR);
+		})
 	.AddTransition("Ice_Needle_Atk_Fire_Loop to Ice_Needle_Atk_Fire_End", "Ice_Needle_Atk_Fire_End")
 		.Predicator([this]
 			{
@@ -847,17 +927,41 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 			// 순간이동 잡아주기
 				SocketLocalMove_Range(m_pASM, m_fTP_Range);
 
-				if (CMathUtils::FloatCmp(m_pASM->GetSocketAnimation("FullBody")->GetPlayRatio(), 0.8f, 0.1f) && m_SetTPOnce.IsNotDo())
+				_float PlayRatio = 0.f; 
+				PlayRatio = m_pModelCom->Find_Animation("AS_em8200_130_AL_dodge_F_start")->GetPlayRatio();
+				IM_LOG("Ratio : %f", PlayRatio);
+
+			if (CMathUtils::FloatCmp(PlayRatio, 0.8f, 0.1f) && m_SetTPOnce.IsNotDo())
 				{
 					static _float2 RandomFloat2;
-					RandomFloat2.x = CGameUtils::GetRandFloat(-1.f, 1.f);
-					RandomFloat2.y = CGameUtils::GetRandFloat(-1.f, 1.f);
+					static _uint iRand = rand() % 4;
+					if (iRand == 0)
+					{
+						RandomFloat2.x = CGameUtils::GetRandFloat(-5.5f, -3.f);
+						RandomFloat2.y = CGameUtils::GetRandFloat(-5.5f, -3.f);
+					}
+					else if(iRand == 1)
+					{
+						RandomFloat2.x = CGameUtils::GetRandFloat(3.f, 5.5f);
+						RandomFloat2.y = CGameUtils::GetRandFloat(3.f, 5.5f);
+					}
+					else if (iRand == 2)
+					{
+						RandomFloat2.x = CGameUtils::GetRandFloat(3.f, 5.5f);
+						RandomFloat2.y = CGameUtils::GetRandFloat(-5.5f, -3.f);
+					}
+					else if (iRand == 3)
+					{
+						RandomFloat2.x = CGameUtils::GetRandFloat(-5.5f, -3.f);
+						RandomFloat2.y = CGameUtils::GetRandFloat(3.f, 5.5f);
+					}
 
-					_float4 TargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(RandomFloat2.x, 3.f, RandomFloat2.y, 0.f);
+					_float4 TargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(RandomFloat2.x , 3.f, RandomFloat2.y, 0.f);
 					m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, TargetPos);
 
 					m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 				}
+
 		})
 		.OnExit([this] { m_SetTPOnce.Reset(); })
 
@@ -870,15 +974,55 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 	.AddState("Air_Elec_Atk_Charge_Start")
 	.OnStart([this]
 		{
+			_matrix Pivot;
+			Pivot = XMMatrixScaling(5.f, 5.f, 5.f);
+			CVFX_Manager::GetInstance()->GetParticle(PS_MONSTER, TEXT("em8200_Elec_Detail_Particle"))->Start_AttachPivot(this, Pivot, "LeftWeapon", true, true, true);
+
 			m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_211_AL_atk_air_chg_start");
 
 			_float4 vThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			// vThisPos = _float4(vThisPos.x, 0.f, vThisPos.z, 1.f);
 			_float4 vThisLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-			m_vRangeOverlapPos = vThisPos + vThisLook * 4.f;
+			m_vRangeOverlapPos = vThisPos + vThisLook * 5.f;
 			m_vRangeOverlapPos = _float4(m_vRangeOverlapPos.x, 0.f, m_vRangeOverlapPos.z, 1.f);
-		})
 
+			_float ThisPosY = XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+
+			if (ThisPosY <= 1.f)
+			{
+				static _float2 RandomFloat2;
+				static _uint iRand = rand() % 4;
+				if (iRand == 0)
+				{
+					RandomFloat2.x = CGameUtils::GetRandFloat(-5.5f, -3.f);
+					RandomFloat2.y = CGameUtils::GetRandFloat(-5.5f, -3.f);
+				}
+				else if (iRand == 1)
+				{
+					RandomFloat2.x = CGameUtils::GetRandFloat(3.f, 5.5f);
+					RandomFloat2.y = CGameUtils::GetRandFloat(3.f, 5.5f);
+				}
+				else if (iRand == 2)
+				{
+					RandomFloat2.x = CGameUtils::GetRandFloat(3.f, 5.5f);
+					RandomFloat2.y = CGameUtils::GetRandFloat(-5.5f, -3.f);
+				}
+				else if (iRand == 3)
+				{
+					RandomFloat2.x = CGameUtils::GetRandFloat(-5.5f, -3.f);
+					RandomFloat2.y = CGameUtils::GetRandFloat(3.f, 5.5f);
+				}
+
+				_float4 TargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(RandomFloat2.x, 3.f, RandomFloat2.y, 0.f);
+				m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, TargetPos);
+
+				m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+			}
+		})
+		.Tick([this](_double TimeDelta)
+		{
+				
+		})
 	.AddTransition("Air_Elec_Atk_Charge_Start to Air_Elec_Atk_Fire_Start", "Air_Elec_Atk_Fire_Start")
 	.Predicator([this]
 		{
@@ -896,7 +1040,7 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 			})
 	.Tick([this](_double TimeDelta)
 		{
-			Range_Overlap(m_vRangeOverlapPos, 50, 2.5f, EAttackType::ATK_LIGHT);
+			Range_Overlap(m_vRangeOverlapPos, 50, 3.f, EAttackType::ATK_LIGHT);
 		})
 	.AddTransition("Air_Elec_Atk_Charge_Loop to Air_Elec_Atk_Fire_Start", "Air_Elec_Atk_Fire_Start")
 		.Predicator([this]
@@ -927,7 +1071,7 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 			})
 	.Tick([this](_double TimeDelta)
 		{
-			Range_Overlap(m_vRangeOverlapPos, 50, 2.5f, EAttackType::ATK_LIGHT);
+			Range_Overlap(m_vRangeOverlapPos, 50, 3.f, EAttackType::ATK_LIGHT);
 		})
 	.AddTransition("Air_Elec_Atk_Fire_Start_Loop to Air_Elec_Atk_Fall", "Air_Elec_Atk_Fall")
 		.Predicator([this]
@@ -942,6 +1086,7 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_215_AL_atk_air_fall");
 				m_fGravity = 20.f;
+				m_pASM->SetLerpDuration(0.f);
 			})
 
 	.AddTransition("Air_Elec_Atk_Fall to Air_Elec_Atk_Landing_Start", "Air_Elec_Atk_Landing_Start")
@@ -985,6 +1130,7 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 		.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_218_AL_atk_air_end");
+				m_pASM->SetLerpDuration(m_fDefault_LerpTime);
 			})
 
 	.AddTransition("Air_Elec_Atk_End to Idle", "Idle")
@@ -1008,11 +1154,21 @@ void CEM8200::AddState_Attack_Rush(CFSMComponentBuilder& Builder)
 	.OnStart([this]
 		{
 			m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_135_AL_dodge_B_start");
-			// m_fTP_Range = CGameUtils::GetRandFloat(1.f, 2.5f);
 		})
 	.Tick([this](_double TimeDelta)
 		{
-			SocketLocalMove_Range(m_pASM, 3.f);
+			SocketLocalMove_Range(m_pASM, 1.5f);
+
+			if(CMathUtils::FloatCmp(m_pModelCom->Find_Animation("AS_em8200_135_AL_dodge_B_start")->GetPlayRatio(), 0.8f, 0.1f) && m_SetTPOnce.IsNotDo())
+			{
+				_float4 vTargetOriginPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+
+				m_pTransformCom->LookAt_NonY(vTargetOriginPos);
+			}
+		})
+	.OnExit([this]
+		{
+				m_SetTPOnce.Reset();
 		})
 
 	.AddTransition("Rush_Copy_Start_Before_TP to Rush_Copy_Start", "Rush_Copy_Start")
@@ -1072,54 +1228,92 @@ void CEM8200::AddState_Attack_Rush(CFSMComponentBuilder& Builder)
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_224_AL_atk_crouch_loop");
 			})
 
-	.AddTransition("Rush_Crouch_Loop to Rush_Rush_Start", "Rush_Rush_Start")
+	.AddTransition("Rush_Crouch_Loop to Rush_Start", "Rush_Start")
 			.Predicator([this]
 				{
 					return m_pASM->isSocketEmpty("FullBody");
 				})
 	// ~Rush_Crouch_Loop
 
-	// Rush_Rush_Start
-	.AddState("Rush_Rush_Start")
+	// Rush_Start
+	.AddState("Rush_Start")
 		.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_225_AL_atk_rush_start");
+				m_bMeleeCollStart = true;
+				ClearDamagedTarget();
 			})
+		.Tick([this](_double TimeDelta)
+		{
+				if (m_bRushStart == true)
+				{
+					_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+					
+					m_pTransformCom->LocalMove(vLook, 0.3f);
+				}
+			Melee_Overlap("Reference", 50.f, 2.f, EAttackType::ATK_HEAVY);
 
-	.AddTransition("Rush_Rush_Start to Rush_Rush_Loop", "Rush_Rush_Loop")
+		})
+	.AddTransition("Rush_Start to Rush_Loop", "Rush_Loop")
 		.Predicator([this]
 			{
 				return m_pASM->isSocketEmpty("FullBody");
 			})
-	// ~Rush_Rush_Start
 
-	// Rush_Rush_Loop
-	.AddState("Rush_Rush_Loop")
+	.AddTransition("Rush_Start to Rush_End", "Rush_End")
+		.Predicator([this]
+			{
+				return !m_DamagedTargetList.empty();
+			})
+	// ~Rush_Start
+
+	// Rush_Loop
+	.AddState("Rush_Loop")
 		.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_226_AL_atk_rush_loop");
 			})
+		.Tick([this](_double TimeDelta)
+		{
+				if (m_bRushStart == true)
+				{
+					_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+					m_pTransformCom->LocalMove(vLook, 0.3f);
+				}
 
-	.AddTransition("Rush_Rush_Loop to Rush_Rush_End", "Rush_Rush_End")
+				Melee_Overlap("Reference", 50.f, 2.f, EAttackType::ATK_HEAVY);
+		})
+	.AddTransition("Rush_Loop to Rush_End", "Rush_End")
 		.Predicator([this]
 			{
-				return m_pASM->isSocketEmpty("FullBody");
+				return m_pASM->isSocketEmpty("FullBody") || !m_DamagedTargetList.empty();
 			})
-	// ~Rush_Rush_Loop
+	// ~Rush_Loop
 
-	// Rush_Rush_End
-	.AddState("Rush_Rush_End")
+	// Rush_End
+	.AddState("Rush_End")
 		.OnStart([this]
 		{
-			m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_227_AL_atk_rush_end");
+			m_bRushStart = false;
+			m_bMeleeCollStart = false;
+			m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_112_AL_brake_dash"); // 러시 앤드 애님 바꿈
+			m_pDashEF->SetDelete();
+			m_pDashEF = nullptr;
 		})
-
-	.AddTransition("Rush_Rush_End to Idle", "Idle")
+	.Tick([this](_double TimeDelta)
+		{
+			SocketLocalMove(m_pASM);
+		})
+	.OnExit([this]
+		{
+			
+		})
+	.AddTransition("Rush_End to Idle", "Idle")
 		.Predicator([this]
 			{
 				return m_pASM->isSocketEmpty("FullBody");
 			})
-	// ~Rush_Rush_End
+	// ~Rush_End
 
 				; 
 }
@@ -1323,5 +1517,14 @@ void CEM8200::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
+
+	if (m_pDashEF != nullptr)
+	{
+		m_pDashEF->SetDelete();
+		Safe_Release(m_pDashEF);
+		m_pDashEF = nullptr;
+	}
+
 	Safe_Release(m_pKarenMaskEf);
+	
 }

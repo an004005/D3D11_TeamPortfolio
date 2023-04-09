@@ -9,6 +9,7 @@
 
 #include "RedString.h"
 #include "GameUtils.h"
+#include "Imgui_EffectBrowser.h"
 #include "JsonStorage.h"
 
 
@@ -41,6 +42,7 @@ HRESULT CLevel_FinalStage::Initialize()
 		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
 		auto pBoss = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("ModelPreview"), &PreviewData);
 	}
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_EffectBrowser::Create(m_pDevice, m_pContext));
 
 	//CGameUtils::ListFiles("../Bin/Resources/Restrings/BranFieldStrings/", [](const string& filePath)
 	//{

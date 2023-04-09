@@ -1641,6 +1641,11 @@ void CModel::Delete_OptionalRootMotion()
 	m_mapOptionalRootMotion.erase(m_CurAnimName);
 }
 
+void CModel::Clear_mapEventFunc()
+{
+	m_EventFunc.clear();
+}
+
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const char * pModelFilePath, _float4x4 PivotMatrix)
 {
 	CModel*		pInstance = new CModel(pDevice, pContext);

@@ -292,6 +292,15 @@ void CParticleGroup::Start_NoOwnerOnlyPos(_float4 vPositon)
 	m_bGenerate = true;
 }
 
+void CParticleGroup::Start_OnlyPosUsePivot(_float4 vPositon, _float4x4 PivotMat)
+{
+	_matrix SocketMatrix = PivotMat * XMMatrixTranslation(vPositon.x, vPositon.y, vPositon.z);
+
+	Set_Transform(SocketMatrix);
+
+	m_bGenerate = true;
+}
+
 void CParticleGroup::Set_Transform(_matrix socket)
 {
 	for(auto iter : m_mapParticleSystem)

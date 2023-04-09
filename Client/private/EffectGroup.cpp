@@ -187,7 +187,8 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			|| LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F
 			|| LEVEL_NOW == LEVEL_SUBWAY
 			|| LEVEL_NOW == LEVEL_NAOMIROOM
-			|| LEVEL_NOW == LEVEL_HOSPITAL_1F)
+			|| LEVEL_NOW == LEVEL_HOSPITAL_1F
+			|| LEVEL_NOW == LEVEL_FINAL_STAGE)
 		{
 			if (m_iSelectFinishFunc == 0)
 			{
@@ -1884,6 +1885,33 @@ void CEffectGroup::Set_Transform(_fmatrix matSocket)
 void CEffectGroup::Start_EffectWork()
 {
 	m_Timeline.PlayFromStart();
+}
+
+void CEffectGroup::Start_OnlyPos_Pivot(_float4 vPos, _float4x4 Pivot, _bool trueisUpdate)
+{
+	m_vPosition = vPos;
+
+	_matrix PosMat = XMMatrixScaling(vPos.x, vPos.y, vPos.z);
+	_matrix SocketMatrix = XMMatrixMultiply(PosMat, Pivot);
+
+	m_bUpdate = trueisUpdate;
+
+	if (m_bUpdate == false)
+	{
+		if (nullptr != m_pFirst_EffectSystem)
+			m_pFirst_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+		if (nullptr != m_pSecond_EffectSystem)
+			m_pSecond_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+		if (nullptr != m_pThird_EffectSystem)
+			m_pThird_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+		if (nullptr != m_pFourth_EffectSystem)
+			m_pFourth_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+		if (nullptr != m_pFifth_EffectSystem)
+			m_pFifth_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+	}
+
+	m_Timeline.PlayFromStart();
+
 }
 
 void CEffectGroup::Start_AttachOnlyPos(_float4 vPos, _bool trueisUpdate)

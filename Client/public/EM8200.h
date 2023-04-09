@@ -125,6 +125,11 @@ private:
 
 	_float4x4 Pivotmat;
 
+	// For Rush
+	_bool	m_bRushStart = false;
+private:
+	CEffectGroup* m_pDashEF = nullptr;
+
 public:
 	static CEM8200*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg = nullptr) override;

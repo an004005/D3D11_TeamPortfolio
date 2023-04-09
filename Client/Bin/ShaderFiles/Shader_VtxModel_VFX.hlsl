@@ -709,7 +709,7 @@ PS_OUT PS_EM8200_ELEC_CON(PS_IN In)
 	float4 FinalColor = saturate(BlendColor);
 
 	Out.vColor = CalcHDRColor(BlendColor, g_float_0);
-	Out.vColor.a = Mask.r * g_float_1;
+	Out.vColor.a = saturate(Mask.r * g_float_1);
 
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 

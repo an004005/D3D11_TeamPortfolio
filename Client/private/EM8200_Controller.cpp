@@ -115,8 +115,10 @@ void CEM8200_Controller::AI_Tick(_double TimeDelta)
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
 		// m_pFSM->Tick(TimeDelta);
-		// AddCommand("Kick_A1", 0.f, &CAIController::Input, E);
-		AddCommand("Air_Elec_Atk_Charge_Start", 0.f, &CAIController::Input, F);
+		// AddCommand("Rush_Copy_Start", 0.f, &CAIController::Input, G);
+		// AddCommand("Air_Elec_Atk_Charge_Start", 0.f, &CAIController::Input, F);
+		AddCommand("Ice_Needle_Attack", 0.f, &CEM8200_Controller::Input, Q);
+
 	}
 
 	Detected_Attack();
