@@ -529,6 +529,9 @@
     <Filter Include="02.GameObjects\Map\Map_KineticBatchPreset">
       <UniqueIdentifier>{d23c5904-79df-4174-9dc0-b8f8a20339ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Weapon\Sheath_Player">
+      <UniqueIdentifier>{80254345-d02e-4bce-8c4b-8f16ccfc0f9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1533,6 +1536,9 @@
     <ClInclude Include="..\public\Map_KineticBatchPreset.h">
       <Filter>02.GameObjects\Map\Map_KineticBatchPreset</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Sheath_Player.h">
+      <Filter>02.GameObjects\Weapon\Sheath_Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2513,6 +2519,9 @@
     <ClCompile Include="..\private\BrainField.cpp" />
     <ClCompile Include="..\private\Map_KineticBatchPreset.cpp">
       <Filter>02.GameObjects\Map\Map_KineticBatchPreset</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sheath_Player.cpp">
+      <Filter>02.GameObjects\Weapon\Sheath_Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
