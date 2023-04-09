@@ -6916,7 +6916,7 @@
     },
     "AS_em1200_210_AL_atk_a3_tackle2_start": {
         "Duration": 110.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 40.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -6929,9 +6929,15 @@
             }
         ]
     },
+    "AS_em1200_211_AL_atk_a3_tackle2_loop": {
+        "Duration": 60.0,
+        "TickPerSecond": 40.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
     "AS_em1200_212_AL_atk_a3_tackle2_end": {
         "Duration": 45.0,
-        "TickPerSecond": 24.0,
+        "TickPerSecond": 40.0,
         "bLooping": false,
         "vecEvent": []
     },
