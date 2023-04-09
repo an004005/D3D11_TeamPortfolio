@@ -19,6 +19,8 @@ public:
 private:
 	void	BrainCrashStateMachine_ReCompoile();
 	void	BrainFieldStateMachine_ReCompile();
+	void	DeBuffStateMachine_ReCompile();
+	void	HitStateMachine_ReCompile();
 
 private:
 	void	Player_Something_Update();
