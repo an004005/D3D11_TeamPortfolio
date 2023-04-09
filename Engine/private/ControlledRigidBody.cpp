@@ -149,6 +149,13 @@ _float4 CControlledRigidBody::GetFootPosition()
 	return _float4{(_float)vPos.x, (_float)vPos.y, (_float)vPos.z, 1.f};
 }
 
+void CControlledRigidBody::SetFilterData(ECOLLIDER_TYPE_BIT eBit)
+{
+	if (m_MoveFilterData.word0 == eBit) return;
+
+	m_MoveFilterData.word0 = eBit;
+}
+
 PxControllerCollisionFlags CControlledRigidBody::Move(_float4 vVelocity, _float fTimeDelta, _float minDist)
 {
 	// disp : direction * speed * delta(delta 시간 동안의 이동량)
@@ -211,11 +218,11 @@ void CControlledRigidBody::CreateController()
 	// 이 컨트롤러와 충돌하는 타입 선택(컨트롤러의 이동은 scene query기반)
 	if (m_eColliderType == CT_MONSTER)
 	{
-		m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC | CTB_PLAYER_RANGE;
+		m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC | CTB_PLAYER_RANGE | CTB_TELEPORT_OBJ;
 	}
 	else 
 	{
-		m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC | CTB_MONSTER_PART | CTB_MONSTER_RANGE;
+		m_MoveFilterData.word0 = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC | CTB_MONSTER_PART | CTB_MONSTER_RANGE | CTB_TELEPORT_OBJ;
 		// 텔레포트 오브젝트 추가
 		// 해당 부분을 Set해주는 함수 필요, 텔레포트시 다른 타입으로 적용될 수 있도록 한다.
 	}

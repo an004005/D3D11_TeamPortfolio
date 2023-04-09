@@ -47,11 +47,15 @@ typedef struct tagPlayerStatus
 	_float fDriveEnergy = { 0 };
 	_float fMaxDriveEnergy = { 0 };
 
+	_float fBrainFieldMaintain = { 0 };
+	_float fMaxBrainFieldMaintain = { 0 };
+
 	_uint iWeaponType = { 0 };			// 0번 wp0106, 1번 wp0190
 
 	_float fKineticCharge = { 0.f };	// 염력체 차지 백분율 (0~1)
 
 	_bool bBattle = false;
+	_bool bDriveMode = false;
 	_bool bBrainField = false;
 
 	_float m_fBaseAttackDamage;
@@ -150,6 +154,9 @@ public:	// Set
 	void			Set_DriveEnergy(_float fDrive) { m_tPlayerStat.fDriveEnergy = fDrive; }
 	void			Change_DriveEnergy(CHANGETYPE eType, _float ChangeDrive);
 
+	void			Set_BrainFieldMaintain(_float fBrain) { m_tPlayerStat.fBrainFieldMaintain = fBrain; }
+	void			Change_BrainFieldMaintain(CHANGETYPE eType, _float ChangeBrain);
+
 	void			Set_SasType(ESASType eType);
 	void			Finish_SasType(ESASType eType);
 
@@ -166,6 +173,7 @@ public:	// Set
 	void			Set_PlayerWeapon(_uint iWeaponType);
 	_uint			Get_PlayerWeapon() { return m_tPlayerStat.iWeaponType; }
 
+	void			Set_DriveMode(_bool bDrive) { m_tPlayerStat.bDriveMode = bDrive; }
 	void			Set_BrainField(_bool bBrain) { m_tPlayerStat.bBrainField = bBrain; }
 
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
