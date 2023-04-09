@@ -218,8 +218,12 @@ void CCanvas_PurchaseKinds::CurrentList()
 {
 	if (m_bLastCheck == true || m_bShortage == true)
 	{
-		m_vecShopCanvass[3].second->Set_OnButton();
-		m_vecShopCanvass[4].second->Set_OnButton();
+		if (4 < m_vecShopCanvass.size())
+		{
+			m_vecShopCanvass[3].second->Set_OnButton();
+			m_vecShopCanvass[4].second->Set_OnButton();
+		}
+
 		return;
 	}
 

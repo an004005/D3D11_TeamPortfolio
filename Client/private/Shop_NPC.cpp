@@ -14,6 +14,8 @@
 #include "VFX_Manager.h"
 #include "EffectSystem.h"
 #include "Canvas_MainTalk.h"
+#include "UI_Manager.h"
+#include "Canvas_Shop.h"
 
 CShop_NPC::CShop_NPC(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CScarletCharacter(pDevice, pContext)
@@ -62,7 +64,6 @@ void CShop_NPC::BeginTick()
 
 void CShop_NPC::Tick(_double TimeDelta)
 {
-
     m_fTimeDelta = TimeDelta;
 
     __super::Tick(TimeDelta);
@@ -73,14 +74,30 @@ void CShop_NPC::Tick(_double TimeDelta)
 	{
 		// UI 출력 (E 버튼 "상점" -> (필요 시)대사창 1회 출력 -> 상점 출력 (기능 이용)
 
-		if (!m_bCheck)
+		if (CGameInstance::GetInstance()->KeyDown(DIK_Z))
 		{
-			m_bCheck = true;
+			if (m_iCheck == false && nullptr == m_pCanvas_MainTalk)
+			{
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
+				m_pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_MainTalk", &json));
+				m_pCanvas_MainTalk->Add_Talk(0);
+			}
 
-			// 대화창
-			Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
-			CCanvas_MainTalk* pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_MainTalk", &json));
-			pCanvas_MainTalk->Add_Talk(0);
+			if (true == m_iCheck)
+			{
+				m_iCheck = false;
+				dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUI();
+			}
+		}
+
+		if (nullptr == m_pCanvas_MainTalk) return;
+
+		if (false == m_pCanvas_MainTalk->Get_End())
+		{
+			m_pCanvas_MainTalk->SetDelete();
+			m_pCanvas_MainTalk = nullptr;
+			dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUI();
+			m_iCheck = true;
 		}
 	}
 }

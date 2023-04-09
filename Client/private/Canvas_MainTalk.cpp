@@ -40,7 +40,7 @@ void CCanvas_MainTalk::Tick(_double TimeDelta)
 
 	// 0 : 시간 되면 넘기기
 	m_dTalk_TimeAcc += TimeDelta;
-	if (m_dTalk_TimeAcc >= 5.0 && m_bNextTalk == false)
+	if (m_dTalk_TimeAcc >= 3.0 && m_bNextTalk == false)
 		Show_Talk();
 
 	// 1 ; 키 입력으로 넘기기
@@ -89,7 +89,7 @@ void CCanvas_MainTalk::Show_Talk()
 		Find_ChildUI(L"TalkName")->SetVisible(false);
 		Find_ChildUI(L"Talk_BackGround")->SetVisible(false);
 
-		m_dTalk_TimeAcc = 5.0;
+		m_dTalk_TimeAcc = 3.0;
 		m_bRunning = false;
 		m_bVisible = false;
 		return;
