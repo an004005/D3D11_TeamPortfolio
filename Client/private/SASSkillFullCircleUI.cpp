@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\SASSkillFullCircleUI.h"
 #include "GameInstance.h"
+#include "PlayerInfoManager.h"
 
 // 알파값이 줄어들면서, 원이 커진다.
 
@@ -27,8 +28,13 @@ HRESULT CSASSkillFullCircleUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	// 1 ~ 6
+	static _uint iCount = 0;
+	++iCount;
+	iObjectNum = iCount;
+
 	m_vOriginSize = { m_fSizeX * m_vScale.x, m_fSizeY * m_vScale.y };
-	m_vCurrentSize = { 150.0f, 150.0f };	// 최대 크기를 이야기 한다.
+	m_vCurrentSize = { 170.0f, 170.0f };	// 최대 크기를 이야기 한다.
 	m_fSpeed = 50.0f; 
 
 	m_bVisible = true;
@@ -38,10 +44,14 @@ HRESULT CSASSkillFullCircleUI::Initialize(void * pArg)
 
 void CSASSkillFullCircleUI::Tick(_double TimeDelta)
 {
-	if (false == m_bGrow)
-		return;
-
 	CUI::Tick(TimeDelta);
+	
+	Grow_Tick(TimeDelta);
+}
+
+void CSASSkillFullCircleUI::Grow_Tick(const _double& TimeDelta)
+{
+	if (false == m_bGrow) return;
 
 	if (m_vOriginSize.x < m_vCurrentSize.x)
 	{
@@ -53,6 +63,52 @@ void CSASSkillFullCircleUI::Tick(_double TimeDelta)
 		m_bGrow = false;
 		m_vCurrentSize = { 140.0f, 140.0f };
 		m_pTransformCom->Set_Scaled(_float3(m_vOriginSize.x, m_vOriginSize.y, 1.f));
+	}
+}
+
+void CSASSkillFullCircleUI::Object_Tick()
+{
+	if (false == m_bChangeX)
+	{
+		if (1 == iObjectNum)
+		{
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_TELEPORT)].Energy;
+			_float fMinEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_TELEPORT)].MinEnergy;
+
+			_bool bUsable = false;
+			if (fCurrentEnergy > fMinEnergy)
+			{
+				m_bChangeX = true;
+				bUsable = true;
+			}
+			else
+			{
+				bUsable = false;
+			}
+		}
+		else if (2 == iObjectNum)
+		{
+
+		}
+		else if (3 == iObjectNum)
+		{
+
+		}
+		else if (4 == iObjectNum)
+		{
+
+		}
+	}
+	else
+	{
+		if (5 == iObjectNum)
+		{
+
+		}
+		else if (6 == iObjectNum)
+		{
+
+		}
 	}
 }
 

@@ -28,7 +28,7 @@ public:
 private:
 	//void	Set_SkillInfo(const SKILLINDEX eSKILLINDEX, const ESASType eESASType);
 	void	Set_IconTypeUse(const _uint iIndex, const ESASType& eESASType);
-	void	Set_IconTypeNotUsed(const _uint iIndex, const ESASType & eESASType);
+	void	Set_IconTypeNotUsed(const _uint iIndex, const ESASType& eESASType, const SKILLINDEX& eSkillIndex);
 
 	void	UseSkill_Tick();
 	void	InputIcon_Tick();

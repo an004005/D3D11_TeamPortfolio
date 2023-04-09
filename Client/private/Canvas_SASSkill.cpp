@@ -100,7 +100,7 @@ void CCanvas_SASSkill::Imgui_RenderProperty()
 void CCanvas_SASSkill::Set_Grow(const _uint iNumber, const _bool bVisible)
 {
 	_tchar szText[MAX_PATH] = TEXT("");
-	wsprintf(szText, TEXT("FullCircle%i"), iNumber);
+	wsprintf(szText, TEXT("FullCircle%u"), iNumber);
 	dynamic_cast<CSASSkillFullCircleUI*>(Find_ChildUI(szText))->Set_Grow();
 	Find_ChildUI(szText)->SetVisible(bVisible);
 }
@@ -119,6 +119,7 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 		Find_ChildUI(L"SASSkill_XRight")->SetVisible(!m_bChangeX);
 
 		dynamic_cast<CCanvas_SASSkillMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_SASSkillMove"))->Set_SkillAll(m_bChangeX);
+		FullCircle();
 	}
 
 	if (true == m_bChangeXButton)
@@ -136,6 +137,18 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 			m_dChangeX_TimcAcc = 0.0;
 			Find_ChildUI(L"SASSkill_XInput")->SetVisible(false);
 		}
+	}
+}
+
+void CCanvas_SASSkill::FullCircle()
+{
+	// 원 들이게 X키의 정보를 넘겨준다.
+	_tchar szText[MAX_PATH] = TEXT("");
+
+	for (_uint i = 1; i < 7; i++)
+	{
+		wsprintf(szText, TEXT("FullCircle%u"), i);
+		dynamic_cast<CSASSkillFullCircleUI*>(Find_ChildUI(szText))->Set_ChangeX(m_bChangeX);
 	}
 }
 

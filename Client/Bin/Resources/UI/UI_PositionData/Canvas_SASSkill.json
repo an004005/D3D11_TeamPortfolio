@@ -205,6 +205,108 @@
             }
         },
         {
+            "ChildTag": "FullCircle5\u0000",
+            "ObjectTag": "FullCircle5",
+            "Pivot": 5,
+            "PositionX": -155.0,
+            "PositionY": 190.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillFullCircle_UI\u0000",
+            "ScaleX": 0.8700000047683716,
+            "ScaleY": 0.8799999952316284,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.4524523615837097,
+                        0.4437020719051361,
+                        0.41597867012023926,
+                        10.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_FullCircle1.png\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    87.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    88.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    645.0,
+                    -260.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "FullCircle6\u0000",
+            "ObjectTag": "FullCircle6",
+            "Pivot": 5,
+            "PositionX": -204.0,
+            "PositionY": 142.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillFullCircle_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8600000143051147,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.4519999921321869,
+                        0.4440000057220459,
+                        0.41600000858306885,
+                        10.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_FullCircle2.png\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    85.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    86.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    596.0,
+                    -308.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
             "ChildTag": "SASSkill_AltText0\u0000",
             "ObjectTag": "SASSkill_AltText0",
             "Pivot": 5,

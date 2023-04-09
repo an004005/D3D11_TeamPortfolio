@@ -27,6 +27,7 @@ public:
 
 private:
 	void	InputX_Tick(const _double & dTimeDelta);
+	void FullCircle();
 	
 private:
 	_bool			m_bChangeX = { false };				// 8개의 스킬 중 4개씩 바꿔서 확인할 수 있다. flase->Left, true->Right
