@@ -21,10 +21,10 @@ public:
 
 private:
 	void	Weaponkind_Tick(const _double & TimeDelta);
-	void	WeaponkindPick_Tick();
 	void	RihgtInfoMove_Tick(const _double& TimeDelta);
-	
-	void	PlayerWeaponChange();
+	void	WeaponkindPick_Tick();
+
+	void	ChangeWeapon(const wstring wsChangeWeaponName);
 
 private:
 	// 왼쪽 무기 정보 저장
@@ -39,9 +39,8 @@ private:
 	// 오른쪽에 무기 정보를 띄우기 위해 필요한 변수
 	_float	m_fOriginalPos = { 0.0f };
 	_float	m_fAddWeaponPos = { 0.0f };
-	size_t m_iPickIndex = { 0 };
+	_uint m_iPickIndex = { 0 };
 	_bool m_bWeaponPick = { false }; // 왼쪽에서 무기를 선택하면 true, 무기를 닫으면 false
-
 
 public:
 	static CCanvas_Equipment* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -1282,7 +1282,7 @@
             "PositionX": -297.0,
             "PositionY": 170.0,
             "Priority": 0,
-            "Prototype_GameObject": "Main_OnePickUI\u0000",
+            "Prototype_GameObject": "Default_UI\u0000",
             "ScaleX": 0.800000011920929,
             "ScaleY": 0.800000011920929,
             "ShaderParams": {
@@ -1333,7 +1333,7 @@
             "PositionX": -297.0,
             "PositionY": -170.0,
             "Priority": 2,
-            "Prototype_GameObject": "Main_OnePickUI\u0000",
+            "Prototype_GameObject": "Default_UI\u0000",
             "ScaleX": 0.800000011920929,
             "ScaleY": 0.800000011920929,
             "ShaderParams": {
