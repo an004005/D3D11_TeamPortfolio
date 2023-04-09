@@ -350,6 +350,9 @@
     <ClInclude Include="..\public\SA_AxisUI.h" />
     <ClInclude Include="..\public\SA_RotationUI.h" />
     <ClInclude Include="..\public\ShaderUI.h" />
+    <ClInclude Include="..\public\Sheath_Player.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\public\Shop_NPC.h" />
     <ClInclude Include="..\public\SpecialObject.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -687,6 +690,9 @@
     <ClCompile Include="..\private\SA_AxisUI.cpp" />
     <ClCompile Include="..\private\SA_RotationUI.cpp" />
     <ClCompile Include="..\private\ShaderUI.cpp" />
+    <ClCompile Include="..\private\Sheath_Player.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\private\Shop_NPC.cpp" />
     <ClCompile Include="..\private\SpecialObject.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

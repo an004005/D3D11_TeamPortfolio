@@ -195,6 +195,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_BrainFieldProductionStateMachine()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_DeBuffStateMachine()))
+		return E_FAIL;
+
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_PLAYEREFFECT);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
@@ -236,6 +239,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
 
+	m_NoticeTick.Initialize(1.0, false);
+
 	return S_OK;
 }
 
@@ -274,7 +279,7 @@ void CPlayer::BeginTick()
 
 void CPlayer::Tick(_double TimeDelta)
 {
-	m_fTimeDelta = TimeDelta;
+	m_fTimeDelta = (_float)TimeDelta;
 
 	__super::Tick(TimeDelta);
 	m_pModel->Tick(TimeDelta);
@@ -738,6 +743,11 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 	{
 		IM_LOG("JustDodge Activate")
 	}
+	else if (m_eDeBuff == EDeBuffType::DEBUFF_THUNDER)
+	{
+		m_DamageDesc.m_iDamage = tDamageParams.iDamage;
+		CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
+	}
 	else
 	{
 		if (tDamageParams.eAttackType != EAttackType::ATK_END)
@@ -747,6 +757,8 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_DamageDesc.m_iDamageType = tDamageParams.eAttackType;
 		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
 		m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
+
+		m_eDeBuff = tDamageParams.eDeBuff;
 
 		// ì²´ë ¥ ê¹Žì´??ë¶€ë¶?
 		CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
@@ -958,6 +970,84 @@ void CPlayer::Imgui_RenderProperty()
 		if("" != szAnimName)
 			m_pModel->Get_AnimList()[szAnimName]->Imgui_RenderProperty();
 	}
+}
+
+void CPlayer::Update_DeBuff(_double TimeDelta)
+{
+	CScarletCharacter::Update_DeBuff(TimeDelta);
+
+	m_pDeBuffStateMachine->Tick(TimeDelta);
+
+	//if (m_eDeBuff == EDeBuffType::DEBUFF_FIRE)
+	//{
+		/*m_FireTick.Tick(TimeDelta);
+		if (m_FireTick.Use())
+		{
+			DAMAGE_PARAM tParam;
+			tParam.iDamage = _uint((_float)m_iMaxHP / 100.f * (1.f - m_fFireResist));
+			tParam.pCauser = this;
+			TakeDamage(tParam);
+		}*/
+	//}
+}
+
+void CPlayer::DeBuff_End()
+{
+	Update_NoticeNeon();
+	
+	for (auto pMtrl : m_pModel->GetMaterials())
+	{
+		if (pMtrl->GetParam().Ints.empty())
+		{
+			pMtrl->GetParam().Ints.push_back(0);
+		}
+
+		pMtrl->GetParam().Ints[0] = 0;
+	}
+}
+
+void CPlayer::DeBuff_Fire()
+{
+	m_fDeBuffTime = 8.f;
+	Update_NoticeNeon();
+
+	for (auto pMtrl : m_pModel->GetMaterials())
+	{
+		if (pMtrl->GetParam().Ints.empty())
+		{
+			pMtrl->GetParam().Ints.push_back(0);
+		}
+
+		pMtrl->GetParam().Ints[0] = 1;
+	}
+}
+
+void CPlayer::DeBuff_Oil()
+{
+	m_fDeBuffTime = 8.f;
+	Update_NoticeNeon();
+
+	for (auto pMtrl : m_pModel->GetMaterials())
+	{
+		if (pMtrl->GetParam().Ints.empty())
+		{
+			pMtrl->GetParam().Ints.push_back(0);
+		}
+
+		pMtrl->GetParam().Ints[0] = 2;
+	}
+}
+
+void CPlayer::DeBuff_Thunder()
+{
+	m_fDeBuffTime = 10.f;
+	Update_NoticeNeon();
+}
+
+void CPlayer::DeBuff_Water()
+{
+	m_fDeBuffTime = 10.f;
+	Update_NoticeNeon();
 }
 
 //CGameObject * CPlayer::Get_TargetedEnemy()
@@ -1489,7 +1579,7 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 
 		})
 			.AddTransition("DRIVEMODE_NOUSE to DRIVEMODE_CAM_CLOSER", "DRIVEMODE_CAM_CLOSER")
-			.Predicator([&]()->_bool {return CGameInstance::GetInstance()->KeyDown(DIK_M); })
+			.Predicator([&]()->_bool {return m_bDirveModeStart; })
 			.Priority(0)
 
 		.AddState("DRIVEMODE_CAM_CLOSER")
@@ -1568,11 +1658,11 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.Tick([&](double fTimeDelta) {})
 		.OnExit([&]() {})
 			.AddTransition("BRAINFIELD to BRAINFIELD_START", "BRAINFIELD_START")
-			.Predicator([&]()->_bool { return (!m_bBrainField) && (m_pController->KeyDown(CController::B)); })
+			.Predicator([&]()->_bool { return (!m_bBrainField) && (m_bBrainFieldStart); })
 			.Priority(0)
 
 			.AddTransition("BRAINFIELD to BRAINFIELD_FINISH_BF", "BRAINFIELD_FINISH_BF")
-			.Predicator([&]()->_bool { return (m_bBrainField) && (m_pController->KeyDown(CController::B)); })
+			.Predicator([&]()->_bool { return (m_bBrainField) && (m_bBrainFieldStart); })
 			.Priority(0)
 
 		.AddState("BRAINFIELD_START")
@@ -2364,7 +2454,7 @@ HRESULT CPlayer::Setup_KineticStateMachine()
 			.AddTransition("NO_USE_KINETIC to KINETIC_RB_START", "KINETIC_RB_START")
 			.Predicator([&]()->_bool
 			{
-				return m_bKineticRB && !m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && !m_bHit;
+				return CanKinetic(15) && m_bKineticRB && !m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && !m_bHit;
 			})
 			.Priority(0)
 
@@ -3085,11 +3175,11 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_KINETIC01_CHARGE", "KINETIC_COMBO_KINETIC01_CHARGE")
-			.Predicator([&]()->_bool { return !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && !m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool { return CanKinetic(15) && !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && !m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_AIR_CAP", "KINETIC_COMBO_AIR_CAP")
-			.Predicator([&]()->_bool { return !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool { return CanKinetic(15) && !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
 #pragma region ?¬ëž˜??ì½¤ë³´ 1
@@ -3145,7 +3235,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_SLASH01 to KINETIC_COMBO_KINETIC01_CHARGE", "KINETIC_COMBO_KINETIC01_CHARGE")
-			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.2f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool {return CanKinetic(15) && m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.2f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
 #pragma endregion ?¬ëž˜??ì½¤ë³´ 1
@@ -3341,7 +3431,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_SLASH02 to KINETIC_COMBO_KINETIC02_CHARGE", "KINETIC_COMBO_KINETIC02_CHARGE")
-			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.2f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool {return CanKinetic(15) && m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.2f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
 
@@ -3524,7 +3614,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_SLASH03 to KINETIC_COMBO_KINETIC03_CHARGE", "KINETIC_COMBO_KINETIC03_CHARGE")
-			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.25f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool {return CanKinetic(15) && m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.25f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
 #pragma endregion ?¬ëž˜??ì½¤ë³´ 3
@@ -3708,7 +3798,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_SLASH04 to KINETIC_COMBO_KINETIC04_CHARGE", "KINETIC_COMBO_KINETIC04_CHARGE")
-			.Predicator([&]()->_bool {return m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.5f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool {return CanKinetic(15) && m_bKineticRB && m_pASM->isSocketPassby("Kinetic_Combo_AnimSocket", 0.5f) && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
 			.Priority(0)
 
 #pragma endregion ?¬ëž˜??ì½¤ë³´ 4
@@ -4992,6 +5082,197 @@ HRESULT CPlayer::SetUp_Sound()
 	return S_OK;
 }
 
+void CPlayer::Update_NoticeNeon()
+{
+	_float4x4	NoticeNeonPivot = XMMatrixTranslation(0.f, 2.5f, 0.f);
+
+	if (m_pNoticeNeon.first != nullptr && m_pNoticeNeon.second != nullptr)
+	{
+		m_pNoticeNeon.first->SetDelete();
+		m_pNoticeNeon.second->Delete_Particles();
+
+		Safe_Release(m_pNoticeNeon.first);
+		Safe_Release(m_pNoticeNeon.second);
+
+		m_pNoticeNeon.first = nullptr;
+		m_pNoticeNeon.second = nullptr;
+	}
+
+	switch (this->GetDeBuffType())
+	{
+	case Client::EDeBuffType::DEBUFF_FIRE:
+		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
+		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"NoticeNeon_Fire_Particle");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_OIL:
+		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
+		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Oil_Particle");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_THUNDER:
+		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
+		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Thunder_Particle");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_WATER:
+		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
+		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Water_Particle");
+		break;
+
+	case Client::EDeBuffType::DEBUFF_END:
+		break;
+
+	default:
+		break;
+	}
+
+	if (m_pNoticeNeon.first != nullptr && m_pNoticeNeon.second != nullptr)
+	{
+		m_pNoticeNeon.first->Start_AttachPivot(this, NoticeNeonPivot, "Reference", true, true);
+		m_pNoticeNeon.second->Start_AttachPivot(this, NoticeNeonPivot, "Reference", true, true);
+		Safe_AddRef(m_pNoticeNeon.first);
+		Safe_AddRef(m_pNoticeNeon.second);
+	}
+}
+
+HRESULT CPlayer::SetUp_DeBuffStateMachine()
+{
+	// »óÅÂÀÌ»ó¿¡ °É·ÈÀ» ¶§ µ¿ÀÛÇÒ FSM, ¾Ö´Ï¸ÞÀÌ¼Ç¿¡ ¿µÁlÀ» ÁÖÁö ¾ÊÀ½
+
+	m_ElecShock_Start.push_back(m_pModel->Find_Animation("AS_ch0100_421_AL_down_start"));
+	m_ElecShock_Start.push_back(m_pModel->Find_Animation("AS_ch0100_481_AL_down_B_shock"));
+	m_ElecShock_WakeUp.push_back(m_pModel->Find_Animation("AS_ch0100_445_AL_wakeup_B"));
+
+		m_pDeBuffStateMachine =
+		CFSMComponentBuilder().InitState("DEBUFF_END")
+
+		.AddState("DEBUFF_END")
+		.OnStart([&]() {})
+		.Tick([&](double fTimeDelta) 
+		{
+			
+		})
+		.OnExit([&]() {})
+
+			.AddTransition("DEBUFF_END to DEBUFF_FIRE", "DEBUFF_FIRE")
+			.Predicator([&]()->_bool {return GetDeBuffType() == EDeBuffType::DEBUFF_FIRE; })
+			.Priority(0)
+
+			.AddTransition("DEBUFF_END to DEBUFF_WATER", "DEBUFF_WATER")
+			.Predicator([&]()->_bool {return GetDeBuffType() == EDeBuffType::DEBUFF_WATER; })
+			.Priority(1)
+
+			.AddTransition("DEBUFF_END to DEBUFF_OIL", "DEBUFF_OIL")
+			.Predicator([&]()->_bool {return GetDeBuffType() == EDeBuffType::DEBUFF_OIL; })
+			.Priority(2)
+
+			.AddTransition("DEBUFF_END to DEBUFF_ELEC", "DEBUFF_ELEC")
+			.Predicator([&]()->_bool {return GetDeBuffType() == EDeBuffType::DEBUFF_THUNDER; })
+			.Priority(3)
+
+
+		.AddState("DEBUFF_FIRE")
+		.OnStart([&]() {})
+		.Tick([&](double fTimeDelta) 
+		{
+			m_NoticeTick.Tick(fTimeDelta);
+
+			if (m_NoticeTick.Use())
+			{
+				DAMAGE_PARAM tParam;
+				ZeroMemory(&tParam, sizeof(DAMAGE_DESC));
+				tParam.eAttackType = EAttackType::ATK_END;
+				tParam.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+				tParam.iDamage = 1;
+				tParam.pCauser = this;
+				TakeDamage(tParam);
+			}
+		})
+		.OnExit([&]() {})
+			
+			/*.AddTransition("DEBUFF_FIRE to DEBUFF_END", "DEBUFF_END")
+			.Predicator([&]()->_bool {return m_pPlayer->GetDeBuffType() == EDeBuffType::DEBUFF_END; })
+			.Priority(0)*/
+
+			.AddTransition("DEBUFF_FIRE to DEBUFF_END", "DEBUFF_END")
+			.Predicator([&]()->_bool {return GetDeBuffType() == EDeBuffType::DEBUFF_END; })
+			.Priority(100)
+
+		.AddState("DEBUFF_WATER")
+		.OnStart([&]() {})
+		.Tick([&](double fTimeDelta) { })
+		.OnExit([&]() {})
+
+			.AddTransition("DEBUFF_WATER to DEBUFF_ELEC", "DEBUFF_ELEC")
+			.Predicator([&]()->_bool {return m_eDeBuff == EDeBuffType::DEBUFF_THUNDER; })
+			.Priority(0)
+
+			.AddTransition("DEBUFF_WATER to DEBUFF_END", "DEBUFF_END")
+			.Predicator([&]()->_bool {return GetDeBuffType() == EDeBuffType::DEBUFF_END; })
+			.Priority(100)
+
+		.AddState("DEBUFF_OIL")
+		.OnStart([&]() {})
+		.Tick([&](double fTimeDelta) { })
+		.OnExit([&]() {})
+
+			.AddTransition("DEBUFF_OIL to DEBUFF_FIRE", "DEBUFF_FIRE")
+			.Predicator([&]()->_bool {return GetDeBuffType() == EDeBuffType::DEBUFF_FIRE; })
+			.Priority(0)
+
+			.AddTransition("DEBUFF_OIL to DEBUFF_END", "DEBUFF_END")
+			.Predicator([&]()->_bool {return GetDeBuffType() == EDeBuffType::DEBUFF_END; })
+			.Priority(100)
+
+				.AddState("DEBUFF_ELEC")
+		.OnStart([&]() 
+		{
+			m_pASM->SetCurState("IDLE");
+			m_pASM->SetCurState_BrainField("IDLE");
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
+			m_pASM->AttachAnimSocket("Hit_AnimSocket", m_ElecShock_Start);
+		})
+		.Tick([&](double fTimeDelta) { })
+		.OnExit([&]() {})
+
+			/*.AddTransition("DEBUFF_OIL to DEBUFF_END", "DEBUFF_END")
+			.Predicator([&]()->_bool {return m_pPlayer->GetDeBuffType() == EDeBuffType::DEBUFF_END; })
+			.Priority(0)*/
+
+			.AddTransition("DEBUFF_ELEC to DEBUFF_ELEC_END", "DEBUFF_ELEC_END")
+			.Predicator([&]()->_bool {return GetDeBuffType() == EDeBuffType::DEBUFF_END; })
+			.Priority(100)
+
+		.AddState("DEBUFF_ELEC_END")
+		.OnStart([&]() 
+		{
+			m_pASM->AttachAnimSocket("Hit_AnimSocket", m_ElecShock_WakeUp);
+		})
+		.Tick([&](double fTimeDelta) { })
+		.OnExit([&]() { m_pASM->ClearAnimSocket("Hit_AnimSocket"); })
+
+			.AddTransition("DEBUFF_ELEC_END to DEBUFF_END", "DEBUFF_END")
+			.Predicator([&]()->_bool 
+			{
+				return m_pModel->Find_Animation("AS_ch0100_445_AL_wakeup_B")->GetPlayRatio() > 0.8f &&
+					(m_bLeftClick || m_bWalk || m_bDash || m_bJump);
+			})
+			.Priority(0)
+
+			.AddTransition("DEBUFF_ELEC_END to DEBUFF_END", "DEBUFF_END")
+			.Predicator([&]()->_bool 
+			{
+				return m_pASM->isSocketEmpty("Hit_AnimSocket");
+			})
+			.Priority(100)
+
+		.Build();
+
+	return S_OK;
+}
+
 void CPlayer::EnemyReportCheck()
 {
 	list<ENEMY_DAMAGE_REPORT> DamageReportList = CGameManager::GetInstance()->GetEnemyReport();
@@ -5061,6 +5342,21 @@ void CPlayer::KineticGuage_Recover()
 	//}
 
 	CPlayerInfoManager::GetInstance()->Change_PlayerKineticEnergy(CHANGE_INCREASE, iRecovery);
+}
+
+_bool CPlayer::CanKinetic(_uint iUseGuage)
+{
+	_uint	iCurKineticEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergy;
+	_uint	iMinKineticEnergy = 20;
+	_uint	iUseKineticEnergy = iUseGuage;
+
+	if (iCurKineticEnergy < iMinKineticEnergy)
+		return false;
+
+	if (iCurKineticEnergy < iUseKineticEnergy)
+		return false;
+
+	return true;
 }
 
 HRESULT CPlayer::SetUp_ProductionEvent()
@@ -6372,7 +6668,7 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			.Predicator([&]()->_bool 
 			{
 				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
-				return m_bKineticG && bResult;
+				return CanKinetic(50) && m_bKineticG && bResult;
 			})
 			.Priority(0)
 
@@ -6623,7 +6919,7 @@ HRESULT CPlayer::SetUp_DropObjectStateMachine()
 			.Predicator([&]()->_bool 
 			{
 				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
-				return m_bKineticG && bResult;
+				return CanKinetic(50) && m_bKineticG && bResult;
 			})
 			.Priority(0)
 
@@ -6949,7 +7245,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			.Predicator([&]()->_bool 
 			{
 				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
-				return m_bKineticG && bResult;
+				return CanKinetic(50) && m_bKineticG && bResult;
 			})
 			.Priority(0)
 
@@ -7449,7 +7745,7 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 			.Predicator([&]()->_bool 
 			{
 				_bool bResult = (nullptr != CPlayerInfoManager::GetInstance()->Get_SpecialObject());
-				return m_bKineticG && bResult;
+				return CanKinetic(50) && m_bKineticG && bResult;
 			})
 			.Priority(0)
 
@@ -8630,7 +8926,7 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 
 	m_bBreakFall = m_pController->KeyDown(CController::SHIFT);
 
-	if (m_bHit)
+	if (m_bHit || m_eDeBuff == EDeBuffType::DEBUFF_THUNDER)
 	{
 		m_bLeftClick = false;
 		m_bDash = false;
@@ -8647,6 +8943,8 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 		m_bUpper = false;
 
 		m_bBrainCrashInput = false;
+		m_bDirveModeStart = false;
+		m_bBrainFieldStart = false;
 	}
 	else
 	{
@@ -8663,11 +8961,8 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 
 		m_bBrainCrashInput = m_pController->KeyDown(CController::R);
 
-		if (m_bBrainCrashInput)
-		{
-			int iA = 0;
-		}
-
+		m_bDirveModeStart = m_pController->KeyDown(CController::M);
+		m_bBrainFieldStart = m_pController->KeyDown(CController::B);
 		//if (m_bCanTurn_Attack)
 		//{
 		//	SmoothTurn_Attack(TimeDelta);
@@ -10307,4 +10602,17 @@ void CPlayer::Free()
 	Safe_Release(m_pHotFixer);
 
 //	Safe_Release(m_pContectRigidBody);
+
+	Safe_Release(m_pDeBuffStateMachine);
+	if (m_pNoticeNeon.first != nullptr && m_pNoticeNeon.second != nullptr)
+	{
+		m_pNoticeNeon.first->SetDelete();
+		m_pNoticeNeon.second->Delete_Particles();
+
+		Safe_Release(m_pNoticeNeon.first);
+		Safe_Release(m_pNoticeNeon.second);
+
+		m_pNoticeNeon.first = nullptr;
+		m_pNoticeNeon.second = nullptr;
+	}
 }
