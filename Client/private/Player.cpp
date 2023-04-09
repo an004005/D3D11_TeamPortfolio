@@ -69,6 +69,7 @@
 #include "EM0700.h"
 #include "EM0800.h"
 
+#include "Renderer.h"
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
 {
@@ -8904,6 +8905,7 @@ void CPlayer::Event_KineticCircleEffect_Attach()
 {
 	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Kinetic_BaseCircle", LAYER_PLAYEREFFECT)->Start_Attach(this, "Eff01", true);
 }
+
 
 void CPlayer::Reset_Charge()
 {
