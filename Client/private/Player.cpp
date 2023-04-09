@@ -296,7 +296,6 @@ void CPlayer::Tick(_double TimeDelta)
 
 	CPlayerInfoManager::GetInstance()->Set_BrainField(m_bBrainField);
 
-
 	Production_Tick(TimeDelta);
 
 	if (m_bOnBattle)
@@ -322,6 +321,7 @@ void CPlayer::Tick(_double TimeDelta)
 
 	Check_Parts();
 	NetualChecker(TimeDelta);
+	Update_CautionNeon();
 	SasMgr();
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_Q))
@@ -1275,15 +1275,17 @@ void CPlayer::Visible_Check()
 		m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_155_AL_sas_dodge_B_start_Telepo" ||
 		m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_157_AL_sas_dodge_L_start_Telepo")
 	{
-		m_bTeleport = false;
+		m_bTeleport = true;
 	}
 	else
 	{
-		m_bTeleport = true;
+		m_bTeleport = false;
 	}
 
-	if (false == m_bTeleport)
+	if (true == m_bTeleport)
 	{
+		m_pCollider->SetFilterData(ECOLLIDER_TYPE_BIT(CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC | CTB_MONSTER_PART | CTB_MONSTER_RANGE));
+
 		if (1.f > m_fTeleportDissolve)
 		{
 			m_fTeleportDissolve = min(m_fTeleportDissolve + ((_float)m_fTimeDelta * 10.f), 1.f);
@@ -1303,6 +1305,8 @@ void CPlayer::Visible_Check()
 	}
 	else
 	{
+		m_pCollider->SetFilterData(ECOLLIDER_TYPE_BIT(CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC | CTB_MONSTER_PART | CTB_MONSTER_RANGE | CTB_TELEPORT_OBJ));
+
 		if (0.f < m_fTeleportDissolve)
 		{
 			m_fTeleportDissolve = max(m_fTeleportDissolve - ((_float)m_fTimeDelta * 10.f), 0.f);
@@ -1573,6 +1577,17 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.Tick([&](double fTimeDelta)
 		{
 			m_bDriveMode_Activate = false;
+
+			if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode && (0.f == CPlayerInfoManager::GetInstance()->Get_PlayerStat().fDriveEnergy))
+			{
+				CPlayerInfoManager::GetInstance()->Set_DriveMode(false);
+			}
+			else if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
+			{
+				CPlayerInfoManager::GetInstance()->Change_DriveEnergy(CHANGE_DECREASE, fTimeDelta);
+			}
+
+			//IM_LOG("DRIVE : %f", CPlayerInfoManager::GetInstance()->Get_PlayerStat().fDriveEnergy);
 		})
 		.OnExit([&]()
 		{
@@ -1637,7 +1652,7 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		})
 		.OnExit([&]()
 		{
-
+			CPlayerInfoManager::GetInstance()->Set_DriveMode(true);
 		})
 			.AddTransition("DRIVEMODE_CAM_AWAY to DRIVEMODE_NOUSE", "DRIVEMODE_NOUSE")
 			.Predicator([&]()->_bool {return m_bZoomIsFinish; })
@@ -1655,14 +1670,22 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 
 		.AddState("BRAINFIELD")
 		.OnStart([&]() { m_bZoomIsFinish = false; })
-		.Tick([&](double fTimeDelta) {})
+		.Tick([&](double fTimeDelta) 
+		{
+			if (m_bBrainField)
+			{
+				CPlayerInfoManager::GetInstance()->Change_BrainFieldMaintain(CHANGE_DECREASE, (_float)fTimeDelta);
+			}
+
+			//IM_LOG("BF : %f", CPlayerInfoManager::GetInstance()->Get_PlayerStat().fBrainFieldMaintain);
+		})
 		.OnExit([&]() {})
 			.AddTransition("BRAINFIELD to BRAINFIELD_START", "BRAINFIELD_START")
 			.Predicator([&]()->_bool { return (!m_bBrainField) && (m_bBrainFieldStart); })
 			.Priority(0)
 
 			.AddTransition("BRAINFIELD to BRAINFIELD_FINISH_BF", "BRAINFIELD_FINISH_BF")
-			.Predicator([&]()->_bool { return (m_bBrainField) && (m_bBrainFieldStart); })
+			.Predicator([&]()->_bool { return (m_bBrainField) && (m_bBrainFieldStart || 0.f >= CPlayerInfoManager::GetInstance()->Get_PlayerStat().fBrainFieldMaintain); })
 			.Priority(0)
 
 		.AddState("BRAINFIELD_START")
@@ -1721,7 +1744,11 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
 		})
 		.Tick([&](double fTimeDelta) {})
-		.OnExit([&]() { m_bBrainField = true; })
+		.OnExit([&]() 
+		{
+			CPlayerInfoManager::GetInstance()->Set_BrainFieldMaintain(60.f);
+			m_bBrainField = true;
+		})
 			.AddTransition("BRAINFIELD_ACTIONCAM_02 to BRAINFIELD", "BRAINFIELD")
 			.Predicator([&]()->_bool { return m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100")->IsFinished(); })
 			.Priority(0)
@@ -2643,8 +2670,8 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 
 				m_pASM->ClearAnimSocket("Hit_AnimSocket");
 			})
-				.Tick([&](double fTimeDelta) {m_bHit = false; })
-				.OnExit([&]() 
+			.Tick([&](double fTimeDelta) {m_bHit = false; })
+			.OnExit([&]() 
 			{ 
 				m_pASM->SetCurState("IDLE");
 				m_pASM->SetCurState_BrainField("IDLE");
@@ -2739,6 +2766,11 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			{
 				m_bWalk = false;
 				//m_bAir = false;
+			})
+			.OnExit([&]()
+			{
+				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
+				m_bHit = false;
 			})
 				.AddTransition("FALLDOWN to NON_HIT", "NON_HIT")
 				.Predicator([&]()->_bool {return m_pASM->isSocketEmpty("Hit_AnimSocket"); })
@@ -5133,6 +5165,32 @@ void CPlayer::Update_NoticeNeon()
 		m_pNoticeNeon.second->Start_AttachPivot(this, NoticeNeonPivot, "Reference", true, true);
 		Safe_AddRef(m_pNoticeNeon.first);
 		Safe_AddRef(m_pNoticeNeon.second);
+	}
+}
+
+void CPlayer::Update_CautionNeon()
+{
+	_float4x4	NoticeNeonPivot = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.1f, 0.f, 0.f);
+
+	_float fCurHP = (_float)CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP;
+	_float fMaxHP = (_float)CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxHP;
+
+	if (0.2f >= fCurHP / fMaxHP)
+	{
+		if (!CGameInstance::GetInstance()->Check_ObjectAlive(m_pCautionNeon.first))
+		{
+			m_pCautionNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_HP");
+			m_pCautionNeon.first->Start_AttachPivot(this, NoticeNeonPivot, "String2", true, true);
+		}
+	}
+	else
+	{
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCautionNeon.first))
+		{
+			m_pCautionNeon.first->SetDelete();
+			Safe_Release(m_pNoticeNeon.first);
+			m_pCautionNeon.first = nullptr;
+		}
 	}
 }
 
@@ -10565,6 +10623,7 @@ void CPlayer::Free()
 	Safe_Release(m_pModel);
 	Safe_Release(m_pController);
 	Safe_Release(m_pPlayerCam);
+	Safe_Release(m_pBattleChecker);
 
 	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pPlayer_AnimCam))
 		Safe_Release(m_pPlayer_AnimCam);
@@ -10614,5 +10673,16 @@ void CPlayer::Free()
 
 		m_pNoticeNeon.first = nullptr;
 		m_pNoticeNeon.second = nullptr;
+	}
+	if (m_pCautionNeon.first != nullptr/* && m_pCautionNeon.second != nullptr*/)
+	{
+		m_pCautionNeon.first->SetDelete();
+		//m_pCautionNeon.second->Delete_Particles();
+
+		Safe_Release(m_pCautionNeon.first);
+		//Safe_Release(m_pCautionNeon.second);
+
+		m_pCautionNeon.first = nullptr;
+		//m_pCautionNeon.second = nullptr;
 	}
 }

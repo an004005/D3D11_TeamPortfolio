@@ -101,6 +101,9 @@ void CPlayerHotFixer::Tick()
 
 		if (ImGui::Button("Thunder"))
 			m_pPlayer->m_eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+
+		if (ImGui::Button("Heal"))
+			CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_INCREASE, 100);
 	}
 	ImGui::CollapsingHeader("~HotFixer");
 }
@@ -545,9 +548,22 @@ void CPlayerHotFixer::Player_Something_Update()
 {
 	// 플레이어에 추가할 내용이나 변경할 내용 있으면 해당 부분에서 추가 컴파일 가능
 
-	m_pPlayer->m_BrandCrash_em0200.clear();
-	m_pPlayer->m_BrandCrash_em0200.push_back(m_pPlayer->m_pModel->Find_Animation("AS_BC_em0200m_ch0100"));
+	/*m_pPlayer->m_BrandCrash_em0200.clear();
+	m_pPlayer->m_BrandCrash_em0200.push_back(m_pPlayer->m_pModel->Find_Animation("AS_BC_em0200m_ch0100"));*/
+	_float4x4	NoticeNeonPivot = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.1f, 0.f, 0.f);
+	
+	/*if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pPlayer->m_pCautionNeon.first))*/
+	if (m_pPlayer->m_pCautionNeon.first != nullptr)
+	{
+		m_pPlayer->m_pCautionNeon.first->SetDelete();
+		m_pPlayer->m_pCautionNeon.first = nullptr;
+	}
 
+	if (m_pPlayer->m_pCautionNeon.first == nullptr)
+	{
+		m_pPlayer->m_pCautionNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_HP");
+		m_pPlayer->m_pCautionNeon.first->Start_AttachPivot(m_pPlayer, NoticeNeonPivot, "String2", true, true);
+	}
 }
 
 CPlayerHotFixer* CPlayerHotFixer::Create(CPlayer* pPlayer)
