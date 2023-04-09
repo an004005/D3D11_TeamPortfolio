@@ -31,13 +31,14 @@ HRESULT CSASSkillFullCircleUI::Initialize(void * pArg)
 	// 1 ~ 6
 	static _uint iCount = 0;
 	++iCount;
-	iObjectNum = iCount;
+	m_iObjectNum = iCount;
 
 	m_vOriginSize = { m_fSizeX * m_vScale.x, m_fSizeY * m_vScale.y };
 	m_vCurrentSize = { 170.0f, 170.0f };	// 최대 크기를 이야기 한다.
 	m_fSpeed = 50.0f; 
 
 	m_bVisible = true;
+	m_bOneGrow = true;
 
 	return S_OK;
 }
@@ -46,6 +47,7 @@ void CSASSkillFullCircleUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 	
+	Object_Tick();
 	Grow_Tick(TimeDelta);
 }
 
@@ -70,44 +72,128 @@ void CSASSkillFullCircleUI::Object_Tick()
 {
 	if (false == m_bChangeX)
 	{
-		if (1 == iObjectNum)
+		if (1 == m_iObjectNum)
 		{
 			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_TELEPORT)].Energy;
 			_float fMinEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_TELEPORT)].MinEnergy;
 
-			_bool bUsable = false;
 			if (fCurrentEnergy > fMinEnergy)
 			{
-				m_bChangeX = true;
-				bUsable = true;
+				m_bVisible = true;
+				if (false == m_bOneGrow)
+				{
+					m_bOneGrow = true;
+					m_bGrow = true;
+				}
 			}
 			else
 			{
-				bUsable = false;
+				m_bVisible = false;
+				m_bOneGrow = false;
 			}
 		}
-		else if (2 == iObjectNum)
+		else if (2 == m_iObjectNum)
 		{
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_PENETRATE)].Energy;
+			_float fMinEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_PENETRATE)].MinEnergy;
 
+			if (fCurrentEnergy > fMinEnergy)
+			{
+				m_bVisible = true;
+				if (false == m_bOneGrow)
+				{
+					m_bOneGrow = true;
+					m_bGrow = true;
+				}
+			}
+			else
+			{
+				m_bVisible = false;
+				m_bOneGrow = false;
+			}
 		}
-		else if (3 == iObjectNum)
+		else if (3 == m_iObjectNum)
 		{
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_HARDBODY)].Energy;
+			_float fMinEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_HARDBODY)].MinEnergy;
 
+			if (fCurrentEnergy > fMinEnergy)
+			{
+				m_bVisible = true;
+				if (false == m_bOneGrow)
+				{
+					m_bOneGrow = true;
+					m_bGrow = true;
+				}
+			}
+			else
+			{
+				m_bVisible = false;
+				m_bOneGrow = false;
+			}
 		}
-		else if (4 == iObjectNum)
+		else if (4 == m_iObjectNum)
 		{
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_FIRE)].Energy;
+			_float fMinEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_FIRE)].MinEnergy;
 
+			m_bVisible = true;
+			if (fCurrentEnergy > fMinEnergy)
+			{
+				if (false == m_bOneGrow)
+				{
+					m_bOneGrow = true;
+					m_bGrow = true;
+				}
+			}
+			else
+			{
+				m_bVisible = false;
+				m_bOneGrow = false;
+			}
 		}
 	}
 	else
 	{
-		if (5 == iObjectNum)
+		if (5 == m_iObjectNum)
 		{
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_SUPERSPEED)].Energy;
+			_float fMinEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_SUPERSPEED)].MinEnergy;
 
+			if (fCurrentEnergy > fMinEnergy)
+			{
+				m_bVisible = true;
+				if (false == m_bOneGrow)
+				{
+					m_bOneGrow = true;
+					m_bGrow = true;
+				}
+			}
+			else
+			{
+				m_bVisible = false;
+				m_bOneGrow = false;
+			}
 		}
-		else if (6 == iObjectNum)
+		else if (6 == m_iObjectNum)
 		{
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_ELETRIC)].Energy;
+			_float fMinEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_ELETRIC)].MinEnergy;
 
+			if (fCurrentEnergy > fMinEnergy)
+			{
+				m_bVisible = true;
+				if (false == m_bOneGrow)
+				{
+					m_bOneGrow = true;
+					m_bGrow = true;
+				}
+			}
+			else
+			{
+				m_bVisible = false;
+				m_bOneGrow = false;
+			}
 		}
 	}
 }

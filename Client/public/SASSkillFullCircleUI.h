@@ -35,8 +35,9 @@ private:
 	_float2 m_vOriginSize = { 0.0f, 0.0f };
 	_float2 m_vCurrentSize = { 0.0f, 0.0f };
 
+	_uint	m_iObjectNum = { 0 };
 	_bool m_bChangeX = { false };
-	_uint iObjectNum = { 0 };
+	_bool	m_bOneGrow = { false };
 
 public:
 	static CSASSkillFullCircleUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

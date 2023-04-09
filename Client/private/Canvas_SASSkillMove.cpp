@@ -50,9 +50,7 @@ HRESULT CCanvas_SASSkillMove::Initialize(void* pArg)
 	m_eSASType[TWO1] = ESASType::SAS_NOT;
 	m_eSASType[THREE1] = ESASType::SAS_NOT;
 	m_eSASType[FOUR1] = ESASType::SAS_NOT;
-
-	m_arrGrow.fill(true);
-
+	
 	return S_OK;
 }
 
@@ -75,9 +73,9 @@ void CCanvas_SASSkillMove::Tick(_double TimeDelta)
 
 		m_bMember0 = true;
 
-		Set_IconTypeNotUsed(2, m_eSASType[TWO0], TWO0);
-		Set_IconTypeNotUsed(3, m_eSASType[THREE0], THREE0);
-		Set_IconTypeNotUsed(4, m_eSASType[FOUR0], FOUR0);
+		Set_IconTypeNotUsed(2, m_eSASType[TWO0]);
+		Set_IconTypeNotUsed(3, m_eSASType[THREE0]);
+		Set_IconTypeNotUsed(4, m_eSASType[FOUR0]);
 
 		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		{
@@ -106,7 +104,7 @@ void CCanvas_SASSkillMove::Tick(_double TimeDelta)
 		if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::LUCA))
 		{
 			m_eSASType[ONE0] = ESASType::SAS_TELEPORT;
-			Set_IconTypeNotUsed(1, m_eSASType[FOUR0], FOUR0);
+			Set_IconTypeNotUsed(1, m_eSASType[FOUR0]);
 		}
 
 		if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::LUCA) &&
@@ -252,7 +250,7 @@ void CCanvas_SASSkillMove::Set_IconTypeUse(const _uint iIndex, const ESASType& e
 	dynamic_cast<CSASSkillGaugeUI*>(Find_ChildUI(szText))->Set_GaugeBackType(eESASType, fRatio);
 }
 
-void CCanvas_SASSkillMove::Set_IconTypeNotUsed(const _uint iIndex, const ESASType& eESASType, const SKILLINDEX & eSkillIndex)
+void CCanvas_SASSkillMove::Set_IconTypeNotUsed(const _uint iIndex, const ESASType& eESASType)
 {
 	_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eESASType)].Energy;
 	_float fMinEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(eESASType)].MinEnergy;
@@ -264,18 +262,10 @@ void CCanvas_SASSkillMove::Set_IconTypeNotUsed(const _uint iIndex, const ESASTyp
 	if (fCurrentEnergy > fMinEnergy && ESASType::SAS_NOT != eESASType)
 	{
 		bUsable = true;
-		
-		//if (false == m_arrGrow[iIndex - 1])
-		//{
-		//	m_arrGrow[iIndex - 1] = true;
-		//	dynamic_cast<CCanvas_SASSkill*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_SASSkill"))->Set_Grow(iIndex, true);
-		//}
 	}
 	else
 	{
 		bUsable = false;
-		m_arrGrow[iIndex - 1] = false;
-//		dynamic_cast<CCanvas_SASSkill*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_SASSkill"))->Set_Grow(iIndex, false);
 	}
 
 	_tchar szText[MAX_PATH] = TEXT("");
@@ -297,68 +287,89 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 {
 	if (nullptr == m_pPlayer) return;
 
-	// 1
-	if (true == m_pPlayer->Get_SASSkillInput(0))
+	if (false == m_bXKey)
 	{
-		ESASType eSASType = m_eSASType[ONE0];
-		if(m_bXKey) eSASType = m_eSASType[ONE1];
+		// 1
+		if (true == m_pPlayer->Get_SASSkillInput(0))
+		{
+			ESASType eSASType = m_eSASType[ONE0];
+			Set_IconTypeUse(1, eSASType);
+		}
+		else
+		{
+			ESASType eSASType = m_eSASType[ONE0];
+			Set_IconTypeNotUsed(1, eSASType);
+		}
 
-		Set_IconTypeUse(1, eSASType);
+		// 2
+		if (true == m_pPlayer->Get_SASSkillInput(1))
+		{
+			ESASType eSASType = m_eSASType[TWO0];
+			Set_IconTypeUse(2, eSASType);
+		}
+		else
+		{
+			ESASType eSASType = m_eSASType[TWO0];
+			Set_IconTypeNotUsed(2, eSASType);
+		}
+
+		// 3
+		if (true == m_pPlayer->Get_SASSkillInput(2))
+		{
+			ESASType eSASType = m_eSASType[THREE0];
+			Set_IconTypeUse(3, eSASType);
+		}
+		else
+		{
+			ESASType eSASType = m_eSASType[THREE0];
+			Set_IconTypeNotUsed(3, eSASType);
+		}
+
+		// 4
+		if (true == m_pPlayer->Get_SASSkillInput(3))
+		{
+			ESASType eSASType = m_eSASType[FOUR0];
+			Set_IconTypeUse(4, eSASType);
+		}
+		else
+		{
+			ESASType eSASType = m_eSASType[FOUR0];
+			Set_IconTypeNotUsed(4, eSASType);
+		}
 	}
 	else
 	{
-		ESASType eSASType = m_eSASType[ONE0];
-		if (m_bXKey) eSASType = m_eSASType[ONE1];
+		// 1
+		if (true == m_pPlayer->Get_SASSkillInput(4))
+		{
+			ESASType eSASType = m_eSASType[ONE1];
+			Set_IconTypeUse(1, eSASType);
+		}
+		else
+		{
+			ESASType eSASType = m_eSASType[ONE1];
+			Set_IconTypeNotUsed(1, eSASType);
+		}
 
-		Set_IconTypeNotUsed(1, eSASType, (false == m_bXKey) ? ONE0 : ONE1);
-	}
+		// 2
+		if (true == m_pPlayer->Get_SASSkillInput(5))
+		{
+			ESASType eSASType = m_eSASType[TWO1];
+			Set_IconTypeUse(2, eSASType);
+		}
+		else
+		{
+			ESASType eSASType = m_eSASType[TWO1];
+			Set_IconTypeNotUsed(2, eSASType);
+		}
 
-	// 2
-	if (true == m_pPlayer->Get_SASSkillInput(1))
-	{
-		ESASType eSASType = m_eSASType[TWO0];
-		if (m_bXKey) eSASType = m_eSASType[TWO1];
-
-		Set_IconTypeUse(2, eSASType);
-	}
-	else
-	{
-		ESASType eSASType = m_eSASType[TWO0];
-		if (m_bXKey) eSASType = m_eSASType[TWO1];
-
-		Set_IconTypeNotUsed(2, eSASType, (false == m_bXKey) ? TWO0 : TWO1);
-	}
-
-	// 3
-	if (true == m_pPlayer->Get_SASSkillInput(2))
-	{
-		ESASType eSASType = m_eSASType[THREE0];
-		if (m_bXKey) eSASType = m_eSASType[THREE1];
-
+		// 3
+		ESASType eSASType = m_eSASType[THREE1];
 		Set_IconTypeUse(3, eSASType);
-	}
-	else
-	{
-		ESASType eSASType = m_eSASType[THREE0];
-		if (m_bXKey) eSASType = m_eSASType[THREE1];
-		
-		Set_IconTypeNotUsed(3, eSASType, (false == m_bXKey) ? THREE0 : THREE1);
-	}
 
-	// 4
-	if (true == m_pPlayer->Get_SASSkillInput(3))
-	{
-		ESASType eSASType = m_eSASType[FOUR0];
-		if (m_bXKey) eSASType = m_eSASType[FOUR1];
-
+		// 4
+		eSASType = m_eSASType[FOUR1];
 		Set_IconTypeUse(4, eSASType);
-	}
-	else
-	{
-		ESASType eSASType = m_eSASType[FOUR0];
-		if (m_bXKey) eSASType = m_eSASType[FOUR1];
-
-		Set_IconTypeNotUsed(4, eSASType, (false == m_bXKey) ? FOUR0 : FOUR1);
 	}
 }
 

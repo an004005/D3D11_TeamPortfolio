@@ -4,6 +4,7 @@
 #include "UI_Manager.h"
 #include "PlayerInfoManager.h"
 
+#include "Player.h"
 #include "Canvas_SASSkillMove.h"
 #include "SASSkillFullCircleUI.h"
 
@@ -97,29 +98,30 @@ void CCanvas_SASSkill::Imgui_RenderProperty()
 
 }
 
-void CCanvas_SASSkill::Set_Grow(const _uint iNumber, const _bool bVisible)
-{
-	_tchar szText[MAX_PATH] = TEXT("");
-	wsprintf(szText, TEXT("FullCircle%u"), iNumber);
-	dynamic_cast<CSASSkillFullCircleUI*>(Find_ChildUI(szText))->Set_Grow();
-	Find_ChildUI(szText)->SetVisible(bVisible);
-}
-
 void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 {
 	if (false == m_bMember1) return;
 
+	if (CGameInstance::GetInstance()->KeyDown(DIK_1) || 
+		CGameInstance::GetInstance()->KeyDown(DIK_2) ||
+		CGameInstance::GetInstance()->KeyDown(DIK_3) ||
+		CGameInstance::GetInstance()->KeyDown(DIK_4))
+	{
+		m_bChangeX = false;
+		InputData();
+	}
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_5) ||
+		CGameInstance::GetInstance()->KeyDown(DIK_6))
+	{
+		m_bChangeX = true;
+		InputData();
+	}
+
 	if (CGameInstance::GetInstance()->KeyDown(DIK_X))
 	{
 		m_bChangeX = !m_bChangeX;
-		m_bChangeXButton = true;
-
-		// [m_bChangeX] false -> 왼쪽 true -> 오른쪽
-		Find_ChildUI(L"SASSkill_XLeft")->SetVisible(m_bChangeX);
-		Find_ChildUI(L"SASSkill_XRight")->SetVisible(!m_bChangeX);
-
-		dynamic_cast<CCanvas_SASSkillMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_SASSkillMove"))->Set_SkillAll(m_bChangeX);
-		FullCircle();
+		InputData();
 	}
 
 	if (true == m_bChangeXButton)
@@ -140,6 +142,18 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 	}
 }
 
+void CCanvas_SASSkill::InputData()
+{
+	m_bChangeXButton = true;
+
+	// [m_bChangeX] false -> 왼쪽 true -> 오른쪽
+	Find_ChildUI(L"SASSkill_XLeft")->SetVisible(m_bChangeX);
+	Find_ChildUI(L"SASSkill_XRight")->SetVisible(!m_bChangeX);
+
+	dynamic_cast<CCanvas_SASSkillMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_SASSkillMove"))->Set_SkillAll(m_bChangeX);
+	FullCircle();
+}
+
 void CCanvas_SASSkill::FullCircle()
 {
 	// 원 들이게 X키의 정보를 넘겨준다.
@@ -149,6 +163,21 @@ void CCanvas_SASSkill::FullCircle()
 	{
 		wsprintf(szText, TEXT("FullCircle%u"), i);
 		dynamic_cast<CSASSkillFullCircleUI*>(Find_ChildUI(szText))->Set_ChangeX(m_bChangeX);
+
+		if (false == m_bChangeX)
+		{
+			if (1 == i || 2 == i || 3 == i || 4 == i)
+				Find_ChildUI(szText)->SetVisible(true);
+			else
+				Find_ChildUI(szText)->SetVisible(false);
+		}
+		else
+		{
+			if (1 == i || 2 == i || 3 == i || 4 == i)
+				Find_ChildUI(szText)->SetVisible(false);
+			else
+				Find_ChildUI(szText)->SetVisible(true);
+		}
 	}
 }
 

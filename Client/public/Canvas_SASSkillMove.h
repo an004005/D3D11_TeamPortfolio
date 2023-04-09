@@ -28,7 +28,7 @@ public:
 private:
 	//void	Set_SkillInfo(const SKILLINDEX eSKILLINDEX, const ESASType eESASType);
 	void	Set_IconTypeUse(const _uint iIndex, const ESASType& eESASType);
-	void	Set_IconTypeNotUsed(const _uint iIndex, const ESASType& eESASType, const SKILLINDEX& eSkillIndex);
+	void	Set_IconTypeNotUsed(const _uint iIndex, const ESASType& eESASType);
 
 	void	UseSkill_Tick();
 	void	InputIcon_Tick();
@@ -46,7 +46,6 @@ private:
 
 	_uint			m_iSASType = { 0 };
 	_bool			m_bXKey = { false };
-	array<_bool, 4>	m_arrGrow;
 
 public:
 	static CCanvas_SASSkillMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

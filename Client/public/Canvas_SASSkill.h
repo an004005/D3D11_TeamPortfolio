@@ -19,14 +19,12 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 
 public:
-	void	Set_Grow(const _uint iNumber, const _bool bVisible);
-
-public:
 	void	InputAlt();
 	void	InputCtrl();
 
 private:
 	void	InputX_Tick(const _double & dTimeDelta);
+	void InputData();
 	void FullCircle();
 	
 private:
