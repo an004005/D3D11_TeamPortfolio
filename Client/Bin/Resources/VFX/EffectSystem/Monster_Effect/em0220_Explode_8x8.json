@@ -1,1 +1,49 @@
-{"BillBoardType":0,"BufferProtoTag":"Prototype_Component_VIBuffer_Rect","Children":[[5.0,0.0,0.0,0.0,0.0,5.0,0.0,0.0,0.0,0.0,5.0,0.0,0.0,0.0,0.0,1.0]],"ModelFolderDir":"","ModelProtoTag":"","ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0,0.0,0.0],"Ints":[0],"Pass":29,"Textures":["..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_smk_014.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxTex_VFX","bBillBoard":true,"bDecal":false,"bModelSprite":false,"bNormal":false,"bUseDepth":false}
+{
+    "BillBoardType": 0,
+    "BufferProtoTag": "Prototype_Component_VIBuffer_Rect",
+    "Children": [
+        [
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    ],
+    "ModelFolderDir": "",
+    "ModelProtoTag": "",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Ints": [
+            0
+        ],
+        "Pass": 57,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_smk_014.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxTex_VFX",
+    "bBillBoard": true,
+    "bDecal": false,
+    "bModelSprite": false,
+    "bNormal": false,
+    "bUseDepth": true
+}

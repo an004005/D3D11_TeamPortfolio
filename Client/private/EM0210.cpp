@@ -35,7 +35,7 @@ HRESULT CEM0210::Initialize(void * pArg)
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
-		m_iMaxHP = 500;
+		m_iMaxHP = 1100;
 		m_iHP = m_iMaxHP; // ★
 
 		m_iAtkDamage = 50;
@@ -53,7 +53,7 @@ HRESULT CEM0210::Initialize(void * pArg)
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	//시작부터 투명상태 적용
-	m_IsInvisible = false;
+	m_IsInvisible = true;
 
 	return S_OK;
 }
@@ -161,6 +161,19 @@ void CEM0210::SetUpAnimationEvent()
 	{
 		m_bAttack = false;
 	});
+
+	// 공중에서 추가타 맞을 때
+	m_pModelCom->Add_EventCaller("Successive", [this]
+		{
+			m_fGravity = 3.f;
+			m_fYSpeed = 1.5f;
+		});
+	// 공중에서 추가타 맞고 다시 떨어지는 순간
+	m_pModelCom->Add_EventCaller("AirDamageReset", [this]
+		{
+			m_fGravity = 20.f;
+			m_fYSpeed = 0.f;
+		});
 
 	m_pModelCom->Add_EventCaller("DeadFlower", [this]
 		{
@@ -306,7 +319,7 @@ void CEM0210::SetUpFSM()
 			})
 			.OnExit([this]
 			{
-				m_bHitAir = false;
+					m_bHitAir = false;
 			})
 			.AddTransition("Hit_ToAir to OnFloorGetup", "OnFloorGetup")
 				.Predicator([this]
@@ -415,7 +428,7 @@ void CEM0210::SetUpFSM()
 						m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
 
 						//const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.2f;
-						const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.55f;
+						const _float fPlayRatio = m_CanFullBC ? 0.7f : 0.55f;
 
 						if (m_pASM->isSocketPassby("FullBody", fPlayRatio))
 						{
@@ -668,23 +681,18 @@ void CEM0210::Imgui_RenderProperty()
 
 	m_pFSM->Imgui_RenderProperty();
 
-	/*static _bool tt = false;
-	ImGui::Checkbox("Modify Pivot", &tt);
-	
-	if (tt)
-	{
-		static GUIZMO_INFO tInfo;
-		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+	if (ImGui::Button("Fire"))
+		m_eDeBuff = EDeBuffType::DEBUFF_FIRE;
 
-		if (ImGui::Button("Create_Effect"))
-		{
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0210_Spin_Attack")
-				->Start_AttachPivot(this, pivot, "Target", true, true);
-		}
-	}*/
-		
-	ImGui::InputInt("HP", &m_iHP);
-	ImGui::InputInt("Crush", &m_iCrushGauge);
+	if (ImGui::Button("Water"))
+		m_eDeBuff = EDeBuffType::DEBUFF_WATER;
+
+	if (ImGui::Button("Oil"))
+		m_eDeBuff = EDeBuffType::DEBUFF_OIL;
+
+	if (ImGui::Button("Thunder"))
+		m_eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+
 }
 
 _bool CEM0210::Exclude()

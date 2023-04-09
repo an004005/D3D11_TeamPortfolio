@@ -30,6 +30,9 @@ HRESULT CPlayerInfoManager::Initialize()
 
 	m_tPlayerStat.m_fBaseAttackDamage = 100.f;
 
+	m_tPlayerStat.fDriveEnergy = 0.f;
+	m_tPlayerStat.fMaxDriveEnergy = 100.f;
+
 	m_tPlayerStat.iExp = 50;
 	m_tPlayerStat.iMaxExp = 100;
 	m_tPlayerStat.iLevel = 1;
@@ -162,16 +165,6 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 	else if (true == m_pSpecialObject->IsDeleted()) m_pSpecialObject = nullptr;
 
 	SAS_Checker();
-
-	/*_uint iCnt = 0;
-	int Test[3] = { -1, -1, -1 };
-	for (auto& iter : m_PlayerSasTypeList)
-	{
-		Test[iCnt] = (int)iter;
-		iCnt++;
-	}*/
-
-	//IM_LOG("SAS : %d %d %d", Test[0], Test[1], Test[2]);
 }
 
 _bool CPlayerInfoManager::Get_isSasUsing(ESASType eType)
@@ -231,6 +224,15 @@ void CPlayerInfoManager::Change_PlayerKineticEnergy(CHANGETYPE eType, _uint Chan
 
 	if (m_tPlayerStat.m_iKineticEnergy > m_tPlayerStat.m_iMaxKineticEnergy)	m_tPlayerStat.m_iKineticEnergy = m_tPlayerStat.m_iMaxKineticEnergy;
 	if (m_tPlayerStat.m_iKineticEnergy < 0)									m_tPlayerStat.m_iKineticEnergy = 0;
+}
+
+void CPlayerInfoManager::Change_DriveEnergy(CHANGETYPE eType, _float ChangeDrive)
+{
+	if (CHANGE_INCREASE == eType)			m_tPlayerStat.fDriveEnergy += ChangeDrive;
+	else if (CHANGE_DECREASE == eType)		m_tPlayerStat.fDriveEnergy -= ChangeDrive;
+
+	if (m_tPlayerStat.fDriveEnergy > m_tPlayerStat.fMaxDriveEnergy)	m_tPlayerStat.fDriveEnergy = m_tPlayerStat.m_iMaxKineticEnergy;
+	if (m_tPlayerStat.fDriveEnergy < 0)								m_tPlayerStat.fDriveEnergy = 0;
 }
 
 void CPlayerInfoManager::Set_SasType(ESASType eType)
@@ -330,6 +332,11 @@ void CPlayerInfoManager::Set_PlayerWorldMatrix(_fmatrix worldmatrix)
 _matrix CPlayerInfoManager::Get_PlayerWorldMatrix()
 {
 	return m_PlayerWorldMatrix;
+}
+
+void CPlayerInfoManager::Set_PlayerWeapon(_uint iWeaponType)
+{
+	m_tPlayerStat.iWeaponType = iWeaponType;
 }
 
 HRESULT CPlayerInfoManager::Set_KineticObject(CGameObject * pKineticObject)

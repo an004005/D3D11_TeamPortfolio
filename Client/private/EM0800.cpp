@@ -38,8 +38,8 @@ HRESULT CEM0800::Initialize(void * pArg)
 		m_iMaxHP = 5000;
 		m_iHP = m_iMaxHP;
 
-		m_iCrushGauge = 1000;
-		m_iMaxCrushGauge = 1000;
+		m_iCrushGauge = 8000;
+		m_iMaxCrushGauge = 8000;
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
@@ -495,7 +495,7 @@ void CEM0800::Tick(_double TimeDelta)
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
 
-	const _float fMoveSpeed = 1.f;
+	const _float fMoveSpeed = 1.2f;
 
 	if (m_vMoveAxis.LengthSquared() > 0.f)
 	{

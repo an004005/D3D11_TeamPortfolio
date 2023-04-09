@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [0],
+        "Floats" : [0.0, 0.0],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_Industrial_Decor_Pack/FuelBarrel_B_Color.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_Industrial_Decor_Pack/FuelBarrel_B_Normal.png",
+            "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_Industrial_Decor_Pack/FuelBarrel_B_Channel.png"
+        ],
+        "Pass" : 4
+    },
+    "InstancingPass": 1
+}

@@ -40,6 +40,7 @@ HRESULT CSkyBox::Initialize(void* pArg)
 	// FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("../Bin/Resources/99.DefaultSky/T_Sky_01_A.png"), TEXT("Texture"),
 	// 	(CComponent**)&m_pTexture));
 	
+	m_tParams.iPass = 0;
 
 	return S_OK;
 }

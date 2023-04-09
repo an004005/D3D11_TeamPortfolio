@@ -10,6 +10,7 @@
 #include "ImguiUtils.h"
 #include "Enemy.h"
 #include "PhysX_Manager.h"
+#include "Material.h"
 
 CSpecial_Container::CSpecial_Container(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -85,7 +86,14 @@ void CSpecial_Container::Tick(_double TimeDelta)
 {
 	if (m_bDeadCheck)
 	{
+		SpecialRimLightFix(false);
+
 		m_fDeadTime -= (_float)TimeDelta;
+
+		if (1.f >= m_fDeadTime)
+		{
+			Set_Dissolve(true);
+		}
 
 		if (0.f >= m_fDeadTime)
 			this->SetDelete();

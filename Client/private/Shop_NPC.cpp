@@ -52,8 +52,8 @@ HRESULT CShop_NPC::Initialize(void* pArg)
 
 void CShop_NPC::BeginTick()
 {
-	__super::BeginTick();
-	m_pModel->SetPlayAnimation("AS_np0100_863_AL_wait_security04");
+    __super::BeginTick();    
+    m_pModel->SetPlayAnimation("AS_np0100_002_AL_wait02");
 
 	CEffectGroup* pShopUI = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Z_Shop", PLAYERTEST_LAYER_FRONTUI);
 	_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -62,13 +62,12 @@ void CShop_NPC::BeginTick()
 
 void CShop_NPC::Tick(_double TimeDelta)
 {
-	m_fTimeDelta = TimeDelta;
 
-	__super::Tick(TimeDelta);
-	m_pModel->Tick(TimeDelta);
-	m_pModel->Play_Animation(TimeDelta);
+    m_fTimeDelta = TimeDelta;
 
-	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+    __super::Tick(TimeDelta);
+    m_pModel->Tick(TimeDelta);
+    Update_Animation(TimeDelta);
 
 	if (DistanceCheck())
 	{
@@ -191,6 +190,30 @@ HRESULT CShop_NPC::SetUp_Event()
 HRESULT CShop_NPC::SetUp_Sound()
 {
 	return S_OK;
+}
+
+void CShop_NPC::Update_Animation(_double TimeDelta)
+{
+    if (m_pModel->GetPlayAnimation()->IsFinished())
+    {
+        m_pModel->GetPlayAnimation()->Reset();
+        m_fLerpTime = 0.f;
+    }
+
+    if (m_fLerpTime < m_fDuration)
+    {
+        m_pModel->GetPlayAnimation()->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fDuration);
+        m_fLerpTime += (_float)TimeDelta;
+    }
+    else
+    {
+        m_pModel->GetPlayAnimation()->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+    }
+
+    m_pModel->Compute_CombindTransformationMatrix();
+
+    _vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix());
+    m_pTransformCom->LocalMove(vLocal);
 }
 
 _bool CShop_NPC::DistanceCheck()

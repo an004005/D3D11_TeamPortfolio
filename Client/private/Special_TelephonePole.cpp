@@ -9,6 +9,7 @@
 #include "Animation.h"
 #include "ImguiUtils.h"
 #include "Enemy.h"
+#include "Material.h"
 
 CSpecial_TelephonePole::CSpecial_TelephonePole(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -66,8 +67,14 @@ void CSpecial_TelephonePole::Tick(_double TimeDelta)
 	if (m_bDeadCheck)
 	{
 		m_bOutline = false;
+		SpecialRimLightFix(false);
 
 		m_fDeadTime -= (_float)TimeDelta;
+
+		if (1.f >= m_fDeadTime)
+		{
+			Set_Dissolve(true);
+		}
 
 		if (0.f >= m_fDeadTime)
 			this->SetDelete();
@@ -76,7 +83,6 @@ void CSpecial_TelephonePole::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 
 	m_pCollider->Update_Tick(m_pTransformCom);
-	//m_pTransformCom->SetTransformDesc({ 0.5f, XMConvertToRadians(90.f) });
 }
 
 void CSpecial_TelephonePole::Late_Tick(_double TimeDelta)

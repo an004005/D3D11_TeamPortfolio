@@ -1345,14 +1345,6 @@
     ],
     "Second_Directory": "../Bin/Resources/UI/UI_InGameData/NoticeNeon_thunder.json",
     "Third_Directory": "",
-    "TimelineEvent": {
-        "Timeline": {
-            "Events": [
-                {
-                }
-            ]
-        }
-    },
     "Transform": {
         "WorldMatrix": [
             1.0,
