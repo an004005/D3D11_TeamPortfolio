@@ -87,7 +87,16 @@ HRESULT CCanvas_Drive::Render()
 
 void CCanvas_Drive::Set_Drive(const _bool Drive)
 {
-	Find_ChildUI(L"Drive_Circle0")->SetVisible(Drive);	// 드라이브 계산을 시작하면!
+	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+	{
+		if ((*iter).first == L"Drive_B" || 
+			(*iter).first == L"Drive_Circle1")
+			continue;
+
+		iter->second->SetVisible(true);
+	}
+
+	//Find_ChildUI(L"Drive_Circle0")->SetVisible(Drive);	// 드라이브 계산을 시작하면!
 }
 
 void CCanvas_Drive::Set_DriveB(const _bool DriveB)

@@ -55,28 +55,26 @@ void CCanvas_DriveMove::Tick(_double TimeDelta)
 	m_pUIMoveFSM->Tick(TimeDelta);	// UI 의 움직임
 	CCanvas::UIHit(TimeDelta);
 
-	// 드라이브 게이지를 계산 시작
-	if (0.0f == m_bDriveGauge)
-	{
-		m_bOnDriveStart_OneCheck = false;
-		return;
-	}
+	DriveGauge_Tikc();
 
+	// 드라이브 게이지를 계산 시작
 	if (false == m_bOnDriveStart_OneCheck)
 	{
-		m_bOnDriveStart_OneCheck = true;
-		
-		Find_ChildUI(L"Drive_Gauge")->SetVisible(true);
-		Find_ChildUI(L"Drive_GaugeBack")->SetVisible(true);
-		dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_Gauge"))->Set_DriveGauge(m_bDriveGauge);
-		dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_GaugeBack"))->Set_DriveGauge(m_bDriveGauge);
+		if (0.0f < m_bDriveGauge)
+		{
+			m_bOnDriveStart_OneCheck = true;
 
-		dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_Drive(true);
+			Find_ChildUI(L"Drive_Gauge")->SetVisible(true);
+			Find_ChildUI(L"Drive_GaugeBack")->SetVisible(true);
+			dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_Drive(true);
+		}
 	}
 
-	DriveGauge_Tikc();
 	DriveGaugeFull_Tick();
 	Drive_Tick();
+
+	if (true == CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
+		Set_OnDrive(CPlayerInfoManager::GetInstance()->Get_PlayerStat().fMaxBrainFieldMaintain);
 }
 
 void CCanvas_DriveMove::Imgui_RenderProperty()
@@ -90,11 +88,14 @@ void CCanvas_DriveMove::Imgui_RenderProperty()
 
 	if (ImGui::Button("Set Drive"))
 	{
-		m_bDriveGauge = fGauge[0] / fGauge[1];
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().fDriveEnergy = fGauge[0];
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().fMaxDriveEnergy = fGauge[1];
+		//m_bDriveGauge = fGauge[0] / fGauge[1];
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("OnDrive")) {
-		Set_OnDrive(fDriveFullTime);	// 드라이브 사용
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode = true;
+		//Set_OnDrive(fDriveFullTime);	// 드라이브 사용
 	}
 
 	ImGui::Checkbox("bOnCircle", &m_bOnCircle);		// 드라이브 원 사용
@@ -120,6 +121,9 @@ void CCanvas_DriveMove::DriveGauge_Tikc()
 	_float fDrive = CPlayerInfoManager::GetInstance()->Get_PlayerStat().fDriveEnergy;
 	_float fMaxDrive = CPlayerInfoManager::GetInstance()->Get_PlayerStat().fMaxDriveEnergy;
 	m_bDriveGauge = fDrive / fMaxDrive;
+
+	dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_Gauge"))->Set_DriveGauge(m_bDriveGauge);
+	dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_GaugeBack"))->Set_DriveGauge(m_bDriveGauge);
 }
 
 void CCanvas_DriveMove::DriveGaugeFull_Tick()
@@ -139,7 +143,6 @@ void CCanvas_DriveMove::Drive_Tick()
 	
 	dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_Drive(false);
 	dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(true);
-	dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(true);
 
 	if (0.0f == fDriveGauge)	// 드라이브 시간이 끝났다.
 	{
@@ -150,7 +153,6 @@ void CCanvas_DriveMove::Drive_Tick()
 		Find_ChildUI(L"Drive_LeftDot")->SetVisible(m_bOnDrive);
 		//dynamic_cast<CDrive_RightDotUI*>(Find_ChildUI(L"Dirve_RightDot"))->Reset_DriveRightDot();
 
-		dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(false);
 		dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(false);
 	}
 

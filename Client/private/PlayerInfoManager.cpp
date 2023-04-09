@@ -34,7 +34,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.fMaxDriveEnergy = 100.f;
 
 	m_tPlayerStat.fBrainFieldMaintain = 0.f;
-	m_tPlayerStat.fMaxBrainFieldMaintain = 60.f;
+	m_tPlayerStat.fMaxBrainFieldMaintain = 180.0f;
 
 	m_tPlayerStat.iExp = 50;
 	m_tPlayerStat.iMaxExp = 100;
@@ -273,10 +273,12 @@ void CPlayerInfoManager::Change_BrainFieldMaintain(CHANGETYPE eType, _float Chan
 	}
 	else if (CHANGE_DECREASE == eType)
 	{
-		if (m_tPlayerStat.fBrainFieldMaintain < ChangeBrain)
-			ChangeBrain = m_tPlayerStat.fBrainFieldMaintain;
+		m_tPlayerStat.fBrainFieldMaintain = ChangeBrain;
 
-		m_tPlayerStat.fBrainFieldMaintain -= ChangeBrain;
+		//if (m_tPlayerStat.fBrainFieldMaintain < ChangeBrain)
+		//	ChangeBrain = m_tPlayerStat.fBrainFieldMaintain;
+
+		//m_tPlayerStat.fBrainFieldMaintain -= ChangeBrain;
 	}
 
 	if (m_tPlayerStat.fBrainFieldMaintain > m_tPlayerStat.fMaxBrainFieldMaintain)	

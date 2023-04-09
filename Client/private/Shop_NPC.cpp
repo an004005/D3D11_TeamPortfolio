@@ -55,7 +55,7 @@ void CShop_NPC::BeginTick()
     __super::BeginTick();    
     m_pModel->SetPlayAnimation("AS_np0100_002_AL_wait02");
 
-	CEffectGroup* pShopUI = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"NoticeNeon_HP", PLAYERTEST_LAYER_FRONTUI);
+	CEffectGroup* pShopUI = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Z_Shop", PLAYERTEST_LAYER_FRONTUI);
 	_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	pShopUI->Start_AttachOnlyPos(XMVectorSet(vPos.x, vPos.y + 1.0f, vPos.z, 1.0));
 }

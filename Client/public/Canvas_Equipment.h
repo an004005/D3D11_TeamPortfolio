@@ -23,10 +23,12 @@ private:
 	void	Weaponkind_Tick(const _double & TimeDelta);
 	void	WeaponkindPick_Tick();
 	void	RihgtInfoMove_Tick(const _double& TimeDelta);
+	
+	void	PlayerWeaponChange();
 
 private:
 	// 왼쪽 무기 정보 저장
-	array<_bool, 3> m_arrItmeWindowPick = { false, false, false };
+	array<_bool, 3> m_arrItmeWindowPick = { false, false, false };		// 목적지 까지 도달 했는지..
 	array<_float, 3> m_arrOriginalPos = { 0.0f, 0.0f, 0.0f };
 	array<_float, 3> m_arrAddWeaponPos = { 0.0f, 0.0f, 0.0f };
 

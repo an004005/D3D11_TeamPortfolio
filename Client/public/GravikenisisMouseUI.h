@@ -19,9 +19,6 @@ public:
 
 	virtual void   Imgui_RenderProperty() override;
 
-public:
-	void SetfRatio(const _float & fRatio);
-
 private:
 	class CEffectGroup* m_pKenisis = { nullptr };
 	class CEffectGroup* m_pBanKenisis = { nullptr };
