@@ -514,20 +514,16 @@ void CEM0220::Create_Bullet()
 	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	vBonePos += XMVector3Normalize(vLook) * 3.f;
 
-	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vUp = m_pTarget->GetTransform()->Get_State(CTransform::STATE_UP);
-	vTargetPos += XMVector3Normalize(vUp) * 0.5f;
-
 	CBulletBuilder()
 		.CreateBullet()
 			.Set_Owner(this)
-			.Set_InitBulletEffect({ L"em0650_Bullet_Birth", L"em0220_Bullet" })
+			.Set_InitBulletEffect({L"em0220_Green_Bullet"})
 			.Set_ShootSpeed(22.f)
 			.Set_Life(2.f)
 			.Set_DamageParam(eDamageParam)
-			.Set_DeadBulletEffect({ L"em0320_Bullet_Dead_1", L"em0320_Bullet_Dead_2", L"em0320_Bullet_Dead_3" })
+			.Set_DeadBulletParticle(L"em0220_Bullet_Dead_Particle")
 			.Set_Position(vBonePos)
-			.Set_LookAt(vTargetPos)
+			.Set_LookAt(m_pTarget->GetColliderPosition())
 		.Build();
 }
 

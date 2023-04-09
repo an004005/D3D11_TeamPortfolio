@@ -74,8 +74,8 @@ HRESULT CRenderer::Add_DebugRenderGroup(CComponent * pComponent)
 HRESULT CRenderer::Draw_RenderGroup()
 {
 	_float fGamma = CHDR::GetInstance()->GetGamma();
-	m_pShader->Set_RawValue("g_Gamma", &fGamma, sizeof(_float));
 	m_bShadow = CLight_Manager::GetInstance()->IsShadowCamOn();
+	m_pShader->Set_RawValue("g_Gamma", &fGamma, sizeof(_float));
 
 	m_pTarget_Manager->ClearTargets();
 
@@ -706,6 +706,7 @@ HRESULT CRenderer::Render_Blend()
 	const int iFog = m_bFog ? 1 : 0;
 	if (FAILED(m_pShader->Set_RawValue("g_bFog", &iFog, sizeof(_int))))
 		return E_FAIL;
+
 	if (m_bFog)
 	{
 		const _float4 vDirToSun = -CLight_Manager::GetInstance()->GetDirectionalLightDir();

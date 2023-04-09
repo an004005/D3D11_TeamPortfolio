@@ -818,7 +818,7 @@ void CEM0700::Create_Bullet()
 			.Set_DeadBulletEffect({ L"em0650_Bullet_Dead" })
 			.Set_DeadBulletParticle(L"em0650_Bullet_Dead_Particle")
 			.Set_Position(BonePos)
-			.Set_LookAt(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION))
+			.Set_LookAt(m_pTarget->GetColliderPosition())
 		.Build();
 }
 
