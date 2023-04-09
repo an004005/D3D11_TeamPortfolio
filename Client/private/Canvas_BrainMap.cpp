@@ -1552,7 +1552,6 @@ void CCanvas_BrainMap::OnIcon_Tick()
 			{
 				IconPick(i);
 				m_iCurrentIndex = i;
-				m_bSkillAcquisition = true;
 				m_vecIconUI[i]->Set_OnButton();
 				dynamic_cast<CMain_BrainMapIconPickUI*>(Find_ChildUI(L"Icon_Pick"))->Set_Pick();
 			}
@@ -1565,40 +1564,52 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 	// 현재 구매할 수 있는 Level 이 되어야 살 수 있도록 한다.
 	if (m_vecBrain[iIndex].vOnIconIndex != m_vecIconUI[iIndex]->Get_CurrentIconIndex())
 	{
-		m_szAlarmText = L"습득 조건을 충족하지 않습니다."; 
+		m_bSkillAcquisition = true;
+		m_szAlarmText = L"습득 조건을 충족하지 않습니다.";
 		return;
 	}
 
 	// 현재 플레이어가 가지고 있는 BP를 확인해서 Icon 의 BP 보다 큰 경우에만 구매할 수 있다.
 	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP >= m_vecIconUI[iIndex]->Get_BrainInfo().iBP)
 	{			
-		m_szAlarmText = L"BP를 소모했습니다.";
-		m_vecIconUI[iIndex]->Set_BrainUse();
+		// 게이지가 가득 차야 아이템을 구매할 수 있다.
+		dynamic_cast<CMain_BrainGaugeUI*>(Find_ChildUI(L"IconGauge_0"))->Set_ChargeGauge(true);
+		dynamic_cast<CMain_BrainGaugeUI*>(Find_ChildUI(L"IconGauge_1"))->Set_ChargeGauge(true);
+		Find_ChildUI(L"IconGauge_0")->Set_Position(m_vecIconUI[iIndex]->Get_Position());
+		Find_ChildUI(L"IconGauge_1")->Set_Position(m_vecIconUI[iIndex]->Get_Position());
 
-		_uint iResultBP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP - m_vecIconUI[iIndex]->Get_BrainInfo().iBP;
-		CPlayerInfoManager::GetInstance()->Set_BP(iResultBP);	 // 플레이어 BP 감소하기
-
-		if (iIndex == 12 || iIndex == 18) 	// 플레이어 염력 레벨 증가
+		if (true == dynamic_cast<CMain_BrainGaugeUI*>(Find_ChildUI(L"IconGauge_0"))->Get_GaugeFull())
 		{
-			CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyLevel += 1;
-			dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Set_PsychokinesisType();
-		}
-		
-		// 레벨에 따른 아이콘 구매할 수 있는 정도
-		for (_int j = 0; j < 3; ++j)
-		{
-			if(-1 == m_vecIconUI[iIndex]->Get_BrainInfo().arrNeighbor[j])
-				break;
+			m_bSkillAcquisition = true;
+			m_szAlarmText = L"BP를 소모했습니다.";
+			m_vecIconUI[iIndex]->Set_BrainUse();
 
-			m_vecIconUI[m_vecIconUI[iIndex]->Get_BrainInfo().arrNeighbor[j]]->Set_OnIcon();
+			_uint iResultBP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP - m_vecIconUI[iIndex]->Get_BrainInfo().iBP;
+			CPlayerInfoManager::GetInstance()->Set_BP(iResultBP);	 // 플레이어 BP 감소하기
+
+			if (iIndex == 12 || iIndex == 18) 	// 플레이어 염력 레벨 증가
+			{
+				CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyLevel += 1;
+				dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Set_PsychokinesisType();
+			}
+
+			// 레벨에 따른 아이콘 구매할 수 있는 정도
+			for (_int j = 0; j < 3; ++j)
+			{
+				if (-1 == m_vecIconUI[iIndex]->Get_BrainInfo().arrNeighbor[j])
+					break;
+
+				m_vecIconUI[m_vecIconUI[iIndex]->Get_BrainInfo().arrNeighbor[j]]->Set_OnIcon();
+			}
+			return;
 		}
-		return;
 	}
 	else
 	{
 		if (true == m_vecIconUI[iIndex]->Get_BrainInfo().bUse)
 			return;
 
+		m_bSkillAcquisition = true;
 		m_szAlarmText = L"BP가 부족합니다.";
 		return;
 	}
@@ -1621,6 +1632,9 @@ void CCanvas_BrainMap::SkillAcquisition_Tick()
 	{
 		m_bSkillAcquisition = false;
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"SkillAcquisition_Button"))->Set_OnButton();
+
+		dynamic_cast<CMain_BrainGaugeUI*>(Find_ChildUI(L"IconGauge_0"))->Set_ChargeGauge(false);
+		dynamic_cast<CMain_BrainGaugeUI*>(Find_ChildUI(L"IconGauge_1"))->Set_ChargeGauge(false);
 		return;
 	}
 }
