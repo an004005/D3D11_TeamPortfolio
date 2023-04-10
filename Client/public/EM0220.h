@@ -33,8 +33,9 @@ public:
 	virtual void Imgui_RenderProperty() override;
 	virtual _bool IsWeak(CRigidBody* pHitPart);
 
-	virtual void HitEffect(DAMAGE_PARAM& tDamageParams);
-	virtual void CheckHP(DAMAGE_PARAM& tDamageParams);
+	virtual void HitEffect(DAMAGE_PARAM& tDamageParams) override;
+	virtual void CheckCrushGage(DAMAGE_PARAM& tDamageParams) override;
+	virtual void CheckHP(DAMAGE_PARAM& tDamageParams) override;
 	void	SetUp_Lantern();
 public:
 	//행동 관련 함수 정의
@@ -50,6 +51,7 @@ private:
 	void CounterAttack(_double TimeDelta);
 	void Create_Bullet();
 	void HitWeakProcess(_double TimeDelta);
+
 private:
 	//충돌 관련 함수 정의
 
@@ -57,8 +59,6 @@ private:
 	class CEM0220_Controller*		m_pController = nullptr;
 	class CEM0220_AnimInstance*		m_pASM = nullptr;
 	CMaterial* m_pWeak = nullptr;
-	//충돌
-	CEffectGroup*				m_pSwingEffect = nullptr;
 
 	vector<class CEM0221*>	m_pLanterns;
 private:
@@ -77,11 +77,9 @@ private:
 	//무적상태
 	_bool		m_Unbeatable = false;
 
-	//플레이어  순간이동 상태 확인
-	//_bool		m_bTeleport = false;
 
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
-	
+
 public:
 	static CEM0220* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

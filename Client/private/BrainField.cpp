@@ -87,7 +87,7 @@ HRESULT CBrainField::Initialize(void* pArg)
 }
 
 void CBrainField::BeginTick()
-{
+{\
 	CGameObject::BeginTick();
 	m_pBrainFieldCables->BeginTick();
 	m_pChromaticAberration->BeginTick();

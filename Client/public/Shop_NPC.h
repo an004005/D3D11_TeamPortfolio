@@ -32,6 +32,9 @@ private:
 	HRESULT SetUp_Sound();
 
 private:
+	void	Update_Animation(_double TimeDelta);
+
+private:
 	_double	m_fTimeDelta = 0.f;
 	
 private:
@@ -53,8 +56,6 @@ private:
 
 private:
 	_bool		DistanceCheck();
-
-	void		Update_Animation(_double TimeDelta);
 
 public:
 	static CShop_NPC* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

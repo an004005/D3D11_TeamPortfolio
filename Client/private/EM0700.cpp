@@ -91,6 +91,20 @@ void CEM0700::SetUpAnimationEvent()
 {
 	CEnemy::SetUpAnimationEvent();
 
+	// 공중에서 추가타 맞을 때
+	m_pModelCom->Add_EventCaller("Successive", [this]
+		{
+			m_fGravity = 3.f;
+			m_fYSpeed = 1.5f;
+		});
+	// 공중에서 추가타 맞고 다시 떨어지는 순간
+	m_pModelCom->Add_EventCaller("AirDamageReset", [this]
+		{
+			m_fGravity = 20.f;
+			m_fYSpeed = 0.f;
+		});
+
+
 	m_pModelCom->Add_EventCaller("DeadFlower", [this]
 		{
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0700DeadFlower")
@@ -236,7 +250,7 @@ void CEM0700::SetUpFSM()
 			})
 			.OnExit([this]
 			{
-				m_bHitAir = false;
+					m_bHitAir = false;
 			})
 			.AddTransition("Hit_ToAir to OnFloorGetup", "OnFloorGetup")
 				.Predicator([this]
@@ -357,7 +371,9 @@ void CEM0700::SetUpFSM()
 			.Tick([this](_double)
 			{	
 				SocketLocalMove(m_pASM);
-				m_pTrail->SetActive(true);
+
+				if(CheckSASType(ESASType::SAS_SUPERSPEED) == false)
+					m_pTrail->SetActive(true);
 			})
 			.OnExit([this]
 			{
@@ -802,7 +818,7 @@ void CEM0700::Create_Bullet()
 			.Set_DeadBulletEffect({ L"em0650_Bullet_Dead" })
 			.Set_DeadBulletParticle(L"em0650_Bullet_Dead_Particle")
 			.Set_Position(BonePos)
-			.Set_LookAt(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION))
+			.Set_LookAt(m_pTarget->GetColliderPosition())
 		.Build();
 }
 

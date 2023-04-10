@@ -87,6 +87,12 @@ CBulletBuilder& CBulletBuilder::Set_BulletEffPivot(_float4x4 pivot)
 	return *this;
 }
 
+CBulletBuilder& CBulletBuilder::Set_Radius(_float fRad)
+{
+	m_fRadius = fRad;
+	return *this;
+}
+
 void CBulletBuilder::Build()
 {
 	CBullet* pBullet = dynamic_cast<CBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_Bullet")));
@@ -103,10 +109,12 @@ void CBulletBuilder::Build()
 	pBullet->Set_ShootSpeed(m_fBulletSpeed);
 	pBullet->Set_LifeTime(m_fLife);
 	pBullet->Set_DamageParam(m_eDamageParam);
+	pBullet->Set_Radius(m_fRadius);
 
 	pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&m_Position));
 	pBullet->GetTransform()->LookAt(XMLoadFloat4(&m_TargetPos));
 	pBullet->GetTransform()->Turn_Fixed(pBullet->GetTransform()->Get_State(CTransform::STATE_UP), XMConvertToRadians(m_fAngle));
+
 }
 
 void CBulletBuilder::Free()

@@ -181,25 +181,6 @@ HRESULT CShop_NPC::SetUp_Sound()
     return S_OK;
 }
 
-_bool CShop_NPC::DistanceCheck()
-{
-    _matrix PlayerMatrix = CPlayerInfoManager::GetInstance()->Get_PlayerWorldMatrix();
-
-    _vector vPlayerPos = PlayerMatrix.r[3];
-
-    _vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-    _vector vDir = vMyPos - vPlayerPos;
-
-    _float fDistance = XMVectorGetX(XMVector3LengthEst(vDir));
-
-    if (fDistance <= 4.f)
-        return true;
-
-    else return false;
-      
-}
-
 void CShop_NPC::Update_Animation(_double TimeDelta)
 {
     if (m_pModel->GetPlayAnimation()->IsFinished())
@@ -222,7 +203,25 @@ void CShop_NPC::Update_Animation(_double TimeDelta)
 
     _vector vLocal = m_pModel->GetLocalMove(m_pTransformCom->Get_WorldMatrix());
     m_pTransformCom->LocalMove(vLocal);
+}
 
+_bool CShop_NPC::DistanceCheck()
+{
+    _matrix PlayerMatrix = CPlayerInfoManager::GetInstance()->Get_PlayerWorldMatrix();
+
+    _vector vPlayerPos = PlayerMatrix.r[3];
+
+    _vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+    _vector vDir = vMyPos - vPlayerPos;
+
+    _float fDistance = XMVectorGetX(XMVector3LengthEst(vDir));
+
+    if (fDistance <= 4.f)
+        return true;
+
+    else return false;
+      
 }
 
 CShop_NPC* CShop_NPC::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

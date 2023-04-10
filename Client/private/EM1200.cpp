@@ -44,9 +44,12 @@ HRESULT CEM1200::Initialize(void * pArg)
 
 	m_eEnemyName = EEnemyName::EM1200;
 	m_bHasCrushGauge = true;
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(60.f));
 	m_fGravity = 20.f;
 
+	//fog
+	m_pRendererCom->GetFogDesc().vFogColor = _float3(0.2667f, 0.247f, 0.1804f);
+	m_pRendererCom->GetFogDesc().fStartDepth = 5.f;
 	return S_OK;
 }
 
@@ -57,8 +60,8 @@ void CEM1200::SetUpComponents(void * pArg)
 
 	m_pWeak = m_pModelCom->FindMaterial(L"MI_em1200_WEAK_0");
 	assert(m_pWeak != nullptr);
+
 	// 범위 충돌체(플레이어가 몬스터 위로 못 올라가게한다.)
-	//Json RangeCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Trunk.json");
 	Json WeakCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Weak.json");
 	Json TrunkCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Trunk.json");
 	Json LegsCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Legs.json");
@@ -172,7 +175,7 @@ void CEM1200::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("Rush_Start", [this]
 	{
 		ClearDamagedTarget();
-		m_bAttack = false;
+		m_bAttack = true;
 
 		_int iNum = 5;
 		while (iNum--)
@@ -495,13 +498,18 @@ void CEM1200::SetUpFSM()
 					m_pModelCom->Find_Animation("AS_em1200_225_AL_atk_a8_shout2_loop")->SetLooping(true);
 					ClearDamagedTarget();
 
+					//데미지
 					m_dLoopTime = 0.0;
 					m_dLoopTick = 0.6;
+					
+					//안개
+					m_dFogTime = 0.0;
+					m_pRendererCom->SetFog(true);
+					m_pRendererCom->GetFogDesc().fGlobalDensity = 0.f;
 				})
 
 				.Tick([this](_double TimeDelta)
 				{
-					//여기서 데미지 처리
 					m_dLoopTime += TimeDelta;
 
 					if (m_dLoopTime >= m_dLoopTick)
@@ -511,6 +519,11 @@ void CEM1200::SetUpFSM()
 					}
 
 					Shout2_Overlap();
+					_float fMaxFogDensity = 0.6f;
+					_float FogGlobalDensity = m_pRendererCom->GetFogDesc().fGlobalDensity += TimeDelta * 0.5;
+					if (FogGlobalDensity >= fMaxFogDensity)
+						m_pRendererCom->GetFogDesc().fGlobalDensity = fMaxFogDensity;
+
 				})
 				.OnExit([this]
 				{
@@ -519,7 +532,7 @@ void CEM1200::SetUpFSM()
 				.AddTransition("Shout2_Loop to Shout2_End", "Shout2_End")
 					.Predicator([this]
 					{
-						return  m_bDead || m_dLoopTime >= 2.8;
+						return  m_bDead || m_dLoopTime >= 3.0;
 					})
 
 			.AddState("Shout2_End")
@@ -562,6 +575,10 @@ void CEM1200::SetUpFSM()
 					.Tick([this](_double TimeDelta)
 				{
 					SocketLocalMove(m_pASM);
+				})
+				.OnExit([this] 
+				{
+						m_pASM->ClearSocketAnim("FullBody", 0.f);
 				})
 				.AddTransition("Stamp_StartLoop to Stamp_Hit", "Stamp_Hit")
 					.Predicator([this]
@@ -616,7 +633,7 @@ void CEM1200::SetUpFSM()
 						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
-			//이벤트에서 스윕 타이밍 알려줌
+			//얜 절대 로컬 움직이지않기
 			.AddState("Swing_L")
 				.OnStart([this]
 				{
@@ -625,7 +642,6 @@ void CEM1200::SetUpFSM()
 				.Tick([this](_double TimeDelta)
 				{
 					m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
-					SocketLocalMove(m_pASM);
 
 					if (m_bAttack)
 						Swing_SweepSphere("LeftHand");
@@ -645,7 +661,6 @@ void CEM1200::SetUpFSM()
 				.Tick([this](_double TimeDelta)
 				{
 					m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
-					SocketLocalMove(m_pASM);
 
 					if (m_bAttack)
 						Swing_SweepSphere("RightHand");
@@ -743,22 +758,22 @@ void CEM1200::SetUpFSM()
 					if (m_dLoopTime >= 0.5 && m_iPreAttackCount != m_iAttackCount)
 					{
 						m_SaveTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+						m_SaveTargetPos.y = XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, -1.f, 0.f, 0.f) * 2.f);
 						m_iPreAttackCount = m_iAttackCount;
 					}
 
 					if (m_dLoopTime >= 1.0)
 					{
+						ClearDamagedTarget();
 						CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1200_Ribbon_Particle")
 							->Start_AttachPosition(this, m_SaveTargetPos, _float4(0.f, 1.f, 0.f, 0.f), false);
 
-						//올라올때 빨라서 미세조정
-						m_SaveTargetPos += XMVectorSet(0.f, -1.f, 0.f, 0.f) * 2.f;
 						CGameObject* pCable = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Cable"), TEXT("Prototype_EMCable"));
 						dynamic_cast<CEMCable*>(pCable)->Set_Dest(m_SaveTargetPos);
-		
+						pCable->Set_Owner(this);
+
 						m_dLoopTime = 0.0;
 						++m_iAttackCount;
-
 					}
 				})
 				.OnExit([this]
@@ -820,7 +835,7 @@ void CEM1200::Tick(_double TimeDelta)
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
 
-	const _float MoveSpeed = m_bRun ? 4.f : 0.7f;
+	const _float MoveSpeed = m_bRun ? 2.f : 0.7f;
 	if (m_vMoveAxis.LengthSquared() > 0.f)
 	{
 		_float3 vVelocity;
@@ -829,6 +844,8 @@ void CEM1200::Tick(_double TimeDelta)
 		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
 	}
 
+
+	FogControl(TimeDelta);
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
 }
@@ -841,7 +858,7 @@ void CEM1200::Late_Tick(_double TimeDelta)
 void CEM1200::AfterPhysX()
 {
 	CEnemy::AfterPhysX();
-
+	 
 	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	GetRigidBody("Trunk")->Update_Tick(m_pModelCom->GetBoneMatrix("Head") * WorldMatrix);
 	GetRigidBody("Weak")->Update_Tick(m_pModelCom->GetBoneMatrix("Flower") * WorldMatrix);
@@ -889,6 +906,26 @@ void CEM1200::Imgui_RenderProperty()
 	//	}
 
 	//}
+
+	static _bool ff = false;
+	if (ImGui::Button("Fog"))
+	{
+		ff = true;
+		m_pRendererCom->SetFog(true);
+		m_pRendererCom->GetFogDesc().fGlobalDensity = 2.f;
+		m_pRendererCom->GetFogDesc().fStartDepth = 13.f;
+	}
+
+	if (ff)
+	{
+		FOG_DESC& tFogDesc = m_pRendererCom->GetFogDesc();
+		ImGui::InputFloat("StartDepth", &tFogDesc.fStartDepth);
+		ImGui::InputFloat("Density", &tFogDesc.fGlobalDensity);
+		ImGui::InputFloat("HeightFalloff", &tFogDesc.fHeightFalloff);
+	}
+
+
+
 }
 
 _bool CEM1200::IsWeak(CRigidBody* pHitPart)
@@ -956,36 +993,6 @@ void CEM1200::HeavyAttackPushStart()
 	}
 }
 
-//
-ESimpleAxis CEM1200::TargetSimpleAxis()
-{
-	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-
-	_float fAngle = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyLook), XMVector3Normalize(vTargetPos - vMyPos)));
-
-	//정면에서 45도 정도
-	if (fAngle > 0.5f)
-		return ESimpleAxis::NORTH;
-	else
-		return ESimpleAxis::SOUTH;
-}
-
-EBaseTurn CEM1200::TargetBaseTurn()
-{
-	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vMyRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
-
-	_float fAngle = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMyRight), XMVector3Normalize(vTargetPos - vMyPos)));
-
-	//오른쪽
-	if (fAngle > 0)
-		return EBaseTurn::TURN_RIGHT;
-	else
-		return EBaseTurn::TURN_LEFT;
-}
 
 void CEM1200::HitWeakProcess(_double TimeDelta)
 {
@@ -1007,6 +1014,33 @@ void CEM1200::HitWeakProcess(_double TimeDelta)
 	}
 }
 
+void CEM1200::FogControl(_double TimeDelta)
+{
+	if (m_pRendererCom->GetFog() == false) return;
+	
+	m_dFogTime += TimeDelta;
+
+	//fog 켜지고 12초후 density를 천천히 줄이는데 0이 되면 안개 끔.
+	//12초 전에 플레이어가 투시를 키면 density를 0.4로 낮춤
+	if (m_dFogTime > 12.0)
+	{
+		m_pRendererCom->GetFogDesc().fGlobalDensity -= TimeDelta * 0.7f;
+
+		if (m_pRendererCom->GetFogDesc().fGlobalDensity <= 0.f)
+		{
+			m_pRendererCom->GetFogDesc().fGlobalDensity = 0.f;
+			m_dFogTime = 0.0;
+			m_pRendererCom->SetFog(false);
+		}
+	}
+	else
+	{
+		if (CheckSASType(ESASType::SAS_PENETRATE))
+			m_pRendererCom->GetFogDesc().fGlobalDensity = 0.1f;
+	}
+	
+}
+
 void CEM1200::Fall_Overlap()
 {
 	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
@@ -1018,15 +1052,15 @@ void CEM1200::Fall_Overlap()
 	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
 
 	SphereOverlapParams param;
-	param.fVisibleTime = 0.1f;
+	param.fVisibleTime = 1.f;
 	param.iTargetType = CTB_PLAYER;
-	param.fRadius = 5.f;
+	param.fRadius = 6.f;
 	param.vPos = XMVectorSetW(fBone, 1.f);
 	param.overlapOut = &overlapOut;
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
-		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_DOWN);
+		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_HEAVY);
 	}
 }
 
@@ -1058,15 +1092,15 @@ void CEM1200::Shout2_Overlap()
 	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
 
 	_vector vBoneVector = BoneMatrix.r[3];
-	_float3 fBone = vBoneVector;
+	_float3 fBone = vBoneVector + XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 6.f;
 
 	physx::PxOverlapHit hitBuffer[3];
 	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
 
 	SphereOverlapParams param;
-	param.fVisibleTime = 0.1f;
+	param.fVisibleTime = 1.f;
 	param.iTargetType = CTB_PLAYER;
-	param.fRadius = 5.f;
+	param.fRadius = 7.f;
 	param.vPos = XMVectorSetW(fBone, 1.f);
 	param.overlapOut = &overlapOut;
 
@@ -1087,9 +1121,9 @@ void CEM1200::Stamp_Overlap()
 	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
 
 	SphereOverlapParams param;
-	param.fVisibleTime = 0.1f;
+	param.fVisibleTime = 1.f;
 	param.iTargetType = CTB_PLAYER;
-	param.fRadius = 2.f;
+	param.fRadius = 4.f;
 	param.vPos = XMVectorSetW(fBone, 1.f);
 	param.overlapOut = &overlapOut;
 
@@ -1111,10 +1145,10 @@ void CEM1200::Swing_SweepSphere(const string & BoneName)
 	_vector	vDir = vBonePos - m_BeforePos;
 
 	SphereSweepParams tParams;
-	tParams.fVisibleTime = 0.2f;
+	tParams.fVisibleTime = 1.f;
 	tParams.iTargetType = CTB_PLAYER;
-	tParams.fRadius = 2.f;
-	tParams.fDistance = 1.f;
+	tParams.fRadius = 3.f;
+	tParams.fDistance = XMVectorGetX(XMVector4Length(vDir));
 	tParams.vPos = vBonePos;
 	tParams.sweepOut = &sweepOut;
 	tParams.vUnitDir = vDir;
@@ -1132,17 +1166,16 @@ void CEM1200::Rush_SweepSphere()
 	physx::PxSweepHit hitBuffer[3];
 	physx::PxSweepBuffer sweepOut(hitBuffer, 3);
 
-	//Tail4가 꼬리 중앙에 있음
-	_float4x4 BoneMatrix = GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
+	_float4x4 BoneMatrix = GetBoneMatrix("Head") * m_pTransformCom->Get_WorldMatrix();
 	_float4 vBonePos = _float4{ BoneMatrix.m[3][0], BoneMatrix.m[3][1], BoneMatrix.m[3][2], BoneMatrix.m[3][3] };
 
 	_vector	vDir = vBonePos - m_BeforePos;
 
 	SphereSweepParams tParams;
-	tParams.fVisibleTime = 0.2f;
+	tParams.fVisibleTime = 1.f;
 	tParams.iTargetType = CTB_PLAYER;
-	tParams.fRadius = 3.f;
-	tParams.fDistance = 1.f;
+	tParams.fRadius = 5.f;
+	tParams.fDistance = XMVectorGetX(XMVector4Length(vDir));
 	tParams.vPos = vBonePos;
 	tParams.sweepOut = &sweepOut;
 	tParams.vUnitDir = vDir;
@@ -1153,6 +1186,7 @@ void CEM1200::Rush_SweepSphere()
 	}
 	m_BeforePos = vBonePos;
 }
+
 
 
 CEM1200 * CEM1200::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

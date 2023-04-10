@@ -46,7 +46,8 @@ public:
 	void Adjust_MoveAxis(_double TimeDelta);
 
 private:
-	void Play_HeavbyHitAnim();
+	void Play_HeavyHitAnim();
+	void	HeavyAttackPushStart();
 	void HitWeakProcess(_double TimeDelta);
 
 private:
@@ -54,6 +55,7 @@ private:
 	void Rush_Overlap();
 	void Rush_SweepSphere();
 	void Kick_SweepSphere();
+	void AOE_Overlap();
 
 private:
 	class CEM0110_Controller*		m_pController = nullptr;
@@ -62,8 +64,6 @@ private:
 	CParticleGroup*				m_pBugParticle = nullptr;
 	CEffectGroup*				m_pRushEffect = nullptr;
 
-	// Swing Attack
-	list<CScarletCharacter*> m_CollisionList;
 private:
 	//원시 데이터
 	_float3 m_vMoveAxis;
@@ -75,7 +75,8 @@ private:
 
 	// Attack
 	_bool		m_bAttack = false;
-	
+	_double	m_dLoopTick = 0.0;
+
 	//Weak
 	_int			m_iArmorHp = 0;
 	_bool		m_bDestroyArmor = false;
@@ -88,11 +89,11 @@ private:
 	CMaterial* m_pArmor = nullptr;
 	CMaterial* m_pWeak = nullptr;
 
-
-
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 
-	_float4x4 pivot;
+	CSimpleTimeline m_HeavyAttackPushTimeline;
+	_float4 m_vPushVelocity;
+	//_float4x4 pivot;
 public:
 	static CEM0110* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
