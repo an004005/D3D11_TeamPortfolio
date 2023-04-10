@@ -26,6 +26,11 @@ private:
 	void	Player_Something_Update();
 
 private:
+	_bool	m_bShakeSmall = false;
+	_bool	m_bShakeMiddle = false;
+	_bool	m_bShakeHeavy = false;
+
+private:
 	CPlayer* m_pPlayer = nullptr;
 
 public:

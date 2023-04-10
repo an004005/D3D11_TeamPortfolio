@@ -1268,6 +1268,10 @@
             {
                 "EventName": "Fire_Attack_3_twist_Particle",
                 "EventTime": 45.0
+            },
+            {
+                "EventName": "Middle_CamShake_0.2",
+                "EventTime": 35.0
             }
         ]
     },
@@ -2504,6 +2508,10 @@
             {
                 "EventName": "Elec_Attack_Air_Hold_Landing_Particle",
                 "EventTime": 10.0
+            },
+            {
+                "EventName": "Middle_CamShake_0.2",
+                "EventTime": 0.0
             }
         ]
     },

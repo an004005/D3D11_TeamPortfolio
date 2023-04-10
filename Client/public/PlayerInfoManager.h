@@ -192,8 +192,9 @@ public:	// Set
 	void			Set_SASMember(const SASMEET eSAS) { m_bSASMember[eSAS] = true; }
 
 public:
-	HRESULT	Set_CamSpot(CGameObject* pCamSpot);
+	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
 	void			Camera_Random_Shake(_float fForce);
+	void			Camera_Random_Shake_Maintain(_float fForce, _float fMaintain);
 	void			Camera_Axis_Shaking(_float4 vDir, _float fShakePower);
 	void			Camera_Axis_Sliding(_float4 vDir, _float fShakePower);
 
@@ -223,6 +224,10 @@ private:
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();
+
+private:	// 카메라 셰이크 관련
+	_float	m_fRandomShakeMaintain = 0.f;
+	_float	m_fRandomShakeForce = 0.f;
 
 public:
 	virtual void Free() override;

@@ -11,6 +11,8 @@
 #include "Enemy.h"
 #include "PhysX_Manager.h"
 #include "Material.h"
+#include "PlayerInfoManager.h"
+#include "MapObject.h"
 
 CSpecial_Container::CSpecial_Container(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -41,6 +43,13 @@ HRESULT CSpecial_Container::Initialize(void * pArg)
 
 	m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
+		if (auto pState = dynamic_cast<CMapObject*>(pGameObject))
+		{
+			m_bCollision = true;
+
+			m_iModelIndex += 1;
+		}
+
 		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 		{
 			if (m_bCollision) return;
@@ -68,6 +77,9 @@ HRESULT CSpecial_Container::Initialize(void * pArg)
 
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, m_vecRandomParticle[CMathUtils::RandomUInt(m_vecRandomParticle.size() - 1)])
 				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 3.f, 0.f, 0.f), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f);
+			//CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Special");
 		}
 	});
 

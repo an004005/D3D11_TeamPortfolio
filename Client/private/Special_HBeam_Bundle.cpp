@@ -13,6 +13,7 @@
 #include "Enemy.h"
 #include "PhysX_Manager.h"
 #include "Material.h"
+#include "PlayerInfoManager.h"
 
 CSpecial_HBeam_Bundle::CSpecial_HBeam_Bundle(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -82,6 +83,9 @@ HRESULT CSpecial_HBeam_Bundle::Initialize(void * pArg)
 				->Start_AttachPosition_Scaling(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f), { 1.f, 1.f ,1.f, 0.f });
 
 			HBeam_Decompose();
+
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f);
+			CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Special");
 		}
 	});
 

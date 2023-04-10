@@ -170,6 +170,17 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 	else if (true == m_pSpecialObject->IsDeleted()) m_pSpecialObject = nullptr;
 
 	SAS_Checker();
+
+	if (0.f < m_fRandomShakeMaintain)
+	{
+		m_fRandomShakeMaintain -= (_float)TimeDelta;
+		Camera_Random_Shake(m_fRandomShakeForce);
+	}
+	else
+	{
+		m_fRandomShakeMaintain = 0.f;
+		m_fRandomShakeForce = 0.f;
+	}
 }
 
 _bool CPlayerInfoManager::Get_isSasUsing(ESASType eType)
@@ -438,6 +449,14 @@ void CPlayerInfoManager::Camera_Random_Shake(_float fForce)
 	{
 		static_cast<CCamSpot*>(m_pCamSpot)->Random_Shaking(fForce);
 	}
+}
+
+void CPlayerInfoManager::Camera_Random_Shake_Maintain(_float fForce, _float fMaintain)
+{
+	if (0.f != m_fRandomShakeMaintain || 0.f != m_fRandomShakeForce) return;
+
+	m_fRandomShakeMaintain = fMaintain;
+	m_fRandomShakeForce = fForce;
 }
 
 void CPlayerInfoManager::Camera_Axis_Shaking(_float4 vDir, _float fShakePower)

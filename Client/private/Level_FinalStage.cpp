@@ -10,6 +10,7 @@
 #include "Imgui_AnimModifier.h"
 #include "PhysX_Manager.h"
 #include "Map_KineticBatchPreset.h"
+#include "GameManager.h"
 
 CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
@@ -47,6 +48,8 @@ HRESULT CLevel_FinalStage::Initialize()
 	//});
 
 	}
+
+	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }

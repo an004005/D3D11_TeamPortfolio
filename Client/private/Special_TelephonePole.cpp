@@ -10,6 +10,7 @@
 #include "ImguiUtils.h"
 #include "Enemy.h"
 #include "Material.h"
+#include "PlayerInfoManager.h"
 
 CSpecial_TelephonePole::CSpecial_TelephonePole(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -178,6 +179,7 @@ void CSpecial_TelephonePole::TelephonePole_PullOut(_float4 vPlayerPos, _float fF
 
 		m_pBrakeSmoke = CVFX_Manager::GetInstance()->GetParticle(PS_SAS, L"Special_G_TelephonePole_Dark_Smoke");
 		m_pBrakeSmoke->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 2.f, 0.f, 0.f), { 0.f, -1.f, 0.f, 0.f }, false);
+		CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.1f);
 	}
 	else
 	{

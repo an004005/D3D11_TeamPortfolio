@@ -82,6 +82,27 @@ void CPlayerHotFixer::Tick()
 		{
 			m_pPlayer->m_strWeaponAttachBone = "Sheath";
 		}
+		if (ImGui::Button("Attach to Sheath"))
+		{
+			m_pPlayer->m_strWeaponAttachBone = "Sheath";
+		}
+
+		ImGui::Checkbox("ShakeSmall", &m_bShakeSmall);
+		ImGui::Checkbox("ShakeMiddle", &m_bShakeMiddle);
+		ImGui::Checkbox("ShakeHeavy", &m_bShakeHeavy);
+
+		if (m_bShakeSmall)
+		{
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.01f);
+		}
+		else if (m_bShakeMiddle)
+		{
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.02f);
+		}
+		else if (m_bShakeHeavy)
+		{
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.03f);
+		}
 
 		if (ImGui::Button("DMG_Light"))
 		{

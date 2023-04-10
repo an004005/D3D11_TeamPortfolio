@@ -552,6 +552,15 @@ void CPlayer::Tick(_double TimeDelta)
 	}
 	// ºê·¹ÀÎ ÇÊµå ÀÛµ¿ÁßÀÎ °æ¿ì
 
+	m_strBefStateName = m_strCurStateName;
+	m_strCurStateName = m_pASM->GetCurStateName();
+	if (m_strBefStateName != m_strCurStateName)
+	{
+		Event_Trail(false);
+		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, false);
+		m_bActionAble = true;
+	}
+
 	// ë¡œì»¬ ë¬´ë¸Œê°€ ?†ëŠ”???ì ?¼ë¡œë¶€??ë²—ì–´??? ë‹ˆë©”ì´?˜ì„ ?¡ê¸° ?„í•œ ì¡°ì¹˜
 	// !! BaseAninInstance?ì„œ ë³´ê°„???ë‚˜ê³?Normal?…ë°?´íŠ¸ê°€ ?????´ë‹¹ ì½”ë“œë¥??¤í–‰?œí‚¤?„ë¡ ?˜ìž
 	if (0.f != XMVectorGetX(XMVector3Length(m_vSyncEffectLocal)))
@@ -750,7 +759,8 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 {
 	// ?„ìž¬ ? ë‹ˆë©”ì´???íƒœ???°ë¼ ?€?¤íŠ¸?·ì? ?¬ë? ?ë‹¨
 	if (m_pModel->GetPlayAnimation()->GetName().find("dodge") != string::npos &&
-		m_pASM->isSocketExactlyEmpty())
+		m_pASM->isSocketExactlyEmpty() &&
+		tDamageParams.eAttackType != EAttackType::ATK_END)
 	{
 		m_fJustDodgeAble = 2.f;
 	}
@@ -771,7 +781,7 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 	}
 	else
 	{
-		if (tDamageParams.eAttackType != EAttackType::ATK_END)
+		if (tDamageParams.eAttackType != EAttackType::ATK_END && tDamageParams.eDeBuff != EDeBuffType::DEBUFF_THUNDER)
 			m_bHit = true;
 
 		m_DamageDesc.m_iDamage = tDamageParams.iDamage;
@@ -1970,6 +1980,39 @@ HRESULT CPlayer::SetUp_Event()
 			static_cast<CMapKinetic_Object*>(pKinetic)->Set_Swing(false);
 		}
 	});
+
+	m_pModel->Add_EventCaller("Small_CamShake_0.1", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.1f); });
+	m_pModel->Add_EventCaller("Small_CamShake_0.2", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.2f); });
+	m_pModel->Add_EventCaller("Small_CamShake_0.3", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.3f); });
+	m_pModel->Add_EventCaller("Small_CamShake_0.4", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.4f); });
+	m_pModel->Add_EventCaller("Small_CamShake_0.5", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.5f); });
+	m_pModel->Add_EventCaller("Small_CamShake_0.6", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.6f); });
+	m_pModel->Add_EventCaller("Small_CamShake_0.7", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.7f); });
+	m_pModel->Add_EventCaller("Small_CamShake_0.8", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.8f); });
+	m_pModel->Add_EventCaller("Small_CamShake_0.9", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.9f); });
+	m_pModel->Add_EventCaller("Small_CamShake_1.0", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 1.f); });
+
+	m_pModel->Add_EventCaller("Middle_CamShake_0.1", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.1f); });
+	m_pModel->Add_EventCaller("Middle_CamShake_0.2", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.2f); });
+	m_pModel->Add_EventCaller("Middle_CamShake_0.3", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.3f); });
+	m_pModel->Add_EventCaller("Middle_CamShake_0.4", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.4f); });
+	m_pModel->Add_EventCaller("Middle_CamShake_0.5", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.5f); });
+	m_pModel->Add_EventCaller("Middle_CamShake_0.6", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.6f); });
+	m_pModel->Add_EventCaller("Middle_CamShake_0.7", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.7f); });
+	m_pModel->Add_EventCaller("Middle_CamShake_0.8", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.8f); });
+	m_pModel->Add_EventCaller("Middle_CamShake_0.9", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.9f); });
+	m_pModel->Add_EventCaller("Middle_CamShake_1.0", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 1.f); });
+
+	m_pModel->Add_EventCaller("Heavy_CamShake_0.1", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.1f); });
+	m_pModel->Add_EventCaller("Heavy_CamShake_0.2", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.2f); });
+	m_pModel->Add_EventCaller("Heavy_CamShake_0.3", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f); });
+	m_pModel->Add_EventCaller("Heavy_CamShake_0.4", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.4f); });
+	m_pModel->Add_EventCaller("Heavy_CamShake_0.5", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.5f); });
+	m_pModel->Add_EventCaller("Heavy_CamShake_0.6", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.6f); });
+	m_pModel->Add_EventCaller("Heavy_CamShake_0.7", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.7f); });
+	m_pModel->Add_EventCaller("Heavy_CamShake_0.8", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.8f); });
+	m_pModel->Add_EventCaller("Heavy_CamShake_0.9", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.9f); });
+	m_pModel->Add_EventCaller("Heavy_CamShake_1.0", [&]() {CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 1.f); });
 	
 	return S_OK;
 }
@@ -2755,6 +2798,8 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 		.AddState("KNUCKBACK")
 			.OnStart([&]() 
 			{ 
+				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.2f);
+
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Knuckback);
 				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 				m_bHit = false;
@@ -2776,6 +2821,8 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 		.AddState("AIRBORNE")
 			.OnStart([&]() 
 			{
+				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.2f);
+
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Airborne); 
 				Jump();
 				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
@@ -2853,6 +2900,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 		//		.Priority(0)
 
 		.AddState("HIT_LIGHT")
+			.OnStart([&]() { CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.1f); })
 			.AddTransition("HIT_LIGHT to FRONT", "HIT_LIGHT_FRONT")
 			.Predicator([&]()->_bool 
 			{
@@ -2918,6 +2966,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				.Priority(1)
 
 		.AddState("HIT_MIDIUM")
+			.OnStart([&]() { CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.2f); })
 			.AddTransition("HIT_MIDIUM to FRONT", "HIT_MIDIUM_FRONT")
 			.Predicator([&]()->_bool 
 			{
@@ -3277,6 +3326,8 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 		.AddState("KINETIC_COMBO_SLASH01")
 		.OnStart([&]() 
 		{
+			m_bActionAble = true;
+
 			m_bSeperateAnim = false;
 			m_bKineticMove = false;
 			m_bKineticCombo = true;
@@ -3479,6 +3530,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 		.AddState("KINETIC_COMBO_SLASH02")
 		.OnStart([&]() 
 		{
+			m_bActionAble = true;
 			m_fKineticCombo_Kinetic = 0.f;
 			m_fKineticCombo_Slash = 10.f;
 
@@ -3662,6 +3714,8 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 		.AddState("KINETIC_COMBO_SLASH03")
 		.OnStart([&]() 
 		{
+			m_bActionAble = true;
+
 			m_fKineticCombo_Kinetic = 0.f;
 			m_fKineticCombo_Slash = 10.f;
 
@@ -3846,6 +3900,8 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 		.AddState("KINETIC_COMBO_SLASH04")
 		.OnStart([&]() 
 		{
+			m_bActionAble = true;
+
 			m_fKineticCombo_Kinetic = 0.f;
 			m_fKineticCombo_Slash = 10.f;
 
@@ -4159,6 +4215,8 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.AddState("KINETIC_COMBO_AIRSLASH")
 			.OnStart([&]()
 			{
+				m_bActionAble = true;
+
 				m_bActiveGravity = false;
 
 				if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
@@ -5393,8 +5451,12 @@ void CPlayer::EnemyReportCheck()
 {
 	list<ENEMY_DAMAGE_REPORT> DamageReportList = CGameManager::GetInstance()->GetEnemyReport();
 
+	EAttackType eAtkType = EAttackType::ATK_END;
+
 	for (auto& iter : DamageReportList)
 	{
+		eAtkType = iter.eAttackType;
+
 		// °ÔÀÌÁö È¸º¹ °ü·Ã
 		if (iter.eAttackType == EAttackType::ATK_LIGHT || iter.eAttackType == EAttackType::ATK_MIDDLE)
 		{
@@ -5429,6 +5491,21 @@ void CPlayer::EnemyReportCheck()
 		{
 			CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack");
 		}*/
+	}
+
+	if (m_bActionAble && !DamageReportList.empty())
+	{
+		if (eAtkType == EAttackType::ATK_LIGHT)
+		{
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.02f, 0.1f);
+		}
+		else if (eAtkType == EAttackType::ATK_MIDDLE)
+		{
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.3f);
+			CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Small");
+		}
+
+		m_bActionAble = false;
 	}
 
 	CGameManager::GetInstance()->ResetEnemyReport();
@@ -7945,20 +8022,27 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 		{
 			m_fSpecialCharge = 0.f;
 		})
+			.AddTransition("CONTAINER_START to CONTAINER_END", "CONTAINER_END")
+			.Predicator([&]()->_bool
+				{
+					return (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
+				})
+			.Priority(0)
+
 			.AddTransition("CONTAINER_START to CONTAINER_WAIT", "CONTAINER_WAIT")
 			.Predicator([&]()->_bool 
 			{ 
 				//return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
 				return static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_isCollision();
 			})
-			.Priority(0)
+			.Priority(1)
 
 			.AddTransition("CONTAINER_START to CONTAINER_END", "CONTAINER_END")
 			.Predicator([&]()->_bool 
 			{ 
 				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
 			})
-			.Priority(0)
+			.Priority(2)
 
 		.AddState("CONTAINER_WAIT")
 		.OnStart([&]() 
@@ -8046,6 +8130,13 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 			})
 			.Priority(0)
 
+			.AddTransition("CONTAINER_PRESS to CONTAINER_FINISH", "CONTAINER_FINISH")
+			.Predicator([&]()->_bool 
+			{ 
+				return (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
+			})
+			.Priority(1)
+
 		.AddState("CONTAINER_END")
 		.OnStart([&]() 
 		{
@@ -8087,12 +8178,13 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 		.Tick([&](double fTimeDelta)
 		{
 			if (nullptr == m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")) return;
-			if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return;
+			//if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return;
 
 			_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio();
 
 			if (0.15f >= fRatio)
 			{
+				if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return;
 				static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_Reposition(m_pTransformCom, fRatio / 0.15f, (1.f - (fRatio / 0.15f)));
 			}
 			else
