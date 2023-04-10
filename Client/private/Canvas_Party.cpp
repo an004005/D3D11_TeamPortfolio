@@ -260,7 +260,7 @@ void CCanvas_Party::Imgui_RenderProperty()
 		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::TSUGUMI);
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("GEMMA"))
+	if (ImGui::Button("KYOTO"))
 	{
 		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::KYOTO);
 	}

@@ -37,13 +37,13 @@ void CMain_BrainGaugeUI::Tick(_double TimeDelta)
 	if (false == m_bChargeGauge) return;
 
 	if (CGameInstance::GetInstance()->KeyPressing(CInput_Device::MOUSEKEYSTATE::DIM_LB))
-		m_tParams.Floats[0] += _float(TimeDelta) * 0.5f;
+		m_tParams.Floats[0] += _float(TimeDelta);
 	else
 	{
 		if (0.0f >= m_tParams.Floats[0])
 			m_tParams.Floats[0] = 0.0f;
 		else
-			m_tParams.Floats[0] -= _float(TimeDelta) * 0.5f;
+			m_tParams.Floats[0] -= _float(TimeDelta);
 	}
 
 	if (1.0f < m_tParams.Floats[0])

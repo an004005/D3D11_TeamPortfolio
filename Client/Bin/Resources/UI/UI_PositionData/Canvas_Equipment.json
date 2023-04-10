@@ -1,6 +1,59 @@
 {
     "ChildrenUI": [
         {
+            "ChildTag": "Arrow\u0000",
+            "ObjectTag": "Arrow",
+            "Pivot": 4,
+            "PositionX": -250.0,
+            "PositionY": 222.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Shader_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        2.0,
+                        1.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Main_UI\\weapon\\24.22 Up and Down.png\u0000"
+                ]
+            },
+            "SizeX": 24.0,
+            "SizeY": 22.0,
+            "Transform": {
+                "WorldMatrix": [
+                    20.400001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    18.700000762939453,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    550.0,
+                    222.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
             "ChildTag": "Equipment_BasicInfo\u0000",
             "ObjectTag": "Equipment_BasicInfo",
             "Pivot": 0,
@@ -723,7 +776,7 @@
             "ObjectTag": "Equipment_CurrentWeaponIcon1",
             "Pivot": 8,
             "PositionX": 135.0,
-            "PositionY": -11.0,
+            "PositionY": -14.0,
             "Priority": 3,
             "Prototype_GameObject": "ItemIconUI\u0000",
             "ScaleX": 0.8500000238418579,
@@ -765,7 +818,7 @@
                     1.0,
                     0.0,
                     -665.0,
-                    102.0,
+                    -14.0,
                     0.0,
                     1.0
                 ]
@@ -818,7 +871,7 @@
                     1.0,
                     0.0,
                     -665.0,
-                    102.0,
+                    -95.0,
                     0.0,
                     1.0
                 ]
@@ -871,7 +924,7 @@
                     1.0,
                     0.0,
                     -665.0,
-                    102.0,
+                    -175.0,
                     0.0,
                     1.0
                 ]
@@ -891,10 +944,10 @@
                 "Float2s": [],
                 "Float4s": [
                     [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.07000000029802322
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0629807785153389
                     ]
                 ],
                 "Float4x4s": [],
@@ -933,7 +986,7 @@
             "ObjectTag": "Equipment_CurrentWeapon_B1",
             "Pivot": 8,
             "PositionX": 287.0,
-            "PositionY": -15.0,
+            "PositionY": -11.0,
             "Priority": 2,
             "Prototype_GameObject": "Main_PickUI\u0000",
             "ScaleX": 0.8500000238418579,
@@ -942,10 +995,10 @@
                 "Float2s": [],
                 "Float4s": [
                     [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.07000000029802322
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.06736139953136444
                     ]
                 ],
                 "Float4x4s": [],
@@ -973,7 +1026,7 @@
                     1.0,
                     0.0,
                     -513.0,
-                    -15.0,
+                    -11.0,
                     0.0,
                     1.0
                 ]
@@ -996,7 +1049,7 @@
                         0.0,
                         0.0,
                         0.0,
-                        0.07000000029802322
+                        0.10000000149011612
                     ]
                 ],
                 "Float4x4s": [],
@@ -1047,7 +1100,7 @@
                         0.0,
                         0.0,
                         0.0,
-                        0.07000000029802322
+                        0.10000000149011612
                     ]
                 ],
                 "Float4x4s": [],
@@ -1226,8 +1279,8 @@
             "ChildTag": "Equipment_ItemInfoMoveIcon\u0000",
             "ObjectTag": "Equipment_ItemInfoMoveIcon",
             "Pivot": 4,
-            "PositionX": -500.0,
-            "PositionY": -102.0,
+            "PositionX": -499.0,
+            "PositionY": -100.0,
             "Priority": 3,
             "Prototype_GameObject": "ItemIconUI\u0000",
             "ScaleX": 1.5,
@@ -1268,8 +1321,8 @@
                     0.0,
                     1.0,
                     0.0,
-                    300.0,
-                    -102.0,
+                    301.0,
+                    -100.0,
                     0.0,
                     1.0
                 ]
