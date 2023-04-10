@@ -19,7 +19,6 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void	Set_Drive(const _bool	Drive);
 	void	Set_DriveB(const _bool DriveB);
 
 public:

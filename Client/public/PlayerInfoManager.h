@@ -58,6 +58,7 @@ typedef struct tagPlayerStatus
 	_bool bBattle = false;
 	_bool bDriveMode = false;
 	_bool bBrainField = false;
+	_bool bStartBrainField = false;
 
 	_float m_fBaseAttackDamage;
 
@@ -185,6 +186,7 @@ public:	// Set
 	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
 
 	void			Set_Exp(const _uint iExp);
+	void			Set_StartBrainField();
 	
 	// SAS
 	void			Set_SASMember(const SASMEET eSAS) { 

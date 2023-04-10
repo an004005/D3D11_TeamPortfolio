@@ -55,7 +55,14 @@ void CCanvas_DriveMove::Tick(_double TimeDelta)
 	m_pUIMoveFSM->Tick(TimeDelta);	// UI 의 움직임
 	CCanvas::UIHit(TimeDelta);
 
-	DriveGauge_Tikc();
+	// 바로 브레인 필드를 들어가기 위해
+	if (true == CPlayerInfoManager::GetInstance()->Get_PlayerStat().bStartBrainField)
+	{
+		m_bStartBrainField = true;
+		StartBrainField_Tick();
+	}
+	else
+		DriveGauge_Tikc();
 
 	// 드라이브 게이지를 계산 시작
 	if (false == m_bOnDriveStart_OneCheck)
@@ -66,13 +73,13 @@ void CCanvas_DriveMove::Tick(_double TimeDelta)
 
 			Find_ChildUI(L"Drive_Gauge")->SetVisible(true);
 			Find_ChildUI(L"Drive_GaugeBack")->SetVisible(true);
-			dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_Drive(true);
 		}
 	}
 
 	DriveGaugeFull_Tick();
 	Drive_Tick();
 
+	// 일반적인 드라이브 모드를 실행 했을 때
 	if (true == CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
 		Set_OnDrive(CPlayerInfoManager::GetInstance()->Get_PlayerStat().fMaxBrainFieldMaintain);
 }
@@ -98,7 +105,10 @@ void CCanvas_DriveMove::Imgui_RenderProperty()
 		//Set_OnDrive(fDriveFullTime);	// 드라이브 사용
 	}
 
-	ImGui::Checkbox("bOnCircle", &m_bOnCircle);		// 드라이브 원 사용
+	if (ImGui::Button("OnBrainField"))
+	{
+		CPlayerInfoManager::GetInstance()->Set_StartBrainField();
+	}
 }
 
 void CCanvas_DriveMove::Set_OnDrive(const _float & fDriveFullTime) 
@@ -141,7 +151,6 @@ void CCanvas_DriveMove::Drive_Tick()
 	// 드라이브를 사용하기 시작하면
 	_float fDriveGauge = dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_Gauge"))->Get_CurrentDriveGauge();
 	
-	dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_Drive(false);
 	dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(true);
 
 	if (0.0f == fDriveGauge)	// 드라이브 시간이 끝났다.
@@ -171,6 +180,51 @@ void CCanvas_DriveMove::Drive_Tick()
 		dynamic_cast<CShaderUI*>(Find_ChildUI(L"Dirve_RightDot"))->Set_Floats0(m_fShaderRightDot);
 		m_fShaderRightDot += 0.1f;
 		//dynamic_cast<CDrive_RightDotUI*>(Find_ChildUI(L"Dirve_RightDot"))->Set_DriveCount();
+	}
+}
+
+void CCanvas_DriveMove::StartBrainField_Tick()
+{
+	if (false == m_bStartBrainField) return;
+	
+	if (false == m_bSetDriveGauge)
+	{
+		m_bSetDriveGauge = true;
+		dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_Gauge"))->Set_CurrentDriveGauge();
+		dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_GaugeBack"))->Set_CurrentDriveGauge();
+	}
+	
+	_float fDriveGauge = dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_Gauge"))->Get_CurrentDriveGauge();
+
+	dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(true);
+
+	if (0.0f == fDriveGauge)	// 드라이브 시간이 끝났다.
+	{
+		m_bSetDriveGauge = false;
+		m_bStartBrainField = false;
+		m_bDriveGauge = 0.0f;
+		m_fRightDotCount = 1.0f;
+		m_fShaderRightDot = 0.0f;
+		//Find_ChildUI(L"Drive_LeftDot")->SetVisible(m_bStartBrainField);
+		//Find_ChildUI(L"Dirve_RightDot")->SetVisible(m_bStartBrainField);
+		//Find_ChildUI(L"Drive_OnCircle")->SetVisible(m_bStartBrainField);
+
+		dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(false);
+	}
+
+	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+		iter->second->SetVisible(m_bStartBrainField);
+
+	_float fMaxBrainFieldMaintain = CPlayerInfoManager::GetInstance()->Get_PlayerStat().fMaxBrainFieldMaintain;
+	dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_Gauge"))->Set_DriveGauge_Use(fMaxBrainFieldMaintain);
+	dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_GaugeBack"))->Set_DriveGauge_Use(fMaxBrainFieldMaintain);
+
+	if (m_fRightDotCount > fDriveGauge)
+	{
+		// 드라이브 0.5f 가 될 때 까지 늘어난다.
+		m_fRightDotCount -= 0.08f;
+		m_fShaderRightDot += 0.1f;
+		dynamic_cast<CShaderUI*>(Find_ChildUI(L"Dirve_RightDot"))->Set_Floats0(m_fShaderRightDot);
 	}
 }
 

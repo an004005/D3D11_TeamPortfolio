@@ -34,7 +34,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.fMaxDriveEnergy = 100.f;
 
 	m_tPlayerStat.fBrainFieldMaintain = 0.f;
-	m_tPlayerStat.fMaxBrainFieldMaintain = 180.0f;
+	m_tPlayerStat.fMaxBrainFieldMaintain = 60.0f;
 
 	m_tPlayerStat.iExp = 50;
 	m_tPlayerStat.iMaxExp = 100;
@@ -480,6 +480,12 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 
 		m_tTsugumiStat.iExp = iOverExp;
 	}
+}
+
+void CPlayerInfoManager::Set_StartBrainField()
+{
+	m_tPlayerStat.bStartBrainField = true;
+	m_tPlayerStat.fDriveEnergy = m_tPlayerStat.fMaxDriveEnergy;
 }
 
 HRESULT CPlayerInfoManager::Set_CamSpot(CGameObject * pCamSpot)

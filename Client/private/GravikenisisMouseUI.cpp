@@ -2,7 +2,7 @@
 #include "..\public\GravikenisisMouseUI.h"
 #include "GameInstance.h"
 #include "EffectSystem.h"
-#include "Player.h"
+#include "VFX_Manager.h"
 #include "PlayerInfoManager.h"
 #include "MapKinetic_Object.h"
 
@@ -57,18 +57,6 @@ void CGravikenisisMouseUI::BeginTick()
 	Assert(m_pAppealCircle != nullptr);
 	m_pAppealCircle->Start_NoAttach(this, true, true);
 	m_pAppealCircle->Set_GroupVisible(true);
-
-	// Player
-	list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
-
-	for (auto iter : plsGameObject)
-	{
-		if (iter->GetPrototypeTag() == L"Player")
-		{
-			m_pPlayer = dynamic_cast<CPlayer*>(iter);
-			break;
-		}
-	}
 }
 
 void CGravikenisisMouseUI::Tick(_double TimeDelta)
@@ -76,7 +64,7 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 	
  	CGameObject* pKineticObject = CPlayerInfoManager::GetInstance()->Get_KineticObject();
-	_float fRatio = m_pPlayer->Get_KineticCharge();
+	_float fRatio = CPlayerInfoManager::GetInstance()->Get_KineticCharge();
 	if (pKineticObject == nullptr || 1.0f <= fRatio)
 	{
 		m_pBanKenisis->Set_GroupVisible(false);
@@ -112,7 +100,7 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 	else
 	{
 		// 염력 게이지가 차는 중에는 어필원이 뜨지 않는다.
-		if (0.01f < m_pPlayer->Get_KineticCharge())
+		if (0.01f < fRatio)
 			m_pAppealCircle->Set_GroupVisible(false);
 		else
 			m_pAppealCircle->Set_GroupVisible(true);
@@ -120,12 +108,6 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 		m_pBanKenisis->Set_GroupVisible(false);
 		m_pKenisis->Set_GroupVisible(true);
 	}
-}
-
-void CGravikenisisMouseUI::Imgui_RenderProperty()
-{
-	__super::Imgui_RenderProperty();
-
 }
 
 CGravikenisisMouseUI * CGravikenisisMouseUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
