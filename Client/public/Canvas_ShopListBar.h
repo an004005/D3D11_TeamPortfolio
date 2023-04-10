@@ -44,11 +44,16 @@ public:
 		m_bSale = true;
 	}
 
+	void	Set_NoButton(const _bool	& bNo) {
+		m_bNoButton = bNo;
+	}
+
 private:
 	size_t		m_iItemInfoIndex = { 0 };
 	_uint		m_iNmberPurchases = { 0 };
 
 	_bool		m_bSale = { false };
+	_bool		m_bNoButton = { false };
 
 public:
 	static CCanvas_ShopListBar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

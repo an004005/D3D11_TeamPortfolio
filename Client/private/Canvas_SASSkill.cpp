@@ -2,6 +2,11 @@
 #include "..\public\Canvas_SASSkill.h"
 #include "GameInstance.h"
 #include "UI_Manager.h"
+#include "PlayerInfoManager.h"
+
+#include "Player.h"
+#include "Canvas_SASSkillMove.h"
+#include "SASSkillFullCircleUI.h"
 
 CCanvas_SASSkill::CCanvas_SASSkill(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -28,26 +33,63 @@ HRESULT CCanvas_SASSkill::Initialize(void* pArg)
 
 	CUI_Manager::GetInstance()->Add_Canvas(L"Canvas_SASSkill", this);
 
-	// 처음에 보이지 않을 UI 들
-	Find_ChildUI(L"SASSkill_CtrlText1")->SetVisible(false);
-	Find_ChildUI(L"SASSkill_CtrlTexture1")->SetVisible(false);
-
-	Find_ChildUI(L"SASSkill_AltText1")->SetVisible(false);
-	Find_ChildUI(L"SASSkill_AltTexture1")->SetVisible(false);
-
-	Find_ChildUI(L"SASSkill_XRight")->SetVisible(false);
-	Find_ChildUI(L"SASSkill_XInput")->SetVisible(false);
-
-	Find_ChildUI(L"SASSkill_FullCircle1")->SetVisible(false);
-	Find_ChildUI(L"SASSkill_FullCircle2")->SetVisible(false);
+	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+		iter->second->SetVisible(false);
 
 	return S_OK;
 }
 
 void CCanvas_SASSkill::Tick(_double TimeDelta)
 {
-	if (true == Find_ChildUI(L"SASSkill_BackGround")->Get_TempOff())
-		return;
+#pragma region 동료를 만나고 나서부터 Tick 을 돈다.
+	// 처음에 하나비를 만난 기준으로 부터 SAS SKilll 창이 보인다.
+	if (false == m_bMember0)
+	{
+		if (false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::HANABI) ||
+			false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI) ||
+			false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::KYOTO))
+			return;
+
+		m_bMember0 = true;
+
+		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+		{
+			if ((*iter).first == L"SASSkill_CtrlText1" || 
+				(*iter).first == L"SASSkill_CtrlTexture1" ||
+				(*iter).first == L"SASSkill_AltText1" ||
+				(*iter).first == L"SASSkill_AltTexture1" ||
+				(*iter).first == L"SASSkill_XLeft" ||
+				(*iter).first == L"SASSkill_XRight" ||
+				(*iter).first == L"SASSkill_XInput" ||
+				(*iter).first == L"FullCircle1" ||
+				(*iter).first == L"FullCircle5" ||
+				(*iter).first == L"FullCircle6")
+				continue;
+
+			iter->second->SetVisible(true);
+		}
+	}
+#pragma endregion
+
+#pragma region (2번째 만남)
+	if (true == m_bMember0 && false == m_bMember1)
+	{
+		if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::LUCA) &&
+			true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::SEEDEN) &&
+			true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::ARASHI))
+		{
+			m_bMember1 = true;
+
+			Find_ChildUI(L"SASSkill_XLeft")->SetVisible(true);
+			Find_ChildUI(L"SASSkill_XRight")->SetVisible(true);
+
+			Find_ChildUI(L"FullCircle1")->SetVisible(true);
+			dynamic_cast<CSASSkillFullCircleUI*>(Find_ChildUI(L"FullCircle1"))->Set_TelepotiCircle();
+		}
+	}
+#pragma endregion
+
+	if (true == Find_ChildUI(L"SASSkill_BackGround")->Get_TempOff()) return;
 
 	__super::Tick(TimeDelta);
 	
@@ -62,28 +104,30 @@ void CCanvas_SASSkill::Imgui_RenderProperty()
 
 }
 
-void CCanvas_SASSkill::SaveToJson(Json& json)
-{
-	__super::SaveToJson(json);
-
-}
-
-void CCanvas_SASSkill::LoadFromJson(const Json & json)
-{
-	__super::LoadFromJson(json);
-
-}
-
 void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 {
+	if (false == m_bMember1) return;
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_1) || 
+		CGameInstance::GetInstance()->KeyDown(DIK_2) ||
+		CGameInstance::GetInstance()->KeyDown(DIK_3) ||
+		CGameInstance::GetInstance()->KeyDown(DIK_4))
+	{
+		m_bChangeX = false;
+		InputData();
+	}
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_5) ||
+		CGameInstance::GetInstance()->KeyDown(DIK_6))
+	{
+		m_bChangeX = true;
+		InputData();
+	}
+
 	if (CGameInstance::GetInstance()->KeyDown(DIK_X))
 	{
 		m_bChangeX = !m_bChangeX;
-		m_bChangeXButton = true;
-
-		// [m_bChangeX] false -> 오른쪽 true -> 왼쪽
-		Find_ChildUI(L"SASSkill_XLeft")->SetVisible(!m_bChangeX);
-		Find_ChildUI(L"SASSkill_XRight")->SetVisible(m_bChangeX);
+		InputData();
 	}
 
 	if (true == m_bChangeXButton)
@@ -100,6 +144,45 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 			m_bChangeXButton = false;
 			m_dChangeX_TimcAcc = 0.0;
 			Find_ChildUI(L"SASSkill_XInput")->SetVisible(false);
+		}
+	}
+}
+
+void CCanvas_SASSkill::InputData()
+{
+	m_bChangeXButton = true;
+
+	// [m_bChangeX] false -> 왼쪽 true -> 오른쪽
+	Find_ChildUI(L"SASSkill_XLeft")->SetVisible(m_bChangeX);
+	Find_ChildUI(L"SASSkill_XRight")->SetVisible(!m_bChangeX);
+
+	dynamic_cast<CCanvas_SASSkillMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_SASSkillMove"))->Set_SkillAll(m_bChangeX);
+	FullCircle();
+}
+
+void CCanvas_SASSkill::FullCircle()
+{
+	// 원 들이게 X키의 정보를 넘겨준다.
+	_tchar szText[MAX_PATH] = TEXT("");
+
+	for (_uint i = 1; i < 7; i++)
+	{
+		wsprintf(szText, TEXT("FullCircle%u"), i);
+		dynamic_cast<CSASSkillFullCircleUI*>(Find_ChildUI(szText))->Set_ChangeX(m_bChangeX);
+
+		if (false == m_bChangeX)
+		{
+			if (1 == i || 2 == i || 3 == i || 4 == i)
+				Find_ChildUI(szText)->SetVisible(true);
+			else
+				Find_ChildUI(szText)->SetVisible(false);
+		}
+		else
+		{
+			if (1 == i || 2 == i || 3 == i || 4 == i)
+				Find_ChildUI(szText)->SetVisible(false);
+			else
+				Find_ChildUI(szText)->SetVisible(true);
 		}
 	}
 }

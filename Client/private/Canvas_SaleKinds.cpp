@@ -261,7 +261,15 @@ void CCanvas_SaleKinds::Clone_ShopListCanvas(const size_t iIndex)
 
 void CCanvas_SaleKinds::CurrentList()
 {
-	if (m_bLastCheck == true) return;
+	if (m_bLastCheck == true)
+	{
+		if (4 < m_vecShopCanvass.size())
+		{
+			m_vecShopCanvass[3].second->Set_OnButton();
+			m_vecShopCanvass[4].second->Set_OnButton();
+		}
+		return;
+	}
 
 	if (m_vecShopCanvass.empty())
 	{

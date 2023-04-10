@@ -30,6 +30,8 @@ HRESULT CPlayerInfo_PsychokinesisUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	m_fMaxLevelGauge = 1.0f;
+
 	return S_OK;
 }
 
@@ -77,7 +79,18 @@ void CPlayerInfo_PsychokinesisUI::LoadFromJson(const Json & json)
 
 }
 
-void CPlayerInfo_PsychokinesisUI::Set_PsychokinesisGauge(const _uint iLevel, const _uint iType, const _float & fGauge)
+void CPlayerInfo_PsychokinesisUI::Set_Type(const _uint iLevel)
+{
+	// 레벨에 따른 게이지 바 길이가 달라진다.
+	if (0 == iLevel)
+		m_fMaxLevelGauge = 2.0f;
+	else if (1 == iLevel)
+		m_fMaxLevelGauge = 1.35f;
+	else
+		m_fMaxLevelGauge = 1.0f;
+}
+
+void CPlayerInfo_PsychokinesisUI::Set_Gauge(const _uint iType, const _float& fGauge)
 {
 	// iType : (0)일반(물결) (1)공격 (2) 드라이브
 	// 드라이브 타입에 따라 이미지와 속도가 달라진다.
@@ -86,14 +99,6 @@ void CPlayerInfo_PsychokinesisUI::Set_PsychokinesisGauge(const _uint iLevel, con
 		m_tParams.Floats[1] = 0.08f;
 	else
 		m_tParams.Floats[1] = 0.05f;
-
-	// 레벨에 따른 게이지 바 길이가 달라진다.
-	if (0 == iLevel)
-		m_fMaxLevelGauge = 2.0f;
-	else if (1 == iLevel)
-		m_fMaxLevelGauge = 1.35f;
-	else
-		m_fMaxLevelGauge = 1.0f;
 
 	m_fPsychokinesisGauge = fGauge / m_fMaxLevelGauge;
 }

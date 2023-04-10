@@ -38,21 +38,24 @@ void CItem_GaugeUI::Tick(_double TimeDelta)
 
 	if (false == m_bCooldownTimeStart) return;
 
-	if (true == m_fRatioDown)
+	if (true == m_fRatioDown)	// 감소 true
 	{
 		m_fRatio -= _float(TimeDelta) * 0.1f;
+		m_bLight = true;
 
 		if (0.0f > m_fRatio)
 			m_fRatioDown = false;
 	}
-	else
+	else										 // 증가 false
 	{
 		m_fRatio += _float(TimeDelta) * 0.1f;
+		m_bLight = false;
 
 		if (1.0f < m_fRatio)
 		{
 			m_fRatio = 1.0f;
 			m_bCooldownTimeStart = false;
+			m_bLight = true;
 		}
 	}
 

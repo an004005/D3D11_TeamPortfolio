@@ -15,25 +15,13 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	Tick(_double TimeDelta) override;
-	virtual void	Late_Tick(_double TimeDelta) override;
-	virtual HRESULT Render() override;
-
-	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
 
 public:
 	_bool	Get_GaugeFull() {
 		return m_bGaugeFull;
 	}
-	void	Set_GaugeFull() {
-		m_bGaugeFull = false;
-	}
 
-	void	Set_ChargeGauge(const _bool bGauge) {
-		m_bVisible = bGauge;
-		m_bChargeGauge = bGauge;
-	}
+	void	Set_ChargeGauge(const _bool bGauge);
 	
 private:
 	_bool	m_bChargeGauge = { false };

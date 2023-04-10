@@ -28,6 +28,7 @@ public:
 
 	void	Set_ItmeUse();
 	void	Set_IconLight(const _bool	bVisble);
+	void	Set_LightReset();
 
 	_float4	 ColorIndex(const _bool	 bBack);
 
@@ -40,7 +41,8 @@ private:
 
 	void	PlayerFontHp(_uint iHp);
 	void	PlayerHpSet(const _uint iRandomMinHp, const _uint iRandomMaxHp);
-	void	MemberHpSet(const _uint iRandomMinHp, const _uint iRandomMaxHp);
+	void	HanabiHpSet(const _uint iRandomMinHp, const _uint iRandomMaxHp);
+	void	TsugumiSet(const _uint iRandomMinHp, const _uint iRandomMaxHp);
 
 private:
 	vector<CItem_Manager::BATTLEITEM> m_vecBattleItme;

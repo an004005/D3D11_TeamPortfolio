@@ -46,13 +46,15 @@ private:
 	_float4		m_vPlayerPos = { 0.f, 0.f, 0.f, 1.f };
 
 	wstring		m_ModelName;
-	_bool		m_bCheck = false;
+	_bool		m_iCheck = false;
 
 	_bool		m_bLoop = false;
 	_float		m_fTimeAcc = 0.f;
 
 	_float      m_fLerpTime = 0.f;
 	_float      m_fDuration = 0.2f;
+
+	class CCanvas_MainTalk* m_pCanvas_MainTalk = { nullptr };
 
 private:
 	_bool		DistanceCheck();

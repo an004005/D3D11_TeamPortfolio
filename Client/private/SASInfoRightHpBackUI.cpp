@@ -33,7 +33,9 @@ HRESULT CSASInfoRightHpBackUI::Initialize(void * pArg)
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
 
-	m_tParams.Floats[0] = 0.0f;
+	m_fHp = 1.0f;
+	m_fCurrentHp = 1.0f;
+	m_tParams.Floats[0] = 1.0f;
 
 	return S_OK;
 }
@@ -42,10 +44,20 @@ void CSASInfoRightHpBackUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	if (m_fCurrentHp < m_fHp)
-		m_fCurrentHp += _float(TimeDelta) * 0.1f;
+	if (false == m_bSpeed)
+	{
+		if (m_fCurrentHp < m_fHp)
+			m_fCurrentHp += _float(TimeDelta) * 0.1f;
+		else
+			m_fCurrentHp -= _float(TimeDelta) * 0.1f;
+	}
 	else
-		m_fCurrentHp -= _float(TimeDelta) * 0.1f;
+	{
+		if (m_fCurrentHp < m_fHp)
+			m_fCurrentHp += _float(TimeDelta);
+		else
+			m_fCurrentHp -= _float(TimeDelta);
+	}
 
 	Object_Tick(TimeDelta);
 }

@@ -20,7 +20,7 @@ public:
 		_uint		iLevel = { 0 };
 		_tchar*	szBrainName = {};
 		_tchar*	szBrainEx[4] = {};
-		_bool		bUse = { false };
+		_bool		bUse = { false };	
 		_float2		vOnIconIndex = { 0.0f, 0.0f };
 		_float2		vOffIconIndex = { 0.0f, 0.0f };
 		
@@ -49,9 +49,13 @@ public:
 	virtual void	Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
-	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
+public:
+	// 35 : 공중 추가 공격 
+	// 36 : 추가 공격 확장 2
+	// 53, 57 : 브레인 필드: 데미지 경감
+	_bool	Get_IconUse(const size_t iIndex) {
+		return m_vecBrain[iIndex].bUse;
+	}
 
 private:
 	void	Brain_Intiialize();

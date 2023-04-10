@@ -54,7 +54,7 @@ HRESULT CCanvas_PlayerInfo::Render()
 		return E_FAIL;
 
 	_float2 vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"PlayerInfo_BackGround"))->GetScreenSpaceLeftTop();
-	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"유이토 스메라기", vPosition + _float2(20.0f, 105.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"유이토 스메라기", vPosition + _float2(60.0f, 100.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 
 	//_float2 fPlayerHp = dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Get_PlayerHp();
 	//_tchar szChildTag[MAX_PATH] = TEXT("");
@@ -77,30 +77,7 @@ HRESULT CCanvas_PlayerInfo::Render()
 	return S_OK;
 }
 
-void CCanvas_PlayerInfo::Imgui_RenderProperty()
-{
-	CCanvas::Imgui_RenderProperty();
-
-	static _float fPosition[2];
-	ImGui::DragFloat2("Font Position", fPosition);
-	m_vFontPos = { fPosition[0], fPosition[1] };
-
-
-}
-
-void CCanvas_PlayerInfo::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-
-}
-
-void CCanvas_PlayerInfo::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
-
-}
-
-void CCanvas_PlayerInfo::Set_GaugeBackGround(const _uint iLevel)
+void CCanvas_PlayerInfo::Set_Type(const _uint iLevel)
 {
 	dynamic_cast<CPlayerInfo_GaugeBackGround*>(Find_ChildUI(L"PlayerInfo_GaugeBack"))->Set_PsychokinesisGauge(iLevel);
 }

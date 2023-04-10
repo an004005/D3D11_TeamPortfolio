@@ -45,6 +45,7 @@ void CCanvas_Alarm::Tick(_double TimeDelta)
 
 	Appeart_Tick();
 	MapName_Tick(TimeDelta);
+	LevelUpDead_Tick();
 }
 
 void CCanvas_Alarm::Late_Tick(_double TimeDelta)
@@ -87,7 +88,7 @@ void CCanvas_Alarm::Imgui_RenderProperty()
 
 	if (ImGui::Button("Map Name"))
 	{
-		Set_MapName(1.0f);
+		Set_MapName(3.0f);
 	}
 }
 
@@ -117,6 +118,7 @@ void CCanvas_Alarm::Set_LevelUp(const _uint iLevel)
 	dynamic_cast<CLevelUpUI*>(Find_ChildUI(L"LevelUp"))->Set_LevelUp(iLevel);
 	dynamic_cast<CLevelUpUI*>(Find_ChildUI(L"LevelUpBack"))->Set_LevelUpBack();
 	dynamic_cast<CLevelUpUI*>(Find_ChildUI(L"LevelUpBackGround"))->Set_LevelUpBackGround();
+	m_bLevelUpDead = true;
 }
 
 void CCanvas_Alarm::Set_Appeart()
@@ -171,6 +173,17 @@ void CCanvas_Alarm::MapName_Tick(const _double& dTimeDelta)
 		if (0.9f < fAlpha)
 			fAlpha = 0.9f;
 		dynamic_cast<CShaderUI*>(Find_ChildUI(L"MapName"))->Set_Float4s_W(fAlpha);
+	}
+}
+
+void CCanvas_Alarm::LevelUpDead_Tick()
+{
+	if (false == m_bLevelUpDead) return;
+
+	if (false == dynamic_cast<CLevelUpUI*>(Find_ChildUI(L"LevelUpBack"))->Get_LevelUpBack())
+	{
+		m_bLevelUpDead = false;
+		CGameObject::SetDelete();	// Level 에서 ImGui 로 버튼 눌러서 지운거면 오류 난다!
 	}
 }
 
