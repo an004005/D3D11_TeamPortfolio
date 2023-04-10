@@ -196,6 +196,13 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 
 void CCanvas_Main::KeyInput()
 {
+	// Not Use in Final Stage
+
+	if (LEVEL_NOW == LEVEL_FINAL_STAGE)
+		return;
+
+	// ~Not Use in Final Stage
+
 	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
 	{
 		m_bAlpha = true;
