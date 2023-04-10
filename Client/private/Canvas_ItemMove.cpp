@@ -73,17 +73,19 @@ void CCanvas_ItemMove::LoadFromJson(const Json & json)
 void CCanvas_ItemMove::Key_Input()
 {
 	// 아이템 Light 조절
-	_float fRatio = dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_Ratio();
-	if (0.01f > fRatio)
-		dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_IconLight(false);
-	else
-		dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_IconLight(true);
+	dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))
+		->	Set_IconLight(dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_Light());
 
 	// 아이템 쿨 타임이 아직 돌지 않았다면 사용할 수 없다.
 	if (false == dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_ItemUseStatuse()) return;
 
+	// 조명 Reset 하기
+	dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_LightReset();
+
 	if (CGameInstance::GetInstance()->KeyDown(DIK_DOWN))
 	{
+		// 예외 처리.. 할까..? 체력이 가득 찼을 경우 체력 아이템을 사용하지 못 하게 한다... 이렇게 되면 조건문이 너무 많아져서..ㅜ
+
 		// 화살표 이동하기
 		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrow"))->Set_Input();
 		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrowBack"))->Set_Input();

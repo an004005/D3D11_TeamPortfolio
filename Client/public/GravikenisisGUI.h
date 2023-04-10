@@ -17,17 +17,10 @@ public:
 	virtual void			BeginTick() override;
 	virtual void			Tick(_double TimeDelta) override;
 
-	virtual void   Imgui_RenderProperty() override;
-
-public:
-	void SetfRatio(const _float & fRatio);
-
 private:
 	class CEffectGroup* m_pKenisis = { nullptr };
 	class CEffectGroup* m_pBanKenisis = { nullptr };
 	class CEffectGroup* m_pAppealCircle = { nullptr };
-
-	class CPlayer* m_pPlayer = { nullptr };
 
 	_bool	m_bOnG = { false };
 	_double	m_dReset_TimeAcc = { 0.0 };

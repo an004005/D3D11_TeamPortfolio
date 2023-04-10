@@ -34,54 +34,34 @@ void CMain_BrainGaugeUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	//IM_LOG("UI Down %i", m_bChargeGauge);
-	//IM_LOG("----------------Gauge %i", m_tParams.Floats[0]);
-	if (true == m_bChargeGauge)
-	{
-		m_tParams.Floats[0] += _float(TimeDelta) * 0.5f;
+	if (false == m_bChargeGauge) return;
 
-		if (0.999f < m_tParams.Floats[0])
-		{
-			m_bGaugeFull = true;
-			m_bVisible = false;
-			m_tParams.Floats[0] = 0.0f;
-		}
-	}
+	if (CGameInstance::GetInstance()->KeyPressing(CInput_Device::MOUSEKEYSTATE::DIM_LB))
+		m_tParams.Floats[0] += _float(TimeDelta);
 	else
 	{
-		m_tParams.Floats[0] -= _float(TimeDelta) * 0.5f;
+		if (0.0f >= m_tParams.Floats[0])
+			m_tParams.Floats[0] = 0.0f;
+		else
+			m_tParams.Floats[0] -= _float(TimeDelta);
+	}
+
+	if (1.0f < m_tParams.Floats[0])
+	{
+		m_bGaugeFull = true;
 	}
 }
 
-void CMain_BrainGaugeUI::Late_Tick(_double TimeDelta)
+void CMain_BrainGaugeUI::Set_ChargeGauge(const _bool bGauge)
 {
-	__super::Late_Tick(TimeDelta);
-}
+	m_bVisible = bGauge;
+	m_bChargeGauge = bGauge;
 
-HRESULT CMain_BrainGaugeUI::Render()
-{
-	if (FAILED(__super::Render()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-void CMain_BrainGaugeUI::Imgui_RenderProperty()
-{
-	CUI::Imgui_RenderProperty();
-
-}
-
-void CMain_BrainGaugeUI::SaveToJson(Json & json)
-{
-	CUI::SaveToJson(json);
-
-}
-
-void CMain_BrainGaugeUI::LoadFromJson(const Json & json)
-{
-	CUI::LoadFromJson(json);
-
+	if (false == bGauge)
+	{
+		m_bGaugeFull = false;
+		m_tParams.Floats[0] = 0.0f;
+	}
 }
 
 CMain_BrainGaugeUI * CMain_BrainGaugeUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

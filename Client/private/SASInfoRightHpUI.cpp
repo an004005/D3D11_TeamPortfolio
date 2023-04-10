@@ -33,7 +33,9 @@ HRESULT CSASInfoRightHpUI::Initialize(void * pArg)
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
 
-	m_tParams.Floats[0] = 0.0f;
+	m_fHp = 1.0f;
+	m_fCurrentHp = 1.0f;
+	m_tParams.Floats[0] = 1.0f;
 
 	return S_OK;
 }
@@ -43,12 +45,17 @@ void CSASInfoRightHpUI::Tick(_double TimeDelta)
 	CUI::Tick(TimeDelta);
 
 	if (m_fCurrentHp < m_fHp)
+	{
 		m_fCurrentHp += _float(TimeDelta) * 0.1f;
+		m_bMaxHp = false;
+	}
 	else
+	{
 		m_fCurrentHp = m_fHp;
+		m_bMaxHp = true;
+	}
 
 	Object_Tick(TimeDelta);
-	
 }
 
 void CSASInfoRightHpUI::Late_Tick(_double TimeDelta)

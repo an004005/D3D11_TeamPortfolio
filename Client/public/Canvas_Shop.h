@@ -31,6 +31,10 @@ public:
 			iter->second->SetVisible(false);
 	}
 
+	void	Set_ShopUI() {
+		m_bOpenShop = true;
+	}
+
 private:
 	HRESULT	Add_MainCanvas();
 
@@ -50,6 +54,8 @@ private:
 	_bool		m_bAlpha = { false };
 	_bool		m_bReverse = { false };
 	_float		m_fAlpha = { 0.0f };
+
+	_bool		m_bOpenShop = { false };
 
 public:
 	static CCanvas_Shop* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

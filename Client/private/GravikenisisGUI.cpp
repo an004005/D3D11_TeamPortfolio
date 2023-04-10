@@ -2,7 +2,7 @@
 #include "..\public\GravikenisisGUI.h"
 #include "GameInstance.h"
 #include "EffectSystem.h"
-#include "Player.h"
+#include "VFX_Manager.h"
 #include "PlayerInfoManager.h"
 #include "SpecialObject.h"
 
@@ -56,18 +56,6 @@ void CGravikenisisGUI::BeginTick()
 	Assert(m_pAppealCircle != nullptr);
 	m_pAppealCircle->Start_NoAttach(this, true, true);
 	m_pAppealCircle->Set_GroupVisible(true);
-
-	// Player
-	list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
-
-	for (auto iter : plsGameObject)
-	{
-		if (iter->GetPrototypeTag() == L"Player")
-		{
-			m_pPlayer = dynamic_cast<CPlayer*>(iter);
-			break;
-		}
-	}
 }
 
 void CGravikenisisGUI::Tick(_double TimeDelta)
@@ -87,10 +75,12 @@ void CGravikenisisGUI::Tick(_double TimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, dynamic_cast<CSpecialObject*>(pSpecialObject)->GetPxPostion());
 
 	// 염력 게이지에 채우기
-	SetfRatio(m_pPlayer->Get_KineticCharge());
+	_float fRatio = CPlayerInfoManager::GetInstance()->Get_SpecialCharge();
+	m_pKenisis->GetSecondEffect()->GetParams().Floats[0] = fRatio;
+	m_pKenisis->GetThirdEffect()->GetParams().Floats[0] = fRatio;
 
 	// 염력이 가득 찼을 때의 처리
-	if (1.0f < m_pPlayer->Get_KineticCharge())	// 염력 게이지가 다 찼을 때
+	if (1.0f < fRatio)	// 염력 게이지가 다 찼을 때
 	{
 		m_pKenisis->GetFourthEffect()->GetParams().Ints[0] = 0;
 		m_bOnG = true;
@@ -129,7 +119,7 @@ void CGravikenisisGUI::Tick(_double TimeDelta)
 	else
 	{
 		// 염력 게이지가 차는 중에는 어필원이 뜨지 않는다.
-		if (0.01f < m_pPlayer->Get_KineticCharge())
+		if (0.01f < fRatio)
 			m_pAppealCircle->Set_GroupVisible(false);
 		else
 			m_pAppealCircle->Set_GroupVisible(true);
@@ -137,21 +127,6 @@ void CGravikenisisGUI::Tick(_double TimeDelta)
 		m_pBanKenisis->Set_GroupVisible(false);
 		m_pKenisis->Set_GroupVisible(true);
 	}
-}
-
-void CGravikenisisGUI::Imgui_RenderProperty()
-{
-	__super::Imgui_RenderProperty();
-
-	static _float fRatio;
-	ImGui::DragFloat("Ratio", &fRatio);
-	SetfRatio(fRatio);
-}
-
-void CGravikenisisGUI::SetfRatio(const _float & fRatio)
-{
-	m_pKenisis->GetSecondEffect()->GetParams().Floats[0] = fRatio;
-	m_pKenisis->GetThirdEffect()->GetParams().Floats[0] = fRatio;
 }
 
 CGravikenisisGUI * CGravikenisisGUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

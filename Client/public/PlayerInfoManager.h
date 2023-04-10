@@ -58,6 +58,7 @@ typedef struct tagPlayerStatus
 	_bool bBattle = false;
 	_bool bDriveMode = false;
 	_bool bBrainField = false;
+	_bool bStartBrainField = false;
 
 	_float m_fBaseAttackDamage;
 
@@ -69,8 +70,6 @@ typedef struct tagPlayerStatus
 
 typedef struct tagHanabiStatus
 {
-	_bool bMember = { false };
-
 	_uint iHP = { 0 };
 	_uint iMaxHP = { 0 };
 	_uint iExp = { 0 };
@@ -85,8 +84,6 @@ typedef struct tagHanabiStatus
 
 typedef struct tagTsugumiStatus
 {
-	_bool bMember = { false };
-
 	_uint iHP = { 0 };
 	_uint iMaxHP = { 0 };
 	_uint iExp = { 0 };
@@ -109,7 +106,7 @@ typedef struct tagDamageDesc
 }	DAMAGE_DESC;
 
 enum CHANGETYPE { CHANGE_INCREASE, CHANGE_DECREASE, CHANGE_END };
-enum SASMEET { KYOTO, LUCA, SEEDEN, ARASHI, SASMEMBER_END };
+enum SASMEET { HANABI, TSUGUMI, KYOTO, LUCA, SEEDEN, ARASHI, SASMEMBER_END };
 
 class CPlayerInfoManager final : public CBase
 {
@@ -140,7 +137,9 @@ public:	// Get
 	TSUGUMI_STAT&	Get_TsugumiStat() { 
 		return m_tTsugumiStat;
 	}
-	_bool					Get_SASMember(const SASMEET eSAS) { return m_bSASMember[eSAS]; }
+	_bool					Get_SASMember(const SASMEET eSAS) { 
+		return m_bSASMember[eSAS];
+	}
 
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
@@ -185,11 +184,14 @@ public:	// Set
 	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
 
 	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
+
+	void			Set_Exp(const _uint iExp);
+	void			Set_StartBrainField();
 	
 	// SAS
-	void			Set_HanabiMember() { m_tHanabiStat.bMember = true; }
-	void			Set_TsugumiMember() { m_tTsugumiStat.bMember = true; }
-	void			Set_SASMember(const SASMEET eSAS) { m_bSASMember[eSAS] = true; }
+	void			Set_SASMember(const SASMEET eSAS) { 
+		m_bSASMember[eSAS] = true; 
+	}
 
 public:
 	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
@@ -220,7 +222,7 @@ private:
 	_float			m_fBaseAttackDamage;
 
 private:
-	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false };
+	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false };
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

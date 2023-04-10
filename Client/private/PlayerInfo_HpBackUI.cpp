@@ -18,7 +18,7 @@ CPlayerInfo_HpBackUI::CPlayerInfo_HpBackUI(const CPlayerInfo_HpBackUI& rhs)
 
 HRESULT CPlayerInfo_HpBackUI::Initialize_Prototype()
 {
-	if (FAILED(CUI::Initialize_Prototype()))
+	if (FAILED(CUI::Initialize_Prototype()))	
 		return E_FAIL;
 	
 	return S_OK;
@@ -32,25 +32,35 @@ HRESULT CPlayerInfo_HpBackUI::Initialize(void * pArg)
 	static _int iObjectCount;
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
-
-	m_tParams.Floats[0] = 0.0f;
 	
 	return S_OK;
 }
 
 void CPlayerInfo_HpBackUI::BeginTick()
 {
-
+	m_fHp = 1.0f;
+	m_fCurrentHp = 1.0f;
+	m_tParams.Floats[0] = 1.0f;
 }
 
 void CPlayerInfo_HpBackUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
-	if (m_fCurrentHp < m_fHp)
-		m_fCurrentHp += _float(TimeDelta) * 0.1f;
+	if (false == m_bSpeed)
+	{
+		if (m_fCurrentHp < m_fHp)
+			m_fCurrentHp += _float(TimeDelta) * 0.1f;
+		else
+			m_fCurrentHp -= _float(TimeDelta) * 0.1f;
+	}
 	else
-		m_fCurrentHp -= _float(TimeDelta) * 0.1f;
+	{
+		if (m_fCurrentHp < m_fHp)
+			m_fCurrentHp += _float(TimeDelta);
+		else
+			m_fCurrentHp -= _float(TimeDelta);
+	}
 
 	Object_Tick(TimeDelta);
 }

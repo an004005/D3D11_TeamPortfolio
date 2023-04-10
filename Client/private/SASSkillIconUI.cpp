@@ -64,7 +64,7 @@ void CSASSkillIconUI::Imgui_RenderProperty()
 
 void CSASSkillIconUI::Set_IconType(const ESASType & eESASType, const _bool bUsable)
 {
-	_float fSasType;
+	_float fSasType = 10.0f;
 
 	switch (eESASType)
 	{
