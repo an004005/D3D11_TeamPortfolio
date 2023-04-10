@@ -261,6 +261,8 @@ void CSpawnTrigger::Imgui_RenderProperty()
 
 void CSpawnTrigger::TriggerInEvent(CGameObject* pObject)
 {
+	if (m_bStart)
+		return;
 	m_bStart = true;
 	if (m_pWall)
 	{
@@ -284,7 +286,9 @@ void CSpawnTrigger::Free()
 	m_WaitingEnemies.clear();
 	m_SpawnEnemies.clear();
 
-	m_pWall->SetDelete();
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pWall))
+		m_pWall->SetDelete();
+	m_pWall = nullptr;
 }
 
 CSpawnTrigger* CSpawnTrigger::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

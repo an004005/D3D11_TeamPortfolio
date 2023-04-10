@@ -47,14 +47,12 @@ private:
 	CShader*							m_pShaderCom = nullptr;
 	CRenderer*							m_pRendererCom = nullptr;
 	CVIBuffer_Invisible*				m_pBuffer = nullptr;
-	CTexture* m_pNoise = nullptr;
-	CTexture* m_pFlowMask = nullptr;
+	ShaderParams						m_tParams;
+
 	CPhysXStaticMesh* m_pPxMesh = nullptr;
 
 	CSimpleTimeline m_Start;
 	CSimpleTimeline m_End;
-	_float m_fDissolve = 0.f;
-	_float m_Time = 0.f;
 			
 private:
 	vector<pair<_float4, CRigidBody*>> m_Points;
@@ -67,9 +65,6 @@ private:
 	_float m_fMaxCreateCoolTime = 0.5f;
 
 	_float m_fSegmentSize = 0.5f;
-
-
-
 
 public:
 	static CInvisibleWall*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

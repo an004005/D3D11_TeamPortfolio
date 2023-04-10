@@ -39,7 +39,7 @@ protected:
 	virtual ~CPhysXStaticMesh() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype(const vector<VTXNORTEX>& VtxData, const vector<FACEINDICES32>& IdxData);
+	virtual HRESULT Initialize_Prototype(const vector<VTXNORTEX>& VtxData, const vector<FACEINDICES32>& IdxData, _float4x4 WorldMatrix);
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Imgui_RenderProperty() override;
 
@@ -54,7 +54,7 @@ private:
 
 public:
 	virtual void Free() override;
-	static CPhysXStaticMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const vector<VTXNORTEX>& VtxData, const vector<FACEINDICES32>& IdxData);
+	static CPhysXStaticMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const vector<VTXNORTEX>& VtxData, const vector<FACEINDICES32>& IdxData, _float4x4 WorldMatrix);
 	virtual CComponent* Clone(void* pArg = nullptr);
 };
 

@@ -51,23 +51,25 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	if (In.vTexUV.y < 0.75f)
+	if (In.vTexUV.y < 0.6f)
 		discard;
 
-	float HeightGradient = Remap(In.vTexUV.y, float2(0.75f, 1.f), float2(0.f, 1.f));
+	float HeightGradient = Remap(In.vTexUV.y, float2(0.6f, 1.f), float2(0.f, 1.f));
 	float fBotGradient = 1.f;
 
-	if (In.vTexUV.y > 0.9f)
+	if (In.vTexUV.y > 0.85f)
 	{
-		fBotGradient = Remap(In.vTexUV.y, float2(0.9f, 1.f), float2(0.f, 1.f));
+		fBotGradient = Remap(In.vTexUV.y, float2(0.85f, 1.f), float2(0.f, 1.f));
 		fBotGradient = 1.f - fBotGradient;
 	}
 
-	float fNoise = g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, float2(1.f, 20.f), 0.f)).r;
-	float fFlowMask = g_tex_1.Sample(LinearSampler, TilingAndOffset(In.vTexUV, 1.f, float2(0.f, g_Time * 0.2f)));
+	float fNoise = g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, float2(0.5f, 10.f), 0.f)).r;
+	float fFlowMask = g_tex_1.Sample(LinearSampler, TilingAndOffset(In.vTexUV, 1.f, float2(g_Time * 0.1f, g_Time * 0.2f)));
 
-	Out.vColor.rgb = fNoise * float3(1.f, 0.3539f , 0.f) * 2.f;
+	Out.vColor.rgb = fNoise * float3(1.f, 0.3539f , 0.f) * 20.f * HeightGradient * fBotGradient;
 	Out.vColor.a = fNoise * fFlowMask * HeightGradient * fBotGradient * g_float_0;
+	if (Out.vColor.a < 0.0001f)
+		discard;
 
 	return Out;
 }

@@ -235,7 +235,7 @@ CPhysXStaticMesh::CPhysXStaticMesh(const CPhysXStaticMesh& rhs)
 {
 }
 
-HRESULT CPhysXStaticMesh::Initialize_Prototype(const vector<VTXNORTEX>& VtxData, const vector<FACEINDICES32>& IdxData)
+HRESULT CPhysXStaticMesh::Initialize_Prototype(const vector<VTXNORTEX>& VtxData, const vector<FACEINDICES32>& IdxData, _float4x4 WorldMatrix)
 {
 	vector<XMFLOAT3> vtxes;
 	vtxes.reserve(VtxData.size());
@@ -293,7 +293,7 @@ HRESULT CPhysXStaticMesh::Initialize_Prototype(const vector<VTXNORTEX>& VtxData,
 	m_PxMesh.pShape->setQueryFilterData(physx::PxFilterData{static_cast<physx::PxU32>(GetCollTypeBit(ECOLLIDER_TYPE::CT_STATIC)), 0, 0, 0});
 
 
-	auto pxMat = CPhysXUtils::ToFloat4x4(_float4x4::Identity);
+	auto pxMat = CPhysXUtils::ToFloat4x4(WorldMatrix);
 	m_pActor = pPhysics->createRigidStatic(physx::PxTransform{ pxMat });
 	m_pActor->userData = this;
 	m_pActor->attachShape(*m_PxMesh.pShape);
@@ -315,7 +315,8 @@ void CPhysXStaticMesh::Imgui_RenderProperty()
 
 void CPhysXStaticMesh::SetPxWorldMatrix(const _float4x4& WorldMatrix)
 {
-	m_pActor->setGlobalPose(physx::PxTransform{ CPhysXUtils::ToFloat4x4(WorldMatrix) });
+	if (IsActive())
+		m_pActor->setGlobalPose(physx::PxTransform{ CPhysXUtils::ToFloat4x4(WorldMatrix) });
 }
 
 void CPhysXStaticMesh::Activate(_bool bActive)
@@ -364,11 +365,11 @@ void CPhysXStaticMesh::Free()
 }
 
 CPhysXStaticMesh* CPhysXStaticMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
-	const vector<VTXNORTEX>& VtxData, const vector<FACEINDICES32>& IdxData)
+	const vector<VTXNORTEX>& VtxData, const vector<FACEINDICES32>& IdxData, _float4x4 WorldMatrix)
 {
 	CPhysXStaticMesh*		pInstance = new CPhysXStaticMesh(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(VtxData, IdxData)))
+	if (FAILED(pInstance->Initialize_Prototype(VtxData, IdxData, WorldMatrix)))
 	{
 		MSG_BOX("Failed to Created : CPhysXStaticMesh");
 		Safe_Release(pInstance);

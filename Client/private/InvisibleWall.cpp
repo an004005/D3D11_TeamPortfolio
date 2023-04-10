@@ -43,8 +43,11 @@ HRESULT CInvisibleWall::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom));
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxInvisible"), TEXT("Shader"), (CComponent**)&m_pShaderCom));  // ★
-	FAILED_CHECK(Add_Component(LEVEL_NOW, L"../Bin/Resources/Texture/VFX/T_ef_scl_noi_052.png", L"Texture0", (CComponent**)&m_pNoise));
-	FAILED_CHECK(Add_Component(LEVEL_NOW, L"../Bin/Resources/Texture/VFX/flowmask01.png", L"Texture1", (CComponent**)&m_pFlowMask));
+
+	Json jsonParams = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/InvisibleWallShaderParams.json");
+	CShader::LoadShaderParam(m_tParams, jsonParams);
+	if (m_tParams.Floats.empty())
+		m_tParams.Floats.push_back(0.f);
 
 #ifdef _DEBUG
 	const _matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -56,11 +59,12 @@ HRESULT CInvisibleWall::Initialize(void* pArg)
 		json["RigidBody"]["Density"] = 10;
 		json["RigidBody"]["ColliderType"] = CT_TRIGGER_FOR_MONSTER;
 		json["RigidBody"]["OriginTransform"] = _float4x4::CreateScale(m_fIndicatorSize);
+		json["RigidBody"]["ShapeType"] = CRigidBody::TYPE_SPHERE;
 		auto pRigidBody = dynamic_cast<CRigidBody*>(CGameInstance::GetInstance()->Clone_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", &json));
 
 		const _float4 vPos = XMVector3TransformCoord(Point.first, WorldMatrix);
-		pRigidBody->SetPxWorldMatrix(_float4x4::CreateTranslation(vPos.x, vPos.y, vPos.z));
 		pRigidBody->BeginTick();
+		pRigidBody->SetPxWorldMatrix(_float4x4::CreateTranslation(vPos.x, vPos.y, vPos.z));
 
 		Point.second = pRigidBody;
 	}
@@ -115,9 +119,9 @@ void CInvisibleWall::Tick(_double TimeDelta)
 		m_fCreateCoolTime -= (_float)TimeDelta;
 #endif
 
-	m_Time += (_float)TimeDelta;
-	m_Start.Tick(TimeDelta, m_fDissolve);
-	m_End.Tick(TimeDelta, m_fDissolve);
+	m_Start.Tick(TimeDelta * 0.5, m_tParams.Floats[0]);
+	m_End.Tick(TimeDelta * 0.5, m_tParams.Floats[0]);
+	m_pShaderCom->Tick(TimeDelta);
 }
 
 void CInvisibleWall::Late_Tick(_double TimeDelta)
@@ -134,13 +138,7 @@ HRESULT CInvisibleWall::Render()
 	FAILED_CHECK(m_pShaderCom->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 	FAILED_CHECK(m_pShaderCom->Set_RawValue("g_vCamPosition", &CGameInstance::GetInstance()->Get_CamPosition(), sizeof(_float4)));
 
-	FAILED_CHECK(m_pShaderCom->Set_RawValue("g_float_0", &m_fDissolve, sizeof(_float)));
-	FAILED_CHECK(m_pShaderCom->Set_RawValue("g_Time", &m_Time, sizeof(_float)));
-
-	FAILED_CHECK(m_pNoise->Bind_ShaderResource(m_pShaderCom, "g_tex_0", 0));
-	FAILED_CHECK(m_pFlowMask->Bind_ShaderResource(m_pShaderCom, "g_tex_1", 0));
-	
-	m_pShaderCom->Begin(0);
+	m_pShaderCom->Begin_Params(m_tParams);
 	m_pBuffer->Render();
 	return S_OK;
 }
@@ -226,8 +224,6 @@ void CInvisibleWall::Imgui_RenderProperty()
 
 	ImGui::InputFloat("ReCreate CoolTime", &m_fMaxCreateCoolTime);
 
-	ImGui::InputFloat("Dissolve", &m_fDissolve);
-
 	if (ImGui::Button("Active"))
 		Activate(true);
 	if (ImGui::Button("DeActive"))
@@ -247,6 +243,13 @@ void CInvisibleWall::CreateInstanceData()
 	m_Points.push_back({m_Points.front().first, nullptr});
 	vector<VTXNORTEX> VtxData;
 	vector<FACEINDICES32> IndexData;
+
+	_bool bClockWise = false;
+	_vector vDir1 = XMVector3Normalize(m_Points[1].first - m_Points[0].first);
+	_vector vDir2 = XMVector3Normalize(m_Points[2].first - m_Points[1].first);
+	_vector vCross = XMVector3Cross(vDir1, vDir2);
+	if (XMVectorGetY(vCross) > 0)
+		bClockWise = true;
 
 	vector<_float4> SplinePoints;
 	SplinePoints.reserve(m_Points.size() * 3);
@@ -313,19 +316,40 @@ void CInvisibleWall::CreateInstanceData()
 		VtxData.push_back(vtxNor);
 
 
-		if (i < SplinePoints.size() - 1)
+		// 시계방향일 때
+		if (bClockWise)
 		{
-			Index._0 = i * 2;
-			Index._1 = Index._0 + 1;
-			Index._2 = Index._0 + 3;
-			IndexData.push_back(Index);
+			if (i < SplinePoints.size() - 1)
+			{
+				Index._0 = i * 2;
+				Index._1 = Index._0 + 2;
+				Index._2 = Index._0 + 3;
+				IndexData.push_back(Index);
 
-			Index._1 = Index._0 + 3;
-			Index._2 = Index._0 + 2;
-			IndexData.push_back(Index);
+				Index._1 = Index._0 + 3;
+				Index._2 = Index._0 + 1;
+				IndexData.push_back(Index);
 
-			const _float fLength = XMVectorGetX(XMVector3Length(SplinePoints[i] - SplinePoints[i + 1]));
-			fU += fLength;
+				const _float fLength = XMVectorGetX(XMVector3Length(SplinePoints[i] - SplinePoints[i + 1]));
+				fU += fLength;
+			}
+		}
+		else
+		{
+			if (i < SplinePoints.size() - 1)
+			{
+				Index._0 = i * 2;
+				Index._1 = Index._0 + 1;
+				Index._2 = Index._0 + 3;
+				IndexData.push_back(Index);
+
+				Index._1 = Index._0 + 3;
+				Index._2 = Index._0 + 2;
+				IndexData.push_back(Index);
+
+				const _float fLength = XMVectorGetX(XMVector3Length(SplinePoints[i] - SplinePoints[i + 1]));
+				fU += fLength;
+			}
 		}
 	}
 
@@ -339,7 +363,7 @@ void CInvisibleWall::CreateInstanceData()
 	m_Points.pop_back();
 
 	Safe_Release(m_pPxMesh);
-	m_pPxMesh = CPhysXStaticMesh::Create(m_pDevice, m_pContext, VtxData, IndexData);
+	m_pPxMesh = CPhysXStaticMesh::Create(m_pDevice, m_pContext, VtxData, IndexData, m_pTransformCom->Get_WorldMatrix_f4x4());
 }
 
 void CInvisibleWall::Activate(_bool bActive)
@@ -400,9 +424,6 @@ _bool CInvisibleWall::PickPoint()
 
 void CInvisibleWall::AddPoint_ForTool(_float4 vPos)
 {
-	if (m_Points.empty())
-		vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
 	Json json;
 	json["RigidBody"]["bKinematic"] = true;
 	json["RigidBody"]["bTrigger"] = false;
@@ -411,8 +432,8 @@ void CInvisibleWall::AddPoint_ForTool(_float4 vPos)
 	json["RigidBody"]["OriginTransform"] = _float4x4::CreateScale(m_fIndicatorSize);
 	json["RigidBody"]["ShapeType"] = CRigidBody::TYPE_SPHERE;
 	auto pRigidBody = dynamic_cast<CRigidBody*>(CGameInstance::GetInstance()->Clone_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", &json));
-	pRigidBody->SetPxWorldMatrix(_float4x4::CreateTranslation(vPos.x, vPos.y, vPos.z));
 	pRigidBody->BeginTick();
+	pRigidBody->SetPxWorldMatrix(_float4x4::CreateTranslation(vPos.x, vPos.y, vPos.z));
 
 	_matrix WorldInv = m_pTransformCom->Get_WorldMatrix_Inverse();
 	vPos = XMVector3TransformCoord(vPos, WorldInv);
@@ -469,7 +490,7 @@ void CInvisibleWall::Free()
 		Safe_Release(Point.second);
 	m_Points.clear();
 
-	Safe_Release(m_pNoise);
-	Safe_Release(m_pFlowMask);
 	Safe_Release(m_pPxMesh);
+	for (auto pTex : m_tParams.Textures)
+		Safe_Release(pTex.first);
 }
