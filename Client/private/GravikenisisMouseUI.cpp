@@ -2,7 +2,7 @@
 #include "..\public\GravikenisisMouseUI.h"
 #include "GameInstance.h"
 #include "EffectSystem.h"
-#include "Player.h"
+#include "VFX_Manager.h"
 #include "PlayerInfoManager.h"
 #include "MapKinetic_Object.h"
 
@@ -57,18 +57,6 @@ void CGravikenisisMouseUI::BeginTick()
 	Assert(m_pAppealCircle != nullptr);
 	m_pAppealCircle->Start_NoAttach(this, true, true);
 	m_pAppealCircle->Set_GroupVisible(true);
-
-	// Player
-	list<CGameObject*> plsGameObject = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects();
-
-	for (auto iter : plsGameObject)
-	{
-		if (iter->GetPrototypeTag() == L"Player")
-		{
-			m_pPlayer = dynamic_cast<CPlayer*>(iter);
-			break;
-		}
-	}
 }
 
 void CGravikenisisMouseUI::Tick(_double TimeDelta)
@@ -76,7 +64,8 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 	
  	CGameObject* pKineticObject = CPlayerInfoManager::GetInstance()->Get_KineticObject();
-	if (pKineticObject == nullptr)
+	_float fRatio = CPlayerInfoManager::GetInstance()->Get_KineticCharge();
+	if (pKineticObject == nullptr || 1.0f <= fRatio)
 	{
 		m_pBanKenisis->Set_GroupVisible(false);
 		m_pAppealCircle->Set_GroupVisible(false);
@@ -88,10 +77,11 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, dynamic_cast<CMapKinetic_Object*>(pKineticObject)->GetPxPostion());
 
 	// 염력 게이지에 채우기
-	SetfRatio(m_pPlayer->Get_KineticCharge());
+	m_pKenisis->GetSecondEffect()->GetParams().Floats[0] = fRatio;
+	m_pKenisis->GetThirdEffect()->GetParams().Floats[0] = fRatio;
 	
 	// 염력이 가득 찼을 때의 처리
-	if (1.0f < m_pPlayer->Get_KineticCharge())	// 염력 게이지가 다 찼을 때
+	if (0.8f < fRatio)	// 염력 게이지가 다 찼을 때
 	{
 		m_pKenisis->GetFourthEffect()->GetParams().Ints[0] = 0;
 	}
@@ -110,7 +100,7 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 	else
 	{
 		// 염력 게이지가 차는 중에는 어필원이 뜨지 않는다.
-		if (0.01f < m_pPlayer->Get_KineticCharge())
+		if (0.01f < fRatio)
 			m_pAppealCircle->Set_GroupVisible(false);
 		else
 			m_pAppealCircle->Set_GroupVisible(true);
@@ -118,68 +108,6 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 		m_pBanKenisis->Set_GroupVisible(false);
 		m_pKenisis->Set_GroupVisible(true);
 	}
-
-	//// 나 염력 사용하라고 어필 하는 원
-
-	//CGameObject* pGameObject = m_pOwner;
-	//CMapKinetic_Object* kinetic = dynamic_cast<CMapKinetic_Object*>(m_pOwner);
-
-	//_bool CameRange = kinetic->Get_CameRange();
-
-	//if (false == dynamic_cast<CMapKinetic_Object*>(m_pOwner)->Get_CameRange())
-	//{
-	//	m_pKenisis->Set_GroupVisible(false);
-	//	m_pBanKenisis->Set_GroupVisible(false);
-	//	m_pAppealCircle->Set_GroupVisible(false);
-	//	
-	//	return;
-	//}
-
-	//if (0.0f == m_pPlayer->Get_KineticCharge())	// 들리고 있지 않은 상태
-	//{
-	//	m_pAppealCircle->Set_GroupVisible(true);
-	//}
-	//else	// 들리고 있는 상태
-	//{
-	//	m_pAppealCircle->Set_GroupVisible(false);
-	//}
-
-	//// 염력 게이지가 부족 하다면, 금지 Icon 으로 변경하고 return 시킨다.
-	//if (20.0f > CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergy)
-	//{
-	//	m_pBanKenisis->Set_GroupVisible(true);
-
-	//	m_pKenisis->Set_GroupVisible(false);
-	//	m_pAppealCircle->Set_GroupVisible(false);
-
-	//	return;
-	//}
-
-	//// 염력 사용이 가능할 때 
-	//m_pKenisis->Set_GroupVisible(true);
-	//m_pBanKenisis->Set_GroupVisible(false);
-
-	//SetfRatio(m_pPlayer->Get_KineticCharge());	// 염력 게이지를 사용하는 만큼 게이지가 올라간다. (사용하지 않으면 내려간다.)
-	//if (1.0f <= m_pPlayer->Get_KineticCharge())	// 최대 1초가 넘어간 객체는 게이지를 지운다.
-	//{
-	//	m_bDelete = true;
-	//	return;
-	//}
-}
-
-void CGravikenisisMouseUI::Imgui_RenderProperty()
-{
-	__super::Imgui_RenderProperty();
-
-	static _float fRatio;
-	ImGui::DragFloat("Ratio", &fRatio);
-	SetfRatio(fRatio);
-}
-
-void CGravikenisisMouseUI::SetfRatio(const _float & fRatio)
-{
-	m_pKenisis->GetSecondEffect()->GetParams().Floats[0] = fRatio;
-	m_pKenisis->GetThirdEffect()->GetParams().Floats[0] = fRatio;
 }
 
 CGravikenisisMouseUI * CGravikenisisMouseUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

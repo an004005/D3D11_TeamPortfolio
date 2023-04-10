@@ -32,6 +32,8 @@ public:
 public:
 	void Create_InitEffects(vector<wstring>& InitEffects, _float4x4 pivot = XMMatrixIdentity());
 	void Create_InitParticle(wstring& InitParticle);
+	void Create_InitRotParticle(wstring& InitParticle, _bool trueisUpdate);
+
 	void Create_DeadEffects();
 	void Create_DeadParticle();
 
@@ -92,6 +94,9 @@ protected:
 	_float m_fLife = 0.f;
 	DAMAGE_PARAM m_eDamageParam;
 	_float	m_fRadius = 0.3f;
+
+
+	_bool	m_bRotParticles = false;
 public:
 	static CBullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

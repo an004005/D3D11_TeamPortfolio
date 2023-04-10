@@ -580,6 +580,7 @@ void CPlayer::Tick(_double TimeDelta)
 		iter->Tick(TimeDelta);
 		{
 			_bool bCol = Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART));
+			CPlayerInfoManager::GetInstance()->Set_PlayerAttackEnable(m_bAttackEnable);
 
 			if (bCol)
 			{
@@ -1680,10 +1681,10 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.OnStart([&]() { m_bZoomIsFinish = false; })
 		.Tick([&](double fTimeDelta) 
 		{
-			if (m_bBrainField)
-			{
-				CPlayerInfoManager::GetInstance()->Change_BrainFieldMaintain(CHANGE_DECREASE, (_float)fTimeDelta);
-			}
+				if (m_bBrainField)
+				{
+					CPlayerInfoManager::GetInstance()->Change_BrainFieldMaintain(CHANGE_DECREASE, (_float)fTimeDelta);
+				}
 
 			//IM_LOG("BF : %f", CPlayerInfoManager::GetInstance()->Get_PlayerStat().fBrainFieldMaintain);
 		})

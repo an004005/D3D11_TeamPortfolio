@@ -253,6 +253,7 @@
     <ClInclude Include="..\public\CapsuleLight.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
+    <ClInclude Include="..\public\Consumption_Item.h" />
     <ClInclude Include="..\public\Controller.h" />
     <ClInclude Include="..\public\Canvas_Tutorial.h" />
     <ClInclude Include="..\public\DistanceUI.h" />
@@ -310,10 +311,12 @@
     <ClInclude Include="..\public\EMGift.h" />
     <ClInclude Include="..\public\EMUI.h" />
     <ClInclude Include="..\public\FSM_Recompiler.h" />
+    <ClInclude Include="..\public\HPlossUI.h" />
     <ClInclude Include="..\public\HS_TeleportableWall.h" />
     <ClInclude Include="..\public\Imgui_Cheat.h" />
     <ClInclude Include="..\public\InvisibleWall.h" />
     <ClInclude Include="..\public\Item_LightUI.h" />
+    <ClInclude Include="..\public\Level_ConstructionSite2F.h" />
     <ClInclude Include="..\public\Level_FinalStage.h" />
     <ClInclude Include="..\public\Level_Hospital_1F.h" />
     <ClInclude Include="..\public\Level_NaomiRoom.h" />
@@ -595,6 +598,7 @@
     <ClCompile Include="..\private\Canvas_SASSkillMove.cpp" />
     <ClCompile Include="..\private\CapsuleLight.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
+    <ClCompile Include="..\private\Consumption_Item.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\DistanceUI.cpp" />
     <ClCompile Include="..\private\Drive_GaugeUI.cpp" />
@@ -651,10 +655,12 @@
     <ClCompile Include="..\private\EMGift.cpp" />
     <ClCompile Include="..\private\EMUI.cpp" />
     <ClCompile Include="..\private\FSM_Recompiler.cpp" />
+    <ClCompile Include="..\private\HPlossUI.cpp" />
     <ClCompile Include="..\private\HS_TeleportableWall.cpp" />
     <ClCompile Include="..\private\Imgui_Cheat.cpp" />
     <ClCompile Include="..\private\InvisibleWall.cpp" />
     <ClCompile Include="..\private\Item_LightUI.cpp" />
+    <ClCompile Include="..\private\Level_ConstructionSite2F.cpp" />
     <ClCompile Include="..\private\Level_FinalStage.cpp" />
     <ClCompile Include="..\private\Level_Hospital_1F.cpp" />
     <ClCompile Include="..\private\Level_NaomiRoom.cpp" />

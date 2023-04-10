@@ -17,24 +17,24 @@ public:
 	virtual void	Tick(_double TimeDelta) override;
 
 	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	_float2	Get_SASLeftHp() {
-		return m_vSASLeftHp;
-	}
-
-	void	Set_SASLeftHp(const _float & fHp, const _float & fMaxHp);
+	void	Set_HillBar();
 
 private:
-	void	ChildHp_Tick();
-	void	RendomTexture(const _double & dTimeDelta);
+	void	SASRightHp_Tick();
+	void	RendomTexture_Tick(const _double& dTimeDelta);
+	void	HillBar_Tick(const _double& TimeDelta);
 
 private:
-	_float	m_fHp = { 0.0f };
-	_float2	m_vSASLeftHp = { 0.0f, 0.0f };
+	_float	m_fHPRatio = { 0.0f };
 	_double	m_dRendomTexture_TimeAcc = { 0.0 };
+
+	_bool	m_bHill = { false };
+	_bool	m_bHpHill = { false };
+	_double	m_dMaxHillChake_TimeAcc = { 0.0 };
+
+	_bool	m_bMember = { false };
 
 public:
 	static CCanvas_SASInfoLeftMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -26,13 +26,13 @@ public:
 public:
 	void	RendomHpImage(const _int & iImageNumber);
 
-	_float	Get_CurrentHp() {
-		return m_fCurrentHp;
+	_bool	Get_MaxHp() {
+		return m_bMaxHp;
 	}
-
 	void	Set_PlayerHp(const _float & fHp) {
 		m_fHp = fHp;
 	}
+
 
 private:
 	void	Object_Tick(const _double & dTimeDelta);
@@ -52,6 +52,8 @@ private:
 	
 	_float	m_fHp = { 0.0f };	// Canvas 에서 0~1 로 계산된 HP
 	_float	m_fCurrentHp = { 0.0f };
+
+	_bool	m_bMaxHp = { false };	// 회복을 사용할 때 Hp가 가득 찼으면! Hill Bar 를 지우기 위해서
 
 public:
 	static CPlayerInfo_HpUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -13,8 +13,6 @@ HRESULT CEnemy_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameObject
 
 void CEnemy_AnimInstance::Tick(_double TimeDelta)
 {
-	m_fLerpDuration = 0.1f;
-
 	UpdateTargetState(TimeDelta);
 
 	_bool bChange = CheckFinishedAnimSocket();

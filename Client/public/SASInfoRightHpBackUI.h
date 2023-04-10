@@ -28,6 +28,9 @@ public:
 	void	Set_PlayerHp(const _float & fHp) {
 		m_fHp = fHp;
 	}
+	void	Set_Speed(const _bool	bSpeed) {
+		m_bSpeed = bSpeed;
+	}
 
 private:
 	void	Object_Tick(const _double & dTimeDelta);
@@ -44,6 +47,8 @@ private:
 
 	_float	m_fHp = { 0.0f };
 	_float	m_fCurrentHp = { 0.0f };
+
+	_bool	m_bSpeed = { false };
 
 public:
 	static CSASInfoRightHpBackUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

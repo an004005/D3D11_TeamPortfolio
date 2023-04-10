@@ -66,6 +66,10 @@ namespace Engine
 		_float4			vDiffuse;
 		_float4			vAmbient;
 		_float4			vSpecular;
+
+
+		_float4			vOriginDiffuse;
+		_float			fLifeTime;
 	}LIGHTDESC;	
 
 	typedef struct tagKeyframe
