@@ -349,8 +349,6 @@ void CEM0400::SetUpFSM()
 					return PriorityCondition() || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketEmpty("FullBody");
 				})
 
-
-
 		.AddState("Down")
 			.OnStart([this]
 			{

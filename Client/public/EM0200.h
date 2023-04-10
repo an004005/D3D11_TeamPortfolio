@@ -54,6 +54,9 @@ private:
 	void Play_MidHitAnim();
 
 private:
+	_bool PriorityCondition();
+
+private:
 	class CEM0200_Controller*		m_pController = nullptr;
 	class CEM0200_AnimInstance*		m_pASM = nullptr;
 	
@@ -81,6 +84,8 @@ private:
 
 	// Run 상태를 위한 _bool
 	_bool m_bRun = false;
+
+	_bool	m_bDown = false;
 
 	CController::EHandleInput m_eInput;
 

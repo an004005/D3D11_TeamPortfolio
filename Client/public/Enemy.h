@@ -179,13 +179,11 @@ protected:
 	string m_strDeathSoundTag;
 	string m_strImpactVoiceTag;
 
-
-
 	_bool m_bSpawnEffect = true;
 	_float4x4 m_SpawnEffectPivot;
 	_float m_fSpawnDistortionDistancePivot = 0.f;
 
-	private:
+private:
 		_int KBSound = 0;
 public:
 	virtual void Free() override;

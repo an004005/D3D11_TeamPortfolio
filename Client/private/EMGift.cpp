@@ -61,7 +61,7 @@ void CEMGift::Tick(_double TimeDelta)
 			m_bDelete = true;
 
 		_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		vPos += XMVector3Normalize(m_vDirection) * 35.f * TimeDelta;
+		vPos += XMVector3Normalize(m_vDirection) * 25.f * TimeDelta;
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos);
 		
 		DAMAGE_PARAM	dParams;
