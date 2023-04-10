@@ -185,7 +185,7 @@ void CEM0700::SetUpFSM()
 			{
 				return m_bDead
 					|| m_pASM->isSocketPassby("FullBody", 0.95f)
-					|| (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
+					|| (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP);
 			})
 
 
@@ -818,7 +818,7 @@ void CEM0700::Create_Bullet()
 			.Set_DeadBulletEffect({ L"em0650_Bullet_Dead" })
 			.Set_DeadBulletParticle(L"em0650_Bullet_Dead_Particle")
 			.Set_Position(BonePos)
-			.Set_LookAt(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION))
+			.Set_LookAt(m_pTarget->GetColliderPosition())
 		.Build();
 }
 

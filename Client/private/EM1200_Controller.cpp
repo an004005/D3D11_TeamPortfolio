@@ -2,6 +2,7 @@
 #include "..\public\EM1200_Controller.h"
 #include <FSMComponent.h>
 #include "EM1200.h"
+#include "EM1200_AnimInstance.h"
 
 CEM1200_Controller::CEM1200_Controller(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CAIController(pDevice, pContext)
@@ -30,6 +31,7 @@ HRESULT CEM1200_Controller::Initialize(void * pArg)
 	//far : cable
 	//out : run
 
+	m_bChangePhase = true;
 	return S_OK;
 }
 
@@ -56,18 +58,16 @@ void CEM1200_Controller::AI_Tick(_double TimeDelta)
 	}
 
 	m_bRun = false;
-	m_eTurn = EBaseTurn::TURN_END;
 
 	m_dStampCoolTime[CURTIME] += TimeDelta;
 	m_dShoutCoolTime[CURTIME] += TimeDelta;
 
-	_bool tt = IsCommandRunning() == false;
-	_bool ttty = m_pCastedOwner->IsPlayingSocket() == false;
-
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
-		AddCommand("Cable", 0.f, &CAIController::Input, C);
-
+		AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
+		AddCommand("Wait", 0.5f, &CAIController::Wait);
+		AddCommand("Rush", 0.f, &CAIController::Input, R);
+		AddCommand("Wait", 1.f, &CAIController::Wait);
 		//DefineState(TimeDelta);
 	}
 }
@@ -97,35 +97,35 @@ void CEM1200_Controller::Tick_Near_2Phase(_double TimeDelta)
 {
 	m_eDistance = DIS_NEAR;
 
-	ESimpleAxis eSimpeAxis = m_pCastedOwner->TargetSimpleAxis();
+	ESimpleAxis eSimpeAxis = m_pCastedOwner->IsTargetFront(45.f) ? ESimpleAxis::NORTH : ESimpleAxis::SOUTH;
 
 	if (eSimpeAxis == ESimpleAxis::NORTH)
 	{
-
 		if (m_dShoutCoolTime[CURTIME] >= m_dShoutCoolTime[MAXTIME])
 		{
-			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 1.f);
+			AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
 			AddCommand("Shout2", 0.f, &CAIController::Input, NUM_2);
 			AddCommand("Wait", 1.f, &CAIController::Wait);
 			m_dShoutCoolTime[CURTIME] = 0.0;
 		}
 		else if (m_dStampCoolTime[CURTIME] >= m_dStampCoolTime[MAXTIME])
 		{
-			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 1.f);
+			AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
 			AddCommand("Stamp", 0.f, &CAIController::Input, S);
 			AddCommand("Wait", 1.f, &CAIController::Wait);
 			m_dStampCoolTime[CURTIME] = 0.0;
 		}
 		else
 		{
-			AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 1.f);
+			AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
+			AddCommand("Wait", 1.f, &CAIController::Wait);
 			AddCommand("Rush", 0.f, &CAIController::Input, R);
 			AddCommand("Wait", 1.f, &CAIController::Wait);
 		}
 	}
 	else
 	{
-		EBaseTurn eTurn = m_pCastedOwner->TargetBaseTurn();
+		EBaseTurn eTurn = m_pCastedOwner->IsTargetRight() ? EBaseTurn::TURN_RIGHT : EBaseTurn::TURN_LEFT;
 
 		if (eTurn == EBaseTurn::TURN_RIGHT)
 			AddCommand("Swing_R", 0.f, &CAIController::Input, MOUSE_RB);
@@ -133,7 +133,7 @@ void CEM1200_Controller::Tick_Near_2Phase(_double TimeDelta)
 			AddCommand("Swing_L", 0.f, &CAIController::Input, MOUSE_LB);
 	}
 
-	
+
 }
 
 void CEM1200_Controller::Tick_Mid(_double TimeDelta)
@@ -142,15 +142,17 @@ void CEM1200_Controller::Tick_Mid(_double TimeDelta)
 
 	if (m_bChangePhase == false)
 	{
-		AddCommand("Turn", 2.f, &CEM1200_Controller::Turn, 0.5f);
+		AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
 		AddCommand("Walk", 2.f, &CAIController::Move, EMoveAxis::NORTH);
 	}
 	else
 	{
-		AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 2.f);
+		AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
+		//AddCommand("Wait", 1.f, &CAIController::Wait);
 		AddCommand("Rush", 0.f, &CAIController::Input, R);
 		AddCommand("Wait", 1.f, &CAIController::Wait);
-	}
+	}	
+
 }
 
 void CEM1200_Controller::Tick_Far(_double TimeDelta)
@@ -169,7 +171,7 @@ void CEM1200_Controller::Tick_Outside(_double TimeDelta)
 	}
 	else
 	{
-		AddCommand("Turn", 3.f, &CEM1200_Controller::Turn, 2.f);
+		AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
 		AddCommand("Run", 3.f, &CEM1200_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 2.f);
 	}
 }
@@ -183,8 +185,33 @@ void CEM1200_Controller::Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
  
 void CEM1200_Controller::Turn( _float fSpeedRatio)
 {
-	m_eTurn = m_pCastedOwner->TargetBaseTurn();
-	TurnToTargetStop(fSpeedRatio);
+	if (m_pTarget == nullptr || m_pCastedOwner == nullptr)
+		return;
+
+	if (m_bturn == false)
+	{
+		m_eTurn = m_pCastedOwner->IsTargetRight() ? EBaseTurn::TURN_RIGHT : EBaseTurn::TURN_LEFT;
+		m_bturn = true;
+	}
+
+	const _vector vLookAt = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+
+	CAnimation* pAnimation = m_pCastedOwner->Get_Model()->GetPlayAnimation();
+
+	if (nullptr == pAnimation) return;
+
+	_float fRatio = pAnimation->GetPlayRatio();
+
+	if (pAnimation == m_pCastedOwner->Get_Model()->Find_Animation("AS_em1200_157_AL_turn_R_loop2") ||
+		pAnimation == m_pCastedOwner->Get_Model()->Find_Animation("AS_em1200_155_AL_turn_L_loop2"))
+	{
+		if (m_pCastedOwner->GetTransform()->LookAt_Lerp_NonY(vLookAt, fRatio))
+		{
+			m_Commands.front().SetFinish();
+			m_eTurn = EBaseTurn::TURN_END;
+			m_bturn = false;
+		}
+	}
 }
 
 void CEM1200_Controller::DefineState(_double TimeDelta)

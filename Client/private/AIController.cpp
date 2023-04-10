@@ -270,6 +270,7 @@ void CAIController::TurnToTarget(_float fSpeedRatio)
 	const _vector vLookAt = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 	m_fTurnRemain = pOwner->GetTransform()->Get_RemainYawToLookAt(vLookAt);
 	pOwner->GetTransform()->LookAt_Smooth(vLookAt, _double(m_fTimeDelta * fSpeedRatio));	
+	//pOwner->GetTransform()->LookAt_Lerp_NonY(vLookAt, _double(m_fTimeDelta * fSpeedRatio));
 }
 
 void CAIController::Input(EHandleInput eInput)

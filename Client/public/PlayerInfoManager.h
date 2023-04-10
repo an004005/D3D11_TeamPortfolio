@@ -53,6 +53,7 @@ typedef struct tagPlayerStatus
 	_uint iWeaponType = { 0 };			// 0번 wp0106, 1번 wp0190
 
 	_float fKineticCharge = { 0.f };	// 염력체 차지 백분율 (0~1)
+	_float fSpecialCharge = { 0.f };
 
 	_bool bBattle = false;
 	_bool bDriveMode = false;
@@ -167,6 +168,9 @@ public:	// Set
 
 	void			Set_KineticCharge(_float fCharge) { m_tPlayerStat.fKineticCharge = fCharge; }
 	_float			Get_KineticCharge() { return m_tPlayerStat.fKineticCharge; }
+
+	void			Set_SpecialCharge(_float fCharge) { m_tPlayerStat.fSpecialCharge = fCharge; }
+	_float			Get_SpecialCharge() { return m_tPlayerStat.fSpecialCharge; }
 
 	void			Set_PlayerWeapon(_uint iWeaponType);
 	_uint			Get_PlayerWeapon() { return m_tPlayerStat.iWeaponType; }
