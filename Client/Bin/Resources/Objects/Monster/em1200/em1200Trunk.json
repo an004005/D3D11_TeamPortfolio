@@ -1,1 +1,1 @@
-{"RigidBody":{"ColliderType":8,"Density":10.0,"OriginTransform":[-1.3113415775478643e-07,3.0,0.0,0.0,-2.0,-8.742277657347586e-08,0.0,0.0,0.0,0.0,1.9997506141662598,0.0,0.0,0.0,0.0,1.0],"ShapeType":2,"bKinematic":true,"bTrigger":false}}
+{"RigidBody":{"ColliderType":8,"Density":10.0,"OriginTransform":[-1.7484555314695172e-07,4.0,0.0,0.0,-2.0,-8.742277657347586e-08,0.0,0.0,0.0,0.0,2.9999611377716064,0.0,0.0,0.0,0.0,1.0],"ShapeType":2,"bKinematic":true,"bTrigger":false}}

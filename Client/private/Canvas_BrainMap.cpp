@@ -2,7 +2,9 @@
 #include "..\public\Canvas_BrainMap.h"
 #include "GameInstance.h"
 #include "PlayerInfoManager.h"
+#include "UI_Manager.h"
 
+#include "Canvas_PlayerInfoMove.h"
 #include "DefaultUI.h"
 #include "Main_PickUI.h"
 #include "Main_OnMouseUI.h"
@@ -175,22 +177,6 @@ HRESULT CCanvas_BrainMap::Render()
 	return S_OK;
 }
 
-void CCanvas_BrainMap::Imgui_RenderProperty()
-{
-	CCanvas::Imgui_RenderProperty();
-
-}
-
-void CCanvas_BrainMap::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-}
-
-void CCanvas_BrainMap::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
-}
-
 void CCanvas_BrainMap::Brain_Intiialize()
 {
 	BRAININFO	tBrainInfo;
@@ -208,7 +194,7 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.arrNeighbor = { 1, 8, -1 };
 	tBrainInfo.szBrainName = L"드라이브 게이지 축적량 상승";
 	tBrainInfo.szBrainEx[0] = L"드라이브 게이지 축적량 +20%";
-	tBrainInfo.szBrainEx[1] = L"적을 쓰러뜨리거나 적에게 대미지를 받는 등";
+	tBrainInfo.szBrainEx[1] = L"적을 쓰러뜨리거나 적에게 데미지를 받는 등";
 	tBrainInfo.szBrainEx[2] = L"특정 행동으로 인한 축적량이 증가하여";
 	tBrainInfo.szBrainEx[3] = L"드라이브 게이지가 쌓이기 쉬워진다.";
 	m_vecBrain.push_back(tBrainInfo);
@@ -369,7 +355,7 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.arrNeighbor = { 11, 15, -1 };
 	tBrainInfo.szBrainName = L"염력 게이지 회복량 상승(공중 공격)";
 	tBrainInfo.szBrainEx[0] = L"공중 공격으로 인한 염력 게이지의 회복량이 증가한다.";
-	tBrainInfo.szBrainEx[1] = L"!![스페이스바]+[왼쪽 마루스] 올려베기 공격은 포함되지 않는다.";
+	tBrainInfo.szBrainEx[1] = L"!![스페이스바]+[왼쪽 마우스] 올려베기 공격은 포함되지 않는다.";
 	tBrainInfo.szBrainEx[2] = L"";
 	tBrainInfo.szBrainEx[3] = L"";
 	m_vecBrain.push_back(tBrainInfo);
@@ -417,7 +403,7 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.arrNeighbor = { 14, 17, 19 };
 	tBrainInfo.szBrainName = L"공격력 상승 1";
 	tBrainInfo.szBrainEx[0] = L"공격력 +5%";
-	tBrainInfo.szBrainEx[1] = L"무기 공격으로 주는 대미지가 증가한다.";
+	tBrainInfo.szBrainEx[1] = L"무기 공격으로 주는 데미지가 증가한다.";
 	tBrainInfo.szBrainEx[2] = L"";
 	tBrainInfo.szBrainEx[3] = L"";
 	m_vecBrain.push_back(tBrainInfo);
@@ -432,7 +418,7 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.vOffIconIndex = { 0.0f, 4.0f };
 	tBrainInfo.arrNeighbor = { 15, -1, -1 };
 	tBrainInfo.szBrainName = L"후속타";
-	tBrainInfo.szBrainEx[0] = L"다운 중인 적에게 주는 대미지가 증가한다.";
+	tBrainInfo.szBrainEx[0] = L"다운 중인 적에게 주는 데미지가 증가한다.";
 	tBrainInfo.szBrainEx[1] = L"";
 	tBrainInfo.szBrainEx[2] = L"";
 	tBrainInfo.szBrainEx[3] = L"";
@@ -481,7 +467,7 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.arrNeighbor = { 18, -1, -1 };
 	tBrainInfo.szBrainName = L"공격력 상승 2";
 	tBrainInfo.szBrainEx[0] = L"공격력 +5%";
-	tBrainInfo.szBrainEx[1] = L"무기 공격으로 주는 대미지가 증가한다.";
+	tBrainInfo.szBrainEx[1] = L"무기 공격으로 주는 데미지가 증가한다.";
 	tBrainInfo.szBrainEx[2] = L"";
 	tBrainInfo.szBrainEx[3] = L"";
 	m_vecBrain.push_back(tBrainInfo);
@@ -513,7 +499,7 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.arrNeighbor = { 20, -1, -1 };
 	tBrainInfo.szBrainName = L"초뇌능력 상승";
 	tBrainInfo.szBrainEx[0] = L"초뇌능력 +5%";
-	tBrainInfo.szBrainEx[1] = L"염력 공격으로 주는 대미지가 증가한다.";
+	tBrainInfo.szBrainEx[1] = L"염력 공격으로 주는 데미지가 증가한다.";
 	tBrainInfo.szBrainEx[2] = L"";
 	tBrainInfo.szBrainEx[3] = L"";
 	m_vecBrain.push_back(tBrainInfo);
@@ -933,7 +919,7 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.szBrainName = L"SAS 동시 발동";
 	tBrainInfo.szBrainEx[0] = L"같은 이름의 스킬이 2개 있으며,";
 	tBrainInfo.szBrainEx[1] = L"하나를 습득하면, SAS를 동시에 2개까지 발동할 수 있으며,";
-	tBrainInfo.szBrainEx[2] = L"2개를 습득하면, SAS를 동시에 4개까지 발동할 수 있다.";
+	tBrainInfo.szBrainEx[2] = L"2개를 습득하면, SAS를 동시에 3개까지 발동할 수 있다.";
 	tBrainInfo.szBrainEx[3] = L"!!SAS 발화와 SAS 방전은 동시에 발동할 수 없다.";
 	m_vecBrain.push_back(tBrainInfo);
 
@@ -981,7 +967,7 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.szBrainName = L"SAS 동시 발동";
 	tBrainInfo.szBrainEx[0] = L"같은 이름의 스킬이 2개 있으며,";
 	tBrainInfo.szBrainEx[1] = L"하나를 습득하면, SAS를 동시에 2개까지 발동할 수 있으며,";
-	tBrainInfo.szBrainEx[2] = L"2개를 습득하면, SAS를 동시에 4개까지 발동할 수 있다.";
+	tBrainInfo.szBrainEx[2] = L"2개를 습득하면, SAS를 동시에 3개까지 발동할 수 있다.";
 	tBrainInfo.szBrainEx[3] = L"!!SAS 발화와 SAS 방전은 동시에 발동할 수 없다.";
 	m_vecBrain.push_back(tBrainInfo);
 	// 잠시 다른 곳
@@ -1013,9 +999,9 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.vOffIconIndex = { 3.0f, 4.0f };
 	tBrainInfo.arrNeighbor = { 51, 53, -1 };
 	tBrainInfo.szBrainName = L"브레인 필드: 차지 투하 레벨 상승";
-	tBrainInfo.szBrainEx[0] = L"자신이 브레인 필드를 전대하고 있을 때";
+	tBrainInfo.szBrainEx[0] = L"자신이 브레인 필드를 전개하고 있을 때";
 	tBrainInfo.szBrainEx[1] = L"[G] 길게 누르기로 모이는 오브젝트가 증가하여";
-	tBrainInfo.szBrainEx[2] = L"오브젝트를 낙하시켜서 주는 대미지가 증가한다.";
+	tBrainInfo.szBrainEx[2] = L"오브젝트를 낙하시켜서 주는 데미지가 증가한다.";
 	tBrainInfo.szBrainEx[3] = L"";
 	m_vecBrain.push_back(tBrainInfo);
 
@@ -1062,11 +1048,11 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.vOnIconIndex = { 1.0f,  1.0f };
 	tBrainInfo.vOffIconIndex = { 0.0f, 4.0f };
 	tBrainInfo.arrNeighbor = { -1, -1, -1 };
-	tBrainInfo.szBrainName = L"브레인 필드: 대미지 경감";
-	tBrainInfo.szBrainEx[0] = L"자신이 브레인 필드를 전ㅐ하고 있을 때 받는 데미지가";
+	tBrainInfo.szBrainName = L"브레인 필드: 데미지 경감";
+	tBrainInfo.szBrainEx[0] = L"자신이 브레인 필드를 전개하고 있을 때 받는 데미지가";
 	tBrainInfo.szBrainEx[1] = L"경감된다. 같은 이름의 스킬이 2개 있으며";
-	tBrainInfo.szBrainEx[2] = L"1개 습득하면 대미지가 반감,";
-	tBrainInfo.szBrainEx[3] = L"2개 습득하면 대미자가 무효화된다.";
+	tBrainInfo.szBrainEx[2] = L"1개 습득하면 데미지가 반감,";
+	tBrainInfo.szBrainEx[3] = L"2개 습득하면 데미자가 무효화된다.";
 	m_vecBrain.push_back(tBrainInfo);
 
 	// 54
@@ -1097,7 +1083,7 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.szBrainName = L"브레인 필드: 타격 레벨 상승";
 	tBrainInfo.szBrainEx[0] = L"자신의 브레인 필드를 전개하고 있을 때";
 	tBrainInfo.szBrainEx[1] = L"[왼쪽 마우스]로 휘두르는 오브젝트가 증가하여";
-	tBrainInfo.szBrainEx[2] = L"대미지를 줄 수 있는 범위가 넓어진다.";
+	tBrainInfo.szBrainEx[2] = L"데미지를 줄 수 있는 범위가 넓어진다.";
 	tBrainInfo.szBrainEx[3] = L"";
 	m_vecBrain.push_back(tBrainInfo);
 
@@ -1126,11 +1112,11 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.vOnIconIndex = { 1.0f,  1.0f };
 	tBrainInfo.vOffIconIndex = { 0.0f, 4.0f };
 	tBrainInfo.arrNeighbor = { -1, -1, -1 };
-	tBrainInfo.szBrainName = L"브레인 필드: 대미지 경감";
-	tBrainInfo.szBrainEx[0] = L"자신이 브레인 필드를 전ㅐ하고 있을 때 받는 데미지가";
+	tBrainInfo.szBrainName = L"브레인 필드: 데미지 경감";
+	tBrainInfo.szBrainEx[0] = L"자신이 브레인 필드를 전개하고 있을 때 받는 데미지가";
 	tBrainInfo.szBrainEx[1] = L"경감된다. 같은 이름의 스킬이 2개 있으며";
-	tBrainInfo.szBrainEx[2] = L"1개 습득하면 대미지가 반감,";
-	tBrainInfo.szBrainEx[3] = L"2개 습득하면 대미자가 무효화된다.";
+	tBrainInfo.szBrainEx[2] = L"1개 습득하면 데미지가 반감,";
+	tBrainInfo.szBrainEx[3] = L"2개 습득하면 데미자가 무효화된다.";
 	m_vecBrain.push_back(tBrainInfo);
 
 	// 58
@@ -1550,7 +1536,6 @@ void CCanvas_BrainMap::OnIcon_Tick()
 			{
 				IconPick(i);
 				m_iCurrentIndex = i;
-				m_bSkillAcquisition = true;
 				m_vecIconUI[i]->Set_OnButton();
 				dynamic_cast<CMain_BrainMapIconPickUI*>(Find_ChildUI(L"Icon_Pick"))->Set_Pick();
 			}
@@ -1563,34 +1548,53 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 	// 현재 구매할 수 있는 Level 이 되어야 살 수 있도록 한다.
 	if (m_vecBrain[iIndex].vOnIconIndex != m_vecIconUI[iIndex]->Get_CurrentIconIndex())
 	{
-		m_szAlarmText = L"습득 조건을 충족하지 않습니다."; 
+		m_bSkillAcquisition = true;
+		m_szAlarmText = L"습득 조건을 충족하지 않습니다.";
 		return;
 	}
 
 	// 현재 플레이어가 가지고 있는 BP를 확인해서 Icon 의 BP 보다 큰 경우에만 구매할 수 있다.
 	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP >= m_vecIconUI[iIndex]->Get_BrainInfo().iBP)
 	{			
-		m_szAlarmText = L"BP를 소모했습니다.";
-		m_vecIconUI[iIndex]->Set_BrainUse();
+		// 게이지가 가득 차야 아이템을 구매할 수 있다.
+		dynamic_cast<CMain_BrainGaugeUI*>(Find_ChildUI(L"IconGauge_0"))->Set_ChargeGauge(true);
+		dynamic_cast<CMain_BrainGaugeUI*>(Find_ChildUI(L"IconGauge_1"))->Set_ChargeGauge(true);
+		Find_ChildUI(L"IconGauge_0")->Set_Position(m_vecIconUI[iIndex]->Get_Position());
+		Find_ChildUI(L"IconGauge_1")->Set_Position(m_vecIconUI[iIndex]->Get_Position());
 
-		_uint iResultBP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP - m_vecIconUI[iIndex]->Get_BrainInfo().iBP;
-		CPlayerInfoManager::GetInstance()->Set_BP(iResultBP);	 // 플레이어 BP 감소하기
-		
-		// 레벨에 따른 아이콘 구매할 수 있는 정도
-		for (_int j = 0; j < 3; ++j)
+		if (true == dynamic_cast<CMain_BrainGaugeUI*>(Find_ChildUI(L"IconGauge_0"))->Get_GaugeFull())
 		{
-			if(-1 == m_vecIconUI[iIndex]->Get_BrainInfo().arrNeighbor[j])
-				break;
+			m_bSkillAcquisition = true;
+			m_szAlarmText = L"BP를 소모했습니다.";
+			m_vecIconUI[iIndex]->Set_BrainUse();
 
-			m_vecIconUI[m_vecIconUI[iIndex]->Get_BrainInfo().arrNeighbor[j]]->Set_OnIcon();
+			_uint iResultBP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP - m_vecIconUI[iIndex]->Get_BrainInfo().iBP;
+			CPlayerInfoManager::GetInstance()->Set_BP(iResultBP);	 // 플레이어 BP 감소하기
+
+			if (iIndex == 12 || iIndex == 18) 	// 플레이어 염력 레벨 증가
+			{
+				CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxKineticEnergy += 50;
+				CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyLevel += 1;
+				dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Set_PsychokinesisType();
+			}
+
+			// 레벨에 따른 아이콘 구매할 수 있는 정도
+			for (_int j = 0; j < 3; ++j)
+			{
+				if (-1 == m_vecIconUI[iIndex]->Get_BrainInfo().arrNeighbor[j])
+					break;
+
+				m_vecIconUI[m_vecIconUI[iIndex]->Get_BrainInfo().arrNeighbor[j]]->Set_OnIcon();
+			}
+			return;
 		}
-		return;
 	}
 	else
 	{
 		if (true == m_vecIconUI[iIndex]->Get_BrainInfo().bUse)
 			return;
 
+		m_bSkillAcquisition = true;
 		m_szAlarmText = L"BP가 부족합니다.";
 		return;
 	}
@@ -1607,6 +1611,9 @@ void CCanvas_BrainMap::SkillAcquisition_Tick()
 
 	if (false == m_bSkillAcquisition)
 		return;
+
+	dynamic_cast<CMain_BrainGaugeUI*>(Find_ChildUI(L"IconGauge_0"))->Set_ChargeGauge(false);
+	dynamic_cast<CMain_BrainGaugeUI*>(Find_ChildUI(L"IconGauge_1"))->Set_ChargeGauge(false);
 
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"SkillAcquisition_Button"))->Get_OnButton() ||
 		CGameInstance::GetInstance()->KeyDown(DIK_RETURN))

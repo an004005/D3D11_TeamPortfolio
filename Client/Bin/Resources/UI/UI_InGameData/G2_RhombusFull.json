@@ -1,0 +1,55 @@
+{
+    "BillBoardType": 0,
+    "BufferProtoTag": "Prototype_Component_VIBuffer_Rect",
+    "Children": [
+        [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    ],
+    "ModelFolderDir": "",
+    "ModelProtoTag": "",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.4833216667175293,
+                0.0,
+                1.0,
+                0.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [
+            1.0,
+            0.0
+        ],
+        "Ints": [
+            0
+        ],
+        "Pass": 3,
+        "Textures": [
+            "..\\Bin\\Resources\\UI\\InGame\\Monster_RhombusColor.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxTex_VFX_UI",
+    "bBillBoard": true,
+    "bDecal": false,
+    "bModelSprite": false,
+    "bNormal": false,
+    "bUseDepth": false
+}

@@ -303,7 +303,9 @@ PS_OUT PS_ch0100_body_0_4(PS_IN In)
 // g_float_1 : 하드바디
 // g_float_2 : 
 // g_float_3 : 마스크 on, off
+// g_float_4 : 마스크 밝기
 // g_int_0 : 상태이상 플래그
+// g_int_1 : 브레인 필드 open 플립북 on off
 // g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 {
@@ -341,8 +343,8 @@ PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 	}
 	else if (fDissolve >= 1.f)
 	{
-		vColor = float4(1.f, 20.f/ 255.f, 0.f, 1.f);
-		fEmissive = 7.f;
+		vColor = float4(1.f, 0.1f, 0.f, 1.f);
+		fEmissive = 6.f * g_float_4;
 	}
 	else
 	{
@@ -352,6 +354,12 @@ PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 
 	PS_OUT Out = PS_TOON_DEFAULT(In);
 
+	if (g_int_1)
+	{
+		Out.vDiffuse = g_tex_5.Sample(LinearSampler, Get_FlipBookUV(In.vTexUV, g_Time, 0.05f, 4, 4));
+	}
+
+
 	Out.vDepth.z = fEmissive;
 	if (g_float_1 <= 0.f) // 하드바디 없을 때
 		Out.vDepth.w = SHADER_NONE_SHADE;
@@ -360,6 +368,7 @@ PS_OUT PS_ch0100_mask_0_5(PS_IN In)
 		Out.vDiffuse *= vColor;
 	else
 		Out.vDiffuse = vColor;
+
 
 	return Out;
 }
@@ -435,6 +444,8 @@ PS_OUT_NONLIGHT PS_SuperSpeedTrail_8(PS_IN In)
 // g_float_0 : 케이블 삭제 디솔브 (0 디폴트, 1 사라짐)
 // g_float_1 : sas 붉은 색 디솔브
 // g_float_2 : 텔레포트 디솔브
+// g_float_3 : 브레인 필드 open 디솔브
+// g_int_0 : 브레인 필드 open 컬러 결정(1 : open 컬러, 2 : open완료 컬러)
 // g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_SAS_CABLE_9(PS_IN In)
 {
@@ -462,20 +473,38 @@ PS_OUT PS_SAS_CABLE_9(PS_IN In)
 	Out.vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
 	Out.vOutline = g_vec4_0;
 
-
-	float fRedDissolve = g_float_1;
-	// if (In.vTexUV.y <= fRedDissolve)
-	// 	fRedDissolve = 1.f;
-	// else
-	// 	fRedDissolve = 0.f;
-
-	if (Out.vCTL.a <= 0.001f)
+	float fBrainFieldOpenDissolve = g_float_3;
+	if (g_int_0 == 0)
 	{
-		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, float3(0.8f, 0.35f, 0.f), fRedDissolve);
-		fEmissive += 1.f;
+		float fRedDissolve = g_float_1;
+		if (Out.vCTL.a <= 0.001f)
+		{
+			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, float3(0.8f, 0.35f, 0.f), fRedDissolve);
+			fEmissive += 1.f;
+		}
+		else
+			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_CABLE_RED, fRedDissolve);
 	}
-	else
-		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_CABLE_RED, fRedDissolve);
+	else if (g_int_0 == 1 && fBrainFieldOpenDissolve > 0.f)
+	{
+		float BrainFieldOpenNoise = g_tex_5.Sample(LinearSampler, In.vTexUV).r;
+		BrainFieldOpenNoise = Remap(BrainFieldOpenNoise, float2(0.f, 0.8f), float2(0.f, 1.f));
+		if (BrainFieldOpenNoise < fBrainFieldOpenDissolve)
+		{
+			float4 vViewDir = g_vCamPosition - In.vWorldPos;
+			float fFresnel = FresnelEffect(In.vNormal.xyz, vViewDir.xyz, 0.1f);
+			float4 vColor = lerp(float4(1.f, 0.f, 0.f, 0.6f), (float4)1.f, saturate(1.f - fFresnel) * 0.5f);
+			Out.vDiffuse.rgb = vColor;
+			fEmissive = fFresnel * 4.f;
+			fTeleportDissolve = 1.f;
+		}
+	}
+	else if (g_int_0 == 2)
+	{
+		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, float3(1.f, 1.f, 0.f), 0.6f);
+		fEmissive = 2.f;
+	}
+
 
 
 

@@ -542,6 +542,140 @@ PS_OUT PS_MAIN_DEFAULT_12(PS_IN In)
 	return Out;
 }
 
+float3 ChromaticAberration(float2 vUV, float3 vOffset)
+{
+	float3 vColor = (float3)0.f;
+
+    float rFlag = g_FlagTextureNonAlpha.Sample(LinearSampler, vUV - (float2)vOffset.x).y;
+    float gFlag = g_FlagTextureNonAlpha.Sample(LinearSampler, vUV - (float2)vOffset.y).y;
+    float bFlag = g_FlagTextureNonAlpha.Sample(LinearSampler, vUV - (float2)vOffset.z).y; 
+
+	float2 rUV = vUV - (float2)vOffset.x;
+	float2 gUV = vUV - (float2)vOffset.y;
+	float2 bUV = vUV - (float2)vOffset.z;
+
+
+	if (rFlag == SHADER_POST_TOON)
+		vColor.r = g_LDRTexture.Sample(LinearSampler, rUV).r;
+	else
+		vColor.r = g_LDRTexture.Sample(LinearSampler, vUV).r;
+	
+	if (gFlag == SHADER_POST_TOON)
+		vColor.g = g_LDRTexture.Sample(LinearSampler, gUV).g;
+	else
+		vColor.g = g_LDRTexture.Sample(LinearSampler, vUV).g;
+
+	if (bFlag == SHADER_POST_TOON)
+		vColor.b = g_LDRTexture.Sample(LinearSampler, bUV).b;
+	else
+		vColor.b = g_LDRTexture.Sample(LinearSampler, vUV).b;
+
+	return vColor;
+}
+
+PS_OUT PS_BRAINFIELD_13(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	// 색수차
+	if (In.vTexUV.x < 0.02 || In.vTexUV.x >= 0.98 || In.vTexUV.y < 0.02 || In.vTexUV.y > 0.98)
+	{
+		Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+		Out.vColor.a = 1.f;
+		return Out;
+	}
+
+	if (g_float_0 > 0.f)
+	{
+		float3 vOffset = float3(-0.007f, 0.007f, 0.02f) * g_float_0;
+		Out.vColor.rgb = ChromaticAberration(In.vTexUV, vOffset);
+	    Out.vColor.a = 1.f;
+		return Out;
+	}
+
+	// ~색수차
+
+	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.a = 1.f;
+
+	
+	return Out;
+}
+
+PS_OUT PS_BRAINFIELD_MAP_14(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 vFlag = g_FlagTexture.Sample(LinearSampler, In.vTexUV);
+	float4 vFlagNonAlpha = g_FlagTextureNonAlpha.Sample(LinearSampler, In.vTexUV);
+	float4 vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
+	float fViewZ = vDepthDesc.y * g_Far;
+
+	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.a = 1.f;
+
+	if (vFlag.y == SHADER_POST_OBJECTS || vFlagNonAlpha.y == SHADER_POST_OBJECTS || fViewZ >= g_Far)
+	{
+		if (g_int_0 == 0) // 기존 맵 검게 지우기
+		{
+			if (g_float_0 >= 1.f)
+				Out.vColor.rgb = 0.f;
+			else if (g_float_0 >= 0.7f)
+			{
+				float fRemap = Remap(g_float_0, float2(0.7f, 1.f), float2(0.f, 1.f));
+				Out.vColor.rgb = lerp(float3(1.f, 0.2f, 0.1f), (float3)0.f, fRemap);
+			}
+			else if (g_float_0 > 0.f)
+			{
+				float fRemap = Remap(g_float_0, float2(0.f, 0.7f), float2(0.f, 1.f));
+				Out.vColor.rgb = lerp(Out.vColor.rgb, float3(1.f, 0.2f, 0.1f), fRemap);
+			}
+		}
+		else if (g_int_0 == 1 && g_float_0 < 1.f)// 맵 다시 보이게 하기(기존 맵 복원 및 브레인 필드맵 보이기용)
+		{
+			if (vFlag.y == SHADER_POST_OBJECTS)
+			{
+				Out.vColor.rgb = lerp((float3)0.f, Out.vColor.rgb, g_float_0);
+			}
+			else
+			{
+				vector		vWorldPos;
+				vWorldPos.x = In.vTexUV.x * 2.f - 1.f;
+				vWorldPos.y = In.vTexUV.y * -2.f + 1.f;
+				vWorldPos.z = vDepthDesc.x; /* 0 ~ 1 */
+				vWorldPos.w = 1.0f;
+			 
+				vWorldPos *= fViewZ;
+				vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+				vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+
+				float fRange = g_float_0 * g_Far;
+
+				float fScanRange = g_float_1;
+				float fDistance = length(vWorldPos - g_vCamPosition);
+
+				if (fDistance > fRange + fScanRange)
+				{
+					Out.vColor.rgb = 0.f;
+				}
+				else if (fDistance <= fRange + fScanRange && fDistance > fRange)
+				{
+					float fRatio = Remap(fDistance, float2(fRange, fRange + fScanRange), float2(0.f, 1.f));
+					Out.vColor.rgb = lerp(float3(1.f, 0.15f, 0.f), (float3)0.f, fRatio);
+				}
+				else if (fDistance <= fRange && fDistance > fRange - fScanRange)
+				{
+					float fRatio = Remap(fDistance, float2(fRange - fScanRange, fRange), float2(0.f, 1.f));
+					Out.vColor.rgb = lerp(Out.vColor.rgb, float3(1.f, 0.15f, 0.f), fRatio);
+				}
+			}
+		}
+	}
+
+	
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default_Test
@@ -721,5 +855,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_DEFAULT_12();
+	}
+
+	//13
+	pass BrainField_13
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRAINFIELD_13();
+	}
+
+	//14
+	pass BrainField_MAP_14
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRAINFIELD_MAP_14();
 	}
 }

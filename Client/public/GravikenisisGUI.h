@@ -14,15 +14,16 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void    Tick(_double TimeDelta) override;
-
-	virtual void   Imgui_RenderProperty() override;
-
-public:
-	void SetfRatio(const _float & fRatio);
+	virtual void			BeginTick() override;
+	virtual void			Tick(_double TimeDelta) override;
 
 private:
-	class CEffectGroup* m_pGroup = nullptr;
+	class CEffectGroup* m_pKenisis = { nullptr };
+	class CEffectGroup* m_pBanKenisis = { nullptr };
+	class CEffectGroup* m_pAppealCircle = { nullptr };
+
+	_bool	m_bOnG = { false };
+	_double	m_dReset_TimeAcc = { 0.0 };
 
 public:
 	static CGravikenisisGUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

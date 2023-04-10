@@ -39,7 +39,7 @@ void CCanvas_SARebar::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
-	KeyInput();
+	//KeyInput();
 	MouseLight_Tick(TimeDelta);
 	Action_Tick(TimeDelta);
 
@@ -57,7 +57,7 @@ void CCanvas_SARebar::KeyInput()
 
 void CCanvas_SARebar::MouseLight_Tick(const _double& TimeDelta)
 {
-	_float fSpeed = 1.0f;
+	_float fSpeed = 3.0f;
 	if (true == m_fAlphaDown)
 	{
 		if (0.1f > m_fMouseLightAlpha)
@@ -66,7 +66,7 @@ void CCanvas_SARebar::MouseLight_Tick(const _double& TimeDelta)
 	else
 	{
 		fSpeed *= -1;
-		if (0.2f < m_fMouseLightAlpha)
+		if (0.3f < m_fMouseLightAlpha)
 			m_fAlphaDown = true;
 	}
 	m_fMouseLightAlpha -= _float(TimeDelta) * fSpeed;

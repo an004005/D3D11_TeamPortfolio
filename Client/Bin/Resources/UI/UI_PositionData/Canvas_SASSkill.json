@@ -1,6 +1,312 @@
 {
     "ChildrenUI": [
         {
+            "ChildTag": "FullCircle1\u0000",
+            "ObjectTag": "FullCircle1",
+            "Pivot": 5,
+            "PositionX": -155.0,
+            "PositionY": 190.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillFullCircle_UI\u0000",
+            "ScaleX": 0.8700000047683716,
+            "ScaleY": 0.8799999952316284,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.4524523615837097,
+                        0.4437020719051361,
+                        0.41597867012023926,
+                        10.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_FullCircle1.png\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    87.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    88.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    645.0,
+                    -260.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "FullCircle2\u0000",
+            "ObjectTag": "FullCircle2",
+            "Pivot": 5,
+            "PositionX": -204.0,
+            "PositionY": 142.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillFullCircle_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8600000143051147,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.4519999921321869,
+                        0.4440000057220459,
+                        0.41600000858306885,
+                        10.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_FullCircle2.png\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    85.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    86.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    596.0,
+                    -308.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "FullCircle3\u0000",
+            "ObjectTag": "FullCircle3",
+            "Pivot": 5,
+            "PositionX": -102.0,
+            "PositionY": 137.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillFullCircle_UI\u0000",
+            "ScaleX": 0.8600000143051147,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.4519999921321869,
+                        0.4440000057220459,
+                        0.41600000858306885,
+                        10.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_FullCircle3.png\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    86.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    85.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    698.0,
+                    -313.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "FullCircle4\u0000",
+            "ObjectTag": "FullCircle4",
+            "Pivot": 5,
+            "PositionX": -150.0,
+            "PositionY": 89.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillFullCircle_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.4519999921321869,
+                        0.4440000057220459,
+                        0.41600000858306885,
+                        10.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_FullCircle4.png\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    85.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    85.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    650.0,
+                    -361.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "FullCircle5\u0000",
+            "ObjectTag": "FullCircle5",
+            "Pivot": 5,
+            "PositionX": -155.0,
+            "PositionY": 190.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillFullCircle_UI\u0000",
+            "ScaleX": 0.8700000047683716,
+            "ScaleY": 0.8799999952316284,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.4524523615837097,
+                        0.4437020719051361,
+                        0.41597867012023926,
+                        10.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_FullCircle1.png\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    87.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    88.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    645.0,
+                    -260.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "FullCircle6\u0000",
+            "ObjectTag": "FullCircle6",
+            "Pivot": 5,
+            "PositionX": -204.0,
+            "PositionY": 142.0,
+            "Priority": 2,
+            "Prototype_GameObject": "SASSkillFullCircle_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8600000143051147,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.4519999921321869,
+                        0.4440000057220459,
+                        0.41600000858306885,
+                        10.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_FullCircle2.png\u0000"
+                ]
+            },
+            "SizeX": 100.0,
+            "SizeY": 100.0,
+            "Transform": {
+                "WorldMatrix": [
+                    85.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    86.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    596.0,
+                    -308.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
             "ChildTag": "SASSkill_AltText0\u0000",
             "ObjectTag": "SASSkill_AltText0",
             "Pivot": 5,
@@ -391,94 +697,6 @@
                     0.0,
                     563.0,
                     -226.0,
-                    0.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "ChildTag": "SASSkill_FullCircle1\u0000",
-            "ObjectTag": "SASSkill_FullCircle1",
-            "Pivot": 5,
-            "PositionX": -154.5,
-            "PositionY": 189.0,
-            "Priority": 1,
-            "Prototype_GameObject": "SASSkillFullCircle_UI\u0000",
-            "ScaleX": 0.8500000238418579,
-            "ScaleY": 0.8500000238418579,
-            "ShaderParams": {
-                "Float2s": [],
-                "Float4s": [],
-                "Float4x4s": [],
-                "Floats": [],
-                "Ints": [],
-                "Pass": 0,
-                "Textures": [
-                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_FullCircle0.dds\u0000"
-                ]
-            },
-            "SizeX": 128.0,
-            "SizeY": 128.0,
-            "Transform": {
-                "WorldMatrix": [
-                    108.80000305175781,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    108.80000305175781,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    0.0,
-                    645.5,
-                    -261.0,
-                    0.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "ChildTag": "SASSkill_FullCircle2\u0000",
-            "ObjectTag": "SASSkill_FullCircle2",
-            "Pivot": 5,
-            "PositionX": -201.0,
-            "PositionY": 141.5,
-            "Priority": 1,
-            "Prototype_GameObject": "SASSkillFullCircle_UI\u0000",
-            "ScaleX": 0.8199999928474426,
-            "ScaleY": 0.8199999928474426,
-            "ShaderParams": {
-                "Float2s": [],
-                "Float4s": [],
-                "Float4x4s": [],
-                "Floats": [],
-                "Ints": [],
-                "Pass": 0,
-                "Textures": [
-                    "..\\Bin\\Resources\\UI\\Front_UI\\SASSkill_FullCircle1.dds\u0000"
-                ]
-            },
-            "SizeX": 128.0,
-            "SizeY": 128.0,
-            "Transform": {
-                "WorldMatrix": [
-                    104.95999908447266,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    104.95999908447266,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    0.0,
-                    599.0,
-                    -308.5,
                     0.0,
                     1.0
                 ]

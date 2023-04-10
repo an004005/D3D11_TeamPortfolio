@@ -87,6 +87,8 @@ public:
 
 public:
 	void CombineStrings(list<CRedString*> RedStrings);
+	void SetPass(_uint iPass) { m_iPass = iPass;}
+	void SetPos(_fvector vPos) { m_vPos = vPos; }
 
 private:
 	CShader*							m_pShaderCom = nullptr;
@@ -99,6 +101,7 @@ private:
 	_bool m_bUseTransform = false;
 
 	_float m_fRadius = 0.1f;
+	_float4 m_vPos;
 
 	_uint m_iPass = 0;
 

@@ -19,13 +19,15 @@ typedef struct tagPickInfo
 	_uint	iSprbrPower = { 0 };
 	_uint	iAttack = { 0 };
 	_uint	iDefense = { 0 };
+	_float	fShaderInfoIndex = { 0.0f };
+	_uint	iSasMember = { 0 };	// SASMEMBER 을 알수 없기에 _uint 로 하고 형변환 했습니다.
 
 }PICKINFO;
 
-enum SASMEMBER { YUITO, HANABI, TSUGUMI, SASMEMBER_END };
-
 class CCanvas_Party : public CCanvas
 {
+	enum class SASMEMBER { YUITO, HANABI, TSUGUMI, KYOTO, LUCA, SEEDEN, ARASHI, SASMEMBER_END };
+
 protected:
 	CCanvas_Party(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CCanvas_Party(const CCanvas_Party& rhs);
@@ -38,17 +40,29 @@ public:
 	virtual HRESULT Render() override;
 
 	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
 
 private:
+	void	SASMemberInfo_Initialize();
+
 	void	ChildRender_Tick();
 	void	CurrentPick_Tick();
 	void	PickInfo();
+	void	Reserve_Tick();
+	void	ReserveArrow_Tick();
 
 private:
 	PICKINFO	m_tPickIngo = {};
-	SASMEMBER	m_eSASMember = { YUITO };
+	SASMEMBER	 m_eSASMember = { CCanvas_Party::SASMEMBER::YUITO };
+
+	array<PICKINFO, 4>	m_arrSASInfo;
+
+	// 화살표를 화면에 보이게 하기 위해서
+	array<_bool, 4>	m_arrReserve_Index = { false, false, false, false };	// 한 번만 체크하기 위한 용도
+	_uint	m_iReserve_Count = { 0 };
+
+	// SAS
+	array<PICKINFO, 4>	m_arrReserve;	// 앞면 0, 1 / 뒷면 0, 1
+	_bool	m_bFrontPage = { false };
 
 public:
 	static CCanvas_Party* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

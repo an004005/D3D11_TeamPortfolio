@@ -333,8 +333,6 @@ void CEM0200::SetUpFSM()
 					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
 				})
 
-
-
 		.AddState("FlowerShower")
 			.OnStart([this]
 			{

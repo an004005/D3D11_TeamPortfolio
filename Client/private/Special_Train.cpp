@@ -7,6 +7,7 @@
 #include "Animation.h"
 #include "RigidBody.h"
 #include "VFX_Manager.h"
+#include "Material.h"
 
 CSpecial_Train::CSpecial_Train(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -56,7 +57,14 @@ void CSpecial_Train::Tick(_double TimeDelta)
 {
 	if (m_bDeadCheck)
 	{
+		SpecialRimLightFix(false);
+
 		m_fDeadTimer -= (_float)TimeDelta;
+
+		if (1.f >= m_fDeadTimer)
+		{
+			Set_Dissolve(true);
+		}
 
 		if (0.f >= m_fDeadTimer)
 		{

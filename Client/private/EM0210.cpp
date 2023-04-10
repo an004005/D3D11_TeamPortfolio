@@ -35,7 +35,7 @@ HRESULT CEM0210::Initialize(void * pArg)
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
-		m_iMaxHP = 500;
+		m_iMaxHP = 1100;
 		m_iHP = m_iMaxHP; // ★
 
 		m_iAtkDamage = 50;
@@ -161,6 +161,19 @@ void CEM0210::SetUpAnimationEvent()
 	{
 		m_bAttack = false;
 	});
+
+	// 공중에서 추가타 맞을 때
+	m_pModelCom->Add_EventCaller("Successive", [this]
+		{
+			m_fGravity = 3.f;
+			m_fYSpeed = 1.5f;
+		});
+	// 공중에서 추가타 맞고 다시 떨어지는 순간
+	m_pModelCom->Add_EventCaller("AirDamageReset", [this]
+		{
+			m_fGravity = 20.f;
+			m_fYSpeed = 0.f;
+		});
 
 	m_pModelCom->Add_EventCaller("DeadFlower", [this]
 		{
@@ -306,7 +319,7 @@ void CEM0210::SetUpFSM()
 			})
 			.OnExit([this]
 			{
-				m_bHitAir = false;
+					m_bHitAir = false;
 			})
 			.AddTransition("Hit_ToAir to OnFloorGetup", "OnFloorGetup")
 				.Predicator([this]
@@ -390,7 +403,19 @@ void CEM0210::SetUpFSM()
 		.AddState("BrainCrushEnd")
 			.OnStart([this]
 			{
-				m_pASM->InputAnimSocketOne("FullBody", "AS_BC_em0200m_em0200");
+				_float4 vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				_float4 vDistance = XMLoadFloat4(&vTargetPos) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				_float fDistance = vDistance.Length();
+
+				if (5.f >= fDistance)
+				{
+					m_pASM->InputAnimSocketOne("FullBody", "AS_BC_em0200m_em0200");
+				}
+				else
+				{
+					m_pASM->InputAnimSocketOne("FullBody", "AS_BC_em_common_em0200");
+				}
+
 				m_pBrain->BeginBC();
 			})
 			.Tick([this](_double)
@@ -402,7 +427,8 @@ void CEM0210::SetUpFSM()
 						_matrix WeakBoneMatrix = GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
 						m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
 
-						const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.2f;
+						//const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.2f;
+						const _float fPlayRatio = m_CanFullBC ? 0.7f : 0.55f;
 
 						if (m_pASM->isSocketPassby("FullBody", fPlayRatio))
 						{
@@ -616,7 +642,7 @@ void CEM0210::Late_Tick(_double TimeDelta)
 		if (m_dRenderChangeDelay >=0.5)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		else
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_MESH_ALPHABLEND, this);
 	}
 	else
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -655,23 +681,18 @@ void CEM0210::Imgui_RenderProperty()
 
 	m_pFSM->Imgui_RenderProperty();
 
-	/*static _bool tt = false;
-	ImGui::Checkbox("Modify Pivot", &tt);
-	
-	if (tt)
-	{
-		static GUIZMO_INFO tInfo;
-		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+	if (ImGui::Button("Fire"))
+		m_eDeBuff = EDeBuffType::DEBUFF_FIRE;
 
-		if (ImGui::Button("Create_Effect"))
-		{
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0210_Spin_Attack")
-				->Start_AttachPivot(this, pivot, "Target", true, true);
-		}
-	}*/
-		
-	ImGui::InputInt("HP", &m_iHP);
-	ImGui::InputInt("Crush", &m_iCrushGauge);
+	if (ImGui::Button("Water"))
+		m_eDeBuff = EDeBuffType::DEBUFF_WATER;
+
+	if (ImGui::Button("Oil"))
+		m_eDeBuff = EDeBuffType::DEBUFF_OIL;
+
+	if (ImGui::Button("Thunder"))
+		m_eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+
 }
 
 _bool CEM0210::Exclude()

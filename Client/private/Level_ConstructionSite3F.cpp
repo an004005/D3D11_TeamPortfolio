@@ -2,6 +2,13 @@
 #include "..\public\Level_ConstructionSite3F.h"
 #include "GameInstance.h"
 #include "Imgui_Batch.h"
+#include "GameManager.h"
+
+// PJW Add
+#include "Map_KineticBatchPreset.h"
+#include "PhysX_Manager.h"
+#include "GameUtils.h"
+#include "JsonStorage.h"
 
 CLevel_ConstructionSite3F::CLevel_ConstructionSite3F(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel_StageDefault(pDevice, pContext)
@@ -25,8 +32,19 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Monster_PlayerStart.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/SpecialKinetics.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/MonsterBatch.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Kinetic_Normal_Construction.json");
+
+	Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Kinetic_Normal_BossRoom .json");
+	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
+
+	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
 	return S_OK;
+}
+
+void CLevel_ConstructionSite3F::Tick(_double TimeDelta)
+{
+	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 }
 
 CLevel_ConstructionSite3F* CLevel_ConstructionSite3F::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

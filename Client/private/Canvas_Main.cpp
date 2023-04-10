@@ -12,6 +12,7 @@
 #include "Canvas_BrainMap.h"
 #include "DefaultUI.h"
 #include "Main_PickUI.h"
+#include "ShaderUI.h"
 
 CCanvas_Main::CCanvas_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -46,7 +47,11 @@ HRESULT CCanvas_Main::Initialize(void* pArg)
 	m_bVisible = true;
 	
 	m_szManuText = L"파티 멤버를 변경합니다.";
-	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_InitializeAlpha();	// 처음에 해당 버튼에 불이 들어올 수 있도록
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"MainButton_Party"))->Set_PickInitialize();	// 처음에 해당 버튼에 불이 들어올 수 있도록
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/ShaderUI.json");
+	m_pShaderUI = dynamic_cast<CShaderUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Shader_UI", &json));
+	assert(m_pShaderUI != nullptr && "Failed to Clone : CFullUI");
 
 	return S_OK;
 }
@@ -54,8 +59,10 @@ HRESULT CCanvas_Main::Initialize(void* pArg)
 void CCanvas_Main::Tick(_double TimeDelta)
 {
 	KeyInput();
+	m_pShaderUI->Tick(TimeDelta);
 
-	if (false == m_bMainUI) return;
+	if (false == m_bMainUI)
+		return;
 
 	CCanvas::Tick(TimeDelta);
 
@@ -65,6 +72,7 @@ void CCanvas_Main::Tick(_double TimeDelta)
 
 void CCanvas_Main::Late_Tick(_double TimeDelta)
 {
+	m_pShaderUI->Late_Tick(TimeDelta);
 	if (false == m_bMainUI) return;
 
 	CCanvas::Late_Tick(TimeDelta);
@@ -141,19 +149,6 @@ void CCanvas_Main::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	ImGui::DragFloat("X", &mm.x);
-	ImGui::DragFloat("Y", &mm.y);
-
-}
-
-void CCanvas_Main::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-}
-
-void CCanvas_Main::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
 }
 
 HRESULT CCanvas_Main::Add_MainCanvas()
@@ -210,17 +205,51 @@ void CCanvas_Main::KeyInput()
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
 	{
-		dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUIClose();
+		m_bAlpha = true;
+		m_pShaderUI->SetVisible(true);
+	}
 
+	if (false == m_bAlpha)
+		return;
+
+	m_pShaderUI->Set_Size({_float(g_iWinSizeX), _float(g_iWinSizeY)});
+	_float fAlpha = m_pShaderUI->Get_Float4s_W();
+	if (m_bReverse == false && fAlpha >= 0.5f)
+	{
+		m_bReverse = true;
+		m_bOpen = true;
+	}
+	else if (m_bReverse == true && fAlpha <= 0.0f)
+	{
+		m_bReverse = false;
+		m_bAlpha = false;
+		m_pShaderUI->SetVisible(false);
+	}
+
+	_float fSpeed = 0.7f;
+	if (m_bReverse == false)
+		fAlpha += _float(TIME_DELTA) * fSpeed;
+	else
+		fAlpha -= _float(TIME_DELTA) * fSpeed;
+	m_pShaderUI->Set_Float4s_W(fAlpha);
+
+	if (true == m_bOpen)
+	{
+		m_bOpen = false;
 		m_bMainUI = !m_bMainUI;
 
 		// m_bMainUI 와 반대로 동작한다.
 		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+		{
+			if (L"Main_Entrance" == iter->first) continue;
 			iter->second->SetVisible(m_bMainUI);
+		}
 		CUI_Manager::GetInstance()->Set_TempOff(m_bMainUI);
 
 		// MainUI 들을 끄고 켜기를 한다.
 		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bMainUI);
+
+		dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUIClose();
 	}
 }
 
@@ -324,4 +353,6 @@ CCanvas * CCanvas_Main::Clone(void * pArg)
 void CCanvas_Main::Free()
 {
 	CCanvas::Free();
+
+	Safe_Release(m_pShaderUI);
 }

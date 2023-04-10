@@ -47,7 +47,22 @@ typedef struct tagPlayerStatus
 
 	_bool bAttackEnable = false;
 
+	
+	_float fDriveEnergy = { 0 };
+	_float fMaxDriveEnergy = { 0 };
+
+	_float fBrainFieldMaintain = { 0 };
+	_float fMaxBrainFieldMaintain = { 0 };
+
+	_uint iWeaponType = { 0 };			// 0번 wp0106, 1번 wp0190
+
+	_float fKineticCharge = { 0.f };	// 염력체 차지 백분율 (0~1)
+	_float fSpecialCharge = { 0.f };
+
 	_bool bBattle = false;
+	_bool bDriveMode = false;
+	_bool bBrainField = false;
+	_bool bStartBrainField = false;
 
 	_float m_fBaseAttackDamage;
 
@@ -59,8 +74,6 @@ typedef struct tagPlayerStatus
 
 typedef struct tagHanabiStatus
 {
-	_bool bMember = { false };
-
 	_uint iHP = { 0 };
 	_uint iMaxHP = { 0 };
 	_uint iExp = { 0 };
@@ -75,8 +88,6 @@ typedef struct tagHanabiStatus
 
 typedef struct tagTsugumiStatus
 {
-	_bool bMember = { false };
-
 	_uint iHP = { 0 };
 	_uint iMaxHP = { 0 };
 	_uint iExp = { 0 };
@@ -99,6 +110,7 @@ typedef struct tagDamageDesc
 }	DAMAGE_DESC;
 
 enum CHANGETYPE { CHANGE_INCREASE, CHANGE_DECREASE, CHANGE_END };
+enum SASMEET { HANABI, TSUGUMI, KYOTO, LUCA, SEEDEN, ARASHI, SASMEMBER_END };
 
 class CPlayerInfoManager final : public CBase
 {
@@ -116,14 +128,22 @@ public:	// Get
 	PLAYER_STAT&	Get_PlayerStat() { 
 		return m_tPlayerStat;
 	}
-	list<ESASType>	Get_PlayerSasList() const { return m_PlayerSasTypeList; }
-	_bool			Get_isSasUsing(ESASType eType);
+	list<ESASType>		Get_PlayerSasList() const { return m_PlayerSasTypeList; }
+	_bool					Get_isSasUsing(ESASType eType);
 	CGameObject*	Get_KineticObject();
 	CGameObject*	Get_TargetedMonster();
 	CGameObject*	Get_SpecialObject();
 
-	HANABI_STAT		Get_HanabiStat() const { return m_tHanabiStat; }
-	TSUGUMI_STAT	Get_TsugumiStat() const { return m_tTsugumiStat; }
+	// SAS
+	HANABI_STAT&		Get_HanabiStat() { 
+		return m_tHanabiStat;
+	}
+	TSUGUMI_STAT&	Get_TsugumiStat() { 
+		return m_tTsugumiStat;
+	}
+	_bool					Get_SASMember(const SASMEET eSAS) { 
+		return m_bSASMember[eSAS];
+	}
 
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
@@ -135,6 +155,12 @@ public:	// Set
 	void			Set_KineticEnergyLevel(_uint iType) { m_tPlayerStat.m_iKineticEnergyLevel = iType; }
 	void			Set_KineticEnetgyType(_uint iType) { m_tPlayerStat.m_iKineticEnergyType = iType; }
 
+	void			Set_DriveEnergy(_float fDrive) { m_tPlayerStat.fDriveEnergy = fDrive; }
+	void			Change_DriveEnergy(CHANGETYPE eType, _float ChangeDrive);
+
+	void			Set_BrainFieldMaintain(_float fBrain) { m_tPlayerStat.fBrainFieldMaintain = fBrain; }
+	void			Change_BrainFieldMaintain(CHANGETYPE eType, _float ChangeBrain);
+
 	void			Set_SasType(ESASType eType);
 	void			Finish_SasType(ESASType eType);
 
@@ -143,30 +169,49 @@ public:	// Set
 	void			Set_BattleState(_bool bBattle) { m_tPlayerStat.bBattle = bBattle; }
 
 	void			Set_PlayerWorldMatrix(_fmatrix worldmatrix);
+	_matrix			Get_PlayerWorldMatrix();
 
+	void			Set_KineticCharge(_float fCharge) { m_tPlayerStat.fKineticCharge = fCharge; }
+	_float			Get_KineticCharge() { return m_tPlayerStat.fKineticCharge; }
+
+	void			Set_SpecialCharge(_float fCharge) { m_tPlayerStat.fSpecialCharge = fCharge; }
+	_float			Get_SpecialCharge() { return m_tPlayerStat.fSpecialCharge; }
+
+	void			Set_PlayerWeapon(_uint iWeaponType);
+	_uint			Get_PlayerWeapon() { return m_tPlayerStat.iWeaponType; }
+
+	void			Set_DriveMode(_bool bDrive) { m_tPlayerStat.bDriveMode = bDrive; }
+	void			Set_BrainField(_bool bBrain) { m_tPlayerStat.bBrainField = bBrain; }
+
+	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
+	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
+	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
 	void			Set_PlayerAttackEnable(_bool bEnable) { m_tPlayerStat.bAttackEnable = bEnable; }
 	_bool			Get_PlayerAttackEnable() { return m_tPlayerStat.bAttackEnable; }
 
-	HRESULT			Set_KineticObject(CGameObject* pKineticObject);
-	HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
-	HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
+	// HRESULT			Set_KineticObject(CGameObject* pKineticObject);
+	// HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
+	// HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
 	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
+
+	void			Set_Exp(const _uint iExp);
+	void			Set_StartBrainField();
 	
 	// SAS
-	void			Set_HanabiMemvber() { m_tHanabiStat.bMember = true; }
-	void			Set_TsugumiMemvber() { m_tTsugumiStat.bMember = true; }
-
+	void			Set_SASMember(const SASMEET eSAS) { 
+		m_bSASMember[eSAS] = true; 
+	}
 
 public:
-	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
+	HRESULT	Set_CamSpot(CGameObject* pCamSpot);
 	void			Camera_Random_Shake(_float fForce);
 	void			Camera_Axis_Shaking(_float4 vDir, _float fShakePower);
 	void			Camera_Axis_Sliding(_float4 vDir, _float fShakePower);
 
 private:	// 스탯 정보 관련
 	PLAYER_STAT		m_tPlayerStat;
-	list<ESASType>	m_PlayerSasTypeList;
+	list<ESASType>		m_PlayerSasTypeList;
 
 	HANABI_STAT		m_tHanabiStat;
 	TSUGUMI_STAT	m_tTsugumiStat;
@@ -184,6 +229,9 @@ private:
 
 private:
 	_float			m_fBaseAttackDamage;
+
+private:
+	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false };
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

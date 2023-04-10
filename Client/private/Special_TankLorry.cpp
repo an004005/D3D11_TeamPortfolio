@@ -59,9 +59,18 @@ void CSpecial_TankLorry::Tick(_double TimeDelta)
 	if (m_bDeadCheck)
 	{
 		static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->SetOutline(false);
+		static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->SpecialRimLightFix(false);
+
 		static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->SetOutline(false);
+		static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->SpecialRimLightFix(false);
 
 		m_fDeadTime -= (_float)TimeDelta;
+
+		if (1.f >= m_fDeadTime)
+		{
+			static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->Set_Dissolve(true);
+			static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->Set_Dissolve(true);
+		}
 
 		if (0.f >= m_fDeadTime)
 		{
@@ -73,16 +82,19 @@ void CSpecial_TankLorry::Tick(_double TimeDelta)
 	}
 	else
 	{
-		if (CPlayerInfoManager::GetInstance()->Get_SpecialObject() == this)
+		if (0.5f < m_fBright)
 		{
-			static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->SetOutline(true);
-			static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->SetOutline(true);
+			int iA = 0;
 		}
-		else
-		{
-			static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->SetOutline(false);
-			static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->SetOutline(false);
-		}
+
+		static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->SetOutline(m_bOutline);
+		static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->Set_Bright(m_fBright);
+		static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->SpecialRimLightFix(m_bRimFix);
+
+		static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->SetOutline(m_bOutline);
+		static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->Set_Bright(m_fBright);
+		static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->SpecialRimLightFix(m_bRimFix);
+		
 	}
 
 	__super::Tick(TimeDelta);
@@ -249,6 +261,11 @@ void CSpecial_TankLorry::TankLorry_Explosion_Particle()
 {
 	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Truck_Explode_Particle")->
 		Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+}
+
+_float4 CSpecial_TankLorry::GetPxPostion()
+{
+	return dynamic_cast<CSpecialObject*>(m_pTankLorry_Trailer)->GetPxPostion();
 }
 
 HRESULT CSpecial_TankLorry::SetUp_Components(void * pArg)

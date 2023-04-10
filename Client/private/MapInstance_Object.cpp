@@ -49,9 +49,9 @@ HRESULT CMapInstance_Object::Initialize(void * pArg)
 				XMVectorGetX(XMVector3Length(mat.r[2]))
 			};
 			
-			if(CMathUtils::FloatCmp(vScale.x, 1.f) == false
-				|| CMathUtils::FloatCmp(vScale.y, 1.f) == false
-				|| CMathUtils::FloatCmp(vScale.z, 1.f) == false)
+			if(CMathUtils::FloatCmp(vScale.x, 1.f, 0.1f) == false
+				|| CMathUtils::FloatCmp(vScale.y, 1.f, 0.1f) == false
+				|| CMathUtils::FloatCmp(vScale.z, 1.f, 0.1f) == false)
 			{
 				m_pPxModels.emplace_back(nullptr);
 				continue;
@@ -285,7 +285,7 @@ HRESULT CMapInstance_Object::SetUp_Components()
 
 	if (nullptr == pGameInstance->Find_Prototype_Component(LEVEL_NOW, m_strModelTag.c_str()))
 	{
-		_uint iNumInstance = 500;
+		_uint iNumInstance = 600;
 		FAILED_CHECK(pGameInstance->Add_Prototype(m_strModelTag.c_str(), CModel_Instancing::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str(), iNumInstance)));
 	}
 
@@ -334,6 +334,8 @@ void CMapInstance_Object::Free()
 
 	for(auto pxModel : m_pPxModels)
 		Safe_Release(pxModel);
+
+	m_pPxModels.clear();
 
 	Safe_Release(m_pModel_InstancingCom);
 }

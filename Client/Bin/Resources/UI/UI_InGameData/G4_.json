@@ -1,0 +1,47 @@
+{
+    "BillBoardType": 0,
+    "BufferProtoTag": "Prototype_Component_VIBuffer_Rect",
+    "Children": [
+        [
+            0.30000001192092896,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.30000001192092896,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    ],
+    "ModelFolderDir": "",
+    "ModelProtoTag": "",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [
+            0.0
+        ],
+        "Ints": [
+            2
+        ],
+        "Pass": 2,
+        "Textures": [
+            "..\\Bin\\Resources\\UI\\InGame\\Monster_G.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxTex_VFX_UI",
+    "bBillBoard": true,
+    "bDecal": false,
+    "bModelSprite": false,
+    "bNormal": false,
+    "bUseDepth": false
+}

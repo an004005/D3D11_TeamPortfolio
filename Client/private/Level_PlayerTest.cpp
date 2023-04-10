@@ -244,33 +244,33 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	// });
 
 	//CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext);
-	{// SAS 케이블
-		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SASCable", CSAS_Cable::Create(m_pDevice, m_pContext)));
-	}
+	//{// SAS 케이블
+	//	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SASCable", CSAS_Cable::Create(m_pDevice, m_pContext)));
+	//}
 
-	pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
+	//pGameInstance->Add_Prototype(L"CamSpot", CCamSpot::Create(m_pDevice, m_pContext));
 
-	{	// 플레이어 모델과 애니메이션
-		auto pModel_Player = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
-		pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
-		FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
-		
-		pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
-	}
+	//{	// 플레이어 모델과 애니메이션
+	//	auto pModel_Player = CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");
+	//	pModel_Player->LoadAnimations("../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Animation/");
+	//	FAILED_CHECK(pGameInstance->Add_Prototype(L"Model_Player", pModel_Player));
+	//	
+	//	pGameInstance->Add_Prototype(L"Player", CPlayer::Create(m_pDevice, m_pContext));
+	//}
 
-	{	// 플레이어 컨트롤러
-		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
-			CController::Create())))
-			return E_FAIL;
-	}
+	//{	// 플레이어 컨트롤러
+	//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_Component_LocalController"),
+	//		CController::Create())))
+	//		return E_FAIL;
+	//}
 
-	{	// 무기
-		_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
-		pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
-		auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
-		FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
-	}
+	//{	// 무기
+	//	_matrix WeaponPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationZ(XMConvertToRadians(180.f));
+	//	pGameInstance->Add_Prototype(L"PlayerWeapon", CWeapon_wp0190::Create(m_pDevice, m_pContext));
+	//	auto pModel_Weapon = CModel::Create(m_pDevice, m_pContext,
+	//		"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", WeaponPivot);
+	//	FAILED_CHECK(pGameInstance->Add_Prototype(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", pModel_Weapon));
+	//}
 
 	pGameInstance->Add_Prototype(L"Indicator", CIndicator::Create(m_pDevice, m_pContext));
 	
@@ -374,11 +374,14 @@ HRESULT CLevel_PlayerTest::Ready_Prototypes()
 	//	FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("Proto_FL_Controller"), CFL_Controller::Create()));
 	//}
 
+	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeSAS_Portrait_Prototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 	FAILED_CHECK(CFactoryMethod::MakeAIPrototypes(m_pDevice, m_pContext));
+
+	FAILED_CHECK(CFactoryMethod::MakeNPCPrototypes(m_pDevice, m_pContext));
 
 	//Batch
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_Batch", CBatch::Create(m_pDevice, m_pContext)));
@@ -439,7 +442,6 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Batch(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
 
 	/*Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Batch/Batch_ConstructionSite3F.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_Batch"), &json));*/
@@ -455,14 +457,15 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Batch(const _tchar * pLayerTag)
 HRESULT CLevel_PlayerTest::Ready_Layer_Map(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, pLayerTag, TEXT("Prototype_GameObject_SkyBox")));
 
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/KineticTestMap.json");
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json"); 
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Subway.json");
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Hospital_1F.json");
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_TestPlace.json");
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_FinalBossStage.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_TestPlace.json");
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_FinalBossStage.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
@@ -473,7 +476,6 @@ HRESULT CLevel_PlayerTest::Ready_Layer_Kinetic(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 	
-
 	//Json Test;
 	//Test["ModelTags"] = "../Bin/Resources/Model/AnimModel/Kinetic/Train/Train.anim_model";
 	//CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_GameObject_Special_Train"), &Test)
@@ -568,17 +570,17 @@ HRESULT CLevel_PlayerTest::Ready_Layer_UI(const _tchar* pLayerTag)
 
 HRESULT CLevel_PlayerTest::Ready_Layer_AI(const _tchar* pLayerTag)
 {
-	Json PreviewData;
-	PreviewData["Model"] = "Model_AI_CH0300";
+	//Json PreviewData;
+	//PreviewData["Model"] = "Model_AI_CH0300";
 
-	CGameObject* pAI_CH0300 = nullptr;
-	NULL_CHECK(pAI_CH0300 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0300"), &PreviewData));
+	//CGameObject* pAI_CH0300 = nullptr;
+	//NULL_CHECK(pAI_CH0300 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0300"), &PreviewData));
 
-	Json Tsugumi;
-	Tsugumi["Model"] = "Model_AI_CH0500";
+	//Json Tsugumi;
+	//Tsugumi["Model"] = "Model_AI_CH0500";
 
-	CGameObject* pAI_CH0500 = nullptr;
-	NULL_CHECK(pAI_CH0500 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0500"), &Tsugumi));
+	//CGameObject* pAI_CH0500 = nullptr;
+	//NULL_CHECK(pAI_CH0500 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0500"), &Tsugumi));
 
 	return S_OK;
 }

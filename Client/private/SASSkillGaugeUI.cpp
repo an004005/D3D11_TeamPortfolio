@@ -130,12 +130,12 @@ void CSASSkillGaugeUI::Set_GaugeType(const ESASType & eESASType, const _float & 
 		break;
 	case Client::ESASType::SAS_ELETRIC:		// 전기
 	{
-		m_tParams.Float4s[0] = { 0.833f, 0.798f, 0.319f, 1.0f };
+		m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	}
 		break;
 	case Client::ESASType::SAS_SUPERSPEED:	// 초고속
 	{
-		m_tParams.Float4s[0] = { 1.0f, 0.553f, 0.878f, 1.0f };
+		m_tParams.Float4s[0] = { 1.0f, 0.832f, 0.954f, 1.0f };
 	}
 		break;
 	case Client::ESASType::SAS_COPY:		// 복제
@@ -192,7 +192,7 @@ void CSASSkillGaugeUI::Set_GaugeBackType(const ESASType & eESASType, const _floa
 	break;
 	case Client::ESASType::SAS_ELETRIC:		// 전기
 	{
-		m_tParams.Float4s[0] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		m_tParams.Float4s[0] = { 0.833f, 0.798f, 0.319f, 1.0f };
 	}
 	break;
 	case Client::ESASType::SAS_SUPERSPEED:	// 초고속

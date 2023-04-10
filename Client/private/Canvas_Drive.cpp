@@ -2,9 +2,9 @@
 #include "..\public\Canvas_Drive.h"
 #include "GameInstance.h"
 #include "UI_Manager.h"
+#include "PlayerInfoManager.h"
 
 #include "DefaultUI.h"
-#include "Canvas_PlayerInfoMove.h"
 
 CCanvas_Drive::CCanvas_Drive(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -33,10 +33,7 @@ HRESULT CCanvas_Drive::Initialize(void* pArg)
 
 	// 처음에 보이지 않을 UI 들
 	Find_ChildUI(L"Drive_B")->SetVisible(false);
-	Find_ChildUI(L"Drive_Circle0")->SetVisible(false);
 	Find_ChildUI(L"Drive_Circle1")->SetVisible(false);
-
-	m_bVisible = true;
 
 	return S_OK;
 }
@@ -59,52 +56,28 @@ HRESULT CCanvas_Drive::Render()
 		return E_FAIL;
 
 	_float2 vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Drive_BackGround"))->GetScreenSpaceLeftTop();
-	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"DRIVE", vPosition + _float2(40.0f, 99.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"DRIVE", vPosition + _float2(40.0f, 97.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 
-	_float2 fPlayerHp = dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Get_PlayerHp();
+	_uint iPlayerHp = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP;
+	_uint iPlayerMaxHp = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxHP;
 	_tchar szChildTag[MAX_PATH] = TEXT("");
 
-	if (1000.0f <= fPlayerHp.x)
+	if (1000 <= iPlayerHp)
 	{
-		wsprintf(szChildTag, TEXT("%d"), _int(fPlayerHp.x));
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-100.0f, 61.0f), 0.f, { 0.55f, 0.55f }, { 1.0f, 0.99f, 0.87f, 1.0f });
-		wsprintf(szChildTag, TEXT("/%d"), _int(fPlayerHp.y));
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-40.0f, 65.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		wsprintf(szChildTag, TEXT("%u"), iPlayerHp);
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-75.0f, 65.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		wsprintf(szChildTag, TEXT("/%u"), iPlayerMaxHp);
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-25.0f, 68.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 	}
 	else
 	{
-		wsprintf(szChildTag, TEXT("%d"), _int(fPlayerHp.x));
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-79.0f, 61.0f), 0.f, { 0.55f, 0.55f }, { 1.0f, 0.99f, 0.87f, 1.0f });
-		wsprintf(szChildTag, TEXT("/%d"), _int(fPlayerHp.y));
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-30.0f, 65.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		wsprintf(szChildTag, TEXT("%u"), iPlayerHp);
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-60.0f, 65.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		wsprintf(szChildTag, TEXT("/%u"), iPlayerMaxHp);
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-17.0f, 68.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 	}
 
 	return S_OK;
-}
-
-void CCanvas_Drive::Imgui_RenderProperty()
-{
-	CCanvas::Imgui_RenderProperty();
-
-	static _float fPosition[2];
-	ImGui::DragFloat2("Font Position", fPosition);
-	m_vFontPos = { fPosition[0], fPosition[1] };
-
-}
-
-void CCanvas_Drive::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-}
-
-void CCanvas_Drive::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
-}
-
-void CCanvas_Drive::Set_Drive(const _bool Drive)
-{
-	Find_ChildUI(L"Drive_Circle0")->SetVisible(Drive);	// 드라이브 계산을 시작하면!
 }
 
 void CCanvas_Drive::Set_DriveB(const _bool DriveB)

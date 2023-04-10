@@ -42,18 +42,17 @@ public:
 	EBaseTurn GetBaseTurn() const { return m_eTurn; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_bool IsPlayingSocket() const;
+	class CEM1200_AnimInstance* GetASM() { return m_pASM; }
+	CModel* Get_Model() { return m_pModelCom; }
 
 public:
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
-
-	ESimpleAxis TargetSimpleAxis();
-	EBaseTurn TargetBaseTurn();
 	void HitWeakProcess(_double TimeDelta);
-
+	void FogControl(_double TimeDelta);
 public:
-	//충돌
+	//공격
 	void Fall_Overlap();
 	void Shout1_Overlap();
 	void Shout2_Overlap();
@@ -78,6 +77,7 @@ private:
 	_bool						m_bAttack = false;
 	_uint						m_iAttackCount = 0;
 	_int						m_iPreAttackCount = -1;
+	_double				m_dFogTime = 0.0;
 
 	_float4					m_SaveTargetPos;
 	//Dodge

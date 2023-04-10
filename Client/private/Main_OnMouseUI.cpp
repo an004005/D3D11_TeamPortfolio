@@ -107,7 +107,8 @@ void CMain_OnMouseUI::Set_BrainInfo(CCanvas_BrainMap::BRAININFO tBrainInfo)
 	// 뒤에 뜨는 색상 Icon 생성하기
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Main_OnMouseColorUI.json");
 	m_pMouseColorUI = dynamic_cast<CMain_OnMouseColorUI*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Main_OnMouseColorUI", &json));
-	
+	assert(m_pMouseColorUI != nullptr && "Failed to Clone : CMain_OnMouseColorUI");
+
 	_float fColor = 0.0f;
 	if (CCanvas_BrainMap::GREEN == m_BrainInfo.eColor)
 		fColor = 0.0f;

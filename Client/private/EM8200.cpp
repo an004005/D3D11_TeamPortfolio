@@ -98,7 +98,7 @@ void CEM8200::Create_Bullet()
 	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
 	eDamageParam.iDamage = 100;
 
-	_matrix pivot = XMMatrixIdentity();
+	_matrix pivot = XMMatrixScaling(0.5f,0.5f,0.5f);
 
 	_matrix BoneMtx = m_pModelCom->GetBoneMatrix("LeftWeapon") * m_pTransformCom->Get_WorldMatrix();
 	_vector vPrePos = BoneMtx.r[3];
@@ -107,12 +107,13 @@ void CEM8200::Create_Bullet()
 		.CreateBullet()
 		.Set_Owner(this)
 		.Set_Target(m_pTarget)
-		.Set_InitBulletEffect({ L"em1100_Elec_Bullet_Loop" })
+		.Set_InitBulletEffect({ L"em8200_Elec_Bullet_Loop" })
 		.Set_BulletEffPivot(pivot)
-		.Set_InitBulletParticle(L"em1100_Elec_Bullet_Particle", true)
+		.Set_InitBulletParticle(L"em8200_Elec_Bullet_Test", true)
 		.Set_ShootSpeed(8.f)
 		.Set_Life(7.f)
 		.Set_DamageParam(eDamageParam)
+		.Set_Radius(1.f)
 		// .Set_DeadBulletEffect({ L"" })
 		.Set_DeadBulletParticle(L"em8200_Elec_Bullet_Dead")
 		.Set_Position(vPrePos)

@@ -57,6 +57,8 @@ public:
 
 	void	Set_Swing(_bool bSwing) { m_bSwing = bSwing; }
 
+	_float4 GetPxPostion();
+
 public:
 	void	SetOutline(_bool bOutLine) { m_bOutline = bOutLine; }
 
@@ -64,6 +66,18 @@ private:
 	void	OutlineMaker();
 	_bool	m_bOutline = false;
 	_bool	m_bBeforeOutline = false;
+
+public:
+	void	KineticRimLightFix(_bool bFix) { m_bRimFix = bFix; }
+
+private:
+	void	BrightChecker();
+	_float	m_fBright = 0.f;
+	_float	m_fDissolve = 0.f;
+	_bool	m_bRimFix = false;	// 림라이트 값 고정
+
+private:
+	_float	m_fTimeDelta = 0.f;
 
 public:
 	void	SetParticle();
@@ -100,6 +114,9 @@ public:
 		m_bCameRange = bCameRange;
 	}
 
+	_matrix				Get_PreMatrix();
+	void				Set_PreMatrix(_matrix preMatrix);
+
 private:
 	_bool				m_bThrow = false;
 	_bool				m_bUsable = true;
@@ -110,6 +127,8 @@ private:
 	_bool				m_bCameRange = { false };
 
 	_bool				m_bBossUse = false; 
+
+	_matrix				m_PreMatrix;
 
 private:
 	vector<wstring>		m_vecRandomParticle{

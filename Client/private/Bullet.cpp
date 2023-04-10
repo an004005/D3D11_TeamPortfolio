@@ -65,18 +65,13 @@ void CBullet::Tick(_double TimeDelta)
 
 	_uint iColType = ECOLLIDER_TYPE_BIT::CTB_PLAYER | ECOLLIDER_TYPE_BIT::CTB_STATIC | ECOLLIDER_TYPE_BIT::CTB_PSYCHICK_OBJ;
 
-	CollisionCheck_Bullet(m_pTransformCom, dParams, 1.f, iColType);
+	CollisionCheck_Bullet(m_pTransformCom, dParams, m_fRadius, iColType);
 
 
 	if (m_bHitCheck == true || m_bDelete == true) // hit 체크 및 life 다 떨어진거 체크
 	{
 		Create_DeadEffects();
 		Create_DeadParticle();
-
-		//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_1")->Start_NoAttach(this, false);
-		//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_2")->Start_NoAttach(this, false);
-		//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Bullet_Dead_3")->Start_NoAttach(this, false);
-
 		m_bDelete = true;
 	}
 }
@@ -126,6 +121,8 @@ void CBullet::Create_InitParticle(wstring& InitParticle)
 void CBullet::Create_InitRotParticle(wstring& InitParticle, _bool trueisUpdate)
 {
 	if (InitParticle == L"") return;
+
+	m_bRotParticles = trueisUpdate;
 
 	CParticleGroup* pParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, InitParticle);
 	assert(pParticle != nullptr);
@@ -204,12 +201,12 @@ void CBullet::CollisionCheck_Bullet(CTransform* pTransform, DAMAGE_PARAM mParam,
 		{
 			auto pTarget = dynamic_cast<CScarletCharacter*>(CPhysXUtils::GetOnwer(sweepOut.getAnyHit(i).actor));
 
-			if (pTarget == nullptr) // 건물, 염력이 적용되는 물체 등에 대한 예외 처리
+			if (pTarget == nullptr && m_bRotParticles == false) // 건물, 염력이 적용되는 물체 등에 대한 예외 처리
 			{
 				m_bHitCheck = true;
 				return;
 			}
-			
+						
 			memcpy(&mParam.vHitPosition, &sweepOut.getAnyHit(i).position, sizeof(_float3));
 			memcpy(&mParam.vHitNormal, &sweepOut.getAnyHit(i).normal, sizeof(_float3));
 			CheckHitTarget(pTarget, CPhysXUtils::GetComponent(sweepOut.getAnyHit(i).actor), mParam);

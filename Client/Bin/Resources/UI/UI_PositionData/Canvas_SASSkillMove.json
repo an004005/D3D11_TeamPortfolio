@@ -6,7 +6,7 @@
             "Pivot": 5,
             "PositionX": -153.0,
             "PositionY": 182.0,
-            "Priority": 3,
+            "Priority": 4,
             "Prototype_GameObject": "SASSkillName_UI\u0000",
             "ScaleX": 0.8500000238418579,
             "ScaleY": 0.8500000238418579,
@@ -61,7 +61,7 @@
             "Pivot": 5,
             "PositionX": -201.0,
             "PositionY": 136.0,
-            "Priority": 3,
+            "Priority": 4,
             "Prototype_GameObject": "SASSkillName_UI\u0000",
             "ScaleX": 0.8500000238418579,
             "ScaleY": 0.8500000238418579,
@@ -116,7 +116,7 @@
             "Pivot": 5,
             "PositionX": -99.0,
             "PositionY": 131.0,
-            "Priority": 3,
+            "Priority": 4,
             "Prototype_GameObject": "SASSkillName_UI\u0000",
             "ScaleX": 0.8500000238418579,
             "ScaleY": 0.8500000238418579,
@@ -171,7 +171,7 @@
             "Pivot": 5,
             "PositionX": -149.0,
             "PositionY": 81.0,
-            "Priority": 3,
+            "Priority": 4,
             "Prototype_GameObject": "SASSkillName_UI\u0000",
             "ScaleX": 0.8500000238418579,
             "ScaleY": 0.8500000238418579,
@@ -894,8 +894,8 @@
             "PositionY": 188.0,
             "Priority": 2,
             "Prototype_GameObject": "SASSkillIcon_UI\u0000",
-            "ScaleX": 0.699999988079071,
-            "ScaleY": 0.699999988079071,
+            "ScaleX": 0.6,
+            "ScaleY": 0.6,
             "ShaderParams": {
                 "Float2s": [
                     [
@@ -956,8 +956,8 @@
             "PositionY": 139.0,
             "Priority": 2,
             "Prototype_GameObject": "SASSkillIcon_UI\u0000",
-            "ScaleX": 0.699999988079071,
-            "ScaleY": 0.699999988079071,
+            "ScaleX": 0.6,
+            "ScaleY": 0.6,
             "ShaderParams": {
                 "Float2s": [
                     [
@@ -1018,8 +1018,8 @@
             "PositionY": 133.0,
             "Priority": 2,
             "Prototype_GameObject": "SASSkillIcon_UI\u0000",
-            "ScaleX": 0.699999988079071,
-            "ScaleY": 0.699999988079071,
+            "ScaleX": 0.6,
+            "ScaleY": 0.6,
             "ShaderParams": {
                 "Float2s": [
                     [
@@ -1080,8 +1080,8 @@
             "PositionY": 89.0,
             "Priority": 2,
             "Prototype_GameObject": "SASSkillIcon_UI\u0000",
-            "ScaleX": 0.699999988079071,
-            "ScaleY": 0.699999988079071,
+            "ScaleX": 0.6,
+            "ScaleY": 0.6,
             "ShaderParams": {
                 "Float2s": [
                     [

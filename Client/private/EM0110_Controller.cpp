@@ -50,6 +50,7 @@ void CEM0110_Controller::AI_Tick(_double TimeDelta)
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
+		//AddCommand("Attack_c1", 0.f, &CAIController::Input, G);
 		DefineState(TimeDelta);
 	}
 }

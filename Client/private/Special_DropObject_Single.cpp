@@ -8,6 +8,7 @@
 #include "MathUtils.h"
 #include "Animation.h"
 #include "ImguiUtils.h"
+#include "Material.h"
 
 CSpecial_DropObject_Single::CSpecial_DropObject_Single(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)

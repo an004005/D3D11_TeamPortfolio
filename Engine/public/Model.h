@@ -89,6 +89,7 @@ public:
 	void Play_Animation(_double TimeDelta);
 	void Play_Animation_Test(_double TimeDelta);
 	void Play_Animation_Additive(_double TimeDelta);
+	void Play_Animation_Sync(_double fRatio);
 	// HRESULT RenderCustomShader(_uint iPass, class CShader* pShader);
 	HRESULT Render(class CTransform* pTransform);
 	HRESULT Render(const _float4x4& WorldMatrix);

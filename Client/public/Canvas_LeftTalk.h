@@ -2,17 +2,16 @@
 
 #include "Canvas.h"
 #include "Client_Defines.h"
-#include <queue>
-
-BEGIN(Client)
 
 typedef struct tagTalkInfo
 {
-	_float2	fFace = { 0.0f, 0.0f };
-	wstring wsTalk0 = L"";
-	wstring wsTalk1 = L"";
+	_float2		fFace;
+	wstring	wsTalk0;
+	wstring	wsTalk1;
 
 }TALKINFO;
+
+BEGIN(Client)
 
 class CCanvas_LeftTalk : public CCanvas
 {
@@ -32,10 +31,10 @@ private:
 	void	Show_Talk();
 
 private:
-	std::queue<TALKINFO>	m_qCurrentTalk;
+	std::list<TALKINFO>	m_qCurrentTalk;
 
 	_bool		m_bRunning = false;
-	_double		m_dTalk_TimeAcc = { 3.0 };
+	_double	m_dTalk_TimeAcc = { 3.0 };
 
 public:
 	static CCanvas_LeftTalk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

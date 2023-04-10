@@ -19,10 +19,13 @@ public:
 public:
 	_bool	Get_ItemUseStatuse() {
 		//if (m_fRatio - 1.0f <= 0.000001f)	
-		if(m_fRatio == 1.0f)
+		if (m_fRatio == 1.0f)
 			return true;		// 사용 가능
 		else
 			return false;	// 사용 불 가능
+	}
+	_bool	Get_Light() {
+		return m_bLight;
 	}
 
 	void	Set_CooldownTimeStart() {
@@ -38,6 +41,8 @@ private:
 	_bool	m_bCooldownTimeStart = { false };
 	_bool	m_fRatioDown = { false };
 	_float	m_fRatio = { 1.0f };
+
+	_bool	m_bLight = { false };
 
 public:
 	static CItem_GaugeUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

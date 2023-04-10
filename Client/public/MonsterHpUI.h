@@ -16,6 +16,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	BeginTick();
 	virtual void    Tick(_double TimeDelta) override;
+	virtual void	Late_Tick(_double TimeDelta) override;
+	virtual HRESULT Render() override;
+
 	virtual void   Imgui_RenderProperty() override;
 
 public:

@@ -1009,6 +1009,28 @@ void CModel::Play_Animation_Additive(_double TimeDelta)
 	Compute_CombindTransformationMatrix();
 }
 
+void CModel::Play_Animation_Sync(_double fRatio)
+{
+	if (m_eType == TYPE_NONANIM)
+	{
+		// IM_WARN("STATIC Model Cannot player animation.");
+		return;
+	}
+	if (auto pAnim = Find_Animation(m_CurAnimName))
+	{
+		pAnim->Update_Bones_SyncRatio(fRatio * pAnim->GetCurDuration());
+
+		KEYFRAME tempKeyFrame = *pAnim->GetCurKeyFrame();
+		if (tempKeyFrame.Time != m_CurKeyFrame.Time)
+		{
+			m_BefKeyFrame = m_CurKeyFrame;
+			m_CurKeyFrame = tempKeyFrame;
+		}
+	}
+
+	Compute_CombindTransformationMatrix();
+}
+
 // HRESULT CModel::RenderCustomShader(_uint iPass, CShader* pShader)
 // {
 // 	for (const auto& mesh : m_Meshes)

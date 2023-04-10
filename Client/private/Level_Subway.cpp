@@ -2,6 +2,7 @@
 #include "..\public\Level_Subway.h"
 #include "GameInstance.h"
 #include "Imgui_Batch.h"
+#include "GameManager.h"
 
 CLevel_Subway::CLevel_Subway(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
@@ -18,8 +19,8 @@ HRESULT CLevel_Subway::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;*/
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/Kinetics_Test.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/MonsterBatches.json");
@@ -27,6 +28,9 @@ HRESULT CLevel_Subway::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/SpecialKientics_Train.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/SpecialKinetics.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/MonsterBatches_2.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/Kinetic_Normal.json");
+
+	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }

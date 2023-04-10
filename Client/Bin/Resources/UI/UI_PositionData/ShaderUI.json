@@ -1,0 +1,50 @@
+{
+    "ObjectTag": "ShaderUI",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 10,
+    "Prototype_GameObject": "ShaderUI\u0000",
+    "ScaleX": 1.0,
+    "ScaleY": 1.0,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 31,
+        "Textures": [
+            "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+        ]
+    },
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
+    "Transform": {
+        "WorldMatrix": [
+            1600.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            900.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

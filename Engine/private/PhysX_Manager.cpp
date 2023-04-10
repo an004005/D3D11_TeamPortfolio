@@ -470,7 +470,7 @@ void CPhysX_Manager::Imgui_RenderProperty()
 	ImGui::Checkbox("DebugDraw", &m_bRenderDebug);
 
 	static array<string, CT_END + 1> ColliderNames{
-		"E", "Player", "Monster", "PlayerAtk", "MonsterAtk", "PsychickObj", "Trigger4Player", "Trigger4Monster", "Static", "MonsterPart", "MonsterRange", "PlayerRange", "Particle"
+		"E", "Player", "Monster", "PlayerAtk", "MonsterAtk", "PsychickObj", "Trigger4Player", "Trigger4Monster", "Static", "MonsterPart", "MonsterRange", "PlayerRange", "Particle", "TeleportObj"
 	};
 
 	ImGui::Checkbox("ShowTable", &m_bShowTable);
@@ -821,7 +821,7 @@ CComponent* CPhysXUtils::GetComponent(physx::PxActor* pActor)
  ***************************************/
 void CEngineSimulationEventCallback::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs, physx::PxU32 nbPairs)
 {
-	IM_LOG("Contacted");
+	// IM_LOG("Contacted");
 	
 	{
 		CComponent* pPxCom = static_cast<CComponent*>(pairHeader.actors[0]->userData);

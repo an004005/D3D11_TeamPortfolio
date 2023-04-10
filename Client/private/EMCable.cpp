@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "EMCable.h"
 #include "VFX_Manager.h"
+#include "GameInstance.h"
+#include "Enemy.h"
 
 CEMCable::CEMCable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CGameObject(pDevice, pContext)
@@ -34,6 +36,12 @@ void CEMCable::BeginTick()
 
 void CEMCable::Tick(_double TimeDelta)
 {
+	//몬스터가 죽을때 예외처리
+	if (dynamic_cast<CEnemy*>(m_pOwner)->IsDead())
+	{
+		m_bDelete = true;
+		return;
+	}
 	__super::Tick(TimeDelta);
 
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -69,7 +77,28 @@ void CEMCable::Tick(_double TimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	}
 
-	
+	Overlap();
+}
+
+void CEMCable::Overlap()
+{
+	physx::PxOverlapHit hitBuffer[3];
+	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
+
+	_float4 vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 1.f, 0.f, 0.f) * 7.f;
+
+	SphereOverlapParams param;
+	param.fVisibleTime = 1.f;
+	param.iTargetType = CTB_PLAYER;
+	param.fRadius = 1.f;
+	param.vPos = vPosition;
+	param.overlapOut = &overlapOut;
+
+	if (CGameInstance::GetInstance()->OverlapSphere(param))
+	{
+		_int iAtkDamage = dynamic_cast<CEnemy*>(m_pOwner)->AtkDamage();
+		dynamic_cast<CEnemy*>(m_pOwner)->HitTargets(overlapOut, static_cast<_int>(iAtkDamage), EAttackType::ATK_HEAVY);
+	}
 }
 
 

@@ -480,7 +480,14 @@ void CScarletMap::RayPicking()
 					if (pMapObject->Get_MapObjType() == INSTANCE)
 					{
 						auto com = dynamic_cast<CMapInstance_Object*>(pMapObject)->Find_PhysXStaticModel(dynamic_cast<CPhysXStaticModel*>(pComponent));
-						return com == nullptr ? false : true;
+						
+						if (com == nullptr)
+							return false;
+						else
+						{
+							m_bPick = false;
+							return true;
+						}
 					}
 					else
 					{

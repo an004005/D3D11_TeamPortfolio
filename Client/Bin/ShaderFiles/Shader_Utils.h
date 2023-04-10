@@ -26,6 +26,8 @@ static const float EPSILON = 1e-6f;
 #define SHADER_POST_ENEMY 13.f
 #define SHADER_POST_OBJECTS 14.f
 
+#define SHADER_CABLE_STRIPE 15.f
+
 
 #define COL_WHITE float3(1.f, 1.f, 1.f)
 #define COL_BLACK float3(0.f, 0.f, 0.f)
@@ -34,7 +36,8 @@ static const float EPSILON = 1e-6f;
 // #define COL_OIL float3(0.470588f, 0.23529f, 0.f)
 #define COL_OIL float3(0.1725, 0.1058f, 0.00392f)
 #define COL_FIRE float3(0.9f, 0.3f, 0.f)
-#define COL_ELEC float3(247.f / 255.f, 255.f / 255.f, 19.f / 255.f)
+#define COL_ELEC float3(0.9686f, 1.f, 0.07451f)
+#define COL_WATER float3(0.8039f, 1.f, 1.f)
 #define COL_BURNOUT float3(1.f, 0.4f, 0.f) // 몬스터 사망 디졸브 색
 #define COL_PINK float3(1.f, 0.0784f, 0.5764f) // 초고속
 #define COL_CABLE_RED float3(1.f, 0.07843f, 0.f)
@@ -42,51 +45,51 @@ static const float EPSILON = 1e-6f;
 
 float2 Get_FlipBookUV(float2 vRectUV, float fCurTime, float fFrameTime, int iRowCnt, int iColCnt)
 {
-	float fTotalTime = fFrameTime * iRowCnt * iColCnt;
-	float fTime = fmod(fCurTime, fTotalTime);
-	uint iFrame = uint(fTime / fFrameTime); // idx = y * X + x;
+    float fTotalTime = fFrameTime * iRowCnt * iColCnt;
+    float fTime = fmod(fCurTime, fTotalTime);
+    uint iFrame = uint(fTime / fFrameTime); // idx = y * X + x;
 
-	float fRowSize = 1.f / iRowCnt;
-	float fColSize = 1.f / iColCnt;
+    float fRowSize = 1.f / iRowCnt;
+    float fColSize = 1.f / iColCnt;
 
-	float2 vOutUV;
-	vOutUV.x = vRectUV.x / iRowCnt + (iFrame % iRowCnt) * fRowSize;
-	vOutUV.y = vRectUV.y / iColCnt + (iFrame / iRowCnt) * fColSize;
+    float2 vOutUV;
+    vOutUV.x = vRectUV.x / iRowCnt + (iFrame % iRowCnt) * fRowSize;
+    vOutUV.y = vRectUV.y / iColCnt + (iFrame / iRowCnt) * fColSize;
 
-	return vOutUV;
+    return vOutUV;
 }
 
 float2 Get_ReverseFlipBookUV(float2 vRectUV, float fCurTime, float fFrameTime, int iRowCnt, int iColCnt)
 {
-	float fTotalTime = fFrameTime * iRowCnt * iColCnt;
-	float fDoubleTotalTime = fTotalTime * 2.f;
+    float fTotalTime = fFrameTime * iRowCnt * iColCnt;
+    float fDoubleTotalTime = fTotalTime * 2.f;
 
-	float fTime = fmod(fCurTime, fTotalTime);
-	float fDoubleTime = fmod(fCurTime, fDoubleTotalTime);
+    float fTime = fmod(fCurTime, fTotalTime);
+    float fDoubleTime = fmod(fCurTime, fDoubleTotalTime);
 
-	float2 vOutUV;
+    float2 vOutUV;
 
-	// reverse
-	if (fTotalTime < fDoubleTime && fDoubleTime <= fDoubleTotalTime)
-	{
-		float fOverTime = fDoubleTime - fTotalTime;
-		fTime = fTotalTime - fOverTime;
-	}
+    // reverse
+    if (fTotalTime < fDoubleTime && fDoubleTime <= fDoubleTotalTime)
+    {
+        float fOverTime = fDoubleTime - fTotalTime;
+        fTime = fTotalTime - fOverTime;
+    }
 
-	uint iFrame = uint(fTime / fFrameTime); // idx = y * X + x;
+    uint iFrame = uint(fTime / fFrameTime); // idx = y * X + x;
 
-	float fRowSize = 1.f / iRowCnt;
-	float fColSize = 1.f / iColCnt;
+    float fRowSize = 1.f / iRowCnt;
+    float fColSize = 1.f / iColCnt;
 
-	vOutUV.x = vRectUV.x / iRowCnt + (iFrame % iRowCnt) * fRowSize;
-	vOutUV.y = vRectUV.y / iColCnt + (iFrame / iRowCnt) * fColSize;
+    vOutUV.x = vRectUV.x / iRowCnt + (iFrame % iRowCnt) * fRowSize;
+    vOutUV.y = vRectUV.y / iColCnt + (iFrame / iRowCnt) * fColSize;
 
-	return vOutUV;
+    return vOutUV;
 }
 
 float2 Get_ColorGradientUV(float fGrayColor)
 {
-	return float2(fGrayColor, fGrayColor);
+    return float2(fGrayColor, fGrayColor);
 }
 
 // Tiling : wrap 샘플러 사용시의 텍스쳐 반복 여부 결정값
@@ -98,31 +101,31 @@ float2 TilingAndOffset(float2 UV, float2 Tiling, float2 Offset)
 
 float4 ConstantBiasScale(float4 v4)
 {
-	return (v4 - 0.5f) * 2.f;
+    return (v4 - 0.5f) * 2.f;
 }
 float2 ConstantBiasScale(float2 v2)
 {
-	return (v2 - 0.5f) * 2.f;
+    return (v2 - 0.5f) * 2.f;
 }
 float ConstantBiasScale(float f)
 {
-	return (f - 0.5f) * 2.f;
+    return (f - 0.5f) * 2.f;
 }
 
 float4 FlowMapping(Texture2D flowTexture, Texture2D targetTexture, sampler sample, float2 vUV, float time, float strength, float2 flowTiling, float2 tiling)
 {
-	float2 flowUV = flowTexture.Sample(sample, TilingAndOffset(vUV, flowTiling, float2(0.f, 0.f))).xy;
-	flowUV = ConstantBiasScale(flowUV) * -1.f;
+    float2 flowUV = flowTexture.Sample(sample, TilingAndOffset(vUV, flowTiling, float2(0.f, 0.f))).xy;
+    flowUV = ConstantBiasScale(flowUV) * -1.f;
 
-	float2 flowUV1 = flowUV * frac(time) * strength + TilingAndOffset(vUV, tiling, float2(0.f, 0.f));
-	float4 flowMap1 = targetTexture.Sample(sample, flowUV1);
+    float2 flowUV1 = flowUV * frac(time) * strength + TilingAndOffset(vUV, tiling, float2(0.f, 0.f));
+    float4 flowMap1 = targetTexture.Sample(sample, flowUV1);
 
-	float2 flowUV2 = flowUV * frac(time + 0.5f) * strength + TilingAndOffset(vUV, tiling, float2(0.f, 0.f));
-	float4 flowMap2 = targetTexture.Sample(sample, flowUV2);
+    float2 flowUV2 = flowUV * frac(time + 0.5f) * strength + TilingAndOffset(vUV, tiling, float2(0.f, 0.f));
+    float4 flowMap2 = targetTexture.Sample(sample, flowUV2);
 
-	float4 flowMap = lerp(flowMap1, flowMap2, abs(ConstantBiasScale(frac(time))));
+    float4 flowMap = lerp(flowMap1, flowMap2, abs(ConstantBiasScale(frac(time))));
 
-	return flowMap;
+    return flowMap;
 }
 
 // InMinMax : x(min), y(max)
@@ -142,11 +145,11 @@ float Remap(float In, float2 InMinMax, float2 OutMinMax)
 
 float4 CalcHDRColor(float4 vColor, float fIntensity)
 {
-	float4 vSatColor = saturate(vColor);
-	float4 vHDRColor = vSatColor * pow(2.f, fIntensity);
-	vHDRColor.a = vSatColor.a;
+    float4 vSatColor = saturate(vColor);
+    float4 vHDRColor = vSatColor * pow(2.f, fIntensity);
+    vHDRColor.a = vSatColor.a;
 
-	return vHDRColor;
+    return vHDRColor;
 }
 
 float FresnelEffect(float3 Normal, float3 ViewDir, float Power)
@@ -156,19 +159,19 @@ float FresnelEffect(float3 Normal, float3 ViewDir, float Power)
 
 float3 matrix_right(float4x4 m)
 {
-	return float3(m[0][0], m[0][1], m[0][2]);
+    return float3(m[0][0], m[0][1], m[0][2]);
 }
 float3 matrix_up(float4x4 m)
 {
-	return float3(m[1][0], m[1][1], m[1][2]);
+    return float3(m[1][0], m[1][1], m[1][2]);
 }
 float3 matrix_look(float4x4 m)
 {
-	return float3(m[2][0], m[2][1], m[2][2]);
+    return float3(m[2][0], m[2][1], m[2][2]);
 }
 float3 matrix_postion(float4x4 m)
 {
-	return float3(m[3][0], m[3][1], m[3][2]);
+    return float3(m[3][0], m[3][1], m[3][2]);
 }
 
 float4x4 inverse(float4x4 m) {
@@ -355,11 +358,11 @@ float4x4 axis_matrix(float3 right, float3 up, float3 forward)
     float3 yaxis = up;
     float3 zaxis = forward;
     return float4x4(
-		xaxis.x, yaxis.x, zaxis.x, 0,
-		xaxis.y, yaxis.y, zaxis.y, 0,
-		xaxis.z, yaxis.z, zaxis.z, 0,
-		0, 0, 0, 1
-	);
+        xaxis.x, yaxis.x, zaxis.x, 0,
+        xaxis.y, yaxis.y, zaxis.y, 0,
+        xaxis.z, yaxis.z, zaxis.z, 0,
+        0, 0, 0, 1
+    );
 }
 
 // http://stackoverflow.com/questions/349050/calculating-a-lookat-matrix
@@ -381,7 +384,7 @@ float4x4 look_at_matrix(float3 at, float3 eye, float3 up)
 
 float Rand(float2 co)
 {
-	return 0.5 + (frac(sin(dot(co.xy, float2(12.9898, 78.233))) * 43758.5453)) * 0.5;
+    return 0.5 + (frac(sin(dot(co.xy, float2(12.9898, 78.233))) * 43758.5453)) * 0.5;
 }
 
 float2 rotateUV_Degree(float2 uv, float degrees)

@@ -68,18 +68,34 @@ void CSpecial_IronBars::Tick(_double TimeDelta)
 {
 	if (m_bDeadCheck)
 	{
+
 		static_cast<CSpecial_IronBars_Door*>(m_pDoor)->SetOutline(false);
+		static_cast<CSpecial_IronBars_Door*>(m_pDoor)->SpecialRimLightFix(false);
+
 		static_cast<CSpecial_IronBars_Bars*>(m_pBars)->SetOutline(false);
+		static_cast<CSpecial_IronBars_Bars*>(m_pBars)->SpecialRimLightFix(false);
 
 		for (_uint i = 0; i < 8; ++i)
 		{
 			static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->SetOutline(false);
+			static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->SpecialRimLightFix(false);
 		}
-
 		static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->SetOutline(false);
+		static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->SpecialRimLightFix(false);
 
 
 		m_fDeadTime -= (_float)TimeDelta;
+
+		if (1.f >= m_fDeadTime)
+		{
+			static_cast<CSpecial_IronBars_Door*>(m_pDoor)->Set_Dissolve(true);
+			static_cast<CSpecial_IronBars_Bars*>(m_pBars)->Set_Dissolve(true);
+			for (_uint i = 0; i < 8; ++i)
+			{
+				static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Set_Dissolve(true);
+			}
+			static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->Set_Dissolve(true);
+		}
 
 		if (0.f >= m_fDeadTime)
 		{
@@ -101,26 +117,44 @@ void CSpecial_IronBars::Tick(_double TimeDelta)
 		if (CPlayerInfoManager::GetInstance()->Get_SpecialObject() == this)
 		{
 			static_cast<CSpecial_IronBars_Door*>(m_pDoor)->SetOutline(true);
+			static_cast<CSpecial_IronBars_Door*>(m_pDoor)->Set_Bright(m_fBright);
+			static_cast<CSpecial_IronBars_Door*>(m_pDoor)->SpecialRimLightFix(m_bRimFix);
+
 			static_cast<CSpecial_IronBars_Bars*>(m_pBars)->SetOutline(true);
+			static_cast<CSpecial_IronBars_Bars*>(m_pBars)->Set_Bright(m_fBright);
+			static_cast<CSpecial_IronBars_Bars*>(m_pBars)->SpecialRimLightFix(m_bRimFix);
 
 			for (_uint i = 0; i < 8; ++i)
 			{
 				static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->SetOutline(true);
+				static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Set_Bright(m_fBright);
+				static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->SpecialRimLightFix(m_bRimFix);
 			}
 
 			static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->SetOutline(true);
+			static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->Set_Bright(m_fBright);
+			static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->SpecialRimLightFix(m_bRimFix);
 		}
 		else
 		{
 			static_cast<CSpecial_IronBars_Door*>(m_pDoor)->SetOutline(false);
+			static_cast<CSpecial_IronBars_Door*>(m_pDoor)->Set_Bright(m_fBright);
+			static_cast<CSpecial_IronBars_Door*>(m_pDoor)->SpecialRimLightFix(m_bRimFix);
+
 			static_cast<CSpecial_IronBars_Bars*>(m_pBars)->SetOutline(false);
+			static_cast<CSpecial_IronBars_Bars*>(m_pBars)->Set_Bright(m_fBright);
+			static_cast<CSpecial_IronBars_Bars*>(m_pBars)->SpecialRimLightFix(m_bRimFix);
 
 			for (_uint i = 0; i < 8; ++i)
 			{
 				static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->SetOutline(false);
+				static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Set_Bright(m_fBright);
+				static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->SpecialRimLightFix(m_bRimFix);
 			}
 
 			static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->SetOutline(false);
+			static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->Set_Bright(m_fBright);
+			static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->SpecialRimLightFix(m_bRimFix);
 		}
 	}
 
@@ -353,6 +387,8 @@ void CSpecial_IronBars::IronBars_SingleBars_Particle()
 
 HRESULT CSpecial_IronBars::SetUp_Components(void * pArg)
 {
+	FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"Collider", (CComponent**)&m_pCollider, pArg));
+
 	return S_OK;
 }
 

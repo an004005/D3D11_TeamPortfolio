@@ -182,6 +182,20 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 		FAILED_CHECK(pGameInstance->Add_Prototype(TEXT("MonsterBoss1"), pBoss1));
 	}
 
+	{
+		auto pModel_NPC = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/NPC/SM_2300.anim_model");
+		pModel_NPC->LoadAnimations("../Bin/Resources/Model/AnimModel/NPC/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Model_NPC", pModel_NPC));
+	}
+
+	{
+		auto pModel_ConsumptionItem = CModel::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Model/AnimModel/Item/Consumption/SM_co0700.anim_model");
+		pModel_ConsumptionItem->LoadAnimations("../Bin/Resources/Model/AnimModel/Item/Consumption/Anim/");
+		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Model_ConsumptionItem", pModel_ConsumptionItem));
+	}
+
 	FAILED_CHECK(CFactoryMethod::MakeAIPrototypes(m_pDevice, m_pContext));
 
 	// PJW Monster Model Anim Control Purpose
@@ -230,11 +244,13 @@ HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 						// Model_Player	 
 // MonsterBuddyLumi	MonsterSkummyPool MonsterFlowerLeg MonsterSkummyPandou MonsterBronJon MonsterBoss1
 	Json PreviewData; 
-	PreviewData["Model"] = "Model_Player";// "Model_AI_CH0300";
+	PreviewData["Model"] = "Model_ConsumptionItem";// "Model_NPC";// "Model_AI_CH0300"; // Model_NPC
 
 	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
 		return E_FAIL;
 	
+
+	//
 	//auto pPlayer = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
 
 	//PreviewData["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";

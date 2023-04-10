@@ -28,6 +28,7 @@ HRESULT CPlayerInfo_GaugeBackGround::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_tParams.Floats[0] = 0.5f;
+	m_bVisible = true;
 
 	return S_OK;
 }
@@ -35,7 +36,6 @@ HRESULT CPlayerInfo_GaugeBackGround::Initialize(void * pArg)
 void CPlayerInfo_GaugeBackGround::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
-	m_bVisible = true;
 }
 
 void CPlayerInfo_GaugeBackGround::Late_Tick(_double TimeDelta)

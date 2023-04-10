@@ -9,6 +9,7 @@
 #include "Canvas_Sale.h"
 #include "Main_PickUI.h"
 #include "DefaultUI.h"
+#include "ShaderUI.h"
 
 CCanvas_Shop::CCanvas_Shop(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -43,7 +44,11 @@ HRESULT CCanvas_Shop::Initialize(void* pArg)
 	m_bVisible = true;
 
 	m_szShopText = L"구입할 상품을 선택해주세요.";
-	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Set_InitializeAlpha();	// 처음에 해당 버튼에 불이 들어올 수 있도록
+	dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Purchase"))->Set_PickInitialize();	// 처음에 해당 버튼에 불이 들어올 수 있도록
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/ShaderUI.json");
+	m_pShaderUI = dynamic_cast<CShaderUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Shader_UI", &json));
+	assert(m_pShaderUI != nullptr && "Failed to Clone : CFullUI");
 
 	return S_OK;
 }
@@ -126,10 +131,45 @@ HRESULT CCanvas_Shop::Add_MainCanvas()
 
 void CCanvas_Shop::KeyInput()
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_Z))
+	if (LEVEL_NOW == LEVEL_UI)
 	{
-		dynamic_cast<CCanvas_Main*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Main"))->Set_MainUIClose();
+		if (CGameInstance::GetInstance()->KeyDown(DIK_Z))
+			m_bOpenShop = true;
+	}
 
+	if (true == m_bOpenShop)
+	{
+		m_bOpenShop = false;
+		m_bAlpha = true;
+		m_pShaderUI->SetVisible(true);
+	}
+
+	if (false == m_bAlpha) return;
+
+	m_pShaderUI->Set_Size({ _float(g_iWinSizeX), _float(g_iWinSizeY) });
+	_float fAlpha = m_pShaderUI->Get_Float4s_W();
+	if (m_bReverse == false && fAlpha >= 0.5f)
+	{
+		m_bReverse = true;
+		m_bOpen = true;
+	}
+	else if (m_bReverse == true && fAlpha <= 0.0f)
+	{
+		m_bReverse = false;
+		m_bAlpha = false;
+		m_pShaderUI->SetVisible(false);
+	}
+
+	_float fSpeed = 0.7f;
+	if (m_bReverse == false)
+		fAlpha += _float(TIME_DELTA) * fSpeed;
+	else
+		fAlpha -= _float(TIME_DELTA) * fSpeed;
+	m_pShaderUI->Set_Float4s_W(fAlpha);
+
+	if (true == m_bOpen)
+	{
+		m_bOpen = false;
 		m_bShopUI = !m_bShopUI;
 
 		// m_bShopUI 와 반대로 동작한다.
@@ -138,6 +178,9 @@ void CCanvas_Shop::KeyInput()
 		CUI_Manager::GetInstance()->Set_TempOff(m_bShopUI);
 
 		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bShopUI);
+
+		dynamic_cast<CCanvas_Main*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Main"))->Set_MainUIClose();
+
 	}
 }
 
@@ -209,4 +252,6 @@ CCanvas * CCanvas_Shop::Clone(void * pArg)
 void CCanvas_Shop::Free()
 {
 	CCanvas::Free();
+
+	Safe_Release(m_pShaderUI);
 }

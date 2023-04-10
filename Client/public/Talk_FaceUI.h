@@ -18,12 +18,12 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void	Set_Face(const _float2 & fFace, const wstring szTalk0, const wstring szTalk1);
+	void	Set_Face(const _float2& fFace, const wstring& szTalk0, const wstring& szTalk1);
 
 private:
-	_bool	m_bChange = { false };
-	_float	m_fFace = { 0.0 };
-	_double m_dChange_TimeAcc = { 0.0 };
+	_bool		m_bChange = { false };
+	_float		m_fFace = { 0.0 };
+	_double	m_dChange_TimeAcc = { 0.0 };
 	wstring m_wsTalk0 = { L"" };
 	wstring m_wsTalk1 = { L"" };
 

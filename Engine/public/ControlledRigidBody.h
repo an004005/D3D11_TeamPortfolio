@@ -45,6 +45,8 @@ public:
 	_float4 GetPosition();
 	_float4 GetFootPosition();
 
+	void SetFilterData(ECOLLIDER_TYPE_BIT eBit);
+
 	// 이동용, 기본 중력없기 때문에 이 함수로 중력 만들어 줘야합니다.
 	physx::PxControllerCollisionFlags Move(_float4 vVelocity, _float fTimeDelta, _float minDist = 0.001f);
 	physx::PxControllerCollisionFlags MoveDisp(_float4 vPosDelta, _float fTimeDelta, _float minDist = 0.001f);

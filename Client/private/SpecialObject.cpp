@@ -14,6 +14,7 @@
 #include "PhysX_Manager.h"
 #include "Enemy.h"
 #include "ScarletCharacter.h"
+#include "PlayerInfoManager.h"
 
 CSpecialObject::CSpecialObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice, pContext)
@@ -63,11 +64,32 @@ void CSpecialObject::BeginTick()
 		}
 	}*/
 
+	if (!m_pModelComs.empty())
+	{
+		for (auto& iter : m_pModelComs)
+		{
+			for (auto& pMtrl : iter->GetMaterials())
+			{
+				if (pMtrl->GetParam().Floats.empty())
+				{
+					pMtrl->GetParam().Floats.push_back(0.f);
+				}
+
+				if (1 == pMtrl->GetParam().Floats.size())
+				{
+					pMtrl->GetParam().Floats.push_back(0.f);
+				}
+			}
+		}
+	}
+
 //	m_pCollider->UpdateChange();
 }
 
 void CSpecialObject::Tick(_double TimeDelta)
 {
+	m_fTimeDelta = (_float)TimeDelta;
+
 	__super::Tick(TimeDelta);
 
 	m_fParticleCoolTime += TimeDelta;
@@ -78,8 +100,20 @@ void CSpecialObject::Tick(_double TimeDelta)
 	}
 
 	OutlineMaker();
+	BrightChecker();
+	DissolveChecker();
 
-//	m_pCollider->Update_Tick(m_pTransformCom);
+	if (!m_pModelComs.empty())
+	{
+		for (auto& iter : m_pModelComs)
+		{
+			for (auto pMtrl : iter->GetMaterials())
+			{
+				pMtrl->GetParam().Floats[0] = m_fBright;
+				pMtrl->GetParam().Floats[1] = m_fDissolve;
+			}
+		}
+	}
 }
 
 void CSpecialObject::Late_Tick(_double TimeDelta)
@@ -184,6 +218,13 @@ void CSpecialObject::Imgui_RenderProperty()
 	//	}
 	//	ImGui::EndListBox();
 	//}
+}
+
+_float4 CSpecialObject::GetPxPostion()
+{
+	auto pxPos = m_pCollider->Get_PxTransform().p;
+
+	return _float4{ pxPos.x, pxPos.y, pxPos.z, 1.f };
 }
 
 void CSpecialObject::CreateKineticParticle(_float4 vPos, _float4 vScale)
@@ -341,6 +382,48 @@ void CSpecialObject::OutlineMaker()
 	}
 
 	m_bBeforeOutline = m_bOutline;
+}
+
+void CSpecialObject::BrightChecker()
+{
+	if (m_bRimFix)
+	{
+		m_fBright = 1.f;
+	}
+	else if (CPlayerInfoManager::GetInstance()->Get_SpecialObject() == this)
+	{
+		_float fCharge = CPlayerInfoManager::GetInstance()->Get_SpecialCharge();
+
+		if (m_fBright <= fCharge)
+		{
+			m_fBright = fCharge;
+		}
+		else if (m_bBrightChange)
+		{
+			m_bBrightChange = false;
+		}
+		else
+		{
+			m_fBright = 0.f;
+		}
+	}
+	else
+	{
+		if (false == m_bRimFix && 0.f < m_fBright && false == m_bBrightChange)
+		{
+			m_fBright = 0.f;
+		}
+		else
+		{
+			m_bBrightChange = false;
+		}
+	}
+}
+
+void CSpecialObject::DissolveChecker()
+{
+	if (m_bDissolve)
+		m_fDissolve += m_fTimeDelta;
 }
 
 HRESULT CSpecialObject::SetUp_Components(void* pArg)
