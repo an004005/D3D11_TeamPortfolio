@@ -18,6 +18,7 @@
 #include "Level_NaomiRoom.h"
 #include "Level_Hospital_1F.h"
 #include "Level_FinalStage.h"
+#include "Level_ConstructionSite2F.h"
 
 CImgui_LevelSwitcher::CImgui_LevelSwitcher(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImguiObject(pDevice, pContext)
@@ -98,6 +99,12 @@ void CImgui_LevelSwitcher::Imgui_RenderMenu()
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_TUTORIAL,
 				CLevel_Loading_Simple::Create<CLevel_Tutorial>(m_pDevice, m_pContext));
+		}
+		if (ImGui::MenuItem("Level_ConstructionSite2F"))
+		{
+			CGameInstance::GetInstance()->Open_Loading(
+				LEVEL_CONSTRUCTIONSITE_2F,
+				CLevel_Loading_Simple::Create<CLevel_ConstructionSite2F>(m_pDevice, m_pContext));
 		}
 		if (ImGui::MenuItem("Level_ConstructionSite3F"))
 		{
