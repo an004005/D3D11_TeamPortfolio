@@ -93,7 +93,10 @@ void CLight_Manager::AddLifePointLight(_float fLife, const _float4& vPos, _float
 	tDesc.vPosition = vPos;
 	tDesc.fRange = fRange;
 	tDesc.vDiffuse = vColor;
-
+	tDesc.isEnable = true;
+	tDesc.fLifeTime = fLife;
+	tDesc.vOriginDiffuse = vColor;
+	tDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 0.f);
 	auto pLight = CLight::Create(
 		CGraphic_Device::GetInstance()->GetDevice(),
 		CGraphic_Device::GetInstance()->GetContext(),
@@ -110,6 +113,10 @@ void CLight_Manager::AddLifeCapsuleLight(_float fLife, const _float4& vStart, co
 	tDesc.vCapsuleEnd = vEnd;
 	tDesc.fRange = fRange;
 	tDesc.vDiffuse = vColor;
+	tDesc.isEnable = true;
+	tDesc.fLifeTime = fLife;
+	tDesc.vOriginDiffuse = vColor;
+	tDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 0.f);
 
 	auto pLight = CLight::Create(
 		CGraphic_Device::GetInstance()->GetDevice(),
@@ -123,10 +130,19 @@ void CLight_Manager::Tick(_double TimeDelta)
 	for (auto& Light : m_TempLights)
 		Light.second -= (_float)TimeDelta;
 
+	for (auto& Light : m_TempLights)
+	{
+		Light.first->Get_LightDesc()->vDiffuse = Light.first->Get_LightDesc()->vOriginDiffuse * (Light.second / Light.first->Get_LightDesc()->fLifeTime);
+		Light.first->Get_LightDesc()->vSpecular = _float4(0.5f, 0.5f, 0.5f, 0.f) * (Light.second / Light.first->Get_LightDesc()->fLifeTime);
+	}
+
 	m_TempLights.remove_if([](const pair<class CLight*, _float>& Light)
 	{
 		return Light.second <= 0.f;
 	});
+
+	
+
 }
 
 void CLight_Manager::SetShadowCam(CCamera* pShadowCam)

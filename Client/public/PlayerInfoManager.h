@@ -43,6 +43,10 @@ typedef struct tagPlayerStatus
 	_uint iDefense = { 0 };
 	_uint iBP = { 0 };
 	_uint iCoin = { 0 };
+
+
+	_bool bAttackEnable = false;
+
 	
 	_float fDriveEnergy = { 0 };
 	_float fMaxDriveEnergy = { 0 };
@@ -182,6 +186,12 @@ public:	// Set
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
+	void			Set_PlayerAttackEnable(_bool bEnable) { m_tPlayerStat.bAttackEnable = bEnable; }
+	_bool			Get_PlayerAttackEnable() { return m_tPlayerStat.bAttackEnable; }
+
+	// HRESULT			Set_KineticObject(CGameObject* pKineticObject);
+	// HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
+	// HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
 	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
 

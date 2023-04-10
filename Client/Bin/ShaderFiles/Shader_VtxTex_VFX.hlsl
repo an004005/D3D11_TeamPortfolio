@@ -741,7 +741,7 @@ PS_OUT_Flag PS_EM8200_ELEC_BILLBOARD(PS_IN In)
 	float4 Final = saturate(Blend);
 	float  Mask = g_tex_1.Sample(LinearSampler, TexUV).r;
 	Out.vColor = CalcHDRColor(Final, g_float_1);
-	Out.vColor.a = Mask *  g_float_2;
+	Out.vColor.a = saturate(Mask *  g_float_2);
 
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 

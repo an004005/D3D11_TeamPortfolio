@@ -109,7 +109,7 @@ protected:
 
 	//로컬움직임 적용. 다른 애니메이션을 넣어주기 전에 ClearSocketAnim 꼭 해줘야함!!
 	void SocketLocalMove(class CEnemy_AnimInstance* pASM);
-
+	void SocketLocalMove_Range(class CEnemy_AnimInstance* pASM, _float fRange);
 	//RigidBoyd 관리
 	void	Add_RigidBody(const string& KeyName, void* pArg = nullptr);
 	CRigidBody* GetRigidBody(const string& KeyName);

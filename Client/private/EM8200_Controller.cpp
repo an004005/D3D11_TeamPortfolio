@@ -1,7 +1,13 @@
 #include "stdafx.h"
 #include "..\public\EM8200_Controller.h"
+
+#include <GameUtils.h>
+#include <PhysX_Manager.h>
+
 #include "FSMComponent.h"
 #include "EM8200.h"
+#include "MapKinetic_Object.h"
+#include "PlayerInfoManager.h"
 
 CEM8200_Controller::CEM8200_Controller(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CAIController(pDevice, pContext)
@@ -20,83 +26,73 @@ HRESULT CEM8200_Controller::Initialize(void* pArg)
 	m_pFSM = CFSMComponentBuilder()
 		.InitState("Operate")
 		.AddState("Operate")
-		.AddTransition("Operate to Outside", "Outside")
+		.AddTransition("Operate to Far", "Far")
 		.Predicator([this]
 			{
 				return m_pCastedOwner->IsPlayingSocket() == false;
 			})
 
-		/*.AddTransition("Operate to Near", "Near")
+		.AddState("Far")
+		.Tick(this, &CEM8200_Controller::Tick_Far)
+			.AddTransition("Far to Mid", "Mid")
 			.Predicator([this]
-			{
-				return m_pCastedOwner->IsPlayingSocket() == false;
-			})*/
+				{
+					return m_fTtoM_Distance <= 12.f;
+				})
+		.AddTransition("Mid to Near", "Near")
+			.Predicator([this]
+				{
+					return m_fTtoM_Distance <= 5.f;
+				})
 
-		.AddState("Outside")
-		.Tick(this, &CEM8200_Controller::Tick_Outside)
-		.OnExit([this]
-			{
-				//m_pCastedOwner->TurnEyesOut();
-			})
-		.AddTransition("Outside to Far", "Far")
-				.Predicator([this]
-					{
-						return m_fTtoM_Distance <= 20.f;
-					})
+
+		.AddState("Mid")
+		.Tick(this, &CEM8200_Controller::Tick_Mid)
+		.AddTransition("Mid to Near", "Near")
+		.Predicator([this]
+		{
+			return m_fTtoM_Distance <= 5.f;
+		})
+
+		.AddTransition("Mid to Far", "Far")
+		.Predicator([this]
+		{
+			return m_fTtoM_Distance > 12.f;
+		})
+
 
 		.AddState("Near")
-				.Tick(this, &CEM8200_Controller::Tick_Near)
+		.Tick(this, &CEM8200_Controller::Tick_Near)
 
 		.AddTransition("Near to Mid", "Mid")
 		.Predicator([this]
-			{
-				return m_fTtoM_Distance > 4.f && m_fTtoM_Distance <= 12.f;
-			})
+		{
+			return m_fTtoM_Distance > 5.f && m_fTtoM_Distance <= 12.f;
+		})
 
 		.AddTransition("Near to Far", "Far")
-				.Predicator([this]
-					{
-						return m_fTtoM_Distance > 12.f;
-					})
-
-		.AddState("Mid")
-				.Tick(this, &CEM8200_Controller::Tick_Mid)
-				.AddTransition("Mid to Near", "Near")
-				.Predicator([this]
-					{
-						return m_fTtoM_Distance <= 4.f;
-					})
-
-		.AddTransition("Mid to Far", "Far")
-				.Predicator([this]
-					{
-						return m_fTtoM_Distance > 12.f;
-					})
-
-		.AddState("Far")
-				.Tick(this, &CEM8200_Controller::Tick_Far)
-				.AddTransition("Far to Near", "Near")
-				.Predicator([this]
-					{
-						return m_fTtoM_Distance <= 4.f;
-					})
-
-		.AddTransition("Far to Mid", "Mid")
-				.Predicator([this]
-					{
-						return m_fTtoM_Distance > 4.f && m_fTtoM_Distance <= 12.f;
-					})
+		.Predicator([this]
+		{
+			return m_fTtoM_Distance > 12.f;
+		})
 
 		.Build();
 
 		m_fTurnSlowTime = 0.9f;
 		m_fTurnSlowRatio = 0.4f;
 
-		m_iNearOrder = CMathUtils::RandomUInt(6);
-		m_iMidOrder = CMathUtils::RandomUInt(3);
-		m_iFarOrder = CMathUtils::RandomUInt(1);
+		Initialize_CoolTimeHelper();
 
 		return S_OK;
+}
+
+void CEM8200_Controller::Initialize_CoolTimeHelper()
+{
+	m_IceNeedle_CoolTimeHelper.Initialize(30.f, true);
+	m_KickAtk_CoolTimeHelper.Initialize(15.f, true);
+	m_RushAtk_CoolTimeHelper.Initialize(35.f, true);
+	m_ChaseElec_CoolTimeHelper.Initialize(20.f, true);
+	m_AirElec_CoolTimeHelper.Initialize(30.f, true);
 }
 
 void CEM8200_Controller::BeginTick()
@@ -108,6 +104,9 @@ void CEM8200_Controller::BeginTick()
 
 void CEM8200_Controller::AI_Tick(_double TimeDelta)
 {
+	Tick_TP_Cooltime(TimeDelta);
+	Tick_CoolTimeHelper(TimeDelta);
+
 	m_bRun = false;
 
 	if (m_pTarget == nullptr)
@@ -115,63 +114,181 @@ void CEM8200_Controller::AI_Tick(_double TimeDelta)
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
-		m_pFSM->Tick(TimeDelta);
+		// m_pFSM->Tick(TimeDelta);
+		// AddCommand("Rush_Copy_Start", 0.f, &CAIController::Input, G);
+		// AddCommand("Air_Elec_Atk_Charge_Start", 0.f, &CAIController::Input, F);
+		// AddCommand("Ice_Needle_Attack", 0.f, &CEM8200_Controller::Input, Q);
+		// AddCommand("Kick_A1", 0.f, &CAIController::Input, E);
+		AddCommand("Chase_Elec_Start", 0.f, &CAIController::Input, R);
+
+
+	}
+
+	Detected_Attack();
+}
+
+void CEM8200_Controller::Detected_Attack()
+{
+	if (m_pCastedOwner->IsPlayingSocket() == false)
+	{
+		physx::PxOverlapHit hitBuffer[5];
+		physx::PxOverlapBuffer overlapOut(hitBuffer, 5);
+
+		SphereOverlapParams param;
+		param.fVisibleTime = 0.3f;
+		param.iTargetType = CTB_PLAYER | CTB_PSYCHICK_OBJ;
+		param.fRadius = 5.f;
+		param.vPos = m_pCastedOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		param.overlapOut = &overlapOut;
+
+		if (CGameInstance::GetInstance()->OverlapSphere(param))
+		{
+			for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+			{
+				auto pObj = CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor);
+				if (auto pTarget = dynamic_cast<CScarletCharacter*>(pObj))
+				{
+					if(pObj == m_pCastedOwner)
+						continue;
+
+					if(CPlayerInfoManager::GetInstance()->Get_PlayerAttackEnable() == true)
+					{
+						if (rand() % 4 == 0)
+							return;
+
+						ClearCommands();
+
+						const _uint iNum = CMathUtils::RandomInt(NUM_1, NUM_4);
+
+						AddCommand("Teleport", 0.f, &CAIController::Input, (EHandleInput)iNum);
+					}
+				}
+				else if (auto pKinetic = dynamic_cast<CMapKinetic_Object*>(pObj))
+				{
+					if (pKinetic->GetThrow() == true && pKinetic->IsUseBoss() == false)
+					{
+						if (rand() % 4 == 0)
+							return;
+
+						ClearCommands();
+
+						const _uint iNum = CMathUtils::RandomInt(NUM_1, NUM_4);
+
+						AddCommand("Teleport", 0.f, &CAIController::Input, (EHandleInput)iNum);
+					}
+				}
+			}
+		}
+	}
+	else
+		return;
+}
+
+void CEM8200_Controller::Tick_CoolTimeHelper(_double TimeDelta)
+{
+	m_IceNeedle_CoolTimeHelper.Tick(TimeDelta);
+	m_KickAtk_CoolTimeHelper.Tick(TimeDelta);
+	m_RushAtk_CoolTimeHelper.Tick(TimeDelta);
+	m_ChaseElec_CoolTimeHelper.Tick(TimeDelta);
+	m_AirElec_CoolTimeHelper.Tick(TimeDelta);
+}
+
+void CEM8200_Controller::Tick_TP_Cooltime(_double TimeDelta)
+{
+	if (m_bCanUseTeleport == false)
+	{
+		m_fTP_CurCoolTime += (_float)TimeDelta;
+	}
+
+	if (m_fTP_CurCoolTime >= m_fTP_CoolTime)
+	{
+		m_bCanUseTeleport = true;
+		m_fTP_CurCoolTime = 0.f;
+		m_fTP_CoolTime = CGameUtils::GetRandFloat(m_fTP_RandCoolTime.x, m_fTP_RandCoolTime.y);
 	}
 }
 
 void CEM8200_Controller::Tick_Near(_double TimeDelta)
 {
 	m_eDistance = DIS_NEAR;
-	// 1. È¸Àü °ø°Ý 2. Èð»Ñ¸®±â °ø°Ý 3. È¸ÇÇ(ÁÂ, ¿ì, µÚ) 4. Walk
+	const _uint iNum = CMathUtils::RandomInt(NUM_1, NUM_3);
+
+	// if (m_RushAtk_CoolTimeHelper.CanUse() == false && m_ChaseElec_CoolTimeHelper.CanUse() == false && m_AirElec_CoolTimeHelper.CanUse() == false)
+	// {
+	// 	if (rand() % 1 == 0)
+	// 		AddCommand("Teleport_B_Start", 0.f, &CEM8200_Controller::Input, NUM_4);
+	//
+	// }
+
+
 	switch (m_iNearOrder)
 	{
 	case 0:
-		// AddCommand("Attack_Spin", 0.f, &CAIController::Input, R);
+		 AddCommand("Walk", 1.f, &CAIController::Wait);
 		break;
 	case 1:
-		// AddCommand("WalkTurn", 1.2f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		if(m_bCanUseTeleport == true)
+		{
+			AddCommand("Teleport", 0.f, &CAIController::Input, (EHandleInput)iNum);
+			m_bCanUseTeleport = false;
+		}
 		break;
 	case 2:
-		// AddCommand("Dodge_L", 0.f, &CAIController::Input, NUM_1);
+		if (m_KickAtk_CoolTimeHelper.Use())
+		{
+			AddCommand("Kick_A1", 0.f, &CAIController::Input, E);
+		}
 		break;
 	case 3:
-		// AddCommand("Attack_Screw", 0.f, &CAIController::Input, G);
+		if(m_RushAtk_CoolTimeHelper.Use())
+		{
+			AddCommand("Rush_Copy_Start", 0.f, &CAIController::Input, G);
+		}
 		break;
 	case 4:
-		// AddCommand("Dodge_B", 0.f, &CAIController::Input, NUM_2);
-		break;
-	case 5:
-		// AddCommand("WalkTurn", 1.2f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
-		break;
-	case 6:
-		// AddCommand("Dodge_R", 0.f, &CAIController::Input, NUM_3);
+		if(m_ChaseElec_CoolTimeHelper.Use())
+		{
+			AddCommand("Chase_Elec_Start", 0.f, &CAIController::Input, R);
+		}
 		break;
 	}
 
-	m_iNearOrder = (m_iNearOrder + 1) % 7;
+	m_iNearOrder = (m_iNearOrder + 1) % 5;
 }
 
 void CEM8200_Controller::Tick_Mid(_double TimeDelta)
 {
 	m_eDistance = DIS_MIDDLE;
+	const _uint iNum = CMathUtils::RandomInt(NUM_1, NUM_3);
 
 	switch (m_iMidOrder)
 	{
 	case 0:
-		// AddCommand("WalkTurn", 1.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		AddCommand("Walk", 2.f, &CAIController::Move, EMoveAxis::NORTH);
 		break;
 	case 1:
-		// AddCommand("Run", 2.f, &CEM0200_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		if (m_bCanUseTeleport == true)
+		{
+			AddCommand("Teleport", 0.f, &CAIController::Input, (EHandleInput)iNum);
+			m_bCanUseTeleport = false;
+		}
 		break;
 	case 2:
-		// AddCommand("Turn", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
-		// AddCommand("Jump", 0.f, &CAIController::Input, MOUSE_RB);
+		if (m_AirElec_CoolTimeHelper.Use())
+		{
+			AddCommand("Air_Elec_Atk_Charge_Start", 0.f, &CAIController::Input, F);
+		}
 		break;
-	case 3:
-		// AddCommand("Threat", 0.f, &CAIController::Input, C);
-		break;
+
+	// case 2:
+	// 	// AddCommand("Turn", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+	// 	// AddCommand("Jump", 0.f, &CAIController::Input, MOUSE_RB);
+	// 	break;
+	// case 3:
+	// 	// AddCommand("Threat", 0.f, &CAIController::Input, C);
+	// 	break;
 	}
-	m_iMidOrder = (m_iMidOrder + 1) % 4;
+	m_iMidOrder = (m_iMidOrder + 1) % 3;
 }
 
 void CEM8200_Controller::Tick_Far(_double TimeDelta)
@@ -181,11 +298,13 @@ void CEM8200_Controller::Tick_Far(_double TimeDelta)
 	switch (m_iFarOrder)
 	{
 	case 0:
-		// AddCommand("Turn", 2.5f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
-		// AddCommand("Jump", 0.f, &CAIController::Input, MOUSE_RB);
+		AddCommand("Teleport_F", 0.f, &CEM8200_Controller::Input, NUM_1);
 		break;
 	case 1:
-		// AddCommand("Threat", 0.f, &CAIController::Input, C);
+		if(m_IceNeedle_CoolTimeHelper.Use())
+		{
+			AddCommand("Ice_Needle_Attack", 0.f, &CEM8200_Controller::Input, Q);
+		}
 		break;
 	}
 
@@ -207,7 +326,7 @@ void CEM8200_Controller::Tick_Outside(_double TimeDelta)
 		break;
 	}
 
-	m_iOutOrder = (m_iOutOrder + 1) % 2;
+	// m_iOutOrder = (m_iOutOrder + 1) % 2;
 }
 
 void CEM8200_Controller::Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
@@ -215,6 +334,16 @@ void CEM8200_Controller::Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
 	m_bRun = true;
 	Move(eAxis);
 	TurnToTarget(fSpeedRatio);
+}
+
+void CEM8200_Controller::Teleport_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
+{
+	TurnToTarget(fSpeedRatio);
+}
+
+void CEM8200_Controller::LookAtNow()
+{
+	m_pCastedOwner->GetTransform()->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 }
 
 void CEM8200_Controller::Free()

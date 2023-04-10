@@ -118,6 +118,23 @@ void CBullet::Create_InitParticle(wstring& InitParticle)
 	m_pInitParticle = pParticle;
 }
 
+void CBullet::Create_InitRotParticle(wstring& InitParticle, _bool trueisUpdate)
+{
+	if (InitParticle == L"") return;
+
+	m_bRotParticles = trueisUpdate;
+
+	CParticleGroup* pParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, InitParticle);
+	assert(pParticle != nullptr);
+
+	CEffectSystem* pSystem = m_pInitEffects[0]->GetFirstEffect();
+
+	pParticle->Start_ForBulletParticle(pSystem, true);
+	Safe_AddRef(pParticle);
+
+	m_pInitParticle = pParticle;
+}
+
 void CBullet::Create_DeadEffects()
 {
 	if (m_pDeadEffects.empty()) return;
@@ -184,12 +201,12 @@ void CBullet::CollisionCheck_Bullet(CTransform* pTransform, DAMAGE_PARAM mParam,
 		{
 			auto pTarget = dynamic_cast<CScarletCharacter*>(CPhysXUtils::GetOnwer(sweepOut.getAnyHit(i).actor));
 
-			if (pTarget == nullptr) // 건물, 염력이 적용되는 물체 등에 대한 예외 처리
+			if (pTarget == nullptr && m_bRotParticles == false) // 건물, 염력이 적용되는 물체 등에 대한 예외 처리
 			{
 				m_bHitCheck = true;
 				return;
 			}
-			
+						
 			memcpy(&mParam.vHitPosition, &sweepOut.getAnyHit(i).position, sizeof(_float3));
 			memcpy(&mParam.vHitNormal, &sweepOut.getAnyHit(i).normal, sizeof(_float3));
 			CheckHitTarget(pTarget, CPhysXUtils::GetComponent(sweepOut.getAnyHit(i).actor), mParam);
