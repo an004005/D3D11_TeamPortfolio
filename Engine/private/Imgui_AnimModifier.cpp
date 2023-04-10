@@ -64,7 +64,7 @@ void CModelPreviwer::Late_Tick(_double TimeDelta)
 {
 	if (m_bVisible)
 	{
-		//m_pModel->Play_Animation(TimeDelta);
+		m_pModel->Play_Animation(TimeDelta);
 		m_pModel->Play_Animation_Additive(TimeDelta);
 		m_pRendererCom->Add_RenderGroup(m_eRenderGroup, this);
 

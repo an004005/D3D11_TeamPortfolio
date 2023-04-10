@@ -191,7 +191,7 @@ HRESULT CLevel_AnimModify::Ready_Prototypes()
 
 	{
 		auto pModel_ConsumptionItem = CModel::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Model/AnimModel/Item/Consumption/SM_co0700.anim_model");
+			"../Bin/Resources/Model/AnimModel/Item/Consumption/co0700.anim_model");
 		pModel_ConsumptionItem->LoadAnimations("../Bin/Resources/Model/AnimModel/Item/Consumption/Anim/");
 		FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_STATIC, L"Model_ConsumptionItem", pModel_ConsumptionItem));
 	}
@@ -249,8 +249,13 @@ HRESULT CLevel_AnimModify::Ready_Layer_Player(const _tchar* pLayerTag)
 	if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPreview"), &PreviewData)))
 		return E_FAIL;
 	
+	//Json PreviewData2;
+	//PreviewData2["Model"] = "Model_Player";
 
-	//
+	//if (FAILED(pGameInstance->Clone_GameObject(pLayerTag, TEXT("ModelPlayer"), &PreviewData2)))
+	//	return E_FAIL;
+
+
 	//auto pPlayer = (pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("ModelPreview"), &PreviewData));
 
 	//PreviewData["Model"] = "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model";
