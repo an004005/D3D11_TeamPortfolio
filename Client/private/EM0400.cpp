@@ -207,11 +207,13 @@ void CEM0400::SetUpFSM()
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
 
+			.AddTransition("Idle to  Down", "Down")
+				.Predicator([this] { return !m_bDown && m_eDeBuff == EDeBuffType::DEBUFF_THUNDER
+					&& m_eCurAttackType != EAttackType::ATK_TO_AIR;; })
+
 			.AddTransition("Idle to Hit_ToAir", "Hit_ToAir")
 				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_TO_AIR; })
-		.AddTransition("Idle to  Down", "Down")
-			.Predicator([this] { return !m_bDown && m_eDeBuff == EDeBuffType::DEBUFF_THUNDER
-				&& m_eCurAttackType != EAttackType::ATK_TO_AIR;; })
+
 
 			.AddTransition("Idle to Hit_Mid_Heavy", "Hit_Mid_Heavy")
 				.Predicator([this] { return
@@ -325,31 +327,40 @@ void CEM0400::SetUpFSM()
 				m_bHitAir = false;
 				m_pController->SetActive(true);
 			})
-			.AddTransition("Hit_ToAir to OnFloorGetup", "OnFloorGetup")
+			.AddTransition("Hit_ToAir to Landing", "Landing")
 				.Predicator([this]
 			{
 				return !m_bPreOnFloor && m_bOnFloor && m_bHitAir;
 			})
-		.AddState("OnFloorGetup")
+
+		.AddState("Landing")
 			.OnStart([this]
 			{
-				m_pASM->InputAnimSocketMany("FullBody", { "AS_em0400_433_AL_blow_landing_F", "AS_em0400_427_AL_getup_01" });
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0400_433_AL_blow_landing_F");
 				m_fGravity = 20.f;
 
 				m_pController->SetActive(false);
 			})
 			.OnExit([this]
 			{
-					m_bDown = false;
-					m_pController->SetActive(true);
+				m_pController->SetActive(true);
 			})
-			.AddTransition("OnFloorGetup to Idle", "Idle")
+			.AddTransition("Landing to Getup", "Getup")
 				.Predicator([this]
 				{
-					return PriorityCondition() || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketEmpty("FullBody");
+					return m_pASM->isSocketPassby("FullBody", 0.98f);
+				})
+			.AddTransition("Landing to Hit_ToAir", "Hit_ToAir")
+				.Predicator([this]
+				{
+					return m_eCurAttackType == EAttackType::ATK_TO_AIR;
 				})
 
-
+			.AddTransition("Landing to Shock", "Shock")
+				.Predicator([this]
+				{
+					return (m_pASM->isSocketPassby("FullBody", 0.95f) && m_eDeBuff == EDeBuffType::DEBUFF_THUNDER);
+				})
 
 		.AddState("Down")
 			.OnStart([this]
@@ -369,15 +380,15 @@ void CEM0400::SetUpFSM()
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0400_480_AL_down_shock");
 				m_pModelCom->Find_Animation("AS_em0400_480_AL_down_shock")->SetLooping(true);
 			})
-			.OnExit([this]
-			{
-				m_bDown = false;
-			})
 			.AddTransition("Shock to Getup", "Getup")
 				.Predicator([this]
 				{
-					return m_eCurAttackType == EAttackType::ATK_TO_AIR
-						|| m_eDeBuff != EDeBuffType::DEBUFF_THUNDER;
+					return m_eDeBuff != EDeBuffType::DEBUFF_THUNDER;
+				})
+			.AddTransition("Shock to Hit_ToAir", "Hit_ToAir")
+				.Predicator([this]
+				{
+						return m_eCurAttackType == EAttackType::ATK_TO_AIR;
 				})
 
 		.AddState("Getup")
@@ -387,14 +398,13 @@ void CEM0400::SetUpFSM()
 			})
 			.OnExit([this]
 			{
-				m_bDown = false;
+  				m_bDown = false;
 			})
 			.AddTransition("Getup to Idle", "Idle")
 				.Predicator([this]		
 				{
 					return PriorityCondition() || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketEmpty("FullBody");
 				})
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 

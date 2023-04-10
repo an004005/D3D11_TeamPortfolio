@@ -30,8 +30,8 @@ HRESULT CEM0750::Initialize(void * pArg)
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
-		m_iMaxHP = 1000;
-		m_iHP = 1000; // ★
+		m_iMaxHP = 20000;
+		m_iHP = m_iMaxHP; // ★
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 1;
@@ -104,6 +104,9 @@ void CEM0750::SetUpFSM()
 			})
 			.AddTransition("Idle to Death" , "Death")
 				.Predicator([this] { return m_bDead; })
+			.AddTransition("Idle to Down", "Down")
+				.Predicator([this] { return !m_bDown && m_eDeBuff == EDeBuffType::DEBUFF_THUNDER
+					&& m_eCurAttackType != EAttackType::ATK_TO_AIR; })
 
 			.AddTransition("Idle to Hit_ToAir", "Hit_ToAir")
 				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_TO_AIR; })
@@ -132,7 +135,8 @@ void CEM0750::SetUpFSM()
 			})
 			.Tick([this](_double)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_LIGHT || m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP)
+				if (m_eCurAttackType == EAttackType::ATK_LIGHT
+					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP)
 				{
 					Play_LightHitAnim();
 				}
@@ -140,10 +144,11 @@ void CEM0750::SetUpFSM()
 			.AddTransition("Hit_Light to Idle", "Idle")
 				.Predicator([this]
 			{
-				return m_bDead
+				return PriorityCondition()
 					|| m_pASM->isSocketPassby("FullBody", 0.95f)
 					|| (m_eCurAttackType != EAttackType::ATK_LIGHT 
-						&& m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP);
+						&& m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
+						&& m_eCurAttackType != EAttackType::ATK_END);
 			})
 
 
@@ -174,7 +179,7 @@ void CEM0750::SetUpFSM()
 			.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead
+					return PriorityCondition()
 						|| m_pASM->isSocketPassby("FullBody", 0.95f)
 						|| m_eCurAttackType == EAttackType::ATK_TO_AIR
 						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
@@ -193,10 +198,7 @@ void CEM0750::SetUpFSM()
 				m_fGravity = 20.f;
 				m_fYSpeed = sqrtf((2.5f - m_fHeight) * m_fGravity * 2.f);
 
-				// 2.5 - m_fHeight = y^2 / 40
-				// y^2 = (2.5-height) * 40
-				// player max height : 2.5
-				//max height = (y speed ^ 2) / (2 * gravity) = 10^2 / 2 * 20
+				m_bDown = true;
 			})
 			.Tick([this](_double)
 			{
@@ -215,21 +217,95 @@ void CEM0750::SetUpFSM()
 			{
 				m_bHitAir = false;
 			})
-			.AddTransition("Hit_ToAir to OnFloorGetup", "OnFloorGetup")
+			.AddTransition("Hit_ToAir to Landing", "Landing")
 				.Predicator([this]
 				{
 					return !m_bPreOnFloor && m_bOnFloor && m_bHitAir;
 				})
-		.AddState("OnFloorGetup")
+
+		.AddState("Landing")
 			.OnStart([this]
 			{
-				m_pASM->InputAnimSocketMany("FullBody", { "AS_em0700_433_AL_blow_landing_F", "AS_em0700_427_AL_getup" });
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_433_AL_blow_landing_F");
 				m_fGravity = 20.f;
 			})
-			.AddTransition("OnFloorGetup to Idle", "Idle")
+			.AddTransition("Landing to Getup", "Getup")
 				.Predicator([this]
 				{
-					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketEmpty("FullBody");
+					return  m_pASM->isSocketPassby("FullBody", 0.98f);
+				})
+			.AddTransition("Landing to Hit_ToAir", "Hit_ToAir")
+				.Predicator([this]
+				{
+					return m_eCurAttackType == EAttackType::ATK_TO_AIR;
+				})
+			.AddTransition("Landing to Shock", "Shock")
+				.Predicator([this]
+				{
+					return (m_pASM->isSocketPassby("FullBody", 0.95f) && m_eDeBuff == EDeBuffType::DEBUFF_THUNDER);
+				})
+
+		.AddState("Down")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_475_AL_down_start02");
+				Check_Height();
+				m_fGravity = 20.f;
+				m_fYSpeed = sqrtf((2.5f - m_fHeight) * m_fGravity * 2.f);
+
+				m_bDown = true;
+			})
+			.Tick([this](_double)
+			{
+				m_vMoveAxis = _float3::Zero;
+				m_bHitAir = true;
+			})
+			.OnExit([this]
+			{
+				m_bHitAir = false;
+			})
+			.AddTransition("Down to Shock", "Shock")
+				.Predicator([this]
+				{
+						return !m_bPreOnFloor && m_bOnFloor && m_bHitAir;
+				})
+
+		.AddState("Shock")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_480_AL_down_shock");
+				m_pModelCom->Find_Animation("AS_em0700_480_AL_down_shock")->SetLooping(true);
+				m_fGravity = 20.f;
+			})
+			.Tick([this](_double)
+			{
+				m_vMoveAxis = _float3::Zero;
+			})
+			.AddTransition("Shock to Getup", "Getup")
+				.Predicator([this]
+				{
+					return  m_eDeBuff != EDeBuffType::DEBUFF_THUNDER;
+				})
+			.AddTransition("Shock to Hit_ToAir", "Hit_ToAir")
+				.Predicator([this]
+				{
+					return m_eCurAttackType == EAttackType::ATK_TO_AIR;
+				})
+
+		.AddState("Getup")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_427_AL_getup");
+				m_fGravity = 20.f;
+			})
+			.OnExit([this]
+			{
+				m_bDown = false;
+			})
+			.AddTransition("Getup to Idle", "Idle")
+				.Predicator([this]
+				{
+					return PriorityCondition() || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketEmpty("FullBody");
 				})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -242,7 +318,7 @@ void CEM0750::SetUpFSM()
 			.AddTransition("Threat to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_eCurAttackType != EAttackType::ATK_END || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -266,7 +342,7 @@ void CEM0750::SetUpFSM()
 			.AddTransition("Rush_Start to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
+					return PriorityCondition() || (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
 				})
 
 		.AddState("Rush_Loop")
@@ -296,7 +372,7 @@ void CEM0750::SetUpFSM()
 			.AddTransition("Rush_Loop to Rush_End", "Rush_End")
 				.Predicator([this]
 				{
-					return m_bDead || m_fRushTime <= 0.f;
+					return PriorityCondition() || m_fRushTime <= 0.f;
 				})
 
 		.AddState("Rush_End")
@@ -316,7 +392,7 @@ void CEM0750::SetUpFSM()
 			.AddTransition("Rush_End to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 
@@ -461,6 +537,12 @@ void CEM0750::HeavyAttackPushStart()
 		const _float fYaw = m_pTransformCom->GetYaw_Radian();
 		m_vPushVelocity = XMVector3TransformNormal(m_vPushVelocity, XMMatrixRotationY(fYaw));
 	}
+}
+
+_bool CEM0750::PriorityCondition()
+{
+	return  m_bDead || m_eDeBuff == EDeBuffType::DEBUFF_THUNDER;
+
 }
 
 void CEM0750::Rush_StaticCheckSweep()

@@ -445,7 +445,7 @@ void CEM0900::SetUpFSM()
 			.AddTransition("Throw_Loop to Throw_End", "Throw_End")
 				.Predicator([this]
 				{
-					return PriorityCondition() || abs(m_pController->GetTurnRemain()) < 0.1f;
+					return PriorityCondition() || IsTargetFront(15.f);
 				})
 
 		//이벤트에서 플레이어쪽으로 던짐

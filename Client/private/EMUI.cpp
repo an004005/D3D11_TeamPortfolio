@@ -176,7 +176,7 @@ void CEMUI::Update_NoticeNeon()
 	if (m_pNoticNeon.first != nullptr && m_pNoticNeon.second != nullptr)
 	{
 		m_pNoticNeon.first->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Target", true, true);
-		m_pNoticNeon.second->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Target", true, true);
+		m_pNoticNeon.second->Start_NoAttach(m_pNoticNeon.first->GetFirstEffect(), true, true);
 		Safe_AddRef(m_pNoticNeon.first);
 		Safe_AddRef(m_pNoticNeon.second);
 	}
