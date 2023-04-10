@@ -28,16 +28,6 @@ HRESULT CLevel_FinalStage::Initialize()
 	// if (FAILED(Ready_Layer_AI(LAYER_AI)))
 		// return E_FAIL;
 
-
-	CGameInstance::GetInstance()->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
-	Json PreviewData;
-	{
-		PreviewData["Model"] = "Model_Player";
-		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
-		CGameInstance::GetInstance()->Clone_GameObject(L"Preview", TEXT("ModelPreview"), &PreviewData);
-
-	}
-
 	return S_OK;
 }
 

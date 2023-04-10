@@ -205,6 +205,7 @@ PS_OUT PS_PSYCHIC_DEFAULT_4(PS_IN In)
 		{
 			float fWave = g_KineticWave.Sample(LinearSampler, TilingAndOffset(In.vTexUV, 1.f, float2(g_Time * 0.25f, 0.f))).r;
 			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_PURPLE, fWave);
+			Out.vDepth.z = fWave;
 		}
 		else
 		{

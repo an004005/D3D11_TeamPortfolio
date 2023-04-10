@@ -497,6 +497,7 @@
     <ClInclude Include="..\public\VFX_Manager.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
+    <ClInclude Include="..\public\VIBuffer_Invisible.h" />
     <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
     <ClInclude Include="..\public\OilBullet.h" />
@@ -829,6 +830,7 @@
     <ClCompile Include="..\private\VFX_Manager.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Invisible.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
     <ClCompile Include="..\private\OilBullet.cpp" />

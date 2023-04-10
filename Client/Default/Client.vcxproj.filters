@@ -1509,6 +1509,7 @@
       <Filter>02.GameObjects\Weapon\Weapon_Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BrainField.h" />
+    <ClInclude Include="..\public\VIBuffer_Invisible.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2475,6 +2476,7 @@
       <Filter>02.GameObjects\Weapon\Weapon_Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BrainField.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Invisible.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

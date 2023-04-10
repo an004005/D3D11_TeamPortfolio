@@ -1,6 +1,7 @@
 #pragma once
 #include "TriggerEx.h"
 #include "Client_Defines.h"
+#include "HelperClasses.h"
 
 BEGIN(Client)
 class CEnemy;
@@ -37,6 +38,9 @@ private:
 	vector<list<CEnemy*>> m_WaitingEnemies;
 	_uint m_iSpawnOrder = 0;
 	_bool m_bStart = false;
+
+	class CInvisibleWall* m_pWall = nullptr;
+	CDoOnce m_WallDeActiveOnce;
 
 public:
 	void Free() override;

@@ -31,4 +31,31 @@ public:
 	virtual CComponent* Clone(void* pArg = nullptr);
 };
 
+class ENGINE_DLL CPhysXStaticMesh : public CComponent
+{
+protected:
+	CPhysXStaticMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CPhysXStaticMesh(const CPhysXStaticMesh& rhs);
+	virtual ~CPhysXStaticMesh() = default;
+
+public:
+	virtual HRESULT Initialize_Prototype(const vector<VTXNORTEX>& VtxData, const vector<FACEINDICES32>& IdxData);
+	virtual HRESULT Initialize(void* pArg);
+	virtual void Imgui_RenderProperty() override;
+
+	// 최초 한번만 위치 셋팅하는 용도로 사용할것
+	void SetPxWorldMatrix(const _float4x4& WorldMatrix);
+	void Activate(_bool bActive);
+	_bool IsActive();
+
+private:
+	PxMesh m_PxMesh;
+	physx::PxRigidStatic* m_pActor = nullptr;
+
+public:
+	virtual void Free() override;
+	static CPhysXStaticMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const vector<VTXNORTEX>& VtxData, const vector<FACEINDICES32>& IdxData);
+	virtual CComponent* Clone(void* pArg = nullptr);
+};
+
 END
