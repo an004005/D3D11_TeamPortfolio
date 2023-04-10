@@ -118,8 +118,14 @@ void CEM8200::Create_Bullet()
 		.Set_DeadBulletParticle(L"em8200_Elec_Bullet_Dead")
 		.Set_Position(vPrePos)
 		.Build();
+}
 
+void CEM8200::TakeDamage(DAMAGE_PARAM tDamageParams)
+{
+	if (m_pModelCom->GetMaterials().front()->GetParam().Floats[2] > 0.1f)
+		return;
 
+	CEnemy::TakeDamage(tDamageParams);
 }
 
 void CEM8200::SetUpAnimationEvent()
@@ -262,6 +268,24 @@ void CEM8200::SetUpAnimationEvent()
 
 			m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 		});
+
+
+	m_pModelCom->Add_EventCaller("Capture_Start", [this]
+		{
+			// 키네틱 객체 발사 
+		});
+
+	m_pModelCom->Add_EventCaller("Counter_Start", [this]
+		{
+			// 카운터 발찍을 때 
+		});
+
+	m_pModelCom->Add_EventCaller("See_Through_Start", [this]
+		{
+			// 번쩍 이펙트
+			// 플레이어 사스 풀기 (게이지 0만들기)
+			
+		});
 }
 
 void CEM8200::SetUpFSM()
@@ -279,6 +303,8 @@ void CEM8200::SetUpFSM()
 	AddState_Attack_AirElec(Builder);
 	AddState_Attack_Rush(Builder);
 	AddState_Seethrough(Builder);
+	AddState_Counter(Builder);
+	AddState_CaptureKinetic(Builder);
 
 	m_pFSM = Builder.Build();
 }
@@ -345,11 +371,7 @@ void CEM8200::Tick(_double TimeDelta)
 
 	string StateName = m_pFSM->GetCurStateName();
 
-
-	// if (StateName.find("TP") == string::npos || StateName.find("Teleport") == string::npos)
-	// 	m_pKarenMaskEf->SetVisible(false);
-	// else
-	// 	m_pKarenMaskEf->SetVisible(true);
+	
 
 
 	// Tick의 제일 마지막에서 실행한다.
@@ -514,12 +536,23 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 				return m_eInput == CController::Q;
 			})
 
-	.AddTransition("Idle to Zero_Sas", "Zero_Sas")
+	.AddTransition("Idle to See_Through_Start", "See_Through_Start")
+		.Predicator([this]
+			{
+				return m_eInput == CController::B;
+			})
+
+	.AddTransition("Idle to Counter_Start", "Counter_Start")
 		.Predicator([this]
 			{
 				return m_eInput == CController::C;
 			})
 
+	.AddTransition("Idle to Capture_Wait", "Capture_Wait")
+		.Predicator([this]
+			{
+				return m_eInput == CController::L;
+			})
 
 	.AddTransition("Idle to KneeKick_A1_Before_TP", "KneeKick_A1_Before_TP")
 	.Predicator([this]
@@ -1453,7 +1486,7 @@ void CEM8200::AddState_Attack_Rush(CFSMComponentBuilder& Builder)
 void CEM8200::AddState_Seethrough(CFSMComponentBuilder& Builder)
 {
 	Builder
-	.AddState("Zero_Sas")
+	.AddState("See_Through_Start")
 		.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_251_AL_atk_seethrough");
@@ -1461,12 +1494,94 @@ void CEM8200::AddState_Seethrough(CFSMComponentBuilder& Builder)
 			// 이벤트 걸기 
 			})
 
-	.AddTransition("Zero_Sas to Idle", "Idle")
+	.AddTransition("See_Through_Start to Idle", "Idle")
 		.Predicator([this]
 			{
 				return m_pASM->isSocketEmpty("FullBody");
 			});
 }
+
+void CEM8200::AddState_Counter(CFSMComponentBuilder& Builder)
+{
+	Builder
+		.AddState("Counter_Start")
+		.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_261_AL_atk_counter_start");
+
+				// 이벤트 걸기 
+			})
+
+		.AddTransition("Counter_Start to Counter_Loop", "Counter_Loop")
+				.Predicator([this]
+					{
+						return m_pASM->isSocketEmpty("FullBody");
+					})
+
+		.AddState("Counter_Loop")
+			.OnStart([this]
+				{
+					m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_262_AL_atk_counter_loop");
+
+					// 이벤트 걸기 
+				})
+
+		.AddTransition("Counter_Loop to Counter_End", "Counter_End")
+				.Predicator([this]
+					{
+						return m_pASM->isSocketEmpty("FullBody");
+					})
+
+		.AddState("Counter_End") // 실질 공격 애니메이션
+			.OnStart([this]
+				{
+					m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_262_AL_atk_counter_loop");
+					ClearDamagedTarget();
+					
+				})
+			.Tick([this](_double TimeDelta)
+			{
+				Melee_Overlap("Reference", 50.f, 8.f, EAttackType::ATK_TO_AIR);
+			})
+
+
+		.AddTransition("Counter_End to Idle", "Idle")
+			.Predicator([this]
+				{
+					return m_pASM->isSocketEmpty("FullBody");
+				})
+
+	;
+}
+
+void CEM8200::AddState_CaptureKinetic(CFSMComponentBuilder& Builder)
+{
+	Builder
+		.AddState("Capture_Wait")
+		.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_272_AL_atk_throw1_wait");
+			})
+
+		.AddTransition("Capture_Wait to Capture_Start", "Capture_Start")
+			.Predicator([this]
+				{
+					return m_pASM->isSocketEmpty("FullBody");
+				})
+
+		.AddState("Capture_Start")
+			.OnStart([this]
+				{
+					m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_281_AL_atk_psycounter");
+				})
+
+		.AddTransition("Capture_Wait_End to Idle", "Idle")
+			.Predicator([this]
+				{
+					return m_pASM->isSocketEmpty("FullBody");
+				});
+}
+
 
 void CEM8200::AddState_Damaged(CFSMComponentBuilder& Builder)
 {

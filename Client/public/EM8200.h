@@ -50,6 +50,11 @@ protected:
 	void				AddState_Attack_AirElec(CFSMComponentBuilder& Builder);
 	void				AddState_Attack_Rush(CFSMComponentBuilder& Builder);
 	void				AddState_Seethrough(CFSMComponentBuilder& Builder);
+	void				AddState_Counter(CFSMComponentBuilder& Builder);
+	void				AddState_CaptureKinetic(CFSMComponentBuilder& Builder);
+
+
+
 
 	void				AddState_Damaged(CFSMComponentBuilder& Builder);
 
@@ -61,6 +66,8 @@ protected:
 	// void	Dodge_VelocityCalc();
 	// void	HeavyAttackPushStart();
 
+public:
+	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 
 private:
 	void Play_MidHitAnim();

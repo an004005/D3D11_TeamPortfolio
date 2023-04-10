@@ -69,6 +69,12 @@ private:
 
 	CCoolTimeHelper m_AirElec_CoolTimeHelper;
 
+	CCoolTimeHelper m_Seethrough_CoolTimeHelper;
+
+	CCoolTimeHelper m_Counter_CoolTimeHelper;
+
+	CCoolTimeHelper m_CaptureKinetic_CoolTimeHelper;
+
 private:
 	_float			m_fTP_CurCoolTime = 0.f;
 	_float			m_fTP_CoolTime = 0.f;

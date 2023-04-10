@@ -7475,27 +7475,37 @@
     },
     "AS_em8200_251_AL_atk_seethrough": {
         "Duration": 330.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "See_Through_Start",
+                "EventTime": 68.0
+            }
+        ]
     },
     "AS_em8200_261_AL_atk_counter_start": {
         "Duration": 90.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em8200_262_AL_atk_counter_loop": {
         "Duration": 60.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 70.0,
         "bLooping": false,
         "vecEvent": []
     },
     "AS_em8200_263_AL_atk_counter_end": {
         "Duration": 295.0,
-        "TickPerSecond": 40.0,
+        "TickPerSecond": 70.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Counter_Start",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em8200_271_AL_atk_capture_wait_end": {
         "Duration": 25.0,
@@ -7511,9 +7521,14 @@
     },
     "AS_em8200_281_AL_atk_psycounter": {
         "Duration": 155.0,
-        "TickPerSecond": 40.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Capture_Start",
+                "EventTime": 65.0
+            }
+        ]
     },
     "AS_em8200_401_AL_damage_l_FL": {
         "Duration": 70.0,
