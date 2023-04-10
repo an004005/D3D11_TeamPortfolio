@@ -42,12 +42,15 @@ public:
 	void		Load_EffectSystem();
 	void		Imgui_RenderEffectSource(_int iSelectEffect);
 
-	void SetStop();
-	void SetPlay();
-	void SetReverse();
-	_bool CheckPlay();
+	void		SetStop();
+	void		SetPlay();
+	void		SetReverse();
+	_bool		CheckPlay();
 	void		VisibleUpdate();
 	void		Set_Transform(_fmatrix matSocket);
+
+	class CEffectSystem* Get_FirstEF();
+
 public:
 	void		Start_EffectWork();
 

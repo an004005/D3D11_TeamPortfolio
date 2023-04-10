@@ -1,0 +1,475 @@
+{
+    "BilboardType": 1,
+    "BufferType": 0,
+    "BurstCnt": 200,
+    "ConeDirDegree": 30.0,
+    "ConeOriginRadius": 1.0,
+    "Curves": [
+        {
+            "Frames": [
+                [
+                    0.0,
+                    1.5666669607162476
+                ],
+                [
+                    1.256250023841858,
+                    5.133333206176758
+                ],
+                [
+                    2.5,
+                    0.1333333015441895
+                ],
+                [
+                    -10000.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0
+                ]
+            ],
+            "Name": "ObjectScale_All",
+            "RangeMax": [
+                2.5,
+                10.0
+            ],
+            "RangeMin": [
+                0.0,
+                0.0
+            ]
+        }
+    ],
+    "Duration": 2.5,
+    "EndTime": 2.5,
+    "FinishFunc": 1,
+    "FromOrigin": true,
+    "GravityPowerMinMax": [
+        0.0,
+        0.0
+    ],
+    "IncreaseMaxSize": 1.0,
+    "Life": 1.0,
+    "LifeMinMax": [
+        0.699999988079071,
+        1.0
+    ],
+    "LifeRand": true,
+    "Loop": false,
+    "MeshBufferProtoTag": "",
+    "MeshSize": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ModelCurveProtoTag": "../Bin/Resources/Meshes/VFX/Effect_Circle/VFX_Mesh_Circle_18.static_model",
+    "ModelProtoTag": "../Bin/Resources/Meshes/VFX/Effect_Circle/VFX_Mesh_Circle_18.static_model",
+    "ObjectTag": "",
+    "Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",
+    "RandDirMax": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "RandDirMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMax": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "ScaleVariation": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.12585638463497162,
+                0.14301609992980957,
+                0.003143202280625701,
+                1.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [
+            7.0,
+            0.21400000154972076
+        ],
+        "Ints": [],
+        "Pass": 13,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_White_01.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_one_lin_013.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxPointInstance_Particle",
+    "Shape": 0,
+    "SpawnTickTime": 0.009999999776482582,
+    "Speed": 1.0,
+    "SpeedMinMax": [
+        0.10000000149011612,
+        0.20000000298023224
+    ],
+    "SpeedRand": true,
+    "SphereDetail": false,
+    "SphereRadius": 4.0,
+    "Transform": {
+        "WorldMatrix": [
+            -1.6399651765823364,
+            -3.345648765563965,
+            1.2600383758544922,
+            0.0,
+            -2.777742862701416,
+            2.0651402473449707,
+            1.8681044578552246,
+            0.0,
+            -2.2505929470062256,
+            -0.11093416064977646,
+            -3.2237906455993652,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    "TurnAngle": 720.0,
+    "TurnAxis": [
+        0.0,
+        1.0,
+        1.0
+    ],
+    "UseMeshData": true,
+    "VtxRangeRatioValue": 1.0,
+    "VtxRangeTimelineCurve": "Simple_Increase",
+    "VtxStartRatioValue": 0.0,
+    "VtxStartTimelineCurve": "Simple_Decrease",
+    "XDirCurveName": "Kinetic_X",
+    "YDirCurveName": "Kinetic_Y",
+    "ZDirCurveName": "Kinetic_Z",
+    "bCurveDir": true,
+    "bGravity": false,
+    "bLocal": false,
+    "bMeshCurve": true,
+    "bNonAlpha": false,
+    "bPhysX": false,
+    "bRotate": true,
+    "bSizeDecreaseByLife": true,
+    "bSizeIncreaseByLife": false,
+    "bTurn": true,
+    "bUseMainCurve": true,
+    "pSize": [
+        0.05000000074505806,
+        0.05000000074505806
+    ]
+}

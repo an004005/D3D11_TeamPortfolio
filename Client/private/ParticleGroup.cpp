@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "JsonStorage.h"
 #include "CurveFloatMapImpl.h"
+#include "EffectSystem.h"
 #include "JsonLib.h"
 #include "ImguiUtils.h"
 #include "GameUtils.h"
@@ -58,6 +59,7 @@ void CParticleGroup::Start_NoAttachPivot(CGameObject* pOwner, _float4x4 PivotMat
 		SetDelete();
 		return;
 	}
+
 	m_pOwner = pOwner;
 	m_bUpdate = trueisUpdate;
 	m_PivotMatrix = PivotMatrix;
@@ -108,7 +110,6 @@ void CParticleGroup::Start_NoAttach(CGameObject* pOwner, _bool trueisUpdate, _bo
 		Set_Transform(SocketMatrix);
 	}
 
-	
 	m_bGenerate = true;
 }
 
@@ -301,6 +302,23 @@ void CParticleGroup::Start_OnlyPosUsePivot(_float4 vPositon, _float4x4 PivotMat)
 	m_bGenerate = true;
 }
 
+void CParticleGroup::Start_ForBulletParticle(CEffectSystem* pEF, _bool trueisUpdate)
+{
+	m_bForBulletUpdate = trueisUpdate;
+	m_pOwner = (CEffectSystem*)pEF;
+
+	if(m_bForBulletUpdate == false)
+	{
+		for (auto iter : m_mapParticleSystem)
+		{
+			if (iter.second.second != nullptr)
+				iter.second.second->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, m_pOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+		}
+	}
+
+	m_bGenerate = true;
+}
+
 void CParticleGroup::Set_Transform(_matrix socket)
 {
 	for(auto iter : m_mapParticleSystem)
@@ -327,6 +345,29 @@ void CParticleGroup::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 
 	VisibleUpdate();
+
+	if (m_bForBulletUpdate == true)
+	{
+		_float4 OwnerPos;
+
+		if (m_pOwner != nullptr && m_pOwner->IsDeleted() == false)
+			OwnerPos = m_pOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		else
+		{
+			Delete_Particles();
+
+			return;
+		}
+
+		for (auto iter : m_mapParticleSystem)
+		{
+			if(m_pOwner->IsDeleted() == false)
+			{
+				if (iter.second.second != nullptr)
+					iter.second.second->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, OwnerPos);
+			}
+		}
+	}
 
 	if(m_bUpdate == true 
 		&& CGameInstance::GetInstance()->Check_ObjectAlive(m_pOwner)

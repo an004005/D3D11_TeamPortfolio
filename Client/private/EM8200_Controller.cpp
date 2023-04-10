@@ -88,11 +88,11 @@ HRESULT CEM8200_Controller::Initialize(void* pArg)
 
 void CEM8200_Controller::Initialize_CoolTimeHelper()
 {
-	m_IceNeedle_CoolTimeHelper.Initialize(300000.f, true);
-	m_KickAtk_CoolTimeHelper.Initialize(5.f, true);
-	m_RushAtk_CoolTimeHelper.Initialize(350000.f, true);
-	m_ChaseElec_CoolTimeHelper.Initialize(200000.f, true);
-	m_AirElec_CoolTimeHelper.Initialize(200000.f, true);
+	m_IceNeedle_CoolTimeHelper.Initialize(30.f, true);
+	m_KickAtk_CoolTimeHelper.Initialize(15.f, true);
+	m_RushAtk_CoolTimeHelper.Initialize(35.f, true);
+	m_ChaseElec_CoolTimeHelper.Initialize(20.f, true);
+	m_AirElec_CoolTimeHelper.Initialize(30.f, true);
 }
 
 void CEM8200_Controller::BeginTick()
@@ -117,7 +117,10 @@ void CEM8200_Controller::AI_Tick(_double TimeDelta)
 		// m_pFSM->Tick(TimeDelta);
 		// AddCommand("Rush_Copy_Start", 0.f, &CAIController::Input, G);
 		// AddCommand("Air_Elec_Atk_Charge_Start", 0.f, &CAIController::Input, F);
-		AddCommand("Ice_Needle_Attack", 0.f, &CEM8200_Controller::Input, Q);
+		// AddCommand("Ice_Needle_Attack", 0.f, &CEM8200_Controller::Input, Q);
+		// AddCommand("Kick_A1", 0.f, &CAIController::Input, E);
+		AddCommand("Chase_Elec_Start", 0.f, &CAIController::Input, R);
+
 
 	}
 
@@ -210,6 +213,14 @@ void CEM8200_Controller::Tick_Near(_double TimeDelta)
 	m_eDistance = DIS_NEAR;
 	const _uint iNum = CMathUtils::RandomInt(NUM_1, NUM_3);
 
+	// if (m_RushAtk_CoolTimeHelper.CanUse() == false && m_ChaseElec_CoolTimeHelper.CanUse() == false && m_AirElec_CoolTimeHelper.CanUse() == false)
+	// {
+	// 	if (rand() % 1 == 0)
+	// 		AddCommand("Teleport_B_Start", 0.f, &CEM8200_Controller::Input, NUM_4);
+	//
+	// }
+
+
 	switch (m_iNearOrder)
 	{
 	case 0:
@@ -240,12 +251,6 @@ void CEM8200_Controller::Tick_Near(_double TimeDelta)
 			AddCommand("Chase_Elec_Start", 0.f, &CAIController::Input, R);
 		}
 		break;
-	// case 5:
-	// 	// AddCommand("WalkTurn", 1.2f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
-	// 	break;
-	// case 6:
-	// 	// AddCommand("Dodge_R", 0.f, &CAIController::Input, NUM_3);
-	// 	break;
 	}
 
 	m_iNearOrder = (m_iNearOrder + 1) % 5;
@@ -259,7 +264,7 @@ void CEM8200_Controller::Tick_Mid(_double TimeDelta)
 	switch (m_iMidOrder)
 	{
 	case 0:
-		AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
+		AddCommand("Walk", 2.f, &CAIController::Move, EMoveAxis::NORTH);
 		break;
 	case 1:
 		if (m_bCanUseTeleport == true)
@@ -296,9 +301,6 @@ void CEM8200_Controller::Tick_Far(_double TimeDelta)
 		AddCommand("Teleport_F", 0.f, &CEM8200_Controller::Input, NUM_1);
 		break;
 	case 1:
-		AddCommand("Teleport_F", 0.f, &CEM8200_Controller::Input, NUM_1);
-		break;
-	case 2:
 		if(m_IceNeedle_CoolTimeHelper.Use())
 		{
 			AddCommand("Ice_Needle_Attack", 0.f, &CEM8200_Controller::Input, Q);
@@ -306,7 +308,7 @@ void CEM8200_Controller::Tick_Far(_double TimeDelta)
 		break;
 	}
 
-	m_iFarOrder = (m_iFarOrder + 1) % 3;
+	m_iFarOrder = (m_iFarOrder + 1) % 2;
 }
 
 void CEM8200_Controller::Tick_Outside(_double TimeDelta)

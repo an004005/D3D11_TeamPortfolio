@@ -146,20 +146,26 @@ PS_OUT_NORM PS_KAREN_MASK_ALL(PS_IN_NORM In)
 	float3 vNormal = In.vNormal.xyz;
 	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
 
-		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
-		vNormal = vNormalDesc.xyz * 2.f - 1.f;
+	vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
 
-		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
-		vNormal = normalize(mul(vNormal, WorldMatrix));
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
 
-		Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
-		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
-		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0, flags);
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0, flags);
 
-		float Mask = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+	float Mask = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
 
-		if (Mask == 1.f)
+	float fDissolve = g_tex_4.Sample(LinearSampler, In.vTexUV).r;
+
+	if (Mask == 1.f)
 			discard;
+
+	if (g_float_1 >= fDissolve)
+		discard;
+
 
 	return Out;
 }

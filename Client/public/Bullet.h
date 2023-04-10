@@ -32,6 +32,8 @@ public:
 public:
 	void Create_InitEffects(vector<wstring>& InitEffects, _float4x4 pivot = XMMatrixIdentity());
 	void Create_InitParticle(wstring& InitParticle);
+	void Create_InitRotParticle(wstring& InitParticle, _bool trueisUpdate);
+
 	void Create_DeadEffects();
 	void Create_DeadParticle();
 

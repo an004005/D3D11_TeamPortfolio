@@ -247,6 +247,15 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 	return S_OK;
 }
 
+CEffectSystem* CEffectGroup::Get_FirstEF()
+{
+	if (nullptr == m_pFirst_EffectSystem)
+		return nullptr;
+	else
+		return m_pFirst_EffectSystem;
+}
+
+
 void CEffectGroup::Start_NoAttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, _bool trueisUpdate,
 	_bool trueisRemoveScale)
 {
@@ -558,7 +567,7 @@ void CEffectGroup::Call_Event()
 			else if (eventName.find("Neon") != string::npos)
 			{
 				_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f));
-				CVFX_Manager::GetInstance()->GetParticle(PS_HIT, s2ws(eventName))->Start_NoAttachPivot(m_pFirst_EffectSystem,MatParticle, true, true);
+				CVFX_Manager::GetInstance()->GetParticle(PS_HIT, s2ws(eventName))->Start_NoAttachPivot(m_pFirst_EffectSystem, MatParticle, true, true);
 			}
 			else
 			{

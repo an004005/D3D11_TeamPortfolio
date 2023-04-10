@@ -52,7 +52,9 @@ protected:
 	void				AddState_Seethrough(CFSMComponentBuilder& Builder);
 
 	void				AddState_Damaged(CFSMComponentBuilder& Builder);
-	
+
+
+	void				Create_Bullet();
 	// void	Strew_Overlap(); // FlowerShower АјАн
 	// void	Spin_SweepCapsule();
 	// void	Kick_SweepSphere();
@@ -66,11 +68,8 @@ private:
 
 private:
 	//For Collision
-
 	void Melee_Overlap(const string& pBornName, _uint iDamage, _float fRad, EAttackType eAtkType);
 	void Range_Overlap(_float4 vPos, _uint iDamage, _float fRad, EAttackType eAtkType);
-
-
 
 private:
 	class CEM8200_Controller* m_pController = nullptr;
@@ -130,11 +129,24 @@ private:
 private:
 	CEffectGroup* m_pDashEF = nullptr;
 
+	vector<wstring>	m_vecRandomTeleportEffect{
+		L"Sas_Teleport_Effect_A",
+		L"Sas_Teleport_Effect_B",
+		L"Sas_Teleport_Effect_C",
+		L"Sas_Teleport_Effect_D"
+	};
+
+private:
+	CSimpleTimeline			m_TPStart;
+	CSimpleTimeline			m_TPEnd;
+
+
 public:
 	static CEM8200*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg = nullptr) override;
 	virtual void			Free() override;
 };
+
 
 
 

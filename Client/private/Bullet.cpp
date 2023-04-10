@@ -123,6 +123,21 @@ void CBullet::Create_InitParticle(wstring& InitParticle)
 	m_pInitParticle = pParticle;
 }
 
+void CBullet::Create_InitRotParticle(wstring& InitParticle, _bool trueisUpdate)
+{
+	if (InitParticle == L"") return;
+
+	CParticleGroup* pParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, InitParticle);
+	assert(pParticle != nullptr);
+
+	CEffectSystem* pSystem = m_pInitEffects[0]->GetFirstEffect();
+
+	pParticle->Start_ForBulletParticle(pSystem, true);
+	Safe_AddRef(pParticle);
+
+	m_pInitParticle = pParticle;
+}
+
 void CBullet::Create_DeadEffects()
 {
 	if (m_pDeadEffects.empty()) return;
