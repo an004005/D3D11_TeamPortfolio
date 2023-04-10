@@ -185,7 +185,7 @@ void CEM0700::SetUpFSM()
 			{
 				return m_bDead
 					|| m_pASM->isSocketPassby("FullBody", 0.95f)
-					|| (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
+					|| (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP);
 			})
 
 
